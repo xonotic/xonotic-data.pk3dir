@@ -1,11 +1,12 @@
 #if defined(CSQC)
-	#include "../../buffs/all.qh"
 	#include "../../../lib/csqcmodel/interpolate.qh"
 	#include "../../../client/main.qh"
 	#include "../../../lib/csqcmodel/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif
+
+REGISTER_NET_LINKED(ENT_CLIENT_LASER)
 
 #ifdef SVQC
 .float modelscale;
@@ -124,7 +125,7 @@ void misc_laser_think()
 
 bool laser_SendEntity(entity this, entity to, float fl)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LASER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LASER);
 	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
 	if(self.spawnflags & 2)
 		fl |= 0x80;
@@ -316,14 +317,14 @@ void Draw_Laser(entity this)
 	if (!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 	{
 		if(self.cnt >= 0)
-			pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
+			__pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
 		if(self.colormod != '0 0 0' && self.modelscale != 0)
 			adddynamiclight(trace_endpos + trace_plane_normal * 1, self.modelscale, self.colormod * 5);
 	}
 }
 
-void Ent_Laser()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
+{
 	InterpolateOrigin_Undo();
 
 	// 30 bytes, or 13 bytes for just moving
@@ -379,6 +380,9 @@ void Ent_Laser()
 	}
 	if(f & 4)
 		self.state = ReadByte();
+
+	return = true;
+
 	InterpolateOrigin_Note();
 	self.draw = Draw_Laser;
 }

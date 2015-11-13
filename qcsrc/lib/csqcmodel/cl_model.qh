@@ -24,8 +24,6 @@
 
 #include "common.qh"
 
-void CSQCModel_Read(bool isnew);
-
 #define CSQCMODEL_IF(cond)
 #define CSQCMODEL_ENDIF
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \

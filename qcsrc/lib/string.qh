@@ -1,33 +1,66 @@
 #ifndef STRING_H
 #define STRING_H
 
-#ifndef SVQC
-float stringwidth_colors(string s, vector theSize)
-{
-    return stringwidth(s, true, theSize);
-}
+#include "nil.qh"
+#include "sort.qh"
+#include "oo.qh"
 
-float stringwidth_nocolors(string s, vector theSize)
-{
-    return stringwidth(s, false, theSize);
-}
+#ifndef SVQC
+	float stringwidth_colors(string s, vector theSize)
+	{
+		return stringwidth(s, true, theSize);
+	}
+
+	float stringwidth_nocolors(string s, vector theSize)
+	{
+		return stringwidth(s, false, theSize);
+	}
 #endif
 
-// Timer (#5)
-//
 // TODO: macro
 string seconds_tostring(float sec)
 {
-    float minutes = floor(sec / 60);
-    sec -= minutes * 60;
-    return sprintf("%d:%02d", minutes, sec);
+	float minutes = floor(sec / 60);
+	sec -= minutes * 60;
+	return sprintf("%d:%02d", minutes, sec);
+}
+
+string format_time(float seconds)
+{
+	seconds = floor(seconds + 0.5);
+	float days = floor(seconds / 864000);
+	seconds -= days * 864000;
+	float hours = floor(seconds / 36000);
+	seconds -= hours * 36000;
+	float minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+	if (days > 0) return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+	else return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
+string mmsss(float tenths)
+{
+	tenths = floor(tenths + 0.5);
+	float minutes = floor(tenths / 600);
+	tenths -= minutes * 600;
+	string s = ftos(1000 + tenths);
+	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
+}
+
+string mmssss(float hundredths)
+{
+	hundredths = floor(hundredths + 0.5);
+	float minutes = floor(hundredths / 6000);
+	hundredths -= minutes * 6000;
+	string s = ftos(10000 + hundredths);
+	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
 }
 
 int ColorTranslateMode;
 
 string ColorTranslateRGB(string s)
 {
-    return (ColorTranslateMode & 1) ? strdecolorize(s) : s;
+	return (ColorTranslateMode & 1) ? strdecolorize(s) : s;
 }
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
@@ -37,155 +70,251 @@ string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary pri
 string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
 string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
 // "kill" colors
-string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+string autocvar_hud_colorset_kill_1 = "1";       // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+string autocvar_hud_colorset_kill_2 = "3";       // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
+string autocvar_hud_colorset_kill_3 = "4";       // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
 // background color
-string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
+string autocvar_hud_colorset_background = "7";   // BG - White // neutral/unimportant text
 
 /** color code replace, place inside of sprintf and parse the string */
 string CCR(string input)
 {
-    // See the autocvar declarations in util.qh for default values
+	// See the autocvar declarations in util.qh for default values
 
-    // foreground/normal colors
-    input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
-    input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
-    input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
-    input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
+	// foreground/normal colors
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
 
-    // "kill" colors
-    input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
-    input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
-    input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+	// "kill" colors
+	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
+	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
+	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
 
-    // background colors
-    input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
-    input = strreplace("^N", "^7", input); // "none"-- reset to white...
-    return input;
+	// background colors
+	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
+	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
+	return input;
 }
 
-bool startsWith(string haystack, string needle)
-{
-    return substring(haystack, 0, strlen(needle)) == needle;
-}
+#define startsWith(haystack, needle) (strstrofs(haystack, needle, 0) == 0)
 
 bool startsWithNocase(string haystack, string needle)
 {
-    return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
+	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
 }
 
 /** unzone the string, and return it as tempstring. Safe to be called on string_null */
 string fstrunzone(string s)
 {
-    if (!s) return s;
-    string sc = strcat(s, "");
-    strunzone(s);
-    return sc;
+	if (!s) return s;
+	string sc = strcat(s, "");
+	strunzone(s);
+	return sc;
 }
 
+/** returns first word */
 string car(string s)
 {
-    int o = strstrofs(s, " ", 0);
-    if (o < 0) return s;
-    return substring(s, 0, o);
+	int o = strstrofs(s, " ", 0);
+	if (o < 0) return s;
+	return substring(s, 0, o);
 }
 
+/** returns all but first word */
 string cdr(string s)
 {
-    int o = strstrofs(s, " ", 0);
-    if (o < 0) return string_null;
-    return substring(s, o + 1, strlen(s) - (o + 1));
+	int o = strstrofs(s, " ", 0);
+	if (o < 0) return string_null;
+	return substring(s, o + 1, strlen(s) - (o + 1));
 }
 
 string substring_range(string s, float b, float e)
 {
-    return substring(s, b, e - b);
+	return substring(s, b, e - b);
 }
 
 string swapwords(string str, float i, float j)
 {
-    float n;
-    string s1, s2, s3, s4, s5;
-    float si, ei, sj, ej, s0, en;
-    n = tokenizebyseparator(str, " "); // must match g_maplist processing in ShuffleMaplist and "shuffle"
-    si = argv_start_index(i);
-    sj = argv_start_index(j);
-    ei = argv_end_index(i);
-    ej = argv_end_index(j);
-    s0 = argv_start_index(0);
-    en = argv_end_index(n-1);
-    s1 = substring_range(str, s0, si);
-    s2 = substring_range(str, si, ei);
-    s3 = substring_range(str, ei, sj);
-    s4 = substring_range(str, sj, ej);
-    s5 = substring_range(str, ej, en);
-    return strcat(s1, s4, s3, s2, s5);
+	float n;
+	string s1, s2, s3, s4, s5;
+	float si, ei, sj, ej, s0, en;
+	n = tokenizebyseparator(str, " ");  // must match g_maplist processing in ShuffleMaplist and "shuffle"
+	si = argv_start_index(i);
+	sj = argv_start_index(j);
+	ei = argv_end_index(i);
+	ej = argv_end_index(j);
+	s0 = argv_start_index(0);
+	en = argv_end_index(n - 1);
+	s1 = substring_range(str, s0, si);
+	s2 = substring_range(str, si, ei);
+	s3 = substring_range(str, ei, sj);
+	s4 = substring_range(str, sj, ej);
+	s5 = substring_range(str, ej, en);
+	return strcat(s1, s4, s3, s2, s5);
 }
 
 string _shufflewords_str;
 void _shufflewords_swapfunc(float i, float j, entity pass)
 {
-    _shufflewords_str = swapwords(_shufflewords_str, i, j);
+	_shufflewords_str = swapwords(_shufflewords_str, i, j);
 }
 string shufflewords(string str)
 {
-    _shufflewords_str = str;
-    int n = tokenizebyseparator(str, " ");
-    shuffle(n, _shufflewords_swapfunc, NULL);
-    str = _shufflewords_str;
-    _shufflewords_str = string_null;
-    return str;
+	_shufflewords_str = str;
+	int n = tokenizebyseparator(str, " ");
+	shuffle(n, _shufflewords_swapfunc, NULL);
+	str = _shufflewords_str;
+	_shufflewords_str = string_null;
+	return str;
 }
 
 string unescape(string in)
 {
-    in = strzone(in); // but it doesn't seem to be necessary in my tests at least
+	in = strzone(in);  // but it doesn't seem to be necessary in my tests at least
 
-    int len = strlen(in);
-    string str = "";
-    for (int i = 0; i < len; ++i) {
-        string s = substring(in, i, 1);
-        if (s == "\\") {
-            s = substring(in, i + 1, 1);
-            if (s == "n")
-                str = strcat(str, "\n");
-            else if (s == "\\")
-                str = strcat(str, "\\");
-            else
-                str = strcat(str, substring(in, i, 2));
-            ++i;
-            continue;
-        }
-        str = strcat(str, s);
-    }
-    strunzone(in);
-    return str;
+	int len = strlen(in);
+	string str = "";
+	for (int i = 0; i < len; ++i)
+	{
+		string s = substring(in, i, 1);
+		if (s == "\\")
+		{
+			s = substring(in, i + 1, 1);
+			if (s == "n") str = strcat(str, "\n");
+			else if (s == "\\") str = strcat(str, "\\");
+			else str = strcat(str, substring(in, i, 2));
+			++i;
+			continue;
+		}
+		str = strcat(str, s);
+	}
+	strunzone(in);
+	return str;
 }
 
 string strwords(string s, int w)
 {
-    int endpos = 0;
-    for (; w && endpos >= 0; --w) endpos = strstrofs(s, " ", endpos + 1);
-    if (endpos < 0) return s;
-    return substring(s, 0, endpos);
+	int endpos = 0;
+	for ( ; w && endpos >= 0; --w)
+		endpos = strstrofs(s, " ", endpos + 1);
+	if (endpos < 0) return s;
+	return substring(s, 0, endpos);
 }
 
-bool strhasword(string s, string w)
-{
-    return strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0;
-}
+#define strhasword(s, w) (strstrofs(strcat(" ", s, " "), strcat(" ", w, " "), 0) >= 0)
 
 int u8_strsize(string s)
 {
-    int l = 0;
-    for (int i = 0, c; (c = str2chr(s, i)) > 0; ++i, ++l)
-    {
-        l += (c >= 0x80);
-        l += (c >= 0x800);
-        l += (c >= 0x10000);
-    }
-    return l;
+	int l = 0;
+	for (int i = 0, c; (c = str2chr(s, i)) > 0; ++i, ++l)
+	{
+		l += (c >= 0x80);
+		l += (c >= 0x800);
+		l += (c >= 0x10000);
+	}
+	return l;
 }
+
+bool isInvisibleString(string s)
+{
+	s = strdecolorize(s);
+	bool utf8 = cvar("utf8_enable");
+	for (int i = 0, n = strlen(s); i < n; ++i)
+	{
+		int c = str2chr(s, i);
+		switch (c)
+		{
+			case 0:
+			case 32:           // space
+				break;
+			case 192:          // charmap space
+				if (!utf8) break;
+				return false;
+			case 160:          // space in unicode fonts
+			case 0xE000 + 192: // utf8 charmap space
+				if (utf8) break;
+			default:
+				return false;
+		}
+	}
+	return true;
+}
+
+// Multiline text file buffers
+
+int buf_load(string pFilename)
+{
+	int buf = buf_create();
+	if (buf < 0) return -1;
+	int fh = fopen(pFilename, FILE_READ);
+	if (fh < 0)
+	{
+		buf_del(buf);
+		return -1;
+	}
+	string l;
+	for (int i = 0; (l = fgets(fh)); ++i)
+		bufstr_set(buf, i, l);
+	fclose(fh);
+	return buf;
+}
+
+void buf_save(float buf, string pFilename)
+{
+	int fh = fopen(pFilename, FILE_WRITE);
+	if (fh < 0) error(strcat("Can't write buf to ", pFilename));
+	int n = buf_getsize(buf);
+	for (int i = 0; i < n; ++i)
+		fputs(fh, strcat(bufstr_get(buf, i), "\n"));
+	fclose(fh);
+}
+
+/**
+ * converts a number to a string with the indicated number of decimals
+ * works for up to 10 decimals!
+ */
+string ftos_decimals(float number, int decimals)
+{
+	// inhibit stupid negative zero
+	if (number == 0) number = 0;
+	// we have sprintf...
+	return sprintf("%.*f", decimals, number);
+}
+
+int vercmp_recursive(string v1, string v2)
+{
+	int dot1 = strstrofs(v1, ".", 0);
+	int dot2 = strstrofs(v2, ".", 0);
+	string s1 = (dot1 == -1) ? v1 : substring(v1, 0, dot1);
+	string s2 = (dot2 == -1) ? v2 : substring(v2, 0, dot2);
+
+	float r;
+	r = stof(s1) - stof(s2);
+	if (r != 0) return r;
+
+	r = strcasecmp(s1, s2);
+	if (r != 0) return r;
+
+	if (dot1 == -1) return (dot2 == -1) ? 0 : -1;
+	else return (dot2 == -1) ? 1 : vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
+}
+
+int vercmp(string v1, string v2)
+{
+	if (strcasecmp(v1, v2) == 0) return 0;  // early out check
+
+	// "git" beats all
+	if (v1 == "git") return 1;
+	if (v2 == "git") return -1;
+
+	return vercmp_recursive(v1, v2);
+}
+
+const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
+#define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
+#define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
+#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
 
 #endif

@@ -271,11 +271,11 @@ void spiderbot_rocket_do()
 
     self.tur_head.frame += 1;
     if (self.tur_head.frame == 9)
-        self.attack_finished_single = autocvar_g_vehicle_spiderbot_rocket_reload;
+        self.attack_finished_single[0] = autocvar_g_vehicle_spiderbot_rocket_reload;
     else
-        self.attack_finished_single = ((self.vehicle_weapon2mode ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
+        self.attack_finished_single[0] = ((self.vehicle_weapon2mode ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
 
-    self.gun2.cnt = time + self.attack_finished_single;
+    self.gun2.cnt = time + self.attack_finished_single[0];
 }
 
 #endif

@@ -13,7 +13,7 @@ CLASS(MineLayer, Weapon)
 /* crosshair */ ATTRIB(MineLayer, w_crosshair_size, float, 0.9);
 /* wepimg    */ ATTRIB(MineLayer, model2, string, "weaponminelayer");
 /* refname   */ ATTRIB(MineLayer, netname, string, "minelayer");
-/* wepname   */ ATTRIB(MineLayer, message, string, _("Mine Layer"));
+/* wepname   */ ATTRIB(MineLayer, m_name, string, _("Mine Layer"));
 ENDCLASS(MineLayer)
 REGISTER_WEAPON(MINE_LAYER, NEW(MineLayer));
 
@@ -51,7 +51,7 @@ REGISTER_WEAPON(MINE_LAYER, NEW(MineLayer));
 
 #ifdef SVQC
 MINELAYER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-void W_MineLayer_Think(void);
+void W_MineLayer_Think();
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 .vector mine_orientation;
@@ -59,7 +59,7 @@ void W_MineLayer_Think(void);
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(WEP_MINE_LAYER.m_id); }
+spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(this, WEP_MINE_LAYER); }
 
 void W_MineLayer_Stick(entity to)
 {SELFPARAM();
@@ -67,8 +67,7 @@ void W_MineLayer_Stick(entity to)
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
-	entity newmine;
-	newmine = spawn();
+	entity newmine = spawn();
 	newmine.classname = self.classname;
 
 	newmine.bot_dodge = self.bot_dodge;
@@ -108,7 +107,7 @@ void W_MineLayer_Stick(entity to)
 		SetMovetypeFollow(self, to);
 }
 
-void W_MineLayer_Explode(void)
+void W_MineLayer_Explode()
 {SELFPARAM();
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -129,7 +128,8 @@ void W_MineLayer_Explode(void)
 		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
-			ATTACK_FINISHED(self) = time;
+			int slot = 0; // TODO: unhardcode
+			ATTACK_FINISHED(self, slot) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
 		setself(this);
@@ -138,7 +138,7 @@ void W_MineLayer_Explode(void)
 	remove(self);
 }
 
-void W_MineLayer_DoRemoteExplode(void)
+void W_MineLayer_DoRemoteExplode()
 {SELFPARAM();
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -155,7 +155,8 @@ void W_MineLayer_DoRemoteExplode(void)
 		if(!w.wr_checkammo1(w))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
-			ATTACK_FINISHED(self) = time;
+			int slot = 0; // TODO: unhardcode
+			ATTACK_FINISHED(self, slot) = time;
 			self.switchweapon = w_getbestweapon(self);
 		}
 		setself(this);
@@ -164,7 +165,7 @@ void W_MineLayer_DoRemoteExplode(void)
 	remove(self);
 }
 
-void W_MineLayer_RemoteExplode(void)
+void W_MineLayer_RemoteExplode()
 {SELFPARAM();
 	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
@@ -176,7 +177,7 @@ void W_MineLayer_RemoteExplode(void)
 		}
 }
 
-void W_MineLayer_ProximityExplode(void)
+void W_MineLayer_ProximityExplode()
 {SELFPARAM();
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
 	if(WEP_CVAR(minelayer, protection) && self.mine_explodeanyway == 0)
@@ -205,7 +206,7 @@ int W_MineLayer_Count(entity e)
 	return minecount;
 }
 
-void W_MineLayer_Think(void)
+void W_MineLayer_Think()
 {SELFPARAM();
 	entity head;
 
@@ -268,7 +269,7 @@ void W_MineLayer_Think(void)
 		W_MineLayer_RemoteExplode();
 }
 
-void W_MineLayer_Touch(void)
+void W_MineLayer_Touch()
 {SELFPARAM();
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
@@ -499,7 +500,7 @@ float W_MineLayer_PlacedMines(float detonate)
 				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
 			}
 		}
-		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
 			{
@@ -509,16 +510,16 @@ float W_MineLayer_PlacedMines(float detonate)
 					w.wr_reload(w);
 				}
 			}
-			else if(fire1)
+			else if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(minelayer, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(minelayer, refire)))
 				{
 					W_MineLayer_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
 				}
 			}
 
-			if(fire2)
+			if(fire & 2)
 			{
 				if(W_MineLayer_PlacedMines(true))
 					sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
@@ -530,8 +531,9 @@ float W_MineLayer_PlacedMines(float detonate)
 		}
 		METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
 		{
+			int slot = 0; // TODO: unhardcode
 			// don't switch while placing a mine
-			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER.m_id)
+			if(ATTACK_FINISHED(self, slot) <= time || self.weapon != WEP_MINE_LAYER.m_id)
 			{
 				float ammo_amount = self.WEP_AMMO(MINE_LAYER) >= WEP_CVAR(minelayer, ammo);
 				ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
@@ -574,7 +576,7 @@ float W_MineLayer_PlacedMines(float detonate)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
-			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
+			pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_MINE_EXP, VOL_BASE, ATTN_NORM);
 		}

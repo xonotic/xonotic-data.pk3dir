@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_PLAT)
+
 #ifdef SVQC
 void plat_link();
 
@@ -9,7 +11,7 @@ void plat_delayedinit()
 
 float plat_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PLAT);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_PLAT);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)
@@ -133,8 +135,8 @@ void plat_draw(entity this)
 	//Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
-void ent_plat()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -197,5 +199,6 @@ void ent_plat()
 		self.move_angles = self.angles;
 		self.move_time = time;
 	}
+	return true;
 }
 #endif

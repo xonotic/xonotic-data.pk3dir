@@ -52,225 +52,203 @@ const int STAT_VIEWZOOM               = 21;
 // 29 empty?
 // 30 empty?
 // 31 empty?
-const int STAT_KH_KEYS                = 32;
-const int STAT_CTF_STATE              = 33;
-// 34 empty?
-const int STAT_WEAPONS                = 35;
-const int STAT_SWITCHWEAPON           = 36;
-const int STAT_GAMESTARTTIME          = 37;
-const int STAT_STRENGTH_FINISHED      = 38;
-const int STAT_INVINCIBLE_FINISHED    = 39;
-// 40 empty?
-const int STAT_ARC_HEAT               = 41;
-const int STAT_PRESSED_KEYS           = 42;
-const int STAT_ALLOW_OLDVORTEXBEAM    = 43; // this stat could later contain some other bits of info, like, more server-side particle config
-const int STAT_FUEL                   = 44;
-const int STAT_NB_METERSTART          = 45;
-const int STAT_SHOTORG                = 46; // compressShotOrigin
-const int STAT_LEADLIMIT              = 47;
-const int STAT_WEAPON_CLIPLOAD        = 48;
-const int STAT_WEAPON_CLIPSIZE        = 49;
-const int STAT_VORTEX_CHARGE          = 50;
-const int STAT_LAST_PICKUP            = 51;
-const int STAT_HUD                    = 52;
-const int STAT_VORTEX_CHARGEPOOL      = 53;
-const int STAT_HIT_TIME               = 54;
-const int STAT_DAMAGE_DEALT_TOTAL     = 55;
-const int STAT_TYPEHIT_TIME           = 56;
-const int STAT_LAYED_MINES            = 57;
-const int STAT_HAGAR_LOAD             = 58;
-const int STAT_SWITCHINGWEAPON        = 59;
-const int STAT_SUPERWEAPONS_FINISHED  = 60;
-const int STAT_VEHICLESTAT_HEALTH     = 61;
-const int STAT_VEHICLESTAT_SHIELD     = 62;
-const int STAT_VEHICLESTAT_ENERGY     = 63;
-const int STAT_VEHICLESTAT_AMMO1      = 64;
-const int STAT_VEHICLESTAT_RELOAD1    = 65;
-const int STAT_VEHICLESTAT_AMMO2      = 66;
-const int STAT_VEHICLESTAT_RELOAD2    = 67;
-const int STAT_VEHICLESTAT_W2MODE     = 68;
-const int STAT_NADE_TIMER             = 69;
-const int STAT_SECRETS_TOTAL          = 70;
-const int STAT_SECRETS_FOUND          = 71;
-const int STAT_RESPAWN_TIME           = 72;
-const int STAT_ROUNDSTARTTIME         = 73;
-const int STAT_WEAPONS2               = 74;
-const int STAT_WEAPONS3               = 75;
-const int STAT_MONSTERS_TOTAL         = 76;
-const int STAT_MONSTERS_KILLED        = 77;
-const int STAT_BUFFS                  = 78;
-const int STAT_NADE_BONUS             = 79;
-const int STAT_NADE_BONUS_TYPE        = 80;
-const int STAT_NADE_BONUS_SCORE       = 81;
-const int STAT_HEALING_ORB            = 82;
-const int STAT_HEALING_ORB_ALPHA      = 83;
-const int STAT_PLASMA                 = 84;
-const int STAT_OK_AMMO_CHARGE         = 85;
-const int STAT_OK_AMMO_CHARGEPOOL     = 86;
-const int STAT_FROZEN                 = 87;
-const int STAT_REVIVE_PROGRESS        = 88;
-// 89 empty?
-// 90 empty?
-// 91 empty?
-// 92 empty?
-// 93 empty?
-// 94 empty?
-// 95 empty?
-// 96 empty?
-// 97 empty?
-// 98 empty?
-const int STAT_ROUNDLOST              = 99;
+
+enum {
+    STAT_WEAPONS = 32,
+    STAT_WEAPONS2,
+    STAT_WEAPONS3,
+
+    STAT_WEAPONSINMAP,
+    STAT_WEAPONSINMAP2,
+    STAT_WEAPONSINMAP3,
+
+    STAT_PL_VIEW_OFS1,
+    STAT_PL_VIEW_OFS2,
+    STAT_PL_VIEW_OFS3,
+
+    STAT_PL_CROUCH_VIEW_OFS1,
+    STAT_PL_CROUCH_VIEW_OFS2,
+    STAT_PL_CROUCH_VIEW_OFS3,
+
+    STAT_PL_MIN1,
+    STAT_PL_MIN2,
+    STAT_PL_MIN3,
+
+    STAT_PL_MAX1,
+    STAT_PL_MAX2,
+    STAT_PL_MAX3,
+
+    STAT_PL_CROUCH_MIN1,
+    STAT_PL_CROUCH_MIN2,
+    STAT_PL_CROUCH_MIN3,
+
+    STAT_PL_CROUCH_MAX1,
+    STAT_PL_CROUCH_MAX2,
+    STAT_PL_CROUCH_MAX3,
+
+    STAT_LAST_VECTOR
+};
+
+const int REGISTERED_STATS = 6;
+
+REGISTER_STAT(KH_KEYS, int)
+/** weapon requested to switch to; next WANTED weapon (for HUD) */
+REGISTER_STAT(SWITCHWEAPON, int)
+REGISTER_STAT(GAMESTARTTIME, float)
+REGISTER_STAT(STRENGTH_FINISHED, float)
+REGISTER_STAT(INVINCIBLE_FINISHED, float)
+/** arc heat in [0,1] */
+REGISTER_STAT(ARC_HEAT, float)
+
+enum {
+    STAT_FIRST_MAIN = (STAT_LAST_VECTOR - 1) + REGISTERED_STATS,
+
+    STAT_PRESSED_KEYS,
+    /** this stat could later contain some other bits of info, like, more server-side particle config */ STAT_ALLOW_OLDVORTEXBEAM,
+    STAT_FUEL,
+    STAT_NB_METERSTART,
+    /** compressShotOrigin */ STAT_SHOTORG,
+    STAT_LEADLIMIT,
+    STAT_WEAPON_CLIPLOAD,
+    STAT_WEAPON_CLIPSIZE,
+    STAT_VORTEX_CHARGE,
+    STAT_LAST_PICKUP,
+    STAT_HUD,
+    STAT_VORTEX_CHARGEPOOL,
+    STAT_HIT_TIME,
+    STAT_DAMAGE_DEALT_TOTAL,
+    STAT_TYPEHIT_TIME,
+    STAT_LAYED_MINES,
+    STAT_HAGAR_LOAD,
+    STAT_SWITCHINGWEAPON,
+    STAT_SUPERWEAPONS_FINISHED,
+    STAT_VEHICLESTAT_HEALTH,
+    STAT_VEHICLESTAT_SHIELD,
+    STAT_VEHICLESTAT_ENERGY,
+    STAT_VEHICLESTAT_AMMO1,
+    STAT_VEHICLESTAT_RELOAD1,
+    STAT_VEHICLESTAT_AMMO2,
+    STAT_VEHICLESTAT_RELOAD2,
+    STAT_VEHICLESTAT_W2MODE,
+    STAT_NADE_TIMER,
+    STAT_SECRETS_TOTAL,
+    STAT_SECRETS_FOUND,
+    STAT_RESPAWN_TIME,
+    STAT_ROUNDSTARTTIME,
+    STAT_MONSTERS_TOTAL,
+    STAT_MONSTERS_KILLED,
+    STAT_BUFFS,
+    STAT_NADE_BONUS,
+    STAT_NADE_BONUS_TYPE,
+    STAT_NADE_BONUS_SCORE,
+    STAT_HEALING_ORB,
+    STAT_HEALING_ORB_ALPHA,
+    STAT_PLASMA,
+    STAT_OK_AMMO_CHARGE,
+    STAT_OK_AMMO_CHARGEPOOL,
+    STAT_FROZEN,
+    STAT_REVIVE_PROGRESS,
+    STAT_ROUNDLOST,
+    STAT_BUFF_TIME,
+    STAT_CTF_FLAGSTATUS,
+    STAT_MULTIJUMP_DODGING,
+    STAT_MULTIJUMP_MAXSPEED,
+    STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND,
+    STAT_BUGRIGS_REVERSE_STOPPING,
+    STAT_BUGRIGS_REVERSE_SPINNING,
+    STAT_BUGRIGS_CAR_JUMPING,
+    STAT_BUGRIGS_FRICTION_AIR,
+    STAT_BUGRIGS_STEER,
+    STAT_BUGRIGS_SPEED_POW,
+    STAT_BUGRIGS_SPEED_REF,
+    STAT_BUGRIGS_ACCEL,
+    STAT_BUGRIGS_FRICTION_BRAKE,
+    STAT_BUGRIGS_AIR_STEERING,
+    STAT_BUGRIGS_FRICTION_FLOOR,
+    STAT_BUGRIGS_REVERSE_SPEEDING,
+    STAT_BUGRIGS_PLANAR_MOVEMENT,
+    STAT_BUGRIGS_ANGLE_SMOOTHING,
+    STAT_BUGRIGS,
+    STAT_GAMEPLAYFIX_STEPDOWN,
+    STAT_MOVEVARS_JUMPSTEP,
+    STAT_NOSTEP,
+    STAT_GAMEPLAYFIX_UNSTICKPLAYERS,
+    STAT_GAMEPLAYFIX_STEPMULTIPLETIMES,
+    STAT_GAMEPLAYFIX_DOWNTRACEONGROUND,
+    STAT_GAMEPLAYFIX_EASIERWATERJUMP,
+    STAT_MOVEVARS_FRICTION_SLICK,
+    STAT_MOVEVARS_FRICTION_ONLAND,
+    STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS,
+    STAT_MOVEVARS_TRACK_CANJUMP,
+    STAT_DOUBLEJUMP,
+    STAT_MOVEVARS_CL_TRACK_CANJUMP,
+    STAT_MULTIJUMP_ADD,
+    STAT_MULTIJUMP_SPEED,
+    STAT_MULTIJUMP,
+    STAT_DODGING_TIMEOUT,
+    STAT_DODGING_WALL,
+    STAT_DODGING_UP_SPEED,
+    STAT_DODGING_RAMP_TIME,
+    STAT_DODGING_HEIGHT_THRESHOLD,
+    STAT_DODGING_DISTANCE_THRESHOLD,
+    STAT_DODGING_HORIZ_SPEED,
+    STAT_DODGING_DELAY,
+    STAT_DODGING_FROZEN_NO_DOUBLETAP,
+    STAT_DODGING_HORIZ_SPEED_FROZEN,
+    STAT_DODGING,
+    STAT_DODGING_FROZEN,
+    STAT_JETPACK_MAXSPEED_UP,
+    STAT_JETPACK_MAXSPEED_SIDE,
+    STAT_JETPACK_FUEL,
+    STAT_JETPACK_ANTIGRAVITY,
+    STAT_JETPACK_ACCEL_SIDE,
+    STAT_JETPACK_ACCEL_UP,
+    STAT_MOVEVARS_HIGHSPEED,
+
+    STAT_LAST_MAIN
+};
+
+const int STAT_LAST = STAT_LAST_MAIN + 5;
 
 /* The following stats change depending on the gamemode, so can share the same ID */
-// IDs 100 to 104 reserved for gamemodes
 
 // freeze tag, clan arena, jailbreak
-const int STAT_REDALIVE               = 100;
-const int STAT_BLUEALIVE              = 101;
-const int STAT_YELLOWALIVE            = 102;
-const int STAT_PINKALIVE              = 103;
+enum {
+    STAT_REDALIVE = STAT_LAST_MAIN,
+    STAT_BLUEALIVE,
+    STAT_YELLOWALIVE,
+    STAT_PINKALIVE,
+};
 
 // domination
-const int STAT_DOM_TOTAL_PPS          = 100;
-const int STAT_DOM_PPS_RED            = 101;
-const int STAT_DOM_PPS_BLUE           = 102;
-const int STAT_DOM_PPS_YELLOW         = 103;
-const int STAT_DOM_PPS_PINK           = 104;
+enum {
+    STAT_DOM_TOTAL_PPS = STAT_LAST_MAIN,
+    STAT_DOM_PPS_RED,
+    STAT_DOM_PPS_BLUE,
+    STAT_DOM_PPS_YELLOW,
+    STAT_DOM_PPS_PINK,
+};
 
 // vip
-const int STAT_VIP                    = 100;
-const int STAT_VIP_RED                = 101;
-const int STAT_VIP_BLUE               = 102;
-const int STAT_VIP_YELLOW             = 103;
-const int STAT_VIP_PINK               = 104;
+enum {
+    STAT_VIP = STAT_LAST_MAIN,
+    STAT_VIP_RED,
+    STAT_VIP_BLUE,
+    STAT_VIP_YELLOW,
+    STAT_VIP_PINK,
+};
 
 // key hunt
-const int STAT_KH_REDKEY_TEAM         = 100;
-const int STAT_KH_BLUEKEY_TEAM        = 101;
-const int STAT_KH_YELLOWKEY_TEAM      = 102;
-const int STAT_KH_PINKKEY_TEAM        = 103;
+enum {
+    STAT_KH_REDKEY_TEAM = STAT_LAST_MAIN,
+    STAT_KH_BLUEKEY_TEAM,
+    STAT_KH_YELLOWKEY_TEAM,
+    STAT_KH_PINKKEY_TEAM,
+};
 
-/* Gamemode-specific stats end here */
+#define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
+ASSERT_LESS(stat_limit, STAT_LAST, 220)
 
-const int STAT_PL_VIEW_OFS1           = 105;
-const int STAT_PL_VIEW_OFS2           = 106;
-const int STAT_PL_VIEW_OFS3           = 107;
-const int STAT_PL_MIN1                = 108;
-const int STAT_PL_MIN2                = 109;
-const int STAT_PL_MIN3                = 110;
-const int STAT_PL_MAX1                = 111;
-const int STAT_PL_MAX2                = 112;
-const int STAT_PL_MAX3                = 113;
-const int STAT_PL_CROUCH_MIN1         = 114;
-const int STAT_PL_CROUCH_MIN2         = 115;
-const int STAT_PL_CROUCH_MIN3         = 116;
-const int STAT_PL_CROUCH_MAX1         = 117;
-const int STAT_PL_CROUCH_MAX2         = 118;
-const int STAT_PL_CROUCH_MAX3         = 119;
-const int STAT_PL_CROUCH_VIEW_OFS1    = 117;
-const int STAT_PL_CROUCH_VIEW_OFS2    = 118;
-const int STAT_PL_CROUCH_VIEW_OFS3    = 119;
-const int STAT_WEAPONSINMAP           = 120;
-const int STAT_WEAPONSINMAP2          = 121;
-const int STAT_WEAPONSINMAP3          = 122;
-const int STAT_BUFF_TIME              = 123;
-const int STAT_CTF_FLAGSTATUS         = 124;
-// 125 empty?
-// 126 empty?
-// 127 empty?
-// 128 empty?
-// 129 empty?
-// 130 empty?
-// 131 empty?
-// 132 empty?
-// 133 empty?
-// 134 empty?
-// 135 empty?
-// 136 empty?
-// 137 empty?
-// 138 empty?
-// 139 empty?
-// 140 reserved
-// 141 reserved
-// 142 reserved
-// 143 reserved
-// 144 reserved
-// 145 reserved
-// 146 reserved
-// 147 reserved
-// 148 reserved
-// 149 reserved
-// 150 reserved
-// 151 reserved
-// 152 reserved
-// 153 reserved
-// 154 reserved
-// 155 reserved
-// 156 empty?
-// 157 empty?
-// 158 empty?
-// 159 empty?
-// 160 empty?
-// 161 empty?
-// 162 empty?
-// 162 empty?
-// 163 empty?
-// 164 empty?
-// 165 empty?
-const int STAT_MULTIJUMP_DODGING                      = 166;
-const int STAT_MULTIJUMP_MAXSPEED                     = 167;
-const int STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND   = 168;
-const int STAT_BUGRIGS_REVERSE_STOPPING               = 169;
-const int STAT_BUGRIGS_REVERSE_SPINNING               = 170;
-const int STAT_BUGRIGS_CAR_JUMPING                    = 171;
-const int STAT_BUGRIGS_FRICTION_AIR                   = 172;
-const int STAT_BUGRIGS_STEER                          = 173;
-const int STAT_BUGRIGS_SPEED_POW                      = 174;
-const int STAT_BUGRIGS_SPEED_REF                      = 175;
-const int STAT_BUGRIGS_ACCEL                          = 176;
-const int STAT_BUGRIGS_FRICTION_BRAKE                 = 177;
-const int STAT_BUGRIGS_AIR_STEERING                   = 178;
-const int STAT_BUGRIGS_FRICTION_FLOOR                 = 179;
-const int STAT_BUGRIGS_REVERSE_SPEEDING               = 180;
-const int STAT_BUGRIGS_PLANAR_MOVEMENT                = 181;
-const int STAT_BUGRIGS_ANGLE_SMOOTHING                = 182;
-const int STAT_BUGRIGS                                = 183;
-const int STAT_GAMEPLAYFIX_STEPDOWN                   = 184;
-const int STAT_MOVEVARS_JUMPSTEP                      = 185;
-const int STAT_NOSTEP                                 = 186;
-const int STAT_GAMEPLAYFIX_UNSTICKPLAYERS             = 187;
-const int STAT_GAMEPLAYFIX_STEPMULTIPLETIMES          = 188;
-const int STAT_GAMEPLAYFIX_DOWNTRACEONGROUND          = 189;
-const int STAT_GAMEPLAYFIX_EASIERWATERJUMP            = 190;
-const int STAT_MOVEVARS_FRICTION_SLICK                = 191;
-const int STAT_MOVEVARS_FRICTION_ONLAND               = 192;
-const int STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS  = 193;
-const int STAT_MOVEVARS_TRACK_CANJUMP                 = 194;
-// 195 empty?
-const int STAT_DOUBLEJUMP                             = 196;
-const int STAT_MOVEVARS_CL_TRACK_CANJUMP              = 197;
-const int STAT_MULTIJUMP_ADD                          = 198;
-const int STAT_MULTIJUMP_SPEED                        = 199;
-const int STAT_MULTIJUMP                              = 200;
-const int STAT_DODGING_TIMEOUT                        = 201;
-const int STAT_DODGING_WALL                           = 202;
-const int STAT_DODGING_UP_SPEED                       = 203;
-const int STAT_DODGING_RAMP_TIME                      = 204;
-const int STAT_DODGING_HEIGHT_THRESHOLD               = 205;
-const int STAT_DODGING_DISTANCE_THRESHOLD             = 206;
-const int STAT_DODGING_HORIZ_SPEED                    = 207;
-const int STAT_DODGING_DELAY                          = 208;
-const int STAT_DODGING_FROZEN_NO_DOUBLETAP            = 209;
-const int STAT_DODGING_HORIZ_SPEED_FROZEN             = 210;
-const int STAT_DODGING                                = 211;
-const int STAT_DODGING_FROZEN                         = 212;
-const int STAT_JETPACK_MAXSPEED_UP                    = 213;
-const int STAT_JETPACK_MAXSPEED_SIDE                  = 214;
-const int STAT_JETPACK_FUEL                           = 215;
-const int STAT_JETPACK_ANTIGRAVITY                    = 216;
-const int STAT_JETPACK_ACCEL_SIDE                     = 217;
-const int STAT_JETPACK_ACCEL_UP                       = 218;
-const int STAT_MOVEVARS_HIGHSPEED                     = 219;
 const int STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR     = 220;
 const int STAT_MOVEVARS_AIRCONTROL_PENALTY            = 221;
 const int STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW           = 222;

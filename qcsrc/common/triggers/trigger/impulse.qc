@@ -113,6 +113,8 @@ void trigger_impulse_touch3()
 #endif
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_IMPULSE)
+
 /*QUAKED spawnfunc_trigger_impulse (.5 .5 .5) ?
 -------- KEYS --------
 target : If this is set, this points to the spawnfunc_target_position to which the player will get pushed.
@@ -133,7 +135,7 @@ in directional and sperical mode. For damper/accelerator mode this is not nesses
 #ifdef SVQC
 bool trigger_impulse_send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_IMPULSE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_IMPULSE);
 
 	WriteCoord(MSG_ENTITY, self.radius);
 	WriteCoord(MSG_ENTITY, self.strength);
@@ -180,15 +182,15 @@ spawnfunc(trigger_impulse)
 	trigger_impulse_link();
 }
 #elif defined(CSQC)
-void ent_trigger_impulse()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
+{
 	self.radius = ReadCoord();
 	self.strength = ReadCoord();
 	self.falloff = ReadByte();
 	self.active = ReadByte();
 
 	trigger_common_read(true);
-
+	return = true;
 
 	self.classname = "trigger_impulse";
 	self.solid = SOLID_TRIGGER;

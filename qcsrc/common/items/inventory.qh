@@ -11,16 +11,20 @@ class(Inventory) .int inv_items[Items_MAX];
 /** Player inventory; Inventories also have one inventory for storing the previous state */
 .Inventory inventory;
 
+REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
+
 #ifdef CSQC
-void Inventory_Read(Inventory data)
+NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
+    make_pure(this);
     const int bits = ReadInt24_t();
     FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
         .int fld = inv_items[it.m_id];
-        int prev = data.(fld);
-        int next = data.(fld) = ReadByte();
+        int prev = this.(fld);
+        int next = this.(fld) = ReadByte();
         LOG_TRACEF("%s: %.0f -> %.0f\n", it.m_name, prev, next);
     ));
+    return true;
 }
 #endif
 
@@ -42,7 +46,7 @@ void Inventory_Write(Inventory data)
 #ifdef SVQC
 bool Inventory_Send(entity this, entity to, int sf)
 {
-    WriteByte(MSG_ENTITY, ENT_CLIENT_INVENTORY);
+    WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
     entity e = self.owner;
     if (IS_SPEC(e)) e = e.enemy;
     Inventory data = e.inventory;
@@ -53,7 +57,7 @@ bool Inventory_Send(entity this, entity to, int sf)
 void Inventory_new(entity e)
 {
     Inventory inv = new(Inventory), bak = new(Inventory);
-    inv.classname = "inventory", bak.classname = "inventory";
+    make_pure(inv); make_pure(bak);
     inv.inventory = bak;
     inv.drawonlytoclient = e;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);

@@ -1,5 +1,4 @@
 #ifdef CSQC
-void ent_keylock();
 bool item_keys_usekey(entity l, entity p)
 {
 	int valid = (l.itemkeys & p.itemkeys);

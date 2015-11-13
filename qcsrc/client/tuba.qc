@@ -3,7 +3,7 @@
 #include "../common/constants.qh"
 
 
-#define TUBA_STARTNOTE(i, n) W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n)))
+#define TUBA_STARTNOTE(i, n) _Sound_fixpath(W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n))))
 
 const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;
@@ -103,8 +103,8 @@ void Ent_TubaNote_StopSound()
 	self.enemy = world;
 }
 
-void Ent_TubaNote(bool isNew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
+{
 	bool upd = false;
 	int f = ReadByte();
 	if (f & 1) {
@@ -118,11 +118,9 @@ void Ent_TubaNote(bool isNew)
 				Ent_TubaNote_StopSound();
 			}
 		} else {
-			self.enemy = spawn();
-			self.enemy.classname = "tuba_note";
+			self.enemy = new(tuba_note);
 			if (Tuba_PitchStep) {
-				self.enemy.enemy = spawn();
-				self.enemy.enemy.classname = "tuba_note_2";
+				self.enemy.enemy = new(tuba_note_2);
 			}
 			isNew = true;
 		}
@@ -154,9 +152,10 @@ void Ent_TubaNote(bool isNew)
 	if (upd) {
 		Ent_TubaNote_UpdateSound();
 	}
+	return true;
 }
 
-void Tuba_Precache()
+PRECACHE(Tuba)
 {
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if (Tuba_PitchStep) {

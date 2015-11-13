@@ -7,15 +7,15 @@ void cts_Initialize();
 
 REGISTER_MUTATOR(cts, false)
 {
-	g_race_qualifying = true;
-	independent_players = 1;
-	SetLimits(0, 0, 0, -1);
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		cts_Initialize();
+
+		g_race_qualifying = true;
+		independent_players = 1;
+		SetLimits(0, 0, 0, -1);
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -378,13 +378,6 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDamage_Calculate)
 MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)
 {
 	return true; // in CTS, you don't lose score by observing
-}
-
-MUTATOR_HOOKFUNCTION(cts, SetModname)
-{
-	g_cloaked = 1; // always enable cloak in CTS
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, GetRecords)

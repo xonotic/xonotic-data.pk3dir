@@ -4,10 +4,14 @@
 #pragma noref 1
 
 #define particleeffectnum __particleeffectnum
+#define trailparticles __trailparticles
+#define pointparticles __pointparticles
 
 #include "upstream/dpextensions.qc"
 
 #undef particleeffectnum
+#undef trailparticles
+#undef pointparticles
 
 int(entity ent, string tagname) _gettagindex = #451;
 #define gettagindex _gettagindex

@@ -13,7 +13,7 @@ CLASS(PortoLaunch, Weapon)
 /* crosshair */ ATTRIB(PortoLaunch, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
 /* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
-/* wepname   */ ATTRIB(PortoLaunch, message, string, _("Port-O-Launch"));
+/* wepname   */ ATTRIB(PortoLaunch, m_name, string, _("Port-O-Launch"));
 ENDCLASS(PortoLaunch)
 REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
@@ -44,7 +44,7 @@ PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 #include "../../triggers/trigger/jumppads.qh"
 
-spawnfunc(weapon_porto) { weapon_defaultspawnfunc(WEP_PORTO.m_id); }
+spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
 
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
@@ -53,7 +53,7 @@ MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
 		e.porto_forbidden = max(0, e.porto_forbidden - 1);
 }
 
-void W_Porto_Success(void)
+void W_Porto_Success()
 {SELFPARAM();
 	if(self.realowner == world)
 	{
@@ -109,7 +109,7 @@ void W_Porto_Remove(entity p)
 	}
 }
 
-void W_Porto_Think(void)
+void W_Porto_Think()
 {SELFPARAM();
 	trace_plane_normal = '0 0 0';
 	if(self.realowner.playerid != self.playerid)
@@ -118,7 +118,7 @@ void W_Porto_Think(void)
 		W_Porto_Fail(0);
 }
 
-void W_Porto_Touch(void)
+void W_Porto_Touch()
 {SELFPARAM();
 	vector norm;
 
@@ -251,11 +251,10 @@ void W_Porto_Attack(float type)
 
 	//Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	gren = spawn();
+	gren = new(porto);
 	gren.cnt = type;
 	gren.owner = gren.realowner = self;
 	gren.playerid = self.playerid;
-	gren.classname = "porto";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = 200;
 	gren.movetype = MOVETYPE_BOUNCEMISSILE;
@@ -306,33 +305,33 @@ void W_Porto_Attack(float type)
 		{
 			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
-		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(porto, secondary))
 			{
-				if(fire1)
+				if(fire & 1)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(0);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 
-				if(fire2)
+				if(fire & 2)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
 				{
 					W_Porto_Attack(1);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
 				}
 			}
 			else
 			{
 				if(actor.porto_v_angle_held)
 				{
-					if(!fire2)
+					if(!(fire & 2))
 					{
 						actor.porto_v_angle_held = 0;
 
@@ -341,7 +340,7 @@ void W_Porto_Attack(float type)
 				}
 				else
 				{
-					if(fire2)
+					if(fire & 2)
 					{
 						actor.porto_v_angle = actor.v_angle;
 						actor.porto_v_angle_held = 1;
@@ -352,13 +351,13 @@ void W_Porto_Attack(float type)
 				if(actor.porto_v_angle_held)
 					makevectors(actor.porto_v_angle); // override the previously set angles
 
-				if(fire1)
+				if(fire & 1)
 				if(!actor.porto_current)
 				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(porto, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
 				{
 					W_Porto_Attack(-1);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
 				}
 			}
 		}

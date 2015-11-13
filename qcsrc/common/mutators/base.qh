@@ -154,7 +154,8 @@ CLASS(Mutator, Object)
     }
 ENDCLASS(Mutator)
 
-REGISTRY(Mutators, BITS(6))
+REGISTRY(Mutators, BITS(7))
+#define Mutators_from(i) _Mutators_from(i, NULL)
 Mutator loaded_mutators[Mutators_MAX];
 
 bool Mutator_Add(Mutator mut)
@@ -209,7 +210,7 @@ void Mutator_Remove(Mutator mut)
         bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(RegisterMutators, MUTATOR, Mutators, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
 

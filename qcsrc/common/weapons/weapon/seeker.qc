@@ -13,7 +13,7 @@ CLASS(Seeker, Weapon)
 /* crosshair */ ATTRIB(Seeker, w_crosshair_size, float, 0.8);
 /* wepimg    */ ATTRIB(Seeker, model2, string, "weaponseeker");
 /* refname   */ ATTRIB(Seeker, netname, string, "seeker");
-/* wepname   */ ATTRIB(Seeker, message, string, _("T.A.G. Seeker"));
+/* wepname   */ ATTRIB(Seeker, m_name, string, _("T.A.G. Seeker"));
 ENDCLASS(Seeker)
 REGISTER_WEAPON(SEEKER, NEW(Seeker));
 
@@ -86,12 +86,12 @@ SEEKER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(WEP_SEEKER.m_id); }
+spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
 // ============================
-void W_Seeker_Missile_Explode(void)
+void W_Seeker_Missile_Explode()
 {SELFPARAM();
 	self.event_damage = func_null;
 	RadiusDamage(self, self.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), world, world, WEP_CVAR(seeker, missile_force), self.projectiledeathtype, other);
@@ -99,14 +99,14 @@ void W_Seeker_Missile_Explode(void)
 	remove(self);
 }
 
-void W_Seeker_Missile_Touch(void)
+void W_Seeker_Missile_Touch()
 {
 	PROJECTILE_TOUCH;
 
 	W_Seeker_Missile_Explode();
 }
 
-void W_Seeker_Missile_Think(void)
+void W_Seeker_Missile_Think()
 {SELFPARAM();
 	entity e;
 	vector desireddir, olddir, newdir, eorg;
@@ -221,7 +221,7 @@ void W_Seeker_Missile_Damage(entity inflictor, entity attacker, float damage, in
 }
 
 /*
-void W_Seeker_Missile_Animate(void)
+void W_Seeker_Missile_Animate()
 {
 	self.frame = self.frame +1;
 	self.nextthink = time + 0.05;
@@ -258,9 +258,8 @@ void W_Seeker_Fire_Missile(Weapon thiswep, vector f_diff, entity m_target)
 
 	//self.detornator         = false;
 
-	missile                 = spawn();
+	missile                 = new(seeker_missile);
 	missile.owner           = missile.realowner = self;
-	missile.classname       = "seeker_missile";
 	missile.bot_dodge       = true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, missile_damage);
 
@@ -302,7 +301,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, vector f_diff, entity m_target)
 // ============================
 // Begin: FLAC, close range attack meant for defeating rockets which are coming at you.
 // ============================
-void W_Seeker_Flac_Explode(void)
+void W_Seeker_Flac_Explode()
 {SELFPARAM();
 	self.event_damage = func_null;
 
@@ -311,7 +310,7 @@ void W_Seeker_Flac_Explode(void)
 	remove(self);
 }
 
-void W_Seeker_Flac_Touch(void)
+void W_Seeker_Flac_Touch()
 {
 	PROJECTILE_TOUCH;
 
@@ -348,9 +347,8 @@ void W_Seeker_Fire_Flac(Weapon thiswep)
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile 				= spawn();
+	missile 				= new(missile);
 	missile.owner 			= missile.realowner = self;
-	missile.classname 		= "missile";
 	missile.bot_dodge 		= true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, flac_damage);
 	missile.touch 			= W_Seeker_Flac_Explode;
@@ -390,7 +388,7 @@ entity W_Seeker_Tagged_Info(entity isowner, entity istarget)
 	return world;
 }
 
-void W_Seeker_Attack(void)
+void W_Seeker_Attack()
 {SELFPARAM();
 	entity tracker, closest_target;
 
@@ -413,7 +411,7 @@ void W_Seeker_Attack(void)
 	W_Seeker_Fire_Missile(WEP_SEEKER, '0 0 0', closest_target);
 }
 
-void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Attack
+void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 {SELFPARAM();
 	float c;
 	entity oldenemy;
@@ -454,7 +452,7 @@ void W_Seeker_Vollycontroller_Think(void) // TODO: Merge this with W_Seeker_Atta
 	setself(this);
 }
 
-void W_Seeker_Tracker_Think(void)
+void W_Seeker_Tracker_Think()
 {SELFPARAM();
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
 	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id)
@@ -475,7 +473,7 @@ void W_Seeker_Tracker_Think(void)
 // ============================
 // Begin: Tag projectile
 // ============================
-void W_Seeker_Tag_Explode(void)
+void W_Seeker_Tag_Explode()
 {SELFPARAM();
 	//if(other==self.realowner)
 	//    return;
@@ -493,7 +491,7 @@ void W_Seeker_Tag_Damage(entity inflictor, entity attacker, float damage, int de
 		W_Seeker_Tag_Explode();
 }
 
-void W_Seeker_Tag_Touch(void)
+void W_Seeker_Tag_Touch()
 {SELFPARAM();
 	vector dir;
 	vector org2;
@@ -524,9 +522,8 @@ void W_Seeker_Tag_Touch(void)
 		else
 		{
 			//sprint(self.realowner, strcat("You just tagged ^2", other.netname, "^7 with a tracking device!\n"));
-			e             = spawn();
+			e             = new(tag_tracker);
 			e.cnt         = WEP_CVAR(seeker, missile_count);
-			e.classname   = "tag_tracker";
 			e.owner       = self.owner;
 			e.realowner   = self.realowner;
 
@@ -563,9 +560,8 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 
 	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(TAG_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
-	missile                 = spawn();
+	missile                 = new(seeker_tag);
 	missile.owner           = missile.realowner = self;
-	missile.classname       = "seeker_tag";
 	missile.bot_dodge       = true;
 	missile.bot_dodgerating = 50;
 	missile.touch           = W_Seeker_Tag_Touch;
@@ -608,47 +604,47 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			else
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 		}
-		METHOD(Seeker, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_seeker_reload_ammo && actor.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
-			} else if(fire1)
+			} else if(fire & 1)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, missile_refire)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, missile_refire)))
 					{
 						W_Seeker_Attack();
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
 					}
 				}
 				else
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, tag_refire)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, tag_refire)))
 					{
 						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
 			}
 
-			else if(fire2)
+			else if(fire & 2)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, tag_refire)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, tag_refire)))
 					{
 						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
 					}
 				}
 				else
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(seeker, flac_refire)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, flac_refire)))
 					{
 						W_Seeker_Fire_Flac(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
 					}
 				}
 			}
@@ -723,7 +719,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 				}
 				else
 				{
-					pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), org2, '0 0 0', 1);
+					pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 					if(!w_issilent)
 					{
 						if(w_random<0.15)
@@ -737,7 +733,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			}
 			else
 			{
-				pointparticles(particleeffectnum(EFFECT_HAGAR_EXPLODE), org2, '0 0 0', 1);
+				pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
 				if(!w_issilent)
 				{
 					if(w_random<0.15)

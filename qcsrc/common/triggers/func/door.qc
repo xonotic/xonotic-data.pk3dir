@@ -293,6 +293,7 @@ void door_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	}
 }
 
+.float door_finished;
 
 /*
 ================
@@ -306,10 +307,10 @@ void door_touch()
 {SELFPARAM();
 	if (!IS_PLAYER(other))
 		return;
-	if (self.owner.attack_finished_single > time)
+	if (self.owner.door_finished > time)
 		return;
 
-	self.owner.attack_finished_single = time + 2;
+	self.owner.door_finished = time + 2;
 
 #ifdef SVQC
 	if (!(self.owner.dmg) && (self.owner.message != ""))
@@ -437,14 +438,14 @@ void door_trigger_touch()
 #endif
 			return;
 
-	if (time < self.attack_finished_single)
+	if (time < self.door_finished)
 		return;
 
 	// check if door is locked
 	if (!door_check_keys(self, other))
 		return;
 
-	self.attack_finished_single = time + 1;
+	self.door_finished = time + 1;
 
 	activator = other;
 
@@ -457,8 +458,7 @@ void door_spawnfield(vector fmins, vector fmaxs)
 	entity	trigger;
 	vector	t1 = fmins, t2 = fmaxs;
 
-	trigger = spawn();
-	trigger.classname = "doortriggerfield";
+	trigger = new(doortriggerfield);
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;
@@ -599,6 +599,8 @@ void LinkDoors()
 	door_spawnfield(cmins, cmaxs);
 }
 
+REGISTER_NET_LINKED(ENT_CLIENT_DOOR)
+
 #ifdef SVQC
 /*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
@@ -631,7 +633,7 @@ FIXME: only one sound set available at the time being
 
 float door_send(entity to, float sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DOOR);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_DOOR);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & SF_TRIGGER_INIT)
@@ -804,8 +806,8 @@ void door_draw(entity this)
 	trigger_draw_generic(this);
 }
 
-void ent_door()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
@@ -874,6 +876,7 @@ void ent_door()
 		self.pos2_y = ReadCoord();
 		self.pos2_z = ReadCoord();
 	}
+	return true;
 }
 
 #endif

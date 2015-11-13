@@ -4,10 +4,6 @@
 vector vehicleHud_Size;
 vector vehicleHud_Pos;
 
-void Net_AuXair2(float bIsNew);
-
-void Net_VehicleSetup();
-
 void RaptorCBShellfragDraw(entity this);
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
 

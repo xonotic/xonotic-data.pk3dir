@@ -6,7 +6,7 @@
 //  Balance Config Generator
 // ==========================
 
-void Dump_Weapon_Settings(void);
+void Dump_Weapon_Settings();
 int wep_config_file;
 bool wep_config_alsoprint;
 

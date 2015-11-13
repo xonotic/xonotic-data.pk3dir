@@ -1,12 +1,13 @@
 #ifdef IMPLEMENTATION
 REGISTER_MUTATOR(itemstime, true);
 
+REGISTER_NET_TEMP(itemstime)
+
 #ifdef SVQC
 void IT_Write(entity e, int i, float f) {
     if (!IS_REAL_CLIENT(e)) return;
     msg_entity = e;
-    WriteByte(MSG_ONE, SVC_TEMPENTITY);
-    WriteMutator(MSG_ONE, itemstime);
+    WriteHeader(MSG_ONE, itemstime);
     WriteByte(MSG_ONE, i);
     WriteFloat(MSG_ONE, f);
 }
@@ -15,13 +16,12 @@ void IT_Write(entity e, int i, float f) {
 #ifdef CSQC
 float ItemsTime_time[Items_MAX];
 float ItemsTime_availableTime[Items_MAX];
-MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
-    if (MUTATOR_RETURNVALUE) return false;
-    if (!ReadMutatorEquals(mutator_argv_int_0, itemstime)) return false;
+NET_HANDLE(itemstime, bool isNew)
+{
     int i = ReadByte();
     float f = ReadFloat();
+    return = true;
     ItemsTime_time[i] = f;
-    return true;
 }
 #endif
 
@@ -102,7 +102,10 @@ void Item_ItemsTime_SetTime(entity e, float t)
         return;
 
     GameItem item = e.itemdef;
-    it_times[item.m_id] = t;
+    if (item.instanceOfGameItem && !item.instanceOfWeaponPickup)
+    {
+        it_times[item.m_id] = t;
+    }
 }
 
 void Item_ItemsTime_SetTimesForAllPlayers()

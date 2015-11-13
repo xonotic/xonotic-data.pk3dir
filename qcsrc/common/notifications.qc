@@ -1,4 +1,5 @@
 #if defined(CSQC)
+	#include "../client/announcer.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
@@ -233,7 +234,7 @@ void Destroy_Notification_Entity(entity notif)
 	remove(notif);
 }
 
-void Destroy_All_Notifications(void)
+void Destroy_All_Notifications()
 {
 	entity notif;
 	int i;
@@ -523,6 +524,7 @@ void Create_Notification_Entity(
 	//  Global Entity Setup
 	// =====================
 	entity notif = spawn();
+	make_pure(notif);
 	switch(typeId)
 	{
 		case MSG_ANNCE:
@@ -595,7 +597,7 @@ void Create_Notification_Entity(
 				{
 					if(notif.nent_enabled)
 					{
-						precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
+						precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), snd));
 						notif.nent_channel = channel;
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
@@ -941,7 +943,7 @@ void Create_Notification_Entity(
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars(void)
+void Notification_GetCvars()
 {
 	for(int i = 0; i <= NOTIF_CHOICE_COUNT; ++i)
 	{
@@ -1276,7 +1278,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1289,7 +1291,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1311,7 +1313,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1677,11 +1679,14 @@ void Local_Notification_WOVA(
 //  Notification Networking
 // =========================
 
+REGISTER_NET_LINKED(ENT_CLIENT_NOTIFICATION)
+
 #ifdef CSQC
-void Read_Notification(float is_new)
+NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 {
 	int net_type = ReadByte();
 	int net_name = ReadShort();
+	return = true;
 
 	entity notif;
 
@@ -1775,7 +1780,7 @@ bool Net_Write_Notification(entity this, entity client, int sf)
 {
 	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{
-		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
+		WriteHeader(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
 		WriteByte(MSG_ENTITY, self.nent_net_type);
 		WriteShort(MSG_ENTITY, self.nent_net_name);
 		for(int i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); }
@@ -1841,8 +1846,8 @@ void Kill_Notification(
 
 	if(killed_cpid != NO_CPID)
 	{
-		net_notif = spawn();
-		net_notif.classname = "net_kill_notification";
+		net_notif = new(net_kill_notification);
+		make_pure(net_notif);
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = MSG_CENTER_CPID;
@@ -2092,9 +2097,9 @@ void Send_Notification(
 	}
 	else
 	{
-		entity net_notif = spawn();
+		entity net_notif = new(net_notification);
+		make_pure(net_notif);
 		net_notif.owner = notif;
-		net_notif.classname = "net_notification";
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = net_type;

@@ -174,13 +174,13 @@ float bumblebee_gunner_frame()
 
 	if(!forbidWeaponUse(gunner))
 	if(gunner.BUTTON_ATCK)
-		if(time > gun.attack_finished_single)
+		if(time > gun.attack_finished_single[0])
 			if(gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
 			{
 				gun.vehicle_energy -= autocvar_g_vehicle_bumblebee_cannon_cost;
 				bumblebee_fire_cannon(gun, "fire", gunner);
 				gun.delay = time;
-				gun.attack_finished_single = time + autocvar_g_vehicle_bumblebee_cannon_refire;
+				gun.attack_finished_single[0] = time + autocvar_g_vehicle_bumblebee_cannon_refire;
 			}
 
 	VEHICLE_UPDATE_PLAYER(gunner, health, bumblebee);
@@ -859,17 +859,15 @@ spawnfunc(vehicle_bumblebee)
 				self.vehicle_shieldent.alpha = -1;
 				self.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
 
-				self.gun1 = spawn();
-				self.gun2 = spawn();
-				self.gun3 = spawn();
+				self.gun1 = new(vehicle_playerslot);
+				self.gun2 = new(vehicle_playerslot);
+				self.gun3 = new(bumblebee_raygun);
 
 				self.vehicle_flags |= VHF_MULTISLOT;
 
 				self.gun1.owner = self;
 				self.gun2.owner = self;
 				self.gun3.owner = self;
-
-				self.gun1.classname = self.gun2.classname = "vehicle_playerslot";
 
 				setmodel(self.gun1, MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
 				setmodel(self.gun2, MDL_VEH_BUMBLEBEE_CANNON_LEFT);

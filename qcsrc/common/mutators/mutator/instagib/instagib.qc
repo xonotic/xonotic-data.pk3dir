@@ -3,13 +3,20 @@
 
 #include "items.qc"
 
+#ifdef SVQC
+float autocvar_g_instagib_invis_alpha;
+#endif
+
 #endif
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
+int autocvar_g_instagib_ammo_drop;
+int autocvar_g_instagib_extralives;
+float autocvar_g_instagib_speed_highspeed;
+
 #include "../../../../server/cl_client.qh"
-#include "../../../buffs/all.qh"
 
 #include "../../../items/all.qc"
 
@@ -19,25 +26,25 @@ spawnfunc(item_minst_cells)
 {
 	if (!g_instagib) { remove(self); return; }
 	if (!self.ammo_cells) self.ammo_cells = autocvar_g_instagib_ammo_drop;
-	StartItemA(ITEM_VaporizerCells);
+	StartItem(this, ITEM_VaporizerCells);
 }
 
 void instagib_invisibility()
 {SELFPARAM();
 	self.strength_finished = autocvar_g_balance_powerup_strength_time;
-	StartItemA(ITEM_Invisibility);
+	StartItem(this, ITEM_Invisibility);
 }
 
 void instagib_extralife()
 {SELFPARAM();
 	self.max_health = 1;
-	StartItemA(ITEM_ExtraLife);
+	StartItem(this, ITEM_ExtraLife);
 }
 
 void instagib_speed()
 {SELFPARAM();
 	self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-	StartItemA(ITEM_Speed);
+	StartItem(this, ITEM_Speed);
 }
 
 .float instagib_nextthink;
@@ -325,7 +332,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		frag_mirrordamage = 0;
 	}
 
-	if((frag_target.buffs & BUFF_INVISIBLE.m_itemid) || (frag_target.items & ITEM_Invisibility.m_itemid))
+	if(frag_target.alpha && frag_target.alpha < 1)
 		yoda = 1;
 
 	return false;
@@ -367,6 +374,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
 		e.noalign = self.noalign;
         e.cnt = self.cnt;
         e.team = self.team;
+        e.spawnfunc_checked = true;
 		WITH(entity, self, e, spawnfunc_item_minst_cells(e));
 		return true;
 	}

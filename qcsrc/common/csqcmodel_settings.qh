@@ -76,7 +76,9 @@
 	CSQCPlayer_SetViewLocation();
 
 // force updates of player entities that often even if unchanged
+#ifndef CSQCPLAYER_FORCE_UPDATES
 #define CSQCPLAYER_FORCE_UPDATES 0.25
+#endif
 
 // mod must define:
 //vector PL_MIN  = ...;

@@ -1,8 +1,0 @@
-#ifndef CLIENT_DAMAGE_H
-#define CLIENT_DAMAGE_H
-
-.float total_damages; // number of effects which currently are attached to a player
-
-void Ent_DamageInfo(float isNew);
-
-#endif

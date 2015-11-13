@@ -13,7 +13,7 @@ CLASS(Blaster, Weapon)
 /* crosshair */ ATTRIB(Blaster, w_crosshair_size, float, 0.5);
 /* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
 /* refname   */ ATTRIB(Blaster, netname, string, "blaster");
-/* wepname   */ ATTRIB(Blaster, message, string, _("Blaster"));
+/* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
 ENDCLASS(Blaster)
 REGISTER_WEAPON(BLASTER, NEW(Blaster));
 
@@ -50,10 +50,10 @@ BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(WEP_BLASTER.m_id); }
+spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
 spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
-void W_Blaster_Touch(void)
+void W_Blaster_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 
@@ -75,7 +75,7 @@ void W_Blaster_Touch(void)
 	remove(self);
 }
 
-void W_Blaster_Think(void)
+void W_Blaster_Think()
 {SELFPARAM();
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
@@ -101,9 +101,8 @@ void W_Blaster_Attack(
 	W_SetupShot_Dir(actor, s_forward, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, atk_damage);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	entity missile = spawn();
+	entity missile = new(blasterbolt);
 	missile.owner = missile.realowner = actor;
-	missile.classname = "blasterbolt";
 	missile.bot_dodge = true;
 	missile.bot_dodgerating = atk_damage;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -161,11 +160,11 @@ void W_Blaster_Attack(
 				{ self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 		}
 
-		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
 		{
-			if(fire1)
+			if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(blaster, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(blaster, refire)))
 				{
 					W_Blaster_Attack(
 						actor,
@@ -180,10 +179,10 @@ void W_Blaster_Attack(
 						WEP_CVAR_PRI(blaster, delay),
 						WEP_CVAR_PRI(blaster, lifetime)
 					);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
 				}
 			}
-			else if(fire2)
+			else if(fire & 2)
 			{
 				switch(WEP_CVAR(blaster, secondary))
 				{
@@ -196,7 +195,7 @@ void W_Blaster_Attack(
 
 					case 1: // normal projectile secondary
 					{
-						if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(blaster, refire)))
+						if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(blaster, refire)))
 						{
 							W_Blaster_Attack(
 								actor,
@@ -211,7 +210,7 @@ void W_Blaster_Attack(
 								WEP_CVAR_SEC(blaster, delay),
 								WEP_CVAR_SEC(blaster, lifetime)
 							);
-							weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
+							weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
 						}
 
 						break;
@@ -262,7 +261,7 @@ void W_Blaster_Attack(
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
+			pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 		}
 

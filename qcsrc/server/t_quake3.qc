@@ -1,6 +1,5 @@
 
 #include "../common/weapons/all.qh"
-#include "../common/buffs/all.qh"
 
 spawnfunc(weapon_crylink);
 spawnfunc(weapon_electro);
@@ -155,10 +154,7 @@ spawnfunc(target_give)
 
 spawnfunc(item_flight)
 {
-	if(!cvar("g_buffs") || !cvar("g_buffs_flight"))
-		spawnfunc_item_jetpack(this);
-	else
-		buff_Init_Compat(self, BUFF_FLIGHT);
+	spawnfunc_item_jetpack(this);
 }
 
 .float notteam;

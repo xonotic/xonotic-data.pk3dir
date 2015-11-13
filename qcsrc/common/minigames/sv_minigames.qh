@@ -46,13 +46,15 @@ entity minigame_sessions;
 
 bool minigame_SendEntity(entity this, entity to, int sf);
 
-REGISTRY(Minigames, BIT(3))
-REGISTER_REGISTRY(RegisterMinigames)
+REGISTRY(Minigames, BITS(3))
+#define Minigames_from(i) _Minigames_from(i, NULL)
+REGISTER_REGISTRY(Minigames)
+REGISTRY_CHECK(Minigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, spawn()); \
+    REGISTER(Minigames, MINIGAME, name, m_id, new(minigame_descriptor)); \
     int name##_server_event(entity, string, ...); \
     REGISTER_INIT_POST(MINIGAME, name) { \
-        this.classname = "minigame_descriptor"; \
+        make_pure(this); \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
 		this.minigame_event = name##_server_event; \

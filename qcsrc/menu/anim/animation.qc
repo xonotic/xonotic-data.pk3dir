@@ -1,124 +1,117 @@
 #ifndef ANIM_ANIMATION_H
-#define ANIM_ANIMATION_H
-void setterDummy(entity, float);
-CLASS(Animation, Object)
-	METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float));
-	METHOD(Animation, update, void(entity, float, float, float));
-	METHOD(Animation, setTimeStartEnd, void(entity, float, float));
-	METHOD(Animation, setTimeStartDuration, void(entity, float, float));
-	METHOD(Animation, setValueStartEnd, void(entity, float, float));
-	METHOD(Animation, setValueStartDelta, void(entity, float, float));
-	METHOD(Animation, setObjectSetter, void(entity, entity, void(entity, float)));
-	METHOD(Animation, tick, void(entity, float));
-	METHOD(Animation, calcValue, float(entity, float, float, float, float));
-	METHOD(Animation, isStopped, float(entity));
-	METHOD(Animation, stopAnim, void(entity));
-	METHOD(Animation, resumeAnim, void(entity));
-	METHOD(Animation, isFinished, float(entity));
-	METHOD(Animation, finishAnim, void(entity));
-	ATTRIB(Animation, object, entity, NULL)
-	ATTRIB(Animation, setter, void(entity, float), setterDummy)
-	ATTRIB(Animation, value, float, 0)
-	ATTRIB(Animation, startTime, float, 0)
-	ATTRIB(Animation, duration, float, 0)
-	ATTRIB(Animation, startValue, float, 0)
-	ATTRIB(Animation, delta, float, 0)
-	ATTRIB(Animation, stopped, float, false)
-	ATTRIB(Animation, finished, float, false)
-ENDCLASS(Animation)
+	#define ANIM_ANIMATION_H
+	CLASS(Animation, Object)
+		METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float));
+		METHOD(Animation, update, void(entity, float, float, float));
+		METHOD(Animation, setTimeStartEnd, void(entity, float, float));
+		METHOD(Animation, setTimeStartDuration, void(entity, float, float));
+		METHOD(Animation, setValueStartEnd, void(entity, float, float));
+		METHOD(Animation, setValueStartDelta, void(entity, float, float));
+		METHOD(Animation, setObjectSetter, void(entity, entity, void(entity, float)));
+		METHOD(Animation, tick, void(entity, float));
+		METHOD(Animation, calcValue, float(entity, float, float, float, float));
+		METHOD(Animation, isStopped, float(entity));
+		METHOD(Animation, stopAnim, void(entity));
+		METHOD(Animation, resumeAnim, void(entity));
+		METHOD(Animation, isFinished, float(entity));
+		METHOD(Animation, finishAnim, void(entity));
+		ATTRIB(Animation, object, entity, NULL)
+		void setterDummy(entity, float) {}
+		ATTRIB(Animation, setter, void(entity, float), setterDummy)
+		ATTRIB(Animation, value, float, 0)
+		ATTRIB(Animation, startTime, float, 0)
+		ATTRIB(Animation, duration, float, 0)
+		ATTRIB(Animation, startValue, float, 0)
+		ATTRIB(Animation, delta, float, 0)
+		ATTRIB(Animation, stopped, float, false)
+		ATTRIB(Animation, finished, float, false)
+	ENDCLASS(Animation)
 #endif
 
 #ifdef IMPLEMENTATION
-void Animation_configureAnimation(entity me, entity obj, void(entity, float) objSetter, float animStartTime, float animDuration, float animStartValue, float animEndValue)
-{
-	me.setObjectSetter(me, obj, objSetter);
-	me.setTimeStartDuration(me, animStartTime, animDuration);
-	me.setValueStartEnd(me, animStartValue, animEndValue);
-}
+	METHOD(Animation, configureAnimation, void(entity this, entity obj, void(entity, float) objSetter, float animStartTime, float animDuration, float animStartValue, float animEndValue))
+	{
+		this.setObjectSetter(this, obj, objSetter);
+		this.setTimeStartDuration(this, animStartTime, animDuration);
+		this.setValueStartEnd(this, animStartValue, animEndValue);
+	}
 
-void Animation_update(entity me, float animDuration, float animStartValue, float animEndValue)
-{
-	me.setTimeStartDuration(me, time, animDuration);
-	me.setValueStartEnd(me, animStartValue, animEndValue);
-}
+	METHOD(Animation, update, void(entity this, float animDuration, float animStartValue, float animEndValue))
+	{
+		this.setTimeStartDuration(this, time, animDuration);
+		this.setValueStartEnd(this, animStartValue, animEndValue);
+	}
 
-void Animation_setTimeStartEnd(entity me, float s, float e)
-{
-	me.startTime = s;
-	me.duration = e - s;
-}
+	METHOD(Animation, setTimeStartEnd, void(entity this, float s, float e))
+	{
+		this.startTime = s;
+		this.duration = e - s;
+	}
 
-void Animation_setTimeStartDuration(entity me, float s, float d)
-{
-	me.startTime = s;
-	me.duration = d;
-}
+	METHOD(Animation, setTimeStartDuration, void(entity this, float s, float d))
+	{
+		this.startTime = s;
+		this.duration = d;
+	}
 
-void Animation_setValueStartEnd(entity me, float s, float e)
-{
-	me.startValue = s;
-	me.delta = e - s;
-}
+	METHOD(Animation, setValueStartEnd, void(entity this, float s, float e))
+	{
+		this.startValue = s;
+		this.delta = e - s;
+	}
 
-void Animation_setValueStartDelta(entity me, float s, float d)
-{
-	me.startValue = s;
-	me.delta = d;
-}
+	METHOD(Animation, setValueStartDelta, void(entity this, float s, float d))
+	{
+		this.startValue = s;
+		this.delta = d;
+	}
 
-void Animation_setObjectSetter(entity me, entity o, void(entity, float) s)
-{
-	me.object = o;
-	me.setter = s;
-}
+	METHOD(Animation, setObjectSetter, void(entity this, entity o, void(entity, float) s))
+	{
+		this.object = o;
+		this.setter = s;
+	}
 
-void Animation_tick(entity me, float tickTime)
-{
-	if (me.isStopped(me) || me.isFinished(me) || (tickTime < me.startTime))
-		return;
+	METHOD(Animation, tick, void(entity this, float tickTime))
+	{
+		if (this.isStopped(this) || this.isFinished(this) || (tickTime < this.startTime)) return;
 
-	if (tickTime >= (me.startTime + me.duration))
-		me.finishAnim(me);
-	else
-		me.value = me.calcValue(me, (tickTime - me.startTime), me.duration, me.startValue, me.delta);
+		if (tickTime >= (this.startTime + this.duration)) this.finishAnim(this);
+		else this.value = this.calcValue(this, (tickTime - this.startTime), this.duration, this.startValue, this.delta);
 
-	me.setter(me.object, me.value);
-}
+		this.setter(this.object, this.value);
+	}
 
-float Animation_calcValue(entity me, float tickTime, float animDuration, float animStartValue, float animDelta)
-{
-	return animStartValue;
-}
+	METHOD(Animation, calcValue, float(entity this, float tickTime, float animDuration, float animStartValue, float animDelta))
+	{
+		return animStartValue;
+	}
 
-float Animation_isStopped(entity me)
-{
-	return me.stopped;
-}
+	METHOD(Animation, isStopped, bool(entity this))
+	{
+		return this.stopped;
+	}
 
-void Animation_stopAnim(entity me)
-{
-	me.stopped = true;
-}
+	METHOD(Animation, stopAnim, void(entity this))
+	{
+		this.stopped = true;
+	}
 
-void Animation_resumeAnim(entity me)
-{
-	me.stopped = false;
-}
+	METHOD(Animation, resumeAnim, void(entity this))
+	{
+		this.stopped = false;
+	}
 
-float Animation_isFinished(entity me)
-{
-	return me.finished;
-}
+	METHOD(Animation, isFinished, bool(entity this))
+	{
+		return this.finished;
+	}
 
-void Animation_finishAnim(entity me)
-{
-	me.value = me.delta + me.startValue;
-	me.finished = true;
-	me.setter(me.object, me.value);
-}
-
-void setterDummy(entity obj, float objValue)
-{
-}
+	METHOD(Animation, finishAnim, void(entity this))
+	{
+		this.value = this.delta + this.startValue;
+		this.finished = true;
+		this.setter(this.object, this.value);
+	}
 
 #endif

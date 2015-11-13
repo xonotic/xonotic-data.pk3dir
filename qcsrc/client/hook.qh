@@ -3,6 +3,4 @@
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 
-void Ent_ReadHook(float bIsNew, float type);
-
 #endif

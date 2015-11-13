@@ -6,17 +6,15 @@
 .float istypefrag;
 
 .float CopyBody_nextthink;
-.void(void) CopyBody_think;
-void CopyBody_Think(void);
+.void() CopyBody_think;
+void CopyBody_Think();
 void CopyBody(float keepvelocity);
-
-float player_getspecies();
 
 void player_setupanimsformodel();
 
-void player_anim (void);
+void player_anim();
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void PlayerCorpseDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 // g_<gametype>_str:
 // If 0, default is used.
@@ -25,51 +23,102 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int de
 // For consistency, negative values there are mapped to zero too.
 #define GAMETYPE_DEFAULTED_SETTING(str) \
 	((gametype_setting_tmp = cvar(strcat("g_", GetGametype(), "_" #str))), \
-	 (gametype_setting_tmp < 0) ? 0 : \
-	 (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) : \
-	 gametype_setting_tmp)
-
+	(gametype_setting_tmp < 0) ? 0 \
+	: (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) \
+	: gametype_setting_tmp)
 
 void calculate_player_respawn_time();
 
 void ClientKill_Now_TeamChange();
 
-void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void MoveToTeam(entity client, float team_colour, float type);
 
-.float muted; // to be used by prvm_edictset server playernumber muted 1
-float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
-// message "": do not say, just test flood control
-// return value:
-//   1 = accept
-//   0 = reject
-//  -1 = fake accept
+void PlayerDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
+/** to be used by `prvm_edictset server playernumber muted 1` */
+.float muted;
+int Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
+
+// player sounds, voice messages
+// TODO implemented fall and falling
+#define ALLPLAYERSOUNDS(X) \
+	X(death) \
+	X(drown) \
+	X(fall) \
+	X(falling) \
+	X(gasp) \
+	X(jump) \
+	X(pain100) \
+	X(pain25) \
+	X(pain50) \
+	X(pain75)
+
+#define ALLVOICEMSGS(X) \
+	X(attack) \
+	X(attackinfive) \
+	X(coverme) \
+	X(defend) \
+	X(freelance) \
+	X(incoming) \
+	X(meet) \
+	X(needhelp) \
+	X(seenflag) \
+	X(taunt) \
+	X(teamshoot)
+
+// reserved sound names for the future (some models lack sounds for them):
+// _VOICEMSG(flagcarriertakingdamage)
+// _VOICEMSG(getflag)
+// reserved sound names for the future (ALL models lack sounds for them):
+// _VOICEMSG(affirmative)
+// _VOICEMSG(attacking)
+// _VOICEMSG(defending)
+// _VOICEMSG(roaming)
+// _VOICEMSG(onmyway)
+// _VOICEMSG(droppedflag)
+// _VOICEMSG(negative)
+// _VOICEMSG(seenenemy)
+
+#define X(m) .string playersound_##m;
+ALLPLAYERSOUNDS(X)
+ALLVOICEMSGS(X)
+#undef X
+
+bool GetPlayerSoundSampleField_notFound;
 float GetVoiceMessageVoiceType(string type);
-
-string allvoicesamples;
 .string GetVoiceMessageSampleField(string type);
-
 .string GetPlayerSoundSampleField(string type);
-
 void PrecacheGlobalSound(string samplestring);
-
 void PrecachePlayerSounds(string f);
-
-void ClearPlayerSounds();
-
-float LoadPlayerSounds(string f, float first);
-
-.int modelindex_for_playersound;
-.int skin_for_playersound;
-void UpdatePlayerSounds();
-
-void FakeGlobalSound(string sample, float chan, float voicetype);
-
-void GlobalSound(string sample, float chan, float voicetype);
-
+void ClearPlayerSounds(entity this);
+float LoadPlayerSounds(string f, bool strict);
+void UpdatePlayerSounds(entity this);
+#define FakeGlobalSound(sample, chan, voicetype) _GlobalSound(sample, chan, voicetype, true)
+void _GlobalSound(string sample, float chan, float voicetype, bool fake);
+#define GlobalSound(def, chan, voicetype) _GlobalSound((def).m_globalsoundstr, chan, voicetype, false)
 void PlayerSound(.string samplefield, float chan, float voicetype);
-
 void VoiceMessage(string type, string msg);
 
-void MoveToTeam(entity client, float team_colour, float type);
+.string m_globalsoundstr;
+REGISTRY(GlobalSounds, BITS(8) - 1)
+#define GlobalSounds_from(i) _GlobalSounds_from(i, NULL)
+#define REGISTER_GLOBALSOUND(id, str) \
+	REGISTER(GlobalSounds, GS, id, m_id, new(GlobalSound)) \
+	{ \
+		make_pure(this); \
+		this.m_globalsoundstr = str; \
+	}
+REGISTER_REGISTRY(GlobalSounds)
+REGISTRY_SORT(GlobalSounds, 0)
+REGISTRY_CHECK(GlobalSounds)
+PRECACHE(GlobalSounds)
+{
+	FOREACH(GlobalSounds, true, LAMBDA(PrecacheGlobalSound(it.m_globalsoundstr)));
+}
+
+REGISTER_GLOBALSOUND(STEP, "misc/footstep0 6")
+REGISTER_GLOBALSOUND(STEP_METAL, "misc/metalfootstep0 6")
+REGISTER_GLOBALSOUND(FALL, "misc/hitground 4")
+REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
+
 #endif

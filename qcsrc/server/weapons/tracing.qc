@@ -55,8 +55,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
-	if(ent.weaponentity.movedir.x > 0)
-		vecs = ent.weaponentity.movedir;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	vector md = ent.(weaponentity).movedir;
+	if(md.x > 0)
+		vecs = md;
 	else
 		vecs = '0 0 0';
 
@@ -357,11 +359,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	float total_damage = 0;
 
 	if(tracereffects & EF_RED)
-		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE);
+		fireBullet_trace_callback_eff = EFFECT_RIFLE;
 	else if(tracereffects & EF_BLUE)
-		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_RIFLE_WEAK);
+		fireBullet_trace_callback_eff = EFFECT_RIFLE_WEAK;
 	else
-		fireBullet_trace_callback_eff = particleeffectnum(EFFECT_BULLET);
+		fireBullet_trace_callback_eff = EFFECT_BULLET;
 
 	float lag = ANTILAG_LATENCY(self);
 	if(lag < 0.001)

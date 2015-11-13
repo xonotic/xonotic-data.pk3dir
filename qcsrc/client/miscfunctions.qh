@@ -44,7 +44,8 @@ float cvar_or(string cv, float v);
 
 vector project_3d_to_2d(vector vec);
 
-void dummyfunction(float a1, float a2, float a3, float a4, float a5, float a6, float a7, float a8);
+#define draw_beginBoldFont()    do { drawfont = FONT_USER + 2; } while (0)
+#define draw_endBoldFont()      do { drawfont = FONT_USER + 1; } while (0)
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp);
 
@@ -150,13 +151,6 @@ float getplayeralpha(float pl);
 vector getcsqcplayercolor(float pl);
 
 float getplayerisdead(float pl);
-
-void URI_Get_Callback(int id, float status, string data);
-
-void draw_beginBoldFont();
-
-void draw_endBoldFont();
-
 
 const int MAX_ACCURACY_LEVELS = 10;
 float acc_lev[MAX_ACCURACY_LEVELS];

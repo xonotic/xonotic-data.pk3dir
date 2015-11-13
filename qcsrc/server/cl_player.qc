@@ -4,7 +4,6 @@
 #include "cheats.qh"
 #include "g_damage.qh"
 #include "g_subs.qh"
-#include "g_violence.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
 #include "teamplay.qh"
@@ -34,7 +33,7 @@ void Drop_Special_Items(entity player)
 	MUTATOR_CALLHOOK(DropSpecialItems, player);
 }
 
-void CopyBody_Think(void)
+void CopyBody_Think()
 {SELFPARAM();
 	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
 	{
@@ -52,7 +51,7 @@ void CopyBody(float keepvelocity)
 {SELFPARAM();
 	if (self.effects & EF_NODRAW)
 		return;
-	setself(spawn());
+	setself(new(body));
 	self.enemy = this;
 	self.lip = this.lip;
 	self.colormap = this.colormap;
@@ -62,7 +61,6 @@ void CopyBody(float keepvelocity)
 	self.angles = this.angles;
 	self.v_angle = this.v_angle;
 	self.avelocity = this.avelocity;
-	self.classname = "body";
 	self.damageforcescale = this.damageforcescale;
 	self.effects = this.effects;
 	self.glowmod = this.glowmod;
@@ -125,17 +123,6 @@ void CopyBody(float keepvelocity)
 	setself(this);
 }
 
-float player_getspecies()
-{SELFPARAM();
-	float s;
-	get_model_parameters(self.model, self.skin);
-	s = get_model_parameters_species;
-	get_model_parameters(string_null, 0);
-	if(s < 0)
-		return SPECIES_HUMAN;
-	return s;
-}
-
 void player_setupanimsformodel()
 {SELFPARAM();
 	// load animation info
@@ -143,7 +130,7 @@ void player_setupanimsformodel()
 	animdecide_setstate(self, 0, false);
 }
 
-void player_anim (void)
+void player_anim ()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(self.deadflag) {
@@ -168,11 +155,14 @@ void player_anim (void)
 	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
 
-	if (self.weaponentity)
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	{
-		updateanim(self.weaponentity);
-		if (!self.weaponentity.animstate_override)
-			setanim(self.weaponentity, self.weaponentity.anim_idle, true, false, false);
+		if (self.(weaponentity))
+		{
+			updateanim(self.(weaponentity));
+			if (!self.(weaponentity).animstate_override)
+				setanim(self.(weaponentity), self.(weaponentity).anim_idle, true, false, false);
+		}
 	}
 }
 
@@ -479,9 +469,18 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	float abot, vbot;
-	abot = (IS_BOT_CLIENT(attacker));
-	vbot = (IS_BOT_CLIENT(self));
+	if (self != attacker) {
+		float realdmg = damage - excess;
+		if (IS_PLAYER(attacker)) {
+			PlayerScore_Add(attacker, SP_DMG, realdmg);
+		}
+		if (IS_PLAYER(self)) {
+			PlayerScore_Add(self, SP_DMGTAKEN, realdmg);
+		}
+	}
+
+	bool abot = (IS_BOT_CLIENT(attacker));
+	bool vbot = (IS_BOT_CLIENT(self));
 
 	valid_damage_for_weaponstats = 0;
 	Weapon awep = WEP_Null;
@@ -643,17 +642,33 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		{
 			Weapon w = get_weaponinfo(j);
 			w.wr_resetplayer(w);
-			ATTACK_FINISHED_FOR(self, j) = 0;
+			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+			{
+				ATTACK_FINISHED_FOR(self, j, slot) = 0;
+			}
 		}
 	}
 }
 
-float Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol)
-// message "": do not say, just test flood control
-// return value:
-//   1 = accept
-//   0 = reject
-//  -1 = fake accept
+void MoveToTeam(entity client, int team_colour, int type)
+{
+	int lockteams_backup = lockteams;  // backup any team lock
+	lockteams = 0;  // disable locked teams
+	TeamchangeFrags(client);  // move the players frags
+	SetPlayerColors(client, team_colour - 1);  // set the players colour
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
+	lockteams = lockteams_backup;  // restore the team lock
+	LogTeamchange(client.playerid, client.team, type);
+}
+
+/**
+ * message "": do not say, just test flood control
+ * return value:
+ *   1 = accept
+ *   0 = reject
+ *  -1 = fake accept
+ */
+int Say(entity source, float teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
@@ -945,347 +960,281 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	return ret;
 }
 
-float GetVoiceMessageVoiceType(string type)
+int GetVoiceMessageVoiceType(string type)
 {
-	if(type == "taunt")
-		return VOICETYPE_TAUNT;
-	if(type == "teamshoot")
-		return VOICETYPE_LASTATTACKER;
+	if (type == "taunt") return VOICETYPE_TAUNT;
+	if (type == "teamshoot") return VOICETYPE_LASTATTACKER;
 	return VOICETYPE_TEAMRADIO;
 }
 
 .string GetVoiceMessageSampleField(string type)
 {
-	GetPlayerSoundSampleField_notFound = 0;
-	switch(type)
+	GetPlayerSoundSampleField_notFound = false;
+	switch (type)
 	{
-#define _VOICEMSG(m) case #m: return playersound_##m;
-		ALLVOICEMSGS
-#undef _VOICEMSG
+#define X(m) case #m: return playersound_##m;
+		ALLVOICEMSGS(X)
+#undef X
 	}
-	GetPlayerSoundSampleField_notFound = 1;
+	GetPlayerSoundSampleField_notFound = true;
 	return playersound_taunt;
 }
 
 .string GetPlayerSoundSampleField(string type)
 {
-	GetPlayerSoundSampleField_notFound = 0;
-	switch(type)
+	GetPlayerSoundSampleField_notFound = false;
+	switch (type)
 	{
-#define _VOICEMSG(m) case #m: return playersound_##m;
-		ALLPLAYERSOUNDS
-#undef _VOICEMSG
+#define X(m) case #m: return playersound_##m;
+		ALLPLAYERSOUNDS(X)
+#undef X
 	}
-	GetPlayerSoundSampleField_notFound = 1;
+	GetPlayerSoundSampleField_notFound = true;
 	return playersound_taunt;
 }
 
-void PrecacheGlobalSound(string samplestring)
+void PrecacheGlobalSound(string sample)
 {
-	float n, i;
-	tokenize_console(samplestring);
-	n = stof(argv(1));
-	if(n > 0)
+	int n;
 	{
-		for(i = 1; i <= n; ++i)
-			precache_sound(strcat(argv(0), ftos(i), ".wav"));
+		string s = cdr(sample);
+		if (s) n = stof(s);
+		else n = 0;
+	}
+	sample = car(sample);
+	if (n > 0)
+	{
+		for (int i = 1; i <= n; ++i)
+			precache_sound(sprintf("%s%d.wav", sample, i));
 	}
 	else
 	{
-		precache_sound(strcat(argv(0), ".wav"));
+		precache_sound(sprintf("%s.wav", sample));
 	}
 }
+
+string allvoicesamples;
 
 void PrecachePlayerSounds(string f)
 {
 	int fh = fopen(f, FILE_READ);
 	if (fh < 0)
+	{
+		LOG_WARNINGF("Player sound file not found: %s\n", f);
 		return;
+	}
 	for (string s; (s = fgets(fh)); )
 	{
 		int n = tokenize_console(s);
 		if (n != 3)
 		{
-			if (n != 0) LOG_TRACEF("Invalid sound info line: %s\n", s);
+			if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
 			continue;
 		}
-		PrecacheGlobalSound(strcat(argv(1), " ", argv(2)));
+		string file = argv(1);
+		string variants = argv(2);
+		PrecacheGlobalSound(strcat(file, " ", variants));
 	}
 	fclose(fh);
 
 	if (!allvoicesamples)
 	{
-#define _VOICEMSG(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
-		ALLVOICEMSGS
-#undef _VOICEMSG
-		allvoicesamples = strzone(substring(allvoicesamples, 1, strlen(allvoicesamples) - 1));
+#define X(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
+		ALLVOICEMSGS(X)
+#undef X
+		allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
 	}
 }
 
-void ClearPlayerSounds()
-{SELFPARAM();
-#define _VOICEMSG(m) if(self.playersound_##m) { strunzone(self.playersound_##m); self.playersound_##m = string_null; }
-	ALLPLAYERSOUNDS
-	ALLVOICEMSGS
-#undef _VOICEMSG
+void ClearPlayerSounds(entity this)
+{
+#define X(m) if (this.playersound_##m) { strunzone(this.playersound_##m); this.playersound_##m = string_null; }
+	ALLPLAYERSOUNDS(X)
+	ALLVOICEMSGS(X)
+#undef X
 }
 
-float LoadPlayerSounds(string f, float first)
-{SELFPARAM();
-	float fh;
-	string s;
-	var .string field;
-	fh = fopen(f, FILE_READ);
-	if(fh < 0)
+bool LoadPlayerSounds(string f, bool strict)
+{
+	SELFPARAM();
+	int fh = fopen(f, FILE_READ);
+	if (fh < 0)
 	{
-		LOG_TRACE("Player sound file not found: ", f, "\n");
-		return 0;
+		if (strict) LOG_WARNINGF("Player sound file not found: %s\n", f);
+		return false;
 	}
-	while((s = fgets(fh)))
+	for (string s; (s = fgets(fh)); )
 	{
-		if(tokenize_console(s) != 3)
+		int n = tokenize_console(s);
+		if (n != 3)
+		{
+			if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
 			continue;
-		field = GetPlayerSoundSampleField(argv(0));
-		if(GetPlayerSoundSampleField_notFound)
-			field = GetVoiceMessageSampleField(argv(0));
-		if(GetPlayerSoundSampleField_notFound)
+		}
+		string key = argv(0);
+		var .string field = GetPlayerSoundSampleField(key);
+		if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
+		if (GetPlayerSoundSampleField_notFound)
+		{
+			LOG_TRACEF("Invalid sound info field: %s\n", key);
 			continue;
-		if (self.(field))
-			strunzone(self.(field));
-		self.(field) = strzone(strcat(argv(1), " ", argv(2)));
+		}
+		string file = argv(1);
+		string variants = argv(2);
+		if (self.(field)) strunzone(self.(field));
+		self.(field) = strzone(strcat(file, " ", variants));
 	}
 	fclose(fh);
-	return 1;
+	return true;
 }
 
-void UpdatePlayerSounds()
-{SELFPARAM();
-	if(self.modelindex == self.modelindex_for_playersound)
-	if(self.skin == self.skin_for_playersound)
-		return;
-	self.modelindex_for_playersound = self.modelindex;
-	self.skin_for_playersound = self.skin;
-	ClearPlayerSounds();
-	LoadPlayerSounds("sound/player/default.sounds", 1);
-	if(!autocvar_g_debug_defaultsounds)
-		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skin, "sounds"), 0))
-			LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
+.int modelindex_for_playersound;
+.int skin_for_playersound;
+
+void UpdatePlayerSounds(entity this)
+{
+	if (this.modelindex == this.modelindex_for_playersound && this.skin == this.skin_for_playersound) return;
+	this.modelindex_for_playersound = this.modelindex;
+	this.skin_for_playersound = this.skin;
+	ClearPlayerSounds(this);
+	LoadPlayerSounds("sound/player/default.sounds", true);
+	if (autocvar_g_debug_defaultsounds) return;
+	if (!LoadPlayerSounds(get_model_datafilename(this.model, this.skin, "sounds"), false))
+		LoadPlayerSounds(get_model_datafilename(this.model, 0, "sounds"), true);
 }
 
-void FakeGlobalSound(string sample, float chan, float voicetype)
-{SELFPARAM();
-	float n;
-	float tauntrand;
-
-	if(sample == "")
-		return;
-
-	tokenize_console(sample);
-	n = stof(argv(1));
-	if(n > 0)
-		sample = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
-	else
-		sample = strcat(argv(0), ".wav"); // randomization
-
-	switch(voicetype)
+void _GlobalSound(string sample, int chan, int voicetype, bool fake)
+{
+	SELFPARAM();
+	if (sample == "") return;
+	int n;
+	{
+		string s = cdr(sample);
+		if (s) n = stof(s);
+		else n = 0;
+	}
+	sample = car(sample);
+	if (n > 0) sample = sprintf("%s%d.wav", sample, floor(random() * n + 1));  // randomization
+	else sample = sprintf("%s.wav", sample);
+	switch (voicetype)
 	{
 		case VOICETYPE_LASTATTACKER_ONLY:
-			break;
 		case VOICETYPE_LASTATTACKER:
-			if(self.pusher)
+		{
+			if (!fake)
 			{
-				msg_entity = self;
-				if(IS_REAL_CLIENT(msg_entity))
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NONE);
+				if (!this.pusher) break;
+				msg_entity = this.pusher;
+				if (IS_REAL_CLIENT(msg_entity))
+				{
+					float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
+					soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
+				}
 			}
+			if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
+			msg_entity = this;
+			if (IS_REAL_CLIENT(msg_entity)) soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NONE);
 			break;
+		}
 		case VOICETYPE_TEAMRADIO:
-			msg_entity = self;
-			if(msg_entity.cvar_cl_voice_directional == 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
+		{
+			#define X() \
+				do \
+				{ \
+					float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
+					soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+				} \
+				while (0)
+
+			if (fake) { msg_entity = this; X(); }
 			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
-			break;
-		case VOICETYPE_AUTOTAUNT:
-			if(!sv_autotaunt)
-				break;
-			if(!sv_taunt)
-				break;
-			if(autocvar_sv_gentle)
-				break;
-			tauntrand = random();
-			msg_entity = self;
-			if (tauntrand < msg_entity.cvar_cl_autotaunt)
 			{
-				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
-				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
+				FOR_EACH_REALCLIENT(msg_entity)
+				{
+					if (!teamplay || msg_entity.team == this.team) X();
+				}
+			}
+			#undef X
+			break;
+		}
+		case VOICETYPE_AUTOTAUNT:
+		case VOICETYPE_TAUNT:
+		{
+			if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
+			else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT, true);
+			if (!sv_taunt) break;
+			if (autocvar_sv_gentle) break;
+			float tauntrand = 0;
+			if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
+			#define X() \
+				do \
+				{ \
+					if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
+					{ \
+						float atten = (msg_entity.cvar_cl_voice_directional >= 1) \
+						    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX) \
+							: ATTEN_NONE; \
+						soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+					} \
+				} \
+				while (0)
+			if (fake)
+			{
+				msg_entity = this;
+				X();
+			}
+			else
+			{
+				FOR_EACH_REALCLIENT(msg_entity)
+				{
+					X();
+				}
+			}
+			#undef X
+			break;
+		}
+		case VOICETYPE_PLAYERSOUND:
+		{
+			if (fake)
+			{
+				msg_entity = this;
+				soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
+			}
+			else
+			{
+				_sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
 			}
 			break;
-		case VOICETYPE_TAUNT:
-			if(IS_PLAYER(self))
-				if(self.deadflag == DEAD_NO)
-					animdecide_setaction(self, ANIMACTION_TAUNT, true);
-			if(!sv_taunt)
-				break;
-			if(autocvar_sv_gentle)
-				break;
-			msg_entity = self;
-			if (msg_entity.cvar_cl_voice_directional >= 1)
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
-			else
-				soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
-			break;
-		case VOICETYPE_PLAYERSOUND:
-			msg_entity = self;
-			soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NORM);
-			break;
+		}
 		default:
+		{
 			backtrace("Invalid voice type!");
 			break;
+		}
 	}
 }
 
-void GlobalSound(string sample, float chan, float voicetype)
-{SELFPARAM();
-	float n;
-	float tauntrand;
-
-	if(sample == "")
-		return;
-
-	tokenize_console(sample);
-	n = stof(argv(1));
-	if(n > 0)
-		sample = strcat(argv(0), ftos(floor(random() * n + 1)), ".wav"); // randomization
-	else
-		sample = strcat(argv(0), ".wav"); // randomization
-
-	switch(voicetype)
-	{
-		case VOICETYPE_LASTATTACKER_ONLY:
-			if(self.pusher)
-			{
-				msg_entity = self.pusher;
-				if(IS_REAL_CLIENT(msg_entity))
-				{
-					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
-					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
-				}
-			}
-			break;
-		case VOICETYPE_LASTATTACKER:
-			if(self.pusher)
-			{
-				msg_entity = self.pusher;
-				if(IS_REAL_CLIENT(msg_entity))
-				{
-					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
-					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
-				}
-				msg_entity = self;
-				if(IS_REAL_CLIENT(msg_entity))
-					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTEN_NONE);
-			}
-			break;
-		case VOICETYPE_TEAMRADIO:
-			FOR_EACH_REALCLIENT(msg_entity)
-				if(!teamplay || msg_entity.team == self.team)
-				{
-					if(msg_entity.cvar_cl_voice_directional == 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_MIN);
-					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
-				}
-			break;
-		case VOICETYPE_AUTOTAUNT:
-			if(!sv_autotaunt)
-				break;
-			if(!sv_taunt)
-				break;
-			if(autocvar_sv_gentle)
-				break;
-			tauntrand = random();
-			FOR_EACH_REALCLIENT(msg_entity)
-				if (tauntrand < msg_entity.cvar_cl_autotaunt)
-				{
-					if (msg_entity.cvar_cl_voice_directional >= 1)
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
-					else
-						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
-				}
-			break;
-		case VOICETYPE_TAUNT:
-			if(IS_PLAYER(self))
-				if(self.deadflag == DEAD_NO)
-					animdecide_setaction(self, ANIMACTION_TAUNT, true);
-			if(!sv_taunt)
-				break;
-			if(autocvar_sv_gentle)
-				break;
-			FOR_EACH_REALCLIENT(msg_entity)
-			{
-				if (msg_entity.cvar_cl_voice_directional >= 1)
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX));
-				else
-					soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTEN_NONE);
-			}
-			break;
-		case VOICETYPE_PLAYERSOUND:
-			_sound(self, chan, sample, VOL_BASE, ATTEN_NORM);
-			break;
-		default:
-			backtrace("Invalid voice type!");
-			break;
-	}
-}
-
-void PlayerSound(.string samplefield, float chan, float voicetype)
-{SELFPARAM();
-	GlobalSound(self.(samplefield), chan, voicetype);
+void PlayerSound(.string samplefield, int chan, float voicetype)
+{
+	SELFPARAM();
+	_GlobalSound(this.(samplefield), chan, voicetype, false);
 }
 
 void VoiceMessage(string type, string msg)
-{SELFPARAM();
-	float voicetype, ownteam;
-	float flood;
+{
+	SELFPARAM();
 	var .string sample = GetVoiceMessageSampleField(type);
-
-	if(GetPlayerSoundSampleField_notFound)
+	if (GetPlayerSoundSampleField_notFound)
 	{
-		sprint(self, strcat("Invalid voice. Use one of: ", allvoicesamples, "\n"));
+		sprint(this, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
 		return;
 	}
-
-	voicetype = GetVoiceMessageVoiceType(type);
-	ownteam = (voicetype == VOICETYPE_TEAMRADIO);
-
-	flood = Say(self, ownteam, world, msg, 1);
-
-	if (IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
-		FakeGlobalSound(self.(sample), CH_VOICE, voicetype);
-	else if (flood > 0)
-		GlobalSound(self.(sample), CH_VOICE, voicetype);
-}
-
-void MoveToTeam(entity client, float team_colour, float type)
-{
-	float lockteams_backup;
-
-	lockteams_backup = lockteams;  // backup any team lock
-
-	lockteams = 0;  // disable locked teams
-
-	TeamchangeFrags(client);  // move the players frags
-	SetPlayerColors(client, team_colour - 1);  // set the players colour
-	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
-
-	lockteams = lockteams_backup;  // restore the team lock
-
-	LogTeamchange(client.playerid, client.team, type);
+	int voicetype = GetVoiceMessageVoiceType(type);
+	bool ownteam = (voicetype == VOICETYPE_TEAMRADIO);
+	int flood = Say(this, ownteam, world, msg, true);
+	bool fake;
+	if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true;
+	else if (flood > 0) fake = false;
+	else return;
+	_GlobalSound(this.(sample), CH_VOICE, voicetype, fake);
 }

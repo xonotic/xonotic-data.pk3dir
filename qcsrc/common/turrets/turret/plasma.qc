@@ -41,7 +41,7 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
     }
     else
     {
-        super.tr_attack(this);
+        SUPER(PlasmaTurret).tr_attack(this);
     }
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;

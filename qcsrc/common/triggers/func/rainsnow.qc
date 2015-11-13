@@ -1,7 +1,9 @@
+REGISTER_NET_LINKED(ENT_CLIENT_RAINSNOW)
+
 #ifdef SVQC
 bool rainsnow_SendEntity(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_RAINSNOW);
 	WriteByte(MSG_ENTITY, self.state);
 	WriteCoord(MSG_ENTITY, self.origin_x + self.mins_x);
 	WriteCoord(MSG_ENTITY, self.origin_y + self.mins_y);
@@ -100,8 +102,8 @@ void Draw_Snow(entity this)
     te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
 }
 
-void Ent_RainOrSnow()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
+{
 	self.impulse = ReadByte(); // Rain, Snow, or Whatever
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();
@@ -112,6 +114,8 @@ void Ent_RainOrSnow()
 	self.velocity = decompressShortVector(ReadShort());
 	self.count = ReadShort() * 10;
 	self.glow_color = ReadByte(); // color
+
+	return = true;
 
 	self.mins    = -0.5 * self.maxs;
 	self.maxs    =  0.5 * self.maxs;

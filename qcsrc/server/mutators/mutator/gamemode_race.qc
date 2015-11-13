@@ -6,13 +6,13 @@ void race_Initialize();
 
 REGISTER_MUTATOR(rc, false)
 {
-	rc_SetLimits();
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		race_Initialize();
+
+		rc_SetLimits();
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

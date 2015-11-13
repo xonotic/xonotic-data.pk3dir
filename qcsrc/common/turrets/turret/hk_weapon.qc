@@ -5,7 +5,7 @@ CLASS(HunterKillerAttack, PortoLaunch)
 /* flags     */ ATTRIB(HunterKillerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(HunterKillerAttack, impulse, int, 9);
 /* refname   */ ATTRIB(HunterKillerAttack, netname, string, "turret_hk");
-/* wepname   */ ATTRIB(HunterKillerAttack, message, string, _("Hunter-Killer"));
+/* wepname   */ ATTRIB(HunterKillerAttack, m_name, string, _("Hunter-Killer"));
 ENDCLASS(HunterKillerAttack)
 REGISTER_WEAPON(HK, NEW(HunterKillerAttack));
 
@@ -23,18 +23,19 @@ float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
 void turret_hk_missile_think();
-METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+SOUND(HunterKillerAttack_FIRE, W_Sound("electro_fire"));
+METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
 	bool isPlayer = IS_PLAYER(actor);
-	if (fire1)
-	if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
+	if (fire & 1)
+	if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
 		if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, v_forward, false, 0, SND(HunterKillerAttack_FIRE), CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
-            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, FALSE, FALSE);
         te_explosion (missile.origin);

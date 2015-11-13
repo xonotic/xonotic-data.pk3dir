@@ -1,14 +1,24 @@
 #include "announcer.qh"
 
+#include "mutators/events.qh"
+
 #include "../common/notifications.qh"
 #include "../common/stats.qh"
 
 bool announcer_1min;
 bool announcer_5min;
+string AnnouncerOption()
+{
+	string ret = autocvar_cl_announcer;
+	MUTATOR_CALLHOOK(AnnouncerOption, ret);
+	ret = ret_string;
+	return ret;
+}
+
 void Announcer_Countdown()
 {
 	SELFPARAM();
-	float starttime = getstatf(STAT_GAMESTARTTIME);
+	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
@@ -59,7 +69,7 @@ void Announcer_Countdown()
  float previous_game_starttime;
 void Announcer_Gamestart()
 {
-	float startTime = getstatf(STAT_GAMESTARTTIME);
+	float startTime = STAT(GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
@@ -68,19 +78,18 @@ void Announcer_Gamestart()
 	{
 		if(time < startTime)
 		{
-			entity e = find(world, classname, "announcer_countdown");
-			if (!e)
+			static entity announcer_countdown;
+			if (!announcer_countdown)
 			{
-				e = spawn();
-				e.classname = "announcer_countdown";
-				e.think = Announcer_Countdown;
+				announcer_countdown = new(announcer_countdown);
+				announcer_countdown.think = Announcer_Countdown;
 			}
 
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle
-			if(time > e.nextthink) // don't play it again if countdown was already going
+			if(time > announcer_countdown.nextthink) // don't play it again if countdown was already going
 				Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 
-			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+			announcer_countdown.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}
 
@@ -92,12 +101,12 @@ void Announcer_Gamestart()
 void Announcer_Time()
 {
 	float timelimit = getstatf(STAT_TIMELIMIT);
-	float timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
+	float timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	float warmup_timeleft = 0;
 
 	if(warmup_stage)
 		if(autocvar_g_warmup_limit > 0)
-			warmup_timeleft = max(0, autocvar_g_warmup_limit + getstatf(STAT_GAMESTARTTIME) - time);
+			warmup_timeleft = max(0, autocvar_g_warmup_limit + STAT(GAMESTARTTIME) - time);
 
 	// 5 minute check
 	if(autocvar_cl_announcer_maptime >= 2)

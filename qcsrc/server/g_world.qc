@@ -18,7 +18,6 @@
 #include "scores.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
-#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
@@ -54,8 +53,7 @@ void PingPLReport_Think()
 	e = edict_num(self.cnt + 1);
 	if(IS_REAL_CLIENT(e))
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, self.cnt);
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
@@ -72,8 +70,7 @@ void PingPLReport_Think()
 	}
 	else
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
 		WriteByte(MSG_BROADCAST, self.cnt);
 		WriteShort(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
@@ -83,8 +80,8 @@ void PingPLReport_Think()
 }
 void PingPLReport_Spawn()
 {
-	pingplreport = spawn();
-	pingplreport.classname = "pingplreport";
+	pingplreport = new(pingplreport);
+	make_pure(pingplreport);
 	pingplreport.think = PingPLReport_Think;
 	pingplreport.nextthink = time;
 }
@@ -98,17 +95,7 @@ void ShuffleMaplist();
 
 void SetDefaultAlpha()
 {
-	if(autocvar_g_running_guns)
-	{
-		default_player_alpha = -1;
-		default_weapon_alpha = +1;
-	}
-	else if(g_cloaked)
-	{
-		default_player_alpha = autocvar_g_balance_cloaked_alpha;
-		default_weapon_alpha = default_player_alpha;
-	}
-	else
+	if (!MUTATOR_CALLHOOK(SetDefaultAlpha))
 	{
 		default_player_alpha = autocvar_g_player_alpha;
 		if(default_player_alpha == 0)
@@ -515,7 +502,7 @@ void detect_maptype()
 entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
 	WriteShort(MSG_ENTITY, self.cnt);
 	return true;
 }
@@ -528,7 +515,8 @@ void RandomSeed_Think()
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
-	randomseed = spawn();
+	randomseed = new(randomseed);
+	make_pure(randomseed);
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
@@ -546,19 +534,18 @@ spawnfunc(__init_dedicated_server)
 
 	remove = remove_unsafely;
 
-	entity e;
-	e = spawn();
+	entity e = spawn();
 	e.think = GotoFirstMap;
 	e.nextthink = time; // this is usually 1 at this point
 
-	e = spawn();
-	e.classname = "info_player_deathmatch"; // safeguard against player joining
+	e = new(info_player_deathmatch);  // safeguard against player joining
 
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
+	static_init_precache();
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -658,6 +645,7 @@ spawnfunc(worldspawn)
 
 	InitGameplayMode();
 	static_init_late();
+	static_init_precache();
 	readlevelcvars();
 	GrappleHookInit();
 
@@ -768,15 +756,11 @@ spawnfunc(worldspawn)
 
 	WepSet_AddStat();
 	WepSet_AddStat_InMap();
-	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
-	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
 	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
 
-	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
-	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
@@ -795,8 +779,6 @@ spawnfunc(worldspawn)
 	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
-
-	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
 
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
@@ -1476,7 +1458,6 @@ void DumpStats(float final)
 
 void FixIntermissionClient(entity e)
 {
-	string s;
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
@@ -1485,18 +1466,24 @@ void FixIntermissionClient(entity e)
 		e.solid = SOLID_NOT;
 		e.movetype = MOVETYPE_NONE;
 		e.takedamage = DAMAGE_NO;
-		if(e.weaponentity)
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 		{
-			e.weaponentity.effects = EF_NODRAW;
-			if (e.weaponentity.weaponentity)
-				e.weaponentity.weaponentity.effects = EF_NODRAW;
+		    .entity weaponentity = weaponentities[slot];
+			if(e.(weaponentity))
+			{
+				e.(weaponentity).effects = EF_NODRAW;
+				if (e.(weaponentity).(weaponentity))
+					e.(weaponentity).(weaponentity).effects = EF_NODRAW;
+			}
 		}
 		if(IS_REAL_CLIENT(e))
 		{
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
-			s = autocvar_sv_intermission_cdtrack;
-			if(s != "")
-				stuffcmd(e, strcat("\ncd loop ", s, "\n"));
+			string list = autocvar_sv_intermission_cdtrack;
+			for(string it; (it = car(list)); list = cdr(list))
+				RandomSelection_Add(world, 0, it, 1, 1);
+			if(RandomSelection_chosen_string && RandomSelection_chosen_string != "")
+				stuffcmd(e, strcat("\ncd loop ", RandomSelection_chosen_string, "\n"));
 			msg_entity = e;
 			WriteByte(MSG_ONE, SVC_INTERMISSION);
 		}
@@ -1657,7 +1644,7 @@ void AddWinners(.float field, float value)
 }
 
 // clear the .winning flags
-void ClearWinners(void)
+void ClearWinners()
 {
 	entity head;
 	FOR_EACH_PLAYER(head)

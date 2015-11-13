@@ -186,8 +186,8 @@ void WarpZone_Trace_InitTransform()
 {
 	if(!WarpZone_trace_transform)
 	{
-		WarpZone_trace_transform = spawn();
-		WarpZone_trace_transform.classname = "warpzone_trace_transform";
+		WarpZone_trace_transform = new(warpzone_trace_transform);
+		make_pure(WarpZone_trace_transform);
 	}
 	WarpZone_Accumulator_Clear(WarpZone_trace_transform);
 }
@@ -457,7 +457,7 @@ entity WarpZone_TrailParticles_trace_callback_own;
 float WarpZone_TrailParticles_trace_callback_eff;
 void WarpZone_TrailParticles_trace_callback(vector from, vector endpos, vector to)
 {
-	trailparticles(WarpZone_TrailParticles_trace_callback_own, WarpZone_TrailParticles_trace_callback_eff, from, endpos);
+	__trailparticles(WarpZone_TrailParticles_trace_callback_own, WarpZone_TrailParticles_trace_callback_eff, from, endpos);
 }
 
 void WarpZone_TrailParticles(entity own, float eff, vector org, vector end)
@@ -572,37 +572,20 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 
 bool WarpZoneLib_BadEntity(entity e)
 {
-	string myclassname = e.classname;
-	if (e.instanceOfObject) return true;
-	switch(myclassname)
+	string s = e.classname;
+	if (is_pure(e)) return true;
+	switch (s)
 	{
-		case "deathtype":
-		case "weaponentity":
-		case "exteriorweaponentity":
-		case "csqc_score_team":
-		case "pingplreport":
-		case "ent_client_scoreinfo":
-		case "saved_cvar_value":
-		case "accuracy":
 		case "entcs_sender":
 		case "entcs_receiver":
-		case "clientinit":
-		case "sprite_waypoint":
-		case "waypoint":
-		case "gibsplash":
-		//case "net_linked": // actually some real entities are linked without classname, fail
+		// case "net_linked": // actually some real entities are linked without classname, fail
 		case "":
 			return true;
 	}
 
-	if(startsWith(myclassname, "msg_"))
-		return true;
+	if (startsWith(s, "target_")) return true;
 
-	if(startsWith(myclassname, "target_"))
-		return true;
-
-	if(startsWith(myclassname, "info_"))
-		return true;
+	if (startsWith(s, "info_")) return true;
 
 	return false;
 }
@@ -703,8 +686,7 @@ void WarpZone_RefSys_CheckCreate(entity me)
 {
 	if(me.WarpZone_refsys.owner != me)
 	{
-		me.WarpZone_refsys = spawn();
-		me.WarpZone_refsys.classname = "warpzone_refsys";
+		me.WarpZone_refsys = new(warpzone_refsys);
 		me.WarpZone_refsys.owner = me;
 		me.WarpZone_refsys.think = WarpZone_RefSys_GC;
 		me.WarpZone_refsys.nextthink = time + 1;

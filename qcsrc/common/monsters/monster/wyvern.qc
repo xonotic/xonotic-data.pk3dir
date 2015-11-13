@@ -2,7 +2,7 @@
 #define WYVERN_H
 
 #ifndef MENUQC
-MODEL(MON_WYVERN, "models/monsters/wizard.mdl");
+MODEL(MON_WYVERN, M_Model("wizard.mdl"));
 #endif
 
 CLASS(Wyvern, Monster)
@@ -28,7 +28,7 @@ CLASS(WyvernAttack, PortoLaunch)
 /* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(WyvernAttack, impulse, int, 9);
 /* refname   */ ATTRIB(WyvernAttack, netname, string, "wyvern");
-/* wepname   */ ATTRIB(WyvernAttack, message, string, _("Wyvern attack"));
+/* wepname   */ ATTRIB(WyvernAttack, m_name, string, _("Wyvern attack"));
 ENDCLASS(WyvernAttack)
 REGISTER_WEAPON(WYVERN_ATTACK, NEW(WyvernAttack));
 
@@ -48,12 +48,13 @@ float autocvar_g_monster_wyvern_attack_fireball_speed;
 void M_Wyvern_Attack_Fireball_Explode();
 void M_Wyvern_Attack_Fireball_Touch();
 
-METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, bool fire1, bool fire2)) {
-    if (fire1)
-    if (time > actor.attack_finished_single || weapon_prepareattack(thiswep, actor, false, 1.2)) {
-        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+SOUND(WyvernAttack_FIRE, W_Sound("electro_fire"));
+METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity weaponentity, int fire)) {
+    if (fire & 1)
+    if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
+        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, SND(WyvernAttack_FIRE), CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
-			actor.attack_finished_single = time + 1.2;
+			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
 			monster_makevectors(actor.enemy);
 		}
@@ -73,7 +74,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, bool fir
 		missile.touch = M_Wyvern_Attack_Fireball_Touch;
 		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 
-        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
 }
 
@@ -121,6 +122,7 @@ void M_Wyvern_Attack_Fireball_Touch()
 float M_Wyvern_Attack(float attack_type, entity targ)
 {
 	SELFPARAM();
+	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -128,7 +130,7 @@ float M_Wyvern_Attack(float attack_type, entity targ)
 		{
 			w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 			Weapon wep = WEP_WYVERN_ATTACK;
-			wep.wr_think(wep, self, true, false);
+			wep.wr_think(wep, self, weaponentity, 1);
 			return true;
 		}
 	}

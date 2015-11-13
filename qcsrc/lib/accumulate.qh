@@ -2,51 +2,59 @@
 #define ACCUMULATE_H
 
 #ifdef QCC_SUPPORT_ACCUMULATE
-# define ACCUMULATE_FUNCTION(func, otherfunc) \
-    [[accumulate]] void func() { otherfunc(); }
-# define CALL_ACCUMULATED_FUNCTION(func) \
-    func()
+	#define ACCUMULATE_FUNCTION(func, otherfunc) \
+		[[accumulate]] void func() \
+		{ \
+			otherfunc(); \
+		}
+	#define CALL_ACCUMULATED_FUNCTION(func) \
+		func()
 #else
-#ifdef HAVE_YO_DAWG_CPP
+	#ifdef HAVE_YO_DAWG_CPP
 // TODO make ascii art pic of xzibit
 // YO DAWG!
 // I HERD YO LIEK MACROS
 // SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION
 // SO YO CAN EXPAND MACROS WHILE YO EXPAND MACROS
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-    #ifdef func \
-    void __merge__##otherfunc() { func(); otherfunc(); } \
-    #undef func \
-    #define func __merge__##otherfunc \
-    #else \
-    #define func otherfunc \
-    #endif
-# define CALL_ACCUMULATED_FUNCTION(func) \
-    func()
-#else
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-    .float _ACCUMULATE_##func##__##otherfunc;
-void ACCUMULATE_call(string func)
-{
-    float i;
-    float n = numentityfields();
-    string funcprefix = strcat("_ACCUMULATE_", func, "__");
-    float funcprefixlen = strlen(funcprefix);
-    for(i = 0; i < n; ++i)
-    {
-        string name = entityfieldname(i);
-        if(substring(name, 0, funcprefixlen) == funcprefix)
-            callfunction(substring(name, funcprefixlen, -1));
-    }
-}
-# define CALL_ACCUMULATED_FUNCTION(func) \
-    ACCUMULATE_call(#func)
-#endif
+		#define ACCUMULATE_FUNCTION(func, otherfunc) \
+			#ifdef func \
+			void __merge__##otherfunc() \
+			{ \
+				func(); otherfunc(); \
+			} \
+			#undef func \
+			#define func __merge__##otherfunc \
+			#else \
+				#define func otherfunc \
+				#endif
+		#define CALL_ACCUMULATED_FUNCTION(func) \
+			func()
+	#else
+		#define ACCUMULATE_FUNCTION(func, otherfunc) \
+			.float _ACCUMULATE_##func##__##otherfunc;
+		void ACCUMULATE_call(string func)
+		{
+			float i;
+			float n = numentityfields();
+			string funcprefix = strcat("_ACCUMULATE_", func, "__");
+			float funcprefixlen = strlen(funcprefix);
+			for (i = 0; i < n; ++i)
+			{
+				string name = entityfieldname(i);
+				if (substring(name, 0, funcprefixlen) == funcprefix) callfunction(substring(name, funcprefixlen, -1));
+			}
+		}
+		#define CALL_ACCUMULATED_FUNCTION(func) \
+			ACCUMULATE_call( #func)
+	#endif
 #endif
 
 // used for simplifying ACCUMULATE_FUNCTIONs
-#define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
-#define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name,max,count,type) if(count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+#define SET_FIRST_OR_LAST(input, first, count) \
+	if (!input) { input = (first + count); }
+#define SET_FIELD_COUNT(field, first, count) \
+	if (!field) { field = (first + count); ++count; }
+#define CHECK_MAX_COUNT(name, max, count, type) \
+	if (count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
 
 #endif

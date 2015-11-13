@@ -3,14 +3,15 @@
 
 #include "model.qh"
 
-REGISTRY(Models, BIT(9))
-REGISTER_REGISTRY(RegisterModels)
+REGISTRY(Models, BITS(9))
+#define Models_from(i) _Models_from(i, MDL_Null)
+REGISTER_REGISTRY(Models)
 
 #define MODEL(name, path) \
     string MDL_##name##_get() { return path; } \
-    REGISTER(RegisterModels, MDL, Models, name, m_id, NEW(Model, MDL_##name##_get))
+    REGISTER(Models, MDL, name, m_id, NEW(Model, MDL_##name##_get))
 
-STATIC_INIT(RegisterModels_precache) {
+PRECACHE(Models) {
     FOREACH(Models, true, LAMBDA({
         it.model_precache(it);
     }));

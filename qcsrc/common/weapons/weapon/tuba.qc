@@ -14,7 +14,7 @@ CLASS(Tuba, Weapon)
 /* wepimg    */ ATTRIB(Tuba, model2, string, "weapontuba");
 /* refname   */ ATTRIB(Tuba, netname, string, "tuba");
 /* xgettext:no-c-format */
-/* wepname   */ ATTRIB(Tuba, message, string, _("@!#%'n Tuba"));
+/* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
 ENDCLASS(Tuba)
 REGISTER_WEAPON(TUBA, NEW(Tuba));
 
@@ -56,7 +56,7 @@ float W_Tuba_MarkClientOnlyFieldsAsUsed() {
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(WEP_TUBA.m_id); }
+spawnfunc(weapon_tuba) { weapon_defaultspawnfunc(this, WEP_TUBA); }
 
 bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch, float mintempo, float maxtempo)
 {
@@ -149,7 +149,7 @@ bool W_Tuba_HasPlayed(entity pl, string melody, int instrument, bool ignorepitch
 	return true;
 }
 
-void W_Tuba_NoteOff(void)
+void W_Tuba_NoteOff()
 {SELFPARAM();
 	// we have a note:
 	//   on: self.spawnshieldtime
@@ -261,7 +261,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	if(!sound_allowed(MSG_ONE, self.realowner))
 		return false;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{
@@ -281,7 +281,7 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	return true;
 }
 
-void W_Tuba_NoteThink(void)
+void W_Tuba_NoteThink()
 {SELFPARAM();
 	float dist_mult;
 	float vol0, vol1;
@@ -379,25 +379,25 @@ void W_Tuba_NoteOn(float hittype)
 					self.BUTTON_ATCK2 = 1;
 			}
 		}
-		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Tuba, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
-			if(fire1)
-			if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(tuba, refire)))
+			if(fire & 1)
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(0);
 				//weapon_thinkf(actor, WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(actor, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
-			if(fire2)
-			if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR(tuba, refire)))
+			if(fire & 2)
+			if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(tuba, refire)))
 			{
 				W_Tuba_NoteOn(HITTYPE_SECONDARY);
 				//weapon_thinkf(actor, WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
-				weapon_thinkf(actor, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 			}
 			if(actor.tuba_note)
 			{
-				if(!fire1 && !fire2)
+				if(!(fire & 1) && !(fire & 2))
 				{
 					WITH(entity, self, actor.tuba_note, W_Tuba_NoteOff());
 				}
@@ -414,8 +414,9 @@ void W_Tuba_NoteOn(float hittype)
 		}
 		METHOD(Tuba, wr_reload, void(entity thiswep))
 		{
+			.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 			// switch to alternate instruments :)
-			if(self.weaponentity.state == WS_READY)
+			if(self.(weaponentity).state == WS_READY)
 			{
 				switch(self.tuba_instrument)
 				{
@@ -434,8 +435,8 @@ void W_Tuba_NoteOn(float hittype)
 				}
 				W_SetupShot(self, false, 0, "", 0, 0);
 				Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
-				self.weaponentity.state = WS_INUSE;
-				weapon_thinkf(self, WFRAME_RELOAD, 0.5, w_ready);
+				self.(weaponentity).state = WS_INUSE;
+				weapon_thinkf(self, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
 			}
 		}
 		METHOD(Tuba, wr_checkammo1, bool(entity thiswep))

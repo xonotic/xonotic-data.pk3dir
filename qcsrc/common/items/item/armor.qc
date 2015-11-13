@@ -5,13 +5,14 @@
 
 #ifndef MENUQC
 MODEL(ArmorSmall_ITEM, Item_Model("item_armor_small.md3"));
+SOUND(ArmorSmall, "misc/armor1");
 #endif
 
 REGISTER_ITEM(ArmorSmall, Armor) {
 #ifndef MENUQC
     this.m_model                =   MDL_ArmorSmall_ITEM;
+    this.m_sound                =   SND_ArmorSmall;
 #endif
-    this.m_sound                =   "misc/armor1.wav";
     this.m_name                 =   "5 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
@@ -24,13 +25,14 @@ REGISTER_ITEM(ArmorSmall, Armor) {
 
 #ifndef MENUQC
 MODEL(ArmorMedium_ITEM, Item_Model("item_armor_medium.md3"));
+SOUND(ArmorMedium, "misc/armor10");
 #endif
 
 REGISTER_ITEM(ArmorMedium, Armor) {
 #ifndef MENUQC
     this.m_model                =   MDL_ArmorMedium_ITEM;
+    this.m_sound                =   SND_ArmorMedium;
 #endif
-    this.m_sound                =   "misc/armor10.wav";
     this.m_name                 =   "25 Armor";
     this.m_icon                 =   "armor";
 #ifdef SVQC
@@ -43,13 +45,14 @@ REGISTER_ITEM(ArmorMedium, Armor) {
 
 #ifndef MENUQC
 MODEL(ArmorLarge_ITEM, Item_Model("item_armor_big.md3"));
+SOUND(ArmorLarge, "misc/armor17_5");
 #endif
 
 REGISTER_ITEM(ArmorLarge, Armor) {
 #ifndef MENUQC
     this.m_model                =   MDL_ArmorLarge_ITEM;
+    this.m_sound                =   SND_ArmorLarge;
 #endif
-    this.m_sound                =   "misc/armor17_5.wav";
     this.m_name                 =   "50 Armor";
     this.m_icon                 =   "armor";
     this.m_color                =   '0 1 0';
@@ -64,13 +67,14 @@ REGISTER_ITEM(ArmorLarge, Armor) {
 
 #ifndef MENUQC
 MODEL(ArmorMega_ITEM, Item_Model("item_armor_large.md3"));
+SOUND(ArmorMega, "misc/armor25");
 #endif
 
 REGISTER_ITEM(ArmorMega, Armor) {
 #ifndef MENUQC
     this.m_model                =   MDL_ArmorMega_ITEM;
+    this.m_sound                =   SND_ArmorMega;
 #endif
-    this.m_sound                =   "misc/armor25.wav";
     this.m_name                 =   "100 Armor";
     this.m_icon                 =   "item_large_armor";
     this.m_color                =   '0 1 0';

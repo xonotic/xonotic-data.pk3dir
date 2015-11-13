@@ -2,16 +2,17 @@
 #define COMMON_COMMANDS_ALL_H
 
 #include "command.qh"
-REGISTRY(GENERIC_COMMANDS, 50)
-REGISTER_REGISTRY(RegisterGENERIC_COMMANDS)
-REGISTRY_SORT(GENERIC_COMMANDS, m_name, 0)
+REGISTRY(GENERIC_COMMANDS, BITS(7))
+#define GENERIC_COMMANDS_from(i) _GENERIC_COMMANDS_from(i, NULL)
+REGISTER_REGISTRY(GENERIC_COMMANDS)
+REGISTRY_SORT(GENERIC_COMMANDS, 0)
 
 #define GENERIC_COMMAND(id, description) \
 	CLASS(genericcommand_##id, Command) \
 		ATTRIB(genericcommand_##id, m_name, string, #id); \
     	ATTRIB(genericcommand_##id, m_description, string, description); \
 	ENDCLASS(genericcommand_##id) \
-    REGISTER(RegisterGENERIC_COMMANDS, CMD_G, GENERIC_COMMANDS, id, m_id, NEW(genericcommand_##id)); \
+    REGISTER(GENERIC_COMMANDS, CMD_G, id, m_id, NEW(genericcommand_##id)); \
 	METHOD(genericcommand_##id, m_invokecmd, void(int request, int arguments, string command))
 
 STATIC_INIT(GENERIC_COMMANDS_aliases) {

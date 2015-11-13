@@ -36,7 +36,7 @@ SOUND(GRENADE_BOUNCE4, W_Sound("grenade_bounce4"));
 SOUND(GRENADE_BOUNCE5, W_Sound("grenade_bounce5"));
 SOUND(GRENADE_BOUNCE6, W_Sound("grenade_bounce6"));
 Sound SND_GRENADE_BOUNCE_RANDOM() {
-    return Sounds[SND_GRENADE_BOUNCE1.m_id + rint(random() * 5)];
+    return Sounds_from(SND_GRENADE_BOUNCE1.m_id + rint(random() * 5));
 }
 SOUND(GRENADE_FIRE, W_Sound("grenade_fire"));
 SOUND(GRENADE_IMPACT, W_Sound("grenade_impact"));
@@ -48,7 +48,7 @@ SOUND(HAGEXP1, W_Sound("hagexp1"));
 SOUND(HAGEXP2, W_Sound("hagexp2"));
 SOUND(HAGEXP3, W_Sound("hagexp3"));
 Sound SND_HAGEXP_RANDOM() {
-    return Sounds[SND_HAGEXP1.m_id + rint(random() * 2)];
+    return Sounds_from(SND_HAGEXP1.m_id + rint(random() * 2));
 }
 
 SOUND(HOOKBOMB_FIRE, W_Sound("hookbomb_fire"));
@@ -71,7 +71,7 @@ SOUND(NEXWHOOSH1, W_Sound("nexwhoosh1"));
 SOUND(NEXWHOOSH2, W_Sound("nexwhoosh2"));
 SOUND(NEXWHOOSH3, W_Sound("nexwhoosh3"));
 Sound SND_NEXWHOOSH_RANDOM() {
-    return Sounds[SND_NEXWHOOSH1.m_id + rint(random() * 2)];
+    return Sounds_from(SND_NEXWHOOSH1.m_id + rint(random() * 2));
 }
 SOUND(RELOAD, W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
 
@@ -79,7 +79,7 @@ SOUND(RIC1, W_Sound("ric1"));
 SOUND(RIC2, W_Sound("ric2"));
 SOUND(RIC3, W_Sound("ric3"));
 Sound SND_RIC_RANDOM() {
-    return Sounds[SND_RIC1.m_id + rint(random() * 2)];
+    return Sounds_from(SND_RIC1.m_id + rint(random() * 2));
 }
 
 SOUND(ROCKET_DET, W_Sound("rocket_det"));
@@ -106,11 +106,11 @@ SOUND(WEAPONPICKUP, W_Sound("weaponpickup"));
 SOUND(WEAPONPICKUP_NEW_TOYS, W_Sound("weaponpickup_new_toys"));
 SOUND(WEAPON_SWITCH, W_Sound("weapon_switch"));
 
-SOUND(CTF_CAPTURE_NEUTRAL, "ctf/capture.ogg");
-SOUND(CTF_CAPTURE_RED, "ctf/red_capture.wav");
-SOUND(CTF_CAPTURE_BLUE, "ctf/blue_capture.wav");
-SOUND(CTF_CAPTURE_YELLOW, "ctf/yellow_capture.ogg");
-SOUND(CTF_CAPTURE_PINK, "ctf/pink_capture.ogg");
+SOUND(CTF_CAPTURE_NEUTRAL, "ctf/capture");
+SOUND(CTF_CAPTURE_RED, "ctf/red_capture");
+SOUND(CTF_CAPTURE_BLUE, "ctf/blue_capture");
+SOUND(CTF_CAPTURE_YELLOW, "ctf/yellow_capture");
+SOUND(CTF_CAPTURE_PINK, "ctf/pink_capture");
 Sound SND_CTF_CAPTURE(int teamid) {
     switch (teamid) {
         case NUM_TEAM_1:    return SND_CTF_CAPTURE_RED;
@@ -121,11 +121,11 @@ Sound SND_CTF_CAPTURE(int teamid) {
     }
 }
 
-SOUND(CTF_DROPPED_NEUTRAL,  "ctf/neutral_dropped.wav");
-SOUND(CTF_DROPPED_RED,      "ctf/red_dropped.wav");
-SOUND(CTF_DROPPED_BLUE,     "ctf/blue_dropped.wav");
-SOUND(CTF_DROPPED_YELLOW,   "ctf/yellow_dropped.wav");
-SOUND(CTF_DROPPED_PINK,     "ctf/pink_dropped.wav");
+SOUND(CTF_DROPPED_NEUTRAL,  "ctf/neutral_dropped");
+SOUND(CTF_DROPPED_RED,      "ctf/red_dropped");
+SOUND(CTF_DROPPED_BLUE,     "ctf/blue_dropped");
+SOUND(CTF_DROPPED_YELLOW,   "ctf/yellow_dropped");
+SOUND(CTF_DROPPED_PINK,     "ctf/pink_dropped");
 Sound SND_CTF_DROPPED(int teamid) {
     switch (teamid) {
         case NUM_TEAM_1:    return SND_CTF_DROPPED_RED;
@@ -136,14 +136,14 @@ Sound SND_CTF_DROPPED(int teamid) {
     }
 }
 
-SOUND(CTF_PASS, "ctf/pass.wav");
-SOUND(CTF_RESPAWN, "ctf/flag_respawn.wav");
+SOUND(CTF_PASS, "ctf/pass");
+SOUND(CTF_RESPAWN, "ctf/flag_respawn");
 
-SOUND(CTF_RETURNED_NEUTRAL,  "ctf/return.wav");
-SOUND(CTF_RETURNED_RED,      "ctf/red_returned.wav");
-SOUND(CTF_RETURNED_BLUE,     "ctf/blue_returned.wav");
-SOUND(CTF_RETURNED_YELLOW,   "ctf/yellow_returned.wav");
-SOUND(CTF_RETURNED_PINK,     "ctf/pink_returned.wav");
+SOUND(CTF_RETURNED_NEUTRAL,  "ctf/return");
+SOUND(CTF_RETURNED_RED,      "ctf/red_returned");
+SOUND(CTF_RETURNED_BLUE,     "ctf/blue_returned");
+SOUND(CTF_RETURNED_YELLOW,   "ctf/yellow_returned");
+SOUND(CTF_RETURNED_PINK,     "ctf/pink_returned");
 Sound SND_CTF_RETURNED(int teamid) {
     switch (teamid) {
         case NUM_TEAM_1:    return SND_CTF_RETURNED_RED;
@@ -154,11 +154,11 @@ Sound SND_CTF_RETURNED(int teamid) {
     }
 }
 
-SOUND(CTF_TAKEN_NEUTRAL,  "ctf/neutral_taken.wav");
-SOUND(CTF_TAKEN_RED,      "ctf/red_taken.wav");
-SOUND(CTF_TAKEN_BLUE,     "ctf/blue_taken.wav");
-SOUND(CTF_TAKEN_YELLOW,   "ctf/yellow_taken.wav");
-SOUND(CTF_TAKEN_PINK,     "ctf/pink_taken.wav");
+SOUND(CTF_TAKEN_NEUTRAL,  "ctf/neutral_taken");
+SOUND(CTF_TAKEN_RED,      "ctf/red_taken");
+SOUND(CTF_TAKEN_BLUE,     "ctf/blue_taken");
+SOUND(CTF_TAKEN_YELLOW,   "ctf/yellow_taken");
+SOUND(CTF_TAKEN_PINK,     "ctf/pink_taken");
 Sound SND_CTF_TAKEN(int teamid) {
     switch (teamid) {
         case NUM_TEAM_1:    return SND_CTF_TAKEN_RED;
@@ -169,109 +169,109 @@ Sound SND_CTF_TAKEN(int teamid) {
     }
 }
 
-SOUND(CTF_TOUCH, "ctf/touch.wav");
+SOUND(CTF_TOUCH, "ctf/touch");
 
-SOUND(DOM_CLAIM, "domination/claim.wav");
+SOUND(DOM_CLAIM, "domination/claim");
 
-SOUND(KA_DROPPED, "keepaway/dropped.wav");
-SOUND(KA_PICKEDUP, "keepaway/pickedup.wav");
-SOUND(KA_RESPAWN, "keepaway/respawn.wav");
-SOUND(KA_TOUCH, "keepaway/touch.wav");
+SOUND(KA_DROPPED, "keepaway/dropped");
+SOUND(KA_PICKEDUP, "keepaway/pickedup");
+SOUND(KA_RESPAWN, "keepaway/respawn");
+SOUND(KA_TOUCH, "keepaway/touch");
 
-SOUND(KH_ALARM, "kh/alarm.wav");
-SOUND(KH_CAPTURE, "kh/capture.wav");
-SOUND(KH_COLLECT, "kh/collect.wav");
-SOUND(KH_DESTROY, "kh/destroy.wav");
-SOUND(KH_DROP, "kh/drop.wav");
+SOUND(KH_ALARM, "kh/alarm");
+SOUND(KH_CAPTURE, "kh/capture");
+SOUND(KH_COLLECT, "kh/collect");
+SOUND(KH_DESTROY, "kh/destroy");
+SOUND(KH_DROP, "kh/drop");
 
-SOUND(NB_BOUNCE, "nexball/bounce.ogg");
-SOUND(NB_DROP, "nexball/drop.ogg");
-SOUND(NB_SHOOT1, "nexball/shoot1.ogg");
-SOUND(NB_SHOOT2, "nexball/shoot2.ogg");
-SOUND(NB_STEAL, "nexball/steal.ogg");
+SOUND(NB_BOUNCE, "nexball/bounce");
+SOUND(NB_DROP, "nexball/drop");
+SOUND(NB_SHOOT1, "nexball/shoot1");
+SOUND(NB_SHOOT2, "nexball/shoot2");
+SOUND(NB_STEAL, "nexball/steal");
 
-SOUND(ONS_CONTROLPOINT_BUILD, "onslaught/controlpoint_build.ogg");
-SOUND(ONS_CONTROLPOINT_BUILT, "onslaught/controlpoint_built.ogg");
-SOUND(ONS_CONTROLPOINT_UNDERATTACK, "onslaught/controlpoint_underattack.ogg");
-SOUND(ONS_DAMAGEBLOCKEDBYSHIELD, "onslaught/damageblockedbyshield.wav");
-SOUND(ONS_ELECTRICITY_EXPLODE, "onslaught/electricity_explode.ogg");
-SOUND(ONS_GENERATOR_DECAY, "onslaught/generator_decay.ogg");
-SOUND(ONS_GENERATOR_UNDERATTACK, "onslaught/generator_underattack.ogg");
-SOUND(ONS_HIT1, "onslaught/ons_hit1.ogg");
-SOUND(ONS_HIT2, "onslaught/ons_hit2.ogg");
-SOUND(ONS_SPARK1, "onslaught/ons_spark1.ogg");
-SOUND(ONS_SPARK2, "onslaught/ons_spark2.ogg");
-SOUND(ONS_SHOCKWAVE, "onslaught/shockwave.ogg");
+SOUND(ONS_CONTROLPOINT_BUILD, "onslaught/controlpoint_build");
+SOUND(ONS_CONTROLPOINT_BUILT, "onslaught/controlpoint_built");
+SOUND(ONS_CONTROLPOINT_UNDERATTACK, "onslaught/controlpoint_underattack");
+SOUND(ONS_DAMAGEBLOCKEDBYSHIELD, "onslaught/damageblockedbyshield");
+SOUND(ONS_ELECTRICITY_EXPLODE, "onslaught/electricity_explode");
+SOUND(ONS_GENERATOR_DECAY, "onslaught/generator_decay");
+SOUND(ONS_GENERATOR_UNDERATTACK, "onslaught/generator_underattack");
+SOUND(ONS_HIT1, "onslaught/ons_hit1");
+SOUND(ONS_HIT2, "onslaught/ons_hit2");
+SOUND(ONS_SPARK1, "onslaught/ons_spark1");
+SOUND(ONS_SPARK2, "onslaught/ons_spark2");
+SOUND(ONS_SHOCKWAVE, "onslaught/shockwave");
 
-SOUND(PORTO_BOUNCE, "porto/bounce.ogg");
-SOUND(PORTO_CREATE, "porto/create.ogg");
-SOUND(PORTO_EXPIRE, "porto/expire.ogg");
-SOUND(PORTO_EXPLODE, "porto/explode.ogg");
-SOUND(PORTO_FIRE, "porto/fire.ogg");
-SOUND(PORTO_UNSUPPORTED, "porto/unsupported.ogg");
+SOUND(PORTO_BOUNCE, "porto/bounce");
+SOUND(PORTO_CREATE, "porto/create");
+SOUND(PORTO_EXPIRE, "porto/expire");
+SOUND(PORTO_EXPLODE, "porto/explode");
+SOUND(PORTO_FIRE, "porto/fire");
+SOUND(PORTO_UNSUPPORTED, "porto/unsupported");
 
-SOUND(TUR_PHASER, "turrets/phaser.ogg");
+SOUND(TUR_PHASER, "turrets/phaser");
 
-SOUND(VEH_ALARM, "vehicles/alarm.wav");
-SOUND(VEH_ALARM_SHIELD, "vehicles/alarm_shield.wav");
-SOUND(VEH_MISSILE_ALARM, "vehicles/missile_alarm.wav");
+SOUND(VEH_ALARM, "vehicles/alarm");
+SOUND(VEH_ALARM_SHIELD, "vehicles/alarm_shield");
+SOUND(VEH_MISSILE_ALARM, "vehicles/missile_alarm");
 
 SOUND(VEH_BUMBLEBEE_FIRE, W_Sound("flacexp3"));
 
-SOUND(VEH_RACER_BOOST, "vehicles/racer_boost.wav");
-SOUND(VEH_RACER_IDLE, "vehicles/racer_idle.wav");
-SOUND(VEH_RACER_MOVE, "vehicles/racer_move.wav");
+SOUND(VEH_RACER_BOOST, "vehicles/racer_boost");
+SOUND(VEH_RACER_IDLE, "vehicles/racer_idle");
+SOUND(VEH_RACER_MOVE, "vehicles/racer_move");
 
-SOUND(VEH_RAPTOR_FLY, "vehicles/raptor_fly.wav");
-SOUND(VEH_RAPTOR_SPEED, "vehicles/raptor_speed.wav");
+SOUND(VEH_RAPTOR_FLY, "vehicles/raptor_fly");
+SOUND(VEH_RAPTOR_SPEED, "vehicles/raptor_speed");
 
-SOUND(VEH_SPIDERBOT_DIE, "vehicles/spiderbot_die.wav");
-SOUND(VEH_SPIDERBOT_IDLE, "vehicles/spiderbot_idle.wav");
-SOUND(VEH_SPIDERBOT_JUMP, "vehicles/spiderbot_jump.wav");
-SOUND(VEH_SPIDERBOT_LAND, "vehicles/spiderbot_land.wav");
-SOUND(VEH_SPIDERBOT_STRAFE, "vehicles/spiderbot_strafe.wav");
-SOUND(VEH_SPIDERBOT_WALK, "vehicles/spiderbot_walk.wav");
+SOUND(VEH_SPIDERBOT_DIE, "vehicles/spiderbot_die");
+SOUND(VEH_SPIDERBOT_IDLE, "vehicles/spiderbot_idle");
+SOUND(VEH_SPIDERBOT_JUMP, "vehicles/spiderbot_jump");
+SOUND(VEH_SPIDERBOT_LAND, "vehicles/spiderbot_land");
+SOUND(VEH_SPIDERBOT_STRAFE, "vehicles/spiderbot_strafe");
+SOUND(VEH_SPIDERBOT_WALK, "vehicles/spiderbot_walk");
 
-SOUND(NADE_BEEP, "overkill/grenadebip.ogg");
+SOUND(NADE_BEEP, "overkill/grenadebip");
 
-SOUND(BUFF_LOST, "relics/relic_effect.wav");
+SOUND(BUFF_LOST, "relics/relic_effect");
 
-SOUND(POWEROFF, "misc/poweroff.wav");
-SOUND(POWERUP, "misc/powerup.ogg");
-SOUND(SHIELD_RESPAWN, "misc/shield_respawn.wav");
-SOUND(STRENGTH_RESPAWN, "misc/strength_respawn.wav");
+SOUND(POWEROFF, "misc/poweroff");
+SOUND(POWERUP, "misc/powerup");
+SOUND(SHIELD_RESPAWN, "misc/shield_respawn");
+SOUND(STRENGTH_RESPAWN, "misc/strength_respawn");
 
-SOUND(ARMOR25, "misc/armor25.wav");
-SOUND(ARMORIMPACT, "misc/armorimpact.wav");
-SOUND(BODYIMPACT1, "misc/bodyimpact1.wav");
-SOUND(BODYIMPACT2, "misc/bodyimpact2.wav");
+SOUND(ARMOR25, "misc/armor25");
+SOUND(ARMORIMPACT, "misc/armorimpact");
+SOUND(BODYIMPACT1, "misc/bodyimpact1");
+SOUND(BODYIMPACT2, "misc/bodyimpact2");
 
-SOUND(ITEMPICKUP, "misc/itempickup.ogg");
-SOUND(ITEMRESPAWNCOUNTDOWN, "misc/itemrespawncountdown.ogg");
-SOUND(ITEMRESPAWN, "misc/itemrespawn.ogg");
-SOUND(MEGAHEALTH, "misc/megahealth.ogg");
+SOUND(ITEMPICKUP, "misc/itempickup");
+SOUND(ITEMRESPAWNCOUNTDOWN, "misc/itemrespawncountdown");
+SOUND(ITEMRESPAWN, "misc/itemrespawn");
+SOUND(MEGAHEALTH, "misc/megahealth");
 
-SOUND(LAVA, "player/lava.wav");
-SOUND(SLIME, "player/slime.wav");
+SOUND(LAVA, "player/lava");
+SOUND(SLIME, "player/slime");
 
-SOUND(GIB, "misc/gib.wav");
-SOUND(GIB_SPLAT01, "misc/gib_splat01.wav");
-SOUND(GIB_SPLAT02, "misc/gib_splat02.wav");
-SOUND(GIB_SPLAT03, "misc/gib_splat03.wav");
-SOUND(GIB_SPLAT04, "misc/gib_splat04.wav");
+SOUND(GIB, "misc/gib");
+SOUND(GIB_SPLAT01, "misc/gib_splat01");
+SOUND(GIB_SPLAT02, "misc/gib_splat02");
+SOUND(GIB_SPLAT03, "misc/gib_splat03");
+SOUND(GIB_SPLAT04, "misc/gib_splat04");
 Sound SND_GIB_SPLAT_RANDOM() {
-    return Sounds[SND_GIB_SPLAT01.m_id + floor(prandom() * 4)];
+    return Sounds_from(SND_GIB_SPLAT01.m_id + floor(prandom() * 4));
 }
 
-SOUND(HIT, "misc/hit.wav");
-SOUND(TYPEHIT, "misc/typehit.wav");
+SOUND(HIT, "misc/hit");
+SOUND(TYPEHIT, "misc/typehit");
 
-SOUND(SPAWN, "misc/spawn.ogg");
+SOUND(SPAWN, "misc/spawn");
 
-SOUND(TALK, "misc/talk.wav");
+SOUND(TALK, "misc/talk");
 
-SOUND(TELEPORT, "misc/teleport.ogg");
+SOUND(TELEPORT, "misc/teleport");
 
-SOUND(INVSHOT, "misc/invshot.wav");
+SOUND(INVSHOT, "misc/invshot");
 
-SOUND(JETPACK_FLY, "misc/jetpack_fly.ogg");
+SOUND(JETPACK_FLY, "misc/jetpack_fly");

@@ -3,11 +3,10 @@
 
 bool fexists(string f)
 {
-    int fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return false;
-    fclose(fh);
-    return true;
+	int fh = fopen(f, FILE_READ);
+	if (fh < 0) return false;
+	fclose(fh);
+	return true;
 }
 
 #endif

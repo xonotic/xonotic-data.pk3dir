@@ -1,3 +1,0 @@
-#ifdef CSQC
-void ent_plat();
-#endif

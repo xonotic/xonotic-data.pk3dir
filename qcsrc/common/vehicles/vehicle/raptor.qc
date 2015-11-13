@@ -392,7 +392,8 @@ float raptor_frame()
 	if(player.BUTTON_ATCK)
 	if (wep1.wr_checkammo1(wep1))
 	{
-		wep1.wr_think(wep1, self, true, false);
+	    .entity weaponentity = weaponentities[0];
+		wep1.wr_think(wep1, self, weaponentity, 1);
 	}
 
 	if(self.vehicle_flags  & VHF_SHIELDREGEN)
@@ -411,7 +412,8 @@ float raptor_frame()
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_bombs_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			wep2a.wr_think(wep2a, self, false, true);
+		    .entity weaponentity = weaponentities[1];
+			wep2a.wr_think(wep2a, self, weaponentity, 2);
 			raptor.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			raptor.lip   = time;
 		}
@@ -422,7 +424,8 @@ float raptor_frame()
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_flare_refire)
 		if(player.BUTTON_ATCK2)
 		{
-			wep2b.wr_think(wep2b, self, false, true);
+		    .entity weaponentity = weaponentities[1];
+			wep2b.wr_think(wep2b, self, weaponentity, 2);
 			raptor.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			raptor.lip   = time;
 		}
@@ -671,10 +674,10 @@ spawnfunc(vehicle_raptor)
 
 				self.frame = 0;
 
-				self.bomb1 = spawn();
-				self.bomb2 = spawn();
-				self.gun1  = spawn();
-				self.gun2  = spawn();
+				self.bomb1 = new(raptor_bomb);
+				self.bomb2 = new(raptor_bomb);
+				self.gun1  = new(raptor_gun);
+				self.gun2  = new(raptor_gun);
 
 				setmodel(self.bomb1, MDL_VEH_RAPTOR_CB_FOLDED);
 				setmodel(self.bomb2, MDL_VEH_RAPTOR_CB_FOLDED);
@@ -705,7 +708,7 @@ spawnfunc(vehicle_raptor)
 				self.angles = self.bomb1.angles;
 				self.bomb1.angles = '0 0 0';
 
-				spinner = spawn();
+				spinner = new(raptor_spinner);
 				spinner.owner = self;
 				setmodel(spinner, MDL_VEH_RAPTOR_PROP);
 				setattachment(spinner, self, "engine_left");
@@ -713,7 +716,7 @@ spawnfunc(vehicle_raptor)
 				spinner.avelocity = '0 90 0';
 				self.bomb1.gun1 = spinner;
 
-				spinner = spawn();
+				spinner = new(raptor_spinner);
 				spinner.owner = self;
 				setmodel(spinner, MDL_VEH_RAPTOR_PROP);
 				setattachment(spinner, self, "engine_right");

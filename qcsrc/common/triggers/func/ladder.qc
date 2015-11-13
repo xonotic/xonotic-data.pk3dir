@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
+
 void func_ladder_touch()
 {SELFPARAM();
 #ifdef SVQC
@@ -20,7 +22,7 @@ void func_ladder_touch()
 #ifdef SVQC
 bool func_ladder_send(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER);
 
 	WriteString(MSG_ENTITY, self.classname);
 	WriteByte(MSG_ENTITY, self.skin);
@@ -60,14 +62,17 @@ spawnfunc(func_water)
 #elif defined(CSQC)
 .float speed;
 
-void ent_func_ladder()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
+{
 	self.classname = strzone(ReadString());
 	self.skin = ReadByte();
 	self.speed = ReadByte();
 	self.model = strzone(ReadString());
 
 	trigger_common_read(false);
+
+	return = true;
+
 	self.mins = self.maxs = '0 0 0';
 
 	self.solid = SOLID_TRIGGER;

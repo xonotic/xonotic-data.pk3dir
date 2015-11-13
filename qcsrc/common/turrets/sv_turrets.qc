@@ -13,7 +13,7 @@ vector turret_aim_generic()
 	if(self.aim_flags & TFL_AIM_SIMPLE)
 		return real_origin(self.enemy);
 
-	mintime = max(self.attack_finished_single - time,0) + sys_frametime;
+	mintime = max(self.attack_finished_single[0] - time,0) + sys_frametime;
 
 	// Baseline
 	pre_pos = real_origin(self.enemy);
@@ -302,7 +302,7 @@ void turrets_setframe(float _frame, float client_only)
 bool turret_send(entity this, entity to, float sf)
 {
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TURRET);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TURRET);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
 	{
@@ -913,7 +913,7 @@ float turret_firecheck()
 
 	// Ready?
 	if (self.firecheck_flags & TFL_FIRECHECK_REFIRE)
-		if (self.attack_finished_single > time) return 0;
+		if (self.attack_finished_single[0] > time) return 0;
 
 	// Special case: volly fire turret that has to fire a full volly if a shot was fired.
 	if (self.shoot_flags & TFL_SHOOT_VOLLYALWAYS)
@@ -996,7 +996,7 @@ void turret_fire()
 	Turret info = get_turretinfo(self.m_id);
 	info.tr_attack(info);
 
-	self.attack_finished_single = time + self.shot_refire;
+	self.attack_finished_single[0] = time + self.shot_refire;
 	self.ammo -= self.shot_dmg;
 	self.volly_counter = self.volly_counter - 1;
 
@@ -1008,7 +1008,7 @@ void turret_fire()
 			self.enemy = world;
 
 		if (self.shot_volly > 1)
-			self.attack_finished_single = time + self.shot_volly_refire;
+			self.attack_finished_single[0] = time + self.shot_volly_refire;
 	}
 
 #ifdef TURRET_DEBUG
@@ -1267,8 +1267,7 @@ float turret_initialize(Turret tur)
 	entity e = find(world, classname, "turret_manager");
 	if(!e)
 	{
-		e = spawn();
-		e.classname = "turret_manager";
+		e = new(turret_manager);
 		e.think = turrets_manager_think;
 		e.nextthink = time + 2;
 	}
@@ -1353,13 +1352,13 @@ float turret_initialize(Turret tur)
 	self.nextthink				= time + 1;
 	self.nextthink			   += turret_count * sys_frametime;
 
-	self.tur_head = spawn();
+	self.tur_head = new(turret_head);
 	_setmodel(self.tur_head, tur.head_model);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 	setorigin(self.tur_head, '0 0 0');
 	setattachment(self.tur_head, self, "tag_head");
 
-	self.tur_head.netname		= self.tur_head.classname = "turret_head";
+	self.tur_head.netname		= self.tur_head.classname;
 	self.tur_head.team			= self.team;
 	self.tur_head.owner			= self;
 	self.tur_head.takedamage	= DAMAGE_NO;

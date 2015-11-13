@@ -13,7 +13,7 @@ CLASS(HLAC, Weapon)
 /* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(HLAC, model2, string, "weaponhlac");
 /* refname   */ ATTRIB(HLAC, netname, string, "hlac");
-/* wepname   */ ATTRIB(HLAC, message, string, _("Heavy Laser Assault Cannon"));
+/* wepname   */ ATTRIB(HLAC, m_name, string, _("Heavy Laser Assault Cannon"));
 ENDCLASS(HLAC)
 REGISTER_WEAPON(HLAC, NEW(HLAC));
 
@@ -50,9 +50,9 @@ HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
+spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
-void W_HLAC_Touch(void)
+void W_HLAC_Touch()
 {SELFPARAM();
 	float isprimary;
 
@@ -87,9 +87,8 @@ void W_HLAC_Attack(Weapon thiswep)
 		self.punchangle_y = random() - 0.5;
 	}
 
-	missile = spawn();
+	missile = new(hlacbolt);
 	missile.owner = missile.realowner = self;
-	missile.classname = "hlacbolt";
 	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
@@ -116,7 +115,7 @@ void W_HLAC_Attack(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-void W_HLAC_Attack2(void)
+void W_HLAC_Attack2()
 {SELFPARAM();
 	entity missile;
     float spread;
@@ -130,9 +129,8 @@ void W_HLAC_Attack2(void)
 	W_SetupShot(self, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn();
+	missile = new(hlacbolt);
 	missile.owner = missile.realowner = self;
-	missile.classname = "hlacbolt";
 	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
@@ -161,11 +159,11 @@ void W_HLAC_Attack2(void)
 }
 
 // weapon frames
-void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	if(actor.weapon != actor.switchweapon) // abort immediately if switching
 	{
-		w_ready(thiswep, actor, fire1, fire2);
+		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 
@@ -176,18 +174,19 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, bool fire1, bool fire2)
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-			w_ready(thiswep, actor, fire1, fire2);
+			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
 
-		ATTACK_FINISHED(actor) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
+		int slot = weaponslot(weaponentity);
+		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
 		W_HLAC_Attack(WEP_HLAC);
 		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
-        weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
 	{
-		weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
 	}
 }
 
@@ -211,27 +210,27 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 		{
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 		}
-		METHOD(HLAC, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
-			} else if(fire1)
+			} else if(fire & 1)
 			{
-				if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(hlac, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hlac, refire)))
 				{
 					actor.misc_bulletcounter = 0;
 					W_HLAC_Attack(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 				}
 			}
 
-			else if(fire2 && WEP_CVAR(hlac, secondary))
+			else if((fire & 2) && WEP_CVAR(hlac, secondary))
 			{
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hlac, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hlac, refire)))
 				{
 					W_HLAC_Attack2_Frame(thiswep);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
 				}
 			}
 		}
@@ -275,7 +274,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
+			pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
 		}

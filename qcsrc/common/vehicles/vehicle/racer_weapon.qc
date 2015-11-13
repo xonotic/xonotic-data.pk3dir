@@ -7,14 +7,14 @@ CLASS(RacerAttack, PortoLaunch)
 /* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
 /* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
-/* wepname   */ ATTRIB(RacerAttack, message, string, _("Racer cannon"));
+/* wepname   */ ATTRIB(RacerAttack, m_name, string, _("Racer cannon"));
 ENDCLASS(RacerAttack)
 REGISTER_WEAPON(RACER, NEW(RacerAttack));
 
 // TODO: move into implementation
 #ifdef SVQC
 float autocvar_g_vehicle_racer_rocket_refire;
-void racer_fire_rocket(vector org, vector dir, entity trg);
+void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
 #endif
 
 #endif
@@ -41,14 +41,14 @@ float autocvar_g_vehicle_racer_rocket_turnrate;
 float autocvar_g_vehicle_racer_rocket_climbspeed;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
 
-void racer_fire_rocket(vector org, vector dir, entity trg);
-METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
+METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
-    if (fire1)
-    if (weapon_prepareattack(thiswep, player, false, autocvar_g_vehicle_racer_cannon_refire)) {
+    if (fire & 1)
+    if (weapon_prepareattack(thiswep, player, weaponentity, false, autocvar_g_vehicle_racer_cannon_refire)) {
         if (veh) {
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
             veh.wait = time;
@@ -61,13 +61,13 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, bool fire1, boo
                                autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
                                DEATH_VH_WAKI_GUN.m_id, PROJECTILE_WAKICANNON, 0, true, true, player);
         bolt.velocity = normalize(dir) * autocvar_g_vehicle_racer_cannon_speed;
-        weapon_thinkf(player, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(player, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
-    if (fire2)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, 0.2)) {
+    if (fire & 2)
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
-        racer_fire_rocket(w_shotorg, w_shotdir, NULL);
-        weapon_thinkf(actor, WFRAME_FIRE2, 0, w_ready);
+        racer_fire_rocket(player, w_shotorg, w_shotdir, NULL);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
 
@@ -83,12 +83,12 @@ METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep))
 void racer_rocket_tracker();
 void racer_rocket_groundhugger();
 
-void racer_fire_rocket(vector org, vector dir, entity trg)
+void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
 {SELFPARAM();
     entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND(ROCKET_FIRE),
                            org, dir * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-                           DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, self.owner);
+                           DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);
 
     rocket.lip			  = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait			 = autocvar_g_vehicle_racer_rocket_turnrate;

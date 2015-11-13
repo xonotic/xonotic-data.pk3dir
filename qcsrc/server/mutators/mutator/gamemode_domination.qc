@@ -10,19 +10,19 @@ void dom_Initialize();
 
 REGISTER_MUTATOR(dom, false)
 {
-	int fraglimit_override = autocvar_g_domination_point_limit;
-	if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
-		fraglimit_override = autocvar_g_domination_roundbased_point_limit;
-
-	ActivateTeamplay();
-	SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, -1, -1);
-	have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		dom_Initialize();
+
+		int fraglimit_override = autocvar_g_domination_point_limit;
+		if (autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
+			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
+
+		ActivateTeamplay();
+		SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, -1, -1);
+		have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONREMOVE

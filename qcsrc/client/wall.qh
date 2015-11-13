@@ -20,5 +20,4 @@ void Ent_Wall_Draw(entity this);
 
 void Ent_Wall_Remove();
 
-void Ent_Wall();
 #endif

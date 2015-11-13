@@ -25,5 +25,3 @@
 #include "weapon/seeker.qc"
 #include "weapon/shockwave.qc"
 #include "weapon/arc.qc"
-#include "weapon/hmg.qc"
-#include "weapon/rpc.qc"

@@ -43,11 +43,14 @@ CLASS(Turret, Object)
 
     }
     ATTRIB(Turret, m_weapon, Weapon, WEP_Null)
+#ifdef SVQC
     /** (SERVER) called when turret attacks */
     METHOD(Turret, tr_attack, void(Turret this)) {
         Weapon w = this.m_weapon;
-        w.wr_think(w, self, true, false);
+        .entity weaponentity = weaponentities[0];
+        w.wr_think(w, self, weaponentity, 1);
     }
+#endif
     /** (ALL) */
     METHOD(Turret, tr_config, void(Turret this)) {
         // TODO

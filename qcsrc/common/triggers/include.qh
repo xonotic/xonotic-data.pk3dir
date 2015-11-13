@@ -13,9 +13,6 @@
 // func
 #include "func/include.qh"
 
-// misc
-#include "misc/include.qh"
-
 // target
 #include "target/include.qh"
 

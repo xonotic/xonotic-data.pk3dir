@@ -5,6 +5,7 @@ string W_Model(string w_mdl);
 
 MODEL(CTF_SHIELD,                       "models/ctf/shield.md3");
 MODEL(CTF_CAPTURE,                      "models/ctf/shockwavetransring.md3");
+MODEL(CTF_FLAG,                         "models/ctf/flags.md3");
 
 MODEL(DOM_NEUTRAL,                      "models/domination/dom_unclaimed.md3");
 MODEL(DOM_RED,                          "models/domination/dom_red.md3");
@@ -144,7 +145,7 @@ MODEL(GIB_ROBO_7,                       "models/gibs/robo7.md3");
 MODEL(GIB_ROBO_8,                       "models/gibs/robo8.md3");
 Model MDL_GIB_ROBO_RANDOM() {
     int i = floor(random() * 8);
-    return Models[MDL_GIB_ROBO_1.m_id + i];
+    return Models_from(MDL_GIB_ROBO_1.m_id + i);
 }
 
 MODEL(CASING_SHELL,                     "models/casing_shell.mdl");
@@ -346,7 +347,7 @@ MODEL(9,                                "models/sprites/9.spr32");
 MODEL(10,                               "models/sprites/10.spr32");
 Model MDL_NUM(int i) {
     if ((i >= 0 && i <= 10))
-        return Models[MDL_0.m_id + i];
+        return Models_from(MDL_0.m_id + i);
     return MDL_Null;
 }
 

@@ -535,7 +535,7 @@ When you press the jump key
 returns true if handled
 =============
 */
-bool PlayerJump (void)
+bool PlayerJump ()
 {SELFPARAM();
 	if (PHYS_FROZEN(self))
 		return true; // no jumping in freezetag when frozen
@@ -1012,7 +1012,7 @@ float PM_check_specialcommand(float buttons)
 	return false;
 }
 
-void PM_check_nickspam(void)
+void PM_check_nickspam()
 {SELFPARAM();
 #ifdef SVQC
 	if (time >= self.nickspamtime)
@@ -1057,7 +1057,7 @@ void PM_check_punch()
 #endif
 }
 
-void PM_check_spider(void)
+void PM_check_spider()
 {SELFPARAM();
 #ifdef SVQC
 	if (time >= self.spider_slowness)
@@ -1070,7 +1070,7 @@ void PM_check_spider(void)
 }
 
 // predict frozen movement, as frozen players CAN move in some cases
-void PM_check_frozen(void)
+void PM_check_frozen()
 {SELFPARAM();
 	if (!PHYS_FROZEN(self))
 		return;
@@ -1115,16 +1115,16 @@ void PM_check_hitground()
 			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 			{
 				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(GS_FALL_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 				else
-					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(GS_FALL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 			}
 		}
 	}
 #endif
 }
 
-void PM_check_blocked(void)
+void PM_check_blocked()
 {SELFPARAM();
 #ifdef SVQC
 	if (!self.player_blocked)
@@ -1134,7 +1134,7 @@ void PM_check_blocked(void)
 #endif
 }
 
-void PM_check_vortex(void)
+void PM_check_vortex()
 {SELFPARAM();
 #ifdef SVQC
 	// WEAPONTODO
@@ -1819,7 +1819,7 @@ void PM_Main()
 		RaceCarPhysics();
 #endif
 
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || (BUFFS_STAT(self) & BUFF_FLIGHT.m_itemid))
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, self))
 		PM_fly(maxspeed_mod);
 
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
@@ -1858,9 +1858,9 @@ void PM_Main()
 }
 
 #ifdef SVQC
-void SV_PlayerPhysics(void)
+void SV_PlayerPhysics()
 #elif defined(CSQC)
-void CSQC_ClientMovement_PlayerMove_Frame(void)
+void CSQC_ClientMovement_PlayerMove_Frame()
 #endif
 {SELFPARAM();
 	PM_Main();

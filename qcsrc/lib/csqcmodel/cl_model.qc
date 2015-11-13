@@ -209,8 +209,8 @@ void CSQCModel_Draw()
 	self.csqcmodel_teleported = 0;
 }
 
-void CSQCModel_Read(bool isnew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
+{
 	int sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
@@ -279,6 +279,7 @@ void CSQCModel_Read(bool isnew)
 	// draw it
 	self.drawmask = MASK_NORMAL;
 	self.predraw = CSQCModel_Draw;
+	return true;
 }
 
 entity CSQCModel_server2csqc(float pl)

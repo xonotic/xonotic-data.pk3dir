@@ -4,7 +4,7 @@
 #include "../lib/warpzone/common.qh"
 
 entityclass(Hook);
-class(Hook) .float HookType; // ENT_CLIENT_*
+class(Hook) .entity HookType; // ENT_CLIENT_*
 class(Hook) .vector origin;
 class(Hook) .vector velocity;
 class(Hook) .float HookSilent;
@@ -48,10 +48,10 @@ void Draw_GrapplingHook(entity this)
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			vs = hook_shotorigin[s];
 			break;
-		case ENT_CLIENT_ARC_BEAM:
+		case NET_ENT_CLIENT_ARC_BEAM:
 			vs = lightning_shotorigin[s];
 			break;
 	}
@@ -61,11 +61,11 @@ void Draw_GrapplingHook(entity this)
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
+			case NET_ENT_CLIENT_ARC_BEAM:
 				if(self.HookRange)
 					b = view_origin + view_forward * self.HookRange;
 				else
@@ -81,11 +81,11 @@ void Draw_GrapplingHook(entity this)
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				a = self.velocity;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
+			case NET_ENT_CLIENT_ARC_BEAM:
 				a = self.origin;
 				b = self.velocity;
 				break;
@@ -97,7 +97,7 @@ void Draw_GrapplingHook(entity this)
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			intensity = 1;
 			offset = 0;
 			switch(t)
@@ -109,7 +109,7 @@ void Draw_GrapplingHook(entity this)
 				default: tex = "particles/hook_white"; rgb = getcsqcplayercolor(self.sv_entnum); break;
 			}
 			break;
-		case ENT_CLIENT_ARC_BEAM: // todo
+		case NET_ENT_CLIENT_ARC_BEAM: // todo
 			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
 			offset = Noise_Brown(self, frametime) * 10;
 			tex = "particles/lgbeam";
@@ -121,7 +121,7 @@ void Draw_GrapplingHook(entity this)
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;
 	Draw_GrapplingHook_trace_callback_a = intensity;
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
 	atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);
@@ -129,7 +129,7 @@ void Draw_GrapplingHook(entity this)
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			if(vlen(trace_endpos - atrans) > 0.5)
 			{
 				setorigin(self, trace_endpos); // hook endpoint!
@@ -141,7 +141,7 @@ void Draw_GrapplingHook(entity this)
 				self.drawmask = 0;
 			}
 			break;
-		case ENT_CLIENT_ARC_BEAM:
+		case NET_ENT_CLIENT_ARC_BEAM:
 			setorigin(self, a); // beam origin!
 			break;
 	}
@@ -149,10 +149,10 @@ void Draw_GrapplingHook(entity this)
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			break;
-		case ENT_CLIENT_ARC_BEAM:
-			pointparticles(particleeffectnum(EFFECT_ARC_LIGHTNING2), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
+		case NET_ENT_CLIENT_ARC_BEAM:
+			pointparticles(EFFECT_ARC_LIGHTNING2, trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 	}
 }
@@ -162,9 +162,9 @@ void Remove_GrapplingHook()
 	sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
-void Ent_ReadHook(float bIsNew, float type)
-{SELFPARAM();
-	self.HookType = type;
+NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
+{
+	self.HookType = NET_ENT_CLIENT_HOOK;
 
 	int sf = ReadByte();
 
@@ -181,10 +181,10 @@ void Ent_ReadHook(float bIsNew, float type)
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				self.HookRange = 0;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
+			case NET_ENT_CLIENT_ARC_BEAM:
 				self.HookRange = ReadCoord();
 				break;
 		}
@@ -213,18 +213,19 @@ void Ent_ReadHook(float bIsNew, float type)
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				// for the model
 				setmodel(self, MDL_HOOK);
 				self.drawmask = MASK_NORMAL;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
+			case NET_ENT_CLIENT_ARC_BEAM:
 				sound (self, CH_SHOTS_SINGLE, SND_LGBEAM_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
 
 	self.teleport_time = time + 10;
+	return true;
 }
 
 // TODO: hook: temporarily transform self.origin for drawing the model along warpzones!

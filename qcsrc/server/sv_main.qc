@@ -13,6 +13,7 @@
 
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
+#include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
@@ -27,7 +28,7 @@
 .float lastground;
 .int state;
 
-void CreatureFrame (void)
+void CreatureFrame ()
 {SELFPARAM();
 	float dm;
 
@@ -158,9 +159,9 @@ void CreatureFrame (void)
 					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 						else
-							GlobalSound(globalsound_step, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}
@@ -422,7 +423,7 @@ void SV_OnEntityPreSpawnFunction()
 	}
 }
 
-void WarpZone_PostInitialize_Callback(void)
+void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
 	entity e;

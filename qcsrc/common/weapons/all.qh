@@ -2,6 +2,7 @@
 #define WEAPONS_ALL_H
 
 #include "../command/all.qh"
+#include "../stats.qh"
 #include "config.qh"
 
 // weapon sets
@@ -34,8 +35,10 @@ WepSet ReadWepSet();
 #endif
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
-REGISTER_REGISTRY(RegisterWeapons)
-entity get_weaponinfo(int id);
+#define Weapons_from(i) _Weapons_from(i, WEP_Null)
+#define get_weaponinfo(i) Weapons_from(i)
+REGISTER_REGISTRY(Weapons)
+STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(WeaponPickup, it))); }
 
 
 GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
@@ -93,7 +96,7 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
 
 #define REGISTER_WEAPON(id, inst) \
     /* WepSet WEPSET_##id; */ \
-    REGISTER(RegisterWeapons, WEP, Weapons, id, m_id, inst)
+    REGISTER(Weapons, WEP, id, m_id, inst)
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
@@ -130,23 +133,15 @@ REGISTER_WEAPON(Null, NEW(Weapon));
 
 #include "all.inc"
 
-entity get_weaponinfo(int id)
-{
-    if (id >= WEP_FIRST && id <= WEP_LAST) {
-        Weapon w = Weapons[id];
-        if (w) return w;
-    }
-    return WEP_Null;
-}
-
 // TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
-#define WEP_HARDCODED_IMPULSES 22
+#define WEP_HARDCODED_IMPULSES 20
 
 // TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
 #define WEP_IMPULSE_BEGIN 230
 #define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (Weapons_COUNT - 1) - 1, 253)
 
-REGISTRY_SORT(Weapons, netname, WEP_HARDCODED_IMPULSES + 1)
+REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
+REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
 {
@@ -168,7 +163,7 @@ STATIC_INIT(register_weapons_done)
     #endif
     weaponorder_byid = "";
     for (int i = Weapons_MAX - 1; i >= 1; --i)
-        if (Weapons[i])
+        if (Weapons_from(i))
             weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
     weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
 }

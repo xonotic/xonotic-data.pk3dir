@@ -8,17 +8,17 @@ void freezetag_Initialize();
 
 REGISTER_MUTATOR(ft, false)
 {
-	ActivateTeamplay();
-	SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, -1, -1);
-
-	if (autocvar_g_freezetag_team_spawns)
-		have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		freezetag_Initialize();
+
+		ActivateTeamplay();
+		SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, -1, -1);
+
+		if (autocvar_g_freezetag_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -44,15 +44,16 @@ const float ICE_MIN_ALPHA = 0.1;
 float freezetag_teams;
 
 .float reviving; // temp var
-#endif
 
+float autocvar_g_freezetag_revive_extra_size;
+float autocvar_g_freezetag_revive_speed;
+bool autocvar_g_freezetag_revive_nade;
+float autocvar_g_freezetag_revive_nade_health;
+
+#endif
 #ifdef IMPLEMENTATION
 
 float autocvar_g_freezetag_frozen_maxtime;
-bool autocvar_g_freezetag_revive_nade;
-float autocvar_g_freezetag_revive_nade_health;
-float autocvar_g_freezetag_revive_extra_size;
-float autocvar_g_freezetag_revive_speed;
 float autocvar_g_freezetag_revive_clearspeed;
 float autocvar_g_freezetag_round_timelimit;
 int autocvar_g_freezetag_teams;

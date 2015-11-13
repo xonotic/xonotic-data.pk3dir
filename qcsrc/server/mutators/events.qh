@@ -153,6 +153,9 @@ MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_NO_ARGS);
 /** returns true if dropping the current weapon shall not be allowed at any time including death */
 MUTATOR_HOOKABLE(ForbidDropCurrentWeapon, EV_NO_ARGS);
 
+/**  */
+MUTATOR_HOOKABLE(SetDefaultAlpha, EV_NO_ARGS);
+
 /** allows changing attack rate */
 #define EV_WeaponRateFactor(i, o) \
     /**/ i(float, weapon_rate) \
@@ -182,7 +185,10 @@ MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
  * checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
  * return error to request removal
  */
-MUTATOR_HOOKABLE(FilterItem, EV_NO_ARGS);
+#define EV_FilterItem(i, o) \
+    /** the current item */ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(FilterItem, EV_FilterItem);
 
 /** return error to request removal */
 #define EV_TurretSpawn(i, o) \
@@ -334,14 +340,30 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
  * Called when a player is damaged
  */
 #define EV_PlayerDamaged(i, o) \
-    /** attacker */ i(entity, mutator_argv_entity_0) \
-    /** target */ i(entity, mutator_argv_entity_1) \
-    /** health */ i(int, mutator_argv_int_0) \
-    /** armor */ i(int, mutator_argv_int_1) \
-    /** location */ i(vector, mutator_argv_vector_0) \
-    /** deathtype */ i(int, mutator_argv_int_2) \
+    /** attacker  */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** target    */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** health    */ i(int,    MUTATOR_ARGV_0_int) \
+    /** armor     */ i(int,    MUTATOR_ARGV_1_int) \
+    /** location  */ i(vector, MUTATOR_ARGV_0_vector) \
+    /** deathtype */ i(int,    MUTATOR_ARGV_2_int) \
     /**/
 MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
+
+/**
+ * Called by W_DecreaseAmmo
+ */
+#define EV_W_DecreaseAmmo(i, o) \
+    /** actor */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(W_DecreaseAmmo, EV_W_DecreaseAmmo);
+
+/**
+ * Called by W_Reload
+ */
+#define EV_W_Reload(i, o) \
+    /** actor */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(W_Reload, EV_W_Reload);
 
 /** called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items. */
 #define EV_PlayerPowerups(i, o) \
@@ -811,4 +833,23 @@ MUTATOR_HOOKABLE(TurretValidateTarget, EV_TurretValidateTarget);
     /**/ i(entity, __self) \
     /**/
 MUTATOR_HOOKABLE(TurretThink, EV_TurretThink);
+
+MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
+
+/** */
+#define EV_PrepareExplosionByDamage(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(entity, frag_attacker) \
+    /**/
+MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
+
+/** called when a monster model is about to be set, allows custom paths etc. */
+#define EV_MonsterModel(i, o) \
+    /**/ i(string, monster_model) \
+    /**/ i(string, monster_model_output) \
+    /**/ o(string, monster_model_output) \
+    /**/
+string monster_model;
+string monster_model_output;
+MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
 #endif

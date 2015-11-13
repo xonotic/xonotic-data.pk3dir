@@ -53,7 +53,7 @@ void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector
 
 bool WarpZone_Teleported_Send(entity to, int sf)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE_TELEPORTED);
 	WriteCoord(MSG_ENTITY, self.angles.x);
 	WriteCoord(MSG_ENTITY, self.angles.y);
 	WriteCoord(MSG_ENTITY, self.angles.z);
@@ -137,7 +137,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		// instead of fixangle, send the transform to the client for smoother operation
 		player.fixangle = false;
 
-		entity ts = spawn();
+		entity ts = new(warpzone_teleported);
 		setmodel(ts, MDL_Null);
 		ts.SendEntity = WarpZone_Teleported_Send;
 		ts.SendFlags = 0xFFFFFF;
@@ -147,7 +147,6 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		ts.owner = player;
 		ts.enemy = wz;
 		ts.effects = EF_NODEPTHTEST;
-		ts.classname = "warpzone_teleported";
 		ts.angles = wz.warpzone_transform;
 	}
 #endif
@@ -155,7 +154,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	return 1;
 }
 
-void WarpZone_Touch (void)
+void WarpZone_Touch ()
 {SELFPARAM();
 	if(other.classname == "trigger_warpzone")
 		return;
@@ -217,7 +216,7 @@ void WarpZone_Touch (void)
 
 bool WarpZone_Send(entity to, int sendflags)
 {SELFPARAM();
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE);
 
 	// we must send this flag for clientside to match properly too
 	int f = 0;
@@ -272,7 +271,7 @@ bool WarpZone_Send(entity to, int sendflags)
 bool WarpZone_Camera_Send(entity to, int sendflags)
 {SELFPARAM();
 	int f = 0;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
 		BITSET_ASSIGN(f, 2);
@@ -486,7 +485,7 @@ void WarpZonePosition_InitStep_FindTarget()
 	self.enemy.aiment = self;
 }
 
-void WarpZoneCamera_Think(void)
+void WarpZoneCamera_Think()
 {SELFPARAM();
 	if(self.warpzone_save_origin != self.origin
 	|| self.warpzone_save_angles != self.angles
@@ -885,7 +884,7 @@ spawnfunc(target_warpzone_reconnect)
 	spawnfunc_trigger_warpzone_reconnect(this); // both names make sense here :(
 }
 
-void WarpZone_PlayerPhysics_FixVAngle(void)
+void WarpZone_PlayerPhysics_FixVAngle()
 {SELFPARAM();
 #ifndef WARPZONE_DONT_FIX_VANGLE
 	if(IS_REAL_CLIENT(self))

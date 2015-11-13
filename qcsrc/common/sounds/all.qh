@@ -4,22 +4,23 @@
 #include "sound.qh"
 
 REGISTRY(Sounds, BITS(8))
-REGISTER_REGISTRY(RegisterSounds)
+#define Sounds_from(i) _Sounds_from(i, SND_Null)
+REGISTER_REGISTRY(Sounds)
 
 #define SOUND(name, path) \
     string SND_##name##_get() { return path; } \
-    REGISTER(RegisterSounds, SND, Sounds, name, m_id, NEW(Sound, SND_##name##_get))
+    REGISTER(Sounds, SND, name, m_id, NEW(Sound, SND_##name##_get))
 
 // Used in places where a string is required
-#define SND(id) (SND_##id.sound_str())
+#define SND(id) Sound_fixpath(SND_##id)
 
-STATIC_INIT(RegisterSounds_precache) {
+PRECACHE(Sounds) {
     FOREACH(Sounds, true, LAMBDA({
         it.sound_precache(it);
     }));
 }
 
-SOUND(Null, "misc/null.wav");
+SOUND(Null, "misc/null");
 #include "all.inc"
-
+#include "all.qc"
 #endif

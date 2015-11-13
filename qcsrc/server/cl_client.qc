@@ -50,8 +50,7 @@
 
 
 void send_CSQC_teamnagger() {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
 bool ClientData_Send(entity this, entity to, int sf)
@@ -79,7 +78,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 	if(e.porto_v_angle_held)
 		sf |= 8; // angles held
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 2)
@@ -96,9 +95,10 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 void ClientData_Attach()
 {SELFPARAM();
-	Net_LinkEntity(self.clientdata = spawn(), false, 0, ClientData_Send);
-	self.clientdata.drawonlytoclient = self;
-	self.clientdata.owner = self;
+	Net_LinkEntity(this.clientdata = new(clientdata), false, 0, ClientData_Send);
+	make_pure(this.clientdata);
+	self.clientdata.drawonlytoclient = this;
+	self.clientdata.owner = this;
 }
 
 void ClientData_Detach()
@@ -175,7 +175,7 @@ void setplayermodel(entity e, string modelname)
 	precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel();
-	UpdatePlayerSounds();
+	UpdatePlayerSounds(e);
 }
 
 /*
@@ -304,7 +304,10 @@ void PutObserverInServer()
 	self.weaponname = "";
 	self.switchingweapon = 0;
 	self.weaponmodel = "";
-	self.weaponentity = world;
+	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		self.weaponentities[slot] = NULL;
+	}
 	self.exteriorweaponentity = world;
 	self.killcount = FRAGS_SPECTATOR;
 	self.velocity = '0 0 0';
@@ -314,6 +317,15 @@ void PutObserverInServer()
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 	self.event_damage = func_null;
+}
+
+int player_getspecies(entity this)
+{
+	get_model_parameters(this.model, this.skin);
+	int s = get_model_parameters_species;
+	get_model_parameters(string_null, 0);
+	if (s < 0) return SPECIES_HUMAN;
+	return s;
 }
 
 .float model_randomizer;
@@ -392,8 +404,8 @@ void FixPlayermodel(entity player)
 
 	if(chmdl || oldskin != player.skin) // model or skin has changed
 	{
-		player.species = player_getspecies(); // update species
-		UpdatePlayerSounds(); // update skin sounds
+		player.species = player_getspecies(player); // update species
+		UpdatePlayerSounds(player); // update skin sounds
 	}
 
 	if(!teamplay)
@@ -532,7 +544,8 @@ void PutClientInServer()
 		this.revival_time = 0;
 		this.air_finished = time + 12;
 
-		entity spawnevent = spawn();
+		entity spawnevent = new(spawnevent);
+		make_pure(spawnevent);
 		spawnevent.owner = this;
 		Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
 
@@ -568,7 +581,10 @@ void PutClientInServer()
 			this.killcount = 0;
 		}
 
-		CL_SpawnWeaponentity(this);
+		for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			CL_SpawnWeaponentity(this, weaponentities[slot]);
+		}
 		this.alpha = default_player_alpha;
 		this.colormod = '1 1 1' * autocvar_g_player_brightness;
 		this.exteriorweaponentity.alpha = default_weapon_alpha;
@@ -623,34 +639,40 @@ void PutClientInServer()
 // changes and just have a console command to update this?
 bool ClientInit_SendEntity(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_INIT);
-	WriteByte(MSG_ENTITY, g_nexball_meter_period * 32);
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[0]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[1]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[2]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(hook_shotorigin[3]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[0]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[1]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[2]));
-	WriteInt24_t(MSG_ENTITY, compressShotOrigin(arc_shotorigin[3]));
+	WriteHeader(MSG_ENTITY, _ENT_CLIENT_INIT);
+	return = true;
+	msg_entity = to;
+	Registry_send_all();
+	int channel = MSG_ONE;
+	WriteHeader(channel, ENT_CLIENT_INIT);
+	WriteByte(channel, g_nexball_meter_period * 32);
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[0]));
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[1]));
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[2]));
+	WriteInt24_t(channel, compressShotOrigin(hook_shotorigin[3]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[0]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[1]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[2]));
+	WriteInt24_t(channel, compressShotOrigin(arc_shotorigin[3]));
 
 	if(sv_foginterval && world.fog != "")
-		WriteString(MSG_ENTITY, world.fog);
+		WriteString(channel, world.fog);
 	else
-		WriteString(MSG_ENTITY, "");
-	WriteByte(MSG_ENTITY, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteCoord(MSG_ENTITY, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
-	WriteCoord(MSG_ENTITY, self.bouncestop); // g_balance_mortar_bouncestop
-	WriteCoord(MSG_ENTITY, self.ebouncefactor); // g_balance_mortar_bouncefactor
-	WriteCoord(MSG_ENTITY, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(MSG_ENTITY, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(MSG_ENTITY, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(MSG_ENTITY, serverflags); // client has to know if it should zoom or not
-	WriteByte(MSG_ENTITY, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
-	WriteByte(MSG_ENTITY, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
-	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
-	WriteByte(MSG_ENTITY, WEP_CVAR(porto, secondary)); // WEAPONTODO
-	return true;
+		WriteString(channel, "");
+	WriteByte(channel, self.count * 255.0); // g_balance_armor_blockpercent
+	WriteCoord(channel, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
+	WriteCoord(channel, self.bouncestop); // g_balance_mortar_bouncestop
+	WriteCoord(channel, self.ebouncefactor); // g_balance_mortar_bouncefactor
+	WriteCoord(channel, self.ebouncestop); // g_balance_mortar_bouncestop
+	WriteByte(channel, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
+	WriteByte(channel, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
+	WriteByte(channel, serverflags); // client has to know if it should zoom or not
+	WriteByte(channel, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
+	WriteByte(channel, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
+	WriteCoord(channel, autocvar_g_trueaim_minrange);
+	WriteByte(channel, WEP_CVAR(porto, secondary)); // WEAPONTODO
+
+	MUTATOR_CALLHOOK(Ent_Init);
 }
 
 void ClientInit_CheckUpdate()
@@ -685,8 +707,9 @@ void ClientInit_CheckUpdate()
 
 void ClientInit_Spawn()
 {SELFPARAM();
-	entity e = spawn();
-	e.classname = "clientinit";
+
+	entity e = new(clientinit);
+	make_pure(e);
 	e.think = ClientInit_CheckUpdate;
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
@@ -698,7 +721,7 @@ void ClientInit_Spawn()
 SetNewParms
 =============
 */
-void SetNewParms (void)
+void SetNewParms ()
 {
 	// initialize parms for a new player
 	parm1 = -(86400 * 366);
@@ -711,7 +734,7 @@ void SetNewParms (void)
 SetChangeParms
 =============
 */
-void SetChangeParms (void)
+void SetChangeParms ()
 {SELFPARAM();
 	// save parms for level change
 	parm1 = self.parm_idlesince - time;
@@ -724,7 +747,7 @@ void SetChangeParms (void)
 DecodeLevelParms
 =============
 */
-void DecodeLevelParms (void)
+void DecodeLevelParms ()
 {SELFPARAM();
 	// load parms
 	self.parm_idlesince = parm1;
@@ -927,7 +950,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 }
 
-void ClientKill (void)
+void ClientKill ()
 {SELFPARAM();
 	if(gameover) return;
 	if(self.player_blocked) return;
@@ -975,7 +998,7 @@ ClientPreConnect
 Called once (not at each match start) when a client begins a connection to the server
 =============
 */
-void ClientPreConnect (void)
+void ClientPreConnect ()
 {SELFPARAM();
 	if(autocvar_sv_eventlog)
 	{
@@ -995,8 +1018,8 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-void DecodeLevelParms (void);
-void ClientConnect (void)
+void DecodeLevelParms ();
+void ClientConnect ()
 {SELFPARAM();
 	float t;
 
@@ -1214,7 +1237,7 @@ Called when a client disconnects from the server
 */
 .entity chatbubbleentity;
 void ReadyCount();
-void ClientDisconnect (void)
+void ClientDisconnect ()
 {SELFPARAM();
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELEASE);
@@ -1284,7 +1307,7 @@ void ClientDisconnect (void)
 	if(self.weaponorder_byimpulse)
 		strunzone(self.weaponorder_byimpulse);
 
-	ClearPlayerSounds();
+	ClearPlayerSounds(self);
 
 	if(self.personal)
 		remove(self.personal);
@@ -1330,7 +1353,7 @@ void UpdateChatBubble()
 	// spawn a chatbubble entity if needed
 	if (!self.chatbubbleentity)
 	{
-		self.chatbubbleentity = spawn();
+		self.chatbubbleentity = new(chatbubbleentity);
 		self.chatbubbleentity.owner = self;
 		self.chatbubbleentity.exteriormodeltoclient = self;
 		self.chatbubbleentity.think = ChatBubbleThink;
@@ -1362,7 +1385,7 @@ void UpdateChatBubble()
 	else self.colormod = '1 1 1';
 }*/
 
-void respawn(void)
+void respawn()
 {SELFPARAM();
 	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
 	{
@@ -1391,7 +1414,7 @@ void play_countdown(float finished, string samp)
 				_sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
-void player_powerups (void)
+void player_powerups ()
 {SELFPARAM();
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = self.items;
@@ -1554,7 +1577,7 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 	return current;
 }
 
-void player_regen (void)
+void player_regen ()
 {SELFPARAM();
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
@@ -1625,19 +1648,20 @@ void SetZoomState(float z)
 }
 
 void GetPressedKeys()
-{SELFPARAM();
+{
+	SELFPARAM();
 	MUTATOR_CALLHOOK(GetPressedKeys);
-	#define X(var,bit,flag) (flag ? var |= bit : var &= ~bit)
-	X(self.pressedkeys, KEY_FORWARD, 	self.movement_x > 0);
-	X(self.pressedkeys, KEY_BACKWARD, 	self.movement_x < 0);
-	X(self.pressedkeys, KEY_RIGHT, 		self.movement_y > 0);
-	X(self.pressedkeys, KEY_LEFT, 		self.movement_y < 0);
+	int keys = this.pressedkeys;
+	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
+	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
+	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
+	keys = BITSET(keys, KEY_LEFT, 		this.movement.y < 0);
 
-	X(self.pressedkeys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(self));
-	X(self.pressedkeys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(self));
-	X(self.pressedkeys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(self));
-	X(self.pressedkeys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(self));
-	#undef X
+	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
+	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
+	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
+	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
+	this.pressedkeys = keys;
 }
 
 /*
@@ -1780,10 +1804,9 @@ bool SpectateNext()
 {SELFPARAM();
 	other = find(self.enemy, classname, "player");
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(SpectateNext, self, other);
-	other = spec_player;
-
-	if(!mutator_returnvalue && !other)
+	if (MUTATOR_CALLHOOK(SpectateNext, self, other))
+		other = spec_player;
+	else if (!other)
 		other = find(other, classname, "player");
 
 	if(other) { SetSpectatee(self, other); }
@@ -1804,13 +1827,14 @@ bool SpectatePrev()
 	while(other && other != self.enemy)
 		other = other.chain;
 
-	int mutator_returnvalue = MUTATOR_CALLHOOK(SpectatePrev, self, other, first);
-	other = spec_player;
-
-	switch(mutator_returnvalue)
+	switch (MUTATOR_CALLHOOK(SpectatePrev, self, other, first))
 	{
-		case MUT_SPECPREV_FOUND: break;
-		case MUT_SPECPREV_RETURN: return true;
+		case MUT_SPECPREV_FOUND:
+		    other = spec_player;
+		    break;
+		case MUT_SPECPREV_RETURN:
+		    other = spec_player;
+		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
@@ -1861,7 +1885,6 @@ void LeaveSpectatorMode()
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
 		{
 			self.classname = STR_PLAYER;
-			nades_RemoveBonus(self);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, false, true); }
@@ -1982,7 +2005,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || IS_SPEC(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
@@ -2129,32 +2152,6 @@ void PlayerUseKey()
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
-float isInvisibleString(string s)
-{
-	float i, n, c;
-	s = strdecolorize(s);
-	for((i = 0), (n = strlen(s)); i < n; ++i)
-	{
-		c = str2chr(s, i);
-		switch(c)
-		{
-			case 0:
-			case 32: // space
-				break;
-			case 192: // charmap space
-				if (!autocvar_utf8_enable)
-					break;
-				return false;
-			case 160: // space in unicode fonts
-			case 0xE000 + 192: // utf8 charmap space
-				if (autocvar_utf8_enable)
-					break;
-			default:
-				return false;
-		}
-	}
-	return true;
-}
 
 /*
 =============
@@ -2167,7 +2164,7 @@ Called every frame for each client before the physics are run
 void() nexball_setstatus;
 .float last_vehiclecheck;
 .int items_added;
-void PlayerPreThink (void)
+void PlayerPreThink ()
 {SELFPARAM();
 	WarpZone_PlayerPhysics_FixVAngle();
 
@@ -2427,7 +2424,8 @@ void PlayerPreThink (void)
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
-		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)
@@ -2555,7 +2553,7 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
-void PlayerPostThink (void)
+void PlayerPostThink ()
 {SELFPARAM();
 	if(sv_maxidle > 0 && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if(IS_REAL_CLIENT(self))

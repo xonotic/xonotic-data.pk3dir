@@ -1,3 +1,5 @@
+REGISTER_NET_LINKED(ENT_CLIENT_CONVEYOR)
+
 void conveyor_think()
 {SELFPARAM();
 #ifdef CSQC
@@ -72,7 +74,7 @@ void conveyor_reset()
 
 bool conveyor_send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_CONVEYOR);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
@@ -160,8 +162,8 @@ void conveyor_init()
 	self.move_time = time;
 }
 
-void ent_conveyor()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
+{
 	float sf = ReadByte();
 
 	if(sf & 1)
@@ -195,5 +197,7 @@ void ent_conveyor()
 
 	if(sf & 2)
 		self.state = ReadByte();
+
+	return true;
 }
 #endif

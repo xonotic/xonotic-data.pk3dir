@@ -8,16 +8,16 @@ void kh_Initialize();
 
 REGISTER_MUTATOR(kh, false)
 {
-	ActivateTeamplay();
-	SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, -1, -1);
-	if (autocvar_g_keyhunt_team_spawns)
-		have_team_spawns = -1; // request team spawns
-
 	MUTATOR_ONADD
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		kh_Initialize();
+
+		ActivateTeamplay();
+		SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, -1, -1);
+		if (autocvar_g_keyhunt_team_spawns)
+			have_team_spawns = -1; // request team spawns
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -45,7 +45,7 @@ float kh_tracking_enabled;
 .entity kh_next;
 float kh_Key_AllOwnedByWhichTeam();
 
-typedef void(void) kh_Think_t;
+typedef void() kh_Think_t;
 void kh_StartRound();
 void kh_Controller_SetThink(float t, kh_Think_t func);
 
@@ -102,7 +102,7 @@ float kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.float kh_state;
+.float kh_state = _STAT(KH_KEYS);
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
@@ -800,17 +800,16 @@ void key_reset()
 }
 
 const string STR_ITEM_KH_KEY = "item_kh_key";
-void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
+void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every time a new flag is created, ie after all the keys have been collected
 {
-	entity key;
-	key = spawn();
+	entity key = spawn();
 	key.count = i;
 	key.classname = STR_ITEM_KH_KEY;
 	key.touch = kh_Key_Touch;
 	key.think = kh_Key_Think;
 	key.nextthink = time;
 	key.items = IT_KEY1 | IT_KEY2;
-	key.cnt = angle;
+	key.cnt = _angle;
 	key.angles = '0 360 0' * random();
 	key.event_damage = kh_Key_Damage;
 	key.takedamage = DAMAGE_YES;
@@ -1095,8 +1094,6 @@ void kh_Initialize()  // sets up th KH environment
 
 	kh_controller.model = "";
 	kh_controller.modelindex = 0;
-
-	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 
 	kh_ScoreRules(kh_teams);
 }

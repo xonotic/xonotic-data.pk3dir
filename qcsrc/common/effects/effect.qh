@@ -1,7 +1,21 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
-#define particleeffectnum(e) _particleeffectnum(e.eent_eff_name)
+#define particleeffectnum(e) \
+	_particleeffectnum(e.eent_eff_name)
+
+#if defined(SVQC)
+	#define pointparticles(effect, org, vel, howmany) \
+		Send_Effect(effect, org, vel, howmany)
+	#define trailparticles(e, effect, org, vel) \
+		((!e) ? Send_Effect(effect, org, vel, 0) \
+		: __trailparticles(e, particleeffectnum(effect), org, vel))
+#elif defined(CSQC)
+	#define pointparticles(effect, org, vel, howmany) \
+		__pointparticles(particleeffectnum(effect), org, vel, howmany)
+	#define trailparticles(e, effect, org, vel) \
+		__trailparticles(e, particleeffectnum(effect), org, vel)
+#endif
 
 .int m_id;
 .string eent_eff_name;
@@ -14,6 +28,7 @@
 entity Create_Effect_Entity(string eff_name, bool eff_trail)
 {
 	entity this = new(effect_entity);
+	make_pure(this);
 	this.eent_eff_name = eff_name;
 	this.eent_eff_trail = eff_trail;
 	return this;

@@ -1,22 +1,125 @@
 #ifndef BITS_H
 #define BITS_H
+#include "log.qh"
 
 #define BIT(n) (1 << (n))
 #define BITS(n) (BIT(n) - 1)
 #ifndef BRANCHLESS_BITSET
-    #define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) &~ (mask))
+	#define BITSET(var, mask, flag) (flag ? (var) | (mask) : (var) & ~(mask))
 #else
-    #define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
+	#define BITSET(var, mask, flag) ((var) ^ (-(flag) ^ (var)) & (mask))
 #endif
 
 int lowestbit(int f)
 {
-    f &= ~(f << 1);
-    f &= ~(f << 2);
-    f &= ~(f << 4);
-    f &= ~(f << 8);
-    f &= ~(f << 16);
-    return f;
+	f &= ~(f << 1);
+	f &= ~(f << 2);
+	f &= ~(f << 4);
+	f &= ~(f << 8);
+	f &= ~(f << 16);
+	return f;
+}
+
+int randombit(int bits)
+{
+	if (!(bits & (bits - 1)))  // this ONLY holds for powers of two!
+		return bits;
+
+	int r = random();
+	int b = 0;
+	int n = 0;
+
+	for (int f = 1; f <= bits; f *= 2)
+	{
+		if (bits & f)
+		{
+			++n;
+			r *= n;
+			if (r <= 1) b = f;
+			else r = (r - 1) / (n - 1);
+		}
+	}
+	return b;
+}
+
+int randombits(int bits, int k, bool error_return)
+{
+	int r = 0;
+	while (k > 0 && bits != r)
+	{
+		r += randombit(bits - r);
+		--k;
+	}
+	if (error_return)
+		if (k > 0) return -1;
+	// all
+	return r;
+}
+
+void randombit_test(int bits, int iter)
+{
+	while (iter > 0)
+	{
+		LOG_INFO(ftos(randombit(bits)), "\n");
+		--iter;
+	}
+}
+
+enum {
+	OP_SET,
+	OP_MIN,
+	OP_MAX,
+	OP_PLUS,
+	OP_MINUS
+};
+
+bool GiveBit(entity e, .int fld, int bit, int op, int val)
+{
+	int v0 = (e.(fld) & bit);
+	switch (op)
+	{
+		case OP_SET:
+			if (val > 0) e.(fld) |= bit;
+			else e.(fld) &= ~bit;
+			break;
+		case OP_MIN:
+		case OP_PLUS:
+			if (val > 0) e.(fld) |= bit;
+			break;
+		case OP_MAX:
+			if (val <= 0) e.(fld) &= ~bit;
+			break;
+		case OP_MINUS:
+			if (val > 0) e.(fld) &= ~bit;
+			break;
+	}
+	int v1 = (e.(fld) & bit);
+	return v0 != v1;
+}
+
+bool GiveValue(entity e, .int fld, int op, int val)
+{
+	int v0 = e.(fld);
+	switch (op)
+	{
+		case OP_SET:
+			e.(fld) = val;
+			break;
+		case OP_MIN:
+			e.(fld) = max(e.(fld), val);  // min 100 cells = at least 100 cells
+			break;
+		case OP_MAX:
+			e.(fld) = min(e.(fld), val);
+			break;
+		case OP_PLUS:
+			e.(fld) += val;
+			break;
+		case OP_MINUS:
+			e.(fld) -= val;
+			break;
+	}
+	int v1 = e.(fld);
+	return v0 != v1;
 }
 
 #endif

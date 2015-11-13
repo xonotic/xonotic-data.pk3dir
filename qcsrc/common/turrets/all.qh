@@ -6,8 +6,11 @@
 
 #include "turret.qh"
 
-REGISTRY(Turrets, BIT(5))
-REGISTER_REGISTRY(RegisterTurrets)
+REGISTRY(Turrets, BITS(5))
+#define Turrets_from(i) _Turrets_from(i, TUR_Null)
+#define get_turretinfo(i) Turrets_from(i)
+REGISTER_REGISTRY(Turrets)
+REGISTRY_CHECK(Turrets)
 
 
 GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
@@ -67,18 +70,9 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
 const int TUR_FIRST = 1;
 #define TUR_LAST (Turrets_COUNT - 1)
 
-#define REGISTER_TURRET(id, inst) REGISTER(RegisterTurrets, TUR, Turrets, id, m_id, inst)
+#define REGISTER_TURRET(id, inst) REGISTER(Turrets, TUR, id, m_id, inst)
 
 REGISTER_TURRET(Null, NEW(Turret));
-
-Turret get_turretinfo(int id)
-{
-    if (id >= TUR_FIRST && id <= TUR_LAST) {
-        Turret t = Turrets[id];
-        if (t) return t;
-    }
-    return TUR_Null;
-}
 
 #include "all.inc"
 

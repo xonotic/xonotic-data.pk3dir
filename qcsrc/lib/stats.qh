@@ -1,0 +1,72 @@
+#ifndef LIB_STATS_H
+#define LIB_STATS_H
+
+#include "registry.qh"
+#include "sort.qh"
+
+.int m_id;
+
+#if defined(CSQC)
+	/** Get all stats and store them as globals, access with `STAT(ID)` */
+	void stats_get() {}
+	#define STAT(...) EVAL(OVERLOAD(STAT, __VA_ARGS__))
+    #define STAT_1(id) STAT_2(id, NULL)
+	#define STAT_2(id, cl) (0, _STAT(id))
+
+	#define getstat_int(id) getstati(id, 0, 24)
+	#define getstat_bool(id) boolean(getstati(id))
+	#define getstat_float(id) getstatf(id)
+
+	#define _STAT(id) g_stat_##id
+	#define REGISTER_STAT(id, type) \
+		type _STAT(id); \
+		REGISTER(Stats, STAT, id, m_id, new(stat)) \
+		{ \
+			make_pure(this); \
+		} \
+		[[accumulate]] void stats_get() \
+		{ \
+			_STAT(id) = getstat_##type(STAT_##id.m_id); \
+		}
+#elif defined(SVQC)
+	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
+	void stats_add() {}
+	#define STAT(id, cl) (cl._STAT(id))
+
+	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
+	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
+	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
+	const int AS_STRING = 1;
+	const int AS_INT = 2;
+	const int AS_FLOAT = 8;
+
+	#define _STAT(id) stat_##id
+	#define REGISTER_STAT(id, type) \
+		.type _STAT(id); \
+		REGISTER(Stats, STAT, id, m_id, new(stat)) \
+		{ \
+			make_pure(this); \
+		} \
+		[[accumulate]] void stats_add() \
+		{ \
+			addstat_##type(STAT_##id.m_id, _STAT(id)); \
+		}
+#else
+	#define REGISTER_STAT(id, type)
+#endif
+
+const int STATS_ENGINE_RESERVE = 32 + (8 * 3); // Not sure how to handle vector stats yet, reserve them too
+
+REGISTRY(Stats, 220 - STATS_ENGINE_RESERVE)
+REGISTER_REGISTRY(Stats)
+REGISTRY_SORT(Stats, 0)
+REGISTRY_CHECK(Stats)
+STATIC_INIT(RegisterStats_renumber)
+{
+	FOREACH(Stats, true, LAMBDA(it.m_id = STATS_ENGINE_RESERVE + i));
+}
+#ifdef SVQC
+STATIC_INIT(stats_add) { stats_add(); }
+#endif
+
+#endif

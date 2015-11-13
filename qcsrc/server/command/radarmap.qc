@@ -25,14 +25,14 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 	float n, m;
 	n = m = 0;
 
-	while(vlen(c - b) > 1)
+	while (vlen(c - b) > 1)
 	{
 		++m;
 
 		tracebox(c, mi, ma, b, MOVE_WORLDONLY, world);
 		++n;
 
-		if(!trace_startsolid)
+		if (!trace_startsolid)
 		{
 			black += vlen(trace_endpos - c);
 			c = trace_endpos;
@@ -44,8 +44,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 		c = trace_endpos;
 	}
 
-	if(n > 200)
-		LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations\n");
+	if (n > 200) LOG_TRACE("HOLY SHIT! FullTraceFraction: ", ftos(n), " total traces, ", ftos(m), " iterations\n");
 
 	return white / (black + white);
 }
@@ -74,17 +73,13 @@ float RadarMapAtPoint_LineBlock(float x, float y, float w, float h, float zmin, 
 	ma = '1 0 0' * w + '0 1 0' * h + dz;
 	o = '1 0 0' * x + '0 1 0' * y + '0 0 1' * zmin;
 
-	if(x < world.absmin.x - w)
-		return 0;
-	if(y < world.absmin.y - h)
-		return 0;
-	if(x > world.absmax.x)
-		return 0;
-	if(y > world.absmax.y)
-		return 0;
+	if (x < world.absmin.x - w) return 0;
+	if (y < world.absmin.y - h) return 0;
+	if (x > world.absmax.x) return 0;
+	if (y > world.absmax.y) return 0;
 
 	r = 0;
-	for(i = 0; i < q; ++i)
+	for (i = 0; i < q; ++i)
 	{
 		vector v1, v2;
 		v1 = v2 = o + dz * i + mi;
@@ -95,8 +90,7 @@ float RadarMapAtPoint_LineBlock(float x, float y, float w, float h, float zmin, 
 		v2_y += random() * (ma.y - mi.y);
 		v2_z += random() * (ma.z - mi.z);
 		traceline(v1, v2, MOVE_WORLDONLY, world);
-		if(trace_startsolid || trace_fraction < 1)
-			++r;
+		if (trace_startsolid || trace_fraction < 1) ++r;
 	}
 	return r / q;
 }
@@ -114,21 +108,16 @@ float RadarMapAtPoint_Block(float x, float y, float w, float h, float zmin, floa
 	ma = '1 0 0' * w + '0 1 0' * h + dz;
 	o = '1 0 0' * x + '0 1 0' * y + '0 0 1' * zmin;
 
-	if(x < world.absmin.x - w)
-		return 0;
-	if(y < world.absmin.y - h)
-		return 0;
-	if(x > world.absmax.x)
-		return 0;
-	if(y > world.absmax.y)
-		return 0;
+	if (x < world.absmin.x - w) return 0;
+	if (y < world.absmin.y - h) return 0;
+	if (x > world.absmax.x) return 0;
+	if (y > world.absmax.y) return 0;
 
 	r = 0;
-	for(i = 0; i < q; ++i)
+	for (i = 0; i < q; ++i)
 	{
 		tracebox(o + dz * i, mi, ma, o + dz * i, MOVE_WORLDONLY, world);
-		if(trace_startsolid)
-			++r;
+		if (trace_startsolid) ++r;
 	}
 	return r / q;
 }
@@ -136,7 +125,7 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 {
 	vector a, b, mi, ma;
 
-	q *= 4; // choose q so it matches the regular algorithm in speed
+	q *= 4;  // choose q so it matches the regular algorithm in speed
 
 	q = 256 * q - 1;
 	// 256q-1 is the ideal sample count to map equal amount of sample values to one pixel value
@@ -149,15 +138,14 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 	float c, i;
 	c = 0;
 
-	for(i = 0; i < q; ++i)
+	for (i = 0; i < q; ++i)
 	{
 		vector v;
 		v.x = a.x + random() * b.x;
 		v.y = a.y + random() * b.y;
 		v.z = a.z + random() * b.z;
 		traceline(v, v, MOVE_WORLDONLY, world);
-		if(trace_startsolid)
-			++c;
+		if (trace_startsolid) ++c;
 	}
 
 	return c / q;
@@ -168,22 +156,17 @@ void sharpen_set(int x, float v)
 }
 float sharpen_getpixel(int x, int y)
 {
-	if(x < 0)
-		return 0;
-	if(x >= RADAR_WIDTH_MAX)
-		return 0;
-	if(y < 0)
-		return 0;
-	if(y > 2)
-		return 0;
+	if (x < 0) return 0;
+	if (x >= RADAR_WIDTH_MAX) return 0;
+	if (y < 0) return 0;
+	if (y > 2) return 0;
 	return sharpen_buffer[x + y * RADAR_WIDTH_MAX];
 }
 float sharpen_get(float x, float a)
 {
 	float sum = sharpen_getpixel(x, 1);
-	if(a == 0)
-		return sum;
-	sum *= (8 + 1/a);
+	if (a == 0) return sum;
+	sum *= (8 + 1 / a);
 	sum -= sharpen_getpixel(x - 1, 0);
 	sum -= sharpen_getpixel(x - 1, 1);
 	sum -= sharpen_getpixel(x - 1, 2);
@@ -196,7 +179,7 @@ float sharpen_get(float x, float a)
 }
 void sharpen_shift(int w)
 {
-	for(int i = 0; i < w; ++i)
+	for (int i = 0; i < w; ++i)
 	{
 		sharpen_buffer[i] = sharpen_buffer[i + RADAR_WIDTH_MAX];
 		sharpen_buffer[i + RADAR_WIDTH_MAX] = sharpen_buffer[i + 2 * RADAR_WIDTH_MAX];
@@ -205,7 +188,7 @@ void sharpen_shift(int w)
 }
 void sharpen_init(int w)
 {
-	for(int i = 0; i < w; ++i)
+	for (int i = 0; i < w; ++i)
 	{
 		sharpen_buffer[i] = 0;
 		sharpen_buffer[i + RADAR_WIDTH_MAX] = 0;
@@ -214,11 +197,11 @@ void sharpen_init(int w)
 }
 void RadarMap_Next()
 {
-	if(radarmapper.count & 4)
+	if (radarmapper.count & 4)
 	{
 		localcmd("quit\n");
 	}
-	else if(radarmapper.count & 2)
+	else if (radarmapper.count & 2)
 	{
 		localcmd(strcat("defer 1 \"sv_cmd radarmap --flags ", ftos(radarmapper.count), strcat(" --res ", ftos(radarmapper.size.x), " ", ftos(radarmapper.size.y), " --sharpen ", ftos(radarmapper.ltime), " --qual ", ftos(radarmapper.size.z)), "\"\n"));
 		GotoNextMap(0);
@@ -227,7 +210,8 @@ void RadarMap_Next()
 	radarmapper = world;
 }
 void RadarMap_Think()
-{SELFPARAM();
+{
+	SELFPARAM();
 	// rough map entity
 	//   cnt: current line
 	//   size: pixel width/height
@@ -237,7 +221,7 @@ void RadarMap_Think()
 	float i, x, l;
 	string si;
 
-	if(self.frame == 0)
+	if (self.frame == 0)
 	{
 		// initialize
 		get_mi_min_max_texcoords(1);
@@ -247,22 +231,16 @@ void RadarMap_Think()
 		self.maxs_z = mi_max.z - mi_min.z;
 		LOG_INFO("Picture mins/maxs: ", ftos(self.maxs.x), " and ", ftos(self.maxs.y), " should match\n");
 		self.netname = strzone(strcat("gfx/", mi_shortname, "_radar.xpm"));
-		if(!(self.count & 1))
+		if (!(self.count & 1))
 		{
 			self.cnt = fopen(self.netname, FILE_READ);
-			if(self.cnt < 0)
-				self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.tga"), FILE_READ);
-			if(self.cnt < 0)
-				self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.png"), FILE_READ);
-			if(self.cnt < 0)
-				self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.jpg"), FILE_READ);
-			if(self.cnt < 0)
-				self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.tga"), FILE_READ);
-			if(self.cnt < 0)
-				self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.png"), FILE_READ);
-			if(self.cnt < 0)
-				self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.jpg"), FILE_READ);
-			if(self.cnt >= 0)
+			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.tga"), FILE_READ);
+			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.png"), FILE_READ);
+			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.jpg"), FILE_READ);
+			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.tga"), FILE_READ);
+			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.png"), FILE_READ);
+			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.jpg"), FILE_READ);
+			if (self.cnt >= 0)
 			{
 				fclose(self.cnt);
 
@@ -272,7 +250,7 @@ void RadarMap_Think()
 			}
 		}
 		self.cnt = fopen(self.netname, FILE_WRITE);
-		if(self.cnt < 0)
+		if (self.cnt < 0)
 		{
 			LOG_INFO("Error writing ", self.netname, "\n");
 			remove(self);
@@ -284,47 +262,47 @@ void RadarMap_Think()
 		fputs(self.cnt, "static char *RadarMap[] = {\n");
 		fputs(self.cnt, "/* columns rows colors chars-per-pixel */\n");
 		fputs(self.cnt, strcat("\"", ftos(self.size.x), " ", ftos(self.size.y), " 256 2\",\n"));
-		for(i = 0; i < 256; ++i)
+		for (i = 0; i < 256; ++i)
 		{
-			si = substring(doublehex, i*2, 2);
+			si = substring(doublehex, i * 2, 2);
 			fputs(self.cnt, strcat("\"", si, " c #", si, si, si, "\",\n"));
 		}
 		self.frame += 1;
 		self.nextthink = time;
 		sharpen_init(self.size.x);
 	}
-	else if(self.frame <= self.size.y)
+	else if (self.frame <= self.size.y)
 	{
 		// fill the sharpen buffer with this line
 		sharpen_shift(self.size.x);
 		i = self.count & 24;
 
-		switch(i)
+		switch (i)
 		{
 			case 0:
 			default:
-				for(x = 0; x < self.size.x; ++x)
+				for (x = 0; x < self.size.x; ++x)
 				{
 					l = RadarMapAtPoint_Block(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
 					sharpen_set(x, l);
 				}
 				break;
 			case 8:
-				for(x = 0; x < self.size.x; ++x)
+				for (x = 0; x < self.size.x; ++x)
 				{
 					l = RadarMapAtPoint_Trace(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
 					sharpen_set(x, l);
 				}
 				break;
 			case 16:
-				for(x = 0; x < self.size.x; ++x)
+				for (x = 0; x < self.size.x; ++x)
 				{
 					l = RadarMapAtPoint_Sample(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
 					sharpen_set(x, l);
 				}
 				break;
 			case 24:
-				for(x = 0; x < self.size.x; ++x)
+				for (x = 0; x < self.size.x; ++x)
 				{
 					l = RadarMapAtPoint_LineBlock(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
 					sharpen_set(x, l);
@@ -333,17 +311,19 @@ void RadarMap_Think()
 		}
 
 		// do we have enough lines?
-		if(self.frame >= 2)
+		if (self.frame >= 2)
 		{
 			// write a pixel line
 			fputs(self.cnt, "\"");
-			for(x = 0; x < self.size.x; ++x)
+			for (x = 0; x < self.size.x; ++x)
 			{
 				l = sharpen_get(x, self.ltime);
 				fputs(self.cnt, substring(doublehex, 2 * floor(l * 256.0), 2));
 			}
-			if(self.frame == self.size.y)
+			if (self.frame == self.size.y)
+			{
 				fputs(self.cnt, "\"\n");
+			}
 			else
 			{
 				fputs(self.cnt, "\",\n");
@@ -352,18 +332,20 @@ void RadarMap_Think()
 		}
 
 		// is this the last line? then write back the missing line
-		if(self.frame == self.size.y)
+		if (self.frame == self.size.y)
 		{
 			sharpen_shift(self.size.x);
 			// write a pixel line
 			fputs(self.cnt, "\"");
-			for(x = 0; x < self.size.x; ++x)
+			for (x = 0; x < self.size.x; ++x)
 			{
 				l = sharpen_get(x, self.ltime);
 				fputs(self.cnt, substring(doublehex, 2 * floor(l * 256.0), 2));
 			}
-			if(self.frame == self.size.y)
+			if (self.frame == self.size.y)
+			{
 				fputs(self.cnt, "\"\n");
+			}
 			else
 			{
 				fputs(self.cnt, "\",\n");
@@ -388,32 +370,72 @@ float RadarMap_Make(float argc)
 {
 	float i;
 
-	if(!radarmapper)
+	if (!radarmapper)
 	{
-		radarmapper = spawn();
-		radarmapper.classname = "radarmapper";
+		radarmapper = new(radarmapper);
 		radarmapper.think = RadarMap_Think;
 		radarmapper.nextthink = time;
-		radarmapper.count = 8; // default to the --trace method, as it is faster now
+		radarmapper.count = 8;  // default to the --trace method, as it is faster now
 		radarmapper.ltime = 1;
 		radarmapper.size = '512 512 1';
-		for(i = 1; i < argc; ++i)
+		for (i = 1; i < argc; ++i)
 		{
-			switch(argv(i))
+			switch (argv(i))
 			{
-				case "--force": { radarmapper.count |= 1; break; }
-				case "--loop": { radarmapper.count |= 2; break; }
-				case "--quit": { radarmapper.count |= 4; break; }
-				case "--block": { radarmapper.count &= ~24; break; }
-				case "--trace": { radarmapper.count &= ~24; radarmapper.count |= 8; break; }
-				case "--sample": { radarmapper.count &= ~24; radarmapper.count |= 16; break; }
-				case "--lineblock": { radarmapper.count |= 24; break; }
-				case "--flags": { ++i; radarmapper.count = stof(argv(i)); break; } // for the recursive call
-				case "--sharpen": { ++i; radarmapper.ltime = stof(argv(i)); break; } // for the recursive call
-				case "--res": // minor alias
-				case "--resolution": { ++i; radarmapper.size_x = stof(argv(i)); ++i; radarmapper.size_y = stof(argv(i)); break; }
-				case "--qual": // minor alias
-				case "--quality": { ++i; radarmapper.size_z = stof(argv(i)); break; }
+				case "--force":
+				{ radarmapper.count |= 1;
+				  break;
+				}
+				case "--loop":
+				{ radarmapper.count |= 2;
+				  break;
+				}
+				case "--quit":
+				{ radarmapper.count |= 4;
+				  break;
+				}
+				case "--block":
+				{ radarmapper.count &= ~24;
+				  break;
+				}
+				case "--trace":
+				{ radarmapper.count &= ~24;
+				  radarmapper.count |= 8;
+				  break;
+				}
+				case "--sample":
+				{ radarmapper.count &= ~24;
+				  radarmapper.count |= 16;
+				  break;
+				}
+				case "--lineblock":
+				{ radarmapper.count |= 24;
+				  break;
+				}
+				case "--flags":
+				{ ++i;
+				  radarmapper.count = stof(argv(i));
+				  break;
+				}  // for the recursive call
+				case "--sharpen":
+				{ ++i;
+				  radarmapper.ltime = stof(argv(i));
+				  break;
+				}  // for the recursive call
+				case "--res":  // minor alias
+				case "--resolution":
+				{ ++i;
+				  radarmapper.size_x = stof(argv(i));
+				  ++i;
+				  radarmapper.size_y = stof(argv(i));
+				  break;
+				}
+				case "--qual":  // minor alias
+				case "--quality":
+				{ ++i;
+				  radarmapper.size_z = stof(argv(i));
+				  break;
+				}
 
 				default:
 					i = argc;
@@ -423,10 +445,10 @@ float RadarMap_Make(float argc)
 			}
 		}
 
-		if(radarmapper) // after doing the arguments, see if we successfully went forward.
+		if (radarmapper)  // after doing the arguments, see if we successfully went forward.
 		{
 			LOG_INFO("Radarmap entity spawned.\n");
-			return true; // if so, don't print usage.
+			return true;  // if so, don't print usage.
 		}
 	}
 

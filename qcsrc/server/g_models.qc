@@ -15,7 +15,7 @@ class(BGMScript) .float bgmscriptrelease;
 
 .float modelscale;
 
-void g_model_setcolormaptoactivator (void)
+void g_model_setcolormaptoactivator ()
 {SELFPARAM();
 	if(teamplay)
 	{
@@ -29,13 +29,13 @@ void g_model_setcolormaptoactivator (void)
 	self.colormap |= BIT(10); // RENDER_COLORMAPPED
 }
 
-void g_clientmodel_setcolormaptoactivator (void)
+void g_clientmodel_setcolormaptoactivator ()
 {SELFPARAM();
 	g_model_setcolormaptoactivator();
 	self.SendFlags |= (BIT(3) | BIT(0));
 }
 
-void g_clientmodel_use(void)
+void g_clientmodel_use()
 {SELFPARAM();
 	if (self.antiwall_flag == 1)
 	{
@@ -90,23 +90,23 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(self.lodmodelindex1)
 		sf |= 0x80;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WALL);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WALL);
 	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 1)
+	if(sf & BIT(0))
 	{
 		if(sf & 0x40)
 			WriteShort(MSG_ENTITY, self.colormap);
 	}
 
-	if(sf & 2)
+	if(sf & BIT(1))
 	{
 		WriteCoord(MSG_ENTITY, self.origin.x);
 		WriteCoord(MSG_ENTITY, self.origin.y);
 		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
-	if(sf & 4)
+	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
 		{
@@ -116,7 +116,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 		}
 	}
 
-	if(sf & 8)
+	if(sf & BIT(3))
 	{
 		if(sf & 0x80)
 		{

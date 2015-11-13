@@ -5,7 +5,18 @@
 #include "progname.qh"
 #include "static.qh"
 
-void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) { }
+void RegisterCvars(void(string name, string def, string desc, bool archive, string file) f) {}
+
+bool cvar_value_issafe(string s)
+{
+	if (strstrofs(s, "\"", 0) >= 0) return false;
+	if (strstrofs(s, "\\", 0) >= 0) return false;
+	if (strstrofs(s, ";", 0) >= 0) return false;
+	if (strstrofs(s, "$", 0) >= 0) return false;
+	if (strstrofs(s, "\r", 0) >= 0) return false;
+	if (strstrofs(s, "\n", 0) >= 0) return false;
+	return true;
+}
 
 /** escape the string to make it safe for consoles */
 string MakeConsoleSafe(string input)
@@ -17,34 +28,38 @@ string MakeConsoleSafe(string input)
 	return input;
 }
 
-void cvar_describe(string name, string desc) {
-    localcmd(sprintf("\nset %1$s \"$%1$s\" \"%2$s\"\n", name, MakeConsoleSafe(desc)));
+void cvar_describe(string name, string desc)
+{
+	localcmd(sprintf("\nset %1$s \"$%1$s\" \"%2$s\"\n", name, MakeConsoleSafe(desc)));
 }
 
-void cvar_archive(string name) {
-    localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", name));
+void cvar_archive(string name)
+{
+	localcmd(sprintf("\nseta %1$s \"$%1$s\"\n", name));
 }
 
 void RegisterCvars_Set(string name, string def, string desc, bool archive, string file)
 {
-    cvar_describe(name, desc);
-    if (archive) cvar_archive(name);
+	cvar_describe(name, desc);
+	if (archive) cvar_archive(name);
 }
 
 int RegisterCvars_Save_fd;
 void RegisterCvars_Save(string name, string def, string desc, bool archive, string file)
 {
-    if (!archive) return;
-    fputs(RegisterCvars_Save_fd, sprintf("seta %s \"%s\"\n", name, def));
+	if (!archive) return;
+	fputs(RegisterCvars_Save_fd, sprintf("seta %s \"%s\"\n", name, def));
 }
 
-STATIC_INIT_LATE(Cvars) {
-    RegisterCvars(RegisterCvars_Set);
-    RegisterCvars_Save_fd = fopen(sprintf("default%s.cfg", PROGNAME), FILE_WRITE);
-    if (RegisterCvars_Save_fd >= 0) {
-        RegisterCvars(RegisterCvars_Save);
-        fclose(RegisterCvars_Save_fd);
-    }
+STATIC_INIT_LATE(Cvars)
+{
+	RegisterCvars(RegisterCvars_Set);
+	RegisterCvars_Save_fd = fopen(sprintf("default%s.cfg", PROGNAME), FILE_WRITE);
+	if (RegisterCvars_Save_fd >= 0)
+	{
+		RegisterCvars(RegisterCvars_Save);
+		fclose(RegisterCvars_Save_fd);
+	}
 }
 
 const noref bool default_bool = false;
@@ -53,19 +68,22 @@ const noref float default_float = 0;
 const noref string default_string = "";
 const noref vector default_vector = '0 0 0';
 
-#define repr_cvar_bool(x)   ((x) ? "1" : "0")
-#define repr_cvar_int(x)    (ftos(x))
-#define repr_cvar_float(x)  (ftos(x))
+#define repr_cvar_bool(x) ((x) ? "1" : "0")
+#define repr_cvar_int(x) (ftos(x))
+#define repr_cvar_float(x) (ftos(x))
 #define repr_cvar_string(x) (x)
 #define repr_cvar_vector(x) (sprintf("%v", x))
 
 #define __AUTOCVAR(file, archive, var, type, desc, default) \
-    [[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) { f(#var, repr_cvar_##type(default), desc, archive, file); } \
-    type autocvar_##var = default
+	[[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) \
+	{ \
+		f( #var, repr_cvar_##type(default), desc, archive, file); \
+	} \
+	type autocvar_##var = default
 #define AUTOCVAR_5(file, archive, var, type, desc) \
-    __AUTOCVAR(file, archive, var, type, desc, default_##type)
+	__AUTOCVAR(file, archive, var, type, desc, default_##type)
 #define AUTOCVAR_6(file, archive, var, type, default, desc) \
-    __AUTOCVAR(file, archive, var, type, desc, default)
+	__AUTOCVAR(file, archive, var, type, desc, default)
 #define _AUTOCVAR(...) EVAL(OVERLOAD(AUTOCVAR, __FILE__, __VA_ARGS__))
 #define AUTOCVAR_SAVE(...) _AUTOCVAR(true, __VA_ARGS__)
 #define AUTOCVAR(...) _AUTOCVAR(false, __VA_ARGS__)

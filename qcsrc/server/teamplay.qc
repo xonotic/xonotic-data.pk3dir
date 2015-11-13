@@ -114,7 +114,7 @@ string GetClientVersionMessage()
 	return versionmsg;
 }
 
-string getwelcomemessage(void)
+string getwelcomemessage()
 {
 	string s, modifications, motd;
 
@@ -132,8 +132,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
-	if(g_cloaked && !g_cts)
-		modifications = strcat(modifications, ", Cloaked");
 	if(g_weapon_stay && !g_cts)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
@@ -654,7 +652,7 @@ void SV_ChangeTeam(float _color)
 
 	// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
 	if(!IS_CLIENT(self))
-		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_CONNECTING, self.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
 
 	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
 

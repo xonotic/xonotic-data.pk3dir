@@ -12,7 +12,6 @@
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
-#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"
@@ -23,45 +22,6 @@
 #include "../common/weapons/all.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
-
-bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
-	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin.x));
-	WriteCoord(MSG_ENTITY, floor(self.origin.y));
-	WriteCoord(MSG_ENTITY, floor(self.origin.z));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
-	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, self.oldorigin.x);
-	WriteByte(MSG_ENTITY, self.species);
-	return true;
-}
-
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner)
-{
-	// TODO maybe call this from non-edgedamage too?
-	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
-
-	entity e;
-
-	if(!sound_allowed(MSG_BROADCAST, dmgowner))
-		deathtype |= 0x8000;
-
-	e = spawn();
-	setorigin(e, org);
-	e.projectiledeathtype = deathtype;
-	e.dmg = coredamage;
-	e.dmg_edge = edgedamage;
-	e.dmg_radius = rad;
-	e.dmg_force = vlen(force);
-	e.velocity = force;
-	e.oldorigin_x = compressShortVector(e.velocity);
-	e.species = bloodtype;
-
-	Net_LinkEntity(e, false, 0.2, Damage_DamageInfo_SendEntity);
-}
 
 void UpdateFrags(entity player, float f)
 {
@@ -114,8 +74,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		{
 			if(!GiveFrags_randomweapons)
 			{
-				GiveFrags_randomweapons = spawn();
-				GiveFrags_randomweapons.classname = "GiveFrags_randomweapons";
+				GiveFrags_randomweapons = new(GiveFrags_randomweapons);
 			}
 
 			if(warmup_stage)
@@ -204,7 +163,7 @@ void Obituary_SpecialDeath(
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = Deathtypes[deathtype - DT_FIRST];
+		entity deathent = Deathtypes_from(deathtype - DT_FIRST);
 		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
 		if(murder)
@@ -301,6 +260,8 @@ float Obituary_WeaponDeath(
 	}
 	return false;
 }
+
+.int buffs; // TODO: remove
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {
@@ -563,10 +524,8 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_speed = freeze_time;
 	self.bot_attack = false;
 
-	entity ice, head;
-	ice = spawn();
+	entity ice = new(ice);
 	ice.owner = targ;
-	ice.classname = "ice";
 	ice.scale = targ.scale;
 	ice.think = Ice_Think;
 	ice.nextthink = time;
@@ -582,6 +541,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	RemoveGrapplingHook(targ);
 
+	entity head;
 	FOR_EACH_PLAYER(head)
 	if(head.hook.aiment == targ)
 		RemoveGrapplingHook(head);
@@ -889,9 +849,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)
 		{
-			entity farcent;
-			farcent = spawn();
-			farcent.classname = "farce";
+			entity farcent = new(farce);
 			farcent.enemy = self;
 			farcent.movedir = farce * 10;
 			if(self.mass)
@@ -1140,8 +1098,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		if(!e.fire_burner)
 		{
 			// print("adding a fire burner to ", e.classname, "\n");
-			e.fire_burner = spawn();
-			e.fire_burner.classname = "fireburner";
+			e.fire_burner = new(fireburner);
 			e.fire_burner.think = fireburner_think;
 			e.fire_burner.nextthink = time;
 			e.fire_burner.owner = e;

@@ -1,5 +1,21 @@
 #ifndef WEAPON_H
 #define WEAPON_H
+#include "../items/item/pickup.qh"
+
+const int MAX_WEAPONSLOTS = 2;
+.entity weaponentities[MAX_WEAPONSLOTS];
+
+int weaponslot(.entity weaponentity)
+{
+	for (int i = 0; i < MAX_WEAPONSLOTS; ++i)
+	{
+		if (weaponentities[i] == weaponentity)
+		{
+			return i;
+		}
+	}
+	return 0;
+}
 
 .int ammo_shells;
 .int ammo_nails;
@@ -42,12 +58,14 @@ CLASS(Weapon, Object)
     /** M: refname   : reference name name */
     ATTRIB(Weapon, netname, string, "");
     /** M: wepname   : human readable name */
-    ATTRIB(Weapon, message, string, "AOL CD Thrower");
+    ATTRIB(Weapon, m_name, string, "AOL CD Thrower");
+
+    ATTRIB(Weapon, m_pickup, entity, NULL);
 
     /** (SERVER) setup weapon data */
     METHOD(Weapon, wr_setup, void(Weapon this)) {}
     /** (SERVER) logic to run every frame */
-    METHOD(Weapon, wr_think, void(Weapon this, entity actor, bool fire1, bool fire2)) {}
+    METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
     METHOD(Weapon, wr_checkammo1, bool(Weapon this)) {return false;}
     /** (SERVER) checks ammo for weapon second */
@@ -83,9 +101,44 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_pickup, void(Weapon this)) {}
 
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
-		returns(this.message, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
+		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}
 ENDCLASS(Weapon)
+
+#include "../items/all.qh"
+CLASS(WeaponPickup, Pickup)
+    ATTRIB(WeaponPickup, m_weapon, Weapon, NULL)
+    ATTRIB(WeaponPickup, m_name, string, string_null)
+#ifndef MENUQC
+    ATTRIB(WeaponPickup, m_sound, Sound, SND_WEAPONPICKUP)
+#endif
+#ifdef SVQC
+    ATTRIB(WeaponPickup, m_itemflags, int, FL_WEAPON)
+    float weapon_pickupevalfunc(entity player, entity item);
+    ATTRIB(WeaponPickup, m_pickupevalfunc, float(entity player, entity item), weapon_pickupevalfunc)
+#endif
+    CONSTRUCTOR(WeaponPickup, Weapon w) {
+        CONSTRUCT(WeaponPickup);
+        this.m_weapon = w;
+        this.m_name = w.m_name;
+#ifndef MENUQC
+        this.m_model = w.m_model;
+#endif
+#ifdef SVQC
+        this.m_botvalue = w.bot_pickupbasevalue;
+#endif
+    }
+#ifdef SVQC
+    METHOD(WeaponPickup, giveTo, bool(entity this, entity item, entity player))
+    {
+        bool b = Item_GiveTo(item, player);
+        if (b) {
+            LOG_TRACEF("entity %i picked up %s\n", player, this.m_name);
+        }
+        return b;
+    }
+#endif
+ENDCLASS(WeaponPickup)
 
 CLASS(OffhandWeapon, Object)
     METHOD(OffhandWeapon, offhand_think, void(OffhandWeapon this, entity player, bool key_pressed)) {}
@@ -140,6 +193,6 @@ string W_Model(string w_mdl);
 
 // other useful macros
 #define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
-#define WEP_NAME(wpn) ((get_weaponinfo(wpn)).message)
+#define WEP_NAME(wpn) ((get_weaponinfo(wpn)).m_name)
 
 #endif

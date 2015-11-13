@@ -1,15 +1,17 @@
 #include "all.qh"
 
+REGISTER_NET_TEMP(net_effect)
 #ifdef CSQC
-void Read_Effect(bool is_new)
+NET_HANDLE(net_effect, bool isNew)
 {
 	int net_name = (Effects_COUNT >= 255) ? ReadShort() : ReadByte();
 
-	entity eff = Effects[net_name];
+	entity eff = Effects_from(net_name);
 
-	vector v, vel = '0 0 0';
+	vector vel = '0 0 0';
 	int eff_cnt = 1;
 	bool eff_trail = eff.eent_eff_trail;
+	vector v;
 	v_x = ReadCoord();
 	v_y = ReadCoord();
 	v_z = ReadCoord();
@@ -25,38 +27,38 @@ void Read_Effect(bool is_new)
 	if(!eff_trail)
 		eff_cnt = ReadByte();
 
-	if(is_new)
-	{
-		if(eff_trail)
-			WarpZone_TrailParticles(world, particleeffectnum(eff), v, vel);
-		else
-			pointparticles(particleeffectnum(eff), v, vel, eff_cnt);
-	}
+	if(eff_trail)
+		WarpZone_TrailParticles(world, particleeffectnum(eff), v, vel);
+	else
+		pointparticles(eff, v, vel, eff_cnt);
+	return true;
 }
 #endif
 
 #ifdef SVQC
 bool Net_Write_Effect(entity this, entity client, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_EFFECT);
+	int channel = MSG_ONE;
+	msg_entity = client;
+	WriteHeader(channel, net_effect);
 	(Effects_COUNT >= 255)
-	? WriteShort(MSG_ENTITY, self.m_id)
-	: WriteByte(MSG_ENTITY, self.m_id);
-	WriteCoord(MSG_ENTITY, self.eent_net_location_x);
-	WriteCoord(MSG_ENTITY, self.eent_net_location_y);
-	WriteCoord(MSG_ENTITY, self.eent_net_location_z);
+	? WriteShort(channel, this.m_id)
+	: WriteByte(channel, this.m_id);
+	WriteCoord(channel, this.eent_net_location_x);
+	WriteCoord(channel, this.eent_net_location_y);
+	WriteCoord(channel, this.eent_net_location_z);
 
 	// attempt to save a tiny bit more bandwidth by not sending velocity if it isn't set
-	if(self.eent_net_velocity)
+	if(this.eent_net_velocity)
 	{
-		WriteByte(MSG_ENTITY, true);
-		WriteCoord(MSG_ENTITY, self.eent_net_velocity_x);
-		WriteCoord(MSG_ENTITY, self.eent_net_velocity_y);
-		WriteCoord(MSG_ENTITY, self.eent_net_velocity_z);
+		WriteByte(channel, true);
+		WriteCoord(channel, this.eent_net_velocity_x);
+		WriteCoord(channel, this.eent_net_velocity_y);
+		WriteCoord(channel, this.eent_net_velocity_z);
 	}
-	else { WriteByte(MSG_ENTITY, false); }
+	else { WriteByte(channel, false); }
 
-	if(!self.eent_eff_trail) { WriteByte(MSG_ENTITY, self.eent_net_count); }
+	if(!this.eent_eff_trail) { WriteByte(channel, this.eent_net_count); }
 	return true;
 }
 
@@ -64,9 +66,9 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
 	if(!eff) { return; }
 	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
-	entity net_eff = spawn();
+	entity net_eff = new(net_effect);
+	make_pure(net_eff);
 	net_eff.owner = eff;
-	net_eff.classname = "net_effect";
 	//net_eff.eent_broadcast = broadcast;
 	net_eff.m_id = eff.m_id;
 	net_eff.eent_net_velocity = eff_vel;
@@ -74,10 +76,8 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 	net_eff.eent_net_count = eff_cnt;
 	net_eff.eent_eff_trail = eff.eent_eff_trail;
 
-	net_eff.think = SUB_Remove;
-	net_eff.nextthink = time + 0.2; // don't need to keep this long
-
-	Net_LinkEntity(net_eff, false, 0, Net_Write_Effect);
+	entity e; FOR_EACH_REALCLIENT(e) Net_Write_Effect(net_eff, e, 0);
+	remove(net_eff);
 }
 
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
@@ -88,6 +88,6 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 		return;
 	));
 	// revert to engine handling
-	pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
+	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif

@@ -1,38 +1,180 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include "string.qh"
+
 #define colormapPaletteColor(c, isPants) colormapPaletteColor_(c, isPants, time)
 vector colormapPaletteColor_(int c, bool isPants, float t)
 {
-    switch (c) {
-        case  0: return '1.000000 1.000000 1.000000';
-        case  1: return '1.000000 0.333333 0.000000';
-        case  2: return '0.000000 1.000000 0.501961';
-        case  3: return '0.000000 1.000000 0.000000';
-        case  4: return '1.000000 0.000000 0.000000';
-        case  5: return '0.000000 0.666667 1.000000';
-        case  6: return '0.000000 1.000000 1.000000';
-        case  7: return '0.501961 1.000000 0.000000';
-        case  8: return '0.501961 0.000000 1.000000';
-        case  9: return '1.000000 0.000000 1.000000';
-        case 10: return '1.000000 0.000000 0.501961';
-        case 11: return '0.000000 0.000000 1.000000';
-        case 12: return '1.000000 1.000000 0.000000';
-        case 13: return '0.000000 0.333333 1.000000';
-        case 14: return '1.000000 0.666667 0.000000';
-        case 15:
-            if (isPants)
-                return
-                      '1 0 0' * (0.502 + 0.498 * sin(t / 2.7182818285 + 0.0000000000))
-                    + '0 1 0' * (0.502 + 0.498 * sin(t / 2.7182818285 + 2.0943951024))
-                    + '0 0 1' * (0.502 + 0.498 * sin(t / 2.7182818285 + 4.1887902048));
-            else
-                return
-                      '1 0 0' * (0.502 + 0.498 * sin(t / 3.1415926536 + 5.2359877560))
-                    + '0 1 0' * (0.502 + 0.498 * sin(t / 3.1415926536 + 3.1415926536))
-                    + '0 0 1' * (0.502 + 0.498 * sin(t / 3.1415926536 + 1.0471975512));
-        default: return '0.000 0.000 0.000';
-    }
+	switch (c)
+	{
+		case  0: return '1.000000 1.000000 1.000000';
+		case  1: return '1.000000 0.333333 0.000000';
+		case  2: return '0.000000 1.000000 0.501961';
+		case  3: return '0.000000 1.000000 0.000000';
+		case  4: return '1.000000 0.000000 0.000000';
+		case  5: return '0.000000 0.666667 1.000000';
+		case  6: return '0.000000 1.000000 1.000000';
+		case  7: return '0.501961 1.000000 0.000000';
+		case  8: return '0.501961 0.000000 1.000000';
+		case  9: return '1.000000 0.000000 1.000000';
+		case 10: return '1.000000 0.000000 0.501961';
+		case 11: return '0.000000 0.000000 1.000000';
+		case 12: return '1.000000 1.000000 0.000000';
+		case 13: return '0.000000 0.333333 1.000000';
+		case 14: return '1.000000 0.666667 0.000000';
+		case 15:
+			if (isPants)
+				return '1 0 0' * (0.502 + 0.498 * sin(t / 2.7182818285 + 0.0000000000))
+				       + '0 1 0' * (0.502 + 0.498 * sin(t / 2.7182818285 + 2.0943951024))
+				       + '0 0 1' * (0.502 + 0.498 * sin(t / 2.7182818285 + 4.1887902048));
+			else
+				return '1 0 0' * (0.502 + 0.498 * sin(t / 3.1415926536 + 5.2359877560))
+				       + '0 1 0' * (0.502 + 0.498 * sin(t / 3.1415926536 + 3.1415926536))
+				       + '0 0 1' * (0.502 + 0.498 * sin(t / 3.1415926536 + 1.0471975512));
+		default: return '0.000 0.000 0.000';
+	}
+}
+
+float rgb_mi_ma_to_hue(vector rgb, float mi, float ma)
+{
+	if (mi == ma)
+	{
+		return 0;
+	}
+	else if (ma == rgb.x)
+	{
+		if (rgb.y >= rgb.z) return (rgb.y - rgb.z) / (ma - mi);
+		else return (rgb.y - rgb.z) / (ma - mi) + 6;
+	}
+	else if (ma == rgb.y)
+	{
+		return (rgb.z - rgb.x) / (ma - mi) + 2;
+	}
+	else  // if(ma == rgb_z)
+	{
+		return (rgb.x - rgb.y) / (ma - mi) + 4;
+	}
+}
+
+vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
+{
+	vector rgb;
+
+	hue -= 6 * floor(hue / 6);
+
+	// else if(ma == rgb_x)
+	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
+	if (hue <= 1)
+	{
+		rgb.x = ma;
+		rgb.y = hue * (ma - mi) + mi;
+		rgb.z = mi;
+	}
+	// else if(ma == rgb_y)
+	//	hue = 60 * (rgb_z - rgb_x) / (ma - mi) + 120;
+	else if (hue <= 2)
+	{
+		rgb.x = (2 - hue) * (ma - mi) + mi;
+		rgb.y = ma;
+		rgb.z = mi;
+	}
+	else if (hue <= 3)
+	{
+		rgb.x = mi;
+		rgb.y = ma;
+		rgb.z = (hue - 2) * (ma - mi) + mi;
+	}
+	// else // if(ma == rgb_z)
+	//	hue = 60 * (rgb_x - rgb_y) / (ma - mi) + 240;
+	else if (hue <= 4)
+	{
+		rgb.x = mi;
+		rgb.y = (4 - hue) * (ma - mi) + mi;
+		rgb.z = ma;
+	}
+	else if (hue <= 5)
+	{
+		rgb.x = (hue - 4) * (ma - mi) + mi;
+		rgb.y = mi;
+		rgb.z = ma;
+	}
+	// else if(ma == rgb_x)
+	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
+	else  // if(hue <= 6)
+	{
+		rgb.x = ma;
+		rgb.y = mi;
+		rgb.z = (6 - hue) * (ma - mi) + mi;
+	}
+
+	return rgb;
+}
+
+vector rgb_to_hsv(vector rgb)
+{
+	float mi, ma;
+	vector hsv;
+
+	mi = min(rgb.x, rgb.y, rgb.z);
+	ma = max(rgb.x, rgb.y, rgb.z);
+
+	hsv.x = rgb_mi_ma_to_hue(rgb, mi, ma);
+	hsv.z = ma;
+
+	if (ma == 0) hsv.y = 0;
+	else hsv.y = 1 - mi / ma;
+
+	return hsv;
+}
+
+vector hsv_to_rgb(vector hsv)
+{
+	return hue_mi_ma_to_rgb(hsv.x, hsv.z * (1 - hsv.y), hsv.z);
+}
+
+vector rgb_to_hsl(vector rgb)
+{
+	float mi, ma;
+	vector hsl;
+
+	mi = min(rgb.x, rgb.y, rgb.z);
+	ma = max(rgb.x, rgb.y, rgb.z);
+
+	hsl.x = rgb_mi_ma_to_hue(rgb, mi, ma);
+
+	hsl.z = 0.5 * (mi + ma);
+	if (mi == ma) hsl.y = 0;
+	else if (hsl.z <= 0.5) hsl.y = (ma - mi) / (2 * hsl.z);
+	else  // if(hsl_z > 0.5)
+		hsl.y = (ma - mi) / (2 - 2 * hsl.z);
+
+	return hsl;
+}
+
+vector hsl_to_rgb(vector hsl)
+{
+	float mi, ma, maminusmi;
+
+	if (hsl.z <= 0.5) maminusmi = hsl.y * 2 * hsl.z;
+	else maminusmi = hsl.y * (2 - 2 * hsl.z);
+
+	// hsl_z     = 0.5 * mi + 0.5 * ma
+	// maminusmi =     - mi +       ma
+	mi = hsl.z - 0.5 * maminusmi;
+	ma = hsl.z + 0.5 * maminusmi;
+
+	return hue_mi_ma_to_rgb(hsl.x, mi, ma);
+}
+
+string rgb_to_hexcolor(vector rgb)
+{
+	return strcat(
+		"^x",
+		DEC_TO_HEXDIGIT(floor(rgb.x * 15 + 0.5)),
+		DEC_TO_HEXDIGIT(floor(rgb.y * 15 + 0.5)),
+		DEC_TO_HEXDIGIT(floor(rgb.z * 15 + 0.5))
+	             );
 }
 
 #endif

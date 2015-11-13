@@ -34,12 +34,12 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 {SELFPARAM();
 	float thisammo, i;
 	string s;
-	var .int ammotype = (get_weaponinfo(wpn)).ammo_field;
+	Weapon info = get_weaponinfo(wpn);
+	var .int ammotype = info.ammo_field;
 
-	entity wep = spawn();
+	entity wep = new(droppedweapon);
 
 	setorigin(wep, org);
-	wep.classname = "droppedweapon";
 	wep.velocity = velo;
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
@@ -75,7 +75,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 	}
 
-	WITH(entity, self, wep, weapon_defaultspawnfunc(wpn));
+	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
 		return string_null;
 	wep.glowmod = own.weaponentity_glowmod;
@@ -171,7 +171,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
-	if(self.weaponentity.state != WS_READY)
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	if(self.(weaponentity).state != WS_READY)
 		return;
 	if(!W_IsWeaponThrowable(w))
 		return;

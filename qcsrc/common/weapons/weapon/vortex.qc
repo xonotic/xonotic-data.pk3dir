@@ -13,7 +13,7 @@ CLASS(Vortex, Weapon)
 /* crosshair */ ATTRIB(Vortex, w_crosshair_size, float, 0.65);
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
-/* wepname   */ ATTRIB(Vortex, message, string, _("Vortex"));
+/* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
 ENDCLASS(Vortex)
 REGISTER_WEAPON(VORTEX, NEW(Vortex));
 
@@ -60,15 +60,14 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #endif
 #ifdef IMPLEMENTATION
-#ifdef SVQC
-spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(WEP_VORTEX.m_id); }
-spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
+REGISTER_NET_TEMP(TE_CSQC_VORTEXBEAMPARTICLE)
+
+#if defined(SVQC)
 void SendCSQCVortexBeamParticle(float charge) {
 	vector v;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
 	WriteCoord(MSG_BROADCAST, w_shotorg.y);
 	WriteCoord(MSG_BROADCAST, w_shotorg.z);
@@ -77,6 +76,33 @@ void SendCSQCVortexBeamParticle(float charge) {
 	WriteCoord(MSG_BROADCAST, v.z);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * charge, 255));
 }
+#elif defined(CSQC)
+NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
+{
+	vector shotorg, endpos;
+	float charge;
+	shotorg.x = ReadCoord(); shotorg.y = ReadCoord(); shotorg.z = ReadCoord();
+	endpos.x = ReadCoord(); endpos.y = ReadCoord(); endpos.z = ReadCoord();
+	charge = ReadByte() / 255.0;
+
+	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, shotorg, normalize(endpos - shotorg) * 1000, 1);
+
+	//draw either the old v2.3 beam or the new beam
+	charge = sqrt(charge); // divide evenly among trail spacing and alpha
+	particles_alphamin = particles_alphamax = particles_fade = charge;
+
+	if(!MUTATOR_CALLHOOK(Particles_VortexBeam, shotorg, endpos))
+	if(autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	else
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	return true;
+}
+#endif
+
+#ifdef SVQC
+spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(this, WEP_VORTEX); }
+spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 
 void W_Vortex_Attack(Weapon thiswep, float issecondary)
 {SELFPARAM();
@@ -143,7 +169,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					self.BUTTON_ATCK2 = true;
 			}
 		}
-		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(vortex, charge) && actor.vortex_charge < WEP_CVAR(vortex, charge_limit))
 				actor.vortex_charge = min(1, actor.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
@@ -161,15 +187,15 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 				w.wr_reload(w);
 			} else
 			{
-				if(fire1)
+				if(fire & 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(vortex, refire)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
 					{
 						W_Vortex_Attack(thiswep, 0);
-						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
 					}
 				}
-				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (actor.BUTTON_ZOOM | actor.BUTTON_ZOOMSCRIPT) : fire2)
+				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (actor.BUTTON_ZOOM | actor.BUTTON_ZOOMSCRIPT) : (fire & 2))
 				{
 					if(WEP_CVAR(vortex, charge))
 					{
@@ -196,7 +222,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 
 							else if(WEP_CVAR_SEC(vortex, ammo))
 							{
-								if(fire2) // only eat ammo when the button is pressed
+								if(fire & 2) // only eat ammo when the button is pressed
 								{
 									dt = min(dt, (1 - actor.vortex_charge) / WEP_CVAR(vortex, charge_rate));
 									if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -235,10 +261,10 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 					}
 					else if(WEP_CVAR(vortex, secondary))
 					{
-						if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR_SEC(vortex, refire)))
+						if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
 						{
 							W_Vortex_Attack(thiswep, 1);
-							weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
+							weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
 						}
 					}
 				}
@@ -306,7 +332,7 @@ float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
 		METHOD(Vortex, wr_impacteffect, void(entity thiswep))
 		{
 			vector org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), org2, '0 0 0', 1);
+			pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 		}

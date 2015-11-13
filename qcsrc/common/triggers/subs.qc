@@ -1,4 +1,4 @@
-void SUB_NullThink(void) { }
+void SUB_NullThink() { }
 
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
@@ -12,7 +12,7 @@ Applies some friction to self
 ==================
 */
 .float friction;
-void SUB_Friction (void)
+void SUB_Friction ()
 {SELFPARAM();
 	self.SUB_NEXTTHINK = time;
 	if(self.SUB_FLAGS & FL_ONGROUND)
@@ -45,7 +45,7 @@ void SUB_VanishOrRemove (entity ent)
 	}
 }
 
-void SUB_SetFade_Think (void)
+void SUB_SetFade_Think ()
 {SELFPARAM();
 	if(self.alpha == 0)
 		self.alpha = 1;
@@ -80,7 +80,7 @@ calculate self.SUB_VELOCITY and self.SUB_NEXTTHINK to reach dest from
 self.SUB_ORIGIN traveling at speed
 ===============
 */
-void SUB_CalcMoveDone (void)
+void SUB_CalcMoveDone ()
 {SELFPARAM();
 	// After moving, set origin to exact final destination
 
@@ -92,7 +92,7 @@ void SUB_CalcMoveDone (void)
 }
 
 .float platmovetype_turn;
-void SUB_CalcMove_controller_think (void)
+void SUB_CalcMove_controller_think ()
 {SELFPARAM();
 	entity oldself;
 	float traveltime;
@@ -222,8 +222,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 		return;
 	}
 
-	controller = spawn();
-	controller.classname = "SUB_CalcMove_controller";
+	controller = new(SUB_CalcMove_controller);
 	controller.owner = self;
 	controller.platmovetype = self.platmovetype;
 	controller.platmovetype_start = self.platmovetype_start;
@@ -309,7 +308,7 @@ self.angles rotating
 The calling function should make sure self.SUB_THINK is valid
 ===============
 */
-void SUB_CalcAngleMoveDone (void)
+void SUB_CalcAngleMoveDone ()
 {SELFPARAM();
 	// After rotating, set angle to exact final angle
 	self.angles = self.finalangle;

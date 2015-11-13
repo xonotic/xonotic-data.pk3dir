@@ -13,7 +13,7 @@ CLASS(Shockwave, Weapon)
 /* crosshair */ ATTRIB(Shockwave, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
 /* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
-/* wepname   */ ATTRIB(Shockwave, message, string, _("Shockwave"));
+/* wepname   */ ATTRIB(Shockwave, m_name, string, _("Shockwave"));
 ENDCLASS(Shockwave)
 REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 
@@ -73,7 +73,7 @@ REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
 SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef CSQC
-void Net_ReadShockwaveParticle(void);
+void Net_ReadShockwaveParticle();
 .vector sw_shotorg;
 .vector sw_shotdir;
 .float sw_distance;
@@ -83,6 +83,9 @@ void Net_ReadShockwaveParticle(void);
 #endif
 #endif
 #ifdef IMPLEMENTATION
+
+REGISTER_NET_TEMP(TE_CSQC_SHOCKWAVEPARTICLE)
+
 #ifdef SVQC
 spawnfunc(weapon_shockwave)
 {
@@ -90,10 +93,10 @@ spawnfunc(weapon_shockwave)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
-		weapon_defaultspawnfunc(WEP_MACHINEGUN.m_id);
+		weapon_defaultspawnfunc(this, WEP_MACHINEGUN);
 		return;
 	}
-	weapon_defaultspawnfunc(WEP_SHOCKWAVE.m_id);
+	weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
 }
 
 const float MAX_SHOCKWAVE_HITS = 10;
@@ -107,7 +110,7 @@ float shockwave_hit_damage[MAX_SHOCKWAVE_HITS];
 vector shockwave_hit_force[MAX_SHOCKWAVE_HITS];
 
 // MELEE ATTACK MODE
-void W_Shockwave_Melee_Think(void)
+void W_Shockwave_Melee_Think()
 {SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -229,13 +232,13 @@ void W_Shockwave_Melee_Think(void)
 	}
 }
 
-void W_Shockwave_Melee(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
-	weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
-	entity meleetemp;
-	meleetemp = spawn();
+	entity meleetemp = new(meleetemp);
+	make_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	meleetemp.think = W_Shockwave_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor();
@@ -335,10 +338,9 @@ float W_Shockwave_Attack_CheckHit(
 	return true;
 }
 
-void W_Shockwave_Send(void)
+void W_Shockwave_Send()
 {SELFPARAM();
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
 	WriteCoord(MSG_BROADCAST, w_shotorg.y);
 	WriteCoord(MSG_BROADCAST, w_shotorg.z);
@@ -351,7 +353,7 @@ void W_Shockwave_Send(void)
 	WriteByte(MSG_BROADCAST, num_for_edict(self));
 }
 
-void W_Shockwave_Attack(void)
+void W_Shockwave_Attack()
 {SELFPARAM();
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
@@ -675,28 +677,28 @@ void W_Shockwave_Attack(void)
 			else
 				{ self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false); }
 		}
-		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
-			if(fire1)
+			if(fire & 1)
 			{
 				if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(shockwave, blast_animtime)))
+					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
 					{
 						W_Shockwave_Attack();
 						actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
-						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
 					}
 				}
 			}
-			else if(fire2)
+			else if(fire & 2)
 			{
 				//if(actor.clip_load >= 0) // we are not currently reloading
 				if(!actor.crouch) // no crouchmelee please
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR(shockwave, melee_refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(shockwave, melee_refire)))
 				{
 					// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-					weapon_thinkf(actor, WFRAME_FIRE1, 0, W_Shockwave_Melee);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shockwave_Melee);
 				}
 			}
 		}
@@ -833,7 +835,13 @@ void Draw_Shockwave(entity this)
 	}
 }
 
-void Net_ReadShockwaveParticle(void)
+NET_HANDLE(TE_CSQC_SHOCKWAVEPARTICLE, bool isNew)
+{
+	Net_ReadShockwaveParticle();
+	return true;
+}
+
+void Net_ReadShockwaveParticle()
 {
 	entity shockwave;
 	shockwave = spawn();
@@ -856,7 +864,7 @@ void Net_ReadShockwaveParticle(void)
 			// handled by Net_ReadShockwaveParticle
 			//vector org2;
 			//org2 = w_org + w_backoff * 2;
-			//pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
+			//pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
 		}
 
 #endif

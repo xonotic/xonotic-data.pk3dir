@@ -1,7 +1,5 @@
 #ifndef CLIENT_TUBA_H
 #define CLIENT_TUBA_H
-void Ent_TubaNote(bool isNew);
-void Tuba_Precache();
 
 entityclass(Tuba);
 

@@ -1,0 +1,28 @@
+#ifndef REGISTRY_NET_H
+#define REGISTRY_NET_H
+
+#include "net.qh"
+
+REGISTER_NET_TEMP(registry)
+
+#ifdef CSQC
+NET_HANDLE(registry, bool isnew)
+{
+	string k = ReadString();
+	string v = ReadString();
+	Registry_check(k, v);
+	return true;
+}
+#endif
+
+#ifdef SVQC
+void Registry_send(string id, string hash)
+{
+	int channel = MSG_ONE;
+	WriteHeader(channel, registry);
+	WriteString(channel, id);
+	WriteString(channel, hash);
+}
+#endif
+
+#endif

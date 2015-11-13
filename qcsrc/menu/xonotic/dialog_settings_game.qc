@@ -7,14 +7,14 @@
 CLASS(SettingSource, DataSource)
     METHOD(SettingSource, getEntry, entity(entity this, int i, void(string name, string icon) returns))
     {
-        Lazy l = Settings[i];
+        Lazy l = Settings_from(i);
         entity it = l.m_get();
         if (returns) returns(it.title, string_null);
         return it;
     }
     METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string theTooltip) returns))
     {
-        Lazy l = Settings[i];
+        Lazy l = Settings_from(i);
         entity it = l.m_get();
         if (returns) returns(it.tooltip);
         return it;
@@ -94,7 +94,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	}
 	METHOD(XonoticRegisteredSettingsList, resizeNotify, void(entity this, vector relOrigin, vector relSize, vector absOrigin, vector absSize))
 	{
-		super.resizeNotify(this, relOrigin, relSize, absOrigin, absSize);
+		SUPER(XonoticRegisteredSettingsList).resizeNotify(this, relOrigin, relSize, absOrigin, absSize);
 
 		this.itemAbsSize = '0 0 0';
 		this.realFontSize_y = this.fontSize / (this.itemAbsSize_y = (absSize.y * this.itemHeight));
@@ -103,7 +103,7 @@ CLASS(XonoticRegisteredSettingsList, XonoticListBox)
 	}
 	METHOD(XonoticRegisteredSettingsList, setSelected, void(entity this, int i))
 	{
-		super.setSelected(this, i);
+		SUPER(XonoticRegisteredSettingsList).setSelected(this, i);
 		this.onChange(this, this.onChangeEntity);
 	}
     CONSTRUCTOR(XonoticRegisteredSettingsList, DataSource _source) {
@@ -147,7 +147,7 @@ CLASS(XonoticGameSettingsTab, XonoticTab)
 			topics.onChangeEntity = this;
 
 		int
-		col = 0, width = 1.5;
+		col = 0, width = 1;
 		this.gotoRC(this, 0, col);
 			this.TD(this, this.rows, width, topics);
 

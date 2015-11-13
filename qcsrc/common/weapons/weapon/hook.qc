@@ -13,17 +13,20 @@ CLASS(Hook, Weapon)
 /* crosshair */ ATTRIB(Hook, w_crosshair_size, float, 0.5);
 /* wepimg    */ ATTRIB(Hook, model2, string, "weaponhook");
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
-/* wepname   */ ATTRIB(Hook, message, string, _("Grappling Hook"));
+/* wepname   */ ATTRIB(Hook, m_name, string, _("Grappling Hook"));
 	ATTRIB(Hook, ammo_factor, float, 1)
 ENDCLASS(Hook)
 REGISTER_WEAPON(HOOK, NEW(Hook));
 
 CLASS(OffhandHook, OffhandWeapon)
+#ifdef SVQC
     METHOD(OffhandHook, offhand_think, void(OffhandHook this, entity actor, bool key_pressed))
     {
     	Weapon wep = WEP_HOOK;
-    	wep.wr_think(wep, actor, key_pressed, false);
+    	.entity weaponentity = weaponentities[1];
+    	wep.wr_think(wep, actor, weaponentity, key_pressed ? 1 : 0);
     }
+#endif
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
 
@@ -71,9 +74,9 @@ HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-spawnfunc(weapon_hook) { weapon_defaultspawnfunc(WEP_HOOK.m_id); }
+spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
 
-void W_Hook_ExplodeThink(void)
+void W_Hook_ExplodeThink()
 {SELFPARAM();
 	float dt, dmg_remaining_next, f;
 
@@ -93,7 +96,7 @@ void W_Hook_ExplodeThink(void)
 		remove(self);
 }
 
-void W_Hook_Explode2(void)
+void W_Hook_Explode2()
 {SELFPARAM();
 	self.event_damage = func_null;
 	self.touch = func_null;
@@ -126,7 +129,7 @@ void W_Hook_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
 }
 
-void W_Hook_Touch2(void)
+void W_Hook_Touch2()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 	self.use();
@@ -174,30 +177,30 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, gren);
 }
 
-		METHOD(Hook, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
-			if (fire1) {
+			if (fire & 1) {
 				if(!actor.hook)
 				if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
 				if(time > actor.hook_refire)
-				if(weapon_prepareattack(thiswep, actor, false, -1))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, -1))
 				{
 					W_DecreaseAmmo(thiswep, actor, thiswep.ammo_factor * WEP_CVAR_PRI(hook, ammo));
 					actor.hook_state |= HOOK_FIRING;
 					actor.hook_state |= HOOK_WAITING_FOR_RELEASE;
-					weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hook, animtime), w_ready);
 				}
 			} else {
 				actor.hook_state |= HOOK_REMOVING;
 				actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 			}
 
-			if(fire2)
+			if(fire & 2)
 			{
-				if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR_SEC(hook, refire)))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hook, refire)))
 				{
 					W_Hook_Attack2(thiswep, actor);
-					weapon_thinkf(actor, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hook, animtime), w_ready);
 				}
 			}
 
@@ -313,7 +316,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum(EFFECT_HOOK_EXPLODE), org2, '0 0 0', 1);
+			pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_HOOKBOMB_IMPACT, VOL_BASE, ATTN_NORM);
 		}

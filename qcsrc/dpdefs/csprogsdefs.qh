@@ -10,6 +10,8 @@
 
 #define spawn _spawn
 #define particleeffectnum _particleeffectnum
+#define trailparticles __trailparticles
+#define pointparticles __pointparticles
 #define setmodel _setmodel
 
 #include "upstream/csprogsdefs.qc"
@@ -21,10 +23,10 @@
 
 #undef spawn
 #undef particleeffectnum
+#undef trailparticles
+#undef pointparticles
 #undef setmodel
 
 #pragma noref 0
-
-#define ReadFloat() ReadCoord()
 
 #endif

@@ -5,7 +5,7 @@ CLASS(EWheelAttack, PortoLaunch)
 /* flags     */ ATTRIB(EWheelAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(EWheelAttack, impulse, int, 5);
 /* refname   */ ATTRIB(EWheelAttack, netname, string, "turret_ewheel");
-/* wepname   */ ATTRIB(EWheelAttack, message, string, _("eWheel"));
+/* wepname   */ ATTRIB(EWheelAttack, m_name, string, _("eWheel"));
 ENDCLASS(EWheelAttack)
 REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
 
@@ -16,17 +16,18 @@ REGISTER_WEAPON(EWHEEL, NEW(EWheelAttack));
 #ifdef SVQC
 
 void turret_initparams(entity);
-METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2)) {
+SOUND(EWheelAttack_FIRE, W_Sound("electro_fire"));
+METHOD(EWheelAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
-    if (fire1)
-    if (!isPlayer || weapon_prepareattack(thiswep, actor, false, WEP_CVAR_PRI(electro, refire))) {
+    if (fire & 1)
+    if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, v_forward, false, 0, SND(EWheelAttack_FIRE), CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
-            weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
 
         turret_do_updates(actor);

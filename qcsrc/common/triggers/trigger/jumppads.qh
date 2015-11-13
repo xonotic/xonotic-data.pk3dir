@@ -19,12 +19,6 @@ void() SUB_UseTargets;
 void trigger_push_use();
 #endif
 
-#ifdef CSQC
-void ent_trigger_push();
-
-void ent_target_push();
-#endif
-
 /*
 	trigger_push_calculatevelocity
 

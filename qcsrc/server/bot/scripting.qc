@@ -1059,10 +1059,11 @@ float bot_cmd_sound()
 .entity tuba_note;
 float bot_cmd_debug_assert_canfire()
 {SELFPARAM();
-	float f;
-	f = bot_cmd.bot_cmd_parm_float;
+	float f = bot_cmd.bot_cmd_parm_float;
 
-	if(self.weaponentity.state != WS_READY)
+	int slot = 0;
+	.entity weaponentity = weaponentities[slot];
+	if(self.(weaponentity).state != WS_READY)
 	{
 		if(f)
 		{
@@ -1070,12 +1071,12 @@ float bot_cmd_debug_assert_canfire()
 			LOG_INFO("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by weaponentity state\n");
 		}
 	}
-	else if(ATTACK_FINISHED(self) > time)
+	else if(ATTACK_FINISHED(self, slot) > time)
 	{
 		if(f)
 		{
 			self.colormod = '8 0 8';
-			LOG_INFO("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(self) - time), " seconds left)\n");
+			LOG_INFO("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(self, slot) - time), " seconds left)\n");
 		}
 	}
 	else if(self.tuba_note)
@@ -1091,7 +1092,7 @@ float bot_cmd_debug_assert_canfire()
 		if(!f)
 		{
 			self.colormod = '8 8 0';
-			LOG_INFO("Bot ", self.netname, " using ", self.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(self) - time), " seconds left\n");
+			LOG_INFO("Bot ", self.netname, " using ", self.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(self, slot) - time), " seconds left\n");
 		}
 	}
 
@@ -1118,9 +1119,8 @@ void bot_setcurrentcommand()
 
 	if(!self.bot_cmd_current)
 	{
-		self.bot_cmd_current = spawn();
-		self.bot_cmd_current.classname = "bot_cmd";
-		self.bot_cmd_current.is_bot_cmd = 1;
+		self.bot_cmd_current = new(bot_cmd);
+		self.bot_cmd_current.is_bot_cmd = true;
 	}
 
 	bot_cmd = self.bot_cmd_current;

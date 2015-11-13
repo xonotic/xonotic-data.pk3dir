@@ -33,18 +33,11 @@ float cvar_normal(string n)
 entity eliminatedPlayers;
 void EliminatedPlayers_Init(float(entity) isEliminated_func);
 
-string admin_name(void);
+string admin_name();
 
 void write_recordmarker(entity pl, float tstart, float dt);
 
 void play2all(string samp);
-
-void DistributeEvenly_Init(float amount, float totalweight);
-float DistributeEvenly_Get(float weight);
-
-void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2);
-
-void shockwave_spawn(string m, vector org, float sz, float t1, float t2);
 
 void play2team(float t, string filename);
 
@@ -62,10 +55,7 @@ void InitializeEntitiesRun();
 
 void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
-float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d);
 
-float DistributeEvenly_amount;
-float DistributeEvenly_totalweight;
 void objerror(string s);
 void droptofloor();
 void() SUB_Remove;
@@ -133,32 +123,6 @@ void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomo
 #define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER.m_id) || ((dt) == DEATH_SLIME.m_id) || ((dt) == DEATH_LAVA.m_id) || ((dt) == DEATH_SWAMP.m_id))
 
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
-
-const string STR_PLAYER = "player";
-const string STR_SPECTATOR = "spectator";
-const string STR_OBSERVER = "observer";
-
-#define IS_PLAYER(v) 			((v).classname == STR_PLAYER)
-#define IS_SPEC(v) 				((v).classname == STR_SPECTATOR)
-#define IS_OBSERVER(v) 			((v).classname == STR_OBSERVER)
-#define IS_CLIENT(v)			(v.flags & FL_CLIENT)
-#define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
-#define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
-#define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
-
-#define IS_MONSTER(v)			(v.flags & FL_MONSTER)
-#define IS_VEHICLE(v)			(v.vehicle_flags & VHF_ISVEHICLE)
-#define IS_TURRET(v)			(v.turret_flags & TUR_FLAG_ISTURRET)
-
-#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
-#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
-
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (!IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
-
-#define FOR_EACH_MONSTER(v) for(v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
 
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
@@ -297,7 +261,7 @@ float sv_autotaunt;
 float sv_taunt;
 
 string GetGametype(); // g_world.qc
-void readlevelcvars(void)
+void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
@@ -322,7 +286,6 @@ void readlevelcvars(void)
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
-	g_cloaked = cvar("g_cloaked");
 	g_footsteps = cvar("g_footsteps");
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");
@@ -419,17 +382,6 @@ void readlevelcvars(void)
 
 //#NO AUTOCVARS END
 
-
-// Sound functions
-//string precache_sound (string s) = #19;
-// hack
-float precache_sound_index (string s) = #19;
-
-const float SND_VOLUME = BIT(0);
-const float SND_ATTENUATION = BIT(1);
-const float SND_LARGEENTITY = BIT(3);
-const float SND_LARGESOUND = BIT(4);
-
 const float INITPRIO_FIRST 				= 0;
 const float INITPRIO_GAMETYPE 			= 0;
 const float INITPRIO_GAMETYPE_FALLBACK 	= 1;
@@ -439,7 +391,7 @@ const float INITPRIO_SETLOCATION 		= 90;
 const float INITPRIO_LINKDOORS 			= 91;
 const float INITPRIO_LAST 				= 99;
 
-.void(void) initialize_entity;
+.void() initialize_entity;
 .float initialize_entity_order;
 .entity initialize_entity_next;
 entity initialize_entity_first;
@@ -449,7 +401,7 @@ entity initialize_entity_first;
 
 
 float sound_allowed(float dest, entity e);
-void InitializeEntity(entity e, void(void) func, float order);
-void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer);
+void InitializeEntity(entity e, void() func, float order);
+void SetCustomizer(entity e, float() customizer, void() uncustomizer);
 
 #endif

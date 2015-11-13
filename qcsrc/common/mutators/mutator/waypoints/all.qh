@@ -3,10 +3,13 @@
 
 #include "waypointsprites.qh"
 
-REGISTRY(Waypoints, BIT(6))
-REGISTER_REGISTRY(RegisterWaypoints)
+REGISTRY(Waypoints, BITS(6))
+#define Waypoints_from(i) _Waypoints_from(i, WP_Null)
+REGISTER_REGISTRY(Waypoints)
+REGISTRY_CHECK(Waypoints)
+
 /** If you register a new waypoint, make sure to add it to all.inc */
-#define REGISTER_WAYPOINT_(id, init) REGISTER(RegisterWaypoints, WP, Waypoints, id, m_id, init)
+#define REGISTER_WAYPOINT_(id, init) REGISTER(Waypoints, WP, id, m_id, init)
 
 CLASS(Waypoint, Object)
     ATTRIB(Waypoint, m_id, int, 0)
@@ -26,9 +29,12 @@ ENDCLASS(Waypoint)
 #define REGISTER_WAYPOINT(id, text, color, blink) REGISTER_WAYPOINT_(id, NEW(Waypoint, #id, text, color, blink))
 
 REGISTRY(RadarIcons, BITS(7))
-REGISTER_REGISTRY(RegisterRadarIcons)
+#define RadarIcons_from(i) _RadarIcons_from(i, RADARICON_NONE)
+REGISTER_REGISTRY(RadarIcons)
+REGISTRY_CHECK(RadarIcons)
+
 .int m_radaricon;
-#define REGISTER_RADARICON(id, num) REGISTER(RegisterRadarIcons, RADARICON, RadarIcons, id, m_id, new(RadarIcon)) { this.m_radaricon = num; this.netname = #id; }
+#define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new(RadarIcon)) { make_pure(this); this.m_radaricon = num; this.netname = #id; }
 
 REGISTER_WAYPOINT(Null, "", '0 0 0', 1);
 
@@ -48,7 +54,6 @@ REGISTER_RADARICON(OBJECTIVE,       1);
 REGISTER_RADARICON(DOMPOINT,        1);
 REGISTER_RADARICON(TAGGED,          1);
 
-REGISTER_RADARICON(Buff,            1);
 REGISTER_RADARICON(Item,            1);
 REGISTER_RADARICON(Vehicle,         1);
 REGISTER_RADARICON(Weapon,          1);

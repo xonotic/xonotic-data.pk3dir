@@ -1,8 +1,7 @@
 
 #include "announcer.qh"
 #include "hook.qh"
-#include "hud.qh"
-#include "hud_config.qh"
+#include "hud/all.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
@@ -11,9 +10,9 @@
 #include "mutators/events.qh"
 
 #include "../common/constants.qh"
+#include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
-#include "../common/nades/all.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
@@ -110,8 +109,8 @@ void Porto_Draw(entity this)
 
 void Porto_Init()
 {
-	porto = spawn();
-	porto.classname = "porto";
+	porto = new(porto);
+	make_pure(porto);
 	porto.draw = Porto_Draw;
 	porto.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
@@ -278,11 +277,11 @@ const float SHOTTYPE_HITENEMY = 4;
 
 void TrueAim_Init()
 {
-	trueaim = spawn();
-	trueaim.classname = "trueaim";
+	trueaim = new(trueaim);
+	make_pure(trueaim);
 	trueaim.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaim_rifle = spawn();
-	trueaim_rifle.classname = "trueaim_rifle";
+	trueaim_rifle = new(trueaim_rifle);
+	make_pure(trueaim_rifle);
 	trueaim_rifle.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
@@ -398,7 +397,7 @@ float TrueAimCheck()
 	return SHOTTYPE_HITWORLD;
 }
 
-void PostInit(void);
+void PostInit();
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
 float camera_mode;
@@ -830,7 +829,7 @@ void HUD_Crosshair()
 				vortex_charge = getstatf(STAT_VORTEX_CHARGE);
 				vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
 
-				float arc_heat = getstatf(STAT_ARC_HEAT);
+				float arc_heat = STAT(ARC_HEAT);
 
 				if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
 					vortex_charge_movingavg = vortex_charge;
@@ -1005,10 +1004,18 @@ void HUD_Crosshair()
 
 void HUD_Draw()
 {
-	if(getstati(STAT_FROZEN))
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-	else if (getstatf(STAT_HEALING_ORB)>time)
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, NADE_TYPE_HEAL.m_color, autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
+	vector rgb = '0 0 0';
+	float a = 1;
+	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
+	{
+		rgb = MUTATOR_ARGV(0, vector);
+		a = MUTATOR_ARGV(0, float);
+	}
+	else if(getstati(STAT_FROZEN))
+	{
+		rgb = ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
+	}
+	drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, rgb, autocvar_hud_colorflash_alpha * a, DRAWFLAG_ADDITIVE);
 	if(!intermission)
 	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
@@ -1064,6 +1071,7 @@ void CSQC_UpdateView(float w, float h)
 
 	++framecount;
 
+	stats_get();
 	hud = getstati(STAT_HUD);
 
 	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)
@@ -1387,9 +1395,6 @@ void CSQC_UpdateView(float w, float h)
 
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
-	// next WANTED weapon (for HUD)
-	switchweapon = getstati(STAT_SWITCHWEAPON);
-
 	// currently switching-to weapon (for crosshair)
 	switchingweapon = getstati(STAT_SWITCHINGWEAPON);
 
@@ -1516,13 +1521,11 @@ void CSQC_UpdateView(float w, float h)
 
 		if(!nightvision_noise)
 		{
-			nightvision_noise = spawn();
-			nightvision_noise.classname = "nightvision_noise";
+			nightvision_noise = new(nightvision_noise);
 		}
 		if(!nightvision_noise2)
 		{
-			nightvision_noise2 = spawn();
-			nightvision_noise2.classname = "nightvision_noise2";
+			nightvision_noise2 = new(nightvision_noise2);
 		}
 
 		// color tint in yellow
@@ -1797,7 +1800,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
+		float sharpen_intensity = 0, strength_finished = STAT(STRENGTH_FINISHED), invincible_finished = STAT(INVINCIBLE_FINISHED);
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 
@@ -1823,9 +1826,6 @@ void CSQC_UpdateView(float w, float h)
 	else if(cvar("r_glsl_postprocess") == 2)
 		cvar_set("r_glsl_postprocess", "0");
 
-	if(menu_visible)
-		menu_show();
-
 	/*if(gametype == MAPINFO_TYPE_CTF)
 	  {
 	  ctf_view();
@@ -1836,6 +1836,7 @@ void CSQC_UpdateView(float w, float h)
 		WITH(entity, self, e, e.draw2d(e));
 	}
 	Draw_ShowNames_All();
+	Debug_Draw();
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 

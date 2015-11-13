@@ -1,13 +1,11 @@
-#ifdef CSQC
-	#include "../../../client/particles.qh"
-#endif
+REGISTER_NET_LINKED(ENT_CLIENT_POINTPARTICLES)
 
 #ifdef SVQC
 // NOTE: also contains func_sparks
 
 bool pointparticles_SendEntity(entity this, entity to, float fl)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_POINTPARTICLES);
 
 	// optional features to save space
 	fl = fl & 0x0F;
@@ -183,6 +181,21 @@ spawnfunc(func_sparks)
 }
 #elif defined(CSQC)
 
+.int dphitcontentsmask;
+
+entityclass(PointParticles);
+class(PointParticles) .int cnt; // effect number
+class(PointParticles) .vector velocity; // particle velocity
+class(PointParticles) .float waterlevel; // direction jitter
+class(PointParticles) .int count; // count multiplier
+class(PointParticles) .int impulse; // density
+class(PointParticles) .string noise; // sound
+class(PointParticles) .float atten;
+class(PointParticles) .float volume;
+class(PointParticles) .float absolute; // 1 = count per second is absolute, 2 = only spawn at toggle
+class(PointParticles) .vector movedir; // trace direction
+class(PointParticles) .float glow_color; // palette index
+
 void Draw_PointParticles(entity this)
 {
 	float n, i, fail;
@@ -221,11 +234,11 @@ void Draw_PointParticles(entity this)
 			{
 				traceline(p, p + normalize(self.movedir) * 4096, 0, world);
 				p = trace_endpos;
-				pointparticles(self.cnt, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
+				__pointparticles(self.cnt, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
 			}
 			else
 			{
-				pointparticles(self.cnt, p, self.velocity + randomvec() * self.waterlevel, self.count);
+				__pointparticles(self.cnt, p, self.velocity + randomvec() * self.waterlevel, self.count);
 			}
 			if(self.noise != "")
 			{
@@ -253,8 +266,8 @@ void Ent_PointParticles_Remove()
 	self.bgmscript = string_null;
 }
 
-void Ent_PointParticles()
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
+{
 	float i;
 	vector v;
 	int f = ReadByte();
@@ -339,6 +352,8 @@ void Ent_PointParticles()
 		}
 		BGMScript_InitEntity(self);
 	}
+
+	return = true;
 
 	if(f & 2)
 	{

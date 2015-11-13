@@ -8,7 +8,7 @@ void trigger_teleport_use()
 #endif
 }
 
-void Teleport_Touch (void)
+void Teleport_Touch ()
 {SELFPARAM();
 	string s;
 

@@ -7,6 +7,8 @@
 
 #ifdef IMPLEMENTATION
 
+REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
+
 #ifdef SVQC
 
 float autocvar_g_vehicle_bumblebee_cannon_cost;
@@ -30,7 +32,7 @@ void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 
 bool bumble_raygun_send(entity this, entity to, float sf)
 {
-    WriteByte(MSG_ENTITY, ENT_CLIENT_BUMBLE_RAYGUN);
+    WriteHeader(MSG_ENTITY, ENT_CLIENT_BUMBLE_RAYGUN);
 
     WriteByte(MSG_ENTITY, sf);
     if(sf & BRG_SETUP)
@@ -63,8 +65,8 @@ bool bumble_raygun_send(entity this, entity to, float sf)
 
 void bumble_raygun_draw(entity this);
 
-void bumble_raygun_read(bool bIsNew)
-{SELFPARAM();
+NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
+{
     int sf = ReadByte();
 
     if(sf & BRG_SETUP)
@@ -99,8 +101,10 @@ void bumble_raygun_read(bool bIsNew)
         self.move_origin_y = ReadCoord();
         self.move_origin_z = ReadCoord();
     }
+    return true;
 }
 
+.float bumble_raygun_nextdraw;
 void bumble_raygun_draw(entity this)
 {
     float _len;
@@ -110,11 +114,11 @@ void bumble_raygun_draw(entity this)
     _len = vlen(self.origin - self.move_origin);
     _dir = normalize(self.move_origin - self.origin);
 
-    if(self.total_damages < time)
+    if(self.bumble_raygun_nextdraw < time)
     {
-        boxparticles(particleeffectnum(Effects[self.traileffect]), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+        boxparticles(particleeffectnum(Effects_from(self.traileffect)), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
         boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
-        self.total_damages = time + 0.1;
+        self.bumble_raygun_nextdraw = time + 0.1;
     }
 
     float i, df, sz, al;

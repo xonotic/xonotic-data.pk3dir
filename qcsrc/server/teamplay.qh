@@ -27,7 +27,7 @@ void InitGameplayMode();
 
 string GetClientVersionMessage();
 
-string getwelcomemessage(void);
+string getwelcomemessage();
 
 void SetPlayerColors(entity pl, float _color);
 
