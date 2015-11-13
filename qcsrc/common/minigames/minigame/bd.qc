@@ -99,7 +99,7 @@ void minigame_setup_randompiece(entity minigame, int ttype)
 void bd_setup_pieces(entity minigame)
 {
 	// TODO!
-	minigame_setup_randompiece(minigame, BD_TILE_DOZER);
+	/*minigame_setup_randompiece(minigame, BD_TILE_DOZER);
 	minigame_setup_randompiece(minigame, BD_TILE_TARGET);
 	minigame_setup_randompiece(minigame, BD_TILE_BOULDER);
 	minigame_setup_randompiece(minigame, BD_TILE_BRICK1);
@@ -109,7 +109,7 @@ void bd_setup_pieces(entity minigame)
 	minigame_setup_randompiece(minigame, BD_TILE_BRICK2);
 	minigame_setup_randompiece(minigame, BD_TILE_BRICK3);
 
-	minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
+	minigame_server_sendflags(minigame,MINIG_SF_UPDATE);*/
 }
 
 bool bd_move_dozer(entity minigame, entity dozer)
@@ -165,7 +165,7 @@ bool bd_move_dozer(entity minigame, entity dozer)
 }
 
 // make a move
-void bd_move(entity minigame, entity player, string dir )
+void bd_move(entity minigame, entity player, string dir)
 {
 	if ( minigame.minigame_flags & BD_TURN_MOVE )
 	if ( dir )
@@ -175,7 +175,10 @@ void bd_move(entity minigame, entity player, string dir )
 		{
 			entity dozer = bd_find_dozer(minigame);
 			if(!dozer)
+			{
+				LOG_INFO("Dozer wasn't found!\n");
 				return; // should not happen... TODO: end match?
+			}
 
 			int dxs = 0, dys = 0;
 			string thedir = strtolower(dir);
@@ -201,6 +204,53 @@ void bd_move(entity minigame, entity player, string dir )
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		}
 	}
+}
+
+// editor
+void bd_editor_place(entity minigame, entity player, string pos, int thetile)
+{
+	if ( minigame.minigame_flags & BD_TURN_EDIT )
+	if ( pos && thetile )
+	{
+		if ( bd_valid_tile(pos) )
+		{
+			bool exists = ( bd_find_piece(minigame, pos, false) || bd_find_piece(minigame, pos, true) );
+
+			entity dozer = bd_find_dozer(minigame);
+			if(dozer && thetile == BD_TILE_DOZER && pos != dozer.netname)
+				return; // nice try
+
+			if(exists)
+			{
+				entity piece = bd_find_piece(minigame, pos, false);
+				if(!piece) piece = bd_find_piece(minigame, pos, true);
+				if(!piece)
+					return; // how?!
+
+				if(piece.netname) { strunzone(piece.netname); }
+				remove(piece);
+				minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
+				return;
+			}
+
+			entity piece = msle_spawn(minigame,"minigame_board_piece");
+			piece.team = 1;
+			piece.netname = strzone(pos);
+			piece.bd_tiletype = thetile;
+			minigame_server_sendflags(piece,MINIG_SF_UPDATE);
+
+			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
+		}
+	}
+}
+
+void bd_do_move(entity minigame, entity player, string dir, string thetile)
+{
+	if(minigame.minigame_flags & BD_TURN_MOVE)
+		bd_move(minigame, player, dir);
+
+	if(minigame.minigame_flags & BD_TURN_EDIT)
+		bd_editor_place(minigame, player, dir, stof(thetile));
 }
 
 void bd_reset_moves(entity minigame)
@@ -232,6 +282,27 @@ void bd_restart_match(entity minigame, entity player)
 	bd_setup_pieces(minigame);
 
 	bd_reset_moves(minigame);
+}
+
+void bd_activate_editor(entity minigame)
+{
+	minigame.minigame_flags = BD_TURN_EDIT;
+	minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
+
+	bd_reset_moves(minigame);
+}
+
+void bd_close_editor(entity minigame)
+{
+	entity dozer = bd_find_dozer(minigame);
+	if(!dozer)
+	{
+		LOG_INFO("You need to place a bulldozer on the level to save it!\n");
+		return;
+	}
+
+	minigame.minigame_flags = BD_TURN_MOVE;
+	minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 }
 
 #ifdef SVQC
@@ -272,13 +343,19 @@ int bd_server_event(entity minigame, string event, ...)
 			switch(argv(0))
 			{
 				case "move":
-					bd_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null)); 
+					bd_do_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null)); 
 					return true;
 				case "next":
 					bd_restart_match(minigame,...(0,entity));
 					return true;
 				case "restart":
 					bd_restart_match(minigame,...(0,entity));
+					return true;
+				case "edit":
+					bd_activate_editor(minigame);
+					return true;
+				case "save":
+					bd_close_editor(minigame);
 					return true;
 			}
 
@@ -317,8 +394,26 @@ int bd_server_event(entity minigame, string event, ...)
 
 #elif defined(CSQC)
 
+int bd_curr_tile;
+string bd_curr_pos;
+
 vector bd_boardpos; // HUD board position
 vector bd_boardsize;// HUD board size
+
+string bd_get_tile_pic(int tileid)
+{
+	switch(tileid)
+	{
+		case BD_TILE_BOULDER: return "bd/boulder";
+		case BD_TILE_BRICK1: return "bd/brick1";
+		case BD_TILE_BRICK2: return "bd/brick2";
+		case BD_TILE_BRICK3: return "bd/brick3";
+		case BD_TILE_TARGET: return "bd/target";
+		case BD_TILE_DOZER: return "bd/dozer";
+	}
+
+	return string_null;
+}
 
 // Required function, draw the game board
 void bd_hud_board(vector pos, vector mySize)
@@ -414,6 +509,19 @@ void bd_hud_board(vector pos, vector mySize)
 		}
 	}
 
+	if(active_minigame.minigame_flags & BD_TURN_EDIT)
+	if(bd_valid_tile(bd_curr_pos))
+	{
+		bool exists = (bd_find_piece(active_minigame, bd_curr_pos, false) || bd_find_piece(active_minigame, bd_curr_pos, true));
+		string thepiece = ((exists) ? "bd/delete" : bd_get_tile_pic(bd_curr_tile));
+
+		tile_pos = minigame_tile_pos(bd_curr_pos,BD_LET_CNT,BD_NUM_CNT);
+		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
+		minigame_drawpic_centered( tile_pos,
+				minigame_texture(thepiece),
+				tile_size, '1 1 1', panel_fg_alpha/2, DRAWFLAG_NORMAL );
+	}
+
 	if ( (active_minigame.minigame_flags & BD_TURN_LOSS) || (active_minigame.minigame_flags & BD_TURN_WIN) )
 	{
 		vector winfs = hud_fontsize*2;
@@ -470,8 +578,11 @@ void bd_hud_status(vector pos, vector mySize)
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			mypos_y += player_fontsize_y;
+			string thepiece = "bd/dozer";
+			if(active_minigame.minigame_flags & BD_TURN_EDIT)
+				thepiece = bd_get_tile_pic(bd_curr_tile);
 			drawpic( mypos,
-					minigame_texture("bd/dozer"),
+					minigame_texture(thepiece),
 					tile_size * 0.7, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 
 			mypos_x += tile_size_x;
@@ -494,6 +605,9 @@ string bd_turn_to_string(int turnflags)
 		else
 			return _("Wicked!");
 
+	if( turnflags & BD_TURN_EDIT )
+		return _("Press the space bar to change your currently selected tile");
+
 	if ( turnflags & BD_TURN_MOVE )
 		return _("Push the boulders onto the targets");
 	
@@ -509,6 +623,92 @@ void bd_make_move(entity minigame, string dir)
 	}
 }
 
+void bd_editor_make_move(entity minigame)
+{
+	if ( minigame.minigame_flags == BD_TURN_EDIT )
+	{
+		minigame_cmd("move ", bd_curr_pos, " ", ftos(bd_curr_tile));
+	}
+}
+
+void bd_set_curr_pos(string s)
+{
+	if ( bd_curr_pos )
+		strunzone(bd_curr_pos);
+	if ( s )
+		s = strzone(s);
+	bd_curr_pos = s;
+}
+
+bool bd_normal_move(entity minigame, int themove)
+{
+	switch ( themove )
+	{
+		case K_RIGHTARROW:
+		case K_KP_RIGHTARROW:
+			bd_make_move(minigame, "r");
+			return true;
+		case K_LEFTARROW:
+		case K_KP_LEFTARROW:
+			bd_make_move(minigame, "l");
+			return true;
+		case K_UPARROW:
+		case K_KP_UPARROW:
+			bd_make_move(minigame, "u");
+			return true;
+		case K_DOWNARROW:
+		case K_KP_DOWNARROW:
+			bd_make_move(minigame, "d");
+			return true;
+	}
+
+	return false;
+}
+
+bool bd_editor_move(entity minigame, int themove)
+{
+	switch ( themove )
+	{
+		case K_RIGHTARROW:
+		case K_KP_RIGHTARROW:
+			if ( ! bd_curr_pos )
+				bd_set_curr_pos("a3");
+			else
+				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,1,0,BD_NUM_CNT,BD_LET_CNT));
+			return true;
+		case K_LEFTARROW:
+		case K_KP_LEFTARROW:
+			if ( ! bd_curr_pos )
+				bd_set_curr_pos("c3");
+			else
+				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,-1,0,BD_NUM_CNT,BD_LET_CNT));
+			return true;
+		case K_UPARROW:
+		case K_KP_UPARROW:
+			if ( ! bd_curr_pos )
+				bd_set_curr_pos("a1");
+			else
+				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,1,BD_NUM_CNT,BD_LET_CNT));
+			return true;
+		case K_DOWNARROW:
+		case K_KP_DOWNARROW:
+			if ( ! bd_curr_pos )
+				bd_set_curr_pos("a3");
+			else
+				bd_set_curr_pos(minigame_relative_tile(bd_curr_pos,0,-1,BD_NUM_CNT,BD_LET_CNT));
+			return true;
+		case K_ENTER:
+		case K_KP_ENTER:
+			bd_editor_make_move(minigame);
+			return true;
+		case K_SPACE:
+			bd_curr_tile = max(1, (bd_curr_tile + 1) % BD_TILE_LAST);
+			return true;
+	}
+
+	return false;
+}
+
 // Required function, handle client events
 int bd_client_event(entity minigame, string event, ...)
 {
@@ -517,34 +717,47 @@ int bd_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			minigame.message = bd_turn_to_string(minigame.minigame_flags);
+			bd_set_curr_pos("");
+			bd_curr_tile = BD_TILE_BRICK1;
 			return false;
 		}
 		case "key_pressed":
 		{
 			if(minigame.minigame_flags & BD_TURN_MOVE)
 			{
-				switch ( ...(0,int) )
-				{
-					case K_RIGHTARROW:
-					case K_KP_RIGHTARROW:
-						bd_make_move(minigame, "r");
-						return true;
-					case K_LEFTARROW:
-					case K_KP_LEFTARROW:
-						bd_make_move(minigame, "l");
-						return true;
-					case K_UPARROW:
-					case K_KP_UPARROW:
-						bd_make_move(minigame, "u");
-						return true;
-					case K_DOWNARROW:
-					case K_KP_DOWNARROW:
-						bd_make_move(minigame, "d");
-						return true;
-				}
+				if(bd_normal_move(minigame, ...(0,int)))
+					return true;
+			}
+
+			if(minigame.minigame_flags & BD_TURN_EDIT)
+			{
+				if(bd_editor_move(minigame, ...(0,int)))
+					return true;
 			}
 
 			return false;
+		}
+		case "mouse_pressed":
+		{
+			if(minigame.minigame_flags & BD_TURN_EDIT)
+			if(...(0,int) == K_MOUSE1)
+			{
+				bd_editor_make_move(minigame);
+				return true;
+			}
+
+			return false;
+		}
+		case "mouse_moved":
+		{
+			if(minigame.minigame_flags & BD_TURN_EDIT)
+			{
+				vector mouse_pos = minigame_hud_normalize(mousepos,bd_boardpos,bd_boardsize);
+				bd_set_curr_pos(minigame_tile_name(mouse_pos,BD_LET_CNT,BD_NUM_CNT));
+				if ( ! bd_valid_tile(bd_curr_pos) )
+					bd_set_curr_pos("");
+			}
+			return true;
 		}
 		case "network_receive":
 		{
@@ -590,6 +803,8 @@ int bd_client_event(entity minigame, string event, ...)
 		{
 			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Next Match"),"next");
 			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Restart"),"restart");
+			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Editor"),"edit");
+			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Save"),"save");
 			return false;
 		}
 		case "menu_click":
@@ -598,6 +813,10 @@ int bd_client_event(entity minigame, string event, ...)
 				minigame_cmd("next");
 			if(...(0,string) == "restart")
 				minigame_cmd("restart");
+			if(...(0,string) == "edit")
+				minigame_cmd("edit");
+			if(...(0,string) == "save")
+				minigame_cmd("save");
 			return false;
 		}
 	}

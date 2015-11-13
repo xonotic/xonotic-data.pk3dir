@@ -46,7 +46,7 @@ entity minigame_sessions;
 
 bool minigame_SendEntity(entity this, entity to, int sf);
 
-REGISTRY(Minigames, BITS(3))
+REGISTRY(Minigames, BITS(4))
 #define Minigames_from(i) _Minigames_from(i, NULL)
 REGISTER_REGISTRY(Minigames)
 REGISTRY_CHECK(Minigames)
