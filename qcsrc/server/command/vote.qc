@@ -345,7 +345,8 @@ void reset_map(float dorespawn)
 {
 	SELFPARAM();
 
-	if (time <= game_starttime && round_handler_IsActive()) round_handler_Reset(game_starttime);
+	if (time <= game_starttime && round_handler_IsActive())
+		round_handler_Reset(game_starttime);
 
 	MUTATOR_CALLHOOK(reset_map_global);
 

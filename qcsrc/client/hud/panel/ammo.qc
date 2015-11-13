@@ -10,41 +10,7 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
-{
-	float bonusNades    = getstatf(STAT_NADE_BONUS);
-	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
-	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	Nade def = Nades_from(bonusType);
-	vector nadeColor    = def.m_color;
-	string nadeIcon     = def.m_icon;
-
-	vector iconPos, textPos;
-
-	if(autocvar_hud_panel_ammo_iconalign)
-	{
-		iconPos = myPos + eX * 2 * mySize.y;
-		textPos = myPos;
-	}
-	else
-	{
-		iconPos = myPos;
-		textPos = myPos + eX * mySize.y;
-	}
-
-	if(bonusNades > 0 || bonusProgress > 0)
-	{
-		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
-
-		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-
-		if(draw_expanding)
-			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
-
-		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
-}
+void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
 
 void DrawAmmoItem(vector myPos, vector mySize, .int ammoType, bool isCurrent, bool isInfinite)
 {

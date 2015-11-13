@@ -10,13 +10,13 @@ REGISTRY(PlayerSounds, BITS(8) - 1)
 #define PlayerSounds_from(i) _PlayerSounds_from(i, NULL)
 #define REGISTER_PLAYERSOUND(id) \
 	.string _playersound_##id; \
-	REGISTER(RegisterPlayerSounds, playersound, PlayerSounds, id, m_id, new(PlayerSound)) \
+	REGISTER(PlayerSounds, playersound, id, m_id, new(PlayerSound)) \
 	{ \
 		make_pure(this); \
 		this.m_playersoundstr = #id; \
 		this.m_playersoundfld = _playersound_##id; \
 	}
-REGISTER_REGISTRY(RegisterPlayerSounds)
+REGISTER_REGISTRY(PlayerSounds)
 REGISTRY_SORT(PlayerSounds, 0)
 STATIC_INIT(PlayerSounds_renumber)
 {
@@ -41,7 +41,7 @@ REGISTER_PLAYERSOUND(pain75)
 .int m_playersoundvt;
 #define REGISTER_VOICEMSG(id, vt) \
 	.string _playersound_##id; \
-	REGISTER(RegisterPlayerSounds, playersound, PlayerSounds, id, m_id, new(VoiceMessage)) \
+	REGISTER(PlayerSounds, playersound, id, m_id, new(VoiceMessage)) \
 	{ \
 		make_pure(this); \
 		this.instanceOfVoiceMessage = true; \
@@ -86,12 +86,12 @@ REGISTER_VOICEMSG(teamshoot, VOICETYPE_LASTATTACKER)
 REGISTRY(GlobalSounds, BITS(8) - 1)
 #define GlobalSounds_from(i) _GlobalSounds_from(i, NULL)
 #define REGISTER_GLOBALSOUND(id, str) \
-	REGISTER(RegisterGlobalSounds, GS, GlobalSounds, id, m_id, new(GlobalSound)) \
+	REGISTER(GlobalSounds, GS, id, m_id, new(GlobalSound)) \
 	{ \
 		make_pure(this); \
 		this.m_globalsoundstr = str; \
 	}
-REGISTER_REGISTRY(RegisterGlobalSounds)
+REGISTER_REGISTRY(GlobalSounds)
 REGISTRY_SORT(GlobalSounds, 0)
 STATIC_INIT(GlobalSounds_renumber)
 {

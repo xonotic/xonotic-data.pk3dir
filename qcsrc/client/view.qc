@@ -13,7 +13,6 @@
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
-#include "../common/nades/all.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
@@ -1005,10 +1004,18 @@ void HUD_Crosshair()
 
 void HUD_Draw()
 {
-	if(getstati(STAT_FROZEN))
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-	else if (getstatf(STAT_HEALING_ORB)>time)
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, NADE_TYPE_HEAL.m_color, autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
+	vector rgb = '0 0 0';
+	float a = 1;
+	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
+	{
+		rgb = MUTATOR_ARGV(0, vector);
+		a = MUTATOR_ARGV(0, float);
+	}
+	else if(getstati(STAT_FROZEN))
+	{
+		rgb = ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
+	}
+	drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, rgb, autocvar_hud_colorflash_alpha * a, DRAWFLAG_ADDITIVE);
 	if(!intermission)
 	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{

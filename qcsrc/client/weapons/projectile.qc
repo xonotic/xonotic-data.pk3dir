@@ -7,7 +7,6 @@
 
 #include "../../common/constants.qh"
 #include "../../common/movetypes/movetypes.qh"
-#include "../../common/nades/all.qh"
 
 #include "../../lib/csqcmodel/interpolate.qh"
 
@@ -48,6 +47,8 @@ void Projectile_DrawTrail(entity this, vector to)
 		boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
+
+bool Projectile_isnade(int proj); // TODO: remove
 
 void Projectile_Draw(entity this)
 {
@@ -112,7 +113,7 @@ void Projectile_Draw(entity this)
 				break;
 		}
 
-		if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
+		if (Projectile_isnade(self.cnt))
 			rot = self.avelocity;
 
 		self.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(self.angles), rot * (t - self.spawntime)));
@@ -140,7 +141,7 @@ void Projectile_Draw(entity this)
 			break;
 	}
 
-	if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
+	if (Projectile_isnade(self.cnt))
 		trailorigin += v_up * 4;
 
 	if (drawn)
@@ -295,7 +296,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			CASE(HOOKBOMB)           self.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
 			CASE(HAGAR)              self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
 			CASE(HAGAR_BOUNCING)     self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
-			CASE(NAPALM_FOUNTAIN)                                                                         // fallthrough // sself.modelindex = 0; self.traileffect = _particleeffectnum("torch_small"); break;
 			CASE(FIREBALL)           self.modelindex = 0; self.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
 			CASE(FIREMINE)           self.modelindex = 0; self.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
 			CASE(TAG)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
@@ -324,13 +324,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				if (MUTATOR_CALLHOOK(Ent_Projectile, self))
 					break;
 
-				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
-				{
-					setmodel(self, MDL_PROJECTILE_NADE);
-					entity trail = Nade_TrailEffect(self.cnt, self.team);
-					if (trail.eent_eff_name) self.traileffect = trail.m_id;
-					break;
-				}
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
 		}
@@ -402,7 +395,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				break;
-			case PROJECTILE_NAPALM_FOUNTAIN:
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
@@ -458,23 +450,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			*/
 			default:
 				break;
-		}
-
-		if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
-		{
-			entity nade_type = Nade_FromProjectile(self.cnt);
-			self.mins = '-16 -16 -16';
-			self.maxs = '16 16 16';
-			self.colormod = nade_type.m_color;
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = func_null;
-			self.scale = 1.5;
-			self.avelocity = randomvec() * 720;
-
-			if (nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
-				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-			else
-				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 		}
 
 		MUTATOR_CALLHOOK(EditProjectile, self);

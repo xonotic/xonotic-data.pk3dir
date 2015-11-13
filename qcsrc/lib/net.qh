@@ -93,7 +93,7 @@
 			this.sourceLocLine = __LINE__; \
 			if (!this) isnew = true; \
 		} \
-		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, new(net_linked_packet)) \
+		REGISTER(LinkedEntities, NET, id, m_id, new(net_linked_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -102,7 +102,7 @@
 #else
 	#define REGISTER_NET_LINKED(id) \
 		const bool NET_##id##_istemp = false; \
-		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, new(net_linked_packet)) \
+		REGISTER(LinkedEntities, NET, id, m_id, new(net_linked_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -111,7 +111,7 @@
 
 REGISTRY(LinkedEntities, BITS(8) - 1)
 #define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
-REGISTER_REGISTRY(RegisterLinkedEntities)
+REGISTER_REGISTRY(LinkedEntities)
 REGISTRY_SORT(LinkedEntities, 0)
 REGISTRY_CHECK(LinkedEntities)
 STATIC_INIT(RegisterLinkedEntities_renumber)
@@ -123,7 +123,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 #ifdef CSQC
 	#define REGISTER_NET_TEMP(id) \
 		NET_HANDLE(id, bool); \
-		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, new(net_temp_packet)) \
+		REGISTER(TempEntities, NET, id, m_id, new(net_temp_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -132,7 +132,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 #else
 	#define REGISTER_NET_TEMP(id) \
 		const bool NET_##id##_istemp = true; \
-		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, new(net_temp_packet)) \
+		REGISTER(TempEntities, NET, id, m_id, new(net_temp_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -141,7 +141,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 
 REGISTRY(TempEntities, BITS(8) - 80)
 #define TempEntities_from(i) _TempEntities_from(i, NULL)
-REGISTER_REGISTRY(RegisterTempEntities)
+REGISTER_REGISTRY(TempEntities)
 REGISTRY_SORT(TempEntities, 0)
 REGISTRY_CHECK(TempEntities)
 STATIC_INIT(RegisterTempEntities_renumber)

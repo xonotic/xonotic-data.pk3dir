@@ -4,6 +4,7 @@
 #ifdef CSQC
 #include "../../deathtypes/all.qh"
 #include "../../movetypes/movetypes.qh"
+#include "../../../client/mutators/events.qh"
 #include "../../vehicles/all.qh"
 #include "../../weapons/all.qh"
 #endif
@@ -423,8 +424,10 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)) {
-			hitwep.wr_impacteffect(hitwep);
+		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+		{
+			if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep))
+				hitwep.wr_impacteffect(hitwep);
 		}
 	}
 }

@@ -72,8 +72,8 @@ float cl_notice_run()
     _notes = findchain(classname, "sv_notice");
     if(!_notes)
         return false;
-    #define M1 30
-    #define M2 10
+    const int M1 = 30;
+    const int M2 = 10;
 
     vector v1, v2 = '0 0 0', v3;
     v1 = '1 1 0' * M1;
@@ -111,8 +111,6 @@ float cl_notice_run()
     }
 
     #undef OUT
-    #undef M1
-    #undef M2
 
     return m;
 }

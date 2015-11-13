@@ -8,12 +8,12 @@ string M_Model(string m_mdl);
 REGISTRY(Monsters, BITS(5))
 #define Monsters_from(i) _Monsters_from(i, MON_Null)
 #define get_monsterinfo(i) Monsters_from(i)
-REGISTER_REGISTRY(RegisterMonsters)
+REGISTER_REGISTRY(Monsters)
 REGISTRY_CHECK(Monsters)
 const int MON_FIRST = 1;
 #define MON_LAST (Monsters_COUNT - 1)
 /** If you register a new monster, make sure to add it to all.inc */
-#define REGISTER_MONSTER(id, inst) REGISTER(RegisterMonsters, MON, Monsters, id, monsterid, inst)
+#define REGISTER_MONSTER(id, inst) REGISTER(Monsters, MON, id, monsterid, inst)
 
 REGISTER_MONSTER(Null, NEW(Monster));
 

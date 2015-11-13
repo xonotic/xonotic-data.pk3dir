@@ -12,7 +12,6 @@
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
-#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"
@@ -261,6 +260,8 @@ float Obituary_WeaponDeath(
 	}
 	return false;
 }
+
+.int buffs; // TODO: remove
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {

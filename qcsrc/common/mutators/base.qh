@@ -210,7 +210,7 @@ void Mutator_Remove(Mutator mut)
         bool ret = MUTATORFUNCTION_##id##_hooks(mode); if (ret) return ret; \
     } \
     bool MUTATOR_##id##_check() { return dependence; } \
-    REGISTER(RegisterMutators, MUTATOR, Mutators, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
+    REGISTER(Mutators, MUTATOR, id, m_id, NEW(Mutator, #id, MUTATORFUNCTION_##id)) \
     { this.mutatorcheck = MUTATOR_##id##_check; } \
     [[accumulate]] bool MUTATORFUNCTION_##id(int mode)
 

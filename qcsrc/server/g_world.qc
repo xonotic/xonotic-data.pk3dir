@@ -18,7 +18,6 @@
 #include "scores.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
-#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"

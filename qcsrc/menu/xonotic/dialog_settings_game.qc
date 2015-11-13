@@ -147,7 +147,7 @@ CLASS(XonoticGameSettingsTab, XonoticTab)
 			topics.onChangeEntity = this;
 
 		int
-		col = 0, width = 1.5;
+		col = 0, width = 1;
 		this.gotoRC(this, 0, col);
 			this.TD(this, this.rows, width, topics);
 

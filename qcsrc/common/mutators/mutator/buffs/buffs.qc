@@ -75,7 +75,6 @@ const vector BUFF_MAX = ('16 16 20');
 
 #include "../../../triggers/target/music.qh"
 #include "../../../gamemodes/all.qh"
-#include "../../../buffs/all.qh"
 
 .float buff_time;
 void buffs_DelayedInit();
@@ -789,6 +788,11 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {SELFPARAM();
+	if (self.classname == "item_flight" && cvar("g_buffs") && cvar("g_buffs_flight"))
+	{
+		buff_Init_Compat(self, BUFF_FLIGHT);
+		return true;
+	}
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{
