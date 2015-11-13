@@ -795,7 +795,7 @@ void CSQC_Ent_Update(bool isnew)
 	this.enttype = t;
 	bool done = false;
 	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
-		this.classname = it.netname;
+		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, isnew);
