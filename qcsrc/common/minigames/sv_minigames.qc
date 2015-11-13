@@ -51,8 +51,6 @@ void minigame_rmplayer(entity minigame_session, entity player)
 
 
 #define FIELD(Flags, Type,Name) if ( sf & (Flags) ) Write##Type(MSG_ENTITY, self.Name);
-#define WriteVector(to,Name) WriteCoord(to,Name##_x); WriteCoord(to,Name##_y); WriteCoord(to,Name##_z)
-#define WriteVector2D(to,Name) WriteCoord(to,Name##_x); WriteCoord(to,Name##_y)
 #define MSLE(Name,Fields) \
 	else if ( self.classname == #Name ) { \
 		if ( sf & MINIG_SF_CREATE ) WriteString(MSG_ENTITY,self.owner.netname); \

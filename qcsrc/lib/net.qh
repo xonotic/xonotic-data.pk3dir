@@ -184,6 +184,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			return v;
 		}
 
+		#define ReadFloat() ReadCoord()
+        vector ReadVector() { vector v; v.x = ReadFloat(); v_y = ReadFloat(); v.z = ReadFloat(); return v; }
+		vector ReadVector2D() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = 0; return v; }
+
 		float ReadApproxPastTime()
 		{
 			float dt = ReadByte();
@@ -214,6 +218,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			WriteInt24_t(dst, val.y);
 			WriteInt24_t(dst, val.z);
 		}
+
+        #define WriteFloat(to, f) WriteCoord(to, f)
+		#define WriteVector(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } while (0)
+        #define WriteVector2D(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); } while (0)
 
 		// this will use the value:
 		//   128

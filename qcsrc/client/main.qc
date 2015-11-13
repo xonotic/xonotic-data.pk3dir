@@ -752,7 +752,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void CSQC_Ent_Update(float bIsNewEntity)
+void CSQC_Ent_Update(bool isnew)
 {
 	SELFPARAM();
 	this.sourceLocLine = __LINE__;
@@ -773,22 +773,22 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	}
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if(this.enttype)
+	if (this.enttype)
 	{
-		if(t != this.enttype || bIsNewEntity)
+		if (t != this.enttype || isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(this), this.entnum, this.enttype, t);
 			Ent_Remove();
 			clearentity(this);
-			bIsNewEntity = 1;
+			isnew = true;
 		}
 	}
 	else
 	{
-		if(!bIsNewEntity)
+		if (!isnew)
 		{
 			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(this), this.entnum, t);
-			bIsNewEntity = 1;
+			isnew = true;
 		}
 	}
 #endif
@@ -797,15 +797,14 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
 		this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", bIsNewEntity, this, this.entnum, this.enttype, it.netname, t);
-		done = it.m_read(this, bIsNewEntity);
+            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		done = it.m_read(this, isnew);
 		break;
 	));
 	time = savetime;
 	if (!done)
 	{
-		//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), this.enttype));
-		error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", this.enttype, num_for_edict(this), this.classname));
+		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 	}
 }
 
