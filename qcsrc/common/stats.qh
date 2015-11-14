@@ -89,7 +89,7 @@ enum {
     STAT_LAST_VECTOR
 };
 
-const int REGISTERED_STATS = 11;
+const int REGISTERED_STATS = 12;
 
 REGISTER_STAT(KH_KEYS, int)
 /** weapon requested to switch to; next WANTED weapon (for HUD) */
@@ -106,11 +106,11 @@ REGISTER_STAT(FUEL, int)
 REGISTER_STAT(NB_METERSTART, float)
 /** compressShotOrigin */
 REGISTER_STAT(SHOTORG, int)
+REGISTER_STAT(LEADLIMIT, float)
 
 enum {
     STAT_FIRST_MAIN = (STAT_LAST_VECTOR - 1) + REGISTERED_STATS,
 
-    STAT_LEADLIMIT,
     STAT_WEAPON_CLIPLOAD,
     STAT_WEAPON_CLIPSIZE,
     STAT_VORTEX_CHARGE,

@@ -1404,7 +1404,7 @@ void HUD_DrawScoreboard()
 	str = sprintf(_("playing ^3%s^7 on ^2%s^7"), MapInfo_Type_ToText(gametype), shortmapname);
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
-	ll = getstatf(STAT_LEADLIMIT);
+	ll = STAT(LEADLIMIT);
 	if(gametype == MAPINFO_TYPE_LMS)
 	{
 		if(tl > 0)
