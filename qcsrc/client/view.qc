@@ -819,8 +819,8 @@ void HUD_Crosshair()
 				ring_scale = autocvar_crosshair_ring_size;
 
 				float weapon_clipload, weapon_clipsize;
-				weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
-				weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
+				weapon_clipload = STAT(WEAPON_CLIPLOAD);
+				weapon_clipsize = STAT(WEAPON_CLIPSIZE);
 
 				float ok_ammo_charge, ok_ammo_chargepool;
 				ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);

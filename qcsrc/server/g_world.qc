@@ -763,8 +763,6 @@ spawnfunc(worldspawn)
 
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
-	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
-	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
 	addstat(STAT_DAMAGE_DEALT_TOTAL, AS_INT, damage_dealt_total);

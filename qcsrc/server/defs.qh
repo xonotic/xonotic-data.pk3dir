@@ -465,9 +465,9 @@ float client_cefc_accumulatortime;
 
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
-.float clip_load;
+.float clip_load = _STAT(WEAPON_CLIPLOAD);
 .float old_clip_load;
-.float clip_size;
+.float clip_size = _STAT(WEAPON_CLIPSIZE);
 
 .float minelayer_mines;
 .float vortex_charge;
