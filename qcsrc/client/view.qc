@@ -362,7 +362,7 @@ float TrueAimCheck()
 
 	vector traceorigin = getplayerorigin(player_localentnum-1) + (eZ * getstati(STAT_VIEWHEIGHT));
 
-	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
+	vecs = decompressShotOrigin(STAT(SHOTORG));
 
 	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;

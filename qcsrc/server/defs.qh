@@ -443,7 +443,7 @@ float servertime, serverprevtime, serverframetime;
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
 
-.float stat_shotorg; // networked stat for trueaim HUD
+.float stat_shotorg = _STAT(SHOTORG); // networked stat for trueaim HUD
 
 string matchid;
 
