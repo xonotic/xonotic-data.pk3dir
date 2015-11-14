@@ -108,10 +108,10 @@ void W_Crylink_Dequeue(entity e)
 	W_Crylink_Dequeue_Raw(e.realowner, e.queueprev, e, e.queuenext);
 }
 
-void W_Crylink_Reset()
-{SELFPARAM();
-	W_Crylink_Dequeue(self);
-	remove(self);
+void W_Crylink_Reset(entity this)
+{
+	W_Crylink_Dequeue(this);
+	remove(this);
 }
 
 // force projectile to explode

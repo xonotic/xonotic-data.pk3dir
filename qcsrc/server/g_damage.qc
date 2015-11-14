@@ -857,7 +857,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			farcent.origin = hitloc;
 			farcent.forcetype = FORCETYPE_FORCEATPOS;
 			farcent.nextthink = time + 0.1;
-			farcent.think = SUB_Remove;
+			farcent.think = SUB_Remove_self;
 		}
 		else
 		{

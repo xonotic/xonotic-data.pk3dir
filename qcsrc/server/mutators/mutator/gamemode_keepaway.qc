@@ -221,16 +221,17 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
 }
 
-void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
-{SELFPARAM();
-	if((self.owner) && (IS_PLAYER(self.owner)))
-		ka_DropEvent(self.owner);
+/** used to clear the ballcarrier whenever the match switches from warmup to normal */
+void ka_Reset(entity this)
+{
+	if((this.owner) && (IS_PLAYER(this.owner)))
+		ka_DropEvent(this.owner);
 
 	if(time < game_starttime)
 	{
-		self.think = ka_RespawnBall;
-		self.touch = func_null;
-		self.nextthink = game_starttime;
+		this.think = ka_RespawnBall;
+		this.touch = func_null;
+		this.nextthink = game_starttime;
 	}
 	else
 		ka_RespawnBall();

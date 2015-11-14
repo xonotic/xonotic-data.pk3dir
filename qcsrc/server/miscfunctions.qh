@@ -58,7 +58,6 @@ void soundtoat(float _dest, entity e, vector o, float chan, string samp, float v
 
 void objerror(string s);
 void droptofloor();
-void() SUB_Remove;
 
 void attach_sameorigin(entity e, entity to, string tag);
 

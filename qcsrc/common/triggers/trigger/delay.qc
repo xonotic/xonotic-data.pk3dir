@@ -5,10 +5,10 @@ void delay_use()
    self.nextthink = self.wait;
 }
 
-void delay_reset()
-{SELFPARAM();
-	self.think = func_null;
-	self.nextthink = 0;
+void delay_reset(entity this)
+{
+	this.think = func_null;
+	this.nextthink = 0;
 }
 
 spawnfunc(trigger_delay)

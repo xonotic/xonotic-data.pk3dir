@@ -77,7 +77,7 @@ void W_Shotgun_Attack(Weapon thiswep, float isprimary)
 	// muzzle flash for 1st person view
 	flash = spawn();
 	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
-	flash.think = SUB_Remove;
+	flash.think = SUB_Remove_self;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(self, flash, '5 0 0');

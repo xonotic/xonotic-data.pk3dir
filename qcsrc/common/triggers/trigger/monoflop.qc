@@ -28,10 +28,10 @@ void monoflop_think()
 	SUB_UseTargets();
 }
 
-void monoflop_reset()
-{SELFPARAM();
-	self.state = 0;
-	self.nextthink = 0;
+void monoflop_reset(entity this)
+{
+	this.state = 0;
+	this.nextthink = 0;
 }
 
 spawnfunc(trigger_monoflop)

@@ -1066,7 +1066,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		this.reset = Item_Reset_self;
+		this.reset = Item_Reset;
 		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;

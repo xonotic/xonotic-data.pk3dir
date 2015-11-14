@@ -185,23 +185,23 @@ void plat_use()
 
 .string sound1, sound2;
 
-void plat_reset()
-{SELFPARAM();
+void plat_reset(entity this)
+{
 	IFTARGETED
 	{
-		setorigin (self, self.pos1);
-		self.state = 4;
-		self.use = plat_use;
+		setorigin (this, this.pos1);
+		this.state = 4;
+		this.use = plat_use;
 	}
 	else
 	{
-		setorigin (self, self.pos2);
-		self.state = 2;
-		self.use = plat_trigger_use;
+		setorigin (this, this.pos2);
+		this.state = 2;
+		this.use = plat_trigger_use;
 	}
 
 #ifdef SVQC
-	self.SendFlags |= SF_TRIGGER_RESET;
+	this.SendFlags |= SF_TRIGGER_RESET;
 #endif
 }
 

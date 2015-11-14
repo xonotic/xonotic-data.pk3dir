@@ -355,7 +355,7 @@ void reset_map(bool dorespawn)
 		{
 			if (e.reset)
 			{
-				WITH(entity, self, e, e.reset());
+				WITH(entity, self, e, e.reset(e));
 				continue;
 			}
 			if (e.team_saved) e.team = e.team_saved;

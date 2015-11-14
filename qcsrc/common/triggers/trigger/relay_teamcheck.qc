@@ -21,15 +21,15 @@ void trigger_relay_teamcheck_use()
 	}
 }
 
-void trigger_relay_teamcheck_reset()
-{SELFPARAM();
-	self.team = self.team_saved;
+void trigger_relay_teamcheck_reset(entity this)
+{
+	this.team = this.team_saved;
 }
 
 spawnfunc(trigger_relay_teamcheck)
 {
-	self.team_saved = self.team;
-	self.use = trigger_relay_teamcheck_use;
-	self.reset = trigger_relay_teamcheck_reset;
+	this.team_saved = this.team;
+	this.use = trigger_relay_teamcheck_use;
+	this.reset = trigger_relay_teamcheck_reset;
 }
 #endif

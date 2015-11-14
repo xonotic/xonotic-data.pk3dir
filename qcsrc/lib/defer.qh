@@ -10,23 +10,23 @@
 	class(Defer).void() think;
 	class(Defer).float nextthink;
 
-/*
-==================
-SUB_Remove
+	/** Remove self */
+	void SUB_Remove(entity this)
+	{
+		remove(this);
+	}
 
-Remove self
-==================
-*/
-	void SUB_Remove()
+	/** Remove self */
+	void SUB_Remove_self()
 	{
 		SELFPARAM();
-		remove(self);
+		remove(this);
 	}
 
 	void defer_think()
 	{
 		SELFPARAM();
-		self.think     = SUB_Remove;
+		self.think     = SUB_Remove_self;
 		self.nextthink = time;
 		WITH(entity, self, self.owner, self.use());
 	}

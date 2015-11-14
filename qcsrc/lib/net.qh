@@ -30,7 +30,7 @@
 		if (dt)
 		{
 			e.nextthink = time + dt;
-			e.think = SUB_Remove;
+			e.think = SUB_Remove_self;
 		}
 	}
 

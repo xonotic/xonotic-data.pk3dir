@@ -6,20 +6,20 @@ void gamestart_use()
 	remove(self);
 }
 
-void _spawnfunc_trigger_gamestart();
+void self_spawnfunc_trigger_gamestart();
 spawnfunc(trigger_gamestart)
 {
-	self.use = gamestart_use;
-	self.reset2 = _spawnfunc_trigger_gamestart;
+	this.use = gamestart_use;
+	this.reset2 = self_spawnfunc_trigger_gamestart;
 
-	if(self.wait)
+	if(this.wait)
 	{
-		self.think = self.use;
-		self.nextthink = game_starttime + self.wait;
+		this.think = this.use;
+		this.nextthink = game_starttime + this.wait;
 	}
 	else
-		InitializeEntity(self, gamestart_use, INITPRIO_FINDTARGET);
+		InitializeEntity(this, gamestart_use, INITPRIO_FINDTARGET);
 }
-void _spawnfunc_trigger_gamestart() { SELFPARAM(); spawnfunc_trigger_gamestart(this); }
+void self_spawnfunc_trigger_gamestart() { SELFPARAM(); spawnfunc_trigger_gamestart(this); }
 
 #endif
