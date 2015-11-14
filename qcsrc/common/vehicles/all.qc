@@ -7,7 +7,6 @@
 STATIC_INIT(vehicles_common_initialize)
 {
 #ifdef SVQC
-	addstat(STAT_HUD, AS_INT, hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
 	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
 	addstat(STAT_VEHICLESTAT_ENERGY,  AS_INT, vehicle_energy);

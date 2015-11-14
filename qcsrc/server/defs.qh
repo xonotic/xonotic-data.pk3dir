@@ -158,7 +158,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 //.int weapon; // current weapon
 .int switchweapon = _STAT(SWITCHWEAPON);
-.int switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+.int switchingweapon = _STAT(SWITCHINGWEAPON); // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon
 
 // WEAPONTODO
@@ -447,12 +447,12 @@ float servertime, serverprevtime, serverframetime;
 
 string matchid;
 
-.float last_pickup;
+.float last_pickup = _STAT(LAST_PICKUP);
 
-.float hit_time;
-.float typehit_time;
+.float hit_time = _STAT(HIT_TIME);
+.float typehit_time = _STAT(TYPEHIT_TIME);
 
-.float damage_dealt_total;
+.float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 
 .float stat_leadlimit = _STAT(LEADLIMIT);
 
@@ -469,11 +469,11 @@ float client_cefc_accumulatortime;
 .float old_clip_load;
 .float clip_size = _STAT(WEAPON_CLIPSIZE);
 
-.float minelayer_mines;
-.float vortex_charge;
+.float minelayer_mines = _STAT(LAYED_MINES);
+.float vortex_charge = _STAT(VORTEX_CHARGE);
 .float vortex_charge_rottime;
-.float vortex_chargepool_ammo;
-.float hagar_load;
+.float vortex_chargepool_ammo = _STAT(VORTEX_CHARGEPOOL);
+.float hagar_load = _STAT(HAGAR_LOAD);
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 

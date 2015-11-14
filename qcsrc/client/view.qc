@@ -475,12 +475,12 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
 	static float damage_dealt_time_prev = 0;
-	float damage_dealt_time = getstatf(STAT_HIT_TIME);
+	float damage_dealt_time = STAT(HIT_TIME);
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
@@ -536,7 +536,7 @@ void HitSound()
 	}
 
 	static float typehit_time_prev = 0;
-	float typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	float typehit_time = STAT(TYPEHIT_TIME);
 	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		sound(world, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
@@ -712,7 +712,7 @@ void HUD_Crosshair()
 
 		if(autocvar_crosshair_pickup)
 		{
-			float stat_pickup_time = getstatf(STAT_LAST_PICKUP);
+			float stat_pickup_time = STAT(LAST_PICKUP);
 
 			if(pickup_crosshair_time < stat_pickup_time)
 			{
@@ -827,8 +827,8 @@ void HUD_Crosshair()
 				ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOL);
 
 				float vortex_charge, vortex_chargepool;
-				vortex_charge = getstatf(STAT_VORTEX_CHARGE);
-				vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
+				vortex_charge = STAT(VORTEX_CHARGE);
+				vortex_chargepool = STAT(VORTEX_CHARGEPOOL);
 
 				float arc_heat = STAT(ARC_HEAT);
 
@@ -859,14 +859,14 @@ void HUD_Crosshair()
 				}
 				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER.m_id && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_value = bound(0, STAT(LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if (activeweapon == WEP_HAGAR.m_id && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				else if (activeweapon == WEP_HAGAR.m_id && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_value = bound(0, STAT(HAGAR_LOAD) / hagar_maxrockets, 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
@@ -1065,7 +1065,7 @@ void CSQC_UpdateView(float w, float h)
 	++framecount;
 
 	stats_get();
-	hud = getstati(STAT_HUD);
+	hud = STAT(HUD);
 
 	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)
 		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
@@ -1389,7 +1389,7 @@ void CSQC_UpdateView(float w, float h)
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
 	// currently switching-to weapon (for crosshair)
-	switchingweapon = getstati(STAT_SWITCHINGWEAPON);
+	switchingweapon = STAT(SWITCHINGWEAPON);
 
 	// actually active weapon (for zoom)
 	activeweapon = getstati(STAT_ACTIVEWEAPON);

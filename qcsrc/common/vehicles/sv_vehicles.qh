@@ -61,7 +61,7 @@ const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 const float VHSF_NORMAL = 0;
 const float VHSF_FACTORY = 2;
 
-.int hud;
+.int hud = _STAT(HUD);
 .float dmg_time;
 
 .int volly_counter;

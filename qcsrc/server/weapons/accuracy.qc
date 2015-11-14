@@ -58,7 +58,7 @@ void accuracy_resend(entity e)
 }
 
 // update accuracy stats
-.float hit_time;
+//.float hit_time;
 .float fired_time;
 
 void accuracy_add(entity this, int w, int fired, int hit)
