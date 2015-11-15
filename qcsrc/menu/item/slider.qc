@@ -275,6 +275,7 @@
 		save = draw_alpha;
 		if (me.disabled) draw_alpha *= me.disabledAlpha;
 		draw_ButtonPicture('0 0 0', strcat(me.src, "_s"), eX * (1 - me.textSpace) + eY, me.color2, 1);
+		if (me.valueMax > me.valueMin) // valid?
 		if (almost_in_bounds(me.valueMin, me.sliderValue, me.valueMax))
 		{
 			controlLeft = (me.sliderValue - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth);
@@ -291,7 +292,8 @@
 				me.sliderAnim = NULL;
 			}
 
-		me.setText(me, me.valueToText(me, me.value));
+		if (me.valueMax > me.valueMin) // valid?
+			me.setText(me, me.valueToText(me, me.value));
 		draw_alpha = save;
 		SUPER(Slider).draw(me);
 		me.text = string_null;  // TEMPSTRING!
