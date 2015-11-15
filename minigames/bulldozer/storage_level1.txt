@@ -1,6 +1,6 @@
 // bulldozer storage "level1" last updated 16-11-2015 03:11:33
 nextlevel = "level2"
-"k11" 1 "0 0 0" ; 
+"k11" 1 "0 -1 0" ; 
 "a20" 6 "0 0 0" ; 
 "a19" 6 "0 0 0" ; 
 "a18" 6 "0 0 0" ; 
