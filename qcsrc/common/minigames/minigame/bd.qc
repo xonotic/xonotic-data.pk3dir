@@ -34,7 +34,8 @@ const int BD_TILE_BOULDER = 3;
 const int BD_TILE_BRICK1 = 4;
 const int BD_TILE_BRICK2 = 5;
 const int BD_TILE_BRICK3 = 6;
-const int BD_TILE_LAST = 6;
+const int BD_TILE_BRICK4 = 7;
+const int BD_TILE_LAST = 7;
 
 string autocvar_sv_minigames_bulldozer_startlevel = "level1";
 
@@ -92,7 +93,8 @@ bool bd_canfill(int ttype)
 	{
 		case BD_TILE_BRICK1:
 		case BD_TILE_BRICK2:
-		case BD_TILE_BRICK3: return true;
+		case BD_TILE_BRICK3:
+		case BD_TILE_BRICK4: return true;
 	}
 
 	return false;
@@ -121,7 +123,8 @@ bool bd_move_dozer(entity minigame, entity dozer)
 		case BD_TILE_DOZER: // wtf, but let's do this incase
 		case BD_TILE_BRICK1:
 		case BD_TILE_BRICK2:
-		case BD_TILE_BRICK3: return false;
+		case BD_TILE_BRICK3:
+		case BD_TILE_BRICK4: return false;
 		case BD_TILE_BOULDER:
 		{
 			string testpos;
@@ -200,13 +203,14 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile)
 	{
 		if ( bd_valid_tile(pos) )
 		{
-			bool exists = ( bd_find_piece(minigame, pos, false) || bd_find_piece(minigame, pos, true) );
+			entity found_piece = bd_find_piece(minigame, pos, false);
+			entity targ = bd_find_piece(minigame, pos, true);
 
 			entity dozer = bd_find_dozer(minigame);
 			if(dozer && thetile == BD_TILE_DOZER && pos != dozer.netname)
 				return; // nice try
 
-			if(exists)
+			if(found_piece || (targ && thetile != BD_TILE_BOULDER))
 			{
 				entity piece = bd_find_piece(minigame, pos, false);
 				if(!piece) piece = bd_find_piece(minigame, pos, true);
@@ -405,6 +409,21 @@ bool bd_save_level(entity minigame)
 {
 	if(minigame.bd_levelname && minigame.bd_levelname != "")
 	{
+		int target_count = 0, boulder_count = 0;
+		entity piece = world;
+		while((piece = findentity(piece,owner,minigame)))
+		if(piece.classname == "minigame_board_piece")
+			if(piece.bd_tiletype == BD_TILE_BOULDER)
+				++boulder_count;
+			else if(piece.bd_tiletype == BD_TILE_TARGET)
+				++target_count;
+
+		if(boulder_count != target_count)
+		{
+			LOG_INFO("Not enough targets or boulders, fix your level!\n");
+			return false;
+		}
+
 		// saves all objects to the database file
 		string file_name;
 		float file_get;
@@ -599,6 +618,7 @@ string bd_get_tile_pic(int tileid)
 		case BD_TILE_BRICK1: return "bd/brick1";
 		case BD_TILE_BRICK2: return "bd/brick2";
 		case BD_TILE_BRICK3: return "bd/brick3";
+		case BD_TILE_BRICK4: return "bd/brick4";
 		case BD_TILE_TARGET: return "bd/target";
 		case BD_TILE_DOZER: return "bd/dozer";
 	}
@@ -626,13 +646,7 @@ void bd_hud_board(vector pos, vector mySize)
 			tile_pos = minigame_tile_pos(e.netname,BD_NUM_CNT,BD_LET_CNT);
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 
-			string thepiece = "bd/brick1";
-			switch(e.bd_tiletype)
-			{
-				case BD_TILE_BOULDER: thepiece = "bd/boulder"; break;
-				case BD_TILE_BRICK2: thepiece = "bd/brick2"; break;
-				case BD_TILE_BRICK3: thepiece = "bd/brick3"; break;
-			}
+			string thepiece = bd_get_tile_pic(e.bd_tiletype);
 
 			minigame_drawpic_centered( tile_pos,  
 					minigame_texture(thepiece),
@@ -703,8 +717,9 @@ void bd_hud_board(vector pos, vector mySize)
 	if(active_minigame.minigame_flags & BD_TURN_EDIT)
 	if(bd_valid_tile(bd_curr_pos))
 	{
-		bool exists = (bd_find_piece(active_minigame, bd_curr_pos, false) || bd_find_piece(active_minigame, bd_curr_pos, true));
-		string thepiece = ((exists) ? "bd/delete" : bd_get_tile_pic(bd_curr_tile));
+		entity piece = bd_find_piece(active_minigame, bd_curr_pos, false);
+		entity targ = bd_find_piece(active_minigame, bd_curr_pos, true);
+		string thepiece = ((piece || (targ && bd_curr_tile != BD_TILE_BOULDER)) ? "bd/delete" : bd_get_tile_pic(bd_curr_tile));
 
 		tile_pos = minigame_tile_pos(bd_curr_pos,BD_LET_CNT,BD_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);

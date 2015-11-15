@@ -1,5 +1,5 @@
 // bulldozer storage "level2" last updated 16-11-2015 03:34:13
-nextlevel = "level2"
+nextlevel = "level3"
 "a20" 4 "0 0 0" ; 
 "b20" 4 "0 0 0" ; 
 "c20" 4 "0 0 0" ; 
