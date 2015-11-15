@@ -12,6 +12,9 @@ CLASS(XonoticServerList, XonoticListBox)
 	METHOD(XonoticServerList, toggleFavorite, void(entity, string));
 
 	ATTRIB(XonoticServerList, iconsSizeFactor, float, 0.85)
+	METHOD(XonoticServerList, mouseMove, float(entity, vector));
+	ATTRIB(XonoticServerList, mouseOverIcons, bool, false)
+	METHOD(XonoticServerList, focusedItemChangeNotify, void(entity));
 
 	ATTRIB(XonoticServerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticServerList, realUpperMargin, float, 0)
@@ -1077,9 +1080,10 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 
 #ifdef COMPAT_NO_MOD_IS_XONOTIC
 	if(modname == "")
-		modname = "xonotic";
+		modname = "Xonotic";
 #endif
 
+	string original_modname = modname;
 	modname = strtolower(modname);
 
 	/*
@@ -1232,6 +1236,19 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
 		draw_Picture(iconPos, "icon_stats1", iconSize, '1 1 1', 1);
 
+	if(isFocused && me.mouseOverIcons && !me.tooltip)
+	{
+		string t = "";
+		if(me.seenIPv4 && me.seenIPv6)
+			t = strcat(t, (isv6) ? "IPv6, " : "IPv4, ");
+		t = strcat(t, _("encryption:"), " ", (q ? sprintf(_("AES level %d"), q) : ZCTX(_("ENC^none"))), ", ");
+		t = strcat(t, sprintf(_("mod: %s"), ((modname == "xonotic") ? ZCTX(_("MOD^Default")) : original_modname)));
+		if(pure_available)
+			t = strcat(t, sprintf(_(" (%s)"), (pure) ? _("official settings") : _("modified settings")));
+		t = strcat(t, ", ");
+		t = strcat(t, ((sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS)) ? _("stats enabled") : _("stats disabled")));
+		setZonedTooltip(me, t, string_null);
+	}
 	// --------------
 	//  RENDER TEXT
 	// --------------
@@ -1255,6 +1272,26 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	// server playercount
 	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i)));
 	draw_Text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
+}
+
+void XonoticServerList_focusedItemChangeNotify(entity me)
+{
+	clearTooltip(me);
+}
+
+float XonoticServerList_mouseMove(entity me, vector pos)
+{
+	if(!SUPER(XonoticServerList).mouseMove(me, pos))
+	{
+		me.mouseOverIcons = false;
+		clearTooltip(me);
+		return 1;
+	}
+
+	me.mouseOverIcons = (pos_x <= me.columnIconsSize);
+	if(!me.mouseOverIcons)
+		clearTooltip(me);
+	return 1;
 }
 
 bool XonoticServerList_keyDown(entity me, int scan, bool ascii, bool shift)
