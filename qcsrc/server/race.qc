@@ -328,8 +328,8 @@ void race_deleteTime(string map, float pos)
 	{
 		if (i == RANKINGS_CNT)
 		{
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), string_null);
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), string_null);
+			db_remove(ServerProgsDB, strcat(map, rr, "time", ftos(i)));
+			db_remove(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)));
 		}
 		else
 		{
