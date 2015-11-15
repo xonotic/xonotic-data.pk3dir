@@ -744,9 +744,18 @@ void bd_hud_board(vector pos, vector mySize)
 
 		tile_pos = minigame_tile_pos(bd_curr_pos,BD_LET_CNT,BD_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-		minigame_drawpic_centered( tile_pos,
-				minigame_texture(thepiece),
-				tile_size, '1 1 1', panel_fg_alpha/2, DRAWFLAG_NORMAL );
+		if(bd_curr_tile == BD_TILE_DOZER)
+		{
+			drawrotpic(tile_pos, M_PI, minigame_texture("bd/dozer"),
+						tile_size, tile_size/2, '1 1 1',
+						panel_fg_alpha/2, DRAWFLAG_NORMAL );
+		}
+		else
+		{
+			minigame_drawpic_centered( tile_pos,
+					minigame_texture(thepiece),
+					tile_size, '1 1 1', panel_fg_alpha/2, DRAWFLAG_NORMAL );
+		}
 	}
 
 	if ( (active_minigame.minigame_flags & BD_TURN_LOSS) || (active_minigame.minigame_flags & BD_TURN_WIN) )
