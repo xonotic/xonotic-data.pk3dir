@@ -1,5 +1,6 @@
-// bulldozer storage "level1" last updated 16-11-2015 03:09:03
-nextlevel=vel2
+// bulldozer storage "level1" last updated 16-11-2015 03:11:33
+nextlevel = "level2"
+"k11" 1 "0 0 0" ; 
 "a20" 6 "0 0 0" ; 
 "a19" 6 "0 0 0" ; 
 "a18" 6 "0 0 0" ; 
@@ -156,7 +157,6 @@ nextlevel=vel2
 "p15" 6 "0 0 0" ; 
 "p14" 6 "0 0 0" ; 
 "l11" 5 "0 0 0" ; 
-"k11" 1 "0 0 0" ; 
 "h11" 2 "0 0 0" ; 
 "k9" 2 "0 0 0" ; 
 "j14" 2 "0 0 0" ; 

@@ -374,10 +374,10 @@ string bd_save_piece(entity minigame, entity e)
 
 void bd_set_nextlevel(entity minigame, string s)
 {
-	string blah = substring(s, 11, strlen(s));
+	tokenize_console(s);
 
 	if(minigame.bd_nextlevel) { strunzone(minigame.bd_nextlevel); }
-	minigame.bd_nextlevel = strzone(blah);
+	minigame.bd_nextlevel = strzone(argv(2));
 }
 
 entity bd_load_piece(entity minigame, string s)
@@ -413,8 +413,8 @@ bool bd_save_level(entity minigame)
 		file_get = fopen(file_name, FILE_WRITE);
 		fputs(file_get, strcat("// bulldozer storage \"", minigame.bd_levelname, "\" last updated ", strftime(true, "%d-%m-%Y %H:%M:%S"), "\n"));
 
-		if(minigame.bd_nextlevel && minigame.bd_nextlevel != "" && fexists(strcat("minigames/bulldozer/storage_", minigame.bd_levelname, ".txt")))
-			fputs(file_get, strcat("nextlevel=", minigame.bd_nextlevel, "\n"));
+		if(minigame.bd_nextlevel && minigame.bd_nextlevel != "" && fexists(strcat("minigames/bulldozer/storage_", minigame.bd_nextlevel, ".txt")))
+			fputs(file_get, strcat("nextlevel = \"", minigame.bd_nextlevel, "\"\n"));
 
 		entity e = world;
 		while ( ( e = findentity(e,owner,minigame) ) )
@@ -454,7 +454,7 @@ void bd_load_level(entity minigame)
 				continue;
 			if(substring(file_read, 0, 1) == "#")
 				continue;
-			if(substring(file_read, 0, 10) == "nextlevel=")
+			if(substring(file_read, 0, 9) == "nextlevel")
 			{
 				bd_set_nextlevel(minigame, file_read);
 				continue;
