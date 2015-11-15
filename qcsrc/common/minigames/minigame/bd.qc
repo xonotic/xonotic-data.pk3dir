@@ -285,14 +285,58 @@ void bd_fill_recurse(entity minigame, entity player, int thetype, int letter, in
 	bd_fill_recurse(minigame, player, thetype, letter, number + 1);
 }
 
+void bd_unfill_recurse(entity minigame, entity player, int thetype, int letter, int number)
+{
+	string pos = minigame_tile_buildname(letter,number);
+	if(!bd_valid_tile(pos))
+		return;
+
+	entity targ = bd_find_piece(minigame, pos, true);
+	entity piece = bd_find_piece(minigame, pos, false);
+
+	if(targ && thetype == targ.bd_tiletype)
+	{
+		if(targ.netname) { strunzone(targ.netname); }
+		remove(targ);
+	}
+	else if(piece && thetype == piece.bd_tiletype)
+	{
+		if(piece.netname) { strunzone(piece.netname); }
+		remove(piece);
+	}
+	else return;
+
+	bd_unfill_recurse(minigame, player, thetype, letter - 1, number);
+	bd_unfill_recurse(minigame, player, thetype, letter + 1, number);
+	bd_unfill_recurse(minigame, player, thetype, letter, number - 1);
+	bd_unfill_recurse(minigame, player, thetype, letter, number + 1);
+}
+
 void bd_do_fill(entity minigame, entity player, string dir, string thetile)
 {
 	if(minigame.minigame_flags & BD_TURN_EDIT)
 	{
 		int thetype = stof(thetile);
 
-		if(!bd_canfill(thetype))
+		entity targ = bd_find_piece(minigame, dir, true);
+		entity piece = bd_find_piece(minigame, dir, false);
+
+		if(!bd_canfill(thetype) || (piece || targ))
+		{
+			int killtype = 0;
+
+			if(targ) { killtype = targ.bd_tiletype; }
+			if(piece) { killtype = piece.bd_tiletype; }
+
+			if(killtype)
+			{
+				int letter = minigame_tile_letter(dir);
+				int number = minigame_tile_number(dir);
+				bd_unfill_recurse(minigame, player, killtype, letter, number);
+			}
+
 			return;
+		}
 
 		int letter = minigame_tile_letter(dir);
 		int number = minigame_tile_number(dir);
