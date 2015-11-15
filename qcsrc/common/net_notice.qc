@@ -103,7 +103,7 @@ float cl_notice_run()
 
         if(_notes.alpha <= time)
         {
-            _notes.think = SUB_Remove;
+            _notes.think = SUB_Remove_self;
             _notes.nextthink = time;
         }
 

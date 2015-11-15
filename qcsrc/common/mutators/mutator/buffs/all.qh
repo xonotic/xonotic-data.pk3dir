@@ -17,13 +17,13 @@ REGISTER_REGISTRY(Buffs)
 REGISTRY_CHECK(Buffs)
 
 #define REGISTER_BUFF(id) \
-    REGISTER(Buffs, BUFF, id, m_id, NEW(Buff)); \
-    REGISTER_INIT_POST(BUFF, id) { \
+    REGISTER(Buffs, BUFF_##id, m_id, NEW(Buff)); \
+    REGISTER_INIT_POST(BUFF_##id) { \
         this.netname = this.m_name; \
         this.m_itemid = BIT(this.m_id - 1); \
         this.m_sprite = strzone(strcat("buff-", this.m_name)); \
     } \
-    REGISTER_INIT(BUFF, id)
+    REGISTER_INIT(BUFF_##id)
 
 #include "../../../items/item/pickup.qh"
 CLASS(Buff, Pickup)

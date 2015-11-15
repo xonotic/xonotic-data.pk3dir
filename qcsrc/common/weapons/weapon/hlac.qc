@@ -103,7 +103,7 @@ void W_HLAC_Attack(Weapon thiswep)
 	//missile.angles = vectoangles(missile.velocity); // csqc
 
 	missile.touch = W_HLAC_Touch;
-	missile.think = SUB_Remove;
+	missile.think = SUB_Remove_self;
 
     missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
@@ -145,7 +145,7 @@ void W_HLAC_Attack2()
 	//missile.angles = vectoangles(missile.velocity); // csqc
 
 	missile.touch = W_HLAC_Touch;
-	missile.think = SUB_Remove;
+	missile.think = SUB_Remove_self;
 
     missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 

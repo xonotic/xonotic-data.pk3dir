@@ -78,10 +78,10 @@ void LogNB(string mode, entity actor)
 	GameLogEcho(s);
 }
 
-void ball_restart()
-{SELFPARAM();
-	if(self.owner)
-		DropBall(self, self.owner.origin, '0 0 0');
+void ball_restart(entity this)
+{
+	if(this.owner)
+		DropBall(this, this.owner.origin, '0 0 0');
 	ResetBall();
 }
 
@@ -816,7 +816,7 @@ void W_Nexball_Attack2()
 	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
-	missile.think = SUB_Remove;
+	missile.think = SUB_Remove_self;
 	missile.nextthink = time + autocvar_g_balance_nexball_secondary_lifetime; //FIXME: use a distance instead?
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;

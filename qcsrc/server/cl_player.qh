@@ -109,7 +109,7 @@ REGISTRY(GlobalSounds, BITS(8) - 1)
 		this.m_globalsoundstr = str; \
 	}
 REGISTER_REGISTRY(GlobalSounds)
-REGISTRY_SORT(GlobalSounds, 0)
+REGISTRY_SORT(GlobalSounds)
 REGISTRY_CHECK(GlobalSounds)
 PRECACHE(GlobalSounds)
 {

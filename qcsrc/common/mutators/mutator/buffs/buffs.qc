@@ -381,17 +381,17 @@ void buff_Waypoint_Reset()
 	if(self.buff_activetime) { buff_Waypoint_Spawn(self); }
 }
 
-void buff_Reset()
-{SELFPARAM();
+void buff_Reset(entity this)
+{
 	if(autocvar_g_buffs_randomize)
-		buff_NewType(self, self.buffs);
-	self.owner = world;
+		buff_NewType(this, this.buffs);
+	this.owner = world;
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset();
-	self.buff_activetime_updated = false;
+	this.buff_activetime_updated = false;
 
-	if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
-		buff_Respawn(self);
+	if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
+		buff_Respawn(this);
 }
 
 float buff_Customize()

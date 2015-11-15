@@ -36,7 +36,6 @@
 
 #endif
 
-void SUB_Remove();
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
 

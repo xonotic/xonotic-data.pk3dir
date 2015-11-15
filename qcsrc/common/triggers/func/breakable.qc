@@ -264,85 +264,85 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, int 
 	}
 }
 
-void func_breakable_reset()
-{SELFPARAM();
-	self.team = self.team_saved;
+void func_breakable_reset(entity this)
+{
+	this.team = this.team_saved;
 	func_breakable_look_restore();
-	if(self.spawnflags & 1)
+	if(this.spawnflags & 1)
 		func_breakable_behave_destroyed();
 	else
 		func_breakable_behave_restore();
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
 spawnfunc(func_breakable)
 {
 	float n, i;
-	if(!self.health)
-		self.health = 100;
-	self.max_health = self.health;
+	if(!this.health)
+		this.health = 100;
+	this.max_health = this.health;
 
 	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway
-	if(!self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
-	if(!self.debrissolid) self.debrissolid = SOLID_NOT;
-	if(self.debrisvelocity == '0 0 0') self.debrisvelocity = '0 0 140';
-	if(self.debrisvelocityjitter == '0 0 0') self.debrisvelocityjitter = '70 70 70';
-	if(self.debrisavelocityjitter == '0 0 0') self.debrisavelocityjitter = '600 600 600';
-	if(!self.debristime) self.debristime = 3.5;
-	if(!self.debristimejitter) self.debristime = 2.5;
+	if(!this.debrismovetype) this.debrismovetype = MOVETYPE_BOUNCE;
+	if(!this.debrissolid) this.debrissolid = SOLID_NOT;
+	if(this.debrisvelocity == '0 0 0') this.debrisvelocity = '0 0 140';
+	if(this.debrisvelocityjitter == '0 0 0') this.debrisvelocityjitter = '70 70 70';
+	if(this.debrisavelocityjitter == '0 0 0') this.debrisavelocityjitter = '600 600 600';
+	if(!this.debristime) this.debristime = 3.5;
+	if(!this.debristimejitter) this.debristime = 2.5;
 
-	if(self.mdl != "")
-		self.cnt = _particleeffectnum(self.mdl);
-	if(self.count == 0)
-		self.count = 1;
+	if(this.mdl != "")
+		this.cnt = _particleeffectnum(this.mdl);
+	if(this.count == 0)
+		this.count = 1;
 
-	if(self.message == "")
-		self.message = "got too close to an explosion";
-	if(self.message2 == "")
-		self.message2 = "was pushed into an explosion by";
-	if(!self.dmg_radius)
-		self.dmg_radius = 150;
-	if(!self.dmg_force)
-		self.dmg_force = 200;
+	if(this.message == "")
+		this.message = "got too close to an explosion";
+	if(this.message2 == "")
+		this.message2 = "was pushed into an explosion by";
+	if(!this.dmg_radius)
+		this.dmg_radius = 150;
+	if(!this.dmg_force)
+		this.dmg_force = 200;
 
-	self.mdl = self.model;
+	this.mdl = this.model;
 	SetBrushEntityModel();
 
-	if(self.spawnflags & 4)
-		self.use = func_breakable_destroy;
+	if(this.spawnflags & 4)
+		this.use = func_breakable_destroy;
 	else
-		self.use = func_breakable_restore;
+		this.use = func_breakable_restore;
 
-	if(self.spawnflags & 4)
+	if(this.spawnflags & 4)
 	{
-		self.takedamage = DAMAGE_NO;
-		self.event_damage = func_null;
-		self.bot_attack = false;
+		this.takedamage = DAMAGE_NO;
+		this.event_damage = func_null;
+		this.bot_attack = false;
 	}
 
 	// precache all the models
-	if (self.mdl_dead)
-		precache_model(self.mdl_dead);
-	n = tokenize_console(self.debris);
+	if (this.mdl_dead)
+		precache_model(this.mdl_dead);
+	n = tokenize_console(this.debris);
 	for(i = 0; i < n; ++i)
 		precache_model(argv(i));
-	if(self.noise)
-		precache_sound(self.noise);
-	if(self.noise1)
-		precache_sound(self.noise1);
+	if(this.noise)
+		precache_sound(this.noise);
+	if(this.noise1)
+		precache_sound(this.noise1);
 
-	self.team_saved = self.team;
-	self.dropped_origin = self.origin;
+	this.team_saved = this.team;
+	this.dropped_origin = this.origin;
 
-	self.reset = func_breakable_reset;
-	func_breakable_reset();
+	this.reset = func_breakable_reset;
+	this.reset(this);
 
-	self.init_for_player_needed = 1;
-	self.init_for_player = func_breakable_init_for_player;
+	this.init_for_player_needed = 1;
+	this.init_for_player = func_breakable_init_for_player;
 
-	CSQCMODEL_AUTOINIT(self);
+	CSQCMODEL_AUTOINIT(this);
 }
 
 // for use in maps with a "model" key set

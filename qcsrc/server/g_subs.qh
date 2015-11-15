@@ -6,7 +6,6 @@ void SUB_NullThink();
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
 //void() SUB_UseTargets;
-void() SUB_Remove;
 
 spawnfunc(info_null);
 
@@ -14,14 +13,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 void updateanim(entity e);
 
-/*
-==================
-SUB_Remove
 
-Remove self
-==================
-*/
-void SUB_Remove ();
 
 /*
 ==================

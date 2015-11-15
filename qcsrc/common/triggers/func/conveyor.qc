@@ -65,11 +65,11 @@ void conveyor_use()
 	self.SendFlags |= 2;
 }
 
-void conveyor_reset()
-{SELFPARAM();
-	self.state = (self.spawnflags & 1);
+void conveyor_reset(entity this)
+{
+	this.state = (this.spawnflags & 1);
 
-	self.SendFlags |= 2;
+	this.SendFlags |= 2;
 }
 
 bool conveyor_send(entity this, entity to, int sf)
@@ -110,25 +110,24 @@ bool conveyor_send(entity this, entity to, int sf)
 
 void conveyor_init()
 {SELFPARAM();
-	if (!self.speed)
-		self.speed = 200;
-	self.movedir = self.movedir * self.speed;
-	self.think = conveyor_think;
-	self.nextthink = time;
+	if (!this.speed) this.speed = 200;
+	this.movedir *= this.speed;
+	this.think = conveyor_think;
+	this.nextthink = time;
 	IFTARGETED
 	{
-		self.use = conveyor_use;
-		self.reset = conveyor_reset;
-		conveyor_reset();
+		this.use = conveyor_use;
+		this.reset = conveyor_reset;
+		this.reset(this);
 	}
 	else
-		self.state = 1;
+		this.state = 1;
 
-	FixSize(self);
+	FixSize(this);
 
-	Net_LinkEntity(self, 0, false, conveyor_send);
+	Net_LinkEntity(this, 0, false, conveyor_send);
 
-	self.SendFlags |= 1;
+	this.SendFlags |= 1;
 }
 
 spawnfunc(trigger_conveyor)

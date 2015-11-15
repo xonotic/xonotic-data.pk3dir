@@ -315,8 +315,10 @@ void dompointtouch()
 	dompoint_captured();
 }
 
-void dom_controlpoint_setup()
-{SELFPARAM();
+void dom_controlpoint_setup(entity this);
+void dom_controlpoint_setup_self() { SELFPARAM(); dom_controlpoint_setup(this); }
+void dom_controlpoint_setup(entity this)
+{
 	entity head;
 	// find the spawnfunc_dom_team representing unclaimed points
 	head = find(world, classname, "dom_team");
@@ -551,7 +553,7 @@ spawnfunc(dom_controlpoint)
 		remove(self);
 		return;
 	}
-	self.think = dom_controlpoint_setup;
+	self.think = dom_controlpoint_setup_self;
 	self.nextthink = time + 0.1;
 	self.reset = dom_controlpoint_setup;
 
@@ -664,12 +666,12 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	setself(this);
 }
 
-void _spawnfunc_dom_controlpoint() { SELFPARAM(); spawnfunc_dom_controlpoint(self); }
+void self_spawnfunc_dom_controlpoint() { SELFPARAM(); spawnfunc_dom_controlpoint(self); }
 void dom_spawnpoint(vector org)
 {SELFPARAM();
 	setself(spawn());
 	self.classname = "dom_controlpoint";
-	self.think = _spawnfunc_dom_controlpoint;
+	self.think = self_spawnfunc_dom_controlpoint;
 	self.nextthink = time;
 	setorigin(self, org);
 	spawnfunc_dom_controlpoint(this);

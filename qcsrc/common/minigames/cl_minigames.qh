@@ -116,11 +116,11 @@ REGISTRY(Minigames, BITS(4))
 REGISTER_REGISTRY(Minigames)
 REGISTRY_CHECK(Minigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(Minigames, MINIGAME, name, m_id, new(minigame_descriptor)); \
+    REGISTER(Minigames, MINIGAME_##name, m_id, new(minigame_descriptor)); \
     void name##_hud_board(vector, vector); \
     void name##_hud_status(vector, vector); \
     int name##_client_event(entity, string, ...); \
-    REGISTER_INIT_POST(MINIGAME, name) { \
+    REGISTER_INIT_POST(MINIGAME_##name) { \
         make_pure(this); \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
@@ -128,6 +128,6 @@ REGISTRY_CHECK(Minigames)
 		this.minigame_hud_status = name##_hud_status; \
 		this.minigame_event = name##_client_event; \
     } \
-    REGISTER_INIT(MINIGAME, name)
+    REGISTER_INIT(MINIGAME_##name)
 
 #endif

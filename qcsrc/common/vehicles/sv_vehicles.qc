@@ -274,7 +274,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 	proj.use			  = vehicles_projectile_explode;
 	proj.owner			= self;
 	proj.realowner		= _owner;
-	proj.think			= SUB_Remove;
+	proj.think			= SUB_Remove_self;
 	proj.nextthink		= time + 30;
 
 	if(_health)
@@ -460,7 +460,7 @@ void vehicles_clearreturn(entity veh)
 		if(ret.wp00 == veh)
 		{
 			ret.classname   = "";
-			ret.think	   = SUB_Remove;
+			ret.think	   = SUB_Remove_self;
 			ret.nextthink   = time + 0.1;
 
 			if(ret.waypointsprite_attached)

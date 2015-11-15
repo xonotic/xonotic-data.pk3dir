@@ -1325,13 +1325,12 @@ void ctf_RespawnFlag(entity flag)
 	ctf_CheckStalemate();
 }
 
-void ctf_Reset()
-{SELFPARAM();
-	if(self.owner)
-		if(IS_PLAYER(self.owner))
-			ctf_Handle_Throw(self.owner, world, DROP_RESET);
+void ctf_Reset(entity this)
+{
+	if(this.owner && IS_PLAYER(this.owner))
+        ctf_Handle_Throw(this.owner, world, DROP_RESET);
 
-	ctf_RespawnFlag(self);
+	ctf_RespawnFlag(this);
 }
 
 void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_FlagSetup()

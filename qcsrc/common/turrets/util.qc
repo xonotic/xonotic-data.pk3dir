@@ -204,7 +204,6 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 }
 
 #ifdef TURRET_DEBUG
-void SUB_Remove();
 void marker_think()
 {SELFPARAM();
 	if(self.cnt)

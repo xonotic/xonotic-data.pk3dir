@@ -1096,7 +1096,7 @@ void XonoticServerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	if(modname != "cts")
 	if(modname != "nix")
 	if(modname != "newtoys")
-		pure = false;
+		pure_available = false;
 
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
