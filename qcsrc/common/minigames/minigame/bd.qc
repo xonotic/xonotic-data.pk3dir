@@ -902,7 +902,9 @@ bool bd_editor_move(entity minigame, int themove)
 			bd_editor_make_move(minigame);
 			return true;
 		case K_SPACE:
-			bd_curr_tile = max(1, (bd_curr_tile + 1) % BD_TILE_LAST);
+			bd_curr_tile += 1;
+			if(bd_curr_tile > BD_TILE_LAST)
+				bd_curr_tile = 1;
 			return true;
 	}
 
