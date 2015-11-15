@@ -155,7 +155,6 @@ void bd_move(entity minigame, entity player, string dir)
 {
 	if ( minigame.minigame_flags & BD_TURN_MOVE )
 	if ( dir )
-	if(bd_valid_tile(dir))
 	{
 		//if ( bd_valid_tile(pos) )
 		//if ( bd_find_piece(minigame, pos, false) )
@@ -187,7 +186,7 @@ void bd_move(entity minigame, entity player, string dir)
 			bd_check_winner(minigame);
 
 			minigame_server_sendflags(dozer,MINIG_SF_UPDATE); // update anyway
-			minigame_server_sendflags(player, BD_SF_PLAYERMOVES);
+			minigame_server_sendflags(player,BD_SF_PLAYERMOVES);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		}
 	}
