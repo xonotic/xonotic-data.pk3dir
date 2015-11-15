@@ -11,7 +11,7 @@ REGISTER_REGISTRY(Items)
 /** If you register a new item, make sure to add it to all.inc */
 #define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
 
-REGISTRY_SORT(Items, 0)
+REGISTRY_SORT(Items)
 REGISTRY_CHECK(Items)
 STATIC_INIT(Items) { FOREACH(Items, true, LAMBDA(it.m_id = i)); }
 

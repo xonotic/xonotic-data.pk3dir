@@ -59,7 +59,7 @@ const int STATS_ENGINE_RESERVE = 32 + (8 * 3); // Not sure how to handle vector 
 
 REGISTRY(Stats, 220 - STATS_ENGINE_RESERVE)
 REGISTER_REGISTRY(Stats)
-REGISTRY_SORT(Stats, 0)
+REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
 STATIC_INIT(RegisterStats_renumber)
 {
