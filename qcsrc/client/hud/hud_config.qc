@@ -127,7 +127,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_icon_aspect");
 					break;
 				case HUD_PANEL_TIMER:
-					HUD_Write_PanelCvar_q("_increment");
 					break;
 				case HUD_PANEL_RADAR:
 					HUD_Write_PanelCvar_q("_foreground_alpha");
@@ -162,7 +161,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_flip");
 					break;
 				case HUD_PANEL_PHYSICS:
-					HUD_Write_PanelCvar_q("_speed_unit");
 					HUD_Write_PanelCvar_q("_speed_unit_show");
 					HUD_Write_PanelCvar_q("_speed_max");
 					HUD_Write_PanelCvar_q("_speed_vertical");
