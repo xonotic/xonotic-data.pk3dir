@@ -10,7 +10,6 @@
 #include "cl_client.qc"
 #include "cl_impulse.qc"
 #include "cl_player.qc"
-#include "ent_cs.qc"
 #include "g_damage.qc"
 #include "g_hook.qc"
 // #include "g_lights.qc" // TODO: was never used
@@ -58,6 +57,7 @@
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
 #include "../common/effects/effectinfo.qc"
+#include "../common/ent_cs.qc"
 #include "../common/mapinfo.qc"
 #include "../common/minigames/minigames.qc"
 #include "../common/minigames/sv_minigames.qc"

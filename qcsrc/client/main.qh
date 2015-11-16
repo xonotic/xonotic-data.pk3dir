@@ -141,8 +141,6 @@ float g_balance_electro_secondary_bouncefactor;
 float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;
 
-entity entcs_receiver[255]; // 255 is the engine limit on maxclients
-
 float hud;
 float view_quality;
 int framecount;

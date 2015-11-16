@@ -1,4 +1,7 @@
 #include "globalsound.qh"
+
+#include "../common/ent_cs.qh"
+
 #ifdef IMPLEMENTATION
 	#include "../../animdecide.qh"
 
@@ -46,6 +49,7 @@
 			WriteByte(channel, fabs(chan));
 			WriteByte(channel, floor(vol * 255));
 			WriteByte(channel, floor(atten * 64));
+			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
 			WriteCoord(channel, o.x);
 			WriteCoord(channel, o.y);
@@ -88,16 +92,10 @@
 
 		NET_HANDLE(playersound, bool isnew)
 		{
-			entity ps;
-			ps = PlayerSounds_from(ReadByte());
+			entity ps = PlayerSounds_from(ReadByte());
 			float r = ReadByte() / 255;
 			int who = ReadByte();
-			entity e = findfloat(world, entnum, who);
-			if (autocvar_cl_forceplayermodels)
-			{
-				entity me = findfloat(world, entnum, player_currententnum);
-				if (me.model != "null") e = me;
-			}
+			entity e = entcs_receiver[who - 1];
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
@@ -108,13 +106,16 @@
 			o.x = ReadCoord();
 			o.y = ReadCoord();
 			o.z = ReadCoord();
-			if (who == player_currententnum)
+			if (e)
 			{
-				// client knows better, play at current position to unlag
+				// TODO: for non-visible players, origin should probably continue to be updated as long as the sound is playing
+				e.origin = o;
 				sound7(e, chan, sample, vol, atten, 0, 0);
 			}
 			else
 			{
+			    LOG_WARNINGF("Missing entcs data for player %i\n", e);
+                // Can this happen?
 				entity e = new(playersound);
 				e.origin = o;
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
@@ -269,15 +270,16 @@
 			return true;
 		}
 
-		.int modelindex_for_playersound;
+		.string model_for_playersound;
 		.int skin_for_playersound;
 
 		bool autocvar_g_debug_defaultsounds;
 
 		void UpdatePlayerSounds(entity this)
 		{
-			if (this.modelindex == this.modelindex_for_playersound && this.skin == this.skin_for_playersound) return;
-			this.modelindex_for_playersound = this.modelindex;
+			if (this.model == this.model_for_playersound && this.skin == this.skin_for_playersound) return;
+			if (this.model_for_playersound) strunzone(this.model_for_playersound);
+			this.model_for_playersound = strzone(this.model);
 			this.skin_for_playersound = this.skin;
 			ClearPlayerSounds(this);
 			LoadPlayerSounds(this, "sound/player/default.sounds", true);

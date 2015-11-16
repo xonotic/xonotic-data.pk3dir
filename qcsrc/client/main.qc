@@ -327,47 +327,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
 
-void Ent_RemoveEntCS()
-{
-	SELFPARAM();
-	entcs_receiver[this.sv_entnum] = NULL;
-}
-
-NET_HANDLE(ENT_CLIENT_ENTCS, bool isnew)
-{
-	make_pure(this);
-	this.classname = "entcs_receiver";
-	InterpolateOrigin_Undo();
-	int sf = ReadByte();
-
-	if(sf & BIT(0))
-		this.sv_entnum = ReadByte();
-	if (sf & BIT(1))
-	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
-		setorigin(this, this.origin);
-	}
-	if (sf & BIT(2))
-	{
-		this.angles_y = ReadByte() * 360.0 / 256;
-		this.angles_x = this.angles_z = 0;
-	}
-	if (sf & BIT(3))
-		this.healthvalue = ReadByte() * 10;
-	if (sf & BIT(4))
-		this.armorvalue = ReadByte() * 10;
-
-	return = true;
-
-	entcs_receiver[this.sv_entnum] = this;
-	this.entremove = Ent_RemoveEntCS;
-	this.iflags |= IFLAG_ORIGIN;
-
-	InterpolateOrigin_Note();
-}
-
 void Ent_Remove();
 
 void Ent_RemovePlayerScore()
@@ -795,7 +754,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	this.enttype = t;
 	bool done = false;
 	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
-		this.classname = it.netname;
+		if (bIsNewEntity) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", bIsNewEntity, this, this.entnum, this.enttype, it.netname, t);
 		done = it.m_read(this, bIsNewEntity);
