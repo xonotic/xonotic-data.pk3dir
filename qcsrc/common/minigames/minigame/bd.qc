@@ -440,8 +440,7 @@ string bd_save_piece(entity minigame, entity e)
 
 	bd_string = strcat(bd_string, "\"", e.netname, "\" ");
 	bd_string = strcat(bd_string, ftos(e.bd_tiletype), " ");
-	bd_string = strcat(bd_string, sprintf("\"%.9v\"", e.bd_dir), " ");
-	bd_string = strcat(bd_string, "; ");
+	bd_string = strcat(bd_string, sprintf("\"%.9v\"", e.bd_dir));
 
 	return bd_string;
 }
@@ -457,8 +456,7 @@ void bd_set_nextlevel(entity minigame, string s)
 entity bd_load_piece(entity minigame, string s)
 {
 	// separate pieces between the ; symbols
-	tokenizebyseparator(s, "; ");
-	string bd_string = argv(0);
+	string bd_string = s;
 
 	tokenize_console(bd_string);
 
