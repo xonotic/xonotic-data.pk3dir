@@ -816,7 +816,7 @@ void bd_hud_board(vector pos, vector mySize)
 		string victory_text = "Game over!";
 
 		if(active_minigame.minigame_flags & BD_TURN_WIN)
-			victory_text = "You win!";
+			victory_text = "Well done! Click 'Next Match' to continue";
 		
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
