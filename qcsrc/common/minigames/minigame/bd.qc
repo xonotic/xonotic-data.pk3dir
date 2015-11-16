@@ -814,7 +814,7 @@ void bd_hud_board(vector pos, vector mySize)
 		string victory_text = "Game over!";
 
 		if(active_minigame.minigame_flags & BD_TURN_WIN)
-			victory_text = "Well done! Click 'Next Match' to continue";
+			victory_text = "Well done! Click 'Next Level' to continue";
 		
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
@@ -887,9 +887,9 @@ string bd_turn_to_string(int turnflags)
 
 	if ( turnflags & BD_TURN_WIN )
 		if(random() > 0.5)
-			return _("Tubular! Press ""Next Level"" to continue!");
+			return _("Tubular! Press \"Next Level\" to continue!");
 		else
-			return _("Wicked! Press ""Next Level"" to continue!");
+			return _("Wicked! Press \"Next Level\" to continue!");
 
 	if( turnflags & BD_TURN_EDIT )
 		return _("Press the space bar to change your currently selected tile");
