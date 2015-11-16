@@ -793,10 +793,10 @@ void kh_Key_Think()  // runs all the time
 	self.nextthink = time + 0.05;
 }
 
-void key_reset()
-{SELFPARAM();
-	kh_Key_AssignTo(self, world);
-	kh_Key_Remove(self);
+void key_reset(entity this)
+{
+	kh_Key_AssignTo(this, world);
+	kh_Key_Remove(this);
 }
 
 const string STR_ITEM_KH_KEY = "item_kh_key";

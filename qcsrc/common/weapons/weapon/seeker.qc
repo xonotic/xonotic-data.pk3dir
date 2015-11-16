@@ -565,7 +565,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 	missile.bot_dodge       = true;
 	missile.bot_dodgerating = 50;
 	missile.touch           = W_Seeker_Tag_Touch;
-	missile.think           = SUB_Remove;
+	missile.think           = SUB_Remove_self;
 	missile.nextthink       = time + WEP_CVAR(seeker, tag_lifetime);
 	missile.movetype        = MOVETYPE_FLY;
 	missile.solid           = SOLID_BBOX;

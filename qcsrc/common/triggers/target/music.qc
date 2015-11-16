@@ -30,10 +30,9 @@ void target_music_sendto(float to, float is)
 	WriteByte(to, self.lifetime);
 	WriteString(to, self.noise);
 }
-void target_music_reset()
-{SELFPARAM();
-	if(self.targetname == "")
-		target_music_sendto(MSG_ALL, 1);
+void target_music_reset(entity this)
+{
+	if (this.targetname == "") target_music_sendto(MSG_ALL, 1);
 }
 void target_music_kill()
 {
@@ -127,10 +126,10 @@ bool trigger_music_SendEntity(entity this, entity to, float sf)
 	}
 	return 1;
 }
-void trigger_music_reset()
-{SELFPARAM();
-	self.cnt = !(self.spawnflags & 1);
-	self.SendFlags |= 0x80;
+void trigger_music_reset(entity this)
+{
+	this.cnt = !(this.spawnflags & 1);
+	this.SendFlags |= 0x80;
 }
 void trigger_music_use()
 {SELFPARAM();
@@ -139,21 +138,19 @@ void trigger_music_use()
 }
 spawnfunc(trigger_music)
 {
-	if(self.model != "")
-		_setmodel(self, self.model);
-	if(!self.volume)
-		self.volume = 1;
-	if(!self.modelindex)
+	if(this.model != "") _setmodel(this, this.model);
+	if(!this.volume) this.volume = 1;
+	if(!this.modelindex)
 	{
-		setorigin(self, self.origin + self.mins);
-		setsize(self, '0 0 0', self.maxs - self.mins);
+		setorigin(this, this.origin + this.mins);
+		setsize(this, '0 0 0', this.maxs - this.mins);
 	}
-	trigger_music_reset();
+	trigger_music_reset(this);
 
-	self.use = trigger_music_use;
-	self.reset = trigger_music_reset;
+	this.use = trigger_music_use;
+	this.reset = trigger_music_reset;
 
-	Net_LinkEntity(self, false, 0, trigger_music_SendEntity);
+	Net_LinkEntity(this, false, 0, trigger_music_SendEntity);
 }
 #elif defined(CSQC)
 

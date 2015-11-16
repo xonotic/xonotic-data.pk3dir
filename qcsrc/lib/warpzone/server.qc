@@ -142,7 +142,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		ts.SendEntity = WarpZone_Teleported_Send;
 		ts.SendFlags = 0xFFFFFF;
 		ts.drawonlytoclient = player;
-		ts.think = SUB_Remove;
+		ts.think = SUB_Remove_self;
 		ts.nextthink = time + 1;
 		ts.owner = player;
 		ts.enemy = wz;

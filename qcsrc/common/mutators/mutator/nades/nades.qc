@@ -958,7 +958,7 @@ void nade_prime()
 	fn.colormod = Nades_from(n.nade_type).m_color;
 	fn.colormap = self.colormap;
 	fn.glowmod = self.glowmod;
-	fn.think = SUB_Remove;
+	fn.think = SUB_Remove_self;
 	fn.nextthink = n.wait;
 
 	self.nade = n;

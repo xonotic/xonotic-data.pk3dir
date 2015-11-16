@@ -168,6 +168,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 
 		// only if this failed, find it out on our own
 		entity e = spawn();
+		precache_model(autocvar__cl_playermodel);
 		_setmodel(e, autocvar__cl_playermodel); // this is harmless, see below
 		forceplayermodels_modelisgoodmodel = fexists(e.model);
 		forceplayermodels_model = e.model;

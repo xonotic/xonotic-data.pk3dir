@@ -260,8 +260,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	return false;
 }
 
-void _spawnfunc_weapon_hmg() { SELFPARAM(); spawnfunc_weapon_hmg(this); }
-void _spawnfunc_weapon_rpc() { SELFPARAM(); spawnfunc_weapon_rpc(this); }
+void self_spawnfunc_weapon_hmg() { SELFPARAM(); spawnfunc_weapon_hmg(this); }
+void self_spawnfunc_weapon_rpc() { SELFPARAM(); spawnfunc_weapon_rpc(this); }
 
 MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 {SELFPARAM();
@@ -279,7 +279,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
-			wep.think = _spawnfunc_weapon_hmg;
+			wep.think = self_spawnfunc_weapon_hmg;
 			wep.nextthink = time + 0.1;
 			return true;
 		}
@@ -295,7 +295,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
-			wep.think = _spawnfunc_weapon_rpc;
+			wep.think = self_spawnfunc_weapon_rpc;
 			wep.nextthink = time + 0.1;
 			return true;
 		}

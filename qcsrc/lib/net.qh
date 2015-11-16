@@ -30,7 +30,7 @@
 		if (dt)
 		{
 			e.nextthink = time + dt;
-			e.think = SUB_Remove;
+			e.think = SUB_Remove_self;
 		}
 	}
 
@@ -112,7 +112,7 @@
 REGISTRY(LinkedEntities, BITS(8) - 1)
 #define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
 REGISTER_REGISTRY(LinkedEntities)
-REGISTRY_SORT(LinkedEntities, 0)
+REGISTRY_SORT(LinkedEntities)
 REGISTRY_CHECK(LinkedEntities)
 STATIC_INIT(RegisterLinkedEntities_renumber)
 {
@@ -142,7 +142,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 REGISTRY(TempEntities, BITS(8) - 80)
 #define TempEntities_from(i) _TempEntities_from(i, NULL)
 REGISTER_REGISTRY(TempEntities)
-REGISTRY_SORT(TempEntities, 0)
+REGISTRY_SORT(TempEntities)
 REGISTRY_CHECK(TempEntities)
 STATIC_INIT(RegisterTempEntities_renumber)
 {
@@ -185,6 +185,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			return v;
 		}
 
+		#define ReadFloat() ReadCoord()
+        vector ReadVector() { vector v; v.x = ReadFloat(); v_y = ReadFloat(); v.z = ReadFloat(); return v; }
+		vector ReadVector2D() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = 0; return v; }
+
 		float ReadApproxPastTime()
 		{
 			float dt = ReadByte();
@@ -215,6 +219,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			WriteInt24_t(dst, val.y);
 			WriteInt24_t(dst, val.z);
 		}
+
+        #define WriteFloat(to, f) WriteCoord(to, f)
+		#define WriteVector(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } while (0)
+        #define WriteVector2D(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); } while (0)
 
 		// this will use the value:
 		//   128

@@ -128,7 +128,7 @@ void target_give_init()
 		else if (targ.classname == "item_health_mega")
 			self.health = 200;
 		//remove(targ); // removing ents in init functions causes havoc, workaround:
-        targ.think = SUB_Remove;
+        targ.think = SUB_Remove_self;
         targ.nextthink = time;
 	}
 	self.spawnflags = 2;

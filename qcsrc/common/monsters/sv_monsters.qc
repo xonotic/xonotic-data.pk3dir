@@ -207,7 +207,7 @@ void Monster_Delay_Action()
 	}
 	else
 	{
-		oldself.think = SUB_Remove;
+		oldself.think = SUB_Remove_self;
 		oldself.nextthink = time;
 	}
 }
@@ -955,19 +955,19 @@ float Monster_Appear_Check(entity ent, float monster_id)
 	return true;
 }
 
-void Monster_Reset()
-{SELFPARAM();
-	setorigin(self, self.pos1);
-	self.angles = self.pos2;
+void Monster_Reset(entity this)
+{
+	setorigin(this, this.pos1);
+	this.angles = this.pos2;
 
-	Unfreeze(self); // remove any icy remains
+	Unfreeze(this); // remove any icy remains
 
-	self.health = self.max_health;
-	self.velocity = '0 0 0';
-	self.enemy = world;
-	self.goalentity = world;
-	self.attack_finished_single[0] = 0;
-	self.moveto = self.origin;
+	this.health = this.max_health;
+	this.velocity = '0 0 0';
+	this.enemy = world;
+	this.goalentity = world;
+	this.attack_finished_single[0] = 0;
+	this.moveto = this.origin;
 }
 
 void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -983,7 +983,7 @@ void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, int de
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		self.think = SUB_Remove;
+		self.think = SUB_Remove_self;
 		self.nextthink = time + 0.1;
 		self.event_damage = func_null;
 	}
@@ -1121,7 +1121,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
 
-			self.think = SUB_Remove;
+			self.think = SUB_Remove_self;
 			self.nextthink = time + 0.1;
 		}
 	}

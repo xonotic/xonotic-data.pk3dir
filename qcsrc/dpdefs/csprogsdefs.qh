@@ -29,6 +29,4 @@
 
 #pragma noref 0
 
-#define ReadFloat() ReadCoord()
-
 #endif

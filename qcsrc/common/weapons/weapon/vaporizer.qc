@@ -125,7 +125,7 @@ void VaporizerBeam_Draw(entity this)
 NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 {
 	Net_Accept(vortex_beam);
-	this.think = SUB_Remove;
+	this.think = SUB_Remove_self;
 	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = VaporizerBeam_Draw;
 	this.drawmask = MASK_NORMAL;
