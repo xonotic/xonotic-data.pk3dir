@@ -28,6 +28,7 @@
 			WriteByte(channel, fabs(chan));
 			WriteByte(channel, floor(vol * 255));
 			WriteByte(channel, floor(atten * 64));
+			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
 			WriteCoord(channel, o.x);
 			WriteCoord(channel, o.y);
