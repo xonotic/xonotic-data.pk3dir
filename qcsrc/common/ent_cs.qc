@@ -49,15 +49,6 @@
 		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded ENTCS_NETPROPS limit");
 	}
 
-	bool entcs_customize()
-	{
-		SELFPARAM();
-		entity player = this.owner;
-		return IS_PLAYER(player)             // player must be active
-		       && player.deadflag == DEAD_NO // player must be alive
-		;
-	}
-
 	bool entcs_send(entity this, entity to, int sf)
 	{
 		entity player = this.owner;
@@ -69,6 +60,12 @@
 		}
 		sf |= this.m_forceupdate;
 		this.m_forceupdate = 0;
+		bool valid =
+		    IS_PLAYER(player)             // player must be active
+		    && player.deadflag == DEAD_NO // player must be alive
+		    || player == to               // player is self
+		;
+		if (!valid) return false;
 		WriteHeader(MSG_ENTITY, ENT_CLIENT_ENTCS);
 		WriteShort(MSG_ENTITY, sf);
 		int i = 1;
@@ -103,7 +100,6 @@
 		e.think = entcs_think;
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
-		e.customizeentityforclient = entcs_customize;
 	}
 
 	void entcs_detach(entity player)
