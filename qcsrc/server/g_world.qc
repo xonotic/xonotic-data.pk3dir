@@ -757,7 +757,6 @@ spawnfunc(worldspawn)
 
 	WepSet_AddStat();
 	WepSet_AddStat_InMap();
-	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
 	Nagger_Init();
 
 	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
@@ -789,17 +788,6 @@ spawnfunc(worldspawn)
 	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
 	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
 	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
-
-	// secrets
-	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
-	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
-
-	// monsters
-	addstat(STAT_MONSTERS_TOTAL, AS_FLOAT, stat_monsters_total);
-	addstat(STAT_MONSTERS_KILLED, AS_FLOAT, stat_monsters_killed);
-
-	// misc
-	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
 
 	next_pingtime = time + 5;
 

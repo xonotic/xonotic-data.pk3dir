@@ -398,7 +398,7 @@ float cvar_purechanges_count;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
 .float stat_game_starttime = _STAT(GAMESTARTTIME);
-.float stat_round_starttime;
+.float stat_round_starttime = _STAT(ROUNDSTARTTIME);
 
 void W_Porto_Remove (entity p);
 
@@ -523,7 +523,7 @@ const float ACTIVE_TOGGLE 	= 3;
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
-.float stat_respawn_time; // shows respawn time, and is negative when awaiting respawn
+.float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
 
 void PlayerUseKey();
 

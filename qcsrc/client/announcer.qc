@@ -19,7 +19,7 @@ void Announcer_Countdown()
 {
 	SELFPARAM();
 	float starttime = STAT(GAMESTARTTIME);
-	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
@@ -70,7 +70,7 @@ void Announcer_Countdown()
 void Announcer_Gamestart()
 {
 	float startTime = STAT(GAMESTARTTIME);
-	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
 
