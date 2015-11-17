@@ -70,7 +70,7 @@ void HUD_Powerups()
 
 		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, STAT(INVINCIBLE_FINISHED) - time, 99);
-		superTime = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
+		superTime = bound(0, STAT(SUPERWEAPONS_FINISHED) - time, 99);
 
 		if(allItems & IT_UNLIMITED_SUPERWEAPONS)
 			superTime = 99;

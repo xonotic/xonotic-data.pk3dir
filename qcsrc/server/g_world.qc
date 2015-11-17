@@ -760,7 +760,6 @@ spawnfunc(worldspawn)
 	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
 	Nagger_Init();
 
-	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
 
 	// freeze attacks

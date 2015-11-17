@@ -132,13 +132,13 @@ void Vehicles_drawHUD(
 	float barAlpha = autocvar_hud_progressbar_alpha * hudAlpha;
 	float blinkValue = 0.55 + sin(time * 7) * 0.45;
 
-	float health  = getstati(STAT_VEHICLESTAT_HEALTH)  * 0.01;
-	float shield  = getstati(STAT_VEHICLESTAT_SHIELD)  * 0.01;
-	float energy  = getstati(STAT_VEHICLESTAT_ENERGY)  * 0.01;
-	float ammo1   = getstati(STAT_VEHICLESTAT_AMMO1)   * 0.01;
-	float reload1 = getstati(STAT_VEHICLESTAT_RELOAD1) * 0.01;
-	float ammo2   = getstati(STAT_VEHICLESTAT_AMMO2)   * 0.01;
-	float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
+	float health  = STAT(VEHICLESTAT_HEALTH)  * 0.01;
+	float shield  = STAT(VEHICLESTAT_SHIELD)  * 0.01;
+	float energy  = STAT(VEHICLESTAT_ENERGY)  * 0.01;
+	float ammo1   = STAT(VEHICLESTAT_AMMO1)   * 0.01;
+	float reload1 = STAT(VEHICLESTAT_RELOAD1) * 0.01;
+	float ammo2   = STAT(VEHICLESTAT_AMMO2)   * 0.01;
+	float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;
 
 	// HACK to deal with the inconsistent use of the vehicle stats
 	ammo1 = (ammo1) ? ammo1 : energy;

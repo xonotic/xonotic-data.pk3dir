@@ -79,7 +79,7 @@ float server_is_dedicated;
 
 .float	strength_finished = _STAT(STRENGTH_FINISHED);
 .float	invincible_finished = _STAT(INVINCIBLE_FINISHED);
-.float	superweapons_finished;
+.float	superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
 
 .float cnt; // used in too many places
 .float count;

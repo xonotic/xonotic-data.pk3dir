@@ -7,7 +7,7 @@
 
 .entity nade;
 .entity fake_nade;
-.float nade_timer;
+.float nade_timer = _STAT(NADE_TIMER);
 .float nade_refire;
 .float bonus_nades;
 .float nade_special_time;
@@ -54,7 +54,6 @@ REGISTER_MUTATOR(nades, cvar("g_nades"))
 {
 	MUTATOR_ONADD
 	{
-		addstat(STAT_NADE_TIMER, AS_FLOAT, nade_timer);
 		addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
 		addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
 		addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
