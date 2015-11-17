@@ -17,7 +17,7 @@ REGISTRY(PlayerSounds, BITS(8) - 1)
 		this.m_playersoundfld = _playersound_##id; \
 	}
 REGISTER_REGISTRY(PlayerSounds)
-REGISTRY_SORT(PlayerSounds, 0)
+REGISTRY_SORT(PlayerSounds)
 STATIC_INIT(PlayerSounds_renumber)
 {
 	FOREACH(PlayerSounds, true, LAMBDA(it.m_id = i));
@@ -92,7 +92,7 @@ REGISTRY(GlobalSounds, BITS(8) - 1)
 		this.m_globalsoundstr = str; \
 	}
 REGISTER_REGISTRY(GlobalSounds)
-REGISTRY_SORT(GlobalSounds, 0)
+REGISTRY_SORT(GlobalSounds)
 STATIC_INIT(GlobalSounds_renumber)
 {
 	FOREACH(GlobalSounds, true, LAMBDA(it.m_id = i));
