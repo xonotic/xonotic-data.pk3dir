@@ -67,6 +67,7 @@
 			float r = ReadByte() / 255;
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
+			entity e = entcs_receiver[who - 1];
 			int chan = ReadByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
@@ -74,10 +75,11 @@
 			o.x = ReadCoord();
 			o.y = ReadCoord();
 			o.z = ReadCoord();
-			if (who == player_currententnum)
+			// TODO: is this really what we want to be doing? Footsteps that follow the player at head height?
+			if (who == player_currententnum) e = findfloat(world, entnum, who);  // play at camera position for full volume
+			else if (e) e.origin = o;
+			if (e)
 			{
-				// client knows better, play at current position to unlag
-				entity e = findfloat(world, entnum, who);
 				sound7(e, chan, sample, vol, atten, 0, 0);
 			}
 			else
@@ -94,8 +96,8 @@
 		{
 			entity ps = PlayerSounds_from(ReadByte());
 			float r = ReadByte() / 255;
-			int who = ReadByte() - 1;
-			entity e = entcs_receiver[who];
+			int who = ReadByte();
+			entity e = entcs_receiver[who - 1];
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
@@ -106,16 +108,17 @@
 			o.x = ReadCoord();
 			o.y = ReadCoord();
 			o.z = ReadCoord();
+			if (who == player_currententnum) e = findfloat(world, entnum, who);  // play at camera position for full volume
+			else if (e) e.origin = o;
 			if (e)
 			{
 				// TODO: for non-visible players, origin should probably continue to be updated as long as the sound is playing
-				e.origin = o;
 				sound7(e, chan, sample, vol, atten, 0, 0);
 			}
 			else
 			{
-			    LOG_WARNINGF("Missing entcs data for player %d\n", who);
-                // Can this happen?
+				LOG_WARNINGF("Missing entcs data for player %d\n", who);
+				// Can this happen?
 				entity e = new(playersound);
 				e.origin = o;
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
