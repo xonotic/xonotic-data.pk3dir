@@ -27,6 +27,7 @@
 
 #include "../common/animdecide.qc"
 #include "../common/effects/effectinfo.qc"
+#include "../common/ent_cs.qc"
 #include "../common/mapinfo.qc"
 #include "../common/movetypes/include.qc"
 #include "../common/net_notice.qc"

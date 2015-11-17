@@ -1227,7 +1227,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		else
 		{
 			// use player origin so that third person display still works
-			self.origin = getplayerorigin(player_localnum) + ('0 0 1' * getstati(STAT_VIEWHEIGHT));
+			self.origin = entcs_receiver[player_localnum].origin + ('0 0 1' * getstati(STAT_VIEWHEIGHT));
 		}
 	}
 
