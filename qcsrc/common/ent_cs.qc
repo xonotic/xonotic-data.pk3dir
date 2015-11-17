@@ -65,7 +65,7 @@
 		    && player.deadflag == DEAD_NO // player must be alive
 		    || player == to               // player is self
 		;
-		if (!valid) return false;
+		if (!valid) sf = 0;
 		WriteHeader(MSG_ENTITY, ENT_CLIENT_ENTCS);
 		WriteShort(MSG_ENTITY, sf);
 		int i = 1;

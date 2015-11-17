@@ -5,6 +5,7 @@
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
 	.bool(entity to, int sendflags) SendEntity;
+	/** return false to remove from the client */
 	.bool(entity this, entity to, int sendflags) SendEntity3;
 
 	bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }

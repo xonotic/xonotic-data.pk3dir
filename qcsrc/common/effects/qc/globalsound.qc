@@ -94,8 +94,8 @@
 		{
 			entity ps = PlayerSounds_from(ReadByte());
 			float r = ReadByte() / 255;
-			int who = ReadByte();
-			entity e = entcs_receiver[who - 1];
+			int who = ReadByte() - 1;
+			entity e = entcs_receiver[who];
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
@@ -114,7 +114,7 @@
 			}
 			else
 			{
-			    LOG_WARNINGF("Missing entcs data for player %i\n", e);
+			    LOG_WARNINGF("Missing entcs data for player %d\n", who);
                 // Can this happen?
 				entity e = new(playersound);
 				e.origin = o;
