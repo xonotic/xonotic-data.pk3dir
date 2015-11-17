@@ -134,7 +134,11 @@
 			this.has_origin = true;
 			this.origin = e.origin;
 			// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
-			this.model = e.model;
+			if (this.model != e.model)
+			{
+				if (this.model) strunzone(this.model);
+				this.model = strzone(e.model);
+			}
 		}
 	}
 
