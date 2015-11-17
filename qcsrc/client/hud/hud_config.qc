@@ -31,6 +31,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 
 		HUD_Write_Cvar("hud_progressbar_alpha");
 		HUD_Write_Cvar("hud_progressbar_strength_color");
+		HUD_Write_Cvar("hud_progressbar_superweapons_color");
 		HUD_Write_Cvar("hud_progressbar_shield_color");
 		HUD_Write_Cvar("hud_progressbar_health_color");
 		HUD_Write_Cvar("hud_progressbar_armor_color");
@@ -39,6 +40,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write_Cvar("hud_progressbar_speed_color");
 		HUD_Write_Cvar("hud_progressbar_acceleration_color");
 		HUD_Write_Cvar("hud_progressbar_acceleration_neg_color");
+		HUD_Write_Cvar("hud_progressbar_vehicles_ammo1_color");
+		HUD_Write_Cvar("hud_progressbar_vehicles_ammo2_color");
 		HUD_Write("\n");
 
 		HUD_Write_Cvar("_hud_panelorder");
@@ -168,9 +171,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar("_flip");
 					HUD_Write_PanelCvar("_baralign");
 					HUD_Write_PanelCvar("_progressbar");
-					HUD_Write_PanelCvar("_progressbar_acceleration_mode");
-					HUD_Write_PanelCvar("_progressbar_acceleration_scale");
-					HUD_Write_PanelCvar("_progressbar_acceleration_nonlinear");
+					HUD_Write_PanelCvar("_acceleration_progressbar_mode");
+					HUD_Write_PanelCvar("_acceleration_progressbar_scale");
+					HUD_Write_PanelCvar("_acceleration_progressbar_nonlinear");
 					HUD_Write_PanelCvar("_text");
 					HUD_Write_PanelCvar("_text_scale");
 					break;
@@ -197,6 +200,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar("_text");
 					HUD_Write_PanelCvar("_ratio");
 					HUD_Write_PanelCvar("_dynamicsize");
+					break;
 				case HUD_PANEL_QUICKMENU:
 					HUD_Write_PanelCvar("_align");
 					break;
