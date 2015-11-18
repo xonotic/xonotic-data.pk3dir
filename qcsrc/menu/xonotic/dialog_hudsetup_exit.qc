@@ -124,18 +124,21 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Grid size:")));
+			setDependent(e, "hud_configure_grid", 1, 1);
 		me.TD(me, 1, 0.2, e = makeXonoticTextLabel(0, _("X:")));
+			setDependent(e, "hud_configure_grid", 1, 1);
 			me.TD(me, 1, 1.1, e = makeXonoticTextSlider("hud_configure_grid_xsize"));
 				for(i = 1; i <= 14; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/200, 3)), strzone(ftos(i/200)));
+					e.addValue(e, strzone(sprintf("%.1f%%", i/2)), strzone(ftos(i/200)));
 				e.configureXonoticTextSliderValues(e);
-			setDependent(e, "hud_configure_grid", 1, 1);
+				setDependent(e, "hud_configure_grid", 1, 1);
 		me.TD(me, 1, 0.2, e = makeXonoticTextLabel(0, _("Y:")));
+			setDependent(e, "hud_configure_grid", 1, 1);
 			me.TD(me, 1, 1.1, e = makeXonoticTextSlider("hud_configure_grid_ysize"));
 				for(i = 1; i <= 14; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/200, 3)), strzone(ftos(i/200)));
+					e.addValue(e, strzone(sprintf("%.1f%%", i/2)), strzone(ftos(i/200)));
 				e.configureXonoticTextSliderValues(e);
-			setDependent(e, "hud_configure_grid", 1, 1);
+				setDependent(e, "hud_configure_grid", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Exit setup"), '0 0 0', "_hud_configure 0", 1));
