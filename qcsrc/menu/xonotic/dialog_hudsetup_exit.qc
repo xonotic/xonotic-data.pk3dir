@@ -5,9 +5,9 @@ CLASS(XonoticHUDExitDialog, XonoticRootDialog)
 	METHOD(XonoticHUDExitDialog, fill, void(entity));
 	ATTRIB(XonoticHUDExitDialog, title, string, _("Panel HUD Setup"))
 	ATTRIB(XonoticHUDExitDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.4)
+	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.8)
 	ATTRIB(XonoticHUDExitDialog, rows, float, 18)
-	ATTRIB(XonoticHUDExitDialog, columns, float, 4)
+	ATTRIB(XonoticHUDExitDialog, columns, float, 8.2)
 	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit")
 	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, true)
 ENDCLASS(XonoticHUDExitDialog)
@@ -18,9 +18,30 @@ ENDCLASS(XonoticHUDExitDialog)
 void XonoticHUDExitDialog_fill(entity me)
 {
 	entity e;
-	float i;
+	int i;
+	hudskinlist = makeXonoticHUDSkinList();
 
 	me.TR(me);
+		me.TD(me, 1, 4, makeXonoticHeaderLabel(_("HUD skins")));
+	me.TR(me);
+		me.TD(me, 1, 0.9, e = makeXonoticButton(_("Refresh"), '0 0 0'));
+			e.onClick = HUDSkinList_Refresh_Click;
+			e.onClickEntity = hudskinlist;
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(1, _("Filter:")));
+		me.TD(me, 1, 2, e = makeXonoticInputBox(0, string_null));
+			e.onChange = HUDSkinList_Filter_Change;
+			e.onChangeEntity = hudskinlist;
+			hudskinlist.controlledTextbox = e;
+	me.TR(me);
+		me.TD(me, 13.5, 4, hudskinlist);
+	me.gotoRC(me, me.rows - 2.5, 0);
+		me.TDempty(me, 0.75);
+		me.TD(me, 1, 2.5, e = makeXonoticButton(_("Set skin"), '0 0 0'));
+			e.onClick = SetHUDSkin_Click;
+			e.onClickEntity = hudskinlist;
+
+	me.gotoRC(me, 0, 4.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Panel background defaults:")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
