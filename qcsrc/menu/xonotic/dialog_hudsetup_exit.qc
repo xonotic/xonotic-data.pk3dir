@@ -34,11 +34,16 @@ void XonoticHUDExitDialog_fill(entity me)
 			e.onChangeEntity = hudskinlist;
 			hudskinlist.controlledTextbox = e;
 	me.TR(me);
-		me.TD(me, 13.5, 4, hudskinlist);
-	me.gotoRC(me, me.rows - 2.5, 0);
+		me.TD(me, 12.5, 4, hudskinlist);
+	me.gotoRC(me, me.rows - 3.5, 0);
 		me.TDempty(me, 0.75);
 		me.TD(me, 1, 2.5, e = makeXonoticButton(_("Set skin"), '0 0 0'));
 			e.onClick = SetHUDSkin_Click;
+			e.onClickEntity = hudskinlist;
+	me.TR(me);
+		me.TDempty(me, 0.75);
+		me.TD(me, 1, 2.5, e = makeXonoticButton(_("Save current skin"), '0 0 0'));
+			e.onClick = SaveHUDSkin_Click;
 			e.onClickEntity = hudskinlist;
 
 	me.gotoRC(me, 0, 4.2); me.setFirstColumn(me, me.currentColumn);

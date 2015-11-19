@@ -5,6 +5,7 @@ CLASS(XonoticHUDSkinList, XonoticListBox)
 	METHOD(XonoticHUDSkinList, configureXonoticHUDSkinList, void(entity));
 	ATTRIB(XonoticHUDSkinList, rowsPerItem, float, 1)
 	METHOD(XonoticHUDSkinList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticHUDSkinList, draw, void(entity));
 	METHOD(XonoticHUDSkinList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticHUDSkinList, getHUDSkins, void(entity));
 	METHOD(XonoticHUDSkinList, setHUDSkin, void(entity));
@@ -23,12 +24,14 @@ CLASS(XonoticHUDSkinList, XonoticListBox)
 	ATTRIB(XonoticHUDSkinList, itemAbsSize, vector, '0 0 0')
 
 	ATTRIB(XonoticHUDSkinList, filterString, string, string_null)
+	ATTRIB(XonoticHUDSkinList, delayedRefreshTime, float, 0)
 ENDCLASS(XonoticHUDSkinList)
 
 #ifndef IMPLEMENTATION
 // public:
 entity hudskinlist;
 entity makeXonoticHUDSkinList();
+void SaveHUDSkin_Click(entity btn, entity me);
 void SetHUDSkin_Click(entity btn, entity me);
 #endif
 void HUDSkinList_Refresh_Click(entity btn, entity me);
@@ -62,14 +65,15 @@ string XonoticHUDSkinList_hudskinName(entity me, float i)
 	return s;
 }
 
-void getAllHUDSkins(entity me)
+void getAllHUDSkins(entity me, string subdir)
 {
 	string s;
 	if(me.filterString)
 		s = me.filterString;
 	else
 		s = "*";
-	s = strcat("hud_", s, ".cfg");
+	s = strcat(subdir, "hud_", s, ".cfg");
+	float strlen_subdir = strlen(subdir);
 
 	float list, i, n;
 	list = search_begin(s, false, true);
@@ -79,7 +83,7 @@ void getAllHUDSkins(entity me)
 		for(i = 0; i < n; ++i)
 		{
 			s = search_getfilename(list, i); // get initial full file name
-			s = substring(s, 4, (strlen(s) - 4 - 4)); // remove "hud_" prefix and ".cfg" suffix
+			s = substring(s, strlen_subdir + 4, (strlen(s) - strlen_subdir - 4 - 4)); // remove "hud_" prefix and ".cfg" suffix
 			bufstr_add(me.listHUDSkin, s, true);
 		}
 		search_end(list);
@@ -96,7 +100,8 @@ void XonoticHUDSkinList_getHUDSkins(entity me)
 		me.nItems = 0;
 		return;
 	}
-	getAllHUDSkins(me);
+	getAllHUDSkins(me, "");
+	getAllHUDSkins(me, "data/");
 	me.nItems = buf_getsize(me.listHUDSkin);
 	if(me.nItems > 0)
 		buf_sort(me.listHUDSkin, 128, false);
@@ -166,10 +171,25 @@ void HUDSkinList_Filter_Change(entity box, entity me)
 	me.getHUDSkins(me);
 }
 
+void SaveHUDSkin_Click(entity btn, entity me)
+{
+	localcmd("hud save myconfig\n");
+	me.delayedRefreshTime = time + 1;
+}
+
+void XonoticHUDSkinList_draw(entity me)
+{
+	if(me.delayedRefreshTime > 0 && me.delayedRefreshTime < time)
+	{
+		HUDSkinList_Refresh_Click(NULL, me);
+		me.delayedRefreshTime = 0;
+	}
+	SUPER(XonoticHUDSkinList).draw(me);
+}
+
 void XonoticHUDSkinList_setHUDSkin(entity me)
 {
 	string s = me.hudskinName(me, me.selectedItem);
-
 	localcmd("exec \"hud_", s, ".cfg\"\n");
 }
 
