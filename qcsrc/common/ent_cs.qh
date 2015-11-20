@@ -5,9 +5,10 @@ REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 
 /** True when private information such as origin is available */
 .bool m_entcs_private;
-
-/** True when a recent origin is available */
+/** True when origin is available */
 .bool has_origin;
+/** True when a recent server sent origin has been received */
+.bool has_sv_origin;
 
 #ifdef SVQC
 /**

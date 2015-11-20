@@ -9,7 +9,7 @@
 	PROP(false, origin, \
 	{ WriteShort(MSG_ENTITY, this.origin.x);  WriteShort(MSG_ENTITY, this.origin.y); \
 	  WriteShort(MSG_ENTITY, this.origin.z); }, \
-	{ this.has_origin = true; vector v; v.x = ReadShort(); v.y = ReadShort(); v.z = ReadShort(); setorigin(this, v); }) \
+	{ this.has_sv_origin = true; vector v; v.x = ReadShort(); v.y = ReadShort(); v.z = ReadShort(); setorigin(this, v); }) \
     \
 	PROP(false, angles_y, \
 	{ WriteByte(MSG_ENTITY, this.angles.y / 360 * 256); }, \
@@ -136,6 +136,10 @@
 				this.model = strzone(e.model);
 			}
 		}
+		else
+		{
+			this.has_origin = this.has_sv_origin;
+		}
 	}
 
 	NET_HANDLE(ENT_CLIENT_ENTCS, bool isnew)
@@ -150,7 +154,7 @@
 		}
 		InterpolateOrigin_Undo();
 		int sf = ReadShort();
-		this.has_origin = false;
+		this.has_sv_origin = false;
 		this.m_entcs_private = boolean(sf & 1);
 		int i = 1;
 		#define X(public, fld, sv, cl) { if (sf & BIT(i)) cl; } i += 1;
