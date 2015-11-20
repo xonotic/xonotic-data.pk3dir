@@ -5,6 +5,7 @@
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
 	.bool(entity to, int sendflags) SendEntity;
+	/** return false to remove from the client */
 	.bool(entity this, entity to, int sendflags) SendEntity3;
 
 	bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }
@@ -86,11 +87,12 @@
 
 #ifdef CSQC
 	#define REGISTER_NET_LINKED(id) \
-		[[accumulate]] NET_HANDLE(id, bool) \
+		[[accumulate]] NET_HANDLE(id, bool isnew) \
 		{ \
 			this = self; \
 			this.sourceLocFile = __FILE__; \
 			this.sourceLocLine = __LINE__; \
+			if (!this) isnew = true; \
 		} \
 		REGISTER(LinkedEntities, NET, id, m_id, new(net_linked_packet)) \
 		{ \

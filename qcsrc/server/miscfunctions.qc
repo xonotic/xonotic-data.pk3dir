@@ -703,7 +703,6 @@ void readplayerstartcvars()
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
-void PrecachePlayerSounds(string f);
 void precache_playermodel(string m)
 {
 	float globhandle, i, n;

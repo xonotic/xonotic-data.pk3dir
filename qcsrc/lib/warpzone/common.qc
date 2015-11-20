@@ -576,8 +576,6 @@ bool WarpZoneLib_BadEntity(entity e)
 	if (is_pure(e)) return true;
 	switch (s)
 	{
-		case "entcs_sender":
-		case "entcs_receiver":
 		// case "net_linked": // actually some real entities are linked without classname, fail
 		case "":
 			return true;

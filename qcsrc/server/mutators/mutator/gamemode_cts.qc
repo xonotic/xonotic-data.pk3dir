@@ -417,7 +417,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 {
 	if(autocvar_g_cts_finish_kill_delay)
-		CTS_ClientKill(self);
+		CTS_ClientKill(race_player);
 
 	return false;
 }

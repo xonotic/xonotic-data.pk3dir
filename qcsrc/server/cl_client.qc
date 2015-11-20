@@ -3,7 +3,6 @@
 #include "anticheat.qh"
 #include "cl_impulse.qh"
 #include "cl_player.qh"
-#include "ent_cs.qh"
 #include "ipban.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
@@ -23,6 +22,7 @@
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
 
+#include "../common/ent_cs.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/triggers/teleporters.qh"
 
@@ -175,7 +175,6 @@ void setplayermodel(entity e, string modelname)
 	precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel();
-	UpdatePlayerSounds(e);
 }
 
 /*
@@ -405,7 +404,6 @@ void FixPlayermodel(entity player)
 	if(chmdl || oldskin != player.skin) // model or skin has changed
 	{
 		player.species = player_getspecies(player); // update species
-		UpdatePlayerSounds(player); // update skin sounds
 	}
 
 	if(!teamplay)
@@ -1180,7 +1178,7 @@ void ClientConnect ()
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	attach_entcs(self);
+	entcs_attach(self);
 
 	bot_relinkplayerlist();
 
@@ -1266,7 +1264,7 @@ void ClientDisconnect ()
 
 	bot_clientdisconnect();
 
-	detach_entcs(self);
+	entcs_detach(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
@@ -1306,8 +1304,6 @@ void ClientDisconnect ()
 		strunzone(self.clientstatus);
 	if(self.weaponorder_byimpulse)
 		strunzone(self.weaponorder_byimpulse);
-
-	ClearPlayerSounds(self);
 
 	if(self.personal)
 		remove(self.personal);
