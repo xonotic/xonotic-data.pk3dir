@@ -37,7 +37,9 @@ const int BD_TILE_BRICK3 = 6;
 const int BD_TILE_BRICK4 = 7;
 const int BD_TILE_BRICK5 = 8;
 const int BD_TILE_BRICK6 = 9;
-const int BD_TILE_LAST = 9;
+const int BD_TILE_BRICK7 = 10;
+const int BD_TILE_BRICK8 = 11;
+const int BD_TILE_LAST = 11;
 
 string autocvar_sv_minigames_bulldozer_startlevel = "level1";
 
@@ -93,6 +95,8 @@ bool bd_canfill(int ttype)
 {
 	switch(ttype)
 	{
+		case BD_TILE_BRICK8:
+		case BD_TILE_BRICK7:
 		case BD_TILE_BRICK6:
 		case BD_TILE_BRICK5:
 		case BD_TILE_BRICK4:
@@ -125,6 +129,8 @@ bool bd_move_dozer(entity minigame, entity dozer)
 	switch(hit.bd_tiletype)
 	{
 		case BD_TILE_DOZER: // wtf, but let's do this incase
+		case BD_TILE_BRICK8:
+		case BD_TILE_BRICK7:
 		case BD_TILE_BRICK6:
 		case BD_TILE_BRICK5:
 		case BD_TILE_BRICK4:
@@ -690,6 +696,8 @@ string bd_get_tile_pic(int tileid)
 		case BD_TILE_BRICK4: return "bd/brick4";
 		case BD_TILE_BRICK5: return "bd/brick5";
 		case BD_TILE_BRICK6: return "bd/brick6";
+		case BD_TILE_BRICK7: return "bd/brick7";
+		case BD_TILE_BRICK8: return "bd/brick8";
 		case BD_TILE_TARGET: return "bd/target";
 		case BD_TILE_DOZER: return "bd/dozer";
 	}
