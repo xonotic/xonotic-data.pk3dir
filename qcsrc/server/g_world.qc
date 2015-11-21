@@ -759,10 +759,7 @@ spawnfunc(worldspawn)
 	WepSet_AddStat_InMap();
 	Nagger_Init();
 
-	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
-
 	// freeze attacks
-	addstat(STAT_FROZEN, AS_INT, frozen);
 	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
 
 	// physics

@@ -98,9 +98,9 @@ bool IsFlying(entity a);
 	#define WAS_ONGROUND(s)						!!(s.lastflags & FL_ONGROUND)
 
 	#define ITEMS_STAT(s) 						(s).items
-	#define BUFFS_STAT(s)						getstati(STAT_BUFFS)
+	#define BUFFS_STAT(s)						STAT(BUFFS)
 
-	#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
+	#define PHYS_FROZEN(s)						STAT(FROZEN)
 
 	#define PHYS_DOUBLEJUMP						getstati(STAT_DOUBLEJUMP)
 

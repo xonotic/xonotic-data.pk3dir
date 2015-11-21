@@ -84,7 +84,6 @@ REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 {
 	MUTATOR_ONADD
 	{
-		addstat(STAT_BUFFS, AS_INT, buffs);
 		addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
 
 		InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);

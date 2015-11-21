@@ -282,7 +282,7 @@ int GetAmmoStat(.int ammotype)
 		case ammo_nails: return STAT_NAILS;
 		case ammo_rockets: return STAT_ROCKETS;
 		case ammo_cells: return STAT_CELLS;
-		case ammo_plasma: return STAT_PLASMA;
+		case ammo_plasma: return STAT_PLASMA.m_id;
 		case ammo_fuel: return STAT_FUEL.m_id;
 		default: return -1;
 	}

@@ -823,8 +823,8 @@ void HUD_Crosshair()
 				weapon_clipsize = STAT(WEAPON_CLIPSIZE);
 
 				float ok_ammo_charge, ok_ammo_chargepool;
-				ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
-				ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOL);
+				ok_ammo_charge = STAT(OK_AMMO_CHARGE);
+				ok_ammo_chargepool = STAT(OK_AMMO_CHARGEPOOL);
 
 				float vortex_charge, vortex_chargepool;
 				vortex_charge = STAT(VORTEX_CHARGE);
@@ -1005,10 +1005,10 @@ void HUD_Crosshair()
 
 void HUD_Draw()
 {
-	if(getstati(STAT_FROZEN))
+	if(STAT(FROZEN))
 		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-	else if (getstatf(STAT_HEALING_ORB)>time)
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, NADE_TYPE_HEAL.m_color, autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
+	else if (STAT(HEALING_ORB)>time)
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, NADE_TYPE_HEAL.m_color, autocvar_hud_colorflash_alpha*STAT(HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
 	if(!intermission)
 	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
@@ -1680,7 +1680,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_damage && !getstati(STAT_FROZEN))
+	if(autocvar_hud_damage && !STAT(FROZEN))
 	{
 		splash_size.x = max(vid_conwidth, vid_conheight);
 		splash_size.y = max(vid_conwidth, vid_conheight);

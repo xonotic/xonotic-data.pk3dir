@@ -9,17 +9,17 @@
 .entity fake_nade;
 .float nade_timer = _STAT(NADE_TIMER);
 .float nade_refire;
-.float bonus_nades;
+.float bonus_nades = _STAT(NADE_BONUS);
 .float nade_special_time;
-.float bonus_nade_score;
-.float nade_type;
+.float bonus_nade_score = _STAT(NADE_BONUS_SCORE);
+.int nade_type = _STAT(NADE_BONUS_TYPE);
 .string pokenade_type;
 .entity nade_damage_target;
 .float cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
 .float toss_time;
-.float stat_healing_orb;
-.float stat_healing_orb_alpha;
+.float stat_healing_orb = _STAT(HEALING_ORB);
+.float stat_healing_orb_alpha = _STAT(HEALING_ORB_ALPHA);
 .float nade_show_particles;
 
 // Remove nades that are being thrown
@@ -50,19 +50,7 @@ MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 #include "../../../monsters/sv_monsters.qh"
 #include "../../../../server/g_subs.qh"
 
-REGISTER_MUTATOR(nades, cvar("g_nades"))
-{
-	MUTATOR_ONADD
-	{
-		addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
-		addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
-		addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
-		addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
-		addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
-	}
-
-	return false;
-}
+REGISTER_MUTATOR(nades, cvar("g_nades"));
 
 .float nade_time_primed;
 

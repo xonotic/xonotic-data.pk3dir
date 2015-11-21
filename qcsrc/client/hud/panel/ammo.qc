@@ -12,9 +12,9 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
 {
-	float bonusNades    = getstatf(STAT_NADE_BONUS);
-	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
-	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
+	float bonusNades    = STAT(NADE_BONUS);
+	float bonusProgress = STAT(NADE_BONUS_SCORE);
+	float bonusType     = STAT(NADE_BONUS_TYPE);
 	Nade def = Nades_from(bonusType);
 	vector nadeColor    = def.m_color;
 	string nadeIcon     = def.m_icon;
@@ -147,7 +147,7 @@ void HUD_Ammo()
 	}
 
 	int rows = 0, columns, row, column;
-	float nade_cnt = getstatf(STAT_NADE_BONUS), nade_score = getstatf(STAT_NADE_BONUS_SCORE);
+	float nade_cnt = STAT(NADE_BONUS), nade_score = STAT(NADE_BONUS_SCORE);
 	bool draw_nades = (nade_cnt > 0 || nade_score > 0);
 	float nade_statuschange_elapsedtime;
 	int total_ammo_count;

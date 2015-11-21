@@ -57,7 +57,7 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 void HUD_Powerups()
 {
 	int allItems = getstati(STAT_ITEMS, 0, 24);
-	int allBuffs = getstati(STAT_BUFFS, 0, 24);
+	int allBuffs = STAT(BUFFS);
 	int strengthTime, shieldTime, superTime;
 
 	// Initialize items
