@@ -701,6 +701,7 @@ MUTATOR_HOOKABLE(FixClientCvars, EV_FixClientCvars);
 #define EV_SpectateSet(i, o) \
     /**/ i(entity, __self) \
     /**/ i(entity, spec_player) \
+    /**/ o(entity, spec_player) \
     /**/
 entity spec_player;
 MUTATOR_HOOKABLE(SpectateSet, EV_SpectateSet);
@@ -708,12 +709,14 @@ MUTATOR_HOOKABLE(SpectateSet, EV_SpectateSet);
 #define EV_SpectateNext(i, o) \
     /**/ i(entity, __self) \
     /**/ i(entity, spec_player) \
+    /**/ o(entity, spec_player) \
     /**/
 MUTATOR_HOOKABLE(SpectateNext, EV_SpectateNext);
 
 #define EV_SpectatePrev(i, o) \
     /**/ i(entity, __self) \
     /**/ i(entity, spec_player) \
+    /**/ o(entity, spec_player) \
     /**/ i(entity, spec_first) \
     /**/
 entity spec_first;
