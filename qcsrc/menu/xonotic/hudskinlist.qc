@@ -10,6 +10,7 @@ CLASS(XonoticHUDSkinList, XonoticListBox)
 	METHOD(XonoticHUDSkinList, getHUDSkins, void(entity));
 	METHOD(XonoticHUDSkinList, setHUDSkin, void(entity));
 	METHOD(XonoticHUDSkinList, hudskinName, string(entity, float));
+	METHOD(XonoticHUDSkinList, hudskinPath, string(entity, float));
 	METHOD(XonoticHUDSkinList, doubleClickListBoxItem, void(entity, float, vector));
 	METHOD(XonoticHUDSkinList, keyDown, float(entity, float, float, float));
 	METHOD(XonoticHUDSkinList, destroy, void(entity));
@@ -54,15 +55,16 @@ void XonoticHUDSkinList_configureXonoticHUDSkinList(entity me)
 	me.getHUDSkins(me);
 }
 
+const float HUDSKINPARM_NAME = 0;
+const float HUDSKINPARM_PATH = 1;
+const float HUDSKINPARM_COUNT = 2;
 string XonoticHUDSkinList_hudskinName(entity me, float i)
 {
-	string s;
-	s = bufstr_get(me.listHUDSkin, i);
-
-	if(substring(s, 0, 1) == "/")
-		s = substring(s, 1, strlen(s) - 1);  // remove the first forward slash
-
-	return s;
+	return bufstr_get(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_NAME);
+}
+string XonoticHUDSkinList_hudskinPath(entity me, float i)
+{
+	return bufstr_get(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH);
 }
 
 void getAllHUDSkins(entity me, string subdir)
@@ -74,20 +76,25 @@ void getAllHUDSkins(entity me, string subdir)
 		s = "*";
 	s = strcat(subdir, "hud_", s, ".cfg");
 	float strlen_subdir = strlen(subdir);
+	string zoned_subdir = strzone(subdir);
 
 	float list, i, n;
 	list = search_begin(s, false, true);
 	if(list >= 0)
 	{
 		n = search_getsize(list);
+		int bufsize = buf_getsize(me.listHUDSkin);
 		for(i = 0; i < n; ++i)
 		{
+			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH, zoned_subdir);
 			s = search_getfilename(list, i); // get initial full file name
 			s = substring(s, strlen_subdir + 4, (strlen(s) - strlen_subdir - 4 - 4)); // remove "hud_" prefix and ".cfg" suffix
-			bufstr_add(me.listHUDSkin, s, true);
+			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_NAME, s);
 		}
 		search_end(list);
 	}
+	if(zoned_subdir)
+		strunzone(zoned_subdir);
 }
 
 void XonoticHUDSkinList_getHUDSkins(entity me)
@@ -102,9 +109,7 @@ void XonoticHUDSkinList_getHUDSkins(entity me)
 	}
 	getAllHUDSkins(me, "");
 	getAllHUDSkins(me, "data/");
-	me.nItems = buf_getsize(me.listHUDSkin);
-	if(me.nItems > 0)
-		buf_sort(me.listHUDSkin, 128, false);
+	me.nItems = buf_getsize(me.listHUDSkin) / HUDSKINPARM_COUNT;
 }
 
 void XonoticHUDSkinList_destroy(entity me)
@@ -189,8 +194,8 @@ void XonoticHUDSkinList_draw(entity me)
 
 void XonoticHUDSkinList_setHUDSkin(entity me)
 {
-	string s = me.hudskinName(me, me.selectedItem);
-	localcmd("exec \"hud_", s, ".cfg\"\n");
+	string cfg = strcat(me.hudskinPath(me, me.selectedItem), "hud_", me.hudskinName(me, me.selectedItem), ".cfg");
+	localcmd("exec ", cfg, "\n");
 }
 
 void SetHUDSkin_Click(entity btn, entity me)
