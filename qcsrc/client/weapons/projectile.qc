@@ -79,7 +79,7 @@ void Projectile_Draw(entity this)
 	}
 	else
 	{
-		InterpolateOrigin_Do();
+		InterpolateOrigin_Do(self);
 	}
 
 	if (self.count & 0x80)
@@ -227,7 +227,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	}
 
 	if (!(self.count & 0x80))
-		InterpolateOrigin_Undo();
+		InterpolateOrigin_Undo(self);
 
 	if (f & 1)
 	{
@@ -475,7 +475,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	}
 
 	if (!(self.count & 0x80))
-		InterpolateOrigin_Note();
+		InterpolateOrigin_Note(this);
 
 	self.classname = "csqcprojectile";
 	self.draw = Projectile_Draw;

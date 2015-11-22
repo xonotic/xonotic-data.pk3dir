@@ -85,7 +85,7 @@ void Ent_Wall_Draw(entity this)
 		}
 	}
 
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(self);
 
 	self.saved = self.(fld);
 
@@ -119,7 +119,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 	int f;
 	var .vector fld;
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 	self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
 
 	if(self.bgmscriptangular)
@@ -224,7 +224,7 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 
 	return = true;
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 
 	self.saved = self.(fld);
 

@@ -56,23 +56,23 @@ bool IsFlying(entity a);
 
 	#define PHYS_INPUT_MOVEVALUES(s)			input_movevalues
 
-	#define PHYS_INPUT_BUTTON_MASK(s)   		(input_buttons | 128 * (input_movevalues_x < 0) | 256 * (input_movevalues_x > 0) | 512 * (input_movevalues_y < 0) | 1024 * (input_movevalues_y > 0))
-	#define PHYS_INPUT_BUTTON_ATCK(s)			!!(input_buttons & 1)
-	#define PHYS_INPUT_BUTTON_JUMP(s)			!!(input_buttons & 2)
-	#define PHYS_INPUT_BUTTON_ATCK2(s)			!!(input_buttons & 4)
-	#define PHYS_INPUT_BUTTON_ZOOM(s)			!!(input_buttons & 8)
-	#define PHYS_INPUT_BUTTON_CROUCH(s)			!!(input_buttons & 16)
-	#define PHYS_INPUT_BUTTON_HOOK(s)			!!(input_buttons & 32)
-	#define PHYS_INPUT_BUTTON_USE(s)			!!(input_buttons & 64)
-	#define PHYS_INPUT_BUTTON_BACKWARD(s)		!!(input_buttons & 128)
-	#define PHYS_INPUT_BUTTON_FORWARD(s)		!!(input_buttons & 256)
-	#define PHYS_INPUT_BUTTON_LEFT(s)			!!(input_buttons & 512)
-	#define PHYS_INPUT_BUTTON_RIGHT(s)			!!(input_buttons & 1024)
-	#define PHYS_INPUT_BUTTON_JETPACK(s)		!!(input_buttons & 4096)
+	#define PHYS_INPUT_BUTTON_MASK(s)   		(input_buttons | BIT(7) * (input_movevalues.x < 0) | BIT(8) * (input_movevalues.x > 0) | BIT(9) * (input_movevalues.y < 0) | BIT(10) * (input_movevalues.y > 0))
+	#define PHYS_INPUT_BUTTON_ATCK(s)			boolean(input_buttons & BIT(0))
+	#define PHYS_INPUT_BUTTON_JUMP(s)			boolean(input_buttons & BIT(1))
+	#define PHYS_INPUT_BUTTON_ATCK2(s)			boolean(input_buttons & BIT(2))
+	#define PHYS_INPUT_BUTTON_ZOOM(s)			boolean(input_buttons & BIT(3))
+	#define PHYS_INPUT_BUTTON_CROUCH(s)			boolean(input_buttons & BIT(4))
+	#define PHYS_INPUT_BUTTON_HOOK(s)			boolean(input_buttons & BIT(5))
+	#define PHYS_INPUT_BUTTON_USE(s)			boolean(input_buttons & BIT(6))
+	#define PHYS_INPUT_BUTTON_BACKWARD(s)		boolean(input_buttons & BIT(7))
+	#define PHYS_INPUT_BUTTON_FORWARD(s)		boolean(input_buttons & BIT(8))
+	#define PHYS_INPUT_BUTTON_LEFT(s)			boolean(input_buttons & BIT(9))
+	#define PHYS_INPUT_BUTTON_RIGHT(s)			boolean(input_buttons & BIT(10))
+	#define PHYS_INPUT_BUTTON_JETPACK(s)		boolean(input_buttons & BIT(12))
 
 	#define PHYS_DEAD(s)						s.csqcmodel_isdead
 
-	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	!!(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
+	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE	boolean(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND			cvar("sv_gameplayfix_nogravityonground")
 	#define GAMEPLAYFIX_Q2AIRACCELERATE				cvar("sv_gameplayfix_q2airaccelerate")
 	#define GAMEPLAYFIX_EASIERWATERJUMP 			getstati(STAT_GAMEPLAYFIX_EASIERWATERJUMP)
@@ -81,7 +81,7 @@ bool IsFlying(entity a);
 	#define GAMEPLAYFIX_UNSTICKPLAYERS				getstati(STAT_GAMEPLAYFIX_UNSTICKPLAYERS)
 	#define GAMEPLAYFIX_STEPDOWN					getstati(STAT_GAMEPLAYFIX_STEPDOWN)
 
-	#define IS_DUCKED(s)    					!!(s.flags & FL_DUCKED)
+	#define IS_DUCKED(s)    					boolean(s.flags & FL_DUCKED)
 	#define SET_DUCKED(s)   					s.flags |= FL_DUCKED
 	#define UNSET_DUCKED(s) 					s.flags &= ~FL_DUCKED
 
@@ -89,11 +89,11 @@ bool IsFlying(entity a);
 	#define SET_JUMP_HELD(s)   					s.flags &= ~FL_JUMPRELEASED
 	#define UNSET_JUMP_HELD(s) 					s.flags |= FL_JUMPRELEASED
 
-	#define IS_ONGROUND(s)    					!!(s.flags & FL_ONGROUND)
+	#define IS_ONGROUND(s)    					boolean(s.flags & FL_ONGROUND)
 	#define SET_ONGROUND(s)   					s.flags |= FL_ONGROUND
 	#define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
 
-	#define WAS_ONGROUND(s)						!!(s.lastflags & FL_ONGROUND)
+	#define WAS_ONGROUND(s)						boolean(s.lastflags & FL_ONGROUND)
 
 	#define ITEMS_STAT(s) 						(s).items
 	#define BUFFS_STAT(s)						getstati(STAT_BUFFS)
@@ -292,11 +292,11 @@ bool IsFlying(entity a);
 	#define SET_JUMP_HELD(s)   					s.flags &= ~FL_JUMPRELEASED
 	#define UNSET_JUMP_HELD(s) 					s.flags |= FL_JUMPRELEASED
 
-	#define IS_ONGROUND(s)    					!!(s.flags & FL_ONGROUND)
+	#define IS_ONGROUND(s)    					boolean(s.flags & FL_ONGROUND)
 	#define SET_ONGROUND(s)   					s.flags |= FL_ONGROUND
 	#define UNSET_ONGROUND(s) 					s.flags &= ~FL_ONGROUND
 
-	#define WAS_ONGROUND(s)						!!((s).lastflags & FL_ONGROUND)
+	#define WAS_ONGROUND(s)						boolean((s).lastflags & FL_ONGROUND)
 
 	#define ITEMS_STAT(s)						s.items
 	#define BUFFS_STAT(s)						(s).buffs

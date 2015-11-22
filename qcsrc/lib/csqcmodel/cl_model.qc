@@ -188,8 +188,7 @@ void CSQCModel_Draw()
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
-	if(!CSQCPlayer_IsLocalPlayer())
-		InterpolateOrigin_Do();
+	if (!CSQCPlayer_IsLocalPlayer(this)) InterpolateOrigin_Do(this);
 
 	CSQCModel_InterpolateAnimation_Do();
 
@@ -238,8 +237,8 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 
 	{ CSQCMODEL_HOOK_PREUPDATE }
 
-	CSQCPlayer_PreUpdate();
-	InterpolateOrigin_Undo();
+	CSQCPlayer_PreUpdate(this);
+	InterpolateOrigin_Undo(this);
 	CSQCModel_InterpolateAnimation_PreNote(sf);
 
 #define CSQCMODEL_IF(cond) if(cond) {
@@ -270,13 +269,13 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	}
 
 	CSQCModel_InterpolateAnimation_Note(sf);
-	InterpolateOrigin_Note();
-	CSQCPlayer_PostUpdate();
+	InterpolateOrigin_Note(this);
+	CSQCPlayer_PostUpdate(this);
 
 	{ CSQCMODEL_HOOK_POSTUPDATE }
 
 #ifdef CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(this);
 	CSQCModel_InterpolateAnimation_Do();
 #endif
 

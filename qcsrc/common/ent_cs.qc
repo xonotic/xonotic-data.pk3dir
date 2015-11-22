@@ -124,7 +124,7 @@
 		SELFPARAM();
 		this.nextthink = time;
 		entity e = CSQCModel_server2csqc(this.sv_entnum + 1);
-		bool exists = !!e;
+		bool exists = e != NULL;
 		if (exists)
 		{
 			this.has_origin = true;
@@ -152,7 +152,7 @@
 			this.think = entcs_think;
 			this.nextthink = time;
 		}
-		InterpolateOrigin_Undo();
+		InterpolateOrigin_Undo(this);
 		int sf = ReadShort();
 		this.has_sv_origin = false;
 		this.m_entcs_private = boolean(sf & 1);
@@ -162,7 +162,7 @@
 	#undef X
 		entcs_receiver[this.sv_entnum] = this;
 		this.iflags |= IFLAG_ORIGIN;
-		InterpolateOrigin_Note();
+		InterpolateOrigin_Note(this);
 		return true;
 	}
 

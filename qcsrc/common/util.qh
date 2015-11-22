@@ -189,8 +189,6 @@ float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
-vector vec2(vector v);
-
 #ifndef MENUQC
 vector NearestPointOnBox(entity box, vector org);
 #endif
@@ -268,8 +266,6 @@ string CCR(string input);
 	#endif
 	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
 #endif
-
-vector vec3(float x, float y, float z);
 
 #ifndef MENUQC
 vector animfixfps(entity e, vector a, vector b);

@@ -13,6 +13,7 @@
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
+#include "../common/physics.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
@@ -975,7 +976,7 @@ void HUD_Crosshair()
 					wcross_color = stov(autocvar_crosshair_dot_color);
 
 				CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
-				// FIXME why don't we use wcross_alpha here?cl_notice_run();
+				// FIXME why don't we use wcross_alpha here?
 				wcross_color = wcross_color_old;
 			}
 		}
@@ -1052,9 +1053,7 @@ float oldr_novis;
 float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
-const int BUTTON_3 = 4;
-const int BUTTON_4 = 8;
-float cl_notice_run();
+void cl_notice_run();
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
@@ -1091,8 +1090,8 @@ void CSQC_UpdateView(float w, float h)
 	else
 		view_quality = 1;
 
-	button_attack2 = (input_buttons & BUTTON_3);
-	button_zoom = (input_buttons & BUTTON_4);
+	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(self);
+	button_zoom = PHYS_INPUT_BUTTON_ZOOM(self);
 
 	vf_size = getpropertyvec(VF_SIZE);
 	vf_min = getpropertyvec(VF_MIN);

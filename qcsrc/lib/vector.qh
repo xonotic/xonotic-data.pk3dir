@@ -1,6 +1,20 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+noref vector _vlen2;
+#define vlen2(v) \
+	(_vlen2 = (v), \
+	  _vlen2.x * _vlen2.x \
+	+ _vlen2.y * _vlen2.y \
+	+ _vlen2.z * _vlen2.z)
+
+noref float _vdist_f;
+/** Vector distance comparison, avoids sqrt() */
+#define vdist(v, cmp, f) (vlen2(v) cmp (_vdist_f = (f), _vdist_f * _vdist_f))
+/*
+#define vdist(v, cmp, f) (vlen(v) cmp (f))
+*/
+
 #define cross(a, b) ((a) >< (b))
 /*
 vector cross(vector a, vector b)
@@ -24,11 +38,6 @@ vector randompos(vector m1, vector m2)
 	v_y = m2_y * random() + m1_y;
 	v_z = m2_z * random() + m1_z;
 	return v;
-}
-
-float vlen2d(vector v)
-{
-	return sqrt(v.x * v.x + v.y * v.y);
 }
 
 float vlen_maxnorm2d(vector v)
@@ -59,20 +68,11 @@ float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= 
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z; }
 
 
-vector vec2(vector v)
-{
-	v.z = 0;
-	return v;
-}
+noref vector _vec2;
+#define vec2(v) (_vec2 = (v), _vec2.z = 0, _vec2)
 
-vector vec3(float x, float y, float z)
-{
-	vector v;
-	v.x = x;
-	v.y = y;
-	v.z = z;
-	return v;
-}
+noref vector _vec3;
+#define vec3(x, y, z) (_vec3_x = (x), _vec3_y = (y), _vec3_z = (z), _vec3)
 
 vector rotate(vector v, float a)
 {
@@ -83,11 +83,8 @@ vector rotate(vector v, float a)
 	return r;
 }
 
-vector yinvert(vector v)
-{
-	v.y = 1 - v.y;
-	return v;
-}
+noref vector _yinvert;
+#define yinvert(v) (_yinvert = (v), _yinvert.y = 1 - _yinvert.y, _yinvert)
 
 #ifndef MENUQC
 	vector get_corner_position(entity box, int corner)

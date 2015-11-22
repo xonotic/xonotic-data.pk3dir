@@ -294,7 +294,7 @@ void HUD_Radar()
 	if((hud_panel_radar_rotation == 0 && !hud_panel_radar_maximized) || (hud_panel_radar_maximized_rotation == 0 && hud_panel_radar_maximized))
 	{
 		// max-min distance must fit the radar in any rotation
-		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_scale));
+		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen(vec2(mi_scale)));
 	}
 	else
 	{

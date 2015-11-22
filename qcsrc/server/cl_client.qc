@@ -1218,7 +1218,7 @@ void ClientConnect ()
 	self.model_randomizer = random();
 
 	if(IS_REAL_CLIENT(self))
-		sv_notice_join();
+		sv_notice_join(self);
 
 	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
 		WITH(entity, self, e, e.init_for_player(this));

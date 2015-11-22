@@ -198,7 +198,7 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 {
 	int sendflags = ReadByte();
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 	self.classname = "radarlink";
@@ -225,5 +225,5 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 
 	return = true;
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 }

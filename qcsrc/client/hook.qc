@@ -41,7 +41,7 @@ void Draw_GrapplingHook(entity this)
 		self.teleport_time = 0;
 	}
 
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(this);
 
 	int s = W_GetGunAlignment(world);
 
@@ -171,7 +171,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 	self.HookSilent = (sf & 0x80);
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	if(sf & 1)
 	{
@@ -203,7 +203,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 		self.velocity_z = ReadCoord();
 	}
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 
 	if(bIsNew || !self.teleport_time)
 	{
