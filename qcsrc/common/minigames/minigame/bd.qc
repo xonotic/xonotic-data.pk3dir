@@ -682,6 +682,9 @@ int bd_server_event(entity minigame, string event, ...)
 int bd_curr_tile;
 string bd_curr_pos;
 
+.entity bd_enemy;
+.bool bd_hide;
+
 vector bd_boardpos; // HUD board position
 vector bd_boardsize;// HUD board size
 
@@ -720,59 +723,42 @@ void bd_hud_board(vector pos, vector mySize)
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_board_piece" && e.bd_tiletype != BD_TILE_TARGET && e.bd_tiletype != BD_TILE_DOZER )
+		if(e.classname == "minigame_board_piece")
 		{
-			tile_pos = minigame_tile_pos(e.netname,BD_NUM_CNT,BD_LET_CNT);
-			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-
-			string thepiece = bd_get_tile_pic(e.bd_tiletype);
-
-			minigame_drawpic_centered( tile_pos,  
-					minigame_texture(thepiece),
-					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-		}
-
-		if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_TARGET && e.bd_tiletype != BD_TILE_DOZER )
-		{
-			tile_pos = minigame_tile_pos(e.netname,BD_NUM_CNT,BD_LET_CNT);
-			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-
-			minigame_drawpic_centered( tile_pos,  
-					minigame_texture("bd/target"),
-					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-		}
-
-		if ( e.classname == "minigame_board_piece" && e.bd_tiletype != BD_TILE_TARGET && e.bd_tiletype == BD_TILE_DOZER )
-		{
-			tile_pos = minigame_tile_pos(e.netname,BD_NUM_CNT,BD_LET_CNT);
-			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
-
-			vector thedir = e.bd_dir;
-			float theang = 0;
-
-			if(thedir_y == -1) { theang = M_PI; }
-			if(thedir_x == 1) { theang = M_PI/2; }
-			if(thedir_x == -1) { theang = M_PI*3/2; }
-
-			drawrotpic(tile_pos, theang, minigame_texture("bd/dozer"),
-						tile_size, tile_size/2, '1 1 1',
-						panel_fg_alpha, DRAWFLAG_NORMAL );
+			if(e.bd_tiletype == BD_TILE_TARGET)
+			{
+				e.bd_enemy = world;
+				e.bd_enemy = bd_find_piece(active_minigame, e.netname, false);
+			}
+			else if(e.bd_tiletype == BD_TILE_BOULDER)
+			{
+				e.bd_hide = false; // reset either way
+				e.bd_hide = ((bd_find_piece(active_minigame, e.netname, true)) != world);
+			}
 		}
 	}
-
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_TARGET )
+		if ( e.classname == "minigame_board_piece" )
 		{
-			tile_pos = minigame_tile_pos(e.netname,BD_NUM_CNT,BD_LET_CNT);
-			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
+			if(e.bd_tiletype != BD_TILE_DOZER && !e.bd_hide) // hide boulders
+			{
+				tile_pos = minigame_tile_pos(e.netname,BD_NUM_CNT,BD_LET_CNT);
+				tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 
-			minigame_drawpic_centered( tile_pos,  
-					minigame_texture("bd/target"),
-					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+				string thepiece = bd_get_tile_pic(e.bd_tiletype);
+
+				if(e.bd_enemy)
+					thepiece = "bd/boulder_target";
+
+				minigame_drawpic_centered( tile_pos,  
+						minigame_texture(thepiece),
+						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			}	
 		}
 	}
 
+	// draw dozers on top, always
 	FOREACH_MINIGAME_ENTITY(e)
 	{
 		if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
