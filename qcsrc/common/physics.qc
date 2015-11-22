@@ -192,49 +192,48 @@ float GeomLerp(float a, float lerp, float b)
 
 noref float pmove_waterjumptime;
 
-const float unstick_count = 27;
-vector unstick_offsets[unstick_count] =
-{
-// 1 no nudge (just return the original if this test passes)
-	'0.000   0.000  0.000',
-// 6 simple nudges
-	' 0.000  0.000  0.125', '0.000  0.000 -0.125',
-	'-0.125  0.000  0.000', '0.125  0.000  0.000',
-	' 0.000 -0.125  0.000', '0.000  0.125  0.000',
-// 4 diagonal flat nudges
-	'-0.125 -0.125  0.000', '0.125 -0.125  0.000',
-	'-0.125  0.125  0.000', '0.125  0.125  0.000',
-// 8 diagonal upward nudges
-	'-0.125  0.000  0.125', '0.125  0.000  0.125',
-	' 0.000 -0.125  0.125', '0.000  0.125  0.125',
-	'-0.125 -0.125  0.125', '0.125 -0.125  0.125',
-	'-0.125  0.125  0.125', '0.125  0.125  0.125',
-// 8 diagonal downward nudges
-	'-0.125  0.000 -0.125', '0.125  0.000 -0.125',
-	' 0.000 -0.125 -0.125', '0.000  0.125 -0.125',
-	'-0.125 -0.125 -0.125', '0.125 -0.125 -0.125',
-	'-0.125  0.125 -0.125', '0.125  0.125 -0.125',
-};
+#define unstick_offsets(X) \
+/* 1 no nudge (just return the original if this test passes) */ \
+	X(' 0.000  0.000  0.000') \
+/* 6 simple nudges */ \
+	X(' 0.000  0.000  0.125') X('0.000  0.000 -0.125') \
+	X('-0.125  0.000  0.000') X('0.125  0.000  0.000') \
+	X(' 0.000 -0.125  0.000') X('0.000  0.125  0.000') \
+/* 4 diagonal flat nudges */ \
+	X('-0.125 -0.125  0.000') X('0.125 -0.125  0.000') \
+	X('-0.125  0.125  0.000') X('0.125  0.125  0.000') \
+/* 8 diagonal upward nudges */ \
+	X('-0.125  0.000  0.125') X('0.125  0.000  0.125') \
+	X(' 0.000 -0.125  0.125') X('0.000  0.125  0.125') \
+	X('-0.125 -0.125  0.125') X('0.125 -0.125  0.125') \
+	X('-0.125  0.125  0.125') X('0.125  0.125  0.125') \
+/* 8 diagonal downward nudges */ \
+	X('-0.125  0.000 -0.125') X('0.125  0.000 -0.125') \
+	X(' 0.000 -0.125 -0.125') X('0.000  0.125 -0.125') \
+	X('-0.125 -0.125 -0.125') X('0.125 -0.125 -0.125') \
+	X('-0.125  0.125 -0.125') X('0.125  0.125 -0.125') \
+/**/
 
-void PM_ClientMovement_Unstick()
-{SELFPARAM();
-	float i;
-	for (i = 0; i < unstick_count; i++)
-	{
-		vector neworigin = unstick_offsets[i] + self.origin;
-		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, self);
-		if (!trace_startsolid)
-		{
-			setorigin(self, neworigin);
-			return;// true;
-		}
+void PM_ClientMovement_Unstick(entity this)
+{
+	#define X(unstick_offset) \
+	{ \
+		vector neworigin = unstick_offset + this.origin; \
+		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, this); \
+		if (!trace_startsolid) \
+		{ \
+			setorigin(this, neworigin); \
+			return; \
+		} \
 	}
+	unstick_offsets(X);
+	#undef X
 }
 
 void PM_ClientMovement_UpdateStatus(bool ground)
 {SELFPARAM();
 	// make sure player is not stuck
-	PM_ClientMovement_Unstick();
+	PM_ClientMovement_Unstick(this);
 
 	// set crouched
 	if (PHYS_INPUT_BUTTON_CROUCH(self))
