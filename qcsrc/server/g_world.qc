@@ -577,13 +577,10 @@ spawnfunc(worldspawn)
 
 	compressShortVector_init();
 
-	entity head;
-	head = nextent(world);
 	maxclients = 0;
-	while(head)
+	for (entity head = nextent(world); head; head = nextent(head))
 	{
 		++maxclients;
-		head = nextent(head);
 	}
 
 	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);

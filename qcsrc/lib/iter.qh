@@ -36,6 +36,39 @@
 	} \
 	while (0)
 
+#if defined(CSQC)
+	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+#elif defined(SVQC)
+	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+#elif defined(MENUQC)
+	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #27;
+#endif
+
+.entity _FOREACH_ENTITY_fld;
+.entity _FOREACH_ENTITY_next;
+
+#define FOREACH_ENTITY_UNORDERED(cond, body) \
+	do { \
+		int i = 0; \
+		for (entity it = findchainentity_tofield(_FOREACH_ENTITY_fld, NULL, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		{ \
+			if (cond) { body } \
+		} \
+	} \
+	while (0)
+
+#define FOREACH_ENTITY_ORDERED(cond, body) \
+	do { \
+		int i = 0; \
+		for (entity it = NULL; (it = nextent(it)); ++i) \
+		{ \
+			if (cond) { body } \
+		} \
+	} \
+	while (0)
+
+#define FOREACH_ENTITY(cond, body) FOREACH_ENTITY_UNORDERED(cond, body)
+
 #define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
 
 #endif
