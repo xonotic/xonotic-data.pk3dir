@@ -570,8 +570,6 @@ void PutClientInServer()
 		this.bot_attack = true;
 		this.monster_attack = true;
 
-		this.spider_slowness = 0;
-
 		this.BUTTON_ATCK = this.BUTTON_JUMP = this.BUTTON_ATCK2 = false;
 
 		if (this.killcount == FRAGS_SPECTATOR) {

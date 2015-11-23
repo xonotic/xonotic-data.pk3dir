@@ -843,18 +843,6 @@ void PM_check_punch()
 #endif
 }
 
-void PM_check_spider()
-{SELFPARAM();
-#ifdef SVQC
-	if (time >= self.spider_slowness)
-		return;
-	PHYS_MAXSPEED(self) *= 0.5; // half speed while slow from spider
-	PHYS_MAXAIRSPEED(self) *= 0.5;
-	PHYS_AIRSPEEDLIMIT_NONQW(self) *= 0.5;
-	PHYS_AIRSTRAFEACCELERATE(self) *= 0.5;
-#endif
-}
-
 // predict frozen movement, as frozen players CAN move in some cases
 void PM_check_frozen()
 {SELFPARAM();
@@ -1447,8 +1435,6 @@ void PM_Main(entity this)
 #endif
 
 	viewloc_PlayerPhysics();
-
-	PM_check_spider();
 
 	PM_check_frozen();
 

@@ -806,12 +806,6 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 	runspeed = bound(0, monster_speed_run * MONSTER_SKILLMOD(self), runspeed * 2.5); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, monster_speed_walk * MONSTER_SKILLMOD(self), walkspeed * 2.5); // limit maxspeed to prevent craziness
 
-	if(time < self.spider_slowness)
-	{
-		runspeed *= 0.5;
-		walkspeed *= 0.5;
-	}
-
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
 	if(DIFF_TEAM(self.monster_follow, self))
@@ -1358,7 +1352,6 @@ bool Monster_Spawn(int mon_id)
 	self.deadflag			= DEAD_NO;
 	self.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	self.spawn_time			= time;
-	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.monster_moveto		= '0 0 0';
 	self.monster_face 		= '0 0 0';
