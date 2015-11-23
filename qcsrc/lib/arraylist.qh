@@ -1,0 +1,44 @@
+#ifndef ARRAYLIST_H
+#define ARRAYLIST_H
+
+typedef int ArrayList;
+
+#define AL_declare(this) ArrayList this; int this##_len = (0)
+#define AL_init(this, n, default, T) \
+	do \
+	{ \
+		this = buf_create(); \
+		this##_len = n; \
+		for (int i = 0; i < this##_len; ++i) \
+		{ \
+			const _AL_type__##T() it = default; \
+			AL_set##T(this, i, it); \
+		} \
+	} \
+	while (0)
+
+#define _AL_type__s() string
+#define AL_gets(this, idx) bufstr_get(this, idx)
+#define AL_sets(this, idx, val) bufstr_set(this, idx, val)
+
+#define _AL_type__f() float
+#define AL_getf(this, idx) stof(AL_gets(this, idx))
+#define AL_setf(this, idx, val) AL_sets(this, idx, ftos(val))
+
+#define _AL_type__e() entity
+#define AL_gete(this, idx) ftoe(AL_getf(this, idx))
+#define AL_sete(this, idx, val) AL_setf(this, idx, etof(val))
+
+#define AL_EACH(this, T, cond, body) \
+	do \
+	{ \
+		const noref ArrayList _al = this; \
+		for (int i = 0, n = this##_len; i < n; ++i) \
+		{ \
+			const noref _AL_type__##T() it = AL_get##T(_al, i); \
+			if (cond) { body } \
+		} \
+	} \
+	while (0)
+
+#endif

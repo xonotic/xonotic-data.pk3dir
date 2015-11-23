@@ -28,6 +28,7 @@
 #include "warpzone/mathlib.qc"
 
 #include "accumulate.qh"
+#include "arraylist.qh"
 #include "bits.qh"
 #include "bool.qh"
 #include "color.qh"
