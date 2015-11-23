@@ -22,17 +22,22 @@ REGISTER_MUTATOR(multijump, true);
 
 .int multijump_count;
 .bool multijump_ready;
-.bool cvar_cl_multijump;
 
 #ifdef CSQC
+
+bool autocvar_cl_multijump = true;
 
 #define PHYS_MULTIJUMP 				getstati(STAT_MULTIJUMP)
 #define PHYS_MULTIJUMP_SPEED 		getstatf(STAT_MULTIJUMP_SPEED)
 #define PHYS_MULTIJUMP_ADD 			getstati(STAT_MULTIJUMP_ADD)
 #define PHYS_MULTIJUMP_MAXSPEED 	getstatf(STAT_MULTIJUMP_MAXSPEED)
 #define PHYS_MULTIJUMP_DODGING 		getstati(STAT_MULTIJUMP_DODGING)
+#define PHYS_MULTIJUMP_COUNT(s) 	getstati(STAT_MULTIJUMP_COUNT)
+#define PHYS_MULTIJUMP_CLIENT(s)	autocvar_cl_multijump
 
 #elif defined(SVQC)
+
+.bool cvar_cl_multijump;
 
 int autocvar_g_multijump;
 float autocvar_g_multijump_add;
@@ -45,6 +50,8 @@ float autocvar_g_multijump_dodging = 1;
 #define PHYS_MULTIJUMP_ADD 			autocvar_g_multijump_add
 #define PHYS_MULTIJUMP_MAXSPEED 	autocvar_g_multijump_maxspeed
 #define PHYS_MULTIJUMP_DODGING 		autocvar_g_multijump_dodging
+#define PHYS_MULTIJUMP_COUNT(s) 	(s).multijump_count
+#define PHYS_MULTIJUMP_CLIENT(s)	(s).cvar_cl_multijump
 
 .float stat_multijump;
 .float stat_multijump_speed;
@@ -68,6 +75,7 @@ void multijump_AddStats()
 	addstat(STAT_MULTIJUMP_ADD, AS_INT, stat_multijump_add);
 	addstat(STAT_MULTIJUMP_MAXSPEED, AS_FLOAT, stat_multijump_maxspeed);
 	addstat(STAT_MULTIJUMP_DODGING, AS_INT, stat_multijump_dodging);
+	addstat(STAT_MULTIJUMP_COUNT, AS_INT, multijump_count);
 }
 
 #endif
@@ -84,14 +92,9 @@ bool PM_multijump_checkjump(entity this)
 {
 	if(!PHYS_MULTIJUMP) { return false; }
 
-#ifdef SVQC
-	bool client_multijump = this.cvar_cl_multijump;
-#elif defined(CSQC)
-	bool client_multijump = cvar("cl_multijump");
-
-	if(cvar("cl_multijump") > 1)
+	int client_multijump = PHYS_MULTIJUMP_CLIENT(this);
+	if(client_multijump > 1)
 		return false; // nope
-#endif
 
 	if (!IS_JUMP_HELD(this) && !IS_ONGROUND(this) && client_multijump) // jump button pressed this frame and we are in midair
 		this.multijump_ready = true;  // this is necessary to check that we released the jump button and pressed it again
@@ -100,11 +103,7 @@ bool PM_multijump_checkjump(entity this)
 
 	int phys_multijump = PHYS_MULTIJUMP;
 
-#ifdef CSQC
-	phys_multijump = (PHYS_MULTIJUMP) ? -1 : 0;
-#endif
-
-	if(!player_multijump && this.multijump_ready && (this.multijump_count < phys_multijump || phys_multijump == -1) && this.velocity_z > PHYS_MULTIJUMP_SPEED && (!PHYS_MULTIJUMP_MAXSPEED || vlen(this.velocity) <= PHYS_MULTIJUMP_MAXSPEED))
+	if(!player_multijump && this.multijump_ready && (PHYS_MULTIJUMP_COUNT(this) < phys_multijump || phys_multijump == -1) && this.velocity_z > PHYS_MULTIJUMP_SPEED && (!PHYS_MULTIJUMP_MAXSPEED || vlen(this.velocity) <= PHYS_MULTIJUMP_MAXSPEED))
 	{
 		if (PHYS_MULTIJUMP)
 		{
@@ -160,6 +159,8 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
 #ifdef SVQC
 	multijump_UpdateStats(self);
+#elif defined(CSQC)
+	self.multijump_count = PHYS_MULTIJUMP_COUNT(self);
 #endif
 	PM_multijump(self);
 	return false;
