@@ -78,4 +78,11 @@ float player_multijump;
 float player_jumpheight;
 MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
+/** called during player physics, allows adjusting the movement type used */
+#define EV_PM_Physics(i, o) \
+    /**/ i(float, pm_maxspeed_mod) \
+    /**/
+float pm_maxspeed_mod;
+MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
+
 #endif

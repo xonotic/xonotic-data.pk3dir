@@ -10,6 +10,7 @@
 #include "mutator/bloodloss/module.inc"
 #include "mutator/breakablehook/module.inc"
 #include "mutator/buffs/module.inc"
+#include "mutator/bugrigs/module.inc"
 #include "mutator/campcheck/module.inc"
 #include "mutator/cloaked/module.inc"
 #include "mutator/damagetext/module.inc"

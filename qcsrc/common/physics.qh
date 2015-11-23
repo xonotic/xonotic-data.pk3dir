@@ -101,22 +101,6 @@ bool IsFlying(entity a);
 
 	#define PHYS_DOUBLEJUMP						getstati(STAT_DOUBLEJUMP)
 
-	#define PHYS_BUGRIGS						getstati(STAT_BUGRIGS)
-	#define PHYS_BUGRIGS_ANGLE_SMOOTHING 		getstati(STAT_BUGRIGS_ANGLE_SMOOTHING)
-	#define PHYS_BUGRIGS_PLANAR_MOVEMENT 		getstati(STAT_BUGRIGS_PLANAR_MOVEMENT)
-	#define PHYS_BUGRIGS_REVERSE_SPEEDING 		getstati(STAT_BUGRIGS_REVERSE_SPEEDING)
-	#define PHYS_BUGRIGS_FRICTION_FLOOR 		getstatf(STAT_BUGRIGS_FRICTION_FLOOR)
-	#define PHYS_BUGRIGS_AIR_STEERING 			getstati(STAT_BUGRIGS_AIR_STEERING)
-	#define PHYS_BUGRIGS_FRICTION_BRAKE 		getstatf(STAT_BUGRIGS_FRICTION_BRAKE)
-	#define PHYS_BUGRIGS_ACCEL 					getstatf(STAT_BUGRIGS_ACCEL)
-	#define PHYS_BUGRIGS_SPEED_REF 				getstatf(STAT_BUGRIGS_SPEED_REF)
-	#define PHYS_BUGRIGS_SPEED_POW 				getstatf(STAT_BUGRIGS_SPEED_POW)
-	#define PHYS_BUGRIGS_STEER 					getstatf(STAT_BUGRIGS_STEER)
-	#define PHYS_BUGRIGS_FRICTION_AIR 			getstatf(STAT_BUGRIGS_FRICTION_AIR)
-	#define PHYS_BUGRIGS_CAR_JUMPING 			getstatf(STAT_BUGRIGS_CAR_JUMPING)
-	#define PHYS_BUGRIGS_REVERSE_SPINNING 		getstatf(STAT_BUGRIGS_REVERSE_SPINNING)
-	#define PHYS_BUGRIGS_REVERSE_STOPPING 		getstatf(STAT_BUGRIGS_REVERSE_STOPPING)
-
 	#define PHYS_JUMPSPEEDCAP_MIN				cvar_string("cl_jumpspeedcap_min")
 	#define PHYS_JUMPSPEEDCAP_MAX				cvar_string("cl_jumpspeedcap_max")
 	#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS	getstati(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
@@ -206,22 +190,6 @@ bool IsFlying(entity a);
 	.float stat_gameplayfix_unstickplayers;
 	.float stat_gameplayfix_stepdown;
 
-	.float stat_bugrigs;
-	.float stat_bugrigs_angle_smoothing;
-	.float stat_bugrigs_planar_movement;
-	.float stat_bugrigs_reverse_speeding;
-	.float stat_bugrigs_friction_floor;
-	.float stat_bugrigs_air_steering;
-	.float stat_bugrigs_friction_brake;
-	.float stat_bugrigs_accel;
-	.float stat_bugrigs_speed_ref;
-	.float stat_bugrigs_speed_pow;
-	.float stat_bugrigs_steer;
-	.float stat_bugrigs_friction_air;
-	.float stat_bugrigs_car_jumping;
-	.float stat_bugrigs_reverse_spinning;
-	.float stat_bugrigs_reverse_stopping;
-
 	// new properties
 	.float stat_sv_jumpvelocity;
 	.float stat_sv_airaccel_qw_stretchfactor;
@@ -303,22 +271,6 @@ bool IsFlying(entity a);
 	#define PHYS_FROZEN(s)						s.frozen
 
 	#define PHYS_DOUBLEJUMP						autocvar_sv_doublejump
-
-	#define PHYS_BUGRIGS						g_bugrigs
-	#define PHYS_BUGRIGS_ANGLE_SMOOTHING		g_bugrigs_angle_smoothing
-	#define PHYS_BUGRIGS_PLANAR_MOVEMENT		g_bugrigs_planar_movement
-	#define PHYS_BUGRIGS_REVERSE_SPEEDING		g_bugrigs_reverse_speeding
-	#define PHYS_BUGRIGS_FRICTION_FLOOR			g_bugrigs_friction_floor
-	#define PHYS_BUGRIGS_AIR_STEERING			g_bugrigs_air_steering
-	#define PHYS_BUGRIGS_FRICTION_BRAKE			g_bugrigs_friction_brake
-	#define PHYS_BUGRIGS_ACCEL					g_bugrigs_accel
-	#define PHYS_BUGRIGS_SPEED_REF				g_bugrigs_speed_ref
-	#define PHYS_BUGRIGS_SPEED_POW				g_bugrigs_speed_pow
-	#define PHYS_BUGRIGS_STEER					g_bugrigs_steer
-	#define PHYS_BUGRIGS_FRICTION_AIR			g_bugrigs_friction_air
-	#define PHYS_BUGRIGS_CAR_JUMPING			g_bugrigs_planar_movement_car_jumping
-	#define PHYS_BUGRIGS_REVERSE_SPINNING		g_bugrigs_reverse_spinning
-	#define PHYS_BUGRIGS_REVERSE_STOPPING		g_bugrigs_reverse_stopping
 
 	#define PHYS_JUMPSPEEDCAP_MIN				autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX				autocvar_sv_jumpspeedcap_max

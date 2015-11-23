@@ -747,212 +747,6 @@ float racecar_angle(float forward, float down)
 		return ret * angle_mult;
 }
 
-void RaceCarPhysics()
-{SELFPARAM();
-#ifdef SVQC
-	// using this move type for "big rigs"
-	// the engine does not push the entity!
-
-	vector rigvel;
-
-	vector angles_save = self.angles;
-	float accel = bound(-1, self.movement.x / PHYS_MAXSPEED(self), 1);
-	float steer = bound(-1, self.movement.y / PHYS_MAXSPEED(self), 1);
-
-	if (g_bugrigs_reverse_speeding)
-	{
-		if (accel < 0)
-		{
-			// back accel is DIGITAL
-			// to prevent speedhack
-			if (accel < -0.5)
-				accel = -1;
-			else
-				accel = 0;
-		}
-	}
-
-	self.angles_x = 0;
-	self.angles_z = 0;
-	makevectors(self.angles); // new forward direction!
-
-	if (IS_ONGROUND(self) || g_bugrigs_air_steering)
-	{
-		float myspeed = self.velocity * v_forward;
-		float upspeed = self.velocity * v_up;
-
-		// responsiveness factor for steering and acceleration
-		float f = 1 / (1 + pow(max(-myspeed, myspeed) / g_bugrigs_speed_ref, g_bugrigs_speed_pow));
-		//MAXIMA: f(v) := 1 / (1 + (v / g_bugrigs_speed_ref) ^ g_bugrigs_speed_pow);
-
-		float steerfactor;
-		if (myspeed < 0 && g_bugrigs_reverse_spinning)
-			steerfactor = -myspeed * g_bugrigs_steer;
-		else
-			steerfactor = -myspeed * f * g_bugrigs_steer;
-
-		float accelfactor;
-		if (myspeed < 0 && g_bugrigs_reverse_speeding)
-			accelfactor = g_bugrigs_accel;
-		else
-			accelfactor = f * g_bugrigs_accel;
-		//MAXIMA: accel(v) := f(v) * g_bugrigs_accel;
-
-		if (accel < 0)
-		{
-			if (myspeed > 0)
-			{
-				myspeed = max(0, myspeed - PHYS_INPUT_TIMELENGTH * (g_bugrigs_friction_floor - g_bugrigs_friction_brake * accel));
-			}
-			else
-			{
-				if (!g_bugrigs_reverse_speeding)
-					myspeed = min(0, myspeed + PHYS_INPUT_TIMELENGTH * g_bugrigs_friction_floor);
-			}
-		}
-		else
-		{
-			if (myspeed >= 0)
-			{
-				myspeed = max(0, myspeed - PHYS_INPUT_TIMELENGTH * g_bugrigs_friction_floor);
-			}
-			else
-			{
-				if (g_bugrigs_reverse_stopping)
-					myspeed = 0;
-				else
-					myspeed = min(0, myspeed + PHYS_INPUT_TIMELENGTH * (g_bugrigs_friction_floor + g_bugrigs_friction_brake * accel));
-			}
-		}
-		// terminal velocity = velocity at which 50 == accelfactor, that is, 1549 units/sec
-		//MAXIMA: friction(v) := g_bugrigs_friction_floor;
-
-		self.angles_y += steer * PHYS_INPUT_TIMELENGTH * steerfactor; // apply steering
-		makevectors(self.angles); // new forward direction!
-
-		myspeed += accel * accelfactor * PHYS_INPUT_TIMELENGTH;
-
-		rigvel = myspeed * v_forward + '0 0 1' * upspeed;
-	}
-	else
-	{
-		float myspeed = vlen(self.velocity);
-
-		// responsiveness factor for steering and acceleration
-		float f = 1 / (1 + pow(max(0, myspeed / g_bugrigs_speed_ref), g_bugrigs_speed_pow));
-		float steerfactor = -myspeed * f;
-		self.angles_y += steer * PHYS_INPUT_TIMELENGTH * steerfactor; // apply steering
-
-		rigvel = self.velocity;
-		makevectors(self.angles); // new forward direction!
-	}
-
-	rigvel *= max(0, 1 - vlen(rigvel) * g_bugrigs_friction_air * PHYS_INPUT_TIMELENGTH);
-	//MAXIMA: airfriction(v) := v * v * g_bugrigs_friction_air;
-	//MAXIMA: total_acceleration(v) := accel(v) - friction(v) - airfriction(v);
-	//MAXIMA: solve(total_acceleration(v) = 0, v);
-
-	if (g_bugrigs_planar_movement)
-	{
-		vector rigvel_xy, neworigin, up;
-		float mt;
-
-		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY; // 4x gravity plays better
-		rigvel_xy = vec2(rigvel);
-
-		if (g_bugrigs_planar_movement_car_jumping)
-			mt = MOVE_NORMAL;
-		else
-			mt = MOVE_NOMONSTERS;
-
-		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 1024', mt, self);
-		up = trace_endpos - self.origin;
-
-		// BUG RIGS: align the move to the surface instead of doing collision testing
-		// can we move?
-		tracebox(trace_endpos, self.mins, self.maxs, trace_endpos + rigvel_xy * PHYS_INPUT_TIMELENGTH, mt, self);
-
-		// align to surface
-		tracebox(trace_endpos, self.mins, self.maxs, trace_endpos - up + '0 0 1' * rigvel_z * PHYS_INPUT_TIMELENGTH, mt, self);
-
-		if (trace_fraction < 0.5)
-		{
-			trace_fraction = 1;
-			neworigin = self.origin;
-		}
-		else
-			neworigin = trace_endpos;
-
-		if (trace_fraction < 1)
-		{
-			// now set angles_x so that the car points parallel to the surface
-			self.angles = vectoangles(
-					'1 0 0' * v_forward_x * trace_plane_normal_z
-					+
-					'0 1 0' * v_forward_y * trace_plane_normal_z
-					+
-					'0 0 1' * -(v_forward_x * trace_plane_normal_x + v_forward_y * trace_plane_normal_y)
-					);
-			SET_ONGROUND(self);
-		}
-		else
-		{
-			// now set angles_x so that the car points forward, but is tilted in velocity direction
-			UNSET_ONGROUND(self);
-		}
-
-		self.velocity = (neworigin - self.origin) * (1.0 / PHYS_INPUT_TIMELENGTH);
-		self.movetype = MOVETYPE_NOCLIP;
-	}
-	else
-	{
-		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY; // 4x gravity plays better
-		self.velocity = rigvel;
-		self.movetype = MOVETYPE_FLY;
-	}
-
-	trace_fraction = 1;
-	tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 4', MOVE_NORMAL, self);
-	if (trace_fraction != 1)
-	{
-		self.angles = vectoangles2(
-				'1 0 0' * v_forward_x * trace_plane_normal_z
-				+
-				'0 1 0' * v_forward_y * trace_plane_normal_z
-				+
-				'0 0 1' * -(v_forward_x * trace_plane_normal_x + v_forward_y * trace_plane_normal_y),
-				trace_plane_normal
-				);
-	}
-	else
-	{
-		vector vel_local;
-
-		vel_local_x = v_forward * self.velocity;
-		vel_local_y = v_right * self.velocity;
-		vel_local_z = v_up * self.velocity;
-
-		self.angles_x = racecar_angle(vel_local_x, vel_local_z);
-		self.angles_z = racecar_angle(-vel_local_y, vel_local_z);
-	}
-
-	// smooth the angles
-	vector vf1, vu1, smoothangles;
-	makevectors(self.angles);
-	float f = bound(0, PHYS_INPUT_TIMELENGTH * g_bugrigs_angle_smoothing, 1);
-	if (f == 0)
-		f = 1;
-	vf1 = v_forward * f;
-	vu1 = v_up * f;
-	makevectors(angles_save);
-	vf1 = vf1 + v_forward * (1 - f);
-	vu1 = vu1 + v_up * (1 - f);
-	smoothangles = vectoangles2(vf1, vu1);
-	self.angles_x = -smoothangles_x;
-	self.angles_z =  smoothangles_z;
-#endif
-}
-
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
 void SpecialCommand()
@@ -1750,7 +1544,7 @@ void PM_Main(entity this)
 	}
 
 #ifdef SVQC
-	if (!this.fixangle && !g_bugrigs)
+	if (!this.fixangle)
 		this.angles = '0 1 0' * this.v_angle.y;
 #endif
 
@@ -1773,10 +1567,8 @@ void PM_Main(entity this)
 		}
 	}
 
-#ifdef SVQC
-	else if (g_bugrigs && IS_PLAYER(this))
-		RaceCarPhysics();
-#endif
+	else if (MUTATOR_CALLHOOK(PM_Physics, maxspeed_mod))
+		{ }
 
 	else if (this.movetype == MOVETYPE_NOCLIP || this.movetype == MOVETYPE_FLY || this.movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
 		PM_fly(maxspeed_mod);

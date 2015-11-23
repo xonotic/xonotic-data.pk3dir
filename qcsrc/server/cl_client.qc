@@ -1199,7 +1199,7 @@ void ClientConnect ()
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET(TUBA)))
+		if(g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 
