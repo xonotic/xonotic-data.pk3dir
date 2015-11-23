@@ -685,8 +685,6 @@ void CheckWaterJump()
 	#define JETPACK_JUMP(s)	autocvar_cl_jetpack_jump
 #endif
 .float jetpack_stopped;
-// Hack: shouldn't need to know about this
-.float multijump_count;
 void CheckPlayerJump()
 {SELFPARAM();
 #ifdef SVQC
@@ -697,7 +695,7 @@ void CheckPlayerJump()
 
 	if(PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self))
 	{
-		float air_jump = !PlayerJump() || self.multijump_count > 0; // PlayerJump() has important side effects
+		float air_jump = !PlayerJump() || player_multijump; // PlayerJump() has important side effects
 		float activate = JETPACK_JUMP(self) && air_jump && PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_JETPACK(self);
 		float has_fuel = !PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(self) || ITEMS_STAT(self) & IT_UNLIMITED_WEAPON_AMMO;
 
