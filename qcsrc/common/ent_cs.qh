@@ -40,7 +40,14 @@ void entcs_detach(entity e);
 
 #ifdef CSQC
 
-entity entcs_receiver[255]; // 255 is the engine limit on maxclients
+AL_declare(_entcs);
+STATIC_INIT(_entcs)
+{
+    AL_init(_entcs, 255, NULL, e); // 255 is the engine limit on maxclients
+}
+#define entcs_receiver(...) EVAL(OVERLOAD(entcs_receiver, __VA_ARGS__))
+#define entcs_receiver_1(i) AL_gete(_entcs, i)
+#define entcs_receiver_2(i, v) AL_sete(_entcs, i, v)
 #define entcs_is_self(e) ((e).sv_entnum + 1 == player_localentnum)
 
 #endif

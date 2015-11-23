@@ -360,7 +360,7 @@ float TrueAimCheck()
 			break;
 	}
 
-	vector traceorigin = entcs_receiver[player_localentnum - 1].origin + (eZ * getstati(STAT_VIEWHEIGHT));
+	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * getstati(STAT_VIEWHEIGHT));
 
 	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
 

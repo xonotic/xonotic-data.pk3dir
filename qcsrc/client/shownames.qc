@@ -168,7 +168,7 @@ void Draw_ShowNames_All()
 {
 	if (!autocvar_hud_shownames) return;
 	LL_EACH(shownames_ent, true, LAMBDA(
-		entity entcs = entcs_receiver[i];
+		entity entcs = entcs_receiver(i);
 		if (!entcs) continue;
 		if (entcs.m_entcs_private)
 		{

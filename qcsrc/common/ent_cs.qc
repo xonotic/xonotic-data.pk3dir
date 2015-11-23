@@ -116,7 +116,7 @@
 	void Ent_RemoveEntCS()
 	{
 		SELFPARAM();
-		entcs_receiver[this.sv_entnum] = NULL;
+		entcs_receiver(this.sv_entnum, NULL);
 	}
 
 	void entcs_think()
@@ -160,7 +160,7 @@
 		#define X(public, fld, sv, cl) { if (sf & BIT(i)) cl; } i += 1;
 		ENTCS_NETPROPS(X);
 	#undef X
-		entcs_receiver[this.sv_entnum] = this;
+		entcs_receiver(this.sv_entnum, this);
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
 		return true;
