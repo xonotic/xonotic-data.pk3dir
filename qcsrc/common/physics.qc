@@ -1687,16 +1687,6 @@ void PM_Main(entity this)
 
 	MUTATOR_CALLHOOK(PlayerPhysics);
 
-//	float forcedodge = 1;
-//	if(forcedodge) {
-//#ifdef CSQC
-//		PM_dodging_checkpressedkeys();
-//#endif
-//		PM_dodging();
-//		PM_ClientMovement_Move();
-//		return;
-//	}
-
 #ifdef SVQC
 	if (!IS_PLAYER(this))
 	{
