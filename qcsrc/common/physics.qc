@@ -912,22 +912,6 @@ void PM_check_blocked()
 #endif
 }
 
-void PM_check_vortex()
-{SELFPARAM();
-#ifdef SVQC
-	// WEAPONTODO
-	float xyspeed = vlen(vec2(self.velocity));
-	if (self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
-	{
-		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
-	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
-		float f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
-		// add the extra charge
-		self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
-	}
-#endif
-}
-
 void PM_fly(float maxspd_mod)
 {SELFPARAM();
 	// noclipping or flying
@@ -1587,8 +1571,6 @@ void PM_Main(entity this)
 
 	else
 		PM_air(buttons_prev, maxspeed_mod);
-
-	PM_check_vortex();
 
 :end
 	if (IS_ONGROUND(this))
