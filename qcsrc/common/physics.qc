@@ -547,11 +547,8 @@ bool PlayerJump ()
 	player_jumpheight = mjumpheight;
 #endif
 
-	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight)
-#ifdef CSQC
-		|| PM_multijump_checkjump()
-#endif
-		) { return true; }
+	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight))
+		return true;
 
 	doublejump = player_multijump;
 	mjumpheight = player_jumpheight;
@@ -1688,12 +1685,7 @@ void PM_Main(entity this)
 	if (this.conveyor.state)
 		this.velocity -= this.conveyor.movedir;
 
-#ifdef SVQC
 	MUTATOR_CALLHOOK(PlayerPhysics);
-#endif
-#ifdef CSQC
-	PM_multijump();
-#endif
 
 //	float forcedodge = 1;
 //	if(forcedodge) {

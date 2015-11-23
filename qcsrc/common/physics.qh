@@ -29,9 +29,6 @@ bool IsFlying(entity a);
 	const int FL_WATERJUMP = 2048;	// player jumping out of water
 	const int FL_JUMPRELEASED = 4096;	// for jump debouncing
 
-	float PM_multijump_checkjump();
-	void PM_multijump();
-
 	.float watertype;
 	.float waterlevel;
 	.int items;
