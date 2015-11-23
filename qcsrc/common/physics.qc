@@ -73,9 +73,6 @@ void Physics_AddStats()
 	addstat(STAT_MOVEVARS_CL_TRACK_CANJUMP, AS_INT, cvar_cl_movement_track_canjump);
 	addstat(STAT_MOVEVARS_TRACK_CANJUMP, AS_INT, stat_sv_track_canjump);
 
-	// double jump
-	addstat(STAT_DOUBLEJUMP, AS_INT, stat_doublejump);
-
 	// jump speed caps
 	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, AS_INT, stat_jumpspeedcap_disable_onramps);
 
@@ -128,8 +125,6 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_sv_airspeedlimit_nonqw = Physics_ClientOption(self, "airspeedlimit_nonqw") * maxspd_mod;
 	self.stat_sv_maxspeed = Physics_ClientOption(self, "maxspeed") * maxspd_mod; // also slow walking
 	self.stat_movement_highspeed = PHYS_HIGHSPEED; // TODO: remove this!
-
-	self.stat_doublejump = PHYS_DOUBLEJUMP;
 
 	self.stat_jetpack_antigravity = PHYS_JETPACK_ANTIGRAVITY;
 	self.stat_jetpack_accel_up = PHYS_JETPACK_ACCEL_UP;
@@ -542,31 +537,12 @@ bool PlayerJump ()
 
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY;
-#ifdef CSQC
-	player_multijump = doublejump;
-	player_jumpheight = mjumpheight;
-#endif
 
 	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight))
 		return true;
 
 	doublejump = player_multijump;
 	mjumpheight = player_jumpheight;
-
-	if (PHYS_DOUBLEJUMP)
-	{
-		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
-		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
-		{
-			doublejump = true;
-
-			// we MUST clip velocity here!
-			float f;
-			f = self.velocity * trace_plane_normal;
-			if (f < 0)
-				self.velocity -= f * trace_plane_normal;
-		}
-	}
 
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{

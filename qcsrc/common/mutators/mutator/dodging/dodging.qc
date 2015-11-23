@@ -285,10 +285,6 @@ void PM_dodging(entity this)
 
 		this.velocity += PHYS_DODGING_UP_SPEED * v_up;
 
-	#ifdef CSQC
-		LOG_INFO("YES?!\n");
-	#endif
-
 #ifdef SVQC
 		if (autocvar_sv_dodging_sound)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);

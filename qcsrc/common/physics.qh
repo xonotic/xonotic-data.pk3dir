@@ -99,8 +99,6 @@ bool IsFlying(entity a);
 
 	#define PHYS_FROZEN(s)						getstati(STAT_FROZEN)
 
-	#define PHYS_DOUBLEJUMP						getstati(STAT_DOUBLEJUMP)
-
 	#define PHYS_JUMPSPEEDCAP_MIN				cvar_string("cl_jumpspeedcap_min")
 	#define PHYS_JUMPSPEEDCAP_MAX				cvar_string("cl_jumpspeedcap_max")
 	#define PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS	getstati(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS)
@@ -171,8 +169,6 @@ bool IsFlying(entity a);
 
 	.float stat_sv_friction_on_land;
 	.float stat_sv_friction_slick;
-
-	.float stat_doublejump;
 
 	.string stat_jumpspeedcap_min;
 	.string stat_jumpspeedcap_max;
@@ -269,8 +265,6 @@ bool IsFlying(entity a);
 	#define PHYS_AMMO_FUEL(s)					s.ammo_fuel
 
 	#define PHYS_FROZEN(s)						s.frozen
-
-	#define PHYS_DOUBLEJUMP						autocvar_sv_doublejump
 
 	#define PHYS_JUMPSPEEDCAP_MIN				autocvar_sv_jumpspeedcap_min
 	#define PHYS_JUMPSPEEDCAP_MAX				autocvar_sv_jumpspeedcap_max

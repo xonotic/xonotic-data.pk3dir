@@ -15,6 +15,7 @@
 #include "mutator/cloaked/module.inc"
 #include "mutator/damagetext/module.inc"
 #include "mutator/dodging/module.inc"
+#include "mutator/doublejump/module.inc"
 #include "mutator/hook/module.inc"
 #include "mutator/instagib/module.inc"
 #include "mutator/invincibleproj/module.inc"
