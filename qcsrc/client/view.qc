@@ -443,7 +443,7 @@ bool WantEventchase()
 			return true;
 		if(MUTATOR_CALLHOOK(WantEventchase, self))
 			return true;
-		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_NEXBALL.m_id)))
+		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
 		{

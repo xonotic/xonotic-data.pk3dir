@@ -53,7 +53,7 @@
 
 // WEAPON PLUGIN SYSTEM
 
-WepSet WepSet_FromWeapon(int a) {
+WepSet _WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
 	if (Weapons_MAX > 24)
 	if (a >= 24) {

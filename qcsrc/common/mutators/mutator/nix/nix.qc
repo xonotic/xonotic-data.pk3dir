@@ -83,7 +83,7 @@ bool NIX_CanChooseWeapon(int wpn)
 		return false;
 	if(g_weaponarena)
 	{
-		if(!(g_weaponarena_weapons & WepSet_FromWeapon(wpn)))
+		if(!(g_weaponarena_weapons & e.m_wepset))
 			return false;
 	}
 	else
@@ -166,8 +166,7 @@ void NIX_GiveCurrentWeapon()
 		else
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		Weapon w = get_weaponinfo(nix_weapon);
-		w.wr_resetplayer(w);
+		e.wr_resetplayer(e);
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
@@ -209,7 +208,7 @@ void NIX_GiveCurrentWeapon()
 	self.weapons = '0 0 0';
 	if(g_nix_with_blaster)
 		self.weapons |= WEPSET(BLASTER);
-	self.weapons |= WepSet_FromWeapon(nix_weapon);
+	self.weapons |= e.m_wepset;
 
 	if(self.switchweapon != nix_weapon)
 		if(!client_hasweapon(self, self.switchweapon, true, false))
