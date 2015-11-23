@@ -8,8 +8,6 @@
 
 #include "../lib/csqcmodel/cl_model.qh"
 
-entity shownames_ent[255];
-
 // self.isactive = player is in range and coordinates/status (health and armor) are up to date
 // self.origin = player origin
 // self.healthvalue
@@ -23,7 +21,6 @@ const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
 void Draw_ShowNames(entity this)
 {
-	if (!autocvar_hud_shownames) return;
 	if (this.sv_entnum == player_localentnum)  // self or spectatee
 		if (!(autocvar_hud_shownames_self && autocvar_chase_active)) return;
 	if (!this.sameteam && !autocvar_hud_shownames_enemies) return;
@@ -155,32 +152,39 @@ void Draw_ShowNames(entity this)
 	}
 }
 
-void Draw_ShowNames_All()
+LinkedList shownames_ent;
+STATIC_INIT(shownames_ent)
 {
+	shownames_ent = LL_NEW();
 	for (int i = 0; i < maxclients; ++i)
 	{
-		entity e = shownames_ent[i];
-		if (!e)
-		{
-			e = shownames_ent[i] = new(shownames_tag);
-			e.sv_entnum = i + 1;
-		}
+		entity e = new(shownames_tag);
+		e.sv_entnum = i + 1;
+		LL_PUSH(shownames_ent, e);
+	}
+}
+
+void Draw_ShowNames_All()
+{
+	if (!autocvar_hud_shownames) return;
+	LL_EACH(shownames_ent, true, LAMBDA(
 		entity entcs = entcs_receiver[i];
+		if (!entcs) continue;
 		if (entcs.m_entcs_private)
 		{
-			e.healthvalue = entcs.healthvalue;
-			e.armorvalue = entcs.armorvalue;
-			e.sameteam = true;
+			it.healthvalue = entcs.healthvalue;
+			it.armorvalue = entcs.armorvalue;
+			it.sameteam = true;
 		}
 		else
 		{
-			e.healthvalue = 0;
-			e.armorvalue = 0;
-			e.sameteam = false;
+			it.healthvalue = 0;
+			it.armorvalue = 0;
+			it.sameteam = false;
 		}
 		bool dead = getplayerisdead(i);
-		if (!e.csqcmodel_isdead && entcs.has_origin) setorigin(e, entcs.origin);
-		e.csqcmodel_isdead = dead;
-		Draw_ShowNames(e);
-	}
+		if (!it.csqcmodel_isdead && entcs.has_origin) setorigin(it, entcs.origin);
+		it.csqcmodel_isdead = dead;
+		Draw_ShowNames(it);
+	));
 }
