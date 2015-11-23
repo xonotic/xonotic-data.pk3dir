@@ -35,7 +35,7 @@
 #include "../../common/viewloc.qh"
 
 float autocvar_cl_movement_errorcompensation = 0;
-int autocvar_cl_movement = 1;
+bool autocvar_cl_movement = true;
 
 // engine stuff
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
@@ -144,11 +144,8 @@ void PM_Movement_Move(entity this)
 
 void CSQCPlayer_Physics(entity this)
 {
-	switch (autocvar_cl_movement)
-	{
-		case 1: CSQC_ClientMovement_PlayerMove_Frame(this); break;
-		case 2: PM_Movement_Move(this); break;
-	}
+	if(autocvar_cl_movement)
+		CSQC_ClientMovement_PlayerMove_Frame(this);
 }
 
 void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
