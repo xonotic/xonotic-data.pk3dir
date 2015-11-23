@@ -752,12 +752,8 @@ string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 void SpecialCommand()
 {
 #ifdef SVQC
-#ifdef TETRIS
-	TetrisImpulse();
-#else
 	if (!CheatImpulse(99))
 		LOG_INFO("A hollow voice says \"Plugh\".\n");
-#endif
 #endif
 }
 
