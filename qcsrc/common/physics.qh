@@ -128,15 +128,15 @@ bool IsFlying(entity a);
 	#define PHYS_TRACK_CANJUMP(s)				getstati(STAT_MOVEVARS_TRACK_CANJUMP)
 	#define PHYS_ACCELERATE						getstatf(STAT_MOVEVARS_ACCELERATE)
 	#define PHYS_AIRACCEL_QW(s)					getstatf(STAT_MOVEVARS_AIRACCEL_QW)
-	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	getstatf(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR)
+	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, s)
 	#define PHYS_AIRACCEL_SIDEWAYS_FRICTION		getstatf(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION)
 	#define PHYS_AIRACCELERATE					getstatf(STAT_MOVEVARS_AIRACCELERATE)
 	#define PHYS_AIRCONTROL						getstatf(STAT_MOVEVARS_AIRCONTROL)
-	#define PHYS_AIRCONTROL_PENALTY				getstatf(STAT_MOVEVARS_AIRCONTROL_PENALTY)
-	#define PHYS_AIRCONTROL_POWER				getstatf(STAT_MOVEVARS_AIRCONTROL_POWER)
-	#define PHYS_AIRSPEEDLIMIT_NONQW(s)			getstatf(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW)
+	#define PHYS_AIRCONTROL_PENALTY				STAT(MOVEVARS_AIRCONTROL_PENALTY)
+	#define PHYS_AIRCONTROL_POWER				STAT(MOVEVARS_AIRCONTROL_POWER)
+	#define PHYS_AIRSPEEDLIMIT_NONQW(s)			STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, s)
 	#define PHYS_AIRSTOPACCELERATE				getstatf(STAT_MOVEVARS_AIRSTOPACCELERATE)
-	#define PHYS_AIRSTRAFEACCEL_QW(s)			getstatf(STAT_MOVEVARS_AIRSTRAFEACCEL_QW)
+	#define PHYS_AIRSTRAFEACCEL_QW(s)			STAT(MOVEVARS_AIRSTRAFEACCEL_QW, s)
 	#define PHYS_AIRSTRAFEACCELERATE(s)			getstatf(STAT_MOVEVARS_AIRSTRAFEACCELERATE)
 	#define PHYS_ENTGRAVITY(s)					STAT(MOVEVARS_ENTGRAVITY)
 	#define PHYS_FRICTION						getstatf(STAT_MOVEVARS_FRICTION)
@@ -183,8 +183,7 @@ bool IsFlying(entity a);
 	.vector stat_pl_crouch_max;
 
 	.float stat_sv_airaccel_qw;
-	.float stat_sv_airstrafeaccel_qw;
-	.float stat_sv_airspeedlimit_nonqw;
+	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed;
 	.float stat_movement_highspeed;
 
@@ -227,15 +226,12 @@ bool IsFlying(entity a);
 
 	// new properties
 	.float stat_sv_jumpvelocity;
-	.float stat_sv_airaccel_qw_stretchfactor;
 	.float stat_sv_maxairstrafespeed;
 	.float stat_sv_maxairspeed;
 	.float stat_sv_airstrafeaccelerate;
 	.float stat_sv_warsowbunny_turnaccel;
 	.float stat_sv_airaccel_sideways_friction;
 	.float stat_sv_aircontrol;
-	.float stat_sv_aircontrol_power;
-	.float stat_sv_aircontrol_penalty;
 	.float stat_sv_warsowbunny_airforwardaccel;
 	.float stat_sv_warsowbunny_topspeed;
 	.float stat_sv_warsowbunny_accel;
@@ -329,15 +325,15 @@ bool IsFlying(entity a);
 	#define PHYS_TRACK_CANJUMP(s)				s.stat_sv_track_canjump
 	#define PHYS_ACCELERATE						self.stat_sv_accelerate
 	#define PHYS_AIRACCEL_QW(s)					s.stat_sv_airaccel_qw
-	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	self.stat_sv_airaccel_qw_stretchfactor
+	#define PHYS_AIRACCEL_QW_STRETCHFACTOR(s)	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, s)
 	#define PHYS_AIRACCEL_SIDEWAYS_FRICTION		self.stat_sv_airaccel_sideways_friction
 	#define PHYS_AIRACCELERATE					self.stat_sv_airaccelerate
 	#define PHYS_AIRCONTROL						self.stat_sv_aircontrol
-	#define PHYS_AIRCONTROL_PENALTY				self.stat_sv_aircontrol_penalty
-	#define PHYS_AIRCONTROL_POWER				self.stat_sv_aircontrol_power
-	#define PHYS_AIRSPEEDLIMIT_NONQW(s)			s.stat_sv_airspeedlimit_nonqw
+	#define PHYS_AIRCONTROL_PENALTY				STAT(MOVEVARS_AIRCONTROL_PENALTY, self)
+	#define PHYS_AIRCONTROL_POWER				STAT(MOVEVARS_AIRCONTROL_POWER, self)
+	#define PHYS_AIRSPEEDLIMIT_NONQW(s)			STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, s)
 	#define PHYS_AIRSTOPACCELERATE				self.stat_sv_airstopaccelerate
-	#define PHYS_AIRSTRAFEACCEL_QW(s)			s.stat_sv_airstrafeaccel_qw
+	#define PHYS_AIRSTRAFEACCEL_QW(s)			STAT(MOVEVARS_AIRSTRAFEACCEL_QW, s)
 	#define PHYS_AIRSTRAFEACCELERATE(s)			s.stat_sv_airstrafeaccelerate
 	#define PHYS_ENTGRAVITY(s)					s.gravity
 	#define PHYS_FRICTION						self.stat_sv_friction

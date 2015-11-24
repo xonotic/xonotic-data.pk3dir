@@ -55,10 +55,8 @@ void Physics_AddStats()
 	addstat(STAT_PL_CROUCH_MAX3, AS_FLOAT, stat_pl_crouch_max_z);
 
 	// g_movementspeed hack
-	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
 	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
-	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
 	addstat(STAT_MOVEVARS_HIGHSPEED, AS_FLOAT, stat_movement_highspeed);
 
 	// jet pack
@@ -86,15 +84,12 @@ void Physics_AddStats()
 
 	// new properties
 	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
-	addstat(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, AS_FLOAT, stat_sv_airaccel_qw_stretchfactor);
 	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
 	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
 	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
 	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
 	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
-	addstat(STAT_MOVEVARS_AIRCONTROL_POWER, AS_FLOAT, stat_sv_aircontrol_power);
-	addstat(STAT_MOVEVARS_AIRCONTROL_PENALTY, AS_FLOAT, stat_sv_aircontrol_penalty);
 	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
 	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
 	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
@@ -121,11 +116,10 @@ void Physics_UpdateStats(float maxspd_mod)
 
 
 	self.stat_sv_airaccel_qw = AdjustAirAccelQW(Physics_ClientOption(self, "airaccel_qw"), maxspd_mod);
-	if(Physics_ClientOption(self, "airstrafeaccel_qw"))
-		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(Physics_ClientOption(self, "airstrafeaccel_qw"), maxspd_mod);
-	else
-		self.stat_sv_airstrafeaccel_qw = 0;
-	self.stat_sv_airspeedlimit_nonqw = Physics_ClientOption(self, "airspeedlimit_nonqw") * maxspd_mod;
+	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(self, "airstrafeaccel_qw"))
+		? AdjustAirAccelQW(Physics_ClientOption(self, "airstrafeaccel_qw"), maxspd_mod)
+		: 0;
+	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(self, "airspeedlimit_nonqw") * maxspd_mod;
 	self.stat_sv_maxspeed = Physics_ClientOption(self, "maxspeed") * maxspd_mod; // also slow walking
 	self.stat_movement_highspeed = PHYS_HIGHSPEED; // TODO: remove this!
 
@@ -148,15 +142,15 @@ void Physics_UpdateStats(float maxspd_mod)
 
 	// old stats
 	// fix some new settings
-	self.stat_sv_airaccel_qw_stretchfactor = Physics_ClientOption(self, "airaccel_qw_stretchfactor");
+	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(self, "airaccel_qw_stretchfactor");
 	self.stat_sv_maxairstrafespeed = Physics_ClientOption(self, "maxairstrafespeed");
 	self.stat_sv_maxairspeed = Physics_ClientOption(self, "maxairspeed");
 	self.stat_sv_airstrafeaccelerate = Physics_ClientOption(self, "airstrafeaccelerate");
 	self.stat_sv_warsowbunny_turnaccel = Physics_ClientOption(self, "warsowbunny_turnaccel");
 	self.stat_sv_airaccel_sideways_friction = Physics_ClientOption(self, "airaccel_sideways_friction");
 	self.stat_sv_aircontrol = Physics_ClientOption(self, "aircontrol");
-	self.stat_sv_aircontrol_power = Physics_ClientOption(self, "aircontrol_power");
-	self.stat_sv_aircontrol_penalty = Physics_ClientOption(self, "aircontrol_penalty");
+	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(self, "aircontrol_power");
+	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(self, "aircontrol_penalty");
 	self.stat_sv_warsowbunny_airforwardaccel = Physics_ClientOption(self, "warsowbunny_airforwardaccel");
 	self.stat_sv_warsowbunny_topspeed = Physics_ClientOption(self, "warsowbunny_topspeed");
 	self.stat_sv_warsowbunny_accel = Physics_ClientOption(self, "warsowbunny_accel");
