@@ -4,54 +4,18 @@
 // Full list of all stat constants, included in a single location for easy reference
 // 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
 
-const int MAX_CL_STATS                = 256;
-// -Wdouble-declaration
-// const int STAT_HEALTH                 = 0;
-// 1 empty?
-const int STAT_WEAPON                 = 2;
-// -Wdouble-declaration
-// const int STAT_AMMO                   = 3;
-// -Wdouble-declaration
-// const int STAT_ARMOR                  = 4;
-// -Wdouble-declaration
-// const int STAT_WEAPONFRAME            = 5;
-// -Wdouble-declaration
-// const int STAT_SHELLS                 = 6;
-// -Wdouble-declaration
-// const int STAT_NAILS                  = 7;
-// -Wdouble-declaration
-// const int STAT_ROCKETS                = 8;
-// -Wdouble-declaration
-// const int STAT_CELLS                  = 9;
-// -Wdouble-declaration
-// const int STAT_ACTIVEWEAPON           = 10;
-// -Wdouble-declaration
-// const int STAT_TOTALSECRETS           = 11;
-// -Wdouble-declaration
-// const int STAT_TOTALMONSTERS          = 12;
-// -Wdouble-declaration
-// const int STAT_SECRETS                = 13;
-// -Wdouble-declaration
-// const int STAT_MONSTERS               = 14;
-// -Wdouble-declaration
-// const int STAT_ITEMS                  = 15;
-// -Wdouble-declaration
-// const int STAT_VIEWHEIGHT             = 16;
-// 17 empty?
-// 18 empty?
-// 19 empty?
-// 20 empty?
-const int STAT_VIEWZOOM               = 21;
-// 22 empty?
-// 23 empty?
-// 24 empty?
-// 25 empty?
-// 26 empty?
-// 27 empty?
-// 28 empty?
-// 29 empty?
-// 30 empty?
-// 31 empty?
+const int MAX_CL_STATS = 256;
+#ifndef CSQC
+const int STAT_HEALTH = 0; // .health
+const int STAT_ARMOR = 4; // .armorvalue
+const int STAT_SHELLS = 6; // .ammo_shells
+const int STAT_NAILS = 7; // .ammo_nails
+const int STAT_ROCKETS = 8; // .ammo_rockets
+const int STAT_CELLS = 9; // .ammo_cells
+const int STAT_ACTIVEWEAPON = 10; // .weapon
+const int STAT_ITEMS = 15; // .items | .items2 << 23 | serverflags << 28
+const int STAT_VIEWHEIGHT = 16; // .view_ofs_z
+#endif
 
 enum {
     STAT_WEAPONS = 32,
@@ -89,7 +53,7 @@ enum {
     STAT_LAST_VECTOR
 };
 
-const int REGISTERED_STATS = 50;
+const int REGISTERED_STATS = 59;
 
 REGISTER_STAT(KH_KEYS, int)
 /** weapon requested to switch to; next WANTED weapon (for HUD) */
@@ -252,12 +216,24 @@ enum {
 #define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 ASSERT_LESS(stat_limit, STAT_LAST, 220)
 
+#ifdef SVQC
+void GlobalStats_update(entity e) {}
+#define STAT_GLOBAL(T, x, expr) REGISTER_STAT(x, T); [[accumulate]] void GlobalStats_update(entity e) { STAT(x, e) = (expr); }
+#include "movetypes/movetypes.qh"
+#else
+#define STAT_GLOBAL(T, x, expr) REGISTER_STAT(x, T)
+#endif
+
 const int STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR     = 220;
 const int STAT_MOVEVARS_AIRCONTROL_PENALTY            = 221;
 const int STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW           = 222;
 const int STAT_MOVEVARS_AIRSTRAFEACCEL_QW             = 223;
 const int STAT_MOVEVARS_AIRCONTROL_POWER              = 224;
-const int STAT_MOVEFLAGS                              = 225;
+noref bool autocvar_sv_gameplayfix_nogravityonground;
+STAT_GLOBAL(int, MOVEFLAGS, MOVEFLAG_VALID
+                            | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
+                            | (autocvar_sv_gameplayfix_nogravityonground ? MOVEFLAG_NOGRAVITYONGROUND : 0)
+                            | (autocvar_sv_gameplayfix_gravityunaffectedbyticrate ? MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE : 0))
 const int STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL   = 226;
 const int STAT_MOVEVARS_WARSOWBUNNY_ACCEL             = 227;
 const int STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED          = 228;
@@ -267,30 +243,23 @@ const int STAT_MOVEVARS_AIRSTOPACCELERATE             = 231;
 const int STAT_MOVEVARS_AIRSTRAFEACCELERATE           = 232;
 const int STAT_MOVEVARS_MAXAIRSTRAFESPEED             = 233;
 const int STAT_MOVEVARS_AIRCONTROL                    = 234;
-// -Wdouble-declaration
-// const int STAT_FRAGLIMIT                              = 235;
-// -Wdouble-declaration
-// const int STAT_TIMELIMIT                              = 236;
-const int STAT_MOVEVARS_WALLFRICTION                  = 237;
+STAT_GLOBAL(float, FRAGLIMIT, autocvar_fraglimit)
+STAT_GLOBAL(float, TIMELIMIT, autocvar_timelimit)
+noref float autocvar_sv_wallfriction;
+STAT_GLOBAL(int, MOVEVARS_WALLFRICTION, autocvar_sv_wallfriction)
 const int STAT_MOVEVARS_FRICTION                      = 238;
-const int STAT_MOVEVARS_WATERFRICTION                 = 239;
-// -Wdouble-declaration
-// const int STAT_MOVEVARS_TICRATE                       = 240;
-// -Wdouble-declaration
-// const int STAT_MOVEVARS_TIMESCALE                     = 241;
-// -Wdouble-declaration
-// const int STAT_MOVEVARS_GRAVITY                       = 242;
+STAT_GLOBAL(float, MOVEVARS_TICRATE, autocvar_sys_ticrate)
+STAT_GLOBAL(float, MOVEVARS_TIMESCALE, autocvar_slowmo)
+STAT_GLOBAL(float, MOVEVARS_GRAVITY, autocvar_sv_gravity)
 const int STAT_MOVEVARS_STOPSPEED                     = 243;
 const int STAT_MOVEVARS_MAXSPEED                      = 244;
-const int STAT_MOVEVARS_SPECTATORMAXSPEED             = 245;
 const int STAT_MOVEVARS_ACCELERATE                    = 246;
 const int STAT_MOVEVARS_AIRACCELERATE                 = 247;
-const int STAT_MOVEVARS_WATERACCELERATE               = 248;
-const int STAT_MOVEVARS_ENTGRAVITY                    = 249;
+.float gravity;
+STAT_GLOBAL(float, MOVEVARS_ENTGRAVITY, (e.gravity) ? e.gravity : 1)
 const int STAT_MOVEVARS_JUMPVELOCITY                  = 250;
-const int STAT_MOVEVARS_EDGEFRICTION                  = 251;
 const int STAT_MOVEVARS_MAXAIRSPEED                   = 252;
-const int STAT_MOVEVARS_STEPHEIGHT                    = 253;
+STAT_GLOBAL(float, MOVEVARS_STEPHEIGHT, autocvar_sv_stepheight)
 const int STAT_MOVEVARS_AIRACCEL_QW                   = 254;
 const int STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION    = 255;
 #endif

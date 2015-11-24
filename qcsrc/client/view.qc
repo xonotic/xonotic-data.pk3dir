@@ -1112,7 +1112,7 @@ void CSQC_UpdateView(float w, float h)
 		prev_myteam = myteam;
 	}
 
-	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	float is_dead = (getstati(STAT_HEALTH) <= 0);
 

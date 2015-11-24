@@ -100,7 +100,7 @@ void Announcer_Gamestart()
 // Plays the 1 minute or 5 minutes (of maptime) remaining sound, if client wants it
 void Announcer_Time()
 {
-	float timelimit = getstatf(STAT_TIMELIMIT);
+	float timelimit = STAT(TIMELIMIT);
 	float timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	float warmup_timeleft = 0;
 

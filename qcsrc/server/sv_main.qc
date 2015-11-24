@@ -262,6 +262,13 @@ void StartFrame()
 	bot_serverframe();
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
+	{
+        entity e;
+        FOR_EACH_CLIENT(e)
+        {
+            GlobalStats_update(e);
+        }
+    }
 }
 
 .vector originjitter;

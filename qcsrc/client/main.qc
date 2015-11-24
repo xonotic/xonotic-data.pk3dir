@@ -768,7 +768,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	else
 	{
 		serverprevtime = time;
-		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+		serverdeltatime = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 		time = serverprevtime + serverdeltatime;
 	}
 

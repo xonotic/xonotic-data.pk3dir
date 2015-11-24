@@ -1,6 +1,8 @@
 #ifndef LIB_STATS_H
 #define LIB_STATS_H
 
+// TODO: rename to 'netvars'
+
 #include "registry.qh"
 #include "sort.qh"
 
