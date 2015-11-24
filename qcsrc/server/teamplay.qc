@@ -151,9 +151,6 @@ string getwelcomemessage()
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
 
-	if (cvar("g_nades"))
-		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
-
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
 		if(cache_lastmutatormsg)

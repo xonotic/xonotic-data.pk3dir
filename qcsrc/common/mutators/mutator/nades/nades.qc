@@ -1319,5 +1319,12 @@ MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
 	ret_string = strcat(ret_string, ", Nades");
 	return false;
 }
+
+MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
+{
+	ret_string = strcat(ret_string, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
+	return false;
+}
+
 #endif
 #endif
