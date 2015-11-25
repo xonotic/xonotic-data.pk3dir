@@ -45,6 +45,10 @@ STATIC_INIT(_entcs)
 {
     AL_init(_entcs, 255, NULL, e); // 255 is the engine limit on maxclients
 }
+SHUTDOWN(_entcs)
+{
+    AL_delete(_entcs);
+}
 #define entcs_receiver(...) EVAL(OVERLOAD(entcs_receiver, __VA_ARGS__))
 #define entcs_receiver_1(i) AL_gete(_entcs, i)
 #define entcs_receiver_2(i, v) AL_sete(_entcs, i, v)

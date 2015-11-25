@@ -1340,6 +1340,7 @@ void m_shutdown()
 	{
 		shutdown_running = 1;
 		Shutdown();
+		shutdownhooks();
 	}
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }

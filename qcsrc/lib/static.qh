@@ -7,6 +7,8 @@ void __static_init_late() {}
 #define static_init_late() CALL_ACCUMULATED_FUNCTION(__static_init_late)
 void __static_init_precache() {}
 #define static_init_precache() CALL_ACCUMULATED_FUNCTION(__static_init_precache)
+void __shutdown() {}
+#define shutdownhooks() CALL_ACCUMULATED_FUNCTION(__shutdown)
 
 #define _STATIC_INIT(where, func) \
 	void _static_##func(); \
@@ -16,5 +18,6 @@ void __static_init_precache() {}
 #define STATIC_INIT(func) _STATIC_INIT(__static_init,           func)
 #define STATIC_INIT_LATE(func) _STATIC_INIT(__static_init_late, func##_late)
 #define PRECACHE(func) _STATIC_INIT(__static_init_precache,     func##_precache)
+#define SHUTDOWN(func) _STATIC_INIT(__shutdown,     			func##_shutdown)
 
 #endif

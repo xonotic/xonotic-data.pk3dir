@@ -16,6 +16,7 @@ typedef int ArrayList;
 		} \
 	} \
 	while (0)
+#define AL_delete(this) buf_del(this)
 
 #define _AL_type__s() string
 #define AL_gets(this, idx) bufstr_get(this, idx)
