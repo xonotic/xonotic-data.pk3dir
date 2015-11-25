@@ -272,7 +272,7 @@ void CSQCPlayer_SetCamera()
 		setorigin(e, e.origin);
 	}
 
-	const entity view = CSQCModel_server2csqc(player_localentnum);
+	const entity view = CSQCModel_server2csqc(player_localentnum - 1);
 	if (view)
 	{
 		if (view != csqcplayer)

@@ -52,7 +52,7 @@
 	bool entcs_send(entity this, entity to, int sf)
 	{
 		entity player = this.owner;
-		sf |= 1;
+		sf |= BIT(0) | BIT(1);
 		if (IS_PLAYER(to) || to.caplayer)                                  // unless spectating,
 		{
 			bool same_team = (to == player) || (teamplay && player.team == to.team);
@@ -123,7 +123,7 @@
 	{
 		SELFPARAM();
 		this.nextthink = time;
-		entity e = CSQCModel_server2csqc(this.sv_entnum + 1);
+		entity e = CSQCModel_server2csqc(this.sv_entnum);
 		bool exists = e != NULL;
 		if (exists)
 		{
@@ -155,7 +155,7 @@
 		InterpolateOrigin_Undo(this);
 		int sf = ReadShort();
 		this.has_sv_origin = false;
-		this.m_entcs_private = boolean(sf & 1);
+		this.m_entcs_private = boolean(sf & BIT(0));
 		int i = 1;
 		#define X(public, fld, sv, cl) { if (sf & BIT(i)) cl; } i += 1;
 		ENTCS_NETPROPS(X);

@@ -294,9 +294,13 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	return true;
 }
 
-entity CSQCModel_server2csqc(int pl)
+/**
+ * @param i zero indexed player
+ */
+entity CSQCModel_server2csqc(int i)
 {
-	if (pl <= maxclients) return CSQCModel_players[pl - 1];
-	LOG_WARNINGF("player out of bounds: %d\n", pl);
-	return findfloat(NULL, entnum, pl);
+	if (i < maxclients) return CSQCModel_players[i];
+	++i;
+	LOG_WARNINGF("player out of bounds: %d\n", i);
+	return findfloat(NULL, entnum, i);
 }

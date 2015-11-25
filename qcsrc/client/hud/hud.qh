@@ -150,9 +150,6 @@ float current_player;
 
 float stringwidth_colors(string s, vector theSize);
 float stringwidth_nocolors(string s, vector theSize);
-float GetPlayerColorForce(int i);
-int GetPlayerColor(int i);
-string GetPlayerName(int i);
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
 
 .int panel_showflags;

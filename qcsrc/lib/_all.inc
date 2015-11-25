@@ -52,7 +52,6 @@
 #include "noise.qc"
 #include "oo.qh"
 #include "p2mathlib.qc"
-#include "player.qh"
 #include "progname.qh"
 #include "random.qc"
 #include "registry.qh"

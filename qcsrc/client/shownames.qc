@@ -53,9 +53,7 @@ void Draw_ShowNames(entity this)
 	if (autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
-		LL_EACH(shownames_ent, true, LAMBDA(
-			entity entcs = entcs_receiver(i);
-			if (!entcs || it == this) continue;
+		LL_EACH(shownames_ent, it != this && entcs_receiver(i), LAMBDA(
 			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;

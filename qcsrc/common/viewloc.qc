@@ -76,7 +76,7 @@ void viewloc_SetTags()
 vector old_camera_angle = '0 0 0';
 void viewloc_SetViewLocation()
 {
-	entity view = CSQCModel_server2csqc(player_localentnum);
+	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 	if (!view) return;
 	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
