@@ -76,7 +76,7 @@ void getAllHUDSkins(entity me, string subdir)
 		s = "*";
 	s = strcat(subdir, "hud_", s, ".cfg");
 	float strlen_subdir = strlen(subdir);
-	string zoned_subdir = strzone(subdir);
+	subdir = strzone(subdir);
 
 	float list, i, n;
 	list = search_begin(s, false, true);
@@ -86,15 +86,15 @@ void getAllHUDSkins(entity me, string subdir)
 		int bufsize = buf_getsize(me.listHUDSkin);
 		for(i = 0; i < n; ++i)
 		{
-			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH, zoned_subdir);
+			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH, subdir);
 			s = search_getfilename(list, i); // get initial full file name
 			s = substring(s, strlen_subdir + 4, (strlen(s) - strlen_subdir - 4 - 4)); // remove "hud_" prefix and ".cfg" suffix
 			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_NAME, s);
 		}
 		search_end(list);
 	}
-	if(zoned_subdir)
-		strunzone(zoned_subdir);
+	if(subdir)
+		strunzone(subdir);
 }
 
 void XonoticHUDSkinList_getHUDSkins(entity me)
