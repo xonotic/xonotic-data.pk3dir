@@ -109,7 +109,7 @@ bool PM_multijump_checkjump(entity this)
 		{
 			if (!PHYS_MULTIJUMP_ADD) // in this case we make the z velocity == jumpvelocity
 			{
-				if (this.velocity_z < PHYS_JUMPVELOCITY)
+				if (this.velocity_z < PHYS_JUMPVELOCITY(this))
 				{
 					player_multijump = true;
 					this.velocity_z = 0;

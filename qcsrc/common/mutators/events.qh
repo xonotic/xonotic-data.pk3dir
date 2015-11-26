@@ -65,7 +65,10 @@ MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
  * called before any player physics, may adjust variables for movement,
  * is run AFTER bot code and idle checking on the server
  */
-MUTATOR_HOOKABLE(PlayerPhysics, EV_NO_ARGS);
+#define EV_PlayerPhysics(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
 
 /** called when a player presses the jump key */
 #define EV_PlayerJump(i, o) \
@@ -80,6 +83,7 @@ MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
 
 /** called during player physics, allows adjusting the movement type used */
 #define EV_PM_Physics(i, o) \
+    /**/ i(entity, __self) \
     /**/ i(float, pm_maxspeed_mod) \
     /**/
 float pm_maxspeed_mod;

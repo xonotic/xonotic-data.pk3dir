@@ -133,32 +133,32 @@ void playerdemo_read_float(.float f, string name)
 {SELFPARAM();
 	self.(f) = stof(fgets(self.playerdemo_fh));
 }
-float playerdemo_read()
-{SELFPARAM();
-	if(self.playerdemo_mode != PLAYERDEMO_MODE_READING)
+float playerdemo_read(entity this)
+{
+	if(this.playerdemo_mode != PLAYERDEMO_MODE_READING)
 		return 0;
-	if(self.playerdemo_time < 0)
+	if(this.playerdemo_time < 0)
 		return 1;
 	float t;
 	t = time;
-	while(time >= self.playerdemo_time)
+	while(time >= this.playerdemo_time)
 	{
 		PLAYERDEMO_FIELDS(playerdemo_read_)
 		{
-			time = self.playerdemo_time;
-			PlayerPreThink();
+			time = this.playerdemo_time;
+			WITH(entity, this, this, PlayerPreThink());
 			// not running physics though... this is just so we can run weapon stuff
-			PlayerPostThink();
+			WITH(entity, this, this, PlayerPostThink());
 		}
-		self.playerdemo_time = stof(fgets(self.playerdemo_fh));
-		if(self.playerdemo_time == 0)
+		this.playerdemo_time = stof(fgets(this.playerdemo_fh));
+		if(this.playerdemo_time == 0)
 		{
-			self.playerdemo_time = -1;
+			this.playerdemo_time = -1;
 			return 1;
 		}
-		self.playerdemo_time += self.playerdemo_starttime;
+		this.playerdemo_time += this.playerdemo_starttime;
 	}
-	self.velocity = '0 0 0';
+	this.velocity = '0 0 0';
 	time = t;
 	return 1;
 }

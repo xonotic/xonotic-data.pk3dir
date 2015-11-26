@@ -9,52 +9,52 @@
 #endif
 
 // client movement
-void viewloc_PlayerPhysics()
-{SELFPARAM();
-	if(self.viewloc)
+void viewloc_PlayerPhysics(entity this)
+{
+	if(this.viewloc)
 	{
-		vector oldmovement = self.movement;
-		self.movement_x = oldmovement_y;
-		self.movement_y = 0;
+		vector oldmovement = this.movement;
+		this.movement_x = oldmovement_y;
+		this.movement_y = 0;
 
-		if(self.movement_x < 0)
-			self.movement_x = -self.movement_x;
+		if(this.movement_x < 0)
+			this.movement_x = -this.movement_x;
 
 		vector level_start, level_end;
-		level_start = self.viewloc.enemy.origin;
-		level_end = self.viewloc.goalentity.origin;
+		level_start = this.viewloc.enemy.origin;
+		level_end = this.viewloc.goalentity.origin;
 		vector forward, backward;
 		forward = vectoangles(normalize(level_end - level_start));
 		backward = vectoangles(normalize(level_start - level_end));
 
-		if(self.movement_x < 0) // left
-			self.angles_y = backward_y;
-		if(self.movement_x > 0) // right
-			self.angles_y = forward_y;
+		if(this.movement_x < 0) // left
+			this.angles_y = backward_y;
+		if(this.movement_x > 0) // right
+			this.angles_y = forward_y;
 
 		if(oldmovement_x > 0)
 #ifdef CSQC
 			input_angles_x =
 #endif
-			self.v_angle_x = self.angles_x = -50;
+			this.v_angle_x = this.angles_x = -50;
 		else if(oldmovement_x < 0)
 #ifdef CSQC
 			input_angles_x =
 #endif
-			self.v_angle_x = self.angles_x = 50;
+			this.v_angle_x = this.angles_x = 50;
 
-		//if(!PHYS_INPUT_BUTTON_CROUCH(self) && !IS_DUCKED(self))
+		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
 #ifdef SVQC
-			//self.BUTTON_CROUCH = (oldmovement_x < 0);
+			//this.BUTTON_CROUCH = (oldmovement_x < 0);
 			if (oldmovement.x < 0)
-				self.BUTTON_CROUCH = true;
+				this.BUTTON_CROUCH = true;
 #elif defined(CSQC)
 			if (oldmovement.x < 0)
 			{
 				input_buttons |= BIT(4);
-				self.flags |= FL_DUCKED;
+				this.flags |= FL_DUCKED;
 			}
-			//else { input_buttons &= ~16; self.flags &= ~FL_DUCKED; }
+			//else { input_buttons &= ~16; this.flags &= ~FL_DUCKED; }
 #endif
 	}
 }
