@@ -541,7 +541,7 @@ bool PlayerJump(entity this)
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY(this);
 
-	if (MUTATOR_CALLHOOK(PlayerJump, doublejump, mjumpheight))
+	if (MUTATOR_CALLHOOK(PlayerJump, this, doublejump, mjumpheight))
 		return true;
 
 	doublejump = player_multijump;

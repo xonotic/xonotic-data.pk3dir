@@ -72,6 +72,7 @@ MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
 
 /** called when a player presses the jump key */
 #define EV_PlayerJump(i, o) \
+    /**/ i(entity, __self) \
     /**/ i(float, player_multijump) \
     /**/ i(float, player_jumpheight) \
     /**/ o(float, player_multijump) \
