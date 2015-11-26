@@ -11,6 +11,8 @@ CLASS(XonoticHUDSkinList, XonoticListBox)
 	METHOD(XonoticHUDSkinList, setHUDSkin, void(entity));
 	METHOD(XonoticHUDSkinList, hudskinName, string(entity, float));
 	METHOD(XonoticHUDSkinList, hudskinPath, string(entity, float));
+	METHOD(XonoticHUDSkinList, hudskinTitle, string(entity, float));
+	METHOD(XonoticHUDSkinList, hudskinAuthor, string(entity, float));
 	METHOD(XonoticHUDSkinList, doubleClickListBoxItem, void(entity, float, vector));
 	METHOD(XonoticHUDSkinList, keyDown, float(entity, float, float, float));
 	METHOD(XonoticHUDSkinList, destroy, void(entity));
@@ -57,7 +59,9 @@ void XonoticHUDSkinList_configureXonoticHUDSkinList(entity me)
 
 const float HUDSKINPARM_NAME = 0;
 const float HUDSKINPARM_PATH = 1;
-const float HUDSKINPARM_COUNT = 2;
+const float HUDSKINPARM_TITLE = 2;
+const float HUDSKINPARM_AUTHOR = 3;
+const float HUDSKINPARM_COUNT = 4;
 string XonoticHUDSkinList_hudskinName(entity me, float i)
 {
 	return bufstr_get(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_NAME);
@@ -65,6 +69,14 @@ string XonoticHUDSkinList_hudskinName(entity me, float i)
 string XonoticHUDSkinList_hudskinPath(entity me, float i)
 {
 	return bufstr_get(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH);
+}
+string XonoticHUDSkinList_hudskinTitle(entity me, float i)
+{
+	return bufstr_get(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_TITLE);
+}
+string XonoticHUDSkinList_hudskinAuthor(entity me, float i)
+{
+	return bufstr_get(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_AUTHOR);
 }
 
 void getAllHUDSkins(entity me, string subdir)
@@ -82,14 +94,28 @@ void getAllHUDSkins(entity me, string subdir)
 	list = search_begin(s, false, true);
 	if(list >= 0)
 	{
+		string filename;
 		n = search_getsize(list);
 		int bufsize = buf_getsize(me.listHUDSkin);
 		for(i = 0; i < n; ++i)
 		{
 			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH, subdir);
-			s = search_getfilename(list, i); // get initial full file name
-			s = substring(s, strlen_subdir + 4, (strlen(s) - strlen_subdir - 4 - 4)); // remove "hud_" prefix and ".cfg" suffix
+			filename = search_getfilename(list, i);
+			s = substring(filename, strlen_subdir + 4, (strlen(filename) - strlen_subdir - 4 - 4)); // remove "hud_" prefix and ".cfg" suffix
 			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_NAME, s);
+
+			int fh = fopen(filename, FILE_READ);
+			if(fh < 0)
+				continue;
+			while((s = fgets(fh)) && substring(s, 0, 2) == "//")
+			{
+				tokenize_console(substring(s, 2, -1));
+				if(argv(0) == "title")
+					bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_TITLE, argv(1));
+				else if(argv(0) == "author")
+					bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_AUTHOR, argv(1));
+			}
+			fclose(fh);
 		}
 		search_end(list);
 	}
@@ -133,7 +159,7 @@ void XonoticHUDSkinList_resizeNotify(entity me, vector relOrigin, vector relSize
 
 void XonoticHUDSkinList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
-	string s;
+	string s, s2;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	else if(isFocused)
@@ -142,7 +168,12 @@ void XonoticHUDSkinList_drawListBoxItem(entity me, int i, vector absSize, bool i
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
 
-	s = me.hudskinName(me,i);
+	s = me.hudskinTitle(me, i);
+	if(s == "")
+		s = me.hudskinName(me, i);
+	s2 = me.hudskinAuthor(me, i);
+	if(s2 != "")
+		s = strcat(s, " (", s2, ")");
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_TEXT, SKINALPHA_TEXT, 1);
 }
