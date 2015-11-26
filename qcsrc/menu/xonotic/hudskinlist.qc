@@ -195,7 +195,7 @@ void XonoticHUDSkinList_draw(entity me)
 void XonoticHUDSkinList_setHUDSkin(entity me)
 {
 	string cfg = strcat(me.hudskinPath(me, me.selectedItem), "hud_", me.hudskinName(me, me.selectedItem), ".cfg");
-	localcmd("exec ", cfg, "\n");
+	localcmd("exec \"", cfg, "\"\n");
 }
 
 void SetHUDSkin_Click(entity btn, entity me)
