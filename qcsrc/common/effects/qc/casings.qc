@@ -52,7 +52,7 @@ void Casing_Draw(entity this)
         self.flags &= ~FL_ONGROUND;
     }
 
-    Movetype_Physics_MatchTicrate(autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
+    Movetype_Physics_MatchTicrate(self, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
     if (wasfreed(self))
         return; // deleted by touch function
 

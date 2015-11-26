@@ -33,7 +33,7 @@ void ItemDraw(entity self)
 {
     if(self.gravity)
     {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
         if(self.move_flags & FL_ONGROUND)
         { // For some reason move_avelocity gets set to '0 0 0' here ...
             self.oldorigin = self.origin;
@@ -69,7 +69,7 @@ void ItemDrawSimple(entity this)
 {
     if(self.gravity)
     {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
 
         if(self.move_flags & FL_ONGROUND)
             self.gravity = 0;

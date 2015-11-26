@@ -353,7 +353,7 @@ void RaceCarPhysics(entity this)
 	this.angles_x = -smoothangles_x;
 	this.angles_z =  smoothangles_z;
 
-	PM_ClientMovement_Move();
+	PM_ClientMovement_Move(this);
 }
 
 #ifdef SVQC

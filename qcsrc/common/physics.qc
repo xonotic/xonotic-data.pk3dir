@@ -292,9 +292,14 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		pmove_waterjumptime = 0;
 }
 
-void PM_ClientMovement_Move()
-{SELFPARAM();
+void PM_ClientMovement_Move(entity this)
+{
 #ifdef CSQC
+
+	PM_ClientMovement_UpdateStatus(this, false);
+	if(autocvar_cl_movement == 3)
+		return;
+
 	int bump;
 	float t;
 	float f;
@@ -313,13 +318,11 @@ void PM_ClientMovement_Move()
 	vector trace2_plane_normal = '0 0 0';
 	vector trace3_plane_normal = '0 0 0';
 
-
-	PM_ClientMovement_UpdateStatus(this, false);
-	primalvelocity = self.velocity;
-	for(bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && (self.velocity * self.velocity) > 0; bump++)
+	primalvelocity = this.velocity;
+	for(bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && (this.velocity * this.velocity) > 0; bump++)
 	{
-		neworigin = self.origin + t * self.velocity;
-		tracebox(self.origin, self.mins, self.maxs, neworigin, MOVE_NORMAL, self);
+		neworigin = this.origin + t * this.velocity;
+		tracebox(this.origin, this.mins, this.maxs, neworigin, MOVE_NORMAL, this);
 		trace1_endpos = trace_endpos;
 		trace1_fraction = trace_fraction;
 		trace1_plane_normal = trace_plane_normal;
@@ -327,11 +330,11 @@ void PM_ClientMovement_Move()
 		{
 			// may be a step or wall, try stepping up
 			// first move forward at a higher level
-			currentorigin2 = self.origin;
+			currentorigin2 = this.origin;
 			currentorigin2_z += PHYS_STEPHEIGHT;
 			neworigin2 = neworigin;
 			neworigin2_z += PHYS_STEPHEIGHT;
-			tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+			tracebox(currentorigin2, this.mins, this.maxs, neworigin2, MOVE_NORMAL, this);
 			trace2_endpos = trace_endpos;
 			trace2_fraction = trace_fraction;
 			trace2_plane_normal = trace_plane_normal;
@@ -340,8 +343,8 @@ void PM_ClientMovement_Move()
 				// then move down from there
 				currentorigin2 = trace2_endpos;
 				neworigin2 = trace2_endpos;
-				neworigin2_z = self.origin_z;
-				tracebox(currentorigin2, self.mins, self.maxs, neworigin2, MOVE_NORMAL, self);
+				neworigin2_z = this.origin_z;
+				tracebox(currentorigin2, this.mins, this.maxs, neworigin2, MOVE_NORMAL, this);
 				trace3_endpos = trace_endpos;
 				trace3_fraction = trace_fraction;
 				trace3_plane_normal = trace_plane_normal;
@@ -358,7 +361,7 @@ void PM_ClientMovement_Move()
 
 		// check if it moved at all
 		if(trace1_fraction >= 0.001)
-			setorigin(self, trace1_endpos);
+			setorigin(this, trace1_endpos);
 
 		// check if it moved all the way
 		if(trace1_fraction == 1)
@@ -369,15 +372,15 @@ void PM_ClientMovement_Move()
 		// this got commented out in a change that supposedly makes the code match QW better
 		// so if this is broken, maybe put it in an if(cls.protocol != PROTOCOL_QUAKEWORLD) block
 		if(trace1_plane_normal_z > 0.7)
-			SET_ONGROUND(self);
+			SET_ONGROUND(this);
 
 		t -= t * trace1_fraction;
 
-		f = (self.velocity * trace1_plane_normal);
-		self.velocity = self.velocity + -f * trace1_plane_normal;
+		f = (this.velocity * trace1_plane_normal);
+		this.velocity = this.velocity + -f * trace1_plane_normal;
 	}
 	if(pmove_waterjumptime > 0)
-		self.velocity = primalvelocity;
+		this.velocity = primalvelocity;
 #endif
 }
 
@@ -888,7 +891,7 @@ void PM_fly(float maxspd_mod)
 	if (time >= self.teleport_time)
 #endif
 		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
-	PM_ClientMovement_Move();
+	PM_ClientMovement_Move(self);
 }
 
 void PM_swim(float maxspd_mod)
@@ -971,7 +974,7 @@ void PM_swim(float maxspd_mod)
 	}
 	// water acceleration
 	PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE * maxspd_mod, 1, 0, 0, 0);
-	PM_ClientMovement_Move();
+	PM_ClientMovement_Move(self);
 }
 
 void PM_ladder(float maxspd_mod)
@@ -1024,7 +1027,7 @@ void PM_ladder(float maxspd_mod)
 #endif
 		// water acceleration
 		PM_Accelerate(wishdir, wishspeed, wishspeed, PHYS_ACCELERATE*maxspd_mod, 1, 0, 0, 0);
-	PM_ClientMovement_Move();
+	PM_ClientMovement_Move(self);
 }
 
 void PM_jetpack(float maxspd_mod)
@@ -1132,14 +1135,20 @@ void PM_jetpack(float maxspd_mod)
 
 #ifdef CSQC
 	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
-	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-		self.velocity_z -= g * 0.5;
-	else
-		self.velocity_z -= g;
-	PM_ClientMovement_Move();
-	if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
+	if(autocvar_cl_movement != 3)
+	{
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			self.velocity_z -= g * 0.5;
+		else
+			self.velocity_z -= g;
+	}
+	PM_ClientMovement_Move(self);
+	if(autocvar_cl_movement != 3)
+	{
+		if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
+			if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+				self.velocity_z -= g * 0.5;
+	}
 #endif
 }
 
@@ -1215,14 +1224,22 @@ void PM_walk(entity this, float maxspd_mod)
 		const float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
 		this.velocity += accelspeed * wishdir;
 	}
+#ifdef CSQC
 	const float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(this) * PHYS_INPUT_TIMELENGTH;
-	if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
-		this.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
+	if(autocvar_cl_movement != 3)
+	{
+		if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
+			this.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
+	}
 	if (vdist(this.velocity, >, 0))
-		PM_ClientMovement_Move();
-	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-		if (!IS_ONGROUND(this) || !GAMEPLAYFIX_NOGRAVITYONGROUND)
-			this.velocity_z -= g * 0.5;
+		PM_ClientMovement_Move(self);
+	if(autocvar_cl_movement != 3)
+	{
+		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+			if (!IS_ONGROUND(this) || !GAMEPLAYFIX_NOGRAVITYONGROUND)
+				this.velocity_z -= g * 0.5;
+	}
+#endif
 }
 
 void PM_air(float buttons_prev, float maxspd_mod)
@@ -1287,15 +1304,21 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		if (PHYS_AIRCONTROL)
 			CPM_PM_Aircontrol(wishdir, wishspeed2);
 	}
+#ifdef CSQC
 	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
+	if(autocvar_cl_movement != 3)
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		self.velocity_z -= g * 0.5;
 	else
 		self.velocity_z -= g;
-	PM_ClientMovement_Move();
+#endif
+	PM_ClientMovement_Move(self);
+#ifdef CSQC
+	if(autocvar_cl_movement != 3)
 	if (!IS_ONGROUND(self) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			self.velocity_z -= g * 0.5;
+#endif
 }
 
 // used for calculating airshots

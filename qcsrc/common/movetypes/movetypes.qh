@@ -45,27 +45,27 @@ float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 .float move_suspendedinair;
 .float move_didgravity;
 
-void _Movetype_WallFriction(vector stepnormal);
-int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float stepheight);
-void _Movetype_CheckVelocity();
+void _Movetype_WallFriction(entity this, vector stepnormal);
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight);
+void _Movetype_CheckVelocity(entity this);
 void _Movetype_CheckWaterTransition(entity ent);
 float _Movetype_CheckWater(entity ent);
-void _Movetype_LinkEdict_TouchAreaGrid();
-void _Movetype_LinkEdict(float touch_triggers);
-float _Movetype_TestEntityPosition(vector ofs);
-float _Movetype_UnstickEntity();
+void _Movetype_LinkEdict_TouchAreaGrid(entity this);
+void _Movetype_LinkEdict(entity this, float touch_triggers);
+float _Movetype_TestEntityPosition(entity this, vector ofs);
+float _Movetype_UnstickEntity(entity this);
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
-void _Movetype_PushEntityTrace(vector push);
-float _Movetype_PushEntity(vector push, float failonstartsolid);
+void _Movetype_PushEntityTrace(entity this, vector push);
+float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);
 void makevectors_matrix(vector myangles);
 
-void Movetype_Physics_MatchTicrate(float tr, bool sloppy);
-void Movetype_Physics_MatchServer(bool sloppy);
-void Movetype_Physics_NoMatchServer();
-void _Movetype_LinkEdict(float touch_triggers);
-void _Movetype_LinkEdict_TouchAreaGrid();
+void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy);
+void Movetype_Physics_MatchServer(entity this, bool sloppy);
+void Movetype_Physics_NoMatchServer(entity this);
+void _Movetype_LinkEdict(entity this, float touch_triggers);
+void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 
-float _Movetype_UnstickEntity();
+float _Movetype_UnstickEntity(entity this);
 
 const int MAX_CLIP_PLANES = 5;
 

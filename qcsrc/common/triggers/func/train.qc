@@ -244,7 +244,7 @@ spawnfunc(func_train)
 void train_draw(entity this)
 {
 	//Movetype_Physics_NoMatchServer();
-	Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+	Movetype_Physics_MatchServer(this, autocvar_cl_projectiles_sloppy);
 }
 
 NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)

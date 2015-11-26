@@ -35,7 +35,6 @@
 #include "../../common/viewloc.qh"
 
 float autocvar_cl_movement_errorcompensation = 0;
-bool autocvar_cl_movement = true;
 
 // engine stuff
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
@@ -130,22 +129,36 @@ void CSQCPlayer_SavePrediction(entity this)
 }
 
 void CSQC_ClientMovement_PlayerMove_Frame(entity this);
+void _Movetype_Physics_Frame(entity this, float movedt);
 
-void PM_Movement_Move(entity this)
+void Movetype_Physics_Spam(entity this)  // optimized
 {
-	runstandardplayerphysics(this);
-#ifdef CSQC
-	this.flags =
-			((this.pmove_flags & PMF_DUCKED) ? FL_DUCKED : 0) |
-			(!(this.pmove_flags & PMF_JUMP_HELD) ? FL_JUMPRELEASED : 0) |
-			((this.pmove_flags & PMF_ONGROUND) ? FL_ONGROUND : 0);
-#endif
+	_Movetype_Physics_Frame(this, PHYS_INPUT_TIMELENGTH);
+	if(wasfreed(this))
+		return;
+
+	this.avelocity = this.move_avelocity;
+	this.velocity = this.move_velocity;
+	this.angles = this.move_angles;
+	setorigin(this, this.move_origin);
 }
 
 void CSQCPlayer_Physics(entity this)
 {
 	if(autocvar_cl_movement)
+	{
 		CSQC_ClientMovement_PlayerMove_Frame(this);
+
+		if(autocvar_cl_movement == 3)
+		{
+			this.move_origin = this.origin;
+			this.move_angles = this.angles;
+			this.move_movetype = MOVETYPE_WALK; // temp
+			this.move_velocity = this.velocity;
+			this.move_avelocity = this.avelocity;
+			Movetype_Physics_Spam(this);
+		}
+	}
 }
 
 void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
