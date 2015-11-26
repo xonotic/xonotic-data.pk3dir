@@ -313,7 +313,7 @@ void trigger_push_findtarget()
 	}
 
 	trigger_push_link();
-	defer(0.1, trigger_push_updatelink);
+	defer(self, 0.1, trigger_push_updatelink);
 #endif
 }
 

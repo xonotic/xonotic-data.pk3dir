@@ -141,9 +141,8 @@ void HUD_Weapons()
 		int nHidden = 0;
 		WepSet weapons_stat = WepSet_GetFromStat();
 		for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-			WepSet weapons_wep = WepSet_FromWeapon(i);
-			if (weapons_stat & weapons_wep) continue;
 			Weapon w = get_weaponinfo(i);
+			if (weapons_stat & w.m_wepset) continue;
 			if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
 		}
 		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, padded_panel_size, aspect);

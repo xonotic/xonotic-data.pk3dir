@@ -1,29 +1,5 @@
 #include "anglestransform.qh"
 
-#ifdef POSITIVE_PITCH_IS_DOWN
-vector fixedvectoangles(vector a)
-{
-	vector ang;
-	ang = vectoangles(a);
-	ang.x = -ang.x;
-	return ang;
-}
-vector fixedvectoangles2(vector a, vector b)
-{
-	vector ang;
-	ang = vectoangles2(a, b);
-	ang.x = -ang.x;
-	return ang;
-}
-#else
-void fixedmakevectors(vector a)
-{
-	// a makevectors that actually inverts vectoangles
-	a.x = -a.x;
-	makevectors(a);
-}
-#endif
-
 // angles transforms
 // angles in fixedmakevectors/fixedvectoangles space
 vector AnglesTransform_Apply(vector transform, vector v)
@@ -148,7 +124,7 @@ vector AnglesTransform_CancelRoll(vector t)
 	return t;
 }
 
-#ifdef POSITIVE_PITCH_IS_DOWN
+#if POSITIVE_PITCH_IS_DOWN
 vector AnglesTransform_ApplyToAngles(vector transform, vector v)
 {
 	v.x = -v.x;

@@ -16,8 +16,8 @@ float mean_evaluate(entity e, .float a, .float c, float mean)
 	else return pow(e.(a) / e.(c), 1.0 / mean);
 }
 
-#define MEAN_ACCUMULATE(prefix, v, w) mean_accumulate(self, prefix##_accumulator, prefix##_count, prefix##_mean, v, w)
-#define MEAN_EVALUATE(prefix) mean_evaluate(self, prefix##_accumulator, prefix##_count, prefix##_mean)
+#define MEAN_ACCUMULATE(s, prefix, v, w) mean_accumulate(s, prefix##_accumulator, prefix##_count, prefix##_mean, v, w)
+#define MEAN_EVALUATE(s, prefix) mean_evaluate(s, prefix##_accumulator, prefix##_count, prefix##_mean)
 #define MEAN_DECLARE(prefix, m) float prefix##_mean = m; .float prefix##_count, prefix##_accumulator
 
 /** Returns a random number between -1.0 and 1.0 */

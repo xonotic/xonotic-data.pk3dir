@@ -154,55 +154,42 @@ spawnfunc(trigger_music)
 }
 #elif defined(CSQC)
 
+entity TargetMusic_list;
+STATIC_INIT(TargetMusic_list)
+{
+	TargetMusic_list = LL_NEW();
+}
+
 void TargetMusic_Advance()
 {
 	// run AFTER all the thinks!
-	entity best, e;
-	float vol, vol0;
-	best = music_default;
-	if(music_target && time < music_target.lifetime)
-		best = music_target;
-	if(music_trigger)
-		best = music_trigger;
-	for(e = world; (e = findfloat(e, enttype, NET_ENT_CLIENT_TRIGGER_MUSIC.m_id)); ) if(e.noise)
-	{
-		vol0 = e.lastvol;
-		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
-		{
-			vol0 = -1;
-		}
-		if(e == best)
+	entity best = music_default;
+	if (music_target && time < music_target.lifetime) best = music_target;
+	if (music_trigger) best = music_trigger;
+	LL_EACH(TargetMusic_list, it.noise, LAMBDA(
+		const float vol0 = (getsoundtime(it, CH_BGM_SINGLE) >= 0) ? it.lastvol : -1;
+		if (it == best)
 		{
 			// increase volume
-			if(e.fade_time > 0)
-				e.state = bound(0, e.state + frametime / e.fade_time, 1);
-			else
-				e.state = 1;
+			it.state = (it.fade_time > 0) ? bound(0, it.state + frametime / it.fade_time, 1) : 1;
 		}
 		else
 		{
 			// decrease volume
-			if(e.fade_rate > 0)
-				e.state = bound(0, e.state - frametime / e.fade_rate, 1);
-			else
-				e.state = 0;
+			it.state = (it.fade_rate > 0) ? bound(0, it.state - frametime / it.fade_rate, 1) : 0;
 		}
-		vol = e.state * e.volume * autocvar_bgmvolume;
-		if(vol != vol0)
+		const float vol = it.state * it.volume * autocvar_bgmvolume;
+		if (vol != vol0)
 		{
 			if(vol0 < 0)
-				_sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
+				_sound(it, CH_BGM_SINGLE, it.noise, vol, ATTEN_NONE); // restart
 			else
-				_sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
-			e.lastvol = vol;
+				_sound(it, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
+			it.lastvol = vol;
 		}
-	}
+	));
 	music_trigger = world;
-
-	if(best)
-		bgmtime = getsoundtime(best, CH_BGM_SINGLE);
-	else
-		bgmtime = gettime(GETTIME_CDTRACK);
+	bgmtime = (best) ? getsoundtime(best, CH_BGM_SINGLE) : gettime(GETTIME_CDTRACK);
 }
 
 NET_HANDLE(TE_CSQC_TARGET_MUSIC, bool isNew)
@@ -213,23 +200,19 @@ NET_HANDLE(TE_CSQC_TARGET_MUSIC, bool isNew)
 
 void Net_TargetMusic()
 {
-	int id = ReadShort();
-	float vol = ReadByte() / 255.0;
-	float fai = ReadByte() / 16.0;
-	float fao = ReadByte() / 16.0;
-	float tim = ReadByte();
-	string noi = ReadString();
+	const int id = ReadShort();
+	const float vol = ReadByte() / 255.0;
+	const float fai = ReadByte() / 16.0;
+	const float fao = ReadByte() / 16.0;
+	const float tim = ReadByte();
+	const string noi = ReadString();
 
-	entity e;
-	for(e = world; (e = findfloat(e, enttype, NET_ENT_CLIENT_TRIGGER_MUSIC.m_id)); )
+	entity e = NULL;
+	LL_EACH(TargetMusic_list, it.count == id, LAMBDA(e = it; break));
+	if (!e)
 	{
-		if(e.count == id)
-			break;
-	}
-	if(!e)
-	{
-		e = spawn();
-		e.enttype = NET_ENT_CLIENT_TRIGGER_MUSIC.m_id;
+		LL_PUSH(TargetMusic_list, e = new(TargetMusic));
+		make_pure(e);
 		e.count = id;
 	}
 	if(e.noise != noi)

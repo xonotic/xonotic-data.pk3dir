@@ -38,6 +38,8 @@ REGISTER_WEAPON(SPIDER_ATTACK, NEW(SpiderAttack));
 
 #ifdef SVQC
 
+.float spider_slowness; // effect time of slowness inflicted by spiders
+
 .float spider_web_delay;
 
 float autocvar_g_monster_spider_attack_web_damagetime;
@@ -49,6 +51,41 @@ float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
 
 void M_Spider_Attack_Web();
+
+REGISTER_MUTATOR(spiderweb, true);
+
+MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
+{
+	if (time >= self.spider_slowness)
+		return false;
+	PHYS_MAXSPEED(self) *= 0.5; // half speed while slow from spider
+	PHYS_MAXAIRSPEED(self) *= 0.5;
+	PHYS_AIRSPEEDLIMIT_NONQW(self) *= 0.5;
+	PHYS_AIRSTRAFEACCELERATE(self) *= 0.5;
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
+{
+	if(time < self.spider_slowness)
+	{
+		monster_speed_run *= 0.5;
+		monster_speed_walk *= 0.5;
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
+{
+	self.spider_slowness = 0;
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
+{
+	self.spider_slowness = 0;
+	return false;
+}
 
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire)) {

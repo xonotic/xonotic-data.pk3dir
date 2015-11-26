@@ -124,7 +124,7 @@ spawnfunc(func_plat)
 #elif defined(CSQC)
 void plat_draw(entity this)
 {
-	Movetype_Physics_NoMatchServer();
+	Movetype_Physics_NoMatchServer(this);
 	//Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 

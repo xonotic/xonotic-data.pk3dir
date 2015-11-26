@@ -188,8 +188,7 @@ void CSQCModel_Draw()
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
-	if(!CSQCPlayer_IsLocalPlayer())
-		InterpolateOrigin_Do();
+	if (!CSQCPlayer_IsLocalPlayer(this)) InterpolateOrigin_Do(this);
 
 	CSQCModel_InterpolateAnimation_Do();
 
@@ -209,34 +208,47 @@ void CSQCModel_Draw()
 	self.csqcmodel_teleported = 0;
 }
 
+entity CSQCModel_players[255]; // 255 is engine limit on maxclients
+
+void CSQCModel_remove()
+{
+	SELFPARAM();
+	CSQCModel_players[this.entnum - 1] = NULL;
+}
+
 NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 {
 	int sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	bool islocalplayer = (self.entnum == player_localnum + 1);
-	noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	bool isplayer = (this.entnum >= 1 && this.entnum <= maxclients);
+	if (isnew && isplayer)
+	{
+		CSQCModel_players[this.entnum - 1] = this;
+		this.entremove = CSQCModel_remove;
+	}
+	bool islocalplayer = (this.entnum == player_localnum + 1);
+	noref bool isnolocalplayer = (isplayer && (this.entnum != player_localnum + 1));
 
-	self.classname = "csqcmodel";
-	self.iflags |= IFLAG_ORIGIN; // interpolate origin too
-	self.iflags |= IFLAG_ANGLES; // interpolate angles too
-	self.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
+	this.classname = "csqcmodel";
+	this.iflags |= IFLAG_ORIGIN; // interpolate origin too
+	this.iflags |= IFLAG_ANGLES; // interpolate angles too
+	this.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
 
 	{ CSQCMODEL_HOOK_PREUPDATE }
 
-	CSQCPlayer_PreUpdate();
-	InterpolateOrigin_Undo();
+	CSQCPlayer_PreUpdate(this);
+	InterpolateOrigin_Undo(this);
 	CSQCModel_InterpolateAnimation_PreNote(sf);
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	if(sf & flag) \
-		self.f = r();
+		this.f = r();
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	if(sf & flag) \
-		self.f = (r() + mi) / s;
+		this.f = (r() + mi) / s;
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
@@ -245,44 +257,50 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
 	{
-		vector pmin = self.mins, pmax = self.maxs;
-		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
-		setsize(self, pmin, pmax);
+		vector pmin = this.mins, pmax = this.maxs;
+		setmodelindex(this, this.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
+		setsize(this, pmin, pmax);
 	}
 
 	if(sf & CSQCMODEL_PROPERTY_TELEPORTED)
 	{
-		self.iflags |= IFLAG_TELEPORTED;
-		self.csqcmodel_teleported = 1;
+		this.iflags |= IFLAG_TELEPORTED;
+		this.csqcmodel_teleported = 1;
 	}
 
 	CSQCModel_InterpolateAnimation_Note(sf);
-	InterpolateOrigin_Note();
-	CSQCPlayer_PostUpdate();
+	InterpolateOrigin_Note(this);
+	CSQCPlayer_PostUpdate(this);
 
 	{ CSQCMODEL_HOOK_POSTUPDATE }
 
 #ifdef CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(this);
 	CSQCModel_InterpolateAnimation_Do();
 #endif
 
 	// relink
-	setorigin(self, self.origin);
+	setorigin(this, this.origin);
 
 	// set obvious render flags
-	if(self.entnum == player_localentnum)
-		self.renderflags |= RF_EXTERNALMODEL;
+	if(this.entnum == player_localentnum)
+		this.renderflags |= RF_EXTERNALMODEL;
 	else
-		self.renderflags &= ~RF_EXTERNALMODEL;
+		this.renderflags &= ~RF_EXTERNALMODEL;
 
 	// draw it
-	self.drawmask = MASK_NORMAL;
-	self.predraw = CSQCModel_Draw;
+	this.drawmask = MASK_NORMAL;
+	this.predraw = CSQCModel_Draw;
 	return true;
 }
 
-entity CSQCModel_server2csqc(float pl)
+/**
+ * @param i zero indexed player
+ */
+entity CSQCModel_server2csqc(int i)
 {
-	return findfloat(world, entnum, pl); // FIXME optimize this using an array
+	if (i < maxclients) return CSQCModel_players[i];
+	++i;
+	LOG_WARNINGF("player out of bounds: %d\n", i);
+	return findfloat(NULL, entnum, i);
 }

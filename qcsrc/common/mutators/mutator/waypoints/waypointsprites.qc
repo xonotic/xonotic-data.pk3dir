@@ -122,7 +122,7 @@ void Ent_WaypointSprite()
 
     self.draw2d = Draw_WaypointSprite;
 
-    InterpolateOrigin_Undo();
+    InterpolateOrigin_Undo(self);
     self.iflags |= IFLAG_ORIGIN;
 
     if (sendflags & 0x80)
@@ -211,7 +211,7 @@ void Ent_WaypointSprite()
             self.helpme += servertime;
     }
 
-    InterpolateOrigin_Note();
+    InterpolateOrigin_Note(this);
 
     self.entremove = Ent_RemoveWaypointSprite;
 }
@@ -467,7 +467,7 @@ void Draw_WaypointSprite(entity this)
         if (autocvar_cl_hidewaypoints)
             return; // fixed waypoint
 
-    InterpolateOrigin_Do();
+    InterpolateOrigin_Do(self);
 
     float t = GetPlayerColor(player_localnum) + 1;
 

@@ -155,7 +155,6 @@ string autocvar_g_ban_sync_uri;
 string autocvar_g_banned_list;
 bool autocvar_g_banned_list_idmode;
 bool autocvar_g_botclip_collisions;
-bool autocvar_g_bugrigs;
 bool autocvar_g_campaign;
 #define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
 int autocvar_g_campaign_skill;
@@ -347,7 +346,6 @@ string autocvar_sv_defaultplayermodel_red;
 string autocvar_sv_defaultplayermodel_yellow;
 int autocvar_sv_defaultplayerskin;
 bool autocvar_sv_dodging_frozen;
-bool autocvar_sv_doublejump;
 bool autocvar_sv_eventlog;
 bool autocvar_sv_eventlog_console;
 bool autocvar_sv_eventlog_files;

@@ -174,7 +174,7 @@ void havocbot_ai()
 			for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				entity e = get_weaponinfo(i);
-				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
+				if ((self.weapons & (e.m_wepset)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
 					self.switchweapon = i;
 			}
 		}

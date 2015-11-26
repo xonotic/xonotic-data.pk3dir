@@ -97,7 +97,7 @@ void ImpulseCommands ()
 		// weapon switching impulses
 		if(self.deadflag == DEAD_NO)
 			W_NextWeaponOnImpulse(imp);
-		//else
+		//else // don't retry, as this can break weaplast bind
 		//	self.impulse = imp; // retry in next frame
 	}
 	else if(imp >= 10 && imp <= 20)
@@ -145,7 +145,7 @@ void ImpulseCommands ()
 					break;
 			}
 		}
-		//else
+		//else // don't retry, as this can break weaplast bind
 			//self.impulse = imp; // retry in next frame
 	}
 	else if(imp == 21)
@@ -162,7 +162,7 @@ void ImpulseCommands ()
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
 		}
-		//else
+		//else // don't retry, as this can break weaplast bind
 			//self.impulse = imp; // retry in next frame
 	}
 	else if(imp >= WEP_IMPULSE_BEGIN && imp <= WEP_IMPULSE_END)
@@ -170,7 +170,7 @@ void ImpulseCommands ()
 		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
 			W_SwitchWeapon (imp - WEP_IMPULSE_BEGIN + WEP_FIRST);
-		//else
+		//else // don't retry, as this can break weaplast bind
 			//self.impulse = imp; // retry in next frame
 	}
 	// deploy waypoints

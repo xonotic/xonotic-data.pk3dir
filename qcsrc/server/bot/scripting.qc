@@ -1198,7 +1198,7 @@ float bot_execute_commands_once()
 	}
 
 	// Keep pressing keys raised by the "presskey" command
-	ispressingkey = !!bot_presskeys();
+	ispressingkey = boolean(bot_presskeys());
 
 	// Handle conditions
 	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))

@@ -332,7 +332,7 @@ void HUD_MinigameMenu_ClickCurrentGame()
 // Whether the minigame menu panel is open
 bool HUD_MinigameMenu_IsOpened()
 {
-	return !!HUD_MinigameMenu_entries;
+	return HUD_MinigameMenu_entries != NULL;
 }
 
 // Close the minigame menu panel

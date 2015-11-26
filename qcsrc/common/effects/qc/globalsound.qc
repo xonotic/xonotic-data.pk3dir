@@ -68,7 +68,7 @@
 			float r = ReadByte() / 255;
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
-			entity e = entcs_receiver[who - 1];
+			entity e = entcs_receiver(who - 1);
 			int chan = ReadByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
@@ -98,7 +98,7 @@
 			entity ps = PlayerSounds_from(ReadByte());
 			float r = ReadByte() / 255;
 			int who = ReadByte();
-			entity e = entcs_receiver[who - 1];
+			entity e = entcs_receiver(who - 1);
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);

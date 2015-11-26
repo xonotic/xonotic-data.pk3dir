@@ -577,13 +577,10 @@ spawnfunc(worldspawn)
 
 	compressShortVector_init();
 
-	entity head;
-	head = nextent(world);
 	maxclients = 0;
-	while(head)
+	for (entity head = nextent(world); head; head = nextent(head))
 	{
 		++maxclients;
-		head = nextent(head);
 	}
 
 	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
@@ -1771,46 +1768,6 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		WinningConditionHelper_topscore && limitreached,
 		WinningConditionHelper_equality
 	);
-}
-
-float WinningCondition_Race(float fraglimit)
-{
-	float wc;
-	entity p;
-	float n, c;
-
-	n = 0;
-	c = 0;
-	FOR_EACH_PLAYER(p)
-	{
-		++n;
-		if(p.race_completed)
-			++c;
-	}
-	if(n && (n == c))
-		return WINNING_YES;
-	wc = WinningCondition_Scores(fraglimit, 0);
-
-	// ALWAYS initiate overtime, unless EVERYONE has finished the race!
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	// do NOT support equality when the laps are all raced!
-		return WINNING_STARTSUDDENDEATHOVERTIME;
-	else
-		return WINNING_NEVER;
-}
-
-float WinningCondition_QualifyingThenRace(float limit)
-{
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
-
-	// NEVER initiate overtime
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	{
-		return WINNING_YES;
-	}
-
-	return wc;
 }
 
 float WinningCondition_RanOutOfSpawns()

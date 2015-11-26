@@ -661,7 +661,7 @@ void checkpoint_passed()
 		other.race_checkpoint = race_NextCheckpoint(self.race_checkpoint);
 		other.race_started = 1;
 
-		race_SendTime(other, self.race_checkpoint, other.race_movetime, !!other.race_laptime);
+		race_SendTime(other, self.race_checkpoint, other.race_movetime, boolean(other.race_laptime));
 
 		if(!self.race_checkpoint) // start line
 		{

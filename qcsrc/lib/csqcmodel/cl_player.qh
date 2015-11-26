@@ -22,6 +22,8 @@
 #ifndef LIB_CSQCMODEL_CL_PLAYER_H
 #define LIB_CSQCMODEL_CL_PLAYER_H
 
+int autocvar_cl_movement = 1;
+
 entity csqcplayer;
 float csqcplayer_status;
 const int CSQCPLAYERSTATUS_UNPREDICTED = 0;
@@ -37,7 +39,7 @@ const int PMF_JUMP_HELD = 1;
 const int FL_DUCKED = 524288;
 
 void CSQCPlayer_SetCamera();
-float CSQCPlayer_PreUpdate();
-float CSQCPlayer_PostUpdate();
-float CSQCPlayer_IsLocalPlayer();
+float CSQCPlayer_PreUpdate(entity this);
+float CSQCPlayer_PostUpdate(entity this);
+float CSQCPlayer_IsLocalPlayer(entity this);
 #endif

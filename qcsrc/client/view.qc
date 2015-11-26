@@ -13,6 +13,7 @@
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
+#include "../common/physics.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
@@ -359,7 +360,7 @@ float TrueAimCheck()
 			break;
 	}
 
-	vector traceorigin = entcs_receiver[player_localentnum - 1].origin + (eZ * getstati(STAT_VIEWHEIGHT));
+	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * getstati(STAT_VIEWHEIGHT));
 
 	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
 
@@ -442,7 +443,7 @@ bool WantEventchase()
 			return true;
 		if(MUTATOR_CALLHOOK(WantEventchase, self))
 			return true;
-		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_NEXBALL.m_id)))
+		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 			return true;
 		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
 		{
@@ -975,7 +976,7 @@ void HUD_Crosshair()
 					wcross_color = stov(autocvar_crosshair_dot_color);
 
 				CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
-				// FIXME why don't we use wcross_alpha here?cl_notice_run();
+				// FIXME why don't we use wcross_alpha here?
 				wcross_color = wcross_color_old;
 			}
 		}
@@ -1052,9 +1053,7 @@ float oldr_novis;
 float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
-const int BUTTON_3 = 4;
-const int BUTTON_4 = 8;
-float cl_notice_run();
+void cl_notice_run();
 float prev_myteam;
 int lasthud;
 float vh_notice_time;
@@ -1091,8 +1090,8 @@ void CSQC_UpdateView(float w, float h)
 	else
 		view_quality = 1;
 
-	button_attack2 = (input_buttons & BUTTON_3);
-	button_zoom = (input_buttons & BUTTON_4);
+	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(self);
+	button_zoom = PHYS_INPUT_BUTTON_ZOOM(self);
 
 	vf_size = getpropertyvec(VF_SIZE);
 	vf_min = getpropertyvec(VF_MIN);
@@ -1500,9 +1499,7 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	for(entity e = NULL; (e = nextent(e)); ) if (e.draw) {
-		WITH(entity, self, e, e.draw(e));
-	}
+	FOREACH_ENTITY(it.draw, LAMBDA(WITH(entity, self, it, it.draw(it))));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -1832,9 +1829,7 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	for (entity e = NULL; (e = nextent(e)); ) if (e.draw2d) {
-		WITH(entity, self, e, e.draw2d(e));
-	}
+	FOREACH_ENTITY(it.draw2d, LAMBDA(WITH(entity, self, it, it.draw2d(it))));
 	Draw_ShowNames_All();
 	Debug_Draw();
 

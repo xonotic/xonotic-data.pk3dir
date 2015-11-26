@@ -33,7 +33,6 @@ int monsters_killed;
 
 // other properties
 .bool monster_attack; // indicates whether an entity can be attacked by monsters
-.float spider_slowness; // effect time of slowness inflicted by spiders
 
 // monster state declarations
 const int MONSTER_MOVE_FOLLOW = 1; // monster will follow if in range, or stand still

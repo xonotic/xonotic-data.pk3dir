@@ -15,7 +15,7 @@
 
 #elif defined(CSQC)
 
-	void _Movetype_LinkEdict(float touch_triggers);
+	void _Movetype_LinkEdict(entity this, float touch_triggers);
 
 	#define SUB_ANGLES(s)	(s).move_angles
 	#define SUB_VELOCITY	move_velocity
@@ -31,7 +31,7 @@
 	void SUB_SETORIGIN(entity s, vector v)
 	{SELFPARAM();
 		s.move_origin = v;
-		WITH(entity, self, s, _Movetype_LinkEdict(true));
+		_Movetype_LinkEdict(s, true);
 	}
 
 #endif

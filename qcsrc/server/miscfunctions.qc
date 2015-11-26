@@ -528,7 +528,7 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				g_weaponarena_weapons |= WepSet_FromWeapon(j);
+				g_weaponarena_weapons |= (e.m_wepset);
 		}
 	}
 	else if (s == "most")
@@ -540,7 +540,7 @@ void readplayerstartcvars()
 			e = get_weaponinfo(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if (e.spawnflags & WEP_FLAG_NORMAL)
-					g_weaponarena_weapons |= WepSet_FromWeapon(j);
+					g_weaponarena_weapons |= (e.m_wepset);
 		}
 	}
 	else if (s == "none")
@@ -561,7 +561,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					g_weaponarena_weapons |= WepSet_FromWeapon(j);
+					g_weaponarena_weapons |= (e.m_wepset);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.m_name, " & ");
 					break;
 				}
@@ -592,12 +592,13 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(i);
 			int w = want_weapon(e, false);
+			WepSet s = e.m_wepset;
 			if(w & 1)
-				start_weapons |= WepSet_FromWeapon(i);
+				start_weapons |= s;
 			if(w & 2)
-				start_weapons_default |= WepSet_FromWeapon(i);
+				start_weapons_default |= s;
 			if(w & 4)
-				start_weapons_defaultmask |= WepSet_FromWeapon(i);
+				start_weapons_defaultmask |= s;
 		}
 	}
 
@@ -654,12 +655,13 @@ void readplayerstartcvars()
 			{
 				e = get_weaponinfo(i);
 				int w = want_weapon(e, g_warmup_allguns);
+				WepSet s = (e.m_wepset);
 				if(w & 1)
-					warmup_start_weapons |= WepSet_FromWeapon(i);
+					warmup_start_weapons |= s;
 				if(w & 2)
-					warmup_start_weapons_default |= WepSet_FromWeapon(i);
+					warmup_start_weapons_default |= s;
 				if(w & 4)
-					warmup_start_weapons_defaultmask |= WepSet_FromWeapon(i);
+					warmup_start_weapons_defaultmask |= s;
 			}
 		}
 	}
@@ -682,9 +684,8 @@ void readplayerstartcvars()
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(precache_weapons & WepSet_FromWeapon(i)) {
-			Weapon w = get_weaponinfo(i);
-			w.wr_init(w);
+		if(precache_weapons & (e.m_wepset)) {
+			e.wr_init(e);
 		}
 	}
 

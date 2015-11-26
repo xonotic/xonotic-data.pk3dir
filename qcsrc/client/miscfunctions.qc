@@ -482,27 +482,6 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	}
 }
 
-// TODO: entcs
-float getplayeralpha(int pl)
-{
-	entity e = CSQCModel_server2csqc(pl + 1);
-	return (e) ? e.alpha : 1;
-}
-
-// TODO: entcs
-vector getcsqcplayercolor(int pl)
-{
-	entity e = CSQCModel_server2csqc(pl);
-	return (e && e.colormap > 0) ? colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, true) : '1 1 1';
-}
-
-// TODO: entcs
-bool getplayerisdead(int pl)
-{
-	entity e = CSQCModel_server2csqc(pl + 1);
-	return e ? e.csqcmodel_isdead : false;
-}
-
 /** engine callback */
 void URI_Get_Callback(int id, float status, string data)
 {

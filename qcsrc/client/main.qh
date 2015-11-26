@@ -90,9 +90,9 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-float button_zoom;
-float spectatorbutton_zoom;
-float button_attack2;
+bool button_zoom;
+bool spectatorbutton_zoom;
+bool button_attack2;
 
 int activeweapon;
 int switchingweapon;

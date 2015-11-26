@@ -507,15 +507,15 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
                     case ANIM_PAIN:
                         if(self.frame != ANIM_PAIN)
-                            defer(0.25, walker_setnoanim);
+                            defer(self, 0.25, walker_setnoanim);
 
                         break;
 
                     case ANIM_MELEE:
                         if(self.frame != ANIM_MELEE)
                         {
-                            defer(0.41, walker_setnoanim);
-                            defer(0.21, walker_melee_do_dmg);
+                            defer(self, 0.41, walker_setnoanim);
+                            defer(self, 0.21, walker_melee_do_dmg);
                         }
 
                         movelib_beak_simple((autocvar_g_turrets_unit_walker_speed_stop));

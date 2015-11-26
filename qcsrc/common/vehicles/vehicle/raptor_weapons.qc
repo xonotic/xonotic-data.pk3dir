@@ -268,7 +268,7 @@ void RaptorCBShellfragDraw(entity this)
     if(wasfreed(self))
         return;
 
-    Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+    Movetype_Physics_MatchTicrate(self, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
     self.move_avelocity += randomvec() * 15;
     self.renderflags = 0;
 

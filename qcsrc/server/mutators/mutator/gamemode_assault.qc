@@ -294,17 +294,10 @@ void assault_new_round()
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
-	entity ent;
-	for(ent = world; (ent = nextent(ent)); )
-	{
-		if(clienttype(ent) == CLIENTTYPE_NOTACLIENT)
-		{
-			if(ent.team_saved == NUM_TEAM_1)
-				ent.team_saved = NUM_TEAM_2;
-			else if(ent.team_saved == NUM_TEAM_2)
-				ent.team_saved = NUM_TEAM_1;
-		}
-	}
+	FOREACH_ENTITY(clienttype(it) == CLIENTTYPE_NOTACLIENT, LAMBDA(
+		if (it.team_saved == NUM_TEAM_1) it.team_saved = NUM_TEAM_2;
+		else if (it.team_saved == NUM_TEAM_2) it.team_saved = NUM_TEAM_1;
+	));
 
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));

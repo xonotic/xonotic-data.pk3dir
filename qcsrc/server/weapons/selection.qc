@@ -140,7 +140,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
 		wep = get_weaponinfo(weaponwant);
-		wepset = WepSet_FromWeapon(weaponwant);
+		wepset = wep.m_wepset;
 		if(imp >= 0)
 		if(wep.impulse != imp)
 			continue;
@@ -148,9 +148,10 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		float i, have_other = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
+			Weapon e = get_weaponinfo(i);
 			if(i != weaponwant)
-			if((get_weaponinfo(i)).impulse == imp || imp < 0)
-			if((pl.weapons & WepSet_FromWeapon(i)) || (weaponsInMap & WepSet_FromWeapon(i)))
+			if(e.impulse == imp || imp < 0)
+			if((pl.weapons & (e.m_wepset)) || (weaponsInMap & (e.m_wepset)))
 				have_other = true;
 		}
 
@@ -197,7 +198,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		{
 			weaponwant = stof(car(rest)); rest = cdr(rest);
 			wep = get_weaponinfo(weaponwant);
-			wepset = WepSet_FromWeapon(weaponwant);
+			wepset = wep.m_wepset;
 			if(imp >= 0)
 				if(wep.impulse != imp)
 					continue;
@@ -205,9 +206,10 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 			float i, have_other = false;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
+				Weapon w = get_weaponinfo(i);
 				if(i != weaponwant)
-				if((get_weaponinfo(i)).impulse == imp || imp < 0)
-				if((pl.weapons & WepSet_FromWeapon(i)) || (weaponsInMap & WepSet_FromWeapon(i)))
+				if(w.impulse == imp || imp < 0)
+				if((pl.weapons & (w.m_wepset)) || (weaponsInMap & (w.m_wepset)))
 					have_other = true;
 			}
 
@@ -239,13 +241,13 @@ void W_SwitchWeapon_Force(entity e, float w)
 void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
-	float w, ww;
-	w = pl.weapon;
-	if(pl.weapons & WepSet_FromWeapon(w))
+	int ww;
+	WepSet set = WepSet_FromWeapon(pl.weapon);
+	if(pl.weapons & set)
 	{
-		pl.weapons &= ~WepSet_FromWeapon(w);
+		pl.weapons &= ~set;
 		ww = w_getbestweapon(pl);
-		pl.weapons |= WepSet_FromWeapon(w);
+		pl.weapons |= set;
 	}
 	else
 		ww = w_getbestweapon(pl);

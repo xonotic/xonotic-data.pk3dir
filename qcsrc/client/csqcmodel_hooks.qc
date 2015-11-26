@@ -348,7 +348,7 @@ void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
 }
 void CSQCPlayer_AnimDecide_PostUpdate(bool isnew)
 {SELFPARAM();
-	self.csqcmodel_isdead = !!(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+	self.csqcmodel_isdead = boolean(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 }
 int CSQCPlayer_FallbackFrame(int f)
 {SELFPARAM();

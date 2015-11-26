@@ -1,6 +1,6 @@
 #ifndef MOVETYPE_TOSS_H
 #define MOVETYPE_TOSS_H
 
-void _Movetype_Physics_Toss(float dt);
+void _Movetype_Physics_Toss(entity this, float dt);
 
 #endif

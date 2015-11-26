@@ -21,15 +21,7 @@
  */
 #include "interpolate.qh"
 
-#if defined(CSQC)
-//	#include "../../client/defs.qh"
-//	#include "../warpzone/anglestransform.qh"
-//	#include "../../client/autocvars.qh"
-//	#include "cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
-
+// 1 = old, 2 = new
 .vector iorigin1, iorigin2;
 .vector ivelocity1, ivelocity2;
 .vector iforward1, iforward2;
@@ -38,143 +30,136 @@
 .vector ivup1, ivup2;
 .float itime1, itime2;
 void InterpolateOrigin_Reset()
-{SELFPARAM();
+{
+	SELFPARAM();
 	self.iflags &= ~IFLAG_INTERNALMASK;
 	self.itime1 = self.itime2 = 0;
 }
-void InterpolateOrigin_Note()
-{SELFPARAM();
-	float dt;
-	int f0;
+void InterpolateOrigin_Note(entity this)
+{
+	float dt = time - this.itime2;
 
-	dt = time - self.itime2;
+	int f0 = this.iflags;
+	if (this.iflags & IFLAG_PREVALID) this.iflags |= IFLAG_VALID;
+	else this.iflags |= IFLAG_PREVALID;
 
-	f0 = self.iflags;
-	if(self.iflags & IFLAG_PREVALID)
-		self.iflags |= IFLAG_VALID;
-	else
-		self.iflags |= IFLAG_PREVALID;
-
-	if(self.iflags & IFLAG_ORIGIN)
+	if (this.iflags & IFLAG_ORIGIN)
 	{
-		self.iorigin1 = self.iorigin2;
-		self.iorigin2 = self.origin;
+		this.iorigin1 = this.iorigin2;
+		this.iorigin2 = this.origin;
 	}
 
-	if(self.iflags & IFLAG_AUTOANGLES)
-		if(self.iorigin2 != self.iorigin1)
-			self.angles = vectoangles(self.iorigin2 - self.iorigin1);
+	if (this.iflags & IFLAG_AUTOANGLES
+	    && this.iorigin2
+	    != this.iorigin1) this.angles = vectoangles(this.iorigin2 - this.iorigin1);
 
-	if(self.iflags & IFLAG_AUTOVELOCITY)
-		if(self.itime2 != self.itime1)
-			self.velocity = (self.iorigin2 - self.iorigin1) * (1.0 / (self.itime2 - self.itime1));
+	if (this.iflags & IFLAG_AUTOVELOCITY
+	    && this.itime2
+	    != this.itime1) this.velocity = (this.iorigin2 - this.iorigin1) * (1.0 / (this.itime2 - this.itime1));
 
-	if(self.iflags & IFLAG_ANGLES)
+	if (this.iflags & IFLAG_ANGLES)
 	{
-		fixedmakevectors(self.angles);
-		if(f0 & IFLAG_VALID)
+		fixedmakevectors(this.angles);
+		if (f0 & IFLAG_VALID)
 		{
-			self.iforward1 = self.iforward2;
-			self.iup1 = self.iup2;
+			this.iforward1 = this.iforward2;
+			this.iup1 = this.iup2;
 		}
 		else
 		{
-			self.iforward1 = v_forward;
-			self.iup1 = v_up;
+			this.iforward1 = v_forward;
+			this.iup1 = v_up;
 		}
-		self.iforward2 = v_forward;
-		self.iup2 = v_up;
+		this.iforward2 = v_forward;
+		this.iup2 = v_up;
 	}
 
-	if(self.iflags & IFLAG_V_ANGLE)
+	if (this.iflags & IFLAG_V_ANGLE)
 	{
-		fixedmakevectors(self.v_angle);
-		if(f0 & IFLAG_VALID)
+		fixedmakevectors(this.v_angle);
+		if (f0 & IFLAG_VALID)
 		{
-			self.ivforward1 = self.ivforward2;
-			self.ivup1 = self.ivup2;
+			this.ivforward1 = this.ivforward2;
+			this.ivup1 = this.ivup2;
 		}
 		else
 		{
-			self.ivforward1 = v_forward;
-			self.ivup1 = v_up;
+			this.ivforward1 = v_forward;
+			this.ivup1 = v_up;
 		}
-		self.ivforward2 = v_forward;
-		self.ivup2 = v_up;
+		this.ivforward2 = v_forward;
+		this.ivup2 = v_up;
 	}
-	else if(self.iflags & IFLAG_V_ANGLE_X)
+	else if (this.iflags & IFLAG_V_ANGLE_X)
 	{
-		self.ivforward1_x = self.ivforward2_x;
-		self.ivforward2_x = self.v_angle.x;
-	}
-
-	if(self.iflags & IFLAG_VELOCITY)
-	{
-		self.ivelocity1 = self.ivelocity2;
-		self.ivelocity2 = self.velocity;
+		this.ivforward1_x = this.ivforward2_x;
+		this.ivforward2_x = this.v_angle.x;
 	}
 
-	if(self.iflags & IFLAG_TELEPORTED)
+	if (this.iflags & IFLAG_VELOCITY)
 	{
-		self.iflags &= ~IFLAG_TELEPORTED;
-		self.itime1 = self.itime2 = time; // don't lerp
+		this.ivelocity1 = this.ivelocity2;
+		this.ivelocity2 = this.velocity;
 	}
-	else if(vlen(self.iorigin2 - self.iorigin1) > 1000)
+
+	if (this.iflags & IFLAG_TELEPORTED)
 	{
-		self.itime1 = self.itime2 = time; // don't lerp
+		this.iflags &= ~IFLAG_TELEPORTED;
+		this.itime1 = this.itime2 = time;  // don't lerp
 	}
-	else if((self.iflags & IFLAG_VELOCITY) && (vlen(self.ivelocity2 - self.ivelocity1) > 1000))
+	else if (vdist(this.iorigin2 - this.iorigin1, >, 1000))
 	{
-		self.itime1 = self.itime2 = time; // don't lerp
+		this.itime1 = this.itime2 = time;  // don't lerp
 	}
-	else if(dt >= 0.2)
+	else if ((this.iflags & IFLAG_VELOCITY) && vdist(this.ivelocity2 - this.ivelocity1, >, 1000))
 	{
-		self.itime1 = self.itime2 = time;
+		this.itime1 = this.itime2 = time;  // don't lerp
+	}
+	else if (dt >= 0.2)
+	{
+		this.itime1 = this.itime2 = time;
 	}
 	else
 	{
-		self.itime1 = serverprevtime;
-		self.itime2 = time;
+		this.itime1 = serverprevtime;
+		this.itime2 = time;
 	}
-}
-void InterpolateOrigin_Do()
-{SELFPARAM();
-	vector forward, up;
-	if(self.itime1 && self.itime2 && self.itime1 != self.itime2)
-	{
-		float f;
-		f = bound(0, (time - self.itime1) / (self.itime2 - self.itime1), 1 + autocvar_cl_lerpexcess);
-		if(self.iflags & IFLAG_ORIGIN)
-			setorigin(self, (1 - f) * self.iorigin1 + f * self.iorigin2);
-		if(self.iflags & IFLAG_ANGLES)
-		{
-			forward = (1 - f) * self.iforward1 + f * self.iforward2;
-			up = (1 - f) * self.iup1 + f * self.iup2;
-			self.angles = fixedvectoangles2(forward, up);
-		}
-		if(self.iflags & IFLAG_V_ANGLE)
-		{
-			forward = (1 - f) * self.ivforward1 + f * self.ivforward2;
-			up = (1 - f) * self.ivup1 + f * self.ivup2;
-			self.v_angle = fixedvectoangles2(forward, up);
-		}
-		else if(self.iflags & IFLAG_V_ANGLE_X)
-			self.v_angle_x = (1 - f) * self.ivforward1_x + f * self.ivforward2_x;
-		if(self.iflags & IFLAG_VELOCITY)
-			self.velocity = (1 - f) * self.ivelocity1 + f * self.ivelocity2;
-	}
-}
-void InterpolateOrigin_Undo()
-{SELFPARAM();
-	if(self.iflags & IFLAG_ORIGIN)
-		setorigin(self, self.iorigin2);
-	if(self.iflags & IFLAG_ANGLES)
-		self.angles = fixedvectoangles2(self.iforward2, self.iup2);
-	if(self.iflags & IFLAG_V_ANGLE)
-		self.v_angle = fixedvectoangles2(self.ivforward2, self.ivup2);
-	else if(self.iflags & IFLAG_V_ANGLE_X)
-		self.v_angle_x = self.ivforward2_x;
-	if(self.iflags & IFLAG_VELOCITY)
-		self.velocity = self.ivelocity2;
 }
 
+/** set origin based on iorigin1 (old pos), iorigin2 (desired pos), and time */
+void InterpolateOrigin_Do(entity this)
+{
+	if (this.itime1 && this.itime2 && this.itime1 != this.itime2)
+	{
+		float f = bound(0, (time - this.itime1) / (this.itime2 - this.itime1), 1 + autocvar_cl_lerpexcess);
+		float f_1 = 1 - f;
+		if (this.iflags & IFLAG_ORIGIN) setorigin(this, f_1 * this.iorigin1 + f * this.iorigin2);
+		if (this.iflags & IFLAG_ANGLES)
+		{
+			vector forward = f_1 * this.iforward1 + f * this.iforward2;
+			vector up = f_1 * this.iup1 + f * this.iup2;
+			this.angles = fixedvectoangles2(forward, up);
+		}
+		if (this.iflags & IFLAG_V_ANGLE)
+		{
+			vector forward = f_1 * this.ivforward1 + f * this.ivforward2;
+			vector up = f_1 * this.ivup1 + f * this.ivup2;
+			this.v_angle = fixedvectoangles2(forward, up);
+		}
+		else if (this.iflags & IFLAG_V_ANGLE_X)
+		{
+			this.v_angle_x = f_1 * this.ivforward1.x + f * this.ivforward2.x;
+		}
+		if (this.iflags & IFLAG_VELOCITY) this.velocity = f_1 * this.ivelocity1 + f * this.ivelocity2;
+	}
+}
+
+/** snap origin to iorigin2 (actual origin) */
+void InterpolateOrigin_Undo(entity this)
+{
+	if (this.iflags & IFLAG_ORIGIN) setorigin(this, this.iorigin2);
+	if (this.iflags & IFLAG_ANGLES) this.angles = fixedvectoangles2(this.iforward2, this.iup2);
+	if (this.iflags & IFLAG_V_ANGLE) this.v_angle = fixedvectoangles2(this.ivforward2, this.ivup2);
+	else if (this.iflags & IFLAG_V_ANGLE_X) this.v_angle_x = this.ivforward2_x;
+	if (this.iflags & IFLAG_VELOCITY) this.velocity = this.ivelocity2;
+}

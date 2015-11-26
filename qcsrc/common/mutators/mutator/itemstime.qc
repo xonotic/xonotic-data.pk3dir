@@ -118,36 +118,13 @@ void Item_ItemsTime_SetTimesForAllPlayers()
 float Item_ItemsTime_UpdateTime(entity e, float t)
 {
     bool isavailable = (t == 0);
-    if (e.weapons & WEPSET_SUPERWEAPONS)
-    {
-        for (entity head = world; (head = nextent(head)); )
-        {
-            if (clienttype(head) != CLIENTTYPE_NOTACLIENT || !(head.weapons & WEPSET_SUPERWEAPONS) || head.instanceOfWeapon)
-                continue;
-            if (e == head)
-                continue;
-
-            if (head.scheduledrespawntime <= time)
-                isavailable = true;
-            else if (t == 0 || head.scheduledrespawntime < t)
-                t = head.scheduledrespawntime;
-        }
-    }
-    else
-    {
-        for (entity head = world; (head = nextent(head)); )
-        {
-            if (head.itemdef != e.itemdef)
-                continue;
-            if (e == head)
-                continue;
-
-            if (head.scheduledrespawntime <= time)
-                isavailable = true;
-            else if (t == 0 || head.scheduledrespawntime < t)
-                t = head.scheduledrespawntime;
-        }
-    }
+    FOREACH_ENTITY(it.itemdef == e.itemdef || ((it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT), LAMBDA(
+        if (e == it) continue;
+        if (it.scheduledrespawntime <= time)
+            isavailable = true;
+        else if (t == 0 || it.scheduledrespawntime < t)
+            t = it.scheduledrespawntime;
+    ));
     if (isavailable)
         t = -t; // let know the client there's another available item
     return t;
@@ -158,13 +135,9 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups
-    for (entity e = NULL; (e = nextent(e)); )
-    if (IS_NOT_A_CLIENT(e))
-    {
-        setself(e);
-        if (self.reset)
-            Item_ItemsTime_SetTime(self, 0);
-    }
+    FOREACH_ENTITY(IS_NOT_A_CLIENT(it), LAMBDA(
+        if (it.reset) Item_ItemsTime_SetTime(it, 0);
+    ));
     Item_ItemsTime_SetTimesForAllPlayers();
 }
 

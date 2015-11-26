@@ -240,22 +240,6 @@ float g_weapon_stay;
 float want_weapon(entity weaponinfo, float allguns); // WEAPONTODO: what still needs done?
 void readplayerstartcvars();
 
-float g_bugrigs;
-float g_bugrigs_planar_movement;
-float g_bugrigs_planar_movement_car_jumping;
-float g_bugrigs_reverse_spinning;
-float g_bugrigs_reverse_speeding;
-float g_bugrigs_reverse_stopping;
-float g_bugrigs_air_steering;
-float g_bugrigs_angle_smoothing;
-float g_bugrigs_friction_floor;
-float g_bugrigs_friction_brake;
-float g_bugrigs_friction_air;
-float g_bugrigs_accel;
-float g_bugrigs_speed_ref;
-float g_bugrigs_speed_pow;
-float g_bugrigs_steer;
-
 float sv_autotaunt;
 float sv_taunt;
 
@@ -264,22 +248,6 @@ void readlevelcvars()
 {
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
-
-    g_bugrigs = cvar("g_bugrigs");
-    g_bugrigs_planar_movement = cvar("g_bugrigs_planar_movement");
-    g_bugrigs_planar_movement_car_jumping = cvar("g_bugrigs_planar_movement_car_jumping");
-    g_bugrigs_reverse_spinning = cvar("g_bugrigs_reverse_spinning");
-    g_bugrigs_reverse_speeding = cvar("g_bugrigs_reverse_speeding");
-    g_bugrigs_reverse_stopping = cvar("g_bugrigs_reverse_stopping");
-    g_bugrigs_air_steering = cvar("g_bugrigs_air_steering");
-    g_bugrigs_angle_smoothing = cvar("g_bugrigs_angle_smoothing");
-    g_bugrigs_friction_floor = cvar("g_bugrigs_friction_floor");
-    g_bugrigs_friction_brake = cvar("g_bugrigs_friction_brake");
-    g_bugrigs_friction_air = cvar("g_bugrigs_friction_air");
-    g_bugrigs_accel = cvar("g_bugrigs_accel");
-    g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
-    g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
-    g_bugrigs_steer = cvar("g_bugrigs_steer");
 
 	g_instagib = cvar("g_instagib");
 

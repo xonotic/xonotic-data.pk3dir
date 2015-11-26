@@ -270,7 +270,7 @@ void Draw_Laser(entity this)
 {
 	if(!self.state)
 		return;
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(self);
 	if(self.count & 0x80)
 	{
 		if(self.count & 0x10)
@@ -319,7 +319,7 @@ void Draw_Laser(entity this)
 
 NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 {
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	// 30 bytes, or 13 bytes for just moving
 	int f = ReadByte();
@@ -377,7 +377,7 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 
 	return = true;
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 	self.draw = Draw_Laser;
 }
 #endif

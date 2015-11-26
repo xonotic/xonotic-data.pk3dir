@@ -61,10 +61,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	{
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit)
-			culprit = get_weaponinfo(attacker.weapon);
-		else if(!(attacker.weapons & WepSet_FromWeapon(culprit.m_id)))
-			culprit = get_weaponinfo(attacker.weapon);
+		if(!culprit) culprit = get_weaponinfo(attacker.weapon);
+		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = get_weaponinfo(attacker.weapon);
 
 		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
@@ -84,7 +82,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 			// all others (including the culprit): remove
 			GiveFrags_randomweapons.weapons &= ~attacker.weapons;
-			GiveFrags_randomweapons.weapons &= ~WepSet_FromWeapon(culprit.m_id);
+			GiveFrags_randomweapons.weapons &= ~(culprit.m_wepset);
 
 			// among the remaining ones, choose one by random
 			W_RandomWeapons(GiveFrags_randomweapons, 1);
@@ -92,7 +90,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 			if(GiveFrags_randomweapons.weapons)
 			{
 				attacker.weapons |= GiveFrags_randomweapons.weapons;
-				attacker.weapons &= ~WepSet_FromWeapon(culprit.m_id);
+				attacker.weapons &= ~(culprit.m_wepset);
 			}
 		}
 

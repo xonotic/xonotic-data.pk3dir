@@ -744,7 +744,7 @@ void Draw_Shockwave(entity this)
 	if(a < ALPHA_MIN_VISIBLE) { remove(self); }
 
 	// WEAPONTODO: save this only once when creating the entity
-	vector sw_color = getcsqcplayercolor(self.sv_entnum); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
+	vector sw_color = getcsqcplayercolor(self.sv_entnum - 1); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
 
 	// WEAPONTODO: trace to find what we actually hit
 	vector endpos = (self.sw_shotorg + (self.sw_shotdir * self.sw_distance));

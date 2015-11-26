@@ -13,26 +13,26 @@
 	#include "../../server/autocvars.qh"
 #endif
 
-void _Movetype_WallFriction(vector stepnormal)  // SV_WallFriction
+void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
 {
 	/*float d, i;
 	vector into, side;
-	makevectors(self.v_angle);
+	makevectors(this.v_angle);
 	d = (stepnormal * v_forward) + 0.5;
 
 	if(d < 0)
 	{
-	    i = (stepnormal * self.move_velocity);
+	    i = (stepnormal * this.move_velocity);
 	    into = i * stepnormal;
-	    side = self.move_velocity - into;
-	    self.move_velocity_x = side.x * (1 * d);
-	    self.move_velocity_y = side.y * (1 * d);
+	    side = this.move_velocity - into;
+	    this.move_velocity_x = side.x * (1 * d);
+	    this.move_velocity_y = side.y * (1 * d);
 	}*/
 }
 
 vector planes[MAX_CLIP_PLANES];
-int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
-{SELFPARAM();
+int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnormal, float stepheight) // SV_FlyMove
+{
 	int blocked = 0, bumpcount;
 	int i, j, numplanes = 0;
 	float time_left = dt, grav = 0;
@@ -44,29 +44,29 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 
 	if(applygravity)
 	{
-		self.move_didgravity = 1;
-		grav = dt * (PHYS_ENTGRAVITY(self) ? PHYS_ENTGRAVITY(self) : 1) * PHYS_GRAVITY;
+		this.move_didgravity = 1;
+		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY;
 
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(self.move_flags & FL_ONGROUND))
+		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.move_flags & FL_ONGROUND))
 		{
 			if(GRAVITY_UNAFFECTED_BY_TICRATE)
-				self.move_velocity_z -= grav * 0.5;
+				this.move_velocity_z -= grav * 0.5;
 			else
-				self.move_velocity_z -= grav;
+				this.move_velocity_z -= grav;
 		}
 	}
 
-	original_velocity = primal_velocity = restore_velocity = self.move_velocity;
+	original_velocity = primal_velocity = restore_velocity = this.move_velocity;
 
 	for(bumpcount = 0;bumpcount < MAX_CLIP_PLANES;bumpcount++)
 	{
-		if(self.move_velocity == '0 0 0')
+		if(this.move_velocity == '0 0 0')
 			break;
 
-		push = self.move_velocity * time_left;
-		vector prev_origin = self.move_origin;
-		_Movetype_PushEntity(push, true);
-		if(trace_startsolid && self.move_origin != prev_origin)
+		push = this.move_velocity * time_left;
+		vector prev_origin = this.move_origin;
+		_Movetype_PushEntity(this, push, true);
+		if(trace_startsolid && this.move_origin != prev_origin)
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -78,7 +78,7 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 		// abort move if we're stuck in the world (and didn't make it out)
 		if(trace_startsolid && trace_allsolid)
 		{
-			self.move_velocity = restore_velocity;
+			this.move_velocity = restore_velocity;
 			return 3;
 		}
 
@@ -101,47 +101,47 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 					trace_ent = world;
 				}
 
-				self.move_flags |= FL_ONGROUND;
-				self.move_groundentity = trace_ent;
+				this.move_flags |= FL_ONGROUND;
+				this.move_groundentity = trace_ent;
 			}
 		}
 		else if(stepheight)
 		{
 			// step - handle it immediately
-			vector org = self.move_origin;
+			vector org = this.move_origin;
 			vector steppush = '0 0 1' * stepheight;
 
-			_Movetype_PushEntity(steppush, true);
-			if(trace_startsolid && self.move_origin != org)
+			_Movetype_PushEntity(this, steppush, true);
+			if(trace_startsolid && this.move_origin != org)
 			{
 				blocked |= 8;
 				break;
 			}
-			_Movetype_PushEntity(push, true);
-			if(trace_startsolid && self.move_origin != org)
+			_Movetype_PushEntity(this, push, true);
+			if(trace_startsolid && this.move_origin != org)
 			{
 				blocked |= 8;
 				break;
 			}
 			float trace2_fraction = trace_fraction;
-			steppush = '0 0 1' * (org_z - self.move_origin_z);
-			_Movetype_PushEntity(steppush, true);
-			if(trace_startsolid && self.move_origin != org)
+			steppush = '0 0 1' * (org_z - this.move_origin_z);
+			_Movetype_PushEntity(this, steppush, true);
+			if(trace_startsolid && this.move_origin != org)
 			{
 				blocked |= 8;
 				break;
 			}
 
 			// accept the new position if it made some progress...
-			if(fabs(self.move_origin_x - org_x) >= 0.03125 || fabs(self.move_origin_y - org_y) >= 0.03125)
+			if(fabs(this.move_origin_x - org_x) >= 0.03125 || fabs(this.move_origin_y - org_y) >= 0.03125)
 			{
-				trace_endpos = self.move_origin;
+				trace_endpos = this.move_origin;
 				time_left *= 1 - trace2_fraction;
 				numplanes = 0;
 				continue;
 			}
 			else
-				self.move_origin = org;
+				this.move_origin = org;
 		}
 		else
 		{
@@ -155,7 +155,7 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 		if(my_trace_fraction >= 0.001)
 		{
 			// actually covered some distance
-			original_velocity = self.move_velocity;
+			original_velocity = this.move_velocity;
 			numplanes = 0;
 		}
 
@@ -165,7 +165,7 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 		if(numplanes >= MAX_CLIP_PLANES)
 		{
 			// this shouldn't really happen
-			self.move_velocity = '0 0 0';
+			this.move_velocity = '0 0 0';
 			blocked = 3;
 			break;
 		}
@@ -194,14 +194,14 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 		if(i != numplanes)
 		{
 			// go along this plane
-			self.move_velocity = new_velocity;
+			this.move_velocity = new_velocity;
 		}
 		else
 		{
 			// go along the crease
 			if(numplanes != 2)
 			{
-				self.move_velocity = '0 0 0';
+				this.move_velocity = '0 0 0';
 				blocked = 7;
 				break;
 			}
@@ -213,39 +213,39 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 			dir.x *= ilength;
 			dir.y *= ilength;
 			dir.z *= ilength;
-			float d = (dir * self.move_velocity);
-			self.move_velocity = dir * d;
+			float d = (dir * this.move_velocity);
+			this.move_velocity = dir * d;
 		}
 
 		// if current velocity is against the original velocity,
 		// stop dead to avoid tiny occilations in sloping corners
-		if((self.move_velocity * primal_velocity) <= 0)
+		if((this.move_velocity * primal_velocity) <= 0)
 		{
-			self.move_velocity = '0 0 0';
+			this.move_velocity = '0 0 0';
 			break;
 		}
 	}
 
 	// LordHavoc: this came from QW and allows you to get out of water more easily
-	if(GAMEPLAYFIX_EASIERWATERJUMP && (self.move_flags & FL_WATERJUMP) && !(blocked & 8))
-		self.move_velocity = primal_velocity;
+	if(GAMEPLAYFIX_EASIERWATERJUMP && (this.move_flags & FL_WATERJUMP) && !(blocked & 8))
+		this.move_velocity = primal_velocity;
 
 	if(applygravity)
 	{
-		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(self.move_flags & FL_ONGROUND))
+		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.move_flags & FL_ONGROUND))
 		{
 			if(GRAVITY_UNAFFECTED_BY_TICRATE)
-				self.move_velocity_z -= grav * 0.5f;
+				this.move_velocity_z -= grav * 0.5f;
 		}
 	}
 
 	return blocked;
 }
 
-void _Movetype_CheckVelocity()  // SV_CheckVelocity
+void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
 {
-	// if(vlen(self.move_velocity) < 0.0001)
-	// self.move_velocity = '0 0 0';
+	// if(vlen(this.move_velocity) < 0.0001)
+	// this.move_velocity = '0 0 0';
 }
 
 bool _Movetype_CheckWater(entity ent)  // SV_CheckWater
@@ -315,22 +315,22 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 	}
 }
 
-void _Movetype_Impact(entity oth)  // SV_Impact
-{SELFPARAM();
+void _Movetype_Impact(entity this, entity oth)  // SV_Impact
+{
 	entity oldother = other;
 
-	if(self.move_touch)
+	if(this.move_touch)
 	{
 		other = oth;
 
-		self.move_touch();
+		WITH(entity, self, this, this.move_touch());
 
 		other = oldother;
 	}
 
 	if(oth.move_touch)
 	{
-		other = self;
+		other = this;
 
 		WITH(entity, self, oth, oth.move_touch());
 
@@ -338,15 +338,14 @@ void _Movetype_Impact(entity oth)  // SV_Impact
 	}
 }
 
-void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
-{SELFPARAM();
+void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
+{
 	entity oldother = other;
 
-	for (entity e = findradius(0.5 * (self.absmin + self.absmax), 0.5 * vlen(self.absmax - self.absmin)); e; e = e.chain)
+	for (entity e = findradius(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin)); e; e = e.chain)
 	{
 		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, this.absmin, this.absmax))
 		{
-			setself(e);
 			other = this;
 
 			trace_allsolid = false;
@@ -359,32 +358,31 @@ void _Movetype_LinkEdict_TouchAreaGrid()  // SV_LinkEdict_TouchAreaGrid
 			trace_plane_dist = 0;
 			trace_ent = this;
 
-			e.move_touch();
+			WITH(entity, self, e, e.move_touch());
 		}
 	}
 
 	other = oldother;
-	setself(this);
 }
 
-void _Movetype_LinkEdict(bool touch_triggers)  // SV_LinkEdict
-{SELFPARAM();
+void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
+{
 	vector mi, ma;
-	if(self.solid == SOLID_BSP)
+	if(this.solid == SOLID_BSP)
 	{
 		// TODO set the absolute bbox
-		mi = self.mins;
-		ma = self.maxs;
+		mi = this.mins;
+		ma = this.maxs;
 	}
 	else
 	{
-		mi = self.mins;
-		ma = self.maxs;
+		mi = this.mins;
+		ma = this.maxs;
 	}
-	mi += self.move_origin;
-	ma += self.move_origin;
+	mi += this.move_origin;
+	ma += this.move_origin;
 
-	if(self.move_flags & FL_ITEM)
+	if(this.move_flags & FL_ITEM)
 	{
 		mi.x -= 15;
 		mi.y -= 15;
@@ -403,53 +401,53 @@ void _Movetype_LinkEdict(bool touch_triggers)  // SV_LinkEdict
 		ma.z += 1;
 	}
 
-	self.absmin = mi;
-	self.absmax = ma;
+	this.absmin = mi;
+	this.absmax = ma;
 
 	if(touch_triggers)
-		_Movetype_LinkEdict_TouchAreaGrid();
+		_Movetype_LinkEdict_TouchAreaGrid(this);
 }
 
-bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
-{SELFPARAM();
-//	vector org = self.move_origin + ofs;
+bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosition
+{
+//	vector org = this.move_origin + ofs;
 
-	int cont = self.dphitcontentsmask;
-	self.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, MOVE_NOMONSTERS, self);
-	self.dphitcontentsmask = cont;
+	int cont = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_SOLID;
+	tracebox(this.move_origin, this.mins, this.maxs, this.move_origin, MOVE_NOMONSTERS, this);
+	this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
 		return true;
 
-	if(vlen(trace_endpos - self.move_origin) > 0.0001)
-		self.move_origin = trace_endpos;
+	if(vlen(trace_endpos - this.move_origin) > 0.0001)
+		this.move_origin = trace_endpos;
 	return false;
 }
 
-bool _Movetype_UnstickEntity()  // SV_UnstickEntity
-{SELFPARAM();
-	if(!_Movetype_TestEntityPosition('0 0 0')) return true;
-	if(!_Movetype_TestEntityPosition('-1 0 0')) goto success;
-	if(!_Movetype_TestEntityPosition('1 0 0')) goto success;
-	if(!_Movetype_TestEntityPosition('0 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition('0 1 0')) goto success;
-	if(!_Movetype_TestEntityPosition('-1 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition('1 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition('-1 1 0')) goto success;
-	if(!_Movetype_TestEntityPosition('1 1 0')) goto success;
+bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
+{
+	if(!_Movetype_TestEntityPosition(this, '0 0 0')) return true;
+	if(!_Movetype_TestEntityPosition(this, '-1 0 0')) goto success;
+	if(!_Movetype_TestEntityPosition(this, '1 0 0')) goto success;
+	if(!_Movetype_TestEntityPosition(this, '0 -1 0')) goto success;
+	if(!_Movetype_TestEntityPosition(this, '0 1 0')) goto success;
+	if(!_Movetype_TestEntityPosition(this, '-1 -1 0')) goto success;
+	if(!_Movetype_TestEntityPosition(this, '1 -1 0')) goto success;
+	if(!_Movetype_TestEntityPosition(this, '-1 1 0')) goto success;
+	if(!_Movetype_TestEntityPosition(this, '1 1 0')) goto success;
 	for (int i = 1; i <= 17; ++i)
 	{
-		if(!_Movetype_TestEntityPosition('0 0 -1' * i)) goto success;
-		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
+		if(!_Movetype_TestEntityPosition(this, '0 0 -1' * i)) goto success;
+		if(!_Movetype_TestEntityPosition(this, '0 0 1' * i)) goto success;
 	}
 	LOG_TRACEF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
-		num_for_edict(self), self.classname, vtos(self.move_origin));
+		num_for_edict(this), this.classname, vtos(this.move_origin));
 	return false;
 	: success;
 	LOG_TRACEF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
-		num_for_edict(self), self.classname, vtos(self.move_origin));
-	_Movetype_LinkEdict(true);
+		num_for_edict(this), this.classname, vtos(this.move_origin));
+	_Movetype_LinkEdict(this, true);
 	return true;
 }
 
@@ -464,34 +462,34 @@ vector _Movetype_ClipVelocity(vector vel, vector norm, float f)  // SV_ClipVeloc
 	return vel;
 }
 
-void _Movetype_PushEntityTrace(vector push)
-{SELFPARAM();
-	vector end = self.move_origin + push;
+void _Movetype_PushEntityTrace(entity this, vector push)
+{
+	vector end = this.move_origin + push;
 	int type;
-	if(self.move_nomonsters)
-		type = max(0, self.move_nomonsters);
-	else if(self.move_movetype == MOVETYPE_FLYMISSILE)
+	if(this.move_nomonsters)
+		type = max(0, this.move_nomonsters);
+	else if(this.move_movetype == MOVETYPE_FLYMISSILE)
 		type = MOVE_MISSILE;
-	else if(self.solid == SOLID_TRIGGER || self.solid == SOLID_NOT)
+	else if(this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT)
 		type = MOVE_NOMONSTERS;
 	else
 		type = MOVE_NORMAL;
 
-	tracebox(self.move_origin, self.mins, self.maxs, end, type, self);
+	tracebox(this.move_origin, this.mins, this.maxs, end, type, this);
 }
 
-float _Movetype_PushEntity(vector push, bool failonstartsolid)  // SV_PushEntity
-{SELFPARAM();
-	_Movetype_PushEntityTrace(push);
+float _Movetype_PushEntity(entity this, vector push, bool failonstartsolid)  // SV_PushEntity
+{
+	_Movetype_PushEntityTrace(this, push);
 
 	if(trace_startsolid && failonstartsolid)
 		return trace_fraction;
 
-	self.move_origin = trace_endpos;
+	this.move_origin = trace_endpos;
 
 	if(trace_fraction < 1)
-		if(self.solid >= SOLID_TRIGGER && (!(self.move_flags & FL_ONGROUND) || (self.move_groundentity != trace_ent)))
-			_Movetype_Impact(trace_ent);
+		if(this.solid >= SOLID_TRIGGER && (!(this.move_flags & FL_ONGROUND) || (this.move_groundentity != trace_ent)))
+			_Movetype_Impact(this, trace_ent);
 
 	return trace_fraction;
 }
@@ -554,121 +552,121 @@ void makevectors_matrix(vector myangles)  // AngleVectorsFLU
 	}
 }
 
-void _Movetype_Physics_Frame(float movedt)
-{SELFPARAM();
-	self.move_didgravity = -1;
-	switch (self.move_movetype)
+void _Movetype_Physics_Frame(entity this, float movedt)
+{
+	this.move_didgravity = -1;
+	switch (this.move_movetype)
 	{
 		case MOVETYPE_PUSH:
 		case MOVETYPE_FAKEPUSH:
-			_Movetype_Physics_Pusher(movedt);
+			_Movetype_Physics_Pusher(this, movedt);
 			break;
 		case MOVETYPE_NONE:
 			break;
 		case MOVETYPE_FOLLOW:
-			_Movetype_Physics_Follow();
+			_Movetype_Physics_Follow(this);
 			break;
 		case MOVETYPE_NOCLIP:
-			_Movetype_CheckWater(self);
-			self.move_origin = self.move_origin + TICRATE * self.move_velocity;
-			self.move_angles = self.move_angles + TICRATE * self.move_avelocity;
-			_Movetype_LinkEdict(false);
+			_Movetype_CheckWater(this);
+			this.move_origin = this.move_origin + TICRATE * this.move_velocity;
+			this.move_angles = this.move_angles + TICRATE * this.move_avelocity;
+			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:
-			_Movetype_Physics_Step(movedt);
+			_Movetype_Physics_Step(this, movedt);
 			break;
 		case MOVETYPE_WALK:
-			_Movetype_Physics_Walk(movedt);
+			_Movetype_Physics_Walk(this, movedt);
 			break;
 		case MOVETYPE_TOSS:
 		case MOVETYPE_BOUNCE:
 		case MOVETYPE_BOUNCEMISSILE:
 		case MOVETYPE_FLYMISSILE:
 		case MOVETYPE_FLY:
-			_Movetype_Physics_Toss(movedt);
+			_Movetype_Physics_Toss(this, movedt);
 			break;
 	}
 }
 
-void Movetype_Physics_NoMatchServer()  // optimized
-{SELFPARAM();
-	float movedt = time - self.move_time;
-	self.move_time = time;
+void Movetype_Physics_NoMatchServer(entity this)  // optimized
+{
+	float movedt = time - this.move_time;
+	this.move_time = time;
 
-	_Movetype_Physics_Frame(movedt);
-	if(wasfreed(self))
+	_Movetype_Physics_Frame(this, movedt);
+	if(wasfreed(this))
 		return;
 
-	self.avelocity = self.move_avelocity;
-	self.velocity = self.move_velocity;
-	self.angles = self.move_angles;
-	setorigin(self, self.move_origin);
+	this.avelocity = this.move_avelocity;
+	this.velocity = this.move_velocity;
+	this.angles = this.move_angles;
+	setorigin(this, this.move_origin);
 }
 
-void Movetype_Physics_MatchServer(bool sloppy)
+void Movetype_Physics_MatchServer(entity this, bool sloppy)
 {
-	Movetype_Physics_MatchTicrate(TICRATE, sloppy);
+	Movetype_Physics_MatchTicrate(this, TICRATE, sloppy);
 }
 
-void Movetype_Physics_MatchTicrate(float tr, bool sloppy)  // SV_Physics_Entity
-{SELFPARAM();
+void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Physics_Entity
+{
 	if(tr <= 0)
 	{
-		Movetype_Physics_NoMatchServer();
+		Movetype_Physics_NoMatchServer(this);
 		return;
 	}
 
-	float dt = time - self.move_time;
+	float dt = time - this.move_time;
 
 	int n = max(0, floor(dt / tr));
 	dt -= n * tr;
-	self.move_time += n * tr;
+	this.move_time += n * tr;
 
-	if(!self.move_didgravity)
-		self.move_didgravity = ((self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS) && !(self.move_flags & FL_ONGROUND));
+	if(!this.move_didgravity)
+		this.move_didgravity = ((this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS) && !(this.move_flags & FL_ONGROUND));
 
 	for (int i = 0; i < n; ++i)
 	{
-		_Movetype_Physics_Frame(tr);
-		if(wasfreed(self))
+		_Movetype_Physics_Frame(this, tr);
+		if(wasfreed(this))
 			return;
 	}
 
-	self.avelocity = self.move_avelocity;
+	this.avelocity = this.move_avelocity;
 
-	if(dt > 0 && self.move_movetype != MOVETYPE_NONE && !(self.move_flags & FL_ONGROUND))
+	if(dt > 0 && this.move_movetype != MOVETYPE_NONE && !(this.move_flags & FL_ONGROUND))
 	{
 		// now continue the move from move_time to time
-		self.velocity = self.move_velocity;
+		this.velocity = this.move_velocity;
 
-		if(self.move_didgravity > 0)
+		if(this.move_didgravity > 0)
 		{
-			self.velocity_z -= (GRAVITY_UNAFFECTED_BY_TICRATE ? 0.5 : 1)
+			this.velocity_z -= (GRAVITY_UNAFFECTED_BY_TICRATE ? 0.5 : 1)
 			    * dt
-			    * (self.gravity ? self.gravity : 1)
+			    * (this.gravity ? this.gravity : 1)
 			    * PHYS_GRAVITY;
 		}
 
-		self.angles = self.move_angles + dt * self.avelocity;
+		this.angles = this.move_angles + dt * this.avelocity;
 
-		if(sloppy || self.move_movetype == MOVETYPE_NOCLIP)
+		if(sloppy || this.move_movetype == MOVETYPE_NOCLIP)
 		{
-			setorigin(self, self.move_origin + dt * self.velocity);
+			setorigin(this, this.move_origin + dt * this.velocity);
 		}
 		else
 		{
-			_Movetype_PushEntityTrace(dt * self.velocity);
+			_Movetype_PushEntityTrace(this, dt * this.velocity);
 			if(!trace_startsolid)
-				setorigin(self, trace_endpos);
+				setorigin(this, trace_endpos);
 		}
 
-		if(self.move_didgravity > 0 && GRAVITY_UNAFFECTED_BY_TICRATE)
-			self.velocity_z -= 0.5 * dt * (self.gravity ? self.gravity : 1) * PHYS_GRAVITY;
+		if(this.move_didgravity > 0 && GRAVITY_UNAFFECTED_BY_TICRATE)
+			this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY;
 	}
 	else
 	{
-		self.velocity = self.move_velocity;
-		self.angles = self.move_angles;
-		setorigin(self, self.move_origin);
+		this.velocity = this.move_velocity;
+		this.angles = this.move_angles;
+		setorigin(this, this.move_origin);
 	}
 }

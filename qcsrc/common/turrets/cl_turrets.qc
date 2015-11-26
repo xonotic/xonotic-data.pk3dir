@@ -248,7 +248,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 void turret_gibboom();
 void turret_gib_draw(entity this)
 {
-	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+	Movetype_Physics_MatchTicrate(self, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 
 	self.drawmask = MASK_NORMAL;
 

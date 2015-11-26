@@ -3,6 +3,18 @@
 
 #include "oo.qh"
 
+#if 1
+	#define _R_MAP(r, max) AL_declare(r); STATIC_INIT(r) { AL_init(r, max, NULL, e); }
+	#define _R_GET(r, i) AL_gete(r, i)
+	#define _R_SET(r, i, e) AL_sete(r, i, e)
+	#define _R_DEL(r) AL_delete(r)
+#else
+	#define _R_MAP(r, max) entity r[max]
+	#define _R_GET(r, i) r[i]
+	#define _R_SET(r, i, e) r[i] = e
+	#define _R_DEL(r)
+#endif
+
 /**
  * Declare a new registry.
  *
@@ -12,9 +24,11 @@
 #define REGISTRY(id, max) \
 	void Register##id() {} \
 	const int id##_MAX = max; \
-	noref entity _##id[id##_MAX], id##_first, id##_last; \
+	noref entity id##_first, id##_last; \
+	_R_MAP(_##id, id##_MAX); \
+	SHUTDOWN(id) { _R_DEL(_##id); } \
 	int id##_COUNT; \
-	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _##id[i]; if (e) return e; } return null; }
+	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
 
 REGISTRY(Registries, BITS(8))
 
@@ -51,7 +65,7 @@ REGISTRY(Registries, BITS(8))
 		entity this = id = inst; \
 		this.registered_id = #id; \
 		this.fld = registry##_COUNT; \
-		_##registry[registry##_COUNT] = this; \
+		_R_SET(_##registry, registry##_COUNT, this); \
 		++registry##_COUNT; \
 		if (!registry##_first) registry##_first = this; \
 		if (registry##_last)   registry##_last.REGISTRY_NEXT = this; \
@@ -76,25 +90,25 @@ REGISTRY(Registries, BITS(8))
 	{ \
 		i += skip; j += skip; \
 		\
-		entity a = _##id[i], b = _##id[j]; \
-		_##id[i] = b; \
-		_##id[j] = a; \
+		entity a = _R_GET(_##id, i), b = _R_GET(_##id, j); \
+		_R_SET(_##id, i, b); \
+		_R_SET(_##id, j, a); \
         \
 		entity a_next = a.REGISTRY_NEXT, b_next = b.REGISTRY_NEXT; \
 		a.REGISTRY_NEXT = b_next; \
 		b.REGISTRY_NEXT = a_next; \
         \
 		if (i == 0) id##_first = b; \
-		else _##id[i - 1].REGISTRY_NEXT = b; \
+		else _R_GET(_##id, i - 1).REGISTRY_NEXT = b; \
         \
 		if (j == 0) id##_first = a; \
-		else _##id[j - 1].REGISTRY_NEXT = a; \
+		else _R_GET(_##id, j - 1).REGISTRY_NEXT = a; \
 	} \
 	int _REGISTRY_CMP_##id(int i, int j, entity pass) \
 	{ \
 		i += skip; j += skip; \
-		string a = _##id[i].registered_id; \
-		string b = _##id[j].registered_id; \
+		string a = _R_GET(_##id, i).registered_id; \
+		string b = _R_GET(_##id, j).registered_id; \
 		return strcmp(a, b); \
 	} \
 	STATIC_INIT(Registry_sort_##id) \

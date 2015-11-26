@@ -863,11 +863,10 @@ void m_toggle(int mode)
 void Shutdown()
 {
 	m_hide();
-	for (entity e = NULL; (e = nextent(e)); )
-	{
-		if (e.classname == "vtbl") continue;
-		if (e.destroy) e.destroy(e);
-	}
+	FOREACH_ENTITY_ORDERED(it.destroy, LAMBDA(
+		if (it.classname == "vtbl") continue;
+		it.destroy(it);
+	));
 }
 
 void m_focus_item_chain(entity outermost, entity innermost)

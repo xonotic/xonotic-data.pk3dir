@@ -36,7 +36,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	float n;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Quality preset:")));
-		n = 5 + 2 * !!cvar("developer");
+		n = 5 + 2 * boolean(cvar("developer"));
 		if(cvar("developer"))
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^OMG!")), '1 0 1', "exec effects-omg.cfg", 0));
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Low")), '0 0 0', "exec effects-low.cfg", 0));

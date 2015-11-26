@@ -35,7 +35,6 @@
 #include "../../common/viewloc.qh"
 
 float autocvar_cl_movement_errorcompensation = 0;
-int autocvar_cl_movement = 1;
 
 // engine stuff
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
@@ -51,15 +50,13 @@ float csqcplayer_predictionerrorfactor;
 
 vector CSQCPlayer_GetPredictionErrorO()
 {
-	if(time >= csqcplayer_predictionerrortime)
-		return '0 0 0';
+	if (time >= csqcplayer_predictionerrortime) return '0 0 0';
 	return csqcplayer_predictionerroro * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
 }
 
 vector CSQCPlayer_GetPredictionErrorV()
 {
-	if(time >= csqcplayer_predictionerrortime)
-		return '0 0 0';
+	if (time >= csqcplayer_predictionerrortime) return '0 0 0';
 	return csqcplayer_predictionerrorv * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
 }
 
@@ -96,74 +93,83 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
-void CSQCPlayer_Unpredict()
-{SELFPARAM();
-	if(csqcplayer_status == CSQCPLAYERSTATUS_UNPREDICTED)
-		return;
-	if(csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED)
-		error("Cannot unpredict in current status");
-	self.origin = csqcplayer_origin;
-	self.velocity = csqcplayer_velocity;
-	csqcplayer_moveframe = csqcplayer_sequence+1; //+1 because the recieved frame has the move already done (server side)
-	self.flags = player_pmflags;
+void CSQCPlayer_Unpredict(entity this)
+{
+	if (csqcplayer_status == CSQCPLAYERSTATUS_UNPREDICTED) return;
+	if (csqcplayer_status != CSQCPLAYERSTATUS_PREDICTED) LOG_FATALF("Cannot unpredict in current status (%d)\n", csqcplayer_status);
+	this.origin = csqcplayer_origin;
+	this.velocity = csqcplayer_velocity;
+	csqcplayer_moveframe = csqcplayer_sequence + 1; // + 1 because the recieved frame has the move already done (server side)
+	this.flags = player_pmflags;
 }
 
-void CSQCPlayer_SetMinsMaxs()
-{SELFPARAM();
-	if(self.flags & FL_DUCKED)
+void CSQCPlayer_SetMinsMaxs(entity this)
+{
+	if (this.flags & FL_DUCKED)
 	{
-		self.mins = PL_CROUCH_MIN;
-		self.maxs = PL_CROUCH_MAX;
-		self.view_ofs = PL_CROUCH_VIEW_OFS;
+		this.mins = PL_CROUCH_MIN;
+		this.maxs = PL_CROUCH_MAX;
+		this.view_ofs = PL_CROUCH_VIEW_OFS;
 	}
 	else
 	{
-		self.mins = PL_MIN;
-		self.maxs = PL_MAX;
-		self.view_ofs = PL_VIEW_OFS;
+		this.mins = PL_MIN;
+		this.maxs = PL_MAX;
+		this.view_ofs = PL_VIEW_OFS;
 	}
 }
 
-void CSQCPlayer_SavePrediction()
-{SELFPARAM();
-	player_pmflags = self.flags;
-	csqcplayer_origin = self.origin;
-	csqcplayer_velocity = self.velocity;
+void CSQCPlayer_SavePrediction(entity this)
+{
+	player_pmflags = this.flags;
+	csqcplayer_origin = this.origin;
+	csqcplayer_velocity = this.velocity;
 	csqcplayer_sequence = servercommandframe;
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 }
 
-void CSQC_ClientMovement_PlayerMove_Frame();
+void CSQC_ClientMovement_PlayerMove_Frame(entity this);
+void _Movetype_Physics_Frame(entity this, float movedt);
 
-void PM_Movement_Move()
-{SELFPARAM();
-	runstandardplayerphysics(self);
-#ifdef CSQC
-	self.flags =
-			((self.pmove_flags & PMF_DUCKED) ? FL_DUCKED : 0) |
-			(!(self.pmove_flags & PMF_JUMP_HELD) ? FL_JUMPRELEASED : 0) |
-			((self.pmove_flags & PMF_ONGROUND) ? FL_ONGROUND : 0);
-#endif
-}
-
-void CSQCPlayer_Physics()
+void Movetype_Physics_Spam(entity this)  // optimized
 {
-	switch(autocvar_cl_movement)
+	_Movetype_Physics_Frame(this, PHYS_INPUT_TIMELENGTH);
+	if(wasfreed(this))
+		return;
+
+	this.avelocity = this.move_avelocity;
+	this.velocity = this.move_velocity;
+	this.angles = this.move_angles;
+	setorigin(this, this.move_origin);
+}
+
+void CSQCPlayer_Physics(entity this)
+{
+	if(autocvar_cl_movement)
 	{
-		case 1: CSQC_ClientMovement_PlayerMove_Frame(); break;
-		case 2: PM_Movement_Move(); break;
+		CSQC_ClientMovement_PlayerMove_Frame(this);
+
+		if(autocvar_cl_movement == 3)
+		{
+			this.move_origin = this.origin;
+			this.move_angles = this.angles;
+			this.move_movetype = MOVETYPE_WALK; // temp
+			this.move_velocity = this.velocity;
+			this.move_avelocity = this.avelocity;
+			Movetype_Physics_Spam(this);
+		}
 	}
 }
 
-void CSQCPlayer_PredictTo(float endframe, float apply_error)
-{SELFPARAM();
-	CSQCPlayer_Unpredict();
-	if(apply_error)
+void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
+{
+	CSQCPlayer_Unpredict(this);
+	if (apply_error)
 	{
-		self.origin += CSQCPlayer_GetPredictionErrorO();
-		self.velocity += CSQCPlayer_GetPredictionErrorV();
+		this.origin += CSQCPlayer_GetPredictionErrorO();
+		this.velocity += CSQCPlayer_GetPredictionErrorV();
 	}
-	CSQCPlayer_SetMinsMaxs();
+	CSQCPlayer_SetMinsMaxs(this);
 
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 
@@ -179,7 +185,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	}
 #endif
 
-	if(csqcplayer_moveframe >= endframe)
+	if (csqcplayer_moveframe >= endframe)
 	{
 		getinputstate(csqcplayer_moveframe - 1);
 	}
@@ -187,22 +193,21 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	{
 		do
 		{
-			if (!getinputstate(csqcplayer_moveframe))
-				break;
-			CSQCPlayer_Physics();
-			CSQCPlayer_SetMinsMaxs();
-			csqcplayer_moveframe++;
+			if (!getinputstate(csqcplayer_moveframe)) break;
+			CSQCPlayer_Physics(this);
+			CSQCPlayer_SetMinsMaxs(this);
+			++csqcplayer_moveframe;
 		}
-		while(csqcplayer_moveframe < endframe);
+		while (csqcplayer_moveframe < endframe);
 	}
 
-	//add in anything that was applied after (for low packet rate protocols)
+	// add in anything that was applied after (for low packet rate protocols)
 	input_angles = view_angles;
 }
 
-bool CSQCPlayer_IsLocalPlayer()
-{SELFPARAM();
-	return (self == csqcplayer);
+bool CSQCPlayer_IsLocalPlayer(entity this)
+{
+	return (this == csqcplayer);
 }
 
 void CSQCPlayer_SetViewLocation()
@@ -210,118 +215,90 @@ void CSQCPlayer_SetViewLocation()
 	viewloc_SetViewLocation();
 }
 
+/** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
-{SELFPARAM();
-	vector v0;
-	v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
-
-	if(csqcplayer)
+{
+	const vector v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+	const float vh = getstati(STAT_VIEWHEIGHT);
+	const vector pl_viewofs = PL_VIEW_OFS;
+	const vector pl_viewofs_crouch = PL_CROUCH_VIEW_OFS;
+	const entity e = csqcplayer;
+	if (e)
 	{
-		setself(csqcplayer);
-
-		if(servercommandframe == 0 || clientcommandframe == 0)
+		if (servercommandframe == 0 || clientcommandframe == 0)
 		{
-			InterpolateOrigin_Do();
-			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+			InterpolateOrigin_Do(e);
+			e.view_ofs = '0 0 1' * vh;
 
 			// get crouch state from the server
-			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
-				self.flags &= ~FL_DUCKED;
-			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
-				self.flags |= FL_DUCKED;
+			if (vh == pl_viewofs.z) e.flags &= ~FL_DUCKED;
+			else if (vh == pl_viewofs_crouch.z) e.flags |= FL_DUCKED;
 
 			// get onground state from the server
-			if(pmove_onground)
-				self.flags |= FL_ONGROUND;
-			else
-				self.flags &= ~FL_ONGROUND;
+			e.flags = BITSET(e.flags, FL_ONGROUND, pmove_onground);
 
-			CSQCPlayer_SetMinsMaxs();
+			CSQCPlayer_SetMinsMaxs(e);
 
 			// override it back just in case
-			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+			e.view_ofs = '0 0 1' * vh;
 
 			// set velocity
-			self.velocity = v0;
+			e.velocity = v0;
 		}
 		else
 		{
-			float flg = self.iflags;
-			self.iflags &= ~(IFLAG_ORIGIN | IFLAG_ANGLES);
-			InterpolateOrigin_Do();
-			self.iflags = flg;
+			const int flg = e.iflags; e.iflags &= ~(IFLAG_ORIGIN | IFLAG_ANGLES);
+			InterpolateOrigin_Do(e);
+			e.iflags = flg;
 
-			if(csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
+			if (csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
 			{
-				vector o, v;
-				o = self.origin;
-				v = v0;
+				const vector o = e.origin;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
-				CSQCPlayer_PredictTo(servercommandframe + 1, false);
-				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.flags & FL_ONGROUND));
-				self.origin = o;
-				self.velocity = v;
+				CSQCPlayer_PredictTo(e, servercommandframe + 1, false);
+				CSQCPlayer_SetPredictionError(e.origin - o, e.velocity - v0, pmove_onground - boolean(e.flags & FL_ONGROUND));
+				e.origin = o;
+				e.velocity = v0;
 
 				// get crouch state from the server
-				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
-					self.flags &= ~FL_DUCKED;
-				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
-					self.flags |= FL_DUCKED;
+				if (vh == pl_viewofs.z) e.flags &= ~FL_DUCKED;
+				else if(vh == pl_viewofs_crouch.z) e.flags |= FL_DUCKED;
 
 				// get onground state from the server
-				if(pmove_onground)
-					self.flags |= FL_ONGROUND;
-				else
-					self.flags &= ~FL_ONGROUND;
+				e.flags = BITSET(e.flags, FL_ONGROUND, pmove_onground);
 
-				CSQCPlayer_SavePrediction();
+				CSQCPlayer_SavePrediction(e);
 			}
-			CSQCPlayer_PredictTo(clientcommandframe + 1, true);
+			CSQCPlayer_PredictTo(e, clientcommandframe + 1, true);
 
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
-			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS.z)
-				self.flags &= ~FL_DUCKED;
-			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS.z)
-				self.flags |= FL_DUCKED;
+			if (vh == pl_viewofs.z) e.flags &= ~FL_DUCKED;
+			else if (vh == pl_viewofs_crouch.z) e.flags |= FL_DUCKED;
 #endif
+			CSQCPlayer_SetMinsMaxs(e);
 
-			CSQCPlayer_SetMinsMaxs();
-
-			self.angles_y = input_angles.y;
+			e.angles_y = input_angles.y;
 		}
 
 		// relink
-		setorigin(self, self.origin);
-
-		setself(this);
+		setorigin(e, e.origin);
 	}
 
-	entity view = CSQCModel_server2csqc(player_localentnum);
-
-	if(view && view != csqcplayer)
+	const entity view = CSQCModel_server2csqc(player_localentnum - 1);
+	if (view)
 	{
-		WITH(entity, self, view, InterpolateOrigin_Do());
-		view.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
-	}
-
-	if(view)
-	{
+		if (view != csqcplayer)
+		{
+			InterpolateOrigin_Do(view);
+			view.view_ofs = '0 0 1' * vh;
+		}
 		int refdefflags = 0;
-
-		if(view.csqcmodel_teleported)
-			refdefflags |= REFDEFFLAG_TELEPORTED;
-
-		if(input_buttons & 4)
-			refdefflags |= REFDEFFLAG_JUMPING;
-
+		if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
+		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
 		// note: these two only work in WIP2, but are harmless in WIP1
-		if(getstati(STAT_HEALTH) <= 0)
-			refdefflags |= REFDEFFLAG_DEAD;
-
-		if(intermission)
-			refdefflags |= REFDEFFLAG_INTERMISSION;
-
+		if (getstati(STAT_HEALTH) <= 0) refdefflags |= REFDEFFLAG_DEAD;
+		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
 		V_CalcRefdef(view, refdefflags);
 	}
 	else
@@ -329,36 +306,32 @@ void CSQCPlayer_SetCamera()
 		// FIXME by CSQC spec we have to do this:
 		// but it breaks chase cam
 		/*
-		setproperty(VF_ORIGIN, pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT));
+		setproperty(VF_ORIGIN, pmove_org + '0 0 1' * vh);
 		setproperty(VF_ANGLES, view_angles);
 		*/
 	}
-
-	{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
+	CSQCPLAYER_HOOK_POSTCAMERASETUP();
 }
 
 void CSQCPlayer_Remove()
 {
-	csqcplayer = world;
+	csqcplayer = NULL;
 	cvar_settemp("cl_movement_replay", "1");
 }
 
-float CSQCPlayer_PreUpdate()
-{SELFPARAM();
-	if(self != csqcplayer)
-		return 0;
-	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
-		CSQCPlayer_Unpredict();
-	return 1;
+bool CSQCPlayer_PreUpdate(entity this)
+{
+	if (this != csqcplayer) return false;
+	if (csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER) CSQCPlayer_Unpredict(this);
+	return true;
 }
 
-float CSQCPlayer_PostUpdate()
-{SELFPARAM();
-	if(self.entnum != player_localnum + 1)
-		return 0;
-	csqcplayer = self;
+bool CSQCPlayer_PostUpdate(entity this)
+{
+	if (this.entnum != player_localnum + 1) return false;
+	csqcplayer = this;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
 	cvar_settemp("cl_movement_replay", "0");
-	self.entremove = CSQCPlayer_Remove;
-	return 1;
+	this.entremove = CSQCPlayer_Remove;
+	return true;
 }

@@ -801,7 +801,7 @@ spawnfunc(func_door)
 
 void door_draw(entity this)
 {
-	Movetype_Physics_NoMatchServer();
+	Movetype_Physics_NoMatchServer(this);
 
 	trigger_draw_generic(this);
 }
