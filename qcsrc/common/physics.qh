@@ -104,21 +104,21 @@ bool IsFlying(entity a);
 
 	#define PHYS_DOUBLEJUMP						getstati(STAT_DOUBLEJUMP)
 
-	#define PHYS_BUGRIGS						getstati(STAT_BUGRIGS)
-	#define PHYS_BUGRIGS_ANGLE_SMOOTHING 		getstati(STAT_BUGRIGS_ANGLE_SMOOTHING)
-	#define PHYS_BUGRIGS_PLANAR_MOVEMENT 		getstati(STAT_BUGRIGS_PLANAR_MOVEMENT)
-	#define PHYS_BUGRIGS_REVERSE_SPEEDING 		getstati(STAT_BUGRIGS_REVERSE_SPEEDING)
-	#define PHYS_BUGRIGS_FRICTION_FLOOR 		getstatf(STAT_BUGRIGS_FRICTION_FLOOR)
-	#define PHYS_BUGRIGS_AIR_STEERING 			getstati(STAT_BUGRIGS_AIR_STEERING)
-	#define PHYS_BUGRIGS_FRICTION_BRAKE 		getstatf(STAT_BUGRIGS_FRICTION_BRAKE)
-	#define PHYS_BUGRIGS_ACCEL 					getstatf(STAT_BUGRIGS_ACCEL)
-	#define PHYS_BUGRIGS_SPEED_REF 				getstatf(STAT_BUGRIGS_SPEED_REF)
-	#define PHYS_BUGRIGS_SPEED_POW 				getstatf(STAT_BUGRIGS_SPEED_POW)
-	#define PHYS_BUGRIGS_STEER 					getstatf(STAT_BUGRIGS_STEER)
-	#define PHYS_BUGRIGS_FRICTION_AIR 			getstatf(STAT_BUGRIGS_FRICTION_AIR)
-	#define PHYS_BUGRIGS_CAR_JUMPING 			getstatf(STAT_BUGRIGS_CAR_JUMPING)
-	#define PHYS_BUGRIGS_REVERSE_SPINNING 		getstatf(STAT_BUGRIGS_REVERSE_SPINNING)
-	#define PHYS_BUGRIGS_REVERSE_STOPPING 		getstatf(STAT_BUGRIGS_REVERSE_STOPPING)
+	#define PHYS_BUGRIGS						STAT(BUGRIGS)
+	#define PHYS_BUGRIGS_ANGLE_SMOOTHING 		STAT(BUGRIGS_ANGLE_SMOOTHING)
+	#define PHYS_BUGRIGS_PLANAR_MOVEMENT 		STAT(BUGRIGS_PLANAR_MOVEMENT)
+	#define PHYS_BUGRIGS_REVERSE_SPEEDING 		STAT(BUGRIGS_REVERSE_SPEEDING)
+	#define PHYS_BUGRIGS_FRICTION_FLOOR 		STAT(BUGRIGS_FRICTION_FLOOR)
+	#define PHYS_BUGRIGS_AIR_STEERING 			STAT(BUGRIGS_AIR_STEERING)
+	#define PHYS_BUGRIGS_FRICTION_BRAKE 		STAT(BUGRIGS_FRICTION_BRAKE)
+	#define PHYS_BUGRIGS_ACCEL 					STAT(BUGRIGS_ACCEL)
+	#define PHYS_BUGRIGS_SPEED_REF 				STAT(BUGRIGS_SPEED_REF)
+	#define PHYS_BUGRIGS_SPEED_POW 				STAT(BUGRIGS_SPEED_POW)
+	#define PHYS_BUGRIGS_STEER 					STAT(BUGRIGS_STEER)
+	#define PHYS_BUGRIGS_FRICTION_AIR 			STAT(BUGRIGS_FRICTION_AIR)
+	#define PHYS_BUGRIGS_CAR_JUMPING 			STAT(BUGRIGS_CAR_JUMPING)
+	#define PHYS_BUGRIGS_REVERSE_SPINNING 		STAT(BUGRIGS_REVERSE_SPINNING)
+	#define PHYS_BUGRIGS_REVERSE_STOPPING 		STAT(BUGRIGS_REVERSE_STOPPING)
 
 	#define PHYS_JUMPSPEEDCAP_MIN				cvar_string("cl_jumpspeedcap_min")
 	#define PHYS_JUMPSPEEDCAP_MAX				cvar_string("cl_jumpspeedcap_max")
@@ -208,21 +208,21 @@ bool IsFlying(entity a);
 	.float stat_gameplayfix_unstickplayers;
 	.float stat_gameplayfix_stepdown;
 
-	.float stat_bugrigs;
-	.float stat_bugrigs_angle_smoothing;
-	.float stat_bugrigs_planar_movement;
-	.float stat_bugrigs_reverse_speeding;
-	.float stat_bugrigs_friction_floor;
-	.float stat_bugrigs_air_steering;
-	.float stat_bugrigs_friction_brake;
-	.float stat_bugrigs_accel;
-	.float stat_bugrigs_speed_ref;
-	.float stat_bugrigs_speed_pow;
-	.float stat_bugrigs_steer;
-	.float stat_bugrigs_friction_air;
-	.float stat_bugrigs_car_jumping;
-	.float stat_bugrigs_reverse_spinning;
-	.float stat_bugrigs_reverse_stopping;
+	.float stat_bugrigs = _STAT(BUGRIGS);
+	.float stat_bugrigs_angle_smoothing = _STAT(BUGRIGS_ANGLE_SMOOTHING);
+	.float stat_bugrigs_planar_movement = _STAT(BUGRIGS_PLANAR_MOVEMENT);
+	.float stat_bugrigs_reverse_speeding = _STAT(BUGRIGS_REVERSE_SPEEDING);
+	.float stat_bugrigs_friction_floor = _STAT(BUGRIGS_FRICTION_FLOOR);
+	.float stat_bugrigs_air_steering = _STAT(BUGRIGS_AIR_STEERING);
+	.float stat_bugrigs_friction_brake = _STAT(BUGRIGS_FRICTION_BRAKE);
+	.float stat_bugrigs_accel = _STAT(BUGRIGS_ACCEL);
+	.float stat_bugrigs_speed_ref = _STAT(BUGRIGS_SPEED_REF);
+	.float stat_bugrigs_speed_pow = _STAT(BUGRIGS_SPEED_POW);
+	.float stat_bugrigs_steer = _STAT(BUGRIGS_STEER);
+	.float stat_bugrigs_friction_air = _STAT(BUGRIGS_FRICTION_AIR);
+	.float stat_bugrigs_car_jumping = _STAT(BUGRIGS_CAR_JUMPING);
+	.float stat_bugrigs_reverse_spinning = _STAT(BUGRIGS_REVERSE_SPINNING);
+	.float stat_bugrigs_reverse_stopping = _STAT(BUGRIGS_REVERSE_STOPPING);
 
 	// new properties
 	.float stat_sv_jumpvelocity;

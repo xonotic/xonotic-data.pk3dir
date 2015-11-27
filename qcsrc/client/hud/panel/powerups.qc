@@ -98,7 +98,7 @@ void HUD_Powerups()
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
 	FOREACH(Buffs, it.m_itemid & allBuffs, LAMBDA(
-		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, STAT(BUFF_TIME) - time, 99), 60);
 	));
 
 	if(!powerupItemsCount)

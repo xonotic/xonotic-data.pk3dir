@@ -13,8 +13,8 @@
 #define PHYS_MULTIJUMP 				getstati(STAT_MULTIJUMP)
 #define PHYS_MULTIJUMP_SPEED 		getstatf(STAT_MULTIJUMP_SPEED)
 #define PHYS_MULTIJUMP_ADD 			getstati(STAT_MULTIJUMP_ADD)
-#define PHYS_MULTIJUMP_MAXSPEED 	getstatf(STAT_MULTIJUMP_MAXSPEED)
-#define PHYS_MULTIJUMP_DODGING 		getstati(STAT_MULTIJUMP_DODGING)
+#define PHYS_MULTIJUMP_MAXSPEED 	STAT(MULTIJUMP_MAXSPEED)
+#define PHYS_MULTIJUMP_DODGING 		STAT(MULTIJUMP_DODGING)
 
 #elif defined(SVQC)
 
@@ -33,8 +33,8 @@ float autocvar_g_multijump_dodging = 1;
 .float stat_multijump;
 .float stat_multijump_speed;
 .float stat_multijump_add;
-.float stat_multijump_maxspeed;
-.float stat_multijump_dodging;
+.float stat_multijump_maxspeed = _STAT(MULTIJUMP_MAXSPEED);
+.float stat_multijump_dodging = _STAT(MULTIJUMP_DODGING);
 
 void multijump_UpdateStats()
 {SELFPARAM();
@@ -50,8 +50,6 @@ void multijump_AddStats()
 	addstat(STAT_MULTIJUMP, AS_INT, stat_multijump);
 	addstat(STAT_MULTIJUMP_SPEED, AS_FLOAT, stat_multijump_speed);
 	addstat(STAT_MULTIJUMP_ADD, AS_INT, stat_multijump_add);
-	addstat(STAT_MULTIJUMP_MAXSPEED, AS_FLOAT, stat_multijump_maxspeed);
-	addstat(STAT_MULTIJUMP_DODGING, AS_INT, stat_multijump_dodging);
 }
 
 #endif

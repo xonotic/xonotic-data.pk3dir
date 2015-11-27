@@ -77,15 +77,13 @@ const vector BUFF_MAX = ('16 16 20');
 #include "../../../gamemodes/all.qh"
 #include "../../../buffs/all.qh"
 
-.float buff_time;
+.float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit();
 
 REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 {
 	MUTATOR_ONADD
 	{
-		addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
-
 		InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 	}
 }

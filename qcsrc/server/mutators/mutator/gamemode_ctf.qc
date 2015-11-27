@@ -183,7 +183,7 @@ void havocbot_role_ctf_setrole(entity bot, int role);
 #define CTF_DIFFTEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))
 
 // networked flag statuses
-.int ctf_flagstatus;
+.int ctf_flagstatus = _STAT(CTF_FLAGSTATUS);
 #endif
 
 const int CTF_RED_FLAG_TAKEN			= 1;
@@ -2773,8 +2773,6 @@ void ctf_Initialize()
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	ctf_captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
-
-	addstat(STAT_CTF_FLAGSTATUS, AS_INT, ctf_flagstatus);
 
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }

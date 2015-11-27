@@ -28,7 +28,7 @@
 float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 
 #ifdef SVQC
-.int stat_gameplayfix_upvelocityclearsonground;
+.int stat_gameplayfix_upvelocityclearsonground = _STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND);
 
 #define GRAVITY_UNAFFECTED_BY_TICRATE autocvar_sv_gameplayfix_gravityunaffectedbyticrate
 #define UPWARD_VELOCITY_CLEARS_ONGROUND autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag
@@ -36,7 +36,7 @@ float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 #define TICRATE sys_frametime
 #elif defined(CSQC)
 #define GRAVITY_UNAFFECTED_BY_TICRATE (STAT(MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
-#define UPWARD_VELOCITY_CLEARS_ONGROUND getstati(STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
+#define UPWARD_VELOCITY_CLEARS_ONGROUND STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
 
 #define TICRATE ticrate
 #endif
