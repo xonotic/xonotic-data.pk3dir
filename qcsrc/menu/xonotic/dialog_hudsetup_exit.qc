@@ -40,7 +40,8 @@ void XonoticHUDExitDialog_fill(entity me)
 			e.onClick = SetHUDSkin_Click;
 			e.onClickEntity = hudskinlist;
 	me.gotoRC(me, me.rows - 2.5, 0);
-		me.TD(me, 1, 2, e = makeXonoticButton(_("Save current skin"), '0 0 0'));
+		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Save current skin"), '0 0 0',
+			"Note: HUD skins are saved in data/data/ directory and can be manually renamed/deleted from there"));
 			e.onClick = SaveHUDSkin_Click;
 			e.onClickEntity = hudskinlist;
 		me.TD(me, 1, 2, e = makeXonoticInputBox(0, string_null));
