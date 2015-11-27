@@ -50,7 +50,6 @@ void XonoticDemoBrowserTab_fill(entity me)
 		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
 			e.onChange = DemoList_Filter_Change;
 			e.onChangeEntity = demolist;
-			demolist.controlledTextbox = e;
 
 	me.gotoRC(me, 0, 3.7);
 		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_autodemo", _("Auto record demos")));

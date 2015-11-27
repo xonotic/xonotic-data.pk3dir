@@ -29,7 +29,6 @@ void XonoticHUDExitDialog_fill(entity me)
 		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
 			e.onChange = HUDSkinList_Filter_Change;
 			e.onChangeEntity = hudskinlist;
-			hudskinlist.controlledTextbox = e;
 	me.TR(me);
 		me.TD(me, 12, 4, hudskinlist);
 	me.gotoRC(me, me.rows - 4, 0);
