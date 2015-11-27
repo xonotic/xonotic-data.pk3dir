@@ -227,7 +227,7 @@ float default_weapon_alpha;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_jetpack_jump;
-.float cvar_cl_movement_track_canjump;
+.float cvar_cl_movement_track_canjump = _STAT(MOVEVARS_CL_TRACK_CANJUMP);
 .float cvar_cl_newusekeysupported;
 
 .string cvar_g_xonoticversion;

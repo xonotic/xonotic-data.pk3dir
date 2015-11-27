@@ -57,30 +57,6 @@ void Physics_AddStats()
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
-	addstat(STAT_MOVEVARS_HIGHSPEED, AS_FLOAT, stat_movement_highspeed);
-
-	// jet pack
-	addstat(STAT_JETPACK_ACCEL_SIDE, AS_FLOAT, stat_jetpack_accel_side);
-	addstat(STAT_JETPACK_ACCEL_UP, AS_FLOAT, stat_jetpack_accel_up);
-	addstat(STAT_JETPACK_ANTIGRAVITY, AS_FLOAT, stat_jetpack_antigravity);
-	addstat(STAT_JETPACK_FUEL, AS_FLOAT, stat_jetpack_fuel);
-	addstat(STAT_JETPACK_MAXSPEED_UP, AS_FLOAT, stat_jetpack_maxspeed_up);
-	addstat(STAT_JETPACK_MAXSPEED_SIDE, AS_FLOAT, stat_jetpack_maxspeed_side);
-
-	// hack to fix track_canjump
-	addstat(STAT_MOVEVARS_CL_TRACK_CANJUMP, AS_INT, cvar_cl_movement_track_canjump);
-	addstat(STAT_MOVEVARS_TRACK_CANJUMP, AS_INT, stat_sv_track_canjump);
-
-	// double jump
-	addstat(STAT_DOUBLEJUMP, AS_INT, stat_doublejump);
-
-	// jump speed caps
-	addstat(STAT_MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, AS_INT, stat_jumpspeedcap_disable_onramps);
-
-	// hacks
-	addstat(STAT_MOVEVARS_FRICTION_ONLAND, AS_FLOAT, stat_sv_friction_on_land);
-	addstat(STAT_MOVEVARS_FRICTION_SLICK, AS_FLOAT, stat_sv_friction_slick);
-	addstat(STAT_GAMEPLAYFIX_EASIERWATERJUMP, AS_INT, stat_gameplayfix_easierwaterjump);
 
 	// new properties
 	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
@@ -119,23 +95,32 @@ void Physics_UpdateStats(float maxspd_mod)
 		: 0;
 	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(self, "airspeedlimit_nonqw") * maxspd_mod;
 	self.stat_sv_maxspeed = Physics_ClientOption(self, "maxspeed") * maxspd_mod; // also slow walking
-	self.stat_movement_highspeed = PHYS_HIGHSPEED; // TODO: remove this!
+	STAT(MOVEVARS_HIGHSPEED, this) = PHYS_HIGHSPEED; // TODO: remove this!
 
-	self.stat_doublejump = PHYS_DOUBLEJUMP;
+	STAT(DOUBLEJUMP, this) = PHYS_DOUBLEJUMP;
 
-	self.stat_jetpack_antigravity = PHYS_JETPACK_ANTIGRAVITY;
-	self.stat_jetpack_accel_up = PHYS_JETPACK_ACCEL_UP;
-	self.stat_jetpack_accel_side = PHYS_JETPACK_ACCEL_SIDE;
-	self.stat_jetpack_maxspeed_side = PHYS_JETPACK_MAXSPEED_SIDE;
-	self.stat_jetpack_maxspeed_up = PHYS_JETPACK_MAXSPEED_UP;
-	self.stat_jetpack_fuel = PHYS_JETPACK_FUEL;
+	STAT(JETPACK_ANTIGRAVITY, this) = PHYS_JETPACK_ANTIGRAVITY;
+	STAT(JETPACK_ACCEL_UP, this) = PHYS_JETPACK_ACCEL_UP;
+	STAT(JETPACK_ACCEL_SIDE, this) = PHYS_JETPACK_ACCEL_SIDE;
+	STAT(JETPACK_MAXSPEED_SIDE, this) = PHYS_JETPACK_MAXSPEED_SIDE;
+	STAT(JETPACK_MAXSPEED_UP, this) = PHYS_JETPACK_MAXSPEED_UP;
+	STAT(JETPACK_FUEL, this) = PHYS_JETPACK_FUEL;
 
-	self.stat_jumpspeedcap_disable_onramps = PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS;
+	STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, this) = PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS;
 
-	self.stat_sv_friction_on_land = PHYS_FRICTION_ONLAND;
-	self.stat_sv_friction_slick = PHYS_FRICTION_SLICK;
+	STAT(MOVEVARS_FRICTION_ONLAND, this) = PHYS_FRICTION_ONLAND;
+	STAT(MOVEVARS_FRICTION_SLICK, this) = PHYS_FRICTION_SLICK;
 
-	self.stat_gameplayfix_easierwaterjump = GAMEPLAYFIX_EASIERWATERJUMP;
+	STAT(MOVEVARS_JUMPSTEP, this) = PHYS_JUMPSTEP;
+
+	STAT(GAMEPLAYFIX_STEPDOWN, this) = GAMEPLAYFIX_STEPDOWN;
+
+	STAT(NOSTEP, this) = PHYS_NOSTEP;
+
+	STAT(GAMEPLAYFIX_EASIERWATERJUMP, this) = GAMEPLAYFIX_EASIERWATERJUMP;
+	STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, this) = GAMEPLAYFIX_DOWNTRACEONGROUND;
+	STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, this) = GAMEPLAYFIX_STEPMULTIPLETIMES;
+	STAT(GAMEPLAYFIX_UNSTICKPLAYERS, this) = GAMEPLAYFIX_UNSTICKPLAYERS;
 
 
 	// old stats
@@ -160,7 +145,7 @@ void Physics_UpdateStats(float maxspd_mod)
 	self.stat_sv_airstopaccelerate = Physics_ClientOption(self, "airstopaccelerate");
 	self.stat_sv_jumpvelocity = Physics_ClientOption(self, "jumpvelocity");
 
-	self.stat_sv_track_canjump = Physics_ClientOption(self, "track_canjump");
+	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(self, "track_canjump");
 
 	self.stat_gameplayfix_upvelocityclearsonground = UPWARD_VELOCITY_CLEARS_ONGROUND;
 }

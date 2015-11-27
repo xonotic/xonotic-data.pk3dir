@@ -2,18 +2,18 @@
 
 #ifdef CSQC
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
-	#define PHYS_DODGING 						getstati(STAT_DODGING)
-	#define PHYS_DODGING_DELAY 					getstatf(STAT_DODGING_DELAY)
-	#define PHYS_DODGING_TIMEOUT(s) 			getstatf(STAT_DODGING_TIMEOUT)
-	#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	getstatf(STAT_DODGING_HORIZ_SPEED_FROZEN)
-	#define PHYS_DODGING_FROZEN_NODOUBLETAP		getstati(STAT_DODGING_FROZEN_NO_DOUBLETAP)
-	#define PHYS_DODGING_HORIZ_SPEED 			getstatf(STAT_DODGING_HORIZ_SPEED)
+	#define PHYS_DODGING 						STAT(DODGING)
+	#define PHYS_DODGING_DELAY 					STAT(DODGING_DELAY)
+	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
+	#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	STAT(DODGING_HORIZ_SPEED_FROZEN)
+	#define PHYS_DODGING_FROZEN_NODOUBLETAP		STAT(DODGING_FROZEN_NO_DOUBLETAP)
+	#define PHYS_DODGING_HORIZ_SPEED 			STAT(DODGING_HORIZ_SPEED)
 	#define PHYS_DODGING_PRESSED_KEYS(s)		s.pressedkeys
-	#define PHYS_DODGING_HEIGHT_THRESHOLD 		getstatf(STAT_DODGING_HEIGHT_THRESHOLD)
-	#define PHYS_DODGING_DISTANCE_THRESHOLD 	getstatf(STAT_DODGING_DISTANCE_THRESHOLD)
-	#define PHYS_DODGING_RAMP_TIME 				getstatf(STAT_DODGING_RAMP_TIME)
-	#define PHYS_DODGING_UP_SPEED 				getstatf(STAT_DODGING_UP_SPEED)
-	#define PHYS_DODGING_WALL 					getstatf(STAT_DODGING_WALL)
+	#define PHYS_DODGING_HEIGHT_THRESHOLD 		STAT(DODGING_HEIGHT_THRESHOLD)
+	#define PHYS_DODGING_DISTANCE_THRESHOLD 	STAT(DODGING_DISTANCE_THRESHOLD)
+	#define PHYS_DODGING_RAMP_TIME 				STAT(DODGING_RAMP_TIME)
+	#define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED)
+	#define PHYS_DODGING_WALL 					STAT(DODGING_WALL)
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
 	#define PHYS_DODGING 						g_dodging
@@ -54,19 +54,19 @@ float g_dodging;
 #include "../../../animdecide.qh"
 #include "../../../physics.qh"
 
-.float cvar_cl_dodging_timeout;
+.float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
 
-.float stat_dodging;
-.float stat_dodging_delay;
-.float stat_dodging_horiz_speed_frozen;
-.float stat_dodging_frozen_nodoubletap;
-.float stat_dodging_frozen;
-.float stat_dodging_horiz_speed;
-.float stat_dodging_height_threshold;
-.float stat_dodging_distance_threshold;
-.float stat_dodging_ramp_time;
-.float stat_dodging_up_speed;
-.float stat_dodging_wall;
+.float stat_dodging = _STAT(DODGING);
+.float stat_dodging_delay = _STAT(DODGING_DELAY);
+.float stat_dodging_horiz_speed_frozen = _STAT(DODGING_HORIZ_SPEED_FROZEN);
+.float stat_dodging_frozen_nodoubletap = _STAT(DODGING_FROZEN_NO_DOUBLETAP);
+.float stat_dodging_frozen = _STAT(DODGING_FROZEN);
+.float stat_dodging_horiz_speed = _STAT(DODGING_HORIZ_SPEED);
+.float stat_dodging_height_threshold = _STAT(DODGING_HEIGHT_THRESHOLD);
+.float stat_dodging_distance_threshold = _STAT(DODGING_DISTANCE_THRESHOLD);
+.float stat_dodging_ramp_time = _STAT(DODGING_RAMP_TIME);
+.float stat_dodging_up_speed = _STAT(DODGING_UP_SPEED);
+.float stat_dodging_wall = _STAT(DODGING_WALL);
 
 REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 {
@@ -74,18 +74,6 @@ REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 	MUTATOR_ONADD
 	{
 		g_dodging = cvar("g_dodging");
-		addstat(STAT_DODGING, AS_INT, stat_dodging);
-		addstat(STAT_DODGING_DELAY, AS_FLOAT, stat_dodging_delay);
-		addstat(STAT_DODGING_TIMEOUT, AS_FLOAT, cvar_cl_dodging_timeout); // we stat this, so it is updated on the client when updated on server (otherwise, chaos)
-		addstat(STAT_DODGING_FROZEN_NO_DOUBLETAP, AS_INT, stat_dodging_frozen_nodoubletap);
-		addstat(STAT_DODGING_HORIZ_SPEED_FROZEN, AS_FLOAT, stat_dodging_horiz_speed_frozen);
-		addstat(STAT_DODGING_FROZEN, AS_INT, stat_dodging_frozen);
-		addstat(STAT_DODGING_HORIZ_SPEED, AS_FLOAT, stat_dodging_horiz_speed);
-		addstat(STAT_DODGING_HEIGHT_THRESHOLD, AS_FLOAT, stat_dodging_height_threshold);
-		addstat(STAT_DODGING_DISTANCE_THRESHOLD, AS_FLOAT, stat_dodging_distance_threshold);
-		addstat(STAT_DODGING_RAMP_TIME, AS_FLOAT, stat_dodging_ramp_time);
-		addstat(STAT_DODGING_UP_SPEED, AS_FLOAT, stat_dodging_up_speed);
-		addstat(STAT_DODGING_WALL, AS_FLOAT, stat_dodging_wall);
 	}
 
 	// this just turns off the cvar.

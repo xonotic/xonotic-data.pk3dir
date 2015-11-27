@@ -10,9 +10,9 @@
 
 #ifdef CSQC
 
-#define PHYS_MULTIJUMP 				getstati(STAT_MULTIJUMP)
-#define PHYS_MULTIJUMP_SPEED 		getstatf(STAT_MULTIJUMP_SPEED)
-#define PHYS_MULTIJUMP_ADD 			getstati(STAT_MULTIJUMP_ADD)
+#define PHYS_MULTIJUMP 				STAT(MULTIJUMP)
+#define PHYS_MULTIJUMP_SPEED 		STAT(MULTIJUMP_SPEED)
+#define PHYS_MULTIJUMP_ADD 			STAT(MULTIJUMP_ADD)
 #define PHYS_MULTIJUMP_MAXSPEED 	STAT(MULTIJUMP_MAXSPEED)
 #define PHYS_MULTIJUMP_DODGING 		STAT(MULTIJUMP_DODGING)
 
@@ -30,26 +30,19 @@ float autocvar_g_multijump_dodging = 1;
 #define PHYS_MULTIJUMP_MAXSPEED 	autocvar_g_multijump_maxspeed
 #define PHYS_MULTIJUMP_DODGING 		autocvar_g_multijump_dodging
 
-.float stat_multijump;
-.float stat_multijump_speed;
-.float stat_multijump_add;
+.float stat_multijump = _STAT(MULTIJUMP);
+.float stat_multijump_speed = _STAT(MULTIJUMP_SPEED);
+.float stat_multijump_add = _STAT(MULTIJUMP_ADD);
 .float stat_multijump_maxspeed = _STAT(MULTIJUMP_MAXSPEED);
 .float stat_multijump_dodging = _STAT(MULTIJUMP_DODGING);
 
 void multijump_UpdateStats()
 {SELFPARAM();
-	self.stat_multijump = PHYS_MULTIJUMP;
-	self.stat_multijump_speed = PHYS_MULTIJUMP_SPEED;
-	self.stat_multijump_add = PHYS_MULTIJUMP_ADD;
-	self.stat_multijump_maxspeed = PHYS_MULTIJUMP_MAXSPEED;
-	self.stat_multijump_dodging = PHYS_MULTIJUMP_DODGING;
-}
-
-void multijump_AddStats()
-{
-	addstat(STAT_MULTIJUMP, AS_INT, stat_multijump);
-	addstat(STAT_MULTIJUMP_SPEED, AS_FLOAT, stat_multijump_speed);
-	addstat(STAT_MULTIJUMP_ADD, AS_INT, stat_multijump_add);
+	STAT(MULTIJUMP, this) = PHYS_MULTIJUMP;
+	STAT(MULTIJUMP_SPEED, this) = PHYS_MULTIJUMP_SPEED;
+	STAT(MULTIJUMP_ADD, this) = PHYS_MULTIJUMP_ADD;
+	STAT(MULTIJUMP_MAXSPEED, this) = PHYS_MULTIJUMP_MAXSPEED;
+	STAT(MULTIJUMP_DODGING, this) = PHYS_MULTIJUMP_DODGING;
 }
 
 #endif
@@ -141,14 +134,7 @@ bool PM_multijump_checkjump()
 }
 
 #ifdef SVQC
-REGISTER_MUTATOR(multijump, cvar("g_multijump"))
-{
-	MUTATOR_ONADD
-	{
-		multijump_AddStats();
-	}
-	return false;
-}
+REGISTER_MUTATOR(multijump, cvar("g_multijump"));
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
