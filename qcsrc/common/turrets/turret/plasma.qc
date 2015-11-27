@@ -8,8 +8,8 @@ CLASS(PlasmaTurret, Turret)
 /* mins       */ ATTRIB(PlasmaTurret, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(PlasmaTurret, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(PlasmaTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB(PlasmaTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(PlasmaTurret, head_model, string, strzone(strcat("models/turrets/", "plasma.md3")));
+/* model      */ ATTRIB_STRZONE(PlasmaTurret, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(PlasmaTurret, head_model, string, strcat("models/turrets/", "plasma.md3"));
 /* netname    */ ATTRIB(PlasmaTurret, netname, string, "plasma");
 /* fullname   */ ATTRIB(PlasmaTurret, turret_name, string, _("Plasma Cannon"));
     ATTRIB(PlasmaTurret, m_weapon, Weapon, WEP_PLASMA);

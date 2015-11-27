@@ -10,8 +10,8 @@ CLASS(EWheel, Turret)
 /* mins       */ ATTRIB(EWheel, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(EWheel, maxs, vector, '32 32 48');
 /* modelname  */ ATTRIB(EWheel, mdl, string, "ewheel-base2.md3");
-/* model      */ ATTRIB(EWheel, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(EWheel, head_model, string, strzone(strcat("models/turrets/", "ewheel-gun1.md3")));
+/* model      */ ATTRIB_STRZONE(EWheel, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(EWheel, head_model, string, strcat("models/turrets/", "ewheel-gun1.md3"));
 /* netname    */ ATTRIB(EWheel, netname, string, "ewheel");
 /* fullname   */ ATTRIB(EWheel, turret_name, string, _("eWheel Turret"));
     ATTRIB(EWheel, m_weapon, Weapon, WEP_EWHEEL);
