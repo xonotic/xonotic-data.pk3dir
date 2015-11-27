@@ -551,6 +551,10 @@ spawnfunc(__init_dedicated_server)
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
 
+void __init_dedicated_server_shutdown() {
+	MapInfo_Shutdown();
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
@@ -2160,5 +2164,9 @@ void Shutdown()
 	else if(world_initialized == 0)
 	{
 		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data\n");
+	}
+	else
+	{
+		__init_dedicated_server_shutdown();
 	}
 }
