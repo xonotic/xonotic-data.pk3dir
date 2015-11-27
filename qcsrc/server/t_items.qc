@@ -96,6 +96,12 @@ void Item_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
+void ItemRemove()
+{SELFPARAM();
+	if (self.mdl)
+		strunzone(self.mdl);
+}
+
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 {
     int sf = ReadByte();
@@ -242,6 +248,9 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         if(self.ItemStatus & ITS_ANIMATE2)
             self.move_avelocity = '0 -90 0';
     }
+
+    self.entremove = ItemRemove;
+
     return true;
 }
 
