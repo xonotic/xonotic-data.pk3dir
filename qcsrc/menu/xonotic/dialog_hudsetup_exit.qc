@@ -40,10 +40,12 @@ void XonoticHUDExitDialog_fill(entity me)
 			e.onClick = SetHUDSkin_Click;
 			e.onClickEntity = hudskinlist;
 	me.gotoRC(me, me.rows - 2.5, 0);
-		me.TDempty(me, 0.75);
-		me.TD(me, 1, 2.5, e = makeXonoticButton(_("Save current skin"), '0 0 0'));
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Save current skin"), '0 0 0'));
 			e.onClick = SaveHUDSkin_Click;
 			e.onClickEntity = hudskinlist;
+		me.TD(me, 1, 2, e = makeXonoticInputBox(0, string_null));
+			e.onChange = HUDSkinList_SavedName_Change;
+			e.onChangeEntity = hudskinlist;
 
 	me.gotoRC(me, 0, 4.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Panel background defaults:")));

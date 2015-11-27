@@ -28,6 +28,7 @@ CLASS(XonoticHUDSkinList, XonoticListBox)
 
 	ATTRIB(XonoticHUDSkinList, filterString, string, string_null)
 	ATTRIB(XonoticHUDSkinList, delayedRefreshTime, float, 0)
+	ATTRIB(XonoticHUDSkinList, savedName, string, string_null)
 ENDCLASS(XonoticHUDSkinList)
 
 #ifndef IMPLEMENTATION
@@ -39,6 +40,7 @@ void SetHUDSkin_Click(entity btn, entity me);
 #endif
 void HUDSkinList_Refresh_Click(entity btn, entity me);
 void HUDSkinList_Filter_Change(entity box, entity me);
+void HUDSkinList_SavedName_Change(entity box, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -189,6 +191,17 @@ void HUDSkinList_Refresh_Click(entity btn, entity me)
 	me.setSelected(me, 0); //always select the first element after a list update
 }
 
+void HUDSkinList_SavedName_Change(entity box, entity me)
+{
+	if(me.savedName)
+		strunzone(me.savedName);
+
+	if(box.text != "")
+		me.savedName = strzone(box.text);
+	else
+		me.savedName = string_null;
+}
+
 void HUDSkinList_Filter_Change(entity box, entity me)
 {
 	if(me.filterString)
@@ -209,7 +222,10 @@ void HUDSkinList_Filter_Change(entity box, entity me)
 
 void SaveHUDSkin_Click(entity btn, entity me)
 {
-	localcmd("hud save myconfig\n");
+	string s = me.savedName;
+	if(s == "")
+		s = "myconfig";
+	localcmd(sprintf("hud save \"%s\"\n", s));
 	me.delayedRefreshTime = time + 1;
 }
 
