@@ -37,7 +37,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = PHYS_GRAVITY;
+	grav = PHYS_GRAVITY(other);
 	if(PHYS_ENTGRAVITY(other))
 		grav *= PHYS_ENTGRAVITY(other);
 

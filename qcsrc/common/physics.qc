@@ -53,101 +53,48 @@ void Physics_AddStats()
 	addstat(STAT_PL_CROUCH_MAX1, AS_FLOAT, stat_pl_crouch_max_x);
 	addstat(STAT_PL_CROUCH_MAX2, AS_FLOAT, stat_pl_crouch_max_y);
 	addstat(STAT_PL_CROUCH_MAX3, AS_FLOAT, stat_pl_crouch_max_z);
-
-	// g_movementspeed hack
-	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
-	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
-
-	// new properties
-	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
-	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
-	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
-	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
-	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
-	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, AS_FLOAT, stat_sv_warsowbunny_backtosideratio);
-	addstat(STAT_MOVEVARS_FRICTION, AS_FLOAT, stat_sv_friction);
-	addstat(STAT_MOVEVARS_ACCELERATE, AS_FLOAT, stat_sv_accelerate);
-	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
-	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
-	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
 }
 
-void Physics_UpdateStats(float maxspd_mod)
-{SELFPARAM();
+void Physics_UpdateStats(entity this, float maxspd_mod)
+{
 	// blah
-	self.stat_pl_view_ofs = PL_VIEW_OFS;
-	self.stat_pl_crouch_view_ofs = PL_CROUCH_VIEW_OFS;
+	this.stat_pl_view_ofs = PL_VIEW_OFS;
+	this.stat_pl_crouch_view_ofs = PL_CROUCH_VIEW_OFS;
 
-	self.stat_pl_min = PL_MIN;
-	self.stat_pl_max = PL_MAX;
-	self.stat_pl_crouch_min = PL_CROUCH_MIN;
-	self.stat_pl_crouch_max = PL_CROUCH_MAX;
+	this.stat_pl_min = PL_MIN;
+	this.stat_pl_max = PL_MAX;
+	this.stat_pl_crouch_min = PL_CROUCH_MIN;
+	this.stat_pl_crouch_max = PL_CROUCH_MAX;
 
-
-	self.stat_sv_airaccel_qw = AdjustAirAccelQW(Physics_ClientOption(self, "airaccel_qw"), maxspd_mod);
-	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(self, "airstrafeaccel_qw"))
-		? AdjustAirAccelQW(Physics_ClientOption(self, "airstrafeaccel_qw"), maxspd_mod)
+	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw"), maxspd_mod);
+	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw"))
+		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw"), maxspd_mod)
 		: 0;
-	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(self, "airspeedlimit_nonqw") * maxspd_mod;
-	self.stat_sv_maxspeed = Physics_ClientOption(self, "maxspeed") * maxspd_mod; // also slow walking
-	STAT(MOVEVARS_HIGHSPEED, this) = PHYS_HIGHSPEED; // TODO: remove this!
-
-	STAT(DOUBLEJUMP, this) = PHYS_DOUBLEJUMP;
-
-	STAT(JETPACK_ANTIGRAVITY, this) = PHYS_JETPACK_ANTIGRAVITY;
-	STAT(JETPACK_ACCEL_UP, this) = PHYS_JETPACK_ACCEL_UP;
-	STAT(JETPACK_ACCEL_SIDE, this) = PHYS_JETPACK_ACCEL_SIDE;
-	STAT(JETPACK_MAXSPEED_SIDE, this) = PHYS_JETPACK_MAXSPEED_SIDE;
-	STAT(JETPACK_MAXSPEED_UP, this) = PHYS_JETPACK_MAXSPEED_UP;
-	STAT(JETPACK_FUEL, this) = PHYS_JETPACK_FUEL;
-
-	STAT(MOVEVARS_JUMPSPEEDCAP_DISABLE_ONRAMPS, this) = PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS;
-
-	STAT(MOVEVARS_FRICTION_ONLAND, this) = PHYS_FRICTION_ONLAND;
-	STAT(MOVEVARS_FRICTION_SLICK, this) = PHYS_FRICTION_SLICK;
-
-	STAT(MOVEVARS_JUMPSTEP, this) = PHYS_JUMPSTEP;
-
-	STAT(GAMEPLAYFIX_STEPDOWN, this) = GAMEPLAYFIX_STEPDOWN;
-
-	STAT(NOSTEP, this) = PHYS_NOSTEP;
-
-	STAT(GAMEPLAYFIX_EASIERWATERJUMP, this) = GAMEPLAYFIX_EASIERWATERJUMP;
-	STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, this) = GAMEPLAYFIX_DOWNTRACEONGROUND;
-	STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, this) = GAMEPLAYFIX_STEPMULTIPLETIMES;
-	STAT(GAMEPLAYFIX_UNSTICKPLAYERS, this) = GAMEPLAYFIX_UNSTICKPLAYERS;
-
+	STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW, this) = Physics_ClientOption(this, "airspeedlimit_nonqw") * maxspd_mod;
+	STAT(MOVEVARS_MAXSPEED, this) = Physics_ClientOption(this, "maxspeed") * maxspd_mod; // also slow walking
 
 	// old stats
 	// fix some new settings
-	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(self, "airaccel_qw_stretchfactor");
-	self.stat_sv_maxairstrafespeed = Physics_ClientOption(self, "maxairstrafespeed");
-	self.stat_sv_maxairspeed = Physics_ClientOption(self, "maxairspeed");
-	self.stat_sv_airstrafeaccelerate = Physics_ClientOption(self, "airstrafeaccelerate");
-	self.stat_sv_warsowbunny_turnaccel = Physics_ClientOption(self, "warsowbunny_turnaccel");
-	self.stat_sv_airaccel_sideways_friction = Physics_ClientOption(self, "airaccel_sideways_friction");
-	self.stat_sv_aircontrol = Physics_ClientOption(self, "aircontrol");
-	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(self, "aircontrol_power");
-	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(self, "aircontrol_penalty");
-	self.stat_sv_warsowbunny_airforwardaccel = Physics_ClientOption(self, "warsowbunny_airforwardaccel");
-	self.stat_sv_warsowbunny_topspeed = Physics_ClientOption(self, "warsowbunny_topspeed");
-	self.stat_sv_warsowbunny_accel = Physics_ClientOption(self, "warsowbunny_accel");
-	self.stat_sv_warsowbunny_backtosideratio = Physics_ClientOption(self, "warsowbunny_backtosideratio");
-	self.stat_sv_friction = Physics_ClientOption(self, "friction");
-	self.stat_sv_accelerate = Physics_ClientOption(self, "accelerate");
-	self.stat_sv_stopspeed = Physics_ClientOption(self, "stopspeed");
-	self.stat_sv_airaccelerate = Physics_ClientOption(self, "airaccelerate");
-	self.stat_sv_airstopaccelerate = Physics_ClientOption(self, "airstopaccelerate");
-	self.stat_sv_jumpvelocity = Physics_ClientOption(self, "jumpvelocity");
-
-	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(self, "track_canjump");
-
-	self.stat_gameplayfix_upvelocityclearsonground = UPWARD_VELOCITY_CLEARS_ONGROUND;
+	STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, this) = Physics_ClientOption(this, "airaccel_qw_stretchfactor");
+	STAT(MOVEVARS_MAXAIRSTRAFESPEED, this) = Physics_ClientOption(this, "maxairstrafespeed");
+	STAT(MOVEVARS_MAXAIRSPEED, this) = Physics_ClientOption(this, "maxairspeed");
+	STAT(MOVEVARS_AIRSTRAFEACCELERATE, this) = Physics_ClientOption(this, "airstrafeaccelerate");
+	STAT(MOVEVARS_WARSOWBUNNY_TURNACCEL, this) = Physics_ClientOption(this, "warsowbunny_turnaccel");
+	STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, this) = Physics_ClientOption(this, "airaccel_sideways_friction");
+	STAT(MOVEVARS_AIRCONTROL, this) = Physics_ClientOption(this, "aircontrol");
+	STAT(MOVEVARS_AIRCONTROL_POWER, this) = Physics_ClientOption(this, "aircontrol_power");
+	STAT(MOVEVARS_AIRCONTROL_PENALTY, this) = Physics_ClientOption(this, "aircontrol_penalty");
+	STAT(MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, this) = Physics_ClientOption(this, "warsowbunny_airforwardaccel");
+	STAT(MOVEVARS_WARSOWBUNNY_TOPSPEED, this) = Physics_ClientOption(this, "warsowbunny_topspeed");
+	STAT(MOVEVARS_WARSOWBUNNY_ACCEL, this) = Physics_ClientOption(this, "warsowbunny_accel");
+	STAT(MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, this) = Physics_ClientOption(this, "warsowbunny_backtosideratio");
+	STAT(MOVEVARS_FRICTION, this) = Physics_ClientOption(this, "friction");
+	STAT(MOVEVARS_ACCELERATE, this) = Physics_ClientOption(this, "accelerate");
+	STAT(MOVEVARS_STOPSPEED, this) = Physics_ClientOption(this, "stopspeed");
+	STAT(MOVEVARS_AIRACCELERATE, this) = Physics_ClientOption(this, "airaccelerate");
+	STAT(MOVEVARS_AIRSTOPACCELERATE, this) = Physics_ClientOption(this, "airstopaccelerate");
+	STAT(MOVEVARS_JUMPVELOCITY, this) = Physics_ClientOption(this, "jumpvelocity");
+	STAT(MOVEVARS_TRACK_CANJUMP, this) = Physics_ClientOption(this, "track_canjump");
 }
 #endif
 
@@ -842,7 +789,7 @@ void RaceCarPhysics()
 		vector rigvel_xy, neworigin, up;
 		float mt;
 
-		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY; // 4x gravity plays better
+		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY(this); // 4x gravity plays better
 		rigvel_xy = vec2(rigvel);
 
 		if (g_bugrigs_planar_movement_car_jumping)
@@ -891,7 +838,7 @@ void RaceCarPhysics()
 	}
 	else
 	{
-		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY; // 4x gravity plays better
+		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY(this); // 4x gravity plays better
 		self.velocity = rigvel;
 		self.movetype = MOVETYPE_FLY;
 	}
@@ -1237,7 +1184,7 @@ void PM_ladder(float maxspd_mod)
 	UNSET_ONGROUND(self);
 
 	float g;
-	g = PHYS_GRAVITY * PHYS_INPUT_TIMELENGTH;
+	g = PHYS_GRAVITY(this) * PHYS_INPUT_TIMELENGTH;
 	if (PHYS_ENTGRAVITY(self))
 		g *= PHYS_ENTGRAVITY(self);
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
@@ -1303,7 +1250,7 @@ void PM_jetpack(float maxspd_mod)
 	// it is now normalized, so...
 	float a_side = PHYS_JETPACK_ACCEL_SIDE;
 	float a_up = PHYS_JETPACK_ACCEL_UP;
-	float a_add = PHYS_JETPACK_ANTIGRAVITY * PHYS_GRAVITY;
+	float a_add = PHYS_JETPACK_ANTIGRAVITY * PHYS_GRAVITY(this);
 
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
@@ -1352,7 +1299,7 @@ void PM_jetpack(float maxspd_mod)
 
 	float fxy, fz;
 	fxy = bound(0, 1 - (self.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / PHYS_JETPACK_MAXSPEED_SIDE, 1);
-	if (wishvel_z - PHYS_GRAVITY > 0)
+	if (wishvel_z - PHYS_GRAVITY(this) > 0)
 		fz = bound(0, 1 - self.velocity_z / PHYS_JETPACK_MAXSPEED_UP, 1);
 	else
 		fz = bound(0, 1 + self.velocity_z / PHYS_JETPACK_MAXSPEED_UP, 1);
@@ -1361,7 +1308,7 @@ void PM_jetpack(float maxspd_mod)
 	fvel = vlen(wishvel);
 	wishvel_x *= fxy;
 	wishvel_y *= fxy;
-	wishvel_z = (wishvel_z - PHYS_GRAVITY) * fz + PHYS_GRAVITY;
+	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
 
 	fvel = min(1, vlen(wishvel) / best);
 	if (PHYS_JETPACK_FUEL && !(ITEMS_STAT(self) & IT_UNLIMITED_WEAPON_AMMO))
@@ -1388,7 +1335,7 @@ void PM_jetpack(float maxspd_mod)
 	}
 
 #ifdef CSQC
-	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
+	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		self.velocity_z -= g * 0.5;
 	else
@@ -1475,7 +1422,7 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 		float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
 		self.velocity += accelspeed * wishdir;
 	}
-	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
+	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
 	if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		self.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
 	if (self.velocity * self.velocity)
@@ -1547,7 +1494,7 @@ void PM_air(float buttons_prev, float maxspd_mod)
 		if (PHYS_AIRCONTROL)
 			CPM_PM_Aircontrol(wishdir, wishspeed2);
 	}
-	float g = PHYS_GRAVITY * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
+	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		self.velocity_z -= g * 0.5;
 	else
@@ -1600,7 +1547,7 @@ void PM_Main()
 	maxspeed_mod *= PHYS_HIGHSPEED;
 
 #ifdef SVQC
-	Physics_UpdateStats(maxspeed_mod);
+	Physics_UpdateStats(this, maxspeed_mod);
 
 	if (self.PlayerPhysplug)
 		if (self.PlayerPhysplug())

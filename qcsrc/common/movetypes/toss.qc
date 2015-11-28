@@ -26,10 +26,10 @@ void _Movetype_Physics_Toss(float dt)  // SV_Physics_Toss
 	if (self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS)
 	{
 		self.move_didgravity = 1;
-		self.move_velocity_z -= (GRAVITY_UNAFFECTED_BY_TICRATE ? 0.5 : 1)
+		self.move_velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 		    * dt
 		    * (self.gravity ? self.gravity : 1)
-		    * PHYS_GRAVITY;
+		    * PHYS_GRAVITY(this);
 	}
 
 	self.move_angles = self.move_angles + self.move_avelocity * dt;
@@ -64,7 +64,7 @@ void _Movetype_Physics_Toss(float dt)  // SV_Physics_Toss
 		{
 			float bouncefac = self.move_bounce_factor;     if (!bouncefac)  bouncefac = 0.5;
 			float bouncestop = self.move_bounce_stopspeed; if (!bouncestop) bouncestop = 60 / 800;
-			bouncestop *= (self.gravity ? self.gravity : 1) * PHYS_GRAVITY;
+			bouncestop *= (self.gravity ? self.gravity : 1) * PHYS_GRAVITY(this);
 
 			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
 
@@ -108,8 +108,8 @@ void _Movetype_Physics_Toss(float dt)  // SV_Physics_Toss
 			break;
 	}
 
-	if (GRAVITY_UNAFFECTED_BY_TICRATE && self.move_didgravity > 0 && !(self.move_flags & FL_ONGROUND))
-		self.move_velocity_z -= 0.5 * dt * (self.gravity ? self.gravity : 1) * PHYS_GRAVITY;
+	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && self.move_didgravity > 0 && !(self.move_flags & FL_ONGROUND))
+		self.move_velocity_z -= 0.5 * dt * (self.gravity ? self.gravity : 1) * PHYS_GRAVITY(this);
 
 	_Movetype_CheckWaterTransition(self);
 }

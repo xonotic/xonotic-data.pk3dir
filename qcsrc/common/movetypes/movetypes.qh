@@ -27,20 +27,6 @@
 // should match sv_gameplayfix_fixedcheckwatertransition
 float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 
-#ifdef SVQC
-.int stat_gameplayfix_upvelocityclearsonground = _STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND);
-
-#define GRAVITY_UNAFFECTED_BY_TICRATE autocvar_sv_gameplayfix_gravityunaffectedbyticrate
-#define UPWARD_VELOCITY_CLEARS_ONGROUND autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag
-
-#define TICRATE sys_frametime
-#elif defined(CSQC)
-#define GRAVITY_UNAFFECTED_BY_TICRATE (STAT(MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
-#define UPWARD_VELOCITY_CLEARS_ONGROUND STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
-
-#define TICRATE ticrate
-#endif
-
 .entity move_groundentity;  // FIXME add move_groundnetworkentity?
 .float move_suspendedinair;
 .float move_didgravity;
@@ -91,7 +77,7 @@ const int FL_ONGROUND				= 512;
 
 const int MOVETYPE_FAKEPUSH         = 13;
 
-const int MOVEFLAG_VALID = BIT(31);
+const int MOVEFLAG_VALID = BIT(23);
 const int MOVEFLAG_Q2AIRACCELERATE = BIT(0);
 const int MOVEFLAG_NOGRAVITYONGROUND = BIT(1);
 const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = BIT(2);

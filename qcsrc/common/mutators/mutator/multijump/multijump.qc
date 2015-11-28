@@ -8,44 +8,11 @@
 .bool multijump_ready;
 .bool cvar_cl_multijump;
 
-#ifdef CSQC
-
-#define PHYS_MULTIJUMP 				STAT(MULTIJUMP)
-#define PHYS_MULTIJUMP_SPEED 		STAT(MULTIJUMP_SPEED)
-#define PHYS_MULTIJUMP_ADD 			STAT(MULTIJUMP_ADD)
-#define PHYS_MULTIJUMP_MAXSPEED 	STAT(MULTIJUMP_MAXSPEED)
-#define PHYS_MULTIJUMP_DODGING 		STAT(MULTIJUMP_DODGING)
-
-#elif defined(SVQC)
-
-int autocvar_g_multijump;
-float autocvar_g_multijump_add;
-float autocvar_g_multijump_speed;
-float autocvar_g_multijump_maxspeed;
-float autocvar_g_multijump_dodging = 1;
-
-#define PHYS_MULTIJUMP 				autocvar_g_multijump
-#define PHYS_MULTIJUMP_SPEED 		autocvar_g_multijump_speed
-#define PHYS_MULTIJUMP_ADD 			autocvar_g_multijump_add
-#define PHYS_MULTIJUMP_MAXSPEED 	autocvar_g_multijump_maxspeed
-#define PHYS_MULTIJUMP_DODGING 		autocvar_g_multijump_dodging
-
-.float stat_multijump = _STAT(MULTIJUMP);
-.float stat_multijump_speed = _STAT(MULTIJUMP_SPEED);
-.float stat_multijump_add = _STAT(MULTIJUMP_ADD);
-.float stat_multijump_maxspeed = _STAT(MULTIJUMP_MAXSPEED);
-.float stat_multijump_dodging = _STAT(MULTIJUMP_DODGING);
-
-void multijump_UpdateStats()
-{SELFPARAM();
-	STAT(MULTIJUMP, this) = PHYS_MULTIJUMP;
-	STAT(MULTIJUMP_SPEED, this) = PHYS_MULTIJUMP_SPEED;
-	STAT(MULTIJUMP_ADD, this) = PHYS_MULTIJUMP_ADD;
-	STAT(MULTIJUMP_MAXSPEED, this) = PHYS_MULTIJUMP_MAXSPEED;
-	STAT(MULTIJUMP_DODGING, this) = PHYS_MULTIJUMP_DODGING;
-}
-
-#endif
+#define PHYS_MULTIJUMP 				STAT(MULTIJUMP, self)
+#define PHYS_MULTIJUMP_SPEED 		STAT(MULTIJUMP_SPEED, self)
+#define PHYS_MULTIJUMP_ADD 			STAT(MULTIJUMP_ADD, self)
+#define PHYS_MULTIJUMP_MAXSPEED 	STAT(MULTIJUMP_MAXSPEED, self)
+#define PHYS_MULTIJUMP_DODGING 		STAT(MULTIJUMP_DODGING, self)
 
 void PM_multijump()
 {SELFPARAM();
@@ -138,7 +105,6 @@ REGISTER_MUTATOR(multijump, cvar("g_multijump"));
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
-	multijump_UpdateStats();
 	PM_multijump();
 
 	return false;

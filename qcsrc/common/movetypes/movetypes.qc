@@ -45,11 +45,11 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 	if(applygravity)
 	{
 		self.move_didgravity = 1;
-		grav = dt * (PHYS_ENTGRAVITY(self) ? PHYS_ENTGRAVITY(self) : 1) * PHYS_GRAVITY;
+		grav = dt * (PHYS_ENTGRAVITY(self) ? PHYS_ENTGRAVITY(self) : 1) * PHYS_GRAVITY(this);
 
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(self.move_flags & FL_ONGROUND))
 		{
-			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				self.move_velocity_z -= grav * 0.5;
 			else
 				self.move_velocity_z -= grav;
@@ -234,7 +234,7 @@ int _Movetype_FlyMove(float dt, bool applygravity, vector stepnormal, float step
 	{
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(self.move_flags & FL_ONGROUND))
 		{
-			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				self.move_velocity_z -= grav * 0.5f;
 		}
 	}
@@ -643,10 +643,10 @@ void Movetype_Physics_MatchTicrate(float tr, bool sloppy)  // SV_Physics_Entity
 
 		if(self.move_didgravity > 0)
 		{
-			self.velocity_z -= (GRAVITY_UNAFFECTED_BY_TICRATE ? 0.5 : 1)
+			self.velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 			    * dt
 			    * (self.gravity ? self.gravity : 1)
-			    * PHYS_GRAVITY;
+			    * PHYS_GRAVITY(this);
 		}
 
 		self.angles = self.move_angles + dt * self.avelocity;
@@ -662,8 +662,8 @@ void Movetype_Physics_MatchTicrate(float tr, bool sloppy)  // SV_Physics_Entity
 				setorigin(self, trace_endpos);
 		}
 
-		if(self.move_didgravity > 0 && GRAVITY_UNAFFECTED_BY_TICRATE)
-			self.velocity_z -= 0.5 * dt * (self.gravity ? self.gravity : 1) * PHYS_GRAVITY;
+		if(self.move_didgravity > 0 && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+			self.velocity_z -= 0.5 * dt * (self.gravity ? self.gravity : 1) * PHYS_GRAVITY(this);
 	}
 	else
 	{

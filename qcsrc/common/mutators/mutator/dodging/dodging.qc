@@ -1,49 +1,30 @@
 #ifdef IMPLEMENTATION
 
+#define PHYS_DODGING 						STAT(DODGING, this)
+#define PHYS_DODGING_DELAY 					STAT(DODGING_DELAY, this)
+#define PHYS_DODGING_DISTANCE_THRESHOLD 	STAT(DODGING_DISTANCE_THRESHOLD, this)
+#define PHYS_DODGING_FROZEN_NODOUBLETAP		STAT(DODGING_FROZEN_NO_DOUBLETAP, this)
+#define PHYS_DODGING_HEIGHT_THRESHOLD 		STAT(DODGING_HEIGHT_THRESHOLD, this)
+#define PHYS_DODGING_HORIZ_SPEED 			STAT(DODGING_HORIZ_SPEED, this)
+#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	STAT(DODGING_HORIZ_SPEED_FROZEN, this)
+#define PHYS_DODGING_RAMP_TIME 				STAT(DODGING_RAMP_TIME, this)
+#define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED, this)
+#define PHYS_DODGING_WALL 					STAT(DODGING_WALL, this)
+#define PHYS_DODGING_PRESSED_KEYS(s)		(s).pressedkeys
+
 #ifdef CSQC
 	#define PHYS_DODGING_FRAMETIME				(1 / (frametime <= 0 ? 60 : frametime))
-	#define PHYS_DODGING 						STAT(DODGING)
-	#define PHYS_DODGING_DELAY 					STAT(DODGING_DELAY)
 	#define PHYS_DODGING_TIMEOUT(s) 			STAT(DODGING_TIMEOUT)
-	#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	STAT(DODGING_HORIZ_SPEED_FROZEN)
-	#define PHYS_DODGING_FROZEN_NODOUBLETAP		STAT(DODGING_FROZEN_NO_DOUBLETAP)
-	#define PHYS_DODGING_HORIZ_SPEED 			STAT(DODGING_HORIZ_SPEED)
-	#define PHYS_DODGING_PRESSED_KEYS(s)		s.pressedkeys
-	#define PHYS_DODGING_HEIGHT_THRESHOLD 		STAT(DODGING_HEIGHT_THRESHOLD)
-	#define PHYS_DODGING_DISTANCE_THRESHOLD 	STAT(DODGING_DISTANCE_THRESHOLD)
-	#define PHYS_DODGING_RAMP_TIME 				STAT(DODGING_RAMP_TIME)
-	#define PHYS_DODGING_UP_SPEED 				STAT(DODGING_UP_SPEED)
-	#define PHYS_DODGING_WALL 					STAT(DODGING_WALL)
 #elif defined(SVQC)
 	#define PHYS_DODGING_FRAMETIME				sys_frametime
-	#define PHYS_DODGING 						g_dodging
-	#define PHYS_DODGING_DELAY 					autocvar_sv_dodging_delay
 	#define PHYS_DODGING_TIMEOUT(s) 			s.cvar_cl_dodging_timeout
-	#define PHYS_DODGING_HORIZ_SPEED_FROZEN 	autocvar_sv_dodging_horiz_speed_frozen
-	#define PHYS_DODGING_FROZEN_NODOUBLETAP		autocvar_sv_dodging_frozen_doubletap
-	#define PHYS_DODGING_HORIZ_SPEED 			autocvar_sv_dodging_horiz_speed
-	#define PHYS_DODGING_PRESSED_KEYS(s)		s.pressedkeys
-	#define PHYS_DODGING_HEIGHT_THRESHOLD 		autocvar_sv_dodging_height_threshold
-	#define PHYS_DODGING_DISTANCE_THRESHOLD 	autocvar_sv_dodging_wall_distance_threshold
-	#define PHYS_DODGING_RAMP_TIME 				autocvar_sv_dodging_ramp_time
-	#define PHYS_DODGING_UP_SPEED 				autocvar_sv_dodging_up_speed
-	#define PHYS_DODGING_WALL 					autocvar_sv_dodging_wall_dodging
 
-	float autocvar_sv_dodging_delay;
-    float autocvar_sv_dodging_height_threshold;
-    float autocvar_sv_dodging_horiz_speed;
-    float autocvar_sv_dodging_horiz_speed_frozen;
-    float autocvar_sv_dodging_ramp_time;
-    bool autocvar_sv_dodging_sound;
-    float autocvar_sv_dodging_up_speed;
-    float autocvar_sv_dodging_wall_distance_threshold;
-    bool autocvar_sv_dodging_wall_dodging;
-    bool autocvar_sv_dodging_frozen_doubletap;
+
 #endif
 
 #ifdef SVQC
 
-float g_dodging;
+bool autocvar_sv_dodging_sound;
 
 // set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
 .float dodging_action;
@@ -55,18 +36,6 @@ float g_dodging;
 #include "../../../physics.qh"
 
 .float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
-
-.float stat_dodging = _STAT(DODGING);
-.float stat_dodging_delay = _STAT(DODGING_DELAY);
-.float stat_dodging_horiz_speed_frozen = _STAT(DODGING_HORIZ_SPEED_FROZEN);
-.float stat_dodging_frozen_nodoubletap = _STAT(DODGING_FROZEN_NO_DOUBLETAP);
-.float stat_dodging_frozen = _STAT(DODGING_FROZEN);
-.float stat_dodging_horiz_speed = _STAT(DODGING_HORIZ_SPEED);
-.float stat_dodging_height_threshold = _STAT(DODGING_HEIGHT_THRESHOLD);
-.float stat_dodging_distance_threshold = _STAT(DODGING_DISTANCE_THRESHOLD);
-.float stat_dodging_ramp_time = _STAT(DODGING_RAMP_TIME);
-.float stat_dodging_up_speed = _STAT(DODGING_UP_SPEED);
-.float stat_dodging_wall = _STAT(DODGING_WALL);
 
 REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 {
@@ -114,23 +83,6 @@ REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 
 #ifdef CSQC
 .int pressedkeys;
-
-#elif defined(SVQC)
-
-void dodging_UpdateStats()
-{SELFPARAM();
-	self.stat_dodging = PHYS_DODGING;
-	self.stat_dodging_delay = PHYS_DODGING_DELAY;
-	self.stat_dodging_horiz_speed_frozen = PHYS_DODGING_HORIZ_SPEED_FROZEN;
-	self.stat_dodging_frozen = PHYS_DODGING_FROZEN;
-	self.stat_dodging_frozen_nodoubletap = PHYS_DODGING_FROZEN_NODOUBLETAP;
-	self.stat_dodging_height_threshold = PHYS_DODGING_HEIGHT_THRESHOLD;
-	self.stat_dodging_distance_threshold = PHYS_DODGING_DISTANCE_THRESHOLD;
-	self.stat_dodging_ramp_time = PHYS_DODGING_RAMP_TIME;
-	self.stat_dodging_up_speed = PHYS_DODGING_UP_SPEED;
-	self.stat_dodging_wall = PHYS_DODGING_WALL;
-}
-
 #endif
 
 // returns 1 if the player is close to a wall
@@ -221,10 +173,6 @@ void PM_dodging()
 {SELFPARAM();
 	if (!PHYS_DODGING)
 		return;
-
-#ifdef SVQC
-	dodging_UpdateStats();
-#endif
 
     if (PHYS_DEAD(self))
         return;
