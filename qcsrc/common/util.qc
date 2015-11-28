@@ -609,6 +609,8 @@ float cvar_settemp_restore()
 		if(cvar_type(e.netname))
 		{
 			cvar_set(e.netname, e.message);
+			strunzone(e.netname);
+			strunzone(e.message);
 			remove(e);
 			++i;
 		}

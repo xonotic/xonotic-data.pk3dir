@@ -162,7 +162,17 @@ STATIC_INIT(RegisterClasses)
 	class(cname).type name;                \
 	INIT(cname) \
 	{ \
+		noref bool strzone; /* Error on strzone() calls. */ \
 		this.name = val; \
+	}
+
+#define ATTRIB_STRZONE(cname, name, type, val)      \
+	class(cname).type name;                \
+	INIT(cname) \
+	{ \
+		if (this.name) \
+			strunzone(this.name); \
+		this.name = strzone(val); \
 	}
 
 #define ATTRIBARRAY(cname, name, type, cnt) \
