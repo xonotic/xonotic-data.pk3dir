@@ -40,6 +40,9 @@
 .float lastground;
 float total_players;
 float redalive, bluealive, yellowalive, pinkalive;
-.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
+.float redalive_stat = _STAT(REDALIVE);
+.float bluealive_stat = _STAT(BLUEALIVE);
+.float yellowalive_stat = _STAT(YELLOWALIVE);
+.float pinkalive_stat = _STAT(PINKALIVE);
 
 #endif

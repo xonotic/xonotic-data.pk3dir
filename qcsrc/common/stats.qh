@@ -49,11 +49,7 @@ enum {
     STAT_PL_CROUCH_MAX1,
     STAT_PL_CROUCH_MAX2,
     STAT_PL_CROUCH_MAX3,
-
-    STAT_LAST_VECTOR
 };
-
-const int REGISTERED_STATS = 139;
 
 REGISTER_STAT(KH_KEYS, int)
 /** weapon requested to switch to; next WANTED weapon (for HUD) */
@@ -218,52 +214,18 @@ REGISTER_STAT(JETPACK_MAXSPEED_UP, float, autocvar_g_jetpack_maxspeed_up)
 
 REGISTER_STAT(MOVEVARS_HIGHSPEED, float, autocvar_g_movement_highspeed)
 
-enum {
-    STAT_FIRST_MAIN = (STAT_LAST_VECTOR - 1) + REGISTERED_STATS,
-
-    STAT_LAST_MAIN
-};
-
-const int STAT_LAST = STAT_LAST_MAIN + 5;
-
-/* The following stats change depending on the gamemode, so can share the same ID */
-
-// freeze tag, clan arena, jailbreak
-enum {
-    STAT_REDALIVE = STAT_LAST_MAIN,
-    STAT_BLUEALIVE,
-    STAT_YELLOWALIVE,
-    STAT_PINKALIVE,
-};
+// freeze tag, clan arena
+REGISTER_STAT(REDALIVE, int)
+REGISTER_STAT(BLUEALIVE, int)
+REGISTER_STAT(YELLOWALIVE, int)
+REGISTER_STAT(PINKALIVE, int)
 
 // domination
-enum {
-    STAT_DOM_TOTAL_PPS = STAT_LAST_MAIN,
-    STAT_DOM_PPS_RED,
-    STAT_DOM_PPS_BLUE,
-    STAT_DOM_PPS_YELLOW,
-    STAT_DOM_PPS_PINK,
-};
-
-// vip
-enum {
-    STAT_VIP = STAT_LAST_MAIN,
-    STAT_VIP_RED,
-    STAT_VIP_BLUE,
-    STAT_VIP_YELLOW,
-    STAT_VIP_PINK,
-};
-
-// key hunt
-enum {
-    STAT_KH_REDKEY_TEAM = STAT_LAST_MAIN,
-    STAT_KH_BLUEKEY_TEAM,
-    STAT_KH_YELLOWKEY_TEAM,
-    STAT_KH_PINKKEY_TEAM,
-};
-
-#define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
-ASSERT_LESS(stat_limit, STAT_LAST, 220)
+REGISTER_STAT(DOM_TOTAL_PPS, float)
+REGISTER_STAT(DOM_PPS_RED, float)
+REGISTER_STAT(DOM_PPS_BLUE, float)
+REGISTER_STAT(DOM_PPS_YELLOW, float)
+REGISTER_STAT(DOM_PPS_PINK, float)
 
 #ifdef SVQC
 #include "movetypes/movetypes.qh"

@@ -10,23 +10,23 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 	switch(i)
 	{
 		case 0:
-			stat = getstati(STAT_REDALIVE);
+			stat = STAT(REDALIVE);
 			pic = "player_red.tga";
 			color = '1 0 0';
 			break;
 		case 1:
-			stat = getstati(STAT_BLUEALIVE);
+			stat = STAT(BLUEALIVE);
 			pic = "player_blue.tga";
 			color = '0 0 1';
 			break;
 		case 2:
-			stat = getstati(STAT_YELLOWALIVE);
+			stat = STAT(YELLOWALIVE);
 			pic = "player_yellow.tga";
 			color = '1 1 0';
 			break;
 		default:
 		case 3:
-			stat = getstati(STAT_PINKALIVE);
+			stat = STAT(PINKALIVE);
 			pic = "player_pink.tga";
 			color = '1 0 1';
 			break;
@@ -630,28 +630,28 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 	switch(i)
 	{
 		case 0:
-			stat = getstatf(STAT_DOM_PPS_RED);
+			stat = STAT(DOM_PPS_RED);
 			pic = "dom_icon_red";
 			color = '1 0 0';
 			break;
 		case 1:
-			stat = getstatf(STAT_DOM_PPS_BLUE);
+			stat = STAT(DOM_PPS_BLUE);
 			pic = "dom_icon_blue";
 			color = '0 0 1';
 			break;
 		case 2:
-			stat = getstatf(STAT_DOM_PPS_YELLOW);
+			stat = STAT(DOM_PPS_YELLOW);
 			pic = "dom_icon_yellow";
 			color = '1 1 0';
 			break;
 		default:
 		case 3:
-			stat = getstatf(STAT_DOM_PPS_PINK);
+			stat = STAT(DOM_PPS_PINK);
 			pic = "dom_icon_pink";
 			color = '1 0 1';
 			break;
 	}
-	float pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
+	float pps_ratio = stat / STAT(DOM_TOTAL_PPS);
 
 	if(mySize.x/mySize.y > aspect_ratio)
 	{
