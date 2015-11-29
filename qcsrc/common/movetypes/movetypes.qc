@@ -64,9 +64,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			break;
 
 		push = this.move_velocity * time_left;
-		vector prev_origin = this.move_origin;
 		_Movetype_PushEntity(this, push, true);
-		if(trace_startsolid && this.move_origin != prev_origin)
+		if(trace_startsolid)
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -88,9 +87,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		float my_trace_fraction = trace_fraction;
 		vector my_trace_plane_normal = trace_plane_normal;
 
-		if(trace_plane_normal_z)
+		if(trace_plane_normal.z)
 		{
-			if(trace_plane_normal_z > 0.7)
+			if(trace_plane_normal.z > 0.7)
 			{
 				// floor
 				blocked |= 1;
@@ -112,13 +111,13 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			vector steppush = '0 0 1' * stepheight;
 
 			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid && this.move_origin != org)
+			if(trace_startsolid)
 			{
 				blocked |= 8;
 				break;
 			}
 			_Movetype_PushEntity(this, push, true);
-			if(trace_startsolid && this.move_origin != org)
+			if(trace_startsolid)
 			{
 				blocked |= 8;
 				break;
@@ -126,7 +125,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			float trace2_fraction = trace_fraction;
 			steppush = '0 0 1' * (org_z - this.move_origin_z);
 			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid && this.move_origin != org)
+			if(trace_startsolid)
 			{
 				blocked |= 8;
 				break;

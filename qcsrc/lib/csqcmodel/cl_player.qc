@@ -140,6 +140,7 @@ void Movetype_Physics_Spam(entity this)  // optimized
 	this.avelocity = this.move_avelocity;
 	this.velocity = this.move_velocity;
 	this.angles = this.move_angles;
+	this.flags = BITSET(this.flags, FL_ONGROUND, boolean(this.move_flags & FL_ONGROUND));
 	setorigin(this, this.move_origin);
 }
 
@@ -156,6 +157,7 @@ void CSQCPlayer_Physics(entity this)
 			this.move_movetype = MOVETYPE_WALK; // temp
 			this.move_velocity = this.velocity;
 			this.move_avelocity = this.avelocity;
+			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, boolean(this.flags & FL_ONGROUND));
 			Movetype_Physics_Spam(this);
 		}
 	}
