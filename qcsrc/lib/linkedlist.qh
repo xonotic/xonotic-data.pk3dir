@@ -14,6 +14,8 @@ ENDCLASS(LinkedList)
 
 #define LL_NEW() NEW(LinkedList)
 
+#define LL_EMPTY(ll) (ll.ll_head == NULL)
+
 /**
  * Push to tail
  */

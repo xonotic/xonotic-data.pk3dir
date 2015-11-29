@@ -360,7 +360,7 @@ bool turret_send(entity this, entity to, float sf)
 	return true;
 }
 
-void load_unit_settings(entity ent, float is_reload)
+void load_unit_settings(entity ent, bool is_reload)
 {SELFPARAM();
 	string unitname = ent.netname;
 	string sbase;
@@ -1200,25 +1200,18 @@ void turret_link()
 }
 
 void turrets_manager_think()
-{SELFPARAM();
-	self.nextthink = time + 1;
+{
+	SELFPARAM();
+	this.nextthink = time + 1;
 
-	entity e;
 	if (autocvar_g_turrets_reloadcvars == 1)
 	{
-		e = nextent(world);
-		while (e)
-		{
-			if (IS_TURRET(e))
-			{
-				load_unit_settings(e,1);
-				Turret tur = get_turretinfo(self.m_id);
-				tur.tr_think(tur);
-			}
-
-			e = nextent(e);
-		}
-		cvar_set("g_turrets_reloadcvars","0");
+		FOREACH_ENTITY(IS_TURRET(it), LAMBDA(
+			load_unit_settings(it, true);
+			Turret tur = get_turretinfo(it.m_id);
+			tur.tr_think(tur);
+		));
+		cvar_set("g_turrets_reloadcvars", "0");
 	}
 }
 

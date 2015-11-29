@@ -57,9 +57,10 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		{
 			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if(WepSet_FromWeapon(i) & WEPSET_SUPERWEAPONS)
-					if(own.weapons & WepSet_FromWeapon(i))
-						++superweapons;
+			{
+				WepSet set = WepSet_FromWeapon(i);
+				if ((set & WEPSET_SUPERWEAPONS) && (own.weapons & set)) ++superweapons;
+			}
 			if(superweapons <= 1)
 			{
 				wep.superweapons_finished = own.superweapons_finished;
@@ -177,9 +178,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
-	if(!(self.weapons & WepSet_FromWeapon(w)))
-		return;
-	self.weapons &= ~WepSet_FromWeapon(w);
+	WepSet set = WepSet_FromWeapon(w);
+	if(!(self.weapons & set)) return;
+	self.weapons &= ~set;
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	string a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);

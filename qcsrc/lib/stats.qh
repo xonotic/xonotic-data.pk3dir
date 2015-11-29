@@ -26,12 +26,12 @@ typedef vector vectori;
 	#define _STAT(id) g_stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		T _STAT(id); \
-		REGISTER(RegisterStats, STAT, Stats, id, m_id, new(stat)) \
+		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
 		{ \
 			make_pure(this); \
 			if (#T == "vector" || #T == "vectori") { \
-				REGISTRY_RESERVE(Stats, m_id, id, _y); \
-				REGISTRY_RESERVE(Stats, m_id, id, _z); \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
 		[[accumulate]] void stats_get() \
@@ -74,12 +74,12 @@ typedef vector vectori;
 	#define _STAT(id) stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		.T _STAT(id); \
-		REGISTER(RegisterStats, STAT, Stats, id, m_id, new(stat)) \
+		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
 		{ \
 			make_pure(this); \
 			if (#T == "vector" || #T == "vectori") { \
-				REGISTRY_RESERVE(Stats, m_id, id, _y); \
-				REGISTRY_RESERVE(Stats, m_id, id, _z); \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
 			} \
 		} \
 		[[accumulate]] void stats_add() \
@@ -99,8 +99,8 @@ typedef vector vectori;
 const int STATS_ENGINE_RESERVE = 32;
 
 REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
-REGISTER_REGISTRY(RegisterStats)
-REGISTRY_SORT(Stats, 0)
+REGISTER_REGISTRY(Stats)
+REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
 STATIC_INIT(RegisterStats_renumber)
 {

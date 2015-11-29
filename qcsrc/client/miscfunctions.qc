@@ -482,55 +482,25 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 	}
 }
 
-vector getplayerorigin(int pl)
+// TODO: entcs
+float getplayeralpha(int pl)
 {
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.origin;
-
-	e = entcs_receiver[pl];
-	if(e)
-		return e.origin;
-
-	return GETPLAYERORIGIN_ERROR;
+	entity e = CSQCModel_server2csqc(pl + 1);
+	return (e) ? e.alpha : 1;
 }
 
-float getplayeralpha(float pl)
+// TODO: entcs
+vector getcsqcplayercolor(int pl)
 {
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.alpha;
-
-	return 1;
+	entity e = CSQCModel_server2csqc(pl);
+	return (e && e.colormap > 0) ? colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, true) : '1 1 1';
 }
 
-vector getcsqcplayercolor(float pl)
+// TODO: entcs
+bool getplayerisdead(int pl)
 {
-	entity e;
-
-	e = CSQCModel_server2csqc(pl);
-	if(e)
-	{
-		if(e.colormap > 0)
-			return colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, true);
-	}
-
-	return '1 1 1';
-}
-
-float getplayerisdead(float pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.csqcmodel_isdead;
-
-	return false;
+	entity e = CSQCModel_server2csqc(pl + 1);
+	return e ? e.csqcmodel_isdead : false;
 }
 
 /** engine callback */

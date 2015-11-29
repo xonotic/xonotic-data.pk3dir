@@ -102,7 +102,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 	entity _item = self;
 
 	entity e;
-	FOR_EACH_SPEC(e)
+	FOR_EACH_CLIENT(e) if (IS_SPEC(e) || IS_OBSERVER(e))
 	{
 		setself(e);
 		if(self.superspec_flags & SSF_ITEMMSG)

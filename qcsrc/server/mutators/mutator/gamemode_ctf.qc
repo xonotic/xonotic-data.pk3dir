@@ -249,6 +249,7 @@ bool autocvar_g_ctf_flag_dropped_floatinwater;
 bool autocvar_g_ctf_flag_glowtrails;
 int autocvar_g_ctf_flag_health;
 bool autocvar_g_ctf_flag_return;
+bool autocvar_g_ctf_flag_return_carrying;
 float autocvar_g_ctf_flag_return_carried_radius;
 float autocvar_g_ctf_flag_return_time;
 bool autocvar_g_ctf_flag_return_when_unreachable;
@@ -1246,7 +1247,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 
 		case FLAG_DROPPED:
 		{
-			if(CTF_SAMETEAM(toucher, flag) && (autocvar_g_ctf_flag_return || num_perteam <= 1) && flag.team) // automatically return if there's only 1 player on the team
+			if(CTF_SAMETEAM(toucher, flag) && (autocvar_g_ctf_flag_return || num_perteam <= 1 || (autocvar_g_ctf_flag_return_carrying && toucher.flagcarried)) && flag.team) // automatically return if there's only 1 player on the team
 				ctf_Handle_Return(flag, toucher); // toucher just returned his own flag
 			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != flag.ctf_dropper) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -1325,13 +1326,12 @@ void ctf_RespawnFlag(entity flag)
 	ctf_CheckStalemate();
 }
 
-void ctf_Reset()
-{SELFPARAM();
-	if(self.owner)
-		if(IS_PLAYER(self.owner))
-			ctf_Handle_Throw(self.owner, world, DROP_RESET);
+void ctf_Reset(entity this)
+{
+	if(this.owner && IS_PLAYER(this.owner))
+        ctf_Handle_Throw(this.owner, world, DROP_RESET);
 
-	ctf_RespawnFlag(self);
+	ctf_RespawnFlag(this);
 }
 
 void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_FlagSetup()

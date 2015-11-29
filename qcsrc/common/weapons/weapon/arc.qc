@@ -857,7 +857,7 @@ void Draw_ArcBeam(entity this)
 
 	if(!self.beam_usevieworigin)
 	{
-		InterpolateOrigin_Do();
+		InterpolateOrigin_Do(self);
 	}
 
 	// origin = beam starting origin
@@ -1208,7 +1208,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		// self.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
 		self.iflags = IFLAG_ORIGIN;
 
-		InterpolateOrigin_Undo();
+		InterpolateOrigin_Undo(self);
 	}
 
 	if(sf & ARC_SF_START) // starting location
@@ -1227,7 +1227,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		else
 		{
 			// use player origin so that third person display still works
-			self.origin = getplayerorigin(player_localnum) + ('0 0 1' * getstati(STAT_VIEWHEIGHT));
+			self.origin = entcs_receiver(player_localnum).origin + ('0 0 1' * getstati(STAT_VIEWHEIGHT));
 		}
 	}
 
@@ -1492,7 +1492,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(!self.beam_usevieworigin)
 	{
-		InterpolateOrigin_Note();
+		InterpolateOrigin_Note(this);
 	}
 	return true;
 }

@@ -793,10 +793,10 @@ void kh_Key_Think()  // runs all the time
 	self.nextthink = time + 0.05;
 }
 
-void key_reset()
-{SELFPARAM();
-	kh_Key_AssignTo(self, world);
-	kh_Key_Remove(self);
+void key_reset(entity this)
+{
+	kh_Key_AssignTo(this, world);
+	kh_Key_Remove(this);
 }
 
 const string STR_ITEM_KH_KEY = "item_kh_key";
@@ -974,9 +974,9 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		}
 		else
 		{
-			float missing_teams_mask = (!!p1) + (!!p2) * 2;
-			if(kh_teams >= 3) missing_teams_mask += (!!p3) * 4;
-			if(kh_teams >= 4) missing_teams_mask += (!!p4) * 8;
+			float missing_teams_mask = boolean(p1) + boolean(p2) * 2;
+			if(kh_teams >= 3) missing_teams_mask += boolean(p3) * 4;
+			if(kh_teams >= 4) missing_teams_mask += boolean(p4) * 8;
 			if(prev_missing_teams_mask != missing_teams_mask)
 			{
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);

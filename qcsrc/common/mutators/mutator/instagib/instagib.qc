@@ -17,7 +17,6 @@ int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
 #include "../../../../server/cl_client.qh"
-#include "../../../buffs/all.qh"
 
 #include "../../../items/all.qc"
 
@@ -38,7 +37,6 @@ void instagib_invisibility()
 
 void instagib_extralife()
 {SELFPARAM();
-	self.max_health = 1;
 	StartItem(this, ITEM_ExtraLife);
 }
 
@@ -333,7 +331,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		frag_mirrordamage = 0;
 	}
 
-	if((frag_target.buffs & BUFF_INVISIBLE.m_itemid) || (frag_target.items & ITEM_Invisibility.m_itemid))
+	if(frag_target.alpha && frag_target.alpha < 1)
 		yoda = 1;
 
 	return false;
@@ -432,7 +430,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
 
-	if(self.max_health)
+	if(self.itemdef == ITEM_ExtraLife)
 	{
 		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_instagib_extralives);
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);

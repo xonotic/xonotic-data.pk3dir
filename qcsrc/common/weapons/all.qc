@@ -11,7 +11,6 @@
 	#include "../../lib/warpzone/common.qh"
 	#include "../../lib/warpzone/client.qh"
 	#include "../util.qh"
-	#include "../buffs/all.qh"
 	#include "../../client/autocvars.qh"
 	#include "../deathtypes/all.qh"
 	#include "../../lib/csqcmodel/interpolate.qh"
@@ -28,7 +27,6 @@
     #include "../stats.qh"
     #include "../teams.qh"
     #include "../util.qh"
-    #include "../buffs/all.qh"
     #include "../monsters/all.qh"
     #include "config.qh"
     #include "../../server/weapons/csqcprojectile.qh"
@@ -55,7 +53,7 @@
 
 // WEAPON PLUGIN SYSTEM
 
-WepSet WepSet_FromWeapon(int a) {
+WepSet _WepSet_FromWeapon(int a) {
 	a -= WEP_FIRST;
 	if (Weapons_MAX > 24)
 	if (a >= 24) {

@@ -7,8 +7,6 @@
 
 // weapon sets
 typedef vector WepSet;
-#define WEPSET(id) WepSet_FromWeapon(WEP_##id.m_id)
-WepSet WepSet_FromWeapon(int a);
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
 #endif
@@ -35,9 +33,17 @@ WepSet ReadWepSet();
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 #define Weapons_from(i) _Weapons_from(i, WEP_Null)
 #define get_weaponinfo(i) Weapons_from(i)
-REGISTER_REGISTRY(RegisterWeapons)
+REGISTER_REGISTRY(Weapons)
 STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(WeaponPickup, it))); }
 
+.WepSet m_wepset;
+#define WEPSET(id) (WEP_##id.m_wepset)
+#define WepSet_FromWeapon(i) (Weapons_from(i).m_wepset)
+WepSet _WepSet_FromWeapon(int i);
+STATIC_INIT(WepSets)
+{
+    FOREACH(Weapons, true, LAMBDA(it.m_wepset = _WepSet_FromWeapon(it.m_id)));
+}
 
 GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
 {
@@ -94,7 +100,7 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
 
 #define REGISTER_WEAPON(id, inst) \
     /* WepSet WEPSET_##id; */ \
-    REGISTER(RegisterWeapons, WEP, Weapons, id, m_id, inst)
+    REGISTER(Weapons, WEP, id, m_id, inst)
 
 // create cvars for weapon settings
 #define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
@@ -145,7 +151,7 @@ STATIC_INIT(register_weapons_done)
 {
     FOREACH(Weapons, true, LAMBDA(
         it.m_id = i;
-        WepSet set = WepSet_FromWeapon(it.m_id);
+        WepSet set = it.m_wepset;
         WEPSET_ALL |= set;
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
         it.weapon = it.m_id;

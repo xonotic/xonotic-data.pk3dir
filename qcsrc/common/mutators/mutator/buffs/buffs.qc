@@ -75,7 +75,6 @@ const vector BUFF_MAX = ('16 16 20');
 
 #include "../../../triggers/target/music.qh"
 #include "../../../gamemodes/all.qh"
-#include "../../../buffs/all.qh"
 
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit();
@@ -379,17 +378,17 @@ void buff_Waypoint_Reset()
 	if(self.buff_activetime) { buff_Waypoint_Spawn(self); }
 }
 
-void buff_Reset()
-{SELFPARAM();
+void buff_Reset(entity this)
+{
 	if(autocvar_g_buffs_randomize)
-		buff_NewType(self, self.buffs);
-	self.owner = world;
+		buff_NewType(this, this.buffs);
+	this.owner = world;
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset();
-	self.buff_activetime_updated = false;
+	this.buff_activetime_updated = false;
 
-	if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
-		buff_Respawn(self);
+	if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
+		buff_Respawn(this);
 }
 
 float buff_Customize()
@@ -786,6 +785,11 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {SELFPARAM();
+	if (self.classname == "item_flight" && cvar("g_buffs") && cvar("g_buffs_flight"))
+	{
+		buff_Init_Compat(self, BUFF_FLIGHT);
+		return true;
+	}
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{

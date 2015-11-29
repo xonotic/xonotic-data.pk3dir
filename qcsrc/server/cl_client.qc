@@ -3,7 +3,6 @@
 #include "anticheat.qh"
 #include "cl_impulse.qh"
 #include "cl_player.qh"
-#include "ent_cs.qh"
 #include "ipban.qh"
 #include "miscfunctions.qh"
 #include "portals.qh"
@@ -23,6 +22,7 @@
 #include "bot/bot.qh"
 #include "bot/navigation.qh"
 
+#include "../common/ent_cs.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/triggers/teleporters.qh"
 
@@ -175,7 +175,6 @@ void setplayermodel(entity e, string modelname)
 	precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel();
-	UpdatePlayerSounds();
 }
 
 /*
@@ -319,6 +318,15 @@ void PutObserverInServer()
 	self.event_damage = func_null;
 }
 
+int player_getspecies(entity this)
+{
+	get_model_parameters(this.model, this.skin);
+	int s = get_model_parameters_species;
+	get_model_parameters(string_null, 0);
+	if (s < 0) return SPECIES_HUMAN;
+	return s;
+}
+
 .float model_randomizer;
 void FixPlayermodel(entity player)
 {
@@ -395,8 +403,7 @@ void FixPlayermodel(entity player)
 
 	if(chmdl || oldskin != player.skin) // model or skin has changed
 	{
-		player.species = player_getspecies(); // update species
-		UpdatePlayerSounds(); // update skin sounds
+		player.species = player_getspecies(player); // update species
 	}
 
 	if(!teamplay)
@@ -1171,7 +1178,7 @@ void ClientConnect ()
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	attach_entcs(self);
+	entcs_attach(self);
 
 	bot_relinkplayerlist();
 
@@ -1211,7 +1218,7 @@ void ClientConnect ()
 	self.model_randomizer = random();
 
 	if(IS_REAL_CLIENT(self))
-		sv_notice_join();
+		sv_notice_join(self);
 
 	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
 		WITH(entity, self, e, e.init_for_player(this));
@@ -1257,7 +1264,7 @@ void ClientDisconnect ()
 
 	bot_clientdisconnect();
 
-	detach_entcs(self);
+	entcs_detach(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
@@ -1297,8 +1304,6 @@ void ClientDisconnect ()
 		strunzone(self.clientstatus);
 	if(self.weaponorder_byimpulse)
 		strunzone(self.weaponorder_byimpulse);
-
-	ClearPlayerSounds();
 
 	if(self.personal)
 		remove(self.personal);

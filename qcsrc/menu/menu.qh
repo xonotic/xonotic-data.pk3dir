@@ -9,15 +9,11 @@
 #include "../common/constants.qh"
 #include "../common/util.qh"
 
-// constants
+const int GAME_ISSERVER     = BIT(0);
+const int GAME_CONNECTED    = BIT(1);
+const int GAME_DEVELOPER    = BIT(2);
 
-const int GAME_ISSERVER 	= 1;
-const int GAME_CONNECTED	= 2;
-const int GAME_DEVELOPER	= 4;
-
-// prototypes
-
-float Menu_Active;
+bool Menu_Active;
 int gamestatus;
 
 const int S_SHIFT = 1;
@@ -35,19 +31,21 @@ void m_goto(string name);
 .string name;
 
 entity keyGrabber;
-.void(entity me, float key, float ascii) keyGrabbed;
+.void(entity this, float key, float ascii) keyGrabbed;
 
-float conwidth, conheight; // "virtual" conwidth/height values for other stuff to assume for scaling
+// "virtual" conwidth/height values for other stuff to assume for scaling
+float conwidth, conheight;
 
-float preMenuInit(); // you have to define this for pre-menu initialization. Return 0 if initialization needs to be retried a frame later, 1 if it succeeded.
-void preMenuDraw(); // this is run before the menu is drawn. You may put some stuff there that has to be done every frame.
-void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.
+/** you have to define this for pre-menu initialization. Return 0 if initialization needs to be retried a frame later, 1 if it succeeded. */
+float preMenuInit();
+/** this is run before the menu is drawn. You may put some stuff there that has to be done every frame. */
+void preMenuDraw();
+/** this is run just after the menu is drawn (or not). Useful to draw something over everything else. */
+void postMenuDraw();
 
 void m_sync();
 
 void draw_reset_cropped();
-
-// sounds
 
 const string MENU_SOUND_CLEAR   = "sound/menu/clear.wav";
 const string MENU_SOUND_CLOSE   = "sound/menu/close.wav";

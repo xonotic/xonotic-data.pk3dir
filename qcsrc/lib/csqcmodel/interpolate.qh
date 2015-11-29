@@ -36,16 +36,16 @@ const int IFLAG_ORIGIN = BIT(9);
 const int IFLAG_INTERNALMASK = IFLAG_VALID | IFLAG_PREVALID;
 
 // call this BEFORE reading an entity update
-void InterpolateOrigin_Undo();
+void InterpolateOrigin_Undo(entity this);
 
 // call this AFTER receiving an entity update
-void InterpolateOrigin_Note();
+void InterpolateOrigin_Note(entity this);
 
 // call this when the entity got teleported, before InterpolateOrigin_Note
 void InterpolateOrigin_Reset();
 
 // call this BEFORE drawing
-void InterpolateOrigin_Do();
+void InterpolateOrigin_Do(entity this);
 
 // in case we interpolate that:
 .vector v_angle;

@@ -1,5 +1,4 @@
 #if defined(CSQC)
-	#include "../../buffs/all.qh"
 	#include "../../../lib/csqcmodel/interpolate.qh"
 	#include "../../../client/main.qh"
 	#include "../../../lib/csqcmodel/cl_model.qh"
@@ -196,67 +195,61 @@ void laser_use()
 	misc_laser_aim();
 }
 
-void laser_reset()
-{SELFPARAM();
-	if(self.spawnflags & 1)
-		self.state = 1;
+void laser_reset(entity this)
+{
+	if(this.spawnflags & 1)
+		this.state = 1;
 	else
-		self.state = 0;
+		this.state = 0;
 }
 
 spawnfunc(misc_laser)
 {
-	if(self.mdl)
+	if(this.mdl)
 	{
-		if(self.mdl == "none")
-			self.cnt = -1;
+		if(this.mdl == "none")
+			this.cnt = -1;
 		else
 		{
-			self.cnt = _particleeffectnum(self.mdl);
-			if(self.cnt < 0)
-				if(self.dmg)
-					self.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
+			this.cnt = _particleeffectnum(this.mdl);
+			if(this.cnt < 0 && this.dmg)
+                this.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
 		}
 	}
-	else if(!self.cnt)
+	else if(!this.cnt)
 	{
-		if(self.dmg)
-			self.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
+		if(this.dmg)
+			this.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
 		else
-			self.cnt = -1;
+			this.cnt = -1;
 	}
-	if(self.cnt < 0)
-		self.cnt = -1;
+	if(this.cnt < 0)
+		this.cnt = -1;
 
-	if(self.colormod == '0 0 0')
-		if(!self.alpha)
-			self.colormod = '1 0 0';
-	if(self.message == "")
-		self.message = "saw the light";
-	if (self.message2 == "")
-		self.message2 = "was pushed into a laser by";
-	if(!self.scale)
-		self.scale = 1;
-	if(!self.modelscale)
-		self.modelscale = 1;
-	else if(self.modelscale < 0)
-		self.modelscale = 0;
-	self.think = misc_laser_think;
-	self.nextthink = time;
-	InitializeEntity(self, misc_laser_init, INITPRIO_FINDTARGET);
+	if(this.colormod == '0 0 0')
+		if(!this.alpha)
+			this.colormod = '1 0 0';
+	if(this.message == "") this.message = "saw the light";
+	if (this.message2 == "") this.message2 = "was pushed into a laser by";
+	if(!this.scale) this.scale = 1;
+	if(!this.modelscale) this.modelscale = 1;
+	else if(this.modelscale < 0) this.modelscale = 0;
+	this.think = misc_laser_think;
+	this.nextthink = time;
+	InitializeEntity(this, misc_laser_init, INITPRIO_FINDTARGET);
 
-	self.mangle = self.angles;
+	this.mangle = this.angles;
 
-	Net_LinkEntity(self, false, 0, laser_SendEntity);
+	Net_LinkEntity(this, false, 0, laser_SendEntity);
 
 	IFTARGETED
 	{
-		self.reset = laser_reset;
-		laser_reset();
-		self.use = laser_use;
+		this.reset = laser_reset;
+		this.reset(this);
+		this.use = laser_use;
 	}
 	else
-		self.state = 1;
+		this.state = 1;
 }
 #elif defined(CSQC)
 
@@ -277,7 +270,7 @@ void Draw_Laser(entity this)
 {
 	if(!self.state)
 		return;
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(self);
 	if(self.count & 0x80)
 	{
 		if(self.count & 0x10)
@@ -326,7 +319,7 @@ void Draw_Laser(entity this)
 
 NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 {
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	// 30 bytes, or 13 bytes for just moving
 	int f = ReadByte();
@@ -384,7 +377,7 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 
 	return = true;
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 	self.draw = Draw_Laser;
 }
 #endif

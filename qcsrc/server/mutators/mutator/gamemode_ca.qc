@@ -202,27 +202,23 @@ float ca_isEliminated(entity e)
 	return false;
 }
 
-// Returns next available player to spectate if g_ca_spectate_enemies == 0
+/** Returns next available player to spectate if g_ca_spectate_enemies == 0 */
 entity CA_SpectateNext(entity player, entity start)
 {
-	if(SAME_TEAM(start, player))
-		return start;
-
-	entity spec_other = start;
+    if (SAME_TEAM(start, player)) return start;
 	// continue from current player
-	while(spec_other && DIFF_TEAM(spec_other, player))
-		spec_other = find(spec_other, classname, "player");
-
-	if (!spec_other)
+	for (entity e = start; (e = find(e, classname, "player")); )
 	{
-		// restart from begining
-		spec_other = find(spec_other, classname, "player");
-		while(spec_other && DIFF_TEAM(spec_other, player))
-			spec_other = find(spec_other, classname, "player");
+		if (SAME_TEAM(player, e)) return e;
 	}
-
-	return spec_other;
+	// restart from begining
+	for (entity e = NULL; (e = find(e, classname, "player")); )
+	{
+		if (SAME_TEAM(player, e)) return e;
+	}
+	return start;
 }
+
 
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {SELFPARAM();

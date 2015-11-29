@@ -82,113 +82,108 @@ float GeomLerp(float a, float lerp, float b)
 
 noref float pmove_waterjumptime;
 
-const float unstick_count = 27;
-vector unstick_offsets[unstick_count] =
-{
-// 1 no nudge (just return the original if this test passes)
-	'0.000   0.000  0.000',
-// 6 simple nudges
-	' 0.000  0.000  0.125', '0.000  0.000 -0.125',
-	'-0.125  0.000  0.000', '0.125  0.000  0.000',
-	' 0.000 -0.125  0.000', '0.000  0.125  0.000',
-// 4 diagonal flat nudges
-	'-0.125 -0.125  0.000', '0.125 -0.125  0.000',
-	'-0.125  0.125  0.000', '0.125  0.125  0.000',
-// 8 diagonal upward nudges
-	'-0.125  0.000  0.125', '0.125  0.000  0.125',
-	' 0.000 -0.125  0.125', '0.000  0.125  0.125',
-	'-0.125 -0.125  0.125', '0.125 -0.125  0.125',
-	'-0.125  0.125  0.125', '0.125  0.125  0.125',
-// 8 diagonal downward nudges
-	'-0.125  0.000 -0.125', '0.125  0.000 -0.125',
-	' 0.000 -0.125 -0.125', '0.000  0.125 -0.125',
-	'-0.125 -0.125 -0.125', '0.125 -0.125 -0.125',
-	'-0.125  0.125 -0.125', '0.125  0.125 -0.125',
-};
+#define unstick_offsets(X) \
+/* 1 no nudge (just return the original if this test passes) */ \
+	X(' 0.000  0.000  0.000') \
+/* 6 simple nudges */ \
+	X(' 0.000  0.000  0.125') X('0.000  0.000 -0.125') \
+	X('-0.125  0.000  0.000') X('0.125  0.000  0.000') \
+	X(' 0.000 -0.125  0.000') X('0.000  0.125  0.000') \
+/* 4 diagonal flat nudges */ \
+	X('-0.125 -0.125  0.000') X('0.125 -0.125  0.000') \
+	X('-0.125  0.125  0.000') X('0.125  0.125  0.000') \
+/* 8 diagonal upward nudges */ \
+	X('-0.125  0.000  0.125') X('0.125  0.000  0.125') \
+	X(' 0.000 -0.125  0.125') X('0.000  0.125  0.125') \
+	X('-0.125 -0.125  0.125') X('0.125 -0.125  0.125') \
+	X('-0.125  0.125  0.125') X('0.125  0.125  0.125') \
+/* 8 diagonal downward nudges */ \
+	X('-0.125  0.000 -0.125') X('0.125  0.000 -0.125') \
+	X(' 0.000 -0.125 -0.125') X('0.000  0.125 -0.125') \
+	X('-0.125 -0.125 -0.125') X('0.125 -0.125 -0.125') \
+	X('-0.125  0.125 -0.125') X('0.125  0.125 -0.125') \
+/**/
 
-void PM_ClientMovement_Unstick()
-{SELFPARAM();
-	float i;
-	for (i = 0; i < unstick_count; i++)
-	{
-		vector neworigin = unstick_offsets[i] + self.origin;
-		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, self);
-		if (!trace_startsolid)
-		{
-			setorigin(self, neworigin);
-			return;// true;
-		}
+void PM_ClientMovement_Unstick(entity this)
+{
+	#define X(unstick_offset) \
+	{ \
+		vector neworigin = unstick_offset + this.origin; \
+		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, this); \
+		if (!trace_startsolid) \
+		{ \
+			setorigin(this, neworigin); \
+			return; \
+		} \
 	}
+	unstick_offsets(X);
+	#undef X
 }
 
-void PM_ClientMovement_UpdateStatus(bool ground)
-{SELFPARAM();
+void PM_ClientMovement_UpdateStatus(entity this, bool ground)
+{
 	// make sure player is not stuck
-	PM_ClientMovement_Unstick();
+	PM_ClientMovement_Unstick(this);
 
 	// set crouched
-	if (PHYS_INPUT_BUTTON_CROUCH(self))
+	if (PHYS_INPUT_BUTTON_CROUCH(this))
 	{
-		// wants to crouch, this always works..
-		if (!IS_DUCKED(self))
-			SET_DUCKED(self);
+		// wants to crouch, this always works
+		if (!IS_DUCKED(this)) SET_DUCKED(this);
 	}
 	else
 	{
-		// wants to stand, if currently crouching we need to check for a
-		// low ceiling first
-		if (IS_DUCKED(self))
+		// wants to stand, if currently crouching we need to check for a low ceiling first
+		if (IS_DUCKED(this))
 		{
-			tracebox(self.origin, PL_MIN, PL_MAX, self.origin, MOVE_NORMAL, self);
-			if (!trace_startsolid)
-				UNSET_DUCKED(self);
+			tracebox(this.origin, PL_MIN, PL_MAX, this.origin, MOVE_NORMAL, this);
+			if (!trace_startsolid) UNSET_DUCKED(this);
 		}
 	}
 
 	// set onground
-	vector origin1 = self.origin + '0 0 1';
-	vector origin2 = self.origin - '0 0 1';
+	vector origin1 = this.origin + '0 0 1';
+	vector origin2 = this.origin - '0 0 1';
 
-	if(ground)
+	if (ground)
 	{
-		tracebox(origin1, self.mins, self.maxs, origin2, MOVE_NORMAL, self);
-		if (trace_fraction < 1.0 && trace_plane_normal_z > 0.7)
+		tracebox(origin1, this.mins, this.maxs, origin2, MOVE_NORMAL, this);
+		if (trace_fraction < 1.0 && trace_plane_normal.z > 0.7)
 		{
-			SET_ONGROUND(self);
+			SET_ONGROUND(this);
 
 			// this code actually "predicts" an impact; so let's clip velocity first
-			float f = self.velocity * trace_plane_normal;
-			self.velocity -= f * trace_plane_normal;
+			this.velocity -= this.velocity * trace_plane_normal * trace_plane_normal;
 		}
 		else
-			UNSET_ONGROUND(self);
+			UNSET_ONGROUND(this);
 	}
 
 	// set watertype/waterlevel
-	origin1 = self.origin;
-	origin1_z += self.mins_z + 1;
-	self.waterlevel = WATERLEVEL_NONE;
+	origin1 = this.origin;
+	origin1.z += this.mins_z + 1;
+	this.waterlevel = WATERLEVEL_NONE;
 
 	int thepoint = pointcontents(origin1);
 
-	self.watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
+	this.watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
 
-	if(self.watertype)
+	if (this.watertype)
 	{
-		self.waterlevel = WATERLEVEL_WETFEET;
-		origin1_z = self.origin_z + (self.mins_z + self.maxs_z) * 0.5;
+		this.waterlevel = WATERLEVEL_WETFEET;
+		origin1.z = this.origin.z + (this.mins.z + this.maxs.z) * 0.5;
 		thepoint = pointcontents(origin1);
-		if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
+		if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
 		{
-			self.waterlevel = WATERLEVEL_SWIMMING;
-			origin1_z = self.origin_z + 22;
+			this.waterlevel = WATERLEVEL_SWIMMING;
+			origin1.z = this.origin.z + 22;
 			thepoint = pointcontents(origin1);
-			if(thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
-				self.waterlevel = WATERLEVEL_SUBMERGED;
+			if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
+				this.waterlevel = WATERLEVEL_SUBMERGED;
 		}
 	}
 
-	if(IS_ONGROUND(self) || self.velocity_z <= 0 || pmove_waterjumptime <= 0)
+	if (IS_ONGROUND(this) || this.velocity.z <= 0 || pmove_waterjumptime <= 0)
 		pmove_waterjumptime = 0;
 }
 
@@ -214,7 +209,7 @@ void PM_ClientMovement_Move()
 	vector trace3_plane_normal = '0 0 0';
 
 
-	PM_ClientMovement_UpdateStatus(false);
+	PM_ClientMovement_UpdateStatus(this, false);
 	primalvelocity = self.velocity;
 	for(bump = 0, t = PHYS_INPUT_TIMELENGTH; bump < 8 && (self.velocity * self.velocity) > 0; bump++)
 	{
@@ -990,27 +985,19 @@ void PM_check_frozen()
 void PM_check_hitground()
 {SELFPARAM();
 #ifdef SVQC
-	if (IS_ONGROUND(self))
-	if (IS_PLAYER(self)) // no fall sounds for observers thank you very much
-	if (self.wasFlying)
-	{
-		self.wasFlying = 0;
-		if (self.waterlevel < WATERLEVEL_SWIMMING)
-		if (time >= self.ladder_time)
-		if (!self.hook)
-		{
-			self.nextstep = time + 0.3 + random() * 0.1;
-			trace_dphitq3surfaceflags = 0;
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
-			{
-				if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-				else
-					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			}
-		}
-	}
+	if (!IS_PLAYER(this)) return; // no fall sounds for observers thank you very much
+	if (!IS_ONGROUND(this)) return;
+	if (!this.wasFlying) return;
+    this.wasFlying = false;
+    if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
+    if (time < this.ladder_time) return;
+    if (this.hook) return;
+    this.nextstep = time + 0.3 + random() * 0.1;
+    trace_dphitq3surfaceflags = 0;
+    tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+    if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)) return;
+    entity fall = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS) ? GS_FALL_METAL : GS_FALL;
+    GlobalSound(fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 #endif
 }
 
@@ -1313,52 +1300,49 @@ void PM_jetpack(float maxspd_mod)
 #endif
 }
 
-void PM_walk(float buttons_prev, float maxspd_mod)
-{SELFPARAM();
-	if (!WAS_ONGROUND(self))
+void PM_walk(entity this, float maxspd_mod)
+{
+	if (!WAS_ONGROUND(this))
 	{
 #ifdef SVQC
 		if (autocvar_speedmeter)
-			LOG_TRACE(strcat("landing velocity: ", vtos(self.velocity), " (abs: ", ftos(vlen(self.velocity)), ")\n"));
+			LOG_TRACE(strcat("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")\n"));
 #endif
-		if (self.lastground < time - 0.3)
-			self.velocity *= (1 - PHYS_FRICTION_ONLAND);
+		if (this.lastground < time - 0.3)
+			this.velocity *= (1 - PHYS_FRICTION_ONLAND);
 #ifdef SVQC
-		if (self.jumppadcount > 1)
-			LOG_TRACE(strcat(ftos(self.jumppadcount), "x jumppad combo\n"));
-		self.jumppadcount = 0;
+		if (this.jumppadcount > 1)
+			LOG_TRACE(strcat(ftos(this.jumppadcount), "x jumppad combo\n"));
+		this.jumppadcount = 0;
 #endif
 	}
 
 	// walking
-	makevectors(self.v_angle.y * '0 1 0');
-	vector wishvel = v_forward * self.movement.x
-					+ v_right * self.movement.y;
+	makevectors(this.v_angle.y * '0 1 0');
+	const vector wishvel = v_forward * this.movement.x
+						+ v_right * this.movement.y;
 	// acceleration
-	vector wishdir = normalize(wishvel);
+	const vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
-
-	wishspeed = min(wishspeed, PHYS_MAXSPEED(self) * maxspd_mod);
-	if (IS_DUCKED(self))
-		wishspeed *= 0.5;
+	wishspeed = min(wishspeed, PHYS_MAXSPEED(this) * maxspd_mod);
+	if (IS_DUCKED(this)) wishspeed *= 0.5;
 
 	// apply edge friction
-	float f = vlen(vec2(self.velocity));
-	if (f > 0)
+	const float f2 = vlen2(vec2(this.velocity));
+	if (f2 > 0)
 	{
-		float realfriction;
 		trace_dphitq3surfaceflags = 0;
-		tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+		tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
 		// TODO: apply edge friction
 		// apply ground friction
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-			realfriction = PHYS_FRICTION_SLICK;
-		else
-			realfriction = PHYS_FRICTION;
+		const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+			? PHYS_FRICTION_SLICK
+			: PHYS_FRICTION;
 
+		float f = sqrt(f2);
 		f = 1 - PHYS_INPUT_TIMELENGTH * realfriction * ((f < PHYS_STOPSPEED) ? (PHYS_STOPSPEED / f) : 1);
 		f = max(0, f);
-		self.velocity *= f;
+		this.velocity *= f;
 		/*
 		   Mathematical analysis time!
 
@@ -1382,20 +1366,20 @@ void PM_walk(float buttons_prev, float maxspd_mod)
 			v >= PHYS_STOPSPEED * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION)
 		 */
 	}
-	float addspeed = wishspeed - self.velocity * wishdir;
+	const float addspeed = wishspeed - this.velocity * wishdir;
 	if (addspeed > 0)
 	{
-		float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
-		self.velocity += accelspeed * wishdir;
+		const float accelspeed = min(PHYS_ACCELERATE * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
+		this.velocity += accelspeed * wishdir;
 	}
-	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(self) * PHYS_INPUT_TIMELENGTH;
+	const float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(this) * PHYS_INPUT_TIMELENGTH;
 	if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
-		self.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
-	if (self.velocity * self.velocity)
+		this.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
+	if (vdist(this.velocity, >, 0))
 		PM_ClientMovement_Move();
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-		if (!IS_ONGROUND(self) || !GAMEPLAYFIX_NOGRAVITYONGROUND)
-			self.velocity_z -= g * 0.5;
+		if (!IS_ONGROUND(this) || !GAMEPLAYFIX_NOGRAVITYONGROUND)
+			this.velocity_z -= g * 0.5;
 }
 
 void PM_air(float buttons_prev, float maxspd_mod)
@@ -1484,25 +1468,25 @@ bool IsFlying(entity a)
 	return true;
 }
 
-void PM_Main()
-{SELFPARAM();
-	int buttons = PHYS_INPUT_BUTTON_MASK(self);
+void PM_Main(entity this)
+{
+	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 #ifdef CSQC
-	self.items = getstati(STAT_ITEMS, 0, 24);
+	this.items = getstati(STAT_ITEMS, 0, 24);
 
-	self.movement = PHYS_INPUT_MOVEVALUES(self);
+	this.movement = PHYS_INPUT_MOVEVALUES(this);
 
-	vector oldv_angle = self.v_angle;
-	vector oldangles = self.angles; // we need to save these, as they're abused by other code
-	self.v_angle = PHYS_INPUT_ANGLES(self);
-	self.angles = PHYS_WORLD_ANGLES(self);
+	vector oldv_angle = this.v_angle;
+	vector oldangles = this.angles; // we need to save these, as they're abused by other code
+	this.v_angle = PHYS_INPUT_ANGLES(this);
+	this.angles = PHYS_WORLD_ANGLES(this);
 
-	self.team = myteam + 1; // is this correct?
-	if (!(PHYS_INPUT_BUTTON_JUMP(self))) // !jump
-		UNSET_JUMP_HELD(self); // canjump = true
+	this.team = myteam + 1; // is this correct?
+	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
+		UNSET_JUMP_HELD(this); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
 
-	PM_ClientMovement_UpdateStatus(true);
+	PM_ClientMovement_UpdateStatus(this, true);
 #endif
 
 
@@ -1515,8 +1499,8 @@ void PM_Main()
 #ifdef SVQC
 	Physics_UpdateStats(this, maxspeed_mod);
 
-	if (self.PlayerPhysplug)
-		if (self.PlayerPhysplug())
+	if (this.PlayerPhysplug)
+		if (this.PlayerPhysplug())
 			return;
 #endif
 
@@ -1529,59 +1513,52 @@ void PM_Main()
 #ifdef SVQC
 	if (sv_maxidle > 0)
 	{
-		if (buttons != self.buttons_old || self.movement != self.movement_old || self.v_angle != self.v_angle_old)
-			self.parm_idlesince = time;
+		if (buttons != this.buttons_old || this.movement != this.movement_old || this.v_angle != this.v_angle_old)
+			this.parm_idlesince = time;
 	}
 #endif
-	int buttons_prev = self.buttons_old;
-	self.buttons_old = buttons;
-	self.movement_old = self.movement;
-	self.v_angle_old = self.v_angle;
+	int buttons_prev = this.buttons_old;
+	this.buttons_old = buttons;
+	this.movement_old = this.movement;
+	this.v_angle_old = this.v_angle;
 
 	PM_check_nickspam();
 
 	PM_check_punch();
 #ifdef SVQC
-	if (IS_BOT_CLIENT(self))
+	if (IS_BOT_CLIENT(this))
 	{
 		if (playerdemo_read())
 			return;
 		bot_think();
 	}
-
-	if (IS_PLAYER(self))
 #endif
+
+#ifdef SVQC
+	if (IS_PLAYER(this))
 	{
-		bool not_allowed_to_move = false;
-#ifdef SVQC
-		if (time < game_starttime)
-			not_allowed_to_move = true;
-#endif
-
-		if (not_allowed_to_move)
+		const bool allowed_to_move = (time >= game_starttime);
+		if (!allowed_to_move)
 		{
-			self.velocity = '0 0 0';
-			self.movetype = MOVETYPE_NONE;
-#ifdef SVQC
-			self.disableclientprediction = 2;
-#endif
+			this.velocity = '0 0 0';
+			this.movetype = MOVETYPE_NONE;
+			this.disableclientprediction = 2;
 		}
-#ifdef SVQC
-		else if (self.disableclientprediction == 2)
+		else if (this.disableclientprediction == 2)
 		{
-			if (self.movetype == MOVETYPE_NONE)
-				self.movetype = MOVETYPE_WALK;
-			self.disableclientprediction = 0;
+			if (this.movetype == MOVETYPE_NONE)
+				this.movetype = MOVETYPE_WALK;
+			this.disableclientprediction = 0;
 		}
-#endif
 	}
+#endif
 
 #ifdef SVQC
-	if (self.movetype == MOVETYPE_NONE)
+	if (this.movetype == MOVETYPE_NONE)
 		return;
 
 	// when we get here, disableclientprediction cannot be 2
-	self.disableclientprediction = 0;
+	this.disableclientprediction = 0;
 #endif
 
 	viewloc_PlayerPhysics();
@@ -1594,12 +1571,12 @@ void PM_Main()
 
 	maxspeed_mod = 1;
 
-	if (self.in_swamp)
-		maxspeed_mod *= self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
+	if (this.in_swamp)
+		maxspeed_mod *= this.swamp_slowdown; //cvar("g_balance_swamp_moverate");
 
 	// conveyors: first fix velocity
-	if (self.conveyor.state)
-		self.velocity -= self.conveyor.movedir;
+	if (this.conveyor.state)
+		this.velocity -= this.conveyor.movedir;
 
 #ifdef SVQC
 	MUTATOR_CALLHOOK(PlayerPhysics);
@@ -1619,110 +1596,110 @@ void PM_Main()
 //	}
 
 #ifdef SVQC
-	if (!IS_PLAYER(self))
+	if (!IS_PLAYER(this))
 	{
 		maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
-		if (!self.spectatorspeed)
-			self.spectatorspeed = maxspeed_mod;
-		if (self.impulse && self.impulse <= 19 || (self.impulse >= 200 && self.impulse <= 209) || (self.impulse >= 220 && self.impulse <= 229))
+		if (!this.spectatorspeed)
+			this.spectatorspeed = maxspeed_mod;
+		if (this.impulse && this.impulse <= 19 || (this.impulse >= 200 && this.impulse <= 209) || (this.impulse >= 220 && this.impulse <= 229))
 		{
-			if (self.lastclassname != "player")
+			if (this.lastclassname != "player")
 			{
-				if (self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209))
-					self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
-				else if (self.impulse == 11)
-					self.spectatorspeed = maxspeed_mod;
-				else if (self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || (self.impulse >= 220 && self.impulse <= 229))
-					self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
-				else if (self.impulse >= 1 && self.impulse <= 9)
-					self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
+				if (this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209))
+					this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);
+				else if (this.impulse == 11)
+					this.spectatorspeed = maxspeed_mod;
+				else if (this.impulse == 12 || this.impulse == 16  || this.impulse == 19 || (this.impulse >= 220 && this.impulse <= 229))
+					this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
+				else if (this.impulse >= 1 && this.impulse <= 9)
+					this.spectatorspeed = 1 + 0.5 * (this.impulse - 1);
 			} // otherwise just clear
-			self.impulse = 0;
+			this.impulse = 0;
 		}
-		maxspeed_mod = self.spectatorspeed;
+		maxspeed_mod = this.spectatorspeed;
 	}
 
-	float spd = max(PHYS_MAXSPEED(self), PHYS_MAXAIRSPEED(self)) * maxspeed_mod;
-	if(self.speed != spd)
+	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
+	if(this.speed != spd)
 	{
-		self.speed = spd;
+		this.speed = spd;
 		string temps = ftos(spd);
-		stuffcmd(self, strcat("cl_forwardspeed ", temps, "\n"));
-		stuffcmd(self, strcat("cl_backspeed ", temps, "\n"));
-		stuffcmd(self, strcat("cl_sidespeed ", temps, "\n"));
-		stuffcmd(self, strcat("cl_upspeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
+		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
 	}
 
-	if(self.stat_jumpspeedcap_min != PHYS_JUMPSPEEDCAP_MIN)
+	if(this.stat_jumpspeedcap_min != PHYS_JUMPSPEEDCAP_MIN)
 	{
-		self.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MIN;
-		stuffcmd(self, strcat("cl_jumpspeedcap_min ", PHYS_JUMPSPEEDCAP_MIN, "\n"));
+		this.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MIN;
+		stuffcmd(this, strcat("cl_jumpspeedcap_min ", PHYS_JUMPSPEEDCAP_MIN, "\n"));
 	}
-	if(self.stat_jumpspeedcap_max != PHYS_JUMPSPEEDCAP_MAX)
+	if(this.stat_jumpspeedcap_max != PHYS_JUMPSPEEDCAP_MAX)
 	{
-		self.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MAX;
-		stuffcmd(self, strcat("cl_jumpspeedcap_max ", PHYS_JUMPSPEEDCAP_MAX, "\n"));
+		this.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MAX;
+		stuffcmd(this, strcat("cl_jumpspeedcap_max ", PHYS_JUMPSPEEDCAP_MAX, "\n"));
 	}
 #endif
 
-	if(PHYS_DEAD(self))
+	if(PHYS_DEAD(this))
 	{
 		// handle water here
-		vector midpoint = ((self.absmin + self.absmax) * 0.5);
+		vector midpoint = ((this.absmin + this.absmax) * 0.5);
 		if(pointcontents(midpoint) == CONTENT_WATER)
 		{
-			self.velocity = self.velocity * 0.5;
+			this.velocity = this.velocity * 0.5;
 
 			// do we want this?
 			//if(pointcontents(midpoint + '0 0 2') == CONTENT_WATER)
-				//{ self.velocity_z = 70; }
+				//{ this.velocity_z = 70; }
 		}
 		goto end;
 	}
 
 #ifdef SVQC
-	if (!self.fixangle && !g_bugrigs)
-		self.angles = '0 1 0' * self.v_angle.y;
+	if (!this.fixangle && !g_bugrigs)
+		this.angles = '0 1 0' * this.v_angle.y;
 #endif
 
 	PM_check_hitground();
 
-	if(IsFlying(self))
-		self.wasFlying = 1;
+	if(IsFlying(this))
+		this.wasFlying = 1;
 
-	if (IS_PLAYER(self))
+	if (IS_PLAYER(this))
 		CheckPlayerJump();
 
-	if (self.flags & FL_WATERJUMP)
+	if (this.flags & FL_WATERJUMP)
 	{
-		self.velocity_x = self.movedir_x;
-		self.velocity_y = self.movedir_y;
-		if (time > self.teleport_time || self.waterlevel == WATERLEVEL_NONE)
+		this.velocity_x = this.movedir.x;
+		this.velocity_y = this.movedir.y;
+		if (time > this.teleport_time || this.waterlevel == WATERLEVEL_NONE)
 		{
-			self.flags &= ~FL_WATERJUMP;
-			self.teleport_time = 0;
+			this.flags &= ~FL_WATERJUMP;
+			this.teleport_time = 0;
 		}
 	}
 
 #ifdef SVQC
-	else if (g_bugrigs && IS_PLAYER(self))
+	else if (g_bugrigs && IS_PLAYER(this))
 		RaceCarPhysics();
 #endif
 
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY || (BUFFS_STAT(self) & BUFF_FLIGHT.m_itemid))
+	else if (this.movetype == MOVETYPE_NOCLIP || this.movetype == MOVETYPE_FLY || this.movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
 		PM_fly(maxspeed_mod);
 
-	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
+	else if (this.waterlevel >= WATERLEVEL_SWIMMING)
 		PM_swim(maxspeed_mod);
 
-	else if (time < self.ladder_time)
+	else if (time < this.ladder_time)
 		PM_ladder(maxspeed_mod);
 
-	else if (ITEMS_STAT(self) & IT_USING_JETPACK)
+	else if (ITEMS_STAT(this) & IT_USING_JETPACK)
 		PM_jetpack(maxspeed_mod);
 
-	else if (IS_ONGROUND(self))
-		PM_walk(buttons_prev, maxspeed_mod);
+	else if (IS_ONGROUND(this))
+		PM_walk(this, maxspeed_mod);
 
 	else
 		PM_air(buttons_prev, maxspeed_mod);
@@ -1730,35 +1707,37 @@ void PM_Main()
 	PM_check_vortex();
 
 :end
-	if (IS_ONGROUND(self))
-		self.lastground = time;
+	if (IS_ONGROUND(this))
+		this.lastground = time;
 
 	// conveyors: then break velocity again
-	if(self.conveyor.state)
-		self.velocity += self.conveyor.movedir;
+	if(this.conveyor.state)
+		this.velocity += this.conveyor.movedir;
 
-	self.lastflags = self.flags;
+	this.lastflags = this.flags;
 
-	self.lastclassname = self.classname;
+	this.lastclassname = this.classname;
 
 #ifdef CSQC
-	self.v_angle = oldv_angle;
-	self.angles = oldangles;
+	this.v_angle = oldv_angle;
+	this.angles = oldangles;
 #endif
 }
 
-#ifdef SVQC
+#if defined(SVQC)
 void SV_PlayerPhysics()
 #elif defined(CSQC)
-void CSQC_ClientMovement_PlayerMove_Frame()
+void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
-{SELFPARAM();
-	PM_Main();
-
+{
+#ifdef SVQC
+	SELFPARAM();
+#endif
+	PM_Main(this);
 #ifdef CSQC
-	self.pmove_flags =
-			((self.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
-			(!(self.flags & FL_JUMPRELEASED) ? 0 : PMF_JUMP_HELD) |
-			((self.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);
+	this.pmove_flags =
+			((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
+			(!(this.flags & FL_JUMPRELEASED) ? PMF_JUMP_HELD : 0) |
+			((this.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);
 #endif
 }

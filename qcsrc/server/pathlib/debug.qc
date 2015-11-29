@@ -70,8 +70,6 @@ void pathlib_showsquare2(entity node ,vector ncolor,float align)
     }
 }
 
-void SUB_Remove();
-
 void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 {
     entity s;
@@ -83,7 +81,7 @@ void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 
     s           = spawn();
     s.alpha     = 0.25;
-    s.think     = SUB_Remove;
+    s.think     = SUB_Remove_self;
     s.nextthink = _lifetime;
     s.scale     = pathlib_gridsize / 512.001;
     s.solid     = SOLID_NOT;
@@ -108,7 +106,7 @@ void pathlib_showedge(vector where,float _lifetime,float rot)
 
     e           = spawn();
     e.alpha     = 0.25;
-    e.think     = SUB_Remove;
+    e.think     = SUB_Remove_self;
     e.nextthink = _lifetime;
     e.scale     = pathlib_gridsize / 512;
     e.solid     = SOLID_NOT;

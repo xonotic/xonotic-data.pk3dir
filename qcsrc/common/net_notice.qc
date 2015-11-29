@@ -4,28 +4,19 @@ REGISTER_NET_TEMP(TE_CSQC_SVNOTICE)
 
 #ifdef SVQC
 void sv_notice_join_think()
-{SELFPARAM();
-    //NextLevel();
-    float argc = tokenizebyseparator(autocvar_sv_join_notices, "|");
-    if(argc > 0)
-    {
-        float i;
-        for(i = argc - 1; i >= 0; --i)
-            sv_notice_to(self.owner, argv(i), autocvar_sv_join_notices_time, false);
-    }
-    remove(self);
+{
+    SELFPARAM();
+    int argc = tokenizebyseparator(autocvar_sv_join_notices, "|");
+    if (argc <= 0) return;
+    for (int i = 0; i < argc; ++i)
+        sv_notice_to(this, argv(i), autocvar_sv_join_notices_time, false);
 }
 
-void sv_notice_join()
-{SELFPARAM();
+void sv_notice_join(entity _to)
+{
     // to-do: make sv_join_notices support per-entry times
-    if(autocvar_sv_join_notices == "")
-        return;
-
-    entity n = spawn();
-    n.owner = self;
-    n.think = sv_notice_join_think;
-    n.nextthink = time + 1;
+    if (autocvar_sv_join_notices == "") return;
+    defer(_to, 1, sv_notice_join_think);
 }
 
 void sv_notice_to(entity _to, string _notice, float _howlong, float _modal)
@@ -53,68 +44,49 @@ NET_HANDLE(TE_CSQC_SVNOTICE, bool isNew)
 	cl_notice_read();
 	return true;
 }
+entity cl_notices;
+STATIC_INIT(cl_notice)
+{
+    cl_notices = LL_NEW();
+}
 void cl_notice_read()
 {
-    //float _done;
-    //float _modal;
     entity _notice = new(sv_notice);
+    make_pure(_notice);
     _notice.netname = strzone(ReadString());
     _notice.alpha = ReadLong() + time;
     _notice.skin = ReadByte();
+    LL_PUSH(cl_notices, _notice);
 }
 
-float cl_notice_run()
+void cl_notice_run()
 {
-    entity _notes;
-    string _notice;
-    float m = false;
+    bool flag = false;
+    LL_EACH(cl_notices, it.alpha > time, LAMBDA(flag = true; break));
+    if (!flag) return;
+    const int M1 = 30;
+    const int M2 = 10;
 
-    _notes = findchain(classname, "sv_notice");
-    if(!_notes)
-        return false;
-    #define M1 30
-    #define M2 10
-
-    vector v1, v2 = '0 0 0', v3;
-    v1 = '1 1 0' * M1;
-    v2_x = vid_conwidth - (2 * M1);
-    v2_y = vid_conheight - (2 * M1);
-
+    vector v1 = '1 1 0' * M1;
+    vector v2 = '0 0 0';
+    v2.x = vid_conwidth - (2 * M1);
+    v2.y = vid_conheight - (2 * M1);
     drawfill(v1, v2, '0 0 0', 0.5, DRAWFLAG_NORMAL);
-    v1 = '1 1 0' * (M1 + M2);
-    v2_x = vid_conwidth - (2 * (M1 + M2));
-    v2_y = vid_conheight - (2 * (M1 + M2));
-    drawfill(v1, v2, '0.5 0.5 0.5', 0.5, DRAWFLAG_NORMAL);
-    v3 = v1 + '10 10 0';
 
-    #define OUT(s,z) drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3_y += z + 4
+    v1 = '1 1 0' * (M1 + M2);
+    v2.x = vid_conwidth - (2 * (M1 + M2));
+    v2.y = vid_conheight - (2 * (M1 + M2));
+    drawfill(v1, v2, '0.5 0.5 0.5', 0.5, DRAWFLAG_NORMAL);
+
+    vector v3 = v1 + '10 10 0';
+    #define OUT(s, z) do { drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3.y += z + 4; } while (0)
 
     OUT(_("^1Server notices:"), 32);
-
-    //drawcolorcodedstring(v1 + '5 5 0', "^1Server notices:", '32 32 0', 1, DRAWFLAG_NORMAL);
-    while(_notes)
-    {
-
-        _notice = sprintf(_("^7%s (^3%d sec left)"), _notes.netname , rint(_notes.alpha - time));
-        OUT(_notice, 16);
-
-        if(_notes.skin)
-            m = true;
-
-        if(_notes.alpha <= time)
-        {
-            _notes.think = SUB_Remove;
-            _notes.nextthink = time;
-        }
-
-        _notes = _notes.chain;
-    }
-
+    LL_EACH(cl_notices, it.alpha > time, LAMBDA(
+        string s = sprintf(_("^7%s (^3%d sec left)"), it.netname , rint(it.alpha - time));
+        OUT(s, 16);
+    ));
     #undef OUT
-    #undef M1
-    #undef M2
-
-    return m;
 }
 
 #endif // CSQC

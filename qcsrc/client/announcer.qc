@@ -15,6 +15,8 @@ string AnnouncerOption()
 	return ret;
 }
 
+entity announcer_countdown;
+
 void Announcer_Countdown()
 {
 	SELFPARAM();
@@ -24,6 +26,7 @@ void Announcer_Countdown()
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		remove(this);
+		announcer_countdown = NULL;
 		return;
 	}
 	if(roundstarttime >= starttime)
@@ -39,6 +42,7 @@ void Announcer_Countdown()
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		remove(this);
+		announcer_countdown = NULL;
 		return;
 	}
 	else // countdown is still going
@@ -78,7 +82,6 @@ void Announcer_Gamestart()
 	{
 		if(time < startTime)
 		{
-			static entity announcer_countdown;
 			if (!announcer_countdown)
 			{
 				announcer_countdown = new(announcer_countdown);

@@ -53,7 +53,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	 */
 
 	// PLAYERS use different math
-#ifndef POSITIVE_PITCH_IS_DOWN
+#if !(POSITIVE_PITCH_IS_DOWN)
 	ang.x = -ang.x;
 #endif
 
@@ -94,7 +94,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 		//print("GOOD path: ", vtos(ang), "\n");
 	}
 
-#ifndef POSITIVE_PITCH_IS_DOWN
+#if !(POSITIVE_PITCH_IS_DOWN)
 	ang.x = -ang.x;
 #endif
 	ang.z = vangle.z;

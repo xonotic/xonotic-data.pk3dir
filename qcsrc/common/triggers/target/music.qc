@@ -30,10 +30,9 @@ void target_music_sendto(float to, float is)
 	WriteByte(to, self.lifetime);
 	WriteString(to, self.noise);
 }
-void target_music_reset()
-{SELFPARAM();
-	if(self.targetname == "")
-		target_music_sendto(MSG_ALL, 1);
+void target_music_reset(entity this)
+{
+	if (this.targetname == "") target_music_sendto(MSG_ALL, 1);
 }
 void target_music_kill()
 {
@@ -127,10 +126,10 @@ bool trigger_music_SendEntity(entity this, entity to, float sf)
 	}
 	return 1;
 }
-void trigger_music_reset()
-{SELFPARAM();
-	self.cnt = !(self.spawnflags & 1);
-	self.SendFlags |= 0x80;
+void trigger_music_reset(entity this)
+{
+	this.cnt = !(this.spawnflags & 1);
+	this.SendFlags |= 0x80;
 }
 void trigger_music_use()
 {SELFPARAM();
@@ -139,73 +138,58 @@ void trigger_music_use()
 }
 spawnfunc(trigger_music)
 {
-	if(self.model != "")
-		_setmodel(self, self.model);
-	if(!self.volume)
-		self.volume = 1;
-	if(!self.modelindex)
+	if(this.model != "") _setmodel(this, this.model);
+	if(!this.volume) this.volume = 1;
+	if(!this.modelindex)
 	{
-		setorigin(self, self.origin + self.mins);
-		setsize(self, '0 0 0', self.maxs - self.mins);
+		setorigin(this, this.origin + this.mins);
+		setsize(this, '0 0 0', this.maxs - this.mins);
 	}
-	trigger_music_reset();
+	trigger_music_reset(this);
 
-	self.use = trigger_music_use;
-	self.reset = trigger_music_reset;
+	this.use = trigger_music_use;
+	this.reset = trigger_music_reset;
 
-	Net_LinkEntity(self, false, 0, trigger_music_SendEntity);
+	Net_LinkEntity(this, false, 0, trigger_music_SendEntity);
 }
 #elif defined(CSQC)
+
+entity TargetMusic_list;
+STATIC_INIT(TargetMusic_list)
+{
+	TargetMusic_list = LL_NEW();
+}
 
 void TargetMusic_Advance()
 {
 	// run AFTER all the thinks!
-	entity best, e;
-	float vol, vol0;
-	best = music_default;
-	if(music_target && time < music_target.lifetime)
-		best = music_target;
-	if(music_trigger)
-		best = music_trigger;
-	for(e = world; (e = findfloat(e, enttype, NET_ENT_CLIENT_TRIGGER_MUSIC.m_id)); ) if(e.noise)
-	{
-		vol0 = e.lastvol;
-		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
-		{
-			vol0 = -1;
-		}
-		if(e == best)
+	entity best = music_default;
+	if (music_target && time < music_target.lifetime) best = music_target;
+	if (music_trigger) best = music_trigger;
+	LL_EACH(TargetMusic_list, it.noise, LAMBDA(
+		const float vol0 = (getsoundtime(it, CH_BGM_SINGLE) >= 0) ? it.lastvol : -1;
+		if (it == best)
 		{
 			// increase volume
-			if(e.fade_time > 0)
-				e.state = bound(0, e.state + frametime / e.fade_time, 1);
-			else
-				e.state = 1;
+			it.state = (it.fade_time > 0) ? bound(0, it.state + frametime / it.fade_time, 1) : 1;
 		}
 		else
 		{
 			// decrease volume
-			if(e.fade_rate > 0)
-				e.state = bound(0, e.state - frametime / e.fade_rate, 1);
-			else
-				e.state = 0;
+			it.state = (it.fade_rate > 0) ? bound(0, it.state - frametime / it.fade_rate, 1) : 0;
 		}
-		vol = e.state * e.volume * autocvar_bgmvolume;
-		if(vol != vol0)
+		const float vol = it.state * it.volume * autocvar_bgmvolume;
+		if (vol != vol0)
 		{
 			if(vol0 < 0)
-				_sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
+				_sound(it, CH_BGM_SINGLE, it.noise, vol, ATTEN_NONE); // restart
 			else
-				_sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
-			e.lastvol = vol;
+				_sound(it, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
+			it.lastvol = vol;
 		}
-	}
+	));
 	music_trigger = world;
-
-	if(best)
-		bgmtime = getsoundtime(best, CH_BGM_SINGLE);
-	else
-		bgmtime = gettime(GETTIME_CDTRACK);
+	bgmtime = (best) ? getsoundtime(best, CH_BGM_SINGLE) : gettime(GETTIME_CDTRACK);
 }
 
 NET_HANDLE(TE_CSQC_TARGET_MUSIC, bool isNew)
@@ -216,23 +200,19 @@ NET_HANDLE(TE_CSQC_TARGET_MUSIC, bool isNew)
 
 void Net_TargetMusic()
 {
-	int id = ReadShort();
-	float vol = ReadByte() / 255.0;
-	float fai = ReadByte() / 16.0;
-	float fao = ReadByte() / 16.0;
-	float tim = ReadByte();
-	string noi = ReadString();
+	const int id = ReadShort();
+	const float vol = ReadByte() / 255.0;
+	const float fai = ReadByte() / 16.0;
+	const float fao = ReadByte() / 16.0;
+	const float tim = ReadByte();
+	const string noi = ReadString();
 
-	entity e;
-	for(e = world; (e = findfloat(e, enttype, NET_ENT_CLIENT_TRIGGER_MUSIC.m_id)); )
+	entity e = NULL;
+	LL_EACH(TargetMusic_list, it.count == id, LAMBDA(e = it; break));
+	if (!e)
 	{
-		if(e.count == id)
-			break;
-	}
-	if(!e)
-	{
-		e = spawn();
-		e.enttype = NET_ENT_CLIENT_TRIGGER_MUSIC.m_id;
+		LL_PUSH(TargetMusic_list, e = new(TargetMusic));
+		make_pure(e);
 		e.count = id;
 	}
 	if(e.noise != noi)

@@ -1,18 +1,6 @@
-#include "all.qh"
+#include "nades.qh"
 
-#if defined(CSQC)
-	#include "../../client/defs.qh"
-	#include "../buffs/all.qh"
-	#include "../movetypes/movetypes.qh"
-	#include "../../client/main.qh"
-	#include "../../lib/csqcmodel/cl_model.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-    #include "../constants.qh"
-    #include "../../server/constants.qh"
-	#include "../turrets/sv_turrets.qh"
-#endif
-
+#ifdef IMPLEMENTATION
 
 #ifdef CSQC
 .float ltime;
@@ -48,9 +36,10 @@ void healer_setup(entity e)
 	e.colormod = '1 0 0';
 	e.renderflags |= RF_ADDITIVE;
 }
-#endif // CSQC
+#endif
 
 REGISTER_NET_LINKED(Nade_Heal)
+
 #ifdef CSQC
 NET_HANDLE(Nade_Heal, bool isNew)
 {
@@ -90,4 +79,6 @@ bool healer_send(entity this, entity to, int sf)
 	}
 	return true;
 }
-#endif // SVQC
+#endif
+
+#endif

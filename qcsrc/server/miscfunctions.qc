@@ -528,7 +528,7 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				g_weaponarena_weapons |= WepSet_FromWeapon(j);
+				g_weaponarena_weapons |= (e.m_wepset);
 		}
 	}
 	else if (s == "most")
@@ -540,7 +540,7 @@ void readplayerstartcvars()
 			e = get_weaponinfo(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if (e.spawnflags & WEP_FLAG_NORMAL)
-					g_weaponarena_weapons |= WepSet_FromWeapon(j);
+					g_weaponarena_weapons |= (e.m_wepset);
 		}
 	}
 	else if (s == "none")
@@ -561,7 +561,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					g_weaponarena_weapons |= WepSet_FromWeapon(j);
+					g_weaponarena_weapons |= (e.m_wepset);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.m_name, " & ");
 					break;
 				}
@@ -592,12 +592,13 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(i);
 			int w = want_weapon(e, false);
+			WepSet s = e.m_wepset;
 			if(w & 1)
-				start_weapons |= WepSet_FromWeapon(i);
+				start_weapons |= s;
 			if(w & 2)
-				start_weapons_default |= WepSet_FromWeapon(i);
+				start_weapons_default |= s;
 			if(w & 4)
-				start_weapons_defaultmask |= WepSet_FromWeapon(i);
+				start_weapons_defaultmask |= s;
 		}
 	}
 
@@ -654,12 +655,13 @@ void readplayerstartcvars()
 			{
 				e = get_weaponinfo(i);
 				int w = want_weapon(e, g_warmup_allguns);
+				WepSet s = (e.m_wepset);
 				if(w & 1)
-					warmup_start_weapons |= WepSet_FromWeapon(i);
+					warmup_start_weapons |= s;
 				if(w & 2)
-					warmup_start_weapons_default |= WepSet_FromWeapon(i);
+					warmup_start_weapons_default |= s;
 				if(w & 4)
-					warmup_start_weapons_defaultmask |= WepSet_FromWeapon(i);
+					warmup_start_weapons_defaultmask |= s;
 			}
 		}
 	}
@@ -682,9 +684,8 @@ void readplayerstartcvars()
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(precache_weapons & WepSet_FromWeapon(i)) {
-			Weapon w = get_weaponinfo(i);
-			w.wr_init(w);
+		if(precache_weapons & (e.m_wepset)) {
+			e.wr_init(e);
 		}
 	}
 
@@ -703,184 +704,6 @@ void readplayerstartcvars()
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
-float sound_allowed(float destin, entity e)
-{
-    // sounds from world may always pass
-    for (;;)
-    {
-        if (e.classname == "body")
-            e = e.enemy;
-	else if (e.realowner && e.realowner != e)
-            e = e.realowner;
-	else if (e.owner && e.owner != e)
-            e = e.owner;
-        else
-            break;
-    }
-    // sounds to self may always pass
-    if (destin == MSG_ONE)
-        if (e == msg_entity)
-            return true;
-    // sounds by players can be removed
-    if (autocvar_bot_sound_monopoly)
-        if (IS_REAL_CLIENT(e))
-            return false;
-    // anything else may pass
-    return true;
-}
-
-void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float attenu)
-{
-    float entno, idx;
-
-    if (!sound_allowed(_dest, e))
-        return;
-
-    entno = num_for_edict(e);
-    idx = precache_sound_index(samp);
-
-    int sflags;
-    sflags = 0;
-
-    attenu = floor(attenu * 64);
-    vol = floor(vol * 255);
-
-    if (vol != 255)
-        sflags |= SND_VOLUME;
-    if (attenu != 64)
-        sflags |= SND_ATTENUATION;
-    if (entno >= 8192 || chan < 0 || chan > 7)
-        sflags |= SND_LARGEENTITY;
-    if (idx >= 256)
-        sflags |= SND_LARGESOUND;
-
-    WriteByte(_dest, SVC_SOUND);
-    WriteByte(_dest, sflags);
-    if (sflags & SND_VOLUME)
-        WriteByte(_dest, vol);
-    if (sflags & SND_ATTENUATION)
-        WriteByte(_dest, attenu);
-    if (sflags & SND_LARGEENTITY)
-    {
-        WriteShort(_dest, entno);
-        WriteByte(_dest, chan);
-    }
-    else
-    {
-        WriteShort(_dest, entno * 8 + chan);
-    }
-    if (sflags & SND_LARGESOUND)
-        WriteShort(_dest, idx);
-    else
-        WriteByte(_dest, idx);
-
-    WriteCoord(_dest, o.x);
-    WriteCoord(_dest, o.y);
-    WriteCoord(_dest, o.z);
-}
-void soundto(float _dest, entity e, float chan, string samp, float vol, float _atten)
-{
-    vector o;
-
-    if (!sound_allowed(_dest, e))
-        return;
-
-    o = e.origin + 0.5 * (e.mins + e.maxs);
-    soundtoat(_dest, e, o, chan, samp, vol, _atten);
-}
-void soundat(entity e, vector o, float chan, string samp, float vol, float _atten)
-{
-    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, _atten);
-}
-void stopsoundto(float _dest, entity e, float chan)
-{
-    float entno;
-
-    if (!sound_allowed(_dest, e))
-        return;
-
-    entno = num_for_edict(e);
-
-    if (entno >= 8192 || chan < 0 || chan > 7)
-    {
-        float idx, sflags;
-        idx = precache_sound_index(SND(Null));
-        sflags = SND_LARGEENTITY;
-        if (idx >= 256)
-            sflags |= SND_LARGESOUND;
-        WriteByte(_dest, SVC_SOUND);
-        WriteByte(_dest, sflags);
-        WriteShort(_dest, entno);
-        WriteByte(_dest, chan);
-        if (sflags & SND_LARGESOUND)
-            WriteShort(_dest, idx);
-        else
-            WriteByte(_dest, idx);
-        WriteCoord(_dest, e.origin.x);
-        WriteCoord(_dest, e.origin.y);
-        WriteCoord(_dest, e.origin.z);
-    }
-    else
-    {
-        WriteByte(_dest, SVC_STOPSOUND);
-        WriteShort(_dest, entno * 8 + chan);
-    }
-}
-void stopsound(entity e, float chan)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-
-    stopsoundto(MSG_BROADCAST, e, chan); // unreliable, gets there fast
-    stopsoundto(MSG_ALL, e, chan); // in case of packet loss
-}
-
-void play2(entity e, string filename)
-{
-    //stuffcmd(e, strcat("play2 ", filename, "\n"));
-    msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
-}
-
-// use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
-.float spamtime;
-float spamsound(entity e, float chan, string samp, float vol, float _atten)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return false;
-
-    if (time > e.spamtime)
-    {
-        e.spamtime = time;
-        _sound(e, chan, samp, vol, _atten);
-        return true;
-    }
-    return false;
-}
-
-void play2team(float t, string filename)
-{
-    entity head;
-
-    if (autocvar_bot_sound_monopoly)
-        return;
-
-    FOR_EACH_REALPLAYER(head)
-    {
-        if (head.team == t)
-            play2(head, filename);
-    }
-}
-
-void play2all(string samp)
-{
-    if (autocvar_bot_sound_monopoly)
-        return;
-
-    _sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
-}
-
-void PrecachePlayerSounds(string f);
 void precache_playermodel(string m)
 {
 	float globhandle, i, n;
@@ -963,16 +786,6 @@ void precache()
 		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
 		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
-
-    if (g_footsteps)
-    {
-        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
-        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
-    }
-
-    // gore and miscellaneous sounds
-    PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
-    PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
 
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
@@ -1346,7 +1159,7 @@ string uid2name(string myuid) {
 		if(s != "")
 		{
 			db_put(ServerProgsDB, strcat("/uid2name/", myuid), s);
-			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
+			db_remove(ServerProgsDB, strcat("uid2name", myuid));
 		}
 	}
 

@@ -1002,12 +1002,14 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
 	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		setself(get_weaponinfo(i));
+		Weapon e = get_weaponinfo(i);
+		setself(e);
 		if (!self.weapon) continue;
 
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		WepSet set = e.m_wepset;
+		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			++disownedcnt;
 	}
 
@@ -1064,11 +1066,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	int column = 0;
 	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		setself(get_weaponinfo(i));
+		Weapon e = get_weaponinfo(i);
+		setself(e);
 		if (!self.weapon) continue;
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		WepSet set = e.m_wepset;
+		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			continue;
 
 		float weapon_alpha;

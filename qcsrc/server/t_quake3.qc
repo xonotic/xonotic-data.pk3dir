@@ -1,6 +1,5 @@
 
 #include "../common/weapons/all.qh"
-#include "../common/buffs/all.qh"
 
 spawnfunc(weapon_crylink);
 spawnfunc(weapon_electro);
@@ -129,7 +128,7 @@ void target_give_init()
 		else if (targ.classname == "item_health_mega")
 			self.health = 200;
 		//remove(targ); // removing ents in init functions causes havoc, workaround:
-        targ.think = SUB_Remove;
+        targ.think = SUB_Remove_self;
         targ.nextthink = time;
 	}
 	self.spawnflags = 2;
@@ -155,10 +154,7 @@ spawnfunc(target_give)
 
 spawnfunc(item_flight)
 {
-	if(!cvar("g_buffs") || !cvar("g_buffs_flight"))
-		spawnfunc_item_jetpack(this);
-	else
-		buff_Init_Compat(self, BUFF_FLIGHT);
+	spawnfunc_item_jetpack(this);
 }
 
 .float notteam;

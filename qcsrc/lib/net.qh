@@ -5,6 +5,7 @@
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
 	.bool(entity to, int sendflags) SendEntity;
+	/** return false to remove from the client */
 	.bool(entity this, entity to, int sendflags) SendEntity3;
 
 	bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }
@@ -30,7 +31,7 @@
 		if (dt)
 		{
 			e.nextthink = time + dt;
-			e.think = SUB_Remove;
+			e.think = SUB_Remove_self;
 		}
 	}
 
@@ -86,13 +87,14 @@
 
 #ifdef CSQC
 	#define REGISTER_NET_LINKED(id) \
-		[[accumulate]] NET_HANDLE(id, bool) \
+		[[accumulate]] NET_HANDLE(id, bool isnew) \
 		{ \
 			this = self; \
 			this.sourceLocFile = __FILE__; \
 			this.sourceLocLine = __LINE__; \
+			if (!this) isnew = true; \
 		} \
-		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, new(net_linked_packet)) \
+		REGISTER(LinkedEntities, NET, id, m_id, new(net_linked_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -101,7 +103,7 @@
 #else
 	#define REGISTER_NET_LINKED(id) \
 		const bool NET_##id##_istemp = false; \
-		REGISTER(RegisterLinkedEntities, NET, LinkedEntities, id, m_id, new(net_linked_packet)) \
+		REGISTER(LinkedEntities, NET, id, m_id, new(net_linked_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -110,8 +112,8 @@
 
 REGISTRY(LinkedEntities, BITS(8) - 1)
 #define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
-REGISTER_REGISTRY(RegisterLinkedEntities)
-REGISTRY_SORT(LinkedEntities, 0)
+REGISTER_REGISTRY(LinkedEntities)
+REGISTRY_SORT(LinkedEntities)
 REGISTRY_CHECK(LinkedEntities)
 STATIC_INIT(RegisterLinkedEntities_renumber)
 {
@@ -122,7 +124,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 #ifdef CSQC
 	#define REGISTER_NET_TEMP(id) \
 		NET_HANDLE(id, bool); \
-		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, new(net_temp_packet)) \
+		REGISTER(TempEntities, NET, id, m_id, new(net_temp_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -131,7 +133,7 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 #else
 	#define REGISTER_NET_TEMP(id) \
 		const bool NET_##id##_istemp = true; \
-		REGISTER(RegisterTempEntities, NET, TempEntities, id, m_id, new(net_temp_packet)) \
+		REGISTER(TempEntities, NET, id, m_id, new(net_temp_packet)) \
 		{ \
 			make_pure(this); \
 			this.netname = #id; \
@@ -140,8 +142,8 @@ STATIC_INIT(RegisterLinkedEntities_renumber)
 
 REGISTRY(TempEntities, BITS(8) - 80)
 #define TempEntities_from(i) _TempEntities_from(i, NULL)
-REGISTER_REGISTRY(RegisterTempEntities)
-REGISTRY_SORT(TempEntities, 0)
+REGISTER_REGISTRY(TempEntities)
+REGISTRY_SORT(TempEntities)
 REGISTRY_CHECK(TempEntities)
 STATIC_INIT(RegisterTempEntities_renumber)
 {
@@ -184,6 +186,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			return v;
 		}
 
+		#define ReadFloat() ReadCoord()
+        vector ReadVector() { vector v; v.x = ReadFloat(); v_y = ReadFloat(); v.z = ReadFloat(); return v; }
+		vector ReadVector2D() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = 0; return v; }
+
 		float ReadApproxPastTime()
 		{
 			float dt = ReadByte();
@@ -214,6 +220,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			WriteInt24_t(dst, val.y);
 			WriteInt24_t(dst, val.z);
 		}
+
+        #define WriteFloat(to, f) WriteCoord(to, f)
+		#define WriteVector(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } while (0)
+        #define WriteVector2D(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); } while (0)
 
 		// this will use the value:
 		//   128

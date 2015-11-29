@@ -1,0 +1,145 @@
+#ifndef GLOBALSOUND_H
+#define GLOBALSOUND_H
+
+// player sounds, voice messages
+
+.string m_playersoundstr;
+..string m_playersoundfld;
+
+REGISTRY(PlayerSounds, BITS(8) - 1)
+#define PlayerSounds_from(i) _PlayerSounds_from(i, NULL)
+#define REGISTER_PLAYERSOUND(id) \
+	.string _playersound_##id; \
+	REGISTER(PlayerSounds, playersound, id, m_id, new(PlayerSound)) \
+	{ \
+		make_pure(this); \
+		this.m_playersoundstr = #id; \
+		this.m_playersoundfld = _playersound_##id; \
+	}
+REGISTER_REGISTRY(PlayerSounds)
+REGISTRY_SORT(PlayerSounds)
+STATIC_INIT(PlayerSounds_renumber)
+{
+	FOREACH(PlayerSounds, true, LAMBDA(it.m_id = i));
+}
+REGISTRY_CHECK(PlayerSounds)
+
+// TODO implement fall and falling
+
+REGISTER_PLAYERSOUND(death)
+REGISTER_PLAYERSOUND(drown)
+REGISTER_PLAYERSOUND(fall)
+REGISTER_PLAYERSOUND(falling)
+REGISTER_PLAYERSOUND(gasp)
+REGISTER_PLAYERSOUND(jump)
+REGISTER_PLAYERSOUND(pain100)
+REGISTER_PLAYERSOUND(pain25)
+REGISTER_PLAYERSOUND(pain50)
+REGISTER_PLAYERSOUND(pain75)
+
+.bool instanceOfVoiceMessage;
+.int m_playersoundvt;
+#define REGISTER_VOICEMSG(id, vt) \
+	.string _playersound_##id; \
+	REGISTER(PlayerSounds, playersound, id, m_id, new(VoiceMessage)) \
+	{ \
+		make_pure(this); \
+		this.instanceOfVoiceMessage = true; \
+		this.m_playersoundstr = #id; \
+		this.m_playersoundfld = _playersound_##id; \
+		this.m_playersoundvt = vt; \
+	}
+
+const int VOICETYPE_PLAYERSOUND = 10;
+const int VOICETYPE_TEAMRADIO = 11;
+const int VOICETYPE_LASTATTACKER = 12;
+const int VOICETYPE_LASTATTACKER_ONLY = 13;
+const int VOICETYPE_AUTOTAUNT = 14;
+const int VOICETYPE_TAUNT = 15;
+
+REGISTER_VOICEMSG(attack, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(attackinfive, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(coverme, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(defend, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(freelance, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(incoming, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(meet, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(needhelp, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(seenflag, VOICETYPE_TEAMRADIO)
+REGISTER_VOICEMSG(taunt, VOICETYPE_TAUNT)
+REGISTER_VOICEMSG(teamshoot, VOICETYPE_LASTATTACKER)
+
+// reserved sound names for the future (some models lack sounds for them):
+// _VOICEMSG(flagcarriertakingdamage)
+// _VOICEMSG(getflag)
+// reserved sound names for the future (ALL models lack sounds for them):
+// _VOICEMSG(affirmative)
+// _VOICEMSG(attacking)
+// _VOICEMSG(defending)
+// _VOICEMSG(roaming)
+// _VOICEMSG(onmyway)
+// _VOICEMSG(droppedflag)
+// _VOICEMSG(negative)
+// _VOICEMSG(seenenemy)
+
+.string m_globalsoundstr;
+REGISTRY(GlobalSounds, BITS(8) - 1)
+#define GlobalSounds_from(i) _GlobalSounds_from(i, NULL)
+#define REGISTER_GLOBALSOUND(id, str) \
+	REGISTER(GlobalSounds, GS, id, m_id, new(GlobalSound)) \
+	{ \
+		make_pure(this); \
+		this.m_globalsoundstr = str; \
+	}
+REGISTER_REGISTRY(GlobalSounds)
+REGISTRY_SORT(GlobalSounds)
+STATIC_INIT(GlobalSounds_renumber)
+{
+	FOREACH(GlobalSounds, true, LAMBDA(it.m_id = i));
+}
+REGISTRY_CHECK(GlobalSounds)
+void PrecacheGlobalSound(string samplestring);
+PRECACHE(GlobalSounds)
+{
+	FOREACH(GlobalSounds, true, LAMBDA(PrecacheGlobalSound(it.m_globalsoundstr)));
+}
+
+REGISTER_GLOBALSOUND(STEP, "misc/footstep0 6")
+REGISTER_GLOBALSOUND(STEP_METAL, "misc/metalfootstep0 6")
+REGISTER_GLOBALSOUND(FALL, "misc/hitground 4")
+REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
+
+bool GetPlayerSoundSampleField_notFound;
+void PrecachePlayerSounds(string f);
+#ifdef CSQC
+	.string GetVoiceMessageSampleField(string type);
+	.string GetPlayerSoundSampleField(string type);
+	void ClearPlayerSounds(entity this);
+	float LoadPlayerSounds(entity this, string f, bool strict);
+	void UpdatePlayerSounds(entity this);
+#endif
+
+#ifdef SVQC
+
+	void _GlobalSound(entity gs, entity ps, string sample, float chan, float voicetype, bool fake);
+	#define GlobalSound(def, chan, voicetype) _GlobalSound(def, NULL, string_null, chan, voicetype, false)
+	#define GlobalSound_string(def, chan, voicetype) _GlobalSound(NULL, NULL, def, chan, voicetype, false)
+	#define PlayerSound(def, chan, voicetype) _GlobalSound(NULL, def, string_null, chan, voicetype, false)
+	#define VoiceMessage(def, msg) \
+		do \
+		{ \
+			entity VM = def; \
+			int voicetype = VM.m_playersoundvt; \
+			bool ownteam = (voicetype == VOICETYPE_TEAMRADIO); \
+			int flood = Say(this, ownteam, world, msg, true); \
+			bool fake; \
+			if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true; \
+			else if (flood > 0) fake = false; \
+			else break; \
+			_GlobalSound(NULL, VM, string_null, CH_VOICE, voicetype, fake); \
+		} \
+		while (0)
+
+#endif
+
+#endif

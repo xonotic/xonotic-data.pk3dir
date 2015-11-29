@@ -46,10 +46,15 @@ void viewloc_PlayerPhysics()
 		//if(!PHYS_INPUT_BUTTON_CROUCH(self) && !IS_DUCKED(self))
 #ifdef SVQC
 			//self.BUTTON_CROUCH = (oldmovement_x < 0);
-			if(oldmovement_x < 0)
+			if (oldmovement.x < 0)
 				self.BUTTON_CROUCH = true;
 #elif defined(CSQC)
-			if(oldmovement_x < 0) { input_buttons |= 16; self.flags |= FL_DUCKED; } //else { input_buttons &= ~16; self.flags &= ~FL_DUCKED; }
+			if (oldmovement.x < 0)
+			{
+				input_buttons |= BIT(4);
+				self.flags |= FL_DUCKED;
+			}
+			//else { input_buttons &= ~16; self.flags &= ~FL_DUCKED; }
 #endif
 	}
 }
@@ -72,7 +77,7 @@ vector old_camera_angle = '0 0 0';
 void viewloc_SetViewLocation()
 {
 	entity view = CSQCModel_server2csqc(player_localentnum);
-	if(!view) { return; }
+	if (!view) return;
 	//NOTE: the "cam_" cvars sould probably be changed out with a spawnflag or an entity key. I have it like this for my testing -- Player_2
 	if(view.viewloc && !wasfreed(view.viewloc) && view.viewloc.enemy && view.viewloc.goalentity)
 	{

@@ -51,11 +51,10 @@ bool autocvar_debugdraw;
 		static int debugdraw_frame;
 		++debugdraw_frame;
 		const int size = 8;
-		for (entity e1 = NULL; (e1 = nextent(e1)); )
-		{
-			if (e1.debugdraw_last == debugdraw_frame) continue;
+		FOREACH_ENTITY(true, LAMBDA(
+			if (it.debugdraw_last == debugdraw_frame) continue;
 			int ofs = 0;
-			for (entity e = findradius(e1.origin, 100); e; e = e.chain)
+			for (entity e = findradius(it.origin, 100); e; e = e.chain)
 			{
 				if (e.debugdraw_last == debugdraw_frame) continue;
 				e.debugdraw_last = debugdraw_frame;
@@ -75,7 +74,7 @@ bool autocvar_debugdraw;
 					size * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
 				++ofs;
 			}
-		}
+		));
 	}
 #endif
 

@@ -1,0 +1,103 @@
+#ifndef NADES_ALL_H
+#define NADES_ALL_H
+
+#include "../../../teams.qh"
+
+// use slots 70-100
+const int PROJECTILE_NADE = 71;
+const int PROJECTILE_NADE_BURN = 72;
+const int PROJECTILE_NADE_NAPALM = 73;
+const int PROJECTILE_NADE_NAPALM_BURN = 74;
+const int PROJECTILE_NAPALM_FOUNTAIN = 75;
+const int PROJECTILE_NADE_ICE = 76;
+const int PROJECTILE_NADE_ICE_BURN = 77;
+const int PROJECTILE_NADE_TRANSLOCATE = 78;
+const int PROJECTILE_NADE_SPAWN = 79;
+const int PROJECTILE_NADE_HEAL = 80;
+const int PROJECTILE_NADE_HEAL_BURN = 81;
+const int PROJECTILE_NADE_MONSTER = 82;
+const int PROJECTILE_NADE_MONSTER_BURN = 83;
+
+REGISTRY(Nades, BITS(4))
+#define Nades_from(i) _Nades_from(i, NADE_TYPE_Null)
+REGISTER_REGISTRY(Nades)
+REGISTRY_CHECK(Nades)
+
+#define REGISTER_NADE(id) REGISTER(Nades, NADE_TYPE, id, m_id, NEW(Nade))
+
+CLASS(Nade, Object)
+    ATTRIB(Nade, m_id, int, 0)
+    ATTRIB(Nade, m_color, vector, '0 0 0')
+    ATTRIB(Nade, m_name, string, _("Grenade"))
+    ATTRIB(Nade, m_icon, string, "nade_normal")
+    ATTRIBARRAY(Nade, m_projectile, int, 2)
+    ATTRIBARRAY(Nade, m_trail, entity, 2)
+    METHOD(Nade, display, void(entity this, void(string name, string icon) returns)) {
+        returns(this.m_name, sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon));
+    }
+ENDCLASS(Nade)
+
+REGISTER_NADE(Null);
+
+Nade Nade_FromProjectile(int proj)
+{
+    FOREACH(Nades, true, LAMBDA(
+        for (int j = 0; j < 2; j++)
+        {
+            if (it.m_projectile[j] == proj) return it;
+        }
+    ));
+    return NADE_TYPE_Null;
+}
+
+#ifndef MENUQC
+#include "effects.inc"
+#endif
+
+#include "nades.inc"
+
+.float healer_lifetime;
+.float healer_radius;
+
+#ifdef SVQC
+
+.entity nade;
+.entity fake_nade;
+.float nade_timer = _STAT(NADE_TIMER);
+.float nade_refire;
+.float bonus_nades = _STAT(NADE_BONUS);
+.float nade_special_time;
+.float bonus_nade_score = _STAT(NADE_BONUS_SCORE);
+.int nade_type = _STAT(NADE_BONUS_TYPE);
+.string pokenade_type;
+.entity nade_damage_target;
+.float cvar_cl_nade_type;
+.string cvar_cl_pokenade_type;
+.float toss_time;
+.float stat_healing_orb = _STAT(HEALING_ORB);
+.float stat_healing_orb_alpha = _STAT(HEALING_ORB_ALPHA);
+.float nade_show_particles;
+
+bool healer_send(entity this, entity to, int sf);
+
+// Remove nades that are being thrown
+void nades_Clear(entity player);
+
+// Give a bonus grenade to a player
+void(entity player, float score) nades_GiveBonus;
+
+/**
+ * called to adjust nade damage and force on hit
+ */
+#define EV_Nade_Damage(i, o) \
+ 	/** weapon */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** force */  i(vector, MUTATOR_ARGV_0_vector) \
+    /**/          o(vector, MUTATOR_ARGV_0_vector) \
+ 	/** damage */ i(float,  MUTATOR_ARGV_0_float) \
+    /**/          o(float,  MUTATOR_ARGV_0_float) \
+    /**/
+MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
+
+#endif
+
+#endif

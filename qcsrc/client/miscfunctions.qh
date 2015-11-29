@@ -143,9 +143,6 @@ void PolyDrawModel(entity e);
 
 void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag);
 
-const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
-vector getplayerorigin(int pl);
-
 float getplayeralpha(float pl);
 
 vector getcsqcplayercolor(float pl);

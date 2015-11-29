@@ -1,5 +1,0 @@
-#ifndef SYS_PRE_H
-#define SYS_PRE_H
-
-#pragma noref 1
-#endif

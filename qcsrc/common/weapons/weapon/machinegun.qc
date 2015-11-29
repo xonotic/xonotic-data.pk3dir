@@ -71,16 +71,16 @@ spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 
 void W_MachineGun_MuzzleFlash_Think()
 {SELFPARAM();
-	self.frame = self.frame + 2;
-	self.scale = self.scale * 0.5;
-	self.alpha = self.alpha - 0.25;
-	self.nextthink = time + 0.05;
+	this.frame += 2;
+	this.scale *= 0.5;
+	this.alpha -= 0.25;
+	this.nextthink = time + 0.05;
 
-	if(self.alpha <= 0)
+	if(this.alpha <= 0)
 	{
-		self.think = SUB_Remove;
-		self.nextthink = time;
-		self.realowner.muzzle_flash = world;
+		this.think = SUB_Remove_self;
+		this.nextthink = time;
+		this.realowner.muzzle_flash = world;
 		return;
 	}
 

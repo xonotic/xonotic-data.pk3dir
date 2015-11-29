@@ -48,4 +48,17 @@ MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
     /**/
 MUTATOR_HOOKABLE(BuildGameplayTipsString, EV_BuildGameplayTipsString);
 
+#define EV_IsFlying(i, o) \
+	/**/ i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(IsFlying, EV_IsFlying);
+
+#define EV_WP_Format(i, o) \
+    /**/ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/ i(string, MUTATOR_ARGV_0_string) \
+    /**/ o(vector, MUTATOR_ARGV_0_vector) \
+    /**/ o(string, MUTATOR_ARGV_0_string) \
+    /**/
+MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
+
 #endif

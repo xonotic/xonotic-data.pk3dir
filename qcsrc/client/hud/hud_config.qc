@@ -3,11 +3,8 @@
 #include "hud.qh"
 
 #define HUD_Write(s) fputs(fh, s)
-// q: quoted, n: not quoted
-#define HUD_Write_Cvar_n(cvar) HUD_Write(strcat("seta ", cvar, " ", cvar_string(cvar), "\n"))
-#define HUD_Write_Cvar_q(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
-#define HUD_Write_PanelCvar_n(cvar_suf) HUD_Write_Cvar_n(strcat("hud_panel_", panel.panel_name, cvar_suf))
-#define HUD_Write_PanelCvar_q(cvar_suf) HUD_Write_Cvar_q(strcat("hud_panel_", panel.panel_name, cvar_suf))
+#define HUD_Write_Cvar(cvar) HUD_Write(strcat("seta ", cvar, " \"", cvar_string(cvar), "\"\n"))
+#define HUD_Write_PanelCvar(cvar_suf) HUD_Write_Cvar(strcat("hud_panel_", panel.panel_name, cvar_suf))
 // Save the config
 void HUD_Panel_ExportCfg(string cfgname)
 {
@@ -16,40 +13,43 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fh = fopen(filename, FILE_WRITE);
 	if(fh >= 0)
 	{
-		HUD_Write_Cvar_q("hud_skin");
-		HUD_Write_Cvar_q("hud_panel_bg");
-		HUD_Write_Cvar_q("hud_panel_bg_color");
-		HUD_Write_Cvar_q("hud_panel_bg_color_team");
-		HUD_Write_Cvar_q("hud_panel_bg_alpha");
-		HUD_Write_Cvar_q("hud_panel_bg_border");
-		HUD_Write_Cvar_q("hud_panel_bg_padding");
-		HUD_Write_Cvar_q("hud_panel_fg_alpha");
+		HUD_Write_Cvar("hud_skin");
+		HUD_Write_Cvar("hud_panel_bg");
+		HUD_Write_Cvar("hud_panel_bg_color");
+		HUD_Write_Cvar("hud_panel_bg_color_team");
+		HUD_Write_Cvar("hud_panel_bg_alpha");
+		HUD_Write_Cvar("hud_panel_bg_border");
+		HUD_Write_Cvar("hud_panel_bg_padding");
+		HUD_Write_Cvar("hud_panel_fg_alpha");
 		HUD_Write("\n");
 
-		HUD_Write_Cvar_q("hud_dock");
-		HUD_Write_Cvar_q("hud_dock_color");
-		HUD_Write_Cvar_q("hud_dock_color_team");
-		HUD_Write_Cvar_q("hud_dock_alpha");
+		HUD_Write_Cvar("hud_dock");
+		HUD_Write_Cvar("hud_dock_color");
+		HUD_Write_Cvar("hud_dock_color_team");
+		HUD_Write_Cvar("hud_dock_alpha");
 		HUD_Write("\n");
 
-		HUD_Write_Cvar_q("hud_progressbar_alpha");
-		HUD_Write_Cvar_q("hud_progressbar_strength_color");
-		HUD_Write_Cvar_q("hud_progressbar_shield_color");
-		HUD_Write_Cvar_q("hud_progressbar_health_color");
-		HUD_Write_Cvar_q("hud_progressbar_armor_color");
-		HUD_Write_Cvar_q("hud_progressbar_fuel_color");
-		HUD_Write_Cvar_q("hud_progressbar_nexball_color");
-		HUD_Write_Cvar_q("hud_progressbar_speed_color");
-		HUD_Write_Cvar_q("hud_progressbar_acceleration_color");
-		HUD_Write_Cvar_q("hud_progressbar_acceleration_neg_color");
+		HUD_Write_Cvar("hud_progressbar_alpha");
+		HUD_Write_Cvar("hud_progressbar_strength_color");
+		HUD_Write_Cvar("hud_progressbar_superweapons_color");
+		HUD_Write_Cvar("hud_progressbar_shield_color");
+		HUD_Write_Cvar("hud_progressbar_health_color");
+		HUD_Write_Cvar("hud_progressbar_armor_color");
+		HUD_Write_Cvar("hud_progressbar_fuel_color");
+		HUD_Write_Cvar("hud_progressbar_nexball_color");
+		HUD_Write_Cvar("hud_progressbar_speed_color");
+		HUD_Write_Cvar("hud_progressbar_acceleration_color");
+		HUD_Write_Cvar("hud_progressbar_acceleration_neg_color");
+		HUD_Write_Cvar("hud_progressbar_vehicles_ammo1_color");
+		HUD_Write_Cvar("hud_progressbar_vehicles_ammo2_color");
 		HUD_Write("\n");
 
-		HUD_Write_Cvar_q("_hud_panelorder");
+		HUD_Write_Cvar("_hud_panelorder");
 		HUD_Write("\n");
 
-		HUD_Write_Cvar_q("hud_configure_grid");
-		HUD_Write_Cvar_q("hud_configure_grid_xsize");
-		HUD_Write_Cvar_q("hud_configure_grid_ysize");
+		HUD_Write_Cvar("hud_configure_grid");
+		HUD_Write_Cvar("hud_configure_grid_xsize");
+		HUD_Write_Cvar("hud_configure_grid_ysize");
 		HUD_Write("\n");
 
 		// common cvars for all panels
@@ -57,153 +57,152 @@ void HUD_Panel_ExportCfg(string cfgname)
 		{
 			panel = hud_panels_from(i);
 
-			HUD_Write_PanelCvar_n("");
-			HUD_Write_PanelCvar_q("_pos");
-			HUD_Write_PanelCvar_q("_size");
-			HUD_Write_PanelCvar_q("_bg");
-			HUD_Write_PanelCvar_q("_bg_color");
-			HUD_Write_PanelCvar_q("_bg_color_team");
-			HUD_Write_PanelCvar_q("_bg_alpha");
-			HUD_Write_PanelCvar_q("_bg_border");
-			HUD_Write_PanelCvar_q("_bg_padding");
+			HUD_Write_PanelCvar("");
+			HUD_Write_PanelCvar("_pos");
+			HUD_Write_PanelCvar("_size");
+			HUD_Write_PanelCvar("_bg");
+			HUD_Write_PanelCvar("_bg_color");
+			HUD_Write_PanelCvar("_bg_color_team");
+			HUD_Write_PanelCvar("_bg_alpha");
+			HUD_Write_PanelCvar("_bg_border");
+			HUD_Write_PanelCvar("_bg_padding");
 			switch(panel) {
 				case HUD_PANEL_WEAPONS:
-					HUD_Write_PanelCvar_q("_accuracy");
-					HUD_Write_PanelCvar_q("_label");
-					HUD_Write_PanelCvar_q("_label_scale");
-					HUD_Write_PanelCvar_q("_complainbubble");
-					HUD_Write_PanelCvar_q("_complainbubble_padding");
-					HUD_Write_PanelCvar_q("_complainbubble_time");
-					HUD_Write_PanelCvar_q("_complainbubble_fadetime");
-					HUD_Write_PanelCvar_q("_complainbubble_color_outofammo");
-					HUD_Write_PanelCvar_q("_complainbubble_color_donthave");
-					HUD_Write_PanelCvar_q("_complainbubble_color_unavailable");
-					HUD_Write_PanelCvar_q("_ammo");
-					HUD_Write_PanelCvar_q("_ammo_color");
-					HUD_Write_PanelCvar_q("_ammo_alpha");
-					HUD_Write_PanelCvar_q("_aspect");
-					HUD_Write_PanelCvar_q("_timeout");
-					HUD_Write_PanelCvar_q("_timeout_effect");
-					HUD_Write_PanelCvar_q("_timeout_fadebgmin");
-					HUD_Write_PanelCvar_q("_timeout_fadefgmin");
-					HUD_Write_PanelCvar_q("_timeout_speed_in");
-					HUD_Write_PanelCvar_q("_timeout_speed_out");
-					HUD_Write_PanelCvar_q("_onlyowned");
-					HUD_Write_PanelCvar_q("_noncurrent_alpha");
-					HUD_Write_PanelCvar_q("_noncurrent_scale");
+					HUD_Write_PanelCvar("_accuracy");
+					HUD_Write_PanelCvar("_label");
+					HUD_Write_PanelCvar("_label_scale");
+					HUD_Write_PanelCvar("_complainbubble");
+					HUD_Write_PanelCvar("_complainbubble_padding");
+					HUD_Write_PanelCvar("_complainbubble_time");
+					HUD_Write_PanelCvar("_complainbubble_fadetime");
+					HUD_Write_PanelCvar("_complainbubble_color_outofammo");
+					HUD_Write_PanelCvar("_complainbubble_color_donthave");
+					HUD_Write_PanelCvar("_complainbubble_color_unavailable");
+					HUD_Write_PanelCvar("_ammo");
+					HUD_Write_PanelCvar("_ammo_color");
+					HUD_Write_PanelCvar("_ammo_alpha");
+					HUD_Write_PanelCvar("_aspect");
+					HUD_Write_PanelCvar("_timeout");
+					HUD_Write_PanelCvar("_timeout_effect");
+					HUD_Write_PanelCvar("_timeout_fadebgmin");
+					HUD_Write_PanelCvar("_timeout_fadefgmin");
+					HUD_Write_PanelCvar("_timeout_speed_in");
+					HUD_Write_PanelCvar("_timeout_speed_out");
+					HUD_Write_PanelCvar("_onlyowned");
+					HUD_Write_PanelCvar("_noncurrent_alpha");
+					HUD_Write_PanelCvar("_noncurrent_scale");
 					break;
 				case HUD_PANEL_AMMO:
-					HUD_Write_PanelCvar_q("_onlycurrent");
-					HUD_Write_PanelCvar_q("_noncurrent_alpha");
-					HUD_Write_PanelCvar_q("_noncurrent_scale");
-					HUD_Write_PanelCvar_q("_iconalign");
-					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_name");
-					HUD_Write_PanelCvar_q("_progressbar_xoffset");
-					HUD_Write_PanelCvar_q("_text");
+					HUD_Write_PanelCvar("_onlycurrent");
+					HUD_Write_PanelCvar("_noncurrent_alpha");
+					HUD_Write_PanelCvar("_noncurrent_scale");
+					HUD_Write_PanelCvar("_iconalign");
+					HUD_Write_PanelCvar("_progressbar");
+					HUD_Write_PanelCvar("_progressbar_name");
+					HUD_Write_PanelCvar("_progressbar_xoffset");
+					HUD_Write_PanelCvar("_text");
 					break;
 				case HUD_PANEL_POWERUPS:
-					HUD_Write_PanelCvar_q("_iconalign");
-					HUD_Write_PanelCvar_q("_baralign");
-					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_text");
+					HUD_Write_PanelCvar("_iconalign");
+					HUD_Write_PanelCvar("_baralign");
+					HUD_Write_PanelCvar("_progressbar");
+					HUD_Write_PanelCvar("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
-					HUD_Write_PanelCvar_q("_flip");
-					HUD_Write_PanelCvar_q("_iconalign");
-					HUD_Write_PanelCvar_q("_baralign");
-					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_health");
-					HUD_Write_PanelCvar_q("_progressbar_armor");
-					HUD_Write_PanelCvar_q("_progressbar_gfx");
-					HUD_Write_PanelCvar_q("_progressbar_gfx_smooth");
-					HUD_Write_PanelCvar_q("_text");
+					HUD_Write_PanelCvar("_flip");
+					HUD_Write_PanelCvar("_iconalign");
+					HUD_Write_PanelCvar("_baralign");
+					HUD_Write_PanelCvar("_progressbar");
+					HUD_Write_PanelCvar("_progressbar_health");
+					HUD_Write_PanelCvar("_progressbar_armor");
+					HUD_Write_PanelCvar("_progressbar_gfx");
+					HUD_Write_PanelCvar("_progressbar_gfx_smooth");
+					HUD_Write_PanelCvar("_text");
 					break;
 				case HUD_PANEL_NOTIFY:
-					HUD_Write_PanelCvar_q("_flip");
-					HUD_Write_PanelCvar_q("_fontsize");
-					HUD_Write_PanelCvar_q("_time");
-					HUD_Write_PanelCvar_q("_fadetime");
-					HUD_Write_PanelCvar_q("_icon_aspect");
+					HUD_Write_PanelCvar("_flip");
+					HUD_Write_PanelCvar("_fontsize");
+					HUD_Write_PanelCvar("_time");
+					HUD_Write_PanelCvar("_fadetime");
+					HUD_Write_PanelCvar("_icon_aspect");
 					break;
 				case HUD_PANEL_TIMER:
-					HUD_Write_PanelCvar_q("_increment");
 					break;
 				case HUD_PANEL_RADAR:
-					HUD_Write_PanelCvar_q("_foreground_alpha");
-					HUD_Write_PanelCvar_q("_rotation");
-					HUD_Write_PanelCvar_q("_zoommode");
-					HUD_Write_PanelCvar_q("_scale");
-					HUD_Write_PanelCvar_q("_maximized_scale");
-					HUD_Write_PanelCvar_q("_maximized_size");
-					HUD_Write_PanelCvar_q("_maximized_rotation");
-					HUD_Write_PanelCvar_q("_maximized_zoommode");
+					HUD_Write_PanelCvar("_foreground_alpha");
+					HUD_Write_PanelCvar("_rotation");
+					HUD_Write_PanelCvar("_zoommode");
+					HUD_Write_PanelCvar("_scale");
+					HUD_Write_PanelCvar("_maximized_scale");
+					HUD_Write_PanelCvar("_maximized_size");
+					HUD_Write_PanelCvar("_maximized_rotation");
+					HUD_Write_PanelCvar("_maximized_zoommode");
 					break;
 				case HUD_PANEL_SCORE:
-					HUD_Write_PanelCvar_q("_rankings");
+					HUD_Write_PanelCvar("_rankings");
 					break;
 				case HUD_PANEL_VOTE:
-					HUD_Write_PanelCvar_q("_alreadyvoted_alpha");
+					HUD_Write_PanelCvar("_alreadyvoted_alpha");
 					break;
 				case HUD_PANEL_MODICONS:
-					HUD_Write_PanelCvar_q("_ca_layout");
-					HUD_Write_PanelCvar_q("_dom_layout");
-					HUD_Write_PanelCvar_q("_freezetag_layout");
+					HUD_Write_PanelCvar("_ca_layout");
+					HUD_Write_PanelCvar("_dom_layout");
+					HUD_Write_PanelCvar("_freezetag_layout");
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
-					HUD_Write_PanelCvar_q("_aspect");
-					HUD_Write_PanelCvar_q("_attack");
+					HUD_Write_PanelCvar("_aspect");
+					HUD_Write_PanelCvar("_attack");
 					break;
 				case HUD_PANEL_ENGINEINFO:
-					HUD_Write_PanelCvar_q("_framecounter_time");
-					HUD_Write_PanelCvar_q("_framecounter_decimals");
+					HUD_Write_PanelCvar("_framecounter_time");
+					HUD_Write_PanelCvar("_framecounter_decimals");
 					break;
 				case HUD_PANEL_INFOMESSAGES:
-					HUD_Write_PanelCvar_q("_flip");
+					HUD_Write_PanelCvar("_flip");
 					break;
 				case HUD_PANEL_PHYSICS:
-					HUD_Write_PanelCvar_q("_speed_unit");
-					HUD_Write_PanelCvar_q("_speed_unit_show");
-					HUD_Write_PanelCvar_q("_speed_max");
-					HUD_Write_PanelCvar_q("_speed_vertical");
-					HUD_Write_PanelCvar_q("_topspeed");
-					HUD_Write_PanelCvar_q("_topspeed_time");
-					HUD_Write_PanelCvar_q("_acceleration_max");
-					HUD_Write_PanelCvar_q("_acceleration_vertical");
-					HUD_Write_PanelCvar_q("_flip");
-					HUD_Write_PanelCvar_q("_baralign");
-					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_acceleration_mode");
-					HUD_Write_PanelCvar_q("_progressbar_acceleration_scale");
-					HUD_Write_PanelCvar_q("_progressbar_acceleration_nonlinear");
-					HUD_Write_PanelCvar_q("_text");
-					HUD_Write_PanelCvar_q("_text_scale");
+					HUD_Write_PanelCvar("_speed_unit_show");
+					HUD_Write_PanelCvar("_speed_max");
+					HUD_Write_PanelCvar("_speed_vertical");
+					HUD_Write_PanelCvar("_topspeed");
+					HUD_Write_PanelCvar("_topspeed_time");
+					HUD_Write_PanelCvar("_acceleration_max");
+					HUD_Write_PanelCvar("_acceleration_vertical");
+					HUD_Write_PanelCvar("_flip");
+					HUD_Write_PanelCvar("_baralign");
+					HUD_Write_PanelCvar("_progressbar");
+					HUD_Write_PanelCvar("_acceleration_progressbar_mode");
+					HUD_Write_PanelCvar("_acceleration_progressbar_scale");
+					HUD_Write_PanelCvar("_acceleration_progressbar_nonlinear");
+					HUD_Write_PanelCvar("_text");
+					HUD_Write_PanelCvar("_text_scale");
 					break;
 				case HUD_PANEL_CENTERPRINT:
-					HUD_Write_PanelCvar_q("_align");
-					HUD_Write_PanelCvar_q("_flip");
-					HUD_Write_PanelCvar_q("_fontscale");
-					HUD_Write_PanelCvar_q("_time");
-					HUD_Write_PanelCvar_q("_fade_in");
-					HUD_Write_PanelCvar_q("_fade_out");
-					HUD_Write_PanelCvar_q("_fade_subsequent");
-					HUD_Write_PanelCvar_q("_fade_subsequent_passone");
-					HUD_Write_PanelCvar_q("_fade_subsequent_passone_minalpha");
-					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo");
-					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
-					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
-					HUD_Write_PanelCvar_q("_fade_minfontsize");
+					HUD_Write_PanelCvar("_align");
+					HUD_Write_PanelCvar("_flip");
+					HUD_Write_PanelCvar("_fontscale");
+					HUD_Write_PanelCvar("_time");
+					HUD_Write_PanelCvar("_fade_in");
+					HUD_Write_PanelCvar("_fade_out");
+					HUD_Write_PanelCvar("_fade_subsequent");
+					HUD_Write_PanelCvar("_fade_subsequent_passone");
+					HUD_Write_PanelCvar("_fade_subsequent_passone_minalpha");
+					HUD_Write_PanelCvar("_fade_subsequent_passtwo");
+					HUD_Write_PanelCvar("_fade_subsequent_passtwo_minalpha");
+					HUD_Write_PanelCvar("_fade_subsequent_minfontsize");
+					HUD_Write_PanelCvar("_fade_minfontsize");
 					break;
 				case HUD_PANEL_ITEMSTIME:
-					HUD_Write_PanelCvar_q("_iconalign");
-					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_name");
-					HUD_Write_PanelCvar_q("_progressbar_reduced");
-					HUD_Write_PanelCvar_q("_text");
-					HUD_Write_PanelCvar_q("_ratio");
-					HUD_Write_PanelCvar_q("_dynamicsize");
+					HUD_Write_PanelCvar("_iconalign");
+					HUD_Write_PanelCvar("_progressbar");
+					HUD_Write_PanelCvar("_progressbar_name");
+					HUD_Write_PanelCvar("_progressbar_reduced");
+					HUD_Write_PanelCvar("_text");
+					HUD_Write_PanelCvar("_ratio");
+					HUD_Write_PanelCvar("_dynamicsize");
+					break;
 				case HUD_PANEL_QUICKMENU:
-					HUD_Write_PanelCvar_q("_align");
+					HUD_Write_PanelCvar("_align");
 					break;
 			}
 			HUD_Write("\n");
