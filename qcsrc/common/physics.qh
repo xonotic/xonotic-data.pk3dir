@@ -190,12 +190,6 @@ bool IsFlying(entity a);
 
 	bool Physics_Valid(string thecvar);
 
-	.vector stat_pl_view_ofs;
-	.vector stat_pl_crouch_view_ofs;
-
-	.vector stat_pl_min, stat_pl_max;
-	.vector stat_pl_crouch_min, stat_pl_crouch_max;
-
 	.float stat_sv_airspeedlimit_nonqw = _STAT(MOVEVARS_AIRSPEEDLIMIT_NONQW);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
 

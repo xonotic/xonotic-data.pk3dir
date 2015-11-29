@@ -2424,8 +2424,8 @@ void PlayerPreThink ()
 			if (!self.crouch)
 			{
 				self.crouch = true;
-				self.view_ofs = self.stat_pl_crouch_view_ofs;
-				setsize (self, self.stat_pl_crouch_min, self.stat_pl_crouch_max);
+				self.view_ofs = STAT(PL_CROUCH_VIEW_OFS, self);
+				setsize (self, STAT(PL_CROUCH_MIN, self), STAT(PL_CROUCH_MAX, self));
 				// setanim(self, self.anim_duck, false, true, true); // this anim is BROKEN anyway
 			}
 		}
@@ -2433,12 +2433,12 @@ void PlayerPreThink ()
 		{
 			if (self.crouch)
 			{
-				tracebox(self.origin, self.stat_pl_min, self.stat_pl_max, self.origin, false, self);
+				tracebox(self.origin, STAT(PL_MIN, self), STAT(PL_MAX, self), self.origin, false, self);
 				if (!trace_startsolid)
 				{
 					self.crouch = false;
-					self.view_ofs = self.stat_pl_view_ofs;
-					setsize (self, self.stat_pl_min, self.stat_pl_max);
+					self.view_ofs = STAT(PL_VIEW_OFS, self);
+					setsize (self, STAT(PL_MIN, self), STAT(PL_MAX, self));
 				}
 			}
 		}

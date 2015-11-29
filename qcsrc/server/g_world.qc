@@ -558,7 +558,6 @@ void Nagger_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
-void Physics_AddStats();
 spawnfunc(worldspawn)
 {
 	float fd, l, j, n;
@@ -755,12 +754,7 @@ spawnfunc(worldspawn)
 
 	WeaponStats_Init();
 
-	WepSet_AddStat();
-	WepSet_AddStat_InMap();
 	Nagger_Init();
-
-	// physics
-	Physics_AddStats();
 
 	next_pingtime = time + 5;
 

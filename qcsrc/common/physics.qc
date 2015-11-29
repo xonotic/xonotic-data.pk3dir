@@ -30,42 +30,8 @@ float Physics_ClientOption(entity pl, string option)
 	return cvar(strcat("sv_", option));
 }
 
-void Physics_AddStats()
-{
-	// static view offset and hitbox vectors
-	// networked for all you bandwidth pigs out there
-	addstat(STAT_PL_VIEW_OFS1, AS_FLOAT, stat_pl_view_ofs_x);
-	addstat(STAT_PL_VIEW_OFS2, AS_FLOAT, stat_pl_view_ofs_y);
-	addstat(STAT_PL_VIEW_OFS3, AS_FLOAT, stat_pl_view_ofs_z);
-	addstat(STAT_PL_CROUCH_VIEW_OFS1, AS_FLOAT, stat_pl_crouch_view_ofs_x);
-	addstat(STAT_PL_CROUCH_VIEW_OFS2, AS_FLOAT, stat_pl_crouch_view_ofs_y);
-	addstat(STAT_PL_CROUCH_VIEW_OFS3, AS_FLOAT, stat_pl_crouch_view_ofs_z);
-
-	addstat(STAT_PL_MIN1, AS_FLOAT, stat_pl_min_x);
-	addstat(STAT_PL_MIN2, AS_FLOAT, stat_pl_min_y);
-	addstat(STAT_PL_MIN3, AS_FLOAT, stat_pl_min_z);
-	addstat(STAT_PL_MAX1, AS_FLOAT, stat_pl_max_x);
-	addstat(STAT_PL_MAX2, AS_FLOAT, stat_pl_max_y);
-	addstat(STAT_PL_MAX3, AS_FLOAT, stat_pl_max_z);
-	addstat(STAT_PL_CROUCH_MIN1, AS_FLOAT, stat_pl_crouch_min_x);
-	addstat(STAT_PL_CROUCH_MIN2, AS_FLOAT, stat_pl_crouch_min_y);
-	addstat(STAT_PL_CROUCH_MIN3, AS_FLOAT, stat_pl_crouch_min_z);
-	addstat(STAT_PL_CROUCH_MAX1, AS_FLOAT, stat_pl_crouch_max_x);
-	addstat(STAT_PL_CROUCH_MAX2, AS_FLOAT, stat_pl_crouch_max_y);
-	addstat(STAT_PL_CROUCH_MAX3, AS_FLOAT, stat_pl_crouch_max_z);
-}
-
 void Physics_UpdateStats(entity this, float maxspd_mod)
 {
-	// blah
-	this.stat_pl_view_ofs = PL_VIEW_OFS;
-	this.stat_pl_crouch_view_ofs = PL_CROUCH_VIEW_OFS;
-
-	this.stat_pl_min = PL_MIN;
-	this.stat_pl_max = PL_MAX;
-	this.stat_pl_crouch_min = PL_CROUCH_MIN;
-	this.stat_pl_crouch_max = PL_CROUCH_MAX;
-
 	STAT(MOVEVARS_AIRACCEL_QW, this) = AdjustAirAccelQW(Physics_ClientOption(this, "airaccel_qw"), maxspd_mod);
 	STAT(MOVEVARS_AIRSTRAFEACCEL_QW, this) = (Physics_ClientOption(this, "airstrafeaccel_qw"))
 		? AdjustAirAccelQW(Physics_ClientOption(this, "airstrafeaccel_qw"), maxspd_mod)

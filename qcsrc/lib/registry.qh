@@ -50,16 +50,26 @@
 		entity this = inst; \
 		ns##_##id = this; \
 		this.registered_id = #id; \
-		this.fld = array##_COUNT; \
-		_##array[array##_COUNT++] = this; \
-		if (!array##_first) array##_first = this; \
-		if (array##_last)   array##_last.REGISTRY_NEXT = this; \
-		array##_last = this; \
+		REGISTRY_PUSH(array, fld, this); \
 		Register_##ns##_##id##_init(this); \
 		Register_##ns##_##id##_init_post(this); \
 	} \
 	ACCUMULATE_FUNCTION(initfunc, Register_##ns##_##id) \
 	REGISTER_INIT(ns, id)
+
+#define REGISTRY_PUSH(array, fld, it) do { \
+	it.fld = array##_COUNT; \
+	_##array[array##_COUNT++] = it; \
+	if (!array##_first) array##_first = it; \
+	if (array##_last)   array##_last.REGISTRY_NEXT = it; \
+	array##_last = it; \
+} while (0)
+
+#define REGISTRY_RESERVE(registry, fld, id, suffix) do { \
+	entity e = new(registry_reserved); \
+	e.registered_id = #id #suffix; \
+	REGISTRY_PUSH(registry, fld, e); \
+} while (0)
 
 /** internal next pointer */
 #define REGISTRY_NEXT enemy

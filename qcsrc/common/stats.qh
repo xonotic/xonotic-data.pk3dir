@@ -17,39 +17,17 @@ const int STAT_ITEMS = 15; // .items | .items2 << 23 | serverflags << 28
 const int STAT_VIEWHEIGHT = 16; // .view_ofs_z
 #endif
 
-enum {
-    STAT_WEAPONS = 32,
-    STAT_WEAPONS2,
-    STAT_WEAPONS3,
+REGISTER_STAT(WEAPONS, vectori)
+REGISTER_STAT(WEAPONSINMAP, vectori)
 
-    STAT_WEAPONSINMAP,
-    STAT_WEAPONSINMAP2,
-    STAT_WEAPONSINMAP3,
+REGISTER_STAT(PL_VIEW_OFS, vector, autocvar_sv_player_viewoffset)
+REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector, autocvar_sv_player_crouch_viewoffset)
 
-    STAT_PL_VIEW_OFS1,
-    STAT_PL_VIEW_OFS2,
-    STAT_PL_VIEW_OFS3,
+REGISTER_STAT(PL_MIN, vector, autocvar_sv_player_mins)
+REGISTER_STAT(PL_CROUCH_MIN, vector, autocvar_sv_player_crouch_mins)
 
-    STAT_PL_CROUCH_VIEW_OFS1,
-    STAT_PL_CROUCH_VIEW_OFS2,
-    STAT_PL_CROUCH_VIEW_OFS3,
-
-    STAT_PL_MIN1,
-    STAT_PL_MIN2,
-    STAT_PL_MIN3,
-
-    STAT_PL_MAX1,
-    STAT_PL_MAX2,
-    STAT_PL_MAX3,
-
-    STAT_PL_CROUCH_MIN1,
-    STAT_PL_CROUCH_MIN2,
-    STAT_PL_CROUCH_MIN3,
-
-    STAT_PL_CROUCH_MAX1,
-    STAT_PL_CROUCH_MAX2,
-    STAT_PL_CROUCH_MAX3,
-};
+REGISTER_STAT(PL_MAX, vector, autocvar_sv_player_maxs)
+REGISTER_STAT(PL_CROUCH_MAX, vector, autocvar_sv_player_crouch_maxs)
 
 REGISTER_STAT(KH_KEYS, int)
 /** weapon requested to switch to; next WANTED weapon (for HUD) */

@@ -256,7 +256,8 @@ void FixClientCvars(entity e);
 // WEAPONTODO: remove this
 WepSet weaponsInMap;
 
-.WepSet weaponsinmap;
+#define weapons _STAT(WEAPONS)
+#define weaponsinmap _STAT(WEAPONSINMAP)
 
 .float respawn_countdown; // next number to count
 

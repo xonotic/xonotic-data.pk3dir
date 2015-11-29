@@ -10,8 +10,6 @@ typedef vector WepSet;
 #define WEPSET(id) WepSet_FromWeapon(WEP_##id.m_id)
 WepSet WepSet_FromWeapon(int a);
 #ifdef SVQC
-void WepSet_AddStat();
-void WepSet_AddStat_InMap();
 void WriteWepSet(float dest, WepSet w);
 #endif
 
