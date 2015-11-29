@@ -37,7 +37,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-	grav = PHYS_GRAVITY;
+	grav = PHYS_GRAVITY(other);
 	if(PHYS_ENTGRAVITY(other))
 		grav *= PHYS_ENTGRAVITY(other);
 
@@ -131,7 +131,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 void trigger_push_touch()
 {SELFPARAM();
-	if (self.active == ACTIVE_NOT)
+	if (this.active == ACTIVE_NOT)
 		return;
 
 #ifdef SVQC
@@ -139,40 +139,42 @@ void trigger_push_touch()
 		return;
 #endif
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (DIFF_TEAM(self, other)))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
 			return;
 
 	EXACTTRIGGER_TOUCH;
 
-	if(self.enemy)
+	if(this.enemy)
 	{
-		other.velocity = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+		other.velocity = trigger_push_calculatevelocity(other.origin, this.enemy, this.height);
 		other.move_velocity = other.velocity;
 	}
-	else if(self.target)
+	else if(this.target)
 	{
 		entity e;
 		RandomSelection_Init();
-		for(e = world; (e = find(e, targetname, self.target)); )
+		for(e = world; (e = find(e, targetname, this.target)); )
 		{
 			if(e.cnt)
 				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
 			else
 				RandomSelection_Add(e, 0, string_null, 1, 1);
 		}
-		other.velocity = trigger_push_calculatevelocity(other.origin, RandomSelection_chosen_ent, self.height);
+		other.velocity = trigger_push_calculatevelocity(other.origin, RandomSelection_chosen_ent, this.height);
 		other.move_velocity = other.velocity;
 	}
 	else
 	{
-		other.velocity = self.movedir;
+		other.velocity = this.movedir;
 		other.move_velocity = other.velocity;
 	}
 
+#ifdef SVQC
 	UNSET_ONGROUND(other);
-
+#elif defined(CSQC)
 	other.move_flags &= ~FL_ONGROUND;
+#endif
 
 #ifdef SVQC
 	if (IS_PLAYER(other))
@@ -180,29 +182,29 @@ void trigger_push_touch()
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		other.oldvelocity = other.velocity;
 
-		if(self.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
+		if(this.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
 		{
 			// flash when activated
 			Send_Effect(EFFECT_JUMPPAD, other.origin, other.velocity, 1);
-			_sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
-			self.pushltime = time + 0.2;
+			_sound (other, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+			this.pushltime = time + 0.2;
 		}
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))
 		{
 			bool found = false;
 			for(int i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
-				if(other.(jumppadsused[i]) == self)
+				if(other.(jumppadsused[i]) == this)
 					found = true;
 			if(!found)
 			{
-				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = self;
+				other.(jumppadsused[other.jumppadcount % NUM_JUMPPADSUSED]) = this;
 				other.jumppadcount = other.jumppadcount + 1;
 			}
 
 			if(IS_REAL_CLIENT(other))
 			{
-				if(self.message)
-					centerprint(other, self.message);
+				if(this.message)
+					centerprint(other, this.message);
 			}
 			else
 				other.lastteleporttime = time;
@@ -218,10 +220,10 @@ void trigger_push_touch()
 		other.istypefrag = 0;
 	}
 
-	if(self.enemy.target)
+	if(this.enemy.target)
 	{
 		activator = other;
-		WITH(entity, self, self.enemy, SUB_UseTargets());
+		WITH(entity, self, this.enemy, SUB_UseTargets());
 	}
 
 	if (other.flags & FL_PROJECTILE)
@@ -241,11 +243,11 @@ void trigger_push_touch()
 		UpdateCSQCProjectile(other);
 	}
 
-	if (self.spawnflags & PUSH_ONCE)
+	if (this.spawnflags & PUSH_ONCE)
 	{
-		self.touch = func_null;
-		self.think = SUB_Remove;
-		self.nextthink = time;
+		this.touch = func_null;
+		this.think = SUB_Remove_self;
+		this.nextthink = time;
 	}
 #endif
 }
@@ -313,13 +315,13 @@ void trigger_push_findtarget()
 	}
 
 	trigger_push_link();
-	defer(0.1, trigger_push_updatelink);
+	defer(self, 0.1, trigger_push_updatelink);
 #endif
 }
 
 #ifdef SVQC
-float trigger_push_send(entity to, float sf)
-{SELFPARAM();
+float trigger_push_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -349,7 +351,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
-	//Net_LinkEntity(self, false, 0, trigger_push_send);
+	Net_LinkEntity(self, false, 0, trigger_push_send);
 }
 #endif
 #ifdef SVQC
@@ -404,7 +406,7 @@ bool target_push_send(entity this, entity to, float sf)
 
 void target_push_link()
 {SELFPARAM();
-	//Net_LinkEntity(self, false, 0, target_push_send);
+	Net_LinkEntity(self, false, 0, target_push_send);
 	//self.SendFlags |= 1; // update
 }
 
@@ -432,8 +434,8 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 
 		self.entremove = trigger_remove_generic;
 		self.solid = SOLID_TRIGGER;
-		self.draw = trigger_draw_generic;
-		self.trigger_touch = trigger_push_touch;
+		//self.draw = trigger_draw_generic;
+		self.move_touch = trigger_push_touch;
 		self.drawmask = MASK_NORMAL;
 		self.move_time = time;
 		trigger_push_findtarget();

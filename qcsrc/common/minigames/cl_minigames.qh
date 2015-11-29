@@ -111,16 +111,16 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 	while( (entityvar = findentity(entityvar,owner,active_minigame)) )
 
 
-REGISTRY(Minigames, BITS(3))
+REGISTRY(Minigames, BITS(4))
 #define Minigames_from(i) _Minigames_from(i, NULL)
-REGISTER_REGISTRY(RegisterMinigames)
+REGISTER_REGISTRY(Minigames)
 REGISTRY_CHECK(Minigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(RegisterMinigames, MINIGAME, Minigames, name, m_id, new(minigame_descriptor)); \
+    REGISTER(Minigames, MINIGAME_##name, m_id, new(minigame_descriptor)); \
     void name##_hud_board(vector, vector); \
     void name##_hud_status(vector, vector); \
     int name##_client_event(entity, string, ...); \
-    REGISTER_INIT_POST(MINIGAME, name) { \
+    REGISTER_INIT_POST(MINIGAME_##name) { \
         make_pure(this); \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
@@ -128,6 +128,6 @@ REGISTRY_CHECK(Minigames)
 		this.minigame_hud_status = name##_hud_status; \
 		this.minigame_event = name##_client_event; \
     } \
-    REGISTER_INIT(MINIGAME, name)
+    REGISTER_INIT(MINIGAME_##name)
 
 #endif

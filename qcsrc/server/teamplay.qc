@@ -151,9 +151,6 @@ string getwelcomemessage()
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
 
-	if (cvar("g_nades"))
-		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
-
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
 		if(cache_lastmutatormsg)
@@ -652,7 +649,9 @@ void SV_ChangeTeam(float _color)
 
 	// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
 	if(!IS_CLIENT(self))
-		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_CONNECTING, self.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
+
+	MUTATOR_CALLHOOK(Player_ChangeTeam, self, steam, dteam);
 
 	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
 

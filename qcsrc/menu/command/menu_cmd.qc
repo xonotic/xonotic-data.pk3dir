@@ -77,22 +77,17 @@ void GameCommand(string theCommand)
 		if (argc == 1)
 		{
 			LOG_INFO(_("Available options:\n"));
-			float i;
-			entity e;
-			string s;
 
-			for (i = 0, e = NULL; (e = nextent(e)); )
-				if (e.classname != "vtbl" && e.name != "")
+			FOREACH_ENTITY_ORDERED(it.name != "", LAMBDA(
+				if (it.classname == "vtbl") continue;
+				string s = it.name;
+				if (filter)
 				{
-					s = e.name;
-					if (filter)
-					{
-						if (substring(s, 0, strlen(filter)) != filter) continue;
-						s = substring(s, strlen(filter), strlen(s) - strlen(filter));
-					}
-					LOG_INFO(strcat(" ", s, "\n"));
-					++i;
+					if (!startsWith(s, filter)) continue;
+					s = substring(s, strlen(filter), strlen(s) - strlen(filter));
 				}
+				LOG_INFOF(" %s\n", s);
+			));
 		}
 		else if (argc == 2 && !isdemo())     // don't allow this command in demos
 		{

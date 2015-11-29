@@ -41,7 +41,7 @@ void Draw_GrapplingHook(entity this)
 		self.teleport_time = 0;
 	}
 
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(this);
 
 	int s = W_GetGunAlignment(world);
 
@@ -106,7 +106,7 @@ void Draw_GrapplingHook(entity this)
 				case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
 				case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
 				case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
-				default: tex = "particles/hook_white"; rgb = getcsqcplayercolor(self.sv_entnum); break;
+				default: tex = "particles/hook_white"; rgb = getcsqcplayercolor(self.sv_entnum - 1); break;
 			}
 			break;
 		case NET_ENT_CLIENT_ARC_BEAM: // todo
@@ -171,7 +171,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 	self.HookSilent = (sf & 0x80);
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	if(sf & 1)
 	{
@@ -203,7 +203,7 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 		self.velocity_z = ReadCoord();
 	}
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 
 	if(bIsNew || !self.teleport_time)
 	{

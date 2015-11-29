@@ -28,9 +28,12 @@ noref bool require_spawnfunc_prefix;
 	#define _spawnfunc_check(fld) \
 		if (fieldname == #fld) continue;
 
-		#define spawnfunc_1(id, whitelist) spawnfunc_2(id, whitelist)
+	bool __spawnfunc_unreachable_workaround = true;
+
+	#define spawnfunc_1(id) spawnfunc_2(id, FIELDS_UNION)
 	#define spawnfunc_2(id, whitelist) \
-		void spawnfunc_##id(entity this) \
+		void __spawnfunc_##id(entity this); \
+		[[accumulate]] void spawnfunc_##id(entity this) \
 		{ \
 			this = self; \
 			if (!this.sourceLocFile) \
@@ -53,8 +56,10 @@ noref bool require_spawnfunc_prefix;
 				} \
 				this.spawnfunc_checked = true; \
 			} \
+			__spawnfunc_##id(this); \
+			if (__spawnfunc_unreachable_workaround) return; \
 		} \
-		[[accumulate]] void spawnfunc_##id(entity this)
+		void __spawnfunc_##id(entity this)
 
 	#define FIELD_SCALAR(fld, n) \
 		fld(n)
@@ -176,6 +181,6 @@ noref bool require_spawnfunc_prefix;
 		FIELD_VEC(fld, velocity) \
 		/**/
 
-	#define spawnfunc(...) EVAL(OVERLOAD(spawnfunc, __VA_ARGS__, FIELDS_UNION))
+	#define spawnfunc(...) EVAL(OVERLOAD(spawnfunc, __VA_ARGS__))
 
 #endif

@@ -76,7 +76,7 @@ bool ons_stalemate;
 
 .float teleport_antispam;
 
-.bool ons_roundlost;
+.bool ons_roundlost = _STAT(ROUNDLOST);
 
 // waypoint sprites
 .entity bot_basewaypoint; // generator waypointsprite
@@ -195,10 +195,10 @@ void ons_CaptureShield_Touch()
 	}
 }
 
-void ons_CaptureShield_Reset()
-{SELFPARAM();
-	self.colormap = self.enemy.colormap;
-	self.team = self.enemy.team;
+void ons_CaptureShield_Reset(entity this)
+{
+	this.colormap = this.enemy.colormap;
+	this.team = this.enemy.team;
 }
 
 void ons_CaptureShield_Spawn(entity generator, bool is_generator)
@@ -845,31 +845,31 @@ void ons_ControlPoint_Think()
 	CSQCMODEL_AUTOUPDATE(self);
 }
 
-void ons_ControlPoint_Reset()
-{SELFPARAM();
-	if(self.goalentity)
-		remove(self.goalentity);
+void ons_ControlPoint_Reset(entity this)
+{
+	if(this.goalentity)
+		remove(this.goalentity);
 
-	self.goalentity = world;
-	self.team = 0;
-	self.colormap = 1024;
-	self.iscaptured = false;
-	self.islinked = false;
-	self.isshielded = true;
-	self.think = ons_ControlPoint_Think;
-	self.ons_toucher = world;
-	self.nextthink = time + ONS_CP_THINKRATE;
-	setmodel_fixsize(self, MDL_ONS_CP_PAD1);
+	this.goalentity = world;
+	this.team = 0;
+	this.colormap = 1024;
+	this.iscaptured = false;
+	this.islinked = false;
+	this.isshielded = true;
+	this.think = ons_ControlPoint_Think;
+	this.ons_toucher = world;
+	this.nextthink = time + ONS_CP_THINKRATE;
+	setmodel_fixsize(this, MDL_ONS_CP_PAD1);
 
-	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
-	WaypointSprite_UpdateRule(self.sprite,self.team,SPRITERULE_TEAMPLAY);
+	WaypointSprite_UpdateMaxHealth(this.sprite, 0);
+	WaypointSprite_UpdateRule(this.sprite,this.team,SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
 
-	activator = self;
+	activator = this;
 	SUB_UseTargets(); // to reset the structures, playerspawns etc.
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void ons_DelayedControlPoint_Setup()
@@ -1076,27 +1076,27 @@ void ons_GeneratorThink()
 	}
 }
 
-void ons_GeneratorReset()
-{SELFPARAM();
-	self.team = self.team_saved;
-	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
-	self.takedamage = DAMAGE_AIM;
-	self.bot_attack = true;
-	self.iscaptured = true;
-	self.islinked = true;
-	self.isshielded = true;
-	self.event_damage = ons_GeneratorDamage;
-	self.think = ons_GeneratorThink;
-	self.nextthink = time + GEN_THINKRATE;
+void ons_GeneratorReset(entity this)
+{
+	this.team = this.team_saved;
+	this.lasthealth = this.max_health = this.health = autocvar_g_onslaught_gen_health;
+	this.takedamage = DAMAGE_AIM;
+	this.bot_attack = true;
+	this.iscaptured = true;
+	this.islinked = true;
+	this.isshielded = true;
+	this.event_damage = ons_GeneratorDamage;
+	this.think = ons_GeneratorThink;
+	this.nextthink = time + GEN_THINKRATE;
 
-	Net_LinkEntity(self, false, 0, generator_send);
+	Net_LinkEntity(this, false, 0, generator_send);
 
-	self.SendFlags = GSF_SETUP; // just incase
-	self.SendFlags |= GSF_STATUS;
+	this.SendFlags = GSF_SETUP; // just incase
+	this.SendFlags |= GSF_STATUS;
 
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
-	WaypointSprite_UpdateRule(self.sprite,self.team,SPRITERULE_TEAMPLAY);
+	WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
+	WaypointSprite_UpdateHealth(this.sprite, this.health);
+	WaypointSprite_UpdateRule(this.sprite,this.team,SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
 }
@@ -2317,8 +2317,6 @@ void ons_Initialize()
 {
 	g_onslaught = true;
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
-
-	addstat(STAT_ROUNDLOST, AS_INT, ons_roundlost);
 
 	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }

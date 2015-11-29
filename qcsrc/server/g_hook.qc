@@ -80,12 +80,12 @@ void RemoveGrapplingHook(entity pl)
 	//pl.disableclientprediction = false;
 }
 
-void GrapplingHookReset()
-{SELFPARAM();
-	if(self.realowner.hook == self)
-		RemoveGrapplingHook(self.owner);
+void GrapplingHookReset(entity this)
+{
+	if(this.realowner.hook == this)
+		RemoveGrapplingHook(this.owner);
 	else // in any case:
-		remove(self);
+		remove(this);
 }
 
 void GrapplingHookThink();

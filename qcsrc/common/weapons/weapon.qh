@@ -1,6 +1,7 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 #include "../items/item/pickup.qh"
+#include "../stats.qh"
 
 const int MAX_WEAPONSLOTS = 2;
 .entity weaponentities[MAX_WEAPONSLOTS];
@@ -29,6 +30,15 @@ const int WS_INUSE  = 3;
 /** idle frame */
 const int WS_READY  = 4;
 
+#ifdef SVQC
+.int ammo_shells;
+.int ammo_nails;
+.int ammo_rockets;
+.int ammo_cells;
+.int ammo_plasma = _STAT(PLASMA);
+.int ammo_fuel = _STAT(FUEL);
+.int ammo_none;
+#else
 .int ammo_shells;
 .int ammo_nails;
 .int ammo_rockets;
@@ -36,6 +46,7 @@ const int WS_READY  = 4;
 .int ammo_plasma;
 .int ammo_fuel;
 .int ammo_none;
+#endif
 
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
 CLASS(Weapon, Object)

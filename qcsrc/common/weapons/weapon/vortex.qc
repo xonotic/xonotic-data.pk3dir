@@ -91,7 +91,8 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 
-	if (autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+	if(!MUTATOR_CALLHOOK(Particles_VortexBeam, shotorg, endpos))
+	if(autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
@@ -102,6 +103,22 @@ NET_HANDLE(TE_CSQC_VORTEXBEAMPARTICLE, bool isNew)
 #ifdef SVQC
 spawnfunc(weapon_vortex) { weapon_defaultspawnfunc(this, WEP_VORTEX); }
 spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
+
+REGISTER_MUTATOR(vortex_charge, true);
+
+MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
+{SELFPARAM();
+	// WEAPONTODO
+	float xyspeed = vlen(vec2(self.velocity));
+	if (self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
+	{
+		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
+	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
+		float f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
+		// add the extra charge
+		self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
+	}
+}
 
 void W_Vortex_Attack(Weapon thiswep, float issecondary)
 {SELFPARAM();

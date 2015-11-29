@@ -220,6 +220,8 @@ void XonoticPlayerModelSelector_resizeNotify(entity me, vector relOrigin, vector
 
 void XonoticPlayerModelSelector_showNotify(entity me)
 {
+	// Reinitialize self.
+	me.destroy(me);
 	me.configureXonoticPlayerModelSelector(me);
 }
 #endif

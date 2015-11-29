@@ -107,7 +107,7 @@ void M_Shambler_Attack_Lightning_Explode()
 		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
 	}
 
-	self.think = SUB_Remove;
+	self.think = SUB_Remove_self;
 	self.nextthink = time + 0.2;
 }
 

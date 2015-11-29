@@ -39,7 +39,7 @@ void CSQC_Init()
 	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	LOG_TRACEF("^4CSQC Build information: ^1%s\n", WATERMARK);
+	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
 	binddb = db_create();
@@ -326,47 +326,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
-void Ent_RemoveEntCS()
-{
-	SELFPARAM();
-	entcs_receiver[this.sv_entnum] = NULL;
-}
-
-NET_HANDLE(ENT_CLIENT_ENTCS, bool isnew)
-{
-	make_pure(this);
-	this.classname = "entcs_receiver";
-	InterpolateOrigin_Undo();
-	int sf = ReadByte();
-
-	if(sf & BIT(0))
-		this.sv_entnum = ReadByte();
-	if (sf & BIT(1))
-	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
-		setorigin(this, this.origin);
-	}
-	if (sf & BIT(2))
-	{
-		this.angles_y = ReadByte() * 360.0 / 256;
-		this.angles_x = this.angles_z = 0;
-	}
-	if (sf & BIT(3))
-		this.healthvalue = ReadByte() * 10;
-	if (sf & BIT(4))
-		this.armorvalue = ReadByte() * 10;
-
-	return = true;
-
-	entcs_receiver[this.sv_entnum] = this;
-	this.entremove = Ent_RemoveEntCS;
-	this.iflags |= IFLAG_ORIGIN;
-
-	InterpolateOrigin_Note();
-}
 
 void Ent_Remove();
 
@@ -752,7 +711,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void CSQC_Ent_Update(float bIsNewEntity)
+void CSQC_Ent_Update(bool isnew)
 {
 	SELFPARAM();
 	this.sourceLocLine = __LINE__;
@@ -768,44 +727,43 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	else
 	{
 		serverprevtime = time;
-		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+		serverdeltatime = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 		time = serverprevtime + serverdeltatime;
 	}
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if(this.enttype)
+	if (this.enttype)
 	{
-		if(t != this.enttype || bIsNewEntity)
+		if (t != this.enttype || isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(this), this.entnum, this.enttype, t);
 			Ent_Remove();
 			clearentity(this);
-			bIsNewEntity = 1;
+			isnew = true;
 		}
 	}
 	else
 	{
-		if(!bIsNewEntity)
+		if (!isnew)
 		{
 			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(this), this.entnum, t);
-			bIsNewEntity = 1;
+			isnew = true;
 		}
 	}
 #endif
 	this.enttype = t;
 	bool done = false;
 	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
-		this.classname = it.netname;
+		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
-            LOG_INFOF("CSQC_Ent_Update(%d) with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", bIsNewEntity, this, this.entnum, this.enttype, it.netname, t);
-		done = it.m_read(this, bIsNewEntity);
+            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		done = it.m_read(this, isnew);
 		break;
 	));
 	time = savetime;
 	if (!done)
 	{
-		//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), this.enttype));
-		error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", this.enttype, num_for_edict(this), this.classname));
+		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 	}
 }
 

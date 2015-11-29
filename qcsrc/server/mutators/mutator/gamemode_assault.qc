@@ -94,9 +94,9 @@ vector target_objective_spawn_evalfunc(entity player, entity spot, vector curren
 
 // reset this objective. Used when spawning an objective
 // and when a new round starts
-void assault_objective_reset()
-{SELFPARAM();
-	self.health = ASSAULT_VALUE_INACTIVE;
+void assault_objective_reset(entity this)
+{
+	this.health = ASSAULT_VALUE_INACTIVE;
 }
 
 // decrease the health of targeted objectives
@@ -212,11 +212,11 @@ void target_objective_decrease_findtarget()
 	assault_setenemytoobjective();
 }
 
-void target_assault_roundend_reset()
-{SELFPARAM();
+void target_assault_roundend_reset(entity this)
+{
 	//print("round end reset\n");
-	self.cnt = self.cnt + 1; // up round counter
-	self.winning = 0; // up round
+	++this.cnt; // up round counter
+	this.winning = false; // up round
 }
 
 void target_assault_roundend_use()
@@ -294,17 +294,10 @@ void assault_new_round()
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
-	entity ent;
-	for(ent = world; (ent = nextent(ent)); )
-	{
-		if(clienttype(ent) == CLIENTTYPE_NOTACLIENT)
-		{
-			if(ent.team_saved == NUM_TEAM_1)
-				ent.team_saved = NUM_TEAM_2;
-			else if(ent.team_saved == NUM_TEAM_2)
-				ent.team_saved = NUM_TEAM_1;
-		}
-	}
+	FOREACH_ENTITY(clienttype(it) == CLIENTTYPE_NOTACLIENT, LAMBDA(
+		if (it.team_saved == NUM_TEAM_1) it.team_saved = NUM_TEAM_2;
+		else if (it.team_saved == NUM_TEAM_2) it.team_saved = NUM_TEAM_1;
+	));
 
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
@@ -330,13 +323,13 @@ spawnfunc(info_player_defender)
 
 spawnfunc(target_objective)
 {
-	if (!g_assault) { remove(self); return; }
+	if (!g_assault) { remove(this); return; }
 
-	self.classname = "target_objective";
-	self.use = assault_objective_use;
-	assault_objective_reset();
-	self.reset = assault_objective_reset;
-	self.spawn_evalfunc = target_objective_spawn_evalfunc;
+	this.classname = "target_objective";
+	this.use = assault_objective_use;
+	this.reset = assault_objective_reset;
+	this.reset(this);
+	this.spawn_evalfunc = target_objective_spawn_evalfunc;
 }
 
 spawnfunc(target_objective_decrease)

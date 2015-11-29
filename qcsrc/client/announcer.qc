@@ -15,15 +15,18 @@ string AnnouncerOption()
 	return ret;
 }
 
+entity announcer_countdown;
+
 void Announcer_Countdown()
 {
 	SELFPARAM();
-	float starttime = getstatf(STAT_GAMESTARTTIME);
-	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	float starttime = STAT(GAMESTARTTIME);
+	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		remove(this);
+		announcer_countdown = NULL;
 		return;
 	}
 	if(roundstarttime >= starttime)
@@ -39,6 +42,7 @@ void Announcer_Countdown()
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
 		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		remove(this);
+		announcer_countdown = NULL;
 		return;
 	}
 	else // countdown is still going
@@ -69,8 +73,8 @@ void Announcer_Countdown()
  float previous_game_starttime;
 void Announcer_Gamestart()
 {
-	float startTime = getstatf(STAT_GAMESTARTTIME);
-	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	float startTime = STAT(GAMESTARTTIME);
+	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
 
@@ -78,7 +82,6 @@ void Announcer_Gamestart()
 	{
 		if(time < startTime)
 		{
-			static entity announcer_countdown;
 			if (!announcer_countdown)
 			{
 				announcer_countdown = new(announcer_countdown);
@@ -100,13 +103,13 @@ void Announcer_Gamestart()
 // Plays the 1 minute or 5 minutes (of maptime) remaining sound, if client wants it
 void Announcer_Time()
 {
-	float timelimit = getstatf(STAT_TIMELIMIT);
-	float timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
+	float timelimit = STAT(TIMELIMIT);
+	float timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	float warmup_timeleft = 0;
 
 	if(warmup_stage)
 		if(autocvar_g_warmup_limit > 0)
-			warmup_timeleft = max(0, autocvar_g_warmup_limit + getstatf(STAT_GAMESTARTTIME) - time);
+			warmup_timeleft = max(0, autocvar_g_warmup_limit + STAT(GAMESTARTTIME) - time);
 
 	// 5 minute check
 	if(autocvar_cl_announcer_maptime >= 2)

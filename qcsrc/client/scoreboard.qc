@@ -303,8 +303,8 @@ void Cmd_HUD_Help()
 
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
-"-teams,rc,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -rc,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"dmg dmgtaken " \
+"-teams,cts,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -cts,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"-rc,cts,nb/dmg -rc,cts,nb/dmgtaken " \
 "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \
@@ -1002,12 +1002,14 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
 	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		setself(get_weaponinfo(i));
+		Weapon e = get_weaponinfo(i);
+		setself(e);
 		if (!self.weapon) continue;
 
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		WepSet set = e.m_wepset;
+		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			++disownedcnt;
 	}
 
@@ -1064,11 +1066,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	int column = 0;
 	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		setself(get_weaponinfo(i));
+		Weapon e = get_weaponinfo(i);
+		setself(e);
 		if (!self.weapon) continue;
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		WepSet set = e.m_wepset;
+		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			continue;
 
 		float weapon_alpha;
@@ -1133,12 +1137,12 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	string val;
 
 	// get monster stats
-	stat_monsters_killed = getstatf(STAT_MONSTERS_KILLED);
-	stat_monsters_total = getstatf(STAT_MONSTERS_TOTAL);
+	stat_monsters_killed = STAT(MONSTERS_KILLED);
+	stat_monsters_total = STAT(MONSTERS_TOTAL);
 
 	// get secrets stats
-	stat_secrets_found = getstatf(STAT_SECRETS_FOUND);
-	stat_secrets_total = getstatf(STAT_SECRETS_TOTAL);
+	stat_secrets_found = STAT(SECRETS_FOUND);
+	stat_secrets_total = STAT(SECRETS_TOTAL);
 
 	// get number of rows
 	if(stat_secrets_total)
@@ -1402,9 +1406,9 @@ void HUD_DrawScoreboard()
 	// Print info string
 	float tl, fl, ll;
 	str = sprintf(_("playing ^3%s^7 on ^2%s^7"), MapInfo_Type_ToText(gametype), shortmapname);
-	tl = getstatf(STAT_TIMELIMIT);
-	fl = getstatf(STAT_FRAGLIMIT);
-	ll = getstatf(STAT_LEADLIMIT);
+	tl = STAT(TIMELIMIT);
+	fl = STAT(FRAGLIMIT);
+	ll = STAT(LEADLIMIT);
 	if(gametype == MAPINFO_TYPE_LMS)
 	{
 		if(tl > 0)
@@ -1458,7 +1462,7 @@ void HUD_DrawScoreboard()
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print information about respawn status
-	float respawn_time = getstatf(STAT_RESPAWN_TIME);
+	float respawn_time = STAT(RESPAWN_TIME);
 	if(!intermission)
 	if(respawn_time)
 	{

@@ -48,4 +48,46 @@ MUTATOR_HOOKABLE(BuildMutatorsPrettyString, EV_BuildMutatorsPrettyString);
     /**/
 MUTATOR_HOOKABLE(BuildGameplayTipsString, EV_BuildGameplayTipsString);
 
+#define EV_IsFlying(i, o) \
+	/**/ i(entity, MUTATOR_ARGV_0_entity) \
+	/**/
+MUTATOR_HOOKABLE(IsFlying, EV_IsFlying);
+
+#define EV_WP_Format(i, o) \
+    /**/ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/ i(string, MUTATOR_ARGV_0_string) \
+    /**/ o(vector, MUTATOR_ARGV_0_vector) \
+    /**/ o(string, MUTATOR_ARGV_0_string) \
+    /**/
+MUTATOR_HOOKABLE(WP_Format, EV_WP_Format);
+
+/**
+ * called before any player physics, may adjust variables for movement,
+ * is run AFTER bot code and idle checking on the server
+ */
+#define EV_PlayerPhysics(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPhysics, EV_PlayerPhysics);
+
+/** called when a player presses the jump key */
+#define EV_PlayerJump(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(float, player_multijump) \
+    /**/ i(float, player_jumpheight) \
+    /**/ o(float, player_multijump) \
+    /**/ o(float, player_jumpheight) \
+    /**/
+float player_multijump;
+float player_jumpheight;
+MUTATOR_HOOKABLE(PlayerJump, EV_PlayerJump);
+
+/** called during player physics, allows adjusting the movement type used */
+#define EV_PM_Physics(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(float, pm_maxspeed_mod) \
+    /**/
+float pm_maxspeed_mod;
+MUTATOR_HOOKABLE(PM_Physics, EV_PM_Physics);
+
 #endif

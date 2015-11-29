@@ -10,35 +10,33 @@
 	class(Defer).void() think;
 	class(Defer).float nextthink;
 
-/*
-==================
-SUB_Remove
+	/** Remove self */
+	void SUB_Remove(entity this)
+	{
+		remove(this);
+	}
 
-Remove self
-==================
-*/
-	void SUB_Remove()
+	/** Remove self */
+	void SUB_Remove_self()
 	{
 		SELFPARAM();
-		remove(self);
+		remove(this);
 	}
 
 	void defer_think()
 	{
 		SELFPARAM();
-		self.think     = SUB_Remove;
-		self.nextthink = time;
-		WITH(entity, self, self.owner, self.use());
+		this.think     = SUB_Remove_self;
+		this.nextthink = time;
+		WITH(entity, self, this.owner, this.use());
 	}
 
 /*
     Execute func() after time + fdelay.
     self when func is executed = self when defer is called
 */
-	void defer(float fdelay, void() func)
+	void defer(entity this, float fdelay, void() func)
 	{
-		SELFPARAM();
-
 		entity e    = new(deferred);
 		make_pure(e);
 		e.owner     = this;

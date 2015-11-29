@@ -1,18 +1,21 @@
-#include "mutator/buffs/module.inc"
+#include "mutator/waypoints/module.inc"
+
 #include "mutator/itemstime.qc"
 #include "mutator/multijump/module.inc"
 #include "mutator/nades/module.inc"
 #include "mutator/superspec/module.inc"
-#include "mutator/waypoints/module.inc"
 
 // completely self contained
 
 #include "mutator/bloodloss/module.inc"
 #include "mutator/breakablehook/module.inc"
+#include "mutator/buffs/module.inc"
+#include "mutator/bugrigs/module.inc"
 #include "mutator/campcheck/module.inc"
 #include "mutator/cloaked/module.inc"
 #include "mutator/damagetext/module.inc"
 #include "mutator/dodging/module.inc"
+#include "mutator/doublejump/module.inc"
 #include "mutator/hook/module.inc"
 #include "mutator/instagib/module.inc"
 #include "mutator/invincibleproj/module.inc"

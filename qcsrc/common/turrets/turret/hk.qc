@@ -10,8 +10,8 @@ CLASS(HunterKiller, Turret)
 /* mins       */ ATTRIB(HunterKiller, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(HunterKiller, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(HunterKiller, mdl, string, "base.md3");
-/* model      */ ATTRIB(HunterKiller, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(HunterKiller, head_model, string, strzone(strcat("models/turrets/", "hk.md3")));
+/* model      */ ATTRIB_STRZONE(HunterKiller, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(HunterKiller, head_model, string, strcat("models/turrets/", "hk.md3"));
 /* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
 /* fullname   */ ATTRIB(HunterKiller, turret_name, string, _("Hunter-Killer Turret"));
     ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);

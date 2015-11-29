@@ -207,7 +207,7 @@ void Monster_Delay_Action()
 	}
 	else
 	{
-		oldself.think = SUB_Remove;
+		oldself.think = SUB_Remove_self;
 		oldself.nextthink = time;
 	}
 }
@@ -346,7 +346,7 @@ void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float
 	if(delaytoo)
 	if(time < self.msound_delay)
 		return; // too early
-	GlobalSound(self.(samplefield), chan, VOICETYPE_PLAYERSOUND);
+	GlobalSound_string(self.(samplefield), chan, VOICETYPE_PLAYERSOUND);
 
 	self.msound_delay = time + sound_delay;
 }
@@ -806,12 +806,6 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 	runspeed = bound(0, monster_speed_run * MONSTER_SKILLMOD(self), runspeed * 2.5); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, monster_speed_walk * MONSTER_SKILLMOD(self), walkspeed * 2.5); // limit maxspeed to prevent craziness
 
-	if(time < self.spider_slowness)
-	{
-		runspeed *= 0.5;
-		walkspeed *= 0.5;
-	}
-
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
 	if(DIFF_TEAM(self.monster_follow, self))
@@ -955,19 +949,19 @@ float Monster_Appear_Check(entity ent, float monster_id)
 	return true;
 }
 
-void Monster_Reset()
-{SELFPARAM();
-	setorigin(self, self.pos1);
-	self.angles = self.pos2;
+void Monster_Reset(entity this)
+{
+	setorigin(this, this.pos1);
+	this.angles = this.pos2;
 
-	Unfreeze(self); // remove any icy remains
+	Unfreeze(this); // remove any icy remains
 
-	self.health = self.max_health;
-	self.velocity = '0 0 0';
-	self.enemy = world;
-	self.goalentity = world;
-	self.attack_finished_single[0] = 0;
-	self.moveto = self.origin;
+	this.health = this.max_health;
+	this.velocity = '0 0 0';
+	this.enemy = world;
+	this.goalentity = world;
+	this.attack_finished_single[0] = 0;
+	this.moveto = this.origin;
 }
 
 void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -983,7 +977,7 @@ void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, int de
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		self.think = SUB_Remove;
+		self.think = SUB_Remove_self;
 		self.nextthink = time + 0.1;
 		self.event_damage = func_null;
 	}
@@ -1121,7 +1115,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
 
-			self.think = SUB_Remove;
+			self.think = SUB_Remove_self;
 			self.nextthink = time + 0.1;
 		}
 	}
@@ -1358,7 +1352,6 @@ bool Monster_Spawn(int mon_id)
 	self.deadflag			= DEAD_NO;
 	self.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	self.spawn_time			= time;
-	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.monster_moveto		= '0 0 0';
 	self.monster_face 		= '0 0 0';

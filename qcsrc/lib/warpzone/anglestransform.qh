@@ -1,16 +1,25 @@
 #ifndef LIB_WARPZONE_ANGLETRANSFORM_H
 #define LIB_WARPZONE_ANGLETRANSFORM_H
 
-#define POSITIVE_PITCH_IS_DOWN
+#ifndef POSITIVE_PITCH_IS_DOWN
+#define POSITIVE_PITCH_IS_DOWN 1
+#endif
 
-#ifdef POSITIVE_PITCH_IS_DOWN
-#define fixedmakevectors makevectors
-vector fixedvectoangles(vector a);
-vector fixedvectoangles2(vector a, vector b);
+#if POSITIVE_PITCH_IS_DOWN
+    #define fixedmakevectors makevectors
+    noref vector _fixedvectoangles;
+    #define fixedvectoangles(a) (_fixedvectoangles = vectoangles(a), _fixedvectoangles.x *= -1, _fixedvectoangles)
+    noref vector _fixedvectoangles2;
+    #define fixedvectoangles2(a, b) (_fixedvectoangles2 = vectoangles2(a, b), _fixedvectoangles2.x *= -1, _fixedvectoangles2)
 #else
-void fixedmakevectors(vector a);
-#define fixedvectoangles2 vectoangles2
-#define fixedvectoangles vectoangles
+    void fixedmakevectors(vector a)
+    {
+        // a makevectors that actually inverts vectoangles
+        a.x = -a.x;
+        makevectors(a);
+    }
+    #define fixedvectoangles2 vectoangles2
+    #define fixedvectoangles vectoangles
 #endif
 
 vector AnglesTransform_Apply(vector transform, vector v);

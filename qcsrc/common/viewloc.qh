@@ -3,7 +3,7 @@
 
 .entity viewloc;
 
-void viewloc_PlayerPhysics();
+void viewloc_PlayerPhysics(entity this);
 
 #ifdef CSQC
 

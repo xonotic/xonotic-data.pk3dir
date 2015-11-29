@@ -647,11 +647,6 @@ void freezetag_Initialize()
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 
-	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
-	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
-	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
-	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
-
 	EliminatedPlayers_Init(freezetag_isEliminated);
 }
 

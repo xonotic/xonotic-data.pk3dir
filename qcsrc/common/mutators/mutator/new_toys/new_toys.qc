@@ -174,15 +174,18 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 
 		n = tokenize_console(nt_GetReplacement(e.netname, autocvar_g_new_toys_autoreplace));
 
-		for(j = 0; j < n; ++j)
-			for(k = WEP_FIRST; k <= WEP_LAST; ++k)
-				if(get_weaponinfo(k).netname == argv(j))
+		for (j = 0; j < n; ++j)
+			for (k = WEP_FIRST; k <= WEP_LAST; ++k)
+			{
+				Weapon w = get_weaponinfo(k);
+				if (w.netname == argv(j))
 				{
-					if(start_weapons & WepSet_FromWeapon(i))
-						newdefault |= WepSet_FromWeapon(k);
-					if(warmup_start_weapons & WepSet_FromWeapon(i))
-						warmup_newdefault |= WepSet_FromWeapon(k);
+					WepSet seti = e.m_wepset;
+					WepSet setk = w.m_wepset;
+					if (start_weapons & seti) newdefault |= setk;
+					if (warmup_start_weapons & seti) warmup_newdefault |= setk;
 				}
+			}
 	}
 
 	newdefault &= start_weapons_defaultmask;

@@ -23,10 +23,10 @@ void counter_use()
 	}
 }
 
-void counter_reset()
-{SELFPARAM();
-	self.count = self.cnt;
-	multi_reset();
+void counter_reset(entity this)
+{
+	this.count = this.cnt;
+	multi_reset(this);
 }
 
 /*QUAKED spawnfunc_trigger_counter (.5 .5 .5) ? nomessage

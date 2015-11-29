@@ -28,6 +28,7 @@
 #include "warpzone/mathlib.qc"
 
 #include "accumulate.qh"
+#include "arraylist.qh"
 #include "bits.qh"
 #include "bool.qh"
 #include "color.qh"
@@ -52,7 +53,6 @@
 #include "noise.qc"
 #include "oo.qh"
 #include "p2mathlib.qc"
-#include "player.qh"
 #include "progname.qh"
 #include "random.qc"
 #include "registry.qh"
@@ -63,6 +63,7 @@
 #include "sort.qh"
 #include "spawnfunc.qh"
 #include "static.qh"
+#include "stats.qh"
 #include "string.qh"
 #include "struct.qh"
 #include "test.qc"

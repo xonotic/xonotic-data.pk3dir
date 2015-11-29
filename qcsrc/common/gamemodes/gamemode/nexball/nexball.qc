@@ -2,7 +2,7 @@
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-.float metertime;
+.float metertime = _STAT(NB_METERSTART);
 
 int autocvar_g_nexball_goalleadlimit;
 #define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
@@ -78,10 +78,10 @@ void LogNB(string mode, entity actor)
 	GameLogEcho(s);
 }
 
-void ball_restart()
-{SELFPARAM();
-	if(self.owner)
-		DropBall(self, self.owner.origin, '0 0 0');
+void ball_restart(entity this)
+{
+	if(this.owner)
+		DropBall(this, this.owner.origin, '0 0 0');
 	ResetBall();
 }
 
@@ -816,7 +816,7 @@ void W_Nexball_Attack2()
 	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
-	missile.think = SUB_Remove;
+	missile.think = SUB_Remove_self;
 	missile.nextthink = time + autocvar_g_balance_nexball_secondary_lifetime; //FIXME: use a distance instead?
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
@@ -1072,7 +1072,6 @@ REGISTER_MUTATOR(nb, g_nexball)
 		if(g_nexball_meter_period <= 0)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
-		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
 
 		// General settings
 		/*

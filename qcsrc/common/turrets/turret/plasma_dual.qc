@@ -12,8 +12,8 @@ CLASS(DualPlasmaTurret, PlasmaTurret)
 /* mins       */ ATTRIB(DualPlasmaTurret, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(DualPlasmaTurret, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(DualPlasmaTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB(DualPlasmaTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(DualPlasmaTurret, head_model, string, strzone(strcat("models/turrets/", "plasmad.md3")));
+/* model      */ ATTRIB_STRZONE(DualPlasmaTurret, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(DualPlasmaTurret, head_model, string, strcat("models/turrets/", "plasmad.md3"));
 /* netname    */ ATTRIB(DualPlasmaTurret, netname, string, "plasma_dual");
 /* fullname   */ ATTRIB(DualPlasmaTurret, turret_name, string, _("Dual Plasma Cannon"));
     ATTRIB(DualPlasmaTurret, m_weapon, Weapon, WEP_PLASMA_DUAL);

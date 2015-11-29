@@ -102,7 +102,7 @@ float kh_no_radar_circles;
 //     bits  5- 9: team of key 2, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 10-14: team of key 3, or 0 for no such key, or 30 for dropped, or 31 for self
 //     bits 15-19: team of key 4, or 0 for no such key, or 30 for dropped, or 31 for self
-.float kh_state;
+.float kh_state = _STAT(KH_KEYS);
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
@@ -793,10 +793,10 @@ void kh_Key_Think()  // runs all the time
 	self.nextthink = time + 0.05;
 }
 
-void key_reset()
-{SELFPARAM();
-	kh_Key_AssignTo(self, world);
-	kh_Key_Remove(self);
+void key_reset(entity this)
+{
+	kh_Key_AssignTo(this, world);
+	kh_Key_Remove(this);
 }
 
 const string STR_ITEM_KH_KEY = "item_kh_key";
@@ -974,9 +974,9 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		}
 		else
 		{
-			float missing_teams_mask = (!!p1) + (!!p2) * 2;
-			if(kh_teams >= 3) missing_teams_mask += (!!p3) * 4;
-			if(kh_teams >= 4) missing_teams_mask += (!!p4) * 8;
+			float missing_teams_mask = boolean(p1) + boolean(p2) * 2;
+			if(kh_teams >= 3) missing_teams_mask += boolean(p3) * 4;
+			if(kh_teams >= 4) missing_teams_mask += boolean(p4) * 8;
 			if(prev_missing_teams_mask != missing_teams_mask)
 			{
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -1094,8 +1094,6 @@ void kh_Initialize()  // sets up th KH environment
 
 	kh_controller.model = "";
 	kh_controller.modelindex = 0;
-
-	addstat(STAT_KH_KEYS, AS_INT, kh_state);
 
 	kh_ScoreRules(kh_teams);
 }

@@ -63,7 +63,7 @@ string getCvarsMulti(entity me)
 void saveCvarsMulti(entity me)
 {
 	float n, i;
-	string s;
+	string s, cvarname;
 
 	me.saveCvars_Multi(me);
 	s = cvar_string(me.cvarName);
@@ -71,12 +71,19 @@ void saveCvarsMulti(entity me)
 	n = tokenize_console(me.cvarNames_Multi);
 	for(i = 0; i < n; ++i)
 	{
+		// cvars prefixed with ! get saved with the inverted value
 		if(substring(argv(i), 0, 1) == "!")
-			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
+		{
+			cvarname = substring(argv(i), 1, strlen(argv(i)));
+			cvar_set(cvarname, ((s == "0") ? "1" : "0"));
+		}
 		else
-			cvar_set(argv(i), s);
+		{
+			cvarname = argv(i);
+			cvar_set(cvarname, s);
+		}
 
-		CheckSendCvars(me, argv(i));
+		CheckSendCvars(me, cvarname);
 	}
 }
 void makeMulti(entity e, string otherCvars)

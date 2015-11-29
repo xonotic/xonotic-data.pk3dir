@@ -183,7 +183,7 @@ void havocbot_role_ctf_setrole(entity bot, int role);
 #define CTF_DIFFTEAM(a,b) ((autocvar_g_ctf_reverse || (ctf_oneflag && autocvar_g_ctf_oneflag_reverse)) ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))
 
 // networked flag statuses
-.int ctf_flagstatus;
+.int ctf_flagstatus = _STAT(CTF_FLAGSTATUS);
 #endif
 
 const int CTF_RED_FLAG_TAKEN			= 1;
@@ -249,6 +249,7 @@ bool autocvar_g_ctf_flag_dropped_floatinwater;
 bool autocvar_g_ctf_flag_glowtrails;
 int autocvar_g_ctf_flag_health;
 bool autocvar_g_ctf_flag_return;
+bool autocvar_g_ctf_flag_return_carrying;
 float autocvar_g_ctf_flag_return_carried_radius;
 float autocvar_g_ctf_flag_return_time;
 bool autocvar_g_ctf_flag_return_when_unreachable;
@@ -1239,6 +1240,11 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 			}
 			else if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, flag) && is_not_monster)
 				ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
+			else if(CTF_DIFFTEAM(toucher, flag) && (toucher.flagcarried) && CTF_SAMETEAM(toucher.flagcarried, toucher) && (!toucher.ctf_captureshielded) && autocvar_g_ctf_flag_return_carrying && (time > toucher.next_take_time) && is_not_monster)
+			{
+				ctf_Handle_Return(toucher.flagcarried, toucher); // return their current flag
+				ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // now pickup the flag
+			}
 			else if(CTF_DIFFTEAM(toucher, flag) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
 				ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
@@ -1246,7 +1252,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 
 		case FLAG_DROPPED:
 		{
-			if(CTF_SAMETEAM(toucher, flag) && (autocvar_g_ctf_flag_return || num_perteam <= 1) && flag.team) // automatically return if there's only 1 player on the team
+			if(CTF_SAMETEAM(toucher, flag) && (autocvar_g_ctf_flag_return || num_perteam <= 1 || (autocvar_g_ctf_flag_return_carrying && toucher.flagcarried)) && flag.team) // automatically return if there's only 1 player on the team
 				ctf_Handle_Return(flag, toucher); // toucher just returned his own flag
 			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != flag.ctf_dropper) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(flag, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -1325,13 +1331,12 @@ void ctf_RespawnFlag(entity flag)
 	ctf_CheckStalemate();
 }
 
-void ctf_Reset()
-{SELFPARAM();
-	if(self.owner)
-		if(IS_PLAYER(self.owner))
-			ctf_Handle_Throw(self.owner, world, DROP_RESET);
+void ctf_Reset(entity this)
+{
+	if(this.owner && IS_PLAYER(this.owner))
+        ctf_Handle_Throw(this.owner, world, DROP_RESET);
 
-	ctf_RespawnFlag(self);
+	ctf_RespawnFlag(this);
 }
 
 void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_FlagSetup()
@@ -2754,7 +2759,7 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
-		LOG_INFO("No ""ctf_team"" entities found on this map, creating them anyway.\n");
+		LOG_INFO("No \"ctf_team\" entities found on this map, creating them anyway.\n");
 		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
 		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
 		if(ctf_teams >= 3)
@@ -2773,8 +2778,6 @@ void ctf_Initialize()
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	ctf_captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
-
-	addstat(STAT_CTF_FLAGSTATUS, AS_INT, ctf_flagstatus);
 
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }

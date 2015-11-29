@@ -328,8 +328,8 @@ void race_deleteTime(string map, float pos)
 	{
 		if (i == RANKINGS_CNT)
 		{
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), string_null);
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), string_null);
+			db_remove(ServerProgsDB, strcat(map, rr, "time", ftos(i)));
+			db_remove(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)));
 		}
 		else
 		{
@@ -661,7 +661,7 @@ void checkpoint_passed()
 		other.race_checkpoint = race_NextCheckpoint(self.race_checkpoint);
 		other.race_started = 1;
 
-		race_SendTime(other, self.race_checkpoint, other.race_movetime, !!other.race_laptime);
+		race_SendTime(other, self.race_checkpoint, other.race_movetime, boolean(other.race_laptime));
 
 		if(!self.race_checkpoint) // start line
 		{

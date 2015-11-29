@@ -11,7 +11,6 @@
 	#include "../../lib/warpzone/common.qh"
 	#include "../../lib/warpzone/client.qh"
 	#include "../util.qh"
-	#include "../buffs/all.qh"
 	#include "../../client/autocvars.qh"
 	#include "../deathtypes/all.qh"
 	#include "../../lib/csqcmodel/interpolate.qh"
@@ -20,31 +19,30 @@
 	#include "../../lib/csqcmodel/cl_model.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../lib/warpzone/anglestransform.qh"
-	#include "../../lib/warpzone/common.qh"
-	#include "../../lib/warpzone/util_server.qh"
-	#include "../../lib/warpzone/server.qh"
-	#include "../constants.qh"
-	#include "../stats.qh"
-	#include "../teams.qh"
-	#include "../util.qh"
-	#include "../buffs/all.qh"
-	#include "../monsters/all.qh"
-	#include "config.qh"
-	#include "../../server/weapons/csqcprojectile.qh"
-	#include "../../server/weapons/tracing.qh"
-	#include "../../server/t_items.qh"
-	#include "../../server/autocvars.qh"
-	#include "../../server/constants.qh"
-	#include "../../server/defs.qh"
-	#include "../notifications.qh"
-	#include "../deathtypes/all.qh"
-	#include "../../server/mutators/all.qh"
-	#include "../mapinfo.qh"
-	#include "../../server/command/common.qh"
-	#include "../../lib/csqcmodel/sv_model.qh"
-	#include "../../server/portals.qh"
-	#include "../../server/g_hook.qh"
+    #include "../../lib/warpzone/anglestransform.qh"
+    #include "../../lib/warpzone/common.qh"
+    #include "../../lib/warpzone/util_server.qh"
+    #include "../../lib/warpzone/server.qh"
+    #include "../constants.qh"
+    #include "../stats.qh"
+    #include "../teams.qh"
+    #include "../util.qh"
+    #include "../monsters/all.qh"
+    #include "config.qh"
+    #include "../../server/weapons/csqcprojectile.qh"
+    #include "../../server/weapons/tracing.qh"
+    #include "../../server/t_items.qh"
+    #include "../../server/autocvars.qh"
+    #include "../../server/constants.qh"
+    #include "../../server/defs.qh"
+    #include "../notifications.qh"
+    #include "../deathtypes/all.qh"
+    #include "../../server/mutators/all.qh"
+    #include "../mapinfo.qh"
+    #include "../../server/command/common.qh"
+    #include "../../lib/csqcmodel/sv_model.qh"
+    #include "../../server/portals.qh"
+    #include "../../server/g_hook.qh"
 #endif
 #ifndef MENUQC
 	#include "calculations.qc"
@@ -55,7 +53,7 @@
 
 // WEAPON PLUGIN SYSTEM
 
-WepSet WepSet_FromWeapon(int a)
+WepSet _WepSet_FromWeapon(int a)
 {
 	a -= WEP_FIRST;
 	if (Weapons_MAX > 24)
@@ -73,18 +71,6 @@ WepSet WepSet_FromWeapon(int a)
 	return '1 0 0' * power2of(a);
 }
 #ifdef SVQC
-	void WepSet_AddStat()
-	{
-		addstat(STAT_WEAPONS, AS_INT, weapons_x);
-		if (Weapons_MAX > 24) addstat(STAT_WEAPONS2, AS_INT, weapons_y);
-		if (Weapons_MAX > 48) addstat(STAT_WEAPONS3, AS_INT, weapons_z);
-	}
-	void WepSet_AddStat_InMap()
-	{
-		addstat(STAT_WEAPONSINMAP, AS_INT, weaponsinmap_x);
-		if (Weapons_MAX > 24) addstat(STAT_WEAPONSINMAP2, AS_INT, weaponsinmap_y);
-		if (Weapons_MAX > 48) addstat(STAT_WEAPONSINMAP3, AS_INT, weaponsinmap_z);
-	}
 	void WriteWepSet(float dst, WepSet w)
 	{
 		if (Weapons_MAX > 48) WriteInt72_t(dst, w);
@@ -95,19 +81,11 @@ WepSet WepSet_FromWeapon(int a)
 #ifdef CSQC
 	WepSet WepSet_GetFromStat()
 	{
-		WepSet w = '0 0 0';
-		w.x = getstati(STAT_WEAPONS);
-		if (Weapons_MAX > 24) w.y = getstati(STAT_WEAPONS2);
-		if (Weapons_MAX > 48) w.z = getstati(STAT_WEAPONS3);
-		return w;
+		return STAT(WEAPONS);
 	}
 	WepSet WepSet_GetFromStat_InMap()
 	{
-		WepSet w = '0 0 0';
-		w_x = getstati(STAT_WEAPONSINMAP);
-		if (Weapons_MAX > 24) w_y = getstati(STAT_WEAPONSINMAP2);
-		if (Weapons_MAX > 48) w_z = getstati(STAT_WEAPONSINMAP3);
-		return w;
+		return STAT(WEAPONSINMAP);
 	}
 	WepSet ReadWepSet()
 	{
@@ -268,8 +246,8 @@ string GetAmmoPicture(.int ammotype)
 			case ammo_nails: return STAT_NAILS;
 			case ammo_rockets: return STAT_ROCKETS;
 			case ammo_cells: return STAT_CELLS;
-			case ammo_plasma: return STAT_PLASMA;
-			case ammo_fuel: return STAT_FUEL;
+			case ammo_plasma: return STAT_PLASMA.m_id;
+			case ammo_fuel: return STAT_FUEL.m_id;
 			default: return -1;
 		}
 	}

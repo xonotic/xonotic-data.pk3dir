@@ -14,6 +14,12 @@
 #define pointparticles __pointparticles
 #define setmodel _setmodel
 
+#define STAT_FRAGLIMIT _STAT_FRAGLIMIT
+#define STAT_TIMELIMIT _STAT_TIMELIMIT
+#define STAT_MOVEVARS_TICRATE _STAT_MOVEVARS_TICRATE
+#define STAT_MOVEVARS_TIMESCALE _STAT_MOVEVARS_TIMESCALE
+#define STAT_MOVEVARS_GRAVITY _STAT_MOVEVARS_GRAVITY
+
 #include "upstream/csprogsdefs.qc"
 
 #undef true
@@ -27,8 +33,12 @@
 #undef pointparticles
 #undef setmodel
 
-#pragma noref 0
+#undef STAT_FRAGLIMIT
+#undef STAT_TIMELIMIT
+#undef STAT_MOVEVARS_TICRATE
+#undef STAT_MOVEVARS_TIMESCALE
+#undef STAT_MOVEVARS_GRAVITY
 
-#define ReadFloat() ReadCoord()
+#pragma noref 0
 
 #endif

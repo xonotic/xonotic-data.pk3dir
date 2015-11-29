@@ -94,6 +94,8 @@ void CreatureFrame ()
 							sound (self, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
+						if(autocvar_g_balance_contents_playerdamage_lava_burn)
+							Fire_AddDamage(self, world, autocvar_g_balance_contents_playerdamage_lava_burn * self.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * self.waterlevel, DEATH_LAVA.m_id);
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
@@ -159,9 +161,9 @@ void CreatureFrame ()
 					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 						else
-							GlobalSound(globalsound_step, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}
@@ -262,6 +264,13 @@ void StartFrame()
 	bot_serverframe();
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
+	{
+        entity e;
+        FOR_EACH_CLIENT(e)
+        {
+            GlobalStats_update(e);
+        }
+    }
 }
 
 .vector originjitter;

@@ -35,8 +35,6 @@ float PreviewExists(string name);
 vector rotate(vector v, float a);
 
 
-string ColorTranslateRGB(string s);
-
 // decolorizes and team colors the player name when needed
 string playername(string thename, float teamid);
 
@@ -142,15 +140,6 @@ float PolyDrawModelSurface(entity e, float i_s);
 void PolyDrawModel(entity e);
 
 void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag);
-
-const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
-vector getplayerorigin(int pl);
-
-float getplayeralpha(float pl);
-
-vector getcsqcplayercolor(float pl);
-
-float getplayerisdead(float pl);
 
 const int MAX_ACCURACY_LEVELS = 10;
 float acc_lev[MAX_ACCURACY_LEVELS];

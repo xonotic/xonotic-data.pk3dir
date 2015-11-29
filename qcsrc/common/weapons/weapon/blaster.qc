@@ -77,10 +77,10 @@ void W_Blaster_Touch()
 
 void W_Blaster_Think()
 {SELFPARAM();
-	self.movetype = MOVETYPE_FLY;
-	self.think = SUB_Remove;
-	self.nextthink = time + self.blaster_lifetime;
-	CSQCProjectile(self, true, PROJECTILE_BLASTER, true);
+	this.movetype = MOVETYPE_FLY;
+	this.think = SUB_Remove_self;
+	this.nextthink = time + this.blaster_lifetime;
+	CSQCProjectile(this, true, PROJECTILE_BLASTER, true);
 }
 
 void W_Blaster_Attack(

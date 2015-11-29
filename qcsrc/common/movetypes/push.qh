@@ -1,6 +1,6 @@
 #ifndef MOVETYPE_PUSH_H
 #define MOVETYPE_PUSH_H
 
-void _Movetype_Physics_Pusher(float dt);
+void _Movetype_Physics_Pusher(entity this, float dt);
 
 #endif

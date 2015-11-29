@@ -56,6 +56,99 @@ VAPORIZER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #endif
 #ifdef IMPLEMENTATION
+
+REGISTER_NET_TEMP(TE_CSQC_VAPORBEAMPARTICLE)
+
+#if defined(SVQC)
+void SendCSQCVaporizerBeamParticle(entity player, int hit) {
+	vector v;
+	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	WriteHeader(MSG_BROADCAST, TE_CSQC_VAPORBEAMPARTICLE);
+	WriteCoord(MSG_BROADCAST, w_shotorg.x);
+	WriteCoord(MSG_BROADCAST, w_shotorg.y);
+	WriteCoord(MSG_BROADCAST, w_shotorg.z);
+	WriteCoord(MSG_BROADCAST, v.x);
+	WriteCoord(MSG_BROADCAST, v.y);
+	WriteCoord(MSG_BROADCAST, v.z);
+	WriteByte(MSG_BROADCAST, hit);
+	WriteShort(MSG_BROADCAST, num_for_edict(player));
+	WriteByte(MSG_BROADCAST, player.team);
+}
+#elif defined(CSQC)
+bool autocvar_cl_vaporizerbeam_particle = false;
+float autocvar_cl_vaporizerbeam_lifetime = 0.8;
+float autocvar_cl_vaporizerbeam_colorboost = 0.7;
+
+string Draw_VaporizerBeam_trace_callback_tex;
+float Draw_VaporizerBeam_trace_callback_rnd;
+vector Draw_VaporizerBeam_trace_callback_rgb;
+float Draw_VaporizerBeam_trace_callback_a;
+void Draw_VaporizerBeam_trace_callback(vector start, vector hit, vector end)
+{
+	float i;
+	vector vorg;
+	vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
+	for(i = 0; i < Draw_VaporizerBeam_trace_callback_a; ++i)
+		Draw_CylindricLine(hit, start, 8, Draw_VaporizerBeam_trace_callback_tex, 0.25, Draw_VaporizerBeam_trace_callback_rnd, Draw_VaporizerBeam_trace_callback_rgb, min(1, Draw_VaporizerBeam_trace_callback_a - i), DRAWFLAG_NORMAL, vorg);
+	Draw_VaporizerBeam_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
+}
+
+.vector vorg1, vorg2;
+.float spawn_time;
+void VaporizerBeam_Draw(entity this)
+{
+	//draw either the old v2.3 beam or the new beam
+	particles_alphamin = particles_alphamax = particles_fade = 1;
+
+	string tex = "particles/lgbeam";
+	if(this.cnt)
+		tex = "particles/gauntletbeam";
+	vector rgb = getcsqcplayercolor(this.sv_entnum - 1);
+	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
+
+	float fail = (self.nextthink - time);
+
+	Draw_VaporizerBeam_trace_callback_tex = tex;
+	Draw_VaporizerBeam_trace_callback_rnd = 0;
+	Draw_VaporizerBeam_trace_callback_rgb = rgb;
+	Draw_VaporizerBeam_trace_callback_a = bound(0, fail, 1);
+	WarpZone_TraceBox_ThroughZone(this.vorg1, '0 0 0', '0 0 0', this.vorg2, MOVE_NOTHING, world, world, Draw_VaporizerBeam_trace_callback);
+	Draw_VaporizerBeam_trace_callback_tex = string_null;
+
+	/*if(!MUTATOR_CALLHOOK(Particles_VaporizerBeam, this.vorg1, this.vorg2))
+	if(autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	else
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);*/
+}
+
+NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
+{
+	Net_Accept(vortex_beam);
+	this.think = SUB_Remove_self;
+	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
+	this.draw = VaporizerBeam_Draw;
+	this.drawmask = MASK_NORMAL;
+
+	this.vorg1_x = ReadCoord(); this.vorg1_y = ReadCoord(); this.vorg1_z = ReadCoord();
+	this.vorg2_x = ReadCoord(); this.vorg2_y = ReadCoord(); this.vorg2_z = ReadCoord();
+	this.cnt = ReadByte();
+	this.sv_entnum = ReadShort();
+	this.team = ReadByte() - 1;
+
+	if(autocvar_cl_vaporizerbeam_particle)
+	{
+		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
+		this.draw = func_null;
+		this.drawmask = MASK_NORMAL;
+		remove(this);
+	}
+
+	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
+	return true;
+}
+#endif
+
 #ifdef SVQC
 spawnfunc(weapon_vaporizer) { weapon_defaultspawnfunc(this, WEP_VAPORIZER); }
 spawnfunc(weapon_minstanex) { spawnfunc_weapon_vaporizer(this); }
@@ -85,6 +178,9 @@ void W_Vaporizer_Attack(Weapon thiswep)
 	damage_goodhits = 0;
 	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
 
+	// do this now, as goodhits is disabled below
+	SendCSQCVaporizerBeamParticle(self, damage_goodhits);
+
 	if(yoda && flying)
 		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
 	if(damage_goodhits && self.vaporizer_lasthit)
@@ -94,12 +190,6 @@ void W_Vaporizer_Attack(Weapon thiswep)
 	}
 
 	self.vaporizer_lasthit = damage_goodhits;
-
-	Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	// teamcolor / hit beam effect
-	vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	Send_Effect((damage_goodhits ? EFFECT_VAPORIZER_HIT(self.team) : EFFECT_VAPORIZER(self.team)), w_shotorg, v, 1);
 
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))

@@ -75,18 +75,14 @@ const vector BUFF_MAX = ('16 16 20');
 
 #include "../../../triggers/target/music.qh"
 #include "../../../gamemodes/all.qh"
-#include "../../../buffs/all.qh"
 
-.float buff_time;
+.float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit();
 
 REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 {
 	MUTATOR_ONADD
 	{
-		addstat(STAT_BUFFS, AS_INT, buffs);
-		addstat(STAT_BUFF_TIME, AS_FLOAT, buff_time);
-
 		InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 	}
 }
@@ -204,7 +200,7 @@ void buff_Respawn(entity ent)
 	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(true);
-		setorigin(ent, ((spot.origin + '0 0 200') + (randomvec() * 300)));
+		setorigin(ent, spot.origin + '0 0 200');
 		ent.angles = spot.angles;
 	}
 
@@ -382,17 +378,17 @@ void buff_Waypoint_Reset()
 	if(self.buff_activetime) { buff_Waypoint_Spawn(self); }
 }
 
-void buff_Reset()
-{SELFPARAM();
+void buff_Reset(entity this)
+{
 	if(autocvar_g_buffs_randomize)
-		buff_NewType(self, self.buffs);
-	self.owner = world;
+		buff_NewType(this, this.buffs);
+	this.owner = world;
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset();
-	self.buff_activetime_updated = false;
+	this.buff_activetime_updated = false;
 
-	if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
-		buff_Respawn(self);
+	if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
+		buff_Respawn(this);
 }
 
 float buff_Customize()
@@ -789,6 +785,11 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {SELFPARAM();
+	if (self.classname == "item_flight" && cvar("g_buffs") && cvar("g_buffs_flight"))
+	{
+		buff_Init_Compat(self, BUFF_FLIGHT);
+		return true;
+	}
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{
@@ -981,7 +982,7 @@ MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
 {
 	vh_vehicle.buffs = vh_player.buffs;
 	vh_player.buffs = 0;
-	vh_vehicle.buff_time = vh_player.buff_time - time;
+	vh_vehicle.buff_time = max(0, time - vh_player.buff_time);
 	vh_player.buff_time = 0;
 	return false;
 }

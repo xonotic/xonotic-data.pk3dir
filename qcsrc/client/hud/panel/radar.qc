@@ -294,7 +294,7 @@ void HUD_Radar()
 	if((hud_panel_radar_rotation == 0 && !hud_panel_radar_maximized) || (hud_panel_radar_maximized_rotation == 0 && hud_panel_radar_maximized))
 	{
 		// max-min distance must fit the radar in any rotation
-		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_scale));
+		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen(vec2(mi_scale)));
 	}
 	else
 	{
@@ -359,6 +359,8 @@ void HUD_Radar()
 	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
+		if (!tm.m_entcs_private) continue;
+		if (entcs_is_self(tm)) continue;
 		color2 = GetPlayerColor(tm.sv_entnum);
 		//if(color == NUM_SPECTATOR || color == color2)
 			draw_teamradar_player(tm.origin, tm.angles, Team_ColorRGB(color2));

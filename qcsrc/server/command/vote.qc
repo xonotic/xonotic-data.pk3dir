@@ -341,7 +341,7 @@ void VoteThink()
 // =======================
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
-void reset_map(float dorespawn)
+void reset_map(bool dorespawn)
 {
 	SELFPARAM();
 
@@ -349,41 +349,24 @@ void reset_map(float dorespawn)
 
 	MUTATOR_CALLHOOK(reset_map_global);
 
-	for (entity e = world; (e = nextent(e)); )
-	{
-		setself(e);
-		if (IS_NOT_A_CLIENT(self))
+	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(
+		if (it.reset)
 		{
-			if (self.reset)
-			{
-				self.reset();
-				continue;
-			}
-
-			if (self.team_saved) self.team = self.team_saved;
-
-			if (self.flags & FL_PROJECTILE)  // remove any projectiles left
-				remove(self);
+			WITH(entity, self, it, it.reset(it));
+			continue;
 		}
-	}
+		if (it.team_saved) it.team = it.team_saved;
+		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
+	));
 
 	// Waypoints and assault start come LAST
-	for (entity e = world; (e = nextent(e)); )
-	{
-		setself(e);
-		if (IS_NOT_A_CLIENT(self))
-		{
-			if (self.reset2)
-			{
-				self.reset2();
-				continue;
-			}
-		}
-	}
+	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(
+		if (it.reset2) WITH(entity, self, it, it.reset2());
+	));
 
 	entity e;
 	FOR_EACH_PLAYER(e)
-	if (e.frozen) WITH(entity, self, e, Unfreeze(self));
+	if (e.frozen) WITH(entity, self, e, Unfreeze(e));
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
@@ -425,27 +408,28 @@ void reset_map(float dorespawn)
 void ReadyRestart_think()
 {
 	SELFPARAM();
-	restart_mapalreadyrestarted = 1;
+	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
-	remove(self);
+	remove(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
-	entity tmp_player, restart_timer;
-
 	bprint("^1Server is restarting...\n");
 
 	VoteReset();
 
 	// clear overtime, we have to decrease timelimit to its original value again.
-	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)   cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
+	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
+		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 
-	readyrestart_happened = 1;
+	readyrestart_happened = true;
 	game_starttime = time + RESTART_COUNTDOWN;
+
+	entity tmp_player;
 
 	// clear player attributes
 	FOR_EACH_CLIENT(tmp_player)
@@ -455,7 +439,7 @@ void ReadyRestart_force()
 		PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, 0));
 	}
 
-	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
+	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
@@ -463,7 +447,7 @@ void ReadyRestart_force()
 	// reset the .ready status of all players (also spectators)
 	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		tmp_player.ready = 0;
+		tmp_player.ready = false;
 	}
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
@@ -471,14 +455,15 @@ void ReadyRestart_force()
 	// lock teams with lockonrestart
 	if (autocvar_teamplay_lockonrestart && teamplay)
 	{
-		lockteams = 1;
+		lockteams = true;
 		bprint("^1The teams are now locked.\n");
 	}
 
 	// initiate the restart-countdown-announcer entity
 	if (autocvar_sv_ready_restart_after_countdown)
 	{
-		restart_timer = spawn();
+		entity restart_timer = new(restart_timer);
+		make_pure(restart_timer);
 		restart_timer.think = ReadyRestart_think;
 		restart_timer.nextthink = game_starttime;
 	}
@@ -490,9 +475,11 @@ void ReadyRestart_force()
 		{
 			tmp_player.allowed_timeouts = autocvar_sv_timeout_number;
 		}
-		// reset map immediately if this cvar is not set
-		if (!autocvar_sv_ready_restart_after_countdown)   reset_map(true); }
-	if (autocvar_sv_eventlog)   GameLogEcho(":restart"); }
+	}
+    // reset map immediately if this cvar is not set
+    if (!autocvar_sv_ready_restart_after_countdown) reset_map(true);
+	if (autocvar_sv_eventlog) GameLogEcho(":restart");
+}
 
 void ReadyRestart()
 {
@@ -502,7 +489,7 @@ void ReadyRestart()
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if (!autocvar_sv_ready_restart_after_countdown)   Score_ClearAll();
+	if (!autocvar_sv_ready_restart_after_countdown) Score_ClearAll();
 	ReadyRestart_force();
 }
 

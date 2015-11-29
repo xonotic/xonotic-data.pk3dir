@@ -63,75 +63,68 @@ void plat_link()
 
 spawnfunc(func_plat)
 {
-	if (self.sounds == 0)
-		self.sounds = 2;
+	if (this.sounds == 0) this.sounds = 2;
 
-    if(self.spawnflags & 4)
-        self.dmg = 10000;
+    if (this.spawnflags & 4) this.dmg = 10000;
 
-    if(self.dmg && (self.message == ""))
-		self.message = "was squished";
-    if(self.dmg && (self.message2 == ""))
-		self.message2 = "was squished by";
+    if (this.dmg && (this.message == "")) this.message = "was squished";
+    if (this.dmg && (this.message2 == "")) this.message2 = "was squished by";
 
-	if (self.sounds == 1)
+	if (this.sounds == 1)
 	{
 		precache_sound ("plats/plat1.wav");
 		precache_sound ("plats/plat2.wav");
-		self.noise = "plats/plat1.wav";
-		self.noise1 = "plats/plat2.wav";
+		this.noise = "plats/plat1.wav";
+		this.noise1 = "plats/plat2.wav";
 	}
 
-	if (self.sounds == 2)
+	if (this.sounds == 2)
 	{
 		precache_sound ("plats/medplat1.wav");
 		precache_sound ("plats/medplat2.wav");
-		self.noise = "plats/medplat1.wav";
-		self.noise1 = "plats/medplat2.wav";
+		this.noise = "plats/medplat1.wav";
+		this.noise1 = "plats/medplat2.wav";
 	}
 
-	if (self.sound1)
+	if (this.sound1)
 	{
-		precache_sound (self.sound1);
-		self.noise = self.sound1;
+		precache_sound (this.sound1);
+		this.noise = this.sound1;
 	}
-	if (self.sound2)
+	if (this.sound2)
 	{
-		precache_sound (self.sound2);
-		self.noise1 = self.sound2;
+		precache_sound (this.sound2);
+		this.noise1 = this.sound2;
 	}
 
-	self.mangle = self.angles;
-	self.angles = '0 0 0';
+	this.mangle = this.angles;
+	this.angles = '0 0 0';
 
-	self.classname = "plat";
+	this.classname = "plat";
 	if (!InitMovingBrushTrigger())
 		return;
-	self.effects |= EF_LOWPRECISION;
-	setsize (self, self.mins , self.maxs);
+	this.effects |= EF_LOWPRECISION;
+	setsize (this, this.mins , this.maxs);
 
-	self.blocked = plat_crush;
+	this.blocked = plat_crush;
 
-	if (!self.speed)
-		self.speed = 150;
-	if (!self.lip)
-		self.lip = 16;
-	if (!self.height)
-		self.height = self.size_z - self.lip;
+	if (!this.speed) this.speed = 150;
+	if (!this.lip) this.lip = 16;
+	if (!this.height) this.height = this.size.z - this.lip;
 
-	self.pos1 = self.origin;
-	self.pos2 = self.origin;
-	self.pos2_z = self.origin_z - self.height;
+	this.pos1 = this.origin;
+	this.pos2 = this.origin;
+	this.pos2_z = this.origin.z - this.height;
 
-	self.reset = plat_reset;
-	plat_reset();
+	this.reset = plat_reset;
+	this.reset(this);
 
-	InitializeEntity(self, plat_delayedinit, INITPRIO_FINDTARGET);
+	InitializeEntity(this, plat_delayedinit, INITPRIO_FINDTARGET);
 }
 #elif defined(CSQC)
 void plat_draw(entity this)
 {
-	Movetype_Physics_NoMatchServer();
+	Movetype_Physics_NoMatchServer(this);
 	//Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
@@ -141,63 +134,63 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		self.platmovetype_start = ReadByte();
-		self.platmovetype_turn = ReadByte();
-		self.platmovetype_end = ReadByte();
-		self.spawnflags = ReadByte();
+		this.platmovetype_start = ReadByte();
+		this.platmovetype_turn = ReadByte();
+		this.platmovetype_end = ReadByte();
+		this.spawnflags = ReadByte();
 
-		self.model = strzone(ReadString());
-		_setmodel(self, self.model);
+		this.model = strzone(ReadString());
+		_setmodel(this, this.model);
 
 		trigger_common_read(true);
 
-		self.pos1_x = ReadCoord();
-		self.pos1_y = ReadCoord();
-		self.pos1_z = ReadCoord();
-		self.pos2_x = ReadCoord();
-		self.pos2_y = ReadCoord();
-		self.pos2_z = ReadCoord();
+		this.pos1_x = ReadCoord();
+		this.pos1_y = ReadCoord();
+		this.pos1_z = ReadCoord();
+		this.pos2_x = ReadCoord();
+		this.pos2_y = ReadCoord();
+		this.pos2_z = ReadCoord();
 
-		self.size_x = ReadCoord();
-		self.size_y = ReadCoord();
-		self.size_z = ReadCoord();
+		this.size_x = ReadCoord();
+		this.size_y = ReadCoord();
+		this.size_z = ReadCoord();
 
-		self.mangle_x = ReadAngle();
-		self.mangle_y = ReadAngle();
-		self.mangle_z = ReadAngle();
+		this.mangle_x = ReadAngle();
+		this.mangle_y = ReadAngle();
+		this.mangle_z = ReadAngle();
 
-		self.speed = ReadShort();
-		self.height = ReadShort();
-		self.lip = ReadByte();
-		self.state = ReadByte();
+		this.speed = ReadShort();
+		this.height = ReadShort();
+		this.lip = ReadByte();
+		this.state = ReadByte();
 
-		self.dmg = ReadShort();
+		this.dmg = ReadShort();
 
-		self.classname = "plat";
-		self.solid = SOLID_BSP;
-		self.movetype = MOVETYPE_PUSH;
-		self.drawmask = MASK_NORMAL;
-		self.draw = plat_draw;
-		self.use = plat_use;
-		self.entremove = trigger_remove_generic;
+		this.classname = "plat";
+		this.solid = SOLID_BSP;
+		this.movetype = MOVETYPE_PUSH;
+		this.drawmask = MASK_NORMAL;
+		this.draw = plat_draw;
+		this.use = plat_use;
+		this.entremove = trigger_remove_generic;
 
-		plat_reset(); // also called here
+		plat_reset(this); // also called here
 
-		self.move_movetype = MOVETYPE_PUSH;
-		self.move_origin = self.origin;
-		self.move_angles = self.angles;
-		self.move_time = time;
+		this.move_movetype = MOVETYPE_PUSH;
+		this.move_origin = this.origin;
+		this.move_angles = this.angles;
+		this.move_time = time;
 
 		plat_spawn_inside_trigger();
 	}
 
 	if(sf & SF_TRIGGER_RESET)
 	{
-		plat_reset();
+		plat_reset(this);
 
-		self.move_origin = self.origin;
-		self.move_angles = self.angles;
-		self.move_time = time;
+		this.move_origin = this.origin;
+		this.move_angles = this.angles;
+		this.move_time = time;
 	}
 	return true;
 }

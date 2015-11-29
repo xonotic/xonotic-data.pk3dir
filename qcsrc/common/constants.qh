@@ -26,11 +26,6 @@
 // Revision 22: hook shot origin
 #define CSQC_REVISION 22
 
-const int AS_STRING = 1;
-const int AS_INT = 2;
-const int AS_FLOAT_TRUNCATED = 2;
-const int AS_FLOAT = 8;
-
 REGISTER_NET_TEMP(TE_CSQC_PICTURE)
 REGISTER_NET_TEMP(TE_CSQC_RACE)
 REGISTER_NET_TEMP(TE_CSQC_TEAMNAGGER)
@@ -60,7 +55,6 @@ NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { return true; }
 /** Sent as a temp entity from a persistent linked entity */
 REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 
-REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 REGISTER_NET_LINKED(ENT_CLIENT_SCORES_INFO)
 REGISTER_NET_LINKED(ENT_CLIENT_SCORES)
 REGISTER_NET_LINKED(ENT_CLIENT_TEAMSCORES)
@@ -111,10 +105,6 @@ const int CVAR_READONLY = 4;
 
 ///////////////////////////
 // csqc communication stuff
-
-const int CTF_STATE_ATTACK = 1;
-const int CTF_STATE_DEFEND = 2;
-const int CTF_STATE_COMMANDER = 3;
 
 const int HUD_NORMAL = 0;
 const int HUD_BUMBLEBEE_GUN = 25;
@@ -172,34 +162,6 @@ const int SP_SCORE = 3;
 const int SP_DMG = 10;
 const int SP_DMGTAKEN = 11;
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
-
-const int CH_INFO = 0;
-const int CH_TRIGGER = -3;
-const int CH_WEAPON_A = -1;
-const int CH_WEAPON_SINGLE = 1;
-const int CH_VOICE = -2;
-const int CH_BGM_SINGLE = 8;
-const int CH_AMBIENT = -9;
-const int CH_TRIGGER_SINGLE = 3;
-const int CH_SHOTS = -4;
-const int CH_SHOTS_SINGLE = 4;
-const int CH_WEAPON_B = -1;
-const int CH_PAIN = -6;
-const int CH_PAIN_SINGLE = 6;
-const int CH_PLAYER = -7;
-const int CH_PLAYER_SINGLE = 7;
-const int CH_TUBA_SINGLE = 5;
-
-const float ATTEN_NONE = 0;
-const float ATTEN_MIN = 0.015625;
-const float ATTEN_NORM = 0.5;
-const float ATTEN_LARGE = 1;
-const float ATTEN_IDLE = 2;
-const float ATTEN_STATIC = 3;
-const float ATTEN_MAX = 3.984375;
-
-const float VOL_BASE = 0.7;
-const float VOL_BASEVOICE = 1.0;
 
 // WEAPONTODO: move this into separate/new projectile handling code // this sets sounds and other properties of the projectiles in csqc
 const int PROJECTILE_ELECTRO = 1;
@@ -276,22 +238,12 @@ vector autocvar_sv_player_headsize = '24 24 12';
 
 
 // not so constant
-#ifdef SVQC
-#define PL_VIEW_OFS autocvar_sv_player_viewoffset
-#define PL_MIN autocvar_sv_player_mins
-#define PL_MAX autocvar_sv_player_maxs
-#define PL_CROUCH_VIEW_OFS autocvar_sv_player_crouch_viewoffset
-#define PL_CROUCH_MIN autocvar_sv_player_crouch_mins
-#define PL_CROUCH_MAX autocvar_sv_player_crouch_maxs
-#define PL_HEAD autocvar_sv_player_headsize
-#elif defined(CSQC)
-#define PL_VIEW_OFS vec3(getstatf(STAT_PL_VIEW_OFS1), getstatf(STAT_PL_VIEW_OFS2), getstatf(STAT_PL_VIEW_OFS3))
-#define PL_MIN vec3(getstatf(STAT_PL_MIN1), getstatf(STAT_PL_MIN2), getstatf(STAT_PL_MIN3))
-#define PL_MAX vec3(getstatf(STAT_PL_MAX1), getstatf(STAT_PL_MAX2), getstatf(STAT_PL_MAX3))
-#define PL_CROUCH_VIEW_OFS vec3(getstatf(STAT_PL_CROUCH_VIEW_OFS1), getstatf(STAT_PL_CROUCH_VIEW_OFS2), getstatf(STAT_PL_CROUCH_VIEW_OFS3))
-#define PL_CROUCH_MIN vec3(getstatf(STAT_PL_CROUCH_MIN1), getstatf(STAT_PL_CROUCH_MIN2), getstatf(STAT_PL_CROUCH_MIN3))
-#define PL_CROUCH_MAX vec3(getstatf(STAT_PL_CROUCH_MAX1), getstatf(STAT_PL_CROUCH_MAX2), getstatf(STAT_PL_CROUCH_MAX3))
-#endif
+#define PL_VIEW_OFS STAT(PL_VIEW_OFS, NULL)
+#define PL_CROUCH_VIEW_OFS STAT(PL_CROUCH_VIEW_OFS, NULL)
+#define PL_MIN STAT(PL_MIN, NULL)
+#define PL_CROUCH_MIN STAT(PL_CROUCH_MIN, NULL)
+#define PL_MAX STAT(PL_MAX, NULL)
+#define PL_CROUCH_MAX STAT(PL_CROUCH_MAX, NULL)
 
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';

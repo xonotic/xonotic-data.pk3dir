@@ -7,7 +7,6 @@
 
 #include "../../common/constants.qh"
 #include "../../common/movetypes/movetypes.qh"
-#include "../../common/nades/all.qh"
 
 #include "../../lib/csqcmodel/interpolate.qh"
 
@@ -49,6 +48,8 @@ void Projectile_DrawTrail(entity this, vector to)
 	}
 }
 
+bool Projectile_isnade(int proj); // TODO: remove
+
 void Projectile_Draw(entity this)
 {
 	vector rot;
@@ -64,21 +65,21 @@ void Projectile_Draw(entity this)
 	{
 		// self.move_flags &= ~FL_ONGROUND;
 		if (self.move_movetype == MOVETYPE_NONE || self.move_movetype == MOVETYPE_FLY)
-			Movetype_Physics_NoMatchServer();
+			Movetype_Physics_NoMatchServer(self);
 		// the trivial movetypes do not have to match the
 		// server's ticrate as they are ticrate independent
 		// NOTE: this assumption is only true if MOVETYPE_FLY
 		// projectiles detonate on impact. If they continue
 		// moving, we might still be ticrate dependent.
 		else
-			Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+			Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
 		if (!(self.move_flags & FL_ONGROUND))
 			if (self.velocity != '0 0 0')
 				self.move_angles = self.angles = vectoangles(self.velocity);
 	}
 	else
 	{
-		InterpolateOrigin_Do();
+		InterpolateOrigin_Do(self);
 	}
 
 	if (self.count & 0x80)
@@ -112,7 +113,7 @@ void Projectile_Draw(entity this)
 				break;
 		}
 
-		if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
+		if (Projectile_isnade(self.cnt))
 			rot = self.avelocity;
 
 		self.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(self.angles), rot * (t - self.spawntime)));
@@ -140,7 +141,7 @@ void Projectile_Draw(entity this)
 			break;
 	}
 
-	if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
+	if (Projectile_isnade(self.cnt))
 		trailorigin += v_up * 4;
 
 	if (drawn)
@@ -226,7 +227,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	}
 
 	if (!(self.count & 0x80))
-		InterpolateOrigin_Undo();
+		InterpolateOrigin_Undo(self);
 
 	if (f & 1)
 	{
@@ -295,7 +296,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(HOOKBOMB)           self.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
 			HANDLE(HAGAR)              self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
 			HANDLE(HAGAR_BOUNCING)     self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
-			HANDLE(NAPALM_FOUNTAIN)                                                                         // fallthrough // sself.modelindex = 0; self.traileffect = _particleeffectnum("torch_small"); break;
 			HANDLE(FIREBALL)           self.modelindex = 0; self.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
 			HANDLE(FIREMINE)           self.modelindex = 0; self.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
 			HANDLE(TAG)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
@@ -324,13 +324,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				if (MUTATOR_CALLHOOK(Ent_Projectile, self))
 					break;
 
-				if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
-				{
-					setmodel(self, MDL_PROJECTILE_NADE);
-					entity trail = Nade_TrailEffect(self.cnt, self.team);
-					if (trail.eent_eff_name) self.traileffect = trail.m_id;
-					break;
-				}
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
 		}
@@ -402,7 +395,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				break;
-			case PROJECTILE_NAPALM_FOUNTAIN:
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
@@ -460,23 +452,6 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				break;
 		}
 
-		if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
-		{
-			entity nade_type = Nade_FromProjectile(self.cnt);
-			self.mins = '-16 -16 -16';
-			self.maxs = '16 16 16';
-			self.colormod = nade_type.m_color;
-			self.move_movetype = MOVETYPE_BOUNCE;
-			self.move_touch = func_null;
-			self.scale = 1.5;
-			self.avelocity = randomvec() * 720;
-
-			if (nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
-				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-			else
-				self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
-		}
-
 		MUTATOR_CALLHOOK(EditProjectile, self);
 
 		setsize(self, self.mins, self.maxs);
@@ -500,7 +475,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 	}
 
 	if (!(self.count & 0x80))
-		InterpolateOrigin_Note();
+		InterpolateOrigin_Note(this);
 
 	self.classname = "csqcprojectile";
 	self.draw = Projectile_Draw;

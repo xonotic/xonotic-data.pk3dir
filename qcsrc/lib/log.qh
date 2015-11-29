@@ -91,4 +91,6 @@ noref bool autocvar_prvm_backtraceforwarnings;
 	} \
 	while (0)
 
+#define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
+
 #endif

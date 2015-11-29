@@ -18,7 +18,6 @@
 #include "scores.qh"
 #include "teamplay.qh"
 #include "weapons/weaponstats.qh"
-#include "../common/buffs/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
@@ -552,13 +551,16 @@ spawnfunc(__init_dedicated_server)
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
 
+void __init_dedicated_server_shutdown() {
+	MapInfo_Shutdown();
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
-void Physics_AddStats();
 spawnfunc(worldspawn)
 {
 	float fd, l, j, n;
@@ -578,13 +580,10 @@ spawnfunc(worldspawn)
 
 	compressShortVector_init();
 
-	entity head;
-	head = nextent(world);
 	maxclients = 0;
-	while(head)
+	for (entity head = nextent(world); head; head = nextent(head))
 	{
 		++maxclients;
-		head = nextent(head);
 	}
 
 	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
@@ -755,77 +754,7 @@ spawnfunc(worldspawn)
 
 	WeaponStats_Init();
 
-	WepSet_AddStat();
-	WepSet_AddStat_InMap();
-	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
-	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
-	addstat(STAT_WEAPON_NEXTTHINK, AS_FLOAT, weapon_nextthink);
-	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
-	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
-	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
-
-	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
-	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
-	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
-	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
-	addstat(STAT_FUEL, AS_INT, ammo_fuel);
-	addstat(STAT_PLASMA, AS_INT, ammo_plasma);
-	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
-	addstat(STAT_LEADLIMIT, AS_FLOAT, stat_leadlimit);
-	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
-	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
-	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
-	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
-	addstat(STAT_DAMAGE_DEALT_TOTAL, AS_INT, damage_dealt_total);
-	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
-	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
-
-	addstat(STAT_VORTEX_CHARGE, AS_FLOAT, vortex_charge);
-	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
-
-	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
-
-	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
-
-	// freeze attacks
-	addstat(STAT_FROZEN, AS_INT, frozen);
-	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
-
-	// physics
-	Physics_AddStats();
-
-	// new properties
-	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
-	addstat(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, AS_FLOAT, stat_sv_airaccel_qw_stretchfactor);
-	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
-	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
-	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
-	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
-	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
-	addstat(STAT_MOVEVARS_AIRCONTROL_POWER, AS_FLOAT, stat_sv_aircontrol_power);
-	addstat(STAT_MOVEVARS_AIRCONTROL_PENALTY, AS_FLOAT, stat_sv_aircontrol_penalty);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
-	addstat(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, AS_FLOAT, stat_sv_warsowbunny_backtosideratio);
-	addstat(STAT_MOVEVARS_FRICTION, AS_FLOAT, stat_sv_friction);
-	addstat(STAT_MOVEVARS_ACCELERATE, AS_FLOAT, stat_sv_accelerate);
-	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
-	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
-	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
-
-	// secrets
-	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
-	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
-
-	// monsters
-	addstat(STAT_MONSTERS_TOTAL, AS_FLOAT, stat_monsters_total);
-	addstat(STAT_MONSTERS_KILLED, AS_FLOAT, stat_monsters_killed);
-
-	// misc
-	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
 
 	next_pingtime = time + 5;
 
@@ -1466,7 +1395,6 @@ void DumpStats(float final)
 
 void FixIntermissionClient(entity e)
 {
-	string s;
 	if(!e.autoscreenshot) // initial call
 	{
 		e.autoscreenshot = time + 0.8;	// used for autoscreenshot
@@ -1488,9 +1416,11 @@ void FixIntermissionClient(entity e)
 		if(IS_REAL_CLIENT(e))
 		{
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
-			s = autocvar_sv_intermission_cdtrack;
-			if(s != "")
-				stuffcmd(e, strcat("\ncd loop ", s, "\n"));
+			string list = autocvar_sv_intermission_cdtrack;
+			for(string it; (it = car(list)); list = cdr(list))
+				RandomSelection_Add(world, 0, it, 1, 1);
+			if(RandomSelection_chosen_string && RandomSelection_chosen_string != "")
+				stuffcmd(e, strcat("\ncd loop ", RandomSelection_chosen_string, "\n"));
 			msg_entity = e;
 			WriteByte(MSG_ONE, SVC_INTERMISSION);
 		}
@@ -1778,46 +1708,6 @@ float WinningCondition_Scores(float limit, float leadlimit)
 		WinningConditionHelper_topscore && limitreached,
 		WinningConditionHelper_equality
 	);
-}
-
-float WinningCondition_Race(float fraglimit)
-{
-	float wc;
-	entity p;
-	float n, c;
-
-	n = 0;
-	c = 0;
-	FOR_EACH_PLAYER(p)
-	{
-		++n;
-		if(p.race_completed)
-			++c;
-	}
-	if(n && (n == c))
-		return WINNING_YES;
-	wc = WinningCondition_Scores(fraglimit, 0);
-
-	// ALWAYS initiate overtime, unless EVERYONE has finished the race!
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	// do NOT support equality when the laps are all raced!
-		return WINNING_STARTSUDDENDEATHOVERTIME;
-	else
-		return WINNING_NEVER;
-}
-
-float WinningCondition_QualifyingThenRace(float limit)
-{
-	float wc;
-	wc = WinningCondition_Scores(limit, 0);
-
-	// NEVER initiate overtime
-	if(wc == WINNING_YES || wc == WINNING_STARTSUDDENDEATHOVERTIME)
-	{
-		return WINNING_YES;
-	}
-
-	return wc;
 }
 
 float WinningCondition_RanOutOfSpawns()
@@ -2210,5 +2100,9 @@ void Shutdown()
 	else if(world_initialized == 0)
 	{
 		LOG_INFO("NOTE: crashed before even initializing the world, not saving persistent data\n");
+	}
+	else
+	{
+		__init_dedicated_server_shutdown();
 	}
 }

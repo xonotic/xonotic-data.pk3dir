@@ -1,0 +1,113 @@
+#ifndef LIB_STATS_H
+#define LIB_STATS_H
+
+// TODO: rename to 'netvars'
+
+#include "registry.qh"
+#include "sort.qh"
+
+.int m_id;
+typedef vector vectori;
+
+#define REGISTER_STAT(...) EVAL(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
+#if defined(CSQC)
+	/** Get all stats and store them as globals, access with `STAT(ID)` */
+	void stats_get() {}
+	#define STAT(...) EVAL(OVERLOAD(STAT, __VA_ARGS__))
+    #define STAT_1(id) STAT_2(id, NULL)
+	#define STAT_2(id, cl) (0, _STAT(id))
+
+	#define getstat_int(id) getstati(id, 0, 24)
+	#define getstat_bool(id) boolean(getstati(id))
+	#define getstat_float(id) getstatf(id)
+	#define getstat_vector(id) vec3(getstat_float(id + 0), getstat_float(id + 1), getstat_float(id + 2))
+	#define getstat_vectori(id) vec3(getstat_int(id + 0), getstat_int(id + 1), getstat_int(id + 2))
+
+	#define _STAT(id) g_stat_##id
+	#define REGISTER_STAT_2(id, T) \
+		T _STAT(id); \
+		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
+		{ \
+			make_pure(this); \
+			if (#T == "vector" || #T == "vectori") { \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
+			} \
+		} \
+		[[accumulate]] void stats_get() \
+		{ \
+			_STAT(id) = getstat_##T(STAT_##id.m_id); \
+		}
+	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT(x, T)
+#elif defined(SVQC)
+	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
+	void stats_add() {}
+	#define STAT(id, cl) (cl._STAT(id))
+
+	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
+	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
+	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
+	#define addstat_vector(id, fld) do { \
+		addstat_float(id + 0, fld##_x); \
+		addstat_float(id + 1, fld##_y); \
+		addstat_float(id + 2, fld##_z); \
+	} while (0)
+	#define addstat_vectori(id, fld) do { \
+		addstat_int(id + 0, fld##_x); \
+		addstat_int(id + 1, fld##_y); \
+		addstat_int(id + 2, fld##_z); \
+	} while (0)
+	const int AS_STRING = 1;
+	const int AS_INT = 2;
+	const int AS_FLOAT = 8;
+
+	.int __stat_null;
+	/** Prevent engine stats being sent */
+	STATIC_INIT(stats_clear)
+	{
+		int r = 32;
+		for (int i = 0, n = 256 - r; i < n; ++i) {
+			addstat(r + i, AS_INT, __stat_null);
+		}
+	}
+
+	#define _STAT(id) stat_##id
+	#define REGISTER_STAT_2(id, T) \
+		.T _STAT(id); \
+		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
+		{ \
+			make_pure(this); \
+			if (#T == "vector" || #T == "vectori") { \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
+				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
+			} \
+		} \
+		[[accumulate]] void stats_add() \
+		{ \
+			addstat_##T(STAT_##id.m_id, _STAT(id)); \
+		}
+	void GlobalStats_update(entity this) {}
+    #define REGISTER_STAT_3(x, T, expr) \
+    	REGISTER_STAT(x, T); \
+    	[[accumulate]] void GlobalStats_update(entity this) { STAT(x, this) = (expr); } \
+    	STATIC_INIT(worldstat_##x) { entity this = world; STAT(x, this) = (expr); }
+#else
+	#define REGISTER_STAT_2(id, type)
+    #define REGISTER_STAT_3(x, T, expr)
+#endif
+
+const int STATS_ENGINE_RESERVE = 32;
+
+REGISTRY(Stats, 256 - STATS_ENGINE_RESERVE)
+REGISTER_REGISTRY(Stats)
+REGISTRY_SORT(Stats)
+REGISTRY_CHECK(Stats)
+STATIC_INIT(RegisterStats_renumber)
+{
+	FOREACH(Stats, true, LAMBDA(it.m_id = STATS_ENGINE_RESERVE + i));
+}
+#ifdef SVQC
+STATIC_INIT(stats_add) { stats_add(); }
+#endif
+
+#endif

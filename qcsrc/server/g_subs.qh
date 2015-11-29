@@ -6,18 +6,8 @@ void SUB_NullThink();
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
 //void() SUB_UseTargets;
-void() SUB_Remove;
 
 spawnfunc(info_null);
-
-/*
-==================
-SUB_Remove
-
-Remove self
-==================
-*/
-void SUB_Remove ();
 
 /*
 ==================

@@ -68,6 +68,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 #include "ps.qc"
 #include "pp.qc"
 #include "snake.qc"
+#include "bd.qc"
 
 /**
  * Set up automatic entity read/write functionality

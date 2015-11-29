@@ -33,7 +33,7 @@ void ItemDraw(entity self)
 {
     if(self.gravity)
     {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
         if(self.move_flags & FL_ONGROUND)
         { // For some reason move_avelocity gets set to '0 0 0' here ...
             self.oldorigin = self.origin;
@@ -69,7 +69,7 @@ void ItemDrawSimple(entity this)
 {
     if(self.gravity)
     {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
 
         if(self.move_flags & FL_ONGROUND)
             self.gravity = 0;
@@ -94,6 +94,12 @@ void Item_PreDraw()
 		self.drawmask = 0;
 	else
 		self.drawmask = MASK_NORMAL;
+}
+
+void ItemRemove()
+{SELFPARAM();
+	if (self.mdl)
+		strunzone(self.mdl);
 }
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
@@ -242,6 +248,9 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         if(self.ItemStatus & ITS_ANIMATE2)
             self.move_avelocity = '0 -90 0';
     }
+
+    self.entremove = ItemRemove;
+
     return true;
 }
 
@@ -922,7 +931,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	{
 		wi = get_weaponinfo(i);
 
-		if (!(player.weapons & WepSet_FromWeapon(i)))
+		if (!(player.weapons & (wi.m_wepset)))
 			continue;
 
 		if(wi.items & ITEM_Shells.m_itemid)
@@ -1066,7 +1075,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		if(this.angles != '0 0 0')
 			this.SendFlags |= ISF_ANGLES;
 
-		this.reset = Item_Reset_self;
+		this.reset = Item_Reset;
 		// it's a level item
 		if(this.spawnflags & 1)
 			this.noalign = 1;
@@ -1437,7 +1446,7 @@ spawnfunc(target_items)
 					s = W_UndeprecateName(argv(i));
 					if(s == e.netname)
 					{
-						self.weapons |= WepSet_FromWeapon(j);
+						self.weapons |= (e.m_wepset);
 						if(self.spawnflags == 0 || self.spawnflags == 2) {
 							Weapon w = get_weaponinfo(e.weapon);
 							w.wr_init(w);
@@ -1478,13 +1487,13 @@ spawnfunc(target_items)
 		}
 
 		self.netname = "";
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * !!(self.items & ITEM_Strength.m_itemid), "strength");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * !!(self.items & ITEM_Shield.m_itemid), "invincible");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * !!(self.items & IT_SUPERWEAPON), "superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & ITEM_Jetpack.m_itemid), "jetpack");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
+		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
+		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * boolean(self.items & ITEM_Strength.m_itemid), "strength");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * boolean(self.items & ITEM_Shield.m_itemid), "invincible");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * boolean(self.items & IT_SUPERWEAPON), "superweapons");
+		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & ITEM_Jetpack.m_itemid), "jetpack");
+		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
 		if(self.ammo_shells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_shells), "shells");
 		if(self.ammo_nails != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_nails), "nails");
 		if(self.ammo_rockets != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_rockets), "rockets");
@@ -1497,7 +1506,7 @@ spawnfunc(target_items)
 		{
 			e = get_weaponinfo(j);
 			if(e.weapon)
-				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & WepSet_FromWeapon(j)), e.netname);
+				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (e.m_wepset)), e.netname);
 		}
 	}
 	self.netname = strzone(self.netname);
@@ -1553,30 +1562,31 @@ spawnfunc(item_jetpack)
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
 	WepSet v0, v1;
-	v0 = (e.weapons & WepSet_FromWeapon(wpn));
+	WepSet s = WepSet_FromWeapon(wpn);
+	v0 = (e.weapons & s);
 	switch(op)
 	{
 		case OP_SET:
 			if(val > 0)
-				e.weapons |= WepSet_FromWeapon(wpn);
+				e.weapons |= s;
 			else
-				e.weapons &= ~WepSet_FromWeapon(wpn);
+				e.weapons &= ~s;
 			break;
 		case OP_MIN:
 		case OP_PLUS:
 			if(val > 0)
-				e.weapons |= WepSet_FromWeapon(wpn);
+				e.weapons |= s;
 			break;
 		case OP_MAX:
 			if(val <= 0)
-				e.weapons &= ~WepSet_FromWeapon(wpn);
+				e.weapons &= ~s;
 			break;
 		case OP_MINUS:
 			if(val > 0)
-				e.weapons &= ~WepSet_FromWeapon(wpn);
+				e.weapons &= ~s;
 			break;
 	}
-	v1 = (e.weapons & WepSet_FromWeapon(wpn));
+	v1 = (e.weapons & s);
 	return (v0 != v1);
 }
 
@@ -1768,8 +1778,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 		if(wi.weapon)
 		{
 			POSTGIVE_WEAPON(e, j, SND(WEAPONPICKUP), string_null);
-			if (!(save_weapons & WepSet_FromWeapon(j)))
-				if(e.weapons & WepSet_FromWeapon(j)) {
+			if (!(save_weapons & (wi.m_wepset)))
+				if(e.weapons & (wi.m_wepset)) {
 					Weapon w = get_weaponinfo(wi.weapon);
 					w.wr_init(w);
 				}

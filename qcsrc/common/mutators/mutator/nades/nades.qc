@@ -1,69 +1,130 @@
-#ifndef MUTATOR_NADES_H
-#define MUTATOR_NADES_H
-
-#ifdef SVQC
-#include "../../../../server/mutators/mutator/gamemode_freezetag.qc"
-#endif
-
-.entity nade;
-.entity fake_nade;
-.float nade_timer;
-.float nade_refire;
-.float bonus_nades;
-.float nade_special_time;
-.float bonus_nade_score;
-.float nade_type;
-.string pokenade_type;
-.entity nade_damage_target;
-.float cvar_cl_nade_type;
-.string cvar_cl_pokenade_type;
-.float toss_time;
-.float stat_healing_orb;
-.float stat_healing_orb_alpha;
-.float nade_show_particles;
-
-// Remove nades that are being thrown
-void nades_Clear(entity player);
-
-// Give a bonus grenade to a player
-void(entity player, float score) nades_GiveBonus;
-
-/**
- * called to adjust nade damage and force on hit
- */
-#define EV_Nade_Damage(i, o) \
- 	/** weapon */ i(entity, MUTATOR_ARGV_0_entity) \
-    /** force */  i(vector, MUTATOR_ARGV_0_vector) \
-    /**/          o(vector, MUTATOR_ARGV_0_vector) \
- 	/** damage */ i(float,  MUTATOR_ARGV_0_float) \
-    /**/          o(float,  MUTATOR_ARGV_0_float) \
-    /**/
-MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
-
-#endif
+#include "nades.qh"
 
 #ifdef IMPLEMENTATION
 
-#include "../../../nades/all.qh"
+#ifndef MENUQC
+entity Nade_TrailEffect(int proj, int nade_team)
+{
+    switch (proj)
+    {
+        case PROJECTILE_NADE:       return EFFECT_NADE_TRAIL(nade_team);
+        case PROJECTILE_NADE_BURN:  return EFFECT_NADE_TRAIL_BURN(nade_team);
+    }
+
+    FOREACH(Nades, true, LAMBDA(
+        for (int j = 0; j < 2; j++)
+        {
+            if (it.m_projectile[j] == proj)
+            {
+                string trail = it.m_trail[j].eent_eff_name;
+                if (trail) return it.m_trail[j];
+                break;
+            }
+        }
+    ));
+
+    return EFFECT_Null;
+}
+#endif
+
+#ifdef CSQC
+REGISTER_MUTATOR(cl_nades, true);
+MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
+{
+	if (STAT(HEALING_ORB) <= time) return false;
+	MUTATOR_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
+	MUTATOR_ARGV(0, float) = STAT(HEALING_ORB_ALPHA);
+	return true;
+}
+MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
+{
+	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
+	{
+		self.modelindex = 0;
+		self.traileffect = EFFECT_FIREBALL.m_id;
+		return true;
+	}
+	if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
+	{
+		setmodel(self, MDL_PROJECTILE_NADE);
+		entity trail = Nade_TrailEffect(self.cnt, self.team);
+		if (trail.eent_eff_name) self.traileffect = trail.m_id;
+		return true;
+	}
+}
+MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
+{
+	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
+	{
+		loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
+		self.mins = '-16 -16 -16';
+		self.maxs = '16 16 16';
+	}
+
+	entity nade_type = Nade_FromProjectile(self.cnt);
+	if (nade_type == NADE_TYPE_Null) return;
+	self.mins = '-16 -16 -16';
+	self.maxs = '16 16 16';
+	self.colormod = nade_type.m_color;
+	self.move_movetype = MOVETYPE_BOUNCE;
+	self.move_touch = func_null;
+	self.scale = 1.5;
+	self.avelocity = randomvec() * 720;
+
+	if (nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
+		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+	else
+		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+}
+bool Projectile_isnade(int p)
+{
+	return Nade_FromProjectile(p) != NADE_TYPE_Null;
+}
+void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
+{
+	float bonusNades    = STAT(NADE_BONUS);
+	float bonusProgress = STAT(NADE_BONUS_SCORE);
+	float bonusType     = STAT(NADE_BONUS_TYPE);
+	Nade def = Nades_from(bonusType);
+	vector nadeColor    = def.m_color;
+	string nadeIcon     = def.m_icon;
+
+	vector iconPos, textPos;
+
+	if(autocvar_hud_panel_ammo_iconalign)
+	{
+		iconPos = myPos + eX * 2 * mySize.y;
+		textPos = myPos;
+	}
+	else
+	{
+		iconPos = myPos;
+		textPos = myPos + eX * mySize.y;
+	}
+
+	if(bonusNades > 0 || bonusProgress > 0)
+	{
+		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
+
+		if(autocvar_hud_panel_ammo_text)
+			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		if(draw_expanding)
+			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
+
+		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
+}
+#endif
+
+#ifdef SVQC
+
 #include "../../../gamemodes/all.qh"
 #include "../../../monsters/spawn.qh"
 #include "../../../monsters/sv_monsters.qh"
 #include "../../../../server/g_subs.qh"
 
-REGISTER_MUTATOR(nades, cvar("g_nades"))
-{
-	MUTATOR_ONADD
-	{
-		addstat(STAT_NADE_TIMER, AS_FLOAT, nade_timer);
-		addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
-		addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
-		addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
-		addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
-		addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
-	}
-
-	return false;
-}
+REGISTER_MUTATOR(nades, cvar("g_nades"));
 
 .float nade_time_primed;
 
@@ -884,7 +945,7 @@ void nade_prime()
 	fn.colormod = Nades_from(n.nade_type).m_color;
 	fn.colormap = self.colormap;
 	fn.glowmod = self.glowmod;
-	fn.think = SUB_Remove;
+	fn.think = SUB_Remove_self;
 	fn.nextthink = n.wait;
 
 	self.nade = n;
@@ -1245,4 +1306,12 @@ MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
 	ret_string = strcat(ret_string, ", Nades");
 	return false;
 }
+
+MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
+{
+	ret_string = strcat(ret_string, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
+	return false;
+}
+
+#endif
 #endif
