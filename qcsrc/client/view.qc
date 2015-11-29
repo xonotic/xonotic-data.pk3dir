@@ -120,7 +120,7 @@ void viewmodel_animate(entity this)
 	vector gunorg = '0 0 0', gunangles = '0 0 0';
 	static vector gunorg_prev = '0 0 0', gunangles_prev = '0 0 0';
 
-	bool teleported = false; // TODO: detect
+	bool teleported = csqcplayer.csqcmodel_teleported;
 
 	// 1. if we teleported, clear the frametime... the lowpass will recover the previous value then
 	if (teleported)
