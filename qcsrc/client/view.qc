@@ -117,10 +117,25 @@ void viewmodel_animate(entity this)
 	if (autocvar_chase_active) return;
 	if (getstati(STAT_HEALTH) <= 0) return;
 
+	entity view = CSQCModel_server2csqc(player_localentnum);
+
+	bool clonground = boolean(view.pmove_flags & PMF_ONGROUND);
+	static bool oldonground;
+	static float hitgroundtime;
+	static float lastongroundtime;
+	if (clonground)
+	{
+		float f = time; // cl.movecmd[0].time
+		if (!oldonground)
+			hitgroundtime = f;
+		lastongroundtime = f;
+	}
+	oldonground = clonground;
+
 	vector gunorg = '0 0 0', gunangles = '0 0 0';
 	static vector gunorg_prev = '0 0 0', gunangles_prev = '0 0 0';
 
-	bool teleported = csqcplayer.csqcmodel_teleported;
+	bool teleported = view.csqcmodel_teleported;
 
 	// 1. if we teleported, clear the frametime... the lowpass will recover the previous value then
 	if (teleported)
@@ -195,7 +210,7 @@ void viewmodel_animate(entity this)
 		frametime * autocvar_cl_leanmodel_side_lowpass,
 		0,
 		gunangles_adjustment_lowpass, gunangles);
-	float xyspeed = bound(0, vlen(vec2(csqcplayer.velocity)), 400);
+	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
 
 	// vertical view bobbing code
 	// TODO: cl_bob
@@ -219,24 +234,23 @@ void viewmodel_animate(entity this)
 		float bspeed;
 		float t = 1;
 		float s = time * autocvar_cl_bobmodel_speed;
-		// TODO
-//		if (clonground)
-//		{
-//			if (time - hitgroundtime < 0.2)
-//			{
-//				// just hit the ground, speed the bob back up over the next 0.2 seconds
-//				t = time - hitgroundtime;
-//				t = bound(0, t, 0.2);
-//				t *= 5;
-//			}
-//		}
-//		else
-//		{
-//			// recently left the ground, slow the bob down over the next 0.2 seconds
-//			t = time - lastongroundtime;
-//			t = 0.2 - bound(0, t, 0.2);
-//			t *= 5;
-//		}
+		if (clonground)
+		{
+			if (time - hitgroundtime < 0.2)
+			{
+				// just hit the ground, speed the bob back up over the next 0.2 seconds
+				t = time - hitgroundtime;
+				t = bound(0, t, 0.2);
+				t *= 5;
+			}
+		}
+		else
+		{
+			// recently left the ground, slow the bob down over the next 0.2 seconds
+			t = time - lastongroundtime;
+			t = 0.2 - bound(0, t, 0.2);
+			t *= 5;
+		}
 		bspeed = xyspeed * 0.01;
 		MAKEVECTORS(makevectors, gunangles, forward, right, up);
 		float bobr = bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
