@@ -35,7 +35,7 @@
 #undef CSQCMODEL_ENDIF
 #undef CSQCMODEL_IF
 
-entity CSQCModel_server2csqc(float pl);
+entity CSQCModel_server2csqc(int i);
 .float csqcmodel_teleported;
 
 // this is exported for custom frame animation code. Use with care.

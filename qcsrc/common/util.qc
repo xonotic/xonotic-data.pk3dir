@@ -609,6 +609,8 @@ float cvar_settemp_restore()
 		if(cvar_type(e.netname))
 		{
 			cvar_set(e.netname, e.message);
+			strunzone(e.netname);
+			strunzone(e.message);
 			remove(e);
 			++i;
 		}
@@ -1340,6 +1342,7 @@ void m_shutdown()
 	{
 		shutdown_running = 1;
 		Shutdown();
+		shutdownhooks();
 	}
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }

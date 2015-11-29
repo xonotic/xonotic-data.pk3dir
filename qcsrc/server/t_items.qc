@@ -33,7 +33,7 @@ void ItemDraw(entity self)
 {
     if(self.gravity)
     {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
         if(self.move_flags & FL_ONGROUND)
         { // For some reason move_avelocity gets set to '0 0 0' here ...
             self.oldorigin = self.origin;
@@ -69,7 +69,7 @@ void ItemDrawSimple(entity this)
 {
     if(self.gravity)
     {
-        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
 
         if(self.move_flags & FL_ONGROUND)
             self.gravity = 0;
@@ -94,6 +94,12 @@ void Item_PreDraw()
 		self.drawmask = 0;
 	else
 		self.drawmask = MASK_NORMAL;
+}
+
+void ItemRemove()
+{SELFPARAM();
+	if (self.mdl)
+		strunzone(self.mdl);
 }
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
@@ -242,6 +248,9 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         if(self.ItemStatus & ITS_ANIMATE2)
             self.move_avelocity = '0 -90 0';
     }
+
+    self.entremove = ItemRemove;
+
     return true;
 }
 

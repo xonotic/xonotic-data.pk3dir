@@ -137,7 +137,7 @@ void Gib_Draw(entity this)
 	vector oldorg;
 	oldorg = self.origin;
 
-	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+	Movetype_Physics_MatchTicrate(self, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 	if(wasfreed(self))
 		return;
 

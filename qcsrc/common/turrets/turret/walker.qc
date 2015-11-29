@@ -10,8 +10,8 @@ CLASS(WalkerTurret, Turret)
 /* mins       */ ATTRIB(WalkerTurret, mins, vector, '-70 -70 0');
 /* maxs       */ ATTRIB(WalkerTurret, maxs, vector, '70 70 95');
 /* modelname  */ ATTRIB(WalkerTurret, mdl, string, "walker_body.md3");
-/* model      */ ATTRIB(WalkerTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(WalkerTurret, head_model, string, strzone(strcat("models/turrets/", "walker_head_minigun.md3")));
+/* model      */ ATTRIB_STRZONE(WalkerTurret, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(WalkerTurret, head_model, string, strcat("models/turrets/", "walker_head_minigun.md3"));
 /* netname    */ ATTRIB(WalkerTurret, netname, string, "walker");
 /* fullname   */ ATTRIB(WalkerTurret, turret_name, string, _("Walker Turret"));
     ATTRIB(WalkerTurret, m_weapon, Weapon, WEP_WALKER);

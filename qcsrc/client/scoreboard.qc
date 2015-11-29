@@ -303,8 +303,8 @@ void Cmd_HUD_Help()
 
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
-"-teams,rc,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -rc,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"dmg dmgtaken " \
+"-teams,cts,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -cts,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"-rc,cts,nb/dmg -rc,cts,nb/dmgtaken " \
 "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \

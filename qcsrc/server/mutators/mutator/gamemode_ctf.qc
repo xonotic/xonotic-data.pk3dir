@@ -1240,6 +1240,11 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 			}
 			else if(CTF_SAMETEAM(toucher, flag) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, flag) && is_not_monster)
 				ctf_Handle_Capture(flag, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
+			else if(CTF_DIFFTEAM(toucher, flag) && (toucher.flagcarried) && CTF_SAMETEAM(toucher.flagcarried, toucher) && (!toucher.ctf_captureshielded) && autocvar_g_ctf_flag_return_carrying && (time > toucher.next_take_time) && is_not_monster)
+			{
+				ctf_Handle_Return(toucher.flagcarried, toucher); // return their current flag
+				ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // now pickup the flag
+			}
 			else if(CTF_DIFFTEAM(toucher, flag) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
 				ctf_Handle_Pickup(flag, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;

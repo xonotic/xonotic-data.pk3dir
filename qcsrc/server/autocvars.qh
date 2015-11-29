@@ -84,6 +84,8 @@ float autocvar_g_balance_contents_damagerate;
 float autocvar_g_balance_contents_drowndelay;
 int autocvar_g_balance_contents_playerdamage_drowning;
 int autocvar_g_balance_contents_playerdamage_lava;
+int autocvar_g_balance_contents_playerdamage_lava_burn; // 10 is a nice value
+float autocvar_g_balance_contents_playerdamage_lava_burn_time = 2.5; // note: damage is total across this time (not by dps)
 int autocvar_g_balance_contents_playerdamage_slime;
 int autocvar_g_balance_contents_projectiledamage;
 float autocvar_g_balance_damagepush_speedfactor;
@@ -155,7 +157,6 @@ string autocvar_g_ban_sync_uri;
 string autocvar_g_banned_list;
 bool autocvar_g_banned_list_idmode;
 bool autocvar_g_botclip_collisions;
-bool autocvar_g_bugrigs;
 bool autocvar_g_campaign;
 #define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
 int autocvar_g_campaign_skill;

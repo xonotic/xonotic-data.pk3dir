@@ -7,10 +7,12 @@
 	#define _R_MAP(r, max) AL_declare(r); STATIC_INIT(r) { AL_init(r, max, NULL, e); }
 	#define _R_GET(r, i) AL_gete(r, i)
 	#define _R_SET(r, i, e) AL_sete(r, i, e)
+	#define _R_DEL(r) AL_delete(r)
 #else
 	#define _R_MAP(r, max) entity r[max]
 	#define _R_GET(r, i) r[i]
 	#define _R_SET(r, i, e) r[i] = e
+	#define _R_DEL(r)
 #endif
 
 /**
@@ -24,6 +26,7 @@
 	const int id##_MAX = max; \
 	noref entity id##_first, id##_last; \
 	_R_MAP(_##id, id##_MAX); \
+	SHUTDOWN(id) { _R_DEL(_##id); } \
 	int id##_COUNT; \
 	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
 

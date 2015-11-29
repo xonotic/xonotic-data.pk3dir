@@ -100,13 +100,14 @@ REGISTER_STAT(MULTIJUMP_DODGING, int, autocvar_g_multijump_dodging)
 REGISTER_STAT(MULTIJUMP_MAXSPEED, float, autocvar_g_multijump_maxspeed)
 REGISTER_STAT(MULTIJUMP_ADD, int, autocvar_g_multijump_add)
 REGISTER_STAT(MULTIJUMP_SPEED, float, autocvar_g_multijump_speed)
+REGISTER_STAT(MULTIJUMP_COUNT, int /*doesn't matter*/)
 REGISTER_STAT(MULTIJUMP, int, autocvar_g_multijump)
 REGISTER_STAT(DOUBLEJUMP, int, autocvar_sv_doublejump)
 
 #ifdef SVQC
-float g_bugrigs;
-float g_bugrigs_planar_movement;
-float g_bugrigs_planar_movement_car_jumping;
+bool g_bugrigs;
+bool g_bugrigs_planar_movement;
+bool g_bugrigs_planar_movement_car_jumping;
 float g_bugrigs_reverse_spinning;
 float g_bugrigs_reverse_speeding;
 float g_bugrigs_reverse_stopping;

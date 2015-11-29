@@ -1,52 +1,52 @@
 #include "../physics.qh"
 
-void _Movetype_Physics_Toss(float dt)  // SV_Physics_Toss
-{SELFPARAM();
-	if (self.move_flags & FL_ONGROUND)
+void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
+{
+	if (this.move_flags & FL_ONGROUND)
 	{
-		if (self.move_velocity.z >= 1 / 32)
+		if (this.move_velocity.z >= 1 / 32)
 		{
-			self.move_flags &= ~FL_ONGROUND;
+			this.move_flags &= ~FL_ONGROUND;
 		}
-		else if (!self.move_groundentity)
+		else if (!this.move_groundentity)
 		{
 			return;
 		}
-		else if (self.move_suspendedinair && wasfreed(self.move_groundentity))
+		else if (this.move_suspendedinair && wasfreed(this.move_groundentity))
 		{
-			self.move_groundentity = world;
+			this.move_groundentity = world;
 			return;
 		}
 	}
 
-	self.move_suspendedinair = false;
+	this.move_suspendedinair = false;
 
-	_Movetype_CheckVelocity();
+	_Movetype_CheckVelocity(this);
 
-	if (self.move_movetype == MOVETYPE_BOUNCE || self.move_movetype == MOVETYPE_TOSS)
+	if (this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS)
 	{
-		self.move_didgravity = 1;
-		self.move_velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
+		this.move_didgravity = 1;
+		this.move_velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 		    * dt
-		    * (self.gravity ? self.gravity : 1)
+		    * (this.gravity ? this.gravity : 1)
 		    * PHYS_GRAVITY(this);
 	}
 
-	self.move_angles = self.move_angles + self.move_avelocity * dt;
+	this.move_angles = this.move_angles + this.move_avelocity * dt;
 
 	float movetime = dt;
 	for (int bump = 0; bump < MAX_CLIP_PLANES && movetime > 0; ++bump)
 	{
-		vector move = self.move_velocity * movetime;
-		_Movetype_PushEntity(move, true);
-		if (wasfreed(self))
+		vector move = this.move_velocity * movetime;
+		_Movetype_PushEntity(this, move, true);
+		if (wasfreed(this))
 			return;
 
 		if (trace_startsolid)
 		{
-			_Movetype_UnstickEntity();
-			_Movetype_PushEntity(move, false);
-			if (wasfreed(self))
+			_Movetype_UnstickEntity(this);
+			_Movetype_PushEntity(this, move, false);
+			if (wasfreed(this))
 				return;
 		}
 
@@ -55,61 +55,61 @@ void _Movetype_Physics_Toss(float dt)  // SV_Physics_Toss
 
 		movetime *= 1 - min(1, trace_fraction);
 
-		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
+		if (this.move_movetype == MOVETYPE_BOUNCEMISSILE)
 		{
-			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 2.0);
-			self.move_flags &= ~FL_ONGROUND;
+			this.move_velocity = _Movetype_ClipVelocity(this.move_velocity, trace_plane_normal, 2.0);
+			this.move_flags &= ~FL_ONGROUND;
 		}
-		else if (self.move_movetype == MOVETYPE_BOUNCE)
+		else if (this.move_movetype == MOVETYPE_BOUNCE)
 		{
-			float bouncefac = self.move_bounce_factor;     if (!bouncefac)  bouncefac = 0.5;
-			float bouncestop = self.move_bounce_stopspeed; if (!bouncestop) bouncestop = 60 / 800;
-			bouncestop *= (self.gravity ? self.gravity : 1) * PHYS_GRAVITY(this);
+			float bouncefac = this.move_bounce_factor;     if (!bouncefac)  bouncefac = 0.5;
+			float bouncestop = this.move_bounce_stopspeed; if (!bouncestop) bouncestop = 60 / 800;
+			bouncestop *= (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
-			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1 + bouncefac);
+			this.move_velocity = _Movetype_ClipVelocity(this.move_velocity, trace_plane_normal, 1 + bouncefac);
 
-			float d = trace_plane_normal * self.move_velocity;
+			float d = trace_plane_normal * this.move_velocity;
 			if (trace_plane_normal.z > 0.7 && d < bouncestop && d > -bouncestop)
 			{
-				self.move_flags |= FL_ONGROUND;
-				self.move_groundentity = trace_ent;
-				self.move_velocity = '0 0 0';
-				self.move_avelocity = '0 0 0';
+				this.move_flags |= FL_ONGROUND;
+				this.move_groundentity = trace_ent;
+				this.move_velocity = '0 0 0';
+				this.move_avelocity = '0 0 0';
 			}
 			else
 			{
-				self.move_flags &= ~FL_ONGROUND;
+				this.move_flags &= ~FL_ONGROUND;
 			}
 		}
 		else
 		{
-			self.move_velocity = _Movetype_ClipVelocity(self.move_velocity, trace_plane_normal, 1.0);
+			this.move_velocity = _Movetype_ClipVelocity(this.move_velocity, trace_plane_normal, 1.0);
 			if (trace_plane_normal.z > 0.7)
 			{
-				self.move_flags |= FL_ONGROUND;
-				self.move_groundentity = trace_ent;
+				this.move_flags |= FL_ONGROUND;
+				this.move_groundentity = trace_ent;
 				if (trace_ent.solid == SOLID_BSP)
-					self.move_suspendedinair = true;
-				self.move_velocity = '0 0 0';
-				self.move_avelocity = '0 0 0';
+					this.move_suspendedinair = true;
+				this.move_velocity = '0 0 0';
+				this.move_avelocity = '0 0 0';
 			}
 			else
 			{
-				self.move_flags &= ~FL_ONGROUND;
+				this.move_flags &= ~FL_ONGROUND;
 			}
 		}
 
 		// DP revision 8905 (just, WHY...)
-		if (self.move_movetype == MOVETYPE_BOUNCEMISSILE)
+		if (this.move_movetype == MOVETYPE_BOUNCEMISSILE)
 			break;
 
 		// DP revision 8918 (WHY...)
-		if (self.move_flags & FL_ONGROUND)
+		if (this.move_flags & FL_ONGROUND)
 			break;
 	}
 
-	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && self.move_didgravity > 0 && !(self.move_flags & FL_ONGROUND))
-		self.move_velocity_z -= 0.5 * dt * (self.gravity ? self.gravity : 1) * PHYS_GRAVITY(this);
+	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && this.move_didgravity > 0 && !(this.move_flags & FL_ONGROUND))
+		this.move_velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
-	_Movetype_CheckWaterTransition(self);
+	_Movetype_CheckWaterTransition(this);
 }

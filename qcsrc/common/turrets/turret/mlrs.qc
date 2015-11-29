@@ -8,8 +8,8 @@ CLASS(MLRSTurret, Turret)
 /* mins       */ ATTRIB(MLRSTurret, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(MLRSTurret, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(MLRSTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB(MLRSTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(MLRSTurret, head_model, string, strzone(strcat("models/turrets/", "mlrs.md3")));
+/* model      */ ATTRIB_STRZONE(MLRSTurret, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(MLRSTurret, head_model, string, strcat("models/turrets/", "mlrs.md3"));
 /* netname    */ ATTRIB(MLRSTurret, netname, string, "mlrs");
 /* fullname   */ ATTRIB(MLRSTurret, turret_name, string, _("MLRS Turret"));
     ATTRIB(MLRSTurret, m_weapon, Weapon, WEP_TUR_MLRS);

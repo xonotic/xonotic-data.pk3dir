@@ -17,6 +17,18 @@
 // self.pointtime = last time you pointed at this player
 // self.csqcmodel_isdead = value of csqcmodel_isdead to know when the player is dead or not
 
+LinkedList shownames_ent;
+STATIC_INIT(shownames_ent)
+{
+	shownames_ent = LL_NEW();
+	for (int i = 0; i < maxclients; ++i)
+	{
+		entity e = new(shownames_tag);
+		e.sv_entnum = i + 1;
+		LL_PUSH(shownames_ent, e);
+	}
+}
+
 const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
 void Draw_ShowNames(entity this)
@@ -41,19 +53,17 @@ void Draw_ShowNames(entity this)
 	if (autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
-		for (entity e = world; (e = find(e, classname, "shownames_tag")); )
-		{
-			if (e == this) continue;
-			vector eo = project_3d_to_2d(e.origin);
+		LL_EACH(shownames_ent, it != this && entcs_receiver(i), LAMBDA(
+			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
 			if (vlen((eX * o.x + eY * o.y) - eo) < autocvar_hud_shownames_antioverlap_distance
-			    && dist > vlen(e.origin - view_origin))
+			    && dist > vlen(it.origin - view_origin))
 			{
 				overlap = true;
 				break;
 			}
-		}
+		));
 	}
 	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	float crosshairdistance = sqrt(pow(o.x - vid_conwidth / 2, 2) + pow(o.y - vid_conheight / 2, 2));
@@ -149,18 +159,6 @@ void Draw_ShowNames(entity this)
 		if (width != namewidth) namepos.x += (namewidth - width) / 2;
 		drawcolorcodedstring(namepos, s, '1 1 0' * autocvar_hud_shownames_fontsize, a, DRAWFLAG_NORMAL);
 		drawfontscale = '1 1 0';
-	}
-}
-
-LinkedList shownames_ent;
-STATIC_INIT(shownames_ent)
-{
-	shownames_ent = LL_NEW();
-	for (int i = 0; i < maxclients; ++i)
-	{
-		entity e = new(shownames_tag);
-		e.sv_entnum = i + 1;
-		LL_PUSH(shownames_ent, e);
 	}
 }
 

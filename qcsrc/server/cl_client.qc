@@ -570,8 +570,6 @@ void PutClientInServer()
 		this.bot_attack = true;
 		this.monster_attack = true;
 
-		this.spider_slowness = 0;
-
 		this.BUTTON_ATCK = this.BUTTON_JUMP = this.BUTTON_ATCK2 = false;
 
 		if (this.killcount == FRAGS_SPECTATOR) {
@@ -1199,7 +1197,7 @@ void ClientConnect ()
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(autocvar_g_bugrigs || (g_weaponarena_weapons == WEPSET(TUBA)))
+		if(g_weaponarena_weapons == WEPSET(TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 

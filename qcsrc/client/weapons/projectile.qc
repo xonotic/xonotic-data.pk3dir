@@ -65,14 +65,14 @@ void Projectile_Draw(entity this)
 	{
 		// self.move_flags &= ~FL_ONGROUND;
 		if (self.move_movetype == MOVETYPE_NONE || self.move_movetype == MOVETYPE_FLY)
-			Movetype_Physics_NoMatchServer();
+			Movetype_Physics_NoMatchServer(self);
 		// the trivial movetypes do not have to match the
 		// server's ticrate as they are ticrate independent
 		// NOTE: this assumption is only true if MOVETYPE_FLY
 		// projectiles detonate on impact. If they continue
 		// moving, we might still be ticrate dependent.
 		else
-			Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+			Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
 		if (!(self.move_flags & FL_ONGROUND))
 			if (self.velocity != '0 0 0')
 				self.move_angles = self.angles = vectoangles(self.velocity);

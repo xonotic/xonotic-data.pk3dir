@@ -8,8 +8,8 @@ CLASS(Hellion, Turret)
 /* mins       */ ATTRIB(Hellion, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(Hellion, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(Hellion, mdl, string, "base.md3");
-/* model      */ ATTRIB(Hellion, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(Hellion, head_model, string, strzone(strcat("models/turrets/", "hellion.md3")));
+/* model      */ ATTRIB_STRZONE(Hellion, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(Hellion, head_model, string, strcat("models/turrets/", "hellion.md3"));
 /* netname    */ ATTRIB(Hellion, netname, string, "hellion");
 /* fullname   */ ATTRIB(Hellion, turret_name, string, _("Hellion Missile Turret"));
     ATTRIB(Hellion, m_weapon, Weapon, WEP_HELLION);

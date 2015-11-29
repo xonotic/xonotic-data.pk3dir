@@ -62,7 +62,8 @@
 	CSQCMODEL_PROPERTY(BIT(11), int, ReadByte, WriteByte, traileffect) \
 	CSQCMODEL_PROPERTY_SCALED(BIT(12), float, ReadByte, WriteByte, scale, 16, 0, 255) \
 	CSQCMODEL_PROPERTY(BIT(13), int, ReadInt24_t, WriteInt24_t, dphitcontentsmask) \
-	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME)
+	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) \
+	CSQCMODEL_PROPERTY(BIT(15), int, ReadByte, WriteByte, multijump_count)
 // TODO get rid of colormod/glowmod here, find good solution for vortex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here

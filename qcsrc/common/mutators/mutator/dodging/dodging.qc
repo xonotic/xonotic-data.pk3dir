@@ -54,6 +54,8 @@ REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 	return false;
 }
 
+#elif defined(CSQC)
+REGISTER_MUTATOR(dodging, true);
 #endif
 
 // set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
@@ -86,13 +88,13 @@ REGISTER_MUTATOR(dodging, cvar("g_dodging"))
 #endif
 
 // returns 1 if the player is close to a wall
-bool check_close_to_wall(float threshold)
-{SELFPARAM();
+bool check_close_to_wall(entity this, float threshold)
+{
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
 	#define X(OFFSET)																\
-	tracebox(self.origin, self.mins, self.maxs, self.origin + OFFSET, true, self);	\
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < threshold)		\
+	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this);	\
+	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < threshold)		\
 		return true;
 	X(1000*v_right);
 	X(-1000*v_right);
@@ -103,41 +105,41 @@ bool check_close_to_wall(float threshold)
 	return false;
 }
 
-bool check_close_to_ground(float threshold)
-{SELFPARAM();
-	return IS_ONGROUND(self) ? true : false;
+bool check_close_to_ground(entity this, float threshold)
+{
+	return IS_ONGROUND(this) ? true : false;
 }
 
-float PM_dodging_checkpressedkeys()
-{SELFPARAM();
+float PM_dodging_checkpressedkeys(entity this)
+{
 	if(!PHYS_DODGING)
 		return false;
 
-	float frozen_dodging = (PHYS_FROZEN(self) && PHYS_DODGING_FROZEN);
+	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN);
 	float frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	// first check if the last dodge is far enough back in time so we can dodge again
-	if ((time - self.last_dodging_time) < PHYS_DODGING_DELAY)
+	if ((time - this.last_dodging_time) < PHYS_DODGING_DELAY)
 		return false;
 
-	makevectors(self.angles);
+	makevectors(this.angles);
 
-	if (check_close_to_ground(PHYS_DODGING_HEIGHT_THRESHOLD) != 1
-		&& check_close_to_wall(PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
+	if (check_close_to_ground(this, PHYS_DODGING_HEIGHT_THRESHOLD) != 1
+		&& check_close_to_wall(this, PHYS_DODGING_DISTANCE_THRESHOLD) != 1)
 		return true;
 
 	float tap_direction_x = 0;
 	float tap_direction_y = 0;
-	float dodge_detected = 0;
+	bool dodge_detected = false;
 
 	#define X(COND,BTN,RESULT)															\
-	if (self.movement_##COND)												\
+	if (this.movement_##COND)												\
 		/* is this a state change? */													\
-		if(!(PHYS_DODGING_PRESSED_KEYS(self) & KEY_##BTN) || frozen_no_doubletap) {		\
+		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
 				tap_direction_##RESULT;													\
-				if ((time - self.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(self))	\
-					dodge_detected = 1;													\
-				self.last_##BTN##_KEY_time = time;										\
+				if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this))	\
+					dodge_detected = true;													\
+				this.last_##BTN##_KEY_time = time;										\
 		}
  	X(x < 0, BACKWARD,	x--);
  	X(x > 0, FORWARD,	x++);
@@ -145,49 +147,49 @@ float PM_dodging_checkpressedkeys()
  	X(y > 0, RIGHT,		y++);
  	#undef X
 
-	if (dodge_detected == 1)
+	if (dodge_detected)
 	{
-		self.last_dodging_time = time;
+		this.last_dodging_time = time;
 
-		self.dodging_action = 1;
-		self.dodging_single_action = 1;
+		this.dodging_action = 1;
+		this.dodging_single_action = 1;
 
-		self.dodging_velocity_gain = PHYS_DODGING_HORIZ_SPEED;
+		this.dodging_velocity_gain = PHYS_DODGING_HORIZ_SPEED;
 
-		self.dodging_direction_x = tap_direction_x;
-		self.dodging_direction_y = tap_direction_y;
+		this.dodging_direction_x = tap_direction_x;
+		this.dodging_direction_y = tap_direction_y;
 
 		// normalize the dodging_direction vector.. (unlike UT99) XD
-		float length = self.dodging_direction_x * self.dodging_direction_x
-					+ self.dodging_direction_y * self.dodging_direction_y;
+		float length = this.dodging_direction_x * this.dodging_direction_x
+					+ this.dodging_direction_y * this.dodging_direction_y;
 		length = sqrt(length);
 
-		self.dodging_direction_x = self.dodging_direction_x * 1.0 / length;
-		self.dodging_direction_y = self.dodging_direction_y * 1.0 / length;
+		this.dodging_direction_x = this.dodging_direction_x * 1.0 / length;
+		this.dodging_direction_y = this.dodging_direction_y * 1.0 / length;
 		return true;
 	}
 	return false;
 }
 
-void PM_dodging()
-{SELFPARAM();
+void PM_dodging(entity this)
+{
 	if (!PHYS_DODGING)
 		return;
 
-    if (PHYS_DEAD(self))
+    if (PHYS_DEAD(this))
         return;
 
 	// when swimming, no dodging allowed..
-	if (self.waterlevel >= WATERLEVEL_SWIMMING)
+	if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
-		self.dodging_action = 0;
-		self.dodging_direction_x = 0;
-		self.dodging_direction_y = 0;
+		this.dodging_action = 0;
+		this.dodging_direction_x = 0;
+		this.dodging_direction_y = 0;
 		return;
 	}
 
 	// make sure v_up, v_right and v_forward are sane
-	makevectors(self.angles);
+	makevectors(this.angles);
 
 	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
 	// will be called ramp_time/frametime times = 2 times. so, we need to
@@ -197,49 +199,78 @@ void PM_dodging()
 	// if ramp time is smaller than frametime we get problems ;D
 	common_factor = min(common_factor, 1);
 
-	float horiz_speed = PHYS_FROZEN(self) ? PHYS_DODGING_HORIZ_SPEED_FROZEN : PHYS_DODGING_HORIZ_SPEED;
-	float new_velocity_gain = self.dodging_velocity_gain - (common_factor * horiz_speed);
+	float horiz_speed = PHYS_FROZEN(this) ? PHYS_DODGING_HORIZ_SPEED_FROZEN : PHYS_DODGING_HORIZ_SPEED;
+	float new_velocity_gain = this.dodging_velocity_gain - (common_factor * horiz_speed);
 	new_velocity_gain = max(0, new_velocity_gain);
 
-	float velocity_difference = self.dodging_velocity_gain - new_velocity_gain;
+	float velocity_difference = this.dodging_velocity_gain - new_velocity_gain;
 
 	// ramp up dodging speed by adding some velocity each frame.. TODO: do it! :D
-	if (self.dodging_action == 1)
+	if (this.dodging_action == 1)
 	{
 		//disable jump key during dodge accel phase
-		if(self.movement_z > 0) { self.movement_z = 0; }
+		if(this.movement_z > 0) { this.movement_z = 0; }
 
-		self.velocity += ((self.dodging_direction_y * velocity_difference) * v_right)
-					+ ((self.dodging_direction_x * velocity_difference) * v_forward);
+		this.velocity += ((this.dodging_direction_y * velocity_difference) * v_right)
+					+ ((this.dodging_direction_x * velocity_difference) * v_forward);
 
-		self.dodging_velocity_gain = self.dodging_velocity_gain - velocity_difference;
+		this.dodging_velocity_gain = this.dodging_velocity_gain - velocity_difference;
 	}
 
 	// the up part of the dodge is a single shot action
-	if (self.dodging_single_action == 1)
+	if (this.dodging_single_action == 1)
 	{
-		UNSET_ONGROUND(self);
+		UNSET_ONGROUND(this);
 
-		self.velocity += PHYS_DODGING_UP_SPEED * v_up;
+		this.velocity += PHYS_DODGING_UP_SPEED * v_up;
 
 #ifdef SVQC
 		if (autocvar_sv_dodging_sound)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
-		animdecide_setaction(self, ANIMACTION_JUMP, true);
+		animdecide_setaction(this, ANIMACTION_JUMP, true);
 #endif
 
-		self.dodging_single_action = 0;
+		this.dodging_single_action = 0;
 	}
 
 	// are we done with the dodging ramp yet?
-	if((self.dodging_action == 1) && ((time - self.last_dodging_time) > PHYS_DODGING_RAMP_TIME))
+	if((this.dodging_action == 1) && ((time - this.last_dodging_time) > PHYS_DODGING_RAMP_TIME))
 	{
 		// reset state so next dodge can be done correctly
-		self.dodging_action = 0;
-		self.dodging_direction_x = 0;
-		self.dodging_direction_y = 0;
+		this.dodging_action = 0;
+		this.dodging_direction_x = 0;
+		this.dodging_direction_y = 0;
 	}
+}
+
+void PM_dodging_GetPressedKeys(entity this)
+{
+#ifdef CSQC
+	if(!PHYS_DODGING) { return; }
+
+	PM_dodging_checkpressedkeys(this);
+
+	int keys = this.pressedkeys;
+	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
+	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
+	keys = BITSET(keys, KEY_RIGHT, 		this.movement.y > 0);
+	keys = BITSET(keys, KEY_LEFT, 		this.movement.y < 0);
+
+	keys = BITSET(keys, KEY_JUMP, 		PHYS_INPUT_BUTTON_JUMP(this));
+	keys = BITSET(keys, KEY_CROUCH, 	PHYS_INPUT_BUTTON_CROUCH(this));
+	keys = BITSET(keys, KEY_ATCK, 		PHYS_INPUT_BUTTON_ATCK(this));
+	keys = BITSET(keys, KEY_ATCK2, 		PHYS_INPUT_BUTTON_ATCK2(this));
+	this.pressedkeys = keys;
+#endif
+}
+
+MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
+{
+	// print("dodging_PlayerPhysics\n");
+	PM_dodging_GetPressedKeys(self);
+	PM_dodging(self);
+	return false;
 }
 
 #ifdef SVQC
@@ -250,21 +281,11 @@ MUTATOR_HOOKFUNCTION(dodging, GetCvars)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
-{
-	// print("dodging_PlayerPhysics\n");
-	PM_dodging();
-
-	return false;
-}
-
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
-	PM_dodging_checkpressedkeys();
-
+	PM_dodging_checkpressedkeys(self);
 	return false;
 }
 
 #endif
-
 #endif

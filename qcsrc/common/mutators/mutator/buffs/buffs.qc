@@ -982,7 +982,7 @@ MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
 {
 	vh_vehicle.buffs = vh_player.buffs;
 	vh_player.buffs = 0;
-	vh_vehicle.buff_time = vh_player.buff_time - time;
+	vh_vehicle.buff_time = max(0, time - vh_player.buff_time);
 	vh_player.buff_time = 0;
 	return false;
 }

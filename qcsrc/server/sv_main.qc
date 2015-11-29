@@ -94,6 +94,8 @@ void CreatureFrame ()
 							sound (self, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
+						if(autocvar_g_balance_contents_playerdamage_lava_burn)
+							Fire_AddDamage(self, world, autocvar_g_balance_contents_playerdamage_lava_burn * self.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * self.waterlevel, DEATH_LAVA.m_id);
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{

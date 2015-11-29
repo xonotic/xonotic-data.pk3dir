@@ -8,8 +8,8 @@ CLASS(PhaserTurret, Turret)
 /* mins       */ ATTRIB(PhaserTurret, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(PhaserTurret, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(PhaserTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB(PhaserTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(PhaserTurret, head_model, string, strzone(strcat("models/turrets/", "phaser.md3")));
+/* model      */ ATTRIB_STRZONE(PhaserTurret, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(PhaserTurret, head_model, string, strcat("models/turrets/", "phaser.md3"));
 /* netname    */ ATTRIB(PhaserTurret, netname, string, "phaser");
 /* fullname   */ ATTRIB(PhaserTurret, turret_name, string, _("Phaser Cannon"));
     ATTRIB(PhaserTurret, m_weapon, Weapon, WEP_PHASER);
