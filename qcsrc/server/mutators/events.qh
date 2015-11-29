@@ -838,4 +838,14 @@ MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
 string monster_model;
 string monster_model_output;
 MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
+
+/**/
+#define EV_Player_ChangeTeam(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(float, pct_curteam) \
+    /**/ i(float, pct_newteam) \
+    /**/
+float pct_curteam;
+float pct_newteam;
+MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
 #endif
