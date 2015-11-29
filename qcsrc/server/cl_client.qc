@@ -1664,8 +1664,8 @@ spectate mode routines
 ======================
 */
 
-void SpectateCopy(entity spectatee)
-{SELFPARAM();
+void SpectateCopy(entity this, entity spectatee)
+{
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, self);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
@@ -1690,7 +1690,6 @@ void SpectateCopy(entity spectatee)
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
-	self.weapon_nextthink = spectatee.weapon_nextthink;
 	self.vortex_charge = spectatee.vortex_charge;
 	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
@@ -1751,7 +1750,7 @@ bool SpectateUpdate()
 		return false;
 	}
 
-	SpectateCopy(self.enemy);
+	SpectateCopy(this, this.enemy);
 
 	return true;
 }
@@ -2148,8 +2147,6 @@ void PlayerUseKey()
 }
 
 
-void wglow_send(entity actor, vector g);
-
 /*
 =============
 PlayerPreThink
@@ -2325,28 +2322,6 @@ void PlayerPreThink ()
 
 		if(frametime)
 		{
-			vector g;
-			if (IS_SPEC(self))
-			{
-				g = self.enemy.weaponentity_glowmod;
-			}
-			else if(self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge))
-			{
-				g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-
-				if(self.vortex_charge > WEP_CVAR(vortex, charge_animlimit))
-				{
-					g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-				}
-			}
-			else
-				g = colormapPaletteColor(self.clientcolors & 0x0F, true) * 2;
-			if (g != self.weaponentity_glowmod)
-				wglow_send(self, self.weaponentity_glowmod = g);
 			player_powerups();
 		}
 

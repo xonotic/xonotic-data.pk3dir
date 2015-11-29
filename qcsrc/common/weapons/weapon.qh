@@ -118,6 +118,8 @@ CLASS(Weapon, Object)
         // no weapon specific image for this weapon
         return false;
     }
+    /** (CLIENT) weapon specific glow */
+    METHOD(Weapon, wr_glow, vector(Weapon this)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
     METHOD(Weapon, wr_drop, void(Weapon this)) {}
     /** (SERVER) a weapon is picked up */

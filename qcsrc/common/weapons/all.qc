@@ -582,32 +582,6 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 }
 #endif
 
-REGISTER_NET_TEMP(wglow)
-#ifdef CSQC
-NET_HANDLE(wglow, bool isNew)
-{
-	vector g = '0 0 0';
-	g.x = ReadCoord();
-	g.y = ReadCoord();
-	g.z = ReadCoord();
-	viewmodel.glowmod = g;
-	return true;
-}
-#endif
-
-#ifdef SVQC
-void wglow_send(entity actor, vector g)
-{
-	if (!IS_REAL_CLIENT(actor)) return;
-	int channel = MSG_ONE;
-	msg_entity = actor;
-	WriteHeader(channel, wglow);
-	WriteCoord(channel, g.x);
-	WriteCoord(channel, g.y);
-	WriteCoord(channel, g.z);
-}
-#endif
-
 #endif
 
 #endif

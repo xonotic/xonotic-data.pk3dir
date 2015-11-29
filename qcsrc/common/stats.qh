@@ -1,6 +1,10 @@
 #ifndef STATS_H
 #define STATS_H
 
+#ifdef SVQC
+#include "../server/cl_client.qh"
+#endif
+
 // Full list of all stat constants, included in a single location for easy reference
 // 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
 
@@ -36,6 +40,9 @@ REGISTER_STAT(SWITCHWEAPON, int)
 /** weapon currently being switched to (is copied from switchweapon once switch is possible) */
 REGISTER_STAT(SWITCHINGWEAPON, int)
 REGISTER_STAT(WEAPON_NEXTTHINK, float)
+#ifdef SVQC
+SPECTATE_COPY(_STAT(WEAPON_NEXTTHINK))
+#endif
 
 REGISTER_STAT(GAMESTARTTIME, float)
 REGISTER_STAT(STRENGTH_FINISHED, float)

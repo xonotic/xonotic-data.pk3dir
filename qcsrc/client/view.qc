@@ -270,7 +270,9 @@ void viewmodel_draw(entity this)
 	int mask = (intermission || (getstati(STAT_HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
-	vector g = this.glowmod; // TODO: completely clientside: colormapPaletteColor(c & 0x0F, true) * 2;
+	vector g;
+	Weapon wep = Weapons_from(switchingweapon);
+	if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
 		| EF_NODEPTHTEST)

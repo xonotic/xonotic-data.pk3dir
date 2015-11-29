@@ -61,6 +61,37 @@ VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 
+REGISTER_STAT(WEP_CVAR_vortex_charge, bool, WEP_CVAR(vortex, charge))
+REGISTER_STAT(WEP_CVAR_vortex_charge_animlimit, float, WEP_CVAR(vortex, charge_animlimit))
+
+#if defined(CSQC)
+float autocvar_g_weapon_charge_colormod_red_full;
+float autocvar_g_weapon_charge_colormod_red_half;
+float autocvar_g_weapon_charge_colormod_green_full;
+float autocvar_g_weapon_charge_colormod_blue_full;
+float autocvar_g_weapon_charge_colormod_blue_half;
+float autocvar_g_weapon_charge_colormod_green_half;
+float autocvar_g_weapon_charge_colormod_hdrmultiplier;
+
+METHOD(Vortex, wr_glow, vector(Vortex this))
+{
+	if (!STAT(WEP_CVAR_vortex_charge)) return '0 0 0';
+	float charge = STAT(VORTEX_CHARGE);
+	float animlimit = STAT(WEP_CVAR_vortex_charge_animlimit);
+	vector g;
+	g.x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, charge / animlimit);
+	g.y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, charge / animlimit);
+	g.z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, charge / animlimit);
+	if (charge > animlimit)
+	{
+		g.x += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (charge - animlimit) / (1 - animlimit);
+		g.y += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (charge - animlimit) / (1 - animlimit);
+		g.z += autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (charge - animlimit) / (1 - animlimit);
+	}
+	return g;
+}
+#endif
+
 REGISTER_NET_TEMP(TE_CSQC_VORTEXBEAMPARTICLE)
 
 #if defined(SVQC)
