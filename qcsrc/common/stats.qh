@@ -100,7 +100,8 @@ REGISTER_STAT(MULTIJUMP_DODGING, int, autocvar_g_multijump_dodging)
 REGISTER_STAT(MULTIJUMP_MAXSPEED, float, autocvar_g_multijump_maxspeed)
 REGISTER_STAT(MULTIJUMP_ADD, int, autocvar_g_multijump_add)
 REGISTER_STAT(MULTIJUMP_SPEED, float, autocvar_g_multijump_speed)
-REGISTER_STAT(MULTIJUMP_COUNT, int /*doesn't matter*/)
+.int multijump_count;
+REGISTER_STAT(MULTIJUMP_COUNT, int, this.multijump_count)
 REGISTER_STAT(MULTIJUMP, int, autocvar_g_multijump)
 REGISTER_STAT(DOUBLEJUMP, int, autocvar_sv_doublejump)
 

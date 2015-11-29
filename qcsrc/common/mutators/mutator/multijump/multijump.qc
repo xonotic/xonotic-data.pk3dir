@@ -6,13 +6,7 @@
 
 
 #if defined(SVQC)
-REGISTER_MUTATOR(multijump, cvar("g_multijump"))
-{
-	MUTATOR_ONADD
-	{
-		addstat(STAT_MULTIJUMP_COUNT.m_id, AS_INT, multijump_count);
-	}
-}
+REGISTER_MUTATOR(multijump, cvar("g_multijump"));
 #elif defined(CSQC)
 REGISTER_MUTATOR(multijump, true);
 #endif
