@@ -148,8 +148,7 @@ NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
 
 	self.classname = "trigger_swamp";
 	self.solid = SOLID_TRIGGER;
-	self.draw = trigger_draw_generic;
-	self.trigger_touch = swamp_touch;
+	self.move_touch = swamp_touch;
 	self.drawmask = MASK_NORMAL;
 	self.move_time = time;
 	self.entremove = trigger_remove_generic;

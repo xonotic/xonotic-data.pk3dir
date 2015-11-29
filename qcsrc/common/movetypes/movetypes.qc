@@ -343,6 +343,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 
 	for (entity e = findradius(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin)); e; e = e.chain)
 	{
+		if(e.move_nomonsters != MOVE_NOMONSTERS && e.move_nomonsters != MOVE_WORLDONLY)
 		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, this.absmin, this.absmax))
 		{
 			other = this;
@@ -413,7 +414,7 @@ bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosi
 
 	int cont = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(this.move_origin, this.mins, this.maxs, this.move_origin, MOVE_NOMONSTERS, this);
+	tracebox(this.move_origin, this.mins, this.maxs, this.move_origin, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
 	this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
@@ -469,6 +470,8 @@ void _Movetype_PushEntityTrace(entity this, vector push)
 		type = max(0, this.move_nomonsters);
 	else if(this.move_movetype == MOVETYPE_FLYMISSILE)
 		type = MOVE_MISSILE;
+	else if(this.move_movetype == MOVETYPE_FLY_WORLDONLY)
+		type = MOVE_WORLDONLY;
 	else if(this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT)
 		type = MOVE_NOMONSTERS;
 	else
@@ -582,7 +585,47 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 		case MOVETYPE_BOUNCEMISSILE:
 		case MOVETYPE_FLYMISSILE:
 		case MOVETYPE_FLY:
+		case MOVETYPE_FLY_WORLDONLY:
 			_Movetype_Physics_Toss(this, movedt);
+			break;
+	}
+}
+
+void _Movetype_Physics_ClientFrame(entity this, float movedt)
+{
+	this.move_didgravity = -1;
+	switch (this.move_movetype)
+	{
+		case MOVETYPE_PUSH:
+		case MOVETYPE_FAKEPUSH:
+			_Movetype_Physics_Pusher(this, movedt);
+			break;
+		case MOVETYPE_NONE:
+			break;
+		case MOVETYPE_FOLLOW:
+			_Movetype_Physics_Follow(this);
+			break;
+		case MOVETYPE_NOCLIP:
+			_Movetype_CheckWater(this);
+			this.move_origin = this.move_origin + TICRATE * this.move_velocity;
+			this.move_angles = this.move_angles + TICRATE * this.move_avelocity;
+			_Movetype_LinkEdict(this, false);
+			break;
+		case MOVETYPE_STEP:
+			_Movetype_Physics_Step(this, movedt);
+			break;
+		case MOVETYPE_WALK:
+		case MOVETYPE_FLY:
+		case MOVETYPE_FLY_WORLDONLY:
+			_Movetype_Physics_Walk(this, movedt);
+			break;
+		case MOVETYPE_TOSS:
+		case MOVETYPE_BOUNCE:
+		case MOVETYPE_BOUNCEMISSILE:
+		case MOVETYPE_FLYMISSILE:
+			_Movetype_Physics_Toss(this, movedt);
+			break;
+		case MOVETYPE_PHYSICS:
 			break;
 	}
 }

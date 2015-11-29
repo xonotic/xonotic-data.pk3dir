@@ -69,6 +69,7 @@ const int MOVETYPE_FLYMISSILE       = 9;
 const int MOVETYPE_BOUNCE           = 10;
 const int MOVETYPE_BOUNCEMISSILE    = 11;  // Like bounce but doesn't lose speed on bouncing
 const int MOVETYPE_FOLLOW           = 12;
+const int MOVETYPE_PHYSICS          = 32;
 const int MOVETYPE_FLY_WORLDONLY    = 33;
 
 const int FL_ITEM                   = 256;

@@ -1428,7 +1428,11 @@ void PM_Main(entity this)
 	else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod))
 		{ }
 
+#ifdef SVQC
 	else if (this.movetype == MOVETYPE_NOCLIP || this.movetype == MOVETYPE_FLY || this.movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
+#elif defined(CSQC)
+	else if (this.move_movetype == MOVETYPE_NOCLIP || this.move_movetype == MOVETYPE_FLY || this.move_movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
+#endif
 		PM_fly(this, maxspeed_mod);
 
 	else if (this.waterlevel >= WATERLEVEL_SWIMMING)

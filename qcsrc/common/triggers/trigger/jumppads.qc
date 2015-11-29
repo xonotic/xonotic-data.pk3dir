@@ -318,8 +318,8 @@ void trigger_push_findtarget()
 }
 
 #ifdef SVQC
-float trigger_push_send(entity to, float sf)
-{SELFPARAM();
+float trigger_push_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -349,7 +349,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
-	//Net_LinkEntity(self, false, 0, trigger_push_send);
+	Net_LinkEntity(self, false, 0, trigger_push_send);
 }
 #endif
 #ifdef SVQC
@@ -404,7 +404,7 @@ bool target_push_send(entity this, entity to, float sf)
 
 void target_push_link()
 {SELFPARAM();
-	//Net_LinkEntity(self, false, 0, target_push_send);
+	Net_LinkEntity(self, false, 0, target_push_send);
 	//self.SendFlags |= 1; // update
 }
 
@@ -432,8 +432,8 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 
 		self.entremove = trigger_remove_generic;
 		self.solid = SOLID_TRIGGER;
-		self.draw = trigger_draw_generic;
-		self.trigger_touch = trigger_push_touch;
+		//self.draw = trigger_draw_generic;
+		self.move_touch = trigger_push_touch;
 		self.drawmask = MASK_NORMAL;
 		self.move_time = time;
 		trigger_push_findtarget();

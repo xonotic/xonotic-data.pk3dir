@@ -129,11 +129,11 @@ void CSQCPlayer_SavePrediction(entity this)
 }
 
 void CSQC_ClientMovement_PlayerMove_Frame(entity this);
-void _Movetype_Physics_Frame(entity this, float movedt);
+void _Movetype_Physics_ClientFrame(entity this, float movedt);
 
 void Movetype_Physics_Spam(entity this)  // optimized
 {
-	_Movetype_Physics_Frame(this, PHYS_INPUT_TIMELENGTH);
+	_Movetype_Physics_ClientFrame(this, PHYS_INPUT_TIMELENGTH);
 	if(wasfreed(this))
 		return;
 
@@ -154,7 +154,7 @@ void CSQCPlayer_Physics(entity this)
 		{
 			this.move_origin = this.origin;
 			this.move_angles = this.angles;
-			this.move_movetype = MOVETYPE_WALK; // temp
+			//this.move_movetype = MOVETYPE_WALK; // temp
 			this.move_velocity = this.velocity;
 			this.move_avelocity = this.avelocity;
 			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, boolean(this.flags & FL_ONGROUND));
