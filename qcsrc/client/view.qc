@@ -119,7 +119,7 @@ void viewmodel_animate(entity this)
 
 	entity view = CSQCModel_server2csqc(player_localentnum);
 
-	bool clonground = boolean(view.pmove_flags & PMF_ONGROUND);
+	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 	static bool oldonground;
 	static float hitgroundtime;
 	static float lastongroundtime;
