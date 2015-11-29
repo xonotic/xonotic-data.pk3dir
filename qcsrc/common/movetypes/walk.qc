@@ -89,11 +89,10 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 		// move up
 		vector upmove = '0 0 1' * PHYS_STEPHEIGHT;
-		vector prev_origin = this.move_origin;
 		_Movetype_PushEntity(this, upmove, true);
 		if(wasfreed(this))
 			return;
-		if(trace_startsolid && this.move_origin != prev_origin)
+		if(trace_startsolid)
 		{
 			// we got teleported when upstepping... must abort the move
 			return;
@@ -145,12 +144,11 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 
 	// move down
 	vector downmove = '0 0 1' * (-PHYS_STEPHEIGHT + start_velocity.z * dt);
-	vector prev_origin = this.move_origin;
 	_Movetype_PushEntity(this, downmove, true);
 	if(wasfreed(this))
 		return;
 
-	if(trace_startsolid && this.move_origin != prev_origin)
+	if(trace_startsolid)
 	{
 		// we got teleported when downstepping... must abort the move
 		return;
