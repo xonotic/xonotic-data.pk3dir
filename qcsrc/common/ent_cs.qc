@@ -122,23 +122,19 @@
 	void entcs_think()
 	{
 		SELFPARAM();
-		this.nextthink = time;
 		entity e = CSQCModel_server2csqc(this.sv_entnum);
-		bool exists = e != NULL;
-		if (exists)
-		{
-			this.has_origin = true;
-			this.origin = e.origin;
-			// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
-			if (this.model != e.model)
-			{
-				if (this.model) strunzone(this.model);
-				this.model = strzone(e.model);
-			}
-		}
-		else
+		if (e == NULL)
 		{
 			this.has_origin = this.has_sv_origin;
+			return;
+		}
+		this.has_origin = true;
+		this.origin = e.origin;
+		// `cl_forceplayermodels 1` sounds will be wrong until the player has been in the PVS, but so be it
+		if (this.model != e.model)
+		{
+			if (this.model) strunzone(this.model);
+			this.model = strzone(e.model);
 		}
 	}
 
@@ -150,7 +146,6 @@
 			this.classname = "entcs_receiver";
 			this.entremove = Ent_RemoveEntCS;
 			this.think = entcs_think;
-			this.nextthink = time;
 		}
 		InterpolateOrigin_Undo(this);
 		int sf = ReadShort();
@@ -163,6 +158,7 @@
 		entcs_receiver(this.sv_entnum, this);
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
+		this.think();
 		return true;
 	}
 
