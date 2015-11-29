@@ -804,7 +804,7 @@ spawnfunc(vehicle_raptor)
 					dropmark.gravity = 1;
 				}
 
-				float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
+				float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;
 				if(reload2 == 1)
 				{
 					setorigin(dropmark, pmove_org);

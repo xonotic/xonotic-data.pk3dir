@@ -6,87 +6,29 @@
 
 
 #if defined(SVQC)
-void multijump_AddStats();
-
-REGISTER_MUTATOR(multijump, cvar("g_multijump"))
-{
-	MUTATOR_ONADD
-	{
-		multijump_AddStats();
-	}
-	return false;
-}
+REGISTER_MUTATOR(multijump, cvar("g_multijump"));
 #elif defined(CSQC)
 REGISTER_MUTATOR(multijump, true);
 #endif
 
-.int multijump_count;
+#define PHYS_MULTIJUMP 				STAT(MULTIJUMP, self)
+#define PHYS_MULTIJUMP_SPEED 		STAT(MULTIJUMP_SPEED, self)
+#define PHYS_MULTIJUMP_ADD 			STAT(MULTIJUMP_ADD, self)
+#define PHYS_MULTIJUMP_MAXSPEED 	STAT(MULTIJUMP_MAXSPEED, self)
+#define PHYS_MULTIJUMP_DODGING 		STAT(MULTIJUMP_DODGING, self)
+#define PHYS_MULTIJUMP_COUNT(s) 	STAT(MULTIJUMP_COUNT, s)
+
 .bool multijump_ready;
 
 #ifdef CSQC
+bool autocvar_cl_multijump = false;
 
-bool autocvar_cl_multijump = true;
-
-#define PHYS_MULTIJUMP 				getstati(STAT_MULTIJUMP)
-#define PHYS_MULTIJUMP_SPEED 		getstatf(STAT_MULTIJUMP_SPEED)
-#define PHYS_MULTIJUMP_ADD 			getstati(STAT_MULTIJUMP_ADD)
-#define PHYS_MULTIJUMP_MAXSPEED 	getstatf(STAT_MULTIJUMP_MAXSPEED)
-#define PHYS_MULTIJUMP_DODGING 		getstati(STAT_MULTIJUMP_DODGING)
-#define PHYS_MULTIJUMP_COUNT(s) 	getstati(STAT_MULTIJUMP_COUNT)
-#define PHYS_MULTIJUMP_CLIENT(s)	autocvar_cl_multijump
-
+	#define PHYS_MULTIJUMP_CLIENT(s)	autocvar_cl_multijump
 #elif defined(SVQC)
-
 .bool cvar_cl_multijump;
 
-int autocvar_g_multijump;
-float autocvar_g_multijump_add;
-float autocvar_g_multijump_speed;
-float autocvar_g_multijump_maxspeed;
-float autocvar_g_multijump_dodging = 1;
-
-#define PHYS_MULTIJUMP 				autocvar_g_multijump
-#define PHYS_MULTIJUMP_SPEED 		autocvar_g_multijump_speed
-#define PHYS_MULTIJUMP_ADD 			autocvar_g_multijump_add
-#define PHYS_MULTIJUMP_MAXSPEED 	autocvar_g_multijump_maxspeed
-#define PHYS_MULTIJUMP_DODGING 		autocvar_g_multijump_dodging
-#define PHYS_MULTIJUMP_COUNT(s) 	(s).multijump_count
-#define PHYS_MULTIJUMP_CLIENT(s)	(s).cvar_cl_multijump
-
-.float stat_multijump;
-.float stat_multijump_speed;
-.float stat_multijump_add;
-.float stat_multijump_maxspeed;
-.float stat_multijump_dodging;
-
-void multijump_UpdateStats(entity this)
-{
-	this.stat_multijump = PHYS_MULTIJUMP;
-	this.stat_multijump_speed = PHYS_MULTIJUMP_SPEED;
-	this.stat_multijump_add = PHYS_MULTIJUMP_ADD;
-	this.stat_multijump_maxspeed = PHYS_MULTIJUMP_MAXSPEED;
-	this.stat_multijump_dodging = PHYS_MULTIJUMP_DODGING;
-}
-
-void multijump_AddStats()
-{
-	addstat(STAT_MULTIJUMP, AS_INT, stat_multijump);
-	addstat(STAT_MULTIJUMP_SPEED, AS_FLOAT, stat_multijump_speed);
-	addstat(STAT_MULTIJUMP_ADD, AS_INT, stat_multijump_add);
-	addstat(STAT_MULTIJUMP_MAXSPEED, AS_FLOAT, stat_multijump_maxspeed);
-	addstat(STAT_MULTIJUMP_DODGING, AS_INT, stat_multijump_dodging);
-	addstat(STAT_MULTIJUMP_COUNT, AS_INT, multijump_count);
-}
-
+	#define PHYS_MULTIJUMP_CLIENT(s)	(s).cvar_cl_multijump
 #endif
-
-void PM_multijump(entity this)
-{
-	if(!PHYS_MULTIJUMP) { return; }
-
-	if(IS_ONGROUND(this))
-		this.multijump_count = 0;
-}
 
 bool PM_multijump_checkjump(entity this)
 {
@@ -157,12 +99,13 @@ bool PM_multijump_checkjump(entity this)
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
-#ifdef SVQC
-	multijump_UpdateStats(self);
-#elif defined(CSQC)
+#ifdef CSQC
 	self.multijump_count = PHYS_MULTIJUMP_COUNT(self);
 #endif
-	PM_multijump(self);
+	if(!PHYS_MULTIJUMP) { return; }
+
+	if(IS_ONGROUND(self))
+		self.multijump_count = 0;
 	return false;
 }
 

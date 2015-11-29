@@ -14,8 +14,8 @@ float autocvar_g_overkill_ammo_charge_limit;
 
 .float ok_notice_time;
 .float ammo_charge[Weapons_MAX];
-.float ok_use_ammocharge;
-.float ok_ammo_charge;
+.float ok_use_ammocharge = _STAT(OK_AMMO_CHARGE);
+.float ok_ammo_charge = _STAT(OK_AMMO_CHARGEPOOL);
 
 .float ok_pauseregen_finished;
 
@@ -371,9 +371,6 @@ void ok_Initialize()
 	ok_SetCvars();
 
 	precache_all_playermodels("models/ok_player/*.dpm");
-
-	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
-	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);
 
 	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;

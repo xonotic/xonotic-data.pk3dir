@@ -45,11 +45,11 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
-		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY;
+		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY(this);
 
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.move_flags & FL_ONGROUND))
 		{
-			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.move_velocity_z -= grav * 0.5;
 			else
 				this.move_velocity_z -= grav;
@@ -234,7 +234,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	{
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.move_flags & FL_ONGROUND))
 		{
-			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.move_velocity_z -= grav * 0.5f;
 		}
 	}
@@ -641,10 +641,10 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 
 		if(this.move_didgravity > 0)
 		{
-			this.velocity_z -= (GRAVITY_UNAFFECTED_BY_TICRATE ? 0.5 : 1)
+			this.velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 			    * dt
 			    * (this.gravity ? this.gravity : 1)
-			    * PHYS_GRAVITY;
+			    * PHYS_GRAVITY(this);
 		}
 
 		this.angles = this.move_angles + dt * this.avelocity;
@@ -660,8 +660,8 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 				setorigin(this, trace_endpos);
 		}
 
-		if(this.move_didgravity > 0 && GRAVITY_UNAFFECTED_BY_TICRATE)
-			this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY;
+		if(this.move_didgravity > 0 && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+			this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 	}
 	else
 	{

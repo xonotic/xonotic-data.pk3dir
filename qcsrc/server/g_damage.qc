@@ -259,7 +259,7 @@ float Obituary_WeaponDeath(
 	return false;
 }
 
-.int buffs; // TODO: remove
+.int buffs = _STAT(BUFFS); // TODO: remove
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {

@@ -362,7 +362,7 @@ float TrueAimCheck()
 
 	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * getstati(STAT_VIEWHEIGHT));
 
-	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
+	vecs = decompressShotOrigin(STAT(SHOTORG));
 
 	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
@@ -475,12 +475,12 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
 	static float damage_dealt_time_prev = 0;
-	float damage_dealt_time = getstatf(STAT_HIT_TIME);
+	float damage_dealt_time = STAT(HIT_TIME);
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
@@ -536,7 +536,7 @@ void HitSound()
 	}
 
 	static float typehit_time_prev = 0;
-	float typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	float typehit_time = STAT(TYPEHIT_TIME);
 	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		sound(world, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
@@ -712,7 +712,7 @@ void HUD_Crosshair()
 
 		if(autocvar_crosshair_pickup)
 		{
-			float stat_pickup_time = getstatf(STAT_LAST_PICKUP);
+			float stat_pickup_time = STAT(LAST_PICKUP);
 
 			if(pickup_crosshair_time < stat_pickup_time)
 			{
@@ -819,16 +819,16 @@ void HUD_Crosshair()
 				ring_scale = autocvar_crosshair_ring_size;
 
 				float weapon_clipload, weapon_clipsize;
-				weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
-				weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
+				weapon_clipload = STAT(WEAPON_CLIPLOAD);
+				weapon_clipsize = STAT(WEAPON_CLIPSIZE);
 
 				float ok_ammo_charge, ok_ammo_chargepool;
-				ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
-				ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOL);
+				ok_ammo_charge = STAT(OK_AMMO_CHARGE);
+				ok_ammo_chargepool = STAT(OK_AMMO_CHARGEPOOL);
 
 				float vortex_charge, vortex_chargepool;
-				vortex_charge = getstatf(STAT_VORTEX_CHARGE);
-				vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
+				vortex_charge = STAT(VORTEX_CHARGE);
+				vortex_chargepool = STAT(VORTEX_CHARGEPOOL);
 
 				float arc_heat = STAT(ARC_HEAT);
 
@@ -859,14 +859,14 @@ void HUD_Crosshair()
 				}
 				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER.m_id && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_value = bound(0, STAT(LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if (activeweapon == WEP_HAGAR.m_id && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				else if (activeweapon == WEP_HAGAR.m_id && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_value = bound(0, STAT(HAGAR_LOAD) / hagar_maxrockets, 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
@@ -1012,20 +1012,20 @@ void HUD_Draw()
 		rgb = MUTATOR_ARGV(0, vector);
 		a = MUTATOR_ARGV(0, float);
 	}
-	else if(getstati(STAT_FROZEN))
+	else if(STAT(FROZEN))
 	{
-		rgb = ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
+		rgb = ((STAT(REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * STAT(REVIVE_PROGRESS)) + ('0 1 1' * STAT(REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
 	}
 	drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, rgb, autocvar_hud_colorflash_alpha * a, DRAWFLAG_ADDITIVE);
 	if(!intermission)
-	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * STAT(NADE_TIMER)) - ('0 1 1' * STAT(NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
-	else if(getstatf(STAT_REVIVE_PROGRESS))
+	else if(STAT(REVIVE_PROGRESS))
 	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 
@@ -1071,7 +1071,7 @@ void CSQC_UpdateView(float w, float h)
 	++framecount;
 
 	stats_get();
-	hud = getstati(STAT_HUD);
+	hud = STAT(HUD);
 
 	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)
 		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
@@ -1118,7 +1118,7 @@ void CSQC_UpdateView(float w, float h)
 		prev_myteam = myteam;
 	}
 
-	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	float is_dead = (getstati(STAT_HEALTH) <= 0);
 
@@ -1142,7 +1142,7 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
-		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && getstati(STAT_ROUNDLOST));
+		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
 		entity gen = world;
 
 		if(ons_roundlost)
@@ -1395,7 +1395,7 @@ void CSQC_UpdateView(float w, float h)
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
 	// currently switching-to weapon (for crosshair)
-	switchingweapon = getstati(STAT_SWITCHINGWEAPON);
+	switchingweapon = STAT(SWITCHINGWEAPON);
 
 	// actually active weapon (for zoom)
 	activeweapon = getstati(STAT_ACTIVEWEAPON);
@@ -1684,7 +1684,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_damage && !getstati(STAT_FROZEN))
+	if(autocvar_hud_damage && !STAT(FROZEN))
 	{
 		splash_size.x = max(vid_conwidth, vid_conheight);
 		splash_size.y = max(vid_conwidth, vid_conheight);

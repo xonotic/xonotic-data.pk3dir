@@ -68,22 +68,6 @@ WepSet _WepSet_FromWeapon(int a) {
 	return '1 0 0' * power2of(a);
 }
 #ifdef SVQC
-void WepSet_AddStat()
-{
-	addstat(STAT_WEAPONS, AS_INT, weapons_x);
-	if (Weapons_MAX > 24)
-	addstat(STAT_WEAPONS2, AS_INT, weapons_y);
-	if (Weapons_MAX > 48)
-	addstat(STAT_WEAPONS3, AS_INT, weapons_z);
-}
-void WepSet_AddStat_InMap()
-{
-	addstat(STAT_WEAPONSINMAP, AS_INT, weaponsinmap_x);
-	if (Weapons_MAX > 24)
-	addstat(STAT_WEAPONSINMAP2, AS_INT, weaponsinmap_y);
-	if (Weapons_MAX > 48)
-	addstat(STAT_WEAPONSINMAP3, AS_INT, weaponsinmap_z);
-}
 void WriteWepSet(float dst, WepSet w)
 {
 	if (Weapons_MAX > 48)
@@ -97,23 +81,11 @@ void WriteWepSet(float dst, WepSet w)
 #ifdef CSQC
 WepSet WepSet_GetFromStat()
 {
-	WepSet w = '0 0 0';
-	w.x = getstati(STAT_WEAPONS);
-	if (Weapons_MAX > 24)
-	w.y = getstati(STAT_WEAPONS2);
-	if (Weapons_MAX > 48)
-	w.z = getstati(STAT_WEAPONS3);
-	return w;
+	return STAT(WEAPONS);
 }
 WepSet WepSet_GetFromStat_InMap()
 {
-	WepSet w = '0 0 0';
-	w_x = getstati(STAT_WEAPONSINMAP);
-	if (Weapons_MAX > 24)
-	w_y = getstati(STAT_WEAPONSINMAP2);
-	if (Weapons_MAX > 48)
-	w_z = getstati(STAT_WEAPONSINMAP3);
-	return w;
+	return STAT(WEAPONSINMAP);
 }
 WepSet ReadWepSet()
 {
@@ -280,8 +252,8 @@ int GetAmmoStat(.int ammotype)
 		case ammo_nails: return STAT_NAILS;
 		case ammo_rockets: return STAT_ROCKETS;
 		case ammo_cells: return STAT_CELLS;
-		case ammo_plasma: return STAT_PLASMA;
-		case ammo_fuel: return STAT_FUEL;
+		case ammo_plasma: return STAT_PLASMA.m_id;
+		case ammo_fuel: return STAT_FUEL.m_id;
 		default: return -1;
 	}
 }

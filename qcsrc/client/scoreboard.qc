@@ -1137,12 +1137,12 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	string val;
 
 	// get monster stats
-	stat_monsters_killed = getstatf(STAT_MONSTERS_KILLED);
-	stat_monsters_total = getstatf(STAT_MONSTERS_TOTAL);
+	stat_monsters_killed = STAT(MONSTERS_KILLED);
+	stat_monsters_total = STAT(MONSTERS_TOTAL);
 
 	// get secrets stats
-	stat_secrets_found = getstatf(STAT_SECRETS_FOUND);
-	stat_secrets_total = getstatf(STAT_SECRETS_TOTAL);
+	stat_secrets_found = STAT(SECRETS_FOUND);
+	stat_secrets_total = STAT(SECRETS_TOTAL);
 
 	// get number of rows
 	if(stat_secrets_total)
@@ -1406,9 +1406,9 @@ void HUD_DrawScoreboard()
 	// Print info string
 	float tl, fl, ll;
 	str = sprintf(_("playing ^3%s^7 on ^2%s^7"), MapInfo_Type_ToText(gametype), shortmapname);
-	tl = getstatf(STAT_TIMELIMIT);
-	fl = getstatf(STAT_FRAGLIMIT);
-	ll = getstatf(STAT_LEADLIMIT);
+	tl = STAT(TIMELIMIT);
+	fl = STAT(FRAGLIMIT);
+	ll = STAT(LEADLIMIT);
 	if(gametype == MAPINFO_TYPE_LMS)
 	{
 		if(tl > 0)
@@ -1462,7 +1462,7 @@ void HUD_DrawScoreboard()
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print information about respawn status
-	float respawn_time = getstatf(STAT_RESPAWN_TIME);
+	float respawn_time = STAT(RESPAWN_TIME);
 	if(!intermission)
 	if(respawn_time)
 	{

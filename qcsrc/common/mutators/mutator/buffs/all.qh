@@ -44,7 +44,7 @@ CLASS(Buff, Pickup)
 ENDCLASS(Buff)
 
 #ifdef SVQC
-	.int buffs;
+	// .int buffs = _STAT(BUFFS);
 	void buff_Init(entity ent);
 	void buff_Init_Compat(entity ent, entity replacement);
 	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \

@@ -41,7 +41,7 @@ void HUD_HealthArmor()
 			prev_health = 0;
 			prev_armor = 0;
 		}
-		fuel = getstati(STAT_FUEL);
+		fuel = STAT(FUEL);
 	}
 	else
 	{

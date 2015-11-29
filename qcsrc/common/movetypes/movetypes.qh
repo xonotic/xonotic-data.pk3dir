@@ -27,20 +27,6 @@
 // should match sv_gameplayfix_fixedcheckwatertransition
 float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 
-#ifdef SVQC
-.int stat_gameplayfix_upvelocityclearsonground;
-
-#define GRAVITY_UNAFFECTED_BY_TICRATE autocvar_sv_gameplayfix_gravityunaffectedbyticrate
-#define UPWARD_VELOCITY_CLEARS_ONGROUND autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag
-
-#define TICRATE sys_frametime
-#elif defined(CSQC)
-#define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
-#define UPWARD_VELOCITY_CLEARS_ONGROUND getstati(STAT_GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND)
-
-#define TICRATE ticrate
-#endif
-
 .entity move_groundentity;  // FIXME add move_groundnetworkentity?
 .float move_suspendedinair;
 .float move_didgravity;
@@ -91,13 +77,13 @@ const int FL_ONGROUND				= 512;
 
 const int MOVETYPE_FAKEPUSH         = 13;
 
-const float MOVEFLAG_Q2AIRACCELERATE            = 1;
-const float MOVEFLAG_NOGRAVITYONGROUND          = 2;
-const float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
+const int MOVEFLAG_VALID = BIT(23);
+const int MOVEFLAG_Q2AIRACCELERATE = BIT(0);
+const int MOVEFLAG_NOGRAVITYONGROUND = BIT(1);
+const int MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = BIT(2);
 
 #ifdef CSQC
-// TODO: figure out server's version of this
-#define moveflags (getstati(STAT_MOVEFLAGS))
+#define moveflags STAT(MOVEFLAGS)
 #endif
 
 #endif
