@@ -170,9 +170,11 @@ void trigger_push_touch()
 		other.move_velocity = other.velocity;
 	}
 
+#ifdef SVQC
 	UNSET_ONGROUND(other);
-
+#elif defined(CSQC)
 	other.move_flags &= ~FL_ONGROUND;
+#endif
 
 #ifdef SVQC
 	if (IS_PLAYER(other))

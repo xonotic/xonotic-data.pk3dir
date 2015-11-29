@@ -20,22 +20,26 @@
     #include "../../server/anticheat.qh"
 #endif
 
-#ifdef SVQC
-
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (IS_PLAYER(player) && player.health >= 1)
+	if (IS_PLAYER(player) && !PHYS_DEAD(player))
 	{
 		TDEATHLOOP(org)
 		{
+		#ifdef SVQC
 			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
+		#endif
 				if(IS_PLAYER(head))
-					if(head.health >= 1)
+					if(!PHYS_DEAD(head))
 						return 1;
 		}
 	}
 	return 0;
 }
+
+#ifdef SVQC
+
+void trigger_teleport_link(entity this);
 
 void tdeath(entity player, entity teleporter, entity telefragger, vector telefragmin, vector telefragmax)
 {
@@ -61,6 +65,8 @@ void spawn_tdeath(vector v0, entity e, vector v)
 	tdeath(e, e, e, '0 0 0', '0 0 0');
 }
 
+#endif
+
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {SELFPARAM();
 	entity telefragger;
@@ -73,6 +79,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 	makevectors (to_angles);
 
+#ifdef SVQC
 	if(player.teleportable == TELEPORT_NORMAL) // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
 	{
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
@@ -87,9 +94,11 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 			self.pushltime = time + 0.2;
 		}
 	}
+#endif
 
 	// Relocate the player
 	// assuming to allows PL_MIN to PL_MAX box and some more
+#ifdef SVQC
 	from = player.origin;
 	setorigin (player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
@@ -101,7 +110,22 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	makevectors(player.angles);
 	Reset_ArcBeam(player, v_forward);
 	UpdateCSQCProjectileAfterTeleport(player);
+#elif defined(CSQC)
+	from = player.move_origin;
+	player.move_origin = to;
+	player.move_angles = to_angles;
+	player.move_velocity = to_velocity;
+	player.move_flags &= ~FL_ONGROUND;
+	player.iflags |= IFLAG_TELEPORTED | IFLAG_V_ANGLE | IFLAG_ANGLES;
+	player.csqcmodel_teleported = 1;
+	player.v_angle = to_angles;
+	setproperty(VF_ANGLES, player.move_angles);
+	setproperty(VF_CL_VIEWANGLES, player.move_angles);
 
+	makevectors(player.move_angles);
+#endif
+
+#ifdef SVQC
 	if(IS_PLAYER(player))
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
@@ -129,6 +153,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 		player.lastteleporttime = time;
 	}
+#endif
 }
 
 entity Simple_TeleportPlayer(entity teleporter, entity player)
@@ -148,9 +173,13 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 		for(e = world; (e = find(e, targetname, teleporter.target)); )
 		{
 			p = 1;
-			if(autocvar_g_telefrags_avoid)
+			if(STAT(TELEPORT_TELEFRAG_AVOID, player))
 			{
+			#ifdef SVQC
 				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+			#elif defined(CSQC)
+				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+			#endif
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
 					p = 0;
 			}
@@ -159,37 +188,60 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 		e = RandomSelection_chosen_ent;
 	}
 
+#ifdef SVQC
 	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
+#elif defined(CSQC)
+	if(!e) { LOG_INFO("Teleport destination could not be found from CSQC.\n"); }
+#endif
 
 	makevectors(e.mangle);
 
+#ifdef SVQC
 	if(e.speed)
 		if(vlen(player.velocity) > e.speed)
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
+#elif defined(CSQC)
+	if(e.speed)
+		if(vlen(player.move_velocity) > e.speed)
+			player.move_velocity = normalize(player.move_velocity) * max(0, e.speed);
+#endif
 
-	if(autocvar_g_teleport_maxspeed)
-		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
-			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
+#ifdef SVQC
+	if(STAT(TELEPORT_MAXSPEED, player))
+		if(vlen(player.velocity) > STAT(TELEPORT_MAXSPEED, player))
+			player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
+#elif defined(CSQC)
+	if(STAT(TELEPORT_MAXSPEED, player))
+		if(vlen(player.move_velocity) > STAT(TELEPORT_MAXSPEED, player))
+			player.move_velocity = normalize(player.move_velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
+#endif
 
+#ifdef SVQC
 	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+
 	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+#elif defined(CSQC)
+	locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+
+	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.move_velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+#endif
 
 	return e;
 }
 
-void teleport_findtarget ()
-{SELFPARAM();
+void teleport_findtarget()
+{
+	int n = 0;
 	entity e;
-	float n;
-
-	n = 0;
 	for(e = world; (e = find(e, targetname, self.target)); )
 	{
 		++n;
+#ifdef SVQC
 		if(e.movetype == MOVETYPE_NONE)
 			waypoint_spawnforteleporter(self, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
 			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
+#endif
 	}
 
 	if(n == 0)
@@ -210,7 +262,13 @@ void teleport_findtarget ()
 	}
 
 	// now enable touch
+#ifdef SVQC
 	self.touch = Teleport_Touch;
+
+	trigger_teleport_link(self);
+#elif defined(CSQC)
+	self.move_touch = Teleport_Touch;
+#endif
 }
 
 entity Teleport_Find(vector mi, vector ma)
@@ -222,6 +280,7 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
+#ifdef SVQC
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {SELFPARAM();
 	makevectors(pl.angles);

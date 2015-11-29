@@ -65,11 +65,17 @@ void trigger_common_read(bool withtarget)
 
 	if(withtarget)
 	{
+		if(self.target) { strunzone(self.target); }
 		self.target = strzone(ReadString());
+		if(self.target2) { strunzone(self.target2); }
 		self.target2 = strzone(ReadString());
+		if(self.target3) { strunzone(self.target3); }
 		self.target3 = strzone(ReadString());
+		if(self.target4) { strunzone(self.target4); }
 		self.target4 = strzone(ReadString());
+		if(self.targetname) { strunzone(self.targetname); }
 		self.targetname = strzone(ReadString());
+		if(self.killtarget) { strunzone(self.killtarget); }
 		self.killtarget = strzone(ReadString());
 	}
 
