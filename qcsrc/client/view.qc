@@ -264,6 +264,8 @@ void viewmodel_animate(entity this)
 }
 
 .vector viewmodel_origin, viewmodel_angles;
+.float weapon_nextthink;
+.float weapon_eta_last;
 
 void viewmodel_draw(entity this)
 {
@@ -300,9 +302,10 @@ void viewmodel_draw(entity this)
 		if (!this.animstate_override)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
-	float eta = (STAT(WEAPON_NEXTTHINK) - time); // TODO: / W_WeaponRateFactor();
 	float f = 0; // 0..1; 0: fully active
-	switch (this.state)
+	float eta = (this.weapon_nextthink - time); // TODO: / W_WeaponRateFactor();
+	if (eta <= 0) f = this.weapon_eta_last;
+	else switch (this.state)
 	{
 		case WS_RAISE:
 		{
@@ -324,6 +327,7 @@ void viewmodel_draw(entity this)
 			break;
 		}
 	}
+	this.weapon_eta_last = f;
 	this.origin = this.viewmodel_origin;
 	this.angles = this.viewmodel_angles;
 	this.angles_x = (-90 * f * f);

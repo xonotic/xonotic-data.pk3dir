@@ -561,6 +561,7 @@ NET_HANDLE(wframe, bool isNew)
 	bool restartanim = ReadByte();
 	anim_set(viewmodel, a, !restartanim, restartanim, restartanim);
 	viewmodel.state = ReadByte();
+	viewmodel.weapon_nextthink = ReadFloat();
 	viewmodel.alpha = ReadByte() / 255;
 	return true;
 }
@@ -578,6 +579,7 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteCoord(channel, a.z);
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);
+	WriteFloat(channel, weaponentity.weapon_nextthink);
 	WriteByte(channel, weaponentity.alpha * 255);
 }
 #endif

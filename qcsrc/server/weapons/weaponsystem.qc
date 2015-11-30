@@ -335,18 +335,16 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	vector or = v_right;
 	vector ou = v_up;
 
+	vector a = '0 0 0';
 	if (this)
 	{
 		this.wframe = fr;
-		vector a = '0 0 0';
 		if (fr == WFRAME_IDLE) a = this.anim_idle;
 		else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
 		else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
 		else  // if (fr == WFRAME_RELOAD)
 			a = this.anim_reload;
 		a.z *= g_weaponratefactor;
-		entity e;
-		FOR_EACH_CLIENT(e) if (e == actor || (IS_SPEC(e) && e.enemy == actor)) wframe_send(e, this, a, restartanim);
 	}
 
 	v_forward = of;
@@ -371,20 +369,27 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 		// dprint("reset weapon animation timer at ", ftos(time), "\n");
 	}
 	this.weapon_nextthink += t;
-	if (weaponentity == weaponentities[0]) actor.weapon_nextthink = this.weapon_nextthink;
+	if (weaponentity == weaponentities[0]) STAT(WEAPON_NEXTTHINK, actor) = this.weapon_nextthink;
 	this.weapon_think = func;
 	// dprint("next ", ftos(this.weapon_nextthink), "\n");
 
+	if (this)
+	{
+		entity e;
+		FOR_EACH_CLIENT(e) if (e == actor || (IS_SPEC(e) && e.enemy == actor)) wframe_send(e, this, a, restartanim);
+	}
+
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		if ((actor.weapon == WEP_SHOCKWAVE.m_id || actor.weapon == WEP_SHOTGUN.m_id)
-		    && fr == WFRAME_FIRE2) animdecide_setaction(actor, ANIMACTION_MELEE, restartanim);
-		else animdecide_setaction(actor, ANIMACTION_SHOOT, restartanim);
+		int act = (fr == WFRAME_FIRE2 && (actor.weapon == WEP_SHOCKWAVE.m_id || actor.weapon == WEP_SHOTGUN.m_id))
+			? ANIMACTION_MELEE
+			: ANIMACTION_SHOOT
+			;
+		animdecide_setaction(actor, act, restartanim);
 	}
-	else
+	else if (actor.anim_upper_action == ANIMACTION_SHOOT || actor.anim_upper_action == ANIMACTION_MELEE)
 	{
-		if (actor.anim_upper_action == ANIMACTION_SHOOT
-		    || actor.anim_upper_action == ANIMACTION_MELEE) actor.anim_upper_action = 0;
+		actor.anim_upper_action = 0;
 	}
 }
 
@@ -486,13 +491,7 @@ void W_WeaponFrame(entity actor)
 				entity oldwep = Weapons_from(actor.weapon);
 
 				// set up weapon switch think in the future, and start drop anim
-				if (
-#if INDEPENDENT_ATTACK_FINISHED
-					    true
-#else
-					    ATTACK_FINISHED(actor, slot) <= time + actor.weapon_frametime * 0.5
-#endif
-				   )
+				if (INDEPENDENT_ATTACK_FINISHED || ATTACK_FINISHED(actor, weaponslot(weaponentity)) <= time + actor.weapon_frametime * 0.5)
 				{
 					sound(actor, CH_WEAPON_SINGLE, SND_WEAPON_SWITCH, VOL_BASE, ATTN_NORM);
 					this.state = WS_DROP;
