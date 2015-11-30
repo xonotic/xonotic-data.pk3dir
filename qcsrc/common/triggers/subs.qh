@@ -47,15 +47,6 @@ void SUB_VanishOrRemove (entity ent);
 .vector destvec;
 .vector destvec2;
 
-// player animation state
-.float animstate_startframe;
-.float animstate_numframes;
-.float animstate_framerate;
-.float animstate_starttime;
-.float animstate_endtime;
-.float animstate_override;
-.float animstate_looping;
-
 .float	delay;
 .float	wait;
 .float	lip;

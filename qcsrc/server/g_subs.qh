@@ -9,12 +9,6 @@ void() SUB_CalcAngleMoveDone;
 
 spawnfunc(info_null);
 
-void setanim(entity e, vector anim, float looping, float override, float restart);
-
-void updateanim(entity e);
-
-
-
 /*
 ==================
 SUB_Friction

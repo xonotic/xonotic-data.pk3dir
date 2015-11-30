@@ -280,46 +280,46 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		self.traileffect = 0;
 		switch (self.cnt)
 		{
-			#define CASE(id) case PROJECTILE_##id: setmodel(self, MDL_PROJECTILE_##id);
-			CASE(ELECTRO)            self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
-			CASE(ROCKET)             self.traileffect = EFFECT_TR_ROCKET.m_id; self.scale = 2; break;
-			CASE(CRYLINK)            self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
-			CASE(CRYLINK_BOUNCING)   self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
-			CASE(ELECTRO_BEAM)       self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
-			CASE(GRENADE)            self.traileffect = EFFECT_TR_GRENADE.m_id; break;
-			CASE(GRENADE_BOUNCING)   self.traileffect = EFFECT_TR_GRENADE.m_id; break;
-			CASE(MINE)               self.traileffect = EFFECT_TR_GRENADE.m_id; break;
-			CASE(BLASTER)            self.traileffect = EFFECT_Null.m_id; break;
-			CASE(HLAC)               self.traileffect = EFFECT_Null.m_id; break;
-			CASE(PORTO_RED)          self.traileffect = EFFECT_TR_WIZSPIKE.m_id; self.scale = 4; break;
-			CASE(PORTO_BLUE)         self.traileffect = EFFECT_TR_WIZSPIKE.m_id; self.scale = 4; break;
-			CASE(HOOKBOMB)           self.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
-			CASE(HAGAR)              self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
-			CASE(HAGAR_BOUNCING)     self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
-			CASE(FIREBALL)           self.modelindex = 0; self.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
-			CASE(FIREMINE)           self.modelindex = 0; self.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
-			CASE(TAG)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
-			CASE(FLAC)               self.scale = 0.4; self.traileffect = EFFECT_FLAC_TRAIL.m_id; break;
-			CASE(SEEKER)             self.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
+			#define HANDLE(id) case PROJECTILE_##id: setmodel(self, MDL_PROJECTILE_##id);
+			HANDLE(ELECTRO)            self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(ROCKET)             self.traileffect = EFFECT_TR_ROCKET.m_id; self.scale = 2; break;
+			HANDLE(CRYLINK)            self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			HANDLE(CRYLINK_BOUNCING)   self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			HANDLE(ELECTRO_BEAM)       self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(GRENADE)            self.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(GRENADE_BOUNCING)   self.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(MINE)               self.traileffect = EFFECT_TR_GRENADE.m_id; break;
+			HANDLE(BLASTER)            self.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(HLAC)               self.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(PORTO_RED)          self.traileffect = EFFECT_TR_WIZSPIKE.m_id; self.scale = 4; break;
+			HANDLE(PORTO_BLUE)         self.traileffect = EFFECT_TR_WIZSPIKE.m_id; self.scale = 4; break;
+			HANDLE(HOOKBOMB)           self.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; break;
+			HANDLE(HAGAR)              self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
+			HANDLE(HAGAR_BOUNCING)     self.traileffect = EFFECT_HAGAR_ROCKET.m_id; self.scale = 0.75; break;
+			HANDLE(FIREBALL)           self.modelindex = 0; self.traileffect = EFFECT_FIREBALL.m_id; break; // particle effect is good enough
+			HANDLE(FIREMINE)           self.modelindex = 0; self.traileffect = EFFECT_FIREMINE.m_id; break; // particle effect is good enough
+			HANDLE(TAG)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
+			HANDLE(FLAC)               self.scale = 0.4; self.traileffect = EFFECT_FLAC_TRAIL.m_id; break;
+			HANDLE(SEEKER)             self.traileffect = EFFECT_SEEKER_TRAIL.m_id; break;
 
-			CASE(MAGE_SPIKE)         self.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
-			CASE(SHAMBLER_LIGHTNING) self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(MAGE_SPIKE)         self.traileffect = EFFECT_TR_VORESPIKE.m_id; break;
+			HANDLE(SHAMBLER_LIGHTNING) self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 
-			CASE(RAPTORBOMB)         self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = EFFECT_Null.m_id; break;
-			CASE(RAPTORBOMBLET)      self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = EFFECT_Null.m_id; break;
-			CASE(RAPTORCANNON)       self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
+			HANDLE(RAPTORBOMB)         self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(RAPTORBOMBLET)      self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(RAPTORCANNON)       self.traileffect = EFFECT_TR_CRYLINKPLASMA.m_id; break;
 
-			CASE(SPIDERROCKET)       self.traileffect = EFFECT_SPIDERBOT_ROCKET_TRAIL.m_id; break;
-			CASE(WAKIROCKET)         self.traileffect = EFFECT_RACER_ROCKET_TRAIL.m_id; break;
-			CASE(WAKICANNON)         self.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(SPIDERROCKET)       self.traileffect = EFFECT_SPIDERBOT_ROCKET_TRAIL.m_id; break;
+			HANDLE(WAKIROCKET)         self.traileffect = EFFECT_RACER_ROCKET_TRAIL.m_id; break;
+			HANDLE(WAKICANNON)         self.traileffect = EFFECT_Null.m_id; break;
 
-			CASE(BUMBLE_GUN)         self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
-			CASE(BUMBLE_BEAM)        self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(BUMBLE_GUN)         self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
+			HANDLE(BUMBLE_BEAM)        self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; break;
 
-			CASE(RPC)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
+			HANDLE(RPC)                self.traileffect = EFFECT_TR_ROCKET.m_id; break;
 
-			CASE(ROCKETMINSTA_LASER) self.traileffect = EFFECT_ROCKETMINSTA_LASER(self.team).m_id; break;
-#undef CASE
+			HANDLE(ROCKETMINSTA_LASER) self.traileffect = EFFECT_ROCKETMINSTA_LASER(self.team).m_id; break;
+#undef HANDLE
 			default:
 				if (MUTATOR_CALLHOOK(Ent_Projectile, self))
 					break;

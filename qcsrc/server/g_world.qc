@@ -1409,8 +1409,8 @@ void FixIntermissionClient(entity e)
 			if(e.(weaponentity))
 			{
 				e.(weaponentity).effects = EF_NODRAW;
-				if (e.(weaponentity).(weaponentity))
-					e.(weaponentity).(weaponentity).effects = EF_NODRAW;
+				if (e.(weaponentity).weaponchild)
+					e.(weaponentity).weaponchild.effects = EF_NODRAW;
 			}
 		}
 		if(IS_REAL_CLIENT(e))

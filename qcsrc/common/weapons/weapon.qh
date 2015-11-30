@@ -18,6 +18,18 @@ int weaponslot(.entity weaponentity)
 	return 0;
 }
 
+// weapon states (actor.(weaponentity).state)
+/** no weapon selected */
+const int WS_CLEAR  = 0;
+/** raise frame */
+const int WS_RAISE  = 1;
+/** deselecting frame */
+const int WS_DROP   = 2;
+/** fire state */
+const int WS_INUSE  = 3;
+/** idle frame */
+const int WS_READY  = 4;
+
 #ifdef SVQC
 .int ammo_shells;
 .int ammo_nails;
@@ -106,6 +118,8 @@ CLASS(Weapon, Object)
         // no weapon specific image for this weapon
         return false;
     }
+    /** (CLIENT) weapon specific glow */
+    METHOD(Weapon, wr_glow, vector(Weapon this)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
     METHOD(Weapon, wr_drop, void(Weapon this)) {}
     /** (SERVER) a weapon is picked up */

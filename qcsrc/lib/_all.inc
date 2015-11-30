@@ -36,6 +36,7 @@
 #include "cvar.qh"
 #include "defer.qh"
 #include "draw.qh"
+#include "enumclass.qh"
 #include "file.qh"
 #include "functional.qh"
 #include "i18n.qh"

@@ -9,6 +9,7 @@
 #include "teamplay.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
 #include "../common/deathtypes/all.qh"
@@ -154,16 +155,6 @@ void player_anim ()
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
-
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	{
-		if (self.(weaponentity))
-		{
-			updateanim(self.(weaponentity));
-			if (!self.(weaponentity).animstate_override)
-				setanim(self.(weaponentity), self.(weaponentity).anim_idle, true, false, false);
-		}
-	}
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

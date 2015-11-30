@@ -87,7 +87,7 @@ void W_Rifle_Attack2()
 }
 
 .void() rifle_bullethail_attackfunc;
-.float rifle_bullethail_frame;
+.WFRAME rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
 void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponentity, int fire)
@@ -113,7 +113,7 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	}
 }
 
-void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, float fr, float animtime, float refire)
+void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFRAME fr, float animtime, float refire)
 {SELFPARAM();
 	// if we get here, we have at least one bullet to fire
 	AttackFunc();

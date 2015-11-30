@@ -9,6 +9,7 @@
 
 #include "mutators/events.qh"
 
+#include "../common/anim.qh"
 #include "../common/constants.qh"
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
@@ -28,6 +29,316 @@
 
 #include "../lib/warpzone/client.qh"
 #include "../lib/warpzone/common.qh"
+
+#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
+
+float autocvar_cl_viewmodel_scale;
+
+bool autocvar_cl_bobmodel;
+float autocvar_cl_bobmodel_speed;
+float autocvar_cl_bobmodel_side;
+float autocvar_cl_bobmodel_up;
+
+float autocvar_cl_followmodel;
+float autocvar_cl_followmodel_side_speed;
+float autocvar_cl_followmodel_side_highpass;
+float autocvar_cl_followmodel_side_highpass1;
+float autocvar_cl_followmodel_side_limit;
+float autocvar_cl_followmodel_side_lowpass;
+float autocvar_cl_followmodel_up_speed;
+float autocvar_cl_followmodel_up_highpass;
+float autocvar_cl_followmodel_up_highpass1;
+float autocvar_cl_followmodel_up_limit;
+float autocvar_cl_followmodel_up_lowpass;
+
+float autocvar_cl_leanmodel;
+float autocvar_cl_leanmodel_side_speed;
+float autocvar_cl_leanmodel_side_highpass;
+float autocvar_cl_leanmodel_side_highpass1;
+float autocvar_cl_leanmodel_side_lowpass;
+float autocvar_cl_leanmodel_side_limit;
+float autocvar_cl_leanmodel_up_speed;
+float autocvar_cl_leanmodel_up_highpass;
+float autocvar_cl_leanmodel_up_highpass1;
+float autocvar_cl_leanmodel_up_lowpass;
+float autocvar_cl_leanmodel_up_limit;
+
+#define lowpass(value, frac, ref_store, ret) do \
+{ \
+	float __frac = bound(0, frac, 1); \
+	ret = ref_store = ref_store * (1 - __frac) + (value) * __frac; \
+} while (0)
+
+#define lowpass_limited(value, frac, limit, ref_store, ret) do \
+{ \
+	float __ignore; lowpass(value, frac, ref_store, __ignore); \
+	ret = ref_store = bound((value) - (limit), ref_store, (value) + (limit)); \
+} while (0)
+
+#define highpass(value, frac, ref_store, ret) do \
+{ \
+	float __f; lowpass(value, frac, ref_store, __f); \
+	ret = (value) - __f; \
+} while (0)
+
+#define highpass_limited(value, frac, limit, ref_store, ret) do \
+{ \
+	float __f; lowpass_limited(value, frac, limit, ref_store, __f); \
+	ret = (value) - __f; \
+} while (0)
+
+#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+{ \
+	lowpass(value.x, fracx, ref_store.x, ref_out.x); \
+	lowpass(value.y, fracy, ref_store.y, ref_out.y); \
+	lowpass(value.z, fracz, ref_store.z, ref_out.z); \
+} while (0)
+
+#define highpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+{ \
+	highpass(value.x, fracx, ref_store.x, ref_out.x); \
+	highpass(value.y, fracy, ref_store.y, ref_out.y); \
+	highpass(value.z, fracz, ref_store.z, ref_out.z); \
+} while (0)
+
+#define highpass3_limited(value, fracx, limitx, fracy, limity, fracz, limitz, ref_store, ref_out) do \
+{ \
+	highpass_limited(value.x, fracx, limitx, ref_store.x, ref_out.x); \
+	highpass_limited(value.y, fracy, limity, ref_store.y, ref_out.y); \
+	highpass_limited(value.z, fracz, limitz, ref_store.z, ref_out.z); \
+} while (0)
+
+void viewmodel_animate(entity this)
+{
+	static float prevtime;
+	float frametime = (time - prevtime) * STAT(MOVEVARS_TIMESCALE);
+	prevtime = time;
+
+	if (autocvar_chase_active) return;
+	if (getstati(STAT_HEALTH) <= 0) return;
+
+	entity view = CSQCModel_server2csqc(player_localentnum - 1);
+
+	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+	static bool oldonground;
+	static float hitgroundtime;
+	static float lastongroundtime;
+	if (clonground)
+	{
+		float f = time; // cl.movecmd[0].time
+		if (!oldonground)
+			hitgroundtime = f;
+		lastongroundtime = f;
+	}
+	oldonground = clonground;
+
+	vector gunorg = '0 0 0', gunangles = '0 0 0';
+	static vector gunorg_prev = '0 0 0', gunangles_prev = '0 0 0';
+
+	bool teleported = view.csqcmodel_teleported;
+
+	// 1. if we teleported, clear the frametime... the lowpass will recover the previous value then
+	if (teleported)
+	{
+		// try to fix the first highpass; result is NOT
+		// perfect! TODO find a better fix
+		gunangles_prev = view_angles;
+		gunorg_prev = view_origin;
+	}
+
+	static vector gunorg_highpass = '0 0 0';
+
+	// 2. for the gun origin, only keep the high frequency (non-DC) parts, which is "somewhat like velocity"
+	gunorg_highpass += gunorg_prev;
+	highpass3_limited(view_origin,
+		frametime * autocvar_cl_followmodel_side_highpass1, autocvar_cl_followmodel_side_limit,
+		frametime * autocvar_cl_followmodel_side_highpass1, autocvar_cl_followmodel_side_limit,
+		frametime * autocvar_cl_followmodel_up_highpass1, autocvar_cl_followmodel_up_limit,
+		gunorg_highpass, gunorg);
+	gunorg_prev = view_origin;
+	gunorg_highpass -= gunorg_prev;
+
+	static vector gunangles_highpass = '0 0 0';
+
+	// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
+	gunangles_highpass += gunangles_prev;
+	PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
+	YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
+	ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
+	highpass3_limited(view_angles,
+		frametime * autocvar_cl_leanmodel_up_highpass1, autocvar_cl_leanmodel_up_limit,
+		frametime * autocvar_cl_leanmodel_side_highpass1, autocvar_cl_leanmodel_side_limit,
+		0, 0,
+		gunangles_highpass, gunangles);
+	gunangles_prev = view_angles;
+	gunangles_highpass -= gunangles_prev;
+
+	// 3. calculate the RAW adjustment vectors
+	gunorg.x *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_side_speed : 0);
+	gunorg.y *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_side_speed : 0);
+	gunorg.z *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_up_speed : 0);
+
+	PITCH(gunangles) *= (autocvar_cl_leanmodel ? -autocvar_cl_leanmodel_up_speed : 0);
+	YAW(gunangles) *= (autocvar_cl_leanmodel ? -autocvar_cl_leanmodel_side_speed : 0);
+	ROLL(gunangles) = 0;
+
+	static vector gunorg_adjustment_highpass;
+	static vector gunorg_adjustment_lowpass;
+	static vector gunangles_adjustment_highpass;
+	static vector gunangles_adjustment_lowpass;
+
+	// 4. perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
+	//    trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
+	highpass3(gunorg,
+		frametime * autocvar_cl_followmodel_side_highpass,
+		frametime * autocvar_cl_followmodel_side_highpass,
+		frametime * autocvar_cl_followmodel_up_highpass,
+		gunorg_adjustment_highpass, gunorg);
+	lowpass3(gunorg,
+		frametime * autocvar_cl_followmodel_side_lowpass,
+		frametime * autocvar_cl_followmodel_side_lowpass,
+		frametime * autocvar_cl_followmodel_up_lowpass,
+		gunorg_adjustment_lowpass, gunorg);
+	// we assume here: PITCH = 0, YAW = 1, ROLL = 2
+	highpass3(gunangles,
+		frametime * autocvar_cl_leanmodel_up_highpass,
+		frametime * autocvar_cl_leanmodel_side_highpass,
+		0,
+		gunangles_adjustment_highpass, gunangles);
+	lowpass3(gunangles,
+		frametime * autocvar_cl_leanmodel_up_lowpass,
+		frametime * autocvar_cl_leanmodel_side_lowpass,
+		0,
+		gunangles_adjustment_lowpass, gunangles);
+	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
+
+	// vertical view bobbing code
+	// TODO: cl_bob
+
+	// horizontal view bobbing code
+	// TODO: cl_bob2
+
+	// fall bobbing code
+	// causes the view to swing down and back up when touching the ground
+	// TODO: cl_bobfall
+
+	// gun model bobbing code
+	if (autocvar_cl_bobmodel)
+	{
+		// calculate for swinging gun model
+		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
+		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
+		// for the most part, but for some reason when you go through a message trigger or
+		// pick up an item or anything like that it will momentarily jolt the gun.
+		vector forward, right, up;
+		float bspeed;
+		float t = 1;
+		float s = time * autocvar_cl_bobmodel_speed;
+		if (clonground)
+		{
+			if (time - hitgroundtime < 0.2)
+			{
+				// just hit the ground, speed the bob back up over the next 0.2 seconds
+				t = time - hitgroundtime;
+				t = bound(0, t, 0.2);
+				t *= 5;
+			}
+		}
+		else
+		{
+			// recently left the ground, slow the bob down over the next 0.2 seconds
+			t = time - lastongroundtime;
+			t = 0.2 - bound(0, t, 0.2);
+			t *= 5;
+		}
+		bspeed = xyspeed * 0.01;
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		float bobr = bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
+		gunorg += bobr * right;
+		float bobu = bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
+		gunorg += bobu * up;
+	}
+	vector v = rotate(gunorg, YAW(view_angles) * DEG2RAD); // rotate world coordinates to relative ones
+	v.z = gunorg.z;
+	this.origin += v;
+	gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
+	this.angles += gunangles;
+}
+
+.vector viewmodel_origin, viewmodel_angles;
+.float weapon_nextthink;
+.float weapon_eta_last;
+.float weapon_switchdelay;
+
+void viewmodel_draw(entity this)
+{
+	int mask = (intermission || (getstati(STAT_HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
+	float a = this.alpha;
+	int c = stof(getplayerkeyvalue(current_player, "colors"));
+	vector g;
+	Weapon wep = Weapons_from(activeweapon);
+	if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
+	entity me = CSQCModel_server2csqc(player_localentnum - 1);
+	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
+		| EF_NODEPTHTEST)
+		&~ (EF_FULLBRIGHT); // can mask team color, so get rid of it
+	for (entity e = this; e; e = e.weaponchild)
+	{
+		e.drawmask = mask;
+		e.alpha = a;
+		e.colormap = c;
+		e.glowmod = g;
+		e.csqcmodel_effects = fx;
+		WITH(entity, self, e, CSQCModel_Effects_Apply());
+	}
+	{
+		static string name_last;
+		string name = Weapons_from(activeweapon).mdl;
+		if (name != name_last)
+		{
+			name_last = name;
+			CL_WeaponEntity_SetModel(this, name);
+			this.viewmodel_origin = this.origin;
+			this.viewmodel_angles = this.angles;
+		}
+		anim_update(this);
+		if (!this.animstate_override)
+			anim_set(this, this.anim_idle, true, false, false);
+	}
+	float f = 0; // 0..1; 0: fully active
+	float eta = (this.weapon_nextthink - time) / STAT(WEAPONRATEFACTOR);
+	if (eta <= 0) f = this.weapon_eta_last;
+	else switch (this.state)
+	{
+		case WS_RAISE:
+		{
+			f = eta / max(eta, this.weapon_switchdelay);
+			break;
+		}
+		case WS_DROP:
+		{
+			f = 1 - eta / max(eta, this.weapon_switchdelay);
+			break;
+		}
+		case WS_CLEAR:
+		{
+			f = 1;
+			break;
+		}
+	}
+	this.weapon_eta_last = f;
+	this.origin = this.viewmodel_origin;
+	this.angles = this.viewmodel_angles;
+	this.angles_x = (-90 * f * f);
+	viewmodel_animate(this);
+	setorigin(this, this.origin);
+}
+
+entity viewmodel;
+STATIC_INIT(viewmodel) {
+    viewmodel = new(viewmodel);
+	viewmodel.draw = viewmodel_draw;
+}
 
 entity porto;
 vector polyline[16];

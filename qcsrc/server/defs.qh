@@ -91,14 +91,7 @@ float server_is_dedicated;
 .float fade_time;
 .float fade_rate;
 
-// weapon animation vectors:
-.vector anim_fire1;
-.vector anim_fire2;
-.vector anim_idle;
-.vector anim_reload;
-
 void() player_setupanimsformodel;
-void setanim(entity e, vector anim, float looping, float override, float restart);
 
 .string mdl;
 
@@ -149,16 +142,6 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .entity item_pickupsound_ent;
 .entity item_model_ent;
 
-// definitions for weaponsystem
-// more WEAPONTODO: move these to their proper files
-.entity exteriorweaponentity;
-.vector weaponentity_glowmod;
-
-//.int weapon; // current weapon
-.int switchweapon = _STAT(SWITCHWEAPON);
-.int switchingweapon = _STAT(SWITCHINGWEAPON); // weapon currently being switched to (is copied from switchweapon once switch is possible)
-.string weaponname; // name of .weapon
-
 // WEAPONTODO
 .float autoswitch;
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
@@ -168,13 +151,6 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 .float weapon_nextthink;
 .void(Weapon thiswep, entity actor, .entity weaponentity, int fire) weapon_think;
 
-
-// weapon states (self.weaponentity.state)
-const int WS_CLEAR			= 0; // no weapon selected
-const int WS_RAISE			= 1; // raise frame
-const int WS_DROP				= 2; // deselecting frame
-const int WS_INUSE			= 3; // fire state
-const int WS_READY			= 4; // idle frame
 
 // there is 2 weapon tics that can run in one server frame
 const int W_TICSPERFRAME = 2;
@@ -211,8 +187,6 @@ float nJoinAllowed(entity ignore);
 .int playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
-
-.vector spawnorigin;
 
 .vector death_origin;
 .vector killer_origin;

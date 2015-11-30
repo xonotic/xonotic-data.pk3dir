@@ -1,6 +1,10 @@
 #ifndef STATS_H
 #define STATS_H
 
+#ifdef SVQC
+#include "../server/cl_client.qh"
+#endif
+
 // Full list of all stat constants, included in a single location for easy reference
 // 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
 
@@ -30,8 +34,18 @@ REGISTER_STAT(PL_MAX, vector, autocvar_sv_player_maxs)
 REGISTER_STAT(PL_CROUCH_MAX, vector, autocvar_sv_player_crouch_maxs)
 
 REGISTER_STAT(KH_KEYS, int)
+
 /** weapon requested to switch to; next WANTED weapon (for HUD) */
 REGISTER_STAT(SWITCHWEAPON, int)
+/** weapon currently being switched to (is copied from switchweapon once switch is possible) */
+REGISTER_STAT(SWITCHINGWEAPON, int)
+REGISTER_STAT(WEAPON_NEXTTHINK, float)
+#ifdef SVQC
+SPECTATE_COPY(_STAT(WEAPON_NEXTTHINK))
+float W_WeaponRateFactor();
+#endif
+REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor())
+
 REGISTER_STAT(GAMESTARTTIME, float)
 REGISTER_STAT(STRENGTH_FINISHED, float)
 REGISTER_STAT(INVINCIBLE_FINISHED, float)
@@ -57,7 +71,6 @@ REGISTER_STAT(DAMAGE_DEALT_TOTAL, int)
 REGISTER_STAT(TYPEHIT_TIME, float)
 REGISTER_STAT(LAYED_MINES, int)
 REGISTER_STAT(HAGAR_LOAD, int)
-REGISTER_STAT(SWITCHINGWEAPON, int)
 REGISTER_STAT(SUPERWEAPONS_FINISHED, float)
 REGISTER_STAT(VEHICLESTAT_HEALTH, int)
 REGISTER_STAT(VEHICLESTAT_SHIELD, int)

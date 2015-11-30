@@ -53,6 +53,7 @@
 #include "weapons/weaponstats.qc"
 #include "weapons/weaponsystem.qc"
 
+#include "../common/anim.qc"
 #include "../common/animdecide.qc"
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
