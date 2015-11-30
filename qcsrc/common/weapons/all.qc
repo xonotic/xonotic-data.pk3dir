@@ -590,7 +590,7 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteByte(channel, restartanim);
 	WriteByte(channel, weaponentity.state);
 	WriteFloat(channel, weaponentity.weapon_nextthink);
-	WriteByte(channel, weaponentity.alpha * 255);
+	WriteByte(channel, weaponentity.m_alpha * 255);
 	Weapon w = Weapons_from(actor.weapon);
 	switch (weaponentity.state)
 	{

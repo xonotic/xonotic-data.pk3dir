@@ -59,6 +59,7 @@ vector CL_Weapon_GetShotOrg(int wpn)
 }
 
 ..entity weaponentity_fld;
+.float m_alpha;
 
 void CL_Weaponentity_Think()
 {
@@ -92,13 +93,17 @@ void CL_Weaponentity_Think()
 		CL_WeaponEntity_SetModel(this, this.owner.weaponname);
 	}
 
-	this.effects = EF_NODRAW;  // TODO: don't render this entity at all
+	this.alpha = -1;  // TODO: don't render this entity at all
 
-	if (this.owner.alpha == default_player_alpha) this.alpha = default_weapon_alpha;
-	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
-	else this.alpha = 1;
+	if (this.owner.alpha == default_player_alpha) this.m_alpha = default_weapon_alpha;
+	else if (this.owner.alpha != 0) this.m_alpha = this.owner.alpha;
+	else this.m_alpha  = 1;
 
-	if (this.weaponchild) this.weaponchild.effects = this.effects;
+	if (this.weaponchild)
+	{
+		this.weaponchild.alpha = this.alpha;
+		this.weaponchild.effects = this.effects;
+	}
 }
 
 void CL_ExteriorWeaponentity_Think()
