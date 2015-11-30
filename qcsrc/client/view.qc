@@ -276,7 +276,7 @@ void viewmodel_draw(entity this)
 	float a = this.alpha;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g;
-	Weapon wep = Weapons_from(switchingweapon);
+	Weapon wep = Weapons_from(activeweapon);
 	if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
