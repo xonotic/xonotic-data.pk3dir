@@ -1416,6 +1416,7 @@ void FixIntermissionClient(entity e)
 		if(IS_REAL_CLIENT(e))
 		{
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
+			RandomSelection_Init();
 			FOREACH_WORD(autocvar_sv_intermission_cdtrack, true, LAMBDA(
 				RandomSelection_Add(NULL, 0, it, 1, 1);
 			));
