@@ -286,7 +286,7 @@ void viewmodel_draw(entity this)
 	{
 		e.drawmask = mask;
 		e.alpha = a;
-		e.colormap = c;
+		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
 		e.glowmod = g;
 		e.csqcmodel_effects = fx;
 		WITH(entity, self, e, CSQCModel_Effects_Apply());
