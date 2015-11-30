@@ -67,9 +67,9 @@ float boxesoverlap(vector m1, vector m2, vector m3, vector m4) { return m2_x >= 
 /** requires the same as boxesoverlap, but is a stronger condition */
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { return smins.x >= bmins.x && smaxs.x <= bmaxs.x && smins.y >= bmins.y && smaxs.y <= bmaxs.y && smins.z >= bmins.z && smaxs.z <= bmaxs.z; }
 
-#define PITCH(v) (v).x
-#define YAW(v) (v).y
-#define ROLL(v) (v).z
+#define PITCH(v) ((v).x)
+#define YAW(v) ((v).y)
+#define ROLL(v) ((v).z)
 
 #define MAKEVECTORS(f, angles, forward, right, up) do { \
 	f(angles); \

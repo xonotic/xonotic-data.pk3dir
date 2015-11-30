@@ -252,13 +252,15 @@ void viewmodel_animate(entity this)
 			t *= 5;
 		}
 		bspeed = xyspeed * 0.01;
-		MAKEVECTORS(makevectors, gunangles, forward, right, up);
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
 		float bobr = bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
 		gunorg += bobr * right;
 		float bobu = bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
 		gunorg += bobu * up;
 	}
-	this.origin += view_forward * gunorg.x + view_right * gunorg.y + view_up * gunorg.z;
+	vector v = rotate(gunorg, YAW(view_angles) * DEG2RAD); // rotate world coordinates to relative ones
+	v.z = gunorg.z;
+	this.origin += v;
 	gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
 	this.angles += gunangles;
 }
