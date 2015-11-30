@@ -438,7 +438,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 		self.move_touch = trigger_push_touch;
 		self.drawmask = MASK_NORMAL;
 		self.move_time = time;
-		trigger_push_findtarget();
+		defer(self, 0.25, trigger_push_findtarget);
 	}
 
 	if(sf & 2)

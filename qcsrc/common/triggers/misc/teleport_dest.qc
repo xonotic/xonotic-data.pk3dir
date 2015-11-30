@@ -2,20 +2,24 @@ REGISTER_NET_LINKED(ENT_CLIENT_TELEPORT_DEST)
 
 #ifdef SVQC
 
-bool teleport_dest_send(entity this, entity to, float sf)
+bool teleport_dest_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TELEPORT_DEST);
+	WriteByte(MSG_ENTITY, sf);
 
-	WriteByte(MSG_ENTITY, self.cnt);
-	WriteCoord(MSG_ENTITY, self.speed);
-	WriteString(MSG_ENTITY, self.targetname);
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	if(sf & 1)
+	{
+		WriteByte(MSG_ENTITY, this.cnt);
+		WriteCoord(MSG_ENTITY, this.speed);
+		WriteString(MSG_ENTITY, this.targetname);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 
-	WriteAngle(MSG_ENTITY, self.mangle_x);
-	WriteAngle(MSG_ENTITY, self.mangle_y);
-	WriteAngle(MSG_ENTITY, self.mangle_z);
+		WriteAngle(MSG_ENTITY, this.mangle_x);
+		WriteAngle(MSG_ENTITY, this.mangle_y);
+		WriteAngle(MSG_ENTITY, this.mangle_z);
+	}
 
 	return true;
 }
@@ -70,24 +74,29 @@ void teleport_dest_remove()
 
 NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)
 {
-	self.classname = "info_teleport_destination";
-	self.cnt = ReadByte();
-	self.speed = ReadCoord();
-	self.targetname = strzone(ReadString());
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+	int sf = ReadByte();
 
-	self.mangle_x = ReadAngle();
-	self.mangle_y = ReadAngle();
-	self.mangle_z = ReadAngle();
+	if(sf & 1)
+	{
+		self.classname = "info_teleport_destination";
+		self.cnt = ReadByte();
+		self.speed = ReadCoord();
+		self.targetname = strzone(ReadString());
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+
+		self.mangle_x = ReadAngle();
+		self.mangle_y = ReadAngle();
+		self.mangle_z = ReadAngle();
+
+		setorigin(self, self.origin);
+
+		self.drawmask = MASK_NORMAL;
+		self.entremove = teleport_dest_remove;
+	}
 
 	return = true;
-
-	setorigin(self, self.origin);
-
-	self.drawmask = MASK_NORMAL;
-	self.entremove = teleport_dest_remove;
 }
 
 #endif

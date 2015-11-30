@@ -63,18 +63,18 @@ float trigger_teleport_send(entity this, entity to, float sf)
 
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, self.team);
-		WriteInt24_t(MSG_ENTITY, self.spawnflags);
-		WriteByte(MSG_ENTITY, self.active);
-		WriteCoord(MSG_ENTITY, self.speed);
+		WriteByte(MSG_ENTITY, this.team);
+		WriteInt24_t(MSG_ENTITY, this.spawnflags);
+		WriteByte(MSG_ENTITY, this.active);
+		WriteCoord(MSG_ENTITY, this.speed);
 
 		trigger_common_write(true);
 	}
 
 	if(sf & 2)
 	{
-		WriteByte(MSG_ENTITY, self.team);
-		WriteByte(MSG_ENTITY, self.active);
+		WriteByte(MSG_ENTITY, this.team);
+		WriteByte(MSG_ENTITY, this.active);
 	}
 
 	return true;
@@ -128,7 +128,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 		//self.move_touch = trigger_push_touch;
 		self.drawmask = MASK_NORMAL;
 		self.move_time = time;
-		teleport_findtarget();
+		defer(self, 0.25, teleport_findtarget);
 
 		self.teleport_next = teleport_first;
 		teleport_first = self;
