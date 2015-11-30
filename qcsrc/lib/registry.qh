@@ -82,6 +82,7 @@ REGISTRY(Registries, BITS(8))
 
 #define REGISTRY_RESERVE(registry, fld, id, suffix) do { \
 	entity e = new(registry_reserved); \
+	make_pure(e); \
 	e.registered_id = #id "/" #suffix; \
 	REGISTRY_PUSH(registry, fld, e); \
 } while (0)

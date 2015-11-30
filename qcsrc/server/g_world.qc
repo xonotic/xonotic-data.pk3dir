@@ -1416,11 +1416,13 @@ void FixIntermissionClient(entity e)
 		if(IS_REAL_CLIENT(e))
 		{
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
-			string list = autocvar_sv_intermission_cdtrack;
-			for(string it; (it = car(list)); list = cdr(list))
-				RandomSelection_Add(world, 0, it, 1, 1);
-			if(RandomSelection_chosen_string && RandomSelection_chosen_string != "")
-				stuffcmd(e, strcat("\ncd loop ", RandomSelection_chosen_string, "\n"));
+			FOREACH_WORD(autocvar_sv_intermission_cdtrack, true, LAMBDA(
+				RandomSelection_Add(NULL, 0, it, 1, 1);
+			));
+			if (RandomSelection_chosen_string != "")
+			{
+				stuffcmd(e, sprintf("\ncd loop %s\n", RandomSelection_chosen_string));
+			}
 			msg_entity = e;
 			WriteByte(MSG_ONE, SVC_INTERMISSION);
 		}

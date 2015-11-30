@@ -168,7 +168,12 @@ void Draw_ShowNames_All()
 	LL_EACH(shownames_ent, true, LAMBDA(
 		entity entcs = entcs_receiver(i);
 		if (!entcs) continue;
-		WITH(entity, self, entcs, entcs.think());
+		if (entcs.think) WITH(entity, self, entcs, entcs.think());
+		else
+		{
+			LOG_WARNING("entcs.think == null");
+			eprint(entcs);
+		}
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;

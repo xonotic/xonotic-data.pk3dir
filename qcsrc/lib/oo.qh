@@ -19,6 +19,12 @@
 		(e).pure_data = true; \
 	} \
 	while (0)
+#define make_impure(e) \
+	do \
+	{ \
+		(e).pure_data = false; \
+	} \
+	while (0)
 #define is_pure(e) ((e).pure_data)
 
 .string classname;
@@ -54,13 +60,16 @@ entity _clearentity_ent;
 STATIC_INIT(clearentity)
 {
 	_clearentity_ent = new(clearentity);
+	make_pure(_clearentity_ent);
 }
 void clearentity(entity e)
 {
 #ifdef CSQC
 		int n = e.entnum;
 #endif
+	bool was_pure = is_pure(e);
 	copyentity(_clearentity_ent, e);
+	if (!was_pure) make_impure(e);
 #ifdef CSQC
 		e.entnum = n;
 #endif
