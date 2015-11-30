@@ -93,6 +93,8 @@ bool IsFlying(entity a);
 
 #ifdef CSQC
 
+	noref float pmove_waterjumptime;
+
 	const int FL_WATERJUMP = 2048;	// player jumping out of water
 	const int FL_JUMPRELEASED = 4096;	// for jump debouncing
 
@@ -110,6 +112,8 @@ bool IsFlying(entity a);
 
 	//float player_multijump;
 	//float player_jumpheight;
+
+	#define PHYS_TELEPORT_TIME(s)				pmove_waterjumptime
 
 	#define TICRATE ticrate
 
@@ -174,6 +178,8 @@ bool IsFlying(entity a);
 
 	/** Not real stats */
 	.string stat_jumpspeedcap_min, stat_jumpspeedcap_max;
+
+	#define PHYS_TELEPORT_TIME(s)				s.teleport_time
 
 	#define TICRATE sys_frametime
 

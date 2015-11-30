@@ -80,8 +80,6 @@ float GeomLerp(float a, float lerp, float b)
 		: a * pow(fabs(b / a), lerp);
 }
 
-noref float pmove_waterjumptime;
-
 #define unstick_offsets(X) \
 /* 1 no nudge (just return the original if this test passes) */ \
 	X(' 0.000  0.000  0.000') \
@@ -122,6 +120,7 @@ void PM_ClientMovement_Unstick(entity this)
 
 void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 {
+#ifdef CSQC
 	// make sure player is not stuck
 	PM_ClientMovement_Unstick(this);
 
@@ -145,7 +144,7 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 	vector origin1 = this.origin + '0 0 1';
 	vector origin2 = this.origin - '0 0 1';
 
-	if (ground)
+	if (ground && autocvar_cl_movement != 3)
 	{
 		tracebox(origin1, this.mins, this.maxs, origin2, MOVE_NORMAL, this);
 		if (trace_fraction < 1.0 && trace_plane_normal.z > 0.7)
@@ -183,8 +182,9 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		}
 	}
 
-	if (IS_ONGROUND(this) || this.velocity.z <= 0 || pmove_waterjumptime <= 0)
-		pmove_waterjumptime = 0;
+	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_TELEPORT_TIME(this) <= 0)
+		PHYS_TELEPORT_TIME(this) = 0;
+#endif
 }
 
 void PM_ClientMovement_Move(entity this)
@@ -274,7 +274,7 @@ void PM_ClientMovement_Move(entity this)
 		f = (this.velocity * trace1_plane_normal);
 		this.velocity = this.velocity + -f * trace1_plane_normal;
 	}
-	if(pmove_waterjumptime > 0)
+	if(PHYS_TELEPORT_TIME(this) > 0)
 		this.velocity = primalvelocity;
 #endif
 }
@@ -542,11 +542,7 @@ void CheckWaterJump(entity this)
 			this.velocity_z = 225;
 			this.flags |= FL_WATERJUMP;
 			SET_JUMP_HELD(this);
-#ifdef SVQC
-			this.teleport_time = time + 2;	// safety net
-#elif defined(CSQC)
-			pmove_waterjumptime = time + 2;
-#endif
+			PHYS_TELEPORT_TIME(this) = time + 2;	// safety net
 		}
 	}
 }
@@ -782,9 +778,7 @@ void PM_fly(entity this, float maxspd_mod)
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod);
-#ifdef SVQC
-	if (time >= this.teleport_time)
-#endif
+	if(time >= PHYS_TELEPORT_TIME(this))
 		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this) * maxspd_mod, 1, 0, 0, 0);
 	PM_ClientMovement_Move(this);
 }
@@ -813,7 +807,7 @@ void PM_swim(entity this, float maxspd_mod)
 			{
 				this.velocity = forward * 50;
 				this.velocity_z = 310;
-				pmove_waterjumptime = 2;
+				PHYS_TELEPORT_TIME(this) = 2;
 				UNSET_ONGROUND(this);
 				SET_JUMP_HELD(this);
 			}
@@ -917,9 +911,7 @@ void PM_ladder(entity this, float maxspd_mod)
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod);
-#ifdef SVQC
-	if (time >= this.teleport_time)
-#endif
+	if(time >= PHYS_TELEPORT_TIME(this))
 		// water acceleration
 		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this)*maxspd_mod, 1, 0, 0, 0);
 	PM_ClientMovement_Move(this);
@@ -1146,11 +1138,7 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
 
-#ifdef SVQC
-	if (time >= this.teleport_time)
-#else
-	if (pmove_waterjumptime <= 0)
-#endif
+	if(PHYS_TELEPORT_TIME(this) < time)
 	{
 		float maxairspd = PHYS_MAXAIRSPEED(this) * min(maxspd_mod, 1);
 
@@ -1245,7 +1233,7 @@ void PM_Main(entity this)
 	this.team = myteam + 1; // is this correct?
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
 		UNSET_JUMP_HELD(this); // canjump = true
-	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
+	PHYS_TELEPORT_TIME(this) -= PHYS_INPUT_TIMELENGTH;
 
 	PM_ClientMovement_UpdateStatus(this, true);
 #endif
@@ -1418,10 +1406,10 @@ void PM_Main(entity this)
 	{
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
-		if (time > this.teleport_time || this.waterlevel == WATERLEVEL_NONE)
+		if (time > PHYS_TELEPORT_TIME(this) || this.waterlevel == WATERLEVEL_NONE)
 		{
 			this.flags &= ~FL_WATERJUMP;
-			this.teleport_time = 0;
+			PHYS_TELEPORT_TIME(this) = 0;
 		}
 	}
 
@@ -1478,10 +1466,4 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 	SELFPARAM();
 #endif
 	PM_Main(this);
-#ifdef CSQC
-	this.pmove_flags =
-			((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
-			(!(this.flags & FL_JUMPRELEASED) ? PMF_JUMP_HELD : 0) |
-			((this.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);
-#endif
 }

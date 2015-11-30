@@ -21,7 +21,11 @@ void trigger_impulse_touch1()
 		return;
 	}
 
+#ifdef SVQC
 	str = min(self.radius, vlen(self.origin - other.origin));
+#elif defined(CSQC)
+	str = min(self.radius, vlen(self.move_origin - other.move_origin));
+#endif
 
 	if(self.falloff == 1)
 		str = (str / self.radius) * self.strength;
@@ -37,18 +41,35 @@ void trigger_impulse_touch1()
 
 	if(self.spawnflags & 64)
 	{
+#ifdef SVQC
 		float addspeed = str - other.velocity * normalize(targ.origin - self.origin);
 		if (addspeed > 0)
 		{
 			float accelspeed = min(8 * pushdeltatime * str, addspeed);
 			other.velocity += accelspeed * normalize(targ.origin - self.origin);
 		}
+#elif defined(CSQC)
+		float addspeed = str - other.move_velocity * normalize(targ.move_origin - self.move_origin);
+		if (addspeed > 0)
+		{
+			float accelspeed = min(8 * pushdeltatime * str, addspeed);
+			other.move_velocity += accelspeed * normalize(targ.move_origin - self.move_origin);
+		}
+#endif
 	}
 	else
-		other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
-	other.flags &= ~FL_ONGROUND;
 #ifdef SVQC
+		other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
+#elif defined(CSQC)
+		other.move_velocity = other.move_velocity + normalize(targ.move_origin - self.move_origin) * str * pushdeltatime;
+#endif
+
+#ifdef SVQC
+	other.flags &= ~FL_ONGROUND;
+
 	UpdateCSQCProjectile(other);
+#elif defined(CSQC)
+	other.move_flags &= ~FL_ONGROUND;
 #endif
 }
 
@@ -71,9 +92,12 @@ void trigger_impulse_touch2()
 	if(!pushdeltatime) return;
 
 	// div0: ticrate independent, 1 = identity (not 20)
-	other.velocity = other.velocity * pow(self.strength, pushdeltatime);
 #ifdef SVQC
+	other.velocity = other.velocity * pow(self.strength, pushdeltatime);
+
 	UpdateCSQCProjectile(other);
+#elif defined(CSQC)
+	other.move_velocity = other.move_velocity * pow(self.strength, pushdeltatime);
 #endif
 }
 
@@ -98,7 +122,11 @@ void trigger_impulse_touch3()
 
 	setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
 
+#ifdef SVQC
 	str = min(self.radius, vlen(self.origin - other.origin));
+#elif defined(CSQC)
+	str = min(self.radius, vlen(self.move_origin - other.move_origin));
+#endif
 
 	if(self.falloff == 1)
 		str = (1 - str / self.radius) * self.strength; // 1 in the inside
@@ -107,9 +135,12 @@ void trigger_impulse_touch3()
 	else
 		str = self.strength;
 
-	other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
 #ifdef SVQC
+	other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
+
 	UpdateCSQCProjectile(other);
+#elif defined(CSQC)
+	other.move_velocity = other.move_velocity + normalize(other.move_origin - self.move_origin) * str * pushdeltatime;
 #endif
 }
 
@@ -133,10 +164,11 @@ Use a brush textured with common/origin in the trigger entity to determine the o
 in directional and sperical mode. For damper/accelerator mode this is not nessesary (and has no effect).
 */
 #ifdef SVQC
-bool trigger_impulse_send(entity to, int sf)
-{SELFPARAM();
+bool trigger_impulse_send(entity this, entity to, int sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_IMPULSE);
 
+	WriteInt24_t(MSG_ENTITY, self.spawnflags);
 	WriteCoord(MSG_ENTITY, self.radius);
 	WriteCoord(MSG_ENTITY, self.strength);
 	WriteByte(MSG_ENTITY, self.falloff);
@@ -149,7 +181,7 @@ bool trigger_impulse_send(entity to, int sf)
 
 void trigger_impulse_link()
 {
-	//Net_LinkEntity(self, 0, false, trigger_impulse_send);
+	Net_LinkEntity(self, 0, false, trigger_impulse_send);
 }
 
 spawnfunc(trigger_impulse)
@@ -184,6 +216,7 @@ spawnfunc(trigger_impulse)
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 {
+	self.spawnflags = ReadInt24_t();
 	self.radius = ReadCoord();
 	self.strength = ReadCoord();
 	self.falloff = ReadByte();
@@ -195,12 +228,12 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 	self.classname = "trigger_impulse";
 	self.solid = SOLID_TRIGGER;
 	self.entremove = trigger_remove_generic;
-	self.draw = trigger_draw_generic;
+	//self.draw = trigger_draw_generic;
 	self.drawmask = MASK_NORMAL;
 	self.move_time = time;
 
-	if(self.radius) { self.trigger_touch = trigger_impulse_touch3; }
-	else if(self.target) { self.trigger_touch = trigger_impulse_touch1; }
-	else { self.trigger_touch = trigger_impulse_touch2; }
+	if(self.radius) { self.move_touch = trigger_impulse_touch3; }
+	else if(self.target) { self.move_touch = trigger_impulse_touch1; }
+	else { self.move_touch = trigger_impulse_touch2; }
 }
 #endif

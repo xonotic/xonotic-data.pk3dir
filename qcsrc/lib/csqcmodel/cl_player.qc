@@ -141,6 +141,9 @@ void Movetype_Physics_Spam(entity this)  // optimized
 	this.velocity = this.move_velocity;
 	this.angles = this.move_angles;
 	this.flags = BITSET(this.flags, FL_ONGROUND, boolean(this.move_flags & FL_ONGROUND));
+	this.flags = BITSET(this.flags, FL_WATERJUMP, boolean(this.move_flags & FL_WATERJUMP));
+	this.waterlevel = this.move_waterlevel;
+	this.watertype = this.move_watertype;
 	setorigin(this, this.move_origin);
 }
 
@@ -158,8 +161,16 @@ void CSQCPlayer_Physics(entity this)
 			this.move_velocity = this.velocity;
 			this.move_avelocity = this.avelocity;
 			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, boolean(this.flags & FL_ONGROUND));
+			this.move_flags = BITSET(this.move_flags, FL_WATERJUMP, boolean(this.flags & FL_WATERJUMP));
+			this.move_waterlevel = this.waterlevel;
+			this.move_watertype = this.watertype;
 			Movetype_Physics_Spam(this);
 		}
+
+		this.pmove_flags =
+				((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
+				(!(this.flags & FL_JUMPRELEASED) ? PMF_JUMP_HELD : 0) |
+				((this.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);
 	}
 }
 
