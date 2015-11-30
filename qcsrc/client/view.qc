@@ -304,7 +304,7 @@ void viewmodel_draw(entity this)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
-	float eta = (this.weapon_nextthink - time); // TODO: / W_WeaponRateFactor();
+	float eta = (this.weapon_nextthink - time) / STAT(WEAPONRATEFACTOR);
 	if (eta <= 0) f = this.weapon_eta_last;
 	else switch (this.state)
 	{
