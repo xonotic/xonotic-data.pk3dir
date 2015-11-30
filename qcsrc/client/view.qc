@@ -266,6 +266,7 @@ void viewmodel_animate(entity this)
 .vector viewmodel_origin, viewmodel_angles;
 .float weapon_nextthink;
 .float weapon_eta_last;
+.float weapon_switchdelay;
 
 void viewmodel_draw(entity this)
 {
@@ -309,16 +310,12 @@ void viewmodel_draw(entity this)
 	{
 		case WS_RAISE:
 		{
-			// entity newwep = Weapons_from(activeweapon);
-			float delay = 0.2; // TODO: newwep.switchdelay_raise;
-			f = eta / max(eta, delay);
+			f = eta / max(eta, this.weapon_switchdelay);
 			break;
 		}
 		case WS_DROP:
 		{
-			// entity oldwep = Weapons_from(activeweapon);
-			float delay = 0.2; // TODO: newwep.switchdelay_drop;
-			f = 1 - eta / max(eta, delay);
+			f = 1 - eta / max(eta, this.weapon_switchdelay);
 			break;
 		}
 		case WS_CLEAR:
