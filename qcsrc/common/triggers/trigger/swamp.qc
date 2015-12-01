@@ -95,8 +95,8 @@ void swamp_touch()
 REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)
 
 #ifdef SVQC
-float swamp_send(entity to, float sf)
-{SELFPARAM();
+float swamp_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SWAMP);
 
 	WriteByte(MSG_ENTITY, self.dmg); // can probably get away with using a single byte here
@@ -110,7 +110,7 @@ float swamp_send(entity to, float sf)
 
 void swamp_link()
 {SELFPARAM();
-	Net_LinkEntity(self, false, 0, func_ladder_send);
+	Net_LinkEntity(self, false, 0, swamp_send);
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?
