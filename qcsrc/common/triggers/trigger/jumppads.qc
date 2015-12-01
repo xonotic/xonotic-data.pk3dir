@@ -351,6 +351,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
+	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
 	Net_LinkEntity(self, false, 0, trigger_push_send);
 }
 #endif
@@ -401,11 +402,16 @@ bool target_push_send(entity this, entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.origin_y);
 	WriteCoord(MSG_ENTITY, self.origin_z);
 
+	WriteAngle(MSG_ENTITY, self.angles_x);
+	WriteAngle(MSG_ENTITY, self.angles_y);
+	WriteAngle(MSG_ENTITY, self.angles_z);
+
 	return true;
 }
 
 void target_push_link()
 {SELFPARAM();
+	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
 	Net_LinkEntity(self, false, 0, target_push_send);
 	//self.SendFlags |= 1; // update
 }
@@ -468,6 +474,10 @@ NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 	self.origin_x = ReadCoord();
 	self.origin_y = ReadCoord();
 	self.origin_z = ReadCoord();
+
+	self.angles_x = ReadAngle();
+	self.angles_y = ReadAngle();
+	self.angles_z = ReadAngle();
 
 	return = true;
 

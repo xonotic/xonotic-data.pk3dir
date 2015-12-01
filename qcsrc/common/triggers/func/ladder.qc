@@ -76,6 +76,7 @@ void func_ladder_init()
 	else
 		setsize(self, self.mins, self.maxs);
 	self.touch = func_ladder_touch;
+	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
 
 	func_ladder_link();
 }

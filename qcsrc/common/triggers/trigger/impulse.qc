@@ -24,7 +24,7 @@ void trigger_impulse_touch1()
 #ifdef SVQC
 	str = min(self.radius, vlen(self.origin - other.origin));
 #elif defined(CSQC)
-	str = min(self.radius, vlen(self.move_origin - other.move_origin));
+	str = min(self.radius, vlen(self.origin - other.move_origin));
 #endif
 
 	if(self.falloff == 1)
@@ -49,11 +49,11 @@ void trigger_impulse_touch1()
 			other.velocity += accelspeed * normalize(targ.origin - self.origin);
 		}
 #elif defined(CSQC)
-		float addspeed = str - other.move_velocity * normalize(targ.move_origin - self.move_origin);
+		float addspeed = str - other.move_velocity * normalize(targ.origin - self.origin);
 		if (addspeed > 0)
 		{
 			float accelspeed = min(8 * pushdeltatime * str, addspeed);
-			other.move_velocity += accelspeed * normalize(targ.move_origin - self.move_origin);
+			other.move_velocity += accelspeed * normalize(targ.origin - self.origin);
 		}
 #endif
 	}
@@ -61,11 +61,11 @@ void trigger_impulse_touch1()
 #ifdef SVQC
 		other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
 #elif defined(CSQC)
-		other.move_velocity = other.move_velocity + normalize(targ.move_origin - self.move_origin) * str * pushdeltatime;
+		other.move_velocity = other.move_velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
 #endif
 
 #ifdef SVQC
-	other.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(other);
 
 	UpdateCSQCProjectile(other);
 #elif defined(CSQC)
@@ -125,7 +125,7 @@ void trigger_impulse_touch3()
 #ifdef SVQC
 	str = min(self.radius, vlen(self.origin - other.origin));
 #elif defined(CSQC)
-	str = min(self.radius, vlen(self.move_origin - other.move_origin));
+	str = min(self.radius, vlen(self.origin - other.move_origin));
 #endif
 
 	if(self.falloff == 1)
@@ -140,7 +140,7 @@ void trigger_impulse_touch3()
 
 	UpdateCSQCProjectile(other);
 #elif defined(CSQC)
-	other.move_velocity = other.move_velocity + normalize(other.move_origin - self.move_origin) * str * pushdeltatime;
+	other.move_velocity = other.move_velocity + normalize(other.move_origin - self.origin) * str * pushdeltatime;
 #endif
 }
 
