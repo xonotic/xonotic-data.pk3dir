@@ -122,7 +122,8 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 {
 #ifdef CSQC
 	// make sure player is not stuck
-	PM_ClientMovement_Unstick(this);
+	if(autocvar_cl_movement != 3)
+		PM_ClientMovement_Unstick(this);
 
 	// set crouched
 	if (PHYS_INPUT_BUTTON_CROUCH(this))
@@ -158,27 +159,30 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 			UNSET_ONGROUND(this);
 	}
 
-	// set watertype/waterlevel
-	origin1 = this.origin;
-	origin1.z += this.mins_z + 1;
-	this.waterlevel = WATERLEVEL_NONE;
-
-	int thepoint = pointcontents(origin1);
-
-	this.watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
-
-	if (this.watertype)
+	if(autocvar_cl_movement != 3)
 	{
-		this.waterlevel = WATERLEVEL_WETFEET;
-		origin1.z = this.origin.z + (this.mins.z + this.maxs.z) * 0.5;
-		thepoint = pointcontents(origin1);
-		if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
+		// set watertype/waterlevel
+		origin1 = this.origin;
+		origin1.z += this.mins_z + 1;
+		this.waterlevel = WATERLEVEL_NONE;
+
+		int thepoint = pointcontents(origin1);
+
+		this.watertype = (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME);
+
+		if (this.watertype)
 		{
-			this.waterlevel = WATERLEVEL_SWIMMING;
-			origin1.z = this.origin.z + 22;
+			this.waterlevel = WATERLEVEL_WETFEET;
+			origin1.z = this.origin.z + (this.mins.z + this.maxs.z) * 0.5;
 			thepoint = pointcontents(origin1);
 			if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
-				this.waterlevel = WATERLEVEL_SUBMERGED;
+			{
+				this.waterlevel = WATERLEVEL_SWIMMING;
+				origin1.z = this.origin.z + 22;
+				thepoint = pointcontents(origin1);
+				if (thepoint == CONTENT_WATER || thepoint == CONTENT_LAVA || thepoint == CONTENT_SLIME)
+					this.waterlevel = WATERLEVEL_SUBMERGED;
+			}
 		}
 	}
 

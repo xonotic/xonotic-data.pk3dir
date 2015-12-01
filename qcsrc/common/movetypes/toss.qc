@@ -4,7 +4,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 {
 	if (this.move_flags & FL_ONGROUND)
 	{
-		if (this.move_velocity.z >= 1 / 32)
+		if (this.move_velocity.z >= 1 / 32 && UPWARD_VELOCITY_CLEARS_ONGROUND)
 		{
 			this.move_flags &= ~FL_ONGROUND;
 		}

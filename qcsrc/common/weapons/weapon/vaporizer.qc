@@ -71,7 +71,7 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	WriteCoord(MSG_BROADCAST, v.y);
 	WriteCoord(MSG_BROADCAST, v.z);
 	WriteByte(MSG_BROADCAST, hit);
-	WriteShort(MSG_BROADCAST, num_for_edict(player));
+	WriteByte(MSG_BROADCAST, num_for_edict(player));
 	WriteByte(MSG_BROADCAST, player.team);
 }
 #elif defined(CSQC)
@@ -103,7 +103,15 @@ void VaporizerBeam_Draw(entity this)
 	string tex = "particles/lgbeam";
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
-	vector rgb = getcsqcplayercolor(this.sv_entnum - 1);
+	vector rgb;
+	//entity e = CSQCModel_server2csqc(this.sv_entnum - 1);
+	//if (e == NULL)
+	//{
+		rgb = colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true);
+		//rgb = '1 1 1';
+	//}
+	//else
+	//	rgb = e.glowmod;
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (self.nextthink - time);
@@ -133,7 +141,9 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	this.vorg1_x = ReadCoord(); this.vorg1_y = ReadCoord(); this.vorg1_z = ReadCoord();
 	this.vorg2_x = ReadCoord(); this.vorg2_y = ReadCoord(); this.vorg2_z = ReadCoord();
 	this.cnt = ReadByte();
-	this.sv_entnum = ReadShort();
+	int myowner = ReadByte();
+	this.owner = playerslots[myowner - 1];
+	this.sv_entnum = myowner;
 	this.team = ReadByte() - 1;
 
 	if(autocvar_cl_vaporizerbeam_particle)

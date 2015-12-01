@@ -588,6 +588,8 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 		case MOVETYPE_FLY_WORLDONLY:
 			_Movetype_Physics_Toss(this, movedt);
 			break;
+		case MOVETYPE_PHYSICS:
+			break;
 	}
 }
 
