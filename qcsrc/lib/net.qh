@@ -35,6 +35,11 @@
 		}
 	}
 
+	void Net_UnlinkEntity(entity e)
+	{
+		e.SendEntity = func_null;
+	}
+
 	.void() uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 

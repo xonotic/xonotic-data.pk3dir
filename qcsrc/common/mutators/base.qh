@@ -157,6 +157,49 @@ ENDCLASS(Mutator)
 REGISTRY(Mutators, BITS(7))
 #define Mutators_from(i) _Mutators_from(i, NULL)
 Mutator loaded_mutators[Mutators_MAX];
+bool Mutator_Add(Mutator mut);
+void Mutator_Remove(Mutator mut);
+bool mutator_log = false;
+
+#ifndef MENUQC
+REGISTER_NET_LINKED(Mutator)
+
+#ifdef SVQC
+bool Mutator_SendEntity(entity this, entity to, int sf)
+{
+    int chan = MSG_ENTITY;
+    WriteHeader(chan, Mutator);
+    WriteString(chan, this.registered_id);
+    return true;
+}
+#endif
+
+#ifdef CSQC
+void NET_Mutator_Remove()
+{
+    SELFPARAM();
+    string s = this.netname;
+    WITH(bool, mutator_log, true, LAMBDA(
+        FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Remove(it)));
+    ));
+}
+NET_HANDLE(Mutator, bool isNew)
+{
+    string s = this.netname = ReadString();
+    return = true;
+    if (isNew)
+    {
+        this.entremove = NET_Mutator_Remove;
+        int added = 0;
+        WITH(bool, mutator_log, true, LAMBDA(
+            FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Add(it); ++added));
+        ));
+        if (added > 1) LOG_WARNINGF("Added more than one mutator for %s\n", s);
+    }
+}
+#endif
+
+#endif
 
 bool Mutator_Add(Mutator mut)
 {
@@ -175,6 +218,10 @@ bool Mutator_Add(Mutator mut)
     mutatorfunc_t func = mut.mutatorfunc;
     if (!func(MUTATOR_ADDING)) {
         // good
+        if (mutator_log) LOG_TRACEF("Mutator: added %s\n", mut.m_name);
+#ifdef SVQC
+        Net_LinkEntity(mut, false, 0, Mutator_SendEntity);
+#endif
         return true;
     }
     backtrace("WARNING: when adding mutator: adding failed, rolling back\n");
@@ -201,6 +248,10 @@ void Mutator_Remove(Mutator mut)
         // baaaaad
         error("Mutator_Remove: removing mutator failed");
     }
+    if (mutator_log) LOG_TRACEF("Mutator: removed %s\n", mut.m_name);
+#ifdef SVQC
+    Net_UnlinkEntity(mut);
+#endif
 }
 
 #define REGISTER_MUTATOR(id, dependence) \
