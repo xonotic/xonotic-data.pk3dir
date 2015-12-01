@@ -24,6 +24,7 @@ STATIC_INIT(shownames_ent)
 	for (int i = 0; i < maxclients; ++i)
 	{
 		entity e = new(shownames_tag);
+		make_pure(e);
 		e.sv_entnum = i + 1;
 		LL_PUSH(shownames_ent, e);
 	}
@@ -167,7 +168,12 @@ void Draw_ShowNames_All()
 	if (!autocvar_hud_shownames) return;
 	LL_EACH(shownames_ent, true, LAMBDA(
 		entity entcs = entcs_receiver(i);
-		if (!entcs) continue;
+		if (!entcs)
+		{
+			make_pure(it);
+			continue;
+		}
+		make_impure(it);
 		if (entcs.think) WITH(entity, self, entcs, entcs.think());
 		else
 		{

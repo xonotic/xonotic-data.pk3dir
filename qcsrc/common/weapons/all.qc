@@ -425,6 +425,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 			if (!this.weaponchild)
 			{
 				this.weaponchild = new(weaponchild);
+				make_pure(this.weaponchild);
 #ifdef CSQC
 				this.weaponchild.drawmask = MASK_NORMAL;
 				this.weaponchild.renderflags |= RF_VIEWMODEL;

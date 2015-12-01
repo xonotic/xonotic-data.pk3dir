@@ -337,6 +337,7 @@ void viewmodel_draw(entity this)
 entity viewmodel;
 STATIC_INIT(viewmodel) {
     viewmodel = new(viewmodel);
+    make_pure(viewmodel);
 	viewmodel.draw = viewmodel_draw;
 }
 

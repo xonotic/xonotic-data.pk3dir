@@ -189,6 +189,7 @@ NET_HANDLE(Mutator, bool isNew)
     return = true;
     if (isNew)
     {
+        make_pure(this);
         this.entremove = NET_Mutator_Remove;
         int added = 0;
         WITH(bool, mutator_log, true, LAMBDA(

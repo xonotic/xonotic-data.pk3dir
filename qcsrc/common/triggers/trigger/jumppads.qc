@@ -426,6 +426,7 @@ spawnfunc(target_position) { make_pure(this); target_push_link(); }
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
+	make_pure(this);
 	float sf = ReadByte();
 
 	if(sf & 1)
@@ -468,6 +469,7 @@ void target_push_remove()
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 {
+	make_pure(this);
 	self.classname = "push_target";
 	self.cnt = ReadByte();
 	self.targetname = strzone(ReadString());
