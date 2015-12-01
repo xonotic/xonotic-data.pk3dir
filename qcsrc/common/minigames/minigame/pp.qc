@@ -354,7 +354,7 @@ void pp_hud_board(vector pos, vector mySize)
 		FOREACH_MINIGAME_ENTITY(e)
 			if ( e.classname == "minigame_player" &&
 					e.team == (active_minigame.minigame_flags & PP_TURN_TEAM) )
-				playername = GetPlayerName(e.minigame_playerslot-1);
+				playername = entcs_GetName(e.minigame_playerslot-1);
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
@@ -412,7 +412,7 @@ void pp_hud_status(vector pos, vector mySize)
 			if ( e.team == 2 )
 				mypos_y  += player_fontsize_y + ts_y;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				GetPlayerName(e.minigame_playerslot-1),
+				entcs_GetName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			mypos_y += player_fontsize_y;

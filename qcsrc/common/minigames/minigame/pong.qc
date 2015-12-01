@@ -566,7 +566,7 @@ void pong_hud_status(vector pos, vector mySize)
 			drawfill(mypos, ts, pong_team_to_color(e.team), 0.25, DRAWFLAG_ADDITIVE);
 
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				(e.minigame_playerslot ? GetPlayerName(e.minigame_playerslot-1) : _("AI")),
+				(e.minigame_playerslot ? entcs_GetName(e.minigame_playerslot-1) : _("AI")),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			drawstring(mypos+eY*player_fontsize_y,ftos(e.pong_score),'48 48 0',

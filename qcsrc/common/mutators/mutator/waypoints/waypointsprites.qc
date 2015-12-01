@@ -469,7 +469,7 @@ void Draw_WaypointSprite(entity this)
 
     InterpolateOrigin_Do(self);
 
-    float t = GetPlayerColor(player_localnum) + 1;
+    float t = entcs_GetTeam(player_localnum) + 1;
 
     string spriteimage = "";
 

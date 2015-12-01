@@ -361,7 +361,7 @@ void HUD_Radar()
 	{
 		if (!tm.m_entcs_private) continue;
 		if (entcs_is_self(tm)) continue;
-		color2 = GetPlayerColor(tm.sv_entnum);
+		color2 = entcs_GetTeam(tm.sv_entnum);
 		//if(color == NUM_SPECTATOR || color == color2)
 			draw_teamradar_player(tm.origin, tm.angles, Team_ColorRGB(color2));
 	}

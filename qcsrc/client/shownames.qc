@@ -99,7 +99,7 @@ void Draw_ShowNames(entity this)
 	// multiply by player alpha
 	if (!this.sameteam || (this.sv_entnum == player_localentnum))
 	{
-		float f = getplayeralpha(this.sv_entnum - 1);
+		float f = entcs_GetAlpha(this.sv_entnum - 1);
 		if (f == 0) f = 1;
 		if (f < 0) f = 0;
 		// FIXME: alpha is negative when dead, breaking death fade
@@ -150,9 +150,9 @@ void Draw_ShowNames(entity this)
 					DRAWFLAG_NORMAL);
 			}
 		}
-		string s = GetPlayerName(this.sv_entnum - 1);
+		string s = entcs_GetName(this.sv_entnum - 1);
 		if ((autocvar_hud_shownames_decolorize == 1 && teamplay)
-		    || autocvar_hud_shownames_decolorize == 2) s = playername(s, GetPlayerColor(this.sv_entnum - 1));
+		    || autocvar_hud_shownames_decolorize == 2) s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
 		drawfontscale = '1 1 0' * resize;
 		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
@@ -186,7 +186,7 @@ void Draw_ShowNames_All()
 			it.armorvalue = 0;
 			it.sameteam = false;
 		}
-		bool dead = getplayerisdead(i);
+		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
 		if (!it.csqcmodel_isdead && entcs.has_origin) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);

@@ -109,7 +109,7 @@ void HUD_UpdatePlayerTeams()
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		num += 1;
-		Team = GetPlayerColor(pl.sv_entnum);
+		Team = entcs_GetTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
 		{
 			tmp = pl.sort_prev;
@@ -146,8 +146,8 @@ int HUD_CompareScore(float vl, float vr, int f)
 float HUD_ComparePlayerScores(entity left, entity right)
 {
 	float vl, vr, r;
-	vl = GetPlayerColor(left.sv_entnum);
-	vr = GetPlayerColor(right.sv_entnum);
+	vl = entcs_GetTeam(left.sv_entnum);
+	vr = entcs_GetTeam(right.sv_entnum);
 
 	if(!left.gotscores)
 		vl = NUM_SPECTATOR;
@@ -571,7 +571,7 @@ string HUD_GetField(entity pl, int field)
 					hud_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
 				}
 			}
-			return GetPlayerName(pl.sv_entnum);
+			return entcs_GetName(pl.sv_entnum);
 
 		case SP_FRAGS:
 			f = pl.(scores[SP_KILLS]);
@@ -710,7 +710,7 @@ void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_s
 	string str;
 	int field;
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
+	is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
 		rgb.x = autocvar_scoreboard_color_bg_r + 0.5;
@@ -1201,7 +1201,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		return pos;
 
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
+	is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
 	vector hl_rgb;
 	hl_rgb.x = autocvar_scoreboard_color_bg_r + 0.5;
 	hl_rgb.y = autocvar_scoreboard_color_bg_g + 0.5;
@@ -1230,7 +1230,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 			continue;
 		n = grecordholder[i];
 		p = count_ordinal(i+1);
-		if(grecordholder[i] == GetPlayerName(player_localnum))
+		if(grecordholder[i] == entcs_GetName(player_localnum))
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize.y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!(i % 2) && scoreboard_highlight)
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize.y, hl_rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);

@@ -62,7 +62,7 @@ void HUD_InfoMessages()
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(current_player));
+				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
 			drawInfoMessage(s);
 
 			if(spectatee_status == -1)

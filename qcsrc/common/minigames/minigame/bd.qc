@@ -854,7 +854,7 @@ void bd_hud_status(vector pos, vector mySize)
 		{
 			mypos = pos;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				GetPlayerName(e.minigame_playerslot-1),
+				entcs_GetName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			mypos_y += player_fontsize_y;

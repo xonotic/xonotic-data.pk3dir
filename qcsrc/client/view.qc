@@ -610,7 +610,7 @@ float EnemyHitCheck()
 		return SHOTTYPE_HITWORLD;
 	if(n > maxclients)
 		return SHOTTYPE_HITWORLD;
-	t = GetPlayerColor(n - 1);
+	t = entcs_GetTeam(n - 1);
 	if(teamplay)
 		if(t == myteam)
 			return SHOTTYPE_HITTEAM;
@@ -1420,7 +1420,7 @@ void CSQC_UpdateView(float w, float h)
 		current_player = player_localentnum - 1;
 	else // then player_localentnum is the vehicle I'm driving
 		current_player = player_localnum;
-	myteam = GetPlayerColor(current_player);
+	myteam = entcs_GetTeam(current_player);
 
 	if(myteam != prev_myteam)
 	{

@@ -55,10 +55,19 @@ REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 	#define entcs_is_self(e) ((e).sv_entnum == player_localentnum - 1)
 
 	/**
+     * @param i zero indexed player
+     */
+	bool entcs_IsSpectating(int i)
+	{
+		bool unconnected = !playerslots[i].gotscores;
+		return unconnected || stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR;
+	}
+
+	/**
 	* @param i zero indexed player
 	* @returns 0 if not teamplay
 	*/
-	int GetPlayerColorForce(int i)
+	int entcs_GetTeamColor(int i)
 	{
 		return (!teamplay) ? 0 : stof(getplayerkeyvalue(i, "colors")) & 15;
 	}
@@ -67,17 +76,15 @@ REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 	* @param i zero indexed player
 	* @returns 0 if not teamplay | NUM_TEAM_##N | NUM_SPECTATOR
 	*/
-	int GetPlayerColor(int i)
+	int entcs_GetTeam(int i)
 	{
-		bool unconnected = !playerslots[i].gotscores;
-		bool spec = unconnected || stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR;
-		return (spec) ? NUM_SPECTATOR : GetPlayerColorForce(i);
+		return entcs_IsSpectating(i) ? NUM_SPECTATOR : entcs_GetTeamColor(i);
 	}
 
 	/**
 	* @param i zero indexed player
 	*/
-	string GetPlayerName(int i)
+	string entcs_GetName(int i)
 	{
 		return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
 	}
@@ -92,7 +99,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
     /**
      * @param i zero indexed player
      */
-	float getplayeralpha(int i)
+	float entcs_GetAlpha(int i)
 	{
 		entity e = CSQCModel_server2csqc(i);
 		return e ? e.alpha : 1;
@@ -101,7 +108,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
     /**
      * @param i zero indexed player
      */
-	vector getcsqcplayercolor(int i)
+	vector entcs_GetColor(int i)
 	{
 		entity e = CSQCModel_server2csqc(i);
 		return (!e || e.colormap <= 0)
@@ -115,7 +122,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
     /**
      * @param i zero indexed player
      */
-	bool getplayerisdead(int i)
+	bool entcs_IsDead(int i)
 	{
 		entity e = CSQCModel_server2csqc(i);
 		return e ? e.csqcmodel_isdead : false;

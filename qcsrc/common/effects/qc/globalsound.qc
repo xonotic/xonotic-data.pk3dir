@@ -85,6 +85,8 @@
 			}
 			else
 			{
+				LOG_WARNINGF("Missing entcs data for player %d\n", who);
+				// Can this happen?
 				entity e = new(globalsound);
 				e.origin = o;
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
