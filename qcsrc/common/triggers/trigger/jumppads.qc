@@ -330,7 +330,7 @@ float trigger_push_send(entity this, entity to, float sf)
 		WriteByte(MSG_ENTITY, self.team);
 		WriteInt24_t(MSG_ENTITY, self.spawnflags);
 		WriteByte(MSG_ENTITY, self.active);
-		WriteByte(MSG_ENTITY, self.height);
+		WriteCoord(MSG_ENTITY, self.height);
 
 		trigger_common_write(true);
 	}
@@ -428,7 +428,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 		int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
 		self.spawnflags = ReadInt24_t();
 		self.active = ReadByte();
-		self.height = ReadByte();
+		self.height = ReadCoord();
 
 		trigger_common_read(true);
 
