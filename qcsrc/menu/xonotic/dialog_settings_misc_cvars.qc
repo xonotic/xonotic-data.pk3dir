@@ -15,6 +15,7 @@ ENDCLASS(XonoticCvarsDialog)
 #ifdef IMPLEMENTATION
 void XonoticCvarsDialog_showNotify(entity me)
 {
+	SUPER(XonoticCvarsDialog).showNotify(me);
 	loadAllCvars(me);
 }
 void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls

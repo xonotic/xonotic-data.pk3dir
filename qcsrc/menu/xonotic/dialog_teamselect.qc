@@ -32,6 +32,7 @@ entity makeTeamButton(string theName, vector theColor, string commandtheName)
 
 void XonoticTeamSelectDialog_showNotify(entity me)
 {
+	SUPER(XonoticTeamSelectDialog).showNotify(me);
 	float teams, nTeams;
 	teams = cvar("_teams_available");
 	nTeams = 0;

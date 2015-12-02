@@ -20,6 +20,7 @@ ENDCLASS(XonoticMutatorsDialog)
 #ifdef IMPLEMENTATION
 void XonoticMutatorsDialog_showNotify(entity me)
 {
+	SUPER(XonoticMutatorsDialog).showNotify(me);
 	loadAllCvars(me);
 }
 

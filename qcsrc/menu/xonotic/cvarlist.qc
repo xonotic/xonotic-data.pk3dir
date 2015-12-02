@@ -7,6 +7,7 @@ CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticCvarList, showNotify, void(entity));
 
 	METHOD(XonoticCvarList, destroy, void(entity));
 
@@ -53,8 +54,10 @@ entity makeXonoticCvarList()
 void XonoticCvarList_configureXonoticCvarList(entity me)
 {
 	me.configureXonoticListBox(me);
-
 	me.handle = buf_create();
+}
+void XonoticCvarList_showNotify(entity me)
+{
 	buf_cvarlist(me.handle, "", "_");
 	me.nItems = buf_getsize(me.handle);
 }
