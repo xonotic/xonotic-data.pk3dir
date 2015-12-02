@@ -110,18 +110,24 @@ CLASS(Sound, Object)
 			x(ogg) \
 			x(flac) \
 			/**/
-		string full, relative;
-		#define tryext(ext) { if (fexists(full = strcat("sound/", relative = strcat(base, "." #ext)))) break; }
+		string relative;
+		#define tryext(ext) { if (fexists(strcat("sound/", relative = strcat(base, "." #ext)))) break; }
 		do
 		{
 			extensions(tryext);
 #undef tryext
 #undef extensions
-			LOG_WARNINGF("Missing sound: \"%s\"\n", full);
+			LOG_WARNINGF("Missing sound: \"%s\"\n", strcat("sound/", base));
+#ifdef CSQC
 			return string_null;
+#endif
 		}
 		while (0);
+#ifdef SVQC
+		return strcat(base, ".wav");  // let the client engine decide
+#else
 		return relative;
+#endif
 	}
 	METHOD(Sound, sound_precache, void(entity this))
 	{
