@@ -25,7 +25,7 @@
 			WriteByte(channel, gs.m_id);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
-			WriteByte(channel, fabs(chan));
+			WriteByte(channel, chan);
 			WriteByte(channel, floor(vol * 255));
 			WriteByte(channel, floor(atten * 64));
 			entcs_force_origin(from);
@@ -47,7 +47,7 @@
 			WriteByte(channel, ps.m_id);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
-			WriteByte(channel, fabs(chan));
+			WriteByte(channel, chan);
 			WriteByte(channel, floor(vol * 255));
 			WriteByte(channel, floor(atten * 64));
 			entcs_force_origin(from);
@@ -70,6 +70,7 @@
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);
 			int chan = ReadByte();
+			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -85,12 +86,9 @@
 			}
 			else
 			{
-				LOG_WARNINGF("Missing entcs data for player %d\n", who);
 				// Can this happen?
-				entity e = new(globalsound);
-				e.origin = o;
+				LOG_WARNINGF("Missing entcs data for player %d\n", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
-				remove(e);  // debug with: e.think = SUB_Remove; e.nextthink = time + 1;
 			}
 			return true;
 		}
@@ -105,6 +103,7 @@
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
 			int chan = ReadByte();
+			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -120,12 +119,9 @@
 			}
 			else
 			{
-				LOG_WARNINGF("Missing entcs data for player %d\n", who);
 				// Can this happen?
-				entity e = new(playersound);
-				e.origin = o;
+				LOG_WARNINGF("Missing entcs data for player %d\n", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
-				remove(e);  // debug with: e.think = SUB_Remove; e.nextthink = time + 1;
 			}
 			return true;
 		}
