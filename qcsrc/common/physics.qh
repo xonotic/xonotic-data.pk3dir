@@ -55,8 +55,6 @@ bool IsFlying(entity a);
 
 #define PHYS_FROZEN(s)                      STAT(FROZEN, s)
 
-#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
-
 #define PHYS_HIGHSPEED                      STAT(MOVEVARS_HIGHSPEED, this)
 
 #define PHYS_JETPACK_ACCEL_SIDE 			STAT(JETPACK_ACCEL_SIDE, this)
@@ -112,6 +110,8 @@ bool IsFlying(entity a);
 
 	//float player_multijump;
 	//float player_jumpheight;
+
+	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
 
 	#define PHYS_TELEPORT_TIME(s)				pmove_waterjumptime
 
@@ -180,6 +180,8 @@ bool IsFlying(entity a);
 	.string stat_jumpspeedcap_min, stat_jumpspeedcap_max;
 
 	#define PHYS_TELEPORT_TIME(s)				s.teleport_time
+
+	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
 
 	#define TICRATE sys_frametime
 

@@ -37,11 +37,7 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
-#ifdef SVQC
-	grav = autocvar_sv_gravity;
-#elif defined(CSQC)
 	grav = PHYS_GRAVITY(other);
-#endif
 	if(PHYS_ENTGRAVITY(other))
 		grav *= PHYS_ENTGRAVITY(other);
 
