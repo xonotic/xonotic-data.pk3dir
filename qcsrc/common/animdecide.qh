@@ -8,6 +8,42 @@ void animdecide_load_if_needed(entity e);
 void animdecide_setimplicitstate(entity e, float onground);
 void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int fld_frame1time, .int fld_frame2, .int fld_frame2time);
 
+// player animation data for this model
+// each vector is as follows:
+// _x = startframe
+// _y = numframes
+// _z = framerate
+.vector anim_die1; // player dies
+.vector anim_die2; // player dies differently
+.vector anim_draw; // player pulls out a weapon
+.vector anim_duckwalk; // player walking while crouching
+.vector anim_duckjump; // player jumping from a crouch
+.vector anim_duckidle; // player idling while crouching
+.vector anim_idle; // player standing
+.vector anim_jump; // player jump
+.vector anim_pain1; // player flinches from pain
+.vector anim_pain2; // player flinches from pain, differently
+.vector anim_shoot; // player shoots
+.vector anim_taunt; // player taunts others (FIXME: no code references this)
+.vector anim_run; // player running forward
+.vector anim_runbackwards; // player running backward
+.vector anim_strafeleft; // player shuffling left quickly
+.vector anim_straferight; // player shuffling right quickly
+.vector anim_forwardright; // player running forward and right
+.vector anim_forwardleft; // player running forward and left
+.vector anim_backright; // player running backward and right
+.vector anim_backleft; // player running back and left
+.vector anim_melee; // player doing the melee action
+.vector anim_duck; // player doing the melee action
+.vector anim_duckwalkbackwards;
+.vector anim_duckwalkstrafeleft;
+.vector anim_duckwalkstraferight;
+.vector anim_duckwalkforwardright;
+.vector anim_duckwalkforwardleft;
+.vector anim_duckwalkbackright;
+.vector anim_duckwalkbackleft;
+.float animdecide_modelindex;
+
 // please network this one
 .int anim_state;
 .float anim_time;
@@ -26,18 +62,19 @@ void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int 
 
 // explicit anim states (networked)
 void animdecide_setstate(entity e, int newstate, float restart);
-const int ANIMSTATE_DEAD1 = 1; // base frames: die1
-const int ANIMSTATE_DEAD2 = 2; // base frames: die2
-const int ANIMSTATE_DUCK = 4; // turns walk into duckwalk, jump into duckjump, etc.
-const int ANIMSTATE_FROZEN = 8; // force idle
+const int ANIMSTATE_DEAD1 = BIT(0); // base frames: die1
+const int ANIMSTATE_DEAD2 = BIT(1); // base frames: die2
+const int ANIMSTATE_DUCK = BIT(2); // turns walk into duckwalk, jump into duckjump, etc.
+const int ANIMSTATE_FROZEN = BIT(3); // force idle
+const int ANIMSTATE_FOLLOW = BIT(4); // also force idle
 
 // implicit anim states (inferred from velocity, etc.)
-const int ANIMIMPLICITSTATE_INAIR = 1;
-const int ANIMIMPLICITSTATE_FORWARD = 2;
-const int ANIMIMPLICITSTATE_BACKWARDS = 4;
-const int ANIMIMPLICITSTATE_LEFT = 8;
-const int ANIMIMPLICITSTATE_RIGHT = 16;
-const int ANIMIMPLICITSTATE_JUMPRELEASED = 32;
+const int ANIMIMPLICITSTATE_INAIR = BIT(0);
+const int ANIMIMPLICITSTATE_FORWARD = BIT(1);
+const int ANIMIMPLICITSTATE_BACKWARDS = BIT(2);
+const int ANIMIMPLICITSTATE_LEFT = BIT(3);
+const int ANIMIMPLICITSTATE_RIGHT = BIT(4);
+const int ANIMIMPLICITSTATE_JUMPRELEASED = BIT(5);
 
 // explicit actions (networked); negative values are for lower body
 void animdecide_setaction(entity e, float action, float restart);

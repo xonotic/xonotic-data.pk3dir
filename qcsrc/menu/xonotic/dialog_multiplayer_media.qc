@@ -2,8 +2,7 @@
 #define DIALOG_MULTIPLAYER_MEDIA_H
 #include "tab.qc"
 CLASS(XonoticMediaTab, XonoticTab)
-	METHOD(XonoticMediaTab, fill, void(entity))
-	ATTRIB(XonoticMediaTab, title, string, _("Media"))
+	METHOD(XonoticMediaTab, fill, void(entity));
 	ATTRIB(XonoticMediaTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMediaTab, rows, float, 23)
 	ATTRIB(XonoticMediaTab, columns, float, 3)

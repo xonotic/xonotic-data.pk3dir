@@ -1,8 +1,5 @@
-#include "../../_all.qh"
 
 #include "havocbot.qh"
-#include "role_keyhunt.qh"
-#include "role_onslaught.qh"
 
 #include "../bot.qh"
 #include "../navigation.qh"
@@ -14,7 +11,7 @@
 .void() havocbot_role;
 
 void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	entity player;
 	float rating, d, discard, distance, friend_distance, enemy_distance;
@@ -139,7 +136,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 }
 
 void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	head = findchain(classname, "dom_controlpoint");
 	while (head)
@@ -158,7 +155,7 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 }
 
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
-{
+{SELFPARAM();
 	entity head;
 	int t;
 	float distance;
@@ -212,13 +209,10 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 	}
 }
 
-// choose a role according to the situation
-void havocbot_role_dm();
-
-//DM:
-//go to best items
-void havocbot_role_dm()
-{
+// legacy bot role for standard gamemodes
+// go to best items
+void havocbot_role_generic()
+{SELFPARAM();
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -233,21 +227,15 @@ void havocbot_role_dm()
 	}
 }
 
-void havocbot_chooserole_dm()
-{
-	self.havocbot_role = havocbot_role_dm;
+void havocbot_chooserole_generic()
+{SELFPARAM();
+	self.havocbot_role = havocbot_role_generic;
 }
 
 void havocbot_chooserole()
-{
-	dprint("choosing a role...\n");
+{SELFPARAM();
+	LOG_TRACE("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
-		return;
-	else if (g_keyhunt)
-		havocbot_chooserole_kh();
-	else if (g_onslaught)
-		havocbot_chooserole_ons();
-	else // assume anything else is deathmatch
-		havocbot_chooserole_dm();
+	if(!MUTATOR_CALLHOOK(HavocBot_ChooseRole, self))
+		havocbot_chooserole_generic();
 }

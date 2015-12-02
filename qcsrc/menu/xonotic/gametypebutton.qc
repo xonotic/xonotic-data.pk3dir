@@ -2,8 +2,8 @@
 #define GAMETYPEBUTTON_H
 #include "../item/radiobutton.qc"
 CLASS(XonoticGametypeButton, RadioButton)
-	METHOD(XonoticGametypeButton, configureXonoticGametypeButton, void(entity, float, string, string))
-	METHOD(XonoticGametypeButton, setChecked, void(entity, float))
+	METHOD(XonoticGametypeButton, configureXonoticGametypeButton, void(entity, float, string, string));
+	METHOD(XonoticGametypeButton, setChecked, void(entity, float));
 	ATTRIB(XonoticGametypeButton, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticGametypeButton, image, string, SKINGFX_BUTTON_BIG)
 	ATTRIB(XonoticGametypeButton, color, vector, SKINCOLOR_BUTTON_N)
@@ -14,8 +14,8 @@ CLASS(XonoticGametypeButton, RadioButton)
 	ATTRIB(XonoticGametypeButton, useDownAsChecked, float, 1)
 
 	ATTRIB(XonoticGametypeButton, cvarName, string, string_null)
-	METHOD(XonoticGametypeButton, loadCvars, void(entity))
-	METHOD(XonoticGametypeButton, saveCvars, void(entity))
+	METHOD(XonoticGametypeButton, loadCvars, void(entity));
+	METHOD(XonoticGametypeButton, saveCvars, void(entity));
 
 	ATTRIB(XonoticGametypeButton, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticGametypeButton, disabledAlpha, float, SKINALPHA_DISABLED)
@@ -29,17 +29,14 @@ entity makeXonoticGametypeButton(float theGroup, string theCvar, string theText)
 {
 	entity me;
 	me = NEW(XonoticGametypeButton);
-	me.configureXonoticGametypeButton(me, theGroup, theCvar, theText);
+	me.configureXonoticGametypeButton(me, theGroup, theCvar, theText, theTooltip);
 	return me;
 }
-void XonoticGametypeButton_configureXonoticGametypeButton(entity me, float theGroup, string theCvar, string theText)
+void XonoticGametypeButton_configureXonoticGametypeButton(entity me, float theGroup, string theCvar, string theText, string theTooltip)
 {
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);
 	me.align = 0.5;
 	me.onClick = GameTypeButton_Click;

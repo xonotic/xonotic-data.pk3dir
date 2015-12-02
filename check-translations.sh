@@ -36,7 +36,8 @@ fi
 
 if [ x"$mode" = x"txt" ]; then
 	{
-		echo "en English \"English\""
+		item=`grep "^en " languages.txt`
+		echo "$item"
 		for X in common.*.po; do
 			[ -f "$X" ] || continue
 			if [ -n "$language" ]; then
@@ -67,9 +68,9 @@ if [ x"$mode" = x"txt" ]; then
 				if [ "$p" -lt 50 ]; then
 					continue
 				fi
-				item="$l $l \"$l (0%)\""
+				item="$l $l \"$l\" 0%"
 			fi
-			printf "%s\n" "$item" | sed -e "s/([0-9][0-9]*%)/($p%)/"
+			printf "%s\n" "$item" | sed -e "s/[0-9][0-9]*%/$p%/"
 		done
 	} | tr '"' '\t' | sort -k3 | tr '\t' '"'
 fi

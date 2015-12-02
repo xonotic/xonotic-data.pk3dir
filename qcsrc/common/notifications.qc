@@ -1,16 +1,14 @@
 #if defined(CSQC)
+	#include "../client/announcer.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "teams.qh"
-    #include "counting.qh"
     #include "../server/autocvars.qh"
     #include "../server/constants.qh"
     #include "../server/defs.qh"
     #include "notifications.qh"
-    #include "../server/mutators/mutators_include.qh"
+    #include "../server/mutators/all.qh"
 #endif
 
 // ================================================
@@ -70,7 +68,7 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 {
 	// check supplied type and name for errors
 	string checkargs = "";
-	#define CHECKARG_TYPENAME(type) case MSG_##type##: \
+	#define CHECKARG_TYPENAME(type) case MSG_##type: \
 		{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
 		{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
 	switch(net_type)
@@ -236,7 +234,7 @@ void Destroy_Notification_Entity(entity notif)
 	remove(notif);
 }
 
-void Destroy_All_Notifications(void)
+void Destroy_All_Notifications()
 {
 	entity notif;
 	int i;
@@ -297,7 +295,7 @@ string Process_Notif_Line(
 	// done to both MSG_INFO and MSG_CENTER
 	if(substring(input, (strlen(input) - 1), 1) == "\n")
 	{
-		printf(
+		LOG_INFOF(
 			strcat(
 				"^1TRAILING NEW LINE AT END OF NOTIFICATION: ",
 				"^7net_type = %s, net_name = %s, string = %s.\n"
@@ -332,7 +330,7 @@ string Process_Notif_Args(
 			{
 				if(sel_num == NOTIF_MAX_ARGS)
 				{
-					printf(
+					LOG_INFOF(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
 							"^7net_type = %s, net_name = %s, max args = %d.\n"
@@ -364,7 +362,7 @@ string Process_Notif_Args(
 					#undef ARG_CASE_ARG_CS_SV_HA
 					default:
 					{
-						printf(
+						LOG_INFOF(
 							strcat(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
 								"^7net_type = %s, net_name = %s, args arg = '%s'.\n"
@@ -383,7 +381,7 @@ string Process_Notif_Args(
 			{
 				if(sel_num == NOTIF_MAX_HUDARGS)
 				{
-					printf(
+					LOG_INFOF(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
 							"^7net_type = %s, net_name = %s, max hudargs = %d.\n"
@@ -415,7 +413,7 @@ string Process_Notif_Args(
 					#undef ARG_CASE_ARG_CS_SV_HA
 					default:
 					{
-						printf(
+						LOG_INFOF(
 							strcat(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
 								"^7net_type = %s, net_name = %s, hudargs arg = '%s'.\n"
@@ -434,7 +432,7 @@ string Process_Notif_Args(
 			{
 				if(sel_num == NOTIF_MAX_DURCNT)
 				{
-					printf(
+					LOG_INFOF(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
 							"^7net_type = %s, net_name = %s, max durcnt = %d.\n"
@@ -469,7 +467,7 @@ string Process_Notif_Args(
 						if(ftos(stof(selected)) != "") { ++sel_num; }
 						else
 						{
-							printf(
+							LOG_INFOF(
 								strcat(
 									"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
 									"^7net_type = %s, net_name = %s, durcnt arg = '%s'.\n"
@@ -526,6 +524,7 @@ void Create_Notification_Entity(
 	//  Global Entity Setup
 	// =====================
 	entity notif = spawn();
+	make_pure(notif);
 	switch(typeId)
 	{
 		case MSG_ANNCE:
@@ -598,7 +597,7 @@ void Create_Notification_Entity(
 				{
 					if(notif.nent_enabled)
 					{
-						precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
+						precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), snd));
 						notif.nent_channel = channel;
 						notif.nent_snd = strzone(snd);
 						notif.nent_vol = vol;
@@ -607,7 +606,7 @@ void Create_Notification_Entity(
 				}
 				else
 				{
-					printf(
+					LOG_INFOF(
 						strcat(
 							"^1NOTIFICATION WITH NO SOUND: ",
 							"^7net_type = %s, net_name = %s.\n"
@@ -654,7 +653,7 @@ void Create_Notification_Entity(
 					}
 					else if((hudargs == "") && (durcnt ==""))
 					{
-						printf(
+						LOG_INFOF(
 							strcat(
 								"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ",
 								"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d\n"
@@ -688,7 +687,7 @@ void Create_Notification_Entity(
 					if(icon != "") { notif.nent_icon = strzone(icon); }
 					else
 					{
-						printf(
+						LOG_INFOF(
 							strcat(
 								"^1NOTIFICATION HAS HUDARGS BUT NO ICON: ",
 								"^7net_type = %s, net_name = %s.\n"
@@ -701,7 +700,7 @@ void Create_Notification_Entity(
 				}
 				else if(icon != "")
 				{
-					printf(
+					LOG_INFOF(
 						strcat(
 							"^1NOTIFICATION HAS ICON BUT NO HUDARGS: ",
 							"^7net_type = %s, net_name = %s.\n"
@@ -720,7 +719,7 @@ void Create_Notification_Entity(
 					if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
 					else
 					{
-						printf(
+						LOG_INFOF(
 							strcat(
 								"^1NOTIFICATION HAS DURCNT BUT NO CPID: ",
 								"^7net_type = %s, net_name = %s.\n"
@@ -762,7 +761,7 @@ void Create_Notification_Entity(
 				// Check to make sure a string was chosen
 				if(notif.nent_string == "")
 				{
-					printf(
+					LOG_INFOF(
 						strcat(
 							"^1EMPTY NOTIFICATION: ",
 							"^7net_type = %s, net_name = %s.\n"
@@ -782,7 +781,7 @@ void Create_Notification_Entity(
 			// Set MSG_MULTI string/float counts
 			if((anncename == NO_MSG) && (infoname == NO_MSG) && (centername == NO_MSG))
 			{
-				printf(
+				LOG_INFOF(
 					strcat(
 						"^1NOTIFICATION WITH NO SUBCALLS: ",
 						"^7net_type = %s, net_name = %s.\n"
@@ -826,7 +825,7 @@ void Create_Notification_Entity(
 		{
 			if((chtype == NO_MSG) || (optiona == NO_MSG) || (optionb == NO_MSG))
 			{
-				printf(
+				LOG_INFOF(
 					strcat(
 						"^1NOTIFICATION IS MISSING CHOICE PARAMS: ",
 						"^7net_type = %s, net_name = %s.\n"
@@ -873,7 +872,7 @@ void Create_Notification_Entity(
 
 					default:
 					{
-						printf(
+						LOG_INFOF(
 							strcat(
 								"^1NOTIFICATION WITH IMPROPER TYPE: ",
 								"^7net_type = %d, net_name = %s.\n"
@@ -916,7 +915,7 @@ void Create_Notification_Entity(
 
 		default:
 		{
-			printf(
+			LOG_INFOF(
 				strcat(
 					"^1NOTIFICATION WITH IMPROPER TYPE: ",
 					"^7net_type = %d, net_name = %s.\n"
@@ -944,7 +943,7 @@ void Create_Notification_Entity(
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars(void)
+void Notification_GetCvars()
 {
 	for(int i = 0; i <= NOTIF_CHOICE_COUNT; ++i)
 	{
@@ -963,7 +962,7 @@ void Dump_Notifications(float fh, float alsoprint)
 {
 	#define NOTIF_WRITE(a) { \
 		fputs(fh, a); \
-		if(alsoprint) { print(a); } }
+		if(alsoprint) { LOG_INFO(a); } }
 	#define NOTIF_WRITE_ENTITY(description) { \
 		notif_msg = \
 			sprintf( \
@@ -1194,8 +1193,8 @@ void Debug_Notification(string input)
 {
 	switch(autocvar_notification_debug)
 	{
-		case 1: { dprint(input); break; }
-		case 2: { print(input); break; }
+		case 1: { LOG_TRACE(input); break; }
+		case 2: { LOG_INFO(input); break; }
 	}
 }
 #endif
@@ -1279,7 +1278,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1287,12 +1286,12 @@ void Local_Notification_sound(
 		));
 		#endif
 
-		sound(
+		_sound(
 			world,
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1314,7 +1313,7 @@ void Local_Notification_sound(
 			soundchannel,
 			sprintf(
 				"announcer/%s/%s.wav",
-				autocvar_cl_announcer,
+				AnnouncerOption(),
 				soundfile
 			),
 			soundvolume,
@@ -1561,6 +1560,14 @@ void Local_Notification(int net_type, int net_name, ...count)
 			#ifdef CSQC
 			if(notif.nent_icon != "")
 			{
+				if ( notif.nent_iconargs != "" )
+				{
+					notif.nent_icon = Local_Notification_sprintf(
+						notif.nent_icon,notif.nent_iconargs,
+						s1, s2, s3, s4, f1, f2, f3, f4);
+					// remove the newline added by Local_Notification_sprintf
+					notif.nent_icon = strzone(substring(notif.nent_icon,0,strlen(notif.nent_icon)-1));
+				}
 				Local_Notification_HUD_Notify_Push(
 					notif.nent_icon,
 					notif.nent_hudargs,
@@ -1672,11 +1679,14 @@ void Local_Notification_WOVA(
 //  Notification Networking
 // =========================
 
+REGISTER_NET_LINKED(ENT_CLIENT_NOTIFICATION)
+
 #ifdef CSQC
-void Read_Notification(float is_new)
+NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 {
 	int net_type = ReadByte();
 	int net_name = ReadShort();
+	return = true;
 
 	entity notif;
 
@@ -1749,7 +1759,7 @@ void Read_Notification(float is_new)
 
 #ifdef SVQC
 void Net_Notification_Remove()
-{
+{SELFPARAM();
 	if (!self) { backtrace(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
 
 	#ifdef NOTIFICATIONS_DEBUG
@@ -1766,11 +1776,11 @@ void Net_Notification_Remove()
 	remove(self);
 }
 
-float Net_Write_Notification(entity client, int sf)
+bool Net_Write_Notification(entity this, entity client, int sf)
 {
 	if(Notification_ShouldSend(self.nent_broadcast, client, self.nent_client))
 	{
-		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
+		WriteHeader(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
 		WriteByte(MSG_ENTITY, self.nent_net_type);
 		WriteShort(MSG_ENTITY, self.nent_net_name);
 		for(int i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); }
@@ -1836,8 +1846,8 @@ void Kill_Notification(
 
 	if(killed_cpid != NO_CPID)
 	{
-		net_notif = spawn();
-		net_notif.classname = "net_kill_notification";
+		net_notif = new(net_kill_notification);
+		make_pure(net_notif);
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = MSG_CENTER_CPID;
@@ -1953,6 +1963,12 @@ void Send_Notification(
 
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 	{
+		string s =
+		#ifdef NOTIFICATIONS_DEBUG
+		Get_Notif_BroadcastName(broadcast);
+		#else
+		ftos(broadcast);
+		#endif
 		backtrace(sprintf(
 			strcat(
 				"Not enough arguments for Send_Notification(%s, ...)! ",
@@ -1960,13 +1976,8 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
-				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
-				Get_Notif_BroadcastName(broadcast),
-				#else
-				"%d, '%s', %s, %s",
-				broadcast,
-				#endif
+				s,
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name
@@ -1979,6 +1990,12 @@ void Send_Notification(
 	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
 	{
+		string s =
+		#ifdef NOTIFICATIONS_DEBUG
+		Get_Notif_BroadcastName(broadcast);
+		#else
+		ftos(broadcast);
+		#endif
 		backtrace(sprintf(
 			strcat(
 				"Too many arguments for Send_Notification(%s, ...)! ",
@@ -1986,13 +2003,8 @@ void Send_Notification(
 				"Check the definition and function call for accuracy...?\n"
 			),
 			sprintf(
-				#ifdef NOTIFICATIONS_DEBUG
 				"%s, '%s', %s, %s",
-				Get_Notif_BroadcastName(broadcast),
-				#else
-				"%d, '%s', %s, %s",
-				broadcast,
-				#endif
+				s,
 				client.classname,
 				Get_Notif_TypeName(net_type),
 				notif.nent_name
@@ -2085,9 +2097,9 @@ void Send_Notification(
 	}
 	else
 	{
-		entity net_notif = spawn();
+		entity net_notif = new(net_notification);
+		make_pure(net_notif);
 		net_notif.owner = notif;
-		net_notif.classname = "net_notification";
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = net_type;

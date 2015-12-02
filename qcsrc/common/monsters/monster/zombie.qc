@@ -1,17 +1,34 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
-/* MON_##id   */ ZOMBIE,
-/* function   */ m_zombie,
-/* spawnflags */ MON_FLAG_MELEE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 47',
-/* model      */ "zombie.dpm",
-/* netname    */ "zombie",
-/* fullname   */ _("Zombie")
-);
+#ifndef ZOMBIE_H
+#define ZOMBIE_H
 
-#else
+#ifndef MENUQC
+MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
+#endif
+
+CLASS(Zombie, Monster)
+    ATTRIB(Zombie, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RIDE);
+    ATTRIB(Zombie, mins, vector, '-18 -18 -25');
+    ATTRIB(Zombie, maxs, vector, '18 18 47');
+#ifndef MENUQC
+    ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
+#endif
+    ATTRIB(Zombie, netname, string, "zombie");
+    ATTRIB(Zombie, monster_name, string, _("Zombie"));
+ENDCLASS(Zombie)
+
+REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
+#ifndef MENUQC
+    this.mr_precache(this);
+#endif
+}
+
+#endif
+
+#ifdef IMPLEMENTATION
+
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
+float autocvar_g_monster_zombie_damageforcescale = 0.55;
 float autocvar_g_monster_zombie_attack_melee_damage;
 float autocvar_g_monster_zombie_attack_melee_delay;
 float autocvar_g_monster_zombie_attack_leap_damage;
@@ -22,6 +39,7 @@ float autocvar_g_monster_zombie_speed_stop;
 float autocvar_g_monster_zombie_speed_run;
 float autocvar_g_monster_zombie_speed_walk;
 
+/*
 const float zombie_anim_attackleap			= 0;
 const float zombie_anim_attackrun1			= 1;
 const float zombie_anim_attackrun2			= 2;
@@ -53,9 +71,12 @@ const float zombie_anim_runforward			= 27;
 const float zombie_anim_runforwardleft		= 28;
 const float zombie_anim_runforwardright		= 29;
 const float zombie_anim_spawn				= 30;
+*/
 
-void zombie_attack_leap_touch()
-{
+.vector moveto;
+
+void M_Zombie_Attack_Leap_Touch()
+{SELFPARAM();
 	if (self.health <= 0)
 		return;
 
@@ -65,93 +86,128 @@ void zombie_attack_leap_touch()
 	{
 		angles_face = vectoangles(self.moveto - self.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * Monster_SkillModifier(), DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
-		self.touch = MonsterTouch; // instantly turn it off to stop damage spam
+		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP.m_id, other.origin, angles_face);
+		self.touch = Monster_Touch; // instantly turn it off to stop damage spam
+		self.state = 0;
 	}
 
 	if (trace_dphitcontents)
-		self.touch = MonsterTouch;
+	{
+		self.state = 0;
+		self.touch = Monster_Touch;
+	}
 }
 
-void zombie_blockend()
-{
+void M_Zombie_Defend_Block_End()
+{SELFPARAM();
 	if(self.health <= 0)
 		return;
 
-	self.frame = zombie_anim_blockend;
-	self.armorvalue = 0;
-	self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
+	setanim(self, self.anim_blockend, false, true, true);
+	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
 }
 
-float zombie_block()
-{
-	self.frame = zombie_anim_blockstart;
-	self.armorvalue = 100;
-	self.m_armor_blockpercent = 0.9;
-	self.state = MONSTER_STATE_ATTACK_MELEE; // freeze monster
-	self.attack_finished_single = time + 2.1;
+float M_Zombie_Defend_Block()
+{SELFPARAM();
+	self.armorvalue = 0.9;
+	self.state = MONSTER_ATTACK_MELEE; // freeze monster
+	self.attack_finished_single[0] = time + 2.1;
+	self.anim_finished = self.attack_finished_single[0];
+	setanim(self, self.anim_blockstart, false, true, true);
 
-	defer(2, zombie_blockend);
+	Monster_Delay(1, 0, 2, M_Zombie_Defend_Block_End);
 
 	return true;
 }
 
-float zombie_attack(float attack_type)
-{
+float M_Zombie_Attack(float attack_type, entity targ)
+{SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float rand = random(), chosen_anim;
+			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
+				return M_Zombie_Defend_Block();
+
+			float rand = random();
+			vector chosen_anim;
 
 			if(rand < 0.33)
-				chosen_anim = zombie_anim_attackstanding1;
+				chosen_anim = self.anim_melee1;
 			else if(rand < 0.66)
-				chosen_anim = zombie_anim_attackstanding2;
+				chosen_anim = self.anim_melee2;
 			else
-				chosen_anim = zombie_anim_attackstanding3;
+				chosen_anim = self.anim_melee3;
 
-			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
-				return zombie_block();
-
-			return monster_melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, true);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE.m_id, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
-			return monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
+			return Monster_Attack_Leap(self.anim_shoot, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
 		}
 	}
 
 	return false;
 }
 
-void spawnfunc_monster_zombie()
-{
-	self.classname = "monster_zombie";
+spawnfunc(monster_zombie) { Monster_Spawn(MON_ZOMBIE.monsterid); }
+#endif // SVQC
 
-	if(!monster_initialize(MON_ZOMBIE)) { remove(self); return; }
-}
-
-float m_zombie(float req)
-{
-	switch(req)
-	{
-		case MR_THINK:
+		#ifdef SVQC
+		METHOD(Zombie, mr_think, bool(Zombie thismon))
 		{
-			monster_move((autocvar_g_monster_zombie_speed_run), (autocvar_g_monster_zombie_speed_walk), (autocvar_g_monster_zombie_speed_stop), zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
+			SELFPARAM();
+			if(time >= self.spawn_time)
+				self.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
 			return true;
 		}
-		case MR_DEATH:
+		METHOD(Zombie, mr_pain, bool(Zombie thismon))
 		{
-			self.armorvalue = 0;
-			self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
-			self.frame = ((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
+			SELFPARAM();
+			self.pain_finished = time + 0.34;
+			setanim(self, ((random() > 0.5) ? self.anim_pain1 : self.anim_pain2), true, true, false);
 			return true;
 		}
-		case MR_SETUP:
+		METHOD(Zombie, mr_death, bool(Zombie thismon))
+		{
+			SELFPARAM();
+			self.armorvalue = autocvar_g_monsters_armor_blockpercent;
+
+			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
+			return true;
+		}
+		#endif
+		#ifndef MENUQC
+		METHOD(Zombie, mr_anim, bool(Zombie thismon))
+		{
+			SELFPARAM();
+			vector none = '0 0 0';
+			self.anim_die1 = animfixfps(self, '9 1 0.5', none); // 2 seconds
+			self.anim_die2 = animfixfps(self, '12 1 0.5', none); // 2 seconds
+			self.anim_spawn = animfixfps(self, '30 1 3', none);
+			self.anim_walk = animfixfps(self, '27 1 1', none);
+			self.anim_idle = animfixfps(self, '19 1 1', none);
+			self.anim_pain1 = animfixfps(self, '20 1 2', none); // 0.5 seconds
+			self.anim_pain2 = animfixfps(self, '22 1 2', none); // 0.5 seconds
+			self.anim_melee1 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_melee2 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_melee3 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
+			self.anim_shoot = animfixfps(self, '0 1 5', none); // analyze models and set framerate
+			self.anim_run = animfixfps(self, '27 1 1', none);
+			self.anim_blockstart = animfixfps(self, '8 1 1', none);
+			self.anim_blockend = animfixfps(self, '7 1 1', none);
+
+			return true;
+		}
+		#endif
+		#ifdef SVQC
+		METHOD(Zombie, mr_setup, bool(Zombie thismon))
 		{
 			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
+			if(!self.speed) { self.speed = (autocvar_g_monster_zombie_speed_walk); }
+			if(!self.speed2) { self.speed2 = (autocvar_g_monster_zombie_speed_run); }
+			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
 
 			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
 				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
@@ -159,38 +215,20 @@ float m_zombie(float req)
 			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
 			self.monster_loot = spawnfunc_item_health_medium;
-			self.monster_attackfunc	= zombie_attack;
-			self.frame = zombie_anim_spawn;
-			self.spawn_time = time + 2.1;
+			self.monster_attackfunc = M_Zombie_Attack;
 			self.spawnshieldtime = self.spawn_time;
 			self.respawntime = 0.2;
+			self.damageforcescale = 0.0001; // no push while spawning
+
+			setanim(self, self.anim_spawn, false, true, true);
+			self.spawn_time = self.animstate_endtime;
 
 			return true;
 		}
-		case MR_PRECACHE:
-		{
-			precache_model("models/monsters/zombie.dpm");
-			return true;
-		}
-	}
-
-	return true;
-}
-
-#endif // SVQC
-#ifdef CSQC
-float m_zombie(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
+		METHOD(Zombie, mr_precache, bool(Zombie thismon))
 		{
 			return true;
 		}
-	}
+		#endif
 
-	return true;
-}
-
-#endif // CSQC
-#endif // REGISTER_MONSTER
+#endif

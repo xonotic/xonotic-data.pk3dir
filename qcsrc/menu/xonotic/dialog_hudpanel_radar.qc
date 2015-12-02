@@ -2,7 +2,7 @@
 #define DIALOG_HUDPANEL_RADAR_H
 #include "rootdialog.qc"
 CLASS(XonoticHUDRadarDialog, XonoticRootDialog)
-	METHOD(XonoticHUDRadarDialog, fill, void(entity))
+	METHOD(XonoticHUDRadarDialog, fill, void(entity));
 	ATTRIB(XonoticHUDRadarDialog, title, string, _("Radar Panel"))
 	ATTRIB(XonoticHUDRadarDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticHUDRadarDialog, intendedWidth, float, 0.4)

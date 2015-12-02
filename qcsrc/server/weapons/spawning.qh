@@ -3,5 +3,5 @@
 
 string W_Apply_Weaponreplace(string in);
 
-void weapon_defaultspawnfunc(float wpn);
+void weapon_defaultspawnfunc(entity this, Weapon e);
 #endif

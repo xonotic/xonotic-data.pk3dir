@@ -3,8 +3,8 @@
 #include "listbox.qc"
 CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
-	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, float, vector, float))
+	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	ATTRIB(XonoticPlayerList, allowFocusSound, float, 0)
 	ATTRIB(XonoticPlayerList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticPlayerList, columnNameOrigin, float, 0)
@@ -14,9 +14,10 @@ CLASS(XonoticPlayerList, XonoticListBox)
 	ATTRIB(XonoticPlayerList, realUpperMargin, float, 0)
 	ATTRIB(XonoticPlayerList, origin, vector, '0 0 0')
 	ATTRIB(XonoticPlayerList, itemAbsSize, vector, '0 0 0')
-	METHOD(XonoticPlayerList, setPlayerList, void(entity, string))
-	METHOD(XonoticPlayerList, getPlayerList, string(entity, float, float))
+	METHOD(XonoticPlayerList, setPlayerList, void(entity, string));
+	METHOD(XonoticPlayerList, getPlayerList, string(entity, float, float));
 	ATTRIB(XonoticPlayerList, playerList, float, -1)
+	ATTRIB(XonoticPlayerList, selectionDoesntMatter, bool, true)
 ENDCLASS(XonoticPlayerList)
 entity makeXonoticPlayerList();
 #endif
@@ -94,7 +95,7 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
 }
 
-void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	string score;
@@ -127,7 +128,7 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 		if((t = strstrofs(score, ",", 0)) >= 0)
 			score = substring(score, 0, t);
 
-		if(stof(score) == -666)
+		if(stof(score) == FRAGS_SPECTATOR)
 			score = _("spectator");
 	}
 

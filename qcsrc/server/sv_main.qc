@@ -1,4 +1,3 @@
-#include "_all.qh"
 
 #include "anticheat.qh"
 #include "g_hook.qh"
@@ -9,37 +8,38 @@
 
 #include "command/common.qh"
 
-#include "mutators/mutators_include.qh"
-#include "vehicles/vehicle.qh"
+#include "mutators/all.qh"
 #include "weapons/csqcprojectile.qh"
 
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
+#include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/util.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/vehicles/all.qh"
+#include "../common/weapons/all.qh"
 
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
-#include "../warpzonelib/common.qh"
-#include "../warpzonelib/server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../lib/warpzone/server.qh"
 
 .float lastground;
+.int state;
 
-void CreatureFrame (void)
-{
-	entity oldself;
+void CreatureFrame ()
+{SELFPARAM();
 	float dm;
 
-	oldself = self;
-	for(self = world; (self = findfloat(self, damagedbycontents, true)); )
+	for(entity e = world; (e = findfloat(e, damagedbycontents, true)); )
 	{
+		setself(e);
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 
-		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
+		float vehic = IS_VEHICLE(self);
 		float projectile = (self.flags & FL_PROJECTILE);
-		float monster = (self.flags & FL_MONSTER);
+		float monster = IS_MONSTER(self);
 
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
@@ -63,7 +63,7 @@ void CreatureFrame (void)
 					if (!self.deadflag)
 					if (self.pain_finished < time)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, self.origin, '0 0 0');
 						self.pain_finished = time + 0.5;
 					}
 				}
@@ -77,11 +77,11 @@ void CreatureFrame (void)
 				{
 					if (self.watertype == CONTENT_LAVA)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME.m_id, self.origin, '0 0 0');
 					}
 				}
 				else
@@ -91,18 +91,20 @@ void CreatureFrame (void)
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER_SINGLE, "player/lava.wav", VOL_BASE, ATTEN_NORM);
+							sound (self, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA.m_id, self.origin, '0 0 0');
+						if(autocvar_g_balance_contents_playerdamage_lava_burn)
+							Fire_AddDamage(self, world, autocvar_g_balance_contents_playerdamage_lava_burn * self.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * self.waterlevel, DEATH_LAVA.m_id);
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
 						if (self.watersound_finished < time)
 						{
 							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER_SINGLE, "player/slime.wav", VOL_BASE, ATTEN_NORM);
+							sound (self, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME.m_id, self.origin, '0 0 0');
 					}
 				}
 			}
@@ -131,15 +133,16 @@ void CreatureFrame (void)
 				else
 					dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 				if (dm > 0)
-					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
+					Damage (self, world, world, dm, DEATH_FALL.m_id, self.origin, '0 0 0');
 			}
 
 			if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
+				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR.m_id, self.origin, '0 0 0');
 			// play stupid sounds
 			if (g_footsteps)
 			if (!gameover)
 			if (self.flags & FL_ONGROUND)
+			if (!self.crouch)
 			if (velocity_len > autocvar_sv_maxspeed * 0.6)
 			if (!self.deadflag)
 			if (time < self.lastground + 0.2)
@@ -158,9 +161,9 @@ void CreatureFrame (void)
 					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 						else
-							GlobalSound(globalsound_step, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}
@@ -168,7 +171,7 @@ void CreatureFrame (void)
 
         self.oldvelocity = self.velocity;
 	}
-	self = oldself;
+	setself(this);
 }
 
 
@@ -184,8 +187,9 @@ float game_delay;
 float game_delay_last;
 
 float RedirectionThink();
-void StartFrame (void)
+void StartFrame()
 {
+	SELFPARAM();
 	execute_next_frame();
 
 	remove = remove_unsafely; // not during spawning!
@@ -196,12 +200,11 @@ void StartFrame (void)
 #ifdef PROFILING
 	if(time > client_cefc_accumulatortime + 1)
 	{
-		float t, pp, c_seeing, c_seen;
+		float t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
+		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
+		int c_seeing = 0;
+		int c_seen = 0;
 		entity cl;
-		t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
-		print("CEFC time: ", ftos(t * 1000), "ms; ");
-		c_seeing = 0;
-		c_seen = 0;
 		FOR_EACH_CLIENT(cl)
 		{
 			if(IS_REAL_CLIENT(cl))
@@ -209,16 +212,15 @@ void StartFrame (void)
 			if(IS_PLAYER(cl))
 				++c_seen;
 		}
-		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
-		print("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
+		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
+		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
 
 		client_cefc_accumulatortime = time;
 		client_cefc_accumulator = 0;
 	}
 #endif
 
-	entity e;
-	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
+	for(entity e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
 		CSQCProjectile_Check(e);
 
 	if(RedirectionThink())
@@ -239,17 +241,15 @@ void StartFrame (void)
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime) ? true : false;
+	game_delay = (time < game_starttime);
 
-	if(game_delay_last == true)
-	if(game_delay == false)
-	if(autocvar_sv_eventlog)
+	if(autocvar_sv_eventlog && game_delay_last && !game_delay)
 		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
 
-	CreatureFrame ();
-	CheckRules_World ();
+	CreatureFrame();
+	CheckRules_World();
 
 	// if in warmup stage and limit for warmup is hit start match
 	if(warmup_stage)
@@ -262,13 +262,15 @@ void StartFrame (void)
 	}
 
 	bot_serverframe();
-
-	FOR_EACH_PLAYER(self)
-		self.porto_forbidden = max(0, self.porto_forbidden - 1);
-
 	anticheat_startframe();
-
 	MUTATOR_CALLHOOK(SV_StartFrame);
+	{
+        entity e;
+        FOR_EACH_CLIENT(e)
+        {
+            GlobalStats_update(e);
+        }
+    }
 }
 
 .vector originjitter;
@@ -278,7 +280,7 @@ void StartFrame (void)
 .string cvarfilter;
 float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
-{
+{SELFPARAM();
 	if (self)
 	if (self.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
@@ -430,7 +432,7 @@ void SV_OnEntityPreSpawnFunction()
 	}
 }
 
-void WarpZone_PostInitialize_Callback(void)
+void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
 	entity e;

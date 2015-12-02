@@ -9,11 +9,11 @@ string cache_lastmutatormsg;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 
+int redowned, blueowned, yellowowned, pinkowned;
+
 //float audit_teams_time;
 
 void TeamchangeFrags(entity e);
-
-void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type);
 
@@ -21,11 +21,13 @@ void default_delayedinit();
 
 void ActivateTeamplay();
 
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override);
+
 void InitGameplayMode();
 
 string GetClientVersionMessage();
 
-string getwelcomemessage(void);
+string getwelcomemessage();
 
 void SetPlayerColors(entity pl, float _color);
 

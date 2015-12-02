@@ -19,18 +19,14 @@ void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theC
 void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue);
 void setDependentWeird(entity e, float(entity) func);
 
-int tooltipdb;
-void loadTooltips();
-void unloadTooltips();
-string getZonedTooltipForIdentifier(string s);
+void setZonedTooltip(entity e, string theTooltip, string theCvar);
+void clearTooltip(entity e);
 
 string resolvemod(string m);
 
 float updateCompression();
 
 void UpdateNotification_URI_Get_Callback(float id, float status, string data);
-
-void URI_Get_Callback(float id, float status, string data);
 
 // game type list box stuff (does not NEED to contain all game types, other
 // types stay available via console)
@@ -47,6 +43,8 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 	me.TR(me); \
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
+
+float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha);
 
 string _Nex_ExtResponseSystem_BannedServers;
 float _Nex_ExtResponseSystem_BannedServersNeedsRefresh;

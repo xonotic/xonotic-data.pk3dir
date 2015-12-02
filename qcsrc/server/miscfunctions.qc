@@ -1,30 +1,31 @@
 #include "miscfunctions.qh"
-#include "_all.qh"
-
 #include "antilag.qh"
 #include "command/common.qh"
 #include "constants.qh"
 #include "g_hook.qh"
 #include "ipban.qh"
-#include "mutators/mutators_include.qh"
-#include "tturrets/include/turrets_early.qh"
+#include "mutators/all.qh"
 #include "t_items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"
 #include "../common/command/generic.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
 #include "../common/notifications.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
-#include "../common/urllib.qh"
+#include "../common/triggers/subs.qh"
 #include "../common/util.qh"
-#include "../common/weapons/weapons.qh"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/server.qh"
+#include "../common/turrets/sv_turrets.qh"
+#include "../common/weapons/all.qh"
+#include "../common/vehicles/sv_vehicles.qh"
+#include "../common/vehicles/vehicle.qh"
+#include "../common/items/all.qc"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/server.qh"
 
 void crosshair_trace(entity pl)
 {
@@ -51,46 +52,12 @@ void WarpZone_crosshair_trace(entity pl)
 }
 
 
-string admin_name(void)
+string admin_name()
 {
 	if(autocvar_sv_adminnick != "")
 		return autocvar_sv_adminnick;
 	else
 		return "SERVER ADMIN";
-}
-
-void DistributeEvenly_Init(float amount, float totalweight)
-{
-    if (DistributeEvenly_amount)
-    {
-        dprint("DistributeEvenly_Init: UNFINISHED DISTRIBUTION (", ftos(DistributeEvenly_amount), " for ");
-        dprint(ftos(DistributeEvenly_totalweight), " left!)\n");
-    }
-    if (totalweight == 0)
-        DistributeEvenly_amount = 0;
-    else
-        DistributeEvenly_amount = amount;
-    DistributeEvenly_totalweight = totalweight;
-}
-float DistributeEvenly_Get(float weight)
-{
-    float f;
-    if (weight <= 0)
-        return 0;
-    f = floor(0.5 + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
-    DistributeEvenly_totalweight -= weight;
-    DistributeEvenly_amount -= f;
-    return f;
-}
-float DistributeEvenly_GetRandomized(float weight)
-{
-    float f;
-    if (weight <= 0)
-        return 0;
-    f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
-    DistributeEvenly_totalweight -= weight;
-    DistributeEvenly_amount -= f;
-    return f;
 }
 
 
@@ -123,7 +90,7 @@ void GameLogEcho(string s)
     }
     if (autocvar_sv_eventlog_console)
     {
-        print(s, "\n");
+        LOG_INFO(s, "\n");
     }
 }
 
@@ -196,9 +163,9 @@ entity findnearest(vector point, .string field, string value, vector axismod)
         {
             if (i != 0)
             {
-                dprint("Nearest point (");
-                dprint(nearest_entity[0].netname);
-                dprint(") is not visible, using a visible one.\n");
+                LOG_TRACE("Nearest point (");
+                LOG_TRACE(nearest_entity[0].netname);
+                LOG_TRACE(") is not visible, using a visible one.\n");
             }
             return nearest_entity[i];
         }
@@ -207,7 +174,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     if (num_nearest == 0)
         return world;
 
-    dprint("Not seeing any location point, using nearest as fallback.\n");
+    LOG_TRACE("Not seeing any location point, using nearest as fallback.\n");
     /* DEBUGGING CODE:
     dprint("Candidates were: ");
     for(j = 0; j < num_nearest; ++j)
@@ -220,19 +187,6 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     */
 
     return nearest_entity[0];
-}
-
-void spawnfunc_target_location()
-{
-    self.classname = "target_location";
-    // location name in netname
-    // eventually support: count, teamgame selectors, line of sight?
-}
-
-void spawnfunc_info_location()
-{
-    self.classname = "target_location";
-    self.message = self.netname;
 }
 
 string NearestLocation(vector p)
@@ -255,15 +209,22 @@ string NearestLocation(vector p)
 }
 
 string formatmessage(string msg)
-{
+{SELFPARAM();
 	float p, p1, p2;
 	float n;
 	vector cursor;
 	entity cursor_ent;
 	string escape;
 	string replacement;
+	string ammoitems;
 	p = 0;
 	n = 7;
+
+	ammoitems = "batteries";
+	if(self.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
+	if(self.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
+	if(self.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
+	if(self.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
 
 	WarpZone_crosshair_trace(self);
 	cursor = trace_endpos;
@@ -291,54 +252,36 @@ string formatmessage(string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
-		if (escape == "%")
-			replacement = "%";
-		else if (escape == "\\")
-			replacement = "\\";
-		else if (escape == "n")
-			replacement = "\n";
-		else if (escape == "a")
-			replacement = ftos(floor(self.armorvalue));
-		else if (escape == "h")
-			replacement = ftos(floor(self.health));
-		else if (escape == "l")
-			replacement = NearestLocation(self.origin);
-		else if (escape == "y")
-			replacement = NearestLocation(cursor);
-		else if (escape == "d")
-			replacement = NearestLocation(self.death_origin);
-		else if (escape == "w") {
-			float wep;
-			wep = self.weapon;
-			if (!wep)
-				wep = self.switchweapon;
-			if (!wep)
-				wep = self.cnt;
-			replacement = WEP_NAME(wep);
-		} else if (escape == "W") {
-			if (self.items & IT_SHELLS) replacement = "shells";
-			else if (self.items & IT_NAILS) replacement = "bullets";
-			else if (self.items & IT_ROCKETS) replacement = "rockets";
-			else if (self.items & IT_CELLS) replacement = "cells";
-			else if (self.items & IT_PLASMA) replacement = "plasma";
-			else replacement = "batteries"; // ;)
-		} else if (escape == "x") {
-			replacement = cursor_ent.netname;
-			if (replacement == "" || !cursor_ent)
-				replacement = "nothing";
-		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity.z * '0 0 1'));
-		else if (escape == "S")
-			replacement = ftos(vlen(self.velocity));
+		switch(escape)
+		{
+			case "%": replacement = "%"; break;
+			case "\\":replacement = "\\"; break;
+			case "n": replacement = "\n"; break;
+			case "a": replacement = ftos(floor(self.armorvalue)); break;
+			case "h": replacement = ftos(floor(self.health)); break;
+			case "l": replacement = NearestLocation(self.origin); break;
+			case "y": replacement = NearestLocation(cursor); break;
+			case "d": replacement = NearestLocation(self.death_origin); break;
+			case "w": replacement = WEP_NAME(((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon)); break;
+			case "W": replacement = ammoitems; break;
+			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(self.velocity)); break;
+			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
+			case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
+			default:
+			{
+				MUTATOR_CALLHOOK(FormatMessage, escape, replacement, msg);
+				escape = format_escape;
+				replacement = format_replacement;
+				break;
+			}
+		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
 	}
 	return msg;
-}
-
-float boolean(float value) { // if value is 0 return false (0), otherwise return true (1)
-	return (value == 0) ? false : true;
 }
 
 /*
@@ -350,7 +293,7 @@ Called with:
   >0: receives a cvar from name=argv(f) value=argv(f+1)
 */
 void GetCvars_handleString(string thisname, float f, .string field, string name)
-{
+{SELFPARAM();
 	if (f < 0)
 	{
 		if (self.(field))
@@ -370,7 +313,7 @@ void GetCvars_handleString(string thisname, float f, .string field, string name)
 		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleString_Fixup(string thisname, float f, .string field, string name, string(string) func)
-{
+{SELFPARAM();
 	GetCvars_handleString(thisname, f, field, name);
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
@@ -384,7 +327,7 @@ void GetCvars_handleString_Fixup(string thisname, float f, .string field, string
 		}
 }
 void GetCvars_handleFloat(string thisname, float f, .float field, string name)
-{
+{SELFPARAM();
 	if (f < 0)
 	{
 	}
@@ -397,7 +340,7 @@ void GetCvars_handleFloat(string thisname, float f, .float field, string name)
 		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 }
 void GetCvars_handleFloatOnce(string thisname, float f, .float field, string name)
-{
+{SELFPARAM();
 	if (f < 0)
 	{
 	}
@@ -420,7 +363,7 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	}
 }
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
-{
+{SELFPARAM();
 	string o;
 	o = W_FixWeaponOrder_ForceComplete(wo);
 	if(self.weaponorder_byimpulse)
@@ -432,7 +375,7 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 	return o;
 }
 void GetCvars(float f)
-{
+{SELFPARAM();
 	string s = string_null;
 
 	if (f > 0)
@@ -440,15 +383,17 @@ void GetCvars(float f)
 
 	get_cvars_f = f;
 	get_cvars_s = s;
-
 	MUTATOR_CALLHOOK(GetCvars);
 
 	Notification_GetCvars();
+
+	ReplicateVars(this, s, f);
 
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
+	GetCvars_handleString(s, f, cvar_cl_physics, "cl_physics");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
@@ -467,11 +412,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_noantilag, "cl_noantilag");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional, "cl_voice_directional");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
-	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
-	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
-
-	self.cvar_cl_accuracy_data_share = boolean(self.cvar_cl_accuracy_data_share);
-	self.cvar_cl_accuracy_data_receive = boolean(self.cvar_cl_accuracy_data_receive);
 
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
@@ -502,41 +442,31 @@ string playername(entity p)
         return p.netname;
 }
 
-vector randompos(vector m1, vector m2)
-{
-    vector v;
-    m2 = m2 - m1;
-    v.x = m2_x * random() + m1_x;
-    v.y = m2_y * random() + m1_y;
-    v.z = m2_z * random() + m1_z;
-    return  v;
-}
-
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
 {
 	int i = weaponinfo.weapon;
 	int d = 0;
+	bool allow_mutatorblocked = false;
 
-	if (!i)
+	if(!i)
 		return 0;
 
-	if (g_lms || g_ca || allguns)
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
+	d = ret_float;
+	allguns = want_allguns;
+	allow_mutatorblocked = false;
+
+	if(allguns)
 	{
 		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
 			d = true;
 		else
 			d = false;
 	}
-	else if (g_cts)
-		d = (i == WEP_SHOTGUN);
-	else if (g_nexball)
-		d = 0; // weapon is set a few lines later
-	else
+	else if(!mutator_returnvalue)
 		d = !(!weaponinfo.weaponstart);
 
-	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-		d |= (i == WEP_HOOK);
-	if(!g_cts && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
+	if(!allow_mutatorblocked && (weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED)) // never default mutator blocked guns
 		d = 0;
 
 	float t = weaponinfo.weaponstartoverride;
@@ -578,11 +508,9 @@ void readplayerstartcvars()
 	g_weaponarena_weapons = '0 0 0';
 
 	s = cvar_string("g_weaponarena");
-	if (s == "0" || s == "")
-	{
-		if(g_ca)
-			s = "most";
-	}
+
+	MUTATOR_CALLHOOK(SetWeaponArena, s);
+	s = ret_string;
 
 	if (s == "0" || s == "")
 	{
@@ -600,7 +528,7 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				g_weaponarena_weapons |= WepSet_FromWeapon(j);
+				g_weaponarena_weapons |= (e.m_wepset);
 		}
 	}
 	else if (s == "most")
@@ -612,7 +540,7 @@ void readplayerstartcvars()
 			e = get_weaponinfo(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if (e.spawnflags & WEP_FLAG_NORMAL)
-					g_weaponarena_weapons |= WepSet_FromWeapon(j);
+					g_weaponarena_weapons |= (e.m_wepset);
 		}
 	}
 	else if (s == "none")
@@ -633,14 +561,14 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					g_weaponarena_weapons |= WepSet_FromWeapon(j);
-					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
+					g_weaponarena_weapons |= (e.m_wepset);
+					g_weaponarena_list = strcat(g_weaponarena_list, e.m_name, " & ");
 					break;
 				}
 			}
 			if (j > WEP_LAST)
 			{
-				print("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
+				LOG_INFO("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
 			}
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
@@ -664,12 +592,13 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(i);
 			int w = want_weapon(e, false);
+			WepSet s = e.m_wepset;
 			if(w & 1)
-				start_weapons |= WepSet_FromWeapon(i);
+				start_weapons |= s;
 			if(w & 2)
-				start_weapons_default |= WepSet_FromWeapon(i);
+				start_weapons_default |= s;
 			if(w & 4)
-				start_weapons_defaultmask |= WepSet_FromWeapon(i);
+				start_weapons_defaultmask |= s;
 		}
 	}
 
@@ -709,7 +638,7 @@ void readplayerstartcvars()
 		warmup_start_weapons_default = start_weapons_default;
 		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
-		if (!g_weaponarena && !g_ca)
+		if (!g_weaponarena && !g_ca && !g_freezetag)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
@@ -726,24 +655,25 @@ void readplayerstartcvars()
 			{
 				e = get_weaponinfo(i);
 				int w = want_weapon(e, g_warmup_allguns);
+				WepSet s = (e.m_wepset);
 				if(w & 1)
-					warmup_start_weapons |= WepSet_FromWeapon(i);
+					warmup_start_weapons |= s;
 				if(w & 2)
-					warmup_start_weapons_default |= WepSet_FromWeapon(i);
+					warmup_start_weapons_default |= s;
 				if(w & 4)
-					warmup_start_weapons_defaultmask |= WepSet_FromWeapon(i);
+					warmup_start_weapons_defaultmask |= s;
 			}
 		}
 	}
 
 	if (g_jetpack)
-		start_items |= IT_JETPACK;
+		start_items |= ITEM_Jetpack.m_itemid;
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
-	if ((start_items & IT_JETPACK) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
+	if (start_items & ITEM_Jetpack.m_itemid)
 	{
-		start_items |= IT_FUEL_REGEN;
+		start_items |= ITEM_JetpackRegen.m_itemid;
 		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
@@ -754,8 +684,9 @@ void readplayerstartcvars()
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(precache_weapons & WepSet_FromWeapon(i))
-			WEP_ACTION(i, WR_INIT);
+		if(precache_weapons & (e.m_wepset)) {
+			e.wr_init(e);
+		}
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
@@ -773,192 +704,6 @@ void readplayerstartcvars()
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
-float sound_allowed(float _dest, entity e)
-{
-    // sounds from world may always pass
-    for (;;)
-    {
-        if (e.classname == "body")
-            e = e.enemy;
-	else if (e.realowner && e.realowner != e)
-            e = e.realowner;
-	else if (e.owner && e.owner != e)
-            e = e.owner;
-        else
-            break;
-    }
-    // sounds to self may always pass
-    if (_dest == MSG_ONE)
-        if (e == msg_entity)
-            return true;
-    // sounds by players can be removed
-    if (autocvar_bot_sound_monopoly)
-        if (IS_REAL_CLIENT(e))
-            return false;
-    // anything else may pass
-    return true;
-}
-
-#undef sound
-void sound(entity e, float chan, string samp, float vol, float _atten)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    sound7(e, chan, samp, vol, _atten, 0, 0);
-}
-
-void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten)
-{
-    float entno, idx;
-
-    if (!sound_allowed(_dest, e))
-        return;
-
-    entno = num_for_edict(e);
-    idx = precache_sound_index(samp);
-
-    int sflags;
-    sflags = 0;
-
-    _atten = floor(_atten * 64);
-    vol = floor(vol * 255);
-
-    if (vol != 255)
-        sflags |= SND_VOLUME;
-    if (_atten != 64)
-        sflags |= SND_ATTENUATION;
-    if (entno >= 8192 || chan < 0 || chan > 7)
-        sflags |= SND_LARGEENTITY;
-    if (idx >= 256)
-        sflags |= SND_LARGESOUND;
-
-    WriteByte(_dest, SVC_SOUND);
-    WriteByte(_dest, sflags);
-    if (sflags & SND_VOLUME)
-        WriteByte(_dest, vol);
-    if (sflags & SND_ATTENUATION)
-        WriteByte(_dest, _atten);
-    if (sflags & SND_LARGEENTITY)
-    {
-        WriteShort(_dest, entno);
-        WriteByte(_dest, chan);
-    }
-    else
-    {
-        WriteShort(_dest, entno * 8 + chan);
-    }
-    if (sflags & SND_LARGESOUND)
-        WriteShort(_dest, idx);
-    else
-        WriteByte(_dest, idx);
-
-    WriteCoord(_dest, o.x);
-    WriteCoord(_dest, o.y);
-    WriteCoord(_dest, o.z);
-}
-void soundto(float _dest, entity e, float chan, string samp, float vol, float _atten)
-{
-    vector o;
-
-    if (!sound_allowed(_dest, e))
-        return;
-
-    o = e.origin + 0.5 * (e.mins + e.maxs);
-    soundtoat(_dest, e, o, chan, samp, vol, _atten);
-}
-void soundat(entity e, vector o, float chan, string samp, float vol, float _atten)
-{
-    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, _atten);
-}
-void stopsoundto(float _dest, entity e, float chan)
-{
-    float entno;
-
-    if (!sound_allowed(_dest, e))
-        return;
-
-    entno = num_for_edict(e);
-
-    if (entno >= 8192 || chan < 0 || chan > 7)
-    {
-        float idx, sflags;
-        idx = precache_sound_index("misc/null.wav");
-        sflags = SND_LARGEENTITY;
-        if (idx >= 256)
-            sflags |= SND_LARGESOUND;
-        WriteByte(_dest, SVC_SOUND);
-        WriteByte(_dest, sflags);
-        WriteShort(_dest, entno);
-        WriteByte(_dest, chan);
-        if (sflags & SND_LARGESOUND)
-            WriteShort(_dest, idx);
-        else
-            WriteByte(_dest, idx);
-        WriteCoord(_dest, e.origin.x);
-        WriteCoord(_dest, e.origin.y);
-        WriteCoord(_dest, e.origin.z);
-    }
-    else
-    {
-        WriteByte(_dest, SVC_STOPSOUND);
-        WriteShort(_dest, entno * 8 + chan);
-    }
-}
-void stopsound(entity e, float chan)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-
-    stopsoundto(MSG_BROADCAST, e, chan); // unreliable, gets there fast
-    stopsoundto(MSG_ALL, e, chan); // in case of packet loss
-}
-
-void play2(entity e, string filename)
-{
-    //stuffcmd(e, strcat("play2 ", filename, "\n"));
-    msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
-}
-
-// use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
-.float spamtime;
-float spamsound(entity e, float chan, string samp, float vol, float _atten)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return false;
-
-    if (time > e.spamtime)
-    {
-        e.spamtime = time;
-        sound(e, chan, samp, vol, _atten);
-        return true;
-    }
-    return false;
-}
-
-void play2team(float t, string filename)
-{
-    entity head;
-
-    if (autocvar_bot_sound_monopoly)
-        return;
-
-    FOR_EACH_REALPLAYER(head)
-    {
-        if (head.team == t)
-            play2(head, filename);
-    }
-}
-
-void play2all(string samp)
-{
-    if (autocvar_bot_sound_monopoly)
-        return;
-
-    sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
-}
-
-void PrecachePlayerSounds(string f);
 void precache_playermodel(string m)
 {
 	float globhandle, i, n;
@@ -1006,16 +751,21 @@ void precache_all_playermodels(string pattern)
 	search_end(globhandle);
 }
 
-void precache()
+void precache_playermodels(string s)
 {
-    // gamemode related things
-    precache_model ("models/misc/chatbubble.spr");
-	precache_model("models/ice/ice.md3");
+	if(s != "")
+	{
+		int n = tokenize_console(s);
+		precache_playermodel(argv(0));
 
-#ifdef TTURRETS_ENABLED
-    if (autocvar_g_turrets)
-        turrets_precash();
-#endif
+		for (int i = 1; i < n; ++i)
+			precache_model(argv(i));
+	}
+}
+
+void precache()
+{SELFPARAM();
+    // gamemode related things
 
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
@@ -1030,78 +780,12 @@ void precache()
 
     if (autocvar_sv_defaultcharacter)
     {
-        string s;
-        s = autocvar_sv_defaultplayermodel_red;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_blue;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_yellow;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel_pink;
-        if (s != "")
-            precache_playermodel(s);
-        s = autocvar_sv_defaultplayermodel;
-        if (s != "")
-            precache_playermodel(s);
+		precache_playermodels(autocvar_sv_defaultplayermodel_red);
+		precache_playermodels(autocvar_sv_defaultplayermodel_blue);
+		precache_playermodels(autocvar_sv_defaultplayermodel_yellow);
+		precache_playermodels(autocvar_sv_defaultplayermodel_pink);
+		precache_playermodels(autocvar_sv_defaultplayermodel);
     }
-
-    if (g_footsteps)
-    {
-        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
-        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
-    }
-
-    // gore and miscellaneous sounds
-    //precache_sound ("misc/h2ohit.wav");
-    precache_model ("models/hook.md3");
-    precache_sound ("misc/armorimpact.wav");
-    precache_sound ("misc/bodyimpact1.wav");
-    precache_sound ("misc/bodyimpact2.wav");
-    precache_sound ("misc/gib.wav");
-    precache_sound ("misc/gib_splat01.wav");
-    precache_sound ("misc/gib_splat02.wav");
-    precache_sound ("misc/gib_splat03.wav");
-    precache_sound ("misc/gib_splat04.wav");
-    PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
-    PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
-    precache_sound ("misc/null.wav");
-    precache_sound ("misc/spawn.wav");
-    precache_sound ("misc/talk.wav");
-    precache_sound ("misc/teleport.wav");
-    precache_sound ("misc/poweroff.wav");
-    precache_sound ("player/lava.wav");
-    precache_sound ("player/slime.wav");
-
-    precache_model ("models/sprites/0.spr32");
-    precache_model ("models/sprites/1.spr32");
-    precache_model ("models/sprites/2.spr32");
-    precache_model ("models/sprites/3.spr32");
-    precache_model ("models/sprites/4.spr32");
-    precache_model ("models/sprites/5.spr32");
-    precache_model ("models/sprites/6.spr32");
-    precache_model ("models/sprites/7.spr32");
-    precache_model ("models/sprites/8.spr32");
-    precache_model ("models/sprites/9.spr32");
-    precache_model ("models/sprites/10.spr32");
-
-    // common weapon precaches
-	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound ("weapons/weapon_switch.wav");
-    precache_sound ("weapons/weaponpickup.wav");
-    precache_sound ("weapons/unavailable.wav");
-    precache_sound ("weapons/dryfire.wav");
-    if (g_grappling_hook)
-    {
-        precache_sound ("weapons/hook_fire.wav"); // hook
-        precache_sound ("weapons/hook_impact.wav"); // hook
-    }
-
-    precache_model("models/elaser.mdl");
-    precache_model("models/laser.mdl");
-    precache_model("models/ebomb.mdl");
 
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
@@ -1116,8 +800,6 @@ void precache()
         ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
-
-#include "precache-for-csqc.inc"
 }
 
 
@@ -1153,7 +835,7 @@ void make_safe_for_remove(entity e)
 }
 
 void objerror(string s)
-{
+{SELFPARAM();
     make_safe_for_remove(self);
     builtin_objerror(s);
 }
@@ -1179,17 +861,15 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void(void) func, float order)
+void InitializeEntity(entity e, void() func, float order)
 {
     entity prev, cur;
 
     if (!e || e.initialize_entity)
     {
         // make a proxy initializer entity
-        entity e_old;
-        e_old = e;
-        e = spawn();
-        e.classname = "initialize_entity";
+        entity e_old = e;
+        e = new(initialize_entity);
         e.enemy = e_old;
     }
 
@@ -1215,96 +895,49 @@ void InitializeEntity(entity e, void(void) func, float order)
     }
 }
 void InitializeEntitiesRun()
-{
-    entity startoflist;
-    startoflist = initialize_entity_first;
-    initialize_entity_first = world;
+{SELFPARAM();
+    entity startoflist = initialize_entity_first;
+    initialize_entity_first = NULL;
     remove = remove_except_protected;
-    for (self = startoflist; self; self = self.initialize_entity_next)
+    for (entity e = startoflist; e; e = e.initialize_entity_next)
     {
-	self.remove_except_protected_forbidden = 1;
+		e.remove_except_protected_forbidden = 1;
     }
-    for (self = startoflist; self; )
+    for (entity e = startoflist; e; )
     {
-        entity e;
-        var void(void) func;
-        e = self.initialize_entity_next;
-        func = self.initialize_entity;
-        self.initialize_entity_order = 0;
-        self.initialize_entity = func_null;
-        self.initialize_entity_next = world;
-	self.remove_except_protected_forbidden = 0;
-        if (self.classname == "initialize_entity")
+		e.remove_except_protected_forbidden = 0;
+        e.initialize_entity_order = 0;
+    	entity next = e.initialize_entity_next;
+        e.initialize_entity_next = NULL;
+        var void() func = e.initialize_entity;
+        e.initialize_entity = func_null;
+        if (e.classname == "initialize_entity")
         {
-            entity e_old;
-            e_old = self.enemy;
-            builtin_remove(self);
-            self = e_old;
+            entity wrappee = e.enemy;
+            builtin_remove(e);
+            e = wrappee;
         }
-        //dprint("Delayed initialization: ", self.classname, "\n");
-        if(func)
-            func();
+        //dprint("Delayed initialization: ", e.classname, "\n");
+        if (func)
+        {
+        	WITH(entity, self, e, func());
+        }
         else
         {
-            eprint(self);
-            backtrace(strcat("Null function in: ", self.classname, "\n"));
+            eprint(e);
+            backtrace(strcat("Null function in: ", e.classname, "\n"));
         }
-        self = e;
+        e = next;
     }
     remove = remove_unsafely;
 }
 
-void UncustomizeEntitiesRun()
-{
-    entity oldself;
-    oldself = self;
-    for (self = world; (self = findfloat(self, uncustomizeentityforclient_set, 1)); )
-        self.uncustomizeentityforclient();
-    self = oldself;
-}
-void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
-{
-    e.customizeentityforclient = customizer;
-    e.uncustomizeentityforclient = uncustomizer;
-    e.uncustomizeentityforclient_set = !!uncustomizer;
-}
-
-
-void Net_LinkEntity(entity e, float docull, float dt, bool(entity, int) sendfunc)
-{
-    vector mi, ma;
-
-    if (e.classname == "")
-        e.classname = "net_linked";
-
-    if (e.model == "" || self.modelindex == 0)
-    {
-        mi = e.mins;
-        ma = e.maxs;
-        setmodel(e, "null");
-        setsize(e, mi, ma);
-    }
-
-    e.SendEntity = sendfunc;
-    e.SendFlags = 0xFFFFFF;
-
-    if (!docull)
-        e.effects |= EF_NODEPTHTEST;
-
-    if (dt)
-    {
-        e.nextthink = time + dt;
-        e.think = SUB_Remove;
-    }
-}
-
-
 .float(entity) isEliminated;
-float EliminatedPlayers_SendEntity(entity to, float sendflags)
+bool EliminatedPlayers_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, f, b;
 	entity e;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
 	WriteByte(MSG_ENTITY, sendflags);
 
 	if(sendflags & 1)
@@ -1336,7 +969,7 @@ void EliminatedPlayers_Init(float(entity) isEliminated_func)
 
 
 void adaptor_think2touch()
-{
+{SELFPARAM();
     entity o;
     o = other;
     other = world;
@@ -1345,7 +978,7 @@ void adaptor_think2touch()
 }
 
 void adaptor_think2use()
-{
+{SELFPARAM();
     entity o, a;
     o = other;
     a = activator;
@@ -1357,7 +990,7 @@ void adaptor_think2use()
 }
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
-{
+{SELFPARAM();
 	if(!(self.flags & FL_ONGROUND)) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 	adaptor_think2use();
@@ -1365,13 +998,13 @@ void adaptor_think2use_hittype_splash() // for timed projectile detonation
 
 // deferred dropping
 void DropToFloor_Handler()
-{
+{SELFPARAM();
     builtin_droptofloor();
     self.dropped_origin = self.origin;
 }
 
 void droptofloor()
-{
+{SELFPARAM();
     InitializeEntity(self, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
 }
 
@@ -1427,7 +1060,7 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
 }
 
 float SUB_NoImpactCheck()
-{
+{SELFPARAM();
 	// zero hitcontents = this is not the real impact, but either the
 	// mirror-impact of something hitting the projectile instead of the
 	// projectile hitting the something, or a touchareagrid one. Neither of
@@ -1435,7 +1068,7 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		dprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -1448,11 +1081,11 @@ float SUB_NoImpactCheck()
         traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
         if (trace_fraction >= 1)
         {
-            dprint("Odd... did not hit...?\n");
+            LOG_TRACE("Odd... did not hit...?\n");
         }
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         {
-            dprint("Detected and prevented the sky-grapple bug.\n");
+            LOG_TRACE("Detected and prevented the sky-grapple bug.\n");
             return 1;
         }
     }
@@ -1464,7 +1097,7 @@ float SUB_NoImpactCheck()
 
 void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
-{
+{SELFPARAM();
 	if(SUB_OwnerCheck())
 		return true;
 	if(SUB_NoImpactCheck())
@@ -1487,7 +1120,7 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 	return false;
 }
 
-
+/** engine callback */
 void URI_Get_Callback(float id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
@@ -1510,7 +1143,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".\n");
 	}
 }
 
@@ -1526,7 +1159,7 @@ string uid2name(string myuid) {
 		if(s != "")
 		{
 			db_put(ServerProgsDB, strcat("/uid2name/", myuid), s);
-			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
+			db_remove(ServerProgsDB, strcat("uid2name", myuid));
 		}
 	}
 
@@ -1535,7 +1168,7 @@ string uid2name(string myuid) {
 	return s;
 }
 
-float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundmax, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
@@ -1544,8 +1177,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
 
-    org = world.mins;
-    delta = world.maxs - world.mins;
+    org = boundmin;
+    delta = boundmax - boundmin;
 
     start = end = org;
 
@@ -1639,11 +1272,16 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     {
         setorigin(e, start);
         e.angles = vectoangles(end - start);
-        dprint("Needed ", ftos(i + 1), " attempts\n");
+        LOG_TRACE("Needed ", ftos(i + 1), " attempts\n");
         return true;
     }
     else
         return false;
+}
+
+float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
+{
+	return MoveToRandomLocationWithinBounds(e, world.mins, world.maxs, goodcontents, badcontents, badsurfaceflags, attempts, maxaboveground, minviewdistance);
 }
 
 void write_recordmarker(entity pl, float tstart, float dt)
@@ -1656,94 +1294,6 @@ void write_recordmarker(entity pl, float tstart, float dt)
                  strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD SET ", TIME_ENCODED_TOSTRING(TIME_ENCODE(dt))),
                  " ", ftos(tstart), " ", ftos(dt), "\n"));
 }
-
-vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter, float algn)
-{
-	switch(algn)
-	{
-		default:
-		case 3: // right
-			break;
-
-		case 4: // left
-			vecs.y = -vecs.y;
-			break;
-
-		case 1:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs.y = 0;
-				vecs.z -= 2;
-			}
-			else
-			{
-				// right
-			}
-			break;
-
-		case 2:
-			if(allowcenter) // 2: allow center handedness
-			{
-				// center
-				vecs.y = 0;
-				vecs.z -= 2;
-			}
-			else
-			{
-				// left
-				vecs.y = -vecs.y;
-			}
-			break;
-	}
-	return vecs;
-}
-
-vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float algn)
-{
-	string s;
-	vector v;
-
-	if (autocvar_g_shootfromeye)
-	{
-		if (visual)
-		{
-			if (autocvar_g_shootfromclient) { vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn); }
-			else { vecs.y = 0; vecs.z -= 2; }
-		}
-		else
-		{
-			vecs.y = 0;
-			vecs.z = 0;
-		}
-	}
-	else if (autocvar_g_shootfromcenter)
-	{
-		vecs.y = 0;
-		vecs.z -= 2;
-	}
-	else if ((s = autocvar_g_shootfromfixedorigin) != "")
-	{
-		v = stov(s);
-		if (y_is_right)
-			v.y = -v.y;
-		if (v.x != 0)
-			vecs.x = v.x;
-		vecs.y = v.y;
-		vecs.z = v.z;
-	}
-	else if (autocvar_g_shootfromclient)
-	{
-		vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn);
-	}
-	return vecs;
-}
-
-vector shotorg_adjust(vector vecs, float y_is_right, float visual)
-{
-	return shotorg_adjust_values(vecs, y_is_right, visual, self.owner.cvar_cl_gunalign);
-}
-
 
 void attach_sameorigin(entity e, entity to, string tag)
 {
@@ -1827,178 +1377,6 @@ vector gettaginfo_relative(entity e, float tag)
     return gettaginfo(gettaginfo_relative_ent, tag);
 }
 
-.float scale2;
-
-float modeleffect_SendEntity(entity to, int sf)
-{
-	float f;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MODELEFFECT);
-
-	f = 0;
-	if(self.velocity != '0 0 0')
-		f |= 1;
-	if(self.angles != '0 0 0')
-		f |= 2;
-	if(self.avelocity != '0 0 0')
-		f |= 4;
-
-	WriteByte(MSG_ENTITY, f);
-	WriteShort(MSG_ENTITY, self.modelindex);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteByte(MSG_ENTITY, self.frame);
-	WriteCoord(MSG_ENTITY, self.origin.x);
-	WriteCoord(MSG_ENTITY, self.origin.y);
-	WriteCoord(MSG_ENTITY, self.origin.z);
-	if(f & 1)
-	{
-		WriteCoord(MSG_ENTITY, self.velocity.x);
-		WriteCoord(MSG_ENTITY, self.velocity.y);
-		WriteCoord(MSG_ENTITY, self.velocity.z);
-	}
-	if(f & 2)
-	{
-		WriteCoord(MSG_ENTITY, self.angles.x);
-		WriteCoord(MSG_ENTITY, self.angles.y);
-		WriteCoord(MSG_ENTITY, self.angles.z);
-	}
-	if(f & 4)
-	{
-		WriteCoord(MSG_ENTITY, self.avelocity.x);
-		WriteCoord(MSG_ENTITY, self.avelocity.y);
-		WriteCoord(MSG_ENTITY, self.avelocity.z);
-	}
-	WriteShort(MSG_ENTITY, self.scale * 256.0);
-	WriteShort(MSG_ENTITY, self.scale2 * 256.0);
-	WriteByte(MSG_ENTITY, self.teleport_time * 100.0);
-	WriteByte(MSG_ENTITY, self.fade_time * 100.0);
-	WriteByte(MSG_ENTITY, self.alpha * 255.0);
-
-	return true;
-}
-
-void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector ang, vector angv, float s0, float s2, float a, float t1, float t2)
-{
-	entity e;
-	float sz;
-	e = spawn();
-	e.classname = "modeleffect";
-	setmodel(e, m);
-	e.frame = f;
-	setorigin(e, o);
-	e.velocity = v;
-	e.angles = ang;
-	e.avelocity = angv;
-	e.alpha = a;
-	e.teleport_time = t1;
-	e.fade_time = t2;
-	e.skin = s;
-	if(s0 >= 0)
-		e.scale = s0 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
-	else
-		e.scale = -s0;
-	if(s2 >= 0)
-		e.scale2 = s2 / max6(-e.mins.x, -e.mins.y, -e.mins.z, e.maxs.x, e.maxs.y, e.maxs.z);
-	else
-		e.scale2 = -s2;
-	sz = max(e.scale, e.scale2);
-	setsize(e, e.mins * sz, e.maxs * sz);
-	Net_LinkEntity(e, false, 0.1, modeleffect_SendEntity);
-}
-
-void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
-{
-	return modeleffect_spawn(m, 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, sz, 1, t1, t2);
-}
-
-float randombit(float bits)
-{
-	if(!(bits & (bits-1))) // this ONLY holds for powers of two!
-		return bits;
-
-	float n, f, b, r;
-
-	r = random();
-	b = 0;
-	n = 0;
-
-	for(f = 1; f <= bits; f *= 2)
-	{
-		if(bits & f)
-		{
-			++n;
-			r *= n;
-			if(r <= 1)
-				b = f;
-			else
-				r = (r - 1) / (n - 1);
-		}
-	}
-
-	return b;
-}
-
-float randombits(float bits, float k, float error_return)
-{
-	float r;
-	r = 0;
-	while(k > 0 && bits != r)
-	{
-		r += randombit(bits - r);
-		--k;
-	}
-	if(error_return)
-		if(k > 0)
-			return -1; // all
-	return r;
-}
-
-void randombit_test(float bits, float iter)
-{
-	while(iter > 0)
-	{
-		print(ftos(randombit(bits)), "\n");
-		--iter;
-	}
-}
-
-float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float d)
-{
-	if(halflifedist > 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - mindist) / halflifedist);
-	else if(halflifedist < 0)
-		return pow(0.5, (bound(mindist, d, maxdist) - maxdist) / halflifedist);
-	else
-		return 1;
-}
-
-
-void defer_think()
-{
-    entity oself;
-
-    oself           = self;
-    self            = self.owner;
-    oself.think     = SUB_Remove;
-    oself.nextthink = time;
-
-    oself.use();
-}
-
-/*
-    Execute func() after time + fdelay.
-    self when func is executed = self when defer is called
-*/
-void defer(float fdelay, void() func)
-{
-    entity e;
-
-    e           = spawn();
-    e.owner     = self;
-    e.use       = func;
-    e.think     = defer_think;
-    e.nextthink = time + fdelay;
-}
-
 .string aiment_classname;
 .float aiment_deadflag;
 void SetMovetypeFollow(entity ent, entity e)
@@ -2038,9 +1416,11 @@ float LostMovetypeFollow(entity ent)
 
 float isPushable(entity e)
 {
-	if(e.iscreature)
-		return true;
 	if(e.pushable)
+		return true;
+	if(IS_VEHICLE(e))
+		return false;
+	if(e.iscreature)
 		return true;
 	switch(e.classname)
 	{

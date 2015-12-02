@@ -1,7 +1,4 @@
 #include "bgmscript.qh"
-#include "_all.qh"
-
-#include "../common/util.qh"
 
 #define CONSTANT_SPEED_DECAY
 
@@ -136,7 +133,7 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			printf("ERROR: bgmscript does not define %s\n", e.bgmscript);
+			LOG_INFOF("ERROR: bgmscript does not define %s\n", e.bgmscript);
 			strunzone(e.bgmscript);
 			e.bgmscript = string_null;
 		}

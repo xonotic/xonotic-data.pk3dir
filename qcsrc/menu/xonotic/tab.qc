@@ -8,7 +8,7 @@ CLASS(XonoticTab, Tab)
 	ATTRIB(XonoticTab, rows, float, 3)
 	ATTRIB(XonoticTab, columns, float, 2)
 	*/
-	METHOD(XonoticTab, showNotify, void(entity))
+	METHOD(XonoticTab, showNotify, void(entity));
 
 	ATTRIB(XonoticTab, marginTop, float, 0) // pixels
 	ATTRIB(XonoticTab, marginBottom, float, 0) // pixels
@@ -17,7 +17,6 @@ CLASS(XonoticTab, Tab)
 	ATTRIB(XonoticTab, columnSpacing, float, SKINMARGIN_COLUMNS) // pixels
 	ATTRIB(XonoticTab, rowSpacing, float, SKINMARGIN_ROWS) // pixels
 	ATTRIB(XonoticTab, rowHeight, float, SKINFONTSIZE_NORMAL * SKINHEIGHT_NORMAL) // pixels
-	ATTRIB(XonoticTab, titleHeight, float, SKINFONTSIZE_TITLE * SKINHEIGHT_TITLE) // pixels
 
 	ATTRIB(XonoticTab, backgroundImage, string, string_null)
 ENDCLASS(XonoticTab)

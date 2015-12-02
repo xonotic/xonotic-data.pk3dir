@@ -1,15 +1,13 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
 #endif
 
 /**
     Uniform pull towards a point
 **/
 vector steerlib_pull(vector point)
-{
+{SELFPARAM();
     return normalize(point - self.origin);
 }
 
@@ -27,7 +25,7 @@ vector steerlib_push(vector point)
     Pull toward a point, The further away, the stronger the pull.
 **/
 vector steerlib_arrive(vector point,float maximal_distance)
-{
+{SELFPARAM();
     float distance;
     vector direction;
 
@@ -40,7 +38,7 @@ vector steerlib_arrive(vector point,float maximal_distance)
     Pull toward a point increasing the pull the closer we get
 **/
 vector steerlib_attract(vector point, float maximal_distance)
-{
+{SELFPARAM();
     float distance;
     vector direction;
 
@@ -51,7 +49,7 @@ vector steerlib_attract(vector point, float maximal_distance)
 }
 
 vector steerlib_attract2(vector point, float min_influense,float max_distance,float max_influense)
-{
+{SELFPARAM();
     float distance;
     vector direction;
     float influense;
@@ -99,7 +97,7 @@ vector steerlib_attract2(vector point, float maximal_distance,float min_influens
     Move away from a point.
 **/
 vector steerlib_repell(vector point,float maximal_distance)
-{
+{SELFPARAM();
     float distance;
     vector direction;
 
@@ -113,7 +111,7 @@ vector steerlib_repell(vector point,float maximal_distance)
     Try to keep at ideal_distance away from point
 **/
 vector steerlib_standoff(vector point,float ideal_distance)
-{
+{SELFPARAM();
     float distance;
     vector direction;
 
@@ -140,7 +138,7 @@ vector steerlib_standoff(vector point,float ideal_distance)
     where range is the cicrle radius and tresh is how close we need to be to pick a new heading.
 **/
 vector steerlib_wander(float range,float tresh,vector oldpoint)
-{
+{SELFPARAM();
     vector wander_point;
     wander_point = v_forward - oldpoint;
 
@@ -159,7 +157,7 @@ vector steerlib_wander(float range,float tresh,vector oldpoint)
     Dodge a point. dont work to well.
 **/
 vector steerlib_dodge(vector point,vector dodge_dir,float min_distance)
-{
+{SELFPARAM();
     float distance;
 
     distance = max(vlen(self.origin - point),min_distance);
@@ -175,7 +173,7 @@ vector steerlib_dodge(vector point,vector dodge_dir,float min_distance)
 **/
 .float flock_id;
 vector steerlib_flock(float _radius, float standoff,float separation_force,float flock_force)
-{
+{SELFPARAM();
     entity flock_member;
     vector push = '0 0 0', pull = '0 0 0';
     float ccount = 0;
@@ -201,7 +199,7 @@ vector steerlib_flock(float _radius, float standoff,float separation_force,float
     xy only version (for ground movers).
 **/
 vector steerlib_flock2d(float _radius, float standoff,float separation_force,float flock_force)
-{
+{SELFPARAM();
     entity flock_member;
     vector push = '0 0 0', pull = '0 0 0';
     float ccount = 0;
@@ -232,7 +230,7 @@ vector steerlib_flock2d(float _radius, float standoff,float separation_force,flo
     This results in a aligned movement (?!) much like flocking.
 **/
 vector steerlib_swarm(float _radius, float standoff,float separation_force,float swarm_force)
-{
+{SELFPARAM();
     entity swarm_member;
     vector force = '0 0 0', center = '0 0 0';
     float ccount = 0;
@@ -262,7 +260,7 @@ vector steerlib_swarm(float _radius, float standoff,float separation_force,float
     You need to call makevectors() (or equivalent) before this function to set v_forward and v_right
 **/
 vector steerlib_traceavoid(float pitch,float length)
-{
+{SELFPARAM();
     vector vup_left,vup_right,vdown_left,vdown_right;
     float fup_left,fup_right,fdown_left,fdown_right;
     vector upwish,downwish,leftwish,rightwish;
@@ -309,7 +307,7 @@ vector steerlib_traceavoid(float pitch,float length)
     Run tracelines in a forward trident, bias each direction negative if something is found there.
 **/
 vector steerlib_traceavoid_flat(float pitch, float length, vector vofs)
-{
+{SELFPARAM();
     vector vt_left, vt_right,vt_front;
     float f_left, f_right,f_front;
     vector leftwish, rightwish,frontwish, v_left;
@@ -381,7 +379,7 @@ float beamsweep_badpoint(vector point,float waterok)
 
 //#define BEAMSTEER_VISUAL
 float beamsweep(vector from, vector dir,float length, float step,float step_up, float step_down)
-{
+{SELFPARAM();
     float i;
     vector a,b,u,d;
 
@@ -421,7 +419,7 @@ float beamsweep(vector from, vector dir,float length, float step,float step_up, 
 }
 
 vector steerlib_beamsteer(vector dir, float length, float step, float step_up, float step_down)
-{
+{SELFPARAM();
     float bm_forward, bm_right, bm_left,p;
     vector vr,vl;
 
@@ -497,8 +495,8 @@ vector steerlib_beamsteer(vector dir, float length, float step, float step_up, f
 //#define TLIBS_TETSLIBS
 #ifdef TLIBS_TETSLIBS
 void flocker_die()
-{
-	pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+{SELFPARAM();
+	Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 
     self.owner.cnt += 1;
     self.owner = world;
@@ -509,7 +507,7 @@ void flocker_die()
 
 
 void flocker_think()
-{
+{SELFPARAM();
     vector dodgemove,swarmmove;
     vector reprellmove,wandermove,newmove;
 
@@ -545,19 +543,17 @@ void flocker_think()
         self.nextthink = time + 0.1;
 }
 
+MODEL(FLOCKER, "models/turrets/rocket.md3");
 
 void spawn_flocker()
-{
-    entity flocker;
-
-    flocker = spawn ();
+{SELFPARAM();
+    entity flocker = new(flocker);
 
     setorigin(flocker, self.origin + '0 0 32');
-    setmodel (flocker, "models/turrets/rocket.md3");
+    setmodel (flocker, MDL_FLOCKER);
     setsize (flocker, '-3 -3 -3', '3 3 3');
 
     flocker.flock_id   = self.flock_id;
-    flocker.classname  = "flocker";
     flocker.owner      = self;
     flocker.think      = flocker_think;
     flocker.nextthink  = time + random() * 5;
@@ -574,7 +570,7 @@ void spawn_flocker()
 }
 
 void flockerspawn_think()
-{
+{SELFPARAM();
 
 
     if(self.cnt > 0)
@@ -585,7 +581,7 @@ void flockerspawn_think()
 }
 
 void flocker_hunter_think()
-{
+{SELFPARAM();
     vector dodgemove,attractmove,newmove;
     entity e,ee;
     float d,bd;
@@ -639,10 +635,8 @@ void flocker_hunter_think()
 
 
 float globflockcnt;
-void spawnfunc_flockerspawn()
-{
-    precache_model ( "models/turrets/rocket.md3");
-    precache_model("models/turrets/c512.md3");
+spawnfunc(flockerspawn)
+{SELFPARAM();
     ++globflockcnt;
 
     if(!self.cnt)      self.cnt = 20;
@@ -652,12 +646,11 @@ void spawnfunc_flockerspawn()
     self.think     = flockerspawn_think;
     self.nextthink = time + 0.25;
 
-    self.enemy = spawn();
+    self.enemy = new(FLock Hunter);
 
-    setmodel(self.enemy, "models/turrets/rocket.md3");
+    setmodel(self.enemy, MDL_FLOCKER);
     setorigin(self.enemy,self.origin + '0 0 768' + (randomvec() * 128));
 
-    self.enemy.classname = "FLock Hunter";
     self.enemy.scale     = 3;
     self.enemy.effects   = EF_LOWPRECISION;
     self.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;

@@ -1,0 +1,49 @@
+#ifndef DEFER_H
+#define DEFER_H
+#ifndef MENUQC
+
+	#include "oo.qh"
+	#include "self.qh"
+
+	entityclass(Defer);
+	class(Defer).entity owner;
+	class(Defer).void() think;
+	class(Defer).float nextthink;
+
+	/** Remove self */
+	void SUB_Remove(entity this)
+	{
+		remove(this);
+	}
+
+	/** Remove self */
+	void SUB_Remove_self()
+	{
+		SELFPARAM();
+		remove(this);
+	}
+
+	void defer_think()
+	{
+		SELFPARAM();
+		this.think     = SUB_Remove_self;
+		this.nextthink = time;
+		WITH(entity, self, this.owner, this.use());
+	}
+
+/*
+    Execute func() after time + fdelay.
+    self when func is executed = self when defer is called
+*/
+	void defer(entity this, float fdelay, void() func)
+	{
+		entity e    = new(deferred);
+		make_pure(e);
+		e.owner     = this;
+		e.use       = func;
+		e.think     = defer_think;
+		e.nextthink = time + fdelay;
+	}
+
+#endif
+#endif

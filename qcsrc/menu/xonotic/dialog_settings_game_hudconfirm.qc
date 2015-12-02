@@ -2,7 +2,7 @@
 #define DIALOG_SETTINGS_GAME_HUDCONFIRM_H
 #include "dialog.qc"
 CLASS(XonoticHUDConfirmDialog, XonoticDialog)
-	METHOD(XonoticHUDConfirmDialog, fill, void(entity))
+	METHOD(XonoticHUDConfirmDialog, fill, void(entity));
 	ATTRIB(XonoticHUDConfirmDialog, title, string, _("Enter HUD editor"))
 	ATTRIB(XonoticHUDConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)
 	ATTRIB(XonoticHUDConfirmDialog, intendedWidth, float, 0.5)

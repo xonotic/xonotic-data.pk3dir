@@ -1,49 +1,37 @@
 #include "accuracy.qh"
-#include "../_all.qh"
 
-#include "../mutators/mutators_include.qh"
+#include "../mutators/all.qh"
 #include "../../common/constants.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
-float accuracy_byte(float n, float d)
+int accuracy_byte(float n, float d)
 {
-	//printf("accuracy: %d / %d\n", n, d);
-	if(n <= 0)
-		return 0;
-	if(n > d)
-		return 255;
+	if (n <= 0) return 0;
+	if (n > d) return 255;
 	return 1 + rint(n * 100.0 / d);
 }
 
-float accuracy_send(entity to, int sf)
+bool accuracy_send(entity this, entity to, int sf)
 {
-	int w, f;
-	entity a;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
-	a = self.owner;
-	if(IS_SPEC(a))
-		a = a.enemy;
+	entity a = this.owner;
+	if (IS_SPEC(a)) a = a.enemy;
 	a = a.accuracy;
 
-	if(to != a.owner)
-		if (!(self.owner.cvar_cl_accuracy_data_share && autocvar_sv_accuracy_data_share))
+	if (to != a.owner)
+		if (!autocvar_sv_accuracy_data_share && !a.owner.cvar_cl_accuracy_data_share)
 			sf = 0;
 	// note: zero sendflags can never be sent... so we can use that to say that we send no accuracy!
 	WriteInt24_t(MSG_ENTITY, sf);
-	if(sf == 0)
-		return true;
+	if (sf == 0) return true;
 	// note: we know that client and server agree about SendFlags...
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
-	{
-		if(sf & f)
-			WriteByte(MSG_ENTITY, accuracy_byte(self.(accuracy_hit[w]), self.(accuracy_fired[w])));
-		if(f == 0x800000)
-			f = 1;
-		else
-			f *= 2;
+	int f = 1;
+	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
+		if (sf & f) WriteByte(MSG_ENTITY, accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w]));
+		f = (f == 0x800000) ? 1 : f * 2;
 	}
 	return true;
 }
@@ -51,11 +39,11 @@ float accuracy_send(entity to, int sf)
 // init/free
 void accuracy_init(entity e)
 {
-	e.accuracy = spawn();
-	e.accuracy.owner = e;
-	e.accuracy.classname = "accuracy";
-	e.accuracy.drawonlytoclient = e;
-	Net_LinkEntity(e.accuracy, false, 0, accuracy_send);
+	entity a = e.accuracy = new(accuracy);
+	make_pure(a);
+	a.owner = e;
+	a.drawonlytoclient = e;
+	Net_LinkEntity(a, false, 0, accuracy_send);
 }
 
 void accuracy_free(entity e)
@@ -70,65 +58,56 @@ void accuracy_resend(entity e)
 }
 
 // update accuracy stats
-.float hit_time;
+//.float hit_time;
 .float fired_time;
 
-void accuracy_add(entity e, int w, float fired, float hit)
+void accuracy_add(entity this, int w, int fired, int hit)
 {
-	entity a;
-	float b;
-	if(IS_INDEPENDENT_PLAYER(e))
-		return;
-	a = e.accuracy;
-	if(!a || !(hit || fired))
-		return;
+	if (IS_INDEPENDENT_PLAYER(this)) return;
+	entity a = this.accuracy;
+	if (!a) return;
+	if (!hit && !fired) return;
 	w -= WEP_FIRST;
-	b = accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w]));
-	if(hit)
-		a.(accuracy_hit[w]) += hit;
-	if(fired)
-		a.(accuracy_fired[w]) += fired;
+	int b = accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w]);
+	if (hit)    a.accuracy_hit  [w] += hit;
+	if (fired)  a.accuracy_fired[w] += fired;
 
-    if(hit && a.hit_time != time) // only run this once per frame
-    {
-        a.(accuracy_cnt_hit[w]) += 1;
+    if (hit && a.hit_time != time) { // only run this once per frame
+        a.accuracy_cnt_hit[w] += 1;
         a.hit_time = time;
     }
 
-    if(fired && a.fired_time != time) // only run this once per frame
-    {
-        a.(accuracy_cnt_fired[w]) += 1;
+    if (fired && a.fired_time != time) { // only run this once per frame
+        a.accuracy_cnt_fired[w] += 1;
         a.fired_time = time;
     }
 
-	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
-		return;
-	w = pow(2, w % 24);
-	a.SendFlags |= w;
-	FOR_EACH_CLIENT(a)
-		if(IS_SPEC(a))
-			if(a.enemy == e)
-				a.SendFlags |= w;
+	if (b == accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w])) return; // no change
+	int sf = 1 << (w % 24);
+	a.SendFlags |= sf;
+	entity e; FOR_EACH_CLIENT(e) if (IS_SPEC(e)) if (e.enemy == this) {
+		e.accuracy.SendFlags |= sf;
+	}
 }
 
-float accuracy_isgooddamage(entity attacker, entity targ)
+bool accuracy_isgooddamage(entity attacker, entity targ)
 {
-	frag_attacker = attacker;
-	frag_target = targ;
-	float mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid);
+	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
-	if(!warmup_stage)
-	if(targ.deadflag == DEAD_NO)
-	if(!targ.frozen)
-	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
-	if(DIFF_TEAM(attacker, targ))
-		return true;
-	return false;
+	if (warmup_stage) return false;
+	if (targ.deadflag != DEAD_NO) return false;
+	if (targ.frozen) return false;
+	if (SAME_TEAM(attacker, targ)) return false;
+
+	if (mutator_check == MUT_ACCADD_INVALID) return true;
+
+	if (mutator_check != MUT_ACCADD_VALID) return false;
+	if (!IS_CLIENT(targ)) return false;
+
+	return true;
 }
 
-float accuracy_canbegooddamage(entity attacker)
+bool accuracy_canbegooddamage(entity attacker)
 {
-	if(!warmup_stage)
-		return true;
-	return false;
+	return !warmup_stage;
 }

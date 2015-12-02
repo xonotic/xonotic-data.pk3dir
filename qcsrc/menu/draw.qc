@@ -27,16 +27,6 @@ void draw_reset(float cw, float ch, float ox, float oy)
 	draw_endBoldFont();
 }
 
-void draw_beginBoldFont()
-{
-	drawfont = FONT_USER+3;
-}
-
-void draw_endBoldFont()
-{
-	drawfont = FONT_USER+0;
-}
-
 vector globalToBox(vector v, vector theOrigin, vector theScale)
 {
 	v -= theOrigin;
@@ -281,7 +271,7 @@ void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector the
 void draw_Text(vector theOrigin, string theText, vector theSize, vector theColor, float theAlpha, float ICanHasKallerz)
 {
 	if(theSize.x <= 0 || theSize.y <= 0) {
-		dprint("Drawing zero size text?\n");
+		LOG_TRACE("Drawing zero size text?\n");
 		return;
 	}
 

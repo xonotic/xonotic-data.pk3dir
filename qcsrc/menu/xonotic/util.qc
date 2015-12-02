@@ -1,54 +1,22 @@
 #include "util.qh"
+
+#include "../item.qc"
+
 #include "../menu.qh"
-#include "../oo/base.qh"
 #include "../../common/campaign_common.qh"
 #include "../../common/constants.qh"
 #include "../../common/mapinfo.qh"
-#include "../../common/urllib.qh"
 #include "../../common/util.qh"
 #include "../../common/command/generic.qh"
 
 float GL_CheckExtension(string ext)
 {
-	return (strstrofs(strcat(" ", cvar_string("gl_info_extensions"), " "), strcat(" ", ext, " "), 0) >= 0);
+	return strhasword(cvar_string("gl_info_extensions"), ext);
 }
 
 float GL_Have_TextureCompression()
 {
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
-}
-
-void loadTooltips()
-{
-	tooltipdb = db_load(language_filename("tooltips.db"));
-}
-void unloadTooltips()
-{
-	if(tooltipdb >= 0)
-		db_close(tooltipdb);
-	tooltipdb = -1;
-}
-string getZonedTooltipForIdentifier(string s)
-{
-	string t;
-	if(s == "")
-		return string_null;
-	if(tooltipdb >= 0)
-	{
-		t = db_get(tooltipdb, s);
-		if(t == "-")
-			return string_null;
-		if(t != "")
-			return strzone(t);
-	}
-	if(prvm_language == "en")
-	{
-		t = cvar_description(s);
-		if(t != "" && t != "custom cvar")
-			return strzone(t);
-	}
-	dprint("WARNING: no tooltip set for ", s, "\n");
-	return string_null;
 }
 
 .entity parent, firstChild, nextSibling;
@@ -95,7 +63,7 @@ string getCvarsMulti(entity me)
 void saveCvarsMulti(entity me)
 {
 	float n, i;
-	string s;
+	string s, cvarname;
 
 	me.saveCvars_Multi(me);
 	s = cvar_string(me.cvarName);
@@ -103,12 +71,19 @@ void saveCvarsMulti(entity me)
 	n = tokenize_console(me.cvarNames_Multi);
 	for(i = 0; i < n; ++i)
 	{
+		// cvars prefixed with ! get saved with the inverted value
 		if(substring(argv(i), 0, 1) == "!")
-			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
+		{
+			cvarname = substring(argv(i), 1, strlen(argv(i)));
+			cvar_set(cvarname, ((s == "0") ? "1" : "0"));
+		}
 		else
-			cvar_set(argv(i), s);
+		{
+			cvarname = argv(i);
+			cvar_set(cvarname, s);
+		}
 
-		CheckSendCvars(me, argv(i));
+		CheckSendCvars(me, cvarname);
 	}
 }
 void makeMulti(entity e, string otherCvars)
@@ -275,6 +250,32 @@ void setDependentWeird(entity e, float(entity) func)
 	setDependent_Check(e);
 }
 
+void setZonedTooltip(entity e, string theTooltip, string theCvar)
+{
+	if(theTooltip == "") // no tooltip, use cvar description then
+	{
+		if(theCvar != "" && prvm_language == "en")
+		{
+			string t = cvar_description(theCvar);
+			if(t != "" && t != "custom cvar")
+				theTooltip = t;
+		}
+	}
+	else if(theTooltip == "-") // no cvar description as tooltip
+	{
+		theTooltip = string_null;
+	}
+
+	if(e.tooltip)
+		strunzone(e.tooltip);
+	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
+}
+
+void clearTooltip(entity e)
+{
+	setZonedTooltip(e, string_null, string_null);
+}
+
 // URI SYSTEM ////////////////////////////////////////////////////////
 
 float _Nex_ExtResponseSystem_Queried;
@@ -283,6 +284,7 @@ string _Nex_ExtResponseSystem_UpdateToURL;
 string _Nex_ExtResponseSystem_Packs;
 float _Nex_ExtResponseSystem_PacksStep;
 
+/** engine callback */
 void URI_Get_Callback(float id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
@@ -304,7 +306,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		printf("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 
@@ -319,22 +321,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 	if(_Nex_ExtResponseSystem_UpdateTo)
 	{
-		dprint("error: UpdateNotification_URI_Get_Callback has been called before\n");
+		LOG_TRACE("error: UpdateNotification_URI_Get_Callback has been called before\n");
 		return;
 	}
 	if(status != 0)
 	{
-		dprintf("error receiving update notification: status is %d\n", status);
+		LOG_TRACEF("error receiving update notification: status is %d\n", status);
 		return;
 	}
 	if(substring(data, 0, 1) == "<")
 	{
-		dprint("error: received HTML instead of an update notification\n");
+		LOG_TRACE("error: received HTML instead of an update notification\n");
 		return;
 	}
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		dprint("error: received carriage returns from update notification server\n");
+		LOG_TRACE("error: received carriage returns from update notification server\n");
 		return;
 	}
 
@@ -412,7 +414,7 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		{
 			// update needed
 			_Nex_ExtResponseSystem_UpdateTo = strzone(un_version);
-			if(un_download) { printf(_("Update can be downloaded at:\n%s\n"), un_download); }
+			if(un_download) { LOG_INFOF(_("Update can be downloaded at:\n%s\n"), un_download); }
 			if(un_url) { _Nex_ExtResponseSystem_UpdateToURL = strzone(un_url); }
 			DisableServerBackwardsCompatibility();
 		}
@@ -643,7 +645,7 @@ float updateCompression()
 		cvar_set("gl_texturecompression", "1");
 		cvar_set("r_texture_dds_load", "1");
 		if(!can_dds)
-			print(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n"));
+			LOG_INFO(_("^1ERROR: Texture compression is required but not supported.\n^1Expect visual problems.\n"));
 		return 0;
 	}
 	else
@@ -665,23 +667,23 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	GAMETYPE(MAPINFO_TYPE_CTF) \
 	GAMETYPE(MAPINFO_TYPE_CA) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
 	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
 	GAMETYPE(MAPINFO_TYPE_INFECTION) \
 	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
 	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
 	GAMETYPE(MAPINFO_TYPE_LMS) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
 	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
-	//GAMETYPE(MAPINFO_TYPE_INVASION) \
-	/* nothing */
+	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
+	/**/
 
 int GameType_GetID(int cnt)
 {
@@ -798,11 +800,20 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname)
 				e.configureXonoticTextSliderValues(e);
 }
 
+float getFadedAlpha(float currentAlpha, float startAlpha, float targetAlpha)
+{
+	if(startAlpha < targetAlpha)
+		currentAlpha = min(currentAlpha + frametime * 0.5, targetAlpha);
+	else
+		currentAlpha = max(currentAlpha - frametime * 0.5, targetAlpha);
+	return currentAlpha;
+}
+
 void CheckSendCvars(entity me, string cvarnamestring)
 {
 	if(me.sendCvars)
 	{
-		printf("Sending cvar: %s -> %s\n", cvarnamestring, cvar_string(cvarnamestring));
+		LOG_INFOF("Sending cvar: %s -> %s\n", cvarnamestring, cvar_string(cvarnamestring));
 		if(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 		{
 			cmd(sprintf("\nsendcvar %s\n", cvarnamestring));

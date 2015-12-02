@@ -2,6 +2,7 @@
 #define COMMAND_COMMON_H
 
 #include "vote.qh"
+#include "../../common/monsters/spawn.qh"
 
 #include "../../common/command/generic.qh"
 #include "../../common/command/command.qh"
@@ -26,15 +27,15 @@ const float TIMEOUT_ACTIVE = 2;
 const float TIMEOUT_SLOWMO_VALUE = 0.0001;
 
 // global timeout information declarations
-entity timeout_caller; // contains the entity of the player who started the last timeout
-entity timeout_handler; // responsible for centerprinting the timeout countdowns and playing sounds
-float sys_frametime; // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
-float orig_slowmo; // contains the value of autocvar_slowmo so that, after timeout finished, it isn't set to slowmo 1 necessarily
-float timeout_time; // contains the time in seconds that the active timeout has left
-float timeout_leadtime; // contains the number of seconds left of the leadtime (before the timeout starts)
-float timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
+entity timeout_caller;   // contains the entity of the player who started the last timeout
+entity timeout_handler;  // responsible for centerprinting the timeout countdowns and playing sounds
+float sys_frametime;     // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
+float orig_slowmo;       // contains the value of autocvar_slowmo so that, after timeout finished, it isn't set to slowmo 1 necessarily
+float timeout_time;      // contains the time in seconds that the active timeout has left
+float timeout_leadtime;  // contains the number of seconds left of the leadtime (before the timeout starts)
+float timeout_status;    // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
 .float allowed_timeouts; // contains the number of allowed timeouts for each player
-.vector lastV_angle; //used when pausing the game in order to force the player to keep his old view angle fixed
+.vector lastV_angle;     // used when pausing the game in order to force the player to keep his old view angle fixed
 
 // allow functions to be used in other code like g_world.qc and teamplay.qc
 void timeout_handler_think();
@@ -59,7 +60,7 @@ float VerifyClientEntity(entity client, float must_be_real, float must_be_bots);
 
 // if the client is not acceptable, return a string to be used for error messages
 string GetClientErrorString_color(float clienterror, string original_input, string col);
-#define GetClientErrorString(clienterror,original_input) GetClientErrorString_color(clienterror,original_input,"^7")
+#define GetClientErrorString(clienterror, original_input) GetClientErrorString_color(clienterror, original_input, "^7")
 
 // is this entity number even in the possible range of entities?
 float VerifyClientNumber(float tmp_number);
@@ -92,6 +93,8 @@ void CommonCommand_cvar_changes(float request, entity caller);
 
 void CommonCommand_cvar_purechanges(float request, entity caller);
 
+void CommonCommand_editmob(float request, entity caller, float argc);
+
 void CommonCommand_info(float request, entity caller, float argc);
 
 void CommonCommand_ladder(float request, entity caller);
@@ -120,9 +123,10 @@ void CommonCommand_who(float request, entity caller, float argc);
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define COMMON_COMMANDS(request,caller,arguments,command) \
+#define COMMON_COMMANDS(request, caller, arguments, command) \
 	COMMON_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, caller), "Prints a list of all changed server cvars") \
 	COMMON_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, caller), "Prints a list of all changed gameplay cvars") \
+	COMMON_COMMAND("editmob", CommonCommand_editmob(request, caller, arguments), "Modifies a monster or all monsters") \
 	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
 	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
 	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \
@@ -139,46 +143,42 @@ void CommonCommand_who(float request, entity caller, float argc);
 
 void CommonCommand_macro_help(entity caller)
 {
-	#define COMMON_COMMAND(name,function,description) \
+	#define COMMON_COMMAND(name, function, description) \
 		{ print_to(caller, strcat("  ^2", name, "^7: ", description)); }
 
 	COMMON_COMMANDS(0, caller, 0, "");
-	#undef COMMON_COMMAND
-
-	return;
+#undef COMMON_COMMAND
 }
 
 float CommonCommand_macro_command(float argc, entity caller, string command)
 {
-	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return true; } }
+	#define COMMON_COMMAND(name, function, description) \
+		{ if (name == strtolower(argv(0))) { function; return true; } }
 
 	COMMON_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, command);
-	#undef COMMON_COMMAND
+#undef COMMON_COMMAND
 
 	return false;
 }
 
 float CommonCommand_macro_usage(float argc, entity caller)
 {
-	#define COMMON_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return true; } }
+	#define COMMON_COMMAND(name, function, description) \
+		{ if (name == strtolower(argv(1))) { function; return true; } }
 
 	COMMON_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "");
-	#undef COMMON_COMMAND
+#undef COMMON_COMMAND
 
 	return false;
 }
 
 void CommonCommand_macro_write_aliases(float fh)
 {
-	#define COMMON_COMMAND(name,function,description) \
+	#define COMMON_COMMAND(name, function, description) \
 		{ CMD_Write_Alias("qc_cmd_svcmd", name, description); }
 
 	COMMON_COMMANDS(0, world, 0, "");
-	#undef COMMON_COMMAND
-
-	return;
+#undef COMMON_COMMAND
 }
 
 

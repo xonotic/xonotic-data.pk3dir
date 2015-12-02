@@ -1,0 +1,9 @@
+#ifndef BUMBLEBEE_H
+#define BUMBLEBEE_H
+
+#ifdef CSQC
+
+void CSQC_BUMBLE_GUN_HUD();
+#endif
+
+#endif

@@ -1,0 +1,69 @@
+#ifndef INVENTORY_H
+#define INVENTORY_H
+
+#include "all.qh"
+#include "item/pickup.qh"
+
+entityclass(Inventory);
+/** Stores counts of items, the id being the index */
+class(Inventory) .int inv_items[Items_MAX];
+
+/** Player inventory; Inventories also have one inventory for storing the previous state */
+.Inventory inventory;
+
+REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
+
+#ifdef CSQC
+NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
+{
+    make_pure(this);
+    const int bits = ReadInt24_t();
+    FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
+        .int fld = inv_items[it.m_id];
+        int prev = this.(fld);
+        int next = this.(fld) = ReadByte();
+        LOG_TRACEF("%s: %.0f -> %.0f\n", it.m_name, prev, next);
+    ));
+    return true;
+}
+#endif
+
+#ifdef SVQC
+void Inventory_Write(Inventory data)
+{
+    int bits = 0;
+    FOREACH(Items, true, LAMBDA(
+        .int fld = inv_items[it.m_id];
+        bits = BITSET(bits, BIT(it.m_id), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
+    ));
+    WriteInt24_t(MSG_ENTITY, bits);
+    FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
+        WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
+    ));
+}
+#endif
+
+#ifdef SVQC
+bool Inventory_Send(entity this, entity to, int sf)
+{
+    WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
+    entity e = self.owner;
+    if (IS_SPEC(e)) e = e.enemy;
+    Inventory data = e.inventory;
+    Inventory_Write(data);
+    return true;
+}
+
+void Inventory_new(entity e)
+{
+    Inventory inv = new(Inventory), bak = new(Inventory);
+    make_pure(inv); make_pure(bak);
+    inv.inventory = bak;
+    inv.drawonlytoclient = e;
+    Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);
+}
+void Inventory_delete(entity e) { remove(e.inventory.inventory); remove(e.inventory); }
+void Inventory_update(entity e) { e.inventory.SendFlags = 0xFFFFFF; }
+#endif
+
+#endif

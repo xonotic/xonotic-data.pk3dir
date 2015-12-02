@@ -1,4 +1,9 @@
-#include "../pathlib.qh"
+#include "pathlib.qh"
+
+MODEL(SQUARE,       "models/pathlib/square.md3");
+MODEL(SQUARE_GOOD,  "models/pathlib/goodsquare.md3");
+MODEL(SQUARE_BAD,   "models/pathlib/badsquare.md3");
+MODEL(EDGE,         "models/pathlib/edge.md3");
 
 #ifdef TURRET_DEBUG
 void mark_error(vector where,float lifetime);
@@ -18,13 +23,13 @@ void pathlib_showpath(entity start)
 }
 
 void path_dbg_think()
-{
+{SELFPARAM();
     pathlib_showpath(self);
     self.nextthink = time + 1;
 }
 
 void __showpath2_think()
-{
+{SELFPARAM();
     #ifdef TURRET_DEBUG
 	mark_info(self.origin,1);
 	#endif
@@ -46,7 +51,6 @@ void pathlib_showpath2(entity path)
     path.nextthink = time;
 }
 
-
 void pathlib_showsquare2(entity node ,vector ncolor,float align)
 {
 
@@ -54,7 +58,7 @@ void pathlib_showsquare2(entity node ,vector ncolor,float align)
     node.scale     = pathlib_gridsize / 512.001;
     node.solid     = SOLID_NOT;
 
-    setmodel(node,"models/pathlib/square.md3");
+    setmodel(node, MDL_SQUARE);
     setorigin(node,node.origin);
     node.colormod = ncolor;
 
@@ -65,8 +69,6 @@ void pathlib_showsquare2(entity node ,vector ncolor,float align)
         node.angles_x -= 90;
     }
 }
-
-void SUB_Remove();
 
 void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 {
@@ -79,17 +81,12 @@ void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 
     s           = spawn();
     s.alpha     = 0.25;
-    s.think     = SUB_Remove;
+    s.think     = SUB_Remove_self;
     s.nextthink = _lifetime;
     s.scale     = pathlib_gridsize / 512.001;
     s.solid     = SOLID_NOT;
 
-    if(goodsquare)
-        setmodel(s,"models/pathlib/goodsquare.md3");
-    else
-        setmodel(s,"models/pathlib/badsquare.md3");
-
-
+    setmodel(s, goodsquare ? MDL_SQUARE_GOOD : MDL_SQUARE_BAD);
 
     traceline(where + '0 0 32',where - '0 0 128',MOVE_WORLDONLY,s);
 
@@ -109,12 +106,12 @@ void pathlib_showedge(vector where,float _lifetime,float rot)
 
     e           = spawn();
     e.alpha     = 0.25;
-    e.think     = SUB_Remove;
+    e.think     = SUB_Remove_self;
     e.nextthink = _lifetime;
     e.scale     = pathlib_gridsize / 512;
     e.solid     = SOLID_NOT;
     setorigin(e,where);
-    setmodel(e,"models/pathlib/edge.md3");
+    setmodel(e, MDL_EDGE);
     //traceline(where + '0 0 32',where - '0 0 128',MOVE_WORLDONLY,e);
     //e.angles = vectoangles(trace_plane_normal);
     e.angles_y = rot;

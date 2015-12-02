@@ -2,9 +2,8 @@
 #define DIALOG_MULTIPLAYER_PROFILE_H
 #include "tab.qc"
 CLASS(XonoticProfileTab, XonoticTab)
-	METHOD(XonoticProfileTab, fill, void(entity))
-	METHOD(XonoticProfileTab, draw, void(entity))
-	ATTRIB(XonoticProfileTab, title, string, _("Profile"))
+	METHOD(XonoticProfileTab, fill, void(entity));
+	METHOD(XonoticProfileTab, draw, void(entity));
 	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticProfileTab, rows, float, 23)
 	ATTRIB(XonoticProfileTab, columns, float, 6.1) // added extra .2 for center space
@@ -50,7 +49,8 @@ void XonoticProfileTab_fill(entity me)
 			label.fontSize = SKINFONTSIZE_TITLE;
 
 	me.gotoRC(me, 2.5, 0);
-		me.TD(me, 1, 3.0, box = makeXonoticInputBox(1, "_cl_name"));
+		me.TD(me, 1, 3.0, box = makeXonoticInputBox_T(1, "_cl_name",
+			_("Name under which you will appear in the game")));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
@@ -161,6 +161,6 @@ void XonoticProfileTab_fill(entity me)
 	#endif
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_weaponpriority;sendcvar cl_autoswitch;sendcvar cl_forceplayermodels;sendcvar cl_forceplayermodelsfromxonotic;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";sendcvar cl_autoswitch;sendcvar cl_forceplayermodels;sendcvar cl_forceplayermodelsfromxonotic;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
 }
 #endif

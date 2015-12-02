@@ -1,0 +1,63 @@
+#ifndef WAYPOINTS_ALL_H
+#define WAYPOINTS_ALL_H
+
+#include "waypointsprites.qh"
+
+REGISTRY(Waypoints, BITS(6))
+#define Waypoints_from(i) _Waypoints_from(i, WP_Null)
+REGISTER_REGISTRY(Waypoints)
+REGISTRY_CHECK(Waypoints)
+
+/** If you register a new waypoint, make sure to add it to all.inc */
+#define REGISTER_WAYPOINT_(id, init) REGISTER(Waypoints, WP, id, m_id, init)
+
+CLASS(Waypoint, Object)
+    ATTRIB(Waypoint, m_id, int, 0)
+    ATTRIB(Waypoint, netname, string, string_null)
+    ATTRIB(Waypoint, m_name, string, string_null)
+    ATTRIB(Waypoint, m_color, vector, '1 1 1')
+    ATTRIB(Waypoint, m_blink, int, 1)
+    CONSTRUCTOR(Waypoint, string _netname, string _name, vector _color, int _blink) {
+        CONSTRUCT(Waypoint);
+        this.netname = _netname;
+        this.m_name = _name;
+        this.m_color = _color;
+        this.m_blink = _blink;
+    }
+ENDCLASS(Waypoint)
+
+#define REGISTER_WAYPOINT(id, text, color, blink) REGISTER_WAYPOINT_(id, NEW(Waypoint, #id, text, color, blink))
+
+REGISTRY(RadarIcons, BITS(7))
+#define RadarIcons_from(i) _RadarIcons_from(i, RADARICON_NONE)
+REGISTER_REGISTRY(RadarIcons)
+REGISTRY_CHECK(RadarIcons)
+
+.int m_radaricon;
+#define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new(RadarIcon)) { make_pure(this); this.m_radaricon = num; this.netname = #id; }
+
+REGISTER_WAYPOINT(Null, "", '0 0 0', 1);
+
+REGISTER_RADARICON(NONE,            0);
+REGISTER_RADARICON(FLAG,            1);
+REGISTER_RADARICON(FLAGCARRIER,     1);
+
+// TODO make these 3 and 4, and make images for them
+REGISTER_RADARICON(HERE,            1);
+REGISTER_RADARICON(DANGER,          1);
+
+REGISTER_RADARICON(WAYPOINT,        1);
+REGISTER_RADARICON(HELPME,          1);
+REGISTER_RADARICON(CONTROLPOINT,    1);
+REGISTER_RADARICON(GENERATOR,       1);
+REGISTER_RADARICON(OBJECTIVE,       1);
+REGISTER_RADARICON(DOMPOINT,        1);
+REGISTER_RADARICON(TAGGED,          1);
+
+REGISTER_RADARICON(Item,            1);
+REGISTER_RADARICON(Vehicle,         1);
+REGISTER_RADARICON(Weapon,          1);
+
+#include "all.inc"
+
+#endif

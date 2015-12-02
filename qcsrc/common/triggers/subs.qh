@@ -1,0 +1,97 @@
+#ifndef SUBS_H
+#define SUBS_H
+
+#ifdef SVQC
+
+	#define SUB_ANGLES(s)		(s).angles
+	#define SUB_VELOCITY		velocity
+	#define SUB_AVELOCITY		avelocity
+	#define SUB_ORIGIN			origin
+	#define SUB_SETORIGIN(s,v)	setorigin((s), (v))
+	#define SUB_NEXTTHINK		nextthink
+	#define SUB_THINK			think
+	#define SUB_LTIME			ltime
+	#define SUB_FLAGS			flags
+
+#elif defined(CSQC)
+
+	void _Movetype_LinkEdict(entity this, float touch_triggers);
+
+	#define SUB_ANGLES(s)	(s).move_angles
+	#define SUB_VELOCITY	move_velocity
+	#define SUB_AVELOCITY	move_avelocity
+	#define SUB_ORIGIN		move_origin
+	#define SUB_NEXTTHINK	move_nextthink
+	#define SUB_THINK		move_think
+	#define SUB_LTIME		move_ltime
+	#define SUB_FLAGS		move_flags
+
+.vector move_origin;
+
+	void SUB_SETORIGIN(entity s, vector v)
+	{SELFPARAM();
+		s.move_origin = v;
+		_Movetype_LinkEdict(s, true);
+	}
+
+#endif
+
+void SUB_SetFade (entity ent, float when, float fading_time);
+void SUB_VanishOrRemove (entity ent);
+
+.vector		finaldest, finalangle; 		//plat.qc stuff
+.void()		think1;
+.float state;
+.float		t_length, t_width;
+
+.vector destvec;
+.vector destvec2;
+
+.float	delay;
+.float	wait;
+.float	lip;
+.float	speed;
+.float	sounds;
+.string  platmovetype;
+.float platmovetype_start, platmovetype_end;
+
+entity activator;
+
+.string killtarget;
+
+.vector	pos1, pos2;
+.vector	mangle;
+
+.string target2;
+.string target3;
+.string target4;
+.string curvetarget;
+.float target_random;
+.float trigger_reverse;
+
+// Keys player is holding
+.float itemkeys;
+// message delay for func_door locked by keys and key locks
+// this field is used on player entities
+.float key_door_messagetime;
+
+.vector dest1, dest2;
+
+#ifdef CSQC
+// this stuff is defined in the server side engine VM, so we must define it separately here
+.float takedamage;
+const float DAMAGE_NO	= 0;
+const float DAMAGE_YES	= 1;
+const float DAMAGE_AIM	= 2;
+
+float	STATE_TOP		= 0;
+float	STATE_BOTTOM	= 1;
+float	STATE_UP		= 2;
+float	STATE_DOWN		= 3;
+
+.string		noise, noise1, noise2, noise3;	// contains names of wavs to play
+
+.float		max_health;		// players maximum health is stored here
+#endif
+
+#endif

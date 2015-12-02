@@ -1,0 +1,508 @@
+// Weapon icons (#0)
+
+entity weaponorder[Weapons_MAX];
+void weaponorder_swap(int i, int j, entity pass)
+{
+	entity h = weaponorder[i];
+	weaponorder[i] = weaponorder[j];
+	weaponorder[j] = h;
+}
+
+string weaponorder_cmp_str;
+int weaponorder_cmp(int i, int j, entity pass)
+{
+	int ai, aj;
+	ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].weapon), 0);
+	aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].weapon), 0);
+	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
+}
+
+void HUD_Weapons()
+{
+	SELFPARAM();
+	// declarations
+	WepSet weapons_stat = WepSet_GetFromStat();
+	int i;
+	float f, a;
+	float screen_ar;
+	vector center = '0 0 0';
+	int weapon_count, weapon_id;
+	int row, column, rows = 0, columns = 0;
+	bool vertical_order = true;
+	float aspect = autocvar_hud_panel_weapons_aspect;
+
+	float timeout = autocvar_hud_panel_weapons_timeout;
+	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
+	float timeout_effect_length = autocvar_hud_panel_weapons_timeout_speed_out; //? 0.75 : 0);
+
+	vector barsize = '0 0 0', baroffset = '0 0 0';
+	vector ammo_color = '1 0 1';
+	float ammo_alpha = 1;
+
+	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
+	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
+
+	vector weapon_pos, weapon_size = '0 0 0';
+	vector color;
+
+	// check to see if we want to continue
+	if(hud != HUD_NORMAL) return;
+
+	if(!autocvar__hud_configure)
+	{
+		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
+			return;
+		if(timeout && time >= weapontime + timeout + timeout_effect_length)
+		if(autocvar_hud_panel_weapons_timeout_effect == 3 || (autocvar_hud_panel_weapons_timeout_effect == 1 && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
+		{
+			weaponprevtime = time;
+			return;
+		}
+	}
+
+	// update generic hud functions
+	HUD_Panel_UpdateCvars();
+
+	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
+	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
+	{
+		int weapon_cnt;
+		if(weaponorder_bypriority)
+			strunzone(weaponorder_bypriority);
+		if(weaponorder_byimpulse)
+			strunzone(weaponorder_byimpulse);
+
+		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
+		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
+		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
+
+		weapon_cnt = 0;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			setself(get_weaponinfo(i));
+			if(self.impulse >= 0)
+			{
+				weaponorder[weapon_cnt] = self;
+				++weapon_cnt;
+			}
+		}
+		for(i = weapon_cnt; i < Weapons_MAX; ++i)
+			weaponorder[i] = world;
+		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+
+		weaponorder_cmp_str = string_null;
+	}
+
+	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
+		complain_weapon = 0;
+
+	if(autocvar__hud_configure)
+	{
+		if(!weapons_stat)
+			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
+				weapons_stat |= WepSet_FromWeapon(i);
+
+		#if 0
+		/// debug code
+		if(cvar("wep_add"))
+		{
+			weapons_stat = '0 0 0';
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (Weapons_COUNT - 1));
+			for(i = WEP_FIRST; i <= countw; ++i)
+				weapons_stat |= WepSet_FromWeapon(i);
+		}
+		#endif
+	}
+
+	// determine which weapons are going to be shown
+	if (autocvar_hud_panel_weapons_onlyowned)
+	{
+		if(autocvar__hud_configure)
+		{
+			if(menu_enabled != 2)
+				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+		}
+
+		// do we own this weapon?
+		weapon_count = 0;
+		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+			if((weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon)) || (weaponorder[i].weapon == complain_weapon))
+				++weapon_count;
+
+
+		// might as well commit suicide now, no reason to live ;)
+		if (weapon_count == 0)
+			return;
+
+		vector old_panel_size = panel_size;
+		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
+
+		// get the all-weapons layout
+		int nHidden = 0;
+		WepSet weapons_stat = WepSet_GetFromStat();
+		for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
+			Weapon w = get_weaponinfo(i);
+			if (weapons_stat & w.m_wepset) continue;
+			if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+		}
+		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, padded_panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
+		weapon_size.x = padded_panel_size.x / columns;
+		weapon_size.y = padded_panel_size.y / rows;
+
+		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
+		// we enlarge them a bit when possible to better match the desired aspect ratio
+		if(padded_panel_size.x / padded_panel_size.y < aspect)
+		{
+			// maximum number of rows that allows to display items with the desired aspect ratio
+			int max_rows = floor(padded_panel_size.y / (weapon_size.x / aspect));
+			columns = min(columns, ceil(weapon_count / max_rows));
+			rows = ceil(weapon_count / columns);
+			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
+			vertical_order = false;
+		}
+		else
+		{
+			int max_columns = floor(padded_panel_size.x / (weapon_size.y * aspect));
+			rows = min(rows, ceil(weapon_count / max_columns));
+			columns = ceil(weapon_count / rows);
+			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
+			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+			vertical_order = true;
+		}
+
+		// reduce size of the panel
+		panel_size.x = columns * weapon_size.x;
+		panel_size.y = rows * weapon_size.y;
+		panel_size += '2 2 0' * panel_bg_padding;
+
+		// center the resized panel, or snap it to the screen edge when close enough
+		if(panel_pos.x > vid_conwidth * 0.001)
+		{
+			if(panel_pos.x + old_panel_size.x > vid_conwidth * 0.999)
+				panel_pos.x += old_panel_size.x - panel_size.x;
+			else
+				panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+		}
+		else if(old_panel_size.x > vid_conwidth * 0.999)
+			panel_pos.x += (old_panel_size.x - panel_size.x) / 2;
+
+		if(panel_pos.y > vid_conheight * 0.001)
+		{
+			if(panel_pos.y + old_panel_size.y > vid_conheight * 0.999)
+				panel_pos.y += old_panel_size.y - panel_size.y;
+			else
+				panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+		}
+		else if(old_panel_size.y > vid_conheight * 0.999)
+			panel_pos.y += (old_panel_size.y - panel_size.y) / 2;
+	}
+	else
+		weapon_count = (Weapons_COUNT - 1);
+
+	// animation for fading in/out the panel respectively when not in use
+	if(!autocvar__hud_configure)
+	{
+		if (timeout && time >= weapontime + timeout) // apply timeout effect if needed
+		{
+			f = bound(0, (time - (weapontime + timeout)) / timeout_effect_length, 1);
+
+			// fade the panel alpha
+			if(autocvar_hud_panel_weapons_timeout_effect == 1)
+			{
+				panel_bg_alpha *= (autocvar_hud_panel_weapons_timeout_fadebgmin * f + (1 - f));
+				panel_fg_alpha *= (autocvar_hud_panel_weapons_timeout_fadefgmin * f + (1 - f));
+			}
+			else if(autocvar_hud_panel_weapons_timeout_effect == 3)
+			{
+				panel_bg_alpha *= (1 - f);
+				panel_fg_alpha *= (1 - f);
+			}
+
+			// move the panel off the screen
+			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
+			{
+				f *= f; // for a cooler movement
+				center.x = panel_pos.x + panel_size.x/2;
+				center.y = panel_pos.y + panel_size.y/2;
+				screen_ar = vid_conwidth/vid_conheight;
+				if (center.x/center.y < screen_ar) //bottom left
+				{
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //bottom
+						panel_pos.y += f * (vid_conheight - panel_pos.y);
+					else //left
+						panel_pos.x -= f * (panel_pos.x + panel_size.x);
+				}
+				else //top right
+				{
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //right
+						panel_pos.x += f * (vid_conwidth - panel_pos.x);
+					else //top
+						panel_pos.y -= f * (panel_pos.y + panel_size.y);
+				}
+				if(f == 1)
+					center.x = -1; // mark the panel as off screen
+			}
+			weaponprevtime = time - (1 - f) * timein_effect_length;
+		}
+		else if (timeout && time < weaponprevtime + timein_effect_length) // apply timein effect if needed
+		{
+			f = bound(0, (time - weaponprevtime) / timein_effect_length, 1);
+
+			// fade the panel alpha
+			if(autocvar_hud_panel_weapons_timeout_effect == 1)
+			{
+				panel_bg_alpha *= (autocvar_hud_panel_weapons_timeout_fadebgmin * (1 - f) + f);
+				panel_fg_alpha *= (autocvar_hud_panel_weapons_timeout_fadefgmin * (1 - f) + f);
+			}
+			else if(autocvar_hud_panel_weapons_timeout_effect == 3)
+			{
+				panel_bg_alpha *= (f);
+				panel_fg_alpha *= (f);
+			}
+
+			// move the panel back on screen
+			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
+			{
+				f *= f; // for a cooler movement
+				f = 1 - f;
+				center.x = panel_pos.x + panel_size.x/2;
+				center.y = panel_pos.y + panel_size.y/2;
+				screen_ar = vid_conwidth/vid_conheight;
+				if (center.x/center.y < screen_ar) //bottom left
+				{
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //bottom
+						panel_pos.y += f * (vid_conheight - panel_pos.y);
+					else //left
+						panel_pos.x -= f * (panel_pos.x + panel_size.x);
+				}
+				else //top right
+				{
+					if ((vid_conwidth - center.x)/center.y < screen_ar) //right
+						panel_pos.x += f * (vid_conwidth - panel_pos.x);
+					else //top
+						panel_pos.y -= f * (panel_pos.y + panel_size.y);
+				}
+			}
+		}
+	}
+
+	// draw the background, then change the virtual size of it to better fit other items inside
+	HUD_Panel_DrawBg(1);
+
+	if(center.x == -1)
+		return;
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
+
+	// after the sizing and animations are done, update the other values
+
+	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
+	{
+		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1), panel_size, aspect);
+		columns = table_size.x;
+		rows = table_size.y;
+		weapon_size.x = panel_size.x / columns;
+		weapon_size.y = panel_size.y / rows;
+		vertical_order = (panel_size.x / panel_size.y >= aspect);
+	}
+
+	// calculate position/size for visual bar displaying ammount of ammo status
+	if (autocvar_hud_panel_weapons_ammo)
+	{
+		ammo_color = stov(autocvar_hud_panel_weapons_ammo_color);
+		ammo_alpha = panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha;
+
+		if(weapon_size.x/weapon_size.y > aspect)
+		{
+			barsize.x = aspect * weapon_size.y;
+			barsize.y = weapon_size.y;
+			baroffset.x = (weapon_size.x - barsize.x) / 2;
+		}
+		else
+		{
+			barsize.y = 1/aspect * weapon_size.x;
+			barsize.x = weapon_size.x;
+			baroffset.y = (weapon_size.y - barsize.y) / 2;
+		}
+	}
+	if(autocvar_hud_panel_weapons_accuracy)
+		Accuracy_LoadColors();
+
+	// draw items
+	row = column = 0;
+	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
+	vector noncurrent_pos = '0 0 0';
+	vector noncurrent_size = weapon_size * bound(0, autocvar_hud_panel_weapons_noncurrent_scale, 1);
+	float noncurrent_alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_weapons_noncurrent_alpha, 1);
+	bool isCurrent;
+
+	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+	{
+		// retrieve information about the current weapon to be drawn
+		setself(weaponorder[i]);
+		weapon_id = self.impulse;
+		isCurrent = (self.weapon == switchweapon);
+
+		// skip if this weapon doesn't exist
+		if(!self || weapon_id < 0) { continue; }
+
+		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
+		if(autocvar_hud_panel_weapons_onlyowned)
+		if (!((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon)))
+			continue;
+
+		// figure out the drawing position of weapon
+		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
+		noncurrent_pos.x = weapon_pos.x + (weapon_size.x - noncurrent_size.x) / 2;
+		noncurrent_pos.y = weapon_pos.y + (weapon_size.y - noncurrent_size.y) / 2;
+
+		// draw background behind currently selected weapon
+		if(isCurrent)
+			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		// draw the weapon accuracy
+		if(autocvar_hud_panel_weapons_accuracy)
+		{
+			float panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
+			if(panel_weapon_accuracy >= 0)
+			{
+				color = Accuracy_GetColor(panel_weapon_accuracy);
+				drawpic_aspect_skin(weapon_pos, "weapon_accuracy", weapon_size, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+			}
+		}
+
+		// drawing all the weapon items
+		if(weapons_stat & WepSet_FromWeapon(self.weapon))
+		{
+			// draw the weapon image
+			if(isCurrent)
+				drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+			else
+				drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
+
+			// draw weapon label string
+			switch(autocvar_hud_panel_weapons_label)
+			{
+				case 1: // weapon number
+					drawstring(weapon_pos, ftos(weapon_id), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					break;
+
+				case 2: // bind
+					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					break;
+
+				case 3: // weapon name
+					drawstring(weapon_pos, strtolower(self.m_name), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					break;
+
+				default: // nothing
+					break;
+			}
+
+			// draw ammo status bar
+			if(autocvar_hud_panel_weapons_ammo && (self.ammo_field != ammo_none))
+			{
+				float ammo_full;
+				a = getstati(GetAmmoStat(self.ammo_field)); // how much ammo do we have?
+
+				if(a > 0)
+				{
+					switch(self.ammo_field)
+					{
+						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
+						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
+						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
+						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case ammo_plasma:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
+						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
+						default: ammo_full = 60;
+					}
+
+					drawsetcliparea(
+						weapon_pos.x + baroffset.x,
+						weapon_pos.y + baroffset.y,
+						barsize.x * bound(0, a/ammo_full, 1),
+						barsize.y
+					);
+
+					drawpic_aspect_skin(
+						weapon_pos,
+						"weapon_ammo",
+						weapon_size,
+						ammo_color,
+						ammo_alpha,
+						DRAWFLAG_NORMAL
+					);
+
+					drawresetcliparea();
+				}
+			}
+		}
+		else // draw a "ghost weapon icon" if you don't have the weapon
+		{
+			drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+		}
+
+		// draw the complain message
+		if(self.weapon == complain_weapon)
+		{
+			if(fadetime)
+				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));
+			else
+				a = ((complain_weapon_time + when > time) ? 1 : 0);
+
+			string s;
+			if(complain_weapon_type == 0) {
+				s = _("Out of ammo");
+				color = stov(autocvar_hud_panel_weapons_complainbubble_color_outofammo);
+			}
+			else if(complain_weapon_type == 1) {
+				s = _("Don't have");
+				color = stov(autocvar_hud_panel_weapons_complainbubble_color_donthave);
+			}
+			else {
+				s = _("Unavailable");
+				color = stov(autocvar_hud_panel_weapons_complainbubble_color_unavailable);
+			}
+			float padding = autocvar_hud_panel_weapons_complainbubble_padding;
+			drawpic_aspect_skin(weapon_pos + '1 1 0' * padding, "weapon_complainbubble", weapon_size - '2 2 0' * padding, color, a * panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(weapon_pos + '1 1 0' * padding, s, weapon_size - '2 2 0' * padding, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+		}
+
+		#if 0
+		/// debug code
+		if(!autocvar_hud_panel_weapons_onlyowned)
+		{
+			drawfill(weapon_pos + '1 1 0', weapon_size - '2 2 0', '1 1 1', panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
+			drawstring(weapon_pos, ftos(i + 1), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		#endif
+
+		// continue with new position for the next weapon
+		if(vertical_order)
+		{
+			++column;
+			if(column >= columns)
+			{
+				column = 0;
+				++row;
+			}
+		}
+		else
+		{
+			++row;
+			if(row >= rows)
+			{
+				row = 0;
+				++column;
+			}
+		}
+	}
+}

@@ -1,10 +1,10 @@
 #include "item_key.qh"
-#include "_all.qh"
 
-#include "../common/monsters/monsters.qh"
+#include "../common/triggers/subs.qh"
+#include "../common/monsters/all.qh"
 #include "../common/notifications.qh"
 #include "../common/util.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/warpzone/util_server.qh"
 
 /*
 TODO:
@@ -15,7 +15,8 @@ TODO:
 - should keys have a trigger?
 */
 
-bool item_keys_usekey(entity l, entity p) {
+bool item_keys_usekey(entity l, entity p)
+{
 	float valid = l.itemkeys & p.itemkeys;
 
 	if (!valid) {
@@ -38,7 +39,7 @@ string item_keys_keylist(float keylist) {
 		return "";
 
 	// one key
-	if ((keylist & (keylist-1)) != 0)
+	if ((keylist & (keylist-1)) == 0)
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
 
 	string n = "";
@@ -67,7 +68,8 @@ item_key
 /**
  * Key touch handler.
  */
-void item_key_touch(void) {
+void item_key_touch()
+{SELFPARAM();
 	if (!IS_PLAYER(other))
 		return;
 
@@ -79,12 +81,19 @@ void item_key_touch(void) {
 	play2(other, self.noise);
 
 	centerprint(other, self.message);
+
+	string oldmsg = self.message;
+	self.message = "";
+	activator = other;
+	SUB_UseTargets();
+	self.message = oldmsg;
 };
 
 /**
  * Spawn a key with given model, key code and color.
  */
-void spawn_item_key() {
+void spawn_item_key()
+{SELFPARAM();
 	precache_model(self.model);
 
 	if (self.spawnflags & 1) // FLOATING
@@ -99,7 +108,7 @@ void spawn_item_key() {
 
 	self.mdl = self.model;
 	self.effects = EF_LOWPRECISION;
-	setmodel(self, self.model);
+	_setmodel(self, self.model);
 	//setsize(self, '-16 -16 -24', '16 16 32');
 	setorigin(self, self.origin + '0 0 32');
 	setsize(self, '-16 -16 -56', '16 16 0');
@@ -144,7 +153,8 @@ This is the only correct way to put keys on the map!
 
 itemkeys MUST always have exactly one bit set.
 */
-void spawnfunc_item_key() {
+spawnfunc(item_key)
+{
 	string _netname;
 	vector _colormod;
 
@@ -157,32 +167,32 @@ void spawnfunc_item_key() {
 
 	// find default netname and colormod
 	switch(self.itemkeys) {
-	case 1:
+	case BIT(0):
 		_netname = "GOLD key";
 		_colormod = '1 .9 0';
 		break;
 
-	case 2:
+	case BIT(1):
 		_netname = "SILVER key";
 		_colormod = '.9 .9 .9';
 		break;
 
-	case 4:
+	case BIT(2):
 		_netname = "BRONZE key";
 		_colormod = '.6 .25 0';
 		break;
 
-	case 8:
+	case BIT(3):
 		_netname = "RED keycard";
 		_colormod = '.9 0 0';
 		break;
 
-	case 16:
+	case BIT(4):
 		_netname = "BLUE keycard";
 		_colormod = '0 0 .9';
 		break;
 
-	case 32:
+	case BIT(5):
 		_netname = "GREEN keycard";
 		_colormod = '0 .9 0';
 		break;
@@ -229,7 +239,7 @@ void spawnfunc_item_key() {
 		self.message = strzone(strcat("You've picked up the ", self.netname, "!"));
 
 	if (self.noise == "")
-		self.noise = "misc/itempickup.wav";
+		self.noise = strzone(SND(ITEMPICKUP));
 
 	// save the name for later
 	item_keys_names[lowestbit(self.itemkeys)] = self.netname;
@@ -250,10 +260,11 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key1(void) {
-	self.classname = "item_key";
-	self.itemkeys = ITEM_KEY_BIT(1);
-	spawnfunc_item_key();
+spawnfunc(item_key1)
+{
+	this.classname = "item_key";
+	this.itemkeys = ITEM_KEY_BIT(1);
+	spawnfunc_item_key(this);
 };
 
 /*QUAKED item_key2 (0 .5 .8) (-16 -16 -24) (16 16 32) FLOATING
@@ -268,161 +279,9 @@ FLOATING: the item will float in air, instead of aligning to the floor by fallin
 ---------NOTES----------
 Don't use this entity on new maps! Use item_key instead.
 */
-void spawnfunc_item_key2(void) {
-	self.classname = "item_key";
-	self.itemkeys = ITEM_KEY_BIT(0);
-	spawnfunc_item_key();
+spawnfunc(item_key2)
+{
+	this.classname = "item_key";
+	this.itemkeys = ITEM_KEY_BIT(0);
+	spawnfunc_item_key(this);
 };
-
-
-/*
-================================
-trigger_keylock
-================================
-*/
-
-/**
- * trigger givent targets
- */
-void trigger_keylock_trigger(string s) {
-	entity stemp = self;
-	entity otemp = other;
-	entity atemp = activator;
-
-	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
-		if (t.use) {
-			self = t;
-			other = stemp;
-			activator = atemp;
-			self.use();
-		}
-
-	self = stemp;
-	other = otemp;
-	activator = atemp;
-};
-
-/**
- * kill killtarget of trigger keylock.
- */
-void trigger_keylock_kill(string s) {
-	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
-		remove(t);
-};
-
-void trigger_keylock_touch(void) {
-	bool key_used = false;
-	bool started_delay = false;
-
-	// only player may trigger the lock
-	if (!IS_PLAYER(other))
-		return;
-
-
-	// check silver key
-	if (self.itemkeys)
-		key_used = item_keys_usekey(self, other);
-
-	activator = other;
-
-	if (self.itemkeys) {
-		// at least one of the keys is missing
-		if (key_used) {
-			// one or more keys were given, but others are still missing!
-			play2(other, self.noise1);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(self.itemkeys));
-			other.key_door_messagetime = time + 2;
-		} else if (other.key_door_messagetime <= time) {
-			// no keys were given
-			play2(other, self.noise2);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(self.itemkeys));
-			other.key_door_messagetime = time + 2;
-		}
-
-		// trigger target2
-		if (self.delay <= time || started_delay == true)
-		if (self.target2) {
-			trigger_keylock_trigger(self.target2);
-			started_delay = true;
-			self.delay = time + self.wait;
-		}
-	} else {
-		// all keys were given!
-		play2(other, self.noise);
-		centerprint(other, self.message);
-
-		if (self.target)
-			trigger_keylock_trigger(self.target);
-
-		if (self.killtarget)
-			trigger_keylock_kill(self.killtarget);
-
-		remove(self);
-	}
-
-};
-
-/*QUAKED trigger_keylock (.0 .5 .8) ?
-Keylock trigger.  Must target other entities.
-This trigger will trigger target entities when all required keys are provided.
--------- KEYS --------
-itemkeys: A bit field with key IDs that are needed to open this lock.
-sounds: 1 to play misc/secret.wav, 2 to play misc/talk.wav, 3 to play misc/trigger1.wav (3 is default)
-target: trigger all entities with this targetname when triggered and all keys have been given to it, then remove this trigger
-target2: trigger all entities with this targetname when triggered without giving it all the required keys.
-killtarget: remove all entities with this targetname when triggered with all the needed keys.
-message: print this message to the player who activated the trigger when all needed keys have been given.
-message2: print this message to the player who activated the trigger when not all of the needed keys have been given.
-noise: sound to play when lock gets unlocked (default: see sounds)
-noise1: sound to play when only some of the needed key were used but not all (default: misc/decreasevalue.wav)
-noise2: sound to play when a key is missing (default: misc/talk.wav)
-wait: prevent triggering again for this amount of time (default: 5) - applies to target2, target3, target4.
----------NOTES----------
-If spawned without any key specified in itemkeys, this trigger will display an error and remove itself.
-message2 and noise2 will be resent to the player every 2 seconds while he is in the trigger zone.
-*/
-void spawnfunc_trigger_keylock(void) {
-	if (!self.itemkeys) {
-		remove(self);
-		return;
-	}
-
-	// set unlocked message
-	if (self.message == "")
-		self.message = "Unlocked!";
-
-	// set default unlock noise
-	if (self.noise == "") {
-		if (self.sounds == 1)
-			self.noise = "misc/secret.wav";
-		else if (self.sounds == 2)
-			self.noise = "misc/talk.wav";
-		else //if (self.sounds == 3) {
-			self.noise = "misc/trigger1.wav";
-	}
-
-	// set default use key sound
-	if (self.noise1 == "")
-		self.noise1 = "misc/decreasevalue.wav";
-
-	// set closed sourd
-	if (self.noise2 == "")
-		self.noise2 = "misc/talk.wav";
-
-	// delay between triggering message2 and trigger2
-	if (!self.wait)
-		self.wait = 5;
-
-	// precache sounds
-	precache_sound(self.noise);
-	precache_sound(self.noise1);
-	precache_sound(self.noise2);
-
-	EXACTTRIGGER_INIT;
-
-	self.touch = trigger_keylock_touch;
-};
-
-

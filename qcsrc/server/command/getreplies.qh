@@ -8,17 +8,17 @@
 
 // ladder bullshit todo
 const int LADDER_FIRSTPOINT = 100;
-#define LADDER_CNT 10 // position X still gives LADDER_FIRSTPOINT/X points
-const int LADDER_SIZE = 30; 	// ladder shows the top X players
+#define LADDER_CNT 10       // position X still gives LADDER_FIRSTPOINT/X points
+const int LADDER_SIZE = 30; // ladder shows the top X players
 
 string top_uids[LADDER_SIZE];
 float top_scores[LADDER_SIZE];
 
 // allow functions to be used in other code like g_world.qc and race.qc
 string getrecords(float page);
-string getrankings(void);
-string getladder(void);
-string getmaplist(void);
-string getlsmaps(void);
-string getmonsterlist(void);
+string getrankings();
+string getladder();
+string getmaplist();
+string getlsmaps();
+string getmonsterlist();
 #endif

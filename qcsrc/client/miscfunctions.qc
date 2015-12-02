@@ -1,18 +1,13 @@
 #include "miscfunctions.qh"
-#include "_all.qh"
 
-#include "hud.qh"
-#include "sortlist.qh"
+#include "hud/all.qh"
 
 #include "../common/command/generic.qh"
 
 #include "../common/teams.qh"
-#include "../common/urllib.qh"
-#include "../common/util.qh"
 
-#include "../csqcmodellib/cl_model.qh"
+#include "../lib/csqcmodel/cl_model.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
 void AuditLists()
 {
@@ -110,7 +105,7 @@ void RemoveTeam(entity Team)
 
 	if(!tm)
 	{
-		print(_("Trying to remove a team which is not in the teamlist!"));
+		LOG_INFO(_("Trying to remove a team which is not in the teamlist!"));
 		return;
 	}
 	parent.sort_next = Team.sort_next;
@@ -128,7 +123,8 @@ entity GetTeam(int Team, bool add)
 		return teamslots[num];
 	if (!add)
 		return world;
-	entity tm = spawn();
+	entity tm = new(team);
+	make_pure(tm);
 	tm.team = Team;
 	teamslots[num] = tm;
 	RegisterTeam(tm);
@@ -158,23 +154,6 @@ float PreviewExists(string name)
 	if (fexists(strcat(name, ".pcx"))) return true;
 
 	return false;
-}
-
-vector rotate(vector v, float a)
-{
-	vector w = '0 0 0';
-	// FTEQCC SUCKS AGAIN
-	w.x =      v.x * cos(a) + v.y * sin(a);
-	w.y = -1 * v.x * sin(a) + v.y * cos(a);
-	return w;
-}
-
-string ColorTranslateRGB(string s)
-{
-	if(ColorTranslateMode & 1)
-		return strdecolorize(s);
-	else
-		return s;
 }
 
 // decolorizes and team colors the player name when needed
@@ -209,10 +188,6 @@ vector project_3d_to_2d(vector vec)
 		vec.y *= vid_conheight / vid_height;
 	}
 	return vec;
-}
-
-void dummyfunction(float a1, float a2, float a3, float a4, float a5, float a6, float a7, float a8)
-{
 }
 
 float expandingbox_sizefactor_from_fadelerp(float fadelerp)
@@ -299,7 +274,6 @@ void drawstring_expanding(vector position, string text, vector theScale, vector 
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
-	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, false, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), rgb, theAlpha * (1 - fadelerp), flag);
 	// width parameter:
 	//    (scale_x * sz / drawfontscale_x) * drawfontscale_x * SIZE1 / (scale_x * sz)
@@ -319,7 +293,6 @@ void drawcolorcodedstring_expanding(vector position, string text, vector theScal
 	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
 
 	drawfontscale = sz * '1 1 0';
-	dummyfunction(0, 0, 0, 0, 0, 0, 0, 0);
 	drawcolorcodedstring(position + expandingbox_resize_centered_box_offset(sz, theScale, stringwidth(text, true, theScale * (sz / drawfontscale.x)) / (theScale.x * sz)), text, theScale * (sz / drawfontscale.x), theAlpha * (1 - fadelerp), flag);
 	drawfontscale = '1 1 0';
 }
@@ -359,11 +332,11 @@ void PolyDrawModel(entity e)
 			break;
 }
 
-void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vector rgb, float a, float drawflag)
+void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector rgb, float a, float drawflag)
 {
 	float x, y, q, d;
 	vector ringsize, v, t;
-	ringsize = radius * '1 1 0';
+	ringsize = radi * '1 1 0';
 
 	x = cos(f * 2 * M_PI);
 	y = sin(f * 2 * M_PI);
@@ -509,57 +482,7 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 	}
 }
 
-vector getplayerorigin(int pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.origin;
-
-	e = entcs_receiver[pl];
-	if(e)
-		return e.origin;
-
-	return GETPLAYERORIGIN_ERROR;
-}
-
-float getplayeralpha(float pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.alpha;
-
-	return 1;
-}
-
-vector getcsqcplayercolor(float pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl);
-	if(e)
-	{
-		if(e.colormap > 0)
-			return colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, true);
-	}
-
-	return '1 1 1';
-}
-
-float getplayerisdead(float pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.csqcmodel_isdead;
-
-	return false;
-}
-
+/** engine callback */
 void URI_Get_Callback(int id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
@@ -577,18 +500,8 @@ void URI_Get_Callback(int id, float status, string data)
 	}
 	else
 	{
-		printf("Received HTTP request data for an invalid id %d.\n", id);
+		LOG_INFOF("Received HTTP request data for an invalid id %d.\n", id);
 	}
-}
-
-void draw_beginBoldFont()
-{
-	drawfont = FONT_USER+2;
-}
-
-void draw_endBoldFont()
-{
-	drawfont = FONT_USER+1;
 }
 
 void Accuracy_LoadLevels()
@@ -602,7 +515,7 @@ void Accuracy_LoadLevels()
 		if(acc_levels > MAX_ACCURACY_LEVELS)
 			acc_levels = MAX_ACCURACY_LEVELS;
 		if(acc_levels < 2)
-			print("Warning: accuracy_color_levels must contain at least 2 values\n");
+			LOG_INFO("Warning: accuracy_color_levels must contain at least 2 values\n");
 
 		int i;
 		for(i = 0; i < acc_levels; ++i)

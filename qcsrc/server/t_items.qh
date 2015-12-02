@@ -1,73 +1,32 @@
 #ifndef T_ITEMS_H
 #define T_ITEMS_H
 
-// constants
-const int IT_UNLIMITED_WEAPON_AMMO 		=       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-const int IT_UNLIMITED_SUPERWEAPONS		=       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
-const int IT_CTF_SHIELDED          		=       4; // set for the flag shield
-const int IT_USING_JETPACK         		=       8; // confirmation that button is pressed
-const int IT_JETPACK               		=      16; // actual item
-const int IT_FUEL_REGEN            		=      32; // fuel regeneration trigger
-// where is 64... ?
-const int IT_FUEL       				=     128;
-// -Wdouble-declaration
-// const int IT_SHELLS     				=     256;
-// -Wdouble-declaration
-// const int IT_NAILS      				=     512;
-// -Wdouble-declaration
-// const int IT_ROCKETS    				=    1024;
-// -Wdouble-declaration
-// const int IT_CELLS      				=    2048;
-const int IT_SUPERWEAPON				=    4096;
-const int IT_STRENGTH   				=    8192;
-const int IT_INVINCIBLE 				=   16384;
-const int IT_HEALTH     				=   32768;
-const int IT_PLASMA     				=   65536;
-
-// shared value space (union):
-	// for items:
-	// -Wdouble-declaration
-	#define IT_KEY1							131072
-	// -Wdouble-declaration
-	#define IT_KEY2							262144
-	// for players:
-	const int IT_RED_FLAG_TAKEN    		=   32768;
-	const int IT_RED_FLAG_LOST     		=   65536;
-	const int IT_RED_FLAG_CARRYING 		=   98304;
-	const int IT_BLUE_FLAG_TAKEN   		=  131072;
-	const int IT_BLUE_FLAG_LOST    		=  262144;
-	const int IT_BLUE_FLAG_CARRYING		=  393216;
-// end
-
-const int IT_5HP                       	=  524288;
-const int IT_25HP                      	= 1048576;
-const int IT_ARMOR_SHARD               	= 2097152;
-const int IT_ARMOR                     	= 4194304;
-
-// item masks
-const int IT_AMMO                      	=    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
-const int IT_PICKUPMASK                	=      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
-const int IT_UNLIMITED_AMMO            	=       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
-
 const int AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // item networking
-const int ISF_LOCATION 			= 2;
-const int ISF_MODEL				= 4;
-const int ISF_STATUS 			= 8;
-    const int ITS_STAYWEP 		= 1;
-    const int ITS_ANIMATE1 		= 2;
-    const int ITS_ANIMATE2 		= 4;
-    const int ITS_AVAILABLE 	= 8;
-    const int ITS_ALLOWFB 		= 16;
-    const int ITS_ALLOWSI 		= 32;
-    const int ITS_POWERUP 		= 64;
-const int ISF_COLORMAP 			= 16;
-const int ISF_DROP 				= 32;
-const int ISF_ANGLES 			= 64;
-const int ISF_SIZE 				= 128;
+const int ISF_LOCATION 			= BIT(1);
+const int ISF_MODEL				= BIT(2);
+const int ISF_STATUS 			= BIT(3);
+    const int ITS_STAYWEP 		    = BIT(0);
+    const int ITS_ANIMATE1 		    = BIT(1);
+    const int ITS_ANIMATE2 		    = BIT(2);
+    const int ITS_AVAILABLE 	    = BIT(3);
+    const int ITS_ALLOWFB 		    = BIT(4);
+    const int ITS_ALLOWSI 		    = BIT(5);
+    const int ITS_POWERUP 		    = BIT(6);
+const int ISF_COLORMAP 			= BIT(4);
+const int ISF_DROP 				= BIT(5);
+const int ISF_ANGLES 			= BIT(6);
+const int ISF_SIZE 				= BIT(7);
 
 .int ItemStatus;
+
+.float fade_start;
+.float fade_end;
+
+#ifdef SVQC
+void StartItem(entity this, entity a);
+#endif
 
 #ifdef CSQC
 
@@ -82,26 +41,24 @@ string autocvar_cl_simpleitems_postfix = "_simple";
 .float  spawntime;
 .float  gravity;
 .vector colormod;
-void ItemDraw();
 
-void ItemDrawSimple();
-
-void ItemRead(float _IsNew);
+void ItemDraw(entity this);
+void ItemDrawSimple(entity this);
 
 #endif
 #ifdef SVQC
-void spawnfunc_item_strength();
-void spawnfunc_item_invincible();
-void spawnfunc_item_armor_small();
-void spawnfunc_item_shells();
-void spawnfunc_item_bullets();
-void spawnfunc_item_rockets();
+spawnfunc(item_strength);
+spawnfunc(item_invincible);
+spawnfunc(item_armor_small);
+spawnfunc(item_shells);
+spawnfunc(item_bullets);
+spawnfunc(item_rockets);
 
 float autocvar_sv_simple_items;
-bool ItemSend(entity to, int sf);
+bool ItemSend(entity this, entity to, int sf);
 
 
-float have_pickup_item(void);
+bool have_pickup_item(entity this);
 
 const float ITEM_RESPAWN_TICKS = 10;
 
@@ -115,9 +72,9 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 void Item_Show (entity e, float mode);
 
-void Item_Respawn (void);
+void Item_Respawn ();
 
-void Item_RespawnCountdown (void);
+void Item_RespawnCountdown ();
 void Item_ScheduleRespawnIn(entity e, float t);
 
 void Item_ScheduleRespawn(entity e);
@@ -131,15 +88,15 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 float Item_GiveTo(entity item, entity player);
 
-void Item_Touch (void);
+void Item_Touch();
 
-void Item_Reset();
+void Item_Reset(entity this);
 
 void Item_FindTeam();
 // Savage: used for item garbage-collection
 // TODO: perhaps nice special effect?
 
-bool ItemSend(entity to, int sf);
+bool ItemSend(entity this, entity to, int sf);
 void ItemUpdate(entity item);
 
 // pickup evaluation functions
@@ -152,16 +109,11 @@ float weapon_pickupevalfunc(entity player, entity item);
 float commodity_pickupevalfunc(entity player, entity item);
 
 .float is_item;
-void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
+.entity itemdef;
+void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
 
-void target_items_use (void);
-
-const float OP_SET = 0;
-const float OP_MIN = 1;
-const float OP_MAX = 2;
-const float OP_PLUS = 3;
-const float OP_MINUS = 4;
+void target_items_use ();
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 

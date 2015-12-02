@@ -2,15 +2,16 @@
 #define DIALOG_SETTINGS_GAME_VIEW_H
 #include "tab.qc"
 CLASS(XonoticGameViewSettingsTab, XonoticTab)
-	//METHOD(XonoticGameCrosshairSettingsTab, toString, string(entity))
-	METHOD(XonoticGameViewSettingsTab, fill, void(entity))
-	METHOD(XonoticGameViewSettingsTab, showNotify, void(entity))
+	METHOD(XonoticGameViewSettingsTab, fill, void(entity));
+	METHOD(XonoticGameViewSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameViewSettingsTab, title, string, _("View"))
 	ATTRIB(XonoticGameViewSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameViewSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameViewSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameViewSettingsTab)
 entity makeXonoticGameViewSettingsTab();
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(View, makeXonoticGameViewSettingsTab());
 #endif
 
 #ifdef IMPLEMENTATION
@@ -51,7 +52,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.01, 0, "cl_bob", _("View bobbing while walking around")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx_T(0.01, 0, "cl_bob", _("View bobbing while walking around"), "-"));
 		makeMulti(e, "cl_bob2");
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
@@ -76,16 +77,19 @@ void XonoticGameViewSettingsTab_fill(entity me)
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 5, "fov"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(60, 130, 5, "fov",
+			_("Field of vision in degrees (default: 100)")));
 	me.TR(me);
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom factor:"))));
-		me.TD(me, 1, 2, e = makeXonoticSlider(2, 16, 0.5, "cl_zoomfactor"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(2, 30, 0.5, "cl_zoomfactor",
+			_("How big the zoom factor is when the zoom button is pressed")));
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom speed:"))));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_zoomspeed"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("cl_zoomspeed",
+			_("How fast the view will be zoomed, disable to zoom instantly")));
 			e.addValue(e, "1", "1"); // Samual: for() loop doesn't work here, even though it would make sense.
 			e.addValue(e, "2", "2");
 			e.addValue(e, "3", "3");
@@ -99,7 +103,8 @@ void XonoticGameViewSettingsTab_fill(entity me)
 	me.TR(me);
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("ZOOM^Zoom sensitivity:"))));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_zoomsensitivity"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 1, 0.1, "cl_zoomsensitivity",
+			_("How zoom changes sensitivity, from 0 (lower sensitivity) to 1 (no sensitivity change)")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_velocityzoom_enabled", _("Velocity zoom")));
@@ -117,7 +122,7 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_reticle", _("Display reticle 2D overlay while zooming")));
 	me.TR(me);
 		//me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_death", _("Release zoom when you die or respawn")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "cl_unpress_zoom_on_death", _("Release zoom when you die or respawn"), "-"));
 			makeMulti(e, "cl_unpress_zoom_on_spawn");
 	me.TR(me);
 		//me.TDempty(me, 0.2);

@@ -4,8 +4,8 @@
 #define DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
 #include "dialog.qc"
 CLASS(XonoticServerInfoDialog, XonoticDialog)
-	METHOD(XonoticServerInfoDialog, fill, void(entity))
-	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float))
+	METHOD(XonoticServerInfoDialog, fill, void(entity));
+	METHOD(XonoticServerInfoDialog, loadServerInfo, void(entity, float));
 	ATTRIB(XonoticServerInfoDialog, title, string, _("Server Information"))
 	ATTRIB(XonoticServerInfoDialog, color, vector, SKINCOLOR_DIALOG_SERVERINFO)
 	ATTRIB(XonoticServerInfoDialog, intendedWidth, float, 0.8)
@@ -50,7 +50,8 @@ void Join_Click(entity btn, entity me);
 #ifdef IMPLEMENTATION
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
-	float m, pure, freeslots, j, numh, maxp, numb, sflags;
+	bool pure_available;
+	float m, pure_violations, freeslots, j, numh, maxp, numb, sflags;
 	string s, typestr, versionstr, k, v, modname;
 
 	// ====================================
@@ -121,7 +122,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerCName = strzone(gethostcachestring(SLIST_FIELD_CNAME, i));
 	me.cnameLabel.setText(me.cnameLabel, me.currentServerCName);
 
-	pure = -1;
+	pure_available = false;
+	pure_violations = -1;
 	typestr = _("N/A");
 	versionstr = _("N/A");
 
@@ -142,7 +144,10 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		k = substring(argv(j), 0, 1);
 		v = substring(argv(j), 1, -1);
 		if(k == "P")
-			pure = stof(v);
+		{
+			pure_available = true;
+			pure_violations = stof(v);
+		}
 		else if(k == "S")
 			freeslots = stof(v);
 		else if(k == "F")
@@ -187,14 +192,14 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerNumFreeSlots = strzone(s);
 	me.numFreeSlotsLabel.setText(me.numFreeSlotsLabel, me.currentServerNumFreeSlots);
 
-	me.currentServerMod = ((modname == "Xonotic") ? _("Default") : modname);
+	me.currentServerMod = ((modname == "Xonotic") ? ZCTX(_("MOD^Default")) : modname);
 	me.currentServerMod = strzone(me.currentServerMod);
 	me.modLabel.setText(me.modLabel, me.currentServerMod);
 
 	me.currentServerVersion = strzone(versionstr);
 	me.versionLabel.setText(me.versionLabel, me.currentServerVersion);
 
-	me.currentServerPure = ((pure < 0) ? _("N/A") : (pure == 0) ? _("Official") : sprintf(_("%d modified"), pure));
+	me.currentServerPure = ((!pure_available) ? _("N/A") : (pure_violations == 0) ? _("Official") : sprintf(_("%d modified"), pure_violations));
 	me.currentServerPure = strzone(me.currentServerPure);
 	me.pureLabel.setText(me.pureLabel, me.currentServerPure);
 

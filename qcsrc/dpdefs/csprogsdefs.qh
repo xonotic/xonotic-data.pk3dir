@@ -8,12 +8,36 @@
 #define TRUE _TRUE
 #define FALSE _FALSE
 
+#define spawn _spawn
+#define particleeffectnum _particleeffectnum
+#define trailparticles __trailparticles
+#define pointparticles __pointparticles
+#define setmodel _setmodel
+
+#define STAT_FRAGLIMIT _STAT_FRAGLIMIT
+#define STAT_TIMELIMIT _STAT_TIMELIMIT
+#define STAT_MOVEVARS_TICRATE _STAT_MOVEVARS_TICRATE
+#define STAT_MOVEVARS_TIMESCALE _STAT_MOVEVARS_TIMESCALE
+#define STAT_MOVEVARS_GRAVITY _STAT_MOVEVARS_GRAVITY
+
 #include "upstream/csprogsdefs.qc"
 
 #undef true
 #undef false
 #undef TRUE
 #undef FALSE
+
+#undef spawn
+#undef particleeffectnum
+#undef trailparticles
+#undef pointparticles
+#undef setmodel
+
+#undef STAT_FRAGLIMIT
+#undef STAT_TIMELIMIT
+#undef STAT_MOVEVARS_TICRATE
+#undef STAT_MOVEVARS_TIMESCALE
+#undef STAT_MOVEVARS_GRAVITY
 
 #pragma noref 0
 

@@ -5,7 +5,7 @@ void anticheat_init();
 void anticheat_report();
 void anticheat_shutdown();
 
-void anticheat_physics();
+void anticheat_physics(entity this);
 void anticheat_spectatecopy(entity spectatee);
 void anticheat_prethink();
 

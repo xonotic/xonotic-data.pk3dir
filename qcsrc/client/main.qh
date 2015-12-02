@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef CLIENT_MAIN_H
+#define CLIENT_MAIN_H
 
 #include "../common/constants.qh"
 
@@ -12,13 +12,6 @@ const float DATABUF_PING = 0;
 #define DATABUF_RETURNS (3*maxclients)
 
 #define DATABUF_NEXT (5*maxclients)
-
-void() menu_show_error;
-void() menu_sub_null;
-
-float menu_visible;
-var void() menu_show;
-var float(float bInputType, float nPrimary, float nSecondary) menu_action;
 
 // --------------------------------------------------------------------------
 // Onslaught
@@ -91,19 +84,19 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float ready;
 .float eliminated;
 
-.void(void) draw;
-.void(void) draw2d;
-.void(void) entremove;
+.void(entity) draw;
+.void(entity) draw2d;
+.void() entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-float button_zoom;
-float spectatorbutton_zoom;
-float button_attack2;
+bool button_zoom;
+bool spectatorbutton_zoom;
+bool button_attack2;
 
 int activeweapon;
 int switchingweapon;
-int switchweapon;
+#define switchweapon STAT(SWITCHWEAPON)
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
@@ -148,9 +141,9 @@ float g_balance_electro_secondary_bouncefactor;
 float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;
 
-entity entcs_receiver[255]; // 255 is the engine limit on maxclients
-
 float hud;
 float view_quality;
 int framecount;
+.float health;
+
 #endif

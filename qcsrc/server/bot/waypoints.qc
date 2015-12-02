@@ -1,5 +1,4 @@
 #include "waypoints.qh"
-#include "../_all.qh"
 
 #include "bot.qh"
 #include "navigation.qh"
@@ -8,7 +7,8 @@
 
 #include "../../common/constants.qh"
 
-#include "../../warpzonelib/util_server.qh"
+#include "../../lib/warpzone/common.qh"
+#include "../../lib/warpzone/util_server.qh"
 
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
 // them back to it as well
@@ -27,9 +27,9 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 		w = find(w, classname, "waypoint");
 	}
 
-	w = spawn();
+	w = new(waypoint);
+	make_pure(w);
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-	w.classname = "waypoint";
 	w.wpflags = f;
 	setorigin(w, (m1 + m2) * 0.5);
 	setsize(w, m1 - w.origin, m2 - w.origin);
@@ -43,7 +43,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
 			{
-				dprint("Killed a waypoint that was stuck in solid at ", vtos(w.origin), "\n");
+				LOG_TRACE("Killed a waypoint that was stuck in solid at ", vtos(w.origin), "\n");
 				remove(w);
 				return world;
 			}
@@ -51,7 +51,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			{
 				if(autocvar_developer)
 				{
-					print("A generated waypoint is stuck in solid at ", vtos(w.origin), "\n");
+					LOG_INFO("A generated waypoint is stuck in solid at ", vtos(w.origin), "\n");
 					backtrace("Waypoint stuck");
 				}
 			}
@@ -66,7 +66,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	{
 		m1 = w.mins;
 		m2 = w.maxs;
-		setmodel(w, "models/runematch/rune.mdl"); w.effects = EF_LOWPRECISION;
+		setmodel(w, MDL_WAYPOINT); w.effects = EF_LOWPRECISION;
 		setsize(w, m1, m2);
 		if (w.wpflags & WAYPOINTFLAG_ITEM)
 			w.colormod = '1 0 0';
@@ -162,7 +162,7 @@ void waypoint_addlink(entity from, entity to)
 // (precompile a list of all reachable waypoints from this spawnfunc_waypoint)
 // (SLOW!)
 void waypoint_think()
-{
+{SELFPARAM();
 	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
 
@@ -208,7 +208,7 @@ void waypoint_think()
 			navigation_testtracewalk = 0;
 			if (!self.wpisbox)
 			{
-				tracebox(sv - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, sv, false, self);
+				tracebox(sv - PL_MIN.z * '0 0 1', PL_MIN, PL_MAX, sv, false, self);
 				if (!trace_startsolid)
 				{
 					//dprint("sv deviation", vtos(trace_endpos - sv), "\n");
@@ -217,7 +217,7 @@ void waypoint_think()
 			}
 			if (!e.wpisbox)
 			{
-				tracebox(ev - PL_MIN_z * '0 0 1', PL_MIN, PL_MAX, ev, false, e);
+				tracebox(ev - PL_MIN.z * '0 0 1', PL_MIN, PL_MAX, ev, false, e);
 				if (!trace_startsolid)
 				{
 					//dprint("ev deviation", vtos(trace_endpos - ev), "\n");
@@ -269,7 +269,7 @@ void waypoint_schedulerelink(entity wp)
 		vector m1, m2;
 		m1 = wp.mins;
 		m2 = wp.maxs;
-		setmodel(wp, "models/runematch/rune.mdl"); wp.effects = EF_LOWPRECISION;
+		setmodel(wp, MDL_WAYPOINT); wp.effects = EF_LOWPRECISION;
 		setsize(wp, m1, m2);
 		if (wp.wpflags & WAYPOINTFLAG_ITEM)
 			wp.colormod = '1 0 0';
@@ -293,7 +293,7 @@ void waypoint_schedulerelink(entity wp)
 }
 
 // spawnfunc_waypoint map entity
-void spawnfunc_waypoint()
+spawnfunc(waypoint)
 {
 	setorigin(self, self.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
@@ -381,9 +381,9 @@ float waypoint_load_links()
 
 	if (file < 0)
 	{
-		dprint("waypoint links load from ");
-		dprint(filename);
-		dprint(" failed\n");
+		LOG_TRACE("waypoint links load from ");
+		LOG_TRACE(filename);
+		LOG_TRACE(" failed\n");
 		return false;
 	}
 
@@ -419,7 +419,7 @@ float waypoint_load_links()
 
 			if(!found)
 			{
-				dprint("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin),"\n");
+				LOG_TRACE("waypoint_load_links: couldn't find 'from' waypoint at ", vtos(wp_from.origin),"\n");
 				continue;
 			}
 
@@ -441,7 +441,7 @@ float waypoint_load_links()
 
 		if(!found)
 		{
-			dprint("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin),"\n");
+			LOG_TRACE("waypoint_load_links: couldn't find 'to' waypoint at ", vtos(wp_to.origin),"\n");
 			continue;
 		}
 
@@ -451,11 +451,11 @@ float waypoint_load_links()
 
 	fclose(file);
 
-	dprint("loaded ");
-	dprint(ftos(c));
-	dprint(" waypoint links from maps/");
-	dprint(mapname);
-	dprint(".waypoints.cache\n");
+	LOG_TRACE("loaded ");
+	LOG_TRACE(ftos(c));
+	LOG_TRACE(" waypoint links from maps/");
+	LOG_TRACE(mapname);
+	LOG_TRACE(".waypoints.cache\n");
 
 	botframe_cachedwaypointlinks = true;
 	return true;
@@ -475,9 +475,9 @@ void waypoint_load_links_hardwired()
 
 	if (file < 0)
 	{
-		dprint("waypoint links load from ");
-		dprint(filename);
-		dprint(" failed\n");
+		LOG_TRACE("waypoint links load from ");
+		LOG_TRACE(filename);
+		LOG_TRACE(" failed\n");
 		return;
 	}
 
@@ -515,7 +515,7 @@ void waypoint_load_links_hardwired()
 
 			if(!found)
 			{
-				print(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
+				LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_from_pos), ". Path skipped\n"));
 				continue;
 			}
 		}
@@ -536,7 +536,7 @@ void waypoint_load_links_hardwired()
 
 		if(!found)
 		{
-			print(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
+			LOG_INFO(strcat("NOTICE: Can not find waypoint at ", vtos(wp_to_pos), ". Path skipped\n"));
 			continue;
 		}
 
@@ -548,11 +548,11 @@ void waypoint_load_links_hardwired()
 
 	fclose(file);
 
-	dprint("loaded ");
-	dprint(ftos(c));
-	dprint(" waypoint links from maps/");
-	dprint(mapname);
-	dprint(".waypoints.hardwired\n");
+	LOG_TRACE("loaded ");
+	LOG_TRACE(ftos(c));
+	LOG_TRACE(" waypoint links from maps/");
+	LOG_TRACE(mapname);
+	LOG_TRACE(".waypoints.hardwired\n");
 }
 
 entity waypoint_get_link(entity w, float i)
@@ -606,9 +606,9 @@ void waypoint_save_links()
 	file = fopen(filename, FILE_WRITE);
 	if (file < 0)
 	{
-		print("waypoint links save to ");
-		print(filename);
-		print(" failed\n");
+		LOG_INFO("waypoint links save to ");
+		LOG_INFO(filename);
+		LOG_INFO(" failed\n");
 	}
 	c = 0;
 	w = findchain(classname, "waypoint");
@@ -630,11 +630,11 @@ void waypoint_save_links()
 	fclose(file);
 	botframe_cachedwaypointlinks = true;
 
-	print("saved ");
-	print(ftos(c));
-	print(" waypoints links to maps/");
-	print(mapname);
-	print(".waypoints.cache\n");
+	LOG_INFO("saved ");
+	LOG_INFO(ftos(c));
+	LOG_INFO(" waypoints links to maps/");
+	LOG_INFO(mapname);
+	LOG_INFO(".waypoints.cache\n");
 }
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
@@ -712,26 +712,26 @@ float waypoint_loadall()
 				cwb = cwb + 1;
 		}
 		fclose(file);
-		dprint("loaded ");
-		dprint(ftos(cwp));
-		dprint(" waypoints and ");
-		dprint(ftos(cwb));
-		dprint(" wayboxes from maps/");
-		dprint(mapname);
-		dprint(".waypoints\n");
+		LOG_TRACE("loaded ");
+		LOG_TRACE(ftos(cwp));
+		LOG_TRACE(" waypoints and ");
+		LOG_TRACE(ftos(cwb));
+		LOG_TRACE(" wayboxes from maps/");
+		LOG_TRACE(mapname);
+		LOG_TRACE(".waypoints\n");
 	}
 	else
 	{
-		dprint("waypoint load from ");
-		dprint(filename);
-		dprint(" failed\n");
+		LOG_TRACE("waypoint load from ");
+		LOG_TRACE(filename);
+		LOG_TRACE(" failed\n");
 	}
 	return cwp + cwb;
 }
 
 vector waypoint_fixorigin(vector position)
 {
-	tracebox(position + '0 0 1' * (1 - PL_MIN_z), PL_MIN, PL_MAX, position + '0 0 -512', MOVE_NOMONSTERS, world);
+	tracebox(position + '0 0 1' * (1 - PL_MIN.z), PL_MIN, PL_MAX, position + '0 0 -512', MOVE_NOMONSTERS, world);
 	if(trace_fraction < 1)
 		position = trace_endpos;
 	//traceline(position, position + '0 0 -512', MOVE_NOMONSTERS, world);
@@ -808,7 +808,7 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 }
 
 entity waypoint_spawnpersonal(vector position)
-{
+{SELFPARAM();
 	entity w;
 
 	// drop the waypoint to a proper location:
@@ -967,7 +967,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		}
 		if(bestdist < maxdist)
 		{
-			print("update chain to new nearest WP ", etos(p.(fld)), "\n");
+			LOG_INFO("update chain to new nearest WP ", etos(p.(fld)), "\n");
 			return 0;
 		}
 
@@ -1046,7 +1046,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		tmax = t;
 	}
 
-	print("spawning a waypoint for connecting to ", etos(wp), "\n");
+	LOG_INFO("spawning a waypoint for connecting to ", etos(wp), "\n");
 	botframe_autowaypoints_createwp(o, p, fld, 0);
 	return 1;
 }
@@ -1062,7 +1062,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 	if(r != -1)
 		return;
 
-	print("emergency: got no good nearby WP to build a link from, starting a new chain\n");
+	LOG_INFO("emergency: got no good nearby WP to build a link from, starting a new chain\n");
 	if(!botframe_autowaypoints_fixdown(p.origin))
 		return; // shouldn't happen, caught above
 	botframe_autowaypoints_createwp(trace_endpos, p, fld, WAYPOINTFLAG_PROTECTED);
@@ -1140,7 +1140,7 @@ void botframe_deleteuselesswaypoints()
 	{
 		if (!(w.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)))
 		{
-			printf("Removed a waypoint at %v. Try again for more!\n", w.origin);
+			LOG_INFOF("Removed a waypoint at %v. Try again for more!\n", w.origin);
 			te_explosion(w.origin);
 			waypoint_remove(w);
 			break;

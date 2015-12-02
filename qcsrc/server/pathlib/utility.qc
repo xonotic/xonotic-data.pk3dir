@@ -2,22 +2,6 @@
 
 #include "pathlib.qh"
 
-float fsnap(float val,float fsize)
-{
-    return rint(val / fsize) * fsize;
-}
-
-vector vsnap(vector point,float fsize)
-{
-    vector vret;
-
-    vret.x = rint(point.x / fsize) * fsize;
-    vret.y = rint(point.y / fsize) * fsize;
-    vret.z = ceil(point.z / fsize) * fsize;
-
-    return vret;
-}
-
 float location_isok(vector point, float water_isok, float air_isok)
 {
     float pc,pc2;
@@ -88,7 +72,7 @@ entity pathlib_nodeatpoint(vector where)
 }
 
 float tile_check_cross(vector where)
-{
+{SELFPARAM();
     vector p,f,r;
 
     f = PLIB_FORWARD * tile_check_size;
@@ -123,7 +107,7 @@ float tile_check_cross(vector where)
 }
 
 float tile_check_plus(vector where)
-{
+{SELFPARAM();
     vector p,f,r;
 
     f = PLIB_FORWARD * tile_check_size;
@@ -158,7 +142,7 @@ float tile_check_plus(vector where)
 }
 
 float tile_check_plus2(vector where)
-{
+{SELFPARAM();
     vector p,f,r;
     float i = 0, e = 0;
 

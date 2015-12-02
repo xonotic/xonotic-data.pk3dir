@@ -2,9 +2,9 @@
 #define RADIOBUTTON_H
 #include "../item/radiobutton.qc"
 CLASS(XonoticRadioButton, RadioButton)
-	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string))
-	METHOD(XonoticRadioButton, draw, void(entity))
-	METHOD(XonoticRadioButton, setChecked, void(entity, float))
+	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string, string));
+	METHOD(XonoticRadioButton, draw, void(entity));
+	METHOD(XonoticRadioButton, setChecked, void(entity, float));
 	ATTRIB(XonoticRadioButton, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticRadioButton, image, string, SKINGFX_RADIOBUTTON)
 	ATTRIB(XonoticRadioButton, color, vector, SKINCOLOR_RADIOBUTTON_N)
@@ -15,33 +15,35 @@ CLASS(XonoticRadioButton, RadioButton)
 	ATTRIB(XonoticRadioButton, cvarName, string, string_null)
 	ATTRIB(XonoticRadioButton, cvarValue, string, string_null)
 	ATTRIB(XonoticRadioButton, cvarOffValue, string, string_null)
-	ATTRIB(XonoticRadioButton, getCvarValueFromCvar, float, 0)
-	METHOD(XonoticRadioButton, loadCvars, void(entity))
-	METHOD(XonoticRadioButton, saveCvars, void(entity))
+	ATTRIB(XonoticRadioButton, cvarValueIsAnotherCvar, float, 0)
+	METHOD(XonoticRadioButton, loadCvars, void(entity));
+	METHOD(XonoticRadioButton, saveCvars, void(entity));
 
 	ATTRIB(XonoticRadioButton, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticRadioButton, disabledAlpha, float, SKINALPHA_DISABLED)
 ENDCLASS(XonoticRadioButton)
+entity makeXonoticRadioButton_T(float, string, string, string, string theTooltip);
 entity makeXonoticRadioButton(float, string, string, string);
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticRadioButton(float theGroup, string theCvar, string theValue, string theText)
+entity makeXonoticRadioButton_T(float theGroup, string theCvar, string theValue, string theText, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticRadioButton);
-	me.configureXonoticRadioButton(me, theGroup, theCvar, theValue, theText);
+	me.configureXonoticRadioButton(me, theGroup, theCvar, theValue, theText, theTooltip);
 	return me;
 }
-void XonoticRadioButton_configureXonoticRadioButton(entity me, float theGroup, string theCvar, string theValue, string theText)
+entity makeXonoticRadioButton(float theGroup, string theCvar, string theValue, string theText)
 {
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.cvarValue = theValue;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		me.loadCvars(me);
-	}
+	return makeXonoticRadioButton_T(theGroup, theCvar, theValue, theText, string_null);
+}
+void XonoticRadioButton_configureXonoticRadioButton(entity me, float theGroup, string theCvar, string theValue, string theText, string theTooltip)
+{
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.cvarValue = theValue;
+	me.loadCvars(me);
+	setZonedTooltip(me, theTooltip, theCvar);
 	me.configureRadioButton(me, theText, me.fontSize, me.image, theGroup, 0);
 }
 void XonoticRadioButton_setChecked(entity me, float val)
@@ -57,13 +59,18 @@ void XonoticRadioButton_loadCvars(entity me)
 	if(me.cvarValue)
 	{
 		if(me.cvarName)
-			me.checked = (cvar_string(me.cvarName) == me.cvarValue);
+		{
+			if(me.cvarValueIsAnotherCvar)
+				me.checked = (cvar_string(me.cvarName) == cvar_string(me.cvarValue));
+			else
+				me.checked = (cvar_string(me.cvarName) == me.cvarValue);
+		}
 	}
 	else
 	{
 		if(me.cvarName)
 		{
-			me.checked = !!cvar(me.cvarName);
+			me.checked = boolean(cvar(me.cvarName));
 		}
 		else
 		{
@@ -102,7 +109,7 @@ void XonoticRadioButton_saveCvars(entity me)
 		{
 			if(me.checked)
 			{
-				if(me.getCvarValueFromCvar)
+				if(me.cvarValueIsAnotherCvar)
 					cvar_set(me.cvarName, cvar_string(me.cvarValue));
 				else
 					cvar_set(me.cvarName, me.cvarValue);

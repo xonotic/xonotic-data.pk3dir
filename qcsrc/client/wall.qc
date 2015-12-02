@@ -1,17 +1,55 @@
 #include "wall.qh"
-#include "_all.qh"
 
 #include "bgmscript.qh"
 
-#include "../common/util.qh"
 
-#include "../csqcmodellib/interpolate.qh"
+#include "../lib/csqcmodel/interpolate.qh"
 
 .float alpha;
 .float scale;
 .vector movedir;
 
-void Ent_Wall_Draw()
+void Ent_Wall_PreDraw()
+{SELFPARAM();
+	if (self.inactive)
+	{
+		self.alpha = 0;
+	}
+	else
+	{
+		vector org = getpropertyvec(VF_ORIGIN);
+		if(!checkpvs(org, self))
+			self.alpha = 0;
+		else if(self.fade_start || self.fade_end) {
+			vector offset = '0 0 0';
+			offset_z = self.fade_vertical_offset;
+			float player_dist = vlen(org - self.origin - 0.5 * (self.mins + self.maxs) + offset);
+			if (self.fade_end == self.fade_start)
+			{
+				if (player_dist >= self.fade_start)
+					self.alpha = 0;
+				else
+					self.alpha = 1;
+			}
+			else
+			{
+				self.alpha = (self.alpha_min + self.alpha_max * bound(0,
+							   (self.fade_end - player_dist)
+							   / (self.fade_end - self.fade_start), 1)) / 100.0;
+			}
+		}
+		else
+		{
+			self.alpha = 1;
+		}
+	}
+	if(self.alpha <= 0)
+		self.drawmask = 0;
+	else
+		self.drawmask = MASK_NORMAL;
+}
+
+void Ent_Wall_Draw(entity this)
 {
 	float f;
 	var .vector fld;
@@ -47,7 +85,7 @@ void Ent_Wall_Draw()
 		}
 	}
 
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(self);
 
 	self.saved = self.(fld);
 
@@ -70,18 +108,18 @@ void Ent_Wall_Draw()
 }
 
 void Ent_Wall_Remove()
-{
+{SELFPARAM();
 	if(self.bgmscript)
 		strunzone(self.bgmscript);
 	self.bgmscript = string_null;
 }
 
-void Ent_Wall()
+NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 {
 	int f;
 	var .vector fld;
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 	self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
 
 	if(self.bgmscriptangular)
@@ -175,13 +213,22 @@ void Ent_Wall()
 			self.movedir_z = ReadCoord();
 			self.lip = ReadByte() / 255.0;
 		}
+		self.fade_start = ReadShort();
+		self.fade_end = ReadShort();
+		self.alpha_max = ReadShort();
+		self.alpha_min = ReadShort();
+		self.inactive = ReadShort();
+		self.fade_vertical_offset = ReadShort();
 		BGMScript_InitEntity(self);
 	}
 
-	InterpolateOrigin_Note();
+	return = true;
+
+	InterpolateOrigin_Note(this);
 
 	self.saved = self.(fld);
 
 	self.entremove = Ent_Wall_Remove;
 	self.draw = Ent_Wall_Draw;
+	self.predraw = Ent_Wall_PreDraw;
 }

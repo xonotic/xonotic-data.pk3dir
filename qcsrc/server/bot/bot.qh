@@ -4,18 +4,18 @@
  * Globals and Fields
  */
 
-const int AI_STATUS_ROAMING						= 1;	// Bot is just crawling the map. No enemies at sight
-const int AI_STATUS_ATTACKING					= 2;	// There are enemies at sight
-const int AI_STATUS_RUNNING						= 4;	// Bot is bunny hopping
-const int AI_STATUS_DANGER_AHEAD				= 8;	// There is lava/slime/trigger_hurt ahead
-const int AI_STATUS_OUT_JUMPPAD					= 16;	// Trying to get out of a "vertical" jump pad
-const int AI_STATUS_OUT_WATER					= 32;	// Trying to get out of water
-const int AI_STATUS_WAYPOINT_PERSONAL_LINKING	= 64;	// Waiting for the personal waypoint to be linked
-const int AI_STATUS_WAYPOINT_PERSONAL_GOING		= 128;	// Going to a personal waypoint
-const int AI_STATUS_WAYPOINT_PERSONAL_REACHED	= 256;	// Personal waypoint reached
-const int AI_STATUS_JETPACK_FLYING				= 512;
-const int AI_STATUS_JETPACK_LANDING				= 1024;
-const int AI_STATUS_STUCK						= 2048; // Cannot reach any goal
+const int AI_STATUS_ROAMING						= BIT(0);	// Bot is just crawling the map. No enemies at sight
+const int AI_STATUS_ATTACKING					= BIT(1);	// There are enemies at sight
+const int AI_STATUS_RUNNING						= BIT(2);	// Bot is bunny hopping
+const int AI_STATUS_DANGER_AHEAD				= BIT(3);	// There is lava/slime/trigger_hurt ahead
+const int AI_STATUS_OUT_JUMPPAD					= BIT(4);	// Trying to get out of a "vertical" jump pad
+const int AI_STATUS_OUT_WATER					= BIT(5);	// Trying to get out of water
+const int AI_STATUS_WAYPOINT_PERSONAL_LINKING	= BIT(6);	// Waiting for the personal waypoint to be linked
+const int AI_STATUS_WAYPOINT_PERSONAL_GOING		= BIT(7);	// Going to a personal waypoint
+const int AI_STATUS_WAYPOINT_PERSONAL_REACHED	= BIT(8);	// Personal waypoint reached
+const int AI_STATUS_JETPACK_FLYING				= BIT(9);
+const int AI_STATUS_JETPACK_LANDING				= BIT(10);
+const int AI_STATUS_STUCK						= BIT(11);  // Cannot reach any goal
 
 .float isbot; // true if this client is actually a bot
 .int aistatus;
@@ -48,9 +48,9 @@ float bot_custom_weapon;
 float bot_distance_far;
 float bot_distance_close;
 
-float bot_weapons_far[WEP_MAXCOUNT];
-float bot_weapons_mid[WEP_MAXCOUNT];
-float bot_weapons_close[WEP_MAXCOUNT];
+float bot_weapons_far[Weapons_MAX];
+float bot_weapons_mid[Weapons_MAX];
+float bot_weapons_close[Weapons_MAX];
 
 entity bot_list;
 entity player_list;
@@ -114,9 +114,5 @@ void bot_serverframe();
 
 void() havocbot_setupbot;
 
-//float c1, c2, c3, c4;
-void CheckAllowedTeams(entity for_whom); void GetTeamCounts(entity other);
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
-
-void bot_calculate_stepheightvec(void);
+void bot_calculate_stepheightvec();
 #endif

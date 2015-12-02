@@ -2,15 +2,16 @@
 #define DIALOG_SETTINGS_GAME_CROSSHAIR_H
 #include "tab.qc"
 CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
-	//METHOD(XonoticGameCrosshairSettingsTab, toString, string(entity))
-	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity))
-	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity))
+	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity));
+	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"))
 	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 13)
 	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameCrosshairSettingsTab)
 entity makeXonoticGameCrosshairSettingsTab();
+#include "../gamesettings.qh"
+REGISTER_SETTINGS(Crosshair, makeXonoticGameCrosshairSettingsTab());
 #endif
 
 #ifdef IMPLEMENTATION
@@ -29,39 +30,25 @@ entity makeXonoticGameCrosshairSettingsTab()
 void XonoticGameCrosshairSettingsTab_fill(entity me)
 {
 	entity e;
-	float i;
 
 	// crosshair_enabled: 0 = no crosshair options, 1 = no crosshair selection, but everything else enabled, 2 = all crosshair options enabled
 	// FIXME: In the future, perhaps make one global crosshair_type cvar which has 0 for disabled, 1 for custom, 2 for per weapon, etc?
 	me.TR(me); //me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_enabled", "0", _("No crosshair")));
 	//me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_per_weapon", string_null, _("Per weapon")));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton_T(3, "crosshair_per_weapon", string_null, _("Per weapon"),
+			_("Set a different crosshair for each weapon, good if you play without weapon models")));
 		makeMulti(e, "crosshair_enabled");
 	//me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom")));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		for(i = 31; i <= 42; ++i) {
-			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
-		// show a larger preview of the selected crosshair
-		me.TDempty(me, 0.1);
-		me.TDNoMargin(me, 3, 0.8, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
+		me.TD(me, 3, 2, e = makeXonoticCrosshairPicker());
+			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
+		me.TD(me, 3, 0.9, e = makeXonoticCrosshairPreview());
 			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 43; i <= 54; ++i) {
-			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
 	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 55; i <= 66; ++i) {
-			me.TDNoMargin(me, 1, 2 / 12, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
 	me.TR(me);
 		me.TDempty(me, 0.1);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
@@ -92,7 +79,7 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 2.9, e = makeXonoticCheckBox(0, "crosshair_ring", _("Use rings to indicate weapon status")));
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox_T(0, "crosshair_ring", _("Use rings to indicate weapon status"), "-"));
 			makeMulti(e, "crosshair_ring_reload");
 			setDependent(e, "crosshair_enabled", 1, 2);
 	//me.TR(me);
@@ -153,7 +140,8 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_enabled", 1, 2);
 	/*me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit testing:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("crosshair_hittest"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("crosshair_hittest",
+			_("None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy")));
 			e.addValue(e, ZCTX(_("HTTST^Disabled")), "0");
 			e.addValue(e, ZCTX(_("HTTST^TrueAim")), "1");
 			e.addValue(e, ZCTX(_("HTTST^Enemies")), "1.25");

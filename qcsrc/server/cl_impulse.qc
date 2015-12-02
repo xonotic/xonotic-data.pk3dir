@@ -1,4 +1,3 @@
-#include "_all.qh"
 #include "round_handler.qh"
 
 #include "bot/waypoints.qh"
@@ -10,12 +9,17 @@
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
-#include "vehicles/vehicle.qh"
-#include "waypointsprites.qh"
 
-#include "../common/weapons/weapons.qh"
+#include "../common/minigames/sv_minigames.qh"
 
-/*
+#include "../common/weapons/all.qh"
+#include "../common/vehicles/sv_vehicles.qh"
+
+#include "../common/mutators/mutator/waypoints/waypointsprites.qh"
+
+.entity vehicle;
+
+/**
  * Impulse map:
  *
  * 0 reserved (no input)
@@ -50,8 +54,8 @@
  * 230 to 253: individual weapons (up to 24)
  */
 
-void ImpulseCommands (void)
-{
+void ImpulseCommands ()
+{SELFPARAM();
 	int imp;
 	vector org;
 	float i;
@@ -63,6 +67,10 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
+	if ( self.active_minigame )
+	if ( MinigameImpulse(imp) )
+		return;
+
 	// allow only weapon change impulses when not in round time
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 	if(imp == 17 || (imp >= 20 && imp < 200) || imp > 253)
@@ -71,11 +79,15 @@ void ImpulseCommands (void)
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
 
-    if(self.vehicle)
-        if(self.vehicle.deadflag == DEAD_NO)
-            if(self.vehicle.vehicles_impulse)
-                if(self.vehicle.vehicles_impulse(imp))
-                    return;
+	if(self.vehicle)
+	if(self.vehicle.deadflag == DEAD_NO)
+	{
+		if(self.vehicle.vehicles_impulse)
+		if(self.vehicle.vehicles_impulse(imp))
+			return;
+		if(vehicle_impulse(imp))
+			return;
+	}
 
 	if(CheatImpulse(imp))
 	{
@@ -85,11 +97,12 @@ void ImpulseCommands (void)
 		// weapon switching impulses
 		if(self.deadflag == DEAD_NO)
 			W_NextWeaponOnImpulse(imp);
-		//else
+		//else // don't retry, as this can break weaplast bind
 		//	self.impulse = imp; // retry in next frame
 	}
 	else if(imp >= 10 && imp <= 20)
 	{
+		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
 		{
 			switch(imp)
@@ -125,12 +138,15 @@ void ImpulseCommands (void)
 					W_PreviousWeapon(1);
 					break;
 				case 20:
-					if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
+					if(!forbidWeaponUse(self)) {
+						Weapon w = get_weaponinfo(self.weapon);
+						w.wr_reload(w);
+					}
 					break;
 			}
 		}
-		else
-			self.impulse = imp; // retry in next frame
+		//else // don't retry, as this can break weaplast bind
+			//self.impulse = imp; // retry in next frame
 	}
 	else if(imp == 21)
 	{
@@ -138,6 +154,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 200 && imp <= 229)
 	{
+		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
@@ -145,15 +162,16 @@ void ImpulseCommands (void)
 			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
 			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
 		}
-		else
-			self.impulse = imp; // retry in next frame
+		//else // don't retry, as this can break weaplast bind
+			//self.impulse = imp; // retry in next frame
 	}
-	else if(imp >= 230 && imp <= 253)
+	else if(imp >= WEP_IMPULSE_BEGIN && imp <= WEP_IMPULSE_END)
 	{
+		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
-			W_SwitchWeapon (imp - 230 + WEP_FIRST);
-		else
-			self.impulse = imp; // retry in next frame
+			W_SwitchWeapon (imp - WEP_IMPULSE_BEGIN + WEP_FIRST);
+		//else // don't retry, as this can break weaplast bind
+			//self.impulse = imp; // retry in next frame
 	}
 	// deploy waypoints
 	else if (imp >= 30 && imp <= 49)
@@ -162,14 +180,14 @@ void ImpulseCommands (void)
 		switch(imp)
 		{
 			case 30:
-				wp = WaypointSprite_DeployPersonal("waypoint", self.origin, RADARICON_WAYPOINT, '0 1 1');
+				wp = WaypointSprite_DeployPersonal(WP_Waypoint, self.origin, RADARICON_WAYPOINT);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "personal waypoint spawned at location\n");
 				break;
 			case 31:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployPersonal("waypoint", trace_endpos, RADARICON_WAYPOINT, '0 1 1');
+				wp = WaypointSprite_DeployPersonal(WP_Waypoint, trace_endpos, RADARICON_WAYPOINT);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "personal waypoint spawned at crosshair\n");
@@ -177,7 +195,7 @@ void ImpulseCommands (void)
 			case 32:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin, RADARICON_WAYPOINT, '0 1 1');
+					wp = WaypointSprite_DeployPersonal(WP_Waypoint, self.death_origin, RADARICON_WAYPOINT);
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "personal waypoint spawned at death location\n");
@@ -186,9 +204,9 @@ void ImpulseCommands (void)
 			case 33:
 				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					if (!MUTATOR_CALLHOOK(HelpMePing))
+					if (!MUTATOR_CALLHOOK(HelpMePing, self))
 					{
-						wp = WaypointSprite_Attach("helpme", true, RADARICON_HELPME, '1 0.5 0');
+						wp = WaypointSprite_Attach(WP_Helpme, true, RADARICON_HELPME);
 						if(!wp)
 							WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
 						else
@@ -198,14 +216,14 @@ void ImpulseCommands (void)
 				}
 				break;
 			case 34:
-				wp = WaypointSprite_DeployFixed("here", false, self.origin, RADARICON_HERE, '0 1 0');
+				wp = WaypointSprite_DeployFixed(WP_Here, false, self.origin, RADARICON_HERE);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "HERE spawned at location\n");
 				break;
 			case 35:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("here", false, trace_endpos, RADARICON_HERE, '0 1 0');
+				wp = WaypointSprite_DeployFixed(WP_Here, false, trace_endpos, RADARICON_HERE);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "HERE spawned at crosshair\n");
@@ -213,21 +231,21 @@ void ImpulseCommands (void)
 			case 36:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("here", false, self.death_origin, RADARICON_HERE, '0 1 0');
+					wp = WaypointSprite_DeployFixed(WP_Here, false, self.death_origin, RADARICON_HERE);
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "HERE spawned at death location\n");
 				}
 				break;
 			case 37:
-				wp = WaypointSprite_DeployFixed("danger", false, self.origin, RADARICON_DANGER, '1 0.5 0');
+				wp = WaypointSprite_DeployFixed(WP_Danger, false, self.origin, RADARICON_DANGER);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "DANGER spawned at location\n");
 				break;
 			case 38:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("danger", false, trace_endpos, RADARICON_DANGER, '1 0.5 0');
+				wp = WaypointSprite_DeployFixed(WP_Danger, false, trace_endpos, RADARICON_DANGER);
 				if(wp)
 					WaypointSprite_Ping(wp);
 				sprint(self, "DANGER spawned at crosshair\n");
@@ -235,7 +253,7 @@ void ImpulseCommands (void)
 			case 39:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("danger", false, self.death_origin, RADARICON_DANGER, '1 0.5 0');
+					wp = WaypointSprite_DeployFixed(WP_Danger, false, self.death_origin, RADARICON_DANGER);
 					if(wp)
 						WaypointSprite_Ping(wp);
 					sprint(self, "DANGER spawned at death location\n");
@@ -300,7 +318,7 @@ void ImpulseCommands (void)
 					{
 						if(e.wpcost >= 10000000)
 						{
-							print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_z = 8;
 							e.effects |= EF_NODEPTHTEST | EF_BLUE;
 							++i;
@@ -308,14 +326,14 @@ void ImpulseCommands (void)
 						}
 					}
 					if(i)
-						print(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
+						LOG_INFO(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
 					navigation_markroutes_inverted(e2);
 					i = 0;
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
 						if(e.wpcost >= 10000000)
 						{
-							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
 							e.colormod_x = 8;
 							if(!(e.effects & EF_NODEPTHTEST)) // not already reported before
 								++m;
@@ -324,9 +342,9 @@ void ImpulseCommands (void)
 						}
 					}
 					if(i)
-						print(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
+						LOG_INFO(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
 					if(m)
-						print(ftos(m), " waypoints have been marked total\n");
+						LOG_INFO(ftos(m), " waypoints have been marked total\n");
 					i = 0;
 					for(e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
 					{
@@ -342,9 +360,9 @@ void ImpulseCommands (void)
 						else
 						{
 							setorigin(e, org);
-							print("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST;
-							setmodel(e, self.model);
+							_setmodel(e, self.model);
 							e.frame = self.frame;
 							e.skin = self.skin;
 							e.colormod = '8 0.5 8';
@@ -353,7 +371,7 @@ void ImpulseCommands (void)
 						}
 					}
 					if(i)
-						print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
+						LOG_INFO(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
 					i = 0;
 					entity start;
 					start = findchainflags(flags, FL_ITEM);
@@ -369,14 +387,14 @@ void ImpulseCommands (void)
 						}
 						else
 						{
-							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST | EF_RED;
 							e.colormod_x = 8;
 							++i;
 						}
 					}
 					if(i)
-						print(ftos(i), " items have no nearest waypoint and cannot be walked away from (marked with red light)\n");
+						LOG_INFO(ftos(i), " items have no nearest waypoint and cannot be walked away from (marked with red light)\n");
 					i = 0;
 					for(e = start; e; e = e.chain)
 					{
@@ -386,20 +404,16 @@ void ImpulseCommands (void)
 						}
 						else
 						{
-							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
 							e.effects |= EF_NODEPTHTEST | EF_BLUE;
 							e.colormod_z = 8;
 							++i;
 						}
 					}
 					if(i)
-						print(ftos(i), " items have no nearest waypoint and cannot be walked to (marked with blue light)\n");
+						LOG_INFO(ftos(i), " items have no nearest waypoint and cannot be walked to (marked with blue light)\n");
 					break;
 			}
 		}
 	}
-#ifdef TETRIS
-	else if(imp == 100)
-		TetrisImpulse();
-#endif
 }

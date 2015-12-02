@@ -1,18 +1,16 @@
-#include "command.qh"
-#include "generic.qh"
+#include "all.qh"
 
 #include "markup.qh"
 #include "rpn.qh"
 
 #include "../mapinfo.qh"
-#include "../test.qh"
 
 #ifndef MENUQC
 	#include "../notifications.qh"
 #endif
 
 #ifdef CSQC
-	#include "../../client/command/cl_cmd.qh"
+	#include "../../client/commands/cl_cmd.qh"
 #endif
 
 #ifdef SVQC
@@ -20,7 +18,7 @@
 	#include "../../server/command/cmd.qh"
 	#include "../../server/command/common.qh"
 	#include "../../server/command/sv_cmd.qh"
-
+	#include "../../common/turrets/config.qh"
 	#include "../../common/weapons/config.qh"
 #endif
 
@@ -30,7 +28,7 @@
 // =========================================================
 
 // used by generic commands for better help/usage information
-string GetProgramCommandPrefix(void)
+string GetProgramCommandPrefix()
 {
 	#ifdef SVQC
 	return "sv_cmd";
@@ -51,7 +49,7 @@ void Curl_URI_Get_Callback(int id, float status, string data)
 	string do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
-		dprintf("error: status is %d\n", status);
+		LOG_TRACEF("error: status is %d\n", status);
 		if(do_cvar)
 			strunzone(do_cvar);
 		return;
@@ -65,7 +63,7 @@ void Curl_URI_Get_Callback(int id, float status, string data)
 	}
 	if(!do_exec)
 		if (!do_cvar)
-			print(data);
+			LOG_INFO(data);
 }
 
 
@@ -103,12 +101,12 @@ void GenericCommand_addtolist(float request, float argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2addtolist^7\n");
+			LOG_INFO("Incorrect parameters for ^2addtolist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value\n"));
-			print("  Where 'variable' is what to add 'value' to.\n");
-			print("See also: ^2removefromlist^7\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value\n"));
+			LOG_INFO("  Where 'variable' is what to add 'value' to.\n");
+			LOG_INFO("See also: ^2removefromlist^7\n");
 			return;
 		}
 	}
@@ -170,7 +168,7 @@ void GenericCommand_qc_curl(float request, float argc)
 				curl_uri_get_pos = (curl_uri_get_pos + 1) % (URI_GET_CURL_END - URI_GET_CURL + 1);
 			}
 			else
-				print(_("error creating curl handle\n"));
+				LOG_INFO(_("error creating curl handle\n"));
 
 			buf_del(buf);
 
@@ -180,13 +178,13 @@ void GenericCommand_qc_curl(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]"));
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]"));
 			return;
 		}
 	}
 }
 
-void GenericCommand_dumpcommands(float request)
+GENERIC_COMMAND(dumpcommands, "Dump all commands on the program to *_cmd_dump.txt")
 {
 	switch(request)
 	{
@@ -220,13 +218,13 @@ void GenericCommand_dumpcommands(float request)
 				CMD_Write("\ndump of generic commands:\n");
 				GenericCommand_macro_write_aliases(fh);
 
-				print("Completed dump of aliases in ^2data/data/", GetProgramCommandPrefix(), "_dump.txt^7.\n");
+				LOG_INFO("Completed dump of aliases in ^2data/data/", GetProgramCommandPrefix(), "_dump.txt^7.\n");
 
 				fclose(fh);
 			}
 			else
 			{
-				print("^1Error: ^7Could not dump to file!\n");
+				LOG_INFO("^1Error: ^7Could not dump to file!\n");
 			}
 			return;
 		}
@@ -234,111 +232,8 @@ void GenericCommand_dumpcommands(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpcommands"));
-			print("  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void GenericCommand_dumpnotifs(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			#ifndef MENUQC
-			float fh, alsoprint = false;
-			string filename = argv(1);
-
-			if(filename == "")
-			{
-				filename = "notifications_dump.cfg";
-				alsoprint = false;
-			}
-			else if(filename == "-")
-			{
-				filename = "notifications_dump.cfg";
-				alsoprint = true;
-			}
-			fh = fopen(filename, FILE_WRITE);
-
-			if(fh >= 0)
-			{
-				Dump_Notifications(fh, alsoprint);
-				printf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
-				fclose(fh);
-			}
-			else
-			{
-				printf("^1Error: ^7Could not open file '%s'!\n", filename);
-			}
-			#else
-			print(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
-			#endif
-			return;
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			print("  Where 'filename' is the file to write (default is notifications_dump.cfg),\n");
-			print("  if supplied with '-' output to console as well as default,\n");
-			print("  if left blank, it will only write to default.\n");
-			return;
-		}
-	}
-}
-
-void GenericCommand_dumpweapons(float request) // WEAPONTODO: make this work with other progs than just server
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			#ifdef SVQC
-			wep_config_file = -1;
-			wep_config_alsoprint = -1;
-			string filename = argv(1);
-
-			if(filename == "")
-			{
-				filename = "weapons_dump.cfg";
-				wep_config_alsoprint = false;
-			}
-			else if(filename == "-")
-			{
-				filename = "weapons_dump.cfg";
-				wep_config_alsoprint = true;
-			}
-			wep_config_file = fopen(filename, FILE_WRITE);
-
-			if(wep_config_file >= 0)
-			{
-				Dump_Weapon_Settings();
-				print(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
-				fclose(wep_config_file);
-				wep_config_file = -1;
-				wep_config_alsoprint = -1;
-			}
-			else
-			{
-				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
-			}
-			#else
-			print(_("Weapons dump command only works with sv_cmd.\n"));
-			#endif
-			return;
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
-			print("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
-			print("  if supplied with '-' output to console as well as default,\n");
-			print("  if left blank, it will only write to default.\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpcommands"));
+			LOG_INFO("  No arguments required.\n");
 			return;
 		}
 	}
@@ -361,7 +256,7 @@ void GenericCommand_maplist(float request, float argc)
 					{
 						if (!fexists(strcat("maps/", argv(2), ".bsp")))
 						{
-							print("maplist: ERROR: ", argv(2), " does not exist!\n");
+							LOG_INFO("maplist: ERROR: ", argv(2), " does not exist!\n");
 							break;
 						}
 
@@ -422,13 +317,13 @@ void GenericCommand_maplist(float request, float argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2maplist^7\n");
+			LOG_INFO("Incorrect parameters for ^2maplist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]\n"));
-			print("  Where 'action' is the command to complete,\n");
-			print("  and 'map' is what it acts upon (if required).\n");
-			print("  Full list of commands here: \"add, cleanup, remove, shuffle.\"\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]\n"));
+			LOG_INFO("  Where 'action' is the command to complete,\n");
+			LOG_INFO("  and 'map' is what it acts upon (if required).\n");
+			LOG_INFO("  Full list of commands here: \"add, cleanup, remove, shuffle.\"\n");
 			return;
 		}
 	}
@@ -447,8 +342,8 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command...\n"));
-			print("  Where command will be executed next frame of this VM\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command...\n"));
+			LOG_INFO("  Where command will be executed next frame of this VM\n");
 			return;
 		}
 	}
@@ -482,12 +377,12 @@ void GenericCommand_removefromlist(float request, float argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2removefromlist^7\n");
+			LOG_INFO("Incorrect parameters for ^2removefromlist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value\n"));
-			print("  Where 'variable' is what cvar to remove 'value' from.\n");
-			print("See also: ^2addtolist^7\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value\n"));
+			LOG_INFO("  Where 'variable' is what cvar to remove 'value' from.\n");
+			LOG_INFO("See also: ^2addtolist^7\n");
 			return;
 		}
 	}
@@ -500,7 +395,7 @@ void GenericCommand_restartnotifs(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifndef MENUQC
-			printf(
+			LOG_INFOF(
 				strcat(
 					"Restart_Notifications(): Restarting %d notifications... ",
 					"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
@@ -521,7 +416,7 @@ void GenericCommand_restartnotifs(float request)
 			Destroy_All_Notifications();
 			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 			#else
-			print(_("Notification restart command only works with cl_cmd and sv_cmd.\n"));
+			LOG_INFO(_("Notification restart command only works with cl_cmd and sv_cmd.\n"));
 			#endif
 			return;
 		}
@@ -529,8 +424,8 @@ void GenericCommand_restartnotifs(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " restartnotifs"));
-			print("  No arguments required.\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " restartnotifs"));
+			LOG_INFO("  No arguments required.\n");
 			return;
 		}
 	}
@@ -546,9 +441,9 @@ void GenericCommand_settemp(float request, float argc)
 			{
 				float f = cvar_settemp(argv(1), argv(2));
 				if(f == 1)
-					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n");
+					LOG_TRACE("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n");
 				else if(f == -1)
-					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
+					LOG_TRACE("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
 				// else cvar_settemp itself errors out
 
 				return;
@@ -556,12 +451,12 @@ void GenericCommand_settemp(float request, float argc)
 		}
 
 		default:
-			print("Incorrect parameters for ^2settemp^7\n");
+			LOG_INFO("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"\n"));
-			print("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
-			print("See also: ^2settemp_restore^7\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"\n"));
+			LOG_INFO("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
+			LOG_INFO("See also: ^2settemp_restore^7\n");
 			return;
 		}
 	}
@@ -576,9 +471,9 @@ void GenericCommand_settemp_restore(float request, float argc)
 			float i = cvar_settemp_restore();
 
 			if(i)
-				dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
+				LOG_TRACE("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
 			else
-				dprint("Nothing to restore.\n");
+				LOG_TRACE("Nothing to restore.\n");
 
 			return;
 		}
@@ -586,9 +481,9 @@ void GenericCommand_settemp_restore(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp_restore\n"));
-			print("  No arguments required.\n");
-			print("See also: ^2settemp^7\n");
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp_restore\n"));
+			LOG_INFO("  No arguments required.\n");
+			LOG_INFO("See also: ^2settemp^7\n");
 			return;
 		}
 	}
@@ -614,7 +509,7 @@ void GenericCommand_runtest(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " [function to run]"));
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " [function to run]"));
 			return;
 		}
 	}
@@ -643,69 +538,46 @@ void GenericCommand_(float request)
 }
 */
 
-// ==================================
-//  Macro system for server commands
-// ==================================
-
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define GENERIC_COMMANDS(request,arguments,command) \
-	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
-	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
-	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
-	GENERIC_COMMAND("dumpweapons", GenericCommand_dumpweapons(request), "Dump all weapons into weapons_dump.txt") \
-	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
-	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
-	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \
-	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
-	GENERIC_COMMAND("restartnotifs", GenericCommand_restartnotifs(request), "Re-initialize all notifications") \
-	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
-	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
-	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
-	GENERIC_COMMAND("runtest", GenericCommand_runtest(request, arguments), "Run unit tests") \
-	/* nothing */
+GENERIC_COMMAND(addtolist, "Add a string to a cvar") { GenericCommand_addtolist(request, arguments); }
+GENERIC_COMMAND(maplist, "Automatic control of maplist") { GenericCommand_maplist(request, arguments); }
+GENERIC_COMMAND(nextframe, "Execute the given command next frame of this VM") { GenericCommand_nextframe(request, arguments, command); }
+GENERIC_COMMAND(qc_curl, "Queries a URL") { GenericCommand_qc_curl(request, arguments); }
+GENERIC_COMMAND(removefromlist, "Remove a string from a cvar") { GenericCommand_removefromlist(request, arguments); }
+GENERIC_COMMAND(restartnotifs, "Re-initialize all notifications") { GenericCommand_restartnotifs(request); }
+GENERIC_COMMAND(rpn, "RPN calculator") { GenericCommand_rpn(request, arguments, command); }
+GENERIC_COMMAND(settemp, "Temporarily set a value to a cvar which is restored later") { GenericCommand_settemp(request, arguments); }
+GENERIC_COMMAND(settemp_restore, "Restore all cvars set by settemp command") { GenericCommand_settemp_restore(request, arguments); }
+GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arguments); }
 
 void GenericCommand_macro_help()
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ print("  ^2", name, "^7: ", description, "\n"); }
-
-	GENERIC_COMMANDS(0, 0, "");
-	#undef GENERIC_COMMAND
-
-	return;
+	FOREACH(GENERIC_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
 }
 
 float GenericCommand_macro_command(float argc, string command)
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(0))) { function; return true; } }
-
-	GENERIC_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
-	#undef GENERIC_COMMAND
-
+	string c = strtolower(argv(0));
+	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_COMMAND, argc, command);
+		return true;
+	));
 	return false;
 }
 
 float GenericCommand_macro_usage(float argc)
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ if(name == strtolower(argv(1))) { function; return true; } }
-
-	GENERIC_COMMANDS(CMD_REQUEST_USAGE, argc, "");
-	#undef GENERIC_COMMAND
-
+	string c = strtolower(argv(1));
+	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_USAGE, argc, "");
+		return true;
+	));
 	return false;
 }
 
 void GenericCommand_macro_write_aliases(float fh)
 {
-	#define GENERIC_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("qc_cmd_svmenu", name, description); }
-
-	GENERIC_COMMANDS(0, 0, "");
-	#undef GENERIC_COMMAND
-
-	return;
+	FOREACH(GENERIC_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_svmenu", it.m_name, it.m_description)));
 }
 
 

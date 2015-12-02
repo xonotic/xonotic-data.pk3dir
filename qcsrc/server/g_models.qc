@@ -1,15 +1,22 @@
-#include "_all.qh"
 
 #include "g_subs.qh"
-#include "g_triggers.qh"
+#include "../common/triggers/subs.qh"
+#include "../common/triggers/triggers.qh"
+
+entityclass(BGMScript);
+class(BGMScript) .string bgmscript;
+class(BGMScript) .float bgmscriptattack;
+class(BGMScript) .float bgmscriptdecay;
+class(BGMScript) .float bgmscriptsustain;
+class(BGMScript) .float bgmscriptrelease;
 
 #include "../common/constants.qh"
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
 .float modelscale;
 
-void g_model_setcolormaptoactivator (void)
-{
+void g_model_setcolormaptoactivator ()
+{SELFPARAM();
 	if(teamplay)
 	{
 		if(activator.team)
@@ -19,17 +26,32 @@ void g_model_setcolormaptoactivator (void)
 	}
 	else
 		self.colormap = floor(random() * 256);
-	self.colormap |= 1024; // RENDER_COLORMAPPED
+	self.colormap |= BIT(10); // RENDER_COLORMAPPED
 }
 
-void g_clientmodel_setcolormaptoactivator (void)
-{
+void g_clientmodel_setcolormaptoactivator ()
+{SELFPARAM();
 	g_model_setcolormaptoactivator();
-	self.SendFlags |= 1;
+	self.SendFlags |= (BIT(3) | BIT(0));
+}
+
+void g_clientmodel_use()
+{SELFPARAM();
+	if (self.antiwall_flag == 1)
+	{
+		self.inactive = 1;
+		self.solid = SOLID_NOT;
+	}
+	else if (self.antiwall_flag == 2)
+	{
+		self.inactive = 0;
+		self.solid = self.default_solid;
+	}
+	g_clientmodel_setcolormaptoactivator();
 }
 
 void g_model_dropbyspawnflags()
-{
+{SELFPARAM();
 	if((self.spawnflags & 3) == 1) // ALIGN_ORIGIN
 	{
 		traceline(self.origin, self.origin - '0 0 4096', MOVE_NOMONSTERS, self);
@@ -48,7 +70,7 @@ void g_model_dropbyspawnflags()
 }
 
 void g_clientmodel_dropbyspawnflags()
-{
+{SELFPARAM();
 	vector o0;
 	o0 = self.origin;
 	g_model_dropbyspawnflags();
@@ -56,35 +78,35 @@ void g_clientmodel_dropbyspawnflags()
 		self.SendFlags |= 2;
 }
 
-float g_clientmodel_genericsendentity (entity to, int sf)
+bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 {
 	sf = sf & 0x0F;
 	if(self.angles != '0 0 0')
 		sf |= 0x10;
-	if(self.solid && (self.mins != '0 0 0' || self.maxs != '0 0 0'))
+	if(self.mins != '0 0 0' || self.maxs != '0 0 0')
 		sf |= 0x20;
 	if(self.colormap != 0)
 		sf |= 0x40;
 	if(self.lodmodelindex1)
 		sf |= 0x80;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_WALL);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_WALL);
 	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 1)
+	if(sf & BIT(0))
 	{
 		if(sf & 0x40)
 			WriteShort(MSG_ENTITY, self.colormap);
 	}
 
-	if(sf & 2)
+	if(sf & BIT(1))
 	{
 		WriteCoord(MSG_ENTITY, self.origin.x);
 		WriteCoord(MSG_ENTITY, self.origin.y);
 		WriteCoord(MSG_ENTITY, self.origin.z);
 	}
 
-	if(sf & 4)
+	if(sf & BIT(2))
 	{
 		if(sf & 0x10)
 		{
@@ -94,7 +116,7 @@ float g_clientmodel_genericsendentity (entity to, int sf)
 		}
 	}
 
-	if(sf & 8)
+	if(sf & BIT(3))
 	{
 		if(sf & 0x80)
 		{
@@ -129,6 +151,12 @@ float g_clientmodel_genericsendentity (entity to, int sf)
 			WriteCoord(MSG_ENTITY, self.movedir.z);
 			WriteByte(MSG_ENTITY, floor(self.lip * 255));
 		}
+		WriteShort(MSG_ENTITY, self.fade_start);
+		WriteShort(MSG_ENTITY, self.fade_end);
+		WriteShort(MSG_ENTITY, self.alpha_max);
+		WriteShort(MSG_ENTITY, self.alpha_min);
+		WriteShort(MSG_ENTITY, self.inactive);
+		WriteShort(MSG_ENTITY, self.fade_vertical_offset);
 	}
 
 	return true;
@@ -147,22 +175,23 @@ float g_clientmodel_genericsendentity (entity to, int sf)
 	if(self.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) self.movetype = MOVETYPE_PHYSICS; \
 	if(!self.scale) self.scale = self.modelscale; \
 	SetBrushEntityModel(); \
-	self.use = g_clientmodel_setcolormaptoactivator; \
+	self.use = g_clientmodel_use; \
 	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
-	Net_LinkEntity(self, true, 0, g_clientmodel_genericsendentity);
+	Net_LinkEntity(self, true, 0, g_clientmodel_genericsendentity); \
+	self.default_solid = sol;
 
 // non-solid model entities:
-void spawnfunc_misc_gamemodel()         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity
-void spawnfunc_misc_clientmodel()       { self.angles_x = -self.angles.x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
-void spawnfunc_misc_models()            { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
+spawnfunc(misc_gamemodel)         { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // model entity
+spawnfunc(misc_clientmodel)       { self.angles_x = -self.angles.x; G_CLIENTMODEL_INIT(SOLID_NOT) } // model entity
+spawnfunc(misc_models)            { self.angles_x = -self.angles.x; G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old compat entity with confusing name, do not use
 
 // non-solid brush entities:
-void spawnfunc_func_illusionary()       { G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
-void spawnfunc_func_clientillusionary() { G_CLIENTMODEL_INIT(SOLID_NOT) } // brush entity
-void spawnfunc_func_static()            { G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old alias name from some other game
+spawnfunc(func_illusionary)       { G_MODEL_INIT      (SOLID_NOT) } // Q1 name (WARNING: MISPREDICTED)
+spawnfunc(func_clientillusionary) { G_CLIENTMODEL_INIT(SOLID_NOT) } // brush entity
+spawnfunc(func_static)            { G_MODEL_INIT      (SOLID_NOT) } // DEPRECATED old alias name from some other game
 
 // solid brush entities
-void spawnfunc_func_wall()              { G_MODEL_INIT      (SOLID_BSP) } // Q1 name
-void spawnfunc_func_clientwall()        { G_CLIENTMODEL_INIT(SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)
+spawnfunc(func_wall)              { G_MODEL_INIT      (SOLID_BSP) } // Q1 name
+spawnfunc(func_clientwall)        { G_CLIENTMODEL_INIT(SOLID_BSP) } // brush entity (WARNING: MISPREDICTED)

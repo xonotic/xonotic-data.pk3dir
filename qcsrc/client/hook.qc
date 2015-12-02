@@ -1,49 +1,14 @@
 #include "hook.qh"
-#include "_all.qh"
 
-#include "hud.qh"
-#include "noise.qh"
-
-#include "../common/teams.qh"
-
-#include "../csqcmodellib/interpolate.qh"
-
-#include "../warpzonelib/common.qh"
-#include "../warpzonelib/mathlib.qh"
+#include "../lib/csqcmodel/interpolate.qh"
+#include "../lib/warpzone/common.qh"
 
 entityclass(Hook);
-class(Hook) .float HookType; // ENT_CLIENT_*
+class(Hook) .entity HookType; // ENT_CLIENT_*
 class(Hook) .vector origin;
 class(Hook) .vector velocity;
 class(Hook) .float HookSilent;
 class(Hook) .float HookRange;
-
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
-{
-	// I want to draw a quad...
-	// from and to are MIDPOINTS.
-
-	vector axis, thickdir, A, B, C, D;
-	float length_tex;
-
-	axis = normalize(to - from);
-	length_tex = aspect * vlen(to - from) / thickness;
-
-	// direction is perpendicular to the view normal, and perpendicular to the axis
-	thickdir = normalize(cross(axis, vieworg - from));
-
-	A = from - thickdir * (thickness / 2);
-	B = from + thickdir * (thickness / 2);
-	C = to + thickdir * (thickness / 2);
-	D = to - thickdir * (thickness / 2);
-
-	R_BeginPolygon(texture, drawflag);
-	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
-	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
-	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
-	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
-	R_EndPolygon();
-}
 
 string Draw_GrapplingHook_trace_callback_tex;
 float Draw_GrapplingHook_trace_callback_rnd;
@@ -60,36 +25,33 @@ void Draw_GrapplingHook_trace_callback(vector start, vector hit, vector end)
 }
 
 class(Hook) .float teleport_time;
-void Draw_GrapplingHook()
+void Draw_GrapplingHook(entity this)
 {
 	vector a, b, atrans;
 	string tex;
 	vector rgb;
 	float t;
-	int s;
 	vector vs;
 	float intensity, offset;
 
 	if(self.teleport_time)
 	if(time > self.teleport_time)
 	{
-		sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM); // safeguard
+		sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM); // safeguard
 		self.teleport_time = 0;
 	}
 
-	InterpolateOrigin_Do();
+	InterpolateOrigin_Do(this);
 
-	s = autocvar_cl_gunalign;
-	if(s != 1 && s != 2 && s != 4)
-		s = 3; // default value
-	--s;
+	int s = W_GetGunAlignment(world);
+
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			vs = hook_shotorigin[s];
 			break;
-		case ENT_CLIENT_ARC_BEAM:
+		case NET_ENT_CLIENT_ARC_BEAM:
 			vs = lightning_shotorigin[s];
 			break;
 	}
@@ -99,11 +61,11 @@ void Draw_GrapplingHook()
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
+			case NET_ENT_CLIENT_ARC_BEAM:
 				if(self.HookRange)
 					b = view_origin + view_forward * self.HookRange;
 				else
@@ -119,23 +81,23 @@ void Draw_GrapplingHook()
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				a = self.velocity;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
+			case NET_ENT_CLIENT_ARC_BEAM:
 				a = self.origin;
 				b = self.velocity;
 				break;
 		}
 	}
 
-	t = GetPlayerColorForce(self.owner.sv_entnum);
+	t = entcs_GetTeamColor(self.owner.sv_entnum);
 
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			intensity = 1;
 			offset = 0;
 			switch(t)
@@ -144,10 +106,10 @@ void Draw_GrapplingHook()
 				case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
 				case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
 				case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
-				default: tex = "particles/hook_white"; rgb = getcsqcplayercolor(self.sv_entnum); break;
+				default: tex = "particles/hook_white"; rgb = entcs_GetColor(self.sv_entnum - 1); break;
 			}
 			break;
-		case ENT_CLIENT_ARC_BEAM: // todo
+		case NET_ENT_CLIENT_ARC_BEAM: // todo
 			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
 			offset = Noise_Brown(self, frametime) * 10;
 			tex = "particles/lgbeam";
@@ -159,7 +121,7 @@ void Draw_GrapplingHook()
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;
 	Draw_GrapplingHook_trace_callback_a = intensity;
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
 	atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);
@@ -167,7 +129,7 @@ void Draw_GrapplingHook()
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			if(vlen(trace_endpos - atrans) > 0.5)
 			{
 				setorigin(self, trace_endpos); // hook endpoint!
@@ -179,7 +141,7 @@ void Draw_GrapplingHook()
 				self.drawmask = 0;
 			}
 			break;
-		case ENT_CLIENT_ARC_BEAM:
+		case NET_ENT_CLIENT_ARC_BEAM:
 			setorigin(self, a); // beam origin!
 			break;
 	}
@@ -187,29 +149,29 @@ void Draw_GrapplingHook()
 	switch(self.HookType)
 	{
 		default:
-		case ENT_CLIENT_HOOK:
+		case NET_ENT_CLIENT_HOOK:
 			break;
-		case ENT_CLIENT_ARC_BEAM:
-			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
+		case NET_ENT_CLIENT_ARC_BEAM:
+			pointparticles(EFFECT_ARC_LIGHTNING2, trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 	}
 }
 
 void Remove_GrapplingHook()
-{
-	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
+{SELFPARAM();
+	sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
-void Ent_ReadHook(float bIsNew, float type)
+NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 {
-	self.HookType = type;
+	self.HookType = NET_ENT_CLIENT_HOOK;
 
 	int sf = ReadByte();
 
 	self.HookSilent = (sf & 0x80);
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	if(sf & 1)
 	{
@@ -219,10 +181,10 @@ void Ent_ReadHook(float bIsNew, float type)
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				self.HookRange = 0;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
+			case NET_ENT_CLIENT_ARC_BEAM:
 				self.HookRange = ReadCoord();
 				break;
 		}
@@ -241,7 +203,7 @@ void Ent_ReadHook(float bIsNew, float type)
 		self.velocity_z = ReadCoord();
 	}
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 
 	if(bIsNew || !self.teleport_time)
 	{
@@ -251,24 +213,19 @@ void Ent_ReadHook(float bIsNew, float type)
 		switch(self.HookType)
 		{
 			default:
-			case ENT_CLIENT_HOOK:
+			case NET_ENT_CLIENT_HOOK:
 				// for the model
-				setmodel(self, "models/hook.md3");
+				setmodel(self, MDL_HOOK);
 				self.drawmask = MASK_NORMAL;
 				break;
-			case ENT_CLIENT_ARC_BEAM:
-				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+			case NET_ENT_CLIENT_ARC_BEAM:
+				sound (self, CH_SHOTS_SINGLE, SND_LGBEAM_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
 
 	self.teleport_time = time + 10;
-}
-
-void Hook_Precache()
-{
-	precache_sound("weapons/lgbeam_fly.wav");
-	precache_model("models/hook.md3");
+	return true;
 }
 
 // TODO: hook: temporarily transform self.origin for drawing the model along warpzones!

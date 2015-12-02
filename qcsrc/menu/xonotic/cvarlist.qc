@@ -2,13 +2,13 @@
 #define CVARLIST_H
 #include "listbox.qc"
 CLASS(XonoticCvarList, XonoticListBox)
-	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity))
+	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity));
 	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)
-	METHOD(XonoticCvarList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float));
 
-	METHOD(XonoticCvarList, destroy, void(entity))
+	METHOD(XonoticCvarList, destroy, void(entity));
 
 	ATTRIB(XonoticCvarList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticCvarList, realUpperMargin, float, 0)
@@ -17,9 +17,9 @@ CLASS(XonoticCvarList, XonoticListBox)
 	ATTRIB(XonoticCvarList, columnValueOrigin, float, 0)
 	ATTRIB(XonoticCvarList, columnValueSize, float, 0)
 
-	METHOD(XonoticCvarList, mouseRelease, float(entity, vector))
-	METHOD(XonoticCvarList, setSelected, void(entity, float))
-	METHOD(XonoticCvarList, updateCvarType, float(entity))
+	METHOD(XonoticCvarList, mouseRelease, float(entity, vector));
+	METHOD(XonoticCvarList, setSelected, void(entity, float));
+	METHOD(XonoticCvarList, updateCvarType, float(entity));
 
 	ATTRIB(XonoticCvarList, controlledTextbox, entity, NULL)
 	ATTRIB(XonoticCvarList, cvarNameBox, entity, NULL)
@@ -70,12 +70,12 @@ float XonoticCvarList_updateCvarType(entity me)
 	t = cvar_type(me.cvarName);
 	me.cvarType = "";
 	float needsForcing;
-	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
 		me.cvarType = strcat(me.cvarType, ", ", _("forced to be saved to config.cfg"));
 		needsForcing = 0;
 	}
-	else if(strstrofs(strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, me.cvarName))
 	{
 		// Currently claims to be saved, but won't be on next startup.
 		me.cvarType = strcat(me.cvarType, ", ", _("will not be saved"));
@@ -154,7 +154,7 @@ void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 
 	me.setSelected(me, me.selectedItem);
 }
-void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string k, v, d;
 	float t;
@@ -166,15 +166,20 @@ void XonoticCvarList_drawListBoxItem(entity me, float i, vector absSize, float i
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	k = bufstr_get(me.handle, i);
 
 	v = cvar_string(k);
 	d = cvar_defstring(k);
 	t = cvar_type(k);
-	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", k, " "), 0) >= 0)
+	if(strhasword(autocvar_menu_forced_saved_cvars, k))
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
-	else if(strstrofs(strcat(" ", autocvar_menu_reverted_nonsaved_cvars, " "), strcat(" ", k, " "), 0) >= 0)
+	else if(strhasword(autocvar_menu_reverted_nonsaved_cvars, k))
 		theAlpha = SKINALPHA_CVARLIST_TEMPORARY;
 	else if(t & CVAR_TYPEFLAG_SAVED)
 		theAlpha = SKINALPHA_CVARLIST_SAVED;
@@ -195,7 +200,7 @@ float XonoticCvarList_keyDown(entity me, float scan, float ascii, float shift)
 {
 	if (scan == K_MOUSE3 || ((shift & S_CTRL) && scan == K_SPACE))
 	{
-		CvarList_Revert_Click(world, me);
+		CvarList_Revert_Click(NULL, me);
 		return 1;
 	}
 	else if(scan == K_ENTER)
@@ -238,7 +243,7 @@ void CvarList_Revert_Click(entity btn, entity me)
 {
 	me.cvarValueBox.setText(me.cvarValueBox, me.cvarDefault);
 	me.cvarValueBox.cursorPos = strlen(me.cvarDefault);
-	if(strstrofs(strcat(" ", autocvar_menu_forced_saved_cvars, " "), strcat(" ", me.cvarName, " "), 0) >= 0)
+	if(strhasword(autocvar_menu_forced_saved_cvars, me.cvarName))
 	{
 		cvar_set("menu_forced_saved_cvars", substring(strreplace(strcat(" ", me.cvarName, " "), " ", strcat(" ", autocvar_menu_forced_saved_cvars, " ")), 1, -2));
 		if (autocvar_menu_reverted_nonsaved_cvars == "")

@@ -1,43 +1,37 @@
 #ifndef WEAPONSYSTEM_H
 #define WEAPONSYSTEM_H
 
-.float wframe;
 
 float internalteam;
 float weaponswapping;
 entity weapon_dropevent_item;
 
-// VorteX: static frame globals
-const float WFRAME_DONTCHANGE = -1;
-const float WFRAME_FIRE1 = 0;
-const float WFRAME_FIRE2 = 1;
-const float WFRAME_IDLE = 2;
-const float WFRAME_RELOAD = 3;
-
-void CL_SpawnWeaponentity();
+void CL_SpawnWeaponentity(entity e, .entity weaponentity);
 
 vector CL_Weapon_GetShotOrg(float wpn);
 
-float forbidWeaponUse();
+float forbidWeaponUse(entity player);
 
-void W_AttachToShotorg(entity flash, vector offset);
+void W_AttachToShotorg(entity actor, entity flash, vector offset);
 
-void W_DecreaseAmmo(float ammo_use);
+void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use);
 
-void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item);
+void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item);
 
-void W_Reload(float sent_ammo_min, string sent_sound);
+void W_Reload(entity actor, float sent_ammo_min, string sent_sound);
 
-void W_WeaponFrame();
+void W_WeaponFrame(entity actor);
 
 float W_WeaponRateFactor();
 
-float weapon_prepareattack(float secondary, float attacktime);
+float W_WeaponSpeedFactor();
 
-float weapon_prepareattack_check(float secondary, float attacktime);
+bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime);
 
-float weapon_prepareattack_do(float secondary, float attacktime);
+bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponentity, float secondary, float attacktime);
 
-void weapon_thinkf(float fr, float t, void() func);
+void weapon_prepareattack_do(entity actor, .entity weaponentity, float secondary, float attacktime);
+
+void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func);
 
 #endif

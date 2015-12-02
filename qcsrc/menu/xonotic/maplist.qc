@@ -2,16 +2,16 @@
 #define MAPLIST_H
 #include "listbox.qc"
 CLASS(XonoticMapList, XonoticListBox)
-	METHOD(XonoticMapList, configureXonoticMapList, void(entity))
+	METHOD(XonoticMapList, configureXonoticMapList, void(entity));
 	ATTRIB(XonoticMapList, rowsPerItem, float, 4)
-	METHOD(XonoticMapList, draw, void(entity))
-	METHOD(XonoticMapList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticMapList, refilter, void(entity))
-	METHOD(XonoticMapList, refilterCallback, void(entity, entity))
-	METHOD(XonoticMapList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticMapList, draw, void(entity));
+	METHOD(XonoticMapList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticMapList, refilter, void(entity));
+	METHOD(XonoticMapList, refilterCallback, void(entity, entity));
+	METHOD(XonoticMapList, keyDown, float(entity, float, float, float));
 
 	ATTRIB(XonoticMapList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticMapList, columnPreviewOrigin, float, 0)
@@ -30,23 +30,30 @@ CLASS(XonoticMapList, XonoticListBox)
 	ATTRIB(XonoticMapList, itemAbsSize, vector, '0 0 0')
 
 	ATTRIB(XonoticMapList, g_maplistCache, string, string_null)
-	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float))
-	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float))
+	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float));
+	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float));
+
+	ATTRIB(XonoticMapList, stringFilter, string, string_null)
+	ATTRIB(XonoticMapList, stringFilterBox, entity, NULL)
 
 	ATTRIB(XonoticMapList, startButton, entity, NULL)
 
-	METHOD(XonoticMapList, loadCvars, void(entity))
+	METHOD(XonoticMapList, loadCvars, void(entity));
 
 	ATTRIB(XonoticMapList, typeToSearchString, string, string_null)
 	ATTRIB(XonoticMapList, typeToSearchTime, float, 0)
 
-	METHOD(XonoticMapList, destroy, void(entity))
+	METHOD(XonoticMapList, destroy, void(entity));
 
 	ATTRIB(XonoticMapList, alphaBG, float, 0)
 ENDCLASS(XonoticMapList)
 entity makeXonoticMapList();
-void MapList_All(entity btn, entity me);
-void MapList_None(entity btn, entity me);
+void MapList_StringFilterBox_Change(entity box, entity me);
+float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
+void MapList_Add_Shown(entity btn, entity me);
+void MapList_Remove_Shown(entity btn, entity me);
+void MapList_Add_All(entity btn, entity me);
+void MapList_Remove_All(entity btn, entity me);
 void MapList_LoadMap(entity btn, entity me);
 #endif
 
@@ -64,6 +71,12 @@ entity makeXonoticMapList()
 	return me;
 }
 
+entity MapList_Set_String_Filter_Box(entity me, entity e)
+{
+	me.stringFilterBox = e;
+	return e;
+}
+
 void XonoticMapList_configureXonoticMapList(entity me)
 {
 	me.configureXonoticListBox(me);
@@ -74,6 +87,7 @@ void XonoticMapList_loadCvars(entity me)
 {
 	me.refilter(me);
 }
+
 
 float XonoticMapList_g_maplistCacheQuery(entity me, float i)
 {
@@ -161,7 +175,7 @@ void XonoticMapList_doubleClickListBoxItem(entity me, float i, vector where)
 		}
 }
 
-void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticMapList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	// layout: Ping, Map name, Map name, NP, TP, MP
 	string s;
@@ -179,8 +193,16 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	else if(included)
-		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
+	else
+	{
+		if(included)
+			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
+		if(isFocused)
+		{
+			me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+		}
+	}
 
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
@@ -205,7 +227,10 @@ void XonoticMapList_refilter(entity me)
 	gt = MapInfo_CurrentGametype();
 	f = MapInfo_CurrentFeatures();
 	MapInfo_FilterGametype(gt, f, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	if (me.stringFilter)
+		MapInfo_FilterString(me.stringFilter);
 	me.nItems = MapInfo_count;
+
 	for(i = 0; i < MapInfo_count; ++i)
 		draw_PreloadPicture(strcat("/maps/", MapInfo_BSPName_ByID(i)));
 	if(me.g_maplistCache)
@@ -218,11 +243,15 @@ void XonoticMapList_refilter(entity me)
 	{
 		j = MapInfo_FindName(argv(i));
 		if(j >= 0)
-			s = strcat(
-				substring(s, 0, j),
-				"1",
-				substring(s, j+1, MapInfo_count - (j+1))
-			);
+		{
+			// double check that the two mapnames are "identical", not just share the same prefix
+			if (strlen(MapInfo_BSPName_ByID(j)) == strlen(argv(i)))
+				s = strcat(
+					substring(s, 0, j),
+					"1",
+					substring(s, j+1, MapInfo_count - (j+1))
+				);
+		}
 	}
 	me.g_maplistCache = strzone(s);
 	if(gt != me.lastGametype || f != me.lastFeatures)
@@ -238,7 +267,43 @@ void XonoticMapList_refilterCallback(entity me, entity cb)
 	me.refilter(me);
 }
 
-void MapList_All(entity btn, entity me)
+void MapList_StringFilterBox_Change(entity box, entity me)
+{
+	if(me.stringFilter)
+		strunzone(me.stringFilter);
+	if(box.text != "")
+		me.stringFilter = strzone(box.text);
+	else
+		me.stringFilter = string_null;
+
+	me.refilter(me);
+}
+
+void MapList_Add_Shown(entity btn, entity me)
+{
+	float i, n;
+	n = strlen(me.g_maplistCache);
+	for (i = 0 ; i < n; i++)
+	{
+		if (!me.g_maplistCacheQuery(me, i))
+			me.g_maplistCacheToggle(me, i);
+	}
+	me.refilter(me);
+}
+
+void MapList_Remove_Shown(entity btn, entity me)
+{
+	float i, n;
+	n = strlen(me.g_maplistCache);
+	for (i = 0 ; i < n; i++)
+	{
+		if (me.g_maplistCacheQuery(me, i))
+			me.g_maplistCacheToggle(me, i);
+	}
+	me.refilter(me);
+}
+
+void MapList_Add_All(entity btn, entity me)
 {
 	float i;
 	string s;
@@ -250,7 +315,7 @@ void MapList_All(entity btn, entity me)
 	me.refilter(me);
 }
 
-void MapList_None(entity btn, entity me)
+void MapList_Remove_All(entity btn, entity me)
 {
 	cvar_set("g_maplist", "");
 	me.refilter(me);
@@ -275,7 +340,7 @@ void MapList_LoadMap(entity btn, entity me)
 	m = MapInfo_BSPName_ByID(i);
 	if (!m)
 	{
-		print(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
+		LOG_INFO(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
 		me.refilter(me);
 		return;
 	}
@@ -288,7 +353,7 @@ void MapList_LoadMap(entity btn, entity me)
 	}
 	else
 	{
-		print(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"));
+		LOG_INFO(_("Huh? Can't play this (invalid game type). Refiltering so this won't happen again.\n"));
 		me.refilter(me);
 		return;
 	}
@@ -359,9 +424,38 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 		if(MapInfo_FindName_firstResult >= 0)
 			me.setSelected(me, MapInfo_FindName_firstResult);
 	}
+	else if(shift & S_CTRL && scan == 'f') // ctrl-f (as in "F"ind)
+	{
+		me.parent.setFocus(me.parent, me.stringFilterBox);
+	}
+	else if(shift & S_CTRL && scan == 'u') // ctrl-u (remove stringFilter line
+	{
+		me.stringFilterBox.setText(me.stringFilterBox, "");
+		MapList_StringFilterBox_Change(me.stringFilterBox, me);
+	}
 	else
 		return SUPER(XonoticMapList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
 
+float MapList_StringFilterBox_keyDown(entity me, float scan, float ascii, float shift)
+{
+	// in this section, note that onChangeEntity has the ref to mapListBox
+	// we make use of that, instead of extending a class to add one more attrib
+	switch(scan)
+	{
+		case K_KP_ENTER:
+		case K_ENTER:
+			// move the focus to the mapListBox
+			me.onChangeEntity.parent.setFocus(me.onChangeEntity.parent, me.onChangeEntity);
+			return 1;
+		case K_KP_UPARROW:
+		case K_UPARROW:
+		case K_KP_DOWNARROW:
+		case K_DOWNARROW:
+			// pass the event to the mapListBox (to scroll up and down)
+			return me.onChangeEntity.keyDown(me.onChangeEntity, scan, ascii, shift);
+	}
+	return SUPER(XonoticInputBox).keyDown(me, scan, ascii, shift);
+}
 #endif

@@ -1,16 +1,18 @@
 #ifndef ACCURACY_H
 #define ACCURACY_H
 
-.float cvar_cl_accuracy_data_share;
-.float cvar_cl_accuracy_data_receive;
+.bool cvar_cl_accuracy_data_share;
+REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
+.bool cvar_cl_accuracy_data_receive;
+REPLICATE(cvar_cl_accuracy_data_receive, bool, "cl_accuracy_data_receive");
 
 .entity accuracy;
-.float accuracy_frags[WEP_MAXCOUNT];
+.float accuracy_frags[Weapons_MAX];
 
-.float accuracy_hit[WEP_MAXCOUNT];
-.float accuracy_fired[WEP_MAXCOUNT];
-.float accuracy_cnt_hit[WEP_MAXCOUNT];
-.float accuracy_cnt_fired[WEP_MAXCOUNT];
+.float accuracy_hit[Weapons_MAX];
+.float accuracy_fired[Weapons_MAX];
+.float accuracy_cnt_hit[Weapons_MAX];
+.float accuracy_cnt_fired[Weapons_MAX];
 
 
 // init/free
@@ -24,6 +26,6 @@ void accuracy_resend(entity e);
 void accuracy_add(entity e, float w, float fired, float hit);
 
 // helper
-float accuracy_isgooddamage(entity attacker, entity targ);
-float accuracy_canbegooddamage(entity attacker);
+bool accuracy_isgooddamage(entity attacker, entity targ);
+bool accuracy_canbegooddamage(entity attacker);
 #endif

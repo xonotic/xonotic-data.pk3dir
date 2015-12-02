@@ -1,0 +1,10 @@
+#ifndef CLIENT_CONTROLPOINT_H
+#define CLIENT_CONTROLPOINT_H
+
+const vector CPICON_MIN = '-32 -32 -9';
+const vector CPICON_MAX = '32 32 25';
+
+const int CPSF_STATUS = 4;
+const int CPSF_SETUP = 8;
+
+#endif

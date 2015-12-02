@@ -1,54 +1,6 @@
 #ifndef COMMON_UTIL_H
 #define COMMON_UTIL_H
 
-#ifdef QCC_SUPPORT_ACCUMULATE
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-	[[accumulate]] void func() { otherfunc(); }
-# define CALL_ACCUMULATED_FUNCTION(func) \
-	func()
-#else
-#ifdef HAVE_YO_DAWG_CPP
-// TODO make ascii art pic of xzibit
-// YO DAWG!
-// I HERD YO LIEK MACROS
-// SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION
-// SO YO CAN EXPAND MACROS WHILE YO EXPAND MACROS
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-	#ifdef func \
-	void __merge__##otherfunc() { func(); otherfunc(); } \
-	#undef func \
-	#define func __merge__##otherfunc \
-	#else \
-	#define func otherfunc \
-	#endif
-# define CALL_ACCUMULATED_FUNCTION(func) \
-	func()
-#else
-# define ACCUMULATE_FUNCTION(func,otherfunc) \
-	.float _ACCUMULATE_##func##__##otherfunc
-void ACCUMULATE_call(string func)
-{
-	float i;
-	float n = numentityfields();
-	string funcprefix = strcat("_ACCUMULATE_", func, "__");
-	float funcprefixlen = strlen(funcprefix);
-	for(i = 0; i < n; ++i)
-	{
-		string name = entityfieldname(i);
-		if(substring(name, 0, funcprefixlen) == funcprefix)
-			callfunction(substring(name, funcprefixlen, -1));
-	}
-}
-# define CALL_ACCUMULATED_FUNCTION(func) \
-	ACCUMULATE_call(#func)
-#endif
-#endif
-
-// used for simplifying ACCUMULATE_FUNCTIONs
-#define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
-#define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name,max,count,type) if(count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
-
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
 string wordwrap(string s, float l);
@@ -75,8 +27,6 @@ float median(float a, float b, float c);
 string ftos_decimals(float number, float decimals);
 
 bool fexists(string f);
-
-vector colormapPaletteColor(float c, float isPants);
 
 // unzone the string, and return it as tempstring. Safe to be called on string_null
 string fstrunzone(string s);
@@ -151,11 +101,6 @@ float almost_in_bounds(float a, float b, float c);
 float power2of(float e);
 float log2of(float x);
 
-const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
-#define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
-#define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
-#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
-
 vector rgb_to_hsl(vector rgb);
 vector hsl_to_rgb(vector hsl);
 vector rgb_to_hsv(vector rgb);
@@ -177,11 +122,6 @@ string getWrappedLine(float w, vector size, textLengthUpToWidth_widthFunction_t 
 string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
 
 float isGametypeInFilter(float gt, float tp, float ts, string pattern);
-
-typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
-typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
-void shuffle(float n, swapfunc_t swap, entity pass);
-void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass);
 
 string swapwords(string str, float i, float j);
 string shufflewords(string str);
@@ -205,14 +145,6 @@ string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply, monsterlist_re
 string records_reply[10];
 #endif
 
-float RandomSelection_totalweight;
-float RandomSelection_best_priority;
-entity RandomSelection_chosen_ent;
-float RandomSelection_chosen_float;
-string RandomSelection_chosen_string;
-void RandomSelection_Init();
-void RandomSelection_Add(entity e, float f, string s, float weight, float priority);
-
 #ifndef MENUQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
 vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage); // returns vector: take, save, 0
@@ -232,24 +164,12 @@ void WriteInt72_t(float dest, vector val);
 #endif
 #endif
 
-// the NULL function
-#ifdef QCC_SUPPORT_NIL
-#define func_null nil
-#define string_null nil
-#else
-var void func_null(void);
-string string_null;
-#endif
 float float2range11(float f);
 float float2range01(float f);
 
 float gsl_ran_gaussian(float sigma);
 
-string car(string s); // returns first word
-string cdr(string s); // returns all but first word
 float matchacl(string acl, string str); // matches str against ACL acl (with entries +foo*, +foo, +*foo, +*foo*, and same with - for forbidding)
-float startsWith(string haystack, string needle);
-float startsWithNocase(string haystack, string needle);
 
 string get_model_datafilename(string mod, float skn, string fil); // skin -1 will return wildcard, mod string_null will also put wildcard there
 string get_model_parameters_modelname;
@@ -269,8 +189,6 @@ float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
-vector vec2(vector v);
-
 #ifndef MENUQC
 vector NearestPointOnBox(entity box, vector org);
 #endif
@@ -279,12 +197,6 @@ float vercmp(string v1, string v2);
 
 float u8_strsize(string s);
 
-// translation helpers
-string prvm_language;
-string language_filename(string s);
-string CTX(string s);
-#define ZCTX(s) strzone(CTX(s))
-
 // x-encoding (encoding as zero length invisible string)
 // encodes approx. 14 bits into 5 bytes of color code string
 const float XENCODE_MAX = 21295; // 2*22*22*22-1
@@ -292,25 +204,11 @@ const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
 
-// Play all sounds via sound7, for access to the extra channels.
-// Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
-#define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
-
-int lowestbit(float f);
-
-#ifdef CSQC
-entity ReadCSQCEntity();
-#endif
-
 #ifndef MENUQC
 string strtolower(string s);
 #endif
 
 string MakeConsoleSafe(string input);
-
-#ifndef MENUQC
-float InterpretBoolean(string input);
-#endif
 
 // generic shutdown handler
 void Shutdown();
@@ -351,36 +249,12 @@ typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_
 typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
-#ifdef SVQC
-vector combine_to_vector(float x, float y, float z);
-vector get_corner_position(entity box, float corner);
-#endif
-
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
 // Some common varargs functions. Lowercase as they match C.
-#define printf(...) print(sprintf(__VA_ARGS__))
-#define dprintf(...) dprint(sprintf(__VA_ARGS__))
 #define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
-
-//#ifndef MENUQC
-void backtrace(string msg);
-//#endif
-
-// color code replace, place inside of sprintf and parse the string... defaults described as constants
-// foreground/normal colors
-string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
-string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
-string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
-string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
-// "kill" colors
-string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
-string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
-// background color
-string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
 
 string CCR(string input);
 
@@ -393,30 +267,12 @@ string CCR(string input);
 	#define normal_or_gentle(normal, gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
 #endif
 
-// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
-#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
-
-vector vec3(float x, float y, float z);
-
 #ifndef MENUQC
 vector animfixfps(entity e, vector a, vector b);
 #endif
 
 #ifdef SVQC
 void dedicated_print(string input);
-#endif
-
-// todo: better way to do this?
-#ifdef MENUQC
-#define PROGNAME "MENUQC"
-#else
-#ifdef SVQC
-#define PROGNAME "SVQC"
-#else
-#define PROGNAME "CSQC"
-#endif
 #endif
 
 #ifndef MENUQC

@@ -55,7 +55,7 @@ vector damage_explosion_calcpush(vector explosion_f, vector target_v, float spee
 	v = explosion_calcpush(explosion_f * speedfactor, m, target_v, 1, 0);
 	// the factor we then get is:
 	//   1
-	printf("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f\n",
+	LOG_INFOF("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f\n",
 		m,
 		target_v, target_v + v,
 		target_v * target_v, m * explosion_f * speedfactor * explosion_f * speedfactor, target_v * target_v + m * explosion_f * speedfactor * explosion_f * speedfactor,
@@ -140,6 +140,20 @@ vector findperpendicular(vector v)
 	p.y = -v.x;
 	p.z = v.y;
 	return normalize(cliptoplane(p, v));
+}
+
+int W_GetGunAlignment(entity player)
+{
+#ifdef SVQC
+	int gunalign = player.cvar_cl_gunalign;
+#else
+	int gunalign = autocvar_cl_gunalign;
+#endif
+	if(gunalign < 1 || gunalign > 4)
+		gunalign = 3; // default value
+	--gunalign;
+
+	return gunalign;
 }
 
 vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)

@@ -1,19 +1,23 @@
 #include "navigation.qh"
-#include "../_all.qh"
 
 #include "bot.qh"
 #include "waypoints.qh"
 
 #include "../t_items.qh"
 
+#include "../../common/items/all.qh"
+
 #include "../../common/constants.qh"
+#include "../../common/triggers/trigger/jumppads.qh"
+
+.float speed;
 
 void bot_debug(string input)
 {
 	switch(autocvar_bot_debug)
 	{
-		case 1: dprint(input); break;
-		case 2: print(input); break;
+		case 1: LOG_TRACE(input); break;
+		case 2: LOG_INFO(input); break;
 	}
 }
 
@@ -21,7 +25,7 @@ void bot_debug(string input)
 // can be traveled, used for waypoint linking and havocbot
 
 float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode)
-{
+{SELFPARAM();
 	vector org;
 	vector move;
 	vector dir;
@@ -231,7 +235,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 
 // completely empty the goal stack, used when deciding where to go
 void navigation_clearroute()
-{
+{SELFPARAM();
 	//print("bot ", etos(self), " clear\n");
 	self.navigation_hasgoals = false;
 	self.goalcurrent = world;
@@ -275,7 +279,7 @@ void navigation_clearroute()
 // That means, if the stack overflows, the bot will know how to do the FIRST 32
 // steps to the goal, and then recalculate the path.
 void navigation_pushroute(entity e)
-{
+{SELFPARAM();
 	//print("bot ", etos(self), " push ", etos(e), "\n");
 	self.goalstack31 = self.goalstack30;
 	self.goalstack30 = self.goalstack29;
@@ -315,7 +319,7 @@ void navigation_pushroute(entity e)
 // (in other words: remove a prerequisite for reaching the later goals)
 // (used when a spawnfunc_waypoint is reached)
 void navigation_poproute()
-{
+{SELFPARAM();
 	//print("bot ", etos(self), " pop\n");
 	self.goalcurrent = self.goalstack01;
 	self.goalstack01 = self.goalstack02;
@@ -397,7 +401,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	}
 
 	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org.z = ent.origin.z + ent.mins.z - PL_MIN_z; // player height
+	org.z = ent.origin.z + ent.mins.z - PL_MIN.z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
@@ -448,7 +452,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 
 // finds the waypoints near the bot initiating a navigation query
 float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist)
-{
+{SELFPARAM();
 	entity head;
 	vector v, m1, m2, diff;
 	float c;
@@ -519,7 +523,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 
 // queries the entire spawnfunc_waypoint network for pathes leading away from the bot
 void navigation_markroutes(entity fixed_source_waypoint)
-{
+{SELFPARAM();
 	entity w, wp, waylist;
 	float searching, cost, cost2;
 	vector p;
@@ -678,7 +682,7 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 
 // updates the best goal according to a weighted calculation of travel cost and item value of a new proposed item
 void navigation_routerating(entity e, float f, float rangebias)
-{
+{SELFPARAM();
 	entity nwp;
 	vector o;
 	if (!e)
@@ -720,7 +724,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 			float zdistance, xydistance, cost, t, fuel;
 			vector down, npa, npb;
 
-			down = '0 0 -1' * (PL_MAX_z - PL_MIN_z) * 10;
+			down = '0 0 -1' * (PL_MAX.z - PL_MIN.z) * 10;
 
 			do{
 				npa = pointa + down;
@@ -860,7 +864,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 // adds an item to the the goal stack with the path to a given item
 float navigation_routetogoal(entity e, vector startposition)
-{
+{SELFPARAM();
 	self.goalentity = e;
 
 	// if there is no goal, just exit
@@ -906,7 +910,7 @@ float navigation_routetogoal(entity e, vector startposition)
 // removes any currently touching waypoints from the goal stack
 // (this is how bots detect if they reached a goal)
 void navigation_poptouchedgoals()
-{
+{SELFPARAM();
 	vector org, m1, m2;
 	org = self.origin;
 	m1 = org + self.mins;
@@ -992,7 +996,7 @@ void navigation_poptouchedgoals()
 
 // begin a goal selection session (queries spawnfunc_waypoint network)
 void navigation_goalrating_start()
-{
+{SELFPARAM();
 	if(self.aistatus & AI_STATUS_STUCK)
 		return;
 
@@ -1006,7 +1010,7 @@ void navigation_goalrating_start()
 
 // ends a goal selection session (updates goal stack to the best goal)
 void navigation_goalrating_end()
-{
+{SELFPARAM();
 	if(self.aistatus & AI_STATUS_STUCK)
 		return;
 
@@ -1066,7 +1070,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 }
 
 void navigation_unstuck()
-{
+{SELFPARAM();
 	float search_radius = 1000;
 
 	if (!autocvar_bot_wander_enable)
@@ -1163,7 +1167,7 @@ void debugresetnodes()
 }
 
 void debugnode(vector node)
-{
+{SELFPARAM();
 	if (!IS_PLAYER(self))
 		return;
 
@@ -1206,7 +1210,7 @@ void debugnodestatus(vector position, float status)
 
 // Debug the goal stack visually
 void debuggoalstack()
-{
+{SELFPARAM();
 	entity goal;
 	vector org, go;
 

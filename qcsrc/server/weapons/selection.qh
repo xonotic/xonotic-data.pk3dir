@@ -29,5 +29,5 @@ void W_NextWeapon(float list);
 void W_PreviousWeapon(float list);
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(void);
+void W_LastWeapon();
 #endif

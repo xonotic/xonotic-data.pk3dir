@@ -1,5 +1,4 @@
 #include "scores_rules.qh"
-#include "_all.qh"
 
 #include "cl_client.qh"
 #include "scores.qh"
@@ -32,6 +31,9 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 
 	if(score_enabled)
 		ScoreInfo_SetLabel_PlayerScore(SP_SCORE,        "score",     sprio);
+		
+	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "damage", 0);
+	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "damagetaken", SFL_LOWER_IS_BETTER);
 }
 void ScoreRules_basics_end()
 {

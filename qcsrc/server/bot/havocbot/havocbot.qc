@@ -1,5 +1,4 @@
 #include "havocbot.qh"
-#include "../../_all.qh"
 
 #include "../aim.qh"
 #include "../bot.qh"
@@ -8,11 +7,16 @@
 #include "../waypoints.qh"
 
 #include "../../../common/constants.qh"
+#include "../../../common/items/all.qh"
 
-#include "../../../warpzonelib/common.qh"
+#include "../../../common/triggers/trigger/jumppads.qh"
+
+#include "../../../lib/warpzone/common.qh"
+
+.float speed;
 
 void havocbot_ai()
-{
+{SELFPARAM();
 	if(self.draggedby)
 		return;
 
@@ -100,7 +104,8 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			WEP_ACTION(self.weapon, WR_AIM);
+			Weapon w = get_weaponinfo(self.weapon);
+			w.wr_aim(w);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = false;
@@ -169,7 +174,7 @@ void havocbot_ai()
 			for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				entity e = get_weaponinfo(i);
-				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
+				if ((self.weapons & (e.m_wepset)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
 					self.switchweapon = i;
 			}
 		}
@@ -177,7 +182,7 @@ void havocbot_ai()
 }
 
 void havocbot_keyboard_movement(vector destorg)
-{
+{SELFPARAM();
 	vector keyboard;
 	float blend, maxspeed;
 	float sk;
@@ -252,7 +257,7 @@ void havocbot_keyboard_movement(vector destorg)
 }
 
 void havocbot_bunnyhop(vector dir)
-{
+{SELFPARAM();
 	float bunnyhopdistance;
 	vector deviation;
 	float maxspeed;
@@ -395,7 +400,7 @@ void havocbot_bunnyhop(vector dir)
 }
 
 void havocbot_movetogoal()
-{
+{SELFPARAM();
 	vector destorg;
 	vector diff;
 	vector dir;
@@ -475,7 +480,7 @@ void havocbot_movetogoal()
 
 		// Flying
 		self.BUTTON_HOOK = true;
-		if(self.navigation_jetpack_point.z - PL_MAX_z + PL_MIN_z < self.origin.z)
+		if(self.navigation_jetpack_point.z - PL_MAX.z + PL_MIN.z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
 			self.movement_y = dir * v_right * maxspeed;
@@ -535,7 +540,7 @@ void havocbot_movetogoal()
 				threshold = maxspeed * 0.2;
 				if(sxy < threshold)
 				{
-					dprint("Warning: ", self.netname, " got stuck on a jumppad (velocity in xy is ", ftos(sxy), "), trying to get out of it now\n");
+					LOG_TRACE("Warning: ", self.netname, " got stuck on a jumppad (velocity in xy is ", ftos(sxy), "), trying to get out of it now\n");
 					self.aistatus |= AI_STATUS_OUT_JUMPPAD;
 				}
 				return;
@@ -598,7 +603,7 @@ void havocbot_movetogoal()
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity.z < 0)
-			if(client_hasweapon(self, WEP_DEVASTATOR, true, false))
+			if(client_hasweapon(self, WEP_DEVASTATOR.m_id, true, false))
 			{
 				self.movement_x = maxspeed;
 
@@ -612,7 +617,7 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_DEVASTATOR;
+				self.switchweapon = WEP_DEVASTATOR.m_id;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
@@ -786,7 +791,7 @@ void havocbot_movetogoal()
 						if(tracebox_hits_trigger_hurt(dst_ahead, self.mins, self.maxs, trace_endpos))
 						{
 							// Remove dangerous dynamic goals from stack
-							dprint("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
+							LOG_TRACE("bot ", self.netname, " avoided the goal ", self.goalcurrent.classname, " ", etos(self.goalcurrent), " because it led to a dangerous path; goal stack cleared\n");
 							navigation_clearroute();
 							return;
 						}
@@ -852,9 +857,9 @@ void havocbot_movetogoal()
 }
 
 void havocbot_chooseenemy()
-{
+{SELFPARAM();
 	entity head, best, head2;
-	float rating, bestrating, i, hf;
+	float rating, bestrating, hf;
 	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 	{
@@ -906,10 +911,29 @@ void havocbot_chooseenemy()
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	for(i = 0; ; ++i)
+	bool scan_transparent = false;
+	bool scan_secondary_targets = false;
+	bool have_secondary_targets = false;
+	while(true)
 	{
-		while (head)
+		scan_secondary_targets = false;
+		:scan_targets
+		for( ; head; head = head.chain)
 		{
+			if(!scan_secondary_targets)
+			{
+				if(head.classname == "misc_breakablemodel")
+				{
+					have_secondary_targets = true;
+					continue;
+				}
+			}
+			else
+			{
+				if(head.classname != "misc_breakablemodel")
+					continue;
+			}
+
 			v = (head.absmin + head.absmax) * 0.5;
 			rating = vlen(v - eye);
 			if (rating<autocvar_bot_ai_enemydetectionradius)
@@ -923,20 +947,29 @@ void havocbot_chooseenemy()
 					bestrating = rating;
 				}
 			}
-			head = head.chain;
+		}
+
+		if(!best && have_secondary_targets && !scan_secondary_targets)
+		{
+			scan_secondary_targets = true;
+			// restart the loop
+			head = head2;
+			bestrating = 100000000;
+			goto scan_targets;
 		}
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_RIFLE
+		if(best || self.weapons) // || self.weapon == WEP_RIFLE.m_id
 			break;
-		if(i)
+		if(scan_transparent)
 			break;
 
 		// Set flags to see through transparent objects
 		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
+		scan_transparent = true;
 	}
 
 	// Restore hit flags
@@ -944,10 +977,12 @@ void havocbot_chooseenemy()
 
 	self.enemy = best;
 	self.havocbot_stickenemy = true;
+	if(best && best.classname == "misc_breakablemodel")
+		self.havocbot_stickenemy = false;
 }
 
 float havocbot_chooseweapon_checkreload(int new_weapon)
-{
+{SELFPARAM();
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
 	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
@@ -960,8 +995,9 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 		float i, other_weapon_available = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
+			Weapon w = get_weaponinfo(i);
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (WEP_ACTION(i, WR_CHECKAMMO1) + WEP_ACTION(i, WR_CHECKAMMO2))
+			if (w.wr_checkammo1(w) + w.wr_checkammo2(w))
 				other_weapon_available = true;
 		}
 		if(other_weapon_available)
@@ -972,13 +1008,13 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 }
 
 void havocbot_chooseweapon()
-{
+{SELFPARAM();
 	int i;
 
 	// ;)
-	if(g_weaponarena_weapons == WEPSET_TUBA)
+	if(g_weaponarena_weapons == WEPSET(TUBA))
 	{
-		self.switchweapon = WEP_TUBA;
+		self.switchweapon = WEP_TUBA.m_id;
 		return;
 	}
 
@@ -987,7 +1023,7 @@ void havocbot_chooseweapon()
 	{
 		// If no weapon was chosen get the first available weapon
 		if(self.weapon==0)
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER)
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER.m_id)
 		{
 			if(client_hasweapon(self, i, true, false))
 			{
@@ -1009,7 +1045,7 @@ void havocbot_chooseweapon()
 	// Should it do a weapon combo?
 	float af, ct, combo_time, combo;
 
-	af = ATTACK_FINISHED(self);
+	af = ATTACK_FINISHED(self, 0);
 	ct = autocvar_bot_ai_weapon_combo_threshold;
 
 	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos
@@ -1033,7 +1069,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for far distance
 		if ( distance > bot_distance_far ) {
-			for(i=0; i < WEP_COUNT && bot_weapons_far[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1047,7 +1083,7 @@ void havocbot_chooseweapon()
 
 		// Choose weapons for mid distance
 		if ( distance > bot_distance_close) {
-			for(i=0; i < WEP_COUNT && bot_weapons_mid[i] != -1 ; ++i){
+			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
 				if ( client_hasweapon(self, w, true, false) )
 				{
@@ -1060,7 +1096,7 @@ void havocbot_chooseweapon()
 		}
 
 		// Choose weapons for close distance
-		for(i=0; i < WEP_COUNT && bot_weapons_close[i] != -1 ; ++i){
+		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
 			if ( client_hasweapon(self, w, true, false) )
 			{
@@ -1074,7 +1110,7 @@ void havocbot_chooseweapon()
 }
 
 void havocbot_aim()
-{
+{SELFPARAM();
 	vector selfvel, enemyvel;
 //	if(self.flags & FL_INWATER)
 //		return;
@@ -1096,7 +1132,7 @@ void havocbot_aim()
 }
 
 float havocbot_moveto_refresh_route()
-{
+{SELFPARAM();
 	// Refresh path to goal if necessary
 	entity wp;
 	wp = self.havocbot_personal_waypoint;
@@ -1107,7 +1143,7 @@ float havocbot_moveto_refresh_route()
 }
 
 float havocbot_moveto(vector pos)
-{
+{SELFPARAM();
 	entity wp;
 
 	if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
@@ -1115,7 +1151,7 @@ float havocbot_moveto(vector pos)
 		// Step 4: Move to waypoint
 		if(self.havocbot_personal_waypoint==world)
 		{
-			dprint("Error: ", self.netname, " trying to walk to a non existent personal waypoint\n");
+			LOG_TRACE("Error: ", self.netname, " trying to walk to a non existent personal waypoint\n");
 			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			return CMD_STATUS_ERROR;
 		}
@@ -1126,7 +1162,7 @@ float havocbot_moveto(vector pos)
 			bot_strategytoken_taken = true;
 			if(havocbot_moveto_refresh_route())
 			{
-				dprint(self.netname, " walking to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts)\n");
+				LOG_TRACE(self.netname, " walking to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts)\n");
 				self.havocbot_personal_waypoint_searchtime = time + 10;
 				self.havocbot_personal_waypoint_failcounter = 0;
 			}
@@ -1136,13 +1172,13 @@ float havocbot_moveto(vector pos)
 				self.havocbot_personal_waypoint_searchtime = time + 2;
 				if(self.havocbot_personal_waypoint_failcounter >= 30)
 				{
-					dprint("Warning: can't walk to the personal waypoint located at ", vtos(self.havocbot_personal_waypoint.origin),"\n");
+					LOG_TRACE("Warning: can't walk to the personal waypoint located at ", vtos(self.havocbot_personal_waypoint.origin),"\n");
 					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 					remove(self.havocbot_personal_waypoint);
 					return CMD_STATUS_ERROR;
 				}
 				else
-					dprint(self.netname, " can't walk to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts), trying later\n");
+					LOG_TRACE(self.netname, " can't walk to its personal waypoint (after ", ftos(self.havocbot_personal_waypoint_failcounter), " failed attempts), trying later\n");
 			}
 		}
 
@@ -1160,7 +1196,7 @@ float havocbot_moveto(vector pos)
 		if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_REACHED)
 		{
 			// Step 5: Waypoint reached
-			dprint(self.netname, "'s personal waypoint reached\n");
+			LOG_TRACE(self.netname, "'s personal waypoint reached\n");
 			remove(self.havocbot_personal_waypoint);
 			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			return CMD_STATUS_FINISHED;
@@ -1175,7 +1211,7 @@ float havocbot_moveto(vector pos)
 		// Wait until it is linked
 		if(!self.havocbot_personal_waypoint.wplinked)
 		{
-			dprint(self.netname, " waiting for personal waypoint to be linked\n");
+			LOG_TRACE(self.netname, " waiting for personal waypoint to be linked\n");
 			return CMD_STATUS_EXECUTING;
 		}
 
@@ -1184,7 +1220,7 @@ float havocbot_moveto(vector pos)
 		self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_GOING;
 
 		// Step 3: Route to waypoint
-		dprint(self.netname, " walking to its personal waypoint\n");
+		LOG_TRACE(self.netname, " walking to its personal waypoint\n");
 
 		return CMD_STATUS_EXECUTING;
 	}
@@ -1193,7 +1229,7 @@ float havocbot_moveto(vector pos)
 	wp = waypoint_spawnpersonal(pos);
 	if(wp==world)
 	{
-		dprint("Error: Can't spawn personal waypoint at ",vtos(pos),"\n");
+		LOG_TRACE("Error: Can't spawn personal waypoint at ",vtos(pos),"\n");
 		return CMD_STATUS_ERROR;
 	}
 
@@ -1229,7 +1265,7 @@ float havocbot_resetgoal()
 }
 
 void havocbot_setupbot()
-{
+{SELFPARAM();
 	self.bot_ai = havocbot_ai;
 	self.cmd_moveto = havocbot_moveto;
 	self.cmd_resetgoal = havocbot_resetgoal;
@@ -1238,7 +1274,7 @@ void havocbot_setupbot()
 }
 
 vector havocbot_dodge()
-{
+{SELFPARAM();
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
 #if 0

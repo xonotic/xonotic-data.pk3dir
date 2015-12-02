@@ -2,13 +2,13 @@
 #define LANGUAGELIST_H
 #include "listbox.qc"
 CLASS(XonoticLanguageList, XonoticListBox)
-	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity))
+	METHOD(XonoticLanguageList, configureXonoticLanguageList, void(entity));
 	ATTRIB(XonoticLanguageList, rowsPerItem, float, 1)
-	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticLanguageList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticLanguageList, setSelected, void(entity, float))
-	METHOD(XonoticLanguageList, loadCvars, void(entity))
-	METHOD(XonoticLanguageList, saveCvars, void(entity))
+	METHOD(XonoticLanguageList, drawListBoxItem, void(entity, int, vector, bool, bool));
+	METHOD(XonoticLanguageList, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticLanguageList, setSelected, void(entity, float));
+	METHOD(XonoticLanguageList, loadCvars, void(entity));
+	METHOD(XonoticLanguageList, saveCvars, void(entity));
 
 	ATTRIB(XonoticLanguageList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticLanguageList, realUpperMargin, float, 0)
@@ -17,15 +17,15 @@ CLASS(XonoticLanguageList, XonoticListBox)
 	ATTRIB(XonoticLanguageList, columnPercentageOrigin, float, 0)
 	ATTRIB(XonoticLanguageList, columnPercentageSize, float, 0)
 
-	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float)) // enter handling
+	METHOD(XonoticLanguageList, doubleClickListBoxItem, void(entity, float, vector));
+	METHOD(XonoticLanguageList, keyDown, float(entity, float, float, float)); // enter handling
 
-	METHOD(XonoticLanguageList, destroy, void(entity))
+	METHOD(XonoticLanguageList, destroy, void(entity));
 
 	ATTRIB(XonoticLanguageList, languagelist, float, -1)
-	METHOD(XonoticLanguageList, getLanguages, void(entity))
-	METHOD(XonoticLanguageList, setLanguage, void(entity))
-	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float))
+	METHOD(XonoticLanguageList, getLanguages, void(entity));
+	METHOD(XonoticLanguageList, setLanguage, void(entity));
+	METHOD(XonoticLanguageList, languageParameter, string(entity, float, float));
 
 	ATTRIB(XonoticLanguageList, name, string, "languageselector") // change this to make it noninteractive (for first run dialog)
 ENDCLASS(XonoticLanguageList)
@@ -57,11 +57,16 @@ void XonoticLanguageList_configureXonoticLanguageList(entity me)
 	me.loadCvars(me);
 }
 
-void XonoticLanguageList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticLanguageList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s, p;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.languageParameter(me, i, LANGPARM_NAME_LOCALIZED);
 
@@ -116,17 +121,17 @@ void XonoticLanguageList_loadCvars(entity me)
 	{
 		if(me.languageParameter(me, i, LANGPARM_ID) == "en")
 		{
-			me.selectedItem = i;
+			SUPER(XonoticLanguageList).setSelected(me, i);
 			break;
 		}
 	}
 
-        // otherwise, find the language
+	// otherwise, find the language
 	for(i = 0; i < n; ++i)
 	{
 		if(me.languageParameter(me, i, LANGPARM_ID) == s)
 		{
-			me.selectedItem = i;
+			SUPER(XonoticLanguageList).setSelected(me, i);
 			break;
 		}
 	}
@@ -179,15 +184,10 @@ void XonoticLanguageList_getLanguages(entity me)
 			continue;
 		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_ID, argv(0));
 		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME, argv(1));
-		float k = strstrofs(argv(2), "(", 0);
-		if(k > 0)
-		if(substring(argv(2), strlen(argv(2)) - 1, 1) == ")")
-		{
-			string percent = substring(argv(2), k + 1, -2);
-			if(percent != "100%")
-				bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_PERCENTAGE, percent);
-		}
-		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME_LOCALIZED, (k < 0) ? argv(2) : substring(argv(2), 0, k - 1));
+		bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_NAME_LOCALIZED, argv(2));
+		string percent = argv(3);
+		if(percent && percent != "100%")
+			bufstr_set(buf, i * LANGPARM_COUNT + LANGPARM_PERCENTAGE, percent);
 		++i;
 	}
 	fclose(fh);

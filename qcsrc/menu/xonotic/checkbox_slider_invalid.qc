@@ -2,9 +2,9 @@
 #define CHECKBOX_SLIDER_INVALID_H
 #include "../item/checkbox.qc"
 CLASS(XonoticSliderCheckBox, CheckBox)
-	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string))
-	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float))
-	METHOD(XonoticSliderCheckBox, draw, void(entity))
+	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string));
+	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float));
+	METHOD(XonoticSliderCheckBox, draw, void(entity));
 	ATTRIB(XonoticSliderCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticSliderCheckBox, image, string, SKINGFX_CHECKBOX)
 
@@ -43,8 +43,8 @@ void XonoticSliderCheckBox_configureXonoticSliderCheckBox(entity me, float theOf
 		me.savedValue = theControlledSlider.valueMin;
 	me.controlledSlider = theControlledSlider;
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
-	me.tooltip = theControlledSlider.tooltip;
 	me.cvarName = theControlledSlider.cvarName; // in case we want to display the cvar in the tooltip
+	me.tooltip = theControlledSlider.tooltip;
 }
 void XonoticSliderCheckBox_draw(entity me)
 {

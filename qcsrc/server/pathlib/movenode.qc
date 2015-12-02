@@ -1,10 +1,11 @@
-#include "../_all.qh"
 
 #include "pathlib.qh"
 #include "utility.qh"
 
+.vector	pos1, pos2;
+
 vector pathlib_wateroutnode(vector start,vector end, float doedge)
-{
+{SELFPARAM();
     vector surface;
 
     pathlib_movenode_goodnode = 0;
@@ -38,7 +39,7 @@ vector pathlib_wateroutnode(vector start,vector end, float doedge)
 }
 
 vector pathlib_swimnode(vector start,vector end, float doedge)
-{
+{SELFPARAM();
     pathlib_movenode_goodnode = 0;
 
     if(pointcontents(start) != CONTENT_WATER)
@@ -58,7 +59,7 @@ vector pathlib_swimnode(vector start,vector end, float doedge)
 }
 
 vector pathlib_flynode(vector start,vector end, float doedge)
-{
+{SELFPARAM();
     pathlib_movenode_goodnode = 0;
 
     end.x = fsnap(end.x, pathlib_gridsize);
@@ -72,7 +73,7 @@ vector pathlib_flynode(vector start,vector end, float doedge)
 }
 
 void a_think()
-{
+{SELFPARAM();
     te_lightning1(self,self.origin, self.pos1);
     if(self.cnt < time)
         remove(self);
@@ -81,11 +82,11 @@ void a_think()
 }
 
 vector pathlib_walknode(vector start,vector end,float doedge)
-{
+{SELFPARAM();
     vector direction,point,last_point,s,e;
     float steps, distance, i;
 
-    dprint("Walking node from ", vtos(start), " to ", vtos(end), "\n");
+    LOG_TRACE("Walking node from ", vtos(start), " to ", vtos(end), "\n");
 
     pathlib_movenode_goodnode = 0;
 
@@ -107,7 +108,7 @@ vector pathlib_walknode(vector start,vector end,float doedge)
         //start - movenode_maxdrop
         a.cnt = time + 10;
 
-        dprint("I cant walk on air!\n");
+        LOG_TRACE("I cant walk on air!\n");
         return trace_endpos;
     }
 

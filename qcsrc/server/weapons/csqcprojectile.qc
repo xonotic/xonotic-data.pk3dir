@@ -1,16 +1,15 @@
 #include "csqcprojectile.qh"
-#include "../_all.qh"
 
 #include "../t_items.qh"
 
 #include "../command/common.qh"
 
 #include "../../common/constants.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/weapons/all.qh"
 
 .float csqcprojectile_type;
 
-bool CSQCProjectile_SendEntity(entity to, int sf)
+bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 {
 	float ft, fr;
 
@@ -35,7 +34,7 @@ bool CSQCProjectile_SendEntity(entity to, int sf)
 	if(self.gravity != 0)
 		sf |= 0x10;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_PROJECTILE);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
@@ -99,13 +98,13 @@ void CSQCProjectile(entity e, float clientanimate, int type, float docull)
 
 void UpdateCSQCProjectile(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(e.SendEntity3 == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;
 	}
 // FIXME HACK
-	else if(e.SendEntity == ItemSend)
+	else if(e.SendEntity3 == ItemSend)
 	{
 		ItemUpdate(e);
 	}
@@ -114,7 +113,7 @@ void UpdateCSQCProjectile(entity e)
 
 void UpdateCSQCProjectileAfterTeleport(entity e)
 {
-	if(e.SendEntity == CSQCProjectile_SendEntity)
+	if(e.SendEntity3 == CSQCProjectile_SendEntity)
 	{
 		// send new origin data
 		e.SendFlags |= 0x01;

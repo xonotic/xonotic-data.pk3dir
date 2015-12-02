@@ -1,5 +1,5 @@
-#ifndef BGMSCRIPT_H
-#define BGMSCRIPT_H
+#ifndef CLIENT_BGMSCRIPT_H
+#define CLIENT_BGMSCRIPT_H
 
 entityclass(BGMScript);
 class(BGMScript) .string bgmscript;
@@ -10,6 +10,9 @@ class(BGMScript) .float bgmscriptrelease;
 
 class(BGMScript) .float just_toggled;
 
+#ifdef CSQC
 void BGMScript_InitEntity(entity e);
 float doBGMScript(entity e);
+#endif
+
 #endif

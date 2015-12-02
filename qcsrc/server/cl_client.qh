@@ -8,6 +8,6 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 float Spectate(entity pl);
 
-void CTS_ClientKill (entity e);
+#define SPECTATE_COPY(fld) [[accumulate]] void SpectateCopy(entity this, entity spectatee) { this.(fld) = spectatee.(fld); }
 
 #endif

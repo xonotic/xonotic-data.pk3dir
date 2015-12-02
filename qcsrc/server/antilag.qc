@@ -1,9 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "vehicles/vehicle.qh"
+    #include "../common/vehicles/all.qh"
     #include "antilag.qh"
 #endif
 
@@ -56,11 +54,6 @@ float antilag_find(entity e, float t)
 
 	// if we get here, t is sandwiched nowhere, so let's assume it's in the present
 	return -1;
-}
-
-vector lerpv(float t0, vector v0, float t1, vector v1, float t)
-{
-	return v0 + (v1 - v0) * ((t - t0) / (t1 - t0));
 }
 
 vector antilag_takebackorigin(entity e, float t)

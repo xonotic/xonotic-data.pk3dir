@@ -1,8 +1,6 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "defs.qh"
     #include "playerdemo.qh"
 #endif
@@ -15,20 +13,20 @@ const float PLAYERDEMO_MODE_OFF = 0;
 const float PLAYERDEMO_MODE_READING = 1;
 const float PLAYERDEMO_MODE_WRITING = 2;
 void playerdemo_init()
-{
+{SELFPARAM();
 	self.playerdemo_mode = PLAYERDEMO_MODE_OFF;
 }
 void playerdemo_shutdown()
-{
+{SELFPARAM();
 	if(self.playerdemo_mode != PLAYERDEMO_MODE_OFF)
 	{
-		print("playerdemo: ", self.netname, " closed\n");
+		LOG_INFO("playerdemo: ", self.netname, " closed\n");
 		fclose(self.playerdemo_fh);
 	}
 	self.playerdemo_mode = 0;
 }
 void playerdemo_open_read(string f)
-{
+{SELFPARAM();
 	playerdemo_shutdown();
 	self.playerdemo_mode = PLAYERDEMO_MODE_READING;
 	self.playerdemo_fh = fopen(f, FILE_READ);
@@ -36,16 +34,16 @@ void playerdemo_open_read(string f)
 	self.playerdemo_time = stof(fgets(self.playerdemo_fh));
 	self.playerdemo_time += self.playerdemo_starttime;
 	self.movetype = MOVETYPE_NONE;
-	print("playerdemo: ", self.netname, " reading from ", f, "\n");
+	LOG_INFO("playerdemo: ", self.netname, " reading from ", f, "\n");
 }
 void playerdemo_open_write(string f)
-{
+{SELFPARAM();
 	playerdemo_shutdown();
 	self.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
 	self.playerdemo_fh = fopen(f, FILE_WRITE);
 	self.playerdemo_starttime = time - 1;
-	print("playerdemo: ", self.netname, " writing to ", f, "\n");
-	print("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
+	LOG_INFO("playerdemo: ", self.netname, " writing to ", f, "\n");
+	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
 }
 #define PLAYERDEMO_FIELD(func,t,f) func##t(f,#f);
 #define PLAYERDEMO_FIELDS(func) \
@@ -70,51 +68,51 @@ void playerdemo_open_write(string f)
 	// end of list
 
 void playerdemo_write_originvector(.vector f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_sizevector(.vector f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_vector(.vector f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
 }
 void playerdemo_write_string(.string f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_modelstring(.string f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
 }
 void playerdemo_write_float(.float f, string name)
-{
+{SELFPARAM();
 	fputs(self.playerdemo_fh, strcat(ftos(self.(f)), "\n"));
 }
 void playerdemo_write()
-{
+{SELFPARAM();
 	if(self.playerdemo_mode != PLAYERDEMO_MODE_WRITING)
 		return;
 	fputs(self.playerdemo_fh, strcat(ftos(time - self.playerdemo_starttime), "\n"));
 	PLAYERDEMO_FIELDS(playerdemo_write_)
 }
 void playerdemo_read_originvector(.vector f, string name)
-{
+{SELFPARAM();
 	setorigin(self, stov(fgets(self.playerdemo_fh)));
 }
 void playerdemo_read_sizevector(.vector f, string name)
-{
+{SELFPARAM();
 	self.(f) = stov(fgets(self.playerdemo_fh));
 	setsize(self, self.mins, self.maxs);
 }
 void playerdemo_read_vector(.vector f, string name)
-{
+{SELFPARAM();
 	self.(f) = stov(fgets(self.playerdemo_fh));
 }
 void playerdemo_read_string(.string f, string name)
-{
+{SELFPARAM();
 	string s = fgets(self.playerdemo_fh);
 	if (s != self.(f))
 	{
@@ -126,41 +124,41 @@ void playerdemo_read_string(.string f, string name)
 	}
 }
 void playerdemo_read_modelstring(.string f, string name)
-{
+{SELFPARAM();
 	string s = fgets(self.playerdemo_fh);
 	if (s != self.(f))
-		setmodel(self, s);
+		_setmodel(self, s);
 }
 void playerdemo_read_float(.float f, string name)
-{
+{SELFPARAM();
 	self.(f) = stof(fgets(self.playerdemo_fh));
 }
-float playerdemo_read()
+float playerdemo_read(entity this)
 {
-	if(self.playerdemo_mode != PLAYERDEMO_MODE_READING)
+	if(this.playerdemo_mode != PLAYERDEMO_MODE_READING)
 		return 0;
-	if(self.playerdemo_time < 0)
+	if(this.playerdemo_time < 0)
 		return 1;
 	float t;
 	t = time;
-	while(time >= self.playerdemo_time)
+	while(time >= this.playerdemo_time)
 	{
 		PLAYERDEMO_FIELDS(playerdemo_read_)
 		{
-			time = self.playerdemo_time;
-			PlayerPreThink();
+			time = this.playerdemo_time;
+			WITH(entity, this, this, PlayerPreThink());
 			// not running physics though... this is just so we can run weapon stuff
-			PlayerPostThink();
+			WITH(entity, this, this, PlayerPostThink());
 		}
-		self.playerdemo_time = stof(fgets(self.playerdemo_fh));
-		if(self.playerdemo_time == 0)
+		this.playerdemo_time = stof(fgets(this.playerdemo_fh));
+		if(this.playerdemo_time == 0)
 		{
-			self.playerdemo_time = -1;
+			this.playerdemo_time = -1;
 			return 1;
 		}
-		self.playerdemo_time += self.playerdemo_starttime;
+		this.playerdemo_time += this.playerdemo_starttime;
 	}
-	self.velocity = '0 0 0';
+	this.velocity = '0 0 0';
 	time = t;
 	return 1;
 }

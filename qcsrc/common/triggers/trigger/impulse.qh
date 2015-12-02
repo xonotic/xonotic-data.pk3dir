@@ -1,0 +1,10 @@
+#ifndef TRIGGER_IMPULSE_H
+#define TRIGGER_IMPULSE_H
+
+// tZorks trigger impulse / gravity
+.float radius;
+.float falloff;
+.float strength;
+.float lastpushtime;
+
+#endif

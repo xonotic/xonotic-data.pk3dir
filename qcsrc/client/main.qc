@@ -1,93 +1,46 @@
 #include "main.qh"
-#include "_all.qh"
 
-#include "casings.qh"
-#include "csqcmodel_hooks.qh"
-#include "damage.qh"
-#include "effects.qh"
-#include "gibs.qh"
+#include "../common/effects/qc/all.qh"
 #include "hook.qh"
-#include "hud.qh"
-#include "hud_config.qh"
-#include "laser.qh"
+#include "hud/all.qh"
 #include "mapvoting.qh"
-#include "modeleffects.qh"
-#include "particles.qh"
-#include "prandom.qh"
+#include "mutators/events.qh"
+#include "quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "sortlist.qh"
-#include "target_music.qh"
-#include "tturrets.qh"
 #include "tuba.qh"
 #include "t_items.qh"
 #include "wall.qh"
-#include "waypointsprites.qh"
-
-#include "vehicles/bumblebee.qh"
-#include "vehicles/vehicles.qh"
-
 #include "weapons/projectile.qh"
-
-#include "../common/buffs.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
+#include "../common/items/all.qh"
 #include "../common/mapinfo.qh"
-#include "../common/monsters/monsters.qh"
-#include "../common/nades.qh"
+#include "../common/minigames/cl_minigames.qh"
+#include "../common/minigames/cl_minigames_hud.qh"
 #include "../common/net_notice.qh"
-#include "../common/notifications.qh"
-#include "../common/stats.qh"
-#include "../common/teams.qh"
-
-#include "../common/weapons/weapons.qh"
-
-#include "../csqcmodellib/cl_model.qh"
-#include "../csqcmodellib/interpolate.qh"
-
-#include "../warpzonelib/client.qh"
+#include "../common/triggers/include.qh"
+#include "../common/vehicles/all.qh"
+#include "../lib/csqcmodel/cl_model.qh"
+#include "../lib/csqcmodel/interpolate.qh"
+#include "../lib/warpzone/client.qh"
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
-entity clearentity_ent;
-void clearentity(entity e)
-{
-	if (!clearentity_ent)
-	{
-		clearentity_ent = spawn();
-		clearentity_ent.classname = "clearentity";
-	}
-	int n = e.entnum;
-	copyentity(clearentity_ent, e);
-	e.entnum = n;
-}
-
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-void menu_show_error()
-{
-	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
-}
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void menu_sub_null()
-{
-}
-
-string forcefog;
-void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
-void CSQC_Init(void)
+void CSQC_Init()
 {
-	prvm_language = cvar_string("prvm_language");
+	prvm_language = strzone(cvar_string("prvm_language"));
 
 #ifdef WATERMARK
-	dprintf("^4CSQC Build information: ^1%s\n", WATERMARK);
+	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
-
-	int i;
 
 	binddb = db_create();
 	tempdb = db_create();
@@ -95,14 +48,14 @@ void CSQC_Init(void)
 	compressShortVector_init();
 
 	draw_endBoldFont();
-	menu_visible = false;
-	menu_show = menu_show_error;
-	menu_action = func_null;
 
-	for(i = 0; i < 255; ++i)
-		if(getplayerkeyvalue(i, "viewentity") == "")
-			break;
-	maxclients = i;
+	{
+		int i = 0;
+		for ( ; i < 255; ++i)
+			if (getplayerkeyvalue(i, "viewentity") == "")
+				break;
+		maxclients = i;
+	}
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
@@ -116,10 +69,17 @@ void CSQC_Init(void)
 	registercvar("cl_nade_type", "3");
 	registercvar("cl_pokenade_type", "zombie");
 
+	registercvar("cl_jumpspeedcap_min", "");
+	registercvar("cl_jumpspeedcap_max", "");
+
+	registercvar("cl_multijump", "0");
+
+	registercvar("cl_spawn_near_teammate", "1");
+
 	gametype = 0;
 
 	// hud_fields uses strunzone on the titles!
-	for(i = 0; i < MAX_HUD_FIELDS; ++i)
+	for(int i = 0; i < MAX_HUD_FIELDS; ++i)
 		hud_title[i] = strzone("(null)");
 
 	Cmd_HUD_SetFields(0);
@@ -134,29 +94,11 @@ void CSQC_Init(void)
 	GetTeam(NUM_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
-	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
-	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
-	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
-
-	WaypointSprite_Load();
+	static_init();
+	static_init_late();
+	static_init_precache();
 
 	// precaches
-	precache_model("null");
-	precache_sound("misc/hit.wav");
-	precache_sound("misc/typehit.wav");
-
-	Projectile_Precache();
-	Hook_Precache();
-	GibSplash_Precache();
-	Casings_Precache();
-	Vehicles_Precache();
-	turrets_precache();
-	Tuba_Precache();
-	CSQCPlayer_Precache();
 
 	if(autocvar_cl_reticle)
 	{
@@ -164,32 +106,32 @@ void CSQC_Init(void)
 		// weapon reticles are precached in weapon files
 	}
 
-	get_mi_min_max_texcoords(1); // try the CLEVER way first
-	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
-	shortmapname = mi_shortname;
-
-	if(precache_pic(minimapname) == "")
 	{
-		// but maybe we have a non-clever minimap
-		minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
-		if(precache_pic(minimapname) == "")
-			minimapname = ""; // FAIL
-		else
-			get_mi_min_max_texcoords(0); // load new texcoords
+		get_mi_min_max_texcoords(1); // try the CLEVER way first
+		minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
+		shortmapname = mi_shortname;
+
+		if (precache_pic(minimapname) == "")
+		{
+			// but maybe we have a non-clever minimap
+			minimapname = strcat("gfx/", mi_shortname, "_mini.tga");
+			if (precache_pic(minimapname) == "")
+				minimapname = ""; // FAIL
+			else
+				get_mi_min_max_texcoords(0); // load new texcoords
+		}
+
+		mi_center = (mi_min + mi_max) * 0.5;
+		mi_scale = mi_max - mi_min;
+		minimapname = strzone(minimapname);
 	}
-
-	mi_center = (mi_min + mi_max) * 0.5;
-	mi_scale = mi_max - mi_min;
-	minimapname = strzone(minimapname);
-
-	WarpZone_Init();
 
 	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
 	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-void Shutdown(void)
+void Shutdown()
 {
 	WarpZone_Shutdown();
 
@@ -217,6 +159,9 @@ void Shutdown(void)
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
+
+	deactivate_minigame();
+	HUD_MinigameMenu_Close();
 }
 
 .float has_team;
@@ -236,7 +181,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					dprintf("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -252,7 +197,7 @@ float SetTeam(entity o, int Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					dprintf("trying to switch to unsupported team %d\n", Team);
+					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -293,12 +238,13 @@ float SetTeam(entity o, int Team)
 
 void Playerchecker_Think()
 {
+	SELFPARAM();
     int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
 	{
 		e = playerslots[i];
-		if(GetPlayerName(i) == "")
+		if(entcs_GetName(i) == "")
 		{
 			if(e.sort_prev)
 			{
@@ -315,27 +261,30 @@ void Playerchecker_Think()
 			{
 				// player connected
 				if (!e)
-					playerslots[i] = e = spawn();
+				{
+					playerslots[i] = e = new(playerslot);
+					make_pure(e);
+				}
 				e.sv_entnum = i;
 				e.ping = 0;
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				SetTeam(e, entcs_GetTeam(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
 				HUD_UpdatePlayerPos(e);
 			}
 		}
 	}
-	self.nextthink = time + 0.2;
+	this.nextthink = time + 0.2;
 }
 
 void Porto_Init();
 void TrueAim_Init();
-void PostInit(void)
+void PostInit()
 {
-	entity playerchecker;
-	playerchecker = spawn();
+	entity playerchecker = new(playerchecker);
+	make_pure(playerchecker);
 	playerchecker.think = Playerchecker_Think;
 	playerchecker.nextthink = time + 0.2;
 
@@ -354,20 +303,22 @@ void PostInit(void)
 // In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-	float bSkipKey;
-	bSkipKey = false;
-
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
-	if(menu_visible && menu_action)
-		if(menu_action(bInputType, nPrimary, nSecondary))
-			return true;
+	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
 
-	return bSkipKey;
+	return false;
 }
 
 // END REQUIRED CSQC FUNCTIONS
@@ -375,85 +326,53 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-void Ent_RemoveEntCS()
-{
-	entcs_receiver[self.sv_entnum] = world;
-}
-void Ent_ReadEntCS()
-{
-    int sf;
-	InterpolateOrigin_Undo();
-
-	self.classname = "entcs_receiver";
-	sf = ReadByte();
-
-	if(sf & 1)
-		self.sv_entnum = ReadByte();
-	if(sf & 2)
-	{
-		self.origin_x = ReadShort();
-		self.origin_y = ReadShort();
-		self.origin_z = ReadShort();
-		setorigin(self, self.origin);
-	}
-	if(sf & 4)
-	{
-		self.angles_y = ReadByte() * 360.0 / 256;
-		self.angles_x = self.angles_z = 0;
-	}
-	if(sf & 8)
-		self.healthvalue = ReadByte() * 10;
-	if(sf & 16)
-		self.armorvalue = ReadByte() * 10;
-
-	entcs_receiver[self.sv_entnum] = self;
-	self.entremove = Ent_RemoveEntCS;
-	self.iflags |= IFLAG_ORIGIN;
-
-	InterpolateOrigin_Note();
-}
 
 void Ent_Remove();
 
 void Ent_RemovePlayerScore()
 {
-	if(self.owner) {
-		SetTeam(self.owner, -1);
-		self.owner.gotscores = 0;
+	SELFPARAM();
+	if(this.owner) {
+		SetTeam(this.owner, -1);
+		this.owner.gotscores = 0;
 		for(int i = 0; i < MAX_SCORE; ++i) {
-			self.owner.(scores[i]) = 0; // clear all scores
+			this.owner.(scores[i]) = 0; // clear all scores
 		}
 	}
 }
 
-void Ent_ReadPlayerScore()
+NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 {
+	make_pure(this);
 	int i, n;
 	bool isNew;
 	entity o;
 
 	// damnit -.- don't want to go change every single .sv_entnum in hud.qc AGAIN
 	// (no I've never heard of M-x replace-string, sed, or anything like that)
-	isNew = !self.owner; // workaround for DP bug
+	isNew = !this.owner; // workaround for DP bug
 	n = ReadByte()-1;
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if(!isNew && n != self.sv_entnum)
+	if(!isNew && n != this.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		printf("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(self), self.classname);
+		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(this), this.classname);
 		isNew = true;
 		Ent_Remove();
-		self.enttype = ENT_CLIENT_SCORES;
 	}
 #endif
 
-	self.sv_entnum = n;
+	this.sv_entnum = n;
 
-	if (!(playerslots[self.sv_entnum]))
-		playerslots[self.sv_entnum] = spawn();
-	o = self.owner = playerslots[self.sv_entnum];
-	o.sv_entnum = self.sv_entnum;
+	o = playerslots[this.sv_entnum];
+	if (!o)
+	{
+		o = playerslots[this.sv_entnum] = new(playerslot);
+		make_pure(o);
+	}
+	this.owner = o;
+	o.sv_entnum = this.sv_entnum;
 	o.gotscores = 1;
 
 	//if (!o.sort_prev)
@@ -478,19 +397,22 @@ void Ent_ReadPlayerScore()
 				o.(scores[i]) = ReadChar();
 		}
 
+	return = true;
+
 	if(o.sort_prev)
 		HUD_UpdatePlayerPos(o); // if not registered, we cannot do this yet!
 
-	self.entremove = Ent_RemovePlayerScore;
+	this.entremove = Ent_RemovePlayerScore;
 }
 
-void Ent_ReadTeamScore()
+NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 {
+	make_pure(this);
 	int i;
 	entity o;
 
-	self.team = ReadByte();
-	o = self.owner = GetTeam(self.team, true); // these team numbers can always be trusted
+	this.team = ReadByte();
+	o = this.owner = GetTeam(this.team, true); // these team numbers can always be trusted
 
     int sf, lf;
 #if MAX_TEAMSCORE <= 8
@@ -510,11 +432,14 @@ void Ent_ReadTeamScore()
 				o.(teamscores[i]) = ReadChar();
 		}
 
+	return = true;
+
 	HUD_UpdateTeamPos(o);
 }
 
-void Ent_ClientData()
+NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 {
+	make_pure(this);
 	float newspectatee_status;
 
     int f = ReadByte();
@@ -542,6 +467,8 @@ void Ent_ClientData()
 	else
 		angles_held_status = 0;
 
+	return = true;
+
 	if(newspectatee_status != spectatee_status)
 	{
 		// clear race stuff
@@ -562,13 +489,14 @@ void Ent_ClientData()
 	// we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
 }
 
-void Ent_Nagger()
+NET_HANDLE(ENT_CLIENT_NAGGER, bool isnew)
 {
+	make_pure(this);
     int i, j, b, f;
 
     int nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
 
-	if(!(nags & 4))
+	if(!(nags & BIT(2)))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -580,7 +508,7 @@ void Ent_Nagger()
 		vote_active = 1;
 	}
 
-	if(nags & 64)
+	if(nags & BIT(6))
 	{
 		vote_yescount = ReadByte();
 		vote_nocount = ReadByte();
@@ -588,7 +516,7 @@ void Ent_Nagger()
 		vote_highlighted = ReadChar();
 	}
 
-	if(nags & 128)
+	if(nags & BIT(7))
 	{
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
@@ -610,15 +538,18 @@ void Ent_Nagger()
 		}
 	}
 
-	ready_waiting = (nags & 1);
-	ready_waiting_for_me = (nags & 2);
-	vote_waiting = (nags & 4);
-	vote_waiting_for_me = (nags & 8);
-	warmup_stage = (nags & 16);
+	return = true;
+
+	ready_waiting = (nags & BIT(0));
+	ready_waiting_for_me = (nags & BIT(1));
+	vote_waiting = (nags & BIT(2));
+	vote_waiting_for_me = (nags & BIT(3));
+	warmup_stage = (nags & BIT(4));
 }
 
-void Ent_EliminatedPlayers()
+NET_HANDLE(ENT_CLIENT_ELIMINATEDPLAYERS, bool isnew)
 {
+	make_pure(this);
     int i, j, b, f;
 
     int sf = ReadByte();
@@ -636,52 +567,50 @@ void Ent_EliminatedPlayers()
 						playerslots[j].eliminated = 0;
 		}
 	}
+	return true;
 }
 
-void Ent_RandomSeed()
+NET_HANDLE(ENT_CLIENT_RANDOMSEED, bool isnew)
 {
-	float s;
+	make_pure(this);
 	prandom_debug();
-	s = ReadShort();
+	float s = ReadShort();
 	psrandom(s);
+	return true;
 }
 
-void Ent_ReadAccuracy(void)
+NET_HANDLE(ENT_CLIENT_ACCURACY, bool isnew)
 {
-    int f, w;
+	make_pure(this);
     int sf = ReadInt24_t();
-	if(sf == 0)
-	{
-		for(w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
+	if (sf == 0) {
+		for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w)
 			weapon_accuracy[w] = -1;
-		return;
+		return true;
 	}
 
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
-	{
-		if(sf & f)
-		{
+	int f = 1;
+	for (int w = 0; w <= WEP_LAST - WEP_FIRST; ++w) {
+		if (sf & f) {
             int b = ReadByte();
-			if(b == 0)
+			if (b == 0)
 				weapon_accuracy[w] = -1;
-			else if(b == 255)
+			else if (b == 255)
 				weapon_accuracy[w] = 1.0; // no better error handling yet, sorry
 			else
 				weapon_accuracy[w] = (b - 1.0) / 100.0;
 		}
-		if(f == 0x800000)
-			f = 1;
-		else
-			f *= 2;
+		f = (f == 0x800000) ? 1 : f * 2;
 	}
+	return true;
 }
 
-void Spawn_Draw(void)
+void Spawn_Draw(entity this)
 {
-	pointparticles(self.cnt, self.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
+	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
-void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
+NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 {
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
@@ -689,21 +618,21 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	spn_origin.y = ReadShort();
 	spn_origin.z = ReadShort();
 
-	if(is_new)
-	{
-		self.origin = spn_origin;
-		setsize(self, PL_MIN, PL_MAX);
-		droptofloor();
+	//if(is_new)
+	//{
+		this.origin = spn_origin;
+		setsize(this, PL_MIN_CONST, PL_MAX_CONST);
+		//droptofloor();
 
 		/*if(autocvar_cl_spawn_point_model) // needs a model first
 		{
-			self.mdl = "models/spawnpoint.md3";
-			self.colormod = Team_ColorRGB(teamnum);
-			precache_model(self.mdl);
-			setmodel(self, self.mdl);
-			self.drawmask = MASK_NORMAL;
-			//self.movetype = MOVETYPE_NOCLIP;
-			//self.draw = Spawn_Draw;
+			this.mdl = "models/spawnpoint.md3";
+			this.colormod = Team_ColorRGB(teamnum);
+			precache_model(this.mdl);
+			setmodel(this, this.mdl);
+			this.drawmask = MASK_NORMAL;
+			//this.movetype = MOVETYPE_NOCLIP;
+			//this.draw = Spawn_Draw;
 		}*/
 		if(autocvar_cl_spawn_point_particles)
 		{
@@ -711,23 +640,24 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 			{
 				switch(teamnum)
 				{
-					case NUM_TEAM_1: self.cnt = particleeffectnum("spawn_point_red"); break;
-					case NUM_TEAM_2: self.cnt = particleeffectnum("spawn_point_blue"); break;
-					case NUM_TEAM_3: self.cnt = particleeffectnum("spawn_point_yellow"); break;
-					case NUM_TEAM_4: self.cnt = particleeffectnum("spawn_point_pink"); break;
-					default: self.cnt = particleeffectnum("spawn_point_neutral"); break;
+					case NUM_TEAM_1: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_RED); break;
+					case NUM_TEAM_2: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_BLUE); break;
+					case NUM_TEAM_3: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_YELLOW); break;
+					case NUM_TEAM_4: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_PINK); break;
+					default: this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); break;
 				}
 			}
-			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
+			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
 
-			self.draw = Spawn_Draw;
+			this.draw = Spawn_Draw;
 		}
-	}
+	//}
 
-	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(self.origin), teamnum, self.cnt);
+	//printf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d, effect = %d\n", is_new, vtos(this.origin), teamnum, this.cnt);
+	return true;
 }
 
-void Ent_ReadSpawnEvent(float is_new)
+NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 {
 	// If entnum is 0, ONLY do the local spawn actions
 	// this way the server can disable the sending of
@@ -736,31 +666,32 @@ void Ent_ReadSpawnEvent(float is_new)
 
 	if(entnum)
 	{
-		self.origin_x = ReadShort();
-		self.origin_y = ReadShort();
-		self.origin_z = ReadShort();
+		this.origin_x = ReadShort();
+		this.origin_y = ReadShort();
+		this.origin_z = ReadShort();
 
 		if(is_new)
 		{
-			float teamnum = GetPlayerColor(entnum - 1);
+			float teamnum = entcs_GetTeam(entnum - 1);
 
 			if(autocvar_cl_spawn_event_particles)
 			{
 				switch(teamnum)
 				{
-					case NUM_TEAM_1: pointparticles(particleeffectnum("spawn_event_red"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_2: pointparticles(particleeffectnum("spawn_event_blue"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_3: pointparticles(particleeffectnum("spawn_event_yellow"), self.origin, '0 0 0', 1); break;
-					case NUM_TEAM_4: pointparticles(particleeffectnum("spawn_event_pink"), self.origin, '0 0 0', 1); break;
-					default: pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); break;
+					case NUM_TEAM_1: pointparticles(EFFECT_SPAWN_RED, this.origin, '0 0 0', 1); break;
+					case NUM_TEAM_2: pointparticles(EFFECT_SPAWN_BLUE, this.origin, '0 0 0', 1); break;
+					case NUM_TEAM_3: pointparticles(EFFECT_SPAWN_YELLOW, this.origin, '0 0 0', 1); break;
+					case NUM_TEAM_4: pointparticles(EFFECT_SPAWN_PINK, this.origin, '0 0 0', 1); break;
+					default: pointparticles(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1); break;
 				}
 			}
 			if(autocvar_cl_spawn_event_sound)
 			{
-				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTEN_NORM);
+				sound(this, CH_TRIGGER, SND_SPAWN, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
+	return = true;
 
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
@@ -774,26 +705,21 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = false;
 		}
 	}
-
-	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
+	HUD_Radar_Hide_Maximized();
+	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(this.origin), entnum, player_localentnum);
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void Ent_RadarLink();
-void Ent_Init();
-void Ent_ScoresInfo();
-void CSQC_Ent_Update(float bIsNewEntity)
+void CSQC_Ent_Update(bool isnew)
 {
-	float t;
-	float savetime;
-	t = ReadByte();
-
-	if(autocvar_developer_csqcentities)
-		printf("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t);
+	SELFPARAM();
+	this.sourceLocLine = __LINE__;
+	this.sourceLocFile = __FILE__;
+	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
-	savetime = time;
+	float savetime = time;
 	if(servertime)
 	{
 		time = servertime;
@@ -801,121 +727,84 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	else
 	{
 		serverprevtime = time;
-		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+		serverdeltatime = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 		time = serverprevtime + serverdeltatime;
 	}
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-	if(self.enttype)
+	if (this.enttype)
 	{
-		if(t != self.enttype || bIsNewEntity)
+		if (t != this.enttype || isnew)
 		{
-			//print("A CSQC entity changed its type!\n");
-			printf("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(self), self.entnum, self.enttype, t);
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(this), this.entnum, this.enttype, t);
 			Ent_Remove();
-			clearentity(self);
-			bIsNewEntity = 1;
+			clearentity(this);
+			isnew = true;
 		}
 	}
 	else
 	{
-		if(!bIsNewEntity)
+		if (!isnew)
 		{
-			printf("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(self), self.entnum, t);
-			bIsNewEntity = 1;
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(this), this.entnum, t);
+			isnew = true;
 		}
 	}
 #endif
-	self.enttype = t;
-	switch(t)
-	{
-		case ENT_CLIENT_ENTCS: Ent_ReadEntCS(); break;
-		case ENT_CLIENT_SCORES: Ent_ReadPlayerScore(); break;
-		case ENT_CLIENT_TEAMSCORES: Ent_ReadTeamScore(); break;
-		case ENT_CLIENT_POINTPARTICLES: Ent_PointParticles(); break;
-		case ENT_CLIENT_RAINSNOW: Ent_RainOrSnow(); break;
-		case ENT_CLIENT_LASER: Ent_Laser(); break;
-		case ENT_CLIENT_NAGGER: Ent_Nagger(); break;
-		case ENT_CLIENT_ELIMINATEDPLAYERS: Ent_EliminatedPlayers(); break;
-		case ENT_CLIENT_WAYPOINT: Ent_WaypointSprite(); break;
-		case ENT_CLIENT_RADARLINK: Ent_RadarLink(); break;
-		case ENT_CLIENT_PROJECTILE: Ent_Projectile(); break;
-		case ENT_CLIENT_GIBSPLASH: Ent_GibSplash(bIsNewEntity); break;
-		case ENT_CLIENT_DAMAGEINFO: Ent_DamageInfo(bIsNewEntity); break;
-		case ENT_CLIENT_CASING: Ent_Casing(bIsNewEntity); break;
-		case ENT_CLIENT_INIT: Ent_Init(); break;
-		case ENT_CLIENT_SCORES_INFO: Ent_ScoresInfo(); break;
-		case ENT_CLIENT_MAPVOTE: Ent_MapVote(); break;
-		case ENT_CLIENT_CLIENTDATA: Ent_ClientData(); break;
-		case ENT_CLIENT_RANDOMSEED: Ent_RandomSeed(); break;
-		case ENT_CLIENT_WALL: Ent_Wall(); break;
-		case ENT_CLIENT_MODELEFFECT: Ent_ModelEffect(bIsNewEntity); break;
-		case ENT_CLIENT_TUBANOTE: Ent_TubaNote(bIsNewEntity); break;
-		case ENT_CLIENT_WARPZONE: WarpZone_Read(bIsNewEntity); break;
-		case ENT_CLIENT_WARPZONE_CAMERA: WarpZone_Camera_Read(bIsNewEntity); break;
-		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
-		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
-		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
-		case ENT_CLIENT_ARC_BEAM: Ent_ReadArcBeam(bIsNewEntity); break;
-		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
-		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
-		case ENT_CLIENT_TURRET: ent_turret(); break;
-		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
-		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
-		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
-		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
-		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
-		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
-		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
-
-		default:
-			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
-			error(sprintf("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n", self.enttype, num_for_edict(self), self.classname));
-			break;
-	}
-
+	this.enttype = t;
+	bool done = false;
+	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
+		if (isnew) this.classname = it.netname;
+		if (autocvar_developer_csqcentities)
+            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		done = it.m_read(this, isnew);
+		break;
+	));
 	time = savetime;
+	if (!done)
+	{
+		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+	}
 }
+
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
 void Ent_Remove()
 {
-	if(self.entremove)
-		self.entremove();
+	SELFPARAM();
+	if(this.entremove) this.entremove();
 
-	if(self.skeletonindex)
+	if(this.skeletonindex)
 	{
-		skel_delete(self.skeletonindex);
-		self.skeletonindex = 0;
+		skel_delete(this.skeletonindex);
+		this.skeletonindex = 0;
 	}
 
-	if(self.snd_looping > 0)
+	if(this.snd_looping > 0)
 	{
-		sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
-		self.snd_looping = 0;
+		sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
+		this.snd_looping = 0;
 	}
 
-	self.enttype = 0;
-	self.classname = "";
-	self.draw = menu_sub_null;
-	self.entremove = menu_sub_null;
+	this.enttype = 0;
+	this.classname = "";
+	this.draw = func_null;
+	this.entremove = func_null;
 	// TODO possibly set more stuff to defaults
 }
-// CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
+// CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove()
 {
-	if(autocvar_developer_csqcentities)
-		printf("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype);
-
-	if(wasfreed(self))
+	SELFPARAM();
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
+	if (wasfreed(this))
 	{
-		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		LOG_WARNING("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
-	if(self.enttype)
-		Ent_Remove();
-	remove(self);
+	if (this.enttype) Ent_Remove();
+	remove(this);
 }
 
 void Gamemode_Init()
@@ -930,70 +819,79 @@ void Gamemode_Init()
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
-	if(autocvar_developer_csqcentities)
-		printf("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage);
-
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage);
 	localcmd(strMessage);
 }
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
-	if(autocvar_developer_csqcentities)
-		printf("CSQC_Parse_Print(\"%s\")\n", strMessage);
-
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
 	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
-	if(autocvar_developer_csqcentities)
-		printf("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage);
-
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage);
 	centerprint_hud(strMessage);
 }
 
-string notranslate_fogcmd1 = "\nfog ";
-string notranslate_fogcmd2 = "\nr_fog_exp2 0\nr_drawfog 1\n";
+// CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
+// You must ALWAYS first acquire the temporary ID, which is sent as a byte.
+// Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
+bool CSQC_Parse_TempEntity()
+{
+	// Acquire TE ID
+	int nTEID = ReadByte();
+
+	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
+		if (autocvar_developer_csqcentities)
+			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
+		return it.m_read(NULL, true);
+	));
+
+	if (autocvar_developer_csqcentities)
+		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
+
+	// No special logic for this temporary entity; return 0 so the engine can handle it
+	return false;
+}
+
+/** TODO somehow thwart prvm_globalset client ... */
+string forcefog;
 void Fog_Force()
 {
-	// TODO somehow thwart prvm_globalset client ...
-
-	if(autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
-		{ localcmd("\nr_drawfog 0\n"); }
-	else if(forcefog != "")
-		{ localcmd(strcat(notranslate_fogcmd1, forcefog, notranslate_fogcmd2)); }
+	if (autocvar_cl_orthoview && autocvar_cl_orthoview_nofog)
+		localcmd("\nr_drawfog 0\n");
+	else if (forcefog != "")
+		localcmd(sprintf("\nfog %s\nr_fog_exp2 0\nr_drawfog 1\n", forcefog));
 }
 
 void Gamemode_Init();
-void Ent_ScoresInfo()
+NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 {
-    int i;
-	self.classname = "ent_client_scores_info";
+	make_pure(this);
 	gametype = ReadInt24_t();
 	HUD_ModIcons_SetFunc();
-	for(i = 0; i < MAX_SCORE; ++i)
+	for (int i = 0; i < MAX_SCORE; ++i)
 	{
-		if(scores_label[i])
-			strunzone(scores_label[i]);
+		if (scores_label[i]) strunzone(scores_label[i]);
 		scores_label[i] = strzone(ReadString());
 		scores_flags[i] = ReadByte();
 	}
-	for(i = 0; i < MAX_TEAMSCORE; ++i)
+	for (int i = 0; i < MAX_TEAMSCORE; ++i)
 	{
-		if(teamscores_label[i])
-			strunzone(teamscores_label[i]);
+		if (teamscores_label[i]) strunzone(teamscores_label[i]);
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
+	return = true;
 	HUD_InitScores();
 	Gamemode_Init();
 }
 
-void Ent_Init()
+NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 {
-	self.classname = "ent_client_init";
-
 	nb_pb_period = ReadByte() / 32; //Accuracy of 1/32th
 
 	hook_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
@@ -1005,8 +903,7 @@ void Ent_Init()
 	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	arc_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
-	if(forcefog)
-		strunzone(forcefog);
+	if (forcefog) strunzone(forcefog);
 	forcefog = strzone(ReadString());
 
 	armorblockpercent = ReadByte() / 255.0;
@@ -1027,18 +924,18 @@ void Ent_Init()
 
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
+	return = true;
 
-	if(!postinit)
-		PostInit();
+	MUTATOR_CALLHOOK(Ent_Init);
+
+	if (!postinit) PostInit();
 }
 
-void Net_ReadRace()
+NET_HANDLE(TE_CSQC_RACE, bool isNew)
 {
-	float b;
+	int b = ReadByte();
 
-	b = ReadByte();
-
-	switch(b)
+	switch (b)
 	{
 		case RACE_NET_CHECKPOINT_HIT_QUALIFYING:
 			race_checkpoint = ReadByte();
@@ -1177,7 +1074,7 @@ void Net_ReadRace()
 				strunzone(grecordholder[pos-1]);
 			grecordholder[pos-1] = strzone(ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
-			if(grecordholder[pos-1] == GetPlayerName(player_localnum))
+			if(grecordholder[pos-1] == entcs_GetName(player_localnum))
 				race_myrank = pos;
 			break;
 		case RACE_NET_SERVER_STATUS:
@@ -1186,36 +1083,36 @@ void Net_ReadRace()
 				strunzone(race_status_name);
 			race_status_name = strzone(ReadString());
 	}
+	return true;
 }
 
-void Net_TeamNagger()
+NET_HANDLE(TE_CSQC_TEAMNAGGER, bool isNew)
 {
 	teamnagger = 1;
+	return true;
 }
 
-void Net_ReadPingPLReport()
+NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 {
-	int e, pi, pl, ml;
-	e = ReadByte();
-	pi = ReadShort();
-	pl = ReadByte();
-	ml = ReadByte();
-	if (!(playerslots[e]))
-		return;
-	playerslots[e].ping = pi;
-	playerslots[e].ping_packetloss = pl / 255.0;
-	playerslots[e].ping_movementloss = ml / 255.0;
+	int i = ReadByte();
+	int pi = ReadShort();
+	int pl = ReadByte();
+	int ml = ReadByte();
+	return = true;
+	entity e = playerslots[i];
+	if (!e) return;
+	e.ping = pi;
+	e.ping_packetloss = pl / 255.0;
+	e.ping_movementloss = ml / 255.0;
 }
 
-void Net_WeaponComplain()
+NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
 	complain_weapon = ReadByte();
-
-	if(complain_weapon_name)
-		strunzone(complain_weapon_name);
+	if (complain_weapon_name) strunzone(complain_weapon_name);
 	complain_weapon_name = strzone(WEP_NAME(complain_weapon));
-
 	complain_weapon_type = ReadByte();
+	return = true;
 
 	complain_weapon_time = time;
 	weapontime = time; // ping the weapon panel
@@ -1226,76 +1123,6 @@ void Net_WeaponComplain()
 		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, complain_weapon); break;
 		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
 	}
-}
-
-// CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
-// You must ALWAYS first acquire the temporary ID, which is sent as a byte.
-// Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
-float CSQC_Parse_TempEntity()
-{
-	float bHandled;
-		bHandled  = true;
-	// Acquire TE ID
-	float nTEID;
-		nTEID = ReadByte();
-
-	if(autocvar_developer_csqcentities)
-		printf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
-
-		// NOTE: Could just do return instead of break...
-	switch(nTEID)
-	{
-		case TE_CSQC_TARGET_MUSIC:
-			Net_TargetMusic();
-			bHandled = true;
-			break;
-		case TE_CSQC_PICTURE:
-			Net_MapVote_Picture();
-			bHandled = true;
-			break;
-		case TE_CSQC_RACE:
-			Net_ReadRace();
-			bHandled = true;
-			break;
-		case TE_CSQC_VORTEXBEAMPARTICLE:
-			Net_ReadVortexBeamParticle();
-			bHandled = true;
-			break;
-		case TE_CSQC_TEAMNAGGER:
-			Net_TeamNagger();
-			bHandled = true;
-			break;
-		case TE_CSQC_ARC:
-			Net_ReadArc();
-			bHandled = true;
-			break;
-		case TE_CSQC_PINGPLREPORT:
-			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
-		case TE_CSQC_WEAPONCOMPLAIN:
-			Net_WeaponComplain();
-			bHandled = true;
-			break;
-		case TE_CSQC_VEHICLESETUP:
-			Net_VehicleSetup();
-			bHandled = true;
-			break;
-		case TE_CSQC_SVNOTICE:
-			cl_notice_read();
-			bHandled = true;
-			break;
-		case TE_CSQC_SHOCKWAVEPARTICLE:
-			Net_ReadShockwaveParticle();
-			bHandled = true;
-			break;
-		default:
-			// No special logic for this temporary entity; return 0 so the engine can handle it
-			bHandled = false;
-			break;
-	}
-
-	return bHandled;
 }
 
 string getcommandkey(string text, string command)

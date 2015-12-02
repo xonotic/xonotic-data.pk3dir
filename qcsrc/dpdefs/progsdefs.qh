@@ -8,12 +8,18 @@
 #define TRUE _TRUE
 #define FALSE _FALSE
 
+#define spawn _spawn
+#define setmodel _setmodel
+
 #include "upstream/progsdefs.qc"
 
 #undef true
 #undef false
 #undef TRUE
 #undef FALSE
+
+#undef spawn
+#undef setmodel
 
 #pragma noref 0
 

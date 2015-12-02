@@ -23,8 +23,8 @@ float		dmg_take;
 #endif
 
 // Basic variables
-.float enttype; // entity type sent from server
-.int   sv_entnum; // entity number sent from server
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
 .int team;
 .int team_size;
 
@@ -126,7 +126,7 @@ int serverflags;
 
 float uid2name_dialog;
 
-.bool csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead
+.bool csqcmodel_isdead; // used by shownames and miscfunctions (entcs_IsDead) to know when a player is dead
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
 

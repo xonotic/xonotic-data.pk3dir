@@ -3,13 +3,20 @@
 
 #pragma noref 1
 
+#define particleeffectnum __particleeffectnum
+#define trailparticles __trailparticles
+#define pointparticles __pointparticles
+
 #include "upstream/dpextensions.qc"
+
+#undef particleeffectnum
+#undef trailparticles
+#undef pointparticles
 
 int(entity ent, string tagname) _gettagindex = #451;
 #define gettagindex _gettagindex
 
 int(string effectname) _particleeffectnum = #335;
-#define particleeffectnum _particleeffectnum
 
 int(string s, string separator1, ...) _tokenizebyseparator = #479;
 #define tokenizebyseparator _tokenizebyseparator

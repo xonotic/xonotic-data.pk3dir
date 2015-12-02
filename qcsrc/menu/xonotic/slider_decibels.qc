@@ -1,13 +1,12 @@
-#include "../../warpzonelib/mathlib.qh"
-
 #ifndef SLIDER_DECIBELS_H
 #define SLIDER_DECIBELS_H
 #include "slider.qc"
 CLASS(XonoticDecibelsSlider, XonoticSlider)
-	METHOD(XonoticDecibelsSlider, loadCvars, void(entity))
-	METHOD(XonoticDecibelsSlider, saveCvars, void(entity))
-	METHOD(XonoticDecibelsSlider, valueToText, string(entity, float))
+	METHOD(XonoticDecibelsSlider, loadCvars, void(entity));
+	METHOD(XonoticDecibelsSlider, saveCvars, void(entity));
+	METHOD(XonoticDecibelsSlider, valueToText, string(entity, float));
 ENDCLASS(XonoticDecibelsSlider)
+entity makeXonoticDecibelsSlider_T(float, float, float, string, string);
 entity makeXonoticDecibelsSlider(float, float, float, string);
 #endif
 
@@ -41,12 +40,16 @@ float fromDecibelOfSquare(float f, float mi)
 	return exp(A * f);
 }
 
-entity makeXonoticDecibelsSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
+entity makeXonoticDecibelsSlider_T(float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticDecibelsSlider);
-	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar);
+	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar, theTooltip);
 	return me;
+}
+entity makeXonoticDecibelsSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
+{
+	return makeXonoticDecibelsSlider_T(theValueMin, theValueMax, theValueStep, theCvar, string_null);
 }
 void XonoticDecibelsSlider_loadCvars(entity me)
 {
@@ -59,9 +62,9 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 
 	// snapping
 	if(v > fromDecibelOfSquare(me.valueMax - 0.5 * me.valueStep, me.valueMin))
-		Slider_setValue(me, me.valueMax);
+		Slider_setValue_noAnim(me, me.valueMax);
 	else
-		Slider_setValue(me, me.valueStep * floor(0.5 + toDecibelOfSquare(v, me.valueMin) / me.valueStep) );
+		Slider_setValue_noAnim(me, me.valueStep * floor(0.5 + toDecibelOfSquare(v, me.valueMin) / me.valueStep));
 }
 void XonoticDecibelsSlider_saveCvars(entity me)
 {
@@ -100,7 +103,7 @@ void _TEST_XonoticDecibelsSlider()
 		float v = fromDecibelOfSquare(db, -40);
 		float dbv = toDecibelOfSquare(v, -40);
 		float d = dbv - db;
-		printf("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d);
+		LOG_INFOF("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d);
 		TEST_Check(fabs(d) > 0.02);
 	}
 	TEST_OK();

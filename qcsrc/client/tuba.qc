@@ -1,12 +1,9 @@
 #include "tuba.qh"
-#include "_all.qh"
 
 #include "../common/constants.qh"
-#include "../common/util.qh"
 
-#include "../warpzonelib/mathlib.qh"
 
-#define TUBA_STARTNOTE(i, n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
+#define TUBA_STARTNOTE(i, n) _Sound_fixpath(W_Sound(strcat("tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n))))
 
 const int TUBA_MIN = -18;
 const int TUBA_MAX = 27;
@@ -66,12 +63,12 @@ void tubasound(entity e, bool restart)
 		if (restart) {
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
-		sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation);
+		_sound(e, CH_TUBA_SINGLE, snd1, e.tuba_volume, e.tuba_attenuate * autocvar_g_balance_tuba_attenuation);
 	}
 }
 
 void Ent_TubaNote_Think()
-{
+{SELFPARAM();
 	float f = autocvar_g_balance_tuba_fadetime;
 	if (f > 0) {
 		self.tuba_volume -= frametime * self.tuba_volume_initial / f;
@@ -80,9 +77,9 @@ void Ent_TubaNote_Think()
 	}
 	self.nextthink = time;
 	if (self.tuba_volume <= 0) {
-		sound(self, CH_TUBA_SINGLE, "misc/null.wav", 0, 0);
+		sound(self, CH_TUBA_SINGLE, SND_Null, 0, 0);
 		if (self.enemy) {
-			sound(self.enemy, CH_TUBA_SINGLE, "misc/null.wav", 0, 0);
+			sound(self.enemy, CH_TUBA_SINGLE, SND_Null, 0, 0);
 			remove(self.enemy);
 		}
 		remove(self);
@@ -92,7 +89,7 @@ void Ent_TubaNote_Think()
 }
 
 void Ent_TubaNote_UpdateSound()
-{
+{SELFPARAM();
 	self.enemy.tuba_volume = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
 	self.enemy.tuba_volume_initial = self.enemy.tuba_volume;
 	self.enemy.note = self.note;
@@ -101,12 +98,12 @@ void Ent_TubaNote_UpdateSound()
 }
 
 void Ent_TubaNote_StopSound()
-{
+{SELFPARAM();
 	self.enemy.nextthink = time;
 	self.enemy = world;
 }
 
-void Ent_TubaNote(bool isNew)
+NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 {
 	bool upd = false;
 	int f = ReadByte();
@@ -121,11 +118,9 @@ void Ent_TubaNote(bool isNew)
 				Ent_TubaNote_StopSound();
 			}
 		} else {
-			self.enemy = spawn();
-			self.enemy.classname = "tuba_note";
+			self.enemy = new(tuba_note);
 			if (Tuba_PitchStep) {
-				self.enemy.enemy = spawn();
-				self.enemy.enemy.classname = "tuba_note_2";
+				self.enemy.enemy = new(tuba_note_2);
 			}
 			isNew = true;
 		}
@@ -157,14 +152,15 @@ void Ent_TubaNote(bool isNew)
 	if (upd) {
 		Ent_TubaNote_UpdateSound();
 	}
+	return true;
 }
 
-void Tuba_Precache()
+PRECACHE(Tuba)
 {
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if (Tuba_PitchStep) {
 		if (!checkextension("DP_SND_SOUND7_WIP2") && !checkextension("DP_SND_SOUND7")) {
-			print("^1NOTE:^7 requested pitch shifting, but not supported by this engine build\n");
+			LOG_INFO("^1NOTE:^7 requested pitch shifting, but not supported by this engine build\n");
 			Tuba_PitchStep = 0;
 		}
 	}

@@ -1,0 +1,8 @@
+#ifndef TRIGGERS_FUNC_INCLUDE_H
+#define TRIGGERS_FUNC_INCLUDE_H
+
+#include "door.qh"
+#include "ladder.qh"
+#include "train.qh"
+
+#endif

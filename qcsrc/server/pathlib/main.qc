@@ -1,4 +1,3 @@
-#include "../_all.qh"
 
 #include "pathlib.qh"
 #include "utility.qh"
@@ -11,7 +10,7 @@ void pathlib_deletepath(entity start)
     e = findchainentity(owner, start);
     while(e)
     {
-        e.think = SUB_Remove;
+        e.think = SUB_Remove_self;
         e.nextthink = time;
         e = e.chain;
     }
@@ -23,9 +22,17 @@ const float PATHLIB_NODEEXPIRE = 20;
 void dumpnode(entity n)
 {
     n.is_path_node = false;
-    n.think        = SUB_Remove;
+    n.think        = SUB_Remove_self;
     n.nextthink    = time;
 }
+
+#ifdef DEBUGPATHING
+void pathlib_showpath(entity start);
+void pathlib_showpath2(entity path);
+#endif
+
+void pathlib_showsquare(vector where,float goodsquare,float _lifetime);
+void pathlib_showsquare2(entity node ,vector ncolor,float align);
 
 entity pathlib_mknode(vector where,entity parent)
 {
@@ -42,7 +49,7 @@ entity pathlib_mknode(vector where,entity parent)
 
     node = spawn();
 
-    node.think        = SUB_Remove;
+    node.think        = SUB_Remove_self;
     node.nextthink    = time + PATHLIB_NODEEXPIRE;
     node.is_path_node = true;
     node.owner        = openlist;
@@ -71,7 +78,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
     if(inwater(parent.origin))
     {
-        dprint("FromWater\n");
+        LOG_TRACE("FromWater\n");
         pathlib_expandnode = pathlib_expandnode_box;
         pathlib_movenode   = pathlib_swimnode;
     }
@@ -79,13 +86,13 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     {
         if(inwater(to))
         {
-            dprint("ToWater\n");
+            LOG_TRACE("ToWater\n");
             pathlib_expandnode = pathlib_expandnode_box;
             pathlib_movenode   = pathlib_walknode;
         }
         else
         {
-            dprint("LandToLoand\n");
+            LOG_TRACE("LandToLoand\n");
             //if(edge_check(parent.origin))
             //    return 0;
 
@@ -98,7 +105,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node = pathlib_nodeatpoint(to);
     if(node)
     {
-        dprint("NodeAtPoint\n");
+        LOG_TRACE("NodeAtPoint\n");
         ++pathlib_merge_cnt;
 
         if(node.owner == openlist)
@@ -131,7 +138,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     {
         //pathlib_showsquare(where, 0 ,30);
         //pathlib_showsquare(parent.origin, 1 ,30);
-        dprint("pathlib_movenode_goodnode = 0\n");
+        LOG_TRACE("pathlib_movenode_goodnode = 0\n");
         return 0;
     }
 
@@ -139,9 +146,9 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
     if(pathlib_nodeatpoint(where))
     {
-        dprint("NAP WHERE :",vtos(where),"\n");
-        dprint("not NAP TO:",vtos(to),"\n");
-        dprint("NAP-NNAP:",ftos(vlen(to-where)),"\n\n");
+        LOG_TRACE("NAP WHERE :",vtos(where),"\n");
+        LOG_TRACE("not NAP TO:",vtos(to),"\n");
+        LOG_TRACE("NAP-NNAP:",ftos(vlen(to-where)),"\n\n");
         return 0;
     }
 
@@ -149,7 +156,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     if(doedge)
         if (!tile_check(where))
         {
-            dprint("tile_check fail\n");
+            LOG_TRACE("tile_check fail\n");
             pathlib_showsquare(where, 0 ,30);
             return 0;
         }
@@ -241,7 +248,7 @@ void pathlib_close_node(entity node,vector goal)
 
     if(node.owner == closedlist)
     {
-        dprint("Pathlib: Tried to close a closed node!\n");
+        LOG_TRACE("Pathlib: Tried to close a closed node!\n");
         return;
     }
 
@@ -370,7 +377,7 @@ entity path_build(entity next, vector where, entity prev, entity start)
 }
 
 entity pathlib_astar(vector from,vector to)
-{
+{SELFPARAM();
     entity path, start, end, open, n, ln;
     float ptime, ftime, ctime;
 
@@ -457,16 +464,15 @@ entity pathlib_astar(vector from,vector to)
     to.y = fsnap(to.y, pathlib_gridsize);
     //to_z += 32;
 
-    dprint("AStar init\n");
+    LOG_TRACE("AStar init\n");
     path = pathlib_mknode(from, world);
     pathlib_close_node(path, to);
     if(pathlib_foundgoal)
     {
-        dprint("AStar: Goal found on first node!\n");
+        LOG_TRACE("AStar: Goal found on first node!\n");
 
-        open           = spawn();
+        open           = new(path_end);
         open.owner     = open;
-        open.classname = "path_end";
         setorigin(open,path.origin);
 
         pathlib_cleanup();
@@ -476,7 +482,7 @@ entity pathlib_astar(vector from,vector to)
 
     if(pathlib_expandnode(path, from, to) <= 0)
     {
-        dprint("AStar path fail.\n");
+        LOG_TRACE("AStar path fail.\n");
         pathlib_cleanup();
 
         return world;
@@ -494,11 +500,11 @@ entity pathlib_astar(vector from,vector to)
     {
         if((gettime(GETTIME_REALTIME) - pathlib_starttime) > pathlib_maxtime)
         {
-            dprint("Path took to long to compute!\n");
-            dprint("Nodes - created: ", ftos(pathlib_made_cnt),"\n");
-            dprint("Nodes -    open: ", ftos(pathlib_open_cnt),"\n");
-            dprint("Nodes -  merged: ", ftos(pathlib_merge_cnt),"\n");
-            dprint("Nodes -  closed: ", ftos(pathlib_closed_cnt),"\n");
+            LOG_TRACE("Path took to long to compute!\n");
+            LOG_TRACE("Nodes - created: ", ftos(pathlib_made_cnt),"\n");
+            LOG_TRACE("Nodes -    open: ", ftos(pathlib_open_cnt),"\n");
+            LOG_TRACE("Nodes -  merged: ", ftos(pathlib_merge_cnt),"\n");
+            LOG_TRACE("Nodes -  closed: ", ftos(pathlib_closed_cnt),"\n");
 
             pathlib_cleanup();
             return world;
@@ -515,7 +521,7 @@ entity pathlib_astar(vector from,vector to)
 
         if(pathlib_foundgoal)
         {
-            dprint("Target found. Rebuilding and filtering path...\n");
+            LOG_TRACE("Target found. Rebuilding and filtering path...\n");
             ftime = gettime(GETTIME_REALTIME);
             ptime = ftime - ptime;
 
@@ -542,26 +548,26 @@ entity pathlib_astar(vector from,vector to)
 #ifdef DEBUGPATHING
             pathlib_showpath2(start);
 
-            dprint("Time used -      pathfinding: ", ftos(ptime),"\n");
-            dprint("Time used - rebuild & filter: ", ftos(ftime),"\n");
-            dprint("Time used -          cleanup: ", ftos(ctime),"\n");
-            dprint("Time used -            total: ", ftos(ptime + ftime + ctime),"\n");
-            dprint("Time used -         # frames: ", ftos(ceil((ptime + ftime + ctime) / sys_frametime)),"\n\n");
-            dprint("Nodes -         created: ", ftos(pathlib_made_cnt),"\n");
-            dprint("Nodes -            open: ", ftos(pathlib_open_cnt),"\n");
-            dprint("Nodes -          merged: ", ftos(pathlib_merge_cnt),"\n");
-            dprint("Nodes -          closed: ", ftos(pathlib_closed_cnt),"\n");
-            dprint("Nodes -        searched: ", ftos(pathlib_searched_cnt),"\n");
-            dprint("Nodes bestopen searched: ", ftos(pathlib_bestopen_seached),"\n");
-            dprint("Nodes bestcash -   hits: ", ftos(pathlib_bestcash_hits),"\n");
-            dprint("Nodes bestcash -   save: ", ftos(pathlib_bestcash_saved),"\n");
-            dprint("AStar done.\n");
+            LOG_TRACE("Time used -      pathfinding: ", ftos(ptime),"\n");
+            LOG_TRACE("Time used - rebuild & filter: ", ftos(ftime),"\n");
+            LOG_TRACE("Time used -          cleanup: ", ftos(ctime),"\n");
+            LOG_TRACE("Time used -            total: ", ftos(ptime + ftime + ctime),"\n");
+            LOG_TRACE("Time used -         # frames: ", ftos(ceil((ptime + ftime + ctime) / sys_frametime)),"\n\n");
+            LOG_TRACE("Nodes -         created: ", ftos(pathlib_made_cnt),"\n");
+            LOG_TRACE("Nodes -            open: ", ftos(pathlib_open_cnt),"\n");
+            LOG_TRACE("Nodes -          merged: ", ftos(pathlib_merge_cnt),"\n");
+            LOG_TRACE("Nodes -          closed: ", ftos(pathlib_closed_cnt),"\n");
+            LOG_TRACE("Nodes -        searched: ", ftos(pathlib_searched_cnt),"\n");
+            LOG_TRACE("Nodes bestopen searched: ", ftos(pathlib_bestopen_seached),"\n");
+            LOG_TRACE("Nodes bestcash -   hits: ", ftos(pathlib_bestcash_hits),"\n");
+            LOG_TRACE("Nodes bestcash -   save: ", ftos(pathlib_bestcash_saved),"\n");
+            LOG_TRACE("AStar done.\n");
 #endif
             return start;
         }
     }
 
-    dprint("A* Faild to find a path! Try a smaller gridsize.\n");
+    LOG_TRACE("A* Faild to find a path! Try a smaller gridsize.\n");
 
     pathlib_cleanup();
 

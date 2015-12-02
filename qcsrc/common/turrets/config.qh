@@ -1,0 +1,21 @@
+#ifndef TURRETS_CONFIG_H
+#define TURRETS_CONFIG_H
+
+#ifdef SVQC
+
+void Dump_Turret_Settings();
+float tur_config_file;
+float tur_config_alsoprint;
+
+const int MAX_TUR_CONFIG = 256;
+float TUR_CONFIG_COUNT;
+string tur_config_queue[MAX_TUR_CONFIG];
+
+#define TUR_CONFIG_WRITETOFILE(a) { \
+	fputs(tur_config_file, a); \
+	if(tur_config_alsoprint) { LOG_INFO(a); } }
+
+
+#endif
+
+#endif

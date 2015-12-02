@@ -1,434 +1,14 @@
 #include "g_subs.qh"
-#include "_all.qh"
 
 #include "antilag.qh"
 #include "command/common.qh"
-#include "../warpzonelib/common.qh"
+#include "../lib/warpzone/common.qh"
+#include "../common/triggers/subs.qh"
 
-void SUB_NullThink(void) { }
-
-void spawnfunc_info_null (void)
+spawnfunc(info_null)
 {
 	remove(self);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
-}
-
-void setanim(entity e, vector anim, float looping, float override, float restart)
-{
-	if (!anim)
-		return; // no animation was given to us! We can't use this.
-
-	if (anim.x == e.animstate_startframe)
-	if (anim.y == e.animstate_numframes)
-	if (anim.z == e.animstate_framerate)
-	{
-		if(restart)
-		{
-			if(restart > 0)
-			if(anim.y == 1) // ZYM animation
-				BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
-		}
-		else
-			return;
-	}
-	e.animstate_startframe = anim.x;
-	e.animstate_numframes = anim.y;
-	e.animstate_framerate = anim.z;
-	e.animstate_starttime = servertime - 0.1 * serverframetime; // shift it a little bit into the past to prevent float inaccuracy hiccups
-	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
-	e.animstate_looping = looping;
-	e.animstate_override = override;
-	e.frame = e.animstate_startframe;
-	e.frame1time = servertime;
-}
-
-void updateanim(entity e)
-{
-	if (time >= e.animstate_endtime)
-	{
-		if (e.animstate_looping)
-		{
-			e.animstate_starttime = e.animstate_endtime;
-			e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
-		}
-		e.animstate_override = false;
-	}
-	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
-	//print(ftos(time), " -> ", ftos(e.frame), "\n");
-}
-
-/*
-==================
-SUB_Remove
-
-Remove self
-==================
-*/
-void SUB_Remove (void)
-{
-	remove (self);
-}
-
-/*
-==================
-SUB_Friction
-
-Applies some friction to self
-==================
-*/
-void SUB_Friction (void)
-{
-	self.nextthink = time;
-	if(self.flags & FL_ONGROUND)
-		self.velocity = self.velocity * (1 - frametime * self.friction);
-}
-
-/*
-==================
-SUB_VanishOrRemove
-
-Makes client invisible or removes non-client
-==================
-*/
-void SUB_VanishOrRemove (entity ent)
-{
-	if (IS_CLIENT(ent))
-	{
-		// vanish
-		ent.alpha = -1;
-		ent.effects = 0;
-		ent.glow_size = 0;
-		ent.pflags = 0;
-	}
-	else
-	{
-		// remove
-		remove (ent);
-	}
-}
-
-void SUB_SetFade_Think (void)
-{
-	if(self.alpha == 0)
-		self.alpha = 1;
-	self.think = SUB_SetFade_Think;
-	self.nextthink = time;
-	self.alpha -= frametime * self.fade_rate;
-	if (self.alpha < 0.01)
-		SUB_VanishOrRemove(self);
-	else
-		self.nextthink = time;
-}
-
-/*
-==================
-SUB_SetFade
-
-Fade 'ent' out when time >= 'when'
-==================
-*/
-void SUB_SetFade (entity ent, float when, float fadetime)
-{
-	ent.fade_rate = 1/fadetime;
-	ent.think = SUB_SetFade_Think;
-	ent.nextthink = when;
-}
-
-/*
-=============
-SUB_CalcMove
-
-calculate self.velocity and self.nextthink to reach dest from
-self.origin traveling at speed
-===============
-*/
-void SUB_CalcMoveDone (void)
-{
-	// After moving, set origin to exact final destination
-
-	setorigin (self, self.finaldest);
-	self.velocity = '0 0 0';
-	self.nextthink = -1;
-	if (self.think1)
-		self.think1 ();
-}
-
-void SUB_CalcMove_controller_think (void)
-{
-	entity oldself;
-	float traveltime;
-	float phasepos;
-	float nexttick;
-	vector delta;
-	vector delta2;
-	vector veloc;
-	vector angloc;
-	vector nextpos;
-	delta = self.destvec;
-	delta2 = self.destvec2;
-	if(time < self.animstate_endtime) {
-		nexttick = time + sys_frametime;
-
-		traveltime = self.animstate_endtime - self.animstate_starttime;
-		phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
-		phasepos = cubic_speedfunc(self.platmovetype_start, self.platmovetype_end, phasepos);
-		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
-		// derivative: delta + 2 * delta2 * phasepos (e.g. for angle positioning)
-
-		if(self.owner.platmovetype_turn)
-		{
-			vector destangle;
-			destangle = delta + 2 * delta2 * phasepos;
-			destangle = vectoangles(destangle);
-			destangle.x = -destangle.x; // flip up / down orientation
-
-			// take the shortest distance for the angles
-			self.owner.angles_x -= 360 * floor((self.owner.angles.x - destangle.x) / 360 + 0.5);
-			self.owner.angles_y -= 360 * floor((self.owner.angles.y - destangle.y) / 360 + 0.5);
-			self.owner.angles_z -= 360 * floor((self.owner.angles.z - destangle.z) / 360 + 0.5);
-			angloc = destangle - self.owner.angles;
-			angloc = angloc * (1 / sys_frametime); // so it arrives for the next frame
-			self.owner.avelocity = angloc;
-		}
-		if(nexttick < self.animstate_endtime)
-			veloc = nextpos - self.owner.origin;
-		else
-			veloc = self.finaldest - self.owner.origin;
-		veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
-
-		self.owner.velocity = veloc;
-		self.nextthink = nexttick;
-	} else {
-		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
-		oldself = self;
-		self.owner.think = self.think1;
-		self = self.owner;
-		remove(oldself);
-		self.think();
-	}
-}
-
-void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector dest)
-{
-	// 0 * (1-t) * (1-t) + 2 * control * t * (1-t) + dest * t * t
-	// 2 * control * t - 2 * control * t * t + dest * t * t
-	// 2 * control * t + (dest - 2 * control) * t * t
-
-	controller.origin = org; // starting point
-	control -= org;
-	dest -= org;
-
-	controller.destvec = 2 * control; // control point
-	controller.destvec2 = dest - 2 * control; // quadratic part required to reach end point
-	// also: initial d/dphasepos origin = 2 * control, final speed = 2 * (dest - control)
-}
-
-void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest)
-{
-	// 0 * (1-t) * (1-t) + 2 * control * t * (1-t) + dest * t * t
-	// 2 * control * t - 2 * control * t * t + dest * t * t
-	// 2 * control * t + (dest - 2 * control) * t * t
-
-	controller.origin = org; // starting point
-	dest -= org;
-
-	controller.destvec = dest; // end point
-	controller.destvec2 = '0 0 0';
-}
-
-void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
-{
-	float	traveltime;
-	entity controller;
-
-	if (!tspeed)
-		objerror ("No speed is defined!");
-
-	self.think1 = func;
-	self.finaldest = tdest;
-	self.think = SUB_CalcMoveDone;
-
-	switch(tspeedtype)
-	{
-		default:
-		case TSPEED_START:
-			traveltime = 2 * vlen(tcontrol - self.origin) / tspeed;
-			break;
-		case TSPEED_END:
-			traveltime = 2 * vlen(tcontrol - tdest)       / tspeed;
-			break;
-		case TSPEED_LINEAR:
-			traveltime = vlen(tdest - self.origin)        / tspeed;
-			break;
-		case TSPEED_TIME:
-			traveltime = tspeed;
-			break;
-	}
-
-	if (traveltime < 0.1) // useless anim
-	{
-		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
-		return;
-	}
-
-	controller = spawn();
-	controller.classname = "SUB_CalcMove_controller";
-	controller.owner = self;
-	controller.platmovetype = self.platmovetype;
-	controller.platmovetype_start = self.platmovetype_start;
-	controller.platmovetype_end = self.platmovetype_end;
-	SUB_CalcMove_controller_setbezier(controller, self.origin, tcontrol, tdest);
-	controller.finaldest = (tdest + '0 0 0.125'); // where do we want to end? Offset to overshoot a bit.
-	controller.animstate_starttime = time;
-	controller.animstate_endtime = time + traveltime;
-	controller.think = SUB_CalcMove_controller_think;
-	controller.think1 = self.think;
-
-	// the thinking is now done by the controller
-	self.think = SUB_NullThink; // for PushMove
-	self.nextthink = self.ltime + traveltime;
-
-	// invoke controller
-	self = controller;
-	self.think();
-	self = self.owner;
-}
-
-void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
-{
-	vector	delta;
-	float	traveltime;
-
-	if (!tspeed)
-		objerror ("No speed is defined!");
-
-	self.think1 = func;
-	self.finaldest = tdest;
-	self.think = SUB_CalcMoveDone;
-
-	if (tdest == self.origin)
-	{
-		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
-		return;
-	}
-
-	delta = tdest - self.origin;
-
-	switch(tspeedtype)
-	{
-		default:
-		case TSPEED_START:
-		case TSPEED_END:
-		case TSPEED_LINEAR:
-			traveltime = vlen (delta) / tspeed;
-			break;
-		case TSPEED_TIME:
-			traveltime = tspeed;
-			break;
-	}
-
-	// Very short animations don't really show off the effect
-	// of controlled animation, so let's just use linear movement.
-	// Alternatively entities can choose to specify non-controlled movement.
-        // The only currently implemented alternative movement is linear (value 1)
-	if (traveltime < 0.15 || (self.platmovetype_start == 1 && self.platmovetype_end == 1)) // is this correct?
-	{
-		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
-		self.nextthink = self.ltime + traveltime;
-		return;
-	}
-
-	// now just run like a bezier curve...
-	SUB_CalcMove_Bezier((self.origin + tdest) * 0.5, tdest, tspeedtype, tspeed, func);
-}
-
-void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
-{
-	entity	oldself;
-
-	oldself = self;
-	self = ent;
-
-	SUB_CalcMove (tdest, tspeedtype, tspeed, func);
-
-	self = oldself;
-}
-
-/*
-=============
-SUB_CalcAngleMove
-
-calculate self.avelocity and self.nextthink to reach destangle from
-self.angles rotating
-
-The calling function should make sure self.think is valid
-===============
-*/
-void SUB_CalcAngleMoveDone (void)
-{
-	// After rotating, set angle to exact final angle
-	self.angles = self.finalangle;
-	self.avelocity = '0 0 0';
-	self.nextthink = -1;
-	if (self.think1)
-		self.think1 ();
-}
-
-// FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func)
-{
-	vector	delta;
-	float	traveltime;
-
-	if (!tspeed)
-		objerror ("No speed is defined!");
-
-	// take the shortest distance for the angles
-	self.angles_x -= 360 * floor((self.angles.x - destangle.x) / 360 + 0.5);
-	self.angles_y -= 360 * floor((self.angles.y - destangle.y) / 360 + 0.5);
-	self.angles_z -= 360 * floor((self.angles.z - destangle.z) / 360 + 0.5);
-	delta = destangle - self.angles;
-
-	switch(tspeedtype)
-	{
-		default:
-		case TSPEED_START:
-		case TSPEED_END:
-		case TSPEED_LINEAR:
-			traveltime = vlen (delta) / tspeed;
-			break;
-		case TSPEED_TIME:
-			traveltime = tspeed;
-			break;
-	}
-
-	self.think1 = func;
-	self.finalangle = destangle;
-	self.think = SUB_CalcAngleMoveDone;
-
-	if (traveltime < 0.1)
-	{
-		self.avelocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
-		return;
-	}
-
-	self.avelocity = delta * (1 / traveltime);
-	self.nextthink = self.ltime + traveltime;
-}
-
-void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
-{
-	entity	oldself;
-
-	oldself = self;
-	self = ent;
-
-	SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func);
-
-	self = oldself;
 }
 
 /*
@@ -438,7 +18,7 @@ main
 unused but required by the engine
 ==================
 */
-void main (void)
+void main ()
 {
 
 }
@@ -563,10 +143,10 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 		if(c == 50)
 		{
-			dprint("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2), "\n");
-			dprint("  Nudging gets us nowhere at ", vtos(pos), "\n");
-			dprint("  trace_endpos is ", vtos(trace_endpos), "\n");
-			dprint("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
+			LOG_TRACE("HOLY SHIT! When tracing from ", vtos(v1), " to ", vtos(v2), "\n");
+			LOG_TRACE("  Nudging gets us nowhere at ", vtos(pos), "\n");
+			LOG_TRACE("  trace_endpos is ", vtos(trace_endpos), "\n");
+			LOG_TRACE("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
 		}
 
 		stopentity = trace_ent;
@@ -656,50 +236,8 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-/*
-==================
-crandom
-
-Returns a random number between -1.0 and 1.0
-==================
-*/
-float crandom (void)
-{
-	return 2 * (random () - 0.5);
-}
-
-/*
-==================
-Angc used for animations
-==================
-*/
-
-
-float angc (float a1, float a2)
-{
-	float	a;
-
-	while (a1 > 180)
-		a1 = a1 - 360;
-	while (a1 < -179)
-		a1 = a1 + 360;
-
-	while (a2 > 180)
-		a2 = a2 - 360;
-	while (a2 < -179)
-		a2 = a2 + 360;
-
-	a = a1 - a2;
-	while (a > 180)
-		a = a - 360;
-	while (a < -179)
-		a = a + 360;
-
-	return a;
-}
-
 float LOD_customize()
-{
+{SELFPARAM();
 	float d;
 
 	if(autocvar_loddebug)
@@ -727,12 +265,12 @@ float LOD_customize()
 }
 
 void LOD_uncustomize()
-{
+{SELFPARAM();
 	self.modelindex = self.lodmodelindex0;
 }
 
 void LODmodel_attach()
-{
+{SELFPARAM();
 	entity e;
 
 	if(!self.loddistance1)
@@ -772,13 +310,13 @@ void LODmodel_attach()
 		ma = self.maxs;
 
 		precache_model(self.lodmodel1);
-		setmodel(self, self.lodmodel1);
+		_setmodel(self, self.lodmodel1);
 		self.lodmodelindex1 = self.modelindex;
 
 		if(self.lodmodel2 != "")
 		{
 			precache_model(self.lodmodel2);
-			setmodel(self, self.lodmodel2);
+			_setmodel(self, self.lodmodel2);
 			self.lodmodelindex2 = self.modelindex;
 		}
 
@@ -792,7 +330,7 @@ void LODmodel_attach()
 }
 
 void ApplyMinMaxScaleAngles(entity e)
-{
+{SELFPARAM();
 	if(e.angles.x != 0 || e.angles.z != 0 || self.avelocity.x != 0 || self.avelocity.z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
@@ -819,7 +357,7 @@ void ApplyMinMaxScaleAngles(entity e)
 }
 
 void SetBrushEntityModel()
-{
+{SELFPARAM();
  	if(self.model != "")
  	{
  		precache_model(self.model);
@@ -827,11 +365,11 @@ void SetBrushEntityModel()
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
 			setsize(self, mi, ma);
 		}
 		else
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
@@ -839,7 +377,7 @@ void SetBrushEntityModel()
 }
 
 void SetBrushEntityModelNoLOD()
-{
+{SELFPARAM();
  	if(self.model != "")
  	{
  		precache_model(self.model);
@@ -847,11 +385,11 @@ void SetBrushEntityModelNoLOD()
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
 			setsize(self, mi, ma);
 		}
 		else
-			setmodel(self, self.model); // no precision needed
+			_setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
 	ApplyMinMaxScaleAngles(self);
@@ -863,24 +401,24 @@ InitTrigger
 ================
 */
 
-void SetMovedir()
+void SetMovedir(entity this)
 {
-	if (self.movedir != '0 0 0')
-		self.movedir = normalize(self.movedir);
+	if(this.movedir != '0 0 0')
+		this.movedir = normalize(this.movedir);
 	else
 	{
-		makevectors (self.angles);
-		self.movedir = v_forward;
+		makevectors(this.angles);
+		this.movedir = v_forward;
 	}
 
-	self.angles = '0 0 0';
+	this.angles = '0 0 0';
 }
 
 void InitTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir ();
+	SetMovedir(self);
 	self.solid = SOLID_TRIGGER;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE;
@@ -889,10 +427,10 @@ void InitTrigger()
 }
 
 void InitSolidBSPTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir ();
+	SetMovedir(self);
 	self.solid = SOLID_BSP;
 	SetBrushEntityModel();
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
@@ -901,7 +439,7 @@ void InitSolidBSPTrigger()
 }
 
 float InitMovingBrushTrigger()
-{
+{SELFPARAM();
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	self.solid = SOLID_BSP;

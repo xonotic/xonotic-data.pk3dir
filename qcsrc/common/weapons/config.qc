@@ -1,11 +1,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
-    #include "../../dpdefs/dpextensions.qh"
     #include "../util.qh"
     #include "config.qh"
-    #include "weapons.qh"
+    #include "all.qh"
 #endif
 
 // ==========================
@@ -24,7 +22,7 @@ float W_Config_Queue_Compare(int root, int child, entity pass)
 	return strcmp(wep_config_queue[root], wep_config_queue[child]);
 }
 
-void Dump_Weapon_Settings(void)
+void Dump_Weapon_Settings()
 {
 	int i, x, totalsettings = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -35,7 +33,8 @@ void Dump_Weapon_Settings(void)
 			{ wep_config_queue[x] = string_null; }
 
 		// step 2: build new queue
-		WEP_ACTION(i, WR_CONFIG);
+		Weapon w = get_weaponinfo(i);
+		w.wr_config(w);
 
 		// step 3: sort queue
 		heapsort(WEP_CONFIG_COUNT, W_Config_Queue_Swap, W_Config_Queue_Compare, world);
@@ -51,7 +50,7 @@ void Dump_Weapon_Settings(void)
 		WEP_CONFIG_WRITETOFILE("// }}}\n");
 
 		// step 5: debug info
-		print(sprintf("#%d: %s: %d settings...\n", i, WEP_NAME(i), WEP_CONFIG_COUNT));
+		LOG_INFO(sprintf("#%d: %s: %d settings...\n", i, WEP_NAME(i), WEP_CONFIG_COUNT));
 		totalsettings += WEP_CONFIG_COUNT;
 	}
 
@@ -61,5 +60,5 @@ void Dump_Weapon_Settings(void)
 		{ wep_config_queue[x] = string_null; }
 
 	// extra information
-	print(sprintf("Totals: %d weapons, %d settings\n", (i - 1), totalsettings));
+	LOG_INFO(sprintf("Totals: %d weapons, %d settings\n", (i - 1), totalsettings));
 }

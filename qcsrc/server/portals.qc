@@ -1,18 +1,20 @@
 #include "portals.qh"
-#include "_all.qh"
 
 #include "g_hook.qh"
-#include "g_subs.qh"
-#include "mutators/mutators_include.qh"
-#include "t_teleporters.qh"
+#include "mutators/all.qh"
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"
+#include "../common/triggers/teleporters.qh"
+#include "../common/triggers/subs.qh"
 #include "../common/util.qh"
-#include "../common/weapons/weapons.qh"
-#include "../csqcmodellib/sv_model.qh"
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../common/weapons/all.qh"
+#include "../lib/csqcmodel/sv_model.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/util_server.qh"
+#include "../lib/warpzone/common.qh"
+#include "../common/vehicles/vehicle.qh"
+#include "../common/vehicles/sv_vehicles.qh"
 
 #define PORTALS_ARE_NOT_SOLID
 
@@ -51,7 +53,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 	 */
 
 	// PLAYERS use different math
-#ifndef POSITIVE_PITCH_IS_DOWN
+#if !(POSITIVE_PITCH_IS_DOWN)
 	ang.x = -ang.x;
 #endif
 
@@ -92,7 +94,7 @@ vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle)
 		//print("GOOD path: ", vtos(ang), "\n");
 	}
 
-#ifndef POSITIVE_PITCH_IS_DOWN
+#if !(POSITIVE_PITCH_IS_DOWN)
 	ang.x = -ang.x;
 #endif
 	ang.z = vangle.z;
@@ -146,7 +148,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, step, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		print("'safe' teleport location is not safe!\n");
+		LOG_INFO("'safe' teleport location is not safe!\n");
 		// FAIL TODO why does this happen?
 		return 0;
 	}
@@ -154,7 +156,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	tracebox(safe, player.mins - SAFENUDGE, player.maxs + SAFENUDGE, to, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
 	{
-		print("trace_endpos in solid, this can't be!\n");
+		LOG_INFO("trace_endpos in solid, this can't be!\n");
 		// FAIL TODO why does this happen? (reported by MrBougo)
 		return 0;
 	}
@@ -170,11 +172,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	// factor -1 allows chaining portals, but may be weird
 	player.right_vector = -1 * AnglesTransform_Apply(transform, player.right_vector);
 
-	entity oldself = self;
-	self = player;
-	MUTATOR_CALLHOOK(PortalTeleport);
-	player = self;
-	self = oldself;
+	MUTATOR_CALLHOOK(PortalTeleport, player);
 
 	if (!teleporter.enemy)
 	{
@@ -217,7 +215,7 @@ float Portal_FindSafeOrigin(entity portal)
 	if(!move_out_of_solid(portal))
 	{
 #ifdef DEBUG
-		print("NO SAFE ORIGIN\n");
+		LOG_INFO("NO SAFE ORIGIN\n");
 #endif
 		return 0;
 	}
@@ -252,7 +250,7 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 }
 
 void Portal_Touch()
-{
+{SELFPARAM();
 	vector g;
 
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -269,6 +267,10 @@ void Portal_Touch()
 
 	if(other.classname == "grapplinghook")
 		return; // handled by think
+
+	if(!autocvar_g_vehicles_teleportable)
+	if(other.vehicle_flags & VHF_ISVEHICLE)
+		return; // no teleporting vehicles?
 
 	if(!self.enemy)
 		error("Portal_Touch called for a broken portal\n");
@@ -306,8 +308,8 @@ void Portal_Touch()
 		return;
 
 	/*
-	if(other.mins_x < PL_MIN_x || other.mins_y < PL_MIN_y || other.mins_z < PL_MIN_z
-	|| other.maxs_x > PL_MAX_x || other.maxs_y > PL_MAX_y || other.maxs_z > PL_MAX_z)
+	if(other.mins_x < PL_MIN.x || other.mins_y < PL_MIN.y || other.mins_z < PL_MIN.z
+	|| other.maxs_x > PL_MAX.x || other.maxs_y > PL_MAX.y || other.maxs_z > PL_MAX.z)
 	{
 		// can't teleport this
 		return;
@@ -414,21 +416,21 @@ void Portal_Remove(entity portal, float killed)
 	if(killed)
 	{
 		fixedmakevectors(portal.mangle);
-		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
+		sound(portal, CH_SHOTS, SND_PORTO_EXPLODE, VOL_BASE, ATTEN_NORM);
+		Send_Effect(EFFECT_ROCKET_EXPLODE, portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else
 	{
 		Portal_MakeBrokenPortal(portal);
-		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTEN_NORM);
+		sound(portal, CH_SHOTS, SND_PORTO_EXPIRE, VOL_BASE, ATTEN_NORM);
 		SUB_SetFade(portal, time, 0.5);
 	}
 }
 
 void Portal_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{
-	if(deathtype == DEATH_TELEFRAG)
+{SELFPARAM();
+	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;
 	if(attacker != self.aiment)
 		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(self.aiment))
@@ -439,7 +441,7 @@ void Portal_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 }
 
 void Portal_Think_TryTeleportPlayer(entity e, vector g)
-{
+{SELFPARAM();
 	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, self.origin, v_forward, self.maxs.x))
 		return;
 
@@ -451,7 +453,7 @@ void Portal_Think_TryTeleportPlayer(entity e, vector g)
 }
 
 void Portal_Think()
-{
+{SELFPARAM();
 	entity e, o;
 	vector g;
 
@@ -494,7 +496,7 @@ void Portal_Think()
 }
 
 float Portal_Customize()
-{
+{SELFPARAM();
 	if(IS_SPEC(other))
 		other = other.enemy;
 	if(other == self.aiment)
@@ -574,7 +576,7 @@ void Portal_ClearAll(entity own)
 	W_Porto_Remove(own);
 }
 void Portal_RemoveLater_Think()
-{
+{SELFPARAM();
 	Portal_Remove(self, self.cnt);
 }
 void Portal_RemoveLater(entity portal, float kill)
@@ -622,8 +624,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	if(!CheckWireframeBox(own, org - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 		return world;
 
-	portal = spawn();
-	portal.classname = "portal";
+	portal = new(portal);
 	portal.aiment = own;
 	setorigin(portal, org);
 	portal.mangle = ang;
@@ -636,7 +637,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.event_damage = Portal_Damage;
 	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
 	portal.health = autocvar_g_balance_portal_health;
-	setmodel(portal, "models/portal.md3");
+	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
 	portal.customizeentityforclient = Portal_Customize;
 

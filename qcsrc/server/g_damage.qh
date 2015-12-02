@@ -4,13 +4,11 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/common.qh"
+    #include "../lib/warpzone/common.qh"
     #include "../common/constants.qh"
     #include "../common/teams.qh"
     #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
+    #include "../common/weapons/all.qh"
     #include "weapons/accuracy.qh"
     #include "weapons/csqcprojectile.qh"
     #include "weapons/selection.qh"
@@ -19,11 +17,11 @@
     #include "constants.qh"
     #include "defs.qh"
     #include "../common/notifications.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "tturrets/include/turrets_early.qh"
-    #include "vehicles/vehicle.qh"
-    #include "../csqcmodellib/sv_model.qh"
+    #include "../common/deathtypes/all.qh"
+    #include "mutators/all.qh"
+    #include "../common/turrets/sv_turrets.qh"
+    #include "../common/vehicles/all.qh"
+    #include "../lib/csqcmodel/sv_model.qh"
     #include "../common/playerstats.qh"
     #include "g_hook.qh"
     #include "scores.qh"
@@ -35,7 +33,7 @@
 .float dmg_force;
 .float dmg_radius;
 
-float Damage_DamageInfo_SendEntity(entity to, int sf);
+bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf);
 
 void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, int deathtype, float bloodtype, entity dmgowner);
 

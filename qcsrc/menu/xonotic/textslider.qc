@@ -2,9 +2,10 @@
 #define TEXTSLIDER_H
 #include "../item/textslider.qc"
 CLASS(XonoticTextSlider, TextSlider)
-	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string))
-	METHOD(XonoticTextSlider, setValue, void(entity, float))
-	METHOD(XonoticTextSlider, configureXonoticTextSliderValues, void(entity))
+	METHOD(XonoticTextSlider, configureXonoticTextSlider, void(entity, string, string));
+	METHOD(XonoticTextSlider, setValue, void(entity, float));
+	METHOD(XonoticTextSlider, setValue_noAnim, void(entity, float));
+	METHOD(XonoticTextSlider, configureXonoticTextSliderValues, void(entity));
 	ATTRIB(XonoticTextSlider, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticTextSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT)
 	ATTRIB(XonoticTextSlider, image, string, SKINGFX_SLIDER)
@@ -17,39 +18,49 @@ CLASS(XonoticTextSlider, TextSlider)
 	ATTRIB(XonoticTextSlider, color2, vector, SKINCOLOR_SLIDER_S)
 
 	ATTRIB(XonoticTextSlider, cvarName, string, string_null)
-	METHOD(XonoticTextSlider, loadCvars, void(entity))
-	METHOD(XonoticTextSlider, saveCvars, void(entity))
+	METHOD(XonoticTextSlider, loadCvars, void(entity));
+	METHOD(XonoticTextSlider, saveCvars, void(entity));
 	ATTRIB(XonoticTextSlider, sendCvars, float, 0)
 
 	ATTRIB(XonoticTextSlider, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticTextSlider, disabledAlpha, float, SKINALPHA_DISABLED)
 ENDCLASS(XonoticTextSlider)
+entity makeXonoticTextSlider_T(string, string theTooltip);
 entity makeXonoticTextSlider(string); // note: you still need to call addValue and configureXonoticTextSliderValues!
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticTextSlider(string theCvar)
+entity makeXonoticTextSlider_T(string theCvar, string theTooltip)
 {
 	entity me;
 	me = NEW(XonoticTextSlider);
-	me.configureXonoticTextSlider(me, theCvar);
+	me.configureXonoticTextSlider(me, theCvar, theTooltip);
 	return me;
 }
-void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar)
+entity makeXonoticTextSlider(string theCvar)
+{
+	return makeXonoticTextSlider_T(theCvar, string_null);
+}
+void XonoticTextSlider_configureXonoticTextSlider(entity me, string theCvar, string theTooltip)
 {
 	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		// don't load it yet
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	// me.loadCvars(me); // don't load it yet
+	setZonedTooltip(me, theTooltip, theCvar);
 }
 void XonoticTextSlider_setValue(entity me, float val)
 {
 	if(val != me.value)
 	{
 		SUPER(XonoticTextSlider).setValue( me, val );
+		me.saveCvars(me);
+	}
+}
+void XonoticTextSlider_setValue_noAnim(entity me, float val)
+{
+	if(val != me.value)
+	{
+		SUPER(XonoticTextSlider).setValue_noAnim(me, val);
 		me.saveCvars(me);
 	}
 }
@@ -63,7 +74,7 @@ void XonoticTextSlider_loadCvars(entity me)
 	float i;
 	for(i = 1; i < n; ++i)
 		s = strcat(s, " ", cvar_string(argv(i)));
-	me.setValueFromIdentifier(me, s);
+	me.setValueFromIdentifier_noAnim(me, s);
 	if(me.value < 0 && n > 1)
 	{
 		// if it failed: check if all cvars have the same value
@@ -72,7 +83,7 @@ void XonoticTextSlider_loadCvars(entity me)
 			if(cvar_string(argv(i)) != cvar_string(argv(i-1)))
 				break;
 		if(i >= n)
-			me.setValueFromIdentifier(me, cvar_string(argv(0)));
+			me.setValueFromIdentifier_noAnim(me, cvar_string(argv(0)));
 	}
 }
 void XonoticTextSlider_saveCvars(entity me)

@@ -1,0 +1,23 @@
+#ifndef MODELS_ALL_H
+#define MODELS_ALL_H
+
+#include "model.qh"
+
+REGISTRY(Models, BITS(9))
+#define Models_from(i) _Models_from(i, MDL_Null)
+REGISTER_REGISTRY(Models)
+
+#define MODEL(name, path) \
+    string MDL_##name##_get() { return path; } \
+    REGISTER(Models, MDL, name, m_id, NEW(Model, MDL_##name##_get))
+
+PRECACHE(Models) {
+    FOREACH(Models, true, LAMBDA({
+        it.model_precache(it);
+    }));
+}
+
+MODEL(Null, "null");
+#include "all.inc"
+
+#endif

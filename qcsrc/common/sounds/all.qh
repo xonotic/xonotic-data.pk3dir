@@ -1,0 +1,26 @@
+#ifndef SOUNDS_ALL_H
+#define SOUNDS_ALL_H
+
+#include "sound.qh"
+
+REGISTRY(Sounds, BITS(8))
+#define Sounds_from(i) _Sounds_from(i, SND_Null)
+REGISTER_REGISTRY(Sounds)
+
+#define SOUND(name, path) \
+    string SND_##name##_get() { return path; } \
+    REGISTER(Sounds, SND, name, m_id, NEW(Sound, SND_##name##_get))
+
+// Used in places where a string is required
+#define SND(id) Sound_fixpath(SND_##id)
+
+PRECACHE(Sounds) {
+    FOREACH(Sounds, true, LAMBDA({
+        it.sound_precache(it);
+    }));
+}
+
+SOUND(Null, "misc/null");
+#include "all.inc"
+#include "all.qc"
+#endif

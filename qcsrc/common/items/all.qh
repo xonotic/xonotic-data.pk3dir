@@ -1,0 +1,38 @@
+#ifndef ITEMS_ALL_H
+#define ITEMS_ALL_H
+
+#include "../command/all.qh"
+
+#include "item.qh"
+
+REGISTRY(Items, BITS(5))
+#define Items_from(i) _Items_from(i, NULL)
+REGISTER_REGISTRY(Items)
+/** If you register a new item, make sure to add it to all.inc */
+#define REGISTER_ITEM(id, class) REGISTER(Items, ITEM, id, m_id, NEW(class))
+
+REGISTRY_SORT(Items)
+REGISTRY_CHECK(Items)
+STATIC_INIT(Items) { FOREACH(Items, true, LAMBDA(it.m_id = i)); }
+
+void Dump_Items();
+
+GENERIC_COMMAND(dumpitems, "Dump all items to the console") {
+    switch (request) {
+        case CMD_REQUEST_COMMAND: {
+            Dump_Items();
+            return;
+        }
+        default:
+        case CMD_REQUEST_USAGE: {
+            LOG_INFOF("\nUsage:^3 %s dumpitems", GetProgramCommandPrefix());
+            return;
+        }
+    }
+}
+
+#ifndef MENUQC
+string Item_Model(string item_mdl);
+#endif
+
+#endif

@@ -1,33 +1,33 @@
 #include "selection.qh"
-#include "../_all.qh"
 
 #include "weaponsystem.qh"
 #include "../t_items.qh"
-#include "../waypointsprites.qh"
 #include "../../common/constants.qh"
 #include "../../common/util.qh"
-#include "../../common/weapons/weapons.qh"
+#include "../../common/items/item.qh"
+#include "../../common/weapons/all.qh"
+#include "../../common/mutators/mutator/waypoints/waypointsprites.qh"
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)
 {
 	msg_entity = e;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
+	WriteHeader(MSG_ONE, TE_CSQC_WEAPONCOMPLAIN);
 	WriteByte(MSG_ONE, wpn);
 	WriteByte(MSG_ONE, type);
 }
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
-{
+{SELFPARAM();
 	float f;
-	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
 
-	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
-		complain = 0;
+	// ignore hook button when using other offhand equipment
+	if (cl.offhand != OFFHAND_HOOK)
+	if (wpn == WEP_HOOK.m_id && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
+	    complain = 0;
 
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
@@ -48,25 +48,24 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			}
 			else
 			{
-				oldself = self;
-				self = cl;
-				f = WEP_ACTION(wpn, WR_CHECKAMMO1);
-				f = f + WEP_ACTION(wpn, WR_CHECKAMMO2);
+				setself(cl);
+				Weapon w = get_weaponinfo(wpn);
+				f = w.wr_checkammo1(w) + w.wr_checkammo2(w);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				entity mine;
-				if(wpn == WEP_MINE_LAYER)
+				if(wpn == WEP_MINE_LAYER.m_id)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
 
-				self = oldself;
+				setself(this);
 			}
 			if (!f)
 			{
 				if (complain)
 				if(IS_REAL_CLIENT(cl))
 				{
-					play2(cl, "weapons/unavailable.wav");
+					play2(cl, SND(UNAVAILABLE));
 					Send_WeaponComplain (cl, wpn, 0);
 				}
 				return false;
@@ -92,15 +91,16 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						continue;
 					if(!(e.flags & FL_ITEM))
 						continue;
-					WaypointSprite_Spawn(
-						(get_weaponinfo(wpn)).wpmodel,
+					entity wp = WaypointSprite_Spawn(
+						WP_Weapon,
 						1, 0,
 						world, e.origin + ('0 0 1' * e.maxs.z) * 1.2,
 						self, 0,
 						world, enemy,
 						0,
-						RADARICON_NONE, '0 0 0'
+						RADARICON_NONE
 					);
+					wp.wp_extra = wpn;
 				}
 			}
 		}
@@ -109,13 +109,13 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			Send_WeaponComplain (cl, wpn, 2);
 		}
 
-		play2(cl, "weapons/unavailable.wav");
+		play2(cl, SND(UNAVAILABLE));
 	}
 	return false;
 }
 
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing)
-{
+{SELFPARAM();
 	// We cannot tokenize in this function, as GiveItems calls this
 	// function. Thus we must use car/cdr.
 	float weaponwant, first_valid, prev_valid, switchtonext, switchtolast;
@@ -140,7 +140,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
 		wep = get_weaponinfo(weaponwant);
-		wepset = WepSet_FromWeapon(weaponwant);
+		wepset = wep.m_wepset;
 		if(imp >= 0)
 		if(wep.impulse != imp)
 			continue;
@@ -148,9 +148,10 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		float i, have_other = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
+			Weapon e = get_weaponinfo(i);
 			if(i != weaponwant)
-			if((get_weaponinfo(i)).impulse == imp || imp < 0)
-			if((pl.weapons & WepSet_FromWeapon(i)) || (weaponsInMap & WepSet_FromWeapon(i)))
+			if(e.impulse == imp || imp < 0)
+			if((pl.weapons & (e.m_wepset)) || (weaponsInMap & (e.m_wepset)))
 				have_other = true;
 		}
 
@@ -197,7 +198,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		{
 			weaponwant = stof(car(rest)); rest = cdr(rest);
 			wep = get_weaponinfo(weaponwant);
-			wepset = WepSet_FromWeapon(weaponwant);
+			wepset = wep.m_wepset;
 			if(imp >= 0)
 				if(wep.impulse != imp)
 					continue;
@@ -205,9 +206,10 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 			float i, have_other = false;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
+				Weapon w = get_weaponinfo(i);
 				if(i != weaponwant)
-				if((get_weaponinfo(i)).impulse == imp || imp < 0)
-				if((pl.weapons & WepSet_FromWeapon(i)) || (weaponsInMap & WepSet_FromWeapon(i)))
+				if(w.impulse == imp || imp < 0)
+				if((pl.weapons & (w.m_wepset)) || (weaponsInMap & (w.m_wepset)))
 					have_other = true;
 			}
 
@@ -239,13 +241,13 @@ void W_SwitchWeapon_Force(entity e, float w)
 void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
-	float w, ww;
-	w = pl.weapon;
-	if(pl.weapons & WepSet_FromWeapon(w))
+	int ww;
+	WepSet set = WepSet_FromWeapon(pl.weapon);
+	if(pl.weapons & set)
 	{
-		pl.weapons &= ~WepSet_FromWeapon(w);
+		pl.weapons &= ~set;
 		ww = w_getbestweapon(pl);
-		pl.weapons |= WepSet_FromWeapon(w);
+		pl.weapons |= set;
 	}
 	else
 		ww = w_getbestweapon(pl);
@@ -254,7 +256,7 @@ void W_SwitchToOtherWeapon(entity pl)
 }
 
 void W_SwitchWeapon(float imp)
-{
+{SELFPARAM();
 	if (self.switchweapon != imp)
 	{
 		if (client_hasweapon(self, imp, true, true))
@@ -262,11 +264,14 @@ void W_SwitchWeapon(float imp)
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
-	else if(!forbidWeaponUse()) { WEP_ACTION(self.weapon, WR_RELOAD); }
+	else if(!forbidWeaponUse(self)) {
+		Weapon w = get_weaponinfo(self.weapon);
+		w.wr_reload(w);
+	}
 }
 
 void W_CycleWeapon(string weaponorder, float dir)
-{
+{SELFPARAM();
 	float w;
 	w = W_GetCycleWeapon(self, weaponorder, dir, -1, 1, true);
 	if(w > 0)
@@ -274,7 +279,7 @@ void W_CycleWeapon(string weaponorder, float dir)
 }
 
 void W_NextWeaponOnImpulse(float imp)
-{
+{SELFPARAM();
 	float w;
 	w = W_GetCycleWeapon(self, self.cvar_cl_weaponpriority, +1, imp, 1, (self.cvar_cl_weaponimpulsemode == 0));
 	if(w > 0)
@@ -283,7 +288,7 @@ void W_NextWeaponOnImpulse(float imp)
 
 // next weapon
 void W_NextWeapon(float list)
-{
+{SELFPARAM();
 	if(list == 0)
 		W_CycleWeapon(weaponorder_byid, -1);
 	else if(list == 1)
@@ -294,7 +299,7 @@ void W_NextWeapon(float list)
 
 // prev weapon
 void W_PreviousWeapon(float list)
-{
+{SELFPARAM();
 	if(list == 0)
 		W_CycleWeapon(weaponorder_byid, +1);
 	else if(list == 1)
@@ -304,8 +309,8 @@ void W_PreviousWeapon(float list)
 }
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(void)
-{
+void W_LastWeapon()
+{SELFPARAM();
 	if(client_hasweapon(self, self.cnt, true, false))
 		W_SwitchWeapon(self.cnt);
 	else

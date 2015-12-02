@@ -1,26 +1,10 @@
 #include "teamradar.qh"
-#include "_all.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 
-#include "../common/util.qh"
+#include "../common/mutators/mutator/waypoints/all.qh"
 
-#include "../csqcmodellib/interpolate.qh"
-
-float vlen2d(vector v)
-{
-	return sqrt(v.x * v.x + v.y * v.y);
-}
-
-float vlen_maxnorm2d(vector v)
-{
-	return max(v.x, v.y, -v.x, -v.y);
-}
-
-float vlen_minnorm2d(vector v)
-{
-	return min(max(v.x, -v.x), max(v.y, -v.y));
-}
+#include "../lib/csqcmodel/interpolate.qh"
 
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
@@ -46,10 +30,32 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	return out;
 }
 
-vector yinvert(vector v)
+
+vector teamradar_2dcoord_to_texcoord(vector in)
 {
-	v.y = 1 - v.y;
-	return v;
+	vector out;
+	out = in;
+
+	out -= teamradar_origin2d;
+	if(v_flipped)
+		out_x = -out_x;
+	out = out / teamradar_size;
+
+	out_y = - out_y; // screen space is reversed
+	out = rotate(out, -teamradar_angle * DEG2RAD);
+
+	out += teamradar_origin3d_in_texcoord;
+
+	return out;
+}
+
+vector teamradar_texcoord_to_3dcoord(vector in,float z)
+{
+	vector out;
+	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
+	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
+	out_z = z;
+	return out;
 }
 
 void draw_teamradar_background(float fg)
@@ -119,10 +125,10 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	R_EndPolygon();
 }
 
-void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a)
+void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb, float a)
 {
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord));
-	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon)), '8 8 0', rgb, a, 0);
+	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon.m_radaricon)), '8 8 0', rgb, a, 0);
 
 	if(pingdata)
 	{
@@ -188,11 +194,11 @@ void teamradar_loadcvars()
 
 // radar links
 
-void Ent_RadarLink()
+NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 {
 	int sendflags = ReadByte();
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 	self.classname = "radarlink";
@@ -217,5 +223,7 @@ void Ent_RadarLink()
 		self.team = ReadByte();
 	}
 
-	InterpolateOrigin_Note();
+	return = true;
+
+	InterpolateOrigin_Note(this);
 }

@@ -2,8 +2,7 @@
 #define DIALOG_MULTIPLAYER_MEDIA_DEMO_H
 #include "tab.qc"
 CLASS(XonoticDemoBrowserTab, XonoticTab)
-	METHOD(XonoticDemoBrowserTab, fill, void(entity))
-	ATTRIB(XonoticDemoBrowserTab, title, string, _("Demo"))
+	METHOD(XonoticDemoBrowserTab, fill, void(entity));
 	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticDemoBrowserTab, rows, float, 21)
 	ATTRIB(XonoticDemoBrowserTab, columns, float, 6.5)
@@ -63,7 +62,8 @@ void XonoticDemoBrowserTab_fill(entity me)
 		me.TD(me, me.rows - 2.5, me.columns, demolist);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Timedemo"), '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton_T(_("Timedemo"), '0 0 0',
+			_("Benchmark how fast your computer can run the highlighted demo")));
 			e.democlicktype = DMO_TIME;
 			e.onClick = DemoConfirm_Check_Gamestatus;
 			e.onClickEntity = me; // demolist is global anyway
