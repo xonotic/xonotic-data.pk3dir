@@ -37,7 +37,11 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
+#ifdef SVQC
+	grav = autocvar_sv_gravity;
+#elif defined(CSQC)
 	grav = PHYS_GRAVITY(other);
+#endif
 	if(PHYS_ENTGRAVITY(other))
 		grav *= PHYS_ENTGRAVITY(other);
 
@@ -354,8 +358,7 @@ void trigger_push_link()
 	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
 	Net_LinkEntity(self, false, 0, trigger_push_send);
 }
-#endif
-#ifdef SVQC
+
 /*
  * ENTITY PARAMETERS:
  *
@@ -420,9 +423,7 @@ spawnfunc(target_push) { target_push_link(); }
 spawnfunc(info_notnull) { target_push_link(); }
 spawnfunc(target_position) { make_pure(this); target_push_link(); }
 
-#endif
-
-#ifdef CSQC
+#elif defined(CSQC)
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
