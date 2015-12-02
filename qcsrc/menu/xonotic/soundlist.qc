@@ -48,7 +48,6 @@ entity makeXonoticSoundList()
 void XonoticSoundList_configureXonoticSoundList(entity me)
 {
 	me.configureXonoticListBox(me);
-	me.getSounds(me);
 }
 
 string XonoticSoundList_soundName(entity me, float i )
