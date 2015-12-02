@@ -4,7 +4,11 @@
 #endif
 #include "../../../physics.qh"
 
+#ifdef SVQC
+REGISTER_MUTATOR(doublejump, autocvar_sv_doublejump);
+#elif defined(CSQC)
 REGISTER_MUTATOR(doublejump, true);
+#endif
 
 #define PHYS_DOUBLEJUMP(s)                     STAT(DOUBLEJUMP, s)
 
@@ -27,19 +31,4 @@ MUTATOR_HOOKFUNCTION(doublejump, PlayerJump)
 	return false;
 }
 
-#ifdef SVQC
-
-MUTATOR_HOOKFUNCTION(doublejump, BuildMutatorsString)
-{
-	ret_string = strcat(ret_string, ":doublejump");
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(doublejump, BuildMutatorsPrettyString)
-{
-	ret_string = strcat(ret_string, ", Double jump");
-	return false;
-}
-
-#endif
 #endif
