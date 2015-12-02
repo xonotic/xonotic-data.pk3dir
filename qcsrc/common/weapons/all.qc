@@ -267,12 +267,8 @@ string W_Sound(string w_snd)
 string W_Model(string w_mdl)
 {
 	string output = strcat("models/weapons/", w_mdl);
-#ifdef SVQC
-		MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
-		return weapon_model_output;
-#else
-		return output;
-#endif
+	MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
+	return weapon_model_output;
 }
 
 #ifndef MENUQC
