@@ -20,7 +20,7 @@
 		 */
 		void globalsound(int channel, entity from, entity gs, float r, int chan, float vol, float atten)
 		{
-			assert(IS_PLAYER(from));
+			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			WriteHeader(channel, globalsound);
 			WriteByte(channel, gs.m_id);
@@ -43,7 +43,7 @@
 		*/
 		void playersound(int channel, entity from, entity ps, float r, int chan, float vol, float atten)
 		{
-			assert(IS_PLAYER(from));
+			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			WriteHeader(channel, playersound);
 			WriteByte(channel, ps.m_id);
