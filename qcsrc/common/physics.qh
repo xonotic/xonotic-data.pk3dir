@@ -91,6 +91,9 @@ bool IsFlying(entity a);
 
 #ifdef CSQC
 
+	string autocvar_cl_jumpspeedcap_min;
+	string autocvar_cl_jumpspeedcap_max;
+
 	noref float pmove_waterjumptime;
 
 	const int FL_WATERJUMP = 2048;	// player jumping out of water
@@ -163,8 +166,8 @@ bool IsFlying(entity a);
 
 	#define ITEMS_STAT(s) 						(s).items
 
-	#define PHYS_JUMPSPEEDCAP_MIN				cvar_string("cl_jumpspeedcap_min")
-	#define PHYS_JUMPSPEEDCAP_MAX				cvar_string("cl_jumpspeedcap_max")
+	#define PHYS_JUMPSPEEDCAP_MIN				autocvar_cl_jumpspeedcap_min
+	#define PHYS_JUMPSPEEDCAP_MAX				autocvar_cl_jumpspeedcap_max
 
 	#define PHYS_CL_TRACK_CANJUMP(s)            STAT(MOVEVARS_CL_TRACK_CANJUMP, s)
 	// FIXME: 0 doesn't mean zero gravity

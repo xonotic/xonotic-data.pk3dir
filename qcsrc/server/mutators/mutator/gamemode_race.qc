@@ -253,16 +253,6 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(rc, PlayerPreThink)
-{SELFPARAM();
-	if(IS_SPEC(self) || IS_OBSERVER(self))
-	if(g_race_qualifying)
-	if(msg_entity.enemy.race_laptime)
-		race_SendNextCheckpoint(msg_entity.enemy, 1);
-
-	return false;
-}
-
 MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 {SELFPARAM();
 	race_PreparePlayer();

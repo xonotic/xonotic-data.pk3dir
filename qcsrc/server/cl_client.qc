@@ -2491,6 +2491,8 @@ void PlayerPreThink ()
 	if(self.spectatee_status != oldspectatee_status)
 	{
 		ClientData_Touch(self);
+		if(g_race || g_cts)
+			race_InitSpectator();
 	}
 
 	if(self.teamkill_soundtime)
