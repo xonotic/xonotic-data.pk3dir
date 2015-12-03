@@ -181,7 +181,7 @@ bool IsFlying(entity a);
 	.float stat_sv_maxspeed = _STAT(MOVEVARS_MAXSPEED);
 
 	/** Not real stats */
-	.string jumpspeedcap_min
+	.string jumpspeedcap_min;
 	.string jumpspeedcap_max;
 
 	#define PHYS_TELEPORT_TIME(s)				s.teleport_time
