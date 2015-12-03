@@ -12,12 +12,20 @@
 	} \
 	while (0)
 
-#define assert(expr, ...) \
+#define assert(expr, ...) _assert(LOG_WARNING, expr, __VA_ARGS__)
+#define ASSERT(expr, ...) _assert(LOG_FATAL, expr, __VA_ARGS__)
+#define _assert(f, expr, then) \
 	do \
 	{ \
-		if (!(expr)) LOG_WARNINGF(__VA_ARGS__); \
+		if (!(expr)) \
+		{ \
+			f("assertion failed: `" #expr "`\n"); \
+			then; \
+		} \
 	} \
 	while (0)
+
+#define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 
 #define _LOG(f, level, s) f("[::"level "] ["__FILE__ ":%s:%.0f] %s", __FUNC__, __LINE__, s)
 
@@ -83,14 +91,5 @@ noref bool autocvar_prvm_backtraceforwarnings;
 		cvar_set("prvm_backtraceforwarnings", ftos(war)); \
 	} \
 	while (0)
-
-#define ASSERT(expr) \
-	do \
-	{ \
-		if (!(expr)) LOG_FATAL("assertion failed: " #expr "\n"); \
-	} \
-	while (0)
-
-#define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 
 #endif

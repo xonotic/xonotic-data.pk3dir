@@ -226,7 +226,7 @@ void PM_dodging(entity this)
 
 #ifdef SVQC
 		if (autocvar_sv_dodging_sound)
-			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 		animdecide_setaction(this, ANIMACTION_JUMP, true);
 #endif

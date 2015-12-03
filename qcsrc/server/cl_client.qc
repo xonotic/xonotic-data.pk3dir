@@ -2498,21 +2498,18 @@ void PlayerPreThink ()
 	{
 		self.teamkill_soundtime = 0;
 
-		setself(self.teamkill_soundsource);
-		entity oldpusher = self.pusher;
-		self.pusher = this;
-
-		PlayerSound(playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
-
-		self.pusher = oldpusher;
-		setself(this);
+		entity e = self.teamkill_soundsource;
+		entity oldpusher = e.pusher;
+		e.pusher = this;
+		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		e.pusher = oldpusher;
 	}
 
 	if(self.taunt_soundtime)
 	if(time > self.taunt_soundtime)
 	{
 		self.taunt_soundtime = 0;
-		PlayerSound(playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(self, playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
 	}
 
 	target_voicescript_next(self);

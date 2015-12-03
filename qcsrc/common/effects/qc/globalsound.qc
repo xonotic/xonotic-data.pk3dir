@@ -20,6 +20,7 @@
 		 */
 		void globalsound(int channel, entity from, entity gs, float r, int chan, float vol, float atten)
 		{
+			assert(IS_PLAYER(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			WriteHeader(channel, globalsound);
 			WriteByte(channel, gs.m_id);
@@ -42,6 +43,7 @@
 		*/
 		void playersound(int channel, entity from, entity ps, float r, int chan, float vol, float atten)
 		{
+			assert(IS_PLAYER(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			WriteHeader(channel, playersound);
 			WriteByte(channel, ps.m_id);
@@ -294,9 +296,8 @@
 
 	#ifdef SVQC
 
-		void _GlobalSound(entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
+		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
 		{
-			SELFPARAM();
 			if (gs == NULL && ps == NULL && sample == "") return;
 			float r = random();
 			if (sample != "") sample = GlobalSound_sample(sample, r);

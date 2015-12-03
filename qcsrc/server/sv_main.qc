@@ -54,7 +54,7 @@ void CreatureFrame ()
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
 					if(self.air_finished < time)
-						PlayerSound(playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+						PlayerSound(self, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 					self.air_finished = time + autocvar_g_balance_contents_drowndelay;
 					self.dmg = 2;
 				}
@@ -161,9 +161,9 @@ void CreatureFrame ()
 					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(self, GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 						else
-							GlobalSound(GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+							GlobalSound(self, GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}

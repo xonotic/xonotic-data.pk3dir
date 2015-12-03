@@ -520,7 +520,7 @@ bool PlayerJump(entity this)
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
-		WITH(entity, self, this, PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND));
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 #endif
 	return true;
 }
@@ -754,7 +754,7 @@ void PM_check_hitground(entity this)
     tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
     if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)) return;
     entity fall = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS) ? GS_FALL_METAL : GS_FALL;
-    WITH(entity, self, this, GlobalSound(fall, CH_PLAYER, VOICETYPE_PLAYERSOUND));
+    GlobalSound(this, fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 #endif
 }
 
