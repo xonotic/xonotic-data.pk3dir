@@ -28,29 +28,6 @@
 .float lastground;
 .int state;
 
-void CreatureFrame_drowning(entity this)
-{
-	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE) && !IS_MONSTER(this)) // vehicles, monsters and projectiles don't drown
-	{
-		if (this.waterlevel != WATERLEVEL_SUBMERGED)
-		{
-			if(this.air_finished < time)
-				PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			this.air_finished = time + autocvar_g_balance_contents_drowndelay;
-			this.dmg = 2;
-		}
-		else if (this.air_finished < time)
-		{	// drown!
-			if (!this.deadflag)
-			if (this.pain_finished < time)
-			{
-				Damage (this, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
-				this.pain_finished = time + 0.5;
-			}
-		}
-	}
-}
-
 void CreatureFrame_hotliquids(entity this)
 {
 	if (this.dmgtime < time)
@@ -100,8 +77,6 @@ void CreatureFrame_Liquids(entity this)
 			this.dmgtime = 0;
 		}
 
-		CreatureFrame_drowning(this);
-
 		CreatureFrame_hotliquids(this);
 	}
 	else
@@ -139,35 +114,6 @@ void CreatureFrame_FallDamage(entity this)
 	}
 }
 
-void CreatureFrame_Footsteps(entity this)
-{
-	// play stupid sounds
-	if (g_footsteps && !gameover && (this.flags & FL_ONGROUND))
-	if (!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE))
-	if (!this.crouch && (vlen(this.velocity) > autocvar_sv_maxspeed * 0.6) && !this.deadflag && time < this.lastground + 0.2)
-	{
-		if((time > this.nextstep) || (time < (this.nextstep - 10.0)))
-		{
-			this.nextstep = time + 0.3 + random() * 0.1;
-			trace_dphitq3surfaceflags = 0;
-			tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-			/*
-			if(trace_fraction == 1)
-				dprint("nohit\n");
-			else
-				dprint(ftos(trace_dphitq3surfaceflags), "\n");
-			*/
-			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
-			{
-				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(this, GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-				else
-					GlobalSound(this, GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			}
-		}
-	}
-}
-
 void CreatureFrame_All()
 {
 	for(entity e = world; (e = findfloat(e, damagedbycontents, true)); )
@@ -176,7 +122,6 @@ void CreatureFrame_All()
 
 		CreatureFrame_Liquids(e);
 		CreatureFrame_FallDamage(e);
-		CreatureFrame_Footsteps(e);
 
         e.oldvelocity = e.velocity;
 	}
