@@ -63,6 +63,7 @@
 #include "../lib/warpzone/anglestransform.qc"
 #include "../lib/warpzone/client.qc"
 #include "../lib/warpzone/common.qc"
+#include "../lib/warpzone/server.qc"
 #include "../lib/warpzone/util_server.qc"
 
 #if BUILD_MOD

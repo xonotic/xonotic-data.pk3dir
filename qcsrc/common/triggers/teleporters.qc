@@ -280,29 +280,35 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
-#ifdef SVQC
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {SELFPARAM();
+#ifdef SVQC
 	makevectors(pl.angles);
 	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
 	{
 		WITH(entity, self, pl, anticheat_fixangle());
 	}
+#endif
 	// "disown" projectiles after teleport
 	if(pl.owner)
 	if(pl.owner == pl.realowner)
 	{
+	#ifdef SVQC
 		if(!(pl.flags & FL_PROJECTILE))
+	#elif defined(CSQC)
+		if(!(pl.move_flags & BIT(15))) // FL_PROJECTILE
+	#endif
 			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
 		pl.owner = world;
 	}
 	if(IS_PLAYER(pl))
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
+	#ifdef SVQC
 		pl.oldvelocity = pl.velocity;
+	#endif
 		// reset teleport time tracking too (or multijump can cause insane speeds)
 		pl.lastteleporttime = time;
 	}
 }
-#endif

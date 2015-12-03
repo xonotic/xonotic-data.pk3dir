@@ -25,6 +25,7 @@ void WarpZone_Fade_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
+void WarpZone_Touch ();
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
 	warpzone_warpzones_exist = 1;
@@ -87,6 +88,8 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 	// how to draw
 	// engine currently wants this
 	self.predraw = WarpZone_Fade_PreDraw;
+
+	self.move_touch = WarpZone_Touch;
 	return true;
 }
 

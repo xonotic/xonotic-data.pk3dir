@@ -106,6 +106,7 @@ bool IsFlying(entity a);
 // TODO
 	#define IS_CLIENT(s)						(s).isplayermodel
 	#define IS_PLAYER(s)						(s).isplayermodel
+	#define IS_NOT_A_CLIENT(s)				   !(s).isplayermodel
 	#define isPushable(s)						(s).isplayermodel
 
 	//float player_multijump;
