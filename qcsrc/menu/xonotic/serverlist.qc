@@ -177,7 +177,7 @@ void RegisterSLCategories()
 		SET_FIELD_COUNT(name, CATEGORY_FIRST, category_ent_count) \
 		CHECK_MAX_COUNT(name, MAX_CATEGORIES, category_ent_count, "SLIST_CATEGORY") \
 		cat = categories[name - 1] = new(slist_category); \
-		cat.cat_name = strzone(#name); \
+		cat.cat_name = #name; \
 		cat.cat_enoverride_string = strzone(SLIST_CATEGORY_AUTOCVAR(name)); \
 		cat.cat_dioverride_string = strzone(dioverride); \
 		cat.cat_string = strzone(str);
@@ -202,6 +202,7 @@ void RegisterSLCategories()
 				if(catnum) \
 				{ \
 					strunzone(categories[i].override_string); \
+					categories[i].override_string = string_null; \
 					categories[i].override_field = catnum; \
 					continue; \
 				} \
@@ -215,6 +216,7 @@ void RegisterSLCategories()
 				} \
 			} \
 			strunzone(categories[i].override_string); \
+			categories[i].override_string = string_null; \
 			categories[i].override_field = 0; \
 		}
 	PROCESS_OVERRIDE(cat_enoverride_string, cat_enoverride)
