@@ -489,7 +489,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	mod_active = 1; // race should never hide the mod icons panel
 	entity me;
 	me = playerslots[player_localnum];
-	float t, score;
+	float score;
 	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
 
@@ -502,7 +502,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
-	t = stof(db_get(ClientProgsDB, strcat(shortmapname, rr, "time")));
+	float t = stof(db_get(ClientProgsDB, strcat(shortmapname, rr, "time")));
 
 	if(score && (score < t || !t)) {
 		db_put(ClientProgsDB, strcat(shortmapname, rr, "time"), ftos(score));

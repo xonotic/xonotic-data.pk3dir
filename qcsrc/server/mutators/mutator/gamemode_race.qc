@@ -10,9 +10,9 @@ REGISTER_MUTATOR(rc, false)
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		race_Initialize();
 
 		rc_SetLimits();
+		race_Initialize();
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
