@@ -963,6 +963,8 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
 		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
+
+	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
 
 float PlayerInIDList(entity p, string idlist)
