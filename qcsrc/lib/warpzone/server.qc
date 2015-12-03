@@ -95,7 +95,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	o10 = o1 = WarpZone_TransformOrigin(wz, o0);
 	v1 = WarpZone_TransformVelocity(wz, v0);
 	if (!IS_NOT_A_CLIENT(player))
-		a1 = WarpZone_TransformVAngles(wz, player.v_angle);
+		a1 = WarpZone_TransformVAngles(wz, PHYS_INPUT_ANGLES(player));
 	else
 		a1 = WarpZone_TransformAngles(wz, a0);
 
@@ -178,8 +178,8 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	}
 	#elif defined(CSQC)
 	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(wz, getpropertyvec(VF_CL_VIEWANGLES)));
-	if(checkextension("DP_CSQC_ROTATEMOVES"))
-		CL_RotateMoves(wz.warpzone_transform);
+	//if(checkextension("DP_CSQC_ROTATEMOVES"))
+		//CL_RotateMoves(wz.warpzone_transform);
 	#endif
 #endif
 
