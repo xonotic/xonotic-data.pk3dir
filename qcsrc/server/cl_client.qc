@@ -2562,7 +2562,6 @@ void DrownPlayer(entity this)
 	}
 	else if (this.air_finished < time)
 	{	// drown!
-		if (!this.deadflag)
 		if (this.pain_finished < time)
 		{
 			Damage (this, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
