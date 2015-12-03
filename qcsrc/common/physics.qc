@@ -742,8 +742,6 @@ void PM_check_frozen(entity this)
 void PM_check_hitground(entity this)
 {
 #ifdef SVQC
-	if (!IS_PLAYER(this)) return; // no fall sounds for observers thank you very much
-	if (!IS_ONGROUND(this)) return;
 	if (!this.wasFlying) return;
     this.wasFlying = false;
     if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
@@ -752,9 +750,32 @@ void PM_check_hitground(entity this)
     this.nextstep = time + 0.3 + random() * 0.1;
     trace_dphitq3surfaceflags = 0;
     tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-    if ((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)) return;
-    entity fall = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS) ? GS_FALL_METAL : GS_FALL;
-    GlobalSound(this, fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
+    entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+    	? GS_FALL_METAL
+    	: GS_FALL;
+    GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+#endif
+}
+
+void PM_Footsteps(entity this)
+{
+#ifdef SVQC
+	if (!g_footsteps) return;
+	if (IS_DUCKED(this)) return;
+	if (time >= this.lastground + 0.2) return;
+	if (vdist(this.velocity, <=, autocvar_sv_maxspeed * 0.6)) return;
+	if ((time > this.nextstep) || (time < (this.nextstep - 10.0)))
+	{
+		this.nextstep = time + 0.3 + random() * 0.1;
+		trace_dphitq3surfaceflags = 0;
+		tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
+		entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+			? GS_STEP_METAL
+			: GS_STEP;
+		GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+	}
 #endif
 }
 
@@ -1398,7 +1419,11 @@ void PM_Main(entity this)
 		this.angles = '0 1 0' * this.v_angle.y;
 #endif
 
-	PM_check_hitground(this);
+	if (IS_PLAYER(this) && IS_ONGROUND(this))
+	{
+		PM_check_hitground(this);
+		PM_Footsteps(this);
+	}
 
 	if(IsFlying(this))
 		this.wasFlying = 1;

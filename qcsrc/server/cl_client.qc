@@ -2520,34 +2520,6 @@ void PlayerPreThink ()
 		self.clip_load = self.clip_size = 0;
 }
 
-void Player_Footsteps(entity this)
-{
-	// play stupid sounds
-	if (g_footsteps && !gameover && (this.flags & FL_ONGROUND))
-	if (!this.crouch && (vlen(this.velocity) > autocvar_sv_maxspeed * 0.6) && this.deadflag == DEAD_NO && time < this.lastground + 0.2)
-	{
-		if((time > this.nextstep) || (time < (this.nextstep - 10.0)))
-		{
-			this.nextstep = time + 0.3 + random() * 0.1;
-			trace_dphitq3surfaceflags = 0;
-			tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-			/*
-			if(trace_fraction == 1)
-				dprint("nohit\n");
-			else
-				dprint(ftos(trace_dphitq3surfaceflags), "\n");
-			*/
-			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
-			{
-				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(this, GS_STEP_METAL, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-				else
-					GlobalSound(this, GS_STEP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			}
-		}
-	}
-}
-
 void DrownPlayer(entity this)
 {
 	if(this.deadflag != DEAD_NO)
@@ -2622,7 +2594,6 @@ void PlayerPostThink ()
 
 	if(IS_PLAYER(self)) {
 		DrownPlayer(self);
-		Player_Footsteps(self);
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)
