@@ -48,6 +48,7 @@ entity makeXonoticDemoList()
 void XonoticDemoList_configureXonoticDemoList(entity me)
 {
 	me.configureXonoticListBox(me);
+	me.nItems = 0;
 }
 
 string XonoticDemoList_demoName(entity me, float i)

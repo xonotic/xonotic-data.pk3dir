@@ -58,6 +58,7 @@ entity makeXonoticScreenshotList()
 void XonoticScreenshotList_configureXonoticScreenshotList(entity me)
 {
 	me.configureXonoticListBox(me);
+	me.nItems = 0;
 }
 
 string XonoticScreenshotList_screenshotName(entity me, float i)
