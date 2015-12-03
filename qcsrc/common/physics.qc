@@ -520,7 +520,7 @@ bool PlayerJump(entity this)
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
-		WITH(entity, this, this, PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND));
+		WITH(entity, self, this, PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND));
 #endif
 	return true;
 }
