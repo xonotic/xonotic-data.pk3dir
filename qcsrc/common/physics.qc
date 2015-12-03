@@ -1387,15 +1387,15 @@ void PM_Main(entity this)
 		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
 	}
 
-	if(this.stat_jumpspeedcap_min != PHYS_JUMPSPEEDCAP_MIN)
+	if(this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min)
 	{
-		this.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MIN;
-		stuffcmd(this, strcat("cl_jumpspeedcap_min ", PHYS_JUMPSPEEDCAP_MIN, "\n"));
+		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
+		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
 	}
-	if(this.stat_jumpspeedcap_max != PHYS_JUMPSPEEDCAP_MAX)
+	if(this.jumpspeedcap_max != autocvar_sv_jumpspeedcap_max)
 	{
-		this.stat_jumpspeedcap_min = PHYS_JUMPSPEEDCAP_MAX;
-		stuffcmd(this, strcat("cl_jumpspeedcap_max ", PHYS_JUMPSPEEDCAP_MAX, "\n"));
+		this.jumpspeedcap_max = autocvar_sv_jumpspeedcap_max;
+		stuffcmd(this, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
 	}
 #endif
 
