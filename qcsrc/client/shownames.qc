@@ -174,12 +174,9 @@ void Draw_ShowNames_All()
 			continue;
 		}
 		make_impure(it);
-		if (entcs.think) WITH(entity, self, entcs, entcs.think());
-		else
-		{
-			LOG_WARNING("entcs.think == null");
-			eprint(entcs);
-		}
+		assert(entcs.think, eprint(entcs));
+		WITH(entity, self, entcs, entcs.think());
+		if (!entcs.has_origin) continue;
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
@@ -193,7 +190,7 @@ void Draw_ShowNames_All()
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
-		if (!it.csqcmodel_isdead && entcs.has_origin) setorigin(it, entcs.origin);
+		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
 	));
