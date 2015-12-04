@@ -2,7 +2,7 @@
 #define ENT_CS_H
 
 REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
-REGISTER_NET_LINKED(CLIENT_ENTCS)
+REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 /** True when private information such as origin is available */
 .bool m_entcs_private;
