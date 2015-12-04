@@ -49,11 +49,8 @@
 		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded ENTCS_NETPROPS limit");
 	}
 
-	bool entcs_send_init;
-	bool entcs_send(entity this, entity to, int sf)
+	bool _entcs_send(entity this, entity to, int sf, int chan)
 	{
-		int chan = entcs_send_init ? MSG_INIT : MSG_ENTITY;
-		entcs_send_init = false;
 		entity player = this.owner;
 		sf |= BIT(0) | BIT(1);
 		if (IS_PLAYER(to) || to.caplayer)                                  // unless spectating,
@@ -68,13 +65,22 @@
 		    || player == to               // player is self
 		;
 		if (!valid) sf = 0;
-		WriteHeader(chan, ENT_CLIENT_ENTCS);
+		if (chan == MSG_ENTITY)
+			WriteHeader(chan, ENT_CLIENT_ENTCS);
+		else
+			WriteHeader(chan, CLIENT_ENTCS);
+		WriteByte(chan, etof(player) - 1);
 		WriteShort(chan, sf);
 		int i = 1;
 		#define X(public, fld, sv, cl) { if (sf & BIT(i)) sv; } i += 1;
 		ENTCS_NETPROPS(X);
 	#undef X
 		return true;
+	}
+
+	bool entcs_send(entity this, entity to, int sf)
+	{
+		return _entcs_send(this, to, sf, MSG_ENTITY);
 	}
 
 	void entcs_think()
@@ -106,8 +112,7 @@
 		FOR_EACH_CLIENT(e)
 		{
 			assert(e.entcs);
-			entcs_send_init = true;
-			entcs_send(e.entcs, player, BITS(23));
+			_entcs_send(e.entcs, msg_entity = player, BITS(23), MSG_ONE);
 		}
 	}
 
@@ -147,16 +152,28 @@
 		}
 	}
 
-	NET_HANDLE(ENT_CLIENT_ENTCS, bool isnew)
+	bool ReadEntcs(entity this)
 	{
-		if (isnew)
+		int n = ReadByte();
+		if (this) this.sv_entnum = n;
+		entity e = entcs_receiver(n);
+		if (!e)
 		{
-			make_pure(this);
-			this.classname = "entcs_receiver";
-			this.entremove = Ent_RemoveEntCS;
-			this.think = entcs_think;
+			if (this)
+			{
+				e = this;
+			}
+			else
+			{
+				e = new(entcs_receiver);
+				make_pure(e);
+				e.think = entcs_think;
+			}
+			entcs_receiver(n, e);
 		}
+		this = e;
 		InterpolateOrigin_Undo(this);
+		this.sv_entnum = n;
 		int sf = ReadShort();
 		this.has_sv_origin = false;
 		this.m_entcs_private = boolean(sf & BIT(0));
@@ -164,11 +181,26 @@
 		#define X(public, fld, sv, cl) { if (sf & BIT(i)) cl; } i += 1;
 		ENTCS_NETPROPS(X);
 	#undef X
-		entcs_receiver(this.sv_entnum, this);
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
 		this.think();
 		return true;
+	}
+
+	NET_HANDLE(ENT_CLIENT_ENTCS, bool isnew)
+	{
+		if (isnew)
+		{
+			make_pure(this);
+			this.classname = "entcs_receiver";
+			this.entremove = Ent_RemoveEntCS;
+		}
+		return ReadEntcs(this);
+	}
+
+	NET_HANDLE(CLIENT_ENTCS, bool isnew)
+	{
+		return ReadEntcs(NULL);
 	}
 
 #endif
