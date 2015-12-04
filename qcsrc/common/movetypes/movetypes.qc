@@ -247,38 +247,38 @@ void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
 	// this.move_velocity = '0 0 0';
 }
 
-bool _Movetype_CheckWater(entity ent)  // SV_CheckWater
+bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 {
-	vector point = ent.move_origin;
-	point.z += (ent.mins.z + 1);
+	vector point = this.move_origin;
+	point.z += this.mins.z + 1;
 
 	int nativecontents = pointcontents(point);
-	if(ent.move_watertype && ent.move_watertype != nativecontents)
+	if(this.move_watertype && this.move_watertype != nativecontents)
 	{
-		// dprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", ent.move_watertype, nativecontents);
-		if(ent.contentstransition)
-			ent.contentstransition(ent.move_watertype, nativecontents);
+		// dprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", this.move_watertype, nativecontents);
+		if(this.contentstransition)
+			this.contentstransition(this.move_watertype, nativecontents);
 	}
 
-	ent.move_waterlevel = 0;
-	ent.move_watertype = CONTENT_EMPTY;
+	this.move_waterlevel = WATERLEVEL_NONE;
+	this.move_watertype = CONTENT_EMPTY;
 
 	int supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
-	if(supercontents & DPCONTENTS_LIQUIDSMASK)
+	if(supercontents & (DPCONTENTS_LIQUIDSMASK))
 	{
-		ent.move_watertype = nativecontents;
-		ent.move_waterlevel = 1;
-		point.y = (ent.origin.y + ((ent.mins.z + ent.maxs.y) * 0.5));
-		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
+		this.move_watertype = nativecontents;
+		this.move_waterlevel = WATERLEVEL_WETFEET;
+		point.z = this.move_origin.z + (this.mins.z + this.maxs.z) * 0.5;
+		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & (DPCONTENTS_LIQUIDSMASK))
 		{
-			ent.move_waterlevel = 2;
-			point.y = ent.origin.y + ent.view_ofs.y;
-			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
-				ent.move_waterlevel = 3;
+			this.move_waterlevel = WATERLEVEL_SWIMMING;
+			point.z = this.move_origin.z + this.view_ofs.z;
+			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & (DPCONTENTS_LIQUIDSMASK))
+				this.move_waterlevel = WATERLEVEL_SUBMERGED;
 		}
 	}
 
-	return ent.move_waterlevel > 1;
+	return this.move_waterlevel > 1;
 }
 
 void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
@@ -353,7 +353,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_fraction = 1;
 			trace_inwater = false;
 			trace_inopen = true;
-			trace_endpos = e.origin;
+			trace_endpos = e.move_origin;
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
 			trace_ent = this;
