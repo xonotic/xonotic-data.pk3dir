@@ -14,7 +14,7 @@ REGISTER_MUTATOR(cts, false)
 
 		g_race_qualifying = true;
 		independent_players = 1;
-		SetLimits(0, 0, 0, -1);
+		SetLimits(0, 0, -1, -1);
 
 		cts_Initialize();
 	}
