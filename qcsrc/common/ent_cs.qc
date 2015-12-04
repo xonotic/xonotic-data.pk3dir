@@ -130,7 +130,10 @@
 	void Ent_RemoveEntCS()
 	{
 		SELFPARAM();
-		entcs_receiver(this.sv_entnum, NULL);
+		int n = this.sv_entnum;
+		entity e = entcs_receiver(n);
+		entcs_receiver(n, NULL);
+		if (e != this) remove(e);
 	}
 
 	void entcs_think()
@@ -155,9 +158,8 @@
 	bool ReadEntcs(entity this)
 	{
 		int n = ReadByte();
-		if (this) this.sv_entnum = n;
 		entity e = entcs_receiver(n);
-		if (!e)
+		if (e == NULL)
 		{
 			if (this)
 			{
@@ -167,9 +169,15 @@
 			{
 				e = new(entcs_receiver);
 				make_pure(e);
-				e.think = entcs_think;
 			}
+			e.sv_entnum = n;
+			e.think = entcs_think;
 			entcs_receiver(n, e);
+		}
+		else if (this && e != this)
+		{
+			this.classname = "entcs_gc";
+			this.sv_entnum = n;
 		}
 		this = e;
 		InterpolateOrigin_Undo(this);
