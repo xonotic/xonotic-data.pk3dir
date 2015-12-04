@@ -104,7 +104,7 @@ bool trigger_keylock_send(entity to, int sf)
 	WriteInt24_t(MSG_ENTITY, self.itemkeys);
 	WriteByte(MSG_ENTITY, self.height);
 
-	trigger_common_write(true);
+	trigger_common_write(self, true);
 
 	return true;
 }

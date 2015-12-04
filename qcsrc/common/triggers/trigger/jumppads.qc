@@ -323,23 +323,13 @@ void trigger_push_findtarget()
 float trigger_push_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
-	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 1)
-	{
-		WriteByte(MSG_ENTITY, self.team);
-		WriteInt24_t(MSG_ENTITY, self.spawnflags);
-		WriteByte(MSG_ENTITY, self.active);
-		WriteCoord(MSG_ENTITY, self.height);
+	WriteByte(MSG_ENTITY, self.team);
+	WriteInt24_t(MSG_ENTITY, self.spawnflags);
+	WriteByte(MSG_ENTITY, self.active);
+	WriteCoord(MSG_ENTITY, self.height);
 
-		trigger_common_write(true);
-	}
-
-	if(sf & 2)
-	{
-		WriteByte(MSG_ENTITY, self.team);
-		WriteByte(MSG_ENTITY, self.active);
-	}
+	trigger_common_write(self, true);
 
 	return true;
 }
@@ -351,8 +341,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
-	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
-	Net_LinkEntity(self, false, 0, trigger_push_send);
+	trigger_link(self, trigger_push_send);
 }
 
 /*
@@ -371,7 +360,7 @@ spawnfunc(trigger_push)
 {
 	SetMovedir(self);
 
-	EXACTTRIGGER_INIT;
+	trigger_init(self);
 
 	self.active = ACTIVE_ACTIVE;
 	self.use = trigger_push_use;
@@ -424,32 +413,23 @@ spawnfunc(target_position) { make_pure(this); target_push_link(); }
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
 	make_pure(this);
-	float sf = ReadByte();
 
-	if(sf & 1)
-	{
-		self.classname = "jumppad";
-		int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
-		self.spawnflags = ReadInt24_t();
-		self.active = ReadByte();
-		self.height = ReadCoord();
+	self.classname = "jumppad";
+	int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
+	self.spawnflags = ReadInt24_t();
+	self.active = ReadByte();
+	self.height = ReadCoord();
 
-		trigger_common_read(true);
+	trigger_common_read(true);
 
-		self.entremove = trigger_remove_generic;
-		self.solid = SOLID_TRIGGER;
-		//self.draw = trigger_draw_generic;
-		self.move_touch = trigger_push_touch;
-		self.drawmask = MASK_NORMAL;
-		self.move_time = time;
-		defer(self, 0.25, trigger_push_findtarget);
-	}
+	self.entremove = trigger_remove_generic;
+	self.solid = SOLID_TRIGGER;
+	//self.draw = trigger_draw_generic;
+	self.move_touch = trigger_push_touch;
+	self.drawmask = MASK_NORMAL;
+	self.move_time = time;
+	defer(self, 0.25, trigger_push_findtarget);
 
-	if(sf & 2)
-	{
-		self.team = ReadByte();
-		self.active = ReadByte();
-	}
 	return true;
 }
 
