@@ -3,36 +3,36 @@
 // #define PROP(public, fld, sv, cl)
 #define ENTCS_NETPROPS(PROP) \
 	PROP(true, sv_entnum, \
-	{ WriteByte(MSG_ENTITY, etof(player) - 1); }, \
+	{ WriteByte(chan, etof(player) - 1); }, \
 	{ this.sv_entnum = ReadByte(); }) \
     \
 	PROP(false, origin, \
-	{ WriteShort(MSG_ENTITY, this.origin.x);  WriteShort(MSG_ENTITY, this.origin.y); \
-	  WriteShort(MSG_ENTITY, this.origin.z); }, \
+	{ WriteShort(chan, this.origin.x);  WriteShort(chan, this.origin.y); \
+	  WriteShort(chan, this.origin.z); }, \
 	{ this.has_sv_origin = true; vector v; v.x = ReadShort(); v.y = ReadShort(); v.z = ReadShort(); setorigin(this, v); }) \
     \
 	PROP(false, angles_y, \
-	{ WriteByte(MSG_ENTITY, this.angles.y / 360 * 256); }, \
+	{ WriteByte(chan, this.angles.y / 360 * 256); }, \
 	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; this.angles = v; }) \
     \
 	PROP(false, health, \
-	{ WriteByte(MSG_ENTITY, this.health / 10);  /* FIXME: use a better scale? */ }, \
+	{ WriteByte(chan, this.health / 10);  /* FIXME: use a better scale? */ }, \
 	{ this.healthvalue = ReadByte() * 10; }) \
     \
 	PROP(false, armorvalue, \
-	{ WriteByte(MSG_ENTITY, this.armorvalue / 10);  /* FIXME: use a better scale? */ }, \
+	{ WriteByte(chan, this.armorvalue / 10);  /* FIXME: use a better scale? */ }, \
 	{ this.armorvalue = ReadByte() * 10; }) \
     \
 	PROP(true, netname, \
-	{ WriteString(MSG_ENTITY, this.netname); }, \
+	{ WriteString(chan, this.netname); }, \
 	{ if (this.netname) strunzone(this.netname); this.netname = strzone(ReadString()); }) \
     \
 	PROP(true, model, \
-	{ WriteString(MSG_ENTITY, this.model); }, \
+	{ WriteString(chan, this.model); }, \
 	{ if (this.model) strunzone(this.model); this.model = strzone(ReadString()); }) \
     \
 	PROP(true, skin, \
-	{ WriteByte(MSG_ENTITY, this.skin); }, \
+	{ WriteByte(chan, this.skin); }, \
 	{ this.skin = ReadByte(); }) \
     \
 	/**/
@@ -49,8 +49,11 @@
 		if (i >= BITS(16 - 1)) LOG_FATAL("Exceeded ENTCS_NETPROPS limit");
 	}
 
+	bool entcs_send_init;
 	bool entcs_send(entity this, entity to, int sf)
 	{
+		int chan = entcs_send_init ? MSG_INIT : MSG_ENTITY;
+		entcs_send_init = false;
 		entity player = this.owner;
 		sf |= BIT(0) | BIT(1);
 		if (IS_PLAYER(to) || to.caplayer)                                  // unless spectating,
@@ -62,12 +65,11 @@
 		this.m_forceupdate = 0;
 		bool valid =
 		    IS_PLAYER(player)             // player must be active
-		    && player.deadflag == DEAD_NO // player must be alive
 		    || player == to               // player is self
 		;
 		if (!valid) sf = 0;
-		WriteHeader(MSG_ENTITY, ENT_CLIENT_ENTCS);
-		WriteShort(MSG_ENTITY, sf);
+		WriteHeader(chan, ENT_CLIENT_ENTCS);
+		WriteShort(chan, sf);
 		int i = 1;
 		#define X(public, fld, sv, cl) { if (sf & BIT(i)) sv; } i += 1;
 		ENTCS_NETPROPS(X);
@@ -100,6 +102,13 @@
 		e.think = entcs_think;
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
+		if (!IS_REAL_CLIENT(player)) return;
+		FOR_EACH_CLIENT(e)
+		{
+			assert(e.entcs);
+			entcs_send_init = true;
+			entcs_send(e.entcs, player, BITS(23));
+		}
 	}
 
 	void entcs_detach(entity player)
