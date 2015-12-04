@@ -147,10 +147,23 @@ void Movetype_Physics_Spam(entity this)  // optimized
 	setorigin(this, this.move_origin);
 }
 
+void CSQCPlayer_CheckWater(entity this)
+{
+	this.move_origin = this.origin;
+	this.move_waterlevel = this.waterlevel;
+	this.move_watertype = this.watertype;
+	_Movetype_CheckWater(this);
+	this.waterlevel = this.move_waterlevel;
+	this.watertype = this.move_watertype;
+}
+
 void CSQCPlayer_Physics(entity this)
 {
 	if(autocvar_cl_movement)
 	{
+		if(autocvar_cl_movement == 3)
+			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
+
 		CSQC_ClientMovement_PlayerMove_Frame(this);
 
 		if(autocvar_cl_movement == 3)

@@ -117,7 +117,7 @@ bool IsFlying(entity a);
 
 	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
 
-	#define PHYS_TELEPORT_TIME(s)				pmove_waterjumptime
+	#define PHYS_TELEPORT_TIME(s)				s.teleport_time
 
 	#define TICRATE ticrate
 

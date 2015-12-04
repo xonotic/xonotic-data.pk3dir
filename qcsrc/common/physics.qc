@@ -186,8 +186,8 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		}
 	}
 
-	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_TELEPORT_TIME(this) <= 0)
-		PHYS_TELEPORT_TIME(this) = 0;
+	if (IS_ONGROUND(this) || this.velocity.z <= 0 || pmove_waterjumptime <= 0)
+		pmove_waterjumptime = 0;
 #endif
 }
 
@@ -546,7 +546,11 @@ void CheckWaterJump(entity this)
 			this.velocity_z = 225;
 			this.flags |= FL_WATERJUMP;
 			SET_JUMP_HELD(this);
+		#ifdef SVQC
 			PHYS_TELEPORT_TIME(this) = time + 2;	// safety net
+		#elif defined(CSQC)
+			pmove_waterjumptime = time + 2;
+		#endif
 		}
 	}
 }
@@ -803,7 +807,9 @@ void PM_fly(entity this, float maxspd_mod)
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod);
+#ifdef SVQC
 	if(time >= PHYS_TELEPORT_TIME(this))
+#endif
 		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this) * maxspd_mod, 1, 0, 0, 0);
 	PM_ClientMovement_Move(this);
 }
@@ -832,7 +838,9 @@ void PM_swim(entity this, float maxspd_mod)
 			{
 				this.velocity = forward * 50;
 				this.velocity_z = 310;
-				PHYS_TELEPORT_TIME(this) = 2;
+			#ifdef CSQC
+				pmove_waterjumptime = 2;
+			#endif
 				UNSET_ONGROUND(this);
 				SET_JUMP_HELD(this);
 			}
@@ -1163,7 +1171,11 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 	vector wishdir = normalize(wishvel);
 	float wishspeed = vlen(wishvel);
 
-	if(PHYS_TELEPORT_TIME(this) < time)
+#ifdef SVQC
+	if(time >= PHYS_TELEPORT_TIME(this))
+#elif defined(CSQC)
+	if(pmove_waterjumptime <= 0)
+#endif
 	{
 		float maxairspd = PHYS_MAXAIRSPEED(this) * min(maxspd_mod, 1);
 
@@ -1258,7 +1270,7 @@ void PM_Main(entity this)
 	this.team = myteam + 1; // is this correct?
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
 		UNSET_JUMP_HELD(this); // canjump = true
-	PHYS_TELEPORT_TIME(this) -= PHYS_INPUT_TIMELENGTH;
+	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
 
 	PM_ClientMovement_UpdateStatus(this, true);
 #endif

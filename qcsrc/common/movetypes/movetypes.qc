@@ -264,16 +264,16 @@ bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 	this.move_watertype = CONTENT_EMPTY;
 
 	int supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
-	if(supercontents & (DPCONTENTS_LIQUIDSMASK))
+	if(supercontents & DPCONTENTS_LIQUIDSMASK)
 	{
 		this.move_watertype = nativecontents;
 		this.move_waterlevel = WATERLEVEL_WETFEET;
 		point.z = this.move_origin.z + (this.mins.z + this.maxs.z) * 0.5;
-		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & (DPCONTENTS_LIQUIDSMASK))
+		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
 			this.move_waterlevel = WATERLEVEL_SWIMMING;
 			point.z = this.move_origin.z + this.view_ofs.z;
-			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & (DPCONTENTS_LIQUIDSMASK))
+			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 				this.move_waterlevel = WATERLEVEL_SUBMERGED;
 		}
 	}
