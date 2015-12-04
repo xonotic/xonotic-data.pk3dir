@@ -111,4 +111,26 @@ bool autocvar_debugdraw;
 	}
 #endif
 
+GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+		    int bufhandle = stof(argv(1));
+		    int string_index = stof(argv(2));
+			string s = bufstr_get(bufhandle, string_index);
+			LOG_INFOF("%s\n", s);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index"));
+			return;
+		}
+	}
+}
+
 #endif
