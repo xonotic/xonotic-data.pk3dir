@@ -21,6 +21,7 @@ ENDCLASS(LinkedList)
  */
 entity LL_PUSH(LinkedList this, entity e)
 {
+	assert(this);
 	LinkedListNode n = NEW(LinkedListNode);
 	n.ll_data = e;
 	LinkedListNode tail = n.ll_prev = this.ll_tail;
@@ -33,12 +34,14 @@ entity LL_PUSH(LinkedList this, entity e)
  */
 entity LL_POP(LinkedList this)
 {
+	assert(this);
 	if (!this.ll_tail) return NULL;
 	LinkedListNode n = this.ll_tail;
 	entity e = n.ll_data;
 	LinkedListNode prev = n.ll_prev;
-	if (prev) prev.ll_next = NULL;
+	if (prev) (this.ll_tail = prev).ll_next = NULL;
 	else this.ll_head = this.ll_tail = NULL;
+	remove(n);
 	return e;
 }
 
