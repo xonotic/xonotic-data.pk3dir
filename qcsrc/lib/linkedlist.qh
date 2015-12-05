@@ -45,6 +45,20 @@ entity LL_POP(LinkedList this)
 	return e;
 }
 
+#define LL_DELETE(this) \
+	do \
+	{ \
+		LinkedList _ll = this; \
+		assert(_ll); \
+		while (_ll.ll_tail) \
+		{ \
+			entity it = LL_POP(_ll); \
+			if (it) remove(it); \
+		} \
+		this = NULL; \
+	} \
+	while (0)
+
 #define LL_EACH(list, cond, body) \
 	do                                                                  \
 	{                                                                   \
