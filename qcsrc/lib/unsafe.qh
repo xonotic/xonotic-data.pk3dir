@@ -1,0 +1,15 @@
+#ifndef UNSAFE_H
+#define UNSAFE_H
+
+#define reinterpret_cast(T, it) _unsafe_cast_##T(0, it)
+#define X(T) T _unsafe_cast_##T(int dummy, ...) { return ...(0, T); }
+X(float)
+X(entity)
+X(string)
+typedef float(...) rawfunc;
+X(rawfunc)
+#undef X
+
+#define strid(s) etof(reinterpret_cast(entity, s))
+
+#endif

@@ -2,6 +2,7 @@
 #define I18N_H
 
 #include "log.qh"
+#include "unsafe.qh"
 
 // translation helpers
 string prvm_language;
@@ -20,11 +21,36 @@ string language_filename(string s)
 	return s;
 }
 
+#ifndef CTX_CACHE
+	#define CTX_CACHE 1
+#endif
+
+#if CTX_CACHE
+	AL_declare(CTX_cache);
+	STATIC_INIT(CTX_cache)
+	{
+		AL_init(CTX_cache, 0, string_null, s);
+	}
+	SHUTDOWN(CTX_cache)
+	{
+		AL_delete(CTX_cache);
+	}
+#endif
+
 string CTX(string s)
 {
+#if CTX_CACHE
+		int i = strid(s);
+		string c = AL_gets(CTX_cache, i);
+		if (c) return c;
+#endif
 	int p = strstrofs(s, "^", 0);
-	if (p < 0) return s;
-	return substring(s, p + 1, -1);
+	string ret = (p < 0) ? s : substring(s, p + 1, -1);
+#if CTX_CACHE
+        LOG_DEBUGF("CTX(\"%s\")\n", s);
+		AL_sets(CTX_cache, i, ret);
+#endif
+	return ret;
 }
 
 #define ZCTX(s) strzone(CTX(s))

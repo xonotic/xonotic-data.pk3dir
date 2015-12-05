@@ -67,5 +67,6 @@
 #include "string.qh"
 #include "struct.qh"
 #include "test.qc"
+#include "unsafe.qh"
 #include "urllib.qc"
 #include "vector.qh"
