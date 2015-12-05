@@ -45,7 +45,9 @@ entity LL_POP(LinkedList this)
 	return e;
 }
 
-#define LL_DELETE(this) \
+#define LL_DELETE(...) EVAL(OVERLOAD(LL_DELETE, __VA_ARGS__))
+#define LL_DELETE_1(this) LL_DELETE_2(this, LAMBDA())
+#define LL_DELETE_2(this, dtor) \
 	do \
 	{ \
 		LinkedList _ll = this; \
@@ -53,7 +55,9 @@ entity LL_POP(LinkedList this)
 		while (_ll.ll_tail) \
 		{ \
 			entity it = LL_POP(_ll); \
-			if (it) remove(it); \
+			if (!it) continue; \
+			dtor \
+			remove(it); \
 		} \
 		this = NULL; \
 	} \
