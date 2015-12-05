@@ -35,6 +35,11 @@
 		}
 	}
 
+	void Net_UnlinkEntity(entity e)
+	{
+		e.SendEntity = func_null;
+	}
+
 	.void() uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
@@ -187,7 +192,7 @@ STATIC_INIT(RegisterTempEntities_renumber)
 		}
 
 		#define ReadFloat() ReadCoord()
-        vector ReadVector() { vector v; v.x = ReadFloat(); v_y = ReadFloat(); v.z = ReadFloat(); return v; }
+        vector ReadVector() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = ReadFloat(); return v; }
 		vector ReadVector2D() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = 0; return v; }
 
 		float ReadApproxPastTime()

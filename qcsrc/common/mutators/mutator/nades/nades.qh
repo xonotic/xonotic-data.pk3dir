@@ -63,19 +63,19 @@ Nade Nade_FromProjectile(int proj)
 
 .entity nade;
 .entity fake_nade;
-.float nade_timer;
+.float nade_timer = _STAT(NADE_TIMER);
 .float nade_refire;
-.float bonus_nades;
+.float bonus_nades = _STAT(NADE_BONUS);
 .float nade_special_time;
-.float bonus_nade_score;
-.float nade_type;
+.float bonus_nade_score = _STAT(NADE_BONUS_SCORE);
+.int nade_type = _STAT(NADE_BONUS_TYPE);
 .string pokenade_type;
 .entity nade_damage_target;
 .float cvar_cl_nade_type;
 .string cvar_cl_pokenade_type;
 .float toss_time;
-.float stat_healing_orb;
-.float stat_healing_orb_alpha;
+.float stat_healing_orb = _STAT(HEALING_ORB);
+.float stat_healing_orb_alpha = _STAT(HEALING_ORB_ALPHA);
 .float nade_show_particles;
 
 bool healer_send(entity this, entity to, int sf);

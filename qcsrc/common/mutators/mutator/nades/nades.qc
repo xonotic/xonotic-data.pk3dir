@@ -31,9 +31,9 @@ entity Nade_TrailEffect(int proj, int nade_team)
 REGISTER_MUTATOR(cl_nades, true);
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
-	if (getstatf(STAT_HEALING_ORB) <= time) return false;
+	if (STAT(HEALING_ORB) <= time) return false;
 	MUTATOR_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
-	MUTATOR_ARGV(0, float) = getstatf(STAT_HEALING_ORB_ALPHA);
+	MUTATOR_ARGV(0, float) = STAT(HEALING_ORB_ALPHA);
 	return true;
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
@@ -82,9 +82,9 @@ bool Projectile_isnade(int p)
 }
 void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
 {
-	float bonusNades    = getstatf(STAT_NADE_BONUS);
-	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
-	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
+	float bonusNades    = STAT(NADE_BONUS);
+	float bonusProgress = STAT(NADE_BONUS_SCORE);
+	float bonusType     = STAT(NADE_BONUS_TYPE);
 	Nade def = Nades_from(bonusType);
 	vector nadeColor    = def.m_color;
 	string nadeIcon     = def.m_icon;
@@ -124,20 +124,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 #include "../../../monsters/sv_monsters.qh"
 #include "../../../../server/g_subs.qh"
 
-REGISTER_MUTATOR(nades, cvar("g_nades"))
-{
-	MUTATOR_ONADD
-	{
-		addstat(STAT_NADE_TIMER, AS_FLOAT, nade_timer);
-		addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
-		addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
-		addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
-		addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
-		addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
-	}
-
-	return false;
-}
+REGISTER_MUTATOR(nades, cvar("g_nades"));
 
 .float nade_time_primed;
 

@@ -4,7 +4,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 {
 	if (this.move_flags & FL_ONGROUND)
 	{
-		if (this.move_velocity.z >= 1 / 32)
+		if (this.move_velocity.z >= 1 / 32 && UPWARD_VELOCITY_CLEARS_ONGROUND)
 		{
 			this.move_flags &= ~FL_ONGROUND;
 		}
@@ -26,10 +26,10 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 	if (this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS)
 	{
 		this.move_didgravity = 1;
-		this.move_velocity_z -= (GRAVITY_UNAFFECTED_BY_TICRATE ? 0.5 : 1)
+		this.move_velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 		    * dt
 		    * (this.gravity ? this.gravity : 1)
-		    * PHYS_GRAVITY;
+		    * PHYS_GRAVITY(this);
 	}
 
 	this.move_angles = this.move_angles + this.move_avelocity * dt;
@@ -64,7 +64,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 		{
 			float bouncefac = this.move_bounce_factor;     if (!bouncefac)  bouncefac = 0.5;
 			float bouncestop = this.move_bounce_stopspeed; if (!bouncestop) bouncestop = 60 / 800;
-			bouncestop *= (this.gravity ? this.gravity : 1) * PHYS_GRAVITY;
+			bouncestop *= (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 			this.move_velocity = _Movetype_ClipVelocity(this.move_velocity, trace_plane_normal, 1 + bouncefac);
 
@@ -108,8 +108,8 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			break;
 	}
 
-	if (GRAVITY_UNAFFECTED_BY_TICRATE && this.move_didgravity > 0 && !(this.move_flags & FL_ONGROUND))
-		this.move_velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY;
+	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && this.move_didgravity > 0 && !(this.move_flags & FL_ONGROUND))
+		this.move_velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 	_Movetype_CheckWaterTransition(this);
 }

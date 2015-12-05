@@ -18,7 +18,7 @@ string W_Apply_Weaponreplace(string in)
 
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			e = get_weaponinfo(j);
+			e = Weapons_from(j);
 			if(e.netname == s)
 			{
 				replacement = e.weaponreplace;
@@ -64,7 +64,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 				int j;
 				for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					e = get_weaponinfo(j);
+					e = Weapons_from(j);
 					if (e.netname == s)
 					{
 						entity replacement = spawn();
@@ -87,7 +87,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			int j;
 			for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
-				e = get_weaponinfo(j);
+				e = Weapons_from(j);
 				if (e.netname == s)
 				{
 					wpn = j;
@@ -107,11 +107,11 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 	}
 
-	e = get_weaponinfo(wpn);
+	e = Weapons_from(wpn);
 
 	if (!this.respawntime)
 	{
-		if (e.weapons & WEPSET_SUPERWEAPONS)
+		if (e.spawnflags & WEP_FLAG_SUPERWEAPON)
 		{
 			this.respawntime = g_pickup_respawntime_superweapon;
 			this.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -123,9 +123,12 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 	}
 
-	if (e.weapons & WEPSET_SUPERWEAPONS)
+	if (e.spawnflags & WEP_FLAG_SUPERWEAPON)
 		if (!this.superweapons_finished)
+		{
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
+			LOG_INFO("Setting it to ", ftos(this.superweapons_finished), " on ", e.mdl, "\n");
+		}
 
 	// if we don't already have ammo, give us some ammo
 	if (!this.(e.ammo_field))

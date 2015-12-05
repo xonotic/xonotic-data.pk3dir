@@ -139,7 +139,7 @@ void ImpulseCommands ()
 					break;
 				case 20:
 					if(!forbidWeaponUse(self)) {
-						Weapon w = get_weaponinfo(self.weapon);
+						Weapon w = Weapons_from(self.weapon);
 						w.wr_reload(w);
 					}
 					break;

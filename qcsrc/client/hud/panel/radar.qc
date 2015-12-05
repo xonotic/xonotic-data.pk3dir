@@ -274,7 +274,6 @@ void HUD_Radar()
 	}
 
 	int color2;
-	entity tm;
 	float scale2d, normalsize, bigsize;
 
 	teamradar_origin2d = pos + 0.5 * mySize;
@@ -334,37 +333,34 @@ void HUD_Radar()
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
-	for(tm = world; (tm = find(tm, classname, "radarlink")); )
-		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
+	FOREACH_ENTITY_CLASS("radarlink", true, LAMBDA(
+		draw_teamradar_link(it.origin, it.velocity, it.team);
+	));
 
-	vector coord;
-	vector brightcolor;
-	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
-	{
+	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, LAMBDA(
 		if ( hud_panel_radar_mouse )
-		if ( tm.health > 0 )
-		if ( tm.team == myteam+1 )
+		if ( it.health > 0 )
+		if ( it.team == myteam+1 )
 		{
-			coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(tm.origin));
+			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if ( vlen(mousepos-coord) < 8 )
 			{
-				brightcolor_x = min(1,tm.teamradar_color_x*1.5);
-				brightcolor_y = min(1,tm.teamradar_color_y*1.5);
-				brightcolor_z = min(1,tm.teamradar_color_z*1.5);
+				vector brightcolor;
+				brightcolor_x = min(1,it.teamradar_color_x*1.5);
+				brightcolor_y = min(1,it.teamradar_color_y*1.5);
+				brightcolor_z = min(1,it.teamradar_color_z*1.5);
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-		entity icon = RadarIcons_from(tm.teamradar_icon);
-		draw_teamradar_icon(tm.origin, icon, tm, spritelookupcolor(tm, icon.netname, tm.teamradar_color), panel_fg_alpha);
-	}
-	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
-	{
-		if (!tm.m_entcs_private) continue;
-		if (entcs_is_self(tm)) continue;
-		color2 = GetPlayerColor(tm.sv_entnum);
-		//if(color == NUM_SPECTATOR || color == color2)
-			draw_teamradar_player(tm.origin, tm.angles, Team_ColorRGB(color2));
-	}
+		entity icon = RadarIcons_from(it.teamradar_icon);
+		draw_teamradar_icon(it.origin, icon, it, spritelookupcolor(it, icon.netname, it.teamradar_color), panel_fg_alpha);
+	));
+	AL_EACH(_entcs, e, it != NULL, LAMBDA(
+		if (!it.m_entcs_private) continue;
+		if (entcs_is_self(it)) continue;
+		color2 = entcs_GetTeam(it.sv_entnum);
+		draw_teamradar_player(it.origin, it.angles, Team_ColorRGB(color2));
+	));
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();

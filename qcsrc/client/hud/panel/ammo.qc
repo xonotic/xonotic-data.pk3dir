@@ -113,7 +113,7 @@ void HUD_Ammo()
 	}
 
 	int rows = 0, columns, row, column;
-	float nade_cnt = getstatf(STAT_NADE_BONUS), nade_score = getstatf(STAT_NADE_BONUS_SCORE);
+	float nade_cnt = STAT(NADE_BONUS), nade_score = STAT(NADE_BONUS_SCORE);
 	bool draw_nades = (nade_cnt > 0 || nade_score > 0);
 	float nade_statuschange_elapsedtime;
 	int total_ammo_count;
@@ -158,6 +158,7 @@ void HUD_Ammo()
 		ammo_size.y = newSize;
 	}
 
+	Weapon wep = switchweapon;
 	int i;
 	bool infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
 	row = column = 0;
@@ -172,7 +173,7 @@ void HUD_Ammo()
 			DrawAmmoItem(
 				pos,
 				ammo_size,
-				(get_weaponinfo(switchweapon)).ammo_field,
+				wep.ammo_field,
 				true,
 				infinite_ammo
 			);
@@ -196,7 +197,7 @@ void HUD_Ammo()
 				pos + eX * column * (ammo_size.x + offset.x) + eY * row * (ammo_size.y + offset.y),
 				ammo_size,
 				ammotype,
-				((get_weaponinfo(switchweapon)).ammo_field == ammotype),
+				(wep.ammo_field == ammotype),
 				infinite_ammo
 			);
 

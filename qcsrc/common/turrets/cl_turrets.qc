@@ -65,7 +65,7 @@ void turret_draw2d(entity this)
 		return;
 
 	float dist = vlen(self.origin - view_origin);
-	float t = (GetPlayerColor(player_localnum) + 1);
+	float t = (entcs_GetTeam(player_localnum) + 1);
 
 	vector o;
 	string txt;

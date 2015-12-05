@@ -244,7 +244,7 @@ void Playerchecker_Think()
 	for(i = 0; i < maxclients; ++i)
 	{
 		e = playerslots[i];
-		if(GetPlayerName(i) == "")
+		if(entcs_GetName(i) == "")
 		{
 			if(e.sort_prev)
 			{
@@ -270,7 +270,7 @@ void Playerchecker_Think()
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, GetPlayerColor(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				SetTeam(e, entcs_GetTeam(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
 				HUD_UpdatePlayerPos(e);
 			}
@@ -672,7 +672,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 		if(is_new)
 		{
-			float teamnum = GetPlayerColor(entnum - 1);
+			float teamnum = entcs_GetTeam(entnum - 1);
 
 			if(autocvar_cl_spawn_event_particles)
 			{
@@ -727,7 +727,7 @@ void CSQC_Ent_Update(bool isnew)
 	else
 	{
 		serverprevtime = time;
-		serverdeltatime = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+		serverdeltatime = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 		time = serverprevtime + serverdeltatime;
 	}
 
@@ -1074,7 +1074,7 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 				strunzone(grecordholder[pos-1]);
 			grecordholder[pos-1] = strzone(ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
-			if(grecordholder[pos-1] == GetPlayerName(player_localnum))
+			if(grecordholder[pos-1] == entcs_GetName(player_localnum))
 				race_myrank = pos;
 			break;
 		case RACE_NET_SERVER_STATUS:

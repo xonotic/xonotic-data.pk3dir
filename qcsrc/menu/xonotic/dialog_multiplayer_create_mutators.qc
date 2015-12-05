@@ -53,7 +53,7 @@ string WeaponArenaString()
 	{
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			e = get_weaponinfo(j);
+			e = Weapons_from(j);
 			if(argv(i) == e.netname)
 				s = strcat(s, " & ", e.m_name);
 		}
@@ -254,7 +254,7 @@ void XonoticMutatorsDialog_fill(entity me)
 			e.cvarOffValue = "0";
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
-		w = get_weaponinfo(i);
+		w = Weapons_from(i);
 		if(w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
 		if((j & 1) == 0)

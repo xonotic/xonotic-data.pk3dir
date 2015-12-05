@@ -340,7 +340,7 @@ void readlevelcvars()
 		game_starttime = time + cvar("g_start_delay");
 
 	for(int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		Weapon w = get_weaponinfo(i);
+		Weapon w = Weapons_from(i);
 		w.wr_init(w);
 	}
 

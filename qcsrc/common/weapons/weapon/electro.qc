@@ -461,8 +461,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 				if(!ammo_amount)
 				{
-					Weapon w = get_weaponinfo(actor.weapon);
-					w.wr_reload(w);
+					thiswep.wr_reload(thiswep);
 					return;
 				}
 			}

@@ -21,7 +21,7 @@ void Announcer_Countdown()
 {
 	SELFPARAM();
 	float starttime = STAT(GAMESTARTTIME);
-	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
 		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
@@ -74,7 +74,7 @@ void Announcer_Countdown()
 void Announcer_Gamestart()
 {
 	float startTime = STAT(GAMESTARTTIME);
-	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
 
@@ -103,7 +103,7 @@ void Announcer_Gamestart()
 // Plays the 1 minute or 5 minutes (of maptime) remaining sound, if client wants it
 void Announcer_Time()
 {
-	float timelimit = getstatf(STAT_TIMELIMIT);
+	float timelimit = STAT(TIMELIMIT);
 	float timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	float warmup_timeleft = 0;
 

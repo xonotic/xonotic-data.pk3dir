@@ -26,7 +26,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 
 	// ignore hook button when using other offhand equipment
 	if (cl.offhand != OFFHAND_HOOK)
-	if (wpn == WEP_HOOK.m_id && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
+	if (wpn == WEP_HOOK.m_id && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(Weapons_from(wpn))))
 	    complain = 0;
 
 	if(complain)
@@ -38,7 +38,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(self, "Invalid weapon\n");
 		return false;
 	}
-	if (cl.weapons & WepSet_FromWeapon(wpn))
+	if (cl.weapons & WepSet_FromWeapon(Weapons_from(wpn)))
 	{
 		if (andammo)
 		{
@@ -49,7 +49,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			else
 			{
 				setself(cl);
-				Weapon w = get_weaponinfo(wpn);
+				Weapon w = Weapons_from(wpn);
 				f = w.wr_checkammo1(w) + w.wr_checkammo2(w);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
@@ -77,7 +77,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if (weaponsInMap & WepSet_FromWeapon(wpn))
+		if (weaponsInMap & WepSet_FromWeapon(Weapons_from(wpn)))
 		{
 			Send_WeaponComplain(cl, wpn, 1);
 
@@ -139,7 +139,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	while(rest != "")
 	{
 		weaponwant = stof(car(rest)); rest = cdr(rest);
-		wep = get_weaponinfo(weaponwant);
+		wep = Weapons_from(weaponwant);
 		wepset = wep.m_wepset;
 		if(imp >= 0)
 		if(wep.impulse != imp)
@@ -148,7 +148,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		float i, have_other = false;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
-			Weapon e = get_weaponinfo(i);
+			Weapon e = Weapons_from(i);
 			if(i != weaponwant)
 			if(e.impulse == imp || imp < 0)
 			if((pl.weapons & (e.m_wepset)) || (weaponsInMap & (e.m_wepset)))
@@ -197,7 +197,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 		while(rest != "")
 		{
 			weaponwant = stof(car(rest)); rest = cdr(rest);
-			wep = get_weaponinfo(weaponwant);
+			wep = Weapons_from(weaponwant);
 			wepset = wep.m_wepset;
 			if(imp >= 0)
 				if(wep.impulse != imp)
@@ -206,7 +206,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 			float i, have_other = false;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
-				Weapon w = get_weaponinfo(i);
+				Weapon w = Weapons_from(i);
 				if(i != weaponwant)
 				if(w.impulse == imp || imp < 0)
 				if((pl.weapons & (w.m_wepset)) || (weaponsInMap & (w.m_wepset)))
@@ -242,7 +242,7 @@ void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	int ww;
-	WepSet set = WepSet_FromWeapon(pl.weapon);
+	WepSet set = WepSet_FromWeapon(Weapons_from(pl.weapon));
 	if(pl.weapons & set)
 	{
 		pl.weapons &= ~set;
@@ -265,7 +265,7 @@ void W_SwitchWeapon(float imp)
 			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
 	else if(!forbidWeaponUse(self)) {
-		Weapon w = get_weaponinfo(self.weapon);
+		Weapon w = Weapons_from(self.weapon);
 		w.wr_reload(w);
 	}
 }

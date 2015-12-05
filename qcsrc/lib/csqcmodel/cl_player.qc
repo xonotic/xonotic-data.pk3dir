@@ -129,35 +129,61 @@ void CSQCPlayer_SavePrediction(entity this)
 }
 
 void CSQC_ClientMovement_PlayerMove_Frame(entity this);
-void _Movetype_Physics_Frame(entity this, float movedt);
+void _Movetype_Physics_ClientFrame(entity this, float movedt);
 
 void Movetype_Physics_Spam(entity this)  // optimized
 {
-	_Movetype_Physics_Frame(this, PHYS_INPUT_TIMELENGTH);
+	_Movetype_Physics_ClientFrame(this, PHYS_INPUT_TIMELENGTH);
 	if(wasfreed(this))
 		return;
 
 	this.avelocity = this.move_avelocity;
 	this.velocity = this.move_velocity;
 	this.angles = this.move_angles;
+	this.flags = BITSET(this.flags, FL_ONGROUND, boolean(this.move_flags & FL_ONGROUND));
+	this.flags = BITSET(this.flags, FL_WATERJUMP, boolean(this.move_flags & FL_WATERJUMP));
+	this.waterlevel = this.move_waterlevel;
+	this.watertype = this.move_watertype;
 	setorigin(this, this.move_origin);
+}
+
+void CSQCPlayer_CheckWater(entity this)
+{
+	this.move_origin = this.origin;
+	this.move_waterlevel = this.waterlevel;
+	this.move_watertype = this.watertype;
+	_Movetype_CheckWater(this);
+	this.waterlevel = this.move_waterlevel;
+	this.watertype = this.move_watertype;
 }
 
 void CSQCPlayer_Physics(entity this)
 {
 	if(autocvar_cl_movement)
 	{
+		if(autocvar_cl_movement == 3)
+			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
+
 		CSQC_ClientMovement_PlayerMove_Frame(this);
 
 		if(autocvar_cl_movement == 3)
 		{
 			this.move_origin = this.origin;
 			this.move_angles = this.angles;
-			this.move_movetype = MOVETYPE_WALK; // temp
+			//this.move_movetype = MOVETYPE_WALK; // temp
 			this.move_velocity = this.velocity;
 			this.move_avelocity = this.avelocity;
+			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, boolean(this.flags & FL_ONGROUND));
+			this.move_flags = BITSET(this.move_flags, FL_WATERJUMP, boolean(this.flags & FL_WATERJUMP));
+			this.move_waterlevel = this.waterlevel;
+			this.move_watertype = this.watertype;
 			Movetype_Physics_Spam(this);
 		}
+
+		this.pmove_flags =
+				((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
+				(!(this.flags & FL_JUMPRELEASED) ? PMF_JUMP_HELD : 0) |
+				((this.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);
 	}
 }
 

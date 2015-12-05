@@ -43,6 +43,7 @@ REGISTER_NET_TEMP(net_debug)
 bool autocvar_debugdraw;
 
 #ifdef CSQC
+	string autocvar_debugdraw_filter;
 	.int debugdraw_last;
 	vector project_3d_to_2d(vector vec);
 	void Debug_Draw()
@@ -59,6 +60,7 @@ bool autocvar_debugdraw;
 				if (e.debugdraw_last == debugdraw_frame) continue;
 				e.debugdraw_last = debugdraw_frame;
 				vector rgb = (e.debug) ? '0 0 1' : '1 0 0';
+				if (autocvar_debugdraw_filter != "" && !strhasword(autocvar_debugdraw_filter, e.classname)) continue;
 				if (is_pure(e))
 				{
 					if (autocvar_debugdraw < 2) continue;
@@ -108,5 +110,27 @@ bool autocvar_debugdraw;
 		}
 	}
 #endif
+
+GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+		    int bufhandle = stof(argv(1));
+		    int string_index = stof(argv(2));
+			string s = bufstr_get(bufhandle, string_index);
+			LOG_INFOF("%s\n", s);
+			return;
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " bufstr_get bufhandle string_index"));
+			return;
+		}
+	}
+}
 
 #endif

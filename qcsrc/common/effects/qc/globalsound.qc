@@ -20,12 +20,13 @@
 		 */
 		void globalsound(int channel, entity from, entity gs, float r, int chan, float vol, float atten)
 		{
+			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			WriteHeader(channel, globalsound);
 			WriteByte(channel, gs.m_id);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
-			WriteByte(channel, fabs(chan));
+			WriteByte(channel, chan);
 			WriteByte(channel, floor(vol * 255));
 			WriteByte(channel, floor(atten * 64));
 			entcs_force_origin(from);
@@ -42,12 +43,13 @@
 		*/
 		void playersound(int channel, entity from, entity ps, float r, int chan, float vol, float atten)
 		{
+			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			WriteHeader(channel, playersound);
 			WriteByte(channel, ps.m_id);
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
-			WriteByte(channel, fabs(chan));
+			WriteByte(channel, chan);
 			WriteByte(channel, floor(vol * 255));
 			WriteByte(channel, floor(atten * 64));
 			entcs_force_origin(from);
@@ -70,6 +72,7 @@
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);
 			int chan = ReadByte();
+			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -85,10 +88,9 @@
 			}
 			else
 			{
-				entity e = new(globalsound);
-				e.origin = o;
+				// Can this happen?
+				LOG_WARNINGF("Missing entcs data for player %d\n", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
-				remove(e);  // debug with: e.think = SUB_Remove; e.nextthink = time + 1;
 			}
 			return true;
 		}
@@ -103,6 +105,7 @@
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
 			int chan = ReadByte();
+			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -118,12 +121,9 @@
 			}
 			else
 			{
-				LOG_WARNINGF("Missing entcs data for player %d\n", who);
 				// Can this happen?
-				entity e = new(playersound);
-				e.origin = o;
+				LOG_WARNINGF("Missing entcs data for player %d\n", who);
 				sound8(e, o, chan, sample, vol, atten, 0, 0);
-				remove(e);  // debug with: e.think = SUB_Remove; e.nextthink = time + 1;
 			}
 			return true;
 		}
@@ -296,9 +296,10 @@
 
 	#ifdef SVQC
 
-		void _GlobalSound(entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
+		bool autocvar_g_debug_globalsounds;
+
+		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
 		{
-			SELFPARAM();
 			if (gs == NULL && ps == NULL && sample == "") return;
 			float r = random();
 			if (sample != "") sample = GlobalSound_sample(sample, r);
@@ -403,7 +404,13 @@
 					}
 					else
 					{
-						if (gs) globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
+						if (gs)
+						{
+							if(autocvar_g_debug_globalsounds)
+								globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
+							else
+								_sound(this, chan, GlobalSound_sample(gs.m_globalsoundstr, r), VOL_BASE, ATTEN_NORM);
+						}
 						else if (ps) playersound(MSG_ALL, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
 						else _sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
 					}

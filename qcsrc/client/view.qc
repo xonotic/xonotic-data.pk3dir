@@ -9,6 +9,7 @@
 
 #include "mutators/events.qh"
 
+#include "../common/anim.qh"
 #include "../common/constants.qh"
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
@@ -29,6 +30,317 @@
 #include "../lib/warpzone/client.qh"
 #include "../lib/warpzone/common.qh"
 
+#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
+
+float autocvar_cl_viewmodel_scale;
+
+bool autocvar_cl_bobmodel;
+float autocvar_cl_bobmodel_speed;
+float autocvar_cl_bobmodel_side;
+float autocvar_cl_bobmodel_up;
+
+float autocvar_cl_followmodel;
+float autocvar_cl_followmodel_side_speed;
+float autocvar_cl_followmodel_side_highpass;
+float autocvar_cl_followmodel_side_highpass1;
+float autocvar_cl_followmodel_side_limit;
+float autocvar_cl_followmodel_side_lowpass;
+float autocvar_cl_followmodel_up_speed;
+float autocvar_cl_followmodel_up_highpass;
+float autocvar_cl_followmodel_up_highpass1;
+float autocvar_cl_followmodel_up_limit;
+float autocvar_cl_followmodel_up_lowpass;
+
+float autocvar_cl_leanmodel;
+float autocvar_cl_leanmodel_side_speed;
+float autocvar_cl_leanmodel_side_highpass;
+float autocvar_cl_leanmodel_side_highpass1;
+float autocvar_cl_leanmodel_side_lowpass;
+float autocvar_cl_leanmodel_side_limit;
+float autocvar_cl_leanmodel_up_speed;
+float autocvar_cl_leanmodel_up_highpass;
+float autocvar_cl_leanmodel_up_highpass1;
+float autocvar_cl_leanmodel_up_lowpass;
+float autocvar_cl_leanmodel_up_limit;
+
+#define lowpass(value, frac, ref_store, ret) do \
+{ \
+	float __frac = bound(0, frac, 1); \
+	ret = ref_store = ref_store * (1 - __frac) + (value) * __frac; \
+} while (0)
+
+#define lowpass_limited(value, frac, limit, ref_store, ret) do \
+{ \
+	float __ignore; lowpass(value, frac, ref_store, __ignore); \
+	ret = ref_store = bound((value) - (limit), ref_store, (value) + (limit)); \
+} while (0)
+
+#define highpass(value, frac, ref_store, ret) do \
+{ \
+	float __f; lowpass(value, frac, ref_store, __f); \
+	ret = (value) - __f; \
+} while (0)
+
+#define highpass_limited(value, frac, limit, ref_store, ret) do \
+{ \
+	float __f; lowpass_limited(value, frac, limit, ref_store, __f); \
+	ret = (value) - __f; \
+} while (0)
+
+#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+{ \
+	lowpass(value.x, fracx, ref_store.x, ref_out.x); \
+	lowpass(value.y, fracy, ref_store.y, ref_out.y); \
+	lowpass(value.z, fracz, ref_store.z, ref_out.z); \
+} while (0)
+
+#define highpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+{ \
+	highpass(value.x, fracx, ref_store.x, ref_out.x); \
+	highpass(value.y, fracy, ref_store.y, ref_out.y); \
+	highpass(value.z, fracz, ref_store.z, ref_out.z); \
+} while (0)
+
+#define highpass3_limited(value, fracx, limitx, fracy, limity, fracz, limitz, ref_store, ref_out) do \
+{ \
+	highpass_limited(value.x, fracx, limitx, ref_store.x, ref_out.x); \
+	highpass_limited(value.y, fracy, limity, ref_store.y, ref_out.y); \
+	highpass_limited(value.z, fracz, limitz, ref_store.z, ref_out.z); \
+} while (0)
+
+void viewmodel_animate(entity this)
+{
+	static float prevtime;
+	float frametime = (time - prevtime) * STAT(MOVEVARS_TIMESCALE);
+	prevtime = time;
+
+	if (autocvar_chase_active) return;
+	if (getstati(STAT_HEALTH) <= 0) return;
+
+	entity view = CSQCModel_server2csqc(player_localentnum - 1);
+
+	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
+	static bool oldonground;
+	static float hitgroundtime;
+	static float lastongroundtime;
+	if (clonground)
+	{
+		float f = time; // cl.movecmd[0].time
+		if (!oldonground)
+			hitgroundtime = f;
+		lastongroundtime = f;
+	}
+	oldonground = clonground;
+
+	vector gunorg = '0 0 0', gunangles = '0 0 0';
+	static vector gunorg_prev = '0 0 0', gunangles_prev = '0 0 0';
+
+	bool teleported = view.csqcmodel_teleported;
+
+	// 1. if we teleported, clear the frametime... the lowpass will recover the previous value then
+	if (teleported)
+	{
+		// try to fix the first highpass; result is NOT
+		// perfect! TODO find a better fix
+		gunangles_prev = view_angles;
+		gunorg_prev = view_origin;
+	}
+
+	static vector gunorg_highpass = '0 0 0';
+
+	// 2. for the gun origin, only keep the high frequency (non-DC) parts, which is "somewhat like velocity"
+	gunorg_highpass += gunorg_prev;
+	highpass3_limited(view_origin,
+		frametime * autocvar_cl_followmodel_side_highpass1, autocvar_cl_followmodel_side_limit,
+		frametime * autocvar_cl_followmodel_side_highpass1, autocvar_cl_followmodel_side_limit,
+		frametime * autocvar_cl_followmodel_up_highpass1, autocvar_cl_followmodel_up_limit,
+		gunorg_highpass, gunorg);
+	gunorg_prev = view_origin;
+	gunorg_highpass -= gunorg_prev;
+
+	static vector gunangles_highpass = '0 0 0';
+
+	// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
+	gunangles_highpass += gunangles_prev;
+	PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
+	YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
+	ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
+	highpass3_limited(view_angles,
+		frametime * autocvar_cl_leanmodel_up_highpass1, autocvar_cl_leanmodel_up_limit,
+		frametime * autocvar_cl_leanmodel_side_highpass1, autocvar_cl_leanmodel_side_limit,
+		0, 0,
+		gunangles_highpass, gunangles);
+	gunangles_prev = view_angles;
+	gunangles_highpass -= gunangles_prev;
+
+	// 3. calculate the RAW adjustment vectors
+	gunorg.x *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_side_speed : 0);
+	gunorg.y *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_side_speed : 0);
+	gunorg.z *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_up_speed : 0);
+
+	PITCH(gunangles) *= (autocvar_cl_leanmodel ? -autocvar_cl_leanmodel_up_speed : 0);
+	YAW(gunangles) *= (autocvar_cl_leanmodel ? -autocvar_cl_leanmodel_side_speed : 0);
+	ROLL(gunangles) = 0;
+
+	static vector gunorg_adjustment_highpass;
+	static vector gunorg_adjustment_lowpass;
+	static vector gunangles_adjustment_highpass;
+	static vector gunangles_adjustment_lowpass;
+
+	// 4. perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
+	//    trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
+	highpass3(gunorg,
+		frametime * autocvar_cl_followmodel_side_highpass,
+		frametime * autocvar_cl_followmodel_side_highpass,
+		frametime * autocvar_cl_followmodel_up_highpass,
+		gunorg_adjustment_highpass, gunorg);
+	lowpass3(gunorg,
+		frametime * autocvar_cl_followmodel_side_lowpass,
+		frametime * autocvar_cl_followmodel_side_lowpass,
+		frametime * autocvar_cl_followmodel_up_lowpass,
+		gunorg_adjustment_lowpass, gunorg);
+	// we assume here: PITCH = 0, YAW = 1, ROLL = 2
+	highpass3(gunangles,
+		frametime * autocvar_cl_leanmodel_up_highpass,
+		frametime * autocvar_cl_leanmodel_side_highpass,
+		0,
+		gunangles_adjustment_highpass, gunangles);
+	lowpass3(gunangles,
+		frametime * autocvar_cl_leanmodel_up_lowpass,
+		frametime * autocvar_cl_leanmodel_side_lowpass,
+		0,
+		gunangles_adjustment_lowpass, gunangles);
+	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
+
+	// vertical view bobbing code
+	// TODO: cl_bob
+
+	// horizontal view bobbing code
+	// TODO: cl_bob2
+
+	// fall bobbing code
+	// causes the view to swing down and back up when touching the ground
+	// TODO: cl_bobfall
+
+	// gun model bobbing code
+	if (autocvar_cl_bobmodel)
+	{
+		// calculate for swinging gun model
+		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
+		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
+		// for the most part, but for some reason when you go through a message trigger or
+		// pick up an item or anything like that it will momentarily jolt the gun.
+		vector forward, right, up;
+		float bspeed;
+		float t = 1;
+		float s = time * autocvar_cl_bobmodel_speed;
+		if (clonground)
+		{
+			if (time - hitgroundtime < 0.2)
+			{
+				// just hit the ground, speed the bob back up over the next 0.2 seconds
+				t = time - hitgroundtime;
+				t = bound(0, t, 0.2);
+				t *= 5;
+			}
+		}
+		else
+		{
+			// recently left the ground, slow the bob down over the next 0.2 seconds
+			t = time - lastongroundtime;
+			t = 0.2 - bound(0, t, 0.2);
+			t *= 5;
+		}
+		bspeed = xyspeed * 0.01;
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		float bobr = bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
+		gunorg += bobr * right;
+		float bobu = bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
+		gunorg += bobu * up;
+	}
+	vector v = rotate(gunorg, YAW(view_angles) * DEG2RAD); // rotate world coordinates to relative ones
+	v.z = gunorg.z;
+	this.origin += v;
+	gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
+	this.angles += gunangles;
+}
+
+.vector viewmodel_origin, viewmodel_angles;
+.float weapon_nextthink;
+.float weapon_eta_last;
+.float weapon_switchdelay;
+
+void viewmodel_draw(entity this)
+{
+	int mask = (intermission || (getstati(STAT_HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
+	float a = this.alpha;
+	int c = stof(getplayerkeyvalue(current_player, "colors"));
+	vector g;
+	Weapon wep = activeweapon;
+	if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
+	entity me = CSQCModel_server2csqc(player_localentnum - 1);
+	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
+		| EF_NODEPTHTEST)
+		&~ (EF_FULLBRIGHT); // can mask team color, so get rid of it
+	for (entity e = this; e; e = e.weaponchild)
+	{
+		e.drawmask = mask;
+		e.alpha = a;
+		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
+		e.glowmod = g;
+		e.csqcmodel_effects = fx;
+		WITH(entity, self, e, CSQCModel_Effects_Apply());
+	}
+	{
+		static string name_last;
+		string name = wep.mdl;
+		if (name != name_last)
+		{
+			name_last = name;
+			CL_WeaponEntity_SetModel(this, name);
+			this.viewmodel_origin = this.origin;
+			this.viewmodel_angles = this.angles;
+		}
+		anim_update(this);
+		if (!this.animstate_override)
+			anim_set(this, this.anim_idle, true, false, false);
+	}
+	float f = 0; // 0..1; 0: fully active
+	float eta = (this.weapon_nextthink - time) / STAT(WEAPONRATEFACTOR);
+	if (eta <= 0) f = this.weapon_eta_last;
+	else switch (this.state)
+	{
+		case WS_RAISE:
+		{
+			f = eta / max(eta, this.weapon_switchdelay);
+			break;
+		}
+		case WS_DROP:
+		{
+			f = 1 - eta / max(eta, this.weapon_switchdelay);
+			break;
+		}
+		case WS_CLEAR:
+		{
+			f = 1;
+			break;
+		}
+	}
+	this.weapon_eta_last = f;
+	this.origin = this.viewmodel_origin;
+	this.angles = this.viewmodel_angles;
+	this.angles_x = (-90 * f * f);
+	viewmodel_animate(this);
+	setorigin(this, this.origin);
+}
+
+entity viewmodel;
+STATIC_INIT(viewmodel) {
+    viewmodel = new(viewmodel);
+    make_pure(viewmodel);
+	viewmodel.draw = viewmodel_draw;
+}
+
 entity porto;
 vector polyline[16];
 void Porto_Draw(entity this)
@@ -36,7 +348,7 @@ void Porto_Draw(entity this)
 	vector p, dir, ang, q, nextdir;
 	float portal_number, portal1_idx;
 
-	if(activeweapon != WEP_PORTO.m_id || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
+	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
 	if(g_balance_porto_secondary)
 		return;
@@ -136,7 +448,7 @@ vector GetCurrentFov(float fov)
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
 	if(switchweapon == activeweapon)
-	if((activeweapon == WEP_VORTEX.m_id && vortex_scope) || (activeweapon == WEP_RIFLE.m_id && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -299,7 +611,7 @@ float EnemyHitCheck()
 		return SHOTTYPE_HITWORLD;
 	if(n > maxclients)
 		return SHOTTYPE_HITWORLD;
-	t = GetPlayerColor(n - 1);
+	t = entcs_GetTeam(n - 1);
 	if(teamplay)
 		if(t == myteam)
 			return SHOTTYPE_HITTEAM;
@@ -323,17 +635,17 @@ float TrueAimCheck()
 
 	switch(activeweapon) // WEAPONTODO
 	{
-		case WEP_TUBA.m_id: // no aim
-		case WEP_PORTO.m_id: // shoots from eye
-		case WEP_NEXBALL.m_id: // shoots from eye
-		case WEP_HOOK.m_id: // no trueaim
-		case WEP_MORTAR.m_id: // toss curve
+		case WEP_TUBA: // no aim
+		case WEP_PORTO: // shoots from eye
+		case WEP_NEXBALL: // shoots from eye
+		case WEP_HOOK: // no trueaim
+		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
-		case WEP_VORTEX.m_id:
-		case WEP_VAPORIZER.m_id:
+		case WEP_VORTEX:
+		case WEP_VAPORIZER:
 			mv = MOVE_NORMAL;
 			break;
-		case WEP_RIFLE.m_id:
+		case WEP_RIFLE:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
@@ -342,19 +654,19 @@ float TrueAimCheck()
 				return EnemyHitCheck();
 			}
 			break;
-		case WEP_DEVASTATOR.m_id: // projectile has a size!
+		case WEP_DEVASTATOR: // projectile has a size!
 			mi = '-3 -3 -3';
 			ma = '3 3 3';
 			break;
-		case WEP_FIREBALL.m_id: // projectile has a size!
+		case WEP_FIREBALL: // projectile has a size!
 			mi = '-16 -16 -16';
 			ma = '16 16 16';
 			break;
-		case WEP_SEEKER.m_id: // projectile has a size!
+		case WEP_SEEKER: // projectile has a size!
 			mi = '-2 -2 -2';
 			ma = '2 2 2';
 			break;
-		case WEP_ELECTRO.m_id: // projectile has a size!
+		case WEP_ELECTRO: // projectile has a size!
 			mi = '0 0 -3';
 			ma = '0 0 -3';
 			break;
@@ -362,7 +674,7 @@ float TrueAimCheck()
 
 	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * getstati(STAT_VIEWHEIGHT));
 
-	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
+	vecs = decompressShotOrigin(STAT(SHOTORG));
 
 	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
@@ -475,12 +787,12 @@ void UpdateDamage()
 {
 	// accumulate damage with each stat update
 	static float damage_total_prev = 0;
-	float damage_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	float damage_total = STAT(DAMAGE_DEALT_TOTAL);
 	float unaccounted_damage_new = COMPARE_INCREASING(damage_total, damage_total_prev);
 	damage_total_prev = damage_total;
 
 	static float damage_dealt_time_prev = 0;
-	float damage_dealt_time = getstatf(STAT_HIT_TIME);
+	float damage_dealt_time = STAT(HIT_TIME);
 	if (damage_dealt_time != damage_dealt_time_prev)
 	{
 		unaccounted_damage += unaccounted_damage_new;
@@ -501,7 +813,7 @@ void HitSound()
 
 	static float hitsound_time_prev = 0;
 	// HACK: the only way to get the arc to sound consistent with pitch shift is to ignore cl_hitsound_antispam_time
-	float arc_hack = activeweapon == WEP_ARC.m_id && autocvar_cl_hitsound >= 2;
+	float arc_hack = activeweapon == WEP_ARC && autocvar_cl_hitsound >= 2;
 	if (arc_hack || COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
@@ -536,7 +848,7 @@ void HitSound()
 	}
 
 	static float typehit_time_prev = 0;
-	float typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	float typehit_time = STAT(TYPEHIT_TIME);
 	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		sound(world, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
@@ -607,7 +919,7 @@ void HUD_Crosshair()
 
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
-			e = get_weaponinfo(switchingweapon);
+			e = switchingweapon;
 			if(e)
 			{
 				if(autocvar_crosshair_per_weapon)
@@ -712,7 +1024,7 @@ void HUD_Crosshair()
 
 		if(autocvar_crosshair_pickup)
 		{
-			float stat_pickup_time = getstatf(STAT_LAST_PICKUP);
+			float stat_pickup_time = STAT(LAST_PICKUP);
 
 			if(pickup_crosshair_time < stat_pickup_time)
 			{
@@ -819,16 +1131,16 @@ void HUD_Crosshair()
 				ring_scale = autocvar_crosshair_ring_size;
 
 				float weapon_clipload, weapon_clipsize;
-				weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
-				weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
+				weapon_clipload = STAT(WEAPON_CLIPLOAD);
+				weapon_clipsize = STAT(WEAPON_CLIPSIZE);
 
 				float ok_ammo_charge, ok_ammo_chargepool;
-				ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
-				ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOL);
+				ok_ammo_charge = STAT(OK_AMMO_CHARGE);
+				ok_ammo_chargepool = STAT(OK_AMMO_CHARGEPOOL);
 
 				float vortex_charge, vortex_chargepool;
-				vortex_charge = getstatf(STAT_VORTEX_CHARGE);
-				vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
+				vortex_charge = STAT(VORTEX_CHARGE);
+				vortex_chargepool = STAT(VORTEX_CHARGEPOOL);
 
 				float arc_heat = STAT(ARC_HEAT);
 
@@ -837,7 +1149,7 @@ void HUD_Crosshair()
 
 
 				// handle the values
-				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX.m_id && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
+				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
 				{
 					if (vortex_chargepool || use_vortex_chargepool) {
 						use_vortex_chargepool = 1;
@@ -857,16 +1169,16 @@ void HUD_Crosshair()
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER.m_id && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, getstati(STAT_LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_value = bound(0, STAT(LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if (activeweapon == WEP_HAGAR.m_id && getstati(STAT_HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				else if (activeweapon == WEP_HAGAR && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, getstati(STAT_HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_value = bound(0, STAT(HAGAR_LOAD) / hagar_maxrockets, 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
@@ -887,12 +1199,12 @@ void HUD_Crosshair()
 
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((activeweapon == WEP_RIFLE.m_id) && (weapon_clipsize == 80))
+					if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
 						ring_image = "gfx/crosshair_ring_rifle.tga";
 					else
 						ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC.m_id )
+				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC )
 				{
 					ring_value = arc_heat;
 					ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
@@ -1012,20 +1324,20 @@ void HUD_Draw()
 		rgb = MUTATOR_ARGV(0, vector);
 		a = MUTATOR_ARGV(0, float);
 	}
-	else if(getstati(STAT_FROZEN))
+	else if(STAT(FROZEN))
 	{
-		rgb = ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
+		rgb = ((STAT(REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * STAT(REVIVE_PROGRESS)) + ('0 1 1' * STAT(REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
 	}
 	drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, rgb, autocvar_hud_colorflash_alpha * a, DRAWFLAG_ADDITIVE);
 	if(!intermission)
-	if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * STAT(NADE_TIMER)) - ('0 1 1' * STAT(NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
-	else if(getstatf(STAT_REVIVE_PROGRESS))
+	else if(STAT(REVIVE_PROGRESS))
 	{
-		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+		DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", STAT(REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 	}
 
@@ -1071,7 +1383,7 @@ void CSQC_UpdateView(float w, float h)
 	++framecount;
 
 	stats_get();
-	hud = getstati(STAT_HUD);
+	hud = STAT(HUD);
 
 	if(hud != HUD_NORMAL && lasthud == HUD_NORMAL)
 		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
@@ -1109,7 +1421,7 @@ void CSQC_UpdateView(float w, float h)
 		current_player = player_localentnum - 1;
 	else // then player_localentnum is the vehicle I'm driving
 		current_player = player_localnum;
-	myteam = GetPlayerColor(current_player);
+	myteam = entcs_GetTeam(current_player);
 
 	if(myteam != prev_myteam)
 	{
@@ -1118,7 +1430,7 @@ void CSQC_UpdateView(float w, float h)
 		prev_myteam = myteam;
 	}
 
-	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	float is_dead = (getstati(STAT_HEALTH) <= 0);
 
@@ -1142,7 +1454,7 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
-		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && getstati(STAT_ROUNDLOST));
+		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
 		entity gen = world;
 
 		if(ons_roundlost)
@@ -1395,10 +1707,12 @@ void CSQC_UpdateView(float w, float h)
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
 	// currently switching-to weapon (for crosshair)
-	switchingweapon = getstati(STAT_SWITCHINGWEAPON);
+	switchingweapon = Weapons_from(STAT(SWITCHINGWEAPON));
 
 	// actually active weapon (for zoom)
-	activeweapon = getstati(STAT_ACTIVEWEAPON);
+	activeweapon = Weapons_from(getstati(STAT_ACTIVEWEAPON));
+
+	switchweapon = Weapons_from(STAT(SWITCHWEAPON));
 
 	f = (serverflags & SERVERFLAG_TEAMPLAY);
 	if(f != teamplay)
@@ -1427,7 +1741,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		last_activeweapon = activeweapon;
 
-		e = get_weaponinfo(activeweapon);
+		e = activeweapon;
 		if(e.netname != "")
 			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
 		else
@@ -1560,7 +1874,7 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar_cl_reticle)
 	{
-		Weapon wep = get_weaponinfo(activeweapon);
+		Weapon wep = activeweapon;
 		// Draw the aiming reticle for weapons that use it
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
@@ -1684,7 +1998,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_damage && !getstati(STAT_FROZEN))
+	if(autocvar_hud_damage && !STAT(FROZEN))
 	{
 		splash_size.x = max(vid_conwidth, vid_conheight);
 		splash_size.y = max(vid_conwidth, vid_conheight);

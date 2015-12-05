@@ -212,7 +212,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 			minigame_read_owner();
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
-			LOG_DEBUG("Player: ",GetPlayerName(ent-1),"\n");
+			LOG_DEBUG("Player: ",entcs_GetName(ent-1),"\n");
 
 			activate = (ent == player_localnum+1 && self.owner && self.owner != active_minigame);
 

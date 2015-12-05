@@ -4,10 +4,10 @@
 #include "oo.qh"
 
 #if 1
-	#define _R_MAP(r, max) AL_declare(r); STATIC_INIT(r) { AL_init(r, max, NULL, e); }
+	#define _R_MAP(r, max) ArrayList r; STATIC_INIT(r) { AL_NEW(r, max, NULL, e); }
 	#define _R_GET(r, i) AL_gete(r, i)
 	#define _R_SET(r, i, e) AL_sete(r, i, e)
-	#define _R_DEL(r) AL_delete(r)
+	#define _R_DEL(r) AL_DELETE(r)
 #else
 	#define _R_MAP(r, max) entity r[max]
 	#define _R_GET(r, i) r[i]
@@ -64,17 +64,28 @@ REGISTRY(Registries, BITS(8))
 		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%s)", ftos(registry##_MAX)); \
 		entity this = id = inst; \
 		this.registered_id = #id; \
-		this.fld = registry##_COUNT; \
-		_R_SET(_##registry, registry##_COUNT, this); \
-		++registry##_COUNT; \
-		if (!registry##_first) registry##_first = this; \
-		if (registry##_last)   registry##_last.REGISTRY_NEXT = this; \
-		registry##_last = this; \
+		REGISTRY_PUSH(registry, fld, this); \
 		Register_##id##_init(this); \
 		Register_##id##_init_post(this); \
 	} \
 	ACCUMULATE_FUNCTION(Register##registry, Register_##id) \
 	REGISTER_INIT(id)
+
+#define REGISTRY_PUSH(registry, fld, it) do { \
+	it.fld = registry##_COUNT; \
+	_R_SET(_##registry, registry##_COUNT, it); \
+	++registry##_COUNT; \
+	if (!registry##_first) registry##_first = it; \
+	if (registry##_last)   registry##_last.REGISTRY_NEXT = it; \
+	registry##_last = it; \
+} while (0)
+
+#define REGISTRY_RESERVE(registry, fld, id, suffix) do { \
+	entity e = new(registry_reserved); \
+	make_pure(e); \
+	e.registered_id = #id "/" #suffix; \
+	REGISTRY_PUSH(registry, fld, e); \
+} while (0)
 
 #define REGISTER_INIT(id) [[accumulate]] void Register_##id##_init(entity this)
 #define REGISTER_INIT_POST(id) [[accumulate]] void Register_##id##_init_post(entity this)

@@ -15,6 +15,13 @@
 #include "../lib/warpzone/common.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 
+void race_InitSpectator()
+{
+	if(g_race_qualifying)
+		if(msg_entity.enemy.race_laptime)
+			race_SendNextCheckpoint(msg_entity.enemy, 1);
+}
+
 void W_Porto_Fail(float failhard);
 
 float race_readTime(string map, float pos)

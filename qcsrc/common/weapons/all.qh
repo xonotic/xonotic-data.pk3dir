@@ -8,8 +8,6 @@
 // weapon sets
 typedef vector WepSet;
 #ifdef SVQC
-void WepSet_AddStat();
-void WepSet_AddStat_InMap();
 void WriteWepSet(float dest, WepSet w);
 #endif
 
@@ -34,13 +32,12 @@ WepSet ReadWepSet();
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 #define Weapons_from(i) _Weapons_from(i, WEP_Null)
-#define get_weaponinfo(i) Weapons_from(i)
 REGISTER_REGISTRY(Weapons)
 STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(WeaponPickup, it))); }
 
 .WepSet m_wepset;
 #define WEPSET(id) (WEP_##id.m_wepset)
-#define WepSet_FromWeapon(i) (Weapons_from(i).m_wepset)
+#define WepSet_FromWeapon(it) ((it).m_wepset)
 WepSet _WepSet_FromWeapon(int i);
 STATIC_INIT(WepSets)
 {
@@ -171,7 +168,44 @@ STATIC_INIT(register_weapons_done)
     for (int i = Weapons_MAX - 1; i >= 1; --i)
         if (Weapons_from(i))
             weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
-    weaponorder_byid = strzone(substring(weaponorder_byid, 1, strlen(weaponorder_byid) - 1));
+    weaponorder_byid = strzone(substring(weaponorder_byid, 1, -1));
 }
+
+#ifndef MENUQC
+
+.entity weaponchild;
+.entity exteriorweaponentity;
+.vector weaponentity_glowmod;
+
+//.int weapon; // current weapon
+#ifdef SVQC
+.int switchweapon = _STAT(SWITCHWEAPON);
+.int switchingweapon = _STAT(SWITCHINGWEAPON);
+#endif
+.string weaponname; // name of .weapon
+
+.vector spawnorigin; // for casings
+
+// weapon animation vectors:
+.vector anim_fire1;
+.vector anim_fire2;
+.vector anim_idle;
+.vector anim_reload;
+
+// static frame globals
+
+ENUMCLASS(WFRAME)
+CASE(WFRAME, DONTCHANGE)
+CASE(WFRAME, FIRE1)
+CASE(WFRAME, FIRE2)
+CASE(WFRAME, IDLE)
+CASE(WFRAME, RELOAD)
+ENUMCLASS_END(WFRAME)
+
+.WFRAME wframe;
+
+vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
+void CL_WeaponEntity_SetModel(entity this, string name);
+#endif
 
 #endif

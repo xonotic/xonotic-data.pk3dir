@@ -963,6 +963,8 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
 		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
+
+	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
 
 float PlayerInIDList(entity p, string idlist)
@@ -1664,8 +1666,8 @@ spectate mode routines
 ======================
 */
 
-void SpectateCopy(entity spectatee)
-{SELFPARAM();
+void SpectateCopy(entity this, entity spectatee)
+{
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, self);
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
@@ -1750,7 +1752,7 @@ bool SpectateUpdate()
 		return false;
 	}
 
-	SpectateCopy(self.enemy);
+	SpectateCopy(this, this.enemy);
 
 	return true;
 }
@@ -2322,22 +2324,6 @@ void PlayerPreThink ()
 
 		if(frametime)
 		{
-			if(self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge))
-			{
-				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.vortex_charge / WEP_CVAR(vortex, charge_animlimit));
-
-				if(self.vortex_charge > WEP_CVAR(vortex, charge_animlimit))
-				{
-					self.weaponentity_glowmod_x = self.weaponentity_glowmod.x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_y = self.weaponentity_glowmod.y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-					self.weaponentity_glowmod_z = self.weaponentity_glowmod.z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.vortex_charge - WEP_CVAR(vortex, charge_animlimit)) / (1 - WEP_CVAR(vortex, charge_animlimit));
-				}
-			}
-			else
-				self.weaponentity_glowmod = colormapPaletteColor(self.clientcolors & 0x0F, true) * 2;
-
 			player_powerups();
 		}
 
@@ -2427,8 +2413,8 @@ void PlayerPreThink ()
 			if (!self.crouch)
 			{
 				self.crouch = true;
-				self.view_ofs = self.stat_pl_crouch_view_ofs;
-				setsize (self, self.stat_pl_crouch_min, self.stat_pl_crouch_max);
+				self.view_ofs = STAT(PL_CROUCH_VIEW_OFS, self);
+				setsize (self, STAT(PL_CROUCH_MIN, self), STAT(PL_CROUCH_MAX, self));
 				// setanim(self, self.anim_duck, false, true, true); // this anim is BROKEN anyway
 			}
 		}
@@ -2436,12 +2422,12 @@ void PlayerPreThink ()
 		{
 			if (self.crouch)
 			{
-				tracebox(self.origin, self.stat_pl_min, self.stat_pl_max, self.origin, false, self);
+				tracebox(self.origin, STAT(PL_MIN, self), STAT(PL_MAX, self), self.origin, false, self);
 				if (!trace_startsolid)
 				{
 					self.crouch = false;
-					self.view_ofs = self.stat_pl_view_ofs;
-					setsize (self, self.stat_pl_min, self.stat_pl_max);
+					self.view_ofs = STAT(PL_VIEW_OFS, self);
+					setsize (self, STAT(PL_MIN, self), STAT(PL_MAX, self));
 				}
 			}
 		}
@@ -2507,6 +2493,8 @@ void PlayerPreThink ()
 	if(self.spectatee_status != oldspectatee_status)
 	{
 		ClientData_Touch(self);
+		if(g_race || g_cts)
+			race_InitSpectator();
 	}
 
 	if(self.teamkill_soundtime)
@@ -2514,21 +2502,18 @@ void PlayerPreThink ()
 	{
 		self.teamkill_soundtime = 0;
 
-		setself(self.teamkill_soundsource);
-		entity oldpusher = self.pusher;
-		self.pusher = this;
-
-		PlayerSound(playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
-
-		self.pusher = oldpusher;
-		setself(this);
+		entity e = self.teamkill_soundsource;
+		entity oldpusher = e.pusher;
+		e.pusher = this;
+		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		e.pusher = oldpusher;
 	}
 
 	if(self.taunt_soundtime)
 	if(time > self.taunt_soundtime)
 	{
 		self.taunt_soundtime = 0;
-		PlayerSound(playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(self, playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
 	}
 
 	target_voicescript_next(self);
@@ -2537,6 +2522,28 @@ void PlayerPreThink ()
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
 	if(!self.weapon)
 		self.clip_load = self.clip_size = 0;
+}
+
+void DrownPlayer(entity this)
+{
+	if(this.deadflag != DEAD_NO)
+		return;
+
+	if (this.waterlevel != WATERLEVEL_SUBMERGED)
+	{
+		if(this.air_finished < time)
+			PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
+		this.dmg = 2;
+	}
+	else if (this.air_finished < time)
+	{	// drown!
+		if (this.pain_finished < time)
+		{
+			Damage (this, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
+			this.pain_finished = time + 0.5;
+		}
+	}
 }
 
 /*
@@ -2590,6 +2597,7 @@ void PlayerPostThink ()
 	//CheckPlayerJump();
 
 	if(IS_PLAYER(self)) {
+		DrownPlayer(self);
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)

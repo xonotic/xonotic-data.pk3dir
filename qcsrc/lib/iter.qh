@@ -37,11 +37,17 @@
 	while (0)
 
 #if defined(CSQC)
+	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #402;
 	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #450;
 #elif defined(SVQC)
+	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #402;
 	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #450;
 #elif defined(MENUQC)
+	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #26;
 	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #27;
+	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #88;
 #endif
 
 .entity _FOREACH_ENTITY_fld;
@@ -61,6 +67,26 @@
 	do { \
 		int i = 0; \
 		for (entity it = NULL; (it = nextent(it)); ++i) \
+		{ \
+			if (cond) { body } \
+		} \
+	} \
+	while (0)
+
+#define FOREACH_ENTITY_FLAGS(fld, flags, body) \
+	do { \
+		int i = 0; \
+		for (entity it = _findchainflags_tofield(fld, flags, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		{ \
+			body \
+		} \
+	} \
+	while (0)
+
+#define FOREACH_ENTITY_CLASS(class, cond, body) \
+	do { \
+		int i = 0; \
+		for (entity it = _findchainstring_tofield(classname, class, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
 		{ \
 			if (cond) { body } \
 		} \

@@ -283,11 +283,11 @@ void HUD_MinigameMenu_ClickInvite()
 		entity prev = self;
 		for(int i = 0; i < maxclients; ++i)
 		{
-			if ( player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
+			if ( player_localnum != i && playerslots[i] && entcs_GetName(i) != "" &&
 				!findfloat(world,minigame_playerslot,i+1) && playerslots[i].ping )
 			{
 				e = HUD_MinigameMenu_SpawnSubEntry(
-					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickInvite_Entry,
+					strzone(entcs_GetName(i)), HUD_MinigameMenu_ClickInvite_Entry,
 					self );
 				e.flags |= 1;
 				e.netname = strzone(ftos(i+1));

@@ -24,9 +24,9 @@ MUTATOR_HOOKFUNCTION(buffs_flight, IsFlying)
 REGISTER_MUTATOR(cl_buffs, true);
 MUTATOR_HOOKFUNCTION(cl_buffs, HUD_Powerups_add)
 {
-    int allBuffs = getstati(STAT_BUFFS, 0, 24);
+    int allBuffs = STAT(BUFFS);
     FOREACH(Buffs, it.m_itemid & allBuffs, LAMBDA(
-		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
+		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, STAT(BUFF_TIME) - time, 99), 60);
 	));
 }
 MUTATOR_HOOKFUNCTION(cl_buffs, WP_Format)

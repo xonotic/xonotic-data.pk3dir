@@ -46,7 +46,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 			{
 				rgb = '1 1 0';
 				drawfill(pos, eX * mySize.x + eY * fontsize.y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				s = GetPlayerName(player_localnum);
+				s = entcs_GetName(player_localnum);
 				score = 7;
 			}
 			else
@@ -114,7 +114,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		}
 		if (team_count)
 			score_color = Team_ColorRGB(pl.team) * 0.8;
-		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
+		s = textShortenToWidth(entcs_GetName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, true, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		pos.y += fontsize.y;

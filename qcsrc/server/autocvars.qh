@@ -296,13 +296,6 @@ bool autocvar_g_use_ammunition;
 bool autocvar_g_waypointeditor;
 int autocvar_g_waypointeditor_auto;
 bool autocvar_g_waypoints_for_items;
-float autocvar_g_weapon_charge_colormod_blue_full;
-float autocvar_g_weapon_charge_colormod_blue_half;
-float autocvar_g_weapon_charge_colormod_green_full;
-float autocvar_g_weapon_charge_colormod_green_half;
-float autocvar_g_weapon_charge_colormod_hdrmultiplier;
-float autocvar_g_weapon_charge_colormod_red_full;
-float autocvar_g_weapon_charge_colormod_red_half;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
 bool autocvar_g_weapon_throwable;
 #define autocvar_g_weaponarena cvar_string("g_weaponarena")
@@ -347,7 +340,7 @@ string autocvar_sv_defaultplayermodel_pink;
 string autocvar_sv_defaultplayermodel_red;
 string autocvar_sv_defaultplayermodel_yellow;
 int autocvar_sv_defaultplayerskin;
-bool autocvar_sv_dodging_frozen;
+bool autocvar_sv_doublejump;
 bool autocvar_sv_eventlog;
 bool autocvar_sv_eventlog_console;
 bool autocvar_sv_eventlog_files;

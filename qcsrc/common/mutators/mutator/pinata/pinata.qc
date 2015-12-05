@@ -4,7 +4,7 @@ REGISTER_MUTATOR(pinata, cvar("g_pinata") && !cvar("g_instagib") && !cvar("g_ove
 MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {SELFPARAM();
 	for(int j = WEP_FIRST; j <= WEP_LAST; ++j)
-	if(self.weapons & WepSet_FromWeapon(j))
+	if(self.weapons & WepSet_FromWeapon(Weapons_from(j)))
 	if(self.switchweapon != j)
 	if(W_IsWeaponThrowable(j))
 		W_ThrowNewWeapon(self, j, false, self.origin + (self.mins + self.maxs) * 0.5, randomvec() * 175 + '0 0 325');

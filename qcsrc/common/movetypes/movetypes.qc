@@ -45,11 +45,11 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	if(applygravity)
 	{
 		this.move_didgravity = 1;
-		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY;
+		grav = dt * (PHYS_ENTGRAVITY(this) ? PHYS_ENTGRAVITY(this) : 1) * PHYS_GRAVITY(this);
 
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.move_flags & FL_ONGROUND))
 		{
-			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.move_velocity_z -= grav * 0.5;
 			else
 				this.move_velocity_z -= grav;
@@ -64,9 +64,8 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			break;
 
 		push = this.move_velocity * time_left;
-		vector prev_origin = this.move_origin;
 		_Movetype_PushEntity(this, push, true);
-		if(trace_startsolid && this.move_origin != prev_origin)
+		if(trace_startsolid)
 		{
 			// we got teleported by a touch function
 			// let's abort the move
@@ -88,9 +87,9 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 		float my_trace_fraction = trace_fraction;
 		vector my_trace_plane_normal = trace_plane_normal;
 
-		if(trace_plane_normal_z)
+		if(trace_plane_normal.z)
 		{
-			if(trace_plane_normal_z > 0.7)
+			if(trace_plane_normal.z > 0.7)
 			{
 				// floor
 				blocked |= 1;
@@ -112,13 +111,13 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			vector steppush = '0 0 1' * stepheight;
 
 			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid && this.move_origin != org)
+			if(trace_startsolid)
 			{
 				blocked |= 8;
 				break;
 			}
 			_Movetype_PushEntity(this, push, true);
-			if(trace_startsolid && this.move_origin != org)
+			if(trace_startsolid)
 			{
 				blocked |= 8;
 				break;
@@ -126,7 +125,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 			float trace2_fraction = trace_fraction;
 			steppush = '0 0 1' * (org_z - this.move_origin_z);
 			_Movetype_PushEntity(this, steppush, true);
-			if(trace_startsolid && this.move_origin != org)
+			if(trace_startsolid)
 			{
 				blocked |= 8;
 				break;
@@ -234,7 +233,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	{
 		if(!GAMEPLAYFIX_NOGRAVITYONGROUND || !(this.move_flags & FL_ONGROUND))
 		{
-			if(GRAVITY_UNAFFECTED_BY_TICRATE)
+			if(GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 				this.move_velocity_z -= grav * 0.5f;
 		}
 	}
@@ -248,38 +247,38 @@ void _Movetype_CheckVelocity(entity this)  // SV_CheckVelocity
 	// this.move_velocity = '0 0 0';
 }
 
-bool _Movetype_CheckWater(entity ent)  // SV_CheckWater
+bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 {
-	vector point = ent.move_origin;
-	point.z += (ent.mins.z + 1);
+	vector point = this.move_origin;
+	point.z += this.mins.z + 1;
 
 	int nativecontents = pointcontents(point);
-	if(ent.move_watertype && ent.move_watertype != nativecontents)
+	if(this.move_watertype && this.move_watertype != nativecontents)
 	{
-		// dprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", ent.move_watertype, nativecontents);
-		if(ent.contentstransition)
-			ent.contentstransition(ent.move_watertype, nativecontents);
+		// dprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", this.move_watertype, nativecontents);
+		if(this.contentstransition)
+			this.contentstransition(this.move_watertype, nativecontents);
 	}
 
-	ent.move_waterlevel = 0;
-	ent.move_watertype = CONTENT_EMPTY;
+	this.move_waterlevel = WATERLEVEL_NONE;
+	this.move_watertype = CONTENT_EMPTY;
 
 	int supercontents = Mod_Q1BSP_SuperContentsFromNativeContents(nativecontents);
 	if(supercontents & DPCONTENTS_LIQUIDSMASK)
 	{
-		ent.move_watertype = nativecontents;
-		ent.move_waterlevel = 1;
-		point.y = (ent.origin.y + ((ent.mins.z + ent.maxs.y) * 0.5));
+		this.move_watertype = nativecontents;
+		this.move_waterlevel = WATERLEVEL_WETFEET;
+		point.z = this.move_origin.z + (this.mins.z + this.maxs.z) * 0.5;
 		if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
 		{
-			ent.move_waterlevel = 2;
-			point.y = ent.origin.y + ent.view_ofs.y;
+			this.move_waterlevel = WATERLEVEL_SWIMMING;
+			point.z = this.move_origin.z + this.view_ofs.z;
 			if(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(point)) & DPCONTENTS_LIQUIDSMASK)
-				ent.move_waterlevel = 3;
+				this.move_waterlevel = WATERLEVEL_SUBMERGED;
 		}
 	}
 
-	return ent.move_waterlevel > 1;
+	return this.move_waterlevel > 1;
 }
 
 void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
@@ -344,6 +343,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 
 	for (entity e = findradius(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin)); e; e = e.chain)
 	{
+		if(e.move_nomonsters != MOVE_NOMONSTERS && e.move_nomonsters != MOVE_WORLDONLY)
 		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, this.absmin, this.absmax))
 		{
 			other = this;
@@ -353,7 +353,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_fraction = 1;
 			trace_inwater = false;
 			trace_inopen = true;
-			trace_endpos = e.origin;
+			trace_endpos = e.move_origin;
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
 			trace_ent = this;
@@ -414,7 +414,7 @@ bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosi
 
 	int cont = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID;
-	tracebox(this.move_origin, this.mins, this.maxs, this.move_origin, MOVE_NOMONSTERS, this);
+	tracebox(this.move_origin, this.mins, this.maxs, this.move_origin, ((this.move_movetype == MOVETYPE_FLY_WORLDONLY) ? MOVE_WORLDONLY : MOVE_NOMONSTERS), this);
 	this.dphitcontentsmask = cont;
 
 	if(trace_startsolid)
@@ -441,11 +441,11 @@ bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition(this, '0 0 -1' * i)) goto success;
 		if(!_Movetype_TestEntityPosition(this, '0 0 1' * i)) goto success;
 	}
-	LOG_TRACEF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
+	LOG_DEBUG("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
 		num_for_edict(this), this.classname, vtos(this.move_origin));
 	return false;
 	: success;
-	LOG_TRACEF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
+	LOG_DEBUG("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
 		num_for_edict(this), this.classname, vtos(this.move_origin));
 	_Movetype_LinkEdict(this, true);
 	return true;
@@ -470,6 +470,8 @@ void _Movetype_PushEntityTrace(entity this, vector push)
 		type = max(0, this.move_nomonsters);
 	else if(this.move_movetype == MOVETYPE_FLYMISSILE)
 		type = MOVE_MISSILE;
+	else if(this.move_movetype == MOVETYPE_FLY_WORLDONLY)
+		type = MOVE_WORLDONLY;
 	else if(this.solid == SOLID_TRIGGER || this.solid == SOLID_NOT)
 		type = MOVE_NOMONSTERS;
 	else
@@ -583,7 +585,49 @@ void _Movetype_Physics_Frame(entity this, float movedt)
 		case MOVETYPE_BOUNCEMISSILE:
 		case MOVETYPE_FLYMISSILE:
 		case MOVETYPE_FLY:
+		case MOVETYPE_FLY_WORLDONLY:
 			_Movetype_Physics_Toss(this, movedt);
+			break;
+		case MOVETYPE_PHYSICS:
+			break;
+	}
+}
+
+void _Movetype_Physics_ClientFrame(entity this, float movedt)
+{
+	this.move_didgravity = -1;
+	switch (this.move_movetype)
+	{
+		case MOVETYPE_PUSH:
+		case MOVETYPE_FAKEPUSH:
+			_Movetype_Physics_Pusher(this, movedt);
+			break;
+		case MOVETYPE_NONE:
+			break;
+		case MOVETYPE_FOLLOW:
+			_Movetype_Physics_Follow(this);
+			break;
+		case MOVETYPE_NOCLIP:
+			_Movetype_CheckWater(this);
+			this.move_origin = this.move_origin + TICRATE * this.move_velocity;
+			this.move_angles = this.move_angles + TICRATE * this.move_avelocity;
+			_Movetype_LinkEdict(this, false);
+			break;
+		case MOVETYPE_STEP:
+			_Movetype_Physics_Step(this, movedt);
+			break;
+		case MOVETYPE_WALK:
+		case MOVETYPE_FLY:
+		case MOVETYPE_FLY_WORLDONLY:
+			_Movetype_Physics_Walk(this, movedt);
+			break;
+		case MOVETYPE_TOSS:
+		case MOVETYPE_BOUNCE:
+		case MOVETYPE_BOUNCEMISSILE:
+		case MOVETYPE_FLYMISSILE:
+			_Movetype_Physics_Toss(this, movedt);
+			break;
+		case MOVETYPE_PHYSICS:
 			break;
 	}
 }
@@ -641,10 +685,10 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 
 		if(this.move_didgravity > 0)
 		{
-			this.velocity_z -= (GRAVITY_UNAFFECTED_BY_TICRATE ? 0.5 : 1)
+			this.velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 			    * dt
 			    * (this.gravity ? this.gravity : 1)
-			    * PHYS_GRAVITY;
+			    * PHYS_GRAVITY(this);
 		}
 
 		this.angles = this.move_angles + dt * this.avelocity;
@@ -660,8 +704,8 @@ void Movetype_Physics_MatchTicrate(entity this, float tr, bool sloppy)  // SV_Ph
 				setorigin(this, trace_endpos);
 		}
 
-		if(this.move_didgravity > 0 && GRAVITY_UNAFFECTED_BY_TICRATE)
-			this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY;
+		if(this.move_didgravity > 0 && GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
+			this.velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 	}
 	else
 	{

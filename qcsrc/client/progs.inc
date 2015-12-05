@@ -25,6 +25,7 @@
 
 #include "weapons/projectile.qc" // TODO
 
+#include "../common/anim.qc"
 #include "../common/animdecide.qc"
 #include "../common/effects/effectinfo.qc"
 #include "../common/ent_cs.qc"
@@ -62,6 +63,7 @@
 #include "../lib/warpzone/anglestransform.qc"
 #include "../lib/warpzone/client.qc"
 #include "../lib/warpzone/common.qc"
+#include "../lib/warpzone/server.qc"
 #include "../lib/warpzone/util_server.qc"
 
 #if BUILD_MOD
