@@ -218,6 +218,6 @@ string W_Model(string w_mdl);
 
 // other useful macros
 #define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
-#define WEP_NAME(wpn) ((get_weaponinfo(wpn)).m_name)
+#define WEP_NAME(wpn) ((Weapons_from(wpn)).m_name)
 
 #endif

@@ -18,7 +18,7 @@ string W_Apply_Weaponreplace(string in)
 
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			e = get_weaponinfo(j);
+			e = Weapons_from(j);
 			if(e.netname == s)
 			{
 				replacement = e.weaponreplace;
@@ -64,7 +64,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 				int j;
 				for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					e = get_weaponinfo(j);
+					e = Weapons_from(j);
 					if (e.netname == s)
 					{
 						entity replacement = spawn();
@@ -87,7 +87,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			int j;
 			for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
-				e = get_weaponinfo(j);
+				e = Weapons_from(j);
 				if (e.netname == s)
 				{
 					wpn = j;
@@ -107,7 +107,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 	}
 
-	e = get_weaponinfo(wpn);
+	e = Weapons_from(wpn);
 
 	if (!this.respawntime)
 	{

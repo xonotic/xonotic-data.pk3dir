@@ -276,7 +276,7 @@ void viewmodel_draw(entity this)
 	float a = this.alpha;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g;
-	Weapon wep = Weapons_from(activeweapon);
+	Weapon wep = activeweapon;
 	if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
 	entity me = CSQCModel_server2csqc(player_localentnum - 1);
 	int fx = ((me.csqcmodel_effects & EFMASK_CHEAP)
@@ -293,7 +293,7 @@ void viewmodel_draw(entity this)
 	}
 	{
 		static string name_last;
-		string name = Weapons_from(activeweapon).mdl;
+		string name = wep.mdl;
 		if (name != name_last)
 		{
 			name_last = name;
@@ -348,7 +348,7 @@ void Porto_Draw(entity this)
 	vector p, dir, ang, q, nextdir;
 	float portal_number, portal1_idx;
 
-	if(activeweapon != WEP_PORTO.m_id || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
+	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
 	if(g_balance_porto_secondary)
 		return;
@@ -448,7 +448,7 @@ vector GetCurrentFov(float fov)
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
 	if(switchweapon == activeweapon)
-	if((activeweapon == WEP_VORTEX.m_id && vortex_scope) || (activeweapon == WEP_RIFLE.m_id && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -635,17 +635,17 @@ float TrueAimCheck()
 
 	switch(activeweapon) // WEAPONTODO
 	{
-		case WEP_TUBA.m_id: // no aim
-		case WEP_PORTO.m_id: // shoots from eye
-		case WEP_NEXBALL.m_id: // shoots from eye
-		case WEP_HOOK.m_id: // no trueaim
-		case WEP_MORTAR.m_id: // toss curve
+		case WEP_TUBA: // no aim
+		case WEP_PORTO: // shoots from eye
+		case WEP_NEXBALL: // shoots from eye
+		case WEP_HOOK: // no trueaim
+		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
-		case WEP_VORTEX.m_id:
-		case WEP_VAPORIZER.m_id:
+		case WEP_VORTEX:
+		case WEP_VAPORIZER:
 			mv = MOVE_NORMAL;
 			break;
-		case WEP_RIFLE.m_id:
+		case WEP_RIFLE:
 			ta = trueaim_rifle;
 			mv = MOVE_NORMAL;
 			if(zoomscript_caught)
@@ -654,19 +654,19 @@ float TrueAimCheck()
 				return EnemyHitCheck();
 			}
 			break;
-		case WEP_DEVASTATOR.m_id: // projectile has a size!
+		case WEP_DEVASTATOR: // projectile has a size!
 			mi = '-3 -3 -3';
 			ma = '3 3 3';
 			break;
-		case WEP_FIREBALL.m_id: // projectile has a size!
+		case WEP_FIREBALL: // projectile has a size!
 			mi = '-16 -16 -16';
 			ma = '16 16 16';
 			break;
-		case WEP_SEEKER.m_id: // projectile has a size!
+		case WEP_SEEKER: // projectile has a size!
 			mi = '-2 -2 -2';
 			ma = '2 2 2';
 			break;
-		case WEP_ELECTRO.m_id: // projectile has a size!
+		case WEP_ELECTRO: // projectile has a size!
 			mi = '0 0 -3';
 			ma = '0 0 -3';
 			break;
@@ -813,7 +813,7 @@ void HitSound()
 
 	static float hitsound_time_prev = 0;
 	// HACK: the only way to get the arc to sound consistent with pitch shift is to ignore cl_hitsound_antispam_time
-	float arc_hack = activeweapon == WEP_ARC.m_id && autocvar_cl_hitsound >= 2;
+	float arc_hack = activeweapon == WEP_ARC && autocvar_cl_hitsound >= 2;
 	if (arc_hack || COMPARE_INCREASING(time, hitsound_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
 		if (autocvar_cl_hitsound && unaccounted_damage)
@@ -919,7 +919,7 @@ void HUD_Crosshair()
 
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
-			e = get_weaponinfo(switchingweapon);
+			e = switchingweapon;
 			if(e)
 			{
 				if(autocvar_crosshair_per_weapon)
@@ -1149,7 +1149,7 @@ void HUD_Crosshair()
 
 
 				// handle the values
-				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX.m_id && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
+				if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
 				{
 					if (vortex_chargepool || use_vortex_chargepool) {
 						use_vortex_chargepool = 1;
@@ -1169,14 +1169,14 @@ void HUD_Crosshair()
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER.m_id && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
 				{
 					ring_value = bound(0, STAT(LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if (activeweapon == WEP_HAGAR.m_id && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
+				else if (activeweapon == WEP_HAGAR && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
 					ring_value = bound(0, STAT(HAGAR_LOAD) / hagar_maxrockets, 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
@@ -1199,12 +1199,12 @@ void HUD_Crosshair()
 
 					// Note: This is to stop Taoki from complaining that the image doesn't match all potential balances.
 					// if a new image for another weapon is added, add the code (and its respective file/value) here
-					if ((activeweapon == WEP_RIFLE.m_id) && (weapon_clipsize == 80))
+					if ((activeweapon == WEP_RIFLE) && (weapon_clipsize == 80))
 						ring_image = "gfx/crosshair_ring_rifle.tga";
 					else
 						ring_image = "gfx/crosshair_ring.tga";
 				}
-				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC.m_id )
+				else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC )
 				{
 					ring_value = arc_heat;
 					ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
@@ -1707,10 +1707,12 @@ void CSQC_UpdateView(float w, float h)
 	ColorTranslateMode = autocvar_cl_stripcolorcodes;
 
 	// currently switching-to weapon (for crosshair)
-	switchingweapon = STAT(SWITCHINGWEAPON);
+	switchingweapon = Weapons_from(STAT(SWITCHINGWEAPON));
 
 	// actually active weapon (for zoom)
-	activeweapon = getstati(STAT_ACTIVEWEAPON);
+	activeweapon = Weapons_from(getstati(STAT_ACTIVEWEAPON));
+
+	switchweapon = Weapons_from(STAT(SWITCHWEAPON));
 
 	f = (serverflags & SERVERFLAG_TEAMPLAY);
 	if(f != teamplay)
@@ -1739,7 +1741,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		last_activeweapon = activeweapon;
 
-		e = get_weaponinfo(activeweapon);
+		e = activeweapon;
 		if(e.netname != "")
 			localcmd(strcat("\ncl_hook_activeweapon ", e.netname), "\n");
 		else
@@ -1872,7 +1874,7 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar_cl_reticle)
 	{
-		Weapon wep = get_weaponinfo(activeweapon);
+		Weapon wep = activeweapon;
 		// Draw the aiming reticle for weapons that use it
 		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 		// It must be a persisted float for fading out to work properly (you let go of the zoom button for

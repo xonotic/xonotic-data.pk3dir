@@ -230,8 +230,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 				}
 
 			if(autocvar_g_balance_vortex_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
-				w.wr_reload(w);
+				thiswep.wr_reload(thiswep);
 			} else
 			{
 				if(fire & 1)

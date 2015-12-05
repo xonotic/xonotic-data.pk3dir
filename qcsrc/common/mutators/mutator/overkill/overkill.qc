@@ -63,7 +63,7 @@ void ok_DecreaseCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return;
 
-	entity wepent = get_weaponinfo(wep);
+	entity wepent = Weapons_from(wep);
 
 	if(wepent.weapon == 0)
 		return; // dummy
@@ -73,7 +73,7 @@ void ok_DecreaseCharge(entity ent, int wep)
 
 void ok_IncreaseCharge(entity ent, int wep)
 {
-	entity wepent = get_weaponinfo(wep);
+	entity wepent = Weapons_from(wep);
 
 	if(wepent.weapon == 0)
 		return; // dummy
@@ -87,7 +87,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return true;
 
-	entity wepent = get_weaponinfo(wep);
+	entity wepent = Weapons_from(wep);
 
 	if(wepent.weapon == 0)
 		return 0; // dummy
@@ -229,7 +229,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			self.ok_notice_time = time + 2;
 			play2(self, SND(DRYFIRE));
 		}
-		Weapon wpn = get_weaponinfo(self.weapon);
+		Weapon wpn = Weapons_from(self.weapon);
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if(self.(weaponentity).state != WS_CLEAR)
 			w_ready(wpn, self, weaponentity, (self.BUTTON_ATCK ? 1 : 0) | (self.BUTTON_ATCK2 ? 2 : 0));

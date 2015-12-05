@@ -101,10 +101,10 @@ string W_FixWeaponOrder(string order, float complete)
 }
 string W_NameWeaponOrder_MapFunc(string s)
 {
-	entity wi;
-	if (s == "0" || stof(s))
+	int i = stof(s);
+	if (s == "0" || i)
 	{
-		wi = get_weaponinfo(stof(s));
+		entity wi = Weapons_from(i);
 		if (wi != WEP_Null) return wi.netname;
 	}
 	return s;
@@ -129,11 +129,9 @@ string W_NameWeaponOrder(string order)
 }
 string W_NumberWeaponOrder_MapFunc(string s)
 {
-	int i;
 	if (s == "0" || stof(s)) return s;
 	s = W_UndeprecateName(s);
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		if (s == get_weaponinfo(i).netname) return ftos(i);
+	FOREACH(Weapons, it != WEP_Null && it.netname == s, LAMBDA(return ftos(i)));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
@@ -152,17 +150,17 @@ void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 }
 float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 {
-	entity e1, e2;
-	float d;
-	e1 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[i]);
-	e2 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[j]);
-	d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
+	int si = W_FixWeaponOrder_BuildImpulseList_buf[i];
+	Weapon e1 = Weapons_from(si);
+	int sj = W_FixWeaponOrder_BuildImpulseList_buf[j];
+	Weapon e2 = Weapons_from(sj);
+	int d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
 	if (d != 0) return -d;  // high impulse first!
 	return strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
-		sprintf(" %d ", W_FixWeaponOrder_BuildImpulseList_buf[i]), 0)
+		sprintf(" %d ", si), 0)
 	       -
 	       strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
-		sprintf(" %d ", W_FixWeaponOrder_BuildImpulseList_buf[j]), 0)
+		sprintf(" %d ", sj), 0)
 	;  // low char index first!
 }
 string W_FixWeaponOrder_BuildImpulseList(string o)
@@ -202,9 +200,10 @@ void W_RandomWeapons(entity e, float n)
 	{
 		RandomSelection_Init();
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			if (remaining & WepSet_FromWeapon(j)) RandomSelection_Add(world, j, string_null, 1, 1);
-		result |= WepSet_FromWeapon(RandomSelection_chosen_float);
-		remaining &= ~WepSet_FromWeapon(RandomSelection_chosen_float);
+			if (remaining & WepSet_FromWeapon(Weapons_from(j))) RandomSelection_Add(NULL, j, string_null, 1, 1);
+		Weapon w = Weapons_from(RandomSelection_chosen_float);
+		result |= WepSet_FromWeapon(w);
+		remaining &= ~WepSet_FromWeapon(w);
 	}
 	e.weapons = result;
 }

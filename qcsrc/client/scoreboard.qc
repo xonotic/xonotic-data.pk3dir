@@ -1001,17 +1001,15 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
-	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		Weapon e = get_weaponinfo(i);
-		setself(e);
-		if (!self.weapon) continue;
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if (!it.weapon) continue;
 
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		WepSet set = e.m_wepset;
+		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			++disownedcnt;
-	}
+	));
 
 	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
 	if (weapon_cnt <= 0) return pos;
@@ -1065,13 +1063,11 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		Weapon e = get_weaponinfo(i);
-		setself(e);
-		if (!self.weapon) continue;
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if (!it.weapon) continue;
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		WepSet set = e.m_wepset;
+		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			continue;
 
@@ -1082,7 +1078,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect_skin(tmpos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(tmpos, it.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if (weapon_stats >= 0) {
 			weapons_with_stats += 1;
@@ -1107,7 +1103,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			pos.y += height;
 		}
 		++column;
-	}
+	));
 
 	if (weapons_with_stats)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);

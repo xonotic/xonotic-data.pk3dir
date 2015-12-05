@@ -482,7 +482,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(DIFF_TEAM(self, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
-			awep = get_weaponinfo(attacker.weapon);
+			awep = Weapons_from(attacker.weapon);
 		else
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
@@ -548,7 +548,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 		excess = frag_damage;
 
-		Weapon wep = get_weaponinfo(self.weapon);
+		Weapon wep = Weapons_from(self.weapon);
 		wep.wr_playerdeath(wep);
 
 		RemoveGrapplingHook(self);
@@ -631,7 +631,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		// reset fields the weapons may use just in case
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			Weapon w = get_weaponinfo(j);
+			Weapon w = Weapons_from(j);
 			w.wr_resetplayer(w);
 			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{

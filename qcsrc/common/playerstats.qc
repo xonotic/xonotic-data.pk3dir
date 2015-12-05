@@ -106,23 +106,16 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 
 void PlayerStats_GameReport_Accuracy(entity p)
 {
-	int i;
-
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		entity w = get_weaponinfo(i);
-
-		#define ACCMAC(suffix,field) \
-			PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", w.netname, suffix), p.accuracy.(field[i-1]));
-
+	#define ACCMAC(suffix, field) \
+		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), p.accuracy.(field[i-1]));
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
 		ACCMAC("cnt-hit", accuracy_cnt_hit)
 		ACCMAC("cnt-fired", accuracy_cnt_fired)
 		ACCMAC("frags", accuracy_frags)
-
-		#undef ACCMAC
-	}
+	));
+	#undef ACCMAC
 }
 
 void PlayerStats_GameReport_FinalizePlayer(entity p)
@@ -240,17 +233,13 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
 
 		// accuracy stats
-		entity w;
-		float i;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			w = get_weaponinfo(i);
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-hit"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-fired"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-frags"));
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-frags"));
+		));
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);

@@ -197,8 +197,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 // alternate secondary weapon frames
 void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	Weapon w = get_weaponinfo(actor.weapon);
-	if (!w.wr_checkammo2(w))
+	if (!thiswep.wr_checkammo2(thiswep))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -212,8 +211,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	Weapon w = get_weaponinfo(actor.weapon);
-	if (!w.wr_checkammo2(w))
+	if (!thiswep.wr_checkammo2(thiswep))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -240,8 +238,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 			{
 				// don't force reload an empty shotgun if its melee attack is active
 				if(WEP_CVAR(shotgun, secondary) < 2) {
-					Weapon w = get_weaponinfo(actor.weapon);
-					w.wr_reload(w);
+					thiswep.wr_reload(thiswep);
 				}
 			}
 			else

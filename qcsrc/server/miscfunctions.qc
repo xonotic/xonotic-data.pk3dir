@@ -526,7 +526,7 @@ void readplayerstartcvars()
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			e = get_weaponinfo(j);
+			e = Weapons_from(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				g_weaponarena_weapons |= (e.m_wepset);
 		}
@@ -537,7 +537,7 @@ void readplayerstartcvars()
 		g_weaponarena_list = "Most Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			e = get_weaponinfo(j);
+			e = Weapons_from(j);
 			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				if (e.spawnflags & WEP_FLAG_NORMAL)
 					g_weaponarena_weapons |= (e.m_wepset);
@@ -558,7 +558,7 @@ void readplayerstartcvars()
 			s = argv(i);
 			for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
-				e = get_weaponinfo(j);
+				e = Weapons_from(j);
 				if (e.netname == s)
 				{
 					g_weaponarena_weapons |= (e.m_wepset);
@@ -590,7 +590,7 @@ void readplayerstartcvars()
 	{
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
-			e = get_weaponinfo(i);
+			e = Weapons_from(i);
 			int w = want_weapon(e, false);
 			WepSet s = e.m_wepset;
 			if(w & 1)
@@ -653,7 +653,7 @@ void readplayerstartcvars()
 			warmup_start_weapons_defaultmask = '0 0 0';
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
-				e = get_weaponinfo(i);
+				e = Weapons_from(i);
 				int w = want_weapon(e, g_warmup_allguns);
 				WepSet s = (e.m_wepset);
 				if(w & 1)
@@ -683,7 +683,7 @@ void readplayerstartcvars()
 		precache_weapons |= warmup_start_weapons;
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		e = get_weaponinfo(i);
+		e = Weapons_from(i);
 		if(precache_weapons & (e.m_wepset)) {
 			e.wr_init(e);
 		}

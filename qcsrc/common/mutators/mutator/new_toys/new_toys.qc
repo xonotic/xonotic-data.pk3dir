@@ -79,14 +79,14 @@ REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overk
 		// mark the guns as ok to use by e.g. impulse 99
 		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+				Weapons_from(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
 		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+				Weapons_from(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	MUTATOR_ONREMOVE
@@ -168,7 +168,7 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		entity e = get_weaponinfo(i);
+		entity e = Weapons_from(i);
 		if(!e.weapon)
 			continue;
 
@@ -177,7 +177,7 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 		for (j = 0; j < n; ++j)
 			for (k = WEP_FIRST; k <= WEP_LAST; ++k)
 			{
-				Weapon w = get_weaponinfo(k);
+				Weapon w = Weapons_from(k);
 				if (w.netname == argv(j))
 				{
 					WepSet seti = e.m_wepset;

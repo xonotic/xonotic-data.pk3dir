@@ -1342,7 +1342,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
-		if(self.weapons & WepSet_FromWeapon(i))
+		if(self.weapons & WepSet_FromWeapon(Weapons_from(i)))
 		if(++c>=4)
 			break;
 	}

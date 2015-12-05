@@ -14,7 +14,7 @@ void W_GiveWeapon (entity e, float wep)
 	if (!wep)
 		return;
 
-	e.weapons |= WepSet_FromWeapon(wep);
+	e.weapons |= WepSet_FromWeapon(Weapons_from(wep));
 
 	setself(e);
 

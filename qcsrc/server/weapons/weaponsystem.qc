@@ -518,7 +518,7 @@ void W_WeaponFrame(entity actor)
 	// server framerate is very low and the weapon fire rate very high
 	for (int c = 0; c < W_TICSPERFRAME; ++c)
 	{
-		if (w && !(actor.weapons & WepSet_FromWeapon(w)))
+		if (w && !(actor.weapons & WepSet_FromWeapon(Weapons_from(w))))
 		{
 			if (actor.weapon == actor.switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 			w = 0;
