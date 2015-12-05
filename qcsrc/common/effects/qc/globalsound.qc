@@ -296,6 +296,8 @@
 
 	#ifdef SVQC
 
+		bool autocvar_g_debug_globalsounds;
+
 		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
 		{
 			if (gs == NULL && ps == NULL && sample == "") return;
@@ -402,7 +404,13 @@
 					}
 					else
 					{
-						if (gs) globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
+						if (gs)
+						{
+							if(autocvar_g_debug_globalsounds)
+								globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
+							else
+								_sound(this, chan, GlobalSound_sample(gs.m_globalsoundstr, r), VOL_BASE, ATTEN_NORM);
+						}
 						else if (ps) playersound(MSG_ALL, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
 						else _sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
 					}
