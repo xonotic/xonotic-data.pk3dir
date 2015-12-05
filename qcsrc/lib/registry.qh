@@ -4,10 +4,10 @@
 #include "oo.qh"
 
 #if 1
-	#define _R_MAP(r, max) AL_declare(r); STATIC_INIT(r) { AL_init(r, max, NULL, e); }
+	#define _R_MAP(r, max) ArrayList r; STATIC_INIT(r) { AL_NEW(r, max, NULL, e); }
 	#define _R_GET(r, i) AL_gete(r, i)
 	#define _R_SET(r, i, e) AL_sete(r, i, e)
-	#define _R_DEL(r) AL_delete(r)
+	#define _R_DEL(r) AL_DELETE(r)
 #else
 	#define _R_MAP(r, max) entity r[max]
 	#define _R_GET(r, i) r[i]

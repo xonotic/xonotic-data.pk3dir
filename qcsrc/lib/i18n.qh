@@ -26,14 +26,14 @@ string language_filename(string s)
 #endif
 
 #if CTX_CACHE
-	AL_declare(CTX_cache);
+	ArrayList CTX_cache;
 	STATIC_INIT(CTX_cache)
 	{
-		AL_init(CTX_cache, 0, string_null, s);
+		AL_NEW(CTX_cache, 0, string_null, s);
 	}
 	SHUTDOWN(CTX_cache)
 	{
-		AL_delete(CTX_cache);
+		AL_DELETE(CTX_cache);
 	}
 #endif
 

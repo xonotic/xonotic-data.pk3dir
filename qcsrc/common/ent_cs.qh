@@ -41,14 +41,14 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 #ifdef CSQC
 
-	AL_declare(_entcs);
+	ArrayList _entcs;
 	STATIC_INIT(_entcs)
 	{
-		AL_init(_entcs, 255, NULL, e);  // 255 is the engine limit on maxclients
+		AL_NEW(_entcs, 255, NULL, e);  // 255 is the engine limit on maxclients
 	}
 	SHUTDOWN(_entcs)
 	{
-		AL_delete(_entcs);
+		AL_DELETE(_entcs);
 	}
 	#define entcs_receiver(...) EVAL(OVERLOAD(entcs_receiver, __VA_ARGS__))
 	#define entcs_receiver_1(i) AL_gete(_entcs, i)
