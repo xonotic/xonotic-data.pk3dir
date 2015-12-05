@@ -59,6 +59,7 @@ entity LL_POP(LinkedList this)
 			dtor \
 			remove(it); \
 		} \
+		remove(_ll); \
 		this = NULL; \
 	} \
 	while (0)
