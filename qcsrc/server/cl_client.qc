@@ -2601,7 +2601,7 @@ void PlayerPostThink ()
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)
-			ImpulseCommands();
+			ImpulseCommands(self);
 		if (intermission_running)
 			return;		// intermission or finale
 		GetPressedKeys();

@@ -1126,7 +1126,7 @@ void ctf_FlagThink()
 
 				setself(self.owner);
 				self.impulse = CHIMPULSE_SPEEDRUN; // move the player back to the waypoint they set
-				ImpulseCommands();
+				ImpulseCommands(self);
 				setself(this);
 			}
 			if(autocvar_g_ctf_stalemate)
