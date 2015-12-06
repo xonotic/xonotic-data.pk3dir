@@ -71,8 +71,7 @@
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);
-			int chan = ReadByte();
-			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
+			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -104,8 +103,7 @@
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
-			int chan = ReadByte();
-			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
+			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;

@@ -191,6 +191,8 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			return v;
 		}
 
+		int _ReadSByte;
+		#define ReadSByte() (_ReadSByte = ReadByte(), (_ReadSByte & BIT(7) ? -128 : 0) + (_ReadSByte & BITS(7)))
 		#define ReadFloat() ReadCoord()
         vector ReadVector() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = ReadFloat(); return v; }
 		vector ReadVector2D() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = 0; return v; }
