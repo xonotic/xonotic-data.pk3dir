@@ -81,7 +81,7 @@ bool autocvar_debugdraw;
 #endif
 
 #ifdef SVQC
-	GENERIC_COMMAND(debugdraw_sv, "Dump all server entities")
+	COMMON_COMMAND(debugdraw_sv, "Dump all server entities")
 	{
 		switch (request)
 		{
