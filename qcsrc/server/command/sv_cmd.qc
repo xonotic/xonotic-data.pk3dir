@@ -1,5 +1,4 @@
-#include "../../common/command/command.qh"
-#include "sv_cmd.qh"
+#include "all.qh"
 
 #include "banning.qh"
 #include "cmd.qh"
@@ -1781,79 +1780,67 @@ void GameCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define SERVER_COMMANDS(request, arguments, command) \
-	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
-	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
-	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
-	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
-	SERVER_COMMAND("animbench", GameCommand_animbench(request, arguments), "Benchmark model animation (LAGS)") \
-	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
-	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments, command), "Control and send commands to bots") \
-	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
-	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
-	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
-	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request), "Clear all queued defer commands for all clients") \
-	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments), "Delete race time record for a map") \
-	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request), "Dump list of effects from code and effectinfo.txt") \
-	SERVER_COMMAND("extendmatchtime", GameCommand_extendmatchtime(request), "Increase the timelimit value incrementally") \
-	SERVER_COMMAND("find", GameCommand_find(request, arguments), "Search through entities for matching classname") \
-	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments), "Simple command to change the active gametype") \
-	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments), "Get specific information about a weapon model") \
-	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments), "Simple command to switch to another map") \
-	SERVER_COMMAND("lockteams", GameCommand_lockteams(request), "Disable the ability for players to switch or enter teams") \
-	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request), "Automatically rebuild mapinfo files") \
-	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments), "Change the team/status of a player") \
-	SERVER_COMMAND("nospectators", GameCommand_nospectators(request), "Automatically remove spectators from a match") \
-	SERVER_COMMAND("playerdemo", GameCommand_playerdemo(request, arguments), "Control the ability to save demos of players") \
-	SERVER_COMMAND("printstats", GameCommand_printstats(request), "Dump eventlog player stats and other score information") \
-	SERVER_COMMAND("radarmap", GameCommand_radarmap(request, arguments), "Generate a radar image of the map") \
-	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request), "Decrease the timelimit value incrementally") \
-	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
-	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request), "Randomly move players to different teams") \
-	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
-	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
-	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
-	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
-	/* nothing */
+SERVER_COMMAND(adminmsg, "Send an admin message to a client directly") { GameCommand_adminmsg(request, arguments); }
+SERVER_COMMAND(allready, "Restart the server and reset the players") { GameCommand_allready(request); }
+SERVER_COMMAND(allspec, "Force all players to spectate") { GameCommand_allspec(request, arguments); }
+SERVER_COMMAND(anticheat, "Create an anticheat report for a client") { GameCommand_anticheat(request, arguments); }
+SERVER_COMMAND(animbench, "Benchmark model animation (LAGS)") { GameCommand_animbench(request, arguments); }
+SERVER_COMMAND(bbox, "Print detailed information about world size") { GameCommand_bbox(request); }
+SERVER_COMMAND(bot_cmd, "Control and send commands to bots") { GameCommand_bot_cmd(request, arguments, command); }
+SERVER_COMMAND(cointoss, "Flip a virtual coin and give random result") { GameCommand_cointoss(request, arguments); }
+SERVER_COMMAND(database, "Extra controls of the serverprogs database") { GameCommand_database(request, arguments); }
+SERVER_COMMAND(defer_clear, "Clear all queued defer commands for a specific client") { GameCommand_defer_clear(request, arguments); }
+SERVER_COMMAND(defer_clear_all, "Clear all queued defer commands for all clients") { GameCommand_defer_clear_all(request); }
+SERVER_COMMAND(delrec, "Delete race time record for a map") { GameCommand_delrec(request, arguments); }
+SERVER_COMMAND(effectindexdump, "Dump list of effects from code and effectinfo.txt") { GameCommand_effectindexdump(request); }
+SERVER_COMMAND(extendmatchtime, "Increase the timelimit value incrementally") { GameCommand_extendmatchtime(request); }
+SERVER_COMMAND(find, "Search through entities for matching classname") { GameCommand_find(request, arguments); }
+SERVER_COMMAND(gametype, "Simple command to change the active gametype") { GameCommand_gametype(request, arguments); }
+SERVER_COMMAND(gettaginfo, "Get specific information about a weapon model") { GameCommand_gettaginfo(request, arguments); }
+SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand_gotomap(request, arguments); }
+SERVER_COMMAND(lockteams, "Disable the ability for players to switch or enter teams") { GameCommand_lockteams(request); }
+SERVER_COMMAND(make_mapinfo, "Automatically rebuild mapinfo files") { GameCommand_make_mapinfo(request); }
+SERVER_COMMAND(moveplayer, "Change the team/status of a player") { GameCommand_moveplayer(request, arguments); }
+SERVER_COMMAND(nospectators, "Automatically remove spectators from a match") { GameCommand_nospectators(request); }
+SERVER_COMMAND(playerdemo, "Control the ability to save demos of players") { GameCommand_playerdemo(request, arguments); }
+SERVER_COMMAND(printstats, "Dump eventlog player stats and other score information") { GameCommand_printstats(request); }
+SERVER_COMMAND(radarmap, "Generate a radar image of the map") { GameCommand_radarmap(request, arguments); }
+SERVER_COMMAND(reducematchtime, "Decrease the timelimit value incrementally") { GameCommand_reducematchtime(request); }
+SERVER_COMMAND(setbots, "Adjust how many bots are in the match") { GameCommand_setbots(request, arguments); }
+SERVER_COMMAND(shuffleteams, "Randomly move players to different teams") { GameCommand_shuffleteams(request); }
+SERVER_COMMAND(stuffto, "Send a command to be executed on a client") { GameCommand_stuffto(request, arguments); }
+SERVER_COMMAND(trace, "Various debugging tools with tracing") { GameCommand_trace(request, arguments); }
+SERVER_COMMAND(unlockteams, "Enable the ability for players to switch or enter teams") { GameCommand_unlockteams(request); }
+SERVER_COMMAND(warp, "Choose different level in campaign") { GameCommand_warp(request, arguments); }
 
 void GameCommand_macro_help()
 {
-	#define SERVER_COMMAND(name, function, description) \
-		{ LOG_INFO("  ^2", name, "^7: ", description, "\n"); }
-
-	SERVER_COMMANDS(0, 0, "");
-#undef SERVER_COMMAND
+	FOREACH(SERVER_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
 }
 
 float GameCommand_macro_command(float argc, string command)
 {
-	#define SERVER_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(0))) { function; return true; } }
-
-	SERVER_COMMANDS(CMD_REQUEST_COMMAND, argc, command);
-#undef SERVER_COMMAND
-
+	string c = strtolower(argv(0));
+	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_COMMAND, argc, command);
+		return true;
+	));
 	return false;
 }
 
 float GameCommand_macro_usage(float argc)
 {
-	#define SERVER_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(1))) { function; return true; } }
-
-	SERVER_COMMANDS(CMD_REQUEST_USAGE, argc, "");
-#undef SERVER_COMMAND
-
+	string c = strtolower(argv(1));
+	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_USAGE, argc, "");
+		return true;
+	));
 	return false;
 }
 
 void GameCommand_macro_write_aliases(float fh)
 {
-	#define SERVER_COMMAND(name, function, description) \
-		{ CMD_Write_Alias("qc_cmd_sv", name, description); }
-
-	SERVER_COMMANDS(0, 0, "");
-#undef SERVER_COMMAND
+	FOREACH(SERVER_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_sv", it.m_name, it.m_description)));
 }
 
 
