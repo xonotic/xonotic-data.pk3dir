@@ -159,7 +159,7 @@ STATIC_INIT(register_weapons_done)
         if (imp <= WEP_IMPULSE_END)
             localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
         else
-            LOG_TRACEF(_("Impulse limit exceeded, weapon will not be directly accessible: %s\n"), it.netname);
+            LOG_TRACEF("Impulse limit exceeded, weapon will not be directly accessible: %s\n", it.netname);
     ));
     #ifdef CSQC
     FOREACH(Weapons, true, LAMBDA(it.wr_init(it)));

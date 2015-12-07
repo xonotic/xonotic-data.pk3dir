@@ -68,6 +68,52 @@ X(9, 9)
 X(0, 14)
 #undef X
 
+// custom order weapon cycling
+
+#define X(slot, dir, imp) \
+	IMPULSE(weapon_priority_##slot##_##dir, imp) \
+	{ \
+		if (this.vehicle) return; \
+		if (this.deadflag != DEAD_NO) return; \
+		noref int prev = -1; \
+		noref int best =  0; \
+		noref int next = +1; \
+		W_CycleWeapon(this.cvar_cl_weaponpriorities[slot], dir); \
+	}
+X(0, prev, 200)
+X(1, prev, 201)
+X(2, prev, 202)
+X(3, prev, 203)
+X(4, prev, 204)
+X(5, prev, 205)
+X(6, prev, 206)
+X(7, prev, 207)
+X(8, prev, 208)
+X(9, prev, 209)
+
+X(0, best, 210)
+X(1, best, 211)
+X(2, best, 212)
+X(3, best, 213)
+X(4, best, 214)
+X(5, best, 215)
+X(6, best, 216)
+X(7, best, 217)
+X(8, best, 218)
+X(9, best, 219)
+
+X(0, next, 220)
+X(1, next, 221)
+X(2, next, 222)
+X(3, next, 223)
+X(4, next, 224)
+X(5, next, 225)
+X(6, next, 226)
+X(7, next, 227)
+X(8, next, 228)
+X(9, next, 229)
+#undef X
+
 IMPULSE(weapon_next_byid, 10)
 {
 	if (this.vehicle) return;
@@ -154,7 +200,65 @@ void ImpulseCommands(entity this)
 
 	// allow only weapon change impulses when not in round time
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
-		if (imp == 17 || (imp >= 20 && imp < 200) || imp > 253) return;
+	{
+		#define X(id) case IMP_##id.impulse:
+		switch (imp)
+		{
+			case WEP_IMPULSE_BEGIN <= imp && imp <= WEP_IMPULSE_END:
+			X(weapon_group_0)
+			X(weapon_group_1)
+			X(weapon_group_2)
+			X(weapon_group_3)
+			X(weapon_group_4)
+			X(weapon_group_5)
+			X(weapon_group_6)
+			X(weapon_group_7)
+			X(weapon_group_8)
+			X(weapon_group_9)
+			X(weapon_next_byid)
+			X(weapon_prev_byid)
+			X(weapon_next_bygroup)
+			X(weapon_prev_bygroup)
+			X(weapon_next_bypriority)
+			X(weapon_prev_bypriority)
+			X(weapon_last)
+			X(weapon_best)
+			X(weapon_reload)
+			X(weapon_priority_0_prev)
+            X(weapon_priority_1_prev)
+            X(weapon_priority_2_prev)
+            X(weapon_priority_3_prev)
+            X(weapon_priority_4_prev)
+            X(weapon_priority_5_prev)
+            X(weapon_priority_6_prev)
+            X(weapon_priority_7_prev)
+            X(weapon_priority_8_prev)
+            X(weapon_priority_9_prev)
+            X(weapon_priority_0_next)
+			X(weapon_priority_1_next)
+			X(weapon_priority_2_next)
+			X(weapon_priority_3_next)
+			X(weapon_priority_4_next)
+			X(weapon_priority_5_next)
+			X(weapon_priority_6_next)
+			X(weapon_priority_7_next)
+			X(weapon_priority_8_next)
+			X(weapon_priority_9_next)
+			X(weapon_priority_0_best)
+            X(weapon_priority_1_best)
+            X(weapon_priority_2_best)
+            X(weapon_priority_3_best)
+            X(weapon_priority_4_best)
+            X(weapon_priority_5_best)
+            X(weapon_priority_6_best)
+            X(weapon_priority_7_best)
+            X(weapon_priority_8_best)
+            X(weapon_priority_9_best)
+			break;
+			default: return;
+		}
+#undef X
+	}
 
 	if (vehicle_impulse(this, imp)) return;
 
@@ -167,23 +271,9 @@ void ImpulseCommands(entity this)
 		return;
 	});
 
-	if (imp >= 200 && imp <= 229)
-	{
-		if (!this.vehicle && this.deadflag == DEAD_NO)
-		{
-			// custom order weapon cycling
-			int i = imp % 10;
-			int m = (imp - (210 + i));  // <0 for prev, =0 for best, >0 for next
-			W_CycleWeapon(this.(cvar_cl_weaponpriorities[i]), m);
-		}
-		// else // don't retry, as this can break weaplast bind
-		// this.impulse = imp; // retry in next frame
-	}
-	else if (imp >= WEP_IMPULSE_BEGIN && imp <= WEP_IMPULSE_END)
+	if (imp >= WEP_IMPULSE_BEGIN && imp <= WEP_IMPULSE_END)
 	{
 		if (!this.vehicle && this.deadflag == DEAD_NO) W_SwitchWeapon(imp - WEP_IMPULSE_BEGIN + WEP_FIRST);
-		// else // don't retry, as this can break weaplast bind
-		// this.impulse = imp; // retry in next frame
 	}
 }
 

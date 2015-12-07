@@ -32,7 +32,8 @@ REGISTRY_CHECK(IMPULSES)
 	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
 
 #define X(slot, imp) \
-	REGISTER_IMPULSE(weapon_group_##slot, imp) LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
+	REGISTER_IMPULSE(weapon_group_##slot, imp) \
+	LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
 X(1, 1)
 X(2, 2)
 X(3, 3)
@@ -43,6 +44,43 @@ X(7, 7)
 X(8, 8)
 X(9, 9)
 X(0, 14)
+#undef X
+
+#define X(slot, dir, imp) \
+	REGISTER_IMPULSE(weapon_priority_##slot##_##dir, imp) \
+	LEGACY_IMPULSE(weapon_priority_##slot##_##dir, imp, "impulse " #imp)
+X(0, prev, 200)
+X(1, prev, 201)
+X(2, prev, 202)
+X(3, prev, 203)
+X(4, prev, 204)
+X(5, prev, 205)
+X(6, prev, 206)
+X(7, prev, 207)
+X(8, prev, 208)
+X(9, prev, 209)
+
+X(0, best, 210)
+X(1, best, 211)
+X(2, best, 212)
+X(3, best, 213)
+X(4, best, 214)
+X(5, best, 215)
+X(6, best, 216)
+X(7, best, 217)
+X(8, best, 218)
+X(9, best, 219)
+
+X(0, next, 220)
+X(1, next, 221)
+X(2, next, 222)
+X(3, next, 223)
+X(4, next, 224)
+X(5, next, 225)
+X(6, next, 226)
+X(7, next, 227)
+X(8, next, 228)
+X(9, next, 229)
 #undef X
 
 REGISTER_IMPULSE(weapon_next_byid, 10)
