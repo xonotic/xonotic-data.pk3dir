@@ -960,7 +960,7 @@ bool vehicle_impulse(entity this, int imp)
 	if (f && f(imp)) return true;
 	switch (imp)
 	{
-		case 17:
+		case IMP_weapon_drop.impulse:
 		{
 			stuffcmd(self, "\ntoggle cl_eventchase_vehicle\nset _vehicles_shownchasemessage 1\n");
 			return true;

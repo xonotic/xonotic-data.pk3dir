@@ -628,7 +628,7 @@ string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 void SpecialCommand()
 {
 #ifdef SVQC
-	if (!CheatImpulse(99))
+	if (!CheatImpulse(CHIMPULSE_GIVE_ALL.impulse))
 		LOG_INFO("A hollow voice says \"Plugh\".\n");
 #endif
 }
