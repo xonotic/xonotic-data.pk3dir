@@ -32,7 +32,7 @@ REGISTRY_CHECK(IMPULSES)
 	SHUTDOWN(legacy_##alias) { IMPULSE_ALIAS(alias, "impulse " #id); }
 
 #define X(slot, imp) \
-	REGISTER_IMPULSE(weapon_group_##slot, imp) LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse" #imp)
+	REGISTER_IMPULSE(weapon_group_##slot, imp) LEGACY_IMPULSE(weapon_group_##slot, imp, "impulse " #imp)
 X(1, 1)
 X(2, 2)
 X(3, 3)
