@@ -2014,7 +2014,7 @@ void ObserverThink()
 {SELFPARAM();
 	if ( self.impulse )
 	{
-		MinigameImpulse(self.impulse);
+		MinigameImpulse(self, self.impulse);
 		self.impulse = 0;
 	}
 	float prefered_movetype;
@@ -2049,7 +2049,7 @@ void SpectatorThink()
 {SELFPARAM();
 	if ( self.impulse )
 	{
-		if(MinigameImpulse(self.impulse))
+		if(MinigameImpulse(self, self.impulse))
 			self.impulse = 0;
 	}
 	if (self.flags & FL_JUMPRELEASED) {

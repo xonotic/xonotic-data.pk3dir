@@ -76,6 +76,7 @@
 #include "../common/deathtypes/all.qc"
 #include "../common/effects/all.qc"
 #include "../common/gamemodes/all.qc"
+#include "../common/impulses/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/turrets/all.qc"

@@ -101,7 +101,7 @@ float vehicles_exit_running;
 
 void vehicles_exit(float eject);
 float vehicle_initialize(entity vehicle, float nodrop);
-bool vehicle_impulse(int imp);
+bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 
 #endif

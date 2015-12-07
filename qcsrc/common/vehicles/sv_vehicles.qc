@@ -951,9 +951,14 @@ void vehicles_touch()
 	vehicles_enter(other, self);
 }
 
-bool vehicle_impulse(int imp)
-{SELFPARAM();
-	switch(imp)
+bool vehicle_impulse(entity this, int imp)
+{
+	entity v = this.vehicle;
+	if (!v) return false;
+	if (v.deadflag != DEAD_NO) return false;
+	bool(int) f = v.vehicles_impulse;
+	if (f && f(imp)) return true;
+	switch (imp)
 	{
 		case 17:
 		{
@@ -961,7 +966,6 @@ bool vehicle_impulse(int imp)
 			return true;
 		}
 	}
-
 	return false;
 }
 

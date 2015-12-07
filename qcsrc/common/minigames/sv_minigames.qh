@@ -27,7 +27,7 @@ void end_minigames();
 bool minigame_CheckSend();
 
 // Check for minigame impulses
-bool MinigameImpulse(int imp);
+bool MinigameImpulse(entity this, int imp);
 
 // Parse a client command ( cmd minigame ... )
 void ClientCommand_minigame(int request, int argc, string command);

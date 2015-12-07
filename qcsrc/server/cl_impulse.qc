@@ -19,25 +19,12 @@
 
 .entity vehicle;
 
-REGISTRY(IMPULSES, 255)
-REGISTER_REGISTRY(IMPULSES)
-REGISTRY_SORT(IMPULSES)
-STATIC_INIT(IMPULSES_renumber)
-{
-	FOREACH(IMPULSES, true, LAMBDA(it.m_id = i));
-}
-REGISTRY_CHECK(IMPULSES)
-
-.void(entity this) impulse_handle;
-
 #define IMPULSE(id, n) _IMPULSE(IMP_##id, n)
 #define _IMPULSE(id, n) \
 	void id##_handle(entity this); \
-	REGISTER(IMPULSES, id, m_id, new(Impulse)) \
+	STATIC_INIT_LATE(id) \
 	{ \
-		make_pure(this); \
-		this.impulse = n; \
-		this.impulse_handle = id##_handle; \
+		id.impulse_handle = id##_handle; \
 	} \
 	void id##_handle(entity this)
 
@@ -101,6 +88,7 @@ IMPULSE(weapon_next_bygroup, 18)
 	if (this.deadflag != DEAD_NO) return;
 	W_NextWeapon(1);
 }
+
 IMPULSE(weapon_prev_bygroup, 19)
 {
 	if (this.vehicle) return;
@@ -114,6 +102,7 @@ IMPULSE(weapon_next_bypriority, 15)
 	if (this.deadflag != DEAD_NO) return;
 	W_NextWeapon(2);
 }
+
 IMPULSE(weapon_prev_bypriority, 16)
 {
 	if (this.vehicle) return;
@@ -135,7 +124,7 @@ IMPULSE(weapon_best, 13)
 	W_SwitchWeapon(w_getbestweapon(this));
 }
 
-IMPULSE(weapon_throw, 17)
+IMPULSE(weapon_drop, 17)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
@@ -159,7 +148,7 @@ void ImpulseCommands(entity this)
 	if (!imp) return;
 	this.impulse = 0;
 
-	if (this.active_minigame && MinigameImpulse(imp)) return;
+	if (MinigameImpulse(this, imp)) return;
 
 	if (timeout_status == TIMEOUT_ACTIVE) return;  // don't allow any impulses while the game is paused
 
@@ -167,17 +156,14 @@ void ImpulseCommands(entity this)
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
 		if (imp == 17 || (imp >= 20 && imp < 200) || imp > 253) return;
 
-	if (this.vehicle && this.vehicle.deadflag == DEAD_NO)
-	{
-		bool(int) f = this.vehicle.vehicles_impulse;
-		if (f && f(imp)) return;
-		if (vehicle_impulse(imp)) return;
-	}
+	if (vehicle_impulse(this, imp)) return;
 
 	if (CheatImpulse(imp)) return;
 
 	FOREACH(IMPULSES, it.impulse == imp, {
-		it.impulse_handle(this);
+		void(entity) f = it.impulse_handle;
+		if (!f) continue;
+		f(this);
 		return;
 	});
 
@@ -299,7 +285,7 @@ IMPULSE(waypoint_clear_personal, 47)
 	sprint(this, "personal waypoint cleared\n");
 }
 
-IMPULSE(waypoint_clear_team, 48)
+IMPULSE(waypoint_clear, 48)
 {
 	WaypointSprite_ClearOwned();
 	if (this.personal)
@@ -339,7 +325,7 @@ IMPULSE(navwaypoint_save, 106)
 	waypoint_saveall();
 }
 
-IMPULSE(navwaypoint_debug, 107)
+IMPULSE(navwaypoint_unreachable, 107)
 {
 	if (!autocvar_g_waypointeditor) return;
 	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)
