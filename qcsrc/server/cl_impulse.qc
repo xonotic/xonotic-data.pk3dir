@@ -19,8 +19,8 @@
 
 .entity vehicle;
 
-#define IMPULSE(id, n) _IMPULSE(IMP_##id, n)
-#define _IMPULSE(id, n) \
+#define IMPULSE(id) _IMPULSE(IMP_##id)
+#define _IMPULSE(id) \
 	void id##_handle(entity this); \
 	STATIC_INIT_LATE(id) \
 	{ \
@@ -50,28 +50,28 @@
 
 // weapon switching impulses
 
-#define X(slot, imp) \
-	IMPULSE(weapon_group_##slot, imp) \
+#define X(slot) \
+	IMPULSE(weapon_group_##slot) \
 	{ \
 		if (this.deadflag != DEAD_NO) return; \
 		W_NextWeaponOnImpulse(slot); \
 	}
-X(1, 1)
-X(2, 2)
-X(3, 3)
-X(4, 4)
-X(5, 5)
-X(6, 6)
-X(7, 7)
-X(8, 8)
-X(9, 9)
-X(0, 14)
+X(1)
+X(2)
+X(3)
+X(4)
+X(5)
+X(6)
+X(7)
+X(8)
+X(9)
+X(0)
 #undef X
 
 // custom order weapon cycling
 
-#define X(slot, dir, imp) \
-	IMPULSE(weapon_priority_##slot##_##dir, imp) \
+#define X(slot, dir) \
+	IMPULSE(weapon_priority_##slot##_##dir) \
 	{ \
 		if (this.vehicle) return; \
 		if (this.deadflag != DEAD_NO) return; \
@@ -80,104 +80,139 @@ X(0, 14)
 		noref int next = +1; \
 		W_CycleWeapon(this.cvar_cl_weaponpriorities[slot], dir); \
 	}
-X(0, prev, 200)
-X(1, prev, 201)
-X(2, prev, 202)
-X(3, prev, 203)
-X(4, prev, 204)
-X(5, prev, 205)
-X(6, prev, 206)
-X(7, prev, 207)
-X(8, prev, 208)
-X(9, prev, 209)
+X(0, prev)
+X(1, prev)
+X(2, prev)
+X(3, prev)
+X(4, prev)
+X(5, prev)
+X(6, prev)
+X(7, prev)
+X(8, prev)
+X(9, prev)
 
-X(0, best, 210)
-X(1, best, 211)
-X(2, best, 212)
-X(3, best, 213)
-X(4, best, 214)
-X(5, best, 215)
-X(6, best, 216)
-X(7, best, 217)
-X(8, best, 218)
-X(9, best, 219)
+X(0, best)
+X(1, best)
+X(2, best)
+X(3, best)
+X(4, best)
+X(5, best)
+X(6, best)
+X(7, best)
+X(8, best)
+X(9, best)
 
-X(0, next, 220)
-X(1, next, 221)
-X(2, next, 222)
-X(3, next, 223)
-X(4, next, 224)
-X(5, next, 225)
-X(6, next, 226)
-X(7, next, 227)
-X(8, next, 228)
-X(9, next, 229)
+X(0, next)
+X(1, next)
+X(2, next)
+X(3, next)
+X(4, next)
+X(5, next)
+X(6, next)
+X(7, next)
+X(8, next)
+X(9, next)
 #undef X
 
-IMPULSE(weapon_next_byid, 10)
+// direct weapons
+
+#define X(i) \
+	IMPULSE(weapon_byid_##i) \
+	{ \
+		if (this.vehicle) return; \
+		if (this.deadflag != DEAD_NO) return; \
+		W_SwitchWeapon(WEP_FIRST + i); \
+	}
+X(0)
+X(1)
+X(2)
+X(3)
+X(4)
+X(5)
+X(6)
+X(7)
+X(8)
+X(9)
+X(10)
+X(11)
+X(12)
+X(13)
+X(14)
+X(15)
+X(16)
+X(17)
+X(18)
+X(19)
+X(20)
+X(21)
+X(22)
+X(23)
+#undef X
+
+IMPULSE(weapon_next_byid)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_NextWeapon(0);
 }
 
-IMPULSE(weapon_prev_byid, 12)
+IMPULSE(weapon_prev_byid)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_PreviousWeapon(0);
 }
 
-IMPULSE(weapon_next_bygroup, 18)
+IMPULSE(weapon_next_bygroup)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_NextWeapon(1);
 }
 
-IMPULSE(weapon_prev_bygroup, 19)
+IMPULSE(weapon_prev_bygroup)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_PreviousWeapon(1);
 }
 
-IMPULSE(weapon_next_bypriority, 15)
+IMPULSE(weapon_next_bypriority)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_NextWeapon(2);
 }
 
-IMPULSE(weapon_prev_bypriority, 16)
+IMPULSE(weapon_prev_bypriority)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_PreviousWeapon(2);
 }
 
-IMPULSE(weapon_last, 11)
+IMPULSE(weapon_last)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_LastWeapon();
 }
 
-IMPULSE(weapon_best, 13)
+IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_SwitchWeapon(w_getbestweapon(this));
 }
 
-IMPULSE(weapon_drop, 17)
+IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	W_ThrowWeapon(W_CalculateProjectileVelocity(this.velocity, v_forward * 750, false), '0 0 0', true);
 }
 
-IMPULSE(weapon_reload, 20)
+IMPULSE(weapon_reload)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
@@ -204,7 +239,6 @@ void ImpulseCommands(entity this)
 		#define X(id) case IMP_##id.impulse:
 		switch (imp)
 		{
-			case WEP_IMPULSE_BEGIN <= imp && imp <= WEP_IMPULSE_END:
 			X(weapon_group_0)
 			X(weapon_group_1)
 			X(weapon_group_2)
@@ -254,6 +288,30 @@ void ImpulseCommands(entity this)
             X(weapon_priority_7_best)
             X(weapon_priority_8_best)
             X(weapon_priority_9_best)
+            X(weapon_byid_0)
+            X(weapon_byid_1)
+            X(weapon_byid_2)
+            X(weapon_byid_3)
+            X(weapon_byid_4)
+            X(weapon_byid_5)
+            X(weapon_byid_6)
+            X(weapon_byid_7)
+            X(weapon_byid_8)
+            X(weapon_byid_9)
+            X(weapon_byid_10)
+            X(weapon_byid_11)
+            X(weapon_byid_12)
+            X(weapon_byid_13)
+            X(weapon_byid_14)
+            X(weapon_byid_15)
+            X(weapon_byid_16)
+            X(weapon_byid_17)
+            X(weapon_byid_18)
+            X(weapon_byid_19)
+            X(weapon_byid_20)
+            X(weapon_byid_21)
+            X(weapon_byid_22)
+            X(weapon_byid_23)
 			break;
 			default: return;
 		}
@@ -270,26 +328,21 @@ void ImpulseCommands(entity this)
 		f(this);
 		return;
 	});
-
-	if (imp >= WEP_IMPULSE_BEGIN && imp <= WEP_IMPULSE_END)
-	{
-		if (!this.vehicle && this.deadflag == DEAD_NO) W_SwitchWeapon(imp - WEP_IMPULSE_BEGIN + WEP_FIRST);
-	}
 }
 
-IMPULSE(use, 21)
+IMPULSE(use)
 {
 	PlayerUseKey();
 }
 
-IMPULSE(waypoint_personal_here, 30)
+IMPULSE(waypoint_personal_here)
 {
 	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.origin, RADARICON_WAYPOINT);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "personal waypoint spawned at location\n");
 }
 
-IMPULSE(waypoint_personal_crosshair, 31)
+IMPULSE(waypoint_personal_crosshair)
 {
 	WarpZone_crosshair_trace(this);
 	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, trace_endpos, RADARICON_WAYPOINT);
@@ -297,7 +350,7 @@ IMPULSE(waypoint_personal_crosshair, 31)
 	sprint(this, "personal waypoint spawned at crosshair\n");
 }
 
-IMPULSE(waypoint_personal_death, 32)
+IMPULSE(waypoint_personal_death)
 {
 	if (!this.death_origin) return;
 	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.death_origin, RADARICON_WAYPOINT);
@@ -305,7 +358,7 @@ IMPULSE(waypoint_personal_death, 32)
 	sprint(this, "personal waypoint spawned at death location\n");
 }
 
-IMPULSE(waypoint_here_follow, 33)
+IMPULSE(waypoint_here_follow)
 {
 	if (!teamplay) return;
 	if (this.deadflag != DEAD_NO) return;
@@ -318,14 +371,14 @@ IMPULSE(waypoint_here_follow, 33)
 	sprint(this, "HELP ME attached\n");
 }
 
-IMPULSE(waypoint_here_here, 34)
+IMPULSE(waypoint_here_here)
 {
 	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.origin, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at location\n");
 }
 
-IMPULSE(waypoint_here_crosshair, 35)
+IMPULSE(waypoint_here_crosshair)
 {
 	WarpZone_crosshair_trace(this);
 	entity wp = WaypointSprite_DeployFixed(WP_Here, false, trace_endpos, RADARICON_HERE);
@@ -333,7 +386,7 @@ IMPULSE(waypoint_here_crosshair, 35)
 	sprint(this, "HERE spawned at crosshair\n");
 }
 
-IMPULSE(waypoint_here_death, 36)
+IMPULSE(waypoint_here_death)
 {
 	if (!this.death_origin) return;
 	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.death_origin, RADARICON_HERE);
@@ -341,14 +394,14 @@ IMPULSE(waypoint_here_death, 36)
 	sprint(this, "HERE spawned at death location\n");
 }
 
-IMPULSE(waypoint_danger_here, 37)
+IMPULSE(waypoint_danger_here)
 {
 	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.origin, RADARICON_DANGER);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "DANGER spawned at location\n");
 }
 
-IMPULSE(waypoint_danger_crosshair, 38)
+IMPULSE(waypoint_danger_crosshair)
 {
 	WarpZone_crosshair_trace(this);
 	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, trace_endpos, RADARICON_DANGER);
@@ -356,7 +409,7 @@ IMPULSE(waypoint_danger_crosshair, 38)
 	sprint(this, "DANGER spawned at crosshair\n");
 }
 
-IMPULSE(waypoint_danger_death, 39)
+IMPULSE(waypoint_danger_death)
 {
 	if (!this.death_origin) return;
 	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.death_origin, RADARICON_DANGER);
@@ -364,7 +417,7 @@ IMPULSE(waypoint_danger_death, 39)
 	sprint(this, "DANGER spawned at death location\n");
 }
 
-IMPULSE(waypoint_clear_personal, 47)
+IMPULSE(waypoint_clear_personal)
 {
 	WaypointSprite_ClearPersonal();
 	if (this.personal)
@@ -375,7 +428,7 @@ IMPULSE(waypoint_clear_personal, 47)
 	sprint(this, "personal waypoint cleared\n");
 }
 
-IMPULSE(waypoint_clear, 48)
+IMPULSE(waypoint_clear)
 {
 	WaypointSprite_ClearOwned();
 	if (this.personal)
@@ -386,14 +439,14 @@ IMPULSE(waypoint_clear, 48)
 	sprint(this, "all waypoints cleared\n");
 }
 
-IMPULSE(navwaypoint_spawn, 103)
+IMPULSE(navwaypoint_spawn)
 {
 	if (!autocvar_g_waypointeditor) return;
 	waypoint_schedulerelink(waypoint_spawn(this.origin, this.origin, 0));
 	bprint(strcat("Waypoint spawned at ", vtos(this.origin), "\n"));
 }
 
-IMPULSE(navwaypoint_remove, 104)
+IMPULSE(navwaypoint_remove)
 {
 	if (!autocvar_g_waypointeditor) return;
 	entity e = navigation_findnearestwaypoint(this, false);
@@ -403,19 +456,19 @@ IMPULSE(navwaypoint_remove, 104)
 	waypoint_remove(e);
 }
 
-IMPULSE(navwaypoint_relink, 105)
+IMPULSE(navwaypoint_relink)
 {
 	if (!autocvar_g_waypointeditor) return;
 	waypoint_schedulerelinkall();
 }
 
-IMPULSE(navwaypoint_save, 106)
+IMPULSE(navwaypoint_save)
 {
 	if (!autocvar_g_waypointeditor) return;
 	waypoint_saveall();
 }
 
-IMPULSE(navwaypoint_unreachable, 107)
+IMPULSE(navwaypoint_unreachable)
 {
 	if (!autocvar_g_waypointeditor) return;
 	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)

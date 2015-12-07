@@ -155,6 +155,7 @@ STATIC_INIT(register_weapons_done)
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
         it.weapon = it.m_id;
         it.weapons = set;
+        if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
         if (imp <= WEP_IMPULSE_END)
             localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));

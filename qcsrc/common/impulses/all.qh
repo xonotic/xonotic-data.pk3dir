@@ -83,6 +83,36 @@ X(8, next, 228)
 X(9, next, 229)
 #undef X
 
+// direct weapons
+
+#define X(i, imp) \
+	REGISTER_IMPULSE(weapon_byid_##i, imp)
+X(0, 230)
+X(1, 231)
+X(2, 232)
+X(3, 233)
+X(4, 234)
+X(5, 235)
+X(6, 236)
+X(7, 237)
+X(8, 238)
+X(9, 239)
+X(10, 240)
+X(11, 241)
+X(12, 242)
+X(13, 243)
+X(14, 244)
+X(15, 245)
+X(16, 246)
+X(17, 247)
+X(18, 248)
+X(19, 249)
+X(20, 250)
+X(21, 251)
+X(22, 252)
+X(23, 253)
+#undef X
+
 REGISTER_IMPULSE(weapon_next_byid, 10)
 LEGACY_IMPULSE(_weapnext_2, 10, "weapon_next_byid")
 
