@@ -144,7 +144,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // WEAPONTODO
 .float autoswitch;
-float client_hasweapon(entity cl, float wpn, float andammo, float complain);
+bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain);
 void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)

@@ -121,7 +121,7 @@ X(9, next)
 	{ \
 		if (this.vehicle) return; \
 		if (this.deadflag != DEAD_NO) return; \
-		W_SwitchWeapon(WEP_FIRST + i); \
+		W_SwitchWeapon(Weapons_from(WEP_FIRST + i)); \
 	}
 X(0)
 X(1)
@@ -202,7 +202,7 @@ IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
-	W_SwitchWeapon(w_getbestweapon(this));
+	W_SwitchWeapon(Weapons_from(w_getbestweapon(this)));
 }
 
 IMPULSE(weapon_drop)

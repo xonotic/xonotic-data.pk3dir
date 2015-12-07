@@ -520,7 +520,7 @@ void W_WeaponFrame(entity actor)
 	{
 		if (w && !(actor.weapons & WepSet_FromWeapon(Weapons_from(w))))
 		{
-			if (actor.weapon == actor.switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+			if (actor.weapon == actor.switchweapon) W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 			w = 0;
 		}
 
@@ -538,8 +538,8 @@ void W_WeaponFrame(entity actor)
 			}
 			else
 			{
-				if (key_pressed && actor.switchweapon != WEP_HOOK.m_id && !actor.hook_switchweapon) W_SwitchWeapon(
-						WEP_HOOK.m_id);
+				if (key_pressed && actor.switchweapon != WEP_HOOK.m_id && !actor.hook_switchweapon)
+					W_SwitchWeapon(WEP_HOOK);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
 				block_weapon = (actor.weapon == h.m_id && (actor.BUTTON_ATCK || key_pressed));

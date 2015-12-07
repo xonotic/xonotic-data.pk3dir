@@ -749,7 +749,7 @@ void Arc_Smoke()
 		}
 		METHOD(Arc, wr_pickup, void(entity thiswep))
 		{
-			if ( !client_hasweapon(self, WEP_ARC.m_id, false, false) &&
+			if ( !client_hasweapon(self, thiswep, false, false) &&
 				weapon_dropevent_item.arc_overheat > time )
 			{
 				self.arc_overheat = weapon_dropevent_item.arc_overheat;

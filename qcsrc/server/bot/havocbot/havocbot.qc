@@ -603,7 +603,7 @@ void havocbot_movetogoal()
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity.z < 0)
-			if(client_hasweapon(self, WEP_DEVASTATOR.m_id, true, false))
+			if(client_hasweapon(self, WEP_DEVASTATOR, true, false))
 			{
 				self.movement_x = maxspeed;
 
@@ -1025,7 +1025,7 @@ void havocbot_chooseweapon()
 		if(self.weapon==0)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER.m_id)
 		{
-			if(client_hasweapon(self, i, true, false))
+			if(client_hasweapon(self, Weapons_from(i), true, false))
 			{
 				self.switchweapon = i;
 				return;
@@ -1071,7 +1071,7 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, true, false) )
+				if ( client_hasweapon(self, Weapons_from(w), true, false) )
 				{
 					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
@@ -1085,7 +1085,7 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, true, false) )
+				if ( client_hasweapon(self, Weapons_from(w), true, false) )
 				{
 					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
@@ -1098,7 +1098,7 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, true, false) )
+			if ( client_hasweapon(self, Weapons_from(w), true, false) )
 			{
 				if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 					continue;

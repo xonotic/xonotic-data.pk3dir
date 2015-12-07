@@ -710,13 +710,13 @@ float Item_GiveTo(entity item, entity player)
 	// crude hack to enforce switching weapons
 	if(g_cts && item.itemdef.instanceOfWeaponPickup)
 	{
-		W_SwitchWeapon_Force(player, item.weapon);
+		W_SwitchWeapon_Force(player, Weapons_from(item.weapon));
 		return 1;
 	}
 
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
-			W_SwitchWeapon_Force(player, w_getbestweapon(player));
+			W_SwitchWeapon_Force(player, Weapons_from(w_getbestweapon(player)));
 
 	return 1;
 }
@@ -1816,7 +1816,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	if (!(e.weapons & WepSet_FromWeapon(Weapons_from(e.switchweapon))))
 		_switchweapon = true;
 	if(_switchweapon)
-		W_SwitchWeapon_Force(e, w_getbestweapon(e));
+		W_SwitchWeapon_Force(e, Weapons_from(w_getbestweapon(e)));
 
 	return got;
 }

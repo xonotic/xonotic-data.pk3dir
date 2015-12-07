@@ -186,7 +186,7 @@ void GiveBall(entity plyr, entity ball)
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w);
 	plyr.switchweapon = WEP_NEXBALL.m_id;
-	W_SwitchWeapon(WEP_NEXBALL.m_id);
+	W_SwitchWeapon(WEP_NEXBALL);
 	setself(this);
 }
 
@@ -972,7 +972,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				Weapon w = WEP_NEXBALL;
 				w.wr_resetplayer(w);
 				self.switchweapon = self.(weaponentity).switchweapon;
-				W_SwitchWeapon(self.switchweapon);
+				W_SwitchWeapon(Weapons_from(self.switchweapon));
 
 				self.(weaponentity).weapons = '0 0 0';
 			}

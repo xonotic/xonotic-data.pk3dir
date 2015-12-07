@@ -182,7 +182,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!(self.weapons & set)) return;
 	self.weapons &= ~set;
 
-	W_SwitchWeapon_Force(self, w_getbestweapon(self));
+	W_SwitchWeapon_Force(self, Weapons_from(w_getbestweapon(self)));
 	string a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 
 	if(!a) return;
