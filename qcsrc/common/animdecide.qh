@@ -8,40 +8,99 @@ void animdecide_load_if_needed(entity e);
 void animdecide_setimplicitstate(entity e, float onground);
 void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int fld_frame1time, .int fld_frame2, .int fld_frame2time);
 
+CLASS(Animation, Object)
+	ATTRIB(Animation, m_framenames, string, string_null)
+	METHOD(Animation, anim_getframe, int(Animation this, int mdlidx))
+	{
+		FOREACH_WORD(this.m_framenames, true, {
+			int f = frameforname(mdlidx, it);
+			if (f != -1) return f;
+		});
+#ifdef CSQC
+		LOG_WARNINGF("Missing animation for %s: %s\n", modelnameforindex(mdlidx), this.registered_id);
+#endif
+		return -1;
+	}
+ENDCLASS(Animation)
+
+REGISTRY(Animations, BITS(8))
+REGISTER_REGISTRY(Animations)
+#define REGISTER_ANIMATION(id, framenames) \
+	.vector anim_##id; \
+	REGISTER(Animations, ANIM_##id, m_id, NEW(Animation)) { \
+		this.m_framenames = framenames; \
+	}
+
+vector _ANIM_VEC_v;
+Animation _ANIM_VEC_a;
+#define ANIM_VEC(anim, numframes, framerate) \
+( \
+	_ANIM_VEC_v.y = numframes, \
+	_ANIM_VEC_v.z = framerate, \
+	_ANIM_VEC_a = ANIM_##anim, \
+	_ANIM_VEC_v.x = _ANIM_VEC_a.anim_getframe(_ANIM_VEC_a, mdlidx), \
+	_ANIM_VEC_v \
+)
+
 // player animation data for this model
 // each vector is as follows:
 // _x = startframe
 // _y = numframes
 // _z = framerate
-.vector anim_die1; // player dies
-.vector anim_die2; // player dies differently
-.vector anim_draw; // player pulls out a weapon
-.vector anim_duckwalk; // player walking while crouching
-.vector anim_duckjump; // player jumping from a crouch
-.vector anim_duckidle; // player idling while crouching
-.vector anim_idle; // player standing
-.vector anim_jump; // player jump
-.vector anim_pain1; // player flinches from pain
-.vector anim_pain2; // player flinches from pain, differently
-.vector anim_shoot; // player shoots
-.vector anim_taunt; // player taunts others (FIXME: no code references this)
-.vector anim_run; // player running forward
-.vector anim_runbackwards; // player running backward
-.vector anim_strafeleft; // player shuffling left quickly
-.vector anim_straferight; // player shuffling right quickly
-.vector anim_forwardright; // player running forward and right
-.vector anim_forwardleft; // player running forward and left
-.vector anim_backright; // player running backward and right
-.vector anim_backleft; // player running back and left
-.vector anim_melee; // player doing the melee action
-.vector anim_duck; // player doing the melee action
-.vector anim_duckwalkbackwards;
-.vector anim_duckwalkstrafeleft;
-.vector anim_duckwalkstraferight;
-.vector anim_duckwalkforwardright;
-.vector anim_duckwalkforwardleft;
-.vector anim_duckwalkbackright;
-.vector anim_duckwalkbackleft;
+/** player dies */
+REGISTER_ANIMATION(die1, "dieone groupified_0_anim");
+/** player dies differently */
+REGISTER_ANIMATION(die2, "dietwo groupified_1_anim");
+/**  */
+REGISTER_ANIMATION(dead1, "deadone groupified_17_anim");
+/**  */
+REGISTER_ANIMATION(dead2, "deadtwo groupified_18_anim");
+/** player pulls out a weapon */
+REGISTER_ANIMATION(draw, "draw groupified_2_anim");
+/** player walking while crouching */
+REGISTER_ANIMATION(duckwalk, "duckwalk groupified_4_anim");
+/** player jumping from a crouch */
+REGISTER_ANIMATION(duckjump, "duckjump groupified_5_anim");
+/** player idling while crouching */
+REGISTER_ANIMATION(duckidle, "duckidle groupified_6_anim");
+/** player standing */
+REGISTER_ANIMATION(idle, "idle groupified_7_anim");
+/** player jump */
+REGISTER_ANIMATION(jump, "jump groupified_8_anim");
+/** player flinches from pain */
+REGISTER_ANIMATION(pain1, "painone groupified_9_anim");
+/** player flinches from pain, differently */
+REGISTER_ANIMATION(pain2, "paintwo groupified_10_anim");
+/** player shoots */
+REGISTER_ANIMATION(shoot, "shoot groupified_11_anim");
+/** player taunts others (FIXME: no code references this) */
+REGISTER_ANIMATION(taunt, "taunt groupified_12_anim");
+/** player running forward */
+REGISTER_ANIMATION(run, "run groupified_13_anim");
+/** player running backward */
+REGISTER_ANIMATION(runbackwards, "runbackwards groupified_14_anim");
+/** player shuffling left quickly */
+REGISTER_ANIMATION(strafeleft, "strafeleft groupified_15_anim");
+/** player shuffling right quickly */
+REGISTER_ANIMATION(straferight, "straferight groupified_16_anim");
+/** player running forward and right */
+REGISTER_ANIMATION(forwardright, "forwardright groupified_19_anim");
+/** player running forward and left */
+REGISTER_ANIMATION(forwardleft, "forwardleft groupified_20_anim");
+/** player running backward and right */
+REGISTER_ANIMATION(backright, "backright groupified_21_anim");
+/** player running back and left */
+REGISTER_ANIMATION(backleft, "backleft groupified_22_anim");
+/** player doing the melee action */
+REGISTER_ANIMATION(melee, "melee groupified_23_anim");
+REGISTER_ANIMATION(duck, "duck groupified_3_anim");
+REGISTER_ANIMATION(duckwalkbackwards, "duckwalkbackwards groupified_24_anim");
+REGISTER_ANIMATION(duckwalkstrafeleft, "duckwalkstrafeleft duckstrafeleft groupified_25_anim");
+REGISTER_ANIMATION(duckwalkstraferight, "duckwalkstraferight duckstraferight groupified_26_anim");
+REGISTER_ANIMATION(duckwalkforwardright, "duckwalkforwardright duckforwardright groupified_27_anim");
+REGISTER_ANIMATION(duckwalkforwardleft, "duckwalkforwardleft groupified_28_anim");
+REGISTER_ANIMATION(duckwalkbackright, "duckwalkbackright duckbackwardright groupified_29_anim");
+REGISTER_ANIMATION(duckwalkbackleft, "duckwalkbackleft duckbackwardleft groupified_30_anim");
 .float animdecide_modelindex;
 
 // please network this one
