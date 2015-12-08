@@ -14,8 +14,8 @@ float autocvar_g_overkill_ammo_charge_limit;
 
 .float ok_notice_time;
 .float ammo_charge[Weapons_MAX];
-.float ok_use_ammocharge;
-.float ok_ammo_charge;
+.float ok_use_ammocharge = _STAT(OK_AMMO_CHARGE);
+.float ok_ammo_charge = _STAT(OK_AMMO_CHARGEPOOL);
 
 .float ok_pauseregen_finished;
 
@@ -63,7 +63,7 @@ void ok_DecreaseCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return;
 
-	entity wepent = get_weaponinfo(wep);
+	entity wepent = Weapons_from(wep);
 
 	if(wepent.weapon == 0)
 		return; // dummy
@@ -73,7 +73,7 @@ void ok_DecreaseCharge(entity ent, int wep)
 
 void ok_IncreaseCharge(entity ent, int wep)
 {
-	entity wepent = get_weaponinfo(wep);
+	entity wepent = Weapons_from(wep);
 
 	if(wepent.weapon == 0)
 		return; // dummy
@@ -87,7 +87,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 {
 	if(!ent.ok_use_ammocharge) return true;
 
-	entity wepent = get_weaponinfo(wep);
+	entity wepent = Weapons_from(wep);
 
 	if(wepent.weapon == 0)
 		return 0; // dummy
@@ -229,7 +229,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			self.ok_notice_time = time + 2;
 			play2(self, SND(DRYFIRE));
 		}
-		Weapon wpn = get_weaponinfo(self.weapon);
+		Weapon wpn = Weapons_from(self.weapon);
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if(self.(weaponentity).state != WS_CLEAR)
 			w_ready(wpn, self, weaponentity, (self.BUTTON_ATCK ? 1 : 0) | (self.BUTTON_ATCK2 ? 2 : 0));
@@ -371,9 +371,6 @@ void ok_Initialize()
 	ok_SetCvars();
 
 	precache_all_playermodels("models/ok_player/*.dpm");
-
-	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
-	addstat(STAT_OK_AMMO_CHARGEPOOL, AS_FLOAT, ok_ammo_charge);
 
 	WEP_RPC.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	WEP_HMG.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;

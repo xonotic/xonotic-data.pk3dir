@@ -7,7 +7,7 @@ float autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 int autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health;
 bool autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath;
 
-REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate") && teamplay);
+REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
 
 .entity msnt_lookat;
 
@@ -54,6 +54,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {SELFPARAM();
+	if(!teamplay) { return false; }
 	// Note: when entering this, fixangle is already set.
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
 	{
@@ -85,7 +86,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 						else
 							fixedmakevectors(team_mate.angles);
 
-						for(pc = 0; pc != 5; ++pc) // test 5 diffrent spots close to mate
+						for(pc = 0; pc < 5; ++pc) // test 5 diffrent spots close to mate
 						{
 							switch(pc)
 							{

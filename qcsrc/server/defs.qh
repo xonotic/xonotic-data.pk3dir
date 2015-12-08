@@ -77,7 +77,7 @@ float server_is_dedicated;
 
 .float	strength_finished = _STAT(STRENGTH_FINISHED);
 .float	invincible_finished = _STAT(INVINCIBLE_FINISHED);
-.float	superweapons_finished;
+.float	superweapons_finished = _STAT(SUPERWEAPONS_FINISHED);
 
 .float cnt; // used in too many places
 .float count;
@@ -91,14 +91,7 @@ float server_is_dedicated;
 .float fade_time;
 .float fade_rate;
 
-// weapon animation vectors:
-.vector anim_fire1;
-.vector anim_fire2;
-.vector anim_idle;
-.vector anim_reload;
-
 void() player_setupanimsformodel;
-void setanim(entity e, vector anim, float looping, float override, float restart);
 
 .string mdl;
 
@@ -149,32 +142,15 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .entity item_pickupsound_ent;
 .entity item_model_ent;
 
-// definitions for weaponsystem
-// more WEAPONTODO: move these to their proper files
-.entity exteriorweaponentity;
-.vector weaponentity_glowmod;
-
-//.int weapon; // current weapon
-.int switchweapon = _STAT(SWITCHWEAPON);
-.int switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
-.string weaponname; // name of .weapon
-
 // WEAPONTODO
 .float autoswitch;
-float client_hasweapon(entity cl, float wpn, float andammo, float complain);
+bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain);
 void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
 .float weapon_nextthink;
 .void(Weapon thiswep, entity actor, .entity weaponentity, int fire) weapon_think;
 
-
-// weapon states (self.weaponentity.state)
-const int WS_CLEAR			= 0; // no weapon selected
-const int WS_RAISE			= 1; // raise frame
-const int WS_DROP				= 2; // deselecting frame
-const int WS_INUSE			= 3; // fire state
-const int WS_READY			= 4; // idle frame
 
 // there is 2 weapon tics that can run in one server frame
 const int W_TICSPERFRAME = 2;
@@ -212,8 +188,6 @@ float nJoinAllowed(entity ignore);
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
-.vector spawnorigin;
-
 .vector death_origin;
 .vector killer_origin;
 
@@ -225,7 +199,7 @@ float default_weapon_alpha;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_jetpack_jump;
-.float cvar_cl_movement_track_canjump;
+.float cvar_cl_movement_track_canjump = _STAT(MOVEVARS_CL_TRACK_CANJUMP);
 .float cvar_cl_newusekeysupported;
 
 .string cvar_g_xonoticversion;
@@ -254,7 +228,8 @@ void FixClientCvars(entity e);
 // WEAPONTODO: remove this
 WepSet weaponsInMap;
 
-.WepSet weaponsinmap;
+#define weapons _STAT(WEAPONS)
+#define weaponsinmap _STAT(WEAPONSINMAP)
 
 .float respawn_countdown; // next number to count
 
@@ -316,7 +291,7 @@ bool independent_players;
 
 string clientstuff;
 .float phase;
-.int pressedkeys;
+.int pressedkeys = _STAT(PRESSED_KEYS);
 
 .string fog;
 
@@ -327,7 +302,7 @@ float cvar_purechanges_count;
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
 .float stat_game_starttime = _STAT(GAMESTARTTIME);
-.float stat_round_starttime;
+.float stat_round_starttime = _STAT(ROUNDSTARTTIME);
 
 void W_Porto_Remove (entity p);
 
@@ -335,7 +310,7 @@ void W_Porto_Remove (entity p);
 
 .string message2;
 
-.float stat_allow_oldvortexbeam;
+.bool stat_allow_oldvortexbeam = _STAT(ALLOW_OLDVORTEXBEAM);
 
 // reset to 0 on weapon switch
 // may be useful to all weapons
@@ -372,18 +347,18 @@ float servertime, serverprevtime, serverframetime;
 .float floodcontrol_voice;
 .float floodcontrol_voiceteam;
 
-.float stat_shotorg; // networked stat for trueaim HUD
+.float stat_shotorg = _STAT(SHOTORG); // networked stat for trueaim HUD
 
 string matchid;
 
-.float last_pickup;
+.float last_pickup = _STAT(LAST_PICKUP);
 
-.float hit_time;
-.float typehit_time;
+.float hit_time = _STAT(HIT_TIME);
+.float typehit_time = _STAT(TYPEHIT_TIME);
 
-.float damage_dealt_total;
+.float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 
-.float stat_leadlimit;
+.float stat_leadlimit = _STAT(LEADLIMIT);
 
 bool radar_showennemies;
 
@@ -394,15 +369,15 @@ float client_cefc_accumulatortime;
 
 .float weapon_load[Weapons_MAX];
 .int ammo_none; // used by the reloading system, must always be 0
-.float clip_load;
+.float clip_load = _STAT(WEAPON_CLIPLOAD);
 .float old_clip_load;
-.float clip_size;
+.float clip_size = _STAT(WEAPON_CLIPSIZE);
 
-.float minelayer_mines;
-.float vortex_charge;
+.float minelayer_mines = _STAT(LAYED_MINES);
+.float vortex_charge = _STAT(VORTEX_CHARGE);
 .float vortex_charge_rottime;
-.float vortex_chargepool_ammo;
-.float hagar_load;
+.float vortex_chargepool_ammo = _STAT(VORTEX_CHARGEPOOL);
+.float hagar_load = _STAT(HAGAR_LOAD);
 
 .int grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
@@ -442,8 +417,8 @@ const float ACTIVE_TOGGLE 	= 3;
 .float player_blocked;
 .float weapon_blocked; // weapon use disabled
 
-.float frozen; // for freeze attacks
-.float revive_progress;
+.float frozen = _STAT(FROZEN); // for freeze attacks
+.float revive_progress = _STAT(REVIVE_PROGRESS);
 .float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
 .entity iceblock;
@@ -452,7 +427,7 @@ const float ACTIVE_TOGGLE 	= 3;
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
-.float stat_respawn_time; // shows respawn time, and is negative when awaiting respawn
+.float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
 
 void PlayerUseKey();
 

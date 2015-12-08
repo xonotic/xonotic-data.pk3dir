@@ -61,11 +61,10 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		return;
 	}
 
-	Weapon w = get_weaponinfo(actor.weapon);
-	if(!w.wr_checkammo1(w))
+	if(!thiswep.wr_checkammo1(thiswep))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -108,8 +107,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(hmg, reload_ammo) && actor.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
-				w.wr_reload(w);
+				thiswep.wr_reload(thiswep);
 			} else
 			{
 				if (fire & 1)

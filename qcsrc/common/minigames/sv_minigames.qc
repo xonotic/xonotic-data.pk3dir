@@ -290,12 +290,13 @@ entity minigame_find_player(entity client)
 	return world;
 }
 
-bool MinigameImpulse(int imp)
-{SELFPARAM();
-	entity e = minigame_find_player(self);
-	if ( imp && self.active_minigame && e )
+bool MinigameImpulse(entity this, int imp)
+{
+	if (!this.active_minigame) return false;
+	entity e = minigame_find_player(this);
+	if ( imp && this.active_minigame && e )
 	{
-		return self.active_minigame.minigame_event(self.active_minigame,"impulse",e,imp);
+		return this.active_minigame.minigame_event(this.active_minigame,"impulse",e,imp);
 	}
 	return false;
 }

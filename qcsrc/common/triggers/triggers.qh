@@ -22,7 +22,7 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 
 // used elsewhere (will fix)
 #ifdef SVQC
-void trigger_common_write(bool withtarget);
+void trigger_common_write(entity this, bool withtarget);
 
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
 

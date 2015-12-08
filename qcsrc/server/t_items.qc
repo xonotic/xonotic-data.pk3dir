@@ -491,7 +491,7 @@ void Item_RespawnCountdown ()
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
 			do {
 				{
-					entity wi = get_weaponinfo(self.weapon);
+					entity wi = Weapons_from(self.weapon);
 					if (wi.m_id) {
 						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Weapon);
 						wp.wp_extra = wi.m_id;
@@ -645,7 +645,7 @@ float Item_GiveTo(entity item, entity player)
 	if (player.switchweapon == w_getbestweapon(player))
 		_switchweapon = true;
 
-	if (!(player.weapons & WepSet_FromWeapon(player.switchweapon)))
+	if (!(player.weapons & WepSet_FromWeapon(Weapons_from(player.switchweapon))))
 		_switchweapon = true;
 
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -667,7 +667,7 @@ float Item_GiveTo(entity item, entity player)
 		{
 			pickedup = true;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(it & WepSet_FromWeapon(i))
+			if(it & WepSet_FromWeapon(Weapons_from(i)))
 			{
 				W_DropEvent(wr_pickup, player, i, item);
 				W_GiveWeapon(player, i);
@@ -710,13 +710,13 @@ float Item_GiveTo(entity item, entity player)
 	// crude hack to enforce switching weapons
 	if(g_cts && item.itemdef.instanceOfWeaponPickup)
 	{
-		W_SwitchWeapon_Force(player, item.weapon);
+		W_SwitchWeapon_Force(player, Weapons_from(item.weapon));
 		return 1;
 	}
 
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
-			W_SwitchWeapon_Force(player, w_getbestweapon(player));
+			W_SwitchWeapon_Force(player, Weapons_from(w_getbestweapon(player)));
 
 	return 1;
 }
@@ -929,7 +929,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	// Detect needed ammo
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
-		wi = get_weaponinfo(i);
+		wi = Weapons_from(i);
 
 		if (!(player.weapons & (wi.m_wepset)))
 			continue;
@@ -1023,7 +1023,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	}
 
 	if(weaponid)
-		this.weapons = WepSet_FromWeapon(weaponid);
+		this.weapons = WepSet_FromWeapon(Weapons_from(weaponid));
 
 	this.flags = FL_ITEM | itemflags;
 
@@ -1126,7 +1126,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.is_item = true;
 		}
 
-		weaponsInMap |= WepSet_FromWeapon(weaponid);
+		weaponsInMap |= WepSet_FromWeapon(Weapons_from(weaponid));
 
 		precache_model(this.model);
 		precache_sound(this.item_pickupsound);
@@ -1442,13 +1442,13 @@ spawnfunc(target_items)
 			{
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					e = get_weaponinfo(j);
+					e = Weapons_from(j);
 					s = W_UndeprecateName(argv(i));
 					if(s == e.netname)
 					{
 						self.weapons |= (e.m_wepset);
 						if(self.spawnflags == 0 || self.spawnflags == 2) {
-							Weapon w = get_weaponinfo(e.weapon);
+							Weapon w = Weapons_from(e.weapon);
 							w.wr_init(w);
 						}
 						break;
@@ -1504,7 +1504,7 @@ spawnfunc(target_items)
 		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "armor");
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			e = get_weaponinfo(j);
+			e = Weapons_from(j);
 			if(e.weapon)
 				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (e.m_wepset)), e.netname);
 		}
@@ -1517,10 +1517,10 @@ spawnfunc(target_items)
 	{
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			e = get_weaponinfo(j);
+			e = Weapons_from(j);
 			if(argv(i) == e.netname)
 			{
-				Weapon w = get_weaponinfo(e.weapon);
+				Weapon w = Weapons_from(e.weapon);
 				w.wr_init(w);
 				break;
 			}
@@ -1562,7 +1562,7 @@ spawnfunc(item_jetpack)
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
 	WepSet v0, v1;
-	WepSet s = WepSet_FromWeapon(wpn);
+	WepSet s = WepSet_FromWeapon(Weapons_from(wpn));
 	v0 = (e.weapons & s);
 	switch(op)
 	{
@@ -1688,7 +1688,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 			case "allweapons":
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					wi = get_weaponinfo(j);
+					wi = Weapons_from(j);
 					if(wi.weapon)
 						if (!(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 							got += GiveWeapon(e, j, op, val);
@@ -1753,7 +1753,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 			default:
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					wi = get_weaponinfo(j);
+					wi = Weapons_from(j);
 					if(cmd == wi.netname)
 					{
 						got += GiveWeapon(e, j, op, val);
@@ -1774,13 +1774,13 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND(ITEMPICKUP), string_null);
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	{
-		wi = get_weaponinfo(j);
+		wi = Weapons_from(j);
 		if(wi.weapon)
 		{
-			POSTGIVE_WEAPON(e, j, SND(WEAPONPICKUP), string_null);
+			POSTGIVE_WEAPON(e, Weapons_from(j), SND(WEAPONPICKUP), string_null);
 			if (!(save_weapons & (wi.m_wepset)))
 				if(e.weapons & (wi.m_wepset)) {
-					Weapon w = get_weaponinfo(wi.weapon);
+					Weapon w = Weapons_from(wi.weapon);
 					w.wr_init(w);
 				}
 		}
@@ -1813,10 +1813,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if (!(e.weapons & WepSet_FromWeapon(e.switchweapon)))
+	if (!(e.weapons & WepSet_FromWeapon(Weapons_from(e.switchweapon))))
 		_switchweapon = true;
 	if(_switchweapon)
-		W_SwitchWeapon_Force(e, w_getbestweapon(e));
+		W_SwitchWeapon_Force(e, Weapons_from(w_getbestweapon(e)));
 
 	return got;
 }

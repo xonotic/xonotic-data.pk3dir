@@ -21,6 +21,7 @@ ENDCLASS(LinkedList)
  */
 entity LL_PUSH(LinkedList this, entity e)
 {
+	assert(this);
 	LinkedListNode n = NEW(LinkedListNode);
 	n.ll_data = e;
 	LinkedListNode tail = n.ll_prev = this.ll_tail;
@@ -33,14 +34,44 @@ entity LL_PUSH(LinkedList this, entity e)
  */
 entity LL_POP(LinkedList this)
 {
+	assert(this);
 	if (!this.ll_tail) return NULL;
 	LinkedListNode n = this.ll_tail;
 	entity e = n.ll_data;
 	LinkedListNode prev = n.ll_prev;
-	if (prev) prev.ll_next = NULL;
+	if (prev) (this.ll_tail = prev).ll_next = NULL;
 	else this.ll_head = this.ll_tail = NULL;
+	remove(n);
 	return e;
 }
+
+#define LL_CLEAR(...) EVAL(OVERLOAD(LL_CLEAR, __VA_ARGS__))
+#define LL_CLEAR_1(this) LL_CLEAR_2(this, LAMBDA())
+#define LL_CLEAR_2(this, dtor) \
+	do \
+	{ \
+		LinkedList _ll = this; \
+		assert(_ll); \
+		while (_ll.ll_tail) \
+		{ \
+			entity it = LL_POP(_ll); \
+			if (!it) continue; \
+			dtor \
+			remove(it); \
+		} \
+	} \
+	while (0)
+
+#define LL_DELETE(...) EVAL(OVERLOAD(LL_DELETE, __VA_ARGS__))
+#define LL_DELETE_1(this) LL_DELETE_2(this, LAMBDA())
+#define LL_DELETE_2(this, dtor) \
+	do \
+	{ \
+		LL_CLEAR(this, dtor); \
+		remove(this); \
+		this = NULL; \
+	} \
+	while (0)
 
 #define LL_EACH(list, cond, body) \
 	do                                                                  \

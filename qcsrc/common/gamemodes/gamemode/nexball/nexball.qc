@@ -2,7 +2,7 @@
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-.float metertime;
+.float metertime = _STAT(NB_METERSTART);
 
 int autocvar_g_nexball_goalleadlimit;
 #define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
@@ -186,7 +186,7 @@ void GiveBall(entity plyr, entity ball)
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w);
 	plyr.switchweapon = WEP_NEXBALL.m_id;
-	W_SwitchWeapon(WEP_NEXBALL.m_id);
+	W_SwitchWeapon(WEP_NEXBALL);
 	setself(this);
 }
 
@@ -972,7 +972,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				Weapon w = WEP_NEXBALL;
 				w.wr_resetplayer(w);
 				self.switchweapon = self.(weaponentity).switchweapon;
-				W_SwitchWeapon(self.switchweapon);
+				W_SwitchWeapon(Weapons_from(self.switchweapon));
 
 				self.(weaponentity).weapons = '0 0 0';
 			}
@@ -1072,7 +1072,6 @@ REGISTER_MUTATOR(nb, g_nexball)
 		if(g_nexball_meter_period <= 0)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
-		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
 
 		// General settings
 		/*

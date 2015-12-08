@@ -346,7 +346,7 @@ void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float
 	if(delaytoo)
 	if(time < self.msound_delay)
 		return; // too early
-	GlobalSound_string(self.(samplefield), chan, VOICETYPE_PLAYERSOUND);
+	GlobalSound_string(self, self.(samplefield), chan, VOICETYPE_PLAYERSOUND);
 
 	self.msound_delay = time + sound_delay;
 }

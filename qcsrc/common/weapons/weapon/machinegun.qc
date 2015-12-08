@@ -146,11 +146,10 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 	}
 	if(actor.BUTTON_ATCK)
 	{
-		Weapon w = get_weaponinfo(actor.weapon);
-		if(!w.wr_checkammo2(w))
+		if(!thiswep.wr_checkammo2(thiswep))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+			W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
@@ -173,11 +172,10 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 		return;
 	}
 
-	Weapon w = get_weaponinfo(actor.weapon);
-	if(!w.wr_checkammo1(w))
+	if(!thiswep.wr_checkammo1(thiswep))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -252,8 +250,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(machinegun, reload_ammo) && actor.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
-				w.wr_reload(w);
+				thiswep.wr_reload(thiswep);
 			} else
 			if(WEP_CVAR(machinegun, mode) == 1)
 			{
@@ -267,11 +264,10 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 				if(fire & 2)
 				if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 				{
-					Weapon w = get_weaponinfo(actor.weapon);
-					if(!w.wr_checkammo2(w))
+					if(!thiswep.wr_checkammo2(thiswep))
 					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
-						W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+						W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 						w_ready(thiswep, actor, weaponentity, fire);
 						return;
 					}

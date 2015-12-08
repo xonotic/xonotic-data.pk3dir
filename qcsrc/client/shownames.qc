@@ -24,6 +24,7 @@ STATIC_INIT(shownames_ent)
 	for (int i = 0; i < maxclients; ++i)
 	{
 		entity e = new(shownames_tag);
+		make_pure(e);
 		e.sv_entnum = i + 1;
 		LL_PUSH(shownames_ent, e);
 	}
@@ -99,7 +100,7 @@ void Draw_ShowNames(entity this)
 	// multiply by player alpha
 	if (!this.sameteam || (this.sv_entnum == player_localentnum))
 	{
-		float f = getplayeralpha(this.sv_entnum - 1);
+		float f = entcs_GetAlpha(this.sv_entnum - 1);
 		if (f == 0) f = 1;
 		if (f < 0) f = 0;
 		// FIXME: alpha is negative when dead, breaking death fade
@@ -150,9 +151,9 @@ void Draw_ShowNames(entity this)
 					DRAWFLAG_NORMAL);
 			}
 		}
-		string s = GetPlayerName(this.sv_entnum - 1);
+		string s = entcs_GetName(this.sv_entnum - 1);
 		if ((autocvar_hud_shownames_decolorize == 1 && teamplay)
-		    || autocvar_hud_shownames_decolorize == 2) s = playername(s, GetPlayerColor(this.sv_entnum - 1));
+		    || autocvar_hud_shownames_decolorize == 2) s = playername(s, entcs_GetTeam(this.sv_entnum - 1));
 		drawfontscale = '1 1 0' * resize;
 		s = textShortenToWidth(s, namewidth, '1 1 0' * autocvar_hud_shownames_fontsize, stringwidth_colors);
 		float width = stringwidth(s, true, '1 1 0' * autocvar_hud_shownames_fontsize);
@@ -167,7 +168,15 @@ void Draw_ShowNames_All()
 	if (!autocvar_hud_shownames) return;
 	LL_EACH(shownames_ent, true, LAMBDA(
 		entity entcs = entcs_receiver(i);
-		if (!entcs) continue;
+		if (!entcs)
+		{
+			make_pure(it);
+			continue;
+		}
+		make_impure(it);
+		assert(entcs.think, eprint(entcs));
+		WITH(entity, self, entcs, entcs.think());
+		if (!entcs.has_origin) continue;
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
@@ -180,8 +189,8 @@ void Draw_ShowNames_All()
 			it.armorvalue = 0;
 			it.sameteam = false;
 		}
-		bool dead = getplayerisdead(i);
-		if (!it.csqcmodel_isdead && entcs.has_origin) setorigin(it, entcs.origin);
+		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
+		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
 	));

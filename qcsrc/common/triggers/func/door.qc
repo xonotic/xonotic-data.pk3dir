@@ -643,7 +643,7 @@ float door_send(entity to, float sf)
 
 		WriteString(MSG_ENTITY, self.model);
 
-		trigger_common_write(true);
+		trigger_common_write(self, true);
 
 		WriteCoord(MSG_ENTITY, self.pos1_x);
 		WriteCoord(MSG_ENTITY, self.pos1_y);

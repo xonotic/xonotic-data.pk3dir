@@ -61,8 +61,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	{
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		Weapon culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit) culprit = get_weaponinfo(attacker.weapon);
-		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = get_weaponinfo(attacker.weapon);
+		if(!culprit) culprit = Weapons_from(attacker.weapon);
+		else if(!(attacker.weapons & (culprit.m_wepset))) culprit = Weapons_from(attacker.weapon);
 
 		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
@@ -95,8 +95,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 		}
 
 		// after a frag, choose another random weapon set
-		if (!(attacker.weapons & WepSet_FromWeapon(attacker.weapon)))
-			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
+		if (!(attacker.weapons & WepSet_FromWeapon(Weapons_from(attacker.weapon))))
+			W_SwitchWeapon_Force(attacker, Weapons_from(w_getbestweapon(attacker)));
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
@@ -259,7 +259,7 @@ float Obituary_WeaponDeath(
 	return false;
 }
 
-.int buffs; // TODO: remove
+.int buffs = _STAT(BUFFS); // TODO: remove
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {

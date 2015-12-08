@@ -42,11 +42,11 @@ const float ST_DOM_CAPS = 1;
 const float SP_DOM_CAPS = 4;
 
 // pps: points per second
-.float dom_total_pps;
-.float dom_pps_red;
-.float dom_pps_blue;
-.float dom_pps_yellow;
-.float dom_pps_pink;
+.float dom_total_pps = _STAT(DOM_TOTAL_PPS);
+.float dom_pps_red = _STAT(DOM_PPS_RED);
+.float dom_pps_blue = _STAT(DOM_PPS_BLUE);
+.float dom_pps_yellow = _STAT(DOM_PPS_YELLOW);
+.float dom_pps_pink = _STAT(DOM_PPS_PINK);
 float total_pps;
 float pps_red;
 float pps_blue;
@@ -695,19 +695,13 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 	{
-		LOG_INFO("No ""dom_team"" entities found on this map, creating them anyway.\n");
+		LOG_INFO("No \"dom_team\" entities found on this map, creating them anyway.\n");
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}
 
 	CheckAllowedTeams(world);
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
-
-	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
-	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
-	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
-	if(domination_teams >= 3) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
-	if(domination_teams >= 4) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
 
 	domination_roundbased = autocvar_g_domination_roundbased;
 

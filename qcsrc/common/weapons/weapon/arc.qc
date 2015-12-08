@@ -670,7 +670,7 @@ void Arc_Smoke()
 						weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
 					else
 					#endif
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+						weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), w_ready);
 				}
 
 				if((!actor.arc_beam) || wasfreed(actor.arc_beam))
@@ -749,7 +749,7 @@ void Arc_Smoke()
 		}
 		METHOD(Arc, wr_pickup, void(entity thiswep))
 		{
-			if ( !client_hasweapon(self, WEP_ARC.m_id, false, false) &&
+			if ( !client_hasweapon(self, thiswep, false, false) &&
 				weapon_dropevent_item.arc_overheat > time )
 			{
 				self.arc_overheat = weapon_dropevent_item.arc_overheat;

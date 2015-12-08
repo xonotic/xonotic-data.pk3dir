@@ -569,28 +569,28 @@ float raptor_impulse(float _imp)
 {SELFPARAM();
 	switch(_imp)
 	{
-		case 1:
+		case IMP_weapon_group_1.impulse:
 			self.vehicle.vehicle_weapon2mode = RSM_BOMB;
 			CSQCVehicleSetup(self, 0);
 			return true;
-		case 2:
+		case IMP_weapon_group_2.impulse:
 			self.vehicle.vehicle_weapon2mode = RSM_FLARE;
 			CSQCVehicleSetup(self, 0);
 			return true;
 
-		case 10:
-		case 15:
-		case 18:
+		case IMP_weapon_next_byid.impulse:
+		case IMP_weapon_next_bypriority.impulse:
+		case IMP_weapon_next_bygroup.impulse:
 			self.vehicle.vehicle_weapon2mode += 1;
 			if(self.vehicle.vehicle_weapon2mode > RSM_LAST)
 				self.vehicle.vehicle_weapon2mode = RSM_FIRST;
 
 			CSQCVehicleSetup(self, 0);
 			return true;
-		case 11:
-		case 12:
-		case 16:
-		case 19:
+		case IMP_weapon_last.impulse:
+		case IMP_weapon_prev_byid.impulse:
+		case IMP_weapon_prev_bypriority.impulse:
+		case IMP_weapon_prev_bygroup.impulse:
 			self.vehicle.vehicle_weapon2mode -= 1;
 			if(self.vehicle.vehicle_weapon2mode < RSM_FIRST)
 				self.vehicle.vehicle_weapon2mode = RSM_LAST;
@@ -599,9 +599,9 @@ float raptor_impulse(float _imp)
 			return true;
 
 		/*
-		case 17: // toss gun, could be used to exit?
+		case IMP_weapon_drop.impulse: // toss gun, could be used to exit?
 			break;
-		case 20: // Manual minigun reload?
+		case IMP_weapon_reload.impulse: // Manual minigun reload?
 			break;
 		*/
 	}
@@ -804,7 +804,7 @@ spawnfunc(vehicle_raptor)
 					dropmark.gravity = 1;
 				}
 
-				float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
+				float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;
 				if(reload2 == 1)
 				{
 					setorigin(dropmark, pmove_org);

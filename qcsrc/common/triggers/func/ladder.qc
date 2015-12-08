@@ -8,10 +8,6 @@ void func_ladder_touch()
 	if(IS_VEHICLE(other))
 		return;
 #endif
-#ifdef CSQC
-	if(other.classname != "csqcmodel")
-		return;
-#endif
 
 	EXACTTRIGGER_TOUCH;
 
@@ -20,69 +16,67 @@ void func_ladder_touch()
 }
 
 #ifdef SVQC
-bool func_ladder_send(entity this, entity to, float sf)
-{
+bool func_ladder_send(entity to, int sf)
+{SELFPARAM();
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER);
 
 	WriteString(MSG_ENTITY, self.classname);
 	WriteByte(MSG_ENTITY, self.skin);
-	WriteByte(MSG_ENTITY, self.speed);
-	WriteString(MSG_ENTITY, self.mdl);
+	WriteCoord(MSG_ENTITY, self.speed);
 
-	trigger_common_write(false);
+	trigger_common_write(self, false);
 
 	return true;
 }
 
 void func_ladder_link()
 {
-	//self.SendEntity = func_ladder_send;
-	//self.SendFlags = 0xFFFFFF;
+	self.SendEntity = func_ladder_send;
+	self.SendFlags = 0xFFFFFF;
 	//self.model = "null";
+}
+
+void func_ladder_init()
+{
+	self.touch = func_ladder_touch;
+
+	trigger_init(self);
+	func_ladder_link();
 }
 
 spawnfunc(func_ladder)
 {
-	self.mdl = self.model;
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
-
-	func_ladder_link();
+	func_ladder_init();
 }
 
 spawnfunc(func_water)
 {
-	self.mdl = self.model;
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
-
-	func_ladder_link();
+	func_ladder_init();
 }
 
 #elif defined(CSQC)
 .float speed;
 
+void func_ladder_remove()
+{
+	if(self.classname) { strunzone(self.classname); }
+	self.classname = string_null;
+}
+
 NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
 {
 	self.classname = strzone(ReadString());
 	self.skin = ReadByte();
-	self.speed = ReadByte();
-	self.model = strzone(ReadString());
+	self.speed = ReadCoord();
 
 	trigger_common_read(false);
 
-	return = true;
-
-	self.mins = self.maxs = '0 0 0';
-
 	self.solid = SOLID_TRIGGER;
-	self.draw = trigger_draw_generic;
-	self.trigger_touch = func_ladder_touch;
+	self.move_touch = func_ladder_touch;
 	self.drawmask = MASK_NORMAL;
 	self.move_time = time;
-	self.entremove = trigger_remove_generic;
+	self.entremove = func_ladder_remove;
 
-	//precache_model(self.mdl);
-	EXACTTRIGGER_INIT;
+	return true;
 }
 #endif

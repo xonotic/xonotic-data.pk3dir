@@ -386,8 +386,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 		self.hagar_warning = false;
 
 		// we aren't checking ammo during an attack, so we must do it here
-		Weapon w = get_weaponinfo(self.weapon);
-		if(!(w.wr_checkammo1(w) + w.wr_checkammo2(w)))
+		if(!(thiswep.wr_checkammo1(thiswep) + thiswep.wr_checkammo2(thiswep)))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -412,8 +411,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 			if(loadable_secondary)
 				W_Hagar_Attack2_Load(thiswep, weaponentity); // must always run each frame
 			if(autocvar_g_balance_hagar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
-				w.wr_reload(w);
+				thiswep.wr_reload(thiswep);
 			} else if((fire & 1) && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hagar, refire)))

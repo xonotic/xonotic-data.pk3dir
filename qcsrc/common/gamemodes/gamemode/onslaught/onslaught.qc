@@ -76,7 +76,7 @@ bool ons_stalemate;
 
 .float teleport_antispam;
 
-.bool ons_roundlost;
+.bool ons_roundlost = _STAT(ROUNDLOST);
 
 // waypoint sprites
 .entity bot_basewaypoint; // generator waypointsprite
@@ -1342,7 +1342,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
-		if(self.weapons & WepSet_FromWeapon(i))
+		if(self.weapons & WepSet_FromWeapon(Weapons_from(i)))
 		if(++c>=4)
 			break;
 	}
@@ -2317,8 +2317,6 @@ void ons_Initialize()
 {
 	g_onslaught = true;
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
-
-	addstat(STAT_ROUNDLOST, AS_INT, ons_roundlost);
 
 	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }

@@ -67,13 +67,27 @@ const float VOL_BASEVOICE = 1.0;
 #define sound8(e, o, chan, samp, vol, atten, speed, sf) \
 	do \
 	{ \
-		entity __e = e; \
+		entity __e; \
+		int __chan = chan; \
+		string __samp = samp; \
+		bool auto = false; \
+		if (__chan > 0) __e = e; \
+		else \
+		{ \
+			auto = true; \
+			__chan = fabs(__chan); \
+			entity tmp = __e = new(csqc_autochannel); \
+			make_pure(tmp); \
+			tmp.think = SUB_Remove_self; \
+			tmp.nextthink = time + soundlength(__samp); \
+		} \
 		vector old_origin = __e.origin; \
 		vector old_mins = __e.mins; \
 		vector old_maxs = __e.maxs; \
 		setorigin(__e, o); \
 		setsize(__e, '0 0 0', '0 0 0'); \
-		sound7(__e, chan, samp, vol, atten, speed, sf); \
+		sound7(__e, __chan, __samp, vol, atten, speed, sf); \
+		if (auto) break; \
 		setorigin(__e, old_origin); \
 		setsize(__e, old_mins, old_maxs); \
 	} \
@@ -96,18 +110,24 @@ CLASS(Sound, Object)
 			x(ogg) \
 			x(flac) \
 			/**/
-		string full, relative;
-		#define tryext(ext) { if (fexists(full = strcat("sound/", relative = strcat(base, "." #ext)))) break; }
+		string relative;
+		#define tryext(ext) { if (fexists(strcat("sound/", relative = strcat(base, "." #ext)))) break; }
 		do
 		{
 			extensions(tryext);
 #undef tryext
 #undef extensions
-			LOG_WARNINGF("Missing sound: \"%s\"\n", full);
+			LOG_WARNINGF("Missing sound: \"%s\"\n", strcat("sound/", base));
+#ifdef CSQC
 			return string_null;
+#endif
 		}
 		while (0);
+#ifdef SVQC
+		return strcat(base, ".wav");  // let the client engine decide
+#else
 		return relative;
+#endif
 	}
 	METHOD(Sound, sound_precache, void(entity this))
 	{

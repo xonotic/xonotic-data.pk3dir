@@ -13,7 +13,7 @@ REGISTRY_SORT(GENERIC_COMMANDS)
     	ATTRIB(genericcommand_##id, m_description, string, description); \
 	ENDCLASS(genericcommand_##id) \
     REGISTER(GENERIC_COMMANDS, CMD_G, id, m_id, NEW(genericcommand_##id)); \
-	METHOD(genericcommand_##id, m_invokecmd, void(int request, int arguments, string command))
+	METHOD(genericcommand_##id, m_invokecmd, void(int request, entity caller, int arguments, string command))
 
 STATIC_INIT(GENERIC_COMMANDS_aliases) {
 	FOREACH(GENERIC_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svmenu"))));

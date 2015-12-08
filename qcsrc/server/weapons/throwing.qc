@@ -34,7 +34,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 {SELFPARAM();
 	float thisammo, i;
 	string s;
-	Weapon info = get_weaponinfo(wpn);
+	Weapon info = Weapons_from(wpn);
 	var .int ammotype = info.ammo_field;
 
 	entity wep = new(droppedweapon);
@@ -47,7 +47,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 	W_DropEvent(wr_drop,own,wpn,wep);
 
-	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
+	if(WepSet_FromWeapon(Weapons_from(wpn)) & WEPSET_SUPERWEAPONS)
 	{
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
@@ -58,7 +58,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
-				WepSet set = WepSet_FromWeapon(i);
+				WepSet set = WepSet_FromWeapon(Weapons_from(i));
 				if ((set & WEPSET_SUPERWEAPONS) && (own.weapons & set)) ++superweapons;
 			}
 			if(superweapons <= 1)
@@ -148,17 +148,17 @@ bool W_IsWeaponThrowable(bool w)
         return false;
 
 	#if 0
-	if(start_weapons & WepSet_FromWeapon(w))
+	if(start_weapons & WepSet_FromWeapon(Weapons_from(w)))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 			return false;
-		if((get_weaponinfo(w)).ammo_field == ammo_none)
+		if((Weapons_from(w)).ammo_field == ammo_none)
 			return false;
 	}
 	return true;
 	#else
-	return (get_weaponinfo(w)).weaponthrowable;
+	return (Weapons_from(w)).weaponthrowable;
 	#endif
 }
 
@@ -178,11 +178,11 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
-	WepSet set = WepSet_FromWeapon(w);
+	WepSet set = WepSet_FromWeapon(Weapons_from(w));
 	if(!(self.weapons & set)) return;
 	self.weapons &= ~set;
 
-	W_SwitchWeapon_Force(self, w_getbestweapon(self));
+	W_SwitchWeapon_Force(self, Weapons_from(w_getbestweapon(self)));
 	string a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 
 	if(!a) return;
@@ -191,7 +191,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 void SpawnThrownWeapon(vector org, float w)
 {SELFPARAM();
-	if(self.weapons & WepSet_FromWeapon(self.weapon))
+	if(self.weapons & WepSet_FromWeapon(Weapons_from(self.weapon)))
 		if(W_IsWeaponThrowable(self.weapon))
 			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');
 }

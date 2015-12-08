@@ -53,6 +53,7 @@
 #include "weapons/weaponstats.qc"
 #include "weapons/weaponsystem.qc"
 
+#include "../common/anim.qc"
 #include "../common/animdecide.qc"
 #include "../common/campaign_file.qc"
 #include "../common/campaign_setup.qc"
@@ -75,6 +76,7 @@
 #include "../common/deathtypes/all.qc"
 #include "../common/effects/all.qc"
 #include "../common/gamemodes/all.qc"
+#include "../common/impulses/all.qc"
 #include "../common/items/all.qc"
 #include "../common/monsters/all.qc"
 #include "../common/turrets/all.qc"

@@ -7,14 +7,12 @@
 
 #if defined(SVQC)
 void bugrigs_SetVars();
-void bugrigs_AddStats();
 
 REGISTER_MUTATOR(bugrigs, cvar("g_bugrigs"))
 {
 	MUTATOR_ONADD
 	{
 		bugrigs_SetVars();
-		bugrigs_AddStats();
 	}
 	return false;
 }
@@ -23,73 +21,23 @@ REGISTER_MUTATOR(bugrigs, true);
 #endif
 
 
-#ifdef CSQC
+#define PHYS_BUGRIGS(s)                        STAT(BUGRIGS, s)
+#define PHYS_BUGRIGS_ACCEL(s)                  STAT(BUGRIGS_ACCEL, s)
+#define PHYS_BUGRIGS_AIR_STEERING(s)           STAT(BUGRIGS_AIR_STEERING, s)
+#define PHYS_BUGRIGS_ANGLE_SMOOTHING(s)        STAT(BUGRIGS_ANGLE_SMOOTHING, s)
+#define PHYS_BUGRIGS_CAR_JUMPING(s)            STAT(BUGRIGS_CAR_JUMPING, s)
+#define PHYS_BUGRIGS_FRICTION_AIR(s)           STAT(BUGRIGS_FRICTION_AIR, s)
+#define PHYS_BUGRIGS_FRICTION_BRAKE(s)         STAT(BUGRIGS_FRICTION_BRAKE, s)
+#define PHYS_BUGRIGS_FRICTION_FLOOR(s)         STAT(BUGRIGS_FRICTION_FLOOR, s)
+#define PHYS_BUGRIGS_PLANAR_MOVEMENT(s)        STAT(BUGRIGS_PLANAR_MOVEMENT, s)
+#define PHYS_BUGRIGS_REVERSE_SPEEDING(s)       STAT(BUGRIGS_REVERSE_SPEEDING, s)
+#define PHYS_BUGRIGS_REVERSE_SPINNING(s)       STAT(BUGRIGS_REVERSE_SPINNING, s)
+#define PHYS_BUGRIGS_REVERSE_STOPPING(s)       STAT(BUGRIGS_REVERSE_STOPPING, s)
+#define PHYS_BUGRIGS_SPEED_POW(s)              STAT(BUGRIGS_SPEED_POW, s)
+#define PHYS_BUGRIGS_SPEED_REF(s)              STAT(BUGRIGS_SPEED_REF, s)
+#define PHYS_BUGRIGS_STEER(s)                  STAT(BUGRIGS_STEER, s)
 
-#define PHYS_BUGRIGS						getstati(STAT_BUGRIGS)
-#define PHYS_BUGRIGS_ANGLE_SMOOTHING 		getstati(STAT_BUGRIGS_ANGLE_SMOOTHING)
-#define PHYS_BUGRIGS_PLANAR_MOVEMENT 		getstati(STAT_BUGRIGS_PLANAR_MOVEMENT)
-#define PHYS_BUGRIGS_REVERSE_SPEEDING 		getstati(STAT_BUGRIGS_REVERSE_SPEEDING)
-#define PHYS_BUGRIGS_FRICTION_FLOOR 		getstatf(STAT_BUGRIGS_FRICTION_FLOOR)
-#define PHYS_BUGRIGS_AIR_STEERING 			getstati(STAT_BUGRIGS_AIR_STEERING)
-#define PHYS_BUGRIGS_FRICTION_BRAKE 		getstatf(STAT_BUGRIGS_FRICTION_BRAKE)
-#define PHYS_BUGRIGS_ACCEL 					getstatf(STAT_BUGRIGS_ACCEL)
-#define PHYS_BUGRIGS_SPEED_REF 				getstatf(STAT_BUGRIGS_SPEED_REF)
-#define PHYS_BUGRIGS_SPEED_POW 				getstatf(STAT_BUGRIGS_SPEED_POW)
-#define PHYS_BUGRIGS_STEER 					getstatf(STAT_BUGRIGS_STEER)
-#define PHYS_BUGRIGS_FRICTION_AIR 			getstatf(STAT_BUGRIGS_FRICTION_AIR)
-#define PHYS_BUGRIGS_CAR_JUMPING 			getstatf(STAT_BUGRIGS_CAR_JUMPING)
-#define PHYS_BUGRIGS_REVERSE_SPINNING 		getstatf(STAT_BUGRIGS_REVERSE_SPINNING)
-#define PHYS_BUGRIGS_REVERSE_STOPPING 		getstatf(STAT_BUGRIGS_REVERSE_STOPPING)
-
-#elif defined(SVQC)
-
-bool g_bugrigs;
-bool g_bugrigs_planar_movement;
-bool g_bugrigs_planar_movement_car_jumping;
-float g_bugrigs_reverse_spinning;
-float g_bugrigs_reverse_speeding;
-float g_bugrigs_reverse_stopping;
-float g_bugrigs_air_steering;
-float g_bugrigs_angle_smoothing;
-float g_bugrigs_friction_floor;
-float g_bugrigs_friction_brake;
-float g_bugrigs_friction_air;
-float g_bugrigs_accel;
-float g_bugrigs_speed_ref;
-float g_bugrigs_speed_pow;
-float g_bugrigs_steer;
-
-#define PHYS_BUGRIGS						g_bugrigs
-#define PHYS_BUGRIGS_ANGLE_SMOOTHING		g_bugrigs_angle_smoothing
-#define PHYS_BUGRIGS_PLANAR_MOVEMENT		g_bugrigs_planar_movement
-#define PHYS_BUGRIGS_REVERSE_SPEEDING		g_bugrigs_reverse_speeding
-#define PHYS_BUGRIGS_FRICTION_FLOOR			g_bugrigs_friction_floor
-#define PHYS_BUGRIGS_AIR_STEERING			g_bugrigs_air_steering
-#define PHYS_BUGRIGS_FRICTION_BRAKE			g_bugrigs_friction_brake
-#define PHYS_BUGRIGS_ACCEL					g_bugrigs_accel
-#define PHYS_BUGRIGS_SPEED_REF				g_bugrigs_speed_ref
-#define PHYS_BUGRIGS_SPEED_POW				g_bugrigs_speed_pow
-#define PHYS_BUGRIGS_STEER					g_bugrigs_steer
-#define PHYS_BUGRIGS_FRICTION_AIR			g_bugrigs_friction_air
-#define PHYS_BUGRIGS_CAR_JUMPING			g_bugrigs_planar_movement_car_jumping
-#define PHYS_BUGRIGS_REVERSE_SPINNING		g_bugrigs_reverse_spinning
-#define PHYS_BUGRIGS_REVERSE_STOPPING		g_bugrigs_reverse_stopping
-
-.float stat_bugrigs;
-.float stat_bugrigs_angle_smoothing;
-.float stat_bugrigs_planar_movement;
-.float stat_bugrigs_reverse_speeding;
-.float stat_bugrigs_friction_floor;
-.float stat_bugrigs_air_steering;
-.float stat_bugrigs_friction_brake;
-.float stat_bugrigs_accel;
-.float stat_bugrigs_speed_ref;
-.float stat_bugrigs_speed_pow;
-.float stat_bugrigs_steer;
-.float stat_bugrigs_friction_air;
-.float stat_bugrigs_car_jumping;
-.float stat_bugrigs_reverse_spinning;
-.float stat_bugrigs_reverse_stopping;
+#if defined(SVQC)
 
 void bugrigs_SetVars()
 {
@@ -110,44 +58,6 @@ void bugrigs_SetVars()
 	g_bugrigs_steer = cvar("g_bugrigs_steer");
 }
 
-void bugrigs_UpdateStats(entity this)
-{
-	this.stat_bugrigs = PHYS_BUGRIGS;
-	this.stat_bugrigs_angle_smoothing = PHYS_BUGRIGS_ANGLE_SMOOTHING;
-	this.stat_bugrigs_planar_movement = PHYS_BUGRIGS_PLANAR_MOVEMENT;
-	this.stat_bugrigs_reverse_speeding = PHYS_BUGRIGS_REVERSE_SPEEDING;
-	this.stat_bugrigs_friction_floor = PHYS_BUGRIGS_FRICTION_FLOOR;
-	this.stat_bugrigs_air_steering = PHYS_BUGRIGS_AIR_STEERING;
-	this.stat_bugrigs_friction_brake = PHYS_BUGRIGS_FRICTION_BRAKE;
-	this.stat_bugrigs_accel = PHYS_BUGRIGS_ACCEL;
-	this.stat_bugrigs_speed_ref = PHYS_BUGRIGS_SPEED_REF;
-	this.stat_bugrigs_speed_pow = PHYS_BUGRIGS_SPEED_POW;
-	this.stat_bugrigs_steer = PHYS_BUGRIGS_STEER;
-	this.stat_bugrigs_friction_air = PHYS_BUGRIGS_FRICTION_AIR;
-	this.stat_bugrigs_car_jumping = PHYS_BUGRIGS_CAR_JUMPING;
-	this.stat_bugrigs_reverse_spinning = PHYS_BUGRIGS_REVERSE_SPINNING;
-	this.stat_bugrigs_reverse_stopping = PHYS_BUGRIGS_REVERSE_STOPPING;
-}
-
-void bugrigs_AddStats()
-{
-	addstat(STAT_BUGRIGS, AS_INT, stat_bugrigs);
-	addstat(STAT_BUGRIGS_ANGLE_SMOOTHING, AS_INT, stat_bugrigs_angle_smoothing);
-	addstat(STAT_BUGRIGS_PLANAR_MOVEMENT, AS_INT, stat_bugrigs_planar_movement);
-	addstat(STAT_BUGRIGS_REVERSE_SPEEDING, AS_INT, stat_bugrigs_reverse_speeding);
-	addstat(STAT_BUGRIGS_FRICTION_FLOOR, AS_FLOAT, stat_bugrigs_friction_floor);
-	addstat(STAT_BUGRIGS_AIR_STEERING, AS_INT, stat_bugrigs_air_steering);
-	addstat(STAT_BUGRIGS_FRICTION_BRAKE, AS_FLOAT, stat_bugrigs_friction_brake);
-	addstat(STAT_BUGRIGS_ACCEL, AS_FLOAT, stat_bugrigs_accel);
-	addstat(STAT_BUGRIGS_SPEED_REF, AS_FLOAT, stat_bugrigs_speed_ref);
-	addstat(STAT_BUGRIGS_SPEED_POW, AS_FLOAT, stat_bugrigs_speed_pow);
-	addstat(STAT_BUGRIGS_STEER, AS_FLOAT, stat_bugrigs_steer);
-	addstat(STAT_BUGRIGS_FRICTION_AIR, AS_FLOAT, stat_bugrigs_friction_air);
-	addstat(STAT_BUGRIGS_CAR_JUMPING, AS_FLOAT, stat_bugrigs_car_jumping);
-	addstat(STAT_BUGRIGS_REVERSE_SPINNING, AS_FLOAT, stat_bugrigs_reverse_spinning);
-	addstat(STAT_BUGRIGS_REVERSE_STOPPING, AS_FLOAT, stat_bugrigs_reverse_stopping);
-}
-
 #endif
 
 void RaceCarPhysics(entity this)
@@ -161,7 +71,7 @@ void RaceCarPhysics(entity this)
 	float accel = bound(-1, this.movement.x / PHYS_MAXSPEED(this), 1);
 	float steer = bound(-1, this.movement.y / PHYS_MAXSPEED(this), 1);
 
-	if (PHYS_BUGRIGS_REVERSE_SPEEDING)
+	if (PHYS_BUGRIGS_REVERSE_SPEEDING(this))
 	{
 		if (accel < 0)
 		{
@@ -178,56 +88,56 @@ void RaceCarPhysics(entity this)
 	this.angles_z = 0;
 	makevectors(this.angles); // new forward direction!
 
-	if (IS_ONGROUND(this) || PHYS_BUGRIGS_AIR_STEERING)
+	if (IS_ONGROUND(this) || PHYS_BUGRIGS_AIR_STEERING(this))
 	{
 		float myspeed = this.velocity * v_forward;
 		float upspeed = this.velocity * v_up;
 
 		// responsiveness factor for steering and acceleration
-		float f = 1 / (1 + pow(max(-myspeed, myspeed) / PHYS_BUGRIGS_SPEED_REF, PHYS_BUGRIGS_SPEED_POW));
-		//MAXIMA: f(v) := 1 / (1 + (v / PHYS_BUGRIGS_SPEED_REF) ^ PHYS_BUGRIGS_SPEED_POW);
+		float f = 1 / (1 + pow(max(-myspeed, myspeed) / PHYS_BUGRIGS_SPEED_REF(this), PHYS_BUGRIGS_SPEED_POW(this)));
+		//MAXIMA: f(v) := 1 / (1 + (v / PHYS_BUGRIGS_SPEED_REF(this)) ^ PHYS_BUGRIGS_SPEED_POW(this));
 
 		float steerfactor;
-		if (myspeed < 0 && PHYS_BUGRIGS_REVERSE_SPINNING)
-			steerfactor = -myspeed * PHYS_BUGRIGS_STEER;
+		if (myspeed < 0 && PHYS_BUGRIGS_REVERSE_SPINNING(this))
+			steerfactor = -myspeed * PHYS_BUGRIGS_STEER(this);
 		else
-			steerfactor = -myspeed * f * PHYS_BUGRIGS_STEER;
+			steerfactor = -myspeed * f * PHYS_BUGRIGS_STEER(this);
 
 		float accelfactor;
-		if (myspeed < 0 && PHYS_BUGRIGS_REVERSE_SPEEDING)
-			accelfactor = PHYS_BUGRIGS_ACCEL;
+		if (myspeed < 0 && PHYS_BUGRIGS_REVERSE_SPEEDING(this))
+			accelfactor = PHYS_BUGRIGS_ACCEL(this);
 		else
-			accelfactor = f * PHYS_BUGRIGS_ACCEL;
-		//MAXIMA: accel(v) := f(v) * PHYS_BUGRIGS_ACCEL;
+			accelfactor = f * PHYS_BUGRIGS_ACCEL(this);
+		//MAXIMA: accel(v) := f(v) * PHYS_BUGRIGS_ACCEL(this);
 
 		if (accel < 0)
 		{
 			if (myspeed > 0)
 			{
-				myspeed = max(0, myspeed - PHYS_INPUT_TIMELENGTH * (PHYS_BUGRIGS_FRICTION_FLOOR - PHYS_BUGRIGS_FRICTION_BRAKE * accel));
+				myspeed = max(0, myspeed - PHYS_INPUT_TIMELENGTH * (PHYS_BUGRIGS_FRICTION_FLOOR(this) - PHYS_BUGRIGS_FRICTION_BRAKE(this) * accel));
 			}
 			else
 			{
-				if (!PHYS_BUGRIGS_REVERSE_SPEEDING)
-					myspeed = min(0, myspeed + PHYS_INPUT_TIMELENGTH * PHYS_BUGRIGS_FRICTION_FLOOR);
+				if (!PHYS_BUGRIGS_REVERSE_SPEEDING(this))
+					myspeed = min(0, myspeed + PHYS_INPUT_TIMELENGTH * PHYS_BUGRIGS_FRICTION_FLOOR(this));
 			}
 		}
 		else
 		{
 			if (myspeed >= 0)
 			{
-				myspeed = max(0, myspeed - PHYS_INPUT_TIMELENGTH * PHYS_BUGRIGS_FRICTION_FLOOR);
+				myspeed = max(0, myspeed - PHYS_INPUT_TIMELENGTH * PHYS_BUGRIGS_FRICTION_FLOOR(this));
 			}
 			else
 			{
-				if (PHYS_BUGRIGS_REVERSE_STOPPING)
+				if (PHYS_BUGRIGS_REVERSE_STOPPING(this))
 					myspeed = 0;
 				else
-					myspeed = min(0, myspeed + PHYS_INPUT_TIMELENGTH * (PHYS_BUGRIGS_FRICTION_FLOOR + PHYS_BUGRIGS_FRICTION_BRAKE * accel));
+					myspeed = min(0, myspeed + PHYS_INPUT_TIMELENGTH * (PHYS_BUGRIGS_FRICTION_FLOOR(this) + PHYS_BUGRIGS_FRICTION_BRAKE(this) * accel));
 			}
 		}
 		// terminal velocity = velocity at which 50 == accelfactor, that is, 1549 units/sec
-		//MAXIMA: friction(v) := PHYS_BUGRIGS_FRICTION_FLOOR;
+		//MAXIMA: friction(v) := PHYS_BUGRIGS_FRICTION_FLOOR(this);
 
 		this.angles_y += steer * PHYS_INPUT_TIMELENGTH * steerfactor; // apply steering
 		makevectors(this.angles); // new forward direction!
@@ -241,7 +151,7 @@ void RaceCarPhysics(entity this)
 		float myspeed = vlen(this.velocity);
 
 		// responsiveness factor for steering and acceleration
-		float f = 1 / (1 + pow(max(0, myspeed / PHYS_BUGRIGS_SPEED_REF), PHYS_BUGRIGS_SPEED_POW));
+		float f = 1 / (1 + pow(max(0, myspeed / PHYS_BUGRIGS_SPEED_REF(this)), PHYS_BUGRIGS_SPEED_POW(this)));
 		float steerfactor = -myspeed * f;
 		this.angles_y += steer * PHYS_INPUT_TIMELENGTH * steerfactor; // apply steering
 
@@ -249,20 +159,20 @@ void RaceCarPhysics(entity this)
 		makevectors(this.angles); // new forward direction!
 	}
 
-	rigvel *= max(0, 1 - vlen(rigvel) * PHYS_BUGRIGS_FRICTION_AIR * PHYS_INPUT_TIMELENGTH);
-	//MAXIMA: airfriction(v) := v * v * PHYS_BUGRIGS_FRICTION_AIR;
+	rigvel *= max(0, 1 - vlen(rigvel) * PHYS_BUGRIGS_FRICTION_AIR(this) * PHYS_INPUT_TIMELENGTH);
+	//MAXIMA: airfriction(v) := v * v * PHYS_BUGRIGS_FRICTION_AIR(this);
 	//MAXIMA: total_acceleration(v) := accel(v) - friction(v) - airfriction(v);
 	//MAXIMA: solve(total_acceleration(v) = 0, v);
 
-	if (PHYS_BUGRIGS_PLANAR_MOVEMENT)
+	if (PHYS_BUGRIGS_PLANAR_MOVEMENT(this))
 	{
 		vector rigvel_xy, neworigin, up;
 		float mt;
 
-		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY; // 4x gravity plays better
+		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY(this); // 4x gravity plays better
 		rigvel_xy = vec2(rigvel);
 
-		if (PHYS_BUGRIGS_CAR_JUMPING)
+		if (PHYS_BUGRIGS_CAR_JUMPING(this))
 			mt = MOVE_NORMAL;
 		else
 			mt = MOVE_NOMONSTERS;
@@ -308,7 +218,7 @@ void RaceCarPhysics(entity this)
 	}
 	else
 	{
-		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY; // 4x gravity plays better
+		rigvel_z -= PHYS_INPUT_TIMELENGTH * PHYS_GRAVITY(this); // 4x gravity plays better
 		this.velocity = rigvel;
 		this.movetype = MOVETYPE_FLY;
 	}
@@ -341,7 +251,7 @@ void RaceCarPhysics(entity this)
 	// smooth the angles
 	vector vf1, vu1, smoothangles;
 	makevectors(this.angles);
-	float f = bound(0, PHYS_INPUT_TIMELENGTH * PHYS_BUGRIGS_ANGLE_SMOOTHING, 1);
+	float f = bound(0, PHYS_INPUT_TIMELENGTH * PHYS_BUGRIGS_ANGLE_SMOOTHING(this), 1);
 	if (f == 0)
 		f = 1;
 	vf1 = v_forward * f;
@@ -361,7 +271,7 @@ void RaceCarPhysics(entity this)
 #endif
 MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 {
-	if(!PHYS_BUGRIGS || !IS_PLAYER(self)) { return false; }
+	if(!PHYS_BUGRIGS(self) || !IS_PLAYER(self)) { return false; }
 
 #ifdef SVQC
 	self.angles = self.bugrigs_prevangles;
@@ -373,11 +283,9 @@ MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 
 MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 {
-	if(!PHYS_BUGRIGS) { return false; }
+	if(!PHYS_BUGRIGS(self)) { return false; }
 #ifdef SVQC
 	self.bugrigs_prevangles = self.angles;
-
-	bugrigs_UpdateStats(self);
 #endif
 	return false;
 }

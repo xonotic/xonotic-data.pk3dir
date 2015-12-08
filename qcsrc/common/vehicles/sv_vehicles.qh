@@ -42,14 +42,14 @@ float autocvar_g_vehicles_weapon_damagerate = 1;
 .entity gunner1;
 .entity gunner2;
 
-.float vehicle_health;  /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
-.float vehicle_energy;  /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
-.float vehicle_shield;  /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
+.float vehicle_health = _STAT(VEHICLESTAT_HEALTH);  /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
+.float vehicle_energy = _STAT(VEHICLESTAT_ENERGY);  /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
+.float vehicle_shield = _STAT(VEHICLESTAT_SHIELD);  /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
 
-.float vehicle_ammo1;   /// If self is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If self is vehile, this is the real ammo1 value.
-.float vehicle_reload1; /// If self is player this is 0..100 indicating percentage of primary reload status. If self is vehile, this is the real reload1 value.
-.float vehicle_ammo2;   /// If self is player this is 0..100 indicating percentage of secondary ammo left. If self is vehile, this is the real ammo2 value.
-.float vehicle_reload2; /// If self is player this is 0..100 indicating percentage of secondary reload status. If self is vehile, this is the real reload2 value.
+.float vehicle_ammo1 = _STAT(VEHICLESTAT_AMMO1);   /// If self is player this is 0..100 indicating percentage of primary ammo left UNLESS value is already stored in vehicle_energy. If self is vehile, this is the real ammo1 value.
+.float vehicle_reload1 = _STAT(VEHICLESTAT_RELOAD1); /// If self is player this is 0..100 indicating percentage of primary reload status. If self is vehile, this is the real reload1 value.
+.float vehicle_ammo2 = _STAT(VEHICLESTAT_AMMO2);   /// If self is player this is 0..100 indicating percentage of secondary ammo left. If self is vehile, this is the real ammo2 value.
+.float vehicle_reload2 = _STAT(VEHICLESTAT_RELOAD2); /// If self is player this is 0..100 indicating percentage of secondary reload status. If self is vehile, this is the real reload2 value.
 
 .float sound_nexttime;
 const float VOL_VEHICLEENGINE = 1;
@@ -61,7 +61,7 @@ const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 const float VHSF_NORMAL = 0;
 const float VHSF_FACTORY = 2;
 
-.int hud;
+.int hud = _STAT(HUD);
 .float dmg_time;
 
 .int volly_counter;
@@ -80,7 +80,7 @@ const float	DAMAGE_TARGETDRONE = 10;
 // vehicle functions
 .void(int _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
 .bool(int _imp) vehicles_impulse;
-.int vehicle_weapon2mode;
+.int vehicle_weapon2mode = _STAT(VEHICLESTAT_W2MODE);
 .void(int exit_flags) vehicle_exit;
 .bool() vehicle_enter;
 const int VHEF_NORMAL = 0;  /// User pressed exit key
@@ -101,7 +101,7 @@ float vehicles_exit_running;
 
 void vehicles_exit(float eject);
 float vehicle_initialize(entity vehicle, float nodrop);
-bool vehicle_impulse(int imp);
+bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 
 #endif

@@ -117,7 +117,7 @@ float train_send(entity to, float sf)
 
 		WriteString(MSG_ENTITY, self.model);
 
-		trigger_common_write(true);
+		trigger_common_write(self, true);
 
 		WriteString(MSG_ENTITY, self.curvetarget);
 

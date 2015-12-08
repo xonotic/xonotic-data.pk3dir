@@ -9,6 +9,7 @@
 #include "teamplay.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
 #include "../common/deathtypes/all.qh"
@@ -154,16 +155,6 @@ void player_anim ()
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
-
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	{
-		if (self.(weaponentity))
-		{
-			updateanim(self.(weaponentity));
-			if (!self.(weaponentity).animstate_override)
-				setanim(self.(weaponentity), self.(weaponentity).anim_idle, true, false, false);
-		}
-	}
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -439,15 +430,15 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL.m_id)
-							PlayerSound(playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(self, playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 75) // TODO make a "gentle" version?
-							PlayerSound(playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(self, playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 50)
-							PlayerSound(playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(self, playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(self.health > 25)
-							PlayerSound(playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(self, playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else
-							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(self, playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}
@@ -491,7 +482,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(DIFF_TEAM(self, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
-			awep = get_weaponinfo(attacker.weapon);
+			awep = Weapons_from(attacker.weapon);
 		else
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
@@ -523,9 +514,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN.m_id)
-				PlayerSound(playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(self, playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
 			else
-				PlayerSound(playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(self, playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
 		}
 
 		// get rid of kill indicator
@@ -557,7 +548,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 		excess = frag_damage;
 
-		Weapon wep = get_weaponinfo(self.weapon);
+		Weapon wep = Weapons_from(self.weapon);
 		wep.wr_playerdeath(wep);
 
 		RemoveGrapplingHook(self);
@@ -640,7 +631,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		// reset fields the weapons may use just in case
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			Weapon w = get_weaponinfo(j);
+			Weapon w = Weapons_from(j);
 			w.wr_resetplayer(w);
 			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{

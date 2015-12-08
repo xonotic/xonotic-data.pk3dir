@@ -22,6 +22,7 @@ QCCFLAGS ?= \
 	-fftepp -flno -futf8 -fno-bail-on-werror -fftepp-predefs \
 	-frelaxed-switch -freturn-assignments \
 	$(QCCFLAGS_WATERMARK) \
+	-DNDEBUG=1 \
 	$(QCCFLAGS_FEATURES) \
 	$(QCCFLAGS_EXTRA)
 

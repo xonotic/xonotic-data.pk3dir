@@ -45,7 +45,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 
 		for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if (NIX_CanChooseWeapon(i)) {
-				Weapon w = get_weaponinfo(i);
+				Weapon w = Weapons_from(i);
 				w.wr_init(w);
 			}
 	}
@@ -68,7 +68,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			e.ammo_rockets = start_ammo_rockets;
 			e.ammo_fuel = start_ammo_fuel;
 			e.weapons = start_weapons;
-			if(!client_hasweapon(e, e.weapon, true, false))
+			if(!client_hasweapon(e, Weapons_from(e.weapon), true, false))
 				e.switchweapon = w_getbestweapon(self);
 		}
 	}
@@ -78,7 +78,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 
 bool NIX_CanChooseWeapon(int wpn)
 {
-	entity e = get_weaponinfo(wpn);
+	entity e = Weapons_from(wpn);
 	if(!e.weapon) // skip dummies
 		return false;
 	if(g_weaponarena)
@@ -124,12 +124,12 @@ void NIX_GiveCurrentWeapon()
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		// Weapon w = get_weaponinfo(nix_weapon);
+		// Weapon w = Weapons_from(nix_weapon);
 		// w.wr_init(w); // forget it, too slow
 	}
 
 	// get weapon info
-	entity e = get_weaponinfo(nix_weapon);
+	entity e = Weapons_from(nix_weapon);
 
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
 	{
@@ -211,9 +211,12 @@ void NIX_GiveCurrentWeapon()
 	self.weapons |= e.m_wepset;
 
 	if(self.switchweapon != nix_weapon)
-		if(!client_hasweapon(self, self.switchweapon, true, false))
-			if(client_hasweapon(self, nix_weapon, true, false))
-				W_SwitchWeapon(nix_weapon);
+		if(!client_hasweapon(self, Weapons_from(self.switchweapon), true, false))
+		{
+			Weapon w = Weapons_from(nix_weapon);
+			if(client_hasweapon(self, w, true, false))
+				W_SwitchWeapon(w);
+		}
 }
 
 MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)

@@ -73,16 +73,6 @@ string weapon_sound;
 string weapon_sound_output;
 MUTATOR_HOOKABLE(WeaponSound, EV_WeaponSound);
 
-/** called when a weapon model is about to be set, allows custom paths etc. */
-#define EV_WeaponModel(i, o) \
-    /**/ i(string, weapon_model) \
-    /**/ i(string, weapon_model_output) \
-    /**/ o(string, weapon_model_output) \
-    /**/
-string weapon_model;
-string weapon_model_output;
-MUTATOR_HOOKABLE(WeaponModel, EV_WeaponModel);
-
 /** called when an item model is about to be set, allows custom paths etc. */
 #define EV_ItemModel(i, o) \
     /**/ i(string, item_model) \
@@ -838,4 +828,14 @@ MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
 string monster_model;
 string monster_model_output;
 MUTATOR_HOOKABLE(MonsterModel, EV_MonsterModel);
+
+/**/
+#define EV_Player_ChangeTeam(i, o) \
+    /**/ i(entity, __self) \
+    /**/ i(float, pct_curteam) \
+    /**/ i(float, pct_newteam) \
+    /**/
+float pct_curteam;
+float pct_newteam;
+MUTATOR_HOOKABLE(Player_ChangeTeam, EV_Player_ChangeTeam);
 #endif

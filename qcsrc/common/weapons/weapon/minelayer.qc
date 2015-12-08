@@ -506,8 +506,7 @@ float W_MineLayer_PlacedMines(float detonate)
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
 				if(!(W_MineLayer_PlacedMines(false) && actor.WEP_AMMO(MINE_LAYER) < WEP_CVAR(minelayer, ammo))) {
-					Weapon w = get_weaponinfo(actor.weapon);
-					w.wr_reload(w);
+					thiswep.wr_reload(thiswep);
 				}
 			}
 			else if(fire & 1)

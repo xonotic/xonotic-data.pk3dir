@@ -72,7 +72,7 @@ void GameCommand(string theCommand)
 	if (argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
 		string filter = string_null;
-		if (argv(0) == "directpanelhudmenu") filter = strzone("HUD");
+		if (argv(0) == "directpanelhudmenu") filter = "HUD";
 
 		if (argc == 1)
 		{
@@ -94,7 +94,6 @@ void GameCommand(string theCommand)
 			m_play_click_sound(MENU_SOUND_OPEN);
 			m_goto(strcat(filter, argv(1))); // switch to a menu item
 		}
-		if (filter) strunzone(filter);
 		return;
 	}
 

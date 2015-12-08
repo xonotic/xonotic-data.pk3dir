@@ -238,22 +238,12 @@ vector autocvar_sv_player_headsize = '24 24 12';
 
 
 // not so constant
-#ifdef SVQC
-#define PL_VIEW_OFS autocvar_sv_player_viewoffset
-#define PL_MIN autocvar_sv_player_mins
-#define PL_MAX autocvar_sv_player_maxs
-#define PL_CROUCH_VIEW_OFS autocvar_sv_player_crouch_viewoffset
-#define PL_CROUCH_MIN autocvar_sv_player_crouch_mins
-#define PL_CROUCH_MAX autocvar_sv_player_crouch_maxs
-#define PL_HEAD autocvar_sv_player_headsize
-#elif defined(CSQC)
-#define PL_VIEW_OFS vec3(getstatf(STAT_PL_VIEW_OFS1), getstatf(STAT_PL_VIEW_OFS2), getstatf(STAT_PL_VIEW_OFS3))
-#define PL_MIN vec3(getstatf(STAT_PL_MIN1), getstatf(STAT_PL_MIN2), getstatf(STAT_PL_MIN3))
-#define PL_MAX vec3(getstatf(STAT_PL_MAX1), getstatf(STAT_PL_MAX2), getstatf(STAT_PL_MAX3))
-#define PL_CROUCH_VIEW_OFS vec3(getstatf(STAT_PL_CROUCH_VIEW_OFS1), getstatf(STAT_PL_CROUCH_VIEW_OFS2), getstatf(STAT_PL_CROUCH_VIEW_OFS3))
-#define PL_CROUCH_MIN vec3(getstatf(STAT_PL_CROUCH_MIN1), getstatf(STAT_PL_CROUCH_MIN2), getstatf(STAT_PL_CROUCH_MIN3))
-#define PL_CROUCH_MAX vec3(getstatf(STAT_PL_CROUCH_MAX1), getstatf(STAT_PL_CROUCH_MAX2), getstatf(STAT_PL_CROUCH_MAX3))
-#endif
+#define PL_VIEW_OFS STAT(PL_VIEW_OFS, NULL)
+#define PL_CROUCH_VIEW_OFS STAT(PL_CROUCH_VIEW_OFS, NULL)
+#define PL_MIN STAT(PL_MIN, NULL)
+#define PL_CROUCH_MIN STAT(PL_CROUCH_MIN, NULL)
+#define PL_MAX STAT(PL_MAX, NULL)
+#define PL_CROUCH_MAX STAT(PL_CROUCH_MAX, NULL)
 
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';
