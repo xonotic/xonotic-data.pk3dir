@@ -81,7 +81,8 @@ string XonoticHUDSkinList_hudskinAuthor(entity me, float i)
 	return bufstr_get(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_AUTHOR);
 }
 
-void getAllHUDSkins(entity me, string subdir)
+// subdir can be a regular expression
+void getHUDSkinFiles(entity me, int sortbuf, string subdir)
 {
 	string s;
 	if(me.filterString)
@@ -89,40 +90,73 @@ void getAllHUDSkins(entity me, string subdir)
 	else
 		s = "*";
 	s = strcat(subdir, "hud_", s, ".cfg");
-	float strlen_subdir = strlen(subdir);
-	subdir = strzone(subdir);
 
-	float list, i, n;
-	list = search_begin(s, false, true);
+	int list = search_begin(s, false, true);
 	if(list >= 0)
 	{
-		string filename;
-		n = search_getsize(list);
-		int bufsize = buf_getsize(me.listHUDSkin);
-		for(i = 0; i < n; ++i)
+		int n = search_getsize(list);
+		for(int i = 0; i < n; ++i)
 		{
-			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH, subdir);
-			filename = search_getfilename(list, i);
-			s = substring(filename, strlen_subdir + 4, (strlen(filename) - strlen_subdir - 4 - 4)); // remove "hud_" prefix and ".cfg" suffix
-			bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_NAME, s);
-
-			int fh = fopen(filename, FILE_READ);
-			if(fh < 0)
-				continue;
-			while((s = fgets(fh)) && substring(s, 0, 2) == "//")
+			string s = search_getfilename(list, i);
+			int subdir_ofs = strstrofs(s, "/", 0);
+			if(subdir_ofs >= 0)
 			{
-				tokenize_console(substring(s, 2, -1));
-				if(argv(0) == "title")
-					bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_TITLE, argv(1));
-				else if(argv(0) == "author")
-					bufstr_set(me.listHUDSkin, bufsize + i * HUDSKINPARM_COUNT + HUDSKINPARM_AUTHOR, argv(1));
+				int ofs = subdir_ofs;
+				while(ofs != -1)
+				{
+					subdir_ofs = ofs;
+					ofs = strstrofs(s, "/", subdir_ofs + 1);
+				}
 			}
-			fclose(fh);
+
+			if(subdir_ofs == -1)
+				bufstr_add(sortbuf, s, true);
+			else
+			{
+				subdir = substring(s, 0, subdir_ofs);
+				string filename = substring(s, subdir_ofs + 1, -1);
+				// invert path and filename position so we can sort sortbuf by filename
+				bufstr_add(sortbuf, strcat(filename, "/", subdir), true);
+			}
 		}
 		search_end(list);
 	}
-	if(subdir)
-		strunzone(subdir);
+}
+
+void getAllHUDSkins(entity me, int sortbuf)
+{
+	int n = buf_getsize(sortbuf);
+	for(int i = 0; i < n; ++i)
+	{
+		string entry = bufstr_get(sortbuf, i);
+		int ofs = strstrofs(entry, "/", 0);
+		string s = "";
+		string filename = entry;
+		if(ofs >= 0)
+		{
+			s = substring(entry, ofs + 1, -1); // skip initial "/"
+			s = strcat(s, "/");
+			bufstr_set(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_PATH, s);
+			filename = strcat(s, substring(entry, 0, ofs));
+		}
+		else
+			ofs = strlen(entry);
+		s = substring(entry, 4, ofs - 4 - 4); // remove "hud_" prefix and ".cfg" suffix
+		bufstr_set(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_NAME, s);
+
+		int fh = fopen(filename, FILE_READ);
+		if(fh < 0)
+			continue;
+		while((s = fgets(fh)) && substring(s, 0, 2) == "//")
+		{
+			tokenize_console(substring(s, 2, -1));
+			if(argv(0) == "title")
+				bufstr_set(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_TITLE, argv(1));
+			else if(argv(0) == "author")
+				bufstr_set(me.listHUDSkin, i * HUDSKINPARM_COUNT + HUDSKINPARM_AUTHOR, argv(1));
+		}
+		fclose(fh);
+	}
 }
 
 void XonoticHUDSkinList_getHUDSkins(entity me)
@@ -135,8 +169,12 @@ void XonoticHUDSkinList_getHUDSkins(entity me)
 		me.nItems = 0;
 		return;
 	}
-	getAllHUDSkins(me, "");
-	getAllHUDSkins(me, "data/");
+	int sortbuf = buf_create();
+	getHUDSkinFiles(me, sortbuf, "");
+	getHUDSkinFiles(me, sortbuf, "data/");
+	buf_sort(sortbuf, 128, 0);
+	getAllHUDSkins(me, sortbuf);
+	buf_del(sortbuf);
 	me.nItems = buf_getsize(me.listHUDSkin) / HUDSKINPARM_COUNT;
 }
 
