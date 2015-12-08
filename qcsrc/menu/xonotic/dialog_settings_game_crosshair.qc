@@ -6,7 +6,7 @@ CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
 	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"))
 	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 13)
+	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameCrosshairSettingsTab)
 entity makeXonoticGameCrosshairSettingsTab();
@@ -82,11 +82,12 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.9, e = makeXonoticCheckBox_T(0, "crosshair_ring", _("Use rings to indicate weapon status"), "-"));
 			makeMulti(e, "crosshair_ring_reload");
 			setDependent(e, "crosshair_enabled", 1, 2);
-	//me.TR(me);
-	//	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Ring size:")));
-	//		setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
-	//	me.TD(me, 1, 2, e = makeXonoticSlider(2, 4, 0.1, "crosshair_ring_size"));
-	//		setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
+	me.TR(me);
+		me.TDempty(me, 0.3);
+		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Ring size:")));
+			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(2, 4, 0.1, "crosshair_ring_size"));
+			setDependentAND(e, "crosshair_ring", 1, 1, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.3);
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Ring alpha:")));
@@ -138,7 +139,7 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.25, 0, "crosshair_pickup", _("Animate crosshair when picking up an item")));
 			setDependent(e, "crosshair_enabled", 1, 2);
-	/*me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit testing:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("crosshair_hittest",
 			_("None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy")));
@@ -146,13 +147,6 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("HTTST^TrueAim")), "1");
 			e.addValue(e, ZCTX(_("HTTST^Enemies")), "1.25");
 			e.configureXonoticTextSliderValues(e);
-			setDependent(e, "crosshair_enabled", 1, 2);*/
-
-	/*me.TR(me);
-
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
-			e.onClick = Dialog_Close;
-			e.onClickEntity = me;*/
+			setDependent(e, "crosshair_enabled", 1, 2);
 }
 #endif

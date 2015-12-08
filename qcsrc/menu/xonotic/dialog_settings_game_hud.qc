@@ -6,7 +6,7 @@ CLASS(XonoticGameHUDSettingsTab, XonoticTab)
 	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameHUDSettingsTab, title, string, _("HUD"))
 	ATTRIB(XonoticGameHUDSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 13)
+	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticGameHUDSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticGameHUDSettingsTab)
 entity makeXonoticGameHUDSettingsTab();
@@ -47,12 +47,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	// threshold: hud_damage_pain_threshold_lower_health
 	// scoreboard_alpha*
 
-	//me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
-	//me.TR(me);
-	//	me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
-	//	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "scoreboard_alpha_bg"));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
+	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "scoreboard_alpha_bg"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
