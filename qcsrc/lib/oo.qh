@@ -158,14 +158,20 @@ STATIC_INIT(RegisterClasses)
 		spawn##base##_1(this);              \
 	}
 
-#define METHOD(cname, name, prototype)      \
-	class(cname).prototype name;           \
-	prototype cname##_##name;               \
+#define METHOD_REFERENCE(cname, name) \
+	cname##_##name
+
+#define STATIC_METHOD(cname, name, prototype) \
+	prototype METHOD_REFERENCE(cname, name)
+
+#define METHOD(cname, name, prototype) \
+	class(cname).prototype name; \
+	STATIC_METHOD(cname, name, prototype); \
 	INIT_STATIC(cname) \
 	{ \
-		this.name = cname##_##name; \
+		this.name = METHOD_REFERENCE(cname, name); \
 	} \
-	prototype cname##_##name
+	STATIC_METHOD(cname, name, prototype)
 
 #define ATTRIB(cname, name, type, val)      \
 	class(cname).type name;                \

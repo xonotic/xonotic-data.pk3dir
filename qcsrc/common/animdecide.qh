@@ -10,7 +10,7 @@ void animdecide_setframes(entity e, bool support_blending, .int fld_frame, .int 
 
 CLASS(Animation, Object)
 	ATTRIB(Animation, m_framenames, string, string_null)
-	METHOD(Animation, anim_getframe, int(Animation this, int mdlidx))
+	STATIC_METHOD(Animation, getframe, int(Animation this, int mdlidx))
 	{
 		FOREACH_WORD(this.m_framenames, true, {
 			int f = frameforname(mdlidx, it);
@@ -31,16 +31,14 @@ REGISTER_REGISTRY(Animations)
 		this.m_framenames = framenames; \
 	}
 
-vector _ANIM_VEC_v;
-Animation _ANIM_VEC_a;
-#define ANIM_VEC(anim, numframes, framerate) \
-( \
-	_ANIM_VEC_v.y = numframes, \
-	_ANIM_VEC_v.z = framerate, \
-	_ANIM_VEC_a = ANIM_##anim, \
-	_ANIM_VEC_v.x = _ANIM_VEC_a.anim_getframe(_ANIM_VEC_a, mdlidx), \
-	_ANIM_VEC_v \
-)
+vector anim_vec(Animation anim, int mdlidx, int numframes, float framerate)
+{
+	vector v;
+	v.x = Animation_getframe(anim, mdlidx);
+	v.y = numframes;
+	v.z = framerate;
+	return v;
+}
 
 // player animation data for this model
 // each vector is as follows:
@@ -51,12 +49,9 @@ Animation _ANIM_VEC_a;
 REGISTER_ANIMATION(die1, "dieone groupified_0_anim");
 /** player dies differently */
 REGISTER_ANIMATION(die2, "dietwo groupified_1_anim");
-/**  */
-REGISTER_ANIMATION(dead1, "deadone groupified_17_anim");
-/**  */
-REGISTER_ANIMATION(dead2, "deadtwo groupified_18_anim");
 /** player pulls out a weapon */
 REGISTER_ANIMATION(draw, "draw groupified_2_anim");
+REGISTER_ANIMATION(duck, "duck groupified_3_anim");
 /** player walking while crouching */
 REGISTER_ANIMATION(duckwalk, "duckwalk groupified_4_anim");
 /** player jumping from a crouch */
@@ -83,6 +78,10 @@ REGISTER_ANIMATION(runbackwards, "runbackwards groupified_14_anim");
 REGISTER_ANIMATION(strafeleft, "strafeleft groupified_15_anim");
 /** player shuffling right quickly */
 REGISTER_ANIMATION(straferight, "straferight groupified_16_anim");
+/**  */
+REGISTER_ANIMATION(dead1, "deadone groupified_17_anim");
+/**  */
+REGISTER_ANIMATION(dead2, "deadtwo groupified_18_anim");
 /** player running forward and right */
 REGISTER_ANIMATION(forwardright, "forwardright groupified_19_anim");
 /** player running forward and left */
@@ -93,7 +92,6 @@ REGISTER_ANIMATION(backright, "backright groupified_21_anim");
 REGISTER_ANIMATION(backleft, "backleft groupified_22_anim");
 /** player doing the melee action */
 REGISTER_ANIMATION(melee, "melee groupified_23_anim");
-REGISTER_ANIMATION(duck, "duck groupified_3_anim");
 REGISTER_ANIMATION(duckwalkbackwards, "duckwalkbackwards groupified_24_anim");
 REGISTER_ANIMATION(duckwalkstrafeleft, "duckwalkstrafeleft duckstrafeleft groupified_25_anim");
 REGISTER_ANIMATION(duckwalkstraferight, "duckwalkstraferight duckstraferight groupified_26_anim");

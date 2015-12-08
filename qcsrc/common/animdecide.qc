@@ -66,6 +66,8 @@ void animdecide_load_if_needed(entity e)
 			return;
 	}
 
+#define ANIM_VEC(a, frames, rate) anim_vec(ANIM_##a, mdlidx, frames, rate)
+
 	vector none = '0 0 0';
 	e.anim_die1 = animfixfps(e, ANIM_VEC(die1, 1, 0.5), none); // 2 seconds
 	e.anim_die2 = animfixfps(e, ANIM_VEC(die2, 1, 0.5), none); // 2 seconds
@@ -95,6 +97,8 @@ void animdecide_load_if_needed(entity e)
 	e.anim_duckwalkforwardleft = animfixfps(e, ANIM_VEC(duckwalkforwardleft, 1, 1), ANIM_VEC(duckwalk, 1, 1));
 	e.anim_duckwalkbackright = animfixfps(e, ANIM_VEC(duckwalkbackright, 1,  1), ANIM_VEC(duckwalk, 1, 1));
 	e.anim_duckwalkbackleft  = animfixfps(e, ANIM_VEC(duckwalkbackleft , 1,  1), ANIM_VEC(duckwalk, 1, 1));
+
+#undef ANIM_VEC
 
 	// these anims ought to stay until stopped explicitly by weaponsystem
 	e.anim_shoot_z = 0.001;
