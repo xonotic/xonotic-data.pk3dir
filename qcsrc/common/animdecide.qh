@@ -25,6 +25,9 @@ ENDCLASS(Animation)
 
 REGISTRY(Animations, BITS(8))
 REGISTER_REGISTRY(Animations)
+#define Animations_from(id) _Animations_from(id, NULL)
+#define WriteAnimation(to, it) WriteRegistry(Animations, to, it)
+#define ReadAnimation() ReadRegistry(Animations)
 #define REGISTER_ANIMATION(id, framenames) \
 	.vector anim_##id; \
 	REGISTER(Animations, ANIM_##id, m_id, NEW(Animation)) { \

@@ -162,6 +162,8 @@ STATIC_INIT(RegisterTempEntities_renumber)
 	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 
 	#ifdef CSQC
+    	#define ReadRegistry(r) r##_from(ReadByte())
+
 		entity ReadCSQCEntity()
 		{
 			int f = ReadShort();
@@ -209,6 +211,8 @@ STATIC_INIT(RegisterTempEntities_renumber)
 
 	#else
 		const int MSG_ENTITY = 5;
+
+		#define WriteRegistry(r, to, it) WriteByte(to, it.m_id)
 
 		void WriteInt24_t(float dst, float val)
 		{
