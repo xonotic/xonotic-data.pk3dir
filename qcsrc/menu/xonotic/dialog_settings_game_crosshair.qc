@@ -128,18 +128,6 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_effect_scalefade", _("Smooth effects of crosshairs")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_hittest_blur", _("Blur crosshair if the shot is obstructed")));
-			setDependentAND(e, "crosshair_hittest", 1, 100, "crosshair_enabled", 1, 2);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(1.25, 0, "crosshair_hittest_scale", _("Enlarge crosshair if targeting an enemy")));
-			setDependentAND(e, "crosshair_hittest", 1, 100, "crosshair_enabled", 1, 2);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.5, 0, "crosshair_hitindication", _("Animate crosshair when hitting an enemy")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.25, 0, "crosshair_pickup", _("Animate crosshair when picking up an item")));
-			setDependent(e, "crosshair_enabled", 1, 2);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit testing:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("crosshair_hittest",
 			_("None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy")));
@@ -147,6 +135,20 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("HTTST^TrueAim")), "1");
 			e.addValue(e, ZCTX(_("HTTST^Enemies")), "1.25");
 			e.configureXonoticTextSliderValues(e);
+			setDependent(e, "crosshair_enabled", 1, 2);
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBox(0, "crosshair_hittest_blur", _("Blur crosshair if the shot is obstructed")));
+			setDependentAND(e, "crosshair_hittest", 1, 100, "crosshair_enabled", 1, 2);
+	me.TR(me);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 2.9, e = makeXonoticCheckBoxEx(1.25, 0, "crosshair_hittest_scale", _("Enlarge crosshair if targeting an enemy")));
+			setDependentAND(e, "crosshair_hittest", 1, 100, "crosshair_enabled", 1, 2);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.5, 0, "crosshair_hitindication", _("Animate crosshair when hitting an enemy")));
+			setDependent(e, "crosshair_enabled", 1, 2);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.25, 0, "crosshair_pickup", _("Animate crosshair when picking up an item")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 }
 #endif
