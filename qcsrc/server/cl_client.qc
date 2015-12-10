@@ -1588,7 +1588,8 @@ void player_regen ()
 	{
 		if(self.vehicle)
 			vehicles_exit(VHEF_RELEASE);
-		self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
+		if(self.event_damage)
+			self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
 	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
