@@ -118,50 +118,45 @@
 	float Slider_keyDown(entity me, float key, float ascii, float shift)
 	{
 		float inRange;
+		float ret_value = 0;
 		if (me.disabled) return 0;
 		inRange = (almost_in_bounds(me.valueMin, me.value, me.valueMax));
 		if (key == K_LEFTARROW || key == K_KP_LEFTARROW || key == K_MWHEELDOWN)
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
 			else me.setValue(me, me.valueMax);
-			if(me.applyButton)
-				me.applyButton.disabled = false;
-			return 1;
+			ret_value = 1;
 		}
 		if (key == K_RIGHTARROW || key == K_KP_RIGHTARROW || key == K_MWHEELUP)
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
 			else me.setValue(me, me.valueMin);
-			if(me.applyButton)
-				me.applyButton.disabled = false;
-			return 1;
+			ret_value = 1;
 		}
 		if (key == K_PGDN || key == K_KP_PGDN)
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
 			else me.setValue(me, me.valueMax);
-			if(me.applyButton)
-				me.applyButton.disabled = false;
-			return 1;
+			ret_value = 1;
 		}
 		if (key == K_PGUP || key == K_KP_PGUP)
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax));
 			else me.setValue(me, me.valueMin);
-			if(me.applyButton)
-				me.applyButton.disabled = false;
-			return 1;
+			ret_value = 1;
 		}
 		if (key == K_HOME || key == K_KP_HOME)
 		{
 			me.setValue(me, me.valueMin);
-			if(me.applyButton)
-				me.applyButton.disabled = false;
-			return 1;
+			ret_value = 1;
 		}
 		if (key == K_END || key == K_KP_END)
 		{
 			me.setValue(me, me.valueMax);
+			ret_value = 1;
+		}
+		if(ret_value == 1)
+		{
 			if(me.applyButton)
 				me.applyButton.disabled = false;
 			return 1;
@@ -246,21 +241,17 @@
 				pageValue = me.value - me.valuePageStep;
 				if (me.valueStep) clickValue = floor(clickValue / me.valueStep) * me.valueStep;
 				pageValue = max(pageValue, clickValue);
-				if (inRange) me.setValue(me, median(me.valueMin, pageValue, me.valueMax));
-				else me.setValue(me, me.valueMax);
-				if(me.applyButton)
-					me.applyButton.disabled = false;
 			}
 			else
 			{
 				pageValue = me.value + me.valuePageStep;
 				if (me.valueStep) clickValue = ceil(clickValue / me.valueStep) * me.valueStep;
 				pageValue = min(pageValue, clickValue);
-				if (inRange) me.setValue(me, median(me.valueMin, pageValue, me.valueMax));
-				else me.setValue(me, me.valueMax);
-				if(me.applyButton)
-					me.applyButton.disabled = false;
 			}
+			if (inRange) me.setValue(me, median(me.valueMin, pageValue, me.valueMax));
+			else me.setValue(me, me.valueMax);
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			if (pageValue == clickValue)
 			{
 				controlCenter = (me.value - me.valueMin) / (me.valueMax - me.valueMin) * (1 - me.textSpace - me.controlWidth) + 0.5 * me.controlWidth;
