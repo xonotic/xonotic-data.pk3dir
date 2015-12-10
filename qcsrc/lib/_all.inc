@@ -25,6 +25,8 @@
 	#include "../dpdefs/keycodes.qh"
 #endif
 
+#include "macro.qh"
+
 #include "warpzone/mathlib.qc"
 
 #include "accumulate.qh"

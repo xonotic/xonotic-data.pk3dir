@@ -47,16 +47,16 @@ typedef vector vectori;
 	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
-	#define addstat_vector(id, fld) do { \
+	#define addstat_vector(id, fld) MACRO_BEGIN { \
 		addstat_float(id + 0, fld##_x); \
 		addstat_float(id + 1, fld##_y); \
 		addstat_float(id + 2, fld##_z); \
-	} while (0)
-	#define addstat_vectori(id, fld) do { \
+	} MACRO_END
+	#define addstat_vectori(id, fld) MACRO_BEGIN { \
 		addstat_int(id + 0, fld##_x); \
 		addstat_int(id + 1, fld##_y); \
 		addstat_int(id + 2, fld##_z); \
-	} while (0)
+	} MACRO_END
 	const int AS_STRING = 1;
 	const int AS_INT = 2;
 	const int AS_FLOAT = 8;

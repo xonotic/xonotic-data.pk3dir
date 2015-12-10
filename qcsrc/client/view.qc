@@ -63,50 +63,50 @@ float autocvar_cl_leanmodel_up_highpass1;
 float autocvar_cl_leanmodel_up_lowpass;
 float autocvar_cl_leanmodel_up_limit;
 
-#define lowpass(value, frac, ref_store, ret) do \
+#define lowpass(value, frac, ref_store, ret) MACRO_BEGIN \
 { \
 	float __frac = bound(0, frac, 1); \
 	ret = ref_store = ref_store * (1 - __frac) + (value) * __frac; \
-} while (0)
+} MACRO_END
 
-#define lowpass_limited(value, frac, limit, ref_store, ret) do \
+#define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
 	float __ignore; lowpass(value, frac, ref_store, __ignore); \
 	ret = ref_store = bound((value) - (limit), ref_store, (value) + (limit)); \
-} while (0)
+} MACRO_END
 
-#define highpass(value, frac, ref_store, ret) do \
+#define highpass(value, frac, ref_store, ret) MACRO_BEGIN \
 { \
 	float __f; lowpass(value, frac, ref_store, __f); \
 	ret = (value) - __f; \
-} while (0)
+} MACRO_END
 
-#define highpass_limited(value, frac, limit, ref_store, ret) do \
+#define highpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
 	float __f; lowpass_limited(value, frac, limit, ref_store, __f); \
 	ret = (value) - __f; \
-} while (0)
+} MACRO_END
 
-#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) MACRO_BEGIN \
 { \
 	lowpass(value.x, fracx, ref_store.x, ref_out.x); \
 	lowpass(value.y, fracy, ref_store.y, ref_out.y); \
 	lowpass(value.z, fracz, ref_store.z, ref_out.z); \
-} while (0)
+} MACRO_END
 
-#define highpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+#define highpass3(value, fracx, fracy, fracz, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass(value.x, fracx, ref_store.x, ref_out.x); \
 	highpass(value.y, fracy, ref_store.y, ref_out.y); \
 	highpass(value.z, fracz, ref_store.z, ref_out.z); \
-} while (0)
+} MACRO_END
 
-#define highpass3_limited(value, fracx, limitx, fracy, limity, fracz, limitz, ref_store, ref_out) do \
+#define highpass3_limited(value, fracx, limitx, fracy, limity, fracz, limitz, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass_limited(value.x, fracx, limitx, ref_store.x, ref_out.x); \
 	highpass_limited(value.y, fracy, limity, ref_store.y, ref_out.y); \
 	highpass_limited(value.z, fracz, limitz, ref_store.z, ref_out.z); \
-} while (0)
+} MACRO_END
 
 void viewmodel_animate(entity this)
 {
@@ -1242,8 +1242,7 @@ void HUD_Crosshair()
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-			do \
-			{ \
+			MACRO_BEGIN { \
 				if(wcross_blur > 0) \
 				{ \
 					for(i = -2; i <= 2; ++i) \
@@ -1254,8 +1253,7 @@ void HUD_Crosshair()
 				{ \
 					M(0,0,sz,wcross_name,wcross_alpha); \
 				} \
-			} \
-			while(0)
+			} MACRO_END
 
 #define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
 			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size.x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size.y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)

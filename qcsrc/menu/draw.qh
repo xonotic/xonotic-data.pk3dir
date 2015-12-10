@@ -10,8 +10,8 @@ vector draw_scale;
 float draw_alpha;
 
 void draw_reset(float cw, float ch, float ox, float oy);
-#define draw_beginBoldFont() do { drawfont = FONT_USER + 3; } while (0)
-#define draw_endBoldFont() do { drawfont = FONT_USER + 0; } while (0)
+#define draw_beginBoldFont() MACRO_BEGIN { drawfont = FONT_USER + 3; } MACRO_END
+#define draw_endBoldFont() MACRO_BEGIN { drawfont = FONT_USER + 0; } MACRO_END
 void draw_setMousePointer(string pic, vector theSize, vector theOffset);
 void draw_drawMousePointer(vector where);
 

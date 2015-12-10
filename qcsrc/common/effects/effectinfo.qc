@@ -259,10 +259,10 @@ void effectinfo_read()
 
 void effectinfo_dump(int fh, bool alsoprint)
 {
-    #define WRITE(s) do { \
+    #define WRITE(s) MACRO_BEGIN { \
         fputs(fh, s); \
         if (alsoprint) LOG_INFO(s); \
-    } while (0)
+    } MACRO_END
     WRITE("// ********************************************** //\n");
     WRITE("// ** WARNING - DO NOT MANUALLY EDIT THIS FILE ** //\n");
     WRITE("// **                                          ** //\n");

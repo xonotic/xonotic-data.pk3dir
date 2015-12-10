@@ -67,27 +67,24 @@
 
 #ifdef CSQC
 	#define Net_Accept(classname) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			if (!this)    this = new(classname); \
-		} \
-		while (0)
+		} MACRO_END
 	#define Net_Reject() \
-		do \
+		MACRO_BEGIN \
 		{ \
 			if (this)     remove(this); \
-		} \
-		while (0)
+		} MACRO_END
 	#define NET_HANDLE(id, param) \
 		bool Net_Handle_##id(entity this, param)
 #else
 	#define WriteHeader(to, id) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
 			WriteByte(to, NET_##id.m_id); \
-		} \
-		while (0)
+		} MACRO_END
 #endif
 
 #ifdef CSQC
@@ -243,8 +240,8 @@ STATIC_INIT(RegisterTempEntities_renumber)
 		}
 
         #define WriteFloat(to, f) WriteCoord(to, f)
-		#define WriteVector(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } while (0)
-        #define WriteVector2D(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); } while (0)
+		#define WriteVector(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } MACRO_END
+        #define WriteVector2D(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); } MACRO_END
 
 		// this will use the value:
 		//   128
@@ -275,11 +272,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			if (msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) \
 				statement msg_entity = varname
 		#define WRITESPECTATABLE_MSG_ONE(statement) \
-			do \
+			MACRO_BEGIN \
 			{ \
 				WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement); \
-			} \
-			while (0)
+			} MACRO_END
 		#define WRITESPECTATABLE(msg, statement) \
 			if (msg == MSG_ONE) WRITESPECTATABLE_MSG_ONE(statement); \
 			else \

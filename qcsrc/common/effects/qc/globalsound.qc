@@ -331,14 +331,13 @@
 				case VOICETYPE_TEAMRADIO:
 				{
 					#define X() \
-						do \
+						MACRO_BEGIN \
 						{ \
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
-						} \
-						while (0)
+						} MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
 					else
@@ -362,7 +361,7 @@
 					float tauntrand = 0;
 					if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
 					#define X() \
-						do \
+						MACRO_BEGIN \
 						{ \
 							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
 							{ \
@@ -374,8 +373,7 @@
 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 								else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
 							} \
-						} \
-						while (0)
+						} MACRO_END
 					if (fake)
 					{
 						msg_entity = this;

@@ -79,7 +79,7 @@ void cl_notice_run()
     drawfill(v1, v2, '0.5 0.5 0.5', 0.5, DRAWFLAG_NORMAL);
 
     vector v3 = v1 + '10 10 0';
-    #define OUT(s, z) do { drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3.y += z + 4; } while (0)
+    #define OUT(s, z) MACRO_BEGIN { drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3.y += z + 4; } MACRO_END
 
     OUT(_("^1Server notices:"), 32);
     LL_EACH(cl_notices, it.alpha > time, LAMBDA(

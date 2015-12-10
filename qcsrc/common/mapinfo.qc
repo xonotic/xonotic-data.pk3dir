@@ -691,13 +691,13 @@ Gametype MapInfo_Type(int t)
 
 int MapInfo_Type_FromString(string t)
 {
-#define deprecate(from, to) do { \
+#define deprecate(from, to) MACRO_BEGIN { \
 	if (t == #from) { \
 		string replacement = #to; \
 		LOG_WARNINGF("MapInfo_Type_FromString (probably %s): using deprecated name '%s'. Should use '%s'.\n", MapInfo_Map_bspname, t, replacement); \
 		t = replacement; \
 	} \
-} while (0)
+} MACRO_END
 	deprecate(nexball, nb);
 	deprecate(freezetag, ft);
 	deprecate(keepaway, ka);

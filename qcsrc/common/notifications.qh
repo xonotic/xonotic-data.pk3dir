@@ -328,9 +328,9 @@ string BUFF_NAME(int i);
     ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(world,netname,s1).descriptor.message) \
     ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(world,netname,s1).descriptor.netname)
 
-#define NOTIF_HIT_MAX(count,funcname) do { \
+#define NOTIF_HIT_MAX(count,funcname) MACRO_BEGIN { \
     if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; } \
-} while(0)
+} MACRO_END
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 
 #define KILL_SPREE_LIST \

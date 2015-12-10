@@ -47,13 +47,13 @@ void Xonotic_KeyBinds_Read()
 {
 	Xonotic_KeyBinds_Count = 0;
 
-	#define KEYBIND_DEF(func, desc) do { \
+	#define KEYBIND_DEF(func, desc) MACRO_BEGIN { \
 		if((Xonotic_KeyBinds_Count < MAX_KEYBINDS)) { \
 			Xonotic_KeyBinds_Functions[Xonotic_KeyBinds_Count] = strzone(func); \
 			Xonotic_KeyBinds_Descriptions[Xonotic_KeyBinds_Count] = strzone(desc); \
 			++Xonotic_KeyBinds_Count; \
 		} \
-	} while(0)
+	} MACRO_END
 
 	KEYBIND_DEF(""                                      , _("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));

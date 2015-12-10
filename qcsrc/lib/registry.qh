@@ -71,21 +71,21 @@ REGISTRY(Registries, BITS(8))
 	ACCUMULATE_FUNCTION(Register##registry, Register_##id) \
 	REGISTER_INIT(id)
 
-#define REGISTRY_PUSH(registry, fld, it) do { \
+#define REGISTRY_PUSH(registry, fld, it) MACRO_BEGIN { \
 	it.fld = registry##_COUNT; \
 	_R_SET(_##registry, registry##_COUNT, it); \
 	++registry##_COUNT; \
 	if (!registry##_first) registry##_first = it; \
 	if (registry##_last)   registry##_last.REGISTRY_NEXT = it; \
 	registry##_last = it; \
-} while (0)
+} MACRO_END
 
-#define REGISTRY_RESERVE(registry, fld, id, suffix) do { \
+#define REGISTRY_RESERVE(registry, fld, id, suffix) MACRO_BEGIN { \
 	entity e = new(registry_reserved); \
 	make_pure(e); \
 	e.registered_id = #id "/" #suffix; \
 	REGISTRY_PUSH(registry, fld, e); \
-} while (0)
+} MACRO_END
 
 #define REGISTER_INIT(id) [[accumulate]] void Register_##id##_init(entity this)
 #define REGISTER_INIT_POST(id) [[accumulate]] void Register_##id##_init_post(entity this)

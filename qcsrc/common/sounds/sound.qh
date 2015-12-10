@@ -40,13 +40,12 @@ const float VOL_BASEVOICE = 1.0;
 // Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
 #ifdef SVQC
 	#define _sound(e, c, s, v, a) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			entity __e = e; \
-			if (!sound_allowed(MSG_BROADCAST, __e)) break; \
-			sound7(__e, c, s, v, a, 0, 0); \
-		} \
-		while (0)
+			if (sound_allowed(MSG_BROADCAST, __e)) \
+				sound7(__e, c, s, v, a, 0, 0); \
+		} MACRO_END
 #else
 	#define _sound(e, c, s, v, a) sound7(e, c, s, v, a, 0, 0)
 #endif
@@ -65,7 +64,7 @@ const float VOL_BASEVOICE = 1.0;
  * @param sf
  */
 #define sound8(e, o, chan, samp, vol, atten, speed, sf) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		entity __e; \
 		int __chan = chan; \
@@ -87,11 +86,12 @@ const float VOL_BASEVOICE = 1.0;
 		setorigin(__e, o); \
 		setsize(__e, '0 0 0', '0 0 0'); \
 		sound7(__e, __chan, __samp, vol, atten, speed, sf); \
-		if (auto) break; \
-		setorigin(__e, old_origin); \
-		setsize(__e, old_mins, old_maxs); \
-	} \
-	while (0)
+		if (!auto) \
+		{ \
+			setorigin(__e, old_origin); \
+			setsize(__e, old_mins, old_maxs); \
+		} \
+	} MACRO_END
 
 CLASS(Sound, Object)
 	ATTRIB(Sound, m_id, int, 0)

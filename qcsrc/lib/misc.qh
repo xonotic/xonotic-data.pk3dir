@@ -44,13 +44,12 @@
 
 // With block may not contain continue or break
 #define WITH(type, name, value, block) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		type __with_save = (name); \
 		name = (value); \
 		LAMBDA(block) \
 		name = __with_save; \
-	} \
-	while (0)
+	} MACRO_END
 
 #endif

@@ -135,14 +135,14 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
-	#define X(team) do {															\
+	#define X(team) MACRO_BEGIN {													\
 		if (team##flag != team##flag_prevframe) {									\
     		team##flag_statuschange_time = time;									\
     		team##flag_prevstatus = team##flag_prevframe;							\
     		team##flag_prevframe = team##flag;										\
     	}																			\
     	team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; 	\
-    } while (0)
+    } MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);
@@ -163,7 +163,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	string team##_icon, team##_icon_prevstatus; \
 	int team##_alpha, team##_alpha_prevstatus; \
 	team##_alpha = team##_alpha_prevstatus = 1; \
-	do { \
+	MACRO_BEGIN { \
 		switch (team##flag) { \
 			case 1: team##_icon = "flag_" #team "_taken"; break; \
 			case 2: team##_icon = "flag_" #team "_lost"; break; \
@@ -190,7 +190,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				} \
 				break; \
 		} \
-	} while (0)
+	} MACRO_END
 	X(red, myteam != NUM_TEAM_1);
 	X(blue, myteam != NUM_TEAM_2);
 	X(yellow, myteam != NUM_TEAM_3);
@@ -255,13 +255,13 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	neutralflag_pos = pos;
 	flag_size = e1 * fs * size1 + e2 * size2;
 
-	#define X(team) do { \
+	#define X(team) MACRO_BEGIN { \
 		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); \
 		if (team##_icon_prevstatus && f < 1) \
 			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); \
 		if (team##_icon) \
 			drawpic_aspect_skin(team##flag_pos, team##_icon, flag_size, '1 1 1', panel_fg_alpha * team##_alpha * f, DRAWFLAG_NORMAL); \
-	} while (0)
+	} MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);

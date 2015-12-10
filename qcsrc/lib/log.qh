@@ -6,24 +6,22 @@
 #define printf(...) print(sprintf(__VA_ARGS__))
 #define dprintf(...) dprint(sprintf(__VA_ARGS__))
 #define _dprintf2(...) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		if (autocvar_developer > 1) dprintf(__VA_ARGS__); \
-	} \
-	while (0)
+	} MACRO_END
 
 #define assert(expr, ...) _assert(LOG_SEVERE, expr, __VA_ARGS__)
 #define ASSERT(expr, ...) _assert(LOG_FATAL, expr, __VA_ARGS__)
 #define _assert(f, expr, then) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		if (!(expr)) \
 		{ \
 			f("assertion failed: `" #expr "`\n"); \
 			then; \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 
@@ -42,19 +40,17 @@
 #define _LOG_WARNING(s) _LOG(printf, "WARNING", s)
 
 #define  LOG_INFO(...) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		if (autocvar_developer) _LOG_INFO(strcat("", __VA_ARGS__)); \
 		else print(__VA_ARGS__); \
-	} \
-	while (0)
+	} MACRO_END
 #define  LOG_INFOF(...) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		if (autocvar_developer) _LOG_INFO(sprintf(__VA_ARGS__)); \
 		else printf(__VA_ARGS__); \
-	} \
-	while (0)
+	} MACRO_END
 #define _LOG_INFO(s) _LOG(printf, "INFO", s)
 
 #define  LOG_TRACE(...) _LOG_TRACE(strcat("", __VA_ARGS__))
@@ -78,7 +74,7 @@ noref int autocvar_developer;
 noref bool autocvar_prvm_backtraceforwarnings;
 
 #define backtrace(msg) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		int dev = autocvar_developer; \
 		bool war = autocvar_prvm_backtraceforwarnings; \
@@ -89,7 +85,6 @@ noref bool autocvar_prvm_backtraceforwarnings;
 		print("\n--- CUT UNTIL HERE ---\n"); \
 		cvar_set("developer", ftos(dev)); \
 		cvar_set("prvm_backtraceforwarnings", ftos(war)); \
-	} \
-	while (0)
+	} MACRO_END
 
 #endif
