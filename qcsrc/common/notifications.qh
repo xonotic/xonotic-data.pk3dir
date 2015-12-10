@@ -897,29 +897,6 @@ float notif_global_error;
 void RegisterNotifications_First()
 {
     notif_global_error = false;
-
-    #ifdef SVQC
-    #define dedi (server_is_dedicated ? "a dedicated " : "")
-    #else
-    #define dedi ""
-    #endif
-
-    LOG_INFOF("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
-    #undef dedi
-
-    // maybe do another implementation of this with checksums? for now, we don't need versioning
-    /*if(autocvar_notification_version != NOTIF_VERSION)
-    {
-        #ifdef CSQC
-        if(autocvar_notification_version_mismatch_client_error)
-        #else
-        if(autocvar_notification_version_mismatch_server_error)
-        #endif
-            notif_global_error = true;
-
-        printf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
-            PROGNAME, autocvar_notification_version, NOTIF_VERSION);
-    }*/
 }
 
 void RegisterNotifications_Done()
@@ -928,11 +905,10 @@ void RegisterNotifications_Done()
     {
         // shit happened... stop the loading of the program now if this is unacceptable
         if(autocvar_notification_errors_are_fatal)
-            error("Notification initialization failed! Read above and fix the errors!\n");
+            LOG_FATAL("Notification initialization failed! Read above and fix the errors!\n");
         else
-            LOG_INFO("Notification initialization failed! Read above and fix the errors!\n");
+            LOG_SEVERE("Notification initialization failed! Read above and fix the errors!\n");
     }
-    else { LOG_INFO("Notification initialization successful!\n"); }
 }
 
 // NOW we actually activate the declarations

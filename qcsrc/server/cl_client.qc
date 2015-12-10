@@ -1018,7 +1018,8 @@ void ClientConnect ()
 		player_count = 0;
 	}
 
-	if(IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
+	// TODO: xonstat elo.txt support, until then just 404s
+	if(false && IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
 
 	PlayerScore_Attach(self);
 	ClientData_Attach();
