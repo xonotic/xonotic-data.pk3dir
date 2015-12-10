@@ -415,7 +415,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	float BLINK_FREQ = 5;
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 
-	int stat_items = getstati(STAT_ITEMS, 0, 24);
+	int stat_items = STAT(ITEMS);
 	int kaball = (stat_items/IT_KEY1) & 1;
 
 	if(kaball != kaball_prevstatus)
@@ -451,7 +451,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	float nb_pb_starttime, dt, p;
 	int stat_items;
 
-	stat_items = getstati(STAT_ITEMS, 0, 24);
+	stat_items = STAT(ITEMS);
 	nb_pb_starttime = STAT(NB_METERSTART);
 
 	if (stat_items & IT_KEY1)

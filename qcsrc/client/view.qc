@@ -115,7 +115,7 @@ void viewmodel_animate(entity this)
 	prevtime = time;
 
 	if (autocvar_chase_active) return;
-	if (getstati(STAT_HEALTH) <= 0) return;
+	if (STAT(HEALTH) <= 0) return;
 
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 
@@ -272,7 +272,7 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
-	int mask = (intermission || (getstati(STAT_HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
+	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g;
@@ -356,7 +356,7 @@ void Porto_Draw(entity this)
 		return;
 	if(intermission == 2)
 		return;
-	if (getstati(STAT_HEALTH) <= 0)
+	if (STAT(HEALTH) <= 0)
 		return;
 
 	dir = view_forward;
@@ -672,7 +672,7 @@ float TrueAimCheck()
 			break;
 	}
 
-	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * getstati(STAT_VIEWHEIGHT));
+	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
 
 	vecs = decompressShotOrigin(STAT(SHOTORG));
 
@@ -757,7 +757,7 @@ bool WantEventchase()
 			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 			return true;
-		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
+		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
 			if(autocvar_cl_eventchase_death == 2)
 			{
@@ -954,7 +954,7 @@ void HUD_Crosshair()
 
 			case 2: // crosshair_color_by_health
 			{
-				float x = getstati(STAT_HEALTH);
+				float x = STAT(HEALTH);
 
 				//x = red
 				//y = green
@@ -1432,7 +1432,7 @@ void CSQC_UpdateView(float w, float h)
 
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
-	float is_dead = (getstati(STAT_HEALTH) <= 0);
+	float is_dead = (STAT(HEALTH) <= 0);
 
 	// FIXME do we need this hack?
 	if(isdemo())
@@ -1710,7 +1710,7 @@ void CSQC_UpdateView(float w, float h)
 	switchingweapon = Weapons_from(STAT(SWITCHINGWEAPON));
 
 	// actually active weapon (for zoom)
-	activeweapon = Weapons_from(getstati(STAT_ACTIVEWEAPON));
+	activeweapon = Weapons_from(STAT(ACTIVEWEAPON));
 
 	switchweapon = Weapons_from(STAT(SWITCHWEAPON));
 
@@ -2006,7 +2006,7 @@ void CSQC_UpdateView(float w, float h)
 		splash_pos.y = (vid_conheight - splash_size.y) / 2;
 
 		float myhealth_flash_temp;
-		myhealth = getstati(STAT_HEALTH);
+		myhealth = STAT(HEALTH);
 
 		// fade out
 		myhealth_flash = max(0, myhealth_flash - autocvar_hud_damage_fade_rate * frametime);
@@ -2115,7 +2115,7 @@ void CSQC_UpdateView(float w, float h)
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 
-		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
+		sharpen_intensity = bound(0, ((STAT(HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 
 		if(autocvar_hud_powerup && sharpen_intensity > 0)
 		{
