@@ -21,7 +21,7 @@ const int MAX_CL_STATS = 256;
 // const int STAT_VIEWHEIGHT = 16;
 
 #if defined(CSQC)
-    #define g_stat_HEALTH getstat_int(STAT_HEALTH)
+    #define g_stat_HEALTH getstati(STAT_HEALTH)
     #define g_stat_ARMOR getstat_int(STAT_ARMOR)
     #define g_stat_SHELLS getstat_int(STAT_SHELLS)
     #define g_stat_NAILS getstat_int(STAT_NAILS)
