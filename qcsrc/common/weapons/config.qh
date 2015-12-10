@@ -23,29 +23,18 @@ string wep_config_queue[MAX_WEP_CONFIG];
 	if(wep_config_alsoprint) { LOG_INFO(a); } \
 } while(0)
 
-#define WEP_CONFIG_WRITE_CVARS_NONE(wepname,name) \
-	{ WEP_CONFIG_QUEUE( \
-		sprintf("set g_balance_%s_%s %g\n", #wepname, #name, \
-		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }
 
-#define WEP_CONFIG_WRITE_CVARS_PRI(wepname,name) WEP_CONFIG_WRITE_CVARS_NONE(wepname, primary_##name)
-#define WEP_CONFIG_WRITE_CVARS_SEC(wepname,name) WEP_CONFIG_WRITE_CVARS_NONE(wepname, secondary_##name)
-#define WEP_CONFIG_WRITE_CVARS_BOTH(wepname,name) \
-	WEP_CONFIG_WRITE_CVARS_PRI(wepname, name) \
-	WEP_CONFIG_WRITE_CVARS_SEC(wepname, name)
+#define WEP_CONFIG_WRITE_CVARS(wepname, name, T) WEP_CONFIG_WRITE_PROPS_##T(wepname, name)
 
-#define WEP_CONFIG_WRITE_CVARS(wepid,wepname,mode,name) WEP_CONFIG_WRITE_CVARS_##mode(wepname, name)
-
-#define WEP_CONFIG_WRITE_PROPS_string(wepname,name) \
+#define WEP_CONFIG_WRITE_PROPS_string(wepname, name) \
 	{ WEP_CONFIG_QUEUE( \
 		sprintf("set g_balance_%s_%s \"%s\"\n", #wepname, #name, \
 		cvar_string(sprintf("g_balance_%s_%s", #wepname, #name)))) }
 
-#define WEP_CONFIG_WRITE_PROPS_float(wepname,name) \
+#define WEP_CONFIG_WRITE_PROPS_float(wepname, name) \
 	{ WEP_CONFIG_QUEUE( \
 		sprintf("set g_balance_%s_%s %g\n", #wepname, #name, \
 		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }
 
-#define WEP_CONFIG_WRITE_PROPS(wepid,wepname,type,prop,name) WEP_CONFIG_WRITE_PROPS_##type(wepname,name)
 #endif
 #endif

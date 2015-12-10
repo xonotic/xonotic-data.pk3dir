@@ -39,10 +39,7 @@ STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(Weap
 #define WEPSET(id) (WEP_##id.m_wepset)
 #define WepSet_FromWeapon(it) ((it).m_wepset)
 WepSet _WepSet_FromWeapon(int i);
-STATIC_INIT(WepSets)
-{
-    FOREACH(Weapons, true, LAMBDA(it.m_wepset = _WepSet_FromWeapon(it.m_id)));
-}
+STATIC_INIT(WepSets) { FOREACH(Weapons, true, LAMBDA(it.m_wepset = _WepSet_FromWeapon(it.m_id))); }
 
 GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
 {
@@ -97,42 +94,194 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
     }
 }
 
-#define REGISTER_WEAPON(id, inst) \
-    /* WepSet WEPSET_##id; */ \
-    REGISTER(Weapons, WEP, id, m_id, inst)
+#ifdef SVQC
+entity W_PROP_reloader;
+float autocvar_w_prop_interval = 0;
+.void(Weapon this) wr_net;
+void W_PROP_reload()
+{
+    SELFPARAM();
+    this.nextthink = time + autocvar_w_prop_interval;
+    FOREACH(Weapons, true, {
+        it.wr_update(it);
+        void(Weapon) f = it.wr_net;
+        if (f) f(it);
+    });
+}
+STATIC_INIT_LATE(W_PROP_reloader)
+{
+    entity e = W_PROP_reloader = new(W_PROP_reloader);
+    make_pure(e);
+    WITH(entity, self, e, (e.think = W_PROP_reload)());
+}
+#endif
 
-// create cvars for weapon settings
-#define WEP_ADD_CVAR_NONE(wepname,name) [[last]] float autocvar_g_balance_##wepname##_##name;
+#define REGISTER_WEAPON(...) EVAL(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
+/** TODO: deprecated - remove */
+#define REGISTER_WEAPON_3(id, sname, inst) \
+    REGISTER_WEAPON_2(id, inst); \
+    [[alias("WEP_" #id)]] Weapon _wep_##sname
 
-#define WEP_ADD_CVAR_PRI(wepname,name) WEP_ADD_CVAR_NONE(wepname, primary_##name)
-#define WEP_ADD_CVAR_SEC(wepname,name) WEP_ADD_CVAR_NONE(wepname, secondary_##name)
-#define WEP_ADD_CVAR_BOTH(wepname,name) \
-    WEP_ADD_CVAR_PRI(wepname, name) \
-    WEP_ADD_CVAR_SEC(wepname, name)
+REGISTER_WEAPON(Null, NEW(Weapon));
 
-#define WEP_ADD_CVAR(wepid,wepname,mode,name) WEP_ADD_CVAR_##mode(wepname, name)
 
-// create properties for weapon settings
-#define WEP_ADD_PROP(wepid,wepname,type,prop,name) \
-    .type prop; \
-    [[last]] type autocvar_g_balance_##wepname##_##name;
+
+// legacy w_prop mappings
+#define X(fld, T) .T fld; .T wepvar_##fld = fld;
+X(switchdelay_drop, float)
+X(switchdelay_raise, float)
+X(weaponreplace, string)
+X(weaponstartoverride, float)
+X(weaponstart, float)
+X(weaponthrowable, float)
+X(reload_ammo, float)
+.float reloading_ammo = reload_ammo;
+X(reload_time, float)
+.float reloading_time = reload_time;
+#undef X
+
+
+
+#define W_PROPS(L, class, prefix) \
+    L(W_PROP_BEGIN, W_PROP, W_PROP_END, class, prefix) \
+    L(W_CONFIG_BEGIN, W_CONFIG, W_CONFIG_END, class, prefix) \
+    L(W_UPDATE_BEGIN, W_UPDATE, W_UPDATE_END, class, prefix) \
+    L(W_NET_BEGIN, W_NET, W_NET_END, class, prefix) \
+    /**/ \
+
+
+    #define W_PROP(class, wepname, fld, T, m)       W_PROP_##m(class, fld, T, wepname)
+    #define W_PROP_NONE(class, fld, T, wepname)     _W_PROP(class, fld, T, wepname)
+    #define W_PROP_PRI(class, fld, T, wepname)      _W_PROP(class, primary_##fld, T, wepname)
+    #define W_PROP_SEC(class, fld, T, wepname)      _W_PROP(class, secondary_##fld, T, wepname)
+    #define W_PROP_BOTH(class, fld, T, wepname) \
+            W_PROP_PRI(class, fld, T, wepname) \
+            W_PROP_SEC(class, fld, T, wepname)
+    #define W_PROP_BEGIN(class)
+        #define _W_PROP(class, fld, T, wepname) \
+            /* static */ T _W_PROP_CVAR(wepname, fld); \
+            ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
+        #define _W_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
+    #define W_PROP_END()
+
+
+
+    #define W_CONFIG(class, wepname, fld, T, m)     W_CONFIG_##m(class, fld, T, wepname)
+    #define W_CONFIG_NONE(class, fld, T, wepname)   _W_CONFIG(class, fld, T, wepname)
+    #define W_CONFIG_PRI(class, fld, T, wepname)    _W_CONFIG(class, primary_##fld, T, wepname)
+    #define W_CONFIG_SEC(class, fld, T, wepname)    _W_CONFIG(class, secondary_##fld, T, wepname)
+    #define W_CONFIG_BOTH(class, fld, T, wepname) \
+            W_CONFIG_PRI(class, fld, T, wepname) \
+            W_CONFIG_SEC(class, fld, T, wepname)
+    #define W_CONFIG_BEGIN(class) METHOD(class, wr_config, void(class this)) {
+        #ifdef SVQC
+            #define _W_CONFIG(class, fld, T, wepname) if (#wepname == this.netname) WEP_CONFIG_WRITE_CVARS(wepname, fld, T);
+        #else
+            #define _W_CONFIG(class, fld, T, wepname)
+        #endif
+    #define W_CONFIG_END() }
+
+
+    #define W_UPDATE(class, wepname, fld, T, m)     W_UPDATE_##m(class, fld, T, wepname)
+    #define W_UPDATE_NONE(class, fld, T, wepname)   _W_UPDATE(class, fld, T, wepname)
+    #define W_UPDATE_PRI(class, fld, T, wepname)    _W_UPDATE(class, primary_##fld, T, wepname)
+    #define W_UPDATE_SEC(class, fld, T, wepname)    _W_UPDATE(class, secondary_##fld, T, wepname)
+    #define W_UPDATE_BOTH(class, fld, T, wepname) \
+            W_UPDATE_PRI(class, fld, T, wepname) \
+            W_UPDATE_SEC(class, fld, T, wepname)
+    .entity baseline, baseline_target;
+    #define W_UPDATE_BEGIN(class) \
+        METHOD(class, wr_update, void(class this)) \
+        { \
+            noref entity b = this.baseline; \
+            if (!b) \
+            { \
+                b = this.baseline = new(baseline); \
+                make_pure(b); \
+                b.baseline_target = this; \
+            }
+        #ifdef SVQC
+            #define _W_UPDATE(class, fld, T, wepname) \
+                { \
+                    T it = _W_PROP_CVAR(wepname, fld); \
+                    b.wepvar_##fld = this.wepvar_##fld; \
+                    this.wepvar_##fld = it; \
+                }
+        #else
+            #define _W_UPDATE(class, fld, T, wepname)
+        #endif
+    #define W_UPDATE_END() }
+
+
+    #define W_NET(class, wepname, fld, T, m)     W_NET_##m(class, fld, T, wepname)
+    #define W_NET_NONE(class, fld, T, wepname)   _W_NET(class, fld, T, wepname)
+    #define W_NET_PRI(class, fld, T, wepname)    _W_NET(class, primary_##fld, T, wepname)
+    #define W_NET_SEC(class, fld, T, wepname)    _W_NET(class, secondary_##fld, T, wepname)
+    #define W_NET_BOTH(class, fld, T, wepname) \
+            W_NET_PRI(class, fld, T, wepname) \
+            W_NET_SEC(class, fld, T, wepname)
+    REGISTER_NET_TEMP(WeaponUpdate)
+    #if defined(CSQC)
+        #define W_NET_BEGIN(class) METHOD(class, wr_net, void(class this, int i)) { int n = 0;
+            #define _W_NET(class, fld, T, wepname) \
+            { \
+                if (++n == i) this.wepvar_##fld = Read_##T(); \
+            }
+            .void(Weapon this, int i) wr_net;
+            NET_HANDLE(WeaponUpdate, bool isnew)
+            {
+                Weapon w = Weapons_from(ReadByte());
+                for (int i; (i = ReadByte()); )
+                {
+                    w.wr_net(w, i);
+                }
+                return true;
+            }
+        #define W_NET_END() }
+    #elif defined(SVQC)
+        #define W_NET_BEGIN(class) \
+            METHOD(class, wr_net, void(class this)) \
+            { \
+                int chan = MSG_INIT; \
+                for (;;) \
+                { \
+                    bool commit = false; \
+                    int i = 0;
+        #define _W_NET(class, fld, T, wepname) \
+                    { \
+                        ++i; \
+                        T it = this.wepvar_##fld; \
+                        if (it != this.baseline.wepvar_##fld) \
+                        { \
+                            if (!commit) { commit = true; WriteHeader(chan, WeaponUpdate); WriteByte(chan, this.m_id); } \
+                            WriteByte(chan, i); Write_##T(chan, it); \
+                        } \
+                    }
+        #define W_NET_END() \
+                    if (commit) WriteByte(chan, 0); \
+                    if (chan == MSG_INIT) chan = MSG_ALL; \
+                    else break; \
+                } \
+            }
+    #else
+        #define W_NET_BEGIN(class)
+            #define _W_NET(class, fld, T, wepname)
+        #define W_NET_END()
+    #endif
+
+
 
 // read cvars from weapon settings
-#define WEP_CVAR(wepname,name) autocvar_g_balance_##wepname##_##name
-#define WEP_CVAR_PRI(wepname,name) WEP_CVAR(wepname, primary_##name)
-#define WEP_CVAR_SEC(wepname,name) WEP_CVAR(wepname, secondary_##name)
-#define WEP_CVAR_BOTH(wepname,isprimary,name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
-
-// set initialization values for weapon settings
-#define WEP_SKIP_CVAR(unuseda,unusedb,unusedc,unusedd) /* skip cvars */
-#define WEP_SET_PROP(wepid,wepname,type,prop,name) WEP_##wepid.prop = autocvar_g_balance_##wepname##_##name;
+#define WEP_CVAR(wepname, name) (_wep_##wepname.wepvar_##name)
+#define WEP_CVAR_PRI(wepname, name) WEP_CVAR(wepname, primary_##name)
+#define WEP_CVAR_SEC(wepname, name) WEP_CVAR(wepname, secondary_##name)
+#define WEP_CVAR_BOTH(wepname, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
 
 const int WEP_FIRST = 1;
 #define WEP_LAST (Weapons_COUNT - 1)
 WepSet WEPSET_ALL;
 WepSet WEPSET_SUPERWEAPONS;
-
-REGISTER_WEAPON(Null, NEW(Weapon));
 
 #include "all.inc"
 

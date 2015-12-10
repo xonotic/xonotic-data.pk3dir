@@ -15,8 +15,38 @@ CLASS(Hook, Weapon)
 /* refname   */ ATTRIB(Hook, netname, string, "hook");
 /* wepname   */ ATTRIB(Hook, m_name, string, _("Grappling Hook"));
 	ATTRIB(Hook, ammo_factor, float, 1)
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, PRI) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, damageforcescale, float, SEC) \
+		P(class, prefix, damage, float, SEC) \
+		P(class, prefix, duration, float, SEC) \
+		P(class, prefix, edgedamage, float, SEC) \
+		P(class, prefix, force, float, SEC) \
+		P(class, prefix, gravity, float, SEC) \
+		P(class, prefix, health, float, SEC) \
+		P(class, prefix, hooked_ammo, float, PRI) \
+		P(class, prefix, hooked_time_free, float, PRI) \
+		P(class, prefix, hooked_time_max, float, PRI) \
+		P(class, prefix, lifetime, float, SEC) \
+		P(class, prefix, power, float, SEC) \
+		P(class, prefix, radius, float, SEC) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, speed, float, SEC) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Hook, hook)
+#undef X
+
 ENDCLASS(Hook)
-REGISTER_WEAPON(HOOK, NEW(Hook));
+REGISTER_WEAPON(HOOK, hook, NEW(Hook));
 
 CLASS(OffhandHook, OffhandWeapon)
 #ifdef SVQC
@@ -30,34 +60,7 @@ CLASS(OffhandHook, OffhandWeapon)
 ENDCLASS(OffhandHook)
 OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(OffhandHook); }
 
-#define HOOK_SETTINGS(w_cvar,w_prop) HOOK_SETTINGS_LIST(w_cvar, w_prop, HOOK, hook)
-#define HOOK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, PRI,  ammo) \
-	w_cvar(id, sn, PRI,  hooked_ammo) \
-	w_cvar(id, sn, PRI,  hooked_time_free) \
-	w_cvar(id, sn, PRI,  hooked_time_max) \
-	w_cvar(id, sn, SEC,  damage) \
-	w_cvar(id, sn, SEC,  duration) \
-	w_cvar(id, sn, SEC,  edgedamage) \
-	w_cvar(id, sn, SEC,  force) \
-	w_cvar(id, sn, SEC,  gravity) \
-	w_cvar(id, sn, SEC,  lifetime) \
-	w_cvar(id, sn, SEC,  power) \
-	w_cvar(id, sn, SEC,  radius) \
-	w_cvar(id, sn, SEC,  speed) \
-	w_cvar(id, sn, SEC,  health) \
-	w_cvar(id, sn, SEC,  damageforcescale) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
-
 #ifdef SVQC
-HOOK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 .float dmg;
 .float dmg_edge;
@@ -269,10 +272,6 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 				actor.hook_state &= ~HOOK_REMOVING;
 			}
 		}
-		METHOD(Hook, wr_init, void(entity thiswep))
-		{
-			HOOK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Hook, wr_setup, void(entity thiswep))
 		{
 			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
@@ -289,10 +288,6 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 		{
 			// infinite ammo for now
 			return true; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
-		}
-		METHOD(Hook, wr_config, void(entity thiswep))
-		{
-			HOOK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Hook, wr_resetplayer, void(entity thiswep))
 		{

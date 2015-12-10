@@ -1,6 +1,6 @@
 #include "globalsound.qh"
 
-#include "../common/ent_cs.qh"
+#include "../../ent_cs.qh"
 
 #ifdef IMPLEMENTATION
 	#include "../../animdecide.qh"

@@ -161,6 +161,16 @@ STATIC_INIT(RegisterTempEntities_renumber)
 	#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 
+	#if defined(CSQC)
+		#define Read_float() ReadFloat()
+		#define Read_int() ReadInt24_t()
+		#define Read_string() ReadString()
+	#elif defined(SVQC)
+		#define Write_float(to, f) WriteFloat(to, f)
+		#define Write_int(to, f) WriteInt24_t(to, f)
+		#define Write_string(to, f) WriteString(to, f)
+	#endif
+
 	#ifdef CSQC
     	#define ReadRegistry(r) r##_from(ReadByte())
 

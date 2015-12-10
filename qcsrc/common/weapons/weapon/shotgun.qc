@@ -14,43 +14,45 @@ CLASS(Shotgun, Weapon)
 /* wepimg    */ ATTRIB(Shotgun, model2, string, "weaponshotgun");
 /* refname   */ ATTRIB(Shotgun, netname, string, "shotgun");
 /* wepname   */ ATTRIB(Shotgun, m_name, string, _("Shotgun"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, alt_animtime, float, SEC) \
+		P(class, prefix, alt_refire, float, SEC) \
+		P(class, prefix, ammo, float, PRI) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bullets, float, PRI) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, melee_delay, float, SEC) \
+		P(class, prefix, melee_multihit, float, SEC) \
+		P(class, prefix, melee_nonplayerdamage, float, SEC) \
+		P(class, prefix, melee_no_doubleslap, float, SEC) \
+		P(class, prefix, melee_range, float, SEC) \
+		P(class, prefix, melee_swing_side, float, SEC) \
+		P(class, prefix, melee_swing_up, float, SEC) \
+		P(class, prefix, melee_time, float, SEC) \
+		P(class, prefix, melee_traces, float, SEC) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, solidpenetration, float, PRI) \
+		P(class, prefix, spread, float, PRI) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string,NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Shotgun, shotgun)
+#undef X
+
 ENDCLASS(Shotgun)
-REGISTER_WEAPON(SHOTGUN, NEW(Shotgun));
+REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
 
-#define SHOTGUN_SETTINGS(w_cvar,w_prop) SHOTGUN_SETTINGS_LIST(w_cvar, w_prop, SHOTGUN, shotgun)
-#define SHOTGUN_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, PRI,  ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, PRI,  bullets) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, PRI,  solidpenetration) \
-	w_cvar(id, sn, PRI,  spread) \
-	w_cvar(id, sn, NONE, secondary) \
-	w_cvar(id, sn, SEC,  melee_time) \
-	w_cvar(id, sn, SEC,  melee_no_doubleslap) \
-	w_cvar(id, sn, SEC,  melee_traces) \
-	w_cvar(id, sn, SEC,  melee_swing_up) \
-	w_cvar(id, sn, SEC,  melee_swing_side) \
-	w_cvar(id, sn, SEC,  melee_nonplayerdamage) \
-	w_cvar(id, sn, SEC,  melee_multihit) \
-	w_cvar(id, sn, SEC,  melee_delay) \
-	w_cvar(id, sn, SEC,  melee_range) \
-	w_cvar(id, sn, SEC,  alt_animtime) \
-	w_cvar(id, sn, SEC,  alt_refire) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
 
-#ifdef SVQC
-SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
@@ -278,10 +280,6 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
 			}
 		}
-		METHOD(Shotgun, wr_init, void(entity thiswep))
-		{
-			SHOTGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Shotgun, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
@@ -308,10 +306,6 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 				}
 				default: return false; // secondary unavailable
 			}
-		}
-		METHOD(Shotgun, wr_config, void(entity thiswep))
-		{
-			SHOTGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Shotgun, wr_reload, void(entity thiswep))
 		{

@@ -14,36 +14,39 @@ CLASS(Rifle, Weapon)
 /* wepimg    */ ATTRIB(Rifle, model2, string, "weaponrifle");
 /* refname   */ ATTRIB(Rifle, netname, string, "rifle");
 /* wepname   */ ATTRIB(Rifle, m_name, string, _("Rifle"));
-ENDCLASS(Rifle)
-REGISTER_WEAPON(RIFLE, NEW(Rifle));
 
-#define RIFLE_SETTINGS(w_cvar,w_prop) RIFLE_SETTINGS_LIST(w_cvar, w_prop, RIFLE, rifle)
-#define RIFLE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, bullethail) \
-	w_cvar(id, sn, BOTH, burstcost) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, shots) \
-	w_cvar(id, sn, BOTH, solidpenetration) \
-	w_cvar(id, sn, BOTH, spread) \
-	w_cvar(id, sn, BOTH, tracer) \
-	w_cvar(id, sn, NONE, bursttime) \
-	w_cvar(id, sn, NONE, secondary) \
-	w_cvar(id, sn, SEC,  reload) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, BOTH) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bullethail, float, BOTH) \
+		P(class, prefix, burstcost, float, BOTH) \
+		P(class, prefix, bursttime, float, NONE) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload, float, SEC) \
+		P(class, prefix, reload_ammo, float, NONE) \
+    	P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, shots, float, BOTH) \
+		P(class, prefix, solidpenetration, float, BOTH) \
+		P(class, prefix, spread, float, BOTH) \
+    	P(class, prefix, switchdelay_drop, float, NONE) \
+    	P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, tracer, float, BOTH) \
+    	P(class, prefix, weaponreplace, string, NONE) \
+    	P(class, prefix, weaponstartoverride, float, NONE) \
+    	P(class, prefix, weaponstart, float, NONE) \
+    	P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Rifle, rifle)
+#undef X
+ENDCLASS(Rifle)
+REGISTER_WEAPON(RIFLE, rifle, NEW(Rifle));
+
 
 #ifdef SVQC
-RIFLE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float rifle_accumulator;
 #endif
 #endif
@@ -193,10 +196,6 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFR
 				}
 			}
 		}
-		METHOD(Rifle, wr_init, void(entity thiswep))
-		{
-			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Rifle, wr_checkammo1, bool(entity thiswep))
 		{
 			float ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_PRI(rifle, ammo);
@@ -208,10 +207,6 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFR
 			float ammo_amount = self.WEP_AMMO(RIFLE) >= WEP_CVAR_SEC(rifle, ammo);
 			ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
 			return ammo_amount;
-		}
-		METHOD(Rifle, wr_config, void(entity thiswep))
-		{
-			RIFLE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Rifle, wr_resetplayer, void(entity thiswep))
 		{

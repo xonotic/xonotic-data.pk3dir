@@ -165,8 +165,8 @@ STATIC_INIT(RegisterClasses)
 	prototype METHOD_REFERENCE(cname, name)
 
 #define METHOD(cname, name, prototype) \
-	class(cname).prototype name; \
 	STATIC_METHOD(cname, name, prototype); \
+	class(cname) .prototype name; \
 	INIT_STATIC(cname) \
 	{ \
 		this.name = METHOD_REFERENCE(cname, name); \

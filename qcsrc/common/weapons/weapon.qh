@@ -124,7 +124,8 @@ CLASS(Weapon, Object)
     METHOD(Weapon, wr_drop, void(Weapon this)) {}
     /** (SERVER) a weapon is picked up */
     METHOD(Weapon, wr_pickup, void(Weapon this)) {}
-
+    /** (SERVER) update cvar based properties */
+    METHOD(Weapon, wr_update, void(Weapon this)) {}
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
 		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}

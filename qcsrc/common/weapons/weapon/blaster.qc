@@ -14,33 +14,36 @@ CLASS(Blaster, Weapon)
 /* wepimg    */ ATTRIB(Blaster, model2, string, "weaponlaser");
 /* refname   */ ATTRIB(Blaster, netname, string, "blaster");
 /* wepname   */ ATTRIB(Blaster, m_name, string, _("Blaster"));
-ENDCLASS(Blaster)
-REGISTER_WEAPON(BLASTER, NEW(Blaster));
 
-#define BLASTER_SETTINGS(w_cvar,w_prop) BLASTER_SETTINGS_LIST(w_cvar, w_prop, BLASTER, blaster)
-#define BLASTER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, delay) \
-	w_cvar(id, sn, BOTH, edgedamage) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, force_zscale) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, BOTH, radius) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, shotangle) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, spread) \
-	w_cvar(id, sn, NONE, secondary) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, delay, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, force_zscale, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, shotangle, float, BOTH) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, spread, float, BOTH) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Blaster, blaster)
+#undef X
+
+ENDCLASS(Blaster)
+REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
 
 #ifdef SVQC
-BLASTER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float blaster_damage;
 .float blaster_edgedamage;
 .float blaster_radius;
@@ -219,11 +222,6 @@ void W_Blaster_Attack(
 			}
 		}
 
-		METHOD(Blaster, wr_init, void(entity thiswep))
-		{
-			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
-
 		METHOD(Blaster, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
@@ -237,11 +235,6 @@ void W_Blaster_Attack(
 		METHOD(Blaster, wr_checkammo2, bool(entity thiswep))
 		{
 			return true; // blaster has infinite ammo
-		}
-
-		METHOD(Blaster, wr_config, void(entity thiswep))
-		{
-			BLASTER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 
 		METHOD(Blaster, wr_suicidemessage, int(entity thiswep))

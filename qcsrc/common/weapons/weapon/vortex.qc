@@ -14,47 +14,51 @@ CLASS(Vortex, Weapon)
 /* wepimg    */ ATTRIB(Vortex, model2, string, "weaponnex");
 /* refname   */ ATTRIB(Vortex, netname, string, "vortex");
 /* wepname   */ ATTRIB(Vortex, m_name, string, _("Vortex"));
-ENDCLASS(Vortex)
-REGISTER_WEAPON(VORTEX, NEW(Vortex));
 
-#define VORTEX_SETTINGS(w_cvar,w_prop) VORTEX_SETTINGS_LIST(w_cvar, w_prop, VORTEX, vortex)
-#define VORTEX_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, damagefalloff_mindist) \
-	w_cvar(id, sn, BOTH, damagefalloff_maxdist) \
-	w_cvar(id, sn, BOTH, damagefalloff_halflife) \
-	w_cvar(id, sn, BOTH, damagefalloff_forcehalflife) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, NONE, charge) \
-	w_cvar(id, sn, NONE, charge_mindmg) \
-	w_cvar(id, sn, NONE, charge_shot_multiplier) \
-	w_cvar(id, sn, NONE, charge_animlimit) \
-	w_cvar(id, sn, NONE, charge_limit) \
-	w_cvar(id, sn, NONE, charge_rate) \
-	w_cvar(id, sn, NONE, charge_rot_rate) \
-	w_cvar(id, sn, NONE, charge_rot_pause) \
-	w_cvar(id, sn, NONE, charge_start) \
-	w_cvar(id, sn, NONE, charge_minspeed) \
-	w_cvar(id, sn, NONE, charge_maxspeed) \
-	w_cvar(id, sn, NONE, charge_velocity_rate) \
-	w_cvar(id, sn, NONE, secondary) \
-	w_cvar(id, sn, SEC,  chargepool) \
-	w_cvar(id, sn, SEC,  chargepool_regen) \
-	w_cvar(id, sn, SEC,  chargepool_pause_regen) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, BOTH) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, chargepool, float, SEC) \
+		P(class, prefix, chargepool_pause_regen, float, SEC) \
+		P(class, prefix, chargepool_regen, float, SEC) \
+		P(class, prefix, charge, float, NONE) \
+		P(class, prefix, charge_animlimit, float, NONE) \
+		P(class, prefix, charge_limit, float, NONE) \
+		P(class, prefix, charge_maxspeed, float, NONE) \
+		P(class, prefix, charge_mindmg, float, NONE) \
+		P(class, prefix, charge_minspeed, float, NONE) \
+		P(class, prefix, charge_rate, float, NONE) \
+		P(class, prefix, charge_rot_pause, float, NONE) \
+		P(class, prefix, charge_rot_rate, float, NONE) \
+		P(class, prefix, charge_shot_multiplier, float, NONE) \
+		P(class, prefix, charge_start, float, NONE) \
+		P(class, prefix, charge_velocity_rate, float, NONE) \
+		P(class, prefix, damagefalloff_forcehalflife, float, BOTH) \
+		P(class, prefix, damagefalloff_halflife, float, BOTH) \
+		P(class, prefix, damagefalloff_maxdist, float, BOTH) \
+		P(class, prefix, damagefalloff_mindist, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Vortex, vortex)
+#undef X
+
+ENDCLASS(Vortex)
+REGISTER_WEAPON(VORTEX, vortex, NEW(Vortex));
+
 
 #ifdef SVQC
-VORTEX_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 
 .float vortex_lasthit;
 #endif
@@ -316,10 +320,6 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 				}
 			}
 		}
-		METHOD(Vortex, wr_init, void(entity thiswep))
-		{
-			VORTEX_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Vortex, wr_setup, void(entity thiswep))
 		{
 			self.vortex_lasthit = 0;
@@ -343,10 +343,6 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 			{
 				return false; // zoom is not a fire mode
 			}
-		}
-		METHOD(Vortex, wr_config, void(entity thiswep))
-		{
-			VORTEX_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Vortex, wr_resetplayer, void(entity thiswep))
 		{
@@ -373,7 +369,6 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 
 #endif
 #ifdef CSQC
-float autocvar_g_balance_vortex_secondary = 0; // WEAPONTODO
 
 		METHOD(Vortex, wr_impacteffect, void(entity thiswep))
 		{

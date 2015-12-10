@@ -14,42 +14,45 @@ CLASS(Fireball, Weapon)
 /* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
 /* refname   */ ATTRIB(Fireball, netname, string, "fireball");
 /* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
-ENDCLASS(Fireball)
-REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 
-#define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, FIREBALL, fireball)
-#define FIREBALL_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, damageforcescale) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, spread) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, BOTH, laserburntime) \
-	w_cvar(id, sn, BOTH, laserdamage) \
-	w_cvar(id, sn, BOTH, laseredgedamage) \
-	w_cvar(id, sn, BOTH, laserradius) \
-	w_cvar(id, sn, PRI,  edgedamage) \
-	w_cvar(id, sn, PRI,  force) \
-	w_cvar(id, sn, PRI,  radius) \
-	w_cvar(id, sn, PRI,  health) \
-	w_cvar(id, sn, PRI,  refire2) \
-	w_cvar(id, sn, PRI,  bfgdamage) \
-	w_cvar(id, sn, PRI,  bfgforce) \
-	w_cvar(id, sn, PRI,  bfgradius) \
-	w_cvar(id, sn, SEC,  damagetime) \
-	w_cvar(id, sn, SEC,  speed_up) \
-	w_cvar(id, sn, SEC,  speed_z) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bfgdamage, float, PRI) \
+		P(class, prefix, bfgforce, float, PRI) \
+		P(class, prefix, bfgradius, float, PRI) \
+		P(class, prefix, damageforcescale, float, BOTH) \
+		P(class, prefix, damagetime, float, SEC) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, health, float, PRI) \
+		P(class, prefix, laserburntime, float, BOTH) \
+		P(class, prefix, laserdamage, float, BOTH) \
+		P(class, prefix, laseredgedamage, float, BOTH) \
+		P(class, prefix, laserradius, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, radius, float, PRI) \
+		P(class, prefix, refire2, float, PRI) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, speed_up, float, SEC) \
+		P(class, prefix, speed_z, float, SEC) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Fireball, fireball)
+#undef X
+
+ENDCLASS(Fireball)
+REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
 
 #ifdef SVQC
-FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
@@ -389,10 +392,6 @@ void W_Fireball_Attack2()
 				}
 			}
 		}
-		METHOD(Fireball, wr_init, void(entity thiswep))
-		{
-			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Fireball, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
@@ -404,10 +403,6 @@ void W_Fireball_Attack2()
 		METHOD(Fireball, wr_checkammo2, bool(entity thiswep))
 		{
 			return true; // fireball has infinite ammo
-		}
-		METHOD(Fireball, wr_config, void(entity thiswep))
-		{
-			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Fireball, wr_resetplayer, void(entity thiswep))
 		{
