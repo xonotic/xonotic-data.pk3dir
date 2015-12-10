@@ -23,6 +23,11 @@ entity makeXonoticAudioSettingsTab()
 void XonoticAudioSettingsTab_fill(entity me)
 {
 	entity e, s;
+	entity audioApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
+		"snd_restart;"
+		"snd_attenuation_method_${menu_snd_attenuation_method};"
+		, COMMANDBUTTON_APPLY);
+	audioApplyButton.disableOnClick = true;
 
 	me.TR(me);
 		s = makeXonoticDecibelsSlider_T(-40, 0, 0.4, "mastervolume", "-");
@@ -97,6 +102,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
+			e.applyButton = audioApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "snd_mutewhenidle", _("Mute sounds when not active")));
 
@@ -113,6 +119,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 			e.addValue(e, _("44.1 kHz"), "44100");
 			e.addValue(e, _("48 kHz"), "48000");
 			e.configureXonoticTextSliderValues(e);
+			e.applyButton = audioApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, makeXonoticTextLabel(0, _("Channels:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("snd_channels",
@@ -126,6 +133,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 			e.addValue(e, _("6.1"), "7");
 			e.addValue(e, _("7.1"), "8");
 			e.configureXonoticTextSliderValues(e);
+			e.applyButton = audioApplyButton;
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "snd_swapstereo", _("Swap stereo output channels"),
@@ -175,6 +183,6 @@ void XonoticAudioSettingsTab_fill(entity me)
 			me.TD(me, 1, 3, makeXonoticCheckBox(0, "showsound", _("Debug info about sounds")));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; snd_attenuation_method_${menu_snd_attenuation_method}", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, audioApplyButton);
 }
 #endif

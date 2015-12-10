@@ -23,6 +23,8 @@
 		ATTRIB(Button, allowFocusSound, float, 1)
 		ATTRIB(Button, pressed, float, 0)
 		ATTRIB(Button, clickTime, float, 0)
+		ATTRIB(Button, applyButton, entity, NULL)
+		ATTRIB(Button, disableOnClick, bool, false)
 		ATTRIB(Button, disabled, float, 0)
 		ATTRIB(Button, disabledAlpha, float, 0.3)
 		ATTRIB(Button, forcePressed, float, 0)
@@ -44,6 +46,9 @@
 		if (me.srcMulti) me.keepspaceLeft = 0;
 		else me.keepspaceLeft = min(0.8, absSize.x == 0 ? 0 : (absSize.y / absSize.x));
 		SUPER(Button).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
+
+		if(me.disableOnClick)
+			me.disabled = true; // initially disabled
 	}
 	void Button_configureButton(entity me, string txt, float sz, string gfx)
 	{
@@ -85,7 +90,14 @@
 			if (!me.disabled)
 			{
 				me.playClickSound(me);
-				if (me.onClick) me.onClick(me, me.onClickEntity);
+				if (me.onClick)
+				{
+					if(me.applyButton)
+						me.applyButton.disabled = false;
+					me.onClick(me, me.onClickEntity);
+					if(me.disableOnClick)
+						me.disabled = true;
+				}
 			}
 			me.pressed = 0;
 		}

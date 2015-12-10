@@ -12,6 +12,8 @@ CLASS(XonoticWeaponsList, XonoticListBox)
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticWeaponsList, realUpperMargin, float, 0)
 	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
+
+	ATTRIB(XonoticWeaponsList, applyButton, entity, NULL)
 ENDCLASS(XonoticWeaponsList)
 entity makeXonoticWeaponsList();
 void WeaponsList_MoveUp_Click(entity btn, entity me);
@@ -73,7 +75,11 @@ float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 	if(me.pressed != 1) // don't change priority if the person is just scrolling
 	{
 		if(me.selectedItem != i)
+		{
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
+		}
 	}
 
 	return f;

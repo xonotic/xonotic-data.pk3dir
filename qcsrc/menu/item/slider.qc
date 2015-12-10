@@ -124,34 +124,46 @@
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valueKeyStep, me.valueMax));
 			else me.setValue(me, me.valueMax);
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			return 1;
 		}
 		if (key == K_RIGHTARROW || key == K_KP_RIGHTARROW || key == K_MWHEELUP)
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valueKeyStep, me.valueMax));
 			else me.setValue(me, me.valueMin);
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			return 1;
 		}
 		if (key == K_PGDN || key == K_KP_PGDN)
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value - me.valuePageStep, me.valueMax));
 			else me.setValue(me, me.valueMax);
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			return 1;
 		}
 		if (key == K_PGUP || key == K_KP_PGUP)
 		{
 			if (inRange) me.setValue(me, median(me.valueMin, me.value + me.valuePageStep, me.valueMax));
 			else me.setValue(me, me.valueMin);
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			return 1;
 		}
 		if (key == K_HOME || key == K_KP_HOME)
 		{
 			me.setValue(me, me.valueMin);
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			return 1;
 		}
 		if (key == K_END || key == K_KP_END)
 		{
 			me.setValue(me, me.valueMax);
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			return 1;
 		}
 		// TODO more keys (NOTE also add them to Slider_keyUp)
@@ -236,6 +248,8 @@
 				pageValue = max(pageValue, clickValue);
 				if (inRange) me.setValue(me, median(me.valueMin, pageValue, me.valueMax));
 				else me.setValue(me, me.valueMax);
+				if(me.applyButton)
+					me.applyButton.disabled = false;
 			}
 			else
 			{
@@ -244,6 +258,8 @@
 				pageValue = min(pageValue, clickValue);
 				if (inRange) me.setValue(me, median(me.valueMin, pageValue, me.valueMax));
 				else me.setValue(me, me.valueMax);
+				if(me.applyButton)
+					me.applyButton.disabled = false;
 			}
 			if (pageValue == clickValue)
 			{
