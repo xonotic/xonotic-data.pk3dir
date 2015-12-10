@@ -108,13 +108,6 @@ int w_deathtype;
 float w_issilent, w_random;
 vector w_org, w_backoff;
 
-float rifle_scope;
-float vortex_scope;
-
-float minelayer_maxmines;
-
-float hagar_maxrockets;
-
 float bgmtime;
 
 string weaponorder_byimpulse;
@@ -130,5 +123,4 @@ float uid2name_dialog;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
 
-float g_balance_porto_secondary;
 #endif

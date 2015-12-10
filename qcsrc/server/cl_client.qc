@@ -656,17 +656,8 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	else
 		WriteString(channel, "");
 	WriteByte(channel, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteCoord(channel, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
-	WriteCoord(channel, self.bouncestop); // g_balance_mortar_bouncestop
-	WriteCoord(channel, self.ebouncefactor); // g_balance_mortar_bouncefactor
-	WriteCoord(channel, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(channel, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(channel, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
 	WriteByte(channel, serverflags); // client has to know if it should zoom or not
-	WriteByte(channel, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
-	WriteByte(channel, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
-	WriteByte(channel, WEP_CVAR(porto, secondary)); // WEAPONTODO
 
 	MUTATOR_CALLHOOK(Ent_Init);
 }
@@ -677,26 +668,6 @@ void ClientInit_CheckUpdate()
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{
 		self.count = autocvar_g_balance_armor_blockpercent;
-		self.SendFlags |= 1;
-	}
-	if(self.bouncefactor != autocvar_g_balance_mortar_bouncefactor) // WEAPONTODO
-	{
-		self.bouncefactor = autocvar_g_balance_mortar_bouncefactor;
-		self.SendFlags |= 1;
-	}
-	if(self.bouncestop != autocvar_g_balance_mortar_bouncestop)
-	{
-		self.bouncestop = autocvar_g_balance_mortar_bouncestop;
-		self.SendFlags |= 1;
-	}
-	if(self.ebouncefactor != autocvar_g_balance_electro_secondary_bouncefactor)
-	{
-		self.ebouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
-		self.SendFlags |= 1;
-	}
-	if(self.ebouncestop != autocvar_g_balance_electro_secondary_bouncestop)
-	{
-		self.ebouncestop = autocvar_g_balance_electro_secondary_bouncestop;
 		self.SendFlags |= 1;
 	}
 }

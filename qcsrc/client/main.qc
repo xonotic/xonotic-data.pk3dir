@@ -908,22 +908,10 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 
 	armorblockpercent = ReadByte() / 255.0;
 
-	g_balance_mortar_bouncefactor = ReadCoord();
-	g_balance_mortar_bouncestop = ReadCoord();
-	g_balance_electro_secondary_bouncefactor = ReadCoord();
-	g_balance_electro_secondary_bouncestop = ReadCoord();
-
-	vortex_scope = !ReadByte();
-	rifle_scope = !ReadByte();
-
 	serverflags = ReadByte();
 
-	minelayer_maxmines = ReadByte();
-
-	hagar_maxrockets = ReadByte();
-
 	g_trueaim_minrange = ReadCoord();
-	g_balance_porto_secondary = ReadByte();
+
 	return = true;
 
 	MUTATOR_CALLHOOK(Ent_Init);

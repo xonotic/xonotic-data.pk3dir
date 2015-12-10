@@ -350,7 +350,7 @@ void Porto_Draw(entity this)
 
 	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
-	if(g_balance_porto_secondary)
+	if(WEP_CVAR(porto, secondary))
 		return;
 	if(intermission == 1)
 		return;
@@ -448,7 +448,7 @@ vector GetCurrentFov(float fov)
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
 	if(switchweapon == activeweapon)
-	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -1169,16 +1169,16 @@ void HUD_Crosshair()
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, STAT(LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_value = bound(0, STAT(LAYED_MINES) / WEP_CVAR(minelayer, limit), 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
 				else if (activeweapon == WEP_HAGAR && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, STAT(HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_value = bound(0, STAT(HAGAR_LOAD) / WEP_CVAR_SEC(hagar, load_max), 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
