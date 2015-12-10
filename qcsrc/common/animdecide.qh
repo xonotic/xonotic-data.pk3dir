@@ -17,7 +17,7 @@ CLASS(Animation, Object)
 			if (f != -1) return f;
 		});
 #ifdef CSQC
-		LOG_WARNINGF("Missing animation for %s: %s\n", modelnameforindex(mdlidx), this.registered_id);
+		LOG_DEBUGF("Missing animation for %s: %s\n", modelnameforindex(mdlidx), this.registered_id);
 #endif
 		return -1;
 	}
