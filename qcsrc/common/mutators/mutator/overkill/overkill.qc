@@ -279,6 +279,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
+			wep.spawnfunc_checked = true;
 			wep.think = self_spawnfunc_weapon_hmg;
 			wep.nextthink = time + 0.1;
 			return true;
@@ -295,6 +296,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
+			wep.spawnfunc_checked = true;
 			wep.think = self_spawnfunc_weapon_rpc;
 			wep.nextthink = time + 0.1;
 			return true;

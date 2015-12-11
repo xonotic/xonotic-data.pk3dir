@@ -138,10 +138,8 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, noise1) \
 		FIELD_SCALAR(fld, noise2) \
 		FIELD_SCALAR(fld, noise) \
-		FIELD_SCALAR(fld, ok_item) \
 		FIELD_SCALAR(fld, phase) \
 		FIELD_SCALAR(fld, platmovetype) \
-		FIELD_SCALAR(fld, pickup_anyway) \
 		FIELD_SCALAR(fld, race_place) \
 		FIELD_SCALAR(fld, radius) \
 		FIELD_SCALAR(fld, respawntimejitter) \
