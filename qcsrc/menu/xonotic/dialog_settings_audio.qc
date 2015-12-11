@@ -101,7 +101,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
 			e.applyButton = audioApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 3, makeXonoticCheckBox(0, "snd_mutewhenidle", _("Mute sounds when not active")));
