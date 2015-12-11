@@ -735,32 +735,20 @@ void precache_playermodel(string m)
 }
 void precache_all_playermodels(string pattern)
 {
-	float globhandle, i, n;
-	string f;
-
-	globhandle = search_begin(pattern, true, false);
-	if (globhandle < 0)
-		return;
-	n = search_getsize(globhandle);
-	for (i = 0; i < n; ++i)
+	int globhandle = search_begin(pattern, true, false);
+	if (globhandle < 0) return;
+	int n = search_getsize(globhandle);
+	for (int i = 0; i < n; ++i)
 	{
-		//print(search_getfilename(globhandle, i), "\n");
-		f = search_getfilename(globhandle, i);
-		precache_playermodel(f);
+		string s = search_getfilename(globhandle, i);
+		precache_playermodel(s);
 	}
 	search_end(globhandle);
 }
 
 void precache_playermodels(string s)
 {
-	if(s != "")
-	{
-		int n = tokenize_console(s);
-		precache_playermodel(argv(0));
-
-		for (int i = 1; i < n; ++i)
-			precache_model(argv(i));
-	}
+	FOREACH_WORD(s, true, LAMBDA(precache_playermodel(it)));
 }
 
 void precache()
