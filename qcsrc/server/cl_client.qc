@@ -630,6 +630,8 @@ void PutClientInServer()
 	}
 }
 
+void ClientInit_misc();
+
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
 // changes and just have a console command to update this?
@@ -638,7 +640,15 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, _ENT_CLIENT_INIT);
 	return = true;
 	msg_entity = to;
+	// MSG_INIT replacement
+	// TODO: make easier to use
 	Registry_send_all();
+	W_PROP_reload(MSG_ONE, to);
+	ClientInit_misc();
+	MUTATOR_CALLHOOK(Ent_Init);
+}
+void ClientInit_misc()
+{
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);
@@ -658,8 +668,6 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	WriteByte(channel, self.count * 255.0); // g_balance_armor_blockpercent
 	WriteByte(channel, serverflags); // client has to know if it should zoom or not
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
-
-	MUTATOR_CALLHOOK(Ent_Init);
 }
 
 void ClientInit_CheckUpdate()

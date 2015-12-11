@@ -97,22 +97,26 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
 #ifdef SVQC
 entity W_PROP_reloader;
 float autocvar_w_prop_interval = 0;
-.void(Weapon this) wr_net;
-void W_PROP_reload()
+.void(Weapon this, int) wr_net;
+void W_PROP_reload(int chan, entity to)
 {
-    SELFPARAM();
-    this.nextthink = time + autocvar_w_prop_interval;
+    W_PROP_reloader.nextthink = time + autocvar_w_prop_interval;
+    msg_entity = to;
     FOREACH(Weapons, true, {
         it.wr_update(it);
-        void(Weapon) f = it.wr_net;
-        if (f) f(it);
+        void(Weapon, int) f = it.wr_net;
+        if (f) f(it, chan);
     });
+}
+void W_PROP_think()
+{
+    W_PROP_reload(MSG_ALL, NULL);
 }
 STATIC_INIT_LATE(W_PROP_reloader)
 {
     entity e = W_PROP_reloader = new(W_PROP_reloader);
     make_pure(e);
-    WITH(entity, self, e, (e.think = W_PROP_reload)());
+    WITH(entity, self, e, (e.think = W_PROP_think)());
 }
 #endif
 
@@ -241,28 +245,22 @@ X(reload_time, float)
         #define W_NET_END() }
     #elif defined(SVQC)
         #define W_NET_BEGIN(class) \
-            METHOD(class, wr_net, void(class this)) \
+            METHOD(class, wr_net, void(class this, int chan)) \
             { \
-                int chan = MSG_INIT; \
-                for (;;) \
+                bool commit = false; \
+                int i = 0;
+    #define _W_NET(class, fld, T, wepname) \
                 { \
-                    bool commit = false; \
-                    int i = 0;
-        #define _W_NET(class, fld, T, wepname) \
+                    ++i; \
+                    T it = this.wepvar_##fld; \
+                    if (chan == MSG_ONE || it != this.baseline.wepvar_##fld) \
                     { \
-                        ++i; \
-                        T it = this.wepvar_##fld; \
-                        if (it != this.baseline.wepvar_##fld) \
-                        { \
-                            if (!commit) { commit = true; WriteHeader(chan, WeaponUpdate); WriteByte(chan, this.m_id); } \
-                            WriteByte(chan, i); Write_##T(chan, it); \
-                        } \
-                    }
-        #define W_NET_END() \
-                    if (commit) WriteByte(chan, 0); \
-                    if (chan == MSG_INIT) chan = MSG_ALL; \
-                    else break; \
-                } \
+                        if (!commit) { commit = true; WriteHeader(chan, WeaponUpdate); WriteByte(chan, this.m_id); } \
+                        WriteByte(chan, i); Write_##T(chan, it); \
+                    } \
+                }
+    #define W_NET_END() \
+                if (commit) WriteByte(chan, 0); \
             }
     #else
         #define W_NET_BEGIN(class)
