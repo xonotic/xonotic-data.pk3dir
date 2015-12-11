@@ -271,7 +271,8 @@ void Playerchecker_Think()
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, entcs_GetTeam(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				int t = entcs_GetScoreTeam(i);
+				if (t) SetTeam(e, t); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
 				HUD_UpdatePlayerPos(e);
 			}

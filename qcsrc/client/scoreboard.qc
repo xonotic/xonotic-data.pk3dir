@@ -109,7 +109,7 @@ void HUD_UpdatePlayerTeams()
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		num += 1;
-		Team = entcs_GetTeam(pl.sv_entnum);
+		Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
 		{
 			tmp = pl.sort_prev;
