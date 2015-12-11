@@ -136,6 +136,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	self.ok_item = true;
 	self.noalign = true;
 	self.pickup_anyway = true;
+	this.spawnfunc_checked = true;
 	spawnfunc_item_armor_small(this);
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
