@@ -59,7 +59,9 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 	float i, p, longflags;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
-	WriteByte(MSG_ENTITY, self.team - 1);
+	int t = this.team - 1;
+	assert(t, eprint(this));
+	WriteByte(MSG_ENTITY, t);
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)

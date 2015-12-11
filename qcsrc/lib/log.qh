@@ -73,18 +73,24 @@
 noref int autocvar_developer;
 noref bool autocvar_prvm_backtraceforwarnings;
 
+#ifdef SVQC
+#define bt_cvar_set(cvar, value) builtin_cvar_set(cvar, value)
+#else
+#define bt_cvar_set(cvar, value) cvar_set(cvar, value)
+#endif
+
 #define backtrace(msg) \
 	MACRO_BEGIN \
 	{ \
 		int dev = autocvar_developer; \
 		bool war = autocvar_prvm_backtraceforwarnings; \
-		cvar_set("developer", "1"); \
-		cvar_set("prvm_backtraceforwarnings", "1"); \
+		bt_cvar_set("developer", "1"); \
+		bt_cvar_set("prvm_backtraceforwarnings", "1"); \
 		print("\n--- CUT HERE ---\n", msg, "\n"); \
 		_backtrace(); \
 		print("\n--- CUT UNTIL HERE ---\n"); \
-		cvar_set("developer", ftos(dev)); \
-		cvar_set("prvm_backtraceforwarnings", ftos(war)); \
+		bt_cvar_set("developer", ftos(dev)); \
+		bt_cvar_set("prvm_backtraceforwarnings", ftos(war)); \
 	} MACRO_END
 
 #endif

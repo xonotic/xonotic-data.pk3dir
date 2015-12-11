@@ -123,30 +123,30 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)
-{SELFPARAM();
+{
+	SELFPARAM();
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
-	if(IS_MONSTER(self))
+	if(IS_MONSTER(this))
 	{
 		remove(other); // remove default item
-		other = world;
+		other = NULL;
 	}
 
-	setself(new(droppedweapon)); // hax
-	self.ok_item = true;
-	self.noalign = true;
-	self.pickup_anyway = true;
-	this.spawnfunc_checked = true;
-	spawnfunc_item_armor_small(this);
-	self.movetype = MOVETYPE_TOSS;
-	self.gravity = 1;
-	self.reset = SUB_Remove;
-	setorigin(self, frag_target.origin + '0 0 32');
-	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
-	SUB_SetFade(self, time + 5, 1);
-	setself(this);
+	entity e = new(droppedweapon); // hax
+	e.ok_item = true;
+	e.noalign = true;
+	e.pickup_anyway = true;
+	e.spawnfunc_checked = true;
+	spawnfunc_item_armor_small(e);
+	e.movetype = MOVETYPE_TOSS;
+	e.gravity = 1;
+	e.reset = SUB_Remove;
+	setorigin(e, frag_target.origin + '0 0 32');
+	e.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
+	SUB_SetFade(e, time + 5, 1);
 
-	self.ok_lastwep = self.switchweapon;
+	this.ok_lastwep = this.switchweapon;
 
 	return false;
 }

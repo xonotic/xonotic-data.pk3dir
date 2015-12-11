@@ -167,6 +167,7 @@ void Shutdown()
 .float has_team;
 float SetTeam(entity o, int Team)
 {
+	assert(Team);
 	entity tm;
 	if(teamplay)
 	{
