@@ -1,138 +1,138 @@
 #define EFFECTINFO_PARSER(on) \
     on(type,                                        MY(type) \
-    ,{ ASSERT(n == 1 && "type");                    MY(type) = strzone(argv(1)); \
+    ,{ demand(n == 1 && "type");                    MY(type) = strzone(argv(1)); \
     }, sprintf(" %s",                               (MY(type)) \
     )) \
     on(airfriction,                                 MY(airfriction) \
-    ,{ ASSERT(n == 1 && "airfriction");             MY(airfriction) = stof(argv(1)); \
+    ,{ demand(n == 1 && "airfriction");             MY(airfriction) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(airfriction)) \
     )) \
     on(alpha,                                       MY(alpha_min) ||                    MY(alpha_max) ||                MY(alpha_fade) \
-    ,{ ASSERT(n == 3 && "alpha");                   MY(alpha_min) = stof(argv(1));      MY(alpha_max) = stof(argv(2));  MY(alpha_fade) = stof(argv(3)); \
+    ,{ demand(n == 3 && "alpha");                   MY(alpha_min) = stof(argv(1));      MY(alpha_max) = stof(argv(2));  MY(alpha_fade) = stof(argv(3)); \
     }, sprintf(" %s %s %s",                         ftos(MY(alpha_min)),                ftos(MY(alpha_max)),            ftos(MY(alpha_fade)) \
     )) \
     on(blend,                                       MY(blend) \
-    ,{ ASSERT(n == 1 && "blend");                   MY(blend) = strzone(argv(1)); \
+    ,{ demand(n == 1 && "blend");                   MY(blend) = strzone(argv(1)); \
     }, sprintf(" %s",                               (MY(blend)) \
     )) \
     on(bounce,                                      MY(bounce) \
-    ,{ ASSERT(n == 1 && "bounce");                  MY(bounce) = stof(argv(1)); \
+    ,{ demand(n == 1 && "bounce");                  MY(bounce) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(bounce)) \
     )) \
     on(color,                                       MY(color_min) ||                    MY(color_max) \
-    ,{ ASSERT(n == 2 && "color");                   MY(color_min) = strzone(argv(1));   MY(color_max) = strzone(argv(2)); \
+    ,{ demand(n == 2 && "color");                   MY(color_min) = strzone(argv(1));   MY(color_max) = strzone(argv(2)); \
     }, sprintf(" %s %s",                            (MY(color_min)),                    (MY(color_max)) \
     )) \
     on(countabsolute,                               MY(countabsolute) \
-    ,{ ASSERT(n == 1 && "countabsolute");           MY(countabsolute) = stof(argv(1)); \
+    ,{ demand(n == 1 && "countabsolute");           MY(countabsolute) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(countabsolute)) \
     )) \
     on(count,                                       MY(count) \
-    ,{ ASSERT(n == 1 && "count");                   MY(count) = stof(argv(1)); \
+    ,{ demand(n == 1 && "count");                   MY(count) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(count)) \
     )) \
     on(gravity,                                     MY(gravity) \
-    ,{ ASSERT(n == 1 && "gravity");                 MY(gravity) = stof(argv(1)); \
+    ,{ demand(n == 1 && "gravity");                 MY(gravity) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(gravity)) \
     )) \
     on(lightcolor,                                  MY(lightcolor) \
-    ,{ ASSERT(n == 3 && "lightcolor");              MY(lightcolor) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
+    ,{ demand(n == 3 && "lightcolor");              MY(lightcolor) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
     }, sprintf(" %v",                               (MY(lightcolor)) \
     )) \
     on(lightradiusfade,                             MY(lightradiusfade) \
-    ,{ ASSERT(n == 1 && "lightradiusfade");         MY(lightradiusfade) = stof(argv(1)); \
+    ,{ demand(n == 1 && "lightradiusfade");         MY(lightradiusfade) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(lightradiusfade)) \
     )) \
     on(lightradius,                                 MY(lightradius) \
-    ,{ ASSERT(n == 1 && "lightradius");             MY(lightradius) = stof(argv(1)); \
+    ,{ demand(n == 1 && "lightradius");             MY(lightradius) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(lightradius)) \
     )) \
     on(lighttime,                                   MY(lighttime) \
-    ,{ ASSERT(n == 1 && "lighttime");               MY(lighttime) = stof(argv(1)); \
+    ,{ demand(n == 1 && "lighttime");               MY(lighttime) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(lighttime)) \
     )) \
     on(liquidfriction,                              MY(liquidfriction) \
-    ,{ ASSERT(n == 1 && "liquidfriction");          MY(liquidfriction) = stof(argv(1)); \
+    ,{ demand(n == 1 && "liquidfriction");          MY(liquidfriction) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(liquidfriction)) \
     )) \
     on(notunderwater,                               MY(notunderwater) \
-    ,{ ASSERT(n == 0 && "notunderwater");           MY(notunderwater) = true; \
+    ,{ demand(n == 0 && "notunderwater");           MY(notunderwater) = true; \
     }, "" \
     ) \
     on(orientation,                                 MY(orientation) \
-    ,{ ASSERT(n == 1 && "orientation");             MY(orientation) = strzone(argv(1)); \
+    ,{ demand(n == 1 && "orientation");             MY(orientation) = strzone(argv(1)); \
     }, sprintf(" %s",                               (MY(orientation)) \
     )) \
     on(originjitter,                                MY(originjitter) \
-    ,{ ASSERT(n == 3 && "originjitter");            MY(originjitter) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
+    ,{ demand(n == 3 && "originjitter");            MY(originjitter) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
     }, sprintf(" %v",                               (MY(originjitter)) \
     )) \
     on(originoffset,                                MY(originoffset) \
-    ,{ ASSERT(n == 3 && "originoffset");            MY(originoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
+    ,{ demand(n == 3 && "originoffset");            MY(originoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
     }, sprintf(" %v",                               (MY(originoffset)) \
     )) \
     on(relativeoriginoffset,                        MY(relativeoriginoffset) \
-    ,{ ASSERT(n == 3 && "relativeoriginoffset");    MY(relativeoriginoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
+    ,{ demand(n == 3 && "relativeoriginoffset");    MY(relativeoriginoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
     }, sprintf(" %v",                               (MY(relativeoriginoffset)) \
     )) \
     on(relativevelocityoffset,                      MY(relativevelocityoffset) \
-    ,{ ASSERT(n == 3 && "relativevelocityoffset");  MY(relativevelocityoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
+    ,{ demand(n == 3 && "relativevelocityoffset");  MY(relativevelocityoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
     }, sprintf(" %v",                               (MY(relativevelocityoffset)) \
     )) \
     on(rotate,                                      MY(startangle_min) ||               MY(startangle_max) ||               MY(spin_min) ||                 MY(spin_max) \
-    ,{ ASSERT(n == 4 && "rotate");                  MY(startangle_min) = stof(argv(1)); MY(startangle_max) = stof(argv(2)); MY(spin_min) = stof(argv(3));   MY(spin_max) = stof(argv(4)); \
+    ,{ demand(n == 4 && "rotate");                  MY(startangle_min) = stof(argv(1)); MY(startangle_max) = stof(argv(2)); MY(spin_min) = stof(argv(3));   MY(spin_max) = stof(argv(4)); \
     }, sprintf(" %s %s %s %s",                      ftos(MY(startangle_min)),           ftos(MY(startangle_max)),           ftos(MY(spin_min)),             ftos(MY(spin_max)) \
     )) \
     on(sizeincrease,                                MY(sizeincrease) \
-    ,{ ASSERT(n == 1 && "sizeincrease");            MY(sizeincrease) = stof(argv(1)); \
+    ,{ demand(n == 1 && "sizeincrease");            MY(sizeincrease) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(sizeincrease)) \
     )) \
     on(size,                                        MY(size_min) ||                     MY(size_max) \
-    ,{ ASSERT(n == 2 && "size");                    MY(size_min) = stof(argv(1));       MY(size_max) = stof(argv(2)); \
+    ,{ demand(n == 2 && "size");                    MY(size_min) = stof(argv(1));       MY(size_max) = stof(argv(2)); \
     }, sprintf(" %s %s",                            ftos(MY(size_min)),                 ftos(MY(size_max)) \
     )) \
     on(staincolor,                                  MY(staincolor_min) ||                   MY(staincolor_max) \
-    ,{ ASSERT(n == 2 && "staincolor");              MY(staincolor_min) = strzone(argv(1));  MY(staincolor_max) = strzone(argv(2)); \
+    ,{ demand(n == 2 && "staincolor");              MY(staincolor_min) = strzone(argv(1));  MY(staincolor_max) = strzone(argv(2)); \
     }, sprintf(" %s %s",                            (MY(staincolor_min)),                   (MY(staincolor_max)) \
     )) \
     on(stainsize,                                   MY(stainsize_min) ||                MY(stainsize_max) \
-    ,{ ASSERT(n == 2 && "stainsize");               MY(stainsize_min) = stof(argv(1));  MY(stainsize_max) = stof(argv(2)); \
+    ,{ demand(n == 2 && "stainsize");               MY(stainsize_min) = stof(argv(1));  MY(stainsize_max) = stof(argv(2)); \
     }, sprintf(" %s %s",                            ftos(MY(stainsize_min)),            ftos(MY(stainsize_max)) \
     )) \
     on(staintex,                                    MY(staintex_min) ||                 MY(staintex_max) \
-    ,{ ASSERT(n == 2 && "staintex");                MY(staintex_min) = stof(argv(1));   MY(staintex_max) = stof(argv(2)); \
+    ,{ demand(n == 2 && "staintex");                MY(staintex_min) = stof(argv(1));   MY(staintex_max) = stof(argv(2)); \
     }, sprintf(" %s %s",                            ftos(MY(staintex_min)),             ftos(MY(staintex_max)) \
     )) \
     on(stretchfactor,                               MY(stretchfactor) \
-    ,{ ASSERT(n == 1 && "stretchfactor");           MY(stretchfactor) = stof(argv(1)); \
+    ,{ demand(n == 1 && "stretchfactor");           MY(stretchfactor) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(stretchfactor)) \
     )) \
     on(tex,                                         MY(tex_min) ||                      MY(tex_max) \
-    ,{ ASSERT(n == 2 && "tex");                     MY(tex_min) = stof(argv(1));        MY(tex_max) = stof(argv(2)); \
+    ,{ demand(n == 2 && "tex");                     MY(tex_min) = stof(argv(1));        MY(tex_max) = stof(argv(2)); \
     }, sprintf(" %s %s",                            ftos(MY(tex_min)),                  ftos(MY(tex_max)) \
     )) \
     on(time,                                        MY(time_min) ||                     MY(time_max) \
-    ,{ ASSERT(n == 2 && "time");                    MY(time_min) = stof(argv(1));       MY(time_max) = stof(argv(2)); \
+    ,{ demand(n == 2 && "time");                    MY(time_min) = stof(argv(1));       MY(time_max) = stof(argv(2)); \
     }, sprintf(" %s %s",                            ftos(MY(time_min)),                 ftos(MY(time_max)) \
     )) \
     on(trailspacing,                                MY(trailspacing) \
-    ,{ ASSERT(n == 1 && "trailspacing");            MY(trailspacing) = stof(argv(1)); \
+    ,{ demand(n == 1 && "trailspacing");            MY(trailspacing) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(trailspacing)) \
     )) \
     on(underwater,                                  MY(underwater) \
-    ,{ ASSERT(n == 0 && "underwater");              MY(underwater) = true; \
+    ,{ demand(n == 0 && "underwater");              MY(underwater) = true; \
     }, "" \
     ) \
     on(velocityjitter,                              MY(velocityjitter) \
-    ,{ ASSERT(n == 3 && "velocityjitter");          MY(velocityjitter) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
+    ,{ demand(n == 3 && "velocityjitter");          MY(velocityjitter) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
     }, sprintf(" %v",                               (MY(velocityjitter)) \
     )) \
     on(velocitymultiplier,                          MY(velocitymultiplier) \
-    ,{ ASSERT(n == 1 && "velocitymultiplier");      MY(velocitymultiplier) = stof(argv(1)); \
+    ,{ demand(n == 1 && "velocitymultiplier");      MY(velocitymultiplier) = stof(argv(1)); \
     }, sprintf(" %s",                               ftos(MY(velocitymultiplier)) \
     )) \
     on(velocityoffset,                              MY(velocityoffset) \
-    ,{ ASSERT(n == 3 && "velocityoffset");          MY(velocityoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
+    ,{ demand(n == 3 && "velocityoffset");          MY(velocityoffset) = vec3(stof(argv(1)), stof(argv(2)), stof(argv(3))); \
     }, sprintf(" %v",                               (MY(velocityoffset)) \
     )) \
     /**/
@@ -238,11 +238,11 @@ void effectinfo_read()
         n--;
         string k = argv(0);
         if (k == "effect") {
-            ASSERT(n == 1);
+            demand(n == 1);
             info = NEW(EffectInfo, strzone(argv(1)));
             continue;
         }
-        ASSERT(info != NULL);
+        demand(info != NULL);
         switch (k) {
             #define MY(f) info.effectinfo_##f
             #define p(k, isset, parse, unparse) case #k: parse break;
