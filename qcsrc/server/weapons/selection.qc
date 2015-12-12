@@ -80,9 +80,7 @@ bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 
 			if(autocvar_g_showweaponspawns)
 			{
-				entity e;
-
-				for(e = world; (e = findfloat(e, weapon, wpn.m_id)); )
+				for(entity e = world; (e = findfloat(e, weapon, wpn.m_id)); )
 				{
 					if(e.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
 						continue;

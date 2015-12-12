@@ -169,8 +169,7 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		entity e = Weapons_from(i);
-		if(!e.weapon)
-			continue;
+		if(e == WEP_Null) continue;
 
 		n = tokenize_console(nt_GetReplacement(e.netname, autocvar_g_new_toys_autoreplace));
 

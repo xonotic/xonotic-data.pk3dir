@@ -79,8 +79,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 bool NIX_CanChooseWeapon(int wpn)
 {
 	entity e = Weapons_from(wpn);
-	if(!e.weapon) // skip dummies
-		return false;
+	if (e == WEP_Null) return false; // skip dummies
 	if(g_weaponarena)
 	{
 		if(!(g_weaponarena_weapons & e.m_wepset))

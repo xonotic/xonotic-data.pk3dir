@@ -65,8 +65,7 @@ void ok_DecreaseCharge(entity ent, int wep)
 
 	entity wepent = Weapons_from(wep);
 
-	if(wepent.weapon == 0)
-		return; // dummy
+	if (wepent == WEP_Null) return;  // dummy
 
 	ent.ammo_charge[wep] -= max(0, cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
@@ -75,8 +74,7 @@ void ok_IncreaseCharge(entity ent, int wep)
 {
 	entity wepent = Weapons_from(wep);
 
-	if(wepent.weapon == 0)
-		return; // dummy
+	if (wepent == WEP_Null) return;  // dummy
 
 	if(ent.ok_use_ammocharge)
 	if(!ent.BUTTON_ATCK) // not while attacking?
@@ -89,8 +87,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 
 	entity wepent = Weapons_from(wep);
 
-	if(wepent.weapon == 0)
-		return 0; // dummy
+	if(wepent == WEP_Null) return 0;  // dummy
 
 	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }

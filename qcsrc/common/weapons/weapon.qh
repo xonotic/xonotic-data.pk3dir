@@ -51,11 +51,6 @@ const int WS_READY  = 4;
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
 CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0)
-    /**
-     * M: WEP_id    : WEP_...
-     * you can recognize dummies when this == 0
-     */
-    ATTRIB(Weapon, weapon, int, 0);
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
     /** M: ammotype  : main ammo field */
@@ -215,10 +210,5 @@ int GetAmmoStat(.int ammotype);
 
 string W_Sound(string w_snd);
 string W_Model(string w_mdl);
-
-
-// other useful macros
-#define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
-#define WEP_NAME(wpn) ((Weapons_from(wpn)).m_name)
 
 #endif

@@ -11,9 +11,8 @@ void weaponorder_swap(int i, int j, entity pass)
 string weaponorder_cmp_str;
 int weaponorder_cmp(int i, int j, entity pass)
 {
-	int ai, aj;
-	ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].weapon), 0);
-	aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].weapon), 0);
+	int ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].m_id), 0);
+	int aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].m_id), 0);
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
@@ -118,7 +117,7 @@ void HUD_Weapons()
 		// do we own this weapon?
 		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if((weapons_stat & WepSet_FromWeapon(Weapons_from(weaponorder[i].weapon))) || (weaponorder[i].weapon == complain_weapon))
+			if((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || (weaponorder[i].m_id == complain_weapon))
 				++weapon_count;
 
 
@@ -339,14 +338,14 @@ void HUD_Weapons()
 		// retrieve information about the current weapon to be drawn
 		setself(weaponorder[i]);
 		weapon_id = self.impulse;
-		isCurrent = (self.weapon == switchweapon.m_id);
+		isCurrent = (self == switchweapon);
 
 		// skip if this weapon doesn't exist
 		if(!self || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if (!((weapons_stat & WepSet_FromWeapon(Weapons_from(self.weapon))) || (self.weapon == complain_weapon)))
+		if (!((weapons_stat & WepSet_FromWeapon(self)) || (self.m_id == complain_weapon)))
 			continue;
 
 		// figure out the drawing position of weapon
@@ -361,7 +360,7 @@ void HUD_Weapons()
 		// draw the weapon accuracy
 		if(autocvar_hud_panel_weapons_accuracy)
 		{
-			float panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
+			float panel_weapon_accuracy = weapon_accuracy[self.m_id-WEP_FIRST];
 			if(panel_weapon_accuracy >= 0)
 			{
 				color = Accuracy_GetColor(panel_weapon_accuracy);
@@ -370,7 +369,7 @@ void HUD_Weapons()
 		}
 
 		// drawing all the weapon items
-		if(weapons_stat & WepSet_FromWeapon(Weapons_from(self.weapon)))
+		if(weapons_stat & WepSet_FromWeapon(self))
 		{
 			// draw the weapon image
 			if(isCurrent)
@@ -442,7 +441,7 @@ void HUD_Weapons()
 		}
 
 		// draw the complain message
-		if(self.weapon == complain_weapon)
+		if(self.m_id == complain_weapon)
 		{
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));

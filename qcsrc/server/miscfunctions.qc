@@ -262,7 +262,7 @@ string formatmessage(string msg)
 			case "l": replacement = NearestLocation(self.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(self.death_origin); break;
-			case "w": replacement = WEP_NAME(((!self.weapon) ? (!PS(self).m_switchweapon.m_id ? self.cnt : PS(self).m_switchweapon.m_id) : self.weapon)); break;
+			case "w": replacement = ((!self.weapon) ? ((PS(self).m_switchweapon == WEP_Null) ? Weapons_from(self.cnt) : PS(self).m_switchweapon) : Weapons_from(self.weapon)).m_name; break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
@@ -448,7 +448,7 @@ string playername(entity p)
 
 float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done?
 {
-	int i = weaponinfo.weapon;
+	int i = weaponinfo.m_id;
 	int d = 0;
 	bool allow_mutatorblocked = false;
 

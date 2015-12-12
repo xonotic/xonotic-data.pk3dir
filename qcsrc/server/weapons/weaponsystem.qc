@@ -718,7 +718,7 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 				if (IS_REAL_CLIENT(actor) && actor.reload_complain < time)
 				{
 					play2(actor, SND(UNAVAILABLE));
-					sprint(actor, strcat("You don't have enough ammo to reload the ^2", WEP_NAME(actor.weapon), "\n"));
+					sprint(actor, strcat("You don't have enough ammo to reload the ^2", Weapons_from(actor.weapon).m_name, "\n"));
 					actor.reload_complain = time + 1;
 				}
 				// switch away if the amount of ammo is not enough to keep using this weapon

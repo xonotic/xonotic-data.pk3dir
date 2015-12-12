@@ -304,9 +304,9 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		{
 			float ammo_amount;
 			if(WEP_CVAR(machinegun, mode) == 1)
-				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, sustained_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(machinegun, sustained_ammo);
 			else
-				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, first_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(machinegun, first_ammo);
 
 			if(WEP_CVAR(machinegun, reload_ammo))
 			{
@@ -321,9 +321,9 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		{
 			float ammo_amount;
 			if(WEP_CVAR(machinegun, mode) == 1)
-				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, burst_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(machinegun, burst_ammo);
 			else
-				ammo_amount = self.WEP_AMMO(MACHINEGUN) >= WEP_CVAR(machinegun, first_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(machinegun, first_ammo);
 
 			if(WEP_CVAR(machinegun, reload_ammo))
 			{

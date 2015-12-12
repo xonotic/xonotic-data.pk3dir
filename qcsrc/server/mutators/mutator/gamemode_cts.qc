@@ -421,7 +421,7 @@ MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
 
 MUTATOR_HOOKFUNCTION(cts, WantWeapon)
 {
-	ret_float = (want_weaponinfo.weapon == WEP_SHOTGUN.m_id);
+	ret_float = (want_weaponinfo == WEP_SHOTGUN);
 	want_mutatorblocked = true;
 	return true;
 }

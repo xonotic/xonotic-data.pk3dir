@@ -305,7 +305,6 @@ STATIC_INIT(register_weapons_done)
         WepSet set = it.m_wepset;
         WEPSET_ALL |= set;
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
-        it.weapon = it.m_id;
         it.weapons = set;
         if (it == WEP_Null) continue;
         int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;

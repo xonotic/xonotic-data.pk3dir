@@ -108,9 +108,10 @@ void W_Devastator_Explode()
 		other
 	);
 
-	if(self.realowner.weapon == WEP_DEVASTATOR.m_id)
+	Weapon thiswep = WEP_DEVASTATOR;
+	if(self.realowner.weapon == thiswep.m_id)
 	{
-		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
+		if(self.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			self.realowner.cnt = WEP_DEVASTATOR.m_id;
@@ -188,9 +189,10 @@ void W_Devastator_DoRemoteExplode(.entity weaponentity)
 		world
 	);
 
-	if(self.realowner.weapon == WEP_DEVASTATOR.m_id)
+	Weapon thiswep = WEP_DEVASTATOR;
+	if(self.realowner.weapon == thiswep.m_id)
 	{
-		if(self.realowner.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
+		if(self.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			self.realowner.cnt = WEP_DEVASTATOR.m_id;
@@ -575,10 +577,10 @@ void W_Devastator_Attack(Weapon thiswep)
 				ammo_amount = false;
 				if(WEP_CVAR(devastator, reload_ammo))
 				{
-					if(self.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo) && self.(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
+					if(self.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo) && self.(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
 						ammo_amount = true;
 				}
-				else if(self.WEP_AMMO(DEVASTATOR) < WEP_CVAR(devastator, ammo))
+				else if(self.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 					ammo_amount = true;
 				return !ammo_amount;
 			}
@@ -586,18 +588,18 @@ void W_Devastator_Attack(Weapon thiswep)
 			#if 0
 			if(self.rl_release == 0)
 			{
-				LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo));
+				LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.(thiswep.ammo_field), WEP_CVAR(devastator, ammo));
 				return true;
 			}
 			else
 			{
-				ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
 				ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
-				LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.WEP_AMMO(DEVASTATOR), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+				LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.(thiswep.ammo_field), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
 				return ammo_amount;
 			}
 			#else
-			float ammo_amount = self.WEP_AMMO(DEVASTATOR) >= WEP_CVAR(devastator, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
 			ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
 			return ammo_amount;
 			#endif

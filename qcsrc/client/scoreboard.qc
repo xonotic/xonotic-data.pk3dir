@@ -1002,8 +1002,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
-		if (!it.weapon) continue;
-
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
@@ -1064,7 +1062,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	int column = 0;
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
-		if (!it.weapon) continue;
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;

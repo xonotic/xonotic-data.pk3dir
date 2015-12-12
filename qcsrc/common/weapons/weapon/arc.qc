@@ -234,10 +234,12 @@ void W_Arc_Beam_Think()
 		burst = ARC_BT_BURSTMASK;
 	}
 
+	Weapon thiswep = WEP_ARC;
+
 	if(
 		!IS_PLAYER(self.owner)
 		||
-		(self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
+		(self.owner.(thiswep.ammo_field) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 		||
 		self.owner.deadflag != DEAD_NO
 		||
@@ -302,8 +304,8 @@ void W_Arc_Beam_Think()
 
 		if(rootammo)
 		{
-			coefficient = min(coefficient, self.owner.WEP_AMMO(ARC) / rootammo);
-			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - (rootammo * frametime));
+			coefficient = min(coefficient, self.owner.(thiswep.ammo_field) / rootammo);
+			self.owner.(thiswep.ammo_field) = max(0, self.owner.(thiswep.ammo_field) - (rootammo * frametime));
 		}
 	}
 	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
@@ -727,13 +729,13 @@ void Arc_Smoke()
 		METHOD(Arc, wr_checkammo1, bool(entity thiswep))
 		{
 			SELFPARAM();
-			return ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			return ((!WEP_CVAR(arc, beam_ammo)) || (self.(thiswep.ammo_field) > 0));
 		}
 		METHOD(Arc, wr_checkammo2, bool(entity thiswep))
 		{
 			SELFPARAM();
 			return WEP_CVAR(arc, overheat_max) > 0 &&
-				((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
+				((!WEP_CVAR(arc, burst_ammo)) || (self.(thiswep.ammo_field) > 0));
 		}
 		METHOD(Arc, wr_killmessage, int(entity thiswep))
 		{

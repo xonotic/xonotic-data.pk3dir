@@ -638,7 +638,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return true;
 
-			float ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_PRI(crylink, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
 			return ammo_amount;
 		}
@@ -649,7 +649,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return true;
 
-			float ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_SEC(crylink, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}

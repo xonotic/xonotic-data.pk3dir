@@ -38,7 +38,8 @@ typedef vector vectori;
 		[[accumulate]] void stats_get() \
 		{ \
 			T it = getstat_##T(STAT_##id.m_id); \
-			if (it != CAT(_STAT(id), _prev)) _STAT(id) = it; \
+			if (it != CAT(_STAT(id), _prev)) \
+				CAT(_STAT(id), _prev) = _STAT(id) = it; \
 		}
 	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT(x, T)
 #elif defined(SVQC)

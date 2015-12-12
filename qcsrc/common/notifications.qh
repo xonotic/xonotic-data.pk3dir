@@ -318,7 +318,7 @@ string BUFF_NAME(int i);
     ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
     ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-    ARG_CASE(ARG_CS_SV,     "item_wepname",  WEP_NAME(f1)) \
+    ARG_CASE(ARG_CS_SV,     "item_wepname",  Weapons_from(f1).m_name) \
     ARG_CASE(ARG_CS_SV,     "item_buffname", BUFF_NAME(f1)) \
     ARG_CASE(ARG_CS_SV,     "f3buffname",    BUFF_NAME(f3)) \
     ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \

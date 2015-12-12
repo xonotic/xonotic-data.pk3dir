@@ -341,7 +341,7 @@ void W_RocketMinsta_Attack3 ()
 
 		METHOD(Vaporizer, wr_aim, void(entity thiswep))
 		{
-			if(self.WEP_AMMO(VAPORIZER) > 0)
+			if(self.(thiswep.ammo_field) > 0)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
@@ -422,13 +422,13 @@ void W_RocketMinsta_Attack3 ()
 		}
 		METHOD(Vaporizer, wr_setup, void(entity thiswep))
 		{
-			self.ammo_field = WEP_AMMO(VAPORIZER);
+			self.ammo_field = (thiswep.ammo_field);
 			self.vaporizer_lasthit = 0;
 		}
 		METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
 		{
 			float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
-			float ammo_amount = self.WEP_AMMO(VAPORIZER) >= vaporizer_ammo;
+			float ammo_amount = self.(thiswep.ammo_field) >= vaporizer_ammo;
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
 			return ammo_amount;
 		}
@@ -436,7 +436,7 @@ void W_RocketMinsta_Attack3 ()
 		{
 			if(!WEP_CVAR_SEC(vaporizer, ammo))
 				return true;
-			float ammo_amount = self.WEP_AMMO(VAPORIZER) >= WEP_CVAR_SEC(vaporizer, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vaporizer, ammo);
 			ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
 			return ammo_amount;
 		}

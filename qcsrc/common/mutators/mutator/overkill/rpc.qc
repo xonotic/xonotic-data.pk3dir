@@ -177,7 +177,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		}
 		METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
 		{
-			float ammo_amount = self.WEP_AMMO(RPC) >= WEP_CVAR(rpc, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
 			ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
 			return ammo_amount;
 		}

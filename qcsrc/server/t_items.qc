@@ -492,7 +492,7 @@ void Item_RespawnCountdown ()
 			do {
 				{
 					entity wi = Weapons_from(self.weapon);
-					if (wi.m_id) {
+					if (wi != WEP_Null) {
 						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Weapon);
 						wp.wp_extra = wi.m_id;
 						break;
@@ -500,7 +500,7 @@ void Item_RespawnCountdown ()
 				}
 				{
 					entity ii = self.itemdef;
-					if (ii.m_id) {
+					if (ii != NULL) {
 						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Item);
 						wp.wp_extra = ii.m_id;
 						break;
@@ -1448,8 +1448,7 @@ spawnfunc(target_items)
 					{
 						self.weapons |= (e.m_wepset);
 						if(self.spawnflags == 0 || self.spawnflags == 2) {
-							Weapon w = Weapons_from(e.weapon);
-							w.wr_init(w);
+							e.wr_init(e);
 						}
 						break;
 					}
@@ -1505,8 +1504,8 @@ spawnfunc(target_items)
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = Weapons_from(j);
-			if(e.weapon)
-				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (e.m_wepset)), e.netname);
+			if(e == WEP_Null) continue;
+			self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (e.m_wepset)), e.netname);
 		}
 	}
 	self.netname = strzone(self.netname);
@@ -1520,8 +1519,7 @@ spawnfunc(target_items)
 			e = Weapons_from(j);
 			if(argv(i) == e.netname)
 			{
-				Weapon w = Weapons_from(e.weapon);
-				w.wr_init(w);
+				e.wr_init(e);
 				break;
 			}
 		}
@@ -1689,9 +1687,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
 					wi = Weapons_from(j);
-					if(wi.weapon)
-						if (!(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-							got += GiveWeapon(e, j, op, val);
+					if(wi == WEP_Null) continue;
+					if (!(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+						got += GiveWeapon(e, j, op, val);
 				}
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
@@ -1775,15 +1773,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	{
 		wi = Weapons_from(j);
-		if(wi.weapon)
-		{
-			POSTGIVE_WEAPON(e, Weapons_from(j), SND(WEAPONPICKUP), string_null);
-			if (!(save_weapons & (wi.m_wepset)))
-				if(e.weapons & (wi.m_wepset)) {
-					Weapon w = Weapons_from(wi.weapon);
-					w.wr_init(w);
-				}
-		}
+		if (wi == WEP_Null) continue;
+		POSTGIVE_WEAPON(e, Weapons_from(j), SND(WEAPONPICKUP), string_null);
+		if (!(save_weapons & (wi.m_wepset)))
+			if(e.weapons & (wi.m_wepset)) {
+				wi.wr_init(wi);
+			}
 	}
 	POSTGIVE_VALUE(e, strength_finished, 1, SND(POWERUP), SND(POWEROFF));
 	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", SND(POWEROFF));

@@ -290,11 +290,11 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 										}
 										else
 										{
-											dt = min(dt, (actor.WEP_AMMO(VORTEX) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+											dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
 											dt = max(0, dt);
 											if(dt > 0)
 											{
-												actor.WEP_AMMO(VORTEX) = max(WEP_CVAR_SEC(vortex, ammo), actor.WEP_AMMO(VORTEX) - WEP_CVAR_SEC(vortex, ammo) * dt);
+												actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(vortex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(vortex, ammo) * dt);
 											}
 										}
 									}
@@ -326,7 +326,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 		}
 		METHOD(Vortex, wr_checkammo1, bool(entity thiswep))
 		{
-			float ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_PRI(vortex, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
 			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
 			return ammo_amount;
 		}
@@ -335,7 +335,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 			if(WEP_CVAR(vortex, secondary))
 			{
 				// don't allow charging if we don't have enough ammo
-				float ammo_amount = self.WEP_AMMO(VORTEX) >= WEP_CVAR_SEC(vortex, ammo);
+				float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vortex, ammo);
 				ammo_amount += self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
 				return ammo_amount;
 			}
