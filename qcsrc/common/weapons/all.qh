@@ -129,6 +129,11 @@ STATIC_INIT_LATE(W_PROP_reloader)
 
 REGISTER_WEAPON(Null, NEW(Weapon));
 
+Weapon Weapons_fromstr(string s)
+{
+    FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
+    return NULL;
+}
 
 
 // legacy w_prop mappings

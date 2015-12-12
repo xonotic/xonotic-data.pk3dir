@@ -7,30 +7,19 @@
 
 string W_Apply_Weaponreplace(string in)
 {
-	float n = tokenize_console(in);
-	string out = "", s, replacement;
-	float i, j;
-	entity e;
-	for(i = 0; i < n; ++i)
-	{
-		replacement = "";
-		s = argv(i);
-
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+	string out = "";
+	FOREACH_WORD(in, true, {
+		string replacement = "";
+		Weapon w = Weapons_fromstr(it);
+		if (w)
 		{
-			e = Weapons_from(j);
-			if(e.netname == s)
-			{
-				replacement = e.weaponreplace;
-			}
+            replacement = w.weaponreplace;
+            if (replacement == "") replacement = it;
 		}
-
-		if(replacement == "")
-			out = strcat(out, " ", s);
-		else if(replacement != "0")
-			out = strcat(out, " ", replacement);
-	}
-	return substring(out, 1, -1);
+		if (replacement == "0") continue;
+		out = cons(out, replacement);
+	});
+	return out;
 }
 
 void weapon_defaultspawnfunc(entity this, Weapon e)
