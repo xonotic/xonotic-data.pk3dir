@@ -576,7 +576,7 @@ float bot_cmd_select_weapon()
 		return CMD_STATUS_ERROR;
 
 	if(client_hasweapon(self, Weapons_from(id), true, false))
-		self.switchweapon = id;
+		PS(self).m_switchweapon = Weapons_from(id);
 	else
 		return CMD_STATUS_ERROR;
 

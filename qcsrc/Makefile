@@ -2,6 +2,7 @@ SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git
 PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
 QCC ?= gmqcc
+NDEBUG ?= 1
  
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
@@ -22,7 +23,7 @@ QCCFLAGS ?= \
 	-fftepp -flno -futf8 -fno-bail-on-werror -fftepp-predefs \
 	-frelaxed-switch -freturn-assignments \
 	$(QCCFLAGS_WATERMARK) \
-	-DNDEBUG=1 \
+	-DNDEBUG=$(NDEBUG) \
 	$(QCCFLAGS_FEATURES) \
 	$(QCCFLAGS_EXTRA)
 

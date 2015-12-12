@@ -332,7 +332,6 @@ STATIC_INIT(register_weapons_done)
 
 //.int weapon; // current weapon
 #ifdef SVQC
-.int switchweapon = _STAT(SWITCHWEAPON);
 .int switchingweapon = _STAT(SWITCHINGWEAPON);
 #endif
 .string weaponname; // name of .weapon

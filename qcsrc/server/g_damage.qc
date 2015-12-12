@@ -96,7 +96,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 		// after a frag, choose another random weapon set
 		if (!(attacker.weapons & WepSet_FromWeapon(Weapons_from(attacker.weapon))))
-			W_SwitchWeapon_Force(attacker, Weapons_from(w_getbestweapon(attacker)));
+			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)

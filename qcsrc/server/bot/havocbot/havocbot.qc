@@ -175,7 +175,7 @@ void havocbot_ai()
 			{
 				entity e = Weapons_from(i);
 				if ((self.weapons & (e.m_wepset)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
-					self.switchweapon = i;
+					PS(self).m_switchweapon = Weapons_from(i);
 			}
 		}
 	}
@@ -617,7 +617,7 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_DEVASTATOR.m_id;
+				PS(self).m_switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
@@ -1014,7 +1014,7 @@ void havocbot_chooseweapon()
 	// ;)
 	if(g_weaponarena_weapons == WEPSET(TUBA))
 	{
-		self.switchweapon = WEP_TUBA.m_id;
+		PS(self).m_switchweapon = WEP_TUBA;
 		return;
 	}
 
@@ -1027,7 +1027,7 @@ void havocbot_chooseweapon()
 		{
 			if(client_hasweapon(self, Weapons_from(i), true, false))
 			{
-				self.switchweapon = i;
+				PS(self).m_switchweapon = Weapons_from(i);
 				return;
 			}
 		}
@@ -1075,7 +1075,7 @@ void havocbot_chooseweapon()
 				{
 					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
-					self.switchweapon = w;
+					PS(self).m_switchweapon = Weapons_from(w);
 					return;
 				}
 			}
@@ -1089,7 +1089,7 @@ void havocbot_chooseweapon()
 				{
 					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
-					self.switchweapon = w;
+					PS(self).m_switchweapon = Weapons_from(w);
 					return;
 				}
 			}
@@ -1102,7 +1102,7 @@ void havocbot_chooseweapon()
 			{
 				if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
 					continue;
-				self.switchweapon = w;
+				PS(self).m_switchweapon = Weapons_from(w);
 				return;
 			}
 		}

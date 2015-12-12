@@ -71,7 +71,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 			antilag_takeback(trace_ent, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
 			antilag_restore(trace_ent);
-			fputs(player.hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(player.switchweapon), "\n"));
+			fputs(player.hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(PS(player).m_switchweapon.m_id), "\n"));
 			//print(strcat(ftos(hitplot_x), " ", ftos(hitplot_y), " ", ftos(hitplot_z), "\n"));
 		}
 	}

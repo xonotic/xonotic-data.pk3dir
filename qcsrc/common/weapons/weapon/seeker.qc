@@ -420,7 +420,7 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 	entity oldenemy;
 	self.cnt = self.cnt - 1;
 
-	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.WEP_AMMO(SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id))
+	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.WEP_AMMO(SEEKER) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (PS(self.realowner).m_switchweapon != WEP_SEEKER))
 	{
 		remove(self);
 		return;
@@ -458,7 +458,7 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 void W_Seeker_Tracker_Think()
 {SELFPARAM();
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (self.realowner.switchweapon != WEP_SEEKER.m_id)
+	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (PS(self.realowner).m_switchweapon != WEP_SEEKER)
 	|| (time > self.tag_time + WEP_CVAR(seeker, tag_tracker_lifetime)))
 	{
 		if(self)

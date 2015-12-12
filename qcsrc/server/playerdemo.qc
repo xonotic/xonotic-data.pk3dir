@@ -58,7 +58,7 @@ void playerdemo_open_write(string f)
 	PLAYERDEMO_FIELD(func,string,playerskin) \
 	PLAYERDEMO_FIELD(func,float,frame) \
 	PLAYERDEMO_FIELD(func,float,effects) \
-	PLAYERDEMO_FIELD(func,float,switchweapon) \
+	/* PLAYERDEMO_FIELD(func,float,switchweapon) */ \
 	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK) \
 	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK2) \
 	PLAYERDEMO_FIELD(func,float,BUTTON_CROUCH) \

@@ -642,10 +642,10 @@ float Item_GiveTo(entity item, entity player)
 	// if the player is using their best weapon before items are given, they
 	// probably want to switch to an even better weapon after items are given
 	if (player.autoswitch)
-	if (player.switchweapon == w_getbestweapon(player))
+	if (PS(player).m_switchweapon == w_getbestweapon(player))
 		_switchweapon = true;
 
-	if (!(player.weapons & WepSet_FromWeapon(Weapons_from(player.switchweapon))))
+	if (!(player.weapons & WepSet_FromWeapon(PS(player).m_switchweapon)))
 		_switchweapon = true;
 
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -715,8 +715,8 @@ float Item_GiveTo(entity item, entity player)
 	}
 
 	if (_switchweapon)
-		if (player.switchweapon != w_getbestweapon(player))
-			W_SwitchWeapon_Force(player, Weapons_from(w_getbestweapon(player)));
+		if (PS(player).m_switchweapon != w_getbestweapon(player))
+			W_SwitchWeapon_Force(player, w_getbestweapon(player));
 
 	return 1;
 }
@@ -1627,7 +1627,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	_switchweapon = false;
 	if (e.autoswitch)
-		if (e.switchweapon == w_getbestweapon(e))
+		if (PS(e).m_switchweapon == w_getbestweapon(e))
 			_switchweapon = true;
 
 	e.strength_finished = max(0, e.strength_finished - time);
@@ -1813,10 +1813,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if (!(e.weapons & WepSet_FromWeapon(Weapons_from(e.switchweapon))))
+	if (!(e.weapons & WepSet_FromWeapon(PS(e).m_switchweapon)))
 		_switchweapon = true;
 	if(_switchweapon)
-		W_SwitchWeapon_Force(e, Weapons_from(w_getbestweapon(e)));
+		W_SwitchWeapon_Force(e, w_getbestweapon(e));
 
 	return got;
 }

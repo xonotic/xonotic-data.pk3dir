@@ -202,7 +202,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 	if (!thiswep.wr_checkammo2(thiswep))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -216,7 +216,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 	if (!thiswep.wr_checkammo2(thiswep))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}

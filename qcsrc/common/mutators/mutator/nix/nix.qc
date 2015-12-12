@@ -69,7 +69,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			e.ammo_fuel = start_ammo_fuel;
 			e.weapons = start_weapons;
 			if(!client_hasweapon(e, Weapons_from(e.weapon), true, false))
-				e.switchweapon = w_getbestweapon(self);
+				PS(e).m_switchweapon = w_getbestweapon(self);
 		}
 	}
 
@@ -210,10 +210,10 @@ void NIX_GiveCurrentWeapon()
 		self.weapons |= WEPSET(BLASTER);
 	self.weapons |= e.m_wepset;
 
-	if(self.switchweapon != nix_weapon)
-		if(!client_hasweapon(self, Weapons_from(self.switchweapon), true, false))
+    Weapon w = Weapons_from(nix_weapon);
+	if(PS(self).m_switchweapon != w)
+		if(!client_hasweapon(self, PS(self).m_switchweapon, true, false))
 		{
-			Weapon w = Weapons_from(nix_weapon);
 			if(client_hasweapon(self, w, true, false))
 				W_SwitchWeapon(w);
 		}

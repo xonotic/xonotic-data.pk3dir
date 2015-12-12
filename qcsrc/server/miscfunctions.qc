@@ -262,7 +262,7 @@ string formatmessage(string msg)
 			case "l": replacement = NearestLocation(self.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(self.death_origin); break;
-			case "w": replacement = WEP_NAME(((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon)); break;
+			case "w": replacement = WEP_NAME(((!self.weapon) ? (!PS(self).m_switchweapon.m_id ? self.cnt : PS(self).m_switchweapon.m_id) : self.weapon)); break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
@@ -374,7 +374,11 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 	self.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
-void GetCvars(float f)
+
+/**
+ * @param f -1: cleanup, 0: request, 1: receive
+ */
+void GetCvars(int f)
 {SELFPARAM();
 	string s = string_null;
 
@@ -423,7 +427,7 @@ void GetCvars(float f)
 	if (f > 0)
 	{
 		if (s == "cl_weaponpriority")
-			self.switchweapon = w_getbestweapon(self);
+			if (PS(self)) PS(self).m_switchweapon = w_getbestweapon(self);
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_GameReport_AddPlayer(self);
 	}

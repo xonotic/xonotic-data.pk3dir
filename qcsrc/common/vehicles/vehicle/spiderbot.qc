@@ -88,7 +88,7 @@ float spiderbot_frame()
 
 	player.BUTTON_ZOOM	  = 0;
 	player.BUTTON_CROUCH	= 0;
-	player.switchweapon	 = 0;
+	PS(player).m_switchweapon = WEP_Null;
 	player.vehicle_weapon2mode = spider.vehicle_weapon2mode;
 
 

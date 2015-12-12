@@ -132,7 +132,7 @@ void W_MineLayer_Explode()
 			self.cnt = WEP_MINE_LAYER.m_id;
 			int slot = 0; // TODO: unhardcode
 			ATTACK_FINISHED(self, slot) = time;
-			self.switchweapon = w_getbestweapon(self);
+			PS(self).m_switchweapon = w_getbestweapon(self);
 		}
 		setself(this);
 	}
@@ -159,7 +159,7 @@ void W_MineLayer_DoRemoteExplode()
 			self.cnt = WEP_MINE_LAYER.m_id;
 			int slot = 0; // TODO: unhardcode
 			ATTACK_FINISHED(self, slot) = time;
-			self.switchweapon = w_getbestweapon(self);
+			PS(self).m_switchweapon = w_getbestweapon(self);
 		}
 		setself(this);
 	}

@@ -877,7 +877,7 @@ void vehicles_exit(bool eject)
 		_player.view_ofs		= PL_VIEW_OFS;
 		_player.event_damage	= PlayerDamage;
 		_player.hud				= HUD_NORMAL;
-		_player.switchweapon	= _vehicle.switchweapon;
+		PS(_player).m_switchweapon = _vehicle.m_switchweapon;
 		_player.last_vehiclecheck = time + 3;
 		_player.vehicle_enter_delay = time + 2;
 
@@ -1063,7 +1063,7 @@ void vehicles_enter(entity pl, entity veh)
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
-	veh.switchweapon = pl.switchweapon;
+	veh.m_switchweapon = PS(pl).m_switchweapon;
 	pl.hud = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 

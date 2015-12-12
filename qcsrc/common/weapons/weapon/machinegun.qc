@@ -141,7 +141,7 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, .entity weaponentity)
 // weapon frames
 void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(actor.weapon != actor.switchweapon) // abort immediately if switching
+	if(actor.weapon != PS(actor).m_switchweapon.m_id) // abort immediately if switching
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
@@ -151,7 +151,7 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 		if(!thiswep.wr_checkammo2(thiswep))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
@@ -177,7 +177,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	if(!thiswep.wr_checkammo1(thiswep))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -269,7 +269,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 					if(!thiswep.wr_checkammo2(thiswep))
 					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
-						W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+						W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 						w_ready(thiswep, actor, weaponentity, fire);
 						return;
 					}

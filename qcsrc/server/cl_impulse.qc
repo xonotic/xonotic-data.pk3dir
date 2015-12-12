@@ -202,7 +202,7 @@ IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
-	W_SwitchWeapon(Weapons_from(w_getbestweapon(this)));
+	W_SwitchWeapon(w_getbestweapon(this));
 }
 
 IMPULSE(weapon_drop)

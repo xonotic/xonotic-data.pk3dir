@@ -573,7 +573,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		// clear waypoints
 		WaypointSprite_PlayerDead();
 		// throw a weapon
-		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, PS(self).m_switchweapon.m_id);
 
 		// become fully visible
 		self.alpha = default_player_alpha;

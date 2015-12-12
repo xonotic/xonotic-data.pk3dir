@@ -243,7 +243,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 							{
 								actor.ammo_fuel = 0;
 								actor.hook_state |= HOOK_REMOVING;
-								W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+								W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 							}
 						}
 					}

@@ -191,7 +191,7 @@ void W_Blaster_Attack(
 				{
 					case 0: // switch to last used weapon
 					{
-						if(actor.switchweapon == WEP_BLASTER.m_id) // don't do this if already switching
+						if(PS(actor).m_switchweapon == WEP_BLASTER) // don't do this if already switching
 							W_LastWeapon();
 						break;
 					}

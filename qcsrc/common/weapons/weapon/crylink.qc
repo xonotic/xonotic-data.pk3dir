@@ -626,7 +626,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 					{
 						// ran out of ammo!
 						actor.cnt = WEP_CRYLINK.m_id;
-						actor.switchweapon = w_getbestweapon(actor);
+						PS(actor).m_switchweapon = w_getbestweapon(actor);
 					}
 				}
 			}

@@ -23,8 +23,11 @@
 #include "bot/navigation.qh"
 
 #include "../common/ent_cs.qh"
-#include "../common/vehicles/all.qh"
+#include "../common/state.qh"
+
 #include "../common/triggers/teleporters.qh"
+
+#include "../common/vehicles/all.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
@@ -186,7 +189,9 @@ putting a client as observer in the server
 */
 void FixPlayermodel(entity player);
 void PutObserverInServer()
-{SELFPARAM();
+{
+	SELFPARAM();
+	PlayerState_detach(this);
 	entity	spot;
     self.hud = HUD_NORMAL;
 
@@ -438,6 +443,7 @@ void PutClientInServer()
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer();
 	} else if (IS_PLAYER(this)) {
+		PlayerState_attach(this);
 		accuracy_resend(this);
 
 		if (this.team < 0)
@@ -617,7 +623,7 @@ void PutClientInServer()
 			remove(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
-		this.switchweapon = w_getbestweapon(this);
+		PS(this).m_switchweapon = w_getbestweapon(this);
 		this.cnt = -1; // W_LastWeapon will not complain
 		this.weapon = 0;
 		this.weaponname = "";
@@ -997,7 +1003,9 @@ Called when a client connects to the server
 */
 void DecodeLevelParms ();
 void ClientConnect ()
-{SELFPARAM();
+{
+	SELFPARAM();
+	ClientState_attach(this);
 	float t;
 
 	if(IS_CLIENT(self))
@@ -1216,7 +1224,9 @@ Called when a client disconnects from the server
 .entity chatbubbleentity;
 void ReadyCount();
 void ClientDisconnect ()
-{SELFPARAM();
+{
+	SELFPARAM();
+	ClientState_detach(this);
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELEASE);
 
@@ -1670,7 +1680,7 @@ void SpectateCopy(entity this, entity spectatee)
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
-	self.switchweapon = spectatee.switchweapon;
+	PS(self).m_switchweapon = PS(spectatee).m_switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
 	self.vortex_charge = spectatee.vortex_charge;

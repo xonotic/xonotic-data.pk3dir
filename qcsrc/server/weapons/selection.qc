@@ -123,7 +123,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	entity wep;
 
 	if(skipmissing || pl.selectweapon == 0)
-		weaponcur = pl.switchweapon;
+		weaponcur = PS(pl).m_switchweapon.m_id;
 	else
 		weaponcur = pl.selectweapon;
 
@@ -225,17 +225,16 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 
 void W_SwitchWeapon_Force(entity e, Weapon wep)
 {
-	int w = wep.m_id;
-	e.cnt = e.switchweapon;
-	e.switchweapon = w;
-	e.selectweapon = w;
+	e.cnt = PS(e).m_switchweapon.m_id;
+	PS(e).m_switchweapon = wep;
+	e.selectweapon = wep.m_id;
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
-	int ww;
+	Weapon ww;
 	WepSet set = WepSet_FromWeapon(Weapons_from(pl.weapon));
 	if(pl.weapons & set)
 	{
@@ -246,18 +245,17 @@ void W_SwitchToOtherWeapon(entity pl)
 	else
 		ww = w_getbestweapon(pl);
 	if(ww)
-		W_SwitchWeapon_Force(pl, Weapons_from(ww));
+		W_SwitchWeapon_Force(pl, ww);
 }
 
 void W_SwitchWeapon(Weapon w)
 {SELFPARAM();
-	int imp = w.m_id;
-	if (self.switchweapon != imp)
+	if (PS(self).m_switchweapon != w)
 	{
 		if (client_hasweapon(self, w, true, true))
 			W_SwitchWeapon_Force(self, w);
 		else
-			self.selectweapon = imp; // update selectweapon ANYWAY
+			self.selectweapon = w.m_id; // update selectweapon ANYWAY
 	}
 	else if(!forbidWeaponUse(self)) {
 		w.wr_reload(w);

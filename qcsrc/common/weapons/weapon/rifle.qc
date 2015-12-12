@@ -95,16 +95,16 @@ void W_Rifle_Attack2()
 .float rifle_bullethail_refire;
 void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	float r, sw, af;
+	float r, af;
 
-	sw = actor.switchweapon; // make it not detect weapon changes as reason to abort firing
+	Weapon sw = PS(actor).m_switchweapon; // make it not detect weapon changes as reason to abort firing
 	int slot = weaponslot(weaponentity);
 	af = ATTACK_FINISHED(actor, slot);
-	actor.switchweapon = actor.weapon;
+	PS(actor).m_switchweapon = Weapons_from(actor.weapon);
 	ATTACK_FINISHED(actor, slot) = time;
 	r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
-	if(actor.switchweapon == actor.weapon)
-		actor.switchweapon = sw;
+	if(PS(actor).m_switchweapon.m_id == actor.weapon)
+		PS(actor).m_switchweapon = sw;
 	if(r)
 	{
 		actor.rifle_bullethail_attackfunc();

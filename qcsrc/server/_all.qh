@@ -29,6 +29,16 @@ const string STR_OBSERVER = "observer";
 #define FOR_EACH_OBSERVER(v) FOR_EACH_CLIENT(v) if (IS_OBSERVER(v))
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if (IS_PLAYER(v))
 
+#define FOREACH_CLIENT(cond, body) \
+	MACRO_BEGIN { \
+		int i = 0; \
+		for (entity it = NULL; (it = nextent(it)) && (num_for_edict(it) <= maxclients); ++i) \
+		{ \
+			if (!IS_CLIENT(it)) continue; \
+			if (cond) { LAMBDA(body) } \
+		} \
+	} MACRO_END
+
 #define FOR_EACH_MONSTER(v) for (v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
 
 #include "../common/effects/all.qh"

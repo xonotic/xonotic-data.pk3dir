@@ -26,6 +26,7 @@ typedef vector vectori;
 	#define _STAT(id) g_stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		T _STAT(id); \
+		T CAT(_STAT(id), _prev); \
 		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
 		{ \
 			make_pure(this); \
@@ -36,7 +37,8 @@ typedef vector vectori;
 		} \
 		[[accumulate]] void stats_get() \
 		{ \
-			_STAT(id) = getstat_##T(STAT_##id.m_id); \
+			T it = getstat_##T(STAT_##id.m_id); \
+			if (it != CAT(_STAT(id), _prev)) _STAT(id) = it; \
 		}
 	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT(x, T)
 #elif defined(SVQC)

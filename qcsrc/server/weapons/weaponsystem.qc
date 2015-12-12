@@ -222,7 +222,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	if (thiswep == WEP_SHOTGUN)
 		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow
 
-	if (thiswep == Weapons_from(actor.switchweapon) && time - actor.prevdryfire > 1) // only play once BEFORE starting to switch weapons
+	if (thiswep == PS(actor).m_switchweapon && time - actor.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 	{
 		sound(actor, CH_WEAPON_A, SND_DRYFIRE, VOL_BASE, ATTEN_NORM);
 		actor.prevdryfire = time;
@@ -269,7 +269,7 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 		return false;
 
 	// do not even think about shooting if switching
-	if (actor.switchweapon != actor.weapon) return false;
+	if (PS(actor).m_switchweapon.m_id != actor.weapon) return false;
 
 	if (attacktime >= 0)
 	{
@@ -429,7 +429,7 @@ void W_WeaponFrame(entity actor)
 		}
 	}
 
-	if (actor.switchweapon == 0)
+	if (PS(actor).m_switchweapon.m_id == 0)
 	{
 		actor.weapon = 0;
 		actor.switchingweapon = 0;
@@ -445,7 +445,7 @@ void W_WeaponFrame(entity actor)
 	vector up = v_up;
 
 	// Change weapon
-	if (actor.weapon != actor.switchweapon)
+	if (actor.weapon != PS(actor).m_switchweapon.m_id)
 	{
 		switch (this.state)
 		{
@@ -458,11 +458,11 @@ void W_WeaponFrame(entity actor)
 			case WS_CLEAR:
 			{
 				// end switching!
-				actor.switchingweapon = actor.switchweapon;
-				entity newwep = Weapons_from(actor.switchweapon);
+				Weapon newwep = PS(actor).m_switchweapon;
+				actor.switchingweapon = newwep.m_id;
 
 				// the two weapon entities will notice this has changed and update their models
-				actor.weapon = actor.switchweapon;
+				actor.weapon = newwep.m_id;
 				actor.weaponname = newwep.mdl;
 				actor.bulletcounter = 0;
 				actor.ammo_field = newwep.ammo_field;
@@ -472,7 +472,7 @@ void W_WeaponFrame(entity actor)
 				// set our clip load to the load of the weapon we switched to, if it's reloadable
 				if ((newwep.spawnflags & WEP_FLAG_RELOADABLE) && newwep.reloading_ammo)  // prevent accessing undefined cvars
 				{
-					actor.clip_load = actor.(weapon_load[actor.switchweapon]);
+					actor.clip_load = actor.(weapon_load[PS(actor).m_switchweapon.m_id]);
 					actor.clip_size = newwep.reloading_ammo;
 				}
 				else
@@ -486,13 +486,13 @@ void W_WeaponFrame(entity actor)
 			case WS_DROP:
 			{
 				// in dropping phase we can switch at any time
-				actor.switchingweapon = actor.switchweapon;
+				actor.switchingweapon = PS(actor).m_switchweapon.m_id;
 				break;
 			}
 			case WS_READY:
 			{
 				// start switching!
-				actor.switchingweapon = actor.switchweapon;
+				actor.switchingweapon = PS(actor).m_switchweapon.m_id;
 				entity oldwep = Weapons_from(actor.weapon);
 
 				// set up weapon switch think in the future, and start drop anim
@@ -520,7 +520,7 @@ void W_WeaponFrame(entity actor)
 	{
 		if (w && !(actor.weapons & WepSet_FromWeapon(Weapons_from(w))))
 		{
-			if (actor.weapon == actor.switchweapon) W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+			if (actor.weapon == PS(actor).m_switchweapon.m_id) W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 			w = 0;
 		}
 
@@ -538,7 +538,7 @@ void W_WeaponFrame(entity actor)
 			}
 			else
 			{
-				if (key_pressed && actor.switchweapon != WEP_HOOK.m_id && !actor.hook_switchweapon)
+				if (key_pressed && PS(actor).m_switchweapon != WEP_HOOK && !actor.hook_switchweapon)
 					W_SwitchWeapon(WEP_HOOK);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;

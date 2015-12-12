@@ -116,7 +116,7 @@ void W_Devastator_Explode()
 			self.realowner.cnt = WEP_DEVASTATOR.m_id;
 			int slot = 0; // TODO: unhardcode
 			ATTACK_FINISHED(self.realowner, slot) = time;
-			self.realowner.switchweapon = w_getbestweapon(self.realowner);
+			PS(self.realowner).m_switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
 	remove(self);
@@ -196,7 +196,7 @@ void W_Devastator_DoRemoteExplode(.entity weaponentity)
 			self.realowner.cnt = WEP_DEVASTATOR.m_id;
 			int slot = weaponslot(weaponentity);
 			ATTACK_FINISHED(self.realowner, slot) = time;
-			self.realowner.switchweapon = w_getbestweapon(self.realowner);
+			PS(self.realowner).m_switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
 	remove(self);
@@ -545,7 +545,7 @@ void W_Devastator_Attack(Weapon thiswep)
 					actor.rl_release = 1;
 
 				if(fire & 2)
-				if(actor.switchweapon == WEP_DEVASTATOR.m_id)
+				if(PS(actor).m_switchweapon == WEP_DEVASTATOR)
 				{
 					entity rock;
 					bool rockfound = false;

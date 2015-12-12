@@ -146,7 +146,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	e.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
 	SUB_SetFade(e, time + 5, 1);
 
-	this.ok_lastwep = this.switchweapon;
+	this.ok_lastwep = PS(this).m_switchweapon.m_id;
 
 	return false;
 }
@@ -186,7 +186,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 
 	if(self.ok_lastwep)
 	{
-		self.switchweapon = self.ok_lastwep;
+		PS(self).m_switchweapon = Weapons_from(self.ok_lastwep);
 		self.ok_lastwep = 0;
 	}
 
@@ -224,7 +224,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(self.ok_use_ammocharge)
 	if(!ok_CheckWeaponCharge(self, self.weapon))
 	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self) && self.weapon == self.switchweapon)
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self) && self.weapon == PS(self).m_switchweapon.m_id)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
