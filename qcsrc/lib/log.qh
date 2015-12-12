@@ -12,6 +12,15 @@
 	} MACRO_END
 
 #define assert(expr, ...) _assert(LOG_SEVERE, expr, __VA_ARGS__)
+#define assert_once(expr, ...) \
+	MACRO_BEGIN { \
+		static bool __once; \
+		if (!__once) \
+		{ \
+			assert(expr, __VA_ARGS__); \
+			__once = true; \
+		} \
+	} MACRO_END
 #define demand(expr, ...) _assert(LOG_FATAL, expr, __VA_ARGS__)
 #define _assert(f, expr, then) \
 	MACRO_BEGIN \
