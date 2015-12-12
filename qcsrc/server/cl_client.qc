@@ -987,7 +987,7 @@ void ClientPreConnect ()
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
 			self.playerid,
-			num_for_edict(self),
+			etof(self),
 			((IS_REAL_CLIENT(self)) ? self.netaddress : "bot")
 		));
 	}
@@ -1122,7 +1122,7 @@ void ClientConnect ()
         PlayerStats_GameReport_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
+		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(etof(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
 
 	LogTeamchange(self.playerid, self.team, 1);
 
@@ -2481,9 +2481,9 @@ void PlayerPreThink ()
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
 	if(IS_SPEC(self))
-		self.spectatee_status = num_for_edict(self.enemy);
+		self.spectatee_status = etof(self.enemy);
 	else if(IS_OBSERVER(self))
-		self.spectatee_status = num_for_edict(self);
+		self.spectatee_status = etof(self);
 	else
 		self.spectatee_status = 0;
 	if(self.spectatee_status != oldspectatee_status)

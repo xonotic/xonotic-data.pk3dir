@@ -559,7 +559,7 @@ void GameCommand_defer_clear_all(float request)
 
 			FOR_EACH_CLIENT(client)
 			{
-				argc = tokenize_console(strcat("defer_clear ", ftos(num_for_edict(client))));
+				argc = tokenize_console(strcat("defer_clear ", ftos(etof(client))));
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
 				++i;
 			}
@@ -1402,7 +1402,7 @@ void GameCommand_shuffleteams(float request)
 						}
 						else
 						{
-							shuffleteams_players[i] = num_for_edict(tmp_player);
+							shuffleteams_players[i] = etof(tmp_player);
 							break;
 						}
 					}

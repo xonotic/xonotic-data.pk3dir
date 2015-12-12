@@ -28,7 +28,7 @@ REGISTER_NET_TEMP(net_debug)
 		int channel = MSG_ONE;
 		msg_entity = to;
 		WriteHeader(channel, net_debug);
-		WriteShort(channel, num_for_edict(this));
+		WriteShort(channel, etof(this));
 		WriteByte(channel, is_pure(this));
 		WriteCoord(channel, this.origin.x);
 		WriteCoord(channel, this.origin.y);
@@ -71,7 +71,7 @@ bool autocvar_debugdraw;
 				pos.z = 0;
 				pos.y += ofs * size;
 				drawcolorcodedstring2(pos,
-					sprintf("%d: '%s'@%s:%d", (e.debug ? e.sv_entnum : num_for_edict(e)),
+					sprintf("%d: '%s'@%s:%d", (e.debug ? e.sv_entnum : etof(e)),
 					e.classname, e.sourceLocFile, e.sourceLocLine),
 					size * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
 				++ofs;

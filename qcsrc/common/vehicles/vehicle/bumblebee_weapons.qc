@@ -37,7 +37,7 @@ bool bumble_raygun_send(entity this, entity to, float sf)
     WriteByte(MSG_ENTITY, sf);
     if(sf & BRG_SETUP)
     {
-        WriteByte(MSG_ENTITY, num_for_edict(self.realowner));
+        WriteByte(MSG_ENTITY, etof(self.realowner));
         WriteByte(MSG_ENTITY, self.realowner.team);
         WriteByte(MSG_ENTITY, self.cnt);
     }

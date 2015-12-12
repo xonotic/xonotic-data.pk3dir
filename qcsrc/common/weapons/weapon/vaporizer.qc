@@ -75,7 +75,7 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	WriteCoord(MSG_BROADCAST, v.y);
 	WriteCoord(MSG_BROADCAST, v.z);
 	WriteByte(MSG_BROADCAST, hit);
-	WriteByte(MSG_BROADCAST, num_for_edict(player));
+	WriteByte(MSG_BROADCAST, etof(player));
 	WriteByte(MSG_BROADCAST, player.team);
 }
 #elif defined(CSQC)

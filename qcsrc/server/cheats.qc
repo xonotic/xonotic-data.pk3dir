@@ -599,7 +599,7 @@ float CheatCommand(float argc)
 							{
 								if(vlen(oldself.origin - start) < vlen(e.origin - start))
 									++effectnum;
-								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && num_for_edict(oldself) < num_for_edict(e))
+								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && etof(oldself) < etof(e))
 									++effectnum;
 							}
 							fputs(f, strcat("\"race_place\" \"", ftos(effectnum), "\"\n"));

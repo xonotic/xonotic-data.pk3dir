@@ -20,7 +20,7 @@ const string STR_OBSERVER = "observer";
 #define IS_VEHICLE(v) (v.vehicle_flags & VHF_ISVEHICLE)
 #define IS_TURRET(v) (v.turret_flags & TUR_FLAG_ISTURRET)
 
-#define FOR_EACH_CLIENTSLOT(v) for (v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
+#define FOR_EACH_CLIENTSLOT(v) for (v = world; (v = nextent(v)) && (etof(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if (IS_CLIENT(v))
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if (IS_REAL_CLIENT(v))
 
@@ -32,7 +32,7 @@ const string STR_OBSERVER = "observer";
 #define FOREACH_CLIENT(cond, body) \
 	MACRO_BEGIN { \
 		int i = 0; \
-		for (entity it = NULL; (it = nextent(it)) && (num_for_edict(it) <= maxclients); ++i) \
+		for (entity it = NULL; (it = nextent(it)) && (etof(it) <= maxclients); ++i) \
 		{ \
 			if (!IS_CLIENT(it)) continue; \
 			if (cond) { LAMBDA(body) } \

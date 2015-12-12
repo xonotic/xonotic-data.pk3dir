@@ -157,7 +157,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				if(valuefield == "")
 				{
 					if(value == "")
-						value = ftos(num_for_edict(valueent));
+						value = ftos(etof(valueent));
 				}
 				else
 				{

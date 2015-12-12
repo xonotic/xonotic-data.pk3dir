@@ -113,7 +113,7 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, num_for_edict(self.realowner));
+		WriteByte(MSG_ENTITY, etof(self.realowner));
 	}
 	if(sf & 2)
 	{

@@ -359,7 +359,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	if(!isNew && n != this.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(this), this.classname);
+		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", etof(this), this.classname);
 		isNew = true;
 		Ent_Remove();
 	}
@@ -738,7 +738,7 @@ void CSQC_Ent_Update(bool isnew)
 	{
 		if (t != this.enttype || isnew)
 		{
-			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(this), this.entnum, this.enttype, t);
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove();
 			clearentity(this);
 			isnew = true;
@@ -748,7 +748,7 @@ void CSQC_Ent_Update(bool isnew)
 	{
 		if (!isnew)
 		{
-			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(this), this.entnum, t);
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
 			isnew = true;
 		}
 	}

@@ -33,9 +33,13 @@
 	// already defined
 #endif
 
-#undef etof
 // avoid bounds checks
-#define etof(e) stof(sprintf("%i", e))
+#undef etof
+#if 1
+	#define etof(e) ITOF(reinterpret_cast(int, e))
+#else
+	#define etof(e) stof(sprintf("%i", e))
+#endif
 
 #define GET(name) name##get
 #define GETTER(type, name) type GET(name)() { return name; }

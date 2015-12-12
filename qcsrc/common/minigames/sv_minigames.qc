@@ -25,7 +25,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		}
 		minigame_session.minigame_event(minigame_session,"part",player);
 		GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
-			ftos(num_for_edict(player)),":",player.netname));
+			ftos(etof(player)),":",player.netname));
 		minigame_session.minigame_players = p.list_next;
 		remove ( p );
 		player_clear_minigame(player);
@@ -38,7 +38,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 			{
 				minigame_session.minigame_event(minigame_session,"part",player);
 				GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
-					ftos(num_for_edict(player)),":",player.netname));
+					ftos(etof(player)),":",player.netname));
 				p.list_next = e.list_next;
 				remove(e);
 				player_clear_minigame(player);
@@ -86,7 +86,7 @@ bool minigame_SendEntity(entity this, entity to, int sf)
 		if ( sf & MINIG_SF_CREATE )
 		{
 			WriteString(MSG_ENTITY,self.owner.netname);
-			WriteLong(MSG_ENTITY,num_for_edict(self.minigame_players));
+			WriteLong(MSG_ENTITY,etof(self.minigame_players));
 		}
 		if ( sf & MINIG_SF_UPDATE )
 			WriteByte(MSG_ENTITY,self.team);
@@ -155,7 +155,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 	}
 	else { remove(player_pointer); }
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
-		ftos(num_for_edict(player)),":",player.netname));
+		ftos(etof(player)),":",player.netname));
 
 	return mgteam;
 }
@@ -169,7 +169,7 @@ entity start_minigame(entity player, string minigame )
 	if ( e )
 	{
 		entity minig = new(minigame);
-		minig.netname = strzone(strcat(e.netname,"_",ftos(num_for_edict(minig))));
+		minig.netname = strzone(strcat(e.netname,"_",ftos(etof(minig))));
 		minig.descriptor = e;
 		minig.minigame_event = e.minigame_event;
 		minig.minigame_event(minig,"start");
@@ -235,7 +235,7 @@ void end_minigame(entity minigame_session)
 	while( (e = findentity(e, owner, minigame_session)) )
 		if ( e.minigame_autoclean )
 		{
-			LOG_TRACE("SV Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
 			remove(e);
 		}
 
@@ -274,7 +274,7 @@ string invite_minigame(entity inviter, entity player)
 		inviter.active_minigame.netname, inviter.netname );
 
 	GameLogEcho(strcat(":minigame:invite:",inviter.active_minigame.netname,":",
-		ftos(num_for_edict(player)),":",player.netname));
+		ftos(etof(player)),":",player.netname));
 
 	return "";
 }

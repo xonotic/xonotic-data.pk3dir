@@ -352,7 +352,7 @@ void W_Shockwave_Send()
 	WriteShort(MSG_BROADCAST, WEP_CVAR(shockwave, blast_distance));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_max), 255));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_min), 255));
-	WriteByte(MSG_BROADCAST, num_for_edict(self));
+	WriteByte(MSG_BROADCAST, etof(self));
 }
 
 void W_Shockwave_Attack()

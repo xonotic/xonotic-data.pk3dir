@@ -23,7 +23,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
 void target_music_sendto(float to, float is)
 {SELFPARAM();
 	WriteHeader(to, TE_CSQC_TARGET_MUSIC);
-	WriteShort(to, num_for_edict(self));
+	WriteShort(to, etof(self));
 	WriteByte(to, self.volume * 255.0 * is);
 	WriteByte(to, self.fade_time * 16.0);
 	WriteByte(to, self.fade_rate * 16.0);

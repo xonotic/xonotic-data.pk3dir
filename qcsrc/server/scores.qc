@@ -235,7 +235,7 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 	float i, p, longflags;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES);
-	WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+	WriteByte(MSG_ENTITY, etof(self.owner));
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
@@ -383,7 +383,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	}
 
 	if (result.x == 0 && strict)
-		result.x = num_for_edict(t1.owner) - num_for_edict(t2.owner);
+		result.x = etof(t1.owner) - etof(t2.owner);
 
 	return result.x;
 }
