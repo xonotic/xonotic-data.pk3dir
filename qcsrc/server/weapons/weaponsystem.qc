@@ -188,7 +188,7 @@ void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	if (actor.weapon != -1)
 	{
 		actor.weapon = 0;
-		actor.switchingweapon = 0;
+		PS(actor).m_switchingweapon = WEP_Null;
 	}
 	entity this = actor.(weaponentity);
 	if (this)
@@ -432,7 +432,7 @@ void W_WeaponFrame(entity actor)
 	if (PS(actor).m_switchweapon.m_id == 0)
 	{
 		actor.weapon = 0;
-		actor.switchingweapon = 0;
+		PS(actor).m_switchingweapon = WEP_Null;
 		this.state = WS_CLEAR;
 		actor.weaponname = "";
 		// actor.items &= ~IT_AMMO;
@@ -459,7 +459,7 @@ void W_WeaponFrame(entity actor)
 			{
 				// end switching!
 				Weapon newwep = PS(actor).m_switchweapon;
-				actor.switchingweapon = newwep.m_id;
+				PS(actor).m_switchingweapon = newwep;
 
 				// the two weapon entities will notice this has changed and update their models
 				actor.weapon = newwep.m_id;
@@ -486,13 +486,13 @@ void W_WeaponFrame(entity actor)
 			case WS_DROP:
 			{
 				// in dropping phase we can switch at any time
-				actor.switchingweapon = PS(actor).m_switchweapon.m_id;
+				PS(actor).m_switchingweapon = PS(actor).m_switchweapon;
 				break;
 			}
 			case WS_READY:
 			{
 				// start switching!
-				actor.switchingweapon = PS(actor).m_switchweapon.m_id;
+				PS(actor).m_switchingweapon = PS(actor).m_switchweapon;
 				entity oldwep = Weapons_from(actor.weapon);
 
 				// set up weapon switch think in the future, and start drop anim

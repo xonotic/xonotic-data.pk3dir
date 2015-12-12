@@ -331,9 +331,6 @@ STATIC_INIT(register_weapons_done)
 .vector weaponentity_glowmod;
 
 //.int weapon; // current weapon
-#ifdef SVQC
-.int switchingweapon = _STAT(SWITCHINGWEAPON);
-#endif
 .string weaponname; // name of .weapon
 
 .vector spawnorigin; // for casings

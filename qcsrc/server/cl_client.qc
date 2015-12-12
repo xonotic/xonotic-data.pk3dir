@@ -306,7 +306,7 @@ void PutObserverInServer()
 
 	self.weapon = 0;
 	self.weaponname = "";
-	self.switchingweapon = 0;
+	PS(self).m_switchingweapon = WEP_Null;
 	self.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -627,7 +627,7 @@ void PutClientInServer()
 		this.cnt = -1; // W_LastWeapon will not complain
 		this.weapon = 0;
 		this.weaponname = "";
-		this.switchingweapon = 0;
+		PS(this).m_switchingweapon = WEP_Null;
 
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
@@ -1681,7 +1681,7 @@ void SpectateCopy(entity this, entity spectatee)
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
 	PS(self).m_switchweapon = PS(spectatee).m_switchweapon;
-	self.switchingweapon = spectatee.switchingweapon;
+	PS(self).m_switchingweapon = PS(spectatee).m_switchingweapon;
 	self.weapon = spectatee.weapon;
 	self.vortex_charge = spectatee.vortex_charge;
 	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;

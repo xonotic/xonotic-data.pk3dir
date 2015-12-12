@@ -50,6 +50,7 @@ CLASS(PlayerState, Object)
 	ATTRIB(PlayerState, m_weapon, Weapon, Weapons_from(-1))
 	METHOD(PlayerState, ps_push, void(PlayerState this))
 	{
+		STAT(SWITCHINGWEAPON, this.m_client) = this.m_switchingweapon.m_id;
 		STAT(SWITCHWEAPON, this.m_client) = this.m_switchweapon.m_id;
 	}
 ENDCLASS(PlayerState)
@@ -63,7 +64,6 @@ PlayerState PS(entity this) { assert(IS_CLIENT(this)); return this._ps; }
 
 void PlayerState_attach(entity this)
 {
-	LOG_INFO("Attached\n");
 	this._ps = NEW(PlayerState, this);
 }
 
