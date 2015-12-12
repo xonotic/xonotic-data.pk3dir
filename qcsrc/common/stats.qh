@@ -29,7 +29,7 @@ const int MAX_CL_STATS = 256;
     #define g_stat_CELLS getstat_int(STAT_CELLS)
     #define g_stat_ACTIVEWEAPON getstat_int(STAT_ACTIVEWEAPON)
     #define g_stat_ITEMS getstat_int(STAT_ITEMS)
-    #define g_stat_VIEWHEIGHT getstat_int(STAT_VIEWHEIGHT)
+    #define g_stat_VIEWHEIGHT getstati(STAT_VIEWHEIGHT)
 #elif defined(SVQC)
     #define stat_HEALTH health
     #define stat_ARMOR armorvalue
