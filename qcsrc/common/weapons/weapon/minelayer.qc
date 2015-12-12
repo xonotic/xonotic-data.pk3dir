@@ -123,7 +123,7 @@ void W_MineLayer_Explode()
 
 	RadiusDamage(self, self.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), world, world, WEP_CVAR(minelayer, force), self.projectiledeathtype, other);
 
-	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
+	if(PS(self.realowner).m_weapon == WEP_MINE_LAYER)
 	{
 		setself(self.realowner);
 		Weapon w = WEP_MINE_LAYER;
@@ -150,7 +150,7 @@ void W_MineLayer_DoRemoteExplode()
 
 	RadiusDamage(self, self.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), world, world, WEP_CVAR(minelayer, remote_force), self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
-	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
+	if(PS(self.realowner).m_weapon == WEP_MINE_LAYER)
 	{
 		setself(self.realowner);
 		Weapon w = WEP_MINE_LAYER;
@@ -265,7 +265,7 @@ void W_MineLayer_Think()
 	}
 
 	// remote detonation
-	if(self.realowner.weapon == WEP_MINE_LAYER.m_id)
+	if(PS(self.realowner).m_weapon == WEP_MINE_LAYER)
 	if(self.realowner.deadflag == DEAD_NO)
 	if(self.minelayer_detonate)
 		W_MineLayer_RemoteExplode();
@@ -530,7 +530,7 @@ float W_MineLayer_PlacedMines(float detonate)
 		{
 			int slot = 0; // TODO: unhardcode
 			// don't switch while placing a mine
-			if(ATTACK_FINISHED(self, slot) <= time || self.weapon != WEP_MINE_LAYER.m_id)
+			if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_MINE_LAYER)
 			{
 				float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
 				ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);

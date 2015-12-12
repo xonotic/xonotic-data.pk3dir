@@ -163,7 +163,7 @@ void W_HLAC_Attack2()
 // weapon frames
 void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(actor.weapon != PS(actor).m_switchweapon.m_id) // abort immediately if switching
+	if(PS(actor).m_weapon != PS(actor).m_switchweapon) // abort immediately if switching
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;

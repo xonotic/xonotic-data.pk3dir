@@ -233,7 +233,7 @@ void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	Weapon ww;
-	WepSet set = WepSet_FromWeapon(Weapons_from(pl.weapon));
+	WepSet set = WepSet_FromWeapon(PS(pl).m_weapon);
 	if(pl.weapons & set)
 	{
 		pl.weapons &= ~set;

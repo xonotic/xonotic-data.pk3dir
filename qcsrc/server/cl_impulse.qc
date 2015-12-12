@@ -217,7 +217,7 @@ IMPULSE(weapon_reload)
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
 	if (forbidWeaponUse(this)) return;
-	Weapon w = Weapons_from(this.weapon);
+	Weapon w = PS(this).m_weapon;
 	w.wr_reload(w);
 }
 

@@ -68,7 +68,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			e.ammo_rockets = start_ammo_rockets;
 			e.ammo_fuel = start_ammo_fuel;
 			e.weapons = start_weapons;
-			if(!client_hasweapon(e, Weapons_from(e.weapon), true, false))
+			if(!client_hasweapon(e, PS(e).m_weapon, true, false))
 				PS(e).m_switchweapon = w_getbestweapon(self);
 		}
 	}

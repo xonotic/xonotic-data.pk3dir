@@ -242,7 +242,7 @@ float bot_waypoints_for_items;
 #else
 #define ATTACK_FINISHED_FOR(ent, w, slot) ((ent).attack_finished_single[slot])
 #endif
-#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, (ent).weapon, slot)
+#define ATTACK_FINISHED(ent, slot) ATTACK_FINISHED_FOR(ent, PS(ent).m_weapon.m_id, slot)
 
 // assault game mode: Which team is attacking in this round?
 float assault_attacker_team;

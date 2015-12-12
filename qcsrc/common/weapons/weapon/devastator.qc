@@ -109,7 +109,7 @@ void W_Devastator_Explode()
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
-	if(self.realowner.weapon == thiswep.m_id)
+	if(PS(self.realowner).m_weapon == thiswep)
 	{
 		if(self.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -190,7 +190,7 @@ void W_Devastator_DoRemoteExplode(.entity weaponentity)
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
-	if(self.realowner.weapon == thiswep.m_id)
+	if(PS(self.realowner).m_weapon == thiswep)
 	{
 		if(self.realowner.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -272,7 +272,7 @@ void W_Devastator_Think()
 		self.velocity = self.velocity + v_forward * min(WEP_CVAR(devastator, speedaccel) * W_WeaponSpeedFactor() * frametime, velspeed);
 
 	// laser guided, or remote detonation
-	if(self.realowner.weapon == WEP_DEVASTATOR.m_id)
+	if(PS(self.realowner).m_weapon == WEP_DEVASTATOR)
 	{
 		if(self == self.realowner.lastrocket)
 		if(!self.realowner.rl_release)
@@ -572,7 +572,7 @@ void W_Devastator_Attack(Weapon thiswep)
 		{
 			#if 0
 			// don't switch while guiding a missile
-			if(ATTACK_FINISHED(self, slot) <= time || self.weapon != WEP_DEVASTATOR.m_id)
+			if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_DEVASTATOR)
 			{
 				ammo_amount = false;
 				if(WEP_CVAR(devastator, reload_ammo))

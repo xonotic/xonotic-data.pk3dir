@@ -25,7 +25,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(ent.weapon == WEP_RIFLE.m_id)
+	if(PS(ent).m_weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -51,7 +51,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	// track max damage
 	if(accuracy_canbegooddamage(ent))
-		accuracy_add(ent, ent.weapon, maxdamage, 0);
+		accuracy_add(ent, PS(ent).m_weapon.m_id, maxdamage, 0);
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
@@ -331,7 +331,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	}
 
 	// calculate hits and fired shots for hitscan
-	accuracy_add(self, self.weapon, 0, min(bdamage, totaldmg));
+	accuracy_add(self, PS(self).m_weapon.m_id, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;
@@ -434,7 +434,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
 				total_damage += damage * solid_penetration_left;
-				accuracy_add(self, self.weapon, 0, added_damage);
+				accuracy_add(self, PS(self).m_weapon.m_id, 0, added_damage);
 			}
 		}
 

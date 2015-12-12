@@ -100,10 +100,10 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	Weapon sw = PS(actor).m_switchweapon; // make it not detect weapon changes as reason to abort firing
 	int slot = weaponslot(weaponentity);
 	af = ATTACK_FINISHED(actor, slot);
-	PS(actor).m_switchweapon = Weapons_from(actor.weapon);
+	PS(actor).m_switchweapon = PS(actor).m_weapon;
 	ATTACK_FINISHED(actor, slot) = time;
 	r = weapon_prepareattack(thiswep, actor, weaponentity, actor.rifle_bullethail_frame == WFRAME_FIRE2, actor.rifle_bullethail_refire);
-	if(PS(actor).m_switchweapon.m_id == actor.weapon)
+	if(PS(actor).m_switchweapon == PS(actor).m_weapon)
 		PS(actor).m_switchweapon = sw;
 	if(r)
 	{

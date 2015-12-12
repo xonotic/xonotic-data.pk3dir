@@ -304,7 +304,7 @@ void PutObserverInServer()
 	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 
-	self.weapon = 0;
+	PS(self).m_weapon = WEP_Null;
 	self.weaponname = "";
 	PS(self).m_switchingweapon = WEP_Null;
 	self.weaponmodel = "";
@@ -625,7 +625,7 @@ void PutClientInServer()
 
 		PS(this).m_switchweapon = w_getbestweapon(this);
 		this.cnt = -1; // W_LastWeapon will not complain
-		this.weapon = 0;
+		PS(this).m_weapon = WEP_Null;
 		this.weaponname = "";
 		PS(this).m_switchingweapon = WEP_Null;
 
@@ -1682,7 +1682,7 @@ void SpectateCopy(entity this, entity spectatee)
 	self.weapons = spectatee.weapons;
 	PS(self).m_switchweapon = PS(spectatee).m_switchweapon;
 	PS(self).m_switchingweapon = PS(spectatee).m_switchingweapon;
-	self.weapon = spectatee.weapon;
+	PS(self).m_weapon = PS(spectatee).m_weapon;
 	self.vortex_charge = spectatee.vortex_charge;
 	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
@@ -2396,7 +2396,7 @@ void PlayerPreThink ()
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
+		if((PS(self).m_weapon == WEP_SHOCKWAVE || PS(self).m_weapon == WEP_SHOTGUN) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)
@@ -2471,7 +2471,12 @@ void PlayerPreThink ()
 
 	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX.m_id) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE.m_id && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
+		SetZoomState(
+			self.BUTTON_ZOOM
+			|| self.BUTTON_ZOOMSCRIPT
+			|| (self.BUTTON_ATCK2 && PS(self).m_weapon == WEP_VORTEX)
+			|| (self.BUTTON_ATCK2 && PS(self).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
+		); // WEAPONTODO
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
@@ -2511,7 +2516,7 @@ void PlayerPreThink ()
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	if(!self.weapon)
+	if (PS(self).m_weapon == WEP_Null)
 		self.clip_load = self.clip_size = 0;
 }
 

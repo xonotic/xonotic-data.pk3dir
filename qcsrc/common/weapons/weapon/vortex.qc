@@ -145,7 +145,7 @@ MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 {SELFPARAM();
 	// WEAPONTODO
 	float xyspeed = vlen(vec2(self.velocity));
-	if (self.weapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
+	if (PS(self).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
 	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));

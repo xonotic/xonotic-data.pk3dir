@@ -180,7 +180,7 @@ void GiveBall(entity plyr, entity ball)
 	}
 
 	plyr.(weaponentity).weapons = plyr.weapons;
-	plyr.(weaponentity).m_switchweapon = Weapons_from(plyr.weapon);
+	plyr.(weaponentity).m_switchweapon = PS(plyr).m_weapon;
 	plyr.weapons = WEPSET(NEXBALL);
 	setself(plyr);
 	Weapon w = WEP_NEXBALL;
@@ -1021,12 +1021,12 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
 {SELFPARAM();
-	return self.weapon == WEP_NEXBALL.m_id;
+	return PS(self).m_weapon == WEP_NEXBALL;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidDropCurrentWeapon)
 {SELFPARAM();
-	return self.weapon == WEP_MORTAR.m_id; // TODO: what is this for?
+	return PS(self).m_weapon == WEP_MORTAR; // TODO: what is this for?
 }
 
 MUTATOR_HOOKFUNCTION(nb, FilterItem)
