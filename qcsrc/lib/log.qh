@@ -33,20 +33,20 @@ string(string...) strcat0n = #115;
 
 #define _LOG(f, level, s) \
 	MACRO_BEGIN { \
-		f(sprintf("[::"level "] ["__FILE__ ":%s:%d] %s", __FUNC__, __LINE__, s)); \
+		f(sprintf("^9[::"level "^9] ["__FILE__ "^7:^9%s^7:^9%d] \n^7%s\n", __FUNC__, __LINE__, s)); \
 	} MACRO_END
 
 #define  LOG_FATAL(...) _LOG_FATAL(strcat0n(__VA_ARGS__))
 #define  LOG_FATALF(...) _LOG_FATAL(sprintf(__VA_ARGS__))
-#define _LOG_FATAL(s) _LOG(error, "FATAL", s)
+#define _LOG_FATAL(s) _LOG(error, "^1FATAL", s)
 
 #define  LOG_SEVERE(...) _LOG_SEVERE(strcat0n(__VA_ARGS__))
 #define  LOG_SEVEREF(...) _LOG_SEVERE(sprintf(__VA_ARGS__))
-#define _LOG_SEVERE(s) _LOG(backtrace, "SEVERE", s)
+#define _LOG_SEVERE(s) _LOG(backtrace, "^1SEVERE", s)
 
 #define  LOG_WARNING(...) _LOG_WARNING(strcat0n(__VA_ARGS__))
 #define  LOG_WARNINGF(...) _LOG_WARNING(sprintf(__VA_ARGS__))
-#define _LOG_WARNING(s) _LOG(print, "WARNING", s)
+#define _LOG_WARNING(s) _LOG(print, "^3WARNING", s)
 
 #define  LOG_INFO(...) _LOG_INFO(strcat0n(__VA_ARGS__))
 #define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
@@ -54,18 +54,18 @@ string(string...) strcat0n = #115;
 	MACRO_BEGIN { \
 		string ___s = s; \
 		if (autocvar_developer) \
-			_LOG(print, "INFO", ___s); \
+			_LOG(print, "^5INFO", ___s); \
 		else \
 			print(___s); \
 	} MACRO_END
 
 #define  LOG_TRACE(...) _LOG_TRACE(strcat0n(__VA_ARGS__))
 #define  LOG_TRACEF(...) _LOG_TRACE(sprintf(__VA_ARGS__))
-#define _LOG_TRACE(s) _LOG(dprint, "TRACE", s)
+#define _LOG_TRACE(s) _LOG(dprint, "^6TRACE", s)
 
 #define  LOG_DEBUG(...) _LOG_DEBUG(strcat0n(__VA_ARGS__))
 #define  LOG_DEBUGF(...) _LOG_DEBUG(sprintf(__VA_ARGS__))
-#define _LOG_DEBUG(s) _LOG(dprint2, "DEBUG", s)
+#define _LOG_DEBUG(s) _LOG(dprint2, "^2DEBUG", s)
 
 #define dprint2(msg) \
 	MACRO_BEGIN { \
@@ -97,7 +97,7 @@ noref bool autocvar_prvm_backtraceforwarnings;
 		bool war = autocvar_prvm_backtraceforwarnings; \
 		bt_cvar_set("developer", "1"); \
 		bt_cvar_set("prvm_backtraceforwarnings", "1"); \
-		print("\n--- CUT HERE ---\n", msg, "\n"); \
+		print("\n--- CUT HERE ---\n", msg); \
 		_backtrace(); \
 		print("\n--- CUT UNTIL HERE ---\n"); \
 		bt_cvar_set("developer", ftos(dev)); \

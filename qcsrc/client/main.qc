@@ -42,6 +42,11 @@ void CSQC_Init()
 	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
+	// needs to be done so early because of the constants they create
+	static_init();
+	static_init_late();
+	static_init_precache();
+
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
@@ -92,11 +97,6 @@ void CSQC_Init()
 	players = Sort_Spawn();
 
 	GetTeam(NUM_SPECTATOR, true); // add specs first
-
-	// needs to be done so early because of the constants they create
-	static_init();
-	static_init_late();
-	static_init_precache();
 
 	// precaches
 

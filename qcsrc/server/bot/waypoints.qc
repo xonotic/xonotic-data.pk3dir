@@ -451,11 +451,7 @@ float waypoint_load_links()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ");
-	LOG_TRACE(ftos(c));
-	LOG_TRACE(" waypoint links from maps/");
-	LOG_TRACE(mapname);
-	LOG_TRACE(".waypoints.cache\n");
+	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.cache\n");
 
 	botframe_cachedwaypointlinks = true;
 	return true;
@@ -475,9 +471,7 @@ void waypoint_load_links_hardwired()
 
 	if (file < 0)
 	{
-		LOG_TRACE("waypoint links load from ");
-		LOG_TRACE(filename);
-		LOG_TRACE(" failed\n");
+		LOG_TRACE("waypoint links load from ", filename, " failed\n");
 		return;
 	}
 
@@ -548,11 +542,7 @@ void waypoint_load_links_hardwired()
 
 	fclose(file);
 
-	LOG_TRACE("loaded ");
-	LOG_TRACE(ftos(c));
-	LOG_TRACE(" waypoint links from maps/");
-	LOG_TRACE(mapname);
-	LOG_TRACE(".waypoints.hardwired\n");
+	LOG_TRACE("loaded ", ftos(c), " waypoint links from maps/", mapname, ".waypoints.hardwired\n");
 }
 
 entity waypoint_get_link(entity w, float i)
@@ -712,19 +702,11 @@ float waypoint_loadall()
 				cwb = cwb + 1;
 		}
 		fclose(file);
-		LOG_TRACE("loaded ");
-		LOG_TRACE(ftos(cwp));
-		LOG_TRACE(" waypoints and ");
-		LOG_TRACE(ftos(cwb));
-		LOG_TRACE(" wayboxes from maps/");
-		LOG_TRACE(mapname);
-		LOG_TRACE(".waypoints\n");
+		LOG_TRACE("loaded ", ftos(cwp), " waypoints and ", ftos(cwb), " wayboxes from maps/", mapname, ".waypoints\n");
 	}
 	else
 	{
-		LOG_TRACE("waypoint load from ");
-		LOG_TRACE(filename);
-		LOG_TRACE(" failed\n");
+		LOG_TRACE("waypoint load from ", filename, " failed\n");
 	}
 	return cwp + cwb;
 }
