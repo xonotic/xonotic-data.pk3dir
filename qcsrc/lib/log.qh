@@ -1,16 +1,6 @@
 #ifndef LOG_H
 #define LOG_H
 
-#define _printferr(...) error(sprintf(__VA_ARGS__))
-#define _printfbt(...) backtrace(sprintf(__VA_ARGS__))
-#define printf(...) print(sprintf(__VA_ARGS__))
-#define dprintf(...) dprint(sprintf(__VA_ARGS__))
-#define _dprintf2(...) \
-	MACRO_BEGIN \
-	{ \
-		if (autocvar_developer > 1) dprintf(__VA_ARGS__); \
-	} MACRO_END
-
 #define assert(expr, ...) _assert(LOG_SEVERE, expr, __VA_ARGS__)
 #define assert_once(expr, ...) \
 	MACRO_BEGIN { \
@@ -34,41 +24,53 @@
 
 #define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 
-#define _LOG(f, level, s) f("[::"level "] ["__FILE__ ":%s:%.0f] %s", __FUNC__, __LINE__, s)
 
-#define  LOG_FATAL(...) _LOG_FATAL(strcat("", __VA_ARGS__))
+#if defined(MENUQC)
+string(string...) strcat0n = #53;
+#else
+string(string...) strcat0n = #115;
+#endif
+
+#define _LOG(f, level, s) \
+	MACRO_BEGIN { \
+		f(sprintf("[::"level "] ["__FILE__ ":%s:%d] %s", __FUNC__, __LINE__, s)); \
+	} MACRO_END
+
+#define  LOG_FATAL(...) _LOG_FATAL(strcat0n(__VA_ARGS__))
 #define  LOG_FATALF(...) _LOG_FATAL(sprintf(__VA_ARGS__))
-#define _LOG_FATAL(s) _LOG(_printferr, "FATAL", s)
+#define _LOG_FATAL(s) _LOG(error, "FATAL", s)
 
-#define  LOG_SEVERE(...) _LOG_SEVERE(strcat("", __VA_ARGS__))
+#define  LOG_SEVERE(...) _LOG_SEVERE(strcat0n(__VA_ARGS__))
 #define  LOG_SEVEREF(...) _LOG_SEVERE(sprintf(__VA_ARGS__))
-#define _LOG_SEVERE(s) _LOG(_printfbt, "SEVERE", s)
+#define _LOG_SEVERE(s) _LOG(backtrace, "SEVERE", s)
 
-#define  LOG_WARNING(...) _LOG_WARNING(strcat("", __VA_ARGS__))
+#define  LOG_WARNING(...) _LOG_WARNING(strcat0n(__VA_ARGS__))
 #define  LOG_WARNINGF(...) _LOG_WARNING(sprintf(__VA_ARGS__))
-#define _LOG_WARNING(s) _LOG(printf, "WARNING", s)
+#define _LOG_WARNING(s) _LOG(print, "WARNING", s)
 
-#define  LOG_INFO(...) \
-	MACRO_BEGIN \
-	{ \
-		if (autocvar_developer) _LOG_INFO(strcat("", __VA_ARGS__)); \
-		else print(__VA_ARGS__); \
+#define  LOG_INFO(...) _LOG_INFO(strcat0n(__VA_ARGS__))
+#define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
+#define _LOG_INFO(s) \
+	MACRO_BEGIN { \
+		string ___s = s; \
+		if (autocvar_developer) \
+			_LOG(print, "INFO", ___s); \
+		else \
+			print(___s); \
 	} MACRO_END
-#define  LOG_INFOF(...) \
-	MACRO_BEGIN \
-	{ \
-		if (autocvar_developer) _LOG_INFO(sprintf(__VA_ARGS__)); \
-		else printf(__VA_ARGS__); \
-	} MACRO_END
-#define _LOG_INFO(s) _LOG(printf, "INFO", s)
 
-#define  LOG_TRACE(...) _LOG_TRACE(strcat("", __VA_ARGS__))
+#define  LOG_TRACE(...) _LOG_TRACE(strcat0n(__VA_ARGS__))
 #define  LOG_TRACEF(...) _LOG_TRACE(sprintf(__VA_ARGS__))
-#define _LOG_TRACE(s) _LOG(dprintf, "TRACE", s)
+#define _LOG_TRACE(s) _LOG(dprint, "TRACE", s)
 
-#define  LOG_DEBUG(...) _LOG_DEBUG(strcat("", __VA_ARGS__))
+#define  LOG_DEBUG(...) _LOG_DEBUG(strcat0n(__VA_ARGS__))
 #define  LOG_DEBUGF(...) _LOG_DEBUG(sprintf(__VA_ARGS__))
-#define _LOG_DEBUG(s) _LOG(_dprintf2, "DEBUG", s)
+#define _LOG_DEBUG(s) _LOG(dprint2, "DEBUG", s)
+
+#define dprint2(msg) \
+	MACRO_BEGIN { \
+		if (autocvar_developer > 1) dprint(msg); \
+	} MACRO_END
 
 // TODO: this sucks, lets find a better way to do backtraces?
 #ifdef SVQC

@@ -1725,7 +1725,7 @@ void GameCommand_warp(float request, float argc)
 				if (argc >= 2)
 				{
 					CampaignLevelWarp(stof(argv(1)));
-					LOG_INFO("Successfully warped to campaign level ", stof(argv(1)), ".\n");
+					LOG_INFO("Successfully warped to campaign level ", argv(1), ".\n");
 				}
 				else
 				{
