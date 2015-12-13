@@ -19,25 +19,19 @@
 
 .entity vehicle;
 
+#define IMPULSE(id) _IMPULSE(IMP_##id)
+#define _IMPULSE(id) \
+	void id##_handle(entity this); \
+	STATIC_INIT_LATE(id) \
+	{ \
+		id.impulse_handle = id##_handle; \
+	} \
+	void id##_handle(entity this)
+
 /**
  * Impulse map:
  *
  * 0 reserved (no input)
- * 1 to 9, 14: weapon shortcuts
- * 10: next weapon according to linear list
- * 11: most recently used weapon
- * 12: previous weapon according to linear list
- * 13: best weapon according to priority list
- * 15: next weapon according to priority list
- * 16: previous weapon according to priority list
- * 17: throw weapon
- * 18: next weapon according to sbar_hudselector 1 list
- * 19: previous weapon according to sbar_hudselector 1 list
- * 20: reload if needed
- *
- * 30 to 39: create waypoints
- * 47: clear personal waypoints
- * 48: clear team waypoints
  *
  * 99: loaded
  *
@@ -54,366 +48,519 @@
  * 230 to 253: individual weapons (up to 24)
  */
 
-void ImpulseCommands ()
-{SELFPARAM();
-	int imp;
-	vector org;
-	float i;
-	float m;
-	entity e, e2;
+// weapon switching impulses
 
-	imp = self.impulse;
-	if (!imp || gameover)
-		return;
-	self.impulse = 0;
+#define X(slot) \
+	IMPULSE(weapon_group_##slot) \
+	{ \
+		if (this.deadflag != DEAD_NO) return; \
+		W_NextWeaponOnImpulse(slot); \
+	}
+X(1)
+X(2)
+X(3)
+X(4)
+X(5)
+X(6)
+X(7)
+X(8)
+X(9)
+X(0)
+#undef X
 
-	if ( self.active_minigame )
-	if ( MinigameImpulse(imp) )
-		return;
+// custom order weapon cycling
+
+#define X(slot, dir) \
+	IMPULSE(weapon_priority_##slot##_##dir) \
+	{ \
+		if (this.vehicle) return; \
+		if (this.deadflag != DEAD_NO) return; \
+		noref int prev = -1; \
+		noref int best =  0; \
+		noref int next = +1; \
+		W_CycleWeapon(this.cvar_cl_weaponpriorities[slot], dir); \
+	}
+X(0, prev)
+X(1, prev)
+X(2, prev)
+X(3, prev)
+X(4, prev)
+X(5, prev)
+X(6, prev)
+X(7, prev)
+X(8, prev)
+X(9, prev)
+
+X(0, best)
+X(1, best)
+X(2, best)
+X(3, best)
+X(4, best)
+X(5, best)
+X(6, best)
+X(7, best)
+X(8, best)
+X(9, best)
+
+X(0, next)
+X(1, next)
+X(2, next)
+X(3, next)
+X(4, next)
+X(5, next)
+X(6, next)
+X(7, next)
+X(8, next)
+X(9, next)
+#undef X
+
+// direct weapons
+
+#define X(i) \
+	IMPULSE(weapon_byid_##i) \
+	{ \
+		if (this.vehicle) return; \
+		if (this.deadflag != DEAD_NO) return; \
+		W_SwitchWeapon(Weapons_from(WEP_FIRST + i)); \
+	}
+X(0)
+X(1)
+X(2)
+X(3)
+X(4)
+X(5)
+X(6)
+X(7)
+X(8)
+X(9)
+X(10)
+X(11)
+X(12)
+X(13)
+X(14)
+X(15)
+X(16)
+X(17)
+X(18)
+X(19)
+X(20)
+X(21)
+X(22)
+X(23)
+#undef X
+
+IMPULSE(weapon_next_byid)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_NextWeapon(0);
+}
+
+IMPULSE(weapon_prev_byid)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_PreviousWeapon(0);
+}
+
+IMPULSE(weapon_next_bygroup)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_NextWeapon(1);
+}
+
+IMPULSE(weapon_prev_bygroup)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_PreviousWeapon(1);
+}
+
+IMPULSE(weapon_next_bypriority)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_NextWeapon(2);
+}
+
+IMPULSE(weapon_prev_bypriority)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_PreviousWeapon(2);
+}
+
+IMPULSE(weapon_last)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_LastWeapon();
+}
+
+IMPULSE(weapon_best)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_SwitchWeapon(w_getbestweapon(this));
+}
+
+IMPULSE(weapon_drop)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	W_ThrowWeapon(W_CalculateProjectileVelocity(this.velocity, v_forward * 750, false), '0 0 0', true);
+}
+
+IMPULSE(weapon_reload)
+{
+	if (this.vehicle) return;
+	if (this.deadflag != DEAD_NO) return;
+	if (forbidWeaponUse(this)) return;
+	Weapon w = PS(this).m_weapon;
+	w.wr_reload(w);
+}
+
+void ImpulseCommands(entity this)
+{
+	if (gameover) return;
+
+	int imp = this.impulse;
+	if (!imp) return;
+	this.impulse = 0;
+
+	if (MinigameImpulse(this, imp)) return;
+
+	if (timeout_status == TIMEOUT_ACTIVE) return;  // don't allow any impulses while the game is paused
 
 	// allow only weapon change impulses when not in round time
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
-	if(imp == 17 || (imp >= 20 && imp < 200) || imp > 253)
+	if (round_handler_IsActive() && !round_handler_IsRoundStarted())
+	{
+		#define X(id) case IMP_##id.impulse:
+		switch (imp)
+		{
+			X(weapon_group_0)
+			X(weapon_group_1)
+			X(weapon_group_2)
+			X(weapon_group_3)
+			X(weapon_group_4)
+			X(weapon_group_5)
+			X(weapon_group_6)
+			X(weapon_group_7)
+			X(weapon_group_8)
+			X(weapon_group_9)
+			X(weapon_next_byid)
+			X(weapon_prev_byid)
+			X(weapon_next_bygroup)
+			X(weapon_prev_bygroup)
+			X(weapon_next_bypriority)
+			X(weapon_prev_bypriority)
+			X(weapon_last)
+			X(weapon_best)
+			X(weapon_reload)
+			X(weapon_priority_0_prev)
+            X(weapon_priority_1_prev)
+            X(weapon_priority_2_prev)
+            X(weapon_priority_3_prev)
+            X(weapon_priority_4_prev)
+            X(weapon_priority_5_prev)
+            X(weapon_priority_6_prev)
+            X(weapon_priority_7_prev)
+            X(weapon_priority_8_prev)
+            X(weapon_priority_9_prev)
+            X(weapon_priority_0_next)
+			X(weapon_priority_1_next)
+			X(weapon_priority_2_next)
+			X(weapon_priority_3_next)
+			X(weapon_priority_4_next)
+			X(weapon_priority_5_next)
+			X(weapon_priority_6_next)
+			X(weapon_priority_7_next)
+			X(weapon_priority_8_next)
+			X(weapon_priority_9_next)
+			X(weapon_priority_0_best)
+            X(weapon_priority_1_best)
+            X(weapon_priority_2_best)
+            X(weapon_priority_3_best)
+            X(weapon_priority_4_best)
+            X(weapon_priority_5_best)
+            X(weapon_priority_6_best)
+            X(weapon_priority_7_best)
+            X(weapon_priority_8_best)
+            X(weapon_priority_9_best)
+            X(weapon_byid_0)
+            X(weapon_byid_1)
+            X(weapon_byid_2)
+            X(weapon_byid_3)
+            X(weapon_byid_4)
+            X(weapon_byid_5)
+            X(weapon_byid_6)
+            X(weapon_byid_7)
+            X(weapon_byid_8)
+            X(weapon_byid_9)
+            X(weapon_byid_10)
+            X(weapon_byid_11)
+            X(weapon_byid_12)
+            X(weapon_byid_13)
+            X(weapon_byid_14)
+            X(weapon_byid_15)
+            X(weapon_byid_16)
+            X(weapon_byid_17)
+            X(weapon_byid_18)
+            X(weapon_byid_19)
+            X(weapon_byid_20)
+            X(weapon_byid_21)
+            X(weapon_byid_22)
+            X(weapon_byid_23)
+			break;
+			default: return;
+		}
+#undef X
+	}
+
+	if (vehicle_impulse(this, imp)) return;
+
+	if (CheatImpulse(imp)) return;
+
+	FOREACH(IMPULSES, it.impulse == imp, {
+		void(entity) f = it.impulse_handle;
+		if (!f) continue;
+		f(this);
 		return;
+	});
+}
 
-	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
-		return;
+IMPULSE(use)
+{
+	PlayerUseKey();
+}
 
-	if(self.vehicle)
-	if(self.vehicle.deadflag == DEAD_NO)
-	{
-		if(self.vehicle.vehicles_impulse)
-		if(self.vehicle.vehicles_impulse(imp))
-			return;
-		if(vehicle_impulse(imp))
-			return;
-	}
+IMPULSE(waypoint_personal_here)
+{
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.origin, RADARICON_WAYPOINT);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "personal waypoint spawned at location\n");
+}
 
-	if(CheatImpulse(imp))
+IMPULSE(waypoint_personal_crosshair)
+{
+	WarpZone_crosshair_trace(this);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, trace_endpos, RADARICON_WAYPOINT);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "personal waypoint spawned at crosshair\n");
+}
+
+IMPULSE(waypoint_personal_death)
+{
+	if (!this.death_origin) return;
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.death_origin, RADARICON_WAYPOINT);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "personal waypoint spawned at death location\n");
+}
+
+IMPULSE(waypoint_here_follow)
+{
+	if (!teamplay) return;
+	if (this.deadflag != DEAD_NO) return;
+	if (!MUTATOR_CALLHOOK(HelpMePing, this))
 	{
+		entity wp = WaypointSprite_Attach(WP_Helpme, true, RADARICON_HELPME);
+		if (!wp) WaypointSprite_HelpMePing(this.waypointsprite_attachedforcarrier);
+		else WaypointSprite_Ping(wp);
 	}
-	else if (imp >= 1 && imp <= 9)
+	sprint(this, "HELP ME attached\n");
+}
+
+IMPULSE(waypoint_here_here)
+{
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.origin, RADARICON_HERE);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "HERE spawned at location\n");
+}
+
+IMPULSE(waypoint_here_crosshair)
+{
+	WarpZone_crosshair_trace(this);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, trace_endpos, RADARICON_HERE);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "HERE spawned at crosshair\n");
+}
+
+IMPULSE(waypoint_here_death)
+{
+	if (!this.death_origin) return;
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.death_origin, RADARICON_HERE);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "HERE spawned at death location\n");
+}
+
+IMPULSE(waypoint_danger_here)
+{
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.origin, RADARICON_DANGER);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "DANGER spawned at location\n");
+}
+
+IMPULSE(waypoint_danger_crosshair)
+{
+	WarpZone_crosshair_trace(this);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, trace_endpos, RADARICON_DANGER);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "DANGER spawned at crosshair\n");
+}
+
+IMPULSE(waypoint_danger_death)
+{
+	if (!this.death_origin) return;
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.death_origin, RADARICON_DANGER);
+	if (wp) WaypointSprite_Ping(wp);
+	sprint(this, "DANGER spawned at death location\n");
+}
+
+IMPULSE(waypoint_clear_personal)
+{
+	WaypointSprite_ClearPersonal();
+	if (this.personal)
 	{
-		// weapon switching impulses
-		if(self.deadflag == DEAD_NO)
-			W_NextWeaponOnImpulse(imp);
-		//else // don't retry, as this can break weaplast bind
-		//	self.impulse = imp; // retry in next frame
+		remove(this.personal);
+		this.personal = NULL;
 	}
-	else if(imp >= 10 && imp <= 20)
+	sprint(this, "personal waypoint cleared\n");
+}
+
+IMPULSE(waypoint_clear)
+{
+	WaypointSprite_ClearOwned();
+	if (this.personal)
 	{
-		if(!self.vehicle)
-		if(self.deadflag == DEAD_NO)
+		remove(this.personal);
+		this.personal = NULL;
+	}
+	sprint(this, "all waypoints cleared\n");
+}
+
+IMPULSE(navwaypoint_spawn)
+{
+	if (!autocvar_g_waypointeditor) return;
+	waypoint_schedulerelink(waypoint_spawn(this.origin, this.origin, 0));
+	bprint(strcat("Waypoint spawned at ", vtos(this.origin), "\n"));
+}
+
+IMPULSE(navwaypoint_remove)
+{
+	if (!autocvar_g_waypointeditor) return;
+	entity e = navigation_findnearestwaypoint(this, false);
+	if (!e) return;
+	if (e.wpflags & WAYPOINTFLAG_GENERATED) return;
+	bprint(strcat("Waypoint removed at ", vtos(e.origin), "\n"));
+	waypoint_remove(e);
+}
+
+IMPULSE(navwaypoint_relink)
+{
+	if (!autocvar_g_waypointeditor) return;
+	waypoint_schedulerelinkall();
+}
+
+IMPULSE(navwaypoint_save)
+{
+	if (!autocvar_g_waypointeditor) return;
+	waypoint_saveall();
+}
+
+IMPULSE(navwaypoint_unreachable)
+{
+	if (!autocvar_g_waypointeditor) return;
+	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)
+	{
+		e.colormod = '0.5 0.5 0.5';
+		e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
+	}
+	entity e2 = navigation_findnearestwaypoint(this, false);
+	navigation_markroutes(e2);
+
+	int i, m;
+
+	i = 0;
+	m = 0;
+	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)
+	{
+		if (e.wpcost < 10000000) continue;
+		LOG_INFO("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
+		e.colormod_z = 8;
+		e.effects |= EF_NODEPTHTEST | EF_BLUE;
+		++i;
+		++m;
+	}
+	if (i) LOG_INFOF("%d waypoints cannot be reached from here in any way (marked with blue light)\n", i);
+	navigation_markroutes_inverted(e2);
+
+	i = 0;
+	for (entity e = findchain(classname, "waypoint"); e; e = e.chain)
+	{
+		if (e.wpcost < 10000000) continue;
+		LOG_INFO("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
+		e.colormod_x = 8;
+		if (!(e.effects & EF_NODEPTHTEST))  // not already reported before
+			++m;
+		e.effects |= EF_NODEPTHTEST | EF_RED;
+		++i;
+	}
+	if (i) LOG_INFOF("%d waypoints cannot walk to here in any way (marked with red light)\n", i);
+	if (m) LOG_INFOF("%d waypoints have been marked total\n", m);
+
+	i = 0;
+	for (entity e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
+	{
+		vector org = e.origin;
+		tracebox(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
+		setorigin(e, trace_endpos);
+		if (navigation_findnearestwaypoint(e, false))
 		{
-			switch(imp)
-			{
-				case 10:
-					W_NextWeapon(0);
-					break;
-				case 11:
-					W_LastWeapon();
-					break;
-				case 12:
-					W_PreviousWeapon(0);
-					break;
-				case 13:
-					W_SwitchWeapon(w_getbestweapon(self));
-					break;
-				case 14:
-					W_NextWeaponOnImpulse(0);
-					break;
-				case 15:
-					W_NextWeapon(2);
-					break;
-				case 16:
-					W_PreviousWeapon(2);
-					break;
-				case 17:
-					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, false), '0 0 0', true);
-					break;
-				case 18:
-					W_NextWeapon(1);
-					break;
-				case 19:
-					W_PreviousWeapon(1);
-					break;
-				case 20:
-					if(!forbidWeaponUse(self)) {
-						Weapon w = Weapons_from(self.weapon);
-						w.wr_reload(w);
-					}
-					break;
-			}
+			setorigin(e, org);
+			e.effects &= ~EF_NODEPTHTEST;
+			e.model = "";
 		}
-		//else // don't retry, as this can break weaplast bind
-			//self.impulse = imp; // retry in next frame
-	}
-	else if(imp == 21)
-	{
-		PlayerUseKey ();
-	}
-	else if(imp >= 200 && imp <= 229)
-	{
-		if(!self.vehicle)
-		if(self.deadflag == DEAD_NO)
+		else
 		{
-			// custom order weapon cycling
-			int i = imp % 10;
-			m = (imp - (210 + i)); // <0 for prev, =0 for best, >0 for next
-			W_CycleWeapon(self.(cvar_cl_weaponpriorities[i]), m);
-		}
-		//else // don't retry, as this can break weaplast bind
-			//self.impulse = imp; // retry in next frame
-	}
-	else if(imp >= WEP_IMPULSE_BEGIN && imp <= WEP_IMPULSE_END)
-	{
-		if(!self.vehicle)
-		if(self.deadflag == DEAD_NO)
-			W_SwitchWeapon (imp - WEP_IMPULSE_BEGIN + WEP_FIRST);
-		//else // don't retry, as this can break weaplast bind
-			//self.impulse = imp; // retry in next frame
-	}
-	// deploy waypoints
-	else if (imp >= 30 && imp <= 49)
-	{
-		entity wp;
-		switch(imp)
-		{
-			case 30:
-				wp = WaypointSprite_DeployPersonal(WP_Waypoint, self.origin, RADARICON_WAYPOINT);
-				if(wp)
-					WaypointSprite_Ping(wp);
-				sprint(self, "personal waypoint spawned at location\n");
-				break;
-			case 31:
-				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployPersonal(WP_Waypoint, trace_endpos, RADARICON_WAYPOINT);
-				if(wp)
-					WaypointSprite_Ping(wp);
-				sprint(self, "personal waypoint spawned at crosshair\n");
-				break;
-			case 32:
-				if(vlen(self.death_origin))
-				{
-					wp = WaypointSprite_DeployPersonal(WP_Waypoint, self.death_origin, RADARICON_WAYPOINT);
-					if(wp)
-						WaypointSprite_Ping(wp);
-					sprint(self, "personal waypoint spawned at death location\n");
-				}
-				break;
-			case 33:
-				if(self.deadflag == DEAD_NO && teamplay)
-				{
-					if (!MUTATOR_CALLHOOK(HelpMePing, self))
-					{
-						wp = WaypointSprite_Attach(WP_Helpme, true, RADARICON_HELPME);
-						if(!wp)
-							WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
-						else
-							WaypointSprite_Ping(wp);
-					}
-					sprint(self, "HELP ME attached\n");
-				}
-				break;
-			case 34:
-				wp = WaypointSprite_DeployFixed(WP_Here, false, self.origin, RADARICON_HERE);
-				if(wp)
-					WaypointSprite_Ping(wp);
-				sprint(self, "HERE spawned at location\n");
-				break;
-			case 35:
-				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed(WP_Here, false, trace_endpos, RADARICON_HERE);
-				if(wp)
-					WaypointSprite_Ping(wp);
-				sprint(self, "HERE spawned at crosshair\n");
-				break;
-			case 36:
-				if(vlen(self.death_origin))
-				{
-					wp = WaypointSprite_DeployFixed(WP_Here, false, self.death_origin, RADARICON_HERE);
-					if(wp)
-						WaypointSprite_Ping(wp);
-					sprint(self, "HERE spawned at death location\n");
-				}
-				break;
-			case 37:
-				wp = WaypointSprite_DeployFixed(WP_Danger, false, self.origin, RADARICON_DANGER);
-				if(wp)
-					WaypointSprite_Ping(wp);
-				sprint(self, "DANGER spawned at location\n");
-				break;
-			case 38:
-				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed(WP_Danger, false, trace_endpos, RADARICON_DANGER);
-				if(wp)
-					WaypointSprite_Ping(wp);
-				sprint(self, "DANGER spawned at crosshair\n");
-				break;
-			case 39:
-				if(vlen(self.death_origin))
-				{
-					wp = WaypointSprite_DeployFixed(WP_Danger, false, self.death_origin, RADARICON_DANGER);
-					if(wp)
-						WaypointSprite_Ping(wp);
-					sprint(self, "DANGER spawned at death location\n");
-				}
-				break;
-			case 47:
-				WaypointSprite_ClearPersonal();
-				if(self.personal)
-				{
-					remove(self.personal);
-					self.personal = world;
-				}
-				sprint(self, "personal waypoint cleared\n");
-				break;
-			case 48:
-				WaypointSprite_ClearOwned();
-				if(self.personal)
-				{
-					remove(self.personal);
-					self.personal = world;
-				}
-				sprint(self, "all waypoints cleared\n");
-				break;
-		}
-	}
-	else if(imp >= 103 && imp <= 107)
-	{
-		if(autocvar_g_waypointeditor)
-		{
-			switch(imp)
-			{
-				case 103:
-					waypoint_schedulerelink(waypoint_spawn(self.origin, self.origin, 0));
-					bprint(strcat("Waypoint spawned at ",vtos(self.origin),"\n"));
-					break;
-				case 104:
-					e = navigation_findnearestwaypoint(self, false);
-					if (e)
-					if (!(e.wpflags & WAYPOINTFLAG_GENERATED))
-					{
-						bprint(strcat("Waypoint removed at ",vtos(e.origin),"\n"));
-						waypoint_remove(e);
-					}
-					break;
-				case 105:
-					waypoint_schedulerelinkall();
-					break;
-				case 106:
-					waypoint_saveall();
-					break;
-				case 107:
-					for(e = findchain(classname, "waypoint"); e; e = e.chain)
-					{
-						e.colormod = '0.5 0.5 0.5';
-						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-					}
-					e2 = navigation_findnearestwaypoint(self, false);
-					navigation_markroutes(e2);
-					i = 0;
-					m = 0;
-					for(e = findchain(classname, "waypoint"); e; e = e.chain)
-					{
-						if(e.wpcost >= 10000000)
-						{
-							LOG_INFO("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_z = 8;
-							e.effects |= EF_NODEPTHTEST | EF_BLUE;
-							++i;
-							++m;
-						}
-					}
-					if(i)
-						LOG_INFO(ftos(i), " waypoints cannot be reached from here in any way (marked with blue light)\n");
-					navigation_markroutes_inverted(e2);
-					i = 0;
-					for(e = findchain(classname, "waypoint"); e; e = e.chain)
-					{
-						if(e.wpcost >= 10000000)
-						{
-							LOG_INFO("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_x = 8;
-							if(!(e.effects & EF_NODEPTHTEST)) // not already reported before
-								++m;
-							e.effects |= EF_NODEPTHTEST | EF_RED;
-							++i;
-						}
-					}
-					if(i)
-						LOG_INFO(ftos(i), " waypoints cannot walk to here in any way (marked with red light)\n");
-					if(m)
-						LOG_INFO(ftos(m), " waypoints have been marked total\n");
-					i = 0;
-					for(e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
-					{
-						org = e.origin;
-						tracebox(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
-						setorigin(e, trace_endpos);
-						if(navigation_findnearestwaypoint(e, false))
-						{
-							setorigin(e, org);
-							e.effects &= ~EF_NODEPTHTEST;
-							e.model = "";
-						}
-						else
-						{
-							setorigin(e, org);
-							LOG_INFO("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST;
-							_setmodel(e, self.model);
-							e.frame = self.frame;
-							e.skin = self.skin;
-							e.colormod = '8 0.5 8';
-							setsize(e, '0 0 0', '0 0 0');
-							++i;
-						}
-					}
-					if(i)
-						LOG_INFO(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
-					i = 0;
-					entity start;
-					start = findchainflags(flags, FL_ITEM);
-					for(e = start; e; e = e.chain)
-					{
-						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
-						e.colormod = '0.5 0.5 0.5';
-					}
-					for(e = start; e; e = e.chain)
-					{
-						if(navigation_findnearestwaypoint(e, false))
-						{
-						}
-						else
-						{
-							LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST | EF_RED;
-							e.colormod_x = 8;
-							++i;
-						}
-					}
-					if(i)
-						LOG_INFO(ftos(i), " items have no nearest waypoint and cannot be walked away from (marked with red light)\n");
-					i = 0;
-					for(e = start; e; e = e.chain)
-					{
-						org = e.origin;
-						if(navigation_findnearestwaypoint(e, true))
-						{
-						}
-						else
-						{
-							LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
-							e.effects |= EF_NODEPTHTEST | EF_BLUE;
-							e.colormod_z = 8;
-							++i;
-						}
-					}
-					if(i)
-						LOG_INFO(ftos(i), " items have no nearest waypoint and cannot be walked to (marked with blue light)\n");
-					break;
-			}
+			setorigin(e, org);
+			LOG_INFO("spawn without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+			e.effects |= EF_NODEPTHTEST;
+			_setmodel(e, this.model);
+			e.frame = this.frame;
+			e.skin = this.skin;
+			e.colormod = '8 0.5 8';
+			setsize(e, '0 0 0', '0 0 0');
+			++i;
 		}
 	}
+	if (i) LOG_INFOF("%d spawnpoints have no nearest waypoint (marked by player model)\n", i);
+
+	i = 0;
+	entity start = findchainflags(flags, FL_ITEM);
+	for (entity e = start; e; e = e.chain)
+	{
+		e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
+		e.colormod = '0.5 0.5 0.5';
+	}
+	for (entity e = start; e; e = e.chain)
+	{
+		if (navigation_findnearestwaypoint(e, false)) continue;
+		LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+		e.effects |= EF_NODEPTHTEST | EF_RED;
+		e.colormod_x = 8;
+		++i;
+	}
+	if (i) LOG_INFOF("%d items have no nearest waypoint and cannot be walked away from (marked with red light)\n", i);
+
+	i = 0;
+	for (entity e = start; e; e = e.chain)
+	{
+		if (navigation_findnearestwaypoint(e, true)) continue;
+		LOG_INFO("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+		e.effects |= EF_NODEPTHTEST | EF_BLUE;
+		e.colormod_z = 8;
+		++i;
+	}
+	if (i) LOG_INFOF("%d items have no nearest waypoint and cannot be walked to (marked with blue light)\n", i);
 }

@@ -1,69 +1,76 @@
 #ifndef LOG_H
 #define LOG_H
 
-#define _printferr(...) error(sprintf(__VA_ARGS__))
-#define _printfbt(...) backtrace(sprintf(__VA_ARGS__))
-#define printf(...) print(sprintf(__VA_ARGS__))
-#define dprintf(...) dprint(sprintf(__VA_ARGS__))
-#define _dprintf2(...) \
-	do \
-	{ \
-		if (autocvar_developer > 1) dprintf(__VA_ARGS__); \
-	} \
-	while (0)
-
 #define assert(expr, ...) _assert(LOG_SEVERE, expr, __VA_ARGS__)
-#define ASSERT(expr, ...) _assert(LOG_FATAL, expr, __VA_ARGS__)
+#define assert_once(expr, ...) \
+	MACRO_BEGIN { \
+		static bool __once; \
+		if (!__once) \
+		{ \
+			assert(expr, __VA_ARGS__); \
+			__once = true; \
+		} \
+	} MACRO_END
+#define demand(expr, ...) _assert(LOG_FATAL, expr, __VA_ARGS__)
 #define _assert(f, expr, then) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		if (!(expr)) \
 		{ \
 			f("assertion failed: `" #expr "`\n"); \
 			then; \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define ASSERT_LESS(name, var, const) noref int name[(const - var + 1)];
 
-#define _LOG(f, level, s) f("[::"level "] ["__FILE__ ":%s:%.0f] %s", __FUNC__, __LINE__, s)
 
-#define  LOG_FATAL(...) _LOG_FATAL(strcat("", __VA_ARGS__))
+#if defined(MENUQC)
+string(string...) strcat0n = #53;
+#else
+string(string...) strcat0n = #115;
+#endif
+
+#define _LOG(f, level, s) \
+	MACRO_BEGIN { \
+		f(sprintf("^9[::"level "^9] ["__FILE__ "^7:^9%s^7:^9%d] \n^7%s\n", __FUNC__, __LINE__, s)); \
+	} MACRO_END
+
+#define  LOG_FATAL(...) _LOG_FATAL(strcat0n(__VA_ARGS__))
 #define  LOG_FATALF(...) _LOG_FATAL(sprintf(__VA_ARGS__))
-#define _LOG_FATAL(s) _LOG(_printferr, "FATAL", s)
+#define _LOG_FATAL(s) _LOG(error, "^1FATAL", s)
 
-#define  LOG_SEVERE(...) _LOG_SEVERE(strcat("", __VA_ARGS__))
+#define  LOG_SEVERE(...) _LOG_SEVERE(strcat0n(__VA_ARGS__))
 #define  LOG_SEVEREF(...) _LOG_SEVERE(sprintf(__VA_ARGS__))
-#define _LOG_SEVERE(s) _LOG(_printfbt, "SEVERE", s)
+#define _LOG_SEVERE(s) _LOG(backtrace, "^1SEVERE", s)
 
-#define  LOG_WARNING(...) _LOG_WARNING(strcat("", __VA_ARGS__))
+#define  LOG_WARNING(...) _LOG_WARNING(strcat0n(__VA_ARGS__))
 #define  LOG_WARNINGF(...) _LOG_WARNING(sprintf(__VA_ARGS__))
-#define _LOG_WARNING(s) _LOG(printf, "WARNING", s)
+#define _LOG_WARNING(s) _LOG(print, "^3WARNING", s)
 
-#define  LOG_INFO(...) \
-	do \
-	{ \
-		if (autocvar_developer) _LOG_INFO(strcat("", __VA_ARGS__)); \
-		else print(__VA_ARGS__); \
-	} \
-	while (0)
-#define  LOG_INFOF(...) \
-	do \
-	{ \
-		if (autocvar_developer) _LOG_INFO(sprintf(__VA_ARGS__)); \
-		else printf(__VA_ARGS__); \
-	} \
-	while (0)
-#define _LOG_INFO(s) _LOG(printf, "INFO", s)
+#define  LOG_INFO(...) _LOG_INFO(strcat0n(__VA_ARGS__))
+#define  LOG_INFOF(...) _LOG_INFO(sprintf(__VA_ARGS__))
+#define _LOG_INFO(s) \
+	MACRO_BEGIN { \
+		string ___s = s; \
+		if (autocvar_developer) \
+			_LOG(print, "^5INFO", ___s); \
+		else \
+			print(___s); \
+	} MACRO_END
 
-#define  LOG_TRACE(...) _LOG_TRACE(strcat("", __VA_ARGS__))
+#define  LOG_TRACE(...) _LOG_TRACE(strcat0n(__VA_ARGS__))
 #define  LOG_TRACEF(...) _LOG_TRACE(sprintf(__VA_ARGS__))
-#define _LOG_TRACE(s) _LOG(dprintf, "TRACE", s)
+#define _LOG_TRACE(s) _LOG(dprint, "^6TRACE", s)
 
-#define  LOG_DEBUG(...) _LOG_DEBUG(strcat("", __VA_ARGS__))
+#define  LOG_DEBUG(...) _LOG_DEBUG(strcat0n(__VA_ARGS__))
 #define  LOG_DEBUGF(...) _LOG_DEBUG(sprintf(__VA_ARGS__))
-#define _LOG_DEBUG(s) _LOG(_dprintf2, "DEBUG", s)
+#define _LOG_DEBUG(s) _LOG(dprint2, "^2DEBUG", s)
+
+#define dprint2(msg) \
+	MACRO_BEGIN { \
+		if (autocvar_developer > 1) dprint(msg); \
+	} MACRO_END
 
 // TODO: this sucks, lets find a better way to do backtraces?
 #ifdef SVQC
@@ -77,19 +84,24 @@
 noref int autocvar_developer;
 noref bool autocvar_prvm_backtraceforwarnings;
 
+#ifdef SVQC
+#define bt_cvar_set(cvar, value) builtin_cvar_set(cvar, value)
+#else
+#define bt_cvar_set(cvar, value) cvar_set(cvar, value)
+#endif
+
 #define backtrace(msg) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		int dev = autocvar_developer; \
 		bool war = autocvar_prvm_backtraceforwarnings; \
-		cvar_set("developer", "1"); \
-		cvar_set("prvm_backtraceforwarnings", "1"); \
-		print("\n--- CUT HERE ---\n", msg, "\n"); \
+		bt_cvar_set("developer", "1"); \
+		bt_cvar_set("prvm_backtraceforwarnings", "1"); \
+		print("\n--- CUT HERE ---\n", msg); \
 		_backtrace(); \
 		print("\n--- CUT UNTIL HERE ---\n"); \
-		cvar_set("developer", ftos(dev)); \
-		cvar_set("prvm_backtraceforwarnings", ftos(war)); \
-	} \
-	while (0)
+		bt_cvar_set("developer", ftos(dev)); \
+		bt_cvar_set("prvm_backtraceforwarnings", ftos(war)); \
+	} MACRO_END
 
 #endif

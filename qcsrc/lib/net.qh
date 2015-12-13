@@ -67,27 +67,24 @@
 
 #ifdef CSQC
 	#define Net_Accept(classname) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			if (!this)    this = new(classname); \
-		} \
-		while (0)
+		} MACRO_END
 	#define Net_Reject() \
-		do \
+		MACRO_BEGIN \
 		{ \
 			if (this)     remove(this); \
-		} \
-		while (0)
+		} MACRO_END
 	#define NET_HANDLE(id, param) \
 		bool Net_Handle_##id(entity this, param)
 #else
 	#define WriteHeader(to, id) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
 			WriteByte(to, NET_##id.m_id); \
-		} \
-		while (0)
+		} MACRO_END
 #endif
 
 #ifdef CSQC
@@ -161,7 +158,19 @@ STATIC_INIT(RegisterTempEntities_renumber)
 	#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 
+	#if defined(CSQC)
+		#define Read_float() ReadFloat()
+		#define Read_int() ReadInt24_t()
+		#define Read_string() ReadString()
+	#elif defined(SVQC)
+		#define Write_float(to, f) WriteFloat(to, f)
+		#define Write_int(to, f) WriteInt24_t(to, f)
+		#define Write_string(to, f) WriteString(to, f)
+	#endif
+
 	#ifdef CSQC
+    	#define ReadRegistry(r) r##_from(ReadByte())
+
 		entity ReadCSQCEntity()
 		{
 			int f = ReadShort();
@@ -191,6 +200,8 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			return v;
 		}
 
+		int _ReadSByte;
+		#define ReadSByte() (_ReadSByte = ReadByte(), (_ReadSByte & BIT(7) ? -128 : 0) + (_ReadSByte & BITS(7)))
 		#define ReadFloat() ReadCoord()
         vector ReadVector() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = ReadFloat(); return v; }
 		vector ReadVector2D() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = 0; return v; }
@@ -207,6 +218,8 @@ STATIC_INIT(RegisterTempEntities_renumber)
 
 	#else
 		const int MSG_ENTITY = 5;
+
+		#define WriteRegistry(r, to, it) WriteByte(to, it.m_id)
 
 		void WriteInt24_t(float dst, float val)
 		{
@@ -227,8 +240,8 @@ STATIC_INIT(RegisterTempEntities_renumber)
 		}
 
         #define WriteFloat(to, f) WriteCoord(to, f)
-		#define WriteVector(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } while (0)
-        #define WriteVector2D(to, v) do { WriteFloat(to, v.x); WriteFloat(to, v.y); } while (0)
+		#define WriteVector(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); WriteFloat(to, v.z); } MACRO_END
+        #define WriteVector2D(to, v) MACRO_BEGIN { WriteFloat(to, v.x); WriteFloat(to, v.y); } MACRO_END
 
 		// this will use the value:
 		//   128
@@ -259,11 +272,10 @@ STATIC_INIT(RegisterTempEntities_renumber)
 			if (msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) \
 				statement msg_entity = varname
 		#define WRITESPECTATABLE_MSG_ONE(statement) \
-			do \
+			MACRO_BEGIN \
 			{ \
 				WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement); \
-			} \
-			while (0)
+			} MACRO_END
 		#define WRITESPECTATABLE(msg, statement) \
 			if (msg == MSG_ONE) WRITESPECTATABLE_MSG_ONE(statement); \
 			else \

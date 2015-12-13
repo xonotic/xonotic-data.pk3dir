@@ -124,9 +124,9 @@ void PrecachePlayerSounds(string f);
 	void _GlobalSound(entity this, entity gs, entity ps, string sample, float chan, float voicetype, bool fake);
 	#define GlobalSound(this, def, chan, voicetype) _GlobalSound(this, def, NULL, string_null, chan, voicetype, false)
 	#define GlobalSound_string(this, def, chan, voicetype) _GlobalSound(this, NULL, NULL, def, chan, voicetype, false)
-	#define PlayerSound(thise, def, chan, voicetype) _GlobalSound(this, NULL, def, string_null, chan, voicetype, false)
+	#define PlayerSound(this, def, chan, voicetype) _GlobalSound(this, NULL, def, string_null, chan, voicetype, false)
 	#define VoiceMessage(this, def, msg) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			entity VM = def; \
 			int voicetype = VM.m_playersoundvt; \
@@ -137,8 +137,7 @@ void PrecachePlayerSounds(string f);
 			else if (flood > 0) fake = false; \
 			else break; \
 			_GlobalSound(this, NULL, VM, string_null, CH_VOICE, voicetype, fake); \
-		} \
-		while (0)
+		} MACRO_END
 
 #endif
 

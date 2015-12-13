@@ -83,6 +83,16 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	}
 
 	/**
+	 * Same as `entcs_GetTeam`, but returns -1 for no team in teamplay
+	 */
+	int entcs_GetScoreTeam(int i)
+	{
+		int t = entcs_GetTeam(i);
+		if (teamplay && !t) t = -1;
+		return t;
+	}
+
+	/**
 	* @param i zero indexed player
 	*/
 	string entcs_GetName(int i)

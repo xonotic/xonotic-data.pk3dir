@@ -104,7 +104,7 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			Weapon w = Weapons_from(self.weapon);
+			Weapon w = PS(self).m_weapon;
 			w.wr_aim(w);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
@@ -114,7 +114,7 @@ void havocbot_ai()
 			else
 			{
 				if(self.BUTTON_ATCK||self.BUTTON_ATCK2)
-					self.lastfiredweapon = self.weapon;
+					self.lastfiredweapon = PS(self).m_weapon.m_id;
 			}
 		}
 		else
@@ -175,7 +175,7 @@ void havocbot_ai()
 			{
 				entity e = Weapons_from(i);
 				if ((self.weapons & (e.m_wepset)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
-					self.switchweapon = i;
+					PS(self).m_switchweapon = Weapons_from(i);
 			}
 		}
 	}
@@ -603,7 +603,7 @@ void havocbot_movetogoal()
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity.z < 0)
-			if(client_hasweapon(self, WEP_DEVASTATOR.m_id, true, false))
+			if(client_hasweapon(self, WEP_DEVASTATOR, true, false))
 			{
 				self.movement_x = maxspeed;
 
@@ -617,7 +617,7 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_DEVASTATOR.m_id;
+				PS(self).m_switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
@@ -1014,7 +1014,7 @@ void havocbot_chooseweapon()
 	// ;)
 	if(g_weaponarena_weapons == WEPSET(TUBA))
 	{
-		self.switchweapon = WEP_TUBA.m_id;
+		PS(self).m_switchweapon = WEP_TUBA;
 		return;
 	}
 
@@ -1022,12 +1022,12 @@ void havocbot_chooseweapon()
 	if(self.enemy==world)
 	{
 		// If no weapon was chosen get the first available weapon
-		if(self.weapon==0)
+		if(PS(self).m_weapon==WEP_Null)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER.m_id)
 		{
-			if(client_hasweapon(self, i, true, false))
+			if(client_hasweapon(self, Weapons_from(i), true, false))
 			{
-				self.switchweapon = i;
+				PS(self).m_switchweapon = Weapons_from(i);
 				return;
 			}
 		}
@@ -1055,7 +1055,7 @@ void havocbot_chooseweapon()
 	combo = false;
 
 	if(autocvar_bot_ai_weapon_combo)
-	if(self.weapon == self.lastfiredweapon)
+	if(PS(self).m_weapon.m_id == self.lastfiredweapon)
 	if(af > combo_time)
 	{
 		combo = true;
@@ -1071,11 +1071,11 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, true, false) )
+				if ( client_hasweapon(self, Weapons_from(w), true, false) )
 				{
-					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
+					if ((PS(self).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
-					self.switchweapon = w;
+					PS(self).m_switchweapon = Weapons_from(w);
 					return;
 				}
 			}
@@ -1085,11 +1085,11 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, true, false) )
+				if ( client_hasweapon(self, Weapons_from(w), true, false) )
 				{
-					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
+					if ((PS(self).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
-					self.switchweapon = w;
+					PS(self).m_switchweapon = Weapons_from(w);
 					return;
 				}
 			}
@@ -1098,11 +1098,11 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, true, false) )
+			if ( client_hasweapon(self, Weapons_from(w), true, false) )
 			{
-				if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
+				if ((PS(self).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(w))
 					continue;
-				self.switchweapon = w;
+				PS(self).m_switchweapon = Weapons_from(w);
 				return;
 			}
 		}

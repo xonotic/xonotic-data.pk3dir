@@ -234,6 +234,7 @@ void StartFrame()
 float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
 {SELFPARAM();
+	__spawnfunc_expect = this;
 	if (self)
 	if (self.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))

@@ -30,7 +30,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 
 	if(autocvar_g_spawn_alloweffects)
 	{
-		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteByte(MSG_ENTITY, etof(self.owner));
 		WriteShort(MSG_ENTITY, self.owner.origin.x);
 		WriteShort(MSG_ENTITY, self.owner.origin.y);
 		WriteShort(MSG_ENTITY, self.owner.origin.z);

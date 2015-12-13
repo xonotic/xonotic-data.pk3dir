@@ -14,17 +14,15 @@
 .vector origin;
 .bool pure_data;
 #define make_pure(e) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		(e).pure_data = true; \
-	} \
-	while (0)
+	} MACRO_END
 #define make_impure(e) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		(e).pure_data = false; \
-	} \
-	while (0)
+	} MACRO_END
 #define is_pure(e) ((e).pure_data)
 
 .string classname;
@@ -158,14 +156,20 @@ STATIC_INIT(RegisterClasses)
 		spawn##base##_1(this);              \
 	}
 
-#define METHOD(cname, name, prototype)      \
-	class(cname).prototype name;           \
-	prototype cname##_##name;               \
+#define METHOD_REFERENCE(cname, name) \
+	cname##_##name
+
+#define STATIC_METHOD(cname, name, prototype) \
+	prototype METHOD_REFERENCE(cname, name)
+
+#define METHOD(cname, name, prototype) \
+	STATIC_METHOD(cname, name, prototype); \
+	class(cname) .prototype name; \
 	INIT_STATIC(cname) \
 	{ \
-		this.name = cname##_##name; \
+		this.name = METHOD_REFERENCE(cname, name); \
 	} \
-	prototype cname##_##name
+	STATIC_METHOD(cname, name, prototype)
 
 #define ATTRIB(cname, name, type, val)      \
 	class(cname).type name;                \

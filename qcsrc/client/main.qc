@@ -42,6 +42,11 @@ void CSQC_Init()
 	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
+	// needs to be done so early because of the constants they create
+	static_init();
+	static_init_late();
+	static_init_precache();
+
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
@@ -92,11 +97,6 @@ void CSQC_Init()
 	players = Sort_Spawn();
 
 	GetTeam(NUM_SPECTATOR, true); // add specs first
-
-	// needs to be done so early because of the constants they create
-	static_init();
-	static_init_late();
-	static_init_precache();
 
 	// precaches
 
@@ -167,6 +167,7 @@ void Shutdown()
 .float has_team;
 float SetTeam(entity o, int Team)
 {
+	assert_once(Team);
 	entity tm;
 	if(teamplay)
 	{
@@ -270,7 +271,8 @@ void Playerchecker_Think()
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, entcs_GetTeam(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				int t = entcs_GetScoreTeam(i);
+				if (t) SetTeam(e, t); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
 				HUD_UpdatePlayerPos(e);
 			}
@@ -357,7 +359,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	if(!isNew && n != this.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(this), this.classname);
+		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", etof(this), this.classname);
 		isNew = true;
 		Ent_Remove();
 	}
@@ -736,7 +738,7 @@ void CSQC_Ent_Update(bool isnew)
 	{
 		if (t != this.enttype || isnew)
 		{
-			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(this), this.entnum, this.enttype, t);
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
 			Ent_Remove();
 			clearentity(this);
 			isnew = true;
@@ -746,7 +748,7 @@ void CSQC_Ent_Update(bool isnew)
 	{
 		if (!isnew)
 		{
-			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(this), this.entnum, t);
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
 			isnew = true;
 		}
 	}
@@ -908,22 +910,10 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 
 	armorblockpercent = ReadByte() / 255.0;
 
-	g_balance_mortar_bouncefactor = ReadCoord();
-	g_balance_mortar_bouncestop = ReadCoord();
-	g_balance_electro_secondary_bouncefactor = ReadCoord();
-	g_balance_electro_secondary_bouncestop = ReadCoord();
-
-	vortex_scope = !ReadByte();
-	rifle_scope = !ReadByte();
-
 	serverflags = ReadByte();
 
-	minelayer_maxmines = ReadByte();
-
-	hagar_maxrockets = ReadByte();
-
 	g_trueaim_minrange = ReadCoord();
-	g_balance_porto_secondary = ReadByte();
+
 	return = true;
 
 	MUTATOR_CALLHOOK(Ent_Init);
@@ -1110,7 +1100,7 @@ NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
 	complain_weapon = ReadByte();
 	if (complain_weapon_name) strunzone(complain_weapon_name);
-	complain_weapon_name = strzone(WEP_NAME(complain_weapon));
+	complain_weapon_name = strzone(Weapons_from(complain_weapon).m_name);
 	complain_weapon_type = ReadByte();
 	return = true;
 

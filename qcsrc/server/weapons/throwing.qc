@@ -97,10 +97,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		if(doreduce && g_weapon_stay == 2)
 		{
 			// if our weapon is loaded, give its load back to the player
-			if(self.(weapon_load[self.weapon]) > 0)
+			int i = PS(self).m_weapon.m_id;
+			if(self.(weapon_load[i]) > 0)
 			{
-				own.(ammotype) += self.(weapon_load[self.weapon]);
-				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
+				own.(ammotype) += self.(weapon_load[i]);
+				self.(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
 
 			wep.(ammotype) = 0;
@@ -108,10 +109,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		else if(doreduce)
 		{
 			// if our weapon is loaded, give its load back to the player
-			if(self.(weapon_load[self.weapon]) > 0)
+			int i = PS(self).m_weapon.m_id;
+			if(self.(weapon_load[i]) > 0)
 			{
-				own.(ammotype) += self.(weapon_load[self.weapon]);
-				self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
+				own.(ammotype) += self.(weapon_load[i]);
+				self.(weapon_load[i]) = -1; // schedule the weapon for reloading
 			}
 
 			thisammo = min(own.(ammotype), wep.(ammotype));
@@ -165,8 +167,8 @@ bool W_IsWeaponThrowable(bool w)
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 {SELFPARAM();
-	int w = self.weapon;
-	if (w == WEP_Null.m_id)
+	Weapon w = PS(self).m_weapon;
+	if (w == WEP_Null)
 		return; // just in case
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
@@ -175,23 +177,23 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if(self.(weaponentity).state != WS_READY)
 		return;
-	if(!W_IsWeaponThrowable(w))
+	if(!W_IsWeaponThrowable(w.m_id))
 		return;
 
-	WepSet set = WepSet_FromWeapon(Weapons_from(w));
+	WepSet set = WepSet_FromWeapon(w);
 	if(!(self.weapons & set)) return;
 	self.weapons &= ~set;
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
-	string a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
+	string a = W_ThrowNewWeapon(self, w.m_id, doreduce, self.origin + delta, velo);
 
 	if(!a) return;
-	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
+	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
 }
 
 void SpawnThrownWeapon(vector org, float w)
 {SELFPARAM();
-	if(self.weapons & WepSet_FromWeapon(Weapons_from(self.weapon)))
-		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, false, org, randomvec() * 125 + '0 0 200');
+	if(self.weapons & WepSet_FromWeapon(PS(self).m_weapon))
+		if(W_IsWeaponThrowable(PS(self).m_weapon.m_id))
+			W_ThrowNewWeapon(self, PS(self).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200');
 }

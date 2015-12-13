@@ -532,17 +532,17 @@ void racer_draw()
 	self.lastpushtime = time;
 	if(!pushdeltatime) return;
 
-	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin - ('0 0 1' * getstatf(STAT_VEH_RACER_SPRINGLENGTH)), MOVE_NOMONSTERS, self);
+	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin - ('0 0 1' * STAT(VEH_RACER_SPRINGLENGTH)), MOVE_NOMONSTERS, self);
 
-	vector df = self.move_velocity * -getstatf(STAT_VEH_RACER_FRICTION);
-	df_z += (1 - trace_fraction) * getstatf(STAT_VEH_RACER_HOVERPOWER) + sin(time * 2) * (getstatf(STAT_VEH_RACER_SPRINGLENGTH) * 2);
+	vector df = self.move_velocity * -STAT(VEH_RACER_FRICTION);
+	df_z += (1 - trace_fraction) * STAT(VEH_RACER_HOVERPOWER) + sin(time * 2) * (STAT(VEH_RACER_SPRINGLENGTH) * 2);
 
-	float forced = getstatf(STAT_VEH_RACER_UPFORCEDAMPER);
+	float forced = STAT(VEH_RACER_UPFORCEDAMPER);
 
 	int cont = pointcontents(self.move_origin - '0 0 64');
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 	{
-		forced = getstatf(STAT_VEH_RACER_WATER_UPFORCEDAMPER);
+		forced = STAT(VEH_RACER_WATER_UPFORCEDAMPER);
 		self.move_velocity_z += 200;
 	}
 
@@ -550,8 +550,8 @@ void racer_draw()
 	if(self.move_velocity_z > 0)
 		self.move_velocity_z *= 1 - forced * pushdeltatime;
 
-	self.move_angles_x *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
-	self.move_angles_z *= 1 - (getstatf(STAT_VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
+	self.move_angles_x *= 1 - (STAT(VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
+	self.move_angles_z *= 1 - (STAT(VEH_RACER_ANGLESTABILIZER) * pushdeltatime);
 
 	Movetype_Physics_MatchServer(false);
 }

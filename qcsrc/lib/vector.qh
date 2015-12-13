@@ -71,12 +71,12 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) { ret
 #define YAW(v) ((v).y)
 #define ROLL(v) ((v).z)
 
-#define MAKEVECTORS(f, angles, forward, right, up) do { \
+#define MAKEVECTORS(f, angles, forward, right, up) MACRO_BEGIN { \
 	f(angles); \
 	forward = v_forward; \
 	right = v_right; \
 	up = v_up; \
-} while (0)
+} MACRO_END
 
 noref vector _vec2;
 #define vec2(v) (_vec2 = (v), _vec2.z = 0, _vec2)

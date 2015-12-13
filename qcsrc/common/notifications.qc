@@ -239,14 +239,14 @@ void Destroy_All_Notifications()
 	entity notif;
 	int i;
 
-	#define DESTROY_LOOP(type,count) do { \
+	#define DESTROY_LOOP(type,count) MACRO_BEGIN { \
 		for(i = 1; i <= count; ++i) \
 		{ \
 			notif = Get_Notif_Ent(type, i); \
 			if (!notif) { backtrace("Destroy_All_Notifications(): Missing notification entity!\n"); return; } \
 			Destroy_Notification_Entity(notif); \
 		} \
-	} while(0)
+	} MACRO_END
 
 	// kill all networked notifications and centerprints
 	#ifdef SVQC
@@ -737,7 +737,7 @@ void Create_Notification_Entity(
 				// ======================
 				//  Process Notif String
 				// ======================
-				#define SET_NOTIF_STRING(string,stringname) do { \
+				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN { \
 					notif.nent_string = strzone(CCR( \
 						Process_Notif_Line( \
 							typeId, \
@@ -748,7 +748,7 @@ void Create_Notification_Entity(
 							stringname \
 						)) \
 					); \
-				} while(0)
+				} MACRO_END
 
 				if(GENTLE)
 				{
@@ -2049,7 +2049,7 @@ void Send_Notification(
 		//   2. Manually handling each separate call on per-usage basis (See old CTF usage of verbose)
 		entity found_choice;
 
-		#define RECURSE_FROM_CHOICE(ent,action) do { \
+		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN { \
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) \
 			{ \
 				switch(ent.msg_choice_choices[net_name - 1]) \
@@ -2069,7 +2069,7 @@ void Send_Notification(
 				found_choice.nent_floatcount, \
 				s1, s2, s3, s4, \
 				f1, f2, f3, f4); \
-		} while(0)
+		} MACRO_END
 
 		switch(broadcast)
 		{

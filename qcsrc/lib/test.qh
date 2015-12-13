@@ -2,11 +2,10 @@
 #define TEST_H
 
 #define TEST_Check(cond) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		if (!(cond)) TEST_Fail( #cond); \
-	} \
-	while (0)
+	} MACRO_END
 
 void TEST_OK();
 void TEST_Fail(string cond);

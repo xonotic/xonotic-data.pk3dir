@@ -344,8 +344,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
-				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
-				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
+				self.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
+				self.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
 				break;
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
@@ -362,8 +362,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				self.maxs = '3 3 3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
-				self.move_bounce_factor = g_balance_mortar_bouncefactor;
-				self.move_bounce_stopspeed = g_balance_mortar_bouncestop;
+				self.move_bounce_factor = WEP_CVAR(mortar, bouncefactor);
+				self.move_bounce_stopspeed = WEP_CVAR(mortar, bouncestop);
 				break;
 			case PROJECTILE_SHAMBLER_LIGHTNING:
 				self.mins = '-8 -8 -8';
@@ -444,8 +444,8 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			    self.maxs = '0 0 -4';
 			    self.move_movetype = MOVETYPE_BOUNCE;
 			    self.move_touch = func_null;
-			    self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
-			    self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
+			    self.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
+			    self.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
 			    break;
 			*/
 			default:

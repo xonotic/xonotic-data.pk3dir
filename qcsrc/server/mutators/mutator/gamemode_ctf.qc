@@ -1125,8 +1125,8 @@ void ctf_FlagThink()
 				ctf_CheckFlagReturn(self, RETURN_SPEEDRUN);
 
 				setself(self.owner);
-				self.impulse = CHIMPULSE_SPEEDRUN; // move the player back to the waypoint they set
-				ImpulseCommands();
+				self.impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
+				ImpulseCommands(self);
 				setself(this);
 			}
 			if(autocvar_g_ctf_stalemate)
@@ -2759,7 +2759,7 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
-		LOG_INFO("No \"ctf_team\" entities found on this map, creating them anyway.\n");
+		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.\n");
 		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
 		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
 		if(ctf_teams >= 3)

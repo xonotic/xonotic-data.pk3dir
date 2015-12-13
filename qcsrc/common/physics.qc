@@ -628,7 +628,7 @@ string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 void SpecialCommand()
 {
 #ifdef SVQC
-	if (!CheatImpulse(99))
+	if (!CheatImpulse(CHIMPULSE_GIVE_ALL.impulse))
 		LOG_INFO("A hollow voice says \"Plugh\".\n");
 #endif
 }
@@ -1258,7 +1258,7 @@ void PM_Main(entity this)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
 #ifdef CSQC
-	this.items = getstati(STAT_ITEMS, 0, 24);
+	this.items = STAT(ITEMS);
 
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 

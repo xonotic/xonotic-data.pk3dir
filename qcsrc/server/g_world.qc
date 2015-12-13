@@ -1992,6 +1992,10 @@ void EndFrame()
 		setself(e_);
 		antilag_record(e_, altime);
 	}
+	FOREACH_CLIENT(PS(it), {
+		PlayerState s = PS(it);
+		s.ps_push(s, it);
+	});
 }
 
 
@@ -2070,7 +2074,7 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
-		LOG_INFO("Saving persistent data...\n");
+		LOG_TRACE("Saving persistent data...\n");
 		Ban_SaveBans();
 
 		// playerstats with unfinished match
@@ -2093,7 +2097,7 @@ void Shutdown()
 		CheatShutdown(); // must be after cheatcount check
 		db_close(ServerProgsDB);
 		db_close(TemporaryDB);
-		LOG_INFO("done!\n");
+		LOG_TRACE("Saving persistent data... done!\n");
 		// tell the bot system the game is ending now
 		bot_endgame();
 

@@ -14,47 +14,52 @@ CLASS(Arc, Weapon)
 /* wepimg    */ ATTRIB(Arc, model2, string, "weaponarc");
 /* refname   */ ATTRIB(Arc, netname, string, "arc");
 /* wepname   */ ATTRIB(Arc, m_name, string, _("Arc"));
-ENDCLASS(Arc)
-REGISTER_WEAPON(ARC, NEW(Arc));
 
-#define ARC_SETTINGS(w_cvar,w_prop) ARC_SETTINGS_LIST(w_cvar, w_prop, ARC, arc)
-#define ARC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, beam_ammo) \
-	w_cvar(id, sn, NONE, beam_animtime) \
-	w_cvar(id, sn, NONE, beam_botaimspeed) \
-	w_cvar(id, sn, NONE, beam_botaimlifetime) \
-	w_cvar(id, sn, NONE, beam_damage) \
-	w_cvar(id, sn, NONE, beam_degreespersegment) \
-	w_cvar(id, sn, NONE, beam_distancepersegment) \
-	w_cvar(id, sn, NONE, beam_falloff_halflifedist) \
-	w_cvar(id, sn, NONE, beam_falloff_maxdist) \
-	w_cvar(id, sn, NONE, beam_falloff_mindist) \
-	w_cvar(id, sn, NONE, beam_force) \
-	w_cvar(id, sn, NONE, beam_healing_amax) \
-	w_cvar(id, sn, NONE, beam_healing_aps) \
-	w_cvar(id, sn, NONE, beam_healing_hmax) \
-	w_cvar(id, sn, NONE, beam_healing_hps) \
-	w_cvar(id, sn, NONE, beam_maxangle) \
-	w_cvar(id, sn, NONE, beam_nonplayerdamage) \
-	w_cvar(id, sn, NONE, beam_range) \
-	w_cvar(id, sn, NONE, beam_refire) \
-	w_cvar(id, sn, NONE, beam_returnspeed) \
-	w_cvar(id, sn, NONE, beam_tightness) \
-	w_cvar(id, sn, NONE, burst_ammo) \
-	w_cvar(id, sn, NONE, burst_damage) \
-	w_cvar(id, sn, NONE, burst_healing_aps) \
-	w_cvar(id, sn, NONE, burst_healing_hps) \
-	w_cvar(id, sn, NONE, overheat_max)/* maximum heat before jamming */ \
-	w_cvar(id, sn, NONE, overheat_min)/* minimum heat to wait for cooldown */ \
-	w_cvar(id, sn, NONE, beam_heat)   /* heat increase per second (primary) */ \
-	w_cvar(id, sn, NONE, burst_heat)  /* heat increase per second (secondary) */ \
-	w_cvar(id, sn, NONE, cooldown)    /* heat decrease per second when resting */ \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, beam_ammo, float, NONE) \
+        P(class, prefix, beam_animtime, float, NONE) \
+        P(class, prefix, beam_botaimlifetime, float, NONE) \
+        P(class, prefix, beam_botaimspeed, float, NONE) \
+        P(class, prefix, beam_damage, float, NONE) \
+        P(class, prefix, beam_degreespersegment, float, NONE) \
+        P(class, prefix, beam_distancepersegment, float, NONE) \
+        P(class, prefix, beam_falloff_halflifedist, float, NONE) \
+        P(class, prefix, beam_falloff_maxdist, float, NONE) \
+        P(class, prefix, beam_falloff_mindist, float, NONE) \
+        P(class, prefix, beam_force, float, NONE) \
+        P(class, prefix, beam_healing_amax, float, NONE) \
+        P(class, prefix, beam_healing_aps, float, NONE) \
+        P(class, prefix, beam_healing_hmax, float, NONE) \
+        P(class, prefix, beam_healing_hps, float, NONE) \
+        P(class, prefix, beam_heat, float, NONE) /* heat increase per second (primary) */ \
+        P(class, prefix, beam_maxangle, float, NONE) \
+        P(class, prefix, beam_nonplayerdamage, float, NONE) \
+        P(class, prefix, beam_range, float, NONE) \
+        P(class, prefix, beam_refire, float, NONE) \
+        P(class, prefix, beam_returnspeed, float, NONE) \
+        P(class, prefix, beam_tightness, float, NONE) \
+        P(class, prefix, burst_ammo, float, NONE) \
+        P(class, prefix, burst_damage, float, NONE) \
+        P(class, prefix, burst_healing_aps, float, NONE) \
+        P(class, prefix, burst_healing_hps, float, NONE) \
+        P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
+        P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
+        P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
+        P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+    END()
+    W_PROPS(X, Arc, arc)
+#undef X
+
+ENDCLASS(Arc)
+REGISTER_WEAPON(ARC, arc, NEW(Arc));
+
 
 #ifndef MENUQC
 const float ARC_MAX_SEGMENTS = 20;
@@ -82,7 +87,6 @@ const int ARC_SF_BEAMTYPE =    BIT(4);
 const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
 #endif
 #ifdef SVQC
-ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity arc_beam;
 .bool arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
@@ -230,10 +234,12 @@ void W_Arc_Beam_Think()
 		burst = ARC_BT_BURSTMASK;
 	}
 
+	Weapon thiswep = WEP_ARC;
+
 	if(
 		!IS_PLAYER(self.owner)
 		||
-		(self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
+		(self.owner.(thiswep.ammo_field) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 		||
 		self.owner.deadflag != DEAD_NO
 		||
@@ -298,8 +304,8 @@ void W_Arc_Beam_Think()
 
 		if(rootammo)
 		{
-			coefficient = min(coefficient, self.owner.WEP_AMMO(ARC) / rootammo);
-			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - (rootammo * frametime));
+			coefficient = min(coefficient, self.owner.(thiswep.ammo_field) / rootammo);
+			self.owner.(thiswep.ammo_field) = max(0, self.owner.(thiswep.ammo_field) - (rootammo * frametime));
 		}
 	}
 	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
@@ -625,7 +631,7 @@ void Arc_Smoke()
 	}
 
 	if (  self.arc_smoke_sound && ( self.arc_overheat <= time ||
-		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC.m_id )
+		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || PS(self).m_switchweapon != WEP_ARC )
 	{
 		self.arc_smoke_sound = 0;
 		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
@@ -719,22 +725,17 @@ void Arc_Smoke()
 				arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 3);
 				arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
 			}
-			ARC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 		}
 		METHOD(Arc, wr_checkammo1, bool(entity thiswep))
 		{
 			SELFPARAM();
-			return ((!WEP_CVAR(arc, beam_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			return ((!WEP_CVAR(arc, beam_ammo)) || (self.(thiswep.ammo_field) > 0));
 		}
 		METHOD(Arc, wr_checkammo2, bool(entity thiswep))
 		{
 			SELFPARAM();
 			return WEP_CVAR(arc, overheat_max) > 0 &&
-				((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
-		}
-		METHOD(Arc, wr_config, void(entity thiswep))
-		{
-			ARC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
+				((!WEP_CVAR(arc, burst_ammo)) || (self.(thiswep.ammo_field) > 0));
 		}
 		METHOD(Arc, wr_killmessage, int(entity thiswep))
 		{
@@ -749,7 +750,7 @@ void Arc_Smoke()
 		}
 		METHOD(Arc, wr_pickup, void(entity thiswep))
 		{
-			if ( !client_hasweapon(self, WEP_ARC.m_id, false, false) &&
+			if ( !client_hasweapon(self, thiswep, false, false) &&
 				weapon_dropevent_item.arc_overheat > time )
 			{
 				self.arc_overheat = weapon_dropevent_item.arc_overheat;
@@ -1227,7 +1228,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		else
 		{
 			// use player origin so that third person display still works
-			self.origin = entcs_receiver(player_localnum).origin + ('0 0 1' * getstati(STAT_VIEWHEIGHT));
+			self.origin = entcs_receiver(player_localnum).origin + ('0 0 1' * STAT(VIEWHEIGHT));
 		}
 	}
 

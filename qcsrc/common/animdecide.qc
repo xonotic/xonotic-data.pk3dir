@@ -56,9 +56,9 @@ bool monsters_animoverride(entity e)
 
 void animdecide_load_if_needed(entity e)
 {
-	if(e.modelindex == e.animdecide_modelindex)
-		return;
-	e.animdecide_modelindex = e.modelindex;
+	int mdlidx = e.modelindex;
+	if (mdlidx == e.animdecide_modelindex) return;
+	e.animdecide_modelindex = mdlidx;
 
 	if(substring(e.model, 0, 16) == "models/monsters/")
 	{
@@ -66,35 +66,39 @@ void animdecide_load_if_needed(entity e)
 			return;
 	}
 
+#define ANIM_VEC(a, frames, rate) anim_vec(ANIM_##a, mdlidx, frames, rate)
+
 	vector none = '0 0 0';
-	e.anim_die1 = animfixfps(e, '0 1 0.5', none); // 2 seconds
-	e.anim_die2 = animfixfps(e, '1 1 0.5', none); // 2 seconds
-	e.anim_draw = animfixfps(e, '2 1 3', none);
-	e.anim_duckwalk = animfixfps(e, '4 1 1', none);
-	e.anim_duckjump = animfixfps(e, '5 1 10', none);
-	e.anim_duckidle = animfixfps(e, '6 1 1', none);
-	e.anim_idle = animfixfps(e, '7 1 1', none);
-	e.anim_jump = animfixfps(e, '8 1 10', none);
-	e.anim_pain1 = animfixfps(e, '9 1 2', none); // 0.5 seconds
-	e.anim_pain2 = animfixfps(e, '10 1 2', none); // 0.5 seconds
-	e.anim_shoot = animfixfps(e, '11 1 5', none); // analyze models and set framerate
-	e.anim_taunt = animfixfps(e, '12 1 0.33', none);
-	e.anim_run = animfixfps(e, '13 1 1', none);
-	e.anim_runbackwards = animfixfps(e, '14 1 1', none);
-	e.anim_strafeleft = animfixfps(e, '15 1 1', none);
-	e.anim_straferight = animfixfps(e, '16 1 1', none);
-	e.anim_forwardright = animfixfps(e, '19 1 1', '16 1 1');
-	e.anim_forwardleft = animfixfps(e, '20 1 1', '15 1 1');
-	e.anim_backright = animfixfps(e, '21 1 1', '16 1 1');
-	e.anim_backleft  = animfixfps(e, '22 1 1', '15 1 1');
-	e.anim_melee = animfixfps(e, '23 1 1', '11 1 1');
-	e.anim_duckwalkbackwards = animfixfps(e, '24 1 1', '4 1 1');
-	e.anim_duckwalkstrafeleft = animfixfps(e, '25 1 1', '4 1 1');
-	e.anim_duckwalkstraferight = animfixfps(e, '26 1 1', '4 1 1');
-	e.anim_duckwalkforwardright = animfixfps(e, '27 1 1', '4 1 1');
-	e.anim_duckwalkforwardleft = animfixfps(e, '28 1 1', '4 1 1');
-	e.anim_duckwalkbackright = animfixfps(e, '29 1 1', '4 1 1');
-	e.anim_duckwalkbackleft  = animfixfps(e, '30 1 1', '4 1 1');
+	e.anim_die1 = animfixfps(e, ANIM_VEC(die1, 1, 0.5), none); // 2 seconds
+	e.anim_die2 = animfixfps(e, ANIM_VEC(die2, 1, 0.5), none); // 2 seconds
+	e.anim_draw = animfixfps(e, ANIM_VEC(draw, 1, 3), none);
+	e.anim_duckwalk = animfixfps(e, ANIM_VEC(duckwalk, 1, 1), none);
+	e.anim_duckjump = animfixfps(e, ANIM_VEC(duckjump, 1, 10), none);
+	e.anim_duckidle = animfixfps(e, ANIM_VEC(duckidle, 1, 1), none);
+	e.anim_idle = animfixfps(e, ANIM_VEC(idle, 1, 1), none);
+	e.anim_jump = animfixfps(e, ANIM_VEC(jump, 1, 10), none);
+	e.anim_pain1 = animfixfps(e, ANIM_VEC(pain1, 1, 2), none); // 0.5 seconds
+	e.anim_pain2 = animfixfps(e, ANIM_VEC(pain2, 1, 2), none); // 0.5 seconds
+	e.anim_shoot = animfixfps(e, ANIM_VEC(shoot, 1, 5), none); // analyze models and set framerate
+	e.anim_taunt = animfixfps(e, ANIM_VEC(taunt, 1, 0.33), none);
+	e.anim_run = animfixfps(e, ANIM_VEC(run, 1, 1), none);
+	e.anim_runbackwards = animfixfps(e, ANIM_VEC(runbackwards, 1, 1), none);
+	e.anim_strafeleft = animfixfps(e, ANIM_VEC(strafeleft, 1, 1), none);
+	e.anim_straferight = animfixfps(e, ANIM_VEC(straferight, 1, 1), none);
+	e.anim_forwardright = animfixfps(e, ANIM_VEC(forwardright, 1, 1), ANIM_VEC(straferight, 1, 1));
+	e.anim_forwardleft = animfixfps(e, ANIM_VEC(forwardleft, 1, 1), ANIM_VEC(strafeleft, 1, 1));
+	e.anim_backright = animfixfps(e, ANIM_VEC(backright, 1, 1), ANIM_VEC(straferight, 1, 1));
+	e.anim_backleft  = animfixfps(e, ANIM_VEC(backleft , 1, 1), ANIM_VEC(strafeleft, 1, 1));
+	e.anim_melee = animfixfps(e, ANIM_VEC(melee, 1, 1), ANIM_VEC(shoot, 1, 1));
+	e.anim_duckwalkbackwards = animfixfps(e, ANIM_VEC(duckwalkbackwards, 1, 1), ANIM_VEC(duckwalk, 1, 1));
+	e.anim_duckwalkstrafeleft = animfixfps(e, ANIM_VEC(duckwalkstrafeleft, 1, 1), ANIM_VEC(duckwalk, 1, 1));
+	e.anim_duckwalkstraferight = animfixfps(e, ANIM_VEC(duckwalkstraferight, 1, 1), ANIM_VEC(duckwalk, 1, 1));
+	e.anim_duckwalkforwardright = animfixfps(e, ANIM_VEC(duckwalkforwardright, 1, 1), ANIM_VEC(duckwalk, 1, 1));
+	e.anim_duckwalkforwardleft = animfixfps(e, ANIM_VEC(duckwalkforwardleft, 1, 1), ANIM_VEC(duckwalk, 1, 1));
+	e.anim_duckwalkbackright = animfixfps(e, ANIM_VEC(duckwalkbackright, 1,  1), ANIM_VEC(duckwalk, 1, 1));
+	e.anim_duckwalkbackleft  = animfixfps(e, ANIM_VEC(duckwalkbackleft , 1,  1), ANIM_VEC(duckwalk, 1, 1));
+
+#undef ANIM_VEC
 
 	// these anims ought to stay until stopped explicitly by weaponsystem
 	e.anim_shoot_z = 0.001;

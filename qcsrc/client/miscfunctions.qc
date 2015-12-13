@@ -79,6 +79,7 @@ void MoveToLast(entity e)
 
 float RegisterTeam(entity Team)
 {
+	assert_once(Team.team, eprint(Team));
 	entity tm;
 	AuditLists();
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)

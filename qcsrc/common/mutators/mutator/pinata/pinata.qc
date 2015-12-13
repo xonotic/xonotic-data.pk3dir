@@ -5,7 +5,7 @@ MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 {SELFPARAM();
 	for(int j = WEP_FIRST; j <= WEP_LAST; ++j)
 	if(self.weapons & WepSet_FromWeapon(Weapons_from(j)))
-	if(self.switchweapon != j)
+	if(PS(self).m_switchweapon.m_id != j)
 	if(W_IsWeaponThrowable(j))
 		W_ThrowNewWeapon(self, j, false, self.origin + (self.mins + self.maxs) * 0.5, randomvec() * 175 + '0 0 325');
 

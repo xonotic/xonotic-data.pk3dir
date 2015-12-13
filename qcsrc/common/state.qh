@@ -1,0 +1,78 @@
+/**
+ * Purpose: common player state, usable on client and server
+ * Client: singleton representing the viewed player
+ * Server: instance per client, clients decoupled from players
+ */
+CLASS(PlayerState, Object)
+	ATTRIB(PlayerState, m_client, entity, NULL)
+	CONSTRUCTOR(PlayerState, entity client)
+	{
+		CONSTRUCT(PlayerState);
+		this.m_client = client;
+	}
+	ATTRIB(PlayerState, m_switchingweapon, Weapon, Weapons_from(-1))
+	ATTRIB(PlayerState, m_switchweapon, Weapon, Weapons_from(-1))
+	ATTRIB(PlayerState, m_weapon, Weapon, Weapons_from(-1))
+	METHOD(PlayerState, ps_push, void(PlayerState this, entity cl))
+	{
+		STAT(ACTIVEWEAPON, cl) = this.m_weapon.m_id;
+		STAT(SWITCHINGWEAPON, cl) = this.m_switchingweapon.m_id;
+		STAT(SWITCHWEAPON, cl) = this.m_switchweapon.m_id;
+	}
+ENDCLASS(PlayerState)
+
+.PlayerState _ps;
+#if NDEBUG
+	#define PS(this) (this._ps)
+#else
+	PlayerState PS(entity this) { assert(IS_CLIENT(this)); return this._ps; }
+#endif
+
+void PlayerState_attach(entity this)
+{
+	// TODO: dynamic
+	// this._ps = NEW(PlayerState, this);
+}
+
+void PlayerState_detach(entity this)
+{
+	// TODO: dynamic
+	// if (!PS(this)) return;  // initial connect
+	// remove(PS(this));
+	// this._ps = NULL;
+}
+
+/**
+ * Purpose: common client state, usable on client and server
+ * Client: singleton representing the viewed player
+ * Server: instance per client
+ */
+CLASS(ClientState, Object)
+	ATTRIB(ClientState, m_client, entity, NULL)
+	CONSTRUCTOR(ClientState, entity client)
+	{
+		CONSTRUCT(ClientState);
+		this.m_client = client;
+	}
+ENDCLASS(ClientState)
+
+.ClientState _cs;
+
+#if NDEBUG
+	#define CS(this) (this._cs)
+#else
+	ClientState CS(entity this) { assert(IS_CLIENT(this)); assert(this._cs); return this._cs; }
+#endif
+
+void ClientState_attach(entity this)
+{
+	this._cs = NEW(ClientState, this);
+	this._ps = NEW(PlayerState, this);  // TODO: dynamic
+}
+
+void ClientState_detach(entity this)
+{
+	remove(CS(this));
+	this._cs = NULL;
+	this._ps = NULL;  // TODO: dynamic
+}

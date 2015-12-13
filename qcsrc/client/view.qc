@@ -63,50 +63,50 @@ float autocvar_cl_leanmodel_up_highpass1;
 float autocvar_cl_leanmodel_up_lowpass;
 float autocvar_cl_leanmodel_up_limit;
 
-#define lowpass(value, frac, ref_store, ret) do \
+#define lowpass(value, frac, ref_store, ret) MACRO_BEGIN \
 { \
 	float __frac = bound(0, frac, 1); \
 	ret = ref_store = ref_store * (1 - __frac) + (value) * __frac; \
-} while (0)
+} MACRO_END
 
-#define lowpass_limited(value, frac, limit, ref_store, ret) do \
+#define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
 	float __ignore; lowpass(value, frac, ref_store, __ignore); \
 	ret = ref_store = bound((value) - (limit), ref_store, (value) + (limit)); \
-} while (0)
+} MACRO_END
 
-#define highpass(value, frac, ref_store, ret) do \
+#define highpass(value, frac, ref_store, ret) MACRO_BEGIN \
 { \
 	float __f; lowpass(value, frac, ref_store, __f); \
 	ret = (value) - __f; \
-} while (0)
+} MACRO_END
 
-#define highpass_limited(value, frac, limit, ref_store, ret) do \
+#define highpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
 	float __f; lowpass_limited(value, frac, limit, ref_store, __f); \
 	ret = (value) - __f; \
-} while (0)
+} MACRO_END
 
-#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) MACRO_BEGIN \
 { \
 	lowpass(value.x, fracx, ref_store.x, ref_out.x); \
 	lowpass(value.y, fracy, ref_store.y, ref_out.y); \
 	lowpass(value.z, fracz, ref_store.z, ref_out.z); \
-} while (0)
+} MACRO_END
 
-#define highpass3(value, fracx, fracy, fracz, ref_store, ref_out) do \
+#define highpass3(value, fracx, fracy, fracz, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass(value.x, fracx, ref_store.x, ref_out.x); \
 	highpass(value.y, fracy, ref_store.y, ref_out.y); \
 	highpass(value.z, fracz, ref_store.z, ref_out.z); \
-} while (0)
+} MACRO_END
 
-#define highpass3_limited(value, fracx, limitx, fracy, limity, fracz, limitz, ref_store, ref_out) do \
+#define highpass3_limited(value, fracx, limitx, fracy, limity, fracz, limitz, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass_limited(value.x, fracx, limitx, ref_store.x, ref_out.x); \
 	highpass_limited(value.y, fracy, limity, ref_store.y, ref_out.y); \
 	highpass_limited(value.z, fracz, limitz, ref_store.z, ref_out.z); \
-} while (0)
+} MACRO_END
 
 void viewmodel_animate(entity this)
 {
@@ -115,7 +115,7 @@ void viewmodel_animate(entity this)
 	prevtime = time;
 
 	if (autocvar_chase_active) return;
-	if (getstati(STAT_HEALTH) <= 0) return;
+	if (STAT(HEALTH) <= 0) return;
 
 	entity view = CSQCModel_server2csqc(player_localentnum - 1);
 
@@ -272,7 +272,7 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
-	int mask = (intermission || (getstati(STAT_HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
+	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g;
@@ -350,13 +350,13 @@ void Porto_Draw(entity this)
 
 	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
-	if(g_balance_porto_secondary)
+	if(WEP_CVAR(porto, secondary))
 		return;
 	if(intermission == 1)
 		return;
 	if(intermission == 2)
 		return;
-	if (getstati(STAT_HEALTH) <= 0)
+	if (STAT(HEALTH) <= 0)
 		return;
 
 	dir = view_forward;
@@ -448,7 +448,7 @@ vector GetCurrentFov(float fov)
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
 	if(switchweapon == activeweapon)
-	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -672,7 +672,7 @@ float TrueAimCheck()
 			break;
 	}
 
-	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * getstati(STAT_VIEWHEIGHT));
+	vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
 
 	vecs = decompressShotOrigin(STAT(SHOTORG));
 
@@ -757,7 +757,7 @@ bool WantEventchase()
 			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 			return true;
-		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
+		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
 			if(autocvar_cl_eventchase_death == 2)
 			{
@@ -954,7 +954,7 @@ void HUD_Crosshair()
 
 			case 2: // crosshair_color_by_health
 			{
-				float x = getstati(STAT_HEALTH);
+				float x = STAT(HEALTH);
 
 				//x = red
 				//y = green
@@ -1169,16 +1169,16 @@ void HUD_Crosshair()
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring_nexgun.tga";
 				}
-				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && minelayer_maxmines && autocvar_crosshair_ring_minelayer)
+				else if (autocvar_crosshair_ring && activeweapon == WEP_MINE_LAYER && WEP_CVAR(minelayer, limit) && autocvar_crosshair_ring_minelayer)
 				{
-					ring_value = bound(0, STAT(LAYED_MINES) / minelayer_maxmines, 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
+					ring_value = bound(0, STAT(LAYED_MINES) / WEP_CVAR(minelayer, limit), 1); // if you later need to use the count of bullets in another place, then add a float for it. For now, no need to.
 					ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
 				}
 				else if (activeweapon == WEP_HAGAR && STAT(HAGAR_LOAD) && autocvar_crosshair_ring_hagar)
 				{
-					ring_value = bound(0, STAT(HAGAR_LOAD) / hagar_maxrockets, 1);
+					ring_value = bound(0, STAT(HAGAR_LOAD) / WEP_CVAR_SEC(hagar, load_max), 1);
 					ring_alpha = autocvar_crosshair_ring_hagar_alpha;
 					ring_rgb = wcross_color;
 					ring_image = "gfx/crosshair_ring.tga";
@@ -1242,8 +1242,7 @@ void HUD_Crosshair()
 			}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
-			do \
-			{ \
+			MACRO_BEGIN { \
 				if(wcross_blur > 0) \
 				{ \
 					for(i = -2; i <= 2; ++i) \
@@ -1254,8 +1253,7 @@ void HUD_Crosshair()
 				{ \
 					M(0,0,sz,wcross_name,wcross_alpha); \
 				} \
-			} \
-			while(0)
+			} MACRO_END
 
 #define CROSSHAIR_DRAW_SINGLE(i,j,sz,wcross_name,wcross_alpha) \
 			drawpic(wcross_origin - ('0.5 0 0' * (sz * wcross_size.x + i * wcross_blur) + '0 0.5 0' * (sz * wcross_size.y + j * wcross_blur)), wcross_name, sz * wcross_size, wcross_color, wcross_alpha, DRAWFLAG_NORMAL)
@@ -1432,7 +1430,7 @@ void CSQC_UpdateView(float w, float h)
 
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
-	float is_dead = (getstati(STAT_HEALTH) <= 0);
+	float is_dead = (STAT(HEALTH) <= 0);
 
 	// FIXME do we need this hack?
 	if(isdemo())
@@ -1710,7 +1708,7 @@ void CSQC_UpdateView(float w, float h)
 	switchingweapon = Weapons_from(STAT(SWITCHINGWEAPON));
 
 	// actually active weapon (for zoom)
-	activeweapon = Weapons_from(getstati(STAT_ACTIVEWEAPON));
+	activeweapon = Weapons_from(STAT(ACTIVEWEAPON));
 
 	switchweapon = Weapons_from(STAT(SWITCHWEAPON));
 
@@ -2006,7 +2004,7 @@ void CSQC_UpdateView(float w, float h)
 		splash_pos.y = (vid_conheight - splash_size.y) / 2;
 
 		float myhealth_flash_temp;
-		myhealth = getstati(STAT_HEALTH);
+		myhealth = STAT(HEALTH);
 
 		// fade out
 		myhealth_flash = max(0, myhealth_flash - autocvar_hud_damage_fade_rate * frametime);
@@ -2115,7 +2113,7 @@ void CSQC_UpdateView(float w, float h)
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 
-		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
+		sharpen_intensity = bound(0, ((STAT(HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 
 		if(autocvar_hud_powerup && sharpen_intensity > 0)
 		{

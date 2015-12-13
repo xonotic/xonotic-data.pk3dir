@@ -44,7 +44,7 @@ MUTATOR_HOOKFUNCTION(ok, W_DecreaseAmmo)
 	entity actor = MUTATOR_ARGV(0, entity);
 	if (actor.ok_use_ammocharge)
 	{
-		ok_DecreaseCharge(actor, actor.weapon);
+		ok_DecreaseCharge(actor, PS(actor).m_weapon.m_id);
 		return true;
 	}
 }
@@ -65,8 +65,7 @@ void ok_DecreaseCharge(entity ent, int wep)
 
 	entity wepent = Weapons_from(wep);
 
-	if(wepent.weapon == 0)
-		return; // dummy
+	if (wepent == WEP_Null) return;  // dummy
 
 	ent.ammo_charge[wep] -= max(0, cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
@@ -75,8 +74,7 @@ void ok_IncreaseCharge(entity ent, int wep)
 {
 	entity wepent = Weapons_from(wep);
 
-	if(wepent.weapon == 0)
-		return; // dummy
+	if (wepent == WEP_Null) return;  // dummy
 
 	if(ent.ok_use_ammocharge)
 	if(!ent.BUTTON_ATCK) // not while attacking?
@@ -89,8 +87,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 
 	entity wepent = Weapons_from(wep);
 
-	if(wepent.weapon == 0)
-		return 0; // dummy
+	if(wepent == WEP_Null) return 0;  // dummy
 
 	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
@@ -123,29 +120,30 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)
-{SELFPARAM();
+{
+	SELFPARAM();
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
-	if(IS_MONSTER(self))
+	if(IS_MONSTER(this))
 	{
 		remove(other); // remove default item
-		other = world;
+		other = NULL;
 	}
 
-	setself(new(droppedweapon)); // hax
-	self.ok_item = true;
-	self.noalign = true;
-	self.pickup_anyway = true;
-	spawnfunc_item_armor_small(this);
-	self.movetype = MOVETYPE_TOSS;
-	self.gravity = 1;
-	self.reset = SUB_Remove;
-	setorigin(self, frag_target.origin + '0 0 32');
-	self.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
-	SUB_SetFade(self, time + 5, 1);
-	setself(this);
+	entity e = new(droppedweapon); // hax
+	e.ok_item = true;
+	e.noalign = true;
+	e.pickup_anyway = true;
+	e.spawnfunc_checked = true;
+	spawnfunc_item_armor_small(e);
+	e.movetype = MOVETYPE_TOSS;
+	e.gravity = 1;
+	e.reset = SUB_Remove;
+	setorigin(e, frag_target.origin + '0 0 32');
+	e.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
+	SUB_SetFade(e, time + 5, 1);
 
-	self.ok_lastwep = self.switchweapon;
+	this.ok_lastwep = PS(this).m_switchweapon.m_id;
 
 	return false;
 }
@@ -185,11 +183,11 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 
 	if(self.ok_lastwep)
 	{
-		self.switchweapon = self.ok_lastwep;
+		PS(self).m_switchweapon = Weapons_from(self.ok_lastwep);
 		self.ok_lastwep = 0;
 	}
 
-	ok_IncreaseCharge(self, self.weapon);
+	ok_IncreaseCharge(self, PS(self).m_weapon.m_id);
 
 	if(self.BUTTON_ATCK2)
 	if(!forbidWeaponUse(self) || self.weapon_blocked) // allow if weapon is blocked
@@ -198,8 +196,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
 		makevectors(self.v_angle);
 
-		int oldwep = self.weapon;
-		self.weapon = WEP_BLASTER.m_id;
+		Weapon oldwep = PS(self).m_weapon;
+		PS(self).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
 			self,
 			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
@@ -213,23 +211,23 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			WEP_CVAR_SEC(vaporizer, delay),
 			WEP_CVAR_SEC(vaporizer, lifetime)
 		);
-		self.weapon = oldwep;
+		PS(self).m_weapon = oldwep;
 	}
 
 	self.weapon_blocked = false;
 
-	self.ok_ammo_charge = self.ammo_charge[self.weapon];
+	self.ok_ammo_charge = self.ammo_charge[PS(self).m_weapon.m_id];
 
 	if(self.ok_use_ammocharge)
-	if(!ok_CheckWeaponCharge(self, self.weapon))
+	if(!ok_CheckWeaponCharge(self, PS(self).m_weapon.m_id))
 	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self) && self.weapon == self.switchweapon)
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self) && PS(self).m_weapon == PS(self).m_switchweapon)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
 			play2(self, SND(DRYFIRE));
 		}
-		Weapon wpn = Weapons_from(self.weapon);
+		Weapon wpn = PS(self).m_weapon;
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if(self.(weaponentity).state != WS_CLEAR)
 			w_ready(wpn, self, weaponentity, (self.BUTTON_ATCK ? 1 : 0) | (self.BUTTON_ATCK2 ? 2 : 0));
@@ -279,6 +277,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
+			wep.spawnfunc_checked = true;
 			wep.think = self_spawnfunc_weapon_hmg;
 			wep.nextthink = time + 0.1;
 			return true;
@@ -295,6 +294,7 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			wep.team = self.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
+			wep.spawnfunc_checked = true;
 			wep.think = self_spawnfunc_weapon_rpc;
 			wep.nextthink = time + 0.1;
 			return true;
@@ -320,7 +320,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ok, SpectateCopy)
 {SELFPARAM();
-	self.ammo_charge[self.weapon] = other.ammo_charge[other.weapon];
+	self.ammo_charge[PS(self).m_weapon.m_id] = other.ammo_charge[PS(other).m_weapon.m_id];
 	self.ok_use_ammocharge = other.ok_use_ammocharge;
 
 	return false;

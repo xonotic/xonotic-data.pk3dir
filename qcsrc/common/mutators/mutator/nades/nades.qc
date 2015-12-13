@@ -658,6 +658,11 @@ void nade_boom()
 
 void nade_touch()
 {SELFPARAM();
+	if(other)
+		UpdateCSQCProjectile(self);
+
+	if(other == self.realowner)
+		return; // no self impacts
 	/*float is_weapclip = 0;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))

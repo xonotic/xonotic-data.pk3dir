@@ -68,8 +68,8 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			e.ammo_rockets = start_ammo_rockets;
 			e.ammo_fuel = start_ammo_fuel;
 			e.weapons = start_weapons;
-			if(!client_hasweapon(e, e.weapon, true, false))
-				e.switchweapon = w_getbestweapon(self);
+			if(!client_hasweapon(e, PS(e).m_weapon, true, false))
+				PS(e).m_switchweapon = w_getbestweapon(self);
 		}
 	}
 
@@ -79,8 +79,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 bool NIX_CanChooseWeapon(int wpn)
 {
 	entity e = Weapons_from(wpn);
-	if(!e.weapon) // skip dummies
-		return false;
+	if (e == WEP_Null) return false; // skip dummies
 	if(g_weaponarena)
 	{
 		if(!(g_weaponarena_weapons & e.m_wepset))
@@ -210,10 +209,13 @@ void NIX_GiveCurrentWeapon()
 		self.weapons |= WEPSET(BLASTER);
 	self.weapons |= e.m_wepset;
 
-	if(self.switchweapon != nix_weapon)
-		if(!client_hasweapon(self, self.switchweapon, true, false))
-			if(client_hasweapon(self, nix_weapon, true, false))
-				W_SwitchWeapon(nix_weapon);
+    Weapon w = Weapons_from(nix_weapon);
+	if(PS(self).m_switchweapon != w)
+		if(!client_hasweapon(self, PS(self).m_switchweapon, true, false))
+		{
+			if(client_hasweapon(self, w, true, false))
+				W_SwitchWeapon(w);
+		}
 }
 
 MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)

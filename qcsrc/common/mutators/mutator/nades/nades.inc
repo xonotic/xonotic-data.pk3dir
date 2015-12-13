@@ -1,8 +1,8 @@
 #ifndef MENUQC
-#define NADE_PROJECTILE(i, projectile, trail) do { \
+#define NADE_PROJECTILE(i, projectile, trail) MACRO_BEGIN { \
     this.m_projectile[i] = projectile; \
     this.m_trail[i] = trail; \
-} while (0)
+} MACRO_END
 #else
 #define NADE_PROJECTILE(i, projectile, trail)
 #endif

@@ -877,7 +877,7 @@ void vehicles_exit(bool eject)
 		_player.view_ofs		= PL_VIEW_OFS;
 		_player.event_damage	= PlayerDamage;
 		_player.hud				= HUD_NORMAL;
-		_player.switchweapon	= _vehicle.switchweapon;
+		PS(_player).m_switchweapon = _vehicle.m_switchweapon;
 		_player.last_vehiclecheck = time + 3;
 		_player.vehicle_enter_delay = time + 2;
 
@@ -951,17 +951,21 @@ void vehicles_touch()
 	vehicles_enter(other, self);
 }
 
-bool vehicle_impulse(int imp)
-{SELFPARAM();
-	switch(imp)
+bool vehicle_impulse(entity this, int imp)
+{
+	entity v = this.vehicle;
+	if (!v) return false;
+	if (v.deadflag != DEAD_NO) return false;
+	bool(int) f = v.vehicles_impulse;
+	if (f && f(imp)) return true;
+	switch (imp)
 	{
-		case 17:
+		case IMP_weapon_drop.impulse:
 		{
 			stuffcmd(self, "\ntoggle cl_eventchase_vehicle\nset _vehicles_shownchasemessage 1\n");
 			return true;
 		}
 	}
-
 	return false;
 }
 
@@ -1059,7 +1063,7 @@ void vehicles_enter(entity pl, entity veh)
 	veh.colormap		= pl.colormap;
 	if(veh.tur_head)
 		veh.tur_head.colormap = pl.colormap;
-	veh.switchweapon = pl.switchweapon;
+	veh.m_switchweapon = PS(pl).m_switchweapon;
 	pl.hud = veh.vehicleid;
 	pl.PlayerPhysplug = veh.PlayerPhysplug;
 

@@ -562,8 +562,10 @@ NET_HANDLE(wframe, bool isNew)
 	switch (viewmodel.state)
 	{
 		case WS_RAISE:
+			viewmodel.weapon_switchdelay = activeweapon.switchdelay_raise;
+			break;
 		case WS_DROP:
-			viewmodel.weapon_switchdelay = ReadFloat();
+			viewmodel.weapon_switchdelay = activeweapon.switchdelay_drop;
 			break;
         default:
             viewmodel.weapon_switchdelay = 0;
@@ -587,16 +589,6 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteByte(channel, weaponentity.state);
 	WriteFloat(channel, weaponentity.weapon_nextthink);
 	WriteByte(channel, weaponentity.m_alpha * 255);
-	Weapon w = Weapons_from(actor.weapon);
-	switch (weaponentity.state)
-	{
-		case WS_RAISE:
-			WriteFloat(channel, w.switchdelay_raise);
-			break;
-		case WS_DROP:
-			WriteFloat(channel, w.switchdelay_drop);
-			break;
-	}
 }
 #endif
 

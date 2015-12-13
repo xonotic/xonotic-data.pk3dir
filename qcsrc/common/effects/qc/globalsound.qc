@@ -1,6 +1,6 @@
 #include "globalsound.qh"
 
-#include "../common/ent_cs.qh"
+#include "../../ent_cs.qh"
 
 #ifdef IMPLEMENTATION
 	#include "../../animdecide.qh"
@@ -71,8 +71,7 @@
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);
-			int chan = ReadByte();
-			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
+			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -104,8 +103,7 @@
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
-			int chan = ReadByte();
-			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
+			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -333,14 +331,13 @@
 				case VOICETYPE_TEAMRADIO:
 				{
 					#define X() \
-						do \
+						MACRO_BEGIN \
 						{ \
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
-						} \
-						while (0)
+						} MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
 					else
@@ -364,7 +361,7 @@
 					float tauntrand = 0;
 					if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
 					#define X() \
-						do \
+						MACRO_BEGIN \
 						{ \
 							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
 							{ \
@@ -376,8 +373,7 @@
 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 								else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
 							} \
-						} \
-						while (0)
+						} MACRO_END
 					if (fake)
 					{
 						msg_entity = this;

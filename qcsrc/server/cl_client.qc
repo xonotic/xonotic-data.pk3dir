@@ -23,8 +23,11 @@
 #include "bot/navigation.qh"
 
 #include "../common/ent_cs.qh"
-#include "../common/vehicles/all.qh"
+#include "../common/state.qh"
+
 #include "../common/triggers/teleporters.qh"
+
+#include "../common/vehicles/all.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
@@ -186,7 +189,9 @@ putting a client as observer in the server
 */
 void FixPlayermodel(entity player);
 void PutObserverInServer()
-{SELFPARAM();
+{
+	SELFPARAM();
+	PlayerState_detach(this);
 	entity	spot;
     self.hud = HUD_NORMAL;
 
@@ -299,9 +304,9 @@ void PutObserverInServer()
 	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 
-	self.weapon = 0;
+	PS(self).m_weapon = WEP_Null;
 	self.weaponname = "";
-	self.switchingweapon = 0;
+	PS(self).m_switchingweapon = WEP_Null;
 	self.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -438,6 +443,7 @@ void PutClientInServer()
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer();
 	} else if (IS_PLAYER(this)) {
+		PlayerState_attach(this);
 		accuracy_resend(this);
 
 		if (this.team < 0)
@@ -617,11 +623,11 @@ void PutClientInServer()
 			remove(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
-		this.switchweapon = w_getbestweapon(this);
+		PS(this).m_switchweapon = w_getbestweapon(this);
 		this.cnt = -1; // W_LastWeapon will not complain
-		this.weapon = 0;
+		PS(this).m_weapon = WEP_Null;
 		this.weaponname = "";
-		this.switchingweapon = 0;
+		PS(this).m_switchingweapon = WEP_Null;
 
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
@@ -629,6 +635,8 @@ void PutClientInServer()
 		antilag_clear(this);
 	}
 }
+
+void ClientInit_misc();
 
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
@@ -638,7 +646,15 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, _ENT_CLIENT_INIT);
 	return = true;
 	msg_entity = to;
+	// MSG_INIT replacement
+	// TODO: make easier to use
 	Registry_send_all();
+	W_PROP_reload(MSG_ONE, to);
+	ClientInit_misc();
+	MUTATOR_CALLHOOK(Ent_Init);
+}
+void ClientInit_misc()
+{
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);
@@ -656,19 +672,8 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	else
 		WriteString(channel, "");
 	WriteByte(channel, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteCoord(channel, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
-	WriteCoord(channel, self.bouncestop); // g_balance_mortar_bouncestop
-	WriteCoord(channel, self.ebouncefactor); // g_balance_mortar_bouncefactor
-	WriteCoord(channel, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(channel, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(channel, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
 	WriteByte(channel, serverflags); // client has to know if it should zoom or not
-	WriteByte(channel, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
-	WriteByte(channel, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
-	WriteByte(channel, WEP_CVAR(porto, secondary)); // WEAPONTODO
-
-	MUTATOR_CALLHOOK(Ent_Init);
 }
 
 void ClientInit_CheckUpdate()
@@ -677,26 +682,6 @@ void ClientInit_CheckUpdate()
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{
 		self.count = autocvar_g_balance_armor_blockpercent;
-		self.SendFlags |= 1;
-	}
-	if(self.bouncefactor != autocvar_g_balance_mortar_bouncefactor) // WEAPONTODO
-	{
-		self.bouncefactor = autocvar_g_balance_mortar_bouncefactor;
-		self.SendFlags |= 1;
-	}
-	if(self.bouncestop != autocvar_g_balance_mortar_bouncestop)
-	{
-		self.bouncestop = autocvar_g_balance_mortar_bouncestop;
-		self.SendFlags |= 1;
-	}
-	if(self.ebouncefactor != autocvar_g_balance_electro_secondary_bouncefactor)
-	{
-		self.ebouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
-		self.SendFlags |= 1;
-	}
-	if(self.ebouncestop != autocvar_g_balance_electro_secondary_bouncestop)
-	{
-		self.ebouncestop = autocvar_g_balance_electro_secondary_bouncestop;
 		self.SendFlags |= 1;
 	}
 }
@@ -1002,7 +987,7 @@ void ClientPreConnect ()
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
 			self.playerid,
-			num_for_edict(self),
+			etof(self),
 			((IS_REAL_CLIENT(self)) ? self.netaddress : "bot")
 		));
 	}
@@ -1018,7 +1003,9 @@ Called when a client connects to the server
 */
 void DecodeLevelParms ();
 void ClientConnect ()
-{SELFPARAM();
+{
+	SELFPARAM();
+	ClientState_attach(this);
 	float t;
 
 	if(IS_CLIENT(self))
@@ -1047,7 +1034,8 @@ void ClientConnect ()
 		player_count = 0;
 	}
 
-	if(IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
+	// TODO: xonstat elo.txt support, until then just 404s
+	if(false && IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
 
 	PlayerScore_Attach(self);
 	ClientData_Attach();
@@ -1134,7 +1122,7 @@ void ClientConnect ()
         PlayerStats_GameReport_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
+		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(etof(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
 
 	LogTeamchange(self.playerid, self.team, 1);
 
@@ -1236,7 +1224,9 @@ Called when a client disconnects from the server
 .entity chatbubbleentity;
 void ReadyCount();
 void ClientDisconnect ()
-{SELFPARAM();
+{
+	SELFPARAM();
+	ClientState_detach(this);
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELEASE);
 
@@ -1617,7 +1607,8 @@ void player_regen ()
 	{
 		if(self.vehicle)
 			vehicles_exit(VHEF_RELEASE);
-		self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
+		if(self.event_damage)
+			self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
 	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -1689,9 +1680,9 @@ void SpectateCopy(entity this, entity spectatee)
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
-	self.switchweapon = spectatee.switchweapon;
-	self.switchingweapon = spectatee.switchingweapon;
-	self.weapon = spectatee.weapon;
+	PS(self).m_switchweapon = PS(spectatee).m_switchweapon;
+	PS(self).m_switchingweapon = PS(spectatee).m_switchingweapon;
+	PS(self).m_weapon = PS(spectatee).m_weapon;
 	self.vortex_charge = spectatee.vortex_charge;
 	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
@@ -2014,7 +2005,7 @@ void ObserverThink()
 {SELFPARAM();
 	if ( self.impulse )
 	{
-		MinigameImpulse(self.impulse);
+		MinigameImpulse(self, self.impulse);
 		self.impulse = 0;
 	}
 	float prefered_movetype;
@@ -2049,7 +2040,7 @@ void SpectatorThink()
 {SELFPARAM();
 	if ( self.impulse )
 	{
-		if(MinigameImpulse(self.impulse))
+		if(MinigameImpulse(self, self.impulse))
 			self.impulse = 0;
 	}
 	if (self.flags & FL_JUMPRELEASED) {
@@ -2405,7 +2396,7 @@ void PlayerPreThink ()
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
+		if((PS(self).m_weapon == WEP_SHOCKWAVE || PS(self).m_weapon == WEP_SHOTGUN) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)
@@ -2480,14 +2471,19 @@ void PlayerPreThink ()
 
 	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX.m_id) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE.m_id && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
+		SetZoomState(
+			self.BUTTON_ZOOM
+			|| self.BUTTON_ZOOMSCRIPT
+			|| (self.BUTTON_ATCK2 && PS(self).m_weapon == WEP_VORTEX)
+			|| (self.BUTTON_ATCK2 && PS(self).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
+		); // WEAPONTODO
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
 	if(IS_SPEC(self))
-		self.spectatee_status = num_for_edict(self.enemy);
+		self.spectatee_status = etof(self.enemy);
 	else if(IS_OBSERVER(self))
-		self.spectatee_status = num_for_edict(self);
+		self.spectatee_status = etof(self);
 	else
 		self.spectatee_status = 0;
 	if(self.spectatee_status != oldspectatee_status)
@@ -2520,7 +2516,7 @@ void PlayerPreThink ()
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	if(!self.weapon)
+	if (PS(self).m_weapon == WEP_Null)
 		self.clip_load = self.clip_size = 0;
 }
 
@@ -2601,7 +2597,7 @@ void PlayerPostThink ()
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)
-			ImpulseCommands();
+			ImpulseCommands(self);
 		if (intermission_running)
 			return;		// intermission or finale
 		GetPressedKeys();

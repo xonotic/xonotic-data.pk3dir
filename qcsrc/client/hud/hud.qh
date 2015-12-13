@@ -24,10 +24,10 @@ REGISTER_REGISTRY(hud_panels)
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
 // draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha) do {																				\
+#define HUD_Panel_DrawBg(theAlpha) MACRO_BEGIN {																				\
 	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
 		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
-} while(0)
+} MACRO_END
 
 int panel_order[hud_panels_MAX];
 string hud_panelorder_prev;
@@ -213,7 +213,7 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 
 // Get value for panel.current_panel_bg: if "" fetch default, else use panel_bg_str
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
-#define HUD_Panel_GetBg() do {                                                                                      \
+#define HUD_Panel_GetBg() MACRO_BEGIN {                                                                             \
 	string panel_bg;                                                                                                \
 	if (!autocvar__hud_configure && panel_bg_str == "0") {                                                          \
 		panel_bg = "0";                                                                                             \
@@ -238,10 +238,10 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 	if (panel.current_panel_bg)                                                                                     \
 		strunzone(panel.current_panel_bg);                                                                          \
 	panel.current_panel_bg = strzone(panel_bg);                                                                     \
-} while(0)
+} MACRO_END
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
-#define HUD_Panel_GetColor() do {                                                                                   \
+#define HUD_Panel_GetColor() MACRO_BEGIN {                                                                          \
 	if ((teamplay) && panel_bg_color_team) {                                                                        \
 		if (autocvar__hud_configure && myteam == NUM_SPECTATOR)                                                     \
 			panel_bg_color = '1 0 0' * panel_bg_color_team;                                                         \
@@ -262,20 +262,20 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 			}                                                                                                       \
 		}                                                                                                           \
 	}                                                                                                               \
-} while(0)
+} MACRO_END
 
 // Get value for panel_bg_color_team: if "" fetch default, else use panel_bg_color_team_str
-#define HUD_Panel_GetColorTeam() do {                                                                               \
+#define HUD_Panel_GetColorTeam() MACRO_BEGIN {                                                                      \
 	if (panel_bg_color_team_str == "") {                                                                            \
 		panel_bg_color_team = autocvar_hud_panel_bg_color_team;                                                     \
 	} else {                                                                                                        \
 		panel_bg_color_team = stof(panel_bg_color_team_str);                                                        \
 	}                                                                                                               \
-} while(0)
+} MACRO_END
 
 // Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
 // comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
-#define HUD_Panel_GetBgAlpha() do {                                                                                 \
+#define HUD_Panel_GetBgAlpha() MACRO_BEGIN {                                                                        \
 	if (panel_bg_alpha_str == "") {                                                                                 \
 		panel_bg_alpha_str = ftos(autocvar_hud_panel_bg_alpha);                                                     \
 	}                                                                                                               \
@@ -288,39 +288,39 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 		else                                                                                                        \
 			panel_bg_alpha = max(cvar("hud_configure_bg_minalpha"), panel_bg_alpha);                                \
 	}                                                                                                               \
-} while(0)
+} MACRO_END
 
 // Get value for panel_fg_alpha. Also do various minalpha checks
 // comment on line 2 of macro: // ALWAYS show disabled panels at 0.25 alpha when in config mode
-#define HUD_Panel_GetFgAlpha() do {                                                                                 \
+#define HUD_Panel_GetFgAlpha() MACRO_BEGIN {                                                                        \
 	panel_fg_alpha = autocvar_hud_panel_fg_alpha;                                                                   \
 	if (autocvar__hud_configure && !panel_enabled)                                                                  \
 		panel_fg_alpha = 0.25;                                                                                      \
-} while(0)
+} MACRO_END
 
 // Get border. See comments above, it's similar.
-#define HUD_Panel_GetBorder() do {                                                                                  \
+#define HUD_Panel_GetBorder() MACRO_BEGIN {                                                                         \
 	if (panel_bg_border_str == "") {                                                                                \
 		panel_bg_border = autocvar_hud_panel_bg_border;                                                             \
 	} else {                                                                                                        \
 		panel_bg_border = stof(panel_bg_border_str);                                                                \
 	}                                                                                                               \
-} while(0)
+} MACRO_END
 
 // Get padding. See comments above, it's similar.
 // last line is a port of the old function, basically always make sure the panel contents are at least 5 pixels tall/wide, to disallow extreme padding values
-#define HUD_Panel_GetPadding() do {                                                                                 \
+#define HUD_Panel_GetPadding() MACRO_BEGIN {                                                                        \
 	if (panel_bg_padding_str == "") {                                                                               \
 		panel_bg_padding = autocvar_hud_panel_bg_padding;                                                           \
 	} else {                                                                                                        \
 		panel_bg_padding = stof(panel_bg_padding_str);                                                              \
 	}                                                                                                               \
 	panel_bg_padding = min(min(panel_size.x, panel_size.y)/2 - 5, panel_bg_padding);                                \
-} while(0)
+} MACRO_END
 
 // return smoothly faded pos and size of given panel when a dialog is active
 // don't center too wide panels, it doesn't work with different resolutions
-#define HUD_Panel_UpdatePosSize_ForMenu() do { \
+#define HUD_Panel_UpdatePosSize_ForMenu() MACRO_BEGIN { \
 	vector menu_enable_size = panel_size; \
 	float max_panel_width = 0.52 * vid_conwidth; \
 	if(panel_size.x > max_panel_width) \
@@ -331,16 +331,16 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 	vector menu_enable_pos = eX * (panel_bg_border + 0.5 * max_panel_width) + eY * 0.5 * vid_conheight - 0.5 * menu_enable_size; \
 	panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos; \
 	panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size; \
-} while(0)
+} MACRO_END
 
 // Scale the pos and size vectors to absolute coordinates
-#define HUD_Panel_ScalePosSize() do {                                                                               \
+#define HUD_Panel_ScalePosSize() MACRO_BEGIN {                                                                      \
 	panel_pos.x *= vid_conwidth;  panel_pos.y *= vid_conheight;                                                     \
 	panel_size.x *= vid_conwidth; panel_size.y *= vid_conheight;                                                    \
-} while(0)
+} MACRO_END
 
 // NOTE: in hud_configure mode cvars must be reloaded every frame
-#define HUD_Panel_UpdateCvars() do {                                                                                \
+#define HUD_Panel_UpdateCvars() MACRO_BEGIN {                                                                       \
 	if (panel.update_time <= time) {                                                                                \
 		if (autocvar__hud_configure) panel_enabled = cvar(strcat("hud_panel_", panel.panel_name));                  \
 		panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));                              \
@@ -386,9 +386,9 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 		panel_bg_padding = panel.current_panel_bg_padding;                                                          \
 		panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha;                                             \
 	}                                                                                                               \
-} while(0)
+} MACRO_END
 
-#define HUD_Panel_UpdatePosSize() do {                                                                              \
+#define HUD_Panel_UpdatePosSize() MACRO_BEGIN {                                                                     \
 	panel_enabled = cvar(strcat("hud_panel_", panel.panel_name));                                                   \
 	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos")));                                  \
 	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size")));                                \
@@ -398,7 +398,7 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 	}                                                                                                               \
 	panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border"));                        \
 	HUD_Panel_GetBorder();                                                                                          \
-} while(0)
+} MACRO_END
 
 const int NOTIFY_MAX_ENTRIES = 10;
 const float NOTIFY_ICON_MARGIN = 0.02;

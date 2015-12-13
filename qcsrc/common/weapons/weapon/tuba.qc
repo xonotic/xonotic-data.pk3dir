@@ -15,34 +15,34 @@ CLASS(Tuba, Weapon)
 /* refname   */ ATTRIB(Tuba, netname, string, "tuba");
 /* xgettext:no-c-format */
 /* wepname   */ ATTRIB(Tuba, m_name, string, _("@!#%'n Tuba"));
-ENDCLASS(Tuba)
-REGISTER_WEAPON(TUBA, NEW(Tuba));
 
-#define TUBA_SETTINGS(w_cvar,w_prop) TUBA_SETTINGS_LIST(w_cvar, w_prop, TUBA, tuba)
-#define TUBA_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, animtime) \
-	w_cvar(id, sn, NONE, attenuation) \
-	w_cvar(id, sn, NONE, damage) \
-	w_cvar(id, sn, NONE, edgedamage) \
-	w_cvar(id, sn, NONE, fadetime) \
-	w_cvar(id, sn, NONE, force) \
-	w_cvar(id, sn, NONE, pitchstep) \
-	w_cvar(id, sn, NONE, radius) \
-	w_cvar(id, sn, NONE, refire) \
-	w_cvar(id, sn, NONE, volume) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, NONE) \
+		P(class, prefix, attenuation, float, NONE) \
+		P(class, prefix, damage, float, NONE) \
+		P(class, prefix, edgedamage, float, NONE) \
+		P(class, prefix, fadetime, float, NONE) \
+		P(class, prefix, force, float, NONE) \
+		P(class, prefix, pitchstep, float, NONE) \
+		P(class, prefix, radius, float, NONE) \
+		P(class, prefix, refire, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, volume, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Tuba, tuba)
+#undef X
+
+ENDCLASS(Tuba)
+REGISTER_WEAPON(TUBA, tuba, NEW(Tuba));
+
 
 #ifdef SVQC
-TUBA_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-float W_Tuba_MarkClientOnlyFieldsAsUsed() {
-	// These variables are only used by client/tuba.qc. TODO: move client/tuba.qc code here.
-	return WEP_CVAR(tuba, fadetime) + WEP_CVAR(tuba, pitchstep) + WEP_CVAR(tuba, volume);
-}
 
 .entity tuba_note;
 .float tuba_smoketime;
@@ -403,10 +403,6 @@ void W_Tuba_NoteOn(float hittype)
 				}
 			}
 		}
-		METHOD(Tuba, wr_init, void(entity thiswep))
-		{
-			TUBA_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Tuba, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
@@ -446,10 +442,6 @@ void W_Tuba_NoteOn(float hittype)
 		METHOD(Tuba, wr_checkammo2, bool(entity thiswep))
 		{
 			return true; // tuba has infinite ammo
-		}
-		METHOD(Tuba, wr_config, void(entity thiswep))
-		{
-			TUBA_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Tuba, wr_suicidemessage, int(entity thiswep))
 		{

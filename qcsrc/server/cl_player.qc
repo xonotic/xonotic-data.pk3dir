@@ -482,7 +482,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	if(DIFF_TEAM(self, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
-			awep = Weapons_from(attacker.weapon);
+			awep = PS(attacker).m_weapon;
 		else
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
@@ -492,7 +492,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 	{
 		dh = dh - max(self.health, 0);
 		da = da - max(self.armorvalue, 0);
-		WeaponStats_LogDamage(awep.m_id, abot, self.weapon, vbot, dh + da);
+		WeaponStats_LogDamage(awep.m_id, abot, PS(self).m_weapon.m_id, vbot, dh + da);
 		MUTATOR_CALLHOOK(PlayerDamaged, attacker, self, dh, da, hitloc, deathtype);
 	}
 
@@ -508,7 +508,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		}
 
 		if(valid_damage_for_weaponstats)
-			WeaponStats_LogKill(awep.m_id, abot, self.weapon, vbot);
+			WeaponStats_LogKill(awep.m_id, abot, PS(self).m_weapon.m_id, vbot);
 
 		if(autocvar_sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
@@ -548,7 +548,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
 		excess = frag_damage;
 
-		Weapon wep = Weapons_from(self.weapon);
+		Weapon wep = PS(self).m_weapon;
 		wep.wr_playerdeath(wep);
 
 		RemoveGrapplingHook(self);
@@ -573,7 +573,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		// clear waypoints
 		WaypointSprite_PlayerDead();
 		// throw a weapon
-		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, PS(self).m_switchweapon.m_id);
 
 		// become fully visible
 		self.alpha = default_player_alpha;

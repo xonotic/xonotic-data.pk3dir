@@ -570,15 +570,13 @@ float bot_cmd_turn()
 
 float bot_cmd_select_weapon()
 {SELFPARAM();
-	float id;
-
-	id = bot_cmd.bot_cmd_parm_float;
+	float id = bot_cmd.bot_cmd_parm_float;
 
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	if(client_hasweapon(self, id, true, false))
-		self.switchweapon = id;
+	if(client_hasweapon(self, Weapons_from(id), true, false))
+		PS(self).m_switchweapon = Weapons_from(id);
 	else
 		return CMD_STATUS_ERROR;
 

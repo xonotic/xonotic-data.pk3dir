@@ -880,7 +880,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(self.buffs & BUFF_AMMO.m_itemid)
 	if(self.clip_size)
-		self.clip_load = self.(weapon_load[self.switchweapon]) = self.clip_size;
+		self.clip_load = self.(weapon_load[PS(self).m_switchweapon.m_id]) = self.clip_size;
 
 	if((self.buffs & BUFF_INVISIBLE.m_itemid) && (self.oldbuffs & BUFF_INVISIBLE.m_itemid))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
@@ -902,7 +902,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 			if(self.clip_load)
 				self.buff_ammo_prev_clipload = self.clip_load;
-			self.clip_load = self.(weapon_load[self.switchweapon]) = self.clip_size;
+			self.clip_load = self.(weapon_load[PS(self).m_switchweapon.m_id]) = self.clip_size;
 		}
 
 		BUFF_ONREM(BUFF_AMMO)

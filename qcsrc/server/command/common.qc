@@ -155,7 +155,7 @@ float GetFilteredNumber(string input)
 	entity selection = GetFilteredEntity(input);
 	float output;
 
-	output = num_for_edict(selection);
+	output = etof(selection);
 
 	return output;
 }
@@ -791,7 +791,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 				}
 
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "),
-					num_for_edict(tmp_player),
+					etof(tmp_player),
 					tmp_player.netname,
 					tmp_player.ping,
 					tmp_player.ping_packetloss,

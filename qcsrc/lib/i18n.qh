@@ -7,6 +7,9 @@
 // translation helpers
 string prvm_language;
 
+/**
+ * @deprecated prefer _("translated")
+ */
 string language_filename(string s)
 {
 	string fn = prvm_language;

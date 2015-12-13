@@ -14,64 +14,66 @@ CLASS(Shockwave, Weapon)
 /* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
 /* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
 /* wepname   */ ATTRIB(Shockwave, m_name, string, _("Shockwave"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, blast_animtime, float, NONE) \
+		P(class, prefix, blast_damage, float, NONE) \
+		P(class, prefix, blast_distance, float, NONE) \
+		P(class, prefix, blast_edgedamage, float, NONE) \
+		P(class, prefix, blast_force, float, NONE) \
+		P(class, prefix, blast_force_forwardbias, float, NONE) \
+		P(class, prefix, blast_force_zscale, float, NONE) \
+		P(class, prefix, blast_jump_damage, float, NONE) \
+		P(class, prefix, blast_jump_edgedamage, float, NONE) \
+		P(class, prefix, blast_jump_force, float, NONE) \
+		P(class, prefix, blast_jump_force_velocitybias, float, NONE) \
+		P(class, prefix, blast_jump_force_zscale, float, NONE) \
+		P(class, prefix, blast_jump_multiplier_accuracy, float, NONE) \
+		P(class, prefix, blast_jump_multiplier_distance, float, NONE) \
+		P(class, prefix, blast_jump_multiplier_min, float, NONE) \
+		P(class, prefix, blast_jump_radius, float, NONE) \
+		P(class, prefix, blast_multiplier_accuracy, float, NONE) \
+		P(class, prefix, blast_multiplier_distance, float, NONE) \
+		P(class, prefix, blast_multiplier_min, float, NONE) \
+		P(class, prefix, blast_refire, float, NONE) \
+		P(class, prefix, blast_splash_damage, float, NONE) \
+		P(class, prefix, blast_splash_edgedamage, float, NONE) \
+		P(class, prefix, blast_splash_force, float, NONE) \
+		P(class, prefix, blast_splash_force_forwardbias, float, NONE) \
+		P(class, prefix, blast_splash_multiplier_accuracy, float, NONE) \
+		P(class, prefix, blast_splash_multiplier_distance, float, NONE) \
+		P(class, prefix, blast_splash_multiplier_min, float, NONE) \
+		P(class, prefix, blast_splash_radius, float, NONE) \
+		P(class, prefix, blast_spread_max, float, NONE) \
+		P(class, prefix, blast_spread_min, float, NONE) \
+		P(class, prefix, melee_animtime, float, NONE) \
+		P(class, prefix, melee_damage, float, NONE) \
+		P(class, prefix, melee_delay, float, NONE) \
+		P(class, prefix, melee_force, float, NONE) \
+		P(class, prefix, melee_multihit, float, NONE) \
+		P(class, prefix, melee_no_doubleslap, float, NONE) \
+		P(class, prefix, melee_nonplayerdamage, float, NONE) \
+		P(class, prefix, melee_range, float, NONE) \
+		P(class, prefix, melee_refire, float, NONE) \
+		P(class, prefix, melee_swing_side, float, NONE) \
+		P(class, prefix, melee_swing_up, float, NONE) \
+		P(class, prefix, melee_time, float, NONE) \
+		P(class, prefix, melee_traces, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Shockwave, shockwave)
+#undef X
+
 ENDCLASS(Shockwave)
-REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
+REGISTER_WEAPON(SHOCKWAVE, shockwave, NEW(Shockwave));
 
-#define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)
-#define SHOCKWAVE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, blast_animtime) \
-	w_cvar(id, sn, NONE, blast_damage) \
-	w_cvar(id, sn, NONE, blast_distance) \
-	w_cvar(id, sn, NONE, blast_edgedamage) \
-	w_cvar(id, sn, NONE, blast_force) \
-	w_cvar(id, sn, NONE, blast_force_forwardbias) \
-	w_cvar(id, sn, NONE, blast_force_zscale) \
-	w_cvar(id, sn, NONE, blast_jump_damage) \
-	w_cvar(id, sn, NONE, blast_jump_edgedamage) \
-	w_cvar(id, sn, NONE, blast_jump_force) \
-	w_cvar(id, sn, NONE, blast_jump_force_velocitybias) \
-	w_cvar(id, sn, NONE, blast_jump_force_zscale) \
-	w_cvar(id, sn, NONE, blast_jump_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, blast_jump_multiplier_distance) \
-	w_cvar(id, sn, NONE, blast_jump_multiplier_min) \
-	w_cvar(id, sn, NONE, blast_jump_radius) \
-	w_cvar(id, sn, NONE, blast_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, blast_multiplier_distance) \
-	w_cvar(id, sn, NONE, blast_multiplier_min) \
-	w_cvar(id, sn, NONE, blast_refire) \
-	w_cvar(id, sn, NONE, blast_splash_damage) \
-	w_cvar(id, sn, NONE, blast_splash_edgedamage) \
-	w_cvar(id, sn, NONE, blast_splash_force) \
-	w_cvar(id, sn, NONE, blast_splash_force_forwardbias) \
-	w_cvar(id, sn, NONE, blast_splash_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, blast_splash_multiplier_distance) \
-	w_cvar(id, sn, NONE, blast_splash_multiplier_min) \
-	w_cvar(id, sn, NONE, blast_splash_radius) \
-	w_cvar(id, sn, NONE, blast_spread_max) \
-	w_cvar(id, sn, NONE, blast_spread_min) \
-	w_cvar(id, sn, NONE, melee_animtime) \
-	w_cvar(id, sn, NONE, melee_damage) \
-	w_cvar(id, sn, NONE, melee_delay) \
-	w_cvar(id, sn, NONE, melee_force) \
-	w_cvar(id, sn, NONE, melee_multihit) \
-	w_cvar(id, sn, NONE, melee_no_doubleslap) \
-	w_cvar(id, sn, NONE, melee_nonplayerdamage) \
-	w_cvar(id, sn, NONE, melee_range) \
-	w_cvar(id, sn, NONE, melee_refire) \
-	w_cvar(id, sn, NONE, melee_swing_side) \
-	w_cvar(id, sn, NONE, melee_swing_up) \
-	w_cvar(id, sn, NONE, melee_time) \
-	w_cvar(id, sn, NONE, melee_traces) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
 
-#ifdef SVQC
-SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #ifdef CSQC
 void Net_ReadShockwaveParticle();
 .vector sw_shotorg;
@@ -350,7 +352,7 @@ void W_Shockwave_Send()
 	WriteShort(MSG_BROADCAST, WEP_CVAR(shockwave, blast_distance));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_max), 255));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_min), 255));
-	WriteByte(MSG_BROADCAST, num_for_edict(self));
+	WriteByte(MSG_BROADCAST, etof(self));
 }
 
 void W_Shockwave_Attack()
@@ -702,10 +704,6 @@ void W_Shockwave_Attack()
 				}
 			}
 		}
-		METHOD(Shockwave, wr_init, void(entity thiswep))
-		{
-			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
 		{
 			return true; // infinite ammo
@@ -714,10 +712,6 @@ void W_Shockwave_Attack()
 		{
 			// shockwave has infinite ammo
 			return true;
-		}
-		METHOD(Shockwave, wr_config, void(entity thiswep))
-		{
-			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Shockwave, wr_suicidemessage, int(entity thiswep))
 		{

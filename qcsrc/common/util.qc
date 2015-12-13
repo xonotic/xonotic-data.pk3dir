@@ -1431,14 +1431,13 @@ vector animfixfps(entity e, vector a, vector b)
 	// multi-frame anim: keep as-is
 	if(a.y == 1)
 	{
-		float dur;
-		dur = frameduration(e.modelindex, a.x);
-		if(dur <= 0 && b.y)
+		float dur = frameduration(e.modelindex, a.x);
+		if (dur <= 0 && b.y)
 		{
 			a = b;
 			dur = frameduration(e.modelindex, a.x);
 		}
-		if(dur > 0)
+		if (dur > 0)
 			a.z = 1.0 / dur;
 	}
 	return a;

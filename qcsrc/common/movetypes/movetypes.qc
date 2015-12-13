@@ -441,12 +441,12 @@ bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition(this, '0 0 -1' * i)) goto success;
 		if(!_Movetype_TestEntityPosition(this, '0 0 1' * i)) goto success;
 	}
-	LOG_DEBUG("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
-		num_for_edict(this), this.classname, vtos(this.move_origin));
+	LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
+		etof(this), this.classname, vtos(this.move_origin));
 	return false;
 	: success;
-	LOG_DEBUG("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
-		num_for_edict(this), this.classname, vtos(this.move_origin));
+	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
+		etof(this), this.classname, vtos(this.move_origin));
 	_Movetype_LinkEdict(this, true);
 	return true;
 }

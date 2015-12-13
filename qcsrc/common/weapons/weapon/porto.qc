@@ -14,25 +14,27 @@ CLASS(PortoLaunch, Weapon)
 /* wepimg    */ ATTRIB(PortoLaunch, model2, string, "weaponporto");
 /* refname   */ ATTRIB(PortoLaunch, netname, string, "porto");
 /* wepname   */ ATTRIB(PortoLaunch, m_name, string, _("Port-O-Launch"));
-ENDCLASS(PortoLaunch)
-REGISTER_WEAPON(PORTO, NEW(PortoLaunch));
 
-#define PORTO_SETTINGS(w_cvar,w_prop) PORTO_SETTINGS_LIST(w_cvar, w_prop, PORTO, porto)
-#define PORTO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, NONE, secondary) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, speed, float, BOTH) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string,NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, PortoLaunch, porto)
+#undef X
+ENDCLASS(PortoLaunch)
+REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
 
 #ifdef SVQC
-PORTO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity porto_current;
 .vector porto_v_angle; // holds "held" view angles
 .float porto_v_angle_held;
@@ -301,10 +303,6 @@ void W_Porto_Attack(float type)
 				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
 					self.BUTTON_ATCK = true;
 		}
-		METHOD(PortoLaunch, wr_config, void(entity this))
-		{
-			PORTO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-		}
 		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(porto, secondary))
@@ -370,10 +368,6 @@ void W_Porto_Attack(float type)
 		{
 			// always allow infinite ammo
 			return true;
-		}
-		METHOD(PortoLaunch, wr_init, void(entity this))
-		{
-			PORTO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 		}
 		METHOD(PortoLaunch, wr_setup, void(entity thiswep))
 		{

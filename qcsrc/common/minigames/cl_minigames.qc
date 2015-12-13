@@ -74,7 +74,7 @@ MINIGAME_SIMPLELINKED_ENTITIES
 
 void minigame_autoclean_entity(entity e)
 {
-	LOG_DEBUG("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
 	remove(e);
 }
 
@@ -235,7 +235,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		LOG_DEBUG("CL Reading entity: ",ftos(num_for_edict(self)),
+		LOG_DEBUG("CL Reading entity: ",ftos(etof(self)),
 			" classname:",self.classname," enttype:",ftos(self.enttype) );
 		LOG_DEBUG(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 	}

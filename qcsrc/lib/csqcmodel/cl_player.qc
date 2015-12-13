@@ -202,7 +202,7 @@ void CSQCPlayer_PredictTo(entity this, float endframe, bool apply_error)
 #if 0
 	// we don't need this
 	// darkplaces makes servercommandframe == 0 in these cases anyway
-	if (getstatf(STAT_HEALTH) <= 0)
+	if (STAT(HEALTH) <= 0)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
@@ -245,7 +245,7 @@ void CSQCPlayer_SetViewLocation()
 void CSQCPlayer_SetCamera()
 {
 	const vector v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
-	const float vh = getstati(STAT_VIEWHEIGHT);
+	const float vh = STAT(VIEWHEIGHT);
 	const vector pl_viewofs = PL_VIEW_OFS;
 	const vector pl_viewofs_crouch = PL_CROUCH_VIEW_OFS;
 	const entity e = csqcplayer;
@@ -323,7 +323,7 @@ void CSQCPlayer_SetCamera()
 		if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
 		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
 		// note: these two only work in WIP2, but are harmless in WIP1
-		if (getstati(STAT_HEALTH) <= 0) refdefflags |= REFDEFFLAG_DEAD;
+		if (STAT(HEALTH) <= 0) refdefflags |= REFDEFFLAG_DEAD;
 		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
 		V_CalcRefdef(view, refdefflags);
 	}

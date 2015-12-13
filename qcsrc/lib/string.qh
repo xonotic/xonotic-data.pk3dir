@@ -130,6 +130,13 @@ string cdr(string s)
 	return substring(s, o + 1, strlen(s) - (o + 1));
 }
 
+string cons(string a, string b)
+{
+	if (a == "") return b;
+	if (b == "") return a;
+	return strcat(a, " ", b);
+}
+
 string substring_range(string s, float b, float e)
 {
 	return substring(s, b, e - b);

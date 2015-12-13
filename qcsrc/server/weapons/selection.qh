@@ -5,18 +5,18 @@
 void Send_WeaponComplain(entity e, float wpn, float type);
 
 .float hasweapon_complain_spam;
-float client_hasweapon(entity cl, float wpn, float andammo, float complain);
+bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain);
 
 .int weaponcomplainindex;
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing);
 
-#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true)
+#define w_getbestweapon(ent) Weapons_from(W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true))
 
-void W_SwitchWeapon_Force(entity e, float w);
+void W_SwitchWeapon_Force(entity e, Weapon w);
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity pl);
-void W_SwitchWeapon(float imp);
+void W_SwitchWeapon(Weapon imp);
 
 void W_CycleWeapon(string weaponorder, float dir);
 

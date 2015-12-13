@@ -71,7 +71,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 		return 0;
 
 	// sv_clones
-	if(i == CHIMPULSE_CLONE_MOVING || i == CHIMPULSE_CLONE_STANDING)
+	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
 		if(self.lip < sv_clones)
 			return 1;
 
@@ -146,7 +146,7 @@ float CheatImpulse(float i)
 	{
 		entity e, e2;
 
-		case CHIMPULSE_SPEEDRUN_INIT: // deploy personal waypoint
+		case CHIMPULSE_SPEEDRUN_INIT.impulse: // deploy personal waypoint
 			// shared with regular waypoint init, so this is not a cheat by itself
 			if(!self.personal)
 			{
@@ -173,7 +173,7 @@ float CheatImpulse(float i)
 			self.personal.invincible_finished = self.invincible_finished;
 			self.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
-		case CHIMPULSE_CLONE_MOVING:
+		case CHIMPULSE_CLONE_MOVING.impulse:
 			IS_CHEAT(i, 0, 0);
 			makevectors (self.v_angle);
 			self.velocity = self.velocity + v_forward * 300;
@@ -182,17 +182,17 @@ float CheatImpulse(float i)
 			self.velocity = self.velocity - v_forward * 300;
 			DID_CHEAT();
 			break;
-		case CHIMPULSE_CLONE_STANDING:
+		case CHIMPULSE_CLONE_STANDING.impulse:
 			IS_CHEAT(i, 0, 0);
 			CopyBody(0);
 			self.lip += 1;
 			DID_CHEAT();
 			break;
-		case CHIMPULSE_GIVE_ALL:
+		case CHIMPULSE_GIVE_ALL.impulse:
 			IS_CHEAT(i, 0, 0);
 			CheatCommand(tokenize_console("give all"));
 			break; // already counted as cheat
-		case CHIMPULSE_SPEEDRUN:
+		case CHIMPULSE_SPEEDRUN.impulse:
 			IS_CHEAT(i, 0, 0);
 			if(self.personal)
 			{
@@ -238,7 +238,7 @@ float CheatImpulse(float i)
 			else
 				sprint(self, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
 			break;
-		case CHIMPULSE_TELEPORT:
+		case CHIMPULSE_TELEPORT.impulse:
 			IS_CHEAT(i, 0, 0);
 			if(self.movetype == MOVETYPE_NOCLIP)
 			{
@@ -267,7 +267,7 @@ float CheatImpulse(float i)
 			}
 			sprint(self, "Emergency teleport could not find a good location, forget it!\n");
 			break;
-		case CHIMPULSE_R00T:
+		case CHIMPULSE_R00T.impulse:
 			IS_CHEAT(i, 0, 0);
 			RandomSelection_Init();
 			FOR_EACH_PLAYER(e)
@@ -599,7 +599,7 @@ float CheatCommand(float argc)
 							{
 								if(vlen(oldself.origin - start) < vlen(e.origin - start))
 									++effectnum;
-								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && num_for_edict(oldself) < num_for_edict(e))
+								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && etof(oldself) < etof(e))
 									++effectnum;
 							}
 							fputs(f, strcat("\"race_place\" \"", ftos(effectnum), "\"\n"));

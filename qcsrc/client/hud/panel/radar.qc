@@ -79,7 +79,7 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
 				return false;
 		}
 
-		if ( getstati(STAT_HEALTH) <= 0 )
+		if ( STAT(HEALTH) <= 0 )
 		{
 			// Show scoreboard
 			if ( bInputType < 2 )
@@ -369,7 +369,7 @@ void HUD_Radar()
 	{
 		string message = "Click to select teleport destination";
 
-		if ( getstati(STAT_HEALTH) <= 0 )
+		if ( STAT(HEALTH) <= 0 )
 		{
 			message = "Click to select spawn location";
 		}

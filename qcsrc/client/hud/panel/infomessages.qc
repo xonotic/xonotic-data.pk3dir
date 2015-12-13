@@ -1,11 +1,11 @@
 // Info messages panel (#14)
 
-#define drawInfoMessage(s) do {																						\
+#define drawInfoMessage(s) MACRO_BEGIN {																			\
 	if(autocvar_hud_panel_infomessages_flip)																		\
 		o.x = pos.x + mySize.x - stringwidth(s, true, fontsize);													\
 	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);														\
 	o.y += fontsize.y;																								\
-} while(0)
+} MACRO_END
 void HUD_InfoMessages()
 {
 	if(!autocvar__hud_configure)

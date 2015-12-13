@@ -1,0 +1,16 @@
+#ifndef MACRO_H
+#define MACRO_H
+
+#if 1
+    void voidfunc() { error("voidfunc"); }
+    #define MACRO_BEGIN if (1) {
+    #define MACRO_END } else voidfunc()
+#else
+    #define MACRO_BEGIN do {
+    #define MACRO_END } while (0)
+#endif
+
+#define _CAT(a, b) a ## b
+#define CAT(a, b) _CAT(a, b)
+
+#endif

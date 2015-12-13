@@ -2,39 +2,36 @@
 #define ITER_H
 
 #define FOREACH_ARRAY(arr, start, end, cond, body) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		for (int i = start; i < end; ++i) \
 		{ \
 			const noref entity it = arr[i]; \
-			if (cond) { body } \
+			if (cond) { LAMBDA(body) } \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define FOREACH_LIST(list, next, cond, body) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		int i = 0; \
 		for (entity it = list##_first; it; (it = it.next, ++i)) \
 		{ \
-			if (cond) { body } \
+			if (cond) { LAMBDA(body) } \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define FOREACH_WORD(words, cond, body) \
-	do \
+	MACRO_BEGIN \
 	{ \
 		string _words = words; \
 		int i = 0; \
 		for (string _it; (_it = car(_words)); (_words = cdr(_words), ++i)) \
 		{ \
 			const noref string it = _it; \
-			if (cond) { body } \
+			if (cond) { LAMBDA(body) } \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #if defined(CSQC)
 	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #402;
@@ -54,44 +51,40 @@
 .entity _FOREACH_ENTITY_next;
 
 #define FOREACH_ENTITY_UNORDERED(cond, body) \
-	do { \
+	MACRO_BEGIN { \
 		int i = 0; \
 		for (entity it = findchainentity_tofield(_FOREACH_ENTITY_fld, NULL, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
 		{ \
-			if (cond) { body } \
+			if (cond) { LAMBDA(body) } \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define FOREACH_ENTITY_ORDERED(cond, body) \
-	do { \
+	MACRO_BEGIN { \
 		int i = 0; \
 		for (entity it = NULL; (it = nextent(it)); ++i) \
 		{ \
-			if (cond) { body } \
+			if (cond) { LAMBDA(body) } \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define FOREACH_ENTITY_FLAGS(fld, flags, body) \
-	do { \
+	MACRO_BEGIN { \
 		int i = 0; \
 		for (entity it = _findchainflags_tofield(fld, flags, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
 		{ \
-			body \
+			LAMBDA(body) \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define FOREACH_ENTITY_CLASS(class, cond, body) \
-	do { \
+	MACRO_BEGIN { \
 		int i = 0; \
 		for (entity it = _findchainstring_tofield(classname, class, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
 		{ \
-			if (cond) { body } \
+			if (cond) { LAMBDA(body) } \
 		} \
-	} \
-	while (0)
+	} MACRO_END
 
 #define FOREACH_ENTITY(cond, body) FOREACH_ENTITY_UNORDERED(cond, body)
 
