@@ -152,18 +152,18 @@ void m_init_delayed()
 	if (cvar_string("menu_skin") != "")
 	{
 		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 	if (fh < 0 && cvar_defstring("menu_skin") != "")
 	{
 		cvar_set("menu_skin", cvar_defstring("menu_skin"));
 		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
-		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 	if (fh < 0)
 	{
 		draw_currentSkin = "gfx/menu/default";
-		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
 	}
 	if (fh < 0) error("cannot load any menu skin\n");
 	draw_currentSkin = strzone(draw_currentSkin);
