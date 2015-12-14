@@ -160,14 +160,13 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 }
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
-{SELFPARAM();
+{
 	entity e;
 	if(restart_mapalreadyrestarted || (time < game_starttime))
-	FOR_EACH_CLIENT(e)
-	if(IS_PLAYER(e))
-	{
-		WITH(entity, self, e, PlayerScore_Add(e, SP_LMS_LIVES, LMS_NewPlayerLives()));
-	}
+		FOR_EACH_PLAYER(e)
+		{
+			PlayerScore_Add(e, SP_LMS_LIVES, LMS_NewPlayerLives());
+		}
 
 	return false;
 }
