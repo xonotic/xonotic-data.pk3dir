@@ -157,6 +157,17 @@ MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver)
     Item_ItemsTime_SetTimesForPlayer(self);
 }
 
+MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
+{SELFPARAM();
+	if(IS_PLAYER(self))
+	{
+		// client became player on connection skipping putObserverInServer step
+		if (IS_REAL_CLIENT(self))
+		if (warmup_stage)
+			Item_ItemsTime_SetTimesForPlayer(self);
+	}
+}
+
 MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 {SELFPARAM();
     if (warmup_stage) return;
