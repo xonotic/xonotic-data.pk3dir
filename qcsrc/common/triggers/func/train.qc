@@ -1,5 +1,8 @@
 .float train_wait_turning;
 void() train_next;
+#ifdef SVQC
+void train_use();
+#endif
 void train_wait()
 {SELFPARAM();
 	WITH(entity, self, self.enemy, SUB_UseTargets());
