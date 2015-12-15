@@ -448,8 +448,16 @@ bool PlayerJump(entity this)
 
 	if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
-		this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
-		return true;
+		if(this.viewloc)
+		{
+			doublejump = true;
+			mjumpheight *= 0.7;
+		}
+		else
+		{
+			this.velocity_z = PHYS_MAXSPEED(this) * 0.7;
+			return true;
+		}
 	}
 
 	if (!doublejump)
@@ -822,7 +830,7 @@ void PM_swim(entity this, float maxspd_mod)
 	float jump = PHYS_INPUT_BUTTON_JUMP(this);
 	// water jump only in certain situations
 	// this mimics quakeworld code
-	if (jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180)
+	if (jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc)
 	{
 		vector yawangles = '0 1 0' * this.v_angle.y;
 		makevectors(yawangles);
@@ -851,8 +859,11 @@ void PM_swim(entity this, float maxspd_mod)
 	vector wishvel = v_forward * this.movement.x
 					+ v_right * this.movement.y
 					+ '0 0 1' * this.movement.z;
-	if (wishvel == '0 0 0')
+	if(this.viewloc)
+		wishvel.z = -160; // drift anyway
+	else if (wishvel == '0 0 0')
 		wishvel = '0 0 -60'; // drift towards bottom
+
 
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod) * 0.7;
@@ -875,7 +886,7 @@ void PM_swim(entity this, float maxspd_mod)
 		}
 
 		// holding jump button swims upward slowly
-		if (jump)
+		if (jump && !this.viewloc)
 		{
 #if 0
 			if (this.watertype & CONTENT_LAVA)
@@ -894,9 +905,21 @@ void PM_swim(entity this, float maxspd_mod)
 #endif
 		}
 	}
-	// water acceleration
-	PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this) * maxspd_mod, 1, 0, 0, 0);
-	PM_ClientMovement_Move(this);
+	if(this.viewloc)
+	{
+		const float addspeed = wishspeed - this.velocity * wishdir;
+		if (addspeed > 0)
+		{
+			const float accelspeed = min(PHYS_ACCELERATE(this) * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
+			this.velocity += accelspeed * wishdir;
+		}
+	}
+	else
+	{
+		// water acceleration
+		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this) * maxspd_mod, 1, 0, 0, 0);
+		PM_ClientMovement_Move(this);
+	}
 }
 
 void PM_ladder(entity this, float maxspd_mod)
