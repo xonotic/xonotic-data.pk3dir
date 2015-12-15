@@ -922,6 +922,7 @@ void PM_swim(entity this, float maxspd_mod)
 	}
 }
 
+.vector oldmovement;
 void PM_ladder(entity this, float maxspd_mod)
 {
 	// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
@@ -943,6 +944,8 @@ void PM_ladder(entity this, float maxspd_mod)
 	vector wishvel = v_forward * this.movement_x
 					+ v_right * this.movement_y
 					+ '0 0 1' * this.movement_z;
+	if(this.viewloc)
+		wishvel.z = this.oldmovement.x;
 	this.velocity_z += g;
 	if (this.ladder_entity.classname == "func_water")
 	{
@@ -1297,6 +1300,8 @@ void PM_Main(entity this)
 
 	PM_ClientMovement_UpdateStatus(this, true);
 #endif
+
+	this.oldmovement = this.movement;
 
 
 #ifdef SVQC
