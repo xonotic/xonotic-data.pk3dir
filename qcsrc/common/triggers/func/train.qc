@@ -36,7 +36,17 @@ void train_wait()
 		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
 #endif
 
-	if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
+#ifdef SVQC
+	entity tg = find(world, targetname, self.target);
+	if(tg.spawnflags & 4)
+	{
+		self.use = train_use;
+		self.SUB_THINK = func_null;
+		self.SUB_NEXTTHINK = 0;
+	}
+	else
+#endif
+	     if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
 		self.train_wait_turning = false;
 		train_next();
