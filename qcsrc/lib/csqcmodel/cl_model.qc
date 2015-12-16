@@ -301,6 +301,6 @@ entity CSQCModel_server2csqc(int i)
 {
 	if (i < maxclients) return CSQCModel_players[i];
 	++i;
-	LOG_WARNINGF("player out of bounds: %d\n", i);
+	LOG_DEBUGF("player out of bounds: %d\n", i);
 	return findfloat(NULL, entnum, i);
 }
