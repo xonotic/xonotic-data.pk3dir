@@ -174,6 +174,9 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         self.drawmask  = MASK_NORMAL;
 		self.move_movetype = self.movetype = MOVETYPE_TOSS;
         self.draw       = ItemDraw;
+        //self.move_flags |= FL_ITEM;
+
+        bool use_bigsize = ReadByte();
 
         self.fade_end = ReadShort();
         self.fade_start = ReadShort();
@@ -215,6 +218,8 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
         precache_model(self.mdl);
         _setmodel(self, self.mdl);
+
+        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_COLORMAP)
@@ -293,6 +298,8 @@ bool ItemSend(entity this, entity to, int sf)
 
 	if(sf & ISF_MODEL)
 	{
+		Pickup p = this.itemdef;
+		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
 		WriteShort(MSG_ENTITY, self.fade_end);
 		WriteShort(MSG_ENTITY, self.fade_start);
 
