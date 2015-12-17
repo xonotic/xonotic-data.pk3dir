@@ -243,6 +243,12 @@ void trigger_push_touch()
 		UpdateCSQCProjectile(other);
 	}
 
+	if (other.flags & FL_ITEM)
+	{
+		ItemUpdate(other);
+		other.SendFlags |= ISF_DROP;
+	}
+
 	if (this.spawnflags & PUSH_ONCE)
 	{
 		this.touch = func_null;
