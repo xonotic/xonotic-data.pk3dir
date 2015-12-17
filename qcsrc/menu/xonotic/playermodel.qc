@@ -52,7 +52,7 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	float sortbuf, glob, i;
 	string fn;
 
-	glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
+	glob = search_begin(get_model_datafilename(string_null, -1, "txt"), true, true);
 	if (glob < 0)
 		return;
 

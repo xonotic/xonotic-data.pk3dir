@@ -1209,12 +1209,12 @@ float get_model_parameters(string m, float sk)
 		m = substring(m, 0, -7);
 	}
 
-	string fn = get_model_datafilename(m, sk, "txt");
+	string fn = language_filename(get_model_datafilename(m, sk, "txt"));
 	int fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
 		sk = 0;
-		fn = get_model_datafilename(m, sk, "txt");
+		fn = language_filename(get_model_datafilename(m, sk, "txt"));
 		fh = fopen(fn, FILE_READ);
 		if(fh < 0)
 			return 0;
