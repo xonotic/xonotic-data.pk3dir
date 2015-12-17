@@ -205,7 +205,6 @@ float default_weapon_alpha;
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
-.float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 
 .string weaponorder_byimpulse;

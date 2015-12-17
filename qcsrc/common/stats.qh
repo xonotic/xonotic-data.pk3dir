@@ -292,4 +292,19 @@ REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
+
+
+#ifdef CSQC
+noref int autocvar_cl_gunalign;
+#endif
+#ifdef SVQC
+.int cvar_cl_gunalign;
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
+#endif
+REGISTER_STAT(GUNALIGN, int, this.cvar_cl_gunalign)
+#ifdef SVQC
+SPECTATE_COPY(_STAT(GUNALIGN))
+#endif
+
+
 #endif

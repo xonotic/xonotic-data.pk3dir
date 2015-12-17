@@ -517,11 +517,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 
 	if (this.movedir.x >= 0)
 	{
-#ifdef SVQC
-		int algn = this.owner.cvar_cl_gunalign;
-#else
-		int algn = autocvar_cl_gunalign;
-#endif
+		int algn = STAT(GUNALIGN, this.owner);
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
