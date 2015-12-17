@@ -161,12 +161,12 @@ void CSQCPlayer_Physics(entity this)
 {
 	if(autocvar_cl_movement)
 	{
-		if(autocvar_cl_movement == 3)
+		if(autocvar_cl_movement == 1)
 			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
 		CSQC_ClientMovement_PlayerMove_Frame(this);
 
-		if(autocvar_cl_movement == 3)
+		if(autocvar_cl_movement == 1)
 		{
 			this.move_origin = this.origin;
 			this.move_angles = this.angles;

@@ -124,7 +124,7 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 	if(!IS_PLAYER(this))
 		return;
 	// make sure player is not stuck
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 		PM_ClientMovement_Unstick(this);
 
 	// set crouched
@@ -147,7 +147,7 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 	vector origin1 = this.origin + '0 0 1';
 	vector origin2 = this.origin - '0 0 1';
 
-	if (ground && autocvar_cl_movement != 3)
+	if (ground && autocvar_cl_movement == 3)
 	{
 		tracebox(origin1, this.mins, this.maxs, origin2, MOVE_NORMAL, this);
 		if (trace_fraction < 1.0 && trace_plane_normal.z > 0.7)
@@ -161,7 +161,7 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 			UNSET_ONGROUND(this);
 	}
 
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 	{
 		// set watertype/waterlevel
 		origin1 = this.origin;
@@ -198,7 +198,7 @@ void PM_ClientMovement_Move(entity this)
 #ifdef CSQC
 
 	PM_ClientMovement_UpdateStatus(this, false);
-	if(autocvar_cl_movement == 3)
+	if(autocvar_cl_movement == 1)
 		return;
 
 	int bump;
@@ -1083,7 +1083,7 @@ void PM_jetpack(entity this, float maxspd_mod)
 
 #ifdef CSQC
 	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(this) * PHYS_INPUT_TIMELENGTH;
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 	{
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			this.velocity_z -= g * 0.5;
@@ -1091,7 +1091,7 @@ void PM_jetpack(entity this, float maxspd_mod)
 			this.velocity_z -= g;
 	}
 	PM_ClientMovement_Move(this);
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 	{
 		if (!IS_ONGROUND(this) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 			if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
@@ -1174,14 +1174,14 @@ void PM_walk(entity this, float maxspd_mod)
 	}
 #ifdef CSQC
 	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(this) * PHYS_INPUT_TIMELENGTH;
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 	{
 		if (!(GAMEPLAYFIX_NOGRAVITYONGROUND))
 			this.velocity_z -= g * (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1);
 	}
 	if (vdist(this.velocity, >, 0))
 		PM_ClientMovement_Move(this);
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 	{
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			if (!IS_ONGROUND(this) || !GAMEPLAYFIX_NOGRAVITYONGROUND)
@@ -1254,7 +1254,7 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 	}
 #ifdef CSQC
 	float g = PHYS_GRAVITY(this) * PHYS_ENTGRAVITY(this) * PHYS_INPUT_TIMELENGTH;
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 		this.velocity_z -= g * 0.5;
 	else
@@ -1262,7 +1262,7 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 #endif
 	PM_ClientMovement_Move(this);
 #ifdef CSQC
-	if(autocvar_cl_movement != 3)
+	if(autocvar_cl_movement == 3)
 	if (!IS_ONGROUND(this) || !(GAMEPLAYFIX_NOGRAVITYONGROUND))
 		if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
 			this.velocity_z -= g * 0.5;
