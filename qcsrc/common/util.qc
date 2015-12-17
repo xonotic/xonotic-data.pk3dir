@@ -1170,6 +1170,89 @@ string get_model_datafilename(string m, float sk, string fil)
 	return strcat(m, ".", fil);
 }
 
+float read_model_parameters_file(string m, float sk, bool from_translated_file)
+{
+	string fn = get_model_datafilename(m, sk, "txt");
+	if(from_translated_file)
+		fn = language_filename(fn);
+	int fh = fopen(fn, FILE_READ);
+	if(fh < 0)
+	{
+		sk = 0;
+		fn = get_model_datafilename(m, sk, "txt");
+		if(from_translated_file)
+			fn = language_filename(fn);
+		fh = fopen(fn, FILE_READ);
+		if(fh < 0)
+			return 0;
+	}
+
+	get_model_parameters_modelname = m;
+	get_model_parameters_modelskin = sk;
+	string s, c;
+	while((s = fgets(fh)))
+	{
+		if(s == "")
+			break; // next lines will be description
+		c = car(s);
+		s = cdr(s);
+		if(c == "name")
+			get_model_parameters_name = s;
+		if(c == "sex")
+			get_model_parameters_sex = s;
+		if(c == "description")
+			get_model_parameters_description = s;
+
+		if(from_translated_file)
+			continue;
+
+		// technical/non-translatable fields start here
+		if(c == "species")
+			switch(s)
+			{
+				case "human":       get_model_parameters_species = SPECIES_HUMAN;       break;
+				case "alien":       get_model_parameters_species = SPECIES_ALIEN;       break;
+				case "robot_shiny": get_model_parameters_species = SPECIES_ROBOT_SHINY; break;
+				case "robot_rusty": get_model_parameters_species = SPECIES_ROBOT_RUSTY; break;
+				case "robot_solid": get_model_parameters_species = SPECIES_ROBOT_SOLID; break;
+				case "animal":      get_model_parameters_species = SPECIES_ANIMAL;      break;
+				case "reserved":    get_model_parameters_species = SPECIES_RESERVED;    break;
+			}
+		if(c == "weight")
+			get_model_parameters_weight = stof(s);
+		if(c == "age")
+			get_model_parameters_age = stof(s);
+		if(c == "bone_upperbody")
+			get_model_parameters_bone_upperbody = s;
+		if(c == "bone_weapon")
+			get_model_parameters_bone_weapon = s;
+	#ifndef MENUQC
+		MUTATOR_CALLHOOK(GetModelParams, c, s);
+	#endif
+		for(int i = 0; i < MAX_AIM_BONES; ++i)
+			if(c == strcat("bone_aim", ftos(i)))
+			{
+				get_model_parameters_bone_aimweight[i] = stof(car(s));
+				get_model_parameters_bone_aim[i] = cdr(s);
+			}
+		if(c == "fixbone")
+			get_model_parameters_fixbone = stof(s);
+	}
+
+	// FIXME
+	while((s = fgets(fh)))
+	{
+		if(get_model_parameters_desc)
+			get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
+		if(s != "")
+			get_model_parameters_desc = strcat(get_model_parameters_desc, s);
+	}
+
+	fclose(fh);
+
+	return 1;
+}
+
 float get_model_parameters(string m, float sk)
 {
 	get_model_parameters_modelname = string_null;
@@ -1209,75 +1292,9 @@ float get_model_parameters(string m, float sk)
 		m = substring(m, 0, -7);
 	}
 
-	string fn = language_filename(get_model_datafilename(m, sk, "txt"));
-	int fh = fopen(fn, FILE_READ);
-	if(fh < 0)
-	{
-		sk = 0;
-		fn = language_filename(get_model_datafilename(m, sk, "txt"));
-		fh = fopen(fn, FILE_READ);
-		if(fh < 0)
-			return 0;
-	}
-
-	get_model_parameters_modelname = m;
-	get_model_parameters_modelskin = sk;
-	string s, c;
-	while((s = fgets(fh)))
-	{
-		if(s == "")
-			break; // next lines will be description
-		c = car(s);
-		s = cdr(s);
-		if(c == "name")
-			get_model_parameters_name = s;
-		if(c == "species")
-			switch(s)
-			{
-				case "human":       get_model_parameters_species = SPECIES_HUMAN;       break;
-				case "alien":       get_model_parameters_species = SPECIES_ALIEN;       break;
-				case "robot_shiny": get_model_parameters_species = SPECIES_ROBOT_SHINY; break;
-				case "robot_rusty": get_model_parameters_species = SPECIES_ROBOT_RUSTY; break;
-				case "robot_solid": get_model_parameters_species = SPECIES_ROBOT_SOLID; break;
-				case "animal":      get_model_parameters_species = SPECIES_ANIMAL;      break;
-				case "reserved":    get_model_parameters_species = SPECIES_RESERVED;    break;
-			}
-		if(c == "sex")
-			get_model_parameters_sex = s;
-		if(c == "weight")
-			get_model_parameters_weight = stof(s);
-		if(c == "age")
-			get_model_parameters_age = stof(s);
-		if(c == "description")
-			get_model_parameters_description = s;
-		if(c == "bone_upperbody")
-			get_model_parameters_bone_upperbody = s;
-		if(c == "bone_weapon")
-			get_model_parameters_bone_weapon = s;
-	#ifndef MENUQC
-		MUTATOR_CALLHOOK(GetModelParams, c, s);
-	#endif
-		for(int i = 0; i < MAX_AIM_BONES; ++i)
-			if(c == strcat("bone_aim", ftos(i)))
-			{
-				get_model_parameters_bone_aimweight[i] = stof(car(s));
-				get_model_parameters_bone_aim[i] = cdr(s);
-			}
-		if(c == "fixbone")
-			get_model_parameters_fixbone = stof(s);
-	}
-
-	while((s = fgets(fh)))
-	{
-		if(get_model_parameters_desc)
-			get_model_parameters_desc = strcat(get_model_parameters_desc, "\n");
-		if(s != "")
-			get_model_parameters_desc = strcat(get_model_parameters_desc, s);
-	}
-
-	fclose(fh);
-
-	return 1;
+	float ret_value = read_model_parameters_file(m, sk, false);
+	read_model_parameters_file(m, sk, true); // overrides translateble fields
+	return ret_value;
 }
 
 // x-encoding (encoding as zero length invisible string)
