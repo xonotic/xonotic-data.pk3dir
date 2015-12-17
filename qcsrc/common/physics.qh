@@ -12,7 +12,11 @@
 .float lastflags;
 .float lastground;
 .float wasFlying;
+#ifdef SVQC
+.float spectatorspeed = _STAT(SPECTATORSPEED);
+#elif defined(CSQC)
 .float spectatorspeed;
+#endif
 
 .vector movement_old;
 .float buttons_old;

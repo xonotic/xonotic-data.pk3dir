@@ -244,6 +244,8 @@ REGISTER_STAT(DOM_PPS_PINK, float)
 REGISTER_STAT(TELEPORT_MAXSPEED, float, autocvar_g_teleport_maxspeed)
 REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int, autocvar_g_telefrags_avoid)
 
+REGISTER_STAT(SPECTATORSPEED, float)
+
 #ifdef SVQC
 #include "movetypes/movetypes.qh"
 #endif

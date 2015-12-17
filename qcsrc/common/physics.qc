@@ -121,6 +121,8 @@ void PM_ClientMovement_Unstick(entity this)
 void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 {
 #ifdef CSQC
+	if(!IS_PLAYER(this))
+		return;
 	// make sure player is not stuck
 	if(autocvar_cl_movement != 3)
 		PM_ClientMovement_Unstick(this);
@@ -1288,6 +1290,8 @@ void PM_Main(entity this)
 
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 
+	this.spectatorspeed = STAT(SPECTATORSPEED);
+
 	vector oldv_angle = this.v_angle;
 	vector oldangles = this.angles; // we need to save these, as they're abused by other code
 	this.v_angle = PHYS_INPUT_ANGLES(this);
@@ -1392,9 +1396,9 @@ void PM_Main(entity this)
 
 	MUTATOR_CALLHOOK(PlayerPhysics, this);
 
-#ifdef SVQC
 	if (!IS_PLAYER(this))
 	{
+#ifdef SVQC
 		maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
 		if (!this.spectatorspeed)
 			this.spectatorspeed = maxspeed_mod;
@@ -1413,8 +1417,10 @@ void PM_Main(entity this)
 			} // otherwise just clear
 			this.impulse = 0;
 		}
+#endif
 		maxspeed_mod = this.spectatorspeed;
 	}
+#ifdef SVQC
 
 	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
 	if(this.speed != spd)

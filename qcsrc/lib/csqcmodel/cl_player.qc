@@ -105,7 +105,7 @@ void CSQCPlayer_Unpredict(entity this)
 
 void CSQCPlayer_SetMinsMaxs(entity this)
 {
-	if (this.flags & FL_DUCKED)
+	if ((this.flags & FL_DUCKED) || !this.isplayermodel)
 	{
 		this.mins = PL_CROUCH_MIN;
 		this.maxs = PL_CROUCH_MAX;
