@@ -110,6 +110,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	makevectors(player.angles);
 	Reset_ArcBeam(player, v_forward);
 	UpdateCSQCProjectileAfterTeleport(player);
+	UpdateItemAfterTeleport(player);
 #elif defined(CSQC)
 	from = player.move_origin;
 	player.move_origin = to;
@@ -286,6 +287,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	makevectors(pl.angles);
 	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
+	UpdateItemAfterTeleport(pl);
 	{
 		WITH(entity, self, pl, anticheat_fixangle());
 	}

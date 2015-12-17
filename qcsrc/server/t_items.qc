@@ -323,9 +323,16 @@ bool ItemSend(entity this, entity to, int sf)
 	return true;
 }
 
-void ItemUpdate(entity item)
+void ItemUpdate(entity this)
 {
-	item.SendFlags |= ISF_LOCATION;
+	this.oldorigin = this.origin;
+	this.SendFlags |= ISF_LOCATION;
+}
+
+void UpdateItemAfterTeleport(entity this)
+{
+	if(this.SendEntity3 == ItemSend)
+		ItemUpdate(this);
 }
 
 bool have_pickup_item(entity this)
@@ -443,10 +450,7 @@ void Item_Think()
 {SELFPARAM();
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
-	{
-		self.oldorigin = self.origin;
 		ItemUpdate(self);
-	}
 }
 
 bool Item_ItemsTime_SpectatorOnly(GameItem it);
@@ -545,10 +549,7 @@ void Item_RespawnThink()
 {SELFPARAM();
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
-	{
-		self.oldorigin = self.origin;
 		ItemUpdate(self);
-	}
 
 	if(time >= self.wait)
 		Item_Respawn();
