@@ -42,6 +42,14 @@ void CSQC_Init()
 	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
+	{
+		int i = 0;
+		for ( ; i < 255; ++i)
+			if (getplayerkeyvalue(i, "viewentity") == "")
+				break;
+		maxclients = i;
+	}
+
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
@@ -53,14 +61,6 @@ void CSQC_Init()
 	compressShortVector_init();
 
 	draw_endBoldFont();
-
-	{
-		int i = 0;
-		for ( ; i < 255; ++i)
-			if (getplayerkeyvalue(i, "viewentity") == "")
-				break;
-		maxclients = i;
-	}
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
