@@ -191,37 +191,39 @@ void buff_SetCooldown(float cd)
 	self.buff_active = !cd;
 }
 
-void buff_Respawn(entity ent)
-{SELFPARAM();
+void buff_Respawn(entity this)
+{
 	if(gameover) { return; }
 
-	vector oldbufforigin = ent.origin;
+	vector oldbufforigin = this.origin;
+	this.velocity = '0 0 200';
 
-	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
+	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 
+		((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(true);
-		setorigin(ent, spot.origin + '0 0 200');
-		ent.angles = spot.angles;
+		setorigin(this, spot.origin);
+		this.velocity = ((randomvec() * 100) + '0 0 200');
+		this.angles = spot.angles;
 	}
 
-	tracebox(ent.origin, ent.mins * 1.5, self.maxs * 1.5, ent.origin, MOVE_NOMONSTERS, ent);
+	tracebox(this.origin, this.mins * 1.5, this.maxs * 1.5, this.origin, MOVE_NOMONSTERS, this);
 
-	setorigin(ent, trace_endpos); // attempt to unstick
+	setorigin(this, trace_endpos); // attempt to unstick
 
-	ent.movetype = MOVETYPE_TOSS;
+	this.movetype = MOVETYPE_TOSS;
 
-	makevectors(ent.angles);
-	ent.velocity = '0 0 200';
-	ent.angles = '0 0 0';
+	makevectors(this.angles);
+	this.angles = '0 0 0';
 	if(autocvar_g_buffs_random_lifetime > 0)
-		ent.lifetime = time + autocvar_g_buffs_random_lifetime;
+		this.lifetime = time + autocvar_g_buffs_random_lifetime;
 
-	Send_Effect(EFFECT_ELECTRO_COMBO, oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, oldbufforigin + ((this.mins + this.maxs) * 0.5), '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 
-	WaypointSprite_Ping(ent.buff_waypoint);
+	WaypointSprite_Ping(this.buff_waypoint);
 
-	sound(ent, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
 void buff_Touch()
