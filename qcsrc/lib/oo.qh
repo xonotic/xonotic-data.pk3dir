@@ -13,6 +13,7 @@
 
 .vector origin;
 .bool pure_data;
+/** deprecated, use new_pure or NEW(class) */
 #define make_pure(e) \
 	MACRO_BEGIN \
 	{ \
@@ -36,7 +37,12 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure
 	this.classname = _classname;
 	this.sourceLocFile = _sourceFile;
 	this.sourceLocLine = _sourceLine;
-	if (pure) make_pure(this);
+	if (pure) {
+		make_pure(this);
+		#ifdef CSQC
+		setorigin(this, '0 0 10000');
+		#endif
+	}
 	return this;
 }
 
@@ -46,18 +52,22 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure
 #ifndef QCC_SUPPORT_ENTITYCLASS
 	#define entityclass_2(name, base) typedef entity name
 	#define class(name)
-	#define new(class) __spawn( #class, __FILE__, __LINE__, false)
+	#define _new(class, pure) __spawn( #class, __FILE__, __LINE__, pure)
 #else
 	#define entityclass_2(name, base) entityclass name : base {}
 	#define class(name) [[class(name)]]
-	#define new(class) ((class) __spawn( #class, __FILE__, __LINE__, false))
+	#define _new(class, pure) ((class) __spawn( #class, __FILE__, __LINE__, pure))
 #endif
+/** entities you care about seeing (.origin works) */
+#define new(class) _new(class, false)
+/** purely logical entities (.origin doesn't work) */
+#define new_pure(class) _new(class, true)
 #define spawn() __spawn("entity", __FILE__, __LINE__, false)
 
 entity _clearentity_ent;
 STATIC_INIT(clearentity)
 {
-	_clearentity_ent = new(clearentity);
+	_clearentity_ent = new_pure(clearentity);
 	make_pure(_clearentity_ent);
 }
 void clearentity(entity e)
@@ -79,7 +89,7 @@ void clearentity(entity e)
 // Macros to hide this implementation detail:
 #ifdef GMQCC
 	#define NEW(cname, ...) \
-		OVERLOAD(spawn##cname, new(cname),##__VA_ARGS__)
+		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)
 
 	#define CONSTRUCT(cname, ...) \
 		OVERLOAD(spawn##cname, this,##__VA_ARGS__)
@@ -87,7 +97,7 @@ void clearentity(entity e)
 	#define NEW_(cname, ...) \
 		OVERLOAD_(spawn##cname, __VA_ARGS__)
 	#define NEW(cname, ...) \
-		NEW_(cname, new(cname),##__VA_ARGS__)(new(cname),##__VA_ARGS__)
+		NEW_(cname, new_pure(cname),##__VA_ARGS__)(new_pure(cname),##__VA_ARGS__)
 
 	#define CONSTRUCT_(cname, ...) \
 		OVERLOAD_(spawn##cname, __VA_ARGS__)
@@ -116,8 +126,7 @@ STATIC_INIT(RegisterClasses)
 	entity cname##_vtbl; \
 	void cname##_vtbl_init() \
 	{ \
-		cname e = new(vtbl); \
-		make_pure(e); \
+		cname e = new_pure(vtbl); \
 		spawn##cname##_static(e); \
 		e.vtblname = #cname; \
 		/* Top level objects refer to themselves */ \

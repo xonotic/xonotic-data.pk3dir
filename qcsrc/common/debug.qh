@@ -43,7 +43,7 @@ REGISTER_NET_TEMP(net_debug)
 bool autocvar_debugdraw;
 
 #ifdef CSQC
-	string autocvar_debugdraw_filter;
+	string autocvar_debugdraw_filter, autocvar_debugdraw_filterout;
 	.int debugdraw_last;
 	vector project_3d_to_2d(vector vec);
 	void Debug_Draw()
@@ -51,7 +51,7 @@ bool autocvar_debugdraw;
 		if (!autocvar_debugdraw) return;
 		static int debugdraw_frame;
 		++debugdraw_frame;
-		const int size = 8;
+		const int sz = 8;
 		FOREACH_ENTITY(true, LAMBDA(
 			if (it.debugdraw_last == debugdraw_frame) continue;
 			int ofs = 0;
@@ -60,8 +60,57 @@ bool autocvar_debugdraw;
 				if (e.debugdraw_last == debugdraw_frame) continue;
 				e.debugdraw_last = debugdraw_frame;
 				vector rgb = (e.debug) ? '0 0 1' : '1 0 0';
+				if (autocvar_debugdraw_filterout != "" && strhasword(autocvar_debugdraw_filterout, e.classname)) continue;
 				if (autocvar_debugdraw_filter != "" && !strhasword(autocvar_debugdraw_filter, e.classname)) continue;
-				if (is_pure(e))
+				if (autocvar_debugdraw == 3)
+				{
+					if (!e.entnum) continue;
+				}
+				if (autocvar_debugdraw == 4)
+				{
+					if (e.origin) continue;
+				}
+				else if (autocvar_debugdraw > 4)
+				{
+					bool flag = true;
+					do {
+//						if (e.modelindex) break;
+//						if (e.absmin) break;
+//						if (e.absmax) break;
+//						if (e.entnum) break;
+//						if (e.drawmask) break;
+//						if (e.predraw) break;
+//						if (e.movetype) break;
+						if (e.solid) break;
+//						if (e.origin) break;
+//						if (e.oldorigin) break;
+//						if (e.velocity) break;
+//						if (e.angles) break;
+//						if (e.avelocity) break;
+//						if (e.classname) break;
+//						if (e.model) break;
+//						if (e.frame) break;
+//						if (e.skin) break;
+//						if (e.effects) break;
+//						if (e.mins) break;
+//						if (e.maxs) break;
+//						if (e.size) break;
+//						if (e.touch) break;
+//						if (e.use) break;
+//						if (e.think) break;
+//						if (e.blocked) break;
+//						if (e.nextthink) break;
+//						if (e.chain) break;
+//						if (e.netname) break;
+//						if (e.enemy) break;
+//						if (e.flags) break;
+//						if (e.colormap) break;
+//						if (e.owner) break;
+						flag = false;
+					} while (0);
+					if (!flag) continue;
+				}
+				else if (is_pure(e))
 				{
 					if (autocvar_debugdraw < 2) continue;
 					rgb.y = 1;
@@ -69,11 +118,11 @@ bool autocvar_debugdraw;
 				vector pos = project_3d_to_2d(e.origin);
 				if (pos.z < 0) continue;
 				pos.z = 0;
-				pos.y += ofs * size;
+				pos.y += ofs * sz;
 				drawcolorcodedstring2(pos,
 					sprintf("%d: '%s'@%s:%d", (e.debug ? e.sv_entnum : etof(e)),
 					e.classname, e.sourceLocFile, e.sourceLocLine),
-					size * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
+					sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
 				++ofs;
 			}
 		));
