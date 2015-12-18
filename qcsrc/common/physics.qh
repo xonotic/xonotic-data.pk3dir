@@ -114,7 +114,7 @@ bool IsFlying(entity a);
 	#define IS_CLIENT(s)						(s).isplayermodel
 	#define IS_PLAYER(s)						(s).isplayermodel
 	#define IS_NOT_A_CLIENT(s)				   !(s).isplayermodel
-	#define isPushable(s)						(s).isplayermodel
+	#define isPushable(s)						((s).isplayermodel || (s).pushable || ((s).flags & FL_PROJECTILE))
 
 	//float player_multijump;
 	//float player_jumpheight;

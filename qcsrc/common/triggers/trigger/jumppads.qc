@@ -134,10 +134,8 @@ void trigger_push_touch()
 	if (this.active == ACTIVE_NOT)
 		return;
 
-#ifdef SVQC
 	if (!isPushable(other))
 		return;
-#endif
 
 	if(this.team)
 		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
@@ -174,6 +172,22 @@ void trigger_push_touch()
 	UNSET_ONGROUND(other);
 #elif defined(CSQC)
 	other.move_flags &= ~FL_ONGROUND;
+
+	if (other.flags & FL_PROJECTILE)
+	{
+		other.move_angles = vectoangles (other.move_velocity);
+		switch(other.move_movetype)
+		{
+			case MOVETYPE_FLY:
+				other.move_movetype = MOVETYPE_TOSS;
+				other.gravity = 1;
+				break;
+			case MOVETYPE_BOUNCEMISSILE:
+				other.move_movetype = MOVETYPE_BOUNCE;
+				other.gravity = 1;
+				break;
+		}
+	}
 #endif
 
 #ifdef SVQC
@@ -243,11 +257,11 @@ void trigger_push_touch()
 		UpdateCSQCProjectile(other);
 	}
 
-	if (other.flags & FL_ITEM)
+	/*if (other.flags & FL_ITEM)
 	{
 		ItemUpdate(other);
 		other.SendFlags |= ISF_DROP;
-	}
+	}*/
 
 	if (this.spawnflags & PUSH_ONCE)
 	{

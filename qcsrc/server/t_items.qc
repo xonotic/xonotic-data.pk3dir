@@ -29,50 +29,50 @@
 REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
 #ifdef CSQC
-void ItemDraw(entity self)
+void ItemDraw(entity this)
 {
-    if(self.gravity)
+    if(this.gravity)
     {
-        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
-        if(self.move_flags & FL_ONGROUND)
+        Movetype_Physics_MatchServer(this, false);
+        if(this.move_flags & FL_ONGROUND)
         { // For some reason move_avelocity gets set to '0 0 0' here ...
-            self.oldorigin = self.origin;
-            self.gravity = 0;
+            this.oldorigin = this.origin;
+            this.gravity = 0;
 
             if(autocvar_cl_animate_items)
             { // ... so reset it if animations are requested.
-                if(self.ItemStatus & ITS_ANIMATE1)
-                    self.move_avelocity = '0 180 0';
+                if(this.ItemStatus & ITS_ANIMATE1)
+                    this.move_avelocity = '0 180 0';
 
-                if(self.ItemStatus & ITS_ANIMATE2)
-                    self.move_avelocity = '0 -90 0';
+                if(this.ItemStatus & ITS_ANIMATE2)
+                    this.move_avelocity = '0 -90 0';
             }
         }
     }
     else if (autocvar_cl_animate_items)
     {
-        if(self.ItemStatus & ITS_ANIMATE1)
+        if(this.ItemStatus & ITS_ANIMATE1)
         {
-            self.angles += self.move_avelocity * frametime;
-            setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));
+            this.angles += this.move_avelocity * frametime;
+            setorigin(this, '0 0 10' + this.oldorigin + '0 0 8' * sin(time * 2));
         }
 
-        if(self.ItemStatus & ITS_ANIMATE2)
+        if(this.ItemStatus & ITS_ANIMATE2)
         {
-            self.angles += self.move_avelocity * frametime;
-            setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));
+            this.angles += this.move_avelocity * frametime;
+            setorigin(this, '0 0 8' + this.oldorigin + '0 0 4' * sin(time * 3));
         }
     }
 }
 
 void ItemDrawSimple(entity this)
 {
-    if(self.gravity)
+    if(this.gravity)
     {
-        Movetype_Physics_MatchServer(self, autocvar_cl_projectiles_sloppy);
+        Movetype_Physics_MatchServer(this, false);
 
-        if(self.move_flags & FL_ONGROUND)
-            self.gravity = 0;
+        if(this.move_flags & FL_ONGROUND)
+            this.gravity = 0;
     }
 }
 
@@ -172,8 +172,9 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(sf & ISF_MODEL)
     {
         self.drawmask  = MASK_NORMAL;
-		self.move_movetype = self.movetype = MOVETYPE_TOSS;
+		self.move_movetype = MOVETYPE_TOSS;
         self.draw       = ItemDraw;
+        self.solid = SOLID_TRIGGER;
         //self.move_flags |= FL_ITEM;
 
         bool use_bigsize = ReadByte();
@@ -214,7 +215,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
 
         if(self.mdl == "")
-            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
+            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, ", tell tZork about this!\n");
 
         precache_model(self.mdl);
         _setmodel(self, self.mdl);
@@ -228,6 +229,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     if(sf & ISF_DROP)
     {
         self.gravity = 1;
+        self.pushable = true;
         //self.move_angles = '0 0 0';
         self.move_movetype = MOVETYPE_TOSS;
         self.move_velocity_x = ReadCoord();

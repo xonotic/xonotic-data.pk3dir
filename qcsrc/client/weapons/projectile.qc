@@ -202,6 +202,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	int f = ReadByte();
 	self.count = (f & 0x80);
+	self.flags |= FL_PROJECTILE;
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES | IFLAG_ORIGIN;
 	self.solid = SOLID_TRIGGER;
 	// self.effects = EF_NOMODELFLAGS;

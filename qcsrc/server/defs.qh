@@ -129,7 +129,6 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float iscreature;
 .float damagedbycontents;
 .float damagedbytriggers;
-.float pushable;
 .float teleportable;
 .vector oldvelocity;
 

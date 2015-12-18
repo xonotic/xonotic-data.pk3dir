@@ -120,8 +120,12 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	player.iflags |= IFLAG_TELEPORTED | IFLAG_V_ANGLE | IFLAG_ANGLES;
 	player.csqcmodel_teleported = 1;
 	player.v_angle = to_angles;
-	setproperty(VF_ANGLES, player.move_angles);
-	setproperty(VF_CL_VIEWANGLES, player.move_angles);
+
+	if(player.isplayermodel) // not for anything but the main player
+	{
+		setproperty(VF_ANGLES, player.move_angles);
+		setproperty(VF_CL_VIEWANGLES, player.move_angles);
+	}
 
 	makevectors(player.move_angles);
 #endif
