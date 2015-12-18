@@ -274,6 +274,11 @@ void viewmodel_draw(entity this)
 {
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
+	static bool wasinvehicle;
+	bool invehicle = player_localentnum > maxclients;
+	if (invehicle) a = -1;
+	else if (wasinvehicle) a = 1;
+	wasinvehicle = invehicle;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g;
 	Weapon wep = activeweapon;
