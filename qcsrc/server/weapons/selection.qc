@@ -234,16 +234,18 @@ void W_SwitchToOtherWeapon(entity pl)
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	Weapon ww;
 	WepSet set = WepSet_FromWeapon(PS(pl).m_weapon);
-	if(pl.weapons & set)
+	if (pl.weapons & set)
 	{
 		pl.weapons &= ~set;
 		ww = w_getbestweapon(pl);
 		pl.weapons |= set;
 	}
 	else
+	{
 		ww = w_getbestweapon(pl);
-	if(ww)
-		W_SwitchWeapon_Force(pl, ww);
+	}
+	if (ww == WEP_Null) return;
+	W_SwitchWeapon_Force(pl, ww);
 }
 
 void W_SwitchWeapon(Weapon w)
@@ -299,11 +301,11 @@ void W_PreviousWeapon(float list)
 }
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon()
-{SELFPARAM();
-	Weapon wep = Weapons_from(self.cnt);
-	if(client_hasweapon(self, wep, true, false))
+void W_LastWeapon(entity this)
+{
+	Weapon wep = Weapons_from(this.cnt);
+	if (client_hasweapon(this, wep, true, false))
 		W_SwitchWeapon(wep);
 	else
-		W_SwitchToOtherWeapon(self);
+		W_SwitchToOtherWeapon(this);
 }
