@@ -79,7 +79,7 @@ void Draw_ShowNames(entity this)
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
 	}
-	else if (!this.sameteam && (!onscreen || !hit)) // out of view, fade out
+	else if (!onscreen || (!this.sameteam && !hit)) // out of view, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 		this.fadedelay = 0;                         // reset fade in delay, enemy has left the view
