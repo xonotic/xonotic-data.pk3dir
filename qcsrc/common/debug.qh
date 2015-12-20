@@ -1,9 +1,12 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#ifndef MENUQC
 .bool debug;
 .int sv_entnum;
 REGISTER_NET_TEMP(net_debug)
+#endif
+
 #ifdef CSQC
 	NET_HANDLE(net_debug, bool isNew)
 	{
@@ -40,7 +43,9 @@ REGISTER_NET_TEMP(net_debug)
 	}
 #endif
 
+#ifndef MENUQC
 bool autocvar_debugdraw;
+#endif
 
 #ifdef CSQC
 	string autocvar_debugdraw_filter, autocvar_debugdraw_filterout;
