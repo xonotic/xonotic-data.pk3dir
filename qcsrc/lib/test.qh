@@ -1,15 +1,20 @@
 #ifndef TEST_H
 #define TEST_H
 
-#define TEST_Check(cond) \
-	MACRO_BEGIN \
-	{ \
-		if (!(cond)) TEST_Fail( #cond); \
-	} MACRO_END
+#define TEST(id) \
+	void _TEST_##id(); \
+	[[accumulate]] int TEST_RunAll_accumulated(int f) { \
+		if (!TEST_Run(#id)) ++f; \
+		return = f; \
+	} \
+	void _TEST_##id()
+
+#define TEST_Check(cond) MACRO_BEGIN { if (!(cond)) TEST_Fail(#cond); } MACRO_END
 
 void TEST_OK();
 void TEST_Fail(string cond);
 
-float TEST_RunAll();
-float TEST_Run(string test);
+bool TEST_RunAll();
+bool TEST_Run(string test);
+
 #endif
