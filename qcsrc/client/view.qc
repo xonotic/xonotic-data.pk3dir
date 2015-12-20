@@ -2197,6 +2197,7 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Radar_Mouse();
 
 	cl_notice_run();
+	Net_Flush();
 
 	// let's reset the view back to normal for the end
 	setproperty(VF_MIN, '0 0 0');

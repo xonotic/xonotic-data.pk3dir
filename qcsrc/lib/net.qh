@@ -1,7 +1,102 @@
 #ifndef NET_H
 #define NET_H
 
+#include "registry.qh"
+#include "sort.qh"
+#include "yenc.qh"
+
+.string netname;
+.int m_id;
+.bool(entity this, bool isNew) m_read;
+#define NET_HANDLE(id, param) bool Net_Handle_##id(entity this, param)
+
+
+#ifdef CSQC
+	#define REGISTER_NET_TEMP(id) \
+		NET_HANDLE(id, bool); \
+		REGISTER(TempEntities, NET, id, m_id, new_pure(net_temp_packet)) \
+		{ \
+			this.netname = #id; \
+			this.m_read = Net_Handle_##id; \
+		}
+#else
+	#define REGISTER_NET_TEMP(id) \
+		const bool NET_##id##_istemp = true; \
+		REGISTER(TempEntities, NET, id, m_id, new_pure(net_temp_packet)) \
+		{ \
+			this.netname = #id; \
+		}
+#endif
+#define REGISTER_NET_S2C(id) REGISTER_NET_TEMP(id)
+
+REGISTRY(TempEntities, BITS(8) - 80)
+#define TempEntities_from(i) _TempEntities_from(i, NULL)
+REGISTER_REGISTRY(TempEntities)
+REGISTRY_SORT(TempEntities)
+REGISTRY_CHECK(TempEntities)
+STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id = 80 + i); }
+
+
+
+#ifdef CSQC
+	#define REGISTER_NET_LINKED(id) \
+		[[accumulate]] NET_HANDLE(id, bool isnew) \
+		{ \
+			this = self; \
+			this.sourceLocFile = __FILE__; \
+			this.sourceLocLine = __LINE__; \
+			if (!this) isnew = true; \
+		} \
+		REGISTER(LinkedEntities, NET, id, m_id, new_pure(net_linked_packet)) \
+		{ \
+			this.netname = #id; \
+			this.m_read = Net_Handle_##id; \
+		}
+#else
+	#define REGISTER_NET_LINKED(id) \
+		const bool NET_##id##_istemp = false; \
+		REGISTER(LinkedEntities, NET, id, m_id, new_pure(net_linked_packet)) \
+		{ \
+			this.netname = #id; \
+		}
+#endif
+
+REGISTRY(LinkedEntities, BITS(8) - 1)
+#define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
+REGISTER_REGISTRY(LinkedEntities)
+REGISTRY_SORT(LinkedEntities)
+REGISTRY_CHECK(LinkedEntities)
+STATIC_INIT(RegisterLinkedEntities_renumber) { FOREACH(LinkedEntities, true, it.m_id = 1 + i); }
+
+
+
 #ifdef SVQC
+	#define REGISTER_NET_C2S(id) \
+		NET_HANDLE(id, bool); \
+		REGISTER(C2S_Protocol, NET, id, m_id, new_pure(net_c2s_packet)) \
+		{ \
+			this.netname = #id; \
+			this.m_read = Net_Handle_##id; \
+		}
+#else
+	#define REGISTER_NET_C2S(id) \
+		const bool NET_##id##_istemp = true; \
+		REGISTER(C2S_Protocol, NET, id, m_id, new_pure(net_c2s_packet)) \
+		{ \
+			this.netname = #id; \
+		}
+#endif
+
+REGISTRY(C2S_Protocol, BITS(8) - 1)
+#define C2S_Protocol_from(i) _C2S_Protocol_from(i, NULL)
+REGISTER_REGISTRY(C2S_Protocol)
+REGISTRY_SORT(C2S_Protocol)
+REGISTRY_CHECK(C2S_Protocol)
+STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
+
+#ifdef SVQC
+	const int MSG_ENTITY = 5;
+
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
 	.bool(entity to, int sendflags) SendEntity;
@@ -56,126 +151,112 @@
 			WITH(entity, self, e, e.uncustomizeentityforclient());
 	}
 
+	STRING_ITERATOR(g_buf, string_null, 0);
+
+	int ReadByte();
+
+	void Net_ClientCommand(string command)
+	{
+		// command matches `c2s "(.+)"`
+		string buf = substring(command, argv_start_index(1) + 1, -2);
+		if (buf == "") return;
+		STRING_ITERATOR_SET(g_buf, buf, 0);
+		for (int C2S; (C2S = ReadByte()) >= 0; )
+		{
+			entity reader = C2S_Protocol_from(C2S);
+			if (reader && reader.m_read && reader.m_read(NULL, true)) continue;
+			LOG_SEVEREF("Net_ClientCommand() with malformed C2S=%d\n", C2S);
+			return;
+		}
+		g_buf_i--;
+		int expected = strlen(buf);
+		if (g_buf_i > expected) LOG_WARNINGF("Underflow: %d", g_buf_i - expected);
+		if (g_buf_i < expected) LOG_WARNINGF("Overrflow: %d", expected - g_buf_i);
+	}
+
 #endif
 
-#include "registry.qh"
-#include "sort.qh"
-
-.string netname;
-.int m_id;
-.bool(entity this, bool isNew) m_read;
-
 #ifdef CSQC
+	const int MSG_C2S = 0;
+
 	#define Net_Accept(classname) \
-		MACRO_BEGIN \
-		{ \
+		MACRO_BEGIN { \
 			if (!this)    this = new(classname); \
 		} MACRO_END
 	#define Net_Reject() \
-		MACRO_BEGIN \
-		{ \
+		MACRO_BEGIN { \
 			if (this)     remove(this); \
 		} MACRO_END
-	#define NET_HANDLE(id, param) \
-		bool Net_Handle_##id(entity this, param)
-#else
+
+	string g_buf;
+
+	void Net_Flush()
+	{
+		if (g_buf == "") return;
+		localcmd("\ncmd c2s \"", strreplace("$", "$$", g_buf), "\"\n");
+		strunzone(g_buf);
+		g_buf = string_null;
+	}
+#endif
+
+#if defined(CSQC)
 	#define WriteHeader(to, id) \
-		MACRO_BEGIN \
-		{ \
+		MACRO_BEGIN { \
+			WriteByte(to, NET_##id.m_id); \
+		} MACRO_END
+#elif defined(SVQC)
+	#define WriteHeader(to, id) \
+		MACRO_BEGIN { \
 			if (NET_##id##_istemp) WriteByte(to, SVC_TEMPENTITY); \
 			WriteByte(to, NET_##id.m_id); \
 		} MACRO_END
 #endif
 
-#ifdef CSQC
-	#define REGISTER_NET_LINKED(id) \
-		[[accumulate]] NET_HANDLE(id, bool isnew) \
-		{ \
-			this = self; \
-			this.sourceLocFile = __FILE__; \
-			this.sourceLocLine = __LINE__; \
-			if (!this) isnew = true; \
-		} \
-		REGISTER(LinkedEntities, NET, id, m_id, new(net_linked_packet)) \
-		{ \
-			make_pure(this); \
-			this.netname = #id; \
-			this.m_read = Net_Handle_##id; \
-		}
-#else
-	#define REGISTER_NET_LINKED(id) \
-		const bool NET_##id##_istemp = false; \
-		REGISTER(LinkedEntities, NET, id, m_id, new(net_linked_packet)) \
-		{ \
-			make_pure(this); \
-			this.netname = #id; \
-		}
+#define ReadRegistry(r) r##_from(Read_byte())
+#define WriteRegistry(r, to, it) Write_byte(to, it.m_id)
+
+#define Read_byte() ReadByte()
+#define Write_byte(to, f) WriteByte(to, f)
+
+#if defined(CSQC)
+	int ReadByte();
+	void WriteByte(int to, int b)
+	{
+		assert(to == MSG_C2S);
+		string s;
+		yenc_single(b, s);
+		string tmp = strcat(g_buf, s);
+		if (g_buf) strunzone(g_buf);
+		g_buf = strzone(tmp);
+	}
+#elif defined(SVQC)
+	int ReadByte()
+	{
+		ydec_single(g_buf, return);
+	}
+	void WriteByte(int to, int b);
 #endif
 
-REGISTRY(LinkedEntities, BITS(8) - 1)
-#define LinkedEntities_from(i) _LinkedEntities_from(i, NULL)
-REGISTER_REGISTRY(LinkedEntities)
-REGISTRY_SORT(LinkedEntities)
-REGISTRY_CHECK(LinkedEntities)
-STATIC_INIT(RegisterLinkedEntities_renumber)
-{
-	for (int i = 0; i < LinkedEntities_COUNT; ++i)
-		LinkedEntities_from(i).m_id = 1 + i;
-}
+#define Read_int() ReadInt24_t()
+#define Write_int(to, f) WriteInt24_t(to, f)
 
-#ifdef CSQC
-	#define REGISTER_NET_TEMP(id) \
-		NET_HANDLE(id, bool); \
-		REGISTER(TempEntities, NET, id, m_id, new(net_temp_packet)) \
-		{ \
-			make_pure(this); \
-			this.netname = #id; \
-			this.m_read = Net_Handle_##id; \
-		}
-#else
-	#define REGISTER_NET_TEMP(id) \
-		const bool NET_##id##_istemp = true; \
-		REGISTER(TempEntities, NET, id, m_id, new(net_temp_packet)) \
-		{ \
-			make_pure(this); \
-			this.netname = #id; \
-		}
-#endif
+#define Read_float() ReadFloat()
+#define Write_float(to, f) WriteFloat(to, f)
 
-REGISTRY(TempEntities, BITS(8) - 80)
-#define TempEntities_from(i) _TempEntities_from(i, NULL)
-REGISTER_REGISTRY(TempEntities)
-REGISTRY_SORT(TempEntities)
-REGISTRY_CHECK(TempEntities)
-STATIC_INIT(RegisterTempEntities_renumber)
-{
-	for (int i = 0; i < TempEntities_COUNT; ++i)
-		TempEntities_from(i).m_id = 80 + i;
-}
+#define Read_string() ReadString()
+#define Write_string(to, f) WriteString(to, f)
 
 #ifndef MENUQC
 	const float APPROXPASTTIME_ACCURACY_REQUIREMENT = 0.05;
 	#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 	#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
 
-	#if defined(CSQC)
-		#define Read_float() ReadFloat()
-		#define Read_int() ReadInt24_t()
-		#define Read_string() ReadString()
-	#elif defined(SVQC)
-		#define Write_float(to, f) WriteFloat(to, f)
-		#define Write_int(to, f) WriteInt24_t(to, f)
-		#define Write_string(to, f) WriteString(to, f)
-	#endif
-
 	#ifdef CSQC
-    	#define ReadRegistry(r) r##_from(ReadByte())
-
 		entity ReadCSQCEntity()
 		{
 			int f = ReadShort();
-			if (f == 0) return world;
-			return findfloat(world, entnum, f);
+			if (f == 0) return NULL;
+			return findfloat(NULL, entnum, f);
 		}
 		int ReadInt24_t()
 		{
@@ -217,10 +298,6 @@ STATIC_INIT(RegisterTempEntities_renumber)
 		}
 
 	#else
-		const int MSG_ENTITY = 5;
-
-		#define WriteRegistry(r, to, it) WriteByte(to, it.m_id)
-
 		void WriteInt24_t(float dst, float val)
 		{
 			float v;

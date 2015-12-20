@@ -35,8 +35,13 @@
 
 #define STRING_ITERATOR(this, s, i) \
 	string this##_s = s; \
-	int this##_i = i; \
-	MACRO_BEGIN MACRO_END
+	int this##_i = i
+
+#define STRING_ITERATOR_SET(this, s, i) \
+	MACRO_BEGIN { \
+		this##_s = s; \
+		this##_i = i; \
+	} MACRO_END
 
 #define STRING_ITERATOR_GET(this) str2chr(this##_s, this##_i++)
 
