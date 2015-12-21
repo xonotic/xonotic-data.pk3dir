@@ -25,7 +25,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(PS(ent).m_weapon == WEP_RIFLE)
+	if (IS_PLAYER(ent) && PS(ent).m_weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -50,7 +50,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
 
 	// track max damage
-	if(accuracy_canbegooddamage(ent))
+	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
 		accuracy_add(ent, PS(ent).m_weapon.m_id, maxdamage, 0);
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);

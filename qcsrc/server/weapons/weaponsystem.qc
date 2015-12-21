@@ -256,6 +256,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 .float race_penalty;
 bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime)
 {
+	if (actor.weaponentity == NULL) return true;
 	if (!weapon_prepareattack_checkammo(thiswep, actor, secondary)) return false;
 
 	// if sv_ready_restart_after_countdown is set, don't allow the player to shoot
@@ -283,6 +284,7 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary, float attacktime)
 {
 	entity this = actor.(weaponentity);
+	if (this == NULL) return;
 	this.state = WS_INUSE;
 
 	actor.spawnshieldtime = min(actor.spawnshieldtime, time);  // kill spawn shield when you fire
@@ -322,6 +324,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	.entity weaponentity, int fire) func)
 {
 	entity this = actor.(weaponentity);
+	if (this == NULL) return;
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
@@ -338,16 +341,13 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	vector ou = v_up;
 
 	vector a = '0 0 0';
-	if (this)
-	{
-		this.wframe = fr;
-		if (fr == WFRAME_IDLE) a = this.anim_idle;
-		else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
-		else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
-		else  // if (fr == WFRAME_RELOAD)
-			a = this.anim_reload;
-		a.z *= g_weaponratefactor;
-	}
+    this.wframe = fr;
+    if (fr == WFRAME_IDLE) a = this.anim_idle;
+    else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
+    else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
+    else  // if (fr == WFRAME_RELOAD)
+        a = this.anim_reload;
+    a.z *= g_weaponratefactor;
 
 	v_forward = of;
 	v_right = or;
