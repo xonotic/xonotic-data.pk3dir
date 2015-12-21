@@ -223,7 +223,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	void WriteByte(int to, int b)
 	{
 		assert(to == MSG_C2S);
-		string s;
+		string s = string_null;
 		yenc_single(b, s);
 		string tmp = strcat(g_buf, s);
 		if (g_buf) strunzone(g_buf);
@@ -232,7 +232,9 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 #elif defined(SVQC)
 	int ReadByte()
 	{
-		ydec_single(g_buf, return);
+		int ret = -1;
+		ydec_single(g_buf, ret);
+		return ret;
 	}
 	void WriteByte(int to, int b);
 #endif

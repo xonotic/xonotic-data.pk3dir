@@ -15,8 +15,11 @@ QCCFLAGS_FEATURES ?= \
 	-DVEHICLES_USE_ODE=0 \
 	-DBUILD_MOD=$(BUILD_MOD)
 
+# -Ooverlap-locals is required
+
 QCCFLAGS ?= \
 	-std=gmqcc \
+	-Ooverlap-locals \
 	-O3 \
 	-Werror -Wall -Wcpp \
 	$(QCCFLAGS_WTFS) \

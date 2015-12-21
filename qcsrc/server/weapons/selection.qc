@@ -19,7 +19,7 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 
 bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 {
-	float f;
+	float f = 0;
 
 	if (time < cl.hasweapon_complain_spam)
 		complain = 0;

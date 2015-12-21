@@ -53,10 +53,10 @@ TEST(yEncDec)
 	{
 		int expect = i;
 
-		string fragment;
+		string fragment = string_null;
 		yenc_single(expect, fragment);
 
-		int encdec;
+		int encdec = 0;
 		STRING_ITERATOR(fragmentiterator, fragment, 0);
 		ydec_single(fragmentiterator, encdec);
 

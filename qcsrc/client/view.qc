@@ -77,13 +77,13 @@ float autocvar_cl_leanmodel_up_limit;
 
 #define highpass(value, frac, ref_store, ret) MACRO_BEGIN \
 { \
-	float __f; lowpass(value, frac, ref_store, __f); \
+	float __f = 0; lowpass(value, frac, ref_store, __f); \
 	ret = (value) - __f; \
 } MACRO_END
 
 #define highpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
-	float __f; lowpass_limited(value, frac, limit, ref_store, __f); \
+	float __f = 0; lowpass_limited(value, frac, limit, ref_store, __f); \
 	ret = (value) - __f; \
 } MACRO_END
 
@@ -230,7 +230,7 @@ void viewmodel_animate(entity this)
 		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
 		// for the most part, but for some reason when you go through a message trigger or
 		// pick up an item or anything like that it will momentarily jolt the gun.
-		vector forward, right, up;
+		vector forward, right = '0 0 0', up = '0 0 0';
 		float bspeed;
 		float t = 1;
 		float s = time * autocvar_cl_bobmodel_speed;
