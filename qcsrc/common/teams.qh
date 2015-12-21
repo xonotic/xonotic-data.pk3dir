@@ -26,12 +26,13 @@ const string COL_TEAM_1 = "^1";
 const string COL_TEAM_2 = "^4";
 const string COL_TEAM_3 = "^3";
 const string COL_TEAM_4 = "^6";
-const string NAME_TEAM_1 = _("Red");
-const string NAME_TEAM_2 = _("Blue");
-const string NAME_TEAM_3 = _("Yellow");
-const string NAME_TEAM_4 = _("Pink");
-const string NAME_TEAM = _("Team");
-const string NAME_NEUTRAL = _("Neutral");
+// must be #defined, const globals drop the translation attribute
+#define NAME_TEAM_1 _("Red")
+#define NAME_TEAM_2 _("Blue")
+#define NAME_TEAM_3 _("Yellow")
+#define NAME_TEAM_4 _("Pink")
+#define NAME_TEAM _("Team")
+#define NAME_NEUTRAL _("Neutral")
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
 const string STATIC_NAME_TEAM_1 = "Red";
