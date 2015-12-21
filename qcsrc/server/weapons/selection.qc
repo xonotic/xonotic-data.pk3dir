@@ -17,6 +17,28 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 	WriteByte(MSG_ONE, type);
 }
 
+void Weapon_whereis(Weapon this, entity cl)
+{
+	if (!autocvar_g_showweaponspawns) return;
+	for (entity it = NULL; (it = findfloat(it, weapon, this.m_id)); )
+	{
+		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
+			continue;
+		if (!(it.flags & FL_ITEM))
+			continue;
+		entity wp = WaypointSprite_Spawn(
+			WP_Weapon,
+			1, 0,
+			NULL, it.origin + ('0 0 1' * it.maxs.z) * 1.2,
+			cl, 0,
+			NULL, enemy,
+			0,
+			RADARICON_NONE
+		);
+		wp.wp_extra = this.m_id;
+	}
+}
+
 bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 {
 	float f = 0;
@@ -77,27 +99,7 @@ bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(cl, wpn.m_id, 1);
-
-			if(autocvar_g_showweaponspawns)
-			{
-				for(entity e = world; (e = findfloat(e, weapon, wpn.m_id)); )
-				{
-					if(e.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
-						continue;
-					if(!(e.flags & FL_ITEM))
-						continue;
-					entity wp = WaypointSprite_Spawn(
-						WP_Weapon,
-						1, 0,
-						world, e.origin + ('0 0 1' * e.maxs.z) * 1.2,
-						cl, 0,
-						world, enemy,
-						0,
-						RADARICON_NONE
-					);
-					wp.wp_extra = wpn.m_id;
-				}
-			}
+			Weapon_whereis(wpn, cl);
 		}
 		else
 		{

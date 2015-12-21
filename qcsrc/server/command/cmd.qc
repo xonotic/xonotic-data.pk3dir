@@ -752,7 +752,7 @@ void SV_ParseClientCommand(string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
-		case "c2s": Net_ClientCommand(command); return;    // handled by net.qh
+		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:
 			if (SV_ParseClientCommand_floodcheck()) break; // "true": continue, as we're not flooding yet

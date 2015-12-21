@@ -7,8 +7,8 @@
 
 .string netname;
 .int m_id;
-.bool(entity this, bool isNew) m_read;
-#define NET_HANDLE(id, param) bool Net_Handle_##id(entity this, param)
+.bool(entity this, entity sender, bool isNew) m_read;
+#define NET_HANDLE(id, param) bool Net_Handle_##id(entity this, entity sender, param)
 
 
 #ifdef CSQC
@@ -155,7 +155,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	int ReadByte();
 
-	void Net_ClientCommand(string command)
+	void Net_ClientCommand(entity sender, string command)
 	{
 		// command matches `c2s "(.+)"`
 		string buf = substring(command, argv_start_index(1) + 1, -2);
@@ -164,7 +164,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		for (int C2S; (C2S = ReadByte()) >= 0; )
 		{
 			entity reader = C2S_Protocol_from(C2S);
-			if (reader && reader.m_read && reader.m_read(NULL, true)) continue;
+			if (reader && reader.m_read && reader.m_read(NULL, sender, true)) continue;
 			LOG_SEVEREF("Net_ClientCommand() with malformed C2S=%d\n", C2S);
 			return;
 		}
@@ -212,8 +212,8 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		} MACRO_END
 #endif
 
-#define ReadRegistry(r) r##_from(Read_byte())
-#define WriteRegistry(r, to, it) Write_byte(to, it.m_id)
+#define ReadRegistered(r) r##_from(Read_byte())
+#define WriteRegistered(r, to, it) Write_byte(to, it.m_id)
 
 #define Read_byte() ReadByte()
 #define Write_byte(to, f) WriteByte(to, f)

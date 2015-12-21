@@ -588,6 +588,60 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 }
 #endif
 
+REGISTER_NET_C2S(w_whereis)
+#ifdef SVQC
+void Weapon_whereis(Weapon this, entity cl);
+NET_HANDLE(w_whereis, bool)
+{
+	Weapon wpn = ReadRegistered(Weapons);
+	if (wpn != WEP_Null) Weapon_whereis(wpn, sender);
+	return true;
+}
+#else
+void w_whereis(Weapon this)
+{
+	int channel = MSG_C2S;
+	WriteHeader(channel, w_whereis);
+	WriteRegistered(Weapons, channel, this);
+}
+CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string s = argv(1);
+			if (s == "all")
+			{
+				FOREACH(Weapons, it != WEP_Null, w_whereis(it));
+				return;
+			}
+			if (s == "unowned")
+			{
+				FOREACH(Weapons, it != WEP_Null && !(STAT(WEAPONS) & it.m_wepset), w_whereis(it));
+				return;
+			}
+			FOREACH(Weapons, it != WEP_Null && it.netname == s,
+			{
+				w_whereis(it);
+				return;
+			});
+		}
+		default:
+		{
+			LOG_INFOF("Incorrect parameters for ^2%s^7\n", "weapon_find");
+		}
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 cl_cmd weapon_find weapon\n");
+			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.\n");
+			return;
+		}
+	}
+}
+#endif
+
+
 #endif
 
 #endif
