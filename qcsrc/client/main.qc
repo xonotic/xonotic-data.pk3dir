@@ -914,6 +914,16 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 
 	g_trueaim_minrange = ReadCoord();
 
+	#define X(out) MACRO_BEGIN { \
+		out = ""; for (string s; (s = ReadString()) != ""; ) out = cons(out, s); \
+	} MACRO_END
+	string votes; X(votes);
+	localcmd("\nset __vcall \"", votes, "\"\n");
+	string maps; X(maps);
+	localcmd("\nset __vcall_chmap \"", maps, "\"\n");
+	localcmd("\nset __vcall_gotomap \"", maps, "\"\n");
+	localcmd("\nset __vcall_nextmap \"", maps, "\"\n");
+	#undef X
 	return = true;
 
 	MUTATOR_CALLHOOK(Ent_Init);

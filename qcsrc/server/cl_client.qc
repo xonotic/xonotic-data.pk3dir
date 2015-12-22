@@ -653,6 +653,20 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	ClientInit_misc();
 	MUTATOR_CALLHOOK(Ent_Init);
 }
+
+string vcall_maps()
+{
+	static string it;
+	if (it) return it;
+	for (int i = 0; i < MapInfo_count; ++i)
+	{
+		if ((MapInfo_Get_ByID(i)) && !(MapInfo_Map_flags & MapInfo_ForbiddenFlags()))
+			it = cons(it, MapInfo_Map_bspname);
+	}
+	MapInfo_ClearTemps();
+	return it = strzone(it);
+}
+
 void ClientInit_misc()
 {
 	int channel = MSG_ONE;
@@ -674,6 +688,16 @@ void ClientInit_misc()
 	WriteByte(channel, self.count * 255.0); // g_balance_armor_blockpercent
 	WriteByte(channel, serverflags); // client has to know if it should zoom or not
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
+	#define X(list) \
+		MACRO_BEGIN { \
+			FOREACH_WORD(list, true, { \
+				WriteString(channel, it); \
+			}); \
+			WriteString(channel, ""); \
+		} MACRO_END
+	X(autocvar_sv_vote_commands);
+	X(vcall_maps());
+	#undef X
 }
 
 void ClientInit_CheckUpdate()

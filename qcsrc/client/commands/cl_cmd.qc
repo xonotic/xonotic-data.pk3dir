@@ -593,8 +593,6 @@ void GameCommand(string command)
 #define CONSOLE_COMMANDS_NORMAL() \
 	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = true; }) \
 	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = false; }) \
-	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = true; }) \
-	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = false; }) \
 	/* nothing */
 
 #define CONSOLE_COMMANDS_MOVEMENT() \

@@ -4,7 +4,6 @@
 // Additional OPTIONAL Fields and Globals
 //float		intermission;
 float		scoreboard_showscores;
-float		scoreboard_showaccuracy;
 .string		message;
 .int		renderflags;
 // float		coop;

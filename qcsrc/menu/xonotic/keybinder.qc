@@ -112,6 +112,7 @@ void Xonotic_KeyBinds_Read()
 	KEYBIND_DEF("messagemode"                           , _("public chat"));
 	KEYBIND_DEF("messagemode2"                          , _("team chat"));
 	KEYBIND_DEF("+con_chat_maximize"                    , _("show chat history"));
+	KEYBIND_DEF("menu_showvcall"                        , _("call a vote"));
 	KEYBIND_DEF("vyes"                                  , _("vote YES"));
 	KEYBIND_DEF("vno"                                   , _("vote NO"));
 	KEYBIND_DEF("ready"                                 , _("ready"));
