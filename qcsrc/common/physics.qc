@@ -232,9 +232,9 @@ void PM_ClientMovement_Move(entity this)
 			// may be a step or wall, try stepping up
 			// first move forward at a higher level
 			currentorigin2 = this.origin;
-			currentorigin2_z += PHYS_STEPHEIGHT;
+			currentorigin2_z += PHYS_STEPHEIGHT(this);
 			neworigin2 = neworigin;
-			neworigin2_z += PHYS_STEPHEIGHT;
+			neworigin2_z += PHYS_STEPHEIGHT(this);
 			tracebox(currentorigin2, this.mins, this.maxs, neworigin2, MOVE_NORMAL, this);
 			trace2_endpos = trace_endpos;
 			trace2_fraction = trace_fraction;
@@ -491,7 +491,7 @@ bool PlayerJump(entity this)
 		// don't do jump speedcaps on ramps to preserve old xonotic ramjump style
 		tracebox(this.origin + '0 0 0.01', this.mins, this.maxs, this.origin - '0 0 0.01', MOVE_NORMAL, this);
 
-		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS))
+		if (!(trace_fraction < 1 && trace_plane_normal_z < 0.98 && PHYS_JUMPSPEEDCAP_DISABLE_ONRAMPS(this)))
 		{
 			float maxjumpspeed = mjumpheight * stof(PHYS_JUMPSPEEDCAP_MAX);
 
@@ -508,8 +508,9 @@ bool PlayerJump(entity this)
 #endif
 		if(this.lastground < time - 0.3)
 		{
-			this.velocity_x *= (1 - PHYS_FRICTION_ONLAND);
-			this.velocity_y *= (1 - PHYS_FRICTION_ONLAND);
+			float f = (1 - PHYS_FRICTION_ONLAND(this));
+			this.velocity_x *= f;
+			this.velocity_y *= f;
 		}
 #ifdef SVQC
 		if(this.jumppadcount > 1)
@@ -585,7 +586,7 @@ void CheckPlayerJump(entity this)
 	{
 		float air_jump = !PlayerJump(this) || player_multijump; // PlayerJump() has important side effects
 		float activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
-		float has_fuel = !PHYS_JETPACK_FUEL || PHYS_AMMO_FUEL(this) || ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO;
+		float has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO;
 
 		if (!(ITEMS_STAT(this) & ITEM_Jetpack.m_itemid)) { }
 		else if (this.jetpack_stopped) { }
@@ -730,7 +731,7 @@ void PM_check_frozen(entity this)
 {
 	if (!PHYS_FROZEN(this))
 		return;
-	if (PHYS_DODGING_FROZEN
+	if (PHYS_DODGING_FROZEN(this)
 #ifdef SVQC
 	&& IS_REAL_CLIENT(this)
 #endif
@@ -995,9 +996,9 @@ void PM_jetpack(entity this, float maxspd_mod)
 		wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
 
 	// it is now normalized, so...
-	float a_side = PHYS_JETPACK_ACCEL_SIDE;
-	float a_up = PHYS_JETPACK_ACCEL_UP;
-	float a_add = PHYS_JETPACK_ANTIGRAVITY * PHYS_GRAVITY(this);
+	float a_side = PHYS_JETPACK_ACCEL_SIDE(this);
+	float a_up = PHYS_JETPACK_ACCEL_UP(this);
+	float a_add = PHYS_JETPACK_ANTIGRAVITY(this) * PHYS_GRAVITY(this);
 
 	wishvel_x *= a_side;
 	wishvel_y *= a_side;
@@ -1045,11 +1046,11 @@ void PM_jetpack(entity this, float maxspd_mod)
 	//print("best possible acceleration: ", ftos(best), "\n");
 
 	float fxy, fz;
-	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / PHYS_JETPACK_MAXSPEED_SIDE, 1);
+	fxy = bound(0, 1 - (this.velocity * normalize(wishvel_x * '1 0 0' + wishvel_y * '0 1 0')) / PHYS_JETPACK_MAXSPEED_SIDE(this), 1);
 	if (wishvel_z - PHYS_GRAVITY(this) > 0)
-		fz = bound(0, 1 - this.velocity_z / PHYS_JETPACK_MAXSPEED_UP, 1);
+		fz = bound(0, 1 - this.velocity_z / PHYS_JETPACK_MAXSPEED_UP(this), 1);
 	else
-		fz = bound(0, 1 + this.velocity_z / PHYS_JETPACK_MAXSPEED_UP, 1);
+		fz = bound(0, 1 + this.velocity_z / PHYS_JETPACK_MAXSPEED_UP(this), 1);
 
 	float fvel;
 	fvel = vlen(wishvel);
@@ -1058,8 +1059,8 @@ void PM_jetpack(entity this, float maxspd_mod)
 	wishvel_z = (wishvel_z - PHYS_GRAVITY(this)) * fz + PHYS_GRAVITY(this);
 
 	fvel = min(1, vlen(wishvel) / best);
-	if (PHYS_JETPACK_FUEL && !(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-		f = min(1, PHYS_AMMO_FUEL(this) / (PHYS_JETPACK_FUEL * PHYS_INPUT_TIMELENGTH * fvel));
+	if (PHYS_JETPACK_FUEL(this) && !(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
+		f = min(1, PHYS_AMMO_FUEL(this) / (PHYS_JETPACK_FUEL(this) * PHYS_INPUT_TIMELENGTH * fvel));
 	else
 		f = 1;
 
@@ -1072,7 +1073,7 @@ void PM_jetpack(entity this, float maxspd_mod)
 
 #ifdef SVQC
 		if (!(ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO))
-			this.ammo_fuel -= PHYS_JETPACK_FUEL * PHYS_INPUT_TIMELENGTH * fvel * f;
+			this.ammo_fuel -= PHYS_JETPACK_FUEL(this) * PHYS_INPUT_TIMELENGTH * fvel * f;
 
 		ITEMS_STAT(this) |= IT_USING_JETPACK;
 
@@ -1109,7 +1110,7 @@ void PM_walk(entity this, float maxspd_mod)
 			LOG_TRACE(strcat("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")\n"));
 #endif
 		if (this.lastground < time - 0.3)
-			this.velocity *= (1 - PHYS_FRICTION_ONLAND);
+			this.velocity *= (1 - PHYS_FRICTION_ONLAND(this));
 #ifdef SVQC
 		if (this.jumppadcount > 1)
 			LOG_TRACE(strcat(ftos(this.jumppadcount), "x jumppad combo\n"));
@@ -1136,7 +1137,7 @@ void PM_walk(entity this, float maxspd_mod)
 		// TODO: apply edge friction
 		// apply ground friction
 		const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-			? PHYS_FRICTION_SLICK
+			? PHYS_FRICTION_SLICK(this)
 			: PHYS_FRICTION(this);
 
 		float f = sqrt(f2);
@@ -1312,7 +1313,7 @@ void PM_Main(entity this)
 	WarpZone_PlayerPhysics_FixVAngle();
 #endif
 	float maxspeed_mod = 1;
-	maxspeed_mod *= PHYS_HIGHSPEED;
+	maxspeed_mod *= PHYS_HIGHSPEED(this);
 
 #ifdef SVQC
 	Physics_UpdateStats(this, maxspeed_mod);

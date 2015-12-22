@@ -226,7 +226,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 	}
 
 	// LordHavoc: this came from QW and allows you to get out of water more easily
-	if(GAMEPLAYFIX_EASIERWATERJUMP && (this.move_flags & FL_WATERJUMP) && !(blocked & 8))
+	if(GAMEPLAYFIX_EASIERWATERJUMP(this) && (this.move_flags & FL_WATERJUMP) && !(blocked & 8))
 		this.move_velocity = primal_velocity;
 
 	if(applygravity)

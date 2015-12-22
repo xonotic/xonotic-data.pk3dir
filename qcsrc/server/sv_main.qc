@@ -127,6 +127,23 @@ void CreatureFrame_All()
 	}
 }
 
+void Pause_TryPause(bool ispaused)
+{
+	int n = 0;
+	entity it;
+	FOR_EACH_REALPLAYER(it)
+	{
+		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
+		++n;
+	}
+	if (!n) return;
+	setpause(ispaused);
+}
+
+void SV_PausedTic(float elapsedtime)
+{
+	if (!server_is_dedicated) Pause_TryPause(false);
+}
 
 /*
 =============
@@ -144,6 +161,7 @@ void StartFrame()
 {
 	SELFPARAM();
 	execute_next_frame();
+	if (!server_is_dedicated) Pause_TryPause(true);
 
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
