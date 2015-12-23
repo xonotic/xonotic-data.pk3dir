@@ -173,7 +173,7 @@ void havocbot_ai()
 		{
 			FOREACH(Weapons, it != WEP_Null, LAMBDA(
 				if((self.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[it.m_id] < it.reloading_ammo))
-					PS(self).m_switchweapon = it.m_id;
+					PS(self).m_switchweapon = it;
 			));
 		}
 	}
