@@ -77,16 +77,18 @@ REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overk
 			error("This cannot be added at runtime\n");
 
 		// mark the guns as ok to use by e.g. impulse 99
-		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(nt_IsNewToy(i))
-				Weapons_from(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(nt_IsNewToy(it.m_id))
+				it.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		));
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
-		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(nt_IsNewToy(i))
-				Weapons_from(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(nt_IsNewToy(it.m_id))
+				it.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		));
 	}
 
 	MUTATOR_ONREMOVE
