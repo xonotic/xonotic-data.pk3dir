@@ -147,8 +147,9 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void UncustomizeEntitiesRun()
 	{
-		for (entity e = NULL; (e = findfloat(e, uncustomizeentityforclient_set, 1)); )
-			WITH(entity, self, e, e.uncustomizeentityforclient());
+		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, LAMBDA(
+			WITH(entity, self, it, it.uncustomizeentityforclient());
+		));
 	}
 
 	STRING_ITERATOR(g_buf, string_null, 0);

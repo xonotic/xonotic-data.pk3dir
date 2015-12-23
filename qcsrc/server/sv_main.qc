@@ -116,15 +116,12 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	for(entity e = world; (e = findfloat(e, damagedbycontents, true)); )
-	{
-		if (e.movetype == MOVETYPE_NOCLIP) { continue; }
-
-		CreatureFrame_Liquids(e);
-		CreatureFrame_FallDamage(e);
-
-        e.oldvelocity = e.velocity;
-	}
+	FOREACH_ENTITY_FLOAT(damagedbycontents, true, LAMBDA(
+		if(it.movetype == MOVETYPE_NOCLIP) continue;
+		CreatureFrame_Liquids(it);
+		CreatureFrame_FallDamage(it);
+		it.oldvelocity = it.velocity;
+	));
 }
 
 void Pause_TryPause(bool ispaused)
@@ -191,8 +188,7 @@ void StartFrame()
 	}
 #endif
 
-	for(entity e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
-		CSQCProjectile_Check(e);
+	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, LAMBDA(CSQCProjectile_Check(it)));
 
 	if(RedirectionThink())
 		return;
