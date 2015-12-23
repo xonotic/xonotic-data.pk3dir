@@ -4,8 +4,6 @@
 
 #include "../turrets/sv_turrets.qh"
 
-// #define VEHICLES_USE_ODE
-
 // vehicle cvars
 float autocvar_g_vehicles;
 float autocvar_g_vehicles_enter;
