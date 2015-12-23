@@ -409,7 +409,7 @@ void WinningConditionHelper()
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
-	s = strcat(s, ":S", ftos(nJoinAllowed(world)));
+	s = strcat(s, ":S", ftos(nJoinAllowed(self, world)));
 	s = strcat(s, ":F", ftos(serverflags));
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(world, (fullstatus ? 1 : 2)));

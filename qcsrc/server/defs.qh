@@ -179,7 +179,7 @@ float game_completion_ratio; // 0 at start, 1 near end
 .float alivetime; // time of being alive
 .float motd_actived_time; // used for both motd and campaign_message
 
-float nJoinAllowed(entity ignore);
+bool nJoinAllowed(entity this, entity ignore);
 
 .float spawnshieldtime;
 .float item_spawnshieldtime;

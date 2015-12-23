@@ -1867,7 +1867,7 @@ void LeaveSpectatorMode()
 {SELFPARAM();
 	if(self.caplayer)
 		return;
-	if(nJoinAllowed(self))
+	if(nJoinAllowed(self, self))
 	{
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
 		{
@@ -1901,40 +1901,39 @@ void LeaveSpectatorMode()
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-float nJoinAllowed(entity ignore)
-{SELFPARAM();
+bool nJoinAllowed(entity this, entity ignore)
+{
 	if(!ignore)
 	// this is called that way when checking if anyone may be able to join (to build qcstatus)
 	// so report 0 free slots if restricted
 	{
 		if(autocvar_g_forced_team_otherwise == "spectate")
-			return 0;
+			return false;
 		if(autocvar_g_forced_team_otherwise == "spectator")
-			return 0;
+			return false;
 	}
 
-	if(self.team_forced < 0)
-		return 0; // forced spectators can never join
+	if(this.team_forced < 0)
+		return false; // forced spectators can never join
 
 	// TODO simplify this
-	entity e;
-	float totalClients = 0;
-	FOR_EACH_CLIENT(e)
-		if(e != ignore)
-			totalClients += 1;
+	int totalClients = 0;
+	int currentlyPlaying = 0;
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it != ignore)
+			++totalClients;
+		if(IS_REAL_CLIENT(it))
+		if(IS_PLAYER(it) || it.caplayer)
+			++currentlyPlaying;
+	));
 
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients;
 
-	float currentlyPlaying = 0;
-	FOR_EACH_REALCLIENT(e)
-		if(IS_PLAYER(e) || e.caplayer)
-			currentlyPlaying += 1;
-
 	if(currentlyPlaying < autocvar_g_maxplayers)
 		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
-	return 0;
+	return false;
 }
 
 /**

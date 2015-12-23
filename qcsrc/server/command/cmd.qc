@@ -174,7 +174,7 @@ void ClientCommand_join(float request)
 				if (!IS_PLAYER(self) && !lockteams && !gameover)
 				{
 					if (self.caplayer) return;
-					if (nJoinAllowed(self))
+					if (nJoinAllowed(self, self))
 					{
 						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
 						self.classname = STR_PLAYER;
