@@ -15,8 +15,7 @@
 #endif
 
 #ifndef MENUQC
-#include "physics.qc"
-#include "movetypes/include.qc"
+#include "physics/all.inc"
 #include "triggers/include.qc"
 #include "viewloc.qc"
 #endif

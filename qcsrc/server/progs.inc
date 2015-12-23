@@ -20,7 +20,6 @@
 #include "item_key.qc"
 #include "mapvoting.qc"
 #include "miscfunctions.qc"
-#include "movelib.qc"
 #include "playerdemo.qc"
 #include "portals.qc"
 #include "race.qc"
