@@ -4,7 +4,7 @@
 CLASS(XonoticVcallDialog, XonoticRootDialog)
 	ATTRIB(XonoticVcallDialog, title, string, _("Call a vote"))
 	ATTRIB(XonoticVcallDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticVcallDialog, intendedWidth, float, 1)
+	ATTRIB(XonoticVcallDialog, intendedWidth, float, 0.5)
 	ATTRIB(XonoticVcallDialog, rows, float, 16)
 	ATTRIB(XonoticVcallDialog, columns, float, 20)
 	ATTRIB(XonoticVcallDialog, name, string, "Vcall")
