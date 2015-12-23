@@ -24,12 +24,6 @@
 #ifndef MENUQC
 #include "minigames/minigames.qc"
 #endif
-#ifdef CSQC
-#include "minigames/cl_minigames.qc"
-#endif
-#ifdef SVQC
-#include "minigames/sv_minigames.qc"
-#endif
 
 #include "debug.qh"
 
