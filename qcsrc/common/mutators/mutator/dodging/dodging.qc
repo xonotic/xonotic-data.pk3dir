@@ -33,7 +33,7 @@ bool autocvar_sv_dodging_sound;
 .float dodging_single_action;
 
 #include "../../../animdecide.qh"
-#include "../../../physics.qh"
+#include "../../../physics/player.qh"
 
 .float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
 

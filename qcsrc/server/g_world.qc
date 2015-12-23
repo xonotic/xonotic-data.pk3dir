@@ -25,7 +25,7 @@
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/notifications.qh"
-#include "../common/physics.qh"
+#include "../common/physics/player.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"

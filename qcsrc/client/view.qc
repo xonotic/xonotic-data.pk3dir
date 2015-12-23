@@ -14,7 +14,7 @@
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
 #include "../common/gamemodes/all.qh"
-#include "../common/physics.qh"
+#include "../common/physics/player.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"

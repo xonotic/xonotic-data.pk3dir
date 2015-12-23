@@ -247,7 +247,7 @@ REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int, autocvar_g_telefrags_avoid)
 REGISTER_STAT(SPECTATORSPEED, float)
 
 #ifdef SVQC
-#include "movetypes/movetypes.qh"
+#include "physics/movetypes/movetypes.qh"
 #endif
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)

@@ -1,3 +1,3 @@
 #include "player.qc"
 #include "movelib.qc"
-#include "movetypes/include.qc"
+#include "movetypes/all.inc"

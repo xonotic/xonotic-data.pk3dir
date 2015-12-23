@@ -116,7 +116,7 @@ void ewheel_move_enemy()
     else
     {
         newframe = ewheel_anim_stop;
-        movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+        movelib_brake_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
     }
 
     turrets_setframe(newframe, false);
@@ -132,7 +132,7 @@ void ewheel_move_idle()
 
     self.frame = 0;
     if (vlen(self.velocity))
-        movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+        movelib_brake_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
 spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }

@@ -189,7 +189,7 @@ float spiderbot_frame()
 						//dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
 						sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_IDLE, VOL_VEHICLEENGINE, ATTEN_NORM);
 					}
-					movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
+					movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
 					spider.frame = 5;
 				}
 			}
@@ -570,7 +570,7 @@ spawnfunc(vehicle_spiderbot)
 		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh))
 		{
 			if(self.flags & FL_ONGROUND)
-				movelib_beak_simple(autocvar_g_vehicle_spiderbot_speed_stop);
+				movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
 		}
 		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh))
 		{

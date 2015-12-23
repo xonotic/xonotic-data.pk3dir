@@ -1,3 +1,5 @@
+#include "walk.qh"
+
 void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 {
 	vector stepnormal = '0 0 0';

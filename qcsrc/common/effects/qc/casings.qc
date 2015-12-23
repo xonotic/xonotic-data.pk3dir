@@ -3,7 +3,7 @@
 #include "../../util.qh"
 
 #ifdef CSQC
-#include "../../movetypes/movetypes.qh"
+#include "../../physics/movetypes/movetypes.qh"
 #include "rubble.qh"
 #endif
 

@@ -470,12 +470,12 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                 switch (self.animflag)
                 {
                     case ANIM_NO:
-                        movelib_beak_simple((autocvar_g_turrets_unit_walker_speed_stop));
+                        movelib_brake_simple((autocvar_g_turrets_unit_walker_speed_stop));
                         break;
 
                     case ANIM_TURN:
                         turny = (autocvar_g_turrets_unit_walker_turn);
-                        movelib_beak_simple((autocvar_g_turrets_unit_walker_speed_stop));
+                        movelib_brake_simple((autocvar_g_turrets_unit_walker_speed_stop));
                         break;
 
                     case ANIM_WALK:
@@ -518,7 +518,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                             defer(self, 0.21, walker_melee_do_dmg);
                         }
 
-                        movelib_beak_simple((autocvar_g_turrets_unit_walker_speed_stop));
+                        movelib_brake_simple((autocvar_g_turrets_unit_walker_speed_stop));
                         break;
 
                     case ANIM_SWIM:
@@ -630,7 +630,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 #endif // SVQC
 #ifdef CSQC
 
-#include "../../../client/movelib.qh"
+#include "../../physics/movelib.qh"
 
 void walker_draw(entity this)
 {

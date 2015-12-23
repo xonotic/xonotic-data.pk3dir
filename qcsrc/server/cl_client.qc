@@ -33,7 +33,7 @@
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
-#include "../common/physics.qh"
+#include "../common/physics/player.qh"
 
 #include "../common/items/all.qc"
 
