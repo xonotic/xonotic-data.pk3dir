@@ -1277,9 +1277,9 @@ bool IsFlying(entity this)
 		return false;
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		return false;
-	traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
-	if(trace_fraction < 1)
-		return false;
+	//traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
+	//if(trace_fraction < 1)
+		//return false;
 	return true;
 }
 
