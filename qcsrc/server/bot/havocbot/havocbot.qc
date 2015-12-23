@@ -171,12 +171,10 @@ void havocbot_ai()
 		if(skill >= 5) // bots can only look for unloaded weapons past this skill
 		if(self.clip_load >= 0) // only if we're not reloading a weapon already
 		{
-			for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			{
-				entity e = Weapons_from(i);
-				if ((self.weapons & (e.m_wepset)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
-					PS(self).m_switchweapon = Weapons_from(i);
-			}
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if((self.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[it.m_id] < it.reloading_ammo))
+					PS(self).m_switchweapon = it.m_id;
+			));
 		}
 	}
 }
