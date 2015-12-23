@@ -30,13 +30,35 @@ typedef entity ArrayList;
 #define AL_gets(this, idx) bufstr_get(this.al_buf, idx)
 #define AL_sets(this, idx, val) bufstr_set(this.al_buf, idx, val)
 
+#if defined(CSQC)
+string al_ftos(float f) = #26;
+float al_stof(string s) = #81;
+#elif defined(SVQC)
+string al_ftos(float f) = #26;
+float al_stof(string s) = #81;
+#elif defined(MENUQC)
+string al_ftos(float f) = #17;
+float al_stof(string s) = #21;
+#endif
+
 #define _AL_type__f() float
-#define AL_getf(this, idx) stof(AL_gets(this, idx))
-#define AL_setf(this, idx, val) AL_sets(this, idx, ftos(val))
+#define AL_getf(this, idx) al_stof(AL_gets(this, idx))
+#define AL_setf(this, idx, val) AL_sets(this, idx, al_ftos(val))
+
+#if defined(CSQC)
+int al_etof(entity e) = #512;
+entity al_ftoe(int i) = #459;
+#elif defined(SVQC)
+int al_etof(entity e) = #512;
+entity al_ftoe(int i) = #459;
+#elif defined(MENUQC)
+int al_etof(entity e) = #79;
+entity al_ftoe(int i) = #80;
+#endif
 
 #define _AL_type__e() entity
-#define AL_gete(this, idx) ftoe(AL_getf(this, idx))
-#define AL_sete(this, idx, val) AL_setf(this, idx, etof(val))
+#define AL_gete(this, idx) al_ftoe(AL_getf(this, idx))
+#define AL_sete(this, idx, val) AL_setf(this, idx, al_etof(val))
 
 #define AL_EACH(this, T, cond, body) \
 	MACRO_BEGIN \
