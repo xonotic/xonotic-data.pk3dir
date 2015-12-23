@@ -232,11 +232,10 @@ void anticheat_fixangle()
 
 void anticheat_endframe()
 {SELFPARAM();
-	entity e;
-	FOR_EACH_CLIENT(e)
-		if (e.fixangle) {
-			WITH(entity, self, e, anticheat_fixangle());
-		}
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it.fixangle)
+			WITH(entity, self, it, anticheat_fixangle());
+	));
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }
 

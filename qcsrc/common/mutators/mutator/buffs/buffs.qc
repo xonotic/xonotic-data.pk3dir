@@ -697,15 +697,15 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = world;
-		entity player;
-		FOR_EACH_PLAYER(player)
-		if(DIFF_TEAM(self, player))
-		if(player.deadflag == DEAD_NO && !player.frozen && !player.vehicle)
-		if(vlen(self.origin - player.origin) <= best_distance)
-		{
-			best_distance = vlen(self.origin - player.origin);
-			closest = player;
-		}
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if(it.deadflag == DEAD_NO && !it.frozen && !it.vehicle)
+			if(DIFF_TEAM(it, self))
+			if(vlen(self.origin - it.origin) <= best_distance)
+			{
+				best_distance = vlen(self.origin - it.origin);
+				closest = it;
+			}
+		));
 
 		if(closest)
 		{

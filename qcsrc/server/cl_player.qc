@@ -209,8 +209,8 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int de
 	}
 }
 
-void calculate_player_respawn_time()
-{SELFPARAM();
+void calculate_player_respawn_time(entity this)
+{
 	if(g_ca)
 		return;
 
@@ -223,13 +223,12 @@ void calculate_player_respawn_time()
 	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
 
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
-	entity pl;
 	if (teamplay)
 	{
-		FOR_EACH_PLAYER(pl)
-			if (pl != self)
-				if (pl.team == self.team)
-					++pcount;
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+			if(it.team == this.team)
+				++pcount;
+		));
 		if (sdelay_small_count == 0)
 			sdelay_small_count = 1;
 		if (sdelay_large_count == 0)
@@ -237,9 +236,9 @@ void calculate_player_respawn_time()
 	}
 	else
 	{
-		FOR_EACH_PLAYER(pl)
-			if (pl != self)
-				++pcount;
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+			++pcount;
+		));
 		if (sdelay_small_count == 0)
 		{
 			if (g_cts)
@@ -278,22 +277,22 @@ void calculate_player_respawn_time()
 		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
 
 	if(waves)
-		self.respawn_time = ceil((time + sdelay) / waves) * waves;
+		this.respawn_time = ceil((time + sdelay) / waves) * waves;
 	else
-		self.respawn_time = time + sdelay;
+		this.respawn_time = time + sdelay;
 
 	if(sdelay < sdelay_max)
-		self.respawn_time_max = time + sdelay_max;
+		this.respawn_time_max = time + sdelay_max;
 	else
-		self.respawn_time_max = self.respawn_time;
+		this.respawn_time_max = this.respawn_time;
 
-	if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
-		self.respawn_countdown = 10; // first number to count down from is 10
+	if((sdelay + waves >= 5.0) && (this.respawn_time - time > 1.75))
+		this.respawn_countdown = 10; // first number to count down from is 10
 	else
-		self.respawn_countdown = -1; // do not count down
+		this.respawn_countdown = -1; // do not count down
 
 	if(autocvar_g_forced_respawn)
-		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
 }
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -595,7 +594,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		self.deadflag = DEAD_DYING;
 
 		// when to allow respawn
-		calculate_player_respawn_time();
+		calculate_player_respawn_time(this);
 
 		self.death_time = time;
 		if (random() < 0.5)

@@ -31,11 +31,11 @@ const string STR_OBSERVER = "observer";
 
 #define FOREACH_CLIENT(cond, body) \
 	MACRO_BEGIN { \
-		int i = 0; \
-		for (entity it = NULL; (it = nextent(it)) && (etof(it) <= maxclients); ++i) \
+		for(int i = 1; i <= maxclients; ++i) \
 		{ \
-			if (!IS_CLIENT(it)) continue; \
-			if (cond) { LAMBDA(body) } \
+			entity it = ftoe(i); \
+			if(it == NULL || !IS_CLIENT(it)) continue; \
+			if(cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
 
