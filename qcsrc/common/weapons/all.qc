@@ -47,6 +47,9 @@
 #ifndef MENUQC
 	#include "calculations.qc"
 #endif
+#ifdef SVQC
+	#include "config.qc"
+#endif
 #define IMPLEMENTATION
 #include "all.inc"
 #undef IMPLEMENTATION
