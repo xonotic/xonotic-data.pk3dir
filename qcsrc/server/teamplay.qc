@@ -583,10 +583,8 @@ void SV_ChangeTeam(float _color)
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
-	if(!teamplay) {
+	if(!teamplay)
 		SetPlayerColors(self, _color);
-		return;
-	}
 
 	if(!IS_CLIENT(self))
 	{
@@ -594,6 +592,9 @@ void SV_ChangeTeam(float _color)
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
 		return;
 	}
+
+	if(!teamplay)
+		return;
 
 	scolor = self.clientcolors & 0x0F;
 	dcolor = _color & 0x0F;
