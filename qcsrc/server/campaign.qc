@@ -265,7 +265,7 @@ void CampaignPostIntermission()
 	if(campaign_won && campaign_entries < 2)
 	{
 		// last map won!
-		LOG_INFO("^2test run: campaign looks GOOD\n");
+		LOG_DEBUG("^2test run: campaign looks GOOD\n");
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;
