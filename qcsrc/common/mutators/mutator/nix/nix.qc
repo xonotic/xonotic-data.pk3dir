@@ -43,11 +43,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 		nix_nextchange = 0;
 		nix_nextweapon = 0;
 
-		for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if (NIX_CanChooseWeapon(i)) {
-				Weapon w = Weapons_from(i);
-				w.wr_init(w);
-			}
+		FOREACH(Weapons, it != WEP_Null && NIX_CanChooseWeapon(it.m_id), LAMBDA(it.wr_init(it)));
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -98,11 +94,11 @@ bool NIX_CanChooseWeapon(int wpn)
 }
 void NIX_ChooseNextWeapon()
 {
-	float j;
 	RandomSelection_Init();
-	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		if(NIX_CanChooseWeapon(j))
-			RandomSelection_Add(world, j, string_null, 1, (j != nix_weapon));
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if(NIX_CanChooseWeapon(it.m_id))
+			RandomSelection_Add(world, it.m_id, string_null, 1, (it.m_id != nix_weapon));
+	));
 	nix_nextweapon = RandomSelection_chosen_float;
 }
 
