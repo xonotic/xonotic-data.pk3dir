@@ -50,9 +50,7 @@ spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
 
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
-	entity e;
-	FOR_EACH_PLAYER(e)
-		e.porto_forbidden = max(0, e.porto_forbidden - 1);
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.porto_forbidden = max(0, it.porto_forbidden - 1)));
 }
 
 void W_Porto_Success()

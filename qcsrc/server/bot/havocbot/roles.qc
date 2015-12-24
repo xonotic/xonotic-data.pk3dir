@@ -13,7 +13,6 @@
 void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 {SELFPARAM();
 	entity head;
-	entity player;
 	float rating, d, discard, distance, friend_distance, enemy_distance;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
@@ -64,17 +63,12 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 		{
 			discard = false;
 
-			FOR_EACH_PLAYER(player)
-			{
+			FOREACH_CLIENT(IS_PLAYER(it) && it != self && it.deadflag == DEAD_NO, LAMBDA(
+				d = vlen(it.origin - o); // distance between player and item
 
-				if ( self == player || player.deadflag )
-					continue;
-
-				d = vlen(player.origin - o); // distance between player and item
-
-				if ( player.team == self.team )
+				if ( it.team == self.team )
 				{
-					if ( !IS_REAL_CLIENT(player) || discard )
+					if ( !IS_REAL_CLIENT(it) || discard )
 						continue;
 
 					if( d > friend_distance)
@@ -84,29 +78,29 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 					discard = true;
 
-					if( head.health && player.health > self.health )
+					if( head.health && it.health > self.health )
 						continue;
 
-					if( head.armorvalue && player.armorvalue > self.armorvalue)
+					if( head.armorvalue && it.armorvalue > self.armorvalue)
 						continue;
 
 					if( head.weapons )
-					if( head.weapons & ~player.weapons )
+					if( head.weapons & ~it.weapons )
 						continue;
 
-					if (head.ammo_shells && player.ammo_shells > self.ammo_shells)
+					if (head.ammo_shells && it.ammo_shells > self.ammo_shells)
 						continue;
 
-					if (head.ammo_nails && player.ammo_nails > self.ammo_nails)
+					if (head.ammo_nails && it.ammo_nails > self.ammo_nails)
 						continue;
 
-					if (head.ammo_rockets && player.ammo_rockets > self.ammo_rockets)
+					if (head.ammo_rockets && it.ammo_rockets > self.ammo_rockets)
 						continue;
 
-					if (head.ammo_cells && player.ammo_cells > self.ammo_cells)
+					if (head.ammo_cells && it.ammo_cells > self.ammo_cells)
 						continue;
 
-					if (head.ammo_plasma && player.ammo_plasma > self.ammo_plasma)
+					if (head.ammo_plasma && it.ammo_plasma > self.ammo_plasma)
 						continue;
 
 					discard = false;
@@ -118,7 +112,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if( d < enemy_distance )
 						enemy_distance = d;
 				}
-			}
+			));
 
 			// Rate the item only if no one needs it, or if an enemy is closer to it
 			if ( (enemy_distance < friend_distance && distance < enemy_distance) ||

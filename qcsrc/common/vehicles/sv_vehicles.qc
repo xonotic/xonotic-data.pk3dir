@@ -1016,9 +1016,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(DIFF_TEAM(pl, veh))
 	if(autocvar_g_vehicles_steal)
 	{
-		entity head;
-		FOR_EACH_PLAYER(head) if(SAME_TEAM(head, veh))
-			Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_VEHICLE_STEAL);
+		FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, veh), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VEHICLE_STEAL)));
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
@@ -1173,10 +1171,7 @@ void vehicles_spawn()
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;
 
-	entity head; // remove hooks (if any)
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == self)
-		RemoveGrapplingHook(head);
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == self, LAMBDA(RemoveGrapplingHook(it)));
 
 	vehicles_reset_colors();
 

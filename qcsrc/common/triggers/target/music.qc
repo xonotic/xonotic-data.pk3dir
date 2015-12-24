@@ -54,8 +54,10 @@ void target_music_use()
 		msg_entity = activator;
 		target_music_sendto(MSG_ONE, 1);
 	}
-	entity head;
-	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == activator, LAMBDA(
+		msg_entity = it;
+		target_music_sendto(MSG_ONE, 1);
+	));
 }
 spawnfunc(target_music)
 {

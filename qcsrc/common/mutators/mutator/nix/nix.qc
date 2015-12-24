@@ -54,19 +54,17 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 	MUTATOR_ONREMOVE
 	{
 		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
-		entity e;
-		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
-		{
-			e.ammo_cells = start_ammo_cells;
-			e.ammo_plasma = start_ammo_plasma;
-			e.ammo_shells = start_ammo_shells;
-			e.ammo_nails = start_ammo_nails;
-			e.ammo_rockets = start_ammo_rockets;
-			e.ammo_fuel = start_ammo_fuel;
-			e.weapons = start_weapons;
-			if(!client_hasweapon(e, PS(e).m_weapon, true, false))
-				PS(e).m_switchweapon = w_getbestweapon(self);
-		}
+		FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO, LAMBDA(
+			it.ammo_cells = start_ammo_cells;
+			it.ammo_plasma = start_ammo_plasma;
+			it.ammo_shells = start_ammo_shells;
+			it.ammo_nails = start_ammo_nails;
+			it.ammo_rockets = start_ammo_rockets;
+			it.ammo_fuel = start_ammo_fuel;
+			it.weapons = start_weapons;
+			if(!client_hasweapon(it, PS(it).m_weapon, true, false))
+				PS(it).m_switchweapon = w_getbestweapon(self);
+		));
 	}
 
 	return 0;

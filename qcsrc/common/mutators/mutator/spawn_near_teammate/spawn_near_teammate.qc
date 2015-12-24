@@ -21,25 +21,22 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
 		return 0;
 
-	entity p;
-
 	spawn_spot.msnt_lookat = world;
 
 	if(!teamplay)
 		return 0;
 
 	RandomSelection_Init();
-	FOR_EACH_PLAYER(p) if(p != self) if(p.team == self.team) if(!p.deadflag)
-	{
-		float l = vlen(spawn_spot.origin - p.origin);
+	FOREACH_CLIENT(IS_PLAYER(it) && it != self && SAME_TEAM(it, self) && it.deadflag == DEAD_NO, LAMBDA(
+		float l = vlen(spawn_spot.origin - it.origin);
 		if(l > autocvar_g_spawn_near_teammate_distance)
 			continue;
 		if(l < 48)
 			continue;
-		if(!checkpvs(spawn_spot.origin, p))
+		if(!checkpvs(spawn_spot.origin, it))
 			continue;
-		RandomSelection_Add(p, 0, string_null, 1, 1);
-	}
+		RandomSelection_Add(it, 0, string_null, 1, 1);
+	));
 
 	if(RandomSelection_chosen_ent)
 	{
@@ -61,55 +58,54 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			self.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 
-		entity team_mate, best_mate = world;
+		entity best_mate = world;
 		vector best_spot = '0 0 0';
 		float pc = 0, best_dist = 0, dist = 0;
-		FOR_EACH_PLAYER(team_mate)
-		{
-			if((autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && team_mate.health >= autocvar_g_balance_health_regenstable) || autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health == 0)
-			if(team_mate.deadflag == DEAD_NO)
-			if(team_mate.msnt_timer < time)
-			if(SAME_TEAM(self, team_mate))
-			if(time > team_mate.spawnshieldtime) // spawn shielding
-			if(team_mate.frozen == 0)
-			if(team_mate != self)
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if((autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && it.health >= autocvar_g_balance_health_regenstable) || autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health == 0)
+			if(it.deadflag == DEAD_NO)
+			if(it.msnt_timer < time)
+			if(SAME_TEAM(self, it))
+			if(time > it.spawnshieldtime) // spawn shielding
+			if(it.frozen == 0)
+			if(it != self)
 			{
-				tracebox(team_mate.origin, PL_MIN, PL_MAX, team_mate.origin - '0 0 100', MOVE_WORLDONLY, team_mate);
+				tracebox(it.origin, PL_MIN, PL_MAX, it.origin - '0 0 100', MOVE_WORLDONLY, it);
 				if(trace_fraction != 1.0)
 				if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 				{
 					pc = pointcontents(trace_endpos + '0 0 1');
 					if(pc == CONTENT_EMPTY)
 					{
-						if(vlen(team_mate.velocity) > 5)
-							fixedmakevectors(vectoangles(team_mate.velocity));
+						if(vlen(it.velocity) > 5)
+							fixedmakevectors(vectoangles(it.velocity));
 						else
-							fixedmakevectors(team_mate.angles);
+							fixedmakevectors(it.angles);
 
 						for(pc = 0; pc < 5; ++pc) // test 5 diffrent spots close to mate
 						{
 							switch(pc)
 							{
 								case 0:
-									tracebox(team_mate.origin , PL_MIN, PL_MAX, team_mate.origin + v_right * 128, MOVE_NORMAL, team_mate);
+									tracebox(it.origin , PL_MIN, PL_MAX, it.origin + v_right * 128, MOVE_NORMAL, it);
 									break;
 								case 1:
-									tracebox(team_mate.origin , PL_MIN, PL_MAX, team_mate.origin - v_right * 128 , MOVE_NORMAL, team_mate);
+									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_right * 128 , MOVE_NORMAL, it);
 									break;
 								case 2:
-									tracebox(team_mate.origin , PL_MIN, PL_MAX, team_mate.origin + v_right * 64 - v_forward * 64, MOVE_NORMAL, team_mate);
+									tracebox(it.origin , PL_MIN, PL_MAX, it.origin + v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
 									break;
 								case 3:
-									tracebox(team_mate.origin , PL_MIN, PL_MAX, team_mate.origin - v_right * 64 - v_forward * 64, MOVE_NORMAL, team_mate);
+									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
 									break;
 								case 4:
-									tracebox(team_mate.origin , PL_MIN, PL_MAX, team_mate.origin - v_forward * 128, MOVE_NORMAL, team_mate);
+									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_forward * 128, MOVE_NORMAL, it);
 									break;
 							}
 
 							if(trace_fraction == 1.0)
 							{
-								traceline(trace_endpos + '0 0 4', trace_endpos - '0 0 100', MOVE_NORMAL, team_mate);
+								traceline(trace_endpos + '0 0 4', trace_endpos - '0 0 100', MOVE_NORMAL, it);
 								if(trace_fraction != 1.0)
 								{
 									if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
@@ -119,15 +115,15 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 										{
 											best_dist = dist;
 											best_spot = trace_endpos;
-											best_mate = team_mate;
+											best_mate = it;
 										}
 									}
 									else
 									{
 										setorigin(self, trace_endpos);
-										self.angles = team_mate.angles;
+										self.angles = it.angles;
 										self.angles_z = 0; // never spawn tilted even if the spot says to
-										team_mate.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
+										it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 										return 0;
 									}
 								}
@@ -136,7 +132,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 					}
 				}
 			}
-		}
+		));
 
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 		if(best_dist)

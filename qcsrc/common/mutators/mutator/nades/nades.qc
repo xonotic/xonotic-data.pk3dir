@@ -1129,20 +1129,19 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOR_EACH_PLAYER(other) if(self != other)
-		{
-			if(other.deadflag == DEAD_NO)
-			if(other.frozen == 0)
-			if(SAME_TEAM(other, self))
-			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+			if(it.deadflag == DEAD_NO)
+			if(it.frozen == 0)
+			if(SAME_TEAM(it, self))
+			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
-					o = other;
+					o = it;
 				if(self.frozen == 1)
-					other.reviving = true;
+					it.reviving = true;
 				++n;
 			}
-		}
+		));
 	}
 
 	if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
@@ -1158,11 +1157,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
 		}
 
-		FOR_EACH_PLAYER(other) if(other.reviving)
-		{
+		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
 			other.revive_progress = self.revive_progress;
 			other.reviving = false;
-		}
+		));
 	}
 
 	return false;
