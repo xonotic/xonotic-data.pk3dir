@@ -8,7 +8,6 @@
 #include "quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "tuba.qh"
 #include "../common/t_items.qh"
 #include "wall.qh"
 #include "weapons/projectile.qh"

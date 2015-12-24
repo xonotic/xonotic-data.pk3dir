@@ -15,7 +15,6 @@
 #include "scoreboard.qc"
 #include "shownames.qc"
 #include "teamradar.qc"
-#include "tuba.qc"
 #include "view.qc"
 #include "wall.qc"
 
