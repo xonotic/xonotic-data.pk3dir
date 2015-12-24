@@ -1339,25 +1339,21 @@ void DumpStats(float final)
 	if(to_file)
 		fputs(file, strcat(s, "\n"));
 
-	FOR_EACH_CLIENT(other)
-	{
-		if ((IS_REAL_CLIENT(other)) || (IS_BOT_CLIENT(other) && autocvar_sv_logscores_bots))
-		{
-			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
-			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(IS_PLAYER(other) || MUTATOR_CALLHOOK(GetPlayerStatus, other, s))
-				s = strcat(s, ftos(other.team), ":");
-			else
-				s = strcat(s, "spectator:");
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
+		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
+		s = strcat(s, ftos(rint(time - it.jointime)), ":");
+		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+			s = strcat(s, ftos(it.team), ":");
+		else
+			s = strcat(s, "spectator:");
 
-			if(to_console)
-				LOG_INFO(s, other.netname, "\n");
-			if(to_eventlog)
-				GameLogEcho(strcat(s, ftos(other.playerid), ":", other.netname));
-			if(to_file)
-				fputs(file, strcat(s, other.netname, "\n"));
-		}
-	}
+		if(to_console)
+			LOG_INFO(s, it.netname, "\n");
+		if(to_eventlog)
+			GameLogEcho(strcat(s, ftos(it.playerid), ":", it.netname));
+		if(to_file)
+			fputs(file, strcat(s, it.netname, "\n"));
+	));
 
 	if(teamplay)
 	{
@@ -1470,11 +1466,11 @@ void NextLevel()
 
 	GameLogClose();
 
-	FOR_EACH_PLAYER(other) {
-		FixIntermissionClient(other);
-		if(other.winning)
-			bprint(other.netname, " ^7wins.\n");
-	}
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FixIntermissionClient(it);
+		if(it.winning)
+			bprint(it.netname, " ^7wins.\n");
+	));
 
 	entity oldself = self;
 	target_music_kill();
@@ -1569,26 +1565,22 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		head.winning = (head.(field) == value);
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = (it.(field) == value)));
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		if (head.(field) == value)
-			head.winning = 1;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		if(it.(field) == value)
+			it.winning = 1;
+	));
 }
 
 // clear the .winning flags
 void ClearWinners()
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		head.winning = 0;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = 0));
 }
 
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
@@ -1715,8 +1707,6 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 float WinningCondition_RanOutOfSpawns()
 {
-	entity head;
-
 	if(have_team_spawns <= 0)
 		return WINNING_NO;
 
@@ -1728,29 +1718,25 @@ float WinningCondition_RanOutOfSpawns()
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
-	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
-	{
-		if(head.team == NUM_TEAM_1)
-			team1_score = 1;
-		else if(head.team == NUM_TEAM_2)
-			team2_score = 1;
-		else if(head.team == NUM_TEAM_3)
-			team3_score = 1;
-		else if(head.team == NUM_TEAM_4)
-			team4_score = 1;
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO, LAMBDA(
+		switch(it.team)
+		{
+			case NUM_TEAM_1: team1_score = 1; break;
+			case NUM_TEAM_2: team2_score = 1; break;
+			case NUM_TEAM_3: team3_score = 1; break;
+			case NUM_TEAM_4: team4_score = 1; break;
+		}
+	));
 
-	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
-	{
-		if(head.team == NUM_TEAM_1)
-			team1_score = 1;
-		else if(head.team == NUM_TEAM_2)
-			team2_score = 1;
-		else if(head.team == NUM_TEAM_3)
-			team3_score = 1;
-		else if(head.team == NUM_TEAM_4)
-			team4_score = 1;
-	}
+	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, LAMBDA(
+		switch(it.team)
+		{
+			case NUM_TEAM_1: team1_score = 1; break;
+			case NUM_TEAM_2: team2_score = 1; break;
+			case NUM_TEAM_3: team3_score = 1; break;
+			case NUM_TEAM_4: team4_score = 1; break;
+		}
+	));
 
 	ClearWinners();
 	if(team1_score + team2_score + team3_score + team4_score == 0)
@@ -1864,16 +1850,14 @@ void CheckRules_World()
 				float totalplayers;
 				float playerswithlaps;
 				float readyplayers;
-				entity head;
 				totalplayers = playerswithlaps = readyplayers = 0;
-				FOR_EACH_PLAYER(head)
-				{
+				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 					++totalplayers;
-					if(PlayerScore_Add(head, SP_RACE_FASTEST, 0))
+					if(PlayerScore_Add(it, SP_RACE_FASTEST, 0))
 						++playerswithlaps;
-					if(head.ready)
+					if(it.ready)
 						++readyplayers;
-				}
+				));
 
 				// at least 2 of the players have completed a lap: start the RACE
 				// otherwise, the players should end the qualifying on their own
@@ -1962,40 +1946,36 @@ void EndFrame()
 	anticheat_endframe();
 
 	float altime;
-	entity e_;
-	FOR_EACH_REALCLIENT(e_)
-	{
-		entity e = IS_SPEC(e_) ? e_.enemy : e_;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		entity e = IS_SPEC(it) ? it.enemy : it;
 		if(e.typehitsound)
-			e_.typehit_time = time;
+			it.typehit_time = time;
 		else if(e.damage_dealt)
 		{
-			e_.hit_time = time;
-			e_.damage_dealt_total += ceil(e.damage_dealt);
+			it.hit_time = time;
+			it.damage_dealt_total += ceil(e.damage_dealt);
 		}
-	}
+	));
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	// add 1 frametime because after this, engine SV_Physics
 	// increases time by a frametime and then networks the frame
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOR_EACH_CLIENT(e_)
-	{
-		e_.typehitsound = false;
-		e_.damage_dealt = 0;
-		setself(e_);
-		antilag_record(e_, altime);
-	}
-	FOR_EACH_MONSTER(e_)
-	{
-		setself(e_);
-		antilag_record(e_, altime);
-	}
-	FOREACH_CLIENT(PS(it), {
+	FOREACH_CLIENT(true, LAMBDA(
+		it.typehitsound = false;
+		it.damage_dealt = 0;
+		setself(it);
+		antilag_record(it, altime);
+	));
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+		setself(it);
+		antilag_record(it, altime);
+	));
+	FOREACH_CLIENT(PS(it), LAMBDA(
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
-	});
+	));
 }
 
 
@@ -2028,10 +2008,8 @@ float RedirectionThink()
 	redirection_nextthink = time + 1;
 
 	clients_found = 0;
-	entity e;
-	FOR_EACH_REALCLIENT(e)
-	{
-		setself(e);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		setself(it);
 		// TODO add timer
 		LOG_INFO("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")
@@ -2039,7 +2017,7 @@ float RedirectionThink()
 		else
 			stuffcmd(self, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
-	}
+	));
 
 	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.\n");
 

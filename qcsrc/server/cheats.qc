@@ -29,7 +29,7 @@ void CopyBody(float keepvelocity);
 
 #ifdef NOCHEATS
 
-float CheatImpulse(float i) { return 0; }
+float CheatImpulse(int imp) { return 0; }
 float CheatCommand(float argc) { return 0; }
 float CheatFrame() { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
@@ -134,10 +134,10 @@ spawnfunc(info_autoscreenshot)
 	// this one just has to exist
 }
 
-float CheatImpulse(float i)
+float CheatImpulse(int imp)
 {SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
-	switch(i)
+	switch(imp)
 	{
 		entity e, e2;
 
@@ -169,7 +169,7 @@ float CheatImpulse(float i)
 			self.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING.impulse:
-			IS_CHEAT(i, 0, 0);
+			IS_CHEAT(imp, 0, 0);
 			makevectors (self.v_angle);
 			self.velocity = self.velocity + v_forward * 300;
 			CopyBody(1);
@@ -178,17 +178,17 @@ float CheatImpulse(float i)
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_CLONE_STANDING.impulse:
-			IS_CHEAT(i, 0, 0);
+			IS_CHEAT(imp, 0, 0);
 			CopyBody(0);
 			self.lip += 1;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_GIVE_ALL.impulse:
-			IS_CHEAT(i, 0, 0);
+			IS_CHEAT(imp, 0, 0);
 			CheatCommand(tokenize_console("give all"));
 			break; // already counted as cheat
 		case CHIMPULSE_SPEEDRUN.impulse:
-			IS_CHEAT(i, 0, 0);
+			IS_CHEAT(imp, 0, 0);
 			if(self.personal)
 			{
 				self.speedrunning = true;
@@ -234,7 +234,7 @@ float CheatImpulse(float i)
 				sprint(self, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
 			break;
 		case CHIMPULSE_TELEPORT.impulse:
-			IS_CHEAT(i, 0, 0);
+			IS_CHEAT(imp, 0, 0);
 			if(self.movetype == MOVETYPE_NOCLIP)
 			{
 				e = find(world, classname, "info_autoscreenshot");
@@ -263,12 +263,9 @@ float CheatImpulse(float i)
 			sprint(self, "Emergency teleport could not find a good location, forget it!\n");
 			break;
 		case CHIMPULSE_R00T.impulse:
-			IS_CHEAT(i, 0, 0);
+			IS_CHEAT(imp, 0, 0);
 			RandomSelection_Init();
-			FOR_EACH_PLAYER(e)
-				if(e.deadflag == DEAD_NO)
-					if(DIFF_TEAM(e, self))
-						RandomSelection_Add(e, 0, string_null, 1, 1);
+			FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO && DIFF_TEAM(it, self), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
