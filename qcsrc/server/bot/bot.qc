@@ -407,10 +407,9 @@ void bot_clientdisconnect()
 		bot_waypoint_queue_owner = world;
 }
 
-void bot_clientconnect()
-{SELFPARAM();
-	if (!IS_BOT_CLIENT(self))
-		return;
+void bot_clientconnect(entity this)
+{
+	if (!IS_BOT_CLIENT(this)) return;
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();
 	self.lag_func = bot_lagfunc;

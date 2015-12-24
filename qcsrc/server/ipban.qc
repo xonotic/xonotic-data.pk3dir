@@ -446,12 +446,11 @@ float Ban_IsClientBanned(entity client, float idx)
 	return false;
 }
 
-float Ban_MaybeEnforceBan(entity client)
+bool Ban_MaybeEnforceBan(entity client)
 {
-	if(Ban_IsClientBanned(client, -1))
+	if (Ban_IsClientBanned(client, -1))
 	{
-		string s;
-		s = strcat("^1NOTE:^7 banned client ", client.netaddress, " just tried to enter\n");
+		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
 		dropclient(client);
 		bprint(s);
 		return true;
@@ -459,11 +458,10 @@ float Ban_MaybeEnforceBan(entity client)
 	return false;
 }
 
-.float ban_checked;
-float Ban_MaybeEnforceBanOnce(entity client)
+.bool ban_checked;
+bool Ban_MaybeEnforceBanOnce(entity client)
 {
-	if(client.ban_checked)
-		return false;
+	if (client.ban_checked) return false;
 	client.ban_checked = true;
 	return Ban_MaybeEnforceBan(client);
 }

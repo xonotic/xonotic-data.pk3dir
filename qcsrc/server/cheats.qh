@@ -9,7 +9,6 @@ float cheatcount_total;
 .float cheatcount;
 void CheatInit();
 void CheatShutdown();
-void CheatInitClient();
 void CheatShutdownClient();
 float CheatImpulse(float i);
 float CheatCommand(float argc);

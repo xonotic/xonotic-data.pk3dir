@@ -419,11 +419,3 @@ void GrappleHookInit()
 		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 4);
 	}
 }
-
-void SetGrappleHookBindings()
-{SELFPARAM();
-	// this function has been modified for Xonotic
-	// don't remove these lines! old server or demos coud overwrite the new aliases
-	stuffcmd(self, "alias +hook +button6\n");
-	stuffcmd(self, "alias -hook -button6\n");
-}

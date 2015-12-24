@@ -58,56 +58,44 @@ void send_CSQC_teamnagger() {
 
 bool ClientData_Send(entity this, entity to, int sf)
 {
-	if(to != self.owner)
-	{
-		error("wtf");
-		return false;
-	}
+	assert(to == this.owner, return false);
 
-	entity e;
-
-	e = to;
-	if(IS_SPEC(to))
-		e = to.enemy;
+	entity e = to;
+	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-
-	if(e.race_completed)
-		sf |= 1; // forced scoreboard
-	if(to.spectatee_status)
-		sf |= 2; // spectator ent number follows
-	if(e.zoomstate)
-		sf |= 4; // zoomed
-	if(e.porto_v_angle_held)
-		sf |= 8; // angles held
+	if (e.race_completed)       sf |= 1; // forced scoreboard
+	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
+	if (e.zoomstate)            sf |= 4; // zoomed
+	if (e.porto_v_angle_held)   sf |= 8; // angles held
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 2)
+	if (sf & 2)
+	{
 		WriteByte(MSG_ENTITY, to.spectatee_status);
-
-	if(sf & 8)
+	}
+	if (sf & 8)
 	{
 		WriteAngle(MSG_ENTITY, e.v_angle.x);
 		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
-
 	return true;
 }
 
-void ClientData_Attach()
-{SELFPARAM();
+void ClientData_Attach(entity this)
+{
 	Net_LinkEntity(this.clientdata = new(clientdata), false, 0, ClientData_Send);
 	make_pure(this.clientdata);
 	self.clientdata.drawonlytoclient = this;
 	self.clientdata.owner = this;
 }
 
-void ClientData_Detach()
-{SELFPARAM();
-	remove(self.clientdata);
-	self.clientdata = world;
+void ClientData_Detach(entity this)
+{
+	remove(this.clientdata);
+	self.clientdata = NULL;
 }
 
 void ClientData_Touch(entity e)
@@ -728,15 +716,15 @@ void SetChangeParms ()
 DecodeLevelParms
 =============
 */
-void DecodeLevelParms ()
-{SELFPARAM();
+void DecodeLevelParms(entity this)
+{
 	// load parms
-	self.parm_idlesince = parm1;
-	if(self.parm_idlesince == -(86400 * 366))
-		self.parm_idlesince = time;
+	this.parm_idlesince = parm1;
+	if (this.parm_idlesince == -(86400 * 366))
+		this.parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
-	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
+	this.parm_idlesince = max(this.parm_idlesince, time - sv_maxidle + 60);
 
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
@@ -994,225 +982,188 @@ void ClientPreConnect ()
 }
 #endif
 
-/*
+/**
 =============
 ClientConnect
 
 Called when a client connects to the server
 =============
 */
-void DecodeLevelParms ();
-void ClientConnect ()
+void ClientConnect()
 {
 	SELFPARAM();
-	ClientState_attach(this);
-	float t;
-
-	if(IS_CLIENT(self))
-	{
-		LOG_INFO("Warning: ClientConnect, but already connected!\n");
-		return;
-	}
-
-	if(Ban_MaybeEnforceBanOnce(self))
-		return;
-
-	DecodeLevelParms();
+	if (Ban_MaybeEnforceBanOnce(this)) return;
+	assert(!IS_CLIENT(this), return);
+	assert(player_count >= 0, player_count = 0);
+	this.classname = "player_joining";
+	this.flags = FL_CLIENT;
 
 #ifdef WATERMARK
-	Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_WATERMARK, WATERMARK);
+	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
 #endif
-
-	self.classname = "player_joining";
-
-	self.flags = FL_CLIENT;
-	self.version_nagtime = time + 10 + random() * 10;
-
-	if(player_count<0)
-	{
-		LOG_TRACE("BUG player count is lower than zero, this cannot happen!\n");
-		player_count = 0;
-	}
+	this.version_nagtime = time + 10 + random() * 10;
 
 	// TODO: xonstat elo.txt support, until then just 404s
-	if(false && IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
+	if (false && IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
 
-	PlayerScore_Attach(self);
-	ClientData_Attach();
-	accuracy_init(self);
-	Inventory_new(self);
+	ClientState_attach(this);
+	// TODO: fold all of these into ClientState
+	DecodeLevelParms(this);
+	PlayerScore_Attach(this);
+	ClientData_Attach(this);
+	accuracy_init(this);
+	Inventory_new(this);
+	playerdemo_init(this);
+	anticheat_init(this);
+	entcs_attach(this);
+	W_HitPlotOpen(this);
 
-	bot_clientconnect();
-
-	playerdemo_init();
-
-	anticheat_init();
+	bot_clientconnect(this);
 
 	// identify the right forced team
-	if(autocvar_g_campaign)
+	if (autocvar_g_campaign)
 	{
-		if(IS_REAL_CLIENT(self)) // only players, not bots
+		if (IS_REAL_CLIENT(this)) // only players, not bots
 		{
-			switch(autocvar_g_campaign_forceteam)
+			switch (autocvar_g_campaign_forceteam)
 			{
-				case 1: self.team_forced = NUM_TEAM_1; break;
-				case 2: self.team_forced = NUM_TEAM_2; break;
-				case 3: self.team_forced = NUM_TEAM_3; break;
-				case 4: self.team_forced = NUM_TEAM_4; break;
-				default: self.team_forced = 0;
+				case 1: this.team_forced = NUM_TEAM_1; break;
+				case 2: this.team_forced = NUM_TEAM_2; break;
+				case 3: this.team_forced = NUM_TEAM_3; break;
+				case 4: this.team_forced = NUM_TEAM_4; break;
+				default: this.team_forced = 0;
 			}
 		}
 	}
-	else if(PlayerInIDList(self, autocvar_g_forced_team_red))
-		self.team_forced = NUM_TEAM_1;
-	else if(PlayerInIDList(self, autocvar_g_forced_team_blue))
-		self.team_forced = NUM_TEAM_2;
-	else if(PlayerInIDList(self, autocvar_g_forced_team_yellow))
-		self.team_forced = NUM_TEAM_3;
-	else if(PlayerInIDList(self, autocvar_g_forced_team_pink))
-		self.team_forced = NUM_TEAM_4;
-	else if(autocvar_g_forced_team_otherwise == "red")
-		self.team_forced = NUM_TEAM_1;
-	else if(autocvar_g_forced_team_otherwise == "blue")
-		self.team_forced = NUM_TEAM_2;
-	else if(autocvar_g_forced_team_otherwise == "yellow")
-		self.team_forced = NUM_TEAM_3;
-	else if(autocvar_g_forced_team_otherwise == "pink")
-		self.team_forced = NUM_TEAM_4;
-	else if(autocvar_g_forced_team_otherwise == "spectate")
-		self.team_forced = -1;
-	else if(autocvar_g_forced_team_otherwise == "spectator")
-		self.team_forced = -1;
-	else
-		self.team_forced = 0;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_red))    this.team_forced = NUM_TEAM_1;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_blue))   this.team_forced = NUM_TEAM_2;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_yellow)) this.team_forced = NUM_TEAM_3;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_pink))   this.team_forced = NUM_TEAM_4;
+	else switch (autocvar_g_forced_team_otherwise)
+	{
+		default: this.team_forced = 0; break;
+		case "red": this.team_forced = NUM_TEAM_1; break;
+		case "blue": this.team_forced = NUM_TEAM_2; break;
+		case "yellow": this.team_forced = NUM_TEAM_3; break;
+		case "pink": this.team_forced = NUM_TEAM_4; break;
+		case "spectate":
+		case "spectator":
+			this.team_forced = -1;
+			break;
+	}
+	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-	if(!teamplay)
-		if(self.team_forced > 0)
-			self.team_forced = 0;
+	JoinBestTeam(this, false, false); // if the team number is valid, keep it
 
-	JoinBestTeam(self, false, false); // if the team number is valid, keep it
-
-	if((autocvar_sv_spectate == 1) || autocvar_g_campaign || self.team_forced < 0) {
-		self.classname = STR_OBSERVER;
+	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
+		this.classname = STR_OBSERVER;
 	} else {
-		if(teamplay)
+		if (!teamplay || autocvar_g_balance_teams)
 		{
-			if(autocvar_g_balance_teams)
-			{
-				self.classname = STR_PLAYER;
-				campaign_bots_may_start = 1;
-			}
-			else
-			{
-				self.classname = STR_OBSERVER; // do it anyway
-			}
+			this.classname = STR_PLAYER;
+			campaign_bots_may_start = 1;
 		}
 		else
 		{
-			self.classname = STR_PLAYER;
-			campaign_bots_may_start = 1;
+			this.classname = STR_OBSERVER; // do it anyway
 		}
 	}
 
-	self.playerid = (playerid_last = playerid_last + 1);
+	this.playerid = ++playerid_last;
 
-	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", self.playerid));
+	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
-    if(IS_BOT_CLIENT(self))
-        PlayerStats_GameReport_AddPlayer(self);
+	// always track bots, don't ask for cl_allow_uidtracking
+    if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
 
-	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(etof(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
+	if (autocvar_sv_eventlog)
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", this.netname));
 
-	LogTeamchange(self.playerid, self.team, 1);
+	LogTeamchange(this.playerid, this.team, 1);
 
-	self.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+	this.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
-	self.netname_previous = strzone(self.netname);
+	this.netname_previous = strzone(this.netname);
 
-	if(IS_PLAYER(self) && teamplay)
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(self, INFO_JOIN_CONNECT_TEAM_), self.netname);
-	else
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_CONNECT, self.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, (teamplay ? APP_TEAM_ENT_4(this, INFO_JOIN_CONNECT_TEAM_) : INFO_JOIN_CONNECT), this.netname);
 
-	stuffcmd(self, strcat(clientstuff, "\n"));
-	stuffcmd(self, "cl_particles_reloadeffects\n"); // TODO do we still need this?
+	stuffcmd(this, clientstuff, "\n");
+	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
 
-	FixClientCvars(self);
+	FixClientCvars(this);
 
-	// spawnfunc_waypoint sprites
-	WaypointSprite_InitClient(self);
-
-	// Wazat's grappling hook
-	SetGrappleHookBindings();
+	// Grappling hook
+	stuffcmd(this, "alias +hook +button6\n");
+	stuffcmd(this, "alias -hook -button6\n");
 
 	// Jetpack binds
-	stuffcmd(self, "alias +jetpack +button10\n");
-	stuffcmd(self, "alias -jetpack -button10\n");
+	stuffcmd(this, "alias +jetpack +button10\n");
+	stuffcmd(this, "alias -jetpack -button10\n");
 
 	// get version info from player
-	stuffcmd(self, "cmd clientversion $gameversion\n");
+	stuffcmd(this, "cmd clientversion $gameversion\n");
 
 	// get other cvars from player
 	GetCvars(0);
 
 	// notify about available teams
-	if(teamplay)
+	if (teamplay)
 	{
-		CheckAllowedTeams(self);
-		t = 0; if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
-		stuffcmd(self, strcat("set _teams_available ", ftos(t), "\n"));
+		CheckAllowedTeams(this);
+		int t = 0;
+		if (c1 >= 0) t |= BIT(0);
+		if (c2 >= 0) t |= BIT(1);
+		if (c3 >= 0) t |= BIT(2);
+		if (c4 >= 0) t |= BIT(3);
+		stuffcmd(this, sprintf("set _teams_available %d\n", t));
 	}
 	else
-		stuffcmd(self, "set _teams_available 0\n");
-
-	entcs_attach(self);
+	{
+		stuffcmd(this, "set _teams_available 0\n");
+	}
 
 	bot_relinkplayerlist();
 
-	self.spectatortime = time;
-	if(blockSpectators)
+	this.spectatortime = time;
+	if (blockSpectators)
 	{
-		Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 	}
 
-	self.jointime = time;
-	self.allowed_timeouts = autocvar_sv_timeout_number;
+	this.jointime = time;
+	this.allowed_timeouts = autocvar_sv_timeout_number;
 
-	if(IS_REAL_CLIENT(self))
+	if (IS_REAL_CLIENT(this))
 	{
-		if(!autocvar_g_campaign)
+		if (!autocvar_g_campaign)
 		{
-			self.motd_actived_time = -1;
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
+			this.motd_actived_time = -1;
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(g_weaponarena_weapons == WEPSET(TUBA))
-			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
+		if (g_weaponarena_weapons == WEPSET(TUBA))
+			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 	}
 
-	if(!sv_foginterval && world.fog != "")
-		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
+	if (!sv_foginterval && world.fog != "")
+		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	W_HitPlotOpen(self);
+	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)))
+		if (!g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
+			send_CSQC_teamnagger();
 
-	if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
-		send_CSQC_teamnagger();
+	CSQCMODEL_AUTOINIT(this);
 
-	CheatInitClient();
+	this.model_randomizer = random();
 
-	CSQCMODEL_AUTOINIT(self);
+	if (IS_REAL_CLIENT(this))
+		sv_notice_join(this);
 
-	self.model_randomizer = random();
+	FOREACH_ENTITY_FLOAT(init_for_player_needed, true, {
+		WITH(entity, self, it, it.init_for_player(it));
+	});
 
-	if(IS_REAL_CLIENT(self))
-		sv_notice_join(self);
-
-	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
-		WITH(entity, self, e, e.init_for_player(this));
-	}
-
-	MUTATOR_CALLHOOK(ClientConnect, self);
+	MUTATOR_CALLHOOK(ClientConnect, this);
 }
 /*
 =============
@@ -1285,7 +1236,7 @@ void ClientDisconnect ()
 
 	accuracy_free(self);
 	Inventory_delete(self);
-	ClientData_Detach();
+	ClientData_Detach(this);
 	PlayerScore_Detach(self);
 
 	if(self.netname_previous)

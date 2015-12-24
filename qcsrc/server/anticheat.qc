@@ -239,10 +239,10 @@ void anticheat_endframe()
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }
 
-void anticheat_init()
-{SELFPARAM();
-	self.anticheat_speedhack_offset = 0;
-	self.anticheat_jointime = servertime;
+void anticheat_init(entity this)
+{
+	this.anticheat_speedhack_offset = 0;
+	this.anticheat_jointime = servertime;
 }
 
 void anticheat_shutdown()
