@@ -367,10 +367,10 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 					if (arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
 
-					FOR_EACH_MONSTER(mon)
-					{
-						if (mon.realowner == caller) ++tmp_moncount;
-					}
+					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+						if(it.realowner == caller)
+							++tmp_moncount;
+					));
 
 					if (!autocvar_g_monsters) { print_to(caller, "Monsters are disabled"); return; }
 					if (autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { print_to(caller, "Monster spawning is disabled"); return; }
@@ -438,13 +438,11 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(ret_string, "\n"); return; }
 
 					int tmp_remcount = 0;
-					entity tmp_entity;
 
-					FOR_EACH_MONSTER(tmp_entity)
-					{
-						Monster_Remove(tmp_entity);
+					FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+						Monster_Remove(it);
 						++tmp_remcount;
-					}
+					));
 
 					monsters_total = monsters_killed = totalspawned = 0;
 

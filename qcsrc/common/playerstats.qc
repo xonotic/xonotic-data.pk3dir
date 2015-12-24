@@ -163,35 +163,33 @@ void PlayerStats_GameReport(float finished)
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
-	entity p;
-	FOR_EACH_CLIENT(p)
-	{
+	FOREACH_CLIENT(true, LAMBDA(
 		// add personal score rank
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_RANK, p.score_dummyfield);
+		PS_GR_P_ADDVAL(it, PLAYERSTATS_RANK, it.score_dummyfield);
 
 		// scoreboard data
-		if(p.scoreboard_pos)
+		if(it.scoreboard_pos)
 		{
 			// scoreboard is valid!
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
 			// add scoreboard position
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
 
 			// add scoreboard data
-			PlayerScore_PlayerStats(p);
+			PlayerScore_PlayerStats(it);
 
 			// if the match ended normally, add winning info
 			if(finished)
 			{
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_WINS, p.winning);
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_MATCHES, 1);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_WINS, it.winning);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_MATCHES, 1);
 			}
 		}
 
 		// collect final player information
-		PlayerStats_GameReport_FinalizePlayer(p);
-	}
+		PlayerStats_GameReport_FinalizePlayer(it);
+	));
 
 	if(autocvar_g_playerstats_gamereport_uri != "")
 	{

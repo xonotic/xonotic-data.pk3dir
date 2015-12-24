@@ -39,7 +39,7 @@ const string STR_OBSERVER = "observer";
 		} \
 	} MACRO_END
 
-#define FOR_EACH_MONSTER(v) for (v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
+// NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(yourcode));
 
 #include "../common/effects/all.qh"
 #include "../common/models/all.qh"

@@ -109,11 +109,10 @@
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
 		if (!IS_REAL_CLIENT(player)) return;
-		FOR_EACH_CLIENT(e)
-		{
-			assert(e.entcs);
-			_entcs_send(e.entcs, msg_entity = player, BITS(23), MSG_ONE);
-		}
+		FOREACH_CLIENT(true, LAMBDA(
+			assert(it.entcs);
+			_entcs_send(it.entcs, msg_entity = player, BITS(23), MSG_ONE);
+		));
 	}
 
 	void entcs_detach(entity player)
