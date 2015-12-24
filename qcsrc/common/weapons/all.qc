@@ -194,7 +194,7 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 void W_RandomWeapons(entity e, float n)
 {
-	int i, j;
+	int i;
 	WepSet remaining;
 	WepSet result;
 	remaining = e.weapons;
@@ -202,9 +202,11 @@ void W_RandomWeapons(entity e, float n)
 	for (i = 0; i < n; ++i)
 	{
 		RandomSelection_Init();
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			if (remaining & WepSet_FromWeapon(Weapons_from(j))) RandomSelection_Add(NULL, j, string_null, 1, 1);
-		Weapon w = Weapons_from(RandomSelection_chosen_float);
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if (remaining & (it.m_wepset))
+				RandomSelection_Add(it, 0, string_null, 1, 1);
+		));
+		Weapon w = RandomSelection_chosen_ent;
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
 	}
