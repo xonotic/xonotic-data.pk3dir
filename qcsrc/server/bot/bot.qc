@@ -132,7 +132,6 @@ void bot_setnameandstuff()
 {SELFPARAM();
 	string readfile, s;
 	float file, tokens, prio;
-	entity p;
 
 	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
 	string name, prefix, suffix;
@@ -169,15 +168,13 @@ void bot_setnameandstuff()
 				continue;
 			s = argv(0);
 			prio = 1;
-			FOR_EACH_CLIENT(p)
-			{
-				if(IS_BOT_CLIENT(p))
-				if(s == p.cleanname)
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+				if(s == it.cleanname)
 				{
 					prio = 0;
 					break;
 				}
-			}
+			));
 			RandomSelection_Add(world, 0, readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
@@ -237,16 +234,13 @@ void bot_setnameandstuff()
 		name = bot_name;
 
 	// number bots with identical names
-	float i;
-	i = 0;
-	FOR_EACH_CLIENT(p)
-	{
-		if(IS_BOT_CLIENT(p))
-			if(p.cleanname == name)
-				++i;
-	}
-	if (i)
-		self.netname = self.netname_freeme = strzone(strcat(prefix, name, "(", ftos(i), ")", suffix));
+	int j = 0;
+	FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+		if(it.cleanname == name)
+			++j;
+	));
+	if (j)
+		self.netname = self.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
 	else
 		self.netname = self.netname_freeme = strzone(strcat(prefix, name, suffix));
 
