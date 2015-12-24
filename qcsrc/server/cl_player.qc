@@ -298,7 +298,6 @@ void calculate_player_respawn_time(entity this)
 void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
 	float take, save, dh, da;
-	int j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -628,15 +627,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		}
 
 		// reset fields the weapons may use just in case
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			Weapon w = Weapons_from(j);
-			w.wr_resetplayer(w);
-			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			it.wr_resetplayer(it);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
-				ATTACK_FINISHED_FOR(self, j, slot) = 0;
+				ATTACK_FINISHED_FOR(self, it.m_id, slot) = 0;
 			}
-		}
+		));
 	}
 }
 
