@@ -139,10 +139,7 @@ void instagib_ammocheck()
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		instagib_stop_countdown(head);
-
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(instagib_stop_countdown(it)));
 	return false;
 }
 
