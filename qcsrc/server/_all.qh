@@ -22,7 +22,7 @@ const string STR_OBSERVER = "observer";
 
 #define FOR_EACH_CLIENTSLOT(v) for (v = world; (v = nextent(v)) && (etof(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if (IS_CLIENT(v))
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if (IS_REAL_CLIENT(v))
+// NOTE: FOR_EACH_REALCLIENT deprecated! Use the following instead: FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(yourcode));
 
 // NOTE: FOR_EACH_PLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(yourcode));
 // NOTE: FOR_EACH_SPEC deprecated! Use the following instead: FOREACH_CLIENT(IS_SPEC(it), LAMBDA(yourcode));
