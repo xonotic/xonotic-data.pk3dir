@@ -244,8 +244,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 {SELFPARAM();
 	if(autocvar_g_overkill_ammo_charge)
 	{
-		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			self.ammo_charge[i] = autocvar_g_overkill_ammo_charge_limit;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(self.ammo_charge[it.m_id] = autocvar_g_overkill_ammo_charge_limit));
 
 		self.ok_use_ammocharge = 1;
 		self.ok_notice_time = time;
