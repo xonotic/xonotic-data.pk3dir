@@ -538,10 +538,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	RemoveGrapplingHook(targ);
 
-	entity head;
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == targ)
-		RemoveGrapplingHook(head);
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
 
 	// add waypoint
 	if(show_waypoint)
@@ -556,7 +553,6 @@ void Unfreeze (entity targ)
 	if(targ.frozen && targ.frozen != 3) // only reset health if target was frozen
 		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
 
-	entity head;
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
@@ -564,9 +560,7 @@ void Unfreeze (entity targ)
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == targ)
-		RemoveGrapplingHook(head);
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
 
 	// remove the ice block
 	if(targ.iceblock)
@@ -1233,20 +1227,18 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = true;
 
-	if (!IS_INDEPENDENT_PLAYER(e))
+	if(!IS_INDEPENDENT_PLAYER(e))
 	if(!e.frozen)
-	FOR_EACH_PLAYER(other) if(e != other)
-	{
-		if(IS_PLAYER(other))
-		if(other.deadflag == DEAD_NO)
-		if (!IS_INDEPENDENT_PLAYER(other))
-		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
-		{
-			t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
-			d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
-			Fire_AddDamage(other, o, d, t, DEATH_FIRE.m_id);
-		}
-	}
+		FOREACH_CLIENT(IS_PLAYER(it) && it != e, LAMBDA(
+			if(it.deadflag == DEAD_NO)
+			if(!IS_INDEPENDENT_PLAYER(it))
+			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
+			{
+				t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
+				d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
+				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
+			}
+		));
 }
 
 void Fire_ApplyEffect(entity e)

@@ -35,9 +35,6 @@ Additionally it moves players back into the past before the trace and restores t
 */
 void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz)
 {
-	entity player;
-	float oldsolid;
-
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
 		lag = 0;
@@ -45,18 +42,18 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
-	oldsolid = source.dphitcontentsmask;
+	int oldsolid = source.dphitcontentsmask;
 	if(source)
 		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	if (lag)
 	{
 		// take players back into the past
-		FOR_EACH_PLAYER(player)
-			if(player != forent)
-				antilag_takeback(player, time - lag);
-		FOR_EACH_MONSTER(player)
-			antilag_takeback(player, time - lag);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, LAMBDA(antilag_takeback(it, time - lag)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != forent)
+				antilag_takeback(it, time - lag);
+		));
 	}
 
 	// do the trace
@@ -68,11 +65,11 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// restore players to current positions
 	if (lag)
 	{
-		FOR_EACH_PLAYER(player)
-			if(player != forent)
-				antilag_restore(player);
-		FOR_EACH_MONSTER(player)
-			antilag_restore(player);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, LAMBDA(antilag_restore(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != forent)
+				antilag_restore(it);
+		));
 	}
 
 	// restore shooter solid type
