@@ -1399,7 +1399,7 @@ void havocbot_role_ons_setrole(entity bot, int role)
 
 void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 {SELFPARAM();
-	entity cp, cp1, cp2, best, pl, wp;
+	entity cp, cp1, cp2, best, wp;
 	float radius, bestvalue;
 	int c;
 	bool found;
@@ -1419,11 +1419,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
-		FOR_EACH_PLAYER(pl)
-		if(SAME_TEAM(pl, self))
-		if(pl.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
-		if(pl.havocbot_ons_target==cp2)
-			++c;
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if(SAME_TEAM(it, self))
+			if(it.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
+			if(it.havocbot_ons_target == cp2)
+				++c;
+		));
 
 		// NOTE: probably decrease the cost of attackable control points
 		cp2.wpcost = c;
@@ -1618,27 +1619,12 @@ void havocbot_role_ons_defense()
 
 void havocbot_ons_reset_role(entity bot)
 {SELFPARAM();
-	entity head;
-	int c = 0;
-
 	if(self.deadflag != DEAD_NO)
 		return;
 
 	bot.havocbot_ons_target = world;
 
 	// TODO: Defend control points or generator if necessary
-
-	// if there is only me on the team switch to offense
-	c = 0;
-	FOR_EACH_PLAYER(head)
-	if(SAME_TEAM(head, self))
-		++c;
-
-	if(c==1)
-	{
-		havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
-		return;
-	}
 
 	havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
 }
