@@ -392,7 +392,6 @@ void WinningConditionHelper()
 {
 	float c;
 	string s;
-	entity p;
 	float fullstatus;
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
@@ -467,14 +466,13 @@ void WinningConditionHelper()
 		WinningConditionHelper_second = world;
 		winnerscorekeeper = world;
 		secondscorekeeper = world;
-		FOR_EACH_PLAYER(p)
-		{
-			sk = p.scorekeeper;
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			sk = it.scorekeeper;
 			c = PlayerScore_Compare(winnerscorekeeper, sk, 1);
 			if(c < 0)
 			{
 				WinningConditionHelper_second = WinningConditionHelper_winner;
-				WinningConditionHelper_winner = p;
+				WinningConditionHelper_winner = it;
 				secondscorekeeper = winnerscorekeeper;
 				winnerscorekeeper = sk;
 			}
@@ -483,11 +481,11 @@ void WinningConditionHelper()
 				c = PlayerScore_Compare(secondscorekeeper, sk, 1);
 				if(c < 0)
 				{
-					WinningConditionHelper_second = p;
+					WinningConditionHelper_second = it;
 					secondscorekeeper = sk;
 				}
 			}
-		}
+		));
 
 		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, 0) == 0);
 		if(WinningConditionHelper_equality)
@@ -529,32 +527,31 @@ void WinningConditionHelper()
 		strunzone(worldstatus);
 	worldstatus = strzone(s);
 
-	FOR_EACH_CLIENT(p)
-	{
+	FOREACH_CLIENT(true, LAMBDA(
 		string s = "";
 		if(fullstatus)
 		{
-			s = GetPlayerScoreString(p, 1);
-			s = strcat(s, IS_REAL_CLIENT(p) ? ":human" : ":bot");
+			s = GetPlayerScoreString(it, 1);
+			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
 			ret_string = string_null;
-			if(!IS_PLAYER(p) && !MUTATOR_CALLHOOK(GetPlayerStatus, p, s))
+			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
 				s = strcat(s, ":spectator");
 			if (ret_string) s = strcat(s, ret_string);
 		}
 		else
 		{
 			ret_string = string_null;
-			if (IS_PLAYER(p) || MUTATOR_CALLHOOK(GetPlayerStatus, p, s))
-				s = GetPlayerScoreString(p, 2);
+			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";
 			if (ret_string) s = strcat(s, ret_string);
 		}
 
-		if(p.clientstatus)
-			strunzone(p.clientstatus);
-		p.clientstatus = strzone(s);
-	}
+		if(it.clientstatus)
+			strunzone(it.clientstatus);
+		it.clientstatus = strzone(s);
+	));
 }
 
 string GetScoreLogLabel(string label, float fl)
@@ -707,8 +704,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 
 	plist = world;
 
-	FOR_EACH_CLIENT(p)
-		p.(field) = 0;
+	FOREACH_CLIENT(true, LAMBDA(it.(field) = 0));
 
 	FOR_EACH_CLIENT(p) if(p.scorekeeper)
 	{
@@ -881,10 +877,10 @@ void Score_NicePrint_Spectator(entity to, entity p)
 void Score_NicePrint(entity to)
 {
 	entity p;
-	float t, i;
+	float i;
 	float w;
 
-	t = 0;
+	int t = 0;
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 			++t;
@@ -906,14 +902,12 @@ void Score_NicePrint(entity to)
 	}
 
 	t = 0;
-	FOR_EACH_CLIENT(p)
-	if (!IS_PLAYER(p))
-	{
+	FOREACH_CLIENT(!IS_PLAYER(it), LAMBDA(
 		if (!t)
 			Score_NicePrint_Spectators(to);
-		Score_NicePrint_Spectator(to, p);
+		Score_NicePrint_Spectator(to, it);
 		t = 1;
-	}
+	));
 }
 
 void PlayerScore_PlayerStats(entity p)

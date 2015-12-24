@@ -1030,11 +1030,8 @@ void race_AbandonRaceCheck(entity p)
 
 void race_StartCompleting()
 {
-	entity p;
 	race_completing = 1;
-	FOR_EACH_PLAYER(p)
-		if(p.deadflag != DEAD_NO)
-			race_AbandonRaceCheck(p);
+	FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag != DEAD_NO, LAMBDA(race_AbandonRaceCheck(it)));
 }
 
 void race_PreparePlayer()
@@ -1079,13 +1076,11 @@ void race_ClearRecords()
 		race_checkpoint_recordholders[i] = string_null;
 	}
 
-	entity e;
-	FOR_EACH_CLIENT(e)
-	{
-		float p = e.race_place;
-		WITH(entity, self, e, race_PreparePlayer());
-		e.race_place = p;
-	}
+	FOREACH_CLIENT(true, LAMBDA(
+		float p = it.race_place;
+		WITH(entity, self, it, race_PreparePlayer());
+		it.race_place = p;
+	));
 }
 
 void race_ImposePenaltyTime(entity pl, float penalty, string reason)
