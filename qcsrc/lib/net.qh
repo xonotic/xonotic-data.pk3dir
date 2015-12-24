@@ -346,20 +346,17 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		}
 
 		// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
-		#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname, statement) \
-			entity varname; varname = msg_entity; \
-			FOR_EACH_REALCLIENT(msg_entity) \
-			if (msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) \
-				statement msg_entity = varname
-		#define WRITESPECTATABLE_MSG_ONE(statement) \
-			MACRO_BEGIN \
-			{ \
-				WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement); \
-			} MACRO_END
-		#define WRITESPECTATABLE(msg, statement) \
-			if (msg == MSG_ONE) WRITESPECTATABLE_MSG_ONE(statement); \
-			else \
-				statement float WRITESPECTATABLE_workaround = 0
+		#define WRITESPECTATABLE_MSG_ONE(statement) MACRO_BEGIN { \
+			entity dst = msg_entity; \
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), { \
+				if (it == dst || (it.classname == STR_SPECTATOR && it.enemy == dst)) \
+				{ \
+					msg_entity = it; \
+					LAMBDA(statement); \
+				} \
+			}); \
+			msg_entity = dst; \
+		} MACRO_END
 	#endif
 #endif
 
