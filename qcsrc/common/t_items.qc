@@ -1,29 +1,34 @@
 #include "t_items.qh"
 
-#include "../common/items/all.qc"
+#include "items/all.qc"
 
 #if defined(SVQC)
 
-    #include "bot/bot.qh"
-    #include "bot/waypoints.qh"
+    #include "../server/bot/bot.qh"
+    #include "../server/bot/waypoints.qh"
 
-    #include "mutators/all.qh"
+    #include "../server/mutators/all.qh"
 
-    #include "weapons/common.qh"
-    #include "weapons/selection.qh"
-    #include "weapons/weaponsystem.qh"
+    #include "../server/weapons/common.qh"
+    #include "../server/weapons/selection.qh"
+    #include "../server/weapons/weaponsystem.qh"
 
-    #include "../common/constants.qh"
-    #include "../common/deathtypes/all.qh"
-    #include "../common/notifications.qh"
-	#include "../common/triggers/subs.qh"
-    #include "../common/util.qh"
+    #include "constants.qh"
+    #include "deathtypes/all.qh"
+    #include "notifications.qh"
+	#include "triggers/subs.qh"
+    #include "util.qh"
 
-    #include "../common/monsters/all.qh"
+    #include "monsters/all.qh"
 
-    #include "../common/weapons/all.qh"
+    #include "weapons/all.qh"
 
     #include "../lib/warpzone/util_server.qh"
+#elif defined(CSQC)
+	#include "physics/movetypes/movetypes.qh"
+	#include "weapons/all.qh"
+	#include "../lib/csqcmodel/cl_model.qh"
+	#include "../lib/csqcmodel/common.qh"
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
@@ -78,9 +83,15 @@ void ItemDrawSimple(entity this)
 
 void Item_PreDraw()
 {SELFPARAM();
-	vector org;
+	if(warpzone_warpzones_exist)
+	{
+		// just incase warpzones were initialized last, reset these
+		self.alpha = 1;
+		self.drawmask = MASK_NORMAL;
+		return;
+	}
 	float alph;
-	org = getpropertyvec(VF_ORIGIN);
+	vector org = getpropertyvec(VF_ORIGIN);
 	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
 		alph = 0;
 	else if(self.fade_start)

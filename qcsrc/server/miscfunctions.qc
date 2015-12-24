@@ -5,7 +5,7 @@
 #include "g_hook.qh"
 #include "ipban.qh"
 #include "mutators/all.qh"
-#include "t_items.qh"
+#include "../common/t_items.qh"
 #include "weapons/accuracy.qh"
 #include "weapons/csqcprojectile.qh"
 #include "weapons/selection.qh"

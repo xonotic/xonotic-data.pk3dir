@@ -5,7 +5,7 @@
 #include "mutators/all.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
-#include "t_items.qh"
+#include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"

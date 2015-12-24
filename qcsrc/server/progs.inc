@@ -31,7 +31,6 @@
 #include "sv_main.qc"
 #include "teamplay.qc"
 #include "t_halflife.qc"
-#include "t_items.qc"
 #include "t_quake3.qc"
 #include "t_quake.qc"
 

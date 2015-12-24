@@ -16,7 +16,6 @@
 #include "shownames.qc"
 #include "teamradar.qc"
 #include "tuba.qc"
-#include "t_items.qc"
 #include "view.qc"
 #include "wall.qc"
 

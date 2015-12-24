@@ -4,7 +4,7 @@
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "teamradar.qh"
-#include "t_items.qh"
+#include "../common/t_items.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mapinfo.qh"

@@ -1,7 +1,7 @@
 #ifndef MISCFUNCTIONS_H
 #define MISCFUNCTIONS_H
 
-#include "t_items.qh"
+#include "../common/t_items.qh"
 
 #include "mutators/events.qh"
 

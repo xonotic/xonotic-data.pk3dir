@@ -30,7 +30,7 @@
     #include "../weapons/tracing.qh"
     #include "../weapons/weaponstats.qh"
     #include "../weapons/weaponsystem.qh"
-    #include "../t_items.qh"
+    #include "../../common/t_items.qh"
     #include "../autocvars.qh"
     #include "../constants.qh"
     #include "../defs.qh"

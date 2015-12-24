@@ -1,7 +1,7 @@
 #include "selection.qh"
 
 #include "weaponsystem.qh"
-#include "../t_items.qh"
+#include "../../common/t_items.qh"
 #include "../../common/constants.qh"
 #include "../../common/util.qh"
 #include "../../common/items/item.qh"

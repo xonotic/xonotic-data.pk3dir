@@ -3,7 +3,7 @@
 #include "bot.qh"
 #include "waypoints.qh"
 
-#include "../t_items.qh"
+#include "../../common/t_items.qh"
 
 #include "../../common/items/all.qh"
 

@@ -17,7 +17,7 @@
 #include "../constants.qh"
 #include "../defs.qh"
 #include "../race.qh"
-#include "../t_items.qh"
+#include "../../common/t_items.qh"
 
 #include "../mutators/all.qh"
 

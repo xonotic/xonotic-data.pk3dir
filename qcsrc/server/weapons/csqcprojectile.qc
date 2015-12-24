@@ -1,6 +1,6 @@
 #include "csqcprojectile.qh"
 
-#include "../t_items.qh"
+#include "../../common/t_items.qh"
 
 #include "../command/common.qh"
 

@@ -5,7 +5,7 @@
 #include "../command/common.qh"
 #include "../mutators/all.qh"
 #include "../round_handler.qh"
-#include "../t_items.qh"
+#include "../../common/t_items.qh"
 #include "../../common/animdecide.qh"
 #include "../../common/constants.qh"
 #include "../../common/monsters/all.qh"

@@ -1,6 +1,6 @@
 #include "common.qh"
 
-#include "../t_items.qh"
+#include "../../common/t_items.qh"
 #include "../../common/constants.qh"
 #include "../../common/deathtypes/all.qh"
 #include "../../common/notifications.qh"

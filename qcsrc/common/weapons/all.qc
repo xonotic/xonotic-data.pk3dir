@@ -31,7 +31,7 @@
     #include "config.qh"
     #include "../../server/weapons/csqcprojectile.qh"
     #include "../../server/weapons/tracing.qh"
-    #include "../../server/t_items.qh"
+    #include "../t_items.qh"
     #include "../../server/autocvars.qh"
     #include "../../server/constants.qh"
     #include "../../server/defs.qh"

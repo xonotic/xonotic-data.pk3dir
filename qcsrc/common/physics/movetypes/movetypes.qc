@@ -6,7 +6,7 @@
 	#include "../../util.qh"
 	#include "movetypes.qh"
 	#include "../../../lib/csqcmodel/common.qh"
-	#include "../../../server/t_items.qh"
+	#include "../../t_items.qh"
 #elif defined(MENUQC)
 #elif defined(SVQC)
 	#include "../../../server/autocvars.qh"

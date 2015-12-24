@@ -31,6 +31,7 @@
 #include "effects/all.qc"
 #include "impulses/all.qc"
 #include "notifications.qc"
+#include "t_items.qc"
 #endif
 
 #include "items/all.qc"

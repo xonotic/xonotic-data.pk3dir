@@ -2,7 +2,7 @@
 
 #include "weaponsystem.qh"
 #include "../mutators/all.qh"
-#include "../t_items.qh"
+#include "../../common/t_items.qh"
 #include "../g_damage.qh"
 #include "../../common/items/item.qh"
 #include "../../common/mapinfo.qh"
