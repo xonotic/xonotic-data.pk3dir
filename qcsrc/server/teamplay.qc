@@ -669,7 +669,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 {
 	float smallestteam, smallestteam_count, steam;
 	float lowest_bot_score, lowest_player_score;
-	entity head, lowest_bot, lowest_player, selected;
+	entity lowest_bot, lowest_player, selected;
 
 	smallestteam = 0;
 	smallestteam_count = 999999999;
@@ -716,28 +716,24 @@ void ShufflePlayerOutOfTeam (float source_team)
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
-	FOR_EACH_PLAYER(head)
-	{
-		if(head.team == steam)
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == steam, LAMBDA(
+		if(it.isbot)
 		{
-			if(head.isbot)
+			if(it.totalfrags < lowest_bot_score)
 			{
-				if(head.totalfrags < lowest_bot_score)
-				{
-					lowest_bot = head;
-					lowest_bot_score = head.totalfrags;
-				}
-			}
-			else
-			{
-				if(head.totalfrags < lowest_player_score)
-				{
-					lowest_player = head;
-					lowest_player_score = head.totalfrags;
-				}
+				lowest_bot = it;
+				lowest_bot_score = it.totalfrags;
 			}
 		}
-	}
+		else
+		{
+			if(it.totalfrags < lowest_player_score)
+			{
+				lowest_player = it;
+				lowest_player_score = it.totalfrags;
+			}
+		}
+	));
 
 	// prefers to move a bot...
 	if(lowest_bot != world)
