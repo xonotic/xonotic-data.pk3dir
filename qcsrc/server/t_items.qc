@@ -532,13 +532,13 @@ void Item_RespawnCountdown ()
 		if(self.waypointsprite_attached)
 		{
 			setself(self.waypointsprite_attached);
-			entity e;
-			FOR_EACH_REALCLIENT(e)
-				if(self.waypointsprite_visible_for_player(e))
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+				if(self.waypointsprite_visible_for_player(it))
 				{
-					msg_entity = e;
+					msg_entity = it;
 					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM);	// play respawn sound
 				}
+			));
 			setself(this);
 
 			WaypointSprite_Ping(self.waypointsprite_attached);

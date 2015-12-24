@@ -287,7 +287,6 @@ void W_Tuba_NoteThink()
 	float vol0, vol1;
 	vector dir0, dir1;
 	vector v;
-	entity e;
 	if(time > self.teleport_time)
 	{
 		W_Tuba_NoteOff();
@@ -295,13 +294,11 @@ void W_Tuba_NoteThink()
 	}
 	self.nextthink = time;
 	dist_mult = WEP_CVAR(tuba, attenuation) / autocvar_snd_soundradius;
-	FOR_EACH_REALCLIENT(e)
-	if(e != self.realowner)
-	{
-		v = self.origin - (e.origin + e.view_ofs);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self.realowner, LAMBDA(
+		v = self.origin - (it.origin + it.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
 		dir0 = normalize(v);
-		v = self.realowner.origin - (e.origin + e.view_ofs);
+		v = self.realowner.origin - (it.origin + it.view_ofs);
 		vol1 = max(0, 1 - vlen(v) * dist_mult);
 		dir1 = normalize(v);
 		if(fabs(vol0 - vol1) > 0.005) // 0.5 percent change in volume
@@ -316,7 +313,7 @@ void W_Tuba_NoteThink()
 			self.SendFlags |= 2;
 			break;
 		}
-	}
+	));
 }
 
 void W_Tuba_NoteOn(float hittype)

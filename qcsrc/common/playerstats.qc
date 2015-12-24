@@ -456,12 +456,10 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 		// server has this disabled, kill the DB and set status to idle
 		if(PS_B_IN_DB >= 0)
 		{
-			entity player;
-
 			db_close(PS_B_IN_DB);
 			PS_B_IN_DB = -1;
 
-			FOR_EACH_REALCLIENT(player) { player.playerstats_basicstatus = PS_B_STATUS_IDLE; }
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(it.playerstats_basicstatus = PS_B_STATUS_IDLE));
 		}
 	}
 }

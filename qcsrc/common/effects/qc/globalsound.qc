@@ -342,10 +342,10 @@
 					if (fake) { msg_entity = this; X(); }
 					else
 					{
-						FOR_EACH_REALCLIENT(msg_entity)
-						{
-							if (!teamplay || msg_entity.team == this.team) X();
-						}
+						FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!teamplay || msg_entity.team == this.team), LAMBDA(
+							msg_entity = it;
+							X();
+						));
 					}
 		#undef X
 					break;
@@ -381,10 +381,10 @@
 					}
 					else
 					{
-						FOR_EACH_REALCLIENT(msg_entity)
-						{
+						FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+							msg_entity = it;
 							X();
-						}
+						));
 					}
 		#undef X
 					break;

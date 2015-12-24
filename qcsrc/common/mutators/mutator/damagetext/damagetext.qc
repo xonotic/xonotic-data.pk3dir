@@ -88,23 +88,24 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const int armor = MUTATOR_ARGV(1, int);
     const int deathtype = MUTATOR_ARGV(2, int);
     const vector location = hit.origin;
-    entity e;
-    FOR_EACH_REALCLIENT(e) if (
-        (SV_DAMAGETEXT_ALL()) ||
-        (SV_DAMAGETEXT_PLAYERS() && e == attacker) ||
-        (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(e) && e.enemy == attacker) ||
-        (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(e))
-    ) {
-        msg_entity = e;
-        WriteHeader(MSG_ONE, damagetext);
-        WriteShort(MSG_ONE, health);
-        WriteShort(MSG_ONE, armor);
-        WriteEntity(MSG_ONE, hit);
-        WriteCoord(MSG_ONE, location.x);
-        WriteCoord(MSG_ONE, location.y);
-        WriteCoord(MSG_ONE, location.z);
-        WriteInt24_t(MSG_ONE, deathtype);
-    }
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+        if (
+            (SV_DAMAGETEXT_ALL()) ||
+            (SV_DAMAGETEXT_PLAYERS() && it == attacker) ||
+            (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(it) && it.enemy == attacker) ||
+            (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
+        ) {
+            msg_entity = it;
+            WriteHeader(MSG_ONE, damagetext);
+            WriteShort(MSG_ONE, health);
+            WriteShort(MSG_ONE, armor);
+            WriteEntity(MSG_ONE, hit);
+            WriteCoord(MSG_ONE, location.x);
+            WriteCoord(MSG_ONE, location.y);
+            WriteCoord(MSG_ONE, location.z);
+            WriteInt24_t(MSG_ONE, deathtype);
+        }
+    ));
 }
 #endif
 

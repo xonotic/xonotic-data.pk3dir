@@ -103,14 +103,7 @@ void ClientData_Touch(entity e)
 	e.clientdata.SendFlags = 1;
 
 	// make it spectatable
-	entity e2;
-	FOR_EACH_REALCLIENT(e2)
-	{
-		if(e2 != e)
-			if(IS_SPEC(e2))
-				if(e2.enemy == e)
-					e2.clientdata.SendFlags = 1;
-	}
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(it.clientdata.SendFlags = 1));
 }
 
 .string netname_previous;

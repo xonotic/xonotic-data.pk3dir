@@ -161,13 +161,8 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 {SELFPARAM();
-	entity e;
 	if(restart_mapalreadyrestarted || (time < game_starttime))
-	FOR_EACH_CLIENT(e)
-	if(IS_PLAYER(e))
-	{
-		WITH(entity, self, e, PlayerScore_Add(e, SP_LMS_LIVES, LMS_NewPlayerLives()));
-	}
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(WITH(entity, self, it, PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives()))));
 
 	return false;
 }
@@ -343,12 +338,10 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	entity head;
-	FOR_EACH_REALCLIENT(head)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		++bot_activerealplayers;
 		++bot_realplayers;
-	}
+	));
 
 	return true;
 }

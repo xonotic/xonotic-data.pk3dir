@@ -30,10 +30,7 @@ void sv_notice_to(entity _to, string _notice, float _howlong, float _modal)
 
 void sv_notice_toall(string _notice, float _howlong, float _modal)
 {
-    entity _head;
-    FOR_EACH_REALCLIENT(_head)
-        sv_notice_to(_head, _notice, _howlong, _modal);
-
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(sv_notice_to(it, _notice, _howlong, _modal)));
 }
 
 #endif // SVQC

@@ -99,8 +99,7 @@ string GameTypeVote_MapInfo_FixName(string m)
 
 void MapVote_ClearAllVotes()
 {
-	FOR_EACH_CLIENT(other)
-		other.mapvote = 0;
+	FOREACH_CLIENT(true, LAMBDA(it.mapvote = 0));
 }
 
 void MapVote_UnzoneStrings()
@@ -454,8 +453,7 @@ float MapVote_Finished(float mappos)
 			GameLogEcho(strcat(":vote:suggestion_accepted:", mapvote_maps[mappos]));
 	}
 
-	FOR_EACH_REALCLIENT(other)
-		FixClientCvars(other);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(FixClientCvars(it)));
 
 	if(gametypevote)
 	{
@@ -494,16 +492,15 @@ void MapVote_CheckRules_1()
 		}
 
 	mapvote_voters = 0;
-	FOR_EACH_REALCLIENT(other)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		++mapvote_voters;
-		if(other.mapvote)
+		if(it.mapvote)
 		{
-			i = other.mapvote - 1;
-			//dprint("Player ", other.netname, " vote = ", ftos(other.mapvote - 1), "\n");
+			i = it.mapvote - 1;
+			//dprint("Player ", it.netname, " vote = ", ftos(it.mapvote - 1), "\n");
 			mapvote_selections[i] = mapvote_selections[i] + 1;
 		}
-	}
+	));
 }
 
 float MapVote_CheckRules_2()
@@ -604,36 +601,33 @@ void MapVote_Tick()
 		return;
 
 	totalvotes = 0;
-	FOR_EACH_REALCLIENT(other)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		// hide scoreboard again
-		if(other.health != 2342)
+		if(it.health != 2342)
 		{
-			other.health = 2342;
-			other.impulse = 0;
-			if(IS_REAL_CLIENT(other))
-			{
-				msg_entity = other;
-				WriteByte(MSG_ONE, SVC_FINALE);
-				WriteString(MSG_ONE, "");
-			}
+			it.health = 2342;
+			it.impulse = 0;
+
+			msg_entity = it;
+			WriteByte(MSG_ONE, SVC_FINALE);
+			WriteString(MSG_ONE, "");
 		}
 
 		// clear possibly invalid votes
-		if ( !(mapvote_maps_flags[other.mapvote-1] & GTV_AVAILABLE) )
-			other.mapvote = 0;
+		if ( !(mapvote_maps_flags[it.mapvote-1] & GTV_AVAILABLE) )
+			it.mapvote = 0;
 		// use impulses as new vote
-		if(other.impulse >= 1 && other.impulse <= mapvote_count)
-			if( mapvote_maps_flags[other.impulse - 1] & GTV_AVAILABLE )
+		if(it.impulse >= 1 && it.impulse <= mapvote_count)
+			if( mapvote_maps_flags[it.impulse - 1] & GTV_AVAILABLE )
 			{
-				other.mapvote = other.impulse;
-				MapVote_TouchVotes(other);
+				it.mapvote = it.impulse;
+				MapVote_TouchVotes(it);
 			}
-		other.impulse = 0;
+		it.impulse = 0;
 
-		if(other.mapvote)
+		if(it.mapvote)
 			++totalvotes;
-	}
+	));
 
 	MapVote_CheckRules_1(); // just count
 }

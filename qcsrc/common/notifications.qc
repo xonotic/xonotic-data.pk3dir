@@ -2083,14 +2083,12 @@ void Send_Notification(
 			}
 			default:
 			{
-				entity to;
-				FOR_EACH_REALCLIENT(to)
-				{
-					if(Notification_ShouldSend(broadcast, to, client))
+				FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+					if(Notification_ShouldSend(broadcast, it, client))
 					{
-						RECURSE_FROM_CHOICE(to, continue);
+						RECURSE_FROM_CHOICE(it, continue);
 					}
-				}
+				));
 				break;
 			}
 		}
