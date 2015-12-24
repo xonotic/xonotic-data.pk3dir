@@ -46,6 +46,10 @@ void CSQC_Shutdown();
 //   trace_endpos: visorigin 
 .vector camera_transform(vector pos, vector ang);
 
+// control start position of sound()
+// calculated as ofs = time - sound_starttime 
+float sound_starttime;
+
 ```
 
 # SVQC
