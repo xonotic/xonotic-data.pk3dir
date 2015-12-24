@@ -156,11 +156,6 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {SELFPARAM();
-	entity head;
-	int t;
-	float distance;
-	noref bool noteam = ((self.team == 0) || !teamplay);
-
 	if (autocvar_bot_nofire)
 		return;
 
@@ -168,45 +163,44 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 	if(self.waterlevel>WATERLEVEL_WETFEET)
 		return;
 
-	FOR_EACH_PLAYER(head)
-	{
+	float distance;
+	int t;
+
+	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(it), LAMBDA(
 		// TODO: Merge this logic with the bot_shouldattack function
-		if(bot_shouldattack(head))
+		distance = vlen(it.origin - org);
+		if (distance < 100 || distance > sradius)
+			continue;
+
+		// rate only visible enemies
+		/*
+		traceline(self.origin + self.view_ofs, it.origin, MOVE_NOMONSTERS, self);
+		if (trace_fraction < 1 || trace_ent != it)
+			continue;
+		*/
+
+		if((it.flags & FL_INWATER) || (it.flags & FL_PARTIALGROUND))
+			continue;
+
+		// not falling
+		if((it.flags & FL_ONGROUND) == 0)
 		{
-			distance = vlen(head.origin - org);
-			if (distance < 100 || distance > sradius)
+			traceline(it.origin, it.origin + '0 0 -1500', true, world);
+			t = pointcontents(trace_endpos + '0 0 1');
+			if(t != CONTENT_SOLID )
+			if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)
 				continue;
-
-			// rate only visible enemies
-			/*
-			traceline(self.origin + self.view_ofs, head.origin, MOVE_NOMONSTERS, self);
-			if (trace_fraction < 1 || trace_ent != head)
+			if(tracebox_hits_trigger_hurt(it.origin, it.mins, it.maxs, trace_endpos))
 				continue;
-			*/
-
-			if((head.flags & FL_INWATER) || (head.flags & FL_PARTIALGROUND))
-				continue;
-
-			// not falling
-			if((head.flags & FL_ONGROUND) == 0)
-			{
-				traceline(head.origin, head.origin + '0 0 -1500', true, world);
-				t = pointcontents(trace_endpos + '0 0 1');
-				if( t != CONTENT_SOLID )
-				if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)
-					continue;
-				if(tracebox_hits_trigger_hurt(head.origin, head.mins, head.maxs, trace_endpos))
-					continue;
-			}
-
-			// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
-			//		 adding a player as a goal seems to be quite dangerous, especially on space maps
-			//		 remove hack in navigation_poptouchedgoals() after performing this change
-
-			t = (self.health + self.armorvalue ) / (head.health + head.armorvalue );
-			navigation_routerating(head, t * ratingscale, 2000);
 		}
-	}
+
+		// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
+		//		 adding a player as a goal seems to be quite dangerous, especially on space maps
+		//		 remove hack in navigation_poptouchedgoals() after performing this change
+
+		t = (self.health + self.armorvalue ) / (it.health + it.armorvalue );
+		navigation_routerating(it, t * ratingscale, 2000);
+	));
 }
 
 // legacy bot role for standard gamemodes
