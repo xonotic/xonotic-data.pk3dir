@@ -642,8 +642,6 @@ float Item_GiveTo(entity item, entity player)
 {
 	float _switchweapon;
 	float pickedup;
-	float it;
-	float i;
 
 	// if nothing happens to player, just return without taking the item
 	pickedup = false;
@@ -669,26 +667,28 @@ float Item_GiveTo(entity item, entity player)
 
 	if (item.itemdef.instanceOfWeaponPickup)
 	{
-		WepSet it;
-		it = item.weapons;
-		it &= ~player.weapons;
+		WepSet w;
+		w = item.weapons;
+		w &= ~player.weapons;
 
-		if (it || (item.spawnshieldtime && item.pickup_anyway > 0))
+		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(it & WepSet_FromWeapon(Weapons_from(i)))
-			{
-				W_DropEvent(wr_pickup, player, i, item);
-				W_GiveWeapon(player, i);
-			}
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if(w & (it.m_wepset))
+				{
+					W_DropEvent(wr_pickup, player, it.m_id, item);
+					W_GiveWeapon(player, it.m_id);
+				}
+			));
 		}
 	}
 
-	if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
+	int its;
+	if((its = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
 	{
 		pickedup = true;
-		player.items |= it;
+		player.items |= its;
 		Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_ITEM_WEAPON_GOT, item.netname);
 	}
 
@@ -931,32 +931,28 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
-	float c, i;
+	float c;
 	float need_shells = false, need_nails = false, need_rockets = false, need_cells = false, need_plasma = false, need_fuel = false;
-	entity wi;
 	c = 0;
 
 	// Detect needed ammo
-	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
-	{
-		wi = Weapons_from(i);
-
-		if (!(player.weapons & (wi.m_wepset)))
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if(!(player.weapons & (it.m_wepset)))
 			continue;
 
-		if(wi.items & ITEM_Shells.m_itemid)
+		if(it.items & ITEM_Shells.m_itemid)
 			need_shells = true;
-		else if(wi.items & ITEM_Bullets.m_itemid)
+		else if(it.items & ITEM_Bullets.m_itemid)
 			need_nails = true;
-		else if(wi.items & ITEM_Rockets.m_itemid)
+		else if(it.items & ITEM_Rockets.m_itemid)
 			need_rockets = true;
-		else if(wi.items & ITEM_Cells.m_itemid)
+		else if(it.items & ITEM_Cells.m_itemid)
 			need_cells = true;
-		else if(wi.items & ITEM_Plasma.m_itemid)
+		else if(it.items & ITEM_Plasma.m_itemid)
 			need_plasma = true;
-		else if(wi.items & ITEM_JetpackFuel.m_itemid)
+		else if(it.items & ITEM_JetpackFuel.m_itemid)
 			need_fuel = true;
-	}
+	));
 
 	// TODO: figure out if the player even has the weapon this ammo is for?
 	// may not affect strategy much though...
@@ -1419,8 +1415,7 @@ void target_items_use()
 
 spawnfunc(target_items)
 {
-	float n, i, j;
-	entity e;
+	float n, i;
 	string s;
 
 	self.use = target_items_use;
@@ -1450,21 +1445,16 @@ spawnfunc(target_items)
 			else if(argv(i) == "fuel_regen")             self.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-				{
-					e = Weapons_from(j);
+				FOREACH(Weapons, it != WEP_Null, LAMBDA(
 					s = W_UndeprecateName(argv(i));
-					if(s == e.netname)
+					if(s == it.netname)
 					{
-						self.weapons |= (e.m_wepset);
-						if(self.spawnflags == 0 || self.spawnflags == 2) {
-							e.wr_init(e);
-						}
+						self.weapons |= (it.m_wepset);
+						if(self.spawnflags == 0 || self.spawnflags == 2)
+							it.wr_init(it);
 						break;
 					}
-				}
-				if(j > WEP_LAST)
-					LOG_INFO("target_items: invalid item ", argv(i), "\n");
+				));
 			}
 		}
 
@@ -1511,12 +1501,7 @@ spawnfunc(target_items)
 		if(self.ammo_fuel != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_fuel), "fuel");
 		if(self.health != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "health");
 		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "armor");
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = Weapons_from(j);
-			if(e == WEP_Null) continue;
-			self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (e.m_wepset)), e.netname);
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (it.m_wepset)), it.netname)));
 	}
 	self.netname = strzone(self.netname);
 	//print(self.netname, "\n");
@@ -1524,15 +1509,13 @@ spawnfunc(target_items)
 	n = tokenize_console(self.netname);
 	for(i = 0; i < n; ++i)
 	{
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = Weapons_from(j);
-			if(argv(i) == e.netname)
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(argv(i) == it.netname)
 			{
-				e.wr_init(e);
+				it.wr_init(it);
 				break;
 			}
-		}
+		));
 	}
 }
 
@@ -1623,9 +1606,8 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 }
 float GiveItems(entity e, float beginarg, float endarg)
 {SELFPARAM();
-	float got, i, j, val, op;
+	float got, i, val, op;
 	float _switchweapon;
-	entity wi;
 	string cmd;
 
 	val = 999;
@@ -1694,13 +1676,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, health, op, val);
 				got += GiveValue(e, armorvalue, op, val);
 			case "allweapons":
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-				{
-					wi = Weapons_from(j);
-					if(wi == WEP_Null) continue;
-					if (!(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-						got += GiveWeapon(e, j, op, val);
-				}
+				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+					if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+						got += GiveWeapon(e, it.m_id, op, val);
+				));
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
 				got += GiveValue(e, ammo_plasma, op, val);
@@ -1759,17 +1738,13 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, ammo_fuel, op, val);
 				break;
 			default:
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-				{
-					wi = Weapons_from(j);
-					if(cmd == wi.netname)
+				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+					if(cmd == it.netname)
 					{
-						got += GiveWeapon(e, j, op, val);
+						got += GiveWeapon(e, it.m_id, op, val);
 						break;
 					}
-				}
-				if(j > WEP_LAST)
-					LOG_INFO("give: invalid item ", cmd, "\n");
+				));
 				break;
 		}
 		val = 999;
@@ -1780,16 +1755,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND(POWERUP), SND(POWEROFF));
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND(POWERUP), SND(POWEROFF));
 	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND(ITEMPICKUP), string_null);
-	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-	{
-		wi = Weapons_from(j);
-		if (wi == WEP_Null) continue;
-		POSTGIVE_WEAPON(e, Weapons_from(j), SND(WEAPONPICKUP), string_null);
-		if (!(save_weapons & (wi.m_wepset)))
-			if(e.weapons & (wi.m_wepset)) {
-				wi.wr_init(wi);
-			}
-	}
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		POSTGIVE_WEAPON(e, it, SND(WEAPONPICKUP), string_null);
+		if(!(save_weapons & (it.m_wepset)))
+			if(e.weapons & (it.m_wepset))
+				it.wr_init(it);
+	));
 	POSTGIVE_VALUE(e, strength_finished, 1, SND(POWERUP), SND(POWEROFF));
 	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", SND(POWEROFF));
 	POSTGIVE_VALUE(e, ammo_nails, 0, SND(ITEMPICKUP), string_null);
