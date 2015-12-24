@@ -1310,7 +1310,7 @@ bool Onslaught_CheckPlayers()
 void Onslaught_RoundStart()
 {
 	entity tmp_entity;
-	FOR_EACH_PLAYER(tmp_entity) { tmp_entity.player_blocked = false; }
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.player_blocked = false));
 
 	for(tmp_entity = ons_worldcplist; tmp_entity; tmp_entity = tmp_entity.ons_worldcpnext)
 		tmp_entity.sprite.SendFlags |= 16;
@@ -1395,19 +1395,6 @@ void havocbot_role_ons_setrole(entity bot, int role)
 			break;
 	}
 	ons_debug("\n");
-}
-
-int havocbot_ons_teamcount(entity bot, int role)
-{SELFPARAM();
-	int c = 0;
-	entity head;
-
-	FOR_EACH_PLAYER(head)
-	if(SAME_TEAM(head, self))
-	if(head.havocbot_role_flags & role)
-		++c;
-
-	return c;
 }
 
 void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
