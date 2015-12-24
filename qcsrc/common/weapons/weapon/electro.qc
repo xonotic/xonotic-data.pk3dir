@@ -465,7 +465,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 				if(!ammo_amount)
 				{
-					thiswep.wr_reload(thiswep);
+					thiswep.wr_reload(thiswep, actor, weaponentity);
 					return;
 				}
 			}
@@ -515,7 +515,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 		{
 			self.electro_secondarytime = time;
 		}
-		METHOD(Electro, wr_reload, void(entity thiswep))
+		METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
 		}

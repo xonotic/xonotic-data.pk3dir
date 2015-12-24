@@ -234,7 +234,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 				}
 
 			if(autocvar_g_balance_vortex_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else
 			{
 				if(fire & 1)
@@ -354,7 +354,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 			}
 			self.vortex_lasthit = 0;
 		}
-		METHOD(Vortex, wr_reload, void(entity thiswep))
+		METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
 		}

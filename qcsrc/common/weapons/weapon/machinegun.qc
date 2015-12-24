@@ -252,7 +252,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(machinegun, reload_ammo) && actor.clip_load < min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo))) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else
 			if(WEP_CVAR(machinegun, mode) == 1)
 			{
@@ -334,7 +334,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 			}
 			return ammo_amount;
 		}
-		METHOD(MachineGun, wr_reload, void(entity thiswep))
+		METHOD(MachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND(RELOAD));
 		}

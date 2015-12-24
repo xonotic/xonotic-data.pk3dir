@@ -611,7 +611,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 		METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_seeker_reload_ammo && actor.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else if(fire & 1)
 			{
 				if(WEP_CVAR(seeker, type) == 1)
@@ -682,7 +682,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 			}
 			return ammo_amount;
 		}
-		METHOD(Seeker, wr_reload, void(entity thiswep))
+		METHOD(Seeker, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
 		}

@@ -157,7 +157,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else
 			{
 				if (fire & 1)
@@ -185,7 +185,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		{
 			return false;
 		}
-		METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
 		}

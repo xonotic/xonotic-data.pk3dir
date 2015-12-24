@@ -508,7 +508,7 @@ float W_MineLayer_PlacedMines(float detonate)
 			{
 				// not if we're holding the minelayer without enough ammo, but can detonate existing mines
 				if(!(W_MineLayer_PlacedMines(false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
-					thiswep.wr_reload(thiswep);
+					thiswep.wr_reload(thiswep, actor, weaponentity);
 				}
 			}
 			else if(fire & 1)
@@ -549,7 +549,7 @@ float W_MineLayer_PlacedMines(float detonate)
 		{
 			self.minelayer_mines = 0;
 		}
-		METHOD(MineLayer, wr_reload, void(entity thiswep))
+		METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR(minelayer, ammo), SND(RELOAD));
 		}

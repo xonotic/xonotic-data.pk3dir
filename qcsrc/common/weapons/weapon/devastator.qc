@@ -531,7 +531,7 @@ void W_Devastator_Attack(Weapon thiswep)
 		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else {
 				if(fire & 1)
 				{
@@ -613,7 +613,7 @@ void W_Devastator_Attack(Weapon thiswep)
 			self.lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
 			self.rl_release = 0;
 		}
-		METHOD(Devastator, wr_reload, void(entity thiswep))
+		METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR(devastator, ammo), SND(RELOAD));
 		}

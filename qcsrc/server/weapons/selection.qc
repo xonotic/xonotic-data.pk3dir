@@ -260,7 +260,9 @@ void W_SwitchWeapon(Weapon w)
 			self.selectweapon = w.m_id; // update selectweapon ANYWAY
 	}
 	else if(!forbidWeaponUse(self)) {
-		w.wr_reload(w);
+		entity actor = this;
+		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+		w.wr_reload(w, actor, weaponentity);
 	}
 }
 

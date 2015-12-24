@@ -240,7 +240,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 			{
 				// don't force reload an empty shotgun if its melee attack is active
 				if(WEP_CVAR(shotgun, secondary) < 2) {
-					thiswep.wr_reload(thiswep);
+					thiswep.wr_reload(thiswep, actor, weaponentity);
 				}
 			}
 			else
@@ -307,7 +307,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 				default: return false; // secondary unavailable
 			}
 		}
-		METHOD(Shotgun, wr_reload, void(entity thiswep))
+		METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
 		}

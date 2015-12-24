@@ -338,7 +338,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 		METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_mortar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else if(fire & 1)
 			{
 				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(mortar, refire)))
@@ -383,7 +383,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
 			return ammo_amount;
 		}
-		METHOD(Mortar, wr_reload, void(entity thiswep))
+		METHOD(Mortar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
 		}

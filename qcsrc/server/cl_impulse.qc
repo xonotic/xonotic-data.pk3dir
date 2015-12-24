@@ -218,7 +218,9 @@ IMPULSE(weapon_reload)
 	if (this.deadflag != DEAD_NO) return;
 	if (forbidWeaponUse(this)) return;
 	Weapon w = PS(this).m_weapon;
-	w.wr_reload(w);
+	entity actor = this;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	w.wr_reload(w, actor, weaponentity);
 }
 
 void ImpulseCommands(entity this)

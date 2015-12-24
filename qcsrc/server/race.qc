@@ -171,7 +171,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 
 	if(!spec)
 		msg_entity = e;
-	WRITESPECTATABLE_MSG_ONE({
+	WRITESPECTATABLE_MSG_ONE(msg_entity, {
 		WriteHeader(MSG_ONE, TE_CSQC_RACE);
 		if(spec)
 		{
@@ -236,7 +236,7 @@ void race_SendStatus(float id, entity e)
 	else
 		msg = MSG_ALL;
 	msg_entity = e;
-	WRITESPECTATABLE_MSG_ONE({
+	WRITESPECTATABLE_MSG_ONE(msg_entity, {
 		WriteHeader(msg, TE_CSQC_RACE);
 		WriteByte(msg, RACE_NET_SERVER_STATUS);
 		WriteShort(msg, id);
@@ -444,7 +444,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			msg_entity = e;
 			if(g_race_qualifying)
 			{
-				WRITESPECTATABLE_MSG_ONE({
+				WRITESPECTATABLE_MSG_ONE(msg_entity, {
 					WriteHeader(MSG_ONE, TE_CSQC_RACE);
 					WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
 					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
@@ -472,7 +472,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		if(IS_REAL_CLIENT(e))
 		{
 			msg_entity = e;
-			WRITESPECTATABLE_MSG_ONE({
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE);
 				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
@@ -498,7 +498,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		if(IS_REAL_CLIENT(oth))
 		{
 			msg_entity = oth;
-			WRITESPECTATABLE_MSG_ONE({
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT);
 				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
@@ -531,7 +531,7 @@ void race_ClearTime(entity e)
 		return;
 
 	msg_entity = e;
-	WRITESPECTATABLE_MSG_ONE({
+	WRITESPECTATABLE_MSG_ONE(msg_entity, {
 		WriteHeader(MSG_ONE, TE_CSQC_RACE);
 		WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR); // next
 	});
@@ -1088,7 +1088,7 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 		if(IS_REAL_CLIENT(pl))
 		{
 			msg_entity = pl;
-			WRITESPECTATABLE_MSG_ONE({
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_PENALTY_QUALIFYING);
 				WriteShort(MSG_ONE, TIME_ENCODE(penalty));
@@ -1102,7 +1102,7 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 		if(IS_REAL_CLIENT(pl))
 		{
 			msg_entity = pl;
-			WRITESPECTATABLE_MSG_ONE({
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_PENALTY_RACE);
 				WriteShort(MSG_ONE, TIME_ENCODE(penalty));
