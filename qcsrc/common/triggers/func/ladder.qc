@@ -7,6 +7,9 @@ void func_ladder_touch()
 		return;
 	if(IS_VEHICLE(other))
 		return;
+#elif defined(CSQC)
+	if(!other.isplayermodel)
+		return;
 #endif
 
 	EXACTTRIGGER_TOUCH;
