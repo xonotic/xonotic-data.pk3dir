@@ -163,7 +163,7 @@ void movelib_update(vector dir,float force)
 }
 */
 
-void movelib_beak_simple(float force)
+void movelib_brake_simple(float force)
 {SELFPARAM();
     float mspeed;
     vector mdir;

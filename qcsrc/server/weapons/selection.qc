@@ -17,9 +17,31 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 	WriteByte(MSG_ONE, type);
 }
 
+void Weapon_whereis(Weapon this, entity cl)
+{
+	if (!autocvar_g_showweaponspawns) return;
+	for (entity it = NULL; (it = findfloat(it, weapon, this.m_id)); )
+	{
+		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
+			continue;
+		if (!(it.flags & FL_ITEM))
+			continue;
+		entity wp = WaypointSprite_Spawn(
+			WP_Weapon,
+			1, 0,
+			NULL, it.origin + ('0 0 1' * it.maxs.z) * 1.2,
+			cl, 0,
+			NULL, enemy,
+			0,
+			RADARICON_NONE
+		);
+		wp.wp_extra = this.m_id;
+	}
+}
+
 bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 {
-	float f;
+	float f = 0;
 
 	if (time < cl.hasweapon_complain_spam)
 		complain = 0;
@@ -77,27 +99,7 @@ bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(cl, wpn.m_id, 1);
-
-			if(autocvar_g_showweaponspawns)
-			{
-				for(entity e = world; (e = findfloat(e, weapon, wpn.m_id)); )
-				{
-					if(e.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
-						continue;
-					if(!(e.flags & FL_ITEM))
-						continue;
-					entity wp = WaypointSprite_Spawn(
-						WP_Weapon,
-						1, 0,
-						world, e.origin + ('0 0 1' * e.maxs.z) * 1.2,
-						cl, 0,
-						world, enemy,
-						0,
-						RADARICON_NONE
-					);
-					wp.wp_extra = wpn.m_id;
-				}
-			}
+			Weapon_whereis(wpn, cl);
 		}
 		else
 		{
@@ -234,16 +236,18 @@ void W_SwitchToOtherWeapon(entity pl)
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	Weapon ww;
 	WepSet set = WepSet_FromWeapon(PS(pl).m_weapon);
-	if(pl.weapons & set)
+	if (pl.weapons & set)
 	{
 		pl.weapons &= ~set;
 		ww = w_getbestweapon(pl);
 		pl.weapons |= set;
 	}
 	else
+	{
 		ww = w_getbestweapon(pl);
-	if(ww)
-		W_SwitchWeapon_Force(pl, ww);
+	}
+	if (ww == WEP_Null) return;
+	W_SwitchWeapon_Force(pl, ww);
 }
 
 void W_SwitchWeapon(Weapon w)
@@ -299,11 +303,11 @@ void W_PreviousWeapon(float list)
 }
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon()
-{SELFPARAM();
-	Weapon wep = Weapons_from(self.cnt);
-	if(client_hasweapon(self, wep, true, false))
+void W_LastWeapon(entity this)
+{
+	Weapon wep = Weapons_from(this.cnt);
+	if (client_hasweapon(this, wep, true, false))
 		W_SwitchWeapon(wep);
 	else
-		W_SwitchToOtherWeapon(self);
+		W_SwitchToOtherWeapon(this);
 }

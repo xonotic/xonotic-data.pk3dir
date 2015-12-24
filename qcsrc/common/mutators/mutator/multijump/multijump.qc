@@ -2,7 +2,7 @@
 #ifdef SVQC
 	#include "../../../../server/antilag.qh"
 #endif
-#include "../../../physics.qh"
+#include "../../../physics/player.qh"
 
 
 #if defined(SVQC)

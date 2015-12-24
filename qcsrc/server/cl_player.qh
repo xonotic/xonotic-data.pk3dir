@@ -27,7 +27,7 @@ void PlayerCorpseDamage(entity inflictor, entity attacker, float damage, int dea
 	: (gametype_setting_tmp == 0 || autocvar_g_respawn_delay_forced) ? max(0, autocvar_g_##str) \
 	: gametype_setting_tmp)
 
-void calculate_player_respawn_time();
+void calculate_player_respawn_time(entity this);
 
 void ClientKill_Now_TeamChange();
 

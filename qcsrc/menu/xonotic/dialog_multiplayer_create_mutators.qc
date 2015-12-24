@@ -29,8 +29,7 @@ string weaponarenastring_cvar;
 string WeaponArenaString()
 {
 	string s;
-	float n, i, j;
-	entity e;
+	float n, i;
 	s = cvar_string("g_weaponarena");
 	if(s == "0")
 		return "";
@@ -51,12 +50,10 @@ string WeaponArenaString()
 	s = "";
 	for(i = 0; i < n; ++i)
 	{
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = Weapons_from(j);
-			if(argv(i) == e.netname)
-				s = strcat(s, " & ", e.m_name);
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(argv(i) == it.netname)
+				s = strcat(s, " & ", it.m_name);
+		));
 	}
 	s = sprintf(_("%s Arena"), substring(s, 3, strlen(s) - 3));
 

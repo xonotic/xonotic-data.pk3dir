@@ -72,3 +72,4 @@
 #include "unsafe.qh"
 #include "urllib.qc"
 #include "vector.qh"
+#include "yenc.qh"

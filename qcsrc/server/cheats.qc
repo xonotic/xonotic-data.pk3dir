@@ -1067,7 +1067,8 @@ void DragBox_Think()
 		self.maxs_y = fabs(self.aiment.origin.y - self.enemy.origin.y) * 0.5;
 		self.maxs_z = fabs(self.aiment.origin.z - self.enemy.origin.z) * 0.5;
 		self.mins = -1 * self.maxs;
-		setorigin(self, self.origin); setsize(self, self.mins, self.maxs); // link edict
+		setorigin(self, self.origin);
+		setsize(self, self.mins, self.maxs); // link edict
 	}
 
 	if(self.cnt == -1) // actually race_place -1

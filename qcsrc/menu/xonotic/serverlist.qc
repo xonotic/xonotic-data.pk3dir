@@ -384,54 +384,44 @@ int CheckCategoryForEntry(int entry)
 	return ((impure > autocvar_menu_slist_purethreshold) ? CAT_MODIFIED : CAT_NORMAL);
 }
 
-void XonoticServerList_toggleFavorite(entity me, string srv)
+METHOD(XonoticServerList, toggleFavorite, void(XonoticServerList this, string srv))
 {
-	string s, s0, s1, s2, srv_resolved, p;
-	int i, n;
-	bool f = false;
-	srv_resolved = netaddress_resolve(srv, 26000);
-	p = crypto_getidfp(srv_resolved);
-	s = cvar_string("net_slist_favorites");
-	n = tokenize_console(s);
-	for(i = 0; i < n; ++i)
+	bool adding = true;
+	string srv_resolved = netaddress_resolve(srv, 26000);
+	string p = crypto_getidfp(srv_resolved);
+	string s = cvar_string("net_slist_favorites");
+	string ret = s;
+	for (int i = 0, n = tokenize_console(s); i < n; ++i)
 	{
-		if(substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
+		bool match;
+		if (substring(argv(i), 0, 1) != "[" && strlen(argv(i)) == 44 && strstrofs(argv(i), ".", 0) < 0)
 		{
-			if(p)
-				if(argv(i) != p)
-					continue;
+			// it's a pubkey hash
+			match = (p && p == argv(i));
 		}
 		else
 		{
-			if(srv_resolved != netaddress_resolve(argv(i), 26000))
-				continue;
+			// it's an ip
+			match = (srv_resolved == netaddress_resolve(argv(i), 26000));
 		}
-		s0 = s1 = s2 = "";
-		if(i > 0)
-			s0 = substring(s, 0, argv_end_index(i - 1));
-		if(i < n-1)
-			s2 = substring(s, argv_start_index(i + 1), -1);
-		if(s0 != "" && s2 != "")
-			s1 = " ";
-		cvar_set("net_slist_favorites", strcat(s0, s1, s2));
-		s = cvar_string("net_slist_favorites");
+		if (!match) continue;
+		// on match: remove
+		adding = false;
+		string before = (i > 0) ? substring(s, 0, argv_end_index(i - 1)) : "";
+		string after = (i < n - 1) ? substring(s, argv_start_index(i + 1), -1) : "";
+		s = strcat(before, (before != "" && after != "" ? " " : ""), after);
+		ret = s;
+		// keep searching
+		// TODO: why not break here?
 		n = tokenize_console(s);
-		f = true;
-		--i;
+		--i; // offset the increment that is about to happen
 	}
-
-	if(!f)
+	if (adding)
 	{
-		s1 = "";
-		if(s != "")
-			s1 = " ";
-		if(p)
-			cvar_set("net_slist_favorites", strcat(s, s1, p));
-		else
-			cvar_set("net_slist_favorites", strcat(s, s1, srv));
+		ret = strcat(s, (s != "" ? " " : ""), p ? p : srv);
 	}
-
-	me.refreshServerList(me, REFRESHSERVERLIST_RESORT);
+	cvar_set("net_slist_favorites", ret);
+	this.refreshServerList(this, REFRESHSERVERLIST_RESORT);
 }
 
 void ServerList_Update_favoriteButton(entity btn, entity me)
@@ -965,16 +955,14 @@ void ServerList_Connect_Click(entity btn, entity me)
 		)
 	));
 }
-void ServerList_Favorite_Click(entity btn, entity me)
+void ServerList_Favorite_Click(entity btn, entity this)
 {
-	string ipstr;
-	ipstr = netaddress_resolve(me.ipAddressBox.text, 26000);
-	if(ipstr != "")
-	{
-		m_play_click_sound(MENU_SOUND_SELECT);
-		me.toggleFavorite(me, me.ipAddressBox.text);
-		me.ipAddressBoxFocused = -1;
-	}
+	string addr = this.ipAddressBox.text;
+	string ipstr = netaddress_resolve(addr, 26000);
+	if (ipstr == "") return;
+	m_play_click_sound(MENU_SOUND_SELECT);
+	this.toggleFavorite(this, addr);
+	this.ipAddressBoxFocused = -1;
 }
 void ServerList_Info_Click(entity btn, entity me)
 {

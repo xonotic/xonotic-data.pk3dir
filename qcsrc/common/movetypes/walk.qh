@@ -1,6 +1,0 @@
-#ifndef MOVETYPE_WALK_H
-#define MOVETYPE_WALK_H
-
-void _Movetype_Physics_Walk(entity this, float dt);
-
-#endif

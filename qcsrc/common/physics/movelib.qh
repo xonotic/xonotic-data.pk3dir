@@ -40,7 +40,7 @@ void movelib_move_simple(vector newdir,float velo,float blendrate)
 #define movelib_move_simple_gravity(newdir,velo,blendrate) \
     if(self.flags & FL_ONGROUND) movelib_move_simple(newdir,velo,blendrate)
 
-void movelib_beak_simple(float force);
+void movelib_brake_simple(float force);
 
 /**
 Pitches and rolls the entity to match the gound.

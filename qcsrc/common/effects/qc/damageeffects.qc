@@ -3,7 +3,7 @@
 
 #ifdef CSQC
 #include "../../deathtypes/all.qh"
-#include "../../movetypes/movetypes.qh"
+#include "../../physics/movetypes/movetypes.qh"
 #include "../../../client/mutators/events.qh"
 #include "../../vehicles/all.qh"
 #include "../../weapons/all.qh"

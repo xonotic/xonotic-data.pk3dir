@@ -2,7 +2,7 @@
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
 #include "../common/animdecide.qh"
-#include "../common/movetypes/movetypes.qh"
+#include "../common/physics/movetypes/movetypes.qh"
 #include "../common/viewloc.qh"
 #include "../lib/csqcmodel/cl_model.qh"
 #include "../lib/csqcmodel/cl_player.qh"

@@ -102,6 +102,7 @@
 #include "xonotic/dialog_singleplayer_winner.qc"
 #include "xonotic/dialog_teamselect.qc"
 #include "xonotic/gametypelist.qc"
+#include "xonotic/hudskinlist.qc"
 #include "xonotic/image.qc"
 #include "xonotic/inputbox.qc"
 #include "xonotic/keybinder.qc"

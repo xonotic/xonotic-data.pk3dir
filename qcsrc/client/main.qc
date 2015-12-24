@@ -42,6 +42,14 @@ void CSQC_Init()
 	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
+	{
+		int i = 0;
+		for ( ; i < 255; ++i)
+			if (getplayerkeyvalue(i, "viewentity") == "")
+				break;
+		maxclients = i;
+	}
+
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
@@ -53,14 +61,6 @@ void CSQC_Init()
 	compressShortVector_init();
 
 	draw_endBoldFont();
-
-	{
-		int i = 0;
-		for ( ; i < 255; ++i)
-			if (getplayerkeyvalue(i, "viewentity") == "")
-				break;
-		maxclients = i;
-	}
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
@@ -167,7 +167,7 @@ void Shutdown()
 .float has_team;
 float SetTeam(entity o, int Team)
 {
-	assert_once(Team);
+	devassert_once(Team);
 	entity tm;
 	if(teamplay)
 	{
@@ -759,7 +759,7 @@ void CSQC_Ent_Update(bool isnew)
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
-		done = it.m_read(this, isnew);
+		done = it.m_read(this, NULL, isnew);
 		break;
 	));
 	time = savetime;
@@ -849,7 +849,7 @@ bool CSQC_Parse_TempEntity()
 	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
 		if (autocvar_developer_csqcentities)
 			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
-		return it.m_read(NULL, true);
+		return it.m_read(NULL, NULL, true);
 	));
 
 	if (autocvar_developer_csqcentities)
@@ -1099,8 +1099,6 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
 	complain_weapon = ReadByte();
-	if (complain_weapon_name) strunzone(complain_weapon_name);
-	complain_weapon_name = strzone(Weapons_from(complain_weapon).m_name);
 	complain_weapon_type = ReadByte();
 	return = true;
 

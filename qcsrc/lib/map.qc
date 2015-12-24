@@ -1,6 +1,8 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include "int.qh"
+
 // Databases (hash tables)
 const int DB_BUCKETS = 8192;
 void db_save(int db, string filename)
@@ -17,10 +19,13 @@ void db_save(int db, string filename)
 	fclose(fh);
 }
 
+typedef int HashMap;
+
 int db_create()
 {
 	return buf_create();
 }
+#define HM_NEW(this) (this = db_create())
 
 void db_put(int db, string key, string value);
 
@@ -75,12 +80,14 @@ void db_close(int db)
 {
 	buf_del(db);
 }
+#define HM_DELETE(this) db_close(this)
 
 string db_get(int db, string key)
 {
 	int h = crc16(false, key) % DB_BUCKETS;
 	return uri_unescape(infoget(bufstr_get(db, h), key));
 }
+#define HM_gets(this, k) db_get(this, k)
 
 #define db_remove(db, key) db_put(db, key, "")
 
@@ -89,6 +96,7 @@ void db_put(int db, string key, string value)
 	int h = crc16(false, key) % DB_BUCKETS;
 	bufstr_set(db, h, infoadd(bufstr_get(db, h), key, uri_escape(value)));
 }
+#define HM_sets(this, key, val) db_put(this, key, val)
 
 void db_test()
 {

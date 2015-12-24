@@ -6,6 +6,8 @@
 
 #define INDEPENDENT_ATTACK_FINISHED 1
 
+// TODO: deprecated: remove. Replaced by physics.qh PHYS_INPUT_BUTTON_*
+
 #define BUTTON_ATCK       button0
 #define BUTTON_JUMP       button2
 #define BUTTON_ATCK2      button3
@@ -13,9 +15,10 @@
 #define BUTTON_CROUCH     button5
 #define BUTTON_HOOK       button6
 #define BUTTON_INFO       button7
-#define BUTTON_CHAT       buttonchat
-#define BUTTON_USE        buttonuse
 #define BUTTON_DRAG       button8
+#define BUTTON_USE        buttonuse
+#define BUTTON_CHAT       buttonchat
+#define BUTTON_PRYDON     cursor_active
 #define BUTTON_ZOOMSCRIPT button9
 #define BUTTON_JETPACK    button10
 
@@ -129,7 +132,6 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 .float iscreature;
 .float damagedbycontents;
 .float damagedbytriggers;
-.float pushable;
 .float teleportable;
 .vector oldvelocity;
 
@@ -177,7 +179,7 @@ float game_completion_ratio; // 0 at start, 1 near end
 .float alivetime; // time of being alive
 .float motd_actived_time; // used for both motd and campaign_message
 
-float nJoinAllowed(entity ignore);
+bool nJoinAllowed(entity this, entity ignore);
 
 .float spawnshieldtime;
 .float item_spawnshieldtime;
@@ -205,7 +207,6 @@ float default_weapon_alpha;
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
-.float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 
 .string weaponorder_byimpulse;

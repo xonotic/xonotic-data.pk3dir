@@ -39,7 +39,6 @@ STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(Weap
 #define WEPSET(id) (WEP_##id.m_wepset)
 #define WepSet_FromWeapon(it) ((it).m_wepset)
 WepSet _WepSet_FromWeapon(int i);
-STATIC_INIT(WepSets) { FOREACH(Weapons, true, LAMBDA(it.m_wepset = _WepSet_FromWeapon(it.m_id))); }
 
 GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
 {
@@ -301,8 +300,7 @@ REGISTRY_CHECK(Weapons)
 STATIC_INIT(register_weapons_done)
 {
     FOREACH(Weapons, true, LAMBDA(
-        it.m_id = i;
-        WepSet set = it.m_wepset;
+        WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
         it.weapons = set;

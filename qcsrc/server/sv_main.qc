@@ -116,17 +116,31 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	for(entity e = world; (e = findfloat(e, damagedbycontents, true)); )
-	{
-		if (e.movetype == MOVETYPE_NOCLIP) { continue; }
-
-		CreatureFrame_Liquids(e);
-		CreatureFrame_FallDamage(e);
-
-        e.oldvelocity = e.velocity;
-	}
+	FOREACH_ENTITY_FLOAT(damagedbycontents, true, LAMBDA(
+		if(it.movetype == MOVETYPE_NOCLIP) continue;
+		CreatureFrame_Liquids(it);
+		CreatureFrame_FallDamage(it);
+		it.oldvelocity = it.velocity;
+	));
 }
 
+void Pause_TryPause(bool ispaused)
+{
+	int n = 0;
+	entity it;
+	FOR_EACH_REALPLAYER(it)
+	{
+		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
+		++n;
+	}
+	if (!n) return;
+	setpause(ispaused);
+}
+
+void SV_PausedTic(float elapsedtime)
+{
+	if (!server_is_dedicated) Pause_TryPause(false);
+}
 
 /*
 =============
@@ -139,11 +153,13 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
+bool autocvar_sv_autopause = true;
 float RedirectionThink();
 void StartFrame()
 {
 	SELFPARAM();
 	execute_next_frame();
+	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
@@ -173,8 +189,7 @@ void StartFrame()
 	}
 #endif
 
-	for(entity e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
-		CSQCProjectile_Check(e);
+	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, LAMBDA(CSQCProjectile_Check(it)));
 
 	if(RedirectionThink())
 		return;
@@ -217,13 +232,8 @@ void StartFrame()
 	bot_serverframe();
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
-	{
-        entity e;
-        FOR_EACH_CLIENT(e)
-        {
-            GlobalStats_update(e);
-        }
-    }
+
+    FOREACH_CLIENT(true, LAMBDA(GlobalStats_update(it)));
 }
 
 .vector originjitter;

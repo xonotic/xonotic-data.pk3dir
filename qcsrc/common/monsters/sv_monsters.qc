@@ -7,6 +7,7 @@
     #include "../util.qh"
     #include "all.qh"
     #include "sv_monsters.qh"
+	#include "../physics/movelib.qh"
     #include "../weapons/all.qh"
     #include "../../server/autocvars.qh"
     #include "../../server/defs.qh"
@@ -710,7 +711,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE) && self.sprite)
 			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
-		movelib_beak_simple(stpspeed);
+		movelib_brake_simple(stpspeed);
 		setanim(self, self.anim_idle, true, false, false);
 
 		self.enemy = world;
@@ -729,7 +730,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE) && self.sprite)
 			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
-		movelib_beak_simple(stpspeed);
+		movelib_brake_simple(stpspeed);
 		setanim(self, self.anim_idle, true, false, false);
 
 		self.enemy = world;
@@ -798,7 +799,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
 			setanim(self, self.anim_idle, true, false, false);
-		movelib_beak_simple(stpspeed);
+		movelib_brake_simple(stpspeed);
 		return;
 	}
 
@@ -879,7 +880,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 		else if(e.target)
 			self.target2 = e.target;
 
-		movelib_beak_simple(stpspeed);
+		movelib_brake_simple(stpspeed);
 		if(time > self.anim_finished)
 		if(time > self.pain_finished)
 		if(!self.state)
@@ -1129,7 +1130,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 		mspeed = 0;
 		if(time >= self.spawn_time)
 			setanim(self, self.anim_idle, true, false, false);
-		movelib_beak_simple(0.6);
+		movelib_brake_simple(0.6);
 		return;
 	}
 

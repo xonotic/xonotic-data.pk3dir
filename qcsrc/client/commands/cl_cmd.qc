@@ -493,57 +493,45 @@ void LocalCommand_(int request)
 // ==================================
 
 // Normally do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define CLIENT_COMMANDS(request, arguments) \
-	CLIENT_COMMAND("blurtest", LocalCommand_blurtest(request), "Feature for testing blur postprocessing") \
-	CLIENT_COMMAND("boxparticles", LocalCommand_boxparticles(request, arguments), "Spawn particles manually") \
-	CLIENT_COMMAND("create_scrshot_ent", LocalCommand_create_scrshot_ent(request), "Create an entity at this location for automatic screenshots") \
-	CLIENT_COMMAND("debugmodel", LocalCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
-	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
-	CLIENT_COMMAND("hud", LocalCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
-	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
-	CLIENT_COMMAND("find", LocalCommand_find(request, arguments), "Search through entities for matching classname") \
-	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
-	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
-	/* nothing */
+CLIENT_COMMAND(blurtest, "Feature for testing blur postprocessing") { LocalCommand_blurtest(request); }
+CLIENT_COMMAND(boxparticles, "Spawn particles manually") { LocalCommand_boxparticles(request, arguments); }
+CLIENT_COMMAND(create_scrshot_ent, "Create an entity at this location for automatic screenshots") { LocalCommand_create_scrshot_ent(request); }
+CLIENT_COMMAND(debugmodel, "Spawn a debug model manually") { LocalCommand_debugmodel(request, arguments); }
+CLIENT_COMMAND(handlevote, "System to handle selecting a vote or option") { LocalCommand_handlevote(request, arguments); }
+CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalCommand_hud(request, arguments); }
+CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
+CLIENT_COMMAND(find, "Search through entities for matching classname") { LocalCommand_find(request, arguments); }
+CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
+CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
 
 void LocalCommand_macro_help()
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (strtolower(description) != "") { LOG_INFO("  ^2", name, "^7: ", description, "\n"); } }
-
-	CLIENT_COMMANDS(0, 0);
-	#undef CLIENT_COMMAND
+	FOREACH(CLIENT_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
 }
 
-bool LocalCommand_macro_command(int argc)
+bool LocalCommand_macro_command(int argc, string command)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(0))) { function; return true; } }
-
-	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc);
-	#undef CLIENT_COMMAND
-
+	string c = strtolower(argv(0));
+	FOREACH(CLIENT_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
+		return true;
+	));
 	return false;
 }
 
 bool LocalCommand_macro_usage(int argc)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (name == strtolower(argv(1))) { function; return true; } }
-
-	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc);
-	#undef CLIENT_COMMAND
-
+	string c = strtolower(argv(1));
+	FOREACH(CLIENT_COMMANDS, it.m_name == c, LAMBDA(
+		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
+		return true;
+	));
 	return false;
 }
 
 void LocalCommand_macro_write_aliases(int fh)
 {
-	#define CLIENT_COMMAND(name, function, description) \
-		{ if (strtolower(description) != "") { CMD_Write_Alias("qc_cmd_cl", name, description); } }
-
-	CLIENT_COMMANDS(0, 0);
-	#undef CLIENT_COMMAND
+	FOREACH(CLIENT_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_cl", it.m_name, it.m_description)));
 }
 
 
@@ -587,7 +575,7 @@ void GameCommand(string command)
 	}
 	// continue as usual and scan for normal commands
 	if (GenericCommand(command)                                    // handled by common/command/generic.qc
-	    || LocalCommand_macro_command(argc)                        // handled by one of the above LocalCommand_* functions
+	    || LocalCommand_macro_command(argc, command)               // handled by one of the above LocalCommand_* functions
 	    || MUTATOR_CALLHOOK(CSQC_ConsoleCommand, s, argc, command) // handled by a mutator
 	   ) return;
 

@@ -2250,7 +2250,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 {
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
-		PlayerTeamScore_AddScore(frag_attacker, autocvar_g_ctf_score_kill);
+		PlayerTeamScore_AddScore(frag_attacker, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
 		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
 	}
 

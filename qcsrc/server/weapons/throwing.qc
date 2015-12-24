@@ -32,7 +32,7 @@ void thrown_wep_think()
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
 {SELFPARAM();
-	float thisammo, i;
+	float thisammo;
 	string s;
 	Weapon info = Weapons_from(wpn);
 	var .int ammotype = info.ammo_field;
@@ -55,12 +55,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 		else
 		{
-			float superweapons = 1;
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			{
-				WepSet set = WepSet_FromWeapon(Weapons_from(i));
-				if ((set & WEPSET_SUPERWEAPONS) && (own.weapons & set)) ++superweapons;
-			}
+			int superweapons = 1;
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				WepSet set = it.m_wepset;
+				if((set & WEPSET_SUPERWEAPONS) && (own.weapons & set)) ++superweapons;
+			));
 			if(superweapons <= 1)
 			{
 				wep.superweapons_finished = own.superweapons_finished;

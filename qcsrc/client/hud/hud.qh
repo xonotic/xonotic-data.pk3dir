@@ -70,7 +70,6 @@ float scoreboard_bottom;
 int weapon_accuracy[Weapons_MAX];
 
 int complain_weapon;
-string complain_weapon_name;
 float complain_weapon_type;
 float complain_weapon_time;
 

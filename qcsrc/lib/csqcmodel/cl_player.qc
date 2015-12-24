@@ -28,7 +28,7 @@
 #include "../../client/defs.qh"
 #include "../../client/main.qh"
 #include "../../common/constants.qh"
-#include "../../common/physics.qh"
+#include "../../common/physics/player.qh"
 #include "../../common/stats.qh"
 #include "../../common/triggers/trigger/viewloc.qh"
 #include "../../common/util.qh"
@@ -105,7 +105,7 @@ void CSQCPlayer_Unpredict(entity this)
 
 void CSQCPlayer_SetMinsMaxs(entity this)
 {
-	if (this.flags & FL_DUCKED)
+	if ((this.flags & FL_DUCKED) || !this.isplayermodel)
 	{
 		this.mins = PL_CROUCH_MIN;
 		this.maxs = PL_CROUCH_MAX;
@@ -161,12 +161,12 @@ void CSQCPlayer_Physics(entity this)
 {
 	if(autocvar_cl_movement)
 	{
-		if(autocvar_cl_movement == 3)
+		if(autocvar_cl_movement == 1)
 			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
 		CSQC_ClientMovement_PlayerMove_Frame(this);
 
-		if(autocvar_cl_movement == 3)
+		if(autocvar_cl_movement == 1)
 		{
 			this.move_origin = this.origin;
 			this.move_angles = this.angles;

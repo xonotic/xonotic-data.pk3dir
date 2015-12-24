@@ -195,7 +195,7 @@ IMPULSE(weapon_last)
 {
 	if (this.vehicle) return;
 	if (this.deadflag != DEAD_NO) return;
-	W_LastWeapon();
+	W_LastWeapon(this);
 }
 
 IMPULSE(weapon_best)

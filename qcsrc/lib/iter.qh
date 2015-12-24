@@ -33,17 +33,43 @@
 		} \
 	} MACRO_END
 
+#define STRING_ITERATOR(this, s, i) \
+	string this##_s = s; \
+	int this##_i = i
+
+#define STRING_ITERATOR_SET(this, s, i) \
+	MACRO_BEGIN { \
+		this##_s = s; \
+		this##_i = i; \
+	} MACRO_END
+
+#define STRING_ITERATOR_GET(this) str2chr(this##_s, this##_i++)
+
+#define FOREACH_CHAR(s, cond, body) \
+	MACRO_BEGIN \
+	{ \
+		STRING_ITERATOR(iter, s, 0); \
+		int it; \
+		while ((it = STRING_ITERATOR_GET(iter)) > 0) \
+		{ \
+			if (cond) { LAMBDA(body) } \
+		} \
+	} MACRO_END
+
 #if defined(CSQC)
 	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #402;
 	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+	entity(.float fld, float match, .entity tofield) _findchainfloat_tofield = #403;
 	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #450;
 #elif defined(SVQC)
 	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #402;
 	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+	entity(.float fld, float match, .entity tofield) _findchainfloat_tofield = #403;
 	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #450;
 #elif defined(MENUQC)
 	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #26;
 	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #27;
+	entity(.float fld, float match, .entity tofield) _findchainfloat_tofield = #27;
 	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #88;
 #endif
 
@@ -68,10 +94,19 @@
 		} \
 	} MACRO_END
 
-#define FOREACH_ENTITY_FLAGS(fld, flags, body) \
+#define FOREACH_ENTITY_FLOAT(fld, match, body) \
 	MACRO_BEGIN { \
 		int i = 0; \
-		for (entity it = _findchainflags_tofield(fld, flags, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		for (entity it = _findchainfloat_tofield(fld, match, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		{ \
+			LAMBDA(body) \
+		} \
+	} MACRO_END
+
+#define FOREACH_ENTITY_FLAGS(fld, match, body) \
+	MACRO_BEGIN { \
+		int i = 0; \
+		for (entity it = _findchainflags_tofield(fld, match, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
 		{ \
 			LAMBDA(body) \
 		} \

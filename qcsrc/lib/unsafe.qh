@@ -12,7 +12,8 @@ typedef float(...) rawfunc;
 X(rawfunc)
 #undef X
 
-#define strid(s) ITOF(reinterpret_cast(int, s))
+#define _strid(s) ITOF(reinterpret_cast(int, s))
+#define strid(s) stof(sprintf("%i", s))
 
 .int _unsafe_fld1, _unsafe_fld2;
 int INTEGER_ONE;

@@ -1,5 +1,5 @@
 
-#include "../common/movetypes/movetypes.qh"
+#include "../common/physics/movetypes/movetypes.qh"
 #include "../common/weapons/all.qh"
 #include "../lib/csqcmodel/cl_model.qh"
 #include "../lib/csqcmodel/common.qh"

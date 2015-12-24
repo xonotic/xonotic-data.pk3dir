@@ -15,7 +15,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"
-#include "../common/movetypes/movetypes.qh"
+#include "../common/physics/movetypes/movetypes.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"

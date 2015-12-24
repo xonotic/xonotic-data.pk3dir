@@ -29,4 +29,6 @@ void loopsound(entity e, int ch, string samp, float vol, float attn);
 
 void Ent_RemoveProjectile();
 
+const int FL_PROJECTILE = BIT(15);
+
 #endif

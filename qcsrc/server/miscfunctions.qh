@@ -339,10 +339,7 @@ void readlevelcvars()
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	for(int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		Weapon w = Weapons_from(i);
-		w.wr_init(w);
-	}
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(it.wr_init(it)));
 
 	readplayerstartcvars();
 }

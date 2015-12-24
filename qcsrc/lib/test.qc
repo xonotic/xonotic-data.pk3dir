@@ -1,7 +1,7 @@
 #include "test.qh"
 
-float TEST_failed;
-float TEST_ok;
+int TEST_failed;
+bool TEST_ok;
 
 void TEST_Fail(string cond)
 {
@@ -15,42 +15,37 @@ void TEST_OK()
 	TEST_ok = true;
 }
 
-float TEST_RunAll()
+int TEST_RunAll_accumulated(int init);
+bool TEST_RunAll()
 {
-	int f = 0;
-	float n = numentityfields();
-	for (int i = 0; i < n; ++i)
-	{
-		string name = entityfieldname(i);
-		if (substring(name, 0, 6) == "_TEST_")
-			if (!TEST_Run(substring(name, 6, -1))) ++f;
-	}
+	int f = TEST_RunAll_accumulated(0);
 	if (f)
 	{
 		LOG_INFOF("%d tests failed\n", f);
-		return 1;
+		return true;
 	}
 	else
 	{
-		LOG_INFOF("All tests OK\n", f);
-		return 0;
+		LOG_INFO("All tests OK\n");
+		return false;
 	}
 }
 
-float TEST_Run(string s)
+bool TEST_Run(string s)
 {
 	LOG_INFOF("%s: testing...\n", s);
-	TEST_failed = TEST_ok = 0;
+	TEST_failed = 0;
+	TEST_ok = false;
 	callfunction(strcat("_TEST_", s));
 	if (TEST_failed > 0)
 	{
 		LOG_INFOF("%s: %d items failed.\n", s, TEST_failed);
-		return 0;
+		return false;
 	}
 	else if (!TEST_ok)
 	{
 		LOG_INFOF("%s: did not complete.\n", s);
-		return 0;
+		return false;
 	}
-	return 1;
+	return true;
 }

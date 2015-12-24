@@ -308,26 +308,24 @@ float PlayerValue(entity p)
 // teams that are allowed will now have their player counts stored in c1...c4
 void GetTeamCounts(entity ignore)
 {
-	entity head;
 	float value, bvalue;
 	// now count how many players are on each team already
 
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOR_EACH_CLIENT(head)
-	{
+	FOREACH_CLIENT(true, LAMBDA(
 		float t;
-		if(IS_PLAYER(head) || head.caplayer)
-			t = head.team;
-		else if(head.team_forced > 0)
-			t = head.team_forced; // reserve the spot
+		if(IS_PLAYER(it) || it.caplayer)
+			t = it.team;
+		else if(it.team_forced > 0)
+			t = it.team_forced; // reserve the spot
 		else
 			continue;
-		if(head != ignore)// && head.netname != "")
+		if(it != ignore)// && it.netname != "")
 		{
-			value = PlayerValue(head);
-			if(IS_BOT_CLIENT(head))
+			value = PlayerValue(it);
+			if(IS_BOT_CLIENT(it))
 				bvalue = value;
 			else
 				bvalue = 0;
@@ -364,7 +362,7 @@ void GetTeamCounts(entity ignore)
 				}
 			}
 		}
-	}
+	));
 
 	// if the player who has a forced team has not joined yet, reserve the spot
 	if(autocvar_g_campaign)

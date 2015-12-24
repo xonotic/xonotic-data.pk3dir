@@ -13,8 +13,8 @@ void viewloc_PlayerPhysics(entity this)
 {
 	if(this.viewloc)
 	{
-		vector oldmovement = this.movement;
-		this.movement_x = oldmovement_y;
+		vector old_movement = this.movement;
+		this.movement_x = old_movement_y;
 		this.movement_y = 0;
 
 		if(this.movement_x < 0)
@@ -32,12 +32,12 @@ void viewloc_PlayerPhysics(entity this)
 		if(this.movement_x > 0) // right
 			this.angles_y = forward_y;
 
-		if(oldmovement_x > 0)
+		if(old_movement_x > 0)
 #ifdef CSQC
 			input_angles_x =
 #endif
 			this.v_angle_x = this.angles_x = -50;
-		else if(oldmovement_x < 0)
+		else if(old_movement_x < 0)
 #ifdef CSQC
 			input_angles_x =
 #endif
@@ -45,11 +45,11 @@ void viewloc_PlayerPhysics(entity this)
 
 		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
 #ifdef SVQC
-			//this.BUTTON_CROUCH = (oldmovement_x < 0);
-			if (oldmovement.x < 0)
+			//this.BUTTON_CROUCH = (old_movement_x < 0);
+			if (old_movement.x < 0)
 				this.BUTTON_CROUCH = true;
 #elif defined(CSQC)
-			if (oldmovement.x < 0)
+			if (old_movement.x < 0)
 			{
 				input_buttons |= BIT(4);
 				this.flags |= FL_DUCKED;

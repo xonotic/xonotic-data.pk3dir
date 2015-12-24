@@ -1,0 +1,68 @@
+#ifndef YENC_H
+#define YENC_H
+
+#include "test.qh"
+
+#define yenc_single(c, ret) \
+	MACRO_BEGIN { \
+		int conv = c; \
+		conv += 42; \
+		if (conv >= 256) conv -= 256; \
+		switch (conv) \
+		{ \
+			default: \
+			{ \
+				string yenc_it = chr2str(conv); \
+				ret = yenc_it; \
+				break; \
+			} \
+			case 0: \
+			case '\n': \
+			case '\r': \
+			case '=': \
+			{ \
+				conv += 64; \
+				string yenc_it = chr2str('=', conv); \
+				ret = yenc_it; \
+				break; \
+			} \
+		} \
+	} MACRO_END
+
+#define ydec_single(stringiter, ret) \
+	MACRO_BEGIN { \
+		int conv = STRING_ITERATOR_GET(stringiter); \
+		if (conv <= 0) { \
+			ret = -1; \
+		} else { \
+			bool esc = false; \
+			if (conv == '=') { \
+				esc = true; \
+				conv = STRING_ITERATOR_GET(stringiter); \
+				conv -= 64; \
+			} \
+			if (conv < 42) conv += 256; \
+			conv -= 42; \
+			ret = conv; \
+		} \
+	} MACRO_END
+
+TEST(yEncDec)
+{
+	for (int i = 0; i <= 255; ++i)
+	{
+		int expect = i;
+
+		string fragment = string_null;
+		yenc_single(expect, fragment);
+
+		int encdec = 0;
+		STRING_ITERATOR(fragmentiterator, fragment, 0);
+		ydec_single(fragmentiterator, encdec);
+
+		TEST_Check(encdec == expect);
+	}
+	TEST_OK();
+}
+
+#endif

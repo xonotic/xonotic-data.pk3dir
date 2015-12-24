@@ -22,7 +22,7 @@
 #include "../../common/deathtypes/all.qh"
 #include "../../common/mapinfo.qh"
 #include "../../common/notifications.qh"
-#include "../../common/physics.qh"
+#include "../../common/physics/player.qh"
 #include "../../common/teams.qh"
 #include "../../common/util.qh"
 #include "../../common/triggers/triggers.qh"
@@ -174,7 +174,7 @@ void ClientCommand_join(float request)
 				if (!IS_PLAYER(self) && !lockteams && !gameover)
 				{
 					if (self.caplayer) return;
-					if (nJoinAllowed(self))
+					if (nJoinAllowed(self, self))
 					{
 						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
 						self.classname = STR_PLAYER;
@@ -752,6 +752,7 @@ void SV_ParseClientCommand(string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
+		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:
 			if (SV_ParseClientCommand_floodcheck()) break; // "true": continue, as we're not flooding yet

@@ -101,10 +101,10 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 {SELFPARAM();
 	entity _item = self;
 
-	entity e;
-	FOR_EACH_CLIENT(e) if (IS_SPEC(e) || IS_OBSERVER(e))
-	{
-		setself(e);
+	FOREACH_CLIENT(true, LAMBDA(
+		if(!IS_SPEC(it) && !IS_OBSERVER(it))
+			continue;
+		setself(it);
 		if(self.superspec_flags & SSF_ITEMMSG)
 			if(superspec_filteritem(self, _item))
 			{
@@ -144,7 +144,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 				}
 			}
 		}
-	}
+	));
 
 	setself(this);
 

@@ -99,7 +99,7 @@ void _Movetype_PushMove(entity this, float dt)  // SV_PushMove
 
 			// try moving the contacted entity
 			this.solid = SOLID_NOT;
-			bool flag;
+			bool flag = false;
 			WITH(entity, this, check, {
 				flag = _Movetype_PushEntity(this, move, true);
 			});

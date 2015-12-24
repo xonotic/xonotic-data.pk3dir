@@ -171,12 +171,10 @@ void havocbot_ai()
 		if(skill >= 5) // bots can only look for unloaded weapons past this skill
 		if(self.clip_load >= 0) // only if we're not reloading a weapon already
 		{
-			for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			{
-				entity e = Weapons_from(i);
-				if ((self.weapons & (e.m_wepset)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
-					PS(self).m_switchweapon = Weapons_from(i);
-			}
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if((self.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[it.m_id] < it.reloading_ammo))
+					PS(self).m_switchweapon = it;
+			));
 		}
 	}
 }
@@ -992,14 +990,11 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (self.weapon_load[new_weapon] < 0)
 	{
-		float i, other_weapon_available = false;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			Weapon w = Weapons_from(i);
-			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (w.wr_checkammo1(w) + w.wr_checkammo2(w))
+		bool other_weapon_available = false;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(it.wr_checkammo1(it) + it.wr_checkammo2(it))
 				other_weapon_available = true;
-		}
+		));
 		if(other_weapon_available)
 			return true;
 	}
@@ -1023,14 +1018,13 @@ void havocbot_chooseweapon()
 	{
 		// If no weapon was chosen get the first available weapon
 		if(PS(self).m_weapon==WEP_Null)
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER.m_id)
-		{
-			if(client_hasweapon(self, Weapons_from(i), true, false))
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(client_hasweapon(self, it, true, false))
 			{
-				PS(self).m_switchweapon = Weapons_from(i);
+				PS(self).m_switchweapon = it;
 				return;
 			}
-		}
+		));
 		return;
 	}
 

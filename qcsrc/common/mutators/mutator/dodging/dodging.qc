@@ -33,7 +33,7 @@ bool autocvar_sv_dodging_sound;
 .float dodging_single_action;
 
 #include "../../../animdecide.qh"
-#include "../../../physics.qh"
+#include "../../../physics/player.qh"
 
 .float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
 
@@ -115,7 +115,7 @@ float PM_dodging_checkpressedkeys(entity this)
 	if(!PHYS_DODGING)
 		return false;
 
-	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN);
+	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
 	float frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	// first check if the last dodge is far enough back in time so we can dodge again

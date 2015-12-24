@@ -6,17 +6,17 @@ NDEBUG ?= 1
  
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
-# We eventually need to get rid of these.
+# We eventually need to get rid of these
 QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
 QCCFLAGS_FEATURES ?= \
-	-DVEHICLES_ENABLED=1 \
-	-DVEHICLES_USE_ODE=0 \
 	-DBUILD_MOD=$(BUILD_MOD)
 
+# -Ooverlap-locals is required
 QCCFLAGS ?= \
 	-std=gmqcc \
+	-Ooverlap-locals \
 	-O3 \
 	-Werror -Wall -Wcpp \
 	$(QCCFLAGS_WTFS) \
