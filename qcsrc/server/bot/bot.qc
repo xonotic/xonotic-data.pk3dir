@@ -507,17 +507,15 @@ void autoskill(float factor)
 {
 	float bestbot;
 	float bestplayer;
-	entity head;
 
 	bestbot = -1;
 	bestplayer = -1;
-	FOR_EACH_PLAYER(head)
-	{
-		if(IS_REAL_CLIENT(head))
-			bestplayer = max(bestplayer, head.totalfrags - head.totalfrags_lastcheck);
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		if(IS_REAL_CLIENT(it))
+			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
 		else
-			bestbot = max(bestbot, head.totalfrags - head.totalfrags_lastcheck);
-	}
+			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
+	));
 
 	LOG_TRACE("autoskill: best player got ", ftos(bestplayer), ", ");
 	LOG_TRACE("best bot got ", ftos(bestbot), "; ");
@@ -551,8 +549,7 @@ void autoskill(float factor)
 		// don't reset counters, wait for them to accumulate
 	}
 
-	FOR_EACH_PLAYER(head)
-		head.totalfrags_lastcheck = head.totalfrags;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.totalfrags_lastcheck = it.totalfrags));
 }
 
 void bot_calculate_stepheightvec()
@@ -571,13 +568,11 @@ float bot_fixcount()
 		activerealplayers = bot_activerealplayers;
 		realplayers = bot_realplayers;
 	} else {
-		entity head;
-		FOR_EACH_REALCLIENT(head)
-		{
-			if(IS_PLAYER(head))
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+			if(IS_PLAYER(it))
 				++activerealplayers;
 			++realplayers;
-		}
+		));
 	}
 
 	int bots;
