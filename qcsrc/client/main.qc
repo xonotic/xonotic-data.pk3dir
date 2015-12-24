@@ -1099,8 +1099,6 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
 	complain_weapon = ReadByte();
-	if (complain_weapon_name) strunzone(complain_weapon_name);
-	complain_weapon_name = strzone(Weapons_from(complain_weapon).m_name);
 	complain_weapon_type = ReadByte();
 	return = true;
 
