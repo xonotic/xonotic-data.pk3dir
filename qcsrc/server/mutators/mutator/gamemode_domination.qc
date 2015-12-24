@@ -645,13 +645,13 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 {SELFPARAM();
 	setself(spawn());
 	self.classname = "dom_team";
-	self.netname = teamname;
+	self.netname = strzone(teamname);
 	self.cnt = teamcolor;
 	self.model = pointmodel;
 	self.skin = pointskin;
-	self.noise = capsound;
-	self.noise1 = capnarration;
-	self.message = capmessage;
+	self.noise = strzone(capsound);
+	self.noise1 = strzone(capnarration);
+	self.message = strzone(capmessage);
 
 	// this code is identical to spawnfunc_dom_team
 	_setmodel(self, self.model); // precision not needed
@@ -681,12 +681,12 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(float teams)
 {
-	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND(DOM_CLAIM), "", "Red team has captured a control point");
-	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND(DOM_CLAIM), "", "Blue team has captured a control point");
+	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND(DOM_CLAIM), "", "Red team has captured a control point");
+	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND(DOM_CLAIM), "", "Blue team has captured a control point");
 	if(teams >= 3)
-		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND(DOM_CLAIM), "", "Yellow team has captured a control point");
+		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_3), NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND(DOM_CLAIM), "", "Yellow team has captured a control point");
 	if(teams >= 4)
-		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND(DOM_CLAIM), "", "Pink team has captured a control point");
+		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_4), NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND(DOM_CLAIM), "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
