@@ -277,23 +277,31 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self, LAMBDA(
+			if(!it.railgunhit)
+			if(!(IS_SPEC(it) && it.enemy == self))
+			{
+				msg_entity = it;
+				// nearest point on the beam
+				beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
+
+				f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
+				if(f <= 0)
+					continue;
+
+				snd = SND(NEXWHOOSH_RANDOM());
+
+				if(!pseudoprojectile)
+					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
+			}
+		));
 		FOR_EACH_REALCLIENT(msg_entity)
 		if(msg_entity != self)
 		if(!msg_entity.railgunhit)
 		if(!(IS_SPEC(msg_entity) && msg_entity.enemy == self)) // we use realclient, so spectators can hear the whoosh too
 		{
-			// nearest point on the beam
-			beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
-
-			f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
-			if(f <= 0)
-				continue;
-
-			snd = SND(NEXWHOOSH_RANDOM());
-
-			if(!pseudoprojectile)
-				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
+			
 		}
 
 		if(pseudoprojectile)
