@@ -56,36 +56,22 @@ void ca_ScoreRules(float teams)
 
 void CA_count_alive_players()
 {
-	entity e;
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOR_EACH_PLAYER(e) {
-		if(e.team == NUM_TEAM_1)
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		switch(it.team)
 		{
-			++total_players;
-			if (e.health >= 1) ++redalive;
+			case NUM_TEAM_1: ++total_players; if(it.deadflag == DEAD_NO) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(it.deadflag == DEAD_NO) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(it.deadflag == DEAD_NO) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(it.deadflag == DEAD_NO) ++pinkalive; break;
 		}
-		else if(e.team == NUM_TEAM_2)
-		{
-			++total_players;
-			if (e.health >= 1) ++bluealive;
-		}
-		else if(e.team == NUM_TEAM_3)
-		{
-			++total_players;
-			if (e.health >= 1) ++yellowalive;
-		}
-		else if(e.team == NUM_TEAM_4)
-		{
-			++total_players;
-			if (e.health >= 1) ++pinkalive;
-		}
-	}
-	FOR_EACH_REALCLIENT(e) {
-		e.redalive_stat = redalive;
-		e.bluealive_stat = bluealive;
-		e.yellowalive_stat = yellowalive;
-		e.pinkalive_stat = pinkalive;
-	}
+	));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		it.redalive_stat = redalive;
+		it.bluealive_stat = bluealive;
+		it.yellowalive_stat = yellowalive;
+		it.pinkalive_stat = pinkalive;
+	));
 }
 
 float CA_GetWinnerTeam()
@@ -117,15 +103,13 @@ float CA_GetWinnerTeam()
 #define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
 float CA_CheckWinner()
 {
-	entity e;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		allowed_to_spawn = false;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-		FOR_EACH_PLAYER(e)
-			nades_Clear(e);
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
 		return 1;
 	}
 
@@ -133,7 +117,7 @@ float CA_CheckWinner()
 	if(CA_ALIVE_TEAMS() > 1)
 		return 0;
 
-	float winner_team = CA_GetWinnerTeam();
+	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
@@ -149,8 +133,7 @@ float CA_CheckWinner()
 	allowed_to_spawn = false;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOR_EACH_PLAYER(e)
-		nades_Clear(e);
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
 
 	return 1;
 }
@@ -163,9 +146,9 @@ void CA_RoundStart()
 		allowed_to_spawn = false;
 }
 
-float CA_CheckTeams()
+bool CA_CheckTeams()
 {
-	static float prev_missing_teams_mask;
+	static int prev_missing_teams_mask;
 	allowed_to_spawn = true;
 	CA_count_alive_players();
 	if(CA_ALIVE_TEAMS_OK())
@@ -173,16 +156,16 @@ float CA_CheckTeams()
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 1;
+		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 0;
+		return false;
 	}
-	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
+	int missing_teams_mask = (!redalive) + (!bluealive) * 2;
 	if(ca_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
 	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
@@ -190,10 +173,10 @@ float CA_CheckTeams()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
-	return 0;
+	return false;
 }
 
-float ca_isEliminated(entity e)
+bool ca_isEliminated(entity e)
 {
 	if(e.caplayer == 1 && (e.deadflag != DEAD_NO || e.frags == FRAGS_LMS_LOSER))
 		return true;
@@ -247,10 +230,8 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {SELFPARAM();
-	entity e;
-	FOR_EACH_CLIENT(e)
-	{
-		setself(e);
+	FOREACH_CLIENT(true, LAMBDA(
+		setself(it);
 		self.killcount = 0;
 		if(!self.caplayer && IS_BOT_CLIENT(self))
 		{
@@ -263,7 +244,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 			self.caplayer = 1;
 			PutClientInServer();
 		}
-	}
+	));
 	return 1;
 }
 
@@ -287,17 +268,15 @@ MUTATOR_HOOKFUNCTION(ca, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 
 entity ca_LastPlayerForTeam()
 {SELFPARAM();
-	entity pl, last_pl = world;
-	FOR_EACH_PLAYER(pl)
-	{
-		if(pl.health >= 1)
-		if(pl != self)
-		if(pl.team == self.team)
+	entity last_pl = world;
+	FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+		if(it.deadflag == DEAD_NO)
+		if(SAME_TEAM(self, it))
 		if(!last_pl)
-			last_pl = pl;
+			last_pl = it;
 		else
 			return world;
-	}
+	));
 	return last_pl;
 }
 
@@ -459,13 +438,11 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 
 MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	entity head;
-	FOR_EACH_REALCLIENT(head)
-	{
-		if(IS_PLAYER(head) || head.caplayer == 1)
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		if(IS_PLAYER(it) || it.caplayer == 1)
 			++bot_activerealplayers;
 		++bot_realplayers;
-	}
+	));
 
 	return true;
 }
