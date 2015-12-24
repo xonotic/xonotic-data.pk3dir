@@ -1,6 +1,5 @@
 
 #include "announcer.qh"
-#include "hook.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
