@@ -229,16 +229,16 @@ void assault_roundstart_use()
 	SUB_UseTargets();
 
 	//(Re)spawn all turrets
-	for(entity ent = NULL; (ent = find(ent, classname, "turret_main")); ) {
+	FOREACH_ENTITY_CLASS("turret_main", true, LAMBDA(
 		// Swap turret teams
-		if(ent.team == NUM_TEAM_1)
-			ent.team = NUM_TEAM_2;
+		if(it.team == NUM_TEAM_1)
+			it.team = NUM_TEAM_2;
 		else
-			ent.team = NUM_TEAM_1;
+			it.team = NUM_TEAM_1;
 
 		// Dubbles as teamchange
-		WITH(entity, self, ent, turret_respawn());
-	}
+		WITH(entity, self, it, turret_respawn());
+	));
 }
 
 void assault_wall_think()
