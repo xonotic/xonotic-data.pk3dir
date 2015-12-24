@@ -491,7 +491,7 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 void readplayerstartcvars()
 {
 	entity e;
-	float i, j, t;
+	float i, t;
 	string s;
 
 	// initialize starting values for players
@@ -527,24 +527,20 @@ void readplayerstartcvars()
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = Weapons_from(j);
-			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				g_weaponarena_weapons |= (e.m_wepset);
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				g_weaponarena_weapons |= (it.m_wepset);
+		));
 	}
 	else if (s == "most")
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = Weapons_from(j);
-			if (!(e.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-				if (e.spawnflags & WEP_FLAG_NORMAL)
-					g_weaponarena_weapons |= (e.m_wepset);
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				if(it.spawnflags & WEP_FLAG_NORMAL)
+					g_weaponarena_weapons |= (it.m_wepset);
+		));
 	}
 	else if (s == "none")
 	{
@@ -559,20 +555,14 @@ void readplayerstartcvars()
 		for (i = 0; i < t; ++i)
 		{
 			s = argv(i);
-			for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			{
-				e = Weapons_from(j);
-				if (e.netname == s)
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if(it.netname == s)
 				{
-					g_weaponarena_weapons |= (e.m_wepset);
-					g_weaponarena_list = strcat(g_weaponarena_list, e.m_name, " & ");
+					g_weaponarena_weapons |= (it.m_wepset);
+					g_weaponarena_list = strcat(g_weaponarena_list, it.m_name, " & ");
 					break;
 				}
-			}
-			if (j > WEP_LAST)
-			{
-				LOG_INFO("The weapon mutator list contains an unknown weapon ", s, ". Skipped.\n");
-			}
+			));
 		}
 		g_weaponarena_list = strzone(substring(g_weaponarena_list, 0, strlen(g_weaponarena_list) - 3));
 	}
@@ -591,18 +581,16 @@ void readplayerstartcvars()
 	}
 	else
 	{
-		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			e = Weapons_from(i);
-			int w = want_weapon(e, false);
-			WepSet s = e.m_wepset;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			int w = want_weapon(it, false);
+			WepSet s = it.m_wepset;
 			if(w & 1)
 				start_weapons |= s;
 			if(w & 2)
 				start_weapons_default |= s;
 			if(w & 4)
 				start_weapons_defaultmask |= s;
-		}
+		));
 	}
 
 	if(!cvar("g_use_ammunition"))
@@ -684,13 +672,10 @@ void readplayerstartcvars()
 	WepSet precache_weapons = start_weapons;
 	if (g_warmup_allguns != 1)
 		precache_weapons |= warmup_start_weapons;
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		e = Weapons_from(i);
-		if(precache_weapons & (e.m_wepset)) {
-			e.wr_init(e);
-		}
-	}
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if(precache_weapons & (it.m_wepset))
+			it.wr_init(it);
+	));
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
