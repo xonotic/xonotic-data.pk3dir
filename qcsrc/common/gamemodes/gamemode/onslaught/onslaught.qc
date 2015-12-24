@@ -578,37 +578,32 @@ void ons_ControlPoint_Icon_Think()
 
 	if(autocvar_g_onslaught_cp_proxydecap)
 	{
-        int _enemy_count = 0;
-        int _friendly_count = 0;
-        float _dist;
-        entity _player;
+		int _enemy_count = 0;
+		int _friendly_count = 0;
+		float _dist;
 
-        FOR_EACH_PLAYER(_player)
-        {
-            if(!_player.deadflag)
-            {
-                _dist = vlen(_player.origin - self.origin);
-                if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
-                {
-					if(SAME_TEAM(_player, self))
-                        ++_friendly_count;
-                    else
-                        ++_enemy_count;
-                }
-            }
-        }
+		FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO, LAMBDA(
+			_dist = vlen(it.origin - self.origin);
+			if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
+			{
+				if(SAME_TEAM(it, self))
+					++_friendly_count;
+				else
+					++_enemy_count;
+			}
+		));
 
-        _friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
-        _enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
-        self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
+		self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
 		self.SendFlags |= CPSF_STATUS;
-        if(self.health <= 0)
-        {
-            ons_ControlPoint_Icon_Damage(self, self, 1, 0, self.origin, '0 0 0');
-            return;
-        }
-    }
+		if(self.health <= 0)
+		{
+			ons_ControlPoint_Icon_Damage(self, self, 1, 0, self.origin, '0 0 0');
+			return;
+		}
+	}
 
 	if (time > self.pain_finished + 5)
 	{
@@ -993,8 +988,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 		if (time > self.pain_finished)
 		{
 			self.pain_finished = time + 10;
-			entity head;
-			FOR_EACH_REALPLAYER(head) if(SAME_TEAM(head, self)) { Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK); }
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, self), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK)));
 			play2team(self.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
@@ -1055,24 +1049,22 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 
 void ons_GeneratorThink()
 {SELFPARAM();
-	entity e;
 	self.nextthink = time + GEN_THINKRATE;
 	if (!gameover)
 	{
-        if(!self.isshielded && self.wait < time)
-        {
-            self.wait = time + 5;
-            FOR_EACH_REALPLAYER(e)
-            {
-				if(SAME_TEAM(e, self))
+		if(!self.isshielded && self.wait < time)
+		{
+			self.wait = time + 5;
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				if(SAME_TEAM(it, self))
 				{
-					Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
-                    soundto(MSG_ONE, e, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
-                }
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
+					soundto(MSG_ONE, it, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
+				}
 				else
-					Send_Notification(NOTIF_ONE, e, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
-            }
-        }
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
+			));
+		}
 	}
 }
 
@@ -1224,8 +1216,6 @@ void nades_Clear(entity e);
 #define ONS_OWNED_GENERATORS_OK() (ONS_OWNED_GENERATORS() > 1)
 bool Onslaught_CheckWinner()
 {
-	entity e;
-
 	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
 	{
 		ons_stalemate = true;
@@ -1245,6 +1235,7 @@ bool Onslaught_CheckWinner()
 			// tmp_entity.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
 			d = 1;
+			entity e;
 			for(e = ons_worldcplist; e; e = e.ons_worldcpnext)
 			{
 				if(DIFF_TEAM(e, tmp_entity))
@@ -1291,13 +1282,12 @@ bool Onslaught_CheckWinner()
 
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 
-	FOR_EACH_PLAYER(e)
-	{
-		e.ons_roundlost = true;
-		e.player_blocked = true;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		it.ons_roundlost = true;
+		it.player_blocked = true;
 
-		nades_Clear(e);
-	}
+		nades_Clear(it);
+	));
 
 	return 1;
 }
@@ -1794,13 +1784,11 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 
 MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 {SELFPARAM();
-	entity e;
-	FOR_EACH_PLAYER(e)
-	{
-		e.ons_roundlost = false;
-		e.ons_deathloc = '0 0 0';
-		WITH(entity, self, e, PutClientInServer());
-	}
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		it.ons_roundlost = false;
+		it.ons_deathloc = '0 0 0';
+		WITH(entity, self, it, PutClientInServer());
+	));
 	return false;
 }
 
@@ -1943,7 +1931,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		}
 	}
 
-    return false;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerDies)
