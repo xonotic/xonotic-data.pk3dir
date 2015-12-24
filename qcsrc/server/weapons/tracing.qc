@@ -296,13 +296,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
 			}
 		));
-		FOR_EACH_REALCLIENT(msg_entity)
-		if(msg_entity != self)
-		if(!msg_entity.railgunhit)
-		if(!(IS_SPEC(msg_entity) && msg_entity.enemy == self)) // we use realclient, so spectators can hear the whoosh too
-		{
-			
-		}
 
 		if(pseudoprojectile)
 			remove(pseudoprojectile);
