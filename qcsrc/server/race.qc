@@ -357,7 +357,6 @@ void race_deleteTime(string map, float pos)
 void race_SendTime(entity e, float cp, float t, float tvalid)
 {
 	float snew, l;
-	entity p;
 
 	if(g_race_qualifying)
 		t += e.race_penalty_accumulator;
@@ -427,9 +426,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					race_checkpoint_recordholders[cp] = strzone(e.netname);
 					if(g_race_qualifying)
 					{
-						FOR_EACH_REALPLAYER(p)
-							if(p.race_checkpoint == cp)
-								race_SendNextCheckpoint(p, 0);
+						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, LAMBDA(race_SendNextCheckpoint(it, 0)));
 					}
 				}
 			}

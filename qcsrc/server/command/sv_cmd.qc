@@ -194,16 +194,14 @@ void GameCommand_allspec(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
 			string reason = argv(1);
 			float i = 0;
 
-			FOR_EACH_REALPLAYER(client)
-			{
-				if (client.caplayer) client.caplayer = 0;
-				WITH(entity, self, client, PutObserverInServer());
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				if (it.caplayer) it.caplayer = 0;
+				WITH(entity, self, it, PutObserverInServer());
 				++i;
-			}
+			));
 			if (i)   bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
 			else   LOG_INFO("No players found to spectate.\n");
 			return;
@@ -553,16 +551,14 @@ void GameCommand_defer_clear_all(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
 			float i = 0;
 			float argc;
 
-			FOR_EACH_CLIENT(client)
-			{
-				argc = tokenize_console(strcat("defer_clear ", ftos(etof(client))));
+			FOREACH_CLIENT(true, LAMBDA(
+				argc = tokenize_console(strcat("defer_clear ", ftos(etof(it))));
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
 				++i;
-			}
+			));
 			if (i)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n"));  // should a message be added if no players were found?
 			return;
 		}
@@ -1161,18 +1157,14 @@ void GameCommand_nospectators(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			blockSpectators = 1;
-			entity plr;
-			FOR_EACH_REALCLIENT(plr)  // give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			{
-				if (IS_SPEC(plr) || IS_OBSERVER(plr))
+			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, LAMBDA(
+				if(!it.caplayer)
 				{
-					if (!plr.caplayer)
-					{
-						plr.spectatortime = time;
-						Send_Notification(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-					}
+					it.spectatortime = time;
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
-			}
+			));
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
 		}
@@ -1368,17 +1360,14 @@ void GameCommand_shuffleteams(float request)
 		{
 			if (teamplay)
 			{
-				entity tmp_player;
 				int i;
 				float x, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				t_players = 0;
 				t_teams = 0;
-				FOR_EACH_CLIENT(tmp_player)
-				if (IS_PLAYER(tmp_player) || tmp_player.caplayer)
-				{
-					CheckAllowedTeams(tmp_player);
+				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
+					CheckAllowedTeams(it);
 
 					if (c1 >= 0) t_teams = max(1, t_teams);
 					if (c2 >= 0) t_teams = max(2, t_teams);
@@ -1386,12 +1375,10 @@ void GameCommand_shuffleteams(float request)
 					if (c4 >= 0) t_teams = max(4, t_teams);
 
 					++t_players;
-				}
+				));
 
 				// build a list of the players in a random order
-				FOR_EACH_CLIENT(tmp_player)
-				if (IS_PLAYER(tmp_player) || tmp_player.caplayer)
-				{
+				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
 					for ( ; ; )
 					{
 						i = bound(1, floor(random() * maxclients) + 1, maxclients);
@@ -1402,11 +1389,11 @@ void GameCommand_shuffleteams(float request)
 						}
 						else
 						{
-							shuffleteams_players[i] = etof(tmp_player);
+							shuffleteams_players[i] = etof(it);
 							break;
 						}
 					}
-				}
+				));
 
 				// finally, from the list made earlier, re-join the players in different order.
 				for (int i = 1; i <= t_teams; ++i)

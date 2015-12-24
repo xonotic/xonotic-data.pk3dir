@@ -660,7 +660,6 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
-	entity head;
 	float ret;
 	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
 
@@ -905,10 +904,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head)
-				if(head != source)
-				if(head.active_minigame == source.active_minigame)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, LAMBDA(sprint(it, msgstr)));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -916,29 +912,23 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
-				if(head != source)
-				{
-					sprint(head, msgstr);
-					if(cmsgstr != "")
-						centerprint(head, cmsgstr);
-				}
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, LAMBDA(
+				sprint(it, msgstr);
+				if(cmsgstr != "")
+					centerprint(it, cmsgstr);
+			));
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if (!IS_PLAYER(head))
-				if(head != source)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
 		}
 		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head)
-				if(head != source)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
 		}
 		else
 			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.

@@ -27,7 +27,7 @@ const string STR_OBSERVER = "observer";
 // NOTE: FOR_EACH_PLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(yourcode));
 // NOTE: FOR_EACH_SPEC deprecated! Use the following instead: FOREACH_CLIENT(IS_SPEC(it), LAMBDA(yourcode));
 // NOTE: FOR_EACH_OBSERVER deprecated! Use the following instead: FOREACH_CLIENT(IS_OBSERVER(it), LAMBDA(yourcode));
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if (IS_PLAYER(v))
+// NOTE: FOR_EACH_REALPLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(yourcode));
 
 #define FOREACH_CLIENT(cond, body) \
 	MACRO_BEGIN { \
