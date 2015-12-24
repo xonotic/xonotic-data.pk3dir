@@ -351,7 +351,7 @@
     MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_NOAMMO,             0, 1, "item_wepname", "",                      "",               _("^BGYou don't have enough ammo for the ^F1%s"), "")
     MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_PRIMORSEC,          0, 3, "item_wepname f2primsec f3primsec", "",  "",               _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
     MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_UNAVAILABLE,        0, 1, "item_wepname", "",                      "",               _("^F1%s^BG is ^F4not available^BG on this map"), "")
-    MSG_INFO_NOTIF(2, INFO_JOIN_CONNECT,                   1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected%s"), "")
+    MSG_INFO_NOTIF(2, INFO_JOIN_CONNECT,                   1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected"), "")
     MULTITEAM_INFO(2, INFO_JOIN_CONNECT_TEAM_, 4,          1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected and joined the ^TC^TT team"), "")
     MSG_INFO_NOTIF(1, INFO_JOIN_PLAY,                      1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now playing"), "")
     MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,               1, 0, "s1", "s1",                        "notify_balldropped",   _("^BG%s^BG has dropped the ball!"), "")

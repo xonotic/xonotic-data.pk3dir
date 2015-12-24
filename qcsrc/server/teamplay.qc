@@ -581,10 +581,18 @@ void SV_ChangeTeam(float _color)
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
-	if(!teamplay) {
+	if(!teamplay)
 		SetPlayerColors(self, _color);
+
+	if(!IS_CLIENT(self))
+	{
+		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
 		return;
 	}
+
+	if(!teamplay)
+		return;
 
 	scolor = self.clientcolors & 0x0F;
 	dcolor = _color & 0x0F;
@@ -644,10 +652,6 @@ void SV_ChangeTeam(float _color)
 		// reduce frags during a team change
 		TeamchangeFrags(self);
 	}
-
-	// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-	if(!IS_CLIENT(self))
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
 
 	MUTATOR_CALLHOOK(Player_ChangeTeam, self, steam, dteam);
 
