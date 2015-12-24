@@ -490,7 +490,6 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 
 void readplayerstartcvars()
 {
-	entity e;
 	float i, t;
 	string s;
 
@@ -642,18 +641,16 @@ void readplayerstartcvars()
 			warmup_start_weapons = '0 0 0';
 			warmup_start_weapons_default = '0 0 0';
 			warmup_start_weapons_defaultmask = '0 0 0';
-			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-			{
-				e = Weapons_from(i);
-				int w = want_weapon(e, g_warmup_allguns);
-				WepSet s = (e.m_wepset);
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				int w = want_weapon(it, g_warmup_allguns);
+				WepSet s = (it.m_wepset);
 				if(w & 1)
 					warmup_start_weapons |= s;
 				if(w & 2)
 					warmup_start_weapons_default |= s;
 				if(w & 4)
 					warmup_start_weapons_defaultmask |= s;
-			}
+			));
 		}
 	}
 
