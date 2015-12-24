@@ -130,12 +130,11 @@ void assault_objective_decrease_use()
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldactivator, head;
+			entity oldactivator;
 
 			setself(this.enemy);
 			if(self.message)
-			FOR_EACH_PLAYER(head)
-				centerprint(head, self.message);
+				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(centerprint(it, self.message)));
 
 			oldactivator = activator;
 			activator = this;
@@ -267,21 +266,13 @@ void assault_new_round()
 	//bprint("ASSAULT: new round\n");
 
 	// Eject players from vehicles
-	entity e;
-    FOR_EACH_PLAYER(e)
-    {
-        if(e.vehicle)
-        {
-        	WITH(entity, self, e, vehicles_exit(VHEF_RELEASE));
-        }
-    }
+    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, LAMBDA(WITH(entity, self, it, vehicles_exit(VHEF_RELEASE))));
 
-    for (entity e_ = findchainflags(vehicle_flags, VHF_ISVEHICLE); e_; e_ = e_.chain)
-    {
-    	setself(e_);
+    FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
+    	setself(it);
         vehicles_clearreturn(self);
         vehicles_spawn();
-    }
+    ));
 
     setself(this);
 
@@ -294,7 +285,7 @@ void assault_new_round()
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
-	FOREACH_ENTITY(clienttype(it) == CLIENTTYPE_NOTACLIENT, LAMBDA(
+	FOREACH_ENTITY(IS_NOT_A_CLIENT(it), LAMBDA(
 		if (it.team_saved == NUM_TEAM_1) it.team_saved = NUM_TEAM_2;
 		else if (it.team_saved == NUM_TEAM_2) it.team_saved = NUM_TEAM_1;
 	));
