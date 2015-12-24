@@ -1330,7 +1330,6 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 {SELFPARAM();
 	entity head;
 	float t, c;
-	int i;
 	bool needarmor = false, needweapons = false;
 
 	// Needs armor/health?
@@ -1339,13 +1338,11 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 
 	// Needs weapons?
 	c = 0;
-	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
-	{
-		// Find weapon
-		if(self.weapons & WepSet_FromWeapon(Weapons_from(i)))
-		if(++c>=4)
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if(self.weapons & (it.m_wepset))
+		if(++c >= 4)
 			break;
-	}
+	));
 
 	if(c<4)
 		needweapons = true;

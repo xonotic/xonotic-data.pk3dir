@@ -160,7 +160,7 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 	// apply those bits that are set by start_weapon_defaultmask
 	// same for warmup
 
-	float i, j, k, n;
+	float j, n;
 
 	WepSet newdefault;
 	WepSet warmup_newdefault;
@@ -168,26 +168,22 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 	newdefault = '0 0 0';
 	warmup_newdefault = '0 0 0';
 
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		entity e = Weapons_from(i);
-		if(e == WEP_Null) continue;
+	WepSet seti = '0 0 0';
 
-		n = tokenize_console(nt_GetReplacement(e.netname, autocvar_g_new_toys_autoreplace));
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		seti = it.m_wepset;
+		n = tokenize_console(nt_GetReplacement(it.netname, autocvar_g_new_toys_autoreplace));
 
-		for (j = 0; j < n; ++j)
-			for (k = WEP_FIRST; k <= WEP_LAST; ++k)
-			{
-				Weapon w = Weapons_from(k);
-				if (w.netname == argv(j))
+		for(j = 0; j < n; ++j)
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if(it.netname == argv(j))
 				{
-					WepSet seti = e.m_wepset;
-					WepSet setk = w.m_wepset;
-					if (start_weapons & seti) newdefault |= setk;
-					if (warmup_start_weapons & seti) warmup_newdefault |= setk;
+					WepSet setk = it.m_wepset;
+					if(start_weapons & seti) newdefault |= setk;
+					if(warmup_start_weapons & seti) warmup_newdefault |= setk;
 				}
-			}
-	}
+			));
+	));
 
 	newdefault &= start_weapons_defaultmask;
 	start_weapons &= ~start_weapons_defaultmask;
