@@ -353,7 +353,6 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	dir = normalize(dir + randomvec() * spread);
 	end = start + dir * MAX_SHOT_DISTANCE;
 
-	entity pl;
 	fireBullet_last_hit = world;
 	float solid_penetration_left = 1;
 	float total_damage = 0;
@@ -374,11 +373,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{
-		FOR_EACH_PLAYER(pl)
-			if(pl != self)
-				antilag_takeback(pl, time - lag);
-		FOR_EACH_MONSTER(pl)
-			antilag_takeback(pl, time - lag);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_takeback(it, time - lag)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != self)
+				antilag_takeback(it, time - lag);
+		));
 	}
 
 	WarpZone_trace_forent = self;
@@ -483,10 +482,10 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 	if(lag)
 	{
-		FOR_EACH_PLAYER(pl)
-			if(pl != self)
-				antilag_restore(pl);
-		FOR_EACH_MONSTER(pl)
-			antilag_restore(pl);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_restore(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != self)
+				antilag_restore(it);
+		));
 	}
 }
