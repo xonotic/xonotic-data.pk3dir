@@ -233,7 +233,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors && team_count == 2)
+		if(autocvar_cl_forceplayercolors == 2 && team_count == 2)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
