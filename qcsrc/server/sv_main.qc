@@ -153,12 +153,13 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
+bool autocvar_sv_autopause = true;
 float RedirectionThink();
 void StartFrame()
 {
 	SELFPARAM();
 	execute_next_frame();
-	if (!server_is_dedicated) Pause_TryPause(true);
+	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
