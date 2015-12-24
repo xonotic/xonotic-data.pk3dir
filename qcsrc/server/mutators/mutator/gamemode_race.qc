@@ -110,17 +110,15 @@ void race_EventLog(string mode, entity actor) // use an alias for easy changing 
 float WinningCondition_Race(float fraglimit)
 {
 	float wc;
-	entity p;
 	float n, c;
 
 	n = 0;
 	c = 0;
-	FOR_EACH_PLAYER(p)
-	{
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		++n;
-		if(p.race_completed)
+		if(it.race_completed)
 			++c;
-	}
+	));
 	if(n && (n == c))
 		return WINNING_YES;
 	wc = WinningCondition_Scores(fraglimit, 0);
@@ -228,17 +226,15 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
-	entity e;
-	FOR_EACH_CLIENT(e)
-	{
-		if(e.race_place)
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it.race_place)
 		{
-			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
 			if(!s)
-				e.race_place = 0;
+				it.race_place = 0;
 		}
-		race_EventLog(ftos(e.race_place), e);
-	}
+		race_EventLog(ftos(it.race_place), it);
+	));
 
 	if(g_race_qualifying == 2)
 	{

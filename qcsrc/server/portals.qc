@@ -454,7 +454,7 @@ void Portal_Think_TryTeleportPlayer(entity e, vector g)
 
 void Portal_Think()
 {SELFPARAM();
-	entity e, o;
+	entity o;
 	vector g;
 
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -473,18 +473,17 @@ void Portal_Think()
 
 	fixedmakevectors(self.mangle);
 
-	FOR_EACH_PLAYER(e)
-	{
-		if(e != o)
-			if(IS_INDEPENDENT_PLAYER(e) || IS_INDEPENDENT_PLAYER(o))
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		if(it != o)
+			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
 
-		if(e != o || time >= self.portal_activatetime)
-			Portal_Think_TryTeleportPlayer(e, g);
+		if(it != o || time >= self.portal_activatetime)
+			Portal_Think_TryTeleportPlayer(it, g);
 
-		if(e.hook)
-			Portal_Think_TryTeleportPlayer(e.hook, g);
-	}
+		if(it.hook)
+			Portal_Think_TryTeleportPlayer(it.hook, g);
+	));
 	self.solid = SOLID_TRIGGER;
 	self.aiment = o;
 #endif

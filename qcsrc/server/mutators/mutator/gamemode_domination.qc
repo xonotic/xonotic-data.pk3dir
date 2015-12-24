@@ -167,40 +167,31 @@ void dompoint_captured ()
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
-	{
+	FOREACH_ENTITY_CLASS("dom_controlpoint", true, LAMBDA(
 		if (autocvar_g_domination_point_amt)
 			points = autocvar_g_domination_point_amt;
 		else
-			points = head.frags;
+			points = it.frags;
 		if (autocvar_g_domination_point_rate)
 			wait_time = autocvar_g_domination_point_rate;
 		else
-			wait_time = head.wait;
-		switch(head.goalentity.team)
+			wait_time = it.wait;
+		switch(it.goalentity.team)
 		{
-			case NUM_TEAM_1:
-				pps_red += points/wait_time;
-				break;
-			case NUM_TEAM_2:
-				pps_blue += points/wait_time;
-				break;
-			case NUM_TEAM_3:
-				pps_yellow += points/wait_time;
-				break;
-			case NUM_TEAM_4:
-				pps_pink += points/wait_time;
-				break;
+			case NUM_TEAM_1: pps_red += points/wait_time; break;
+			case NUM_TEAM_2: pps_blue += points/wait_time; break;
+			case NUM_TEAM_3: pps_yellow += points/wait_time; break;
+			case NUM_TEAM_4: pps_pink += points/wait_time; break;
 		}
 		total_pps += points/wait_time;
-	}
+	));
 
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
 	self.captime = time;
 
-	FOR_EACH_REALCLIENT(head)
-		set_dom_state(head);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(set_dom_state(it)));
 }
 
 void AnimateDomPoint()
@@ -455,9 +446,7 @@ float Domination_CheckPlayers()
 
 void Domination_RoundStart()
 {
-	entity e;
-	FOR_EACH_PLAYER(e)
-		e.player_blocked = 0;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.player_blocked = false));
 }
 
 //go to best items, or control points you don't own
@@ -509,15 +498,13 @@ MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 {SELFPARAM();
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	entity e;
-	FOR_EACH_PLAYER(e)
-	{
-		setself(e);
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		setself(it);
 		PutClientInServer();
 		self.player_blocked = 1;
 		if(IS_REAL_CLIENT(self))
 			set_dom_state(self);
-	}
+	));
 	return 1;
 }
 
