@@ -121,6 +121,16 @@
 		} \
 	} MACRO_END
 
+#define FOREACH_ENTITY_ENT(fld, match, body) \
+	do { \
+		int i = 0; \
+		for (entity it = findchainentity_tofield(fld, match, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		{ \
+			body \
+		} \
+	} \
+	while (0)
+
 #define FOREACH_ENTITY(cond, body) FOREACH_ENTITY_UNORDERED(cond, body)
 
 #define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
