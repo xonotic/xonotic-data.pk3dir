@@ -930,10 +930,11 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 			self.ballcarried.velocity = self.velocity;
 			self.ballcarried.customizeentityforclient = ball_customize;
 
-			setorigin(self.ballcarried, self.origin + self.view_ofs +
+			vector org = self.origin + self.view_ofs +
 					  v_forward * autocvar_g_nexball_viewmodel_offset.x +
 					  v_right * autocvar_g_nexball_viewmodel_offset.y +
-					  v_up * autocvar_g_nexball_viewmodel_offset.z);
+					  v_up * autocvar_g_nexball_viewmodel_offset.z;
+			setorigin(self.ballcarried, org);
 
 			// 'safe passing'
 			if(autocvar_g_nexball_safepass_maxdist)

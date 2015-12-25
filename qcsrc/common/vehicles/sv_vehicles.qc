@@ -320,7 +320,8 @@ entity vehicle_tossgib(entity _template, vector _vel, string _tag, bool _burn, b
 {SELFPARAM();
 	entity _gib = spawn();
 	_setmodel(_gib, _template.model);
-	setorigin(_gib, gettaginfo(self, gettagindex(self, _tag)));
+	vector org = gettaginfo(self, gettagindex(self, _tag));
+	setorigin(_gib, org);
 	_gib.velocity = _vel;
 	_gib.movetype = MOVETYPE_TOSS;
 	_gib.solid = SOLID_CORPSE;

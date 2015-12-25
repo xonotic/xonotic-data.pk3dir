@@ -449,7 +449,8 @@ void spiderbot_blowup()
 	b.angles = self.angles;
 	setsize(b, self.mins, self.maxs);
 
-	setorigin(h, gettaginfo(self, gettagindex(self, "tag_head")));
+	vector org = gettaginfo(self, gettagindex(self, "tag_head"));
+	setorigin(h, org);
 	h.movetype = MOVETYPE_BOUNCE;
 	h.solid = SOLID_BBOX;
 	h.velocity = v_up * (500 + random() * 500) + randomvec() * 128;
@@ -464,13 +465,15 @@ void spiderbot_blowup()
 	h.think = spiderbot_headfade;
 	h.nextthink = time;
 
-	setorigin(g1, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint01")));
+	org = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint01"));
+	setorigin(g1, org);
 	g1.movetype = MOVETYPE_TOSS;
 	g1.solid = SOLID_CORPSE;
 	g1.velocity = v_forward * 700 + (randomvec() * 32);
 	g1.avelocity = randomvec() * 180;
 
-	setorigin(g2, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint02")));
+	org = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint02"));
+	setorigin(g2, org);
 	g2.movetype = MOVETYPE_TOSS;
 	g2.solid = SOLID_CORPSE;
 	g2.velocity = v_forward * 700 + (randomvec() * 32);
