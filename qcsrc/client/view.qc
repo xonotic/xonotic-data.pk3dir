@@ -46,19 +46,6 @@ float autocvar_cl_leanmodel;
 float autocvar_cl_leanmodel_scale;
 float autocvar_cl_leanmodel_averagingtime;
 
-#define lowpass(value, frac, ref_store, ret) MACRO_BEGIN \
-{ \
-	float __frac = 1 - exp(-frac); \
-	ret = ref_store = ref_store * (1 - __frac) + (value) * __frac; \
-} MACRO_END
-
-#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	lowpass(value.x, fracx, ref_store.x, ref_out.x); \
-	lowpass(value.y, fracy, ref_store.y, ref_out.y); \
-	lowpass(value.z, fracz, ref_store.z, ref_out.z); \
-} MACRO_END
-
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
@@ -102,8 +89,8 @@ void viewmodel_animate(entity this)
 
 		vel_prev = view.velocity;
 
-		float frac = frametime / autocvar_cl_followmodel_averagingtime;
-		lowpass3(acc, frac, frac, frac, acc_average, acc_average);
+		float frac = 1 - exp(-frametime / autocvar_cl_followmodel_averagingtime);
+		acc_average = acc_average * (1 - frac) + acc * frac;
 
 		gunorg.x = -acc_average.x / 30 * autocvar_cl_followmodel_scale;
 		gunorg.y = -acc_average.y / 30 * autocvar_cl_followmodel_scale;
@@ -127,16 +114,18 @@ void viewmodel_animate(entity this)
 		if(vel.y > 180) vel.y -= 360; if(vel.y < -180) vel.y += 360;
 		vel *= (1 / max(0.0001, frametime) * (0.0254 / 9.80665));
 
-		float frac = frametime / 0.3; // a relatively high averaging time is needed to smooth mouse movements out
-		lowpass3(vel, frac, frac, 0, viewangles_vel_average, viewangles_vel_average);
+		float frac = 1 - exp(-frametime / 0.3); // a relatively high averaging time is needed to smooth mouse movements out
+		viewangles_vel_average.x = viewangles_vel_average.x * (1 - frac) + vel.x * frac;
+		viewangles_vel_average.y = viewangles_vel_average.y * (1 - frac) + vel.y * frac;
 		acc = viewangles_vel_average - viewangles_vel_prev;
 		acc *= 1 / max(0.0001, frametime);
 
 		viewangles_prev = view_angles;
 		viewangles_vel_prev = viewangles_vel_average;
 
-		frac = frametime / autocvar_cl_leanmodel_averagingtime;
-		lowpass3(acc, frac, frac, 0, viewangles_acc_average, viewangles_acc_average);
+		frac = 1 - exp(-frametime / autocvar_cl_leanmodel_averagingtime);
+		viewangles_acc_average.x = viewangles_acc_average.x * (1 - frac) + acc.x * frac;
+		viewangles_acc_average.y = viewangles_acc_average.y * (1 - frac) + acc.y * frac;
 
 		gunangles.x = -viewangles_acc_average.x / 3 * autocvar_cl_leanmodel_scale;
 		gunangles.y = -viewangles_acc_average.y / 3 * autocvar_cl_leanmodel_scale;
