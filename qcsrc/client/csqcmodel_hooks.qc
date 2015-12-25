@@ -649,7 +649,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 			bool onground = 0;
 			if(self == csqcplayer)
 			{
-				if(self.flags & FL_ONGROUND)
+				if(IS_ONGROUND(self))
 					onground = 1;
 				self.anim_prev_pmove_flags = self.flags;
 				if(self.flags & FL_DUCKED)

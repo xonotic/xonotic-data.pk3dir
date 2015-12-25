@@ -177,7 +177,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			continue;
 
 		// not falling
-		if((it.flags & FL_ONGROUND) == 0)
+		if((IS_ONGROUND(it)) == 0)
 		{
 			traceline(it.origin, it.origin + '0 0 -1500', true, world);
 			t = pointcontents(trace_endpos + '0 0 1');

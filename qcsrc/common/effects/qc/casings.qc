@@ -49,7 +49,7 @@ void Casing_Draw(entity this)
     {
         self.move_angles_x = 0;
         self.move_angles_z = 0;
-        self.flags &= ~FL_ONGROUND;
+        UNSET_ONGROUND(self);
     }
 
     Movetype_Physics_MatchTicrate(self, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);

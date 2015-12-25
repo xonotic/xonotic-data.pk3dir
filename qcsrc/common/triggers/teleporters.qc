@@ -138,7 +138,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
-		player.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(player);
 
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;

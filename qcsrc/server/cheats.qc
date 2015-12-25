@@ -880,7 +880,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	draggee.draggravity = draggee.gravity;
 	draggee.movetype = MOVETYPE_WALK;
 	draggee.gravity = 0.00001;
-	draggee.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(draggee);
 	draggee.draggedby = dragger;
 
 	dragger.dragentity = draggee;
@@ -924,7 +924,7 @@ void Drag_Finish(entity dragger)
 	if((draggee.flags & FL_ITEM) && (vlen(draggee.velocity) < 32))
 	{
 		draggee.velocity = '0 0 0';
-		draggee.flags |= FL_ONGROUND; // floating items are FUN
+		SET_ONGROUND(draggee); // floating items are FUN
 	}
 }
 
@@ -985,7 +985,7 @@ void Drag_Update(entity dragger)
 	entity draggee;
 
 	draggee = dragger.dragentity;
-	draggee.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(draggee);
 
 	curorigin = gettaginfo(draggee, 0);
 	curorigin = curorigin + v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;

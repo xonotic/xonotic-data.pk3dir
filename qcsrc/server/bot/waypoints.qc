@@ -818,7 +818,7 @@ void botframe_showwaypointlinks()
 	while (player)
 	{
 		if (!player.isbot)
-		if (player.flags & FL_ONGROUND || player.waterlevel > WATERLEVEL_NONE)
+		if (IS_ONGROUND(player) || player.waterlevel > WATERLEVEL_NONE)
 		{
 			//navigation_testtracewalk = true;
 			head = navigation_findnearestwaypoint(player, false);

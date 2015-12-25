@@ -196,7 +196,7 @@ float M_Shambler_Attack(float attack_type, entity targ)
 			float randomness = random(), enemy_len = vlen(self.enemy.origin - self.origin);
 
 			if(time >= self.shambler_lastattack) // shambler doesn't attack much
-			if(self.flags & FL_ONGROUND)
+			if(IS_ONGROUND(self))
 			if(randomness <= 0.5 && enemy_len <= autocvar_g_monster_shambler_attack_smash_range)
 			{
 				setanim(self, self.anim_melee2, true, true, false);

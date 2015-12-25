@@ -1076,8 +1076,8 @@ void vehicles_enter(entity pl, entity veh)
 	//veh.exteriormodeltoclient = veh.owner;
 	//veh.tur_head.exteriormodeltoclient = veh.owner;
 
-	pl.flags &= ~FL_ONGROUND;
-	veh.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(pl);
+	UNSET_ONGROUND(veh);
 
 	veh.team = pl.team;
 	veh.flags -= FL_NOTARGET;

@@ -74,7 +74,7 @@ void movelib_move(vector force,float max_velocity,float drag,float theMass,float
     else
         acceleration = vlen(force);
 
-    if (self.flags & FL_ONGROUND)
+    if (IS_ONGROUND(self))
     {
         if (breakforce)
         {
@@ -150,7 +150,7 @@ void movelib_update(vector dir,float force)
         acceleration += self.buoyancy * '0 0 1';
     }
     else
-        if(self.flags & FL_ONGROUND)
+        if(IS_ONGROUND(self))
             ffriction = self.ground_friction;
         else
             ffriction = self.air_friction;

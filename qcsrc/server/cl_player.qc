@@ -154,7 +154,7 @@ void player_anim ()
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+	animdecide_setimplicitstate(self, (IS_ONGROUND(self)));
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -588,7 +588,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		self.solid = SOLID_CORPSE;
 		self.ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
-		self.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(self);
 		// dying animation
 		self.deadflag = DEAD_DYING;
 

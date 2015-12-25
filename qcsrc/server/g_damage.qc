@@ -855,7 +855,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			self.velocity = self.velocity + farce;
 			self.move_velocity = self.velocity;
 		}
-		self.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(self);
 		self.move_flags &= ~FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}

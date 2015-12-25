@@ -134,10 +134,6 @@ bool IsFlying(entity a);
 #define SET_JUMP_HELD(s)                    ((s).flags &= ~FL_JUMPRELEASED)
 #define UNSET_JUMP_HELD(s)                  ((s).flags |= FL_JUMPRELEASED)
 
-#define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
-#define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
-#define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
-
 #define WAS_ONGROUND(s)                     boolean((s).lastflags & FL_ONGROUND)
 
 #define ITEMS_STAT(s)                       ((s).items)

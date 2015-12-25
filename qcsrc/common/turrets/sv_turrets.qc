@@ -31,7 +31,7 @@ vector turret_aim_generic()
 			prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
 
 			if(self.aim_flags & TFL_AIM_ZPREDICT)
-			if(!(self.enemy.flags & FL_ONGROUND))
+			if(!IS_ONGROUND(self.enemy))
 			if(self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE)
 			{
 				float vz;

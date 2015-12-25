@@ -127,7 +127,7 @@ void DropOwner()
 	DropBall(self, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle.y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
-	ownr.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(ownr);
 }
 
 void GiveBall(entity plyr, entity ball)
@@ -199,7 +199,7 @@ void DropBall(entity ball, vector org, vector vel)
 	setattachment(ball, world, "");
 	setorigin(ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(ball);
 	ball.scale = ball_scale;
 	ball.velocity = vel;
 	ball.nb_droptime = time;
@@ -225,7 +225,7 @@ void DropBall(entity ball, vector org, vector vel)
 void InitBall()
 {SELFPARAM();
 	if(gameover) return;
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 	self.movetype = MOVETYPE_BOUNCE;
 	if(self.classname == "nexball_basketball")
 		self.touch = basketball_touch;
@@ -729,7 +729,7 @@ void W_Nexball_Touch()
 		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
-			other.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(other);
 			if(!attacker.ballcarried)
 			{
 				LogNB("stole", attacker);

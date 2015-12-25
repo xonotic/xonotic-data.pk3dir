@@ -382,7 +382,7 @@ float Monster_Attack_Leap_Check(vector vel)
 {SELFPARAM();
 	if(self.state && (self.flags & FL_MONSTER))
 		return false; // already attacking
-	if(!(self.flags & FL_ONGROUND))
+	if(!(IS_ONGROUND(self)))
 		return false; // not on the ground
 	if(self.health <= 0)
 		return false; // called when dead?
@@ -417,7 +417,7 @@ bool Monster_Attack_Leap(vector anm, void() touchfunc, vector vel, float animtim
 	self.touch = touchfunc;
 	self.origin_z += 1;
 	self.velocity = vel;
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 
 	return true;
 }
@@ -833,7 +833,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 		self.last_enemycheck = time + 1; // check for enemies every second
 	}
 
-	if(self.state == MONSTER_ATTACK_RANGED && (self.flags & FL_ONGROUND))
+	if(self.state == MONSTER_ATTACK_RANGED && (IS_ONGROUND(self)))
 	{
 		self.state = 0;
 		self.touch = Monster_Touch;
@@ -861,7 +861,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 	if(vlen(self.origin - self.moveto) > 100)
 	{
 		float do_run = (self.enemy || self.monster_moveto);
-		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
+		if((IS_ONGROUND(self)) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 			Monster_CalculateVelocity(self, self.moveto, self.origin, true, ((do_run) ? runspeed : walkspeed));
 
 		if(time > self.pain_finished) // TODO: use anim_finished instead!
@@ -1203,7 +1203,7 @@ void Monster_Anim()
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+	animdecide_setimplicitstate(self, (IS_ONGROUND(self)));
 
 	/* // weapon entities for monsters?
 	if (self.weaponentity)

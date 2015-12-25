@@ -551,7 +551,7 @@ void navigation_markroutes(entity fixed_source_waypoint)
 		// try a short range search for the nearest waypoints, and expand the search repeatedly if none are found
 		// as this search is expensive we will use lower values if the bot is on the air
 		float i, increment, maxdistance;
-		if(self.flags & FL_ONGROUND)
+		if(IS_ONGROUND(self))
 		{
 			increment = 750;
 			maxdistance = 50000;

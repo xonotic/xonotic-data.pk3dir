@@ -173,7 +173,7 @@ void CSQCPlayer_Physics(entity this)
 			//this.move_movetype = MOVETYPE_WALK; // temp
 			this.move_velocity = this.velocity;
 			this.move_avelocity = this.avelocity;
-			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, boolean(this.flags & FL_ONGROUND));
+			this.move_flags = BITSET(this.move_flags, FL_ONGROUND, IS_ONGROUND(this));
 			this.move_flags = BITSET(this.move_flags, FL_WATERJUMP, boolean(this.flags & FL_WATERJUMP));
 			this.move_waterlevel = this.waterlevel;
 			this.move_watertype = this.watertype;
@@ -183,7 +183,7 @@ void CSQCPlayer_Physics(entity this)
 		this.pmove_flags =
 				((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
 				(!(this.flags & FL_JUMPRELEASED) ? PMF_JUMP_HELD : 0) |
-				((this.flags & FL_ONGROUND) ? PMF_ONGROUND : 0);
+				((IS_ONGROUND(this)) ? PMF_ONGROUND : 0);
 	}
 }
 
@@ -282,7 +282,7 @@ void CSQCPlayer_SetCamera()
 				const vector o = e.origin;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(e, servercommandframe + 1, false);
-				CSQCPlayer_SetPredictionError(e.origin - o, e.velocity - v0, pmove_onground - boolean(e.flags & FL_ONGROUND));
+				CSQCPlayer_SetPredictionError(e.origin - o, e.velocity - v0, pmove_onground - IS_ONGROUND(e));
 				e.origin = o;
 				e.velocity = v0;
 

@@ -743,7 +743,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	self.velocity += force;
 	UpdateCSQCProjectile(self);
 
-	if(damage <= 0 || ((self.flags & FL_ONGROUND) && IS_PLAYER(attacker)))
+	if(damage <= 0 || ((IS_ONGROUND(self)) && IS_PLAYER(attacker)))
 		return;
 
 	if(self.health == self.max_health)

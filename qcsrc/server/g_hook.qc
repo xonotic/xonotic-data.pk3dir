@@ -243,7 +243,7 @@ void GrapplingHookThink()
 						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
 						{
 							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-							self.aiment.flags &= ~FL_ONGROUND;
+							UNSET_ONGROUND(self.aiment);
 							if(self.aiment.flags & FL_PROJECTILE)
 								UpdateCSQCProjectile(self.aiment);
 						}
@@ -255,7 +255,7 @@ void GrapplingHookThink()
 					}
 				}
 
-				pull_entity.flags &= ~FL_ONGROUND;
+				UNSET_ONGROUND(pull_entity);
 			}
 
 			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
@@ -280,7 +280,7 @@ void GrapplingHookThink()
 			self.realowner.velocity = dir*spd;
 			self.realowner.movetype = MOVETYPE_FLY;
 
-			self.realowner.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(self.realowner);
 		}
 	}
 

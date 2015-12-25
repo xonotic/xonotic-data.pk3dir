@@ -134,12 +134,12 @@ float spiderbot_frame()
 
 	movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend, autocvar_g_vehicle_spiderbot_tiltlimit);
 
-	if(spider.flags & FL_ONGROUND)
+	if(IS_ONGROUND(spider))
 		spider.jump_delay = time; // reset now so movement can begin
 
-	//if(spider.flags & FL_ONGROUND)
+	//if(IS_ONGROUND(spider))
 	{
-		if(spider.flags & FL_ONGROUND)
+		if(IS_ONGROUND(spider))
 		if(spider.frame == 4 && self.tur_head.wait != 0)
 		{
 			sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_LAND, VOL_VEHICLEENGINE, ATTEN_NORM);
@@ -149,7 +149,7 @@ float spiderbot_frame()
 		if(!player.BUTTON_JUMP)
 			spider.BUTTON_JUMP = 0;
 
-		if((spider.flags & FL_ONGROUND) && player.BUTTON_JUMP && !spider.BUTTON_JUMP && self.tur_head.wait < time)
+		if((IS_ONGROUND(spider)) && player.BUTTON_JUMP && !spider.BUTTON_JUMP && self.tur_head.wait < time)
 		{
 			sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_JUMP, VOL_VEHICLEENGINE, ATTEN_NORM);
 			//dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
@@ -171,7 +171,7 @@ float spiderbot_frame()
 			if(movefix_y == 0 && movefix_x == 0)
 				sd = v_forward; // always do forward
 
-			spider.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(spider);
 
 			spider.velocity = sd * 700 + rt * 600 + v_up * 600;
 			spider.frame = 4;
@@ -180,7 +180,7 @@ float spiderbot_frame()
 		{
 			if(vlen(player.movement) == 0)
 			{
-				if(spider.flags & FL_ONGROUND)
+				if(IS_ONGROUND(spider))
 				{
 					if(self.sound_nexttime < time || self.delay != 3)
 					{
@@ -210,13 +210,13 @@ float spiderbot_frame()
 					if(player.movement_x > 0)
 					{
 						player.movement_x = 1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 0;
 					}
 					else if(player.movement_x < 0)
 					{
 						player.movement_x = -1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 1;
 					}
 					player.movement_y = 0;
@@ -226,7 +226,7 @@ float spiderbot_frame()
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
 						spider.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
-					if(spider.flags & FL_ONGROUND)
+					if(IS_ONGROUND(spider))
 					if(self.sound_nexttime < time || self.delay != 1)
 					{
 						self.delay = 1;
@@ -240,13 +240,13 @@ float spiderbot_frame()
 					if(player.movement_y < 0)
 					{
 						player.movement_y = -1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 2;
 					}
 					else if(player.movement_y > 0)
 					{
 						player.movement_y = 1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 3;
 					}
 
@@ -256,7 +256,7 @@ float spiderbot_frame()
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
 						spider.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
-					if(spider.flags & FL_ONGROUND)
+					if(IS_ONGROUND(spider))
 					if(self.sound_nexttime < time || self.delay != 2)
 					{
 						self.delay = 2;
@@ -572,7 +572,7 @@ spawnfunc(vehicle_spiderbot)
 		}
 		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh))
 		{
-			if(self.flags & FL_ONGROUND)
+			if(IS_ONGROUND(self))
 				movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
 		}
 		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh))
