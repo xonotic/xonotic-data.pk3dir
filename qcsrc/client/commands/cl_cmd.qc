@@ -407,11 +407,7 @@ void LocalCommand_find(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-
-			for (client = world; (client = find(client, classname, argv(1))); )
-				LOG_INFO(etos(client), "\n");
-
+			FOREACH_ENTITY_CLASS(argv(1), true, LAMBDA(LOG_INFO(etos(it), "\n")));
 			return;
 		}
 
