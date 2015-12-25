@@ -1134,7 +1134,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 		return;
 	}
 
-	float reverse = FALSE;
+	float reverse = false;
 	vector a, b;
 
 	makevectors(self.angles);
@@ -1145,11 +1145,11 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 
 	if(trace_fraction != 1.0)
 	{
-		reverse = TRUE;
+		reverse = true;
 
 		if(trace_ent)
 		if(IS_PLAYER(trace_ent) && !(trace_ent.items & IT_STRENGTH))
-			reverse = FALSE;
+			reverse = false;
 	}
 
 	// TODO: fix this... tracing is broken if the floor is thin
@@ -1159,7 +1159,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 		a = b - '0 0 32';
 		traceline(b, a, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1.0)
-			reverse = TRUE;
+			reverse = true;
 	} */
 
 	if(reverse)

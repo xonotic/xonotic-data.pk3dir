@@ -1461,17 +1461,12 @@ void CSQC_UpdateView(float w, float h)
 
 		if(ons_roundlost)
 		{
-			entity e;
-			for(e = world; (e = find(e, classname, "onslaught_generator")); )
-			{
-				if(e.health <= 0)
-				{
-					gen = e;
-					break;
-				}
-			}
+			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, LAMBDA(
+				gen = it;
+				break;
+			));
 			if(!gen)
-				ons_roundlost = FALSE; // don't enforce the 3rd person camera if there is no dead generator to show
+				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
 		if(WantEventchase() || (!autocvar_cl_orthoview && ons_roundlost))
 		{

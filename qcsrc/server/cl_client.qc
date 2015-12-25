@@ -2054,7 +2054,7 @@ void PlayerUseKey()
 		if(!gameover)
 		{
 			entity head, closest_target = world;
-			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
+			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, true);
 
 			while(head) // find the closest acceptable target to enter
 			{

@@ -405,7 +405,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		frag_damage = 1000; // always gib if it was a vaporizer death
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
