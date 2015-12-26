@@ -39,12 +39,12 @@ float autocvar_cl_bobmodel_side;
 float autocvar_cl_bobmodel_up;
 
 float autocvar_cl_followmodel;
-float autocvar_cl_followmodel_scale;
-float autocvar_cl_followmodel_averagingtime;
+float autocvar_cl_followmodel_scale = 6;
+float autocvar_cl_followmodel_averagingtime = 0.15;
 
 float autocvar_cl_leanmodel;
-float autocvar_cl_leanmodel_scale;
-float autocvar_cl_leanmodel_averagingtime;
+float autocvar_cl_leanmodel_scale = 5.5;
+float autocvar_cl_leanmodel_averagingtime = 0.15;
 
 void viewmodel_animate(entity this)
 {
