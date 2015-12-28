@@ -257,6 +257,9 @@ void LocalCommand_hud(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if(MUTATOR_CALLHOOK(HUD_Command, argc))
+				return;
+
 			switch (argv(1))
 			{
 				case "configure":

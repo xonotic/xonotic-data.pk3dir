@@ -126,4 +126,11 @@ MUTATOR_HOOKABLE(Particles_VortexBeam, EV_Particles_VortexBeam);
 entity w_hitwep;
 MUTATOR_HOOKABLE(Weapon_ImpactEffect, EV_Weapon_ImpactEffect);
 
+/* NOTE: hooks MUST start with if (MUTATOR_RETURNVALUE) return false;
+*/
+#define EV_HUD_Command(i, o) \
+	/** also, argv() can be used */ i(int, cmd_argc) \
+	/**/
+MUTATOR_HOOKABLE(HUD_Command, EV_HUD_Command);
+
 #endif
