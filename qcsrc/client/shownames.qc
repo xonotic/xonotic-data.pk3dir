@@ -58,8 +58,8 @@ void Draw_ShowNames(entity this)
 			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
-			if (vlen((eX * o.x + eY * o.y) - eo) < autocvar_hud_shownames_antioverlap_distance
-			    && dist > vlen(it.origin - view_origin))
+			if (vdist(((eX * o.x + eY * o.y) - eo), <, autocvar_hud_shownames_antioverlap_distance)
+			    && vdist((it.origin - view_origin), <, dist))
 			{
 				overlap = true;
 				break;
