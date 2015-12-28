@@ -34,9 +34,12 @@
 REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
 #ifdef CSQC
+bool autocvar_cl_ghost_items_vehicle = true;
 void Item_SetAlpha(entity this)
 {
-	if(!hud && (this.ItemStatus & ITS_AVAILABLE))
+	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
+
+	if(!veh_hud && (this.ItemStatus & ITS_AVAILABLE))
 	{
 		this.alpha = 1;
 		this.colormod = this.glowmod = '1 1 1';
@@ -52,13 +55,14 @@ void Item_SetAlpha(entity this)
 			this.alpha = -1;
 	}
 
-	if(!hud)
+	if(!veh_hud)
 	if(this.ItemStatus & ITS_STAYWEP)
 	{
 		this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
 		this.alpha = autocvar_cl_weapon_stay_alpha;
 	}
 }
+
 void ItemDraw(entity this)
 {
     if(this.gravity)
