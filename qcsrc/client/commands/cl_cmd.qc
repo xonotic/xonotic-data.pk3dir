@@ -284,15 +284,6 @@ void LocalCommand_hud(int request, int argc)
 					return;
 				}
 
-				case "minigame":
-				{
-					if (HUD_MinigameMenu_IsOpened())
-						HUD_MinigameMenu_Close();
-					else
-						HUD_MinigameMenu_Open();
-					return;
-				}
-
 				case "save":
 				{
 					if (argv(2))
