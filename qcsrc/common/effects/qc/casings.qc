@@ -90,7 +90,7 @@ void Casing_Touch()
     if (!self.silent)
     if (!trace_ent || trace_ent.solid == SOLID_BSP)
     {
-        if (vlen(self.velocity) > 50)
+        if(vdist(self.velocity, >, 50))
         {
             if (time >= self.nextthink)
             {

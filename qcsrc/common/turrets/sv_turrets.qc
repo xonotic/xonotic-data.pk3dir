@@ -119,7 +119,7 @@ float turret_targetscore_generic(entity _turret, entity _target)
 			(m_score * _turret.target_select_missilebias) +
 			(p_score * _turret.target_select_playerbias);
 
-	if(_turret.target_range < vlen(_turret.tur_shotorg - real_origin(_target)))
+	if(vdist((_turret.tur_shotorg - real_origin(_target)), >, _turret.target_range))
 	{
 		//dprint("Wtf?\n");
 		score *= 0.001;

@@ -261,7 +261,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 
 		if(self.damageforcescale)
-			if(vlen(thisforce))
+			if(vdist(thisforce, !=, 0))
 			{
 				self.move_velocity = self.move_velocity + damage_explosion_calcpush(self.damageforcescale * thisforce, self.move_velocity, autocvar_g_balance_damagepush_speedfactor);
 				self.move_flags &= ~FL_ONGROUND;
