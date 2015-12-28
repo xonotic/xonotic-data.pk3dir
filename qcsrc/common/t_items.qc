@@ -34,6 +34,31 @@
 REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
 #ifdef CSQC
+void Item_SetAlpha(entity this)
+{
+	if(!hud && (this.ItemStatus & ITS_AVAILABLE))
+	{
+		this.alpha = 1;
+		this.colormod = this.glowmod = '1 1 1';
+	}
+	else
+	{
+		if (autocvar_cl_ghost_items_color)
+		{
+			this.alpha = autocvar_cl_ghost_items;
+			this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
+		}
+		else
+			this.alpha = -1;
+	}
+
+	if(!hud)
+	if(this.ItemStatus & ITS_STAYWEP)
+	{
+		this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
+		this.alpha = autocvar_cl_weapon_stay_alpha;
+	}
+}
 void ItemDraw(entity this)
 {
     if(this.gravity)
@@ -68,6 +93,8 @@ void ItemDraw(entity this)
             setorigin(this, '0 0 8' + this.oldorigin + '0 0 4' * sin(time * 3));
         }
     }
+
+    Item_SetAlpha(this);
 }
 
 void ItemDrawSimple(entity this)
@@ -99,7 +126,7 @@ void Item_PreDraw()
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
-	if(self.ItemStatus & ITS_AVAILABLE)
+	if(!hud && (self.ItemStatus & ITS_AVAILABLE))
 		self.alpha = alph;
 	if(alph <= 0)
 		self.drawmask = 0;
@@ -144,32 +171,11 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     {
         self.ItemStatus = ReadByte();
 
-        if(self.ItemStatus & ITS_AVAILABLE)
-        {
-            self.alpha = 1;
-            self.colormod = self.glowmod = '1 1 1';
-        }
-        else
-        {
-            if (autocvar_cl_ghost_items_color)
-            {
-                self.alpha = autocvar_cl_ghost_items;
-                self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
-            }
-            else
-                self.alpha = -1;
-        }
+        Item_SetAlpha(self);
 
         if(autocvar_cl_fullbright_items)
             if(self.ItemStatus & ITS_ALLOWFB)
                 self.effects |= EF_FULLBRIGHT;
-
-        if(self.ItemStatus & ITS_STAYWEP)
-        {
-            self.colormod = self.glowmod = autocvar_cl_weapon_stay_color;
-            self.alpha = autocvar_cl_weapon_stay_alpha;
-
-        }
 
         if(self.ItemStatus & ITS_POWERUP)
         {
