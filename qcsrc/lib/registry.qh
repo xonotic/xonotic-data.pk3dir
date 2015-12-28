@@ -142,7 +142,8 @@ void Registry_send(string id, string hash);
 	string REGISTRY_HASH(id); \
 	STATIC_INIT(Registry_check_##id) \
 	{ \
-		string algo = "SHA256"; \
+		/* Note: SHA256 isn't always available, use MD4 instead */ \
+		string algo = "MD4"; \
 		string join = ":"; \
 		string s = ""; \
 		FOREACH(id, true, LAMBDA(s = strcat(s, join, it.registered_id))); \
