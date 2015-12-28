@@ -27,9 +27,8 @@ typedef vector vectori;
 	#define REGISTER_STAT_2(id, T) \
 		T _STAT(id); \
 		T CAT(_STAT(id), _prev); \
-		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			make_pure(this); \
 			if (#T == "vector" || #T == "vectori") { \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
@@ -77,9 +76,8 @@ typedef vector vectori;
 	#define _STAT(id) stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		.T _STAT(id); \
-		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			make_pure(this); \
 			if (#T == "vector" || #T == "vectori") { \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \

@@ -81,8 +81,7 @@ REGISTRY(Registries, BITS(8))
 } MACRO_END
 
 #define REGISTRY_RESERVE(registry, fld, id, suffix) MACRO_BEGIN { \
-	entity e = new(registry_reserved); \
-	make_pure(e); \
+	entity e = new_pure(registry_reserved); \
 	e.registered_id = #id "/" #suffix; \
 	REGISTRY_PUSH(registry, fld, e); \
 } MACRO_END

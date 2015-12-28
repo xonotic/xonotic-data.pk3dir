@@ -523,8 +523,7 @@ void Create_Notification_Entity(
 	// =====================
 	//  Global Entity Setup
 	// =====================
-	entity notif = spawn();
-	make_pure(notif);
+	entity notif = new_pure(notification);
 	switch(typeId)
 	{
 		case MSG_ANNCE:

@@ -20,9 +20,8 @@ REGISTRY_CHECK(IMPULSES)
 
 #define REGISTER_IMPULSE(id, n) _REGISTER_IMPULSE(IMP_##id, id, n)
 #define _REGISTER_IMPULSE(id, alias, n) \
-	REGISTER(IMPULSES, id, m_id, new(Impulse)) \
+	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
 	{ \
-		make_pure(this); \
 		this.impulse = n; \
 		IMPULSE_ALIAS(alias, "impulse " #n); \
 	}
@@ -205,9 +204,8 @@ LEGACY_IMPULSE(g_waypointeditor_unreachable, 107, "navwaypoint_unreachable")
 
 #define CHIMPULSE(id, n) _CHIMPULSE(CHIMPULSE_##id, n)
 #define _CHIMPULSE(id, n) \
-	REGISTER(IMPULSES, id, m_id, new(Impulse)) \
+	REGISTER(IMPULSES, id, m_id, new_pure(Impulse)) \
 	{ \
-		make_pure(this); \
 		this.impulse = n; \
 	}
 

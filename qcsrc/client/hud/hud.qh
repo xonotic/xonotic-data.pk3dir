@@ -12,8 +12,7 @@ REGISTER_REGISTRY(hud_panels)
 
 #define REGISTER_HUD_PANEL(id, draw_func, name, configflags, showflags) \
 	void draw_func(); \
-	REGISTER(hud_panels, HUD_PANEL, id, m_id, new(hud_panel)) { \
-		make_pure(this); \
+	REGISTER(hud_panels, HUD_PANEL, id, m_id, new_pure(hud_panel)) { \
 		this.panel_id = this.m_id; \
 		this.panel_draw = draw_func; \
 		this.panel_name = #name; \

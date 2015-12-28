@@ -205,8 +205,7 @@ X(reload_time, float)
             noref entity b = this.baseline; \
             if (!b) \
             { \
-                b = this.baseline = new(baseline); \
-                make_pure(b); \
+                b = this.baseline = new_pure(baseline); \
                 b.baseline_target = this; \
             }
         #ifdef SVQC

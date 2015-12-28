@@ -31,9 +31,20 @@
 .string sourceLocFile;
 .int sourceLocLine;
 entity _spawn();
+
+#ifndef SPAWN_PURE
+#define SPAWN_PURE 0
+#endif
+
+#if SPAWN_PURE
+entity spawn_pure() = #600;
+#else
+#define spawn_pure() _spawn()
+#endif
+
 entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure)
 {
-	entity this = _spawn();
+	entity this = pure ? spawn_pure() : _spawn();
 	this.classname = _classname;
 	this.sourceLocFile = _sourceFile;
 	this.sourceLocLine = _sourceLine;

@@ -8,8 +8,7 @@ typedef entity ArrayList;
 #define AL_NEW(this, n, default, T) \
 	MACRO_BEGIN \
 	{ \
-		ArrayList _al = this = new(ArrayList); \
-		make_pure(_al); \
+		ArrayList _al = this = new_pure(ArrayList); \
 		_al.al_buf = buf_create(); \
 		for (int i = 0, _n = _al.al_len = n; i < _n; ++i) \
 		{ \
