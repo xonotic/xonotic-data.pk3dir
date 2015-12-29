@@ -294,7 +294,7 @@ void snake_eat_team(entity minigame, int pteam)
 		minigame.snake_lost_teams |= BIT(pteam);
 
 	if(pl && minigame.snake_lives[pteam] > 0)
-		minigame_setup_snake(minigame, pteam);	
+		minigame_setup_snake(minigame, pteam);
 }
 
 void snake_move_head(entity minigame, entity head)
@@ -415,7 +415,7 @@ int snake_server_event(entity minigame, string event, ...)
 			}
 			else
 				minigame.snake_lives[1] = 1;
-			
+
 			return true;
 		}
 		case "end":
@@ -465,8 +465,8 @@ int snake_server_event(entity minigame, string event, ...)
 		{
 			switch(argv(0))
 			{
-				case "move": 
-					snake_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) == 3 ? argv(2) : string_null)); 
+				case "move":
+					snake_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) == 3 ? argv(2) : string_null));
 					return true;
 			}
 
@@ -506,7 +506,7 @@ int snake_server_event(entity minigame, string event, ...)
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -539,7 +539,7 @@ void snake_hud_board(vector pos, vector mySize)
 	minigame_hud_fitsqare(pos, mySize);
 	snake_boardpos = pos;
 	snake_boardsize = mySize;
-	
+
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("snake/board"));
 
 	vector tile_size = minigame_hud_denormalize_size('1 1 0' / SNAKE_TILE_SIZE,pos,mySize);
@@ -633,7 +633,7 @@ void snake_hud_board(vector pos, vector mySize)
 			}
 			else
 			{
-				minigame_drawpic_centered( tile_pos,  
+				minigame_drawpic_centered( tile_pos,
 						minigame_texture(thepiece),
 						tile_size, tile_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 			}
@@ -654,17 +654,17 @@ void snake_hud_board(vector pos, vector mySize)
 			victory_text = "You win!";
 		if(active_minigame.snake_lives[minigame_self.team] <= 0)
 			victory_text = "You ran out of lives!";
-		
+
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s %s", victory_text, scores_text), 
+			sprintf("%s %s", victory_text, scores_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
-		
+
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8,DRAWFLAG_ADDITIVE);
-		
+
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s %s", victory_text, scores_text), 
+			sprintf("%s %s", victory_text, scores_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -726,7 +726,7 @@ string snake_turn_to_string(int turnflags)
 
 	if(active_minigame.snake_lives[minigame_self.team] <= 0)
 		return _("You ran out of lives!");
-	
+
 	if ( (snake_find_head(active_minigame, minigame_self.team)).snake_dir == '0 0 0' )
 		return _("Press an arrow key to begin the game");
 
@@ -735,7 +735,7 @@ string snake_turn_to_string(int turnflags)
 			return _("Avoid the snake's body, collect the mice!");
 		else
 			return _("Avoid the screen edges and the snake's body, collect the mice!");
-	
+
 	return "";
 }
 

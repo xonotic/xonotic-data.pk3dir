@@ -3,7 +3,7 @@ PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
 QCC ?= gmqcc
 NDEBUG ?= 1
- 
+
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
 # We eventually need to get rid of these

@@ -513,7 +513,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 				++n;
 			}
 		));
-			
+
 	}
 
 	if(n && self.frozen == 1) // OK, there is at least one teammate reviving us

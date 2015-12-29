@@ -1184,7 +1184,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if (!(this.spawnflags & 1024)) {
 		if(def.instanceOfPowerup)
 			this.ItemStatus |= ITS_ANIMATE1;
-	
+
 		if(this.armorvalue || this.health)
 			this.ItemStatus |= ITS_ANIMATE2;
 	}

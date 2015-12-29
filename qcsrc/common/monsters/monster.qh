@@ -54,7 +54,7 @@ CLASS(Monster, Object)
     ATTRIB(Monster, mins, vector, '-0 -0 -0')
     /** hitbox size */
     ATTRIB(Monster, maxs, vector, '0 0 0')
-    
+
     /** (SERVER) setup monster data */
     METHOD(Monster, mr_setup, bool(Monster this)) { return false; }
     /** (SERVER) logic to run every frame */

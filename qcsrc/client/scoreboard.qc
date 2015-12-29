@@ -608,17 +608,17 @@ string HUD_GetField(entity pl, int field)
 		case SP_DMG:
 			num = pl.(scores[SP_DMG]);
 			denom = 1000;
-			
+
 			str = sprintf("%.1f k", num/denom);
 			return str;
-			
+
 		case SP_DMGTAKEN:
 			num = pl.(scores[SP_DMGTAKEN]);
 			denom = 1000;
-			
+
 			str = sprintf("%.1f k", num/denom);
-			return str; 
-		
+			return str;
+
 		default:
 			tmp = pl.(scores[field]);
 			f = scores_flags[field];

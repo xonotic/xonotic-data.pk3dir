@@ -245,7 +245,7 @@ void timeout_handler_think()
 
 				// reset all the flood variables
 				FOREACH_CLIENT(true, LAMBDA(
-					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat = 
+					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
 						it.floodcontrol_chatteam = it.floodcontrol_chattell =
 							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
 				));
