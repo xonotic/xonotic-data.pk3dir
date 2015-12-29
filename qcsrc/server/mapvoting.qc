@@ -484,7 +484,7 @@ void MapVote_CheckRules_1()
 {
 	int j;
 
-	for(j = 0; i < mapvote_count; ++j)
+	for(j = 0; j < mapvote_count; ++j)
 		if( mapvote_maps_flags[j] & GTV_AVAILABLE )
 		{
 			//dprint("Map ", ftos(j), ": "); dprint(mapvote_maps[j], "\n");
