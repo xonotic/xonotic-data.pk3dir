@@ -145,7 +145,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 			continue; // player model bone blacklist
 
 		// now choose the bone closest to impact origin
-		if(nearestbone == 0 || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, nearestbone)))
+		if(nearestbone == 0 || vlen2(hitorg - gettaginfo(self, tagnum)) <= vlen2(hitorg - gettaginfo(self, nearestbone)))
 			nearestbone = tagnum;
 	}
 	gettaginfo(self, nearestbone); // set gettaginfo_name
@@ -253,7 +253,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		}
 		else
 		{
-			if(vlen(nearest - w_org) > bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS))
+			if(vdist((nearest - w_org), >, bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS)))
 				continue;
 
 			thisdmg = thedamage;

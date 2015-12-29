@@ -75,7 +75,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 		return;
 	}
 	*/
-	if(vlen(o) > 32 || vlen(v) > 192)
+	if(vdist(o, >, 32) || vdist(v, >, 192))
 	{
 		//printf("TOO BIG: x=%v v=%v\n", o, v);
 		return;
