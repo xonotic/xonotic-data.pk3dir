@@ -448,7 +448,7 @@ float CheatCommand(float argc)
 			e.nextthink = time;
 			e.solid = 0; // nothing special
 			setmodel(e, MDL_MARKER);
-			setsize(e, PL_MIN, PL_MAX);
+			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 			e.skin = 2;
 			if(argc == 3)
 				e.cnt = stof(argv(1));

@@ -9,11 +9,13 @@
 .int m_id;
 typedef vector vectori;
 
-#define REGISTER_STAT(...) EVAL(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
+#define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
+#define EVAL_REGISTER_STAT(...) __VA_ARGS__
 #if defined(CSQC)
 	/** Get all stats and store them as globals, access with `STAT(ID)` */
 	void stats_get() {}
-	#define STAT(...) EVAL(OVERLOAD(STAT, __VA_ARGS__))
+	#define STAT(...) EVAL_STAT(OVERLOAD(STAT, __VA_ARGS__))
+	#define EVAL_STAT(...) __VA_ARGS__
     #define STAT_1(id) STAT_2(id, NULL)
 	#define STAT_2(id, cl) (0, _STAT(id))
 
@@ -40,11 +42,11 @@ typedef vector vectori;
 			if (it != CAT(_STAT(id), _prev)) \
 				CAT(_STAT(id), _prev) = _STAT(id) = it; \
 		}
-	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT(x, T)
+	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
 #elif defined(SVQC)
 	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
 	void stats_add() {}
-	#define STAT(id, cl) (cl._STAT(id))
+	#define STAT(id, cl) (cl)._STAT(id)
 
 	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
@@ -85,16 +87,17 @@ typedef vector vectori;
 		} \
 		[[accumulate]] void stats_add() \
 		{ \
-			addstat_##T(STAT_##id.m_id, _STAT(id)); \
+			.T fld = _STAT(id); \
+			addstat_##T(STAT_##id.m_id, fld); \
 		}
 	void GlobalStats_update(entity this) {}
-    #define REGISTER_STAT_3(x, T, expr) \
-    	REGISTER_STAT(x, T); \
-    	[[accumulate]] void GlobalStats_update(entity this) { STAT(x, this) = (expr); } \
-    	STATIC_INIT(worldstat_##x) { entity this = world; STAT(x, this) = (expr); }
+    #define REGISTER_STAT_3(id, T, expr) \
+    	REGISTER_STAT_2(id, T); \
+    	[[accumulate]] void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
+    	STATIC_INIT(worldstat_##id) { entity this = world; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)
-    #define REGISTER_STAT_3(x, T, expr)
+    #define REGISTER_STAT_3(id, T, expr)
 #endif
 
 const int STATS_ENGINE_RESERVE = 32;

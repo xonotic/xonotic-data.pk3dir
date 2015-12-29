@@ -1751,7 +1751,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 
 		loc += tele_target.origin + '0 0 128' * iteration_scale;
 
-		tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, player);
+		tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid)
 		{
 			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the world
@@ -1865,7 +1865,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				iteration_scale -= i / 10;
 				loc = closest_target.origin + '0 0 96' * iteration_scale;
 				loc += ('0 1 0' * random()) * 128 * iteration_scale;
-				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
+				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, self);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
 					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
@@ -1916,7 +1916,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				iteration_scale -= i / 10;
 				loc = closest_target.origin + '0 0 128' * iteration_scale;
 				loc += ('0 1 0' * random()) * 256 * iteration_scale;
-				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
+				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, self);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
 					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world

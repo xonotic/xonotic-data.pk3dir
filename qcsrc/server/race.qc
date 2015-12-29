@@ -934,7 +934,7 @@ spawnfunc(trigger_race_checkpoint)
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
-	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
+	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
@@ -983,7 +983,7 @@ spawnfunc(target_checkpoint) // defrag entity
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
-	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
+	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 

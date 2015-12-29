@@ -777,7 +777,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
 	//vector exitspot;
 	float mysize;
 
-	tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, prefer_spot, MOVE_NORMAL, self.owner);
+	tracebox(self.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, self.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -790,7 +790,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, PL_MIN, PL_MAX, v, MOVE_NORMAL, self.owner);
+		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, self.owner);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -865,7 +865,7 @@ void vehicles_exit(bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(_player, PL_MIN,PL_MAX);
+		setsize(_player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 
 		_player.takedamage		= DAMAGE_AIM;
 		_player.solid			= SOLID_SLIDEBOX;
@@ -875,7 +875,7 @@ void vehicles_exit(bool eject)
 		_player.alpha			= 1;
 		_player.PlayerPhysplug	= func_null;
 		_player.vehicle			= world;
-		_player.view_ofs		= PL_VIEW_OFS;
+		_player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
 		_player.event_damage	= PlayerDamage;
 		_player.hud				= HUD_NORMAL;
 		PS(_player).m_switchweapon = _vehicle.m_switchweapon;
@@ -1044,10 +1044,10 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	tracebox(pl.origin, PL_MIN, PL_MAX, pl.origin, false, pl);
+	tracebox(pl.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pl.origin, false, pl);
 	pl.crouch = false;
-	pl.view_ofs = PL_VIEW_OFS;
-	setsize (pl, PL_MIN, PL_MAX);
+	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
+	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;

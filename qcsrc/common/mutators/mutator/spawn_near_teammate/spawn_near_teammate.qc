@@ -70,7 +70,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if(it.frozen == 0)
 			if(it != self)
 			{
-				tracebox(it.origin, PL_MIN, PL_MAX, it.origin - '0 0 100', MOVE_WORLDONLY, it);
+				tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 100', MOVE_WORLDONLY, it);
 				if(trace_fraction != 1.0)
 				if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 				{
@@ -87,19 +87,19 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 							switch(pc)
 							{
 								case 0:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin + v_right * 128, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NORMAL, it);
 									break;
 								case 1:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_right * 128 , MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NORMAL, it);
 									break;
 								case 2:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin + v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
 									break;
 								case 3:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
 									break;
 								case 4:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_forward * 128, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NORMAL, it);
 									break;
 							}
 

@@ -119,7 +119,8 @@ STATIC_INIT_LATE(W_PROP_reloader)
 }
 #endif
 
-#define REGISTER_WEAPON(...) EVAL(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define REGISTER_WEAPON(...) EVAL_REGISTER_WEAPON(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define EVAL_REGISTER_WEAPON(...) __VA_ARGS__
 #define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
 /** TODO: deprecated - remove */
 #define REGISTER_WEAPON_3(id, sname, inst) \

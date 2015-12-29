@@ -209,11 +209,11 @@ vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity p
 	//vector exitspot;
 	float mysize;
 
-	tracebox(gunner.origin + '0 0 32', PL_MIN, PL_MAX, prefer_spot, MOVE_NORMAL, player);
+	tracebox(gunner.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, player);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
-	mysize = 1.5 * vlen(PL_MAX - PL_MIN); // can't use gunner's size, as they don't have a size
+	mysize = 1.5 * vlen(STAT(PL_MAX, NULL) - STAT(PL_MIN, NULL)); // can't use gunner's size, as they don't have a size
 	float i;
 	vector v, v2;
 	v2 = 0.5 * (gunner.absmin + gunner.absmax);
@@ -222,7 +222,7 @@ vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity p
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, PL_MIN, PL_MAX, v, MOVE_NORMAL, player);
+		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -249,7 +249,7 @@ void bumblebee_gunner_exit(int _exitflag)
 	}
 
 	CSQCVehicleSetup(player, HUD_NORMAL);
-	setsize(player, PL_MIN, PL_MAX);
+	setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
@@ -257,7 +257,7 @@ void bumblebee_gunner_exit(int _exitflag)
 	player.effects       &= ~EF_NODRAW;
 	player.alpha          = 1;
 	player.PlayerPhysplug = func_null;
-	player.view_ofs       = PL_VIEW_OFS;
+	player.view_ofs       = STAT(PL_VIEW_OFS, NULL);
 	player.event_damage   = PlayerDamage;
 	player.hud            = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;

@@ -273,7 +273,7 @@ void PutObserverInServer()
 	self.crouch = false;
 	self.revival_time = 0;
 
-	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
+	setorigin (self, (spot.origin + STAT(PL_VIEW_OFS, NULL))); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = '0 0 0';
@@ -282,7 +282,7 @@ void PutObserverInServer()
 	setmodel(self, MDL_Null);
 	self.drawonlytoclient = self;
 
-	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	setsize (self, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL)); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 
 	PS(self).m_weapon = WEP_Null;
@@ -542,8 +542,8 @@ void PutClientInServer()
 		this.drawonlytoclient = NULL;
 
 		this.crouch = false;
-		this.view_ofs = PL_VIEW_OFS;
-		setsize(this, PL_MIN, PL_MAX);
+		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
+		setsize(this, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 		this.spawnorigin = spot.origin;
 		setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 		// don't reset back to last position, even if new position is stuck in solid

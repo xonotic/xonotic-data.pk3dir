@@ -366,12 +366,12 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 		{
 			if (walkfromwp)
 			{
-				if (tracewalk(ent, v, PL_MIN, PL_MAX, org, bot_navigation_movemode))
+				if (tracewalk(ent, v, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), org, bot_navigation_movemode))
 					return true;
 			}
 			else
 			{
-				if (tracewalk(ent, org, PL_MIN, PL_MAX, v, bot_navigation_movemode))
+				if (tracewalk(ent, org, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, bot_navigation_movemode))
 					return true;
 			}
 		}
@@ -401,7 +401,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	}
 
 	org = ent.origin + 0.5 * (ent.mins + ent.maxs);
-	org.z = ent.origin.z + ent.mins.z - PL_MIN.z; // player height
+	org.z = ent.origin.z + ent.mins.z - STAT(PL_MIN, NULL).z; // player height
 	// TODO possibly make other code have the same support for bboxes
 	if(ent.tag_entity)
 		org = org + ent.tag_entity.origin;
@@ -724,7 +724,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 			float zdistance, xydistance, cost, t, fuel;
 			vector down, npa, npb;
 
-			down = '0 0 -1' * (PL_MAX.z - PL_MIN.z) * 10;
+			down = '0 0 -1' * (STAT(PL_MAX, NULL).z - STAT(PL_MIN, NULL).z) * 10;
 
 			do{
 				npa = pointa + down;
@@ -882,7 +882,7 @@ float navigation_routetogoal(entity e, vector startposition)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(self, startposition, PL_MIN, PL_MAX, (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
+	if (tracewalk(self, startposition, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
 		return true;
 
 	// see if there are waypoints describing a path to the item
@@ -1092,7 +1092,7 @@ void navigation_unstuck()
 		// evaluate the next goal on the queue
 		float d = vlen(self.origin - bot_waypoint_queue_goal.origin);
 		bot_debug(strcat(self.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n"));
-		if(tracewalk(bot_waypoint_queue_goal, self.origin, PL_MIN, PL_MAX, bot_waypoint_queue_goal.origin, bot_navigation_movemode))
+		if(tracewalk(bot_waypoint_queue_goal, self.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
 			{

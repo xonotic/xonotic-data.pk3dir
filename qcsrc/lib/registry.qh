@@ -53,7 +53,8 @@ REGISTRY(Registries, BITS(8))
  * @param fld       The field to store the locally unique unique entity id
  * @param inst      An expression to create a new instance, invoked for every registration
  */
-#define REGISTER(...) EVAL(OVERLOAD(REGISTER, __VA_ARGS__))
+#define REGISTER(...) EVAL_REGISTER(OVERLOAD(REGISTER, __VA_ARGS__))
+#define EVAL_REGISTER(...) __VA_ARGS__
 #define REGISTER_5(registry, ns, id, fld, inst) REGISTER_4(registry, ns##_##id, fld, inst)
 #define REGISTER_4(registry, id, fld, inst) \
 	entity id; \
@@ -93,7 +94,8 @@ REGISTRY(Registries, BITS(8))
 #define REGISTRY_NEXT enemy
 .entity REGISTRY_NEXT;
 
-#define REGISTRY_SORT(...) EVAL(OVERLOAD(REGISTRY_SORT, __VA_ARGS__))
+#define REGISTRY_SORT(...) EVAL_REGISTRY_SORT(OVERLOAD(REGISTRY_SORT, __VA_ARGS__))
+#define EVAL_REGISTRY_SORT(...) __VA_ARGS__
 #define REGISTRY_SORT_1(id) REGISTRY_SORT_2(id, 0)
 #define REGISTRY_SORT_2(id, skip) \
 	void _REGISTRY_SWAP_##id(int i, int j, entity pass) \
@@ -163,7 +165,8 @@ void Registry_send(string id, string hash);
 	} \
 	void Registry_send_all() { Registry_send(#id, REGISTRY_HASH(id)); } \
 
-#define REGISTER_REGISTRY(...) EVAL(OVERLOAD(REGISTER_REGISTRY, __VA_ARGS__))
+#define REGISTER_REGISTRY(...) EVAL_REGISTER_REGISTRY(OVERLOAD(REGISTER_REGISTRY, __VA_ARGS__))
+#define EVAL_REGISTER_REGISTRY(...) __VA_ARGS__
 #define REGISTER_REGISTRY_1(id) REGISTER_REGISTRY_2(id, #id)
 #define REGISTER_REGISTRY_2(id, str) \
 	ACCUMULATE_FUNCTION(__static_init, Register##id) \

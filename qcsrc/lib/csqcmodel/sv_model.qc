@@ -79,7 +79,7 @@ void CSQCModel_CheckUpdate(entity e)
 	if(isplayer && time > e.csqcmodel_nextforcedupdate)
 	{
 		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
-		e.csqcmodel_nextforcedupdate = time + CSQCPLAYER_FORCE_UPDATES * (0.5 + random()); // ensure about 4 origin sends per sec
+		e.csqcmodel_nextforcedupdate = time + (1 / (CSQCPLAYER_FORCE_UPDATES)) * (0.5 + random()); // ensure about 4 origin sends per sec
 	}
 #endif
 

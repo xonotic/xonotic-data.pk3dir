@@ -58,7 +58,8 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure
 }
 
 
-#define entityclass(...) EVAL(OVERLOAD(entityclass, __VA_ARGS__))
+#define entityclass(...) EVAL_entityclass(OVERLOAD(entityclass, __VA_ARGS__))
+#define EVAL_entityclass(...) __VA_ARGS__
 #define entityclass_1(name) entityclass_2(name, Object)
 #ifndef QCC_SUPPORT_ENTITYCLASS
 	#define entityclass_2(name, base) typedef entity name

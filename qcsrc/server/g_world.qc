@@ -480,7 +480,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, PL_MIN, PL_MAX, o - '0 0 32768', MOVE_WORLDONLY, world);
+		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, world);
 		if(trace_fraction == 1)
 			continue;
 

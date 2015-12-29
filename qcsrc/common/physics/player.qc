@@ -107,7 +107,7 @@ void PM_ClientMovement_Unstick(entity this)
 	#define X(unstick_offset) \
 	{ \
 		vector neworigin = unstick_offset + this.origin; \
-		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, this); \
+		tracebox(neworigin, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL), neworigin, MOVE_NORMAL, this); \
 		if (!trace_startsolid) \
 		{ \
 			setorigin(this, neworigin); \
@@ -138,7 +138,7 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		// wants to stand, if currently crouching we need to check for a low ceiling first
 		if (IS_DUCKED(this))
 		{
-			tracebox(this.origin, PL_MIN, PL_MAX, this.origin, MOVE_NORMAL, this);
+			tracebox(this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), this.origin, MOVE_NORMAL, this);
 			if (!trace_startsolid) UNSET_DUCKED(this);
 		}
 	}
