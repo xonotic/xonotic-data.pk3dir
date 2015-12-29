@@ -81,13 +81,23 @@ void viewmodel_animate(entity this)
 
 	if(autocvar_cl_followmodel && autocvar_cl_followmodel_scale > 0)
 	{
-		if(teleported)
-			vel_prev = view.velocity;
+		vector forward, right = '0 0 0', up = '0 0 0';
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vel.x = view.velocity * forward;
+		vel.y = view.velocity * right * -1;
+		vel.z = view.velocity * up;
 
-		acc = view.velocity - vel_prev;
+		vector r = rotate(vel, -YAW(view_angles) * DEG2RAD);
+		vel.x = r.x;
+		vel.y = r.y;
+
+		if(teleported)
+			vel_prev = vel;
+
+		acc = vel - vel_prev;
 		acc *= (1 / max(0.0001, frametime)) * (0.0254 / 9.80665);
 
-		vel_prev = view.velocity;
+		vel_prev = vel;
 
 		float frac = 1 - exp(-frametime / autocvar_cl_followmodel_averagingtime);
 		acc_average = acc_average * (1 - frac) + acc * frac;
