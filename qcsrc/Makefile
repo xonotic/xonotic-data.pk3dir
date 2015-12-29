@@ -39,25 +39,29 @@ qc: ../menu.dat ../progs.dat ../csprogs.dat
 .PHONY: clean
 clean:
 	rm -f ../progs.dat ../menu.dat ../csprogs.dat
+	rm -f progs.d menu.d csprogs.d
 
 $(QCCVERSIONFILE):
 	$(RM) qccversion.*
 	echo This file intentionally left blank. > $@
 
-FILES_CSPROGS = $(shell find lib common client -type f)
-../csprogs.dat: $(FILES_CSPROGS) $(QCCVERSIONFILE)
+../csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
+	@$(CC) -MM -MP -MF csprogs.d -MT $@ -x c -DCSQC -o $@ $<
 	@echo make[1]: Entering directory \`$(PWD)/client\'
-	cd client && $(QCC) $(QCCFLAGS) -DCSQC -o ../../csprogs.dat progs.inc
+	cd client && $(QCC) $(QCCFLAGS) -DCSQC -o ../$@ ../$<
+-include csprogs.d
 
-FILES_PROGS = $(shell find lib common server -type f)
-../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE)
+../progs.dat: server/progs.inc $(QCCVERSIONFILE)
+	@$(CC) -MM -MP -MF progs.d -MT $@ -x c -DSVQC -o $@ $<
 	@echo make[1]: Entering directory \`$(PWD)/server\'
-	cd server && $(QCC) $(QCCFLAGS) -DSVQC -o ../../progs.dat progs.inc
+	cd server && $(QCC) $(QCCFLAGS) -DSVQC -o ../$@ ../$<
+-include progs.d
 
-FILES_MENU = $(shell find lib common menu -type f)
-../menu.dat: $(FILES_MENU) $(QCCVERSIONFILE)
+../menu.dat: menu/progs.inc $(QCCVERSIONFILE)
+	@$(CC) -MM -MP -MF menu.d -MT $@ -x c -DMENUQC -o $@ $<
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	cd menu && $(QCC) $(QCCFLAGS) -DMENUQC -o ../../menu.dat progs.inc
+	cd menu && $(QCC) $(QCCFLAGS) -DMENUQC -o ../$@ ../$<
+-include menu.d
 
 .PHONY: testcase
 testcase:
