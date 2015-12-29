@@ -482,13 +482,13 @@ float MapVote_Finished(float mappos)
 
 void MapVote_CheckRules_1()
 {
-	float i;
+	int j;
 
-	for(i = 0; i < mapvote_count; ++i)
-		if( mapvote_maps_flags[i] & GTV_AVAILABLE )
+	for(j = 0; i < mapvote_count; ++j)
+		if( mapvote_maps_flags[j] & GTV_AVAILABLE )
 		{
-			//dprint("Map ", ftos(i), ": "); dprint(mapvote_maps[i], "\n");
-			mapvote_selections[i] = 0;
+			//dprint("Map ", ftos(j), ": "); dprint(mapvote_maps[j], "\n");
+			mapvote_selections[j] = 0;
 		}
 
 	mapvote_voters = 0;
@@ -496,9 +496,9 @@ void MapVote_CheckRules_1()
 		++mapvote_voters;
 		if(it.mapvote)
 		{
-			i = it.mapvote - 1;
+			j = it.mapvote - 1;
 			//dprint("Player ", it.netname, " vote = ", ftos(it.mapvote - 1), "\n");
-			mapvote_selections[i] = mapvote_selections[i] + 1;
+			mapvote_selections[j] = mapvote_selections[j] + 1;
 		}
 	));
 }
