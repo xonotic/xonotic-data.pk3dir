@@ -195,14 +195,13 @@ void GameCommand_allspec(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			string reason = argv(1);
-			float i = 0;
-
+			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
 				if (it.caplayer) it.caplayer = 0;
 				WITH(entity, self, it, PutObserverInServer());
-				++i;
+				++n;
 			));
-			if (i)   bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
+			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
 			else   LOG_INFO("No players found to spectate.\n");
 			return;
 		}
@@ -551,15 +550,15 @@ void GameCommand_defer_clear_all(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float i = 0;
+			int n = 0;
 			float argc;
 
 			FOREACH_CLIENT(true, LAMBDA(
 				argc = tokenize_console(strcat("defer_clear ", ftos(etof(it))));
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
-				++i;
+				++n;
 			));
-			if (i)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n"));  // should a message be added if no players were found?
+			if (n)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(n), ")\n"));  // should a message be added if no players were found?
 			return;
 		}
 
@@ -1360,7 +1359,6 @@ void GameCommand_shuffleteams(float request)
 		{
 			if (teamplay)
 			{
-				int i;
 				float x, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
@@ -1381,15 +1379,15 @@ void GameCommand_shuffleteams(float request)
 				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
 					for ( ; ; )
 					{
-						i = bound(1, floor(random() * maxclients) + 1, maxclients);
+						int idx = bound(1, floor(random() * maxclients) + 1, maxclients);
 
-						if (shuffleteams_players[i])
+						if (shuffleteams_players[idx])
 						{
 							continue;  // a player is already assigned to this slot
 						}
 						else
 						{
-							shuffleteams_players[i] = etof(it);
+							shuffleteams_players[idx] = etof(it);
 							break;
 						}
 					}
@@ -1428,10 +1426,10 @@ void GameCommand_shuffleteams(float request)
 				bprint("Successfully shuffled the players around randomly.\n");
 
 				// clear the buffers now
-				for (i = 0; i < SHUFFLETEAMS_MAX_PLAYERS; ++i)
+				for (int i = 0; i < SHUFFLETEAMS_MAX_PLAYERS; ++i)
 					shuffleteams_players[i] = 0;
 
-				for (i = 0; i < SHUFFLETEAMS_MAX_TEAMS; ++i)
+				for (int i = 0; i < SHUFFLETEAMS_MAX_TEAMS; ++i)
 					shuffleteams_teams[i] = 0;
 			}
 			else

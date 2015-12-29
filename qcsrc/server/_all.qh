@@ -31,9 +31,10 @@ const string STR_OBSERVER = "observer";
 
 #define FOREACH_CLIENT(cond, body) \
 	MACRO_BEGIN { \
-		for(int i = 1; i <= maxclients; ++i) \
+		for(int _i = 1; _i <= maxclients; ++_i) \
 		{ \
-			entity it = ftoe(i); \
+			const noref int i = _i; \
+			const noref entity it = ftoe(i); \
 			if(it == NULL || !IS_CLIENT(it)) continue; \
 			if(cond) { LAMBDA(body) } \
 		} \
