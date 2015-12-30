@@ -1,5 +1,5 @@
-#ifndef REPLICATE_H
-#define REPLICATE_H
+#pragma once
+
 #ifndef MENUQC
 
 	#define REPLICATE(...) EVAL_REPLICATE(OVERLOAD(REPLICATE, __VA_ARGS__))
@@ -53,5 +53,4 @@
 		#define REPLICATE_7(fld, type, var, func, create, destroy, after)
 	#endif
 
-#endif
 #endif

@@ -1,5 +1,4 @@
-#ifndef MISC_H
-#define MISC_H
+#pragma once
 
 #ifdef __STDC__
 	#define EMPTY()
@@ -47,5 +46,3 @@
 		LAMBDA(block) \
 		name = __with_save; \
 	} MACRO_END
-
-#endif

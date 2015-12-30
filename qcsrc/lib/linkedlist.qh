@@ -1,5 +1,4 @@
-#ifndef LINKEDLIST_H
-#define LINKEDLIST_H
+#pragma once
 
 CLASS(LinkedListNode, Object)
 	ATTRIB(LinkedListNode, ll_data, entity, NULL)
@@ -83,5 +82,3 @@ entity LL_POP(LinkedList this)
 			if (cond) { body }                                          \
 		}                                                               \
 	} MACRO_END
-
-#endif

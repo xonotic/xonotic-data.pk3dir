@@ -1,5 +1,4 @@
-#ifndef ITER_H
-#define ITER_H
+#pragma once
 
 #define FOREACH_ARRAY(arr, start, end, cond, body) \
 	MACRO_BEGIN \
@@ -151,5 +150,3 @@
 #define FOREACH_ENTITY(cond, body) FOREACH_ENTITY_UNORDERED(cond, body)
 
 #define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
-
-#endif

@@ -1,6 +1,6 @@
+#pragma once
+
 #ifdef CSQC
-#ifndef DRAW_H
-	#define DRAW_H
 
 	#include "i18n.qh"
 	#include "vector.qh"
@@ -129,5 +129,4 @@
 		drawstring(position, text, theScale, rgb, theAlpha, flag);
 	}
 
-#endif
 #endif

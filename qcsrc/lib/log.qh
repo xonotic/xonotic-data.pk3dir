@@ -1,5 +1,4 @@
-#ifndef LOG_H
-#define LOG_H
+#pragma once
 
 #define assert(expr, ...) _assert(LOG_SEVERE, expr, __VA_ARGS__)
 #define devassert(...) MACRO_BEGIN if (autocvar_developer) assert(__VA_ARGS__); MACRO_END
@@ -109,5 +108,3 @@ noref bool autocvar_prvm_backtraceforwarnings;
 		bt_cvar_set("developer", ftos(dev)); \
 		bt_cvar_set("prvm_backtraceforwarnings", ftos(war)); \
 	} MACRO_END
-
-#endif

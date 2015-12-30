@@ -1,5 +1,4 @@
-#ifndef COLOR_H
-#define COLOR_H
+#pragma once
 
 #include "string.qh"
 
@@ -176,5 +175,3 @@ string rgb_to_hexcolor(vector rgb)
 		DEC_TO_HEXDIGIT(floor(rgb.z * 15 + 0.5))
 	             );
 }
-
-#endif

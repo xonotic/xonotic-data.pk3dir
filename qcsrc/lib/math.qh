@@ -1,5 +1,4 @@
-#ifndef MATH_H
-#define MATH_H
+#pragma once
 
 void mean_accumulate(entity e, .float a, .float c, float mean, float value, float weight)
 {
@@ -299,5 +298,3 @@ vector solve_quadratic(float a, float b, float c)
 	}
 	return v;
 }
-
-#endif

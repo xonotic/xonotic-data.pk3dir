@@ -1,5 +1,4 @@
-#ifndef CVAR_H
-#define CVAR_H
+#pragma once
 
 #include "nil.qh"
 #include "progname.qh"
@@ -88,5 +87,3 @@ const noref vector default_vector = '0 0 0';
 #define EVAL__AUTOCVAR(...) __VA_ARGS__
 #define AUTOCVAR_SAVE(...) _AUTOCVAR(true, __VA_ARGS__)
 #define AUTOCVAR(...) _AUTOCVAR(false, __VA_ARGS__)
-
-#endif

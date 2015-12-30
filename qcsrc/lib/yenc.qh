@@ -1,5 +1,4 @@
-#ifndef YENC_H
-#define YENC_H
+#pragma once
 
 #include "test.qh"
 
@@ -64,5 +63,3 @@ TEST(yEncDec)
 	}
 	TEST_OK();
 }
-
-#endif

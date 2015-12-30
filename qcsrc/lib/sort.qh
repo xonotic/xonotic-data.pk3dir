@@ -1,5 +1,4 @@
-#ifndef SORT_H
-#define SORT_H
+#pragma once
 
 /** is only ever called for i1 < i2 */
 typedef void (int i1, int i2, entity pass) swapfunc_t;
@@ -57,5 +56,3 @@ void shuffle(float n, swapfunc_t swap, entity pass)
 		if (j != i) swap(j, i, pass);
 	}
 }
-
-#endif

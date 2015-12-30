@@ -1,5 +1,4 @@
-#ifndef LIB_STATS_H
-#define LIB_STATS_H
+#pragma once
 
 // TODO: rename to 'netvars'
 
@@ -112,6 +111,4 @@ STATIC_INIT(RegisterStats_renumber)
 }
 #ifdef SVQC
 STATIC_INIT(stats_add) { stats_add(); }
-#endif
-
 #endif

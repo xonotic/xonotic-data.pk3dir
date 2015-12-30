@@ -1,5 +1,4 @@
-#ifndef TEST_H
-#define TEST_H
+#pragma once
 
 #define TEST(id) \
 	void _TEST_##id(); \
@@ -16,5 +15,3 @@ void TEST_Fail(string cond);
 
 bool TEST_RunAll();
 bool TEST_Run(string test);
-
-#endif

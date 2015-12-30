@@ -1,5 +1,4 @@
-#ifndef SPAWNFUNC_H
-#define SPAWNFUNC_H
+#pragma once
 
 /** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
 noref bool require_spawnfunc_prefix;
@@ -195,5 +194,3 @@ noref bool require_spawnfunc_prefix;
 
 	#define spawnfunc(...) EVAL_spawnfunc(OVERLOAD(spawnfunc, __VA_ARGS__))
 	#define EVAL_spawnfunc(...) __VA_ARGS__
-
-#endif

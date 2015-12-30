@@ -1,5 +1,4 @@
-#ifndef PROGNAME_H
-#define PROGNAME_H
+#pragma once
 
 #if defined(MENUQC)
 	#define PROGNAME "MENUQC"
@@ -9,6 +8,4 @@
 	#define PROGNAME "CSQC"
 #else
 	#error "Unable to detect PROGNAME"
-#endif
-
 #endif

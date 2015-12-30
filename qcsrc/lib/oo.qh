@@ -1,5 +1,4 @@
-#ifndef OO_H
-#define OO_H
+#pragma once
 
 #include "misc.qh"
 #include "nil.qh"
@@ -245,5 +244,3 @@ ENDCLASS(Object)
 #undef spawn_static
 #undef spawn_1
 #undef _vtbl
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef NET_H
-#define NET_H
+#pragma once
 
 #include "registry.qh"
 #include "sort.qh"
@@ -359,6 +358,4 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			msg_entity = prev; \
 		} MACRO_END
 	#endif
-#endif
-
 #endif
