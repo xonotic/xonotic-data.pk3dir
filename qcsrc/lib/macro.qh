@@ -13,4 +13,7 @@
 #define _CAT(a, b) a ## b
 #define CAT(a, b) _CAT(a, b)
 
+#define _STR(it) #it
+#define STR(it) _STR(it)
+
 #endif

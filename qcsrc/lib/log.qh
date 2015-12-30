@@ -39,7 +39,7 @@ string(string...) strcat0n = #115;
 
 #define _LOG(f, level, s) \
 	MACRO_BEGIN { \
-		f(sprintf("^9[::"level "^9] ["__FILE__ "^7:^9%s^7:^9%d] \n^7%s\n", __FUNC__, __LINE__, s)); \
+		f(sprintf("^9[::" level "^9] [" __FILE__ "^7:^9%s^7:^9" STR(__LINE__) "] \n^7%s\n", __FUNC__, s)); \
 	} MACRO_END
 
 #define  LOG_FATAL(...) _LOG_FATAL(strcat0n(__VA_ARGS__))

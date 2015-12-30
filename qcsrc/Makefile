@@ -48,24 +48,24 @@ $(QCCVERSIONFILE):
 	echo This file intentionally left blank. > $@
 
 ../csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
-	@$(CC) -xc $(QCCDEFS) -DCSQC -E -dM 1>tmp/client_macros.txt -H 2>tmp/client_includes.txt $<
 	$(CC) -xc $(QCCDEFS) -DCSQC -E -MMD -MP -MT $@ -Wall -Wundef -Werror -CC -o tmp/client.qc $<
+	@$(CC) -xc $(QCCDEFS) -DCSQC -E -dM 1>tmp/client_macros.txt -H 2>tmp/client_includes.txt $<
 	@sed -i 's/^# \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\2)\n#pragma line(\1)/g' tmp/client.qc
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	cd client && $(QCC) $(QCCFLAGS) -o ../$@ ../tmp/client.qc
 -include tmp/client.d
 
 ../progs.dat: server/progs.inc $(QCCVERSIONFILE)
-	@$(CC) -xc $(QCCDEFS) -DSVQC -E -dM 1>tmp/server_macros.txt -H 2>tmp/server_includes.txt $<
 	$(CC) -xc $(QCCDEFS) -DSVQC -E -MMD -MP -MT $@ -Wall -Wundef -Werror -CC -o tmp/server.qc $<
+	@$(CC) -xc $(QCCDEFS) -DSVQC -E -dM 1>tmp/server_macros.txt -H 2>tmp/server_includes.txt $<
 	@sed -i 's/^# \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\2)\n#pragma line(\1)/g' tmp/server.qc
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	cd server && $(QCC) $(QCCFLAGS) -o ../$@ ../tmp/server.qc
 -include tmp/server.d
 
 ../menu.dat: menu/progs.inc $(QCCVERSIONFILE)
-	@$(CC) -xc $(QCCDEFS) -DMENUQC -E -dM 1>tmp/menu_macros.txt -H 2>tmp/menu_includes.txt $<
 	$(CC) -xc $(QCCDEFS) -DMENUQC -E -MMD -MP -MT $@ -Wall -Wundef -Werror -CC -o tmp/menu.qc $<
+	@$(CC) -xc $(QCCDEFS) -DMENUQC -E -dM 1>tmp/menu_macros.txt -H 2>tmp/menu_includes.txt $<
 	@sed -i 's/^# \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\2)\n#pragma line(\1)/g' tmp/menu.qc
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
 	cd menu && $(QCC) $(QCCFLAGS) -o ../$@ ../tmp/menu.qc
