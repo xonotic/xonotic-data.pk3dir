@@ -99,13 +99,7 @@ void clearentity(entity e)
 // The parameter is used across [[accumulate]] functions
 
 // Macros to hide this implementation detail:
-#ifdef GMQCC
-	#define NEW(cname, ...) \
-		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)
-
-	#define CONSTRUCT(cname, ...) \
-		OVERLOAD(spawn##cname, this,##__VA_ARGS__)
-#else
+#ifdef __STDC__
 	#define NEW_(cname, ...) \
 		OVERLOAD_(spawn##cname, __VA_ARGS__)
 	#define NEW(cname, ...) \
@@ -115,6 +109,12 @@ void clearentity(entity e)
 		OVERLOAD_(spawn##cname, __VA_ARGS__)
 	#define CONSTRUCT(cname, ...) \
 		CONSTRUCT_(cname, this,##__VA_ARGS__)(this,##__VA_ARGS__)
+#else
+	#define NEW(cname, ...) \
+		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)
+
+	#define CONSTRUCT(cname, ...) \
+		OVERLOAD(spawn##cname, this,##__VA_ARGS__)
 #endif
 
 #define CONSTRUCTOR(cname, ...) \
