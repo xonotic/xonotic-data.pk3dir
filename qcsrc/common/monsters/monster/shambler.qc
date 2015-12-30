@@ -82,7 +82,7 @@ void M_Shambler_Attack_Swing()
 	}
 }
 
-#include "../../effects/qc/all.qh"
+#include <common/effects/qc/all.qh>
 
 void M_Shambler_Attack_Lightning_Explode()
 {SELFPARAM();

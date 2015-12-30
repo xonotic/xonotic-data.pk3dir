@@ -1,7 +1,7 @@
 #ifndef VEHICLE_SPIDERBOT_WEAPONS_H
 #define VEHICLE_SPIDERBOT_WEAPONS_H
 
-#include "../../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 #endif
 

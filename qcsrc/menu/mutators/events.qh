@@ -1,7 +1,7 @@
 #ifndef MENU_MUTATORS_EVENTS_H
 #define MENU_MUTATORS_EVENTS_H
 
-#include "../../common/mutators/base.qh"
+#include <common/mutators/base.qh>
 
 // globals
 

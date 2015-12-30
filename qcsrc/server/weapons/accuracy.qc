@@ -1,10 +1,10 @@
 #include "accuracy.qh"
 
 #include "../mutators/all.qh"
-#include "../../common/constants.qh"
-#include "../../common/teams.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
+#include <common/constants.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
 
 int accuracy_byte(float n, float d)
 {

@@ -1,6 +1,6 @@
 #ifdef SVQC
-    #include "../../t_items.qh"
-    #include "../../../server/constants.qh"
+    #include <common/t_items.qh>
+    #include <server/constants.qh>
 #endif
 
 #include "ammo.qh"

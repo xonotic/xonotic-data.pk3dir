@@ -3,7 +3,7 @@
 #include "hud/all.qh"
 #include "scoreboard.qh"
 
-#include "../common/mapinfo.qh"
+#include <common/mapinfo.qh>
 
 
 int mv_num_maps;

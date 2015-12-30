@@ -17,23 +17,23 @@
 #include "../constants.qh"
 #include "../defs.qh"
 #include "../race.qh"
-#include "../../common/t_items.qh"
+#include <common/t_items.qh>
 
 #include "../mutators/all.qh"
 
 #include "../weapons/accuracy.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/teams.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
 
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
-#include "../../lib/csqcmodel/sv_model.qh"
+#include <lib/csqcmodel/sv_model.qh>
 
-#include "../../lib/warpzone/common.qh"
-#include "../../lib/warpzone/util_server.qh"
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
 
 entity bot_spawn()
 {SELFPARAM();

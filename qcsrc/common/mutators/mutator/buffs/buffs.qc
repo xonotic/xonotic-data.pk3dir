@@ -73,8 +73,8 @@ const vector BUFF_MAX = ('16 16 20');
 
 #ifdef IMPLEMENTATION
 
-#include "../../../triggers/target/music.qh"
-#include "../../../gamemodes/all.qh"
+#include <common/triggers/target/music.qh>
+#include <common/gamemodes/all.qh>
 
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit();

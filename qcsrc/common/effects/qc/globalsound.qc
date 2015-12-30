@@ -1,12 +1,12 @@
 #include "globalsound.qh"
 
-#include "../../ent_cs.qh"
+#include <common/ent_cs.qh>
 
 #ifdef IMPLEMENTATION
-	#include "../../animdecide.qh"
+	#include <common/animdecide.qh>
 
 	#ifdef SVQC
-		#include "../../../server/cl_player.qh"
+		#include <server/cl_player.qh>
 	#endif
 
 	REGISTER_NET_TEMP(globalsound)

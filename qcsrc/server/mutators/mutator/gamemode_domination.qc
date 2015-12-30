@@ -65,7 +65,7 @@ float domination_teams;
 
 #ifdef IMPLEMENTATION
 
-#include "../../teamplay.qh"
+#include <server/teamplay.qh>
 
 bool g_domination;
 

@@ -9,12 +9,12 @@
 #include "../g_subs.qh"
 #include "../antilag.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/util.qh>
 
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
-#include "../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.

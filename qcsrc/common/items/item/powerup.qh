@@ -1,6 +1,6 @@
 #ifdef SVQC
     // For FL_POWERUP
-    #include "../../../server/constants.qh"
+    #include <server/constants.qh>
 #endif
 
 #ifndef POWERUP_H

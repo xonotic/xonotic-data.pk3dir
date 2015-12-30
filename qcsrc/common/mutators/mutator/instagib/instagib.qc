@@ -16,9 +16,9 @@ int autocvar_g_instagib_ammo_drop;
 int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
-#include "../../../../server/cl_client.qh"
+#include <server/cl_client.qh>
 
-#include "../../../items/all.qc"
+#include <common/items/all.qc>
 
 REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
 

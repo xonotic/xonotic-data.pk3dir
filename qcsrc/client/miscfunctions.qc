@@ -2,11 +2,11 @@
 
 #include "hud/all.qh"
 
-#include "../common/command/generic.qh"
+#include <common/command/generic.qh>
 
-#include "../common/teams.qh"
+#include <common/teams.qh>
 
-#include "../lib/csqcmodel/cl_model.qh"
+#include <lib/csqcmodel/cl_model.qh>
 
 
 void AuditLists()

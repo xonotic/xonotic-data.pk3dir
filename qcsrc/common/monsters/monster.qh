@@ -3,13 +3,13 @@
 
 #ifdef SVQC
 #include "sv_monsters.qh"
-#include "../../server/g_damage.qh"
-#include "../../server/bot/bot.qh"
-#include "../../server/weapons/common.qh"
-#include "../../server/weapons/tracing.qh"
-#include "../../server/weapons/weaponsystem.qh"
-#include "../mutators/mutator/waypoints/waypointsprites.qh"
-#include "../../lib/warpzone/server.qh"
+#include <server/g_damage.qh>
+#include <server/bot/bot.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
+#include <lib/warpzone/server.qh>
 #endif
 
 // special spawn flags

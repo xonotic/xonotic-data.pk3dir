@@ -3,21 +3,21 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/common.qh"
-    #include "../../lib/warpzone/util_server.qh"
-    #include "../../lib/warpzone/server.qh"
+    #include <lib/warpzone/common.qh>
+    #include <lib/warpzone/util_server.qh>
+    #include <lib/warpzone/server.qh>
     #include "../constants.qh"
 	#include "../triggers/subs.qh"
     #include "../util.qh"
-    #include "../../server/weapons/csqcprojectile.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/constants.qh"
-    #include "../../server/defs.qh"
+    #include <server/weapons/csqcprojectile.qh>
+    #include <server/autocvars.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
     #include "../deathtypes/all.qh"
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
     #include "../mapinfo.qh"
-    #include "../../server/anticheat.qh"
+    #include <server/anticheat.qh>
 #endif
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)

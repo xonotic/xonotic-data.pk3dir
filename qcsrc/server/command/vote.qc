@@ -1,4 +1,4 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "vote.qh"
 
 #include "common.qh"
@@ -11,11 +11,11 @@
 
 #include "../mutators/all.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/playerstats.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/playerstats.qh>
+#include <common/util.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual

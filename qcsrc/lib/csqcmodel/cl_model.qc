@@ -24,10 +24,10 @@
 #include "cl_player.qh"
 #include "common.qh"
 #include "interpolate.qh"
-#include "../../client/defs.qh"
-#include "../../common/animdecide.qh"
-#include "../../common/csqcmodel_settings.qh"
-#include "../../common/util.qh"
+#include <client/defs.qh>
+#include <common/animdecide.qh>
+#include <common/csqcmodel_settings.qh>
+#include <common/util.qh>
 
 float autocvar_cl_lerpanim_maxdelta_framegroups = 0.1;
 float autocvar_cl_nolerp = 0;

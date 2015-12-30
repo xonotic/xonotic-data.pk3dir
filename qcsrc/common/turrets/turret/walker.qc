@@ -630,7 +630,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 #endif // SVQC
 #ifdef CSQC
 
-#include "../../physics/movelib.qh"
+#include <common/physics/movelib.qh>
 
 void walker_draw(entity this)
 {

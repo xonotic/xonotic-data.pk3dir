@@ -1,7 +1,7 @@
 #ifndef CLIENT_HUD_H
 #define CLIENT_HUD_H
 
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
 bool HUD_Radar_Clickable();
 void HUD_Radar_Mouse();

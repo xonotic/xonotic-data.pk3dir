@@ -21,13 +21,13 @@
 
 #include "../mutators/all.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/teams.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
 
-#include "../../common/monsters/sv_monsters.qh"
+#include <common/monsters/sv_monsters.qh>
 
 
 void PutObserverInServer();

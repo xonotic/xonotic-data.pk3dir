@@ -3,12 +3,12 @@
 #include "bot.qh"
 #include "waypoints.qh"
 
-#include "../../common/t_items.qh"
+#include <common/t_items.qh>
 
-#include "../../common/items/all.qh"
+#include <common/items/all.qh>
 
-#include "../../common/constants.qh"
-#include "../../common/triggers/trigger/jumppads.qh"
+#include <common/constants.qh>
+#include <common/triggers/trigger/jumppads.qh>
 
 .float speed;
 

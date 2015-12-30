@@ -1,11 +1,11 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "common.qh"
 
 #include "../scores.qh"
 
-#include "../../common/monsters/all.qh"
-#include "../../common/notifications.qh"
-#include "../../lib/warpzone/common.qh"
+#include <common/monsters/all.qh>
+#include <common/notifications.qh>
+#include <lib/warpzone/common.qh>
 
 
 // ====================================================

@@ -10,16 +10,16 @@
 #endif
 
 #ifdef CSQC
-	#include "../../client/commands/cl_cmd.qh"
+	#include <client/commands/cl_cmd.qh>
 #endif
 
 #ifdef SVQC
-	#include "../../server/command/banning.qh"
-	#include "../../server/command/cmd.qh"
-	#include "../../server/command/common.qh"
-	#include "../../server/command/sv_cmd.qh"
-	#include "../../common/turrets/config.qh"
-	#include "../../common/weapons/config.qh"
+	#include <server/command/banning.qh>
+	#include <server/command/cmd.qh>
+	#include <server/command/common.qh>
+	#include <server/command/sv_cmd.qh>
+	#include <common/turrets/config.qh>
+	#include <common/weapons/config.qh>
 #endif
 
 // =========================================================

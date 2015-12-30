@@ -44,7 +44,7 @@ REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-#include "../../triggers/trigger/jumppads.qh"
+#include <common/triggers/trigger/jumppads.qh>
 
 spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
 

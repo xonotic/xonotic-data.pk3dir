@@ -1,7 +1,7 @@
 #ifndef VEHICLE_RACER_WEAPON_H
 #define VEHICLE_RACER_WEAPON_H
 
-#include "../../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 CLASS(RacerAttack, PortoLaunch)
 /* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);

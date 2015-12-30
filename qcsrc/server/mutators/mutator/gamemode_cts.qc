@@ -1,4 +1,4 @@
-#include "../../race.qh"
+#include <server/race.qh>
 
 #ifndef GAMEMODE_CTS_H
 #define GAMEMODE_CTS_H
@@ -44,7 +44,7 @@ const float SP_CTS_FASTEST = 6;
 
 #ifdef IMPLEMENTATION
 
-#include "../../race.qh"
+#include <server/race.qh>
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;

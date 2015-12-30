@@ -1,7 +1,7 @@
 #ifndef VEHICLE_RAPTOR_WEAPONS_H
 #define VEHICLE_RAPTOR_WEAPONS_H
 
-#include "../../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 CLASS(RaptorCannon, PortoLaunch)
 /* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);

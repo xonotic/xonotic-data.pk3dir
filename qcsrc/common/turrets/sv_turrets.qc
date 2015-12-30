@@ -1,5 +1,5 @@
 #ifdef SVQC
-#include "../../server/autocvars.qh"
+#include <server/autocvars.qh>
 
 // Generic aiming
 vector turret_aim_generic()

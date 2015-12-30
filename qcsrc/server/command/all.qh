@@ -1,7 +1,7 @@
 #ifndef SERVER_COMMANDS_ALL_H
 #define SERVER_COMMANDS_ALL_H
 
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 REGISTRY(SERVER_COMMANDS, BITS(7))
 #define SERVER_COMMANDS_from(i) _SERVER_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(SERVER_COMMANDS)

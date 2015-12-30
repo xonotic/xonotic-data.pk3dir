@@ -208,11 +208,11 @@ const int CTF_SHIELDED					= 4096;
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-#include "../../../common/vehicles/all.qh"
-#include "../../teamplay.qh"
+#include <common/vehicles/all.qh>
+#include <server/teamplay.qh>
 #endif
 
-#include "../../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 bool autocvar_g_ctf_allow_vehicle_carry;
 bool autocvar_g_ctf_allow_vehicle_touch;

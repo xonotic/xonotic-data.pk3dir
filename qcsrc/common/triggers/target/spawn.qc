@@ -1,8 +1,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../util.qh"
-    #include "../../../server/defs.qh"
+    #include <common/util.qh>
+    #include <server/defs.qh>
 #endif
 
 #ifdef SVQC

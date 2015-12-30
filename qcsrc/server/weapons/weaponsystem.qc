@@ -5,14 +5,14 @@
 #include "../command/common.qh"
 #include "../mutators/all.qh"
 #include "../round_handler.qh"
-#include "../../common/t_items.qh"
-#include "../../common/animdecide.qh"
-#include "../../common/constants.qh"
-#include "../../common/monsters/all.qh"
-#include "../../common/notifications.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
-#include "../../lib/csqcmodel/sv_model.qh"
+#include <common/t_items.qh>
+#include <common/animdecide.qh>
+#include <common/constants.qh>
+#include <common/monsters/all.qh>
+#include <common/notifications.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
+#include <lib/csqcmodel/sv_model.qh>
 
 .int state;
 

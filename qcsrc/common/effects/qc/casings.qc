@@ -1,9 +1,9 @@
 #ifdef IMPLEMENTATION
 
-#include "../../util.qh"
+#include <common/util.qh>
 
 #ifdef CSQC
-#include "../../physics/movetypes/movetypes.qh"
+#include <common/physics/movetypes/movetypes.qh>
 #include "rubble.qh"
 #endif
 

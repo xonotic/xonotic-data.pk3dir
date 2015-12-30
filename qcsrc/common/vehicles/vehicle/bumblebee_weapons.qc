@@ -1,7 +1,7 @@
 #ifndef VEHICLE_BUMBLEBEE_WEAPONS_H
 #define VEHICLE_BUMBLEBEE_WEAPONS_H
 
-#include "../../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 #endif
 

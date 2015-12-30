@@ -5,12 +5,12 @@
 #include "../main.qh"
 #include "../mutators/events.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/physics/movetypes/movetypes.qh"
+#include <common/constants.qh>
+#include <common/physics/movetypes/movetypes.qh>
 
-#include "../../lib/csqcmodel/interpolate.qh"
+#include <lib/csqcmodel/interpolate.qh>
 
-#include "../../lib/warpzone/anglestransform.qh"
+#include <lib/warpzone/anglestransform.qh>
 
 .float alpha;
 .float scale;

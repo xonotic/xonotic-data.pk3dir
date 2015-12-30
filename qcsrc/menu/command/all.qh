@@ -1,7 +1,7 @@
 #ifndef MENU_COMMANDS_ALL_H
 #define MENU_COMMANDS_ALL_H
 
-#include "../../common/command/commands.qh"
+#include <common/command/commands.qh>
 
 #include "menu_cmd.qh"
 

@@ -6,12 +6,12 @@
 #include "../scripting.qh"
 #include "../waypoints.qh"
 
-#include "../../../common/constants.qh"
-#include "../../../common/items/all.qh"
+#include <common/constants.qh>
+#include <common/items/all.qh>
 
-#include "../../../common/triggers/trigger/jumppads.qh"
+#include <common/triggers/trigger/jumppads.qh>
 
-#include "../../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 .float speed;
 

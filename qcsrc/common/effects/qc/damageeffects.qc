@@ -2,11 +2,11 @@
 #define DAMAGEEFFECTS_H
 
 #ifdef CSQC
-#include "../../deathtypes/all.qh"
-#include "../../physics/movetypes/movetypes.qh"
-#include "../../../client/mutators/events.qh"
-#include "../../vehicles/all.qh"
-#include "../../weapons/all.qh"
+#include <common/deathtypes/all.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <client/mutators/events.qh>
+#include <common/vehicles/all.qh>
+#include <common/weapons/all.qh>
 #endif
 
 #endif

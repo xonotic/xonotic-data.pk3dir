@@ -119,10 +119,10 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 
 #ifdef SVQC
 
-#include "../../../gamemodes/all.qh"
-#include "../../../monsters/spawn.qh"
-#include "../../../monsters/sv_monsters.qh"
-#include "../../../../server/g_subs.qh"
+#include <common/gamemodes/all.qh>
+#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <server/g_subs.qh>
 
 REGISTER_MUTATOR(nades, cvar("g_nades"));
 

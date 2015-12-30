@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/common.qh"
+    #include <lib/warpzone/common.qh>
     #include "../constants.qh"
     #include "../teams.qh"
     #include "../util.qh"
@@ -9,20 +9,20 @@
     #include "sv_monsters.qh"
 	#include "../physics/movelib.qh"
     #include "../weapons/all.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/defs.qh"
+    #include <server/autocvars.qh>
+    #include <server/defs.qh>
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/all.qh"
-	#include "../../server/steerlib.qh"
+    #include <server/mutators/all.qh>
+	#include <server/steerlib.qh>
 	#include "../turrets/sv_turrets.qh"
 	#include "../turrets/util.qh"
     #include "../vehicles/all.qh"
-    #include "../../server/campaign.qh"
-    #include "../../server/command/common.qh"
-    #include "../../server/command/cmd.qh"
+    #include <server/campaign.qh>
+    #include <server/command/common.qh>
+    #include <server/command/cmd.qh>
 	#include "../triggers/triggers.qh"
-    #include "../../lib/csqcmodel/sv_model.qh"
-    #include "../../server/round_handler.qh"
+    #include <lib/csqcmodel/sv_model.qh>
+    #include <server/round_handler.qh>
 #endif
 
 void monsters_setstatus()

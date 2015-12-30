@@ -1,6 +1,6 @@
 #include "health.qh"
 #ifdef SVQC
-    #include "../../t_items.qh"
+    #include <common/t_items.qh>
 #endif
 
 #ifndef MENUQC

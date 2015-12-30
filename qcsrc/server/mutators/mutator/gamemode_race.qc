@@ -42,7 +42,7 @@ const float SP_RACE_FASTEST = 6;
 
 #ifdef IMPLEMENTATION
 
-#include "../../race.qh"
+#include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
 float autocvar_g_race_qualifying_timelimit;

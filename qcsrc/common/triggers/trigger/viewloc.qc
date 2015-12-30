@@ -1,8 +1,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../../lib/warpzone/util_server.qh"
-    #include "../../../server/defs.qh"
+    #include <lib/warpzone/util_server.qh>
+    #include <server/defs.qh>
 #endif
 
 REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC)

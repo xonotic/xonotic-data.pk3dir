@@ -1,12 +1,12 @@
 #include "selection.qh"
 
 #include "weaponsystem.qh"
-#include "../../common/t_items.qh"
-#include "../../common/constants.qh"
-#include "../../common/util.qh"
-#include "../../common/items/item.qh"
-#include "../../common/weapons/all.qh"
-#include "../../common/mutators/mutator/waypoints/waypointsprites.qh"
+#include <common/t_items.qh>
+#include <common/constants.qh>
+#include <common/util.qh>
+#include <common/items/item.qh>
+#include <common/weapons/all.qh>
+#include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type)

@@ -1,15 +1,15 @@
 #include "../player.qh"
 
 #if defined(CSQC)
-	#include "../../../client/defs.qh"
-	#include "../../stats.qh"
-	#include "../../util.qh"
+	#include <client/defs.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
 	#include "movetypes.qh"
-	#include "../../../lib/csqcmodel/common.qh"
-	#include "../../t_items.qh"
+	#include <lib/csqcmodel/common.qh>
+	#include <common/t_items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../../server/autocvars.qh"
+	#include <server/autocvars.qh>
 #endif
 
 void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction

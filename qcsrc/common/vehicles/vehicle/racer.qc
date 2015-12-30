@@ -27,7 +27,7 @@ REGISTER_VEHICLE(RACER, NEW(Racer));
 #include "racer_weapon.qc"
 
 #ifdef SVQC
-#include "../../triggers/trigger/impulse.qh"
+#include <common/triggers/trigger/impulse.qh>
 
 bool autocvar_g_vehicle_racer;
 

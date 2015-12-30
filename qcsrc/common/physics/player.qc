@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 
-#include "../../server/miscfunctions.qh"
+#include <server/miscfunctions.qh>
 #include "../triggers/trigger/viewloc.qh"
 
 // client side physics

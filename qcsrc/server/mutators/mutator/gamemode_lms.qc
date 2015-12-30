@@ -44,8 +44,8 @@ float LMS_NewPlayerLives();
 
 #ifdef IMPLEMENTATION
 
-#include "../../campaign.qh"
-#include "../../command/cmd.qh"
+#include <server/campaign.qh>
+#include <server/command/cmd.qh>
 
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
