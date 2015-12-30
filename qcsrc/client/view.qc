@@ -70,7 +70,6 @@ void viewmodel_animate(entity this)
 	}
 	oldonground = clonground;
 
-	vector gunorg = '0 0 0', gunangles = '0 0 0';
 	static vector gunorg_prev = '0 0 0', gunangles_prev = '0 0 0';
 
 	bool teleported = view.csqcmodel_teleported;
@@ -81,15 +80,12 @@ void viewmodel_animate(entity this)
 
 	if(autocvar_cl_followmodel && autocvar_cl_followmodel_scale > 0)
 	{
+		vector gunorg = '0 0 0';
 		vector forward, right = '0 0 0', up = '0 0 0';
 		MAKEVECTORS(makevectors, view_angles, forward, right, up);
 		vel.x = view.velocity * forward;
 		vel.y = view.velocity * right * -1;
 		vel.z = view.velocity * up;
-
-		vector r = rotate(vel, -YAW(view_angles) * DEG2RAD);
-		vel.x = r.x;
-		vel.y = r.y;
 
 		if(teleported)
 			vel_prev = vel;
@@ -108,6 +104,8 @@ void viewmodel_animate(entity this)
 		if(fabs(gunorg.x) < 0.001) gunorg.x = 0;
 		if(fabs(gunorg.y) < 0.001) gunorg.y = 0;
 		if(fabs(gunorg.z) < 0.001) gunorg.z = 0;
+
+		this.origin += gunorg;
 	}
 
 	static vector viewangles_prev = '0 0 0';
@@ -116,6 +114,7 @@ void viewmodel_animate(entity this)
 	static vector viewangles_acc_average = '0 0 0';
 	if(autocvar_cl_leanmodel && autocvar_cl_leanmodel_scale > 0)
 	{
+		vector gunangles = '0 0 0';
 		if(teleported)
 			viewangles_prev = view_angles;
 
@@ -141,6 +140,8 @@ void viewmodel_animate(entity this)
 		gunangles.y = -viewangles_acc_average.y / 3 * autocvar_cl_leanmodel_scale;
 		if(fabs(gunangles.x) < 0.001) gunangles.x = 0;
 		if(fabs(gunangles.y) < 0.001) gunangles.y = 0;
+		gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
+		this.angles += gunangles;
 	}
 
 	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
@@ -163,6 +164,7 @@ void viewmodel_animate(entity this)
 		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
 		// for the most part, but for some reason when you go through a message trigger or
 		// pick up an item or anything like that it will momentarily jolt the gun.
+		vector gunorg = '0 0 0';
 		vector forward, right = '0 0 0', up = '0 0 0';
 		float bspeed;
 		float t = 1;
@@ -187,15 +189,14 @@ void viewmodel_animate(entity this)
 		bspeed = xyspeed * 0.01;
 		MAKEVECTORS(makevectors, view_angles, forward, right, up);
 		float bobr = bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
-		gunorg += bobr * right;
+		gunorg = bobr * right;
 		float bobu = bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
 		gunorg += bobu * up;
+		vector v = rotate(gunorg, YAW(view_angles) * DEG2RAD); // rotate world coordinates to relative ones
+		gunorg.x = v.x;
+		gunorg.y = v.y;
+		this.origin += gunorg;
 	}
-	vector v = rotate(gunorg, YAW(view_angles) * DEG2RAD); // rotate world coordinates to relative ones
-	v.z = gunorg.z;
-	this.origin += v;
-	gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
-	this.angles += gunangles;
 }
 
 .vector viewmodel_origin, viewmodel_angles;
