@@ -6,7 +6,7 @@
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
     #include "notifications.qh"
-    #include "deathtypes/all.qh"
+    #include <common/deathtypes/all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
     #include "constants.qh"
@@ -14,7 +14,7 @@
     #include "../server/defs.qh"
 	#include "../server/mutators/events.qh"
     #include "notifications.qh"
-    #include "deathtypes/all.qh"
+    #include <common/deathtypes/all.qh>
     #include "mapinfo.qh"
 #endif
 

@@ -7,26 +7,26 @@
     #include "../server/bot/bot.qh"
     #include "../server/bot/waypoints.qh"
 
-    #include "../server/mutators/all.qh"
+    #include <server/mutators/all.qh>
 
     #include "../server/weapons/common.qh"
     #include "../server/weapons/selection.qh"
     #include "../server/weapons/weaponsystem.qh"
 
     #include "constants.qh"
-    #include "deathtypes/all.qh"
-    #include "notifications.qh"
+    #include <common/deathtypes/all.qh>
+    #include <common/notifications.qh>
 	#include "triggers/subs.qh"
     #include "util.qh"
 
-    #include "monsters/all.qh"
+    #include <common/monsters/all.qh>
 
-    #include "weapons/all.qh"
+    #include <common/weapons/all.qh>
 
     #include "../lib/warpzone/util_server.qh"
 #elif defined(CSQC)
 	#include "physics/movetypes/movetypes.qh"
-	#include "weapons/all.qh"
+	#include <common/weapons/all.qh>
 	#include "../lib/csqcmodel/cl_model.qh"
 	#include "../lib/csqcmodel/common.qh"
 #endif

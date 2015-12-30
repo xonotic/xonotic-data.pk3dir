@@ -12,14 +12,14 @@
 #include "../common/constants.qh"
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
-#include "../common/gamemodes/all.qh"
+#include <common/gamemodes/all.qh>
 #include "../common/physics/player.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
 
-#include "../common/vehicles/all.qh"
-#include "../common/weapons/all.qh"
+#include <common/vehicles/all.qh>
+#include <common/weapons/all.qh>
 #include "../common/viewloc.qh"
 #include "../common/minigames/cl_minigames.qh"
 #include "../common/minigames/cl_minigames_hud.qh"

@@ -21,7 +21,7 @@ WepSet ReadWepSet();
 
 #ifndef MENUQC
 #include "calculations.qh"
-#include "../models/all.qh"
+#include <common/models/all.qh>
 #endif
 
 #include "../util.qh"
