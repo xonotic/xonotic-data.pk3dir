@@ -53,17 +53,17 @@ export QCCFLAGS
 
 ../csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
-	./qcc.sh client $@ $<
+	sh ./qcc.sh client $@ $<
 -include tmp/client.d
 
 ../progs.dat: server/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
-	./qcc.sh server $@ $<
+	sh ./qcc.sh server $@ $<
 -include tmp/server.d
 
 ../menu.dat: menu/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	./qcc.sh menu $@ $<
+	sh ./qcc.sh menu $@ $<
 -include tmp/menu.d
 
 .PHONY: testcase
