@@ -136,11 +136,10 @@ void viewmodel_animate(entity this)
 		viewangles_acc_average.x = viewangles_acc_average.x * (1 - frac) + acc.x * frac;
 		viewangles_acc_average.y = viewangles_acc_average.y * (1 - frac) + acc.y * frac;
 
-		gunangles.x = -viewangles_acc_average.x / 3 * autocvar_cl_leanmodel_scale;
+		gunangles.x = viewangles_acc_average.x / 3 * autocvar_cl_leanmodel_scale;
 		gunangles.y = -viewangles_acc_average.y / 3 * autocvar_cl_leanmodel_scale;
 		if(fabs(gunangles.x) < 0.001) gunangles.x = 0;
 		if(fabs(gunangles.y) < 0.001) gunangles.y = 0;
-		gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
 		this.angles += gunangles;
 	}
 
