@@ -1446,7 +1446,7 @@ void PM_Main(entity this)
 	}
 #endif
 
-	if(PHYS_DEAD(this))
+	if(IS_DEAD(this))
 	{
 		// handle water here
 		vector midpoint = ((this.absmin + this.absmax) * 0.5);

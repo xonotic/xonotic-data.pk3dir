@@ -103,7 +103,7 @@ void plat_center_touch()
 #elif defined(CSQC)
 	if (!IS_PLAYER(other))
 		return;
-	if(PHYS_DEAD(other))
+	if(IS_DEAD(other))
 		return;
 #endif
 

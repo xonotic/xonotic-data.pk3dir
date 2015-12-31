@@ -64,7 +64,7 @@ void swamp_touch()
 {SELFPARAM();
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
-	if(!IS_PLAYER(other) || PHYS_DEAD(other))
+	if(!IS_PLAYER(other) || IS_DEAD(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;

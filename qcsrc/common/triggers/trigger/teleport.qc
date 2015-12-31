@@ -31,7 +31,7 @@ void Teleport_Touch ()
 		return;
 #endif
 
-	if(PHYS_DEAD(other))
+	if(IS_DEAD(other))
 		return;
 
 	if(self.team)

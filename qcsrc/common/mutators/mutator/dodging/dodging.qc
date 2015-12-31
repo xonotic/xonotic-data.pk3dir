@@ -176,7 +176,7 @@ void PM_dodging(entity this)
 	if (!PHYS_DODGING)
 		return;
 
-    if (PHYS_DEAD(this))
+    if (IS_DEAD(this))
         return;
 
 	// when swimming, no dodging allowed..

@@ -22,7 +22,7 @@
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (IS_PLAYER(player) && !PHYS_DEAD(player))
+	if (IS_PLAYER(player) && !IS_DEAD(player))
 	{
 		TDEATHLOOP(org)
 		{
@@ -30,7 +30,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 		#endif
 				if(IS_PLAYER(head))
-					if(!PHYS_DEAD(head))
+					if(!IS_DEAD(head))
 						return 1;
 		}
 	}
