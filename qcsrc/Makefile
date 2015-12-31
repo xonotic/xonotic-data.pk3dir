@@ -1,6 +1,7 @@
 SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
 PERL ?= perl
 QCCFLAGS_WATERMARK ?= $(shell git describe)
+CPP := cc -xc -E
 QCC ?= gmqcc
 NDEBUG ?= 1
 BUILD_MOD ?= 0
