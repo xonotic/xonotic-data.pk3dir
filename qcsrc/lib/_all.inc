@@ -30,6 +30,7 @@
 #include "warpzone/mathlib.qc"
 
 #include "accumulate.qh"
+#include "angle.qc"
 #include "arraylist.qh"
 #include "bits.qh"
 #include "bool.qh"

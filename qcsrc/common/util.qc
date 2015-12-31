@@ -18,6 +18,26 @@
     #include "mapinfo.qh"
 #endif
 
+#ifndef MENUQC
+/*
+* Get "real" origin, in worldspace, even if ent is attached to something else.
+*/
+vector real_origin(entity ent)
+{
+	entity e;
+	vector v = ((ent.absmin + ent.absmax) * 0.5);
+
+	e = ent.tag_entity;
+	while(e)
+	{
+		v = v + ((e.absmin + e.absmax) * 0.5);
+		e = e.tag_entity;
+	}
+
+	return v;
+}
+#endif
+
 string wordwrap_buffer;
 
 void wordwrap_buffer_put(string s)
