@@ -810,23 +810,20 @@ entity waypoint_spawnpersonal(vector position)
 
 void botframe_showwaypointlinks()
 {
-	entity player, head, w;
+	entity head, w;
 	if (time < botframe_waypointeditorlightningtime)
 		return;
 	botframe_waypointeditorlightningtime = time + 0.5;
-	player = find(world, classname, "player");
-	while (player)
-	{
-		if (!player.isbot)
-		if (IS_ONGROUND(player) || player.waterlevel > WATERLEVEL_NONE)
+	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot, LAMBDA(
+		if(IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
 		{
 			//navigation_testtracewalk = true;
-			head = navigation_findnearestwaypoint(player, false);
+			head = navigation_findnearestwaypoint(it, false);
 		//	print("currently selected WP is ", etos(head), "\n");
 			//navigation_testtracewalk = false;
 			if (head)
 			{
-				w = head     ;if (w) te_lightning2(world, w.origin, player.origin);
+				w = head     ;if (w) te_lightning2(world, w.origin, it.origin);
 				w = head.wp00;if (w) te_lightning2(world, w.origin, head.origin);
 				w = head.wp01;if (w) te_lightning2(world, w.origin, head.origin);
 				w = head.wp02;if (w) te_lightning2(world, w.origin, head.origin);
@@ -861,8 +858,7 @@ void botframe_showwaypointlinks()
 				w = head.wp31;if (w) te_lightning2(world, w.origin, head.origin);
 			}
 		}
-		player = find(player, classname, "player");
-	}
+	));
 }
 
 float botframe_autowaypoints_fixdown(vector v)

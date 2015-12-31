@@ -74,16 +74,13 @@ float LMS_NewPlayerLives()
 // LMS winning condition: game terminates if and only if there's at most one
 // one player who's living lives. Top two scores being equal cancels the time
 // limit.
-float WinningCondition_LMS()
+int WinningCondition_LMS()
 {
 	entity head, head2;
-	float have_player;
-	float have_players;
-	float l;
+	bool have_player = false;
+	bool have_players = false;
 
-	have_player = false;
-	have_players = false;
-	l = LMS_NewPlayerLives();
+	int l = LMS_NewPlayerLives();
 
 	head = find(world, classname, "player");
 	if(head)
