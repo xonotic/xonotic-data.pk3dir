@@ -714,8 +714,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 void CSQC_Ent_Update(bool isnew)
 {
 	SELFPARAM();
-	this.sourceLocLine = __LINE__;
-	this.sourceLocFile = __FILE__;
+	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes

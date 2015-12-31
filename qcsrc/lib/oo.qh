@@ -27,8 +27,7 @@
 
 .string classname;
 /** Location entity was spawned from in source */
-.string sourceLocFile;
-.int sourceLocLine;
+.string sourceLoc;
 entity _spawn();
 
 #ifndef SPAWN_PURE
@@ -41,12 +40,11 @@ entity spawn_pure() = #600;
 #define spawn_pure() _spawn()
 #endif
 
-entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure)
+entity __spawn(string _classname, string _sourceLoc, bool pure)
 {
 	entity this = pure ? spawn_pure() : _spawn();
 	this.classname = _classname;
-	this.sourceLocFile = _sourceFile;
-	this.sourceLocLine = _sourceLine;
+	this.sourceLoc = _sourceLoc;
 	if (pure) {
 		make_pure(this);
 		#ifdef CSQC
@@ -57,23 +55,23 @@ entity __spawn(string _classname, string _sourceFile, int _sourceLine, bool pure
 }
 
 
-#define entityclass(...) EVAL_entityclass(OVERLOAD(entityclass, __VA_ARGS__))
+#define entityclass(...) EVAL_entityclass(OVERLOAD_(entityclass, __VA_ARGS__))
 #define EVAL_entityclass(...) __VA_ARGS__
 #define entityclass_1(name) entityclass_2(name, Object)
 #ifndef QCC_SUPPORT_ENTITYCLASS
 	#define entityclass_2(name, base) typedef entity name
 	#define class(name)
-	#define _new(class, pure) __spawn( #class, __FILE__, __LINE__, pure)
+	#define _new(class, pure) __spawn( #class, __FILE__ ":" STR(__LINE__), pure)
 #else
 	#define entityclass_2(name, base) entityclass name : base {}
 	#define class(name) [[class(name)]]
-	#define _new(class, pure) ((class) __spawn( #class, __FILE__, __LINE__, pure))
+	#define _new(class, pure) ((class) __spawn( #class, __FILE__ ":" STR(__LINE__), pure))
 #endif
 /** entities you care about seeing (.origin works) */
 #define new(class) _new(class, false)
 /** purely logical entities (.origin doesn't work) */
 #define new_pure(class) _new(class, true)
-#define spawn() __spawn("entity", __FILE__, __LINE__, false)
+#define spawn() __spawn("entity", __FILE__ ":" STR(__LINE__), false)
 
 entity _clearentity_ent;
 STATIC_INIT(clearentity)
@@ -99,15 +97,10 @@ void clearentity(entity e)
 
 // Macros to hide this implementation detail:
 #ifdef __STDC__
-	#define NEW_(cname, ...) \
-		OVERLOAD_(spawn##cname, __VA_ARGS__)
 	#define NEW(cname, ...) \
-		NEW_(cname, new_pure(cname),##__VA_ARGS__)(new_pure(cname),##__VA_ARGS__)
-
-	#define CONSTRUCT_(cname, ...) \
-		OVERLOAD_(spawn##cname, __VA_ARGS__)
+		OVERLOAD_(spawn##cname, new_pure(cname) P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 	#define CONSTRUCT(cname, ...) \
-		CONSTRUCT_(cname, this,##__VA_ARGS__)(this,##__VA_ARGS__)
+		OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 #else
 	#define NEW(cname, ...) \
 		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)

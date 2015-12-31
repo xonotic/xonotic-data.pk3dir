@@ -19,8 +19,7 @@ REGISTER_NET_TEMP(net_debug)
 		setorigin(this, this.origin);
 		this.debug = true;  // identify server entities by this
 		this.classname = strzone(ReadString());
-		this.sourceLocFile = strzone(ReadString());
-		this.sourceLocLine = ReadInt24_t();
+		this.sourceLoc = strzone(ReadString());
 		return true;
 	}
 #endif
@@ -37,8 +36,7 @@ REGISTER_NET_TEMP(net_debug)
 		WriteCoord(channel, this.origin.y);
 		WriteCoord(channel, this.origin.z);
 		WriteString(channel, this.classname);
-		WriteString(channel, this.sourceLocFile);
-		WriteInt24_t(channel, this.sourceLocLine);
+		WriteString(channel, this.sourceLoc);
 		return true;
 	}
 #endif
@@ -125,8 +123,8 @@ bool autocvar_debugdraw;
 				pos.z = 0;
 				pos.y += ofs * sz;
 				drawcolorcodedstring2(pos,
-					sprintf("%d: '%s'@%s:%d", (e.debug ? e.sv_entnum : etof(e)),
-					e.classname, e.sourceLocFile, e.sourceLocLine),
+					sprintf("%d: '%s'@%s", (e.debug ? e.sv_entnum : etof(e)),
+					e.classname, e.sourceLoc),
 					sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
 				++ofs;
 			}

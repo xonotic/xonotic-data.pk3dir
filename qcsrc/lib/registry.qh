@@ -52,7 +52,7 @@ REGISTRY(Registries, BITS(8))
  * @param fld       The field to store the locally unique unique entity id
  * @param inst      An expression to create a new instance, invoked for every registration
  */
-#define REGISTER(...) EVAL_REGISTER(OVERLOAD(REGISTER, __VA_ARGS__))
+#define REGISTER(...) EVAL_REGISTER(OVERLOAD_(REGISTER, __VA_ARGS__))
 #define EVAL_REGISTER(...) __VA_ARGS__
 #define REGISTER_5(registry, ns, id, fld, inst) REGISTER_4(registry, ns##_##id, fld, inst)
 #define REGISTER_4(registry, id, fld, inst) \
@@ -61,7 +61,7 @@ REGISTRY(Registries, BITS(8))
 	REGISTER_INIT_POST(id) {} \
 	void Register_##id() \
 	{ \
-		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%s)", ftos(registry##_MAX)); \
+		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
 		entity this = id = inst; \
 		this.registered_id = #id; \
 		REGISTRY_PUSH(registry, fld, this); \

@@ -90,7 +90,7 @@ noref vector _vec2;
 #define vec2(v) (_vec2 = (v), _vec2.z = 0, _vec2)
 
 noref vector _vec3;
-#define vec3(x, y, z) (_vec3_x = (x), _vec3_y = (y), _vec3_z = (z), _vec3)
+#define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
 
 vector rotate(vector v, float a)
 {

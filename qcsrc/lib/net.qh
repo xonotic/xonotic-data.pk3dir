@@ -42,8 +42,7 @@ STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id
 		[[accumulate]] NET_HANDLE(id, bool isnew) \
 		{ \
 			this = self; \
-			this.sourceLocFile = __FILE__; \
-			this.sourceLocLine = __LINE__; \
+			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
 			if (!this) isnew = true; \
 		} \
 		REGISTER(LinkedEntities, NET, id, m_id, new_pure(net_linked_packet)) \

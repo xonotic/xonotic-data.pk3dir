@@ -45,10 +45,9 @@ noref bool require_spawnfunc_prefix;
 			{ \
 				assert(this); \
 			} \
-			if (!this.sourceLocFile) \
+			if (!this.sourceLoc) \
 			{ \
-				this.sourceLocFile = __FILE__; \
-				this.sourceLocLine = __LINE__; \
+				this.sourceLoc = __FILE__ ":" STR(__LINE__); \
 			} \
 			if (!this.spawnfunc_checked) \
 			{ \
@@ -83,8 +82,7 @@ noref bool require_spawnfunc_prefix;
 
 	#define FIELDS_COMMON(fld) \
 		FIELD_SCALAR(fld, classname) \
-		FIELD_SCALAR(fld, sourceLocFile) \
-		FIELD_SCALAR(fld, sourceLocLine) \
+		FIELD_SCALAR(fld, sourceLoc) \
 		FIELD_SCALAR(fld, spawnfunc_checked) \
 		FIELD_VEC(fld, origin) \
 		/**/
