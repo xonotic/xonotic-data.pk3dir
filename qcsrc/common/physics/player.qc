@@ -1405,7 +1405,7 @@ void PM_Main(entity this)
 			this.spectatorspeed = maxspeed_mod;
 		if (this.impulse && this.impulse <= 19 || (this.impulse >= 200 && this.impulse <= 209) || (this.impulse >= 220 && this.impulse <= 229))
 		{
-			if (this.lastclassname != "player")
+			if (this.lastclassname != STR_PLAYER)
 			{
 				if (this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209))
 					this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);

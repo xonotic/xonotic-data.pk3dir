@@ -190,12 +190,12 @@ entity CA_SpectateNext(entity player, entity start)
 {
     if (SAME_TEAM(start, player)) return start;
 	// continue from current player
-	for (entity e = start; (e = find(e, classname, "player")); )
+	for (entity e = start; (e = find(e, classname, STR_PLAYER)); )
 	{
 		if (SAME_TEAM(player, e)) return e;
 	}
 	// restart from begining
-	for (entity e = NULL; (e = find(e, classname, "player")); )
+	for (entity e = NULL; (e = find(e, classname, STR_PLAYER)); )
 	{
 		if (SAME_TEAM(player, e)) return e;
 	}

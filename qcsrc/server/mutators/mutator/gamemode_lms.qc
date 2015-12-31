@@ -82,10 +82,10 @@ int WinningCondition_LMS()
 
 	int l = LMS_NewPlayerLives();
 
-	head = find(world, classname, "player");
+	head = find(world, classname, STR_PLAYER);
 	if(head)
 		have_player = true;
-	head2 = find(head, classname, "player");
+	head2 = find(head, classname, STR_PLAYER);
 	if(head2)
 		have_players = true;
 

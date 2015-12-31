@@ -1733,12 +1733,12 @@ bool Spectate(entity pl)
 
 bool SpectateNext()
 {SELFPARAM();
-	other = find(self.enemy, classname, "player");
+	other = find(self.enemy, classname, STR_PLAYER);
 
 	if (MUTATOR_CALLHOOK(SpectateNext, self, other))
 		other = spec_player;
 	else if (!other)
-		other = find(other, classname, "player");
+		other = find(other, classname, STR_PLAYER);
 
 	if(other) { SetSpectatee(self, other); }
 
@@ -1748,7 +1748,7 @@ bool SpectateNext()
 bool SpectatePrev()
 {SELFPARAM();
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
-	other = findchain(classname, "player");
+	other = findchain(classname, STR_PLAYER);
 	if (!other) // no player
 		return false;
 
