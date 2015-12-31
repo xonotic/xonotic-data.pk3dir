@@ -359,7 +359,7 @@ bool vehicles_valid_pilot()
 		return false;
 
 	if((!IS_PLAYER(other))
-	|| (other.deadflag != DEAD_NO)
+	|| (IS_DEAD(other))
 	|| (other.vehicle)
 	|| (DIFF_TEAM(other, self))
 	) { return false; }
@@ -426,7 +426,7 @@ float bumblebee_pilot_frame()
 	vehic = self.vehicle;
 	setself(vehic);
 
-	if(vehic.deadflag != DEAD_NO)
+	if(IS_DEAD(vehic))
 	{
 		setself(pilot);
 		pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = 0;
@@ -562,7 +562,7 @@ float bumblebee_pilot_frame()
 			}
 			else
 			{
-				if(trace_ent.deadflag == DEAD_NO)
+				if(!IS_DEAD(trace_ent))
 					if((teamplay && trace_ent.team == pilot.team) || !teamplay)
 					{
 
@@ -659,7 +659,7 @@ void bumblebee_exit(float eject)
 
 	self.touch = vehicles_touch;
 
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		self.think = bumblebee_land;
 		self.nextthink  = time;

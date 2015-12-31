@@ -572,7 +572,7 @@ void ons_ControlPoint_Icon_Think()
 		int _friendly_count = 0;
 		float _dist;
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
 			_dist = vlen(it.origin - self.origin);
 			if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
 			{
@@ -800,7 +800,7 @@ void ons_ControlPoint_Touch()
 
 	if(!IS_PLAYER(toucher)) { return; }
 	if(toucher.frozen) { return; }
-	if(toucher.deadflag != DEAD_NO) { return; }
+	if(IS_DEAD(toucher)) { return; }
 
 	if ( SAME_TEAM(self,toucher) )
 	if ( self.iscaptured )
@@ -1554,7 +1554,7 @@ bool havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 void havocbot_role_ons_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		self.havocbot_attack_time = 0;
 		havocbot_ons_reset_role(self);
@@ -1599,7 +1599,7 @@ void havocbot_role_ons_defense()
 
 void havocbot_ons_reset_role(entity bot)
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	bot.havocbot_ons_target = world;
@@ -2111,7 +2111,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
-	if((time > self.teleport_antispam) && (self.deadflag == DEAD_NO) && !self.vehicle)
+	if((time > self.teleport_antispam) && (!IS_DEAD(self)) && !self.vehicle)
 	{
 		entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
 		if ( source_point )

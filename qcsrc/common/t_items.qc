@@ -1421,7 +1421,7 @@ void target_items_use()
 
 	if (!IS_PLAYER(activator))
 		return;
-	if(activator.deadflag != DEAD_NO)
+	if(IS_DEAD(activator))
 		return;
 	EXACTTRIGGER_TOUCH;
 

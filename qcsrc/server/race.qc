@@ -1028,7 +1028,7 @@ void race_AbandonRaceCheck(entity p)
 void race_StartCompleting()
 {
 	race_completing = 1;
-	FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag != DEAD_NO, LAMBDA(race_AbandonRaceCheck(it)));
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_DEAD(it), LAMBDA(race_AbandonRaceCheck(it)));
 }
 
 void race_PreparePlayer()

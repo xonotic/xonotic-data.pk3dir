@@ -252,7 +252,7 @@ void freezetag_Unfreeze(entity attacker)
 
 float freezetag_isEliminated(entity e)
 {
-	if(IS_PLAYER(e) && (e.frozen == 1 || e.deadflag != DEAD_NO))
+	if(IS_PLAYER(e) && (e.frozen == 1 || IS_DEAD(e)))
 		return true;
 	return false;
 }
@@ -288,7 +288,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 
 void havocbot_role_ft_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (!self.havocbot_role_timeout)
@@ -322,7 +322,7 @@ void havocbot_role_ft_offense()
 
 void havocbot_role_ft_freeing()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (!self.havocbot_role_timeout)
@@ -502,7 +502,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
 			if(it.frozen == 0)
-			if(it.deadflag == DEAD_NO)
+			if(!IS_DEAD(it))
 			if(SAME_TEAM(it, self))
 			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
 			{

@@ -137,7 +137,7 @@ void M_Spider_Attack_Web_Explode()
 		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
 		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
+		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && !IS_DEAD(e)) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 
 		remove(self);

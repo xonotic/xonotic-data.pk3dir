@@ -114,7 +114,7 @@ void raptor_exit(float eject)
 	vector spot;
 	self.tur_head.exteriormodeltoclient = world;
 
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		self.think	  = raptor_land;
 		self.nextthink  = time;
@@ -198,7 +198,7 @@ float raptor_frame()
 	}
 	*/
 
-	if(raptor.deadflag != DEAD_NO)
+	if(IS_DEAD(raptor))
 	{
 		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;

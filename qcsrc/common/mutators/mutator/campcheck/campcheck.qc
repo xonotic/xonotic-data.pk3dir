@@ -35,7 +35,7 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 	if(time >= game_starttime)
 	if(IS_PLAYER(self))
 	if(IS_REAL_CLIENT(self)) // bots may camp, but that's no reason to constantly kill them
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	if(!self.frozen)
 	if(!self.BUTTON_CHAT)
 	if(autocvar_g_campcheck_interval)

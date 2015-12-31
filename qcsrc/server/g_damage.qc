@@ -643,7 +643,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 						damage = 0;
 					else if(autocvar_teamplay_mode == 4)
 					{
-						if(IS_PLAYER(targ) && targ.deadflag == DEAD_NO)
+						if(IS_PLAYER(targ) && !IS_DEAD(targ))
 						{
 							attacker.dmg_team = attacker.dmg_team + damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
@@ -1230,7 +1230,7 @@ void Fire_ApplyDamage(entity e)
 	if(!IS_INDEPENDENT_PLAYER(e))
 	if(!e.frozen)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != e, LAMBDA(
-			if(it.deadflag == DEAD_NO)
+			if(!IS_DEAD(it))
 			if(!IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
 			{

@@ -403,7 +403,7 @@ void nade_ice_think()
 	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
 	if(e != self)
 	if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(e, self.realowner) || e == self.realowner))
-	if(e.takedamage && e.deadflag == DEAD_NO)
+	if(e.takedamage && !IS_DEAD(e))
 	if(e.health > 0)
 	if(!e.revival_time || ((time - e.revival_time) >= 1.5))
 	if(!e.frozen)
@@ -509,7 +509,7 @@ void nade_heal_touch()
 	float maxhealth;
 	float health_factor;
 	if(IS_PLAYER(other) || IS_MONSTER(other))
-	if(other.deadflag == DEAD_NO)
+	if(!IS_DEAD(other))
 	if(!other.frozen)
 	{
 		health_factor = autocvar_g_nades_heal_rate*frametime/2;
@@ -850,7 +850,7 @@ void nades_GiveBonus(entity player, float score)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max)
 	if (player.frozen == 0)
-	if (player.deadflag == DEAD_NO)
+	if (!IS_DEAD(player))
 	{
 		if ( player.bonus_nade_score < 1 )
 			player.bonus_nade_score += score/autocvar_g_nades_bonus_score_max;
@@ -965,7 +965,7 @@ float CanThrowNade()
 	if(gameover)
 		return false;
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return false;
 
 	if (!autocvar_g_nades)
@@ -1130,7 +1130,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
-			if(it.deadflag == DEAD_NO)
+			if(!IS_DEAD(it))
 			if(it.frozen == 0)
 			if(SAME_TEAM(it, self))
 			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))

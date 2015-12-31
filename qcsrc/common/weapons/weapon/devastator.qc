@@ -88,7 +88,7 @@ void W_Devastator_Explode()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
@@ -206,7 +206,7 @@ void W_Devastator_DoRemoteExplode(.entity weaponentity)
 
 void W_Devastator_RemoteExplode(.entity weaponentity)
 {SELFPARAM();
-	if(self.realowner.deadflag == DEAD_NO)
+	if(!IS_DEAD(self.realowner))
 	if(self.realowner.lastrocket)
 	{
 		if((self.spawnshieldtime >= 0)
@@ -279,7 +279,7 @@ void W_Devastator_Think()
 		if(!self.BUTTON_ATCK2)
 		if(WEP_CVAR(devastator, guiderate))
 		if(time > self.pushltime)
-		if(self.realowner.deadflag == DEAD_NO)
+		if(!IS_DEAD(self.realowner))
 		{
 			f = WEP_CVAR(devastator, guideratedelay);
 			if(f)

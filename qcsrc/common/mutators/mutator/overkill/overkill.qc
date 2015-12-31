@@ -102,7 +102,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 		if(frag_attacker != frag_target)
 		if(frag_target.health > 0)
 		if(frag_target.frozen == 0)
-		if(frag_target.deadflag == DEAD_NO)
+		if(!IS_DEAD(frag_target))
 		{
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			frag_force = '0 0 0';
@@ -178,7 +178,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(intermission_running || gameover)
 		return false;
 
-	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || self.frozen)
+	if(IS_DEAD(self) || !IS_PLAYER(self) || self.frozen)
 		return false;
 
 	if(self.ok_lastwep)

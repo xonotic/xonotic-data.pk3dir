@@ -53,7 +53,7 @@ bool autocvar_g_cts_selfdamage;
 .float race_checkpoint;
 void havocbot_role_cts()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	entity e;

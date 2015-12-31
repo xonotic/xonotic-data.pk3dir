@@ -378,7 +378,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (MUTATOR_CALLHOOK(AllowMobSpawning)) { print_to(caller, ret_string); return; }
 					if (caller.vehicle) { print_to(caller, "You can't spawn monsters while driving a vehicle"); return; }
 					if (caller.frozen) { print_to(caller, "You can't spawn monsters while frozen"); return; }
-					if (caller.deadflag != DEAD_NO) { print_to(caller, "You can't spawn monsters while dead"); return; }
+					if (IS_DEAD(caller)) { print_to(caller, "You can't spawn monsters while dead"); return; }
 					if (tmp_moncount >= autocvar_g_monsters_max) { print_to(caller, "The maximum monster count has been reached"); return; }
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 

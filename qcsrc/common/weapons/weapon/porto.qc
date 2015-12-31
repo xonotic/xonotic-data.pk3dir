@@ -82,7 +82,7 @@ void W_Porto_Fail(float failhard)
 
 	self.realowner.porto_current = world;
 
-	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !(self.realowner.weapons & WEPSET(PORTO)))
+	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && !IS_DEAD(self.realowner) && !(self.realowner.weapons & WEPSET(PORTO)))
 	{
 		setsize(self, '-16 -16 0', '16 16 32');
 		setorigin(self, self.origin + trace_plane_normal);

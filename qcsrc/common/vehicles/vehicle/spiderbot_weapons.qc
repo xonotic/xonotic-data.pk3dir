@@ -50,7 +50,7 @@ void spiderbot_rocket_unguided()
 
     UpdateCSQCProjectile(self);
 
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time || vlen(self.pos1 - self.origin) < 16)
+    if (IS_DEAD(self.owner) || self.cnt < time || vlen(self.pos1 - self.origin) < 16)
         self.use();
 }
 
@@ -70,7 +70,7 @@ void spiderbot_rocket_guided()
 
     UpdateCSQCProjectile(self);
 
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+    if (IS_DEAD(self.owner) || self.cnt < time)
         self.use();
 }
 

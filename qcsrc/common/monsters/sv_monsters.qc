@@ -91,7 +91,7 @@ bool Monster_ValidTarget(entity mon, entity player)
 	|| (player.takedamage == DAMAGE_NO)
 	|| (player.items & IT_INVISIBILITY)
 	|| (IS_SPEC(player) || IS_OBSERVER(player)) // don't attack spectators
-	|| (!IS_VEHICLE(player) && (player.deadflag != DEAD_NO || mon.deadflag != DEAD_NO || player.health <= 0 || mon.health <= 0))
+	|| (!IS_VEHICLE(player) && (IS_DEAD(player) || IS_DEAD(mon) || player.health <= 0 || mon.health <= 0))
 	|| (mon.monster_follow == player || player.monster_follow == mon)
 	|| (!IS_VEHICLE(player) && (player.flags & FL_NOTARGET))
 	|| (!autocvar_g_monsters_typefrag && player.BUTTON_CHAT)
@@ -564,7 +564,7 @@ vector Monster_Move_Target(entity targ)
 		WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 
 		if((self.enemy == world)
-			|| (self.enemy.deadflag != DEAD_NO || self.enemy.health < 1)
+			|| (IS_DEAD(self.enemy) || self.enemy.health < 1)
 			|| (self.enemy.frozen)
 			|| (self.enemy.flags & FL_NOTARGET)
 			|| (self.enemy.alpha < 0.5 && self.enemy.alpha != 0)

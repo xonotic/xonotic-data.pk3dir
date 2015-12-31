@@ -10,7 +10,7 @@ void generic_plat_blocked()
 		}
 
 		// Gib dead/dying stuff
-		if(other.deadflag != DEAD_NO)
+		if(IS_DEAD(other))
 			Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 	}
 #endif
@@ -160,7 +160,7 @@ void plat_crush()
 		{   // Shall we bite?
 			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 			// Gib dead/dying stuff
-			if(other.deadflag != DEAD_NO)
+			if(IS_DEAD(other))
 				Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 #endif

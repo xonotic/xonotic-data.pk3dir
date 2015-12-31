@@ -131,7 +131,7 @@ void W_Seeker_Missile_Think()
 	);
 
 	if(self.enemy != world)
-		if(self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+		if(self.enemy.takedamage != DAMAGE_AIM || IS_DEAD(self.enemy))
 			self.enemy = world;
 
 	if(self.enemy != world)
@@ -191,7 +191,7 @@ void W_Seeker_Missile_Think()
 	}
 	///////////////
 
-	if(self.enemy.deadflag != DEAD_NO)
+	if(IS_DEAD(self.enemy))
 	{
 		self.enemy = world;
 		self.cnt = time + 1 + (random() * 4);
@@ -230,7 +230,7 @@ void W_Seeker_Missile_Animate()
 	self.nextthink = time + 0.05;
 
 	if(self.enemy != world)
-		if(self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+		if(self.enemy.takedamage != DAMAGE_AIM || IS_DEAD(self.enemy))
 			self.enemy = world;
 
 	if(self.frame == 5)
@@ -421,7 +421,7 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 	self.cnt = self.cnt - 1;
 
 	Weapon thiswep = WEP_SEEKER;
-	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (PS(self.realowner).m_switchweapon != WEP_SEEKER))
+	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (IS_DEAD(self.realowner)) || (PS(self.realowner).m_switchweapon != WEP_SEEKER))
 	{
 		remove(self);
 		return;
@@ -459,7 +459,7 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 void W_Seeker_Tracker_Think()
 {SELFPARAM();
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (PS(self.realowner).m_switchweapon != WEP_SEEKER)
+	if((IS_DEAD(self.realowner)) || (IS_DEAD(self.tag_target)) || (PS(self.realowner).m_switchweapon != WEP_SEEKER)
 	|| (time > self.tag_time + WEP_CVAR(seeker, tag_tracker_lifetime)))
 	{
 		if(self)
@@ -511,7 +511,7 @@ void W_Seeker_Tag_Touch()
 	self.event_damage = func_null;
 	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, self);
 
-	if(other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
+	if(other.takedamage == DAMAGE_AIM && !IS_DEAD(other))
 	{
 		// check to see if this person is already tagged by me
 		entity tag = W_Seeker_Tagged_Info(self.realowner, other);

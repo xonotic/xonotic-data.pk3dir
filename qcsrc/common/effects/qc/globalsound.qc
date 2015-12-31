@@ -354,7 +354,7 @@
 				case VOICETYPE_TAUNT:
 				{
 					if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
-					else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT,
+					else if (IS_PLAYER(this) && !IS_DEAD(this)) animdecide_setaction(this, ANIMACTION_TAUNT,
 							true);
 					if (!sv_taunt) break;
 					if (autocvar_sv_gentle) break;

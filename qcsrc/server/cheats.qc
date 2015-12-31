@@ -60,7 +60,7 @@ void CheatShutdownClient()
 float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {SELFPARAM();
 	// dead people cannot cheat
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
@@ -228,7 +228,7 @@ float CheatImpulse(int imp)
 				DID_CHEAT();
 				break;
 			}
-			if(self.deadflag != DEAD_NO)
+			if(IS_DEAD(self))
 				sprint(self, "UR DEAD AHAHAH))\n");
 			else
 				sprint(self, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
@@ -265,7 +265,7 @@ float CheatImpulse(int imp)
 		case CHIMPULSE_R00T.impulse:
 			IS_CHEAT(imp, 0, 0);
 			RandomSelection_Init();
-			FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO && DIFF_TEAM(it, self), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, self), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
@@ -1018,7 +1018,7 @@ void Drag_Update(entity dragger)
 
 float Drag_CanDrag(entity dragger)
 {
-	return (dragger.deadflag == DEAD_NO) || (IS_PLAYER(dragger));
+	return (!IS_DEAD(dragger)) || (IS_PLAYER(dragger));
 }
 
 float Drag_IsDragging(entity dragger)

@@ -53,7 +53,7 @@ int autocvar_g_race_teams;
 .float race_checkpoint;
 void havocbot_role_race()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	entity e;

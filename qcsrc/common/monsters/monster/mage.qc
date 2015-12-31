@@ -182,7 +182,7 @@ void M_Mage_Attack_Spike_Think()
 	);
 
 	if (self.enemy != world)
-		if (self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+		if (self.enemy.takedamage != DAMAGE_AIM || IS_DEAD(self.enemy))
 			self.enemy = world;
 
 	if (self.enemy != world)

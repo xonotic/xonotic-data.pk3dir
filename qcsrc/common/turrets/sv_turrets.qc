@@ -735,7 +735,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		if(!(validate_flags & TFL_TARGETSELECT_PLAYERS))
 			return -7;
 
-		if (e_target.deadflag != DEAD_NO)
+		if (IS_DEAD(e_target))
 			return -8;
 	}
 
@@ -923,7 +923,7 @@ float turret_firecheck()
 
 	// Lack of zombies makes shooting dead things unnecessary :P
 	if (self.firecheck_flags & TFL_FIRECHECK_DEAD)
-		if (self.enemy.deadflag != DEAD_NO)
+		if (IS_DEAD(self.enemy))
 			return 0;
 
 	// Own ammo?

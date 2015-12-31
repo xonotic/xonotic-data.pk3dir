@@ -950,7 +950,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				crosshair_trace(self);
 				if( trace_ent &&
 					IS_CLIENT(trace_ent) &&
-					trace_ent.deadflag == DEAD_NO &&
+					!IS_DEAD(trace_ent) &&
 					trace_ent.team == self.team &&
 					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )
 				{

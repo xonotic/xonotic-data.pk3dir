@@ -109,7 +109,7 @@ void racer_rocket_tracker()
 
     self.nextthink  = time;
 
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+    if (IS_DEAD(self.owner) || self.cnt < time)
     {
         self.use();
         return;
@@ -161,7 +161,7 @@ void racer_rocket_groundhugger()
 
     self.nextthink  = time;
 
-    if(self.owner.deadflag != DEAD_NO || self.cnt < time)
+    if(IS_DEAD(self.owner) || self.cnt < time)
     {
         self.use();
         return;

@@ -372,7 +372,7 @@ void ClientCommand_selectteam(float request, float argc)
 
 								if (selection)
 								{
-									if (self.team == selection && self.deadflag == DEAD_NO)
+									if (self.team == selection && !IS_DEAD(self))
 									{
 										sprint(self, "^7You already are on that team.\n");
 									}

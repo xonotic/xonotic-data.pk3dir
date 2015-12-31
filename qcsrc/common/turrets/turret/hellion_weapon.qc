@@ -66,7 +66,7 @@ void turret_hellion_missile_think()
         turret_projectile_explode();
 
     // Enemy dead? just keep on the current heading then.
-    if ((self.enemy == world) || (self.enemy.deadflag != DEAD_NO))
+    if ((self.enemy == world) || (IS_DEAD(self.enemy)))
     {
 
         // Make sure we dont return to tracking a respawned player

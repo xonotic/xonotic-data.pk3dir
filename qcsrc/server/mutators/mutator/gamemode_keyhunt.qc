@@ -522,7 +522,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 
 	if (!IS_PLAYER(other))
 		return;
-	if(other.deadflag != DEAD_NO)
+	if(IS_DEAD(other))
 		return;
 	if(other == self.enemy)
 		if(time < self.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
@@ -919,7 +919,7 @@ float kh_CheckPlayers(float num)
 		float t_team = kh_Team_ByID(num);
 		float players = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(it.deadflag == DEAD_NO && !it.BUTTON_CHAT && it.team == t_team)
+			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == t_team)
 				++players;
 		));
 
@@ -1005,7 +1005,7 @@ void kh_StartRound()  // runs at the start of each round
 		players = 0;
 		entity my_player = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(it.deadflag == DEAD_NO && !it.BUTTON_CHAT && it.team == teem)
+			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == teem)
 			{
 				++players;
 				if(random() * players <= 1)
@@ -1127,7 +1127,7 @@ void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, f
 
 void havocbot_role_kh_carrier()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (!(self.kh_next))
@@ -1154,7 +1154,7 @@ void havocbot_role_kh_carrier()
 
 void havocbot_role_kh_defense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1195,7 +1195,7 @@ void havocbot_role_kh_defense()
 
 void havocbot_role_kh_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1237,7 +1237,7 @@ void havocbot_role_kh_offense()
 
 void havocbot_role_kh_freelancer()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1352,7 +1352,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return true;
 
 	float r = random() * 3;

@@ -132,7 +132,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 		ka_RespawnBall();
 		return;
 	}
-	if(other.deadflag != DEAD_NO) { return; }
+	if(IS_DEAD(other)) { return; }
 	if(other.frozen) { return; }
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
@@ -263,7 +263,7 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 
 void havocbot_role_ka_carrier()
 {SELFPARAM();
-	if (self.deadflag != DEAD_NO)
+	if (IS_DEAD(self))
 		return;
 
 	if (time > self.bot_strategytime)
@@ -286,7 +286,7 @@ void havocbot_role_ka_carrier()
 
 void havocbot_role_ka_collector()
 {SELFPARAM();
-	if (self.deadflag != DEAD_NO)
+	if (IS_DEAD(self))
 		return;
 
 	if (time > self.bot_strategytime)

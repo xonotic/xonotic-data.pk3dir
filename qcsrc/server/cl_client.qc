@@ -835,13 +835,13 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
     if(!self.killindicator)
 	{
-		if(self.deadflag == DEAD_NO)
+		if(!IS_DEAD(self))
 		{
 			killtime = max(killtime, self.clientkill_nexttime - time);
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || !IS_PLAYER(self) || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || !IS_PLAYER(self) || IS_DEAD(self))
 		{
 			ClientKill_Now();
 		}
@@ -1791,7 +1791,7 @@ Update a respawn countdown display.
 void ShowRespawnCountdown()
 {SELFPARAM();
 	float number;
-	if(self.deadflag == DEAD_NO) // just respawned?
+	if(!IS_DEAD(self)) // just respawned?
 		return;
 	else
 	{
@@ -2050,7 +2050,7 @@ void PlayerUseKey()
 	else if(autocvar_g_vehicles_enter)
 	{
 		if(!self.frozen)
-		if(self.deadflag == DEAD_NO)
+		if(!IS_DEAD(self))
 		if(!gameover)
 		{
 			entity head, closest_target = world;
@@ -2059,7 +2059,7 @@ void PlayerUseKey()
 			while(head) // find the closest acceptable target to enter
 			{
 				if(head.vehicle_flags & VHF_ISVEHICLE)
-				if(head.deadflag == DEAD_NO)
+				if(!IS_DEAD(head))
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, self)))
 				if(head.takedamage != DAMAGE_NO)
 				{
@@ -2209,12 +2209,12 @@ void PlayerPreThink ()
 	if(!gameover)
 	if(!self.frozen)
 	if(!self.vehicle)
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
-		if(veh.deadflag == DEAD_NO)
+		if(!IS_DEAD(veh))
 		if(veh.takedamage != DAMAGE_NO)
 		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, self))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
@@ -2261,7 +2261,7 @@ void PlayerPreThink ()
 			player_powerups();
 		}
 
-		if (self.deadflag != DEAD_NO)
+		if (IS_DEAD(self))
 		{
 			if(self.personal && g_race_qualifying)
 			{
@@ -2465,7 +2465,7 @@ void PlayerPreThink ()
 
 void DrownPlayer(entity this)
 {
-	if(this.deadflag != DEAD_NO)
+	if(IS_DEAD(this))
 		return;
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)

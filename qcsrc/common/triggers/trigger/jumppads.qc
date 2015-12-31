@@ -223,7 +223,7 @@ void trigger_push_touch()
 			else
 				other.lastteleporttime = time;
 
-			if (other.deadflag == DEAD_NO)
+			if (!IS_DEAD(other))
 				animdecide_setaction(other, ANIMACTION_JUMP, true);
 		}
 		else

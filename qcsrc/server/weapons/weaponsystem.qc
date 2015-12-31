@@ -74,7 +74,7 @@ void CL_Weaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (this.owner.deadflag != DEAD_NO)
+	if (IS_DEAD(self.owner))
 	{
 		// owner died; disappear
 		this.model = "";
@@ -115,7 +115,7 @@ void CL_ExteriorWeaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (this.owner.deadflag != DEAD_NO)
+	if (IS_DEAD(self.owner))
 	{
 		this.model = "";
 		return;

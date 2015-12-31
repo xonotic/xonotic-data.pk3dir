@@ -107,7 +107,7 @@ vector targetdrone_getnewspot()
 
 void vehicles_locktarget(float incr, float decr, float _lock_time)
 {SELFPARAM();
-	if(self.lock_target && self.lock_target.deadflag != DEAD_NO)
+	if(self.lock_target && IS_DEAD(self.lock_target))
 	{
 		self.lock_target	= world;
 		self.lock_strength  = 0;
@@ -131,7 +131,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 		if(SAME_TEAM(trace_ent, self))
 			trace_ent = world;
 
-		if(trace_ent.deadflag != DEAD_NO)
+		if(IS_DEAD(trace_ent))
 			trace_ent = world;
 
 		if(!(IS_VEHICLE(trace_ent) || IS_TURRET(trace_ent)))
@@ -550,7 +550,7 @@ void vehicles_setreturn(entity veh)
 	ret.team		= veh.team;
 	ret.think	   = vehicles_showwp;
 
-	if(veh.deadflag != DEAD_NO)
+	if(IS_DEAD(veh))
 	{
 		ret.cnt		 = time + veh.respawntime;
 		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 5);
@@ -576,7 +576,7 @@ void vehicle_use()
 	else
 		self.active = ACTIVE_ACTIVE;
 
-	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
+	if(self.active == ACTIVE_ACTIVE && !IS_DEAD(self) && !gameover)
 	{
 		LOG_TRACE("Respawning vehicle: ", self.netname, "\n");
 		if(self.effects & EF_NODRAW)
@@ -886,7 +886,7 @@ void vehicles_exit(bool eject)
 	}
 	_vehicle.flags |= FL_NOTARGET;
 
-	if(_vehicle.deadflag == DEAD_NO)
+	if(!IS_DEAD(_vehicle))
 		_vehicle.avelocity = '0 0 0';
 
 	_vehicle.tur_head.nodrawtoclient = world;
@@ -956,7 +956,7 @@ bool vehicle_impulse(entity this, int imp)
 {
 	entity v = this.vehicle;
 	if (!v) return false;
-	if (v.deadflag != DEAD_NO) return false;
+	if (IS_DEAD(v)) return false;
 	bool(int) f = v.vehicles_impulse;
 	if (f && f(imp)) return true;
 	switch (imp)
@@ -980,7 +980,7 @@ void vehicles_enter(entity pl, entity veh)
 	|| (veh.phase >= time)
 	|| (pl.vehicle_enter_delay >= time)
 	|| (pl.frozen)
-	|| (pl.deadflag != DEAD_NO)
+	|| (IS_DEAD(pl))
 	|| (pl.vehicle)
 	) { return; }
 

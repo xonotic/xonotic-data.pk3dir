@@ -38,7 +38,7 @@ void havocbot_ai()
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(self.deadflag != DEAD_NO)
+		if(IS_DEAD(self))
 		if(self.goalcurrent==world)
 		if(self.waterlevel==WATERLEVEL_SWIMMING || (self.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -86,7 +86,7 @@ void havocbot_ai()
 		bot_strategytoken_taken = true;
 	}
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	havocbot_chooseenemy();

@@ -241,7 +241,7 @@ void W_Arc_Beam_Think()
 		||
 		(self.owner.(thiswep.ammo_field) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 		||
-		self.owner.deadflag != DEAD_NO
+		IS_DEAD(self.owner)
 		||
 		(!self.owner.BUTTON_ATCK && !burst )
 		||
