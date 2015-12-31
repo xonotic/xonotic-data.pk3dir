@@ -1,8 +1,7 @@
 SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
 PERL ?= perl
-QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
+QCCFLAGS_WATERMARK ?= $(shell git describe)
 QCC ?= gmqcc
-QCCDEFS_EXTRA ?= -DGMQCC
 NDEBUG ?= 1
 BUILD_MOD ?= 0
 
@@ -13,7 +12,7 @@ QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
 QCCDEFS ?= \
-	$(QCCFLAGS_WATERMARK) \
+	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
 	-DNDEBUG=$(NDEBUG) \
 	-DBUILD_MOD=$(BUILD_MOD) \
 	$(QCCDEFS_EXTRA)
@@ -47,28 +46,24 @@ $(QCCVERSIONFILE):
 	$(RM) qccversion.*
 	echo This file intentionally left blank. > $@
 
+export QCC
+export CPP
+export QCCDEFS
+export QCCFLAGS
+
 ../csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
-	$(CC) -xc -I. $(QCCDEFS) -DCSQC -E -MMD -MP -MT $@ -Wall -Wundef -Werror -CC -o tmp/client.qc $<
-	@$(CC) -xc -I. $(QCCDEFS) -DCSQC -E -dM 1>tmp/client_macros.txt -H 2>tmp/client_includes.txt $<
-	@sed -i 's/^# \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\2)\n#pragma line(\1)/g' tmp/client.qc
 	@echo make[1]: Entering directory \`$(PWD)/client\'
-	cd client && $(QCC) $(QCCFLAGS) -o ../$@ ../tmp/client.qc
+	./qcc.sh client $@ $<
 -include tmp/client.d
 
 ../progs.dat: server/progs.inc $(QCCVERSIONFILE)
-	$(CC) -xc -I. $(QCCDEFS) -DSVQC -E -MMD -MP -MT $@ -Wall -Wundef -Werror -CC -o tmp/server.qc $<
-	@$(CC) -xc -I. $(QCCDEFS) -DSVQC -E -dM 1>tmp/server_macros.txt -H 2>tmp/server_includes.txt $<
-	@sed -i 's/^# \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\2)\n#pragma line(\1)/g' tmp/server.qc
 	@echo make[1]: Entering directory \`$(PWD)/server\'
-	cd server && $(QCC) $(QCCFLAGS) -o ../$@ ../tmp/server.qc
+	./qcc.sh server $@ $<
 -include tmp/server.d
 
 ../menu.dat: menu/progs.inc $(QCCVERSIONFILE)
-	$(CC) -xc -I. $(QCCDEFS) -DMENUQC -E -MMD -MP -MT $@ -Wall -Wundef -Werror -CC -o tmp/menu.qc $<
-	@$(CC) -xc -I. $(QCCDEFS) -DMENUQC -E -dM 1>tmp/menu_macros.txt -H 2>tmp/menu_includes.txt $<
-	@sed -i 's/^# \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\2)\n#pragma line(\1)/g' tmp/menu.qc
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	cd menu && $(QCC) $(QCCFLAGS) -o ../$@ ../tmp/menu.qc
+	./qcc.sh menu $@ $<
 -include tmp/menu.d
 
 .PHONY: testcase
