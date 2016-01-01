@@ -1425,10 +1425,11 @@ void target_items_use()
 		return;
 	EXACTTRIGGER_TOUCH;
 
-	entity e;
-	for(e = world; (e = find(e, classname, "droppedweapon")); )
-		if(e.enemy == activator)
-			remove(e);
+	FOREACH_ENTITY_ENT(enemy, activator,
+	{
+		if(it.classname == "droppedweapon")
+			remove(it);
+	});
 
 	if(GiveItems(activator, 0, tokenize_console(self.netname)))
 		centerprint(activator, self.message);

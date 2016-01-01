@@ -584,7 +584,6 @@ void get_mi_min_max_texcoords(float mode)
 float cvar_settemp(string tmp_cvar, string tmp_value)
 {
 	float created_saved_value;
-	entity e;
 
 	created_saved_value = 0;
 
@@ -600,14 +599,16 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 		return 0;
 	}
 
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == tmp_cvar)
-			created_saved_value = -1; // skip creation
+	FOREACH_ENTITY_CLASS("saved_cvar_value", it.netname == tmp_cvar,
+	{
+		created_saved_value = -1; // skip creation
+		break; // no need to continue
+	});
 
 	if(created_saved_value != -1)
 	{
 		// creating a new entity to keep track of this cvar
-		e = new(saved_cvar_value);
+		entity e = new(saved_cvar_value);
 		make_pure(e);
 		e.netname = strzone(tmp_cvar);
 		e.message = strzone(cvar_string(tmp_cvar));
@@ -620,25 +621,24 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	return created_saved_value;
 }
 
-float cvar_settemp_restore()
+int cvar_settemp_restore()
 {
-	float i = 0;
-	entity e = world;
-	while((e = find(e, classname, "saved_cvar_value")))
+	int j = 0;
+	FOREACH_ENTITY_CLASS("saved_cvar_value", true,
 	{
-		if(cvar_type(e.netname))
+		if(cvar_type(it.netname))
 		{
-			cvar_set(e.netname, e.message);
-			strunzone(e.netname);
-			strunzone(e.message);
-			remove(e);
-			++i;
+			cvar_set(it.netname, it.message);
+			strunzone(it.netname);
+			strunzone(it.message);
+			remove(it);
+			++j;
 		}
 		else
-			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
-	}
+			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", it.netname);
+	});
 
-	return i;
+	return j;
 }
 
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
