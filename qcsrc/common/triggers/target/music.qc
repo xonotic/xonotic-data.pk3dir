@@ -1,9 +1,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../constants.qh"
-    #include "../../../server/constants.qh"
-    #include "../../../server/defs.qh"
+    #include <common/constants.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
 #endif
 
 REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)
@@ -54,8 +54,10 @@ void target_music_use()
 		msg_entity = activator;
 		target_music_sendto(MSG_ONE, 1);
 	}
-	entity head;
-	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == activator, LAMBDA(
+		msg_entity = it;
+		target_music_sendto(MSG_ONE, 1);
+	));
 }
 spawnfunc(target_music)
 {

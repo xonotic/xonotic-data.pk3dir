@@ -21,13 +21,13 @@
 
 #include "../mutators/all.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/teams.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
 
-#include "../../common/monsters/sv_monsters.qh"
+#include <common/monsters/sv_monsters.qh>
 
 
 void PutObserverInServer();
@@ -194,17 +194,14 @@ void GameCommand_allspec(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
 			string reason = argv(1);
-			float i = 0;
-
-			FOR_EACH_REALPLAYER(client)
-			{
-				if (client.caplayer) client.caplayer = 0;
-				WITH(entity, self, client, PutObserverInServer());
-				++i;
-			}
-			if (i)   bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
+			int n = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				if (it.caplayer) it.caplayer = 0;
+				WITH(entity, self, it, PutObserverInServer());
+				++n;
+			));
+			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
 			else   LOG_INFO("No players found to spectate.\n");
 			return;
 		}
@@ -553,17 +550,15 @@ void GameCommand_defer_clear_all(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-			float i = 0;
+			int n = 0;
 			float argc;
 
-			FOR_EACH_CLIENT(client)
-			{
-				argc = tokenize_console(strcat("defer_clear ", ftos(etof(client))));
+			FOREACH_CLIENT(true, LAMBDA(
+				argc = tokenize_console(strcat("defer_clear ", ftos(etof(it))));
 				GameCommand_defer_clear(CMD_REQUEST_COMMAND, argc);
-				++i;
-			}
-			if (i)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n"));  // should a message be added if no players were found?
+				++n;
+			));
+			if (n)   LOG_INFO(strcat("Successfully stuffed defer clear to all clients (", ftos(n), ")\n"));  // should a message be added if no players were found?
 			return;
 		}
 
@@ -1161,18 +1156,14 @@ void GameCommand_nospectators(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			blockSpectators = 1;
-			entity plr;
-			FOR_EACH_REALCLIENT(plr)  // give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
-			{
-				if (IS_SPEC(plr) || IS_OBSERVER(plr))
+			// give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_SPEC(it) || IS_OBSERVER(it)) && !it.caplayer, LAMBDA(
+				if(!it.caplayer)
 				{
-					if (!plr.caplayer)
-					{
-						plr.spectatortime = time;
-						Send_Notification(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-					}
+					it.spectatortime = time;
+					Send_Notification(NOTIF_ONE_ONLY, it, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
-			}
+			));
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
 		}
@@ -1368,17 +1359,13 @@ void GameCommand_shuffleteams(float request)
 		{
 			if (teamplay)
 			{
-				entity tmp_player;
-				int i;
 				float x, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				t_players = 0;
 				t_teams = 0;
-				FOR_EACH_CLIENT(tmp_player)
-				if (IS_PLAYER(tmp_player) || tmp_player.caplayer)
-				{
-					CheckAllowedTeams(tmp_player);
+				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
+					CheckAllowedTeams(it);
 
 					if (c1 >= 0) t_teams = max(1, t_teams);
 					if (c2 >= 0) t_teams = max(2, t_teams);
@@ -1386,27 +1373,25 @@ void GameCommand_shuffleteams(float request)
 					if (c4 >= 0) t_teams = max(4, t_teams);
 
 					++t_players;
-				}
+				));
 
 				// build a list of the players in a random order
-				FOR_EACH_CLIENT(tmp_player)
-				if (IS_PLAYER(tmp_player) || tmp_player.caplayer)
-				{
+				FOREACH_CLIENT(IS_PLAYER(it) || it.caplayer, LAMBDA(
 					for ( ; ; )
 					{
-						i = bound(1, floor(random() * maxclients) + 1, maxclients);
+						int idx = bound(1, floor(random() * maxclients) + 1, maxclients);
 
-						if (shuffleteams_players[i])
+						if (shuffleteams_players[idx])
 						{
 							continue;  // a player is already assigned to this slot
 						}
 						else
 						{
-							shuffleteams_players[i] = etof(tmp_player);
+							shuffleteams_players[idx] = etof(it);
 							break;
 						}
 					}
-				}
+				));
 
 				// finally, from the list made earlier, re-join the players in different order.
 				for (int i = 1; i <= t_teams; ++i)
@@ -1441,10 +1426,10 @@ void GameCommand_shuffleteams(float request)
 				bprint("Successfully shuffled the players around randomly.\n");
 
 				// clear the buffers now
-				for (i = 0; i < SHUFFLETEAMS_MAX_PLAYERS; ++i)
+				for (int i = 0; i < SHUFFLETEAMS_MAX_PLAYERS; ++i)
 					shuffleteams_players[i] = 0;
 
-				for (i = 0; i < SHUFFLETEAMS_MAX_TEAMS; ++i)
+				for (int i = 0; i < SHUFFLETEAMS_MAX_TEAMS; ++i)
 					shuffleteams_teams[i] = 0;
 			}
 			else
@@ -1473,7 +1458,6 @@ void GameCommand_stuffto(float request, float argc)
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
 
 #ifdef STUFFTO_ENABLED
-	#message "stuffto command enabled"
 		switch (request)
 		{
 			case CMD_REQUEST_COMMAND:
@@ -1549,15 +1533,15 @@ void GameCommand_trace(float request, float argc)
 						start = stov(vtos(start));
 						end = stov(vtos(end));
 
-						tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
+						tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, world);
 						if (!trace_startsolid && trace_fraction < 1)
 						{
 							p = trace_endpos;
-							tracebox(p, PL_MIN, PL_MAX, p, MOVE_NOMONSTERS, world);
+							tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), p, MOVE_NOMONSTERS, world);
 							if (trace_startsolid)
 							{
 								rint(42);  // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
-								tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
+								tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, world);
 
 								// how much do we need to back off?
 								safe = 1;
@@ -1565,7 +1549,7 @@ void GameCommand_trace(float request, float argc)
 								for ( ; ; )
 								{
 									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-									tracebox(pos, PL_MIN, PL_MAX, pos, MOVE_NOMONSTERS, world);
+									tracebox(pos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pos, MOVE_NOMONSTERS, world);
 									if (trace_startsolid)
 									{
 										if ((safe + unsafe) * 0.5 == unsafe) break;
@@ -1581,7 +1565,7 @@ void GameCommand_trace(float request, float argc)
 								LOG_INFO("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
 								LOG_INFO("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
 
-								tracebox(p, PL_MIN + '0.1 0.1 0.1', PL_MAX - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+								tracebox(p, STAT(PL_MIN, NULL) + '0.1 0.1 0.1', STAT(PL_MAX, NULL) - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
 								if (trace_startsolid) LOG_INFO("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								else LOG_INFO("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								if (++hitcount >= 10) break;
@@ -1595,7 +1579,7 @@ void GameCommand_trace(float request, float argc)
 								{
 									q = p + normalize(end - p) * (dq + dqf);
 									if (q == q0) break;
-									tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
+									tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), q, MOVE_NOMONSTERS, world);
 									if (trace_startsolid) error("THIS ONE cannot happen");
 									if (trace_fraction > 0) dq += dqf * trace_fraction;
 									dqf *= 0.5;

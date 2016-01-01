@@ -1,5 +1,4 @@
-#ifndef NIL_H
-#define NIL_H
+#pragma once
 
 #ifdef QCC_SUPPORT_NIL
 	#define func_null nil
@@ -8,6 +7,4 @@
 // the NULL function
 	var void func_null();
 	string string_null;
-#endif
-
 #endif

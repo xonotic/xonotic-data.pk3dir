@@ -133,7 +133,6 @@ const int SP_ONS_TAKES = 6;
 
 bool g_onslaught;
 
-float autocvar_g_onslaught_debug;
 float autocvar_g_onslaught_teleport_wait;
 bool autocvar_g_onslaught_spawn_at_controlpoints;
 bool autocvar_g_onslaught_spawn_at_generator;
@@ -229,15 +228,6 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 // Junk Pile
 // ==========
 
-void ons_debug(string input)
-{
-	switch(autocvar_g_onslaught_debug)
-	{
-		case 1: LOG_TRACE(input); break;
-		case 2: LOG_INFO(input); break;
-	}
-}
-
 void setmodel_fixsize(entity e, Model m)
 {
 	setmodel(e, m);
@@ -248,14 +238,14 @@ void onslaught_updatelinks()
 {
 	entity l;
 	// first check if the game has ended
-	ons_debug("--- updatelinks ---\n");
+	LOG_DEBUG("--- updatelinks ---\n");
 	// mark generators as being shielded and networked
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
 		if (l.iscaptured)
-			ons_debug(strcat(etos(l), " (generator) belongs to team ", ftos(l.team), "\n"));
+			LOG_DEBUG(strcat(etos(l), " (generator) belongs to team ", ftos(l.team), "\n"));
 		else
-			ons_debug(strcat(etos(l), " (generator) is destroyed\n"));
+			LOG_DEBUG(strcat(etos(l), " (generator) is destroyed\n"));
 		l.islinked = l.iscaptured;
 		l.isshielded = l.iscaptured;
 		l.sprite.SendFlags |= 16;
@@ -267,7 +257,7 @@ void onslaught_updatelinks()
 		l.isshielded = true;
 		int i;
 		for(i = 0; i < 17; ++i) { l.isgenneighbor[i] = false; l.iscpneighbor[i] = false; }
-		ons_debug(strcat(etos(l), " (point) belongs to team ", ftos(l.team), "\n"));
+		LOG_DEBUG(strcat(etos(l), " (point) belongs to team ", ftos(l.team), "\n"));
 		l.sprite.SendFlags |= 16;
 	}
 	// flow power outward from the generators through the network
@@ -287,13 +277,13 @@ void onslaught_updatelinks()
 						{
 							stop = false;
 							l.goalentity.islinked = true;
-							ons_debug(strcat(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n"));
+							LOG_DEBUG(strcat(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n"));
 						}
 						else if (!l.enemy.islinked)
 						{
 							stop = false;
 							l.enemy.islinked = true;
-							ons_debug(strcat(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n"));
+							LOG_DEBUG(strcat(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n"));
 						}
 					}
 		}
@@ -306,7 +296,7 @@ void onslaught_updatelinks()
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				ons_debug(strcat(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n"));
+				LOG_DEBUG(strcat(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n"));
 				l.enemy.isshielded = false;
 			}
 			if(l.goalentity.classname == "onslaught_generator")
@@ -318,7 +308,7 @@ void onslaught_updatelinks()
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				ons_debug(strcat(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n"));
+				LOG_DEBUG(strcat(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n"));
 				l.goalentity.isshielded = false;
 			}
 			if(l.enemy.classname == "onslaught_generator")
@@ -332,13 +322,13 @@ void onslaught_updatelinks()
 	{
 		if (l.isshielded)
 		{
-			ons_debug(strcat(etos(l), " (generator) is shielded\n"));
+			LOG_DEBUG(strcat(etos(l), " (generator) is shielded\n"));
 			l.takedamage = DAMAGE_NO;
 			l.bot_attack = false;
 		}
 		else
 		{
-			ons_debug(strcat(etos(l), " (generator) is not shielded\n"));
+			LOG_DEBUG(strcat(etos(l), " (generator) is not shielded\n"));
 			l.takedamage = DAMAGE_AIM;
 			l.bot_attack = true;
 		}
@@ -350,7 +340,7 @@ void onslaught_updatelinks()
 	{
 		if (l.isshielded)
 		{
-			ons_debug(strcat(etos(l), " (point) is shielded\n"));
+			LOG_DEBUG(strcat(etos(l), " (point) is shielded\n"));
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_NO;
@@ -359,7 +349,7 @@ void onslaught_updatelinks()
 		}
 		else
 		{
-			ons_debug(strcat(etos(l), " (point) is not shielded\n"));
+			LOG_DEBUG(strcat(etos(l), " (point) is not shielded\n"));
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_AIM;
@@ -431,7 +421,7 @@ void ons_DelayedLinkSetup()
 	if(!self.goalentity) { objerror("can not find target\n"); }
 	if(!self.enemy) { objerror("can not find target2\n"); }
 
-	ons_debug(strcat(etos(self.goalentity), " linked with ", etos(self.enemy), "\n"));
+	LOG_DEBUG(strcat(etos(self.goalentity), " linked with ", etos(self.enemy), "\n"));
 	self.SendFlags |= 3;
 	self.think = ons_Link_CheckUpdate;
 	self.nextthink = time;
@@ -578,37 +568,32 @@ void ons_ControlPoint_Icon_Think()
 
 	if(autocvar_g_onslaught_cp_proxydecap)
 	{
-        int _enemy_count = 0;
-        int _friendly_count = 0;
-        float _dist;
-        entity _player;
+		int _enemy_count = 0;
+		int _friendly_count = 0;
+		float _dist;
 
-        FOR_EACH_PLAYER(_player)
-        {
-            if(!_player.deadflag)
-            {
-                _dist = vlen(_player.origin - self.origin);
-                if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
-                {
-					if(SAME_TEAM(_player, self))
-                        ++_friendly_count;
-                    else
-                        ++_enemy_count;
-                }
-            }
-        }
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+			_dist = vlen(it.origin - self.origin);
+			if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
+			{
+				if(SAME_TEAM(it, self))
+					++_friendly_count;
+				else
+					++_enemy_count;
+			}
+		));
 
-        _friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
-        _enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
-        self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
+		self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
 		self.SendFlags |= CPSF_STATUS;
-        if(self.health <= 0)
-        {
-            ons_ControlPoint_Icon_Damage(self, self, 1, 0, self.origin, '0 0 0');
-            return;
-        }
-    }
+		if(self.health <= 0)
+		{
+			ons_ControlPoint_Icon_Damage(self, self, 1, 0, self.origin, '0 0 0');
+			return;
+		}
+	}
 
 	if (time > self.pain_finished + 5)
 	{
@@ -814,8 +799,8 @@ void ons_ControlPoint_Touch()
 		return;
 
 	if(!IS_PLAYER(toucher)) { return; }
-	if(toucher.frozen) { return; }
-	if(toucher.deadflag != DEAD_NO) { return; }
+	if(STAT(FROZEN, toucher)) { return; }
+	if(IS_DEAD(toucher)) { return; }
 
 	if ( SAME_TEAM(self,toucher) )
 	if ( self.iscaptured )
@@ -993,8 +978,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 		if (time > self.pain_finished)
 		{
 			self.pain_finished = time + 10;
-			entity head;
-			FOR_EACH_REALPLAYER(head) if(SAME_TEAM(head, self)) { Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK); }
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, self), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK)));
 			play2team(self.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
@@ -1055,24 +1039,22 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 
 void ons_GeneratorThink()
 {SELFPARAM();
-	entity e;
 	self.nextthink = time + GEN_THINKRATE;
 	if (!gameover)
 	{
-        if(!self.isshielded && self.wait < time)
-        {
-            self.wait = time + 5;
-            FOR_EACH_REALPLAYER(e)
-            {
-				if(SAME_TEAM(e, self))
+		if(!self.isshielded && self.wait < time)
+		{
+			self.wait = time + 5;
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+				if(SAME_TEAM(it, self))
 				{
-					Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
-                    soundto(MSG_ONE, e, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
-                }
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
+					soundto(MSG_ONE, it, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
+				}
 				else
-					Send_Notification(NOTIF_ONE, e, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
-            }
-        }
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
+			));
+		}
 	}
 }
 
@@ -1224,8 +1206,6 @@ void nades_Clear(entity e);
 #define ONS_OWNED_GENERATORS_OK() (ONS_OWNED_GENERATORS() > 1)
 bool Onslaught_CheckWinner()
 {
-	entity e;
-
 	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
 	{
 		ons_stalemate = true;
@@ -1245,6 +1225,7 @@ bool Onslaught_CheckWinner()
 			// tmp_entity.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
 			d = 1;
+			entity e;
 			for(e = ons_worldcplist; e; e = e.ons_worldcpnext)
 			{
 				if(DIFF_TEAM(e, tmp_entity))
@@ -1291,13 +1272,12 @@ bool Onslaught_CheckWinner()
 
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 
-	FOR_EACH_PLAYER(e)
-	{
-		e.ons_roundlost = true;
-		e.player_blocked = true;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		it.ons_roundlost = true;
+		it.player_blocked = true;
 
-		nades_Clear(e);
-	}
+		nades_Clear(it);
+	));
 
 	return 1;
 }
@@ -1310,7 +1290,7 @@ bool Onslaught_CheckPlayers()
 void Onslaught_RoundStart()
 {
 	entity tmp_entity;
-	FOR_EACH_PLAYER(tmp_entity) { tmp_entity.player_blocked = false; }
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.player_blocked = false));
 
 	for(tmp_entity = ons_worldcplist; tmp_entity; tmp_entity = tmp_entity.ons_worldcpnext)
 		tmp_entity.sprite.SendFlags |= 16;
@@ -1330,7 +1310,6 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 {SELFPARAM();
 	entity head;
 	float t, c;
-	int i;
 	bool needarmor = false, needweapons = false;
 
 	// Needs armor/health?
@@ -1339,13 +1318,11 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 
 	// Needs weapons?
 	c = 0;
-	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
-	{
-		// Find weapon
-		if(self.weapons & WepSet_FromWeapon(Weapons_from(i)))
-		if(++c>=4)
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if(self.weapons & (it.m_wepset))
+		if(++c >= 4)
 			break;
-	}
+	));
 
 	if(c<4)
 		needweapons = true;
@@ -1353,8 +1330,8 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	if(!needweapons && !needarmor)
 		return;
 
-	ons_debug(strcat(self.netname, " needs weapons ", ftos(needweapons) , "\n"));
-	ons_debug(strcat(self.netname, " needs armor ", ftos(needarmor) , "\n"));
+	LOG_DEBUG(strcat(self.netname, " needs weapons ", ftos(needweapons) , "\n"));
+	LOG_DEBUG(strcat(self.netname, " needs armor ", ftos(needarmor) , "\n"));
 
 	// See what is around
 	head = findchainfloat(bot_pickup, true);
@@ -1375,47 +1352,34 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 
 void havocbot_role_ons_setrole(entity bot, int role)
 {
-	ons_debug(strcat(bot.netname," switched to "));
+	LOG_DEBUG(strcat(bot.netname," switched to "));
 	switch(role)
 	{
 		case HAVOCBOT_ONS_ROLE_DEFENSE:
-			ons_debug("defense");
+			LOG_DEBUG("defense");
 			bot.havocbot_role = havocbot_role_ons_defense;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_ASSISTANT:
-			ons_debug("assistant");
+			LOG_DEBUG("assistant");
 			bot.havocbot_role = havocbot_role_ons_assistant;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_OFFENSE:
-			ons_debug("offense");
+			LOG_DEBUG("offense");
 			bot.havocbot_role = havocbot_role_ons_offense;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
 	}
-	ons_debug("\n");
-}
-
-int havocbot_ons_teamcount(entity bot, int role)
-{SELFPARAM();
-	int c = 0;
-	entity head;
-
-	FOR_EACH_PLAYER(head)
-	if(SAME_TEAM(head, self))
-	if(head.havocbot_role_flags & role)
-		++c;
-
-	return c;
+	LOG_DEBUG("\n");
 }
 
 void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 {SELFPARAM();
-	entity cp, cp1, cp2, best, pl, wp;
+	entity cp, cp1, cp2, best, wp;
 	float radius, bestvalue;
 	int c;
 	bool found;
@@ -1435,11 +1399,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
-		FOR_EACH_PLAYER(pl)
-		if(SAME_TEAM(pl, self))
-		if(pl.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
-		if(pl.havocbot_ons_target==cp2)
-			++c;
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if(SAME_TEAM(it, self))
+			if(it.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
+			if(it.havocbot_ons_target == cp2)
+				++c;
+		));
 
 		// NOTE: probably decrease the cost of attackable control points
 		cp2.wpcost = c;
@@ -1465,7 +1430,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	if (!cp)
 		return;
 
-	ons_debug(strcat(self.netname, " chose cp ranked ", ftos(bestvalue), "\n"));
+	LOG_DEBUG(strcat(self.netname, " chose cp ranked ", ftos(bestvalue), "\n"));
 
 	if(cp.goalentity)
 	{
@@ -1506,12 +1471,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		{
 			navigation_routerating(cp, ratingscale, 10000);
 		}
-		ons_debug(strcat(self.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n"));
+		LOG_DEBUG(strcat(self.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n"));
 	}
 	else
 	{
 		// Should be touched
-		ons_debug(strcat(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n"));
+		LOG_DEBUG(strcat(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n"));
 		found = false;
 
 		// Look for auto generated waypoint
@@ -1564,7 +1529,7 @@ bool havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 		if(bestwp)
 		{
-			ons_debug("waypoints found around generator\n");
+			LOG_DEBUG("waypoints found around generator\n");
 			navigation_routerating(bestwp, ratingscale, 10000);
 			bestwp.cnt += 1;
 
@@ -1577,7 +1542,7 @@ bool havocbot_goalrating_ons_generator_attack(float ratingscale)
 		}
 		else
 		{
-			ons_debug("generator found without waypoints around\n");
+			LOG_DEBUG("generator found without waypoints around\n");
 			// if there aren't waypoints near the generator go straight to it
 			navigation_routerating(g, ratingscale, 10000);
 			self.havocbot_attack_time = 0;
@@ -1589,7 +1554,7 @@ bool havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 void havocbot_role_ons_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		self.havocbot_attack_time = 0;
 		havocbot_ons_reset_role(self);
@@ -1634,27 +1599,12 @@ void havocbot_role_ons_defense()
 
 void havocbot_ons_reset_role(entity bot)
 {SELFPARAM();
-	entity head;
-	int c = 0;
-
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	bot.havocbot_ons_target = world;
 
 	// TODO: Defend control points or generator if necessary
-
-	// if there is only me on the team switch to offense
-	c = 0;
-	FOR_EACH_PLAYER(head)
-	if(SAME_TEAM(head, self))
-		++c;
-
-	if(c==1)
-	{
-		havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
-		return;
-	}
 
 	havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
 }
@@ -1791,7 +1741,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 
 		loc += tele_target.origin + '0 0 128' * iteration_scale;
 
-		tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, player);
+		tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid)
 		{
 			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the world
@@ -1824,13 +1774,11 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 
 MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 {SELFPARAM();
-	entity e;
-	FOR_EACH_PLAYER(e)
-	{
-		e.ons_roundlost = false;
-		e.ons_deathloc = '0 0 0';
-		WITH(entity, self, e, PutClientInServer());
-	}
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		it.ons_roundlost = false;
+		it.ons_deathloc = '0 0 0';
+		WITH(entity, self, it, PutClientInServer());
+	));
 	return false;
 }
 
@@ -1907,7 +1855,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				iteration_scale -= i / 10;
 				loc = closest_target.origin + '0 0 96' * iteration_scale;
 				loc += ('0 1 0' * random()) * 128 * iteration_scale;
-				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
+				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, self);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
 					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
@@ -1958,7 +1906,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				iteration_scale -= i / 10;
 				loc = closest_target.origin + '0 0 128' * iteration_scale;
 				loc += ('0 1 0' * random()) * 256 * iteration_scale;
-				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
+				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, self);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
 					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
@@ -1973,7 +1921,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		}
 	}
 
-    return false;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerDies)
@@ -2112,7 +2060,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 		if ( IS_PLAYER(self) )
 		{
-			if ( !self.frozen )
+			if ( !STAT(FROZEN, self) )
 			{
 				entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
 
@@ -2163,7 +2111,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
-	if((time > self.teleport_antispam) && (self.deadflag == DEAD_NO) && !self.vehicle)
+	if((time > self.teleport_antispam) && (!IS_DEAD(self)) && !self.vehicle)
 	{
 		entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
 		if ( source_point )

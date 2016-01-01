@@ -12,14 +12,15 @@ REGISTRY_CHECK(Deathtypes)
 .entity death_msgmurder;
 .string death_msgextra;
 
+int dt_identity(int i) { return i; }
+
 #define REGISTER_DEATHTYPE(id, msg_death, msg_death_by, extra) \
-    REGISTER(Deathtypes, DEATH, id, m_id, new(deathtype)) { \
-        make_pure(this); \
+    REGISTER(Deathtypes, DEATH, id, m_id, new_pure(deathtype)) { \
         this.m_id += DT_FIRST; \
         this.nent_name = #id; \
         this.death_msgextra = extra; \
-        if (msg_death       != NO_MSG) this.death_msgself   = msg_multi_notifs[msg_death    - 1]; \
-        if (msg_death_by    != NO_MSG) this.death_msgmurder = msg_multi_notifs[msg_death_by - 1]; \
+        if (msg_death       != NO_MSG) this.death_msgself   = msg_multi_notifs[dt_identity(msg_death    - 1)]; \
+        if (msg_death_by    != NO_MSG) this.death_msgmurder = msg_multi_notifs[dt_identity(msg_death_by - 1)]; \
     }
 
 const int DEATH_WEAPONMASK = BITS(8);

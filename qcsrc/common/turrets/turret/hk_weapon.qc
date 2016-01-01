@@ -37,7 +37,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
             actor.tur_head = actor;
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
-        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, FALSE, FALSE);
+        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
 
         missile.think = turret_hk_missile_think;
@@ -74,7 +74,7 @@ void turret_hk_missile_think()
     //if (self.cnt < time)
     //	turret_hk_missile_explode();
 
-    if (self.enemy.deadflag != DEAD_NO)
+    if (IS_DEAD(self.enemy))
         self.enemy = world;
 
     // Pick the closest valid target.
@@ -276,7 +276,7 @@ bool hk_is_valid_target(entity e_target)
         if (self.owner.target_select_playerbias < 0)
             return 0;
 
-        if (e_target.deadflag != DEAD_NO)
+        if (IS_DEAD(e_target))
             return 0;
     }
 

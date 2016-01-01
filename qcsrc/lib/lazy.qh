@@ -1,5 +1,4 @@
-#ifndef LAZY_H
-#define LAZY_H
+#pragma once
 
 #include "oo.qh"
 
@@ -19,4 +18,3 @@ ENDCLASS(Lazy)
 		if (!done) { it = compute; done = true; } \
 		return it; \
 	}
-#endif

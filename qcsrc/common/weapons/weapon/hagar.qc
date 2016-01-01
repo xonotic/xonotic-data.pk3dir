@@ -412,7 +412,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 			if(loadable_secondary)
 				W_Hagar_Attack2_Load(thiswep, weaponentity); // must always run each frame
 			if(autocvar_g_balance_hagar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else if((fire & 1) && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
 				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hagar, refire)))
@@ -473,7 +473,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 			if(self.hagar_load && WEP_CVAR_SEC(hagar, load_releasedeath))
 				W_Hagar_Attack2_Load_Release(weaponentity);
 		}
-		METHOD(Hagar, wr_reload, void(entity thiswep))
+		METHOD(Hagar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			if(!self.hagar_load) // require releasing loaded rockets first
 				W_Reload(self, min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), SND(RELOAD));

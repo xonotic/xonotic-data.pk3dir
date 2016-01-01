@@ -101,8 +101,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 
 		if(frag_attacker != frag_target)
 		if(frag_target.health > 0)
-		if(frag_target.frozen == 0)
-		if(frag_target.deadflag == DEAD_NO)
+		if(STAT(FROZEN, frag_target) == 0)
+		if(!IS_DEAD(frag_target))
 		{
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			frag_force = '0 0 0';
@@ -152,7 +152,7 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem) { ok_PlayerDies(); }
 MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
 {SELFPARAM();
 	// overkill's values are different, so use custom regen
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > self.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > self.pauserotarmor_finished), autocvar_g_balance_armor_limit);
 		self.health = CalcRotRegen(self.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > self.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > self.pauserothealth_finished), autocvar_g_balance_health_limit);
@@ -178,7 +178,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(intermission_running || gameover)
 		return false;
 
-	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || self.frozen)
+	if(IS_DEAD(self) || !IS_PLAYER(self) || STAT(FROZEN, self))
 		return false;
 
 	if(self.ok_lastwep)
@@ -244,8 +244,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 {SELFPARAM();
 	if(autocvar_g_overkill_ammo_charge)
 	{
-		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			self.ammo_charge[i] = autocvar_g_overkill_ammo_charge_limit;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(self.ammo_charge[it.m_id] = autocvar_g_overkill_ammo_charge_limit));
 
 		self.ok_use_ammocharge = 1;
 		self.ok_notice_time = time;

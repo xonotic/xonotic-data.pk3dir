@@ -13,16 +13,14 @@ void target_changelevel_use()
 
 		activator.chlevel_targ = self;
 
-		entity head;
 		int plnum = 0;
 		int realplnum = 0;
 		// let's not count bots
-		FOR_EACH_REALPLAYER(head)
-		{
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
 			++realplnum;
-			if(head.chlevel_targ == self)
+			if(it.chlevel_targ == self)
 				++plnum;
-		}
+		));
 		if(plnum < ceil(realplnum * min(1, self.count))) // 70% of players
 			return;
 	}

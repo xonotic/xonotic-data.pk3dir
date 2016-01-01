@@ -1,8 +1,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../util.qh"
-    #include "../../../server/defs.qh"
+    #include <common/util.qh>
+    #include <server/defs.qh>
 #endif
 
 #ifdef SVQC
@@ -15,7 +15,7 @@
 //   2 = trigger on map load
 
 float target_spawn_initialized;
-.void() target_spawn_spawnfunc;
+.void(entity this) target_spawn_spawnfunc;
 float target_spawn_spawnfunc_field;
 .entity target_spawn_activator;
 .float target_spawn_id;
@@ -221,7 +221,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 			oldactivator = activator;
 
 			activator = act;
-			WITH(entity, self, e, e.target_spawn_spawnfunc());
+			WITH(entity, self, e, e.target_spawn_spawnfunc(e));
 			activator = oldactivator;
 
 			// We called an external function, so we have to re-tokenize msg.

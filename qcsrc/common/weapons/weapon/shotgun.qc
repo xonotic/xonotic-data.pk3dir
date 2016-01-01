@@ -108,7 +108,7 @@ void W_Shotgun_Melee_Think()
 	f = ((1 - swing) * WEP_CVAR_SEC(shotgun, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && WEP_CVAR_SEC(shotgun, melee_no_doubleslap))
+	if(IS_DEAD(self.realowner) && WEP_CVAR_SEC(shotgun, melee_no_doubleslap))
 	{
 		remove(self);
 		return;
@@ -240,7 +240,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 			{
 				// don't force reload an empty shotgun if its melee attack is active
 				if(WEP_CVAR(shotgun, secondary) < 2) {
-					thiswep.wr_reload(thiswep);
+					thiswep.wr_reload(thiswep, actor, weaponentity);
 				}
 			}
 			else
@@ -307,7 +307,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 				default: return false; // secondary unavailable
 			}
 		}
-		METHOD(Shotgun, wr_reload, void(entity thiswep))
+		METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
 		}

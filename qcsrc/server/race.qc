@@ -171,7 +171,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 
 	if(!spec)
 		msg_entity = e;
-	WRITESPECTATABLE_MSG_ONE({
+	WRITESPECTATABLE_MSG_ONE(msg_entity, {
 		WriteHeader(MSG_ONE, TE_CSQC_RACE);
 		if(spec)
 		{
@@ -236,7 +236,7 @@ void race_SendStatus(float id, entity e)
 	else
 		msg = MSG_ALL;
 	msg_entity = e;
-	WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
+	WRITESPECTATABLE_MSG_ONE(msg_entity, {
 		WriteHeader(msg, TE_CSQC_RACE);
 		WriteByte(msg, RACE_NET_SERVER_STATUS);
 		WriteShort(msg, id);
@@ -357,7 +357,6 @@ void race_deleteTime(string map, float pos)
 void race_SendTime(entity e, float cp, float t, float tvalid)
 {
 	float snew, l;
-	entity p;
 
 	if(g_race_qualifying)
 		t += e.race_penalty_accumulator;
@@ -427,9 +426,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 					race_checkpoint_recordholders[cp] = strzone(e.netname);
 					if(g_race_qualifying)
 					{
-						FOR_EACH_REALPLAYER(p)
-							if(p.race_checkpoint == cp)
-								race_SendNextCheckpoint(p, 0);
+						FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.race_checkpoint == cp, LAMBDA(race_SendNextCheckpoint(it, 0)));
 					}
 				}
 			}
@@ -447,7 +444,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			msg_entity = e;
 			if(g_race_qualifying)
 			{
-				WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
+				WRITESPECTATABLE_MSG_ONE(msg_entity, {
 					WriteHeader(MSG_ONE, TE_CSQC_RACE);
 					WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
 					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
@@ -475,7 +472,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		if(IS_REAL_CLIENT(e))
 		{
 			msg_entity = e;
-			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy2, {
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE);
 				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
@@ -501,7 +498,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		if(IS_REAL_CLIENT(oth))
 		{
 			msg_entity = oth;
-			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT);
 				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
@@ -534,7 +531,7 @@ void race_ClearTime(entity e)
 		return;
 
 	msg_entity = e;
-	WRITESPECTATABLE_MSG_ONE({
+	WRITESPECTATABLE_MSG_ONE(msg_entity, {
 		WriteHeader(MSG_ONE, TE_CSQC_RACE);
 		WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_CLEAR); // next
 	});
@@ -937,7 +934,7 @@ spawnfunc(trigger_race_checkpoint)
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
-	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
+	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
@@ -986,7 +983,7 @@ spawnfunc(target_checkpoint) // defrag entity
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
-	tracebox(o, PL_MIN, PL_MAX, o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
+	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - self.absmin.z), MOVE_NORMAL, self);
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
@@ -1030,11 +1027,8 @@ void race_AbandonRaceCheck(entity p)
 
 void race_StartCompleting()
 {
-	entity p;
 	race_completing = 1;
-	FOR_EACH_PLAYER(p)
-		if(p.deadflag != DEAD_NO)
-			race_AbandonRaceCheck(p);
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_DEAD(it), LAMBDA(race_AbandonRaceCheck(it)));
 }
 
 void race_PreparePlayer()
@@ -1079,13 +1073,11 @@ void race_ClearRecords()
 		race_checkpoint_recordholders[i] = string_null;
 	}
 
-	entity e;
-	FOR_EACH_CLIENT(e)
-	{
-		float p = e.race_place;
-		WITH(entity, self, e, race_PreparePlayer());
-		e.race_place = p;
-	}
+	FOREACH_CLIENT(true, LAMBDA(
+		float p = it.race_place;
+		WITH(entity, self, it, race_PreparePlayer());
+		it.race_place = p;
+	));
 }
 
 void race_ImposePenaltyTime(entity pl, float penalty, string reason)
@@ -1096,7 +1088,7 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 		if(IS_REAL_CLIENT(pl))
 		{
 			msg_entity = pl;
-			WRITESPECTATABLE_MSG_ONE({
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_PENALTY_QUALIFYING);
 				WriteShort(MSG_ONE, TIME_ENCODE(penalty));
@@ -1110,7 +1102,7 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 		if(IS_REAL_CLIENT(pl))
 		{
 			msg_entity = pl;
-			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy, {
+			WRITESPECTATABLE_MSG_ONE(msg_entity, {
 				WriteHeader(MSG_ONE, TE_CSQC_RACE);
 				WriteByte(MSG_ONE, RACE_NET_PENALTY_RACE);
 				WriteShort(MSG_ONE, TIME_ENCODE(penalty));

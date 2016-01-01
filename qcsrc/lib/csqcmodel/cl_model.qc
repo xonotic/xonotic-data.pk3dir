@@ -24,10 +24,10 @@
 #include "cl_player.qh"
 #include "common.qh"
 #include "interpolate.qh"
-#include "../../client/defs.qh"
-#include "../../common/animdecide.qh"
-#include "../../common/csqcmodel_settings.qh"
-#include "../../common/util.qh"
+#include <client/defs.qh>
+#include <common/animdecide.qh>
+#include <common/csqcmodel_settings.qh>
+#include <common/util.qh>
 
 float autocvar_cl_lerpanim_maxdelta_framegroups = 0.1;
 float autocvar_cl_nolerp = 0;
@@ -301,6 +301,6 @@ entity CSQCModel_server2csqc(int i)
 {
 	if (i < maxclients) return CSQCModel_players[i];
 	++i;
-	LOG_WARNINGF("player out of bounds: %d\n", i);
+	LOG_DEBUGF("player out of bounds: %d\n", i);
 	return findfloat(NULL, entnum, i);
 }

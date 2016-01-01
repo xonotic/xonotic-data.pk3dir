@@ -58,8 +58,8 @@ void Draw_ShowNames(entity this)
 			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
-			if (vlen((eX * o.x + eY * o.y) - eo) < autocvar_hud_shownames_antioverlap_distance
-			    && dist > vlen(it.origin - view_origin))
+			if (vdist(((eX * o.x + eY * o.y) - eo), <, autocvar_hud_shownames_antioverlap_distance)
+			    && vdist((it.origin - view_origin), <, dist))
 			{
 				overlap = true;
 				break;
@@ -67,10 +67,12 @@ void Draw_ShowNames(entity this)
 		));
 	}
 	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
-	float crosshairdistance = sqrt(pow(o.x - vid_conwidth / 2, 2) + pow(o.y - vid_conheight / 2, 2));
 	if (autocvar_hud_shownames_crosshairdistance)
 	{
-		if (autocvar_hud_shownames_crosshairdistance > crosshairdistance) this.pointtime = time;
+		float d = autocvar_hud_shownames_crosshairdistance;
+		float w = o.x - vid_conwidth / 2;
+		float h = o.y - vid_conheight / 2;
+		if (d * d > w * w + h * h) this.pointtime = time;
 		if (this.pointtime + autocvar_hud_shownames_crosshairdistance_time <= time) overlap = true;
 		else overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : false); // override what antioverlap says unless allowed by cvar.
 	}
@@ -79,7 +81,7 @@ void Draw_ShowNames(entity this)
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
 	}
-	else if (!this.sameteam && (!onscreen || !hit)) // out of view, fade out
+	else if (!onscreen || (!this.sameteam && !hit)) // out of view, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 		this.fadedelay = 0;                         // reset fade in delay, enemy has left the view

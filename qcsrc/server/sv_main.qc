@@ -101,7 +101,7 @@ void CreatureFrame_FallDamage(entity this)
 		if(!this.hook.state)
 		{
 			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-			if (this.deadflag)
+			if (IS_DEAD(this))
 				dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
 			else
 				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
@@ -116,17 +116,29 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	for(entity e = world; (e = findfloat(e, damagedbycontents, true)); )
-	{
-		if (e.movetype == MOVETYPE_NOCLIP) { continue; }
-
-		CreatureFrame_Liquids(e);
-		CreatureFrame_FallDamage(e);
-
-        e.oldvelocity = e.velocity;
-	}
+	FOREACH_ENTITY_FLOAT(damagedbycontents, true, LAMBDA(
+		if(it.movetype == MOVETYPE_NOCLIP) continue;
+		CreatureFrame_Liquids(it);
+		CreatureFrame_FallDamage(it);
+		it.oldvelocity = it.velocity;
+	));
 }
 
+void Pause_TryPause(bool ispaused)
+{
+	int n = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
+		++n;
+	));
+	if (!n) return;
+	setpause(ispaused);
+}
+
+void SV_PausedTic(float elapsedtime)
+{
+	if (!server_is_dedicated) Pause_TryPause(false);
+}
 
 /*
 =============
@@ -139,11 +151,13 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
+bool autocvar_sv_autopause = true;
 float RedirectionThink();
 void StartFrame()
 {
 	SELFPARAM();
 	execute_next_frame();
+	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
@@ -157,14 +171,12 @@ void StartFrame()
 		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
 		int c_seeing = 0;
 		int c_seen = 0;
-		entity cl;
-		FOR_EACH_CLIENT(cl)
-		{
-			if(IS_REAL_CLIENT(cl))
+		FOREACH_CLIENT(true, LAMBDA(
+			if(IS_REAL_CLIENT(it))
 				++c_seeing;
-			if(IS_PLAYER(cl))
+			if(IS_PLAYER(it))
 				++c_seen;
-		}
+		));
 		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
 		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
 
@@ -173,8 +185,7 @@ void StartFrame()
 	}
 #endif
 
-	for(entity e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
-		CSQCProjectile_Check(e);
+	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, LAMBDA(CSQCProjectile_Check(it)));
 
 	if(RedirectionThink())
 		return;
@@ -217,13 +228,8 @@ void StartFrame()
 	bot_serverframe();
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
-	{
-        entity e;
-        FOR_EACH_CLIENT(e)
-        {
-            GlobalStats_update(e);
-        }
-    }
+
+    FOREACH_CLIENT(true, LAMBDA(GlobalStats_update(it)));
 }
 
 .vector originjitter;

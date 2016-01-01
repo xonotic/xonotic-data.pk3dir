@@ -73,8 +73,6 @@ void sandbox_ObjectFunction_Touch()
 
 void sandbox_ObjectFunction_Think()
 {SELFPARAM();
-	entity e;
-
 	// decide if and how this object can be grabbed
 	if(autocvar_g_sandbox_readonly)
 		self.grab = 0; // no grabbing
@@ -86,15 +84,16 @@ void sandbox_ObjectFunction_Think()
 	// Object owner is stored via player UID, but we also need the owner as an entity (if the player is available on the server).
 	// Therefore, scan for all players, and update the owner as long as the player is present. We must always do this,
 	// since if the owning player disconnects, the object's owner should also be reset.
-	FOR_EACH_REALPLAYER(e) // bots can't have objects
-	{
-		if(self.crypto_idfp == e.crypto_idfp)
+
+	// bots can't have objects
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+		if(self.crypto_idfp == it.crypto_idfp)
 		{
-			self.realowner = e;
+			self.realowner = it;
 			break;
 		}
 		self.realowner = world;
-	}
+	));
 
 	self.nextthink = time;
 
@@ -225,12 +224,7 @@ void sandbox_ObjectRemove(entity e)
 	sandbox_ObjectAttach_Remove(e); // detach child objects
 
 	// if the object being removed has been selected for attachment by a player, unset it
-	entity head;
-	FOR_EACH_REALPLAYER(head) // bots can't have objects
-	{
-		if(head.object_attach == e)
-			head.object_attach = world;
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, LAMBDA(it.object_attach = world));
 
 	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
 	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}

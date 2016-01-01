@@ -214,7 +214,6 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 {SELFPARAM();
 	float shortest, thisdist;
 	float prio;
-	entity player;
 
 	prio = 0;
 
@@ -239,12 +238,11 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 	}
 
 	shortest = vlen(world.maxs - world.mins);
-	FOR_EACH_PLAYER(player) if (player != self)
-	{
-		thisdist = vlen(player.origin - spot.origin);
+	FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+		thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
-	}
+	));
 	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 

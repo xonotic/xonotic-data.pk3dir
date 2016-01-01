@@ -5,7 +5,7 @@
 #include "mutators/all.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
-#include "t_items.qh"
+#include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/all.qc"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
@@ -15,7 +15,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/notifications.qh"
-#include "../common/movetypes/movetypes.qh"
+#include "../common/physics/movetypes/movetypes.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/util.qh"
@@ -496,7 +496,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 void Ice_Think()
 {SELFPARAM();
-	if(!self.owner.frozen || self.owner.iceblock != self)
+	if(!STAT(FROZEN, self.owner) || self.owner.iceblock != self)
 	{
 		remove(self);
 		return;
@@ -510,12 +510,12 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
-	if(targ.frozen)
+	if(STAT(FROZEN, targ))
 		return;
 
 	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
-	targ.frozen = frozen_type;
+	STAT(FROZEN, targ) = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
@@ -538,10 +538,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	RemoveGrapplingHook(targ);
 
-	entity head;
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == targ)
-		RemoveGrapplingHook(head);
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
 
 	// add waypoint
 	if(show_waypoint)
@@ -550,23 +547,20 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
-	if(!targ.frozen)
+	if(!STAT(FROZEN, targ))
 		return;
 
-	if(targ.frozen && targ.frozen != 3) // only reset health if target was frozen
+	if(STAT(FROZEN, targ) && STAT(FROZEN, targ) != 3) // only reset health if target was frozen
 		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
 
-	entity head;
-	targ.frozen = 0;
+	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
 	self.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == targ)
-		RemoveGrapplingHook(head);
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == targ, LAMBDA(RemoveGrapplingHook(it)));
 
 	// remove the ice block
 	if(targ.iceblock)
@@ -649,7 +643,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 						damage = 0;
 					else if(autocvar_teamplay_mode == 4)
 					{
-						if(IS_PLAYER(targ) && targ.deadflag == DEAD_NO)
+						if(IS_PLAYER(targ) && !IS_DEAD(targ))
 						{
 							attacker.dmg_team = attacker.dmg_team + damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
@@ -702,7 +696,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
 
-		if(targ.frozen)
+		if(STAT(FROZEN, targ))
 		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			if(autocvar_g_frozen_revive_falldamage > 0)
@@ -720,7 +714,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			force *= autocvar_g_frozen_force;
 		}
 
-		if(targ.frozen && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
+		if(STAT(FROZEN, targ) && deathtype == DEATH_HURTTRIGGER.m_id && !autocvar_g_frozen_damage_trigger)
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
@@ -784,7 +778,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 		// count the damage
 		if(attacker)
-		if(!targ.deadflag)
+		if(!IS_DEAD(targ))
 		if(deathtype != DEATH_BUFF.m_id)
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
@@ -797,7 +791,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 			if(IS_PLAYER(victim) || (IS_TURRET(victim) && victim.active == ACTIVE_ACTIVE) || IS_MONSTER(victim) || MUTATOR_CALLHOOK(PlayHitsound, victim))
 			{
-				if(DIFF_TEAM(victim, attacker) && !victim.frozen)
+				if(DIFF_TEAM(victim, attacker) && !STAT(FROZEN, victim))
 				{
 					if(damage > 0)
 					{
@@ -861,7 +855,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			self.velocity = self.velocity + farce;
 			self.move_velocity = self.velocity;
 		}
-		self.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(self);
 		self.move_flags &= ~FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}
@@ -1087,7 +1081,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 	if(IS_PLAYER(e))
 	{
-		if(e.deadflag)
+		if(IS_DEAD(e))
 			return -1;
 	}
 	else
@@ -1217,7 +1211,7 @@ void Fire_ApplyDamage(entity e)
 		e.fire_endtime = 0;
 
 	// ice stops fire
-	if(e.frozen)
+	if(STAT(FROZEN, e))
 		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);
@@ -1233,20 +1227,18 @@ void Fire_ApplyDamage(entity e)
 	}
 	e.fire_hitsound = true;
 
-	if (!IS_INDEPENDENT_PLAYER(e))
-	if(!e.frozen)
-	FOR_EACH_PLAYER(other) if(e != other)
-	{
-		if(IS_PLAYER(other))
-		if(other.deadflag == DEAD_NO)
-		if (!IS_INDEPENDENT_PLAYER(other))
-		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
-		{
-			t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
-			d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
-			Fire_AddDamage(other, o, d, t, DEATH_FIRE.m_id);
-		}
-	}
+	if(!IS_INDEPENDENT_PLAYER(e))
+	if(!STAT(FROZEN, e))
+		FOREACH_CLIENT(IS_PLAYER(it) && it != e, LAMBDA(
+			if(!IS_DEAD(it))
+			if(!IS_INDEPENDENT_PLAYER(it))
+			if(boxesoverlap(e.absmin, e.absmax, it.absmin, it.absmax))
+			{
+				t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
+				d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
+				Fire_AddDamage(it, o, d, t, DEATH_FIRE.m_id);
+			}
+		));
 }
 
 void Fire_ApplyEffect(entity e)

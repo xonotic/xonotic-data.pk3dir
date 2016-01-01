@@ -524,8 +524,6 @@ float bot_cmd_wait_until()
 
 float bot_cmd_barrier()
 {SELFPARAM();
-	entity cl;
-
 	// 0 = no barrier, 1 = waiting, 2 = waiting finished
 
 	if(self.bot_barrier == 0) // initialization
@@ -537,18 +535,16 @@ float bot_cmd_barrier()
 
 	if(self.bot_barrier == 1) // find other bots
 	{
-		FOR_EACH_CLIENT(cl) if(cl.isbot)
-		{
-			if(cl.bot_cmdqueuebuf_allocated)
-				if(cl.bot_barrier != 1)
-					return CMD_STATUS_EXECUTING; // not all are at the barrier yet
-		}
+		FOREACH_CLIENT(it.isbot, LAMBDA(
+			if(it.bot_cmdqueuebuf_allocated)
+			if(it.bot_barrier != 1)
+				return CMD_STATUS_EXECUTING; // not all are at the barrier yet
+		));
 
 		// all bots hit the barrier!
-		FOR_EACH_CLIENT(cl) if(cl.isbot)
-		{
-			cl.bot_barrier = 2; // acknowledge barrier
-		}
+
+		// acknowledge barrier
+		FOREACH_CLIENT(it.isbot, LAMBDA(it.bot_barrier = 2));
 
 		bot_barriertime = time;
 	}
@@ -1148,21 +1144,18 @@ void bot_setcurrentcommand()
 
 void bot_resetqueues()
 {
-	entity cl;
-
-	FOR_EACH_CLIENT(cl) if(cl.isbot)
-	{
-		cl.bot_cmd_execution_index = 0;
-		bot_clearqueue(cl);
+	FOREACH_CLIENT(it.isbot, LAMBDA(
+		it.bot_cmd_execution_index = 0;
+		bot_clearqueue(it);
 		// also, cancel all barriers
-		cl.bot_barrier = 0;
-		for(int i = 0; i < cl.bot_places_count; ++i)
+		it.bot_barrier = 0;
+		for(int i = 0; i < it.bot_places_count; ++i)
 		{
-			strunzone(cl.(bot_placenames[i]));
-			cl.(bot_placenames[i]) = string_null;
+			strunzone(it.(bot_placenames[i]));
+			it.(bot_placenames[i]) = string_null;
 		}
-		cl.bot_places_count = 0;
-	}
+		it.bot_places_count = 0;
+	));
 
 	bot_barriertime = time;
 }

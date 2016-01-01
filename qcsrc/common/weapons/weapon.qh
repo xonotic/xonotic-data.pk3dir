@@ -97,7 +97,7 @@ CLASS(Weapon, Object)
     /** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
     METHOD(Weapon, wr_killmessage, int(Weapon this)) {return 0;}
     /** (SERVER) handles reloading for weapon */
-    METHOD(Weapon, wr_reload, void(Weapon this)) {}
+    METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) clears fields that the weapon may use */
     METHOD(Weapon, wr_resetplayer, void(Weapon this)) {}
     /** (CLIENT) impact effect for weapon explosion */

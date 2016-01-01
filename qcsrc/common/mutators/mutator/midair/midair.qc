@@ -19,7 +19,7 @@ MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
 MUTATOR_HOOKFUNCTION(midair, PlayerPowerups)
 {SELFPARAM();
 	if(time >= game_starttime)
-	if(self.flags & FL_ONGROUND)
+	if(IS_ONGROUND(self))
 	{
 		self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
 		self.midair_shieldtime = max(self.midair_shieldtime, time + autocvar_g_midair_shieldtime);

@@ -4,48 +4,51 @@
 #include "all.qh"
 
 #if defined(CSQC)
-	#include "../../client/defs.qh"
+	#include <client/defs.qh>
 	#include "../constants.qh"
 	#include "../stats.qh"
-	#include "../../lib/warpzone/anglestransform.qh"
-	#include "../../lib/warpzone/common.qh"
-	#include "../../lib/warpzone/client.qh"
+	#include <lib/warpzone/anglestransform.qh>
+	#include <lib/warpzone/common.qh>
+	#include <lib/warpzone/client.qh>
 	#include "../util.qh"
-	#include "../../client/autocvars.qh"
+	#include <client/autocvars.qh>
 	#include "../deathtypes/all.qh"
-	#include "../../lib/csqcmodel/interpolate.qh"
-	#include "../movetypes/movetypes.qh"
-	#include "../../client/main.qh"
-	#include "../../lib/csqcmodel/cl_model.qh"
+	#include <lib/csqcmodel/interpolate.qh>
+	#include "../physics/movetypes/movetypes.qh"
+	#include <client/main.qh>
+	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/anglestransform.qh"
-    #include "../../lib/warpzone/common.qh"
-    #include "../../lib/warpzone/util_server.qh"
-    #include "../../lib/warpzone/server.qh"
+    #include <lib/warpzone/anglestransform.qh>
+    #include <lib/warpzone/common.qh>
+    #include <lib/warpzone/util_server.qh>
+    #include <lib/warpzone/server.qh>
     #include "../constants.qh"
     #include "../stats.qh"
     #include "../teams.qh"
     #include "../util.qh"
     #include "../monsters/all.qh"
     #include "config.qh"
-    #include "../../server/weapons/csqcprojectile.qh"
-    #include "../../server/weapons/tracing.qh"
-    #include "../../server/t_items.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/constants.qh"
-    #include "../../server/defs.qh"
+    #include <server/weapons/csqcprojectile.qh>
+    #include <server/weapons/tracing.qh>
+    #include "../t_items.qh"
+    #include <server/autocvars.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
     #include "../notifications.qh"
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/all.qh"
+    #include <server/mutators/all.qh>
     #include "../mapinfo.qh"
-    #include "../../server/command/common.qh"
-    #include "../../lib/csqcmodel/sv_model.qh"
-    #include "../../server/portals.qh"
-    #include "../../server/g_hook.qh"
+    #include <server/command/common.qh>
+    #include <lib/csqcmodel/sv_model.qh>
+    #include <server/portals.qh>
+    #include <server/g_hook.qh>
 #endif
 #ifndef MENUQC
 	#include "calculations.qc"
+#endif
+#ifdef SVQC
+	#include "config.qc"
 #endif
 #define IMPLEMENTATION
 #include "all.inc"
@@ -191,7 +194,7 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 void W_RandomWeapons(entity e, float n)
 {
-	int i, j;
+	int i;
 	WepSet remaining;
 	WepSet result;
 	remaining = e.weapons;
@@ -199,9 +202,11 @@ void W_RandomWeapons(entity e, float n)
 	for (i = 0; i < n; ++i)
 	{
 		RandomSelection_Init();
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			if (remaining & WepSet_FromWeapon(Weapons_from(j))) RandomSelection_Add(NULL, j, string_null, 1, 1);
-		Weapon w = Weapons_from(RandomSelection_chosen_float);
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if (remaining & (it.m_wepset))
+				RandomSelection_Add(it, 0, string_null, 1, 1);
+		));
+		Weapon w = RandomSelection_chosen_ent;
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
 	}
@@ -517,11 +522,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 
 	if (this.movedir.x >= 0)
 	{
-#ifdef SVQC
-		int algn = this.owner.cvar_cl_gunalign;
-#else
-		int algn = autocvar_cl_gunalign;
-#endif
+		int algn = STAT(GUNALIGN, this.owner);
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
@@ -591,6 +592,60 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteByte(channel, weaponentity.m_alpha * 255);
 }
 #endif
+
+REGISTER_NET_C2S(w_whereis)
+#ifdef SVQC
+void Weapon_whereis(Weapon this, entity cl);
+NET_HANDLE(w_whereis, bool)
+{
+	Weapon wpn = ReadRegistered(Weapons);
+	if (wpn != WEP_Null) Weapon_whereis(wpn, sender);
+	return true;
+}
+#else
+void w_whereis(Weapon this)
+{
+	int channel = MSG_C2S;
+	WriteHeader(channel, w_whereis);
+	WriteRegistered(Weapons, channel, this);
+}
+CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string s = argv(1);
+			if (s == "all")
+			{
+				FOREACH(Weapons, it != WEP_Null, w_whereis(it));
+				return;
+			}
+			if (s == "unowned")
+			{
+				FOREACH(Weapons, it != WEP_Null && !(STAT(WEAPONS) & it.m_wepset), w_whereis(it));
+				return;
+			}
+			FOREACH(Weapons, it != WEP_Null && it.netname == s,
+			{
+				w_whereis(it);
+				return;
+			});
+		}
+		default:
+		{
+			LOG_INFOF("Incorrect parameters for ^2%s^7\n", "weapon_find");
+		}
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 cl_cmd weapon_find weapon\n");
+			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.\n");
+			return;
+		}
+	}
+}
+#endif
+
 
 #endif
 

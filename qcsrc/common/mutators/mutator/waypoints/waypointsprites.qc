@@ -877,10 +877,6 @@ void WaypointSprite_Init()
     waypointsprite_deadlifetime = autocvar_sv_waypointsprite_deadlifetime;
 }
 
-void WaypointSprite_InitClient(entity e)
-{
-}
-
 void WaypointSprite_Kill(entity wp)
 {
     if (!wp) return;

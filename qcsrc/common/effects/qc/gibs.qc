@@ -43,7 +43,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 
 	e.oldorigin_x = compressShortVector(e.velocity);
 
-	entity cl; FOR_EACH_REALCLIENT(cl) Violence_GibSplash_SendEntity(e, cl, 0);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(Violence_GibSplash_SendEntity(e, it, 0)));
 	remove(e);
 }
 
@@ -59,7 +59,7 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 .bool silent;
 
 #include "rubble.qh"
-#include "../common/movetypes/movetypes.qh"
+#include <common/physics/movetypes/movetypes.qh>
 
 .float scale;
 .float alpha;

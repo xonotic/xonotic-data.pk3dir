@@ -97,7 +97,9 @@ void Item_FindTeam();
 // TODO: perhaps nice special effect?
 
 bool ItemSend(entity this, entity to, int sf);
-void ItemUpdate(entity item);
+void ItemUpdate(entity this);
+
+void UpdateItemAfterTeleport(entity this);
 
 // pickup evaluation functions
 // these functions decide how desirable an item is to the bots

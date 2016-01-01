@@ -1,4 +1,4 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "vote.qh"
 
 #include "common.qh"
@@ -11,11 +11,11 @@
 
 #include "../mutators/all.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/playerstats.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/playerstats.qh>
+#include <common/util.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual
@@ -118,12 +118,7 @@ string OriginalCallerName()
 
 void VoteReset()
 {
-	entity tmp_player;
-
-	FOR_EACH_CLIENT(tmp_player)
-	{
-		tmp_player.vote_selection = 0;
-	}
+	FOREACH_CLIENT(true, LAMBDA(it.vote_selection = 0));
 
 	if (vote_called)
 	{
@@ -217,32 +212,29 @@ void VoteCount(float first_count)
 	float vote_needed_of_voted, final_needed_votes;
 	float vote_factor_overall, vote_factor_of_voted;
 
-	entity tmp_player;
-
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOR_EACH_REALCLIENT(tmp_player)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		++vote_player_count;
-		if (IS_PLAYER(tmp_player))   ++vote_real_player_count;
-		switch (tmp_player.vote_selection)
+		if (IS_PLAYER(it))   ++vote_real_player_count;
+		switch (it.vote_selection)
 		{
 			case VOTE_SELECT_REJECT:
 			{ ++vote_reject_count;
-			  { if (IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break;
+			  { if (IS_PLAYER(it)) ++vote_real_reject_count; } break;
 			}
 			case VOTE_SELECT_ACCEPT:
 			{ ++vote_accept_count;
-			  { if (IS_PLAYER(tmp_player)) ++vote_real_accept_count; } break;
+			  { if (IS_PLAYER(it)) ++vote_real_accept_count; } break;
 			}
 			case VOTE_SELECT_ABSTAIN:
 			{ ++vote_abstain_count;
-			  { if (IS_PLAYER(tmp_player)) ++vote_real_abstain_count; } break;
+			  { if (IS_PLAYER(it)) ++vote_real_abstain_count; } break;
 			}
 			default: break;
 		}
-	}
+	));
 
 	// Check to see if there are enough players on the server to allow master voting... otherwise, vote master could be used for evil.
 	if ((vote_called == VOTE_MASTER) && autocvar_sv_vote_master_playerlimit > vote_player_count)
@@ -364,9 +356,7 @@ void reset_map(bool dorespawn)
 		if (it.reset2) WITH(entity, self, it, it.reset2());
 	));
 
-	entity e;
-	FOR_EACH_PLAYER(e)
-	if (e.frozen) WITH(entity, self, e, Unfreeze(e));
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITH(entity, self, it, Unfreeze(it))));
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
@@ -374,9 +364,8 @@ void reset_map(bool dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			FOR_EACH_CLIENT(e)  // reset all players
-			{
-				setself(e);
+			FOREACH_CLIENT(true, LAMBDA(
+				setself(it);
 				/*
 				only reset players if a restart countdown is active
 				this can either be due to cvar sv_ready_restart_after_countdown having set
@@ -397,7 +386,7 @@ void reset_map(bool dorespawn)
 						PutClientInServer();
 					}
 				}
-			}
+			));
 
 			setself(this);
 		}
@@ -429,15 +418,12 @@ void ReadyRestart_force()
 	readyrestart_happened = true;
 	game_starttime = time + RESTART_COUNTDOWN;
 
-	entity tmp_player;
-
 	// clear player attributes
-	FOR_EACH_CLIENT(tmp_player)
-	{
-		tmp_player.alivetime = 0;
-		tmp_player.killcount = 0;
-		PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, 0));
-	}
+	FOREACH_CLIENT(true, LAMBDA(
+		it.alivetime = 0;
+		it.killcount = 0;
+		PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, 0));
+	));
 
 	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
@@ -445,10 +431,7 @@ void ReadyRestart_force()
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
-	FOR_EACH_REALCLIENT(tmp_player)
-	{
-		tmp_player.ready = false;
-	}
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(it.ready = false));
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
@@ -471,10 +454,7 @@ void ReadyRestart_force()
 	// after a restart every players number of allowed timeouts gets reset, too
 	if (autocvar_sv_timeout)
 	{
-		FOR_EACH_REALPLAYER(tmp_player)
-		{
-			tmp_player.allowed_timeouts = autocvar_sv_timeout_number;
-		}
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(it.allowed_timeouts = autocvar_sv_timeout_number));
 	}
     // reset map immediately if this cvar is not set
     if (!autocvar_sv_ready_restart_after_countdown) reset_map(true);
@@ -496,17 +476,13 @@ void ReadyRestart()
 // Count the players who are ready and determine whether or not to restart the match
 void ReadyCount()
 {
-	entity tmp_player;
 	float ready_needed_factor, ready_needed_count;
 	float t_ready = 0, t_players = 0;
 
-	FOR_EACH_REALCLIENT(tmp_player)
-	{
-		if (IS_PLAYER(tmp_player) || tmp_player.caplayer == 1)
-		{
-			++t_players;
-			if (tmp_player.ready)   ++t_ready; }
-	}
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || it.caplayer == 1), LAMBDA(
+		++t_players;
+		if (it.ready) ++t_ready;
+	));
 
 	readycount = t_ready;
 
@@ -777,7 +753,6 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			    || (autocvar_sv_vote_nospectators == 0));
 
 			float tmp_playercount = 0;
-			entity tmp_player;
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 
@@ -831,10 +806,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 					msg_entity = caller;
 				}
 
-				FOR_EACH_REALCLIENT(tmp_player)
-				{
-					++tmp_playercount;
-				}
+				FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(++tmp_playercount));
 				if (tmp_playercount > 1)   Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_CALL);  // don't announce a "vote now" sound if player is alone
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");

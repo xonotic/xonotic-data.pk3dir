@@ -34,7 +34,7 @@ REGISTER_REGISTRY(RadarIcons)
 REGISTRY_CHECK(RadarIcons)
 
 .int m_radaricon;
-#define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new(RadarIcon)) { make_pure(this); this.m_radaricon = num; this.netname = #id; }
+#define REGISTER_RADARICON(id, num) REGISTER(RadarIcons, RADARICON, id, m_id, new_pure(RadarIcon)) { this.m_radaricon = num; this.netname = #id; }
 
 REGISTER_WAYPOINT(Null, "", '0 0 0', 1);
 

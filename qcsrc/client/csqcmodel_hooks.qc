@@ -1,12 +1,12 @@
 #include "mutators/events.qh"
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
-#include "../common/animdecide.qh"
-#include "../common/movetypes/movetypes.qh"
-#include "../common/viewloc.qh"
-#include "../lib/csqcmodel/cl_model.qh"
-#include "../lib/csqcmodel/cl_player.qh"
-#include "../lib/csqcmodel/interpolate.qh"
+#include <common/animdecide.qh>
+#include <common/physics/movetypes/movetypes.qh>
+#include <common/viewloc.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include <lib/csqcmodel/cl_player.qh>
+#include <lib/csqcmodel/interpolate.qh>
 
 .float death_time;
 .int modelflags;
@@ -233,7 +233,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors && team_count == 2)
+		if(autocvar_cl_forceplayercolors == 2 && team_count == 2)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
@@ -649,7 +649,7 @@ void CSQCModel_Hook_PreDraw(bool isplayer)
 			bool onground = 0;
 			if(self == csqcplayer)
 			{
-				if(self.flags & FL_ONGROUND)
+				if(IS_ONGROUND(self))
 					onground = 1;
 				self.anim_prev_pmove_flags = self.flags;
 				if(self.flags & FL_DUCKED)

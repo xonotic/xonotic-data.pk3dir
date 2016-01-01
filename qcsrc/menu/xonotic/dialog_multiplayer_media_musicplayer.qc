@@ -31,7 +31,6 @@ void XonoticMusicPlayerTab_fill(entity me)
 			soundList = makeXonoticSoundList();
 			e.onChange = SoundList_Filter_Change;
 			e.onChangeEntity = soundList;
-			soundList.controlledTextbox = e;
 			playList = makeXonoticPlayList();
 			soundList.playlist = playList;
 

@@ -1,8 +1,8 @@
 #ifndef CLIENT_MAIN_H
 #define CLIENT_MAIN_H
 
-#include "../common/constants.qh"
-#include "../common/weapons/all.qh"
+#include <common/constants.qh>
+#include <common/weapons/all.qh>
 
 // --------------------------------------------------------------------------
 // MENU Functionality

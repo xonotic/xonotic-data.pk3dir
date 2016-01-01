@@ -2,8 +2,8 @@
 #include "common.qh"
 
 #if defined(CSQC)
-	#include "../../client/autocvars.qh"
-	#include "../csqcmodel/cl_model.qh"
+	#include <client/autocvars.qh>
+	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif

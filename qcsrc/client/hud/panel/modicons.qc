@@ -108,7 +108,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float f; // every function should have that
 
 	int redflag, blueflag, yellowflag, pinkflag, neutralflag; // current status
-	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime, neutralflag_statuschange_elapsedtime; // time since the status changed
+	float redflag_statuschange_elapsedtime = 0, blueflag_statuschange_elapsedtime = 0, yellowflag_statuschange_elapsedtime = 0, pinkflag_statuschange_elapsedtime = 0, neutralflag_statuschange_elapsedtime = 0; // time since the status changed
 	bool ctf_oneflag; // one-flag CTF mode enabled/disabled
 	int stat_items = STAT(CTF_FLAGSTATUS);
 	float fs, fs2, fs3, size1, size2;
@@ -160,7 +160,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	const float BLINK_FREQ = 5; // circle frequency, = 2*pi*frequency in hertz
 
 	#define X(team, cond) \
-	string team##_icon, team##_icon_prevstatus; \
+	string team##_icon = string_null, team##_icon_prevstatus = string_null; \
 	int team##_alpha, team##_alpha_prevstatus; \
 	team##_alpha = team##_alpha_prevstatus = 1; \
 	MACRO_BEGIN { \

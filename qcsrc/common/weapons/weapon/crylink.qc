@@ -278,7 +278,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 
 	while(head)
 	{
-		if((head.takedamage != DAMAGE_NO) && (head.deadflag == DEAD_NO))
+		if((head.takedamage != DAMAGE_NO) && (!IS_DEAD(head)))
 		{
 			if(SAME_TEAM(head, projectile.realowner))
 				++hit_friendly;
@@ -578,7 +578,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 		METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_crylink_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			}
 
 			if(fire & 1)
@@ -653,7 +653,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}
-		METHOD(Crylink, wr_reload, void(entity thiswep))
+		METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND(RELOAD));
 		}

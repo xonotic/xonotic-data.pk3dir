@@ -214,7 +214,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 		METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_hlac_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else if(fire & 1)
 			{
 				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hlac, refire)))
@@ -246,7 +246,7 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
 			return ammo_amount;
 		}
-		METHOD(HLAC, wr_reload, void(entity thiswep))
+		METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND(RELOAD));
 		}

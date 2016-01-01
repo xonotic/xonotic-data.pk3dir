@@ -130,12 +130,11 @@ void assault_objective_decrease_use()
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldactivator, head;
+			entity oldactivator;
 
 			setself(this.enemy);
 			if(self.message)
-			FOR_EACH_PLAYER(head)
-				centerprint(head, self.message);
+				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(centerprint(it, self.message)));
 
 			oldactivator = activator;
 			activator = this;
@@ -230,16 +229,16 @@ void assault_roundstart_use()
 	SUB_UseTargets();
 
 	//(Re)spawn all turrets
-	for(entity ent = NULL; (ent = find(ent, classname, "turret_main")); ) {
+	FOREACH_ENTITY_CLASS("turret_main", true, LAMBDA(
 		// Swap turret teams
-		if(ent.team == NUM_TEAM_1)
-			ent.team = NUM_TEAM_2;
+		if(it.team == NUM_TEAM_1)
+			it.team = NUM_TEAM_2;
 		else
-			ent.team = NUM_TEAM_1;
+			it.team = NUM_TEAM_1;
 
 		// Dubbles as teamchange
-		WITH(entity, self, ent, turret_respawn());
-	}
+		WITH(entity, self, it, turret_respawn());
+	));
 }
 
 void assault_wall_think()
@@ -267,21 +266,13 @@ void assault_new_round()
 	//bprint("ASSAULT: new round\n");
 
 	// Eject players from vehicles
-	entity e;
-    FOR_EACH_PLAYER(e)
-    {
-        if(e.vehicle)
-        {
-        	WITH(entity, self, e, vehicles_exit(VHEF_RELEASE));
-        }
-    }
+    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, LAMBDA(WITH(entity, self, it, vehicles_exit(VHEF_RELEASE))));
 
-    for (entity e_ = findchainflags(vehicle_flags, VHF_ISVEHICLE); e_; e_ = e_.chain)
-    {
-    	setself(e_);
+    FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
+    	setself(it);
         vehicles_clearreturn(self);
         vehicles_spawn();
-    }
+    ));
 
     setself(this);
 
@@ -294,7 +285,7 @@ void assault_new_round()
 	else
 		assault_attacker_team = NUM_TEAM_1;
 
-	FOREACH_ENTITY(clienttype(it) == CLIENTTYPE_NOTACLIENT, LAMBDA(
+	FOREACH_ENTITY(IS_NOT_A_CLIENT(it), LAMBDA(
 		if (it.team_saved == NUM_TEAM_1) it.team_saved = NUM_TEAM_2;
 		else if (it.team_saved == NUM_TEAM_2) it.team_saved = NUM_TEAM_1;
 	));
@@ -490,7 +481,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 
 void havocbot_role_ast_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		self.havocbot_attack_time = 0;
 		havocbot_ast_reset_role(self);
@@ -524,7 +515,7 @@ void havocbot_role_ast_offense()
 
 void havocbot_role_ast_defense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		self.havocbot_attack_time = 0;
 		havocbot_ast_reset_role(self);
@@ -575,7 +566,7 @@ void havocbot_role_ast_setrole(entity bot, float role)
 
 void havocbot_ast_reset_role(entity bot)
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if(bot.team == assault_attacker_team)

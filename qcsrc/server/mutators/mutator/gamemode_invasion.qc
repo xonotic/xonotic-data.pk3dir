@@ -61,10 +61,10 @@ const float ST_INV_KILLS = 1;
 
 #ifdef IMPLEMENTATION
 
-#include "../../../common/monsters/spawn.qh"
-#include "../../../common/monsters/sv_monsters.qh"
+#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_monsters.qh>
 
-#include "../../teamplay.qh"
+#include <server/teamplay.qh>
 
 
 float autocvar_g_invasion_round_timelimit;
@@ -192,11 +192,9 @@ void invasion_SpawnMonsters(float supermonster_count)
 
 float Invasion_CheckWinner()
 {
-	entity head;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		FOR_EACH_MONSTER(head)
-			Monster_Remove(head);
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(Monster_Remove(it)));
 
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
@@ -206,21 +204,23 @@ float Invasion_CheckWinner()
 
 	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;
 
-	FOR_EACH_MONSTER(head) if(head.health > 0)
-	{
-		if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-			++supermonster_count;
-		++total_alive_monsters;
-
-		if(teamplay)
-		switch(head.team)
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+		if(it.health > 0)
 		{
-			case NUM_TEAM_1: ++red_alive; break;
-			case NUM_TEAM_2: ++blue_alive; break;
-			case NUM_TEAM_3: ++yellow_alive; break;
-			case NUM_TEAM_4: ++pink_alive; break;
+			if((get_monsterinfo(it.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+				++supermonster_count;
+			++total_alive_monsters;
+
+			if(teamplay)
+			switch(it.team)
+			{
+				case NUM_TEAM_1: ++red_alive; break;
+				case NUM_TEAM_2: ++blue_alive; break;
+				case NUM_TEAM_3: ++yellow_alive; break;
+				case NUM_TEAM_4: ++pink_alive; break;
+			}
 		}
-	}
+	));
 
 	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < inv_maxspawned)
 	{
@@ -262,18 +262,18 @@ float Invasion_CheckWinner()
 		else { winner_team = NUM_TEAM_4; }
 	}
 	else
-	FOR_EACH_PLAYER(head)
 	{
-		float cs = PlayerScore_Add(head, SP_KILLS, 0);
-		if(cs > winning_score)
-		{
-			winning_score = cs;
-			winner = head;
-		}
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			float cs = PlayerScore_Add(it, SP_KILLS, 0);
+			if(cs > winning_score)
+			{
+				winning_score = cs;
+				winner = it;
+			}
+		));
 	}
 
-	FOR_EACH_MONSTER(head)
-		Monster_Remove(head);
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(Monster_Remove(it)));
 
 	if(teamplay)
 	{
@@ -294,20 +294,18 @@ float Invasion_CheckWinner()
 	return 1;
 }
 
-float Invasion_CheckPlayers()
+bool Invasion_CheckPlayers()
 {
 	return true;
 }
 
 void Invasion_RoundStart()
 {
-	entity e;
-	float numplayers = 0;
-	FOR_EACH_PLAYER(e)
-	{
-		e.player_blocked = 0;
+	int numplayers = 0;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		it.player_blocked = false;
 		++numplayers;
-	}
+	));
 
 	if(inv_roundcnt < inv_maxrounds)
 		inv_roundcnt += 1; // a limiter to stop crazy counts

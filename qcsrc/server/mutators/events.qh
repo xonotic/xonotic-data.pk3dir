@@ -1,7 +1,7 @@
 #ifndef SERVER_MUTATORS_EVENTS_H
 #define SERVER_MUTATORS_EVENTS_H
 
-#include "../../common/mutators/base.qh"
+#include <common/mutators/base.qh>
 
 // register all possible hooks here
 

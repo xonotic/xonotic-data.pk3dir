@@ -5,12 +5,12 @@
 #include "../main.qh"
 #include "../mutators/events.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/movetypes/movetypes.qh"
+#include <common/constants.qh>
+#include <common/physics/movetypes/movetypes.qh>
 
-#include "../../lib/csqcmodel/interpolate.qh"
+#include <lib/csqcmodel/interpolate.qh>
 
-#include "../../lib/warpzone/anglestransform.qh"
+#include <lib/warpzone/anglestransform.qh>
 
 .float alpha;
 .float scale;
@@ -202,6 +202,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 
 	int f = ReadByte();
 	self.count = (f & 0x80);
+	self.flags |= FL_PROJECTILE;
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES | IFLAG_ORIGIN;
 	self.solid = SOLID_TRIGGER;
 	// self.effects = EF_NOMODELFLAGS;

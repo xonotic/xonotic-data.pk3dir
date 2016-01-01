@@ -1,7 +1,7 @@
 #ifndef VEHICLE_RAPTOR_WEAPONS_H
 #define VEHICLE_RAPTOR_WEAPONS_H
 
-#include "../../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 CLASS(RaptorCannon, PortoLaunch)
 /* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -204,8 +204,10 @@ void raptor_bombdrop()
     bomb_1 = spawn();
     bomb_2 = spawn();
 
-    setorigin(bomb_1, gettaginfo(self, gettagindex(self, "bombmount_left")));
-    setorigin(bomb_2, gettaginfo(self, gettagindex(self, "bombmount_right")));
+    vector org = gettaginfo(self, gettagindex(self, "bombmount_left"));
+    setorigin(bomb_1, org);
+    org = gettaginfo(self, gettagindex(self, "bombmount_right"));
+    setorigin(bomb_2, org);
 
     bomb_1.movetype	 = bomb_2.movetype   = MOVETYPE_BOUNCE;
     bomb_1.velocity	 = bomb_2.velocity   = self.velocity;

@@ -9,7 +9,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	magicear_matched = false;
 
-	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
+	dotrigger = ((IS_PLAYER(source)) && (!IS_DEAD(source)) && ((ear.radius == 0) || (vdist(source.origin - ear.origin, <=, ear.radius))));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
 
 	if (!domatch)

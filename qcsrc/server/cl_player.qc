@@ -134,7 +134,7 @@ void player_setupanimsformodel()
 void player_anim ()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag) {
+	if(IS_DEAD(self)) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
 			if(random() < 0.5)
@@ -147,14 +147,14 @@ void player_anim ()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+	animdecide_setimplicitstate(self, (IS_ONGROUND(self)));
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -209,8 +209,8 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int de
 	}
 }
 
-void calculate_player_respawn_time()
-{SELFPARAM();
+void calculate_player_respawn_time(entity this)
+{
 	if(g_ca)
 		return;
 
@@ -223,13 +223,12 @@ void calculate_player_respawn_time()
 	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
 
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
-	entity pl;
 	if (teamplay)
 	{
-		FOR_EACH_PLAYER(pl)
-			if (pl != self)
-				if (pl.team == self.team)
-					++pcount;
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+			if(it.team == this.team)
+				++pcount;
+		));
 		if (sdelay_small_count == 0)
 			sdelay_small_count = 1;
 		if (sdelay_large_count == 0)
@@ -237,9 +236,9 @@ void calculate_player_respawn_time()
 	}
 	else
 	{
-		FOR_EACH_PLAYER(pl)
-			if (pl != self)
-				++pcount;
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+			++pcount;
+		));
 		if (sdelay_small_count == 0)
 		{
 			if (g_cts)
@@ -278,28 +277,27 @@ void calculate_player_respawn_time()
 		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
 
 	if(waves)
-		self.respawn_time = ceil((time + sdelay) / waves) * waves;
+		this.respawn_time = ceil((time + sdelay) / waves) * waves;
 	else
-		self.respawn_time = time + sdelay;
+		this.respawn_time = time + sdelay;
 
 	if(sdelay < sdelay_max)
-		self.respawn_time_max = time + sdelay_max;
+		this.respawn_time_max = time + sdelay_max;
 	else
-		self.respawn_time_max = self.respawn_time;
+		this.respawn_time_max = this.respawn_time;
 
-	if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
-		self.respawn_countdown = 10; // first number to count down from is 10
+	if((sdelay + waves >= 5.0) && (this.respawn_time - time > 1.75))
+		this.respawn_countdown = 10; // first number to count down from is 10
 	else
-		self.respawn_countdown = -1; // do not count down
+		this.respawn_countdown = -1; // do not count down
 
 	if(autocvar_g_forced_respawn)
-		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
 }
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {SELFPARAM();
 	float take, save, dh, da;
-	int j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -590,12 +588,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		self.solid = SOLID_CORPSE;
 		self.ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
-		self.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(self);
 		// dying animation
 		self.deadflag = DEAD_DYING;
 
 		// when to allow respawn
-		calculate_player_respawn_time();
+		calculate_player_respawn_time(this);
 
 		self.death_time = time;
 		if (random() < 0.5)
@@ -629,15 +627,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		}
 
 		// reset fields the weapons may use just in case
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			Weapon w = Weapons_from(j);
-			w.wr_resetplayer(w);
-			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			it.wr_resetplayer(it);
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
-				ATTACK_FINISHED_FOR(self, j, slot) = 0;
+				ATTACK_FINISHED_FOR(self, it.m_id, slot) = 0;
 			}
-		}
+		));
 	}
 }
 
@@ -664,7 +660,6 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
-	entity head;
 	float ret;
 	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
 
@@ -909,10 +904,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head)
-				if(head != source)
-				if(head.active_minigame == source.active_minigame)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, LAMBDA(sprint(it, msgstr)));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -920,29 +912,23 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
-				if(head != source)
-				{
-					sprint(head, msgstr);
-					if(cmsgstr != "")
-						centerprint(head, cmsgstr);
-				}
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, LAMBDA(
+				sprint(it, msgstr);
+				if(cmsgstr != "")
+					centerprint(it, cmsgstr);
+			));
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if (!IS_PLAYER(head))
-				if(head != source)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
 		}
 		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head)
-				if(head != source)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
 		}
 		else
 			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.

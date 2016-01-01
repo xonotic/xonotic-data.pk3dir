@@ -1,7 +1,7 @@
-#ifndef I18N_H
-#define I18N_H
+#pragma once
 
 #include "log.qh"
+#include "map.qh"
 #include "unsafe.qh"
 
 // translation helpers
@@ -29,33 +29,30 @@ string language_filename(string s)
 #endif
 
 #if CTX_CACHE
-	ArrayList CTX_cache;
+	HashMap CTX_cache;
 	STATIC_INIT(CTX_cache)
 	{
-		AL_NEW(CTX_cache, 0, string_null, s);
+		HM_NEW(CTX_cache);
 	}
 	SHUTDOWN(CTX_cache)
 	{
-		AL_DELETE(CTX_cache);
+		HM_DELETE(CTX_cache);
 	}
 #endif
 
 string CTX(string s)
 {
 #if CTX_CACHE
-		int i = strid(s);
-		string c = AL_gets(CTX_cache, i);
-		if (c) return c;
+		string c = HM_gets(CTX_cache, s);
+		if (c != "") return c;
 #endif
 	int p = strstrofs(s, "^", 0);
 	string ret = (p < 0) ? s : substring(s, p + 1, -1);
 #if CTX_CACHE
         LOG_DEBUGF("CTX(\"%s\")\n", s);
-		AL_sets(CTX_cache, i, ret);
+		HM_sets(CTX_cache, s, ret);
 #endif
 	return ret;
 }
 
 #define ZCTX(s) strzone(CTX(s))
-
-#endif

@@ -12,7 +12,7 @@
     #include "weapons/accuracy.qh"
     #include "weapons/csqcprojectile.qh"
     #include "weapons/selection.qh"
-    #include "t_items.qh"
+    #include "../common/t_items.qh"
     #include "autocvars.qh"
     #include "constants.qh"
     #include "defs.qh"

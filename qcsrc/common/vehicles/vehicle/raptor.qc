@@ -114,7 +114,7 @@ void raptor_exit(float eject)
 	vector spot;
 	self.tur_head.exteriormodeltoclient = world;
 
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		self.think	  = raptor_land;
 		self.nextthink  = time;
@@ -198,7 +198,7 @@ float raptor_frame()
 	}
 	*/
 
-	if(raptor.deadflag != DEAD_NO)
+	if(IS_DEAD(raptor))
 	{
 		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
@@ -291,13 +291,13 @@ float raptor_frame()
 	// Target lock & predict
 	if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
 	{
-		if(raptor.gun1.lock_time < time || raptor.gun1.enemy.deadflag)
+		if(raptor.gun1.lock_time < time || IS_DEAD(raptor.gun1.enemy) || STAT(FROZEN, raptor.gun1.enemy))
 			raptor.gun1.enemy = world;
 
 		if(trace_ent)
 		if(trace_ent.movetype)
 		if(trace_ent.takedamage)
-		if(!trace_ent.deadflag)
+		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 		{
 			if(teamplay)
 			{

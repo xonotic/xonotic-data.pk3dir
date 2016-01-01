@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef CSQC
 bool item_keys_usekey(entity l, entity p)
 {

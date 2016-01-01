@@ -6,7 +6,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	if (dt <= 0)
 		return;
 
-	if (GAMEPLAYFIX_UNSTICKPLAYERS)
+	if (GAMEPLAYFIX_UNSTICKPLAYERS(this))
 		_Movetype_UnstickEntity(this);
 
 	bool applygravity = (!_Movetype_CheckWater(this) && this.move_movetype == MOVETYPE_WALK && !(this.move_flags & FL_WATERJUMP));
@@ -19,9 +19,9 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	vector start_origin = this.move_origin;
 	vector start_velocity = this.move_velocity;
 
-	int clip = _Movetype_FlyMove(this, dt, applygravity, stepnormal, GAMEPLAYFIX_STEPMULTIPLETIMES ? PHYS_STEPHEIGHT : 0);
+	int clip = _Movetype_FlyMove(this, dt, applygravity, stepnormal, GAMEPLAYFIX_STEPMULTIPLETIMES(this) ? PHYS_STEPHEIGHT(this) : 0);
 
-	if (GAMEPLAYFIX_DOWNTRACEONGROUND && !(clip & 1))
+	if (GAMEPLAYFIX_DOWNTRACEONGROUND(this) && !(clip & 1))
 	{
 		// only try this if there was no floor in the way in the trace (no,
 		// this check seems to be not REALLY necessary, because if clip & 1,
@@ -54,7 +54,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 	if (this.move_flags & FL_WATERJUMP)
 		return;
 
-	if (PHYS_NOSTEP)
+	if (PHYS_NOSTEP(this))
 		return;
 
 	vector originalmove_origin = this.move_origin;
@@ -77,7 +77,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 				return;
 
 			// return if attempting to jump while airborn (unless sv_jumpstep)
-			if (!PHYS_JUMPSTEP)
+			if (!PHYS_JUMPSTEP(this))
 				if (!oldonground && this.move_waterlevel == 0)
 					return;
 		}
@@ -88,7 +88,7 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		this.move_velocity = start_velocity;
 
 		// move up
-		vector upmove = '0 0 1' * PHYS_STEPHEIGHT;
+		vector upmove = '0 0 1' * PHYS_STEPHEIGHT(this);
 		_Movetype_PushEntity(this, upmove, true);
 		if(wasfreed(this))
 			return;
@@ -133,17 +133,17 @@ void _Movetype_Physics_Walk(entity this, float dt)  // SV_WalkMove
 		// Con_Printf("step - ");
 
 		// extra friction based on view angle
-		if ((clip & 2) && PHYS_WALLFRICTION)
+		if ((clip & 2) && PHYS_WALLFRICTION(this))
 			_Movetype_WallFriction(this, stepnormal);
 	}
 	// don't do the down move if stepdown is disabled, moving upward, not in water, or the move started offground or ended onground
-	else if (!GAMEPLAYFIX_STEPDOWN || this.move_waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !oldonground || (this.move_flags & FL_ONGROUND))
+	else if (!GAMEPLAYFIX_STEPDOWN(this) || this.move_waterlevel >= 3 || start_velocity.z >= (1.0 / 32.0) || !oldonground || (this.move_flags & FL_ONGROUND))
 	{
 		return;
 	}
 
 	// move down
-	vector downmove = '0 0 1' * (-PHYS_STEPHEIGHT + start_velocity.z * dt);
+	vector downmove = '0 0 1' * (-PHYS_STEPHEIGHT(this) + start_velocity.z * dt);
 	_Movetype_PushEntity(this, downmove, true);
 	if(wasfreed(this))
 		return;

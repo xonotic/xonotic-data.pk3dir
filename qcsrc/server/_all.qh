@@ -20,30 +20,32 @@ const string STR_OBSERVER = "observer";
 #define IS_VEHICLE(v) (v.vehicle_flags & VHF_ISVEHICLE)
 #define IS_TURRET(v) (v.turret_flags & TUR_FLAG_ISTURRET)
 
-#define FOR_EACH_CLIENTSLOT(v) for (v = world; (v = nextent(v)) && (etof(v) <= maxclients); )
-#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if (IS_CLIENT(v))
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if (IS_REAL_CLIENT(v))
+// NOTE: FOR_EACH_CLIENTSLOT deprecated! Use the following instead: FOREACH_CLIENTSLOT(true, LAMBDA(yourcode));
+// NOTE: FOR_EACH_CLIENT deprecated! Use the following instead: FOREACH_CLIENT(true, LAMBDA(yourcode));
+// NOTE: FOR_EACH_REALCLIENT deprecated! Use the following instead: FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(yourcode));
 
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if (IS_PLAYER(v))
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if (IS_SPEC(v))
-#define FOR_EACH_OBSERVER(v) FOR_EACH_CLIENT(v) if (IS_OBSERVER(v))
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if (IS_PLAYER(v))
+// NOTE: FOR_EACH_PLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(yourcode));
+// NOTE: FOR_EACH_SPEC deprecated! Use the following instead: FOREACH_CLIENT(IS_SPEC(it), LAMBDA(yourcode));
+// NOTE: FOR_EACH_OBSERVER deprecated! Use the following instead: FOREACH_CLIENT(IS_OBSERVER(it), LAMBDA(yourcode));
+// NOTE: FOR_EACH_REALPLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(yourcode));
 
-#define FOREACH_CLIENT(cond, body) \
+#define FOREACH_CLIENTSLOT(cond, body) \
 	MACRO_BEGIN { \
-		int i = 0; \
-		for (entity it = NULL; (it = nextent(it)) && (etof(it) <= maxclients); ++i) \
+		for(int _i = 1; _i <= maxclients; ++_i) \
 		{ \
-			if (!IS_CLIENT(it)) continue; \
-			if (cond) { LAMBDA(body) } \
+			const noref int i = _i; \
+			const noref entity it = ftoe(i); \
+			if(cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
 
-#define FOR_EACH_MONSTER(v) for (v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
+#define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), body)
 
-#include "../common/effects/all.qh"
-#include "../common/models/all.qh"
-#include "../common/sounds/all.qh"
+// NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(yourcode));
+
+#include <common/effects/all.qh>
+#include <common/models/all.qh>
+#include <common/sounds/all.qh>
 
 #include "autocvars.qh"
 #include "constants.qh"

@@ -27,12 +27,12 @@ GENERIC_COMMAND(dumpturrets, "Dump all turrets into turrets_dump.txt")
             if(filename == "")
             {
                 filename = "turrets_dump.cfg";
-                tur_config_alsoprint = FALSE;
+                tur_config_alsoprint = false;
             }
             else if(filename == "-")
             {
                 filename = "turrets_dump.cfg";
-                tur_config_alsoprint = TRUE;
+                tur_config_alsoprint = true;
             }
             tur_config_file = fopen(filename, FILE_WRITE);
 

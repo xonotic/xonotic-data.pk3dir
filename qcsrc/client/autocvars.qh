@@ -53,7 +53,6 @@ float autocvar_cl_gibs_velocity_random = 1;
 float autocvar_cl_gibs_velocity_scale = 1;
 float autocvar_cl_gibs_avelocity_scale = 1;
 float autocvar_cl_gibs_velocity_up;
-int autocvar_cl_gunalign;
 bool autocvar_cl_hidewaypoints;
 bool autocvar_cl_lockview;
 bool autocvar_cl_nogibs;

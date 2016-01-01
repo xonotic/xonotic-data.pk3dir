@@ -3,7 +3,7 @@
 #elif defined(SVQC)
     #include "constants.qh"
     #include "util.qh"
-    #include "weapons/all.qh"
+    #include <common/weapons/all.qh>
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"
     #include "playerstats.qh"
@@ -163,35 +163,33 @@ void PlayerStats_GameReport(float finished)
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
-	entity p;
-	FOR_EACH_CLIENT(p)
-	{
+	FOREACH_CLIENT(true, LAMBDA(
 		// add personal score rank
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_RANK, p.score_dummyfield);
+		PS_GR_P_ADDVAL(it, PLAYERSTATS_RANK, it.score_dummyfield);
 
 		// scoreboard data
-		if(p.scoreboard_pos)
+		if(it.scoreboard_pos)
 		{
 			// scoreboard is valid!
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
 			// add scoreboard position
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
 
 			// add scoreboard data
-			PlayerScore_PlayerStats(p);
+			PlayerScore_PlayerStats(it);
 
 			// if the match ended normally, add winning info
 			if(finished)
 			{
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_WINS, p.winning);
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_MATCHES, 1);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_WINS, it.winning);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_MATCHES, 1);
 			}
 		}
 
 		// collect final player information
-		PlayerStats_GameReport_FinalizePlayer(p);
-	}
+		PlayerStats_GameReport_FinalizePlayer(it);
+	));
 
 	if(autocvar_g_playerstats_gamereport_uri != "")
 	{
@@ -456,12 +454,10 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 		// server has this disabled, kill the DB and set status to idle
 		if(PS_B_IN_DB >= 0)
 		{
-			entity player;
-
 			db_close(PS_B_IN_DB);
 			PS_B_IN_DB = -1;
 
-			FOR_EACH_REALCLIENT(player) { player.playerstats_basicstatus = PS_B_STATUS_IDLE; }
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(it.playerstats_basicstatus = PS_B_STATUS_IDLE));
 		}
 	}
 }

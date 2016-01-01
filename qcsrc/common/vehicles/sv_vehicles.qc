@@ -107,7 +107,7 @@ vector targetdrone_getnewspot()
 
 void vehicles_locktarget(float incr, float decr, float _lock_time)
 {SELFPARAM();
-	if(self.lock_target && self.lock_target.deadflag != DEAD_NO)
+	if(self.lock_target && IS_DEAD(self.lock_target))
 	{
 		self.lock_target	= world;
 		self.lock_strength  = 0;
@@ -131,7 +131,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 		if(SAME_TEAM(trace_ent, self))
 			trace_ent = world;
 
-		if(trace_ent.deadflag != DEAD_NO)
+		if(IS_DEAD(trace_ent))
 			trace_ent = world;
 
 		if(!(IS_VEHICLE(trace_ent) || IS_TURRET(trace_ent)))
@@ -320,7 +320,8 @@ entity vehicle_tossgib(entity _template, vector _vel, string _tag, bool _burn, b
 {SELFPARAM();
 	entity _gib = spawn();
 	_setmodel(_gib, _template.model);
-	setorigin(_gib, gettaginfo(self, gettagindex(self, _tag)));
+	vector org = gettaginfo(self, gettagindex(self, _tag));
+	setorigin(_gib, org);
 	_gib.velocity = _vel;
 	_gib.movetype = MOVETYPE_TOSS;
 	_gib.solid = SOLID_CORPSE;
@@ -549,7 +550,7 @@ void vehicles_setreturn(entity veh)
 	ret.team		= veh.team;
 	ret.think	   = vehicles_showwp;
 
-	if(veh.deadflag != DEAD_NO)
+	if(IS_DEAD(veh))
 	{
 		ret.cnt		 = time + veh.respawntime;
 		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 5);
@@ -575,7 +576,7 @@ void vehicle_use()
 	else
 		self.active = ACTIVE_ACTIVE;
 
-	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
+	if(self.active == ACTIVE_ACTIVE && !IS_DEAD(self) && !gameover)
 	{
 		LOG_TRACE("Respawning vehicle: ", self.netname, "\n");
 		if(self.effects & EF_NODRAW)
@@ -776,7 +777,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
 	//vector exitspot;
 	float mysize;
 
-	tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, prefer_spot, MOVE_NORMAL, self.owner);
+	tracebox(self.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, self.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
@@ -789,7 +790,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, PL_MIN, PL_MAX, v, MOVE_NORMAL, self.owner);
+		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, self.owner);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
@@ -864,7 +865,7 @@ void vehicles_exit(bool eject)
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(_player, PL_MIN,PL_MAX);
+		setsize(_player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 
 		_player.takedamage		= DAMAGE_AIM;
 		_player.solid			= SOLID_SLIDEBOX;
@@ -874,7 +875,7 @@ void vehicles_exit(bool eject)
 		_player.alpha			= 1;
 		_player.PlayerPhysplug	= func_null;
 		_player.vehicle			= world;
-		_player.view_ofs		= PL_VIEW_OFS;
+		_player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
 		_player.event_damage	= PlayerDamage;
 		_player.hud				= HUD_NORMAL;
 		PS(_player).m_switchweapon = _vehicle.m_switchweapon;
@@ -885,7 +886,7 @@ void vehicles_exit(bool eject)
 	}
 	_vehicle.flags |= FL_NOTARGET;
 
-	if(_vehicle.deadflag == DEAD_NO)
+	if(!IS_DEAD(_vehicle))
 		_vehicle.avelocity = '0 0 0';
 
 	_vehicle.tur_head.nodrawtoclient = world;
@@ -955,7 +956,7 @@ bool vehicle_impulse(entity this, int imp)
 {
 	entity v = this.vehicle;
 	if (!v) return false;
-	if (v.deadflag != DEAD_NO) return false;
+	if (IS_DEAD(v)) return false;
 	bool(int) f = v.vehicles_impulse;
 	if (f && f(imp)) return true;
 	switch (imp)
@@ -978,8 +979,8 @@ void vehicles_enter(entity pl, entity veh)
 	if((!IS_PLAYER(pl))
 	|| (veh.phase >= time)
 	|| (pl.vehicle_enter_delay >= time)
-	|| (pl.frozen)
-	|| (pl.deadflag != DEAD_NO)
+	|| (STAT(FROZEN, pl))
+	|| (IS_DEAD(pl))
 	|| (pl.vehicle)
 	) { return; }
 
@@ -1016,9 +1017,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(DIFF_TEAM(pl, veh))
 	if(autocvar_g_vehicles_steal)
 	{
-		entity head;
-		FOR_EACH_PLAYER(head) if(SAME_TEAM(head, veh))
-			Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_VEHICLE_STEAL);
+		FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, veh), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VEHICLE_STEAL)));
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
@@ -1045,10 +1044,10 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	tracebox(pl.origin, PL_MIN, PL_MAX, pl.origin, false, pl);
+	tracebox(pl.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pl.origin, false, pl);
 	pl.crouch = false;
-	pl.view_ofs = PL_VIEW_OFS;
-	setsize (pl, PL_MIN, PL_MAX);
+	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
+	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
@@ -1077,8 +1076,8 @@ void vehicles_enter(entity pl, entity veh)
 	//veh.exteriormodeltoclient = veh.owner;
 	//veh.tur_head.exteriormodeltoclient = veh.owner;
 
-	pl.flags &= ~FL_ONGROUND;
-	veh.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(pl);
+	UNSET_ONGROUND(veh);
 
 	veh.team = pl.team;
 	veh.flags -= FL_NOTARGET;
@@ -1173,10 +1172,7 @@ void vehicles_spawn()
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;
 
-	entity head; // remove hooks (if any)
-	FOR_EACH_PLAYER(head)
-	if(head.hook.aiment == self)
-		RemoveGrapplingHook(head);
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == self, LAMBDA(RemoveGrapplingHook(it)));
 
 	vehicles_reset_colors();
 

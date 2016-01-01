@@ -22,7 +22,7 @@ bool turret_fusionreactor_firecheck()
     if (self.attack_finished_single[0] > time)
         return false;
 
-    if (self.enemy.deadflag != DEAD_NO)
+    if (IS_DEAD(self.enemy))
         return false;
 
     if (self.enemy == world)

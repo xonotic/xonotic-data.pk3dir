@@ -27,7 +27,7 @@ REGISTER_VEHICLE(RACER, NEW(Racer));
 #include "racer_weapon.qc"
 
 #ifdef SVQC
-#include "../../triggers/trigger/impulse.qh"
+#include <common/triggers/trigger/impulse.qh>
 
 bool autocvar_g_vehicle_racer;
 
@@ -182,7 +182,7 @@ float racer_frame()
 	if(pointcontents(racer.origin) != CONTENT_WATER)
 		racer.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
-	if(racer.deadflag != DEAD_NO)
+	if(IS_DEAD(racer))
 	{
 		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;

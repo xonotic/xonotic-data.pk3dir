@@ -88,7 +88,7 @@ void W_Devastator_Explode()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
@@ -206,7 +206,7 @@ void W_Devastator_DoRemoteExplode(.entity weaponentity)
 
 void W_Devastator_RemoteExplode(.entity weaponentity)
 {SELFPARAM();
-	if(self.realowner.deadflag == DEAD_NO)
+	if(!IS_DEAD(self.realowner))
 	if(self.realowner.lastrocket)
 	{
 		if((self.spawnshieldtime >= 0)
@@ -279,7 +279,7 @@ void W_Devastator_Think()
 		if(!self.BUTTON_ATCK2)
 		if(WEP_CVAR(devastator, guiderate))
 		if(time > self.pushltime)
-		if(self.realowner.deadflag == DEAD_NO)
+		if(!IS_DEAD(self.realowner))
 		{
 			f = WEP_CVAR(devastator, guideratedelay);
 			if(f)
@@ -439,7 +439,7 @@ void W_Devastator_Attack(Weapon thiswep)
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
-				entity missile, targetlist, targ;
+				entity targetlist, targ;
 				float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
 				float selfdamage, teamdamage, enemydamage;
 				edgedamage = WEP_CVAR(devastator, edgedamage);
@@ -450,18 +450,14 @@ void W_Devastator_Attack(Weapon thiswep)
 				teamdamage = 0;
 				enemydamage = 0;
 				targetlist = findchainfloat(bot_attack, true);
-				missile = find(world, classname, "rocket");
-				while(missile)
+				FOREACH_ENTITY_ENT(realowner, self,
 				{
-					if(missile.realowner != self)
-					{
-						missile = find(missile, classname, "rocket");
-						continue;
-					}
+					if(it.classname != "rocket") continue;
+
 					targ = targetlist;
 					while(targ)
 					{
-						d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - missile.origin);
+						d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - it.origin);
 						d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
 						// count potential damage according to type of target
 						if(targ == self)
@@ -472,8 +468,7 @@ void W_Devastator_Attack(Weapon thiswep)
 							enemydamage = enemydamage + d;
 						targ = targ.chain;
 					}
-					missile = find(missile, classname, "rocket");
-				}
+				});
 				float desirabledamage;
 				desirabledamage = enemydamage;
 				if(time > self.invincible_finished && time > self.spawnshieldtime)
@@ -481,15 +476,11 @@ void W_Devastator_Attack(Weapon thiswep)
 				if(teamplay && self.team)
 					desirabledamage = desirabledamage - teamdamage;
 
-				missile = find(world, classname, "rocket");
-				while(missile)
+				FOREACH_ENTITY_ENT(realowner, self,
 				{
-					if(missile.realowner != self)
-					{
-						missile = find(missile, classname, "rocket");
-						continue;
-					}
-					makevectors(missile.v_angle);
+					if(it.classname != "rocket") continue;
+
+					makevectors(it.v_angle);
 					targ = targetlist;
 					if(skill > 9) // normal players only do this for the target they are tracking
 					{
@@ -497,25 +488,25 @@ void W_Devastator_Attack(Weapon thiswep)
 						while(targ)
 						{
 							if(
-								(v_forward * normalize(missile.origin - targ.origin)< 0.1)
+								(v_forward * normalize(it.origin - targ.origin)< 0.1)
 								&& desirabledamage > 0.1*coredamage
 							)self.BUTTON_ATCK2 = true;
 							targ = targ.chain;
 						}
-					}else{
+					}
+					else
+					{
 						float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
 						//As the distance gets larger, a correct detonation gets near imposible
 						//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
-						if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
+						if(v_forward * normalize(it.origin - self.enemy.origin)< 0.1)
 							if(IS_PLAYER(self.enemy))
 								if(desirabledamage >= 0.1*coredamage)
 									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
 										self.BUTTON_ATCK2 = true;
 					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
 					}
-
-					missile = find(missile, classname, "rocket");
-				}
+				});
 				// if we would be doing at X percent of the core damage, detonate it
 				// but don't fire a new shot at the same time!
 				if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
@@ -531,7 +522,7 @@ void W_Devastator_Attack(Weapon thiswep)
 		METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(devastator, reload_ammo) && actor.clip_load < WEP_CVAR(devastator, ammo)) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else {
 				if(fire & 1)
 				{
@@ -613,7 +604,7 @@ void W_Devastator_Attack(Weapon thiswep)
 			self.lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
 			self.rl_release = 0;
 		}
-		METHOD(Devastator, wr_reload, void(entity thiswep))
+		METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR(devastator, ammo), SND(RELOAD));
 		}

@@ -13,6 +13,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fh = fopen(filename, FILE_WRITE);
 	if(fh >= 0)
 	{
+		HUD_Write("//title \n");
+		HUD_Write("//author \n");
+		HUD_Write("\n");
 		HUD_Write_Cvar("hud_skin");
 		HUD_Write_Cvar("hud_panel_bg");
 		HUD_Write_Cvar("hud_panel_bg_color");

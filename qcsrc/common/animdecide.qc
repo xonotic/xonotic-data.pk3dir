@@ -1,6 +1,6 @@
 #include "animdecide.qh"
 
-#include "monsters/all.qh"
+#include <common/monsters/all.qh>
 
 #if defined(SVQC)
     #include "util.qh"
@@ -271,7 +271,7 @@ void animdecide_setimplicitstate(entity e, float onground)
 	// it slightly less likely to "hit two keys at once", so let's do this
 	// here too
 
-	if(vlen(v) > 10)
+	if(vdist(v, >, 10))
 	{
 		if(v.x >  fabs(v.y) * 0.5)
 			s |= ANIMIMPLICITSTATE_FORWARD;

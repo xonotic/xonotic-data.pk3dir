@@ -1,7 +1,7 @@
 #ifndef CLIENT_MAPVOTING_H
 #define CLIENT_MAPVOTING_H
 
-#include "../common/constants.qh"
+#include <common/constants.qh>
 void MapVote_Draw();
 
 void Cmd_MapVote_MapDownload(float argc);

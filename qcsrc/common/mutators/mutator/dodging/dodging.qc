@@ -32,8 +32,8 @@ bool autocvar_sv_dodging_sound;
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
-#include "../../../animdecide.qh"
-#include "../../../physics.qh"
+#include <common/animdecide.qh>
+#include <common/physics/player.qh>
 
 .float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
 
@@ -115,7 +115,7 @@ float PM_dodging_checkpressedkeys(entity this)
 	if(!PHYS_DODGING)
 		return false;
 
-	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN);
+	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
 	float frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	// first check if the last dodge is far enough back in time so we can dodge again
@@ -176,7 +176,7 @@ void PM_dodging(entity this)
 	if (!PHYS_DODGING)
 		return;
 
-    if (PHYS_DEAD(this))
+    if (IS_DEAD(this))
         return;
 
 	// when swimming, no dodging allowed..

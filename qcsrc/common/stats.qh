@@ -62,7 +62,7 @@ REGISTER_STAT(SWITCHWEAPON, int)
 REGISTER_STAT(SWITCHINGWEAPON, int)
 REGISTER_STAT(WEAPON_NEXTTHINK, float)
 #ifdef SVQC
-SPECTATE_COPY(_STAT(WEAPON_NEXTTHINK))
+SPECTATE_COPYFIELD(_STAT(WEAPON_NEXTTHINK))
 float W_WeaponRateFactor();
 #endif
 REGISTER_STAT(WEAPONRATEFACTOR, float, W_WeaponRateFactor())
@@ -244,8 +244,10 @@ REGISTER_STAT(DOM_PPS_PINK, float)
 REGISTER_STAT(TELEPORT_MAXSPEED, float, autocvar_g_teleport_maxspeed)
 REGISTER_STAT(TELEPORT_TELEFRAG_AVOID, int, autocvar_g_telefrags_avoid)
 
+REGISTER_STAT(SPECTATORSPEED, float)
+
 #ifdef SVQC
-#include "movetypes/movetypes.qh"
+#include "physics/movetypes/movetypes.qh"
 #endif
 
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, float)
@@ -290,4 +292,19 @@ REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float)
 REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 REGISTER_STAT(MOVEVARS_AIRACCEL_QW, float)
 REGISTER_STAT(MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, float)
+
+
+#ifdef CSQC
+noref int autocvar_cl_gunalign;
+#endif
+#ifdef SVQC
+.int cvar_cl_gunalign;
+REPLICATE(cvar_cl_gunalign, int, "cl_gunalign");
+#endif
+REGISTER_STAT(GUNALIGN, int, this.cvar_cl_gunalign)
+#ifdef SVQC
+SPECTATE_COPYFIELD(_STAT(GUNALIGN))
+#endif
+
+
 #endif

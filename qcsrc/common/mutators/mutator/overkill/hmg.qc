@@ -108,7 +108,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(hmg, reload_ammo) && actor.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
-				thiswep.wr_reload(thiswep);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else
 			{
 				if (fire & 1)
@@ -137,7 +137,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 			return ammo_amount;
 		}
-		METHOD(HeavyMachineGun, wr_reload, void(entity thiswep))
+		METHOD(HeavyMachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR(hmg, ammo), SND(RELOAD));
 		}

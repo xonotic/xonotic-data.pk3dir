@@ -1,11 +1,11 @@
 #ifdef SVQC
 
-#include "../../../server/g_subs.qh"
-#include "../../../server/g_damage.qh"
-#include "../../../server/bot/bot.qh"
-#include "../../../common/csqcmodel_settings.qh"
-#include "../../../lib/csqcmodel/sv_model.qh"
-#include "../../../server/weapons/common.qh"
+#include <server/g_subs.qh>
+#include <server/g_damage.qh>
+#include <server/bot/bot.qh>
+#include <common/csqcmodel_settings.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <server/weapons/common.qh>
 
 .entity sprite;
 
@@ -50,10 +50,11 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, int 
 void LaunchDebris (string debrisname, vector force)
 {SELFPARAM();
 	entity dbr = spawn();
-	setorigin(dbr, self.absmin
+	vector org = self.absmin
 	           + '1 0 0' * random() * (self.absmax.x - self.absmin.x)
 	           + '0 1 0' * random() * (self.absmax.y - self.absmin.y)
-	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z));
+	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z);
+	setorigin(dbr, org);
 	_setmodel (dbr, debrisname );
 	dbr.skin = self.debrisskin;
 	dbr.colormap = self.colormap; // inherit team colors

@@ -1,7 +1,7 @@
 #ifndef NOTIFICATIONS_H
 #define NOTIFICATIONS_H
 
-#include "command/all.qh"
+#include <common/command/all.qh>
 
 #include "constants.qh"
 #include "teams.qh"
@@ -244,6 +244,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
     f2primsec: f2 float primary or secondary selection for weapons
     f3primsec: f3 float primary or secondary selection for weapons
     f1secs: count_seconds of f1
+    f1points: point or points depending on f1
     f1ord: count_ordinal of f1
     f1time: process_time of f1
     f1race_time: mmssss of f1
@@ -302,6 +303,7 @@ string BUFF_NAME(int i);
     ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
     ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
     ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
+    ARG_CASE(ARG_CS,        "f1points",      (f1 == 1 ? _("point") : _("points"))) \
     ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
     ARG_CASE(ARG_CS,        "f1time",        process_time(2, f1)) \
     ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   mmssss(f1)) \

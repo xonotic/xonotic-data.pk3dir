@@ -120,7 +120,7 @@ void W_Shockwave_Melee_Think()
 	vector targpos;
 
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && WEP_CVAR(shockwave, melee_no_doubleslap))
+	if(IS_DEAD(self.realowner) && WEP_CVAR(shockwave, melee_no_doubleslap))
 	{
 		remove(self);
 		return;

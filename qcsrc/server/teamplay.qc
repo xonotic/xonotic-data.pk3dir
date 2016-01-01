@@ -308,26 +308,24 @@ float PlayerValue(entity p)
 // teams that are allowed will now have their player counts stored in c1...c4
 void GetTeamCounts(entity ignore)
 {
-	entity head;
 	float value, bvalue;
 	// now count how many players are on each team already
 
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOR_EACH_CLIENT(head)
-	{
+	FOREACH_CLIENT(true, LAMBDA(
 		float t;
-		if(IS_PLAYER(head) || head.caplayer)
-			t = head.team;
-		else if(head.team_forced > 0)
-			t = head.team_forced; // reserve the spot
+		if(IS_PLAYER(it) || it.caplayer)
+			t = it.team;
+		else if(it.team_forced > 0)
+			t = it.team_forced; // reserve the spot
 		else
 			continue;
-		if(head != ignore)// && head.netname != "")
+		if(it != ignore)// && it.netname != "")
 		{
-			value = PlayerValue(head);
-			if(IS_BOT_CLIENT(head))
+			value = PlayerValue(it);
+			if(IS_BOT_CLIENT(it))
 				bvalue = value;
 			else
 				bvalue = 0;
@@ -364,7 +362,7 @@ void GetTeamCounts(entity ignore)
 				}
 			}
 		}
-	}
+	));
 
 	// if the player who has a forced team has not joined yet, reserve the spot
 	if(autocvar_g_campaign)
@@ -570,7 +568,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 		LogTeamchange(pl.playerid, pl.team, 2); // log auto join
 
-		if(pl.deadflag == DEAD_NO)
+		if(!IS_DEAD(pl))
 			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE.m_id, pl.origin, '0 0 0');
 	}
 
@@ -583,10 +581,18 @@ void SV_ChangeTeam(float _color)
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
-	if(!teamplay) {
+	if(!teamplay)
 		SetPlayerColors(self, _color);
+
+	if(!IS_CLIENT(self))
+	{
+		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
 		return;
 	}
+
+	if(!teamplay)
+		return;
 
 	scolor = self.clientcolors & 0x0F;
 	dcolor = _color & 0x0F;
@@ -647,10 +653,6 @@ void SV_ChangeTeam(float _color)
 		TeamchangeFrags(self);
 	}
 
-	// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-	if(!IS_CLIENT(self))
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
-
 	MUTATOR_CALLHOOK(Player_ChangeTeam, self, steam, dteam);
 
 	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
@@ -658,7 +660,7 @@ void SV_ChangeTeam(float _color)
 	if(IS_PLAYER(self) && steam != dteam)
 	{
 		// kill player when changing teams
-		if(self.deadflag == DEAD_NO)
+		if(!IS_DEAD(self))
 			Damage(self, self, self, 100000, DEATH_TEAMCHANGE.m_id, self.origin, '0 0 0');
 	}
 }
@@ -667,7 +669,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 {
 	float smallestteam, smallestteam_count, steam;
 	float lowest_bot_score, lowest_player_score;
-	entity head, lowest_bot, lowest_player, selected;
+	entity lowest_bot, lowest_player, selected;
 
 	smallestteam = 0;
 	smallestteam_count = 999999999;
@@ -714,28 +716,24 @@ void ShufflePlayerOutOfTeam (float source_team)
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
-	FOR_EACH_PLAYER(head)
-	{
-		if(head.team == steam)
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == steam, LAMBDA(
+		if(it.isbot)
 		{
-			if(head.isbot)
+			if(it.totalfrags < lowest_bot_score)
 			{
-				if(head.totalfrags < lowest_bot_score)
-				{
-					lowest_bot = head;
-					lowest_bot_score = head.totalfrags;
-				}
-			}
-			else
-			{
-				if(head.totalfrags < lowest_player_score)
-				{
-					lowest_player = head;
-					lowest_player_score = head.totalfrags;
-				}
+				lowest_bot = it;
+				lowest_bot_score = it.totalfrags;
 			}
 		}
-	}
+		else
+		{
+			if(it.totalfrags < lowest_player_score)
+			{
+				lowest_player = it;
+				lowest_player_score = it.totalfrags;
+			}
+		}
+	));
 
 	// prefers to move a bot...
 	if(lowest_bot != world)
@@ -799,7 +797,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	TeamchangeFrags(selected);
 	SetPlayerTeam(selected, smallestteam, source_team, false);
 
-	if(selected.deadflag == DEAD_NO)
+	if(!IS_DEAD(selected))
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE.m_id, selected.origin, '0 0 0');
 	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }

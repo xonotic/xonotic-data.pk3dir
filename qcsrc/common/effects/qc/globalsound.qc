@@ -1,12 +1,12 @@
 #include "globalsound.qh"
 
-#include "../../ent_cs.qh"
+#include <common/ent_cs.qh>
 
 #ifdef IMPLEMENTATION
-	#include "../../animdecide.qh"
+	#include <common/animdecide.qh>
 
 	#ifdef SVQC
-		#include "../../../server/cl_player.qh"
+		#include <server/cl_player.qh>
 	#endif
 
 	REGISTER_NET_TEMP(globalsound)
@@ -342,10 +342,10 @@
 					if (fake) { msg_entity = this; X(); }
 					else
 					{
-						FOR_EACH_REALCLIENT(msg_entity)
-						{
-							if (!teamplay || msg_entity.team == this.team) X();
-						}
+						FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!teamplay || msg_entity.team == this.team), LAMBDA(
+							msg_entity = it;
+							X();
+						));
 					}
 		#undef X
 					break;
@@ -354,7 +354,7 @@
 				case VOICETYPE_TAUNT:
 				{
 					if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
-					else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT,
+					else if (IS_PLAYER(this) && !IS_DEAD(this)) animdecide_setaction(this, ANIMACTION_TAUNT,
 							true);
 					if (!sv_taunt) break;
 					if (autocvar_sv_gentle) break;
@@ -381,10 +381,10 @@
 					}
 					else
 					{
-						FOR_EACH_REALCLIENT(msg_entity)
-						{
+						FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+							msg_entity = it;
 							X();
-						}
+						));
 					}
 		#undef X
 					break;

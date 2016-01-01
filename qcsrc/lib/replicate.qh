@@ -1,8 +1,9 @@
-#ifndef REPLICATE_H
-#define REPLICATE_H
+#pragma once
+
 #ifndef MENUQC
 
-	#define REPLICATE(...) EVAL(OVERLOAD(REPLICATE, __VA_ARGS__))
+	#define REPLICATE(...) EVAL_REPLICATE(OVERLOAD(REPLICATE, __VA_ARGS__))
+	#define EVAL_REPLICATE(...) __VA_ARGS__
 
 	[[accumulate]] void ReplicateVars(entity this, string thisname, int i) {}
 
@@ -52,5 +53,4 @@
 		#define REPLICATE_7(fld, type, var, func, create, destroy, after)
 	#endif
 
-#endif
 #endif

@@ -31,7 +31,7 @@ void door_blocked()
 #ifdef SVQC
 		&& (other.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
-		&& !PHYS_DEAD(other)
+		&& !IS_DEAD(other)
 #endif
 	)
 	{ // KIll Kill Kill!!
@@ -47,7 +47,7 @@ void door_blocked()
 #endif
 
 		 // don't change direction for dead or dying stuff
-		if(PHYS_DEAD(other)
+		if(IS_DEAD(other)
 #ifdef SVQC
 			&& (other.takedamage == DAMAGE_NO)
 #endif
@@ -339,7 +339,7 @@ void door_generic_plat_blocked()
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
-		if(PHYS_DEAD(other) && (other.takedamage == DAMAGE_NO))
+		if(IS_DEAD(other) && (other.takedamage == DAMAGE_NO))
 		{
 			if (self.wait >= 0)
 			{
@@ -432,9 +432,9 @@ void door_trigger_touch()
 {SELFPARAM();
 	if (other.health < 1)
 #ifdef SVQC
-		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !PHYS_DEAD(other)))
+		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !IS_DEAD(other)))
 #elif defined(CSQC)
-		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !PHYS_DEAD(other)))
+		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !IS_DEAD(other)))
 #endif
 			return;
 

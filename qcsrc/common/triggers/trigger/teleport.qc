@@ -26,9 +26,12 @@ void Teleport_Touch ()
 
 	if(IS_TURRET(other))
 		return;
+#elif defined(CSQC)
+	if(!IS_PLAYER(other))
+		return;
 #endif
 
-	if(PHYS_DEAD(other))
+	if(IS_DEAD(other))
 		return;
 
 	if(self.team)

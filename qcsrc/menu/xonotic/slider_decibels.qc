@@ -94,10 +94,11 @@ string XonoticDecibelsSlider_valueToText(entity me, float v)
 		return sprintf(_("%s dB"), ftos_decimals(toDecibelOfSquare(fromDecibelOfSquare(v, me.valueMin), 0), me.valueDigits));
 }
 
-void _TEST_XonoticDecibelsSlider()
+bool autocvar_test_XonoticDecibelsSlider = false;
+TEST(XonoticDecibelsSlider)
 {
-	float i;
-	for(i = -400; i < 0; ++i)
+	if (!autocvar_test_XonoticDecibelsSlider) { TEST_OK(); return; }
+	for (int i = -400; i < 0; ++i)
 	{
 		float db = i * 0.1;
 		float v = fromDecibelOfSquare(db, -40);

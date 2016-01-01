@@ -12,9 +12,9 @@
 const float PLAYERDEMO_MODE_OFF = 0;
 const float PLAYERDEMO_MODE_READING = 1;
 const float PLAYERDEMO_MODE_WRITING = 2;
-void playerdemo_init()
-{SELFPARAM();
-	self.playerdemo_mode = PLAYERDEMO_MODE_OFF;
+void playerdemo_init(entity this)
+{
+	this.playerdemo_mode = PLAYERDEMO_MODE_OFF;
 }
 void playerdemo_shutdown()
 {SELFPARAM();

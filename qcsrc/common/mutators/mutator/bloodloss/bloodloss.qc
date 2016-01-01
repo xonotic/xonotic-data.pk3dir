@@ -6,7 +6,7 @@ REGISTER_MUTATOR(bloodloss, cvar("g_bloodloss"));
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 {SELFPARAM();
 	if(IS_PLAYER(self))
-	if(self.health <= autocvar_g_bloodloss && self.deadflag == DEAD_NO)
+	if(self.health <= autocvar_g_bloodloss && !IS_DEAD(self))
 	{
 		self.BUTTON_CROUCH = true;
 

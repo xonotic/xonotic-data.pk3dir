@@ -5,14 +5,14 @@
 #include "../command/common.qh"
 #include "../mutators/all.qh"
 #include "../round_handler.qh"
-#include "../t_items.qh"
-#include "../../common/animdecide.qh"
-#include "../../common/constants.qh"
-#include "../../common/monsters/all.qh"
-#include "../../common/notifications.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
-#include "../../lib/csqcmodel/sv_model.qh"
+#include <common/t_items.qh>
+#include <common/animdecide.qh>
+#include <common/constants.qh>
+#include <common/monsters/all.qh>
+#include <common/notifications.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
+#include <lib/csqcmodel/sv_model.qh>
 
 .int state;
 
@@ -74,7 +74,7 @@ void CL_Weaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (this.owner.deadflag != DEAD_NO)
+	if (IS_DEAD(self.owner))
 	{
 		// owner died; disappear
 		this.model = "";
@@ -115,7 +115,7 @@ void CL_ExteriorWeaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (this.owner.deadflag != DEAD_NO)
+	if (IS_DEAD(self.owner))
 	{
 		this.model = "";
 		return;
@@ -256,6 +256,7 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 .float race_penalty;
 bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime)
 {
+	if (actor.weaponentity == NULL) return true;
 	if (!weapon_prepareattack_checkammo(thiswep, actor, secondary)) return false;
 
 	// if sv_ready_restart_after_countdown is set, don't allow the player to shoot
@@ -283,6 +284,7 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary, float attacktime)
 {
 	entity this = actor.(weaponentity);
+	if (this == NULL) return;
 	this.state = WS_INUSE;
 
 	actor.spawnshieldtime = min(actor.spawnshieldtime, time);  // kill spawn shield when you fire
@@ -322,6 +324,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	.entity weaponentity, int fire) func)
 {
 	entity this = actor.(weaponentity);
+	if (this == NULL) return;
 	bool restartanim;
 	if (fr == WFRAME_DONTCHANGE)
 	{
@@ -338,16 +341,13 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	vector ou = v_up;
 
 	vector a = '0 0 0';
-	if (this)
-	{
-		this.wframe = fr;
-		if (fr == WFRAME_IDLE) a = this.anim_idle;
-		else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
-		else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
-		else  // if (fr == WFRAME_RELOAD)
-			a = this.anim_reload;
-		a.z *= g_weaponratefactor;
-	}
+    this.wframe = fr;
+    if (fr == WFRAME_IDLE) a = this.anim_idle;
+    else if (fr == WFRAME_FIRE1) a = this.anim_fire1;
+    else if (fr == WFRAME_FIRE2) a = this.anim_fire2;
+    else  // if (fr == WFRAME_RELOAD)
+        a = this.anim_reload;
+    a.z *= g_weaponratefactor;
 
 	v_forward = of;
 	v_right = or;
@@ -377,8 +377,10 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 
 	if (this)
 	{
-		entity e;
-		FOR_EACH_CLIENT(e) if (e == actor || (IS_SPEC(e) && e.enemy == actor)) wframe_send(e, this, a, restartanim);
+		FOREACH_CLIENT(true, LAMBDA(
+			if(it == actor || (IS_SPEC(it) && it.enemy == actor))
+				wframe_send(it, this, a, restartanim);
+		));
 	}
 
 	if ((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
@@ -400,7 +402,7 @@ bool forbidWeaponUse(entity player)
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
 	if (player.player_blocked) return true;
-	if (player.frozen) return true;
+	if (STAT(FROZEN, player)) return true;
 	if (player.weapon_blocked) return true;
 	return false;
 }

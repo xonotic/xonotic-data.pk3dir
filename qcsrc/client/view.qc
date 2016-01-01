@@ -1,6 +1,5 @@
 
 #include "announcer.qh"
-#include "hook.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
@@ -13,14 +12,14 @@
 #include "../common/constants.qh"
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
-#include "../common/gamemodes/all.qh"
-#include "../common/physics.qh"
+#include <common/gamemodes/all.qh>
+#include "../common/physics/player.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
 
-#include "../common/vehicles/all.qh"
-#include "../common/weapons/all.qh"
+#include <common/vehicles/all.qh>
+#include <common/weapons/all.qh>
 #include "../common/viewloc.qh"
 #include "../common/minigames/cl_minigames.qh"
 #include "../common/minigames/cl_minigames_hud.qh"
@@ -77,13 +76,13 @@ float autocvar_cl_leanmodel_up_limit;
 
 #define highpass(value, frac, ref_store, ret) MACRO_BEGIN \
 { \
-	float __f; lowpass(value, frac, ref_store, __f); \
+	float __f = 0; lowpass(value, frac, ref_store, __f); \
 	ret = (value) - __f; \
 } MACRO_END
 
 #define highpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
 { \
-	float __f; lowpass_limited(value, frac, limit, ref_store, __f); \
+	float __f = 0; lowpass_limited(value, frac, limit, ref_store, __f); \
 	ret = (value) - __f; \
 } MACRO_END
 
@@ -230,7 +229,7 @@ void viewmodel_animate(entity this)
 		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
 		// for the most part, but for some reason when you go through a message trigger or
 		// pick up an item or anything like that it will momentarily jolt the gun.
-		vector forward, right, up;
+		vector forward, right = '0 0 0', up = '0 0 0';
 		float bspeed;
 		float t = 1;
 		float s = time * autocvar_cl_bobmodel_speed;
@@ -274,6 +273,11 @@ void viewmodel_draw(entity this)
 {
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
+	static bool wasinvehicle;
+	bool invehicle = player_localentnum > maxclients;
+	if (invehicle) a = -1;
+	else if (wasinvehicle) a = 1;
+	wasinvehicle = invehicle;
 	int c = stof(getplayerkeyvalue(current_player, "colors"));
 	vector g;
 	Weapon wep = activeweapon;
@@ -679,7 +683,7 @@ float TrueAimCheck()
 	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
 
-	if(vlen(trueaimpoint - traceorigin) < g_trueaim_minrange)
+	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
 	if(vecs.x > 0)
@@ -1457,17 +1461,12 @@ void CSQC_UpdateView(float w, float h)
 
 		if(ons_roundlost)
 		{
-			entity e;
-			for(e = world; (e = find(e, classname, "onslaught_generator")); )
-			{
-				if(e.health <= 0)
-				{
-					gen = e;
-					break;
-				}
-			}
+			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, LAMBDA(
+				gen = it;
+				break;
+			));
 			if(!gen)
-				ons_roundlost = FALSE; // don't enforce the 3rd person camera if there is no dead generator to show
+				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
 		if(WantEventchase() || (!autocvar_cl_orthoview && ons_roundlost))
 		{
@@ -1577,14 +1576,14 @@ void CSQC_UpdateView(float w, float h)
 		float ov_furthest = 0;
 		float dist = 0;
 
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
 
 		if(!ov_enabled)
 		{
@@ -2192,6 +2191,8 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Radar_Mouse();
 
 	cl_notice_run();
+	unpause_update();
+	Net_Flush();
 
 	// let's reset the view back to normal for the end
 	setproperty(VF_MIN, '0 0 0');
@@ -2238,7 +2239,7 @@ void CSQC_Demo_Camera()
 	else
 	{
 		tmp = getmousepos() * 0.1;
-		if(vlen(tmp)>autocvar_camera_mouse_threshold)
+		if(vdist(tmp, >, autocvar_camera_mouse_threshold))
 		{
 			mouse_angles.x += tmp.y * cos(mouse_angles.z * DEG2RAD) + (tmp.x * sin(mouse_angles.z * DEG2RAD));
 			mouse_angles.y -= tmp.x * cos(mouse_angles.z * DEG2RAD) + (tmp.y * -sin(mouse_angles.z * DEG2RAD));

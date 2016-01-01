@@ -3,26 +3,26 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/common.qh"
-    #include "../../lib/warpzone/util_server.qh"
-    #include "../../lib/warpzone/server.qh"
+    #include <lib/warpzone/common.qh>
+    #include <lib/warpzone/util_server.qh>
+    #include <lib/warpzone/server.qh>
     #include "../constants.qh"
 	#include "../triggers/subs.qh"
     #include "../util.qh"
-    #include "../../server/weapons/csqcprojectile.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/constants.qh"
-    #include "../../server/defs.qh"
+    #include <server/weapons/csqcprojectile.qh>
+    #include <server/autocvars.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
     #include "../deathtypes/all.qh"
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
     #include "../mapinfo.qh"
-    #include "../../server/anticheat.qh"
+    #include <server/anticheat.qh>
 #endif
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (IS_PLAYER(player) && !PHYS_DEAD(player))
+	if (IS_PLAYER(player) && !IS_DEAD(player))
 	{
 		TDEATHLOOP(org)
 		{
@@ -30,7 +30,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 		#endif
 				if(IS_PLAYER(head))
-					if(!PHYS_DEAD(head))
+					if(!IS_DEAD(head))
 						return 1;
 		}
 	}
@@ -110,6 +110,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	makevectors(player.angles);
 	Reset_ArcBeam(player, v_forward);
 	UpdateCSQCProjectileAfterTeleport(player);
+	UpdateItemAfterTeleport(player);
 #elif defined(CSQC)
 	from = player.move_origin;
 	player.move_origin = to;
@@ -119,8 +120,12 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	player.iflags |= IFLAG_TELEPORTED | IFLAG_V_ANGLE | IFLAG_ANGLES;
 	player.csqcmodel_teleported = 1;
 	player.v_angle = to_angles;
-	setproperty(VF_ANGLES, player.move_angles);
-	setproperty(VF_CL_VIEWANGLES, player.move_angles);
+
+	if(player.isplayermodel) // not for anything but the main player
+	{
+		setproperty(VF_ANGLES, player.move_angles);
+		setproperty(VF_CL_VIEWANGLES, player.move_angles);
+	}
 
 	makevectors(player.move_angles);
 #endif
@@ -129,11 +134,11 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	if(IS_PLAYER(player))
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
+			if(player.takedamage && !IS_DEAD(player) && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
-		player.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(player);
 
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;
@@ -286,6 +291,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	makevectors(pl.angles);
 	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
+	UpdateItemAfterTeleport(pl);
 	{
 		WITH(entity, self, pl, anticheat_fixangle());
 	}

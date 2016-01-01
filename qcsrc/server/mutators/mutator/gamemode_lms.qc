@@ -44,8 +44,8 @@ float LMS_NewPlayerLives();
 
 #ifdef IMPLEMENTATION
 
-#include "../../campaign.qh"
-#include "../../command/cmd.qh"
+#include <server/campaign.qh>
+#include <server/command/cmd.qh>
 
 int autocvar_g_lms_extra_lives;
 bool autocvar_g_lms_join_anytime;
@@ -74,21 +74,18 @@ float LMS_NewPlayerLives()
 // LMS winning condition: game terminates if and only if there's at most one
 // one player who's living lives. Top two scores being equal cancels the time
 // limit.
-float WinningCondition_LMS()
+int WinningCondition_LMS()
 {
 	entity head, head2;
-	float have_player;
-	float have_players;
-	float l;
+	bool have_player = false;
+	bool have_players = false;
 
-	have_player = false;
-	have_players = false;
-	l = LMS_NewPlayerLives();
+	int l = LMS_NewPlayerLives();
 
-	head = find(world, classname, "player");
+	head = find(world, classname, STR_PLAYER);
 	if(head)
 		have_player = true;
-	head2 = find(head, classname, "player");
+	head2 = find(head, classname, STR_PLAYER);
 	if(head2)
 		have_players = true;
 
@@ -161,13 +158,8 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 {
-	entity e;
 	if(restart_mapalreadyrestarted || (time < game_starttime))
-		FOR_EACH_PLAYER(e)
-		{
-			PlayerScore_Add(e, SP_LMS_LIVES, LMS_NewPlayerLives());
-		}
-
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives())));
 	return false;
 }
 
@@ -342,12 +334,10 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
-	entity head;
-	FOR_EACH_REALCLIENT(head)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		++bot_activerealplayers;
 		++bot_realplayers;
-	}
+	));
 
 	return true;
 }

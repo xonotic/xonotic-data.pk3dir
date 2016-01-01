@@ -1,7 +1,7 @@
 #ifndef MISCFUNCTIONS_H
 #define MISCFUNCTIONS_H
 
-#include "t_items.qh"
+#include "../common/t_items.qh"
 
 #include "mutators/events.qh"
 
@@ -116,6 +116,8 @@ void traceline_antilag (entity source, vector v1, vector v2, float nomonst, enti
 void WarpZone_crosshair_trace(entity pl);
 
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
+
+#define IS_DEAD(s) ((s).deadflag != DEAD_NO)
 
 
 #define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
@@ -339,10 +341,7 @@ void readlevelcvars()
 	if (!warmup_stage)
 		game_starttime = time + cvar("g_start_delay");
 
-	for(int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		Weapon w = Weapons_from(i);
-		w.wr_init(w);
-	}
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(it.wr_init(it)));
 
 	readplayerstartcvars();
 }

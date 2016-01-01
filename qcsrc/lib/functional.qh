@@ -1,5 +1,4 @@
-#ifndef FUNCTIONAL_H
-#define FUNCTIONAL_H
+#pragma once
 
 #define MAP(f, ...) EVAL(OVERLOAD(MAP, f, __VA_ARGS__))
 #define MAP_2(f, it) f(it)
@@ -41,5 +40,3 @@
 #endif
 
 #define IF(cond, f, ...) cond(f, __VA_ARGS__)
-
-#endif

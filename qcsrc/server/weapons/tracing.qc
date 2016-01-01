@@ -9,12 +9,12 @@
 #include "../g_subs.qh"
 #include "../antilag.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/util.qh>
 
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
-#include "../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
@@ -25,7 +25,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
-	if(PS(ent).m_weapon == WEP_RIFLE)
+	if (IS_PLAYER(ent) && PS(ent).m_weapon == WEP_RIFLE)
 		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -50,7 +50,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
 
 	// track max damage
-	if(accuracy_canbegooddamage(ent))
+	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
 		accuracy_add(ent, PS(ent).m_weapon.m_id, maxdamage, 0);
 
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
@@ -277,24 +277,25 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
-		FOR_EACH_REALCLIENT(msg_entity)
-		if(msg_entity != self)
-		if(!msg_entity.railgunhit)
-		if(!(IS_SPEC(msg_entity) && msg_entity.enemy == self)) // we use realclient, so spectators can hear the whoosh too
-		{
-			// nearest point on the beam
-			beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self, LAMBDA(
+			if(!it.railgunhit)
+			if(!(IS_SPEC(it) && it.enemy == self))
+			{
+				msg_entity = it;
+				// nearest point on the beam
+				beampos = start + dir * bound(0, (msg_entity.origin - start) * dir, length);
 
-			f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
-			if(f <= 0)
-				continue;
+				f = bound(0, 1 - vlen(beampos - msg_entity.origin) / 512, 1);
+				if(f <= 0)
+					continue;
 
-			snd = SND(NEXWHOOSH_RANDOM());
+				snd = SND(NEXWHOOSH_RANDOM());
 
-			if(!pseudoprojectile)
-				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
-		}
+				if(!pseudoprojectile)
+					pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
+				soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
+			}
+		));
 
 		if(pseudoprojectile)
 			remove(pseudoprojectile);
@@ -353,7 +354,6 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	dir = normalize(dir + randomvec() * spread);
 	end = start + dir * MAX_SHOT_DISTANCE;
 
-	entity pl;
 	fireBullet_last_hit = world;
 	float solid_penetration_left = 1;
 	float total_damage = 0;
@@ -374,11 +374,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{
-		FOR_EACH_PLAYER(pl)
-			if(pl != self)
-				antilag_takeback(pl, time - lag);
-		FOR_EACH_MONSTER(pl)
-			antilag_takeback(pl, time - lag);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_takeback(it, time - lag)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != self)
+				antilag_takeback(it, time - lag);
+		));
 	}
 
 	WarpZone_trace_forent = self;
@@ -483,10 +483,10 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 	if(lag)
 	{
-		FOR_EACH_PLAYER(pl)
-			if(pl != self)
-				antilag_restore(pl);
-		FOR_EACH_MONSTER(pl)
-			antilag_restore(pl);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_restore(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != self)
+				antilag_restore(it);
+		));
 	}
 }

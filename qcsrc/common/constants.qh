@@ -237,14 +237,6 @@ vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
 vector autocvar_sv_player_headsize = '24 24 12';
 
 
-// not so constant
-#define PL_VIEW_OFS STAT(PL_VIEW_OFS, NULL)
-#define PL_CROUCH_VIEW_OFS STAT(PL_CROUCH_VIEW_OFS, NULL)
-#define PL_MIN STAT(PL_MIN, NULL)
-#define PL_CROUCH_MIN STAT(PL_CROUCH_MIN, NULL)
-#define PL_MAX STAT(PL_MAX, NULL)
-#define PL_CROUCH_MAX STAT(PL_CROUCH_MAX, NULL)
-
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';
 const vector PL_MIN_CONST = '-16 -16 -24';

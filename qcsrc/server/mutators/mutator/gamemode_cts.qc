@@ -1,4 +1,4 @@
-#include "../../race.qh"
+#include <server/race.qh>
 
 #ifndef GAMEMODE_CTS_H
 #define GAMEMODE_CTS_H
@@ -44,7 +44,7 @@ const float SP_CTS_FASTEST = 6;
 
 #ifdef IMPLEMENTATION
 
-#include "../../race.qh"
+#include <server/race.qh>
 
 float autocvar_g_cts_finish_kill_delay;
 bool autocvar_g_cts_selfdamage;
@@ -53,26 +53,21 @@ bool autocvar_g_cts_selfdamage;
 .float race_checkpoint;
 void havocbot_role_cts()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
-	entity e;
 	if (self.bot_strategytime < time)
 	{
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
-		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
+		FOREACH_ENTITY_CLASS("trigger_race_checkpoint", true,
 		{
-			if(e.cnt == self.race_checkpoint)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
+			if(it.cnt == self.race_checkpoint)
+				navigation_routerating(it, 1000000, 5000);
 			else if(self.race_checkpoint == -1)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-		}
+				navigation_routerating(it, 1000000, 5000);
+		});
 
 		navigation_goalrating_end();
 	}
@@ -192,17 +187,15 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
-	entity e;
-	FOR_EACH_CLIENT(e)
-	{
-		if(e.race_place)
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it.race_place)
 		{
-			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
 			if(!s)
-				e.race_place = 0;
+				it.race_place = 0;
 		}
-		cts_EventLog(ftos(e.race_place), e);
-	}
+		cts_EventLog(ftos(it.race_place), it);
+	));
 
 	if(g_race_qualifying == 2)
 	{

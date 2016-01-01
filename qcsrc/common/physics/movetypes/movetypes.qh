@@ -1,6 +1,10 @@
 #ifndef MOVETYPES_H
 #define MOVETYPES_H
 
+#define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
+#define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
+#define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
+
 .float move_ltime;
 .void()move_think;
 .float move_nextthink;
