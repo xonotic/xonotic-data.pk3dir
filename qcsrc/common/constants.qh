@@ -223,6 +223,8 @@ const int WATERLEVEL_NONE = 0;
 const int WATERLEVEL_WETFEET = 1;
 const int WATERLEVEL_SWIMMING = 2;
 const int WATERLEVEL_SUBMERGED = 3;
+
+// server flags
 const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
 const int SERVERFLAG_TEAMPLAY = 2;
 const int SERVERFLAG_PLAYERSTATS = 4;
