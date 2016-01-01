@@ -648,10 +648,11 @@ void nade_boom()
 		case NADE_TYPE_MONSTER: nade_monster_boom(); break;
 	}
 
-	entity head;
-	for(head = world; (head = find(head, classname, "grapplinghook")); )
-	if(head.aiment == self)
-		RemoveGrapplingHook(head.realowner);
+	FOREACH_ENTITY_ENT(aiment, self,
+	{
+		if(it.classname == "grapplinghook")
+			RemoveGrapplingHook(it.realowner);
+	});
 
 	remove(self);
 }
@@ -670,10 +671,11 @@ void nade_touch()
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
-		entity head;
-		for(head = world; (head = find(head, classname, "grapplinghook")); )
-		if(head.aiment == self)
-			RemoveGrapplingHook(head.realowner);
+		FOREACH_ENTITY_ENT(aiment, self,
+		{
+			if(it.classname == "grapplinghook")
+				RemoveGrapplingHook(it.realowner);
+		});
 		remove(self);
 		return;
 	}
