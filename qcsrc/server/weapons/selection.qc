@@ -73,11 +73,12 @@ bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 				WITH(entity, self, cl, f = wpn.wr_checkammo1(wpn) + wpn.wr_checkammo2(wpn));
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
-				entity mine;
 				if(wpn == WEP_MINE_LAYER)
-				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == cl)
-					f = 1;
-
+					FOREACH_ENTITY_CLASS("mine", it.owner == cl,
+					{
+						f = 1;
+						break; // no need to continue
+					});
 			}
 			if (!f)
 			{
