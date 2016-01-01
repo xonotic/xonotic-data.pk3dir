@@ -1806,7 +1806,7 @@ void Kill_Notification(
 	string checkargs = Notification_CheckArgs(broadcast, client, 1, 1);
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
 
-	entity notif, net_notif;
+	entity net_notif;
 	float killed_cpid = NO_CPID;
 
 	switch(net_type)
@@ -1854,32 +1854,32 @@ void Kill_Notification(
 		Net_LinkEntity(net_notif, false, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 	}
 
-	for(notif = world; (notif = find(notif, classname, "net_notification"));)
+	FOREACH_ENTITY_CLASS("net_notification", true,
 	{
 		if(net_type)
 		{
-			if((killed_cpid != NO_CPID) && (notif.nent_net_type == MSG_CENTER))
+			if((killed_cpid != NO_CPID) && (it.nent_net_type == MSG_CENTER))
 			{
-				if(notif.owner.nent_cpid == killed_cpid)
+				if(it.owner.nent_cpid == killed_cpid)
 				{
-					notif.nent_net_name = -1;
-					notif.nextthink = time;
+					it.nent_net_name = -1;
+					it.nextthink = time;
 				}
 				else { continue; } // we ARE looking for a specific CPID, don't kill everything else too
 			}
-			else if(notif.nent_net_type == net_type)
+			else if(it.nent_net_type == net_type)
 			{
 				if(net_name)
 				{
-					if(notif.nent_net_name == net_name) { notif.nent_net_name = -1; notif.nextthink = time; }
+					if(it.nent_net_name == net_name) { it.nent_net_name = -1; it.nextthink = time; }
 					else { continue; } // we ARE looking for a certain net_name, don't kill everything else too
 				}
-				else { notif.nent_net_name = -1; notif.nextthink = time; }
+				else { it.nent_net_name = -1; it.nextthink = time; }
 			}
 			else { continue; } // we ARE looking for a certain net_type, don't kill everything else too
 		}
-		else { notif.nent_net_name = -1; notif.nextthink = time; }
-	}
+		else { it.nent_net_name = -1; it.nextthink = time; }
+	});
 }
 
 void Send_Notification(
