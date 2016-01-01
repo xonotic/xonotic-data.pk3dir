@@ -726,7 +726,7 @@ void W_Nexball_Touch()
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && !STAT(FROZEN, other) && !other.deadflag && (IS_PLAYER(attacker)))
+		if((ball = other.ballcarried) && !STAT(FROZEN, other) && !IS_DEAD(other) && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			UNSET_ONGROUND(other);

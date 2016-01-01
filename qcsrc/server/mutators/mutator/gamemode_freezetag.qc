@@ -580,7 +580,7 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 {SELFPARAM();
-	if (!self.deadflag)
+	if (!IS_DEAD(self))
 	{
 		if (random() < 0.5)
 			self.havocbot_role = havocbot_role_ft_freeing;

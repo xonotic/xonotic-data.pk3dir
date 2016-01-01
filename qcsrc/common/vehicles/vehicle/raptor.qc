@@ -291,13 +291,13 @@ float raptor_frame()
 	// Target lock & predict
 	if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
 	{
-		if(raptor.gun1.lock_time < time || raptor.gun1.enemy.deadflag)
+		if(raptor.gun1.lock_time < time || IS_DEAD(raptor.gun1.enemy) || STAT(FROZEN, raptor.gun1.enemy))
 			raptor.gun1.enemy = world;
 
 		if(trace_ent)
 		if(trace_ent.movetype)
 		if(trace_ent.takedamage)
-		if(!trace_ent.deadflag)
+		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 		{
 			if(teamplay)
 			{

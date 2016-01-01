@@ -778,7 +778,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 		// count the damage
 		if(attacker)
-		if(!targ.deadflag)
+		if(!IS_DEAD(targ))
 		if(deathtype != DEATH_BUFF.m_id)
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
@@ -1081,7 +1081,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 	if(IS_PLAYER(e))
 	{
-		if(e.deadflag)
+		if(IS_DEAD(e))
 			return -1;
 	}
 	else

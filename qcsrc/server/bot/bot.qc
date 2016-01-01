@@ -113,7 +113,7 @@ void bot_think()
 	}
 
 	// if dead, just wait until we can respawn
-	if (self.deadflag)
+	if (IS_DEAD(self))
 	{
 		if (self.deadflag == DEAD_DEAD)
 		{

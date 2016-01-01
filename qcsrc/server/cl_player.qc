@@ -134,7 +134,7 @@ void player_setupanimsformodel()
 void player_anim ()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag) {
+	if(IS_DEAD(self)) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
 			if(random() < 0.5)

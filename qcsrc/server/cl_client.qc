@@ -1263,7 +1263,7 @@ void ChatBubbleThink()
 
 	self.mdl = "";
 
-	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
+	if ( !IS_DEAD(self.owner) && IS_PLAYER(self.owner) )
 	{
 		if ( self.owner.active_minigame )
 			self.mdl = "models/sprites/minigame_busy.iqm";
@@ -1349,14 +1349,14 @@ void player_powerups ()
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = self.items;
 
-	if((self.items & IT_USING_JETPACK) && !self.deadflag && !gameover)
+	if((self.items & IT_USING_JETPACK) && !IS_DEAD(self) && !gameover)
 		self.modelflags |= MF_ROCKET;
 	else
 		self.modelflags &= ~MF_ROCKET;
 
 	self.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if((self.alpha < 0 || self.deadflag) && !self.vehicle) // don't apply the flags if the player is gibbed
+	if((self.alpha < 0 || IS_DEAD(self)) && !self.vehicle) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);

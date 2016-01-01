@@ -1181,7 +1181,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 void Monster_Anim()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag)
+	if(IS_DEAD(self))
 	{
 		if (!deadbits)
 		{

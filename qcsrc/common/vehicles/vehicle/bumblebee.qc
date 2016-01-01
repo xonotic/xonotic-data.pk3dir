@@ -134,7 +134,7 @@ float bumblebee_gunner_frame()
 		if(trace_ent)
 			if(trace_ent.movetype)
 				if(trace_ent.takedamage)
-					if(!trace_ent.deadflag)
+					if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 					{
 						if(DIFF_TEAM(trace_ent, gunner))
 						{
@@ -508,13 +508,13 @@ float bumblebee_pilot_frame()
 
 	if(autocvar_g_vehicle_bumblebee_healgun_locktime)
 	{
-		if(vehic.tur_head.lock_time < time || vehic.tur_head.enemy.deadflag)
+		if(vehic.tur_head.lock_time < time || IS_DEAD(vehic.tur_head.enemy) || STAT(FROZEN, vehic.tur_head.enemy))
 			vehic.tur_head.enemy = world;
 
 		if(trace_ent)
 		if(trace_ent.movetype)
 		if(trace_ent.takedamage)
-		if(!trace_ent.deadflag)
+		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 		{
 			if(teamplay)
 			{
