@@ -96,7 +96,7 @@ bool Monster_ValidTarget(entity mon, entity player)
 	|| (!IS_VEHICLE(player) && (player.flags & FL_NOTARGET))
 	|| (!autocvar_g_monsters_typefrag && player.BUTTON_CHAT)
 	|| (SAME_TEAM(player, mon))
-	|| (player.frozen)
+	|| (STAT(FROZEN, player))
 	|| (player.alpha != 0 && player.alpha < 0.5)
 	)
 	{
@@ -565,7 +565,7 @@ vector Monster_Move_Target(entity targ)
 
 		if((self.enemy == world)
 			|| (IS_DEAD(self.enemy) || self.enemy.health < 1)
-			|| (self.enemy.frozen)
+			|| (STAT(FROZEN, self.enemy))
 			|| (self.enemy.flags & FL_NOTARGET)
 			|| (self.enemy.alpha < 0.5 && self.enemy.alpha != 0)
 			|| (self.enemy.takedamage == DAMAGE_NO)
@@ -702,7 +702,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 
 	entity targ;
 
-	if(self.frozen == 2)
+	if(STAT(FROZEN, self) == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
 		self.health = max(1, self.revive_progress * self.max_health);
@@ -722,7 +722,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 
 		return;
 	}
-	else if(self.frozen == 3)
+	else if(STAT(FROZEN, self) == 3)
 	{
 		self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
@@ -990,7 +990,7 @@ void Monster_Dead(entity attacker, float gibbed)
 	self.nextthink = time;
 	self.monster_lifetime = time + 5;
 
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 	{
 		Unfreeze(self); // remove any icy remains
 		self.health = 0; // reset by Unfreeze
@@ -1043,7 +1043,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL.m_id && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
 
-	if(self.frozen && deathtype != DEATH_KILL.m_id && deathtype != DEATH_NADE_ICE_FREEZE.m_id)
+	if(STAT(FROZEN, self) && deathtype != DEATH_KILL.m_id && deathtype != DEATH_NADE_ICE_FREEZE.m_id)
 		return;
 
 	//if(time < self.pain_finished && deathtype != DEATH_KILL.m_id)
@@ -1198,7 +1198,7 @@ void Monster_Anim()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...

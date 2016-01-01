@@ -726,7 +726,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	}
 	else if (e_target.health <= 0)
 		return -6;
-	else if(e_target.frozen > 0)
+	else if(STAT(FROZEN, e_target) > 0)
 		return -6;
 
 	// player

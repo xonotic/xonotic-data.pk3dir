@@ -402,7 +402,7 @@ bool forbidWeaponUse(entity player)
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
 	if (player.player_blocked) return true;
-	if (player.frozen) return true;
+	if (STAT(FROZEN, player)) return true;
 	if (player.weapon_blocked) return true;
 	return false;
 }

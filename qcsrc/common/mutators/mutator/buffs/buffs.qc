@@ -237,7 +237,7 @@ void buff_Touch()
 	}
 
 	if((self.team && DIFF_TEAM(other, self))
-	|| (other.frozen)
+	|| (STAT(FROZEN, other))
 	|| (other.vehicle)
 	|| (!self.buff_active)
 	)
@@ -334,7 +334,7 @@ void buff_Think()
 	}
 
 	if(!self.buff_active && !self.buff_activetime)
-	if(!self.owner || self.owner.frozen || IS_DEAD(self.owner) || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
+	if(!self.owner || STAT(FROZEN, self.owner) || IS_DEAD(self.owner) || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
 	{
 		buff_SetCooldown(autocvar_g_buffs_cooldown_respawn + frametime);
 		self.owner = world;
@@ -589,7 +589,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	if(!IS_DEAD(frag_target))
 	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))
 	if(frag_attacker != frag_target)
-	if(!frag_target.frozen)
+	if(!STAT(FROZEN, frag_target))
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
@@ -698,7 +698,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !it.frozen && !it.vehicle)
+			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, self))
 			if(vlen(self.origin - it.origin) <= best_distance)
 			{
@@ -848,7 +848,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if(time >= self.buff_time)
 		buff_lost = 2;
 
-	if(self.frozen) { buff_lost = 1; }
+	if(STAT(FROZEN, self)) { buff_lost = 1; }
 
 	if(buff_lost)
 	{

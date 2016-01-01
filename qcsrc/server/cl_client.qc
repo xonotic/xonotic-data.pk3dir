@@ -916,7 +916,7 @@ void ClientKill ()
 {SELFPARAM();
 	if(gameover) return;
 	if(self.player_blocked) return;
-	if(self.frozen) return;
+	if(STAT(FROZEN, self)) return;
 
 	ClientKill_TeamChange(0);
 }
@@ -1523,7 +1523,7 @@ void player_regen ()
 	regen_health_stable = autocvar_g_balance_health_regenstable;
 	regen_health_rotstable = autocvar_g_balance_health_rotstable;
 	if(!MUTATOR_CALLHOOK(PlayerRegen))
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	{
 		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
@@ -1640,7 +1640,7 @@ void SpectateCopy(entity this, entity spectatee)
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
-	self.frozen = spectatee.frozen;
+	STAT(FROZEN, self) = STAT(FROZEN, spectatee);
 	self.revive_progress = spectatee.revive_progress;
 	if(!self.BUTTON_USE)
 		self.fixangle = true;
@@ -2049,7 +2049,7 @@ void PlayerUseKey()
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!self.frozen)
+		if(!STAT(FROZEN, self))
 		if(!IS_DEAD(self))
 		if(!gameover)
 		{
@@ -2177,7 +2177,7 @@ void PlayerPreThink ()
 		self.max_armorvalue = 0;
 	}
 
-	if(self.frozen == 2)
+	if(STAT(FROZEN, self) == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
 		self.health = max(1, self.revive_progress * start_health);
@@ -2186,7 +2186,7 @@ void PlayerPreThink ()
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
 	}
-	else if(self.frozen == 3)
+	else if(STAT(FROZEN, self) == 3)
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * self.revive_progress );
@@ -2207,7 +2207,7 @@ void PlayerPreThink ()
 	if(time > self.last_vehiclecheck)
 	if(IS_PLAYER(self))
 	if(!gameover)
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	if(!self.vehicle)
 	if(!IS_DEAD(self))
 	{
@@ -2333,7 +2333,7 @@ void PlayerPreThink ()
 			do_crouch = 0;
 		if(self.vehicle)
 			do_crouch = 0;
-		if(self.frozen)
+		if(STAT(FROZEN, self))
 			do_crouch = 0;
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY

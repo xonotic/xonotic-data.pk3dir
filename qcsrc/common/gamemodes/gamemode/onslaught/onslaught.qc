@@ -799,7 +799,7 @@ void ons_ControlPoint_Touch()
 		return;
 
 	if(!IS_PLAYER(toucher)) { return; }
-	if(toucher.frozen) { return; }
+	if(STAT(FROZEN, toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
 
 	if ( SAME_TEAM(self,toucher) )
@@ -2060,7 +2060,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 		if ( IS_PLAYER(self) )
 		{
-			if ( !self.frozen )
+			if ( !STAT(FROZEN, self) )
 			{
 				entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
 

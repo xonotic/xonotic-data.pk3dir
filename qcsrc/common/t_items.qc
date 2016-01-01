@@ -767,7 +767,7 @@ void Item_Touch()
 	}
 
 	if(!(other.flags & FL_PICKUPITEMS)
-	|| other.frozen
+	|| STAT(FROZEN, other)
 	|| other.deadflag
 	|| (this.solid != SOLID_TRIGGER)
 	|| (this.owner == other)

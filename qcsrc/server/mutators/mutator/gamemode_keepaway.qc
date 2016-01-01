@@ -133,7 +133,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 		return;
 	}
 	if(IS_DEAD(other)) { return; }
-	if(other.frozen) { return; }
+	if(STAT(FROZEN, other)) { return; }
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
 		Send_Effect(EFFECT_BALL_SPARKS, self.origin, '0 0 0', 1);

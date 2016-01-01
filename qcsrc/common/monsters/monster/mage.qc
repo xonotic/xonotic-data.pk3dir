@@ -125,7 +125,7 @@ float M_Mage_Defend_Heal_Check(entity e)
 		return false;
 	if(DIFF_TEAM(e, self) && e != self.monster_follow)
 		return false;
-	if(e.frozen)
+	if(STAT(FROZEN, e))
 		return false;
 	if(!IS_PLAYER(e))
 		return (IS_MONSTER(e) && e.health < e.max_health);

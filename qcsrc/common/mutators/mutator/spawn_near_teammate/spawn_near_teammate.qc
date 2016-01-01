@@ -67,7 +67,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if(it.msnt_timer < time)
 			if(SAME_TEAM(self, it))
 			if(time > it.spawnshieldtime) // spawn shielding
-			if(it.frozen == 0)
+			if(STAT(FROZEN, it) == 0)
 			if(it != self)
 			{
 				tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 100', MOVE_WORLDONLY, it);

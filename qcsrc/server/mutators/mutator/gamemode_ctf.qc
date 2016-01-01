@@ -1192,7 +1192,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(toucher, it), LAMBDA(++num_perteam));
 
 	// special touch behaviors
-	if(toucher.frozen) { return; }
+	if(STAT(FROZEN, toucher)) { return; }
 	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)

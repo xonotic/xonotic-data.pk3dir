@@ -979,7 +979,7 @@ void vehicles_enter(entity pl, entity veh)
 	if((!IS_PLAYER(pl))
 	|| (veh.phase >= time)
 	|| (pl.vehicle_enter_delay >= time)
-	|| (pl.frozen)
+	|| (STAT(FROZEN, pl))
 	|| (IS_DEAD(pl))
 	|| (pl.vehicle)
 	) { return; }

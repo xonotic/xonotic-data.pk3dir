@@ -147,7 +147,7 @@ void player_anim ()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;

@@ -245,7 +245,7 @@ void W_Arc_Beam_Think()
 		||
 		(!self.owner.BUTTON_ATCK && !burst )
 		||
-		self.owner.frozen
+		STAT(FROZEN, self.owner)
 		||
 		self.owner.vehicle
 		||
