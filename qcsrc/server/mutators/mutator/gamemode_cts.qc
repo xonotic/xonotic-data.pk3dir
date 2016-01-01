@@ -56,23 +56,18 @@ void havocbot_role_cts()
 	if(IS_DEAD(self))
 		return;
 
-	entity e;
 	if (self.bot_strategytime < time)
 	{
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
-		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
+		FOREACH_ENTITY_CLASS("trigger_race_checkpoint", true,
 		{
-			if(e.cnt == self.race_checkpoint)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
+			if(it.cnt == self.race_checkpoint)
+				navigation_routerating(it, 1000000, 5000);
 			else if(self.race_checkpoint == -1)
-			{
-				navigation_routerating(e, 1000000, 5000);
-			}
-		}
+				navigation_routerating(it, 1000000, 5000);
+		});
 
 		navigation_goalrating_end();
 	}
