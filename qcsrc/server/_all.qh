@@ -35,7 +35,6 @@ const string STR_OBSERVER = "observer";
 		{ \
 			const noref int i = _i; \
 			const noref entity it = ftoe(i); \
-			if(it == NULL || wasfreed(it)) continue; \
 			if(cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
