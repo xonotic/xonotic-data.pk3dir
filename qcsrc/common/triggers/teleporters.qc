@@ -85,7 +85,19 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
-				_sound (player, CH_TRIGGER, ((teleporter.noise != "") ? teleporter.noise : SND(TELEPORT)), VOL_BASE, ATTEN_NORM);
+			{
+				string thesound = SND(TELEPORT);
+				if(teleporter.noise != "")
+				{
+					RandomSelection_Init();
+					FOREACH_WORD(teleporter.noise, true,
+					{
+						RandomSelection_Add(NULL, 0, it, 1, 1);
+					});
+					thesound = RandomSelection_chosen_string;
+				}
+				_sound (player, CH_TRIGGER, thesound, VOL_BASE, ATTEN_NORM);
+			}
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
 				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
