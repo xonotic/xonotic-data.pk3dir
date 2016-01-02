@@ -177,7 +177,7 @@ float racer_frame()
 	racer   = self.vehicle;
 	setself(racer);
 
-	vehicles_painframe();
+	vehicles_frame(racer, player);
 
 	if(pointcontents(racer.origin) != CONTENT_WATER)
 		racer.air_finished = time + autocvar_g_vehicle_racer_water_time;

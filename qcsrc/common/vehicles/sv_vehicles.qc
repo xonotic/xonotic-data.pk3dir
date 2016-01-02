@@ -622,26 +622,31 @@ void shieldhit_think()
 	}
 }
 
-void vehicles_painframe()
-{SELFPARAM();
-	if(self.owner.vehicle_health <= 50)
-	if(self.pain_frame < time)
+void vehicles_painframe(entity this)
+{
+	int myhealth = ((this.owner) ? this.owner.vehicle_health : ((this.vehicle_health / this.max_health) * 100));
+
+	if(myhealth <= 50)
+	if(this.pain_frame < time)
 	{
-		float _ftmp;
-		_ftmp = self.owner.vehicle_health / 50;
-		self.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
-		pointparticles(EFFECT_SMOKE_SMALL, (self.origin + (randomvec() * 80)), '0 0 0', 1);
+		float _ftmp = myhealth / 50;
+		this.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
+		pointparticles(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
-		if(self.vehicle_flags & VHF_DMGSHAKE)
-			self.velocity += randomvec() * 30;
+		if(this.vehicle_flags & VHF_DMGSHAKE)
+			this.velocity += randomvec() * 30;
 
-		if(self.vehicle_flags & VHF_DMGROLL)
-			if(self.vehicle_flags & VHF_DMGHEADROLL)
-				self.tur_head.angles += randomvec();
+		if(this.vehicle_flags & VHF_DMGROLL)
+			if(this.vehicle_flags & VHF_DMGHEADROLL)
+				this.tur_head.angles += randomvec();
 			else
-				self.angles += randomvec();
-
+				this.angles += randomvec();
 	}
+}
+
+void vehicles_frame(entity this, entity actor)
+{
+	vehicles_painframe(this);
 }
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -1129,6 +1134,8 @@ void vehicles_think()
 
 	Vehicle info = get_vehicleinfo(self.vehicleid);
 	info.vr_think(info);
+
+	vehicles_painframe(self);
 
 	CSQCMODEL_AUTOUPDATE(self);
 }

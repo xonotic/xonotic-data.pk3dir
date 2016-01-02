@@ -173,7 +173,8 @@ float raptor_frame()
 	raptor = self.vehicle;
 	setself(raptor);
 
-	vehicles_painframe();
+	vehicles_frame(raptor, player);
+
 	/*
 	ftmp = vlen(self.velocity);
 	if(ftmp > autocvar_g_vehicle_raptor_speed_forward)

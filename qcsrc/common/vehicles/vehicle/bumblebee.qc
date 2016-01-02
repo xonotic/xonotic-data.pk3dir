@@ -101,6 +101,9 @@ float bumblebee_gunner_frame()
 	entity gunner   = self;
 	setself(vehic);
 
+	// this isn't technically a vehicle (yet), let's not do frame functions on it (yet)
+	//vehicles_frame(gun, player);
+
 	vehic.solid = SOLID_NOT;
 	//setorigin(gunner, vehic.origin);
 	gunner.velocity = vehic.velocity;
@@ -425,6 +428,8 @@ float bumblebee_pilot_frame()
 	pilot = self;
 	vehic = self.vehicle;
 	setself(vehic);
+
+	vehicles_frame(vehic, pilot);
 
 	if(IS_DEAD(vehic))
 	{

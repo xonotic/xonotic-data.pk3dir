@@ -82,9 +82,10 @@ float spiderbot_frame()
 
 	player = self;
 	spider = self.vehicle;
-	setself(spider);
 
-	vehicles_painframe();
+	vehicles_frame(spider, player);
+
+	setself(spider);
 
 	player.BUTTON_ZOOM	  = 0;
 	player.BUTTON_CROUCH	= 0;
