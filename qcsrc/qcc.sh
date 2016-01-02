@@ -19,8 +19,8 @@ esac
 
 CPP="${CPP} -I. ${QCCIDENT} ${QCCDEFS} -D${PROG}"
 set -x
-${CPP} -CC -MMD -MP -MT ${OUT} -Wall -Wundef -Werror -o ./tmp/${MODE}.qc ${IN}
+${CPP} -MMD -MP -MT ${OUT} -Wall -Wundef -Werror -o ./tmp/${MODE}.txt ${IN}
 ${CPP} -dM 1>./tmp/${MODE}_macros.txt -H 2>./tmp/${MODE}_includes.txt ${IN}
-sed -i 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' ./tmp/${MODE}.qc
+sed 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' ./tmp/${MODE}.txt > ./tmp/${MODE}.qc
 cd ${MODE}
 ${QCC} ${QCCFLAGS} -o ../${OUT} ../tmp/${MODE}.qc
