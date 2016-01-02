@@ -61,10 +61,10 @@ const float ST_INV_KILLS = 1;
 
 #ifdef IMPLEMENTATION
 
-#include "../../../common/monsters/spawn.qh"
-#include "../../../common/monsters/sv_monsters.qh"
+#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_monsters.qh>
 
-#include "../../teamplay.qh"
+#include <server/teamplay.qh>
 
 
 float autocvar_g_invasion_round_timelimit;

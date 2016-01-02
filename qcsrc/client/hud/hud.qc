@@ -1,18 +1,18 @@
 #include "hud.qh"
 
 #include "hud_config.qh"
-#include "mapvoting.qh"
-#include "scoreboard.qh"
-#include "teamradar.qh"
-#include "../common/t_items.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/items/all.qc"
-#include "../common/mapinfo.qh"
-#include "../common/mutators/mutator/waypoints/all.qh"
-#include "../common/stats.qh"
-#include "../lib/csqcmodel/cl_player.qh"
+#include "../mapvoting.qh"
+#include "../scoreboard.qh"
+#include "../teamradar.qh"
+#include <common/t_items.qh>
+#include <common/deathtypes/all.qh>
+#include <common/items/all.qc>
+#include <common/mapinfo.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
+#include <common/stats.qh>
+#include <lib/csqcmodel/cl_player.qh>
 // TODO: remove
-#include "../server/mutators/mutator/gamemode_ctf.qc"
+#include <server/mutators/mutator/gamemode_ctf.qc>
 
 
 /*
@@ -418,7 +418,7 @@ void HUD_Vehicle()
 	if(hud == HUD_BUMBLEBEE_GUN)
 		CSQC_BUMBLE_GUN_HUD();
 	else {
-		Vehicle info = get_vehicleinfo(hud);
+		Vehicle info = Vehicles_from(hud);
 		info.vr_hud(info);
 	}
 }

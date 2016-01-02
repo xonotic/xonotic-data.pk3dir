@@ -27,7 +27,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		return 0;
 
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it != self && SAME_TEAM(it, self) && it.deadflag == DEAD_NO, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != self && SAME_TEAM(it, self) && !IS_DEAD(it), LAMBDA(
 		float l = vlen(spawn_spot.origin - it.origin);
 		if(l > autocvar_g_spawn_near_teammate_distance)
 			continue;
@@ -63,14 +63,14 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		float pc = 0, best_dist = 0, dist = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			if((autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && it.health >= autocvar_g_balance_health_regenstable) || autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health == 0)
-			if(it.deadflag == DEAD_NO)
+			if(!IS_DEAD(it))
 			if(it.msnt_timer < time)
 			if(SAME_TEAM(self, it))
 			if(time > it.spawnshieldtime) // spawn shielding
-			if(it.frozen == 0)
+			if(STAT(FROZEN, it) == 0)
 			if(it != self)
 			{
-				tracebox(it.origin, PL_MIN, PL_MAX, it.origin - '0 0 100', MOVE_WORLDONLY, it);
+				tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 100', MOVE_WORLDONLY, it);
 				if(trace_fraction != 1.0)
 				if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 				{
@@ -87,19 +87,19 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 							switch(pc)
 							{
 								case 0:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin + v_right * 128, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NORMAL, it);
 									break;
 								case 1:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_right * 128 , MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NORMAL, it);
 									break;
 								case 2:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin + v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
 									break;
 								case 3:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
 									break;
 								case 4:
-									tracebox(it.origin , PL_MIN, PL_MAX, it.origin - v_forward * 128, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NORMAL, it);
 									break;
 							}
 

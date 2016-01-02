@@ -319,8 +319,8 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 #endif
 
 #ifdef CSQC
-#include "../../../lib/csqcmodel/interpolate.qh"
-#include "../../../lib/warpzone/common.qh"
+#include <lib/csqcmodel/interpolate.qh>
+#include <lib/warpzone/common.qh>
 
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 

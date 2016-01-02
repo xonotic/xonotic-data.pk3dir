@@ -1,22 +1,30 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#pragma once
 
 noref vector _vlen2;
-#define vlen2(v) \
-	(_vlen2 = (v), \
-	  _vlen2.x * _vlen2.x \
-	+ _vlen2.y * _vlen2.y \
-	+ _vlen2.z * _vlen2.z)
+#define vlen2(v) (_vlen2 = (v), dotproduct(_vlen2, _vlen2))
 
+#if 1
 noref float _vdist_f;
 /** Vector distance comparison, avoids sqrt() */
 #define vdist(v, cmp, f) (vlen2(v) cmp (_vdist_f = (f), _vdist_f * _vdist_f))
-/*
+#else
 #define vdist(v, cmp, f) (vlen(v) cmp (f))
-*/
+#endif
 
+#if 1
+#define dotproduct(a, b) ((a) * (b))
+#else
+noref vector _dotproduct_a, _dotproduct_b;
+#define dotproduct(a, b) \
+	(_dotproduct_a = (a), _dotproduct_b = (b), \
+	  _dotproduct_a.x * _dotproduct_b.x \
+	+ _dotproduct_a.y * _dotproduct_b.y \
+	+ _dotproduct_a.z * _dotproduct_b.z)
+#endif
+
+#if 1
 #define cross(a, b) ((a) >< (b))
-/*
+#else
 vector cross(vector a, vector b)
 {
 	return
@@ -24,7 +32,7 @@ vector cross(vector a, vector b)
 	+	'0 1 0' * (a.z * b.x - a.x * b.z)
 	+	'0 0 1' * (a.x * b.y - a.y * b.x);
 }
-*/
+#endif
 
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
@@ -82,7 +90,7 @@ noref vector _vec2;
 #define vec2(v) (_vec2 = (v), _vec2.z = 0, _vec2)
 
 noref vector _vec3;
-#define vec3(x, y, z) (_vec3_x = (x), _vec3_y = (y), _vec3_z = (z), _vec3)
+#define vec3(_x, _y, _z) (_vec3.x = (_x), _vec3.y = (_y), _vec3.z = (_z), _vec3)
 
 vector rotate(vector v, float a)
 {
@@ -124,6 +132,4 @@ noref vector _yinvert;
 		ret.z = bound(m1.z, org.z, m2.z);
 		return ret;
 	}
-#endif
-
 #endif

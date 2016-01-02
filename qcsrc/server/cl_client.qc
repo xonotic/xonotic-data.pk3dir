@@ -273,7 +273,7 @@ void PutObserverInServer()
 	self.crouch = false;
 	self.revival_time = 0;
 
-	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
+	setorigin (self, (spot.origin + STAT(PL_VIEW_OFS, NULL))); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = '0 0 0';
@@ -282,7 +282,7 @@ void PutObserverInServer()
 	setmodel(self, MDL_Null);
 	self.drawonlytoclient = self;
 
-	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	setsize (self, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL)); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 
 	PS(self).m_weapon = WEP_Null;
@@ -542,8 +542,8 @@ void PutClientInServer()
 		this.drawonlytoclient = NULL;
 
 		this.crouch = false;
-		this.view_ofs = PL_VIEW_OFS;
-		setsize(this, PL_MIN, PL_MAX);
+		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
+		setsize(this, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 		this.spawnorigin = spot.origin;
 		setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
@@ -835,13 +835,13 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
     if(!self.killindicator)
 	{
-		if(self.deadflag == DEAD_NO)
+		if(!IS_DEAD(self))
 		{
 			killtime = max(killtime, self.clientkill_nexttime - time);
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || !IS_PLAYER(self) || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || !IS_PLAYER(self) || IS_DEAD(self))
 		{
 			ClientKill_Now();
 		}
@@ -916,7 +916,7 @@ void ClientKill ()
 {SELFPARAM();
 	if(gameover) return;
 	if(self.player_blocked) return;
-	if(self.frozen) return;
+	if(STAT(FROZEN, self)) return;
 
 	ClientKill_TeamChange(0);
 }
@@ -1263,7 +1263,7 @@ void ChatBubbleThink()
 
 	self.mdl = "";
 
-	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
+	if ( !IS_DEAD(self.owner) && IS_PLAYER(self.owner) )
 	{
 		if ( self.owner.active_minigame )
 			self.mdl = "models/sprites/minigame_busy.iqm";
@@ -1349,14 +1349,14 @@ void player_powerups ()
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = self.items;
 
-	if((self.items & IT_USING_JETPACK) && !self.deadflag && !gameover)
+	if((self.items & IT_USING_JETPACK) && !IS_DEAD(self) && !gameover)
 		self.modelflags |= MF_ROCKET;
 	else
 		self.modelflags &= ~MF_ROCKET;
 
 	self.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if((self.alpha < 0 || self.deadflag) && !self.vehicle) // don't apply the flags if the player is gibbed
+	if((self.alpha < 0 || IS_DEAD(self)) && !self.vehicle) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);
@@ -1523,7 +1523,7 @@ void player_regen ()
 	regen_health_stable = autocvar_g_balance_health_regenstable;
 	regen_health_rotstable = autocvar_g_balance_health_rotstable;
 	if(!MUTATOR_CALLHOOK(PlayerRegen))
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	{
 		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
@@ -1640,7 +1640,7 @@ void SpectateCopy(entity this, entity spectatee)
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
-	self.frozen = spectatee.frozen;
+	STAT(FROZEN, self) = STAT(FROZEN, spectatee);
 	self.revive_progress = spectatee.revive_progress;
 	if(!self.BUTTON_USE)
 		self.fixangle = true;
@@ -1733,12 +1733,12 @@ bool Spectate(entity pl)
 
 bool SpectateNext()
 {SELFPARAM();
-	other = find(self.enemy, classname, "player");
+	other = find(self.enemy, classname, STR_PLAYER);
 
 	if (MUTATOR_CALLHOOK(SpectateNext, self, other))
 		other = spec_player;
 	else if (!other)
-		other = find(other, classname, "player");
+		other = find(other, classname, STR_PLAYER);
 
 	if(other) { SetSpectatee(self, other); }
 
@@ -1748,7 +1748,7 @@ bool SpectateNext()
 bool SpectatePrev()
 {SELFPARAM();
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
-	other = findchain(classname, "player");
+	other = findchain(classname, STR_PLAYER);
 	if (!other) // no player
 		return false;
 
@@ -1791,7 +1791,7 @@ Update a respawn countdown display.
 void ShowRespawnCountdown()
 {SELFPARAM();
 	float number;
-	if(self.deadflag == DEAD_NO) // just respawned?
+	if(!IS_DEAD(self)) // just respawned?
 		return;
 	else
 	{
@@ -2049,17 +2049,17 @@ void PlayerUseKey()
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!self.frozen)
-		if(self.deadflag == DEAD_NO)
+		if(!STAT(FROZEN, self))
+		if(!IS_DEAD(self))
 		if(!gameover)
 		{
 			entity head, closest_target = world;
-			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
+			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, true);
 
 			while(head) // find the closest acceptable target to enter
 			{
 				if(head.vehicle_flags & VHF_ISVEHICLE)
-				if(head.deadflag == DEAD_NO)
+				if(!IS_DEAD(head))
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, self)))
 				if(head.takedamage != DAMAGE_NO)
 				{
@@ -2177,7 +2177,7 @@ void PlayerPreThink ()
 		self.max_armorvalue = 0;
 	}
 
-	if(self.frozen == 2)
+	if(STAT(FROZEN, self) == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
 		self.health = max(1, self.revive_progress * start_health);
@@ -2186,7 +2186,7 @@ void PlayerPreThink ()
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
 	}
-	else if(self.frozen == 3)
+	else if(STAT(FROZEN, self) == 3)
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * self.revive_progress );
@@ -2207,14 +2207,14 @@ void PlayerPreThink ()
 	if(time > self.last_vehiclecheck)
 	if(IS_PLAYER(self))
 	if(!gameover)
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	if(!self.vehicle)
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
-		if(veh.deadflag == DEAD_NO)
+		if(!IS_DEAD(veh))
 		if(veh.takedamage != DAMAGE_NO)
 		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, self))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
@@ -2261,7 +2261,7 @@ void PlayerPreThink ()
 			player_powerups();
 		}
 
-		if (self.deadflag != DEAD_NO)
+		if (IS_DEAD(self))
 		{
 			if(self.personal && g_race_qualifying)
 			{
@@ -2333,7 +2333,7 @@ void PlayerPreThink ()
 			do_crouch = 0;
 		if(self.vehicle)
 			do_crouch = 0;
-		if(self.frozen)
+		if(STAT(FROZEN, self))
 			do_crouch = 0;
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
@@ -2465,7 +2465,7 @@ void PlayerPreThink ()
 
 void DrownPlayer(entity this)
 {
-	if(this.deadflag != DEAD_NO)
+	if(IS_DEAD(this))
 		return;
 
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)

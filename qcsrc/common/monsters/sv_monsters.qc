@@ -1,7 +1,7 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/common.qh"
+    #include <lib/warpzone/common.qh>
     #include "../constants.qh"
     #include "../teams.qh"
     #include "../util.qh"
@@ -9,20 +9,20 @@
     #include "sv_monsters.qh"
 	#include "../physics/movelib.qh"
     #include "../weapons/all.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/defs.qh"
+    #include <server/autocvars.qh>
+    #include <server/defs.qh>
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/all.qh"
-	#include "../../server/steerlib.qh"
+    #include <server/mutators/all.qh>
+	#include <server/steerlib.qh>
 	#include "../turrets/sv_turrets.qh"
 	#include "../turrets/util.qh"
     #include "../vehicles/all.qh"
-    #include "../../server/campaign.qh"
-    #include "../../server/command/common.qh"
-    #include "../../server/command/cmd.qh"
+    #include <server/campaign.qh>
+    #include <server/command/common.qh>
+    #include <server/command/cmd.qh>
 	#include "../triggers/triggers.qh"
-    #include "../../lib/csqcmodel/sv_model.qh"
-    #include "../../server/round_handler.qh"
+    #include <lib/csqcmodel/sv_model.qh>
+    #include <server/round_handler.qh>
 #endif
 
 void monsters_setstatus()
@@ -91,12 +91,12 @@ bool Monster_ValidTarget(entity mon, entity player)
 	|| (player.takedamage == DAMAGE_NO)
 	|| (player.items & IT_INVISIBILITY)
 	|| (IS_SPEC(player) || IS_OBSERVER(player)) // don't attack spectators
-	|| (!IS_VEHICLE(player) && (player.deadflag != DEAD_NO || mon.deadflag != DEAD_NO || player.health <= 0 || mon.health <= 0))
+	|| (!IS_VEHICLE(player) && (IS_DEAD(player) || IS_DEAD(mon) || player.health <= 0 || mon.health <= 0))
 	|| (mon.monster_follow == player || player.monster_follow == mon)
 	|| (!IS_VEHICLE(player) && (player.flags & FL_NOTARGET))
 	|| (!autocvar_g_monsters_typefrag && player.BUTTON_CHAT)
 	|| (SAME_TEAM(player, mon))
-	|| (player.frozen)
+	|| (STAT(FROZEN, player))
 	|| (player.alpha != 0 && player.alpha < 0.5)
 	)
 	{
@@ -382,7 +382,7 @@ float Monster_Attack_Leap_Check(vector vel)
 {SELFPARAM();
 	if(self.state && (self.flags & FL_MONSTER))
 		return false; // already attacking
-	if(!(self.flags & FL_ONGROUND))
+	if(!(IS_ONGROUND(self)))
 		return false; // not on the ground
 	if(self.health <= 0)
 		return false; // called when dead?
@@ -417,7 +417,7 @@ bool Monster_Attack_Leap(vector anm, void() touchfunc, vector vel, float animtim
 	self.touch = touchfunc;
 	self.origin_z += 1;
 	self.velocity = vel;
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 
 	return true;
 }
@@ -564,8 +564,8 @@ vector Monster_Move_Target(entity targ)
 		WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 
 		if((self.enemy == world)
-			|| (self.enemy.deadflag != DEAD_NO || self.enemy.health < 1)
-			|| (self.enemy.frozen)
+			|| (IS_DEAD(self.enemy) || self.enemy.health < 1)
+			|| (STAT(FROZEN, self.enemy))
 			|| (self.enemy.flags & FL_NOTARGET)
 			|| (self.enemy.alpha < 0.5 && self.enemy.alpha != 0)
 			|| (self.enemy.takedamage == DAMAGE_NO)
@@ -702,7 +702,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 
 	entity targ;
 
-	if(self.frozen == 2)
+	if(STAT(FROZEN, self) == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
 		self.health = max(1, self.revive_progress * self.max_health);
@@ -722,7 +722,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 
 		return;
 	}
-	else if(self.frozen == 3)
+	else if(STAT(FROZEN, self) == 3)
 	{
 		self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
@@ -833,7 +833,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 		self.last_enemycheck = time + 1; // check for enemies every second
 	}
 
-	if(self.state == MONSTER_ATTACK_RANGED && (self.flags & FL_ONGROUND))
+	if(self.state == MONSTER_ATTACK_RANGED && (IS_ONGROUND(self)))
 	{
 		self.state = 0;
 		self.touch = Monster_Touch;
@@ -861,7 +861,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed)
 	if(vlen(self.origin - self.moveto) > 100)
 	{
 		float do_run = (self.enemy || self.monster_moveto);
-		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
+		if((IS_ONGROUND(self)) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 			Monster_CalculateVelocity(self, self.moveto, self.origin, true, ((do_run) ? runspeed : walkspeed));
 
 		if(time > self.pain_finished) // TODO: use anim_finished instead!
@@ -990,7 +990,7 @@ void Monster_Dead(entity attacker, float gibbed)
 	self.nextthink = time;
 	self.monster_lifetime = time + 5;
 
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 	{
 		Unfreeze(self); // remove any icy remains
 		self.health = 0; // reset by Unfreeze
@@ -1043,7 +1043,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, int deathty
 	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL.m_id && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
 
-	if(self.frozen && deathtype != DEATH_KILL.m_id && deathtype != DEATH_NADE_ICE_FREEZE.m_id)
+	if(STAT(FROZEN, self) && deathtype != DEATH_KILL.m_id && deathtype != DEATH_NADE_ICE_FREEZE.m_id)
 		return;
 
 	//if(time < self.pain_finished && deathtype != DEATH_KILL.m_id)
@@ -1134,7 +1134,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 		return;
 	}
 
-	float reverse = FALSE;
+	float reverse = false;
 	vector a, b;
 
 	makevectors(self.angles);
@@ -1145,11 +1145,11 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 
 	if(trace_fraction != 1.0)
 	{
-		reverse = TRUE;
+		reverse = true;
 
 		if(trace_ent)
 		if(IS_PLAYER(trace_ent) && !(trace_ent.items & IT_STRENGTH))
-			reverse = FALSE;
+			reverse = false;
 	}
 
 	// TODO: fix this... tracing is broken if the floor is thin
@@ -1159,7 +1159,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 		a = b - '0 0 32';
 		traceline(b, a, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1.0)
-			reverse = TRUE;
+			reverse = true;
 	} */
 
 	if(reverse)
@@ -1181,7 +1181,7 @@ void Monster_Move_2D(float mspeed, float allow_jumpoff)
 void Monster_Anim()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag)
+	if(IS_DEAD(self))
 	{
 		if (!deadbits)
 		{
@@ -1198,12 +1198,12 @@ void Monster_Anim()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK; // not that monsters can crouch currently...
 	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+	animdecide_setimplicitstate(self, (IS_ONGROUND(self)));
 
 	/* // weapon entities for monsters?
 	if (self.weaponentity)

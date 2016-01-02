@@ -1,4 +1,4 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "vote.qh"
 
 #include "common.qh"
@@ -11,11 +11,11 @@
 
 #include "../mutators/all.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/playerstats.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/playerstats.qh>
+#include <common/util.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual
@@ -356,7 +356,7 @@ void reset_map(bool dorespawn)
 		if (it.reset2) WITH(entity, self, it, it.reset2());
 	));
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.frozen, LAMBDA(WITH(entity, self, it, Unfreeze(it))));
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITH(entity, self, it, Unfreeze(it))));
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub

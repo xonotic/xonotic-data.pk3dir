@@ -1,4 +1,4 @@
-#define EFFECTINFO_PARSER(on) \
+#define EFFECTINFO_PARSER(on, MY) \
     on(type,                                        MY(type) \
     ,{ demand(n == 1 && "type");                    MY(type) = strzone(argv(1)); \
     }, sprintf(" %s",                               (MY(type)) \
@@ -206,7 +206,6 @@ CLASS(EffectInfo, Object)
         #define p(f, type, default) if (this.effectinfo_##f) { s = strcat(s, "\t", "MY("#f") = ", str_##type(this.effectinfo_##f), ";\n"); }
         FIELDS(p)
         #undef p
-        #undef MY
         return strcat(s, "}\n");
     }
 
@@ -214,7 +213,7 @@ CLASS(EffectInfo, Object)
         string s = sprintf("effect %s\n", this.effectinfo_name);
         #define MY(f) this.effectinfo_##f
         #define p(k, isset, parse, unparse) if (isset) { s = strcat(s, "\t", #k, unparse, "\n"); }
-        EFFECTINFO_PARSER(p)
+        EFFECTINFO_PARSER(p, MY)
         #undef p
         #undef MY
         return s;
@@ -246,7 +245,7 @@ void effectinfo_read()
         switch (k) {
             #define MY(f) info.effectinfo_##f
             #define p(k, isset, parse, unparse) case #k: parse break;
-            EFFECTINFO_PARSER(p)
+            EFFECTINFO_PARSER(p, MY)
             #undef p
             #undef MY
             default:

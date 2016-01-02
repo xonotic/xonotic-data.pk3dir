@@ -1,11 +1,11 @@
 #include "csqcprojectile.qh"
 
-#include "../../common/t_items.qh"
+#include <common/t_items.qh>
 
 #include "../command/common.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/weapons/all.qh"
+#include <common/constants.qh>
+#include <common/weapons/all.qh>
 
 .float csqcprojectile_type;
 
@@ -19,7 +19,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 	if(self.csqcprojectile_clientanimate)
 		sf |= 0x80; // client animated, not interpolated
 
-	if(self.flags & FL_ONGROUND)
+	if(IS_ONGROUND(self))
 		sf |= 0x40;
 
 	ft = fr = 0;
@@ -71,7 +71,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 void CSQCProjectile_Check(entity e)
 {
 	if(e.csqcprojectile_clientanimate)
-	if(e.flags & FL_ONGROUND)
+	if(IS_ONGROUND(e))
 	if(e.origin != e.csqcprojectile_oldorigin)
 		UpdateCSQCProjectile(e);
 	e.csqcprojectile_oldorigin = e.origin;

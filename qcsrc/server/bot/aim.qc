@@ -117,7 +117,7 @@ float bot_shouldattack(entity e)
 			return false;
 	}
 
-	if(e.frozen)
+	if(STAT(FROZEN, e))
 		return false;
 
 	if(teamplay)
@@ -131,7 +131,7 @@ float bot_shouldattack(entity e)
 
 	if (!e.takedamage)
 		return false;
-	if (e.deadflag)
+	if (IS_DEAD(e))
 		return false;
 	if (e.BUTTON_CHAT)
 		return false;

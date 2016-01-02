@@ -1,11 +1,11 @@
-#ifndef ITER_H
-#define ITER_H
+#pragma once
 
 #define FOREACH_ARRAY(arr, start, end, cond, body) \
 	MACRO_BEGIN \
 	{ \
-		for (int i = start; i < end; ++i) \
+		for (int _i = start; _i < end; ++_i) \
 		{ \
+			const noref int i = _i; \
 			const noref entity it = arr[i]; \
 			if (cond) { LAMBDA(body) } \
 		} \
@@ -14,9 +14,11 @@
 #define FOREACH_LIST(list, next, cond, body) \
 	MACRO_BEGIN \
 	{ \
-		int i = 0; \
-		for (entity it = list##_first; it; (it = it.next, ++i)) \
+		int _i = 0; \
+		for (entity _it = list##_first; _it; (_it = _it.next, ++_i)) \
 		{ \
+			const noref int i = _i; \
+			const noref entity it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
@@ -25,9 +27,10 @@
 	MACRO_BEGIN \
 	{ \
 		string _words = words; \
-		int i = 0; \
-		for (string _it; (_it = car(_words)); (_words = cdr(_words), ++i)) \
+		int _i = 0; \
+		for (string _it; (_it = car(_words)); (_words = cdr(_words), ++_i)) \
 		{ \
+			const noref int i = _i; \
 			const noref string it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
@@ -49,9 +52,10 @@
 	MACRO_BEGIN \
 	{ \
 		STRING_ITERATOR(iter, s, 0); \
-		int it; \
-		while ((it = STRING_ITERATOR_GET(iter)) > 0) \
+		int _it; \
+		while ((_it = STRING_ITERATOR_GET(iter)) > 0) \
 		{ \
+			const noref int it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
@@ -78,51 +82,71 @@
 
 #define FOREACH_ENTITY_UNORDERED(cond, body) \
 	MACRO_BEGIN { \
-		int i = 0; \
-		for (entity it = findchainentity_tofield(_FOREACH_ENTITY_fld, NULL, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		int _i = 0; \
+		for (entity _it = findchainentity_tofield(_FOREACH_ENTITY_fld, NULL, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
 		{ \
+			const noref int i = _i; \
+			const noref entity it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
 
 #define FOREACH_ENTITY_ORDERED(cond, body) \
 	MACRO_BEGIN { \
-		int i = 0; \
-		for (entity it = NULL; (it = nextent(it)); ++i) \
+		int _i = 0; \
+		for (entity _it = NULL; (_it = nextent(_it)); ++_i) \
 		{ \
+			const noref int i = _i; \
+			const noref entity it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
 
 #define FOREACH_ENTITY_FLOAT(fld, match, body) \
 	MACRO_BEGIN { \
-		int i = 0; \
-		for (entity it = _findchainfloat_tofield(fld, match, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		int _i = 0; \
+		for (entity _it = _findchainfloat_tofield(fld, match, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
 		{ \
+			const noref int i = _i; \
+			const noref entity it = _it; \
 			LAMBDA(body) \
 		} \
 	} MACRO_END
 
 #define FOREACH_ENTITY_FLAGS(fld, match, body) \
 	MACRO_BEGIN { \
-		int i = 0; \
-		for (entity it = _findchainflags_tofield(fld, match, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		int _i = 0; \
+		for (entity _it = _findchainflags_tofield(fld, match, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
 		{ \
+			const noref int i = _i; \
+			const noref entity it = _it; \
 			LAMBDA(body) \
 		} \
 	} MACRO_END
 
 #define FOREACH_ENTITY_CLASS(class, cond, body) \
 	MACRO_BEGIN { \
-		int i = 0; \
-		for (entity it = _findchainstring_tofield(classname, class, _FOREACH_ENTITY_next); it; (it = it._FOREACH_ENTITY_next, ++i)) \
+		int _i = 0; \
+		for (entity _it = _findchainstring_tofield(classname, class, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
 		{ \
+			const noref int i = _i; \
+			const noref entity it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
 
+#define FOREACH_ENTITY_ENT(fld, match, body) \
+	do { \
+		int _i = 0; \
+		for (entity _it = findchainentity_tofield(fld, match, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
+		{ \
+			const noref int i = _i; \
+			const noref entity it = _it; \
+			LAMBDA(body) \
+		} \
+	} \
+	while (0)
+
 #define FOREACH_ENTITY(cond, body) FOREACH_ENTITY_UNORDERED(cond, body)
 
 #define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
-
-#endif

@@ -285,32 +285,32 @@ float PlayerScore_Clear(entity player)
 
 void Score_ClearAll()
 {
-	entity p, sk;
-	float i, t;
-	FOR_EACH_CLIENTSLOT(p)
+	entity sk;
+	float t;
+	FOREACH_CLIENTSLOT(true,
 	{
-		sk = p.scorekeeper;
+		sk = it.scorekeeper;
 		if(!sk)
 			continue;
-		for(i = 0; i < MAX_SCORE; ++i)
+		for(int j = 0; j < MAX_SCORE; ++j)
 		{
-			if(sk.(scores[i]) != 0)
-				if(scores_label[i] != "")
-					sk.SendFlags |= pow(2, i);
-			sk.(scores[i]) = 0;
+			if(sk.(scores[j]) != 0)
+				if(scores_label[j] != "")
+					sk.SendFlags |= pow(2, j);
+			sk.(scores[j]) = 0;
 		}
-	}
+	});
 	for(t = 0; t < 16; ++t)
 	{
 		sk = teamscorekeepers[t];
 		if(!sk)
 			continue;
-		for(i = 0; i < MAX_TEAMSCORE; ++i)
+		for(int j = 0; j < MAX_TEAMSCORE; ++j)
 		{
-			if(sk.(teamscores[i]) != 0)
-				if(teamscores_label[i] != "")
-					sk.SendFlags |= pow(2, i);
-			sk.(teamscores[i]) = 0;
+			if(sk.(teamscores[j]) != 0)
+				if(teamscores_label[j] != "")
+					sk.SendFlags |= pow(2, j);
+			sk.(teamscores[j]) = 0;
 		}
 	}
 }
@@ -706,15 +706,15 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 
 	FOREACH_CLIENT(true, LAMBDA(it.(field) = 0));
 
-	FOR_EACH_CLIENT(p) if(p.scorekeeper)
+	FOREACH_CLIENT(it.scorekeeper,
 	{
 		if(nospectators)
-			if(p.frags == FRAGS_SPECTATOR)
+			if(it.frags == FRAGS_SPECTATOR)
 				continue;
 
-		p.chain = plist;
-		plist = p;
-	}
+		it.chain = plist;
+		plist = it;
+	});
 	// Now plist points to the whole list.
 
 	pfirst = plast = world;

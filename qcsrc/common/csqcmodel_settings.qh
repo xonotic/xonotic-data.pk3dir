@@ -81,9 +81,9 @@
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP() \
 	CSQCPlayer_SetViewLocation()
 
-// force updates of player entities that often even if unchanged
+// force updates of player entities this frequently (per second) even if unchanged
 #ifndef CSQCPLAYER_FORCE_UPDATES
-#define CSQCPLAYER_FORCE_UPDATES 0.25
+#define CSQCPLAYER_FORCE_UPDATES 4
 #endif
 
 // mod must define:

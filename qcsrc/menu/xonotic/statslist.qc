@@ -1,4 +1,4 @@
-#include "../../common/playerstats.qh"
+#include <common/playerstats.qh>
 
 #ifndef STATSLIST_H
 #define STATSLIST_H

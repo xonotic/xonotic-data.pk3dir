@@ -1,8 +1,8 @@
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-	#include "../../../../server/antilag.qh"
+	#include <server/antilag.qh>
 #endif
-#include "../../../physics/player.qh"
+#include <common/physics/player.qh>
 
 
 #if defined(SVQC)

@@ -60,10 +60,10 @@ void CA_count_alive_players()
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		switch(it.team)
 		{
-			case NUM_TEAM_1: ++total_players; if(it.deadflag == DEAD_NO) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(it.deadflag == DEAD_NO) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(it.deadflag == DEAD_NO) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(it.deadflag == DEAD_NO) ++pinkalive; break;
+			case NUM_TEAM_1: ++total_players; if(!IS_DEAD(it)) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(!IS_DEAD(it)) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(!IS_DEAD(it)) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(!IS_DEAD(it)) ++pinkalive; break;
 		}
 	));
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
@@ -178,7 +178,7 @@ bool CA_CheckTeams()
 
 bool ca_isEliminated(entity e)
 {
-	if(e.caplayer == 1 && (e.deadflag != DEAD_NO || e.frags == FRAGS_LMS_LOSER))
+	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_LMS_LOSER))
 		return true;
 	if(e.caplayer == 0.5)
 		return true;
@@ -190,12 +190,12 @@ entity CA_SpectateNext(entity player, entity start)
 {
     if (SAME_TEAM(start, player)) return start;
 	// continue from current player
-	for (entity e = start; (e = find(e, classname, "player")); )
+	for (entity e = start; (e = find(e, classname, STR_PLAYER)); )
 	{
 		if (SAME_TEAM(player, e)) return e;
 	}
 	// restart from begining
-	for (entity e = NULL; (e = find(e, classname, "player")); )
+	for (entity e = NULL; (e = find(e, classname, STR_PLAYER)); )
 	{
 		if (SAME_TEAM(player, e)) return e;
 	}
@@ -270,7 +270,7 @@ entity ca_LastPlayerForTeam()
 {SELFPARAM();
 	entity last_pl = world;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
-		if(it.deadflag == DEAD_NO)
+		if(!IS_DEAD(it))
 		if(SAME_TEAM(self, it))
 		if(!last_pl)
 			last_pl = it;
@@ -355,7 +355,7 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_target))
-	if(frag_target.deadflag == DEAD_NO)
+	if(!IS_DEAD(frag_target))
 	if(frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 

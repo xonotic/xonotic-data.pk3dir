@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 
-#include "../../server/miscfunctions.qh"
+#include <server/miscfunctions.qh>
 #include "../triggers/trigger/viewloc.qh"
 
 // client side physics
@@ -107,7 +107,7 @@ void PM_ClientMovement_Unstick(entity this)
 	#define X(unstick_offset) \
 	{ \
 		vector neworigin = unstick_offset + this.origin; \
-		tracebox(neworigin, PL_CROUCH_MIN, PL_CROUCH_MAX, neworigin, MOVE_NORMAL, this); \
+		tracebox(neworigin, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL), neworigin, MOVE_NORMAL, this); \
 		if (!trace_startsolid) \
 		{ \
 			setorigin(this, neworigin); \
@@ -138,7 +138,7 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		// wants to stand, if currently crouching we need to check for a low ceiling first
 		if (IS_DUCKED(this))
 		{
-			tracebox(this.origin, PL_MIN, PL_MAX, this.origin, MOVE_NORMAL, this);
+			tracebox(this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), this.origin, MOVE_NORMAL, this);
 			if (!trace_startsolid) UNSET_DUCKED(this);
 		}
 	}
@@ -1405,7 +1405,7 @@ void PM_Main(entity this)
 			this.spectatorspeed = maxspeed_mod;
 		if (this.impulse && this.impulse <= 19 || (this.impulse >= 200 && this.impulse <= 209) || (this.impulse >= 220 && this.impulse <= 229))
 		{
-			if (this.lastclassname != "player")
+			if (this.lastclassname != STR_PLAYER)
 			{
 				if (this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209))
 					this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);
@@ -1446,7 +1446,7 @@ void PM_Main(entity this)
 	}
 #endif
 
-	if(PHYS_DEAD(this))
+	if(IS_DEAD(this))
 	{
 		// handle water here
 		vector midpoint = ((this.absmin + this.absmax) * 0.5);

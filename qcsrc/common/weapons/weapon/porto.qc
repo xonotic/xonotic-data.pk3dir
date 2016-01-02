@@ -44,7 +44,7 @@ REGISTER_WEAPON(PORTO, porto, NEW(PortoLaunch));
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-#include "../../triggers/trigger/jumppads.qh"
+#include <common/triggers/trigger/jumppads.qh>
 
 spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
 
@@ -82,7 +82,7 @@ void W_Porto_Fail(float failhard)
 
 	self.realowner.porto_current = world;
 
-	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && self.realowner.deadflag == DEAD_NO && !(self.realowner.weapons & WEPSET(PORTO)))
+	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && !IS_DEAD(self.realowner) && !(self.realowner.weapons & WEPSET(PORTO)))
 	{
 		setsize(self, '-16 -16 0', '16 16 32');
 		setorigin(self, self.origin + trace_plane_normal);
@@ -131,7 +131,7 @@ void W_Porto_Touch()
 	norm = trace_plane_normal;
 	if(trace_ent.iscreature)
 	{
-		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * PL_MIN.z, MOVE_WORLDONLY, self);
+		traceline(trace_ent.origin, trace_ent.origin + '0 0 2' * STAT(PL_MIN, NULL).z, MOVE_WORLDONLY, self);
 		if(trace_fraction >= 1)
 			return;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)

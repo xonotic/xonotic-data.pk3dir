@@ -132,7 +132,11 @@ void RegisterCallbacks() {};
         return ret; \
     } \
     [[accumulate]] void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
-#define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+#ifdef __STDC__
+    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+#else
+    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+#endif
 
 enum {
     MUTATOR_REMOVING,
@@ -289,7 +293,8 @@ STATIC_INIT_LATE(Mutators) {
     [[accumulate]] void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \
-    EVAL(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
+    EVAL_MUTATOR_HOOKFUNCTION(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
+#define EVAL_MUTATOR_HOOKFUNCTION(...) __VA_ARGS__
 
 #define MUTATOR_HOOKFUNCTION_2(mut, cb) \
     MUTATOR_HOOKFUNCTION_3(mut, cb, CBC_ORDER_ANY)

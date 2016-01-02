@@ -1,5 +1,4 @@
-#ifndef SELF_H
-#define SELF_H
+#pragma once
 
 // Transition from global 'self' to local 'this'
 
@@ -32,6 +31,4 @@
 #if 0
 	#define SELFPARAM() noref const entity this = __self
 	#define self this
-#endif
-
 #endif

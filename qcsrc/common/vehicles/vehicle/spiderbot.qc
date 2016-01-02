@@ -7,6 +7,8 @@ CLASS(Spiderbot, Vehicle)
 /* spawnflags */ ATTRIB(Spiderbot, spawnflags, int, VHF_DMGSHAKE);
 /* mins       */ ATTRIB(Spiderbot, mins, vector, '-75 -75 10');
 /* maxs       */ ATTRIB(Spiderbot, maxs, vector, '75 75 125');
+/* view offset*/ ATTRIB(Spiderbot, view_ofs, vector, '0 0 70');
+/* view dist  */ ATTRIB(Spiderbot, height, float, 170);
 /* model	  */ ATTRIB(Spiderbot, mdl, string, "models/vehicles/spiderbot.dpm");
 /* model	  */ ATTRIB(Spiderbot, model, string, "models/vehicles/spiderbot.dpm");
 /* head_model */ ATTRIB(Spiderbot, head_model, string, "models/vehicles/spiderbot_top.dpm");
@@ -82,9 +84,10 @@ float spiderbot_frame()
 
 	player = self;
 	spider = self.vehicle;
-	setself(spider);
 
-	vehicles_painframe();
+	vehicles_frame(spider, player);
+
+	setself(spider);
 
 	player.BUTTON_ZOOM	  = 0;
 	player.BUTTON_CROUCH	= 0;
@@ -134,12 +137,12 @@ float spiderbot_frame()
 
 	movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend, autocvar_g_vehicle_spiderbot_tiltlimit);
 
-	if(spider.flags & FL_ONGROUND)
+	if(IS_ONGROUND(spider))
 		spider.jump_delay = time; // reset now so movement can begin
 
-	//if(spider.flags & FL_ONGROUND)
+	//if(IS_ONGROUND(spider))
 	{
-		if(spider.flags & FL_ONGROUND)
+		if(IS_ONGROUND(spider))
 		if(spider.frame == 4 && self.tur_head.wait != 0)
 		{
 			sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_LAND, VOL_VEHICLEENGINE, ATTEN_NORM);
@@ -149,7 +152,7 @@ float spiderbot_frame()
 		if(!player.BUTTON_JUMP)
 			spider.BUTTON_JUMP = 0;
 
-		if((spider.flags & FL_ONGROUND) && player.BUTTON_JUMP && !spider.BUTTON_JUMP && self.tur_head.wait < time)
+		if((IS_ONGROUND(spider)) && player.BUTTON_JUMP && !spider.BUTTON_JUMP && self.tur_head.wait < time)
 		{
 			sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_JUMP, VOL_VEHICLEENGINE, ATTEN_NORM);
 			//dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
@@ -171,7 +174,7 @@ float spiderbot_frame()
 			if(movefix_y == 0 && movefix_x == 0)
 				sd = v_forward; // always do forward
 
-			spider.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(spider);
 
 			spider.velocity = sd * 700 + rt * 600 + v_up * 600;
 			spider.frame = 4;
@@ -180,7 +183,7 @@ float spiderbot_frame()
 		{
 			if(vlen(player.movement) == 0)
 			{
-				if(spider.flags & FL_ONGROUND)
+				if(IS_ONGROUND(spider))
 				{
 					if(self.sound_nexttime < time || self.delay != 3)
 					{
@@ -210,13 +213,13 @@ float spiderbot_frame()
 					if(player.movement_x > 0)
 					{
 						player.movement_x = 1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 0;
 					}
 					else if(player.movement_x < 0)
 					{
 						player.movement_x = -1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 1;
 					}
 					player.movement_y = 0;
@@ -226,7 +229,7 @@ float spiderbot_frame()
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
 						spider.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
-					if(spider.flags & FL_ONGROUND)
+					if(IS_ONGROUND(spider))
 					if(self.sound_nexttime < time || self.delay != 1)
 					{
 						self.delay = 1;
@@ -240,13 +243,13 @@ float spiderbot_frame()
 					if(player.movement_y < 0)
 					{
 						player.movement_y = -1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 2;
 					}
 					else if(player.movement_y > 0)
 					{
 						player.movement_y = 1;
-						if(spider.flags & FL_ONGROUND)
+						if(IS_ONGROUND(spider))
 							spider.frame = 3;
 					}
 
@@ -256,7 +259,7 @@ float spiderbot_frame()
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
 						spider.velocity_z -= g * sys_frametime * autocvar_sv_gravity;
-					if(spider.flags & FL_ONGROUND)
+					if(IS_ONGROUND(spider))
 					if(self.sound_nexttime < time || self.delay != 2)
 					{
 						self.delay = 2;
@@ -449,7 +452,8 @@ void spiderbot_blowup()
 	b.angles = self.angles;
 	setsize(b, self.mins, self.maxs);
 
-	setorigin(h, gettaginfo(self, gettagindex(self, "tag_head")));
+	vector org = gettaginfo(self, gettagindex(self, "tag_head"));
+	setorigin(h, org);
 	h.movetype = MOVETYPE_BOUNCE;
 	h.solid = SOLID_BBOX;
 	h.velocity = v_up * (500 + random() * 500) + randomvec() * 128;
@@ -464,13 +468,15 @@ void spiderbot_blowup()
 	h.think = spiderbot_headfade;
 	h.nextthink = time;
 
-	setorigin(g1, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint01")));
+	org = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint01"));
+	setorigin(g1, org);
 	g1.movetype = MOVETYPE_TOSS;
 	g1.solid = SOLID_CORPSE;
 	g1.velocity = v_forward * 700 + (randomvec() * 32);
 	g1.avelocity = randomvec() * 180;
 
-	setorigin(g2, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint02")));
+	org = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint02"));
+	setorigin(g2, org);
 	g2.movetype = MOVETYPE_TOSS;
 	g2.solid = SOLID_CORPSE;
 	g2.velocity = v_forward * 700 + (randomvec() * 32);
@@ -569,7 +575,7 @@ spawnfunc(vehicle_spiderbot)
 		}
 		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh))
 		{
-			if(self.flags & FL_ONGROUND)
+			if(IS_ONGROUND(self))
 				movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
 		}
 		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh))

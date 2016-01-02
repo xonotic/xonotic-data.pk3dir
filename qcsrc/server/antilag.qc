@@ -97,7 +97,8 @@ void antilag_takeback(entity e, float t)
 	if(!e.antilag_takenback)
 		e.antilag_saved_origin = e.origin;
 
-	setorigin(e, antilag_takebackorigin(e, t));
+	vector org = antilag_takebackorigin(e, t);
+	setorigin(e, org);
 	e.antilag_takenback = true;
 }
 

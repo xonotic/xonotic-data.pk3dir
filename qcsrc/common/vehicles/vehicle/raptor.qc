@@ -8,6 +8,8 @@ CLASS(Raptor, Vehicle)
 /* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
 /* mins       */ ATTRIB(Raptor, mins, vector, '-80 -80 0');
 /* maxs       */ ATTRIB(Raptor, maxs, vector, '80 80 70');
+/* view offset*/ ATTRIB(Raptor, view_ofs, vector, '0 0 160');
+/* view dist  */ ATTRIB(Raptor, height, float, 200);
 /* model	  */ ATTRIB(Raptor, mdl, string, "models/vehicles/raptor.dpm");
 /* model	  */ ATTRIB(Raptor, model, string, "models/vehicles/raptor.dpm");
 /* head_model */ ATTRIB(Raptor, head_model, string, "");
@@ -114,7 +116,7 @@ void raptor_exit(float eject)
 	vector spot;
 	self.tur_head.exteriormodeltoclient = world;
 
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		self.think	  = raptor_land;
 		self.nextthink  = time;
@@ -173,7 +175,8 @@ float raptor_frame()
 	raptor = self.vehicle;
 	setself(raptor);
 
-	vehicles_painframe();
+	vehicles_frame(raptor, player);
+
 	/*
 	ftmp = vlen(self.velocity);
 	if(ftmp > autocvar_g_vehicle_raptor_speed_forward)
@@ -198,7 +201,7 @@ float raptor_frame()
 	}
 	*/
 
-	if(raptor.deadflag != DEAD_NO)
+	if(IS_DEAD(raptor))
 	{
 		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
@@ -291,13 +294,13 @@ float raptor_frame()
 	// Target lock & predict
 	if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
 	{
-		if(raptor.gun1.lock_time < time || raptor.gun1.enemy.deadflag)
+		if(raptor.gun1.lock_time < time || IS_DEAD(raptor.gun1.enemy) || STAT(FROZEN, raptor.gun1.enemy))
 			raptor.gun1.enemy = world;
 
 		if(trace_ent)
 		if(trace_ent.movetype)
 		if(trace_ent.takedamage)
-		if(!trace_ent.deadflag)
+		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 		{
 			if(teamplay)
 			{

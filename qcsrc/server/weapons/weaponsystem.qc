@@ -5,14 +5,14 @@
 #include "../command/common.qh"
 #include "../mutators/all.qh"
 #include "../round_handler.qh"
-#include "../../common/t_items.qh"
-#include "../../common/animdecide.qh"
-#include "../../common/constants.qh"
-#include "../../common/monsters/all.qh"
-#include "../../common/notifications.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
-#include "../../lib/csqcmodel/sv_model.qh"
+#include <common/t_items.qh>
+#include <common/animdecide.qh>
+#include <common/constants.qh>
+#include <common/monsters/all.qh>
+#include <common/notifications.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
+#include <lib/csqcmodel/sv_model.qh>
 
 .int state;
 
@@ -74,7 +74,7 @@ void CL_Weaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (this.owner.deadflag != DEAD_NO)
+	if (IS_DEAD(self.owner))
 	{
 		// owner died; disappear
 		this.model = "";
@@ -115,7 +115,7 @@ void CL_ExteriorWeaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (this.owner.deadflag != DEAD_NO)
+	if (IS_DEAD(self.owner))
 	{
 		this.model = "";
 		return;
@@ -402,7 +402,7 @@ bool forbidWeaponUse(entity player)
 	if (time < game_starttime && !autocvar_sv_ready_restart_after_countdown) return true;
 	if (round_handler_IsActive() && !round_handler_IsRoundStarted()) return true;
 	if (player.player_blocked) return true;
-	if (player.frozen) return true;
+	if (STAT(FROZEN, player)) return true;
 	if (player.weapon_blocked) return true;
 	return false;
 }

@@ -119,10 +119,10 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 
 #ifdef SVQC
 
-#include "../../../gamemodes/all.qh"
-#include "../../../monsters/spawn.qh"
-#include "../../../monsters/sv_monsters.qh"
-#include "../../../../server/g_subs.qh"
+#include <common/gamemodes/all.qh>
+#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_monsters.qh>
+#include <server/g_subs.qh>
 
 REGISTER_MUTATOR(nades, cvar("g_nades"));
 
@@ -175,7 +175,7 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		if(e.takedamage == DAMAGE_AIM)
 		if(self.realowner != e || autocvar_g_nades_napalm_selfdamage)
 		if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
-		if(!e.frozen)
+		if(!STAT(FROZEN, e))
 		{
 			p = e.origin;
 			p.x += e.mins.x + random() * (e.maxs.x - e.mins.x);
@@ -403,10 +403,10 @@ void nade_ice_think()
 	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
 	if(e != self)
 	if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(e, self.realowner) || e == self.realowner))
-	if(e.takedamage && e.deadflag == DEAD_NO)
+	if(e.takedamage && !IS_DEAD(e))
 	if(e.health > 0)
 	if(!e.revival_time || ((time - e.revival_time) >= 1.5))
-	if(!e.frozen)
+	if(!STAT(FROZEN, e))
 	if(current_freeze_time > 0)
 		nade_ice_freeze(self, e, current_freeze_time);
 }
@@ -509,8 +509,8 @@ void nade_heal_touch()
 	float maxhealth;
 	float health_factor;
 	if(IS_PLAYER(other) || IS_MONSTER(other))
-	if(other.deadflag == DEAD_NO)
-	if(!other.frozen)
+	if(!IS_DEAD(other))
+	if(!STAT(FROZEN, other))
 	{
 		health_factor = autocvar_g_nades_heal_rate*frametime/2;
 		if ( other != self.realowner )
@@ -648,10 +648,11 @@ void nade_boom()
 		case NADE_TYPE_MONSTER: nade_monster_boom(); break;
 	}
 
-	entity head;
-	for(head = world; (head = find(head, classname, "grapplinghook")); )
-	if(head.aiment == self)
-		RemoveGrapplingHook(head.realowner);
+	FOREACH_ENTITY_ENT(aiment, self,
+	{
+		if(it.classname == "grapplinghook")
+			RemoveGrapplingHook(it.realowner);
+	});
 
 	remove(self);
 }
@@ -670,10 +671,11 @@ void nade_touch()
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
-		entity head;
-		for(head = world; (head = find(head, classname, "grapplinghook")); )
-		if(head.aiment == self)
-			RemoveGrapplingHook(head.realowner);
+		FOREACH_ENTITY_ENT(aiment, self,
+		{
+			if(it.classname == "grapplinghook")
+				RemoveGrapplingHook(it.realowner);
+		});
 		remove(self);
 		return;
 	}
@@ -743,7 +745,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	self.velocity += force;
 	UpdateCSQCProjectile(self);
 
-	if(damage <= 0 || ((self.flags & FL_ONGROUND) && IS_PLAYER(attacker)))
+	if(damage <= 0 || ((IS_ONGROUND(self)) && IS_PLAYER(attacker)))
 		return;
 
 	if(self.health == self.max_health)
@@ -849,8 +851,8 @@ void nades_GiveBonus(entity player, float score)
 	if (autocvar_g_nades_bonus)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max)
-	if (player.frozen == 0)
-	if (player.deadflag == DEAD_NO)
+	if (STAT(FROZEN, player) == 0)
+	if (!IS_DEAD(player))
 	{
 		if ( player.bonus_nade_score < 1 )
 			player.bonus_nade_score += score/autocvar_g_nades_bonus_score_max;
@@ -965,7 +967,7 @@ float CanThrowNade()
 	if(gameover)
 		return false;
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return false;
 
 	if (!autocvar_g_nades)
@@ -1130,21 +1132,21 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
-			if(it.deadflag == DEAD_NO)
-			if(it.frozen == 0)
+			if(!IS_DEAD(it))
+			if(STAT(FROZEN, it) == 0)
 			if(SAME_TEAM(it, self))
 			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
 					o = it;
-				if(self.frozen == 1)
+				if(STAT(FROZEN, self) == 1)
 					it.reviving = true;
 				++n;
 			}
 		));
 	}
 
-	if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
+	if(n && STAT(FROZEN, self) == 3) // OK, there is at least one teammate reviving us
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		self.health = max(1, self.revive_progress * start_health);
@@ -1198,7 +1200,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 {
 	if(frag_target.nade)
-	if(!frag_target.frozen || !autocvar_g_freezetag_revive_nade)
+	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
 		toss_nade(frag_target, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
 	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
@@ -1231,7 +1233,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 
 MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 {
-	if(frag_target.frozen)
+	if(STAT(FROZEN, frag_target))
 	if(autocvar_g_freezetag_revive_nade)
 	if(frag_attacker == frag_target)
 	if(frag_deathtype == DEATH_NADE.m_id)

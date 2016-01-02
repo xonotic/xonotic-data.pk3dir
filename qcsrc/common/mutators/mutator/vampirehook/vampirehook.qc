@@ -14,7 +14,7 @@ MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
 
 	if(IS_PLAYER(self.aiment))
 	if(self.last_dmg < time)
-	if(!self.aiment.frozen)
+	if(!STAT(FROZEN, self.aiment))
 	if(time >= game_starttime)
 	if(DIFF_TEAM(self.owner, self.aiment) || autocvar_g_vampirehook_teamheal)
 	if(self.aiment.health > 0)

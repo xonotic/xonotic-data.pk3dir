@@ -1,11 +1,11 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "common.qh"
 
 #include "../scores.qh"
 
-#include "../../common/monsters/all.qh"
-#include "../../common/notifications.qh"
-#include "../../lib/warpzone/common.qh"
+#include <common/monsters/all.qh>
+#include <common/notifications.qh>
+#include <lib/warpzone/common.qh>
 
 
 // ====================================================
@@ -245,7 +245,7 @@ void timeout_handler_think()
 
 				// reset all the flood variables
 				FOREACH_CLIENT(true, LAMBDA(
-					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat = 
+					it.nickspamcount = it.nickspamtime = it.floodcontrol_chat =
 						it.floodcontrol_chatteam = it.floodcontrol_chattell =
 							it.floodcontrol_voice = it.floodcontrol_voiceteam = 0;
 				));
@@ -377,8 +377,8 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!IS_PLAYER(caller)) { print_to(caller, "You must be playing to spawn a monster"); return; }
 					if (MUTATOR_CALLHOOK(AllowMobSpawning)) { print_to(caller, ret_string); return; }
 					if (caller.vehicle) { print_to(caller, "You can't spawn monsters while driving a vehicle"); return; }
-					if (caller.frozen) { print_to(caller, "You can't spawn monsters while frozen"); return; }
-					if (caller.deadflag != DEAD_NO) { print_to(caller, "You can't spawn monsters while dead"); return; }
+					if (STAT(FROZEN, caller)) { print_to(caller, "You can't spawn monsters while frozen"); return; }
+					if (IS_DEAD(caller)) { print_to(caller, "You can't spawn monsters while dead"); return; }
 					if (tmp_moncount >= autocvar_g_monsters_max) { print_to(caller, "The maximum monster count has been reached"); return; }
 					if (tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
 

@@ -1,7 +1,6 @@
 #ifndef TURRETS_UTIL_H
 #define TURRETS_UTIL_H
 
-vector real_origin(entity ent);
 float shortangle_f(float ang1, float ang2);
 float anglemods(float v);
 float turret_tag_fire_update();

@@ -2,7 +2,7 @@
 
 #include "hud/all.qh"
 
-#include "../common/mutators/mutator/waypoints/all.qh"
+#include <common/mutators/mutator/waypoints/all.qh>
 
 #include "../lib/csqcmodel/interpolate.qh"
 

@@ -35,6 +35,9 @@ float PreviewExists(string name);
 vector rotate(vector v, float a);
 
 
+#define IS_DEAD(s) (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : ((s).health <= 0))
+
+
 // decolorizes and team colors the player name when needed
 string playername(string thename, float teamid);
 

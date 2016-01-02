@@ -480,7 +480,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, PL_MIN, PL_MAX, o - '0 0 32768', MOVE_WORLDONLY, world);
+		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, world);
 		if(trace_fraction == 1)
 			continue;
 
@@ -1496,7 +1496,7 @@ void CheckRules_Player()
 	if (gameover)	// someone else quit the game already
 		return;
 
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 		self.play_time += frametime;
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
@@ -1718,7 +1718,7 @@ float WinningCondition_RanOutOfSpawns()
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
 		switch(it.team)
 		{
 			case NUM_TEAM_1: team1_score = 1; break;

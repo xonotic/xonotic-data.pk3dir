@@ -58,7 +58,6 @@ bool autocvar_bot_nofire;
 #define autocvar_bot_suffix cvar_string("bot_suffix")
 bool autocvar_bot_usemodelnames;
 int autocvar_bot_vs_human;
-int autocvar_bot_debug;
 bool autocvar_bot_debug_tracewalk;
 bool autocvar_bot_debug_goalstack;
 bool autocvar_bot_wander_enable;

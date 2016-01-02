@@ -26,14 +26,14 @@ MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 {SELFPARAM();
 	if(time > self.touchexplode_time)
 	if(!gameover)
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	if(IS_PLAYER(self))
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	if(!IS_INDEPENDENT_PLAYER(self))
 		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
 			if(time > it.touchexplode_time)
-			if(!it.frozen)
-			if(it.deadflag == DEAD_NO)
+			if(!STAT(FROZEN, it))
+			if(!IS_DEAD(it))
 			if (!IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(self.absmin, self.absmax, it.absmin, it.absmax))
 			{

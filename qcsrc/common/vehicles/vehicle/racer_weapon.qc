@@ -1,7 +1,7 @@
 #ifndef VEHICLE_RACER_WEAPON_H
 #define VEHICLE_RACER_WEAPON_H
 
-#include "../../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 CLASS(RacerAttack, PortoLaunch)
 /* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -109,7 +109,7 @@ void racer_rocket_tracker()
 
     self.nextthink  = time;
 
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+    if (IS_DEAD(self.owner) || self.cnt < time)
     {
         self.use();
         return;
@@ -161,7 +161,7 @@ void racer_rocket_groundhugger()
 
     self.nextthink  = time;
 
-    if(self.owner.deadflag != DEAD_NO || self.cnt < time)
+    if(IS_DEAD(self.owner) || self.cnt < time)
     {
         self.use();
         return;

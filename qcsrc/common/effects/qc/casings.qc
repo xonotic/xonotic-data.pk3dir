@@ -1,9 +1,9 @@
 #ifdef IMPLEMENTATION
 
-#include "../../util.qh"
+#include <common/util.qh>
 
 #ifdef CSQC
-#include "../../physics/movetypes/movetypes.qh"
+#include <common/physics/movetypes/movetypes.qh>
 #include "rubble.qh"
 #endif
 
@@ -49,7 +49,7 @@ void Casing_Draw(entity this)
     {
         self.move_angles_x = 0;
         self.move_angles_z = 0;
-        self.flags &= ~FL_ONGROUND;
+        UNSET_ONGROUND(self);
     }
 
     Movetype_Physics_MatchTicrate(self, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
@@ -90,7 +90,7 @@ void Casing_Touch()
     if (!self.silent)
     if (!trace_ent || trace_ent.solid == SOLID_BSP)
     {
-        if (vlen(self.velocity) > 50)
+        if(vdist(self.velocity, >, 50))
         {
             if (time >= self.nextthink)
             {

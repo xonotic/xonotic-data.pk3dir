@@ -240,10 +240,10 @@ void GrapplingHookThink()
 					{
 						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
-						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
+						if((frozen_pulling && STAT(FROZEN, self.aiment)) || !frozen_pulling)
 						{
 							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-							self.aiment.flags &= ~FL_ONGROUND;
+							UNSET_ONGROUND(self.aiment);
 							if(self.aiment.flags & FL_PROJECTILE)
 								UpdateCSQCProjectile(self.aiment);
 						}
@@ -255,13 +255,13 @@ void GrapplingHookThink()
 					}
 				}
 
-				pull_entity.flags &= ~FL_ONGROUND;
+				UNSET_ONGROUND(pull_entity);
 			}
 
 			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
 				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(self, pull_entity, v * velocity_multiplier);
 
-			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !self.aiment.frozen)
+			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, self.aiment))
 			{
 				RemoveGrapplingHook(self.realowner);
 				return;
@@ -280,7 +280,7 @@ void GrapplingHookThink()
 			self.realowner.velocity = dir*spd;
 			self.realowner.movetype = MOVETYPE_FLY;
 
-			self.realowner.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(self.realowner);
 		}
 	}
 

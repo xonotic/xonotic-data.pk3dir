@@ -1,4 +1,4 @@
-#include "../../common/mapinfo.qh"
+#include <common/mapinfo.qh>
 
 #ifndef DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
 #define DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H

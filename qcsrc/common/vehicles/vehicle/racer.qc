@@ -7,6 +7,8 @@ CLASS(Racer, Vehicle)
 /* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
 /* mins       */ ATTRIB(Racer, mins, vector, '-120 -120 -40' * 0.5);
 /* maxs       */ ATTRIB(Racer, maxs, vector, '120 120 40' * 0.5);
+/* view offset*/ ATTRIB(Racer, view_ofs, vector, '0 0 50');
+/* view dist  */ ATTRIB(Racer, height, float, 200);
 /* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
 /* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
 /* head_model */ ATTRIB(Racer, head_model, string, "null");
@@ -27,7 +29,7 @@ REGISTER_VEHICLE(RACER, NEW(Racer));
 #include "racer_weapon.qc"
 
 #ifdef SVQC
-#include "../../triggers/trigger/impulse.qh"
+#include <common/triggers/trigger/impulse.qh>
 
 bool autocvar_g_vehicle_racer;
 
@@ -177,12 +179,12 @@ float racer_frame()
 	racer   = self.vehicle;
 	setself(racer);
 
-	vehicles_painframe();
+	vehicles_frame(racer, player);
 
 	if(pointcontents(racer.origin) != CONTENT_WATER)
 		racer.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
-	if(racer.deadflag != DEAD_NO)
+	if(IS_DEAD(racer))
 	{
 		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;

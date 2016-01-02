@@ -1,10 +1,10 @@
 #include "common.qh"
 
 #if defined(CSQC)
-    #include "../../common/t_items.qh"
+    #include <common/t_items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../common/weapons/all.qh"
+    #include <common/weapons/all.qh>
 #endif
 
 void WarpZone_Accumulator_Clear(entity acc)
@@ -387,7 +387,8 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 			goto fail;
 		}
 		WarpZone_Trace_AddTransform(wz);
-		setorigin(e, WarpZone_TransformOrigin(wz, e.origin));
+		vector org = WarpZone_TransformOrigin(wz, e.origin);
+		setorigin(e, org);
 		e.velocity = WarpZone_TransformVelocity(wz, e.velocity);
 	}
 	WarpZone_MakeAllSolid();

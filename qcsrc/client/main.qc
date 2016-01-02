@@ -1,26 +1,26 @@
 #include "main.qh"
 
-#include "../common/effects/qc/all.qh"
+#include <common/effects/qc/all.qh>
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
 #include "quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "../common/t_items.qh"
+#include <common/t_items.qh>
 #include "wall.qh"
 #include "weapons/projectile.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/items/all.qh"
-#include "../common/mapinfo.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/minigames/cl_minigames_hud.qh"
-#include "../common/net_notice.qh"
-#include "../common/triggers/include.qh"
-#include "../common/vehicles/all.qh"
-#include "../lib/csqcmodel/cl_model.qh"
-#include "../lib/csqcmodel/interpolate.qh"
-#include "../lib/warpzone/client.qh"
+#include <common/deathtypes/all.qh>
+#include <common/items/all.qh>
+#include <common/mapinfo.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/minigames/cl_minigames_hud.qh>
+#include <common/net_notice.qh>
+#include <common/triggers/include.qh>
+#include <common/vehicles/all.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include <lib/csqcmodel/interpolate.qh>
+#include <lib/warpzone/client.qh>
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
@@ -714,8 +714,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 void CSQC_Ent_Update(bool isnew)
 {
 	SELFPARAM();
-	this.sourceLocLine = __LINE__;
-	this.sourceLocFile = __FILE__;
+	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes

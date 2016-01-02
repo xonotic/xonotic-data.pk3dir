@@ -157,7 +157,7 @@ void walker_rocket_think()
     m_speed = vlen(self.velocity);
 
     // Enemy dead? just keep on the current heading then.
-    if (self.enemy == world || self.enemy.deadflag != DEAD_NO)
+    if (self.enemy == world || IS_DEAD(self.enemy))
         self.enemy = world;
 
     if (self.enemy)
@@ -630,7 +630,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 #endif // SVQC
 #ifdef CSQC
 
-#include "../../physics/movelib.qh"
+#include <common/physics/movelib.qh>
 
 void walker_draw(entity this)
 {

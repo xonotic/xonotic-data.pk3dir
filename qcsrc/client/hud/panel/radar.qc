@@ -343,7 +343,7 @@ void HUD_Radar()
 		if ( it.team == myteam+1 )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
-			if ( vlen(mousepos-coord) < 8 )
+			if(vdist((mousepos - coord), <, 8))
 			{
 				vector brightcolor;
 				brightcolor_x = min(1,it.teamradar_color_x*1.5);

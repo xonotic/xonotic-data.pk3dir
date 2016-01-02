@@ -382,3 +382,22 @@ void minigame_prompt()
 			_("It's your turn"), "");
 	}
 }
+
+// handle commands etc.
+REGISTER_MUTATOR(minigames, true);
+
+MUTATOR_HOOKFUNCTION(minigames, HUD_Command)
+{
+	if(MUTATOR_RETURNVALUE) { return false; } // command was already handled
+
+	if(argv(1) == "minigame")
+	{
+		if (HUD_MinigameMenu_IsOpened())
+			HUD_MinigameMenu_Close();
+		else
+			HUD_MinigameMenu_Open();
+		return true;
+	}
+
+	return false;
+}

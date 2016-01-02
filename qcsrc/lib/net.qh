@@ -1,5 +1,4 @@
-#ifndef NET_H
-#define NET_H
+#pragma once
 
 #include "registry.qh"
 #include "sort.qh"
@@ -43,8 +42,7 @@ STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id
 		[[accumulate]] NET_HANDLE(id, bool isnew) \
 		{ \
 			this = self; \
-			this.sourceLocFile = __FILE__; \
-			this.sourceLocLine = __LINE__; \
+			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
 			if (!this) isnew = true; \
 		} \
 		REGISTER(LinkedEntities, NET, id, m_id, new_pure(net_linked_packet)) \
@@ -359,6 +357,4 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			msg_entity = prev; \
 		} MACRO_END
 	#endif
-#endif
-
 #endif

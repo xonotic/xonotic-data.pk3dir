@@ -127,7 +127,7 @@ void DropOwner()
 	DropBall(self, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle.y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
-	ownr.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(ownr);
 }
 
 void GiveBall(entity plyr, entity ball)
@@ -199,7 +199,7 @@ void DropBall(entity ball, vector org, vector vel)
 	setattachment(ball, world, "");
 	setorigin(ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(ball);
 	ball.scale = ball_scale;
 	ball.velocity = vel;
 	ball.nb_droptime = time;
@@ -225,7 +225,7 @@ void DropBall(entity ball, vector org, vector vel)
 void InitBall()
 {SELFPARAM();
 	if(gameover) return;
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 	self.movetype = MOVETYPE_BOUNCE;
 	if(self.classname == "nexball_basketball")
 		self.touch = basketball_touch;
@@ -331,7 +331,7 @@ void basketball_touch()
 		football_touch();
 		return;
 	}
-	if(!self.cnt && IS_PLAYER(other) && !other.frozen && !other.deadflag && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && !STAT(FROZEN, other) && !IS_DEAD(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -726,10 +726,10 @@ void W_Nexball_Touch()
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
+		if((ball = other.ballcarried) && !STAT(FROZEN, other) && !IS_DEAD(other) && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
-			other.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(other);
 			if(!attacker.ballcarried)
 			{
 				LogNB("stole", attacker);
@@ -930,10 +930,11 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 			self.ballcarried.velocity = self.velocity;
 			self.ballcarried.customizeentityforclient = ball_customize;
 
-			setorigin(self.ballcarried, self.origin + self.view_ofs +
+			vector org = self.origin + self.view_ofs +
 					  v_forward * autocvar_g_nexball_viewmodel_offset.x +
 					  v_right * autocvar_g_nexball_viewmodel_offset.y +
-					  v_up * autocvar_g_nexball_viewmodel_offset.z);
+					  v_up * autocvar_g_nexball_viewmodel_offset.z;
+			setorigin(self.ballcarried, org);
 
 			// 'safe passing'
 			if(autocvar_g_nexball_safepass_maxdist)
@@ -949,7 +950,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				crosshair_trace(self);
 				if( trace_ent &&
 					IS_CLIENT(trace_ent) &&
-					trace_ent.deadflag == DEAD_NO &&
+					!IS_DEAD(trace_ent) &&
 					trace_ent.team == self.team &&
 					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )
 				{

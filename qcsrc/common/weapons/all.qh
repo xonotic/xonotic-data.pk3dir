@@ -21,13 +21,13 @@ WepSet ReadWepSet();
 
 #ifndef MENUQC
 #include "calculations.qh"
-#include "../models/all.qh"
+#include <common/models/all.qh>
 #endif
 
 #include "../util.qh"
 
 #ifdef SVQC
-#include "../../server/bot/aim.qh"
+#include <server/bot/aim.qh>
 #endif
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
@@ -119,7 +119,8 @@ STATIC_INIT_LATE(W_PROP_reloader)
 }
 #endif
 
-#define REGISTER_WEAPON(...) EVAL(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define REGISTER_WEAPON(...) EVAL_REGISTER_WEAPON(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define EVAL_REGISTER_WEAPON(...) __VA_ARGS__
 #define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
 /** TODO: deprecated - remove */
 #define REGISTER_WEAPON_3(id, sname, inst) \
@@ -205,8 +206,7 @@ X(reload_time, float)
             noref entity b = this.baseline; \
             if (!b) \
             { \
-                b = this.baseline = new(baseline); \
-                make_pure(b); \
+                b = this.baseline = new_pure(baseline); \
                 b.baseline_target = this; \
             }
         #ifdef SVQC

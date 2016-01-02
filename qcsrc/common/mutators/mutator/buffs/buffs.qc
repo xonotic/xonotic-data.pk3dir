@@ -73,8 +73,8 @@ const vector BUFF_MAX = ('16 16 20');
 
 #ifdef IMPLEMENTATION
 
-#include "../../../triggers/target/music.qh"
-#include "../../../gamemodes/all.qh"
+#include <common/triggers/target/music.qh>
+#include <common/gamemodes/all.qh>
 
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit();
@@ -198,7 +198,7 @@ void buff_Respawn(entity this)
 	vector oldbufforigin = this.origin;
 	this.velocity = '0 0 200';
 
-	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 
+	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY,
 		((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(true);
@@ -237,7 +237,7 @@ void buff_Touch()
 	}
 
 	if((self.team && DIFF_TEAM(other, self))
-	|| (other.frozen)
+	|| (STAT(FROZEN, other))
 	|| (other.vehicle)
 	|| (!self.buff_active)
 	)
@@ -334,7 +334,7 @@ void buff_Think()
 	}
 
 	if(!self.buff_active && !self.buff_activetime)
-	if(!self.owner || self.owner.frozen || self.owner.deadflag != DEAD_NO || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
+	if(!self.owner || STAT(FROZEN, self.owner) || IS_DEAD(self.owner) || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
 	{
 		buff_SetCooldown(autocvar_g_buffs_cooldown_respawn + frametime);
 		self.owner = world;
@@ -586,10 +586,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	if(!frag_target.vehicle)
 	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if(frag_target.deadflag == DEAD_NO)
+	if(!IS_DEAD(frag_target))
 	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))
 	if(frag_attacker != frag_target)
-	if(!frag_target.frozen)
+	if(!STAT(FROZEN, frag_target))
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
@@ -698,7 +698,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(it.deadflag == DEAD_NO && !it.frozen && !it.vehicle)
+			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, self))
 			if(vlen(self.origin - it.origin) <= best_distance)
 			{
@@ -830,7 +830,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {SELFPARAM();
-	if(gameover || self.deadflag != DEAD_NO) { return false; }
+	if(gameover || IS_DEAD(self)) { return false; }
 
 	if(time < self.buff_disability_time)
 	if(time >= self.buff_disability_effect_time)
@@ -848,7 +848,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if(time >= self.buff_time)
 		buff_lost = 2;
 
-	if(self.frozen) { buff_lost = 1; }
+	if(STAT(FROZEN, self)) { buff_lost = 1; }
 
 	if(buff_lost)
 	{

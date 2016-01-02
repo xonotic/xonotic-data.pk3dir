@@ -43,11 +43,11 @@ void CSQC_Shutdown();
 //   v_forward: forward
 //   v_right: right
 //   v_up: up
-//   trace_endpos: visorigin 
+//   trace_endpos: visorigin
 .vector camera_transform(vector pos, vector ang);
 
 // control start position of sound()
-// calculated as ofs = time - sound_starttime 
+// calculated as ofs = time - sound_starttime
 float sound_starttime;
 
 ```
@@ -123,7 +123,7 @@ void SV_OnEntityPostSpawnFunction();
 void SetNewParms();
 
 // input:
-//   
+//
 .bool customizeentityforclient();
 
 // input:

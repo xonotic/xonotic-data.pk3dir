@@ -12,14 +12,14 @@
 #include "../common/constants.qh"
 #include "../common/debug.qh"
 #include "../common/mapinfo.qh"
-#include "../common/gamemodes/all.qh"
+#include <common/gamemodes/all.qh>
 #include "../common/physics/player.qh"
 #include "../common/stats.qh"
 #include "../common/triggers/target/music.qh"
 #include "../common/teams.qh"
 
-#include "../common/vehicles/all.qh"
-#include "../common/weapons/all.qh"
+#include <common/vehicles/all.qh>
+#include <common/weapons/all.qh>
 #include "../common/viewloc.qh"
 #include "../common/minigames/cl_minigames.qh"
 #include "../common/minigames/cl_minigames_hud.qh"
@@ -617,7 +617,7 @@ float TrueAimCheck()
 	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
 
-	if(vlen(trueaimpoint - traceorigin) < g_trueaim_minrange)
+	if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
 		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
 	if(vecs.x > 0)
@@ -713,7 +713,7 @@ void HUD_Crosshair_Vehicle()
 {
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
-		Vehicle info = get_vehicleinfo(hud);
+		Vehicle info = Vehicles_from(hud);
 		info.vr_crosshair(info);
 	}
 }
@@ -1393,19 +1393,27 @@ void CSQC_UpdateView(float w, float h)
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
 		entity gen = world;
 
+		float vehicle_viewdist = 0;
+		vector vehicle_viewofs = '0 0 0';
+
+		if(vehicle_chase)
+		{
+			if(hud != HUD_BUMBLEBEE_GUN)
+			{
+				Vehicle info = Vehicles_from(hud);
+				vehicle_viewdist = info.height;
+				vehicle_viewofs = info.view_ofs;
+			}
+		}
+
 		if(ons_roundlost)
 		{
-			entity e;
-			for(e = world; (e = find(e, classname, "onslaught_generator")); )
-			{
-				if(e.health <= 0)
-				{
-					gen = e;
-					break;
-				}
-			}
+			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, LAMBDA(
+				gen = it;
+				break;
+			));
 			if(!gen)
-				ons_roundlost = FALSE; // don't enforce the 3rd person camera if there is no dead generator to show
+				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
 		if(WantEventchase() || (!autocvar_cl_orthoview && ons_roundlost))
 		{
@@ -1417,7 +1425,13 @@ void CSQC_UpdateView(float w, float h)
 
 			// detect maximum viewoffset and use it
 			vector view_offset = autocvar_cl_eventchase_viewoffset;
-			if(vehicle_chase && autocvar_cl_eventchase_vehicle_viewoffset) { view_offset = autocvar_cl_eventchase_vehicle_viewoffset; }
+			if(vehicle_chase)
+			{
+				if(vehicle_viewofs)
+					view_offset = vehicle_viewofs;
+				else
+					view_offset = autocvar_cl_eventchase_vehicle_viewoffset;
+			}
 			if(ons_roundlost) { view_offset = autocvar_cl_eventchase_generator_viewoffset; }
 
 			if(view_offset)
@@ -1434,7 +1448,13 @@ void CSQC_UpdateView(float w, float h)
 
 			// make the camera smooth back
 			float chase_distance = autocvar_cl_eventchase_distance;
-			if(vehicle_chase && autocvar_cl_eventchase_vehicle_distance) { chase_distance = autocvar_cl_eventchase_vehicle_distance; }
+			if(vehicle_chase)
+			{
+				if(vehicle_viewofs)
+					chase_distance = vehicle_viewdist;
+				else
+					chase_distance = autocvar_cl_eventchase_vehicle_distance;
+			}
 			if(ons_roundlost) { chase_distance = autocvar_cl_eventchase_generator_distance; }
 
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
@@ -1515,14 +1535,14 @@ void CSQC_UpdateView(float w, float h)
 		float ov_furthest = 0;
 		float dist = 0;
 
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmin.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
-		if((dist = vlen(vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmax.z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmin.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmin.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmin.x, ov_worldmax.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmin.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
+		if((dist = vdist((vec3(ov_worldmax.x, ov_worldmax.y, ov_worldmax.z) - ov_org), >, ov_furthest))) { ov_furthest = dist; }
 
 		if(!ov_enabled)
 		{
@@ -2178,7 +2198,7 @@ void CSQC_Demo_Camera()
 	else
 	{
 		tmp = getmousepos() * 0.1;
-		if(vlen(tmp)>autocvar_camera_mouse_threshold)
+		if(vdist(tmp, >, autocvar_camera_mouse_threshold))
 		{
 			mouse_angles.x += tmp.y * cos(mouse_angles.z * DEG2RAD) + (tmp.x * sin(mouse_angles.z * DEG2RAD));
 			mouse_angles.y -= tmp.x * cos(mouse_angles.z * DEG2RAD) + (tmp.y * -sin(mouse_angles.z * DEG2RAD));

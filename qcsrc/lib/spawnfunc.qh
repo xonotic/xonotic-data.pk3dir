@@ -1,5 +1,4 @@
-#ifndef SPAWNFUNC_H
-#define SPAWNFUNC_H
+#pragma once
 
 /** If this global exists, only functions with spawnfunc_ name prefix qualify as spawn functions */
 noref bool require_spawnfunc_prefix;
@@ -46,10 +45,9 @@ noref bool require_spawnfunc_prefix;
 			{ \
 				assert(this); \
 			} \
-			if (!this.sourceLocFile) \
+			if (!this.sourceLoc) \
 			{ \
-				this.sourceLocFile = __FILE__; \
-				this.sourceLocLine = __LINE__; \
+				this.sourceLoc = __FILE__ ":" STR(__LINE__); \
 			} \
 			if (!this.spawnfunc_checked) \
 			{ \
@@ -84,12 +82,12 @@ noref bool require_spawnfunc_prefix;
 
 	#define FIELDS_COMMON(fld) \
 		FIELD_SCALAR(fld, classname) \
+		FIELD_SCALAR(fld, sourceLoc) \
 		FIELD_SCALAR(fld, spawnfunc_checked) \
+		FIELD_VEC(fld, origin) \
 		/**/
 
 	#define FIELDS_UNION(fld) \
-		FIELD_SCALAR(fld, sourceLocFile) \
-		FIELD_SCALAR(fld, sourceLocLine) \
 		FIELD_SCALAR(fld, Version) \
 		FIELD_SCALAR(fld, ammo_cells) \
 		FIELD_SCALAR(fld, ammo_nails) \
@@ -189,10 +187,8 @@ noref bool require_spawnfunc_prefix;
 		FIELD_VEC(fld, maxs) \
 		FIELD_VEC(fld, mins) \
 		FIELD_VEC(fld, modelscale_vec) \
-		FIELD_VEC(fld, origin) \
 		FIELD_VEC(fld, velocity) \
 		/**/
 
-	#define spawnfunc(...) EVAL(OVERLOAD(spawnfunc, __VA_ARGS__))
-
-#endif
+	#define spawnfunc(...) EVAL_spawnfunc(OVERLOAD(spawnfunc, __VA_ARGS__))
+	#define EVAL_spawnfunc(...) __VA_ARGS__

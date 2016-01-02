@@ -1,5 +1,5 @@
 #ifdef SVQC
-#include "../../server/autocvars.qh"
+#include <server/autocvars.qh>
 
 // Generic aiming
 vector turret_aim_generic()
@@ -31,7 +31,7 @@ vector turret_aim_generic()
 			prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
 
 			if(self.aim_flags & TFL_AIM_ZPREDICT)
-			if(!(self.enemy.flags & FL_ONGROUND))
+			if(!IS_ONGROUND(self.enemy))
 			if(self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE)
 			{
 				float vz;
@@ -119,7 +119,7 @@ float turret_targetscore_generic(entity _turret, entity _target)
 			(m_score * _turret.target_select_missilebias) +
 			(p_score * _turret.target_select_playerbias);
 
-	if(_turret.target_range < vlen(_turret.tur_shotorg - real_origin(_target)))
+	if(vdist((_turret.tur_shotorg - real_origin(_target)), >, _turret.target_range))
 	{
 		//dprint("Wtf?\n");
 		score *= 0.001;
@@ -726,7 +726,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	}
 	else if (e_target.health <= 0)
 		return -6;
-	else if(e_target.frozen > 0)
+	else if(STAT(FROZEN, e_target) > 0)
 		return -6;
 
 	// player
@@ -735,7 +735,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		if(!(validate_flags & TFL_TARGETSELECT_PLAYERS))
 			return -7;
 
-		if (e_target.deadflag != DEAD_NO)
+		if (IS_DEAD(e_target))
 			return -8;
 	}
 
@@ -923,7 +923,7 @@ float turret_firecheck()
 
 	// Lack of zombies makes shooting dead things unnecessary :P
 	if (self.firecheck_flags & TFL_FIRECHECK_DEAD)
-		if (self.enemy.deadflag != DEAD_NO)
+		if (IS_DEAD(self.enemy))
 			return 0;
 
 	// Own ammo?

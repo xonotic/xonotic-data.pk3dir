@@ -1,4 +1,4 @@
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
 #ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
 #define DIALOG_MULTIPLAYER_CREATE_MUTATORS_H

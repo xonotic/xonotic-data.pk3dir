@@ -42,7 +42,7 @@ const float SP_RACE_FASTEST = 6;
 
 #ifdef IMPLEMENTATION
 
-#include "../../race.qh"
+#include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
 float autocvar_g_race_qualifying_timelimit;
@@ -53,7 +53,7 @@ int autocvar_g_race_teams;
 .float race_checkpoint;
 void havocbot_role_race()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	entity e;

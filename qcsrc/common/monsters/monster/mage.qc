@@ -22,8 +22,8 @@ REGISTER_MONSTER(MAGE, NEW(Mage)) {
 #endif
 }
 
-#include "../../weapons/all.qh"
-#include "../../items/all.qc"
+#include <common/weapons/all.qh>
+#include <common/items/all.qc>
 
 CLASS(MageSpike, PortoLaunch)
 /* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -125,7 +125,7 @@ float M_Mage_Defend_Heal_Check(entity e)
 		return false;
 	if(DIFF_TEAM(e, self) && e != self.monster_follow)
 		return false;
-	if(e.frozen)
+	if(STAT(FROZEN, e))
 		return false;
 	if(!IS_PLAYER(e))
 		return (IS_MONSTER(e) && e.health < e.max_health);
@@ -182,7 +182,7 @@ void M_Mage_Attack_Spike_Think()
 	);
 
 	if (self.enemy != world)
-		if (self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+		if (self.enemy.takedamage != DAMAGE_AIM || IS_DEAD(self.enemy))
 			self.enemy = world;
 
 	if (self.enemy != world)

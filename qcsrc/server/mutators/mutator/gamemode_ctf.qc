@@ -208,11 +208,11 @@ const int CTF_SHIELDED					= 4096;
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-#include "../../../common/vehicles/all.qh"
-#include "../../teamplay.qh"
+#include <common/vehicles/all.qh>
+#include <server/teamplay.qh>
 #endif
 
-#include "../../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 bool autocvar_g_ctf_allow_vehicle_carry;
 bool autocvar_g_ctf_allow_vehicle_touch;
@@ -1144,7 +1144,7 @@ void ctf_FlagThink()
 			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 
 			if((self.pass_target == world)
-				|| (self.pass_target.deadflag != DEAD_NO)
+				|| (IS_DEAD(self.pass_target))
 				|| (self.pass_target.flagcarried)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
@@ -1192,7 +1192,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(toucher, it), LAMBDA(++num_perteam));
 
 	// special touch behaviors
-	if(toucher.frozen) { return; }
+	if(STAT(FROZEN, toucher)) { return; }
 	else if(IS_VEHICLE(toucher))
 	{
 		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
@@ -1215,7 +1215,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 		}
 		return;
 	}
-	else if(toucher.deadflag != DEAD_NO) { return; }
+	else if(IS_DEAD(toucher)) { return; }
 
 	switch(flag.ctf_status)
 	{
@@ -1257,7 +1257,7 @@ METHOD(Flag, giveTo, bool(Flag this, entity flag, entity toucher))
 
 		case FLAG_PASSING:
 		{
-			if((IS_PLAYER(toucher)) && (toucher.deadflag == DEAD_NO) && (toucher != flag.pass_sender))
+			if((IS_PLAYER(toucher)) && !IS_DEAD(toucher) && (toucher != flag.pass_sender))
 			{
 				if(DIFF_TEAM(toucher, flag.pass_sender))
 					ctf_Handle_Return(flag, toucher);
@@ -1540,7 +1540,7 @@ int havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 	int c = 0;
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		if(DIFF_TEAM(it, bot) || it.deadflag != DEAD_NO || it == bot)
+		if(DIFF_TEAM(it, bot) || IS_DEAD(it) || it == bot)
 			continue;
 
 		if(vlen(it.origin - org) < tc_radius)
@@ -1688,7 +1688,7 @@ void havocbot_ctf_reset_role(entity bot)
 	entity mf, ef;
 	float c;
 
-	if(bot.deadflag != DEAD_NO)
+	if(IS_DEAD(bot))
 		return;
 
 	if(vlen(havocbot_ctf_middlepoint)==0)
@@ -1748,7 +1748,7 @@ void havocbot_ctf_reset_role(entity bot)
 
 void havocbot_role_ctf_carrier()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		havocbot_ctf_reset_role(self);
 		return;
@@ -1791,7 +1791,7 @@ void havocbot_role_ctf_escort()
 {SELFPARAM();
 	entity mf, ef;
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		havocbot_ctf_reset_role(self);
 		return;
@@ -1852,7 +1852,7 @@ void havocbot_role_ctf_offense()
 	entity mf, ef;
 	vector pos;
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		havocbot_ctf_reset_role(self);
 		return;
@@ -1933,7 +1933,7 @@ void havocbot_role_ctf_retriever()
 {SELFPARAM();
 	entity mf;
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		havocbot_ctf_reset_role(self);
 		return;
@@ -1981,7 +1981,7 @@ void havocbot_role_ctf_middle()
 {SELFPARAM();
 	entity mf;
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		havocbot_ctf_reset_role(self);
 		return;
@@ -2032,7 +2032,7 @@ void havocbot_role_ctf_defense()
 {SELFPARAM();
 	entity mf;
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		havocbot_ctf_reset_role(self);
 		return;
@@ -2074,7 +2074,7 @@ void havocbot_role_ctf_defense()
 		// if enemies are closer to our base, go there
 		entity closestplayer = world;
 		float distance, bestdistance = 10000;
-		FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
 			distance = vlen(org - it.origin);
 			if(distance<bestdistance)
 			{
@@ -2215,7 +2215,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and for
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
 	}
-	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && CTF_DIFFTEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
+	else if(frag_target.flagcarried && !IS_DEAD(frag_target) && CTF_DIFFTEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
 		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)))
 		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
@@ -2292,7 +2292,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 	entity player = self;
 
-	if((time > player.throw_antispam) && (player.deadflag == DEAD_NO) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
+	if((time > player.throw_antispam) && !IS_DEAD(player) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 	{
 		// pass the flag to a team mate
 		if(autocvar_g_ctf_pass)
@@ -2302,7 +2302,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 
 			while(head) // find the closest acceptable target to pass to
 			{
-				if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
+				if(IS_PLAYER(head) && !IS_DEAD(head))
 				if(head != player && SAME_TEAM(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{

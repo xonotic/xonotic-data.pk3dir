@@ -74,10 +74,10 @@ void freezetag_count_alive_players()
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		switch(it.team)
 		{
-			case NUM_TEAM_1: ++total_players; if(it.health >= 1 && it.frozen != 1) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(it.health >= 1 && it.frozen != 1) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(it.health >= 1 && it.frozen != 1) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(it.health >= 1 && it.frozen != 1) ++pinkalive; break;
+			case NUM_TEAM_1: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++pinkalive; break;
 		}
 	));
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
@@ -188,7 +188,7 @@ entity freezetag_LastPlayerForTeam()
 	entity last_pl = world;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
 		if(it.health >= 1)
-		if(!it.frozen)
+		if(!STAT(FROZEN, it))
 		if(SAME_TEAM(it, self))
 		if(!last_pl)
 			last_pl = it;
@@ -229,7 +229,7 @@ void freezetag_Add_Score(entity attacker)
 
 void freezetag_Freeze(entity attacker)
 {SELFPARAM();
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		return;
 
 	if(autocvar_g_freezetag_frozen_maxtime > 0)
@@ -252,7 +252,7 @@ void freezetag_Unfreeze(entity attacker)
 
 float freezetag_isEliminated(entity e)
 {
-	if(IS_PLAYER(e) && (e.frozen == 1 || e.deadflag != DEAD_NO))
+	if(IS_PLAYER(e) && (STAT(FROZEN, e) == 1 || IS_DEAD(e)))
 		return true;
 	return false;
 }
@@ -270,7 +270,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 	float distance;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && it != self && SAME_TEAM(it, self), LAMBDA(
-		if (it.frozen == 1)
+		if (STAT(FROZEN, it) == 1)
 		{
 			distance = vlen(it.origin - org);
 			if (distance > sradius)
@@ -288,7 +288,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 
 void havocbot_role_ft_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (!self.havocbot_role_timeout)
@@ -296,10 +296,10 @@ void havocbot_role_ft_offense()
 
 	// Count how many players on team are unfrozen.
 	int unfrozen = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self) && !(it.frozen != 1), LAMBDA(unfrozen++));
+	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self) && !(STAT(FROZEN, it) != 1), LAMBDA(unfrozen++));
 
 	// If only one left on team or if role has timed out then start trying to free players.
-	if (((unfrozen == 0) && (!self.frozen)) || (time > self.havocbot_role_timeout))
+	if (((unfrozen == 0) && (!STAT(FROZEN, self))) || (time > self.havocbot_role_timeout))
 	{
 		LOG_TRACE("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;
@@ -322,7 +322,7 @@ void havocbot_role_ft_offense()
 
 void havocbot_role_ft_freeing()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (!self.havocbot_role_timeout)
@@ -357,7 +357,7 @@ void havocbot_role_ft_freeing()
 void ft_RemovePlayer()
 {SELFPARAM();
 	self.health = 0; // neccessary to update correctly alive stats
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 		freezetag_LastPlayerForTeam_Notify();
 	freezetag_Unfreeze(world);
 	freezetag_count_alive_players();
@@ -380,7 +380,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{
-		if(self.frozen)
+		if(STAT(FROZEN, self))
 			freezetag_Unfreeze(world);
 		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
@@ -392,7 +392,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
 		// let the player die, he will be automatically frozen when he respawns
-		if(self.frozen != 1)
+		if(STAT(FROZEN, self) != 1)
 		{
 			freezetag_Add_Score(frag_attacker);
 			freezetag_count_alive_players();
@@ -405,7 +405,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		return 1;
 	}
 
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		return 1;
 
 	freezetag_Freeze(frag_attacker);
@@ -476,7 +476,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	if(gameover)
 		return 1;
 
-	if(self.frozen == 1)
+	if(STAT(FROZEN, self) == 1)
 	{
 		// keep health = 1
 		self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
@@ -490,7 +490,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 	entity o;
 	o = world;
-	//if(self.frozen)
+	//if(STAT(FROZEN, self))
 	//if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
 		//self.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
 
@@ -501,22 +501,22 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
-			if(it.frozen == 0)
-			if(it.deadflag == DEAD_NO)
+			if(STAT(FROZEN, it) == 0)
+			if(!IS_DEAD(it))
 			if(SAME_TEAM(it, self))
 			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
 					o = it;
-				if(self.frozen == 1)
+				if(STAT(FROZEN, self) == 1)
 					it.reviving = true;
 				++n;
 			}
 		));
-			
+
 	}
 
-	if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
+	if(n && STAT(FROZEN, self) == 1) // OK, there is at least one teammate reviving us
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
@@ -550,12 +550,12 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			it.reviving = false;
 		));
 	}
-	else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
+	else if(!n && STAT(FROZEN, self) == 1) // only if no teammate is nearby will we reset
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
 		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
 	}
-	else if(!n && !self.frozen)
+	else if(!n && !STAT(FROZEN, self))
 	{
 		self.revive_progress = 0; // thawing nobody
 	}
@@ -580,7 +580,7 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 {SELFPARAM();
-	if (!self.deadflag)
+	if (!IS_DEAD(self))
 	{
 		if (random() < 0.5)
 			self.havocbot_role = havocbot_role_ft_freeing;

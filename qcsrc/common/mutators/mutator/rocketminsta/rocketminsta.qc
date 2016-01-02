@@ -1,6 +1,6 @@
 #ifdef IMPLEMENTATION
-#include "../../../deathtypes/all.qh"
-#include "../../../../server/round_handler.qh"
+#include <common/deathtypes/all.qh>
+#include <server/round_handler.qh>
 
 REGISTER_MUTATOR(rm, cvar("g_instagib"));
 

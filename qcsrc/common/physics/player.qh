@@ -134,10 +134,6 @@ bool IsFlying(entity a);
 #define SET_JUMP_HELD(s)                    ((s).flags &= ~FL_JUMPRELEASED)
 #define UNSET_JUMP_HELD(s)                  ((s).flags |= FL_JUMPRELEASED)
 
-#define IS_ONGROUND(s)                      boolean((s).flags & FL_ONGROUND)
-#define SET_ONGROUND(s)                     ((s).flags |= FL_ONGROUND)
-#define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
-
 #define WAS_ONGROUND(s)                     boolean((s).lastflags & FL_ONGROUND)
 
 #define ITEMS_STAT(s)                       ((s).items)
@@ -203,8 +199,6 @@ bool IsFlying(entity a);
 	#define PHYS_INPUT_BUTTON_BUTTON15(s)       boolean(input_buttons & BIT(17))
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       boolean(input_buttons & BIT(18))
 
-	#define PHYS_DEAD(s)                        ((s).csqcmodel_isdead)
-
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  (boolean(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE))
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND           (boolean(moveflags & MOVEFLAG_NOGRAVITYONGROUND))
 	#define GAMEPLAYFIX_Q2AIRACCELERATE             (boolean(moveflags & MOVEFLAG_Q2AIRACCELERATE))
@@ -264,8 +258,6 @@ bool IsFlying(entity a);
 	#define PHYS_INPUT_BUTTON_BUTTON14(s)       ((s).button14)
 	#define PHYS_INPUT_BUTTON_BUTTON15(s)       ((s).button15)
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       ((s).button16)
-
-	#define PHYS_DEAD(s)                        ((s).deadflag != DEAD_NO)
 
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  autocvar_sv_gameplayfix_gravityunaffectedbyticrate
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND           autocvar_sv_gameplayfix_nogravityonground

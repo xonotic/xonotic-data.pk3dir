@@ -6,12 +6,12 @@
 #include "../scripting.qh"
 #include "../waypoints.qh"
 
-#include "../../../common/constants.qh"
-#include "../../../common/items/all.qh"
+#include <common/constants.qh>
+#include <common/items/all.qh>
 
-#include "../../../common/triggers/trigger/jumppads.qh"
+#include <common/triggers/trigger/jumppads.qh>
 
-#include "../../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 .float speed;
 
@@ -38,7 +38,7 @@ void havocbot_ai()
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(self.deadflag != DEAD_NO)
+		if(IS_DEAD(self))
 		if(self.goalcurrent==world)
 		if(self.waterlevel==WATERLEVEL_SWIMMING || (self.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -86,7 +86,7 @@ void havocbot_ai()
 		bot_strategytoken_taken = true;
 	}
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	havocbot_chooseenemy();
@@ -295,7 +295,7 @@ void havocbot_bunnyhop(vector dir)
 	bunnyhopdistance = vlen(self.origin - gco);
 
 	// Run only to visible goals
-	if(self.flags & FL_ONGROUND)
+	if(IS_ONGROUND(self))
 	if(self.speed==maxspeed)
 	if(checkpvs(self.origin + self.view_ofs, self.goalcurrent))
 	{
@@ -371,7 +371,7 @@ void havocbot_bunnyhop(vector dir)
 #if 0
 	// Release jump button
 	if(!cvar("sv_pogostick"))
-	if((self.flags & FL_ONGROUND) == 0)
+	if((IS_ONGROUND(self)) == 0)
 	{
 		if(self.velocity.z < 0 || vlen(self.velocity)<maxspeed)
 			self.BUTTON_JUMP = false;
@@ -478,7 +478,7 @@ void havocbot_movetogoal()
 
 		// Flying
 		self.BUTTON_HOOK = true;
-		if(self.navigation_jetpack_point.z - PL_MAX.z + PL_MIN.z < self.origin.z)
+		if(self.navigation_jetpack_point.z - STAT(PL_MAX, NULL).z + STAT(PL_MIN, NULL).z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
 			self.movement_y = dir * v_right * maxspeed;
@@ -554,7 +554,7 @@ void havocbot_movetogoal()
 
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if(skill>6)
-	if (!(self.flags & FL_ONGROUND))
+	if (!(IS_ONGROUND(self)))
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
 		if(tracebox_hits_trigger_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
@@ -767,7 +767,7 @@ void havocbot_movetogoal()
 			self.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
-			if((self.flags & FL_ONGROUND) || (self.aistatus & AI_STATUS_RUNNING) || self.BUTTON_JUMP == true)
+			if((IS_ONGROUND(self)) || (self.aistatus & AI_STATUS_RUNNING) || self.BUTTON_JUMP == true)
 			{
 				// Look downwards
 				traceline(dst_ahead , dst_down, true, world);
@@ -849,7 +849,7 @@ void havocbot_movetogoal()
 	if(skill+self.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(dir);
 
-	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
+	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (IS_ONGROUND(self))) self.BUTTON_JUMP=1;
 	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=true;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
 }

@@ -2,8 +2,8 @@
 
 #include "weaponsystem.qh"
 #include "../mutators/all.qh"
-#include "../../common/t_items.qh"
-#include "../../common/weapons/all.qh"
+#include <common/t_items.qh>
+#include <common/weapons/all.qh>
 
 string W_Apply_Weaponreplace(string in)
 {

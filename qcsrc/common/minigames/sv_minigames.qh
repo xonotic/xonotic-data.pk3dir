@@ -51,7 +51,7 @@ REGISTRY(Minigames, BITS(4))
 REGISTER_REGISTRY(Minigames)
 REGISTRY_CHECK(Minigames)
 #define REGISTER_MINIGAME(name,nicename) \
-    REGISTER(Minigames, MINIGAME_##name, m_id, new(minigame_descriptor)); \
+    REGISTER(Minigames, MINIGAME_##name, m_id, new_pure(minigame_descriptor)); \
     int name##_server_event(entity, string, ...); \
     REGISTER_INIT_POST(MINIGAME_##name) { \
         make_pure(this); \

@@ -32,8 +32,8 @@ bool autocvar_sv_dodging_sound;
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
-#include "../../../animdecide.qh"
-#include "../../../physics/player.qh"
+#include <common/animdecide.qh>
+#include <common/physics/player.qh>
 
 .float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
 
@@ -176,7 +176,7 @@ void PM_dodging(entity this)
 	if (!PHYS_DODGING)
 		return;
 
-    if (PHYS_DEAD(this))
+    if (IS_DEAD(this))
         return;
 
 	// when swimming, no dodging allowed..

@@ -50,7 +50,8 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 	{
 		AL_DELETE(_entcs);
 	}
-	#define entcs_receiver(...) EVAL(OVERLOAD(entcs_receiver, __VA_ARGS__))
+	#define entcs_receiver(...) EVAL_entcs_receiver(OVERLOAD(entcs_receiver, __VA_ARGS__))
+	#define EVAL_entcs_receiver(...) __VA_ARGS__
 	#define entcs_receiver_1(i) AL_gete(_entcs, i)
 	#define entcs_receiver_2(i, v) AL_sete(_entcs, i, v)
 	#define entcs_is_self(e) ((e).sv_entnum == player_localentnum - 1)

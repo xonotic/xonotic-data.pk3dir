@@ -1,7 +1,7 @@
 // TODO: split target_push and put it in the target folder
 #ifdef SVQC
 #include "jumppads.qh"
-#include "../../physics/movetypes/movetypes.qh"
+#include <common/physics/movetypes/movetypes.qh>
 
 void trigger_push_use()
 {SELFPARAM();
@@ -223,7 +223,7 @@ void trigger_push_touch()
 			else
 				other.lastteleporttime = time;
 
-			if (other.deadflag == DEAD_NO)
+			if (!IS_DEAD(other))
 				animdecide_setaction(other, ANIMACTION_JUMP, true);
 		}
 		else
@@ -283,7 +283,7 @@ void trigger_push_findtarget()
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
-	org_z = self.absmax.z - PL_MIN.z;
+	org_z = self.absmax.z - STAT(PL_MIN, NULL).z;
 
 	if (self.target)
 	{
@@ -294,7 +294,7 @@ void trigger_push_findtarget()
 #ifdef SVQC
 			entity e = spawn();
 			setorigin(e, org);
-			setsize(e, PL_MIN, PL_MAX);
+			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 			e.velocity = trigger_push_calculatevelocity(org, t, self.height);
 			tracetoss(e, e);
 			if(e.movetype == MOVETYPE_NONE)
@@ -327,7 +327,7 @@ void trigger_push_findtarget()
 	{
 		entity e = spawn();
 		setorigin(e, org);
-		setsize(e, PL_MIN, PL_MAX);
+		setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 		e.velocity = self.movedir;
 		tracetoss(e, e);
 		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));

@@ -5,10 +5,10 @@
 
 #include "../antilag.qh"
 
-#include "../../common/constants.qh"
+#include <common/constants.qh>
 
-#include "../../lib/warpzone/common.qh"
-#include "../../lib/warpzone/util_server.qh"
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
 
 // create a new spawnfunc_waypoint and automatically link it to other waypoints, and link
 // them back to it as well
@@ -38,7 +38,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 
 	if(!w.wpisbox)
 	{
-		setsize(w, PL_MIN - '1 1 0', PL_MAX + '1 1 0');
+		setsize(w, STAT(PL_MIN, NULL) - '1 1 0', STAT(PL_MAX, NULL) + '1 1 0');
 		if(!move_out_of_solid(w))
 		{
 			if(!(f & WAYPOINTFLAG_GENERATED))
@@ -208,7 +208,7 @@ void waypoint_think()
 			navigation_testtracewalk = 0;
 			if (!self.wpisbox)
 			{
-				tracebox(sv - PL_MIN.z * '0 0 1', PL_MIN, PL_MAX, sv, false, self);
+				tracebox(sv - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, false, self);
 				if (!trace_startsolid)
 				{
 					//dprint("sv deviation", vtos(trace_endpos - sv), "\n");
@@ -217,7 +217,7 @@ void waypoint_think()
 			}
 			if (!e.wpisbox)
 			{
-				tracebox(ev - PL_MIN.z * '0 0 1', PL_MIN, PL_MAX, ev, false, e);
+				tracebox(ev - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, false, e);
 				if (!trace_startsolid)
 				{
 					//dprint("ev deviation", vtos(trace_endpos - ev), "\n");
@@ -226,11 +226,11 @@ void waypoint_think()
 			}
 			//traceline(self.origin, e.origin, false, world);
 			//if (trace_fraction == 1)
-			if (!self.wpisbox && tracewalk(self, sv, PL_MIN, PL_MAX, ev, MOVE_NOMONSTERS))
+			if (!self.wpisbox && tracewalk(self, sv, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, MOVE_NOMONSTERS))
 				waypoint_addlink(self, e);
 			else
 				relink_walkculled += 0.5;
-			if (!e.wpisbox && tracewalk(e, ev, PL_MIN, PL_MAX, sv, MOVE_NOMONSTERS))
+			if (!e.wpisbox && tracewalk(e, ev, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, MOVE_NOMONSTERS))
 				waypoint_addlink(e, self);
 			else
 				relink_walkculled += 0.5;
@@ -713,7 +713,7 @@ float waypoint_loadall()
 
 vector waypoint_fixorigin(vector position)
 {
-	tracebox(position + '0 0 1' * (1 - PL_MIN.z), PL_MIN, PL_MAX, position + '0 0 -512', MOVE_NOMONSTERS, world);
+	tracebox(position + '0 0 1' * (1 - STAT(PL_MIN, NULL).z), STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), position + '0 0 -512', MOVE_NOMONSTERS, world);
 	if(trace_fraction < 1)
 		position = trace_endpos;
 	//traceline(position, position + '0 0 -512', MOVE_NOMONSTERS, world);
@@ -810,23 +810,20 @@ entity waypoint_spawnpersonal(vector position)
 
 void botframe_showwaypointlinks()
 {
-	entity player, head, w;
+	entity head, w;
 	if (time < botframe_waypointeditorlightningtime)
 		return;
 	botframe_waypointeditorlightningtime = time + 0.5;
-	player = find(world, classname, "player");
-	while (player)
-	{
-		if (!player.isbot)
-		if (player.flags & FL_ONGROUND || player.waterlevel > WATERLEVEL_NONE)
+	FOREACH_CLIENT(IS_PLAYER(it) && !it.isbot, LAMBDA(
+		if(IS_ONGROUND(it) || it.waterlevel > WATERLEVEL_NONE)
 		{
 			//navigation_testtracewalk = true;
-			head = navigation_findnearestwaypoint(player, false);
+			head = navigation_findnearestwaypoint(it, false);
 		//	print("currently selected WP is ", etos(head), "\n");
 			//navigation_testtracewalk = false;
 			if (head)
 			{
-				w = head     ;if (w) te_lightning2(world, w.origin, player.origin);
+				w = head     ;if (w) te_lightning2(world, w.origin, it.origin);
 				w = head.wp00;if (w) te_lightning2(world, w.origin, head.origin);
 				w = head.wp01;if (w) te_lightning2(world, w.origin, head.origin);
 				w = head.wp02;if (w) te_lightning2(world, w.origin, head.origin);
@@ -861,13 +858,12 @@ void botframe_showwaypointlinks()
 				w = head.wp31;if (w) te_lightning2(world, w.origin, head.origin);
 			}
 		}
-		player = find(player, classname, "player");
-	}
+	));
 }
 
 float botframe_autowaypoints_fixdown(vector v)
 {
-	tracebox(v, PL_MIN, PL_MAX, v + '0 0 -64', MOVE_NOMONSTERS, world);
+	tracebox(v, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v + '0 0 -64', MOVE_NOMONSTERS, world);
 	if(trace_fraction >= 1)
 		return 0;
 	return 1;
@@ -1134,7 +1130,7 @@ void botframe_deleteuselesswaypoints()
 
 void botframe_autowaypoints()
 {
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.deadflag == DEAD_NO, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && !IS_DEAD(it), LAMBDA(
 		// going back is broken, so only fix waypoints to walk TO the player
 		//botframe_autowaypoints_fix(p, false, botframe_autowaypoints_lastwp0);
 		botframe_autowaypoints_fix(it, true, botframe_autowaypoints_lastwp1);

@@ -3,21 +3,21 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "cl_cmd.qh"
 
 #include "../autocvars.qh"
 #include "../defs.qh"
-#include "../hud/all.qh"
+#include <client/hud/all.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
 
 #include "../mutators/events.qh"
 
-#include "../../common/mapinfo.qh"
+#include <common/mapinfo.qh>
 
-#include "../../common/command/generic.qh"
+#include <common/command/generic.qh>
 
 void DrawDebugModel(entity this)
 {
@@ -257,6 +257,9 @@ void LocalCommand_hud(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if(MUTATOR_CALLHOOK(HUD_Command, argc))
+				return;
+
 			switch (argv(1))
 			{
 				case "configure":
@@ -278,15 +281,6 @@ void LocalCommand_hud(int request, int argc)
 						QuickMenu_Close();
 					else
 						QuickMenu_Open(argv(2), argv(3));  // mode, submenu
-					return;
-				}
-
-				case "minigame":
-				{
-					if (HUD_MinigameMenu_IsOpened())
-						HUD_MinigameMenu_Close();
-					else
-						HUD_MinigameMenu_Open();
 					return;
 				}
 
@@ -407,11 +401,7 @@ void LocalCommand_find(int request, int argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-
-			for (client = world; (client = find(client, classname, argv(1))); )
-				LOG_INFO(etos(client), "\n");
-
+			FOREACH_ENTITY_CLASS(argv(1), true, LAMBDA(LOG_INFO(etos(it), "\n")));
 			return;
 		}
 

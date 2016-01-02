@@ -31,7 +31,7 @@ void Teleport_Touch ()
 		return;
 #endif
 
-	if(PHYS_DEAD(other))
+	if(IS_DEAD(other))
 		return;
 
 	if(self.team)
@@ -85,6 +85,9 @@ spawnfunc(trigger_teleport)
 	self.active = ACTIVE_ACTIVE;
 	trigger_init(self);
 	self.use = trigger_teleport_use;
+
+	if(self.noise != "")
+		FOREACH_WORD(self.noise, true, LAMBDA(precache_sound(it)));
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);

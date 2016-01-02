@@ -1,5 +1,4 @@
-#ifndef RANDOM_H
-#define RANDOM_H
+#pragma once
 
 float RandomSelection_totalweight;
 float RandomSelection_best_priority;
@@ -29,5 +28,4 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 	#define prandomvec randomvec
 	#define psrandom(x)
 	#define prandom_debug()
-#endif
 #endif

@@ -59,7 +59,7 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 .bool silent;
 
 #include "rubble.qh"
-#include "../common/physics/movetypes/movetypes.qh"
+#include <common/physics/movetypes/movetypes.qh>
 
 .float scale;
 .float alpha;

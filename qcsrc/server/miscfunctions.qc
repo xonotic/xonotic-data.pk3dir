@@ -964,7 +964,7 @@ void adaptor_think2use()
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
 {SELFPARAM();
-	if(!(self.flags & FL_ONGROUND)) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+	if(!(IS_ONGROUND(self))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		self.projectiledeathtype |= HITTYPE_SPLASH;
 	adaptor_think2use();
 }

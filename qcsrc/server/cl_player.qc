@@ -134,7 +134,7 @@ void player_setupanimsformodel()
 void player_anim ()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag) {
+	if(IS_DEAD(self)) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
 			if(random() < 0.5)
@@ -147,14 +147,14 @@ void player_anim ()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+	animdecide_setimplicitstate(self, (IS_ONGROUND(self)));
 }
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -588,7 +588,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		self.solid = SOLID_CORPSE;
 		self.ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
-		self.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(self);
 		// dying animation
 		self.deadflag = DEAD_DYING;
 

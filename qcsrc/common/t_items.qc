@@ -7,26 +7,26 @@
     #include "../server/bot/bot.qh"
     #include "../server/bot/waypoints.qh"
 
-    #include "../server/mutators/all.qh"
+    #include <server/mutators/all.qh>
 
     #include "../server/weapons/common.qh"
     #include "../server/weapons/selection.qh"
     #include "../server/weapons/weaponsystem.qh"
 
     #include "constants.qh"
-    #include "deathtypes/all.qh"
-    #include "notifications.qh"
+    #include <common/deathtypes/all.qh>
+    #include <common/notifications.qh>
 	#include "triggers/subs.qh"
     #include "util.qh"
 
-    #include "monsters/all.qh"
+    #include <common/monsters/all.qh>
 
-    #include "weapons/all.qh"
+    #include <common/weapons/all.qh>
 
     #include "../lib/warpzone/util_server.qh"
 #elif defined(CSQC)
 	#include "physics/movetypes/movetypes.qh"
-	#include "weapons/all.qh"
+	#include <common/weapons/all.qh>
 	#include "../lib/csqcmodel/cl_model.qh"
 	#include "../lib/csqcmodel/common.qh"
 #endif
@@ -34,6 +34,35 @@
 REGISTER_NET_LINKED(ENT_CLIENT_ITEM)
 
 #ifdef CSQC
+bool autocvar_cl_ghost_items_vehicle = true;
+void Item_SetAlpha(entity this)
+{
+	bool veh_hud = (hud && autocvar_cl_ghost_items_vehicle);
+
+	if(!veh_hud && (this.ItemStatus & ITS_AVAILABLE))
+	{
+		this.alpha = 1;
+		this.colormod = this.glowmod = '1 1 1';
+	}
+	else
+	{
+		if (autocvar_cl_ghost_items_color)
+		{
+			this.alpha = autocvar_cl_ghost_items;
+			this.colormod = this.glowmod = autocvar_cl_ghost_items_color;
+		}
+		else
+			this.alpha = -1;
+	}
+
+	if(!veh_hud)
+	if(this.ItemStatus & ITS_STAYWEP)
+	{
+		this.colormod = this.glowmod = autocvar_cl_weapon_stay_color;
+		this.alpha = autocvar_cl_weapon_stay_alpha;
+	}
+}
+
 void ItemDraw(entity this)
 {
     if(this.gravity)
@@ -68,6 +97,8 @@ void ItemDraw(entity this)
             setorigin(this, '0 0 8' + this.oldorigin + '0 0 4' * sin(time * 3));
         }
     }
+
+    Item_SetAlpha(this);
 }
 
 void ItemDrawSimple(entity this)
@@ -79,6 +110,8 @@ void ItemDrawSimple(entity this)
         if(this.move_flags & FL_ONGROUND)
             this.gravity = 0;
     }
+
+    Item_SetAlpha(this);
 }
 
 void Item_PreDraw()
@@ -86,7 +119,7 @@ void Item_PreDraw()
 	if(warpzone_warpzones_exist)
 	{
 		// just incase warpzones were initialized last, reset these
-		self.alpha = 1;
+		//self.alpha = 1; // alpha is already set by the draw function
 		self.drawmask = MASK_NORMAL;
 		return;
 	}
@@ -99,7 +132,7 @@ void Item_PreDraw()
 	else
 		alph = 1;
 	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
-	if(self.ItemStatus & ITS_AVAILABLE)
+	if(!hud && (self.ItemStatus & ITS_AVAILABLE))
 		self.alpha = alph;
 	if(alph <= 0)
 		self.drawmask = 0;
@@ -144,32 +177,11 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
     {
         self.ItemStatus = ReadByte();
 
-        if(self.ItemStatus & ITS_AVAILABLE)
-        {
-            self.alpha = 1;
-            self.colormod = self.glowmod = '1 1 1';
-        }
-        else
-        {
-            if (autocvar_cl_ghost_items_color)
-            {
-                self.alpha = autocvar_cl_ghost_items;
-                self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
-            }
-            else
-                self.alpha = -1;
-        }
+        Item_SetAlpha(self);
 
         if(autocvar_cl_fullbright_items)
             if(self.ItemStatus & ITS_ALLOWFB)
                 self.effects |= EF_FULLBRIGHT;
-
-        if(self.ItemStatus & ITS_STAYWEP)
-        {
-            self.colormod = self.glowmod = autocvar_cl_weapon_stay_color;
-            self.alpha = autocvar_cl_weapon_stay_alpha;
-
-        }
 
         if(self.ItemStatus & ITS_POWERUP)
         {
@@ -757,8 +769,8 @@ void Item_Touch()
 	}
 
 	if(!(other.flags & FL_PICKUPITEMS)
-	|| other.frozen
-	|| other.deadflag
+	|| STAT(FROZEN, other)
+	|| IS_DEAD(other)
 	|| (this.solid != SOLID_TRIGGER)
 	|| (this.owner == other)
 	|| (time < this.item_spawnshieldtime)
@@ -1174,7 +1186,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	if (!(this.spawnflags & 1024)) {
 		if(def.instanceOfPowerup)
 			this.ItemStatus |= ITS_ANIMATE1;
-	
+
 		if(this.armorvalue || this.health)
 			this.ItemStatus |= ITS_ANIMATE2;
 	}
@@ -1411,14 +1423,15 @@ void target_items_use()
 
 	if (!IS_PLAYER(activator))
 		return;
-	if(activator.deadflag != DEAD_NO)
+	if(IS_DEAD(activator))
 		return;
 	EXACTTRIGGER_TOUCH;
 
-	entity e;
-	for(e = world; (e = find(e, classname, "droppedweapon")); )
-		if(e.enemy == activator)
-			remove(e);
+	FOREACH_ENTITY_ENT(enemy, activator,
+	{
+		if(it.classname == "droppedweapon")
+			remove(it);
+	});
 
 	if(GiveItems(activator, 0, tokenize_console(self.netname)))
 		centerprint(activator, self.message);

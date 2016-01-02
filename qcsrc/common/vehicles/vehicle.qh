@@ -31,6 +31,10 @@ CLASS(Vehicle, Object)
     ATTRIB(Vehicle, mins, vector, '-0 -0 -0')
     /** vehicle hitbox size */
     ATTRIB(Vehicle, maxs, vector, '0 0 0')
+    /** vehicle 3rd person view offset */
+    ATTRIB(Vehicle, view_ofs, vector, '0 0 0')
+    /** vehicle 3rd person view distance */
+    ATTRIB(Vehicle, height, float, 0)
 
     /** (BOTH) setup vehicle data */
     METHOD(Vehicle, vr_setup, void(Vehicle)) { }

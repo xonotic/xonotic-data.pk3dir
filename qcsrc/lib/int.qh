@@ -1,5 +1,4 @@
-#ifndef INT_H
-#define INT_H
+#pragma once
 
 #ifndef QCC_SUPPORT_INT
 	#define stoi(s) stof(s)
@@ -9,6 +8,4 @@
 	#define stoi(s) ((int) stof(s))
 	#define stob(s) ((bool) stof(s))
 	#define itos(i) ftos(i)
-#endif
-
 #endif

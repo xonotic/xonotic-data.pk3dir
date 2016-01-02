@@ -1,5 +1,4 @@
-#ifndef URLLIB_H
-#define URLLIB_H
+#pragma once
 
 // URI handles
 const int URI_GET_DISCARD = 0;
@@ -29,4 +28,3 @@ float url_URI_Get_Callback(int id, float status, string data);
 #define NUM_URL_ID (URI_GET_URLLIB_END - URI_GET_URLLIB + 1)
 
 void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass);
-#endif
