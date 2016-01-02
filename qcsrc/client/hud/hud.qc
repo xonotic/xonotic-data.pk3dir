@@ -418,7 +418,7 @@ void HUD_Vehicle()
 	if(hud == HUD_BUMBLEBEE_GUN)
 		CSQC_BUMBLE_GUN_HUD();
 	else {
-		Vehicle info = get_vehicleinfo(hud);
+		Vehicle info = Vehicles_from(hud);
 		info.vr_hud(info);
 	}
 }

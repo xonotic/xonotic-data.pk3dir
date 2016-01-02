@@ -5,7 +5,6 @@
 
 REGISTRY(Vehicles, BITS(4))
 #define Vehicles_from(i) _Vehicles_from(i, VEH_Null)
-#define get_vehicleinfo(i) Vehicles_from(i)
 REGISTER_REGISTRY(Vehicles)
 REGISTRY_CHECK(Vehicles)
 

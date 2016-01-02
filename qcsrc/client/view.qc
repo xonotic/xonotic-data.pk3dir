@@ -779,7 +779,7 @@ void HUD_Crosshair_Vehicle()
 {
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
-		Vehicle info = get_vehicleinfo(hud);
+		Vehicle info = Vehicles_from(hud);
 		info.vr_crosshair(info);
 	}
 }
@@ -1466,7 +1466,7 @@ void CSQC_UpdateView(float w, float h)
 		{
 			if(hud != HUD_BUMBLEBEE_GUN)
 			{
-				Vehicle info = get_vehicleinfo(hud);
+				Vehicle info = Vehicles_from(hud);
 				vehicle_viewdist = info.height;
 				vehicle_viewofs = info.view_ofs;
 			}
