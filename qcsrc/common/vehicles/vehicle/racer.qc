@@ -7,6 +7,8 @@ CLASS(Racer, Vehicle)
 /* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
 /* mins       */ ATTRIB(Racer, mins, vector, '-120 -120 -40' * 0.5);
 /* maxs       */ ATTRIB(Racer, maxs, vector, '120 120 40' * 0.5);
+/* view offset*/ ATTRIB(Racer, view_ofs, vector, '0 0 50');
+/* view dist  */ ATTRIB(Racer, height, float, 200);
 /* model	  */ ATTRIB(Racer, mdl, string, "models/vehicles/wakizashi.dpm");
 /* model	  */ ATTRIB(Racer, model, string, "models/vehicles/wakizashi.dpm");
 /* head_model */ ATTRIB(Racer, head_model, string, "null");

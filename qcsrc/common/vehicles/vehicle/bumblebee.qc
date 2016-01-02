@@ -8,6 +8,8 @@ CLASS(Bumblebee, Vehicle)
 /* spawnflags */ ATTRIB(Bumblebee, spawnflags, int, VHF_DMGSHAKE);
 /* mins       */ ATTRIB(Bumblebee, mins, vector, '-245 -130 -130');
 /* maxs       */ ATTRIB(Bumblebee, maxs, vector, '230 130 130');
+/* view offset*/ ATTRIB(Bumblebee, view_ofs, vector, '0 0 300');
+/* view dist  */ ATTRIB(Bumblebee, height, float, 450);
 /* model	  */ ATTRIB(Bumblebee, mdl, string, "models/vehicles/bumblebee_body.dpm");
 /* model	  */ ATTRIB(Bumblebee, model, string, "models/vehicles/bumblebee_body.dpm");
 /* head_model */ ATTRIB(Bumblebee, head_model, string, "");

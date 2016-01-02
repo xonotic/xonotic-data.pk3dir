@@ -8,6 +8,8 @@ CLASS(Raptor, Vehicle)
 /* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
 /* mins       */ ATTRIB(Raptor, mins, vector, '-80 -80 0');
 /* maxs       */ ATTRIB(Raptor, maxs, vector, '80 80 70');
+/* view offset*/ ATTRIB(Raptor, view_ofs, vector, '0 0 160');
+/* view dist  */ ATTRIB(Raptor, height, float, 200);
 /* model	  */ ATTRIB(Raptor, mdl, string, "models/vehicles/raptor.dpm");
 /* model	  */ ATTRIB(Raptor, model, string, "models/vehicles/raptor.dpm");
 /* head_model */ ATTRIB(Raptor, head_model, string, "");

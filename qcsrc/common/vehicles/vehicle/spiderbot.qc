@@ -7,6 +7,8 @@ CLASS(Spiderbot, Vehicle)
 /* spawnflags */ ATTRIB(Spiderbot, spawnflags, int, VHF_DMGSHAKE);
 /* mins       */ ATTRIB(Spiderbot, mins, vector, '-75 -75 10');
 /* maxs       */ ATTRIB(Spiderbot, maxs, vector, '75 75 125');
+/* view offset*/ ATTRIB(Spiderbot, view_ofs, vector, '0 0 70');
+/* view dist  */ ATTRIB(Spiderbot, height, float, 170);
 /* model	  */ ATTRIB(Spiderbot, mdl, string, "models/vehicles/spiderbot.dpm");
 /* model	  */ ATTRIB(Spiderbot, model, string, "models/vehicles/spiderbot.dpm");
 /* head_model */ ATTRIB(Spiderbot, head_model, string, "models/vehicles/spiderbot_top.dpm");

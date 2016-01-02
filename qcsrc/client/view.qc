@@ -1459,6 +1459,19 @@ void CSQC_UpdateView(float w, float h)
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
 		entity gen = world;
 
+		float vehicle_viewdist = 0;
+		vector vehicle_viewofs = '0 0 0';
+
+		if(vehicle_chase)
+		{
+			if(hud != HUD_BUMBLEBEE_GUN)
+			{
+				Vehicle info = get_vehicleinfo(hud);
+				vehicle_viewdist = info.height;
+				vehicle_viewofs = info.view_ofs;
+			}
+		}
+
 		if(ons_roundlost)
 		{
 			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, LAMBDA(
@@ -1478,7 +1491,13 @@ void CSQC_UpdateView(float w, float h)
 
 			// detect maximum viewoffset and use it
 			vector view_offset = autocvar_cl_eventchase_viewoffset;
-			if(vehicle_chase && autocvar_cl_eventchase_vehicle_viewoffset) { view_offset = autocvar_cl_eventchase_vehicle_viewoffset; }
+			if(vehicle_chase)
+			{
+				if(vehicle_viewofs)
+					view_offset = vehicle_viewofs;
+				else
+					view_offset = autocvar_cl_eventchase_vehicle_viewoffset;
+			}
 			if(ons_roundlost) { view_offset = autocvar_cl_eventchase_generator_viewoffset; }
 
 			if(view_offset)
@@ -1495,7 +1514,13 @@ void CSQC_UpdateView(float w, float h)
 
 			// make the camera smooth back
 			float chase_distance = autocvar_cl_eventchase_distance;
-			if(vehicle_chase && autocvar_cl_eventchase_vehicle_distance) { chase_distance = autocvar_cl_eventchase_vehicle_distance; }
+			if(vehicle_chase)
+			{
+				if(vehicle_viewofs)
+					chase_distance = vehicle_viewdist;
+				else
+					chase_distance = autocvar_cl_eventchase_vehicle_distance;
+			}
 			if(ons_roundlost) { chase_distance = autocvar_cl_eventchase_generator_distance; }
 
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
