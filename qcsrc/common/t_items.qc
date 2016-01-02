@@ -110,6 +110,8 @@ void ItemDrawSimple(entity this)
         if(this.move_flags & FL_ONGROUND)
             this.gravity = 0;
     }
+
+    Item_SetAlpha(this);
 }
 
 void Item_PreDraw()
@@ -117,7 +119,7 @@ void Item_PreDraw()
 	if(warpzone_warpzones_exist)
 	{
 		// just incase warpzones were initialized last, reset these
-		self.alpha = 1;
+		//self.alpha = 1; // alpha is already set by the draw function
 		self.drawmask = MASK_NORMAL;
 		return;
 	}
