@@ -8,14 +8,14 @@
 
 #include "../lib/csqcmodel/cl_model.qh"
 
-// self.isactive = player is in range and coordinates/status (health and armor) are up to date
-// self.origin = player origin
-// self.healthvalue
-// self.armorvalue
-// self.sameteam = player is on same team as local client
-// self.fadedelay = time to wait before name tag starts fading in for enemies
-// self.pointtime = last time you pointed at this player
-// self.csqcmodel_isdead = value of csqcmodel_isdead to know when the player is dead or not
+// this.isactive = player is in range and coordinates/status (health and armor) are up to date
+// this.origin = player origin
+// this.healthvalue
+// this.armorvalue
+// this.sameteam = player is on same team as local client
+// this.fadedelay = time to wait before name tag starts fading in for enemies
+// this.pointtime = last time you pointed at this player
+// this.csqcmodel_isdead = value of csqcmodel_isdead to know when the player is dead or not
 
 LinkedList shownames_ent;
 STATIC_INIT(shownames_ent)
