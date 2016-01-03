@@ -479,10 +479,10 @@ void Monster_Touch()
 	if(other == world) { return; }
 
 	if(other.monster_attack)
-	if(self.enemy != other)
+	if(this.enemy != other)
 	if(!IS_MONSTER(other))
-	if(Monster_ValidTarget(self, other))
-		self.enemy = other;
+	if(Monster_ValidTarget(this, other))
+		this.enemy = other;
 }
 
 void Monster_Miniboss_Check(entity this)
@@ -517,7 +517,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn() { SELFPARAM(); Monster_Spawn(self, self.monsterid); }
+void Monster_Respawn() { SELFPARAM(); Monster_Spawn(this, this.monsterid); }
 
 void Monster_Dead_Fade(entity this)
 {
@@ -551,7 +551,7 @@ void Monster_Dead_Fade(entity this)
 
 void Monster_Use()
 {SELFPARAM();
-	if(Monster_ValidTarget(self, activator)) { self.enemy = activator; }
+	if(Monster_ValidTarget(this, activator)) { this.enemy = activator; }
 }
 
 vector Monster_Move_Target(entity this, entity targ)
@@ -919,21 +919,21 @@ void Monster_Remove(entity this)
 
 void Monster_Dead_Think()
 {SELFPARAM();
-	self.nextthink = time + self.ticrate;
+	this.nextthink = time + this.ticrate;
 
-	if(self.monster_lifetime != 0)
-	if(time >= self.monster_lifetime)
+	if(this.monster_lifetime != 0)
+	if(time >= this.monster_lifetime)
 	{
-		Monster_Dead_Fade(self);
+		Monster_Dead_Fade(this);
 		return;
 	}
 }
 
 void Monster_Appear()
 {SELFPARAM();
-	self.enemy = activator;
-	self.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
-	Monster_Spawn(self, self.monsterid);
+	this.enemy = activator;
+	this.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
+	Monster_Spawn(this, this.monsterid);
 }
 
 bool Monster_Appear_Check(entity this, int monster_id)
@@ -1216,23 +1216,23 @@ void Monster_Anim(entity this)
 
 void Monster_Think()
 {SELFPARAM();
-	self.think = Monster_Think;
-	self.nextthink = self.ticrate;
+	this.think = Monster_Think;
+	this.nextthink = this.ticrate;
 
-	if(self.monster_lifetime)
-	if(time >= self.monster_lifetime)
+	if(this.monster_lifetime)
+	if(time >= this.monster_lifetime)
 	{
-		Damage(self, self, self, self.health + self.max_health, DEATH_KILL.m_id, self.origin, self.origin);
+		Damage(this, this, this, this.health + this.max_health, DEATH_KILL.m_id, this.origin, this.origin);
 		return;
 	}
 
-	Monster mon = get_monsterinfo(self.monsterid);
-	if(mon.mr_think(mon, self))
-		Monster_Move(self, self.speed2, self.speed, self.stopspeed);
+	Monster mon = get_monsterinfo(this.monsterid);
+	if(mon.mr_think(mon, this))
+		Monster_Move(this, this.speed2, this.speed, this.stopspeed);
 
-	Monster_Anim(self);
+	Monster_Anim(this);
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 bool Monster_Spawn_Setup(entity this)
