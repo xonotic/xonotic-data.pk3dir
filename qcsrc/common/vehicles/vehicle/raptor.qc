@@ -617,12 +617,12 @@ spawnfunc(vehicle_raptor)
 	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
-		METHOD(Raptor, vr_impact, void(Raptor thisveh))
+		METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_raptor_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 		}
-		METHOD(Raptor, vr_enter, void(Raptor thisveh))
+		METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 		{
 			self.vehicle_weapon2mode = RSM_BOMB;
 			self.owner.PlayerPhysplug = raptor_takeoff;
@@ -641,7 +641,7 @@ spawnfunc(vehicle_raptor)
 
 			CSQCVehicleSetup(self.owner, 0);
 		}
-		METHOD(Raptor, vr_death, void(Raptor thisveh))
+		METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -663,7 +663,7 @@ spawnfunc(vehicle_raptor)
 			self.colormod = '-0.5 -0.5 -0.5';
 			self.touch = raptor_blowup;
 		}
-		METHOD(Raptor, vr_spawn, void(Raptor thisveh))
+		METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 		{
 			if(!self.gun1)
 			{
@@ -754,7 +754,7 @@ spawnfunc(vehicle_raptor)
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 		}
-		METHOD(Raptor, vr_setup, void(Raptor thisveh))
+		METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_raptor_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -850,7 +850,7 @@ spawnfunc(vehicle_raptor)
 
 			Vehicles_drawCrosshair(crosshair);
 		}
-		METHOD(Raptor, vr_setup, void(Raptor thisveh))
+		METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 		{
 			AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 		}

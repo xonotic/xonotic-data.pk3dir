@@ -560,7 +560,7 @@ void racer_draw()
 #endif
 #endif
 
-		METHOD(Racer, vr_impact, void(Racer thisveh))
+		METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			if(autocvar_g_vehicle_racer_bouncepain)
@@ -568,7 +568,7 @@ void racer_draw()
 		#endif
 		}
 
-		METHOD(Racer, vr_enter, void(Racer thisveh))
+		METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			self.movetype = MOVETYPE_BOUNCE;
@@ -583,7 +583,7 @@ void racer_draw()
 		#endif
 		}
 
-		METHOD(Racer, vr_spawn, void(Racer thisveh))
+		METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			if(self.scale != 0.5)
@@ -621,7 +621,7 @@ void racer_draw()
 		#endif
 		}
 
-		METHOD(Racer, vr_death, void(Racer thisveh))
+		METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			self.SendEntity		= func_null; // stop networking this racer (for now)
@@ -664,7 +664,7 @@ void racer_draw()
 			Vehicles_drawCrosshair(vCROSS_GUIDE);
 		}
 #endif
-		METHOD(Racer, vr_setup, void(Racer thisveh))
+		METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			self.vehicle_exit = racer_exit;

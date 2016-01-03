@@ -554,12 +554,12 @@ spawnfunc(vehicle_spiderbot)
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
-		METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_spiderbot_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 		}
-		METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 		{
 			self.vehicle_weapon2mode = SBRM_GUIDE;
 			self.movetype = MOVETYPE_WALK;
@@ -573,12 +573,12 @@ spawnfunc(vehicle_spiderbot)
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
 		}
-		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
 		{
 			if(IS_ONGROUND(self))
 				movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
 		}
-		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -596,7 +596,7 @@ spawnfunc(vehicle_spiderbot)
 
 			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 		}
-		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 		{
 			if(!self.gun1)
 			{
@@ -627,7 +627,7 @@ spawnfunc(vehicle_spiderbot)
 
 			self.PlayerPhysplug = spiderbot_frame;
 		}
-		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_spiderbot_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -670,7 +670,7 @@ float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 			Vehicles_drawCrosshair(crosshair);
 		}
-		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
 			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2

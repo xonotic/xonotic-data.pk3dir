@@ -736,19 +736,19 @@ spawnfunc(vehicle_bumblebee)
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
-		METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_bumblebee_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 		}
-		METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			self.touch = bumblebee_touch;
 			self.nextthink = 0;
 			self.movetype = MOVETYPE_BOUNCEMISSILE;
 		}
-		METHOD(Bumblebee, vr_think, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			self.angles_z *= 0.8;
@@ -786,7 +786,7 @@ spawnfunc(vehicle_bumblebee)
 				}
 			}
 		}
-		METHOD(Bumblebee, vr_death, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			entity oldself = self;
@@ -850,7 +850,7 @@ spawnfunc(vehicle_bumblebee)
 
 			setorigin(self, self.pos1);
 		}
-		METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			if(!self.gun1)
@@ -928,7 +928,7 @@ spawnfunc(vehicle_bumblebee)
 
 			setorigin(self, self.origin + '0 0 25');
 		}
-		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			if(autocvar_g_vehicle_bumblebee_energy)
@@ -989,7 +989,7 @@ void CSQC_BUMBLE_GUN_HUD()
 		{
 			Vehicles_drawCrosshair(vCROSS_HEAL);
 		}
-		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_LOCK;  // Raygun-locked
 			AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1

@@ -37,23 +37,23 @@ CLASS(Vehicle, Object)
     ATTRIB(Vehicle, height, float, 0)
 
     /** (BOTH) setup vehicle data */
-    METHOD(Vehicle, vr_setup, void(Vehicle)) { }
+    METHOD(Vehicle, vr_setup, void(Vehicle this, entity instance)) { }
     /** (SERVER) logic to run every frame */
-    METHOD(Vehicle, vr_think, void(Vehicle)) { }
+    METHOD(Vehicle, vr_think, void(Vehicle this, entity instance)) { }
     /** (SERVER) called when vehicle dies */
-    METHOD(Vehicle, vr_death, void(Vehicle)) { }
+    METHOD(Vehicle, vr_death, void(Vehicle this, entity instance)) { }
     /** (BOTH) precaches models/sounds used by this vehicle */
-    METHOD(Vehicle, vr_precache, void(Vehicle)) { }
+    METHOD(Vehicle, vr_precache, void(Vehicle this)) { }
     /** (SERVER) called when a player enters this vehicle */
-    METHOD(Vehicle, vr_enter, void(Vehicle)) { }
+    METHOD(Vehicle, vr_enter, void(Vehicle this, entity instance)) { }
     /** (SERVER) called when the vehicle re-spawns */
-    METHOD(Vehicle, vr_spawn, void(Vehicle)) { }
+    METHOD(Vehicle, vr_spawn, void(Vehicle this, entity instance)) { }
     /** (SERVER) called when a vehicle hits something */
-    METHOD(Vehicle, vr_impact, void(Vehicle)) { }
+    METHOD(Vehicle, vr_impact, void(Vehicle this, entity instance)) { }
     /** (CLIENT) logic to run every frame */
-    METHOD(Vehicle, vr_hud, void(Vehicle)) { }
+    METHOD(Vehicle, vr_hud, void(Vehicle this)) { }
     /** (CLIENT) logic to run every frame */
-    METHOD(Vehicle, vr_crosshair, void(Vehicle)) { }
+    METHOD(Vehicle, vr_crosshair, void(Vehicle this)) { }
 ENDCLASS(Vehicle)
 
 // vehicle spawn flags (need them here for common registrations)
