@@ -114,30 +114,30 @@ void ItemDrawSimple(entity this)
     Item_SetAlpha(this);
 }
 
-void Item_PreDraw()
-{SELFPARAM();
+void Item_PreDraw(entity this)
+{
 	if(warpzone_warpzones_exist)
 	{
 		// just incase warpzones were initialized last, reset these
-		//self.alpha = 1; // alpha is already set by the draw function
-		self.drawmask = MASK_NORMAL;
+		//this.alpha = 1; // alpha is already set by the draw function
+		this.drawmask = MASK_NORMAL;
 		return;
 	}
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
 		alph = 0;
-	else if(self.fade_start)
-		alph = bound(0, (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.fade_end - self.fade_start), 1);
+	else if(this.fade_start)
+		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
 	else
 		alph = 1;
-	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
-	if(!hud && (self.ItemStatus & ITS_AVAILABLE))
-		self.alpha = alph;
+	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
+	if(!hud && (this.ItemStatus & ITS_AVAILABLE))
+		this.alpha = alph;
 	if(alph <= 0)
-		self.drawmask = 0;
+		this.drawmask = 0;
 	else
-		self.drawmask = MASK_NORMAL;
+		this.drawmask = MASK_NORMAL;
 }
 
 void ItemRemove(entity this)
@@ -205,7 +205,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         self.fade_end = ReadShort();
         self.fade_start = ReadShort();
         if(self.fade_start && !autocvar_cl_items_nofade)
-        	self.predraw = Item_PreDraw;
+        	setpredraw(self, Item_PreDraw);
 
         if(self.mdl)
             strunzone(self.mdl);

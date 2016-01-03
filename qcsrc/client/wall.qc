@@ -9,8 +9,8 @@
 .float scale;
 .vector movedir;
 
-void Ent_Wall_PreDraw()
-{SELFPARAM();
+void Ent_Wall_PreDraw(entity this)
+{
 	if (this.inactive)
 	{
 		this.alpha = 0;
@@ -230,5 +230,5 @@ NET_HANDLE(ENT_CLIENT_WALL, bool isnew)
 
 	this.entremove = Ent_Wall_Remove;
 	this.draw = Ent_Wall_Draw;
-	this.predraw = Ent_Wall_PreDraw;
+	setpredraw(this, Ent_Wall_PreDraw);
 }

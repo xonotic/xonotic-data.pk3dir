@@ -8,21 +8,21 @@
 #elif defined(SVQC)
 #endif
 
-void WarpZone_Fade_PreDraw()
-{SELFPARAM();
+void WarpZone_Fade_PreDraw(entity this)
+{
 	vector org;
 	org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
-		self.alpha = 0;
-	else if(self.warpzone_fadestart)
-		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
+	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
+		this.alpha = 0;
+	else if(this.warpzone_fadestart)
+		this.alpha = bound(0, (this.warpzone_fadeend - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.warpzone_fadeend - this.warpzone_fadestart), 1);
 	else
-		self.alpha = 1;
-	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
-	if(self.alpha <= 0)
-		self.drawmask = 0;
+		this.alpha = 1;
+	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
+	if(this.alpha <= 0)
+		this.drawmask = 0;
 	else
-		self.drawmask = MASK_NORMAL;
+		this.drawmask = MASK_NORMAL;
 }
 
 void WarpZone_Touch ();
@@ -87,7 +87,7 @@ NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 
 	// how to draw
 	// engine currently wants this
-	self.predraw = WarpZone_Fade_PreDraw;
+	setpredraw(self, WarpZone_Fade_PreDraw);
 
 	//self.move_touch = WarpZone_Touch;
 	return true;
@@ -146,7 +146,7 @@ NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
 
 	// how to draw
 	// engine currently wants this
-	self.predraw = WarpZone_Fade_PreDraw;
+	setpredraw(self, WarpZone_Fade_PreDraw);
 	return true;
 }
 

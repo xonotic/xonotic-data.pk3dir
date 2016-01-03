@@ -327,6 +327,19 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
 
+.void(entity) predraw_qc;
+void PreDraw_self()
+{
+	if(self.predraw_qc)
+		self.predraw_qc(self);
+}
+
+void setpredraw(entity this, void(entity) pdfunc)
+{
+	this.predraw = PreDraw_self;
+	this.predraw_qc = pdfunc;
+}
+
 void Ent_Remove(entity this);
 
 void Ent_RemovePlayerScore(entity this)

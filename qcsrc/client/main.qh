@@ -14,6 +14,8 @@ const float DATABUF_PING = 0;
 
 #define DATABUF_NEXT (5*maxclients)
 
+void setpredraw(entity this, void(entity) pdfunc);
+
 // --------------------------------------------------------------------------
 // Onslaught
 

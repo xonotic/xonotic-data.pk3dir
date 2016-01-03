@@ -179,33 +179,33 @@ void CSQCModel_InterpolateAnimation_Do()
 #endif
 }
 
-void CSQCModel_Draw()
-{SELFPARAM();
+void CSQCModel_Draw(entity this)
+{
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	noref bool islocalplayer = (self.entnum == player_localnum + 1);
-	noref bool isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
+	bool isplayer = (this.entnum >= 1 && this.entnum <= maxclients);
+	noref bool islocalplayer = (this.entnum == player_localnum + 1);
+	noref bool isnolocalplayer = (isplayer && (this.entnum != player_localnum + 1));
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
 	if (!CSQCPlayer_IsLocalPlayer(this)) InterpolateOrigin_Do(this);
 
-	CSQCModel_InterpolateAnimation_Do();
+	WITH(entity, self, this, CSQCModel_InterpolateAnimation_Do());
 
 	{ CSQCMODEL_HOOK_PREDRAW }
 
 	// inherit draw flags easily
-	entity root = self;
+	entity root = this;
 	while(root.tag_entity)
 		root = root.tag_entity;
-	if(self != root)
+	if(this != root)
 	{
-		self.renderflags &= ~(RF_EXTERNALMODEL | RF_VIEWMODEL);
-		self.renderflags |= (root.renderflags & (RF_EXTERNALMODEL | RF_VIEWMODEL));
+		this.renderflags &= ~(RF_EXTERNALMODEL | RF_VIEWMODEL);
+		this.renderflags |= (root.renderflags & (RF_EXTERNALMODEL | RF_VIEWMODEL));
 	}
 
 	// we're drawn, now teleporting is over
-	self.csqcmodel_teleported = 0;
+	this.csqcmodel_teleported = 0;
 }
 
 entity CSQCModel_players[255]; // 255 is engine limit on maxclients
@@ -289,7 +289,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 
 	// draw it
 	this.drawmask = MASK_NORMAL;
-	this.predraw = CSQCModel_Draw;
+	setpredraw(this, CSQCModel_Draw);
 	return true;
 }
 
