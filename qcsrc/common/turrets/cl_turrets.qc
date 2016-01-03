@@ -117,7 +117,7 @@ void turret_draw2d(entity this)
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		txt = _("Spam");
 	else
-		txt = spritelookuptext(spriteimage);
+		txt = spritelookuptext(this, spriteimage);
 
 	if(time - floor(time) > 0.5 && t == this.team)
 	{
@@ -127,7 +127,7 @@ void turret_draw2d(entity this)
 			txt = sprintf(_("%s under attack!"), txt);
 		}
 		else
-			a *= spritelookupblinkvalue(spriteimage);
+			a *= spritelookupblinkvalue(this, spriteimage);
 	}
 
 	if(autocvar_g_waypointsprite_uppercase)

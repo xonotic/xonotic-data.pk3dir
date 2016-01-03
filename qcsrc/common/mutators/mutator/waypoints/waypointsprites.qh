@@ -97,9 +97,9 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
 // returns location of sprite healthbar
 vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s);
 
-float spritelookupblinkvalue(string s);
+float spritelookupblinkvalue(entity this, string s);
 vector spritelookupcolor(entity this, string s, vector def);
-string spritelookuptext(string s);
+string spritelookuptext(entity this, string s);
 
 vector fixrgbexcess_move(vector rgb, vector src, vector dst);
 vector fixrgbexcess(vector rgb);
@@ -108,7 +108,7 @@ vector fixrgbexcess(vector rgb);
 
 void Ent_RemoveWaypointSprite(entity this);
 
-void Ent_WaypointSprite();
+void Ent_WaypointSprite(entity this);
 
 void WaypointSprite_Load_Frames(string ext);
 
