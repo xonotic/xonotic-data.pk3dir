@@ -2169,7 +2169,7 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY(it.draw2d, LAMBDA(WITH(entity, self, it, it.draw2d(it))));
+	FOREACH_ENTITY(it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 	Debug_Draw();
 

@@ -31,18 +31,18 @@ void AuxiliaryXhair_Draw2D(entity this)
 	if (scoreboard_active)
 		return;
 
-	vector size = draw_getimagesize(self.axh_image) * autocvar_cl_vehicles_crosshair_size;
-	vector pos = project_3d_to_2d(self.move_origin) - 0.5 * size;
+	vector size = draw_getimagesize(this.axh_image) * autocvar_cl_vehicles_crosshair_size;
+	vector pos = project_3d_to_2d(this.move_origin) - 0.5 * size;
 
 	if (!(pos.z < 0 || pos.x < 0 || pos.y < 0 || pos.x > vid_conwidth || pos.y > vid_conheight))
 	{
 		pos.z = 0;
 		size.z = 0;
-		drawpic(pos, self.axh_image, size, self.colormod, autocvar_crosshair_alpha * self.alpha, self.axh_drawflag);
+		drawpic(pos, this.axh_image, size, this.colormod, autocvar_crosshair_alpha * this.alpha, this.axh_drawflag);
 	}
 
-	if(time - self.cnt > self.axh_fadetime)
-		self.draw2d = func_null;
+	if(time - this.cnt > this.axh_fadetime)
+		this.draw2d = func_null;
 }
 
 NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)

@@ -452,29 +452,29 @@ vector fixrgbexcess(vector rgb)
 
 void Draw_WaypointSprite(entity this)
 {
-    if (self.lifetime)
-        self.alpha = pow(bound(0, (self.fadetime - time) / self.lifetime, 1), waypointsprite_timealphaexponent);
+    if (this.lifetime)
+        this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
     else
-        self.alpha = 1;
+        this.alpha = 1;
 
-    if (self.hideflags & 2)
+    if (this.hideflags & 2)
         return; // radar only
 
     if (autocvar_cl_hidewaypoints >= 2)
         return;
 
-    if (self.hideflags & 1)
+    if (this.hideflags & 1)
         if (autocvar_cl_hidewaypoints)
             return; // fixed waypoint
 
-    InterpolateOrigin_Do(self);
+    InterpolateOrigin_Do(this);
 
     float t = entcs_GetTeam(player_localnum) + 1;
 
     string spriteimage = "";
 
     // choose the sprite
-    switch (self.rule)
+    switch (this.rule)
     {
         case SPRITERULE_SPECTATOR:
             if (!(
@@ -482,26 +482,26 @@ void Draw_WaypointSprite(entity this)
             ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage))
                 ))
                 return;
-            spriteimage = self.netname;
+            spriteimage = this.netname;
             break;
         case SPRITERULE_DEFAULT:
-            if (self.team)
+            if (this.team)
             {
-                if (self.team == t)
-                    spriteimage = self.netname;
+                if (this.team == t)
+                    spriteimage = this.netname;
                 else
                     spriteimage = "";
             }
             else
-                spriteimage = self.netname;
+                spriteimage = this.netname;
             break;
         case SPRITERULE_TEAMPLAY:
             if (t == NUM_SPECTATOR + 1)
-                spriteimage = self.netname3;
-            else if (self.team == t)
-                spriteimage = self.netname2;
+                spriteimage = this.netname3;
+            else if (this.team == t)
+                spriteimage = this.netname2;
             else
-                spriteimage = self.netname;
+                spriteimage = this.netname;
             break;
         default:
             error("Invalid waypointsprite rule!");
@@ -514,28 +514,28 @@ void Draw_WaypointSprite(entity this)
     ++waypointsprite_newcount;
 
     float dist;
-    dist = vlen(self.origin - view_origin);
+    dist = vlen(this.origin - view_origin);
 
     float a;
-    a = self.alpha * autocvar_hud_panel_fg_alpha;
+    a = this.alpha * autocvar_hud_panel_fg_alpha;
 
-    if (self.maxdistance > waypointsprite_normdistance)
-        a *= pow(bound(0, (self.maxdistance - dist) / (self.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
-    else if (self.maxdistance > 0)
+    if (this.maxdistance > waypointsprite_normdistance)
+        a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+    else if (this.maxdistance > 0)
         a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
-    vector rgb = spritelookupcolor(self, spriteimage, self.teamradar_color);
+    vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')
     {
-        self.teamradar_color = '1 0 1';
+        this.teamradar_color = '1 0 1';
         LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
     }
 
     if (time - floor(time) > 0.5)
     {
-        if (self.helpme && time < self.helpme)
+        if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (!self.lifetime) // fading out waypoints don't blink
+        else if (!this.lifetime) // fading out waypoints don't blink
             a *= spritelookupblinkvalue(spriteimage);
     }
 
@@ -553,7 +553,7 @@ void Draw_WaypointSprite(entity this)
     vector o;
     float ang;
 
-    o = project_3d_to_2d(self.origin);
+    o = project_3d_to_2d(this.origin);
     if (o.z < 0
     || o.x < (vid_conwidth * waypointsprite_edgeoffset_left)
     || o.y < (vid_conheight * waypointsprite_edgeoffset_top)
@@ -629,19 +629,19 @@ void Draw_WaypointSprite(entity this)
         t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
     }
 
-    if (self.build_finished)
+    if (this.build_finished)
     {
-        if (time < self.build_finished + 0.25)
+        if (time < this.build_finished + 0.25)
         {
-            if (time < self.build_started)
-                self.health = self.build_starthealth;
-            else if (time < self.build_finished)
-                self.health = (time - self.build_started) / (self.build_finished - self.build_started) * (1 - self.build_starthealth) + self.build_starthealth;
+            if (time < this.build_started)
+                this.health = this.build_starthealth;
+            else if (time < this.build_finished)
+                this.health = (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth;
             else
-                self.health = 1;
+                this.health = 1;
         }
         else
-            self.health = -1;
+            this.health = -1;
     }
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
@@ -651,18 +651,18 @@ void Draw_WaypointSprite(entity this)
         txt = _("Spam");
     else
         txt = spritelookuptext(spriteimage);
-    if (self.helpme && time < self.helpme)
+    if (this.helpme && time < this.helpme)
         txt = sprintf(_("%s needing help!"), txt);
     if (autocvar_g_waypointsprite_uppercase)
         txt = strtoupper(txt);
 
     draw_beginBoldFont();
-    if (self.health >= 0)
+    if (this.health >= 0)
     {
         o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 
         float align, marg;
-        if (self.build_finished)
+        if (this.build_finished)
             align = 0.5;
         else
             align = 0;
@@ -673,7 +673,7 @@ void Draw_WaypointSprite(entity this)
         drawhealthbar(
                 o,
                 0,
-                self.health,
+                this.health,
                 '0 0 0',
                 '0 0 0',
                 SPRITE_HEALTHBAR_WIDTH * t,
