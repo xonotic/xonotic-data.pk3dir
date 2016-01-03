@@ -95,48 +95,48 @@ vector autocvar_g_vehicle_racer_bouncepain;
 
 .float racer_watertime;
 
-var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
+var vector racer_force_from_tag(entity this, string tag_name, float spring_length, float max_power);
 
-void racer_align4point(float _delta)
-{SELFPARAM();
+void racer_align4point(entity this, float _delta)
+{
 	vector push_vector;
 	float fl_push, fr_push, bl_push, br_push;
 
-	push_vector  = racer_force_from_tag("tag_engine_fr", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector  = racer_force_from_tag(this, "tag_engine_fr", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	fr_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	push_vector += racer_force_from_tag("tag_engine_fl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector += racer_force_from_tag(this, "tag_engine_fl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	fl_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	push_vector += racer_force_from_tag("tag_engine_br", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector += racer_force_from_tag(this, "tag_engine_br", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	br_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	push_vector += racer_force_from_tag("tag_engine_bl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector += racer_force_from_tag(this, "tag_engine_bl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	bl_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	self.velocity += push_vector * _delta;
+	this.velocity += push_vector * _delta;
 
 	float uforce = autocvar_g_vehicle_racer_upforcedamper;
 
-	int cont = pointcontents(self.origin - '0 0 64');
+	int cont = pointcontents(this.origin - '0 0 64');
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 	{
 		uforce = autocvar_g_vehicle_racer_water_upforcedamper;
 
-		if(self.owner.BUTTON_CROUCH && time < self.air_finished)
-			self.velocity_z += 30;
+		if(this.owner.BUTTON_CROUCH && time < this.air_finished)
+			this.velocity_z += 30;
 		else
-			self.velocity_z += 200;
+			this.velocity_z += 200;
 	}
 
 
 	// Anti ocilation
-	if(self.velocity_z > 0)
-		self.velocity_z *= 1 - uforce * _delta;
+	if(this.velocity_z > 0)
+		this.velocity_z *= 1 - uforce * _delta;
 
 	push_vector_x =  (fl_push - bl_push);
 	push_vector_x += (fr_push - br_push);
@@ -147,12 +147,12 @@ void racer_align4point(float _delta)
 	push_vector_z *= 360;
 
 	// Apply angle diffrance
-	self.angles_z += push_vector_z * _delta;
-	self.angles_x += push_vector_x * _delta;
+	this.angles_z += push_vector_z * _delta;
+	this.angles_x += push_vector_x * _delta;
 
 	// Apply stabilizer
-	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
-	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
+	this.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
+	this.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
 }
 
 void racer_fire_rocket_aim(entity player, string tagname, entity trg)
@@ -191,7 +191,7 @@ float racer_frame()
 		return 1;
 	}
 
-	racer_align4point(PHYS_INPUT_TIMELENGTH);
+	racer_align4point(self, PHYS_INPUT_TIMELENGTH);
 
 	player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
 
@@ -329,7 +329,7 @@ float racer_frame()
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
-		vehicles_locktarget((1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
+		vehicles_locktarget(self, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
 						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
 						 autocvar_g_vehicle_racer_rocket_locked_time);
 

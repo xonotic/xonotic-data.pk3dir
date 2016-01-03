@@ -342,7 +342,7 @@ float raptor_frame()
 	else if(autocvar_g_vehicle_raptor_cannon_locktarget == 1)
 	{
 
-		vehicles_locktarget((1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
+		vehicles_locktarget(self, (1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
 							 (1 / autocvar_g_vehicle_raptor_cannon_locking_releasetime) * frametime,
 							 autocvar_g_vehicle_raptor_cannon_locked_time);
 

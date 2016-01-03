@@ -42,15 +42,15 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
 
-	WriteByte(MSG_ENTITY, self.cnt);
+	WriteByte(MSG_ENTITY, this.cnt);
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
 
-	WriteByte(MSG_ENTITY, rint(self.colormod_x * 255));
-	WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
-	WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
+	WriteByte(MSG_ENTITY, rint(this.colormod_x * 255));
+	WriteByte(MSG_ENTITY, rint(this.colormod_y * 255));
+	WriteByte(MSG_ENTITY, rint(this.colormod_z * 255));
 
 	return true;
 }
@@ -91,36 +91,22 @@ void CSQCVehicleSetup(entity own, int vehicle_id)
 	WriteByte(MSG_ONE, vehicle_id);
 }
 
-vector targetdrone_getnewspot()
-{SELFPARAM();
-	vector spot;
-	int i;
-	for(i = 0; i < 100; ++i)
+void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
+{
+	if(this.lock_target && IS_DEAD(this.lock_target))
 	{
-		spot = self.origin + randomvec() * 1024;
-		tracebox(spot, self.mins, self.maxs, spot, MOVE_NORMAL, self);
-		if(trace_fraction == 1.0 && trace_startsolid == 0 && trace_allsolid == 0)
-			return spot;
-	}
-	return self.origin;
-}
-
-void vehicles_locktarget(float incr, float decr, float _lock_time)
-{SELFPARAM();
-	if(self.lock_target && IS_DEAD(self.lock_target))
-	{
-		self.lock_target	= world;
-		self.lock_strength  = 0;
-		self.lock_time	  = 0;
+		this.lock_target	= world;
+		this.lock_strength  = 0;
+		this.lock_time	  = 0;
 	}
 
-	if(self.lock_time > time)
+	if(this.lock_time > time)
 	{
-		if(self.lock_target)
-		if(self.lock_soundtime < time)
+		if(this.lock_target)
+		if(this.lock_soundtime < time)
 		{
-			self.lock_soundtime = time + 0.5;
-			play2(self.owner, "vehicles/locked.wav");
+			this.lock_soundtime = time + 0.5;
+			play2(this.owner, "vehicles/locked.wav");
 		}
 
 		return;
@@ -128,7 +114,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
 	if(trace_ent != world)
 	{
-		if(SAME_TEAM(trace_ent, self))
+		if(SAME_TEAM(trace_ent, this))
 			trace_ent = world;
 
 		if(IS_DEAD(trace_ent))
@@ -141,48 +127,48 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 			trace_ent = world; // invisible
 	}
 
-	if(self.lock_target == world && trace_ent != world)
-		self.lock_target = trace_ent;
+	if(this.lock_target == world && trace_ent != world)
+		this.lock_target = trace_ent;
 
-	if(self.lock_target && trace_ent == self.lock_target)
+	if(this.lock_target && trace_ent == this.lock_target)
 	{
-		if(self.lock_strength != 1 && self.lock_strength + incr >= 1)
+		if(this.lock_strength != 1 && this.lock_strength + incr >= 1)
 		{
-			play2(self.owner, "vehicles/lock.wav");
-			self.lock_soundtime = time + 0.8;
+			play2(this.owner, "vehicles/lock.wav");
+			this.lock_soundtime = time + 0.8;
 		}
-		else if (self.lock_strength != 1 && self.lock_soundtime < time)
+		else if (this.lock_strength != 1 && this.lock_soundtime < time)
 		{
-			play2(self.owner, "vehicles/locking.wav");
-			self.lock_soundtime = time + 0.3;
+			play2(this.owner, "vehicles/locking.wav");
+			this.lock_soundtime = time + 0.3;
 		}
 	}
 
 	// Have a locking target
 	// Trace hit current target
-	if(trace_ent == self.lock_target && trace_ent != world)
+	if(trace_ent == this.lock_target && trace_ent != world)
 	{
-		self.lock_strength = min(self.lock_strength + incr, 1);
-		if(self.lock_strength == 1)
-			self.lock_time = time + _lock_time;
+		this.lock_strength = min(this.lock_strength + incr, 1);
+		if(this.lock_strength == 1)
+			this.lock_time = time + _lock_time;
 	}
 	else
 	{
 		if(trace_ent)
-			self.lock_strength = max(self.lock_strength - decr * 2, 0);
+			this.lock_strength = max(this.lock_strength - decr * 2, 0);
 		else
-			self.lock_strength = max(self.lock_strength - decr, 0);
+			this.lock_strength = max(this.lock_strength - decr, 0);
 
-		if(self.lock_strength == 0)
-			self.lock_target = world;
+		if(this.lock_strength == 0)
+			this.lock_target = world;
 	}
 }
 
-vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float max_power)
-{SELFPARAM();
-	force_fromtag_origin = gettaginfo(self, gettagindex(self, tag_name));
+vector vehicles_force_fromtag_hover(entity this, string tag_name, float spring_length, float max_power)
+{
+	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));
 	v_forward  = normalize(v_forward) * -1;
-	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, self);
+	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, this);
 
 	force_fromtag_power = (1 - trace_fraction) * max_power;
 	force_fromtag_normpower = force_fromtag_power / max_power;
@@ -190,12 +176,11 @@ vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float 
 	return v_forward  * force_fromtag_power;
 }
 
-vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float max_power)
-{SELFPARAM();
-
-	force_fromtag_origin = gettaginfo(self, gettagindex(self, tag_name));
+vector vehicles_force_fromtag_maglev(entity this, string tag_name, float spring_length, float max_power)
+{
+	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));
 	v_forward  = normalize(v_forward) * -1;
-	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, self);
+	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, this);
 
 	// TODO - this may NOT be compatible with wall/celing movement, unhardcode 0.25 (engine count multiplier)
 	if(trace_fraction == 1.0)
