@@ -163,17 +163,17 @@ void movelib_update(vector dir,float force)
 }
 */
 
-void movelib_brake_simple(float force)
-{SELFPARAM();
+void movelib_brake_simple(entity this, float force)
+{
     float mspeed;
     vector mdir;
     float vz;
 
-    mspeed = max(0,vlen(self.velocity) - force);
-    mdir   = normalize(self.velocity);
-    vz = self.velocity.z;
-    self.velocity = mdir * mspeed;
-    self.velocity_z = vz;
+    mspeed = max(0,vlen(this.velocity) - force);
+    mdir   = normalize(this.velocity);
+    vz = this.velocity.z;
+    this.velocity = mdir * mspeed;
+    this.velocity_z = vz;
 }
 
 /**

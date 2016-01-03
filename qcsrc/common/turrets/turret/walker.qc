@@ -114,7 +114,7 @@ void walker_rocket_damage (entity inflictor, entity attacker, float damage, floa
         W_PrepareExplosionByDamage(self.owner, walker_rocket_explode);
 }
 
-#define WALKER_ROCKET_MOVE movelib_move_simple(newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)
+#define WALKER_ROCKET_MOVE movelib_move_simple(self, newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)
 void walker_rocket_loop();
 void walker_rocket_think()
 {SELFPARAM();
@@ -292,7 +292,7 @@ void walker_move_to(vector _target, float _dist)
     }
 
     self.moveto = _target;
-    self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+    self.steerto = steerlib_attract2(self, self.moveto, 0.5, 500, 0.95);
 
     if(self.enemy)
     {
@@ -330,7 +330,7 @@ void walker_move_path()
             self.pathcurrent = self.pathcurrent.path_next;
 
     self.moveto = self.pathcurrent.origin;
-    self.steerto = steerlib_attract2(self.moveto,0.5,500,0.95);
+    self.steerto = steerlib_attract2(self, self.moveto,0.5,500,0.95);
     walker_move_to(self.moveto, 0);
 
 #else
@@ -341,7 +341,7 @@ void walker_move_path()
         return;
 
     self.moveto = self.pathcurrent.origin;
-    self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+    self.steerto = steerlib_attract2(self, self.moveto, 0.5, 500, 0.95);
     walker_move_to(self.moveto, 0);
 #endif
 }
@@ -424,7 +424,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                     if (fabs(wish_angle_y) < 15)
                     {
                         self.moveto   = self.enemy.origin;
-                        self.steerto  = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+                        self.steerto  = steerlib_attract2(self, self.moveto, 0.5, 500, 0.95);
                         self.animflag = ANIM_MELEE;
                     }
                 }
@@ -470,32 +470,32 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                 switch (self.animflag)
                 {
                     case ANIM_NO:
-                        movelib_brake_simple((autocvar_g_turrets_unit_walker_speed_stop));
+                        movelib_brake_simple(self, (autocvar_g_turrets_unit_walker_speed_stop));
                         break;
 
                     case ANIM_TURN:
                         turny = (autocvar_g_turrets_unit_walker_turn);
-                        movelib_brake_simple((autocvar_g_turrets_unit_walker_speed_stop));
+                        movelib_brake_simple(self, (autocvar_g_turrets_unit_walker_speed_stop));
                         break;
 
                     case ANIM_WALK:
                         turny = (autocvar_g_turrets_unit_walker_turn_walk);
-                        movelib_move_simple(v_forward, (autocvar_g_turrets_unit_walker_speed_walk), 0.6);
+                        movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_walker_speed_walk), 0.6);
                         break;
 
                     case ANIM_RUN:
                         turny = (autocvar_g_turrets_unit_walker_turn_run);
-                        movelib_move_simple(v_forward, (autocvar_g_turrets_unit_walker_speed_run), 0.6);
+                        movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_walker_speed_run), 0.6);
                         break;
 
                     case ANIM_STRAFE_L:
                         turny = (autocvar_g_turrets_unit_walker_turn_strafe);
-                        movelib_move_simple(v_right * -1, (autocvar_g_turrets_unit_walker_speed_walk), 0.8);
+                        movelib_move_simple(self, v_right * -1, (autocvar_g_turrets_unit_walker_speed_walk), 0.8);
                         break;
 
                     case ANIM_STRAFE_R:
                         turny = (autocvar_g_turrets_unit_walker_turn_strafe);
-                        movelib_move_simple(v_right, (autocvar_g_turrets_unit_walker_speed_walk), 0.8);
+                        movelib_move_simple(self, v_right, (autocvar_g_turrets_unit_walker_speed_walk), 0.8);
                         break;
 
                     case ANIM_JUMP:
@@ -518,7 +518,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                             defer(self, 0.21, walker_melee_do_dmg);
                         }
 
-                        movelib_brake_simple((autocvar_g_turrets_unit_walker_speed_stop));
+                        movelib_brake_simple(self, (autocvar_g_turrets_unit_walker_speed_stop));
                         break;
 
                     case ANIM_SWIM:
@@ -526,13 +526,13 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                         turnx = (autocvar_g_turrets_unit_walker_turn_swim);
 
                         self.angles_x += bound(-10, shortangle_f(real_angle_x, self.angles_x), 10);
-                        movelib_move_simple(v_forward, (autocvar_g_turrets_unit_walker_speed_swim), 0.3);
+                        movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_walker_speed_swim), 0.3);
                         vz = self.velocity_z + sin(time * 4) * 8;
                         break;
 
                     case ANIM_ROAM:
                         turny = (autocvar_g_turrets_unit_walker_turn_walk);
-                        movelib_move_simple(v_forward ,(autocvar_g_turrets_unit_walker_speed_roam), 0.5);
+                        movelib_move_simple(self, v_forward ,(autocvar_g_turrets_unit_walker_speed_roam), 0.5);
                         break;
                 }
 

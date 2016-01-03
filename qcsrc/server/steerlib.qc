@@ -48,14 +48,14 @@ vector steerlib_attract(vector point, float maximal_distance)
     return  direction * (1-(distance / maximal_distance));
 }
 
-vector steerlib_attract2(vector point, float min_influense,float max_distance,float max_influense)
-{SELFPARAM();
+vector steerlib_attract2(entity this, vector point, float min_influense,float max_distance,float max_influense)
+{
     float distance;
     vector direction;
     float influense;
 
-    distance  = bound(0.00001,vlen(self.origin - point),max_distance);
-    direction = normalize(point - self.origin);
+    distance  = bound(0.00001,vlen(this.origin - point),max_distance);
+    direction = normalize(point - this.origin);
 
     influense = 1 - (distance / max_distance);
     influense = min_influense + (influense * (max_influense - min_influense));

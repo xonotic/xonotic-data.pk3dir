@@ -2397,7 +2397,7 @@ void PlayerPreThink ()
 		secrets_setstatus();
 
 		// monsters status
-		monsters_setstatus();
+		monsters_setstatus(self);
 
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 

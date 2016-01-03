@@ -75,9 +75,9 @@ void ewheel_move_path()
     {
 
         self.moveto = self.pathcurrent.origin;
-        self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+        self.steerto = steerlib_attract2(self, self.moveto, 0.5, 500, 0.95);
 
-        movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+        movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
     }
 }
 
@@ -94,29 +94,29 @@ void ewheel_move_enemy()
         if ( self.tur_head.spawnshieldtime < 1 )
         {
             newframe = ewheel_anim_fwd_fast;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
         }
         else if (self.tur_head.spawnshieldtime < 2)
         {
 
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
        }
         else
         {
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
         }
     }
     else if (self.tur_dist_enemy < self.target_range_optimal * 0.5)
     {
         newframe = ewheel_anim_bck_slow;
-        movelib_move_simple(v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+        movelib_move_simple(self, v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
     }
     else
     {
         newframe = ewheel_anim_stop;
-        movelib_brake_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
     }
 
     turrets_setframe(newframe, false);
@@ -132,7 +132,7 @@ void ewheel_move_idle()
 
     self.frame = 0;
     if (vlen(self.velocity))
-        movelib_brake_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
 spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }

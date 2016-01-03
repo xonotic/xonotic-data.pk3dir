@@ -25,7 +25,7 @@ const int MON_FLAG_RIDE = 4096; // monster can be ridden in special modes
 const int MONSTER_SIZE_QUAKE = 8192;
 
 // entity properties of monsterinfo:
-.bool(int, entity targ) monster_attackfunc;
+.bool(int, entity actor, entity targ) monster_attackfunc;
 
 // animations
 .vector anim_blockend;
@@ -56,17 +56,17 @@ CLASS(Monster, Object)
     ATTRIB(Monster, maxs, vector, '0 0 0')
 
     /** (SERVER) setup monster data */
-    METHOD(Monster, mr_setup, bool(Monster this)) { return false; }
+    METHOD(Monster, mr_setup, bool(Monster this, entity actor)) { return false; }
     /** (SERVER) logic to run every frame */
-    METHOD(Monster, mr_think, bool(Monster this)) { return false; }
+    METHOD(Monster, mr_think, bool(Monster this, entity actor)) { return false; }
     /** (SERVER) called when monster dies */
-    METHOD(Monster, mr_death, bool(Monster this)) { return false; }
+    METHOD(Monster, mr_death, bool(Monster this, entity actor)) { return false; }
     /** (BOTH) precaches models/sounds used by this monster */
     METHOD(Monster, mr_precache, bool(Monster this)) { return false; }
     /** (SERVER) called when monster is damaged */
-    METHOD(Monster, mr_pain, bool(Monster this)) { return false; }
+    METHOD(Monster, mr_pain, bool(Monster this, entity actor)) { return false; }
     /** (BOTH?) sets animations for monster */
-    METHOD(Monster, mr_anim, bool(Monster this)) { return false; }
+    METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { return false; }
 
 ENDCLASS(Monster)
 

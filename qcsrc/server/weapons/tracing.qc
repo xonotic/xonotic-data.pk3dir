@@ -53,7 +53,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
 		accuracy_add(ent, PS(ent).m_weapon.m_id, maxdamage, 0);
 
-	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
+	if(IS_PLAYER(ent))
+		W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	vector md = ent.(weaponentity).movedir;

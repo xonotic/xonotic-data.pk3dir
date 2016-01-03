@@ -192,7 +192,7 @@ float spiderbot_frame()
 						//dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
 						sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_IDLE, VOL_VEHICLEENGINE, ATTEN_NORM);
 					}
-					movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
+					movelib_brake_simple(self, autocvar_g_vehicle_spiderbot_speed_stop);
 					spider.frame = 5;
 				}
 			}
@@ -224,7 +224,7 @@ float spiderbot_frame()
 					}
 					player.movement_y = 0;
 					float oldvelz = spider.velocity_z;
-					movelib_move_simple(normalize(v_forward * player.movement_x),((player.BUTTON_JUMP) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(self, normalize(v_forward * player.movement_x),((player.BUTTON_JUMP) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
 					spider.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
@@ -254,7 +254,7 @@ float spiderbot_frame()
 					}
 
 					float oldvelz = spider.velocity_z;
-					movelib_move_simple(normalize(v_right * player.movement_y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(self, normalize(v_right * player.movement_y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
 					spider.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
@@ -576,7 +576,7 @@ spawnfunc(vehicle_spiderbot)
 		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
 		{
 			if(IS_ONGROUND(self))
-				movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
+				movelib_brake_simple(self, autocvar_g_vehicle_spiderbot_speed_stop);
 		}
 		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 		{

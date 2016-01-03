@@ -50,7 +50,7 @@ float autocvar_g_monster_spider_attack_web_delay;
 float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
 
-void M_Spider_Attack_Web();
+void M_Spider_Attack_Web(entity this);
 
 REGISTER_MUTATOR(spiderweb, true);
 
@@ -101,7 +101,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, v_forward, false, 0, SND(SpiderAttack_FIRE), CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
-		M_Spider_Attack_Web();
+		M_Spider_Attack_Web(actor);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
         return;
     }
@@ -111,7 +111,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
     		actor.enemy = Monster_FindTarget(actor);
     		actor.attack_range = 60;
     	}
-    	Monster_Attack_Melee(actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
+    	Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
@@ -153,14 +153,14 @@ void M_Spider_Attack_Web_Touch()
 
 void adaptor_think2use_hittype_splash();
 
-void M_Spider_Attack_Web()
-{SELFPARAM();
-	monster_makevectors(self.enemy);
+void M_Spider_Attack_Web(entity this)
+{
+	monster_makevectors(this, this.enemy);
 
-	sound(self, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_ELECTRO_FIRE2, VOL_BASE, ATTEN_NORM);
 
 	entity proj = new(plasma);
-	proj.owner = proj.realowner = self;
+	proj.owner = proj.realowner = this;
 	proj.use = M_Spider_Attack_Web_Explode;
 	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = true;
@@ -168,7 +168,7 @@ void M_Spider_Attack_Web()
 	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = DEATH_MONSTER_SPIDER.m_id;
-	setorigin(proj, CENTER_OR_VIEWOFS(self));
+	setorigin(proj, CENTER_OR_VIEWOFS(this));
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
@@ -190,20 +190,20 @@ void M_Spider_Attack_Web()
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, true);
 }
 
-bool M_Spider_Attack(int attack_type, entity targ)
-{SELFPARAM();
+bool M_Spider_Attack(int attack_type, entity actor, entity targ)
+{
     .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		Weapon wep = WEP_SPIDER_ATTACK;
 		case MONSTER_ATTACK_MELEE:
 		{
-			wep.wr_think(wep, self, weaponentity, 2);
+			wep.wr_think(wep, actor, weaponentity, 2);
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			wep.wr_think(wep, self, weaponentity, 1);
+			wep.wr_think(wep, actor, weaponentity, 1);
 			return true;
 		}
 	}
@@ -211,53 +211,49 @@ bool M_Spider_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_spider) { Monster_Spawn(MON_SPIDER.monsterid); }
+spawnfunc(monster_spider) { Monster_Spawn(this, MON_SPIDER.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Spider, mr_think, bool(Spider thismon))
+		METHOD(Spider, mr_think, bool(Spider thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Spider, mr_pain, bool(Spider thismon))
+		METHOD(Spider, mr_pain, bool(Spider thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Spider, mr_death, bool(Spider thismon))
+		METHOD(Spider, mr_death, bool(Spider thismon, entity actor))
 		{
-			SELFPARAM();
-			setanim(self, self.anim_melee, false, true, true);
-			self.angles_x = 180;
+			setanim(actor, actor.anim_melee, false, true, true);
+			actor.angles_x = 180;
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Spider, mr_anim, bool(Spider thismon))
+		METHOD(Spider, mr_anim, bool(Spider thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_walk = animfixfps(self, '1 1 1', none);
-			self.anim_idle = animfixfps(self, '0 1 1', none);
-			self.anim_melee = animfixfps(self, '2 1 5', none); // analyze models and set framerate
-			self.anim_shoot = animfixfps(self, '3 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '1 1 1', none);
-
+			actor.anim_walk = animfixfps(actor, '1 1 1', none);
+			actor.anim_idle = animfixfps(actor, '0 1 1', none);
+			actor.anim_melee = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+			actor.anim_shoot = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '1 1 1', none);
 			return true;
 		}
 		#endif
 		#ifdef SVQC
 		spawnfunc(item_health_medium);
-		METHOD(Spider, mr_setup, bool(Spider thismon))
+		METHOD(Spider, mr_setup, bool(Spider thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_spider_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_spider_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_spider_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_spider_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_spider_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
-			self.monster_loot = spawnfunc_item_health_medium;
-			self.monster_attackfunc = M_Spider_Attack;
+			actor.monster_loot = spawnfunc_item_health_medium;
+			actor.monster_attackfunc = M_Spider_Attack;
 
 			return true;
 		}
