@@ -137,7 +137,7 @@ void ewheel_move_idle()
 
 spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
-        METHOD(EWheel, tr_think, void(EWheel thistur))
+        METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
         {
             SELFPARAM();
             float vz;

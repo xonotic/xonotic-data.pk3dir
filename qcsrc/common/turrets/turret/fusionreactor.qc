@@ -48,13 +48,13 @@ bool turret_fusionreactor_firecheck()
 
 spawnfunc(turret_fusionreactor) { if (!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
 
-METHOD(FusionReactor, tr_attack, void(FusionReactor this))
+METHOD(FusionReactor, tr_attack, void(FusionReactor this, entity it))
 {
     self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
     vector fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
     te_smallflash(fl_org);
 }
-METHOD(FusionReactor, tr_think, void(FusionReactor thistur))
+METHOD(FusionReactor, tr_think, void(FusionReactor thistur, entity it))
 {
     self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
 }

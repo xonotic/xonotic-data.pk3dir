@@ -23,7 +23,7 @@ CLASS(Turret, Object)
     /** turret hitbox size */
     ATTRIB(Turret, maxs, vector, '0 0 0')
 
-    METHOD(Turret, display, void(entity this, void(string name, string icon) returns)) {
+    METHOD(Turret, display, void(Turret this, void(string name, string icon) returns)) {
         returns(this.turret_name, string_null);
     }
     /** (BOTH) setup turret data */
@@ -31,7 +31,7 @@ CLASS(Turret, Object)
 
     }
     /** (SERVER) logic to run every frame */
-    METHOD(Turret, tr_think, void(Turret this)) {
+    METHOD(Turret, tr_think, void(Turret this, entity it)) {
 
     }
     /** (SERVER) called when turret dies */
@@ -45,7 +45,7 @@ CLASS(Turret, Object)
     ATTRIB(Turret, m_weapon, Weapon, WEP_Null)
 #ifdef SVQC
     /** (SERVER) called when turret attacks */
-    METHOD(Turret, tr_attack, void(Turret this)) {
+    METHOD(Turret, tr_attack, void(Turret this, entity it)) {
         Weapon w = this.m_weapon;
         .entity weaponentity = weaponentities[0];
         w.wr_think(w, self, weaponentity, 1);

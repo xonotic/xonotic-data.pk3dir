@@ -348,7 +348,7 @@ void walker_move_path()
 
 spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
-        METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur))
+        METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
         {
             fixedmakevectors(self.angles);
 

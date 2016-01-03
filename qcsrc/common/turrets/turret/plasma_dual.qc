@@ -28,7 +28,7 @@ REGISTER_TURRET(PLASMA_DUAL, NEW(DualPlasmaTurret));
 
 spawnfunc(turret_plasma_dual) { if (!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
 
-METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this))
+METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this, entity it))
 {
     if (g_instagib) {
         FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
@@ -41,11 +41,11 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this))
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
         WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
     } else {
-        SUPER(PlasmaTurret).tr_attack(this);
+        SUPER(PlasmaTurret).tr_attack(this, it);
     }
     self.tur_head.frame += 1;
 }
-METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur))
+METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur, entity it))
 {
     if ((self.tur_head.frame != 0) && (self.tur_head.frame != 3))
         self.tur_head.frame = self.tur_head.frame + 1;

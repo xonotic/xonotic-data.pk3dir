@@ -994,7 +994,7 @@ void turret_fire()
 		return;
 
 	Turret info = get_turretinfo(self.m_id);
-	info.tr_attack(info);
+	info.tr_attack(info, self);
 
 	self.attack_finished_single[0] = time + self.shot_refire;
 	self.ammo -= self.shot_dmg;
@@ -1108,7 +1108,7 @@ void turret_think()
 					turret_fire();
 
 				Turret tur = get_turretinfo(self.m_id);
-				tur.tr_think(tur);
+				tur.tr_think(tur, self);
 
 				return;
 			}
@@ -1147,7 +1147,7 @@ void turret_think()
 				turret_track();
 
 			Turret tur = get_turretinfo(self.m_id);
-			tur.tr_think(tur);
+			tur.tr_think(tur, self);
 
 			// And bail.
 			return;
@@ -1171,7 +1171,7 @@ void turret_think()
 	}
 
 	Turret tur = get_turretinfo(self.m_id);
-	tur.tr_think(tur);
+	tur.tr_think(tur, self);
 }
 
 /*
@@ -1209,7 +1209,7 @@ void turrets_manager_think()
 		FOREACH_ENTITY(IS_TURRET(it), LAMBDA(
 			load_unit_settings(it, true);
 			Turret tur = get_turretinfo(it.m_id);
-			tur.tr_think(tur);
+			tur.tr_think(tur, it);
 		));
 		cvar_set("g_turrets_reloadcvars", "0");
 	}
