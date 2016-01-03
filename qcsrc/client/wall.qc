@@ -11,42 +11,42 @@
 
 void Ent_Wall_PreDraw()
 {SELFPARAM();
-	if (self.inactive)
+	if (this.inactive)
 	{
-		self.alpha = 0;
+		this.alpha = 0;
 	}
 	else
 	{
 		vector org = getpropertyvec(VF_ORIGIN);
-		if(!checkpvs(org, self))
-			self.alpha = 0;
-		else if(self.fade_start || self.fade_end) {
+		if(!checkpvs(org, this))
+			this.alpha = 0;
+		else if(this.fade_start || this.fade_end) {
 			vector offset = '0 0 0';
-			offset_z = self.fade_vertical_offset;
-			float player_dist = vlen(org - self.origin - 0.5 * (self.mins + self.maxs) + offset);
-			if (self.fade_end == self.fade_start)
+			offset_z = this.fade_vertical_offset;
+			float player_dist = vlen(org - this.origin - 0.5 * (this.mins + this.maxs) + offset);
+			if (this.fade_end == this.fade_start)
 			{
-				if (player_dist >= self.fade_start)
-					self.alpha = 0;
+				if (player_dist >= this.fade_start)
+					this.alpha = 0;
 				else
-					self.alpha = 1;
+					this.alpha = 1;
 			}
 			else
 			{
-				self.alpha = (self.alpha_min + self.alpha_max * bound(0,
-							   (self.fade_end - player_dist)
-							   / (self.fade_end - self.fade_start), 1)) / 100.0;
+				this.alpha = (this.alpha_min + this.alpha_max * bound(0,
+							   (this.fade_end - player_dist)
+							   / (this.fade_end - this.fade_start), 1)) / 100.0;
 			}
 		}
 		else
 		{
-			self.alpha = 1;
+			this.alpha = 1;
 		}
 	}
-	if(self.alpha <= 0)
-		self.drawmask = 0;
+	if(this.alpha <= 0)
+		this.drawmask = 0;
 	else
-		self.drawmask = MASK_NORMAL;
+		this.drawmask = MASK_NORMAL;
 }
 
 void Ent_Wall_Draw(entity this)
