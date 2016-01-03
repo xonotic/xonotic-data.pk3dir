@@ -5,7 +5,7 @@ bool TEST_ok;
 
 void TEST_Fail(string cond)
 {
-	LOG_INFOF("Assertion failed: ", cond);
+	LOG_INFOF("Assertion failed: %s", cond);
 	// backtrace();
 	++TEST_failed;
 }
