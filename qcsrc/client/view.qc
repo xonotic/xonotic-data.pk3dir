@@ -1486,6 +1486,8 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_running = true;
 
 			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
+			if(!local_player)
+				local_player = self; // fall back!
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
