@@ -80,7 +80,6 @@ void viewmodel_animate(entity this)
 
 	if(autocvar_cl_followmodel && autocvar_cl_followmodel_scale > 0)
 	{
-		vector gunorg = '0 0 0';
 		vector forward, right = '0 0 0', up = '0 0 0';
 		MAKEVECTORS(makevectors, view_angles, forward, right, up);
 		vel.x = view.velocity * forward;
@@ -95,9 +94,10 @@ void viewmodel_animate(entity this)
 
 		vel_prev = vel;
 
-		float frac = 1 - exp(-frametime / autocvar_cl_followmodel_averagingtime);
+		float frac = 1 - exp(-frametime / max(0.001, autocvar_cl_followmodel_averagingtime));
 		acc_average = acc_average * (1 - frac) + acc * frac;
 
+		vector gunorg;
 		gunorg.x = -acc_average.x / 30 * autocvar_cl_followmodel_scale;
 		gunorg.y = -acc_average.y / 30 * autocvar_cl_followmodel_scale;
 		gunorg.z = -acc_average.z / 30 * autocvar_cl_followmodel_scale;
@@ -114,7 +114,6 @@ void viewmodel_animate(entity this)
 	static vector viewangles_acc_average = '0 0 0';
 	if(autocvar_cl_leanmodel && autocvar_cl_leanmodel_scale > 0)
 	{
-		vector gunangles = '0 0 0';
 		if(teleported)
 			viewangles_prev = view_angles;
 
@@ -132,10 +131,11 @@ void viewmodel_animate(entity this)
 		viewangles_prev = view_angles;
 		viewangles_vel_prev = viewangles_vel_average;
 
-		frac = 1 - exp(-frametime / autocvar_cl_leanmodel_averagingtime);
+		frac = 1 - exp(-frametime / max(0.001, autocvar_cl_leanmodel_averagingtime));
 		viewangles_acc_average.x = viewangles_acc_average.x * (1 - frac) + acc.x * frac;
 		viewangles_acc_average.y = viewangles_acc_average.y * (1 - frac) + acc.y * frac;
 
+		vector gunangles = '0 0 0';
 		gunangles.x = viewangles_acc_average.x / 3 * autocvar_cl_leanmodel_scale;
 		gunangles.y = -viewangles_acc_average.y / 3 * autocvar_cl_leanmodel_scale;
 		if(fabs(gunangles.x) < 0.001) gunangles.x = 0;
