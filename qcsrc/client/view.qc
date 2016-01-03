@@ -1839,7 +1839,7 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	FOREACH_ENTITY(it.draw, it.draw(it));
+	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -2169,7 +2169,7 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY(it.draw2d, it.draw2d(it));
+	FOREACH_ENTITY(it.draw2d, LAMBDA(it.draw2d(it)));
 	Draw_ShowNames_All();
 	Debug_Draw();
 
