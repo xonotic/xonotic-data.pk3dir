@@ -267,18 +267,18 @@ void raptor_flare_think()
 
 void RaptorCBShellfragDraw(entity this)
 {
-    if(wasfreed(self))
+    if(wasfreed(this))
         return;
 
-    Movetype_Physics_MatchTicrate(self, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
-    self.move_avelocity += randomvec() * 15;
-    self.renderflags = 0;
+    Movetype_Physics_MatchTicrate(this, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+    this.move_avelocity += randomvec() * 15;
+    this.renderflags = 0;
 
-    if(self.cnt < time)
-        self.alpha = bound(0, self.nextthink - time, 1);
+    if(this.cnt < time)
+        this.alpha = bound(0, this.nextthink - time, 1);
 
-    if(self.alpha < ALPHA_MIN_VISIBLE)
-        remove(self);
+    if(this.alpha < ALPHA_MIN_VISIBLE)
+        remove(this);
 }
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)

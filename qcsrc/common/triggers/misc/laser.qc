@@ -268,52 +268,52 @@ class(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser(entity this)
 {
-	if(!self.state)
+	if(!this.state)
 		return;
-	InterpolateOrigin_Do(self);
-	if(self.count & 0x80)
+	InterpolateOrigin_Do(this);
+	if(this.count & 0x80)
 	{
-		if(self.count & 0x10)
+		if(this.count & 0x10)
 		{
-			trace_endpos = self.velocity;
+			trace_endpos = this.velocity;
 			trace_dphitq3surfaceflags = 0;
 		}
 		else
-			traceline(self.origin, self.velocity, 0, self);
+			traceline(this.origin, this.velocity, 0, this);
 	}
 	else
 	{
-		if(self.count & 0x10)
+		if(this.count & 0x10)
 		{
-			makevectors(self.angles);
-			trace_endpos = self.origin + v_forward * 1048576;
+			makevectors(this.angles);
+			trace_endpos = this.origin + v_forward * 1048576;
 			trace_dphitq3surfaceflags = Q3SURFACEFLAG_SKY;
 		}
 		else
 		{
-			makevectors(self.angles);
-			traceline(self.origin, self.origin + v_forward * 32768, 0, self);
+			makevectors(this.angles);
+			traceline(this.origin, this.origin + v_forward * 32768, 0, this);
 			if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-				trace_endpos = self.origin + v_forward * 1048576;
+				trace_endpos = this.origin + v_forward * 1048576;
 		}
 	}
-	if(self.scale != 0)
+	if(this.scale != 0)
 	{
-		if(self.alpha)
+		if(this.alpha)
 		{
-			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, self.alpha, DRAWFLAG_NORMAL, view_origin);
+			Draw_CylindricLine(this.origin, trace_endpos, this.scale, "particles/laserbeam", 0, time * 3, this.colormod, this.alpha, DRAWFLAG_NORMAL, view_origin);
 		}
 		else
 		{
-			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, 0.5, DRAWFLAG_ADDITIVE, view_origin);
+			Draw_CylindricLine(this.origin, trace_endpos, this.scale, "particles/laserbeam", 0, time * 3, this.colormod, 0.5, DRAWFLAG_ADDITIVE, view_origin);
 		}
 	}
 	if (!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 	{
-		if(self.cnt >= 0)
-			__pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
-		if(self.colormod != '0 0 0' && self.modelscale != 0)
-			adddynamiclight(trace_endpos + trace_plane_normal * 1, self.modelscale, self.colormod * 5);
+		if(this.cnt >= 0)
+			__pointparticles(this.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
+		if(this.colormod != '0 0 0' && this.modelscale != 0)
+			adddynamiclight(trace_endpos + trace_plane_normal * 1, this.modelscale, this.colormod * 5);
 	}
 }
 

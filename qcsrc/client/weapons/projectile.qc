@@ -252,7 +252,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		{
 			this.trail_oldorigin = this.origin;
 			if (!(this.count & 0x80))
-				WITH(entity, self, this, InterpolateOrigin_Reset());
+				InterpolateOrigin_Reset(this);
 		}
 
 		if (f & 0x20)

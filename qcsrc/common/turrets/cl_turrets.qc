@@ -28,28 +28,28 @@ void turret_draw(entity this)
 {
 	float dt;
 
-	dt = time - self.move_time;
-	self.move_time = time;
+	dt = time - this.move_time;
+	this.move_time = time;
 	if(dt <= 0)
 		return;
 
-	self.tur_head.angles += dt * self.tur_head.move_avelocity;
+	this.tur_head.angles += dt * this.tur_head.move_avelocity;
 
-	if (self.health < 127)
+	if (this.health < 127)
 	{
 		dt = random();
 
 		if(dt < 0.03)
-			te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
+			te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 	}
 
-	if(self.health < 85)
+	if(this.health < 85)
 	if(dt < 0.01)
-		pointparticles(EFFECT_SMOKE_LARGE, (self.origin + (randomvec() * 80)), '0 0 0', 1);
+		pointparticles(EFFECT_SMOKE_LARGE, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
-	if(self.health < 32)
+	if(this.health < 32)
 	if(dt < 0.015)
-		pointparticles(EFFECT_SMOKE_SMALL, (self.origin + (randomvec() * 80)), '0 0 0', 1);
+		pointparticles(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
 }
 
@@ -245,38 +245,36 @@ void turret_construct()
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
-void turret_gibboom();
+void turret_gibboom(entity this);
 void turret_gib_draw(entity this)
 {
-	Movetype_Physics_MatchTicrate(self, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+	Movetype_Physics_MatchTicrate(this, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 
-	self.drawmask = MASK_NORMAL;
+	this.drawmask = MASK_NORMAL;
 
-	if(self.cnt)
+	if(this.cnt)
 	{
-		if(time >= self.nextthink)
+		if(time >= this.nextthink)
 		{
-			turret_gibboom();
-			remove(self);
+			turret_gibboom(this);
+			remove(this);
 		}
 	}
 	else
 	{
-		self.alpha = bound(0, self.nextthink - time, 1);
-		if(self.alpha < ALPHA_MIN_VISIBLE)
-			remove(self);
+		this.alpha = bound(0, this.nextthink - time, 1);
+		if(this.alpha < ALPHA_MIN_VISIBLE)
+			remove(this);
 	}
 }
 
-void turret_gibboom()
-{SELFPARAM();
-	float i;
+void turret_gibboom(entity this)
+{
+	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+	pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 
-	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-	pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
-
-	for (i = 1; i < 5; i = i + 1)
-		turret_gibtoss(strcat("models/turrets/head-gib", ftos(i), ".md3"), self.origin + '0 0 2', self.velocity + randomvec() * 700, '0 0 0', false);
+	for (int j = 1; j < 5; j = j + 1)
+		turret_gibtoss(strcat("models/turrets/head-gib", ftos(j), ".md3"), this.origin + '0 0 2', this.velocity + randomvec() * 700, '0 0 0', false);
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode)

@@ -734,24 +734,24 @@ const float SW_DISTTOMIN = 200;
 void Draw_Shockwave(entity this)
 {
 	// fading/removal control
-	float a = bound(0, (SW_MAXALPHA - ((time - self.sw_time) / SW_FADETIME)), SW_MAXALPHA);
-	if(a < ALPHA_MIN_VISIBLE) { remove(self); }
+	float a = bound(0, (SW_MAXALPHA - ((time - this.sw_time) / SW_FADETIME)), SW_MAXALPHA);
+	if(a < ALPHA_MIN_VISIBLE) { remove(this); }
 
 	// WEAPONTODO: save this only once when creating the entity
-	vector sw_color = entcs_GetColor(self.sv_entnum - 1); // GetTeamRGB(entcs_GetTeam(self.sv_entnum));
+	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // GetTeamRGB(entcs_GetTeam(this.sv_entnum));
 
 	// WEAPONTODO: trace to find what we actually hit
-	vector endpos = (self.sw_shotorg + (self.sw_shotdir * self.sw_distance));
+	vector endpos = (this.sw_shotorg + (this.sw_shotdir * this.sw_distance));
 
-	vectorvectors(self.sw_shotdir);
+	vectorvectors(this.sw_shotdir);
 	vector right = v_right; // save this for when we do makevectors later
 	vector up = v_up; // save this for when we do makevectors later
 
 	// WEAPONTODO: combine and simplify these calculations
-	vector min_end = ((self.sw_shotorg + (self.sw_shotdir * SW_DISTTOMIN)) + (up * self.sw_spread_min));
-	vector max_end = (endpos + (up * self.sw_spread_max));
-	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - self.sw_shotdir);
-	float spread_to_max = vlen(normalize(max_end - min_end) - self.sw_shotdir);
+	vector min_end = ((this.sw_shotorg + (this.sw_shotdir * SW_DISTTOMIN)) + (up * this.sw_spread_min));
+	vector max_end = (endpos + (up * this.sw_spread_max));
+	float spread_to_min = vlen(normalize(min_end - this.sw_shotorg) - this.sw_shotdir);
+	float spread_to_max = vlen(normalize(max_end - min_end) - this.sw_shotdir);
 
 	vector first_min_end = '0 0 0', prev_min_end = '0 0 0', new_min_end = '0 0 0';
 	vector first_max_end = '0 0 0', prev_max_end = '0 0 0', new_max_end = '0 0 0';
@@ -768,14 +768,14 @@ void Draw_Shockwave(entity this)
 
 		// first do the spread_to_min effect
 		deviation = angle * spread_to_min;
-		deviation = ((self.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
+		deviation = ((this.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_min_dist = SW_DISTTOMIN;
-		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
-		//te_lightning2(world, new_min_end, self.sw_shotorg);
+		new_min_end = (this.sw_shotorg + (deviation * new_min_dist));
+		//te_lightning2(world, new_min_end, this.sw_shotorg);
 
 		// then calculate spread_to_max effect
 		deviation = angle * spread_to_max;
-		deviation = ((self.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
+		deviation = ((this.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_max_dist = vlen(new_min_end - endpos);
 		new_max_end = (new_min_end + (deviation * new_max_dist));
 		//te_lightning2(world, new_end, prev_min_end);
@@ -793,7 +793,7 @@ void Draw_Shockwave(entity this)
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
-			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
@@ -815,7 +815,7 @@ void Draw_Shockwave(entity this)
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
-			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius

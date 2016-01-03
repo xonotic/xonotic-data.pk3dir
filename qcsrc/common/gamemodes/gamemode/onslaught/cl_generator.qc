@@ -44,75 +44,75 @@ void ons_generator_ray_spawn(vector org)
 
 void generator_draw(entity this)
 {
-	if(time < self.move_time)
+	if(time < this.move_time)
 		return;
 
-	if(self.health > 0)
+	if(this.health > 0)
 	{
 		// damaged fx (less probable the more damaged is the generator)
-		if(random() < 0.9 - self.health / self.max_health)
+		if(random() < 0.9 - this.health / this.max_health)
 		if(random() < 0.01)
 		{
-			pointparticles(EFFECT_ELECTRO_BALLEXPLODE, self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
-			sound(self, CH_TRIGGER, SND_ONS_ELECTRICITY_EXPLODE, VOL_BASE, ATTEN_NORM);
+			pointparticles(EFFECT_ELECTRO_BALLEXPLODE, this.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
+			sound(this, CH_TRIGGER, SND_ONS_ELECTRICITY_EXPLODE, VOL_BASE, ATTEN_NORM);
 		}
 		else
-			pointparticles(EFFECT_ONS_GENERATOR_DAMAGED, self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
+			pointparticles(EFFECT_ONS_GENERATOR_DAMAGED, this.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
 
-		self.move_time = time + 0.1;
+		this.move_time = time + 0.1;
 
 		return;
 	}
 
-	if(self.count <= 0)
+	if(this.count <= 0)
 		return;
 
 	vector org;
 	int i;
 
 	// White shockwave
-	if(self.count==40||self.count==20)
+	if(this.count==40||this.count==20)
 	{
-		sound(self, CH_TRIGGER, SND_ONS_SHOCKWAVE, VOL_BASE, ATTEN_NORM);
-		pointparticles(EFFECT_ELECTRO_COMBO, self.origin, '0 0 0', 6);
+		sound(this, CH_TRIGGER, SND_ONS_SHOCKWAVE, VOL_BASE, ATTEN_NORM);
+		pointparticles(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 6);
 	}
 
 	// rays
 	if(random() > 0.25)
 	{
-		ons_generator_ray_spawn(self.origin);
+		ons_generator_ray_spawn(this.origin);
 	}
 
 	// Spawn fire balls
 	for(i=0;i < 10;++i)
 	{
-		org = self.origin + randompos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
+		org = this.origin + randompos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
 		pointparticles(EFFECT_ONS_GENERATOR_GIB, org, '0 0 0', 1);
 	}
 
 	// Short explosion sound + small explosion
 	if(random() < 0.25)
 	{
-		te_explosion(self.origin);
-		sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+		te_explosion(this.origin);
+		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 
 	// Particles
-	org = self.origin + randompos(self.mins + '8 8 8', self.maxs + '-8 -8 -8');
+	org = this.origin + randompos(this.mins + '8 8 8', this.maxs + '-8 -8 -8');
 	pointparticles(EFFECT_ONS_GENERATOR_EXPLODE, org, '0 0 0', 1);
 
 	// Final explosion
-	if(self.count==1)
+	if(this.count==1)
 	{
-		org = self.origin;
+		org = this.origin;
 		te_explosion(org);
 		pointparticles(EFFECT_ONS_GENERATOR_EXPLODE2, org, '0 0 0', 1);
-		sound(self, CH_TRIGGER, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 
-	self.move_time = time + 0.05;
+	this.move_time = time + 0.05;
 
-	self.count -= 1;
+	this.count -= 1;
 }
 
 void generator_damage(float hp)

@@ -292,32 +292,32 @@ void SUB_UseTargets()
 }
 
 #ifdef CSQC
-void trigger_touch_generic(void() touchfunc)
-{SELFPARAM();
+void trigger_touch_generic(entity this, void() touchfunc)
+{
 	entity e;
-	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+	for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
 	if(e.isplayermodel || e.classname == "csqcprojectile")
 	{
 		vector emin = e.absmin, emax = e.absmax;
-		if(self.solid == SOLID_BSP)
+		if(this.solid == SOLID_BSP)
 		{
 			emin -= '1 1 1';
 			emax += '1 1 1';
 		}
-		if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-		if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+		if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
 		{
 			other = e;
-			touchfunc();
+			WITH(entity, self, this, touchfunc());
 		}
 	}
 }
 void trigger_draw_generic(entity this)
 {
-	float dt = time - self.move_time;
-	self.move_time = time;
+	float dt = time - this.move_time;
+	this.move_time = time;
 	if(dt <= 0) { return; }
 
-	if(self.trigger_touch) { trigger_touch_generic(self.trigger_touch); }
+	if(this.trigger_touch) { trigger_touch_generic(this, this.trigger_touch); }
 }
 #endif

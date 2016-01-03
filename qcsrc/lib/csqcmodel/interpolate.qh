@@ -42,7 +42,7 @@ void InterpolateOrigin_Undo(entity this);
 void InterpolateOrigin_Note(entity this);
 
 // call this when the entity got teleported, before InterpolateOrigin_Note
-void InterpolateOrigin_Reset();
+void InterpolateOrigin_Reset(entity this);
 
 // call this BEFORE drawing
 void InterpolateOrigin_Do(entity this);

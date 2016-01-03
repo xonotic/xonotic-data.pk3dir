@@ -118,7 +118,7 @@ void VaporizerBeam_Draw(entity this)
 	//	rgb = e.glowmod;
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
-	float fail = (self.nextthink - time);
+	float fail = (this.nextthink - time);
 
 	Draw_VaporizerBeam_trace_callback_tex = tex;
 	Draw_VaporizerBeam_trace_callback_rnd = 0;

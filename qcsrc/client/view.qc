@@ -1839,7 +1839,7 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	FOREACH_ENTITY(it.draw, LAMBDA(WITH(entity, self, it, it.draw(it))));
+	FOREACH_ENTITY(it.draw, it.draw(it));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();

@@ -94,12 +94,12 @@ spawnfunc(func_snow)
 #elif defined(CSQC)
 void Draw_Rain(entity this)
 {
-    te_particlerain(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
+    te_particlerain(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
 }
 
 void Draw_Snow(entity this)
 {
-    te_particlesnow(self.origin + self.mins, self.origin + self.maxs, self.velocity, floor(self.count * drawframetime + random()), self.glow_color);
+    te_particlesnow(this.origin + this.mins, this.origin + this.maxs, this.velocity, floor(this.count * drawframetime + random()), this.glow_color);
 }
 
 NET_HANDLE(ENT_CLIENT_RAINSNOW, bool isnew)
