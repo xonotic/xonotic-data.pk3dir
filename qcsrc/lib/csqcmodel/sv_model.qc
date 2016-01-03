@@ -30,12 +30,12 @@
 
 // generic CSQC model code
 
-bool CSQCModel_Send(entity this, entity to, int sf)
+bool CSQCModel_Send(entity to, int sf)
 {
 	// some nice flags for CSQCMODEL_IF
-	float isplayer = (IS_CLIENT(this));
-	float islocalplayer = (this == to);
-	float isnolocalplayer = (isplayer && (this != to));
+	float isplayer = (IS_CLIENT(self));
+	float islocalplayer = (self == to);
+	float isnolocalplayer = (isplayer && (self != to));
 
 	unused_float = isplayer;
 	unused_float = islocalplayer;
@@ -49,7 +49,7 @@ bool CSQCModel_Send(entity this, entity to, int sf)
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	if(sf & flag) \
 	{ \
-		w(MSG_ENTITY, this.csqcmodel_##f); \
+		w(MSG_ENTITY, self.csqcmodel_##f); \
 	}
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
 	ALLPROPERTIES
@@ -124,8 +124,7 @@ void CSQCModel_CheckUpdate(entity e)
 
 void CSQCModel_LinkEntity(entity e)
 {
-	e.SendEntity3 = CSQCModel_Send;
-	e.SendEntity = SendEntity_self;
+	e.SendEntity = CSQCModel_Send;
 	e.SendFlags = 0xFFFFFF;
 	CSQCModel_CheckUpdate(e);
 }
