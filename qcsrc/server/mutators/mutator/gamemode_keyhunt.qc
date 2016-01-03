@@ -471,9 +471,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 	}
 }
 
-void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.owner)
+void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.owner)
 		return;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -484,9 +484,9 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 	}
 	if(vlen(force) <= 0)
 		return;
-	if(time > self.pushltime)
+	if(time > this.pushltime)
 		if(IS_PLAYER(attacker))
-			self.team = attacker.team;
+			this.team = attacker.team;
 }
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key

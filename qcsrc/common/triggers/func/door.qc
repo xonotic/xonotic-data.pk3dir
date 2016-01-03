@@ -272,24 +272,24 @@ void door_use()
 	}
 }
 
-void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.spawnflags & DOOR_NOSPLASH)
+void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if (self.itemkeys)
+	if (this.itemkeys)
 	{
 		// don't allow opening doors through damage if keys are required
 		return;
 	}
 
-	if (self.health <= 0)
+	if (this.health <= 0)
 	{
-		self.owner.health = self.owner.max_health;
-		self.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
-		WITH(entity, self, self.owner, door_use());
+		this.owner.health = this.owner.max_health;
+		this.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
+		WITH(entity, self, this.owner, door_use());
 	}
 }
 

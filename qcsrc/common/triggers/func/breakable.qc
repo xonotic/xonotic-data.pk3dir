@@ -41,7 +41,7 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 //
 // func_breakable
@@ -226,42 +226,42 @@ void func_breakable_destroy()
 	self.message = oldmsg;
 }
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.state == 1)
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.state == 1)
 		return;
-	if(self.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	if(self.team)
-		if(attacker.team == self.team)
+	if(this.team)
+		if(attacker.team == this.team)
 			return;
-	self.pain_finished = time;
-	self.health = self.health - damage;
-	if(self.sprite)
+	this.pain_finished = time;
+	this.health = this.health - damage;
+	if(this.sprite)
 	{
-		WaypointSprite_Ping(self.sprite);
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		WaypointSprite_Ping(this.sprite);
+		WaypointSprite_UpdateHealth(this.sprite, this.health);
 	}
-	func_breakable_colormod();
+	WITH(entity, self, this, func_breakable_colormod());
 
-	if(self.health <= 0)
+	if(this.health <= 0)
 	{
 		debrisforce = force;
 
-		self.takedamage = DAMAGE_NO;
-		self.event_damage = func_null;
+		this.takedamage = DAMAGE_NO;
+		this.event_damage = func_null;
 
-		if(IS_CLIENT(attacker) && self.classname == "func_assault_destructible")
+		if(IS_CLIENT(attacker) && this.classname == "func_assault_destructible")
 		{
-			self.owner = attacker;
-			self.realowner = attacker;
+			this.owner = attacker;
+			this.realowner = attacker;
 		}
 
 		// do not explode NOW but in the NEXT FRAME!
 		// because recursive calls to RadiusDamage are not allowed
-		self.nextthink = time;
-		self.think = func_breakable_destroy;
+		this.nextthink = time;
+		this.think = func_breakable_destroy;
 	}
 }
 

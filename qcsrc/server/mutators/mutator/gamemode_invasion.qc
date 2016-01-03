@@ -329,15 +329,15 @@ void Invasion_RoundStart()
 }
 
 MUTATOR_HOOKFUNCTION(inv, MonsterDies)
-{SELFPARAM();
-	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+{
+	if(!(frag_target.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		inv_numkilled += 1;
 		inv_maxcurrent -= 1;
-		if(teamplay) { inv_monsters_perteam[self.team] -= 1; }
+		if(teamplay) { inv_monsters_perteam[frag_target.team] -= 1; }
 
 		if(IS_PLAYER(frag_attacker))
-		if(SAME_TEAM(frag_attacker, self)) // in non-teamplay modes, same team = same player, so this works
+		if(SAME_TEAM(frag_attacker, frag_target)) // in non-teamplay modes, same team = same player, so this works
 			PlayerScore_Add(frag_attacker, SP_KILLS, -1);
 		else
 		{

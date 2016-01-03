@@ -14,7 +14,7 @@ void player_setupanimsformodel();
 
 void player_anim();
 
-void PlayerCorpseDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 // g_<gametype>_str:
 // If 0, default is used.
@@ -29,11 +29,11 @@ void PlayerCorpseDamage(entity inflictor, entity attacker, float damage, int dea
 
 void calculate_player_respawn_time(entity this);
 
-void ClientKill_Now_TeamChange();
+void ClientKill_Now_TeamChange(entity this);
 
 void MoveToTeam(entity client, float team_colour, float type);
 
-void PlayerDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 /** to be used by `prvm_edictset server playernumber muted 1` */
 .float muted;

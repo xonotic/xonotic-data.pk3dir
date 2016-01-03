@@ -294,21 +294,21 @@ void W_MineLayer_Touch()
 	}
 }
 
-void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	float is_from_enemy = (inflictor.realowner != self.realowner);
+	float is_from_enemy = (inflictor.realowner != this.realowner);
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_from_enemy ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
-	self.angles = vectoangles(self.velocity);
+	this.health = this.health - damage;
+	this.angles = vectoangles(this.velocity);
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode));
 }
 
 void W_MineLayer_Attack(Weapon thiswep)

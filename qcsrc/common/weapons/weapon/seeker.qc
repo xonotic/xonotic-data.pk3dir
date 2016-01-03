@@ -206,21 +206,21 @@ void W_Seeker_Missile_Think()
 
 
 
-void W_Seeker_Missile_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	if(self.realowner == attacker)
-		self.health = self.health - (damage * 0.25);
+	if(this.realowner == attacker)
+		this.health = this.health - (damage * 0.25);
 	else
-		self.health = self.health - damage;
+		this.health = this.health - damage;
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_Seeker_Missile_Explode);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_Seeker_Missile_Explode));
 }
 
 /*
@@ -477,22 +477,22 @@ void W_Seeker_Tracker_Think()
 // ============================
 // Begin: Tag projectile
 // ============================
-void W_Seeker_Tag_Explode()
-{SELFPARAM();
-	//if(other==self.realowner)
+void W_Seeker_Tag_Explode(entity this)
+{
+	//if(other==this.realowner)
 	//    return;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, other.species, self);
+	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, other.species, this);
 
-	remove(self);
+	remove(this);
 }
 
-void W_Seeker_Tag_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
-	self.health = self.health - damage;
-	if(self.health <= 0)
-		W_Seeker_Tag_Explode();
+	this.health = this.health - damage;
+	if(this.health <= 0)
+		W_Seeker_Tag_Explode(this);
 }
 
 void W_Seeker_Tag_Touch()

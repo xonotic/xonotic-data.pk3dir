@@ -1126,10 +1126,10 @@ void WaypointSprite_ClearOwned()
     WaypointSprite_Kill(self.waypointsprite_attached);
 }
 
-void WaypointSprite_PlayerDead()
-{SELFPARAM();
-    WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
-    WaypointSprite_DetachCarrier(self);
+void WaypointSprite_PlayerDead(entity this)
+{
+    WaypointSprite_Disown(this.waypointsprite_attached, waypointsprite_deadlifetime);
+    WaypointSprite_DetachCarrier(this);
 }
 
 void WaypointSprite_PlayerGone()

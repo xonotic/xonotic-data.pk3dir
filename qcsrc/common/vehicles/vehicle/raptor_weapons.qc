@@ -106,7 +106,7 @@ float autocvar_g_vehicle_raptor_flare_chase;
 float autocvar_g_vehicle_raptor_flare_range;
 
 void raptor_flare_think();
-void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void raptor_flare_touch();
 
 METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -237,11 +237,11 @@ void raptor_flare_touch()
     remove(self);
 }
 
-void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-    self.health -= damage;
-    if(self.health <= 0)
-        remove(self);
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+    this.health -= damage;
+    if(this.health <= 0)
+        remove(this);
 }
 
 void raptor_flare_think()

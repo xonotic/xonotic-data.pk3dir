@@ -222,6 +222,7 @@ MUTATOR_HOOKABLE(MonsterSpawn, EV_MonsterSpawn);
 
 /** called when a monster dies */
 #define EV_MonsterDies(i, o) \
+    /**/ i(entity, frag_target) \
     /**/ i(entity, frag_attacker) \
     /**/
 MUTATOR_HOOKABLE(MonsterDies, EV_MonsterDies);

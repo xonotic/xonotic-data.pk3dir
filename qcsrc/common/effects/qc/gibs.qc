@@ -20,7 +20,7 @@ bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 }
 
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker)
-{SELFPARAM();
+{
 	if(g_cts) // no gibs in CTS
 		return;
 
@@ -29,14 +29,14 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	e.state = type; // should stay smaller than 15
 	if(!sound_allowed(MSG_BROADCAST, gibowner) || !sound_allowed(MSG_BROADCAST, attacker))
 		e.state |= 0x40; // "silence" bit
-	e.state |= 8 * self.species; // gib type, ranges from 0 to 15
+	e.state |= 8 * gibowner.species; // gib type, ranges from 0 to 15
 
 	// if this is a copied dead body, send the num of its player instead
 	// TODO: remove this field, read from model txt files
-	if(self.classname == "body")
-		e.team = etof(self.enemy);
+	if(gibowner.classname == "body")
+		e.team = etof(gibowner.enemy);
 	else
-		e.team = etof(self);
+		e.team = etof(gibowner);
 
 	setorigin(e, org);
 	e.velocity = dir;

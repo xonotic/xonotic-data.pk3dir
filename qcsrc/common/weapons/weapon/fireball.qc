@@ -167,19 +167,19 @@ void W_Fireball_Think()
 	self.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
-	if(self.health <= 0)
+	this.health = this.health - damage;
+	if(this.health <= 0)
 	{
-		self.cnt = 1;
-		W_PrepareExplosionByDamage(attacker, W_Fireball_Explode);
+		this.cnt = 1;
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_Fireball_Explode));
 	}
 }
 

@@ -741,7 +741,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 			Unfreeze(this);
 			this.health = 0;
 			if(this.event_damage)
-				this.event_damage(this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
+				this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
 		}
 
 		else if ( this.revive_progress <= 0 )
@@ -965,22 +965,22 @@ void Monster_Reset(entity this)
 	this.moveto = this.origin;
 }
 
-void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	self.health -= damage;
+void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	this.health -= damage;
 
-	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
-	if(self.health <= -50) // 100 health until gone?
+	if(this.health <= -50) // 100 health until gone?
 	{
-		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		self.think = SUB_Remove_self;
-		self.nextthink = time + 0.1;
-		self.event_damage = func_null;
+		this.think = SUB_Remove_self;
+		this.nextthink = time + 0.1;
+		this.event_damage = func_null;
 	}
 }
 
@@ -1038,86 +1038,85 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		W_ThrowNewWeapon(this, this.weapon, 0, this.origin, randomvec() * 150 + '0 0 325');
 }
 
-void Monster_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL.m_id && !ITEM_DAMAGE_NEEDKILL(deathtype))
+void Monster_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if((this.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL.m_id && !ITEM_DAMAGE_NEEDKILL(deathtype))
 		return;
 
-	if(STAT(FROZEN, self) && deathtype != DEATH_KILL.m_id && deathtype != DEATH_NADE_ICE_FREEZE.m_id)
+	if(STAT(FROZEN, this) && deathtype != DEATH_KILL.m_id && deathtype != DEATH_NADE_ICE_FREEZE.m_id)
 		return;
 
-	//if(time < self.pain_finished && deathtype != DEATH_KILL.m_id)
+	//if(time < this.pain_finished && deathtype != DEATH_KILL.m_id)
 		//return;
 
-	if(time < self.spawnshieldtime && deathtype != DEATH_KILL.m_id)
+	if(time < this.spawnshieldtime && deathtype != DEATH_KILL.m_id)
 		return;
 
-	if(deathtype == DEATH_FALL.m_id && self.draggedby != world)
+	if(deathtype == DEATH_FALL.m_id && this.draggedby != world)
 		return;
 
 	vector v;
 	float take, save;
 
-	v = healtharmor_applydamage(100, self.armorvalue / 100, deathtype, damage);
+	v = healtharmor_applydamage(100, this.armorvalue / 100, deathtype, damage);
 	take = v_x;
 	save = v_y;
 
 	damage_take = take;
 	frag_attacker = attacker;
 	frag_deathtype = deathtype;
-	Monster mon = get_monsterinfo(self.monsterid);
-	mon.mr_pain(mon, self);
+	Monster mon = get_monsterinfo(this.monsterid);
+	mon.mr_pain(mon, this);
 	take = damage_take;
 
 	if(take)
 	{
-		self.health -= take;
-		Monster_Sound(self, monstersound_pain, 1.2, true, CH_PAIN);
+		this.health -= take;
+		Monster_Sound(this, monstersound_pain, 1.2, true, CH_PAIN);
 	}
 
-	if(self.sprite)
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
+	if(this.sprite)
+		WaypointSprite_UpdateHealth(this.sprite, this.health);
 
-	self.dmg_time = time;
+	this.dmg_time = time;
 
 	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN.m_id)
-		spamsound (self, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+		spamsound (this, CH_PAIN, SND(BODYIMPACT1), VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
-	self.velocity += force * self.damageforcescale;
+	this.velocity += force * this.damageforcescale;
 
 	if(deathtype != DEATH_DROWN.m_id && take)
 	{
-		Violence_GibSplash_At(hitloc, force, 2, bound(0, take, 200) / 16, self, attacker);
+		Violence_GibSplash_At(hitloc, force, 2, bound(0, take, 200) / 16, this, attacker);
 		if (take > 50)
-			Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
+			Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, this, attacker);
 		if (take > 100)
-			Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+			Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 	}
 
-	if(self.health <= 0)
+	if(this.health <= 0)
 	{
 		if(deathtype == DEATH_KILL.m_id)
-			self.candrop = false; // killed by mobkill command
+			this.candrop = false; // killed by mobkill command
 
 		// TODO: fix this?
 		activator = attacker;
-		other = self.enemy;
-		SUB_UseTargets();
-		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
+		other = this.enemy;
+		WITH(entity, self, this, SUB_UseTargets());
+		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
-		Monster_Dead(self, attacker, (self.health <= -100 || deathtype == DEATH_KILL.m_id));
+		Monster_Dead(this, attacker, (this.health <= -100 || deathtype == DEATH_KILL.m_id));
 
-		WaypointSprite_Kill(self.sprite);
+		WaypointSprite_Kill(this.sprite);
 
-		frag_target = self;
-		MUTATOR_CALLHOOK(MonsterDies, attacker);
+		MUTATOR_CALLHOOK(MonsterDies, this, attacker);
 
-		if(self.health <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
+		if(this.health <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
 		{
-			Violence_GibSplash(self, 1, 0.5, attacker);
+			Violence_GibSplash(this, 1, 0.5, attacker);
 
-			self.think = SUB_Remove_self;
-			self.nextthink = time + 0.1;
+			this.think = SUB_Remove_self;
+			this.nextthink = time + 0.1;
 		}
 	}
 }

@@ -99,19 +99,19 @@ void multi_touch()
 	multi_trigger ();
 }
 
-void multi_eventdamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if (!self.takedamage)
+void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(!this.takedamage)
 		return;
-	if(self.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
-	if (self.health <= 0)
+	this.health = this.health - damage;
+	if (this.health <= 0)
 	{
-		self.enemy = attacker;
-		self.goalentity = inflictor;
-		multi_trigger();
+		this.enemy = attacker;
+		this.goalentity = inflictor;
+		WITH(entity, self, this, multi_trigger());
 	}
 }
 

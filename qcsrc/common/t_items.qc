@@ -1014,10 +1014,10 @@ float commodity_pickupevalfunc(entity player, entity item)
 	return item.bot_pickupbasevalue * c;
 }
 
-void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		RemoveItem();
+		WITH(entity, self, this, RemoveItem());
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)

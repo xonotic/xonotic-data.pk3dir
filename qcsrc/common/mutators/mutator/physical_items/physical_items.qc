@@ -78,13 +78,13 @@ void physical_item_touch()
 	}
 }
 
-void physical_item_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(!self.cnt) // not for dropped items
+void physical_item_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(!this.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		setorigin(self, self.spawn_origin);
-		self.angles = self.spawn_angles;
+		setorigin(this, this.spawn_origin);
+		this.angles = this.spawn_angles;
 	}
 }
 

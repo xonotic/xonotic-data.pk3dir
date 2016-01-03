@@ -62,7 +62,7 @@ float server_is_dedicated;
 
 // Fields
 
-.void(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
+.void(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force) event_damage;
 
 //.string	wad;
 //.string	map;

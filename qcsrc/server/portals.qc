@@ -428,16 +428,16 @@ void Portal_Remove(entity portal, float killed)
 	}
 }
 
-void Portal_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;
-	if(attacker != self.aiment)
-		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(self.aiment))
+	if(attacker != this.aiment)
+		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(this.aiment))
 			return;
-	self.health -= damage;
-	if(self.health < 0)
-		Portal_Remove(self, 1);
+	this.health -= damage;
+	if(this.health < 0)
+		Portal_Remove(this, 1);
 }
 
 void Portal_Think_TryTeleportPlayer(entity e, vector g)

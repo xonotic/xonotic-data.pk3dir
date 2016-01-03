@@ -227,7 +227,7 @@ void WaypointSprite_ClearPersonal();
 
 void WaypointSprite_ClearOwned();
 
-void WaypointSprite_PlayerDead();
+void WaypointSprite_PlayerDead(entity this);
 
 void WaypointSprite_PlayerGone();
 #endif

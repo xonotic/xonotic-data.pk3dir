@@ -207,17 +207,17 @@ void turret_die()
 	}
 }
 
-void turret_damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
-{SELFPARAM();
+void turret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
+{
 	// Enough already!
-	if(self.deadflag == DEAD_DEAD)
+	if(this.deadflag == DEAD_DEAD)
 		return;
 
 	// Inactive turrets take no damage. (hm..)
-	if(!self.active)
+	if(!this.active)
 		return;
 
-	if(SAME_TEAM(self, attacker))
+	if(SAME_TEAM(this, attacker))
 	{
 		if(autocvar_g_friendlyfire)
 			damage = damage * autocvar_g_friendlyfire;
@@ -225,30 +225,30 @@ void turret_damage (entity inflictor, entity attacker, float damage, int deathty
 			return;
 	}
 
-	self.health -= damage;
+	this.health -= damage;
 
 	// thorw head slightly off aim when hit?
-	if (self.damage_flags & TFL_DMG_HEADSHAKE)
+	if (this.damage_flags & TFL_DMG_HEADSHAKE)
 	{
-		self.tur_head.angles_x = self.tur_head.angles_x + (-0.5 + random()) * damage;
-		self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
+		this.tur_head.angles_x = this.tur_head.angles_x + (-0.5 + random()) * damage;
+		this.tur_head.angles_y = this.tur_head.angles_y + (-0.5 + random()) * damage;
 
-		self.SendFlags  |= TNSF_ANG;
+		this.SendFlags  |= TNSF_ANG;
 	}
 
-	if (self.turret_flags & TUR_FLAG_MOVE)
-		self.velocity = self.velocity + vforce;
+	if (this.turret_flags & TUR_FLAG_MOVE)
+		this.velocity = this.velocity + vforce;
 
-	if (self.health <= 0)
+	if (this.health <= 0)
 	{
-		self.event_damage		  = func_null;
-		self.tur_head.event_damage = func_null;
-		self.takedamage			 = DAMAGE_NO;
-		self.nextthink = time;
-		self.think = turret_die;
+		this.event_damage		  = func_null;
+		this.tur_head.event_damage = func_null;
+		this.takedamage			 = DAMAGE_NO;
+		this.nextthink = time;
+		this.think = turret_die;
 	}
 
-	self.SendFlags  |= TNSF_STATUS;
+	this.SendFlags  |= TNSF_STATUS;
 }
 
 void() turret_think;
@@ -449,13 +449,13 @@ void turret_projectile_touch()
 	turret_projectile_explode();
 }
 
-void turret_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
-{SELFPARAM();
-	self.velocity  += vforce;
-	self.health	-= damage;
-	//self.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(self.owner, turret_projectile_explode);
+void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
+{
+	this.velocity  += vforce;
+	this.health	-= damage;
+	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(this.owner, turret_projectile_explode));
 }
 
 entity turret_projectile(string _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)

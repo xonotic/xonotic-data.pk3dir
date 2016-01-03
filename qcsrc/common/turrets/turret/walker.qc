@@ -105,13 +105,13 @@ void walker_rocket_explode()
     remove (self);
 }
 
-void walker_rocket_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
-{SELFPARAM();
-    self.health = self.health - damage;
-    self.velocity = self.velocity + vforce;
+void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+{
+    this.health = this.health - damage;
+    this.velocity = this.velocity + vforce;
 
-    if (self.health <= 0)
-        W_PrepareExplosionByDamage(self.owner, walker_rocket_explode);
+    if (this.health <= 0)
+        WITH(entity, self, this, W_PrepareExplosionByDamage(this.owner, walker_rocket_explode));
 }
 
 #define WALKER_ROCKET_MOVE movelib_move_simple(self, newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)

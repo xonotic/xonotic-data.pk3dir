@@ -196,20 +196,20 @@ vector vehicles_force_fromtag_maglev(entity this, string tag_name, float spring_
 }
 
 // projectile handling
-void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	// Ignore damage from oterh projectiles from my owner (dont mess up volly's)
-	if(inflictor.owner == self.owner)
+	if(inflictor.owner == this.owner)
 		return;
 
-	self.health -= damage;
-	self.velocity += force;
-	if(self.health < 1)
+	this.health -= damage;
+	this.velocity += force;
+	if(this.health < 1)
 	{
-		self.takedamage = DAMAGE_NO;
-		self.event_damage = func_null;
-		self.think = self.use;
-		self.nextthink = time;
+		this.takedamage = DAMAGE_NO;
+		this.event_damage = func_null;
+		this.think = this.use;
+		this.nextthink = time;
 	}
 }
 
@@ -634,9 +634,9 @@ void vehicles_frame(entity this, entity actor)
 	vehicles_painframe(this);
 }
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	self.dmg_time = time;
+void vehicles_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	this.dmg_time = time;
 
 	// WEAPONTODO
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
@@ -657,74 +657,74 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 	if(DEATH_WEAPONOF(deathtype) != WEP_Null)
 		damage *= autocvar_g_vehicles_weapon_damagerate;
 
-	self.enemy = attacker;
+	this.enemy = attacker;
 
-	self.pain_finished = time;
+	this.pain_finished = time;
 
-	if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
+	if((this.vehicle_flags & VHF_HASSHIELD) && (this.vehicle_shield > 0))
 	{
-		if (wasfreed(self.vehicle_shieldent) || self.vehicle_shieldent == world)
+		if (wasfreed(this.vehicle_shieldent) || this.vehicle_shieldent == world)
 		{
-			self.vehicle_shieldent = spawn();
-			self.vehicle_shieldent.effects = EF_LOWPRECISION;
+			this.vehicle_shieldent = spawn();
+			this.vehicle_shieldent.effects = EF_LOWPRECISION;
 
-			setmodel(self.vehicle_shieldent, MDL_VEH_SHIELD);
-			setattachment(self.vehicle_shieldent, self, "");
-			setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
-			self.vehicle_shieldent.scale	   = 256 / vlen(self.maxs - self.mins);
-			self.vehicle_shieldent.think	   = shieldhit_think;
+			setmodel(this.vehicle_shieldent, MDL_VEH_SHIELD);
+			setattachment(this.vehicle_shieldent, this, "");
+			setorigin(this.vehicle_shieldent, real_origin(this) - this.origin);
+			this.vehicle_shieldent.scale	   = 256 / vlen(this.maxs - this.mins);
+			this.vehicle_shieldent.think	   = shieldhit_think;
 		}
 
-		self.vehicle_shieldent.colormod	= '1 1 1';
-		self.vehicle_shieldent.alpha = 0.45;
-		self.vehicle_shieldent.angles = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
-		self.vehicle_shieldent.nextthink = time;
-		self.vehicle_shieldent.effects &= ~EF_NODRAW;
+		this.vehicle_shieldent.colormod	= '1 1 1';
+		this.vehicle_shieldent.alpha = 0.45;
+		this.vehicle_shieldent.angles = vectoangles(normalize(hitloc - (this.origin + this.vehicle_shieldent.origin))) - this.angles;
+		this.vehicle_shieldent.nextthink = time;
+		this.vehicle_shieldent.effects &= ~EF_NODRAW;
 
-		self.vehicle_shield -= damage;
+		this.vehicle_shield -= damage;
 
-		if(self.vehicle_shield < 0)
+		if(this.vehicle_shield < 0)
 		{
-			self.vehicle_health -= fabs(self.vehicle_shield);
-			self.vehicle_shieldent.colormod = '2 0 0';
-			self.vehicle_shield = 0;
-			self.vehicle_shieldent.alpha = 0.75;
+			this.vehicle_health -= fabs(this.vehicle_shield);
+			this.vehicle_shieldent.colormod = '2 0 0';
+			this.vehicle_shield = 0;
+			this.vehicle_shieldent.alpha = 0.75;
 
 			if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
+				spamsound (this, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
 		}
 		else
 			if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+				spamsound (this, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	}
 	else
 	{
-		self.vehicle_health -= damage;
+		this.vehicle_health -= damage;
 
 		if(sound_allowed(MSG_BROADCAST, attacker))
-			spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+			spamsound (this, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 	}
 
-	if(self.damageforcescale < 1 && self.damageforcescale > 0)
-		self.velocity += force * self.damageforcescale;
+	if(this.damageforcescale < 1 && this.damageforcescale > 0)
+		this.velocity += force * this.damageforcescale;
 	else
-		self.velocity += force;
+		this.velocity += force;
 
-	if(self.vehicle_health <= 0)
+	if(this.vehicle_health <= 0)
 	{
-		if(self.owner)
-			if(self.vehicle_flags & VHF_DEATHEJECT)
-				vehicles_exit(VHEF_EJECT);
+		if(this.owner)
+			if(this.vehicle_flags & VHF_DEATHEJECT)
+				WITH(entity, self, this, vehicles_exit(VHEF_EJECT));
 			else
-				vehicles_exit(VHEF_RELEASE);
+				WITH(entity, self, this, vehicles_exit(VHEF_RELEASE));
 
 
-		antilag_clear(self);
+		antilag_clear(this);
 
-		Vehicle info = Vehicles_from(self.vehicleid);
-		info.vr_death(info, self);
-		vehicles_setreturn(self);
+		Vehicle info = Vehicles_from(this.vehicleid);
+		info.vr_death(info, this);
+		vehicles_setreturn(this);
 	}
 }
 

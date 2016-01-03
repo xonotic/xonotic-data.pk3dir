@@ -113,12 +113,12 @@ void Casing_Touch()
     self.nextthink = time + 0.2;
 }
 
-void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
-{SELFPARAM();
+void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector thisforce)
+{
     if (thisforce.z < 0)
         thisforce.z = 0;
-    self.move_velocity = self.move_velocity + thisforce + '0 0 100';
-    self.move_flags &= ~FL_ONGROUND;
+    this.move_velocity = this.move_velocity + thisforce + '0 0 100';
+    this.move_flags &= ~FL_ONGROUND;
 }
 
 NET_HANDLE(casings, bool isNew)

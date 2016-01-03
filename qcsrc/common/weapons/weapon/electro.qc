@@ -306,34 +306,34 @@ void W_Electro_Orb_Touch()
 	}
 }
 
-void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
 	// note: combos are usually triggered by W_Electro_TriggerCombo, not damage
 	float is_combo = (inflictor.classname == "electro_orb_chain" || inflictor.classname == "electro_bolt");
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_combo ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
-	if(self.health <= 0)
+	this.health = this.health - damage;
+	if(this.health <= 0)
 	{
-		self.takedamage = DAMAGE_NO;
-		self.nextthink = time;
+		this.takedamage = DAMAGE_NO;
+		this.nextthink = time;
 		if(is_combo)
 		{
 			// change owner to whoever caused the combo explosion
-			self.realowner = inflictor.realowner;
-			self.classname = "electro_orb_chain";
-			self.think = W_Electro_ExplodeCombo;
-			self.nextthink = time +
+			this.realowner = inflictor.realowner;
+			this.classname = "electro_orb_chain";
+			this.think = W_Electro_ExplodeCombo;
+			this.nextthink = time +
 				(
 					// bound the length, inflictor may be in a galaxy far far away (warpzones)
 					min(
 						WEP_CVAR(electro, combo_radius),
-						vlen(self.origin - inflictor.origin)
+						vlen(this.origin - inflictor.origin)
 					)
 					/
 					// delay combo chains, looks cooler
@@ -342,8 +342,8 @@ void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int d
 		}
 		else
 		{
-			self.use = W_Electro_Explode;
-			self.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
+			this.use = W_Electro_Explode;
+			this.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
 		}
 	}
 }
