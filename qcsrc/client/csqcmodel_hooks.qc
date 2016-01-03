@@ -389,7 +389,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 	if(this.tag_entity && wasfreed(this.tag_entity))
 		this.tag_entity = world;
 
-	WITH(entity, self, this, viewloc_SetTags());
+	viewloc_SetTags(this);
 
 	MUTATOR_CALLHOOK(TagIndex_Update, this);
 
@@ -406,7 +406,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
 		if(this.tag_entity.classname == "csqcmodel")
 		{
-			WITH(entity, this, this.tag_entity, CSQCModel_Hook_PreDraw(this, (this.entnum >= 1 && this.entnum <= maxclients)));
+			CSQCModel_Hook_PreDraw(this.tag_entity, (this.entnum >= 1 && this.entnum <= maxclients));
 		}
 
 		if(this.tag_entity.modelindex != this.tag_entity_lastmodelindex)
@@ -490,7 +490,7 @@ void CSQCModel_Effects_PostUpdate(entity this)
 {
 	if (this == csqcplayer) {
 		if (this.csqcmodel_teleported) {
-			WITH(entity, self, this, Reset_ArcBeam());
+			Reset_ArcBeam();
 		}
 	}
 	this.csqcmodel_effects = this.effects;
@@ -677,14 +677,14 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 			this.anim_saveframe2time = this.anim_frame2time;
 			// Note: we always consider lerpfrac "changed", as it uses fixed values every time anyway.
 			// This ensures that .frame etc. are always written.
-			WITH(entity, self, this, CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC));
+			CSQCModel_InterpolateAnimation_2To4_PreNote(this, sf | CSQCMODEL_PROPERTY_LERPFRAC);
 			this.lerpfrac = (doblend ? 0.5 : 0);
 			this.frame = this.anim_frame;
 			this.frame1time = this.anim_frame1time;
 			this.frame2 = this.anim_frame2;
 			this.frame2time = this.anim_frame2time;
-			WITH(entity, self, this, CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, false));
-			WITH(entity, self, this, CSQCModel_InterpolateAnimation_2To4_Do());
+			CSQCModel_InterpolateAnimation_2To4_Note(this, sf | CSQCMODEL_PROPERTY_LERPFRAC, false);
+			CSQCModel_InterpolateAnimation_2To4_Do(this);
 			if(doblend)
 			{
 				skeleton_from_frames(this, this.csqcmodel_isdead);
