@@ -971,7 +971,7 @@ void Monster_Dead_Damage(entity inflictor, entity attacker, float damage, int de
 
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if(self.health <= -100) // 100 health until gone?
+	if(self.health <= -50) // 100 health until gone?
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
