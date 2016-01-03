@@ -30,12 +30,12 @@
 
 // generic CSQC model code
 
-bool CSQCModel_Send(entity to, int sf)
-{SELFPARAM();
+bool CSQCModel_Send(entity this, entity to, int sf)
+{
 	// some nice flags for CSQCMODEL_IF
-	float isplayer = (IS_CLIENT(self));
-	float islocalplayer = (self == to);
-	float isnolocalplayer = (isplayer && (self != to));
+	float isplayer = (IS_CLIENT(this));
+	float islocalplayer = (this == to);
+	float isnolocalplayer = (isplayer && (this != to));
 
 	unused_float = isplayer;
 	unused_float = islocalplayer;
@@ -49,7 +49,7 @@ bool CSQCModel_Send(entity to, int sf)
 #define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	if(sf & flag) \
 	{ \
-		w(MSG_ENTITY, self.csqcmodel_##f); \
+		w(MSG_ENTITY, this.csqcmodel_##f); \
 	}
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
 	ALLPROPERTIES
@@ -124,12 +124,13 @@ void CSQCModel_CheckUpdate(entity e)
 
 void CSQCModel_LinkEntity(entity e)
 {
-	e.SendEntity = CSQCModel_Send;
+	e.SendEntity3 = CSQCModel_Send;
+	e.SendEntity = SendEntity_self;
 	e.SendFlags = 0xFFFFFF;
 	CSQCModel_CheckUpdate(e);
 }
 
 void CSQCModel_UnlinkEntity(entity e)
 {
-	e.SendEntity = func_null;
+	e.SendEntity3 = func_null;
 }
