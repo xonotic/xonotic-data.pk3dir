@@ -853,7 +853,7 @@ void MapVote_UpdateVotes()
 
 NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
 {
-	make_pure(self);
+	make_pure(this);
 	int sf = ReadByte();
 	return = true;
 

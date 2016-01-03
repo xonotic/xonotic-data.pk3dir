@@ -104,11 +104,11 @@ NET_HANDLE(waypointsprites, bool isnew) {
     return true;
 }
 
-void Ent_RemoveWaypointSprite()
-{SELFPARAM();
-    if (self.netname) strunzone(self.netname);
-    if (self.netname2) strunzone(self.netname2);
-    if (self.netname3) strunzone(self.netname3);
+void Ent_RemoveWaypointSprite(entity this)
+{
+    if (this.netname) strunzone(this.netname);
+    if (this.netname2) strunzone(this.netname2);
+    if (this.netname3) strunzone(this.netname3);
 }
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */

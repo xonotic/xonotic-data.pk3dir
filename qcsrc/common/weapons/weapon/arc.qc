@@ -1143,10 +1143,10 @@ void Draw_ArcBeam(entity this)
 	Draw_ArcBeam_callback_last_bottom = '0 0 0';
 }
 
-void Remove_ArcBeam()
-{SELFPARAM();
-	remove(self.beam_muzzleentity);
-	sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+void Remove_ArcBeam(entity this)
+{
+	remove(this.beam_muzzleentity);
+	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)

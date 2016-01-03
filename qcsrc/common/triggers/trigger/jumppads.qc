@@ -453,15 +453,15 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	return true;
 }
 
-void target_push_remove()
-{SELFPARAM();
-	if(self.classname)
-		strunzone(self.classname);
-	self.classname = string_null;
+void target_push_remove(entity this)
+{
+	if(this.classname)
+		strunzone(this.classname);
+	this.classname = string_null;
 
-	if(self.targetname)
-		strunzone(self.targetname);
-	self.targetname = string_null;
+	if(this.targetname)
+		strunzone(this.targetname);
+	this.targetname = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)

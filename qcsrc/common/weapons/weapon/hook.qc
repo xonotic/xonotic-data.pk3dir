@@ -478,9 +478,9 @@ void Draw_GrapplingHook(entity this)
 	}
 }
 
-void Remove_GrapplingHook()
-{SELFPARAM();
-	sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+void Remove_GrapplingHook(entity this)
+{
+	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)

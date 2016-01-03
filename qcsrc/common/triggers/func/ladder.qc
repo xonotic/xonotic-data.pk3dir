@@ -60,10 +60,10 @@ spawnfunc(func_water)
 #elif defined(CSQC)
 .float speed;
 
-void func_ladder_remove()
+void func_ladder_remove(entity this)
 {
-	if(self.classname) { strunzone(self.classname); }
-	self.classname = string_null;
+	if(this.classname) { strunzone(this.classname); }
+	this.classname = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)

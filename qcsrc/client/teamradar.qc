@@ -198,29 +198,29 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 {
 	int sendflags = ReadByte();
 
-	InterpolateOrigin_Undo(self);
+	InterpolateOrigin_Undo(this);
 
-	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
-	self.classname = "radarlink";
+	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
+	this.classname = "radarlink";
 
 	if(sendflags & 1)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 	}
 
 	if(sendflags & 2)
 	{
-		self.velocity_x = ReadCoord();
-		self.velocity_y = ReadCoord();
-		self.velocity_z = ReadCoord();
+		this.velocity_x = ReadCoord();
+		this.velocity_y = ReadCoord();
+		this.velocity_z = ReadCoord();
 	}
 
 	if(sendflags & 4)
 	{
-		self.team = ReadByte();
+		this.team = ReadByte();
 	}
 
 	return = true;

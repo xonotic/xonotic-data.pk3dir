@@ -210,9 +210,8 @@ void CSQCModel_Draw()
 
 entity CSQCModel_players[255]; // 255 is engine limit on maxclients
 
-void CSQCModel_remove()
+void CSQCModel_remove(entity this)
 {
-	SELFPARAM();
 	CSQCModel_players[this.entnum - 1] = NULL;
 }
 

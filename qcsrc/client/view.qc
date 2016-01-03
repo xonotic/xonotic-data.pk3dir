@@ -293,7 +293,7 @@ void viewmodel_draw(entity this)
 		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
 		e.glowmod = g;
 		e.csqcmodel_effects = fx;
-		WITH(entity, self, e, CSQCModel_Effects_Apply());
+		CSQCModel_Effects_Apply(e);
 	}
 	{
 		static string name_last;
@@ -745,19 +745,19 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-bool WantEventchase()
-{SELFPARAM();
+bool WantEventchase(entity this)
+{
 	if(autocvar_cl_orthoview)
 		return false;
 	if(intermission)
 		return true;
-	if(self.viewloc)
+	if(this.viewloc)
 		return true;
 	if(spectatee_status >= 0)
 	{
 		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
 			return true;
-		if(MUTATOR_CALLHOOK(WantEventchase, self))
+		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 			return true;
@@ -766,7 +766,7 @@ bool WantEventchase()
 			if(autocvar_cl_eventchase_death == 2)
 			{
 				// don't stop eventchase once it's started (even if velocity changes afterwards)
-				if(self.velocity == '0 0 0' || eventchase_running)
+				if(this.velocity == '0 0 0' || eventchase_running)
 					return true;
 			}
 			else return true;
@@ -1481,7 +1481,7 @@ void CSQC_UpdateView(float w, float h)
 			if(!gen)
 				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
-		if(WantEventchase() || (!autocvar_cl_orthoview && ons_roundlost))
+		if(WantEventchase(self) || (!autocvar_cl_orthoview && ons_roundlost))
 		{
 			eventchase_running = true;
 

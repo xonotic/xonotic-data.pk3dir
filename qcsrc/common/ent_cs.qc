@@ -126,9 +126,8 @@
 
 #ifdef CSQC
 
-	void Ent_RemoveEntCS()
+	void Ent_RemoveEntCS(entity this)
 	{
-		SELFPARAM();
 		int n = this.sv_entnum;
 		entity e = entcs_receiver(n);
 		entcs_receiver(n, NULL);

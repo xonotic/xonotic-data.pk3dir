@@ -140,10 +140,10 @@ void Item_PreDraw()
 		self.drawmask = MASK_NORMAL;
 }
 
-void ItemRemove()
-{SELFPARAM();
-	if (self.mdl)
-		strunzone(self.mdl);
+void ItemRemove(entity this)
+{
+	if(this.mdl)
+		strunzone(this.mdl);
 }
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)

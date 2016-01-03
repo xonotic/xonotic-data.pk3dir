@@ -106,7 +106,7 @@ vector fixrgbexcess(vector rgb);
 
 // they are drawn using a .draw function
 
-void Ent_RemoveWaypointSprite();
+void Ent_RemoveWaypointSprite(entity this);
 
 void Ent_WaypointSprite();
 

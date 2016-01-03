@@ -1,8 +1,8 @@
-void turret_remove()
-{SELFPARAM();
-	remove(self.tur_head);
-	//remove(self.enemy);
-	self.tur_head = world;
+void turret_remove(entity this)
+{
+	remove(this.tur_head);
+	//remove(this.enemy);
+	this.tur_head = world;
 }
 
 .vector glowmod;

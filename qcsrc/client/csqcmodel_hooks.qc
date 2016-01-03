@@ -11,7 +11,7 @@
 .float death_time;
 .int modelflags;
 
-void CSQCModel_Hook_PreDraw(bool isplayer);
+void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
 
 .bool isplayermodel;
 
@@ -19,66 +19,66 @@ void CSQCModel_Hook_PreDraw(bool isplayer);
 .int lodmodelindex0;
 .int lodmodelindex1;
 .int lodmodelindex2;
-void CSQCPlayer_LOD_Apply()
-{SELFPARAM();
+void CSQCPlayer_LOD_Apply(entity this)
+{
 	// LOD model loading
-	if(self.lodmodelindex0 != self.modelindex)
+	if(this.lodmodelindex0 != this.modelindex)
 	{
-		string modelname = self.model;
+		string modelname = this.model;
 		string s;
 
-		vector mi = self.mins;
-		vector ma = self.maxs;
+		vector mi = this.mins;
+		vector ma = this.maxs;
 
 		// set modelindex
-		self.lodmodelindex0 = self.modelindex;
-		self.lodmodelindex1 = self.modelindex;
-		self.lodmodelindex2 = self.modelindex;
+		this.lodmodelindex0 = this.modelindex;
+		this.lodmodelindex1 = this.modelindex;
+		this.lodmodelindex2 = this.modelindex;
 
 		// FIXME: this only supports 3-letter extensions
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
 		if(fexists(s))
 		{
 			precache_model(s);
-			_setmodel(self, s);
-			if(self.modelindex)
-				self.lodmodelindex1 = self.modelindex;
+			_setmodel(this, s);
+			if(this.modelindex)
+				this.lodmodelindex1 = this.modelindex;
 		}
 
 		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
 		if(fexists(s))
 		{
 			precache_model(s);
-			_setmodel(self, s);
-			if(self.modelindex)
-				self.lodmodelindex2 = self.modelindex;
+			_setmodel(this, s);
+			if(this.modelindex)
+				this.lodmodelindex2 = this.modelindex;
 		}
 
-		_setmodel(self, modelname); // make everything normal again
-		setsize(self, mi, ma);
+		_setmodel(this, modelname); // make everything normal again
+		setsize(this, mi, ma);
 	}
 
 	// apply LOD
 	if(autocvar_cl_playerdetailreduction <= 0)
 	{
 		if(autocvar_cl_playerdetailreduction <= -2)
-			self.modelindex = self.lodmodelindex2;
+			this.modelindex = this.lodmodelindex2;
 		else if(autocvar_cl_playerdetailreduction <= -1)
-			self.modelindex = self.lodmodelindex1;
+			this.modelindex = this.lodmodelindex1;
 		else
-			self.modelindex = self.lodmodelindex0;
+			this.modelindex = this.lodmodelindex0;
 	}
 	else
 	{
-		float distance = vlen(self.origin - view_origin);
+		float distance = vlen(this.origin - view_origin);
 		float f = (distance * current_viewzoom + 100.0) * autocvar_cl_playerdetailreduction;
 		f *= 1.0 / bound(0.01, view_quality, 1);
 		if(f > autocvar_cl_loddistance2)
-			self.modelindex = self.lodmodelindex2;
+			this.modelindex = this.lodmodelindex2;
 		else if(f > autocvar_cl_loddistance1)
-			self.modelindex = self.lodmodelindex1;
+			this.modelindex = this.lodmodelindex1;
 		else
-			self.modelindex = self.lodmodelindex0;
+			this.modelindex = this.lodmodelindex0;
 	}
 }
 
@@ -108,30 +108,30 @@ int forceplayermodels_goodmodelindex;
 .vector glowmod;
 .vector old_glowmod;
 
-void CSQCPlayer_ModelAppearance_PreUpdate()
-{SELFPARAM();
-	self.model = self.forceplayermodels_savemodel;
-	self.modelindex = self.forceplayermodels_savemodelindex;
-	self.skin = self.forceplayermodels_saveskin;
-	self.colormap = self.forceplayermodels_savecolormap;
+void CSQCPlayer_ModelAppearance_PreUpdate(entity this)
+{
+	this.model = this.forceplayermodels_savemodel;
+	this.modelindex = this.forceplayermodels_savemodelindex;
+	this.skin = this.forceplayermodels_saveskin;
+	this.colormap = this.forceplayermodels_savecolormap;
 }
-void CSQCPlayer_ModelAppearance_PostUpdate()
-{SELFPARAM();
-	self.forceplayermodels_savemodel = self.model;
-	self.forceplayermodels_savemodelindex = self.modelindex;
-	self.forceplayermodels_saveskin = self.skin;
-	self.forceplayermodels_savecolormap = self.colormap;
+void CSQCPlayer_ModelAppearance_PostUpdate(entity this)
+{
+	this.forceplayermodels_savemodel = this.model;
+	this.forceplayermodels_savemodelindex = this.modelindex;
+	this.forceplayermodels_saveskin = this.skin;
+	this.forceplayermodels_savecolormap = this.colormap;
 
-	if(self.forceplayermodels_savemodel != self.forceplayermodels_isgoodmodel_mdl)
+	if(this.forceplayermodels_savemodel != this.forceplayermodels_isgoodmodel_mdl)
 	{
-		self.forceplayermodels_isgoodmodel = fexists(self.forceplayermodels_savemodel);
-		self.forceplayermodels_isgoodmodel_mdl = self.forceplayermodels_savemodel;
-		if(!self.forceplayermodels_isgoodmodel)
-			LOG_INFOF("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
+		this.forceplayermodels_isgoodmodel = fexists(this.forceplayermodels_savemodel);
+		this.forceplayermodels_isgoodmodel_mdl = this.forceplayermodels_savemodel;
+		if(!this.forceplayermodels_isgoodmodel)
+			LOG_INFOF("Warning: missing model %s has been used\n", this.forceplayermodels_savemodel);
 	}
 }
-void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
-{SELFPARAM();
+void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
+{
 	// FORCEMODEL
 	// which one is ALWAYS good?
 	if (!forceplayermodels_goodmodel)
@@ -145,17 +145,17 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 	}
 
 	// first, try finding it from the server
-	if(self.forceplayermodels_savemodelindex && self.forceplayermodels_savemodel != "null")
+	if(this.forceplayermodels_savemodelindex && this.forceplayermodels_savemodel != "null")
 	{
 		if(islocalplayer)
 		{
 			if(!isdemo()) // this is mainly cheat protection; not needed for demos
 			{
 				// trust server's idea of "own player model"
-				forceplayermodels_modelisgoodmodel = self.forceplayermodels_isgoodmodel;
-				forceplayermodels_model = self.forceplayermodels_savemodel;
-				forceplayermodels_modelindex = self.forceplayermodels_savemodelindex;
-				forceplayermodels_skin = self.forceplayermodels_saveskin;
+				forceplayermodels_modelisgoodmodel = this.forceplayermodels_isgoodmodel;
+				forceplayermodels_model = this.forceplayermodels_savemodel;
+				forceplayermodels_modelindex = this.forceplayermodels_savemodelindex;
+				forceplayermodels_skin = this.forceplayermodels_saveskin;
 				forceplayermodels_attempted = 1;
 			}
 		}
@@ -190,7 +190,7 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 	// apply it
 	bool isfriend;
 	int cm;
-	cm = self.forceplayermodels_savecolormap;
+	cm = this.forceplayermodels_savecolormap;
 	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(cm - 1, "colors")) + 1024);
 
 	if(teamplay)
@@ -200,27 +200,27 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 
 	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && isfriend)
 	{
-		self.model = forceplayermodels_mymodel;
-		self.modelindex = forceplayermodels_mymodelindex;
-		self.skin = autocvar_cl_forcemyplayerskin;
+		this.model = forceplayermodels_mymodel;
+		this.modelindex = forceplayermodels_mymodelindex;
+		this.skin = autocvar_cl_forcemyplayerskin;
 	}
 	else if(autocvar_cl_forceplayermodels && forceplayermodels_modelisgoodmodel)
 	{
-		self.model = forceplayermodels_model;
-		self.modelindex = forceplayermodels_modelindex;
-		self.skin = forceplayermodels_skin;
+		this.model = forceplayermodels_model;
+		this.modelindex = forceplayermodels_modelindex;
+		this.skin = forceplayermodels_skin;
 	}
-	else if(self.forceplayermodels_isgoodmodel)
+	else if(this.forceplayermodels_isgoodmodel)
 	{
-		self.model = self.forceplayermodels_savemodel;
-		self.modelindex = self.forceplayermodels_savemodelindex;
-		self.skin = self.forceplayermodels_saveskin;
+		this.model = this.forceplayermodels_savemodel;
+		this.modelindex = this.forceplayermodels_savemodelindex;
+		this.skin = this.forceplayermodels_saveskin;
 	}
 	else
 	{
-		self.model = forceplayermodels_goodmodel;
-		self.modelindex = forceplayermodels_goodmodelindex;
-		self.skin = self.forceplayermodels_saveskin;
+		this.model = forceplayermodels_goodmodel;
+		this.modelindex = forceplayermodels_goodmodelindex;
+		this.skin = this.forceplayermodels_saveskin;
 	}
 
 	// forceplayercolors too
@@ -260,45 +260,45 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 		if(cm == 1024 + 17 * myteam)
 		{
 			if(forcecolor_friend)
-				self.colormap = forcecolor_friend;
+				this.colormap = forcecolor_friend;
 		}
 		else
 		{
 			if(forcecolor_enemy)
-				self.colormap = forcecolor_enemy;
+				this.colormap = forcecolor_enemy;
 		}
 	}
 	else
 	{
 		if(autocvar_cl_forcemyplayercolors && islocalplayer)
-			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
+			this.colormap = 1024 + autocvar_cl_forcemyplayercolors;
 		else if(autocvar_cl_forceplayercolors)
-			self.colormap = player_localnum + 1;
+			this.colormap = player_localnum + 1;
 	}
 
 	// GLOWMOD AND DEATH FADING
-	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, true) * 2;
+	if(this.colormap > 0)
+		this.glowmod = colormapPaletteColor(((this.colormap >= 1024) ? this.colormap : stof(getplayerkeyvalue(this.colormap - 1, "colors"))) & 0x0F, true) * 2;
 	else
-		self.glowmod = '1 1 1';
+		this.glowmod = '1 1 1';
 
 	if(autocvar_cl_deathglow > 0)
 	{
-		if(self.csqcmodel_isdead)
+		if(this.csqcmodel_isdead)
 		{
 			// Fade out to black now...
-			if(self.old_glowmod == '0 0 0') { self.old_glowmod = self.glowmod; }
-			self.colormap = 0;
+			if(this.old_glowmod == '0 0 0') { this.old_glowmod = this.glowmod; }
+			this.colormap = 0;
 
-			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
-			self.glowmod_x = max(self.glowmod.x, 0.0001);
-			self.glowmod_y = max(self.glowmod.y, 0.0001);
-			self.glowmod_z = max(self.glowmod.z, 0.0001);
+			this.glowmod = this.old_glowmod * bound(0, 1 - (time - this.death_time) / autocvar_cl_deathglow, 1);
+			this.glowmod_x = max(this.glowmod.x, 0.0001);
+			this.glowmod_y = max(this.glowmod.y, 0.0001);
+			this.glowmod_z = max(this.glowmod.z, 0.0001);
 		}
-		else if(self.old_glowmod != '0 0 0') { self.old_glowmod = '0 0 0'; }
+		else if(this.old_glowmod != '0 0 0') { this.old_glowmod = '0 0 0'; }
 	}
 
-	//printf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), self.colormap, vtos(self.glowmod));
+	//printf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (this.csqcmodel_isdead ? "DEAD" : "ALIVE"), this.colormap, vtos(this.glowmod));
 }
 
 // FEATURE: fallback frames
@@ -311,22 +311,22 @@ void CSQCPlayer_ModelAppearance_Apply(bool islocalplayer)
 .int csqcmodel_framecount;
 
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
-void CSQCPlayer_FallbackFrame_PreUpdate()
-{SELFPARAM();
-	self.frame = self.csqcmodel_saveframe;
-	self.frame2 = self.csqcmodel_saveframe2;
+void CSQCPlayer_FallbackFrame_PreUpdate(entity this)
+{
+	this.frame = this.csqcmodel_saveframe;
+	this.frame2 = this.csqcmodel_saveframe2;
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-	self.frame3 = self.csqcmodel_saveframe3;
-	self.frame4 = self.csqcmodel_saveframe4;
+	this.frame3 = this.csqcmodel_saveframe3;
+	this.frame4 = this.csqcmodel_saveframe4;
 #endif
 }
-void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
-{SELFPARAM();
-	self.csqcmodel_saveframe = self.frame;
-	self.csqcmodel_saveframe2 = self.frame2;
+void CSQCPlayer_FallbackFrame_PostUpdate(entity this, bool isnew)
+{
+	this.csqcmodel_saveframe = this.frame;
+	this.csqcmodel_saveframe2 = this.frame2;
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-	self.csqcmodel_saveframe3 = self.frame3;
-	self.csqcmodel_saveframe4 = self.frame4;
+	this.csqcmodel_saveframe3 = this.frame3;
+	this.csqcmodel_saveframe4 = this.frame4;
 #endif
 
 	// hack for death animations: set their frametime to zero in case a
@@ -334,8 +334,8 @@ void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
 	if(isnew)
 	{
 #define FIX_FRAMETIME(f,ft) MACRO_BEGIN {																			\
-		if(IS_DEAD_FRAME(self.f) && self.ft != 0 && self.death_time != 0)											\
-			self.ft = self.death_time;																				\
+		if(IS_DEAD_FRAME(this.f) && this.ft != 0 && this.death_time != 0)											\
+			this.ft = this.death_time;																				\
 } MACRO_END
 		FIX_FRAMETIME(frame, frame1time);
 		FIX_FRAMETIME(frame2, frame2time);
@@ -344,17 +344,17 @@ void CSQCPlayer_FallbackFrame_PostUpdate(bool isnew)
 		FIX_FRAMETIME(frame4, frame4time);
 #endif
 	}
-	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
+	this.csqcmodel_isdead = IS_DEAD_FRAME(this.frame);
 }
-void CSQCPlayer_AnimDecide_PostUpdate(bool isnew)
-{SELFPARAM();
-	self.csqcmodel_isdead = boolean(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+void CSQCPlayer_AnimDecide_PostUpdate(entity this, bool isnew)
+{
+	this.csqcmodel_isdead = boolean(this.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 }
-int CSQCPlayer_FallbackFrame(int f)
-{SELFPARAM();
-	if(frameduration(self.modelindex, f) > 0)
+int CSQCPlayer_FallbackFrame(entity this, int f)
+{
+	if(frameduration(this.modelindex, f) > 0)
 		return f; // goooooood
-	if(frameduration(self.modelindex, 1) <= 0)
+	if(frameduration(this.modelindex, 1) <= 0)
 		return f; // this is a static model. We can't fix it if we wanted to
 	switch(f)
 	{
@@ -367,16 +367,16 @@ int CSQCPlayer_FallbackFrame(int f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	LOG_INFOF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
+	LOG_INFOF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, this.model);
 	return f;
 }
-void CSQCPlayer_FallbackFrame_Apply()
-{SELFPARAM();
-	self.frame = CSQCPlayer_FallbackFrame(self.frame);
-	self.frame2 = CSQCPlayer_FallbackFrame(self.frame2);
+void CSQCPlayer_FallbackFrame_Apply(entity this)
+{
+	this.frame = CSQCPlayer_FallbackFrame(this, this.frame);
+	this.frame2 = CSQCPlayer_FallbackFrame(this, this.frame2);
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-	self.frame3 = CSQCPlayer_FallbackFrame(self.frame3);
-	self.frame4 = CSQCPlayer_FallbackFrame(self.frame4);
+	this.frame3 = CSQCPlayer_FallbackFrame(this, this.frame3);
+	this.frame4 = CSQCPlayer_FallbackFrame(this, this.frame4);
 #endif
 }
 
@@ -384,76 +384,76 @@ void CSQCPlayer_FallbackFrame_Apply()
 .entity tag_entity;
 .int tag_entity_lastmodelindex;
 .int tag_index;
-void CSQCModel_AutoTagIndex_Apply()
-{SELFPARAM();
-	if(self.tag_entity && wasfreed(self.tag_entity))
-		self.tag_entity = world;
+void CSQCModel_AutoTagIndex_Apply(entity this)
+{
+	if(this.tag_entity && wasfreed(this.tag_entity))
+		this.tag_entity = world;
 
-	viewloc_SetTags();
+	WITH(entity, self, this, viewloc_SetTags());
 
-	MUTATOR_CALLHOOK(TagIndex_Update, self);
+	MUTATOR_CALLHOOK(TagIndex_Update, this);
 
-	if(self.tag_networkentity)
+	if(this.tag_networkentity)
 	{
 		// we are ATTACHED!
 		bool changed = 0;
-		if(self.tag_entity.entnum != self.tag_networkentity)
+		if(this.tag_entity.entnum != this.tag_networkentity)
 		{
-			self.tag_entity = findfloat(world, entnum, self.tag_networkentity);
+			this.tag_entity = findfloat(world, entnum, this.tag_networkentity);
 			changed = 1;
 		}
 
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
-		if(self.tag_entity.classname == "csqcmodel")
+		if(this.tag_entity.classname == "csqcmodel")
 		{
-			WITH(entity, self, self.tag_entity, CSQCModel_Hook_PreDraw((self.entnum >= 1 && self.entnum <= maxclients)));
+			WITH(entity, this, this.tag_entity, CSQCModel_Hook_PreDraw(this, (this.entnum >= 1 && this.entnum <= maxclients)));
 		}
 
-		if(self.tag_entity.modelindex != self.tag_entity_lastmodelindex)
+		if(this.tag_entity.modelindex != this.tag_entity_lastmodelindex)
 		{
-			self.tag_entity_lastmodelindex = self.tag_entity.modelindex;
+			this.tag_entity_lastmodelindex = this.tag_entity.modelindex;
 			changed = 1;
 		}
 		if(changed)
 		{
-			if(self.tag_entity)
+			if(this.tag_entity)
 			{
 				// the best part is: IT EXISTS
-				if(substring(self.model, 0, 14) == "models/weapons")
+				if(substring(this.model, 0, 14) == "models/weapons")
 				{
-					if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
+					if(substring(this.tag_entity.model, 0, 14) == "models/weapons")
 					{
-						self.tag_index = gettagindex(self.tag_entity, "weapon");
-						if(!self.tag_index)
-							self.tag_index = gettagindex(self.tag_entity, "tag_weapon");
-						if(!self.tag_index)
+						this.tag_index = gettagindex(this.tag_entity, "weapon");
+						if(!this.tag_index)
+							this.tag_index = gettagindex(this.tag_entity, "tag_weapon");
+						if(!this.tag_index)
 						{
 							// we need to prevent this from 'appening
-							self.tag_entity = world;
-							self.drawmask = 0;
+							this.tag_entity = world;
+							this.drawmask = 0;
 							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it\n");
 						}
 					}
-					else if(self.tag_entity.isplayermodel)
+					else if(this.tag_entity.isplayermodel)
 					{
-						skeleton_loadinfo(self.tag_entity);
-						self.tag_index = self.tag_entity.bone_weapon;
+						skeleton_loadinfo(this.tag_entity);
+						this.tag_index = this.tag_entity.bone_weapon;
 					}
 				}
 
-				if(substring(self.tag_entity.model, 0, 14) == "models/weapons")
+				if(substring(this.tag_entity.model, 0, 14) == "models/weapons")
 				{
-					self.tag_index = gettagindex(self.tag_entity, "shot");
-					if(!self.tag_index)
-						self.tag_index = gettagindex(self.tag_entity, "tag_shot");
+					this.tag_index = gettagindex(this.tag_entity, "shot");
+					if(!this.tag_index)
+						this.tag_index = gettagindex(this.tag_entity, "tag_shot");
 				}
 
-				MUTATOR_CALLHOOK(TagIndex_Apply, self);
+				MUTATOR_CALLHOOK(TagIndex_Apply, this);
 			}
 			else
 			{
 				// damn, see you next frame
-				self.drawmask = 0;
+				this.drawmask = 0;
 			}
 		}
 	}
@@ -479,117 +479,117 @@ const int MF_TRACER3 = BIT(7); // purple trail
 .int csqcmodel_effects;
 .int csqcmodel_modelflags;
 .int csqcmodel_traileffect;
-void CSQCModel_Effects_PreUpdate()
-{SELFPARAM();
-	self.effects = self.csqcmodel_effects;
-	self.modelflags = self.csqcmodel_modelflags;
-	self.traileffect = self.csqcmodel_traileffect;
+void CSQCModel_Effects_PreUpdate(entity this)
+{
+	this.effects = this.csqcmodel_effects;
+	this.modelflags = this.csqcmodel_modelflags;
+	this.traileffect = this.csqcmodel_traileffect;
 }
 void Reset_ArcBeam();
-void CSQCModel_Effects_PostUpdate()
-{SELFPARAM();
-	if (self == csqcplayer) {
-		if (self.csqcmodel_teleported) {
-			Reset_ArcBeam();
+void CSQCModel_Effects_PostUpdate(entity this)
+{
+	if (this == csqcplayer) {
+		if (this.csqcmodel_teleported) {
+			WITH(entity, self, this, Reset_ArcBeam());
 		}
 	}
-	self.csqcmodel_effects = self.effects;
-	self.csqcmodel_modelflags = self.modelflags;
-	self.csqcmodel_traileffect = self.traileffect;
-	self.effects = 0;
-	self.modelflags = 0;
-	if(self.csqcmodel_teleported)
-		Projectile_ResetTrail(self, self.origin);
+	this.csqcmodel_effects = this.effects;
+	this.csqcmodel_modelflags = this.modelflags;
+	this.csqcmodel_traileffect = this.traileffect;
+	this.effects = 0;
+	this.modelflags = 0;
+	if(this.csqcmodel_teleported)
+		Projectile_ResetTrail(this, this.origin);
 }
 .int snd_looping;
-void CSQCModel_Effects_Apply()
-{SELFPARAM();
-	int eff = self.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
-	int tref = self.csqcmodel_traileffect;
+void CSQCModel_Effects_Apply(entity this)
+{
+	int eff = this.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
+	int tref = this.csqcmodel_traileffect;
 
-	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
-	self.effects = 0;
-	self.traileffect = 0;
+	this.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
+	this.effects = 0;
+	this.traileffect = 0;
 
 	if(eff & EF_BRIGHTFIELD)
 		tref = EFFECT_TR_NEXUIZPLASMA.m_id;
 	// ignoring EF_MUZZLEFLASH
 	if(eff & EF_BRIGHTLIGHT)
-		adddynamiclight(self.origin, 400, '3 3 3');
+		adddynamiclight(this.origin, 400, '3 3 3');
 	if(eff & EF_DIMLIGHT)
-		adddynamiclight(self.origin, 200, '1.5 1.5 1.5');
-	if((eff & EF_NODRAW) || (self.alpha < 0))
-		self.drawmask = 0;
+		adddynamiclight(this.origin, 200, '1.5 1.5 1.5');
+	if((eff & EF_NODRAW) || (this.alpha < 0))
+		this.drawmask = 0;
 	if(eff & EF_ADDITIVE)
-		self.renderflags |= RF_ADDITIVE;
+		this.renderflags |= RF_ADDITIVE;
 	if(eff & EF_BLUE)
-		adddynamiclight(self.origin, 200, '0.15 0.15 1.5');
+		adddynamiclight(this.origin, 200, '0.15 0.15 1.5');
 	if(eff & EF_RED)
-		adddynamiclight(self.origin, 200, '1.5 0.15 0.15');
+		adddynamiclight(this.origin, 200, '1.5 0.15 0.15');
 	// ignoring EF_NOGUNBOB
 	if(eff & EF_FULLBRIGHT)
-		self.renderflags |= RF_FULLBRIGHT;
+		this.renderflags |= RF_FULLBRIGHT;
 	if(eff & EF_FLAME)
-		pointparticles(EFFECT_EF_FLAME, self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(EFFECT_EF_FLAME, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_STARDUST)
-		pointparticles(EFFECT_EF_STARDUST, self.origin, '0 0 0', bound(0, frametime, 0.1));
+		pointparticles(EFFECT_EF_STARDUST, this.origin, '0 0 0', bound(0, frametime, 0.1));
 	if(eff & EF_NOSHADOW)
-		self.renderflags |= RF_NOSHADOW;
+		this.renderflags |= RF_NOSHADOW;
 	if(eff & EF_NODEPTHTEST)
-		self.renderflags |= RF_DEPTHHACK;
+		this.renderflags |= RF_DEPTHHACK;
 	// ignoring EF_SELECTABLE
 	if(eff & EF_DOUBLESIDED)
-		self.effects |= EF_DOUBLESIDED;
+		this.effects |= EF_DOUBLESIDED;
 	if(eff & EF_NOSELFSHADOW)
-		self.effects |= EF_NOSELFSHADOW;
+		this.effects |= EF_NOSELFSHADOW;
 	if(eff & EF_DYNAMICMODELLIGHT)
-		self.renderflags |= RF_DYNAMICMODELLIGHT;
+		this.renderflags |= RF_DYNAMICMODELLIGHT;
 	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
-	if(self.csqcmodel_modelflags & MF_ROCKET)
+	if(this.csqcmodel_modelflags & MF_ROCKET)
 		tref = EFFECT_TR_ROCKET.m_id;
-	if(self.csqcmodel_modelflags & MF_GRENADE)
+	if(this.csqcmodel_modelflags & MF_GRENADE)
 		tref = EFFECT_TR_GRENADE.m_id;
-	if(self.csqcmodel_modelflags & MF_GIB)
+	if(this.csqcmodel_modelflags & MF_GIB)
 		tref = EFFECT_TR_BLOOD.m_id;
-	if(self.csqcmodel_modelflags & MF_ROTATE)
+	if(this.csqcmodel_modelflags & MF_ROTATE)
 	{
-		self.renderflags |= RF_USEAXIS;
-		makevectors(self.angles + '0 100 0' * fmod(time, 3.6));
+		this.renderflags |= RF_USEAXIS;
+		makevectors(this.angles + '0 100 0' * fmod(time, 3.6));
 	}
-	if(self.csqcmodel_modelflags & MF_TRACER)
+	if(this.csqcmodel_modelflags & MF_TRACER)
 		tref = EFFECT_TR_WIZSPIKE.m_id;
-	if(self.csqcmodel_modelflags & MF_ZOMGIB)
+	if(this.csqcmodel_modelflags & MF_ZOMGIB)
 		tref = EFFECT_TR_SLIGHTBLOOD.m_id;
-	if(self.csqcmodel_modelflags & MF_TRACER2)
+	if(this.csqcmodel_modelflags & MF_TRACER2)
 		tref = EFFECT_TR_KNIGHTSPIKE.m_id;
-	if(self.csqcmodel_modelflags & MF_TRACER3)
+	if(this.csqcmodel_modelflags & MF_TRACER3)
 		tref = EFFECT_TR_VORESPIKE.m_id;
 
-	self.traileffect = tref;
+	this.traileffect = tref;
 
-	if(self.drawmask)
-		Projectile_DrawTrail(self, self.origin);
+	if(this.drawmask)
+		Projectile_DrawTrail(this, this.origin);
 	else
-		Projectile_ResetTrail(self, self.origin);
+		Projectile_ResetTrail(this, this.origin);
 
-	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
-		self.renderflags |= RF_ADDITIVE;
+	if(this.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		this.renderflags |= RF_ADDITIVE;
 		// also special in CSQCPlayer_GlowMod_Apply
 
-	if(self.csqcmodel_modelflags & MF_ROCKET)
+	if(this.csqcmodel_modelflags & MF_ROCKET)
 	{
-		if(!self.snd_looping)
+		if(!this.snd_looping)
 		{
-			sound(self, CH_TRIGGER_SINGLE, SND_JETPACK_FLY, VOL_BASE, autocvar_g_jetpack_attenuation);
-			self.snd_looping = CH_TRIGGER_SINGLE;
+			sound(this, CH_TRIGGER_SINGLE, SND_JETPACK_FLY, VOL_BASE, autocvar_g_jetpack_attenuation);
+			this.snd_looping = CH_TRIGGER_SINGLE;
 		}
 	}
 	else
 	{
-		if(self.snd_looping)
+		if(this.snd_looping)
 		{
-			sound(self, self.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
-			self.snd_looping = 0;
+			sound(this, this.snd_looping, SND_Null, VOL_BASE, autocvar_g_jetpack_attenuation);
+			this.snd_looping = 0;
 		}
 	}
 }
@@ -605,132 +605,132 @@ void CSQCModel_Effects_Apply()
 .int anim_saveframe2;
 .int anim_saveframe2time;
 .int anim_prev_pmove_flags;
-void CSQCModel_Hook_PreDraw(bool isplayer)
-{SELFPARAM();
-	if(self.csqcmodel_predraw_run == framecount)
+void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
+{
+	if(this.csqcmodel_predraw_run == framecount)
 		return;
-	self.csqcmodel_predraw_run = framecount;
+	this.csqcmodel_predraw_run = framecount;
 
-	if(!self.modelindex || self.model == "null")
+	if(!this.modelindex || this.model == "null")
 	{
-		self.drawmask = 0;
+		this.drawmask = 0;
 		return;
 	}
 	else
-		self.drawmask = MASK_NORMAL;
+		this.drawmask = MASK_NORMAL;
 
-	if(self.isplayermodel) // this checks if it's a player MODEL!
+	if(this.isplayermodel) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
-		CSQCPlayer_LOD_Apply();
+		CSQCPlayer_ModelAppearance_Apply(this, this.entnum == player_localnum + 1);
+		CSQCPlayer_LOD_Apply(this);
 
 		if(!isplayer)
 		{
-			skeleton_loadinfo(self);
-			bool doblend = (self.bone_upperbody >= 0);
-			CSQCPlayer_FallbackFrame_Apply();
+			skeleton_loadinfo(this);
+			bool doblend = (this.bone_upperbody >= 0);
+			CSQCPlayer_FallbackFrame_Apply(this);
 			if(doblend)
 			{
-				skeleton_from_frames(self, self.csqcmodel_isdead);
+				skeleton_from_frames(this, this.csqcmodel_isdead);
 			}
 			else
 			{
-				free_skeleton_from_frames(self);
+				free_skeleton_from_frames(this);
 				// just in case, clear these (we're animating in frame and frame3)
-				self.lerpfrac = 0;
-				self.lerpfrac4 = 0;
+				this.lerpfrac = 0;
+				this.lerpfrac4 = 0;
 			}
 		}
 		else
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
-			skeleton_loadinfo(self);
-			bool doblend = (self.bone_upperbody >= 0);
+			skeleton_loadinfo(this);
+			bool doblend = (this.bone_upperbody >= 0);
 			bool onground = 0;
-			if(self == csqcplayer)
+			if(this == csqcplayer)
 			{
-				if(IS_ONGROUND(self))
+				if(IS_ONGROUND(this))
 					onground = 1;
-				self.anim_prev_pmove_flags = self.flags;
-				if(self.flags & FL_DUCKED)
-					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, false);
-				else if(self.anim_state & ANIMSTATE_DUCK)
-					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, false);
+				this.anim_prev_pmove_flags = this.flags;
+				if(this.flags & FL_DUCKED)
+					animdecide_setstate(this, this.anim_state | ANIMSTATE_DUCK, false);
+				else if(this.anim_state & ANIMSTATE_DUCK)
+					animdecide_setstate(this, this.anim_state - ANIMSTATE_DUCK, false);
 			}
 			else
 			{
-				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 4', MOVE_NORMAL, self);
+				tracebox(this.origin + '0 0 1', this.mins, this.maxs, this.origin - '0 0 4', MOVE_NORMAL, this);
 				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
 			}
-			animdecide_load_if_needed(self);
-			animdecide_setimplicitstate(self, onground);
-			animdecide_setframes(self, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
+			animdecide_load_if_needed(this);
+			animdecide_setimplicitstate(this, onground);
+			animdecide_setframes(this, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
 			int sf = 0;
-			if(self.anim_saveframe != self.anim_frame || self.anim_saveframe1time != self.anim_frame1time)
+			if(this.anim_saveframe != this.anim_frame || this.anim_saveframe1time != this.anim_frame1time)
 				sf |= CSQCMODEL_PROPERTY_FRAME;
-			if(self.anim_saveframe2 != self.anim_frame2 || self.anim_saveframe2time != self.anim_frame2time)
+			if(this.anim_saveframe2 != this.anim_frame2 || this.anim_saveframe2time != this.anim_frame2time)
 				sf |= CSQCMODEL_PROPERTY_FRAME2;
-			self.anim_saveframe = self.anim_frame;
-			self.anim_saveframe1time = self.anim_frame1time;
-			self.anim_saveframe2 = self.anim_frame2;
-			self.anim_saveframe2time = self.anim_frame2time;
+			this.anim_saveframe = this.anim_frame;
+			this.anim_saveframe1time = this.anim_frame1time;
+			this.anim_saveframe2 = this.anim_frame2;
+			this.anim_saveframe2time = this.anim_frame2time;
 			// Note: we always consider lerpfrac "changed", as it uses fixed values every time anyway.
 			// This ensures that .frame etc. are always written.
-			CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC);
-			self.lerpfrac = (doblend ? 0.5 : 0);
-			self.frame = self.anim_frame;
-			self.frame1time = self.anim_frame1time;
-			self.frame2 = self.anim_frame2;
-			self.frame2time = self.anim_frame2time;
-			CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, false);
-			CSQCModel_InterpolateAnimation_2To4_Do();
+			WITH(entity, self, this, CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC));
+			this.lerpfrac = (doblend ? 0.5 : 0);
+			this.frame = this.anim_frame;
+			this.frame1time = this.anim_frame1time;
+			this.frame2 = this.anim_frame2;
+			this.frame2time = this.anim_frame2time;
+			WITH(entity, self, this, CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, false));
+			WITH(entity, self, this, CSQCModel_InterpolateAnimation_2To4_Do());
 			if(doblend)
 			{
-				skeleton_from_frames(self, self.csqcmodel_isdead);
+				skeleton_from_frames(this, this.csqcmodel_isdead);
 			}
 			else
 			{
-				free_skeleton_from_frames(self);
+				free_skeleton_from_frames(this);
 				// just in case, clear these (we're animating in frame and frame3)
-				self.lerpfrac = 0;
-				self.lerpfrac4 = 0;
+				this.lerpfrac = 0;
+				this.lerpfrac4 = 0;
 			}
 		}
 	}
 
-	CSQCModel_AutoTagIndex_Apply();
+	CSQCModel_AutoTagIndex_Apply(this);
 
-	CSQCModel_Effects_Apply();
+	CSQCModel_Effects_Apply(this);
 }
 
-void CSQCModel_Hook_PreUpdate(bool isnew, bool isplayer, bool islocalplayer)
-{SELFPARAM();
+void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)
+{
 	// interpolate v_angle
-	self.iflags |= IFLAG_V_ANGLE_X;
+	this.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
-	CSQCModel_Effects_PreUpdate();
-	if(self.isplayermodel)
+	CSQCModel_Effects_PreUpdate(this);
+	if(this.isplayermodel)
 	{
 		if(!isplayer)
-			CSQCPlayer_FallbackFrame_PreUpdate();
-		CSQCPlayer_ModelAppearance_PreUpdate();
+			CSQCPlayer_FallbackFrame_PreUpdate(this);
+		CSQCPlayer_ModelAppearance_PreUpdate(this);
 	}
 }
 
-void CSQCModel_Hook_PostUpdate(bool isnew, bool isplayer, bool islocalplayer)
-{SELFPARAM();
+void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)
+{
 	// is it a player model? (shared state)
-	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/" || (substring(self.model, 0, 16) == "models/monsters/" && (self.entnum >= 1 && self.entnum <= maxclients)));
+	this.isplayermodel = (substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || (substring(this.model, 0, 16) == "models/monsters/" && (this.entnum >= 1 && this.entnum <= maxclients)));
 
 	// save values set by server
-	if(self.isplayermodel)
+	if(this.isplayermodel)
 	{
-		CSQCPlayer_ModelAppearance_PostUpdate();
+		CSQCPlayer_ModelAppearance_PostUpdate(this);
 		if(isplayer)
-			CSQCPlayer_AnimDecide_PostUpdate(isnew);
+			CSQCPlayer_AnimDecide_PostUpdate(this, isnew);
 		else
-			CSQCPlayer_FallbackFrame_PostUpdate(isnew);
+			CSQCPlayer_FallbackFrame_PostUpdate(this, isnew);
 	}
-	CSQCModel_Effects_PostUpdate();
+	CSQCModel_Effects_PostUpdate(this);
 }

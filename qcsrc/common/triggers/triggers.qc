@@ -143,25 +143,25 @@ void trigger_common_read(bool withtarget)
 	self.angles_z = ReadCoord();
 }
 
-void trigger_remove_generic()
-{SELFPARAM();
-	if(self.target) { strunzone(self.target); }
-	self.target = string_null;
+void trigger_remove_generic(entity this)
+{
+	if(this.target) { strunzone(this.target); }
+	this.target = string_null;
 
-	if(self.target2) { strunzone(self.target2); }
-	self.target2 = string_null;
+	if(this.target2) { strunzone(this.target2); }
+	this.target2 = string_null;
 
-	if(self.target3) { strunzone(self.target3); }
-	self.target3 = string_null;
+	if(this.target3) { strunzone(this.target3); }
+	this.target3 = string_null;
 
-	if(self.target4) { strunzone(self.target4); }
-	self.target4 = string_null;
+	if(this.target4) { strunzone(this.target4); }
+	this.target4 = string_null;
 
-	if(self.targetname) { strunzone(self.targetname); }
-	self.target = string_null;
+	if(this.targetname) { strunzone(this.targetname); }
+	this.target = string_null;
 
-	if(self.killtarget) { strunzone(self.killtarget); }
-	self.killtarget = string_null;
+	if(this.killtarget) { strunzone(this.killtarget); }
+	this.killtarget = string_null;
 }
 #endif
 
