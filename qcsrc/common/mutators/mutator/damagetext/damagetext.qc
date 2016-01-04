@@ -138,7 +138,7 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
     ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"))
     ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9)
-    ATTRIB(XonoticDamageTextSettings, rows, float, 13)
+    ATTRIB(XonoticDamageTextSettings, rows, float, 15.5)
     ATTRIB(XonoticDamageTextSettings, columns, float, 5)
     INIT(XonoticDamageTextSettings) { this.configureDialog(this); }
     METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }

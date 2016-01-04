@@ -6,7 +6,7 @@ CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
 	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameWeaponsSettingsTab, title, string, _("Weapons"))
 	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 13)
+	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6)
 	ATTRIB(XonoticGameWeaponsSettingsTab, weaponsList, entity, NULL)
 ENDCLASS(XonoticGameWeaponsSettingsTab)
@@ -37,8 +37,8 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Weapon Priority List (* = mutator weapon)")));
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, 10, 2.5, e = me.weaponsList = makeXonoticWeaponsList());
-	me.gotoRC(me, 11, 0.25);
+		me.TD(me, 9, 2.5, e = me.weaponsList = makeXonoticWeaponsList());
+	me.gotoRC(me, 10, 0.25);
 		me.TD(me, 1, 1.25, e = makeXonoticButton(_("Up"), '0 0 0'));
 			e.onClick = WeaponsList_MoveUp_Click;
 			e.onClickEntity = me.weaponsList;
@@ -82,5 +82,8 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_bobmodel", _("Gun model bobbing")));
 		setDependent(e, "r_drawviewmodel", 1, 1);
+	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
+			"sendcvar cl_autoswitch; sendcvar cl_weaponpriority; sendcvar cl_weaponimpulsemode", COMMANDBUTTON_APPLY));
 }
 #endif

@@ -54,8 +54,11 @@
 	{
 		if (key == K_ENTER || key == K_SPACE || key == K_KP_ENTER)
 		{
-			me.playClickSound(me);
-			me.clickTime = 0.1;  // delayed for effect
+			if(!me.disabled)
+			{
+				me.playClickSound(me);
+				me.clickTime = 0.1;  // delayed for effect
+			}
 			return 1;
 		}
 		return 0;
