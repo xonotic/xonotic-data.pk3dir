@@ -302,7 +302,10 @@
 		other.parent = me;
 		other.Container_origin = theOrigin;
 		other.Container_size = theSize;
-		me.setAlphaOf(me, other, theAlpha);
+
+		// don't call setAlphaOf, it would uneccessarily trigger showNotify
+		//me.setAlphaOf(me, other, theAlpha);
+		other.Container_alpha = theAlpha;
 
 		entity l;
 		l = me.lastChild;
