@@ -330,8 +330,8 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 .void(entity) predraw_qc;
 void PreDraw_self()
 {
-	if(self.predraw_qc)
-		self.predraw_qc(self);
+	SELFPARAM();
+	if (this.predraw_qc) this.predraw_qc(this);
 }
 
 void setpredraw(entity this, void(entity) pdfunc)

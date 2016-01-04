@@ -22,7 +22,11 @@ void SUB_Stop(entity this)
 	this.move_movetype = MOVETYPE_NONE;
 }
 
-void SUB_Stop_self() { SUB_Stop(self); }
+void SUB_Stop_self()
+{
+	SELFPARAM();
+	SUB_Stop(this);
+}
 
 void Projectile_ResetTrail(entity this, vector to)
 {

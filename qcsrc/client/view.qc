@@ -864,7 +864,7 @@ void HUD_Crosshair()
 {SELFPARAM();
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
-	entity e = self;
+	entity e = this;
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 &&
@@ -1404,8 +1404,8 @@ void CSQC_UpdateView(float w, float h)
 	else
 		view_quality = 1;
 
-	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(self);
-	button_zoom = PHYS_INPUT_BUTTON_ZOOM(self);
+	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
+	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);
 
 	vf_size = getpropertyvec(VF_SIZE);
 	vf_min = getpropertyvec(VF_MIN);
