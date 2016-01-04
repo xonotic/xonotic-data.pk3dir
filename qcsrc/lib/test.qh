@@ -1,12 +1,12 @@
 #pragma once
 
-#define TEST(id) \
-	void _TEST_##id(); \
+#define TEST(suite, test) \
+	void _TEST_##suite##_##test(); \
 	[[accumulate]] int TEST_RunAll_accumulated(int f) { \
-		if (!TEST_Run(#id)) ++f; \
+		if (!TEST_Run(#suite "_" #test)) ++f; \
 		return = f; \
 	} \
-	void _TEST_##id()
+	void _TEST_##suite##_##test()
 
 #define TEST_Check(cond) MACRO_BEGIN { if (!(cond)) TEST_Fail(#cond); } MACRO_END
 

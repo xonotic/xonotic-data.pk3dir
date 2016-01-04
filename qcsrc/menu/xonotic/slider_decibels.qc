@@ -95,7 +95,7 @@ string XonoticDecibelsSlider_valueToText(entity me, float v)
 }
 
 bool autocvar_test_XonoticDecibelsSlider = false;
-TEST(XonoticDecibelsSlider)
+TEST(XonoticDecibelsSlider, SoundTest)
 {
 	if (!autocvar_test_XonoticDecibelsSlider) { TEST_OK(); return; }
 	for (int i = -400; i < 0; ++i)
