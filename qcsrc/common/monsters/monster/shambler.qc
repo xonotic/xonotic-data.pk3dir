@@ -189,11 +189,11 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			float randomness = random(), enemy_len = vlen(actor.enemy.origin - actor.origin);
+			float randomness = random();
 
 			if(time >= actor.shambler_lastattack) // shambler doesn't attack much
 			if(IS_ONGROUND(actor))
-			if(randomness <= 0.5 && enemy_len <= autocvar_g_monster_shambler_attack_smash_range)
+			if(randomness <= 0.5 && vdist(actor.enemy.origin - actor.origin, <=, autocvar_g_monster_shambler_attack_smash_range))
 			{
 				setanim(actor, actor.anim_melee2, true, true, false);
 				Monster_Delay(actor, 1, 0.7, M_Shambler_Attack_Smash);
@@ -203,7 +203,7 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
 				actor.shambler_lastattack = time + 3 + random() * 1.5;
 				return true;
 			}
-			else if(randomness <= 0.1 && enemy_len >= autocvar_g_monster_shambler_attack_smash_range * 1.5) // small chance, don't want this spammed
+			else if(randomness <= 0.1 && vdist(actor.enemy.origin - actor.origin, >=, autocvar_g_monster_shambler_attack_smash_range * 1.5)) // small chance, don't want this spammed
 			{
 				setanim(actor, actor.anim_shoot, true, true, false);
 				actor.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general

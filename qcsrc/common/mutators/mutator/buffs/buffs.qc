@@ -545,11 +545,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 
 	if(frag_target.buffs & BUFF_BASH.m_itemid)
 	if(frag_attacker != frag_target)
-	if(vlen(frag_force))
 		frag_force = '0 0 0';
 
 	if(frag_attacker.buffs & BUFF_BASH.m_itemid)
-	if(vlen(frag_force))
+	if(frag_force)
 	if(frag_attacker == frag_target)
 		frag_force *= autocvar_g_buffs_bash_force_self;
 	else
@@ -700,10 +699,13 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, self))
-			if(vlen(self.origin - it.origin) <= best_distance)
 			{
-				best_distance = vlen(self.origin - it.origin);
-				closest = it;
+				float test = vlen2(self.origin - it.origin);
+				if(test <= best_distance * best_distance)
+				{
+					best_distance = sqrt(test);
+					closest = it;
+				}
 			}
 		));
 

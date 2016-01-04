@@ -270,7 +270,7 @@ void W_Fireball_Firemine_Think()
 	// make it "hot" once it leaves its owner
 	if(self.owner)
 	{
-		if(vlen(self.origin - self.owner.origin - self.owner.view_ofs) > WEP_CVAR_SEC(fireball, laserradius))
+		if(vdist(self.origin - self.owner.origin - self.owner.view_ofs, >, WEP_CVAR_SEC(fireball, laserradius)))
 		{
 			self.cnt += 1;
 			if(self.cnt == 3)

@@ -300,7 +300,7 @@ bool bumblebee_gunner_enter()
 	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
 	{
 		// we can have some fun
-		if(vlen(real_origin(vehic.gun2) - player.origin) < vlen(real_origin(vehic.gun1) - player.origin))
+		if(vlen2(real_origin(vehic.gun2) - player.origin) < vlen2(real_origin(vehic.gun1) - player.origin))
 		{
 			gunner = vehic.gun2;
 			vehic.gunner2 = player;
@@ -679,7 +679,7 @@ void bumblebee_exit(float eject)
 
 	fixedmakevectors(self.angles);
 	vector spot;
-	if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)
+	if(vdist(self.velocity, >, autocvar_g_vehicle_bumblebee_speed_forward * 0.5))
 		spot = self.origin + v_up * 128 + v_forward * 300;
 	else
 		spot = self.origin + v_up * 128 - v_forward * 300;

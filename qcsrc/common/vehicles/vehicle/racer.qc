@@ -220,7 +220,7 @@ float racer_frame()
 	//racer.velocity_z = ftmp;
 
 	int cont = pointcontents(racer.origin);
-	if(vlen(player.movement) != 0)
+	if(player.movement)
 	{
 		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
@@ -454,7 +454,7 @@ void racer_exit(float eject)
 	}
 	else
 	{
-		if(vlen(self.velocity) > 2 * autocvar_sv_maxairspeed)
+		if(vdist(self.velocity, >, 2 * autocvar_sv_maxairspeed))
 		{
 			self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed * 2;
 			self.owner.velocity_z += 200;

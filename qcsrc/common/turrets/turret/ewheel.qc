@@ -42,7 +42,7 @@ void ewheel_move_path()
 {SELFPARAM();
 #ifdef EWHEEL_FANCYPATH
     // Are we close enougth to a path node to switch to the next?
-    if (vlen(self.origin  - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         if (self.pathcurrent.path_next == world)
         {
             // Path endpoint reached
@@ -67,7 +67,7 @@ void ewheel_move_path()
             self.pathcurrent = self.pathcurrent.path_next;
 
 #else
-    if (vlen(self.origin - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         self.pathcurrent = self.pathcurrent.enemy;
 #endif
 
@@ -131,7 +131,7 @@ void ewheel_move_idle()
     }
 
     self.frame = 0;
-    if (vlen(self.velocity))
+    if(self.velocity)
         movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
@@ -168,7 +168,7 @@ spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
             self.velocity_z = vz;
 
-            if(vlen(self.velocity))
+            if(self.velocity)
                 self.SendFlags |= TNSF_MOVE;
         }
         METHOD(EWheel, tr_death, void(EWheel this, entity it))

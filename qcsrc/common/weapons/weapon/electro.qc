@@ -86,7 +86,7 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 			if(WEP_CVAR(electro, combo_comboradius_thruwall))
 			{
 				// if distance is greater than thruwall distance, check to make sure it's not through a wall
-				if(vlen(e.WarpZone_findradius_dist) > WEP_CVAR(electro, combo_comboradius_thruwall))
+				if(vdist(e.WarpZone_findradius_dist, >, WEP_CVAR(electro, combo_comboradius_thruwall)))
 				{
 					WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
 					if(trace_fraction != 1)
@@ -428,7 +428,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 		METHOD(Electro, wr_aim, void(entity thiswep))
 		{
 			self.BUTTON_ATCK = self.BUTTON_ATCK2 = false;
-			if(vlen(self.origin-self.enemy.origin) > 1000) { self.bot_secondary_electromooth = 0; }
+			if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
 			if(self.bot_secondary_electromooth == 0)
 			{
 				float shoot;

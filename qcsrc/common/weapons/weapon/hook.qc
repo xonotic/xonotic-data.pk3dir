@@ -451,7 +451,7 @@ void Draw_GrapplingHook(entity this)
 	{
 		default:
 		case NET_ENT_CLIENT_HOOK:
-			if(vlen(trace_endpos - atrans) > 0.5)
+			if(vdist(trace_endpos - atrans, >, 0.5))
 			{
 				setorigin(this, trace_endpos); // hook endpoint!
 				this.angles = vectoangles(trace_endpos - atrans);

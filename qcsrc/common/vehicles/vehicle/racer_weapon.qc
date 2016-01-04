@@ -135,7 +135,7 @@ void racer_rocket_tracker()
     //vector
     float height_diff = predicted_origin_z - self.origin_z;
 
-    if(vlen(newdir - v_forward) > autocvar_g_vehicle_racer_rocket_locked_maxangle)
+    if(vdist(newdir - v_forward, >, autocvar_g_vehicle_racer_rocket_locked_maxangle))
     {
         //bprint("Target lost!\n");
         //dprint("OF:", ftos(vlen(newdir - v_forward)), "\n");

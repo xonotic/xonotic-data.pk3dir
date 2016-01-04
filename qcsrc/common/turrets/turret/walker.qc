@@ -182,7 +182,7 @@ void walker_rocket_loop3()
         return;
     }
 
-    if (vlen(self.origin - self.tur_shotorg) < 100 )
+    if(vdist(self.origin - self.tur_shotorg, <, 100))
     {
         self.think = walker_rocket_think;
         return;
@@ -206,7 +206,7 @@ void walker_rocket_loop2()
         return;
     }
 
-    if (vlen(self.origin - self.tur_shotorg) < 100 )
+    if(vdist(self.origin - self.tur_shotorg, <, 100))
     {
         self.tur_shotorg = self.origin - '0 0 200';
         self.think = walker_rocket_loop3;
@@ -305,7 +305,7 @@ void walker_move_path()
 {SELFPARAM();
 #ifdef WALKER_FANCYPATHING
     // Are we close enougth to a path node to switch to the next?
-    if (vlen(self.origin  - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         if (self.pathcurrent.path_next == world)
         {
             // Path endpoint reached
@@ -334,7 +334,7 @@ void walker_move_path()
     walker_move_to(self.moveto, 0);
 
 #else
-    if (vlen(self.origin - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         self.pathcurrent = self.pathcurrent.enemy;
 
     if(!self.pathcurrent)
@@ -362,7 +362,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
                 {
                     if(self.enemy_last_time != 0)
                     {
-                        if(vlen(self.origin - self.enemy_last_loc) < 128 || time - self.enemy_last_time > 10)
+                        if(vdist(self.origin - self.enemy_last_loc, <, 128) || time - self.enemy_last_time > 10)
                             self.enemy_last_time = 0;
                         else
                             walker_move_to(self.enemy_last_loc, 0);

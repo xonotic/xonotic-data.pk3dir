@@ -570,11 +570,9 @@ void ons_ControlPoint_Icon_Think()
 	{
 		int _enemy_count = 0;
 		int _friendly_count = 0;
-		float _dist;
 
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
-			_dist = vlen(it.origin - self.origin);
-			if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
+			if(vdist(it.origin - self.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
 			{
 				if(SAME_TEAM(it, self))
 					++_friendly_count;
@@ -1622,8 +1620,8 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
 	{
 		if(SAME_TEAM(tmp_entity, self))
 		if(tmp_entity.iscaptured)
-		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) <= max_dist)
-		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <=, max_dist))
+		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
 			closest_target = tmp_entity;
 		tmp_entity = tmp_entity.chain;
 	}
@@ -1631,8 +1629,8 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
 	while(tmp_entity)
 	{
 		if(SAME_TEAM(tmp_entity, self))
-		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) < max_dist)
-		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <, max_dist))
+		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
 			closest_target = tmp_entity;
 		tmp_entity = tmp_entity.chain;
 	}

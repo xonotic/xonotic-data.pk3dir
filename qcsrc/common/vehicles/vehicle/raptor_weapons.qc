@@ -165,7 +165,7 @@ void raptor_bomb_burst()
     {
         self.nextthink = time;
         traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
-        if((trace_fraction == 1.0) || (vlen(self.origin - self.owner.origin) < autocvar_g_vehicle_raptor_bomblet_radius))
+        if((trace_fraction == 1.0) || (vdist(self.origin - self.owner.origin, <, autocvar_g_vehicle_raptor_bomblet_radius)))
         {
             UpdateCSQCProjectile(self);
             return;
@@ -251,7 +251,7 @@ void raptor_flare_think()
     while(_missile)
     {
         if(_missile.flags & FL_PROJECTILE)
-        if(vlen(self.origin - _missile.origin) < autocvar_g_vehicle_raptor_flare_range)
+        if(vdist(self.origin - _missile.origin, <, autocvar_g_vehicle_raptor_flare_range))
         if(random() > autocvar_g_vehicle_raptor_flare_chase)
             _missile.enemy = self;
         _missile = _missile.chain;

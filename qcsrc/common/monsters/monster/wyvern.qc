@@ -101,13 +101,15 @@ void M_Wyvern_Attack_Fireball_Explode()
 	SELFPARAM();
 	Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
 
-	entity owner = self.realowner;
+	entity own = self.realowner;
 
-	RadiusDamage(self, owner, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, world, world, autocvar_g_monster_wyvern_attack_fireball_radius, self.projectiledeathtype, world);
+	RadiusDamage(self, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, world, world, autocvar_g_monster_wyvern_attack_fireball_radius, self.projectiledeathtype, world);
 
-	for (entity e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); )
-	if (vlen(e.origin - self.origin) <= (autocvar_g_monster_wyvern_attack_fireball_radius))
-		Fire_AddDamage(e, owner, 5 * MONSTER_SKILLMOD(owner), (autocvar_g_monster_wyvern_attack_fireball_damagetime), self.projectiledeathtype);
+	FOREACH_ENTITY_FLOAT(takedamage, DAMAGE_AIM,
+	{
+		if(vdist(it.origin - self.origin, <=, autocvar_g_monster_wyvern_attack_fireball_radius))
+			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, self.projectiledeathtype);
+	});
 
 	remove(self);
 }

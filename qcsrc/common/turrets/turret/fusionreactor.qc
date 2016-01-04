@@ -34,7 +34,7 @@ bool turret_fusionreactor_firecheck()
     if (self.enemy.ammo >= self.enemy.ammo_max)
         return false;
 
-    if (vlen(self.enemy.origin - self.origin) > self.target_range)
+    if(vdist(self.enemy.origin - self.origin, >, self.target_range))
         return false;
 
     if(self.team != self.enemy.team)

@@ -181,7 +181,7 @@ float spiderbot_frame()
 		}
 		else if(time >= spider.jump_delay)
 		{
-			if(vlen(player.movement) == 0)
+			if(!player.movement)
 			{
 				if(IS_ONGROUND(spider))
 				{
@@ -384,7 +384,7 @@ void spiderbot_exit(float eject)
 	}
 	else
 	{
-		if(vlen(self.velocity) > autocvar_g_vehicle_spiderbot_speed_strafe)
+		if(vdist(self.velocity, >, autocvar_g_vehicle_spiderbot_speed_strafe))
 		{
 			self.owner.velocity = normalize(self.velocity) * vlen(self.velocity);
 			self.owner.velocity_z += 200;

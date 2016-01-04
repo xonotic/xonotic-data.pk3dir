@@ -88,7 +88,7 @@ void turret_hk_missile_think()
                 if (!self.enemy)
                     self.enemy = e;
                 else
-                    if (vlen(self.origin - e.origin) < vlen(self.origin - self.enemy.origin))
+                    if (vlen2(self.origin - e.origin) < vlen2(self.origin - self.enemy.origin))
                         self.enemy = e;
             }
             e = e.chain;

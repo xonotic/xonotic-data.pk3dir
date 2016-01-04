@@ -524,8 +524,7 @@ void m_tooltip(vector pos)
 	{
 		float f = bound(0, frametime * 2, 1);
 		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
-		f = vlen(pos - menuTooltipAveragedMousePos);
-		if (f < 0.01)
+		if (vdist(pos - menuTooltipAveragedMousePos, <, 0.01))
 		{
 			it = m_findtooltipitem(main, pos);
 

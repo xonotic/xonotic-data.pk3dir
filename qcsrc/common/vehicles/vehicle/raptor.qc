@@ -136,7 +136,7 @@ void raptor_exit(float eject)
 	}
 	else
 	{
-		if(vlen(self.velocity) > 2 * autocvar_sv_maxairspeed)
+		if(vdist(self.velocity, >, 2 * autocvar_sv_maxairspeed))
 		{
 			self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed * 2;
 			self.owner.velocity_z += 200;
@@ -446,7 +446,7 @@ float raptor_frame()
 		{
 			if(_missile.flags & FL_PROJECTILE)
 			if(MISSILE_IS_TRACKING(_missile))
-			if(vlen(self.origin - _missile.origin) < 2 * autocvar_g_vehicle_raptor_flare_range)
+			if(vdist(self.origin - _missile.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
 				++_incomming;
 
 			_missile = _missile.chain;

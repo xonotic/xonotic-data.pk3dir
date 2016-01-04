@@ -591,7 +591,7 @@ void flocker_hunter_think()
     self.angles_x = self.angles.x * -1;
 
     if(self.enemy)
-    if(vlen(self.enemy.origin - self.origin) < 64)
+    if(vdist(self.enemy.origin - self.origin, <, 64))
     {
         ee = self.enemy;
         ee.health = -1;

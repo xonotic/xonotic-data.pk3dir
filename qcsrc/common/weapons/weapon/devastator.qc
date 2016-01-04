@@ -211,7 +211,7 @@ void W_Devastator_RemoteExplode(.entity weaponentity)
 	{
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > WEP_CVAR(devastator, remote_radius)) // safety device
+			: (vdist(NearestPointOnBox(self.realowner, self.origin) - self.origin, >, WEP_CVAR(devastator, remote_radius))) // safety device
 		)
 		{
 			W_Devastator_DoRemoteExplode(weaponentity);

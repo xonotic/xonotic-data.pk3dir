@@ -92,15 +92,15 @@ bool check_close_to_wall(entity this, float threshold)
 {
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
-	#define X(OFFSET)																\
-	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this);	\
-	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < threshold)		\
+#define X(OFFSET) \
+	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this); \
+	if(trace_fraction < 1 && vdist(this.origin - trace_endpos, <, threshold)) \
 		return true;
 	X(1000*v_right);
 	X(-1000*v_right);
 	X(1000*v_forward);
 	X(-1000*v_forward);
-	#undef X
+#undef X
 
 	return false;
 }

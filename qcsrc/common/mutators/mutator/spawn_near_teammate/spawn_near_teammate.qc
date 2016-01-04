@@ -77,7 +77,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 					pc = pointcontents(trace_endpos + '0 0 1');
 					if(pc == CONTENT_EMPTY)
 					{
-						if(vlen(it.velocity) > 5)
+						if(vdist(it.velocity, >, 5))
 							fixedmakevectors(vectoangles(it.velocity));
 						else
 							fixedmakevectors(it.angles);

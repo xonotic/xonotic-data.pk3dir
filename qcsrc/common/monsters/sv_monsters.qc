@@ -138,7 +138,7 @@ entity Monster_FindTarget(entity mon)
 			if(closest_target)
 			{
 				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
-				if(vlen(ent_center - head_center) < vlen(ent_center - closest_target_center))
+				if(vlen2(ent_center - head_center) < vlen2(ent_center - closest_target_center))
 					{ closest_target = head; }
 			}
 			else { closest_target = head; }
@@ -429,9 +429,7 @@ void Monster_Attack_Check(entity this, entity targ)
 	|| (time < this.attack_finished_single[0])
 	) { return; }
 
-	float targ_vlen = vlen(targ.origin - this.origin);
-
-	if(targ_vlen <= this.attack_range)
+	if(vdist(targ.origin - this.origin, <=, this.attack_range))
 	{
 		bool attack_success = this.monster_attackfunc(MONSTER_ATTACK_MELEE, this, targ);
 		if(attack_success == 1)
@@ -440,7 +438,7 @@ void Monster_Attack_Check(entity this, entity targ)
 			return;
 	}
 
-	if(targ_vlen > this.attack_range)
+	if(vdist(targ.origin - this.origin, >, this.attack_range))
 	{
 		float attack_success = this.monster_attackfunc(MONSTER_ATTACK_RANGED, this, targ);
 		if(attack_success == 1)
@@ -569,7 +567,7 @@ vector Monster_Move_Target(entity this, entity targ)
 			|| (this.enemy.flags & FL_NOTARGET)
 			|| (this.enemy.alpha < 0.5 && this.enemy.alpha != 0)
 			|| (this.enemy.takedamage == DAMAGE_NO)
-			|| (vlen(this.origin - targ_origin) > this.target_range)
+			|| (vdist(this.origin - targ_origin, >, this.target_range))
 			|| ((trace_fraction < 1) && (trace_ent != this.enemy)))
 		{
 			this.enemy = world;
@@ -858,7 +856,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(!(this.spawnflags & MONSTERFLAG_FLY_VERTICAL) && !(this.flags & FL_SWIM))
 		this.moveto_z = this.origin_z;
 
-	if(vlen(this.origin - this.moveto) > 100)
+	if(vdist(this.origin - this.moveto, >, 100))
 	{
 		float do_run = (this.enemy || this.monster_moveto);
 		if(IS_ONGROUND(this) || ((this.flags & FL_FLY) || (this.flags & FL_SWIM)))
@@ -867,7 +865,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		if(time > this.pain_finished) // TODO: use anim_finished instead!
 		if(!this.state)
 		if(time > this.anim_finished)
-		if(vlen(this.velocity) > 10)
+		if(vdist(this.velocity, >, 10))
 			setanim(this, ((do_run) ? this.anim_run : this.anim_walk), true, false, false);
 		else
 			setanim(this, this.anim_idle, true, false, false);
@@ -884,7 +882,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		if(time > this.anim_finished)
 		if(time > this.pain_finished)
 		if(!this.state)
-		if(vlen(this.velocity) <= 30)
+		if(vdist(this.velocity, <=, 30))
 			setanim(this, this.anim_idle, true, false, false);
 	}
 
@@ -1171,7 +1169,7 @@ void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 
 	if(time > this.pain_finished)
 	if(time > this.attack_finished_single[0])
-	if(vlen(this.velocity) > 10)
+	if(vdist(this.velocity, >, 10))
 		setanim(this, this.anim_walk, true, false, false);
 	else
 		setanim(this, this.anim_idle, true, false, false);

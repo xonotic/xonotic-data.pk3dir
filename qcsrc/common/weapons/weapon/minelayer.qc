@@ -172,7 +172,7 @@ void W_MineLayer_RemoteExplode()
 	if(!IS_DEAD(self.realowner))
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > WEP_CVAR(minelayer, remote_radius)) // safety device
+			: (vdist(NearestPointOnBox(self.realowner, self.origin) - self.origin, >, WEP_CVAR(minelayer, remote_radius))) // safety device
 		)
 		{
 			W_MineLayer_DoRemoteExplode();

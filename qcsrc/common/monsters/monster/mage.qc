@@ -192,13 +192,12 @@ void M_Mage_Attack_Spike_Think()
 		float turnrate = (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
 		vector desireddir = normalize(eorg - self.origin);
 		vector olddir = normalize(self.velocity); // get my current direction
-		float dist = vlen(eorg - self.origin);
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
-		if ((autocvar_g_monster_mage_attack_spike_smart) && (dist > (autocvar_g_monster_mage_attack_spike_smart_mindist)))
+		if ((autocvar_g_monster_mage_attack_spike_smart) && vdist(eorg - self.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
-			if ( vlen(self.origin + olddir * self.wait) < dist)
+			if ( vlen2(self.origin + olddir * self.wait) < vlen2(eorg - self.origin))
 				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
 				traceline(self.origin, eorg, false, self);

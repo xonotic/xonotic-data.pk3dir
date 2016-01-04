@@ -816,7 +816,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
 		traceline(e_turret.origin + '0 0 16', v_tmp, 0, e_turret);
 
-		if (e_turret.aim_firetolerance_dist < vlen(v_tmp - trace_endpos))
+		if(vdist(v_tmp - trace_endpos, >, e_turret.aim_firetolerance_dist))
 			return -19;
 	}
 
@@ -1376,7 +1376,7 @@ float turret_initialize(Turret tur)
 
 #ifdef TURRET_DEBUG
 	self.tur_debug_start = self.nextthink;
-	while (vlen(self.tur_debug_rvec) < 2)
+	while(vdist(self.tur_debug_rvec, <, 2))
 		self.tur_debug_rvec = randomvec() * 4;
 
 	self.tur_debug_rvec_x = fabs(self.tur_debug_rvec_x);

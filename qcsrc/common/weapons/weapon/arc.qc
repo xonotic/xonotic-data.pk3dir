@@ -902,7 +902,7 @@ void Draw_ArcBeam(entity this)
 		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 
 		// un-adjust trueaim if shotend is too close
-		if(vlen(end_pos - start_pos) < g_trueaim_minrange)
+		if(vdist(end_pos - start_pos, <, g_trueaim_minrange))
 			end_pos = start_pos + (forward * g_trueaim_minrange);
 
 		// move shot origin to the actual gun muzzle origin

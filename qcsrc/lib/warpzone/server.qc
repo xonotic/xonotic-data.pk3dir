@@ -634,7 +634,7 @@ void WarpZone_InitStep_UpdateTransform()
 	{
 		norm = norm * (1 / area);
 		point = point * (1 / (3 * area));
-		if(vlen(norm) < 0.99)
+		if(vdist(norm, <, 0.99))
 		{
 			LOG_INFO("trigger_warpzone near ", vtos(self.aiment.origin), " is nonplanar. BEWARE.\n");
 			area = 0; // no autofixing in this case
@@ -660,7 +660,7 @@ void WarpZone_InitStep_UpdateTransform()
 			ang.x = -ang.x;
 			if(norm * v_forward < 0.99)
 				LOG_INFO("trigger_warpzone near ", vtos(self.aiment.origin), " has been turned to match plane orientation (", vtos(self.aiment.angles), " -> ", vtos(ang), "\n");
-			if(vlen(org - self.aiment.origin) > 0.5)
+			if(vdist(org - self.aiment.origin, >, 0.5))
 				LOG_INFO("trigger_warpzone near ", vtos(self.aiment.origin), " has been moved to match the plane (", vtos(self.aiment.origin), " -> ", vtos(org), ").\n");
 		}
 	}

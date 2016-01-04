@@ -147,7 +147,7 @@ void W_Seeker_Missile_Think()
 		if(WEP_CVAR(seeker, missile_smart) && (dist > WEP_CVAR(seeker, missile_smart_mindist)))
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
-			if( vlen(self.origin + olddir * self.wait) < dist)
+			if( vdist(self.origin + olddir * self.wait, <, dist))
 				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
 				traceline(self.origin, eorg, false, self);
@@ -400,7 +400,7 @@ void W_Seeker_Attack()
 	{
 		if(closest_target)
 		{
-			if(vlen(self.origin - tracker.tag_target.origin) < vlen(self.origin - closest_target.origin))
+			if(vlen2(self.origin - tracker.tag_target.origin) < vlen2(self.origin - closest_target.origin))
 				closest_target = tracker.tag_target;
 		}
 		else

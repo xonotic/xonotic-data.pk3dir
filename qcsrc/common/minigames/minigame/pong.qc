@@ -124,7 +124,7 @@ bool pong_paddle_hit(entity ball, int pteam)
 		return false;
 	vector near_point = box_nearest(paddle.mins+paddle.origin,
 									paddle.maxs+paddle.origin, ball.origin);
-	return vlen(near_point-ball.origin) <= ball.pong_length ;
+	return vdist(near_point - ball.origin, <=, ball.pong_length);
 }
 
 // Checks for a goal, when that happes adds scores and resets the ball

@@ -419,7 +419,7 @@ bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosi
 	if(trace_startsolid)
 		return true;
 
-	if(vlen(trace_endpos - this.move_origin) > 0.0001)
+	if(vdist(trace_endpos - this.move_origin, >, 0.0001))
 		this.move_origin = trace_endpos;
 	return false;
 }
