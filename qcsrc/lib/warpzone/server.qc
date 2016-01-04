@@ -873,7 +873,8 @@ void WarpZone_StartFrame()
 		if(warpzone_warpzones_exist)
 			WarpZone_StoreProjectileData(it);
 
-		if((IS_OBSERVER(it) || it.solid == SOLID_NOT) && IS_REAL_CLIENT(it))
+		if((IS_OBSERVER(it) || it.solid == SOLID_NOT))
+		if(IS_REAL_CLIENT(it))
 		{
 			other = it; // player
 
