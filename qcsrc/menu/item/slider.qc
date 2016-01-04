@@ -206,6 +206,8 @@
 				v = median(0, (pos.x - me.pressOffset - 0.5 * me.controlWidth) / (1 - me.textSpace - me.controlWidth), 1) * (me.valueMax - me.valueMin) + me.valueMin;
 				if (me.valueStep) v = floor(0.5 + v / me.valueStep) * me.valueStep;
 				me.setValue_noAnim(me, v);
+				if(me.applyButton)
+					me.applyButton.disabled = false;
 			}
 			else
 			{
