@@ -1,10 +1,18 @@
 before_script:
-  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - cd gmqcc
-  - make -j $(nproc)
+  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+  - cd darkplaces && make sv-debug -j $(nproc)
   - cd ..
-  - export QCC=$PWD/gmqcc/gmqcc
+  - export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic"
+
+  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
+  - cd gmqcc && make -j $(nproc)
+  - cd ..
+  - export QCC="$PWD/gmqcc/gmqcc"
+
+  - ln -s $PWD data/xonotic-data.pk3dir
+  - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
 build:
   script:
     - make
+    - ${ENGINE} +map gitlab-ci +sv_cmd runtest +exit
