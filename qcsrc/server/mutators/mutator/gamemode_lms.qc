@@ -157,10 +157,9 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 }
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
-{SELFPARAM();
+{
 	if(restart_mapalreadyrestarted || (time < game_starttime))
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(WITH(entity, self, it, PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives()))));
-
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives())));
 	return false;
 }
 
