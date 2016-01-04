@@ -624,31 +624,31 @@ void racer_draw()
 		METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
-			self.SendEntity		= func_null; // stop networking this racer (for now)
-			self.health			= 0;
-			self.event_damage	= func_null;
-			self.solid			= SOLID_CORPSE;
-			self.takedamage		= DAMAGE_NO;
-			self.deadflag		= DEAD_DYING;
-			self.movetype		= MOVETYPE_BOUNCE;
-			self.wait			= time;
-			self.delay			= 2 + time + random() * 3;
-			self.cnt			= 1 + random() * 2;
-			self.touch			= racer_deadtouch;
+			instance.SendEntity		= func_null; // stop networking this racer (for now)
+			instance.health			= 0;
+			instance.event_damage	= func_null;
+			instance.solid			= SOLID_CORPSE;
+			instance.takedamage		= DAMAGE_NO;
+			instance.deadflag		= DEAD_DYING;
+			instance.movetype		= MOVETYPE_BOUNCE;
+			instance.wait			= time;
+			instance.delay			= 2 + time + random() * 3;
+			instance.cnt			= 1 + random() * 2;
+			instance.touch			= racer_deadtouch;
 
-			Send_Effect(EFFECT_EXPLOSION_MEDIUM, self.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, instance.origin, '0 0 0', 1);
 
 			if(random() < 0.5)
-				self.avelocity_z = 32;
+				instance.avelocity_z = 32;
 			else
-				self.avelocity_z = -32;
+				instance.avelocity_z = -32;
 
-			self.avelocity_x = -vlen(self.velocity) * 0.2;
-			self.velocity += '0 0 700';
-			self.colormod = '-0.5 -0.5 -0.5';
+			instance.avelocity_x = -vlen(instance.velocity) * 0.2;
+			instance.velocity += '0 0 700';
+			instance.colormod = '-0.5 -0.5 -0.5';
 
-			self.think = racer_blowup_think;
-			self.nextthink = time;
+			instance.think = racer_blowup_think;
+			instance.nextthink = time;
 		#endif
 		}
 

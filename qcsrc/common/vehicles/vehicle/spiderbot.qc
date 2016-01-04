@@ -580,21 +580,21 @@ spawnfunc(vehicle_spiderbot)
 		}
 		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 		{
-			self.health				= 0;
-			self.event_damage		= func_null;
-			self.takedamage			= DAMAGE_NO;
-			self.touch				= func_null;
-			self.cnt				= 3.4 + time + random() * 2;
-			self.think				= spiderbot_blowup;
-			self.nextthink			= time;
-			self.deadflag			= DEAD_DYING;
-			self.frame				= 5;
-			self.tur_head.effects  |= EF_FLAME;
-			self.colormod			= self.tur_head.colormod = '-1 -1 -1';
-			self.frame				= 10;
-			self.movetype			= MOVETYPE_TOSS;
+			instance.health				= 0;
+			instance.event_damage		= func_null;
+			instance.takedamage			= DAMAGE_NO;
+			instance.touch				= func_null;
+			instance.cnt				= 3.4 + time + random() * 2;
+			instance.think				= spiderbot_blowup;
+			instance.nextthink			= time;
+			instance.deadflag			= DEAD_DYING;
+			instance.frame				= 5;
+			instance.tur_head.effects  |= EF_FLAME;
+			instance.colormod			= instance.tur_head.colormod = '-1 -1 -1';
+			instance.frame				= 10;
+			instance.movetype			= MOVETYPE_TOSS;
 
-			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
+			CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 		}
 		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 		{

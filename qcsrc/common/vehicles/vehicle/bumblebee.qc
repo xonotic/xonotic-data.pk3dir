@@ -788,8 +788,8 @@ spawnfunc(vehicle_bumblebee)
 		}
 		METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 		{
-			SELFPARAM();
 			entity oldself = self;
+			setself(instance);
 
 			CSQCModel_UnlinkEntity(self);
 
@@ -849,6 +849,8 @@ spawnfunc(vehicle_bumblebee)
 			self.nextthink 		= 0;
 
 			setorigin(self, self.pos1);
+
+			setself(oldself);
 		}
 		METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 		{

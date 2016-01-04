@@ -643,25 +643,25 @@ spawnfunc(vehicle_raptor)
 		}
 		METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 		{
-			self.health				= 0;
-			self.event_damage		= func_null;
-			self.solid				= SOLID_CORPSE;
-			self.takedamage			= DAMAGE_NO;
-			self.deadflag			= DEAD_DYING;
-			self.movetype			= MOVETYPE_BOUNCE;
-			self.think				= raptor_diethink;
-			self.nextthink			= time;
-			self.wait				= time + 5 + (random() * 5);
+			instance.health				= 0;
+			instance.event_damage		= func_null;
+			instance.solid				= SOLID_CORPSE;
+			instance.takedamage			= DAMAGE_NO;
+			instance.deadflag			= DEAD_DYING;
+			instance.movetype			= MOVETYPE_BOUNCE;
+			instance.think				= raptor_diethink;
+			instance.nextthink			= time;
+			instance.wait				= time + 5 + (random() * 5);
 
-			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (self.origin, 16), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (instance.origin, 16), '0 0 0', 1);
 
-			self.velocity_z += 600;
+			instance.velocity_z += 600;
 
-			self.avelocity = '0 0.5 1' * (random() * 400);
-			self.avelocity -= '0 0.5 1' * (random() * 400);
+			instance.avelocity = '0 0.5 1' * (random() * 400);
+			instance.avelocity -= '0 0.5 1' * (random() * 400);
 
-			self.colormod = '-0.5 -0.5 -0.5';
-			self.touch = raptor_blowup;
+			instance.colormod = '-0.5 -0.5 -0.5';
+			instance.touch = raptor_blowup;
 		}
 		METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 		{
