@@ -874,7 +874,7 @@ void WarpZone_StartFrame()
 			WarpZone_StoreProjectileData(it);
 
 		if((IS_OBSERVER(it) || it.solid == SOLID_NOT))
-		if(IS_REAL_CLIENT(it))
+		if(IS_CLIENT(it)) // we don't care about it being a bot
 		{
 			other = it; // player
 
