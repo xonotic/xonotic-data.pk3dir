@@ -15,4 +15,8 @@ before_script:
 build:
   script:
     - make
-    - ${ENGINE} +map gitlab-ci +sv_cmd runtest +exit
+    - while read line; do
+        echo $line;
+        if [[ $line == "All tests OK" ]]; then exit 0; fi;
+      done < <(${ENGINE} +map gitlab-ci +sv_cmd runtest +exit)
+    - exit 1
