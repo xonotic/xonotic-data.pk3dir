@@ -207,13 +207,12 @@
 				if (me.valueStep) v = floor(0.5 + v / me.valueStep) * me.valueStep;
 				me.setValue_noAnim(me, v);
 				if(me.applyButton)
-					me.applyButton.disabled = (me.previousValue == me.value);
+				if(me.previousValue != me.value)
+					me.applyButton.disabled = false;
 			}
 			else
 			{
 				me.setValue(me, me.previousValue);
-				if(me.applyButton)
-					me.applyButton.disabled = true;
 			}
 		}
 
