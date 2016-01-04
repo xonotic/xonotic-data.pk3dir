@@ -59,7 +59,7 @@ TEST(yEnc, EncodeDecode)
 		STRING_ITERATOR(fragmentiterator, fragment, 0);
 		ydec_single(fragmentiterator, encdec);
 
-		TEST_Check(encdec == expect);
+		EXPECT_EQ(expect, encdec);
 	}
-	TEST_OK();
+	SUCCEED();
 }

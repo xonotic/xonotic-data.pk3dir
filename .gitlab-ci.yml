@@ -18,5 +18,5 @@ build:
     - while read line; do
         echo $line;
         if [[ $line == "All tests OK" ]]; then exit 0; fi;
-      done < <(${ENGINE} +map gitlab-ci +sv_cmd runtest +exit)
+      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
     - exit 1
