@@ -28,18 +28,21 @@
 .float warpzone_teleport_finishtime;
 .entity warpzone_teleport_zone;
 
-void WarpZone_StoreProjectileData(entity e)
-{
 #ifdef SVQC
-	e.warpzone_oldorigin = e.origin;
-	e.warpzone_oldvelocity = e.velocity;
-	e.warpzone_oldangles = e.angles;
+	#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN { \
+		entity e = e_; \
+		e.warpzone_oldorigin = e.origin; \
+		e.warpzone_oldvelocity = e.velocity; \
+		e.warpzone_oldangles = e.angles; \
+		} MACRO_END
 #elif defined(CSQC)
-	e.warpzone_oldorigin = e.move_origin;
-	e.warpzone_oldvelocity = e.move_velocity;
-	e.warpzone_oldangles = e.move_angles;
+	#define WarpZone_StoreProjectileData(e_) MACRO_BEGIN { \
+		entity e = e_; \
+		e.warpzone_oldorigin = e.move_origin; \
+		e.warpzone_oldvelocity = e.move_velocity; \
+		e.warpzone_oldangles = e.move_angles; \
+		} MACRO_END
 #endif
-}
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
@@ -864,40 +867,32 @@ void WarpZone_StartFrame()
 	}
 
 	entity oldother = other;
-	for (entity e = world; (e = nextent(e)); )
+
+	FOREACH_ENTITY(true,
 	{
-		if (warpzone_warpzones_exist) WarpZone_StoreProjectileData(e);
-		if (IS_REAL_CLIENT(e))
+		if(warpzone_warpzones_exist)
+			WarpZone_StoreProjectileData(it);
+
+		if((IS_OBSERVER(it) || it.solid == SOLID_NOT) && IS_REAL_CLIENT(it))
 		{
-			if (e.solid == SOLID_NOT) // not spectating?
-			if (e.movetype == MOVETYPE_NOCLIP || e.movetype == MOVETYPE_FLY || e.movetype == MOVETYPE_FLY_WORLDONLY) // not spectating? (this is to catch observers)
-			{
-				other = e; // player
+			other = it; // player
 
-				// warpzones
-				if (warpzone_warpzones_exist) {
-					setself(WarpZone_Find(e.origin + e.mins, e.origin + e.maxs));
-					if (self)
-					if (!WarpZoneLib_ExactTrigger_Touch())
-					if (WarpZone_PlaneDist(self, e.origin + e.view_ofs) <= 0)
-						WarpZone_Teleport(self, e, -1, 0); // NOT triggering targets by this!
-				}
-
-				// teleporters
-				setself(Teleport_Find(e.origin + e.mins, e.origin + e.maxs));
+			// warpzones
+			if (warpzone_warpzones_exist) {
+				setself(WarpZone_Find(it.origin + it.mins, it.origin + it.maxs));
 				if (self)
 				if (!WarpZoneLib_ExactTrigger_Touch())
-					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
+				if (WarpZone_PlaneDist(self, it.origin + it.view_ofs) <= 0)
+					WarpZone_Teleport(self, it, -1, 0); // NOT triggering targets by this!
 			}
+
+			// teleporters
+			setself(Teleport_Find(it.origin + it.mins, it.origin + it.maxs));
+			if (self)
+			if (!WarpZoneLib_ExactTrigger_Touch())
+				Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
 		}
-		else if (IS_NOT_A_CLIENT(e))
-		{
-			if (warpzone_warpzones_exist)
-				while ((e = nextent(e)))
-					WarpZone_StoreProjectileData(e);
-			break;
-		}
-	}
+	});
 	setself(this);
 	other = oldother;
 }

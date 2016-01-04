@@ -338,10 +338,14 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
 {
+	if(this.solid == SOLID_NOT)
+		return;
+
 	entity oldother = other;
 
 	for (entity e = findradius(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin)); e; e = e.chain)
 	{
+		if(e.solid == SOLID_TRIGGER && e != this)
 		if(e.move_nomonsters != MOVE_NOMONSTERS && e.move_nomonsters != MOVE_WORLDONLY)
 		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, this.absmin, this.absmax))
 		{
