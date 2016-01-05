@@ -856,33 +856,38 @@ void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
 void Item_FindTeam()
 {SELFPARAM();
-	entity head, e;
+	entity e;
 
 	if(self.effects & EF_NODRAW)
 	{
 		// marker for item team search
 		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
 		RandomSelection_Init();
-		for(head = world; (head = findfloat(head, team, self.team)); )
-		if(head.flags & FL_ITEM)
-		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
-			RandomSelection_Add(head, 0, string_null, head.cnt, 0);
+		FOREACH_ENTITY_FLOAT(team, self.team,
+		{
+			if(it.flags & FL_ITEM)
+			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
+				RandomSelection_Add(it, 0, string_null, it.cnt, 0);
+		});
+
 		e = RandomSelection_chosen_ent;
 		e.state = 0;
 		Item_Show(e, 1);
 
-		for(head = world; (head = findfloat(head, team, self.team)); )
-		if(head.flags & FL_ITEM)
-		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
+		FOREACH_ENTITY_FLOAT(team, self.team,
 		{
-			if(head != e)
+			if(it.flags & FL_ITEM)
+			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 			{
-				// make it a non-spawned item
-				Item_Show(head, -1);
-				head.state = 1; // state 1 = initially hidden item
+				if(it != e)
+				{
+					// make it non-spawned
+					Item_Show(it, -1);
+					it.state = 1; // state 1 = initially hidden item, apparently
+				}
+				it.effects &= ~EF_NODRAW;
 			}
-			head.effects &= ~EF_NODRAW;
-		}
+		});
 
 		Item_Reset(self);
 	}
