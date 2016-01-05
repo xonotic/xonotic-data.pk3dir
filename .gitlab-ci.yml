@@ -27,7 +27,7 @@ build:
 pages:
   stage: deploy
   script:
-    - cd qcsrc && doxygen
+    - cd qcsrc && doxygen >/dev/null
     - mv html ../public
   artifacts:
     paths:
