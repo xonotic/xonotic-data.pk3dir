@@ -46,7 +46,7 @@
 		} \
 	} MACRO_END
 
-TEST(yEncDec)
+TEST(yEnc, EncodeDecode)
 {
 	for (int i = 0; i <= 255; ++i)
 	{
@@ -59,7 +59,7 @@ TEST(yEncDec)
 		STRING_ITERATOR(fragmentiterator, fragment, 0);
 		ydec_single(fragmentiterator, encdec);
 
-		TEST_Check(encdec == expect);
+		EXPECT_EQ(expect, encdec);
 	}
-	TEST_OK();
+	SUCCEED();
 }

@@ -83,16 +83,16 @@ void button_touch()
 	button_fire ();
 }
 
-void button_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.spawnflags & DOOR_NOSPLASH)
+void button_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
-	if (self.health <= 0)
+	this.health = this.health - damage;
+	if (this.health <= 0)
 	{
-		self.enemy = damage_attacker;
-		button_fire ();
+		this.enemy = damage_attacker;
+		WITH(entity, self, this, button_fire());
 	}
 }
 

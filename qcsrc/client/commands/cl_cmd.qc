@@ -23,13 +23,13 @@ void DrawDebugModel(entity this)
 {
 	if (time - floor(time) > 0.5)
 	{
-		PolyDrawModel(self);
-		self.drawmask = 0;
+		PolyDrawModel(this);
+		this.drawmask = 0;
 	}
 	else
 	{
-		self.renderflags = 0;
-		self.drawmask = MASK_NORMAL;
+		this.renderflags = 0;
+		this.drawmask = MASK_NORMAL;
 	}
 }
 

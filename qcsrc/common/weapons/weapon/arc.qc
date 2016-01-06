@@ -852,13 +852,13 @@ void Reset_ArcBeam()
 
 void Draw_ArcBeam(entity this)
 {
-	float dt = time - self.move_time;
-	self.move_time = time;
+	float dt = time - this.move_time;
+	this.move_time = time;
 	if(dt <= 0) { return; }
 
-	if(!self.beam_usevieworigin)
+	if(!this.beam_usevieworigin)
 	{
-		InterpolateOrigin_Do(self);
+		InterpolateOrigin_Do(this);
 	}
 
 	// origin = beam starting origin
@@ -867,10 +867,10 @@ void Draw_ArcBeam(entity this)
 
 	vector start_pos;
 	vector wantdir; //= view_forward;
-	vector beamdir; //= self.beam_dir;
+	vector beamdir; //= this.beam_dir;
 
 	float segments;
-	if(self.beam_usevieworigin)
+	if(this.beam_usevieworigin)
 	{
 		// WEAPONTODO:
 		// Currently we have to replicate nearly the same method of figuring
@@ -885,99 +885,99 @@ void Draw_ArcBeam(entity this)
 		vector up = v_up;
 
 		// decide upon start position
-		if(self.beam_usevieworigin == 2)
+		if(this.beam_usevieworigin == 2)
 			{ start_pos = warpzone_save_view_origin; }
 		else
-			{ start_pos = self.origin; }
+			{ start_pos = this.origin; }
 
 		// trace forward with an estimation
 		WarpZone_TraceLine(
 			start_pos,
-			start_pos + forward * self.beam_range,
+			start_pos + forward * this.beam_range,
 			MOVE_NOMONSTERS,
-			self
+			this
 		);
 
 		// untransform in case our trace went through a warpzone
 		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 
 		// un-adjust trueaim if shotend is too close
-		if(vlen(end_pos - start_pos) < g_trueaim_minrange)
+		if(vdist(end_pos - start_pos, <, g_trueaim_minrange))
 			end_pos = start_pos + (forward * g_trueaim_minrange);
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset =
-			  right * -self.beam_shotorigin.y
-			+ up * self.beam_shotorigin.z;
+			  right * -this.beam_shotorigin.y
+			+ up * this.beam_shotorigin.z;
 
 		start_pos = start_pos + origin_offset;
 
 		// Move it also forward, but only as far as possible without hitting anything. Don't poke into walls!
-		traceline(start_pos, start_pos + forward * self.beam_shotorigin.x, MOVE_NORMAL, self);
+		traceline(start_pos, start_pos + forward * this.beam_shotorigin.x, MOVE_NORMAL, this);
 		start_pos = trace_endpos;
 
 		// calculate the aim direction now
 		wantdir = normalize(end_pos - start_pos);
 
-		if(!self.beam_initialized)
+		if(!this.beam_initialized)
 		{
-			self.beam_dir = wantdir;
-			self.beam_initialized = true;
+			this.beam_dir = wantdir;
+			this.beam_initialized = true;
 		}
 
-		if(self.beam_dir != wantdir)
+		if(this.beam_dir != wantdir)
 		{
 			// calculate how much we're going to move the end of the beam to the want position
 			// WEAPONTODO (server and client):
 			// blendfactor never actually becomes 0 in this situation, which is a problem
-			// regarding precision... this means that self.beam_dir and w_shotdir approach
+			// regarding precision... this means that this.beam_dir and w_shotdir approach
 			// eachother, however they never actually become the same value with this method.
 			// Perhaps we should do some form of rounding/snapping?
-			float angle = vlen(wantdir - self.beam_dir) * RAD2DEG;
-			if(angle && (angle > self.beam_maxangle))
+			float angle = vlen(wantdir - this.beam_dir) * RAD2DEG;
+			if(angle && (angle > this.beam_maxangle))
 			{
 				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
 				float blendfactor = bound(
 					0,
-					(1 - (self.beam_returnspeed * frametime)),
-					min(self.beam_maxangle / angle, 1)
+					(1 - (this.beam_returnspeed * frametime)),
+					min(this.beam_maxangle / angle, 1)
 				);
-				self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 			}
 			else
 			{
 				// the radius is not too far yet, no worries :D
 				float blendfactor = bound(
 					0,
-					(1 - (self.beam_returnspeed * frametime)),
+					(1 - (this.beam_returnspeed * frametime)),
 					1
 				);
-				self.beam_dir = normalize((wantdir * (1 - blendfactor)) + (self.beam_dir * blendfactor));
+				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
 			}
 
 			// calculate how many segments are needed
 			float max_allowed_segments;
 
-			if(self.beam_distancepersegment)
+			if(this.beam_distancepersegment)
 			{
 				max_allowed_segments = min(
 					ARC_MAX_SEGMENTS,
-					1 + (vlen(wantdir / self.beam_distancepersegment))
+					1 + (vlen(wantdir / this.beam_distancepersegment))
 				);
 			}
 			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
-			if(self.beam_degreespersegment)
+			if(this.beam_degreespersegment)
 			{
 				segments = bound(
 					1,
 					(
 						min(
 							angle,
-							self.beam_maxangle
+							this.beam_maxangle
 						)
 						/
-						self.beam_degreespersegment
+						this.beam_degreespersegment
 					),
 					max_allowed_segments
 				);
@@ -987,17 +987,17 @@ void Draw_ArcBeam(entity this)
 		else { segments = 1; }
 
 		// set the beam direction which the rest of the code will refer to
-		beamdir = self.beam_dir;
+		beamdir = this.beam_dir;
 
-		// finally, set self.angles to the proper direction so that muzzle attachment points in proper direction
-		self.angles = fixedvectoangles2(forward, up); // TODO(Samual): is this == warpzone_save_view_angles?
+		// finally, set this.angles to the proper direction so that muzzle attachment points in proper direction
+		this.angles = fixedvectoangles2(forward, up); // TODO(Samual): is this == warpzone_save_view_angles?
 	}
 	else
 	{
 		// set the values from the provided info from the networked entity
-		start_pos = self.origin;
-		wantdir = self.v_angle;
-		beamdir = self.angles;
+		start_pos = this.origin;
+		wantdir = this.v_angle;
+		beamdir = this.angles;
 
 		if(beamdir != wantdir)
 		{
@@ -1006,26 +1006,26 @@ void Draw_ArcBeam(entity this)
 			// calculate how many segments are needed
 			float max_allowed_segments;
 
-			if(self.beam_distancepersegment)
+			if(this.beam_distancepersegment)
 			{
 				max_allowed_segments = min(
 					ARC_MAX_SEGMENTS,
-					1 + (vlen(wantdir / self.beam_distancepersegment))
+					1 + (vlen(wantdir / this.beam_distancepersegment))
 				);
 			}
 			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
 
-			if(self.beam_degreespersegment)
+			if(this.beam_degreespersegment)
 			{
 				segments = bound(
 					1,
 					(
 						min(
 							angle,
-							self.beam_maxangle
+							this.beam_maxangle
 						)
 						/
-						self.beam_degreespersegment
+						this.beam_degreespersegment
 					),
 					max_allowed_segments
 				);
@@ -1035,13 +1035,13 @@ void Draw_ArcBeam(entity this)
 		else { segments = 1; }
 	}
 
-	setorigin(self, start_pos);
-	self.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
+	setorigin(this, start_pos);
+	this.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
 
-	vector beam_endpos = (start_pos + (beamdir * self.beam_range));
-	vector beam_controlpoint = start_pos + wantdir * (self.beam_range * (1 - self.beam_tightness));
+	vector beam_endpos = (start_pos + (beamdir * this.beam_range));
+	vector beam_controlpoint = start_pos + wantdir * (this.beam_range * (1 - this.beam_tightness));
 
-	Draw_ArcBeam_callback_entity = self;
+	Draw_ArcBeam_callback_entity = this;
 	Draw_ArcBeam_callback_last_thickness = 0;
 	Draw_ArcBeam_callback_last_top = start_pos;
 	Draw_ArcBeam_callback_last_bottom = start_pos;
@@ -1089,49 +1089,49 @@ void Draw_ArcBeam(entity this)
 	}
 
 	// visual effects for startpoint and endpoint
-	if(self.beam_hiteffect)
+	if(this.beam_hiteffect)
 	{
 		// FIXME we really should do this on the server so it actually
 		// matches gameplay. What this client side stuff is doing is no
 		// more than guesswork.
 		if((trace_ent || trace_fraction < 1) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
-			self.beam_hiteffect,
+			this.beam_hiteffect,
 			last_origin,
 			beamdir * -1,
 			frametime * 2
 		);
 	}
-	if(self.beam_hitlight[0])
+	if(this.beam_hitlight[0])
 	{
 		adddynamiclight(
 			last_origin,
-			self.beam_hitlight[0],
+			this.beam_hitlight[0],
 			vec3(
-				self.beam_hitlight[1],
-				self.beam_hitlight[2],
-				self.beam_hitlight[3]
+				this.beam_hitlight[1],
+				this.beam_hitlight[2],
+				this.beam_hitlight[3]
 			)
 		);
 	}
-	if(self.beam_muzzleeffect)
+	if(this.beam_muzzleeffect)
 	{
 		pointparticles(
-			self.beam_muzzleeffect,
+			this.beam_muzzleeffect,
 			original_start_pos + wantdir * 20,
 			wantdir * 1000,
 			frametime * 0.1
 		);
 	}
-	if(self.beam_muzzlelight[0])
+	if(this.beam_muzzlelight[0])
 	{
 		adddynamiclight(
 			original_start_pos + wantdir * 20,
-			self.beam_muzzlelight[0],
+			this.beam_muzzlelight[0],
 			vec3(
-				self.beam_muzzlelight[1],
-				self.beam_muzzlelight[2],
-				self.beam_muzzlelight[3]
+				this.beam_muzzlelight[1],
+				this.beam_muzzlelight[2],
+				this.beam_muzzlelight[3]
 			)
 		);
 	}
@@ -1143,10 +1143,10 @@ void Draw_ArcBeam(entity this)
 	Draw_ArcBeam_callback_last_bottom = '0 0 0';
 }
 
-void Remove_ArcBeam()
-{SELFPARAM();
-	remove(self.beam_muzzleentity);
-	sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+void Remove_ArcBeam(entity this)
+{
+	remove(this.beam_muzzleentity);
+	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)

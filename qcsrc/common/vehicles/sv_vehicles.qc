@@ -42,15 +42,15 @@ bool SendAuxiliaryXhair(entity this, entity to, int sf)
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
 
-	WriteByte(MSG_ENTITY, self.cnt);
+	WriteByte(MSG_ENTITY, this.cnt);
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
 
-	WriteByte(MSG_ENTITY, rint(self.colormod_x * 255));
-	WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
-	WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
+	WriteByte(MSG_ENTITY, rint(this.colormod_x * 255));
+	WriteByte(MSG_ENTITY, rint(this.colormod_y * 255));
+	WriteByte(MSG_ENTITY, rint(this.colormod_z * 255));
 
 	return true;
 }
@@ -91,36 +91,22 @@ void CSQCVehicleSetup(entity own, int vehicle_id)
 	WriteByte(MSG_ONE, vehicle_id);
 }
 
-vector targetdrone_getnewspot()
-{SELFPARAM();
-	vector spot;
-	int i;
-	for(i = 0; i < 100; ++i)
+void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
+{
+	if(this.lock_target && IS_DEAD(this.lock_target))
 	{
-		spot = self.origin + randomvec() * 1024;
-		tracebox(spot, self.mins, self.maxs, spot, MOVE_NORMAL, self);
-		if(trace_fraction == 1.0 && trace_startsolid == 0 && trace_allsolid == 0)
-			return spot;
-	}
-	return self.origin;
-}
-
-void vehicles_locktarget(float incr, float decr, float _lock_time)
-{SELFPARAM();
-	if(self.lock_target && IS_DEAD(self.lock_target))
-	{
-		self.lock_target	= world;
-		self.lock_strength  = 0;
-		self.lock_time	  = 0;
+		this.lock_target	= world;
+		this.lock_strength  = 0;
+		this.lock_time	  = 0;
 	}
 
-	if(self.lock_time > time)
+	if(this.lock_time > time)
 	{
-		if(self.lock_target)
-		if(self.lock_soundtime < time)
+		if(this.lock_target)
+		if(this.lock_soundtime < time)
 		{
-			self.lock_soundtime = time + 0.5;
-			play2(self.owner, "vehicles/locked.wav");
+			this.lock_soundtime = time + 0.5;
+			play2(this.owner, "vehicles/locked.wav");
 		}
 
 		return;
@@ -128,7 +114,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
 	if(trace_ent != world)
 	{
-		if(SAME_TEAM(trace_ent, self))
+		if(SAME_TEAM(trace_ent, this))
 			trace_ent = world;
 
 		if(IS_DEAD(trace_ent))
@@ -141,48 +127,48 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 			trace_ent = world; // invisible
 	}
 
-	if(self.lock_target == world && trace_ent != world)
-		self.lock_target = trace_ent;
+	if(this.lock_target == world && trace_ent != world)
+		this.lock_target = trace_ent;
 
-	if(self.lock_target && trace_ent == self.lock_target)
+	if(this.lock_target && trace_ent == this.lock_target)
 	{
-		if(self.lock_strength != 1 && self.lock_strength + incr >= 1)
+		if(this.lock_strength != 1 && this.lock_strength + incr >= 1)
 		{
-			play2(self.owner, "vehicles/lock.wav");
-			self.lock_soundtime = time + 0.8;
+			play2(this.owner, "vehicles/lock.wav");
+			this.lock_soundtime = time + 0.8;
 		}
-		else if (self.lock_strength != 1 && self.lock_soundtime < time)
+		else if (this.lock_strength != 1 && this.lock_soundtime < time)
 		{
-			play2(self.owner, "vehicles/locking.wav");
-			self.lock_soundtime = time + 0.3;
+			play2(this.owner, "vehicles/locking.wav");
+			this.lock_soundtime = time + 0.3;
 		}
 	}
 
 	// Have a locking target
 	// Trace hit current target
-	if(trace_ent == self.lock_target && trace_ent != world)
+	if(trace_ent == this.lock_target && trace_ent != world)
 	{
-		self.lock_strength = min(self.lock_strength + incr, 1);
-		if(self.lock_strength == 1)
-			self.lock_time = time + _lock_time;
+		this.lock_strength = min(this.lock_strength + incr, 1);
+		if(this.lock_strength == 1)
+			this.lock_time = time + _lock_time;
 	}
 	else
 	{
 		if(trace_ent)
-			self.lock_strength = max(self.lock_strength - decr * 2, 0);
+			this.lock_strength = max(this.lock_strength - decr * 2, 0);
 		else
-			self.lock_strength = max(self.lock_strength - decr, 0);
+			this.lock_strength = max(this.lock_strength - decr, 0);
 
-		if(self.lock_strength == 0)
-			self.lock_target = world;
+		if(this.lock_strength == 0)
+			this.lock_target = world;
 	}
 }
 
-vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float max_power)
-{SELFPARAM();
-	force_fromtag_origin = gettaginfo(self, gettagindex(self, tag_name));
+vector vehicles_force_fromtag_hover(entity this, string tag_name, float spring_length, float max_power)
+{
+	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));
 	v_forward  = normalize(v_forward) * -1;
-	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, self);
+	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, this);
 
 	force_fromtag_power = (1 - trace_fraction) * max_power;
 	force_fromtag_normpower = force_fromtag_power / max_power;
@@ -190,12 +176,11 @@ vector vehicles_force_fromtag_hover(string tag_name, float spring_length, float 
 	return v_forward  * force_fromtag_power;
 }
 
-vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float max_power)
-{SELFPARAM();
-
-	force_fromtag_origin = gettaginfo(self, gettagindex(self, tag_name));
+vector vehicles_force_fromtag_maglev(entity this, string tag_name, float spring_length, float max_power)
+{
+	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));
 	v_forward  = normalize(v_forward) * -1;
-	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, self);
+	traceline(force_fromtag_origin, force_fromtag_origin - (v_forward  * spring_length), MOVE_NORMAL, this);
 
 	// TODO - this may NOT be compatible with wall/celing movement, unhardcode 0.25 (engine count multiplier)
 	if(trace_fraction == 1.0)
@@ -211,20 +196,20 @@ vector vehicles_force_fromtag_maglev(string tag_name, float spring_length, float
 }
 
 // projectile handling
-void vehicles_projectile_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	// Ignore damage from oterh projectiles from my owner (dont mess up volly's)
-	if(inflictor.owner == self.owner)
+	if(inflictor.owner == this.owner)
 		return;
 
-	self.health -= damage;
-	self.velocity += force;
-	if(self.health < 1)
+	this.health -= damage;
+	this.velocity += force;
+	if(this.health < 1)
 	{
-		self.takedamage = DAMAGE_NO;
-		self.event_damage = func_null;
-		self.think = self.use;
-		self.nextthink = time;
+		this.takedamage = DAMAGE_NO;
+		this.event_damage = func_null;
+		this.think = this.use;
+		this.nextthink = time;
 	}
 }
 
@@ -630,8 +615,8 @@ void vehicles_painframe(entity this)
 	if(this.pain_frame < time)
 	{
 		float _ftmp = myhealth / 50;
-		this.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
-		pointparticles(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
+		this.pain_frame = time + max(0.1, 0.1 + (random() * 0.5 * _ftmp));
+		Send_Effect(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
 		if(this.vehicle_flags & VHF_DMGSHAKE)
 			this.velocity += randomvec() * 30;
@@ -649,9 +634,9 @@ void vehicles_frame(entity this, entity actor)
 	vehicles_painframe(this);
 }
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	self.dmg_time = time;
+void vehicles_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	this.dmg_time = time;
 
 	// WEAPONTODO
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
@@ -672,74 +657,74 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, int deatht
 	if(DEATH_WEAPONOF(deathtype) != WEP_Null)
 		damage *= autocvar_g_vehicles_weapon_damagerate;
 
-	self.enemy = attacker;
+	this.enemy = attacker;
 
-	self.pain_finished = time;
+	this.pain_finished = time;
 
-	if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
+	if((this.vehicle_flags & VHF_HASSHIELD) && (this.vehicle_shield > 0))
 	{
-		if (wasfreed(self.vehicle_shieldent) || self.vehicle_shieldent == world)
+		if (wasfreed(this.vehicle_shieldent) || this.vehicle_shieldent == world)
 		{
-			self.vehicle_shieldent = spawn();
-			self.vehicle_shieldent.effects = EF_LOWPRECISION;
+			this.vehicle_shieldent = spawn();
+			this.vehicle_shieldent.effects = EF_LOWPRECISION;
 
-			setmodel(self.vehicle_shieldent, MDL_VEH_SHIELD);
-			setattachment(self.vehicle_shieldent, self, "");
-			setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
-			self.vehicle_shieldent.scale	   = 256 / vlen(self.maxs - self.mins);
-			self.vehicle_shieldent.think	   = shieldhit_think;
+			setmodel(this.vehicle_shieldent, MDL_VEH_SHIELD);
+			setattachment(this.vehicle_shieldent, this, "");
+			setorigin(this.vehicle_shieldent, real_origin(this) - this.origin);
+			this.vehicle_shieldent.scale	   = 256 / vlen(this.maxs - this.mins);
+			this.vehicle_shieldent.think	   = shieldhit_think;
 		}
 
-		self.vehicle_shieldent.colormod	= '1 1 1';
-		self.vehicle_shieldent.alpha = 0.45;
-		self.vehicle_shieldent.angles = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
-		self.vehicle_shieldent.nextthink = time;
-		self.vehicle_shieldent.effects &= ~EF_NODRAW;
+		this.vehicle_shieldent.colormod	= '1 1 1';
+		this.vehicle_shieldent.alpha = 0.45;
+		this.vehicle_shieldent.angles = vectoangles(normalize(hitloc - (this.origin + this.vehicle_shieldent.origin))) - this.angles;
+		this.vehicle_shieldent.nextthink = time;
+		this.vehicle_shieldent.effects &= ~EF_NODRAW;
 
-		self.vehicle_shield -= damage;
+		this.vehicle_shield -= damage;
 
-		if(self.vehicle_shield < 0)
+		if(this.vehicle_shield < 0)
 		{
-			self.vehicle_health -= fabs(self.vehicle_shield);
-			self.vehicle_shieldent.colormod = '2 0 0';
-			self.vehicle_shield = 0;
-			self.vehicle_shieldent.alpha = 0.75;
+			this.vehicle_health -= fabs(this.vehicle_shield);
+			this.vehicle_shieldent.colormod = '2 0 0';
+			this.vehicle_shield = 0;
+			this.vehicle_shieldent.alpha = 0.75;
 
 			if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
+				spamsound (this, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
 		}
 		else
 			if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+				spamsound (this, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
 	}
 	else
 	{
-		self.vehicle_health -= damage;
+		this.vehicle_health -= damage;
 
 		if(sound_allowed(MSG_BROADCAST, attacker))
-			spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
+			spamsound (this, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 	}
 
-	if(self.damageforcescale < 1 && self.damageforcescale > 0)
-		self.velocity += force * self.damageforcescale;
+	if(this.damageforcescale < 1 && this.damageforcescale > 0)
+		this.velocity += force * this.damageforcescale;
 	else
-		self.velocity += force;
+		this.velocity += force;
 
-	if(self.vehicle_health <= 0)
+	if(this.vehicle_health <= 0)
 	{
-		if(self.owner)
-			if(self.vehicle_flags & VHF_DEATHEJECT)
-				vehicles_exit(VHEF_EJECT);
+		if(this.owner)
+			if(this.vehicle_flags & VHF_DEATHEJECT)
+				WITH(entity, self, this, vehicles_exit(VHEF_EJECT));
 			else
-				vehicles_exit(VHEF_RELEASE);
+				WITH(entity, self, this, vehicles_exit(VHEF_RELEASE));
 
 
-		antilag_clear(self);
+		antilag_clear(this);
 
-		Vehicle info = Vehicles_from(self.vehicleid);
-		info.vr_death(info);
-		vehicles_setreturn(self);
+		Vehicle info = Vehicles_from(this.vehicleid);
+		info.vr_death(info, this);
+		vehicles_setreturn(this);
 	}
 }
 
@@ -937,7 +922,7 @@ void vehicles_touch()
 		if((self.origin_z + self.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
-			if(vlen(self.velocity) >= 30)
+			if(vdist(self.velocity, >=, 30))
 				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
@@ -945,7 +930,7 @@ void vehicles_touch()
 
 		if(self.play_time < time) {
 			Vehicle info = Vehicles_from(self.vehicleid);
-			info.vr_impact(info);
+			info.vr_impact(info, self);
 		}
 
 		return;
@@ -1119,7 +1104,7 @@ void vehicles_enter(entity pl, entity veh)
 	setself(veh);
 	CSQCModel_UnlinkEntity(veh);
 	Vehicle info = Vehicles_from(veh.vehicleid);
-	info.vr_enter(info);
+	info.vr_enter(info, veh);
 	setself(this);
 
 	antilag_clear(pl);
@@ -1133,7 +1118,7 @@ void vehicles_think()
 		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
 
 	Vehicle info = Vehicles_from(self.vehicleid);
-	info.vr_think(info);
+	info.vr_think(info, self);
 
 	vehicles_painframe(self);
 
@@ -1184,7 +1169,7 @@ void vehicles_spawn()
 	vehicles_reset_colors();
 
 	Vehicle info = Vehicles_from(self.vehicleid);
-	info.vr_spawn(info);
+	info.vr_spawn(info, self);
 
 	CSQCMODEL_AUTOINIT(self);
 }
@@ -1294,7 +1279,7 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	self.tur_head.team = self.team;
 
 	Vehicle info = Vehicles_from(veh.vehicleid);
-	info.vr_setup(info);
+	info.vr_setup(info, veh);
 
 	if(self.active == ACTIVE_NOT)
 		self.nextthink = 0; // wait until activated

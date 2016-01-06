@@ -376,12 +376,12 @@ MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
-{SELFPARAM();
+{
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{
-		if(STAT(FROZEN, self))
-			freezetag_Unfreeze(world);
+		if(STAT(FROZEN, frag_target))
+			WITH(entity, self, frag_target, freezetag_Unfreeze(world));
 		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
@@ -392,23 +392,23 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		|| frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
 		// let the player die, he will be automatically frozen when he respawns
-		if(STAT(FROZEN, self) != 1)
+		if(STAT(FROZEN, frag_target) != 1)
 		{
 			freezetag_Add_Score(frag_attacker);
 			freezetag_count_alive_players();
 			freezetag_LastPlayerForTeam_Notify();
 		}
 		else
-			freezetag_Unfreeze(world); // remove ice
-		self.health = 0; // Unfreeze resets health
-		self.freezetag_frozen_timeout = -2; // freeze on respawn
+			WITH(entity, self, frag_target, freezetag_Unfreeze(world)); // remove ice
+		frag_target.health = 0; // Unfreeze resets health
+		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return 1;
 	}
 
-	if(STAT(FROZEN, self))
+	if(STAT(FROZEN, frag_target))
 		return 1;
 
-	freezetag_Freeze(frag_attacker);
+	WITH(entity, self, frag_target, freezetag_Freeze(frag_attacker));
 	freezetag_LastPlayerForTeam_Notify();
 
 	if(frag_attacker == frag_target || frag_attacker == world)

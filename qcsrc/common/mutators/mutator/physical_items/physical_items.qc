@@ -78,13 +78,13 @@ void physical_item_touch()
 	}
 }
 
-void physical_item_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(!self.cnt) // not for dropped items
+void physical_item_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(!this.cnt) // not for dropped items
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		setorigin(self, self.spawn_origin);
-		self.angles = self.spawn_angles;
+		setorigin(this, this.spawn_origin);
+		this.angles = this.spawn_angles;
 	}
 }
 
@@ -136,7 +136,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	self.effects |= EF_NODRAW; // hide the original weapon
 	self.movetype = MOVETYPE_FOLLOW;
 	self.aiment = wep; // attach the original weapon
-	self.SendEntity = func_null;
+	self.SendEntity3 = func_null;
 
 	return false;
 }

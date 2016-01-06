@@ -281,9 +281,9 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerDies)
-{SELFPARAM();
-	self.respawn_flags |= RESPAWN_FORCE;
-	race_AbandonRaceCheck(self);
+{
+	frag_target.respawn_flags |= RESPAWN_FORCE;
+	race_AbandonRaceCheck(frag_target);
 	return false;
 }
 

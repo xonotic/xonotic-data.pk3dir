@@ -106,7 +106,7 @@ float autocvar_g_vehicle_raptor_flare_chase;
 float autocvar_g_vehicle_raptor_flare_range;
 
 void raptor_flare_think();
-void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 void raptor_flare_touch();
 
 METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -165,7 +165,7 @@ void raptor_bomb_burst()
     {
         self.nextthink = time;
         traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
-        if((trace_fraction == 1.0) || (vlen(self.origin - self.owner.origin) < autocvar_g_vehicle_raptor_bomblet_radius))
+        if((trace_fraction == 1.0) || (vdist(self.origin - self.owner.origin, <, autocvar_g_vehicle_raptor_bomblet_radius)))
         {
             UpdateCSQCProjectile(self);
             return;
@@ -237,11 +237,11 @@ void raptor_flare_touch()
     remove(self);
 }
 
-void raptor_flare_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-    self.health -= damage;
-    if(self.health <= 0)
-        remove(self);
+void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+    this.health -= damage;
+    if(this.health <= 0)
+        remove(this);
 }
 
 void raptor_flare_think()
@@ -251,7 +251,7 @@ void raptor_flare_think()
     while(_missile)
     {
         if(_missile.flags & FL_PROJECTILE)
-        if(vlen(self.origin - _missile.origin) < autocvar_g_vehicle_raptor_flare_range)
+        if(vdist(self.origin - _missile.origin, <, autocvar_g_vehicle_raptor_flare_range))
         if(random() > autocvar_g_vehicle_raptor_flare_chase)
             _missile.enemy = self;
         _missile = _missile.chain;
@@ -267,18 +267,18 @@ void raptor_flare_think()
 
 void RaptorCBShellfragDraw(entity this)
 {
-    if(wasfreed(self))
+    if(wasfreed(this))
         return;
 
-    Movetype_Physics_MatchTicrate(self, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
-    self.move_avelocity += randomvec() * 15;
-    self.renderflags = 0;
+    Movetype_Physics_MatchTicrate(this, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+    this.move_avelocity += randomvec() * 15;
+    this.renderflags = 0;
 
-    if(self.cnt < time)
-        self.alpha = bound(0, self.nextthink - time, 1);
+    if(this.cnt < time)
+        this.alpha = bound(0, this.nextthink - time, 1);
 
-    if(self.alpha < ALPHA_MIN_VISIBLE)
-        remove(self);
+    if(this.alpha < ALPHA_MIN_VISIBLE)
+        remove(this);
 }
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)

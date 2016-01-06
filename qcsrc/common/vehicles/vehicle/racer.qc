@@ -95,48 +95,48 @@ vector autocvar_g_vehicle_racer_bouncepain;
 
 .float racer_watertime;
 
-var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
+var vector racer_force_from_tag(entity this, string tag_name, float spring_length, float max_power);
 
-void racer_align4point(float _delta)
-{SELFPARAM();
+void racer_align4point(entity this, float _delta)
+{
 	vector push_vector;
 	float fl_push, fr_push, bl_push, br_push;
 
-	push_vector  = racer_force_from_tag("tag_engine_fr", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector  = racer_force_from_tag(this, "tag_engine_fr", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	fr_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	push_vector += racer_force_from_tag("tag_engine_fl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector += racer_force_from_tag(this, "tag_engine_fl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	fl_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	push_vector += racer_force_from_tag("tag_engine_br", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector += racer_force_from_tag(this, "tag_engine_br", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	br_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	push_vector += racer_force_from_tag("tag_engine_bl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
+	push_vector += racer_force_from_tag(this, "tag_engine_bl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
 	bl_push	  = force_fromtag_normpower;
-	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+	//vehicles_sweap_collision(force_fromtag_origin, this.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-	self.velocity += push_vector * _delta;
+	this.velocity += push_vector * _delta;
 
 	float uforce = autocvar_g_vehicle_racer_upforcedamper;
 
-	int cont = pointcontents(self.origin - '0 0 64');
+	int cont = pointcontents(this.origin - '0 0 64');
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 	{
 		uforce = autocvar_g_vehicle_racer_water_upforcedamper;
 
-		if(self.owner.BUTTON_CROUCH && time < self.air_finished)
-			self.velocity_z += 30;
+		if(this.owner.BUTTON_CROUCH && time < this.air_finished)
+			this.velocity_z += 30;
 		else
-			self.velocity_z += 200;
+			this.velocity_z += 200;
 	}
 
 
 	// Anti ocilation
-	if(self.velocity_z > 0)
-		self.velocity_z *= 1 - uforce * _delta;
+	if(this.velocity_z > 0)
+		this.velocity_z *= 1 - uforce * _delta;
 
 	push_vector_x =  (fl_push - bl_push);
 	push_vector_x += (fr_push - br_push);
@@ -147,12 +147,12 @@ void racer_align4point(float _delta)
 	push_vector_z *= 360;
 
 	// Apply angle diffrance
-	self.angles_z += push_vector_z * _delta;
-	self.angles_x += push_vector_x * _delta;
+	this.angles_z += push_vector_z * _delta;
+	this.angles_x += push_vector_x * _delta;
 
 	// Apply stabilizer
-	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
-	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
+	this.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
+	this.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
 }
 
 void racer_fire_rocket_aim(entity player, string tagname, entity trg)
@@ -191,7 +191,7 @@ float racer_frame()
 		return 1;
 	}
 
-	racer_align4point(PHYS_INPUT_TIMELENGTH);
+	racer_align4point(self, PHYS_INPUT_TIMELENGTH);
 
 	player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
 
@@ -220,7 +220,7 @@ float racer_frame()
 	//racer.velocity_z = ftmp;
 
 	int cont = pointcontents(racer.origin);
-	if(vlen(player.movement) != 0)
+	if(player.movement)
 	{
 		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
@@ -329,7 +329,7 @@ float racer_frame()
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
-		vehicles_locktarget((1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
+		vehicles_locktarget(self, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
 						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
 						 autocvar_g_vehicle_racer_rocket_locked_time);
 
@@ -454,7 +454,7 @@ void racer_exit(float eject)
 	}
 	else
 	{
-		if(vlen(self.velocity) > 2 * autocvar_sv_maxairspeed)
+		if(vdist(self.velocity, >, 2 * autocvar_sv_maxairspeed))
 		{
 			self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed * 2;
 			self.owner.velocity_z += 200;
@@ -560,7 +560,7 @@ void racer_draw()
 #endif
 #endif
 
-		METHOD(Racer, vr_impact, void(Racer thisveh))
+		METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			if(autocvar_g_vehicle_racer_bouncepain)
@@ -568,7 +568,7 @@ void racer_draw()
 		#endif
 		}
 
-		METHOD(Racer, vr_enter, void(Racer thisveh))
+		METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			self.movetype = MOVETYPE_BOUNCE;
@@ -583,7 +583,7 @@ void racer_draw()
 		#endif
 		}
 
-		METHOD(Racer, vr_spawn, void(Racer thisveh))
+		METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			if(self.scale != 0.5)
@@ -621,34 +621,34 @@ void racer_draw()
 		#endif
 		}
 
-		METHOD(Racer, vr_death, void(Racer thisveh))
+		METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
-			self.SendEntity		= func_null; // stop networking this racer (for now)
-			self.health			= 0;
-			self.event_damage	= func_null;
-			self.solid			= SOLID_CORPSE;
-			self.takedamage		= DAMAGE_NO;
-			self.deadflag		= DEAD_DYING;
-			self.movetype		= MOVETYPE_BOUNCE;
-			self.wait			= time;
-			self.delay			= 2 + time + random() * 3;
-			self.cnt			= 1 + random() * 2;
-			self.touch			= racer_deadtouch;
+			instance.SendEntity		= func_null; // stop networking this racer (for now)
+			instance.health			= 0;
+			instance.event_damage	= func_null;
+			instance.solid			= SOLID_CORPSE;
+			instance.takedamage		= DAMAGE_NO;
+			instance.deadflag		= DEAD_DYING;
+			instance.movetype		= MOVETYPE_BOUNCE;
+			instance.wait			= time;
+			instance.delay			= 2 + time + random() * 3;
+			instance.cnt			= 1 + random() * 2;
+			instance.touch			= racer_deadtouch;
 
-			Send_Effect(EFFECT_EXPLOSION_MEDIUM, self.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, instance.origin, '0 0 0', 1);
 
 			if(random() < 0.5)
-				self.avelocity_z = 32;
+				instance.avelocity_z = 32;
 			else
-				self.avelocity_z = -32;
+				instance.avelocity_z = -32;
 
-			self.avelocity_x = -vlen(self.velocity) * 0.2;
-			self.velocity += '0 0 700';
-			self.colormod = '-0.5 -0.5 -0.5';
+			instance.avelocity_x = -vlen(instance.velocity) * 0.2;
+			instance.velocity += '0 0 700';
+			instance.colormod = '-0.5 -0.5 -0.5';
 
-			self.think = racer_blowup_think;
-			self.nextthink = time;
+			instance.think = racer_blowup_think;
+			instance.nextthink = time;
 		#endif
 		}
 
@@ -664,7 +664,7 @@ void racer_draw()
 			Vehicles_drawCrosshair(vCROSS_GUIDE);
 		}
 #endif
-		METHOD(Racer, vr_setup, void(Racer thisveh))
+		METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 		{
 		#ifdef SVQC
 			self.vehicle_exit = racer_exit;

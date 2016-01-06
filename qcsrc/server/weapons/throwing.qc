@@ -190,9 +190,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
 }
 
-void SpawnThrownWeapon(vector org, float w)
-{SELFPARAM();
-	if(self.weapons & WepSet_FromWeapon(PS(self).m_weapon))
-		if(W_IsWeaponThrowable(PS(self).m_weapon.m_id))
-			W_ThrowNewWeapon(self, PS(self).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200');
+void SpawnThrownWeapon(entity this, vector org, float w)
+{
+	if(this.weapons & WepSet_FromWeapon(PS(this).m_weapon))
+		if(W_IsWeaponThrowable(PS(this).m_weapon.m_id))
+			W_ThrowNewWeapon(this, PS(this).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200');
 }

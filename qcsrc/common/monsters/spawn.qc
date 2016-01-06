@@ -63,7 +63,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 
 	// Monster_Spawn checks if monster is valid
-	WITH(entity, self, e, Monster_Spawn(monster_id));
+	Monster_Spawn(e, monster_id);
 
 	return e;
 }

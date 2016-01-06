@@ -179,9 +179,8 @@ bool Mutator_SendEntity(entity this, entity to, int sf)
 #endif
 
 #ifdef CSQC
-void NET_Mutator_Remove()
+void NET_Mutator_Remove(entity this)
 {
-    SELFPARAM();
     string s = this.netname;
     WITH(bool, mutator_log, true, LAMBDA(
         FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Remove(it)));

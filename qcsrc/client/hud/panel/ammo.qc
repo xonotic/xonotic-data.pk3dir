@@ -141,7 +141,7 @@ void HUD_Ammo()
 	columns = ceil((total_ammo_count)/rows);
 	ammo_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 
-	vector offset = '0 0 0'; // fteqcc sucks
+	vector offset = '0 0 0';
 	float newSize;
 	if(ammo_size.x/ammo_size.y > 3)
 	{

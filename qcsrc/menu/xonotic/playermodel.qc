@@ -3,6 +3,7 @@
 #include "image.qc"
 CLASS(XonoticPlayerModelSelector, XonoticImage)
 	METHOD(XonoticPlayerModelSelector, configureXonoticPlayerModelSelector, void(entity));
+	METHOD(XonoticPlayerModelSelector, loadModels, void(entity));
 	METHOD(XonoticPlayerModelSelector, loadCvars, void(entity));
 	METHOD(XonoticPlayerModelSelector, saveCvars, void(entity));
 	METHOD(XonoticPlayerModelSelector, draw, void(entity));
@@ -49,16 +50,19 @@ const float BUFMODELS_COUNT = 5;
 
 void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 {
-	float sortbuf, glob, i;
+	me.configureXonoticImage(me, string_null, -1);
+}
+
+void XonoticPlayerModelSelector_loadModels(entity me)
+{
+	int i;
 	string fn;
 
-	glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
+	float glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
 	if (glob < 0)
 		return;
 
-	me.configureXonoticImage(me, string_null, -1);
-
-	sortbuf = buf_create();
+	float sortbuf = buf_create();
 	for(i = 0; i < search_getsize(glob); ++i)
 	{
 		// select model #i!
@@ -103,10 +107,14 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	me.loadCvars(me); // this will select the initial model, depending on the current cvars
 	me.go(me, 0); // this will set the vars for the selected model
 }
+
 void XonoticPlayerModelSelector_destroy(entity me)
 {
-	buf_del(me.bufModels);
-	me.bufModels = -1;
+	if(me.bufModels >= 0)
+	{
+		buf_del(me.bufModels);
+		me.bufModels = -1;
+	}
 }
 
 void XonoticPlayerModelSelector_loadCvars(entity me)
@@ -222,6 +230,6 @@ void XonoticPlayerModelSelector_showNotify(entity me)
 {
 	// Reinitialize self.
 	me.destroy(me);
-	me.configureXonoticPlayerModelSelector(me);
+	me.loadModels(me);
 }
 #endif

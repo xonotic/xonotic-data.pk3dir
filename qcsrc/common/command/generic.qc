@@ -495,7 +495,7 @@ void GenericCommand_runtest(float request, float argc)
 					TEST_Run(argv(i));
 			}
 			else
-				TEST_RunAll();
+				RUN_ALL_TESTS();
 			return;
 		}
 

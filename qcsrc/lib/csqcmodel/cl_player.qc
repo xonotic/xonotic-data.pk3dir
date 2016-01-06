@@ -339,7 +339,7 @@ void CSQCPlayer_SetCamera()
 	CSQCPLAYER_HOOK_POSTCAMERASETUP();
 }
 
-void CSQCPlayer_Remove()
+void CSQCPlayer_Remove(entity this)
 {
 	csqcplayer = NULL;
 	cvar_settemp("cl_movement_replay", "1");

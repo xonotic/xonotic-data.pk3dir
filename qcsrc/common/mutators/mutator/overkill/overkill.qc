@@ -113,18 +113,17 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
-{SELFPARAM();
+{
 	if(damage_take)
-		self.ok_pauseregen_finished = max(self.ok_pauseregen_finished, time + 2);
+		frag_target.ok_pauseregen_finished = max(frag_target.ok_pauseregen_finished, time + 2);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 {
-	SELFPARAM();
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
-	if(IS_MONSTER(this))
+	if(IS_MONSTER(frag_target))
 	{
 		remove(other); // remove default item
 		other = NULL;
@@ -140,10 +139,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	e.gravity = 1;
 	e.reset = SUB_Remove;
 	setorigin(e, frag_target.origin + '0 0 32');
-	e.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
+	e.velocity = '0 0 200' + normalize(targ.origin - frag_target.origin) * 500;
 	SUB_SetFade(e, time + 5, 1);
 
-	this.ok_lastwep = PS(this).m_switchweapon.m_id;
+	frag_target.ok_lastwep = PS(frag_target).m_switchweapon.m_id;
 
 	return false;
 }

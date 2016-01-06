@@ -118,18 +118,18 @@ void W_Hook_Explode2()
 	self.movetype = MOVETYPE_NONE;
 }
 
-void W_Hook_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(this.realowner, W_Hook_Explode2));
 }
 
 void W_Hook_Touch2()
@@ -355,18 +355,18 @@ void Draw_GrapplingHook(entity this)
 	vector vs;
 	float intensity, offset;
 
-	if(self.teleport_time)
-	if(time > self.teleport_time)
+	if(this.teleport_time)
+	if(time > this.teleport_time)
 	{
-		sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM); // safeguard
-		self.teleport_time = 0;
+		sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM); // safeguard
+		this.teleport_time = 0;
 	}
 
 	InterpolateOrigin_Do(this);
 
 	int s = W_GetGunAlignment(world);
 
-	switch(self.HookType)
+	switch(this.HookType)
 	{
 		default:
 		case NET_ENT_CLIENT_HOOK:
@@ -377,20 +377,20 @@ void Draw_GrapplingHook(entity this)
 			break;
 	}
 
-	if((self.owner.sv_entnum == player_localentnum - 1) && autocvar_chase_active <= 0)
+	if((this.owner.sv_entnum == player_localentnum - 1) && autocvar_chase_active <= 0)
 	{
-		switch(self.HookType)
+		switch(this.HookType)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
 				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
-				b = self.origin;
+				b = this.origin;
 				break;
 			case NET_ENT_CLIENT_ARC_BEAM:
-				if(self.HookRange)
-					b = view_origin + view_forward * self.HookRange;
+				if(this.HookRange)
+					b = view_origin + view_forward * this.HookRange;
 				else
-					b = view_origin + view_forward * vlen(self.velocity - self.origin); // honor original length of beam!
+					b = view_origin + view_forward * vlen(this.velocity - this.origin); // honor original length of beam!
 				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
@@ -399,23 +399,23 @@ void Draw_GrapplingHook(entity this)
 	}
 	else
 	{
-		switch(self.HookType)
+		switch(this.HookType)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
-				a = self.velocity;
-				b = self.origin;
+				a = this.velocity;
+				b = this.origin;
 				break;
 			case NET_ENT_CLIENT_ARC_BEAM:
-				a = self.origin;
-				b = self.velocity;
+				a = this.origin;
+				b = this.velocity;
 				break;
 		}
 	}
 
-	t = entcs_GetTeamColor(self.owner.sv_entnum);
+	t = entcs_GetTeamColor(this.owner.sv_entnum);
 
-	switch(self.HookType)
+	switch(this.HookType)
 	{
 		default:
 		case NET_ENT_CLIENT_HOOK:
@@ -427,12 +427,12 @@ void Draw_GrapplingHook(entity this)
 				case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
 				case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
 				case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
-				default: tex = "particles/hook_white"; rgb = entcs_GetColor(self.sv_entnum - 1); break;
+				default: tex = "particles/hook_white"; rgb = entcs_GetColor(this.sv_entnum - 1); break;
 			}
 			break;
 		case NET_ENT_CLIENT_ARC_BEAM: // todo
-			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
-			offset = Noise_Brown(self, frametime) * 10;
+			intensity = bound(0.2, 1 + Noise_Pink(this, frametime) * 1 + Noise_Burst(this, frametime, 0.03) * 0.3, 2);
+			offset = Noise_Brown(this, frametime) * 10;
 			tex = "particles/lgbeam";
 			rgb = '1 1 1';
 			break;
@@ -442,32 +442,32 @@ void Draw_GrapplingHook(entity this)
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;
 	Draw_GrapplingHook_trace_callback_a = intensity;
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((self.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((this.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
 	atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);
 
-	switch(self.HookType)
+	switch(this.HookType)
 	{
 		default:
 		case NET_ENT_CLIENT_HOOK:
-			if(vlen(trace_endpos - atrans) > 0.5)
+			if(vdist(trace_endpos - atrans, >, 0.5))
 			{
-				setorigin(self, trace_endpos); // hook endpoint!
-				self.angles = vectoangles(trace_endpos - atrans);
-				self.drawmask = MASK_NORMAL;
+				setorigin(this, trace_endpos); // hook endpoint!
+				this.angles = vectoangles(trace_endpos - atrans);
+				this.drawmask = MASK_NORMAL;
 			}
 			else
 			{
-				self.drawmask = 0;
+				this.drawmask = 0;
 			}
 			break;
 		case NET_ENT_CLIENT_ARC_BEAM:
-			setorigin(self, a); // beam origin!
+			setorigin(this, a); // beam origin!
 			break;
 	}
 
-	switch(self.HookType)
+	switch(this.HookType)
 	{
 		default:
 		case NET_ENT_CLIENT_HOOK:
@@ -478,9 +478,9 @@ void Draw_GrapplingHook(entity this)
 	}
 }
 
-void Remove_GrapplingHook()
-{SELFPARAM();
-	sound (self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+void Remove_GrapplingHook(entity this)
+{
+	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)

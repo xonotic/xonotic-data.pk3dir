@@ -487,18 +487,18 @@ int ons_ControlPoint_Attackable(entity cp, int teamnumber)
 	return 0;
 }
 
-void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	if(damage <= 0) { return; }
 
-	if (self.owner.isshielded)
+	if (this.owner.isshielded)
 	{
 		// this is protected by a shield, so ignore the damage
-		if (time > self.pain_finished)
+		if (time > this.pain_finished)
 			if (IS_PLAYER(attacker))
 			{
 				play2(attacker, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
-				self.pain_finished = time + 1;
+				this.pain_finished = time + 1;
 				attacker.typehitsound += 1; // play both sounds (shield is way too quiet)
 			}
 
@@ -506,60 +506,60 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 	}
 
 	if(IS_PLAYER(attacker))
-	if(time - ons_notification_time[self.team] > 10)
+	if(time - ons_notification_time[this.team] > 10)
 	{
-		play2team(self.team, SND(ONS_CONTROLPOINT_UNDERATTACK));
-		ons_notification_time[self.team] = time;
+		play2team(this.team, SND(ONS_CONTROLPOINT_UNDERATTACK));
+		ons_notification_time[this.team] = time;
 	}
 
-	self.health = self.health - damage;
-	if(self.owner.iscaptured)
-		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
+	this.health = this.health - damage;
+	if(this.owner.iscaptured)
+		WaypointSprite_UpdateHealth(this.owner.sprite, this.health);
 	else
-		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / ONS_CP_THINKRATE));
-	self.pain_finished = time + 1;
+		WaypointSprite_UpdateBuildFinished(this.owner.sprite, time + (this.max_health - this.health) / (this.count / ONS_CP_THINKRATE));
+	this.pain_finished = time + 1;
 	// particles on every hit
 	pointparticles(EFFECT_SPARKS, hitloc, force*-1, 1);
 	//sound on every hit
 	if (random() < 0.5)
-		sound(self, CH_TRIGGER, SND_ONS_HIT1, VOL_BASE+0.3, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ONS_HIT1, VOL_BASE+0.3, ATTEN_NORM);
 	else
-		sound(self, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE+0.3, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE+0.3, ATTEN_NORM);
 
-	if (self.health < 0)
+	if (this.health < 0)
 	{
-		sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
-		pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
+		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_CPDESTROYED_), this.owner.message, attacker.netname);
 
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
 		PlayerScore_Add(attacker, SP_SCORE, 10);
 
-		self.owner.goalentity = world;
-		self.owner.islinked = false;
-		self.owner.iscaptured = false;
-		self.owner.team = 0;
-		self.owner.colormap = 1024;
+		this.owner.goalentity = world;
+		this.owner.islinked = false;
+		this.owner.iscaptured = false;
+		this.owner.team = 0;
+		this.owner.colormap = 1024;
 
-		WaypointSprite_UpdateMaxHealth(self.owner.sprite, 0);
+		WaypointSprite_UpdateMaxHealth(this.owner.sprite, 0);
 
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		setself(self.owner);
-		activator = self;
-		SUB_UseTargets ();
+		setself(this.owner);
+		activator = this;
+		WITH(entity, self, this, SUB_UseTargets());
 		setself(this);
 
-		self.owner.waslinked = self.owner.islinked;
-		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
-			setmodel_fixsize(self.owner, MDL_ONS_CP_PAD1);
-		//setsize(self, '-32 -32 0', '32 32 8');
+		this.owner.waslinked = this.owner.islinked;
+		if(this.owner.model != "models/onslaught/controlpoint_pad.md3")
+			setmodel_fixsize(this.owner, MDL_ONS_CP_PAD1);
+		//setsize(this, '-32 -32 0', '32 32 8');
 
-		remove(self);
+		remove(this);
 	}
 
-	self.SendFlags |= CPSF_STATUS;
+	this.SendFlags |= CPSF_STATUS;
 }
 
 void ons_ControlPoint_Icon_Think()
@@ -570,11 +570,9 @@ void ons_ControlPoint_Icon_Think()
 	{
 		int _enemy_count = 0;
 		int _friendly_count = 0;
-		float _dist;
 
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
-			_dist = vlen(it.origin - self.origin);
-			if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
+			if(vdist(it.origin - self.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
 			{
 				if(SAME_TEAM(it, self))
 					++_friendly_count;
@@ -590,7 +588,7 @@ void ons_ControlPoint_Icon_Think()
 		self.SendFlags |= CPSF_STATUS;
 		if(self.health <= 0)
 		{
-			ons_ControlPoint_Icon_Damage(self, self, 1, 0, self.origin, '0 0 0');
+			ons_ControlPoint_Icon_Damage(self, self, self, 1, 0, self.origin, '0 0 0');
 			return;
 		}
 	}
@@ -955,64 +953,64 @@ void ons_Generator_UpdateSprite(entity e)
 	}
 }
 
-void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	if(damage <= 0) { return; }
 	if(warmup_stage || gameover) { return; }
 	if(!round_handler_IsRoundStarted()) { return; }
 
-	if (attacker != self)
+	if (attacker != this)
 	{
-		if (self.isshielded)
+		if (this.isshielded)
 		{
 			// this is protected by a shield, so ignore the damage
-			if (time > self.pain_finished)
+			if (time > this.pain_finished)
 				if (IS_PLAYER(attacker))
 				{
 					play2(attacker, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 					attacker.typehitsound += 1;
-					self.pain_finished = time + 1;
+					this.pain_finished = time + 1;
 				}
 			return;
 		}
-		if (time > self.pain_finished)
+		if (time > this.pain_finished)
 		{
-			self.pain_finished = time + 10;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, self), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK)));
-			play2team(self.team, SND(ONS_GENERATOR_UNDERATTACK));
+			this.pain_finished = time + 10;
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, this), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK)));
+			play2team(this.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
-	self.health = self.health - damage;
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	this.health = this.health - damage;
+	WaypointSprite_UpdateHealth(this.sprite, this.health);
 	// choose an animation frame based on health
-	self.frame = 10 * bound(0, (1 - self.health / self.max_health), 1);
+	this.frame = 10 * bound(0, (1 - this.health / this.max_health), 1);
 	// see if the generator is still functional, or dying
-	if (self.health > 0)
+	if (this.health > 0)
 	{
-		self.lasthealth = self.health;
+		this.lasthealth = this.health;
 	}
 	else
 	{
-		if (attacker == self)
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_));
+		if (attacker == this)
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_));
 		else
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_GENDESTROYED_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_GENDESTROYED_));
 			PlayerScore_Add(attacker, SP_SCORE, 100);
 		}
-		self.iscaptured = false;
-		self.islinked = false;
-		self.isshielded = false;
-		self.takedamage = DAMAGE_NO; // can't be hurt anymore
-		self.event_damage = func_null; // won't do anything if hurt
-		self.count = 0;	// reset counter
-		self.think = func_null;
-		self.nextthink = 0;
-		//self.think(); // do the first explosion now
+		this.iscaptured = false;
+		this.islinked = false;
+		this.isshielded = false;
+		this.takedamage = DAMAGE_NO; // can't be hurt anymore
+		this.event_damage = func_null; // won't do anything if hurt
+		this.count = 0;	// reset counter
+		this.think = func_null;
+		this.nextthink = 0;
+		//this.think(); // do the first explosion now
 
-		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
-		WaypointSprite_Ping(self.sprite);
-		//WaypointSprite_Kill(self.sprite); // can't do this yet, code too poor
+		WaypointSprite_UpdateMaxHealth(this.sprite, 0);
+		WaypointSprite_Ping(this.sprite);
+		//WaypointSprite_Kill(this.sprite); // can't do this yet, code too poor
 
 		onslaught_updatelinks();
 	}
@@ -1020,7 +1018,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
 	{
-		sound(self, CH_TRIGGER, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+		sound(this, CH_TRIGGER, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 	else
 	{
@@ -1029,12 +1027,12 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, int de
 
 		//sound on every hit
 		if (random() < 0.5)
-			sound(self, CH_TRIGGER, SND_ONS_HIT1, VOL_BASE, ATTEN_NORM);
+			sound(this, CH_TRIGGER, SND_ONS_HIT1, VOL_BASE, ATTEN_NORM);
 		else
-			sound(self, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);
+			sound(this, CH_TRIGGER, SND_ONS_HIT2, VOL_BASE, ATTEN_NORM);
 	}
 
-	self.SendFlags |= GSF_STATUS;
+	this.SendFlags |= GSF_STATUS;
 }
 
 void ons_GeneratorThink()
@@ -1622,8 +1620,8 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
 	{
 		if(SAME_TEAM(tmp_entity, self))
 		if(tmp_entity.iscaptured)
-		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) <= max_dist)
-		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <=, max_dist))
+		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
 			closest_target = tmp_entity;
 		tmp_entity = tmp_entity.chain;
 	}
@@ -1631,8 +1629,8 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
 	while(tmp_entity)
 	{
 		if(SAME_TEAM(tmp_entity, self))
-		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) < max_dist)
-		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <, max_dist))
+		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
 			closest_target = tmp_entity;
 		tmp_entity = tmp_entity.chain;
 	}
@@ -1690,16 +1688,16 @@ entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
 	return closest_target;
 }
 /**
- * find the number of control points and generators in the same team as self
+ * find the number of control points and generators in the same team as this
  */
-int ons_Count_SelfControlPoints()
-{SELFPARAM();
+int ons_Count_SelfControlPoints(entity this)
+{
 	entity tmp_entity;
 	tmp_entity = findchain(classname, "onslaught_controlpoint");
 	int n = 0;
 	while(tmp_entity)
 	{
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.iscaptured)
 			n++;
 		tmp_entity = tmp_entity.chain;
@@ -1707,7 +1705,7 @@ int ons_Count_SelfControlPoints()
 	tmp_entity = findchain(classname, "onslaught_generator");
 	while(tmp_entity)
 	{
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 			n++;
 		tmp_entity = tmp_entity.chain;
 	}
@@ -1938,8 +1936,8 @@ MUTATOR_HOOKFUNCTION(ons, PlayerDies)
 	}
 
 	if ( autocvar_g_onslaught_spawn_choose )
-	if ( ons_Count_SelfControlPoints() > 1 )
-		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+	if ( ons_Count_SelfControlPoints(frag_target) > 1 )
+		stuffcmd(frag_target, "qc_cmd_cl hud clickradar\n");
 
 	return false;
 }

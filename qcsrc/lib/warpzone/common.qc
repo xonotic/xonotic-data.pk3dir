@@ -43,7 +43,7 @@ vector WarpZone_camera_transform(vector org, vector ang)
 {SELFPARAM();
 	vector vf, vr, vu;
 	if(self.warpzone_fadestart)
-		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+		if(vdist(org - self.origin - 0.5 * (self.mins + self.maxs), >, self.warpzone_fadeend + 400))
 			return org;
 			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
 			// unneeded on client, on server this helps a lot
@@ -81,7 +81,7 @@ vector WarpZone_Camera_camera_transform(vector org, vector ang)
 {SELFPARAM();
 	// a fixed camera view
 	if(self.warpzone_fadestart)
-		if(vlen(org - self.origin - 0.5 * (self.mins + self.maxs)) > self.warpzone_fadeend + 400)
+		if(vdist(org - self.origin - 0.5 * (self.mins + self.maxs), >, self.warpzone_fadeend + 400))
 			return org;
 			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
 			// unneeded on client, on server this helps a lot
@@ -616,7 +616,7 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 			if(trace_fraction < 1)
 				continue;
 		}
-		if(!e.WarpZone_findradius_hit || vlen(e.WarpZone_findradius_dist) > vlen(org0 - p))
+		if(!e.WarpZone_findradius_hit || vlen2(e.WarpZone_findradius_dist) > vlen2(org0 - p))
 		{
 			e.WarpZone_findradius_nearest = p;
 			e.WarpZone_findradius_dist = org0 - p;

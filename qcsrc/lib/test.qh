@@ -1,17 +1,96 @@
 #pragma once
 
-#define TEST(id) \
-	void _TEST_##id(); \
+// public:
+
+/** Use UpperCamelCase for suite and test only */
+#define TEST(suite, test) \
+	void _TEST_##suite##_##test(); \
 	[[accumulate]] int TEST_RunAll_accumulated(int f) { \
-		if (!TEST_Run(#id)) ++f; \
+		if (!TEST_Run(#suite "_" #test)) ++f; \
 		return = f; \
 	} \
-	void _TEST_##id()
+	void _TEST_##suite##_##test()
 
-#define TEST_Check(cond) MACRO_BEGIN { if (!(cond)) TEST_Fail(#cond); } MACRO_END
+/** Must be present at the end of a test */
+#define SUCCEED() (TEST_ok = true)
 
-void TEST_OK();
-void TEST_Fail(string cond);
+/** Add a failure, but continue */
+#define ADD_FAILURE(msg) MACRO_BEGIN { ++TEST_failed; LOG_WARNINGF(msg); } MACRO_END
 
-bool TEST_RunAll();
+/** Add a failure and return */
+#define FAIL(msg) _TEST_ASSERT(ADD_FAILURE(msg))
+
+#define HasFatalFailure() (TEST_fatal > 0)
+
+bool RUN_ALL_TESTS();
+
+// difference between expect/assert: assert returns early
+
+#define EXPECT_EQ(expected_, actual_) MACRO_BEGIN { \
+	int expected = expected_; \
+	int actual = actual_; \
+	if ((expected) != (actual)) { \
+		ADD_FAILURE(sprintf( \
+			"Value of: " #actual_ "\n" \
+			"  Actual: %d\n" \
+			"Expected: %d\n", \
+			actual, expected \
+		)); \
+	} \
+} MACRO_END
+#define ASSERT_EQ(expected, actual) _TEST_ASSERT(EXPECT_EQ(expected, actual))
+
+#define EXPECT_TRUE(condition) EXPECT_EQ(true, condition)
+#define ASSERT_TRUE(condition) ASSERT_EQ(true, condition)
+
+#define EXPECT_FALSE(condition) EXPECT_EQ(false, condition)
+#define ASSERT_FALSE(condition) ASSERT_EQ(false, condition)
+
+#define EXPECT_NE(val1, val2) EXPECT_TRUE(val1 != val2)
+#define ASSERT_NE(val1, val2) _TEST_ASSERT(EXPECT_NE(val1, val2))
+
+#define EXPECT_LT(val1, val2) EXPECT_TRUE(val1 < val2)
+#define ASSERT_LT(val1, val2) _TEST_ASSERT(EXPECT_LT(val1, val2))
+
+#define EXPECT_LE(val1, val2) EXPECT_TRUE(val1 <= val2)
+#define ASSERT_LE(val1, val2) _TEST_ASSERT(EXPECT_LE(val1, val2))
+
+#define EXPECT_GT(val1, val2) EXPECT_TRUE(val1 > val2)
+#define ASSERT_GT(val1, val2) _TEST_ASSERT(EXPECT_GT(val1, val2))
+
+#define EXPECT_GE(val1, val2) EXPECT_TRUE(val1 >= val2)
+#define ASSERT_GE(val1, val2) _TEST_ASSERT(EXPECT_GE(val1, val2))
+
+#define EXPECT_NO_FATAL_FAILURE(statement) EXPECT_NO_FATAL_FAILURE_(statement, { })
+#define ASSERT_NO_FATAL_FAILURE(statement) EXPECT_NO_FATAL_FAILURE_(statement, { ++TEST_fatal; return; })
+
+// private:
+
 bool TEST_Run(string test);
+int TEST_fatal;
+bool TEST_ok;
+int TEST_failed;
+
+#define _TEST_ASSERT(statement) \
+	MACRO_BEGIN { \
+		LAMBDA(statement); \
+		++TEST_fatal; return; \
+	} MACRO_END
+
+#define EXPECT_NO_FATAL_FAILURE__(statement, then) \
+	MACRO_BEGIN { \
+		int TEST_prevfatal = TEST_fatal; \
+		LAMBDA(statement); \
+		if (TEST_fatal != TEST_prevfatal) \
+			LAMBDA(then); \
+	} MACRO_END
+
+#define EXPECT_NO_FATAL_FAILURE_(statement, then) \
+	EXPECT_NO_FATAL_FAILURE__(statement, { \
+		LOG_WARNINGF( \
+			"  Actual: %d fatal failures\n" \
+			"Expected: no fatal failures\n", \
+			TEST_fatal - TEST_prevfatal \
+		); \
+		LAMBDA(then); \
+	})

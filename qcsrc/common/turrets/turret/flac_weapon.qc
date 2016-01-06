@@ -50,8 +50,8 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
 void turret_flac_projectile_think_explode()
 {
     SELFPARAM();
-    if (self.enemy != world)
-    if (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3)
+    if(self.enemy != world)
+    if(vdist(self.origin - self.enemy.origin, <, self.owner.shot_radius * 3))
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
 
 #ifdef TURRET_DEBUG

@@ -142,7 +142,7 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFR
 		{
 			self.BUTTON_ATCK=false;
 			self.BUTTON_ATCK2=false;
-			if(vlen(self.origin-self.enemy.origin) > 1000)
+			if(vdist(self.origin - self.enemy.origin, >, 1000))
 				self.bot_secondary_riflemooth = 0;
 			if(self.bot_secondary_riflemooth == 0)
 			{

@@ -98,130 +98,125 @@ void M_Zombie_Attack_Leap_Touch()
 	}
 }
 
-void M_Zombie_Defend_Block_End()
-{SELFPARAM();
-	if(self.health <= 0)
+void M_Zombie_Defend_Block_End(entity this)
+{
+	if(this.health <= 0)
 		return;
 
-	setanim(self, self.anim_blockend, false, true, true);
-	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
+	setanim(this, this.anim_blockend, false, true, true);
+	this.armorvalue = autocvar_g_monsters_armor_blockpercent;
 }
 
-float M_Zombie_Defend_Block()
-{SELFPARAM();
-	self.armorvalue = 0.9;
-	self.state = MONSTER_ATTACK_MELEE; // freeze monster
-	self.attack_finished_single[0] = time + 2.1;
-	self.anim_finished = self.attack_finished_single[0];
-	setanim(self, self.anim_blockstart, false, true, true);
+bool M_Zombie_Defend_Block(entity this)
+{
+	this.armorvalue = 0.9;
+	this.state = MONSTER_ATTACK_MELEE; // freeze monster
+	this.attack_finished_single[0] = time + 2.1;
+	this.anim_finished = this.attack_finished_single[0];
+	setanim(this, this.anim_blockstart, false, true, true);
 
-	Monster_Delay(1, 0, 2, M_Zombie_Defend_Block_End);
+	Monster_Delay(this, 1, 2, M_Zombie_Defend_Block_End);
 
 	return true;
 }
 
-float M_Zombie_Attack(float attack_type, entity targ)
-{SELFPARAM();
+bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
+{
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
-				return M_Zombie_Defend_Block();
+			if(random() < 0.3 && actor.health < 75 && actor.enemy.health > 10)
+				return M_Zombie_Defend_Block(actor);
 
-			float rand = random();
+			float anim_chance = random();
 			vector chosen_anim;
 
-			if(rand < 0.33)
-				chosen_anim = self.anim_melee1;
-			else if(rand < 0.66)
-				chosen_anim = self.anim_melee2;
+			if(anim_chance < 0.33)
+				chosen_anim = actor.anim_melee1;
+			else if(anim_chance < 0.66)
+				chosen_anim = actor.anim_melee2;
 			else
-				chosen_anim = self.anim_melee3;
+				chosen_anim = actor.anim_melee3;
 
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE.m_id, true);
+			return Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, actor.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE.m_id, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			makevectors(self.angles);
-			return Monster_Attack_Leap(self.anim_shoot, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
+			makevectors(actor.angles);
+			return Monster_Attack_Leap(actor, actor.anim_shoot, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
 		}
 	}
 
 	return false;
 }
 
-spawnfunc(monster_zombie) { Monster_Spawn(MON_ZOMBIE.monsterid); }
+spawnfunc(monster_zombie) { Monster_Spawn(this, MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Zombie, mr_think, bool(Zombie thismon))
+		METHOD(Zombie, mr_think, bool(Zombie thismon, entity actor))
 		{
-			SELFPARAM();
-			if(time >= self.spawn_time)
-				self.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
+			if(time >= actor.spawn_time)
+				actor.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
 			return true;
 		}
-		METHOD(Zombie, mr_pain, bool(Zombie thismon))
+		METHOD(Zombie, mr_pain, bool(Zombie thismon, entity actor))
 		{
-			SELFPARAM();
-			self.pain_finished = time + 0.34;
-			setanim(self, ((random() > 0.5) ? self.anim_pain1 : self.anim_pain2), true, true, false);
+			actor.pain_finished = time + 0.34;
+			setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
 			return true;
 		}
-		METHOD(Zombie, mr_death, bool(Zombie thismon))
+		METHOD(Zombie, mr_death, bool(Zombie thismon, entity actor))
 		{
-			SELFPARAM();
-			self.armorvalue = autocvar_g_monsters_armor_blockpercent;
+			actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
 
-			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
+			setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Zombie, mr_anim, bool(Zombie thismon))
+		METHOD(Zombie, mr_anim, bool(Zombie thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '9 1 0.5', none); // 2 seconds
-			self.anim_die2 = animfixfps(self, '12 1 0.5', none); // 2 seconds
-			self.anim_spawn = animfixfps(self, '30 1 3', none);
-			self.anim_walk = animfixfps(self, '27 1 1', none);
-			self.anim_idle = animfixfps(self, '19 1 1', none);
-			self.anim_pain1 = animfixfps(self, '20 1 2', none); // 0.5 seconds
-			self.anim_pain2 = animfixfps(self, '22 1 2', none); // 0.5 seconds
-			self.anim_melee1 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
-			self.anim_melee2 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
-			self.anim_melee3 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
-			self.anim_shoot = animfixfps(self, '0 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '27 1 1', none);
-			self.anim_blockstart = animfixfps(self, '8 1 1', none);
-			self.anim_blockend = animfixfps(self, '7 1 1', none);
-
+			actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
+			actor.anim_die2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
+			actor.anim_spawn = animfixfps(actor, '30 1 3', none);
+			actor.anim_walk = animfixfps(actor, '27 1 1', none);
+			actor.anim_idle = animfixfps(actor, '19 1 1', none);
+			actor.anim_pain1 = animfixfps(actor, '20 1 2', none); // 0.5 seconds
+			actor.anim_pain2 = animfixfps(actor, '22 1 2', none); // 0.5 seconds
+			actor.anim_melee1 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+			actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+			actor.anim_melee3 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+			actor.anim_shoot = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '27 1 1', none);
+			actor.anim_blockstart = animfixfps(actor, '8 1 1', none);
+			actor.anim_blockend = animfixfps(actor, '7 1 1', none);
 			return true;
 		}
 		#endif
 		#ifdef SVQC
-		METHOD(Zombie, mr_setup, bool(Zombie thismon))
+		METHOD(Zombie, mr_setup, bool(Zombie thismon, entity actor))
 		{
-			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_zombie_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_zombie_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
+			if(!actor.health) actor.health = (autocvar_g_monster_zombie_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_zombie_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_zombie_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
 
-			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
-				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
+			if(actor.spawnflags & MONSTERFLAG_NORESPAWN)
+				actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
 
-			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
+			actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
-			self.monster_loot = spawnfunc_item_health_medium;
-			self.monster_attackfunc = M_Zombie_Attack;
-			self.spawnshieldtime = self.spawn_time;
-			self.respawntime = 0.2;
-			self.damageforcescale = 0.0001; // no push while spawning
+			actor.monster_loot = spawnfunc_item_health_medium;
+			actor.monster_attackfunc = M_Zombie_Attack;
+			actor.spawnshieldtime = actor.spawn_time;
+			actor.respawntime = 0.2;
+			actor.damageforcescale = 0.0001; // no push while spawning
 
-			setanim(self, self.anim_spawn, false, true, true);
-			self.spawn_time = self.animstate_endtime;
+			setanim(actor, actor.anim_spawn, false, true, true);
+			actor.spawn_time = actor.animstate_endtime;
 
 			return true;
 		}

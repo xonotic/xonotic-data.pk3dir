@@ -72,12 +72,6 @@
 // TODO get rid of colormod/glowmod here, find good solution for vortex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here
-#define CSQCMODEL_HOOK_PREUPDATE \
-	CSQCModel_Hook_PreUpdate(isnew, isplayer, islocalplayer);
-#define CSQCMODEL_HOOK_POSTUPDATE \
-	CSQCModel_Hook_PostUpdate(isnew, isplayer, islocalplayer);
-#define CSQCMODEL_HOOK_PREDRAW \
-	CSQCModel_Hook_PreDraw(isplayer);
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP() \
 	CSQCPlayer_SetViewLocation()
 

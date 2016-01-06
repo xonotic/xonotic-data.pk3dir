@@ -26,7 +26,7 @@ REGISTER_TURRET(TESLA, NEW(TeslaCoil));
 
 spawnfunc(turret_tesla) { if (!turret_initialize(TUR_TESLA)) remove(self); }
 
-METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur))
+METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur, entity it))
 {
     if(!self.active)
     {

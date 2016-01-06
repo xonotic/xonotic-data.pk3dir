@@ -12,9 +12,6 @@
 	/* CSQCMODEL_PROPERTY(2, float, ReadInt24_t, WriteInt24_t, effects) */
 
 // add hook function calls here
-#define CSQCMODEL_HOOK_PREUPDATE
-#define CSQCMODEL_HOOK_POSTUPDATE
-#define CSQCMODEL_HOOK_PREDRAW
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // force updates of player entities this frequently (per second) even if unchanged

@@ -271,7 +271,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 			self.silent = 1;
 
 		if(self.event_damage)
-			self.event_damage(thisdmg, w_deathtype, w_org, thisforce);
+			self.event_damage(self, thisdmg, w_deathtype, w_org, thisforce);
 
 		DamageEffect(w_org, thisdmg, w_deathtype, species);
 

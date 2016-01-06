@@ -14,6 +14,8 @@ const float DATABUF_PING = 0;
 
 #define DATABUF_NEXT (5*maxclients)
 
+void setpredraw(entity this, void(entity) pdfunc);
+
 // --------------------------------------------------------------------------
 // Onslaught
 
@@ -87,7 +89,7 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 
 .void(entity) draw;
 .void(entity) draw2d;
-.void() entremove;
+.void(entity) entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 

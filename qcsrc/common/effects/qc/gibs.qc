@@ -20,7 +20,7 @@ bool Violence_GibSplash_SendEntity(entity this, entity to, int sf)
 }
 
 void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker)
-{SELFPARAM();
+{
 	if(g_cts) // no gibs in CTS
 		return;
 
@@ -29,14 +29,14 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	e.state = type; // should stay smaller than 15
 	if(!sound_allowed(MSG_BROADCAST, gibowner) || !sound_allowed(MSG_BROADCAST, attacker))
 		e.state |= 0x40; // "silence" bit
-	e.state |= 8 * self.species; // gib type, ranges from 0 to 15
+	e.state |= 8 * gibowner.species; // gib type, ranges from 0 to 15
 
 	// if this is a copied dead body, send the num of its player instead
 	// TODO: remove this field, read from model txt files
-	if(self.classname == "body")
-		e.team = etof(self.enemy);
+	if(gibowner.classname == "body")
+		e.team = etof(gibowner.enemy);
 	else
-		e.team = etof(self);
+		e.team = etof(gibowner);
 
 	setorigin(e, org);
 	e.velocity = dir;
@@ -66,9 +66,9 @@ void Violence_GibSplash(entity source, float type, float amount, entity attacker
 .float cnt;
 .float gravity;
 
-void Gib_Delete()
-{SELFPARAM();
-	remove(self);
+void Gib_Delete(entity this)
+{
+	remove(this);
 }
 
 string species_prefix(int specnum);
@@ -112,7 +112,7 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 void SUB_RemoveOnNoImpact()
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-		Gib_Delete();
+		Gib_Delete(self);
 }
 
 void Gib_Touch()
@@ -121,7 +121,7 @@ void Gib_Touch()
 
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		Gib_Delete();
+		Gib_Delete(self);
 		return;
 	}
 
@@ -129,36 +129,36 @@ void Gib_Touch()
 		sound(self, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
 	__pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
 
-	Gib_Delete();
+	Gib_Delete(self);
 }
 
 void Gib_Draw(entity this)
 {
 	vector oldorg;
-	oldorg = self.origin;
+	oldorg = this.origin;
 
-	Movetype_Physics_MatchTicrate(self, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
-	if(wasfreed(self))
+	Movetype_Physics_MatchTicrate(this, autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+	if(wasfreed(this))
 		return;
 
-	if(self.touch == Gib_Touch) // don't do this for the "chunk" thingie...
-		// TODO somehow make it spray in a direction dependent on self.angles
-		__trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, self.origin);
+	if(this.touch == Gib_Touch) // don't do this for the "chunk" thingie...
+		// TODO somehow make it spray in a direction dependent on this.angles
+		__trailparticles(this, _particleeffectnum(strcat(species_prefix(this.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, this.origin);
 	else
-		__trailparticles(self, _particleeffectnum(strcat(species_prefix(self.cnt), EFFECT_TR_BLOOD.eent_eff_name)), oldorg, self.origin);
+		__trailparticles(this, _particleeffectnum(strcat(species_prefix(this.cnt), EFFECT_TR_BLOOD.eent_eff_name)), oldorg, this.origin);
 
-	self.renderflags = 0;
+	this.renderflags = 0;
 
 	// make gibs die faster at low view quality
 	// if view_quality is 0.5, we want to have them die twice as fast
-	self.nextthink -= frametime * (1 / bound(0.01, view_quality, 1.00) - 1);
+	this.nextthink -= frametime * (1 / bound(0.01, view_quality, 1.00) - 1);
 
-	self.alpha = bound(0, self.nextthink - time, 1);
+	this.alpha = bound(0, this.nextthink - time, 1);
 
-	if(self.alpha < ALPHA_MIN_VISIBLE)
+	if(this.alpha < ALPHA_MIN_VISIBLE)
 	{
-		self.drawmask = 0;
-		Gib_Delete();
+		this.drawmask = 0;
+		Gib_Delete(this);
 	}
 }
 

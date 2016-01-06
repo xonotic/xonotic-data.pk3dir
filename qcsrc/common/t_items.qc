@@ -114,36 +114,36 @@ void ItemDrawSimple(entity this)
     Item_SetAlpha(this);
 }
 
-void Item_PreDraw()
-{SELFPARAM();
+void Item_PreDraw(entity this)
+{
 	if(warpzone_warpzones_exist)
 	{
 		// just incase warpzones were initialized last, reset these
-		//self.alpha = 1; // alpha is already set by the draw function
-		self.drawmask = MASK_NORMAL;
+		//this.alpha = 1; // alpha is already set by the draw function
+		this.drawmask = MASK_NORMAL;
 		return;
 	}
 	float alph;
 	vector org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+	if(!checkpvs(org, this)) // this makes sense as long as we don't support recursive warpzones
 		alph = 0;
-	else if(self.fade_start)
-		alph = bound(0, (self.fade_end - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.fade_end - self.fade_start), 1);
+	else if(this.fade_start)
+		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
 	else
 		alph = 1;
-	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
-	if(!hud && (self.ItemStatus & ITS_AVAILABLE))
-		self.alpha = alph;
+	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
+	if(!hud && (this.ItemStatus & ITS_AVAILABLE))
+		this.alpha = alph;
 	if(alph <= 0)
-		self.drawmask = 0;
+		this.drawmask = 0;
 	else
-		self.drawmask = MASK_NORMAL;
+		this.drawmask = MASK_NORMAL;
 }
 
-void ItemRemove()
-{SELFPARAM();
-	if (self.mdl)
-		strunzone(self.mdl);
+void ItemRemove(entity this)
+{
+	if(this.mdl)
+		strunzone(this.mdl);
 }
 
 NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
@@ -205,7 +205,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
         self.fade_end = ReadShort();
         self.fade_start = ReadShort();
         if(self.fade_start && !autocvar_cl_items_nofade)
-        	self.predraw = Item_PreDraw;
+        	setpredraw(self, Item_PreDraw);
 
         if(self.mdl)
             strunzone(self.mdl);
@@ -856,33 +856,38 @@ void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
 void Item_FindTeam()
 {SELFPARAM();
-	entity head, e;
+	entity e;
 
 	if(self.effects & EF_NODRAW)
 	{
 		// marker for item team search
 		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
 		RandomSelection_Init();
-		for(head = world; (head = findfloat(head, team, self.team)); )
-		if(head.flags & FL_ITEM)
-		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
-			RandomSelection_Add(head, 0, string_null, head.cnt, 0);
+		FOREACH_ENTITY_FLOAT(team, self.team,
+		{
+			if(it.flags & FL_ITEM)
+			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
+				RandomSelection_Add(it, 0, string_null, it.cnt, 0);
+		});
+
 		e = RandomSelection_chosen_ent;
 		e.state = 0;
 		Item_Show(e, 1);
 
-		for(head = world; (head = findfloat(head, team, self.team)); )
-		if(head.flags & FL_ITEM)
-		if(head.classname != "item_flag_team" && head.classname != "item_key_team")
+		FOREACH_ENTITY_FLOAT(team, self.team,
 		{
-			if(head != e)
+			if(it.flags & FL_ITEM)
+			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 			{
-				// make it a non-spawned item
-				Item_Show(head, -1);
-				head.state = 1; // state 1 = initially hidden item
+				if(it != e)
+				{
+					// make it non-spawned
+					Item_Show(it, -1);
+					it.state = 1; // state 1 = initially hidden item, apparently
+				}
+				it.effects &= ~EF_NODRAW;
 			}
-			head.effects &= ~EF_NODRAW;
-		}
+		});
 
 		Item_Reset(self);
 	}
@@ -1014,10 +1019,10 @@ float commodity_pickupevalfunc(entity player, entity item)
 	return item.bot_pickupbasevalue * c;
 }
 
-void Item_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		RemoveItem();
+		WITH(entity, self, this, RemoveItem());
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
@@ -1775,26 +1780,26 @@ float GiveItems(entity e, float beginarg, float endarg)
 		op = OP_SET;
 	}
 
-	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND(ITEMPICKUP), string_null);
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND(POWERUP), SND(POWEROFF));
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND(POWERUP), SND(POWEROFF));
-	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND(ITEMPICKUP), string_null);
+	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, "misc/itempickup.wav", string_null);
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, "misc/powerup.wav", "misc/poweroff.wav");
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, "misc/powerup.wav", "misc/poweroff.wav");
+	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, "misc/itempickup.wav", string_null);
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
-		POSTGIVE_WEAPON(e, it, SND(WEAPONPICKUP), string_null);
+		POSTGIVE_WEAPON(e, it, strcat(W_Sound("weaponpickup"), ".wav"), string_null);
 		if(!(save_weapons & (it.m_wepset)))
 			if(e.weapons & (it.m_wepset))
 				it.wr_init(it);
 	));
-	POSTGIVE_VALUE(e, strength_finished, 1, SND(POWERUP), SND(POWEROFF));
-	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", SND(POWEROFF));
-	POSTGIVE_VALUE(e, ammo_nails, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_cells, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_plasma, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_shells, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_rockets, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(ARMOR25), string_null);
-	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(MEGAHEALTH), string_null);
+	POSTGIVE_VALUE(e, strength_finished, 1, "misc/powerup.wav", "misc/poweroff.wav");
+	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", "misc/poweroff.wav");
+	POSTGIVE_VALUE(e, ammo_nails, 0, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE(e, ammo_cells, 0, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE(e, ammo_plasma, 0, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE(e, ammo_shells, 0, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE(e, ammo_rockets, 0, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/armor25.wav", string_null);
+	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
 
 	if(e.superweapons_finished <= 0)
 		if(self.weapons & WEPSET_SUPERWEAPONS)

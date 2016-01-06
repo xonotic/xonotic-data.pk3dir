@@ -209,7 +209,7 @@ void PutObserverInServer()
 	if(self.vehicle)
 		vehicles_exit(VHEF_RELEASE);
 
-	WaypointSprite_PlayerDead();
+	WaypointSprite_PlayerDead(self);
 
 	if(!mutator_returnvalue)  // mutator prevents resetting teams
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
@@ -731,21 +731,21 @@ Called when a client types 'kill' in the console
 */
 
 .float clientkill_nexttime;
-void ClientKill_Now_TeamChange()
-{SELFPARAM();
-	if(self.killindicator_teamchange == -1)
+void ClientKill_Now_TeamChange(entity this)
+{
+	if(this.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( self, false, true );
+		JoinBestTeam( this, false, true );
 	}
-	else if(self.killindicator_teamchange == -2)
+	else if(this.killindicator_teamchange == -2)
 	{
 		if(blockSpectators)
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-		PutObserverInServer();
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+		WITH(entity, self, this, PutObserverInServer());
 	}
 	else
-		SV_ChangeTeam(self.killindicator_teamchange - 1);
-	self.killindicator_teamchange = 0;
+		WITH(entity, self, this, SV_ChangeTeam(this.killindicator_teamchange - 1));
+	this.killindicator_teamchange = 0;
 }
 
 void ClientKill_Now()
@@ -766,7 +766,7 @@ void ClientKill_Now()
 	self.killindicator = world;
 
 	if(self.killindicator_teamchange)
-		ClientKill_Now_TeamChange();
+		ClientKill_Now_TeamChange(self);
 
 	if(IS_PLAYER(self))
 		Damage(self, self, self, 100000, DEATH_KILL.m_id, self.origin, '0 0 0');
@@ -1552,7 +1552,7 @@ void player_regen ()
 		if(self.vehicle)
 			vehicles_exit(VHEF_RELEASE);
 		if(self.event_damage)
-			self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
+			self.event_damage(self, self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
 	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -2195,7 +2195,7 @@ void PlayerPreThink ()
 		{
 			if(self.vehicle)
 				vehicles_exit(VHEF_RELEASE);
-			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, self.origin, '0 0 0');
+			self.event_damage(self, self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
 			Unfreeze(self);
@@ -2397,7 +2397,7 @@ void PlayerPreThink ()
 		secrets_setstatus();
 
 		// monsters status
-		monsters_setstatus();
+		monsters_setstatus(self);
 
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 

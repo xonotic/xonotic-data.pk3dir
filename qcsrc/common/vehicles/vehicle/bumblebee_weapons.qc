@@ -111,14 +111,14 @@ void bumble_raygun_draw(entity this)
     vector _dir;
     vector _vtmp1, _vtmp2;
 
-    _len = vlen(self.origin - self.move_origin);
-    _dir = normalize(self.move_origin - self.origin);
+    _len = vlen(this.origin - this.move_origin);
+    _dir = normalize(this.move_origin - this.origin);
 
-    if(self.bumble_raygun_nextdraw < time)
+    if(this.bumble_raygun_nextdraw < time)
     {
-        boxparticles(particleeffectnum(Effects_from(self.traileffect)), self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
-        boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
-        self.bumble_raygun_nextdraw = time + 0.1;
+        boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, this.origin, this.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+        boxparticles(this.lip, this, this.move_origin, this.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
+        this.bumble_raygun_nextdraw = time + 0.1;
     }
 
     float i, df, sz, al;
@@ -127,19 +127,19 @@ void bumble_raygun_draw(entity this)
         df = DRAWFLAG_NORMAL; //((random() < 0.5) ? DRAWFLAG_ADDITIVE : DRAWFLAG_SCREEN);
         sz = 5 + random() * 5;
         al = 0.25 + random() * 0.5;
-        _vtmp1 = self.origin + _dir * _len * (0.25 + i);
-        _vtmp1 += (randomvec() * (_len * 0.2) * (frametime * 2));       //self.raygun_l1;
-        Draw_CylindricLine(self.origin, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
+        _vtmp1 = this.origin + _dir * _len * (0.25 + i);
+        _vtmp1 += (randomvec() * (_len * 0.2) * (frametime * 2));       //this.raygun_l1;
+        Draw_CylindricLine(this.origin, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
 
-        _vtmp2 = self.origin + _dir * _len * (0.5 + i);
-        _vtmp2 += (randomvec() * (_len * 0.2) * (frametime * 5));       //self.raygun_l2;
-        Draw_CylindricLine(_vtmp1, _vtmp2, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
+        _vtmp2 = this.origin + _dir * _len * (0.5 + i);
+        _vtmp2 += (randomvec() * (_len * 0.2) * (frametime * 5));       //this.raygun_l2;
+        Draw_CylindricLine(_vtmp1, _vtmp2, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
 
-        _vtmp1 = self.origin + _dir * _len * (0.75 + i);
-        _vtmp1 += randomvec() * (_len * 0.2) * (frametime * 10);     //self.raygun_l3;
-        Draw_CylindricLine(_vtmp2, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
+        _vtmp1 = this.origin + _dir * _len * (0.75 + i);
+        _vtmp1 += randomvec() * (_len * 0.2) * (frametime * 10);     //this.raygun_l3;
+        Draw_CylindricLine(_vtmp2, _vtmp1, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
 
-        Draw_CylindricLine(_vtmp1, self.move_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
+        Draw_CylindricLine(_vtmp1, this.move_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, this.colormod, al, df, view_origin);
     }
 }
 

@@ -292,10 +292,10 @@ void ca_LastPlayerForTeam_Notify()
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDies)
-{SELFPARAM();
+{
 	ca_LastPlayerForTeam_Notify();
 	if(!allowed_to_spawn)
-		self.respawn_flags =  RESPAWN_SILENT;
+		frag_target.respawn_flags =  RESPAWN_SILENT;
 	if(!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	return 1;

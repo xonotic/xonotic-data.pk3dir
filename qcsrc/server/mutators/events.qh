@@ -215,10 +215,14 @@ MUTATOR_HOOKABLE(GetCvars, EV_NO_ARGS); // NOTE: Can't use EV_GetCvars because o
 MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 
 /** called when a monster spawns */
-MUTATOR_HOOKABLE(MonsterSpawn, EV_NO_ARGS);
+#define EV_MonsterSpawn(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(MonsterSpawn, EV_MonsterSpawn);
 
 /** called when a monster dies */
 #define EV_MonsterDies(i, o) \
+    /**/ i(entity, frag_target) \
     /**/ i(entity, frag_attacker) \
     /**/
 MUTATOR_HOOKABLE(MonsterDies, EV_MonsterDies);
@@ -249,6 +253,7 @@ MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
  * returning true makes the monster stop
  */
 #define EV_MonsterMove(i, o) \
+    /**/ i(entity, __self) \
     /**/ i(float, monster_speed_run) \
     /**/ o(float, monster_speed_run) \
     /**/ i(float, monster_speed_walk) \
@@ -264,7 +269,10 @@ MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
 
 /** called to change a random monster to a miniboss */
-MUTATOR_HOOKABLE(MonsterCheckBossFlag, EV_NO_ARGS);
+#define EV_MonsterCheckBossFlag(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(MonsterCheckBossFlag, EV_MonsterCheckBossFlag);
 
 /**
  * called when a player tries to spawn a monster

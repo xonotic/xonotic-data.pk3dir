@@ -42,7 +42,7 @@ void ewheel_move_path()
 {SELFPARAM();
 #ifdef EWHEEL_FANCYPATH
     // Are we close enougth to a path node to switch to the next?
-    if (vlen(self.origin  - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         if (self.pathcurrent.path_next == world)
         {
             // Path endpoint reached
@@ -67,7 +67,7 @@ void ewheel_move_path()
             self.pathcurrent = self.pathcurrent.path_next;
 
 #else
-    if (vlen(self.origin - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         self.pathcurrent = self.pathcurrent.enemy;
 #endif
 
@@ -75,9 +75,9 @@ void ewheel_move_path()
     {
 
         self.moveto = self.pathcurrent.origin;
-        self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+        self.steerto = steerlib_attract2(self, self.moveto, 0.5, 500, 0.95);
 
-        movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+        movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
     }
 }
 
@@ -94,29 +94,29 @@ void ewheel_move_enemy()
         if ( self.tur_head.spawnshieldtime < 1 )
         {
             newframe = ewheel_anim_fwd_fast;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
         }
         else if (self.tur_head.spawnshieldtime < 2)
         {
 
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
        }
         else
         {
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
         }
     }
     else if (self.tur_dist_enemy < self.target_range_optimal * 0.5)
     {
         newframe = ewheel_anim_bck_slow;
-        movelib_move_simple(v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+        movelib_move_simple(self, v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
     }
     else
     {
         newframe = ewheel_anim_stop;
-        movelib_brake_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
     }
 
     turrets_setframe(newframe, false);
@@ -131,13 +131,13 @@ void ewheel_move_idle()
     }
 
     self.frame = 0;
-    if (vlen(self.velocity))
-        movelib_brake_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+    if(self.velocity)
+        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
 spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
-        METHOD(EWheel, tr_think, void(EWheel thistur))
+        METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
         {
             SELFPARAM();
             float vz;
@@ -168,7 +168,7 @@ spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
             self.velocity_z = vz;
 
-            if(vlen(self.velocity))
+            if(self.velocity)
                 self.SendFlags |= TNSF_MOVE;
         }
         METHOD(EWheel, tr_death, void(EWheel this, entity it))
@@ -241,19 +241,19 @@ void ewheel_draw(entity this)
 {
     float dt;
 
-    dt = time - self.move_time;
-    self.move_time = time;
+    dt = time - this.move_time;
+    this.move_time = time;
     if(dt <= 0)
         return;
 
-    fixedmakevectors(self.angles);
-    setorigin(self, self.origin + self.velocity * dt);
-    self.tur_head.angles += dt * self.tur_head.move_avelocity;
-    self.angles_y = self.move_angles_y;
+    fixedmakevectors(this.angles);
+    setorigin(this, this.origin + this.velocity * dt);
+    this.tur_head.angles += dt * this.tur_head.move_avelocity;
+    this.angles_y = this.move_angles_y;
 
-    if (self.health < 127)
+    if (this.health < 127)
     if(random() < 0.05)
-        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
+        te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
         METHOD(EWheel, tr_setup, void(EWheel this, entity it))

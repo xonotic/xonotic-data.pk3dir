@@ -545,11 +545,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 
 	if(frag_target.buffs & BUFF_BASH.m_itemid)
 	if(frag_attacker != frag_target)
-	if(vlen(frag_force))
 		frag_force = '0 0 0';
 
 	if(frag_attacker.buffs & BUFF_BASH.m_itemid)
-	if(vlen(frag_force))
+	if(frag_force)
 	if(frag_attacker == frag_target)
 		frag_force *= autocvar_g_buffs_bash_force_self;
 	else
@@ -657,17 +656,17 @@ MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
-{SELFPARAM();
-	if(self.buffs)
+{
+	if(frag_target.buffs)
 	{
-		int buffid = buff_FirstFromFlags(self.buffs).m_id;
-		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
-		self.buffs = 0;
+		int buffid = buff_FirstFromFlags(frag_target.buffs).m_id;
+		Send_Notification(NOTIF_ALL_EXCEPT, frag_target, MSG_INFO, INFO_ITEM_BUFF_LOST, frag_target.netname, buffid);
+		frag_target.buffs = 0;
 
-		if(self.buff_model)
+		if(frag_target.buff_model)
 		{
-			remove(self.buff_model);
-			self.buff_model = world;
+			remove(frag_target.buff_model);
+			frag_target.buff_model = world;
 		}
 	}
 	return false;
@@ -700,10 +699,13 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, self))
-			if(vlen(self.origin - it.origin) <= best_distance)
 			{
-				best_distance = vlen(self.origin - it.origin);
-				closest = it;
+				float test = vlen2(self.origin - it.origin);
+				if(test <= best_distance * best_distance)
+				{
+					best_distance = sqrt(test);
+					closest = it;
+				}
 			}
 		));
 

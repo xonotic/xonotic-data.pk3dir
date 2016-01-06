@@ -330,8 +330,8 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 
 			if (caller)
 			{
-				makevectors(self.v_angle);
-				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+				makevectors(caller.v_angle);
+				WarpZone_TraceLine(caller.origin + caller.view_ofs, caller.origin + caller.view_ofs + v_forward * 100, MOVE_NORMAL, caller);
 			}
 
 			entity mon = trace_ent;

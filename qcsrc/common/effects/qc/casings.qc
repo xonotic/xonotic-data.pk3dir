@@ -38,31 +38,31 @@ class(Casing) .bool silent;
 class(Casing) .int state;
 class(Casing) .float cnt;
 
-void Casing_Delete()
-{SELFPARAM();
-    remove(self);
+void Casing_Delete(entity this)
+{
+    remove(this);
 }
 
 void Casing_Draw(entity this)
 {
-    if (self.move_flags & FL_ONGROUND)
+    if (this.move_flags & FL_ONGROUND)
     {
-        self.move_angles_x = 0;
-        self.move_angles_z = 0;
-        UNSET_ONGROUND(self);
+        this.move_angles_x = 0;
+        this.move_angles_z = 0;
+        UNSET_ONGROUND(this);
     }
 
-    Movetype_Physics_MatchTicrate(self, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
-    if (wasfreed(self))
+    Movetype_Physics_MatchTicrate(this, autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
+    if (wasfreed(this))
         return; // deleted by touch function
 
-    self.renderflags = 0;
-    self.alpha = bound(0, self.cnt - time, 1);
+    this.renderflags = 0;
+    this.alpha = bound(0, this.cnt - time, 1);
 
-    if (self.alpha < ALPHA_MIN_VISIBLE)
+    if (this.alpha < ALPHA_MIN_VISIBLE)
     {
-        Casing_Delete();
-        self.drawmask = 0;
+        Casing_Delete(this);
+        this.drawmask = 0;
     }
 }
 
@@ -83,7 +83,7 @@ void Casing_Touch()
 {SELFPARAM();
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
-        Casing_Delete();
+        Casing_Delete(self);
         return;
     }
 
@@ -113,12 +113,12 @@ void Casing_Touch()
     self.nextthink = time + 0.2;
 }
 
-void Casing_Damage(float thisdmg, int hittype, vector org, vector thisforce)
-{SELFPARAM();
+void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector thisforce)
+{
     if (thisforce.z < 0)
         thisforce.z = 0;
-    self.move_velocity = self.move_velocity + thisforce + '0 0 100';
-    self.move_flags &= ~FL_ONGROUND;
+    this.move_velocity = this.move_velocity + thisforce + '0 0 100';
+    this.move_flags &= ~FL_ONGROUND;
 }
 
 NET_HANDLE(casings, bool isNew)

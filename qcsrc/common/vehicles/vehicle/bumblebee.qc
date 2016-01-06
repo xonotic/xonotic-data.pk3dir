@@ -300,7 +300,7 @@ bool bumblebee_gunner_enter()
 	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
 	{
 		// we can have some fun
-		if(vlen(real_origin(vehic.gun2) - player.origin) < vlen(real_origin(vehic.gun1) - player.origin))
+		if(vlen2(real_origin(vehic.gun2) - player.origin) < vlen2(real_origin(vehic.gun1) - player.origin))
 		{
 			gunner = vehic.gun2;
 			vehic.gunner2 = player;
@@ -679,7 +679,7 @@ void bumblebee_exit(float eject)
 
 	fixedmakevectors(self.angles);
 	vector spot;
-	if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)
+	if(vdist(self.velocity, >, autocvar_g_vehicle_bumblebee_speed_forward * 0.5))
 		spot = self.origin + v_up * 128 + v_forward * 300;
 	else
 		spot = self.origin + v_up * 128 - v_forward * 300;
@@ -736,19 +736,19 @@ spawnfunc(vehicle_bumblebee)
 	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
 }
 
-		METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_bumblebee_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 		}
-		METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			self.touch = bumblebee_touch;
 			self.nextthink = 0;
 			self.movetype = MOVETYPE_BOUNCEMISSILE;
 		}
-		METHOD(Bumblebee, vr_think, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			self.angles_z *= 0.8;
@@ -786,10 +786,10 @@ spawnfunc(vehicle_bumblebee)
 				}
 			}
 		}
-		METHOD(Bumblebee, vr_death, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 		{
-			SELFPARAM();
 			entity oldself = self;
+			setself(instance);
 
 			CSQCModel_UnlinkEntity(self);
 
@@ -849,8 +849,10 @@ spawnfunc(vehicle_bumblebee)
 			self.nextthink 		= 0;
 
 			setorigin(self, self.pos1);
+
+			setself(oldself);
 		}
-		METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			if(!self.gun1)
@@ -928,7 +930,7 @@ spawnfunc(vehicle_bumblebee)
 
 			setorigin(self, self.origin + '0 0 25');
 		}
-		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 		{
 			SELFPARAM();
 			if(autocvar_g_vehicle_bumblebee_energy)
@@ -989,7 +991,7 @@ void CSQC_BUMBLE_GUN_HUD()
 		{
 			Vehicles_drawCrosshair(vCROSS_HEAL);
 		}
-		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh))
+		METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_LOCK;  // Raygun-locked
 			AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Gunner1

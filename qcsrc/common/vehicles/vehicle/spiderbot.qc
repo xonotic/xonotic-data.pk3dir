@@ -181,7 +181,7 @@ float spiderbot_frame()
 		}
 		else if(time >= spider.jump_delay)
 		{
-			if(vlen(player.movement) == 0)
+			if(!player.movement)
 			{
 				if(IS_ONGROUND(spider))
 				{
@@ -192,7 +192,7 @@ float spiderbot_frame()
 						//dprint("spiderbot_idle:", ftos(soundlength("vehicles/spiderbot_idle.wav")), "\n");
 						sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_IDLE, VOL_VEHICLEENGINE, ATTEN_NORM);
 					}
-					movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
+					movelib_brake_simple(self, autocvar_g_vehicle_spiderbot_speed_stop);
 					spider.frame = 5;
 				}
 			}
@@ -224,7 +224,7 @@ float spiderbot_frame()
 					}
 					player.movement_y = 0;
 					float oldvelz = spider.velocity_z;
-					movelib_move_simple(normalize(v_forward * player.movement_x),((player.BUTTON_JUMP) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(self, normalize(v_forward * player.movement_x),((player.BUTTON_JUMP) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
 					spider.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
@@ -254,7 +254,7 @@ float spiderbot_frame()
 					}
 
 					float oldvelz = spider.velocity_z;
-					movelib_move_simple(normalize(v_right * player.movement_y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(self, normalize(v_right * player.movement_y),autocvar_g_vehicle_spiderbot_speed_strafe,autocvar_g_vehicle_spiderbot_movement_inertia);
 					spider.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
@@ -384,7 +384,7 @@ void spiderbot_exit(float eject)
 	}
 	else
 	{
-		if(vlen(self.velocity) > autocvar_g_vehicle_spiderbot_speed_strafe)
+		if(vdist(self.velocity, >, autocvar_g_vehicle_spiderbot_speed_strafe))
 		{
 			self.owner.velocity = normalize(self.velocity) * vlen(self.velocity);
 			self.owner.velocity_z += 200;
@@ -554,12 +554,12 @@ spawnfunc(vehicle_spiderbot)
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
-		METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_spiderbot_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 		}
-		METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 		{
 			self.vehicle_weapon2mode = SBRM_GUIDE;
 			self.movetype = MOVETYPE_WALK;
@@ -573,30 +573,30 @@ spawnfunc(vehicle_spiderbot)
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
 		}
-		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
 		{
 			if(IS_ONGROUND(self))
-				movelib_brake_simple(autocvar_g_vehicle_spiderbot_speed_stop);
+				movelib_brake_simple(self, autocvar_g_vehicle_spiderbot_speed_stop);
 		}
-		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 		{
-			self.health				= 0;
-			self.event_damage		= func_null;
-			self.takedamage			= DAMAGE_NO;
-			self.touch				= func_null;
-			self.cnt				= 3.4 + time + random() * 2;
-			self.think				= spiderbot_blowup;
-			self.nextthink			= time;
-			self.deadflag			= DEAD_DYING;
-			self.frame				= 5;
-			self.tur_head.effects  |= EF_FLAME;
-			self.colormod			= self.tur_head.colormod = '-1 -1 -1';
-			self.frame				= 10;
-			self.movetype			= MOVETYPE_TOSS;
+			instance.health				= 0;
+			instance.event_damage		= func_null;
+			instance.takedamage			= DAMAGE_NO;
+			instance.touch				= func_null;
+			instance.cnt				= 3.4 + time + random() * 2;
+			instance.think				= spiderbot_blowup;
+			instance.nextthink			= time;
+			instance.deadflag			= DEAD_DYING;
+			instance.frame				= 5;
+			instance.tur_head.effects  |= EF_FLAME;
+			instance.colormod			= instance.tur_head.colormod = '-1 -1 -1';
+			instance.frame				= 10;
+			instance.movetype			= MOVETYPE_TOSS;
 
-			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
+			CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 		}
-		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 		{
 			if(!self.gun1)
 			{
@@ -627,7 +627,7 @@ spawnfunc(vehicle_spiderbot)
 
 			self.PlayerPhysplug = spiderbot_frame;
 		}
-		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_spiderbot_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -670,7 +670,7 @@ float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 			Vehicles_drawCrosshair(crosshair);
 		}
-		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh))
+		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
 			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2

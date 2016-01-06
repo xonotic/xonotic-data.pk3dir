@@ -701,16 +701,16 @@ void nade_beep()
 	self.nextthink = max(self.wait, time);
 }
 
-void nade_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void nade_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		self.takedamage = DAMAGE_NO;
-		nade_boom();
+		this.takedamage = DAMAGE_NO;
+		WITH(entity, self, this, nade_boom());
 		return;
 	}
 
-	if(self.nade_type == NADE_TYPE_TRANSLOCATE.m_id || self.nade_type == NADE_TYPE_SPAWN.m_id)
+	if(this.nade_type == NADE_TYPE_TRANSLOCATE.m_id || this.nade_type == NADE_TYPE_SPAWN.m_id)
 		return;
 
 	if (MUTATOR_CALLHOOK(Nade_Damage, DEATH_WEAPONOF(deathtype), force, damage)) {}
@@ -727,43 +727,43 @@ void nade_damage(entity inflictor, entity attacker, float damage, int deathtype,
 	else if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 	{
 		force *= 6;
-		damage = self.max_health * 0.55;
+		damage = this.max_health * 0.55;
 	}
 	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
-		damage = self.max_health * 0.1;
+		damage = this.max_health * 0.1;
 	else if(DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) // WEAPONTODO
 	{
 		if(deathtype & HITTYPE_SECONDARY)
 		{
-			damage = self.max_health * 0.1;
+			damage = this.max_health * 0.1;
 			force *= 10;
 		}
 		else
-			damage = self.max_health * 1.15;
+			damage = this.max_health * 1.15;
 	}
 
-	self.velocity += force;
-	UpdateCSQCProjectile(self);
+	this.velocity += force;
+	UpdateCSQCProjectile(this);
 
-	if(damage <= 0 || ((IS_ONGROUND(self)) && IS_PLAYER(attacker)))
+	if(damage <= 0 || ((IS_ONGROUND(this)) && IS_PLAYER(attacker)))
 		return;
 
-	if(self.health == self.max_health)
+	if(this.health == this.max_health)
 	{
-		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
-		self.nextthink = max(time + autocvar_g_nades_nade_lifetime, time);
-		self.think = nade_beep;
+		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
+		this.nextthink = max(time + autocvar_g_nades_nade_lifetime, time);
+		this.think = nade_beep;
 	}
 
-	self.health -= damage;
+	this.health -= damage;
 
-	if ( self.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
-		self.realowner = attacker;
+	if ( this.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
+		this.realowner = attacker;
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, nade_boom);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, nade_boom));
 	else
-		nade_burn_spawn(self);
+		nade_burn_spawn(this);
 }
 
 void toss_nade(entity e, vector _velocity, float _time)
@@ -1252,10 +1252,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 }
 
 MUTATOR_HOOKFUNCTION(nades, MonsterDies)
-{SELFPARAM();
+{
 	if(IS_PLAYER(frag_attacker))
-	if(DIFF_TEAM(frag_attacker, self))
-	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
+	if(DIFF_TEAM(frag_attacker, frag_target))
+	if(!(frag_target.spawnflags & MONSTERFLAG_SPAWNED))
 		nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor);
 
 	return false;

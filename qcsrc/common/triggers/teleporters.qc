@@ -215,21 +215,21 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 #ifdef SVQC
 	if(e.speed)
-		if(vlen(player.velocity) > e.speed)
+		if(vdist(player.velocity, >, e.speed))
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
 #elif defined(CSQC)
 	if(e.speed)
-		if(vlen(player.move_velocity) > e.speed)
+		if(vdist(player.move_velocity, >, e.speed))
 			player.move_velocity = normalize(player.move_velocity) * max(0, e.speed);
 #endif
 
 #ifdef SVQC
 	if(STAT(TELEPORT_MAXSPEED, player))
-		if(vlen(player.velocity) > STAT(TELEPORT_MAXSPEED, player))
+		if(vdist(player.velocity, >, STAT(TELEPORT_MAXSPEED, player)))
 			player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
 #elif defined(CSQC)
 	if(STAT(TELEPORT_MAXSPEED, player))
-		if(vlen(player.move_velocity) > STAT(TELEPORT_MAXSPEED, player))
+		if(vdist(player.move_velocity, >, STAT(TELEPORT_MAXSPEED, player)))
 			player.move_velocity = normalize(player.move_velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
 #endif
 

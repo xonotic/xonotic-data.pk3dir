@@ -998,26 +998,26 @@ void ctf_CheckStalemate()
 	}
 }
 
-void ctf_FlagDamage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		if(autocvar_g_ctf_flag_return_damage_delay)
 		{
-			self.ctf_flagdamaged = true;
+			this.ctf_flagdamaged = true;
 		}
 		else
 		{
-			self.health = 0;
-			ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
+			this.health = 0;
+			ctf_CheckFlagReturn(this, RETURN_NEEDKILL);
 		}
 		return;
 	}
 	if(autocvar_g_ctf_flag_return_damage)
 	{
 		// reduce health and check if it should be returned
-		self.health = self.health - damage;
-		ctf_CheckFlagReturn(self, RETURN_DAMAGE);
+		this.health = this.health - damage;
+		ctf_CheckFlagReturn(this, RETURN_DAMAGE);
 		return;
 	}
 }

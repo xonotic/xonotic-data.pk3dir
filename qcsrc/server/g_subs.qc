@@ -235,11 +235,9 @@ vector findbetterlocation (vector org, float mindist)
 
 float LOD_customize()
 {SELFPARAM();
-	float d;
-
 	if(autocvar_loddebug)
 	{
-		d = autocvar_loddebug;
+		int d = autocvar_loddebug;
 		if(d == 1)
 			self.modelindex = self.lodmodelindex0;
 		else if(d == 2 || !self.lodmodelindex2)
@@ -250,10 +248,10 @@ float LOD_customize()
 	}
 
 	// TODO csqc network this so it only gets sent once
-	d = vlen(NearestPointOnBox(self, other.origin) - other.origin);
-	if(d < self.loddistance1)
+	vector near_point = NearestPointOnBox(self, other.origin);
+	if(vdist(near_point - other.origin, <, self.loddistance1))
 		self.modelindex = self.lodmodelindex0;
-	else if(!self.lodmodelindex2 || d < self.loddistance2)
+	else if(!self.lodmodelindex2 || vdist(near_point - other.origin, <, self.loddistance2))
 		self.modelindex = self.lodmodelindex1;
 	else
 		self.modelindex = self.lodmodelindex2;

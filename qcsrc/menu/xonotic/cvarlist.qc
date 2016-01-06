@@ -7,6 +7,7 @@ CLASS(XonoticCvarList, XonoticListBox)
 	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector));
 	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float));
+	METHOD(XonoticCvarList, showNotify, void(entity));
 
 	METHOD(XonoticCvarList, destroy, void(entity));
 
@@ -53,10 +54,18 @@ entity makeXonoticCvarList()
 void XonoticCvarList_configureXonoticCvarList(entity me)
 {
 	me.configureXonoticListBox(me);
-
 	me.handle = buf_create();
+	me.nItems = 0;
+}
+void XonoticCvarList_showNotify(entity me)
+{
+	bool force_initial_selection = false;
+	if(me.handle >= 0 && me.nItems <= 0) // me.handle not loaded yet?
+		force_initial_selection = true;
 	buf_cvarlist(me.handle, "", "_");
 	me.nItems = buf_getsize(me.handle);
+	if(force_initial_selection)
+		me.setSelected(me, 0);
 }
 void XonoticCvarList_destroy(entity me)
 {
@@ -151,8 +160,6 @@ void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.columnValueSize = me.realFontSize.x * 20;
 	me.columnNameSize = 1 - me.columnValueSize - me.realFontSize.x;
 	me.columnValueOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
-
-	me.setSelected(me, me.selectedItem);
 }
 void XonoticCvarList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {

@@ -229,7 +229,7 @@ void viewmodel_draw(entity this)
 		e.colormap = 256 + c;  // colormap == 0 is black, c == 0 is white
 		e.glowmod = g;
 		e.csqcmodel_effects = fx;
-		WITH(entity, self, e, CSQCModel_Effects_Apply());
+		CSQCModel_Effects_Apply(e);
 	}
 	{
 		static string name_last;
@@ -681,19 +681,19 @@ vector liquidcolor_prev;
 
 float eventchase_current_distance;
 float eventchase_running;
-bool WantEventchase()
-{SELFPARAM();
+bool WantEventchase(entity this)
+{
 	if(autocvar_cl_orthoview)
 		return false;
 	if(intermission)
 		return true;
-	if(self.viewloc)
+	if(this.viewloc)
 		return true;
 	if(spectatee_status >= 0)
 	{
 		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
 			return true;
-		if(MUTATOR_CALLHOOK(WantEventchase, self))
+		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return true;
 		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
 			return true;
@@ -702,7 +702,7 @@ bool WantEventchase()
 			if(autocvar_cl_eventchase_death == 2)
 			{
 				// don't stop eventchase once it's started (even if velocity changes afterwards)
-				if(self.velocity == '0 0 0' || eventchase_running)
+				if(this.velocity == '0 0 0' || eventchase_running)
 					return true;
 			}
 			else return true;
@@ -800,7 +800,7 @@ void HUD_Crosshair()
 {SELFPARAM();
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
-	entity e = self;
+	entity e = this;
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 &&
@@ -1340,8 +1340,8 @@ void CSQC_UpdateView(float w, float h)
 	else
 		view_quality = 1;
 
-	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(self);
-	button_zoom = PHYS_INPUT_BUTTON_ZOOM(self);
+	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
+	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);
 
 	vf_size = getpropertyvec(VF_SIZE);
 	vf_min = getpropertyvec(VF_MIN);
@@ -1417,9 +1417,13 @@ void CSQC_UpdateView(float w, float h)
 			if(!gen)
 				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
-		if(WantEventchase() || (!autocvar_cl_orthoview && ons_roundlost))
+		if(WantEventchase(self) || (!autocvar_cl_orthoview && ons_roundlost))
 		{
 			eventchase_running = true;
+
+			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
+			if(!local_player)
+				local_player = self; // fall back!
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -1470,7 +1474,7 @@ void CSQC_UpdateView(float w, float h)
 			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
 
 			// If the boxtrace fails, revert back to line tracing.
-			if(!self.viewloc)
+			if(!local_player.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
@@ -1479,7 +1483,7 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
-			if(!self.viewloc)
+			if(!local_player.viewloc)
 				setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
@@ -1593,7 +1597,7 @@ void CSQC_UpdateView(float w, float h)
 
 	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
-	FOREACH_ENTITY(it.draw, LAMBDA(WITH(entity, self, it, it.draw(it))));
+	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -2103,7 +2107,7 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY(it.draw2d, LAMBDA(WITH(entity, self, it, it.draw2d(it))));
+	FOREACH_ENTITY(it.draw2d, LAMBDA(it.draw2d(it)));
 	Draw_ShowNames_All();
 	Debug_Draw();
 

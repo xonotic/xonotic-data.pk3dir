@@ -46,14 +46,15 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	v_up = vu;
 
 	// un-adjust trueaim if shotend is too close
-	if(vlen(w_shotend - (ent.origin + ent.view_ofs)) < autocvar_g_trueaim_minrange)
+	if(vdist(w_shotend - (ent.origin + ent.view_ofs), <, autocvar_g_trueaim_minrange))
 		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
 
 	// track max damage
 	if (IS_PLAYER(ent) && accuracy_canbegooddamage(ent))
 		accuracy_add(ent, PS(ent).m_weapon.m_id, maxdamage, 0);
 
-	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
+	if(IS_PLAYER(ent))
+		W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
 	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	vector md = ent.(weaponentity).movedir;
@@ -341,7 +342,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 void fireBullet_trace_callback(vector start, vector hit, vector end)
 {
-	if(vlen(hit - start) > 16)
+	if(vdist(hit - start, >, 16))
 		trailparticles(world, fireBullet_trace_callback_eff, start, hit);
 	WarpZone_trace_forent = world;
 	fireBullet_last_hit = world;
@@ -472,7 +473,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 		// Only show effect when going through a player (invisible otherwise)
 		if (hit && (hit.solid != SOLID_BSP))
-			if(vlen(trace_endpos - start) > 4)
+			if(vdist(trace_endpos - start, >, 4))
 				trailparticles(self, fireBullet_trace_callback_eff, start, trace_endpos);
 
 		start = trace_endpos;

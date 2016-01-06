@@ -26,7 +26,7 @@ REGISTER_TURRET(MLRS, NEW(MLRSTurret));
 
 spawnfunc(turret_mlrs) { if (!turret_initialize(TUR_MLRS)) remove(self); }
 
-METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur))
+METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur, entity it))
 {
     // 0 = full, 6 = empty
     self.tur_head.frame = bound(0, 6 - floor(0.1 + self.ammo / self.shot_dmg), 6);

@@ -91,7 +91,7 @@ void W_Porto_Fail(float failhard)
 			self.flags = FL_ITEM;
 			self.velocity = trigger_push_calculatevelocity(self.origin, self.realowner, 128);
 			tracetoss(self, self);
-			if(vlen(trace_endpos - self.realowner.origin) < 128)
+			if(vdist(trace_endpos - self.realowner.origin, <, 128))
 			{
 				W_ThrowNewWeapon(self.realowner, WEP_PORTO.m_id, 0, self.origin, self.velocity);
 				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_FAILED);

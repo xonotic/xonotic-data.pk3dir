@@ -26,7 +26,7 @@ REGISTER_TURRET(PHASER, NEW(PhaserTurret));
 
 spawnfunc(turret_phaser) { if (!turret_initialize(TUR_PHASER)) remove(self); }
 
-METHOD(PhaserTurret, tr_think, void(PhaserTurret thistur))
+METHOD(PhaserTurret, tr_think, void(PhaserTurret thistur, entity it))
 {
     if (self.tur_head.frame != 0)
     {

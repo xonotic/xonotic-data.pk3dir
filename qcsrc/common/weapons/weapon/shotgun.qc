@@ -229,7 +229,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 
 		METHOD(Shotgun, wr_aim, void(entity thiswep))
 		{
-			if(vlen(self.origin-self.enemy.origin) <= WEP_CVAR_SEC(shotgun, melee_range))
+			if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
@@ -293,7 +293,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
 		{
 			if(IS_BOT_CLIENT(self))
-			if(vlen(self.origin-self.enemy.origin) > WEP_CVAR_SEC(shotgun, melee_range))
+			if(vdist(self.origin - self.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
 				return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
 			switch(WEP_CVAR(shotgun, secondary))
 			{

@@ -246,14 +246,14 @@ void Draw_PointParticles(entity this)
 	setorigin(self, o);
 }
 
-void Ent_PointParticles_Remove()
-{SELFPARAM();
-	if(self.noise)
-		strunzone(self.noise);
-	self.noise = string_null;
-	if(self.bgmscript)
-		strunzone(self.bgmscript);
-	self.bgmscript = string_null;
+void Ent_PointParticles_Remove(entity this)
+{
+	if(this.noise)
+		strunzone(this.noise);
+	this.noise = string_null;
+	if(this.bgmscript)
+		strunzone(this.bgmscript);
+	this.bgmscript = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
