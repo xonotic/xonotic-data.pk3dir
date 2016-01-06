@@ -1421,7 +1421,7 @@ void target_items_use()
 {SELFPARAM();
 	if(activator.classname == "droppedweapon")
 	{
-		EXACTTRIGGER_TOUCH;
+		//EXACTTRIGGER_TOUCH;
 		remove(activator);
 		return;
 	}
@@ -1430,7 +1430,7 @@ void target_items_use()
 		return;
 	if(IS_DEAD(activator))
 		return;
-	EXACTTRIGGER_TOUCH;
+	//EXACTTRIGGER_TOUCH;
 
 	FOREACH_ENTITY_ENT(enemy, activator,
 	{
