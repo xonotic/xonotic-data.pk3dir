@@ -26,6 +26,16 @@ doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   script:
     - cd qcsrc && doxygen
     - mv html ../public
+    - for i in {0..0}; do eval $(printf "echo \$id_rsa_%02d\n" $i) >> ~/.ssh/id_rsa_base64; done
+    - base64 --decode ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\tLogLevel ERROR\n" >> ~/.ssh/config
+    - git config --global user.name "Gitlab CI"
+    - git config --global user.email "<>"
+    - git clone --single-branch --depth 1 ${DEPLOY_HOST}:${DEPLOY_REPO} ~/deploy_
+    - mkdir ~/deploy && mv ~/deploy_/.git ~/deploy && rm -r ~/deploy_
+    - cp -r ../public/* ~/deploy
+    - cd ~/deploy && git add -A . && git commit -m "Update" && git push origin gh-pages
   artifacts:
     paths:
       - public
