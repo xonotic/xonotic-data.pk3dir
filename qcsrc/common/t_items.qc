@@ -1610,19 +1610,19 @@ float GiveWeapon(entity e, float wpn, float op, float val)
 	return (v0 != v1);
 }
 
-void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string snd_decr)
+void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_decr)
 {
 	if(v1 == v0)
 		return;
 	if(v1 <= v0 - t)
 	{
-		if(snd_decr != "")
-			_sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
+		if(snd_decr != NULL)
+			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTEN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
-		if(snd_incr != "")
-			_sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
+		if(snd_incr != NULL)
+			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -1780,26 +1780,26 @@ float GiveItems(entity e, float beginarg, float endarg)
 		op = OP_SET;
 	}
 
-	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND(ITEMPICKUP), string_null);
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND(POWERUP), SND(POWEROFF));
-	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND(POWERUP), SND(POWEROFF));
-	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND(ITEMPICKUP), string_null);
+	POSTGIVE_BIT(e, items, ITEM_JetpackRegen.m_itemid, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND_ITEMPICKUP, SND_Null);
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
-		POSTGIVE_WEAPON(e, it, SND(WEAPONPICKUP), string_null);
+		POSTGIVE_WEAPON(e, it, SND_WEAPONPICKUP, SND_Null);
 		if(!(save_weapons & (it.m_wepset)))
 			if(e.weapons & (it.m_wepset))
 				it.wr_init(it);
 	));
-	POSTGIVE_VALUE(e, strength_finished, 1, SND(POWERUP), SND(POWEROFF));
-	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", SND(POWEROFF));
-	POSTGIVE_VALUE(e, ammo_nails, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_cells, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_plasma, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_shells, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE(e, ammo_rockets, 0, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND(ITEMPICKUP), string_null);
-	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(ARMOR25), string_null);
-	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND(MEGAHEALTH), string_null);
+	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
+	POSTGIVE_VALUE(e, invincible_finished, 1, SND_Shield, SND_POWEROFF);
+	POSTGIVE_VALUE(e, ammo_nails, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_VALUE(e, ammo_cells, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_VALUE(e, ammo_plasma, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_VALUE(e, ammo_shells, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_VALUE(e, ammo_rockets, 0, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, SND_ITEMPICKUP, SND_Null);
+	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_ARMOR25, SND_Null);
+	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
 		if(self.weapons & WEPSET_SUPERWEAPONS)

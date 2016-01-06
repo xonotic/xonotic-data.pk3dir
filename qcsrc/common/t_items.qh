@@ -123,7 +123,7 @@ float GiveBit(entity e, .float fld, float bit, float op, float val);
 
 float GiveValue(entity e, .float fld, float op, float val);
 
-void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string snd_decr);
+void GiveSound(entity e, float v0, float v1, float t, Sound snd_incr, Sound snd_decr);
 
 void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime);
 
