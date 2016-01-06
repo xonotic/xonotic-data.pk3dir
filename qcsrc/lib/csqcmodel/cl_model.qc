@@ -192,7 +192,7 @@ void CSQCModel_Draw(entity this)
 
 	CSQCModel_InterpolateAnimation_Do(this);
 
-	{ CSQCMODEL_HOOK_PREDRAW }
+	CSQCModel_Hook_PreDraw(this, isplayer);
 
 	// inherit draw flags easily
 	entity root = this;
@@ -234,7 +234,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	this.iflags |= IFLAG_ANGLES; // interpolate angles too
 	this.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
 
-	{ CSQCMODEL_HOOK_PREUPDATE }
+	CSQCModel_Hook_PreUpdate(this, isnew, isplayer, islocalplayer);
 
 	CSQCPlayer_PreUpdate(this);
 	InterpolateOrigin_Undo(this);
@@ -271,7 +271,7 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	InterpolateOrigin_Note(this);
 	CSQCPlayer_PostUpdate(this);
 
-	{ CSQCMODEL_HOOK_POSTUPDATE }
+	CSQCModel_Hook_PostUpdate(this, isnew, isplayer, islocalplayer);
 
 #ifdef CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
 	InterpolateOrigin_Do(this);
