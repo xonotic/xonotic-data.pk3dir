@@ -615,8 +615,8 @@ void vehicles_painframe(entity this)
 	if(this.pain_frame < time)
 	{
 		float _ftmp = myhealth / 50;
-		this.pain_frame = time + 0.1 + (random() * 0.5 * _ftmp);
-		pointparticles(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
+		this.pain_frame = time + max(0.1, 0.1 + (random() * 0.5 * _ftmp));
+		Send_Effect(EFFECT_SMOKE_SMALL, (this.origin + (randomvec() * 80)), '0 0 0', 1);
 
 		if(this.vehicle_flags & VHF_DMGSHAKE)
 			this.velocity += randomvec() * 30;
