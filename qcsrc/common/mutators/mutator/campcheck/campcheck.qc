@@ -9,9 +9,8 @@ REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
 .float campcheck_traveled_distance;
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
-{SELFPARAM();
-	Kill_Notification(NOTIF_ONE, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
-
+{
+	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER_CPID, CPID_CAMPCHECK);
 	return false;
 }
 

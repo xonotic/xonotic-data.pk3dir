@@ -908,8 +908,8 @@ MUTATOR_HOOKFUNCTION(nb, ClientDisconnect)
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerDies)
-{SELFPARAM();
-	nb_DropBall(self);
+{
+	nb_DropBall(frag_target);
 	return false;
 }
 

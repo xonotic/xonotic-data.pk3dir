@@ -656,17 +656,17 @@ MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
-{SELFPARAM();
-	if(self.buffs)
+{
+	if(frag_target.buffs)
 	{
-		int buffid = buff_FirstFromFlags(self.buffs).m_id;
-		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
-		self.buffs = 0;
+		int buffid = buff_FirstFromFlags(frag_target.buffs).m_id;
+		Send_Notification(NOTIF_ALL_EXCEPT, frag_target, MSG_INFO, INFO_ITEM_BUFF_LOST, frag_target.netname, buffid);
+		frag_target.buffs = 0;
 
-		if(self.buff_model)
+		if(frag_target.buff_model)
 		{
-			remove(self.buff_model);
-			self.buff_model = world;
+			remove(frag_target.buff_model);
+			frag_target.buff_model = world;
 		}
 	}
 	return false;

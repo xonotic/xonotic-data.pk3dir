@@ -1688,16 +1688,16 @@ entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
 	return closest_target;
 }
 /**
- * find the number of control points and generators in the same team as self
+ * find the number of control points and generators in the same team as this
  */
-int ons_Count_SelfControlPoints()
-{SELFPARAM();
+int ons_Count_SelfControlPoints(entity this)
+{
 	entity tmp_entity;
 	tmp_entity = findchain(classname, "onslaught_controlpoint");
 	int n = 0;
 	while(tmp_entity)
 	{
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.iscaptured)
 			n++;
 		tmp_entity = tmp_entity.chain;
@@ -1705,7 +1705,7 @@ int ons_Count_SelfControlPoints()
 	tmp_entity = findchain(classname, "onslaught_generator");
 	while(tmp_entity)
 	{
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 			n++;
 		tmp_entity = tmp_entity.chain;
 	}
@@ -1936,8 +1936,8 @@ MUTATOR_HOOKFUNCTION(ons, PlayerDies)
 	}
 
 	if ( autocvar_g_onslaught_spawn_choose )
-	if ( ons_Count_SelfControlPoints() > 1 )
-		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+	if ( ons_Count_SelfControlPoints(frag_target) > 1 )
+		stuffcmd(frag_target, "qc_cmd_cl hud clickradar\n");
 
 	return false;
 }

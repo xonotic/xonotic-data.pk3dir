@@ -313,7 +313,7 @@ void havocbot_role_ka_collector()
 // ==============
 
 MUTATOR_HOOKFUNCTION(ka, PlayerDies)
-{SELFPARAM();
+{
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
@@ -329,7 +329,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);
 	}
 
-	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has died, drop it
+	if(frag_target.ballcarried) { ka_DropEvent(frag_target); } // a player with the ball has died, drop it
 	return 0;
 }
 

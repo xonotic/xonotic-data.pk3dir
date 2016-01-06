@@ -159,8 +159,8 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
-{SELFPARAM();
-	self.msnt_deathloc = self.origin;
+{
+	frag_target.msnt_deathloc = frag_target.origin;
 	return 0;
 }
 

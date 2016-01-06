@@ -177,9 +177,8 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerDies)
-{SELFPARAM();
-	self.respawn_flags |= RESPAWN_FORCE;
-
+{
+	frag_target.respawn_flags |= RESPAWN_FORCE;
 	return false;
 }
 

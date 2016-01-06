@@ -1301,13 +1301,13 @@ MUTATOR_HOOKFUNCTION(kh, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerDies)
-{SELFPARAM();
-	if(self == other)
-		kh_Key_DropAll(self, true);
+{
+	if(frag_target == other)
+		kh_Key_DropAll(frag_target, true);
 	else if(IS_PLAYER(other))
-		kh_Key_DropAll(self, false);
+		kh_Key_DropAll(frag_target, false);
 	else
-		kh_Key_DropAll(self, true);
+		kh_Key_DropAll(frag_target, true);
 	return 0;
 }
 
