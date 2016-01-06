@@ -20,9 +20,6 @@ build:
         if [[ $line == "All tests OK" ]]; then exit 0; fi;
       done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
     - exit 1
-  artifacts:
-    paths:
-      - csprogs.dat
 
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy
