@@ -24,10 +24,10 @@ build:
     paths:
       - csprogs.dat
 
-pages:
+doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy
   script:
-    - cd qcsrc && doxygen >/dev/null
+    - cd qcsrc && doxygen
     - mv html ../public
   artifacts:
     paths:
