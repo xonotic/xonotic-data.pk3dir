@@ -563,7 +563,7 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
-	float fd, l, j, n;
+	float fd, l;
 	string s;
 
 	cvar = cvar_normal;
@@ -782,32 +782,37 @@ spawnfunc(worldspawn)
 
 	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
+	// force unloading of server pk3 files when starting a listen server
+	if (!server_is_dedicated) localcmd("\nfs_rescan\n");
+
 	// fill sv_curl_serverpackages from .serverpackage files
-	if(autocvar_sv_curl_serverpackages_auto)
+	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		s = "";
-		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
-		for(int i = 0; i < n; ++i)
-			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
-			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
-				s = strcat(s, " ", argv(i));
-		fd = search_begin("*-serverpackage.txt", true, false);
-		if(fd >= 0)
+		s = "csprogs-" WATERMARK ".txt";
+		// remove automatically managed files from the list to prevent duplicates
+		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
-			j = search_getsize(fd);
-			for(int i = 0; i < j; ++i)
-				s = strcat(s, " ", search_getfilename(fd, i));
-			search_end(fd);
+			string pkg = argv(i);
+			if (substring(pkg, -18, -1) == "-serverpackage.txt") continue;
+			if (substring(pkg, -14, -1) == ".serverpackage") continue;  // OLD legacy
+			s = cons(s, pkg);
 		}
-		fd = search_begin("*.serverpackage", true, false);
-		if(fd >= 0)
-		{
-			j = search_getsize(fd);
-			for(int i = 0; i < j; ++i)
-				s = strcat(s, " ", search_getfilename(fd, i));
-			search_end(fd);
-		}
-		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
+		// add automatically managed files to the list
+		#define X(match) MACRO_BEGIN { \
+			fd = search_begin(match, true, false); \
+			if (fd >= 0) \
+			{ \
+				for (int i = 0, j = search_getsize(fd); i < j; ++i) \
+				{ \
+					s = cons(s, search_getfilename(fd, i)); \
+				} \
+				search_end(fd); \
+			} \
+		} MACRO_END
+		X("*-serverpackage.txt");
+		X("*.serverpackage");
+		#undef X
+		cvar_set("sv_curl_serverpackages", s);
 	}
 
 	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
