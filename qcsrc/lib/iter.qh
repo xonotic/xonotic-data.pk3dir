@@ -11,6 +11,8 @@
 		} \
 	} MACRO_END
 
+#define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
+
 #define FOREACH_LIST(list, next, cond, body) \
 	MACRO_BEGIN \
 	{ \
@@ -62,35 +64,24 @@
 
 #if defined(CSQC)
 	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #402;
-	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+	entity(.entity fld, entity match, .entity tofield) _findchainentity_tofield = #403;
 	entity(.float fld, float match, .entity tofield) _findchainfloat_tofield = #403;
 	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #450;
 #elif defined(SVQC)
 	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #402;
-	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #403;
+	entity(.entity fld, entity match, .entity tofield) _findchainentity_tofield = #403;
 	entity(.float fld, float match, .entity tofield) _findchainfloat_tofield = #403;
 	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #450;
 #elif defined(MENUQC)
 	entity(.string fld, string match, .entity tofield) _findchainstring_tofield = #26;
-	entity(.entity fld, entity match, .entity tofield) findchainentity_tofield = #27;
+	entity(.entity fld, entity match, .entity tofield) _findchainentity_tofield = #27;
 	entity(.float fld, float match, .entity tofield) _findchainfloat_tofield = #27;
 	entity(.float fld, float match, .entity tofield) _findchainflags_tofield = #88;
 #endif
 
-.entity _FOREACH_ENTITY_fld;
-.entity _FOREACH_ENTITY_next;
+#define ORDERED(F) F##_UNORDERED
 
-#define FOREACH_ENTITY_UNORDERED(cond, body) \
-	MACRO_BEGIN { \
-		int _i = 0; \
-		for (entity _it = findchainentity_tofield(_FOREACH_ENTITY_fld, NULL, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
-		{ \
-			const noref int i = _i; \
-			const noref entity it = _it; \
-			if (cond) { LAMBDA(body) } \
-		} \
-	} MACRO_END
-
+#define FOREACH_ENTITY(cond, body) ORDERED(FOREACH_ENTITY)(cond, body)
 #define FOREACH_ENTITY_ORDERED(cond, body) \
 	MACRO_BEGIN { \
 		int _i = 0; \
@@ -101,52 +92,91 @@
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
+/** marker field, always NULL */
+.entity _FOREACH_ENTITY_fld;
 
-#define FOREACH_ENTITY_FLOAT(fld, match, body) \
+.entity _FOREACH_ENTITY_next;
+noref string _FOREACH_ENTITY_mutex;
+#define FOREACH_ENTITY_UNORDERED(cond, body) \
 	MACRO_BEGIN { \
-		int _i = 0; \
-		for (entity _it = _findchainfloat_tofield(fld, match, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
-		{ \
-			const noref int i = _i; \
-			const noref entity it = _it; \
-			LAMBDA(body) \
-		} \
+		if (_FOREACH_ENTITY_mutex) LOG_SEVEREF("Loop mutex held by %s", _FOREACH_ENTITY_mutex); \
+		_FOREACH_ENTITY_mutex = __FUNC__; \
+		entity _foundchain_first = _findchainentity_tofield(_FOREACH_ENTITY_fld, NULL, _FOREACH_ENTITY_next); \
+		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_next, cond, body); \
+		_FOREACH_ENTITY_mutex = string_null; \
 	} MACRO_END
 
-#define FOREACH_ENTITY_FLAGS(fld, match, body) \
+
+
+#define FOREACH_ENTITY_CLASS(class, cond, body) ORDERED(FOREACH_ENTITY_CLASS)(class, cond, body)
+#define FOREACH_ENTITY_CLASS_ORDERED(class, cond, body) FOREACH_ENTITY_ORDERED(it.classname == class && (cond), body)
+.entity _FOREACH_ENTITY_CLASS_next;
+noref string _FOREACH_ENTITY_CLASS_mutex;
+#define FOREACH_ENTITY_CLASS_UNORDERED(class, cond, body) \
 	MACRO_BEGIN { \
-		int _i = 0; \
-		for (entity _it = _findchainflags_tofield(fld, match, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
-		{ \
-			const noref int i = _i; \
-			const noref entity it = _it; \
-			LAMBDA(body) \
-		} \
+		if (_FOREACH_ENTITY_CLASS_mutex) LOG_SEVEREF("Loop mutex held by %s", _FOREACH_ENTITY_CLASS_mutex); \
+		_FOREACH_ENTITY_CLASS_mutex = __FUNC__; \
+		entity _foundchain_first = _findchainstring_tofield(classname, class, _FOREACH_ENTITY_CLASS_next); \
+		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_CLASS_next, cond, body); \
+		_FOREACH_ENTITY_CLASS_mutex = string_null; \
 	} MACRO_END
 
-#define FOREACH_ENTITY_CLASS(class, cond, body) \
+
+
+#define FOREACH_ENTITY_FLOAT(fld, match, body) ORDERED(FOREACH_ENTITY_FLOAT)(fld, match, body)
+#define FOREACH_ENTITY_FLOAT_ORDERED(fld, match, body) FOREACH_ENTITY_ORDERED(it.fld == match, body)
+.entity _FOREACH_ENTITY_FLOAT_next;
+noref string _FOREACH_ENTITY_FLOAT_mutex;
+#define FOREACH_ENTITY_FLOAT_UNORDERED(fld, match, body) \
 	MACRO_BEGIN { \
-		int _i = 0; \
-		for (entity _it = _findchainstring_tofield(classname, class, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
-		{ \
-			const noref int i = _i; \
-			const noref entity it = _it; \
-			if (cond) { LAMBDA(body) } \
-		} \
+		if (_FOREACH_ENTITY_FLOAT_mutex) LOG_SEVEREF("Loop mutex held by %s", _FOREACH_ENTITY_FLOAT_mutex); \
+		_FOREACH_ENTITY_FLOAT_mutex = __FUNC__; \
+		entity _foundchain_first = _findchainfloat_tofield(fld, match, _FOREACH_ENTITY_FLOAT_next); \
+		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_FLOAT_next, true, body); \
+		_FOREACH_ENTITY_FLOAT_mutex = string_null; \
 	} MACRO_END
 
-#define FOREACH_ENTITY_ENT(fld, match, body) \
-	do { \
-		int _i = 0; \
-		for (entity _it = findchainentity_tofield(fld, match, _FOREACH_ENTITY_next); _it; (_it = _it._FOREACH_ENTITY_next, ++_i)) \
-		{ \
-			const noref int i = _i; \
-			const noref entity it = _it; \
-			LAMBDA(body) \
-		} \
-	} \
-	while (0)
 
-#define FOREACH_ENTITY(cond, body) FOREACH_ENTITY_UNORDERED(cond, body)
 
-#define FOREACH(list, cond, body) FOREACH_LIST(list, enemy, cond, body)
+#define FOREACH_ENTITY_FLAGS(fld, match, body) ORDERED(FOREACH_ENTITY_FLAGS)(fld, match, body)
+#define FOREACH_ENTITY_FLAGS_ORDERED(fld, match, body) FOREACH_ENTITY_ORDERED(it.fld & match, body)
+.entity _FOREACH_ENTITY_FLAGS_next;
+noref string _FOREACH_ENTITY_FLAGS_mutex;
+#define FOREACH_ENTITY_FLAGS_UNORDERED(fld, match, body) \
+	MACRO_BEGIN { \
+		if (_FOREACH_ENTITY_FLAGS_mutex) LOG_SEVEREF("Loop mutex held by %s", _FOREACH_ENTITY_FLAGS_mutex); \
+		_FOREACH_ENTITY_FLAGS_mutex = __FUNC__; \
+		entity _foundchain_first = _findchainflags_tofield(fld, match, _FOREACH_ENTITY_FLAGS_next); \
+		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_FLAGS_next, true, body); \
+		_FOREACH_ENTITY_FLAGS_mutex = string_null; \
+	} MACRO_END
+
+
+
+#define FOREACH_ENTITY_ENT(fld, match, body) ORDERED(FOREACH_ENTITY_ENT)(fld, match, body)
+#define FOREACH_ENTITY_ENT_ORDERED(fld, match, body) FOREACH_ENTITY_ORDERED(it.fld == match, body)
+.entity _FOREACH_ENTITY_ENT_next;
+noref string _FOREACH_ENTITY_ENT_mutex;
+#define FOREACH_ENTITY_ENT_UNORDERED(fld, match, body) \
+	MACRO_BEGIN { \
+		if (_FOREACH_ENTITY_ENT_mutex) LOG_SEVEREF("Loop mutex held by %s", _FOREACH_ENTITY_ENT_mutex); \
+		_FOREACH_ENTITY_ENT_mutex = __FUNC__; \
+		entity _foundchain_first = _findchainentity_tofield(fld, match, _FOREACH_ENTITY_ENT_next); \
+		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_ENT_next, true, body); \
+		_FOREACH_ENTITY_ENT_mutex = string_null; \
+	} MACRO_END
+
+
+
+#define FOREACH_ENTITY_STRING(fld, match, body) ORDERED(FOREACH_ENTITY_STRING)(fld, match, body)
+#define FOREACH_ENTITY_STRING_ORDERED(fld, match, body) FOREACH_ENTITY_ORDERED(it.fld == match, body)
+.entity _FOREACH_ENTITY_STRING_next;
+noref string _FOREACH_ENTITY_STRING_mutex;
+#define FOREACH_ENTITY_STRING_UNORDERED(fld, match, body) \
+	MACRO_BEGIN { \
+		if (_FOREACH_ENTITY_STRING_mutex) LOG_SEVEREF("Loop mutex held by %s", _FOREACH_ENTITY_STRING_mutex); \
+		_FOREACH_ENTITY_STRING_mutex = __FUNC__; \
+		entity _foundchain_first = _findchainstring_tofield(fld, match, _FOREACH_ENTITY_STRING_next); \
+		FOREACH_LIST(_foundchain, _FOREACH_ENTITY_STRING_next, true, body); \
+		_FOREACH_ENTITY_STRING_mutex = string_null; \
+	} MACRO_END
