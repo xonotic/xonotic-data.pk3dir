@@ -4,6 +4,7 @@ QCCFLAGS_WATERMARK ?= $(shell git describe)
 CPP := cc -xc -E
 QCC ?= gmqcc
 NDEBUG ?= 1
+PROGS_OUT ?= $(CURDIR)/..
 BUILD_MOD ?= 0
 
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
@@ -36,11 +37,11 @@ XON_BUILDSYSTEM =
 all: qc
 
 .PHONY: qc
-qc: ../menu.dat ../progs.dat ../csprogs.dat
+qc: $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat $(PROGS_OUT)/csprogs.dat
 
 .PHONY: clean
 clean:
-	rm -f ../progs.dat ../menu.dat ../csprogs.dat
+	rm -f $(PROGS_OUT)/progs.dat $(PROGS_OUT)/menu.dat $(PROGS_OUT)/csprogs.dat
 	rm -f tmp/*.qc tmp/*.d tmp/*.txt
 
 $(QCCVERSIONFILE):
@@ -52,17 +53,17 @@ export CPP
 export QCCDEFS
 export QCCFLAGS
 
-../csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	sh ./qcc.sh client $@ $<
 -include tmp/client.d
 
-../progs.dat: server/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	sh ./qcc.sh server $@ $<
 -include tmp/server.d
 
-../menu.dat: menu/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
 	sh ./qcc.sh menu $@ $<
 -include tmp/menu.d

@@ -23,4 +23,4 @@ ${CPP} -MMD -MP -MT ${OUT} -Wall -Wundef -Werror -o ./tmp/${MODE}.txt ${IN}
 ${CPP} -dM 1>./tmp/${MODE}_macros.txt -H 2>./tmp/${MODE}_includes.txt ${IN}
 sed 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' ./tmp/${MODE}.txt > ./tmp/${MODE}.qc
 cd ${MODE}
-${QCC} ${QCCFLAGS} -o ../${OUT} ../tmp/${MODE}.qc
+${QCC} ${QCCFLAGS} -o ${OUT} ../tmp/${MODE}.qc
