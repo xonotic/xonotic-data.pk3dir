@@ -25,7 +25,7 @@
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"
 
-void CopyBody(float keepvelocity);
+void CopyBody(entity this, float keepvelocity);
 
 #ifdef NOCHEATS
 
@@ -172,14 +172,14 @@ float CheatImpulse(int imp)
 			IS_CHEAT(imp, 0, 0);
 			makevectors (self.v_angle);
 			self.velocity = self.velocity + v_forward * 300;
-			CopyBody(1);
+			CopyBody(self, 1);
 			self.lip += 1;
 			self.velocity = self.velocity - v_forward * 300;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_CLONE_STANDING.impulse:
 			IS_CHEAT(imp, 0, 0);
-			CopyBody(0);
+			CopyBody(self, 0);
 			self.lip += 1;
 			DID_CHEAT();
 			break;

@@ -48,80 +48,78 @@ void CopyBody_Think()
 	CSQCMODEL_AUTOUPDATE(self);
 	self.nextthink = time;
 }
-void CopyBody(float keepvelocity)
-{SELFPARAM();
-	if (self.effects & EF_NODRAW)
+void CopyBody(entity this, float keepvelocity)
+{
+	if (this.effects & EF_NODRAW)
 		return;
-	setself(new(body));
-	self.enemy = this;
-	self.lip = this.lip;
-	self.colormap = this.colormap;
-	self.iscreature = this.iscreature;
-	self.teleportable = this.teleportable;
-	self.damagedbycontents = this.damagedbycontents;
-	self.angles = this.angles;
-	self.v_angle = this.v_angle;
-	self.avelocity = this.avelocity;
-	self.damageforcescale = this.damageforcescale;
-	self.effects = this.effects;
-	self.glowmod = this.glowmod;
-	self.event_damage = this.event_damage;
-	self.anim_state = this.anim_state;
-	self.anim_time = this.anim_time;
-	self.anim_lower_action = this.anim_lower_action;
-	self.anim_lower_time = this.anim_lower_time;
-	self.anim_upper_action = this.anim_upper_action;
-	self.anim_upper_time = this.anim_upper_time;
-	self.anim_implicit_state = this.anim_implicit_state;
-	self.anim_implicit_time = this.anim_implicit_time;
-	self.anim_lower_implicit_action = this.anim_lower_implicit_action;
-	self.anim_lower_implicit_time = this.anim_lower_implicit_time;
-	self.anim_upper_implicit_action = this.anim_upper_implicit_action;
-	self.anim_upper_implicit_time = this.anim_upper_implicit_time;
-	self.dphitcontentsmask = this.dphitcontentsmask;
-	self.death_time = this.death_time;
-	self.pain_finished = this.pain_finished;
-	self.health = this.health;
-	self.armorvalue = this.armorvalue;
-	self.armortype = this.armortype;
-	self.model = this.model;
-	self.modelindex = this.modelindex;
-	self.skin = this.skin;
-	self.species = this.species;
-	self.movetype = this.movetype;
-	self.solid = this.solid;
-	self.ballistics_density = this.ballistics_density;
-	self.takedamage = this.takedamage;
-	self.customizeentityforclient = this.customizeentityforclient;
-	self.uncustomizeentityforclient = this.uncustomizeentityforclient;
-	self.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
+	entity clone = new(body);
+	clone.enemy = this;
+	clone.lip = this.lip;
+	clone.colormap = this.colormap;
+	clone.iscreature = this.iscreature;
+	clone.teleportable = this.teleportable;
+	clone.damagedbycontents = this.damagedbycontents;
+	clone.angles = this.angles;
+	clone.v_angle = this.v_angle;
+	clone.avelocity = this.avelocity;
+	clone.damageforcescale = this.damageforcescale;
+	clone.effects = this.effects;
+	clone.glowmod = this.glowmod;
+	clone.event_damage = this.event_damage;
+	clone.anim_state = this.anim_state;
+	clone.anim_time = this.anim_time;
+	clone.anim_lower_action = this.anim_lower_action;
+	clone.anim_lower_time = this.anim_lower_time;
+	clone.anim_upper_action = this.anim_upper_action;
+	clone.anim_upper_time = this.anim_upper_time;
+	clone.anim_implicit_state = this.anim_implicit_state;
+	clone.anim_implicit_time = this.anim_implicit_time;
+	clone.anim_lower_implicit_action = this.anim_lower_implicit_action;
+	clone.anim_lower_implicit_time = this.anim_lower_implicit_time;
+	clone.anim_upper_implicit_action = this.anim_upper_implicit_action;
+	clone.anim_upper_implicit_time = this.anim_upper_implicit_time;
+	clone.dphitcontentsmask = this.dphitcontentsmask;
+	clone.death_time = this.death_time;
+	clone.pain_finished = this.pain_finished;
+	clone.health = this.health;
+	clone.armorvalue = this.armorvalue;
+	clone.armortype = this.armortype;
+	clone.model = this.model;
+	clone.modelindex = this.modelindex;
+	clone.skin = this.skin;
+	clone.species = this.species;
+	clone.movetype = this.movetype;
+	clone.solid = this.solid;
+	clone.ballistics_density = this.ballistics_density;
+	clone.takedamage = this.takedamage;
+	clone.customizeentityforclient = this.customizeentityforclient;
+	clone.uncustomizeentityforclient = this.uncustomizeentityforclient;
+	clone.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
 	if (keepvelocity == 1)
-		self.velocity = this.velocity;
-	self.oldvelocity = self.velocity;
-	self.alpha = this.alpha;
-	self.fade_time = this.fade_time;
-	self.fade_rate = this.fade_rate;
-	//self.weapon = this.weapon;
-	setorigin(self, this.origin);
-	setsize(self, this.mins, this.maxs);
-	self.prevorigin = this.origin;
-	self.reset = SUB_Remove;
+		clone.velocity = this.velocity;
+	clone.oldvelocity = clone.velocity;
+	clone.alpha = this.alpha;
+	clone.fade_time = this.fade_time;
+	clone.fade_rate = this.fade_rate;
+	//clone.weapon = this.weapon;
+	setorigin(clone, this.origin);
+	setsize(clone, this.mins, this.maxs);
+	clone.prevorigin = this.origin;
+	clone.reset = SUB_Remove;
 
-	Drag_MoveDrag(this, self);
+	Drag_MoveDrag(this, clone);
 
-	if(self.colormap <= maxclients && self.colormap > 0)
-		self.colormap = 1024 + this.clientcolors;
+	if(clone.colormap <= maxclients && clone.colormap > 0)
+		clone.colormap = 1024 + this.clientcolors;
 
-	CSQCMODEL_AUTOINIT(self);
-	self.CopyBody_nextthink = this.nextthink;
-	self.CopyBody_think = this.think;
-	self.nextthink = time;
-	self.think = CopyBody_Think;
+	CSQCMODEL_AUTOINIT(clone);
+	clone.CopyBody_nextthink = this.nextthink;
+	clone.CopyBody_think = this.think;
+	clone.nextthink = time;
+	clone.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
-	animdecide_load_if_needed(self);
-	animdecide_setframes(self, false, frame, frame1time, frame2, frame2time);
-
-	setself(this);
+	animdecide_load_if_needed(clone);
+	animdecide_setframes(clone, false, frame, frame1time, frame2, frame2time);
 }
 
 void player_setupanimsformodel()
@@ -154,7 +152,7 @@ void player_anim ()
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, (IS_ONGROUND(self)));
+	animdecide_setimplicitstate(self, IS_ONGROUND(self));
 }
 
 void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

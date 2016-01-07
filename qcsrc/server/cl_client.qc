@@ -1330,7 +1330,7 @@ void respawn()
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
 
-	CopyBody(1);
+	CopyBody(self, 1);
 
 	self.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer();
