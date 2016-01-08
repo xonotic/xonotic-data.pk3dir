@@ -131,13 +131,16 @@ void CSQC_Init()
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
 void Shutdown()
 {
-	// Reset csqc_progname changes here to keep listen servers working
-	// The engine should do this, but doesn't
-	string csqc_progname_prev = "csprogs.dat";
-	if (fexists(csqc_progname_prev))
-		cvar_set("csqc_progname", csqc_progname_prev);
-	else
-		LOG_WARNING("Don't know what to reset csqc_progname to");
+	if (cvar_string("csqc_progname") == "csprogs-" WATERMARK ".dat")
+	{
+		// Reset csqc_progname changes here to keep listen servers working
+		// The engine should do this, but doesn't
+		string csqc_progname_prev = "csprogs.dat";
+		if (fexists(csqc_progname_prev))
+			cvar_set("csqc_progname", csqc_progname_prev);
+		else
+			LOG_WARNING("Don't know what to reset csqc_progname to");
+	}
 	WarpZone_Shutdown();
 
 	remove(teams);
