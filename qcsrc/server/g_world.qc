@@ -563,6 +563,48 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
+	{
+		bool wantrestart = false;
+		// Try to use versioned csprogs from pk3
+		// Only ever use versioned csprogs.dat files on dedicated servers;
+		// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
+		string pk3csprogs = "csprogs-" WATERMARK ".dat";
+		if (cvar_string_normal("csqc_progname") != pk3csprogs && fexists(pk3csprogs))
+		{
+			cvar_set_normal("csqc_progname", pk3csprogs);
+			wantrestart = true;
+		}
+		// Check for updates on startup
+		// We do it this way for atomicity so that connecting clients still match the server progs and don't disconnect
+		int sentinel = fopen("progs.txt", FILE_READ);
+		if (sentinel >= 0)
+		{
+			string switchversion = fgets(sentinel);
+			fclose(sentinel);
+			if (switchversion != "" && switchversion != WATERMARK)
+			{
+				LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+				// if it doesn't exist, assume either:
+				//   a) the current program was overwritten
+				//   b) this is a client only update
+				string newprogs = sprintf("progs-%s.dat", switchversion);
+				if (fexists(newprogs))
+				{
+					cvar_set_normal("sv_progs", newprogs);
+					wantrestart = true;
+				}
+				string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
+				if (fexists(newcsprogs))
+				{
+					cvar_set_normal("csqc_progname", newcsprogs);
+					wantrestart = true;
+				}
+			}
+		}
+		if (wantrestart) changelevel(mapname);
+		// let initialization continue, shutdown depends on it
+	}
+
 	float fd, l;
 	string s;
 
@@ -793,8 +835,9 @@ spawnfunc(worldspawn)
 		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
 			string pkg = argv(i);
-			if (substring(pkg, -18, -1) == "-serverpackage.txt") continue;
-			if (substring(pkg, -14, -1) == ".serverpackage") continue;  // OLD legacy
+			if (startsWith(pkg, "csprogs-")) continue;
+			if (endsWith(pkg, "-serverpackage.txt")) continue;
+			if (endsWith(pkg, ".serverpackage")) continue;  // OLD legacy
 			s = cons(s, pkg);
 		}
 		// add automatically managed files to the list
