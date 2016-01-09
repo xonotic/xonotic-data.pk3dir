@@ -41,8 +41,8 @@ qc: $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat $(PROGS_OUT)/csprogs.dat
 
 .PHONY: clean
 clean:
-	rm -f $(PROGS_OUT)/progs.dat $(PROGS_OUT)/menu.dat $(PROGS_OUT)/csprogs.dat
-	rm -f tmp/*.qc tmp/*.d tmp/*.txt
+	rm -f $(PROGS_OUT)/{csprogs,progs,menu}.dat
+	rm -f ../.tmp/*.{qc,d,txt}
 
 $(QCCVERSIONFILE):
 	$(RM) qccversion.*
@@ -56,17 +56,17 @@ export QCCFLAGS
 $(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	sh ./qcc.sh client $@ $<
--include tmp/client.d
+-include ../.tmp/client.d
 
 $(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	sh ./qcc.sh server $@ $<
--include tmp/server.d
+-include ../.tmp/server.d
 
 $(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
 	sh ./qcc.sh menu $@ $<
--include tmp/menu.d
+-include ../.tmp/menu.d
 
 .PHONY: testcase
 testcase:
