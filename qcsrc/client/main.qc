@@ -128,21 +128,9 @@ void CSQC_Init()
 	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
 }
 
-bool autocvar_debug_csprogs = false;
-
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
 void Shutdown()
 {
-	if (autocvar_debug_csprogs && cvar_string("csqc_progname") == "csprogs-" WATERMARK ".dat")
-	{
-		// Reset csqc_progname changes here to keep listen servers working
-		// The engine should do this, but doesn't
-		string csqc_progname_prev = "csprogs.dat";
-		if (fexists(csqc_progname_prev))
-			cvar_set("csqc_progname", csqc_progname_prev);
-		else
-			LOG_WARNING("Don't know what to reset csqc_progname to");
-	}
 	WarpZone_Shutdown();
 
 	remove(teams);

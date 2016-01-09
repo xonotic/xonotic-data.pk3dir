@@ -563,41 +563,56 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
+	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
+
 	{
 		bool wantrestart = false;
-		// Try to use versioned csprogs from pk3
-		// Only ever use versioned csprogs.dat files on dedicated servers;
-		// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
-		string pk3csprogs = "csprogs-" WATERMARK ".dat";
-		if (cvar_string_normal("csqc_progname") != pk3csprogs && fexists(pk3csprogs))
+
+		if (!server_is_dedicated)
 		{
-			cvar_set_normal("csqc_progname", pk3csprogs);
-			wantrestart = true;
+			// force unloading of server pk3 files when starting a listen server
+			localcmd("\nfs_rescan\n");
+			// restore csqc_progname too
+			string expect = "csprogs.dat";
+			wantrestart = cvar_string_normal("csqc_progname") != expect;
+			cvar_set_normal("csqc_progname", expect);
 		}
-		// Check for updates on startup
-		// We do it this way for atomicity so that connecting clients still match the server progs and don't disconnect
-		int sentinel = fopen("progs.txt", FILE_READ);
-		if (sentinel >= 0)
+		else
 		{
-			string switchversion = fgets(sentinel);
-			fclose(sentinel);
-			if (switchversion != "" && switchversion != WATERMARK)
+			// Try to use versioned csprogs from pk3
+			// Only ever use versioned csprogs.dat files on dedicated servers;
+			// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
+			string pk3csprogs = "csprogs-" WATERMARK ".dat";
+			if (cvar_string_normal("csqc_progname") != pk3csprogs && fexists(pk3csprogs))
 			{
-				LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
-				// if it doesn't exist, assume either:
-				//   a) the current program was overwritten
-				//   b) this is a client only update
-				string newprogs = sprintf("progs-%s.dat", switchversion);
-				if (fexists(newprogs))
+				cvar_set_normal("csqc_progname", pk3csprogs);
+				wantrestart = true;
+			}
+			// Check for updates on startup
+			// We do it this way for atomicity so that connecting clients still match the server progs and don't disconnect
+			int sentinel = fopen("progs.txt", FILE_READ);
+			if (sentinel >= 0)
+			{
+				string switchversion = fgets(sentinel);
+				fclose(sentinel);
+				if (switchversion != "" && switchversion != WATERMARK)
 				{
-					cvar_set_normal("sv_progs", newprogs);
-					wantrestart = true;
-				}
-				string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
-				if (fexists(newcsprogs))
-				{
-					cvar_set_normal("csqc_progname", newcsprogs);
-					wantrestart = true;
+					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+					// if it doesn't exist, assume either:
+					//   a) the current program was overwritten
+					//   b) this is a client only update
+					string newprogs = sprintf("progs-%s.dat", switchversion);
+					if (fexists(newprogs))
+					{
+						cvar_set_normal("sv_progs", newprogs);
+						wantrestart = true;
+					}
+					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
+					if (fexists(newcsprogs))
+					{
+						cvar_set_normal("csqc_progname", newcsprogs);
+						wantrestart = true;
+					}
 				}
 			}
 		}
@@ -627,8 +642,6 @@ spawnfunc(worldspawn)
 	{
 		++maxclients;
 	}
-
-	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -823,9 +836,6 @@ spawnfunc(worldspawn)
 	CheatInit();
 
 	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
-
-	// force unloading of server pk3 files when starting a listen server
-	if (!server_is_dedicated) localcmd("\nfs_rescan\n");
 
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
