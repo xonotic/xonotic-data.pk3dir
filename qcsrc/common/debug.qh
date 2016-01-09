@@ -185,4 +185,22 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 	}
 }
 
+GENERIC_COMMAND(version, "Print the current version")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			LOG_INFO(WATERMARK "\n");
+			return;
+		}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " version"));
+			return;
+		}
+	}
+}
+
 #endif
