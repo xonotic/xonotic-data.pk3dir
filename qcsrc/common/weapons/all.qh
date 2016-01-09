@@ -327,6 +327,8 @@ STATIC_INIT(register_weapons_done)
 .entity exteriorweaponentity;
 vector weaponentity_glowmod(Weapon wep, int c)
 {
+    if(!wep)
+        return '1 1 1'; // ???
     vector g;
     if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
     return g;
