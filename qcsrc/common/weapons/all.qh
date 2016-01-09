@@ -325,7 +325,12 @@ STATIC_INIT(register_weapons_done)
 
 .entity weaponchild;
 .entity exteriorweaponentity;
-.vector weaponentity_glowmod;
+vector weaponentity_glowmod(Weapon wep, int c)
+{
+    vector g;
+    if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
+    return g;
+}
 
 //.int weapon; // current weapon
 .string weaponname; // name of .weapon
