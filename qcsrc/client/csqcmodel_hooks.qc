@@ -367,7 +367,7 @@ int CSQCPlayer_FallbackFrame(entity this, int f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	LOG_INFOF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, this.model);
+	LOG_DEBUGF("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, this.model);
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(entity this)
