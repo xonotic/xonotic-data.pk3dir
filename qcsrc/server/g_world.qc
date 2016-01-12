@@ -571,7 +571,7 @@ spawnfunc(worldspawn)
 		if (!server_is_dedicated)
 		{
 			// force unloading of server pk3 files when starting a listen server
-			localcmd("\nfs_rescan\n");
+			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
 			wantrestart = cvar_string_normal("csqc_progname") != expect;
