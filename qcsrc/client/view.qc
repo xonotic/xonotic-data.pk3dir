@@ -118,7 +118,7 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
-	float frametime = (time - prevtime) * STAT(MOVEVARS_TIMESCALE);
+	float frametime = (time - prevtime);
 	prevtime = time;
 
 	if (autocvar_chase_active) return;
