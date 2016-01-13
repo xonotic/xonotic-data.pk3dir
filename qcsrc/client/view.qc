@@ -176,8 +176,12 @@ void viewmodel_animate(entity this)
 		frac = avg_factor(autocvar_cl_followmodel_lowpass);
 		lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
 
-		vector v = rotate(gunorg, YAW(view_angles) * DEG2RAD); // rotate world coordinates to relative ones
-		v.z = gunorg.z;
+		vector v;
+		vector forward, right = '0 0 0', up = '0 0 0';
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		v.x = gunorg * forward;
+		v.y = gunorg * right * -1;
+		v.z = gunorg * up;
 		this.origin += v;
 	}
 
