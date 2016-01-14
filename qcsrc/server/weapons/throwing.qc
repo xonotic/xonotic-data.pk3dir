@@ -78,7 +78,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
 		return string_null;
-	wep.glowmod = own.weaponentity_glowmod;
+	wep.glowmod = weaponentity_glowmod(info, own.clientcolors);
 	wep.think = thrown_wep_think;
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);

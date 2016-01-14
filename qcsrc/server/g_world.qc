@@ -563,7 +563,64 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
-	float fd, l, j, n;
+	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
+
+	{
+		bool wantrestart = false;
+
+		if (!server_is_dedicated)
+		{
+			// force unloading of server pk3 files when starting a listen server
+			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
+			// restore csqc_progname too
+			string expect = "csprogs.dat";
+			wantrestart = cvar_string_normal("csqc_progname") != expect;
+			cvar_set_normal("csqc_progname", expect);
+		}
+		else
+		{
+			// Try to use versioned csprogs from pk3
+			// Only ever use versioned csprogs.dat files on dedicated servers;
+			// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
+			string pk3csprogs = "csprogs-" WATERMARK ".dat";
+			if (cvar_string_normal("csqc_progname") != pk3csprogs && fexists(pk3csprogs))
+			{
+				cvar_set_normal("csqc_progname", pk3csprogs);
+				wantrestart = true;
+			}
+			// Check for updates on startup
+			// We do it this way for atomicity so that connecting clients still match the server progs and don't disconnect
+			int sentinel = fopen("progs.txt", FILE_READ);
+			if (sentinel >= 0)
+			{
+				string switchversion = fgets(sentinel);
+				fclose(sentinel);
+				if (switchversion != "" && switchversion != WATERMARK)
+				{
+					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+					// if it doesn't exist, assume either:
+					//   a) the current program was overwritten
+					//   b) this is a client only update
+					string newprogs = sprintf("progs-%s.dat", switchversion);
+					if (fexists(newprogs))
+					{
+						cvar_set_normal("sv_progs", newprogs);
+						wantrestart = true;
+					}
+					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
+					if (fexists(newcsprogs))
+					{
+						cvar_set_normal("csqc_progname", newcsprogs);
+						wantrestart = true;
+					}
+				}
+			}
+		}
+		if (wantrestart) changelevel(mapname);
+		// let initialization continue, shutdown depends on it
+	}
+
+	float fd, l;
 	string s;
 
 	cvar = cvar_normal;
@@ -585,8 +642,6 @@ spawnfunc(worldspawn)
 	{
 		++maxclients;
 	}
-
-	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -783,31 +838,34 @@ spawnfunc(worldspawn)
 	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	// fill sv_curl_serverpackages from .serverpackage files
-	if(autocvar_sv_curl_serverpackages_auto)
+	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		s = "";
-		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
-		for(int i = 0; i < n; ++i)
-			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
-			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
-				s = strcat(s, " ", argv(i));
-		fd = search_begin("*-serverpackage.txt", true, false);
-		if(fd >= 0)
+		s = "csprogs-" WATERMARK ".txt";
+		// remove automatically managed files from the list to prevent duplicates
+		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
-			j = search_getsize(fd);
-			for(int i = 0; i < j; ++i)
-				s = strcat(s, " ", search_getfilename(fd, i));
-			search_end(fd);
+			string pkg = argv(i);
+			if (startsWith(pkg, "csprogs-")) continue;
+			if (endsWith(pkg, "-serverpackage.txt")) continue;
+			if (endsWith(pkg, ".serverpackage")) continue;  // OLD legacy
+			s = cons(s, pkg);
 		}
-		fd = search_begin("*.serverpackage", true, false);
-		if(fd >= 0)
-		{
-			j = search_getsize(fd);
-			for(int i = 0; i < j; ++i)
-				s = strcat(s, " ", search_getfilename(fd, i));
-			search_end(fd);
-		}
-		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
+		// add automatically managed files to the list
+		#define X(match) MACRO_BEGIN { \
+			fd = search_begin(match, true, false); \
+			if (fd >= 0) \
+			{ \
+				for (int i = 0, j = search_getsize(fd); i < j; ++i) \
+				{ \
+					s = cons(s, search_getfilename(fd, i)); \
+				} \
+				search_end(fd); \
+			} \
+		} MACRO_END
+		X("*-serverpackage.txt");
+		X("*.serverpackage");
+		#undef X
+		cvar_set("sv_curl_serverpackages", s);
 	}
 
 	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes

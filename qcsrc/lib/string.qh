@@ -104,6 +104,9 @@ bool startsWithNocase(string haystack, string needle)
 	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
 }
 
+noref string _endsWith_suffix;
+#define endsWith(this, suffix) (_endsWith_suffix = suffix, substring(this, -strlen(_endsWith_suffix), -1) == _endsWith_suffix)
+
 /** unzone the string, and return it as tempstring. Safe to be called on string_null */
 string fstrunzone(string s)
 {

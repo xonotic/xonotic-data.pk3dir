@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Rudolf PolzerCSQCModel_InterpolateAnimation_2To4_PreNote
+ * Copyright (c) 2011 Rudolf Polzer
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to

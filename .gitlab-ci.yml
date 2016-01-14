@@ -10,16 +10,34 @@ before_script:
   - export QCC="$PWD/gmqcc/gmqcc"
 
   - ln -s $PWD data/xonotic-data.pk3dir
-  - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
 
-build:
+test_sv_unit:
+  stage: test
   script:
+    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
     - make
     - while read line; do
         echo $line;
         if [[ $line == "All tests OK" ]]; then exit 0; fi;
       done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
     - exit 1
+
+test_sv_game:
+  stage: test
+  script:
+    - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
+    - make
+    - EXPECT=dd534b9e83d5e07cd43e0a13ac61a646
+    - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
+      | tee /dev/stderr
+      | grep '^:'
+      | grep -v '^:gamestart:'
+      | grep -v '^:anticheat:'
+      | md5sum | awk '{ print $1 }')
+    - echo 'expected:' $EXPECT
+    - echo '  actual:' $HASH
+    - test "$HASH" == "$EXPECT"
+    - exit $?
 
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy

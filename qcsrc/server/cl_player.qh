@@ -8,7 +8,7 @@
 .float CopyBody_nextthink;
 .void() CopyBody_think;
 void CopyBody_Think();
-void CopyBody(float keepvelocity);
+void CopyBody(entity this, float keepvelocity);
 
 void player_setupanimsformodel();
 
