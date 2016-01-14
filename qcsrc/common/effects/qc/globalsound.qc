@@ -369,7 +369,13 @@
 								    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
-								if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
+								if (gs) \
+								{ \
+									if(autocvar_g_debug_globalsounds) \
+										globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
+									else \
+										soundto(MSG_ONE, this, chan, GlobalSound_sample(gs.m_globalsoundstr, r), VOL_BASE, ATTEN_NORM); \
+								} \
 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 								else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
 							} \
