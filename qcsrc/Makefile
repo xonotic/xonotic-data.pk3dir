@@ -41,8 +41,12 @@ qc: $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat $(PROGS_OUT)/csprogs.dat
 
 .PHONY: clean
 clean:
-	rm -f $(PROGS_OUT)/{csprogs,progs,menu}.dat
-	rm -f ../.tmp/*.{qc,d,txt}
+	rm -f $(PROGS_OUT)/csprogs.dat
+	rm -f $(PROGS_OUT)/progs.dat
+	rm -f $(PROGS_OUT)/menu.dat
+	rm -f ../.tmp/*.qc
+	rm -f ../.tmp/*.d
+	rm -f ../.tmp/*.txt
 
 $(QCCVERSIONFILE):
 	$(RM) qccversion.*
