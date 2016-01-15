@@ -93,16 +93,14 @@ void _Movetype_PushMove(entity this, float dt)  // SV_PushMove
 			if (check.move_movetype == 32)  // MOVETYPE_PHYSICS
 			{
 				check.move_origin = check.move_origin + move;
-				WITH(entity, this, check, _Movetype_LinkEdict(this, true));
+				_Movetype_LinkEdict(check, true);
 				continue;
 			}
 
 			// try moving the contacted entity
 			this.solid = SOLID_NOT;
 			bool flag = false;
-			WITH(entity, this, check, {
-				flag = _Movetype_PushEntity(this, move, true);
-			});
+			flag = _Movetype_PushEntity(check, move, true);
 			if (!flag)
 			{
 				// entity "check" got teleported

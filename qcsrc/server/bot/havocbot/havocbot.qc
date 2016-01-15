@@ -6,12 +6,12 @@
 #include "../scripting.qh"
 #include "../waypoints.qh"
 
-#include "../../../common/constants.qh"
-#include "../../../common/items/all.qh"
+#include <common/constants.qh>
+#include <common/items/all.qh>
 
-#include "../../../common/triggers/trigger/jumppads.qh"
+#include <common/triggers/trigger/jumppads.qh>
 
-#include "../../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 .float speed;
 
@@ -38,7 +38,7 @@ void havocbot_ai()
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(self.deadflag != DEAD_NO)
+		if(IS_DEAD(self))
 		if(self.goalcurrent==world)
 		if(self.waterlevel==WATERLEVEL_SWIMMING || (self.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -86,7 +86,7 @@ void havocbot_ai()
 		bot_strategytoken_taken = true;
 	}
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	havocbot_chooseenemy();
@@ -478,7 +478,7 @@ void havocbot_movetogoal()
 
 		// Flying
 		self.BUTTON_HOOK = true;
-		if(self.navigation_jetpack_point.z - PL_MAX.z + PL_MIN.z < self.origin.z)
+		if(self.navigation_jetpack_point.z - STAT(PL_MAX, NULL).z + STAT(PL_MIN, NULL).z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
 			self.movement_y = dir * v_right * maxspeed;

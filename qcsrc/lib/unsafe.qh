@@ -1,5 +1,4 @@
-#ifndef UNSAFE_H
-#define UNSAFE_H
+#pragma once
 
 #define reinterpret_cast(T, it) _unsafe_cast_##T(0, it)
 #define X(T) T _unsafe_cast_##T(int dummy, ...) { return ...(0, T); }
@@ -25,5 +24,3 @@ STATIC_INIT(INTEGER_ONE)
 {
     INTEGER_ONE = reinterpret_cast(int, _unsafe_fld2) - reinterpret_cast(int, _unsafe_fld1);
 }
-
-#endif

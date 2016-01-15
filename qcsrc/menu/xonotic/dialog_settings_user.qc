@@ -29,8 +29,8 @@ void XonoticUserSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.5, e = makeXonoticHeaderLabel(_("Menu Skins")));
 	me.TR(me);
 		me.TDempty(me, 0.25);
-		me.TD(me, me.rows - 2.5, 2.5, sk = makeXonoticSkinList());
-	me.gotoRC(me, me.rows - 1.5, 0.25);
+		me.TD(me, me.rows - 3.5, 2.5, sk = makeXonoticSkinList());
+	me.gotoRC(me, me.rows - 2.5, 0.25);
 		me.TD(me, 1, 2.5, e = makeXonoticButton(_("Set skin"), '0 0 0'));
 			e.onClick = SetSkin_Click;
 			e.onClickEntity = sk;
@@ -78,21 +78,8 @@ void XonoticUserSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.5, e = makeXonoticCheckBox_T(0, "cl_gentle", _("Disable gore effects and harsh language"),
 			_("Replace blood and gibs with content that does not have any gore effects (default: disabled)")));
 
-	//me.TR(me);
-	//	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
-	//	me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
-	//		e.addValue(e, ZCTX(_("TLTIP^Disabled")), "0");
-	//		e.addValue(e, ZCTX(_("TLTIP^Standard")), "1");
-	//		e.addValue(e, ZCTX(_("TLTIP^Advanced")), "2");
-	//		e.configureXonoticTextSliderValues(e);
-	//me.TR(me);
-	//	me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client"))); // TODO: move to profile tab
-	//me.TR(me);
-	//	me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
-	//	setDependent(e, "cl_allow_uidtracking", 1, 1);
-
-	//me.gotoRC(me, me.rows - 1, 2.6);
-	//	me.TD(me, 1, 2, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_gentle; sendcvar cl_allow_uidtracking; sendcvar cl_allow_uid2name;", COMMANDBUTTON_APPLY));
+	me.gotoRC(me, me.rows - 1, 0);
+		me.TD(me, 1, 6, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_gentle;", COMMANDBUTTON_APPLY));
 
 }
 #endif

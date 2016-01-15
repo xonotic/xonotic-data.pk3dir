@@ -1,12 +1,12 @@
 #include "common.qh"
 
-#include "../../common/t_items.qh"
-#include "../../common/constants.qh"
-#include "../../common/deathtypes/all.qh"
-#include "../../common/notifications.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
-#include "../../common/items/all.qc"
+#include <common/t_items.qh>
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/notifications.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
+#include <common/items/all.qc>
 
 void W_GiveWeapon (entity e, float wep)
 {SELFPARAM();

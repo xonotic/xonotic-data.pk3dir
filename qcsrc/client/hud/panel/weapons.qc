@@ -336,16 +336,16 @@ void HUD_Weapons()
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
-		setself(weaponorder[i]);
-		weapon_id = self.impulse;
-		isCurrent = (self == switchweapon);
+		entity it = weaponorder[i];
+		weapon_id = it.impulse;
+		isCurrent = (it == switchweapon);
 
 		// skip if this weapon doesn't exist
-		if(!self || weapon_id < 0) { continue; }
+		if(!it || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if (!((weapons_stat & WepSet_FromWeapon(self)) || (self.m_id == complain_weapon)))
+		if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
 			continue;
 
 		// figure out the drawing position of weapon
@@ -360,7 +360,7 @@ void HUD_Weapons()
 		// draw the weapon accuracy
 		if(autocvar_hud_panel_weapons_accuracy)
 		{
-			float panel_weapon_accuracy = weapon_accuracy[self.m_id-WEP_FIRST];
+			float panel_weapon_accuracy = weapon_accuracy[it.m_id-WEP_FIRST];
 			if(panel_weapon_accuracy >= 0)
 			{
 				color = Accuracy_GetColor(panel_weapon_accuracy);
@@ -369,13 +369,13 @@ void HUD_Weapons()
 		}
 
 		// drawing all the weapon items
-		if(weapons_stat & WepSet_FromWeapon(self))
+		if(weapons_stat & WepSet_FromWeapon(it))
 		{
 			// draw the weapon image
 			if(isCurrent)
-				drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(weapon_pos, it.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			else
-				drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(noncurrent_pos, it.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -389,7 +389,7 @@ void HUD_Weapons()
 					break;
 
 				case 3: // weapon name
-					drawstring(weapon_pos, strtolower(self.m_name), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, strtolower(it.m_name), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				default: // nothing
@@ -397,14 +397,14 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && (self.ammo_field != ammo_none))
+			if(autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(self.ammo_field)); // how much ammo do we have?
+				a = getstati(GetAmmoStat(it.ammo_field)); // how much ammo do we have?
 
 				if(a > 0)
 				{
-					switch(self.ammo_field)
+					switch(it.ammo_field)
 					{
 						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
 						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
@@ -437,11 +437,11 @@ void HUD_Weapons()
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
 		{
-			drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(noncurrent_pos, it.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
-		if(self.m_id == complain_weapon)
+		if(it.m_id == complain_weapon)
 		{
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));

@@ -1,3 +1,5 @@
+#pragma once
+
 // noises "usually" start in the range -1..1
 entityclass(Noise);
 class(Noise).float noise_baccum;

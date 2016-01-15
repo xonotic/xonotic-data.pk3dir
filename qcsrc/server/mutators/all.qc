@@ -1,25 +1,25 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/anglestransform.qh"
-    #include "../../lib/warpzone/common.qh"
-    #include "../../lib/warpzone/util_server.qh"
-    #include "../../lib/warpzone/server.qh"
-    #include "../../common/constants.qh"
-    #include "../../common/stats.qh"
-    #include "../../common/teams.qh"
-    #include "../../common/util.qh"
-    #include "../../common/command/markup.qh"
-    #include "../../common/command/rpn.qh"
-    #include "../../common/command/generic.qh"
-    #include "../../common/command/command.qh"
-    #include "../../common/net_notice.qh"
-    #include "../../common/animdecide.qh"
-    #include "../../common/monsters/all.qh"
-    #include "../../common/monsters/sv_monsters.qh"
-    #include "../../common/monsters/spawn.qh"
-    #include "../../common/weapons/config.qh"
-    #include "../../common/weapons/all.qh"
+    #include <lib/warpzone/anglestransform.qh>
+    #include <lib/warpzone/common.qh>
+    #include <lib/warpzone/util_server.qh>
+    #include <lib/warpzone/server.qh>
+    #include <common/constants.qh>
+    #include <common/stats.qh>
+    #include <common/teams.qh>
+    #include <common/util.qh>
+    #include <common/command/markup.qh>
+    #include <common/command/rpn.qh>
+    #include <common/command/generic.qh>
+    #include <common/command/command.qh>
+    #include <common/net_notice.qh>
+    #include <common/animdecide.qh>
+    #include <common/monsters/all.qh>
+    #include <common/monsters/sv_monsters.qh>
+    #include <common/monsters/spawn.qh>
+    #include <common/weapons/config.qh>
+    #include <common/weapons/all.qh>
     #include "../weapons/accuracy.qh"
     #include "../weapons/common.qh"
     #include "../weapons/csqcprojectile.qh"
@@ -30,18 +30,18 @@
     #include "../weapons/tracing.qh"
     #include "../weapons/weaponstats.qh"
     #include "../weapons/weaponsystem.qh"
-    #include "../../common/t_items.qh"
+    #include <common/t_items.qh>
     #include "../autocvars.qh"
     #include "../constants.qh"
     #include "../defs.qh"
-    #include "../../common/notifications.qh"
-    #include "../../common/deathtypes/all.qh"
+    #include <common/notifications.qh>
+    #include <common/deathtypes/all.qh>
     #include "all.qh"
-    #include "../../common/turrets/sv_turrets.qh"
-    #include "../../common/vehicles/all.qh"
+    #include <common/turrets/sv_turrets.qh>
+    #include <common/vehicles/all.qh>
     #include "../campaign.qh"
-    #include "../../common/campaign_common.qh"
-    #include "../../common/mapinfo.qh"
+    #include <common/campaign_common.qh>
+    #include <common/mapinfo.qh>
     #include "../command/common.qh"
     #include "../command/banning.qh"
     #include "../command/radarmap.qh"
@@ -49,12 +49,12 @@
     #include "../command/getreplies.qh"
     #include "../command/cmd.qh"
     #include "../command/sv_cmd.qh"
-    #include "../../common/csqcmodel_settings.qh"
-    #include "../../lib/csqcmodel/common.qh"
-    #include "../../lib/csqcmodel/sv_model.qh"
+    #include <common/csqcmodel_settings.qh>
+    #include <lib/csqcmodel/common.qh>
+    #include <lib/csqcmodel/sv_model.qh>
     #include "../anticheat.qh"
     #include "../cheats.qh"
-    #include "../../common/playerstats.qh"
+    #include <common/playerstats.qh>
     #include "../portals.qh"
     #include "../g_hook.qh"
     #include "../scores.qh"
@@ -67,7 +67,7 @@
     #include "../round_handler.qh"
     #include "../item_key.qh"
     #include "../pathlib/pathlib.qh"
-    #include "../../common/vehicles/all.qh"
+    #include <common/vehicles/all.qh>
 #endif
 
 #include "all.qh"

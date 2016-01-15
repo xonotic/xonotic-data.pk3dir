@@ -69,29 +69,29 @@ const int MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
 .int monster_skill;
 
 // functions used elsewhere
-void Monster_Remove(entity mon);
+void Monster_Remove(entity this);
 
-void monsters_setstatus();
+void monsters_setstatus(entity this);
 
-bool Monster_Spawn(int mon_id);
+bool Monster_Spawn(entity this, int mon_id);
 
-void monster_setupcolors(entity mon);
+void monster_setupcolors(entity this);
 
 void Monster_Touch();
 
-void Monster_Move_2D(float mspeed, float allow_jumpoff);
+void Monster_Move_2D(entity this, float mspeed, float allow_jumpoff);
 
-void Monster_Delay(float repeat_count, float repeat_defer, float defer_amnt, void() func);
+void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func);
 
-float Monster_Attack_Melee(entity targ, float damg, vector anim, float er, float animtime, int deathtype, float dostop);
+float Monster_Attack_Melee(entity this, entity targ, float damg, vector anim, float er, float animtime, int deathtype, float dostop);
 
-bool Monster_Attack_Leap(vector anm, void() touchfunc, vector vel, float animtime);
+bool Monster_Attack_Leap(entity this, vector anm, void() touchfunc, vector vel, float animtime);
 
-entity Monster_FindTarget(entity mon);
+entity Monster_FindTarget(entity this);
 
-void monster_makevectors(entity e);
+void monster_makevectors(entity this, entity targ);
 
-void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float chan);
+void Monster_Sound(entity this, .string samplefield, float sound_delay, float delaytoo, float chan);
 
 /** number of monsters spawned with mobspawn command */
 int totalspawned;

@@ -1,15 +1,15 @@
 #include "../player.qh"
 
 #if defined(CSQC)
-	#include "../../../client/defs.qh"
-	#include "../../stats.qh"
-	#include "../../util.qh"
+	#include <client/defs.qh>
+	#include <common/stats.qh>
+	#include <common/util.qh>
 	#include "movetypes.qh"
-	#include "../../../lib/csqcmodel/common.qh"
-	#include "../../t_items.qh"
+	#include <lib/csqcmodel/common.qh>
+	#include <common/t_items.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../../server/autocvars.qh"
+	#include <server/autocvars.qh>
 #endif
 
 void _Movetype_WallFriction(entity this, vector stepnormal)  // SV_WallFriction
@@ -338,10 +338,14 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
 {
+	if(this.solid == SOLID_NOT)
+		return;
+
 	entity oldother = other;
 
 	for (entity e = findradius(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin)); e; e = e.chain)
 	{
+		if(e.solid == SOLID_TRIGGER && e != this)
 		if(e.move_nomonsters != MOVE_NOMONSTERS && e.move_nomonsters != MOVE_WORLDONLY)
 		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, this.absmin, this.absmax))
 		{
@@ -419,7 +423,7 @@ bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosi
 	if(trace_startsolid)
 		return true;
 
-	if(vlen(trace_endpos - this.move_origin) > 0.0001)
+	if(vdist(trace_endpos - this.move_origin, >, 0.0001))
 		this.move_origin = trace_endpos;
 	return false;
 }

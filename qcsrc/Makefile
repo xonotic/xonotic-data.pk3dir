@@ -1,30 +1,33 @@
 SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
 PERL ?= perl
-QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
+QCCFLAGS_WATERMARK ?= $(shell git describe)
+CPP := cc -xc -E
 QCC ?= gmqcc
 NDEBUG ?= 1
- 
+PROGS_OUT ?= $(CURDIR)/..
+BUILD_MOD ?= 0
+
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
 # We eventually need to get rid of these
 QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
-QCCFLAGS_FEATURES ?= \
-	-DBUILD_MOD=$(BUILD_MOD)
+QCCDEFS ?= \
+	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
+	-DNDEBUG=$(NDEBUG) \
+	-DBUILD_MOD=$(BUILD_MOD) \
+	$(QCCDEFS_EXTRA)
 
 # -Ooverlap-locals is required
 QCCFLAGS ?= \
 	-std=gmqcc \
 	-Ooverlap-locals \
 	-O3 \
-	-Werror -Wall -Wcpp \
+	-Werror -Wall \
 	$(QCCFLAGS_WTFS) \
-	-fftepp -flno -futf8 -fno-bail-on-werror -fftepp-predefs \
+	-flno -futf8 -fno-bail-on-werror \
 	-frelaxed-switch -freturn-assignments \
-	$(QCCFLAGS_WATERMARK) \
-	-DNDEBUG=$(NDEBUG) \
-	$(QCCFLAGS_FEATURES) \
 	$(QCCFLAGS_EXTRA)
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step
@@ -34,31 +37,37 @@ XON_BUILDSYSTEM =
 all: qc
 
 .PHONY: qc
-qc: ../menu.dat ../progs.dat ../csprogs.dat
+qc: $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat $(PROGS_OUT)/csprogs.dat
 
 .PHONY: clean
 clean:
-	rm -f ../progs.dat ../menu.dat ../csprogs.dat
+	rm -f $(PROGS_OUT)/{csprogs,progs,menu}.dat
+	rm -f ../.tmp/*.{qc,d,txt}
 
 $(QCCVERSIONFILE):
 	$(RM) qccversion.*
 	echo This file intentionally left blank. > $@
 
-FILES_CSPROGS = $(shell find lib common client -type f)
-../csprogs.dat: $(FILES_CSPROGS) $(QCCVERSIONFILE)
+export QCC
+export CPP
+export QCCDEFS
+export QCCFLAGS
+
+$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
-	cd client && $(QCC) $(QCCFLAGS) -DCSQC -o ../../csprogs.dat progs.inc
+	sh ./qcc.sh client $@ $<
+-include ../.tmp/client.d
 
-FILES_PROGS = $(shell find lib common server -type f)
-../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE)
+$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
-	cd server && $(QCC) $(QCCFLAGS) -DSVQC -o ../../progs.dat progs.inc
+	sh ./qcc.sh server $@ $<
+-include ../.tmp/server.d
 
-FILES_MENU = $(shell find lib common menu -type f)
-../menu.dat: $(FILES_MENU) $(QCCVERSIONFILE)
+$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	cd menu && $(QCC) $(QCCFLAGS) -DMENUQC -o ../../menu.dat progs.inc
+	sh ./qcc.sh menu $@ $<
+-include ../.tmp/menu.d
 
 .PHONY: testcase
 testcase:
-	cd testcase && $(QCC) $(QCCFLAGS) -DTESTCASE="$$TESTCASE"
+	cd testcase && $(QCC) $(QCCDEFS) $(QCCFLAGS) -DTESTCASE="$$TESTCASE"

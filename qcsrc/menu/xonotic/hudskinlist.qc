@@ -56,7 +56,7 @@ entity makeXonoticHUDSkinList()
 void XonoticHUDSkinList_configureXonoticHUDSkinList(entity me)
 {
 	me.configureXonoticListBox(me);
-	me.getHUDSkins(me);
+	me.nItems = 0;
 }
 
 const float HUDSKINPARM_NAME = 0;

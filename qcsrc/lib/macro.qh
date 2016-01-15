@@ -1,5 +1,4 @@
-#ifndef MACRO_H
-#define MACRO_H
+#pragma once
 
 #if 1
     void voidfunc() { error("voidfunc"); }
@@ -13,4 +12,5 @@
 #define _CAT(a, b) a ## b
 #define CAT(a, b) _CAT(a, b)
 
-#endif
+#define _STR(it) #it
+#define STR(it) _STR(it)

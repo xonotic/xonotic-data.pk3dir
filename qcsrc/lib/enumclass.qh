@@ -1,5 +1,4 @@
-#ifndef ENUMCLASS_H
-#define ENUMCLASS_H
+#pragma once
 
 #include "oo.qh"
 
@@ -20,7 +19,5 @@
 #define ENUMCLASS(id) CLASS(id, Object)
 #define CASE(class, id) class class##_##id; STATIC_INIT(class##_##id) { class##_##id = NEW(class); }
 #define ENUMCLASS_END(id) ENDCLASS(id)
-
-#endif
 
 #endif

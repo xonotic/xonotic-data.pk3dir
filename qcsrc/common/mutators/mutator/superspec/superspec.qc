@@ -439,10 +439,10 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
-{SELFPARAM();
+{
 	FOREACH_CLIENT(IS_SPEC(it), LAMBDA(
 		setself(it);
-		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == this)
+		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == frag_target)
 		{
 			if(self.autospec_flags & ASF_SHOWWHAT)
 				superspec_msg("", "", self, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
@@ -451,7 +451,7 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 		}
 	));
 
-	setself(this);
+	setself(frag_target);
 	return false;
 }
 

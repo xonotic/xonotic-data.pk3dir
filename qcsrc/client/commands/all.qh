@@ -1,7 +1,7 @@
 #ifndef CLIENT_COMMANDS_ALL_H
 #define CLIENT_COMMANDS_ALL_H
 
-#include "../../common/commands/all.qh"
+#include <common/commands/all.qh>
 
 #include "cl_cmd.qh"
 

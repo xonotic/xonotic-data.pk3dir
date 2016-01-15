@@ -1,7 +1,7 @@
 #ifndef NOTIFICATIONS_H
 #define NOTIFICATIONS_H
 
-#include "command/all.qh"
+#include <common/command/all.qh>
 
 #include "constants.qh"
 #include "teams.qh"

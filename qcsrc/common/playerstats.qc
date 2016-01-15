@@ -3,7 +3,7 @@
 #elif defined(SVQC)
     #include "constants.qh"
     #include "util.qh"
-    #include "weapons/all.qh"
+    #include <common/weapons/all.qh>
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"
     #include "playerstats.qh"

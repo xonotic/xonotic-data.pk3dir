@@ -117,7 +117,7 @@ float bot_shouldattack(entity e)
 			return false;
 	}
 
-	if(e.frozen)
+	if(STAT(FROZEN, e))
 		return false;
 
 	if(teamplay)
@@ -131,7 +131,7 @@ float bot_shouldattack(entity e)
 
 	if (!e.takedamage)
 		return false;
-	if (e.deadflag)
+	if (IS_DEAD(e))
 		return false;
 	if (e.BUTTON_CHAT)
 		return false;
@@ -303,7 +303,7 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	// note the maxfiredeviation is in degrees so this has to convert to radians first
 	//if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
 	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
-	if (vlen(trace_endpos-shotorg) < 500+500*bound(0, skill+self.bot_aggresskill, 10) || random()*random()>bound(0,(skill+self.bot_aggresskill)*0.05,1))
+	if(vdist(trace_endpos-shotorg, <, 500 + 500 * bound(0, skill + self.bot_aggresskill, 10)) || random()*random()>bound(0,(skill+self.bot_aggresskill)*0.05,1))
 		self.bot_firetimer = time + bound(0.1, 0.5-(skill+self.bot_aggresskill)*0.05, 0.5);
 	//traceline(shotorg,shotorg+shotdir*1000,false,world);
 	//dprint(ftos(maxfiredeviation),"\n");

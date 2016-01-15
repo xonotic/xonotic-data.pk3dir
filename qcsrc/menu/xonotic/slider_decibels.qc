@@ -95,9 +95,9 @@ string XonoticDecibelsSlider_valueToText(entity me, float v)
 }
 
 bool autocvar_test_XonoticDecibelsSlider = false;
-TEST(XonoticDecibelsSlider)
+TEST(XonoticDecibelsSlider, SoundTest)
 {
-	if (!autocvar_test_XonoticDecibelsSlider) { TEST_OK(); return; }
+	if (!autocvar_test_XonoticDecibelsSlider) { SUCCEED(); return; }
 	for (int i = -400; i < 0; ++i)
 	{
 		float db = i * 0.1;
@@ -105,9 +105,9 @@ TEST(XonoticDecibelsSlider)
 		float dbv = toDecibelOfSquare(v, -40);
 		float d = dbv - db;
 		LOG_INFOF("%f -> %f -> %f (diff: %f)\n", db, v, dbv, d);
-		TEST_Check(fabs(d) > 0.02);
+		EXPECT_GT(fabs(d), 0.02);
 	}
-	TEST_OK();
+	SUCCEED();
 }
 
 #endif

@@ -1,5 +1,4 @@
-#ifndef MAP_H
-#define MAP_H
+#pragma once
 
 #include "int.qh"
 
@@ -111,5 +110,3 @@ void db_test()
 	db_close(db);
 	LOG_INFO("CLOSED.\n");
 }
-
-#endif

@@ -63,7 +63,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 		{
 			discard = false;
 
-			FOREACH_CLIENT(IS_PLAYER(it) && it != self && it.deadflag == DEAD_NO, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && it != self && !IS_DEAD(it), LAMBDA(
 				d = vlen(it.origin - o); // distance between player and item
 
 				if ( it.team == self.team )
@@ -201,7 +201,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 // go to best items
 void havocbot_role_generic()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.bot_strategytime < time)

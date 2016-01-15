@@ -568,7 +568,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 		LogTeamchange(pl.playerid, pl.team, 2); // log auto join
 
-		if(pl.deadflag == DEAD_NO)
+		if(!IS_DEAD(pl))
 			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE.m_id, pl.origin, '0 0 0');
 	}
 
@@ -660,7 +660,7 @@ void SV_ChangeTeam(float _color)
 	if(IS_PLAYER(self) && steam != dteam)
 	{
 		// kill player when changing teams
-		if(self.deadflag == DEAD_NO)
+		if(!IS_DEAD(self))
 			Damage(self, self, self, 100000, DEATH_TEAMCHANGE.m_id, self.origin, '0 0 0');
 	}
 }
@@ -797,7 +797,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	TeamchangeFrags(selected);
 	SetPlayerTeam(selected, smallestteam, source_team, false);
 
-	if(selected.deadflag == DEAD_NO)
+	if(!IS_DEAD(selected))
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE.m_id, selected.origin, '0 0 0');
 	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
 }

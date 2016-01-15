@@ -1,8 +1,7 @@
-#ifndef I18N_H
-#define I18N_H
+#pragma once
 
 #include "log.qh"
-#include "map.qc"
+#include "map.qh"
 #include "unsafe.qh"
 
 // translation helpers
@@ -57,5 +56,3 @@ string CTX(string s)
 }
 
 #define ZCTX(s) strzone(CTX(s))
-
-#endif

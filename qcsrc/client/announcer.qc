@@ -2,8 +2,8 @@
 
 #include "mutators/events.qh"
 
-#include "../common/notifications.qh"
-#include "../common/stats.qh"
+#include <common/notifications.qh>
+#include <common/stats.qh>
 
 bool announcer_1min;
 bool announcer_5min;

@@ -53,7 +53,7 @@
 #define X(slot) \
 	IMPULSE(weapon_group_##slot) \
 	{ \
-		if (this.deadflag != DEAD_NO) return; \
+		if (IS_DEAD(this)) return; \
 		W_NextWeaponOnImpulse(slot); \
 	}
 X(1)
@@ -74,7 +74,7 @@ X(0)
 	IMPULSE(weapon_priority_##slot##_##dir) \
 	{ \
 		if (this.vehicle) return; \
-		if (this.deadflag != DEAD_NO) return; \
+		if (IS_DEAD(this)) return; \
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
@@ -120,7 +120,7 @@ X(9, next)
 	IMPULSE(weapon_byid_##i) \
 	{ \
 		if (this.vehicle) return; \
-		if (this.deadflag != DEAD_NO) return; \
+		if (IS_DEAD(this)) return; \
 		W_SwitchWeapon(Weapons_from(WEP_FIRST + i)); \
 	}
 X(0)
@@ -152,70 +152,70 @@ X(23)
 IMPULSE(weapon_next_byid)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_NextWeapon(0);
 }
 
 IMPULSE(weapon_prev_byid)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_PreviousWeapon(0);
 }
 
 IMPULSE(weapon_next_bygroup)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_NextWeapon(1);
 }
 
 IMPULSE(weapon_prev_bygroup)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_PreviousWeapon(1);
 }
 
 IMPULSE(weapon_next_bypriority)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_NextWeapon(2);
 }
 
 IMPULSE(weapon_prev_bypriority)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_PreviousWeapon(2);
 }
 
 IMPULSE(weapon_last)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_LastWeapon(this);
 }
 
 IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_SwitchWeapon(w_getbestweapon(this));
 }
 
 IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	W_ThrowWeapon(W_CalculateProjectileVelocity(this.velocity, v_forward * 750, false), '0 0 0', true);
 }
 
 IMPULSE(weapon_reload)
 {
 	if (this.vehicle) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	if (forbidWeaponUse(this)) return;
 	Weapon w = PS(this).m_weapon;
 	entity actor = this;
@@ -363,7 +363,7 @@ IMPULSE(waypoint_personal_death)
 IMPULSE(waypoint_here_follow)
 {
 	if (!teamplay) return;
-	if (this.deadflag != DEAD_NO) return;
+	if (IS_DEAD(this)) return;
 	if (!MUTATOR_CALLHOOK(HelpMePing, this))
 	{
 		entity wp = WaypointSprite_Attach(WP_Helpme, true, RADARICON_HELPME);
@@ -515,7 +515,7 @@ IMPULSE(navwaypoint_unreachable)
 	for (entity e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
 	{
 		vector org = e.origin;
-		tracebox(e.origin, PL_MIN, PL_MAX, e.origin - '0 0 512', MOVE_NOMONSTERS, world);
+		tracebox(e.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), e.origin - '0 0 512', MOVE_NOMONSTERS, world);
 		setorigin(e, trace_endpos);
 		if (navigation_findnearestwaypoint(e, false))
 		{

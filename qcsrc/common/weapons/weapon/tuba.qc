@@ -582,11 +582,13 @@ void Ent_TubaNote_UpdateSound(entity this)
 	tubasound(this.enemy, 1);
 }
 
-void Ent_TubaNote_StopSound()
-{SELFPARAM();
+void Ent_TubaNote_StopSound(entity this)
+{
 	this.enemy.nextthink = time;
 	this.enemy = NULL;
 }
+
+void Ent_TubaNote_StopSound_self() { Ent_TubaNote_StopSound(self); }
 
 NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 {
@@ -600,7 +602,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 
 		if (this.enemy) {
 			if (n != this.note || i != this.tuba_instrument || isNew) {
-				Ent_TubaNote_StopSound();
+				Ent_TubaNote_StopSound(this);
 			}
 		} else {
 			this.enemy = new(tuba_note);
@@ -629,7 +631,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 		}
 	}
 
-	this.think = Ent_TubaNote_StopSound;
+	this.think = Ent_TubaNote_StopSound_self;
 	this.entremove = Ent_TubaNote_StopSound;
 	this.enemy.think = Ent_TubaNote_Think;
 	this.enemy.nextthink = time + 10;

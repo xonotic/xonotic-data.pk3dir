@@ -2,14 +2,14 @@
 
 #include "weaponsystem.qh"
 #include "../mutators/all.qh"
-#include "../../common/t_items.qh"
+#include <common/t_items.qh>
 #include "../g_damage.qh"
-#include "../../common/items/item.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/triggers/subs.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
+#include <common/items/item.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/triggers/subs.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
 
 void thrown_wep_think()
 {SELFPARAM();
@@ -78,7 +78,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	weapon_defaultspawnfunc(wep, info);
 	if(startitem_failed)
 		return string_null;
-	wep.glowmod = own.weaponentity_glowmod;
+	wep.glowmod = weaponentity_glowmod(info, own.clientcolors);
 	wep.think = thrown_wep_think;
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
@@ -190,9 +190,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w.m_id);
 }
 
-void SpawnThrownWeapon(vector org, float w)
-{SELFPARAM();
-	if(self.weapons & WepSet_FromWeapon(PS(self).m_weapon))
-		if(W_IsWeaponThrowable(PS(self).m_weapon.m_id))
-			W_ThrowNewWeapon(self, PS(self).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200');
+void SpawnThrownWeapon(entity this, vector org, float w)
+{
+	if(this.weapons & WepSet_FromWeapon(PS(this).m_weapon))
+		if(W_IsWeaponThrowable(PS(this).m_weapon.m_id))
+			W_ThrowNewWeapon(this, PS(this).m_weapon.m_id, false, org, randomvec() * 125 + '0 0 200');
 }

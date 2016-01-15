@@ -101,8 +101,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 
 		if(frag_attacker != frag_target)
 		if(frag_target.health > 0)
-		if(frag_target.frozen == 0)
-		if(frag_target.deadflag == DEAD_NO)
+		if(STAT(FROZEN, frag_target) == 0)
+		if(!IS_DEAD(frag_target))
 		{
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			frag_force = '0 0 0';
@@ -113,18 +113,17 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
-{SELFPARAM();
+{
 	if(damage_take)
-		self.ok_pauseregen_finished = max(self.ok_pauseregen_finished, time + 2);
+		frag_target.ok_pauseregen_finished = max(frag_target.ok_pauseregen_finished, time + 2);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 {
-	SELFPARAM();
 	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
 
-	if(IS_MONSTER(this))
+	if(IS_MONSTER(frag_target))
 	{
 		remove(other); // remove default item
 		other = NULL;
@@ -140,10 +139,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	e.gravity = 1;
 	e.reset = SUB_Remove;
 	setorigin(e, frag_target.origin + '0 0 32');
-	e.velocity = '0 0 200' + normalize(targ.origin - self.origin) * 500;
+	e.velocity = '0 0 200' + normalize(targ.origin - frag_target.origin) * 500;
 	SUB_SetFade(e, time + 5, 1);
 
-	this.ok_lastwep = PS(this).m_switchweapon.m_id;
+	frag_target.ok_lastwep = PS(frag_target).m_switchweapon.m_id;
 
 	return false;
 }
@@ -152,7 +151,7 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem) { ok_PlayerDies(); }
 MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
 {SELFPARAM();
 	// overkill's values are different, so use custom regen
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > self.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > self.pauserotarmor_finished), autocvar_g_balance_armor_limit);
 		self.health = CalcRotRegen(self.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > self.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > self.pauserothealth_finished), autocvar_g_balance_health_limit);
@@ -178,7 +177,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(intermission_running || gameover)
 		return false;
 
-	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || self.frozen)
+	if(IS_DEAD(self) || !IS_PLAYER(self) || STAT(FROZEN, self))
 		return false;
 
 	if(self.ok_lastwep)

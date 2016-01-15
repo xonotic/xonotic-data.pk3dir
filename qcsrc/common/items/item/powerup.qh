@@ -1,10 +1,10 @@
+#pragma once
+
 #ifdef SVQC
     // For FL_POWERUP
-    #include "../../../server/constants.qh"
+    #include <server/constants.qh>
 #endif
 
-#ifndef POWERUP_H
-#define POWERUP_H
 #include "pickup.qh"
 CLASS(Powerup, Pickup)
 #ifdef SVQC
@@ -16,5 +16,3 @@ CLASS(Powerup, Pickup)
     ATTRIB(Powerup, m_respawntimejitter, float(), GET(g_pickup_respawntimejitter_powerup))
 #endif
 ENDCLASS(Powerup)
-
-#endif

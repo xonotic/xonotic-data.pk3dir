@@ -65,7 +65,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
 
 void beam_think()
 {SELFPARAM();
-    if ((time > self.cnt) || (self.owner.deadflag != DEAD_NO))
+    if ((time > self.cnt) || (IS_DEAD(self.owner)))
     {
         self.owner.attack_finished_single[0] = time + self.owner.shot_refire;
         self.owner.fireflag = 2;

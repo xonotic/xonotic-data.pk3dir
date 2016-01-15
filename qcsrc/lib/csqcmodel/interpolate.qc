@@ -29,11 +29,10 @@
 .vector ivforward1, ivforward2;
 .vector ivup1, ivup2;
 .float itime1, itime2;
-void InterpolateOrigin_Reset()
+void InterpolateOrigin_Reset(entity this)
 {
-	SELFPARAM();
-	self.iflags &= ~IFLAG_INTERNALMASK;
-	self.itime1 = self.itime2 = 0;
+	this.iflags &= ~IFLAG_INTERNALMASK;
+	this.itime1 = this.itime2 = 0;
 }
 void InterpolateOrigin_Note(entity this)
 {

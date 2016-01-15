@@ -3,26 +3,26 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/common.qh"
-    #include "../../lib/warpzone/util_server.qh"
-    #include "../../lib/warpzone/server.qh"
+    #include <lib/warpzone/common.qh>
+    #include <lib/warpzone/util_server.qh>
+    #include <lib/warpzone/server.qh>
     #include "../constants.qh"
 	#include "../triggers/subs.qh"
     #include "../util.qh"
-    #include "../../server/weapons/csqcprojectile.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/constants.qh"
-    #include "../../server/defs.qh"
+    #include <server/weapons/csqcprojectile.qh>
+    #include <server/autocvars.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
     #include "../deathtypes/all.qh"
     #include "../turrets/sv_turrets.qh"
     #include "../vehicles/all.qh"
     #include "../mapinfo.qh"
-    #include "../../server/anticheat.qh"
+    #include <server/anticheat.qh>
 #endif
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
-	if (IS_PLAYER(player) && !PHYS_DEAD(player))
+	if (IS_PLAYER(player) && !IS_DEAD(player))
 	{
 		TDEATHLOOP(org)
 		{
@@ -30,7 +30,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 		#endif
 				if(IS_PLAYER(head))
-					if(!PHYS_DEAD(head))
+					if(!IS_DEAD(head))
 						return 1;
 		}
 	}
@@ -85,7 +85,19 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
-				sound (player, CH_TRIGGER, SND_TELEPORT, VOL_BASE, ATTEN_NORM);
+			{
+				string thesound = SND(TELEPORT);
+				if(teleporter.noise != "")
+				{
+					RandomSelection_Init();
+					FOREACH_WORD(teleporter.noise, true,
+					{
+						RandomSelection_Add(NULL, 0, it, 1, 1);
+					});
+					thesound = RandomSelection_chosen_string;
+				}
+				_sound (player, CH_TRIGGER, thesound, VOL_BASE, ATTEN_NORM);
+			}
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
 				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
@@ -134,7 +146,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	if(IS_PLAYER(player))
 	{
 		if(tflags & TELEPORT_FLAG_TDEATH)
-			if(player.takedamage && player.deadflag == DEAD_NO && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
+			if(player.takedamage && !IS_DEAD(player) && !g_race && !g_cts && (autocvar_g_telefrags || (tflags & TELEPORT_FLAG_FORCE_TDEATH)))
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
@@ -203,21 +215,21 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 #ifdef SVQC
 	if(e.speed)
-		if(vlen(player.velocity) > e.speed)
+		if(vdist(player.velocity, >, e.speed))
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
 #elif defined(CSQC)
 	if(e.speed)
-		if(vlen(player.move_velocity) > e.speed)
+		if(vdist(player.move_velocity, >, e.speed))
 			player.move_velocity = normalize(player.move_velocity) * max(0, e.speed);
 #endif
 
 #ifdef SVQC
 	if(STAT(TELEPORT_MAXSPEED, player))
-		if(vlen(player.velocity) > STAT(TELEPORT_MAXSPEED, player))
+		if(vdist(player.velocity, >, STAT(TELEPORT_MAXSPEED, player)))
 			player.velocity = normalize(player.velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
 #elif defined(CSQC)
 	if(STAT(TELEPORT_MAXSPEED, player))
-		if(vlen(player.move_velocity) > STAT(TELEPORT_MAXSPEED, player))
+		if(vdist(player.move_velocity, >, STAT(TELEPORT_MAXSPEED, player)))
 			player.move_velocity = normalize(player.move_velocity) * max(0, STAT(TELEPORT_MAXSPEED, player));
 #endif
 

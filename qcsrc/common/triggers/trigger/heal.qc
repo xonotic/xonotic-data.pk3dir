@@ -9,7 +9,7 @@ void trigger_heal_touch()
 	if (other.iscreature)
 	{
 		if (other.takedamage)
-		if (!other.deadflag)
+		if (!IS_DEAD(other))
 		if (other.triggerhealtime < time)
 		{
 			EXACTTRIGGER_TOUCH;

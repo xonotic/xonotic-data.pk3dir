@@ -1,19 +1,19 @@
-ast   Asturian "Asturianu" 60%
-de    German "Deutsch" 90%
-de_CH German "Deutsch (Schweiz)" 90%
+ast   Asturian "Asturianu" 69%
+de    German "Deutsch" 88%
+de_CH German "Deutsch (Schweiz)" 88%
 en    English "English"
-en_AU English "English (Australia)" 77%
-es    Spanish "Español" 68%
-fr    French "Français" 98%
-it    Italian "Italiano" 97%
-hu    Hungarian "Magyar" 50%
-nl    Dutch "Nederlands" 45%
-pl    Polish "Polski" 60%
-pt    Portuguese "Português" 42%
-ro    Romanian "Romana" 90%
-fi    Finnish "Suomi" 35%
+en_AU English "English (Australia)" 76%
+es    Spanish "Español" 67%
+fr    French "Français" 96%
+it    Italian "Italiano" 96%
+hu    Hungarian "Magyar" 49%
+nl    Dutch "Nederlands" 44%
+pl    Polish "Polski" 59%
+pt    Portuguese "Português" 78%
+ro    Romanian "Romana" 87%
+fi    Finnish "Suomi" 34%
 el    Greek "Ελληνική" 25%
-be    Belarusian "Беларуская" 65%
-bg    Bulgarian "Български" 65%
-ru    Russian "Русский" 93%
-uk    Ukrainian "Українська" 60%
+be    Belarusian "Беларуская" 63%
+bg    Bulgarian "Български" 63%
+ru    Russian "Русский" 90%
+uk    Ukrainian "Українська" 59%

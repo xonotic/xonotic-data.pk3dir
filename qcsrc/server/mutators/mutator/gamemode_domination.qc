@@ -65,7 +65,7 @@ float domination_teams;
 
 #ifdef IMPLEMENTATION
 
-#include "../../teamplay.qh"
+#include <server/teamplay.qh>
 
 bool g_domination;
 
@@ -452,7 +452,7 @@ void Domination_RoundStart()
 //go to best items, or control points you don't own
 void havocbot_role_dom()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.bot_strategytime < time)

@@ -34,13 +34,13 @@ void movelib_move_simple(vector newdir,float velo,float blendrate)
     self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
 }
 */
-#define movelib_move_simple(newdir,velo,blendrate) \
-    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
+#define movelib_move_simple(e,newdir,velo,blendrate) \
+    e.velocity = e.velocity * (1 - blendrate) + (newdir * blendrate) * velo
 
-#define movelib_move_simple_gravity(newdir,velo,blendrate) \
-    if(IS_ONGROUND(self)) movelib_move_simple(newdir,velo,blendrate)
+#define movelib_move_simple_gravity(e,newdir,velo,blendrate) \
+    if(IS_ONGROUND(e)) movelib_move_simple(e,newdir,velo,blendrate)
 
-void movelib_brake_simple(float force);
+void movelib_brake_simple(entity this, float force);
 
 /**
 Pitches and rolls the entity to match the gound.

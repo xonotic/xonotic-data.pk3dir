@@ -25,14 +25,14 @@
 #include "cl_model.qh"
 #include "common.qh"
 #include "interpolate.qh"
-#include "../../client/defs.qh"
-#include "../../client/main.qh"
-#include "../../common/constants.qh"
-#include "../../common/physics/player.qh"
-#include "../../common/stats.qh"
-#include "../../common/triggers/trigger/viewloc.qh"
-#include "../../common/util.qh"
-#include "../../common/viewloc.qh"
+#include <client/defs.qh>
+#include <client/main.qh>
+#include <common/constants.qh>
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/triggers/trigger/viewloc.qh>
+#include <common/util.qh>
+#include <common/viewloc.qh>
 
 float autocvar_cl_movement_errorcompensation = 0;
 
@@ -75,7 +75,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 		return;
 	}
 	*/
-	if(vlen(o) > 32 || vlen(v) > 192)
+	if(vdist(o, >, 32) || vdist(v, >, 192))
 	{
 		//printf("TOO BIG: x=%v v=%v\n", o, v);
 		return;
@@ -107,15 +107,15 @@ void CSQCPlayer_SetMinsMaxs(entity this)
 {
 	if ((this.flags & FL_DUCKED) || !this.isplayermodel)
 	{
-		this.mins = PL_CROUCH_MIN;
-		this.maxs = PL_CROUCH_MAX;
-		this.view_ofs = PL_CROUCH_VIEW_OFS;
+		this.mins = STAT(PL_CROUCH_MIN, NULL);
+		this.maxs = STAT(PL_CROUCH_MAX, NULL);
+		this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, NULL);
 	}
 	else
 	{
-		this.mins = PL_MIN;
-		this.maxs = PL_MAX;
-		this.view_ofs = PL_VIEW_OFS;
+		this.mins = STAT(PL_MIN, NULL);
+		this.maxs = STAT(PL_MAX, NULL);
+		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
 	}
 }
 
@@ -246,8 +246,8 @@ void CSQCPlayer_SetCamera()
 {
 	const vector v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 	const float vh = STAT(VIEWHEIGHT);
-	const vector pl_viewofs = PL_VIEW_OFS;
-	const vector pl_viewofs_crouch = PL_CROUCH_VIEW_OFS;
+	const vector pl_viewofs = STAT(PL_VIEW_OFS, NULL);
+	const vector pl_viewofs_crouch = STAT(PL_CROUCH_VIEW_OFS, NULL);
 	const entity e = csqcplayer;
 	if (e)
 	{
@@ -339,7 +339,7 @@ void CSQCPlayer_SetCamera()
 	CSQCPLAYER_HOOK_POSTCAMERASETUP();
 }
 
-void CSQCPlayer_Remove()
+void CSQCPlayer_Remove(entity this)
 {
 	csqcplayer = NULL;
 	cvar_settemp("cl_movement_replay", "1");

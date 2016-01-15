@@ -131,7 +131,7 @@ void W_Seeker_Missile_Think()
 	);
 
 	if(self.enemy != world)
-		if(self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+		if(self.enemy.takedamage != DAMAGE_AIM || IS_DEAD(self.enemy))
 			self.enemy = world;
 
 	if(self.enemy != world)
@@ -147,7 +147,7 @@ void W_Seeker_Missile_Think()
 		if(WEP_CVAR(seeker, missile_smart) && (dist > WEP_CVAR(seeker, missile_smart_mindist)))
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
-			if( vlen(self.origin + olddir * self.wait) < dist)
+			if( vdist(self.origin + olddir * self.wait, <, dist))
 				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
 				traceline(self.origin, eorg, false, self);
@@ -191,7 +191,7 @@ void W_Seeker_Missile_Think()
 	}
 	///////////////
 
-	if(self.enemy.deadflag != DEAD_NO)
+	if(IS_DEAD(self.enemy))
 	{
 		self.enemy = world;
 		self.cnt = time + 1 + (random() * 4);
@@ -206,21 +206,21 @@ void W_Seeker_Missile_Think()
 
 
 
-void W_Seeker_Missile_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	if(self.realowner == attacker)
-		self.health = self.health - (damage * 0.25);
+	if(this.realowner == attacker)
+		this.health = this.health - (damage * 0.25);
 	else
-		self.health = self.health - damage;
+		this.health = this.health - damage;
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_Seeker_Missile_Explode);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_Seeker_Missile_Explode));
 }
 
 /*
@@ -230,7 +230,7 @@ void W_Seeker_Missile_Animate()
 	self.nextthink = time + 0.05;
 
 	if(self.enemy != world)
-		if(self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+		if(self.enemy.takedamage != DAMAGE_AIM || IS_DEAD(self.enemy))
 			self.enemy = world;
 
 	if(self.frame == 5)
@@ -400,7 +400,7 @@ void W_Seeker_Attack()
 	{
 		if(closest_target)
 		{
-			if(vlen(self.origin - tracker.tag_target.origin) < vlen(self.origin - closest_target.origin))
+			if(vlen2(self.origin - tracker.tag_target.origin) < vlen2(self.origin - closest_target.origin))
 				closest_target = tracker.tag_target;
 		}
 		else
@@ -421,7 +421,7 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 	self.cnt = self.cnt - 1;
 
 	Weapon thiswep = WEP_SEEKER;
-	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (self.realowner.deadflag != DEAD_NO) || (PS(self.realowner).m_switchweapon != WEP_SEEKER))
+	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (IS_DEAD(self.realowner)) || (PS(self.realowner).m_switchweapon != WEP_SEEKER))
 	{
 		remove(self);
 		return;
@@ -459,7 +459,7 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 void W_Seeker_Tracker_Think()
 {SELFPARAM();
 	// commit suicide if: You die OR target dies OR you switch away from the seeker OR commit suicide if lifetime is up
-	if((self.realowner.deadflag != DEAD_NO) || (self.tag_target.deadflag != DEAD_NO) || (PS(self.realowner).m_switchweapon != WEP_SEEKER)
+	if((IS_DEAD(self.realowner)) || (IS_DEAD(self.tag_target)) || (PS(self.realowner).m_switchweapon != WEP_SEEKER)
 	|| (time > self.tag_time + WEP_CVAR(seeker, tag_tracker_lifetime)))
 	{
 		if(self)
@@ -477,22 +477,22 @@ void W_Seeker_Tracker_Think()
 // ============================
 // Begin: Tag projectile
 // ============================
-void W_Seeker_Tag_Explode()
-{SELFPARAM();
-	//if(other==self.realowner)
+void W_Seeker_Tag_Explode(entity this)
+{
+	//if(other==this.realowner)
 	//    return;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, other.species, self);
+	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, other.species, this);
 
-	remove(self);
+	remove(this);
 }
 
-void W_Seeker_Tag_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
-	self.health = self.health - damage;
-	if(self.health <= 0)
-		W_Seeker_Tag_Explode();
+	this.health = this.health - damage;
+	if(this.health <= 0)
+		W_Seeker_Tag_Explode(this);
 }
 
 void W_Seeker_Tag_Touch()
@@ -511,7 +511,7 @@ void W_Seeker_Tag_Touch()
 	self.event_damage = func_null;
 	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, self);
 
-	if(other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
+	if(other.takedamage == DAMAGE_AIM && !IS_DEAD(other))
 	{
 		// check to see if this person is already tagged by me
 		entity tag = W_Seeker_Tagged_Info(self.realowner, other);

@@ -54,7 +54,7 @@ string minigame_texture(string name)
 	return path;
 }
 
-#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(self.Name)
+#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(this.Name)
 #define MSLE_CLEAN_String(x) strunzone(x);
 #define MSLE_CLEAN_Byte(x)
 #define MSLE_CLEAN_Char(x)
@@ -67,7 +67,7 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Vector2D(x)
 
 #define MSLE(Name,Fields) \
-	void msle_entremove_##Name() { SELFPARAM(); strunzone(self.netname); Fields }
+	void msle_entremove_##Name(entity this) { strunzone(this.netname); Fields }
 MINIGAME_SIMPLELINKED_ENTITIES
 #undef MSLE
 #undef FIELD
@@ -105,9 +105,9 @@ void deactivate_minigame()
 		HUD_MinigameMenu_CurrentButton();
 }
 
-void minigame_entremove()
-{SELFPARAM();
-	if ( self == active_minigame )
+void minigame_entremove(entity this)
+{
+	if ( this == active_minigame )
 		deactivate_minigame();
 }
 
@@ -147,9 +147,9 @@ void activate_minigame(entity minigame)
 	}
 }
 
-void minigame_player_entremove()
-{SELFPARAM();
-	if ( self.owner == active_minigame && self.minigame_playerslot == player_localentnum )
+void minigame_player_entremove(entity this)
+{
+	if ( this.owner == active_minigame && this.minigame_playerslot == player_localentnum )
 		deactivate_minigame();
 }
 

@@ -1,4 +1,4 @@
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
 #ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
 #define DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
@@ -20,6 +20,7 @@ ENDCLASS(XonoticMutatorsDialog)
 #ifdef IMPLEMENTATION
 void XonoticMutatorsDialog_showNotify(entity me)
 {
+	SUPER(XonoticMutatorsDialog).showNotify(me);
 	loadAllCvars(me);
 }
 

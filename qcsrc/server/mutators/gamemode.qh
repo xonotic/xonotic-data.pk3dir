@@ -20,22 +20,22 @@
 
 #include "../command/vote.qh"
 
-#include "../../common/monsters/all.qh"
+#include <common/monsters/all.qh>
 
 #include "../command/common.qh"
 
 #include "../weapons/tracing.qh"
 #include "../weapons/weaponsystem.qh"
 
-#include "../../common/deathtypes/all.qh"
-#include "../../common/notifications.qh"
-#include "../../common/triggers/teleporters.qh"
-#include "../../common/triggers/subs.qh"
-#include "../../common/stats.qh"
-#include "../../common/teams.qh"
+#include <common/deathtypes/all.qh>
+#include <common/notifications.qh>
+#include <common/triggers/teleporters.qh>
+#include <common/triggers/subs.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
 
-#include "../../lib/warpzone/server.qh"
-#include "../../lib/warpzone/util_server.qh"
+#include <lib/warpzone/server.qh>
+#include <lib/warpzone/util_server.qh>
 
 .float lastground;
 float total_players;

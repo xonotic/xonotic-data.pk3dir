@@ -54,8 +54,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 5, 1, "cl_curl_maxdownloads",
 			_("Maximum number of concurrent HTTP/FTP downloads")));
 	me.TR(me);
-		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
 		me.TD(me, 1, 2, e = makeXonoticSlider_T(10, 2000, 50, "cl_curl_maxspeed",
 			_("Maximum download speed")));
 	me.TR(me);

@@ -2,7 +2,7 @@
 #define MUTATOR_DAMAGETEXT_H
 
 #ifdef MENUQC
-#include "../../../../menu/xonotic/tab.qc"
+#include <menu/xonotic/tab.qc>
 #endif
 
 #endif
@@ -134,11 +134,11 @@ NET_HANDLE(damagetext, bool isNew)
 
 #ifdef MENUQC
 CLASS(XonoticDamageTextSettings, XonoticTab)
-    #include "../../../../menu/gamesettings.qh"
+    #include <menu/gamesettings.qh>
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
     ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"))
     ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9)
-    ATTRIB(XonoticDamageTextSettings, rows, float, 13)
+    ATTRIB(XonoticDamageTextSettings, rows, float, 15.5)
     ATTRIB(XonoticDamageTextSettings, columns, float, 5)
     INIT(XonoticDamageTextSettings) { this.configureDialog(this); }
     METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }

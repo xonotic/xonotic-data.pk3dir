@@ -32,8 +32,8 @@ bool autocvar_sv_dodging_sound;
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
-#include "../../../animdecide.qh"
-#include "../../../physics/player.qh"
+#include <common/animdecide.qh>
+#include <common/physics/player.qh>
 
 .float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
 
@@ -92,15 +92,15 @@ bool check_close_to_wall(entity this, float threshold)
 {
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
-	#define X(OFFSET)																\
-	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this);	\
-	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < threshold)		\
+#define X(OFFSET) \
+	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this); \
+	if(trace_fraction < 1 && vdist(this.origin - trace_endpos, <, threshold)) \
 		return true;
 	X(1000*v_right);
 	X(-1000*v_right);
 	X(1000*v_forward);
 	X(-1000*v_forward);
-	#undef X
+#undef X
 
 	return false;
 }
@@ -176,7 +176,7 @@ void PM_dodging(entity this)
 	if (!PHYS_DODGING)
 		return;
 
-    if (PHYS_DEAD(this))
+    if (IS_DEAD(this))
         return;
 
 	// when swimming, no dodging allowed..

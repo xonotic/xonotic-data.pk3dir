@@ -1,22 +1,7 @@
 #include "test.qh"
 
-int TEST_failed;
-bool TEST_ok;
-
-void TEST_Fail(string cond)
-{
-	LOG_INFOF("Assertion failed: ", cond);
-	// backtrace();
-	++TEST_failed;
-}
-
-void TEST_OK()
-{
-	TEST_ok = true;
-}
-
 int TEST_RunAll_accumulated(int init);
-bool TEST_RunAll()
+bool RUN_ALL_TESTS()
 {
 	int f = TEST_RunAll_accumulated(0);
 	if (f)
@@ -35,6 +20,7 @@ bool TEST_Run(string s)
 {
 	LOG_INFOF("%s: testing...\n", s);
 	TEST_failed = 0;
+	TEST_fatal = 0;
 	TEST_ok = false;
 	callfunction(strcat("_TEST_", s));
 	if (TEST_failed > 0)

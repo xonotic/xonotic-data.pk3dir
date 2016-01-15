@@ -278,7 +278,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 
 	while(head)
 	{
-		if((head.takedamage != DAMAGE_NO) && (head.deadflag == DEAD_NO))
+		if((head.takedamage != DAMAGE_NO) && (!IS_DEAD(head)))
 		{
 			if(SAME_TEAM(head, projectile.realowner))
 				++hit_friendly;

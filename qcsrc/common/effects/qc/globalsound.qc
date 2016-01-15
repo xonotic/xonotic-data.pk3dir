@@ -1,12 +1,12 @@
 #include "globalsound.qh"
 
-#include "../../ent_cs.qh"
+#include <common/ent_cs.qh>
 
 #ifdef IMPLEMENTATION
-	#include "../../animdecide.qh"
+	#include <common/animdecide.qh>
 
 	#ifdef SVQC
-		#include "../../../server/cl_player.qh"
+		#include <server/cl_player.qh>
 	#endif
 
 	REGISTER_NET_TEMP(globalsound)
@@ -354,7 +354,7 @@
 				case VOICETYPE_TAUNT:
 				{
 					if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
-					else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT,
+					else if (IS_PLAYER(this) && !IS_DEAD(this)) animdecide_setaction(this, ANIMACTION_TAUNT,
 							true);
 					if (!sv_taunt) break;
 					if (autocvar_sv_gentle) break;
@@ -369,7 +369,13 @@
 								    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
-								if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
+								if (gs) \
+								{ \
+									if(autocvar_g_debug_globalsounds) \
+										globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
+									else \
+										soundto(MSG_ONE, this, chan, GlobalSound_sample(gs.m_globalsoundstr, r), VOL_BASE, ATTEN_NORM); \
+								} \
 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 								else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
 							} \

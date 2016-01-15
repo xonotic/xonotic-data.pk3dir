@@ -108,7 +108,7 @@ entity sandbox_ObjectEdit_Get(float permissions)
 	// Attached objects are SOLID_NOT and do not get traced.
 
 	crosshair_trace_plusvisibletriggers(self);
-	if(vlen(self.origin - trace_ent.origin) > autocvar_g_sandbox_editor_distance_edit)
+	if(vdist(self.origin - trace_ent.origin, >, autocvar_g_sandbox_editor_distance_edit))
 		return world; // out of trace range
 	if(trace_ent.classname != "object")
 		return world; // entity is not an object

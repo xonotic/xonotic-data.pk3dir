@@ -1,5 +1,4 @@
-#ifndef SORTLIST_H
-#define SORTLIST_H
+#pragma once
 
 entityclass(Sort);
 // .float(entity,entity) sort_cmp;
@@ -19,5 +18,3 @@ entity Sort_Spawn();
 	if (a.sort_prev) a.sort_prev.sort_next = b;          \
 	a.sort_prev = b;                                    \
 	b.sort_next = a
-
-#endif

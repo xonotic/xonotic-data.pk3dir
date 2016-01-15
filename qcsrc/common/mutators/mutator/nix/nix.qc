@@ -54,7 +54,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 	MUTATOR_ONREMOVE
 	{
 		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
-		FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
 			it.ammo_cells = start_ammo_cells;
 			it.ammo_plasma = start_ammo_plasma;
 			it.ammo_shells = start_ammo_shells;
@@ -264,7 +264,7 @@ MUTATOR_HOOKFUNCTION(nix, OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
 {SELFPARAM();
 	if(!intermission_running)
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	if(IS_PLAYER(self))
 		NIX_GiveCurrentWeapon();
 	return 0;

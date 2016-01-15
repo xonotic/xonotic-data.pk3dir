@@ -26,6 +26,17 @@ NET_HANDLE(itemstime, bool isNew)
 #endif
 
 #ifdef CSQC
+void Item_ItemsTime_Init()
+{
+    FOREACH(Items, true, LAMBDA(
+        ItemsTime_time[it.m_id] = -1;
+    ));
+}
+
+STATIC_INIT(ItemsTime_Init) {
+    Item_ItemsTime_Init();
+}
+
 int autocvar_hud_panel_itemstime = 2;
 float autocvar_hud_panel_itemstime_dynamicsize = 1;
 float autocvar_hud_panel_itemstime_ratio = 2;
@@ -142,6 +153,17 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
 MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver)
 {SELFPARAM();
     Item_ItemsTime_SetTimesForPlayer(self);
+}
+
+MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
+{SELFPARAM();
+	if(IS_PLAYER(self))
+	{
+		// client became player on connection skipping putObserverInServer step
+		if (IS_REAL_CLIENT(self))
+		if (warmup_stage)
+			Item_ItemsTime_SetTimesForPlayer(self);
+	}
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)

@@ -105,28 +105,20 @@ CLASS(Sound, Object)
 	string _Sound_fixpath(string base)
 	{
 		if (base == "") return string_null;
+#ifdef SVQC
+		return strcat(base, ".wav");  // let the client engine decide
+#else
 		#define extensions(x) \
 			x(wav) \
 			x(ogg) \
 			x(flac) \
 			/**/
-		string relative;
-		#define tryext(ext) { if (fexists(strcat("sound/", relative = strcat(base, "." #ext)))) break; }
-		do
-		{
-			extensions(tryext);
-#undef tryext
-#undef extensions
-			LOG_WARNINGF("Missing sound: \"%s\"\n", strcat("sound/", base));
-#ifdef CSQC
-			return string_null;
-#endif
-		}
-		while (0);
-#ifdef SVQC
-		return strcat(base, ".wav");  // let the client engine decide
-#else
-		return relative;
+		#define tryext(ext) { string s = strcat(base, "." #ext); if (fexists(strcat("sound/", s))) return s; }
+		extensions(tryext);
+		LOG_WARNINGF("Missing sound: \"%s\"\n", strcat("sound/", base));
+		#undef tryext
+		#undef extensions
+		return string_null;
 #endif
 	}
 	METHOD(Sound, sound_precache, void(entity this))

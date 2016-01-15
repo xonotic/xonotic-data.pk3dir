@@ -3,7 +3,7 @@
 #include "hud/all.qh"
 #include "scoreboard.qh"
 
-#include "../common/mapinfo.qh"
+#include <common/mapinfo.qh>
 
 
 int mv_num_maps;
@@ -853,7 +853,7 @@ void MapVote_UpdateVotes()
 
 NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
 {
-	make_pure(self);
+	make_pure(this);
 	int sf = ReadByte();
 	return = true;
 

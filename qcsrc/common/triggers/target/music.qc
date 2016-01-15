@@ -1,9 +1,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../constants.qh"
-    #include "../../../server/constants.qh"
-    #include "../../../server/defs.qh"
+    #include <common/constants.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
 #endif
 
 REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)

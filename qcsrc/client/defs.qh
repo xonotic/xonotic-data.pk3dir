@@ -95,7 +95,7 @@ float ticrate;
 const float MIN_DAMAGEEXTRARADIUS = 2;
 const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
-.void(float thisdmg, int hittype, vector org, vector thisforce) event_damage;
+.void(entity this, float thisdmg, int hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto
 float angles_held_status;

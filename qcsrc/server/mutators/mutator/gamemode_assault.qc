@@ -481,7 +481,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 
 void havocbot_role_ast_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		self.havocbot_attack_time = 0;
 		havocbot_ast_reset_role(self);
@@ -515,7 +515,7 @@ void havocbot_role_ast_offense()
 
 void havocbot_role_ast_defense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 	{
 		self.havocbot_attack_time = 0;
 		havocbot_ast_reset_role(self);
@@ -566,7 +566,7 @@ void havocbot_role_ast_setrole(entity bot, float role)
 
 void havocbot_ast_reset_role(entity bot)
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if(bot.team == assault_attacker_team)

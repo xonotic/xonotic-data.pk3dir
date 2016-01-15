@@ -244,7 +244,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 		METHOD(MachineGun, wr_aim, void(entity thiswep))
 		{
-			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
+			if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);

@@ -19,6 +19,9 @@ float autocvar_g_buffs_medic_survive_health;
 float autocvar_g_buffs_medic_rot;
 float autocvar_g_buffs_medic_max;
 float autocvar_g_buffs_medic_regen;
+float autocvar_g_buffs_medic_heal_amount = 15;
+float autocvar_g_buffs_medic_heal_delay = 1;
+float autocvar_g_buffs_medic_heal_range = 400;
 float autocvar_g_buffs_vengeance_damage_multiplier;
 float autocvar_g_buffs_bash_force;
 float autocvar_g_buffs_bash_force_self;
@@ -42,6 +45,7 @@ float autocvar_g_buffs_inferno_burntime_target_time;
 float autocvar_g_buffs_inferno_damagemultiplier;
 float autocvar_g_buffs_swapper_range;
 float autocvar_g_buffs_magnet_range_item;
+float autocvar_g_buffs_magnet_range_buff = 200;
 
 // ammo
 .float buff_ammo_prev_infitems;
@@ -50,6 +54,8 @@ float autocvar_g_buffs_magnet_range_item;
 .float buff_invisible_prev_alpha;
 // flight
 .float buff_flight_prev_gravity;
+// medic
+.float buff_medic_healtime;
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
@@ -73,8 +79,8 @@ const vector BUFF_MAX = ('16 16 20');
 
 #ifdef IMPLEMENTATION
 
-#include "../../../triggers/target/music.qh"
-#include "../../../gamemodes/all.qh"
+#include <common/triggers/target/music.qh>
+#include <common/gamemodes/all.qh>
 
 .float buff_time = _STAT(BUFF_TIME);
 void buffs_DelayedInit();
@@ -198,7 +204,7 @@ void buff_Respawn(entity this)
 	vector oldbufforigin = this.origin;
 	this.velocity = '0 0 200';
 
-	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 
+	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY,
 		((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(true);
@@ -237,7 +243,7 @@ void buff_Touch()
 	}
 
 	if((self.team && DIFF_TEAM(other, self))
-	|| (other.frozen)
+	|| (STAT(FROZEN, other))
 	|| (other.vehicle)
 	|| (!self.buff_active)
 	)
@@ -334,7 +340,7 @@ void buff_Think()
 	}
 
 	if(!self.buff_active && !self.buff_activetime)
-	if(!self.owner || self.owner.frozen || self.owner.deadflag != DEAD_NO || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
+	if(!self.owner || STAT(FROZEN, self.owner) || IS_DEAD(self.owner) || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
 	{
 		buff_SetCooldown(autocvar_g_buffs_cooldown_respawn + frametime);
 		self.owner = world;
@@ -490,6 +496,20 @@ void buff_Vengeance_DelayedDamage()
 	return;
 }
 
+// note: only really useful in teamplay
+void buff_Medic_Heal(entity this)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
+	{
+		if(SAME_TEAM(it, this))
+		if(it.health < autocvar_g_balance_health_regenstable)
+		{
+			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
+			it.health = bound(0, it.health + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable);
+		}
+	});
+}
+
 float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
 {
 	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
@@ -545,11 +565,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 
 	if(frag_target.buffs & BUFF_BASH.m_itemid)
 	if(frag_attacker != frag_target)
-	if(vlen(frag_force))
 		frag_force = '0 0 0';
 
 	if(frag_attacker.buffs & BUFF_BASH.m_itemid)
-	if(vlen(frag_force))
+	if(frag_force)
 	if(frag_attacker == frag_target)
 		frag_force *= autocvar_g_buffs_bash_force_self;
 	else
@@ -559,18 +578,17 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	if(frag_target != frag_attacker)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
-	if(frag_attacker.buffs & BUFF_MEDIC.m_itemid)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
-	if(SAME_TEAM(frag_attacker, frag_target))
-	if(frag_attacker != frag_target)
+	if(frag_target.buffs & BUFF_INFERNO.m_itemid)
 	{
-		frag_target.health = min(g_pickup_healthmega_max, frag_target.health + frag_damage);
-		frag_damage = 0;
+		if(frag_deathtype == DEATH_FIRE.m_id)
+			frag_damage = 0;
+		if(frag_deathtype == DEATH_LAVA.m_id)
+			frag_damage *= 0.5; // TODO: cvarize?
 	}
 
 	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
-		float time = buff_Inferno_CalculateTime(
+		float btime = buff_Inferno_CalculateTime(
 			frag_damage,
 			0,
 			autocvar_g_buffs_inferno_burntime_min_time,
@@ -578,7 +596,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 			autocvar_g_buffs_inferno_burntime_target_time,
 			autocvar_g_buffs_inferno_burntime_factor
 		);
-		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF.m_id);
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier), btime, DEATH_BUFF.m_id);
 	}
 
 	// this... is ridiculous (TODO: fix!)
@@ -586,10 +604,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	if(!frag_target.vehicle)
 	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if(frag_target.deadflag == DEAD_NO)
+	if(!IS_DEAD(frag_target))
 	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))
 	if(frag_attacker != frag_target)
-	if(!frag_target.frozen)
+	if(!STAT(FROZEN, frag_target))
 	if(frag_target.takedamage)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
@@ -657,17 +675,17 @@ MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
-{SELFPARAM();
-	if(self.buffs)
+{
+	if(frag_target.buffs)
 	{
-		int buffid = buff_FirstFromFlags(self.buffs).m_id;
-		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
-		self.buffs = 0;
+		int buffid = buff_FirstFromFlags(frag_target.buffs).m_id;
+		Send_Notification(NOTIF_ALL_EXCEPT, frag_target, MSG_INFO, INFO_ITEM_BUFF_LOST, frag_target.netname, buffid);
+		frag_target.buffs = 0;
 
-		if(self.buff_model)
+		if(frag_target.buff_model)
 		{
-			remove(self.buff_model);
-			self.buff_model = world;
+			remove(frag_target.buff_model);
+			frag_target.buff_model = world;
 		}
 	}
 	return false;
@@ -698,12 +716,15 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(it.deadflag == DEAD_NO && !it.frozen && !it.vehicle)
+			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, self))
-			if(vlen(self.origin - it.origin) <= best_distance)
 			{
-				best_distance = vlen(self.origin - it.origin);
-				closest = it;
+				float test = vlen2(self.origin - it.origin);
+				if(test <= best_distance * best_distance)
+				{
+					best_distance = sqrt(test);
+					closest = it;
+				}
 			}
 		));
 
@@ -830,7 +851,7 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {SELFPARAM();
-	if(gameover || self.deadflag != DEAD_NO) { return false; }
+	if(gameover || IS_DEAD(self)) { return false; }
 
 	if(time < self.buff_disability_time)
 	if(time >= self.buff_disability_effect_time)
@@ -848,7 +869,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if(time >= self.buff_time)
 		buff_lost = 2;
 
-	if(self.frozen) { buff_lost = 1; }
+	if(STAT(FROZEN, self)) { buff_lost = 1; }
 
 	if(buff_lost)
 	{
@@ -867,17 +888,24 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(self.buffs & BUFF_MAGNET.m_itemid)
 	{
-		vector pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
-		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
-		if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, other.absmin, other.absmax))
+		vector pickup_size;
+		FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 		{
-			setself(other);
-			other = this;
-			if(self.touch)
-				self.touch();
-			other = self;
-			setself(this);
-		}
+			if(it.buffs)
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;
+			else
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
+
+			if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, it.absmin, it.absmax))
+			{
+				setself(other);
+				other = this;
+				if(self.touch)
+					self.touch();
+				other = self;
+				setself(this);
+			}
+		});
 	}
 
 	if(self.buffs & BUFF_AMMO.m_itemid)
@@ -887,6 +915,13 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if((self.buffs & BUFF_INVISIBLE.m_itemid) && (self.oldbuffs & BUFF_INVISIBLE.m_itemid))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+
+	if(self.buffs & BUFF_MEDIC.m_itemid)
+	if(time >= self.buff_medic_healtime)
+	{
+		buff_Medic_Heal(self);
+		self.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;
+	}
 
 #define BUFF_ONADD(b) if ( (self.buffs & (b).m_itemid) && !(self.oldbuffs & (b).m_itemid))
 #define BUFF_ONREM(b) if (!(self.buffs & (b).m_itemid) &&  (self.oldbuffs & (b).m_itemid))

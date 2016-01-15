@@ -98,133 +98,133 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 #endif
 
 #ifdef CSQC
-void Ent_WaypointSprite();
+void Ent_WaypointSprite(entity this);
 NET_HANDLE(waypointsprites, bool isnew) {
-    Ent_WaypointSprite();
+    Ent_WaypointSprite(this);
     return true;
 }
 
-void Ent_RemoveWaypointSprite()
-{SELFPARAM();
-    if (self.netname) strunzone(self.netname);
-    if (self.netname2) strunzone(self.netname2);
-    if (self.netname3) strunzone(self.netname3);
+void Ent_RemoveWaypointSprite(entity this)
+{
+    if (this.netname) strunzone(this.netname);
+    if (this.netname2) strunzone(this.netname2);
+    if (this.netname3) strunzone(this.netname3);
 }
 
 /** flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable] */
-void Ent_WaypointSprite()
-{SELFPARAM();
+void Ent_WaypointSprite(entity this)
+{
     int sendflags = ReadByte();
-    self.wp_extra = ReadByte();
+    this.wp_extra = ReadByte();
 
-    if (!self.spawntime)
-        self.spawntime = time;
+    if (!this.spawntime)
+        this.spawntime = time;
 
-    self.draw2d = Draw_WaypointSprite;
+    this.draw2d = Draw_WaypointSprite;
 
-    InterpolateOrigin_Undo(self);
-    self.iflags |= IFLAG_ORIGIN;
+    InterpolateOrigin_Undo(this);
+    this.iflags |= IFLAG_ORIGIN;
 
     if (sendflags & 0x80)
     {
         int t = ReadByte();
         if (t < 192)
         {
-            self.health = t / 191.0;
-            self.build_finished = 0;
+            this.health = t / 191.0;
+            this.build_finished = 0;
         }
         else
         {
             t = (t - 192) * 256 + ReadByte();
-            self.build_started = servertime;
-            if (self.build_finished)
-                self.build_starthealth = bound(0, self.health, 1);
+            this.build_started = servertime;
+            if (this.build_finished)
+                this.build_starthealth = bound(0, this.health, 1);
             else
-                self.build_starthealth = 0;
-            self.build_finished = servertime + t / 32;
+                this.build_starthealth = 0;
+            this.build_finished = servertime + t / 32;
         }
     }
     else
     {
-        self.health = -1;
-        self.build_finished = 0;
+        this.health = -1;
+        this.build_finished = 0;
     }
 
     if (sendflags & 64)
     {
         // unfortunately, this needs to be exact (for the 3D display)
-        self.origin_x = ReadCoord();
-        self.origin_y = ReadCoord();
-        self.origin_z = ReadCoord();
-        setorigin(self, self.origin);
+        this.origin_x = ReadCoord();
+        this.origin_y = ReadCoord();
+        this.origin_z = ReadCoord();
+        setorigin(this, this.origin);
     }
 
     if (sendflags & 1)
     {
-        self.team = ReadByte();
-        self.rule = ReadByte();
+        this.team = ReadByte();
+        this.rule = ReadByte();
     }
 
     if (sendflags & 2)
     {
-        if (self.netname)
-            strunzone(self.netname);
-        self.netname = strzone(ReadString());
+        if (this.netname)
+            strunzone(this.netname);
+        this.netname = strzone(ReadString());
     }
 
     if (sendflags & 4)
     {
-        if (self.netname2)
-            strunzone(self.netname2);
-        self.netname2 = strzone(ReadString());
+        if (this.netname2)
+            strunzone(this.netname2);
+        this.netname2 = strzone(ReadString());
     }
 
     if (sendflags & 8)
     {
-        if (self.netname3)
-            strunzone(self.netname3);
-        self.netname3 = strzone(ReadString());
+        if (this.netname3)
+            strunzone(this.netname3);
+        this.netname3 = strzone(ReadString());
     }
 
     if (sendflags & 16)
     {
-        self.lifetime = ReadCoord();
-        self.fadetime = ReadCoord();
-        self.maxdistance = ReadShort();
-        self.hideflags = ReadByte();
+        this.lifetime = ReadCoord();
+        this.fadetime = ReadCoord();
+        this.maxdistance = ReadShort();
+        this.hideflags = ReadByte();
     }
 
     if (sendflags & 32)
     {
         int f = ReadByte();
-        self.teamradar_icon = f & BITS(7);
+        this.teamradar_icon = f & BITS(7);
         if (f & BIT(7))
         {
-            self.(teamradar_times[self.teamradar_time_index]) = time;
-            self.teamradar_time_index = (self.teamradar_time_index + 1) % MAX_TEAMRADAR_TIMES;
+            this.(teamradar_times[this.teamradar_time_index]) = time;
+            this.teamradar_time_index = (this.teamradar_time_index + 1) % MAX_TEAMRADAR_TIMES;
         }
-        self.teamradar_color_x = ReadByte() / 255.0;
-        self.teamradar_color_y = ReadByte() / 255.0;
-        self.teamradar_color_z = ReadByte() / 255.0;
-        self.helpme = ReadByte() * 0.1;
-        if (self.helpme > 0)
-            self.helpme += servertime;
+        this.teamradar_color_x = ReadByte() / 255.0;
+        this.teamradar_color_y = ReadByte() / 255.0;
+        this.teamradar_color_z = ReadByte() / 255.0;
+        this.helpme = ReadByte() * 0.1;
+        if (this.helpme > 0)
+            this.helpme += servertime;
     }
 
     InterpolateOrigin_Note(this);
 
-    self.entremove = Ent_RemoveWaypointSprite;
+    this.entremove = Ent_RemoveWaypointSprite;
 }
 #endif
 
 #ifdef CSQC
-float spritelookupblinkvalue(string s)
-{SELFPARAM();
+float spritelookupblinkvalue(entity this, string s)
+{
     if (s == WP_Weapon.netname) {
-        if (Weapons_from(self.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
+        if (Weapons_from(this.wp_extra).spawnflags & WEP_FLAG_SUPERWEAPON)
             return 2;
     }
-    if (s == WP_Item.netname) return Items_from(self.wp_extra).m_waypointblink;
+    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypointblink;
 
     return 1;
 }
@@ -240,12 +240,12 @@ vector spritelookupcolor(entity this, string s, vector def)
     return def;
 }
 
-string spritelookuptext(string s)
-{SELFPARAM();
+string spritelookuptext(entity this, string s)
+{
     if (s == WP_RaceStartFinish.netname) return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
-    if (s == WP_Weapon.netname) return Weapons_from(self.wp_extra).m_name;
-    if (s == WP_Item.netname) return Items_from(self.wp_extra).m_waypoint;
-    if (s == WP_Monster.netname) return get_monsterinfo(self.wp_extra).monster_name;
+    if (s == WP_Weapon.netname) return Weapons_from(this.wp_extra).m_name;
+    if (s == WP_Item.netname) return Items_from(this.wp_extra).m_waypoint;
+    if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
         return MUTATOR_ARGV(0, string);
@@ -452,29 +452,29 @@ vector fixrgbexcess(vector rgb)
 
 void Draw_WaypointSprite(entity this)
 {
-    if (self.lifetime)
-        self.alpha = pow(bound(0, (self.fadetime - time) / self.lifetime, 1), waypointsprite_timealphaexponent);
+    if (this.lifetime)
+        this.alpha = pow(bound(0, (this.fadetime - time) / this.lifetime, 1), waypointsprite_timealphaexponent);
     else
-        self.alpha = 1;
+        this.alpha = 1;
 
-    if (self.hideflags & 2)
+    if (this.hideflags & 2)
         return; // radar only
 
     if (autocvar_cl_hidewaypoints >= 2)
         return;
 
-    if (self.hideflags & 1)
+    if (this.hideflags & 1)
         if (autocvar_cl_hidewaypoints)
             return; // fixed waypoint
 
-    InterpolateOrigin_Do(self);
+    InterpolateOrigin_Do(this);
 
     float t = entcs_GetTeam(player_localnum) + 1;
 
     string spriteimage = "";
 
     // choose the sprite
-    switch (self.rule)
+    switch (this.rule)
     {
         case SPRITERULE_SPECTATOR:
             if (!(
@@ -482,26 +482,26 @@ void Draw_WaypointSprite(entity this)
             ||	(autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage))
                 ))
                 return;
-            spriteimage = self.netname;
+            spriteimage = this.netname;
             break;
         case SPRITERULE_DEFAULT:
-            if (self.team)
+            if (this.team)
             {
-                if (self.team == t)
-                    spriteimage = self.netname;
+                if (this.team == t)
+                    spriteimage = this.netname;
                 else
                     spriteimage = "";
             }
             else
-                spriteimage = self.netname;
+                spriteimage = this.netname;
             break;
         case SPRITERULE_TEAMPLAY:
             if (t == NUM_SPECTATOR + 1)
-                spriteimage = self.netname3;
-            else if (self.team == t)
-                spriteimage = self.netname2;
+                spriteimage = this.netname3;
+            else if (this.team == t)
+                spriteimage = this.netname2;
             else
-                spriteimage = self.netname;
+                spriteimage = this.netname;
             break;
         default:
             error("Invalid waypointsprite rule!");
@@ -514,29 +514,29 @@ void Draw_WaypointSprite(entity this)
     ++waypointsprite_newcount;
 
     float dist;
-    dist = vlen(self.origin - view_origin);
+    dist = vlen(this.origin - view_origin);
 
     float a;
-    a = self.alpha * autocvar_hud_panel_fg_alpha;
+    a = this.alpha * autocvar_hud_panel_fg_alpha;
 
-    if (self.maxdistance > waypointsprite_normdistance)
-        a *= pow(bound(0, (self.maxdistance - dist) / (self.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
-    else if (self.maxdistance > 0)
+    if (this.maxdistance > waypointsprite_normdistance)
+        a *= pow(bound(0, (this.maxdistance - dist) / (this.maxdistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent);
+    else if (this.maxdistance > 0)
         a *= pow(bound(0, (waypointsprite_fadedistance - dist) / (waypointsprite_fadedistance - waypointsprite_normdistance), 1), waypointsprite_distancealphaexponent) * (1 - waypointsprite_minalpha) + waypointsprite_minalpha;
 
-    vector rgb = spritelookupcolor(self, spriteimage, self.teamradar_color);
+    vector rgb = spritelookupcolor(this, spriteimage, this.teamradar_color);
     if (rgb == '0 0 0')
     {
-        self.teamradar_color = '1 0 1';
+        this.teamradar_color = '1 0 1';
         LOG_INFOF("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
     }
 
     if (time - floor(time) > 0.5)
     {
-        if (self.helpme && time < self.helpme)
+        if (this.helpme && time < this.helpme)
             a *= SPRITE_HELPME_BLINK;
-        else if (!self.lifetime) // fading out waypoints don't blink
-            a *= spritelookupblinkvalue(spriteimage);
+        else if (!this.lifetime) // fading out waypoints don't blink
+            a *= spritelookupblinkvalue(this, spriteimage);
     }
 
     if (a > 1)
@@ -553,7 +553,7 @@ void Draw_WaypointSprite(entity this)
     vector o;
     float ang;
 
-    o = project_3d_to_2d(self.origin);
+    o = project_3d_to_2d(this.origin);
     if (o.z < 0
     || o.x < (vid_conwidth * waypointsprite_edgeoffset_left)
     || o.y < (vid_conheight * waypointsprite_edgeoffset_top)
@@ -629,19 +629,19 @@ void Draw_WaypointSprite(entity this)
         t = t * (1 - (1 - waypointsprite_crosshairfadescale) * (1 - bound(0, crosshairdistance/waypointsprite_crosshairfadedistance, 1)));
     }
 
-    if (self.build_finished)
+    if (this.build_finished)
     {
-        if (time < self.build_finished + 0.25)
+        if (time < this.build_finished + 0.25)
         {
-            if (time < self.build_started)
-                self.health = self.build_starthealth;
-            else if (time < self.build_finished)
-                self.health = (time - self.build_started) / (self.build_finished - self.build_started) * (1 - self.build_starthealth) + self.build_starthealth;
+            if (time < this.build_started)
+                this.health = this.build_starthealth;
+            else if (time < this.build_finished)
+                this.health = (time - this.build_started) / (this.build_finished - this.build_started) * (1 - this.build_starthealth) + this.build_starthealth;
             else
-                self.health = 1;
+                this.health = 1;
         }
         else
-            self.health = -1;
+            this.health = -1;
     }
 
     o = drawspritearrow(o, ang, rgb, a, SPRITE_ARROW_SCALE * t);
@@ -650,19 +650,19 @@ void Draw_WaypointSprite(entity this)
     if (autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
         txt = _("Spam");
     else
-        txt = spritelookuptext(spriteimage);
-    if (self.helpme && time < self.helpme)
+        txt = spritelookuptext(this, spriteimage);
+    if (this.helpme && time < this.helpme)
         txt = sprintf(_("%s needing help!"), txt);
     if (autocvar_g_waypointsprite_uppercase)
         txt = strtoupper(txt);
 
     draw_beginBoldFont();
-    if (self.health >= 0)
+    if (this.health >= 0)
     {
         o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 
         float align, marg;
-        if (self.build_finished)
+        if (this.build_finished)
             align = 0.5;
         else
             align = 0;
@@ -673,7 +673,7 @@ void Draw_WaypointSprite(entity this)
         drawhealthbar(
                 o,
                 0,
-                self.health,
+                this.health,
                 '0 0 0',
                 '0 0 0',
                 SPRITE_HEALTHBAR_WIDTH * t,
@@ -1126,10 +1126,10 @@ void WaypointSprite_ClearOwned()
     WaypointSprite_Kill(self.waypointsprite_attached);
 }
 
-void WaypointSprite_PlayerDead()
-{SELFPARAM();
-    WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
-    WaypointSprite_DetachCarrier(self);
+void WaypointSprite_PlayerDead(entity this)
+{
+    WaypointSprite_Disown(this.waypointsprite_attached, waypointsprite_deadlifetime);
+    WaypointSprite_DetachCarrier(this);
 }
 
 void WaypointSprite_PlayerGone()

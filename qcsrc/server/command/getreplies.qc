@@ -1,13 +1,13 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "getreplies.qh"
 
 #include "../race.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/util.qh>
 
-#include "../../common/monsters/all.qh"
+#include <common/monsters/all.qh>
 
 // =========================================================
 //  Reply messages for common commands, re-worked by Samual

@@ -3,33 +3,33 @@
 //  Last updated: December 28th, 2011
 // ==============================================
 
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "cl_cmd.qh"
 
 #include "../autocvars.qh"
 #include "../defs.qh"
-#include "../hud/all.qh"
+#include <client/hud/all.qh>
 #include "../main.qh"
 #include "../mapvoting.qh"
 #include "../miscfunctions.qh"
 
 #include "../mutators/events.qh"
 
-#include "../../common/mapinfo.qh"
+#include <common/mapinfo.qh>
 
-#include "../../common/command/generic.qh"
+#include <common/command/generic.qh>
 
 void DrawDebugModel(entity this)
 {
 	if (time - floor(time) > 0.5)
 	{
-		PolyDrawModel(self);
-		self.drawmask = 0;
+		PolyDrawModel(this);
+		this.drawmask = 0;
 	}
 	else
 	{
-		self.renderflags = 0;
-		self.drawmask = MASK_NORMAL;
+		this.renderflags = 0;
+		this.drawmask = MASK_NORMAL;
 	}
 }
 

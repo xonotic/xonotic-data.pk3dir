@@ -1,7 +1,7 @@
 #ifndef SERVER_COMMANDS_ALL_H
 #define SERVER_COMMANDS_ALL_H
 
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 REGISTRY(SERVER_COMMANDS, BITS(7))
 #define SERVER_COMMANDS_from(i) _SERVER_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(SERVER_COMMANDS)
@@ -16,7 +16,7 @@ REGISTRY_SORT(SERVER_COMMANDS)
 	METHOD(servercommand_##id, m_invokecmd, void(int request, entity caller, int arguments, string command))
 
 STATIC_INIT(SERVER_COMMANDS_aliases) {
-	FOREACH(SERVER_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svcmd"))));
+	FOREACH(SERVER_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_sv"))));
 }
 
 #include "sv_cmd.qh"

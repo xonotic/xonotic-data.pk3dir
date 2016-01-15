@@ -6,13 +6,13 @@
 .float ltime;
 void healer_draw(entity this)
 {
-	float dt = time - self.move_time;
-	self.move_time = time;
+	float dt = time - this.move_time;
+	this.move_time = time;
 	if(dt <= 0)
 		return;
 
-	self.alpha = (self.ltime - time) / self.healer_lifetime;
-	self.scale = min((1 - self.alpha)*self.healer_lifetime*4,1)*self.healer_radius;
+	this.alpha = (this.ltime - time) / this.healer_lifetime;
+	this.scale = min((1 - this.alpha)*this.healer_lifetime*4,1)*this.healer_radius;
 }
 
 void healer_setup(entity e)

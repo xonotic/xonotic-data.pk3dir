@@ -61,16 +61,16 @@ void viewloc_PlayerPhysics(entity this)
 
 #ifdef CSQC
 
-void viewloc_SetTags()
-{SELFPARAM();
-	if(self.viewloc && wasfreed(self.viewloc))
-		self.viewloc = world;
+void viewloc_SetTags(entity this)
+{
+	if(this.viewloc && wasfreed(this.viewloc))
+		this.viewloc = world;
 
-	if(self.viewloc.entnum != self.tag_networkviewloc)
-	if(self.tag_networkviewloc == 0)
-		self.viewloc = world;
+	if(this.viewloc.entnum != this.tag_networkviewloc)
+	if(this.tag_networkviewloc == 0)
+		this.viewloc = world;
 	else
-		self.viewloc = findfloat(world, entnum, self.tag_networkviewloc);
+		this.viewloc = findfloat(world, entnum, this.tag_networkviewloc);
 }
 
 vector old_camera_angle = '0 0 0';

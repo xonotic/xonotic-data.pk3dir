@@ -69,18 +69,18 @@ void W_RocketPropelledChainsaw_Touch ()
 	W_RocketPropelledChainsaw_Explode();
 }
 
-void W_RocketPropelledChainsaw_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if (self.health <= 0)
+void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if (this.health <= 0)
 		return;
 
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if (self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_RocketPropelledChainsaw_Explode);
+	if (this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_RocketPropelledChainsaw_Explode));
 }
 
 void W_RocketPropelledChainsaw_Think()

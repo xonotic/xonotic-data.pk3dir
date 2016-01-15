@@ -79,28 +79,28 @@ void W_Hagar_Explode2()
 	remove(self);
 }
 
-void W_Hagar_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == self.owner) : true)
+	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == this.owner) : true)
 		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY)
-		&& (self.projectiledeathtype & HITTYPE_SECONDARY));
+		&& (this.projectiledeathtype & HITTYPE_SECONDARY));
 
 	if(is_linkexplode)
 		is_linkexplode = (is_linkexplode && WEP_CVAR_SEC(hagar, load_linkexplode));
 	else
 		is_linkexplode = -1; // not secondary load, so continue as normal without exception.
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, is_linkexplode))
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, is_linkexplode))
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
-	self.angles = vectoangles(self.velocity);
+	this.health = this.health - damage;
+	this.angles = vectoangles(this.velocity);
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, self.think);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.think));
 }
 
 void W_Hagar_Touch()

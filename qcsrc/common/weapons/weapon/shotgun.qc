@@ -108,7 +108,7 @@ void W_Shotgun_Melee_Think()
 	f = ((1 - swing) * WEP_CVAR_SEC(shotgun, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && WEP_CVAR_SEC(shotgun, melee_no_doubleslap))
+	if(IS_DEAD(self.realowner) && WEP_CVAR_SEC(shotgun, melee_no_doubleslap))
 	{
 		remove(self);
 		return;
@@ -124,7 +124,7 @@ void W_Shotgun_Melee_Think()
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self.realowner, ANTILAG_LATENCY(self.realowner));
 
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -229,7 +229,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 
 		METHOD(Shotgun, wr_aim, void(entity thiswep))
 		{
-			if(vlen(self.origin-self.enemy.origin) <= WEP_CVAR_SEC(shotgun, melee_range))
+			if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
@@ -293,7 +293,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
 		{
 			if(IS_BOT_CLIENT(self))
-			if(vlen(self.origin-self.enemy.origin) > WEP_CVAR_SEC(shotgun, melee_range))
+			if(vdist(self.origin - self.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
 				return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
 			switch(WEP_CVAR(shotgun, secondary))
 			{

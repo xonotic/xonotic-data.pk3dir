@@ -1,5 +1,4 @@
-#ifndef ARRAYLIST_H
-#define ARRAYLIST_H
+#pragma once
 
 typedef entity ArrayList;
 .int al_buf;
@@ -69,5 +68,3 @@ entity al_ftoe(int i) = #80;
 			if (cond) { body } \
 		} \
 	} MACRO_END
-
-#endif

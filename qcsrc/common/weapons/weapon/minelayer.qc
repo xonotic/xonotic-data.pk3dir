@@ -114,7 +114,7 @@ void W_MineLayer_Explode()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
@@ -169,10 +169,10 @@ void W_MineLayer_DoRemoteExplode()
 
 void W_MineLayer_RemoteExplode()
 {SELFPARAM();
-	if(self.realowner.deadflag == DEAD_NO)
+	if(!IS_DEAD(self.realowner))
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > WEP_CVAR(minelayer, remote_radius)) // safety device
+			: (vdist(NearestPointOnBox(self.realowner, self.origin) - self.origin, >, WEP_CVAR(minelayer, remote_radius))) // safety device
 		)
 		{
 			W_MineLayer_DoRemoteExplode();
@@ -235,7 +235,7 @@ void W_MineLayer_Think()
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO || self.realowner.frozen)
+	if(!IS_PLAYER(self.realowner) || IS_DEAD(self.realowner) || STAT(FROZEN, self.realowner))
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -247,7 +247,7 @@ void W_MineLayer_Think()
 	head = findradius(self.origin, WEP_CVAR(minelayer, proximityradius));
 	while(head)
 	{
-		if(IS_PLAYER(head) && head.deadflag == DEAD_NO && !head.frozen)
+		if(IS_PLAYER(head) && !IS_DEAD(head) && !STAT(FROZEN, head))
 		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
@@ -266,7 +266,7 @@ void W_MineLayer_Think()
 
 	// remote detonation
 	if(PS(self.realowner).m_weapon == WEP_MINE_LAYER)
-	if(self.realowner.deadflag == DEAD_NO)
+	if(!IS_DEAD(self.realowner))
 	if(self.minelayer_detonate)
 		W_MineLayer_RemoteExplode();
 }
@@ -283,7 +283,7 @@ void W_MineLayer_Touch()
 		return;
 	}
 
-	if(other && IS_PLAYER(other) && other.deadflag == DEAD_NO)
+	if(other && IS_PLAYER(other) && !IS_DEAD(other))
 	{
 		// hit a player
 		// don't stick
@@ -294,21 +294,21 @@ void W_MineLayer_Touch()
 	}
 }
 
-void W_MineLayer_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	float is_from_enemy = (inflictor.realowner != self.realowner);
+	float is_from_enemy = (inflictor.realowner != this.realowner);
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_from_enemy ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
-	self.angles = vectoangles(self.velocity);
+	this.health = this.health - damage;
+	this.angles = vectoangles(this.velocity);
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode));
 }
 
 void W_MineLayer_Attack(Weapon thiswep)

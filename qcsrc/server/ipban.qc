@@ -466,16 +466,15 @@ bool Ban_MaybeEnforceBanOnce(entity client)
 	return Ban_MaybeEnforceBan(client);
 }
 
-string Ban_Enforce(float i, string reason)
+string Ban_Enforce(float j, string reason)
 {
 	string s;
-	entity e;
 
 	// Enforce our new ban
 	s = "";
-	FOR_EACH_CLIENTSLOT(e)
-		if (IS_REAL_CLIENT(e))
-		if(Ban_IsClientBanned(e, i))
+	FOREACH_CLIENTSLOT(IS_REAL_CLIENT(it),
+	{
+		if(Ban_IsClientBanned(it, j))
 		{
 			if(reason != "")
 			{
@@ -483,11 +482,12 @@ string Ban_Enforce(float i, string reason)
 					reason = strcat(reason, ": affects ");
 				else
 					reason = strcat(reason, ", ");
-				reason = strcat(reason, e.netname);
+				reason = strcat(reason, it.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", e.netaddress, "^7 has to go\n");
-			dropclient(e);
+			s = strcat(s, "^1NOTE:^7 banned client ", it.netaddress, "^7 has to go\n");
+			dropclient(it);
 		}
+	});
 	bprint(s);
 
 	return reason;

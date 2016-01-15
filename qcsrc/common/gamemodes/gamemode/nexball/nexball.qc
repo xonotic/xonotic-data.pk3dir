@@ -331,7 +331,7 @@ void basketball_touch()
 		football_touch();
 		return;
 	}
-	if(!self.cnt && IS_PLAYER(other) && !other.frozen && !other.deadflag && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && !STAT(FROZEN, other) && !IS_DEAD(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -726,7 +726,7 @@ void W_Nexball_Touch()
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
+		if((ball = other.ballcarried) && !STAT(FROZEN, other) && !IS_DEAD(other) && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			UNSET_ONGROUND(other);
@@ -908,8 +908,8 @@ MUTATOR_HOOKFUNCTION(nb, ClientDisconnect)
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerDies)
-{SELFPARAM();
-	nb_DropBall(self);
+{
+	nb_DropBall(frag_target);
 	return false;
 }
 
@@ -950,7 +950,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				crosshair_trace(self);
 				if( trace_ent &&
 					IS_CLIENT(trace_ent) &&
-					trace_ent.deadflag == DEAD_NO &&
+					!IS_DEAD(trace_ent) &&
 					trace_ent.team == self.team &&
 					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )
 				{

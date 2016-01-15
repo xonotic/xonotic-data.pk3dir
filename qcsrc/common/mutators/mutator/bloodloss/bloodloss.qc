@@ -6,7 +6,7 @@ REGISTER_MUTATOR(bloodloss, cvar("g_bloodloss"));
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 {SELFPARAM();
 	if(IS_PLAYER(self))
-	if(self.health <= autocvar_g_bloodloss && self.deadflag == DEAD_NO)
+	if(self.health <= autocvar_g_bloodloss && !IS_DEAD(self))
 	{
 		self.BUTTON_CROUCH = true;
 
@@ -15,7 +15,7 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 			if(self.vehicle)
 				vehicles_exit(VHEF_RELEASE);
 			if(self.event_damage)
-				self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
+				self.event_damage(self, self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
 			self.bloodloss_timer = time + 0.5 + random() * 0.5;
 		}
 	}

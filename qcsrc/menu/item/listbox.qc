@@ -43,7 +43,7 @@
 		ATTRIB(ListBox, colorF, vector, '1 1 1')
 		ATTRIB(ListBox, tolerance, vector, '0 0 0') // drag tolerance
 		ATTRIB(ListBox, scrollbarWidth, float, 0)   // pixels
-		ATTRIB(ListBox, nItems, float, 42)
+		ATTRIB(ListBox, nItems, float, 42) // FIXME: why?!?
 		ATTRIB(ListBox, itemHeight, float, 0)
 		ATTRIB(ListBox, colorBG, vector, '0 0 0')
 		ATTRIB(ListBox, alphaBG, float, 0)

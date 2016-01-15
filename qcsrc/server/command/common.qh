@@ -1,7 +1,7 @@
 #ifndef COMMAND_COMMON_H
 #define COMMAND_COMMON_H
 
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
 #define COMMON_COMMANDS_from(i) _COMMON_COMMANDS_from(i, NULL)
 REGISTER_REGISTRY(COMMON_COMMANDS)
@@ -20,10 +20,10 @@ STATIC_INIT(COMMON_COMMANDS_aliases) {
 }
 
 #include "vote.qh"
-#include "../../common/monsters/spawn.qh"
+#include <common/monsters/spawn.qh>
 
-#include "../../common/command/generic.qh"
-#include "../../common/command/command.qh"
+#include <common/command/generic.qh>
+#include <common/command/command.qh>
 
 // ============================================================
 //  Shared declarations for server commands, written by Samual

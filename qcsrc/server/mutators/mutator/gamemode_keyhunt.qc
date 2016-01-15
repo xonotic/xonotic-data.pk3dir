@@ -336,7 +336,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	}
 	// in any case:
 	setattachment(key, world, "");
-	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN.z - KH_KEY_MIN_z));
+	setorigin(key, key.owner.origin + '0 0 1' * (STAT(PL_MIN, NULL).z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
 	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
@@ -471,9 +471,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 	}
 }
 
-void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.owner)
+void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.owner)
 		return;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -484,9 +484,9 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 	}
 	if(vlen(force) <= 0)
 		return;
-	if(time > self.pushltime)
+	if(time > this.pushltime)
 		if(IS_PLAYER(attacker))
-			self.team = attacker.team;
+			this.team = attacker.team;
 }
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
@@ -522,7 +522,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 
 	if (!IS_PLAYER(other))
 		return;
-	if(other.deadflag != DEAD_NO)
+	if(IS_DEAD(other))
 		return;
 	if(other == self.enemy)
 		if(time < self.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
@@ -919,7 +919,7 @@ float kh_CheckPlayers(float num)
 		float t_team = kh_Team_ByID(num);
 		float players = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(it.deadflag == DEAD_NO && !it.BUTTON_CHAT && it.team == t_team)
+			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == t_team)
 				++players;
 		));
 
@@ -1005,7 +1005,7 @@ void kh_StartRound()  // runs at the start of each round
 		players = 0;
 		entity my_player = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(it.deadflag == DEAD_NO && !it.BUTTON_CHAT && it.team == teem)
+			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == teem)
 			{
 				++players;
 				if(random() * players <= 1)
@@ -1127,7 +1127,7 @@ void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, f
 
 void havocbot_role_kh_carrier()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (!(self.kh_next))
@@ -1154,7 +1154,7 @@ void havocbot_role_kh_carrier()
 
 void havocbot_role_kh_defense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1195,7 +1195,7 @@ void havocbot_role_kh_defense()
 
 void havocbot_role_kh_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1237,7 +1237,7 @@ void havocbot_role_kh_offense()
 
 void havocbot_role_kh_freelancer()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1301,13 +1301,13 @@ MUTATOR_HOOKFUNCTION(kh, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerDies)
-{SELFPARAM();
-	if(self == other)
-		kh_Key_DropAll(self, true);
+{
+	if(frag_target == other)
+		kh_Key_DropAll(frag_target, true);
 	else if(IS_PLAYER(other))
-		kh_Key_DropAll(self, false);
+		kh_Key_DropAll(frag_target, false);
 	else
-		kh_Key_DropAll(self, true);
+		kh_Key_DropAll(frag_target, true);
 	return 0;
 }
 
@@ -1352,7 +1352,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return true;
 
 	float r = random() * 3;

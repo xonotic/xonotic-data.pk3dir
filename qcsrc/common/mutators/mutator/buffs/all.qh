@@ -5,8 +5,8 @@
 // Add new buffs here!
 // Note: Buffs also need spawnfuncs, which are set below
 
-#include "../../../teams.qh"
-#include "../../../util.qh"
+#include <common/teams.qh>
+#include <common/util.qh>
 
 REGISTER_WAYPOINT(Buff, _("Buff"), '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
@@ -25,7 +25,7 @@ REGISTRY_CHECK(Buffs)
     } \
     REGISTER_INIT(BUFF_##id)
 
-#include "../../../items/item/pickup.qh"
+#include <common/items/item/pickup.qh>
 CLASS(Buff, Pickup)
 	/** bit index */
 	ATTRIB(Buff, m_itemid, int, 0)

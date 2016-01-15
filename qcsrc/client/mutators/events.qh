@@ -1,7 +1,7 @@
 #ifndef CLIENT_MUTATORS_EVENTS_H
 #define CLIENT_MUTATORS_EVENTS_H
 
-#include "../../common/mutators/base.qh"
+#include <common/mutators/base.qh>
 
 // globals
 

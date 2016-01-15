@@ -4,45 +4,45 @@
 #include "all.qh"
 
 #if defined(CSQC)
-	#include "../../client/defs.qh"
+	#include <client/defs.qh>
 	#include "../constants.qh"
 	#include "../stats.qh"
-	#include "../../lib/warpzone/anglestransform.qh"
-	#include "../../lib/warpzone/common.qh"
-	#include "../../lib/warpzone/client.qh"
+	#include <lib/warpzone/anglestransform.qh>
+	#include <lib/warpzone/common.qh>
+	#include <lib/warpzone/client.qh>
 	#include "../util.qh"
-	#include "../../client/autocvars.qh"
+	#include <client/autocvars.qh>
 	#include "../deathtypes/all.qh"
-	#include "../../lib/csqcmodel/interpolate.qh"
+	#include <lib/csqcmodel/interpolate.qh>
 	#include "../physics/movetypes/movetypes.qh"
-	#include "../../client/main.qh"
-	#include "../../lib/csqcmodel/cl_model.qh"
+	#include <client/main.qh>
+	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/anglestransform.qh"
-    #include "../../lib/warpzone/common.qh"
-    #include "../../lib/warpzone/util_server.qh"
-    #include "../../lib/warpzone/server.qh"
+    #include <lib/warpzone/anglestransform.qh>
+    #include <lib/warpzone/common.qh>
+    #include <lib/warpzone/util_server.qh>
+    #include <lib/warpzone/server.qh>
     #include "../constants.qh"
     #include "../stats.qh"
     #include "../teams.qh"
     #include "../util.qh"
     #include "../monsters/all.qh"
     #include "config.qh"
-    #include "../../server/weapons/csqcprojectile.qh"
-    #include "../../server/weapons/tracing.qh"
+    #include <server/weapons/csqcprojectile.qh>
+    #include <server/weapons/tracing.qh>
     #include "../t_items.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/constants.qh"
-    #include "../../server/defs.qh"
+    #include <server/autocvars.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
     #include "../notifications.qh"
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/all.qh"
+    #include <server/mutators/all.qh>
     #include "../mapinfo.qh"
-    #include "../../server/command/common.qh"
-    #include "../../lib/csqcmodel/sv_model.qh"
-    #include "../../server/portals.qh"
-    #include "../../server/g_hook.qh"
+    #include <server/command/common.qh>
+    #include <lib/csqcmodel/sv_model.qh>
+    #include <server/portals.qh>
+    #include <server/g_hook.qh>
 #endif
 #ifndef MENUQC
 	#include "calculations.qc"

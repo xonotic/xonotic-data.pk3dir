@@ -40,7 +40,7 @@ void FixSize(entity e);
 
 #ifdef CSQC
 void trigger_common_read(bool withtarget);
-void trigger_remove_generic();
+void trigger_remove_generic(entity this);
 
 .float active;
 .string target;

@@ -21,13 +21,13 @@ WepSet ReadWepSet();
 
 #ifndef MENUQC
 #include "calculations.qh"
-#include "../models/all.qh"
+#include <common/models/all.qh>
 #endif
 
 #include "../util.qh"
 
 #ifdef SVQC
-#include "../../server/bot/aim.qh"
+#include <server/bot/aim.qh>
 #endif
 
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
@@ -119,7 +119,8 @@ STATIC_INIT_LATE(W_PROP_reloader)
 }
 #endif
 
-#define REGISTER_WEAPON(...) EVAL(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define REGISTER_WEAPON(...) EVAL_REGISTER_WEAPON(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define EVAL_REGISTER_WEAPON(...) __VA_ARGS__
 #define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
 /** TODO: deprecated - remove */
 #define REGISTER_WEAPON_3(id, sname, inst) \
@@ -324,7 +325,12 @@ STATIC_INIT(register_weapons_done)
 
 .entity weaponchild;
 .entity exteriorweaponentity;
-.vector weaponentity_glowmod;
+vector weaponentity_glowmod(Weapon wep, int c)
+{
+    vector g;
+    if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
+    return g;
+}
 
 //.int weapon; // current weapon
 .string weaponname; // name of .weapon

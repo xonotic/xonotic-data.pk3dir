@@ -69,7 +69,7 @@ void W_Mortar_Grenade_Explode()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
@@ -89,7 +89,7 @@ void W_Mortar_Grenade_Explode2()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
@@ -105,18 +105,18 @@ void W_Mortar_Grenade_Explode2()
 }
 
 
-void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, self.use);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void W_Mortar_Grenade_Think1()

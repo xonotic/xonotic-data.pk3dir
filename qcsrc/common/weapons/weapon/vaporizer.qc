@@ -118,7 +118,7 @@ void VaporizerBeam_Draw(entity this)
 	//	rgb = e.glowmod;
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
-	float fail = (self.nextthink - time);
+	float fail = (this.nextthink - time);
 
 	Draw_VaporizerBeam_trace_callback_tex = tex;
 	Draw_VaporizerBeam_trace_callback_rnd = 0;
@@ -217,7 +217,7 @@ void W_RocketMinsta_Laser_Explode ()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 

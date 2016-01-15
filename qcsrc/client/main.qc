@@ -1,26 +1,26 @@
 #include "main.qh"
 
-#include "../common/effects/qc/all.qh"
+#include <common/effects/qc/all.qh>
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
 #include "quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "../common/t_items.qh"
+#include <common/t_items.qh>
 #include "wall.qh"
 #include "weapons/projectile.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/items/all.qh"
-#include "../common/mapinfo.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/minigames/cl_minigames_hud.qh"
-#include "../common/net_notice.qh"
-#include "../common/triggers/include.qh"
-#include "../common/vehicles/all.qh"
-#include "../lib/csqcmodel/cl_model.qh"
-#include "../lib/csqcmodel/interpolate.qh"
-#include "../lib/warpzone/client.qh"
+#include <common/deathtypes/all.qh>
+#include <common/items/all.qh>
+#include <common/mapinfo.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/minigames/cl_minigames_hud.qh>
+#include <common/net_notice.qh>
+#include <common/triggers/include.qh>
+#include <common/vehicles/all.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include <lib/csqcmodel/interpolate.qh>
+#include <lib/warpzone/client.qh>
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
@@ -327,11 +327,23 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
 
-void Ent_Remove();
-
-void Ent_RemovePlayerScore()
+.void(entity) predraw_qc;
+void PreDraw_self()
 {
 	SELFPARAM();
+	if (this.predraw_qc) this.predraw_qc(this);
+}
+
+void setpredraw(entity this, void(entity) pdfunc)
+{
+	this.predraw = PreDraw_self;
+	this.predraw_qc = pdfunc;
+}
+
+void Ent_Remove(entity this);
+
+void Ent_RemovePlayerScore(entity this)
+{
 	if(this.owner) {
 		SetTeam(this.owner, -1);
 		this.owner.gotscores = 0;
@@ -359,7 +371,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 		//print("A CSQC entity changed its owner!\n");
 		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", etof(this), this.classname);
 		isNew = true;
-		Ent_Remove();
+		Ent_Remove(this);
 	}
 #endif
 
@@ -714,8 +726,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 void CSQC_Ent_Update(bool isnew)
 {
 	SELFPARAM();
-	this.sourceLocLine = __LINE__;
-	this.sourceLocFile = __FILE__;
+	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
@@ -737,7 +748,7 @@ void CSQC_Ent_Update(bool isnew)
 		if (t != this.enttype || isnew)
 		{
 			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
-			Ent_Remove();
+			Ent_Remove(this);
 			clearentity(this);
 			isnew = true;
 		}
@@ -770,10 +781,9 @@ void CSQC_Ent_Update(bool isnew)
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
-void Ent_Remove()
+void Ent_Remove(entity this)
 {
-	SELFPARAM();
-	if(this.entremove) this.entremove();
+	if(this.entremove) this.entremove(this);
 
 	if(this.skeletonindex)
 	{
@@ -803,7 +813,7 @@ void CSQC_Ent_Remove()
 		LOG_WARNING("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
-	if (this.enttype) Ent_Remove();
+	if (this.enttype) Ent_Remove(this);
 	remove(this);
 }
 

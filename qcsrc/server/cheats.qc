@@ -25,7 +25,7 @@
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"
 
-void CopyBody(float keepvelocity);
+void CopyBody(entity this, float keepvelocity);
 
 #ifdef NOCHEATS
 
@@ -60,7 +60,7 @@ void CheatShutdownClient()
 float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {SELFPARAM();
 	// dead people cannot cheat
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
@@ -172,14 +172,14 @@ float CheatImpulse(int imp)
 			IS_CHEAT(imp, 0, 0);
 			makevectors (self.v_angle);
 			self.velocity = self.velocity + v_forward * 300;
-			CopyBody(1);
+			CopyBody(self, 1);
 			self.lip += 1;
 			self.velocity = self.velocity - v_forward * 300;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_CLONE_STANDING.impulse:
 			IS_CHEAT(imp, 0, 0);
-			CopyBody(0);
+			CopyBody(self, 0);
 			self.lip += 1;
 			DID_CHEAT();
 			break;
@@ -228,7 +228,7 @@ float CheatImpulse(int imp)
 				DID_CHEAT();
 				break;
 			}
-			if(self.deadflag != DEAD_NO)
+			if(IS_DEAD(self))
 				sprint(self, "UR DEAD AHAHAH))\n");
 			else
 				sprint(self, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
@@ -265,7 +265,7 @@ float CheatImpulse(int imp)
 		case CHIMPULSE_R00T.impulse:
 			IS_CHEAT(imp, 0, 0);
 			RandomSelection_Init();
-			FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO && DIFF_TEAM(it, self), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, self), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
@@ -448,7 +448,7 @@ float CheatCommand(float argc)
 			e.nextthink = time;
 			e.solid = 0; // nothing special
 			setmodel(e, MDL_MARKER);
-			setsize(e, PL_MIN, PL_MAX);
+			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 			e.skin = 2;
 			if(argc == 3)
 				e.cnt = stof(argv(1));
@@ -1018,7 +1018,7 @@ void Drag_Update(entity dragger)
 
 float Drag_CanDrag(entity dragger)
 {
-	return (dragger.deadflag == DEAD_NO) || (IS_PLAYER(dragger));
+	return (!IS_DEAD(dragger)) || (IS_PLAYER(dragger));
 }
 
 float Drag_IsDragging(entity dragger)

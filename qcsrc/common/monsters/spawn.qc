@@ -5,8 +5,8 @@
     #include "all.qh"
     #include "sv_monsters.qh"
     #include "spawn.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/defs.qh"
+    #include <server/autocvars.qh>
+    #include <server/defs.qh>
 #endif
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {SELFPARAM();
@@ -63,7 +63,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 
 	// Monster_Spawn checks if monster is valid
-	WITH(entity, self, e, Monster_Spawn(monster_id));
+	Monster_Spawn(e, monster_id);
 
 	return e;
 }

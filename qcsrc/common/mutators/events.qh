@@ -16,7 +16,7 @@ string ret_string;
     /**/
 
 #define MUTATOR_ARGV(x, type) MUTATOR_ARGV_##x##_##type
-#define MUTATOR_NEWGLOBAL(x, type) type MUTATOR_ARGV(x, type);
+#define MUTATOR_NEWGLOBAL(x, type) type MUTATOR_ARGV_##x##_##type;
 
 MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 0)
 MUTATOR_TYPES(MUTATOR_NEWGLOBAL, 1)

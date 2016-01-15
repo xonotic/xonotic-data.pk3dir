@@ -85,7 +85,7 @@ void anticheat_physics(entity this)
 	this.anticheat_div0_strafebot_movement_prev = this.movement;
 
 	// Note: this actually tries to detect snap-aim.
-	if(vlen(this.anticheat_div0_strafebot_forward_prev) && time > this.anticheat_fixangle_endtime) {
+	if(this.anticheat_div0_strafebot_forward_prev && time > this.anticheat_fixangle_endtime) {
 		float cosangle = this.anticheat_div0_strafebot_forward_prev * v_forward;
 		float angle = cosangle < -1 ? M_PI : cosangle > 1 ? 0 : acos(cosangle);
 		/*

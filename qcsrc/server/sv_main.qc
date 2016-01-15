@@ -101,7 +101,7 @@ void CreatureFrame_FallDamage(entity this)
 		if(!this.hook.state)
 		{
 			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-			if (this.deadflag)
+			if (IS_DEAD(this))
 				dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
 			else
 				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);

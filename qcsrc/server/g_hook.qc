@@ -240,7 +240,7 @@ void GrapplingHookThink()
 					{
 						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
-						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
+						if((frozen_pulling && STAT(FROZEN, self.aiment)) || !frozen_pulling)
 						{
 							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
 							UNSET_ONGROUND(self.aiment);
@@ -261,7 +261,7 @@ void GrapplingHookThink()
 			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
 				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(self, pull_entity, v * velocity_multiplier);
 
-			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !self.aiment.frozen)
+			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, self.aiment))
 			{
 				RemoveGrapplingHook(self.realowner);
 				return;
@@ -317,25 +317,25 @@ void GrapplingHookTouch ()
 	//self.realowner.disableclientprediction = true;
 }
 
-void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if (self.health <= 0)
+	if (this.health <= 0)
 	{
-		if(attacker != self.realowner)
+		if(attacker != this.realowner)
 		{
-			self.realowner.pusher = attacker;
-			self.realowner.pushltime = time + autocvar_g_maxpushtime;
-			self.realowner.istypefrag = self.realowner.BUTTON_CHAT;
+			this.realowner.pusher = attacker;
+			this.realowner.pushltime = time + autocvar_g_maxpushtime;
+			this.realowner.istypefrag = this.realowner.BUTTON_CHAT;
 		}
-		RemoveGrapplingHook(self.realowner);
+		RemoveGrapplingHook(this.realowner);
 	}
 }
 
