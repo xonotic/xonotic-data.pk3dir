@@ -295,6 +295,48 @@ void assault_new_round()
 	ReadyRestart_force(); // sets game_starttime
 }
 
+// Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
+// they win. Otherwise the defending team wins once the timelimit passes.
+int WinningCondition_Assault()
+{
+	WinningConditionHelper(); // set worldstatus
+
+	int status = WINNING_NO;
+	// as the timelimit has not yet passed just assume the defending team will win
+	if(assault_attacker_team == NUM_TEAM_1)
+	{
+		SetWinners(team, NUM_TEAM_2);
+	}
+	else
+	{
+		SetWinners(team, NUM_TEAM_1);
+	}
+
+	entity ent;
+	ent = find(world, classname, "target_assault_roundend");
+	if(ent)
+	{
+		if(ent.winning)	// round end has been triggered by attacking team
+		{
+			bprint("ASSAULT: round completed...\n");
+			SetWinners(team, assault_attacker_team);
+
+			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
+
+			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round
+			{
+				status = WINNING_YES;
+			}
+			else
+			{
+				WITH(entity, self, ent, assault_new_round());
+			}
+		}
+	}
+
+	return status;
+}
+
 // spawnfuncs
 spawnfunc(info_player_attacker)
 {
