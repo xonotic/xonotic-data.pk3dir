@@ -119,7 +119,7 @@
 	NL() \
 	NL() \
 	TITLE(_("Game Engine")) \
-		FUNCTION(_("DarkPlaces")) \
+		FUNCTION("DarkPlaces") \
 			PERSON(Forest "LordHavoc" Hale) \
 		NL() \
 		FUNCTION(_("Engine Additions")) \
@@ -128,7 +128,7 @@
 		NL() \
 	NL() \
 	TITLE(_("Compiler")) \
-		FUNCTION(_("GMQCC")) \
+		FUNCTION("GMQCC") \
 			PERSON(Wolfgang "Blub\0" Bumiller) \
 			PERSON(Dale "graphitemaster" Weiler) \
 		NL() \
