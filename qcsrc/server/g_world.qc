@@ -583,9 +583,12 @@ spawnfunc(worldspawn)
 			// Only ever use versioned csprogs.dat files on dedicated servers;
 			// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
 			string pk3csprogs = "csprogs-" WATERMARK ".dat";
-			if (cvar_string_normal("csqc_progname") != pk3csprogs && fexists(pk3csprogs))
+			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
+			string select = "csprogs.dat";
+			if (fexists(pk3csprogs)) select = pk3csprogs;
+			if (cvar_string_normal("csqc_progname") != select)
 			{
-				cvar_set_normal("csqc_progname", pk3csprogs);
+				cvar_set_normal("csqc_progname", select);
 				wantrestart = true;
 			}
 			// Check for updates on startup
@@ -616,8 +619,12 @@ spawnfunc(worldspawn)
 				}
 			}
 		}
-		if (wantrestart) changelevel(mapname);
-		// let initialization continue, shutdown depends on it
+		if (wantrestart)
+		{
+			LOG_INFOF("Restart requested\n");
+			changelevel(mapname);
+			// let initialization continue, shutdown depends on it
+		}
 	}
 
 	float fd, l;
