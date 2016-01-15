@@ -64,6 +64,7 @@ void XonoticProfileTab_fill(entity me)
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
 			box.enableClearButton = 0;
+			box.applyButton = profileApplyButton;
 			label.textEntity = box;
 	me.TR(me);
 		me.TD(me, 5, 1, e = makeXonoticColorpicker(box));
