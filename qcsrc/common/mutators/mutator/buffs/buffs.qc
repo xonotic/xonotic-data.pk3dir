@@ -19,6 +19,9 @@ float autocvar_g_buffs_medic_survive_health;
 float autocvar_g_buffs_medic_rot;
 float autocvar_g_buffs_medic_max;
 float autocvar_g_buffs_medic_regen;
+float autocvar_g_buffs_medic_heal_amount = 15;
+float autocvar_g_buffs_medic_heal_delay = 1;
+float autocvar_g_buffs_medic_heal_range = 400;
 float autocvar_g_buffs_vengeance_damage_multiplier;
 float autocvar_g_buffs_bash_force;
 float autocvar_g_buffs_bash_force_self;
@@ -50,6 +53,8 @@ float autocvar_g_buffs_magnet_range_item;
 .float buff_invisible_prev_alpha;
 // flight
 .float buff_flight_prev_gravity;
+// medic
+.float buff_medic_healtime;
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
@@ -490,6 +495,20 @@ void buff_Vengeance_DelayedDamage()
 	return;
 }
 
+// note: only really useful in teamplay
+void buff_Medic_Heal(entity this)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
+	{
+		if(SAME_TEAM(it, this))
+		if(it.health < autocvar_g_balance_health_regenstable)
+		{
+			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
+			it.health = bound(0, it.health + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable);
+		}
+	});
+}
+
 float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
 {
 	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
@@ -557,15 +576,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	if(frag_attacker.buffs & BUFF_DISABILITY.m_itemid)
 	if(frag_target != frag_attacker)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
-
-	if(frag_attacker.buffs & BUFF_MEDIC.m_itemid)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
-	if(SAME_TEAM(frag_attacker, frag_target))
-	if(frag_attacker != frag_target)
-	{
-		frag_target.health = min(g_pickup_healthmega_max, frag_target.health + frag_damage);
-		frag_damage = 0;
-	}
 
 	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
@@ -889,6 +899,13 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if((self.buffs & BUFF_INVISIBLE.m_itemid) && (self.oldbuffs & BUFF_INVISIBLE.m_itemid))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+
+	if(self.buffs & BUFF_MEDIC.m_itemid)
+	if(time >= self.buff_medic_healtime)
+	{
+		buff_Medic_Heal(self);
+		self.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;
+	}
 
 #define BUFF_ONADD(b) if ( (self.buffs & (b).m_itemid) && !(self.oldbuffs & (b).m_itemid))
 #define BUFF_ONREM(b) if (!(self.buffs & (b).m_itemid) &&  (self.oldbuffs & (b).m_itemid))
