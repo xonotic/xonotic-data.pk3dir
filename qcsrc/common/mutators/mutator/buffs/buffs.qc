@@ -579,7 +579,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 
 	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
-		float time = buff_Inferno_CalculateTime(
+		float btime = buff_Inferno_CalculateTime(
 			frag_damage,
 			0,
 			autocvar_g_buffs_inferno_burntime_min_time,
@@ -587,7 +587,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 			autocvar_g_buffs_inferno_burntime_target_time,
 			autocvar_g_buffs_inferno_burntime_factor
 		);
-		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF.m_id);
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier), btime, DEATH_BUFF.m_id);
 	}
 
 	// this... is ridiculous (TODO: fix!)
