@@ -577,6 +577,14 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	if(frag_target != frag_attacker)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
+	if(frag_target.buffs & BUFF_INFERNO.m_itemid)
+	{
+		if(frag_deathtype == DEATH_FIRE.m_id)
+			frag_damage = 0;
+		if(frag_deathtype == DEATH_LAVA.m_id)
+			frag_damage *= 0.5; // TODO: cvarize?
+	}
+
 	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
 		float btime = buff_Inferno_CalculateTime(
