@@ -45,6 +45,7 @@ float autocvar_g_buffs_inferno_burntime_target_time;
 float autocvar_g_buffs_inferno_damagemultiplier;
 float autocvar_g_buffs_swapper_range;
 float autocvar_g_buffs_magnet_range_item;
+float autocvar_g_buffs_magnet_range_buff = 200;
 
 // ammo
 .float buff_ammo_prev_infitems;
@@ -887,17 +888,24 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(self.buffs & BUFF_MAGNET.m_itemid)
 	{
-		vector pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
-		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
-		if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, other.absmin, other.absmax))
+		vector pickup_size;
+		FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 		{
-			setself(other);
-			other = this;
-			if(self.touch)
-				self.touch();
-			other = self;
-			setself(this);
-		}
+			if(it.buffs)
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;
+			else
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
+
+			if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, it.absmin, it.absmax))
+			{
+				setself(other);
+				other = this;
+				if(self.touch)
+					self.touch();
+				other = self;
+				setself(this);
+			}
+		});
 	}
 
 	if(self.buffs & BUFF_AMMO.m_itemid)
