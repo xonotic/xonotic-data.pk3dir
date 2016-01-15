@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 17:03+0100\n"
-"PO-Revision-Date: 2016-01-15 16:03+0000\n"
+"POT-Creation-Date: 2016-01-15 22:46+0100\n"
+"PO-Revision-Date: 2016-01-15 16:04+0000\n"
 "Last-Translator: divVerent <divVerent@xonotic.org>\n"
 "Language-Team: Belarusian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/be/)\n"
@@ -7265,7 +7265,7 @@ msgstr "Эфекты анімацыі прыцэлу"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
 msgid "Hit testing:"
-msgstr ""
+msgstr "Праверка на траплянне:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
 msgid ""
@@ -7276,15 +7276,15 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:134
 msgid "HTTST^Disabled"
-msgstr ""
+msgstr "HTTST^Адключана"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:135
 msgid "HTTST^TrueAim"
-msgstr ""
+msgstr "HTTST^TrueAim"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
 msgid "HTTST^Enemies"
-msgstr ""
+msgstr "HTTST^Ворагі"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:141
 msgid "Blur crosshair if the shot is obstructed"

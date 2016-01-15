@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Translators:
-# Antonio <piuntn@gmail.com>, 2013-2015
+# Antonio <piuntn@gmail.com>, 2013-2016
 # Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011-2012
 # Costa <yesbubu@hotmail.it>, 2014
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011
@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 17:03+0100\n"
-"PO-Revision-Date: 2016-01-15 16:03+0000\n"
-"Last-Translator: divVerent <divVerent@xonotic.org>\n"
+"POT-Creation-Date: 2016-01-15 22:46+0100\n"
+"PO-Revision-Date: 2016-01-15 20:08+0000\n"
+"Last-Translator: Antonio <piuntn@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/team-xonotic/xonotic/"
 "language/it/)\n"
 "Language: it\n"
@@ -7490,7 +7490,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:87
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:103
 msgid "Size:"
-msgstr ""
+msgstr "Grandezza:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:70
 msgid "By health"
@@ -7514,7 +7514,7 @@ msgstr "Ammorbidisci gli effetti dei mirini"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:131
 msgid "Hit testing:"
-msgstr ""
+msgstr "Test colpo a segno:"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:133
 msgid ""
@@ -7522,18 +7522,21 @@ msgid ""
 "when you would not hit the wall; Enemies: also enlarge the crosshair when "
 "you would hit an enemy"
 msgstr ""
+"Nessuno: non fare test del colpo a segno per il mirino; VeraMira: sfuoca il "
+"mirino quando non potresti colpire il muro; Nemici: ingrandisci anche il "
+"mirino quando colpiresti un nemico"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:134
 msgid "HTTST^Disabled"
-msgstr ""
+msgstr "Disabilitato"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:135
 msgid "HTTST^TrueAim"
-msgstr ""
+msgstr "VeraMira"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:136
 msgid "HTTST^Enemies"
-msgstr ""
+msgstr "Nemici"
 
 #: qcsrc/menu/xonotic/dialog_settings_game_crosshair.qc:141
 msgid "Blur crosshair if the shot is obstructed"
