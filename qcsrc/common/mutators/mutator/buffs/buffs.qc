@@ -898,12 +898,14 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 			if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, it.absmin, it.absmax))
 			{
-				setself(other);
-				other = this;
-				if(self.touch)
-					self.touch();
-				other = self;
-				setself(this);
+				if(it.touch)
+				{
+					entity oldother = other;
+					other = self;
+					WITH(entity, self, it, it.touch());
+
+					other = oldother;
+				}
 			}
 		});
 	}
