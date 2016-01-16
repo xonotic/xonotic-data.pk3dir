@@ -1313,6 +1313,8 @@ void HUD_DrawScoreboard()
 		{
 			if(tm.team == NUM_SPECTATOR)
 				continue;
+			if(!tm.team && teamplay)
+				continue;
 
 			draw_beginBoldFont();
 			rgb = Team_ColorRGB(tm.team);
@@ -1341,6 +1343,8 @@ void HUD_DrawScoreboard()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
+				continue;
+			if(!tm.team && teamplay)
 				continue;
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
