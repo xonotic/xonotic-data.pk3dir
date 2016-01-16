@@ -299,6 +299,7 @@
 		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
 		{
 			if (gs == NULL && ps == NULL && sample == "") return;
+			if(this.classname == "body") return;
 			float r = random();
 			if (sample != "") sample = GlobalSound_sample(sample, r);
 			switch (voicetype)

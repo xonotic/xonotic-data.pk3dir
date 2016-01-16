@@ -106,6 +106,7 @@ void CopyBody(entity this, float keepvelocity)
 	setsize(clone, this.mins, this.maxs);
 	clone.prevorigin = this.origin;
 	clone.reset = SUB_Remove;
+	clone._ps = this._ps;
 
 	Drag_MoveDrag(this, clone);
 
