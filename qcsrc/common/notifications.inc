@@ -354,6 +354,7 @@
     MSG_INFO_NOTIF(2, INFO_JOIN_CONNECT,                   1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected"), "")
     MULTITEAM_INFO(2, INFO_JOIN_CONNECT_TEAM_, 4,          1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected and joined the ^TC^TT team"), "")
     MSG_INFO_NOTIF(1, INFO_JOIN_PLAY,                      1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now playing"), "")
+    MULTITEAM_INFO(2, INFO_JOIN_PLAY_TEAM_, 4,             1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now playing on the ^TC^TT team"), "")
     MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,               1, 0, "s1", "s1",                        "notify_balldropped",   _("^BG%s^BG has dropped the ball!"), "")
     MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,                1, 0, "s1", "s1",                        "notify_ballpickedup",  _("^BG%s^BG has picked up the ball!"), "")
     MULTITEAM_INFO(1, INFO_KEYHUNT_CAPTURE_, 4,            1, 0, "s1", "",                          "",                     _("^BG%s^BG captured the keys for the ^TC^TT team"), "")

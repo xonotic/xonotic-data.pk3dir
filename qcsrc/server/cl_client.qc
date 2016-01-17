@@ -1078,7 +1078,7 @@ void ClientConnect()
 
 	this.netname_previous = strzone(this.netname);
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, (teamplay ? APP_TEAM_ENT_4(this, INFO_JOIN_CONNECT_TEAM_) : INFO_JOIN_CONNECT), this.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_ENT_4(this, INFO_JOIN_CONNECT_TEAM_) : INFO_JOIN_CONNECT), this.netname);
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1827,7 +1827,7 @@ void LeaveSpectatorMode()
 
 			PutClientInServer();
 
-			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname); }
+			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname); }
 		}
 		else
 			stuffcmd(self, "menu_showteamselect\n");
