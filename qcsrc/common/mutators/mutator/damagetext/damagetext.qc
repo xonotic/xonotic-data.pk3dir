@@ -11,9 +11,9 @@
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
-AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      _("Draw damage dealt. 0: disabled, 1: enabled"));
+AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      _("Draw damage dealt where you hit the enemy"));
 AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$$d",   _("How to format the damage text. 1$ is health, 2$ is armor, 3$ is both"));
-AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    _("Default damage text color"));
+AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    _("Damage text color"));
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      _("Damage text uses weapon color"));
 AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          _("Damage text font size"));
 AUTOCVAR_SAVE(cl_damagetext_alpha_start,        float,  1,          _("Damage text initial alpha"));
