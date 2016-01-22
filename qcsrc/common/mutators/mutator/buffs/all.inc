@@ -76,14 +76,6 @@ REGISTER_BUFF(JUMP) {
 }
 BUFF_SPAWNFUNCS(jump, BUFF_JUMP)
 
-REGISTER_BUFF(FLIGHT) {
-    this.m_prettyName = _("Flight");
-    this.m_name = "flight";
-    this.m_skin = 11;
-    this.m_color = '0.33 0.56 1';
-}
-BUFF_SPAWNFUNCS(flight, BUFF_FLIGHT)
-
 REGISTER_BUFF(INVISIBLE) {
     this.m_prettyName = _("Invisible");
     this.m_name = "invisible";

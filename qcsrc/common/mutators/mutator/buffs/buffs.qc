@@ -36,7 +36,6 @@ float autocvar_g_buffs_speed_damage_take;
 float autocvar_g_buffs_speed_regen;
 float autocvar_g_buffs_vampire_damage_steal;
 float autocvar_g_buffs_invisible_alpha;
-float autocvar_g_buffs_flight_gravity;
 float autocvar_g_buffs_jump_height;
 float autocvar_g_buffs_inferno_burntime_factor;
 float autocvar_g_buffs_inferno_burntime_min_time;
@@ -54,8 +53,6 @@ float autocvar_g_buffs_luck_damagemultiplier = 3;
 .int buff_ammo_prev_clipload;
 // invisible
 .float buff_invisible_prev_alpha;
-// flight
-.float buff_flight_prev_gravity;
 // medic
 .float buff_medic_healtime;
 // disability
@@ -816,11 +813,6 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {SELFPARAM();
-	if (self.classname == "item_flight" && cvar("g_buffs") && cvar("g_buffs_flight"))
-	{
-		buff_Init_Compat(self, BUFF_FLIGHT);
-		return true;
-	}
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{
@@ -974,15 +966,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONREM(BUFF_INVISIBLE)
 			self.alpha = self.buff_invisible_prev_alpha;
-
-		BUFF_ONADD(BUFF_FLIGHT)
-		{
-			self.buff_flight_prev_gravity = self.gravity;
-			self.gravity = autocvar_g_buffs_flight_gravity;
-		}
-
-		BUFF_ONREM(BUFF_FLIGHT)
-			self.gravity = self.buff_flight_prev_gravity;
 
 		self.oldbuffs = self.buffs;
 		if(self.buffs)
