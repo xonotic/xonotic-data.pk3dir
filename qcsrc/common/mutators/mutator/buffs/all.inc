@@ -116,3 +116,11 @@ REGISTER_BUFF(MAGNET) {
     this.m_color = '1 0.95 0.18';
 }
 BUFF_SPAWNFUNCS(magnet, BUFF_MAGNET)
+
+REGISTER_BUFF(LUCK) {
+    this.m_prettyName = _("Luck");
+    this.m_name = "luck";
+    this.m_skin = 19;
+    this.m_color = '1 0.23 0.44';
+}
+BUFF_SPAWNFUNCS(luck, BUFF_LUCK)

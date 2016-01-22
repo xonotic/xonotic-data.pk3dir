@@ -46,6 +46,8 @@ float autocvar_g_buffs_inferno_damagemultiplier;
 float autocvar_g_buffs_swapper_range;
 float autocvar_g_buffs_magnet_range_item;
 float autocvar_g_buffs_magnet_range_buff = 200;
+float autocvar_g_buffs_luck_chance = 0.15;
+float autocvar_g_buffs_luck_damagemultiplier = 3;
 
 // ammo
 .float buff_ammo_prev_infitems;
@@ -585,6 +587,12 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 		if(frag_deathtype == DEATH_LAVA.m_id)
 			frag_damage *= 0.5; // TODO: cvarize?
 	}
+
+	if(frag_attacker.buffs & BUFF_LUCK.m_itemid)
+	if(frag_attacker != frag_target)
+	if(autocvar_g_buffs_luck_damagemultiplier > 0)
+	if(random() <= autocvar_g_buffs_luck_chance)
+		frag_damage *= autocvar_g_buffs_luck_damagemultiplier;
 
 	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
