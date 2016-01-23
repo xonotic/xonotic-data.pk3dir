@@ -76,7 +76,7 @@ float it_times[Items_MAX];
 
 void Item_ItemsTime_Init()
 {
-    FOREACH(Items, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
         it_times[it.m_id] = -1;
     ));
 }
@@ -88,21 +88,21 @@ STATIC_INIT(ItemsTime_Init) {
 
 void Item_ItemsTime_ResetTimes()
 {
-    FOREACH(Items, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
         it_times[it.m_id] = (it_times[it.m_id] == -1) ? -1 : 0;
     ));
 }
 
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
-    FOREACH(Items, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
         IT_Write(e, it.m_id, (it_times[it.m_id] == -1) ? -1 : 0);
     ));
 }
 
 void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
-    FOREACH(Items, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
         IT_Write(e, it.m_id, it_times[it.m_id]);
     ));
 }
