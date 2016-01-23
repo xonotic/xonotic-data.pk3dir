@@ -92,15 +92,6 @@ REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 	}
 }
 
-entity buff_FirstFromFlags(int _buffs)
-{
-	if (flags)
-	{
-		FOREACH(Buffs, it.m_itemid & _buffs, LAMBDA(return it));
-	}
-	return BUFF_Null;
-}
-
 bool buffs_BuffModel_Customize()
 {SELFPARAM();
 	entity player, myowner;

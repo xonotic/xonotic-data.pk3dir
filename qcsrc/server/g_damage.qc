@@ -259,7 +259,7 @@ float Obituary_WeaponDeath(
 }
 
 .int buffs = _STAT(BUFFS); // TODO: remove
-
+entity buff_FirstFromFlags(int _buffs);
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 {
 	// Sanity check
@@ -430,9 +430,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 				);
 			}
 
-			float f3 = 0;
+			int f3 = 0;
 			if(deathtype == DEATH_BUFF.m_id)
-				f3 = attacker.buffs;
+				f3 = buff_FirstFromFlags(attacker.buffs).m_id;
 
 			if (!Obituary_WeaponDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))
 				Obituary_SpecialDeath(targ, true, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker, f3);
