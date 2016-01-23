@@ -66,6 +66,7 @@ bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
     return (false
     || it.instanceOfPowerup
     || Item_ItemsTime_SpectatorOnly(it)
+    || it == ITEM_JetpackRegen
     || (_weapons & WEPSET_SUPERWEAPONS)
     );
 }
