@@ -14,8 +14,9 @@ void IT_Write(entity e, int i, float f) {
 #endif
 
 #ifdef CSQC
-float ItemsTime_time[Items_MAX];
-float ItemsTime_availableTime[Items_MAX];
+// reserve one more spot for superweapons time
+float ItemsTime_time[Items_MAX + 1];
+float ItemsTime_availableTime[Items_MAX + 1];
 NET_HANDLE(itemstime, bool isNew)
 {
     int i = ReadByte();
@@ -31,6 +32,7 @@ void Item_ItemsTime_Init()
     FOREACH(Items, true, LAMBDA(
         ItemsTime_time[it.m_id] = -1;
     ));
+    ItemsTime_time[Items_MAX] = -1;
 }
 
 STATIC_INIT(ItemsTime_Init) {
@@ -61,25 +63,26 @@ bool Item_ItemsTime_SpectatorOnly(GameItem it)
     );
 }
 
-bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
+bool Item_ItemsTime_Allow(GameItem it)
 {
     return (false
     || it.instanceOfPowerup
     || Item_ItemsTime_SpectatorOnly(it)
     || it == ITEM_JetpackRegen
-    || (_weapons & WEPSET_SUPERWEAPONS)
     );
 }
 
 #ifdef SVQC
 
-float it_times[Items_MAX];
+// reserve one more spot for superweapons time
+float it_times[Items_MAX + 1];
 
 void Item_ItemsTime_Init()
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         it_times[it.m_id] = -1;
     ));
+    it_times[Items_MAX] = -1;
 }
 
 STATIC_INIT(ItemsTime_Init) {
@@ -89,23 +92,26 @@ STATIC_INIT(ItemsTime_Init) {
 
 void Item_ItemsTime_ResetTimes()
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         it_times[it.m_id] = (it_times[it.m_id] == -1) ? -1 : 0;
     ));
+    it_times[Items_MAX] = (it_times[Items_MAX] == -1) ? -1 : 0;
 }
 
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         IT_Write(e, it.m_id, (it_times[it.m_id] == -1) ? -1 : 0);
     ));
+    IT_Write(e, Items_MAX, (it_times[Items_MAX] == -1) ? -1 : 0);
 }
 
 void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
-    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         IT_Write(e, it.m_id, it_times[it.m_id]);
     ));
+    IT_Write(e, Items_MAX, it_times[Items_MAX]);
 }
 
 void Item_ItemsTime_SetTime(entity e, float t)
@@ -114,9 +120,12 @@ void Item_ItemsTime_SetTime(entity e, float t)
         return;
 
     GameItem item = e.itemdef;
-    if (item.instanceOfGameItem && !item.instanceOfWeaponPickup)
+    if (item.instanceOfGameItem)
     {
-        it_times[item.m_id] = t;
+		if (!item.instanceOfWeaponPickup)
+			it_times[item.m_id] = t;
+		else if (e.weapons & WEPSET_SUPERWEAPONS)
+			it_times[Items_MAX] = t;
     }
 }
 
@@ -128,7 +137,7 @@ void Item_ItemsTime_SetTimesForAllPlayers()
 float Item_ItemsTime_UpdateTime(entity e, float t)
 {
     bool isavailable = (t == 0);
-    FOREACH_ENTITY(it.itemdef == e.itemdef || ((it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT), LAMBDA(
+    FOREACH_ENTITY(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT), LAMBDA(
         if (e == it) continue;
         if (it.scheduledrespawntime <= time)
             isavailable = true;
@@ -177,7 +186,7 @@ MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
 
 #ifdef CSQC
 
-void DrawItemsTimeItem(vector myPos, vector mySize, float ar, entity item, float item_time, bool item_available, float item_availableTime)
+void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, float item_time, bool item_available, float item_availableTime)
 {
     float t = 0;
     vector color = '0 0 0';
@@ -240,8 +249,8 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, entity item, float
             picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
     }
     if (item_availableTime)
-        drawpic_aspect_skin_expanding(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
-    drawpic_aspect_skin(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
+        drawpic_aspect_skin_expanding(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
+    drawpic_aspect_skin(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_ItemsTime()
@@ -263,17 +272,26 @@ void HUD_ItemsTime()
 
     int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
-        FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+    {
+        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
             count += (ItemsTime_time[it.m_id] > time || -ItemsTime_time[it.m_id] > time);
         ));
+        count += (ItemsTime_time[Items_MAX] > time || -ItemsTime_time[Items_MAX] > time);
+    }
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
-        FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+    {
+        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
             count += (ItemsTime_time[it.m_id] > time);
         ));
+        count += (ItemsTime_time[Items_MAX] > time);
+    }
     else
-        FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
+    {
+        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
             count += (ItemsTime_time[it.m_id] != -1);
         ));
+        count += (ItemsTime_time[Items_MAX] != -1);
+    }
     if (count == 0)
         return;
 
@@ -344,8 +362,14 @@ void HUD_ItemsTime()
 
     float row = 0, column = 0;
     bool item_available;
-    FOREACH(Items, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[it.m_id] != -1, LAMBDA(
-        float item_time = ItemsTime_time[it.m_id];
+    int id = 0;
+    string icon = "";
+    FOREACH(Items, Item_ItemsTime_Allow(it) && ItemsTime_time[it.m_id] != -1, LAMBDA(
+    	id = it.m_id;
+    	icon = it.m_icon;
+    	
+    	:iteration
+        float item_time = ItemsTime_time[id];
         if (item_time < -1)
         {
             item_available = true;
@@ -354,35 +378,44 @@ void HUD_ItemsTime()
         else
             item_available = (item_time <= time);
 
-        if (ItemsTime_time[it.m_id] >= 0)
+        if (ItemsTime_time[id] >= 0)
         {
-            if (time <= ItemsTime_time[it.m_id])
-                ItemsTime_availableTime[it.m_id] = 0;
-            else if (ItemsTime_availableTime[it.m_id] == 0)
-                ItemsTime_availableTime[it.m_id] = time;
+            if (time <= ItemsTime_time[id])
+                ItemsTime_availableTime[id] = 0;
+            else if (ItemsTime_availableTime[id] == 0)
+                ItemsTime_availableTime[id] = time;
         }
-        else if (ItemsTime_availableTime[it.m_id] == 0)
-            ItemsTime_availableTime[it.m_id] = time;
+        else if (ItemsTime_availableTime[id] == 0)
+            ItemsTime_availableTime[id] = time;
 
-        float f = (time - ItemsTime_availableTime[it.m_id]) * 2;
+        float f = (time - ItemsTime_availableTime[id]) * 2;
         f = (f > 1) ? 0 : bound(0, f, 1);
 
         if (autocvar_hud_panel_itemstime_hidespawned == 1)
-            if (!(ItemsTime_time[it.m_id] > time || -ItemsTime_time[it.m_id] > time))
+            if (!(ItemsTime_time[id] > time || -ItemsTime_time[id] > time))
                 continue;
 
         if (autocvar_hud_panel_itemstime_hidespawned == 2)
-            if (!(ItemsTime_time[it.m_id] > time))
+            if (!(ItemsTime_time[id] > time))
                 continue;
 
-        DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, it, item_time, item_available, f);
+        DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, icon, item_time, item_available, f);
         ++row;
         if (row >= rows)
         {
             row = 0;
             column = column + 1;
         }
+        if(id == Items_MAX) // can happen only in the last fake iteration
+        	break;
     ));
+    // add another fake iteration for superweapons time
+    if(id < Items_MAX && ItemsTime_time[Items_MAX] != -1)
+    {
+		id = Items_MAX;
+		icon = "superweapons";
+		goto iteration;
+    }
 }
 
 #endif
