@@ -137,7 +137,7 @@ float PM_dodging_checkpressedkeys(entity this)
 		/* is this a state change? */													\
 		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
 				tap_direction_##RESULT;													\
-				if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this))	\
+				if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap)	\
 					dodge_detected = true;													\
 				this.last_##BTN##_KEY_time = time;										\
 		}
