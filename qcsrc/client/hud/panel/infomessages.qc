@@ -94,16 +94,16 @@ void HUD_InfoMessages()
 			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
 			drawInfoMessage(s);
-
-			//show restart countdown:
-			if (time < STAT(GAMESTARTTIME)) {
-				float countdown;
-				//we need to ceil, otherwise the countdown would be off by .5 when using round()
-				countdown = ceil(STAT(GAMESTARTTIME) - time);
-				s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
-				drawInfoMessage(s);
-			}
 		}
+
+		if (time < STAT(GAMESTARTTIME))
+		{
+			//we need to ceil, otherwise the countdown would be off by .5 when using round()
+			float countdown = ceil(STAT(GAMESTARTTIME) - time);
+			s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
+			drawInfoMessage(s);
+		}
+
 		if(warmup_stage && !intermission)
 		{
 			s = _("^2Currently in ^1warmup^2 stage!");
