@@ -101,8 +101,7 @@ void HUD_InfoMessages()
 				//we need to ceil, otherwise the countdown would be off by .5 when using round()
 				countdown = ceil(STAT(GAMESTARTTIME) - time);
 				s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
-				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-				o.y += fontsize.y;
+				drawInfoMessage(s);
 			}
 		}
 		if(warmup_stage && !intermission)
