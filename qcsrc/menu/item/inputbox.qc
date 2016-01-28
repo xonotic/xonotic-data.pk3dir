@@ -31,6 +31,7 @@
 		ATTRIB(InputBox, color, vector, '1 1 1')
 		ATTRIB(InputBox, colorF, vector, '1 1 1')
 		ATTRIB(InputBox, maxLength, float, 255)  // if negative, it counts bytes, not chars
+		ATTRIB(InputBox, applyButton, entity, NULL)
 
 		ATTRIB(InputBox, enableClearButton, float, 1)
 		ATTRIB(InputBox, clearButton, entity, NULL)
@@ -132,6 +133,8 @@
 			{
 				m_play_click_sound(MENU_SOUND_CLEAR);
 				me.setText(me, "");
+				if(me.applyButton)
+					me.applyButton.disabled = false;
 				me.cb_pressed = 0;
 				return 1;
 			}
@@ -167,6 +170,8 @@
 		if (ascii >= 32 && ascii != 127)
 		{
 			me.enterText(me, chr(ascii));
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			return 1;
 		}
 		switch (key)
@@ -192,6 +197,8 @@
 				{
 					me.cursorPos -= 1;
 					me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
+					if(me.applyButton)
+						me.applyButton.disabled = false;
 				}
 				return 1;
 			case K_KP_DEL:
@@ -202,9 +209,9 @@
 					me.setText(me, "");
 				}
 				else
-				{
 					me.setText(me, strcat(substring(me.text, 0, me.cursorPos), substring(me.text, me.cursorPos + 1, strlen(me.text) - me.cursorPos - 1)));
-				}
+				if(me.applyButton)
+					me.applyButton.disabled = false;
 				return 1;
 		}
 		return 0;
