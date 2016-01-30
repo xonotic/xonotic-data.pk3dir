@@ -87,6 +87,11 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 	centerprint_countdown_num[j] = countdown_num;
 }
 
+void centerprint_kill(float id)
+{
+	centerprint_generic(id, "", 0, 0);
+}
+
 void centerprint_hud(string strMessage)
 {
 	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
