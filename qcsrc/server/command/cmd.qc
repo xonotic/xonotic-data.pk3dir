@@ -180,7 +180,7 @@ void ClientCommand_join(float request)
 						self.classname = STR_PLAYER;
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname);
 						PutClientInServer();
 					}
 					else

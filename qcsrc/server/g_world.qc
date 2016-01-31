@@ -571,7 +571,7 @@ spawnfunc(worldspawn)
 		if (!server_is_dedicated)
 		{
 			// force unloading of server pk3 files when starting a listen server
-			localcmd("\nfs_rescan\n");
+			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
 			wantrestart = cvar_string_normal("csqc_progname") != expect;
@@ -583,9 +583,12 @@ spawnfunc(worldspawn)
 			// Only ever use versioned csprogs.dat files on dedicated servers;
 			// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
 			string pk3csprogs = "csprogs-" WATERMARK ".dat";
-			if (cvar_string_normal("csqc_progname") != pk3csprogs && fexists(pk3csprogs))
+			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
+			string select = "csprogs.dat";
+			if (fexists(pk3csprogs)) select = pk3csprogs;
+			if (cvar_string_normal("csqc_progname") != select)
 			{
-				cvar_set_normal("csqc_progname", pk3csprogs);
+				cvar_set_normal("csqc_progname", select);
 				wantrestart = true;
 			}
 			// Check for updates on startup
@@ -616,8 +619,12 @@ spawnfunc(worldspawn)
 				}
 			}
 		}
-		if (wantrestart) changelevel(mapname);
-		// let initialization continue, shutdown depends on it
+		if (wantrestart)
+		{
+			LOG_INFOF("Restart requested\n");
+			changelevel(mapname);
+			// let initialization continue, shutdown depends on it
+		}
 	}
 
 	float fd, l;
@@ -1639,51 +1646,6 @@ void AddWinners(.float field, float value)
 void ClearWinners()
 {
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = 0));
-}
-
-// Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
-// they win. Otherwise the defending team wins once the timelimit passes.
-void assault_new_round();
-float WinningCondition_Assault()
-{SELFPARAM();
-	float status;
-
-	WinningConditionHelper(); // set worldstatus
-
-	status = WINNING_NO;
-	// as the timelimit has not yet passed just assume the defending team will win
-	if(assault_attacker_team == NUM_TEAM_1)
-	{
-		SetWinners(team, NUM_TEAM_2);
-	}
-	else
-	{
-		SetWinners(team, NUM_TEAM_1);
-	}
-
-	entity ent;
-	ent = find(world, classname, "target_assault_roundend");
-	if(ent)
-	{
-		if(ent.winning)	// round end has been triggered by attacking team
-		{
-			bprint("ASSAULT: round completed...\n");
-			SetWinners(team, assault_attacker_team);
-
-			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
-
-			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round
-			{
-				status = WINNING_YES;
-			}
-			else
-			{
-				WITH(entity, self, ent, assault_new_round());
-			}
-		}
-	}
-
-	return status;
 }
 
 void ShuffleMaplist()

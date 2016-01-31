@@ -479,7 +479,7 @@ void Item_Think()
 }
 
 bool Item_ItemsTime_SpectatorOnly(GameItem it);
-bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons);
+bool Item_ItemsTime_Allow(GameItem it);
 float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
@@ -496,7 +496,7 @@ void Item_Respawn ()
 		sound (self, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-    if (Item_ItemsTime_Allow(self.itemdef, self.weapons))
+    if (Item_ItemsTime_Allow(self.itemdef) || self.weapons & WEPSET_SUPERWEAPONS)
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -582,7 +582,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if (Item_ItemsTime_Allow(e.itemdef, e.weapons))
+	if (Item_ItemsTime_Allow(e.itemdef) || e.weapons & WEPSET_SUPERWEAPONS)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);

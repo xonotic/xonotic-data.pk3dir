@@ -74,6 +74,8 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == NUM_SPECTATOR)
 				continue;
+			if(!tm.team && teamplay)
+				continue;
 			if (tm.team == myteam)
 				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize.y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize.y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -268,6 +270,8 @@ void HUD_Score()
 		row = column = 0;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == NUM_SPECTATOR)
+				continue;
+			if(!tm.team && teamplay)
 				continue;
 			score = tm.(teamscores[ts_primary]);
 			if(autocvar__hud_configure)
