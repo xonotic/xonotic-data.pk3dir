@@ -19,6 +19,9 @@ float autocvar_g_buffs_medic_survive_health;
 float autocvar_g_buffs_medic_rot;
 float autocvar_g_buffs_medic_max;
 float autocvar_g_buffs_medic_regen;
+float autocvar_g_buffs_medic_heal_amount = 15;
+float autocvar_g_buffs_medic_heal_delay = 1;
+float autocvar_g_buffs_medic_heal_range = 400;
 float autocvar_g_buffs_vengeance_damage_multiplier;
 float autocvar_g_buffs_bash_force;
 float autocvar_g_buffs_bash_force_self;
@@ -33,7 +36,6 @@ float autocvar_g_buffs_speed_damage_take;
 float autocvar_g_buffs_speed_regen;
 float autocvar_g_buffs_vampire_damage_steal;
 float autocvar_g_buffs_invisible_alpha;
-float autocvar_g_buffs_flight_gravity;
 float autocvar_g_buffs_jump_height;
 float autocvar_g_buffs_inferno_burntime_factor;
 float autocvar_g_buffs_inferno_burntime_min_time;
@@ -42,14 +44,17 @@ float autocvar_g_buffs_inferno_burntime_target_time;
 float autocvar_g_buffs_inferno_damagemultiplier;
 float autocvar_g_buffs_swapper_range;
 float autocvar_g_buffs_magnet_range_item;
+float autocvar_g_buffs_magnet_range_buff = 200;
+float autocvar_g_buffs_luck_chance = 0.15;
+float autocvar_g_buffs_luck_damagemultiplier = 3;
 
 // ammo
 .float buff_ammo_prev_infitems;
 .int buff_ammo_prev_clipload;
 // invisible
 .float buff_invisible_prev_alpha;
-// flight
-.float buff_flight_prev_gravity;
+// medic
+.float buff_medic_healtime;
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;
@@ -85,15 +90,6 @@ REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 	{
 		InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 	}
-}
-
-entity buff_FirstFromFlags(int _buffs)
-{
-	if (flags)
-	{
-		FOREACH(Buffs, it.m_itemid & _buffs, LAMBDA(return it));
-	}
-	return BUFF_Null;
 }
 
 bool buffs_BuffModel_Customize()
@@ -490,6 +486,20 @@ void buff_Vengeance_DelayedDamage()
 	return;
 }
 
+// note: only really useful in teamplay
+void buff_Medic_Heal(entity this)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && vdist(it.origin - this.origin, <=, autocvar_g_buffs_medic_heal_range),
+	{
+		if(SAME_TEAM(it, this))
+		if(it.health < autocvar_g_balance_health_regenstable)
+		{
+			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
+			it.health = bound(0, it.health + autocvar_g_buffs_medic_heal_amount, autocvar_g_balance_health_regenstable);
+		}
+	});
+}
+
 float buff_Inferno_CalculateTime(float x, float offset_x, float offset_y, float intersect_x, float intersect_y, float base)
 {
 	return offset_y + (intersect_y - offset_y) * logn(((x - offset_x) * ((base - 1) / intersect_x)) + 1, base);
@@ -558,18 +568,23 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	if(frag_target != frag_attacker)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_slowtime;
 
-	if(frag_attacker.buffs & BUFF_MEDIC.m_itemid)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
-	if(SAME_TEAM(frag_attacker, frag_target))
-	if(frag_attacker != frag_target)
+	if(frag_target.buffs & BUFF_INFERNO.m_itemid)
 	{
-		frag_target.health = min(g_pickup_healthmega_max, frag_target.health + frag_damage);
-		frag_damage = 0;
+		if(frag_deathtype == DEATH_FIRE.m_id)
+			frag_damage = 0;
+		if(frag_deathtype == DEATH_LAVA.m_id)
+			frag_damage *= 0.5; // TODO: cvarize?
 	}
+
+	if(frag_attacker.buffs & BUFF_LUCK.m_itemid)
+	if(frag_attacker != frag_target)
+	if(autocvar_g_buffs_luck_damagemultiplier > 0)
+	if(random() <= autocvar_g_buffs_luck_chance)
+		frag_damage *= autocvar_g_buffs_luck_damagemultiplier;
 
 	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
-		float time = buff_Inferno_CalculateTime(
+		float btime = buff_Inferno_CalculateTime(
 			frag_damage,
 			0,
 			autocvar_g_buffs_inferno_burntime_min_time,
@@ -577,7 +592,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 			autocvar_g_buffs_inferno_burntime_target_time,
 			autocvar_g_buffs_inferno_burntime_factor
 		);
-		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier) * time, time, DEATH_BUFF.m_id);
+		Fire_AddDamage(frag_target, frag_attacker, (frag_damage * autocvar_g_buffs_inferno_damagemultiplier), btime, DEATH_BUFF.m_id);
 	}
 
 	// this... is ridiculous (TODO: fix!)
@@ -789,11 +804,6 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {SELFPARAM();
-	if (self.classname == "item_flight" && cvar("g_buffs") && cvar("g_buffs_flight"))
-	{
-		buff_Init_Compat(self, BUFF_FLIGHT);
-		return true;
-	}
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{
@@ -869,17 +879,26 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(self.buffs & BUFF_MAGNET.m_itemid)
 	{
-		vector pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
-		for(other = world; (other = findflags(other, flags, FL_ITEM)); )
-		if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, other.absmin, other.absmax))
+		vector pickup_size;
+		FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 		{
-			setself(other);
-			other = this;
-			if(self.touch)
-				self.touch();
-			other = self;
-			setself(this);
-		}
+			if(it.buffs)
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_buff;
+			else
+				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
+
+			if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, it.absmin, it.absmax))
+			{
+				if(it.touch)
+				{
+					entity oldother = other;
+					other = self;
+					WITH(entity, self, it, it.touch());
+
+					other = oldother;
+				}
+			}
+		});
 	}
 
 	if(self.buffs & BUFF_AMMO.m_itemid)
@@ -889,6 +908,13 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	if((self.buffs & BUFF_INVISIBLE.m_itemid) && (self.oldbuffs & BUFF_INVISIBLE.m_itemid))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+
+	if(self.buffs & BUFF_MEDIC.m_itemid)
+	if(time >= self.buff_medic_healtime)
+	{
+		buff_Medic_Heal(self);
+		self.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;
+	}
 
 #define BUFF_ONADD(b) if ( (self.buffs & (b).m_itemid) && !(self.oldbuffs & (b).m_itemid))
 #define BUFF_ONREM(b) if (!(self.buffs & (b).m_itemid) &&  (self.oldbuffs & (b).m_itemid))
@@ -931,15 +957,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 		BUFF_ONREM(BUFF_INVISIBLE)
 			self.alpha = self.buff_invisible_prev_alpha;
-
-		BUFF_ONADD(BUFF_FLIGHT)
-		{
-			self.buff_flight_prev_gravity = self.gravity;
-			self.gravity = autocvar_g_buffs_flight_gravity;
-		}
-
-		BUFF_ONREM(BUFF_FLIGHT)
-			self.gravity = self.buff_flight_prev_gravity;
 
 		self.oldbuffs = self.buffs;
 		if(self.buffs)
@@ -986,7 +1003,7 @@ MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
 {
 	vh_vehicle.buffs = vh_player.buffs;
 	vh_player.buffs = 0;
-	vh_vehicle.buff_time = max(0, time - vh_player.buff_time);
+	vh_vehicle.buff_time = max(0, vh_player.buff_time - time);
 	vh_player.buff_time = 0;
 	return false;
 }

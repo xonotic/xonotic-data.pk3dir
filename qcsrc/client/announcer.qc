@@ -77,6 +77,19 @@ void Announcer_Gamestart()
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
+	if(intermission)
+	{
+		if(announcer_countdown)
+		{
+			centerprint_kill(CPID_ROUND);
+			if(announcer_countdown)
+			{
+				remove(announcer_countdown);
+				announcer_countdown = NULL;
+			}
+		}
+		return;
+	}
 
 	if(previous_game_starttime != startTime)
 	{

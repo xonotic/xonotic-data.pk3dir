@@ -501,7 +501,8 @@ MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		setself(it);
 		PutClientInServer();
-		self.player_blocked = 1;
+		if(domination_roundbased)
+			self.player_blocked = 1;
 		if(IS_REAL_CLIENT(self))
 			set_dom_state(self);
 	));

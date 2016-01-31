@@ -1,9 +1,5 @@
 #ifndef BUFFS_ALL_H
 #define BUFFS_ALL_H
-// Welcome to the stuff behind the scenes
-// Below, you will find the list of buffs
-// Add new buffs here!
-// Note: Buffs also need spawnfuncs, which are set below
 
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -11,7 +7,7 @@
 REGISTER_WAYPOINT(Buff, _("Buff"), '1 0.5 0', 1);
 REGISTER_RADARICON(Buff, 1);
 
-REGISTRY(Buffs, BITS(4))
+REGISTRY(Buffs, BITS(5))
 #define Buffs_from(i) _Buffs_from(i, BUFF_Null)
 REGISTER_REGISTRY(Buffs)
 REGISTRY_CHECK(Buffs)

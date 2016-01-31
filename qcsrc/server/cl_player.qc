@@ -106,6 +106,7 @@ void CopyBody(entity this, float keepvelocity)
 	setsize(clone, this.mins, this.maxs);
 	clone.prevorigin = this.origin;
 	clone.reset = SUB_Remove;
+	clone._ps = this._ps;
 
 	Drag_MoveDrag(this, clone);
 
@@ -373,6 +374,13 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		this.istypefrag = 0;
 	}
 
+	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+	{
+		vector v = healtharmor_applydamage(this.armorvalue, max(0, autocvar_g_spawnshield_blockdamage), deathtype, damage);
+		take = v.x;
+		save = v.y;
+	}
+
 	frag_damage = damage;
 	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save);
 	take = bound(0, damage_take, this.health);
@@ -394,7 +402,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	if (time >= this.spawnshieldtime)
+	if (time >= this.spawnshieldtime || autocvar_g_spawnshield_blockdamage < 1)
 	{
 		if (!(this.flags & FL_GODMODE))
 		{
