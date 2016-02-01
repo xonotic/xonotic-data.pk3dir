@@ -275,6 +275,8 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
+	if(!activeweapon)
+		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
 	static bool wasinvehicle;
@@ -1662,6 +1664,10 @@ void CSQC_UpdateView(float w, float h)
 		ov_enabled = false;
 	}
 
+	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
+	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
+	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
+
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
@@ -1841,8 +1847,6 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos_y = vid_conheight;
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
-
-	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
