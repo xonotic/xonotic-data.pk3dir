@@ -82,6 +82,12 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	lowpass(value.y, frac, ref_store.y, ref_out.y); \
 } MACRO_END
 
+#define lowpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
+{ \
+	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
+	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
+} MACRO_END
+
 #define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass(value.x, frac, ref_store.x, ref_out.x); \
@@ -115,6 +121,13 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	highpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
 } MACRO_END
 
+#define lowpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
+{ \
+	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
+	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
+	lowpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
+} MACRO_END
+
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
@@ -146,28 +159,21 @@ void viewmodel_animate(entity this)
 	if(autocvar_cl_followmodel)
 	{
 		vector gunorg = '0 0 0';
+		static vector vel_average;
 		static vector gunorg_prev = '0 0 0';
-		static vector gunorg_highpass = '0 0 0';
 		static vector gunorg_adjustment_highpass;
 		static vector gunorg_adjustment_lowpass;
 
-		// if we teleported, clear the frametime... the lowpass will recover the previous value then
-		if (teleported)
-		{
-			// try to fix the first highpass; result is NOT
-			// perfect! TODO find a better fix
-			gunorg_prev = view_origin;
-		}
-
-		// for the gun origin, only keep the high frequency (non-DC) parts, which is "somewhat like velocity"
-		gunorg_highpass += gunorg_prev;
+		vector vel;
+		vector forward, right = '0 0 0', up = '0 0 0';
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vel.x = view.velocity * forward;
+		vel.y = view.velocity * right * -1;
+		vel.z = view.velocity * up;
 		frac = avg_factor(autocvar_cl_followmodel_highpass1);
-		highpass3_limited(view_origin, frac, autocvar_cl_followmodel_limit, gunorg_highpass, gunorg);
-		gunorg_prev = view_origin;
-		gunorg_highpass -= gunorg_prev;
+		lowpass3_limited(vel, frac, autocvar_cl_followmodel_limit, vel_average, gunorg);
 
-		// calculate the RAW adjustment vectors
-		gunorg *= -autocvar_cl_followmodel_speed;
+		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
 
 		// perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
 		// trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
@@ -176,13 +182,7 @@ void viewmodel_animate(entity this)
 		frac = avg_factor(autocvar_cl_followmodel_lowpass);
 		lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
 
-		vector v;
-		vector forward, right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
-		v.x = gunorg * forward;
-		v.y = gunorg * right * -1;
-		v.z = gunorg * up;
-		this.origin += v;
+		this.origin += gunorg;
 	}
 
 	if(autocvar_cl_leanmodel)
