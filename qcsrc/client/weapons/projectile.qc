@@ -294,6 +294,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			HANDLE(GRENADE_BOUNCING)   this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(MINE)               this.traileffect = EFFECT_TR_GRENADE.m_id; break;
 			HANDLE(BLASTER)            this.traileffect = EFFECT_Null.m_id; break;
+			HANDLE(ARC_BOLT)           this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(HLAC)               this.traileffect = EFFECT_Null.m_id; break;
 			HANDLE(PORTO_RED)          this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
 			HANDLE(PORTO_BLUE)         this.traileffect = EFFECT_TR_WIZSPIKE.m_id; this.scale = 4; break;
