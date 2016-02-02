@@ -41,7 +41,7 @@ float autocvar_cl_bobmodel_up;
 float autocvar_cl_followmodel;
 float autocvar_cl_followmodel_speed = 0.3;
 float autocvar_cl_followmodel_limit = 1000;
-float autocvar_cl_followmodel_highpass1 = 0.05;
+float autocvar_cl_followmodel_velocity_lowpass = 0.05;
 float autocvar_cl_followmodel_highpass = 0.05;
 float autocvar_cl_followmodel_lowpass = 0.03;
 
@@ -170,7 +170,7 @@ void viewmodel_animate(entity this)
 		vel.x = view.velocity * forward;
 		vel.y = view.velocity * right * -1;
 		vel.z = view.velocity * up;
-		frac = avg_factor(autocvar_cl_followmodel_highpass1);
+		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
 		lowpass3_limited(vel, frac, autocvar_cl_followmodel_limit, vel_average, gunorg);
 
 		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
