@@ -57,6 +57,7 @@ CLASS(Arc, Weapon)
         P(class, prefix, burst_healing_hps, float, NONE) \
         P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
         P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
+        P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
         P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
         P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
         P(class, prefix, switchdelay_drop, float, NONE) \
@@ -350,7 +351,8 @@ void W_Arc_Beam_Think()
 
 			if ( cooldown_speed )
 			{
-				self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
+				if ( WEP_CVAR(arc, cooldown_release) || (WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max)) )
+					self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
 				self.owner.arc_cooldown = cooldown_speed;
 			}
 
