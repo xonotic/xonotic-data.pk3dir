@@ -1472,8 +1472,10 @@ void PM_Main(entity this)
 		PM_Footsteps(this);
 	}
 
+#ifdef SVQC
 	if(IsFlying(this))
 		this.wasFlying = 1;
+#endif
 
 	if (IS_PLAYER(this))
 		CheckPlayerJump(this);
