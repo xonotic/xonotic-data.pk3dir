@@ -163,6 +163,9 @@ void Obituary_SpecialDeath(
 		entity deathent = Deathtypes_from(deathtype - DT_FIRST);
 		if (!deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
+		if(g_cts && deathtype == DEATH_KILL.m_id)
+			return; // TODO: somehow put this in CTS gamemode file!
+
 		if(murder)
 		{
 			if(deathent.death_msgmurder)
