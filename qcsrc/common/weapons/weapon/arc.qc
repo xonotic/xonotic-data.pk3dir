@@ -865,7 +865,7 @@ void Arc_Smoke()
 		}
 #endif
 #ifdef CSQC
-bool autocvar_cl_arcbeam_teamcolor;
+bool autocvar_cl_arcbeam_teamcolor = true;
 
 		METHOD(Arc, wr_impacteffect, void(entity thiswep))
 		{
