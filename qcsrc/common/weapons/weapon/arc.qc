@@ -57,6 +57,7 @@ CLASS(Arc, Weapon)
         P(class, prefix, burst_healing_hps, float, NONE) \
         P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
         P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
+        P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
         P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
         P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
         P(class, prefix, switchdelay_drop, float, NONE) \
@@ -168,6 +169,7 @@ bool W_Arc_Beam_Send(entity this, entity to, int sf)
 		WriteByte(MSG_ENTITY, WEP_CVAR(arc, beam_tightness) * 10);
 
 		WriteByte(MSG_ENTITY, drawlocal);
+		WriteByte(MSG_ENTITY, etof(this.owner));
 	}
 	if(sf & ARC_SF_START) // starting location
 	{
@@ -349,7 +351,8 @@ void W_Arc_Beam_Think()
 
 			if ( cooldown_speed )
 			{
-				self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
+				if ( WEP_CVAR(arc, cooldown_release) || (WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max)) )
+					self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
 				self.owner.arc_cooldown = cooldown_speed;
 			}
 
@@ -862,6 +865,8 @@ void Arc_Smoke()
 		}
 #endif
 #ifdef CSQC
+bool autocvar_cl_arcbeam_teamcolor = true;
+
 		METHOD(Arc, wr_impacteffect, void(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
@@ -1316,6 +1321,8 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		{
 			self.beam_usevieworigin = 0;
 		}
+
+		self.sv_entnum = ReadByte();
 	}
 
 	if(!self.beam_usevieworigin)
@@ -1365,11 +1372,13 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
 		self.beam_type = ReadByte();
+
+		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(stof(getplayerkeyvalue(self.sv_entnum - 1, "colors")) & 0x0F, true) : '1 1 1');
 		switch(self.beam_type)
 		{
 			case ARC_BT_MISS:
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = (EFFECT_ARC_BEAM);
@@ -1394,7 +1403,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			}
 			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = (EFFECT_ARC_BEAM);
@@ -1420,7 +1429,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			}
 			case ARC_BT_HEAL:
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
@@ -1446,7 +1455,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			}
 			case ARC_BT_HIT:
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = (EFFECT_ARC_BEAM);
@@ -1472,7 +1481,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			}
 			case ARC_BT_BURST_MISS:
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = (EFFECT_ARC_BEAM);
@@ -1498,7 +1507,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			}
 			case ARC_BT_BURST_WALL:
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = (EFFECT_ARC_BEAM);
@@ -1524,7 +1533,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			}
 			case ARC_BT_BURST_HEAL:
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
@@ -1550,7 +1559,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			}
 			case ARC_BT_BURST_HIT:
 			{
-				self.beam_color = '1 1 1';
+				self.beam_color = beamcolor;
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = (EFFECT_ARC_BEAM);
