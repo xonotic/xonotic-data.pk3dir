@@ -328,6 +328,8 @@ void W_Arc_Beam_Think()
 		||
 		IS_DEAD(self.owner)
 		||
+		gameover
+		||
 		(!self.owner.BUTTON_ATCK && !burst )
 		||
 		STAT(FROZEN, self.owner)
