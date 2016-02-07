@@ -125,7 +125,26 @@ void CSQC_Init()
 	}
 
 	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
-	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
+
+	int fh = -1;
+	if(cvar_string("menu_skin") != "")
+	{
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0 && cvar_defstring("menu_skin") != "")
+	{
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0)
+	{
+		draw_currentSkin = "gfx/menu/default";
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+
+	draw_currentSkin = strzone(draw_currentSkin);
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
