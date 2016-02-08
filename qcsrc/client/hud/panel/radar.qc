@@ -156,8 +156,7 @@ void HUD_Radar_Mouse()
 	}
 
 
-	const vector cursor_size = '32 32 0';
-	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursor_size, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	draw_cursor_normal(mousepos, '1 1 1', 0.8);
 }
 
 void HUD_Radar()
