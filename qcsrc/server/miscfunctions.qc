@@ -1114,6 +1114,10 @@ void URI_Get_Callback(float id, float status, string data)
 		// online ban list
 		OnlineBanList_URI_Get_Callback(id, status, data);
 	}
+	else if (MUTATOR_CALLHOOK(URI_GetCallback, id, status, data))
+	{
+		// handled by a mutator
+	}
 	else
 	{
 		LOG_INFO("Received HTTP request data for an invalid id ", ftos(id), ".\n");
