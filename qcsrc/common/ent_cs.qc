@@ -16,11 +16,11 @@
 	{ vector v = '0 0 0'; v.y = ReadByte() / 256 * 360; this.angles = v; }) \
     \
 	PROP(false, health, \
-	{ WriteByte(chan, this.health / 10);  /* FIXME: use a better scale? */ }, \
+	{ WriteByte(chan, bound(0, this.health / 10, 255));  /* FIXME: use a better scale? */ }, \
 	{ this.healthvalue = ReadByte() * 10; }) \
     \
 	PROP(false, armorvalue, \
-	{ WriteByte(chan, this.armorvalue / 10);  /* FIXME: use a better scale? */ }, \
+	{ WriteByte(chan, bound(0, this.armorvalue / 10, 255));  /* FIXME: use a better scale? */ }, \
 	{ this.armorvalue = ReadByte() * 10; }) \
     \
 	PROP(true, netname, \
