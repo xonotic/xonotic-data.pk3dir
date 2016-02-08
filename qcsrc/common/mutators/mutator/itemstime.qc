@@ -68,7 +68,6 @@ bool Item_ItemsTime_Allow(GameItem it)
     return (false
     || it.instanceOfPowerup
     || Item_ItemsTime_SpectatorOnly(it)
-    || it == ITEM_JetpackRegen
     );
 }
 
