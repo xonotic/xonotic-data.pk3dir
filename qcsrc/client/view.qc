@@ -347,7 +347,6 @@ entity viewmodel;
 STATIC_INIT(viewmodel) {
     viewmodel = new(viewmodel);
     make_pure(viewmodel);
-	viewmodel.draw = viewmodel_draw;
 }
 
 entity porto;
@@ -1666,7 +1665,7 @@ void CSQC_UpdateView(float w, float h)
 
 	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
 	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
-	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
+	viewmodel_draw(viewmodel);
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -1847,6 +1846,8 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos_y = vid_conheight;
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
+
+	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
