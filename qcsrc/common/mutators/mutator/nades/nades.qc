@@ -2,6 +2,12 @@
 
 #ifdef IMPLEMENTATION
 
+#ifdef SVQC
+bool autocvar_g_nades_nade_small;
+#endif
+
+REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
+
 #ifndef MENUQC
 entity Nade_TrailEffect(int proj, int nade_team)
 {
@@ -63,8 +69,16 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	entity nade_type = Nade_FromProjectile(self.cnt);
 	if (nade_type == NADE_TYPE_Null) return;
-	self.mins = '-16 -16 -16';
-	self.maxs = '16 16 16';
+	if(STAT(NADES_SMALL, NULL))
+	{
+		self.mins = '-8 -8 -8';
+		self.maxs = '8 8 8';
+	}
+	else
+	{
+		self.mins = '-16 -16 -16';
+		self.maxs = '16 16 16';
+	}
 	self.colormod = nade_type.m_color;
 	self.move_movetype = MOVETYPE_BOUNCE;
 	self.move_touch = func_null;
@@ -793,7 +807,10 @@ void toss_nade(entity e, vector _velocity, float _time)
 	//setmodel(_nade, MDL_PROJECTILE_NADE);
 	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
-	setsize(_nade, '-16 -16 -16', '16 16 16');
+	if(STAT(NADES_SMALL, e))
+		setsize(_nade, '-8 -8 -8', '8 8 8');
+	else
+		setsize(_nade, '-16 -16 -16', '16 16 16');
 	_nade.movetype = MOVETYPE_BOUNCE;
 
 	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, false, _nade);
