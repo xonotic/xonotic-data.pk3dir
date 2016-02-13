@@ -39,33 +39,23 @@ float autocvar_cl_bobmodel_side;
 float autocvar_cl_bobmodel_up;
 
 float autocvar_cl_followmodel;
-float autocvar_cl_followmodel_side_speed;
-float autocvar_cl_followmodel_side_highpass;
-float autocvar_cl_followmodel_side_highpass1;
-float autocvar_cl_followmodel_side_limit;
-float autocvar_cl_followmodel_side_lowpass;
-float autocvar_cl_followmodel_up_speed;
-float autocvar_cl_followmodel_up_highpass;
-float autocvar_cl_followmodel_up_highpass1;
-float autocvar_cl_followmodel_up_limit;
-float autocvar_cl_followmodel_up_lowpass;
+float autocvar_cl_followmodel_speed = 0.3;
+float autocvar_cl_followmodel_limit = 1000;
+float autocvar_cl_followmodel_velocity_lowpass = 0.05;
+float autocvar_cl_followmodel_highpass = 0.05;
+float autocvar_cl_followmodel_lowpass = 0.03;
 
 float autocvar_cl_leanmodel;
-float autocvar_cl_leanmodel_side_speed;
-float autocvar_cl_leanmodel_side_highpass;
-float autocvar_cl_leanmodel_side_highpass1;
-float autocvar_cl_leanmodel_side_lowpass;
-float autocvar_cl_leanmodel_side_limit;
-float autocvar_cl_leanmodel_up_speed;
-float autocvar_cl_leanmodel_up_highpass;
-float autocvar_cl_leanmodel_up_highpass1;
-float autocvar_cl_leanmodel_up_lowpass;
-float autocvar_cl_leanmodel_up_limit;
+float autocvar_cl_leanmodel_speed = 0.3;
+float autocvar_cl_leanmodel_limit = 1000;
+float autocvar_cl_leanmodel_highpass1 = 0.2;
+float autocvar_cl_leanmodel_highpass = 0.2;
+float autocvar_cl_leanmodel_lowpass = 0.05;
 
+#define avg_factor(avg_time) (1 - exp(-frametime / max(0.001, avg_time)))
 #define lowpass(value, frac, ref_store, ret) MACRO_BEGIN \
 { \
-	float __frac = bound(0, frac, 1); \
-	ret = ref_store = ref_store * (1 - __frac) + (value) * __frac; \
+	ret = ref_store = ref_store * (1 - frac) + (value) * frac; \
 } MACRO_END
 
 #define lowpass_limited(value, frac, limit, ref_store, ret) MACRO_BEGIN \
@@ -86,31 +76,63 @@ float autocvar_cl_leanmodel_up_limit;
 	ret = (value) - __f; \
 } MACRO_END
 
-#define lowpass3(value, fracx, fracy, fracz, ref_store, ref_out) MACRO_BEGIN \
+#define lowpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
 { \
-	lowpass(value.x, fracx, ref_store.x, ref_out.x); \
-	lowpass(value.y, fracy, ref_store.y, ref_out.y); \
-	lowpass(value.z, fracz, ref_store.z, ref_out.z); \
+	lowpass(value.x, frac, ref_store.x, ref_out.x); \
+	lowpass(value.y, frac, ref_store.y, ref_out.y); \
 } MACRO_END
 
-#define highpass3(value, fracx, fracy, fracz, ref_store, ref_out) MACRO_BEGIN \
+#define lowpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
 { \
-	highpass(value.x, fracx, ref_store.x, ref_out.x); \
-	highpass(value.y, fracy, ref_store.y, ref_out.y); \
-	highpass(value.z, fracz, ref_store.z, ref_out.z); \
+	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
+	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
 } MACRO_END
 
-#define highpass3_limited(value, fracx, limitx, fracy, limity, fracz, limitz, ref_store, ref_out) MACRO_BEGIN \
+#define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
 { \
-	highpass_limited(value.x, fracx, limitx, ref_store.x, ref_out.x); \
-	highpass_limited(value.y, fracy, limity, ref_store.y, ref_out.y); \
-	highpass_limited(value.z, fracz, limitz, ref_store.z, ref_out.z); \
+	highpass(value.x, frac, ref_store.x, ref_out.x); \
+	highpass(value.y, frac, ref_store.y, ref_out.y); \
 } MACRO_END
 
+#define highpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
+{ \
+	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
+	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
+} MACRO_END
+
+#define lowpass3(value, frac, ref_store, ref_out) MACRO_BEGIN \
+{ \
+	lowpass(value.x, frac, ref_store.x, ref_out.x); \
+	lowpass(value.y, frac, ref_store.y, ref_out.y); \
+	lowpass(value.z, frac, ref_store.z, ref_out.z); \
+} MACRO_END
+
+#define highpass3(value, frac, ref_store, ref_out) MACRO_BEGIN \
+{ \
+	highpass(value.x, frac, ref_store.x, ref_out.x); \
+	highpass(value.y, frac, ref_store.y, ref_out.y); \
+	highpass(value.z, frac, ref_store.z, ref_out.z); \
+} MACRO_END
+
+#define highpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
+{ \
+	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
+	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
+	highpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
+} MACRO_END
+
+#define lowpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
+{ \
+	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
+	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
+	lowpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
+} MACRO_END
+
+bool autocvar_cl_followmodel_velocity_absolute;
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
-	float frametime = (time - prevtime) * STAT(MOVEVARS_TIMESCALE);
+	float frametime = (time - prevtime);
 	prevtime = time;
 
 	if (autocvar_chase_active) return;
@@ -131,84 +153,90 @@ void viewmodel_animate(entity this)
 	}
 	oldonground = clonground;
 
-	vector gunorg = '0 0 0', gunangles = '0 0 0';
-	static vector gunorg_prev = '0 0 0', gunangles_prev = '0 0 0';
 
 	bool teleported = view.csqcmodel_teleported;
 
-	// 1. if we teleported, clear the frametime... the lowpass will recover the previous value then
-	if (teleported)
+	float frac;
+	if(autocvar_cl_followmodel)
 	{
-		// try to fix the first highpass; result is NOT
-		// perfect! TODO find a better fix
-		gunangles_prev = view_angles;
-		gunorg_prev = view_origin;
+		vector gunorg = '0 0 0';
+		static vector vel_average;
+		static vector gunorg_prev = '0 0 0';
+		static vector gunorg_adjustment_highpass;
+		static vector gunorg_adjustment_lowpass;
+
+		vector vel;
+		if(autocvar_cl_followmodel_velocity_absolute)
+			vel = view.velocity;
+		else
+		{
+			vector forward, right = '0 0 0', up = '0 0 0';
+			MAKEVECTORS(makevectors, view_angles, forward, right, up);
+			vel.x = view.velocity * forward;
+			vel.y = view.velocity * right * -1;
+			vel.z = view.velocity * up;
+		}
+
+		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
+		lowpass3_limited(vel, frac, autocvar_cl_followmodel_limit, vel_average, gunorg);
+
+		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
+
+		// perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
+		// trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
+		frac = avg_factor(autocvar_cl_followmodel_highpass);
+		highpass3(gunorg, frac, gunorg_adjustment_highpass, gunorg);
+		frac = avg_factor(autocvar_cl_followmodel_lowpass);
+		lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
+
+		if(autocvar_cl_followmodel_velocity_absolute)
+		{
+			vector fixed_gunorg;
+			vector forward, right = '0 0 0', up = '0 0 0';
+			MAKEVECTORS(makevectors, view_angles, forward, right, up);
+			fixed_gunorg.x = gunorg * forward;
+			fixed_gunorg.y = gunorg * right * -1;
+			fixed_gunorg.z = gunorg * up;
+			gunorg = fixed_gunorg;
+		}
+
+		this.origin += gunorg;
 	}
 
-	static vector gunorg_highpass = '0 0 0';
+	if(autocvar_cl_leanmodel)
+	{
+		vector gunangles = '0 0 0';
+		static vector gunangles_prev = '0 0 0';
+		static vector gunangles_highpass = '0 0 0';
+		static vector gunangles_adjustment_highpass;
+		static vector gunangles_adjustment_lowpass;
 
-	// 2. for the gun origin, only keep the high frequency (non-DC) parts, which is "somewhat like velocity"
-	gunorg_highpass += gunorg_prev;
-	highpass3_limited(view_origin,
-		frametime * autocvar_cl_followmodel_side_highpass1, autocvar_cl_followmodel_side_limit,
-		frametime * autocvar_cl_followmodel_side_highpass1, autocvar_cl_followmodel_side_limit,
-		frametime * autocvar_cl_followmodel_up_highpass1, autocvar_cl_followmodel_up_limit,
-		gunorg_highpass, gunorg);
-	gunorg_prev = view_origin;
-	gunorg_highpass -= gunorg_prev;
+		if (teleported)
+			gunangles_prev = view_angles;
 
-	static vector gunangles_highpass = '0 0 0';
+		// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
+		gunangles_highpass += gunangles_prev;
+		PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
+		YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
+		ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
+		frac = avg_factor(autocvar_cl_leanmodel_highpass1);
+		highpass2_limited(view_angles, frac, autocvar_cl_leanmodel_limit, gunangles_highpass, gunangles);
+		gunangles_prev = view_angles;
+		gunangles_highpass -= gunangles_prev;
 
-	// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
-	gunangles_highpass += gunangles_prev;
-	PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
-	YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
-	ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
-	highpass3_limited(view_angles,
-		frametime * autocvar_cl_leanmodel_up_highpass1, autocvar_cl_leanmodel_up_limit,
-		frametime * autocvar_cl_leanmodel_side_highpass1, autocvar_cl_leanmodel_side_limit,
-		0, 0,
-		gunangles_highpass, gunangles);
-	gunangles_prev = view_angles;
-	gunangles_highpass -= gunangles_prev;
+		PITCH(gunangles) *= -autocvar_cl_leanmodel_speed;
+		YAW(gunangles) *= -autocvar_cl_leanmodel_speed;
 
-	// 3. calculate the RAW adjustment vectors
-	gunorg.x *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_side_speed : 0);
-	gunorg.y *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_side_speed : 0);
-	gunorg.z *= (autocvar_cl_followmodel ? -autocvar_cl_followmodel_up_speed : 0);
+		// we assume here: PITCH = 0, YAW = 1, ROLL = 2
+		frac = avg_factor(autocvar_cl_leanmodel_highpass);
+		highpass2(gunangles, frac, gunangles_adjustment_highpass, gunangles);
+		frac = avg_factor(autocvar_cl_leanmodel_lowpass);
+		lowpass2(gunangles, frac, gunangles_adjustment_lowpass, gunangles);
 
-	PITCH(gunangles) *= (autocvar_cl_leanmodel ? -autocvar_cl_leanmodel_up_speed : 0);
-	YAW(gunangles) *= (autocvar_cl_leanmodel ? -autocvar_cl_leanmodel_side_speed : 0);
-	ROLL(gunangles) = 0;
+		gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
+		this.angles += gunangles;
+	}
 
-	static vector gunorg_adjustment_highpass;
-	static vector gunorg_adjustment_lowpass;
-	static vector gunangles_adjustment_highpass;
-	static vector gunangles_adjustment_lowpass;
-
-	// 4. perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
-	//    trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
-	highpass3(gunorg,
-		frametime * autocvar_cl_followmodel_side_highpass,
-		frametime * autocvar_cl_followmodel_side_highpass,
-		frametime * autocvar_cl_followmodel_up_highpass,
-		gunorg_adjustment_highpass, gunorg);
-	lowpass3(gunorg,
-		frametime * autocvar_cl_followmodel_side_lowpass,
-		frametime * autocvar_cl_followmodel_side_lowpass,
-		frametime * autocvar_cl_followmodel_up_lowpass,
-		gunorg_adjustment_lowpass, gunorg);
-	// we assume here: PITCH = 0, YAW = 1, ROLL = 2
-	highpass3(gunangles,
-		frametime * autocvar_cl_leanmodel_up_highpass,
-		frametime * autocvar_cl_leanmodel_side_highpass,
-		0,
-		gunangles_adjustment_highpass, gunangles);
-	lowpass3(gunangles,
-		frametime * autocvar_cl_leanmodel_up_lowpass,
-		frametime * autocvar_cl_leanmodel_side_lowpass,
-		0,
-		gunangles_adjustment_lowpass, gunangles);
 	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
 
 	// vertical view bobbing code
@@ -229,7 +257,6 @@ void viewmodel_animate(entity this)
 		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
 		// for the most part, but for some reason when you go through a message trigger or
 		// pick up an item or anything like that it will momentarily jolt the gun.
-		vector forward, right = '0 0 0', up = '0 0 0';
 		float bspeed;
 		float t = 1;
 		float s = time * autocvar_cl_bobmodel_speed;
@@ -251,17 +278,12 @@ void viewmodel_animate(entity this)
 			t *= 5;
 		}
 		bspeed = xyspeed * 0.01;
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
-		float bobr = bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
-		gunorg += bobr * right;
-		float bobu = bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
-		gunorg += bobu * up;
+		vector gunorg = '0 0 0';
+		gunorg.y += bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
+		gunorg.z += bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
+
+		this.origin += gunorg;
 	}
-	vector v = rotate(gunorg, YAW(view_angles) * DEG2RAD); // rotate world coordinates to relative ones
-	v.z = gunorg.z;
-	this.origin += v;
-	gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
-	this.angles += gunangles;
 }
 
 .vector viewmodel_origin, viewmodel_angles;
@@ -271,6 +293,8 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
+	if(!activeweapon)
+		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
 	static bool wasinvehicle;
@@ -341,7 +365,6 @@ entity viewmodel;
 STATIC_INIT(viewmodel) {
     viewmodel = new(viewmodel);
     make_pure(viewmodel);
-	viewmodel.draw = viewmodel_draw;
 }
 
 entity porto;
@@ -1657,6 +1680,10 @@ void CSQC_UpdateView(float w, float h)
 		}
 		ov_enabled = false;
 	}
+
+	// run viewmodel_draw before updating view_angles to the angles calculated by WarpZone_FixView
+	// viewmodel_draw needs to use the view_angles set by the engine on every CSQC_UpdateView call
+	viewmodel_draw(viewmodel);
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
