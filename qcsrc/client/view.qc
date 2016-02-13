@@ -128,6 +128,7 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	lowpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
 } MACRO_END
 
+bool autocvar_cl_followmodel_velocity_absolute;
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
@@ -165,11 +166,17 @@ void viewmodel_animate(entity this)
 		static vector gunorg_adjustment_lowpass;
 
 		vector vel;
-		vector forward, right = '0 0 0', up = '0 0 0';
-		MAKEVECTORS(makevectors, view_angles, forward, right, up);
-		vel.x = view.velocity * forward;
-		vel.y = view.velocity * right * -1;
-		vel.z = view.velocity * up;
+		if(autocvar_cl_followmodel_velocity_absolute)
+			vel = view.velocity;
+		else
+		{
+			vector forward, right = '0 0 0', up = '0 0 0';
+			MAKEVECTORS(makevectors, view_angles, forward, right, up);
+			vel.x = view.velocity * forward;
+			vel.y = view.velocity * right * -1;
+			vel.z = view.velocity * up;
+		}
+
 		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
 		lowpass3_limited(vel, frac, autocvar_cl_followmodel_limit, vel_average, gunorg);
 
@@ -181,6 +188,17 @@ void viewmodel_animate(entity this)
 		highpass3(gunorg, frac, gunorg_adjustment_highpass, gunorg);
 		frac = avg_factor(autocvar_cl_followmodel_lowpass);
 		lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
+
+		if(autocvar_cl_followmodel_velocity_absolute)
+		{
+			vector fixed_gunorg;
+			vector forward, right = '0 0 0', up = '0 0 0';
+			MAKEVECTORS(makevectors, view_angles, forward, right, up);
+			fixed_gunorg.x = gunorg * forward;
+			fixed_gunorg.y = gunorg * right * -1;
+			fixed_gunorg.z = gunorg * up;
+			gunorg = fixed_gunorg;
+		}
 
 		this.origin += gunorg;
 	}
