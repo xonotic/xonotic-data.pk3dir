@@ -1,5 +1,4 @@
-#ifndef SORT_H
-#define SORT_H
+#pragma once
 
 /** is only ever called for i1 < i2 */
 typedef void (int i1, int i2, entity pass) swapfunc_t;
@@ -9,17 +8,16 @@ typedef int (int i1, int i2, entity pass) comparefunc_t;
 void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 {
 	#define heapify(_count) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			for (int start = floor(((_count) - 2) / 2); start >= 0; --start) \
 			{ \
 				siftdown(start, (_count) - 1); \
 			} \
-		} \
-		while (0)
+		} MACRO_END
 
 	#define siftdown(_start, _end) \
-		do \
+		MACRO_BEGIN \
 		{ \
 			for (int root = (_start); root * 2 + 1 <= (_end); ) \
 			{ \
@@ -29,8 +27,7 @@ void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 				swap(root, child, pass); \
 				root = child; \
 			} \
-		} \
-		while (0)
+		} MACRO_END
 
 	heapify(n);
 	int end = n - 1;
@@ -59,5 +56,3 @@ void shuffle(float n, swapfunc_t swap, entity pass)
 		if (j != i) swap(j, i, pass);
 	}
 }
-
-#endif

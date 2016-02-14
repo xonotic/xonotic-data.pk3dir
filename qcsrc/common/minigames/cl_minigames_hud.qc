@@ -283,11 +283,11 @@ void HUD_MinigameMenu_ClickInvite()
 		entity prev = self;
 		for(int i = 0; i < maxclients; ++i)
 		{
-			if ( player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
+			if ( player_localnum != i && playerslots[i] && entcs_GetName(i) != "" &&
 				!findfloat(world,minigame_playerslot,i+1) && playerslots[i].ping )
 			{
 				e = HUD_MinigameMenu_SpawnSubEntry(
-					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickInvite_Entry,
+					strzone(entcs_GetName(i)), HUD_MinigameMenu_ClickInvite_Entry,
 					self );
 				e.flags |= 1;
 				e.netname = strzone(ftos(i+1));
@@ -332,7 +332,7 @@ void HUD_MinigameMenu_ClickCurrentGame()
 // Whether the minigame menu panel is open
 bool HUD_MinigameMenu_IsOpened()
 {
-	return !!HUD_MinigameMenu_entries;
+	return HUD_MinigameMenu_entries != NULL;
 }
 
 // Close the minigame menu panel
@@ -685,9 +685,7 @@ void HUD_Minigame_Mouse()
 	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
 		HUD_MinigameMenu_MouseInput();
 
-	vector cursorsize = '32 32 0';
-	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"),
-			cursorsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	draw_cursor_normal(mousepos-'8 4 0', '1 1 1', panel_fg_alpha);
 }
 
 bool HUD_Minigame_Showpanels()

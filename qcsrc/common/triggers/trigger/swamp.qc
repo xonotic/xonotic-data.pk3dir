@@ -1,10 +1,10 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../../lib/warpzone/util_server.qh"
-    #include "../../weapons/all.qh"
-    #include "../../../server/defs.qh"
-    #include "../../deathtypes/all.qh"
+    #include <lib/warpzone/util_server.qh>
+    #include <common/weapons/all.qh>
+    #include <server/defs.qh>
+    #include <common/deathtypes/all.qh>
 #endif
 
 /*
@@ -64,7 +64,7 @@ void swamp_touch()
 {SELFPARAM();
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
-	if(!IS_PLAYER(other) || PHYS_DEAD(other))
+	if(!IS_PLAYER(other) || IS_DEAD(other))
 		return;
 
 	EXACTTRIGGER_TOUCH;
@@ -95,22 +95,22 @@ void swamp_touch()
 REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)
 
 #ifdef SVQC
-float swamp_send(entity to, float sf)
-{SELFPARAM();
+float swamp_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SWAMP);
 
-	WriteByte(MSG_ENTITY, self.dmg); // can probably get away with using a single byte here
-	WriteByte(MSG_ENTITY, self.swamp_slowdown);
-	WriteByte(MSG_ENTITY, self.swamp_interval);
+	WriteByte(MSG_ENTITY, this.dmg); // can probably get away with using a single byte here
+	WriteByte(MSG_ENTITY, this.swamp_slowdown);
+	WriteByte(MSG_ENTITY, this.swamp_interval);
 
-	trigger_common_write(false);
+	trigger_common_write(this, false);
 
 	return true;
 }
 
 void swamp_link()
 {SELFPARAM();
-	Net_LinkEntity(self, false, 0, func_ladder_send);
+	trigger_link(self, swamp_send);
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?
@@ -120,7 +120,7 @@ get slowd down and damaged
 spawnfunc(trigger_swamp)
 {
 	// Init stuff
-	EXACTTRIGGER_INIT;
+	trigger_init(self);
 	self.touch = swamp_touch;
 
 	// Setup default keys, if missing
@@ -148,8 +148,7 @@ NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
 
 	self.classname = "trigger_swamp";
 	self.solid = SOLID_TRIGGER;
-	self.draw = trigger_draw_generic;
-	self.trigger_touch = swamp_touch;
+	self.move_touch = swamp_touch;
 	self.drawmask = MASK_NORMAL;
 	self.move_time = time;
 	self.entremove = trigger_remove_generic;

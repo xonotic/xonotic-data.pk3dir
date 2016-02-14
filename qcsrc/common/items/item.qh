@@ -50,11 +50,11 @@ CLASS(GameItem, Object)
     ATTRIB(GameItem, m_color, vector, '1 1 1')
     ATTRIB(GameItem, m_waypoint, string, string_null)
     ATTRIB(GameItem, m_waypointblink, int, 1)
-    METHOD(GameItem, display, void(entity this, void(string name, string icon) returns)) {
+    METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns)) {
         returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
     }
-    METHOD(GameItem, show, void(entity this)) { LOG_INFO("A game item\n"); }
-    void ITEM_HANDLE(Show, entity this) { this.show(this); }
+    METHOD(GameItem, show, void(GameItem this)) { LOG_INFO("A game item\n"); }
+    void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
 ENDCLASS(GameItem)
 
 #endif

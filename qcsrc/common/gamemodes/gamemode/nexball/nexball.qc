@@ -2,7 +2,7 @@
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-.float metertime;
+.float metertime = _STAT(NB_METERSTART);
 
 int autocvar_g_nexball_goalleadlimit;
 #define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
@@ -78,10 +78,10 @@ void LogNB(string mode, entity actor)
 	GameLogEcho(s);
 }
 
-void ball_restart()
-{SELFPARAM();
-	if(self.owner)
-		DropBall(self, self.owner.origin, '0 0 0');
+void ball_restart(entity this)
+{
+	if(this.owner)
+		DropBall(this, this.owner.origin, '0 0 0');
 	ResetBall();
 }
 
@@ -127,7 +127,7 @@ void DropOwner()
 	DropBall(self, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle.y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
-	ownr.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(ownr);
 }
 
 void GiveBall(entity plyr, entity ball)
@@ -180,13 +180,13 @@ void GiveBall(entity plyr, entity ball)
 	}
 
 	plyr.(weaponentity).weapons = plyr.weapons;
-	plyr.(weaponentity).switchweapon = plyr.weapon;
+	plyr.(weaponentity).m_switchweapon = PS(plyr).m_weapon;
 	plyr.weapons = WEPSET(NEXBALL);
 	setself(plyr);
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w);
-	plyr.switchweapon = WEP_NEXBALL.m_id;
-	W_SwitchWeapon(WEP_NEXBALL.m_id);
+	PS(plyr).m_switchweapon = WEP_NEXBALL;
+	W_SwitchWeapon(WEP_NEXBALL);
 	setself(this);
 }
 
@@ -199,7 +199,7 @@ void DropBall(entity ball, vector org, vector vel)
 	setattachment(ball, world, "");
 	setorigin(ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(ball);
 	ball.scale = ball_scale;
 	ball.velocity = vel;
 	ball.nb_droptime = time;
@@ -225,7 +225,7 @@ void DropBall(entity ball, vector org, vector vel)
 void InitBall()
 {SELFPARAM();
 	if(gameover) return;
-	self.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(self);
 	self.movetype = MOVETYPE_BOUNCE;
 	if(self.classname == "nexball_basketball")
 		self.touch = basketball_touch;
@@ -331,7 +331,7 @@ void basketball_touch()
 		football_touch();
 		return;
 	}
-	if(!self.cnt && IS_PLAYER(other) && !other.frozen && !other.deadflag && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && !STAT(FROZEN, other) && !IS_DEAD(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -726,10 +726,10 @@ void W_Nexball_Touch()
 
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
+		if((ball = other.ballcarried) && !STAT(FROZEN, other) && !IS_DEAD(other) && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
-			other.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(other);
 			if(!attacker.ballcarried)
 			{
 				LogNB("stole", attacker);
@@ -816,7 +816,7 @@ void W_Nexball_Attack2()
 	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
-	missile.think = SUB_Remove;
+	missile.think = SUB_Remove_self;
 	missile.nextthink = time + autocvar_g_balance_nexball_secondary_lifetime; //FIXME: use a distance instead?
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
@@ -908,8 +908,8 @@ MUTATOR_HOOKFUNCTION(nb, ClientDisconnect)
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerDies)
-{SELFPARAM();
-	nb_DropBall(self);
+{
+	nb_DropBall(frag_target);
 	return false;
 }
 
@@ -930,10 +930,11 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 			self.ballcarried.velocity = self.velocity;
 			self.ballcarried.customizeentityforclient = ball_customize;
 
-			setorigin(self.ballcarried, self.origin + self.view_ofs +
+			vector org = self.origin + self.view_ofs +
 					  v_forward * autocvar_g_nexball_viewmodel_offset.x +
 					  v_right * autocvar_g_nexball_viewmodel_offset.y +
-					  v_up * autocvar_g_nexball_viewmodel_offset.z);
+					  v_up * autocvar_g_nexball_viewmodel_offset.z;
+			setorigin(self.ballcarried, org);
 
 			// 'safe passing'
 			if(autocvar_g_nexball_safepass_maxdist)
@@ -949,7 +950,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				crosshair_trace(self);
 				if( trace_ent &&
 					IS_CLIENT(trace_ent) &&
-					trace_ent.deadflag == DEAD_NO &&
+					!IS_DEAD(trace_ent) &&
 					trace_ent.team == self.team &&
 					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )
 				{
@@ -971,8 +972,8 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				self.weapons = self.(weaponentity).weapons;
 				Weapon w = WEP_NEXBALL;
 				w.wr_resetplayer(w);
-				self.switchweapon = self.(weaponentity).switchweapon;
-				W_SwitchWeapon(self.switchweapon);
+				PS(self).m_switchweapon = self.(weaponentity).m_switchweapon;
+				W_SwitchWeapon(PS(self).m_switchweapon);
 
 				self.(weaponentity).weapons = '0 0 0';
 			}
@@ -1021,12 +1022,12 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
 {SELFPARAM();
-	return self.weapon == WEP_NEXBALL.m_id;
+	return PS(self).m_weapon == WEP_NEXBALL;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidDropCurrentWeapon)
 {SELFPARAM();
-	return self.weapon == WEP_MORTAR.m_id; // TODO: what is this for?
+	return PS(self).m_weapon == WEP_MORTAR; // TODO: what is this for?
 }
 
 MUTATOR_HOOKFUNCTION(nb, FilterItem)
@@ -1072,7 +1073,6 @@ REGISTER_MUTATOR(nb, g_nexball)
 		if(g_nexball_meter_period <= 0)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
-		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
 
 		// General settings
 		/*

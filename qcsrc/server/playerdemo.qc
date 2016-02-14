@@ -12,9 +12,9 @@
 const float PLAYERDEMO_MODE_OFF = 0;
 const float PLAYERDEMO_MODE_READING = 1;
 const float PLAYERDEMO_MODE_WRITING = 2;
-void playerdemo_init()
-{SELFPARAM();
-	self.playerdemo_mode = PLAYERDEMO_MODE_OFF;
+void playerdemo_init(entity this)
+{
+	this.playerdemo_mode = PLAYERDEMO_MODE_OFF;
 }
 void playerdemo_shutdown()
 {SELFPARAM();
@@ -58,7 +58,7 @@ void playerdemo_open_write(string f)
 	PLAYERDEMO_FIELD(func,string,playerskin) \
 	PLAYERDEMO_FIELD(func,float,frame) \
 	PLAYERDEMO_FIELD(func,float,effects) \
-	PLAYERDEMO_FIELD(func,float,switchweapon) \
+	/* PLAYERDEMO_FIELD(func,float,switchweapon) */ \
 	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK) \
 	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK2) \
 	PLAYERDEMO_FIELD(func,float,BUTTON_CROUCH) \
@@ -133,32 +133,32 @@ void playerdemo_read_float(.float f, string name)
 {SELFPARAM();
 	self.(f) = stof(fgets(self.playerdemo_fh));
 }
-float playerdemo_read()
-{SELFPARAM();
-	if(self.playerdemo_mode != PLAYERDEMO_MODE_READING)
+float playerdemo_read(entity this)
+{
+	if(this.playerdemo_mode != PLAYERDEMO_MODE_READING)
 		return 0;
-	if(self.playerdemo_time < 0)
+	if(this.playerdemo_time < 0)
 		return 1;
 	float t;
 	t = time;
-	while(time >= self.playerdemo_time)
+	while(time >= this.playerdemo_time)
 	{
 		PLAYERDEMO_FIELDS(playerdemo_read_)
 		{
-			time = self.playerdemo_time;
-			PlayerPreThink();
+			time = this.playerdemo_time;
+			WITH(entity, self, this, PlayerPreThink());
 			// not running physics though... this is just so we can run weapon stuff
-			PlayerPostThink();
+			WITH(entity, self, this, PlayerPostThink());
 		}
-		self.playerdemo_time = stof(fgets(self.playerdemo_fh));
-		if(self.playerdemo_time == 0)
+		this.playerdemo_time = stof(fgets(this.playerdemo_fh));
+		if(this.playerdemo_time == 0)
 		{
-			self.playerdemo_time = -1;
+			this.playerdemo_time = -1;
 			return 1;
 		}
-		self.playerdemo_time += self.playerdemo_starttime;
+		this.playerdemo_time += this.playerdemo_starttime;
 	}
-	self.velocity = '0 0 0';
+	this.velocity = '0 0 0';
 	time = t;
 	return 1;
 }

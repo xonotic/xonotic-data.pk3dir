@@ -9,14 +9,12 @@ void flipflop_use()
         SUB_UseTargets();
 }
 
-void _spawnfunc_trigger_flipflop();
 spawnfunc(trigger_flipflop)
 {
-    if(self.spawnflags & 1)
-        self.state = 1;
-    self.use = flipflop_use;
-    self.reset = _spawnfunc_trigger_flipflop; // perfect resetter
+    if(this.spawnflags & 1)
+        this.state = 1;
+    this.use = flipflop_use;
+    this.reset = spawnfunc_trigger_flipflop; // perfect resetter
 }
-void _spawnfunc_trigger_flipflop() { SELFPARAM(); spawnfunc_trigger_flipflop(this); }
 
 #endif

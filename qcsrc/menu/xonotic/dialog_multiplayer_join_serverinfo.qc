@@ -1,4 +1,4 @@
-#include "../../common/mapinfo.qh"
+#include <common/mapinfo.qh>
 
 #ifndef DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
 #define DIALOG_MULTIPLAYER_JOIN_SERVERINFO_H
@@ -192,7 +192,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerNumFreeSlots = strzone(s);
 	me.numFreeSlotsLabel.setText(me.numFreeSlotsLabel, me.currentServerNumFreeSlots);
 
-	me.currentServerMod = ((modname == "Xonotic") ? _("Default") : modname);
+	me.currentServerMod = ((modname == "Xonotic") ? ZCTX(_("MOD^Default")) : modname);
 	me.currentServerMod = strzone(me.currentServerMod);
 	me.modLabel.setText(me.modLabel, me.currentServerMod);
 

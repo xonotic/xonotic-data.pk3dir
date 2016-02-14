@@ -30,7 +30,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 
 	if(autocvar_g_spawn_alloweffects)
 	{
-		WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+		WriteByte(MSG_ENTITY, etof(self.owner));
 		WriteShort(MSG_ENTITY, self.owner.origin.x);
 		WriteShort(MSG_ENTITY, self.owner.origin.y);
 		WriteShort(MSG_ENTITY, self.owner.origin.z);
@@ -214,7 +214,6 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 {SELFPARAM();
 	float shortest, thisdist;
 	float prio;
-	entity player;
 
 	prio = 0;
 
@@ -239,12 +238,11 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 	}
 
 	shortest = vlen(world.maxs - world.mins);
-	FOR_EACH_PLAYER(player) if (player != self)
-	{
-		thisdist = vlen(player.origin - spot.origin);
+	FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+		thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
-	}
+	));
 	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 

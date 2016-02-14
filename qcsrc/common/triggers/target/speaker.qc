@@ -61,16 +61,16 @@ void target_speaker_use_off()
 	sound(self, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE * self.volume, self.atten);
 	self.use = target_speaker_use_on;
 }
-void target_speaker_reset()
-{SELFPARAM();
-	if(self.spawnflags & 1) // LOOPED_ON
+void target_speaker_reset(entity this)
+{
+	if(this.spawnflags & 1) // LOOPED_ON
 	{
-		if(self.use == target_speaker_use_on)
+		if(this.use == target_speaker_use_on)
 			target_speaker_use_on();
 	}
-	else if(self.spawnflags & 2)
+	else if(this.spawnflags & 2)
 	{
-		if(self.use == target_speaker_use_off)
+		if(this.use == target_speaker_use_off)
 			target_speaker_use_off();
 	}
 }

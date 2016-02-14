@@ -109,7 +109,7 @@ void HUD_UpdatePlayerTeams()
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		num += 1;
-		Team = GetPlayerColor(pl.sv_entnum);
+		Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
 		{
 			tmp = pl.sort_prev;
@@ -146,8 +146,8 @@ int HUD_CompareScore(float vl, float vr, int f)
 float HUD_ComparePlayerScores(entity left, entity right)
 {
 	float vl, vr, r;
-	vl = GetPlayerColor(left.sv_entnum);
-	vr = GetPlayerColor(right.sv_entnum);
+	vl = entcs_GetTeam(left.sv_entnum);
+	vr = entcs_GetTeam(right.sv_entnum);
 
 	if(!left.gotscores)
 		vl = NUM_SPECTATOR;
@@ -303,8 +303,8 @@ void Cmd_HUD_Help()
 
 #define HUD_DefaultColumnLayout() \
 "ping pl name | " \
-"-teams,rc,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -rc,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"dmg dmgtaken " \
+"-teams,cts,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -cts,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"-rc,cts,nb/dmg -rc,cts,nb/dmgtaken " \
 "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
 "+lms/lives +lms/rank " \
 "+kh/caps +kh/pushes +kh/destroyed " \
@@ -571,7 +571,7 @@ string HUD_GetField(entity pl, int field)
 					hud_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
 				}
 			}
-			return GetPlayerName(pl.sv_entnum);
+			return entcs_GetName(pl.sv_entnum);
 
 		case SP_FRAGS:
 			f = pl.(scores[SP_KILLS]);
@@ -608,17 +608,17 @@ string HUD_GetField(entity pl, int field)
 		case SP_DMG:
 			num = pl.(scores[SP_DMG]);
 			denom = 1000;
-			
+
 			str = sprintf("%.1f k", num/denom);
 			return str;
-			
+
 		case SP_DMGTAKEN:
 			num = pl.(scores[SP_DMGTAKEN]);
 			denom = 1000;
-			
+
 			str = sprintf("%.1f k", num/denom);
-			return str; 
-		
+			return str;
+
 		default:
 			tmp = pl.(scores[field]);
 			f = scores_flags[field];
@@ -710,7 +710,7 @@ void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_s
 	string str;
 	int field;
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
+	is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
 		rgb.x = autocvar_scoreboard_color_bg_r + 0.5;
@@ -986,7 +986,7 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
+	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
@@ -1001,15 +1001,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
-	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		setself(get_weaponinfo(i));
-		if (!self.weapon) continue;
-
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		WepSet set = it.m_wepset;
+		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			++disownedcnt;
-	}
+	));
 
 	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
 	if (weapon_cnt <= 0) return pos;
@@ -1063,12 +1061,11 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		setself(get_weaponinfo(i));
-		if (!self.weapon) continue;
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		if (weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+		WepSet set = it.m_wepset;
+		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			continue;
 
 		float weapon_alpha;
@@ -1078,7 +1075,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect_skin(tmpos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(tmpos, it.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if (weapon_stats >= 0) {
 			weapons_with_stats += 1;
@@ -1103,7 +1100,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			pos.y += height;
 		}
 		++column;
-	}
+	));
 
 	if (weapons_with_stats)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
@@ -1133,12 +1130,12 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	string val;
 
 	// get monster stats
-	stat_monsters_killed = getstatf(STAT_MONSTERS_KILLED);
-	stat_monsters_total = getstatf(STAT_MONSTERS_TOTAL);
+	stat_monsters_killed = STAT(MONSTERS_KILLED);
+	stat_monsters_total = STAT(MONSTERS_TOTAL);
 
 	// get secrets stats
-	stat_secrets_found = getstatf(STAT_SECRETS_FOUND);
-	stat_secrets_total = getstatf(STAT_SECRETS_TOTAL);
+	stat_secrets_found = STAT(SECRETS_FOUND);
+	stat_secrets_total = STAT(SECRETS_TOTAL);
 
 	// get number of rows
 	if(stat_secrets_total)
@@ -1197,7 +1194,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		return pos;
 
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
+	is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
 	vector hl_rgb;
 	hl_rgb.x = autocvar_scoreboard_color_bg_r + 0.5;
 	hl_rgb.y = autocvar_scoreboard_color_bg_g + 0.5;
@@ -1226,7 +1223,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 			continue;
 		n = grecordholder[i];
 		p = count_ordinal(i+1);
-		if(grecordholder[i] == GetPlayerName(player_localnum))
+		if(grecordholder[i] == entcs_GetName(player_localnum))
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize.y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!(i % 2) && scoreboard_highlight)
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize.y, hl_rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
@@ -1316,6 +1313,8 @@ void HUD_DrawScoreboard()
 		{
 			if(tm.team == NUM_SPECTATOR)
 				continue;
+			if(!tm.team && teamplay)
+				continue;
 
 			draw_beginBoldFont();
 			rgb = Team_ColorRGB(tm.team);
@@ -1344,6 +1343,8 @@ void HUD_DrawScoreboard()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
+				continue;
+			if(!tm.team && teamplay)
 				continue;
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
@@ -1402,9 +1403,9 @@ void HUD_DrawScoreboard()
 	// Print info string
 	float tl, fl, ll;
 	str = sprintf(_("playing ^3%s^7 on ^2%s^7"), MapInfo_Type_ToText(gametype), shortmapname);
-	tl = getstatf(STAT_TIMELIMIT);
-	fl = getstatf(STAT_FRAGLIMIT);
-	ll = getstatf(STAT_LEADLIMIT);
+	tl = STAT(TIMELIMIT);
+	fl = STAT(FRAGLIMIT);
+	ll = STAT(LEADLIMIT);
 	if(gametype == MAPINFO_TYPE_LMS)
 	{
 		if(tl > 0)
@@ -1458,7 +1459,7 @@ void HUD_DrawScoreboard()
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, true, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print information about respawn status
-	float respawn_time = getstatf(STAT_RESPAWN_TIME);
+	float respawn_time = STAT(RESPAWN_TIME);
 	if(!intermission)
 	if(respawn_time)
 	{

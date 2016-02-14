@@ -7,7 +7,7 @@ const int CMD_REQUEST_USAGE = 2;
 CLASS(Command, Object)
 	ATTRIB(Command, m_name, string, string_null);
 	ATTRIB(Command, m_description, string, string_null);
-	METHOD(Command, m_invokecmd, void(int request, int arguments, string command)) { }
+	METHOD(Command, m_invokecmd, void(int request, entity caller, int arguments, string command)) { }
 ENDCLASS(Command)
 
 #endif

@@ -31,7 +31,7 @@ void door_blocked()
 #ifdef SVQC
 		&& (other.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
-		&& !PHYS_DEAD(other)
+		&& !IS_DEAD(other)
 #endif
 	)
 	{ // KIll Kill Kill!!
@@ -47,7 +47,7 @@ void door_blocked()
 #endif
 
 		 // don't change direction for dead or dying stuff
-		if(PHYS_DEAD(other)
+		if(IS_DEAD(other)
 #ifdef SVQC
 			&& (other.takedamage == DAMAGE_NO)
 #endif
@@ -272,24 +272,24 @@ void door_use()
 	}
 }
 
-void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.spawnflags & DOOR_NOSPLASH)
+void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if (self.itemkeys)
+	if (this.itemkeys)
 	{
 		// don't allow opening doors through damage if keys are required
 		return;
 	}
 
-	if (self.health <= 0)
+	if (this.health <= 0)
 	{
-		self.owner.health = self.owner.max_health;
-		self.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
-		WITH(entity, self, self.owner, door_use());
+		this.owner.health = this.owner.max_health;
+		this.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
+		WITH(entity, self, this.owner, door_use());
 	}
 }
 
@@ -339,7 +339,7 @@ void door_generic_plat_blocked()
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
-		if(PHYS_DEAD(other) && (other.takedamage == DAMAGE_NO))
+		if(IS_DEAD(other) && (other.takedamage == DAMAGE_NO))
 		{
 			if (self.wait >= 0)
 			{
@@ -432,9 +432,9 @@ void door_trigger_touch()
 {SELFPARAM();
 	if (other.health < 1)
 #ifdef SVQC
-		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !PHYS_DEAD(other)))
+		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !IS_DEAD(other)))
 #elif defined(CSQC)
-		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !PHYS_DEAD(other)))
+		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !IS_DEAD(other)))
 #endif
 			return;
 
@@ -643,7 +643,7 @@ float door_send(entity to, float sf)
 
 		WriteString(MSG_ENTITY, self.model);
 
-		trigger_common_write(true);
+		trigger_common_write(self, true);
 
 		WriteCoord(MSG_ENTITY, self.pos1_x);
 		WriteCoord(MSG_ENTITY, self.pos1_y);
@@ -704,16 +704,16 @@ void door_init_startopen()
 #endif
 }
 
-void door_reset()
-{SELFPARAM();
-	SUB_SETORIGIN(self, self.pos1);
-	self.SUB_VELOCITY = '0 0 0';
-	self.state = STATE_BOTTOM;
-	self.SUB_THINK = func_null;
-	self.SUB_NEXTTHINK = 0;
+void door_reset(entity this)
+{
+	SUB_SETORIGIN(this, this.pos1);
+	this.SUB_VELOCITY = '0 0 0';
+	this.state = STATE_BOTTOM;
+	this.SUB_THINK = func_null;
+	this.SUB_NEXTTHINK = 0;
 
 #ifdef SVQC
-	self.SendFlags |= SF_TRIGGER_RESET;
+	this.SendFlags |= SF_TRIGGER_RESET;
 #endif
 }
 
@@ -801,7 +801,7 @@ spawnfunc(func_door)
 
 void door_draw(entity this)
 {
-	Movetype_Physics_NoMatchServer();
+	Movetype_Physics_NoMatchServer(this);
 
 	trigger_draw_generic(this);
 }
@@ -812,69 +812,75 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		self.classname = strzone(ReadString());
-		self.spawnflags = ReadByte();
+		this.classname = strzone(ReadString());
+		this.spawnflags = ReadByte();
 
-		self.mdl = strzone(ReadString());
-		_setmodel(self, self.mdl);
+		this.mdl = strzone(ReadString());
+		_setmodel(this, this.mdl);
 
 		trigger_common_read(true);
 
-		self.pos1_x = ReadCoord();
-		self.pos1_y = ReadCoord();
-		self.pos1_z = ReadCoord();
-		self.pos2_x = ReadCoord();
-		self.pos2_y = ReadCoord();
-		self.pos2_z = ReadCoord();
+		vector v;
 
-		self.size_x = ReadCoord();
-		self.size_y = ReadCoord();
-		self.size_z = ReadCoord();
+		v.x = ReadCoord();
+		v.y = ReadCoord();
+		v.z = ReadCoord();
+		this.pos1 = v;
 
-		self.wait = ReadShort();
-		self.speed = ReadShort();
-		self.lip = ReadByte();
-		self.state = ReadByte();
-		self.SUB_LTIME = ReadCoord();
+		v.x = ReadCoord();
+		v.y = ReadCoord();
+		v.z = ReadCoord();
+		this.pos2 = v;
 
-		self.solid = SOLID_BSP;
-		self.movetype = MOVETYPE_PUSH;
-		self.trigger_touch = door_touch;
-		self.draw = door_draw;
-		self.drawmask = MASK_NORMAL;
-		self.use = door_use;
+		v.x = ReadCoord();
+		v.y = ReadCoord();
+		v.z = ReadCoord();
+		this.size = v;
+
+		this.wait = ReadShort();
+		this.speed = ReadShort();
+		this.lip = ReadByte();
+		this.state = ReadByte();
+		this.SUB_LTIME = ReadCoord();
+
+		this.solid = SOLID_BSP;
+		this.movetype = MOVETYPE_PUSH;
+		this.trigger_touch = door_touch;
+		this.draw = door_draw;
+		this.drawmask = MASK_NORMAL;
+		this.use = door_use;
 
 		LinkDoors();
 
-		if(self.spawnflags & DOOR_START_OPEN)
+		if(this.spawnflags & DOOR_START_OPEN)
 			door_init_startopen();
 
-		self.move_time = time;
-		self.move_origin = self.origin;
-		self.move_movetype = MOVETYPE_PUSH;
-		self.move_angles = self.angles;
-		self.move_blocked = door_blocked;
+		this.move_time = time;
+		this.move_origin = this.origin;
+		this.move_movetype = MOVETYPE_PUSH;
+		this.move_angles = this.angles;
+		this.move_blocked = door_blocked;
 	}
 
 	if(sf & SF_TRIGGER_RESET)
 	{
-		door_reset();
+		door_reset(this);
 	}
 
 	if(sf & SF_TRIGGER_UPDATE)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
-		self.move_origin = self.origin;
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
+		this.move_origin = this.origin;
 
-		self.pos1_x = ReadCoord();
-		self.pos1_y = ReadCoord();
-		self.pos1_z = ReadCoord();
-		self.pos2_x = ReadCoord();
-		self.pos2_y = ReadCoord();
-		self.pos2_z = ReadCoord();
+		this.pos1_x = ReadCoord();
+		this.pos1_y = ReadCoord();
+		this.pos1_z = ReadCoord();
+		this.pos2_x = ReadCoord();
+		this.pos2_y = ReadCoord();
+		this.pos2_z = ReadCoord();
 	}
 	return true;
 }

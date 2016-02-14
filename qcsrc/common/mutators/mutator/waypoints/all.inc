@@ -54,8 +54,6 @@ REGISTER_WAYPOINT(OnsCPAttack, _("Control point"), '1 0.5 0', 2);
 REGISTER_WAYPOINT(OnsGen, _("Generator"), '1 0.5 0', 1);
 REGISTER_WAYPOINT(OnsGenShielded, _("Generator"), '1 0.5 0', 1);
 
-REGISTER_WAYPOINT(Buff, _("Buff"), '1 0.5 0', 1);
-
 REGISTER_WAYPOINT(Weapon, _("Weapon"), '0 0 0', 1);
 
 REGISTER_WAYPOINT(Monster, _("Monster"), '1 0 0', 1);

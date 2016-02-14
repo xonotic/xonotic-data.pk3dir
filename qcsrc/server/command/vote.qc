@@ -1,4 +1,4 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "vote.qh"
 
 #include "common.qh"
@@ -11,11 +11,11 @@
 
 #include "../mutators/all.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/playerstats.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/playerstats.qh>
+#include <common/util.qh>
 
 // =============================================
 //  Server side voting code, reworked by Samual
@@ -118,12 +118,7 @@ string OriginalCallerName()
 
 void VoteReset()
 {
-	entity tmp_player;
-
-	FOR_EACH_CLIENT(tmp_player)
-	{
-		tmp_player.vote_selection = 0;
-	}
+	FOREACH_CLIENT(true, LAMBDA(it.vote_selection = 0));
 
 	if (vote_called)
 	{
@@ -217,32 +212,29 @@ void VoteCount(float first_count)
 	float vote_needed_of_voted, final_needed_votes;
 	float vote_factor_overall, vote_factor_of_voted;
 
-	entity tmp_player;
-
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOR_EACH_REALCLIENT(tmp_player)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		++vote_player_count;
-		if (IS_PLAYER(tmp_player))   ++vote_real_player_count;
-		switch (tmp_player.vote_selection)
+		if (IS_PLAYER(it))   ++vote_real_player_count;
+		switch (it.vote_selection)
 		{
 			case VOTE_SELECT_REJECT:
 			{ ++vote_reject_count;
-			  { if (IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break;
+			  { if (IS_PLAYER(it)) ++vote_real_reject_count; } break;
 			}
 			case VOTE_SELECT_ACCEPT:
 			{ ++vote_accept_count;
-			  { if (IS_PLAYER(tmp_player)) ++vote_real_accept_count; } break;
+			  { if (IS_PLAYER(it)) ++vote_real_accept_count; } break;
 			}
 			case VOTE_SELECT_ABSTAIN:
 			{ ++vote_abstain_count;
-			  { if (IS_PLAYER(tmp_player)) ++vote_real_abstain_count; } break;
+			  { if (IS_PLAYER(it)) ++vote_real_abstain_count; } break;
 			}
 			default: break;
 		}
-	}
+	));
 
 	// Check to see if there are enough players on the server to allow master voting... otherwise, vote master could be used for evil.
 	if ((vote_called == VOTE_MASTER) && autocvar_sv_vote_master_playerlimit > vote_player_count)
@@ -341,7 +333,7 @@ void VoteThink()
 // =======================
 
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
-void reset_map(float dorespawn)
+void reset_map(bool dorespawn)
 {
 	SELFPARAM();
 
@@ -349,41 +341,22 @@ void reset_map(float dorespawn)
 
 	MUTATOR_CALLHOOK(reset_map_global);
 
-	for (entity e = world; (e = nextent(e)); )
-	{
-		setself(e);
-		if (IS_NOT_A_CLIENT(self))
+	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(
+		if (it.reset)
 		{
-			if (self.reset)
-			{
-				self.reset();
-				continue;
-			}
-
-			if (self.team_saved) self.team = self.team_saved;
-
-			if (self.flags & FL_PROJECTILE)  // remove any projectiles left
-				remove(self);
+			WITH(entity, self, it, it.reset(it));
+			continue;
 		}
-	}
+		if (it.team_saved) it.team = it.team_saved;
+		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
+	));
 
 	// Waypoints and assault start come LAST
-	for (entity e = world; (e = nextent(e)); )
-	{
-		setself(e);
-		if (IS_NOT_A_CLIENT(self))
-		{
-			if (self.reset2)
-			{
-				self.reset2();
-				continue;
-			}
-		}
-	}
+	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(
+		if (it.reset2) WITH(entity, self, it, it.reset2());
+	));
 
-	entity e;
-	FOR_EACH_PLAYER(e)
-	if (e.frozen) WITH(entity, self, e, Unfreeze(self));
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITH(entity, self, it, Unfreeze(it))));
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
@@ -391,9 +364,8 @@ void reset_map(float dorespawn)
 	{
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
-			FOR_EACH_CLIENT(e)  // reset all players
-			{
-				setself(e);
+			FOREACH_CLIENT(true, LAMBDA(
+				setself(it);
 				/*
 				only reset players if a restart countdown is active
 				this can either be due to cvar sv_ready_restart_after_countdown having set
@@ -414,7 +386,7 @@ void reset_map(float dorespawn)
 						PutClientInServer();
 					}
 				}
-			}
+			));
 
 			setself(this);
 		}
@@ -425,60 +397,56 @@ void reset_map(float dorespawn)
 void ReadyRestart_think()
 {
 	SELFPARAM();
-	restart_mapalreadyrestarted = 1;
+	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
-	remove(self);
+	remove(this);
 }
 
 // Forces a restart of the game without actually reloading the map // this is a mess...
 void ReadyRestart_force()
 {
-	entity tmp_player, restart_timer;
-
 	bprint("^1Server is restarting...\n");
 
 	VoteReset();
 
 	// clear overtime, we have to decrease timelimit to its original value again.
-	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)   cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
+	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2)
+		cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime)));
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 
-	readyrestart_happened = 1;
+	readyrestart_happened = true;
 	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear player attributes
-	FOR_EACH_CLIENT(tmp_player)
-	{
-		tmp_player.alivetime = 0;
-		tmp_player.killcount = 0;
-		PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(tmp_player, PLAYERSTATS_ALIVETIME, 0));
-	}
+	FOREACH_CLIENT(true, LAMBDA(
+		it.alivetime = 0;
+		it.killcount = 0;
+		PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, -PS_GR_P_ADDVAL(it, PLAYERSTATS_ALIVETIME, 0));
+	));
 
-	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
+	restart_mapalreadyrestarted = false; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
 	warmup_stage = 0;                // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
-	FOR_EACH_REALCLIENT(tmp_player)
-	{
-		tmp_player.ready = 0;
-	}
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(it.ready = false));
 	readycount = 0;
 	Nagger_ReadyCounted();  // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
 	// lock teams with lockonrestart
 	if (autocvar_teamplay_lockonrestart && teamplay)
 	{
-		lockteams = 1;
+		lockteams = true;
 		bprint("^1The teams are now locked.\n");
 	}
 
 	// initiate the restart-countdown-announcer entity
 	if (autocvar_sv_ready_restart_after_countdown)
 	{
-		restart_timer = spawn();
+		entity restart_timer = new(restart_timer);
+		make_pure(restart_timer);
 		restart_timer.think = ReadyRestart_think;
 		restart_timer.nextthink = game_starttime;
 	}
@@ -486,13 +454,12 @@ void ReadyRestart_force()
 	// after a restart every players number of allowed timeouts gets reset, too
 	if (autocvar_sv_timeout)
 	{
-		FOR_EACH_REALPLAYER(tmp_player)
-		{
-			tmp_player.allowed_timeouts = autocvar_sv_timeout_number;
-		}
-		// reset map immediately if this cvar is not set
-		if (!autocvar_sv_ready_restart_after_countdown)   reset_map(true); }
-	if (autocvar_sv_eventlog)   GameLogEcho(":restart"); }
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(it.allowed_timeouts = autocvar_sv_timeout_number));
+	}
+    // reset map immediately if this cvar is not set
+    if (!autocvar_sv_ready_restart_after_countdown) reset_map(true);
+	if (autocvar_sv_eventlog) GameLogEcho(":restart");
+}
 
 void ReadyRestart()
 {
@@ -502,24 +469,20 @@ void ReadyRestart()
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if (!autocvar_sv_ready_restart_after_countdown)   Score_ClearAll();
+	if (!autocvar_sv_ready_restart_after_countdown) Score_ClearAll();
 	ReadyRestart_force();
 }
 
 // Count the players who are ready and determine whether or not to restart the match
 void ReadyCount()
 {
-	entity tmp_player;
 	float ready_needed_factor, ready_needed_count;
 	float t_ready = 0, t_players = 0;
 
-	FOR_EACH_REALCLIENT(tmp_player)
-	{
-		if (IS_PLAYER(tmp_player) || tmp_player.caplayer == 1)
-		{
-			++t_players;
-			if (tmp_player.ready)   ++t_ready; }
-	}
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && (IS_PLAYER(it) || it.caplayer == 1), LAMBDA(
+		++t_players;
+		if (it.ready) ++t_ready;
+	));
 
 	readycount = t_ready;
 
@@ -710,7 +673,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 				if (first_command == "kickban") command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
 				else command_arguments = reason;
 
-				vote_parsed_command = strcat(first_command, " # ", ftos(num_for_edict(victim)), " ", command_arguments);
+				vote_parsed_command = strcat(first_command, " # ", ftos(etof(victim)), " ", command_arguments);
 				vote_parsed_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", reason);
 			}
 			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return false; }
@@ -790,7 +753,6 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			    || (autocvar_sv_vote_nospectators == 0));
 
 			float tmp_playercount = 0;
-			entity tmp_player;
 
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 
@@ -844,10 +806,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 					msg_entity = caller;
 				}
 
-				FOR_EACH_REALCLIENT(tmp_player)
-				{
-					++tmp_playercount;
-				}
+				FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(++tmp_playercount));
 				if (tmp_playercount > 1)   Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_CALL);  // don't announce a "vote now" sound if player is alone
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");

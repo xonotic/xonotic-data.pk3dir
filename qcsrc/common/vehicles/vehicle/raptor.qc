@@ -8,6 +8,8 @@ CLASS(Raptor, Vehicle)
 /* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
 /* mins       */ ATTRIB(Raptor, mins, vector, '-80 -80 0');
 /* maxs       */ ATTRIB(Raptor, maxs, vector, '80 80 70');
+/* view offset*/ ATTRIB(Raptor, view_ofs, vector, '0 0 160');
+/* view dist  */ ATTRIB(Raptor, height, float, 200);
 /* model	  */ ATTRIB(Raptor, mdl, string, "models/vehicles/raptor.dpm");
 /* model	  */ ATTRIB(Raptor, model, string, "models/vehicles/raptor.dpm");
 /* head_model */ ATTRIB(Raptor, head_model, string, "");
@@ -114,7 +116,7 @@ void raptor_exit(float eject)
 	vector spot;
 	self.tur_head.exteriormodeltoclient = world;
 
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		self.think	  = raptor_land;
 		self.nextthink  = time;
@@ -134,7 +136,7 @@ void raptor_exit(float eject)
 	}
 	else
 	{
-		if(vlen(self.velocity) > 2 * autocvar_sv_maxairspeed)
+		if(vdist(self.velocity, >, 2 * autocvar_sv_maxairspeed))
 		{
 			self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed * 2;
 			self.owner.velocity_z += 200;
@@ -173,7 +175,8 @@ float raptor_frame()
 	raptor = self.vehicle;
 	setself(raptor);
 
-	vehicles_painframe();
+	vehicles_frame(raptor, player);
+
 	/*
 	ftmp = vlen(self.velocity);
 	if(ftmp > autocvar_g_vehicle_raptor_speed_forward)
@@ -198,7 +201,7 @@ float raptor_frame()
 	}
 	*/
 
-	if(raptor.deadflag != DEAD_NO)
+	if(IS_DEAD(raptor))
 	{
 		setself(player);
 		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
@@ -291,13 +294,13 @@ float raptor_frame()
 	// Target lock & predict
 	if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
 	{
-		if(raptor.gun1.lock_time < time || raptor.gun1.enemy.deadflag)
+		if(raptor.gun1.lock_time < time || IS_DEAD(raptor.gun1.enemy) || STAT(FROZEN, raptor.gun1.enemy))
 			raptor.gun1.enemy = world;
 
 		if(trace_ent)
 		if(trace_ent.movetype)
 		if(trace_ent.takedamage)
-		if(!trace_ent.deadflag)
+		if(!IS_DEAD(trace_ent) && !STAT(FROZEN, trace_ent))
 		{
 			if(teamplay)
 			{
@@ -339,7 +342,7 @@ float raptor_frame()
 	else if(autocvar_g_vehicle_raptor_cannon_locktarget == 1)
 	{
 
-		vehicles_locktarget((1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
+		vehicles_locktarget(self, (1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
 							 (1 / autocvar_g_vehicle_raptor_cannon_locking_releasetime) * frametime,
 							 autocvar_g_vehicle_raptor_cannon_locked_time);
 
@@ -443,7 +446,7 @@ float raptor_frame()
 		{
 			if(_missile.flags & FL_PROJECTILE)
 			if(MISSILE_IS_TRACKING(_missile))
-			if(vlen(self.origin - _missile.origin) < 2 * autocvar_g_vehicle_raptor_flare_range)
+			if(vdist(self.origin - _missile.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
 				++_incomming;
 
 			_missile = _missile.chain;
@@ -569,28 +572,28 @@ float raptor_impulse(float _imp)
 {SELFPARAM();
 	switch(_imp)
 	{
-		case 1:
+		case IMP_weapon_group_1.impulse:
 			self.vehicle.vehicle_weapon2mode = RSM_BOMB;
 			CSQCVehicleSetup(self, 0);
 			return true;
-		case 2:
+		case IMP_weapon_group_2.impulse:
 			self.vehicle.vehicle_weapon2mode = RSM_FLARE;
 			CSQCVehicleSetup(self, 0);
 			return true;
 
-		case 10:
-		case 15:
-		case 18:
+		case IMP_weapon_next_byid.impulse:
+		case IMP_weapon_next_bypriority.impulse:
+		case IMP_weapon_next_bygroup.impulse:
 			self.vehicle.vehicle_weapon2mode += 1;
 			if(self.vehicle.vehicle_weapon2mode > RSM_LAST)
 				self.vehicle.vehicle_weapon2mode = RSM_FIRST;
 
 			CSQCVehicleSetup(self, 0);
 			return true;
-		case 11:
-		case 12:
-		case 16:
-		case 19:
+		case IMP_weapon_last.impulse:
+		case IMP_weapon_prev_byid.impulse:
+		case IMP_weapon_prev_bypriority.impulse:
+		case IMP_weapon_prev_bygroup.impulse:
 			self.vehicle.vehicle_weapon2mode -= 1;
 			if(self.vehicle.vehicle_weapon2mode < RSM_FIRST)
 				self.vehicle.vehicle_weapon2mode = RSM_LAST;
@@ -599,9 +602,9 @@ float raptor_impulse(float _imp)
 			return true;
 
 		/*
-		case 17: // toss gun, could be used to exit?
+		case IMP_weapon_drop.impulse: // toss gun, could be used to exit?
 			break;
-		case 20: // Manual minigun reload?
+		case IMP_weapon_reload.impulse: // Manual minigun reload?
 			break;
 		*/
 	}
@@ -614,12 +617,12 @@ spawnfunc(vehicle_raptor)
 	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
 }
 
-		METHOD(Raptor, vr_impact, void(Raptor thisveh))
+		METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_raptor_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 		}
-		METHOD(Raptor, vr_enter, void(Raptor thisveh))
+		METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 		{
 			self.vehicle_weapon2mode = RSM_BOMB;
 			self.owner.PlayerPhysplug = raptor_takeoff;
@@ -638,29 +641,29 @@ spawnfunc(vehicle_raptor)
 
 			CSQCVehicleSetup(self.owner, 0);
 		}
-		METHOD(Raptor, vr_death, void(Raptor thisveh))
+		METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 		{
-			self.health				= 0;
-			self.event_damage		= func_null;
-			self.solid				= SOLID_CORPSE;
-			self.takedamage			= DAMAGE_NO;
-			self.deadflag			= DEAD_DYING;
-			self.movetype			= MOVETYPE_BOUNCE;
-			self.think				= raptor_diethink;
-			self.nextthink			= time;
-			self.wait				= time + 5 + (random() * 5);
+			instance.health				= 0;
+			instance.event_damage		= func_null;
+			instance.solid				= SOLID_CORPSE;
+			instance.takedamage			= DAMAGE_NO;
+			instance.deadflag			= DEAD_DYING;
+			instance.movetype			= MOVETYPE_BOUNCE;
+			instance.think				= raptor_diethink;
+			instance.nextthink			= time;
+			instance.wait				= time + 5 + (random() * 5);
 
-			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (self.origin, 16), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (instance.origin, 16), '0 0 0', 1);
 
-			self.velocity_z += 600;
+			instance.velocity_z += 600;
 
-			self.avelocity = '0 0.5 1' * (random() * 400);
-			self.avelocity -= '0 0.5 1' * (random() * 400);
+			instance.avelocity = '0 0.5 1' * (random() * 400);
+			instance.avelocity -= '0 0.5 1' * (random() * 400);
 
-			self.colormod = '-0.5 -0.5 -0.5';
-			self.touch = raptor_blowup;
+			instance.colormod = '-0.5 -0.5 -0.5';
+			instance.touch = raptor_blowup;
 		}
-		METHOD(Raptor, vr_spawn, void(Raptor thisveh))
+		METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 		{
 			if(!self.gun1)
 			{
@@ -751,7 +754,7 @@ spawnfunc(vehicle_raptor)
 			self.vehicle_health = autocvar_g_vehicle_raptor_health;
 			self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
 		}
-		METHOD(Raptor, vr_setup, void(Raptor thisveh))
+		METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_raptor_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -804,7 +807,7 @@ spawnfunc(vehicle_raptor)
 					dropmark.gravity = 1;
 				}
 
-				float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
+				float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;
 				if(reload2 == 1)
 				{
 					setorigin(dropmark, pmove_org);
@@ -847,7 +850,7 @@ spawnfunc(vehicle_raptor)
 
 			Vehicles_drawCrosshair(crosshair);
 		}
-		METHOD(Raptor, vr_setup, void(Raptor thisveh))
+		METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 		{
 			AuxiliaryXhair[1].axh_image = vCROSS_LOCK;
 		}

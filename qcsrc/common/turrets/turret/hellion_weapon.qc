@@ -40,7 +40,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
                 actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire2"));
         }
 
-        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, FALSE, FALSE);
+        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
         missile.think		= turret_hellion_missile_think;
         missile.nextthink	= time;
@@ -66,7 +66,7 @@ void turret_hellion_missile_think()
         turret_projectile_explode();
 
     // Enemy dead? just keep on the current heading then.
-    if ((self.enemy == world) || (self.enemy.deadflag != DEAD_NO))
+    if ((self.enemy == world) || (IS_DEAD(self.enemy)))
     {
 
         // Make sure we dont return to tracking a respawned player
@@ -75,7 +75,7 @@ void turret_hellion_missile_think()
         // Turn model
         self.angles = vectoangles(self.velocity);
 
-        if ( (vlen(self.origin - self.owner.origin)) > (self.owner.shot_radius * 5) )
+        if(vdist(self.origin - self.owner.origin, >, (self.owner.shot_radius * 5)))
             turret_projectile_explode();
 
         // Accelerate
@@ -87,7 +87,7 @@ void turret_hellion_missile_think()
     }
 
     // Enemy in range?
-    if (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 0.2)
+    if(vdist(self.origin - self.enemy.origin, <, self.owner.shot_radius * 0.2))
         turret_projectile_explode();
 
     // Predict enemy position

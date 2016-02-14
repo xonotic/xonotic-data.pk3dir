@@ -1,11 +1,11 @@
 #ifdef SVQC
 
-#include "../../../server/g_subs.qh"
-#include "../../../server/g_damage.qh"
-#include "../../../server/bot/bot.qh"
-#include "../../../common/csqcmodel_settings.qh"
-#include "../../../lib/csqcmodel/sv_model.qh"
-#include "../../../server/weapons/common.qh"
+#include <server/g_subs.qh>
+#include <server/g_damage.qh>
+#include <server/bot/bot.qh>
+#include <common/csqcmodel_settings.qh>
+#include <lib/csqcmodel/sv_model.qh>
+#include <server/weapons/common.qh>
 
 .entity sprite;
 
@@ -41,7 +41,7 @@
 //   Otherwise mdl_dead will be displayed at the map origin, and nobody would
 //   want that!
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
 //
 // func_breakable
@@ -50,10 +50,11 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, int 
 void LaunchDebris (string debrisname, vector force)
 {SELFPARAM();
 	entity dbr = spawn();
-	setorigin(dbr, self.absmin
+	vector org = self.absmin
 	           + '1 0 0' * random() * (self.absmax.x - self.absmin.x)
 	           + '0 1 0' * random() * (self.absmax.y - self.absmin.y)
-	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z));
+	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z);
+	setorigin(dbr, org);
 	_setmodel (dbr, debrisname );
 	dbr.skin = self.debrisskin;
 	dbr.colormap = self.colormap; // inherit team colors
@@ -225,124 +226,124 @@ void func_breakable_destroy()
 	self.message = oldmsg;
 }
 
-void func_breakable_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.state == 1)
+void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.state == 1)
 		return;
-	if(self.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	if(self.team)
-		if(attacker.team == self.team)
+	if(this.team)
+		if(attacker.team == this.team)
 			return;
-	self.pain_finished = time;
-	self.health = self.health - damage;
-	if(self.sprite)
+	this.pain_finished = time;
+	this.health = this.health - damage;
+	if(this.sprite)
 	{
-		WaypointSprite_Ping(self.sprite);
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		WaypointSprite_Ping(this.sprite);
+		WaypointSprite_UpdateHealth(this.sprite, this.health);
 	}
-	func_breakable_colormod();
+	WITH(entity, self, this, func_breakable_colormod());
 
-	if(self.health <= 0)
+	if(this.health <= 0)
 	{
 		debrisforce = force;
 
-		self.takedamage = DAMAGE_NO;
-		self.event_damage = func_null;
+		this.takedamage = DAMAGE_NO;
+		this.event_damage = func_null;
 
-		if(IS_CLIENT(attacker) && self.classname == "func_assault_destructible")
+		if(IS_CLIENT(attacker) && this.classname == "func_assault_destructible")
 		{
-			self.owner = attacker;
-			self.realowner = attacker;
+			this.owner = attacker;
+			this.realowner = attacker;
 		}
 
 		// do not explode NOW but in the NEXT FRAME!
 		// because recursive calls to RadiusDamage are not allowed
-		self.nextthink = time;
-		self.think = func_breakable_destroy;
+		this.nextthink = time;
+		this.think = func_breakable_destroy;
 	}
 }
 
-void func_breakable_reset()
-{SELFPARAM();
-	self.team = self.team_saved;
+void func_breakable_reset(entity this)
+{
+	this.team = this.team_saved;
 	func_breakable_look_restore();
-	if(self.spawnflags & 1)
+	if(this.spawnflags & 1)
 		func_breakable_behave_destroyed();
 	else
 		func_breakable_behave_restore();
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 // destructible walls that can be used to trigger target_objective_decrease
 spawnfunc(func_breakable)
 {
 	float n, i;
-	if(!self.health)
-		self.health = 100;
-	self.max_health = self.health;
+	if(!this.health)
+		this.health = 100;
+	this.max_health = this.health;
 
 	// yes, I know, MOVETYPE_NONE is not available here, not that one would want it here anyway
-	if(!self.debrismovetype) self.debrismovetype = MOVETYPE_BOUNCE;
-	if(!self.debrissolid) self.debrissolid = SOLID_NOT;
-	if(self.debrisvelocity == '0 0 0') self.debrisvelocity = '0 0 140';
-	if(self.debrisvelocityjitter == '0 0 0') self.debrisvelocityjitter = '70 70 70';
-	if(self.debrisavelocityjitter == '0 0 0') self.debrisavelocityjitter = '600 600 600';
-	if(!self.debristime) self.debristime = 3.5;
-	if(!self.debristimejitter) self.debristime = 2.5;
+	if(!this.debrismovetype) this.debrismovetype = MOVETYPE_BOUNCE;
+	if(!this.debrissolid) this.debrissolid = SOLID_NOT;
+	if(this.debrisvelocity == '0 0 0') this.debrisvelocity = '0 0 140';
+	if(this.debrisvelocityjitter == '0 0 0') this.debrisvelocityjitter = '70 70 70';
+	if(this.debrisavelocityjitter == '0 0 0') this.debrisavelocityjitter = '600 600 600';
+	if(!this.debristime) this.debristime = 3.5;
+	if(!this.debristimejitter) this.debristime = 2.5;
 
-	if(self.mdl != "")
-		self.cnt = _particleeffectnum(self.mdl);
-	if(self.count == 0)
-		self.count = 1;
+	if(this.mdl != "")
+		this.cnt = _particleeffectnum(this.mdl);
+	if(this.count == 0)
+		this.count = 1;
 
-	if(self.message == "")
-		self.message = "got too close to an explosion";
-	if(self.message2 == "")
-		self.message2 = "was pushed into an explosion by";
-	if(!self.dmg_radius)
-		self.dmg_radius = 150;
-	if(!self.dmg_force)
-		self.dmg_force = 200;
+	if(this.message == "")
+		this.message = "got too close to an explosion";
+	if(this.message2 == "")
+		this.message2 = "was pushed into an explosion by";
+	if(!this.dmg_radius)
+		this.dmg_radius = 150;
+	if(!this.dmg_force)
+		this.dmg_force = 200;
 
-	self.mdl = self.model;
+	this.mdl = this.model;
 	SetBrushEntityModel();
 
-	if(self.spawnflags & 4)
-		self.use = func_breakable_destroy;
+	if(this.spawnflags & 4)
+		this.use = func_breakable_destroy;
 	else
-		self.use = func_breakable_restore;
+		this.use = func_breakable_restore;
 
-	if(self.spawnflags & 4)
+	if(this.spawnflags & 4)
 	{
-		self.takedamage = DAMAGE_NO;
-		self.event_damage = func_null;
-		self.bot_attack = false;
+		this.takedamage = DAMAGE_NO;
+		this.event_damage = func_null;
+		this.bot_attack = false;
 	}
 
 	// precache all the models
-	if (self.mdl_dead)
-		precache_model(self.mdl_dead);
-	n = tokenize_console(self.debris);
+	if (this.mdl_dead)
+		precache_model(this.mdl_dead);
+	n = tokenize_console(this.debris);
 	for(i = 0; i < n; ++i)
 		precache_model(argv(i));
-	if(self.noise)
-		precache_sound(self.noise);
-	if(self.noise1)
-		precache_sound(self.noise1);
+	if(this.noise)
+		precache_sound(this.noise);
+	if(this.noise1)
+		precache_sound(this.noise1);
 
-	self.team_saved = self.team;
-	self.dropped_origin = self.origin;
+	this.team_saved = this.team;
+	this.dropped_origin = this.origin;
 
-	self.reset = func_breakable_reset;
-	func_breakable_reset();
+	this.reset = func_breakable_reset;
+	this.reset(this);
 
-	self.init_for_player_needed = 1;
-	self.init_for_player = func_breakable_init_for_player;
+	this.init_for_player_needed = 1;
+	this.init_for_player = func_breakable_init_for_player;
 
-	CSQCMODEL_AUTOINIT(self);
+	CSQCMODEL_AUTOINIT(this);
 }
 
 // for use in maps with a "model" key set

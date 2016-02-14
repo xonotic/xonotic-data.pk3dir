@@ -27,13 +27,13 @@ START_OPEN causes the door to move to its destination when spawned, and operate 
 FIXME: only one sound set available at the time being
 */
 
-void door_rotating_reset()
-{SELFPARAM();
-	self.angles = self.pos1;
-	self.avelocity = '0 0 0';
-	self.state = STATE_BOTTOM;
-	self.think = func_null;
-	self.nextthink = 0;
+void door_rotating_reset(entity this)
+{
+	this.angles = this.pos1;
+	this.avelocity = '0 0 0';
+	this.state = STATE_BOTTOM;
+	this.think = func_null;
+	this.nextthink = 0;
 }
 
 void door_rotating_init_startopen()

@@ -14,36 +14,37 @@ CLASS(RocketPropelledChainsaw, Weapon)
 /* wepimg    */ ATTRIB(RocketPropelledChainsaw, model2, string, "weaponrpc");
 /* refname   */ ATTRIB(RocketPropelledChainsaw, netname, string, "rpc");
 /* wepname   */ ATTRIB(RocketPropelledChainsaw, m_name, string, _("Rocket Propelled Chainsaw"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, NONE) \
+		P(class, prefix, animtime, float, NONE) \
+		P(class, prefix, damage2, float, NONE) \
+		P(class, prefix, damageforcescale, float, NONE) \
+		P(class, prefix, damage, float, NONE) \
+		P(class, prefix, edgedamage, float, NONE) \
+		P(class, prefix, force, float, NONE) \
+		P(class, prefix, health, float, NONE) \
+		P(class, prefix, lifetime, float, NONE) \
+		P(class, prefix, radius, float, NONE) \
+		P(class, prefix, refire, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, speedaccel, float, NONE) \
+		P(class, prefix, speed, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+    END()
+    W_PROPS(X, RocketPropelledChainsaw, rpc)
+#undef X
+
 ENDCLASS(RocketPropelledChainsaw)
-REGISTER_WEAPON(RPC, NEW(RocketPropelledChainsaw));
+REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
 
-#define RPC_SETTINGS(w_cvar,w_prop) RPC_SETTINGS_LIST(w_cvar, w_prop, RPC, rpc)
-#define RPC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, ammo) \
-	w_cvar(id, sn, NONE, animtime) \
-	w_cvar(id, sn, NONE, damage) \
-	w_cvar(id, sn, NONE, damage2) \
-	w_cvar(id, sn, NONE, damageforcescale) \
-	w_cvar(id, sn, NONE, edgedamage) \
-	w_cvar(id, sn, NONE, force) \
-	w_cvar(id, sn, NONE, health) \
-	w_cvar(id, sn, NONE, lifetime) \
-	w_cvar(id, sn, NONE, radius) \
-	w_cvar(id, sn, NONE, refire) \
-	w_cvar(id, sn, NONE, speed) \
-	w_cvar(id, sn, NONE, speedaccel) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
-
-#ifdef SVQC
-RPC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
@@ -68,18 +69,18 @@ void W_RocketPropelledChainsaw_Touch ()
 	W_RocketPropelledChainsaw_Explode();
 }
 
-void W_RocketPropelledChainsaw_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if (self.health <= 0)
+void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if (this.health <= 0)
 		return;
 
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if (self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_RocketPropelledChainsaw_Explode);
+	if (this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_RocketPropelledChainsaw_Explode));
 }
 
 void W_RocketPropelledChainsaw_Think()
@@ -156,8 +157,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
-				Weapon w = get_weaponinfo(actor.weapon);
-				w.wr_reload(w);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else
 			{
 				if (fire & 1)
@@ -175,13 +175,9 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 				}
 			}
 		}
-		METHOD(RocketPropelledChainsaw, wr_init, void(entity thiswep))
-		{
-			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
 		{
-			float ammo_amount = self.WEP_AMMO(RPC) >= WEP_CVAR(rpc, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
 			ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
 			return ammo_amount;
 		}
@@ -189,11 +185,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		{
 			return false;
 		}
-		METHOD(RocketPropelledChainsaw, wr_config, void(entity thiswep))
-		{
-			RPC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-		}
-		METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
 		}

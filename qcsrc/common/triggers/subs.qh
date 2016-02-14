@@ -15,7 +15,7 @@
 
 #elif defined(CSQC)
 
-	void _Movetype_LinkEdict(float touch_triggers);
+	void _Movetype_LinkEdict(entity this, float touch_triggers);
 
 	#define SUB_ANGLES(s)	(s).move_angles
 	#define SUB_VELOCITY	move_velocity
@@ -31,12 +31,11 @@
 	void SUB_SETORIGIN(entity s, vector v)
 	{SELFPARAM();
 		s.move_origin = v;
-		WITH(entity, self, s, _Movetype_LinkEdict(true));
+		_Movetype_LinkEdict(s, true);
 	}
 
 #endif
 
-void SUB_Remove();
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
 
@@ -47,15 +46,6 @@ void SUB_VanishOrRemove (entity ent);
 
 .vector destvec;
 .vector destvec2;
-
-// player animation state
-.float animstate_startframe;
-.float animstate_numframes;
-.float animstate_framerate;
-.float animstate_starttime;
-.float animstate_endtime;
-.float animstate_override;
-.float animstate_looping;
 
 .float	delay;
 .float	wait;

@@ -33,19 +33,32 @@ float someShadowCvarIsEnabled(entity box)
 void XonoticEffectsSettingsTab_fill(entity me)
 {
 	entity e, s;
+	entity effectsApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY);
+	effectsApplyButton.disableOnClick = true;
 	float n;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Quality preset:")));
-		n = 5 + 2 * !!cvar("developer");
+		n = 5 + 2 * boolean(cvar("developer"));
 		if(cvar("developer"))
+		{
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^OMG!")), '1 0 1', "exec effects-omg.cfg", 0));
+				e.applyButton = effectsApplyButton;
+		}
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Low")), '0 0 0', "exec effects-low.cfg", 0));
+			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Medium")), '0 0 0', "exec effects-med.cfg", 0));
+			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Normal")), '0 0 0', "exec effects-normal.cfg", 0));
+			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^High")), '0 0 0', "exec effects-high.cfg", 0));
+			e.applyButton = effectsApplyButton;
 		me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultra")), '0 0 0', "exec effects-ultra.cfg", 0));
+			e.applyButton = effectsApplyButton;
 		if(cvar("developer"))
+		{
 			me.TD(me, 1, 5 / n, e = makeXonoticCommandButton(ZCTX(_("PRE^Ultimate")), '0.5 0 0', "exec effects-ultimate.cfg", 0));
+				e.applyButton = effectsApplyButton;
+		}
 
 	me.gotoRC(me, 1.25, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Geometry detail:")));
@@ -58,6 +71,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DET^Best")), "2");
 			e.addValue(e, ZCTX(_("DET^Insane")), "1");
 			e.configureXonoticTextSliderValues(e);
+			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Player detail:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_playerdetailreduction"));
@@ -67,6 +81,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("PDET^Good")), "1");
 			e.addValue(e, ZCTX(_("PDET^Best")), "0");
 			e.configureXonoticTextSliderValues(e);
+			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 			setDependent(e, "r_showsurfaces", 0, 0);
@@ -81,6 +96,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("RES^Best")), "-2");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "r_showsurfaces", 0, 0);
+			e.applyButton = effectsApplyButton;
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		{
@@ -92,15 +108,18 @@ void XonoticEffectsSettingsTab_fill(entity me)
 				case 0:
 					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
 						e.disabled = 1; // just show the checkbox anyway, but with no ability to control it
+						e.applyButton = effectsApplyButton;
 					break;
 				case 1:
 					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
 						setDependent(e, "r_showsurfaces", 0, 0);
+						e.applyButton = effectsApplyButton;
 					break;
 				case 2:
 					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
 						setDependent(e, "r_showsurfaces", 0, 0);
 						makeMulti(e, "gl_texturecompression");
+						e.applyButton = effectsApplyButton;
 					break;
 			}
 		}
@@ -235,6 +254,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			setDependent(e, "cl_particles", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, effectsApplyButton);
 }
 #endif

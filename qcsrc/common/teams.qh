@@ -26,12 +26,13 @@ const string COL_TEAM_1 = "^1";
 const string COL_TEAM_2 = "^4";
 const string COL_TEAM_3 = "^3";
 const string COL_TEAM_4 = "^6";
-const string NAME_TEAM_1 = _("Red");
-const string NAME_TEAM_2 = _("Blue");
-const string NAME_TEAM_3 = _("Yellow");
-const string NAME_TEAM_4 = _("Pink");
-const string NAME_TEAM = _("Team");
-const string NAME_NEUTRAL = _("Neutral");
+// must be #defined, const globals drop the translation attribute
+#define NAME_TEAM_1 _("Red")
+#define NAME_TEAM_2 _("Blue")
+#define NAME_TEAM_3 _("Yellow")
+#define NAME_TEAM_4 _("Pink")
+#define NAME_TEAM _("Team")
+#define NAME_NEUTRAL _("Neutral")
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
 const string STATIC_NAME_TEAM_1 = "Red";
@@ -160,8 +161,8 @@ float Team_TeamToNumber(float teamid)
 #define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
 
 // safe team comparisons
-#define SAME_TEAM(a,b) (teamplay ? ((a.team == b.team) ? 1 : 0) : ((a == b) ? 1 : 0))
-#define DIFF_TEAM(a,b) (teamplay ? ((a.team != b.team) ? 1 : 0) : ((a != b) ? 1 : 0))
+#define SAME_TEAM(a,b) (teamplay ? (a.team == b.team) : (a == b))
+#define DIFF_TEAM(a,b) (teamplay ? (a.team != b.team) : (a != b))
 
 // used for notification system multi-team identifiers
 #define APP_TEAM_NUM_2(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)

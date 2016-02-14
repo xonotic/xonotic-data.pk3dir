@@ -132,8 +132,8 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 		ka_RespawnBall();
 		return;
 	}
-	if(other.deadflag != DEAD_NO) { return; }
-	if(other.frozen) { return; }
+	if(IS_DEAD(other)) { return; }
+	if(STAT(FROZEN, other)) { return; }
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
 		Send_Effect(EFFECT_BALL_SPARKS, self.origin, '0 0 0', 1);
@@ -221,16 +221,17 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
 }
 
-void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
-{SELFPARAM();
-	if((self.owner) && (IS_PLAYER(self.owner)))
-		ka_DropEvent(self.owner);
+/** used to clear the ballcarrier whenever the match switches from warmup to normal */
+void ka_Reset(entity this)
+{
+	if((this.owner) && (IS_PLAYER(this.owner)))
+		ka_DropEvent(this.owner);
 
 	if(time < game_starttime)
 	{
-		self.think = ka_RespawnBall;
-		self.touch = func_null;
-		self.nextthink = game_starttime;
+		this.think = ka_RespawnBall;
+		this.touch = func_null;
+		this.nextthink = game_starttime;
 	}
 	else
 		ka_RespawnBall();
@@ -262,7 +263,7 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 
 void havocbot_role_ka_carrier()
 {SELFPARAM();
-	if (self.deadflag != DEAD_NO)
+	if (IS_DEAD(self))
 		return;
 
 	if (time > self.bot_strategytime)
@@ -285,7 +286,7 @@ void havocbot_role_ka_carrier()
 
 void havocbot_role_ka_collector()
 {SELFPARAM();
-	if (self.deadflag != DEAD_NO)
+	if (IS_DEAD(self))
 		return;
 
 	if (time > self.bot_strategytime)
@@ -312,7 +313,7 @@ void havocbot_role_ka_collector()
 // ==============
 
 MUTATOR_HOOKFUNCTION(ka, PlayerDies)
-{SELFPARAM();
+{
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
@@ -328,7 +329,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);
 	}
 
-	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has died, drop it
+	if(frag_target.ballcarried) { ka_DropEvent(frag_target); } // a player with the ball has died, drop it
 	return 0;
 }
 

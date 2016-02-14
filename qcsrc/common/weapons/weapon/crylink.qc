@@ -14,48 +14,51 @@ CLASS(Crylink, Weapon)
 /* wepimg    */ ATTRIB(Crylink, model2, string, "weaponcrylink");
 /* refname   */ ATTRIB(Crylink, netname, string, "crylink");
 /* wepname   */ ATTRIB(Crylink, m_name, string, _("Crylink"));
-ENDCLASS(Crylink)
-REGISTER_WEAPON(CRYLINK, NEW(Crylink));
 
-#define CRYLINK_SETTINGS(w_cvar,w_prop) CRYLINK_SETTINGS_LIST(w_cvar, w_prop, CRYLINK, crylink)
-#define CRYLINK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, edgedamage) \
-	w_cvar(id, sn, BOTH, radius) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, spread) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, shots) \
-	w_cvar(id, sn, BOTH, bounces) \
-	w_cvar(id, sn, BOTH, bouncedamagefactor) \
-	w_cvar(id, sn, BOTH, middle_lifetime) \
-	w_cvar(id, sn, BOTH, middle_fadetime) \
-	w_cvar(id, sn, BOTH, other_lifetime) \
-	w_cvar(id, sn, BOTH, other_fadetime) \
-	w_cvar(id, sn, BOTH, linkexplode) \
-	w_cvar(id, sn, BOTH, joindelay) \
-	w_cvar(id, sn, BOTH, joinspread) \
-	w_cvar(id, sn, BOTH, joinexplode) \
-	w_cvar(id, sn, BOTH, joinexplode_damage) \
-	w_cvar(id, sn, BOTH, joinexplode_edgedamage) \
-	w_cvar(id, sn, BOTH, joinexplode_radius) \
-	w_cvar(id, sn, BOTH, joinexplode_force) \
-	w_cvar(id, sn, SEC,  spreadtype) \
-	w_cvar(id, sn, NONE, secondary) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, BOTH) \
+        P(class, prefix, animtime, float, BOTH) \
+        P(class, prefix, bouncedamagefactor, float, BOTH) \
+        P(class, prefix, bounces, float, BOTH) \
+        P(class, prefix, damage, float, BOTH) \
+        P(class, prefix, edgedamage, float, BOTH) \
+        P(class, prefix, force, float, BOTH) \
+        P(class, prefix, joindelay, float, BOTH) \
+        P(class, prefix, joinexplode, float, BOTH) \
+        P(class, prefix, joinexplode_damage, float, BOTH) \
+        P(class, prefix, joinexplode_edgedamage, float, BOTH) \
+        P(class, prefix, joinexplode_force, float, BOTH) \
+        P(class, prefix, joinexplode_radius, float, BOTH) \
+        P(class, prefix, joinspread, float, BOTH) \
+        P(class, prefix, linkexplode, float, BOTH) \
+        P(class, prefix, middle_fadetime, float, BOTH) \
+        P(class, prefix, middle_lifetime, float, BOTH) \
+        P(class, prefix, other_fadetime, float, BOTH) \
+        P(class, prefix, other_lifetime, float, BOTH) \
+        P(class, prefix, radius, float, BOTH) \
+        P(class, prefix, refire, float, BOTH) \
+        P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+        P(class, prefix, secondary, float, NONE) \
+        P(class, prefix, shots, float, BOTH) \
+        P(class, prefix, speed, float, BOTH) \
+        P(class, prefix, spreadtype, float, SEC) \
+        P(class, prefix, spread, float, BOTH) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Crylink, crylink)
+#undef X
+
+ENDCLASS(Crylink)
+REGISTER_WEAPON(CRYLINK, crylink, NEW(Crylink));
 
 #ifdef SVQC
-CRYLINK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float gravity;
 .float crylink_waitrelease;
 .entity crylink_lastgroup;
@@ -108,10 +111,10 @@ void W_Crylink_Dequeue(entity e)
 	W_Crylink_Dequeue_Raw(e.realowner, e.queueprev, e, e.queuenext);
 }
 
-void W_Crylink_Reset()
-{SELFPARAM();
-	W_Crylink_Dequeue(self);
-	remove(self);
+void W_Crylink_Reset(entity this)
+{
+	W_Crylink_Dequeue(this);
+	remove(this);
 }
 
 // force projectile to explode
@@ -275,7 +278,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 
 	while(head)
 	{
-		if((head.takedamage != DAMAGE_NO) && (head.deadflag == DEAD_NO))
+		if((head.takedamage != DAMAGE_NO) && (!IS_DEAD(head)))
 		{
 			if(SAME_TEAM(head, projectile.realowner))
 				++hit_friendly;
@@ -575,8 +578,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 		METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(autocvar_g_balance_crylink_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
-				w.wr_reload(w);
+				thiswep.wr_reload(thiswep, actor, weaponentity);
 			}
 
 			if(fire & 1)
@@ -624,14 +626,10 @@ void W_Crylink_Attack2(Weapon thiswep)
 					{
 						// ran out of ammo!
 						actor.cnt = WEP_CRYLINK.m_id;
-						actor.switchweapon = w_getbestweapon(actor);
+						PS(actor).m_switchweapon = w_getbestweapon(actor);
 					}
 				}
 			}
-		}
-		METHOD(Crylink, wr_init, void(entity thiswep))
-		{
-			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 		}
 		METHOD(Crylink, wr_checkammo1, bool(entity thiswep))
 		{
@@ -640,7 +638,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return true;
 
-			float ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_PRI(crylink, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
 			return ammo_amount;
 		}
@@ -651,15 +649,11 @@ void W_Crylink_Attack2(Weapon thiswep)
 			if(self.crylink_lastgroup && self.crylink_waitrelease)
 				return true;
 
-			float ammo_amount = self.WEP_AMMO(CRYLINK) >= WEP_CVAR_SEC(crylink, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
 			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
 			return ammo_amount;
 		}
-		METHOD(Crylink, wr_config, void(entity thiswep))
-		{
-			CRYLINK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-		}
-		METHOD(Crylink, wr_reload, void(entity thiswep))
+		METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND(RELOAD));
 		}

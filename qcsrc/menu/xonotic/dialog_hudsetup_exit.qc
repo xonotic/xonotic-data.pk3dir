@@ -5,9 +5,9 @@ CLASS(XonoticHUDExitDialog, XonoticRootDialog)
 	METHOD(XonoticHUDExitDialog, fill, void(entity));
 	ATTRIB(XonoticHUDExitDialog, title, string, _("Panel HUD Setup"))
 	ATTRIB(XonoticHUDExitDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.4)
+	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.8)
 	ATTRIB(XonoticHUDExitDialog, rows, float, 18)
-	ATTRIB(XonoticHUDExitDialog, columns, float, 4)
+	ATTRIB(XonoticHUDExitDialog, columns, float, 8.2)
 	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit")
 	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, true)
 ENDCLASS(XonoticHUDExitDialog)
@@ -18,9 +18,37 @@ ENDCLASS(XonoticHUDExitDialog)
 void XonoticHUDExitDialog_fill(entity me)
 {
 	entity e;
-	float i;
+	int i;
+	hudskinlist = makeXonoticHUDSkinList();
 
 	me.TR(me);
+		me.TD(me, 1, 4, makeXonoticHeaderLabel(_("HUD skins")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.7, e = makeXonoticTextLabel(0.5, _("Filter:")));
+		me.TD(me, 1, 2.9, e = makeXonoticInputBox(0, string_null));
+			e.onChange = HUDSkinList_Filter_Change;
+			e.onChangeEntity = hudskinlist;
+	me.TR(me);
+		me.TD(me, 12, 4, hudskinlist);
+	me.gotoRC(me, me.rows - 4, 0);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.4, e = makeXonoticButton(_("Refresh"), '0 0 0'));
+			e.onClick = HUDSkinList_Refresh_Click;
+			e.onClickEntity = hudskinlist;
+		me.TD(me, 1, 2.2, e = makeXonoticButton(_("Set skin"), '0 0 0'));
+			e.onClick = SetHUDSkin_Click;
+			e.onClickEntity = hudskinlist;
+	me.gotoRC(me, me.rows - 2.5, 0);
+		me.TD(me, 1, 2, e = makeXonoticButton_T(_("Save current skin"), '0 0 0',
+			"Note: HUD skins are saved in data/data/ directory and can be manually renamed/deleted from there"));
+			e.onClick = SaveHUDSkin_Click;
+			e.onClickEntity = hudskinlist;
+		me.TD(me, 1, 2, e = makeXonoticInputBox(0, string_null));
+			e.onChange = HUDSkinList_SavedName_Change;
+			e.onChangeEntity = hudskinlist;
+
+	me.gotoRC(me, 0, 4.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Panel background defaults:")));
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Background:")));
@@ -103,18 +131,21 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Grid size:")));
+			setDependent(e, "hud_configure_grid", 1, 1);
 		me.TD(me, 1, 0.2, e = makeXonoticTextLabel(0, _("X:")));
+			setDependent(e, "hud_configure_grid", 1, 1);
 			me.TD(me, 1, 1.1, e = makeXonoticTextSlider("hud_configure_grid_xsize"));
 				for(i = 1; i <= 14; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/200, 3)), strzone(ftos(i/200)));
+					e.addValue(e, strzone(sprintf("%.1f%%", i/2)), strzone(ftos(i/200)));
 				e.configureXonoticTextSliderValues(e);
-			setDependent(e, "hud_configure_grid", 1, 1);
+				setDependent(e, "hud_configure_grid", 1, 1);
 		me.TD(me, 1, 0.2, e = makeXonoticTextLabel(0, _("Y:")));
+			setDependent(e, "hud_configure_grid", 1, 1);
 			me.TD(me, 1, 1.1, e = makeXonoticTextSlider("hud_configure_grid_ysize"));
 				for(i = 1; i <= 14; ++i)
-					e.addValue(e, strzone(ftos_decimals(i/200, 3)), strzone(ftos(i/200)));
+					e.addValue(e, strzone(sprintf("%.1f%%", i/2)), strzone(ftos(i/200)));
 				e.configureXonoticTextSliderValues(e);
-			setDependent(e, "hud_configure_grid", 1, 1);
+				setDependent(e, "hud_configure_grid", 1, 1);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Exit setup"), '0 0 0', "_hud_configure 0", 1));

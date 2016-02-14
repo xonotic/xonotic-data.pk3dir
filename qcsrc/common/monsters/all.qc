@@ -18,4 +18,9 @@ string M_Model(string m_mdl)
 #include "all.inc"
 #undef IMPLEMENTATION
 
+#ifdef SVQC
+#include "spawn.qc"
+#include "sv_monsters.qc"
+#endif
+
 #endif

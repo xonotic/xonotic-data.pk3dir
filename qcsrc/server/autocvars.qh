@@ -58,13 +58,11 @@ bool autocvar_bot_nofire;
 #define autocvar_bot_suffix cvar_string("bot_suffix")
 bool autocvar_bot_usemodelnames;
 int autocvar_bot_vs_human;
-int autocvar_bot_debug;
 bool autocvar_bot_debug_tracewalk;
 bool autocvar_bot_debug_goalstack;
 bool autocvar_bot_wander_enable;
 int autocvar_captureleadlimit_override;
 #define autocvar_capturelimit_override cvar("capturelimit_override")
-#define autocvar_developer cvar("developer")
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
@@ -84,6 +82,8 @@ float autocvar_g_balance_contents_damagerate;
 float autocvar_g_balance_contents_drowndelay;
 int autocvar_g_balance_contents_playerdamage_drowning;
 int autocvar_g_balance_contents_playerdamage_lava;
+int autocvar_g_balance_contents_playerdamage_lava_burn; // 10 is a nice value
+float autocvar_g_balance_contents_playerdamage_lava_burn_time = 2.5; // note: damage is total across this time (not by dps)
 int autocvar_g_balance_contents_playerdamage_slime;
 int autocvar_g_balance_contents_projectiledamage;
 float autocvar_g_balance_damagepush_speedfactor;
@@ -155,7 +155,6 @@ string autocvar_g_ban_sync_uri;
 string autocvar_g_banned_list;
 bool autocvar_g_banned_list_idmode;
 bool autocvar_g_botclip_collisions;
-bool autocvar_g_bugrigs;
 bool autocvar_g_campaign;
 #define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
 int autocvar_g_campaign_skill;
@@ -266,6 +265,7 @@ float autocvar_g_spawn_furthest;
 bool autocvar_g_spawn_useallspawns;
 bool autocvar_g_spawnpoints_auto_move_out_of_solid;
 #define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
+float autocvar_g_spawnshield_blockdamage;
 float autocvar_g_teamdamage_resetspeed;
 float autocvar_g_teamdamage_threshold;
 bool autocvar_g_telefrags;
@@ -295,13 +295,6 @@ bool autocvar_g_use_ammunition;
 bool autocvar_g_waypointeditor;
 int autocvar_g_waypointeditor_auto;
 bool autocvar_g_waypoints_for_items;
-float autocvar_g_weapon_charge_colormod_blue_full;
-float autocvar_g_weapon_charge_colormod_blue_half;
-float autocvar_g_weapon_charge_colormod_green_full;
-float autocvar_g_weapon_charge_colormod_green_half;
-float autocvar_g_weapon_charge_colormod_hdrmultiplier;
-float autocvar_g_weapon_charge_colormod_red_full;
-float autocvar_g_weapon_charge_colormod_red_half;
 #define autocvar_g_weapon_stay cvar("g_weapon_stay")
 bool autocvar_g_weapon_throwable;
 #define autocvar_g_weaponarena cvar_string("g_weaponarena")
@@ -346,7 +339,6 @@ string autocvar_sv_defaultplayermodel_pink;
 string autocvar_sv_defaultplayermodel_red;
 string autocvar_sv_defaultplayermodel_yellow;
 int autocvar_sv_defaultplayerskin;
-bool autocvar_sv_dodging_frozen;
 bool autocvar_sv_doublejump;
 bool autocvar_sv_eventlog;
 bool autocvar_sv_eventlog_console;
@@ -437,7 +429,6 @@ bool autocvar_waypoint_benchmark;
 float autocvar_sv_gameplayfix_gravityunaffectedbyticrate;
 bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag;
 float autocvar_g_trueaim_minrange;
-bool autocvar_g_debug_defaultsounds;
 float autocvar_g_grab_range;
 int autocvar_g_max_info_autoscreenshot;
 bool autocvar_physics_ode;

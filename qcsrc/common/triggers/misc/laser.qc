@@ -1,8 +1,7 @@
 #if defined(CSQC)
-	#include "../../buffs/all.qh"
-	#include "../../../lib/csqcmodel/interpolate.qh"
-	#include "../../../client/main.qh"
-	#include "../../../lib/csqcmodel/cl_model.qh"
+	#include <lib/csqcmodel/interpolate.qh>
+	#include <client/main.qh>
+	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
 #endif
@@ -196,67 +195,61 @@ void laser_use()
 	misc_laser_aim();
 }
 
-void laser_reset()
-{SELFPARAM();
-	if(self.spawnflags & 1)
-		self.state = 1;
+void laser_reset(entity this)
+{
+	if(this.spawnflags & 1)
+		this.state = 1;
 	else
-		self.state = 0;
+		this.state = 0;
 }
 
 spawnfunc(misc_laser)
 {
-	if(self.mdl)
+	if(this.mdl)
 	{
-		if(self.mdl == "none")
-			self.cnt = -1;
+		if(this.mdl == "none")
+			this.cnt = -1;
 		else
 		{
-			self.cnt = _particleeffectnum(self.mdl);
-			if(self.cnt < 0)
-				if(self.dmg)
-					self.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
+			this.cnt = _particleeffectnum(this.mdl);
+			if(this.cnt < 0 && this.dmg)
+                this.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
 		}
 	}
-	else if(!self.cnt)
+	else if(!this.cnt)
 	{
-		if(self.dmg)
-			self.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
+		if(this.dmg)
+			this.cnt = particleeffectnum(EFFECT_LASER_DEADLY);
 		else
-			self.cnt = -1;
+			this.cnt = -1;
 	}
-	if(self.cnt < 0)
-		self.cnt = -1;
+	if(this.cnt < 0)
+		this.cnt = -1;
 
-	if(self.colormod == '0 0 0')
-		if(!self.alpha)
-			self.colormod = '1 0 0';
-	if(self.message == "")
-		self.message = "saw the light";
-	if (self.message2 == "")
-		self.message2 = "was pushed into a laser by";
-	if(!self.scale)
-		self.scale = 1;
-	if(!self.modelscale)
-		self.modelscale = 1;
-	else if(self.modelscale < 0)
-		self.modelscale = 0;
-	self.think = misc_laser_think;
-	self.nextthink = time;
-	InitializeEntity(self, misc_laser_init, INITPRIO_FINDTARGET);
+	if(this.colormod == '0 0 0')
+		if(!this.alpha)
+			this.colormod = '1 0 0';
+	if(this.message == "") this.message = "saw the light";
+	if (this.message2 == "") this.message2 = "was pushed into a laser by";
+	if(!this.scale) this.scale = 1;
+	if(!this.modelscale) this.modelscale = 1;
+	else if(this.modelscale < 0) this.modelscale = 0;
+	this.think = misc_laser_think;
+	this.nextthink = time;
+	InitializeEntity(this, misc_laser_init, INITPRIO_FINDTARGET);
 
-	self.mangle = self.angles;
+	this.mangle = this.angles;
 
-	Net_LinkEntity(self, false, 0, laser_SendEntity);
+	Net_LinkEntity(this, false, 0, laser_SendEntity);
 
 	IFTARGETED
 	{
-		self.reset = laser_reset;
-		laser_reset();
-		self.use = laser_use;
+		this.reset = laser_reset;
+		this.reset(this);
+		this.use = laser_use;
 	}
 	else
-		self.state = 1;
+		this.state = 1;
 }
 #elif defined(CSQC)
 
@@ -275,58 +268,58 @@ class(Laser) .float modelscale; // scaling factor of the dlight
 
 void Draw_Laser(entity this)
 {
-	if(!self.state)
+	if(!this.state)
 		return;
-	InterpolateOrigin_Do();
-	if(self.count & 0x80)
+	InterpolateOrigin_Do(this);
+	if(this.count & 0x80)
 	{
-		if(self.count & 0x10)
+		if(this.count & 0x10)
 		{
-			trace_endpos = self.velocity;
+			trace_endpos = this.velocity;
 			trace_dphitq3surfaceflags = 0;
 		}
 		else
-			traceline(self.origin, self.velocity, 0, self);
+			traceline(this.origin, this.velocity, 0, this);
 	}
 	else
 	{
-		if(self.count & 0x10)
+		if(this.count & 0x10)
 		{
-			makevectors(self.angles);
-			trace_endpos = self.origin + v_forward * 1048576;
+			makevectors(this.angles);
+			trace_endpos = this.origin + v_forward * 1048576;
 			trace_dphitq3surfaceflags = Q3SURFACEFLAG_SKY;
 		}
 		else
 		{
-			makevectors(self.angles);
-			traceline(self.origin, self.origin + v_forward * 32768, 0, self);
+			makevectors(this.angles);
+			traceline(this.origin, this.origin + v_forward * 32768, 0, this);
 			if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
-				trace_endpos = self.origin + v_forward * 1048576;
+				trace_endpos = this.origin + v_forward * 1048576;
 		}
 	}
-	if(self.scale != 0)
+	if(this.scale != 0)
 	{
-		if(self.alpha)
+		if(this.alpha)
 		{
-			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, self.alpha, DRAWFLAG_NORMAL, view_origin);
+			Draw_CylindricLine(this.origin, trace_endpos, this.scale, "particles/laserbeam", 0, time * 3, this.colormod, this.alpha, DRAWFLAG_NORMAL, view_origin);
 		}
 		else
 		{
-			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, 0.5, DRAWFLAG_ADDITIVE, view_origin);
+			Draw_CylindricLine(this.origin, trace_endpos, this.scale, "particles/laserbeam", 0, time * 3, this.colormod, 0.5, DRAWFLAG_ADDITIVE, view_origin);
 		}
 	}
 	if (!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 	{
-		if(self.cnt >= 0)
-			__pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
-		if(self.colormod != '0 0 0' && self.modelscale != 0)
-			adddynamiclight(trace_endpos + trace_plane_normal * 1, self.modelscale, self.colormod * 5);
+		if(this.cnt >= 0)
+			__pointparticles(this.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
+		if(this.colormod != '0 0 0' && this.modelscale != 0)
+			adddynamiclight(trace_endpos + trace_plane_normal * 1, this.modelscale, this.colormod * 5);
 	}
 }
 
 NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 {
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(self);
 
 	// 30 bytes, or 13 bytes for just moving
 	int f = ReadByte();
@@ -384,7 +377,7 @@ NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 
 	return = true;
 
-	InterpolateOrigin_Note();
+	InterpolateOrigin_Note(this);
 	self.draw = Draw_Laser;
 }
 #endif

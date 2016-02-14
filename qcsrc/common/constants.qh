@@ -55,7 +55,6 @@ NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { return true; }
 /** Sent as a temp entity from a persistent linked entity */
 REGISTER_NET_TEMP(ENT_CLIENT_INIT)
 
-REGISTER_NET_LINKED(ENT_CLIENT_ENTCS)
 REGISTER_NET_LINKED(ENT_CLIENT_SCORES_INFO)
 REGISTER_NET_LINKED(ENT_CLIENT_SCORES)
 REGISTER_NET_LINKED(ENT_CLIENT_TEAMSCORES)
@@ -201,6 +200,8 @@ const int PROJECTILE_SHAMBLER_LIGHTNING = 33;
 
 const int PROJECTILE_ROCKETMINSTA_LASER = 34;
 
+const int PROJECTILE_ARC_BOLT = 35;
+
 // projectile IDs 40-50 reserved
 
 const int PROJECTILE_RPC = 60;
@@ -224,6 +225,8 @@ const int WATERLEVEL_NONE = 0;
 const int WATERLEVEL_WETFEET = 1;
 const int WATERLEVEL_SWIMMING = 2;
 const int WATERLEVEL_SUBMERGED = 3;
+
+// server flags
 const int SERVERFLAG_ALLOW_FULLBRIGHT = 1;
 const int SERVERFLAG_TEAMPLAY = 2;
 const int SERVERFLAG_PLAYERSTATS = 4;
@@ -237,24 +240,6 @@ vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
 vector autocvar_sv_player_headsize = '24 24 12';
 
-
-// not so constant
-#ifdef SVQC
-#define PL_VIEW_OFS autocvar_sv_player_viewoffset
-#define PL_MIN autocvar_sv_player_mins
-#define PL_MAX autocvar_sv_player_maxs
-#define PL_CROUCH_VIEW_OFS autocvar_sv_player_crouch_viewoffset
-#define PL_CROUCH_MIN autocvar_sv_player_crouch_mins
-#define PL_CROUCH_MAX autocvar_sv_player_crouch_maxs
-#define PL_HEAD autocvar_sv_player_headsize
-#elif defined(CSQC)
-#define PL_VIEW_OFS vec3(getstatf(STAT_PL_VIEW_OFS1), getstatf(STAT_PL_VIEW_OFS2), getstatf(STAT_PL_VIEW_OFS3))
-#define PL_MIN vec3(getstatf(STAT_PL_MIN1), getstatf(STAT_PL_MIN2), getstatf(STAT_PL_MIN3))
-#define PL_MAX vec3(getstatf(STAT_PL_MAX1), getstatf(STAT_PL_MAX2), getstatf(STAT_PL_MAX3))
-#define PL_CROUCH_VIEW_OFS vec3(getstatf(STAT_PL_CROUCH_VIEW_OFS1), getstatf(STAT_PL_CROUCH_VIEW_OFS2), getstatf(STAT_PL_CROUCH_VIEW_OFS3))
-#define PL_CROUCH_MIN vec3(getstatf(STAT_PL_CROUCH_MIN1), getstatf(STAT_PL_CROUCH_MIN2), getstatf(STAT_PL_CROUCH_MIN3))
-#define PL_CROUCH_MAX vec3(getstatf(STAT_PL_CROUCH_MAX1), getstatf(STAT_PL_CROUCH_MAX2), getstatf(STAT_PL_CROUCH_MAX3))
-#endif
 
 // a bit more constant
 const vector PL_MAX_CONST = '16 16 45';

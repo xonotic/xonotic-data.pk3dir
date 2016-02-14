@@ -1,5 +1,5 @@
-#ifndef BITS_H
-#define BITS_H
+#pragma once
+
 #include "log.qh"
 
 #define BIT(n) (1 << (n))
@@ -121,5 +121,3 @@ bool GiveValue(entity e, .int fld, int op, int val)
 	int v1 = e.(fld);
 	return v0 != v1;
 }
-
-#endif

@@ -10,23 +10,23 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int
 	switch(i)
 	{
 		case 0:
-			stat = getstati(STAT_REDALIVE);
+			stat = STAT(REDALIVE);
 			pic = "player_red.tga";
 			color = '1 0 0';
 			break;
 		case 1:
-			stat = getstati(STAT_BLUEALIVE);
+			stat = STAT(BLUEALIVE);
 			pic = "player_blue.tga";
 			color = '0 0 1';
 			break;
 		case 2:
-			stat = getstati(STAT_YELLOWALIVE);
+			stat = STAT(YELLOWALIVE);
 			pic = "player_yellow.tga";
 			color = '1 1 0';
 			break;
 		default:
 		case 3:
-			stat = getstati(STAT_PINKALIVE);
+			stat = STAT(PINKALIVE);
 			pic = "player_pink.tga";
 			color = '1 0 1';
 			break;
@@ -108,9 +108,9 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float f; // every function should have that
 
 	int redflag, blueflag, yellowflag, pinkflag, neutralflag; // current status
-	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime, neutralflag_statuschange_elapsedtime; // time since the status changed
+	float redflag_statuschange_elapsedtime = 0, blueflag_statuschange_elapsedtime = 0, yellowflag_statuschange_elapsedtime = 0, pinkflag_statuschange_elapsedtime = 0, neutralflag_statuschange_elapsedtime = 0; // time since the status changed
 	bool ctf_oneflag; // one-flag CTF mode enabled/disabled
-	int stat_items = getstati(STAT_CTF_FLAGSTATUS, 0, 24);
+	int stat_items = STAT(CTF_FLAGSTATUS);
 	float fs, fs2, fs3, size1, size2;
 	vector e1, e2;
 
@@ -135,14 +135,14 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
-	#define X(team) do {															\
+	#define X(team) MACRO_BEGIN {													\
 		if (team##flag != team##flag_prevframe) {									\
     		team##flag_statuschange_time = time;									\
     		team##flag_prevstatus = team##flag_prevframe;							\
     		team##flag_prevframe = team##flag;										\
     	}																			\
     	team##flag_statuschange_elapsedtime = time - team##flag_statuschange_time; 	\
-    } while (0)
+    } MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);
@@ -160,10 +160,10 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	const float BLINK_FREQ = 5; // circle frequency, = 2*pi*frequency in hertz
 
 	#define X(team, cond) \
-	string team##_icon, team##_icon_prevstatus; \
+	string team##_icon = string_null, team##_icon_prevstatus = string_null; \
 	int team##_alpha, team##_alpha_prevstatus; \
 	team##_alpha = team##_alpha_prevstatus = 1; \
-	do { \
+	MACRO_BEGIN { \
 		switch (team##flag) { \
 			case 1: team##_icon = "flag_" #team "_taken"; break; \
 			case 2: team##_icon = "flag_" #team "_lost"; break; \
@@ -190,7 +190,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				} \
 				break; \
 		} \
-	} while (0)
+	} MACRO_END
 	X(red, myteam != NUM_TEAM_1);
 	X(blue, myteam != NUM_TEAM_2);
 	X(yellow, myteam != NUM_TEAM_3);
@@ -255,13 +255,13 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	neutralflag_pos = pos;
 	flag_size = e1 * fs * size1 + e2 * size2;
 
-	#define X(team) do { \
+	#define X(team) MACRO_BEGIN { \
 		f = bound(0, team##flag_statuschange_elapsedtime * 2, 1); \
 		if (team##_icon_prevstatus && f < 1) \
 			drawpic_aspect_skin_expanding(team##flag_pos, team##_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * team##_alpha_prevstatus, DRAWFLAG_NORMAL, f); \
 		if (team##_icon) \
 			drawpic_aspect_skin(team##flag_pos, team##_icon, flag_size, '1 1 1', panel_fg_alpha * team##_alpha * f, DRAWFLAG_NORMAL); \
-	} while (0)
+	} MACRO_END
 	X(red);
 	X(blue);
 	X(yellow);
@@ -415,7 +415,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	float BLINK_FREQ = 5;
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 
-	int stat_items = getstati(STAT_ITEMS, 0, 24);
+	int stat_items = STAT(ITEMS);
 	int kaball = (stat_items/IT_KEY1) & 1;
 
 	if(kaball != kaball_prevstatus)
@@ -451,8 +451,8 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 	float nb_pb_starttime, dt, p;
 	int stat_items;
 
-	stat_items = getstati(STAT_ITEMS, 0, 24);
-	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
+	stat_items = STAT(ITEMS);
+	nb_pb_starttime = STAT(NB_METERSTART);
 
 	if (stat_items & IT_KEY1)
 		mod_active = 1;
@@ -489,7 +489,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	mod_active = 1; // race should never hide the mod icons panel
 	entity me;
 	me = playerslots[player_localnum];
-	float t, score;
+	float score;
 	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
 
@@ -502,7 +502,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
-	t = stof(db_get(ClientProgsDB, strcat(shortmapname, rr, "time")));
+	float t = stof(db_get(ClientProgsDB, strcat(shortmapname, rr, "time")));
 
 	if(score && (score < t || !t)) {
 		db_put(ClientProgsDB, strcat(shortmapname, rr, "time"), ftos(score));
@@ -598,7 +598,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
-		if(race_status_name == GetPlayerName(player_localnum) || !race_myrank || race_myrank < rank)
+		if(race_status_name == entcs_GetName(player_localnum) || !race_myrank || race_myrank < rank)
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		else
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -630,28 +630,28 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, in
 	switch(i)
 	{
 		case 0:
-			stat = getstatf(STAT_DOM_PPS_RED);
+			stat = STAT(DOM_PPS_RED);
 			pic = "dom_icon_red";
 			color = '1 0 0';
 			break;
 		case 1:
-			stat = getstatf(STAT_DOM_PPS_BLUE);
+			stat = STAT(DOM_PPS_BLUE);
 			pic = "dom_icon_blue";
 			color = '0 0 1';
 			break;
 		case 2:
-			stat = getstatf(STAT_DOM_PPS_YELLOW);
+			stat = STAT(DOM_PPS_YELLOW);
 			pic = "dom_icon_yellow";
 			color = '1 1 0';
 			break;
 		default:
 		case 3:
-			stat = getstatf(STAT_DOM_PPS_PINK);
+			stat = STAT(DOM_PPS_PINK);
 			pic = "dom_icon_pink";
 			color = '1 0 1';
 			break;
 	}
-	float pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
+	float pps_ratio = stat / STAT(DOM_TOTAL_PPS);
 
 	if(mySize.x/mySize.y > aspect_ratio)
 	{

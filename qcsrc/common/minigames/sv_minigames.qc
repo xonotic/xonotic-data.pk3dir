@@ -25,7 +25,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		}
 		minigame_session.minigame_event(minigame_session,"part",player);
 		GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
-			ftos(num_for_edict(player)),":",player.netname));
+			ftos(etof(player)),":",player.netname));
 		minigame_session.minigame_players = p.list_next;
 		remove ( p );
 		player_clear_minigame(player);
@@ -38,7 +38,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 			{
 				minigame_session.minigame_event(minigame_session,"part",player);
 				GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
-					ftos(num_for_edict(player)),":",player.netname));
+					ftos(etof(player)),":",player.netname));
 				p.list_next = e.list_next;
 				remove(e);
 				player_clear_minigame(player);
@@ -51,8 +51,6 @@ void minigame_rmplayer(entity minigame_session, entity player)
 
 
 #define FIELD(Flags, Type,Name) if ( sf & (Flags) ) Write##Type(MSG_ENTITY, self.Name);
-#define WriteVector(to,Name) WriteCoord(to,Name##_x); WriteCoord(to,Name##_y); WriteCoord(to,Name##_z)
-#define WriteVector2D(to,Name) WriteCoord(to,Name##_x); WriteCoord(to,Name##_y)
 #define MSLE(Name,Fields) \
 	else if ( self.classname == #Name ) { \
 		if ( sf & MINIG_SF_CREATE ) WriteString(MSG_ENTITY,self.owner.netname); \
@@ -88,7 +86,7 @@ bool minigame_SendEntity(entity this, entity to, int sf)
 		if ( sf & MINIG_SF_CREATE )
 		{
 			WriteString(MSG_ENTITY,self.owner.netname);
-			WriteLong(MSG_ENTITY,num_for_edict(self.minigame_players));
+			WriteLong(MSG_ENTITY,etof(self.minigame_players));
 		}
 		if ( sf & MINIG_SF_UPDATE )
 			WriteByte(MSG_ENTITY,self.team);
@@ -157,7 +155,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 	}
 	else { remove(player_pointer); }
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
-		ftos(num_for_edict(player)),":",player.netname));
+		ftos(etof(player)),":",player.netname));
 
 	return mgteam;
 }
@@ -171,7 +169,7 @@ entity start_minigame(entity player, string minigame )
 	if ( e )
 	{
 		entity minig = new(minigame);
-		minig.netname = strzone(strcat(e.netname,"_",ftos(num_for_edict(minig))));
+		minig.netname = strzone(strcat(e.netname,"_",ftos(etof(minig))));
 		minig.descriptor = e;
 		minig.minigame_event = e.minigame_event;
 		minig.minigame_event(minig,"start");
@@ -237,7 +235,7 @@ void end_minigame(entity minigame_session)
 	while( (e = findentity(e, owner, minigame_session)) )
 		if ( e.minigame_autoclean )
 		{
-			LOG_TRACE("SV Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+			LOG_TRACE("SV Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
 			remove(e);
 		}
 
@@ -276,7 +274,7 @@ string invite_minigame(entity inviter, entity player)
 		inviter.active_minigame.netname, inviter.netname );
 
 	GameLogEcho(strcat(":minigame:invite:",inviter.active_minigame.netname,":",
-		ftos(num_for_edict(player)),":",player.netname));
+		ftos(etof(player)),":",player.netname));
 
 	return "";
 }
@@ -292,12 +290,13 @@ entity minigame_find_player(entity client)
 	return world;
 }
 
-bool MinigameImpulse(int imp)
-{SELFPARAM();
-	entity e = minigame_find_player(self);
-	if ( imp && self.active_minigame && e )
+bool MinigameImpulse(entity this, int imp)
+{
+	if (!this.active_minigame) return false;
+	entity e = minigame_find_player(this);
+	if ( imp && this.active_minigame && e )
 	{
-		return self.active_minigame.minigame_event(self.active_minigame,"impulse",e,imp);
+		return this.active_minigame.minigame_event(this.active_minigame,"impulse",e,imp);
 	}
 	return false;
 }

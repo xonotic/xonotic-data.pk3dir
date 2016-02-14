@@ -17,23 +17,23 @@
 #include "../constants.qh"
 #include "../defs.qh"
 #include "../race.qh"
-#include "../t_items.qh"
+#include <common/t_items.qh>
 
 #include "../mutators/all.qh"
 
 #include "../weapons/accuracy.qh"
 
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/teams.qh"
-#include "../../common/util.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
 
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
-#include "../../lib/csqcmodel/sv_model.qh"
+#include <lib/csqcmodel/sv_model.qh>
 
-#include "../../lib/warpzone/common.qh"
-#include "../../lib/warpzone/util_server.qh"
+#include <lib/warpzone/common.qh>
+#include <lib/warpzone/util_server.qh>
 
 entity bot_spawn()
 {SELFPARAM();
@@ -113,7 +113,7 @@ void bot_think()
 	}
 
 	// if dead, just wait until we can respawn
-	if (self.deadflag)
+	if (IS_DEAD(self))
 	{
 		if (self.deadflag == DEAD_DEAD)
 		{
@@ -132,7 +132,6 @@ void bot_setnameandstuff()
 {SELFPARAM();
 	string readfile, s;
 	float file, tokens, prio;
-	entity p;
 
 	string bot_name, bot_model, bot_skin, bot_shirt, bot_pants;
 	string name, prefix, suffix;
@@ -169,15 +168,13 @@ void bot_setnameandstuff()
 				continue;
 			s = argv(0);
 			prio = 1;
-			FOR_EACH_CLIENT(p)
-			{
-				if(IS_BOT_CLIENT(p))
-				if(s == p.cleanname)
+			FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+				if(s == it.cleanname)
 				{
 					prio = 0;
 					break;
 				}
-			}
+			));
 			RandomSelection_Add(world, 0, readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
@@ -237,16 +234,13 @@ void bot_setnameandstuff()
 		name = bot_name;
 
 	// number bots with identical names
-	float i;
-	i = 0;
-	FOR_EACH_CLIENT(p)
-	{
-		if(IS_BOT_CLIENT(p))
-			if(p.cleanname == name)
-				++i;
-	}
-	if (i)
-		self.netname = self.netname_freeme = strzone(strcat(prefix, name, "(", ftos(i), ")", suffix));
+	int j = 0;
+	FOREACH_CLIENT(IS_BOT_CLIENT(it), LAMBDA(
+		if(it.cleanname == name)
+			++j;
+	));
+	if (j)
+		self.netname = self.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
 	else
 		self.netname = self.netname_freeme = strzone(strcat(prefix, name, suffix));
 
@@ -407,10 +401,9 @@ void bot_clientdisconnect()
 		bot_waypoint_queue_owner = world;
 }
 
-void bot_clientconnect()
-{SELFPARAM();
-	if (!IS_BOT_CLIENT(self))
-		return;
+void bot_clientconnect(entity this)
+{
+	if (!IS_BOT_CLIENT(this)) return;
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();
 	self.lag_func = bot_lagfunc;
@@ -508,17 +501,15 @@ void autoskill(float factor)
 {
 	float bestbot;
 	float bestplayer;
-	entity head;
 
 	bestbot = -1;
 	bestplayer = -1;
-	FOR_EACH_PLAYER(head)
-	{
-		if(IS_REAL_CLIENT(head))
-			bestplayer = max(bestplayer, head.totalfrags - head.totalfrags_lastcheck);
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		if(IS_REAL_CLIENT(it))
+			bestplayer = max(bestplayer, it.totalfrags - it.totalfrags_lastcheck);
 		else
-			bestbot = max(bestbot, head.totalfrags - head.totalfrags_lastcheck);
-	}
+			bestbot = max(bestbot, it.totalfrags - it.totalfrags_lastcheck);
+	));
 
 	LOG_TRACE("autoskill: best player got ", ftos(bestplayer), ", ");
 	LOG_TRACE("best bot got ", ftos(bestbot), "; ");
@@ -552,8 +543,7 @@ void autoskill(float factor)
 		// don't reset counters, wait for them to accumulate
 	}
 
-	FOR_EACH_PLAYER(head)
-		head.totalfrags_lastcheck = head.totalfrags;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.totalfrags_lastcheck = it.totalfrags));
 }
 
 void bot_calculate_stepheightvec()
@@ -572,13 +562,11 @@ float bot_fixcount()
 		activerealplayers = bot_activerealplayers;
 		realplayers = bot_realplayers;
 	} else {
-		entity head;
-		FOR_EACH_REALCLIENT(head)
-		{
-			if(IS_PLAYER(head))
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+			if(IS_PLAYER(it))
 				++activerealplayers;
 			++realplayers;
-		}
+		));
 	}
 
 	int bots;

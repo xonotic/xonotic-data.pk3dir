@@ -7,9 +7,11 @@ CLASS(XonoticKeyBinder, XonoticListBox)
 	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, int, vector, bool, bool));
 	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector));
 	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector));
+	METHOD(XonoticKeyBinder, showNotify, void(entity));
 	METHOD(XonoticKeyBinder, setSelected, void(entity, float));
 	METHOD(XonoticKeyBinder, keyDown, float(entity, float, float, float));
 	METHOD(XonoticKeyBinder, keyGrabbed, void(entity, float, float));
+	METHOD(XonoticKeyBinder, destroy, void(entity));
 
 	ATTRIB(XonoticKeyBinder, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticKeyBinder, realUpperMargin, float, 0)
@@ -18,6 +20,7 @@ CLASS(XonoticKeyBinder, XonoticListBox)
 	ATTRIB(XonoticKeyBinder, columnKeysOrigin, float, 0)
 	ATTRIB(XonoticKeyBinder, columnKeysSize, float, 0)
 
+	METHOD(XonoticKeyBinder, loadKeyBinds, void(entity));
 	ATTRIB(XonoticKeyBinder, previouslySelected, int, -1)
 	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0)
 	ATTRIB(XonoticKeyBinder, userbindEditButton, entity, NULL)
@@ -47,13 +50,13 @@ void Xonotic_KeyBinds_Read()
 {
 	Xonotic_KeyBinds_Count = 0;
 
-	#define KEYBIND_DEF(func, desc) do { \
+	#define KEYBIND_DEF(func, desc) MACRO_BEGIN { \
 		if((Xonotic_KeyBinds_Count < MAX_KEYBINDS)) { \
 			Xonotic_KeyBinds_Functions[Xonotic_KeyBinds_Count] = strzone(func); \
 			Xonotic_KeyBinds_Descriptions[Xonotic_KeyBinds_Count] = strzone(desc); \
 			++Xonotic_KeyBinds_Count; \
 		} \
-	} while(0)
+	} MACRO_END
 
 	KEYBIND_DEF(""                                      , _("Moving"));
 	KEYBIND_DEF("+forward"                              , _("forward"));
@@ -78,26 +81,21 @@ void Xonotic_KeyBinds_Read()
 
 	int i;
 
-	#define ADD_TO_W_LIST(pred) do { \
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) \
-		{ \
-			wep = get_weaponinfo(i); \
-			if(wep.impulse == imp && (pred)) \
-				w_list = strcat(w_list, WEP_NAME(i), " / "); \
-		} \
-	} while(0)
+	#define ADD_TO_W_LIST(pred) \
+		FOREACH(Weapons, it != WEP_Null, LAMBDA( \
+			if (it.impulse != imp) continue; \
+			if (!(pred)) continue; \
+			w_list = strcat(w_list, it.m_name, " / "); \
+		))
 
-	int imp;
-	entity wep;
-	string w_list = "";
-	for(imp = 1; imp <= 9; ++imp)
+	for(int imp = 1; imp <= 9; ++imp)
 	{
-		ADD_TO_W_LIST(!(wep.flags & WEP_FLAG_MUTATORBLOCKED) && !(wep.flags & WEP_FLAG_SUPERWEAPON));
-		ADD_TO_W_LIST(wep.flags & WEP_FLAG_SUPERWEAPON);
-		ADD_TO_W_LIST(wep.flags & WEP_FLAG_MUTATORBLOCKED);
+        string w_list = "";
+		ADD_TO_W_LIST(!(it.flags & WEP_FLAG_MUTATORBLOCKED) && !(it.flags & WEP_FLAG_SUPERWEAPON));
+		ADD_TO_W_LIST(it.flags & WEP_FLAG_SUPERWEAPON);
+		ADD_TO_W_LIST(it.flags & WEP_FLAG_MUTATORBLOCKED);
 		if(w_list)
 			KEYBIND_DEF(strcat("weapon_group_", itos(imp)), substring(w_list, 0, -4));
-		w_list = "";
 		if(imp == 0)
 			break;
 		if(imp == 9)
@@ -170,10 +168,7 @@ void replace_bind(string from, string to)
 void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
-	if(Xonotic_KeyBinds_Count < 0)
-		Xonotic_KeyBinds_Read();
-	me.nItems = Xonotic_KeyBinds_Count;
-	me.setSelected(me, 0);
+	me.nItems = 0;
 
 	// TEMP: Xonotic 0.1 to later
 	replace_bind("impulse 1", "weapon_group_1");
@@ -187,6 +182,21 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 	replace_bind("impulse 9", "weapon_group_9");
 	replace_bind("impulse 14", "weapon_group_0");
 }
+void XonoticKeyBinder_loadKeyBinds(entity me)
+{
+	bool force_initial_selection = false;
+	if(Xonotic_KeyBinds_Count < 0) // me.handle not loaded yet?
+		force_initial_selection = true;
+	Xonotic_KeyBinds_Read();
+	me.nItems = Xonotic_KeyBinds_Count;
+	if(force_initial_selection)
+		me.setSelected(me, 0);
+}
+void XonoticKeyBinder_showNotify(entity me)
+{
+	me.destroy(me);
+	me.loadKeyBinds(me);
+}
 void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticKeyBinder).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -199,9 +209,6 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.columnKeysSize = me.realFontSize.x * 12;
 	me.columnFunctionSize = 1 - me.columnKeysSize - 2 * me.realFontSize.x;
 	me.columnKeysOrigin = me.columnFunctionOrigin + me.columnFunctionSize + me.realFontSize.x;
-
-	if(me.userbindEditButton)
-		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[me.selectedItem], 0, 1) != "$");
 }
 void KeyBinder_Bind_Change(entity btn, entity me)
 {
@@ -260,6 +267,22 @@ void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
+}
+void XonoticKeyBinder_destroy(entity me)
+{
+	if(Xonotic_KeyBinds_Count < 0)
+		return;
+
+	for(int i = 0; i < MAX_KEYBINDS; ++i)
+	{
+		if(Xonotic_KeyBinds_Functions[i])
+			strunzone(Xonotic_KeyBinds_Functions[i]);
+		Xonotic_KeyBinds_Functions[i] = string_null;
+		if(Xonotic_KeyBinds_Descriptions[i])
+			strunzone(Xonotic_KeyBinds_Descriptions[i]);
+		Xonotic_KeyBinds_Descriptions[i] = string_null;
+	}
+	Xonotic_KeyBinds_Count = 0;
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {

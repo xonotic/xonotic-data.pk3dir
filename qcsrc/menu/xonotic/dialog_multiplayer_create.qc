@@ -21,37 +21,47 @@ entity makeXonoticServerCreateTab();
 
 #ifdef IMPLEMENTATION
 
-void GameType_ConfigureSliders(entity e, entity l, string pLabel, float pMin, float pMax, float pStep, string pCvar, string theTooltip)
+void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip)
 {
-	if(pCvar == "")
-	{
-		e.configureXonoticTextSlider(e, string_null, string_null);
-		l.setText(l, pLabel);
-		e.disabled = l.disabled = true;
-	}
-	else
-	{
-		e.configureXonoticTextSlider(e, pCvar, theTooltip);
+	int i;
+	entity e = me.sliderFraglimit;
+	entity l = me.labelFraglimit;
+	e.configureXonoticTextSlider(e, pCvar, pTooltip);
+	e.disabled = l.disabled = !pCvar;
+	l.setText(l, pLabel);
 
-		// clear old values
-		int i;
-		for(i = 0; i <= e.nValues; ++i);
+	// clear old values
+	for(i = 0; i < e.nValues; ++i);
+	{
+		if(e.(valueStrings[i]))
 		{
-			if(e.(valueStrings[i])) { strunzone(e.(valueStrings[i])); }
-			if(e.(valueIdentifiers[i])) { strunzone(e.(valueIdentifiers[i])); }
+			strunzone(e.(valueStrings[i]));
+			e.(valueStrings[i]) = string_null;
 		}
-		e.clearValues(e);
+		if(e.(valueIdentifiers[i]))
+		{
+			strunzone(e.(valueIdentifiers[i]));
+			e.(valueIdentifiers[i]) = string_null;
+		}
+	}
+	e.clearValues(e);
 
+	if(pCvar != "")
+	{
 		// set new values
 		e.addValue(e, strzone(_("Default")), strzone("-1"));
 		for(i = pMin; i <= pMax; i += pStep) { e.addValue(e, strzone(ftos(i)), strzone(ftos(i))); }
 		e.addValue(e, strzone(_("Unlimited")), strzone("0"));
-		e.configureXonoticTextSliderValues(e);
-
-		// set text field
-		l.setText(l, pLabel);
-		e.disabled = l.disabled = false;
 	}
+	e.configureXonoticTextSliderValues(e);
+
+
+	entity t = me.sliderTeams;
+	entity tl = me.labelTeams;
+	t.configureXonoticTextSlider(t, tCvar, string_null);
+	tl.disabled = t.disabled = !tCvar;
+	t.nValues = (tCvar == "") ? 0 : 4; // instead of clearing / readding the very same values
+	t.configureXonoticTextSliderValues(t);
 }
 
 entity makeXonoticServerCreateTab()
@@ -175,7 +185,6 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onChange = MapList_StringFilterBox_Change;
 			e.keyDown = MapList_StringFilterBox_keyDown;
 			e.onChangeEntity = me.mapListBox;
-			me.mapListBox.controlledTextbox = e;
 
 	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
 		// the selection buttons
@@ -212,44 +221,23 @@ void XonoticServerCreateTab_fill(entity me)
 
 void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 {
-	// tell the map list to update
-	float gt;
-	entity e, l;
-	gt = MapInfo_CurrentGametype();
-	e = me.sliderFraglimit;
-	l = me.labelFraglimit;
-
-	switch(gt)
+	switch(MapInfo_CurrentGametype())
 	{
-		case MAPINFO_TYPE_CTF:            GameType_ConfigureSliders(e, l, _("Capture limit:"),   1,   20, 1,  "capturelimit_override", string_null); break;
-		case MAPINFO_TYPE_DOMINATION:     GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "g_domination_point_limit", string_null); break;
-		case MAPINFO_TYPE_KEYHUNT:        GameType_ConfigureSliders(e, l, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit", string_null); break;
-		case MAPINFO_TYPE_LMS:            GameType_ConfigureSliders(e, l, _("Lives:"),           3,   50,  1, "g_lms_lives_override", string_null); break;
-		case MAPINFO_TYPE_RACE:           GameType_ConfigureSliders(e, l, _("Laps:"),            1,   25,  1, "g_race_laps_limit", string_null); break;
-		case MAPINFO_TYPE_NEXBALL:        GameType_ConfigureSliders(e, l, _("Goals:"),           1,   50,  1, "g_nexball_goallimit", string_null); break;
-		case MAPINFO_TYPE_ASSAULT:        GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
-		case MAPINFO_TYPE_ONSLAUGHT:      GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
-		case MAPINFO_TYPE_CTS:            GameType_ConfigureSliders(e, l, _("Point limit:"),    50,  500, 10, "", string_null); break;
-		case MAPINFO_TYPE_INVASION:       GameType_ConfigureSliders(e, l, _("Point limit:"),     5,    0,  5, "", string_null); break;
-		case MAPINFO_TYPE_TEAM_DEATHMATCH:GameType_ConfigureSliders(e, l, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit", string_null); break;
-		default:                          GameType_ConfigureSliders(e, l, _("Frag limit:"),      5,  100,  5, "fraglimit_override", _("The amount of frags needed before the match will end")); break;
+		case MAPINFO_TYPE_CA:              GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_ca_teams_override",          _("The amount of frags needed before the match will end")); break;
+		case MAPINFO_TYPE_FREEZETAG:       GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        "g_freezetag_teams_override",   _("The amount of frags needed before the match will end")); break;
+		case MAPINFO_TYPE_CTF:             GameType_ConfigureSliders(me, _("Capture limit:"),   1,   20,  1, "capturelimit_override",     string_null,                    _("The amount of captures needed before the match will end")); break;
+		case MAPINFO_TYPE_DOMINATION:      GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, "g_domination_point_limit",  "g_domination_teams_override",  _("The amount of points needed before the match will end")); break;
+		case MAPINFO_TYPE_KEYHUNT:         GameType_ConfigureSliders(me, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit",     "g_keyhunt_teams_override",     _("The amount of points needed before the match will end")); break;
+		case MAPINFO_TYPE_LMS:             GameType_ConfigureSliders(me, _("Lives:"),           3,   50,  1, "g_lms_lives_override",      string_null,                    string_null); break;
+		case MAPINFO_TYPE_RACE:            GameType_ConfigureSliders(me, _("Laps:"),            1,   25,  1, "g_race_laps_limit",         string_null,                    string_null); break;
+		case MAPINFO_TYPE_NEXBALL:         GameType_ConfigureSliders(me, _("Goals:"),           1,   50,  1, "g_nexball_goallimit",       string_null,                    _("The amount of goals needed before the match will end")); break;
+		case MAPINFO_TYPE_ASSAULT:         GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
+		case MAPINFO_TYPE_ONSLAUGHT:       GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
+		case MAPINFO_TYPE_CTS:             GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
+		case MAPINFO_TYPE_INVASION:        GameType_ConfigureSliders(me, _("Point limit:"),    50,  500, 10, string_null,                 string_null,                    string_null); break;
+		case MAPINFO_TYPE_TEAM_DEATHMATCH: GameType_ConfigureSliders(me, _("Point limit:"),     5,  100,  5, "g_tdm_point_limit",         "g_tdm_teams_override",         _("The amount of points needed before the match will end")); break;
+		default:                           GameType_ConfigureSliders(me, _("Frag limit:"),      5,  100,  5, "fraglimit_override",        string_null,                    _("The amount of frags needed before the match will end")); break;
 	}
-
-	string x = string_null;
-	string theTooltip = string_null;
-	e = me.sliderTeams;
-	switch(gt)
-	{
-		// old tooltip: _("Override the default amount of teams in teamgames")
-		case MAPINFO_TYPE_CA:               x = "g_ca_teams_override";          break;
-		case MAPINFO_TYPE_DOMINATION:       x = "g_domination_teams_override";  break;
-		case MAPINFO_TYPE_FREEZETAG:        x = "g_freezetag_teams_override";   break;
-		case MAPINFO_TYPE_KEYHUNT:          x = "g_keyhunt_teams_override";     break;
-		case MAPINFO_TYPE_TEAM_DEATHMATCH:  x = "g_tdm_teams_override";         break;
-	}
-	e.configureXonoticTextSlider(e, x, theTooltip);
-	e.configureXonoticTextSliderValues(e);
-	me.sliderTeams.disabled = me.labelTeams.disabled = !x;
 
 	me.mapListBox.refilter(me.mapListBox);
 }

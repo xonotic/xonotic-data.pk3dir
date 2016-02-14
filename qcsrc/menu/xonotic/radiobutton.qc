@@ -70,7 +70,7 @@ void XonoticRadioButton_loadCvars(entity me)
 	{
 		if(me.cvarName)
 		{
-			me.checked = !!cvar(me.cvarName);
+			me.checked = boolean(cvar(me.cvarName));
 		}
 		else
 		{

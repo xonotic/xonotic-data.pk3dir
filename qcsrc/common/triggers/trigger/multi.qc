@@ -99,35 +99,35 @@ void multi_touch()
 	multi_trigger ();
 }
 
-void multi_eventdamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if (!self.takedamage)
+void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(!this.takedamage)
 		return;
-	if(self.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
-	if (self.health <= 0)
+	this.health = this.health - damage;
+	if (this.health <= 0)
 	{
-		self.enemy = attacker;
-		self.goalentity = inflictor;
-		multi_trigger();
+		this.enemy = attacker;
+		this.goalentity = inflictor;
+		WITH(entity, self, this, multi_trigger());
 	}
 }
 
-void multi_reset()
-{SELFPARAM();
-	if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
-		self.touch = multi_touch;
-	if (self.max_health)
+void multi_reset(entity this)
+{
+	if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
+		this.touch = multi_touch;
+	if (this.max_health)
 	{
-		self.health = self.max_health;
-		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
+		this.health = this.max_health;
+		this.takedamage = DAMAGE_YES;
+		this.solid = SOLID_BBOX;
 	}
-	self.think = func_null;
-	self.nextthink = 0;
-	self.team = self.team_saved;
+	this.think = func_null;
+	this.nextthink = 0;
+	this.team = this.team_saved;
 }
 
 /*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch

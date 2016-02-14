@@ -10,16 +10,16 @@
 #endif
 
 #ifdef CSQC
-	#include "../../client/commands/cl_cmd.qh"
+	#include <client/commands/cl_cmd.qh>
 #endif
 
 #ifdef SVQC
-	#include "../../server/command/banning.qh"
-	#include "../../server/command/cmd.qh"
-	#include "../../server/command/common.qh"
-	#include "../../server/command/sv_cmd.qh"
-	#include "../../common/turrets/config.qh"
-	#include "../../common/weapons/config.qh"
+	#include <server/command/banning.qh>
+	#include <server/command/cmd.qh>
+	#include <server/command/common.qh>
+	#include <server/command/sv_cmd.qh>
+	#include <common/turrets/config.qh>
+	#include <common/weapons/config.qh>
 #endif
 
 // =========================================================
@@ -274,16 +274,9 @@ void GenericCommand_maplist(float request, float argc)
 				{
 					MapInfo_Enumerate();
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
-
-					tmp_string = "";
-					for(i = 0; i < argc; ++i)
-						if(MapInfo_CheckMap(argv(i)))
-							tmp_string = strcat(tmp_string, " ", argv(i));
-
-					tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
-					cvar_set("g_maplist", tmp_string);
-
+					string filtered = "";
+					FOREACH_WORD(cvar_string("g_maplist"), MapInfo_CheckMap(it), filtered = cons(filtered, it));
+					cvar_set("g_maplist", filtered);
 					return;
 				}
 
@@ -502,7 +495,7 @@ void GenericCommand_runtest(float request, float argc)
 					TEST_Run(argv(i));
 			}
 			else
-				TEST_RunAll();
+				RUN_ALL_TESTS();
 			return;
 		}
 
@@ -559,7 +552,7 @@ float GenericCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_COMMAND, argc, command);
+		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
 	));
 	return false;
@@ -569,7 +562,7 @@ float GenericCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_USAGE, argc, "");
+		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
 	));
 	return false;

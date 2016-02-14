@@ -9,6 +9,7 @@
 #include "teamplay.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
 #include "../common/deathtypes/all.qh"
@@ -47,80 +48,79 @@ void CopyBody_Think()
 	CSQCMODEL_AUTOUPDATE(self);
 	self.nextthink = time;
 }
-void CopyBody(float keepvelocity)
-{SELFPARAM();
-	if (self.effects & EF_NODRAW)
+void CopyBody(entity this, float keepvelocity)
+{
+	if (this.effects & EF_NODRAW)
 		return;
-	setself(new(body));
-	self.enemy = this;
-	self.lip = this.lip;
-	self.colormap = this.colormap;
-	self.iscreature = this.iscreature;
-	self.teleportable = this.teleportable;
-	self.damagedbycontents = this.damagedbycontents;
-	self.angles = this.angles;
-	self.v_angle = this.v_angle;
-	self.avelocity = this.avelocity;
-	self.damageforcescale = this.damageforcescale;
-	self.effects = this.effects;
-	self.glowmod = this.glowmod;
-	self.event_damage = this.event_damage;
-	self.anim_state = this.anim_state;
-	self.anim_time = this.anim_time;
-	self.anim_lower_action = this.anim_lower_action;
-	self.anim_lower_time = this.anim_lower_time;
-	self.anim_upper_action = this.anim_upper_action;
-	self.anim_upper_time = this.anim_upper_time;
-	self.anim_implicit_state = this.anim_implicit_state;
-	self.anim_implicit_time = this.anim_implicit_time;
-	self.anim_lower_implicit_action = this.anim_lower_implicit_action;
-	self.anim_lower_implicit_time = this.anim_lower_implicit_time;
-	self.anim_upper_implicit_action = this.anim_upper_implicit_action;
-	self.anim_upper_implicit_time = this.anim_upper_implicit_time;
-	self.dphitcontentsmask = this.dphitcontentsmask;
-	self.death_time = this.death_time;
-	self.pain_finished = this.pain_finished;
-	self.health = this.health;
-	self.armorvalue = this.armorvalue;
-	self.armortype = this.armortype;
-	self.model = this.model;
-	self.modelindex = this.modelindex;
-	self.skin = this.skin;
-	self.species = this.species;
-	self.movetype = this.movetype;
-	self.solid = this.solid;
-	self.ballistics_density = this.ballistics_density;
-	self.takedamage = this.takedamage;
-	self.customizeentityforclient = this.customizeentityforclient;
-	self.uncustomizeentityforclient = this.uncustomizeentityforclient;
-	self.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
+	entity clone = new(body);
+	clone.enemy = this;
+	clone.lip = this.lip;
+	clone.colormap = this.colormap;
+	clone.iscreature = this.iscreature;
+	clone.teleportable = this.teleportable;
+	clone.damagedbycontents = this.damagedbycontents;
+	clone.angles = this.angles;
+	clone.v_angle = this.v_angle;
+	clone.avelocity = this.avelocity;
+	clone.damageforcescale = this.damageforcescale;
+	clone.effects = this.effects;
+	clone.glowmod = this.glowmod;
+	clone.event_damage = this.event_damage;
+	clone.anim_state = this.anim_state;
+	clone.anim_time = this.anim_time;
+	clone.anim_lower_action = this.anim_lower_action;
+	clone.anim_lower_time = this.anim_lower_time;
+	clone.anim_upper_action = this.anim_upper_action;
+	clone.anim_upper_time = this.anim_upper_time;
+	clone.anim_implicit_state = this.anim_implicit_state;
+	clone.anim_implicit_time = this.anim_implicit_time;
+	clone.anim_lower_implicit_action = this.anim_lower_implicit_action;
+	clone.anim_lower_implicit_time = this.anim_lower_implicit_time;
+	clone.anim_upper_implicit_action = this.anim_upper_implicit_action;
+	clone.anim_upper_implicit_time = this.anim_upper_implicit_time;
+	clone.dphitcontentsmask = this.dphitcontentsmask;
+	clone.death_time = this.death_time;
+	clone.pain_finished = this.pain_finished;
+	clone.health = this.health;
+	clone.armorvalue = this.armorvalue;
+	clone.armortype = this.armortype;
+	clone.model = this.model;
+	clone.modelindex = this.modelindex;
+	clone.skin = this.skin;
+	clone.species = this.species;
+	clone.movetype = this.movetype;
+	clone.solid = this.solid;
+	clone.ballistics_density = this.ballistics_density;
+	clone.takedamage = this.takedamage;
+	clone.customizeentityforclient = this.customizeentityforclient;
+	clone.uncustomizeentityforclient = this.uncustomizeentityforclient;
+	clone.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
 	if (keepvelocity == 1)
-		self.velocity = this.velocity;
-	self.oldvelocity = self.velocity;
-	self.alpha = this.alpha;
-	self.fade_time = this.fade_time;
-	self.fade_rate = this.fade_rate;
-	//self.weapon = this.weapon;
-	setorigin(self, this.origin);
-	setsize(self, this.mins, this.maxs);
-	self.prevorigin = this.origin;
-	self.reset = SUB_Remove;
+		clone.velocity = this.velocity;
+	clone.oldvelocity = clone.velocity;
+	clone.alpha = this.alpha;
+	clone.fade_time = this.fade_time;
+	clone.fade_rate = this.fade_rate;
+	//clone.weapon = this.weapon;
+	setorigin(clone, this.origin);
+	setsize(clone, this.mins, this.maxs);
+	clone.prevorigin = this.origin;
+	clone.reset = SUB_Remove;
+	clone._ps = this._ps;
 
-	Drag_MoveDrag(this, self);
+	Drag_MoveDrag(this, clone);
 
-	if(self.colormap <= maxclients && self.colormap > 0)
-		self.colormap = 1024 + this.clientcolors;
+	if(clone.colormap <= maxclients && clone.colormap > 0)
+		clone.colormap = 1024 + this.clientcolors;
 
-	CSQCMODEL_AUTOINIT(self);
-	self.CopyBody_nextthink = this.nextthink;
-	self.CopyBody_think = this.think;
-	self.nextthink = time;
-	self.think = CopyBody_Think;
+	CSQCMODEL_AUTOINIT(clone);
+	clone.CopyBody_nextthink = this.nextthink;
+	clone.CopyBody_think = this.think;
+	clone.nextthink = time;
+	clone.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
-	animdecide_load_if_needed(self);
-	animdecide_setframes(self, false, frame, frame1time, frame2, frame2time);
-
-	setself(this);
+	animdecide_load_if_needed(clone);
+	animdecide_setframes(clone, false, frame, frame1time, frame2, frame2time);
 }
 
 void player_setupanimsformodel()
@@ -133,7 +133,7 @@ void player_setupanimsformodel()
 void player_anim ()
 {SELFPARAM();
 	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(self.deadflag) {
+	if(IS_DEAD(self)) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
 			if(random() < 0.5)
@@ -146,80 +146,70 @@ void player_anim ()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(self.frozen)
+	if(STAT(FROZEN, self))
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
-
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	{
-		if (self.(weaponentity))
-		{
-			updateanim(self.(weaponentity));
-			if (!self.(weaponentity).animstate_override)
-				setanim(self.(weaponentity), self.(weaponentity).anim_idle, true, false, false);
-		}
-	}
+	animdecide_setimplicitstate(self, IS_ONGROUND(self));
 }
 
-void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	float take, save;
 	vector v;
-	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
+			sound (this, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
+			sound (this, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM);
+			sound (this, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM);
 	}
 
 	if (take > 50)
-		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
+		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, this, attacker);
 	if (take > 100)
-		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	self.armorvalue = self.armorvalue - save;
-	self.health = self.health - take;
+	this.armorvalue = this.armorvalue - save;
+	this.health = this.health - take;
 	// pause regeneration for 5 seconds
-	self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+	this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
-	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
-	self.dmg_inflictor = inflictor;
+	this.dmg_save = this.dmg_save + save;//max(save - 10, 0);
+	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
+	this.dmg_inflictor = inflictor;
 
-	if (self.health <= -autocvar_sv_gibhealth && self.alpha >= 0)
+	if (this.health <= -autocvar_sv_gibhealth && this.alpha >= 0)
 	{
 		// don't use any animations as a gib
-		self.frame = 0;
+		this.frame = 0;
 		// view just above the floor
-		self.view_ofs = '0 0 4';
+		this.view_ofs = '0 0 4';
 
-		Violence_GibSplash(self, 1, 1, attacker);
-		self.alpha = -1;
-		self.solid = SOLID_NOT; // restore later
-		self.takedamage = DAMAGE_NO; // restore later
-		self.damagedbycontents = false;
+		Violence_GibSplash(this, 1, 1, attacker);
+		this.alpha = -1;
+		this.solid = SOLID_NOT; // restore later
+		this.takedamage = DAMAGE_NO; // restore later
+		this.damagedbycontents = false;
 	}
 }
 
-void calculate_player_respawn_time()
-{SELFPARAM();
+void calculate_player_respawn_time(entity this)
+{
 	if(g_ca)
 		return;
 
@@ -232,13 +222,12 @@ void calculate_player_respawn_time()
 	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
 
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
-	entity pl;
 	if (teamplay)
 	{
-		FOR_EACH_PLAYER(pl)
-			if (pl != self)
-				if (pl.team == self.team)
-					++pcount;
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+			if(it.team == this.team)
+				++pcount;
+		));
 		if (sdelay_small_count == 0)
 			sdelay_small_count = 1;
 		if (sdelay_large_count == 0)
@@ -246,9 +235,9 @@ void calculate_player_respawn_time()
 	}
 	else
 	{
-		FOR_EACH_PLAYER(pl)
-			if (pl != self)
-				++pcount;
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+			++pcount;
+		));
 		if (sdelay_small_count == 0)
 		{
 			if (g_cts)
@@ -287,39 +276,38 @@ void calculate_player_respawn_time()
 		sdelay = sdelay_small + (sdelay_large - sdelay_small) * (pcount - sdelay_small_count) / (sdelay_large_count - sdelay_small_count);
 
 	if(waves)
-		self.respawn_time = ceil((time + sdelay) / waves) * waves;
+		this.respawn_time = ceil((time + sdelay) / waves) * waves;
 	else
-		self.respawn_time = time + sdelay;
+		this.respawn_time = time + sdelay;
 
 	if(sdelay < sdelay_max)
-		self.respawn_time_max = time + sdelay_max;
+		this.respawn_time_max = time + sdelay_max;
 	else
-		self.respawn_time_max = self.respawn_time;
+		this.respawn_time_max = this.respawn_time;
 
-	if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
-		self.respawn_countdown = 10; // first number to count down from is 10
+	if((sdelay + waves >= 5.0) && (this.respawn_time - time > 1.75))
+		this.respawn_countdown = 10; // first number to count down from is 10
 	else
-		self.respawn_countdown = -1; // do not count down
+		this.respawn_countdown = -1; // do not count down
 
 	if(autocvar_g_forced_respawn)
-		self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+		this.respawn_flags = this.respawn_flags | RESPAWN_FORCE;
 }
 
-void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	float take, save, dh, da;
-	int j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
 
-	dh = max(self.health, 0);
-	da = max(self.armorvalue, 0);
+	dh = max(this.health, 0);
+	da = max(this.armorvalue, 0);
 
 	if(!DEATH_ISSPECIAL(deathtype))
 	{
-		damage *= sqrt(bound(1.0, self.cvar_cl_handicap, 100.0));
-		if(self != attacker)
+		damage *= sqrt(bound(1.0, this.cvar_cl_handicap, 100.0));
+		if(this != attacker)
 			damage /= sqrt(bound(1.0, attacker.cvar_cl_handicap, 100.0));
 	}
 
@@ -329,20 +317,20 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		vector ear1, ear2;
 		vector d;
 		float f;
-		ear1 = self.origin;
-		ear1_z += 0.125 * self.view_ofs.z + 0.875 * self.maxs.z; // 7/8
+		ear1 = this.origin;
+		ear1_z += 0.125 * this.view_ofs.z + 0.875 * this.maxs.z; // 7/8
 		ear2 = ear1;
-		makevectors(self.angles);
+		makevectors(this.angles);
 		ear1 += v_right * -10;
 		ear2 += v_right * +10;
-		d = inflictor.origin - self.origin;
+		d = inflictor.origin - this.origin;
 		if (d)
 			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
 		else
 			f = 0;  // Assum ecenter.
 		force = v_right * vlen(force);
-		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
-		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
+		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), this, attacker);
+		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), this, attacker);
 		if(f > 0)
 		{
 			hitloc = ear1;
@@ -355,143 +343,150 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 		}
 	}
 	else
-		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, this, attacker);
 
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(this.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
 	take = v.x;
 	save = v.y;
 
-	if(attacker == self)
+	if(attacker == this)
 	{
-		// don't reset pushltime for self damage as it may be an attempt to
+		// don't reset pushltime for this damage as it may be an attempt to
 		// escape a lava pit or similar
-		//self.pushltime = 0;
-		self.istypefrag = 0;
+		//this.pushltime = 0;
+		this.istypefrag = 0;
 	}
 	else if(IS_PLAYER(attacker))
 	{
-		self.pusher = attacker;
-		self.pushltime = time + autocvar_g_maxpushtime;
-		self.istypefrag = self.BUTTON_CHAT;
+		this.pusher = attacker;
+		this.pushltime = time + autocvar_g_maxpushtime;
+		this.istypefrag = this.BUTTON_CHAT;
 	}
-	else if(time < self.pushltime)
+	else if(time < this.pushltime)
 	{
-		attacker = self.pusher;
-		self.pushltime = max(self.pushltime, time + 0.6);
+		attacker = this.pusher;
+		this.pushltime = max(this.pushltime, time + 0.6);
 	}
 	else
 	{
-		self.pushltime = 0;
-		self.istypefrag = 0;
+		this.pushltime = 0;
+		this.istypefrag = 0;
+	}
+
+	if (time < this.spawnshieldtime && autocvar_g_spawnshield_blockdamage < 1)
+	{
+		vector v = healtharmor_applydamage(this.armorvalue, max(0, autocvar_g_spawnshield_blockdamage), deathtype, damage);
+		take = v.x;
+		save = v.y;
 	}
 
 	frag_damage = damage;
-	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, self, force, take, save);
-	take = bound(0, damage_take, self.health);
-	save = bound(0, damage_save, self.armorvalue);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save);
+	take = bound(0, damage_take, this.health);
+	save = bound(0, damage_save, this.armorvalue);
 	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
 	{
 		if (save > 10)
-			sound (self, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
+			sound (this, CH_SHOTS, SND_ARMORIMPACT, VOL_BASE, ATTEN_NORM);
 		else if (take > 30)
-			sound (self, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
+			sound (this, CH_SHOTS, SND_BODYIMPACT2, VOL_BASE, ATTEN_NORM);
 		else if (take > 10)
-			sound (self, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
+			sound (this, CH_SHOTS, SND_BODYIMPACT1, VOL_BASE, ATTEN_NORM); // FIXME possibly remove them?
 	}
 
 	if (take > 50)
-		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
+		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, this, attacker);
 	if (take > 100)
-		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, this, attacker);
 
-	if (time >= self.spawnshieldtime)
+	if (time >= this.spawnshieldtime || autocvar_g_spawnshield_blockdamage < 1)
 	{
-		if (!(self.flags & FL_GODMODE))
+		if (!(this.flags & FL_GODMODE))
 		{
-			self.armorvalue = self.armorvalue - save;
-			self.health = self.health - take;
+			this.armorvalue = this.armorvalue - save;
+			this.health = this.health - take;
 			// pause regeneration for 5 seconds
 			if(take)
-				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+				this.pauseregen_finished = max(this.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
-			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
+			if (time > this.pain_finished)		//Don't switch pain sequences like crazy
 			{
-				self.pain_finished = time + 0.5;	//Supajoe
+				this.pain_finished = time + 0.5;	//Supajoe
 
 				if(autocvar_sv_gentle < 1) {
-					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
+					if(this.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 					{
-						if (!self.animstate_override)
+						if (!this.animstate_override)
 						{
 							if (random() > 0.5)
-								animdecide_setaction(self, ANIMACTION_PAIN1, true);
+								animdecide_setaction(this, ANIMACTION_PAIN1, true);
 							else
-								animdecide_setaction(self, ANIMACTION_PAIN2, true);
+								animdecide_setaction(this, ANIMACTION_PAIN2, true);
 						}
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
-					if((self.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || attacker != self) // WEAPONTODO: create separate limit for pain notification with laser
-					if(self.health > 1)
+					if((this.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !(DEATH_WEAPONOF(deathtype).spawnflags & WEP_FLAG_CANCLIMB) || attacker != this) // WEAPONTODO: create separate limit for pain notification with laser
+					if(this.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
 						if(deathtype == DEATH_FALL.m_id)
-							PlayerSound(playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 75) // TODO make a "gentle" version?
-							PlayerSound(playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 50)
-							PlayerSound(playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(self.health > 25)
-							PlayerSound(playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
+						else if(this.health > 75) // TODO make a "gentle" version?
+							PlayerSound(this, playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
+						else if(this.health > 50)
+							PlayerSound(this, playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
+						else if(this.health > 25)
+							PlayerSound(this, playersound_pain50, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else
-							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
+							PlayerSound(this, playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
 			}
 
 			// throw off bot aim temporarily
 			float shake;
-			if(IS_BOT_CLIENT(self) && self.health >= 1)
+			if(IS_BOT_CLIENT(this) && this.health >= 1)
 			{
 				shake = damage * 5 / (bound(0,skill,100) + 1);
-				self.v_angle_x = self.v_angle.x + (random() * 2 - 1) * shake;
-				self.v_angle_y = self.v_angle.y + (random() * 2 - 1) * shake;
-				self.v_angle_x = bound(-90, self.v_angle.x, 90);
+				this.v_angle_x = this.v_angle.x + (random() * 2 - 1) * shake;
+				this.v_angle_y = this.v_angle.y + (random() * 2 - 1) * shake;
+				this.v_angle_x = bound(-90, this.v_angle.x, 90);
 			}
 		}
 		else
-			self.max_armorvalue += (save + take);
+			this.max_armorvalue += (save + take);
 	}
-	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
-	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
-	self.dmg_inflictor = inflictor;
+	this.dmg_save = this.dmg_save + save;//max(save - 10, 0);
+	this.dmg_take = this.dmg_take + take;//max(take - 10, 0);
+	this.dmg_inflictor = inflictor;
 
-	if (self != attacker) {
+	if (this != attacker) {
 		float realdmg = damage - excess;
 		if (IS_PLAYER(attacker)) {
 			PlayerScore_Add(attacker, SP_DMG, realdmg);
 		}
-		if (IS_PLAYER(self)) {
-			PlayerScore_Add(self, SP_DMGTAKEN, realdmg);
+		if (IS_PLAYER(this)) {
+			PlayerScore_Add(this, SP_DMGTAKEN, realdmg);
 		}
 	}
 
 	bool abot = (IS_BOT_CLIENT(attacker));
-	bool vbot = (IS_BOT_CLIENT(self));
+	bool vbot = (IS_BOT_CLIENT(this));
 
 	valid_damage_for_weaponstats = 0;
 	Weapon awep = WEP_Null;
 
-	if(vbot || IS_REAL_CLIENT(self))
+	if(vbot || IS_REAL_CLIENT(this))
 	if(abot || IS_REAL_CLIENT(attacker))
-	if(attacker && self != attacker)
-	if(DIFF_TEAM(self, attacker))
+	if(attacker && this != attacker)
+	if(DIFF_TEAM(this, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
-			awep = get_weaponinfo(attacker.weapon);
+			awep = PS(attacker).m_weapon;
 		else
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
@@ -499,154 +494,152 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, int deathtyp
 
 	if(valid_damage_for_weaponstats)
 	{
-		dh = dh - max(self.health, 0);
-		da = da - max(self.armorvalue, 0);
-		WeaponStats_LogDamage(awep.m_id, abot, self.weapon, vbot, dh + da);
-		MUTATOR_CALLHOOK(PlayerDamaged, attacker, self, dh, da, hitloc, deathtype);
+		dh = dh - max(this.health, 0);
+		da = da - max(this.armorvalue, 0);
+		WeaponStats_LogDamage(awep.m_id, abot, PS(this).m_weapon.m_id, vbot, dh + da);
+		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype);
 	}
 
-	if (self.health < 1)
+	if (this.health < 1)
 	{
 		float defer_ClientKill_Now_TeamChange;
 		defer_ClientKill_Now_TeamChange = false;
 
-		if(self.alivetime)
+		if(this.alivetime)
 		{
-			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
-			self.alivetime = 0;
+			PS_GR_P_ADDVAL(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+			this.alivetime = 0;
 		}
 
 		if(valid_damage_for_weaponstats)
-			WeaponStats_LogKill(awep.m_id, abot, self.weapon, vbot);
+			WeaponStats_LogKill(awep.m_id, abot, PS(this).m_weapon.m_id, vbot);
 
 		if(autocvar_sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN.m_id)
-				PlayerSound(playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(this, playersound_drown, CH_PAIN, VOICETYPE_PLAYERSOUND);
 			else
-				PlayerSound(playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
+				PlayerSound(this, playersound_death, CH_PAIN, VOICETYPE_PLAYERSOUND);
 		}
 
 		// get rid of kill indicator
-		if(self.killindicator)
+		if(this.killindicator)
 		{
-			remove(self.killindicator);
-			self.killindicator = world;
-			if(self.killindicator_teamchange)
+			remove(this.killindicator);
+			this.killindicator = world;
+			if(this.killindicator_teamchange)
 				defer_ClientKill_Now_TeamChange = true;
 
-			if(self.classname == "body")
+			if(this.classname == "body")
 			if(deathtype == DEATH_KILL.m_id)
 			{
 				// for the lemmings fans, a small harmless explosion
-				Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 			}
 		}
 
 		// print an obituary message
-		if(self.classname != "body")
-			Obituary (attacker, inflictor, self, deathtype);
+		if(this.classname != "body")
+			Obituary (attacker, inflictor, this, deathtype);
 
         // increment frag counter for used weapon type
         Weapon w = DEATH_WEAPONOF(deathtype);
         if(w != WEP_Null)
-	if(accuracy_isgooddamage(attacker, self))
+	if(accuracy_isgooddamage(attacker, this))
         attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
-		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, self, deathtype);
+		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype);
 		excess = frag_damage;
 
-		Weapon wep = get_weaponinfo(self.weapon);
-		wep.wr_playerdeath(wep);
+		Weapon wep = PS(this).m_weapon;
+		WITH(entity, self, this, wep.wr_playerdeath(wep));
 
-		RemoveGrapplingHook(self);
+		RemoveGrapplingHook(this);
 
-		Portal_ClearAllLater(self);
+		Portal_ClearAllLater(this);
 
-		self.fixangle = true;
+		this.fixangle = true;
 
 		if(defer_ClientKill_Now_TeamChange)
-			ClientKill_Now_TeamChange(); // can turn player into spectator
+			ClientKill_Now_TeamChange(this); // can turn player into spectator
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die
-		if(self.health >= 1 || !(IS_PLAYER(self) || self.classname == "body"))
+		if(this.health >= 1 || !(IS_PLAYER(this) || this.classname == "body"))
 			return;
 
 		// when we get here, player actually dies
 
-		Unfreeze(self); // remove any icy remains
-		self.health = 0; // Unfreeze resets health, so we need to set it back
+		Unfreeze(this); // remove any icy remains
+		this.health = 0; // Unfreeze resets health, so we need to set it back
 
 		// clear waypoints
-		WaypointSprite_PlayerDead();
+		WaypointSprite_PlayerDead(this);
 		// throw a weapon
-		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+		SpawnThrownWeapon(this, this.origin + (this.mins + this.maxs) * 0.5, PS(this).m_switchweapon.m_id);
 
 		// become fully visible
-		self.alpha = default_player_alpha;
+		this.alpha = default_player_alpha;
 		// make the corpse upright (not tilted)
-		self.angles_x = 0;
-		self.angles_z = 0;
+		this.angles_x = 0;
+		this.angles_z = 0;
 		// don't spin
-		self.avelocity = '0 0 0';
+		this.avelocity = '0 0 0';
 		// view from the floor
-		self.view_ofs = '0 0 -8';
+		this.view_ofs = '0 0 -8';
 		// toss the corpse
-		self.movetype = MOVETYPE_TOSS;
+		this.movetype = MOVETYPE_TOSS;
 		// shootable corpse
-		self.solid = SOLID_CORPSE;
-		self.ballistics_density = autocvar_g_ballistics_density_corpse;
+		this.solid = SOLID_CORPSE;
+		this.ballistics_density = autocvar_g_ballistics_density_corpse;
 		// don't stick to the floor
-		self.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(this);
 		// dying animation
-		self.deadflag = DEAD_DYING;
+		this.deadflag = DEAD_DYING;
 
 		// when to allow respawn
-		calculate_player_respawn_time();
+		calculate_player_respawn_time(this);
 
-		self.death_time = time;
+		this.death_time = time;
 		if (random() < 0.5)
-			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, true);
+			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD1, true);
 		else
-			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, true);
-		if (self.maxs.z > 5)
+			animdecide_setstate(this, this.anim_state | ANIMSTATE_DEAD2, true);
+		if (this.maxs.z > 5)
 		{
-			self.maxs_z = 5;
-			setsize(self, self.mins, self.maxs);
+			this.maxs_z = 5;
+			setsize(this, this.mins, this.maxs);
 		}
 		// set damage function to corpse damage
-		self.event_damage = PlayerCorpseDamage;
+		this.event_damage = PlayerCorpseDamage;
 		// call the corpse damage function just in case it wants to gib
-		self.event_damage(inflictor, attacker, excess, deathtype, hitloc, force);
+		this.event_damage(this, inflictor, attacker, excess, deathtype, hitloc, force);
 
 		// set up to fade out later
-		SUB_SetFade (self, time + 6 + random (), 1);
+		SUB_SetFade (this, time + 6 + random (), 1);
 		// reset body think wrapper broken by SUB_SetFade
-		if(self.classname == "body" && self.think != CopyBody_Think) {
-			self.CopyBody_think = self.think;
-			self.CopyBody_nextthink = self.nextthink;
-			self.think = CopyBody_Think;
-			self.nextthink = time;
+		if(this.classname == "body" && this.think != CopyBody_Think) {
+			this.CopyBody_think = this.think;
+			this.CopyBody_nextthink = this.nextthink;
+			this.think = CopyBody_Think;
+			this.nextthink = time;
 		}
 
-		if(autocvar_sv_gentle > 0 || autocvar_ekg || self.classname == "body") {
+		if(autocvar_sv_gentle > 0 || autocvar_ekg || this.classname == "body") {
 			// remove corpse
 			// clones don't run any animation code any more, so we must gib them when they die :(
-			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
+			PlayerCorpseDamage(this, inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
 
 		// reset fields the weapons may use just in case
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			Weapon w = get_weaponinfo(j);
-			w.wr_resetplayer(w);
-			for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			WITH(entity, self, this, it.wr_resetplayer(it));
+			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
-				ATTACK_FINISHED_FOR(self, j, slot) = 0;
+				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
 			}
-		}
+		));
 	}
 }
 
@@ -673,7 +666,6 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
-	entity head;
 	float ret;
 	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
 
@@ -918,10 +910,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head)
-				if(head != source)
-				if(head.active_minigame == source.active_minigame)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, LAMBDA(sprint(it, msgstr)));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -929,312 +918,27 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
-				if(head != source)
-				{
-					sprint(head, msgstr);
-					if(cmsgstr != "")
-						centerprint(head, cmsgstr);
-				}
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, LAMBDA(
+				sprint(it, msgstr);
+				if(cmsgstr != "")
+					centerprint(it, cmsgstr);
+			));
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if (!IS_PLAYER(head))
-				if(head != source)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
 		}
 		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head)
-				if(head != source)
-					sprint(head, msgstr);
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
 		}
 		else
 			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.
 	}
 
 	return ret;
-}
-
-int GetVoiceMessageVoiceType(string type)
-{
-	if (type == "taunt") return VOICETYPE_TAUNT;
-	if (type == "teamshoot") return VOICETYPE_LASTATTACKER;
-	return VOICETYPE_TEAMRADIO;
-}
-
-.string GetVoiceMessageSampleField(string type)
-{
-	GetPlayerSoundSampleField_notFound = false;
-	switch (type)
-	{
-#define X(m) case #m: return playersound_##m;
-		ALLVOICEMSGS(X)
-#undef X
-	}
-	GetPlayerSoundSampleField_notFound = true;
-	return playersound_taunt;
-}
-
-.string GetPlayerSoundSampleField(string type)
-{
-	GetPlayerSoundSampleField_notFound = false;
-	switch (type)
-	{
-#define X(m) case #m: return playersound_##m;
-		ALLPLAYERSOUNDS(X)
-#undef X
-	}
-	GetPlayerSoundSampleField_notFound = true;
-	return playersound_taunt;
-}
-
-void PrecacheGlobalSound(string sample)
-{
-	int n;
-	{
-		string s = cdr(sample);
-		if (s) n = stof(s);
-		else n = 0;
-	}
-	sample = car(sample);
-	if (n > 0)
-	{
-		for (int i = 1; i <= n; ++i)
-			precache_sound(sprintf("%s%d.wav", sample, i));
-	}
-	else
-	{
-		precache_sound(sprintf("%s.wav", sample));
-	}
-}
-
-string allvoicesamples;
-
-void PrecachePlayerSounds(string f)
-{
-	int fh = fopen(f, FILE_READ);
-	if (fh < 0)
-	{
-		LOG_WARNINGF("Player sound file not found: %s\n", f);
-		return;
-	}
-	for (string s; (s = fgets(fh)); )
-	{
-		int n = tokenize_console(s);
-		if (n != 3)
-		{
-			if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
-			continue;
-		}
-		string file = argv(1);
-		string variants = argv(2);
-		PrecacheGlobalSound(strcat(file, " ", variants));
-	}
-	fclose(fh);
-
-	if (!allvoicesamples)
-	{
-#define X(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
-		ALLVOICEMSGS(X)
-#undef X
-		allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
-	}
-}
-
-void ClearPlayerSounds(entity this)
-{
-#define X(m) if (this.playersound_##m) { strunzone(this.playersound_##m); this.playersound_##m = string_null; }
-	ALLPLAYERSOUNDS(X)
-	ALLVOICEMSGS(X)
-#undef X
-}
-
-bool LoadPlayerSounds(string f, bool strict)
-{
-	SELFPARAM();
-	int fh = fopen(f, FILE_READ);
-	if (fh < 0)
-	{
-		if (strict) LOG_WARNINGF("Player sound file not found: %s\n", f);
-		return false;
-	}
-	for (string s; (s = fgets(fh)); )
-	{
-		int n = tokenize_console(s);
-		if (n != 3)
-		{
-			if (n != 0) LOG_WARNINGF("Invalid sound info line: %s\n", s);
-			continue;
-		}
-		string key = argv(0);
-		var .string field = GetPlayerSoundSampleField(key);
-		if (GetPlayerSoundSampleField_notFound) field = GetVoiceMessageSampleField(key);
-		if (GetPlayerSoundSampleField_notFound)
-		{
-			LOG_TRACEF("Invalid sound info field: %s\n", key);
-			continue;
-		}
-		string file = argv(1);
-		string variants = argv(2);
-		if (self.(field)) strunzone(self.(field));
-		self.(field) = strzone(strcat(file, " ", variants));
-	}
-	fclose(fh);
-	return true;
-}
-
-.int modelindex_for_playersound;
-.int skin_for_playersound;
-
-void UpdatePlayerSounds(entity this)
-{
-	if (this.modelindex == this.modelindex_for_playersound && this.skin == this.skin_for_playersound) return;
-	this.modelindex_for_playersound = this.modelindex;
-	this.skin_for_playersound = this.skin;
-	ClearPlayerSounds(this);
-	LoadPlayerSounds("sound/player/default.sounds", true);
-	if (autocvar_g_debug_defaultsounds) return;
-	if (!LoadPlayerSounds(get_model_datafilename(this.model, this.skin, "sounds"), false))
-		LoadPlayerSounds(get_model_datafilename(this.model, 0, "sounds"), true);
-}
-
-void _GlobalSound(string sample, int chan, int voicetype, bool fake)
-{
-	SELFPARAM();
-	if (sample == "") return;
-	int n;
-	{
-		string s = cdr(sample);
-		if (s) n = stof(s);
-		else n = 0;
-	}
-	sample = car(sample);
-	if (n > 0) sample = sprintf("%s%d.wav", sample, floor(random() * n + 1));  // randomization
-	else sample = sprintf("%s.wav", sample);
-	switch (voicetype)
-	{
-		case VOICETYPE_LASTATTACKER_ONLY:
-		case VOICETYPE_LASTATTACKER:
-		{
-			if (!fake)
-			{
-				if (!this.pusher) break;
-				msg_entity = this.pusher;
-				if (IS_REAL_CLIENT(msg_entity))
-				{
-					float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
-					soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
-				}
-			}
-			if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
-			msg_entity = this;
-			if (IS_REAL_CLIENT(msg_entity)) soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NONE);
-			break;
-		}
-		case VOICETYPE_TEAMRADIO:
-		{
-			#define X() \
-				do \
-				{ \
-					float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
-					soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
-				} \
-				while (0)
-
-			if (fake) { msg_entity = this; X(); }
-			else
-			{
-				FOR_EACH_REALCLIENT(msg_entity)
-				{
-					if (!teamplay || msg_entity.team == this.team) X();
-				}
-			}
-			#undef X
-			break;
-		}
-		case VOICETYPE_AUTOTAUNT:
-		case VOICETYPE_TAUNT:
-		{
-			if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
-			else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT, true);
-			if (!sv_taunt) break;
-			if (autocvar_sv_gentle) break;
-			float tauntrand = 0;
-			if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
-			#define X() \
-				do \
-				{ \
-					if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
-					{ \
-						float atten = (msg_entity.cvar_cl_voice_directional >= 1) \
-						    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, ATTEN_MAX) \
-							: ATTEN_NONE; \
-						soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
-					} \
-				} \
-				while (0)
-			if (fake)
-			{
-				msg_entity = this;
-				X();
-			}
-			else
-			{
-				FOR_EACH_REALCLIENT(msg_entity)
-				{
-					X();
-				}
-			}
-			#undef X
-			break;
-		}
-		case VOICETYPE_PLAYERSOUND:
-		{
-			if (fake)
-			{
-				msg_entity = this;
-				soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
-			}
-			else
-			{
-				_sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
-			}
-			break;
-		}
-		default:
-		{
-			backtrace("Invalid voice type!");
-			break;
-		}
-	}
-}
-
-void PlayerSound(.string samplefield, int chan, float voicetype)
-{
-	SELFPARAM();
-	_GlobalSound(this.(samplefield), chan, voicetype, false);
-}
-
-void VoiceMessage(string type, string msg)
-{
-	SELFPARAM();
-	var .string sample = GetVoiceMessageSampleField(type);
-	if (GetPlayerSoundSampleField_notFound)
-	{
-		sprint(this, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
-		return;
-	}
-	int voicetype = GetVoiceMessageVoiceType(type);
-	bool ownteam = (voicetype == VOICETYPE_TEAMRADIO);
-	int flood = Say(this, ownteam, world, msg, true);
-	bool fake;
-	if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true;
-	else if (flood > 0) fake = false;
-	else return;
-	_GlobalSound(this.(sample), CH_VOICE, voicetype, fake);
 }

@@ -10,7 +10,7 @@ void generic_plat_blocked()
 		}
 
 		// Gib dead/dying stuff
-		if(other.deadflag != DEAD_NO)
+		if(IS_DEAD(other))
 			Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 	}
 #endif
@@ -103,7 +103,7 @@ void plat_center_touch()
 #elif defined(CSQC)
 	if (!IS_PLAYER(other))
 		return;
-	if(PHYS_DEAD(other))
+	if(IS_DEAD(other))
 		return;
 #endif
 
@@ -160,7 +160,7 @@ void plat_crush()
 		{   // Shall we bite?
 			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 			// Gib dead/dying stuff
-			if(other.deadflag != DEAD_NO)
+			if(IS_DEAD(other))
 				Damage (other, self, self, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 #endif
@@ -185,23 +185,23 @@ void plat_use()
 
 .string sound1, sound2;
 
-void plat_reset()
-{SELFPARAM();
+void plat_reset(entity this)
+{
 	IFTARGETED
 	{
-		setorigin (self, self.pos1);
-		self.state = 4;
-		self.use = plat_use;
+		setorigin (this, this.pos1);
+		this.state = 4;
+		this.use = plat_use;
 	}
 	else
 	{
-		setorigin (self, self.pos2);
-		self.state = 2;
-		self.use = plat_trigger_use;
+		setorigin (this, this.pos2);
+		this.state = 2;
+		this.use = plat_trigger_use;
 	}
 
 #ifdef SVQC
-	self.SendFlags |= SF_TRIGGER_RESET;
+	this.SendFlags |= SF_TRIGGER_RESET;
 #endif
 }
 

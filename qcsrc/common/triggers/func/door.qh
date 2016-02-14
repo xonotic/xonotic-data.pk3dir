@@ -1,3 +1,5 @@
+#pragma once
+
 // door constants
 const int DOOR_START_OPEN = 1;
 const int DOOR_DONT_LINK = 4;

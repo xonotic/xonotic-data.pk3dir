@@ -1,4 +1,4 @@
-#include "../../common/command/command.qh"
+#include <common/command/command.qh>
 #include "cmd.qh"
 
 #include "common.qh"
@@ -15,25 +15,25 @@
 #include "../mutators/all.qh"
 
 #ifdef SVQC
-	#include "../../common/vehicles/all.qh"
+	#include <common/vehicles/all.qh>
 #endif
 
-#include "../../common/constants.qh"
-#include "../../common/deathtypes/all.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/notifications.qh"
-#include "../../common/physics.qh"
-#include "../../common/teams.qh"
-#include "../../common/util.qh"
-#include "../../common/triggers/triggers.qh"
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/mapinfo.qh>
+#include <common/notifications.qh>
+#include <common/physics/player.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/triggers/triggers.qh>
 
-#include "../../common/minigames/sv_minigames.qh"
+#include <common/minigames/sv_minigames.qh>
 
-#include "../../common/monsters/all.qc"
-#include "../../common/monsters/spawn.qh"
-#include "../../common/monsters/sv_monsters.qh"
+#include <common/monsters/all.qc>
+#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_monsters.qh>
 
-#include "../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 void ClientKill_TeamChange(float targetteam);  // 0 = don't change, -1 = auto, -2 = spec
 
@@ -174,13 +174,13 @@ void ClientCommand_join(float request)
 				if (!IS_PLAYER(self) && !lockteams && !gameover)
 				{
 					if (self.caplayer) return;
-					if (nJoinAllowed(self))
+					if (nJoinAllowed(self, self))
 					{
 						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
 						self.classname = STR_PLAYER;
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname);
 						PutClientInServer();
 					}
 					else
@@ -372,7 +372,7 @@ void ClientCommand_selectteam(float request, float argc)
 
 								if (selection)
 								{
-									if (self.team == selection && self.deadflag == DEAD_NO)
+									if (self.team == selection && !IS_DEAD(self))
 									{
 										sprint(self, "^7You already are on that team.\n");
 									}
@@ -601,8 +601,14 @@ void ClientCommand_voice(float request, float argc, string command)
 		{
 			if (argv(1) != "")
 			{
-				if (argc >= 3) VoiceMessage(argv(1), substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-				else VoiceMessage(argv(1), "");
+				entity e = GetVoiceMessage(argv(1));
+				if (!e)
+				{
+					sprint(this, sprintf("Invalid voice. Use one of: %s\n", allvoicesamples));
+					return;
+				}
+				if (argc >= 3) VoiceMessage(this, e, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
+				else VoiceMessage(this, e, "");
 
 				return;
 			}
@@ -746,6 +752,7 @@ void SV_ParseClientCommand(string command)
 		case "prespawn": break;                            // handled by engine in host_cmd.c
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
+		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 
 		default:
 			if (SV_ParseClientCommand_floodcheck()) break; // "true": continue, as we're not flooding yet

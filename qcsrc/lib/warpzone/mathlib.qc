@@ -290,11 +290,3 @@ int isunordered(float x, float y)
 {
 	return !(x < y || x == y || x > y);
 }
-
-vector cross(vector a, vector b)
-{
-	return
-		'1 0 0' * (a.y * b.z - a.z * b.y)
-	+	'0 1 0' * (a.z * b.x - a.x * b.z)
-	+	'0 0 1' * (a.x * b.y - a.y * b.x);
-}

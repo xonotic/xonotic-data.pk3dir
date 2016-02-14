@@ -3,7 +3,7 @@
 #elif defined(SVQC)
     #include "constants.qh"
     #include "util.qh"
-    #include "weapons/all.qh"
+    #include <common/weapons/all.qh>
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"
     #include "playerstats.qh"
@@ -106,23 +106,16 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 
 void PlayerStats_GameReport_Accuracy(entity p)
 {
-	int i;
-
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		entity w = get_weaponinfo(i);
-
-		#define ACCMAC(suffix,field) \
-			PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", w.netname, suffix), p.accuracy.(field[i-1]));
-
+	#define ACCMAC(suffix, field) \
+		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), p.accuracy.(field[i-1]));
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
 		ACCMAC("cnt-hit", accuracy_cnt_hit)
 		ACCMAC("cnt-fired", accuracy_cnt_fired)
 		ACCMAC("frags", accuracy_frags)
-
-		#undef ACCMAC
-	}
+	));
+	#undef ACCMAC
 }
 
 void PlayerStats_GameReport_FinalizePlayer(entity p)
@@ -170,35 +163,33 @@ void PlayerStats_GameReport(float finished)
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
-	entity p;
-	FOR_EACH_CLIENT(p)
-	{
+	FOREACH_CLIENT(true, LAMBDA(
 		// add personal score rank
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_RANK, p.score_dummyfield);
+		PS_GR_P_ADDVAL(it, PLAYERSTATS_RANK, it.score_dummyfield);
 
 		// scoreboard data
-		if(p.scoreboard_pos)
+		if(it.scoreboard_pos)
 		{
 			// scoreboard is valid!
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
 			// add scoreboard position
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
 
 			// add scoreboard data
-			PlayerScore_PlayerStats(p);
+			PlayerScore_PlayerStats(it);
 
 			// if the match ended normally, add winning info
 			if(finished)
 			{
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_WINS, p.winning);
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_MATCHES, 1);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_WINS, it.winning);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_MATCHES, 1);
 			}
 		}
 
 		// collect final player information
-		PlayerStats_GameReport_FinalizePlayer(p);
-	}
+		PlayerStats_GameReport_FinalizePlayer(it);
+	));
 
 	if(autocvar_g_playerstats_gamereport_uri != "")
 	{
@@ -240,17 +231,13 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
 
 		// accuracy stats
-		entity w;
-		float i;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			w = get_weaponinfo(i);
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-hit"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-fired"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-frags"));
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-frags"));
+		));
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -467,12 +454,10 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 		// server has this disabled, kill the DB and set status to idle
 		if(PS_B_IN_DB >= 0)
 		{
-			entity player;
-
 			db_close(PS_B_IN_DB);
 			PS_B_IN_DB = -1;
 
-			FOR_EACH_REALCLIENT(player) { player.playerstats_basicstatus = PS_B_STATUS_IDLE; }
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(it.playerstats_basicstatus = PS_B_STATUS_IDLE));
 		}
 	}
 }

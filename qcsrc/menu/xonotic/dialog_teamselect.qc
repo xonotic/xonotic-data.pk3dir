@@ -2,9 +2,9 @@
 #define DIALOG_TEAMSELECT_H
 #include "rootdialog.qc"
 CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
-	METHOD(XonoticTeamSelectDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
+	METHOD(XonoticTeamSelectDialog, fill, void(entity));
 	METHOD(XonoticTeamSelectDialog, showNotify, void(entity));
-	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection")) // ;)
+	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection"))
 	ATTRIB(XonoticTeamSelectDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticTeamSelectDialog, intendedWidth, float, 0.4)
 	ATTRIB(XonoticTeamSelectDialog, rows, float, 5)
@@ -32,13 +32,14 @@ entity makeTeamButton(string theName, vector theColor, string commandtheName)
 
 void XonoticTeamSelectDialog_showNotify(entity me)
 {
+	SUPER(XonoticTeamSelectDialog).showNotify(me);
 	float teams, nTeams;
 	teams = cvar("_teams_available");
 	nTeams = 0;
-	me.team1.disabled = !(teams & 1); nTeams += !!(teams & 1);
-	me.team2.disabled = !(teams & 2); nTeams += !!(teams & 2);
-	me.team3.disabled = !(teams & 4); nTeams += !!(teams & 4);
-	me.team4.disabled = !(teams & 8); nTeams += !!(teams & 8);
+	me.team1.disabled = !(teams & 1); nTeams += boolean(teams & 1);
+	me.team2.disabled = !(teams & 2); nTeams += boolean(teams & 2);
+	me.team3.disabled = !(teams & 4); nTeams += boolean(teams & 4);
+	me.team4.disabled = !(teams & 8); nTeams += boolean(teams & 8);
 }
 
 void XonoticTeamSelectDialog_fill(entity me)

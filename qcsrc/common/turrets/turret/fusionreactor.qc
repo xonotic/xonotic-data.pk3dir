@@ -6,8 +6,8 @@ CLASS(FusionReactor, Turret)
 /* mins       */ ATTRIB(FusionReactor, mins, vector, '-34 -34 0');
 /* maxs       */ ATTRIB(FusionReactor, maxs, vector, '34 34 90');
 /* modelname  */ ATTRIB(FusionReactor, mdl, string, "base.md3");
-/* model      */ ATTRIB(FusionReactor, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(FusionReactor, head_model, string, strzone(strcat("models/turrets/", "reactor.md3")));
+/* model      */ ATTRIB_STRZONE(FusionReactor, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(FusionReactor, head_model, string, strcat("models/turrets/", "reactor.md3"));
 /* netname    */ ATTRIB(FusionReactor, netname, string, "fusionreactor");
 /* fullname   */ ATTRIB(FusionReactor, turret_name, string, _("Fusion Reactor"));
 ENDCLASS(FusionReactor)
@@ -22,7 +22,7 @@ bool turret_fusionreactor_firecheck()
     if (self.attack_finished_single[0] > time)
         return false;
 
-    if (self.enemy.deadflag != DEAD_NO)
+    if (IS_DEAD(self.enemy))
         return false;
 
     if (self.enemy == world)
@@ -34,7 +34,7 @@ bool turret_fusionreactor_firecheck()
     if (self.enemy.ammo >= self.enemy.ammo_max)
         return false;
 
-    if (vlen(self.enemy.origin - self.origin) > self.target_range)
+    if(vdist(self.enemy.origin - self.origin, >, self.target_range))
         return false;
 
     if(self.team != self.enemy.team)
@@ -48,13 +48,13 @@ bool turret_fusionreactor_firecheck()
 
 spawnfunc(turret_fusionreactor) { if (!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
 
-METHOD(FusionReactor, tr_attack, void(FusionReactor this))
+METHOD(FusionReactor, tr_attack, void(FusionReactor this, entity it))
 {
     self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
     vector fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
     te_smallflash(fl_org);
 }
-METHOD(FusionReactor, tr_think, void(FusionReactor thistur))
+METHOD(FusionReactor, tr_think, void(FusionReactor thistur, entity it))
 {
     self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
 }

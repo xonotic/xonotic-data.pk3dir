@@ -98,7 +98,11 @@ void XonoticCharmap_cellSelect(entity me, vector cell)
 {
 	string character = charmap_cellToChar(me, cell);
 	if(character != "")
+	{
 		me.inputBox.enterText(me.inputBox, character);
+		if(me.inputBox.applyButton)
+			me.inputBox.applyButton.disabled = false;
+	}
 }
 
 bool XonoticCharmap_cellIsValid(entity me, vector cell)

@@ -10,41 +10,7 @@ void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector col
 		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time)
-{
-	float bonusNades    = getstatf(STAT_NADE_BONUS);
-	float bonusProgress = getstatf(STAT_NADE_BONUS_SCORE);
-	float bonusType     = getstati(STAT_NADE_BONUS_TYPE);
-	Nade def = Nades_from(bonusType);
-	vector nadeColor    = def.m_color;
-	string nadeIcon     = def.m_icon;
-
-	vector iconPos, textPos;
-
-	if(autocvar_hud_panel_ammo_iconalign)
-	{
-		iconPos = myPos + eX * 2 * mySize.y;
-		textPos = myPos;
-	}
-	else
-	{
-		iconPos = myPos;
-		textPos = myPos + eX * mySize.y;
-	}
-
-	if(bonusNades > 0 || bonusProgress > 0)
-	{
-		DrawNadeProgressBar(myPos, mySize, bonusProgress, nadeColor);
-
-		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(textPos, ftos(bonusNades), eX * (2/3) * mySize.x + eY * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-
-		if(draw_expanding)
-			drawpic_aspect_skin_expanding(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, expand_time);
-
-		drawpic_aspect_skin(iconPos, nadeIcon, '1 1 0' * mySize.y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	}
-}
+void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expand_time); // TODO: mutator
 
 void DrawAmmoItem(vector myPos, vector mySize, .int ammoType, bool isCurrent, bool isInfinite)
 {
@@ -147,7 +113,7 @@ void HUD_Ammo()
 	}
 
 	int rows = 0, columns, row, column;
-	float nade_cnt = getstatf(STAT_NADE_BONUS), nade_score = getstatf(STAT_NADE_BONUS_SCORE);
+	float nade_cnt = STAT(NADE_BONUS), nade_score = STAT(NADE_BONUS_SCORE);
 	bool draw_nades = (nade_cnt > 0 || nade_score > 0);
 	float nade_statuschange_elapsedtime;
 	int total_ammo_count;
@@ -175,7 +141,7 @@ void HUD_Ammo()
 	columns = ceil((total_ammo_count)/rows);
 	ammo_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 
-	vector offset = '0 0 0'; // fteqcc sucks
+	vector offset = '0 0 0';
 	float newSize;
 	if(ammo_size.x/ammo_size.y > 3)
 	{
@@ -192,8 +158,9 @@ void HUD_Ammo()
 		ammo_size.y = newSize;
 	}
 
+	Weapon wep = switchweapon;
 	int i;
-	bool infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
 	row = column = 0;
 	if(autocvar_hud_panel_ammo_onlycurrent)
 	{
@@ -206,7 +173,7 @@ void HUD_Ammo()
 			DrawAmmoItem(
 				pos,
 				ammo_size,
-				(get_weaponinfo(switchweapon)).ammo_field,
+				wep.ammo_field,
 				true,
 				infinite_ammo
 			);
@@ -230,7 +197,7 @@ void HUD_Ammo()
 				pos + eX * column * (ammo_size.x + offset.x) + eY * row * (ammo_size.y + offset.y),
 				ammo_size,
 				ammotype,
-				((get_weaponinfo(switchweapon)).ammo_field == ammotype),
+				(wep.ammo_field == ammotype),
 				infinite_ammo
 			);
 

@@ -1,5 +1,4 @@
-#ifndef LINKEDLIST_H
-#define LINKEDLIST_H
+#pragma once
 
 CLASS(LinkedListNode, Object)
 	ATTRIB(LinkedListNode, ll_data, entity, NULL)
@@ -14,11 +13,14 @@ ENDCLASS(LinkedList)
 
 #define LL_NEW() NEW(LinkedList)
 
+#define LL_EMPTY(ll) (ll.ll_head == NULL)
+
 /**
  * Push to tail
  */
 entity LL_PUSH(LinkedList this, entity e)
 {
+	assert(this);
 	LinkedListNode n = NEW(LinkedListNode);
 	n.ll_data = e;
 	LinkedListNode tail = n.ll_prev = this.ll_tail;
@@ -31,17 +33,47 @@ entity LL_PUSH(LinkedList this, entity e)
  */
 entity LL_POP(LinkedList this)
 {
+	assert(this);
 	if (!this.ll_tail) return NULL;
 	LinkedListNode n = this.ll_tail;
 	entity e = n.ll_data;
 	LinkedListNode prev = n.ll_prev;
-	if (prev) prev.ll_next = NULL;
+	if (prev) (this.ll_tail = prev).ll_next = NULL;
 	else this.ll_head = this.ll_tail = NULL;
+	remove(n);
 	return e;
 }
 
+#define LL_CLEAR(...) EVAL_LL_CLEAR(OVERLOAD(LL_CLEAR, __VA_ARGS__))
+#define EVAL_LL_CLEAR(...) __VA_ARGS__
+#define LL_CLEAR_1(this) LL_CLEAR_2(this, LAMBDA())
+#define LL_CLEAR_2(this, dtor) \
+	MACRO_BEGIN \
+	{ \
+		LinkedList _ll = this; \
+		assert(_ll); \
+		while (_ll.ll_tail) \
+		{ \
+			entity it = LL_POP(_ll); \
+			if (!it) continue; \
+			dtor \
+			remove(it); \
+		} \
+	} MACRO_END
+
+#define LL_DELETE(...) EVAL_LL_DELETE(OVERLOAD(LL_DELETE, __VA_ARGS__))
+#define EVAL_LL_DELETE(...) __VA_ARGS__
+#define LL_DELETE_1(this) LL_DELETE_2(this, LAMBDA())
+#define LL_DELETE_2(this, dtor) \
+	MACRO_BEGIN \
+	{ \
+		LL_CLEAR(this, dtor); \
+		remove(this); \
+		this = NULL; \
+	} MACRO_END
+
 #define LL_EACH(list, cond, body) \
-	do                                                                  \
+	MACRO_BEGIN                                                         \
 	{                                                                   \
 		noref int i = 0;                                                \
 		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i))  \
@@ -49,7 +81,4 @@ entity LL_POP(LinkedList this)
 			noref entity it = _it.ll_data;                              \
 			if (cond) { body }                                          \
 		}                                                               \
-	}                                                                   \
-	while (0)
-
-#endif
+	} MACRO_END

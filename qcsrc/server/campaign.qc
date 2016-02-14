@@ -184,25 +184,16 @@ void CampaignSaveCvar(string cvarname, float value)
 
 void CampaignPreIntermission()
 {
-	entity head;
-	float won;
-	float lost;
+	int won = 0;
+	int lost = 0;
 	string savevar;
 
-	won = lost = 0;
-
-	head = findchain(classname, "player");
-	while(head)
-	{
-		if(IS_REAL_CLIENT(head))
-		{
-			if(head.winning)
-				won = won + 1;
-			else
-				lost = lost + 1;
-		}
-		head = head.chain;
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+		if(it.winning)
+			won += 1;
+		else
+			lost += 1;
+	));
 
 	if(autocvar__campaign_testrun)
 	{
@@ -265,7 +256,7 @@ void CampaignPostIntermission()
 	if(campaign_won && campaign_entries < 2)
 	{
 		// last map won!
-		LOG_INFO("^2test run: campaign looks GOOD\n");
+		LOG_DEBUG("^2test run: campaign looks GOOD\n");
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;

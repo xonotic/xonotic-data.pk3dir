@@ -54,7 +54,7 @@ string minigame_texture(string name)
 	return path;
 }
 
-#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(self.Name)
+#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(this.Name)
 #define MSLE_CLEAN_String(x) strunzone(x);
 #define MSLE_CLEAN_Byte(x)
 #define MSLE_CLEAN_Char(x)
@@ -67,14 +67,14 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Vector2D(x)
 
 #define MSLE(Name,Fields) \
-	void msle_entremove_##Name() { SELFPARAM(); strunzone(self.netname); Fields }
+	void msle_entremove_##Name(entity this) { strunzone(this.netname); Fields }
 MINIGAME_SIMPLELINKED_ENTITIES
 #undef MSLE
 #undef FIELD
 
 void minigame_autoclean_entity(entity e)
 {
-	LOG_DEBUG("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
 	remove(e);
 }
 
@@ -105,9 +105,9 @@ void deactivate_minigame()
 		HUD_MinigameMenu_CurrentButton();
 }
 
-void minigame_entremove()
-{SELFPARAM();
-	if ( self == active_minigame )
+void minigame_entremove(entity this)
+{
+	if ( this == active_minigame )
 		deactivate_minigame();
 }
 
@@ -147,14 +147,12 @@ void activate_minigame(entity minigame)
 	}
 }
 
-void minigame_player_entremove()
-{SELFPARAM();
-	if ( self.owner == active_minigame && self.minigame_playerslot == player_localentnum )
+void minigame_player_entremove(entity this)
+{
+	if ( this.owner == active_minigame && this.minigame_playerslot == player_localentnum )
 		deactivate_minigame();
 }
 
-vector ReadVector2D() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = 0; return v; }
-vector ReadVector() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = ReadCoord(); return v; }
 string() ReadString_Raw = #366;
 string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define ReadString ReadString_Zoned
@@ -214,7 +212,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 			minigame_read_owner();
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
-			LOG_DEBUG("Player: ",GetPlayerName(ent-1),"\n");
+			LOG_DEBUG("Player: ",entcs_GetName(ent-1),"\n");
 
 			activate = (ent == player_localnum+1 && self.owner && self.owner != active_minigame);
 
@@ -237,7 +235,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		LOG_DEBUG("CL Reading entity: ",ftos(num_for_edict(self)),
+		LOG_DEBUG("CL Reading entity: ",ftos(etof(self)),
 			" classname:",self.classname," enttype:",ftos(self.enttype) );
 		LOG_DEBUG(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 	}
@@ -383,4 +381,23 @@ void minigame_prompt()
 		HUD_Notify_Push(sprintf("minigames/%s/icon_notif",active_minigame.descriptor.netname),
 			_("It's your turn"), "");
 	}
+}
+
+// handle commands etc.
+REGISTER_MUTATOR(minigames, true);
+
+MUTATOR_HOOKFUNCTION(minigames, HUD_Command)
+{
+	if(MUTATOR_RETURNVALUE) { return false; } // command was already handled
+
+	if(argv(1) == "minigame")
+	{
+		if (HUD_MinigameMenu_IsOpened())
+			HUD_MinigameMenu_Close();
+		else
+			HUD_MinigameMenu_Open();
+		return true;
+	}
+
+	return false;
 }

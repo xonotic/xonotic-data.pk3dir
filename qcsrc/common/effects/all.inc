@@ -12,6 +12,7 @@ EFFECT(0, SMOKE_SMALL,              "smoke_small")
 EFFECT(0, SMOKE_LARGE,              "smoke_large")
 
 
+EFFECT(0, ARC_MUZZLEFLASH,          "arc_muzzleflash")
 
 EFFECT(0, BLASTER_IMPACT,           "laser_impact")
 EFFECT(0, BLASTER_MUZZLEFLASH,      "laser_muzzleflash")
@@ -23,6 +24,7 @@ EFFECT(0, ARC_BEAM,                 "arc_beam")
 EFFECT(0, ARC_BEAM_HEAL,            "arc_beam_heal")
 EFFECT(0, ARC_BEAM_HEAL_IMPACT,     "arc_beam_healimpact")
 EFFECT(0, ARC_BEAM_HEAL_IMPACT2,    "healray_impact")
+EFFECT(0, ARC_BOLT_EXPLODE,         "arc_bolt_explode")
 EFFECT(0, ARC_OVERHEAT,             "arc_overheat")
 EFFECT(0, ARC_OVERHEAT_FIRE,        "arc_overheat_fire")
 EFFECT(0, ARC_SMOKE,                "arc_smoke")
@@ -146,54 +148,6 @@ EFFECT(0, SPAWNPOINT_PINK,          "spawn_point_pink")
 EFFECT(0, SPAWN_PINK,               "spawn_event_pink")
 EFFECT(0, SPAWNPOINT_NEUTRAL,       "spawn_point_neutral")
 EFFECT(0, SPAWN_NEUTRAL,            "spawn_event_neutral")
-
-EFFECT(0, NADE_EXPLODE_RED,         "nade_red_explode")
-EFFECT(0, NADE_EXPLODE_BLUE,        "nade_blue_explode")
-EFFECT(0, NADE_EXPLODE_YELLOW,      "nade_yellow_explode")
-EFFECT(0, NADE_EXPLODE_PINK,        "nade_pink_explode")
-EFFECT(0, NADE_EXPLODE_NEUTRAL,     "nade_neutral_explode")
-entity EFFECT_NADE_EXPLODE(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_NADE_EXPLODE_RED;
-        case NUM_TEAM_2:    return EFFECT_NADE_EXPLODE_BLUE;
-        case NUM_TEAM_3:    return EFFECT_NADE_EXPLODE_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_NADE_EXPLODE_PINK;
-        default:		    return EFFECT_NADE_EXPLODE_NEUTRAL;
-    }
-}
-
-EFFECT(1, NADE_TRAIL_RED,           "nade_red")
-EFFECT(1, NADE_TRAIL_BLUE,          "nade_blue")
-EFFECT(1, NADE_TRAIL_YELLOW,        "nade_yellow")
-EFFECT(1, NADE_TRAIL_PINK,          "nade_pink")
-EFFECT(1, NADE_TRAIL_NEUTRAL,       "nade_neutral")
-entity EFFECT_NADE_TRAIL(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_NADE_TRAIL_RED;
-        case NUM_TEAM_2:    return EFFECT_NADE_TRAIL_BLUE;
-        case NUM_TEAM_3:    return EFFECT_NADE_TRAIL_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_NADE_TRAIL_PINK;
-        default:            return EFFECT_NADE_TRAIL_NEUTRAL;
-    }
-}
-
-EFFECT(1, NADE_TRAIL_BURN_RED,      "nade_red_burn")
-EFFECT(1, NADE_TRAIL_BURN_BLUE,     "nade_blue_burn")
-EFFECT(1, NADE_TRAIL_BURN_YELLOW,   "nade_yellow_burn")
-EFFECT(1, NADE_TRAIL_BURN_PINK,     "nade_pink_burn")
-EFFECT(1, NADE_TRAIL_BURN_NEUTRAL,  "nade_neutral_burn")
-entity EFFECT_NADE_TRAIL_BURN(int teamid)
-{
-    switch (teamid) {
-        case NUM_TEAM_1:    return EFFECT_NADE_TRAIL_BURN_RED;
-        case NUM_TEAM_2:    return EFFECT_NADE_TRAIL_BURN_BLUE;
-        case NUM_TEAM_3:    return EFFECT_NADE_TRAIL_BURN_YELLOW;
-        case NUM_TEAM_4:    return EFFECT_NADE_TRAIL_BURN_PINK;
-        default:            return EFFECT_NADE_TRAIL_BURN_NEUTRAL;
-    }
-}
 
 EFFECT(0, ICEORGLASS,               "iceorglass")
 EFFECT(0, ICEFIELD,                 "icefield")

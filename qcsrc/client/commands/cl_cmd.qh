@@ -1,13 +1,27 @@
 #ifndef CLIENT_COMMANDS_CL_CMD_H
 #define CLIENT_COMMANDS_CL_CMD_H
-// ==============================================
-//  CSQC client commands code, written by Samual
-//  Last updated: December 17th, 2011
-// ==============================================
 
 void Cmd_HUD_SetFields(int);
 void Cmd_HUD_Help();
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void LocalCommand_macro_write_aliases(int fh);
+
+REGISTRY(CLIENT_COMMANDS, BITS(7))
+#define CLIENT_COMMANDS_from(i) _CLIENT_COMMANDS_from(i, NULL)
+REGISTER_REGISTRY(CLIENT_COMMANDS)
+REGISTRY_SORT(CLIENT_COMMANDS)
+
+#define CLIENT_COMMAND(id, description) \
+	CLASS(clientcommand_##id, Command) \
+		ATTRIB(clientcommand_##id, m_name, string, #id); \
+    	ATTRIB(clientcommand_##id, m_description, string, description); \
+	ENDCLASS(clientcommand_##id) \
+    REGISTER(CLIENT_COMMANDS, CMD_CL, id, m_id, NEW(clientcommand_##id)); \
+	METHOD(clientcommand_##id, m_invokecmd, void(int request, entity caller, int arguments, string command))
+
+STATIC_INIT(CLIENT_COMMANDS_aliases) {
+	FOREACH(CLIENT_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_cl"))));
+}
+
 #endif

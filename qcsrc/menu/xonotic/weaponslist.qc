@@ -12,6 +12,8 @@ CLASS(XonoticWeaponsList, XonoticListBox)
 	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticWeaponsList, realUpperMargin, float, 0)
 	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
+
+	ATTRIB(XonoticWeaponsList, applyButton, entity, NULL)
 ENDCLASS(XonoticWeaponsList)
 entity makeXonoticWeaponsList();
 void WeaponsList_MoveUp_Click(entity btn, entity me);
@@ -73,7 +75,11 @@ float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 	if(me.pressed != 1) // don't change priority if the person is just scrolling
 	{
 		if(me.selectedItem != i)
+		{
+			if(me.applyButton)
+				me.applyButton.disabled = false;
 			cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
+		}
 	}
 
 	return f;
@@ -87,7 +93,7 @@ string XonoticWeaponsList_toString(entity me)
 	s = "";
 	for(i = 0; i < n; ++i)
 	{
-		e = get_weaponinfo(stof(argv(i)));
+		e = Weapons_from(stof(argv(i)));
 		s = strcat(s, e.m_name, ", ");
 	}
 	return substring(s, 0, strlen(s) - 2);
@@ -102,7 +108,7 @@ void XonoticWeaponsList_drawListBoxItem(entity me, int i, vector absSize, bool i
 		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
 	}
-	e = get_weaponinfo(stof(argv(i)));
+	e = Weapons_from(stof(argv(i)));
 	string msg = e.m_name;
 	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		msg = strcat(msg, "*");

@@ -1,11 +1,11 @@
 // Info messages panel (#14)
 
-#define drawInfoMessage(s) do {																						\
+#define drawInfoMessage(s) MACRO_BEGIN {																			\
 	if(autocvar_hud_panel_infomessages_flip)																		\
 		o.x = pos.x + mySize.x - stringwidth(s, true, fontsize);													\
 	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);														\
 	o.y += fontsize.y;																								\
-} while(0)
+} MACRO_END
 void HUD_InfoMessages()
 {
 	if(!autocvar__hud_configure)
@@ -56,13 +56,13 @@ void HUD_InfoMessages()
 	string s;
 	if(!autocvar__hud_configure)
 	{
-		if(spectatee_status && !intermission)
+		if(spectatee_status)
 		{
 			a = 1;
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(current_player));
+				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
 			drawInfoMessage(s);
 
 			if(spectatee_status == -1)
@@ -94,18 +94,17 @@ void HUD_InfoMessages()
 			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
 			drawInfoMessage(s);
-
-			//show restart countdown:
-			if (time < STAT(GAMESTARTTIME)) {
-				float countdown;
-				//we need to ceil, otherwise the countdown would be off by .5 when using round()
-				countdown = ceil(STAT(GAMESTARTTIME) - time);
-				s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
-				drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);
-				o.y += fontsize.y;
-			}
 		}
-		if(warmup_stage && !intermission)
+
+		if (time < STAT(GAMESTARTTIME))
+		{
+			//we need to ceil, otherwise the countdown would be off by .5 when using round()
+			float countdown = ceil(STAT(GAMESTARTTIME) - time);
+			s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
+			drawInfoMessage(s);
+		}
+
+		if(warmup_stage)
 		{
 			s = _("^2Currently in ^1warmup^2 stage!");
 			drawInfoMessage(s);
@@ -117,7 +116,7 @@ void HUD_InfoMessages()
 		else
 			blinkcolor = "^3";
 
-		if(ready_waiting && !intermission && !spectatee_status)
+		if(ready_waiting && !spectatee_status)
 		{
 			if(ready_waiting_for_me)
 			{
@@ -135,13 +134,13 @@ void HUD_InfoMessages()
 			}
 			drawInfoMessage(s);
 		}
-		else if(warmup_stage && !intermission && !spectatee_status)
+		else if(warmup_stage && !spectatee_status)
 		{
 			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
 			drawInfoMessage(s);
 		}
 
-		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
+		if(teamplay && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
 		{
 			float ts_min = 0, ts_max = 0;
 			tm = teams.sort_next;

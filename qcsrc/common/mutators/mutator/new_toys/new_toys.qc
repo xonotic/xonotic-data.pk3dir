@@ -77,16 +77,18 @@ REGISTER_MUTATOR(nt, cvar("g_new_toys") && !cvar("g_instagib") && !cvar("g_overk
 			error("This cannot be added at runtime\n");
 
 		// mark the guns as ok to use by e.g. impulse 99
-		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(nt_IsNewToy(it.m_id))
+				it.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+		));
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
-		for(int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(nt_IsNewToy(i))
-				get_weaponinfo(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(nt_IsNewToy(it.m_id))
+				it.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		));
 	}
 
 	MUTATOR_ONREMOVE
@@ -158,7 +160,7 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 	// apply those bits that are set by start_weapon_defaultmask
 	// same for warmup
 
-	float i, j, k, n;
+	float j, n;
 
 	WepSet newdefault;
 	WepSet warmup_newdefault;
@@ -166,24 +168,22 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 	newdefault = '0 0 0';
 	warmup_newdefault = '0 0 0';
 
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		entity e = get_weaponinfo(i);
-		if(!e.weapon)
-			continue;
+	WepSet seti = '0 0 0';
 
-		n = tokenize_console(nt_GetReplacement(e.netname, autocvar_g_new_toys_autoreplace));
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		seti = it.m_wepset;
+		n = tokenize_console(nt_GetReplacement(it.netname, autocvar_g_new_toys_autoreplace));
 
 		for(j = 0; j < n; ++j)
-			for(k = WEP_FIRST; k <= WEP_LAST; ++k)
-				if(get_weaponinfo(k).netname == argv(j))
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if(it.netname == argv(j))
 				{
-					if(start_weapons & WepSet_FromWeapon(i))
-						newdefault |= WepSet_FromWeapon(k);
-					if(warmup_start_weapons & WepSet_FromWeapon(i))
-						warmup_newdefault |= WepSet_FromWeapon(k);
+					WepSet setk = it.m_wepset;
+					if(start_weapons & seti) newdefault |= setk;
+					if(warmup_start_weapons & seti) warmup_newdefault |= setk;
 				}
-	}
+			));
+	));
 
 	newdefault &= start_weapons_defaultmask;
 	start_weapons &= ~start_weapons_defaultmask;

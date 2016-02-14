@@ -56,8 +56,8 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 void HUD_Powerups()
 {
-	int allItems = getstati(STAT_ITEMS, 0, 24);
-	int allBuffs = getstati(STAT_BUFFS, 0, 24);
+	int allItems = STAT(ITEMS);
+	int allBuffs = STAT(BUFFS);
 	int strengthTime, shieldTime, superTime;
 
 	// Initialize items
@@ -65,12 +65,12 @@ void HUD_Powerups()
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if(getstati(STAT_HEALTH) <= 0) return;
+		if(STAT(HEALTH) <= 0) return;
 		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);
 		shieldTime = bound(0, STAT(INVINCIBLE_FINISHED) - time, 99);
-		superTime = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
+		superTime = bound(0, STAT(SUPERWEAPONS_FINISHED) - time, 99);
 
 		if(allItems & IT_UNLIMITED_SUPERWEAPONS)
 			superTime = 99;
@@ -97,9 +97,7 @@ void HUD_Powerups()
 	if(superTime)
 		addPowerupItem("Superweapons", "superweapons", autocvar_hud_progressbar_superweapons_color, superTime, 30);
 
-	FOREACH(Buffs, it.m_itemid & allBuffs, LAMBDA(
-		addPowerupItem(it.m_prettyName, strcat("buff_", it.m_name), it.m_color, bound(0, getstatf(STAT_BUFF_TIME) - time, 99), 60);
-	));
+	MUTATOR_CALLHOOK(HUD_Powerups_add);
 
 	if(!powerupItemsCount)
 		return;

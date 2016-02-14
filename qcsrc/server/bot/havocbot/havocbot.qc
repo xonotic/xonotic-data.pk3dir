@@ -6,12 +6,12 @@
 #include "../scripting.qh"
 #include "../waypoints.qh"
 
-#include "../../../common/constants.qh"
-#include "../../../common/items/all.qh"
+#include <common/constants.qh>
+#include <common/items/all.qh>
 
-#include "../../../common/triggers/trigger/jumppads.qh"
+#include <common/triggers/trigger/jumppads.qh>
 
-#include "../../../lib/warpzone/common.qh"
+#include <lib/warpzone/common.qh>
 
 .float speed;
 
@@ -38,7 +38,7 @@ void havocbot_ai()
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
-		if(self.deadflag != DEAD_NO)
+		if(IS_DEAD(self))
 		if(self.goalcurrent==world)
 		if(self.waterlevel==WATERLEVEL_SWIMMING || (self.aistatus & AI_STATUS_OUT_WATER))
 		{
@@ -86,7 +86,7 @@ void havocbot_ai()
 		bot_strategytoken_taken = true;
 	}
 
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	havocbot_chooseenemy();
@@ -104,7 +104,7 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			Weapon w = get_weaponinfo(self.weapon);
+			Weapon w = PS(self).m_weapon;
 			w.wr_aim(w);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
@@ -114,7 +114,7 @@ void havocbot_ai()
 			else
 			{
 				if(self.BUTTON_ATCK||self.BUTTON_ATCK2)
-					self.lastfiredweapon = self.weapon;
+					self.lastfiredweapon = PS(self).m_weapon.m_id;
 			}
 		}
 		else
@@ -171,12 +171,10 @@ void havocbot_ai()
 		if(skill >= 5) // bots can only look for unloaded weapons past this skill
 		if(self.clip_load >= 0) // only if we're not reloading a weapon already
 		{
-			for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			{
-				entity e = get_weaponinfo(i);
-				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
-					self.switchweapon = i;
-			}
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if((self.weapons & (it.m_wepset)) && (it.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[it.m_id] < it.reloading_ammo))
+					PS(self).m_switchweapon = it;
+			));
 		}
 	}
 }
@@ -297,7 +295,7 @@ void havocbot_bunnyhop(vector dir)
 	bunnyhopdistance = vlen(self.origin - gco);
 
 	// Run only to visible goals
-	if(self.flags & FL_ONGROUND)
+	if(IS_ONGROUND(self))
 	if(self.speed==maxspeed)
 	if(checkpvs(self.origin + self.view_ofs, self.goalcurrent))
 	{
@@ -373,7 +371,7 @@ void havocbot_bunnyhop(vector dir)
 #if 0
 	// Release jump button
 	if(!cvar("sv_pogostick"))
-	if((self.flags & FL_ONGROUND) == 0)
+	if((IS_ONGROUND(self)) == 0)
 	{
 		if(self.velocity.z < 0 || vlen(self.velocity)<maxspeed)
 			self.BUTTON_JUMP = false;
@@ -480,7 +478,7 @@ void havocbot_movetogoal()
 
 		// Flying
 		self.BUTTON_HOOK = true;
-		if(self.navigation_jetpack_point.z - PL_MAX.z + PL_MIN.z < self.origin.z)
+		if(self.navigation_jetpack_point.z - STAT(PL_MAX, NULL).z + STAT(PL_MIN, NULL).z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
 			self.movement_y = dir * v_right * maxspeed;
@@ -556,7 +554,7 @@ void havocbot_movetogoal()
 
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if(skill>6)
-	if (!(self.flags & FL_ONGROUND))
+	if (!(IS_ONGROUND(self)))
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
 		if(tracebox_hits_trigger_hurt(self.origin, self.mins, self.maxs, trace_endpos ))
@@ -603,7 +601,7 @@ void havocbot_movetogoal()
 		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity.z < 0)
-			if(client_hasweapon(self, WEP_DEVASTATOR.m_id, true, false))
+			if(client_hasweapon(self, WEP_DEVASTATOR, true, false))
 			{
 				self.movement_x = maxspeed;
 
@@ -617,7 +615,7 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_DEVASTATOR.m_id;
+				PS(self).m_switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
@@ -769,7 +767,7 @@ void havocbot_movetogoal()
 			self.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
-			if((self.flags & FL_ONGROUND) || (self.aistatus & AI_STATUS_RUNNING) || self.BUTTON_JUMP == true)
+			if((IS_ONGROUND(self)) || (self.aistatus & AI_STATUS_RUNNING) || self.BUTTON_JUMP == true)
 			{
 				// Look downwards
 				traceline(dst_ahead , dst_down, true, world);
@@ -851,7 +849,7 @@ void havocbot_movetogoal()
 	if(skill+self.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(dir);
 
-	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
+	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (IS_ONGROUND(self))) self.BUTTON_JUMP=1;
 	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=true;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
 }
@@ -992,14 +990,11 @@ float havocbot_chooseweapon_checkreload(int new_weapon)
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (self.weapon_load[new_weapon] < 0)
 	{
-		float i, other_weapon_available = false;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			Weapon w = get_weaponinfo(i);
-			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (w.wr_checkammo1(w) + w.wr_checkammo2(w))
+		bool other_weapon_available = false;
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(it.wr_checkammo1(it) + it.wr_checkammo2(it))
 				other_weapon_available = true;
-		}
+		));
 		if(other_weapon_available)
 			return true;
 	}
@@ -1014,7 +1009,7 @@ void havocbot_chooseweapon()
 	// ;)
 	if(g_weaponarena_weapons == WEPSET(TUBA))
 	{
-		self.switchweapon = WEP_TUBA.m_id;
+		PS(self).m_switchweapon = WEP_TUBA;
 		return;
 	}
 
@@ -1022,15 +1017,14 @@ void havocbot_chooseweapon()
 	if(self.enemy==world)
 	{
 		// If no weapon was chosen get the first available weapon
-		if(self.weapon==0)
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER.m_id)
-		{
-			if(client_hasweapon(self, i, true, false))
+		if(PS(self).m_weapon==WEP_Null)
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(client_hasweapon(self, it, true, false))
 			{
-				self.switchweapon = i;
+				PS(self).m_switchweapon = it;
 				return;
 			}
-		}
+		));
 		return;
 	}
 
@@ -1055,7 +1049,7 @@ void havocbot_chooseweapon()
 	combo = false;
 
 	if(autocvar_bot_ai_weapon_combo)
-	if(self.weapon == self.lastfiredweapon)
+	if(PS(self).m_weapon.m_id == self.lastfiredweapon)
 	if(af > combo_time)
 	{
 		combo = true;
@@ -1071,11 +1065,11 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_far ) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_far[i] != -1 ; ++i){
 				w = bot_weapons_far[i];
-				if ( client_hasweapon(self, w, true, false) )
+				if ( client_hasweapon(self, Weapons_from(w), true, false) )
 				{
-					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
+					if ((PS(self).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
-					self.switchweapon = w;
+					PS(self).m_switchweapon = Weapons_from(w);
 					return;
 				}
 			}
@@ -1085,11 +1079,11 @@ void havocbot_chooseweapon()
 		if ( distance > bot_distance_close) {
 			for(i=0; i < Weapons_COUNT && bot_weapons_mid[i] != -1 ; ++i){
 				w = bot_weapons_mid[i];
-				if ( client_hasweapon(self, w, true, false) )
+				if ( client_hasweapon(self, Weapons_from(w), true, false) )
 				{
-					if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
+					if ((PS(self).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(w))
 						continue;
-					self.switchweapon = w;
+					PS(self).m_switchweapon = Weapons_from(w);
 					return;
 				}
 			}
@@ -1098,11 +1092,11 @@ void havocbot_chooseweapon()
 		// Choose weapons for close distance
 		for(i=0; i < Weapons_COUNT && bot_weapons_close[i] != -1 ; ++i){
 			w = bot_weapons_close[i];
-			if ( client_hasweapon(self, w, true, false) )
+			if ( client_hasweapon(self, Weapons_from(w), true, false) )
 			{
-				if ((self.weapon == w && combo) || havocbot_chooseweapon_checkreload(w))
+				if ((PS(self).m_weapon.m_id == w && combo) || havocbot_chooseweapon_checkreload(w))
 					continue;
-				self.switchweapon = w;
+				PS(self).m_switchweapon = Weapons_from(w);
 				return;
 			}
 		}

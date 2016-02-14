@@ -1,6 +1,7 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 #include "../items/item/pickup.qh"
+#include "../stats.qh"
 
 const int MAX_WEAPONSLOTS = 2;
 .entity weaponentities[MAX_WEAPONSLOTS];
@@ -17,6 +18,27 @@ int weaponslot(.entity weaponentity)
 	return 0;
 }
 
+// weapon states (actor.(weaponentity).state)
+/** no weapon selected */
+const int WS_CLEAR  = 0;
+/** raise frame */
+const int WS_RAISE  = 1;
+/** deselecting frame */
+const int WS_DROP   = 2;
+/** fire state */
+const int WS_INUSE  = 3;
+/** idle frame */
+const int WS_READY  = 4;
+
+#ifdef SVQC
+.int ammo_shells;
+.int ammo_nails;
+.int ammo_rockets;
+.int ammo_cells;
+.int ammo_plasma = _STAT(PLASMA);
+.int ammo_fuel = _STAT(FUEL);
+.int ammo_none;
+#else
 .int ammo_shells;
 .int ammo_nails;
 .int ammo_rockets;
@@ -24,15 +46,11 @@ int weaponslot(.entity weaponentity)
 .int ammo_plasma;
 .int ammo_fuel;
 .int ammo_none;
+#endif
 
 /** fields which are explicitly/manually set are marked with "M", fields set automatically are marked with "A" */
 CLASS(Weapon, Object)
 	ATTRIB(Weapon, m_id, int, 0)
-    /**
-     * M: WEP_id    : WEP_...
-     * you can recognize dummies when this == 0
-     */
-    ATTRIB(Weapon, weapon, int, 0);
     /** A: WEPSET_id : WEPSET_... */
     ATTRIB(Weapon, weapons, WepSet, '0 0 0');
     /** M: ammotype  : main ammo field */
@@ -79,7 +97,7 @@ CLASS(Weapon, Object)
     /** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
     METHOD(Weapon, wr_killmessage, int(Weapon this)) {return 0;}
     /** (SERVER) handles reloading for weapon */
-    METHOD(Weapon, wr_reload, void(Weapon this)) {}
+    METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) clears fields that the weapon may use */
     METHOD(Weapon, wr_resetplayer, void(Weapon this)) {}
     /** (CLIENT) impact effect for weapon explosion */
@@ -95,11 +113,14 @@ CLASS(Weapon, Object)
         // no weapon specific image for this weapon
         return false;
     }
+    /** (CLIENT) weapon specific glow */
+    METHOD(Weapon, wr_glow, vector(Weapon this)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
     METHOD(Weapon, wr_drop, void(Weapon this)) {}
     /** (SERVER) a weapon is picked up */
     METHOD(Weapon, wr_pickup, void(Weapon this)) {}
-
+    /** (SERVER) update cvar based properties */
+    METHOD(Weapon, wr_update, void(Weapon this)) {}
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
 		returns(this.m_name, this.model2 ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.model2) : string_null);
 	}
@@ -189,10 +210,5 @@ int GetAmmoStat(.int ammotype);
 
 string W_Sound(string w_snd);
 string W_Model(string w_mdl);
-
-
-// other useful macros
-#define WEP_AMMO(wpn) (WEP_##wpn.ammo_field) // only used inside weapon files/with direct name, don't duplicate prefix
-#define WEP_NAME(wpn) ((get_weaponinfo(wpn)).m_name)
 
 #endif

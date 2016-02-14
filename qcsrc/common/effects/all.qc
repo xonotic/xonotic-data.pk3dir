@@ -76,7 +76,7 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 	net_eff.eent_net_count = eff_cnt;
 	net_eff.eent_eff_trail = eff.eent_eff_trail;
 
-	entity e; FOR_EACH_REALCLIENT(e) Net_Write_Effect(net_eff, e, 0);
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(Net_Write_Effect(net_eff, it, 0)));
 	remove(net_eff);
 }
 
@@ -91,3 +91,5 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }
 #endif
+
+#include "effectinfo.qc"

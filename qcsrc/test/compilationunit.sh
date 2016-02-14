@@ -8,10 +8,6 @@ declare -a NOWARN=(
   -Wno-unused-variable
   -Wno-implicit-function-pointer
 )
-declare -a FEATURES=(
-  -DVEHICLES_ENABLED=1
-  -DVEHICLES_USE_ODE=0
-)
 declare QCC=../../../gmqcc/gmqcc
 
 declare -a QCC_FLAGS=(
@@ -21,7 +17,7 @@ declare -a QCC_FLAGS=(
   -futf8
   -freturn-assignments
   -frelaxed-switch
-  -O3
+  -Ooverlap-locals
 )
 
 function check() {
@@ -29,7 +25,7 @@ function check() {
   declare -la predefs=("-D${2}" "lib/_all.inc" "${base}/_all.qh")
   find "$base" -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
     echo "$file"
-    ${QCC} "${QCC_FLAGS[@]}" "${NOWARN[@]}" "${FEATURES[@]}" "${predefs[@]}" "$file" >/dev/null
+    ${QCC} "${QCC_FLAGS[@]}" "${NOWARN[@]}" "${predefs[@]}" "$file" >/dev/null
   done
 }
 

@@ -1,5 +1,8 @@
 .float train_wait_turning;
 void() train_next;
+#ifdef SVQC
+void train_use();
+#endif
 void train_wait()
 {SELFPARAM();
 	WITH(entity, self, self.enemy, SUB_UseTargets());
@@ -36,7 +39,17 @@ void train_wait()
 		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
 #endif
 
-	if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
+#ifdef SVQC
+	entity tg = find(world, targetname, self.target);
+	if(tg.spawnflags & 4)
+	{
+		self.use = train_use;
+		self.SUB_THINK = func_null;
+		self.SUB_NEXTTHINK = 0;
+	}
+	else
+#endif
+	     if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
 		self.train_wait_turning = false;
 		train_next();
@@ -117,7 +130,7 @@ float train_send(entity to, float sf)
 
 		WriteString(MSG_ENTITY, self.model);
 
-		trigger_common_write(true);
+		trigger_common_write(self, true);
 
 		WriteString(MSG_ENTITY, self.curvetarget);
 
@@ -244,7 +257,7 @@ spawnfunc(func_train)
 void train_draw(entity this)
 {
 	//Movetype_Physics_NoMatchServer();
-	Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+	Movetype_Physics_MatchServer(this, autocvar_cl_projectiles_sloppy);
 }
 
 NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)

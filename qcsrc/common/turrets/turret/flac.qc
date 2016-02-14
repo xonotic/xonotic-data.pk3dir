@@ -8,8 +8,8 @@ CLASS(Flac, Turret)
 /* mins       */ ATTRIB(Flac, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(Flac, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(Flac, mdl, string, "base.md3");
-/* model      */ ATTRIB(Flac, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(Flac, head_model, string, strzone(strcat("models/turrets/", "flac.md3")));
+/* model      */ ATTRIB_STRZONE(Flac, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(Flac, head_model, string, strcat("models/turrets/", "flac.md3"));
 /* netname    */ ATTRIB(Flac, netname, string, "flac");
 /* fullname   */ ATTRIB(Flac, turret_name, string, _("FLAC Cannon"));
     ATTRIB(Flac, m_weapon, Weapon, WEP_FLAC);

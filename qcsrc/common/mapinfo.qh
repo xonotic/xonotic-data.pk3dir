@@ -44,13 +44,13 @@ ENDCLASS(Gametype)
 
 REGISTRY(Gametypes, BITS(4))
 #define Gametypes_from(i) _Gametypes_from(i, NULL)
-REGISTER_REGISTRY(RegisterGametypes)
+REGISTER_REGISTRY(Gametypes)
 REGISTRY_CHECK(Gametypes)
 int MAPINFO_TYPE_ALL;
 #define REGISTER_GAMETYPE(hname, sname, g_name, NAME, gteamplay, mutators, defaults, gdescription)          \
     int MAPINFO_TYPE_##NAME;                                                                                \
     bool NAME##_mapinfo(string k, string v) { return = false; }                                             \
-    REGISTER(RegisterGametypes, MAPINFO_TYPE, Gametypes, g_name, m_id,                                      \
+    REGISTER(Gametypes, MAPINFO_TYPE, g_name, m_id,                                      \
         NEW(Gametype, hname, #sname, #g_name, gteamplay, #sname " " mutators, defaults, gdescription)       \
     ) {                                                                                                     \
         /* same as `1 << m_id` */                                                                           \

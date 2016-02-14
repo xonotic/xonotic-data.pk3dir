@@ -10,7 +10,7 @@ MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
 {SELFPARAM();
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
-	if(time < self.midair_shieldtime)
+	if(time < frag_target.midair_shieldtime)
 		frag_damage = false;
 
 	return false;
@@ -19,7 +19,7 @@ MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
 MUTATOR_HOOKFUNCTION(midair, PlayerPowerups)
 {SELFPARAM();
 	if(time >= game_starttime)
-	if(self.flags & FL_ONGROUND)
+	if(IS_ONGROUND(self))
 	{
 		self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
 		self.midair_shieldtime = max(self.midair_shieldtime, time + autocvar_g_midair_shieldtime);

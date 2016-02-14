@@ -1,5 +1,4 @@
-#ifndef BOOL_H
-#define BOOL_H
+#pragma once
 
 #ifndef QCC_SUPPORT_BOOL
 	// Boolean Constants
@@ -31,5 +30,3 @@ float InterpretBoolean(string input)
 		default: return boolean(stof(input));
 	}
 }
-
-#endif

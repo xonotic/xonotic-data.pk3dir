@@ -2,11 +2,11 @@
 
 #include "hud/all.qh"
 
-#include "../common/command/generic.qh"
+#include <common/command/generic.qh>
 
-#include "../common/teams.qh"
+#include <common/teams.qh>
 
-#include "../lib/csqcmodel/cl_model.qh"
+#include <lib/csqcmodel/cl_model.qh>
 
 
 void AuditLists()
@@ -79,6 +79,7 @@ void MoveToLast(entity e)
 
 float RegisterTeam(entity Team)
 {
+	assert_once(Team.team, eprint(Team));
 	entity tm;
 	AuditLists();
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
@@ -480,57 +481,6 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 			R_PolygonVertex(v, t, rgb, a);
 		R_EndPolygon();
 	}
-}
-
-vector getplayerorigin(int pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.origin;
-
-	e = entcs_receiver[pl];
-	if(e)
-		return e.origin;
-
-	return GETPLAYERORIGIN_ERROR;
-}
-
-float getplayeralpha(float pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.alpha;
-
-	return 1;
-}
-
-vector getcsqcplayercolor(float pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl);
-	if(e)
-	{
-		if(e.colormap > 0)
-			return colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, true);
-	}
-
-	return '1 1 1';
-}
-
-float getplayerisdead(float pl)
-{
-	entity e;
-
-	e = CSQCModel_server2csqc(pl + 1);
-	if(e)
-		return e.csqcmodel_isdead;
-
-	return false;
 }
 
 /** engine callback */

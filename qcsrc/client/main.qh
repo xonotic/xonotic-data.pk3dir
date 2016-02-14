@@ -1,7 +1,8 @@
 #ifndef CLIENT_MAIN_H
 #define CLIENT_MAIN_H
 
-#include "../common/constants.qh"
+#include <common/constants.qh>
+#include <common/weapons/all.qh>
 
 // --------------------------------------------------------------------------
 // MENU Functionality
@@ -12,6 +13,8 @@ const float DATABUF_PING = 0;
 #define DATABUF_RETURNS (3*maxclients)
 
 #define DATABUF_NEXT (5*maxclients)
+
+void setpredraw(entity this, void(entity) pdfunc);
 
 // --------------------------------------------------------------------------
 // Onslaught
@@ -36,6 +39,13 @@ float gametype;
 //.float health;
 
 float FONT_USER = 8;
+
+
+vector OFFSET_CURSOR = '0 0 0';
+vector SIZE_CURSOR = '32 32 0';
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a);
+void draw_cursor_normal(vector pos, vector col, float a);
+void LoadMenuSkinValues();
 
 // --------------------------------------------------------------------------
 // Scoreboard stuff
@@ -86,17 +96,17 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 
 .void(entity) draw;
 .void(entity) draw2d;
-.void() entremove;
+.void(entity) entremove;
 float drawframetime;
 vector view_origin, view_forward, view_right, view_up;
 
-float button_zoom;
-float spectatorbutton_zoom;
-float button_attack2;
+bool button_zoom;
+bool spectatorbutton_zoom;
+bool button_attack2;
 
-int activeweapon;
-int switchingweapon;
-#define switchweapon STAT(SWITCHWEAPON)
+Weapon activeweapon;
+Weapon switchingweapon;
+Weapon switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
@@ -122,6 +132,7 @@ float camera_roll;
 vector camera_direction;
 
 void centerprint_hud(string strMessage);
+void centerprint_kill(float id);
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 const float ALPHA_MIN_VISIBLE = 0.003;
@@ -135,13 +146,7 @@ const int HOOK_END =      2;
 
 .float ping, ping_packetloss, ping_movementloss;
 
-float g_balance_mortar_bouncefactor;
-float g_balance_mortar_bouncestop;
-float g_balance_electro_secondary_bouncefactor;
-float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;
-
-entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 
 float hud;
 float view_quality;

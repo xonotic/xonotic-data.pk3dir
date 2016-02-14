@@ -11,50 +11,6 @@ spawnfunc(info_null)
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }
 
-void setanim(entity e, vector anim, float looping, float override, float restart)
-{
-	if (!anim)
-		return; // no animation was given to us! We can't use this.
-
-	if (anim.x == e.animstate_startframe)
-	if (anim.y == e.animstate_numframes)
-	if (anim.z == e.animstate_framerate)
-	{
-		if(restart)
-		{
-			if(restart > 0)
-			if(anim.y == 1) // ZYM animation
-				BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
-		}
-		else
-			return;
-	}
-	e.animstate_startframe = anim.x;
-	e.animstate_numframes = anim.y;
-	e.animstate_framerate = anim.z;
-	e.animstate_starttime = servertime - 0.1 * serverframetime; // shift it a little bit into the past to prevent float inaccuracy hiccups
-	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
-	e.animstate_looping = looping;
-	e.animstate_override = override;
-	e.frame = e.animstate_startframe;
-	e.frame1time = servertime;
-}
-
-void updateanim(entity e)
-{
-	if (time >= e.animstate_endtime)
-	{
-		if (e.animstate_looping)
-		{
-			e.animstate_starttime = e.animstate_endtime;
-			e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
-		}
-		e.animstate_override = false;
-	}
-	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
-	//print(ftos(time), " -> ", ftos(e.frame), "\n");
-}
-
 /*
 ==================
 main
@@ -79,9 +35,6 @@ Additionally it moves players back into the past before the trace and restores t
 */
 void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz)
 {
-	entity player;
-	float oldsolid;
-
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
 		lag = 0;
@@ -89,18 +42,18 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
-	oldsolid = source.dphitcontentsmask;
+	int oldsolid = source.dphitcontentsmask;
 	if(source)
 		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	if (lag)
 	{
 		// take players back into the past
-		FOR_EACH_PLAYER(player)
-			if(player != forent)
-				antilag_takeback(player, time - lag);
-		FOR_EACH_MONSTER(player)
-			antilag_takeback(player, time - lag);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, LAMBDA(antilag_takeback(it, time - lag)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != forent)
+				antilag_takeback(it, time - lag);
+		));
 	}
 
 	// do the trace
@@ -112,11 +65,11 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// restore players to current positions
 	if (lag)
 	{
-		FOR_EACH_PLAYER(player)
-			if(player != forent)
-				antilag_restore(player);
-		FOR_EACH_MONSTER(player)
-			antilag_restore(player);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, LAMBDA(antilag_restore(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(it != forent)
+				antilag_restore(it);
+		));
 	}
 
 	// restore shooter solid type
@@ -282,11 +235,9 @@ vector findbetterlocation (vector org, float mindist)
 
 float LOD_customize()
 {SELFPARAM();
-	float d;
-
 	if(autocvar_loddebug)
 	{
-		d = autocvar_loddebug;
+		int d = autocvar_loddebug;
 		if(d == 1)
 			self.modelindex = self.lodmodelindex0;
 		else if(d == 2 || !self.lodmodelindex2)
@@ -297,10 +248,10 @@ float LOD_customize()
 	}
 
 	// TODO csqc network this so it only gets sent once
-	d = vlen(NearestPointOnBox(self, other.origin) - other.origin);
-	if(d < self.loddistance1)
+	vector near_point = NearestPointOnBox(self, other.origin);
+	if(vdist(near_point - other.origin, <, self.loddistance1))
 		self.modelindex = self.lodmodelindex0;
-	else if(!self.lodmodelindex2 || d < self.loddistance2)
+	else if(!self.lodmodelindex2 || vdist(near_point - other.origin, <, self.loddistance2))
 		self.modelindex = self.lodmodelindex1;
 	else
 		self.modelindex = self.lodmodelindex2;

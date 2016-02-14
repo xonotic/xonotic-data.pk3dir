@@ -3,7 +3,7 @@
 #include "hud/all.qh"
 #include "scoreboard.qh"
 
-#include "../common/mapinfo.qh"
+#include <common/mapinfo.qh>
 
 
 int mv_num_maps;
@@ -482,7 +482,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, dist.x, xmax - xmin, tmp, i);
 	}
 
-	drawpic(mv_mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), '32 32 0', '1 1 1', 1 - autocvar__menu_alpha, DRAWFLAG_NORMAL);
+	draw_cursor_normal(mv_mousepos, '1 1 1', 1 - autocvar__menu_alpha);
 }
 
 void Cmd_MapVote_MapDownload(float argc)
@@ -853,7 +853,7 @@ void MapVote_UpdateVotes()
 
 NET_HANDLE(ENT_CLIENT_MAPVOTE, bool isnew)
 {
-	make_pure(self);
+	make_pure(this);
 	int sf = ReadByte();
 	return = true;
 

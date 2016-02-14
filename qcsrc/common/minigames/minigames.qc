@@ -138,3 +138,10 @@ int minigame_count_players(entity minigame)
 		pl_num++;
 	return pl_num;
 }
+
+#ifdef CSQC
+#include "cl_minigames.qc"
+#endif
+#ifdef SVQC
+#include "sv_minigames.qc"
+#endif

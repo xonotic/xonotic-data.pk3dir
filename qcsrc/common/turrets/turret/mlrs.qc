@@ -8,8 +8,8 @@ CLASS(MLRSTurret, Turret)
 /* mins       */ ATTRIB(MLRSTurret, mins, vector, '-32 -32 0');
 /* maxs       */ ATTRIB(MLRSTurret, maxs, vector, '32 32 64');
 /* modelname  */ ATTRIB(MLRSTurret, mdl, string, "base.md3");
-/* model      */ ATTRIB(MLRSTurret, model, string, strzone(strcat("models/turrets/", this.mdl)));
-/* head_model */ ATTRIB(MLRSTurret, head_model, string, strzone(strcat("models/turrets/", "mlrs.md3")));
+/* model      */ ATTRIB_STRZONE(MLRSTurret, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(MLRSTurret, head_model, string, strcat("models/turrets/", "mlrs.md3"));
 /* netname    */ ATTRIB(MLRSTurret, netname, string, "mlrs");
 /* fullname   */ ATTRIB(MLRSTurret, turret_name, string, _("MLRS Turret"));
     ATTRIB(MLRSTurret, m_weapon, Weapon, WEP_TUR_MLRS);
@@ -26,7 +26,7 @@ REGISTER_TURRET(MLRS, NEW(MLRSTurret));
 
 spawnfunc(turret_mlrs) { if (!turret_initialize(TUR_MLRS)) remove(self); }
 
-METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur))
+METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur, entity it))
 {
     // 0 = full, 6 = empty
     self.tur_head.frame = bound(0, 6 - floor(0.1 + self.ammo / self.shot_dmg), 6);

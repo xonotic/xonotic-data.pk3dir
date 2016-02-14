@@ -1,5 +1,4 @@
-#ifndef ACCUMULATE_H
-#define ACCUMULATE_H
+#pragma once
 
 #ifdef QCC_SUPPORT_ACCUMULATE
 	#define ACCUMULATE_FUNCTION(func, otherfunc) \
@@ -56,5 +55,3 @@
 	if (!field) { field = (first + count); ++count; }
 #define CHECK_MAX_COUNT(name, max, count, type) \
 	if (count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
-
-#endif

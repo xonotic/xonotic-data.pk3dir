@@ -8,7 +8,7 @@
     #include "../server/constants.qh"
     #include "../server/defs.qh"
     #include "notifications.qh"
-    #include "../server/mutators/all.qh"
+    #include <server/mutators/all.qh>
 #endif
 
 // ================================================
@@ -239,14 +239,14 @@ void Destroy_All_Notifications()
 	entity notif;
 	int i;
 
-	#define DESTROY_LOOP(type,count) do { \
+	#define DESTROY_LOOP(type,count) MACRO_BEGIN { \
 		for(i = 1; i <= count; ++i) \
 		{ \
 			notif = Get_Notif_Ent(type, i); \
 			if (!notif) { backtrace("Destroy_All_Notifications(): Missing notification entity!\n"); return; } \
 			Destroy_Notification_Entity(notif); \
 		} \
-	} while(0)
+	} MACRO_END
 
 	// kill all networked notifications and centerprints
 	#ifdef SVQC
@@ -523,8 +523,7 @@ void Create_Notification_Entity(
 	// =====================
 	//  Global Entity Setup
 	// =====================
-	entity notif = spawn();
-	make_pure(notif);
+	entity notif = new_pure(notification);
 	switch(typeId)
 	{
 		case MSG_ANNCE:
@@ -737,7 +736,7 @@ void Create_Notification_Entity(
 				// ======================
 				//  Process Notif String
 				// ======================
-				#define SET_NOTIF_STRING(string,stringname) do { \
+				#define SET_NOTIF_STRING(string,stringname) MACRO_BEGIN { \
 					notif.nent_string = strzone(CCR( \
 						Process_Notif_Line( \
 							typeId, \
@@ -748,7 +747,7 @@ void Create_Notification_Entity(
 							stringname \
 						)) \
 					); \
-				} while(0)
+				} MACRO_END
 
 				if(GENTLE)
 				{
@@ -1807,7 +1806,7 @@ void Kill_Notification(
 	string checkargs = Notification_CheckArgs(broadcast, client, 1, 1);
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
 
-	entity notif, net_notif;
+	entity net_notif;
 	float killed_cpid = NO_CPID;
 
 	switch(net_type)
@@ -1855,32 +1854,32 @@ void Kill_Notification(
 		Net_LinkEntity(net_notif, false, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 	}
 
-	for(notif = world; (notif = find(notif, classname, "net_notification"));)
+	FOREACH_ENTITY_CLASS("net_notification", true,
 	{
 		if(net_type)
 		{
-			if((killed_cpid != NO_CPID) && (notif.nent_net_type == MSG_CENTER))
+			if((killed_cpid != NO_CPID) && (it.nent_net_type == MSG_CENTER))
 			{
-				if(notif.owner.nent_cpid == killed_cpid)
+				if(it.owner.nent_cpid == killed_cpid)
 				{
-					notif.nent_net_name = -1;
-					notif.nextthink = time;
+					it.nent_net_name = -1;
+					it.nextthink = time;
 				}
 				else { continue; } // we ARE looking for a specific CPID, don't kill everything else too
 			}
-			else if(notif.nent_net_type == net_type)
+			else if(it.nent_net_type == net_type)
 			{
 				if(net_name)
 				{
-					if(notif.nent_net_name == net_name) { notif.nent_net_name = -1; notif.nextthink = time; }
+					if(it.nent_net_name == net_name) { it.nent_net_name = -1; it.nextthink = time; }
 					else { continue; } // we ARE looking for a certain net_name, don't kill everything else too
 				}
-				else { notif.nent_net_name = -1; notif.nextthink = time; }
+				else { it.nent_net_name = -1; it.nextthink = time; }
 			}
 			else { continue; } // we ARE looking for a certain net_type, don't kill everything else too
 		}
-		else { notif.nent_net_name = -1; notif.nextthink = time; }
-	}
+		else { it.nent_net_name = -1; it.nextthink = time; }
+	});
 }
 
 void Send_Notification(
@@ -2049,7 +2048,7 @@ void Send_Notification(
 		//   2. Manually handling each separate call on per-usage basis (See old CTF usage of verbose)
 		entity found_choice;
 
-		#define RECURSE_FROM_CHOICE(ent,action) do { \
+		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN { \
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) \
 			{ \
 				switch(ent.msg_choice_choices[net_name - 1]) \
@@ -2069,7 +2068,7 @@ void Send_Notification(
 				found_choice.nent_floatcount, \
 				s1, s2, s3, s4, \
 				f1, f2, f3, f4); \
-		} while(0)
+		} MACRO_END
 
 		switch(broadcast)
 		{
@@ -2083,14 +2082,12 @@ void Send_Notification(
 			}
 			default:
 			{
-				entity to;
-				FOR_EACH_REALCLIENT(to)
-				{
-					if(Notification_ShouldSend(broadcast, to, client))
+				FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+					if(Notification_ShouldSend(broadcast, it, client))
 					{
-						RECURSE_FROM_CHOICE(to, continue);
+						RECURSE_FROM_CHOICE(it, continue);
 					}
-				}
+				));
 				break;
 			}
 		}

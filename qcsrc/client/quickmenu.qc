@@ -531,8 +531,7 @@ void QuickMenu_Mouse()
 		}
 	}
 
-	vector cursorsize = '32 32 0';
-	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	draw_cursor_normal(mousepos, '1 1 1', 0.8);
 
 	prevMouseClicked = mouseClicked;
 }
@@ -758,7 +757,7 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, float teamplayers, float withou
 			continue;
 		if(without_me && pl.sv_entnum == player_localnum)
 			continue;
-		QUICKMENU_ENTRY(GetPlayerName(pl.sv_entnum), sprintf(cmd, GetPlayerName(pl.sv_entnum)))
+		QUICKMENU_ENTRY(entcs_GetName(pl.sv_entnum), sprintf(cmd, entcs_GetName(pl.sv_entnum)))
 	}
 
 	return;
@@ -847,7 +846,7 @@ void QuickMenu_Default(string target_submenu)
 	QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")), "Call a vote")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Restart the map")), "vcall restart")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^End match")), "vcall endmatch")
-		if(getstatf(STAT_TIMELIMIT) > 0)
+		if(STAT(TIMELIMIT) > 0)
 		{
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Reduce match time")), "vcall reducematchtime")
 		QUICKMENU_ENTRY(CTX(_("QMCMD^Extend match time")), "vcall extendmatchtime")

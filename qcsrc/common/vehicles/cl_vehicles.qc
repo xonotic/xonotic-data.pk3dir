@@ -31,18 +31,18 @@ void AuxiliaryXhair_Draw2D(entity this)
 	if (scoreboard_active)
 		return;
 
-	vector size = draw_getimagesize(self.axh_image) * autocvar_cl_vehicles_crosshair_size;
-	vector pos = project_3d_to_2d(self.move_origin) - 0.5 * size;
+	vector size = draw_getimagesize(this.axh_image) * autocvar_cl_vehicles_crosshair_size;
+	vector pos = project_3d_to_2d(this.move_origin) - 0.5 * size;
 
 	if (!(pos.z < 0 || pos.x < 0 || pos.y < 0 || pos.x > vid_conwidth || pos.y > vid_conheight))
 	{
 		pos.z = 0;
 		size.z = 0;
-		drawpic(pos, self.axh_image, size, self.colormod, autocvar_crosshair_alpha * self.alpha, self.axh_drawflag);
+		drawpic(pos, this.axh_image, size, this.colormod, autocvar_crosshair_alpha * this.alpha, this.axh_drawflag);
 	}
 
-	if(time - self.cnt > self.axh_fadetime)
-		self.draw2d = func_null;
+	if(time - this.cnt > this.axh_fadetime)
+		this.draw2d = func_null;
 }
 
 NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
@@ -109,8 +109,8 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 		AuxiliaryXhair[0].axh_image = vCROSS_BURST; // Plasma cannons
 		AuxiliaryXhair[1].axh_image = vCROSS_BURST; // Raygun
 	} else {
-		Vehicle info = get_vehicleinfo(hud_id);
-    	info.vr_setup(info);
+		Vehicle info = Vehicles_from(hud_id);
+    	info.vr_setup(info, NULL);
 	}
 }
 
@@ -132,13 +132,13 @@ void Vehicles_drawHUD(
 	float barAlpha = autocvar_hud_progressbar_alpha * hudAlpha;
 	float blinkValue = 0.55 + sin(time * 7) * 0.45;
 
-	float health  = getstati(STAT_VEHICLESTAT_HEALTH)  * 0.01;
-	float shield  = getstati(STAT_VEHICLESTAT_SHIELD)  * 0.01;
-	float energy  = getstati(STAT_VEHICLESTAT_ENERGY)  * 0.01;
-	float ammo1   = getstati(STAT_VEHICLESTAT_AMMO1)   * 0.01;
-	float reload1 = getstati(STAT_VEHICLESTAT_RELOAD1) * 0.01;
-	float ammo2   = getstati(STAT_VEHICLESTAT_AMMO2)   * 0.01;
-	float reload2 = getstati(STAT_VEHICLESTAT_RELOAD2) * 0.01;
+	float health  = STAT(VEHICLESTAT_HEALTH)  * 0.01;
+	float shield  = STAT(VEHICLESTAT_SHIELD)  * 0.01;
+	float energy  = STAT(VEHICLESTAT_ENERGY)  * 0.01;
+	float ammo1   = STAT(VEHICLESTAT_AMMO1)   * 0.01;
+	float reload1 = STAT(VEHICLESTAT_RELOAD1) * 0.01;
+	float ammo2   = STAT(VEHICLESTAT_AMMO2)   * 0.01;
+	float reload2 = STAT(VEHICLESTAT_RELOAD2) * 0.01;
 
 	// HACK to deal with the inconsistent use of the vehicle stats
 	ammo1 = (ammo1) ? ammo1 : energy;

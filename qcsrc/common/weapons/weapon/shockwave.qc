@@ -14,64 +14,66 @@ CLASS(Shockwave, Weapon)
 /* wepimg    */ ATTRIB(Shockwave, model2, string, "weaponshotgun");
 /* refname   */ ATTRIB(Shockwave, netname, string, "shockwave");
 /* wepname   */ ATTRIB(Shockwave, m_name, string, _("Shockwave"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, blast_animtime, float, NONE) \
+		P(class, prefix, blast_damage, float, NONE) \
+		P(class, prefix, blast_distance, float, NONE) \
+		P(class, prefix, blast_edgedamage, float, NONE) \
+		P(class, prefix, blast_force, float, NONE) \
+		P(class, prefix, blast_force_forwardbias, float, NONE) \
+		P(class, prefix, blast_force_zscale, float, NONE) \
+		P(class, prefix, blast_jump_damage, float, NONE) \
+		P(class, prefix, blast_jump_edgedamage, float, NONE) \
+		P(class, prefix, blast_jump_force, float, NONE) \
+		P(class, prefix, blast_jump_force_velocitybias, float, NONE) \
+		P(class, prefix, blast_jump_force_zscale, float, NONE) \
+		P(class, prefix, blast_jump_multiplier_accuracy, float, NONE) \
+		P(class, prefix, blast_jump_multiplier_distance, float, NONE) \
+		P(class, prefix, blast_jump_multiplier_min, float, NONE) \
+		P(class, prefix, blast_jump_radius, float, NONE) \
+		P(class, prefix, blast_multiplier_accuracy, float, NONE) \
+		P(class, prefix, blast_multiplier_distance, float, NONE) \
+		P(class, prefix, blast_multiplier_min, float, NONE) \
+		P(class, prefix, blast_refire, float, NONE) \
+		P(class, prefix, blast_splash_damage, float, NONE) \
+		P(class, prefix, blast_splash_edgedamage, float, NONE) \
+		P(class, prefix, blast_splash_force, float, NONE) \
+		P(class, prefix, blast_splash_force_forwardbias, float, NONE) \
+		P(class, prefix, blast_splash_multiplier_accuracy, float, NONE) \
+		P(class, prefix, blast_splash_multiplier_distance, float, NONE) \
+		P(class, prefix, blast_splash_multiplier_min, float, NONE) \
+		P(class, prefix, blast_splash_radius, float, NONE) \
+		P(class, prefix, blast_spread_max, float, NONE) \
+		P(class, prefix, blast_spread_min, float, NONE) \
+		P(class, prefix, melee_animtime, float, NONE) \
+		P(class, prefix, melee_damage, float, NONE) \
+		P(class, prefix, melee_delay, float, NONE) \
+		P(class, prefix, melee_force, float, NONE) \
+		P(class, prefix, melee_multihit, float, NONE) \
+		P(class, prefix, melee_no_doubleslap, float, NONE) \
+		P(class, prefix, melee_nonplayerdamage, float, NONE) \
+		P(class, prefix, melee_range, float, NONE) \
+		P(class, prefix, melee_refire, float, NONE) \
+		P(class, prefix, melee_swing_side, float, NONE) \
+		P(class, prefix, melee_swing_up, float, NONE) \
+		P(class, prefix, melee_time, float, NONE) \
+		P(class, prefix, melee_traces, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Shockwave, shockwave)
+#undef X
+
 ENDCLASS(Shockwave)
-REGISTER_WEAPON(SHOCKWAVE, NEW(Shockwave));
+REGISTER_WEAPON(SHOCKWAVE, shockwave, NEW(Shockwave));
 
-#define SHOCKWAVE_SETTINGS(w_cvar,w_prop) SHOCKWAVE_SETTINGS_LIST(w_cvar, w_prop, SHOCKWAVE, shockwave)
-#define SHOCKWAVE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, blast_animtime) \
-	w_cvar(id, sn, NONE, blast_damage) \
-	w_cvar(id, sn, NONE, blast_distance) \
-	w_cvar(id, sn, NONE, blast_edgedamage) \
-	w_cvar(id, sn, NONE, blast_force) \
-	w_cvar(id, sn, NONE, blast_force_forwardbias) \
-	w_cvar(id, sn, NONE, blast_force_zscale) \
-	w_cvar(id, sn, NONE, blast_jump_damage) \
-	w_cvar(id, sn, NONE, blast_jump_edgedamage) \
-	w_cvar(id, sn, NONE, blast_jump_force) \
-	w_cvar(id, sn, NONE, blast_jump_force_velocitybias) \
-	w_cvar(id, sn, NONE, blast_jump_force_zscale) \
-	w_cvar(id, sn, NONE, blast_jump_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, blast_jump_multiplier_distance) \
-	w_cvar(id, sn, NONE, blast_jump_multiplier_min) \
-	w_cvar(id, sn, NONE, blast_jump_radius) \
-	w_cvar(id, sn, NONE, blast_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, blast_multiplier_distance) \
-	w_cvar(id, sn, NONE, blast_multiplier_min) \
-	w_cvar(id, sn, NONE, blast_refire) \
-	w_cvar(id, sn, NONE, blast_splash_damage) \
-	w_cvar(id, sn, NONE, blast_splash_edgedamage) \
-	w_cvar(id, sn, NONE, blast_splash_force) \
-	w_cvar(id, sn, NONE, blast_splash_force_forwardbias) \
-	w_cvar(id, sn, NONE, blast_splash_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, blast_splash_multiplier_distance) \
-	w_cvar(id, sn, NONE, blast_splash_multiplier_min) \
-	w_cvar(id, sn, NONE, blast_splash_radius) \
-	w_cvar(id, sn, NONE, blast_spread_max) \
-	w_cvar(id, sn, NONE, blast_spread_min) \
-	w_cvar(id, sn, NONE, melee_animtime) \
-	w_cvar(id, sn, NONE, melee_damage) \
-	w_cvar(id, sn, NONE, melee_delay) \
-	w_cvar(id, sn, NONE, melee_force) \
-	w_cvar(id, sn, NONE, melee_multihit) \
-	w_cvar(id, sn, NONE, melee_no_doubleslap) \
-	w_cvar(id, sn, NONE, melee_nonplayerdamage) \
-	w_cvar(id, sn, NONE, melee_range) \
-	w_cvar(id, sn, NONE, melee_refire) \
-	w_cvar(id, sn, NONE, melee_swing_side) \
-	w_cvar(id, sn, NONE, melee_swing_up) \
-	w_cvar(id, sn, NONE, melee_time) \
-	w_cvar(id, sn, NONE, melee_traces) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
 
-#ifdef SVQC
-SHOCKWAVE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #ifdef CSQC
 void Net_ReadShockwaveParticle();
 .vector sw_shotorg;
@@ -118,7 +120,7 @@ void W_Shockwave_Melee_Think()
 	vector targpos;
 
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && WEP_CVAR(shockwave, melee_no_doubleslap))
+	if(IS_DEAD(self.realowner) && WEP_CVAR(shockwave, melee_no_doubleslap))
 	{
 		remove(self);
 		return;
@@ -350,7 +352,7 @@ void W_Shockwave_Send()
 	WriteShort(MSG_BROADCAST, WEP_CVAR(shockwave, blast_distance));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_max), 255));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_min), 255));
-	WriteByte(MSG_BROADCAST, num_for_edict(self));
+	WriteByte(MSG_BROADCAST, etof(self));
 }
 
 void W_Shockwave_Attack()
@@ -702,10 +704,6 @@ void W_Shockwave_Attack()
 				}
 			}
 		}
-		METHOD(Shockwave, wr_init, void(entity thiswep))
-		{
-			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
 		{
 			return true; // infinite ammo
@@ -714,10 +712,6 @@ void W_Shockwave_Attack()
 		{
 			// shockwave has infinite ammo
 			return true;
-		}
-		METHOD(Shockwave, wr_config, void(entity thiswep))
-		{
-			SHOCKWAVE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Shockwave, wr_suicidemessage, int(entity thiswep))
 		{
@@ -740,24 +734,24 @@ const float SW_DISTTOMIN = 200;
 void Draw_Shockwave(entity this)
 {
 	// fading/removal control
-	float a = bound(0, (SW_MAXALPHA - ((time - self.sw_time) / SW_FADETIME)), SW_MAXALPHA);
-	if(a < ALPHA_MIN_VISIBLE) { remove(self); }
+	float a = bound(0, (SW_MAXALPHA - ((time - this.sw_time) / SW_FADETIME)), SW_MAXALPHA);
+	if(a < ALPHA_MIN_VISIBLE) { remove(this); }
 
 	// WEAPONTODO: save this only once when creating the entity
-	vector sw_color = getcsqcplayercolor(self.sv_entnum); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
+	vector sw_color = entcs_GetColor(this.sv_entnum - 1); // GetTeamRGB(entcs_GetTeam(this.sv_entnum));
 
 	// WEAPONTODO: trace to find what we actually hit
-	vector endpos = (self.sw_shotorg + (self.sw_shotdir * self.sw_distance));
+	vector endpos = (this.sw_shotorg + (this.sw_shotdir * this.sw_distance));
 
-	vectorvectors(self.sw_shotdir);
+	vectorvectors(this.sw_shotdir);
 	vector right = v_right; // save this for when we do makevectors later
 	vector up = v_up; // save this for when we do makevectors later
 
 	// WEAPONTODO: combine and simplify these calculations
-	vector min_end = ((self.sw_shotorg + (self.sw_shotdir * SW_DISTTOMIN)) + (up * self.sw_spread_min));
-	vector max_end = (endpos + (up * self.sw_spread_max));
-	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - self.sw_shotdir);
-	float spread_to_max = vlen(normalize(max_end - min_end) - self.sw_shotdir);
+	vector min_end = ((this.sw_shotorg + (this.sw_shotdir * SW_DISTTOMIN)) + (up * this.sw_spread_min));
+	vector max_end = (endpos + (up * this.sw_spread_max));
+	float spread_to_min = vlen(normalize(min_end - this.sw_shotorg) - this.sw_shotdir);
+	float spread_to_max = vlen(normalize(max_end - min_end) - this.sw_shotdir);
 
 	vector first_min_end = '0 0 0', prev_min_end = '0 0 0', new_min_end = '0 0 0';
 	vector first_max_end = '0 0 0', prev_max_end = '0 0 0', new_max_end = '0 0 0';
@@ -774,14 +768,14 @@ void Draw_Shockwave(entity this)
 
 		// first do the spread_to_min effect
 		deviation = angle * spread_to_min;
-		deviation = ((self.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
+		deviation = ((this.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_min_dist = SW_DISTTOMIN;
-		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
-		//te_lightning2(world, new_min_end, self.sw_shotorg);
+		new_min_end = (this.sw_shotorg + (deviation * new_min_dist));
+		//te_lightning2(world, new_min_end, this.sw_shotorg);
 
 		// then calculate spread_to_max effect
 		deviation = angle * spread_to_max;
-		deviation = ((self.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
+		deviation = ((this.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_max_dist = vlen(new_min_end - endpos);
 		new_max_end = (new_min_end + (deviation * new_max_dist));
 		//te_lightning2(world, new_end, prev_min_end);
@@ -799,7 +793,7 @@ void Draw_Shockwave(entity this)
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
-			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius
@@ -821,7 +815,7 @@ void Draw_Shockwave(entity this)
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
 			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
-			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_PolygonVertex(this.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			// draw from min spread radius to max spread radius

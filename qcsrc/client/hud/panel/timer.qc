@@ -23,7 +23,7 @@ void HUD_Timer()
 	string timer;
 	float timelimit, elapsedTime, timeleft, minutesLeft;
 
-	timelimit = getstatf(STAT_TIMELIMIT);
+	timelimit = STAT(TIMELIMIT);
 
 	timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
 	timeleft = ceil(timeleft);

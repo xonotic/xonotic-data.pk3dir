@@ -2,7 +2,7 @@
 
 #include "../g_world.qh"
 
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
 void WeaponStats_Init()
 {

@@ -1,4 +1,4 @@
-#include "../../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 
 #ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
 #define DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
@@ -20,6 +20,7 @@ ENDCLASS(XonoticMutatorsDialog)
 #ifdef IMPLEMENTATION
 void XonoticMutatorsDialog_showNotify(entity me)
 {
+	SUPER(XonoticMutatorsDialog).showNotify(me);
 	loadAllCvars(me);
 }
 
@@ -28,8 +29,7 @@ string weaponarenastring_cvar;
 string WeaponArenaString()
 {
 	string s;
-	float n, i, j;
-	entity e;
+	float n, i;
 	s = cvar_string("g_weaponarena");
 	if(s == "0")
 		return "";
@@ -50,12 +50,10 @@ string WeaponArenaString()
 	s = "";
 	for(i = 0; i < n; ++i)
 	{
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			if(argv(i) == e.netname)
-				s = strcat(s, " & ", e.m_name);
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if(argv(i) == it.netname)
+				s = strcat(s, " & ", it.m_name);
+		));
 	}
 	s = sprintf(_("%s Arena"), substring(s, 3, strlen(s) - 3));
 
@@ -253,7 +251,7 @@ void XonoticMutatorsDialog_fill(entity me)
 			e.cvarOffValue = "0";
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
-		w = get_weaponinfo(i);
+		w = Weapons_from(i);
 		if(w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
 		if((j & 1) == 0)
