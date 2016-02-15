@@ -111,3 +111,11 @@ shotgun
 		rgbgen lightingDiffuse
 	}
 }
+SniperRifle
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/sniperrifle.tga
+		rgbgen lightingDiffuse
+	}
+}
