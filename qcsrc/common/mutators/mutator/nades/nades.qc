@@ -671,6 +671,19 @@ void nade_boom()
 	remove(self);
 }
 
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
+void nade_pickup(entity this, entity thenade)
+{
+	spawn_held_nade(this, thenade.realowner, thenade.wait - time, thenade.nade_type, thenade.pokenade_type);
+
+	// set refire so player can't even
+	this.nade_refire = time + autocvar_g_nades_nade_refire;
+	this.nade_timer = 0;
+
+	if(this.nade)
+		this.nade.nade_time_primed = thenade.nade_time_primed;
+}
+
 void nade_touch()
 {SELFPARAM();
 	if(other)
@@ -678,6 +691,16 @@ void nade_touch()
 
 	if(other == self.realowner)
 		return; // no self impacts
+
+	if(autocvar_g_nades_pickup)
+	if(!other.nade)
+	if(IS_REAL_CLIENT(other) && IS_PLAYER(other))
+	{
+		nade_pickup(other, self);
+		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
+		remove(self);
+		return;
+	}
 	/*float is_weapclip = 0;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
@@ -834,6 +857,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.customizeentityforclient = func_null;
 	_nade.exteriormodeltoclient = world;
 	_nade.traileffectnum = 0;
+	_nade.realowner = e;
 	_nade.teleportable = true;
 	_nade.pushable = true;
 	_nade.gravity = 1;
@@ -917,6 +941,42 @@ float nade_customize()
 	return true;
 }
 
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype)
+{
+	entity n = new(nade), fn = new(fake_nade);
+
+	n.nade_type = bound(1, ntype, Nades_COUNT);
+	n.pokenade_type = pntype;
+
+	setmodel(n, MDL_PROJECTILE_NADE);
+	//setattachment(n, player, "bip01 l hand");
+	n.exteriormodeltoclient = player;
+	n.customizeentityforclient = nade_customize;
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], player.team).eent_eff_name);
+	n.colormod = Nades_from(n.nade_type).m_color;
+	n.realowner = nowner;
+	n.colormap = player.colormap;
+	n.glowmod = player.glowmod;
+	n.wait = time + max(0, ntime);
+	n.nade_time_primed = time;
+	n.think = nade_beep;
+	n.nextthink = max(n.wait - 3, time);
+	n.projectiledeathtype = DEATH_NADE.m_id;
+
+	setmodel(fn, MDL_NADE_VIEW);
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	setattachment(fn, player.(weaponentity), "");
+	fn.realowner = fn.owner = player;
+	fn.colormod = Nades_from(n.nade_type).m_color;
+	fn.colormap = player.colormap;
+	fn.glowmod = player.glowmod;
+	fn.think = SUB_Remove_self;
+	fn.nextthink = n.wait;
+
+	player.nade = n;
+	player.fake_nade = fn;
+}
+
 void nade_prime()
 {SELFPARAM();
 	if(autocvar_g_nades_bonus_only)
@@ -929,51 +989,24 @@ void nade_prime()
 	if(self.fake_nade)
 		remove(self.fake_nade);
 
-	entity n = new(nade), fn = new(fake_nade);
+	int ntype;
+	string pntype = self.pokenade_type;
 
 	if(self.items & ITEM_Strength.m_itemid && autocvar_g_nades_bonus_onstrength)
-		n.nade_type = self.nade_type;
+		ntype = self.nade_type;
 	else if (self.bonus_nades >= 1)
 	{
-		n.nade_type = self.nade_type;
-		n.pokenade_type = self.pokenade_type;
+		ntype = self.nade_type;
+		pntype = self.pokenade_type;
 		self.bonus_nades -= 1;
 	}
 	else
 	{
-		n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		n.pokenade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
-	n.nade_type = bound(1, n.nade_type, Nades_COUNT);
-
-	setmodel(n, MDL_PROJECTILE_NADE);
-	//setattachment(n, self, "bip01 l hand");
-	n.exteriormodeltoclient = self;
-	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], self.team).eent_eff_name);
-	n.colormod = Nades_from(n.nade_type).m_color;
-	n.realowner = self;
-	n.colormap = self.colormap;
-	n.glowmod = self.glowmod;
-	n.wait = time + autocvar_g_nades_nade_lifetime;
-	n.nade_time_primed = time;
-	n.think = nade_beep;
-	n.nextthink = max(n.wait - 3, time);
-	n.projectiledeathtype = DEATH_NADE.m_id;
-
-	setmodel(fn, MDL_NADE_VIEW);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	setattachment(fn, self.(weaponentity), "");
-	fn.realowner = fn.owner = self;
-	fn.colormod = Nades_from(n.nade_type).m_color;
-	fn.colormap = self.colormap;
-	fn.glowmod = self.glowmod;
-	fn.think = SUB_Remove_self;
-	fn.nextthink = n.wait;
-
-	self.nade = n;
-	self.fake_nade = fn;
+	spawn_held_nade(self, self, autocvar_g_nades_nade_lifetime, ntype, pntype);
 }
 
 float CanThrowNade()

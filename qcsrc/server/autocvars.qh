@@ -465,6 +465,7 @@ vector autocvar_g_nades_throw_offset;
 bool autocvar_g_nades_spawn;
 int autocvar_g_nades_spawn_count;
 bool autocvar_g_nades_client_select;
+bool autocvar_g_nades_pickup = true;
 float autocvar_g_nades_nade_lifetime;
 float autocvar_g_nades_nade_minforce;
 float autocvar_g_nades_nade_maxforce;
