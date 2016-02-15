@@ -684,6 +684,7 @@ void nade_pickup(entity this, entity thenade)
 		this.nade.nade_time_primed = thenade.nade_time_primed;
 }
 
+bool CanThrowNade(entity this);
 void nade_touch()
 {SELFPARAM();
 	if(other)
@@ -695,7 +696,8 @@ void nade_touch()
 	if(autocvar_g_nades_pickup)
 	if(time >= self.spawnshieldtime)
 	if(!other.nade && self.health == self.max_health) // no boosted shot pickups, thank you very much
-	if(IS_REAL_CLIENT(other) && IS_PLAYER(other))
+	if(CanThrowNade(other)) // prevent some obvious things, like dead players
+	if(IS_REAL_CLIENT(other)) // above checks for IS_PLAYER, don't need to do it here
 	{
 		nade_pickup(other, self);
 		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
@@ -1013,24 +1015,24 @@ void nade_prime()
 	spawn_held_nade(self, self, autocvar_g_nades_nade_lifetime, ntype, pntype);
 }
 
-float CanThrowNade()
-{SELFPARAM();
-	if(self.vehicle)
+bool CanThrowNade(entity this)
+{
+	if(this.vehicle)
 		return false;
 
 	if(gameover)
 		return false;
 
-	if(IS_DEAD(self))
+	if(IS_DEAD(this))
 		return false;
 
 	if (!autocvar_g_nades)
 		return false; // allow turning them off mid match
 
-	if(forbidWeaponUse(self))
+	if(forbidWeaponUse(this))
 		return false;
 
-	if (!IS_PLAYER(self))
+	if (!IS_PLAYER(this))
 		return false;
 
 	return true;
@@ -1040,7 +1042,7 @@ float CanThrowNade()
 
 void nades_CheckThrow()
 {SELFPARAM();
-	if(!CanThrowNade())
+	if(!CanThrowNade(self))
 		return;
 
 	entity held_nade = self.nade;
@@ -1103,7 +1105,7 @@ CLASS(NadeOffhand, OffhandWeapon)
 				toss_nade(player, false, '0 0 0', time + 0.05);
 		}
 
-        if (!CanThrowNade()) return;
+        if (!CanThrowNade(player)) return;
         if (!(time > player.nade_refire)) return;
 		if (key_pressed) {
 			if (!held_nade) {
