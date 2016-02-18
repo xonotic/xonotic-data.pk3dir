@@ -685,7 +685,7 @@ void HUD_Minigame_Mouse()
 	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
 		HUD_MinigameMenu_MouseInput();
 
-	draw_cursor_normal(mousepos-'8 4 0', '1 1 1', panel_fg_alpha);
+	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }
 
 bool HUD_Minigame_Showpanels()
