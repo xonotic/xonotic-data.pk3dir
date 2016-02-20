@@ -126,7 +126,11 @@ void CL_ExteriorWeaponentity_Think()
 		this.weaponname = this.owner.weaponname;
 		this.dmg = this.owner.modelindex;
 		this.deadflag = this.owner.deadflag;
-		if (this.owner.weaponname != "") _setmodel(this, W_Model(strcat("v_", this.owner.weaponname, ".md3")));
+		if (this.owner.weaponname != "")
+		{
+			_setmodel(this, W_Model(strcat("v_", this.owner.weaponname, ".md3")));
+			setsize(this, '0 0 0', '0 0 0');
+		}
 		else this.model = "";
 
 		int tag_found;
