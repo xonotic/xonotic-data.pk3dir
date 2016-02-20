@@ -674,7 +674,7 @@ void nade_boom()
 void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
 void nade_pickup(entity this, entity thenade)
 {
-	spawn_held_nade(this, thenade.realowner, thenade.wait - time, thenade.nade_type, thenade.pokenade_type);
+	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, thenade.nade_type, thenade.pokenade_type);
 
 	// set refire so player can't even
 	this.nade_refire = time + autocvar_g_nades_nade_refire;
@@ -684,6 +684,7 @@ void nade_pickup(entity this, entity thenade)
 		this.nade.nade_time_primed = thenade.nade_time_primed;
 }
 
+bool CanThrowNade(entity this);
 void nade_touch()
 {SELFPARAM();
 	if(other)
@@ -693,8 +694,10 @@ void nade_touch()
 		return; // no self impacts
 
 	if(autocvar_g_nades_pickup)
-	if(!other.nade)
-	if(IS_REAL_CLIENT(other) && IS_PLAYER(other))
+	if(time >= self.spawnshieldtime)
+	if(!other.nade && self.health == self.max_health) // no boosted shot pickups, thank you very much
+	if(CanThrowNade(other)) // prevent some obvious things, like dead players
+	if(IS_REAL_CLIENT(other)) // above checks for IS_PLAYER, don't need to do it here
 	{
 		nade_pickup(other, self);
 		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
@@ -803,7 +806,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		nade_burn_spawn(this);
 }
 
-void toss_nade(entity e, vector _velocity, float _time)
+void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 {SELFPARAM();
 	if(e.nade == world)
 		return;
@@ -849,7 +852,11 @@ void toss_nade(entity e, vector _velocity, float _time)
 	else
 		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, true);
 
+	if(set_owner)
+		_nade.realowner = e;
+
 	_nade.touch = nade_touch;
+	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
 	_nade.health = autocvar_g_nades_nade_health;
 	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
@@ -857,7 +864,6 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.customizeentityforclient = func_null;
 	_nade.exteriormodeltoclient = world;
 	_nade.traileffectnum = 0;
-	_nade.realowner = e;
 	_nade.teleportable = true;
 	_nade.pushable = true;
 	_nade.gravity = 1;
@@ -922,7 +928,7 @@ MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 float nade_customize()
 {SELFPARAM();
 	//if(IS_SPEC(other)) { return false; }
-	if(other == self.realowner || (IS_SPEC(other) && other.enemy == self.realowner))
+	if(other == self.exteriormodeltoclient || (IS_SPEC(other) && other.enemy == self.exteriormodeltoclient))
 	{
 		// somewhat hide the model, but keep the glow
 		//self.effects = 0;
@@ -1009,24 +1015,24 @@ void nade_prime()
 	spawn_held_nade(self, self, autocvar_g_nades_nade_lifetime, ntype, pntype);
 }
 
-float CanThrowNade()
-{SELFPARAM();
-	if(self.vehicle)
+bool CanThrowNade(entity this)
+{
+	if(this.vehicle)
 		return false;
 
 	if(gameover)
 		return false;
 
-	if(IS_DEAD(self))
+	if(IS_DEAD(this))
 		return false;
 
 	if (!autocvar_g_nades)
 		return false; // allow turning them off mid match
 
-	if(forbidWeaponUse(self))
+	if(forbidWeaponUse(this))
 		return false;
 
-	if (!IS_PLAYER(self))
+	if (!IS_PLAYER(this))
 		return false;
 
 	return true;
@@ -1036,7 +1042,7 @@ float CanThrowNade()
 
 void nades_CheckThrow()
 {SELFPARAM();
-	if(!CanThrowNade())
+	if(!CanThrowNade(self))
 		return;
 
 	entity held_nade = self.nade;
@@ -1058,7 +1064,7 @@ void nades_CheckThrow()
 			float _force = time - held_nade.nade_time_primed;
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-			toss_nade(self, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
+			toss_nade(self, true, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
 		}
 	}
 }
@@ -1077,7 +1083,7 @@ void nades_Clear(entity player)
 MUTATOR_HOOKFUNCTION(nades, VehicleEnter)
 {
 	if(vh_player.nade)
-		toss_nade(vh_player, '0 0 100', max(vh_player.nade.wait, time + 0.05));
+		toss_nade(vh_player, true, '0 0 100', max(vh_player.nade.wait, time + 0.05));
 
 	return false;
 }
@@ -1096,10 +1102,10 @@ CLASS(NadeOffhand, OffhandWeapon)
 			held_nade.angles_y = player.angles.y;
 
 			if (time + 0.1 >= held_nade.wait)
-				toss_nade(player, '0 0 0', time + 0.05);
+				toss_nade(player, false, '0 0 0', time + 0.05);
 		}
 
-        if (!CanThrowNade()) return;
+        if (!CanThrowNade(player)) return;
         if (!(time > player.nade_refire)) return;
 		if (key_pressed) {
 			if (!held_nade) {
@@ -1112,7 +1118,7 @@ CLASS(NadeOffhand, OffhandWeapon)
 				float _force = time - held_nade.nade_time_primed;
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-				toss_nade(player, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
+				toss_nade(player, false, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
 			}
 		}
     }
@@ -1251,7 +1257,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 {
 	if(frag_target.nade)
 	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
-		toss_nade(frag_target, '0 0 100', max(frag_target.nade.wait, time + 0.05));
+		toss_nade(frag_target, true, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
 	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
 
@@ -1314,7 +1320,7 @@ MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
 {
 	if(frag_target.nade)
-		toss_nade(frag_target, '0 0 0', time + 0.05);
+		toss_nade(frag_target, true, '0 0 0', time + 0.05);
 
 	return false;
 }
