@@ -200,17 +200,17 @@
     MSG_ANNCE_NOTIF(2, ANNCE_VOTE_FAIL,                 CH_INFO, "votefail",          VOL_BASEVOICE, ATTEN_NONE)
 
 #define MULTITEAM_INFO2(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle) \
-    MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-    MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2)))
+    MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, 1), TCR(gentle, 1)) \
+    MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, 2), TCR(gentle, 2))
 #define MULTITEAM_INFO3(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle) \
-    MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-    MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
-    MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3)))
+    MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, 1), TCR(gentle, 1)) \
+    MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, 2), TCR(gentle, 2)) \
+    MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, 3), TCR(gentle, 3))
 #define MULTITEAM_INFO4(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle) \
-    MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-    MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
-    MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
-    MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4)))
+    MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, 1), TCR(gentle, 1)) \
+    MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, 2), TCR(gentle, 2)) \
+    MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, 3), TCR(gentle, 3)) \
+    MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, 4), TCR(gentle, 4))
 #define MULTITEAM_INFO(default,prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
     MULTITEAM_INFO##teams(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle)
 
@@ -455,17 +455,17 @@
     MSG_INFO_NOTIF(1, INFO_WEAPON_VORTEX_MURDER,                 3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponnex",              _("^BG%s%s^K1 has been vaporized by ^BG%s^K1's Vortex%s%s"), "")
 
 #define MULTITEAM_CENTER2(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-    MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-    MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2)))
+    MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, 1), TCR(gentle, 1)) \
+    MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, 2), TCR(gentle, 2))
 #define MULTITEAM_CENTER3(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-    MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-    MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
-    MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3)))
+    MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, 1), TCR(gentle, 1)) \
+    MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, 2), TCR(gentle, 2)) \
+    MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, 3), TCR(gentle, 3))
 #define MULTITEAM_CENTER4(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-    MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-    MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
-    MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
-    MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4)))
+    MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, 1), TCR(gentle, 1)) \
+    MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, 2), TCR(gentle, 2)) \
+    MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, 3), TCR(gentle, 3)) \
+    MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, 4), TCR(gentle, 4))
 #define MULTITEAM_CENTER(default,prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
     MULTITEAM_CENTER##teams(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle)
 

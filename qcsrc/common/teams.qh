@@ -27,12 +27,26 @@ const string COL_TEAM_2 = "^4";
 const string COL_TEAM_3 = "^3";
 const string COL_TEAM_4 = "^6";
 // must be #defined, const globals drop the translation attribute
-#define NAME_TEAM_1 _("Red")
-#define NAME_TEAM_2 _("Blue")
-#define NAME_TEAM_3 _("Yellow")
-#define NAME_TEAM_4 _("Pink")
+#define NAME_TEAM_1 _("TEAM^Red")
+#define NAME_TEAM_2 _("TEAM^Blue")
+#define NAME_TEAM_3 _("TEAM^Yellow")
+#define NAME_TEAM_4 _("TEAM^Pink")
 #define NAME_TEAM _("Team")
 #define NAME_NEUTRAL _("Neutral")
+
+// items colors, so they are handled properly in languages which decline things with grammatical gender
+#define KEY_TEAM_1 CTX(_("KEY^Red"))
+#define KEY_TEAM_2 CTX(_("KEY^Blue"))
+#define KEY_TEAM_3 CTX(_("KEY^Yellow"))
+#define KEY_TEAM_4 CTX(_("KEY^Pink"))
+#define FLAG_TEAM_1 CTX(_("FLAG^Red"))
+#define FLAG_TEAM_2 CTX(_("FLAG^Blue"))
+#define FLAG_TEAM_3 CTX(_("FLAG^Yellow"))
+#define FLAG_TEAM_4 CTX(_("FLAG^Pink"))
+#define GENERATOR_TEAM_1 CTX(_("GENERATOR^Red"))
+#define GENERATOR_TEAM_2 CTX(_("GENERATOR^Blue"))
+#define GENERATOR_TEAM_3 CTX(_("GENERATOR^Yellow"))
+#define GENERATOR_TEAM_4 CTX(_("GENERATOR^Pink"))
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
 const string STATIC_NAME_TEAM_1 = "Red";
@@ -158,7 +172,13 @@ float Team_TeamToNumber(float teamid)
 #define Team_NumberToColoredFullName(number) Team_ColoredFullName(Team_NumberToTeam(number))
 
 // replace these flags in a string with the strings provided
-#define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
+#define TCR(input,team) \
+	strreplace("^TC", COL_TEAM_##team, \
+	strreplace("^KT", strtoupper(NAME_TEAM_##team), \
+	strreplace("^FT", strtoupper(KEY_TEAM_##team), \
+	strreplace("^TT", strtoupper(FLAG_TEAM_##team), \
+	strreplace("^GT", strtoupper(GENERATOR_TEAM_##team), \
+	input)))))
 
 // safe team comparisons
 #define SAME_TEAM(a,b) (teamplay ? (a.team == b.team) : (a == b))
