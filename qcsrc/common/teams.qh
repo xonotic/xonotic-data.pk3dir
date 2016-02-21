@@ -47,12 +47,12 @@ float myteam;
 
 string Team_ColorCode(float teamid)
 {
-    switch(teamid)
-    {
+	switch(teamid)
+	{
 		case NUM_TEAM_1: return COL_TEAM_1;
-    	case NUM_TEAM_2: return COL_TEAM_2;
-    	case NUM_TEAM_3: return COL_TEAM_3;
-    	case NUM_TEAM_4: return COL_TEAM_4;
+		case NUM_TEAM_2: return COL_TEAM_2;
+		case NUM_TEAM_3: return COL_TEAM_3;
+		case NUM_TEAM_4: return COL_TEAM_4;
 	}
 
 	return "^7";
@@ -73,12 +73,12 @@ vector Team_ColorRGB(float teamid)
 
 string Team_ColorName(float teamid)
 {
-    switch(teamid)
-    {
+	switch(teamid)
+	{
 		case NUM_TEAM_1: return NAME_TEAM_1;
-    	case NUM_TEAM_2: return NAME_TEAM_2;
-    	case NUM_TEAM_3: return NAME_TEAM_3;
-    	case NUM_TEAM_4: return NAME_TEAM_4;
+		case NUM_TEAM_2: return NAME_TEAM_2;
+		case NUM_TEAM_3: return NAME_TEAM_3;
+		case NUM_TEAM_4: return NAME_TEAM_4;
 	}
 
     return NAME_NEUTRAL;
@@ -87,12 +87,12 @@ string Team_ColorName(float teamid)
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
 string Static_Team_ColorName(float teamid)
 {
-    switch(teamid)
-    {
+	switch(teamid)
+	{
 		case NUM_TEAM_1: return STATIC_NAME_TEAM_1;
-    	case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
-    	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
-    	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
+		case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
+		case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
+		case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
 	}
 
     return NAME_NEUTRAL;
@@ -103,10 +103,10 @@ float Team_ColorToTeam(string team_color)
 	switch(strtolower(team_color))
 	{
 		case "red": return NUM_TEAM_1;
-    	case "blue": return NUM_TEAM_2;
-    	case "yellow": return NUM_TEAM_3;
-    	case "pink": return NUM_TEAM_4;
-    	case "auto": return 0;
+		case "blue": return NUM_TEAM_2;
+		case "yellow": return NUM_TEAM_3;
+		case "pink": return NUM_TEAM_4;
+		case "auto": return 0;
 	}
 
 	return -1;
