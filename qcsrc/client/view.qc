@@ -40,14 +40,15 @@ float autocvar_cl_bobmodel_up;
 
 float autocvar_cl_followmodel;
 float autocvar_cl_followmodel_speed = 0.3;
-float autocvar_cl_followmodel_limit = 1000;
+float autocvar_cl_followmodel_limit = 135;
 float autocvar_cl_followmodel_velocity_lowpass = 0.05;
 float autocvar_cl_followmodel_highpass = 0.05;
 float autocvar_cl_followmodel_lowpass = 0.03;
+bool autocvar_cl_followmodel_velocity_absolute;
 
 float autocvar_cl_leanmodel;
 float autocvar_cl_leanmodel_speed = 0.3;
-float autocvar_cl_leanmodel_limit = 1000;
+float autocvar_cl_leanmodel_limit = 30;
 float autocvar_cl_leanmodel_highpass1 = 0.2;
 float autocvar_cl_leanmodel_highpass = 0.2;
 float autocvar_cl_leanmodel_lowpass = 0.05;
@@ -82,12 +83,6 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	lowpass(value.y, frac, ref_store.y, ref_out.y); \
 } MACRO_END
 
-#define lowpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-} MACRO_END
-
 #define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass(value.x, frac, ref_store.x, ref_out.x); \
@@ -114,21 +109,6 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	highpass(value.z, frac, ref_store.z, ref_out.z); \
 } MACRO_END
 
-#define highpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-	highpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
-} MACRO_END
-
-#define lowpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-	lowpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
-} MACRO_END
-
-bool autocvar_cl_followmodel_velocity_absolute;
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
@@ -177,8 +157,12 @@ void viewmodel_animate(entity this)
 			vel.z = view.velocity * up;
 		}
 
+		vel.x = bound(vel_average.x - autocvar_cl_followmodel_limit, vel.x, vel_average.x + autocvar_cl_followmodel_limit);
+		vel.y = bound(vel_average.y - autocvar_cl_followmodel_limit, vel.y, vel_average.y + autocvar_cl_followmodel_limit);
+		vel.z = bound(vel_average.z - autocvar_cl_followmodel_limit, vel.z, vel_average.z + autocvar_cl_followmodel_limit);
+
 		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
-		lowpass3_limited(vel, frac, autocvar_cl_followmodel_limit, vel_average, gunorg);
+		lowpass3(vel, frac, vel_average, gunorg);
 
 		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
 
