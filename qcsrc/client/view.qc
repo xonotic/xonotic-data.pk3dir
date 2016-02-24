@@ -123,13 +123,11 @@ void viewmodel_animate(entity this)
 	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 	static bool oldonground;
 	static float hitgroundtime;
-	static float lastongroundtime;
 	if (clonground)
 	{
 		float f = time; // cl.movecmd[0].time
 		if (!oldonground)
 			hitgroundtime = f;
-		lastongroundtime = f;
 	}
 	oldonground = clonground;
 
@@ -238,35 +236,25 @@ void viewmodel_animate(entity this)
 	{
 		// calculate for swinging gun model
 		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
-		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
-		// for the most part, but for some reason when you go through a message trigger or
-		// pick up an item or anything like that it will momentarily jolt the gun.
 		float bspeed;
-		float t = 1;
+		static float bobmodel_scale = 0;
 		float s = time * autocvar_cl_bobmodel_speed;
 		if (clonground)
 		{
-			if (time - hitgroundtime < 0.2)
-			{
-				// just hit the ground, speed the bob back up over the next 0.2 seconds
-				t = time - hitgroundtime;
-				t = bound(0, t, 0.2);
-				t *= 5;
-			}
+			if (time - hitgroundtime > 0.05)
+				bobmodel_scale = min(1, bobmodel_scale + frametime * 5);
 		}
 		else
+			bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
+		if(bobmodel_scale)
 		{
-			// recently left the ground, slow the bob down over the next 0.2 seconds
-			t = time - lastongroundtime;
-			t = 0.2 - bound(0, t, 0.2);
-			t *= 5;
-		}
-		bspeed = xyspeed * 0.01;
-		vector gunorg = '0 0 0';
-		gunorg.y += bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
-		gunorg.z += bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
+			bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+			vector gunorg = '0 0 0';
+			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
 
-		this.origin += gunorg;
+			this.origin += gunorg;
+		}
 	}
 }
 
