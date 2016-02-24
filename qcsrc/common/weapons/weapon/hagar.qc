@@ -397,6 +397,36 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 	}
 }
 
+void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
+{
+	if(!(fire & 1) || actor.hagar_load || actor.hagar_loadblock)
+	{
+		w_ready(thiswep, actor, weaponentity, fire);
+		return;
+	}
+
+	if(!thiswep.wr_checkammo1(thiswep))
+	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	{
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		w_ready(thiswep, actor, weaponentity, fire);
+		return;
+	}
+
+	W_Hagar_Attack(thiswep);
+
+	int slot = weaponslot(weaponentity);
+	int theframe = WFRAME_FIRE1;
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hagar, refire) * W_WeaponRateFactor();
+	entity this = actor.(weaponentity);
+	if(this)
+	{
+		if(this.wframe == WFRAME_FIRE1)
+			theframe = WFRAME_DONTCHANGE;
+	}
+	weapon_thinkf(actor, weaponentity, theframe, WEP_CVAR_PRI(hagar, refire), W_Hagar_Attack_Auto);
+}
+
 		METHOD(Hagar, wr_aim, void(entity thiswep))
 		{
 			if(random()>0.15)
@@ -415,11 +445,8 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 				thiswep.wr_reload(thiswep, actor, weaponentity);
 			} else if((fire & 1) && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
 			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hagar, refire)))
-				{
-					W_Hagar_Attack(thiswep);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
-				}
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
+					W_Hagar_Attack_Auto(thiswep, actor, weaponentity, fire);
 			}
 			else if((fire & 2) && !loadable_secondary && WEP_CVAR(hagar, secondary))
 			{
