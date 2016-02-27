@@ -1318,18 +1318,14 @@ void HUD_Crosshair()
 
 void HUD_Draw()
 {
-	vector rgb = '0 0 0';
-	float a = 1;
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		rgb = MUTATOR_ARGV(0, vector);
-		a = MUTATOR_ARGV(0, float);
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, MUTATOR_ARGV(0, vector), autocvar_hud_colorflash_alpha * MUTATOR_ARGV(0, float), DRAWFLAG_ADDITIVE);
 	}
 	else if(STAT(FROZEN))
 	{
-		rgb = ((STAT(REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * STAT(REVIVE_PROGRESS)) + ('0 1 1' * STAT(REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((STAT(REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * STAT(REVIVE_PROGRESS)) + ('0 1 1' * STAT(REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 	}
-	drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, rgb, autocvar_hud_colorflash_alpha * a, DRAWFLAG_ADDITIVE);
 	if(!intermission)
 	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
