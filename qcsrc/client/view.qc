@@ -236,9 +236,8 @@ void viewmodel_animate(entity this)
 	{
 		// calculate for swinging gun model
 		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
-		float bspeed;
 		static float bobmodel_scale = 0;
-		float s = time * autocvar_cl_bobmodel_speed;
+		static float time_ofs = 0; // makes the effect always restart in the same way
 		if (clonground)
 		{
 			if (time - hitgroundtime > 0.05)
@@ -246,15 +245,18 @@ void viewmodel_animate(entity this)
 		}
 		else
 			bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
-		if(bobmodel_scale)
+		if(bobmodel_scale && xyspeed)
 		{
-			bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+			float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
 			vector gunorg = '0 0 0';
 			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
 			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
 
 			this.origin += gunorg;
 		}
+		else
+			time_ofs = time;
 	}
 }
 
