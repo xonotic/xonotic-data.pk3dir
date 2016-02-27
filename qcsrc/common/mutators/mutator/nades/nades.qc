@@ -696,6 +696,7 @@ void nade_touch()
 	if(autocvar_g_nades_pickup)
 	if(time >= self.spawnshieldtime)
 	if(!other.nade && self.health == self.max_health) // no boosted shot pickups, thank you very much
+	if(!other.frozen)
 	if(CanThrowNade(other)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(other)) // above checks for IS_PLAYER, don't need to do it here
 	{
