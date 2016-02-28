@@ -1244,6 +1244,7 @@ void ClientDisconnect ()
 
 	self.playerid = 0;
 	ReadyCount();
+	VoteCount(false);
 
 	// free cvars
 	GetCvars(-1);
