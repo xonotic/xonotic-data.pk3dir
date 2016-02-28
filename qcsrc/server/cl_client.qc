@@ -1827,7 +1827,7 @@ void LeaveSpectatorMode()
 
 			PutClientInServer();
 
-			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname); }
+			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname); }
 		}
 		else
 			stuffcmd(self, "menu_showteamselect\n");
