@@ -40,14 +40,15 @@ float autocvar_cl_bobmodel_up;
 
 float autocvar_cl_followmodel;
 float autocvar_cl_followmodel_speed = 0.3;
-float autocvar_cl_followmodel_limit = 1000;
+float autocvar_cl_followmodel_limit = 135;
 float autocvar_cl_followmodel_velocity_lowpass = 0.05;
 float autocvar_cl_followmodel_highpass = 0.05;
 float autocvar_cl_followmodel_lowpass = 0.03;
+bool autocvar_cl_followmodel_velocity_absolute;
 
 float autocvar_cl_leanmodel;
 float autocvar_cl_leanmodel_speed = 0.3;
-float autocvar_cl_leanmodel_limit = 1000;
+float autocvar_cl_leanmodel_limit = 30;
 float autocvar_cl_leanmodel_highpass1 = 0.2;
 float autocvar_cl_leanmodel_highpass = 0.2;
 float autocvar_cl_leanmodel_lowpass = 0.05;
@@ -82,12 +83,6 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	lowpass(value.y, frac, ref_store.y, ref_out.y); \
 } MACRO_END
 
-#define lowpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-} MACRO_END
-
 #define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass(value.x, frac, ref_store.x, ref_out.x); \
@@ -114,21 +109,6 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	highpass(value.z, frac, ref_store.z, ref_out.z); \
 } MACRO_END
 
-#define highpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-	highpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
-} MACRO_END
-
-#define lowpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-	lowpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
-} MACRO_END
-
-bool autocvar_cl_followmodel_velocity_absolute;
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
@@ -143,13 +123,11 @@ void viewmodel_animate(entity this)
 	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 	static bool oldonground;
 	static float hitgroundtime;
-	static float lastongroundtime;
 	if (clonground)
 	{
 		float f = time; // cl.movecmd[0].time
 		if (!oldonground)
 			hitgroundtime = f;
-		lastongroundtime = f;
 	}
 	oldonground = clonground;
 
@@ -177,8 +155,12 @@ void viewmodel_animate(entity this)
 			vel.z = view.velocity * up;
 		}
 
+		vel.x = bound(vel_average.x - autocvar_cl_followmodel_limit, vel.x, vel_average.x + autocvar_cl_followmodel_limit);
+		vel.y = bound(vel_average.y - autocvar_cl_followmodel_limit, vel.y, vel_average.y + autocvar_cl_followmodel_limit);
+		vel.z = bound(vel_average.z - autocvar_cl_followmodel_limit, vel.z, vel_average.z + autocvar_cl_followmodel_limit);
+
 		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
-		lowpass3_limited(vel, frac, autocvar_cl_followmodel_limit, vel_average, gunorg);
+		lowpass3(vel, frac, vel_average, gunorg);
 
 		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
 
@@ -254,35 +236,27 @@ void viewmodel_animate(entity this)
 	{
 		// calculate for swinging gun model
 		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
-		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
-		// for the most part, but for some reason when you go through a message trigger or
-		// pick up an item or anything like that it will momentarily jolt the gun.
-		float bspeed;
-		float t = 1;
-		float s = time * autocvar_cl_bobmodel_speed;
+		static float bobmodel_scale = 0;
+		static float time_ofs = 0; // makes the effect always restart in the same way
 		if (clonground)
 		{
-			if (time - hitgroundtime < 0.2)
-			{
-				// just hit the ground, speed the bob back up over the next 0.2 seconds
-				t = time - hitgroundtime;
-				t = bound(0, t, 0.2);
-				t *= 5;
-			}
+			if (time - hitgroundtime > 0.05)
+				bobmodel_scale = min(1, bobmodel_scale + frametime * 5);
 		}
 		else
+			bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
+		if(bobmodel_scale && xyspeed)
 		{
-			// recently left the ground, slow the bob down over the next 0.2 seconds
-			t = time - lastongroundtime;
-			t = 0.2 - bound(0, t, 0.2);
-			t *= 5;
-		}
-		bspeed = xyspeed * 0.01;
-		vector gunorg = '0 0 0';
-		gunorg.y += bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
-		gunorg.z += bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
+			float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
+			vector gunorg = '0 0 0';
+			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
 
-		this.origin += gunorg;
+			this.origin += gunorg;
+		}
+		else
+			time_ofs = time;
 	}
 }
 
