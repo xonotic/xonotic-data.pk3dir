@@ -12,7 +12,11 @@
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
 
+	string GlobalSound_sample(string pair, float r);
+
 	#ifdef SVQC
+		/** Use new sound handling. TODO: use when sounds play correctly on clients */
+		bool autocvar_g_debug_globalsounds = false;
 		/**
 		 * @param from the source entity, its position is sent
 		 * @param gs the global sound def
@@ -22,6 +26,18 @@
 		{
 			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
+			if (!autocvar_g_debug_globalsounds) {
+				string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
+				switch (channel) {
+					case MSG_ONE:
+						soundto(channel, from, chan, sample, vol, atten);
+						break;
+					case MSG_ALL:
+						_sound(from, chan, sample, vol, atten);
+						break;
+				}
+				return;
+			}
 			WriteHeader(channel, globalsound);
 			WriteByte(channel, gs.m_id);
 			WriteByte(channel, r * 255);
@@ -45,6 +61,20 @@
 		{
 			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
+			if (!autocvar_g_debug_globalsounds) {
+				UpdatePlayerSounds(from);
+				string s = from.(ps.m_playersoundfld);
+				string sample = GlobalSound_sample(s, r);
+				switch (channel) {
+					case MSG_ONE:
+						soundto(channel, from, chan, sample, vol, atten);
+						break;
+					case MSG_ALL:
+						_sound(from, chan, sample, vol, atten);
+						break;
+				}
+				return;
+			}
 			WriteHeader(channel, playersound);
 			WriteByte(channel, ps.m_id);
 			WriteByte(channel, r * 255);
@@ -59,8 +89,6 @@
 			WriteCoord(channel, o.z);
 		}
 	#endif
-
-	string GlobalSound_sample(string pair, float r);
 
 	#ifdef CSQC
 
@@ -220,7 +248,7 @@
 		fclose(fh);
 	}
 
-	#ifdef CSQC
+	//#ifdef CSQC
 
 		.string GetPlayerSoundSampleField(string type)
 		{
@@ -229,14 +257,14 @@
 
 		void ClearPlayerSounds(entity this)
 		{
-			FOREACH(PlayerSounds, true, LAMBDA(
+			FOREACH(PlayerSounds, true, {
 				.string fld = it.m_playersoundfld;
 				if (this.(fld))
-	{
-		strunzone(this.(fld));
-		this.(fld) = string_null;
-	}
-				                              ));
+				{
+					strunzone(this.(fld));
+					this.(fld) = string_null;
+				}
+			});
 		}
 
 		bool LoadPlayerSounds(entity this, string f, bool strict)
@@ -290,7 +318,7 @@
 			LoadPlayerSounds(this, get_model_datafilename(this.model, 0, "sounds"), true);
 		}
 
-	#endif
+	//#endif
 
 	#ifdef SVQC
 

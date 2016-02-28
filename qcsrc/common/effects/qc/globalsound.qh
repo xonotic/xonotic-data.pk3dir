@@ -108,13 +108,13 @@ REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
 
 bool GetPlayerSoundSampleField_notFound;
 void PrecachePlayerSounds(string f);
-#ifdef CSQC
+//#ifdef CSQC
 	.string GetVoiceMessageSampleField(string type);
 	.string GetPlayerSoundSampleField(string type);
 	void ClearPlayerSounds(entity this);
 	float LoadPlayerSounds(entity this, string f, bool strict);
 	void UpdatePlayerSounds(entity this);
-#endif
+//#endif
 
 #ifdef SVQC
 
