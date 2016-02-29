@@ -578,6 +578,8 @@
     MSG_CENTER_NOTIF(1, CENTER_INVASION_SUPERMONSTER,       1, 0, "s1",           NO_CPID,             "0 0", _("^K1A %s has arrived!"), "")
     MSG_CENTER_NOTIF(1, CENTER_ITEM_BUFF_DROP,              0, 1, "item_buffname",                     CPID_ITEM, "item_centime 0", _("^BGYou dropped the %s^BG buff!"), "")
     MSG_CENTER_NOTIF(1, CENTER_ITEM_BUFF_GOT,               0, 1, "item_buffname",                     CPID_ITEM, "item_centime 0", _("^BGYou got the %s^BG buff!"), "")
+    MSG_CENTER_NOTIF(1, CENTER_ITEM_FUELREGEN_GOT,          0, 0, "",                                  CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Fuel regenerator"), "")
+    MSG_CENTER_NOTIF(1, CENTER_ITEM_JETPACK_GOT,            0, 0, "",                                  CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1Jet pack"), "")
     MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DONTHAVE,        0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "")
     MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DROP,            1, 1, "item_wepname item_wepammo",         CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
     MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_GOT,             0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "")

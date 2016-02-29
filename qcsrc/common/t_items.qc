@@ -707,6 +707,14 @@ float Item_GiveTo(entity item, entity player)
 		}
 	}
 
+	if (item.itemdef.instanceOfPowerup)
+	{
+		if ((item.itemdef == ITEM_JetpackRegen) && !(player.items & IT_FUEL_REGEN))
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_FUELREGEN_GOT);
+		else if ((item.itemdef == ITEM_Jetpack) && !(player.items & IT_JETPACK))
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_JETPACK_GOT);
+	}
+
 	int its;
 	if((its = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
 	{
