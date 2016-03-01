@@ -639,7 +639,9 @@ entity msg_choice_notifs[NOTIF_CHOICE_MAX];
 float notif_error;
 float notif_global_error;
 
-#define MSG_ANNCE_NOTIF(default,name,channel,sound,volume,position) \
+#define MSG_ANNCE_NOTIF(name, default, sound, channel, volume, position) \
+    MSG_ANNCE_NOTIF_(ANNCE_##name, default, sound, channel, volume, position)
+#define MSG_ANNCE_NOTIF_(name, default, sound, channel, volume, position) \
     NOTIF_ADD_AUTOCVAR(name, default) \
     float name; \
     void RegisterNotification_##name() \
@@ -681,7 +683,9 @@ float notif_global_error;
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
+#define MSG_INFO_NOTIF(name, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
+    MSG_INFO_NOTIF_(INFO_##name, default, strnum, flnum, args, hudargs, icon, normal, gentle)
+#define MSG_INFO_NOTIF_(name, default, strnum, flnum, args, hudargs, icon, normal, gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
     int name; \
     void RegisterNotification_##name() \
@@ -724,7 +728,9 @@ float notif_global_error;
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 .string nent_iconargs;
-#define MULTIICON_INFO(default,name,strnum,flnum,args,hudargs,iconargs,icon,normal,gentle) \
+#define MULTIICON_INFO(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
+    MULTIICON_INFO_(INFO_##name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle)
+#define MULTIICON_INFO_(name, default, strnum, flnum, args, hudargs, iconargs, icon, normal, gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
     int name; \
     void RegisterNotification_##name() \
@@ -767,7 +773,9 @@ float notif_global_error;
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_CENTER_NOTIF(default,name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
+#define MSG_CENTER_NOTIF(name, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
+    MSG_CENTER_NOTIF_(CENTER_##name, default, strnum, flnum, args, cpid, durcnt, normal, gentle)
+#define MSG_CENTER_NOTIF_(name, default, strnum, flnum, args, cpid, durcnt, normal, gentle) \
     NOTIF_ADD_AUTOCVAR(name, default) \
     float name; \
     void RegisterNotification_##name() \
@@ -809,7 +817,7 @@ float notif_global_error;
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_MULTI_NOTIF(default,name,anncename,infoname,centername) \
+#define MSG_MULTI_NOTIF(name, default, anncename, infoname, centername) \
     NOTIF_ADD_AUTOCVAR(name, default) \
     int name; \
     void RegisterNotification_##name() \
@@ -853,7 +861,9 @@ float notif_global_error;
 
 #define ACVNN(name) autocvar_notification_##name
 
-#define MSG_CHOICE_NOTIF(default,challow,name,chtype,optiona,optionb) \
+#define MSG_CHOICE_NOTIF(name, default, challow, chtype, optiona, optionb) \
+    MSG_CHOICE_NOTIF_(CHOICE_##name, default, challow, chtype, optiona, optionb)
+#define MSG_CHOICE_NOTIF_(name, default, challow, chtype, optiona, optionb) \
     NOTIF_ADD_AUTOCVAR(name, default) \
     NOTIF_ADD_AUTOCVAR(name##_ALLOWED, challow) \
     float name; \

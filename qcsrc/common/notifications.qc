@@ -571,7 +571,7 @@ void Create_Notification_Entity(
 		}
 	}
 	notif.nent_default = var_default;
-	notif.nent_enabled = (1 <= var_cvar);
+	notif.nent_enabled = (var_cvar >= 1);
 	notif.nent_type = typeId;
 	notif.nent_id = nameid;
 	notif.nent_name = strzone(namestring);
