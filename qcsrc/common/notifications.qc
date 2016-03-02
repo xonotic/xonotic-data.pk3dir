@@ -488,108 +488,66 @@ string Process_Notif_Args(
 	return args;
 }
 
-void Create_Notification_Entity(
+void Create_Notification_Entity(entity notif,
 	float var_default,
 	float var_cvar,
 	int typeId,
 	int nameid,
-	string namestring,
-	int strnum,
-	int flnum,
-	/* MSG_ANNCE */
-	float channel,
-	string snd,
-	float vol,
-	float position,
-	/* MSG_INFO & MSG_CENTER */
-	string args,
-	string hudargs,
-	string icon,
-	float cpid,
-	string durcnt,
-	string normal,
-	string gentle,
-	/* MSG_MULTI */
-	int anncename,
-	int infoname,
-	int centername,
-	/* MSG_CHOICE */
-	float challow_def,
-	float challow_var,
-	int chtype,
-	int optiona,
-	int optionb)
+	string namestring)
 {
 	// =====================
 	//  Global Entity Setup
 	// =====================
-	entity notif = new_pure(notification);
-	switch(typeId)
-	{
-		case MSG_ANNCE:
-		{
-			msg_annce_notifs[nameid - 1] = notif;
-			notif.classname = "msg_annce_notification";
-			break;
-		}
-		case MSG_INFO:
-		{
-			msg_info_notifs[nameid - 1] = notif;
-			notif.classname = "msg_info_notification";
-			break;
-		}
-		case MSG_CENTER:
-		{
-			msg_center_notifs[nameid - 1] = notif;
-			notif.classname = "msg_center_notification";
-			break;
-		}
-		case MSG_MULTI:
-		{
-			msg_multi_notifs[nameid - 1] = notif;
-			notif.classname = "msg_multi_notification";
-			break;
-		}
-		case MSG_CHOICE:
-		{
-			msg_choice_notifs[nameid - 1] = notif;
-			notif.classname = "msg_choice_notification";
-			break;
-		}
-
-		default:
-		{
-			error(sprintf(
-				strcat(
-					"^1NOTIFICATION WITH IMPROPER TYPE: ",
-					"^7net_type = %d, net_name = %s.\n"
-				),
-				typeId,
-				namestring
-			));
-			return; // It's not possible to recover from this one
-		}
-	}
 	notif.nent_default = var_default;
 	notif.nent_enabled = (var_cvar >= 1);
 	notif.nent_type = typeId;
 	notif.nent_id = nameid;
 	notif.nent_name = strzone(namestring);
 
-	string typestring = Get_Notif_TypeName(typeId);
-
 	// Other pre-notif-setup requisites
 	notif_error = false;
 
-	// ====================
-	//  Notification Setup
-	// ====================
 	switch(typeId)
 	{
-		case MSG_ANNCE:
+	    case MSG_ANNCE:
+        case MSG_INFO:
+        case MSG_CENTER:
+        case MSG_MULTI:
+        case MSG_CHOICE:
+            break;
+        default:
+            LOG_INFOF(
+                strcat(
+                    "^1NOTIFICATION WITH IMPROPER TYPE: ",
+                    "^7net_type = %d, net_name = %s.\n"
+                ),
+                typeId,
+                namestring
+            );
+            notif_error = true;
+            break;
+	}
+
+	// now check to see if any errors happened
+    if(notif_error)
+    {
+        notif.nent_enabled = false; // disable the notification so it can't cause trouble
+        notif_global_error = true; // throw the red flag that an error happened on init
+    }
+}
+
+void Create_Notification_Entity_Annce(entity notif,
+                                      	float var_cvar,
+                                      	string namestring,
+                                      	/* MSG_ANNCE */
+                                      	float channel,
+                                      	string snd,
+                                      	float vol,
+                                      	float position)
 		{
 			// Set MSG_ANNCE information and handle precaching
 			#ifdef CSQC
+		    int typeId = MSG_ANNCE;
 			if (!(GENTLE && (var_cvar == 1)))
 			{
 				if(snd != "")
@@ -605,6 +563,7 @@ void Create_Notification_Entity(
 				}
 				else
 				{
+					string typestring = Get_Notif_TypeName(typeId);
 					LOG_INFOF(
 						strcat(
 							"^1NOTIFICATION WITH NO SOUND: ",
@@ -621,12 +580,23 @@ void Create_Notification_Entity(
 			notif.nent_enabled = false;
 			#endif
 
-			break;
 		}
 
-		case MSG_INFO:
-		case MSG_CENTER:
+void Create_Notification_Entity_InfoCenter(entity notif,
+                                           	float var_cvar,
+                                           	string namestring,
+                                           	int strnum,
+                                           	int flnum,
+                                           	/* MSG_INFO & MSG_CENTER */
+                                           	string args,
+                                           	string hudargs,
+                                           	string icon,
+                                           	float cpid,
+                                           	string durcnt,
+                                           	string normal,
+                                           	string gentle)
 		{
+		    int typeId = notif.nent_type;
 			// Set MSG_INFO and MSG_CENTER string/float counts
 			notif.nent_stringcount = strnum;
 			notif.nent_floatcount = flnum;
@@ -637,7 +607,7 @@ void Create_Notification_Entity(
 			#else
 			float should_process_args = true;
 			#endif
-
+            string typestring = Get_Notif_TypeName(typeId);
 			if(should_process_args)
 			{
 				// ========================
@@ -771,15 +741,21 @@ void Create_Notification_Entity(
 					notif_error = true;
 				}
 			}
-
-			break;
 		}
 
-		case MSG_MULTI:
+void Create_Notification_Entity_Multi(entity notif,
+                                      	float var_cvar,
+                                      	string namestring,
+                                      	/* MSG_MULTI */
+                                      	int anncename,
+                                      	int infoname,
+                                      	int centername)
 		{
+		    int typeId = MSG_MULTI;
 			// Set MSG_MULTI string/float counts
 			if((anncename == NO_MSG) && (infoname == NO_MSG) && (centername == NO_MSG))
 			{
+                string typestring = Get_Notif_TypeName(typeId);
 				LOG_INFOF(
 					strcat(
 						"^1NOTIFICATION WITH NO SUBCALLS: ",
@@ -816,14 +792,22 @@ void Create_Notification_Entity(
 				notif.nent_stringcount = max(infoname_stringcount, centername_stringcount);
 				notif.nent_floatcount = max(infoname_floatcount, centername_floatcount);
 			}
-
-			break;
 		}
 
-		case MSG_CHOICE:
+void Create_Notification_Entity_Choice(entity notif,
+                                       	float var_cvar,
+                                       	string namestring,
+                                       	/* MSG_CHOICE */
+                                       	float challow_def,
+                                       	float challow_var,
+                                       	int chtype,
+                                       	int optiona,
+                                       	int optionb)
 		{
+		    int typeId = MSG_CHOICE;
 			if((chtype == NO_MSG) || (optiona == NO_MSG) || (optionb == NO_MSG))
 			{
+                string typestring = Get_Notif_TypeName(typeId);
 				LOG_INFOF(
 					strcat(
 						"^1NOTIFICATION IS MISSING CHOICE PARAMS: ",
@@ -909,31 +893,7 @@ void Create_Notification_Entity(
 				));
 				#endif*/
 			}
-			break;
 		}
-
-		default:
-		{
-			LOG_INFOF(
-				strcat(
-					"^1NOTIFICATION WITH IMPROPER TYPE: ",
-					"^7net_type = %d, net_name = %s.\n"
-				),
-				typeId,
-				namestring
-			);
-			notif_error = true;
-			break;
-		}
-	}
-
-	// now check to see if any errors happened
-	if(notif_error)
-	{
-		notif.nent_enabled = false; // disable the notification so it can't cause trouble
-		notif_global_error = true; // throw the red flag that an error happened on init
-	}
-}
 
 
 // ===============

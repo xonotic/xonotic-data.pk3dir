@@ -51,37 +51,52 @@ const int NOTIF_ABORT = -1234;   // allows Send_Notification to safely abort sen
     VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
 
 void Destroy_All_Notifications();
-void Create_Notification_Entity(
+void Create_Notification_Entity(entity notif,
     float var_default,
     float var_cvar,
     float typeId,
     float nameid,
-    string namestring,
-    int strnum,
-    int flnum,
-    /* MSG_ANNCE */
-    float channel,
-    string snd,
-    float vol,
-    float position,
-    /* MSG_INFO & MSG_CENTER */
-    string args,
-    string hudargs,
-    string icon,
-    float cpid,
-    string durcnt,
-    string normal,
-    string gentle,
-    /* MSG_MULTI */
-    float anncename,
-    float infoname,
-    float centername,
-    /* MSG_CHOICE */
-    float challow_def,
-    float challow_var,
-    float chtype,
-    float optiona,
-    float optionb);
+    string namestring);
+void Create_Notification_Entity_Annce(entity notif,
+                                      	float var_cvar,
+                                      	string namestring,
+                                      	/* MSG_ANNCE */
+                                      	float channel,
+                                      	string snd,
+                                      	float vol,
+                                      	float position);
+
+void Create_Notification_Entity_InfoCenter(entity notif,
+                                           	float var_cvar,
+                                           	string namestring,
+                                           	int strnum,
+                                           	int flnum,
+                                           	/* MSG_INFO & MSG_CENTER */
+                                           	string args,
+                                           	string hudargs,
+                                           	string icon,
+                                           	float cpid,
+                                           	string durcnt,
+                                           	string normal,
+                                           	string gentle);
+
+void Create_Notification_Entity_Multi(entity notif,
+                                      	float var_cvar,
+                                      	string namestring,
+                                      	/* MSG_MULTI */
+                                      	int anncename,
+                                      	int infoname,
+                                      	int centername);
+
+void Create_Notification_Entity_Choice(entity notif,
+                                       	float var_cvar,
+                                       	string namestring,
+                                       	/* MSG_CHOICE */
+                                       	float challow_def,
+                                       	float challow_var,
+                                       	int chtype,
+                                       	int optiona,
+                                       	int optionb);
 
 void Dump_Notifications(float fh, float alsoprint);
 
@@ -635,6 +650,8 @@ entity msg_choice_notifs[NOTIF_CHOICE_MAX];
 // other notification properties
 .float msg_choice_choices[NOTIF_CHOICE_MAX]; // set on each player containing MSG_CHOICE choices
 
+#define ACVNN(name) autocvar_notification_##name
+
 // initialization error detection
 float notif_error;
 float notif_global_error;
@@ -648,38 +665,13 @@ float notif_global_error;
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_ANNCE_COUNT) \
         CHECK_MAX_COUNT(name, NOTIF_ANNCE_MAX, NOTIF_ANNCE_COUNT, "MSG_ANNCE") \
-        Create_Notification_Entity( \
-            /* COMMON ======================== */ \
-            default,            /* var_default */ \
-            ACVNN(name),        /* var_cvar    */ \
-            MSG_ANNCE,          /* typeId      */ \
-            name,               /* nameid      */ \
-            strtoupper(#name),  /* namestring  */ \
-            NO_MSG,             /* strnum      */ \
-            NO_MSG,             /* flnum       */ \
-            /* ANNCE ============= */ \
+        entity this = msg_annce_notifs[name - 1] = new_pure(msg_annce_notification); \
+        Create_Notification_Entity      (this, default, ACVNN(name), MSG_ANNCE, name, strtoupper(#name)); \
+        Create_Notification_Entity_Annce(this, ACVNN(name), strtoupper(#name), \
             channel,   /* channel  */ \
             sound,     /* snd      */ \
             volume,    /* vol      */ \
-            position,  /* position */ \
-            /* INFO & CENTER == */ \
-            "",      /* args    */ \
-            "",      /* hudargs */ \
-            "",      /* icon    */ \
-            NO_MSG,  /* cpid    */ \
-            "",      /* durcnt  */ \
-            "",      /* normal  */ \
-            "",      /* gentle  */ \
-            /* MULTI ============= */ \
-            NO_MSG,  /* anncename  */ \
-            NO_MSG,  /* infoname   */ \
-            NO_MSG,  /* centername */ \
-            /* MSG_CHOICE ========== */ \
-            NO_MSG,   /* challow_def */ \
-            NO_MSG,   /* challow_var */ \
-            NO_MSG,   /* chtype      */ \
-            NO_MSG,   /* optiona     */ \
-            NO_MSG);  /* optionb     */ \
+            position); /* position */ \
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -692,38 +684,16 @@ float notif_global_error;
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
         CHECK_MAX_COUNT(name, NOTIF_INFO_MAX, NOTIF_INFO_COUNT, "MSG_INFO") \
-        Create_Notification_Entity( \
-            /* COMMON ======================== */ \
-            default,            /* var_default */ \
-            ACVNN(name),        /* var_cvar    */ \
-            MSG_INFO,           /* typeId      */ \
-            name,               /* nameid      */ \
-            strtoupper(#name),  /* namestring  */ \
-            strnum,             /* strnum      */ \
-            flnum,              /* flnum       */ \
-            /* ANNCE =========== */ \
-            NO_MSG,  /* channel  */ \
-            "",      /* snd      */ \
-            NO_MSG,  /* vol      */ \
-            NO_MSG,  /* position */ \
-            /* INFO & CENTER === */ \
+        entity this = msg_info_notifs[name - 1] = new_pure(msg_info_notification); \
+        Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, name, strtoupper(#name)); \
+        Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
             args,     /* args    */ \
             hudargs,  /* hudargs */ \
             icon,     /* icon    */ \
             NO_MSG,   /* cpid    */ \
             "",       /* durcnt  */ \
             normal,   /* normal  */ \
-            gentle,   /* gentle  */ \
-            /* MULTI ============= */ \
-            NO_MSG,  /* anncename  */ \
-            NO_MSG,  /* infoname   */ \
-            NO_MSG,  /* centername */ \
-            /* CHOICE ============== */ \
-            NO_MSG,   /* challow_def */ \
-            NO_MSG,   /* challow_var */ \
-            NO_MSG,   /* chtype      */ \
-            NO_MSG,   /* optiona     */ \
-            NO_MSG);  /* optionb     */ \
+            gentle);  /* gentle  */ \
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -737,38 +707,16 @@ float notif_global_error;
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
         CHECK_MAX_COUNT(name, NOTIF_INFO_MAX, NOTIF_INFO_COUNT, "MSG_INFO") \
-        Create_Notification_Entity( \
-            /* COMMON ======================== */ \
-            default,            /* var_default */ \
-            ACVNN(name),        /* var_cvar    */ \
-            MSG_INFO,           /* typeid      */ \
-            name,               /* nameid      */ \
-            strtoupper(#name),  /* namestring  */ \
-            strnum,             /* strnum      */ \
-            flnum,              /* flnum       */ \
-            /* ANNCE =========== */ \
-            NO_MSG,  /* channel  */ \
-            "",      /* snd      */ \
-            NO_MSG,  /* vol      */ \
-            NO_MSG,  /* position */ \
-            /* INFO & CENTER === */ \
+        entity this = msg_info_notifs[name - 1] = new_pure(msg_info_notification); \
+        Create_Notification_Entity           (this, default, ACVNN(name), MSG_INFO, name, strtoupper(#name)); \
+        Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
             args,     /* args    */ \
             hudargs,  /* hudargs */ \
             icon,     /* icon    */ \
             NO_MSG,   /* cpid    */ \
             "",       /* durcnt  */ \
             normal,   /* normal  */ \
-            gentle,   /* gentle  */ \
-            /* MULTI ============= */ \
-            NO_MSG,  /* anncename  */ \
-            NO_MSG,  /* infoname   */ \
-            NO_MSG,  /* centername */ \
-            /* CHOICE ============== */ \
-            NO_MSG,   /* challow_def */ \
-            NO_MSG,   /* challow_var */ \
-            NO_MSG,   /* chtype      */ \
-            NO_MSG,   /* optiona     */ \
-            NO_MSG);  /* optionb     */ \
+            gentle);  /* gentle  */ \
         msg_info_notifs[name - 1].nent_iconargs = iconargs; \
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
@@ -782,38 +730,16 @@ float notif_global_error;
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
         CHECK_MAX_COUNT(name, NOTIF_CENTER_MAX, NOTIF_CENTER_COUNT, "MSG_CENTER") \
-        Create_Notification_Entity( \
-            /* COMMON ======================== */ \
-            default,            /* var_default */ \
-            ACVNN(name),        /* var_cvar    */ \
-            MSG_CENTER,         /* typeId      */ \
-            name,               /* nameid      */ \
-            strtoupper(#name),  /* namestring  */ \
-            strnum,             /* strnum      */ \
-            flnum,              /* flnum       */ \
-            /* ANNCE =========== */ \
-            NO_MSG,  /* channel  */ \
-            "",      /* snd      */ \
-            NO_MSG,  /* vol      */ \
-            NO_MSG,  /* position */ \
-            /* INFO & CENTER == */ \
+        entity this = msg_center_notifs[name - 1] = new_pure(msg_center_notification); \
+        Create_Notification_Entity           (this, default, ACVNN(name), MSG_CENTER, name, strtoupper(#name)); \
+        Create_Notification_Entity_InfoCenter(this, ACVNN(name), strtoupper(#name), strnum, flnum, \
             args,    /* args    */ \
             "",      /* hudargs */ \
             "",      /* icon    */ \
             cpid,    /* cpid    */ \
             durcnt,  /* durcnt  */ \
             normal,  /* normal  */ \
-            gentle,  /* gentle  */ \
-            /* MULTI ============= */ \
-            NO_MSG,  /* anncename  */ \
-            NO_MSG,  /* infoname   */ \
-            NO_MSG,  /* centername */ \
-            /* CHOICE ============== */ \
-            NO_MSG,   /* challow_def */ \
-            NO_MSG,   /* challow_var */ \
-            NO_MSG,   /* chtype      */ \
-            NO_MSG,   /* optiona     */ \
-            NO_MSG);  /* optionb     */ \
+            gentle); /* gentle  */ \
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -824,42 +750,14 @@ float notif_global_error;
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_MULTI_COUNT) \
         CHECK_MAX_COUNT(name, NOTIF_MULTI_MAX, NOTIF_MULTI_COUNT, "MSG_MULTI") \
-        Create_Notification_Entity( \
-            /* COMMON ======================== */ \
-            default,            /* var_default */ \
-            ACVNN(name),        /* var_cvar    */ \
-            MSG_MULTI,          /* typeId      */ \
-            name,               /* nameid      */ \
-            strtoupper(#name),  /* namestring  */ \
-            NO_MSG,             /* strnum      */ \
-            NO_MSG,             /* flnum       */ \
-            /* ANNCE =========== */ \
-            NO_MSG,  /* channel  */ \
-            "",      /* snd      */ \
-            NO_MSG,  /* vol      */ \
-            NO_MSG,  /* position */ \
-            /* INFO & CENTER == */ \
-            "",      /* args    */ \
-            "",      /* hudargs */ \
-            "",      /* icon    */ \
-            NO_MSG,  /* cpid    */ \
-            "",      /* durcnt  */ \
-            "",      /* normal  */ \
-            "",      /* gentle  */ \
-            /* MULTI ================= */ \
+        entity this = msg_multi_notifs[name - 1] = new_pure(msg_multi_notification); \
+        Create_Notification_Entity      (this, default, ACVNN(name), MSG_MULTI, name, strtoupper(#name)); \
+        Create_Notification_Entity_Multi(this, ACVNN(name), strtoupper(#name), \
             anncename,   /* anncename  */ \
             infoname,    /* infoname   */ \
-            centername,  /* centername */ \
-            /* CHOICE ============== */ \
-            NO_MSG,   /* challow_def */ \
-            NO_MSG,   /* challow_var */ \
-            NO_MSG,   /* chtype      */ \
-            NO_MSG,   /* optiona     */ \
-            NO_MSG);  /* optionb     */ \
+            centername); /* centername */ \
     } \
     ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
-
-#define ACVNN(name) autocvar_notification_##name
 
 #define MSG_CHOICE_NOTIF(name, default, challow, chtype, optiona, optionb) \
     MSG_CHOICE_NOTIF_(CHOICE_##name, default, challow, chtype, optiona, optionb)
@@ -871,33 +769,9 @@ float notif_global_error;
     { \
         SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CHOICE_COUNT) \
         CHECK_MAX_COUNT(name, NOTIF_CHOICE_MAX, NOTIF_CHOICE_COUNT, "MSG_CHOICE") \
-        Create_Notification_Entity( \
-            /* COMMON ======================== */ \
-            default,            /* var_default */ \
-            ACVNN(name),        /* var_cvar    */ \
-            MSG_CHOICE,         /* typeId      */ \
-            name,               /* nameid      */ \
-            strtoupper(#name),  /* namestring  */ \
-            NO_MSG,             /* strnum      */ \
-            NO_MSG,             /* flnum       */ \
-            /* ANNCE =========== */ \
-            NO_MSG,  /* channel  */ \
-            "",      /* snd      */ \
-            NO_MSG,  /* vol      */ \
-            NO_MSG,  /* position */ \
-            /* INFO & CENTER == */ \
-            "",      /* args    */ \
-            "",      /* hudargs */ \
-            "",      /* icon    */ \
-            NO_MSG,  /* cpid    */ \
-            "",      /* durcnt  */ \
-            "",      /* normal  */ \
-            "",      /* gentle  */ \
-            /* MULTI ============= */ \
-            NO_MSG,  /* anncename  */ \
-            NO_MSG,  /* infoname   */ \
-            NO_MSG,  /* centername */ \
-            /* CHOICE ============================================= */ \
+        entity this = msg_choice_notifs[name - 1] = new_pure(msg_choice_notification); \
+        Create_Notification_Entity       (this, default, ACVNN(name), MSG_CHOICE, name, strtoupper(#name)); \
+        Create_Notification_Entity_Choice(this, ACVNN(name), strtoupper(#name), \
             challow,                                 /* challow_def */ \
             autocvar_notification_##name##_ALLOWED,  /* challow_var */ \
             chtype,                                  /* chtype      */ \
