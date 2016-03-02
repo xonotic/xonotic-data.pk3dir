@@ -168,28 +168,30 @@ float prev_soundtime;
 #endif
 
 #ifdef SVQC // SERVER ONLY
-const float NOTIF_ONE = 1;
-const float NOTIF_ONE_ONLY = 2;
-const float NOTIF_TEAM = 3;
-const float NOTIF_TEAM_EXCEPT = 4;
-const float NOTIF_ALL = 5;
-const float NOTIF_ALL_EXCEPT = 6;
+ENUMCLASS(NOTIF)
+    CASE(NOTIF, ONE)
+    CASE(NOTIF, ONE_ONLY)
+    CASE(NOTIF, TEAM)
+    CASE(NOTIF, TEAM_EXCEPT)
+    CASE(NOTIF, ALL)
+    CASE(NOTIF, ALL_EXCEPT)
+ENUMCLASS_END(NOTIF)
 
 void Kill_Notification(
-    float broadcast, entity client,
+    NOTIF broadcast, entity client,
     float net_type, float net_name);
 void Send_Notification(
-    float broadcast, entity client,
+    NOTIF broadcast, entity client,
     float net_type, float net_name,
     ...count);
 void Send_Notification_WOVA(
-    float broadcast, entity client,
+    NOTIF broadcast, entity client,
     float net_type, float net_name,
     float stringcount, float floatcount,
     string s1, string s2, string s3, string s4,
     float f1, float f2, float f3, float f4);
 void Send_Notification_WOCOVA(
-    float broadcast, entity client,
+    NOTIF broadcast, entity client,
     float net_type, float net_name,
     string s1, string s2, string s3, string s4,
     float f1, float f2, float f3, float f4);
@@ -640,7 +642,9 @@ entity msg_choice_notifs[NOTIF_CHOICE_MAX];
 .entity nent_optionb;
 
 // networked notification entity values
-.float nent_broadcast;
+#ifdef SVQC
+.NOTIF nent_broadcast;
+#endif
 .entity nent_client;
 .float nent_net_type;
 .float nent_net_name;

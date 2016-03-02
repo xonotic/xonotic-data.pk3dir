@@ -86,7 +86,7 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 
 #ifdef SVQC
 string Notification_CheckArgs(
-	float broadcast, entity client,
+	NOTIF broadcast, entity client,
 	float net_type, float net_name)
 {
 	// check supplied broadcast, target, type, and name for errors
@@ -138,7 +138,7 @@ string Notification_CheckArgs(
 	return checkargs;
 }
 
-float Notification_ShouldSend(float broadcast, entity to_client, entity other_client)
+float Notification_ShouldSend(NOTIF broadcast, entity to_client, entity other_client)
 {
 	switch(broadcast)
 	{
@@ -1750,7 +1750,7 @@ bool Net_Write_Notification(entity this, entity client, int sf)
 }
 
 void Kill_Notification(
-	float broadcast, entity client,
+	NOTIF broadcast, entity client,
 	float net_type, float net_name)
 {
 	#ifdef NOTIFICATIONS_DEBUG
@@ -1843,7 +1843,7 @@ void Kill_Notification(
 }
 
 void Send_Notification(
-	float broadcast, entity client,
+	NOTIF broadcast, entity client,
 	float net_type, float net_name,
 	...count)
 {
@@ -1926,7 +1926,7 @@ void Send_Notification(
 		#ifdef NOTIFICATIONS_DEBUG
 		Get_Notif_BroadcastName(broadcast);
 		#else
-		ftos(broadcast);
+		ftos(ORDINAL(broadcast));
 		#endif
 		backtrace(sprintf(
 			strcat(
@@ -1953,7 +1953,7 @@ void Send_Notification(
 		#ifdef NOTIFICATIONS_DEBUG
 		Get_Notif_BroadcastName(broadcast);
 		#else
-		ftos(broadcast);
+		ftos(ORDINAL(broadcast));
 		#endif
 		backtrace(sprintf(
 			strcat(
@@ -2084,7 +2084,7 @@ void Send_Notification(
 
 // WOVA = Without Variable Arguments
 void Send_Notification_WOVA(
-	float broadcast, entity client,
+	NOTIF broadcast, entity client,
 	float net_type, float net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
@@ -2118,7 +2118,7 @@ void Send_Notification_WOVA(
 
 // WOCOVA = Without Counts Or Variable Arguments
 void Send_Notification_WOCOVA(
-	float broadcast, entity client,
+	NOTIF broadcast, entity client,
 	float net_type, float net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
