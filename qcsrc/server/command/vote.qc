@@ -215,7 +215,7 @@ void VoteCount(float first_count)
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_CLIENT(it), LAMBDA(
 		++vote_player_count;
 		if (IS_PLAYER(it))   ++vote_real_player_count;
 		switch (it.vote_selection)

@@ -432,6 +432,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 #endif
 			}
 			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
+			setsize(this.weaponchild, '0 0 0', '0 0 0');
 			setattachment(this.weaponchild, this, t);
 		}
 		else
@@ -440,6 +441,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 			this.weaponchild = NULL;
 		}
 
+		setsize(this, '0 0 0', '0 0 0');
 		setorigin(this, '0 0 0');
 		this.angles = '0 0 0';
 		this.frame = 0;

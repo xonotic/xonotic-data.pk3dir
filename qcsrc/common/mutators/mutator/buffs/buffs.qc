@@ -36,7 +36,6 @@ float autocvar_g_buffs_speed_damage_take;
 float autocvar_g_buffs_speed_regen;
 float autocvar_g_buffs_vampire_damage_steal;
 float autocvar_g_buffs_invisible_alpha;
-float autocvar_g_buffs_flight_gravity;
 float autocvar_g_buffs_jump_height;
 float autocvar_g_buffs_inferno_burntime_factor;
 float autocvar_g_buffs_inferno_burntime_min_time;
@@ -46,14 +45,14 @@ float autocvar_g_buffs_inferno_damagemultiplier;
 float autocvar_g_buffs_swapper_range;
 float autocvar_g_buffs_magnet_range_item;
 float autocvar_g_buffs_magnet_range_buff = 200;
+float autocvar_g_buffs_luck_chance = 0.15;
+float autocvar_g_buffs_luck_damagemultiplier = 3;
 
 // ammo
 .float buff_ammo_prev_infitems;
 .int buff_ammo_prev_clipload;
 // invisible
 .float buff_invisible_prev_alpha;
-// flight
-.float buff_flight_prev_gravity;
 // medic
 .float buff_medic_healtime;
 // disability
@@ -91,15 +90,6 @@ REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 	{
 		InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 	}
-}
-
-entity buff_FirstFromFlags(int _buffs)
-{
-	if (flags)
-	{
-		FOREACH(Buffs, it.m_itemid & _buffs, LAMBDA(return it));
-	}
-	return BUFF_Null;
 }
 
 bool buffs_BuffModel_Customize()
@@ -586,6 +576,12 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 			frag_damage *= 0.5; // TODO: cvarize?
 	}
 
+	if(frag_attacker.buffs & BUFF_LUCK.m_itemid)
+	if(frag_attacker != frag_target)
+	if(autocvar_g_buffs_luck_damagemultiplier > 0)
+	if(random() <= autocvar_g_buffs_luck_chance)
+		frag_damage *= autocvar_g_buffs_luck_damagemultiplier;
+
 	if(frag_attacker.buffs & BUFF_INFERNO.m_itemid)
 	if(frag_target != frag_attacker) {
 		float btime = buff_Inferno_CalculateTime(
@@ -602,7 +598,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	// this... is ridiculous (TODO: fix!)
 	if(frag_attacker.buffs & BUFF_VAMPIRE.m_itemid)
 	if(!frag_target.vehicle)
-	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(!IS_DEAD(frag_target))
 	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))
@@ -808,11 +803,6 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 {SELFPARAM();
-	if (self.classname == "item_flight" && cvar("g_buffs") && cvar("g_buffs_flight"))
-	{
-		buff_Init_Compat(self, BUFF_FLIGHT);
-		return true;
-	}
 	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{
@@ -898,12 +888,14 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 			if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, it.absmin, it.absmax))
 			{
-				setself(other);
-				other = this;
-				if(self.touch)
-					self.touch();
-				other = self;
-				setself(this);
+				if(it.touch)
+				{
+					entity oldother = other;
+					other = self;
+					WITH(entity, self, it, it.touch());
+
+					other = oldother;
+				}
 			}
 		});
 	}
@@ -965,15 +957,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		BUFF_ONREM(BUFF_INVISIBLE)
 			self.alpha = self.buff_invisible_prev_alpha;
 
-		BUFF_ONADD(BUFF_FLIGHT)
-		{
-			self.buff_flight_prev_gravity = self.gravity;
-			self.gravity = autocvar_g_buffs_flight_gravity;
-		}
-
-		BUFF_ONREM(BUFF_FLIGHT)
-			self.gravity = self.buff_flight_prev_gravity;
-
 		self.oldbuffs = self.buffs;
 		if(self.buffs)
 		{
@@ -1019,7 +1002,7 @@ MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
 {
 	vh_vehicle.buffs = vh_player.buffs;
 	vh_player.buffs = 0;
-	vh_vehicle.buff_time = max(0, time - vh_player.buff_time);
+	vh_vehicle.buff_time = max(0, vh_player.buff_time - time);
 	vh_player.buff_time = 0;
 	return false;
 }

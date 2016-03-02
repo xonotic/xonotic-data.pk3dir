@@ -75,7 +75,7 @@ float trigger_teleport_send(entity this, entity to, float sf)
 
 void trigger_teleport_link(entity this)
 {
-	trigger_link(this, trigger_teleport_send);
+	//trigger_link(this, trigger_teleport_send);
 }
 
 spawnfunc(trigger_teleport)

@@ -531,8 +531,7 @@ void QuickMenu_Mouse()
 		}
 	}
 
-	vector cursorsize = '32 32 0';
-	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	draw_cursor_normal(mousepos, '1 1 1', 0.8);
 
 	prevMouseClicked = mouseClicked;
 }

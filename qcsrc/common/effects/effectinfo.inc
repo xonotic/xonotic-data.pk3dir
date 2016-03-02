@@ -8731,3 +8731,145 @@ SUB(arc_overheat_fire) {
 #include "effectinfo_buffs.inc"
 
 #include "effectinfo_instagib.inc"
+
+DEF(arc_muzzleflash);
+SUB(arc_muzzleflash) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 512;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x8f4333";
+	MY(count) = 2;
+	MY(lightcolor) = '0.3 2.0 0.2';
+	MY(lightradiusfade) = 2000;
+	MY(lightradius) = 200;
+	MY(originjitter) = '1.5 1.5 1.5';
+	MY(size_min) = 5;
+	MY(size_max) = 5;
+	MY(tex_max) = 8;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '6.0 6.0 6.0';
+	MY(velocitymultiplier) = 0.010000;
+}
+SUB(arc_muzzleflash) {
+	MY(airfriction) = 12;
+	MY(alpha_max) = 128;
+	MY(alpha_fade) = 1024;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x8f4333";
+	MY(count) = 15;
+	MY(originjitter) = '1.0 1.0 1.0';
+	MY(startangle_min) = -180;
+	MY(startangle_max) = 180;
+	MY(spin_min) = -400;
+	MY(spin_max) = 400;
+	MY(size_min) = 5;
+	MY(size_max) = 10;
+	MY(stretchfactor) = 2;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "spark";
+	MY(velocityjitter) = '200.0 200.0 200.0';
+	MY(velocitymultiplier) = 0.500000;
+}
+
+DEF(arc_bolt_explode);
+// decal
+SUB(arc_bolt_explode) {
+	MY(alpha_min) = 256;
+	MY(alpha_max) = 256;
+	MY(countabsolute) = 1;
+	MY(lightcolor) = '8.0 4.0 1.0';
+	MY(lightradiusfade) = 400;
+	MY(lightradius) = 120;
+	MY(originjitter) = '14.0 14.0 14.0';
+	MY(size_min) = 28;
+	MY(size_max) = 38;
+	MY(tex_min) = 8;
+	MY(tex_max) = 16;
+	MY(type) = "decal";
+}
+// fire effect which make bright dot inside
+SUB(arc_bolt_explode) {
+	MY(airfriction) = 8;
+	MY(alpha_min) = 80;
+	MY(alpha_max) = 200;
+	MY(alpha_fade) = 356;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00ffff";
+	MY(color_max) = "0x00ffff";
+	MY(count) = 3.500000;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 5;
+	MY(size_min) = 16;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "smoke";
+	MY(velocityjitter) = '156.0 156.0 156.0';
+}
+// fire effect which expands then slows
+SUB(arc_bolt_explode) {
+	MY(airfriction) = 12;
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 456;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x8f4333";
+	MY(count) = 12;
+	MY(liquidfriction) = 8;
+	MY(notunderwater) = true;
+	MY(originjitter) = '8.0 8.0 8.0';
+	MY(sizeincrease) = 15;
+	MY(size_min) = 20;
+	MY(size_max) = 26;
+	MY(tex_min) = 48;
+	MY(tex_max) = 55;
+	MY(type) = "static";
+	MY(velocityjitter) = '286.0 286.0 286.0';
+}
+// underwater bubbles
+SUB(arc_bolt_explode) {
+	MY(alpha_min) = 128;
+	MY(alpha_max) = 256;
+	MY(alpha_fade) = 64;
+	MY(bounce) = 1.500000;
+	MY(color_min) = "0x404040";
+	MY(color_max) = "0x808080";
+	MY(count) = 16;
+	MY(gravity) = -0.125000;
+	MY(liquidfriction) = 0.250000;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 3;
+	MY(size_max) = 3;
+	MY(tex_min) = 62;
+	MY(tex_max) = 62;
+	MY(type) = "bubble";
+	MY(underwater) = true;
+	MY(velocityjitter) = '96.0 96.0 96.0';
+}
+// bouncing sparks
+SUB(arc_bolt_explode) {
+	MY(airfriction) = 1;
+	MY(alpha_min) = 644;
+	MY(alpha_max) = 956;
+	MY(alpha_fade) = 684;
+	MY(bounce) = 1.600000;
+	MY(color_min) = "0x00ff00";
+	MY(color_max) = "0x8f4333";
+	MY(count) = 16;
+	MY(gravity) = 1;
+	MY(liquidfriction) = 0.800000;
+	MY(notunderwater) = true;
+	MY(originjitter) = '16.0 16.0 16.0';
+	MY(size_min) = 1;
+	MY(size_max) = 0.100000;
+	MY(tex_min) = 40;
+	MY(tex_max) = 40;
+	MY(type) = "spark";
+	MY(velocityjitter) = '224.0 224.0 224.0';
+	MY(velocityoffset) = '0.0 0.0 80.0';
+}

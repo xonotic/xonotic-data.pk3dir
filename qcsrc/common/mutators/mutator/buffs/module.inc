@@ -11,14 +11,14 @@ string BUFF_NAME(int i)
     return sprintf("%s%s", rgb_to_hexcolor(b.m_color), b.m_prettyName);
 }
 
-#ifndef MENUQC
-REGISTER_MUTATOR(buffs_flight, true);
-MUTATOR_HOOKFUNCTION(buffs_flight, IsFlying)
+entity buff_FirstFromFlags(int _buffs)
 {
-    noref entity e = MUTATOR_ARGV(0, entity);
-	return BUFFS_STAT(e) & BUFF_FLIGHT.m_itemid;
+    if (flags)
+    {
+        FOREACH(Buffs, it.m_itemid & _buffs, LAMBDA(return it));
+    }
+    return BUFF_Null;
 }
-#endif
 
 #ifdef CSQC
 REGISTER_MUTATOR(cl_buffs, true);

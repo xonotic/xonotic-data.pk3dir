@@ -560,7 +560,7 @@ void CheckWaterJump(entity this)
 		#ifdef SVQC
 			PHYS_TELEPORT_TIME(this) = time + 2;	// safety net
 		#elif defined(CSQC)
-			pmove_waterjumptime = time + 2;
+			pmove_waterjumptime = 2;
 		#endif
 		}
 	}
@@ -1277,11 +1277,15 @@ bool IsFlying(entity this)
 		return false;
 	if(this.waterlevel >= WATERLEVEL_SWIMMING)
 		return false;
-	//traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
-	//if(trace_fraction < 1)
-		//return false;
+	traceline(this.origin, this.origin - '0 0 48', MOVE_NORMAL, this);
+	if(trace_fraction < 1)
+		return false;
 	return true;
 }
+
+#ifdef CSQC
+float autocvar_slowmo;
+#endif
 
 void PM_Main(entity this)
 {
@@ -1321,6 +1325,9 @@ void PM_Main(entity this)
 	if (this.PlayerPhysplug)
 		if (this.PlayerPhysplug())
 			return;
+#elif defined(CSQC)
+	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
+		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 #endif
 
 #ifdef SVQC
@@ -1472,8 +1479,10 @@ void PM_Main(entity this)
 		PM_Footsteps(this);
 	}
 
+#ifdef SVQC
 	if(IsFlying(this))
 		this.wasFlying = 1;
+#endif
 
 	if (IS_PLAYER(this))
 		CheckPlayerJump(this);
@@ -1482,10 +1491,17 @@ void PM_Main(entity this)
 	{
 		this.velocity_x = this.movedir.x;
 		this.velocity_y = this.movedir.y;
-		if (time > PHYS_TELEPORT_TIME(this) || this.waterlevel == WATERLEVEL_NONE)
+		if (time > PHYS_TELEPORT_TIME(this) || this.waterlevel == WATERLEVEL_NONE
+		#ifdef CSQC
+			|| pmove_waterjumptime <= 0
+		#endif
+			)
 		{
 			this.flags &= ~FL_WATERJUMP;
 			PHYS_TELEPORT_TIME(this) = 0;
+		#ifdef CSQC
+			pmove_waterjumptime = 0;
+		#endif
 		}
 	}
 

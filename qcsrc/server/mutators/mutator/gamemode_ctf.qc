@@ -1379,7 +1379,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = true;
 	flag.teleportable = TELEPORT_NORMAL;
-	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';

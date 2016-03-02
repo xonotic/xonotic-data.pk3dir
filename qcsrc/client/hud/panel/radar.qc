@@ -156,8 +156,7 @@ void HUD_Radar_Mouse()
 	}
 
 
-	const vector cursor_size = '32 32 0';
-	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursor_size, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	draw_cursor_normal(mousepos, '1 1 1', 0.8);
 }
 
 void HUD_Radar()
@@ -340,7 +339,7 @@ void HUD_Radar()
 	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, LAMBDA(
 		if ( hud_panel_radar_mouse )
 		if ( it.health > 0 )
-		if ( it.team == myteam+1 )
+		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))

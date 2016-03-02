@@ -22,10 +22,21 @@ entity makeXonoticVideoSettingsTab()
 void XonoticVideoSettingsTab_fill(entity me)
 {
 	entity e;
+	entity videoApplyButton = makeXonoticCommandButton(_("Apply immediately"), '0 0 0',
+		"vid_width $_menu_vid_width;"
+		"vid_height $_menu_vid_height;"
+		"vid_pixelheight $_menu_vid_pixelheight;"
+		"vid_desktopfullscreen $_menu_vid_desktopfullscreen;"
+		"menu_cmd update_conwidths_before_vid_restart;"
+		"vid_restart;"
+		"menu_cmd sync;"
+		, COMMANDBUTTON_APPLY);
+	videoApplyButton.disableOnClick = true;
 
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticResolutionSlider());
+			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Font/UI size:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_vid_scale"));
@@ -46,8 +57,10 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, _("16bit"), "16");
 			e.addValue(e, _("32bit"), "32");
 			e.configureXonoticTextSliderValues(e);
+			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
+			e.applyButton = videoApplyButton;
 		me.TD(me, 1, 2, e = makeXonoticCheckBox_T(0, "vid_vsync", _("Vertical Synchronization"),
 			_("Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)")));
 
@@ -161,6 +174,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 	}
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_width $_menu_vid_width; vid_height $_menu_vid_height; vid_pixelheight $_menu_vid_pixelheight; vid_desktopfullscreen $_menu_vid_desktopfullscreen; menu_cmd update_conwidths_before_vid_restart; vid_restart; menu_cmd sync", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, videoApplyButton);
 }
 #endif

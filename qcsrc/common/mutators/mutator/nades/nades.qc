@@ -2,6 +2,12 @@
 
 #ifdef IMPLEMENTATION
 
+#ifdef SVQC
+bool autocvar_g_nades_nade_small;
+#endif
+
+REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
+
 #ifndef MENUQC
 entity Nade_TrailEffect(int proj, int nade_team)
 {
@@ -63,8 +69,16 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 
 	entity nade_type = Nade_FromProjectile(self.cnt);
 	if (nade_type == NADE_TYPE_Null) return;
-	self.mins = '-16 -16 -16';
-	self.maxs = '16 16 16';
+	if(STAT(NADES_SMALL, NULL))
+	{
+		self.mins = '-8 -8 -8';
+		self.maxs = '8 8 8';
+	}
+	else
+	{
+		self.mins = '-16 -16 -16';
+		self.maxs = '16 16 16';
+	}
 	self.colormod = nade_type.m_color;
 	self.move_movetype = MOVETYPE_BOUNCE;
 	self.move_touch = func_null;
@@ -657,6 +671,20 @@ void nade_boom()
 	remove(self);
 }
 
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype);
+void nade_pickup(entity this, entity thenade)
+{
+	spawn_held_nade(this, thenade.realowner, autocvar_g_nades_pickup_time, thenade.nade_type, thenade.pokenade_type);
+
+	// set refire so player can't even
+	this.nade_refire = time + autocvar_g_nades_nade_refire;
+	this.nade_timer = 0;
+
+	if(this.nade)
+		this.nade.nade_time_primed = thenade.nade_time_primed;
+}
+
+bool CanThrowNade(entity this);
 void nade_touch()
 {SELFPARAM();
 	if(other)
@@ -664,6 +692,19 @@ void nade_touch()
 
 	if(other == self.realowner)
 		return; // no self impacts
+
+	if(autocvar_g_nades_pickup)
+	if(time >= self.spawnshieldtime)
+	if(!other.nade && self.health == self.max_health) // no boosted shot pickups, thank you very much
+	if(!other.frozen)
+	if(CanThrowNade(other)) // prevent some obvious things, like dead players
+	if(IS_REAL_CLIENT(other)) // above checks for IS_PLAYER, don't need to do it here
+	{
+		nade_pickup(other, self);
+		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
+		remove(self);
+		return;
+	}
 	/*float is_weapclip = 0;
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
@@ -766,7 +807,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		nade_burn_spawn(this);
 }
 
-void toss_nade(entity e, vector _velocity, float _time)
+void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 {SELFPARAM();
 	if(e.nade == world)
 		return;
@@ -793,7 +834,10 @@ void toss_nade(entity e, vector _velocity, float _time)
 	//setmodel(_nade, MDL_PROJECTILE_NADE);
 	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
-	setsize(_nade, '-16 -16 -16', '16 16 16');
+	if(STAT(NADES_SMALL, e))
+		setsize(_nade, '-8 -8 -8', '8 8 8');
+	else
+		setsize(_nade, '-16 -16 -16', '16 16 16');
 	_nade.movetype = MOVETYPE_BOUNCE;
 
 	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, false, _nade);
@@ -809,7 +853,11 @@ void toss_nade(entity e, vector _velocity, float _time)
 	else
 		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, true);
 
+	if(set_owner)
+		_nade.realowner = e;
+
 	_nade.touch = nade_touch;
+	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
 	_nade.health = autocvar_g_nades_nade_health;
 	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
@@ -881,7 +929,7 @@ MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 float nade_customize()
 {SELFPARAM();
 	//if(IS_SPEC(other)) { return false; }
-	if(other == self.realowner || (IS_SPEC(other) && other.enemy == self.realowner))
+	if(other == self.exteriormodeltoclient || (IS_SPEC(other) && other.enemy == self.exteriormodeltoclient))
 	{
 		// somewhat hide the model, but keep the glow
 		//self.effects = 0;
@@ -900,6 +948,42 @@ float nade_customize()
 	return true;
 }
 
+void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, string pntype)
+{
+	entity n = new(nade), fn = new(fake_nade);
+
+	n.nade_type = bound(1, ntype, Nades_COUNT);
+	n.pokenade_type = pntype;
+
+	setmodel(n, MDL_PROJECTILE_NADE);
+	//setattachment(n, player, "bip01 l hand");
+	n.exteriormodeltoclient = player;
+	n.customizeentityforclient = nade_customize;
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], player.team).eent_eff_name);
+	n.colormod = Nades_from(n.nade_type).m_color;
+	n.realowner = nowner;
+	n.colormap = player.colormap;
+	n.glowmod = player.glowmod;
+	n.wait = time + max(0, ntime);
+	n.nade_time_primed = time;
+	n.think = nade_beep;
+	n.nextthink = max(n.wait - 3, time);
+	n.projectiledeathtype = DEATH_NADE.m_id;
+
+	setmodel(fn, MDL_NADE_VIEW);
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	setattachment(fn, player.(weaponentity), "");
+	fn.realowner = fn.owner = player;
+	fn.colormod = Nades_from(n.nade_type).m_color;
+	fn.colormap = player.colormap;
+	fn.glowmod = player.glowmod;
+	fn.think = SUB_Remove_self;
+	fn.nextthink = n.wait;
+
+	player.nade = n;
+	player.fake_nade = fn;
+}
+
 void nade_prime()
 {SELFPARAM();
 	if(autocvar_g_nades_bonus_only)
@@ -912,71 +996,44 @@ void nade_prime()
 	if(self.fake_nade)
 		remove(self.fake_nade);
 
-	entity n = new(nade), fn = new(fake_nade);
+	int ntype;
+	string pntype = self.pokenade_type;
 
 	if(self.items & ITEM_Strength.m_itemid && autocvar_g_nades_bonus_onstrength)
-		n.nade_type = self.nade_type;
+		ntype = self.nade_type;
 	else if (self.bonus_nades >= 1)
 	{
-		n.nade_type = self.nade_type;
-		n.pokenade_type = self.pokenade_type;
+		ntype = self.nade_type;
+		pntype = self.pokenade_type;
 		self.bonus_nades -= 1;
 	}
 	else
 	{
-		n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		n.pokenade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
-	n.nade_type = bound(1, n.nade_type, Nades_COUNT);
-
-	setmodel(n, MDL_PROJECTILE_NADE);
-	//setattachment(n, self, "bip01 l hand");
-	n.exteriormodeltoclient = self;
-	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], self.team).eent_eff_name);
-	n.colormod = Nades_from(n.nade_type).m_color;
-	n.realowner = self;
-	n.colormap = self.colormap;
-	n.glowmod = self.glowmod;
-	n.wait = time + autocvar_g_nades_nade_lifetime;
-	n.nade_time_primed = time;
-	n.think = nade_beep;
-	n.nextthink = max(n.wait - 3, time);
-	n.projectiledeathtype = DEATH_NADE.m_id;
-
-	setmodel(fn, MDL_NADE_VIEW);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-	setattachment(fn, self.(weaponentity), "");
-	fn.realowner = fn.owner = self;
-	fn.colormod = Nades_from(n.nade_type).m_color;
-	fn.colormap = self.colormap;
-	fn.glowmod = self.glowmod;
-	fn.think = SUB_Remove_self;
-	fn.nextthink = n.wait;
-
-	self.nade = n;
-	self.fake_nade = fn;
+	spawn_held_nade(self, self, autocvar_g_nades_nade_lifetime, ntype, pntype);
 }
 
-float CanThrowNade()
-{SELFPARAM();
-	if(self.vehicle)
+bool CanThrowNade(entity this)
+{
+	if(this.vehicle)
 		return false;
 
 	if(gameover)
 		return false;
 
-	if(IS_DEAD(self))
+	if(IS_DEAD(this))
 		return false;
 
 	if (!autocvar_g_nades)
 		return false; // allow turning them off mid match
 
-	if(forbidWeaponUse(self))
+	if(forbidWeaponUse(this))
 		return false;
 
-	if (!IS_PLAYER(self))
+	if (!IS_PLAYER(this))
 		return false;
 
 	return true;
@@ -986,7 +1043,7 @@ float CanThrowNade()
 
 void nades_CheckThrow()
 {SELFPARAM();
-	if(!CanThrowNade())
+	if(!CanThrowNade(self))
 		return;
 
 	entity held_nade = self.nade;
@@ -1008,7 +1065,7 @@ void nades_CheckThrow()
 			float _force = time - held_nade.nade_time_primed;
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-			toss_nade(self, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
+			toss_nade(self, true, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
 		}
 	}
 }
@@ -1027,7 +1084,7 @@ void nades_Clear(entity player)
 MUTATOR_HOOKFUNCTION(nades, VehicleEnter)
 {
 	if(vh_player.nade)
-		toss_nade(vh_player, '0 0 100', max(vh_player.nade.wait, time + 0.05));
+		toss_nade(vh_player, true, '0 0 100', max(vh_player.nade.wait, time + 0.05));
 
 	return false;
 }
@@ -1046,10 +1103,10 @@ CLASS(NadeOffhand, OffhandWeapon)
 			held_nade.angles_y = player.angles.y;
 
 			if (time + 0.1 >= held_nade.wait)
-				toss_nade(player, '0 0 0', time + 0.05);
+				toss_nade(player, false, '0 0 0', time + 0.05);
 		}
 
-        if (!CanThrowNade()) return;
+        if (!CanThrowNade(player)) return;
         if (!(time > player.nade_refire)) return;
 		if (key_pressed) {
 			if (!held_nade) {
@@ -1062,7 +1119,7 @@ CLASS(NadeOffhand, OffhandWeapon)
 				float _force = time - held_nade.nade_time_primed;
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-				toss_nade(player, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
+				toss_nade(player, false, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
 			}
 		}
     }
@@ -1201,7 +1258,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 {
 	if(frag_target.nade)
 	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
-		toss_nade(frag_target, '0 0 100', max(frag_target.nade.wait, time + 0.05));
+		toss_nade(frag_target, true, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
 	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
 
@@ -1264,7 +1321,7 @@ MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
 {
 	if(frag_target.nade)
-		toss_nade(frag_target, '0 0 0', time + 0.05);
+		toss_nade(frag_target, true, '0 0 0', time + 0.05);
 
 	return false;
 }

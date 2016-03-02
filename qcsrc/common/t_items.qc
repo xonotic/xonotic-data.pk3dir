@@ -479,7 +479,7 @@ void Item_Think()
 }
 
 bool Item_ItemsTime_SpectatorOnly(GameItem it);
-bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons);
+bool Item_ItemsTime_Allow(GameItem it);
 float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
@@ -496,7 +496,7 @@ void Item_Respawn ()
 		sound (self, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-    if (Item_ItemsTime_Allow(self.itemdef, self.weapons))
+    if (Item_ItemsTime_Allow(self.itemdef) || self.weapons & WEPSET_SUPERWEAPONS)
 	{
 		float t = Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_SetTime(self, t);
@@ -582,7 +582,7 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if (Item_ItemsTime_Allow(e.itemdef, e.weapons))
+	if (Item_ItemsTime_Allow(e.itemdef) || e.weapons & WEPSET_SUPERWEAPONS)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -705,6 +705,14 @@ float Item_GiveTo(entity item, entity player)
 				}
 			));
 		}
+	}
+
+	if (item.itemdef.instanceOfPowerup)
+	{
+		if ((item.itemdef == ITEM_JetpackRegen) && !(player.items & IT_FUEL_REGEN))
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_FUELREGEN_GOT);
+		else if ((item.itemdef == ITEM_Jetpack) && !(player.items & IT_JETPACK))
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ITEM_JETPACK_GOT);
 	}
 
 	int its;
@@ -1529,7 +1537,7 @@ spawnfunc(target_items)
 		if(self.ammo_plasma != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_plasma), "plasma");
 		if(self.ammo_fuel != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_fuel), "fuel");
 		if(self.health != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "health");
-		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "armor");
+		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.armorvalue), "armor");
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (it.m_wepset)), it.netname)));
 	}
 	self.netname = strzone(self.netname);

@@ -49,6 +49,7 @@
 #include "linkedlist.qh"
 #include "log.qh"
 #include "map.qh"
+#include "markdown.qh"
 #include "math.qh"
 #include "misc.qh"
 #include "net.qh"

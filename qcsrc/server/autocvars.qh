@@ -265,6 +265,7 @@ float autocvar_g_spawn_furthest;
 bool autocvar_g_spawn_useallspawns;
 bool autocvar_g_spawnpoints_auto_move_out_of_solid;
 #define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
+float autocvar_g_spawnshield_blockdamage;
 float autocvar_g_teamdamage_resetspeed;
 float autocvar_g_teamdamage_threshold;
 bool autocvar_g_telefrags;
@@ -464,6 +465,8 @@ vector autocvar_g_nades_throw_offset;
 bool autocvar_g_nades_spawn;
 int autocvar_g_nades_spawn_count;
 bool autocvar_g_nades_client_select;
+bool autocvar_g_nades_pickup = true;
+float autocvar_g_nades_pickup_time = 2;
 float autocvar_g_nades_nade_lifetime;
 float autocvar_g_nades_nade_minforce;
 float autocvar_g_nades_nade_maxforce;

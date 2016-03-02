@@ -624,6 +624,8 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 int cvar_settemp_restore()
 {
 	int j = 0;
+	// FIXME this new-style loop fails!
+#if 0
 	FOREACH_ENTITY_CLASS("saved_cvar_value", true,
 	{
 		if(cvar_type(it.netname))
@@ -637,6 +639,21 @@ int cvar_settemp_restore()
 		else
 			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", it.netname);
 	});
+
+#else
+	entity e = world;
+	while((e = find(e, classname, "saved_cvar_value")))
+	{
+		if(cvar_type(e.netname))
+		{
+			cvar_set(e.netname, e.message);
+			remove(e);
+			++j;
+		}
+		else
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+	}
+#endif
 
 	return j;
 }
