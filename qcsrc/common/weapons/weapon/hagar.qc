@@ -478,11 +478,11 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 			if(!self.hagar_load) // require releasing loaded rockets first
 				W_Reload(self, min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo)), SND(RELOAD));
 		}
-		METHOD(Hagar, wr_suicidemessage, int(entity thiswep))
+		METHOD(Hagar, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_HAGAR_SUICIDE;
 		}
-		METHOD(Hagar, wr_killmessage, int(entity thiswep))
+		METHOD(Hagar, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_HAGAR_MURDER_BURST;

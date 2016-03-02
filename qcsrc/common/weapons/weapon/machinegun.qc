@@ -338,11 +338,11 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		{
 			W_Reload(self, min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND(RELOAD));
 		}
-		METHOD(MachineGun, wr_suicidemessage, int(entity thiswep))
+		METHOD(MachineGun, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(MachineGun, wr_killmessage, int(entity thiswep))
+		METHOD(MachineGun, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MACHINEGUN_MURDER_SNIPE;

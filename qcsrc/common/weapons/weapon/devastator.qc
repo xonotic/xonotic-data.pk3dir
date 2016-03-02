@@ -608,11 +608,11 @@ void W_Devastator_Attack(Weapon thiswep)
 		{
 			W_Reload(self, WEP_CVAR(devastator, ammo), SND(RELOAD));
 		}
-		METHOD(Devastator, wr_suicidemessage, int(entity thiswep))
+		METHOD(Devastator, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_DEVASTATOR_SUICIDE;
 		}
-		METHOD(Devastator, wr_killmessage, int(entity thiswep))
+		METHOD(Devastator, wr_killmessage, Notification(entity thiswep))
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
 				return WEAPON_DEVASTATOR_MURDER_SPLASH;

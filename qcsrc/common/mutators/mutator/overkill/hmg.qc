@@ -141,11 +141,11 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		{
 			W_Reload(self, WEP_CVAR(hmg, ammo), SND(RELOAD));
 		}
-		METHOD(HeavyMachineGun, wr_suicidemessage, int(entity thiswep))
+		METHOD(HeavyMachineGun, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(HeavyMachineGun, wr_killmessage, int(entity thiswep))
+		METHOD(HeavyMachineGun, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_HMG_MURDER_SNIPE;

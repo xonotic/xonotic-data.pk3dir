@@ -358,11 +358,11 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
 		}
-		METHOD(Vortex, wr_suicidemessage, int(entity thiswep))
+		METHOD(Vortex, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Vortex, wr_killmessage, int(entity thiswep))
+		METHOD(Vortex, wr_killmessage, Notification(entity thiswep))
 		{
 			return WEAPON_VORTEX_MURDER;
 		}

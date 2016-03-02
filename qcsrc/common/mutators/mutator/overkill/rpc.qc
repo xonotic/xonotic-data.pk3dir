@@ -189,14 +189,14 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 		{
 			W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
 		}
-		METHOD(RocketPropelledChainsaw, wr_suicidemessage, int(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
 				return WEAPON_RPC_SUICIDE_SPLASH;
 			else
 				return WEAPON_RPC_SUICIDE_DIRECT;
 		}
-		METHOD(RocketPropelledChainsaw, wr_killmessage, int(entity thiswep))
+		METHOD(RocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_BLASTER_MURDER;

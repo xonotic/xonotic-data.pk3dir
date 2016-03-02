@@ -685,7 +685,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 					notif.nent_durcnt = strzone(
 						Process_Notif_Args(3, durcnt, typestring, namestring));
 
-					if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
+					if(cpid != NO_MSG_) { notif.nent_cpid = cpid; }
 					else
 					{
 						LOG_INFOF(
@@ -699,7 +699,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 						notif_error = true;
 					}
 				}
-				else if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
+				else if(cpid != NO_MSG_) { notif.nent_cpid = cpid; }
 				#endif
 
 
@@ -747,9 +747,9 @@ void Create_Notification_Entity_Multi(entity notif,
                                       	float var_cvar,
                                       	string namestring,
                                       	/* MSG_MULTI */
-                                      	int anncename,
-                                      	int infoname,
-                                      	int centername)
+                                      	Notification anncename,
+                                      	Notification infoname,
+                                      	Notification centername)
 		{
 		    int typeId = MSG_MULTI;
 			// Set MSG_MULTI string/float counts
@@ -769,21 +769,21 @@ void Create_Notification_Entity_Multi(entity notif,
 			else
 			{
 				// announcements don't actually need any arguments, so lets not even count them.
-				if(anncename != NO_MSG) { notif.nent_msgannce = msg_annce_notifs[anncename - 1]; }
+				if(anncename != NO_MSG) { notif.nent_msgannce = anncename; }
 
 				float infoname_stringcount = 0, infoname_floatcount = 0;
 				float centername_stringcount = 0, centername_floatcount = 0;
 
 				if(infoname != NO_MSG)
 				{
-					notif.nent_msginfo = msg_info_notifs[infoname - 1];
+					notif.nent_msginfo = infoname;
 					infoname_stringcount = notif.nent_msginfo.nent_stringcount;
 					infoname_floatcount = notif.nent_msginfo.nent_floatcount;
 				}
 
 				if(centername != NO_MSG)
 				{
-					notif.nent_msgcenter = msg_center_notifs[centername - 1];
+					notif.nent_msgcenter = centername;
 					centername_stringcount = notif.nent_msgcenter.nent_stringcount;
 					centername_floatcount = notif.nent_msgcenter.nent_floatcount;
 				}
@@ -801,11 +801,11 @@ void Create_Notification_Entity_Choice(entity notif,
                                        	float challow_def,
                                        	float challow_var,
                                        	int chtype,
-                                       	int optiona,
-                                       	int optionb)
+                                       	Notification optiona,
+                                       	Notification optionb)
 		{
 		    int typeId = MSG_CHOICE;
-			if((chtype == NO_MSG) || (optiona == NO_MSG) || (optionb == NO_MSG))
+			if((chtype == NO_MSG_) || (optiona == NO_MSG) || (optionb == NO_MSG))
 			{
                 string typestring = Get_Notif_TypeName(typeId);
 				LOG_INFOF(
@@ -820,53 +820,8 @@ void Create_Notification_Entity_Choice(entity notif,
 			}
 			else
 			{
-				switch(chtype)
-				{
-					case MSG_ANNCE:
-					{
-						notif.nent_optiona = msg_annce_notifs[optiona - 1];
-						notif.nent_optionb = msg_annce_notifs[optionb - 1];
-						break;
-					}
-					case MSG_INFO:
-					{
-						notif.nent_optiona = msg_info_notifs[optiona - 1];
-						notif.nent_optionb = msg_info_notifs[optionb - 1];
-						break;
-					}
-					case MSG_CENTER:
-					{
-						notif.nent_optiona = msg_center_notifs[optiona - 1];
-						notif.nent_optionb = msg_center_notifs[optionb - 1];
-						break;
-					}
-					case MSG_MULTI:
-					{
-						notif.nent_optiona = msg_multi_notifs[optiona - 1];
-						notif.nent_optionb = msg_multi_notifs[optionb - 1];
-						break;
-					}
-					case MSG_CHOICE: // should we REALLY allow nested options?...
-					{
-						notif.nent_optiona = msg_choice_notifs[optiona - 1];
-						notif.nent_optionb = msg_choice_notifs[optionb - 1];
-						break;
-					}
-
-					default:
-					{
-						LOG_INFOF(
-							strcat(
-								"^1NOTIFICATION WITH IMPROPER TYPE: ",
-								"^7net_type = %d, net_name = %s.\n"
-							),
-							typeId,
-							namestring
-						);
-						notif_error = true;
-						break;
-					}
-				}
+			    notif.nent_optiona = optiona;
+                notif.nent_optionb = optionb;
 				notif.nent_challow_def = challow_def; // 0: never allowed, 1: allowed in warmup, 2: always allowed
 				notif.nent_challow_var = challow_var; // 0: never allowed, 1: allowed in warmup, 2: always allowed
 				notif.nent_stringcount = max(notif.nent_optiona.nent_stringcount, notif.nent_optionb.nent_stringcount);
@@ -1380,7 +1335,7 @@ void Local_Notification_centerprint_generic(
 }
 #endif
 
-void Local_Notification(int net_type, int net_name, ...count)
+void Local_Notification(int net_type, Notification net_name, ...count)
 {
 	// check if this should be aborted
 	if(net_name == NOTIF_ABORT)
@@ -1396,7 +1351,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 	}
 
 	// check supplied type and name for errors
-	string checkargs = Notification_CheckArgs_TypeName(net_type, net_name);
+	string checkargs = Notification_CheckArgs_TypeName(net_type, net_name.nent_id);
 	if(checkargs != "")
 	{
 		#ifdef NOTIFICATIONS_DEBUG
@@ -1411,7 +1366,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 	}
 
 	// retreive entity of this notification
-	entity notif = Get_Notif_Ent(net_type, net_name);
+	entity notif = net_name;
 	if (!notif)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
@@ -1560,7 +1515,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 			{
 				Local_Notification_WOVA(
 					MSG_INFO,
-					notif.nent_msginfo.nent_id,
+					notif.nent_msginfo,
 					notif.nent_msginfo.nent_stringcount,
 					notif.nent_msginfo.nent_floatcount,
 					s1, s2, s3, s4,
@@ -1572,7 +1527,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 			{
 				Local_Notification_WOVA(
 					MSG_ANNCE,
-					notif.nent_msgannce.nent_id,
+					notif.nent_msgannce,
 					0, 0,
 					"", "", "", "",
 					0, 0, 0, 0);
@@ -1582,7 +1537,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 			{
 				Local_Notification_WOVA(
 					MSG_CENTER,
-					notif.nent_msgcenter.nent_id,
+					notif.nent_msgcenter,
 					notif.nent_msgcenter.nent_stringcount,
 					notif.nent_msgcenter.nent_floatcount,
 					s1, s2, s3, s4,
@@ -1609,7 +1564,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 
 			Local_Notification_WOVA(
 				found_choice.nent_type,
-				found_choice.nent_id,
+				found_choice,
 				found_choice.nent_stringcount,
 				found_choice.nent_floatcount,
 				s1, s2, s3, s4,
@@ -1620,7 +1575,7 @@ void Local_Notification(int net_type, int net_name, ...count)
 
 // WOVA = Without Variable Arguments
 void Local_Notification_WOVA(
-	int net_type, float net_name,
+	int net_type, Notification net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -1706,7 +1661,7 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 		if(is_new)
 		{
 			Local_Notification_WOVA(
-				net_type, net_name,
+				net_type, notif,
 				notif.nent_stringcount,
 				notif.nent_floatcount,
 				s1, s2, s3, s4,
@@ -1844,7 +1799,7 @@ void Kill_Notification(
 
 void Send_Notification(
 	NOTIF broadcast, entity client,
-	float net_type, float net_name,
+	float net_type, Notification net_name,
 	...count)
 {
 	// check if this should be aborted
@@ -1863,7 +1818,7 @@ void Send_Notification(
 	}
 
 	// check supplied broadcast, target, type, and name for errors
-	string checkargs = Notification_CheckArgs(broadcast, client, net_type, net_name);
+	string checkargs = Notification_CheckArgs(broadcast, client, net_type, net_name.nent_id);
 	if(checkargs != "")
 	{
 		#ifdef NOTIFICATIONS_DEBUG
@@ -1880,7 +1835,7 @@ void Send_Notification(
 	}
 
 	// retreive entity of this notification
-	entity notif = Get_Notif_Ent(net_type, net_name);
+	entity notif = net_name;
 	if (!notif)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
@@ -2011,7 +1966,7 @@ void Send_Notification(
 		#define RECURSE_FROM_CHOICE(ent,action) MACRO_BEGIN { \
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) \
 			{ \
-				switch(ent.msg_choice_choices[net_name - 1]) \
+				switch(ent.msg_choice_choices[net_name.nent_id - 1]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \
@@ -2023,7 +1978,7 @@ void Send_Notification(
 				NOTIF_ONE_ONLY, \
 				ent, \
 				found_choice.nent_type, \
-				found_choice.nent_id, \
+				found_choice, \
 				found_choice.nent_stringcount, \
 				found_choice.nent_floatcount, \
 				s1, s2, s3, s4, \
@@ -2060,7 +2015,7 @@ void Send_Notification(
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
 		net_notif.nent_net_type = net_type;
-		net_notif.nent_net_name = net_name;
+		net_notif.nent_net_name = net_name.nent_id;
 		net_notif.nent_stringcount = notif.nent_stringcount;
 		net_notif.nent_floatcount = notif.nent_floatcount;
 
@@ -2085,7 +2040,7 @@ void Send_Notification(
 // WOVA = Without Variable Arguments
 void Send_Notification_WOVA(
 	NOTIF broadcast, entity client,
-	float net_type, float net_name,
+	float net_type, Notification net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -2119,11 +2074,11 @@ void Send_Notification_WOVA(
 // WOCOVA = Without Counts Or Variable Arguments
 void Send_Notification_WOCOVA(
 	NOTIF broadcast, entity client,
-	float net_type, float net_name,
+	float net_type, Notification net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
-	entity notif = Get_Notif_Ent(net_type, net_name);
+	entity notif = net_name;
 
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(

@@ -686,11 +686,11 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 		{
 			W_Reload(self, min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
 		}
-		METHOD(Seeker, wr_suicidemessage, int(entity thiswep))
+		METHOD(Seeker, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_SEEKER_SUICIDE;
 		}
-		METHOD(Seeker, wr_killmessage, int(entity thiswep))
+		METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_SEEKER_MURDER_TAG;

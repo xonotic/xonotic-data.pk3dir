@@ -1489,7 +1489,7 @@ void dedicated_print(string input) // print(), but only print if the server is n
 #endif
 
 #ifndef MENUQC
-float Announcer_PickNumber(float type, float num)
+Notification Announcer_PickNumber(float type, float num)
 {
 	switch(type)
 	{

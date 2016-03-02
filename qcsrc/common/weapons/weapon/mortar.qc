@@ -387,14 +387,14 @@ void W_Mortar_Attack2(Weapon thiswep)
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
 		}
-		METHOD(Mortar, wr_suicidemessage, int(entity thiswep))
+		METHOD(Mortar, wr_suicidemessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MORTAR_SUICIDE_BOUNCE;
 			else
 				return WEAPON_MORTAR_SUICIDE_EXPLODE;
 		}
-		METHOD(Mortar, wr_killmessage, int(entity thiswep))
+		METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MORTAR_MURDER_BOUNCE;

@@ -519,14 +519,14 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
 		}
-		METHOD(Electro, wr_suicidemessage, int(entity thiswep))
+		METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_ELECTRO_SUICIDE_ORBS;
 			else
 				return WEAPON_ELECTRO_SUICIDE_BOLT;
 		}
-		METHOD(Electro, wr_killmessage, int(entity thiswep))
+		METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{

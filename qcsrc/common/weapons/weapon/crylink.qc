@@ -657,11 +657,11 @@ void W_Crylink_Attack2(Weapon thiswep)
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND(RELOAD));
 		}
-		METHOD(Crylink, wr_suicidemessage, int(entity thiswep))
+		METHOD(Crylink, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_CRYLINK_SUICIDE;
 		}
-		METHOD(Crylink, wr_killmessage, int(entity thiswep))
+		METHOD(Crylink, wr_killmessage, Notification(entity thiswep))
 		{
 			return WEAPON_CRYLINK_MURDER;
 		}

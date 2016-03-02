@@ -295,11 +295,11 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 			self.hook_time = 0;
 			self.hook_refire = time;
 		}
-		METHOD(Hook, wr_suicidemessage, int(entity thiswep))
+		METHOD(Hook, wr_suicidemessage, Notification(entity thiswep))
 		{
-			return false;
+			return NULL;
 		}
-		METHOD(Hook, wr_killmessage, int(entity thiswep))
+		METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 		{
 			return WEAPON_HOOK_MURDER;
 		}

@@ -842,7 +842,7 @@ void Arc_Smoke()
 				return WEP_CVAR(arc, overheat_max) > 0 &&
 					((!WEP_CVAR(arc, burst_ammo)) || (self.(thiswep.ammo_field) > 0));
 		}
-		METHOD(Arc, wr_killmessage, int(entity thiswep))
+		METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_ARC_MURDER_SPRAY;

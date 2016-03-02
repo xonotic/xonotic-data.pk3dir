@@ -408,14 +408,14 @@ void W_Fireball_Attack2()
 		{
 			self.fireball_primarytime = time;
 		}
-		METHOD(Fireball, wr_suicidemessage, int(entity thiswep))
+		METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_FIREBALL_SUICIDE_FIREMINE;
 			else
 				return WEAPON_FIREBALL_SUICIDE_BLAST;
 		}
-		METHOD(Fireball, wr_killmessage, int(entity thiswep))
+		METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_FIREBALL_MURDER_FIREMINE;
