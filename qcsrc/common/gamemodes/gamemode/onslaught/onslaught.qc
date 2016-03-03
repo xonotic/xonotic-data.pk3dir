@@ -530,7 +530,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	{
 		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_CPDESTROYED_), this.owner.message, attacker.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
 		PlayerScore_Add(attacker, SP_SCORE, 10);
@@ -665,7 +665,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		if(IS_PLAYER(self.owner.ons_toucher))
 		{
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
-			Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_4(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
+			Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(self.owner.ons_toucher.team, CENTER_ONS_CAPTURE), self.owner.message);
 			Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
 			PlayerScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, 1);
 			PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
@@ -992,10 +992,10 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 	else
 	{
 		if (attacker == this)
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME));
 		else
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_GENDESTROYED_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED));
 			PlayerScore_Add(attacker, SP_SCORE, 100);
 		}
 		this.iscaptured = false;
@@ -1050,7 +1050,7 @@ void ons_GeneratorThink()
 					soundto(MSG_ONE, it, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
 				}
 				else
-					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(self.team, CENTER_ONS_NOTSHIELDED));
 			));
 		}
 	}
@@ -1254,8 +1254,8 @@ bool Onslaught_CheckWinner()
 
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
 	}
 	else if(winner_team == -1)
