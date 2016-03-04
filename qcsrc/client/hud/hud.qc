@@ -451,6 +451,31 @@ void HUD_Reset()
 		HUD_Mod_CTF_Reset();
 }
 
+float autocvar_hud_dynamic_shake;
+float autocvar_hud_dynamic_shake_damage_max;
+float autocvar_hud_dynamic_shake_damage_min;
+float autocvar_hud_dynamic_shake_scale;
+float hud_dynamic_shake_x[10] = {0,    1, -0.7,  0.5, -0.3,  0.2, -0.1,  0.1,  0.0, 0};
+float hud_dynamic_shake_y[10] = {0,  0.4,  0.8, -0.2, -0.6,  0.0,  0.3,  0.1, -0.1, 0};
+bool Hud_Shake_Update()
+{
+	if(time - hud_dynamic_shake_time < 0)
+		return false;
+
+	float anim_speed = 17 + 9 * hud_dynamic_shake_factor;
+	float elapsed_time = (time - hud_dynamic_shake_time) * anim_speed;
+	int i = floor(elapsed_time);
+	if(i >= 9)
+		return false;
+
+	float f = elapsed_time - i;
+	hud_dynamic_shake_ofs.x = ((1 - f) * hud_dynamic_shake_x[i] + f * hud_dynamic_shake_x[i+1]) * vid_conwidth * 0.27;
+	hud_dynamic_shake_ofs.y = ((1 - f) * hud_dynamic_shake_y[i] + f * hud_dynamic_shake_y[i+1]) * vid_conheight * 0.27;
+	hud_dynamic_shake_ofs.z = 0;
+	hud_dynamic_shake_ofs *= hud_dynamic_shake_factor * autocvar_hud_dynamic_shake_scale;
+	return true;
+}
+
 void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
@@ -465,6 +490,32 @@ void Hud_Dynamic_Frame()
 	if (fabs(hud_dynamic_ofs.x) < 0.001) hud_dynamic_ofs.x = 0;
 	if (fabs(hud_dynamic_ofs.y) < 0.001) hud_dynamic_ofs.y = 0;
 	if (fabs(hud_dynamic_ofs.z) < 0.001) hud_dynamic_ofs.z = 0;
+
+	float health = STAT(HEALTH);
+	if(autocvar_hud_dynamic_shake > 0 && !autocvar__hud_configure && health > 0)
+	{
+		if(hud_dynamic_shake_factor == -1) // don't allow the effect for this frame
+			hud_dynamic_shake_factor = 0;
+		else
+		{
+			float new_hud_dynamic_shake_factor = 0;
+			if(prev_health - health >= autocvar_hud_dynamic_shake_damage_min && autocvar_hud_dynamic_shake_damage_max > autocvar_hud_dynamic_shake_damage_min)
+			{
+				float m = max(autocvar_hud_dynamic_shake_damage_min, 1);
+				new_hud_dynamic_shake_factor = (prev_health - health - m) / (autocvar_hud_dynamic_shake_damage_max - m);
+				if(new_hud_dynamic_shake_factor >= 1)
+					new_hud_dynamic_shake_factor = 1;
+				if(new_hud_dynamic_shake_factor >= hud_dynamic_shake_factor)
+				{
+					hud_dynamic_shake_factor = new_hud_dynamic_shake_factor;
+					hud_dynamic_shake_time = time;
+				}
+			}
+			if(hud_dynamic_shake_factor)
+				if(!Hud_Shake_Update())
+					hud_dynamic_shake_factor = 0;
+		}
+	}
 }
 
 void HUD_Main()

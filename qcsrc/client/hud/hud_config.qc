@@ -1263,6 +1263,7 @@ void HUD_Configure_Frame()
 			menu_enabled = 0;
 		if(autocvar_hud_cursormode)
 			setcursormode(0);
+		hud_dynamic_shake_factor = -1;
 	}
 }
 

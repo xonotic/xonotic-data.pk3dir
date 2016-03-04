@@ -149,6 +149,10 @@ float current_player;
 float autocvar_hud_dynamic_follow;
 float autocvar_hud_dynamic_follow_scale;
 
+vector hud_dynamic_shake_ofs;
+float hud_dynamic_shake_factor;
+float hud_dynamic_shake_time;
+
 // shared across viewmodel effects and dynamic hud code
 vector cl_followmodel_ofs;
 float cl_followmodel_time;
@@ -393,6 +397,7 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 		panel_bg_padding = panel.current_panel_bg_padding;                                                          \
 		panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha;                                             \
 	}                                                                                                               \
+	if(hud_dynamic_shake_factor > 0) panel_pos += hud_dynamic_shake_ofs; \
 	if(hud_dynamic_ofs.y) panel_pos.x += hud_dynamic_ofs.y * vid_conwidth; \
 	if(hud_dynamic_ofs.z) panel_pos.y += hud_dynamic_ofs.z * vid_conheight; \
 	if(hud_dynamic_ofs.x) { \
