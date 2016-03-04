@@ -305,6 +305,7 @@ void cvar_changes_init()
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
 		BADCVAR("gameversion");
+		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_ca_point_leadlimit");
@@ -393,6 +394,7 @@ void cvar_changes_init()
 		BADCVAR("g_powerups");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
