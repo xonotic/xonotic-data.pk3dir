@@ -109,17 +109,99 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	highpass(value.z, frac, ref_store.z, ref_out.z); \
 } MACRO_END
 
-void viewmodel_animate(entity this)
+void calc_followmodel_ofs(entity view)
 {
-	static float prevtime;
-	float frametime = (time - prevtime);
-	prevtime = time;
+	if(cl_followmodel_time == time)
+		return; // cl_followmodel_ofs already calculated for this frame
 
-	if (autocvar_chase_active) return;
-	if (STAT(HEALTH) <= 0) return;
+	float frac;
+	vector gunorg = '0 0 0';
+	static vector vel_average;
+	static vector gunorg_prev = '0 0 0';
+	static vector gunorg_adjustment_highpass;
+	static vector gunorg_adjustment_lowpass;
 
-	entity view = CSQCModel_server2csqc(player_localentnum - 1);
+	vector vel;
+	if (autocvar_cl_followmodel_velocity_absolute)
+		vel = view.velocity;
+	else
+	{
+		vector forward, right = '0 0 0', up = '0 0 0';
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vel.x = view.velocity * forward;
+		vel.y = view.velocity * right * -1;
+		vel.z = view.velocity * up;
+	}
 
+	vel.x = bound(vel_average.x - autocvar_cl_followmodel_limit, vel.x, vel_average.x + autocvar_cl_followmodel_limit);
+	vel.y = bound(vel_average.y - autocvar_cl_followmodel_limit, vel.y, vel_average.y + autocvar_cl_followmodel_limit);
+	vel.z = bound(vel_average.z - autocvar_cl_followmodel_limit, vel.z, vel_average.z + autocvar_cl_followmodel_limit);
+
+	frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
+	lowpass3(vel, frac, vel_average, gunorg);
+
+	gunorg *= -autocvar_cl_followmodel_speed * 0.042;
+
+	// perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
+	// trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
+	frac = avg_factor(autocvar_cl_followmodel_highpass);
+	highpass3(gunorg, frac, gunorg_adjustment_highpass, gunorg);
+	frac = avg_factor(autocvar_cl_followmodel_lowpass);
+	lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
+
+	if (autocvar_cl_followmodel_velocity_absolute)
+	{
+		vector fixed_gunorg;
+		vector forward, right = '0 0 0', up = '0 0 0';
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		fixed_gunorg.x = gunorg * forward;
+		fixed_gunorg.y = gunorg * right * -1;
+		fixed_gunorg.z = gunorg * up;
+		gunorg = fixed_gunorg;
+	}
+
+	cl_followmodel_ofs = gunorg;
+	cl_followmodel_time = time;
+}
+
+vector leanmodel_ofs(entity view)
+{
+	float frac;
+	vector gunangles = '0 0 0';
+	static vector gunangles_prev = '0 0 0';
+	static vector gunangles_highpass = '0 0 0';
+	static vector gunangles_adjustment_highpass;
+	static vector gunangles_adjustment_lowpass;
+
+	if (view.csqcmodel_teleported)
+		gunangles_prev = view_angles;
+
+	// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
+	gunangles_highpass += gunangles_prev;
+	PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
+	YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
+	ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
+	frac = avg_factor(autocvar_cl_leanmodel_highpass1);
+	highpass2_limited(view_angles, frac, autocvar_cl_leanmodel_limit, gunangles_highpass, gunangles);
+	gunangles_prev = view_angles;
+	gunangles_highpass -= gunangles_prev;
+
+	PITCH(gunangles) *= -autocvar_cl_leanmodel_speed;
+	YAW(gunangles) *= -autocvar_cl_leanmodel_speed;
+
+	// we assume here: PITCH = 0, YAW = 1, ROLL = 2
+	frac = avg_factor(autocvar_cl_leanmodel_highpass);
+	highpass2(gunangles, frac, gunangles_adjustment_highpass, gunangles);
+	frac = avg_factor(autocvar_cl_leanmodel_lowpass);
+	lowpass2(gunangles, frac, gunangles_adjustment_lowpass, gunangles);
+
+	gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
+
+	return gunangles;
+}
+
+vector bobmodel_ofs(entity view)
+{
 	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 	static bool oldonground;
 	static float hitgroundtime;
@@ -131,95 +213,48 @@ void viewmodel_animate(entity this)
 	}
 	oldonground = clonground;
 
-
-	bool teleported = view.csqcmodel_teleported;
-
-	float frac;
-	if(autocvar_cl_followmodel)
+	// calculate for swinging gun model
+	// the gun bobs when running on the ground, but doesn't bob when you're in the air.
+	vector gunorg = '0 0 0';
+	static float bobmodel_scale = 0;
+	static float time_ofs = 0; // makes the effect always restart in the same way
+	if (clonground)
 	{
-		vector gunorg = '0 0 0';
-		static vector vel_average;
-		static vector gunorg_prev = '0 0 0';
-		static vector gunorg_adjustment_highpass;
-		static vector gunorg_adjustment_lowpass;
-
-		vector vel;
-		if(autocvar_cl_followmodel_velocity_absolute)
-			vel = view.velocity;
-		else
-		{
-			vector forward, right = '0 0 0', up = '0 0 0';
-			MAKEVECTORS(makevectors, view_angles, forward, right, up);
-			vel.x = view.velocity * forward;
-			vel.y = view.velocity * right * -1;
-			vel.z = view.velocity * up;
-		}
-
-		vel.x = bound(vel_average.x - autocvar_cl_followmodel_limit, vel.x, vel_average.x + autocvar_cl_followmodel_limit);
-		vel.y = bound(vel_average.y - autocvar_cl_followmodel_limit, vel.y, vel_average.y + autocvar_cl_followmodel_limit);
-		vel.z = bound(vel_average.z - autocvar_cl_followmodel_limit, vel.z, vel_average.z + autocvar_cl_followmodel_limit);
-
-		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
-		lowpass3(vel, frac, vel_average, gunorg);
-
-		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
-
-		// perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
-		// trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
-		frac = avg_factor(autocvar_cl_followmodel_highpass);
-		highpass3(gunorg, frac, gunorg_adjustment_highpass, gunorg);
-		frac = avg_factor(autocvar_cl_followmodel_lowpass);
-		lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
-
-		if(autocvar_cl_followmodel_velocity_absolute)
-		{
-			vector fixed_gunorg;
-			vector forward, right = '0 0 0', up = '0 0 0';
-			MAKEVECTORS(makevectors, view_angles, forward, right, up);
-			fixed_gunorg.x = gunorg * forward;
-			fixed_gunorg.y = gunorg * right * -1;
-			fixed_gunorg.z = gunorg * up;
-			gunorg = fixed_gunorg;
-		}
-
-		this.origin += gunorg;
+		if (time - hitgroundtime > 0.05)
+			bobmodel_scale = min(1, bobmodel_scale + frametime * 5);
 	}
-
-	if(autocvar_cl_leanmodel)
-	{
-		vector gunangles = '0 0 0';
-		static vector gunangles_prev = '0 0 0';
-		static vector gunangles_highpass = '0 0 0';
-		static vector gunangles_adjustment_highpass;
-		static vector gunangles_adjustment_lowpass;
-
-		if (teleported)
-			gunangles_prev = view_angles;
-
-		// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
-		gunangles_highpass += gunangles_prev;
-		PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
-		YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
-		ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
-		frac = avg_factor(autocvar_cl_leanmodel_highpass1);
-		highpass2_limited(view_angles, frac, autocvar_cl_leanmodel_limit, gunangles_highpass, gunangles);
-		gunangles_prev = view_angles;
-		gunangles_highpass -= gunangles_prev;
-
-		PITCH(gunangles) *= -autocvar_cl_leanmodel_speed;
-		YAW(gunangles) *= -autocvar_cl_leanmodel_speed;
-
-		// we assume here: PITCH = 0, YAW = 1, ROLL = 2
-		frac = avg_factor(autocvar_cl_leanmodel_highpass);
-		highpass2(gunangles, frac, gunangles_adjustment_highpass, gunangles);
-		frac = avg_factor(autocvar_cl_leanmodel_lowpass);
-		lowpass2(gunangles, frac, gunangles_adjustment_lowpass, gunangles);
-
-		gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
-		this.angles += gunangles;
-	}
+	else
+		bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
 
 	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
+	if (bobmodel_scale && xyspeed)
+	{
+		float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+		float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
+		gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+		gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+	}
+	else
+		time_ofs = time;
+
+	return gunorg;
+}
+
+void viewmodel_animate(entity this)
+{
+	if (autocvar_chase_active) return;
+	if (STAT(HEALTH) <= 0) return;
+
+	entity view = CSQCModel_server2csqc(player_localentnum - 1);
+
+	if (autocvar_cl_followmodel)
+	{
+		calc_followmodel_ofs(view);
+		this.origin += cl_followmodel_ofs;
+	}
+
+	if (autocvar_cl_leanmodel)
+		this.angles += leanmodel_ofs(view);
 
 	// vertical view bobbing code
 	// TODO: cl_bob
@@ -233,31 +268,7 @@ void viewmodel_animate(entity this)
 
 	// gun model bobbing code
 	if (autocvar_cl_bobmodel)
-	{
-		// calculate for swinging gun model
-		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
-		static float bobmodel_scale = 0;
-		static float time_ofs = 0; // makes the effect always restart in the same way
-		if (clonground)
-		{
-			if (time - hitgroundtime > 0.05)
-				bobmodel_scale = min(1, bobmodel_scale + frametime * 5);
-		}
-		else
-			bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
-		if(bobmodel_scale && xyspeed)
-		{
-			float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
-			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
-			vector gunorg = '0 0 0';
-			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
-			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
-
-			this.origin += gunorg;
-		}
-		else
-			time_ofs = time;
-	}
+		this.origin += bobmodel_ofs(view);
 }
 
 .vector viewmodel_origin, viewmodel_angles;

@@ -146,6 +146,15 @@ float chat_sizey;
 
 float current_player;
 
+float autocvar_hud_dynamic_follow;
+float autocvar_hud_dynamic_follow_scale;
+
+// shared across viewmodel effects and dynamic hud code
+vector cl_followmodel_ofs;
+float cl_followmodel_time;
+
+vector hud_dynamic_ofs;
+
 float stringwidth_colors(string s, vector theSize);
 float stringwidth_nocolors(string s, vector theSize);
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag);
@@ -384,6 +393,14 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 		panel_bg_padding = panel.current_panel_bg_padding;                                                          \
 		panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha;                                             \
 	}                                                                                                               \
+	if(hud_dynamic_ofs.y) panel_pos.x += hud_dynamic_ofs.y * vid_conwidth; \
+	if(hud_dynamic_ofs.z) panel_pos.y += hud_dynamic_ofs.z * vid_conheight; \
+	if(hud_dynamic_ofs.x) { \
+		panel_size.x += hud_dynamic_ofs.x * panel_size.x; \
+		panel_size.y += hud_dynamic_ofs.x * panel_size.y; \
+		panel_pos.x += hud_dynamic_ofs.x * (panel_pos.x - vid_conwidth * 0.5); \
+		panel_pos.y += hud_dynamic_ofs.x * (panel_pos.y - vid_conheight * 0.5); \
+	} \
 } MACRO_END
 
 #define HUD_Panel_UpdatePosSize() MACRO_BEGIN {                                                                     \

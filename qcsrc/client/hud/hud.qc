@@ -451,6 +451,22 @@ void HUD_Reset()
 		HUD_Mod_CTF_Reset();
 }
 
+void calc_followmodel_ofs(entity view);
+void Hud_Dynamic_Frame()
+{
+	hud_dynamic_ofs = '0 0 0';
+	if (autocvar_hud_dynamic_follow)
+	{
+		entity view = CSQCModel_server2csqc(player_localentnum - 1);
+		calc_followmodel_ofs(view);
+		hud_dynamic_ofs -= cl_followmodel_ofs * autocvar_hud_dynamic_follow_scale;
+	}
+
+	if (fabs(hud_dynamic_ofs.x) < 0.001) hud_dynamic_ofs.x = 0;
+	if (fabs(hud_dynamic_ofs.y) < 0.001) hud_dynamic_ofs.y = 0;
+	if (fabs(hud_dynamic_ofs.z) < 0.001) hud_dynamic_ofs.z = 0;
+}
+
 void HUD_Main()
 {
 	int i;
@@ -480,6 +496,8 @@ void HUD_Main()
 		hud_fade_alpha = 0;
 		return;
 	}
+
+	Hud_Dynamic_Frame();
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)
