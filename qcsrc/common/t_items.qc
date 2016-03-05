@@ -902,7 +902,6 @@ void Item_FindTeam()
 }
 
 // Savage: used for item garbage-collection
-// TODO: perhaps nice special effect?
 void RemoveItem()
 {SELFPARAM();
 	if(wasfreed(self) || !self) { return; }

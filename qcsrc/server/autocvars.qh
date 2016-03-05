@@ -72,7 +72,7 @@ float autocvar_g_antilag_nudge;
 float autocvar_g_balance_armor_blockpercent;
 int autocvar_g_balance_armor_limit;
 float autocvar_g_balance_armor_regen;
-float autocvar_g_balance_armor_regenlinear; // TODO: int/bool?
+float autocvar_g_balance_armor_regenlinear;
 int autocvar_g_balance_armor_regenstable;
 float autocvar_g_balance_armor_rot;
 float autocvar_g_balance_armor_rotlinear;

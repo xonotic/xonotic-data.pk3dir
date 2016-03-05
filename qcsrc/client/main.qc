@@ -940,7 +940,6 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
-/** TODO somehow thwart prvm_globalset client ... */
 string forcefog;
 void Fog_Force()
 {
