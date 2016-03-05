@@ -41,12 +41,12 @@ typedef entity Notification;
 // negative confirmations
 /** allows various things to know when no information is added */
 Notification NO_MSG;
-STATIC_INIT(NO_MSG) { NO_MSG = new(Notification); }
+STATIC_INIT(NO_MSG) { NO_MSG = new_pure(Notification); }
 /** @deprecated */
 const int NO_MSG_ = -12345;
 /** allows Send_Notification to safely abort sending */
 Notification NOTIF_ABORT;
-STATIC_INIT(NOTIF_ABORT) { NOTIF_ABORT = new(Notification); }
+STATIC_INIT(NOTIF_ABORT) { NOTIF_ABORT = new_pure(Notification); }
 
 // used for notification system multi-team identifiers
 #define APP_TEAM_NUM(num, prefix) ((num == NUM_TEAM_1) ? prefix##_RED : ((num == NUM_TEAM_2) ? prefix##_BLUE : ((num == NUM_TEAM_3) ? prefix##_YELLOW : prefix##_PINK)))

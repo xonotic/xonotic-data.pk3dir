@@ -1425,11 +1425,13 @@ void Local_Notification_WOVA(
 //  Notification Networking
 // =========================
 
+/** networked as a linked entity to give newly connecting clients some notification context */
 REGISTER_NET_LINKED(ENT_CLIENT_NOTIFICATION)
 
 #ifdef CSQC
 NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 {
+	make_pure(this);
 	int net_type = ReadByte();
 	int net_name = ReadShort();
 	Notification notif = Get_Notif_Ent(net_type, net_name);

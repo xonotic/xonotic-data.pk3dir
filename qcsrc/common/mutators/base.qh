@@ -166,6 +166,7 @@ void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 
 #ifndef MENUQC
+/** server mutators activate corresponding client mutators for all clients */
 REGISTER_NET_LINKED(Mutator)
 
 #ifdef SVQC
@@ -188,6 +189,7 @@ void NET_Mutator_Remove(entity this)
 }
 NET_HANDLE(Mutator, bool isNew)
 {
+    make_pure(this);
     string s = this.netname = ReadString();
     return = true;
     if (isNew)

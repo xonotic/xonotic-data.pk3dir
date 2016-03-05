@@ -50,7 +50,7 @@ const int RANKINGS_CNT = 15;
 
 REGISTER_NET_LINKED(_ENT_CLIENT_INIT)
 #ifdef CSQC
-NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { return true; }
+NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { make_pure(this); return true; }
 #endif
 /** Sent as a temp entity from a persistent linked entity */
 REGISTER_NET_TEMP(ENT_CLIENT_INIT)
