@@ -672,7 +672,7 @@ enum {
 
 REGISTRY(Notifications, BITS(11))
 REGISTER_REGISTRY(Notifications)
-REGISTRY_SORT(Notifications)
+REGISTRY_SORT(Notifications); STATIC_INIT(Notifications) { FOREACH(Notifications, true, LAMBDA(it.m_id = i)); }
 REGISTRY_CHECK(Notifications)
 
 const int NOTIF_CHOICE_MAX = 50;
@@ -795,28 +795,21 @@ Notification Get_Notif_Ent(int net_type, int net_name)
 			optionb);                                /* optionb     */ \
 	}
 
-void RegisterNotifications_First()
+REGISTRY_BEGIN(Notifications)
 {
 	notif_global_error = false;
 }
 
-void RegisterNotifications_Done()
+REGISTRY_END(Notifications)
 {
-	if(notif_global_error)
-	{
-		// shit happened... stop the loading of the program now if this is unacceptable
-		if(autocvar_notification_errors_are_fatal)
-			LOG_FATAL("Notification initialization failed! Read above and fix the errors!\n");
-		else
-			LOG_SEVERE("Notification initialization failed! Read above and fix the errors!\n");
-	}
+	if (!notif_global_error) return;
+	// shit happened... stop the loading of the program now if this is unacceptable
+	if (autocvar_notification_errors_are_fatal)
+		LOG_FATAL("Notification initialization failed! Read above and fix the errors!");
+	else
+		LOG_SEVERE("Notification initialization failed! Read above and fix the errors!");
 }
 
-// NOW we actually activate the declarations
-ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First)
 #include "notifications.inc"
-ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done)
-
-STATIC_INIT(RegisterNotifications) { CALL_ACCUMULATED_FUNCTION(RegisterNotifications); }
 
 #endif
