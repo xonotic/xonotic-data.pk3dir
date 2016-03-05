@@ -1244,6 +1244,7 @@ void ClientDisconnect ()
 
 	self.playerid = 0;
 	ReadyCount();
+	if(vote_called)
 	if(IS_REAL_CLIENT(self))
 		VoteCount(false);
 
