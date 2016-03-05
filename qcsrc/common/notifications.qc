@@ -164,7 +164,7 @@ void Destroy_All_Notifications()
 {
 	// kill all networked notifications and centerprints
 	#ifdef SVQC
-	Kill_Notification(NOTIF_ALL, NULL, 0, 0);
+	Kill_Notification(NOTIF_ALL, NULL, MSG_Null, 0);
 	#else
 	reset_centerprint_messages();
 	#endif
@@ -174,7 +174,7 @@ void Destroy_All_Notifications()
 }
 
 string Process_Notif_Line(
-	int typeId,
+	MSG typeId,
 	bool chat,
 	string input,
 	string notiftype,
@@ -205,8 +205,8 @@ string Process_Notif_Line(
 	if(substring(input, (strlen(input) - 1), 1) == "\n")
 	{
 		LOG_INFOF(
-			strcat(
-				"^1TRAILING NEW LINE AT END OF NOTIFICATION: ",
+			(
+				"^1TRAILING NEW LINE AT END OF NOTIFICATION: "
 				"^7net_type = %s, net_name = %s, string = %s.\n"
 			),
 			notiftype,
@@ -240,8 +240,8 @@ string Process_Notif_Args(
 				if(sel_num == NOTIF_MAX_ARGS)
 				{
 					LOG_INFOF(
-						strcat(
-							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
+						(
+							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: "
 							"^7net_type = %s, net_name = %s, max args = %d.\n"
 						),
 						notiftype,
@@ -272,8 +272,8 @@ string Process_Notif_Args(
 					default:
 					{
 						LOG_INFOF(
-							strcat(
-								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
+							(
+								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: "
 								"^7net_type = %s, net_name = %s, args arg = '%s'.\n"
 							),
 							notiftype,
@@ -291,8 +291,8 @@ string Process_Notif_Args(
 				if(sel_num == NOTIF_MAX_HUDARGS)
 				{
 					LOG_INFOF(
-						strcat(
-							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
+						(
+							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: "
 							"^7net_type = %s, net_name = %s, max hudargs = %d.\n"
 						),
 						notiftype,
@@ -323,8 +323,8 @@ string Process_Notif_Args(
 					default:
 					{
 						LOG_INFOF(
-							strcat(
-								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
+							(
+								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: "
 								"^7net_type = %s, net_name = %s, hudargs arg = '%s'.\n"
 							),
 							notiftype,
@@ -342,8 +342,8 @@ string Process_Notif_Args(
 				if(sel_num == NOTIF_MAX_DURCNT)
 				{
 					LOG_INFOF(
-						strcat(
-							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
+						(
+							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: "
 							"^7net_type = %s, net_name = %s, max durcnt = %d.\n"
 						),
 						notiftype,
@@ -377,8 +377,8 @@ string Process_Notif_Args(
 						else
 						{
 							LOG_INFOF(
-								strcat(
-									"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
+								(
+									"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: "
 									"^7net_type = %s, net_name = %s, durcnt arg = '%s'.\n"
 								),
 								notiftype,
@@ -400,7 +400,7 @@ string Process_Notif_Args(
 void Create_Notification_Entity(entity notif,
 	float var_default,
 	float var_cvar,
-	int typeId,
+	MSG typeId,
 	string namestring)
 {
 	// =====================
@@ -424,8 +424,8 @@ void Create_Notification_Entity(entity notif,
 			break;
 		default:
 			LOG_INFOF(
-				strcat(
-					"^1NOTIFICATION WITH IMPROPER TYPE: ",
+				(
+					"^1NOTIFICATION WITH IMPROPER TYPE: "
 					"^7net_type = %d, net_name = %s.\n"
 				),
 				typeId,
@@ -454,7 +454,7 @@ void Create_Notification_Entity_Annce(entity notif,
 		{
 			// Set MSG_ANNCE information and handle precaching
 			#ifdef CSQC
-			int typeId = MSG_ANNCE;
+			MSG typeId = MSG_ANNCE;
 			if (!(GENTLE && (var_cvar == 1)))
 			{
 				if(snd != "")
@@ -472,8 +472,8 @@ void Create_Notification_Entity_Annce(entity notif,
 				{
 					string typestring = Get_Notif_TypeName(typeId);
 					LOG_INFOF(
-						strcat(
-							"^1NOTIFICATION WITH NO SOUND: ",
+						(
+							"^1NOTIFICATION WITH NO SOUND: "
 							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
@@ -503,7 +503,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 											string normal,
 											string gentle)
 		{
-			int typeId = notif.nent_type;
+			MSG typeId = notif.nent_type;
 			// Set MSG_INFO and MSG_CENTER string/float counts
 			notif.nent_stringcount = strnum;
 			notif.nent_floatcount = flnum;
@@ -530,8 +530,8 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 					else if((hudargs == "") && (durcnt ==""))
 					{
 						LOG_INFOF(
-							strcat(
-								"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ",
+							(
+								"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: "
 								"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d\n"
 							),
 							typestring,
@@ -564,8 +564,8 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 					else
 					{
 						LOG_INFOF(
-							strcat(
-								"^1NOTIFICATION HAS HUDARGS BUT NO ICON: ",
+							(
+								"^1NOTIFICATION HAS HUDARGS BUT NO ICON: "
 								"^7net_type = %s, net_name = %s.\n"
 							),
 							typestring,
@@ -577,8 +577,8 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				else if(icon != "")
 				{
 					LOG_INFOF(
-						strcat(
-							"^1NOTIFICATION HAS ICON BUT NO HUDARGS: ",
+						(
+							"^1NOTIFICATION HAS ICON BUT NO HUDARGS: "
 							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
@@ -596,8 +596,8 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 					else
 					{
 						LOG_INFOF(
-							strcat(
-								"^1NOTIFICATION HAS DURCNT BUT NO CPID: ",
+							(
+								"^1NOTIFICATION HAS DURCNT BUT NO CPID: "
 								"^7net_type = %s, net_name = %s.\n"
 							),
 							typestring,
@@ -638,8 +638,8 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 				if(notif.nent_string == "")
 				{
 					LOG_INFOF(
-						strcat(
-							"^1EMPTY NOTIFICATION: ",
+						(
+							"^1EMPTY NOTIFICATION: "
 							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
@@ -658,14 +658,14 @@ void Create_Notification_Entity_Multi(entity notif,
 										Notification infoname,
 										Notification centername)
 		{
-			int typeId = MSG_MULTI;
+			MSG typeId = MSG_MULTI;
 			// Set MSG_MULTI string/float counts
 			if((anncename == NO_MSG) && (infoname == NO_MSG) && (centername == NO_MSG))
 			{
 				string typestring = Get_Notif_TypeName(typeId);
 				LOG_INFOF(
-					strcat(
-						"^1NOTIFICATION WITH NO SUBCALLS: ",
+					(
+						"^1NOTIFICATION WITH NO SUBCALLS: "
 						"^7net_type = %s, net_name = %s.\n"
 					),
 					typestring,
@@ -707,17 +707,17 @@ void Create_Notification_Entity_Choice(entity notif,
 										/* MSG_CHOICE */
 										float challow_def,
 										float challow_var,
-										int chtype,
+										MSG chtype,
 										Notification optiona,
 										Notification optionb)
 		{
-			int typeId = MSG_CHOICE;
-			if((chtype == NO_MSG_) || (optiona == NO_MSG) || (optionb == NO_MSG))
+			MSG typeId = MSG_CHOICE;
+			if((chtype == MSG_Null) || (optiona == NO_MSG) || (optionb == NO_MSG))
 			{
 				string typestring = Get_Notif_TypeName(typeId);
 				LOG_INFOF(
-					strcat(
-						"^1NOTIFICATION IS MISSING CHOICE PARAMS: ",
+					(
+						"^1NOTIFICATION IS MISSING CHOICE PARAMS: "
 						"^7net_type = %s, net_name = %s.\n"
 					),
 					typestring,
@@ -964,8 +964,8 @@ void Dump_Notifications(int fh, bool alsoprint)
 	);
 
 	NOTIF_WRITE(sprintf(
-		strcat(
-			"\n// Notification counts (total = %d): ",
+		(
+			"\n// Notification counts (total = %d): "
 			"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
 		),
 		(
@@ -1091,8 +1091,8 @@ void Local_Notification_sound(
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
-			strcat(
-				"Local_Notification_sound(world, %f, '%s', %f, %f) ",
+			(
+				"Local_Notification_sound(world, %f, '%s', %f, %f) "
 				"^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', timediff: %f, limit: %f\n"
 			 ),
 			soundchannel,
@@ -1204,7 +1204,7 @@ void Local_Notification_centerprint_generic(
 }
 #endif
 
-void Local_Notification(int net_type, Notification net_name, ...count)
+void Local_Notification(MSG net_type, Notification net_name, ...count)
 {
 	// check if this should be aborted
 	if (net_name == NOTIF_ABORT)
@@ -1269,9 +1269,9 @@ void Local_Notification(int net_type, Notification net_name, ...count)
 	if ((notif.nent_stringcount + notif.nent_floatcount) != count)
 	{
 		backtrace(sprintf(
-			strcat(
-				"Arguments mismatch for Local_Notification(%s, %s, ...)! ",
-				"stringcount(%d) + floatcount(%d) != count(%d)\n",
+			(
+				"Arguments mismatch for Local_Notification(%s, %s, ...)! "
+				"stringcount(%d) + floatcount(%d) != count(%d)\n"
 				"Check the definition and function call for accuracy...?\n"
 			),
 			Get_Notif_TypeName(net_type),
@@ -1407,7 +1407,7 @@ void Local_Notification(int net_type, Notification net_name, ...count)
 
 // WOVA = Without Variable Arguments
 void Local_Notification_WOVA(
-	int net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -1432,7 +1432,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_NOTIFICATION)
 NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 {
 	make_pure(this);
-	int net_type = ReadByte();
+	MSG net_type = ENUMCAST(MSG, ReadByte());
 	int net_name = ReadShort();
 	Notification notif = Get_Notif_Ent(net_type, net_name);
 
@@ -1521,7 +1521,7 @@ bool Net_Write_Notification(entity this, entity client, int sf)
 {
 	if (!Notification_ShouldSend(this.nent_broadcast, client, this.nent_client)) return false;
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
-	WriteByte(MSG_ENTITY, this.nent_net_type);
+	WriteByte(MSG_ENTITY, ORDINAL(this.nent_net_type));
 	WriteShort(MSG_ENTITY, this.nent_net_name);
 	for (int i = 0; i < this.nent_stringcount; ++i) { WriteString(MSG_ENTITY, this.nent_strings[i]); }
 	for (int i = 0; i < this.nent_floatcount; ++i) { WriteLong(MSG_ENTITY, this.nent_floats[i]); }
@@ -1531,7 +1531,7 @@ bool Net_Write_Notification(entity this, entity client, int sf)
 void Kill_Notification(
 	NOTIF broadcast, entity client,
 	/** primary group */
-	float net_type,
+	MSG net_type,
 	/** secondary group */
 	float net_name)
 {
@@ -1553,7 +1553,7 @@ void Kill_Notification(
 
 	switch (net_type)
 	{
-		case 0:
+		case MSG_Null:
 		{
 			killed_cpid = 0; // kill ALL centerprints
 			break;
@@ -1626,7 +1626,7 @@ void Kill_Notification(
 
 void Send_Notification(
 	NOTIF broadcast, entity client,
-	float net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	...count)
 {
 	entity notif = net_name;
@@ -1792,7 +1792,7 @@ void Send_Notification(
 // WOVA = Without Variable Arguments
 void Send_Notification_WOVA(
 	NOTIF broadcast, entity client,
-	float net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -1826,7 +1826,7 @@ void Send_Notification_WOVA(
 // WOCOVA = Without Counts Or Variable Arguments
 void Send_Notification_WOCOVA(
 	NOTIF broadcast, entity client,
-	float net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {

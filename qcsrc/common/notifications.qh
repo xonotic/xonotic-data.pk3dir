@@ -7,21 +7,24 @@
 #include "teams.qh"
 #include "util.qh"
 
-// ================================================
-//  Unified notification system, written by Samual
-//  Last updated: March, 2013
-// ================================================
+/** main types/groups of notifications */
+ENUMCLASS(MSG)
+	/** "Global" AND "personal" announcer messages */
+	CASE(MSG, ANNCE)
+	/** "Global" information messages */
+	CASE(MSG, INFO)
+	/** "Personal" centerprint messages */
+	CASE(MSG, CENTER)
+	/** Subcall MSG_INFO and/or MSG_CENTER notifications */
+	CASE(MSG, MULTI)
+	/** Choose which subcall wrapper to activate */
+	CASE(MSG, CHOICE)
 
-// main types/groups of notifications
-const int MSG_ANNCE = 1; // "Global" AND "personal" announcer messages
-const int MSG_INFO = 2; // "Global" information messages
-const int MSG_CENTER = 3; // "Personal" centerprint messages
-const int MSG_MULTI = 5; // Subcall MSG_INFO and/or MSG_CENTER notifications
-const int MSG_CHOICE = 6; // Choose which subcall wrapper to activate
+	/** Kill centerprint message */
+	CASE(MSG, CENTER_CPID)
+ENUMCLASS_END(MSG)
 
-const int MSG_CENTER_CPID = 4; // Kill centerprint message
-
-string Get_Notif_TypeName(int net_type)
+string Get_Notif_TypeName(MSG net_type)
 {
 	switch (net_type)
 	{
@@ -83,7 +86,7 @@ void Destroy_All_Notifications();
 void Create_Notification_Entity(entity notif,
 	float var_default,
 	float var_cvar,
-	float typeId,
+	MSG typeId,
 	string namestring);
 void Create_Notification_Entity_Annce(entity notif,
 										float var_cvar,
@@ -122,7 +125,7 @@ void Create_Notification_Entity_Choice(entity notif,
 										/* MSG_CHOICE */
 										float challow_def,
 										float challow_var,
-										int chtype,
+										MSG chtype,
 										Notification optiona,
 										Notification optionb);
 
@@ -186,10 +189,10 @@ void Debug_Notification(string input)
 }
 #endif
 
-void Local_Notification(int net_type, Notification net_name, ...count);
+void Local_Notification(MSG net_type, Notification net_name, ...count);
 /** glue for networking, forwards to `Local_Notification` */
 void Local_Notification_WOVA(
-	float net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4);
@@ -232,20 +235,20 @@ string Get_Notif_BroadcastName(NOTIF broadcast)
 
 void Kill_Notification(
 	NOTIF broadcast, entity client,
-	float net_type, float net_name);
+	MSG net_type, float net_name);
 void Send_Notification(
 	NOTIF broadcast, entity client,
-	float net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	...count);
 void Send_Notification_WOVA(
 	NOTIF broadcast, entity client,
-	float net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4);
 void Send_Notification_WOCOVA(
 	NOTIF broadcast, entity client,
-	float net_type, Notification net_name,
+	MSG net_type, Notification net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4);
 #endif
@@ -628,7 +631,7 @@ enum {
 // common notification entity values
 .int nent_default;
 .bool nent_enabled;
-.int nent_type;
+.MSG nent_type;
 .string nent_name;
 .int nent_stringcount;
 .int nent_floatcount;
@@ -663,7 +666,7 @@ enum {
 .NOTIF nent_broadcast;
 #endif
 .entity nent_client;
-.float nent_net_type;
+.MSG nent_net_type;
 .float nent_net_name;
 .string nent_strings[4];
 .float nent_floats[4];
@@ -691,7 +694,7 @@ STATIC_INIT_LATE(Notif_Choices) {
 	}
 }
 
-Notification Get_Notif_Ent(int net_type, int net_name)
+Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
 	if (net_type == MSG_CENTER_CPID) return NULL;
 	Notification it = _Notifications_from(net_name, NULL);
