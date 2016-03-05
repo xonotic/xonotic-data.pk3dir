@@ -98,8 +98,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
         ) {
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
-            WriteShort(MSG_ONE, health);
-            WriteShort(MSG_ONE, armor);
+            WriteShort(MSG_ONE, rint(health));
+            WriteShort(MSG_ONE, rint(armor));
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
             WriteCoord(MSG_ONE, location.y);
