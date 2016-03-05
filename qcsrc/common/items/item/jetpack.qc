@@ -5,6 +5,10 @@
 #include "ammo.qh"
 #include "powerup.qh"
 
+#ifndef SVQC
+.int m_itemid;
+#endif
+
 #ifndef MENUQC
 MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 #endif
@@ -12,6 +16,7 @@ MODEL(Jetpack_ITEM, Item_Model("g_jetpack.md3"));
 REGISTER_ITEM(Jetpack, Powerup) {
 #ifndef MENUQC
     this.m_model                =   MDL_Jetpack_ITEM;
+    this.m_itemid               =   IT_JETPACK;
 #endif
     this.m_name                 =   "Jet pack";
     this.m_icon                 =   "jetpack";
@@ -20,7 +25,6 @@ REGISTER_ITEM(Jetpack, Powerup) {
     this.m_waypointblink        =   2;
 #ifdef SVQC
     this.m_botvalue             =   BOT_PICKUP_RATING_LOW;
-    this.m_itemid               =   IT_JETPACK;
     this.m_pickupevalfunc       =   commodity_pickupevalfunc;
 #endif
 }

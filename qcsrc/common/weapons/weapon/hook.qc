@@ -322,6 +322,8 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 #include <lib/csqcmodel/interpolate.qh>
 #include <lib/warpzone/common.qh>
 
+float autocvar_cl_grapplehook_alpha = 1;
+
 void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg);
 
 entityclass(Hook);
@@ -419,7 +421,7 @@ void Draw_GrapplingHook(entity this)
 	{
 		default:
 		case NET_ENT_CLIENT_HOOK:
-			intensity = 1;
+			intensity = autocvar_cl_grapplehook_alpha;
 			offset = 0;
 			switch(t)
 			{

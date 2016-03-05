@@ -269,7 +269,9 @@ void cvar_changes_init()
 		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
+		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
+		BADCVAR("g_race_qualifying_timelimit_override");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("leadlimit");
@@ -300,47 +302,52 @@ void cvar_changes_init()
 
 		// now check if the changes are actually gameplay relevant
 
-		// does nothing visible
+		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("gameversion");
+		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
-		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_ca_point_leadlimit");
+		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
-		BADCVAR("g_freezetag_point_limit");
 		BADCVAR("g_freezetag_point_leadlimit");
-		BADCVAR("g_keyhunt_point_leadlimit");
-		BADPREFIX("g_mod_");
+		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_hats");
 		BADCVAR("g_invasion_point_limit");
+		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
-		BADCVAR("g_tdm_point_limit");
 		BADCVAR("g_tdm_point_leadlimit");
+		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_intermission_cdtrack");
+		BADCVAR("sv_minigames");
+		BADCVAR("sv_namechangetimer");
+		BADCVAR("sv_precacheplayermodels");
 		BADCVAR("sv_timeout");
-		BADPREFIX("sv_timeout_");
 		BADPREFIX("crypto_");
+		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_maplist_votable_");
+		BADPREFIX("g_mod_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_minigames_");
+		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
-		BADCVAR("gameversion");
-		BADPREFIX("gameversion_");
-		BADCVAR("sv_minigames");
-		BADPREFIX("sv_minigames_");
-		BADCVAR("sv_namechangetimer");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -385,7 +392,9 @@ void cvar_changes_init()
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
+		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
@@ -423,7 +432,6 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
-		BADCVAR("g_spawnshieldtime");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
 
