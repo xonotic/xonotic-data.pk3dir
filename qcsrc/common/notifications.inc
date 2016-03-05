@@ -218,8 +218,6 @@
     MULTITEAM_INFO##teams(prefix, default, strnum, flnum, args, hudargs, icon, normal, gentle)
 
 // MSG_INFO_NOTIFICATIONS
-    MSG_INFO_NOTIF(CONNECTING,                              1,  1, 0, "s1", "",     "",     _("^BG%s^BG is connecting..."), "")
-
     MSG_INFO_NOTIF(CHAT_NOSPECTATORS,                       2,  0, 0, "", "",       "",     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "")
 
     MULTITEAM_INFO(CTF_CAPTURE, 4,                          1,  1, 0, "s1", "s1",                       "notify_%s_captured",       _("^BG%s^BG captured the ^TC^TT^BG flag"), "")
@@ -370,6 +368,7 @@
     MSG_INFO_NOTIF(ITEM_WEAPON_PRIMORSEC,                   0,  0, 3, "item_wepname f2primsec f3primsec", "",       "",     _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "")
     MSG_INFO_NOTIF(ITEM_WEAPON_UNAVAILABLE,                 0,  0, 1, "item_wepname", "",                           "",     _("^F1%s^BG is ^F4not available^BG on this map"), "")
 
+    MSG_INFO_NOTIF(CONNECTING,                              1,  1, 0, "s1", "",         "",     _("^BG%s^BG is connecting..."), "")
     MSG_INFO_NOTIF(JOIN_CONNECT,                            2,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected"), "")
     MULTITEAM_INFO(JOIN_CONNECT_TEAM, 4,                    2,  1, 0, "s1", "",         "",     _("^BG%s^F3 connected and joined the ^TC^TT team"), "")
     MSG_INFO_NOTIF(JOIN_PLAY,                               1,  1, 0, "s1", "",         "",     _("^BG%s^F3 is now playing"), "")

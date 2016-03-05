@@ -388,6 +388,11 @@ void GenericCommand_restartnotifs(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifndef MENUQC
+			int NOTIF_ANNCE_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_ANNCE,   { ++NOTIF_ANNCE_COUNT;  });
+			int NOTIF_INFO_COUNT    = 0; FOREACH(Notifications, it.nent_type == MSG_INFO,    { ++NOTIF_INFO_COUNT;   });
+			int NOTIF_CENTER_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CENTER,  { ++NOTIF_CENTER_COUNT; });
+			int NOTIF_MULTI_COUNT   = 0; FOREACH(Notifications, it.nent_type == MSG_MULTI,   { ++NOTIF_MULTI_COUNT;  });
+			int NOTIF_CHOICE_COUNT  = 0; FOREACH(Notifications, it.nent_type == MSG_CHOICE,  { ++NOTIF_CHOICE_COUNT; });
 			LOG_INFOF(
 				strcat(
 					"Restart_Notifications(): Restarting %d notifications... ",
