@@ -1,6 +1,5 @@
-csprogs.dat
-menu.dat
-progs.dat
-*.lno
+/*.dat
+/*.lno
+
 .DS_Store
 .idea/

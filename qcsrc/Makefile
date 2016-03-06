@@ -1,6 +1,4 @@
-SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
-PERL ?= perl
-QCCFLAGS_WATERMARK ?= $(shell git describe)
+QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty=*)
 CPP := cc -xc -E
 QCC ?= gmqcc
 NDEBUG ?= 1
@@ -34,10 +32,25 @@ QCCFLAGS ?= \
 XON_BUILDSYSTEM =
 
 .PHONY: all
-all: qc
+all: qc pk3
 
 .PHONY: qc
 qc: $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat $(PROGS_OUT)/csprogs.dat
+
+.PHONY: pk3
+pk3: qc
+	$(eval PROG=csprogs)
+	$(eval VER=${QCCFLAGS_WATERMARK})
+	$(eval PK3=${PROG}-${VER}.pk3)
+	$(eval TXT=${PROG}-${VER}.txt)
+	$(eval DAT=${PROG}-${VER}.dat)
+	$(eval LNO=${PROG}-${VER}.lno)
+	@ echo "http://xonotic.org" > ${TXT}
+	@ ln -f $(PROGS_OUT)/${PROG}.dat ${DAT}
+	@ ln -f $(PROGS_OUT)/${PROG}.lno ${LNO}
+	@ rm *.pk3
+	zip -9 ${PK3} ${TXT} ${DAT} ${LNO}
+	@ rm ${TXT} ${DAT} ${LNO}
 
 .PHONY: clean
 clean:
