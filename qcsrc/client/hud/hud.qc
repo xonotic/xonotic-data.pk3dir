@@ -469,10 +469,12 @@ bool Hud_Shake_Update()
 		return false;
 
 	float f = elapsed_time - i;
-	hud_dynamic_shake_ofs.x = ((1 - f) * hud_dynamic_shake_x[i] + f * hud_dynamic_shake_x[i+1]) * vid_conwidth * 0.27;
-	hud_dynamic_shake_ofs.y = ((1 - f) * hud_dynamic_shake_y[i] + f * hud_dynamic_shake_y[i+1]) * vid_conheight * 0.27;
-	hud_dynamic_shake_ofs.z = 0;
-	hud_dynamic_shake_ofs *= hud_dynamic_shake_factor * autocvar_hud_dynamic_shake_scale;
+	hud_dynamic_shake_realofs.x = (1 - f) * hud_dynamic_shake_x[i] + f * hud_dynamic_shake_x[i+1];
+	hud_dynamic_shake_realofs.y = (1 - f) * hud_dynamic_shake_y[i] + f * hud_dynamic_shake_y[i+1];
+	hud_dynamic_shake_realofs.z = 0;
+	hud_dynamic_shake_realofs *= hud_dynamic_shake_factor * autocvar_hud_dynamic_shake_scale;
+	hud_dynamic_shake_realofs.x = bound(-0.1, hud_dynamic_shake_realofs.x, 0.1) * vid_conwidth;
+	hud_dynamic_shake_realofs.y = bound(-0.1, hud_dynamic_shake_realofs.y, 0.1) * vid_conheight;
 	return true;
 }
 
@@ -490,6 +492,9 @@ void Hud_Dynamic_Frame()
 	if (fabs(hud_dynamic_ofs.x) < 0.001) hud_dynamic_ofs.x = 0;
 	if (fabs(hud_dynamic_ofs.y) < 0.001) hud_dynamic_ofs.y = 0;
 	if (fabs(hud_dynamic_ofs.z) < 0.001) hud_dynamic_ofs.z = 0;
+	hud_dynamic_ofs.x = bound(-0.1, hud_dynamic_ofs.x, 0.1);
+	hud_dynamic_ofs.y = bound(-0.1, hud_dynamic_ofs.y, 0.1);
+	hud_dynamic_ofs.z = bound(-0.1, hud_dynamic_ofs.z, 0.1);
 
 	float health = STAT(HEALTH);
 	if(autocvar_hud_dynamic_shake > 0 && !autocvar__hud_configure && health > 0)
