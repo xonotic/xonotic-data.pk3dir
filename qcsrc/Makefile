@@ -48,7 +48,7 @@ pk3: qc
 	@ echo "http://xonotic.org" > ${TXT}
 	@ ln -f $(PROGS_OUT)/${PROG}.dat ${DAT}
 	@ ln -f $(PROGS_OUT)/${PROG}.lno ${LNO}
-	@ rm *.pk3
+	@ rm -f *.pk3
 	zip -9 ${PK3} ${TXT} ${DAT} ${LNO}
 	@ rm ${TXT} ${DAT} ${LNO}
 
