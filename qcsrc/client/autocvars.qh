@@ -370,6 +370,7 @@ float autocvar_hud_shownames_offset;
 string autocvar_hud_skin;
 float autocvar_menu_mouse_speed;
 string autocvar_menu_skin;
+float autocvar_r_drawviewmodel;
 int autocvar_r_fakelight;
 int autocvar_r_fullbright;
 float autocvar_r_letterbox;

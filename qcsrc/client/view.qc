@@ -278,7 +278,7 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
-	if(!activeweapon)
+	if(!activeweapon || !autocvar_r_drawviewmodel)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
