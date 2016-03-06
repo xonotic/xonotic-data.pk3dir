@@ -396,7 +396,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_TYPEFRAG,
 					targ.netname,
 					kill_count_to_attacker,
-					(IS_BOT_CLIENT(targ) ? NO_MSG_ : targ.ping)
+					(IS_BOT_CLIENT(targ) ? -1 : targ.ping)
 				);
 				Send_Notification(
 					NOTIF_ONE,
@@ -407,7 +407,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					kill_count_to_target,
 					attacker.health,
 					attacker.armorvalue,
-					(IS_BOT_CLIENT(attacker) ? NO_MSG_ : attacker.ping)
+					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
 				);
 			}
 			else
@@ -419,7 +419,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_FRAG,
 					targ.netname,
 					kill_count_to_attacker,
-					(IS_BOT_CLIENT(targ) ? NO_MSG_ : targ.ping)
+					(IS_BOT_CLIENT(targ) ? -1 : targ.ping)
 				);
 				Send_Notification(
 					NOTIF_ONE,
@@ -430,7 +430,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					kill_count_to_target,
 					attacker.health,
 					attacker.armorvalue,
-					(IS_BOT_CLIENT(attacker) ? NO_MSG_ : attacker.ping)
+					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
 				);
 			}
 

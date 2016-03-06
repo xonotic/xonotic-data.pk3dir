@@ -81,7 +81,7 @@ void Announcer_Gamestart()
 	{
 		if(announcer_countdown)
 		{
-			centerprint_kill(CPID_ROUND);
+			centerprint_kill(ORDINAL(CPID_ROUND));
 			if(announcer_countdown)
 			{
 				remove(announcer_countdown);

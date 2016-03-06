@@ -10,7 +10,7 @@ REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 {
-	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER_CPID, CPID_CAMPCHECK);
+	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CPID_CAMPCHECK);
 	return false;
 }
 

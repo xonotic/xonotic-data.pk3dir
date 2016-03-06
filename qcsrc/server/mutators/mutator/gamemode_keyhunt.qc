@@ -943,7 +943,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	if(KH_READY_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
@@ -953,7 +953,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		if(player_count == 0)
 		{
 			if(prev_missing_teams_mask > 0)
-				Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+				Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 			prev_missing_teams_mask = -1;
 		}
 		else
@@ -973,8 +973,8 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	kh_tracking_enabled = true;
 }
@@ -996,8 +996,8 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	for(i = 0; i < kh_teams; ++i)
 	{

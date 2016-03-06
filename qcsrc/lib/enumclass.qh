@@ -19,10 +19,10 @@
 // edict overhead mode, use this for type checking
 
 .int enum_ordinal;
-#define ENUMCLASS(id) CLASS(id, Object) int id##_count; CASE(id, Null)
+#define ENUMCLASS(id) CLASS(id, Object) int id##_count; const noref entity id##_Null = nil; CASE(id, Null__)
 #define CASE(class, id) class class##_##id; STATIC_INIT(class##_##id) { entity e = class##_##id = NEW(class); e.enum_ordinal = class##_count++; }
 #define ENUMCLASS_END(id) ENDCLASS(id)
 #define ORDINAL(it) ((it).enum_ordinal)
-#define ENUMCAST(T, it) ftoe(etof(T##_Null) + (it))
+#define ENUMCAST(T, it) ftoe(etof(T##_Null__) + (it))
 
 #endif

@@ -884,8 +884,8 @@ void vehicles_exit(bool eject)
 	if(!teamplay)
 		_vehicle.team = 0;
 
-	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER_CPID, CPID_VEHICLES);
-	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER_CPID, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
+	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES);
+	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
 
 	WaypointSprite_Kill(_vehicle.wps_intruder);
 

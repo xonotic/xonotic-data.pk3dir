@@ -19,9 +19,8 @@ ENUMCLASS(MSG)
 	CASE(MSG, MULTI)
 	/** Choose which subcall wrapper to activate */
 	CASE(MSG, CHOICE)
-
-	/** Kill centerprint message */
-	CASE(MSG, CENTER_CPID)
+	/** Kill centerprint message @deprecated */
+	CASE(MSG, CENTER_KILL)
 ENUMCLASS_END(MSG)
 
 string Get_Notif_TypeName(MSG net_type)
@@ -31,25 +30,49 @@ string Get_Notif_TypeName(MSG net_type)
 		case MSG_ANNCE: return "MSG_ANNCE";
 		case MSG_INFO: return "MSG_INFO";
 		case MSG_CENTER: return "MSG_CENTER";
-		case MSG_CENTER_CPID: return "MSG_CENTER_CPID";
 		case MSG_MULTI: return "MSG_MULTI";
 		case MSG_CHOICE: return "MSG_CHOICE";
 	}
-	backtrace(sprintf("Get_Notif_TypeName(%d): Improper net type!\n", net_type));
+	LOG_WARNINGF("Get_Notif_TypeName(%d): Improper net type!\n", ORDINAL(net_type));
 	return "";
 }
 
-typedef entity Notification;
+ENUMCLASS(CPID)
+	CASE(CPID, ASSAULT_ROLE)
+	CASE(CPID, ROUND)
+	CASE(CPID, CAMPCHECK)
+	CASE(CPID, CTF_CAPSHIELD)
+	CASE(CPID, CTF_LOWPRIO)
+	CASE(CPID, CTF_PASS)
+	CASE(CPID, STALEMATE)
+	CASE(CPID, NADES)
+	CASE(CPID, IDLING)
+	CASE(CPID, ITEM)
+	CASE(CPID, PREVENT_JOIN)
+	CASE(CPID, KEEPAWAY)
+	CASE(CPID, KEEPAWAY_WARN)
+	CASE(CPID, KEYHUNT)
+	CASE(CPID, KEYHUNT_OTHER)
+	CASE(CPID, LMS)
+	CASE(CPID, MISSING_TEAMS)
+	CASE(CPID, MISSING_PLAYERS)
+	CASE(CPID, INSTAGIB_FINDAMMO)
+	CASE(CPID, MOTD)
+	CASE(CPID, NIX)
+	CASE(CPID, ONSLAUGHT)
+	CASE(CPID, ONS_CAPSHIELD)
+	CASE(CPID, OVERTIME)
+	CASE(CPID, POWERUP)
+	CASE(CPID, RACE_FINISHLAP)
+	CASE(CPID, TEAMCHANGE)
+	CASE(CPID, TIMEOUT)
+	CASE(CPID, VEHICLES)
+	CASE(CPID, VEHICLES_OTHER)
+	/** always last */
+	CASE(CPID, LAST)
+ENUMCLASS_END(CPID)
 
-// negative confirmations
-/** allows various things to know when no information is added */
-Notification NO_MSG;
-STATIC_INIT(NO_MSG) { NO_MSG = new_pure(Notification); }
-/** @deprecated */
-const int NO_MSG_ = -12345;
-/** allows Send_Notification to safely abort sending */
-Notification NOTIF_ABORT;
-STATIC_INIT(NOTIF_ABORT) { NOTIF_ABORT = new_pure(Notification); }
+typedef entity Notification;
 
 // used for notification system multi-team identifiers
 #define APP_TEAM_NUM(num, prefix) ((num == NUM_TEAM_1) ? prefix##_RED : ((num == NUM_TEAM_2) ? prefix##_BLUE : ((num == NUM_TEAM_3) ? prefix##_YELLOW : prefix##_PINK)))
@@ -106,7 +129,7 @@ void Create_Notification_Entity_InfoCenter(entity notif,
 											string args,
 											string hudargs,
 											string icon,
-											float cpid,
+											CPID cpid,
 											string durcnt,
 											string normal,
 											string gentle);
@@ -235,7 +258,7 @@ string Get_Notif_BroadcastName(NOTIF broadcast)
 
 void Kill_Notification(
 	NOTIF broadcast, entity client,
-	MSG net_type, float net_name);
+	MSG net_type, CPID net_name);
 void Send_Notification(
 	NOTIF broadcast, entity client,
 	MSG net_type, Notification net_name,
@@ -421,7 +444,7 @@ string BUFF_NAME(int i);
 string notif_arg_frag_ping(bool newline, float fping)
 {
 	string s = newline ? "\n" : " ";
-	if (fping == NO_MSG_)
+	if (fping < 0)
 		return sprintf(CCR(_("%s(^F1Bot^BG)")), s);
 	else
 		return sprintf(CCR(_("%s(Ping ^F1%d^BG)")), s, fping);
@@ -592,42 +615,6 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 //  Initialization/Create Declarations
 // ====================================
 
-enum {
-	NO_CPID
-,   CPID_ASSAULT_ROLE
-,   CPID_ROUND
-,   CPID_CAMPCHECK
-,   CPID_CTF_CAPSHIELD
-,   CPID_CTF_LOWPRIO
-,   CPID_CTF_PASS
-,   CPID_STALEMATE
-,   CPID_NADES
-,   CPID_IDLING
-,   CPID_ITEM
-,   CPID_PREVENT_JOIN
-,   CPID_KEEPAWAY
-,   CPID_KEEPAWAY_WARN
-,   CPID_KEYHUNT
-,   CPID_KEYHUNT_OTHER
-,   CPID_LMS
-,   CPID_MISSING_TEAMS
-,   CPID_MISSING_PLAYERS
-,   CPID_INSTAGIB_FINDAMMO
-,   CPID_MOTD
-,   CPID_NIX
-,   CPID_ONSLAUGHT
-,   CPID_ONS_CAPSHIELD
-,   CPID_OVERTIME
-,   CPID_POWERUP
-,   CPID_RACE_FINISHLAP
-,   CPID_TEAMCHANGE
-,   CPID_TIMEOUT
-,   CPID_VEHICLES
-,   CPID_VEHICLES_OTHER
-// always last
-,   NOTIF_CPID_COUNT
-};
-
 // common notification entity values
 .int nent_default;
 .bool nent_enabled;
@@ -646,7 +633,7 @@ enum {
 .string nent_args; // used by both
 .string nent_hudargs; // used by info
 .string nent_icon; // used by info
-.float nent_cpid; // used by center
+.CPID nent_cpid; // used by center
 .string nent_durcnt; // used by center
 .string nent_string; // used by both
 
@@ -696,7 +683,6 @@ STATIC_INIT_LATE(Notif_Choices) {
 
 Notification Get_Notif_Ent(MSG net_type, int net_name)
 {
-	if (net_type == MSG_CENTER_CPID) return NULL;
 	Notification it = _Notifications_from(net_name, NULL);
 	if (it.nent_type != net_type) {
 		LOG_WARNINGF("Get_Notif_Ent(%s (%d), %s (%d)): Improper net type '%s'!\n",
@@ -732,7 +718,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 			args,     /* args    */ \
 			hudargs,  /* hudargs */ \
 			icon,     /* icon    */ \
-			NO_MSG_,  /* cpid    */ \
+			CPID_Null,/* cpid    */ \
 			"",       /* durcnt  */ \
 			normal,   /* normal  */ \
 			gentle);  /* gentle  */ \
@@ -749,7 +735,7 @@ Notification Get_Notif_Ent(MSG net_type, int net_name)
 			args,     /* args    */ \
 			hudargs,  /* hudargs */ \
 			icon,     /* icon    */ \
-			NO_MSG_,  /* cpid    */ \
+			CPID_Null,/* cpid    */ \
 			"",       /* durcnt  */ \
 			normal,   /* normal  */ \
 			gentle);  /* gentle  */ \

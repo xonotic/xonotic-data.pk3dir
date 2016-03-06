@@ -1489,9 +1489,10 @@ void dedicated_print(string input) // print(), but only print if the server is n
 #endif
 
 #ifndef MENUQC
-Notification Announcer_PickNumber(float type, float num)
+Notification Announcer_PickNumber(int type, int num)
 {
-	switch(type)
+    return = NULL;
+	switch (type)
 	{
 		case CNT_GAMESTART:
 		{
@@ -1596,7 +1597,6 @@ Notification Announcer_PickNumber(float type, float num)
 			break;
 		}
 	}
-	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif
 

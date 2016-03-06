@@ -822,7 +822,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	W_SetupShot(e, false, false, "", CH_WEAPON_A, 0);
 
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
 	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
 				  + (v_right * autocvar_g_nades_throw_offset.y)

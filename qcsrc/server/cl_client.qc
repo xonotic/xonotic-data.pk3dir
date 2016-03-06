@@ -1824,7 +1824,7 @@ void LeaveSpectatorMode()
 			if(autocvar_g_campaign)
 				{ campaign_bots_may_start = 1; }
 
-			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
 
 			PutClientInServer();
 
@@ -1921,14 +1921,14 @@ void PrintWelcomeMessage()
 				self.motd_actived_time = time;
 			else if ((time - self.motd_actived_time > 2) && IS_PLAYER(self)) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 			}
 		} else {
 			if (self.BUTTON_INFO)
 				self.motd_actived_time = time;
 			else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 			}
 		}
 	}
@@ -1940,7 +1940,7 @@ void PrintWelcomeMessage()
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 		}
 	}
 }
@@ -2505,7 +2505,7 @@ void PlayerPostThink ()
 			if(self.idlekick_lasttimeleft)
 			{
 				self.idlekick_lasttimeleft = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_IDLING);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_IDLING);
 			}
 		}
 		else
