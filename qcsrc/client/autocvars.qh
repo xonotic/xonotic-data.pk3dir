@@ -195,7 +195,7 @@ float autocvar_hud_dock_alpha;
 string autocvar_hud_dock_color;
 bool autocvar_hud_dock_color_team;
 bool autocvar_hud_panel_ammo;
-bool autocvar_hud_panel_ammo_iconalign; // TODO: check if this should be turned into an int
+bool autocvar_hud_panel_ammo_iconalign;
 int autocvar_hud_panel_ammo_maxammo;
 bool autocvar_hud_panel_ammo_onlycurrent;
 float autocvar_hud_panel_ammo_noncurrent_alpha = 0.7;
@@ -207,8 +207,8 @@ bool autocvar_hud_panel_ammo_text;
 string autocvar_hud_panel_bg;
 float autocvar_hud_panel_bg_alpha;
 float autocvar_hud_panel_bg_border;
-vector autocvar_hud_panel_bg_color; // TODO: int?
-float autocvar_hud_panel_bg_color_team; // ^
+vector autocvar_hud_panel_bg_color;
+float autocvar_hud_panel_bg_color_team;
 float autocvar_hud_panel_bg_padding;
 bool autocvar_hud_panel_centerprint;
 float autocvar_hud_panel_centerprint_align;
