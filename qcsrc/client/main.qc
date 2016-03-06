@@ -696,9 +696,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 {
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
-	spn_origin.x = ReadShort();
-	spn_origin.y = ReadShort();
-	spn_origin.z = ReadShort();
+	spn_origin.x = ReadCoord();
+	spn_origin.y = ReadCoord();
+	spn_origin.z = ReadCoord();
 
 	//if(is_new)
 	//{
@@ -751,9 +751,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 	if(entnum)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 
 		if(is_new)
 		{
