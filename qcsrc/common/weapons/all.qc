@@ -35,7 +35,7 @@
     #include <server/autocvars.qh>
     #include <server/constants.qh>
     #include <server/defs.qh>
-    #include "../notifications.qh"
+    #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
     #include <server/mutators/all.qh>
     #include "../mapinfo.qh"

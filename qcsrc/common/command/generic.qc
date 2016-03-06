@@ -6,7 +6,7 @@
 #include "../mapinfo.qh"
 
 #ifndef MENUQC
-	#include "../notifications.qh"
+	#include "../notifications/all.qh"
 #endif
 
 #ifdef CSQC

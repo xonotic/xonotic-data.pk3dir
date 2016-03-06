@@ -21,7 +21,7 @@
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>

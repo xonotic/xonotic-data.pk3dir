@@ -1,13 +1,13 @@
 #if defined(CSQC)
-	#include "../client/announcer.qh"
+	#include <client/announcer.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "constants.qh"
-	#include "teams.qh"
-	#include "../server/autocvars.qh"
-	#include "../server/constants.qh"
-	#include "../server/defs.qh"
-	#include "notifications.qh"
+	#include <common/constants.qh>
+	#include <common/teams.qh>
+	#include <server/autocvars.qh>
+	#include <server/constants.qh>
+	#include <server/defs.qh>
+	#include "all.qh"
 	#include <server/mutators/all.qh>
 #endif
 

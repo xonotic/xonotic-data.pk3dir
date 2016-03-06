@@ -15,7 +15,7 @@
 
     #include "constants.qh"
     #include <common/deathtypes/all.qh>
-    #include <common/notifications.qh>
+    #include <common/notifications/all.qh>
 	#include "triggers/subs.qh"
     #include "util.qh"
 

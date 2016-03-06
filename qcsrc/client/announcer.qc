@@ -2,7 +2,7 @@
 
 #include "mutators/events.qh"
 
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/stats.qh>
 
 bool announcer_1min;

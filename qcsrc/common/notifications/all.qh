@@ -3,9 +3,9 @@
 
 #include <common/command/all.qh>
 
-#include "constants.qh"
-#include "teams.qh"
-#include "util.qh"
+#include <common/constants.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
 
 /** main types/groups of notifications */
 ENUMCLASS(MSG)
@@ -317,7 +317,7 @@ float autocvar_notification_show_sprees_center_specialonly = true;
 // ============================
 /*
  These arguments get replaced with the Local_Notification_sprintf
- and other such functions found in notifications.qc to supply data
+ and other such functions found in all.qc to supply data
  from networked notifications to their usage in sprintf... It
  allows for more dynamic data to be inferred by the local
  notification parser, so that the server does not have to network
@@ -799,6 +799,6 @@ REGISTRY_END(Notifications)
 		LOG_SEVERE("Notification initialization failed! Read above and fix the errors!");
 }
 
-#include "notifications.inc"
+#include "all.inc"
 
 #endif
