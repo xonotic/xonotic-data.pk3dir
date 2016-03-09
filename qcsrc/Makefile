@@ -5,6 +5,18 @@ NDEBUG ?= 1
 PROGS_OUT ?= $(CURDIR)/..
 BUILD_MOD ?= 0
 
+ifndef Zip
+    ifneq ($(shell which zip),)
+        Zip := zip -9
+    endif
+    ifneq ($(shell which 7za),)
+        Zip := 7za a -tzip -mx=9
+    endif
+    ifndef Zip
+        $(error "No zip in ($(PATH))")
+    endif
+endif
+
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
 # We eventually need to get rid of these
@@ -49,7 +61,7 @@ pk3: qc
 	@ ln -f $(PROGS_OUT)/${PROG}.dat ${DAT}
 	@ ln -f $(PROGS_OUT)/${PROG}.lno ${LNO}
 	@ rm -f *.pk3
-	zip -9 ${PK3} ${TXT} ${DAT} ${LNO}
+	$(Zip) ${PK3} ${TXT} ${DAT} ${LNO}
 	@ rm ${TXT} ${DAT} ${LNO}
 
 dirtree:
