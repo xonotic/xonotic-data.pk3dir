@@ -560,140 +560,140 @@ void racer_draw()
 #endif
 #endif
 
-		METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
-		{
-		#ifdef SVQC
-			if(autocvar_g_vehicle_racer_bouncepain)
-				vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
-		#endif
-		}
+METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
+{
+#ifdef SVQC
+    if(autocvar_g_vehicle_racer_bouncepain)
+        vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
+#endif
+}
 
-		METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
-		{
-		#ifdef SVQC
-			self.movetype = MOVETYPE_BOUNCE;
-			self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
-			self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
+METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
+{
+#ifdef SVQC
+    self.movetype = MOVETYPE_BOUNCE;
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
 
-			if(self.owner.flagcarried)
-			   setorigin(self.owner.flagcarried, '-190 0 96');
-		#elif defined(CSQC)
+    if(self.owner.flagcarried)
+       setorigin(self.owner.flagcarried, '-190 0 96');
+#elif defined(CSQC)
 
-			self.move_movetype = MOVETYPE_BOUNCE;
-		#endif
-		}
+    self.move_movetype = MOVETYPE_BOUNCE;
+#endif
+}
 
-		METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
-		{
-		#ifdef SVQC
-			if(self.scale != 0.5)
-			{
-				if(autocvar_g_vehicle_racer_hovertype != 0)
-					racer_force_from_tag = vehicles_force_fromtag_maglev;
-				else
-					racer_force_from_tag = vehicles_force_fromtag_hover;
+METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
+{
+#ifdef SVQC
+    if(self.scale != 0.5)
+    {
+        if(autocvar_g_vehicle_racer_hovertype != 0)
+            racer_force_from_tag = vehicles_force_fromtag_maglev;
+        else
+            racer_force_from_tag = vehicles_force_fromtag_hover;
 
-				// FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
-				self.scale = 0.5;
-				setattachment(self.vehicle_hudmodel, self, "");
-				setattachment(self.vehicle_viewport, self, "tag_viewport");
+        // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
+        self.scale = 0.5;
+        setattachment(self.vehicle_hudmodel, self, "");
+        setattachment(self.vehicle_viewport, self, "tag_viewport");
 
-				self.mass			   = 900;
-			}
+        self.mass			   = 900;
+    }
 
-			self.think		  = racer_think;
-			self.nextthink	  = time;
-			self.vehicle_health = autocvar_g_vehicle_racer_health;
-			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
+    self.think		  = racer_think;
+    self.nextthink	  = time;
+    self.vehicle_health = autocvar_g_vehicle_racer_health;
+    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
-			self.movetype	  = MOVETYPE_TOSS;
-			self.solid		  = SOLID_SLIDEBOX;
-			self.delay		  = time;
-			self.scale		  = 0.5;
+    self.movetype	  = MOVETYPE_TOSS;
+    self.solid		  = SOLID_SLIDEBOX;
+    self.delay		  = time;
+    self.scale		  = 0.5;
 
-			self.PlayerPhysplug = racer_frame;
+    self.PlayerPhysplug = racer_frame;
 
-			self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
-			self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
-			self.damageforcescale = 0.5;
-			self.vehicle_health = autocvar_g_vehicle_racer_health;
-			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
-		#endif
-		}
+    self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
+    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
+    self.damageforcescale = 0.5;
+    self.vehicle_health = autocvar_g_vehicle_racer_health;
+    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
+#endif
+}
 
-		METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
-		{
-		#ifdef SVQC
-			instance.SendEntity		= func_null; // stop networking this racer (for now)
-			instance.health			= 0;
-			instance.event_damage	= func_null;
-			instance.solid			= SOLID_CORPSE;
-			instance.takedamage		= DAMAGE_NO;
-			instance.deadflag		= DEAD_DYING;
-			instance.movetype		= MOVETYPE_BOUNCE;
-			instance.wait			= time;
-			instance.delay			= 2 + time + random() * 3;
-			instance.cnt			= 1 + random() * 2;
-			instance.touch			= racer_deadtouch;
+METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
+{
+#ifdef SVQC
+    instance.SendEntity		= func_null; // stop networking this racer (for now)
+    instance.health			= 0;
+    instance.event_damage	= func_null;
+    instance.solid			= SOLID_CORPSE;
+    instance.takedamage		= DAMAGE_NO;
+    instance.deadflag		= DEAD_DYING;
+    instance.movetype		= MOVETYPE_BOUNCE;
+    instance.wait			= time;
+    instance.delay			= 2 + time + random() * 3;
+    instance.cnt			= 1 + random() * 2;
+    instance.touch			= racer_deadtouch;
 
-			Send_Effect(EFFECT_EXPLOSION_MEDIUM, instance.origin, '0 0 0', 1);
+    Send_Effect(EFFECT_EXPLOSION_MEDIUM, instance.origin, '0 0 0', 1);
 
-			if(random() < 0.5)
-				instance.avelocity_z = 32;
-			else
-				instance.avelocity_z = -32;
+    if(random() < 0.5)
+        instance.avelocity_z = 32;
+    else
+        instance.avelocity_z = -32;
 
-			instance.avelocity_x = -vlen(instance.velocity) * 0.2;
-			instance.velocity += '0 0 700';
-			instance.colormod = '-0.5 -0.5 -0.5';
+    instance.avelocity_x = -vlen(instance.velocity) * 0.2;
+    instance.velocity += '0 0 700';
+    instance.colormod = '-0.5 -0.5 -0.5';
 
-			instance.think = racer_blowup_think;
-			instance.nextthink = time;
-		#endif
-		}
+    instance.think = racer_blowup_think;
+    instance.nextthink = time;
+#endif
+}
 
 #ifdef CSQC
-		METHOD(Racer, vr_hud, void(Racer thisveh))
-		{
-			Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
-		}
-		METHOD(Racer, vr_crosshair, void(Racer thisveh))
-		{
-			Vehicles_drawCrosshair(vCROSS_GUIDE);
-		}
+METHOD(Racer, vr_hud, void(Racer thisveh))
+{
+    Vehicles_drawHUD(VEH_RACER.m_icon, "vehicle_racer_weapon1", "vehicle_racer_weapon2",
+                     "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+                     "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+}
+METHOD(Racer, vr_crosshair, void(Racer thisveh))
+{
+    Vehicles_drawCrosshair(vCROSS_GUIDE);
+}
 #endif
-		METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
-		{
-		#ifdef SVQC
-			self.vehicle_exit = racer_exit;
-		#endif
+METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
+{
+#ifdef SVQC
+    self.vehicle_exit = racer_exit;
+#endif
 
-		#ifdef SVQC
-			// we have no need to network energy
-			if(autocvar_g_vehicle_racer_energy)
-			if(autocvar_g_vehicle_racer_energy_regen)
-				self.vehicle_flags |= VHF_ENERGYREGEN;
+#ifdef SVQC
+    // we have no need to network energy
+    if(autocvar_g_vehicle_racer_energy)
+    if(autocvar_g_vehicle_racer_energy_regen)
+        self.vehicle_flags |= VHF_ENERGYREGEN;
 
-			if(autocvar_g_vehicle_racer_shield)
-				self.vehicle_flags |= VHF_HASSHIELD;
+    if(autocvar_g_vehicle_racer_shield)
+        self.vehicle_flags |= VHF_HASSHIELD;
 
-			if(autocvar_g_vehicle_racer_shield_regen)
-				self.vehicle_flags |= VHF_SHIELDREGEN;
+    if(autocvar_g_vehicle_racer_shield_regen)
+        self.vehicle_flags |= VHF_SHIELDREGEN;
 
-			if(autocvar_g_vehicle_racer_health_regen)
-				self.vehicle_flags |= VHF_HEALTHREGEN;
+    if(autocvar_g_vehicle_racer_health_regen)
+        self.vehicle_flags |= VHF_HEALTHREGEN;
 
-			self.respawntime = autocvar_g_vehicle_racer_respawntime;
-			self.vehicle_health = autocvar_g_vehicle_racer_health;
-			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
-			self.max_health = self.vehicle_health;
-		#endif
+    self.respawntime = autocvar_g_vehicle_racer_respawntime;
+    self.vehicle_health = autocvar_g_vehicle_racer_health;
+    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
+    self.max_health = self.vehicle_health;
+#endif
 
-		#ifdef CSQC
-			AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
-		#endif
-		}
+#ifdef CSQC
+    AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Rocket
+#endif
+}
 
 #endif

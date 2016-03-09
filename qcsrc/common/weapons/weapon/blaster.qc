@@ -150,113 +150,113 @@ void W_Blaster_Attack(
 	}
 }
 
-		METHOD(Blaster, wr_aim, void(entity thiswep))
-		{
-			if(WEP_CVAR(blaster, secondary))
-			{
-				if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
-					{ PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
-				else
-					{ PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
-			}
-			else
-				{ PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
-		}
+METHOD(Blaster, wr_aim, void(entity thiswep))
+{
+    if(WEP_CVAR(blaster, secondary))
+    {
+        if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
+            { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
+        else
+            { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+    }
+    else
+        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+}
 
-		METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(fire & 1)
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(blaster, refire)))
-				{
-					W_Blaster_Attack(
-						actor,
-						WEP_BLASTER.m_id,
-						WEP_CVAR_PRI(blaster, shotangle),
-						WEP_CVAR_PRI(blaster, damage),
-						WEP_CVAR_PRI(blaster, edgedamage),
-						WEP_CVAR_PRI(blaster, radius),
-						WEP_CVAR_PRI(blaster, force),
-						WEP_CVAR_PRI(blaster, speed),
-						WEP_CVAR_PRI(blaster, spread),
-						WEP_CVAR_PRI(blaster, delay),
-						WEP_CVAR_PRI(blaster, lifetime)
-					);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
-				}
-			}
-			else if(fire & 2)
-			{
-				switch(WEP_CVAR(blaster, secondary))
-				{
-					case 0: // switch to last used weapon
-					{
-						if(PS(actor).m_switchweapon == WEP_BLASTER) // don't do this if already switching
-							W_LastWeapon(actor);
-						break;
-					}
+METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(fire & 1)
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(blaster, refire)))
+        {
+            W_Blaster_Attack(
+                actor,
+                WEP_BLASTER.m_id,
+                WEP_CVAR_PRI(blaster, shotangle),
+                WEP_CVAR_PRI(blaster, damage),
+                WEP_CVAR_PRI(blaster, edgedamage),
+                WEP_CVAR_PRI(blaster, radius),
+                WEP_CVAR_PRI(blaster, force),
+                WEP_CVAR_PRI(blaster, speed),
+                WEP_CVAR_PRI(blaster, spread),
+                WEP_CVAR_PRI(blaster, delay),
+                WEP_CVAR_PRI(blaster, lifetime)
+            );
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(blaster, animtime), w_ready);
+        }
+    }
+    else if(fire & 2)
+    {
+        switch(WEP_CVAR(blaster, secondary))
+        {
+            case 0: // switch to last used weapon
+            {
+                if(PS(actor).m_switchweapon == WEP_BLASTER) // don't do this if already switching
+                    W_LastWeapon(actor);
+                break;
+            }
 
-					case 1: // normal projectile secondary
-					{
-						if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(blaster, refire)))
-						{
-							W_Blaster_Attack(
-								actor,
-								WEP_BLASTER.m_id | HITTYPE_SECONDARY,
-								WEP_CVAR_SEC(blaster, shotangle),
-								WEP_CVAR_SEC(blaster, damage),
-								WEP_CVAR_SEC(blaster, edgedamage),
-								WEP_CVAR_SEC(blaster, radius),
-								WEP_CVAR_SEC(blaster, force),
-								WEP_CVAR_SEC(blaster, speed),
-								WEP_CVAR_SEC(blaster, spread),
-								WEP_CVAR_SEC(blaster, delay),
-								WEP_CVAR_SEC(blaster, lifetime)
-							);
-							weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
-						}
+            case 1: // normal projectile secondary
+            {
+                if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(blaster, refire)))
+                {
+                    W_Blaster_Attack(
+                        actor,
+                        WEP_BLASTER.m_id | HITTYPE_SECONDARY,
+                        WEP_CVAR_SEC(blaster, shotangle),
+                        WEP_CVAR_SEC(blaster, damage),
+                        WEP_CVAR_SEC(blaster, edgedamage),
+                        WEP_CVAR_SEC(blaster, radius),
+                        WEP_CVAR_SEC(blaster, force),
+                        WEP_CVAR_SEC(blaster, speed),
+                        WEP_CVAR_SEC(blaster, spread),
+                        WEP_CVAR_SEC(blaster, delay),
+                        WEP_CVAR_SEC(blaster, lifetime)
+                    );
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(blaster, animtime), w_ready);
+                }
 
-						break;
-					}
-				}
-			}
-		}
+                break;
+            }
+        }
+    }
+}
 
-		METHOD(Blaster, wr_setup, void(entity thiswep))
-		{
-			self.ammo_field = ammo_none;
-		}
+METHOD(Blaster, wr_setup, void(entity thiswep))
+{
+    self.ammo_field = ammo_none;
+}
 
-		METHOD(Blaster, wr_checkammo1, bool(entity thiswep))
-		{
-			return true; // infinite ammo
-		}
+METHOD(Blaster, wr_checkammo1, bool(entity thiswep))
+{
+    return true; // infinite ammo
+}
 
-		METHOD(Blaster, wr_checkammo2, bool(entity thiswep))
-		{
-			return true; // blaster has infinite ammo
-		}
+METHOD(Blaster, wr_checkammo2, bool(entity thiswep))
+{
+    return true; // blaster has infinite ammo
+}
 
-		METHOD(Blaster, wr_suicidemessage, int(entity thiswep))
-		{
-			return WEAPON_BLASTER_SUICIDE;
-		}
+METHOD(Blaster, wr_suicidemessage, int(entity thiswep))
+{
+    return WEAPON_BLASTER_SUICIDE;
+}
 
-		METHOD(Blaster, wr_killmessage, int(entity thiswep))
-		{
-			return WEAPON_BLASTER_MURDER;
-		}
+METHOD(Blaster, wr_killmessage, int(entity thiswep))
+{
+    return WEAPON_BLASTER_MURDER;
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(Blaster, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 6;
-			pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-			if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
-		}
+METHOD(Blaster, wr_impacteffect, void(entity thiswep))
+{
+    vector org2;
+    org2 = w_org + w_backoff * 6;
+    pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
+    if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+}
 
 #endif
 #endif

@@ -554,127 +554,127 @@ spawnfunc(vehicle_spiderbot)
 	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
 }
 
-		METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
-		{
-			if(autocvar_g_vehicle_spiderbot_bouncepain)
-				vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
-		}
-		METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
-		{
-			self.vehicle_weapon2mode = SBRM_GUIDE;
-			self.movetype = MOVETYPE_WALK;
-			CSQCVehicleSetup(self.owner, 0);
-			self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
-			self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
+METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
+{
+    if(autocvar_g_vehicle_spiderbot_bouncepain)
+        vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
+}
+METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
+{
+    self.vehicle_weapon2mode = SBRM_GUIDE;
+    self.movetype = MOVETYPE_WALK;
+    CSQCVehicleSetup(self.owner, 0);
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
 
-			if(self.owner.flagcarried)
-			{
-				setattachment(self.owner.flagcarried, self.tur_head, "");
-				setorigin(self.owner.flagcarried, '-20 0 120');
-			}
-		}
-		METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
-		{
-			if(IS_ONGROUND(self))
-				movelib_brake_simple(self, autocvar_g_vehicle_spiderbot_speed_stop);
-		}
-		METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
-		{
-			instance.health				= 0;
-			instance.event_damage		= func_null;
-			instance.takedamage			= DAMAGE_NO;
-			instance.touch				= func_null;
-			instance.cnt				= 3.4 + time + random() * 2;
-			instance.think				= spiderbot_blowup;
-			instance.nextthink			= time;
-			instance.deadflag			= DEAD_DYING;
-			instance.frame				= 5;
-			instance.tur_head.effects  |= EF_FLAME;
-			instance.colormod			= instance.tur_head.colormod = '-1 -1 -1';
-			instance.frame				= 10;
-			instance.movetype			= MOVETYPE_TOSS;
+    if(self.owner.flagcarried)
+    {
+        setattachment(self.owner.flagcarried, self.tur_head, "");
+        setorigin(self.owner.flagcarried, '-20 0 120');
+    }
+}
+METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
+{
+    if(IS_ONGROUND(self))
+        movelib_brake_simple(self, autocvar_g_vehicle_spiderbot_speed_stop);
+}
+METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
+{
+    instance.health				= 0;
+    instance.event_damage		= func_null;
+    instance.takedamage			= DAMAGE_NO;
+    instance.touch				= func_null;
+    instance.cnt				= 3.4 + time + random() * 2;
+    instance.think				= spiderbot_blowup;
+    instance.nextthink			= time;
+    instance.deadflag			= DEAD_DYING;
+    instance.frame				= 5;
+    instance.tur_head.effects  |= EF_FLAME;
+    instance.colormod			= instance.tur_head.colormod = '-1 -1 -1';
+    instance.frame				= 10;
+    instance.movetype			= MOVETYPE_TOSS;
 
-			CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
-		}
-		METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
-		{
-			if(!self.gun1)
-			{
-				self.vehicles_impulse = spiderbot_impulse;
-				self.gun1 = spawn();
-				self.gun2 = spawn();
-				setmodel(self.gun1, MDL_VEH_SPIDERBOT_GUN);
-				setmodel(self.gun2, MDL_VEH_SPIDERBOT_GUN);
-				setattachment(self.gun1, self.tur_head, "tag_hardpoint01");
-				setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
-				self.gravity = 2;
-				self.mass = 5000;
-			}
+    CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
+}
+METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
+{
+    if(!self.gun1)
+    {
+        self.vehicles_impulse = spiderbot_impulse;
+        self.gun1 = spawn();
+        self.gun2 = spawn();
+        setmodel(self.gun1, MDL_VEH_SPIDERBOT_GUN);
+        setmodel(self.gun2, MDL_VEH_SPIDERBOT_GUN);
+        setattachment(self.gun1, self.tur_head, "tag_hardpoint01");
+        setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
+        self.gravity = 2;
+        self.mass = 5000;
+    }
 
-			self.frame = 5;
-			self.tur_head.frame = 1;
-			self.movetype = MOVETYPE_WALK;
-			self.solid = SOLID_SLIDEBOX;
-			self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
-			self.tur_head.angles = '0 0 0';
-			self.vehicle_exit = spiderbot_exit;
+    self.frame = 5;
+    self.tur_head.frame = 1;
+    self.movetype = MOVETYPE_WALK;
+    self.solid = SOLID_SLIDEBOX;
+    self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
+    self.tur_head.angles = '0 0 0';
+    self.vehicle_exit = spiderbot_exit;
 
-			setorigin(self, self.pos1 + '0 0 128');
-			self.angles = self.pos2;
-			self.damageforcescale = 0.03;
-			self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
-			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
+    setorigin(self, self.pos1 + '0 0 128');
+    self.angles = self.pos2;
+    self.damageforcescale = 0.03;
+    self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
+    self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 
-			self.PlayerPhysplug = spiderbot_frame;
-		}
-		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
-		{
-			if(autocvar_g_vehicle_spiderbot_shield)
-				self.vehicle_flags |= VHF_HASSHIELD;
+    self.PlayerPhysplug = spiderbot_frame;
+}
+METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
+{
+    if(autocvar_g_vehicle_spiderbot_shield)
+        self.vehicle_flags |= VHF_HASSHIELD;
 
-			if(autocvar_g_vehicle_spiderbot_shield_regen)
-				self.vehicle_flags |= VHF_SHIELDREGEN;
+    if(autocvar_g_vehicle_spiderbot_shield_regen)
+        self.vehicle_flags |= VHF_SHIELDREGEN;
 
-			if(autocvar_g_vehicle_spiderbot_health_regen)
-				self.vehicle_flags |= VHF_HEALTHREGEN;
+    if(autocvar_g_vehicle_spiderbot_health_regen)
+        self.vehicle_flags |= VHF_HEALTHREGEN;
 
-			self.respawntime = autocvar_g_vehicle_spiderbot_respawntime;
-			self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
-			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
-			self.max_health = self.vehicle_health;
-			self.pushable = true; // spiderbot can use jumppads
-		}
+    self.respawntime = autocvar_g_vehicle_spiderbot_respawntime;
+    self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
+    self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
+    self.max_health = self.vehicle_health;
+    self.pushable = true; // spiderbot can use jumppads
+}
 
 #endif // SVQC
 #ifdef CSQC
 float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
 float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
-		METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
-		{
-			Vehicles_drawHUD(VEH_SPIDERBOT.m_icon, "vehicle_spider_weapon1", "vehicle_spider_weapon2",
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
-		}
-		METHOD(Spiderbot, vr_crosshair, void(Spiderbot thisveh))
-		{
-			string crosshair;
+METHOD(Spiderbot, vr_hud, void(Spiderbot thisveh))
+{
+    Vehicles_drawHUD(VEH_SPIDERBOT.m_icon, "vehicle_spider_weapon1", "vehicle_spider_weapon2",
+                     "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+                     "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo2_color);
+}
+METHOD(Spiderbot, vr_crosshair, void(Spiderbot thisveh))
+{
+    string crosshair;
 
-			switch(weapon2mode)
-			{
-				case SBRM_VOLLY:     crosshair = vCROSS_BURST; break;
-				case SBRM_GUIDE:     crosshair = vCROSS_GUIDE; break;
-				case SBRM_ARTILLERY: crosshair = vCROSS_RAIN;  break;
-				default:             crosshair = vCROSS_BURST;
-			}
+    switch(weapon2mode)
+    {
+        case SBRM_VOLLY:     crosshair = vCROSS_BURST; break;
+        case SBRM_GUIDE:     crosshair = vCROSS_GUIDE; break;
+        case SBRM_ARTILLERY: crosshair = vCROSS_RAIN;  break;
+        default:             crosshair = vCROSS_BURST;
+    }
 
-			Vehicles_drawCrosshair(crosshair);
-		}
-		METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
-		{
-			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
-			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
-		}
+    Vehicles_drawCrosshair(crosshair);
+}
+METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
+{
+    AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
+    AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
+}
 
 #endif
 #endif

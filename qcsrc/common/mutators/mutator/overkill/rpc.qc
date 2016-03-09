@@ -150,74 +150,80 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-		METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep))
-		{
-			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
-		}
-		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
-				thiswep.wr_reload(thiswep, actor, weaponentity);
-			} else
-			{
-				if (fire & 1)
-				{
-					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(rpc, refire)))
-					{
-						W_RocketPropelledChainsaw_Attack(thiswep);
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
-					}
-				}
+METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep))
+{
+    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
+}
 
-				if (fire & 2)
-				{
-					// to-do
-				}
-			}
-		}
-		METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
-			ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
-			return ammo_amount;
-		}
-		METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep))
-		{
-			return false;
-		}
-		METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
-			W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
-		}
-		METHOD(RocketPropelledChainsaw, wr_suicidemessage, int(entity thiswep))
-		{
-			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
-				return WEAPON_RPC_SUICIDE_SPLASH;
-			else
-				return WEAPON_RPC_SUICIDE_DIRECT;
-		}
-		METHOD(RocketPropelledChainsaw, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_BLASTER_MURDER;
-			else if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
-				return WEAPON_RPC_MURDER_SPLASH;
-			else
-				return WEAPON_RPC_MURDER_DIRECT;
-		}
+METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(WEP_CVAR(rpc, reload_ammo) && actor.clip_load < WEP_CVAR(rpc, ammo)) {
+        thiswep.wr_reload(thiswep, actor, weaponentity);
+    } else
+    {
+        if (fire & 1)
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(rpc, refire)))
+            {
+                W_RocketPropelledChainsaw_Attack(thiswep);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(rpc, animtime), w_ready);
+            }
+        }
+
+        if (fire & 2)
+        {
+            // to-do
+        }
+    }
+}
+
+METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
+{
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
+    ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
+    return ammo_amount;
+}
+
+METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep))
+{
+    return false;
+}
+
+METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
+}
+
+METHOD(RocketPropelledChainsaw, wr_suicidemessage, int(entity thiswep))
+{
+    if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+        return WEAPON_RPC_SUICIDE_SPLASH;
+    else
+        return WEAPON_RPC_SUICIDE_DIRECT;
+}
+
+METHOD(RocketPropelledChainsaw, wr_killmessage, int(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_BLASTER_MURDER;
+    else if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+        return WEAPON_RPC_MURDER_SPLASH;
+    else
+        return WEAPON_RPC_MURDER_DIRECT;
+}
 
 #endif
 
 #ifdef CSQC
 
-		METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 12;
-			pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-		}
+METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep))
+{
+    vector org2;
+    org2 = w_org + w_backoff * 12;
+    pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
+    if(!w_issilent)
+        sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+}
 
 #endif
 #endif
