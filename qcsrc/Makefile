@@ -52,8 +52,11 @@ pk3: qc
 	zip -9 ${PK3} ${TXT} ${DAT} ${LNO}
 	@ rm ${TXT} ${DAT} ${LNO}
 
+dirtree:
+	@mkdir -p ../.tmp
+
 .PHONY: clean
-clean:
+clean: | dirtree
 	rm -f $(PROGS_OUT)/csprogs.dat
 	rm -f $(PROGS_OUT)/progs.dat
 	rm -f $(PROGS_OUT)/menu.dat
@@ -70,17 +73,17 @@ export CPP
 export QCCDEFS
 export QCCFLAGS
 
-$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | dirtree
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	sh ./qcc.sh client $@ $<
 -include ../.tmp/client.d
 
-$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE) | dirtree
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	sh ./qcc.sh server $@ $<
 -include ../.tmp/server.d
 
-$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE) | dirtree
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
 	sh ./qcc.sh menu $@ $<
 -include ../.tmp/menu.d
