@@ -1031,11 +1031,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_buffs_autoreplace, "cl_buffs_autoreplace");
-	return false;
-}
+REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {

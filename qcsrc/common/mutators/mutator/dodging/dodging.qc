@@ -275,11 +275,7 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 
 #ifdef SVQC
 
-MUTATOR_HOOKFUNCTION(dodging, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
-	return false;
-}
+REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {

@@ -1349,13 +1349,8 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nade_type, "cl_nade_type");
-	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_pokenade_type, "cl_pokenade_type");
-
-	return false;
-}
+REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
+REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {

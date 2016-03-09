@@ -116,11 +116,7 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 
 #ifdef SVQC
 
-MUTATOR_HOOKFUNCTION(multijump, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_multijump, "cl_multijump");
-	return false;
-}
+REPLICATE(cvar_cl_multijump, bool, "cl_multijump");
 
 MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsString)
 {

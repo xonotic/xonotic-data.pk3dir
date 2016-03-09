@@ -164,9 +164,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(spawn_near_teammate, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_spawn_near_teammate, "cl_spawn_near_teammate");
-	return false;
-}
+REPLICATE(cvar_cl_spawn_near_teammate, bool, "cl_spawn_near_teammate");
+
 #endif
