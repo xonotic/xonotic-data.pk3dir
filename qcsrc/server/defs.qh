@@ -106,6 +106,7 @@ void() player_setupanimsformodel;
 .float	scheduledrespawntime;
 .float	respawntime;
 .float	respawntimejitter;
+.float	respawntimestart;
 //.float	chasecam;
 
 .float	damageforcescale;

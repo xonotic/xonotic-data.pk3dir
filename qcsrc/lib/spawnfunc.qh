@@ -152,6 +152,7 @@ noref bool require_spawnfunc_prefix;
 		FIELD_SCALAR(fld, platmovetype) \
 		FIELD_SCALAR(fld, race_place) \
 		FIELD_SCALAR(fld, radius) \
+		FIELD_SCALAR(fld, respawntimestart) \
 		FIELD_SCALAR(fld, respawntimejitter) \
 		FIELD_SCALAR(fld, respawntime) \
 		FIELD_SCALAR(fld, restriction) \

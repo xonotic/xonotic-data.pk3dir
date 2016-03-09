@@ -615,7 +615,7 @@ void Item_ScheduleRespawn(entity e)
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
-	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
+	Item_ScheduleRespawnIn(e, game_starttime - time + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
