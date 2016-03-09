@@ -36,7 +36,6 @@ float CheatCommand(float argc) { return 0; }
 float CheatFrame() { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
 void CheatShutdown() { }
-void CheatShutdownClient() { }
 void Drag_MoveDrag(entity from, entity to) { }
 
 #else
@@ -52,10 +51,6 @@ void CheatInit()
 }
 
 void CheatShutdown()
-{
-}
-
-void CheatShutdownClient()
 {
 }
 

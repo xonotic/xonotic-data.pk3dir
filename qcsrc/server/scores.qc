@@ -349,7 +349,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	{
 		if(gameover)
 			return 0;
-		backtrace("Adding score to unknown player!");
+		LOG_WARNING("Adding score to unknown player!");
 		return 0;
 	}
 	if(score)

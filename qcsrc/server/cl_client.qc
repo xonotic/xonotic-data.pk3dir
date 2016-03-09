@@ -285,9 +285,7 @@ void PutObserverInServer()
 	setsize (self, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL)); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 
-	PS(self).m_weapon = WEP_Null;
 	self.weaponname = "";
-	PS(self).m_switchingweapon = WEP_Null;
 	self.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
@@ -996,22 +994,7 @@ void ClientConnect()
 #endif
 	this.version_nagtime = time + 10 + random() * 10;
 
-	// TODO: xonstat elo.txt support, until then just 404s
-	if (false && IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
-
 	ClientState_attach(this);
-	// TODO: fold all of these into ClientState
-	DecodeLevelParms(this);
-	PlayerScore_Attach(this);
-	ClientData_Attach(this);
-	accuracy_init(this);
-	Inventory_new(this);
-	playerdemo_init(this);
-	anticheat_init(this);
-	entcs_attach(this);
-	W_HitPlotOpen(this);
-
-	bot_clientconnect(this);
 
 	// identify the right forced team
 	if (autocvar_g_campaign)
@@ -1085,19 +1068,8 @@ void ClientConnect()
 
 	FixClientCvars(this);
 
-	// Grappling hook
-	stuffcmd(this, "alias +hook +button6\n");
-	stuffcmd(this, "alias -hook -button6\n");
-
-	// Jetpack binds
-	stuffcmd(this, "alias +jetpack +button10\n");
-	stuffcmd(this, "alias -jetpack -button10\n");
-
 	// get version info from player
 	stuffcmd(this, "cmd clientversion $gameversion\n");
-
-	// get other cvars from player
-	GetCvars(0);
 
 	// notify about available teams
 	if (teamplay)
@@ -1167,45 +1139,24 @@ Called when a client disconnects from the server
 */
 .entity chatbubbleentity;
 void ReadyCount();
-void ClientDisconnect ()
+void ClientDisconnect()
 {
 	SELFPARAM();
+	assert(IS_CLIENT(this), return);
+
+	PlayerStats_GameReport_FinalizePlayer(this);
+	if (this.vehicle) vehicles_exit(VHEF_RELEASE);
+	if (this.active_minigame) part_minigame(this);
+	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+
+	if (autocvar_sv_eventlog)
+		GameLogEcho(strcat(":part:", ftos(this.playerid)));
+
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
+
+    MUTATOR_CALLHOOK(ClientDisconnect);
+
 	ClientState_detach(this);
-	if(self.vehicle)
-	    vehicles_exit(VHEF_RELEASE);
-
-	if (!IS_CLIENT(self))
-	{
-		LOG_INFO("Warning: ClientDisconnect without ClientConnect\n");
-		return;
-	}
-
-	PlayerStats_GameReport_FinalizePlayer(self);
-
-	if ( self.active_minigame )
-		part_minigame(self);
-
-	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
-
-	CheatShutdownClient();
-
-	W_HitPlotClose(self);
-
-	anticheat_report();
-	anticheat_shutdown();
-
-	playerdemo_shutdown();
-
-	bot_clientdisconnect();
-
-	entcs_detach(self);
-
-	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":part:", ftos(self.playerid)));
-
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
-
-	MUTATOR_CALLHOOK(ClientDisconnect);
 
 	Portal_ClearAll(self);
 
@@ -1217,39 +1168,21 @@ void ClientDisconnect ()
 
 	self.flags &= ~FL_CLIENT;
 
-	if (self.chatbubbleentity)
-		remove (self.chatbubbleentity);
-
-	if (self.killindicator)
-		remove (self.killindicator);
+	if (this.chatbubbleentity) remove(this.chatbubbleentity);
+	if (this.killindicator) remove(this.killindicator);
 
 	WaypointSprite_PlayerGone();
 
 	bot_relinkplayerlist();
 
-	accuracy_free(self);
-	Inventory_delete(self);
-	ClientData_Detach(this);
-	PlayerScore_Detach(self);
+	if (self.netname_previous) strunzone(self.netname_previous);
+	if (self.clientstatus) strunzone(self.clientstatus);
+	if (self.weaponorder_byimpulse) strunzone(self.weaponorder_byimpulse);
+	if (self.personal) remove(self.personal);
 
-	if(self.netname_previous)
-		strunzone(self.netname_previous);
-	if(self.clientstatus)
-		strunzone(self.clientstatus);
-	if(self.weaponorder_byimpulse)
-		strunzone(self.weaponorder_byimpulse);
-
-	if(self.personal)
-		remove(self.personal);
-
-	self.playerid = 0;
+	this.playerid = 0;
 	ReadyCount();
-	if(vote_called)
-	if(IS_REAL_CLIENT(self))
-		VoteCount(false);
-
-	// free cvars
-	GetCvars(-1);
+	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 }
 
 void ChatBubbleThink()
