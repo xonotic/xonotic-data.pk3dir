@@ -146,7 +146,7 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
-	if(actor.BUTTON_ATCK)
+	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		if(!thiswep.wr_checkammo2(thiswep))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -245,9 +245,9 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		METHOD(MachineGun, wr_aim, void(entity thiswep))
 		{
 			if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false);
 		}
 		METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

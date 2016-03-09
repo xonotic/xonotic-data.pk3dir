@@ -127,7 +127,7 @@ void racer_align4point(entity this, float _delta)
 	{
 		uforce = autocvar_g_vehicle_racer_water_upforcedamper;
 
-		if(this.owner.BUTTON_CROUCH && time < this.air_finished)
+		if(PHYS_INPUT_BUTTON_CROUCH(this.owner) && time < this.air_finished)
 			this.velocity_z += 30;
 		else
 			this.velocity_z += 200;
@@ -187,13 +187,13 @@ float racer_frame()
 	if(IS_DEAD(racer))
 	{
 		setself(player);
-		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
+		PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = false;
 		return 1;
 	}
 
 	racer_align4point(self, PHYS_INPUT_TIMELENGTH);
 
-	player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
+	PHYS_INPUT_BUTTON_ZOOM(player) = PHYS_INPUT_BUTTON_CROUCH(player) = false;
 
 	crosshair_trace(player);
 
@@ -311,7 +311,7 @@ float racer_frame()
 #ifdef SVQC
 	Weapon wep1 = WEP_RACER;
 	if (!forbidWeaponUse(player))
-	if (player.BUTTON_ATCK)
+	if (PHYS_INPUT_BUTTON_ATCK(player))
 	if (wep1.wr_checkammo1(wep1))
 	{
 		string tagname = (racer.cnt)
@@ -346,7 +346,7 @@ float racer_frame()
 
 	if(!forbidWeaponUse(player))
 	if(time > racer.delay)
-	if(player.BUTTON_ATCK2)
+	if(PHYS_INPUT_BUTTON_ATCK2(player))
 	{
 		racer.misc_bulletcounter += 1;
 		racer.delay = time + 0.3;
@@ -388,7 +388,7 @@ float racer_frame()
 	if(racer.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(player, shield, racer);
 
-	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
+	PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = false;
 #endif
 
 	setorigin(player,racer.origin + '0 0 32');

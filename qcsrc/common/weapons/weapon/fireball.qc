@@ -353,13 +353,13 @@ void W_Fireball_Attack2()
 
 		METHOD(Fireball, wr_aim, void(entity thiswep))
 		{
-			self.BUTTON_ATCK = false;
-			self.BUTTON_ATCK2 = false;
+			PHYS_INPUT_BUTTON_ATCK(self) = false;
+			PHYS_INPUT_BUTTON_ATCK2(self) = false;
 			if(self.bot_primary_fireballmooth == 0)
 			{
 				if(bot_aim(WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
 				{
-					self.BUTTON_ATCK = true;
+					PHYS_INPUT_BUTTON_ATCK(self) = true;
 					if(random() < 0.02) self.bot_primary_fireballmooth = 0;
 				}
 			}
@@ -367,7 +367,7 @@ void W_Fireball_Attack2()
 			{
 				if(bot_aim(WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
 				{
-					self.BUTTON_ATCK2 = true;
+					PHYS_INPUT_BUTTON_ATCK2(self) = true;
 					if(random() < 0.01) self.bot_primary_fireballmooth = 1;
 				}
 			}

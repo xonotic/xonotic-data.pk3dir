@@ -89,8 +89,8 @@ float spiderbot_frame()
 
 	setself(spider);
 
-	player.BUTTON_ZOOM	  = 0;
-	player.BUTTON_CROUCH	= 0;
+	PHYS_INPUT_BUTTON_ZOOM(player) = false;
+	PHYS_INPUT_BUTTON_CROUCH(player) = false;
 	PS(player).m_switchweapon = WEP_Null;
 	player.vehicle_weapon2mode = spider.vehicle_weapon2mode;
 
@@ -149,10 +149,10 @@ float spiderbot_frame()
 			spider.frame = 5;
 		}
 
-		if(!player.BUTTON_JUMP)
-			spider.BUTTON_JUMP = 0;
+		if (!PHYS_INPUT_BUTTON_JUMP(player))
+			PHYS_INPUT_BUTTON_JUMP(spider) = false;
 
-		if((IS_ONGROUND(spider)) && player.BUTTON_JUMP && !spider.BUTTON_JUMP && self.tur_head.wait < time)
+		if((IS_ONGROUND(spider)) && PHYS_INPUT_BUTTON_JUMP(player) && !PHYS_INPUT_BUTTON_JUMP(spider) && self.tur_head.wait < time)
 		{
 			sound (self, CH_TRIGGER_SINGLE, SND_VEH_SPIDERBOT_JUMP, VOL_VEHICLEENGINE, ATTEN_NORM);
 			//dprint("spiderbot_jump:", ftos(soundlength("vehicles/spiderbot_jump.wav")), "\n");
@@ -160,8 +160,8 @@ float spiderbot_frame()
 
 			self.tur_head.wait = time + 2;
 			spider.jump_delay = time + 2;
-			spider.BUTTON_JUMP = 1; // set spider's jump
-			//player.BUTTON_JUMP = 0;
+			PHYS_INPUT_BUTTON_JUMP(spider) = true; // set spider's jump
+			//PHYS_INPUT_BUTTON_JUMP(player) = false;
 
 			vector movefix = '0 0 0';
 			if(player.movement_x > 0) movefix_x = 1;
@@ -224,7 +224,7 @@ float spiderbot_frame()
 					}
 					player.movement_y = 0;
 					float oldvelz = spider.velocity_z;
-					movelib_move_simple(self, normalize(v_forward * player.movement_x),((player.BUTTON_JUMP) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
+					movelib_move_simple(self, normalize(v_forward * player.movement_x),((PHYS_INPUT_BUTTON_JUMP(player)) ? autocvar_g_vehicle_spiderbot_speed_run : autocvar_g_vehicle_spiderbot_speed_walk),autocvar_g_vehicle_spiderbot_movement_inertia);
 					spider.velocity_z = oldvelz;
 					float g = ((autocvar_sv_gameplayfix_gravityunaffectedbyticrate) ? 0.5 : 1);
 					if(spider.velocity_z <= 20) // not while jumping
@@ -276,7 +276,7 @@ float spiderbot_frame()
 	self.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
 	if(!forbidWeaponUse(player))
-	if(player.BUTTON_ATCK)
+	if(PHYS_INPUT_BUTTON_ATCK(player))
 	{
 		spider.cnt = time;
 		if(spider.vehicle_ammo1 >= autocvar_g_vehicle_spiderbot_minigun_ammo_cost && spider.tur_head.attack_finished_single[0] <= time)
@@ -328,7 +328,7 @@ float spiderbot_frame()
 	if(self.vehicle_flags  & VHF_HEALTHREGEN)
 		vehicles_regen(spider.dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, false);
 
-	player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
+	PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = false;
 	//player.vehicle_ammo2 = spider.tur_head.frame;
 	player.vehicle_ammo2 = (9 - spider.tur_head.frame) / 8 * 100; // Percentage, like ammo1
 

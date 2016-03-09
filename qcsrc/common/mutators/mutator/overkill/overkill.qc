@@ -77,7 +77,7 @@ void ok_IncreaseCharge(entity ent, int wep)
 	if (wepent == WEP_Null) return;  // dummy
 
 	if(ent.ok_use_ammocharge)
-	if(!ent.BUTTON_ATCK) // not while attacking?
+	if(!PHYS_INPUT_BUTTON_ATCK(ent)) // not while attacking?
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
@@ -188,7 +188,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 
 	ok_IncreaseCharge(self, PS(self).m_weapon.m_id);
 
-	if(self.BUTTON_ATCK2)
+	if(PHYS_INPUT_BUTTON_ATCK2(self))
 	if(!forbidWeaponUse(self) || self.weapon_blocked) // allow if weapon is blocked
 	if(time >= self.jump_interval)
 	{
@@ -220,7 +220,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(self.ok_use_ammocharge)
 	if(!ok_CheckWeaponCharge(self, PS(self).m_weapon.m_id))
 	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self) && PS(self).m_weapon == PS(self).m_switchweapon)
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && PHYS_INPUT_BUTTON_ATCK(self) && IS_REAL_CLIENT(self) && PS(self).m_weapon == PS(self).m_switchweapon)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
@@ -229,12 +229,12 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		Weapon wpn = PS(self).m_weapon;
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if(self.(weaponentity).state != WS_CLEAR)
-			w_ready(wpn, self, weaponentity, (self.BUTTON_ATCK ? 1 : 0) | (self.BUTTON_ATCK2 ? 2 : 0));
+			w_ready(wpn, self, weaponentity, PHYS_INPUT_BUTTON_ATCK(self) | (PHYS_INPUT_BUTTON_ATCK2(self) << 1));
 
 		self.weapon_blocked = true;
 	}
 
-	self.BUTTON_ATCK2 = 0;
+	PHYS_INPUT_BUTTON_ATCK2(self) = false;
 
 	return false;
 }

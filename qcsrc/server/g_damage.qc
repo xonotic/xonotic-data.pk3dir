@@ -125,7 +125,7 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "I");
 	if(player.flagcarried != world)
 		s = strcat(s, "F");
-	if(player.BUTTON_CHAT)
+	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
 	if(player.kh_next)
 		s = strcat(s, "K");
@@ -800,7 +800,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 					{
 						if(deathtype != DEATH_FIRE.m_id)
 						{
-							if(victim.BUTTON_CHAT)
+							if(PHYS_INPUT_BUTTON_CHAT(victim))
 								attacker.typehitsound += 1;
 							else
 								attacker.damage_dealt += damage;

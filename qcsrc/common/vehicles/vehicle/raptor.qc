@@ -204,7 +204,7 @@ float raptor_frame()
 	if(IS_DEAD(raptor))
 	{
 		setself(player);
-		player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
+		PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = false;
 		return 1;
 	}
 	crosshair_trace(player);
@@ -213,10 +213,10 @@ float raptor_frame()
 	//{
 		if(raptor.angles_z > 50 || raptor.angles_z < -50)
 		{
-			if(player.BUTTON_JUMP)
+			if(PHYS_INPUT_BUTTON_JUMP(player))
 			{
-				player.BUTTON_CROUCH = true;
-				player.BUTTON_JUMP = false;
+				PHYS_INPUT_BUTTON_CROUCH(player) = true;
+				PHYS_INPUT_BUTTON_JUMP(player) = false;
 			}
 		}
 	//}
@@ -279,9 +279,9 @@ float raptor_frame()
 			raptor.angles_z = 0;
 	}
 
-	if(player.BUTTON_CROUCH)
+	if(PHYS_INPUT_BUTTON_CROUCH(player))
 		df -=   v_up * autocvar_g_vehicle_raptor_speed_down;
-	else if (player.BUTTON_JUMP)
+	else if (PHYS_INPUT_BUTTON_JUMP(player))
 		df +=  v_up * autocvar_g_vehicle_raptor_speed_up;
 
 	raptor.velocity  += df * frametime;
@@ -392,7 +392,7 @@ float raptor_frame()
 
 	Weapon wep1 = WEP_RAPTOR;
 	if(!forbidWeaponUse(player))
-	if(player.BUTTON_ATCK)
+	if(PHYS_INPUT_BUTTON_ATCK(player))
 	if (wep1.wr_checkammo1(wep1))
 	{
 	    .entity weaponentity = weaponentities[0];
@@ -413,7 +413,7 @@ float raptor_frame()
 	if(raptor.vehicle_weapon2mode == RSM_BOMB)
 	{
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_bombs_refire)
-		if(player.BUTTON_ATCK2)
+		if(PHYS_INPUT_BUTTON_ATCK2(player))
 		{
 		    .entity weaponentity = weaponentities[1];
 			wep2a.wr_think(wep2a, self, weaponentity, 2);
@@ -425,7 +425,7 @@ float raptor_frame()
 	{
 		Weapon wep2b = WEP_RAPTOR_FLARE;
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_flare_refire)
-		if(player.BUTTON_ATCK2)
+		if(PHYS_INPUT_BUTTON_ATCK2(player))
 		{
 		    .entity weaponentity = weaponentities[1];
 			wep2b.wr_think(wep2b, self, weaponentity, 2);
@@ -464,7 +464,7 @@ float raptor_frame()
 	if(self.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(player, shield, raptor);
 
-	player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
+	PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = PHYS_INPUT_BUTTON_CROUCH(player) = false;
 
 	setself(player);
 	return 1;
@@ -495,7 +495,7 @@ float raptor_takeoff()
 		raptor.velocity_z = min(raptor.velocity_z * 1.5, 256);
 		self.bomb1.gun1.avelocity_y = 90 + ((raptor.frame / 25) * 25000);
 		self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
-		player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
+		PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = PHYS_INPUT_BUTTON_CROUCH(player) = false;
 
 		setorigin(player, raptor.origin + '0 0 32');
 	}
@@ -521,7 +521,7 @@ float raptor_takeoff()
 	if(self.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(player, shield, raptor);
 
-	player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
+	PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = PHYS_INPUT_BUTTON_CROUCH(player) = false;
 	setself(player);
 	return 1;
 }

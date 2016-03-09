@@ -56,7 +56,7 @@ spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
 
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!actor.BUTTON_ATCK)
+	if (!PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
@@ -101,9 +101,9 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 		METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
 		{
 			if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false);
 		}
 		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

@@ -557,7 +557,7 @@ void PutClientInServer()
 		this.bot_attack = true;
 		this.monster_attack = true;
 
-		this.BUTTON_ATCK = this.BUTTON_JUMP = this.BUTTON_ATCK2 = false;
+		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
 		if (this.killcount == FRAGS_SPECTATOR) {
 			PlayerScore_Clear(this);
@@ -1252,7 +1252,6 @@ void ClientDisconnect ()
 	GetCvars(-1);
 }
 
-.float BUTTON_CHAT;
 void ChatBubbleThink()
 {SELFPARAM();
 	self.nextthink = time;
@@ -1270,7 +1269,7 @@ void ChatBubbleThink()
 	{
 		if ( self.owner.active_minigame )
 			self.mdl = "models/sprites/minigame_busy.iqm";
-		else if ( self.owner.BUTTON_CHAT )
+		else if (PHYS_INPUT_BUTTON_CHAT(self.owner))
 			self.mdl = "models/misc/chatbubble.spr";
 	}
 
@@ -1645,7 +1644,7 @@ void SpectateCopy(entity this, entity spectatee)
 	self.angles = spectatee.v_angle;
 	STAT(FROZEN, self) = STAT(FROZEN, spectatee);
 	self.revive_progress = spectatee.revive_progress;
-	if(!self.BUTTON_USE)
+	if(!PHYS_INPUT_BUTTON_USE(self))
 		self.fixangle = true;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
@@ -1905,12 +1904,12 @@ void PrintWelcomeMessage()
 	if(self.motd_actived_time == 0)
 	{
 		if (autocvar_g_campaign) {
-			if ((IS_PLAYER(self) && self.BUTTON_INFO) || (!IS_PLAYER(self))) {
+			if ((IS_PLAYER(self) && PHYS_INPUT_BUTTON_INFO(self)) || (!IS_PLAYER(self))) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, campaign_message);
 			}
 		} else {
-			if (self.BUTTON_INFO) {
+			if (PHYS_INPUT_BUTTON_INFO(self)) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 			}
@@ -1919,14 +1918,14 @@ void PrintWelcomeMessage()
 	else if(self.motd_actived_time > 0) // showing MOTD or campaign message
 	{
 		if (autocvar_g_campaign) {
-			if (self.BUTTON_INFO)
+			if (PHYS_INPUT_BUTTON_INFO(self))
 				self.motd_actived_time = time;
 			else if ((time - self.motd_actived_time > 2) && IS_PLAYER(self)) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
 				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 			}
 		} else {
-			if (self.BUTTON_INFO)
+			if (PHYS_INPUT_BUTTON_INFO(self))
 				self.motd_actived_time = time;
 			else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
@@ -1936,7 +1935,7 @@ void PrintWelcomeMessage()
 	}
 	else //if(self.motd_actived_time < 0) // just connected, motd is active
 	{
-		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
+		if(PHYS_INPUT_BUTTON_INFO(self)) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
 		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || IS_SPEC(self))
 		{
@@ -1956,21 +1955,21 @@ void ObserverThink()
 	}
 	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
-		if (self.BUTTON_JUMP && !self.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
 				self.classname = STR_SPECTATOR;
 			}
 		} else {
-			prefered_movetype = ((!self.BUTTON_USE ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			prefered_movetype = ((!PHYS_INPUT_BUTTON_USE(self) ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			if (self.movetype != prefered_movetype)
 				self.movetype = prefered_movetype;
 		}
 	} else {
-		if (!(self.BUTTON_ATCK || self.BUTTON_JUMP)) {
+		if (!(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self))) {
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)
 			{
@@ -1990,10 +1989,10 @@ void SpectatorThink()
 			self.impulse = 0;
 	}
 	if (self.flags & FL_JUMPRELEASED) {
-		if (self.BUTTON_JUMP && !self.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209)) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(self) || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
 				self.classname = STR_SPECTATOR;
@@ -2011,7 +2010,7 @@ void SpectatorThink()
 				PutClientInServer();
 			}
 			self.impulse = 0;
-		} else if (self.BUTTON_ATCK2) {
+		} else if (PHYS_INPUT_BUTTON_ATCK2(self)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.classname = STR_OBSERVER;
 			PutClientInServer();
@@ -2020,7 +2019,7 @@ void SpectatorThink()
 				PutObserverInServer();
 		}
 	} else {
-		if (!(self.BUTTON_ATCK || self.BUTTON_ATCK2)) {
+		if (!(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_ATCK2(self))) {
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)
 			{
@@ -2232,9 +2231,9 @@ void PlayerPreThink ()
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
-		if(self.BUTTON_USE && !self.usekeypressed)
+		if(PHYS_INPUT_BUTTON_USE(self) && !self.usekeypressed)
 			PlayerUseKey();
-		self.usekeypressed = self.BUTTON_USE;
+		self.usekeypressed = PHYS_INPUT_BUTTON_USE(self);
 	}
 
 	if(IS_REAL_CLIENT(self))
@@ -2281,7 +2280,7 @@ void PlayerPreThink ()
 				float button_pressed;
 				if(frametime)
 					player_anim();
-				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
+				button_pressed = (PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self));
 
 				if (self.deadflag == DEAD_DYING)
 				{
@@ -2331,7 +2330,7 @@ void PlayerPreThink ()
 
 		self.prevorigin = self.origin;
 
-		float do_crouch = self.BUTTON_CROUCH;
+		float do_crouch = PHYS_INPUT_BUTTON_CROUCH(self);
 		if(self.hook.state)
 			do_crouch = 0;
 		if(self.vehicle)
@@ -2418,10 +2417,10 @@ void PlayerPreThink ()
 	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
 		SetZoomState(
-			self.BUTTON_ZOOM
-			|| self.BUTTON_ZOOMSCRIPT
-			|| (self.BUTTON_ATCK2 && PS(self).m_weapon == WEP_VORTEX)
-			|| (self.BUTTON_ATCK2 && PS(self).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
+			PHYS_INPUT_BUTTON_ZOOM(self)
+			|| PHYS_INPUT_BUTTON_ZOOMSCRIPT(self)
+			|| (PHYS_INPUT_BUTTON_ATCK2(self) && PS(self).m_weapon == WEP_VORTEX)
+			|| (PHYS_INPUT_BUTTON_ATCK2(self) && PS(self).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
 		); // WEAPONTODO
 
 	float oldspectatee_status;

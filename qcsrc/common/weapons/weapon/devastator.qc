@@ -276,7 +276,7 @@ void W_Devastator_Think()
 	{
 		if(self == self.realowner.lastrocket)
 		if(!self.realowner.rl_release)
-		if(!self.BUTTON_ATCK2)
+		if(!PHYS_INPUT_BUTTON_ATCK2(self))
 		if(WEP_CVAR(devastator, guiderate))
 		if(time > self.pushltime)
 		if(!IS_DEAD(self.realowner))
@@ -408,7 +408,7 @@ void W_Devastator_Attack(Weapon thiswep)
 		METHOD(Devastator, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
-			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
@@ -421,21 +421,21 @@ void W_Devastator_Attack(Weapon thiswep)
 					{
 						if(targ != missile.realowner && vlen(targ.origin - missile.origin) < WEP_CVAR(devastator, radius))
 						{
-							self.BUTTON_ATCK2 = true;
+							PHYS_INPUT_BUTTON_ATCK2(self) = true;
 							break;
 						}
 						targ = targ.chain;
 					}
 				}
 
-				if(self.BUTTON_ATCK2) self.BUTTON_ATCK = false;
+				if(PHYS_INPUT_BUTTON_ATCK2(self)) PHYS_INPUT_BUTTON_ATCK(self) = false;
 			}
 		}
 		#else
 		METHOD(Devastator, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
-			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
@@ -490,7 +490,7 @@ void W_Devastator_Attack(Weapon thiswep)
 							if(
 								(v_forward * normalize(it.origin - targ.origin)< 0.1)
 								&& desirabledamage > 0.1*coredamage
-							)self.BUTTON_ATCK2 = true;
+							) PHYS_INPUT_BUTTON_ATCK2(self) = true;
 							targ = targ.chain;
 						}
 					}
@@ -503,19 +503,19 @@ void W_Devastator_Attack(Weapon thiswep)
 							if(IS_PLAYER(self.enemy))
 								if(desirabledamage >= 0.1*coredamage)
 									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
-										self.BUTTON_ATCK2 = true;
+										PHYS_INPUT_BUTTON_ATCK2(self) = true;
 					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
 					}
 				});
 				// if we would be doing at X percent of the core damage, detonate it
 				// but don't fire a new shot at the same time!
 				if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
-					self.BUTTON_ATCK2 = true;
+					PHYS_INPUT_BUTTON_ATCK2(self) = true;
 				if((skill > 6.5) && (selfdamage > self.health))
-					self.BUTTON_ATCK2 = false;
-				//if(self.BUTTON_ATCK2 == true)
+					PHYS_INPUT_BUTTON_ATCK2(self) = false;
+				//if(PHYS_INPUT_BUTTON_ATCK2(self) == true)
 				//	dprint(ftos(desirabledamage),"\n");
-				if(self.BUTTON_ATCK2 == true) self.BUTTON_ATCK = false;
+				if(PHYS_INPUT_BUTTON_ATCK2(self)) PHYS_INPUT_BUTTON_ATCK(self) = false;
 			}
 		}
 		#endif

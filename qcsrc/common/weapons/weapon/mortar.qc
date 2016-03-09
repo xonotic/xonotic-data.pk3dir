@@ -300,13 +300,13 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 		METHOD(Mortar, wr_aim, void(entity thiswep))
 		{
-			self.BUTTON_ATCK = false;
-			self.BUTTON_ATCK2 = false;
+			PHYS_INPUT_BUTTON_ATCK(self) = false;
+			PHYS_INPUT_BUTTON_ATCK2(self) = false;
 			if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
 			{
 				if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
 				{
-					self.BUTTON_ATCK = true;
+					PHYS_INPUT_BUTTON_ATCK(self) = true;
 					if(random() < 0.01) self.bot_secondary_grenademooth = 1;
 				}
 			}
@@ -314,7 +314,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 			{
 				if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
 				{
-					self.BUTTON_ATCK2 = true;
+					PHYS_INPUT_BUTTON_ATCK2(self) = true;
 					if(random() < 0.02) self.bot_secondary_grenademooth = 0;
 				}
 			}

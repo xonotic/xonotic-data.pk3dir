@@ -361,7 +361,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		this.pusher = attacker;
 		this.pushltime = time + autocvar_g_maxpushtime;
-		this.istypefrag = this.BUTTON_CHAT;
+		this.istypefrag = PHYS_INPUT_BUTTON_CHAT(this);
 	}
 	else if(time < this.pushltime)
 	{

@@ -12,6 +12,8 @@
 #include "../common/deathtypes/all.qh"
 #include "../common/util.qh"
 
+#include <common/physics/player.qh>
+
 #include "../common/monsters/all.qh"
 
 #include "../common/weapons/all.qh"
@@ -784,7 +786,7 @@ float Drag(float force_allow_pick, float ischeat)
 		default:
 			if(Drag_IsDragging(self))
 			{
-				if(self.BUTTON_DRAG)
+				if(PHYS_INPUT_BUTTON_DRAG(self))
 				{
 					if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
 					{
@@ -816,7 +818,7 @@ float Drag(float force_allow_pick, float ischeat)
 			else
 			{
 				if(Drag_CanDrag(self))
-					if(self.BUTTON_DRAG)
+					if(PHYS_INPUT_BUTTON_DRAG(self))
 					{
 						crosshair_trace_plusvisibletriggers(self);
 						entity e = trace_ent;

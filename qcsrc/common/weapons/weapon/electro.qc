@@ -411,7 +411,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {SELFPARAM();
 	if(self.electro_count > 1)
-	if(self.BUTTON_ATCK2)
+	if(PHYS_INPUT_BUTTON_ATCK2(self))
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO);
@@ -427,7 +427,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 		METHOD(Electro, wr_aim, void(entity thiswep))
 		{
-			self.BUTTON_ATCK = self.BUTTON_ATCK2 = false;
+			PHYS_INPUT_BUTTON_ATCK(self) = PHYS_INPUT_BUTTON_ATCK2(self) = false;
 			if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
 			if(self.bot_secondary_electromooth == 0)
 			{
@@ -440,7 +440,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 				if(shoot)
 				{
-					self.BUTTON_ATCK = true;
+					PHYS_INPUT_BUTTON_ATCK(self) = true;
 					if(random() < 0.01) self.bot_secondary_electromooth = 1;
 				}
 			}
@@ -448,7 +448,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 			{
 				if(bot_aim(WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
 				{
-					self.BUTTON_ATCK2 = true;
+					PHYS_INPUT_BUTTON_ATCK2(self) = true;
 					if(random() < 0.03) self.bot_secondary_electromooth = 0;
 				}
 			}

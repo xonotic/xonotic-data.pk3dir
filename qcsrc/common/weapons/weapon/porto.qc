@@ -295,11 +295,11 @@ void W_Porto_Attack(float type)
 		METHOD(PortoLaunch, wr_aim, void(entity thiswep))
 		{
 			SELFPARAM();
-			self.BUTTON_ATCK = false;
-			self.BUTTON_ATCK2 = false;
+			PHYS_INPUT_BUTTON_ATCK(self) = false;
+			PHYS_INPUT_BUTTON_ATCK2(self) = false;
 			if(!WEP_CVAR(porto, secondary))
 				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
-					self.BUTTON_ATCK = true;
+					PHYS_INPUT_BUTTON_ATCK(self) = true;
 		}
 		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

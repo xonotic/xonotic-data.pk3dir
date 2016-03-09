@@ -178,7 +178,7 @@ float bumblebee_gunner_frame()
 						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
 
 	if(!forbidWeaponUse(gunner))
-	if(gunner.BUTTON_ATCK)
+	if(PHYS_INPUT_BUTTON_ATCK(gunner))
 		if(time > gun.attack_finished_single[0])
 			if(gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
 			{
@@ -202,7 +202,7 @@ float bumblebee_gunner_frame()
 		UpdateAuxiliaryXhair(vehic.owner, trace_endpos, ('1 0 0' * gunner.vehicle_reload1) + ('0 1 0' *(1 - gunner.vehicle_reload1)), ((gunner == vehic.gunner1) ? 1 : 2));
 
 	vehic.solid = SOLID_BBOX;
-	gunner.BUTTON_ATCK = gunner.BUTTON_ATCK2 = gunner.BUTTON_CROUCH = 0;
+	PHYS_INPUT_BUTTON_ATCK(gunner) = PHYS_INPUT_BUTTON_ATCK2(gunner) = PHYS_INPUT_BUTTON_CROUCH(gunner) = false;
 	gunner.vehicle_energy = (gun.vehicle_energy / autocvar_g_vehicle_bumblebee_cannon_ammo) * 100;
 
 	setself(gunner);
@@ -436,7 +436,7 @@ float bumblebee_pilot_frame()
 	if(IS_DEAD(vehic))
 	{
 		setself(pilot);
-		pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = 0;
+		PHYS_INPUT_BUTTON_ATCK(pilot) = PHYS_INPUT_BUTTON_ATCK2(pilot) = false;
 		return 1;
 	}
 
@@ -504,9 +504,9 @@ float bumblebee_pilot_frame()
 			vehic.angles_z = 0;
 	}
 
-	if(pilot.BUTTON_CROUCH)
+	if(PHYS_INPUT_BUTTON_CROUCH(pilot))
 		newvel -=   v_up * autocvar_g_vehicle_bumblebee_speed_down;
-	else if(pilot.BUTTON_JUMP)
+	else if(PHYS_INPUT_BUTTON_JUMP(pilot))
 		newvel +=  v_up * autocvar_g_vehicle_bumblebee_speed_up;
 
 	vehic.velocity  += newvel * frametime;
@@ -550,7 +550,7 @@ float bumblebee_pilot_frame()
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
 
 	if(!forbidWeaponUse(pilot))
-	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
+	if((PHYS_INPUT_BUTTON_ATCK(pilot) || PHYS_INPUT_BUTTON_ATCK2(pilot)) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
 	{
 		vehic.gun3.enemy.realowner = pilot;
 		vehic.gun3.enemy.effects &= ~EF_NODRAW;
@@ -633,7 +633,7 @@ float bumblebee_pilot_frame()
 	vehic.angles_x *= -1;
 	setorigin(pilot, vehic.origin + v_up * 48 + v_forward * 160);
 
-	pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = pilot.BUTTON_CROUCH = 0;
+	PHYS_INPUT_BUTTON_ATCK(pilot) = PHYS_INPUT_BUTTON_ATCK2(pilot) = PHYS_INPUT_BUTTON_CROUCH(pilot) = false;
 	setself(pilot);
 
 	return 1;

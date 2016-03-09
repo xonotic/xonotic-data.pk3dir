@@ -66,7 +66,7 @@ void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pFor
 
 	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
-	if(self.BUTTON_ZOOM | self.BUTTON_ZOOMSCRIPT) // if zoomed, shoot from the eye
+	if(PHYS_INPUT_BUTTON_ZOOM(self) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(self)) // if zoomed, shoot from the eye
 	{
 		w_shotdir = v_forward;
 		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
@@ -140,15 +140,15 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFR
 
 		METHOD(Rifle, wr_aim, void(entity thiswep))
 		{
-			self.BUTTON_ATCK=false;
-			self.BUTTON_ATCK2=false;
+			PHYS_INPUT_BUTTON_ATCK(self) = false;
+			PHYS_INPUT_BUTTON_ATCK2(self) = false;
 			if(vdist(self.origin - self.enemy.origin, >, 1000))
 				self.bot_secondary_riflemooth = 0;
 			if(self.bot_secondary_riflemooth == 0)
 			{
 				if(bot_aim(1000000, 0, 0.001, false))
 				{
-					self.BUTTON_ATCK = true;
+					PHYS_INPUT_BUTTON_ATCK(self) = true;
 					if(random() < 0.01) self.bot_secondary_riflemooth = 1;
 				}
 			}
@@ -156,7 +156,7 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFR
 			{
 				if(bot_aim(1000000, 0, 0.001, false))
 				{
-					self.BUTTON_ATCK2 = true;
+					PHYS_INPUT_BUTTON_ATCK2(self) = true;
 					if(random() < 0.03) self.bot_secondary_riflemooth = 0;
 				}
 			}

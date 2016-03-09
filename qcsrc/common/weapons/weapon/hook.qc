@@ -255,7 +255,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 				actor.hook_time_fueldecrease = time + WEP_CVAR_PRI(hook, hooked_time_free);
 			}
 
-			actor.hook_state = BITSET(actor.hook_state, HOOK_PULLING, (!actor.BUTTON_CROUCH || !autocvar_g_balance_grapplehook_crouchslide));
+			actor.hook_state = BITSET(actor.hook_state, HOOK_PULLING, (!PHYS_INPUT_BUTTON_CROUCH(actor) || !autocvar_g_balance_grapplehook_crouchslide));
 
 			if (actor.hook_state & HOOK_FIRING)
 			{

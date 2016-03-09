@@ -309,9 +309,9 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 
 	bool stopped = loaded || !enough_ammo;
 
-	if(self.BUTTON_ATCK2)
+	if(PHYS_INPUT_BUTTON_ATCK2(self))
 	{
-		if(self.BUTTON_ATCK && WEP_CVAR_SEC(hagar, load_abort))
+		if(PHYS_INPUT_BUTTON_ATCK(self) && WEP_CVAR_SEC(hagar, load_abort))
 		{
 			if(self.hagar_load)
 			{
@@ -375,7 +375,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 		}
 
 		// release if player let go of button or if they've held it in too long
-		if(!self.BUTTON_ATCK2 || (stopped && self.hagar_loadstep < time && WEP_CVAR_SEC(hagar, load_hold) >= 0))
+		if(!PHYS_INPUT_BUTTON_ATCK2(self) || (stopped && self.hagar_loadstep < time && WEP_CVAR_SEC(hagar, load_hold) >= 0))
 		{
 			self.(weaponentity).state = WS_READY;
 			W_Hagar_Attack2_Load_Release(weaponentity);
@@ -400,9 +400,9 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 		METHOD(Hagar, wr_aim, void(entity thiswep))
 		{
 			if(random()>0.15)
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 			else // not using secondary_speed since these are only 15% and should cause some ricochets without re-aiming
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_PRI(hagar, speed), 0, WEP_CVAR_PRI(hagar, lifetime), false);
 		}
 		METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

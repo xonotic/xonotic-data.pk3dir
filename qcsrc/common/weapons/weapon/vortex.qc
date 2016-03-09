@@ -213,11 +213,11 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 		METHOD(Vortex, wr_aim, void(entity thiswep))
 		{
 			if(bot_aim(1000000, 0, 1, false))
-				self.BUTTON_ATCK = true;
+				PHYS_INPUT_BUTTON_ATCK(self) = true;
 			else
 			{
 				if(WEP_CVAR(vortex, charge))
-					self.BUTTON_ATCK2 = true;
+					PHYS_INPUT_BUTTON_ATCK2(self) = true;
 			}
 		}
 		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -245,7 +245,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
 					}
 				}
-				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (actor.BUTTON_ZOOM | actor.BUTTON_ZOOMSCRIPT) : (fire & 2))
+				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
 				{
 					if(WEP_CVAR(vortex, charge))
 					{

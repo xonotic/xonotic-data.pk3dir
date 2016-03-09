@@ -152,7 +152,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 
 		METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep))
 		{
-			self.BUTTON_ATCK = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 		}
 		METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

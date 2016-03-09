@@ -919,7 +919,7 @@ float kh_CheckPlayers(float num)
 		float t_team = kh_Team_ByID(num);
 		float players = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == t_team)
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == t_team)
 				++players;
 		));
 
@@ -1005,7 +1005,7 @@ void kh_StartRound()  // runs at the start of each round
 		players = 0;
 		entity my_player = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == teem)
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
 			{
 				++players;
 				if(random() * players <= 1)

@@ -571,9 +571,9 @@ void W_Crylink_Attack2(Weapon thiswep)
 		{
 			SELFPARAM();
 			if(random() < 0.10)
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
 		}
 		METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

@@ -312,7 +312,7 @@ void W_Arc_Beam_Think()
 
 
 	float burst = 0;
-	if( (self.owner.BUTTON_ATCK2 && !WEP_CVAR(arc, bolt)) || self.beam_bursting)
+	if( (PHYS_INPUT_BUTTON_ATCK2(self.owner) && !WEP_CVAR(arc, bolt)) || self.beam_bursting)
 	{
 		if(!self.beam_bursting)
 			self.beam_bursting = true;
@@ -330,7 +330,7 @@ void W_Arc_Beam_Think()
 		||
 		gameover
 		||
-		(!self.owner.BUTTON_ATCK && !burst )
+		(!PHYS_INPUT_BUTTON_ATCK(self.owner) && !burst )
 		||
 		STAT(FROZEN, self.owner)
 		||
@@ -700,7 +700,7 @@ void Arc_Smoke()
 	{
 		if ( random() < self.arc_heat_percent )
 			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
-		if ( self.BUTTON_ATCK || self.BUTTON_ATCK2 )
+		if ( PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_ATCK2(self) )
 		{
 			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
 			if ( !self.arc_smoke_sound )
@@ -719,7 +719,7 @@ void Arc_Smoke()
 	}
 
 	if (  self.arc_smoke_sound && ( self.arc_overheat <= time ||
-		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || PS(self).m_switchweapon != WEP_ARC )
+		!( PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_ATCK2(self) ) ) || PS(self).m_switchweapon != WEP_ARC )
 	{
 		self.arc_smoke_sound = 0;
 		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
@@ -731,7 +731,7 @@ void Arc_Smoke()
 			SELFPARAM();
 			if(WEP_CVAR(arc, beam_botaimspeed))
 			{
-				self.BUTTON_ATCK = bot_aim(
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(
 					WEP_CVAR(arc, beam_botaimspeed),
 					0,
 					WEP_CVAR(arc, beam_botaimlifetime),
@@ -740,7 +740,7 @@ void Arc_Smoke()
 			}
 			else
 			{
-				self.BUTTON_ATCK = bot_aim(
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(
 					1000000,
 					0,
 					0.001,

@@ -755,7 +755,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 			// set pusher so self gets the kill if they fall into void
 			closest.pusher = self;
 			closest.pushltime = time + autocvar_g_maxpushtime;
-			closest.istypefrag = closest.BUTTON_CHAT;
+			closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
 
 			Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
 			Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
