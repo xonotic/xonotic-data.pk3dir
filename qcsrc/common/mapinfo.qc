@@ -10,11 +10,6 @@
     #include "mapinfo.qh"
 #endif
 
-bool autocvar_developer_mapper;
-
-#define LOG_MAPWARN(...) MACRO_BEGIN { if (autocvar_developer_mapper) LOG_WARNING(__VA_ARGS__); } MACRO_END
-#define LOG_MAPWARNF(...) MACRO_BEGIN { if (autocvar_developer_mapper) LOG_WARNINGF(__VA_ARGS__); } MACRO_END
-
 // generic string stuff
 
 int _MapInfo_Cache_Active;
