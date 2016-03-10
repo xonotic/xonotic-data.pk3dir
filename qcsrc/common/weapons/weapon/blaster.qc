@@ -237,12 +237,12 @@ METHOD(Blaster, wr_checkammo2, bool(entity thiswep))
     return true; // blaster has infinite ammo
 }
 
-METHOD(Blaster, wr_suicidemessage, int(entity thiswep))
+METHOD(Blaster, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_BLASTER_SUICIDE;
 }
 
-METHOD(Blaster, wr_killmessage, int(entity thiswep))
+METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_BLASTER_MURDER;
 }

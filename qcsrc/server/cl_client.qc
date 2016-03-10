@@ -894,7 +894,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.killindicator.colormod = Team_ColorRGB(targetteam);
 			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, APP_TEAM_NUM_4(targetteam, CENTER_TEAMCHANGE_), self.killindicator.cnt);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, APP_TEAM_NUM(targetteam, CENTER_TEAMCHANGE), self.killindicator.cnt);
 		}
 	}
 
@@ -1051,7 +1051,7 @@ void ClientConnect()
 
 	this.netname_previous = strzone(this.netname);
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_ENT_4(this, INFO_JOIN_CONNECT_TEAM_) : INFO_JOIN_CONNECT), this.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_ENT(this, INFO_JOIN_CONNECT_TEAM) : INFO_JOIN_CONNECT), this.netname);
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1748,11 +1748,11 @@ void LeaveSpectatorMode()
 			if(autocvar_g_campaign)
 				{ campaign_bots_may_start = 1; }
 
-			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
 
 			PutClientInServer();
 
-			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname); }
+			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname); }
 		}
 		else
 			stuffcmd(self, "menu_showteamselect\n");
@@ -1845,14 +1845,14 @@ void PrintWelcomeMessage()
 				self.motd_actived_time = time;
 			else if ((time - self.motd_actived_time > 2) && IS_PLAYER(self)) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 			}
 		} else {
 			if (PHYS_INPUT_BUTTON_INFO(self))
 				self.motd_actived_time = time;
 			else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 			}
 		}
 	}
@@ -1864,7 +1864,7 @@ void PrintWelcomeMessage()
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 		}
 	}
 }
@@ -2429,7 +2429,7 @@ void PlayerPostThink ()
 			if(self.idlekick_lasttimeleft)
 			{
 				self.idlekick_lasttimeleft = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_IDLING);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_IDLING);
 			}
 		}
 		else

@@ -52,7 +52,7 @@ void instagib_stop_countdown(entity e)
 {
 	if (!e.instagib_needammo)
 		return;
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_INSTAGIB_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_INSTAGIB_FINDAMMO);
 	e.instagib_needammo = false;
 }
 void instagib_ammocheck()

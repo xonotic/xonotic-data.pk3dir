@@ -455,11 +455,11 @@ METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponen
 
     W_Reload(self, used_ammo, SND(RELOAD));
 }
-METHOD(Vaporizer, wr_suicidemessage, int(entity thiswep))
+METHOD(Vaporizer, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
-METHOD(Vaporizer, wr_killmessage, int(entity thiswep))
+METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_VAPORIZER_MURDER;
 }

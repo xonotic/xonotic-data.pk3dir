@@ -311,11 +311,11 @@ METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponenti
 {
     W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
 }
-METHOD(Shotgun, wr_suicidemessage, int(entity thiswep))
+METHOD(Shotgun, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
-METHOD(Shotgun, wr_killmessage, int(entity thiswep))
+METHOD(Shotgun, wr_killmessage, Notification(entity thiswep))
 {
     if(w_deathtype & HITTYPE_SECONDARY)
         return WEAPON_SHOTGUN_MURDER_SLAP;

@@ -464,7 +464,7 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 METHOD(Tuba, wr_checkammo1, bool(Tuba this)) { return true; }
 METHOD(Tuba, wr_checkammo2, bool(Tuba this)) { return true; }
 
-METHOD(Tuba, wr_suicidemessage, int(Tuba this))
+METHOD(Tuba, wr_suicidemessage, Notification(Tuba this))
 {
 	if (w_deathtype & HITTYPE_BOUNCE)
 		return WEAPON_KLEINBOTTLE_SUICIDE;
@@ -473,7 +473,7 @@ METHOD(Tuba, wr_suicidemessage, int(Tuba this))
 	else
 		return WEAPON_TUBA_SUICIDE;
 }
-METHOD(Tuba, wr_killmessage, int(Tuba this))
+METHOD(Tuba, wr_killmessage, Notification(Tuba this))
 {
 	if (w_deathtype & HITTYPE_BOUNCE)
 		return WEAPON_KLEINBOTTLE_MURDER;

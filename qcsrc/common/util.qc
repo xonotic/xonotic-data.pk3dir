@@ -5,7 +5,7 @@
     #include "constants.qh"
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
-    #include "notifications.qh"
+    #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -13,7 +13,7 @@
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
 	#include "../server/mutators/events.qh"
-    #include "notifications.qh"
+    #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
     #include "mapinfo.qh"
 #endif
@@ -1489,9 +1489,10 @@ void dedicated_print(string input) // print(), but only print if the server is n
 #endif
 
 #ifndef MENUQC
-float Announcer_PickNumber(float type, float num)
+Notification Announcer_PickNumber(int type, int num)
 {
-	switch(type)
+    return = NULL;
+	switch (type)
 	{
 		case CNT_GAMESTART:
 		{
@@ -1596,7 +1597,6 @@ float Announcer_PickNumber(float type, float num)
 			break;
 		}
 	}
-	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif
 

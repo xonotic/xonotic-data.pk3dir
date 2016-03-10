@@ -24,7 +24,7 @@
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/physics/player.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
@@ -1532,7 +1532,7 @@ void NextLevel()
 	PlayerStats_GameReport(true);
 	WeaponStats_Shutdown();
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_Null); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");

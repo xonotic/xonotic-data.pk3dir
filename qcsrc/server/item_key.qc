@@ -2,7 +2,7 @@
 
 #include "../common/triggers/subs.qh"
 #include "../common/monsters/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/util.qh"
 #include "../lib/warpzone/util_server.qh"
 

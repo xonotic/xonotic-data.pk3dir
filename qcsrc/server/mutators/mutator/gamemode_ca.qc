@@ -120,8 +120,8 @@ float CA_CheckWinner()
 	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
@@ -154,14 +154,14 @@ bool CA_CheckTeams()
 	if(CA_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return false;
 	}

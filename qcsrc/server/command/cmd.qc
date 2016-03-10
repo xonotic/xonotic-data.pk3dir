@@ -21,7 +21,7 @@
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -179,8 +179,8 @@ void ClientCommand_join(float request)
 						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
 						self.classname = STR_PLAYER;
 						PlayerScore_Clear(self);
-						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && self.team != -1) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname);
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && self.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname);
 						PutClientInServer();
 					}
 					else

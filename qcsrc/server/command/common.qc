@@ -4,7 +4,7 @@
 #include "../scores.qh"
 
 #include <common/monsters/all.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <lib/warpzone/common.qh>
 
 

@@ -295,11 +295,7 @@ METHOD(Hook, wr_resetplayer, void(entity thiswep))
     self.hook_time = 0;
     self.hook_refire = time;
 }
-METHOD(Hook, wr_suicidemessage, int(entity thiswep))
-{
-    return false;
-}
-METHOD(Hook, wr_killmessage, int(entity thiswep))
+METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_HOOK_MURDER;
 }

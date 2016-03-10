@@ -713,11 +713,11 @@ METHOD(Shockwave, wr_checkammo2, bool(entity thiswep))
     // shockwave has infinite ammo
     return true;
 }
-METHOD(Shockwave, wr_suicidemessage, int(entity thiswep))
+METHOD(Shockwave, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
-METHOD(Shockwave, wr_killmessage, int(entity thiswep))
+METHOD(Shockwave, wr_killmessage, Notification(entity thiswep))
 {
     if(w_deathtype & HITTYPE_SECONDARY)
         return WEAPON_SHOCKWAVE_MURDER_SLAP;

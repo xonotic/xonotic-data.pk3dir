@@ -499,7 +499,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_PICKUP_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_PICKUP), player.netname);
 
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
@@ -608,7 +608,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 			first = false;
 		}
 
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(teem, INFO_KEYHUNT_CAPTURE_), keyowner);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(teem, INFO_KEYHUNT_CAPTURE), keyowner);
 
 	first = true;
 	midpoint = '0 0 0';
@@ -717,7 +717,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		}
 	}
 
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(lostkey, INFO_KEYHUNT_LOST), lostkey.kh_previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
@@ -772,7 +772,7 @@ void kh_Key_Think()  // runs all the time
 				else
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
 			else
-				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM_4(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE_));
+				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
 		));
 	}
 
@@ -830,7 +830,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.kh_worldkeynext = kh_worldkeylist;
 	kh_worldkeylist = key;
 
-	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM_4(initial_owner.team, CENTER_KEYHUNT_START_));
+	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM(initial_owner.team, CENTER_KEYHUNT_START));
 
 	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
@@ -873,7 +873,7 @@ void kh_Key_DropOne(entity key)
 
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_DROP_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_DROP), player.netname);
 
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
@@ -899,7 +899,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 		{
 			kh_Scores_Event(player, key, "losekey", 0, 0);
 			PlayerScore_Add(player, SP_KH_LOSSES, 1);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_LOST_), player.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_LOST), player.netname);
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
 			key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, false);
@@ -943,7 +943,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	if(KH_READY_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
@@ -953,7 +953,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		if(player_count == 0)
 		{
 			if(prev_missing_teams_mask > 0)
-				Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+				Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 			prev_missing_teams_mask = -1;
 		}
 		else
@@ -973,8 +973,8 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	kh_tracking_enabled = true;
 }
@@ -996,8 +996,8 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	for(i = 0; i < kh_teams; ++i)
 	{

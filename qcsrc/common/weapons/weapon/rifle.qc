@@ -216,11 +216,11 @@ METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity
 {
     W_Reload(self, min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND(RELOAD));
 }
-METHOD(Rifle, wr_suicidemessage, int(entity thiswep))
+METHOD(Rifle, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_THINKING_WITH_PORTALS;
 }
-METHOD(Rifle, wr_killmessage, int(entity thiswep))
+METHOD(Rifle, wr_killmessage, Notification(entity thiswep))
 {
     if(w_deathtype & HITTYPE_SECONDARY)
     {

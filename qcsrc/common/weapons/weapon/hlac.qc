@@ -250,11 +250,11 @@ METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity)
 {
     W_Reload(self, min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND(RELOAD));
 }
-METHOD(HLAC, wr_suicidemessage, int(entity thiswep))
+METHOD(HLAC, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_HLAC_SUICIDE;
 }
-METHOD(HLAC, wr_killmessage, int(entity thiswep))
+METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_HLAC_MURDER;
 }

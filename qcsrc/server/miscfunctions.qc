@@ -13,7 +13,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"

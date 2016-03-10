@@ -553,11 +553,11 @@ METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponen
 {
     W_Reload(self, WEP_CVAR(minelayer, ammo), SND(RELOAD));
 }
-METHOD(MineLayer, wr_suicidemessage, int(entity thiswep))
+METHOD(MineLayer, wr_suicidemessage, Notification(entity thiswep))
 {
     return WEAPON_MINELAYER_SUICIDE;
 }
-METHOD(MineLayer, wr_killmessage, int(entity thiswep))
+METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_MINELAYER_MURDER;
 }
