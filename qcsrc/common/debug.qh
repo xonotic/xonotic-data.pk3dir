@@ -1,5 +1,4 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#pragma once
 
 #ifndef MENUQC
 .bool debug;
@@ -32,9 +31,10 @@ REGISTER_NET_TEMP(net_debug)
 		WriteHeader(channel, net_debug);
 		WriteShort(channel, etof(this));
 		WriteByte(channel, is_pure(this));
-		WriteCoord(channel, this.origin.x);
-		WriteCoord(channel, this.origin.y);
-		WriteCoord(channel, this.origin.z);
+		vector o = this.origin;
+		if (o == '0 0 0') // brushes
+		    o = (this.absmin + this.absmax) / 2;
+		WriteCoord(channel, o.x); WriteCoord(channel, o.y); WriteCoord(channel, o.z);
 		WriteString(channel, this.classname);
 		WriteString(channel, this.sourceLoc);
 		return true;
@@ -42,6 +42,15 @@ REGISTER_NET_TEMP(net_debug)
 #endif
 
 #ifndef MENUQC
+/**
+ * 0: off
+ * 1: on
+ * 2: on (pure)
+ * 3: on (.entnum != 0)
+ * 4: on (.origin == '0 0 0')
+ * 5: on (.debug != 0), server only
+ * 6: on (.solid != 0)
+ */
 bool autocvar_debugdraw;
 #endif
 
@@ -73,7 +82,11 @@ bool autocvar_debugdraw;
 				{
 					if (e.origin) continue;
 				}
-				else if (autocvar_debugdraw > 4)
+				if (autocvar_debugdraw == 5)
+                {
+                    if (!e.debug) continue;
+                }
+				else if (autocvar_debugdraw > 5)
 				{
 					bool flag = true;
 					do {
@@ -169,8 +182,8 @@ GENERIC_COMMAND(bufstr_get, "Examine a string buffer object")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-		    int bufhandle = stof(argv(1));
-		    int string_index = stof(argv(2));
+			int bufhandle = stof(argv(1));
+			int string_index = stof(argv(2));
 			string s = bufstr_get(bufhandle, string_index);
 			LOG_INFOF("%s\n", s);
 			return;
@@ -203,4 +216,57 @@ GENERIC_COMMAND(version, "Print the current version")
 	}
 }
 
+REGISTER_STAT(TRACE_ENT, int)
+#ifdef SVQC
+bool autocvar_debugtrace;
+
+REGISTER_MUTATOR(trace, autocvar_debugtrace);
+
+.bool debug_trace_button;
+.int solid_prev;
+MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
+{
+	FOREACH_CLIENT(true, {
+		bool skip = false;
+		bool btn = PHYS_INPUT_BUTTON_HOOK(it);
+		if (btn == it.debug_trace_button) skip = true;
+		it.debug_trace_button = btn;
+		if (!btn || skip) continue;
+		FOREACH_ENTITY(true, {
+		    it.solid_prev = it.solid;
+			it.solid = SOLID_BBOX;
+		});
+		vector forward; vector right; vector up;
+		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
+		vector pos = it.origin + it.view_ofs;
+		traceline(pos, pos + forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, it);
+		FOREACH_ENTITY(true, {
+		    it.solid = it.solid_prev;
+            it.solid_prev = 0;
+		});
+		entity e = trace_ent;
+		int i = etof(e);
+		STAT(TRACE_ENT, it) = i;
+		if (!e) continue;
+		setorigin(e, e.origin + '0 0 100');
+		stuffcmd(it, sprintf("prvm_edict server %d\n", i));
+	});
+}
+#endif
+#ifdef CSQC
+entity TRACE_ENT;
+void Trace_draw2d(entity this)
+{
+	int e = STAT(TRACE_ENT);
+	if (!e) return;
+	vector pos = '0 0 0';
+	pos.y += vid_conheight / 2;
+	drawstring(pos, sprintf("prvm_edict server %d", e), '10 10 0', '1 1 1', 1, DRAWFLAG_NORMAL);
+}
+
+STATIC_INIT(TRACE_ENT)
+{
+	entity e = TRACE_ENT = new_pure(TRACE_ENT);
+	e.draw2d = Trace_draw2d;
+}
 #endif
