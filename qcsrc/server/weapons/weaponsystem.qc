@@ -427,7 +427,7 @@ void W_WeaponFrame(entity actor)
 		if (actor.(weaponentity).state != WS_CLEAR)
 		{
 			Weapon wpn = PS(actor).m_weapon;
-			w_ready(wpn, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+			w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			return;
 		}
 	}
@@ -533,7 +533,7 @@ void W_WeaponFrame(entity actor)
 
 		bool block_weapon = false;
 		{
-			bool key_pressed = actor.BUTTON_HOOK && !actor.vehicle;
+			bool key_pressed = PHYS_INPUT_BUTTON_HOOK(actor) && !actor.vehicle;
 			Weapon off = actor.offhand;
 			if (off && !(actor.weapons & WEPSET(HOOK)))
 			{
@@ -545,7 +545,7 @@ void W_WeaponFrame(entity actor)
 					W_SwitchWeapon(WEP_HOOK);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
-				block_weapon = (PS(actor).m_weapon == h && (actor.BUTTON_ATCK || key_pressed));
+				block_weapon = (PS(actor).m_weapon == h && (PHYS_INPUT_BUTTON_ATCK(actor) || key_pressed));
 				h.wr_think(h, actor, weaponentity, block_weapon ? 1 : 0);
 			}
 		}
@@ -559,7 +559,7 @@ void W_WeaponFrame(entity actor)
 			if (w)
 			{
 				Weapon e = PS(actor).m_weapon;
-				e.wr_think(e, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+				e.wr_think(e, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
 			else
 			{
@@ -577,7 +577,7 @@ void W_WeaponFrame(entity actor)
 				v_up = up;
 				Weapon wpn = PS(actor).m_weapon;
 				this.weapon_think(wpn, actor, weaponentity,
-					(actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+					PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
 			else
 			{
@@ -681,7 +681,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	// ATTACK_FINISHED(actor, slot) -= actor.reload_time - 1;
 
 	Weapon wpn = Weapons_from(PS(actor).m_weapon.m_id);
-	w_ready(wpn, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
 void W_Reload(entity actor, float sent_ammo_min, string sent_sound)

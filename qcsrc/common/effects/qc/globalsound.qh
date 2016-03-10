@@ -23,8 +23,6 @@ STATIC_INIT(PlayerSounds_renumber)
 }
 REGISTRY_CHECK(PlayerSounds)
 
-// TODO implement fall and falling
-
 REGISTER_PLAYERSOUND(death)
 REGISTER_PLAYERSOUND(drown)
 REGISTER_PLAYERSOUND(fall)

@@ -582,7 +582,8 @@ void Item_RespawnThink()
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if (Item_ItemsTime_Allow(e.itemdef) || e.weapons & WEPSET_SUPERWEAPONS)
+	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
+	if ((Item_ItemsTime_Allow(e.itemdef) || e.weapons & WEPSET_SUPERWEAPONS) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -615,7 +616,7 @@ void Item_ScheduleRespawn(entity e)
 void Item_ScheduleInitialRespawn(entity e)
 {
 	Item_Show(e, 0);
-	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
+	Item_ScheduleRespawnIn(e, game_starttime - time + ((e.respawntimestart) ? e.respawntimestart : ITEM_RESPAWNTIME_INITIAL(e)));
 }
 
 float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
@@ -902,7 +903,6 @@ void Item_FindTeam()
 }
 
 // Savage: used for item garbage-collection
-// TODO: perhaps nice special effect?
 void RemoveItem()
 {SELFPARAM();
 	if(wasfreed(self) || !self) { return; }

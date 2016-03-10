@@ -567,123 +567,123 @@ void W_Crylink_Attack2(Weapon thiswep)
 	}
 }
 
-		METHOD(Crylink, wr_aim, void(entity thiswep))
-		{
-			SELFPARAM();
-			if(random() < 0.10)
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
-			else
-				self.BUTTON_ATCK2 = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
-		}
-		METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(autocvar_g_balance_crylink_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
-				thiswep.wr_reload(thiswep, actor, weaponentity);
-			}
+METHOD(Crylink, wr_aim, void(entity thiswep))
+{
+    SELFPARAM();
+    if(random() < 0.10)
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
+    else
+        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
+}
+METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(autocvar_g_balance_crylink_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo))) { // forced reload
+        thiswep.wr_reload(thiswep, actor, weaponentity);
+    }
 
-			if(fire & 1)
-			{
-				if(actor.crylink_waitrelease != 1)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(crylink, refire)))
-				{
-					W_Crylink_Attack(thiswep);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
-				}
-			}
+    if(fire & 1)
+    {
+        if(actor.crylink_waitrelease != 1)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(crylink, refire)))
+        {
+            W_Crylink_Attack(thiswep);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
+        }
+    }
 
-			if((fire & 2) && autocvar_g_balance_crylink_secondary)
-			{
-				if(actor.crylink_waitrelease != 2)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(crylink, refire)))
-				{
-					W_Crylink_Attack2(thiswep);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
-				}
-			}
+    if((fire & 2) && autocvar_g_balance_crylink_secondary)
+    {
+        if(actor.crylink_waitrelease != 2)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(crylink, refire)))
+        {
+            W_Crylink_Attack2(thiswep);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
+        }
+    }
 
-			if((actor.crylink_waitrelease == 1 && !(fire & 1)) || (actor.crylink_waitrelease == 2 && !(fire & 2)))
-			{
-				if(!actor.crylink_lastgroup || time > actor.crylink_lastgroup.teleport_time)
-				{
-					// fired and released now!
-					if(actor.crylink_lastgroup)
-					{
-						vector pos;
-						entity linkjoineffect;
-						float isprimary = (actor.crylink_waitrelease == 1);
+    if((actor.crylink_waitrelease == 1 && !(fire & 1)) || (actor.crylink_waitrelease == 2 && !(fire & 2)))
+    {
+        if(!actor.crylink_lastgroup || time > actor.crylink_lastgroup.teleport_time)
+        {
+            // fired and released now!
+            if(actor.crylink_lastgroup)
+            {
+                vector pos;
+                entity linkjoineffect;
+                float isprimary = (actor.crylink_waitrelease == 1);
 
-						pos = W_Crylink_LinkJoin(actor.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
+                pos = W_Crylink_LinkJoin(actor.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
 
-						linkjoineffect = new(linkjoineffect);
-						linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
-						linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
-						linkjoineffect.owner = actor;
-						setorigin(linkjoineffect, pos);
-					}
-					actor.crylink_waitrelease = 0;
-					if(!thiswep.wr_checkammo1(thiswep) && !thiswep.wr_checkammo2(thiswep))
-					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
-					{
-						// ran out of ammo!
-						actor.cnt = WEP_CRYLINK.m_id;
-						PS(actor).m_switchweapon = w_getbestweapon(actor);
-					}
-				}
-			}
-		}
-		METHOD(Crylink, wr_checkammo1, bool(entity thiswep))
-		{
-			SELFPARAM();
-			// don't "run out of ammo" and switch weapons while waiting for release
-			if(self.crylink_lastgroup && self.crylink_waitrelease)
-				return true;
+                linkjoineffect = new(linkjoineffect);
+                linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
+                linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
+                linkjoineffect.owner = actor;
+                setorigin(linkjoineffect, pos);
+            }
+            actor.crylink_waitrelease = 0;
+            if(!thiswep.wr_checkammo1(thiswep) && !thiswep.wr_checkammo2(thiswep))
+            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+            {
+                // ran out of ammo!
+                actor.cnt = WEP_CRYLINK.m_id;
+                PS(actor).m_switchweapon = w_getbestweapon(actor);
+            }
+        }
+    }
+}
+METHOD(Crylink, wr_checkammo1, bool(entity thiswep))
+{
+    SELFPARAM();
+    // don't "run out of ammo" and switch weapons while waiting for release
+    if(self.crylink_lastgroup && self.crylink_waitrelease)
+        return true;
 
-			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
-			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
-			return ammo_amount;
-		}
-		METHOD(Crylink, wr_checkammo2, bool(entity thiswep))
-		{
-			SELFPARAM();
-			// don't "run out of ammo" and switch weapons while waiting for release
-			if(self.crylink_lastgroup && self.crylink_waitrelease)
-				return true;
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
+    ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
+    return ammo_amount;
+}
+METHOD(Crylink, wr_checkammo2, bool(entity thiswep))
+{
+    SELFPARAM();
+    // don't "run out of ammo" and switch weapons while waiting for release
+    if(self.crylink_lastgroup && self.crylink_waitrelease)
+        return true;
 
-			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
-			ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
-			return ammo_amount;
-		}
-		METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
-			W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND(RELOAD));
-		}
-		METHOD(Crylink, wr_suicidemessage, Notification(entity thiswep))
-		{
-			return WEAPON_CRYLINK_SUICIDE;
-		}
-		METHOD(Crylink, wr_killmessage, Notification(entity thiswep))
-		{
-			return WEAPON_CRYLINK_MURDER;
-		}
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
+    ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
+    return ammo_amount;
+}
+METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND(RELOAD));
+}
+METHOD(Crylink, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_CRYLINK_SUICIDE;
+}
+METHOD(Crylink, wr_killmessage, Notification(entity thiswep))
+{
+    return WEAPON_CRYLINK_MURDER;
+}
 #endif
 #ifdef CSQC
-		METHOD(Crylink, wr_impacteffect, void(entity thiswep))
-		{
-			SELFPARAM();
-			vector org2;
-			org2 = w_org + w_backoff * 2;
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				pointparticles(EFFECT_CRYLINK_IMPACT2, org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, SND_CRYLINK_IMPACT2, VOL_BASE, ATTN_NORM);
-			}
-			else
-			{
-				pointparticles(EFFECT_CRYLINK_IMPACT, org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, SND_CRYLINK_IMPACT, VOL_BASE, ATTN_NORM);
-			}
-		}
+METHOD(Crylink, wr_impacteffect, void(entity thiswep))
+{
+    SELFPARAM();
+    vector org2;
+    org2 = w_org + w_backoff * 2;
+    if(w_deathtype & HITTYPE_SECONDARY)
+    {
+        pointparticles(EFFECT_CRYLINK_IMPACT2, org2, '0 0 0', 1);
+        if(!w_issilent)
+            sound(self, CH_SHOTS, SND_CRYLINK_IMPACT2, VOL_BASE, ATTN_NORM);
+    }
+    else
+    {
+        pointparticles(EFFECT_CRYLINK_IMPACT, org2, '0 0 0', 1);
+        if(!w_issilent)
+            sound(self, CH_SHOTS, SND_CRYLINK_IMPACT, VOL_BASE, ATTN_NORM);
+    }
+}
 #endif
 #endif

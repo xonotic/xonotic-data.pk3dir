@@ -83,7 +83,8 @@ spawnfunc(trigger_teleport)
 	self.angles = '0 0 0';
 
 	self.active = ACTIVE_ACTIVE;
-	trigger_init(self);
+	//trigger_init(self); // only for predicted triggers?
+	EXACTTRIGGER_INIT;
 	self.use = trigger_teleport_use;
 
 	if(self.noise != "")

@@ -210,193 +210,193 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 
 .float vortex_chargepool_pauseregen_finished;
 
-		METHOD(Vortex, wr_aim, void(entity thiswep))
-		{
-			if(bot_aim(1000000, 0, 1, false))
-				self.BUTTON_ATCK = true;
-			else
-			{
-				if(WEP_CVAR(vortex, charge))
-					self.BUTTON_ATCK2 = true;
-			}
-		}
-		METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(WEP_CVAR(vortex, charge) && actor.vortex_charge < WEP_CVAR(vortex, charge_limit))
-				actor.vortex_charge = min(1, actor.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
+METHOD(Vortex, wr_aim, void(entity thiswep))
+{
+    if(bot_aim(1000000, 0, 1, false))
+        PHYS_INPUT_BUTTON_ATCK(self) = true;
+    else
+    {
+        if(WEP_CVAR(vortex, charge))
+            PHYS_INPUT_BUTTON_ATCK2(self) = true;
+    }
+}
+METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(WEP_CVAR(vortex, charge) && actor.vortex_charge < WEP_CVAR(vortex, charge_limit))
+        actor.vortex_charge = min(1, actor.vortex_charge + WEP_CVAR(vortex, charge_rate) * frametime / W_TICSPERFRAME);
 
-			if(WEP_CVAR_SEC(vortex, chargepool))
-				if(actor.vortex_chargepool_ammo < 1)
-				{
-					if(actor.vortex_chargepool_pauseregen_finished < time)
-						actor.vortex_chargepool_ammo = min(1, actor.vortex_chargepool_ammo + WEP_CVAR_SEC(vortex, chargepool_regen) * frametime / W_TICSPERFRAME);
-					actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(vortex, chargepool_pause_regen));
-				}
+    if(WEP_CVAR_SEC(vortex, chargepool))
+        if(actor.vortex_chargepool_ammo < 1)
+        {
+            if(actor.vortex_chargepool_pauseregen_finished < time)
+                actor.vortex_chargepool_ammo = min(1, actor.vortex_chargepool_ammo + WEP_CVAR_SEC(vortex, chargepool_regen) * frametime / W_TICSPERFRAME);
+            actor.pauseregen_finished = max(actor.pauseregen_finished, time + WEP_CVAR_SEC(vortex, chargepool_pause_regen));
+        }
 
-			if(autocvar_g_balance_vortex_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
-				thiswep.wr_reload(thiswep, actor, weaponentity);
-			} else
-			{
-				if(fire & 1)
-				{
-					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
-					{
-						W_Vortex_Attack(thiswep, 0);
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
-					}
-				}
-				if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (actor.BUTTON_ZOOM | actor.BUTTON_ZOOMSCRIPT) : (fire & 2))
-				{
-					if(WEP_CVAR(vortex, charge))
-					{
-						actor.vortex_charge_rottime = time + WEP_CVAR(vortex, charge_rot_pause);
-						float dt = frametime / W_TICSPERFRAME;
+    if(autocvar_g_balance_vortex_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo))) { // forced reload
+        thiswep.wr_reload(thiswep, actor, weaponentity);
+    } else
+    {
+        if(fire & 1)
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
+            {
+                W_Vortex_Attack(thiswep, 0);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
+            }
+        }
+        if((WEP_CVAR(vortex, charge) && !WEP_CVAR(vortex, secondary)) ? (PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) : (fire & 2))
+        {
+            if(WEP_CVAR(vortex, charge))
+            {
+                actor.vortex_charge_rottime = time + WEP_CVAR(vortex, charge_rot_pause);
+                float dt = frametime / W_TICSPERFRAME;
 
-						if(actor.vortex_charge < 1)
-						{
-							if(WEP_CVAR_SEC(vortex, chargepool))
-							{
-								if(WEP_CVAR_SEC(vortex, ammo))
-								{
-									// always deplete if secondary is held
-									actor.vortex_chargepool_ammo = max(0, actor.vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
+                if(actor.vortex_charge < 1)
+                {
+                    if(WEP_CVAR_SEC(vortex, chargepool))
+                    {
+                        if(WEP_CVAR_SEC(vortex, ammo))
+                        {
+                            // always deplete if secondary is held
+                            actor.vortex_chargepool_ammo = max(0, actor.vortex_chargepool_ammo - WEP_CVAR_SEC(vortex, ammo) * dt);
 
-									dt = min(dt, (1 - actor.vortex_charge) / WEP_CVAR(vortex, charge_rate));
-									actor.vortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(vortex, chargepool_pause_regen);
-									dt = min(dt, actor.vortex_chargepool_ammo);
-									dt = max(0, dt);
+                            dt = min(dt, (1 - actor.vortex_charge) / WEP_CVAR(vortex, charge_rate));
+                            actor.vortex_chargepool_pauseregen_finished = time + WEP_CVAR_SEC(vortex, chargepool_pause_regen);
+                            dt = min(dt, actor.vortex_chargepool_ammo);
+                            dt = max(0, dt);
 
-									actor.vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
-								}
-							}
+                            actor.vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
+                        }
+                    }
 
-							else if(WEP_CVAR_SEC(vortex, ammo))
-							{
-								if(fire & 2) // only eat ammo when the button is pressed
-								{
-									dt = min(dt, (1 - actor.vortex_charge) / WEP_CVAR(vortex, charge_rate));
-									if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
-									{
-										// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-										if(autocvar_g_balance_vortex_reload_ammo)
-										{
-											dt = min(dt, (actor.clip_load - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
-											dt = max(0, dt);
-											if(dt > 0)
-											{
-												actor.clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
-											}
-											actor.(weapon_load[WEP_VORTEX.m_id]) = actor.clip_load;
-										}
-										else
-										{
-											dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
-											dt = max(0, dt);
-											if(dt > 0)
-											{
-												actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(vortex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(vortex, ammo) * dt);
-											}
-										}
-									}
-									actor.vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
-								}
-							}
+                    else if(WEP_CVAR_SEC(vortex, ammo))
+                    {
+                        if(fire & 2) // only eat ammo when the button is pressed
+                        {
+                            dt = min(dt, (1 - actor.vortex_charge) / WEP_CVAR(vortex, charge_rate));
+                            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+                            {
+                                // if this weapon is reloadable, decrease its load. Else decrease the player's ammo
+                                if(autocvar_g_balance_vortex_reload_ammo)
+                                {
+                                    dt = min(dt, (actor.clip_load - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+                                    dt = max(0, dt);
+                                    if(dt > 0)
+                                    {
+                                        actor.clip_load = max(WEP_CVAR_SEC(vortex, ammo), actor.clip_load - WEP_CVAR_SEC(vortex, ammo) * dt);
+                                    }
+                                    actor.(weapon_load[WEP_VORTEX.m_id]) = actor.clip_load;
+                                }
+                                else
+                                {
+                                    dt = min(dt, (actor.(thiswep.ammo_field) - WEP_CVAR_PRI(vortex, ammo)) / WEP_CVAR_SEC(vortex, ammo));
+                                    dt = max(0, dt);
+                                    if(dt > 0)
+                                    {
+                                        actor.(thiswep.ammo_field) = max(WEP_CVAR_SEC(vortex, ammo), actor.(thiswep.ammo_field) - WEP_CVAR_SEC(vortex, ammo) * dt);
+                                    }
+                                }
+                            }
+                            actor.vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
+                        }
+                    }
 
-							else
-							{
-								dt = min(dt, (1 - actor.vortex_charge) / WEP_CVAR(vortex, charge_rate));
-								actor.vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
-							}
-						}
-					}
-					else if(WEP_CVAR(vortex, secondary))
-					{
-						if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
-						{
-							W_Vortex_Attack(thiswep, 1);
-							weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
-						}
-					}
-				}
-			}
-		}
-		METHOD(Vortex, wr_setup, void(entity thiswep))
-		{
-			self.vortex_lasthit = 0;
-		}
-		METHOD(Vortex, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
-			ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
-			return ammo_amount;
-		}
-		METHOD(Vortex, wr_checkammo2, bool(entity thiswep))
-		{
-			if(WEP_CVAR(vortex, secondary))
-			{
-				// don't allow charging if we don't have enough ammo
-				float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vortex, ammo);
-				ammo_amount += self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
-				return ammo_amount;
-			}
-			else
-			{
-				return false; // zoom is not a fire mode
-			}
-		}
-		METHOD(Vortex, wr_resetplayer, void(entity thiswep))
-		{
-			if (WEP_CVAR(vortex, charge)) {
-				if (WEP_CVAR_SEC(vortex, chargepool)) {
-					self.vortex_chargepool_ammo = 1;
-				}
-				self.vortex_charge = WEP_CVAR(vortex, charge_start);
-			}
-			self.vortex_lasthit = 0;
-		}
-		METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
-			W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
-		}
-		METHOD(Vortex, wr_suicidemessage, Notification(entity thiswep))
-		{
-			return WEAPON_THINKING_WITH_PORTALS;
-		}
-		METHOD(Vortex, wr_killmessage, Notification(entity thiswep))
-		{
-			return WEAPON_VORTEX_MURDER;
-		}
+                    else
+                    {
+                        dt = min(dt, (1 - actor.vortex_charge) / WEP_CVAR(vortex, charge_rate));
+                        actor.vortex_charge += dt * WEP_CVAR(vortex, charge_rate);
+                    }
+                }
+            }
+            else if(WEP_CVAR(vortex, secondary))
+            {
+                if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
+                {
+                    W_Vortex_Attack(thiswep, 1);
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
+                }
+            }
+        }
+    }
+}
+METHOD(Vortex, wr_setup, void(entity thiswep))
+{
+    self.vortex_lasthit = 0;
+}
+METHOD(Vortex, wr_checkammo1, bool(entity thiswep))
+{
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
+    ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
+    return ammo_amount;
+}
+METHOD(Vortex, wr_checkammo2, bool(entity thiswep))
+{
+    if(WEP_CVAR(vortex, secondary))
+    {
+        // don't allow charging if we don't have enough ammo
+        float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vortex, ammo);
+        ammo_amount += self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
+        return ammo_amount;
+    }
+    else
+    {
+        return false; // zoom is not a fire mode
+    }
+}
+METHOD(Vortex, wr_resetplayer, void(entity thiswep))
+{
+    if (WEP_CVAR(vortex, charge)) {
+        if (WEP_CVAR_SEC(vortex, chargepool)) {
+            self.vortex_chargepool_ammo = 1;
+        }
+        self.vortex_charge = WEP_CVAR(vortex, charge_start);
+    }
+    self.vortex_lasthit = 0;
+}
+METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
+}
+METHOD(Vortex, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_THINKING_WITH_PORTALS;
+}
+METHOD(Vortex, wr_killmessage, Notification(entity thiswep))
+{
+    return WEAPON_VORTEX_MURDER;
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(Vortex, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2 = w_org + w_backoff * 6;
-			pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
-		}
-		METHOD(Vortex, wr_init, void(entity thiswep))
-		{
-			if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
-			{
-				precache_pic("gfx/reticle_nex");
-			}
-		}
-		METHOD(Vortex, wr_zoomreticle, bool(entity thiswep))
-		{
-			if(button_zoom || zoomscript_caught || (!WEP_CVAR(vortex, secondary) && button_attack2))
-			{
-				reticle_image = "gfx/reticle_nex";
-				return true;
-			}
-			else
-			{
-				// no weapon specific image for this weapon
-				return false;
-			}
-		}
+METHOD(Vortex, wr_impacteffect, void(entity thiswep))
+{
+    vector org2 = w_org + w_backoff * 6;
+    pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
+    if(!w_issilent)
+        sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+}
+METHOD(Vortex, wr_init, void(entity thiswep))
+{
+    if(autocvar_cl_reticle && autocvar_cl_reticle_weapon)
+    {
+        precache_pic("gfx/reticle_nex");
+    }
+}
+METHOD(Vortex, wr_zoomreticle, bool(entity thiswep))
+{
+    if(button_zoom || zoomscript_caught || (!WEP_CVAR(vortex, secondary) && button_attack2))
+    {
+        reticle_image = "gfx/reticle_nex";
+        return true;
+    }
+    else
+    {
+        // no weapon specific image for this weapon
+        return false;
+    }
+}
 
 #endif
 #endif

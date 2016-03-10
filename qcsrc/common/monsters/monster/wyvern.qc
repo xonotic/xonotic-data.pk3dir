@@ -142,58 +142,61 @@ bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)
 spawnfunc(monster_wyvern) { Monster_Spawn(this, MON_WYVERN.monsterid); }
 #endif // SVQC
 
-		#ifdef SVQC
-		METHOD(Wyvern, mr_think, bool(Wyvern thismon, entity actor))
-		{
-			return true;
-		}
-		METHOD(Wyvern, mr_pain, bool(Wyvern thismon, entity actor))
-		{
-			actor.pain_finished = time + 0.5;
-			setanim(actor, actor.anim_pain1, true, true, false);
-			return true;
-		}
-		METHOD(Wyvern, mr_death, bool(Wyvern thismon, entity actor))
-		{
-			setanim(actor, actor.anim_die1, false, true, true);
-			actor.velocity_x = -200 + 400 * random();
-			actor.velocity_y = -200 + 400 * random();
-			actor.velocity_z = 100 + 100 * random();
-			return true;
-		}
-		#endif
-		#ifndef MENUQC
-		METHOD(Wyvern, mr_anim, bool(Wyvern thismon, entity actor))
-		{
-			vector none = '0 0 0';
-			actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
-			actor.anim_walk = animfixfps(actor, '1 1 1', none);
-			actor.anim_idle = animfixfps(actor, '0 1 1', none);
-			actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
-			actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-			actor.anim_run = animfixfps(actor, '1 1 1', none);
-			return true;
-		}
-		#endif
-		#ifdef SVQC
-		spawnfunc(item_cells);
-		METHOD(Wyvern, mr_setup, bool(Wyvern thismon, entity actor))
-		{
-			if(!actor.health) actor.health = (autocvar_g_monster_wyvern_health);
-			if(!actor.speed) { actor.speed = (autocvar_g_monster_wyvern_speed_walk); }
-			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_wyvern_speed_run); }
-			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
-			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
+#ifdef SVQC
+METHOD(Wyvern, mr_think, bool(Wyvern thismon, entity actor))
+{
+    return true;
+}
 
-			actor.monster_loot = spawnfunc_item_cells;
-			actor.monster_attackfunc = M_Wyvern_Attack;
+METHOD(Wyvern, mr_pain, bool(Wyvern thismon, entity actor))
+{
+    actor.pain_finished = time + 0.5;
+    setanim(actor, actor.anim_pain1, true, true, false);
+    return true;
+}
 
-			return true;
-		}
-		METHOD(Wyvern, mr_precache, bool(Wyvern thismon))
-		{
-			return true;
-		}
-		#endif
+METHOD(Wyvern, mr_death, bool(Wyvern thismon, entity actor))
+{
+    setanim(actor, actor.anim_die1, false, true, true);
+    actor.velocity_x = -200 + 400 * random();
+    actor.velocity_y = -200 + 400 * random();
+    actor.velocity_z = 100 + 100 * random();
+    return true;
+}
+#endif
+#ifndef MENUQC
+METHOD(Wyvern, mr_anim, bool(Wyvern thismon, entity actor))
+{
+    vector none = '0 0 0';
+    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_idle = animfixfps(actor, '0 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '1 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+spawnfunc(item_cells);
+METHOD(Wyvern, mr_setup, bool(Wyvern thismon, entity actor))
+{
+    if(!actor.health) actor.health = (autocvar_g_monster_wyvern_health);
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_wyvern_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_wyvern_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
+    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
+
+    actor.monster_loot = spawnfunc_item_cells;
+    actor.monster_attackfunc = M_Wyvern_Attack;
+
+    return true;
+}
+
+METHOD(Wyvern, mr_precache, bool(Wyvern thismon))
+{
+    return true;
+}
+#endif
 
 #endif

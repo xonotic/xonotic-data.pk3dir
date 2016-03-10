@@ -50,6 +50,9 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 		#ifdef CSQC
 		setorigin(this, '0 0 10000');
 		#endif
+		#ifdef SVQC
+        setorigin(this, '0 0 -10000');
+        #endif
 	}
 	return this;
 }

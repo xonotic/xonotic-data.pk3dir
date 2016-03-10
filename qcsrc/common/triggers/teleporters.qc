@@ -160,7 +160,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		{
 			player.pusher = teleporter.owner;
 			player.pushltime = time + autocvar_g_maxpushtime;
-			player.istypefrag = player.BUTTON_CHAT;
+			player.istypefrag = PHYS_INPUT_BUTTON_CHAT(player);
 		}
 		else
 		{

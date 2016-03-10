@@ -213,7 +213,7 @@ entity sandbox_ObjectSpawn(float database)
 		e.angles_y = self.v_angle.y;
 	}
 
-	WITH(entity, self, e, CSQCMODEL_AUTOINIT(e));
+	CSQCMODEL_AUTOINIT(e);
 
 	object_count += 1;
 	return e;

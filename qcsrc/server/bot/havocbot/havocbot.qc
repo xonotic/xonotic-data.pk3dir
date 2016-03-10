@@ -108,12 +108,12 @@ void havocbot_ai()
 			w.wr_aim(w);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
-				self.BUTTON_ATCK = false;
-				self.BUTTON_ATCK2 = false;
+				PHYS_INPUT_BUTTON_ATCK(self) = false;
+				PHYS_INPUT_BUTTON_ATCK2(self) = false;
 			}
 			else
 			{
-				if(self.BUTTON_ATCK||self.BUTTON_ATCK2)
+				if(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_ATCK2(self))
 					self.lastfiredweapon = PS(self).m_weapon.m_id;
 			}
 		}
@@ -246,7 +246,7 @@ void havocbot_keyboard_movement(vector destorg)
 		keyboard.z = 0;
 
 	self.havocbot_keyboard = keyboard * maxspeed;
-	if (self.havocbot_ducktime>time) self.BUTTON_CROUCH=true;
+	if (self.havocbot_ducktime>time) PHYS_INPUT_BUTTON_CROUCH(self) = true;
 
 	keyboard = self.havocbot_keyboard;
 	blend = bound(0,vlen(destorg-self.origin)/autocvar_bot_ai_keyboard_distance,1); // When getting close move with 360 degree
@@ -273,7 +273,7 @@ void havocbot_bunnyhop(vector dir)
 	if(self.aistatus & AI_STATUS_DANGER_AHEAD)
 	{
 		self.aistatus &= ~AI_STATUS_RUNNING;
-		self.BUTTON_JUMP = false;
+		PHYS_INPUT_BUTTON_JUMP(self) = false;
 		self.bot_canruntogoal = 0;
 		self.bot_timelastseengoal = 0;
 		return;
@@ -349,12 +349,12 @@ void havocbot_bunnyhop(vector dir)
 					{
 						self.aistatus &= ~AI_STATUS_RUNNING;
 						if(bunnyhopdistance > autocvar_bot_ai_bunnyhop_stopdistance)
-							self.BUTTON_JUMP = true;
+							PHYS_INPUT_BUTTON_JUMP(self) = true;
 					}
 					else
 					{
 						self.aistatus |= AI_STATUS_RUNNING;
-						self.BUTTON_JUMP = true;
+						PHYS_INPUT_BUTTON_JUMP(self) = true;
 					}
 				}
 			}
@@ -374,7 +374,7 @@ void havocbot_bunnyhop(vector dir)
 	if((IS_ONGROUND(self)) == 0)
 	{
 		if(self.velocity.z < 0 || vlen(self.velocity)<maxspeed)
-			self.BUTTON_JUMP = false;
+			PHYS_INPUT_BUTTON_JUMP(self) = false;
 
 		// Strafe
 		if(self.aistatus & AI_STATUS_RUNNING)
@@ -477,7 +477,7 @@ void havocbot_movetogoal()
 		}
 
 		// Flying
-		self.BUTTON_HOOK = true;
+		PHYS_INPUT_BUTTON_HOOK(self) = true;
 		if(self.navigation_jetpack_point.z - STAT(PL_MAX, NULL).z + STAT(PL_MIN, NULL).z < self.origin.z)
 		{
 			self.movement_x = dir * v_forward * maxspeed;
@@ -565,11 +565,11 @@ void havocbot_movetogoal()
 			{
 				if(self.velocity.z<0)
 				{
-					self.BUTTON_HOOK = true;
+					PHYS_INPUT_BUTTON_HOOK(self) = true;
 				}
 			}
 			else
-				self.BUTTON_HOOK = true;
+				PHYS_INPUT_BUTTON_HOOK(self) = true;
 
 			// If there is no goal try to move forward
 
@@ -609,7 +609,7 @@ void havocbot_movetogoal()
 				{
 					if(time > self.rocketjumptime)
 					{
-						self.BUTTON_ATCK2 = true;
+						PHYS_INPUT_BUTTON_ATCK2(self) = true;
 						self.rocketjumptime = 0;
 					}
 					return;
@@ -617,7 +617,7 @@ void havocbot_movetogoal()
 
 				PS(self).m_switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
-				self.BUTTON_ATCK = true;
+				PHYS_INPUT_BUTTON_ATCK(self) = true;
 				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
 				return;
 			}
@@ -638,9 +638,9 @@ void havocbot_movetogoal()
 		if(self.waterlevel>WATERLEVEL_SWIMMING)
 			dir.z = 1;
 		else if(self.velocity.z >= 0 && !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER))
-			self.BUTTON_JUMP = true;
+			PHYS_INPUT_BUTTON_JUMP(self) = true;
 		else
-			self.BUTTON_JUMP = false;
+			PHYS_INPUT_BUTTON_JUMP(self) = false;
 		makevectors(self.v_angle.y * '0 1 0');
 		self.movement_x = dir * v_forward * maxspeed;
 		self.movement_y = dir * v_right * maxspeed;
@@ -696,9 +696,9 @@ void havocbot_movetogoal()
 			{
 				if(self.velocity.z >= 0 && !(self.watertype == CONTENT_WATER && gco.z < self.origin.z) &&
 					( !(self.waterlevel == WATERLEVEL_WETFEET && self.watertype == CONTENT_WATER) || self.aistatus & AI_STATUS_OUT_WATER))
-					self.BUTTON_JUMP = true;
+					PHYS_INPUT_BUTTON_JUMP(self) = true;
 				else
-					self.BUTTON_JUMP = false;
+					PHYS_INPUT_BUTTON_JUMP(self) = false;
 			}
 			dir = normalize(flatdir);
 			makevectors(self.v_angle.y * '0 1 0');
@@ -722,7 +722,7 @@ void havocbot_movetogoal()
 					s = trace_fraction;
 					tracebox(self.origin + jumpstepheightvec, self.mins, self.maxs, self.origin + self.velocity * 0.2 + jumpstepheightvec, false, self);
 					if (trace_fraction > s)
-						self.BUTTON_JUMP = 1;
+						PHYS_INPUT_BUTTON_JUMP(self) = true;
 				}
 			}
 
@@ -738,7 +738,7 @@ void havocbot_movetogoal()
 			// Check head-banging against walls
 			if(vlen(self.origin + self.view_ofs - trace_endpos) < 25 && !(self.aistatus & AI_STATUS_OUT_WATER))
 			{
-				self.BUTTON_JUMP = true;
+				PHYS_INPUT_BUTTON_JUMP(self) = true;
 				if(self.facingwalltime && time > self.facingwalltime)
 				{
 					self.ignoregoal = self.goalcurrent;
@@ -767,7 +767,7 @@ void havocbot_movetogoal()
 			self.aistatus &= ~AI_STATUS_DANGER_AHEAD;
 
 			if(trace_fraction == 1 && self.jumppadcount == 0 && !self.goalcurrent.wphardwired )
-			if((IS_ONGROUND(self)) || (self.aistatus & AI_STATUS_RUNNING) || self.BUTTON_JUMP == true)
+			if((IS_ONGROUND(self)) || (self.aistatus & AI_STATUS_RUNNING) || PHYS_INPUT_BUTTON_JUMP(self))
 			{
 				// Look downwards
 				traceline(dst_ahead , dst_down, true, world);
@@ -815,7 +815,7 @@ void havocbot_movetogoal()
 
 		dir = normalize(dir + dodge + evadeobstacle + evadelava);
 	//	self.bot_dodgevector = dir;
-	//	self.bot_dodgevector_jumpbutton = self.BUTTON_JUMP;
+	//	self.bot_dodgevector_jumpbutton = PHYS_INPUT_BUTTON_JUMP(self);
 	}
 
 	if(time < self.ladder_time)
@@ -834,7 +834,7 @@ void havocbot_movetogoal()
 
 	//dir = self.bot_dodgevector;
 	//if (self.bot_dodgevector_jumpbutton)
-	//	self.BUTTON_JUMP = 1;
+	//	PHYS_INPUT_BUTTON_JUMP(self) = true;
 	self.movement_x = dir * v_forward * maxspeed;
 	self.movement_y = dir * v_right * maxspeed;
 	self.movement_z = dir * v_up * maxspeed;
@@ -849,8 +849,8 @@ void havocbot_movetogoal()
 	if(skill+self.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(dir);
 
-	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (IS_ONGROUND(self))) self.BUTTON_JUMP=1;
-	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=true;
+	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (IS_ONGROUND(self))) PHYS_INPUT_BUTTON_JUMP(self) = true;
+	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) PHYS_INPUT_BUTTON_JUMP(self) = true;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
 }
 

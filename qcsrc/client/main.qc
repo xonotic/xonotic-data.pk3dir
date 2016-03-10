@@ -676,13 +676,29 @@ void Spawn_Draw(entity this)
 	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
+void Spawn_PreDraw(entity this)
+{
+	float alph;
+	vector org = getpropertyvec(VF_ORIGIN);
+	if(this.fade_start)
+		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	else
+		alph = 1;
+	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
+	this.alpha = alph;
+	if(alph <= 0)
+		this.drawmask = 0;
+	else
+		this.drawmask = MASK_NORMAL;
+}
+
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 {
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
-	spn_origin.x = ReadShort();
-	spn_origin.y = ReadShort();
-	spn_origin.z = ReadShort();
+	spn_origin.x = ReadCoord();
+	spn_origin.y = ReadCoord();
+	spn_origin.z = ReadCoord();
 
 	//if(is_new)
 	//{
@@ -716,6 +732,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
 
 			this.draw = Spawn_Draw;
+			setpredraw(this, Spawn_PreDraw);
+			this.fade_start = autocvar_cl_spawn_point_dist_min;
+			this.fade_end = autocvar_cl_spawn_point_dist_max;
 		}
 	//}
 
@@ -732,9 +751,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 	if(entnum)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 
 		if(is_new)
 		{
@@ -921,7 +940,6 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
-/** TODO somehow thwart prvm_globalset client ... */
 string forcefog;
 void Fog_Force()
 {

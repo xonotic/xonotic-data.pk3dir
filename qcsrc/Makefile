@@ -1,11 +1,21 @@
-SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
-PERL ?= perl
-QCCFLAGS_WATERMARK ?= $(shell git describe)
+QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty=*)
 CPP := cc -xc -E
 QCC ?= gmqcc
 NDEBUG ?= 1
 PROGS_OUT ?= $(CURDIR)/..
 BUILD_MOD ?= 0
+
+ifndef Zip
+    ifneq ($(shell which zip),)
+        Zip := zip -9
+    endif
+    ifneq ($(shell which 7za),)
+        Zip := 7za a -tzip -mx=9
+    endif
+    ifndef Zip
+        $(error "No zip in ($(PATH))")
+    endif
+endif
 
 QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
@@ -34,13 +44,31 @@ QCCFLAGS ?= \
 XON_BUILDSYSTEM =
 
 .PHONY: all
-all: qc
+all: qc pk3
 
 .PHONY: qc
 qc: $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat $(PROGS_OUT)/csprogs.dat
 
+.PHONY: pk3
+pk3: qc
+	$(eval PROG=csprogs)
+	$(eval VER=${QCCFLAGS_WATERMARK})
+	$(eval PK3=${PROG}-${VER}.pk3)
+	$(eval TXT=${PROG}-${VER}.txt)
+	$(eval DAT=${PROG}-${VER}.dat)
+	$(eval LNO=${PROG}-${VER}.lno)
+	@ echo "http://xonotic.org" > ${TXT}
+	@ ln -f $(PROGS_OUT)/${PROG}.dat ${DAT}
+	@ ln -f $(PROGS_OUT)/${PROG}.lno ${LNO}
+	@ rm -f *.pk3
+	$(Zip) ${PK3} ${TXT} ${DAT} ${LNO}
+	@ rm ${TXT} ${DAT} ${LNO}
+
+dirtree:
+	@mkdir -p ../.tmp
+
 .PHONY: clean
-clean:
+clean: | dirtree
 	rm -f $(PROGS_OUT)/csprogs.dat
 	rm -f $(PROGS_OUT)/progs.dat
 	rm -f $(PROGS_OUT)/menu.dat
@@ -57,17 +85,17 @@ export CPP
 export QCCDEFS
 export QCCFLAGS
 
-$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | dirtree
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	sh ./qcc.sh client $@ $<
 -include ../.tmp/client.d
 
-$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE) | dirtree
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	sh ./qcc.sh server $@ $<
 -include ../.tmp/server.d
 
-$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE)
+$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE) | dirtree
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
 	sh ./qcc.sh menu $@ $<
 -include ../.tmp/menu.d

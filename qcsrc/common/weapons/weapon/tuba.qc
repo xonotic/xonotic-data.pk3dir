@@ -213,9 +213,9 @@ int W_Tuba_GetNote(entity pl, int hittype)
 		case 8: note = +4; break; // e
 		case 9: note = -1; break; // B
 	}
-	if(pl.BUTTON_CROUCH)
+	if(PHYS_INPUT_BUTTON_CROUCH(pl))
 		note -= 12;
-	if(pl.BUTTON_JUMP)
+	if(PHYS_INPUT_BUTTON_JUMP(pl))
 		note += 12;
 	if(hittype & HITTYPE_SECONDARY)
 		note += 7;
@@ -367,9 +367,9 @@ METHOD(Tuba, wr_aim, void(Tuba this))
 	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(tuba, radius)))
 	{
 		if (random() > 0.5)
-			actor.BUTTON_ATCK = 1;
+			PHYS_INPUT_BUTTON_ATCK(actor) = true;
 		else
-			actor.BUTTON_ATCK2 = 1;
+			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 	}
 }
 

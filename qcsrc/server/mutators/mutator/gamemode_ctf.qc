@@ -2715,7 +2715,7 @@ void ctf_ScoreRules(int teams)
 // code from here on is just to support maps that don't have flag and team entities
 void ctf_SpawnTeam (string teamname, int teamcolor)
 {
-	entity this = new(ctf_team);
+	entity this = new_pure(ctf_team);
 	this.netname = teamname;
 	this.cnt = teamcolor;
 	this.spawnfunc_checked = true;

@@ -844,7 +844,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
-	if(self.v_angle.x >= 70 && self.v_angle.x <= 110 && self.BUTTON_CROUCH)
+	if(self.v_angle.x >= 70 && self.v_angle.x <= 110 && PHYS_INPUT_BUTTON_CROUCH(self))
 		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
 		_nade.velocity = e.velocity + _velocity;
@@ -1349,13 +1349,8 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nade_type, "cl_nade_type");
-	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_pokenade_type, "cl_pokenade_type");
-
-	return false;
-}
+REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
+REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {

@@ -244,7 +244,3 @@ void anticheat_init(entity this)
 	this.anticheat_speedhack_offset = 0;
 	this.anticheat_jointime = servertime;
 }
-
-void anticheat_shutdown()
-{
-}

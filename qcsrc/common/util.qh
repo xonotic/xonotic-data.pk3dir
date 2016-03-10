@@ -159,8 +159,6 @@ string getcurrentmod();
 #ifndef MENUQC
 #ifdef CSQC
 int ReadInt24_t();
-vector ReadInt48_t();
-vector ReadInt72_t();
 #else
 void WriteInt24_t(float dest, float val);
 void WriteInt48_t(float dest, vector val);

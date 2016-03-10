@@ -27,7 +27,7 @@ test_sv_game:
   script:
     - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
     - make
-    - EXPECT=0920bfe86d0a02684fd67044233a092e
+    - EXPECT=f077e4e45176d4aedacf943adede6e55
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
