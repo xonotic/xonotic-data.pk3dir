@@ -86,7 +86,7 @@ pk3: csprogs-$(VER).pk3
 	$(ZIP) $(PK3) $(TXT) $(DAT) $(LNO)
 	@ $(RM) $(TXT) $(DAT) $(LNO)
 
-QCCVERSION := $(shell $(QCC) --version)
+QCCVERSION := $(shell cd lib && $(QCC) --version)
 QCCVERSIONFILE := $(WORKDIR)/qccversion.$(shell echo ${QCCVERSION} | git hash-object --stdin)
 $(QCCVERSIONFILE): | $(WORKDIR)
 	@ $(RM) $(WORKDIR)/qccversion.*
