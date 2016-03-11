@@ -382,6 +382,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		));
 	}
 
+	// change shooter to SOLID_BBOX so the shot can hit corpses
+	int oldsolid = self.dphitcontentsmask;
+	if(self)
+		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
 	WarpZone_trace_forent = self;
 
 	for (;;)
@@ -397,8 +402,9 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		if (pointcontents(start) == CONTENT_SKY)
 			break;
 
-		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			break;
+		// can't use noimpact, as we need to pass through walls
+		//if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+			//break;
 
 		// if we hit "weapclip", bail out
 		//
@@ -412,11 +418,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		// matching shaders:
 		//   common/weapclip (intended)
 		//   common/noimpact (is supposed to eat projectiles, but is erased anyway)
-		float is_weapclip = 0;
+		bool is_weapclip = false;
 		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
 		if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
 		if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
-			is_weapclip = 1;
+			is_weapclip = true;
 
 		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
 			Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
@@ -490,4 +496,8 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 				antilag_restore(it);
 		));
 	}
+
+	// restore shooter solid type
+	if(self)
+		self.dphitcontentsmask = oldsolid;
 }
