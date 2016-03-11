@@ -256,7 +256,7 @@ void nade_napalm_ball()
 	proj = new(grenade);
 	proj.owner = self.owner;
 	proj.realowner = self.realowner;
-	proj.team = self.owner.team;
+	proj.team = self.team;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
@@ -374,7 +374,7 @@ void nade_ice_think()
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(self.realowner.team);
+			entity expef = EFFECT_NADE_EXPLODE(self.team);
 			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
 			sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
@@ -569,7 +569,7 @@ void nade_heal_boom()
 	setorigin(healer, self.origin);
 	healer.healer_lifetime = autocvar_g_nades_heal_time; // save the cvar
 	healer.ltime = time + healer.healer_lifetime;
-	healer.team = self.realowner.team;
+	healer.team = self.team;
 	healer.bot_dodge = false;
 	healer.solid = SOLID_TRIGGER;
 	healer.touch = nade_heal_touch;
@@ -616,7 +616,7 @@ void nade_boom()
 		case NADE_TYPE_MONSTER:
 		case NADE_TYPE_SPAWN:
 			nade_blast = false;
-			switch(self.realowner.team)
+			switch(self.team)
 			{
 				case NUM_TEAM_1: expef = EFFECT_SPAWN_RED; break;
 				case NUM_TEAM_2: expef = EFFECT_SPAWN_BLUE; break;
@@ -632,7 +632,7 @@ void nade_boom()
 
 		default:
 		case NADE_TYPE_NORMAL:
-			expef = EFFECT_NADE_EXPLODE(self.realowner.team);
+			expef = EFFECT_NADE_EXPLODE(self.team);
 			break;
 	}
 
@@ -799,7 +799,10 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	this.health -= damage;
 
 	if ( this.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
+	{
+		this.team = attacker.team;
 		this.realowner = attacker;
+	}
 
 	if(this.health <= 0)
 		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, nade_boom));
@@ -959,7 +962,8 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
 	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], player.team).eent_eff_name);
+	n.team = player.team;
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], n.team).eent_eff_name);
 	n.colormod = Nades_from(n.nade_type).m_color;
 	n.realowner = nowner;
 	n.colormap = player.colormap;
