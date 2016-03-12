@@ -108,10 +108,10 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NOMONSTERS, it);
 									break;
 								case 2:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 64 - v_forward * 64, MOVE_NOMONSTERS, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
 									break;
 								case 3:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 64 - v_forward * 64, MOVE_NOMONSTERS, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
 									break;
 								//case 4:
 									//tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NOMONSTERS, it);
