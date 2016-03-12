@@ -188,7 +188,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 		if(self.ok_lastwep == WEP_RPC.m_id)
 			newwep = WEP_VORTEX;
 		PS(self).m_switchweapon = newwep;
-		LOG_INFO("Overkill PlayerPreThink weapon setting at time ", ftos(time), "\n");
 		self.ok_lastwep = 0;
 	}
 
@@ -256,6 +255,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	}
 	else
 		self.ok_use_ammocharge = 0;
+
+	// if player changed their weapon while dead, don't switch to their death weapon
+	if(self.impulse)
+		self.ok_lastwep = 0;
 
 	self.ok_pauseregen_finished = time + 2;
 
