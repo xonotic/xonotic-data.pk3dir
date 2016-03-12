@@ -51,6 +51,22 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {SELFPARAM();
 	if(!teamplay) { return false; }
+
+	int num_red = 0, num_blue = 0, num_yellow = 0, num_pink = 0;
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		switch(it.team)
+		{
+			case NUM_TEAM_1: ++num_red; break;
+			case NUM_TEAM_2: ++num_blue; break;
+			case NUM_TEAM_3: ++num_yellow; break;
+			case NUM_TEAM_4: ++num_pink; break;
+		}
+	});
+
+	if(num_red == 1 || num_blue == 1 || num_yellow == 1 || num_pink == 1)
+		return false; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
+
 	// Note: when entering this, fixangle is already set.
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
 	{
