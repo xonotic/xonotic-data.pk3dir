@@ -411,8 +411,9 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 		_Movetype_LinkEdict_TouchAreaGrid(this);
 }
 
-bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosition
+bool _Movetype_TestEntityPosition(/*entity this, */ vector ofs)  // SV_TestEntityPosition
 {
+    SELFPARAM(); // XXX: performance
 //	vector org = this.move_origin + ofs;
 
 	int cont = this.dphitcontentsmask;
@@ -430,24 +431,34 @@ bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosi
 
 bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
-	if(!_Movetype_TestEntityPosition(this, '0 0 0')) return true;
-	if(!_Movetype_TestEntityPosition(this, '-1 0 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '1 0 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '0 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '0 1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '-1 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '1 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '-1 1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '1 1 0')) goto success;
-	for (int i = 1; i <= 17; ++i)
-	{
-		if(!_Movetype_TestEntityPosition(this, '0 0 -1' * i)) goto success;
-		if(!_Movetype_TestEntityPosition(this, '0 0 1' * i)) goto success;
+    entity oldself = this;
+    setself(this);
+	if (!_Movetype_TestEntityPosition(/* this, */ ' 0  0  0')) {
+	    setself(oldself);
+	    return true;
 	}
-	LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
-		etof(this), this.classname, vtos(this.move_origin));
-	return false;
-	: success;
+	#define X(v) if (_Movetype_TestEntityPosition(/* this, */ v))
+	X('-1  0  0') X(' 1  0  0')
+	X(' 0 -1  0') X(' 0  1  0')
+	X('-1 -1  0') X(' 1 -1  0')
+	X('-1  1  0') X(' 1  1  0')
+	#undef X
+	{
+        #define X(i) \
+            if (_Movetype_TestEntityPosition(/* this, */ '0 0 -1' * i)) \
+            if (_Movetype_TestEntityPosition(/* this, */ '0 0 1' * i))
+        X(01) X(02) X(03) X(04) X(05) X(06) X(07) X(08)
+        X(09) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
+        X(17)
+        #undef X
+        {
+            setself(oldself);
+            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
+                etof(this), this.classname, vtos(this.move_origin));
+            return false;
+        }
+	}
+	setself(oldself);
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
 		etof(this), this.classname, vtos(this.move_origin));
 	_Movetype_LinkEdict(this, true);
