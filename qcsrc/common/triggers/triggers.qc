@@ -296,7 +296,7 @@ void trigger_touch_generic(entity this, void() touchfunc)
 {
 	entity e;
 	for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
-	if(e.isplayermodel || e.classname == "csqcprojectile")
+	if(e.classname == "csqcprojectile")
 	{
 		vector emin = e.absmin, emax = e.absmax;
 		if(this.solid == SOLID_BSP)
