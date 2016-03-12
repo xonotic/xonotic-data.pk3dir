@@ -182,7 +182,12 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 
 	if(self.ok_lastwep)
 	{
-		PS(self).m_switchweapon = Weapons_from(self.ok_lastwep);
+		Weapon newwep = Weapons_from(self.ok_lastwep);
+		if(self.ok_lastwep == WEP_HMG.m_id)
+			newwep = WEP_MACHINEGUN;
+		if(self.ok_lastwep == WEP_RPC.m_id)
+			newwep = WEP_VORTEX;
+		PS(self).m_switchweapon = newwep;
 		self.ok_lastwep = 0;
 	}
 
@@ -250,6 +255,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	}
 	else
 		self.ok_use_ammocharge = 0;
+
+	// if player changed their weapon while dead, don't switch to their death weapon
+	if(self.impulse)
+		self.ok_lastwep = 0;
 
 	self.ok_pauseregen_finished = time + 2;
 
