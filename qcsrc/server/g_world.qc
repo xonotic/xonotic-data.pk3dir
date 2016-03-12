@@ -231,7 +231,6 @@ void cvar_changes_init()
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
-		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("log_file");
 		BADPREFIX("rcon_");
@@ -338,6 +337,7 @@ void cvar_changes_init()
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_maplist_votable_");
 		BADPREFIX("g_mod_");
+		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
