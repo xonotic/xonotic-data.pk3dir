@@ -29,8 +29,33 @@ case "$1" in
 esac
 
 if [ x"$mode" = x"pot" ]; then
+	make QCC="../../../../gmqcc/gmqcc" clean
+	make QCC="../../../../gmqcc/gmqcc"
 	{
-		find qcsrc -type f -name \*.\* -not -name \*.po -not -name \*.txt
+		grep -h '^\.' .tmp/*_includes.txt | cut -d ' ' -f 2 | sed -e 's,^,qcsrc/,' | while IFS= read -r name; do
+			while :; do
+				case "$name" in
+					*/./*)
+						name=${name%%/./*}/${name#*/./}
+						;;
+					./*)
+						name=${name#./}
+						;;
+					*/*/../*)
+						before=${name%%/../*}
+						before=${before%/*}
+						name=$before/${name#*/../}
+						;;
+					*/../*)
+						name=${name#*/../}
+						;;
+					*)
+						break
+						;;
+				esac
+			done
+			echo "$name"
+		done | sort -u
 	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot >&2
 fi
 

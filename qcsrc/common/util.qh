@@ -1,6 +1,10 @@
 #ifndef COMMON_UTIL_H
 #define COMMON_UTIL_H
 
+#ifndef MENUQC
+vector real_origin(entity ent);
+#endif
+
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
 string wordwrap(string s, float l);
@@ -155,8 +159,6 @@ string getcurrentmod();
 #ifndef MENUQC
 #ifdef CSQC
 int ReadInt24_t();
-vector ReadInt48_t();
-vector ReadInt72_t();
 #else
 void WriteInt24_t(float dest, float val);
 void WriteInt48_t(float dest, vector val);
@@ -282,7 +284,7 @@ const float CNT_IDLE = 3;
 const float CNT_KILL = 4;
 const float CNT_RESPAWN = 5;
 const float CNT_ROUNDSTART = 6;
-float Announcer_PickNumber(float type, float num);
+entity Announcer_PickNumber(float type, float num);
 #endif
 
 #ifndef MENUQC

@@ -8,14 +8,14 @@
 
 #include "../lib/csqcmodel/cl_model.qh"
 
-// self.isactive = player is in range and coordinates/status (health and armor) are up to date
-// self.origin = player origin
-// self.healthvalue
-// self.armorvalue
-// self.sameteam = player is on same team as local client
-// self.fadedelay = time to wait before name tag starts fading in for enemies
-// self.pointtime = last time you pointed at this player
-// self.csqcmodel_isdead = value of csqcmodel_isdead to know when the player is dead or not
+// this.isactive = player is in range and coordinates/status (health and armor) are up to date
+// this.origin = player origin
+// this.healthvalue
+// this.armorvalue
+// this.sameteam = player is on same team as local client
+// this.fadedelay = time to wait before name tag starts fading in for enemies
+// this.pointtime = last time you pointed at this player
+// this.csqcmodel_isdead = value of csqcmodel_isdead to know when the player is dead or not
 
 LinkedList shownames_ent;
 STATIC_INIT(shownames_ent)
@@ -58,8 +58,8 @@ void Draw_ShowNames(entity this)
 			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
-			if (vlen((eX * o.x + eY * o.y) - eo) < autocvar_hud_shownames_antioverlap_distance
-			    && dist > vlen(it.origin - view_origin))
+			if (vdist(((eX * o.x + eY * o.y) - eo), <, autocvar_hud_shownames_antioverlap_distance)
+			    && vdist((it.origin - view_origin), <, dist))
 			{
 				overlap = true;
 				break;
@@ -67,10 +67,12 @@ void Draw_ShowNames(entity this)
 		));
 	}
 	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
-	float crosshairdistance = sqrt(pow(o.x - vid_conwidth / 2, 2) + pow(o.y - vid_conheight / 2, 2));
 	if (autocvar_hud_shownames_crosshairdistance)
 	{
-		if (autocvar_hud_shownames_crosshairdistance > crosshairdistance) this.pointtime = time;
+		float d = autocvar_hud_shownames_crosshairdistance;
+		float w = o.x - vid_conwidth / 2;
+		float h = o.y - vid_conheight / 2;
+		if (d * d > w * w + h * h) this.pointtime = time;
 		if (this.pointtime + autocvar_hud_shownames_crosshairdistance_time <= time) overlap = true;
 		else overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : false); // override what antioverlap says unless allowed by cvar.
 	}
@@ -79,7 +81,7 @@ void Draw_ShowNames(entity this)
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
 	}
-	else if (!this.sameteam && (!onscreen || !hit)) // out of view, fade out
+	else if (!onscreen || (!this.sameteam && !hit)) // out of view, fade out
 	{
 		this.alpha = max(0, this.alpha - SHOWNAMES_FADESPEED * frametime);
 		this.fadedelay = 0;                         // reset fade in delay, enemy has left the view
@@ -174,12 +176,9 @@ void Draw_ShowNames_All()
 			continue;
 		}
 		make_impure(it);
-		if (entcs.think) WITH(entity, self, entcs, entcs.think());
-		else
-		{
-			LOG_WARNING("entcs.think == null");
-			eprint(entcs);
-		}
+		assert(entcs.think, eprint(entcs));
+		WITH(entity, self, entcs, entcs.think());
+		if (!entcs.has_origin) continue;
 		if (entcs.m_entcs_private)
 		{
 			it.healthvalue = entcs.healthvalue;
@@ -193,7 +192,7 @@ void Draw_ShowNames_All()
 			it.sameteam = false;
 		}
 		bool dead = entcs_IsDead(i) || entcs_IsSpectating(i);
-		if (!it.csqcmodel_isdead && entcs.has_origin) setorigin(it, entcs.origin);
+		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
 	));

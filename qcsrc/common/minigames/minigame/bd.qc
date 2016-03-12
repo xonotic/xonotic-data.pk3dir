@@ -595,7 +595,7 @@ int bd_server_event(entity minigame, string event, ...)
 			minigame.bd_levelname = strzone(autocvar_sv_minigames_bulldozer_startlevel);
 			bd_setup_pieces(minigame);
 			minigame.minigame_flags = BD_TURN_MOVE;
-			
+
 			return true;
 		}
 		case "end":
@@ -625,7 +625,7 @@ int bd_server_event(entity minigame, string event, ...)
 			switch(argv(0))
 			{
 				case "move":
-					bd_do_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null), ((...(1,int)) >= 4 ? argv(3) : string_null)); 
+					bd_do_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null), ((...(1,int)) >= 4 ? argv(3) : string_null));
 					return true;
 				case "next":
 					bd_next_match(minigame,...(0,entity), ((...(1,int) >= 2 ? argv(1) : string_null)));
@@ -640,7 +640,7 @@ int bd_server_event(entity minigame, string event, ...)
 					bd_close_editor(minigame);
 					return true;
 				case "fill":
-					bd_do_fill(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null)); 
+					bd_do_fill(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null));
 					return true;
 			}
 
@@ -672,7 +672,7 @@ int bd_server_event(entity minigame, string event, ...)
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -714,7 +714,7 @@ void bd_hud_board(vector pos, vector mySize)
 	minigame_hud_fitsqare(pos, mySize);
 	bd_boardpos = pos;
 	bd_boardsize = mySize;
-	
+
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("bd/board"));
 
 	vector tile_size = minigame_hud_denormalize_size('1 1 0' / BD_TILE_SIZE,pos,mySize);
@@ -751,10 +751,10 @@ void bd_hud_board(vector pos, vector mySize)
 				if(e.bd_enemy)
 					thepiece = "bd/boulder_target";
 
-				minigame_drawpic_centered( tile_pos,  
+				minigame_drawpic_centered( tile_pos,
 						minigame_texture(thepiece),
 						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-			}	
+			}
 		}
 	}
 
@@ -809,17 +809,17 @@ void bd_hud_board(vector pos, vector mySize)
 
 		if(active_minigame.minigame_flags & BD_TURN_WIN)
 			victory_text = "Well done! Click 'Next Level' to continue";
-		
+
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s", victory_text), 
+			sprintf("%s", victory_text),
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
-		
+
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'0.3 0.3 1',0.8,DRAWFLAG_ADDITIVE);
-		
+
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s", victory_text), 
+			sprintf("%s", victory_text),
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -890,7 +890,7 @@ string bd_turn_to_string(int turnflags)
 
 	if ( turnflags & BD_TURN_MOVE )
 		return _("Push the boulders onto the targets");
-	
+
 	return "";
 }
 

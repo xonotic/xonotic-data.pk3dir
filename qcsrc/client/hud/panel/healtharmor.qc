@@ -8,13 +8,13 @@ void HUD_HealthArmor()
 		if(hud != HUD_NORMAL) return;
 		if(spectatee_status == -1) return;
 
-		health = getstati(STAT_HEALTH);
+		health = STAT(HEALTH);
 		if(health <= 0)
 		{
 			prev_health = -1;
 			return;
 		}
-		armor = getstati(STAT_ARMOR);
+		armor = STAT(ARMOR);
 
 		// code to check for spectatee_status changes is in Ent_ClientData()
 		// prev_p_health and prev_health can be set to -1 there

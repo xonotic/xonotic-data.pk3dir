@@ -26,7 +26,7 @@ REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 
 spawnfunc(turret_plasma) { if (!turret_initialize(TUR_PLASMA)) remove(self); }
 
-METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
+METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
     if(g_instagib)
     {
@@ -41,12 +41,12 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this))
     }
     else
     {
-        SUPER(PlasmaTurret).tr_attack(this);
+        SUPER(PlasmaTurret).tr_attack(this, it);
     }
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
 }
-METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur))
+METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
     if (self.tur_head.frame != 0)
         self.tur_head.frame = self.tur_head.frame + 1;

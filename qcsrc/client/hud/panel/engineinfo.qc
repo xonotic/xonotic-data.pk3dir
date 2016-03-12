@@ -7,6 +7,9 @@ int framecounter;
 float frametimeavg;
 float frametimeavg1; // 1 frame ago
 float frametimeavg2; // 2 frames ago
+float autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage;
+float autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight;
+float autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold;
 void HUD_EngineInfo()
 {
 	if(!autocvar__hud_configure)
@@ -27,7 +30,7 @@ void HUD_EngineInfo()
 	}
 
 	float currentTime = gettime(GETTIME_REALTIME);
-	if(cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage"))
+	if(autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage)
 	{
 		float currentframetime = currentTime - prevfps_time;
 		frametimeavg = (frametimeavg + frametimeavg1 + frametimeavg2 + currentframetime)/4; // average three frametimes into framecounter for slightly more stable fps readings :P
@@ -35,10 +38,10 @@ void HUD_EngineInfo()
 		frametimeavg1 = frametimeavg;
 
 		float weight;
-		weight = cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight");
+		weight = autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_new_weight;
 		if(currentframetime > 0.0001) // filter out insane values which sometimes seem to occur and throw off the average? If you are getting 10,000 fps or more, then you don't need a framerate counter.
 		{
-			if(fabs(prevfps - (1/frametimeavg)) > prevfps * cvar("hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold")) // if there was a big jump in fps, just force prevfps at current (1/currentframetime) to make big updates instant
+			if(fabs(prevfps - (1/frametimeavg)) > prevfps * autocvar_hud_panel_engineinfo_framecounter_exponentialmovingaverage_instantupdate_change_threshold) // if there was a big jump in fps, just force prevfps at current (1/currentframetime) to make big updates instant
 				prevfps = (1/currentframetime);
 			prevfps = (1 - weight) * prevfps + weight * (1/frametimeavg); // framecounter just used so there's no need for a new variable, think of it as "frametime average"
 		}

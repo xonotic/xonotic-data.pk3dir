@@ -69,21 +69,15 @@
 	CSQCMODEL_PROPERTY(BIT(14), TAG_VIEWLOC_TYPE, ReadShort, WriteEntity, TAG_VIEWLOC_NAME) \
 	CSQCMODEL_PROPERTY(BIT(15), int, ReadByte, WriteByte, multijump_count) \
 	CSQCMODEL_PROPERTY(BIT(16), int, ReadByte, WriteByte, MOVETYPE_NAME)
-// TODO get rid of colormod/glowmod here, find good solution for vortex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
+// TODO get rid of colormod/glowmod here; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here
-#define CSQCMODEL_HOOK_PREUPDATE \
-	CSQCModel_Hook_PreUpdate(isnew, isplayer, islocalplayer);
-#define CSQCMODEL_HOOK_POSTUPDATE \
-	CSQCModel_Hook_PostUpdate(isnew, isplayer, islocalplayer);
-#define CSQCMODEL_HOOK_PREDRAW \
-	CSQCModel_Hook_PreDraw(isplayer);
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP() \
 	CSQCPlayer_SetViewLocation()
 
-// force updates of player entities that often even if unchanged
+// force updates of player entities this frequently (per second) even if unchanged
 #ifndef CSQCPLAYER_FORCE_UPDATES
-#define CSQCPLAYER_FORCE_UPDATES 0.25
+#define CSQCPLAYER_FORCE_UPDATES 4
 #endif
 
 // mod must define:

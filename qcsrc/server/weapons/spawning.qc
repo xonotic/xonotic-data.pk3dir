@@ -2,45 +2,34 @@
 
 #include "weaponsystem.qh"
 #include "../mutators/all.qh"
-#include "../t_items.qh"
-#include "../../common/weapons/all.qh"
+#include <common/t_items.qh>
+#include <common/weapons/all.qh>
 
 string W_Apply_Weaponreplace(string in)
 {
-	float n = tokenize_console(in);
-	string out = "", s, replacement;
-	float i, j;
-	entity e;
-	for(i = 0; i < n; ++i)
-	{
-		replacement = "";
-		s = argv(i);
-
-		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+	string out = "";
+	FOREACH_WORD(in, true, {
+		string replacement = "";
+		Weapon w = Weapons_fromstr(it);
+		if (w)
 		{
-			e = get_weaponinfo(j);
-			if(e.netname == s)
-			{
-				replacement = e.weaponreplace;
-			}
+            replacement = w.weaponreplace;
+            if (replacement == "") replacement = it;
 		}
-
-		if(replacement == "")
-			out = strcat(out, " ", s);
-		else if(replacement != "0")
-			out = strcat(out, " ", replacement);
-	}
-	return substring(out, 1, -1);
+		if (replacement == "0") continue;
+		out = cons(out, replacement);
+	});
+	return out;
 }
 
 void weapon_defaultspawnfunc(entity this, Weapon e)
 {
-	int wpn = e.m_id;
+	Weapon wpn = e;
 	if (this.classname != "droppedweapon" && this.classname != "replacedweapon")
 	{
 		if (e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
-			objerror("Attempted to spawn a mutator-blocked weapon rejected");
+			LOG_MAPWARNF("Attempted to spawn a mutator-blocked weapon rejected: prvm_edict server %i", this);
 			startitem_failed = true;
 			return;
 		}
@@ -61,45 +50,31 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);
-				int j;
-				for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-				{
-					e = get_weaponinfo(j);
-					if (e.netname == s)
+				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+					if(it.netname == s)
 					{
 						entity replacement = spawn();
 						copyentity(this, replacement);
 						replacement.classname = "replacedweapon";
-						weapon_defaultspawnfunc(replacement, e);
+						weapon_defaultspawnfunc(replacement, it);
 						break;
 					}
-				}
-				if (j > WEP_LAST)
-				{
-					LOG_INFO("The weapon replace list for ", this.classname, " contains an unknown weapon ", s, ". Skipped.\n");
-				}
+				));
 			}
 		}
 		if (t >= 1) // always the case!
 		{
 			s = argv(0);
-			wpn = 0;
-			int j;
-			for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			{
-				e = get_weaponinfo(j);
-				if (e.netname == s)
+			wpn = WEP_Null;
+			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				if(it.netname == s)
 				{
-					wpn = j;
+					wpn = it;
 					break;
 				}
-			}
-			if (j > WEP_LAST)
-			{
-				LOG_INFO("The weapon replace list for ", this.classname, " contains an unknown weapon ", s, ". Skipped.\n");
-			}
+			));
 		}
-		if (wpn == 0)
+		if (wpn == WEP_Null)
 		{
 			remove(this);
 			startitem_failed = true;
@@ -107,11 +82,9 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 	}
 
-	e = get_weaponinfo(wpn);
-
 	if (!this.respawntime)
 	{
-		if (e.weapons & WEPSET_SUPERWEAPONS)
+		if (wpn.spawnflags & WEP_FLAG_SUPERWEAPON)
 		{
 			this.respawntime = g_pickup_respawntime_superweapon;
 			this.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -123,14 +96,14 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		}
 	}
 
-	if (e.weapons & WEPSET_SUPERWEAPONS)
+	if (wpn.spawnflags & WEP_FLAG_SUPERWEAPON)
 		if (!this.superweapons_finished)
 			this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	// if we don't already have ammo, give us some ammo
-	if (!this.(e.ammo_field))
+	if (!this.(wpn.ammo_field))
 	{
-		switch (e.ammo_field)
+		switch (wpn.ammo_field)
 		{
 			case ammo_shells:  this.ammo_shells  = cvar("g_pickup_shells_weapon");  break;
 			case ammo_nails:   this.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
@@ -142,11 +115,11 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	}
 
 	#if 0 // WEAPONTODO
-	if (e.items)
+	if (wpn.items)
 	{
 		for (int i = 0, j = 1; i < 24; ++i, j <<= 1)
 		{
-			if (e.items & j)
+			if (wpn.items & j)
 			{
 				ammotype = Item_CounterField(j);
 				if (!this.ammotype)
@@ -160,7 +133,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	if (g_pickup_weapons_anyway)
 		this.pickup_anyway = true;
 
-	GameItem def = e.m_pickup;
+	GameItem def = wpn.m_pickup;
 	_StartItem(
 		this,
 		this.itemdef = def,
@@ -169,7 +142,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 	);
 	#if 0 // WEAPONTODO
 	if (this.modelindex) { // don't precache if this was removed
-		e.wr_init(e);
+		wpn.wr_init(wpn);
 	}
 	#endif
 }

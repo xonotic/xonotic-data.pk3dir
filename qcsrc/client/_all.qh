@@ -1,11 +1,11 @@
 #ifndef CLIENT_ALL_H
 #define CLIENT_ALL_H
 
-#include "../common/util.qh"
+#include <common/util.qh>
 
-#include "../common/effects/all.qh"
-#include "../common/models/all.qh"
-#include "../common/sounds/all.qh"
+#include <common/effects/all.qh>
+#include <common/models/all.qh>
+#include <common/sounds/all.qh>
 
 #include "autocvars.qh"
 #include "defs.qh"

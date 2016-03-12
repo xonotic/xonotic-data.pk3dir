@@ -76,7 +76,7 @@ void soundat(entity e, vector o, int chan, string samp, float vol, float _atten)
 void stopsoundto(int _dest, entity e, int chan)
 {
 	if (!sound_allowed(_dest, e)) return;
-	int entno = num_for_edict(e);
+	int entno = etof(e);
 	if (entno >= 8192 || chan < 0 || chan > 7)
 	{
 		int idx = precache_sound_index(SND(Null));
@@ -128,11 +128,7 @@ float spamsound(entity e, int chan, string samp, float vol, float _atten)
 void play2team(float t, string filename)
 {
 	if (autocvar_bot_sound_monopoly) return;
-	entity head;
-	FOR_EACH_REALPLAYER(head)
-	{
-		if (head.team == t) play2(head, filename);
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.team == t, LAMBDA(play2(it, filename)));
 }
 
 void play2all(string samp)

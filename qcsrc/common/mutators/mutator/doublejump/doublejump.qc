@@ -1,8 +1,8 @@
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-	#include "../../../../server/antilag.qh"
+	#include <server/antilag.qh>
 #endif
-#include "../../../physics.qh"
+#include <common/physics/player.qh>
 
 #ifdef SVQC
 REGISTER_MUTATOR(doublejump, autocvar_sv_doublejump);

@@ -27,8 +27,7 @@
 
 entity Create_Effect_Entity(string eff_name, bool eff_trail)
 {
-	entity this = new(effect_entity);
-	make_pure(this);
+	entity this = new_pure(effect_entity);
 	this.eent_eff_name = eff_name;
 	this.eent_eff_trail = eff_trail;
 	return this;

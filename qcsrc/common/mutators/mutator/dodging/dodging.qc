@@ -32,8 +32,8 @@ bool autocvar_sv_dodging_sound;
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
-#include "../../../animdecide.qh"
-#include "../../../physics.qh"
+#include <common/animdecide.qh>
+#include <common/physics/player.qh>
 
 .float cvar_cl_dodging_timeout = _STAT(DODGING_TIMEOUT);
 
@@ -92,15 +92,15 @@ bool check_close_to_wall(entity this, float threshold)
 {
 	if (PHYS_DODGING_WALL == 0) { return false; }
 
-	#define X(OFFSET)																\
-	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this);	\
-	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < threshold)		\
+#define X(OFFSET) \
+	tracebox(this.origin, this.mins, this.maxs, this.origin + OFFSET, true, this); \
+	if(trace_fraction < 1 && vdist(this.origin - trace_endpos, <, threshold)) \
 		return true;
 	X(1000*v_right);
 	X(-1000*v_right);
 	X(1000*v_forward);
 	X(-1000*v_forward);
-	#undef X
+#undef X
 
 	return false;
 }
@@ -115,7 +115,7 @@ float PM_dodging_checkpressedkeys(entity this)
 	if(!PHYS_DODGING)
 		return false;
 
-	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN);
+	float frozen_dodging = (PHYS_FROZEN(this) && PHYS_DODGING_FROZEN(this));
 	float frozen_no_doubletap = (frozen_dodging && !PHYS_DODGING_FROZEN_NODOUBLETAP);
 
 	// first check if the last dodge is far enough back in time so we can dodge again
@@ -137,7 +137,7 @@ float PM_dodging_checkpressedkeys(entity this)
 		/* is this a state change? */													\
 		if(!(PHYS_DODGING_PRESSED_KEYS(this) & KEY_##BTN) || frozen_no_doubletap) {		\
 				tap_direction_##RESULT;													\
-				if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this))	\
+				if ((time - this.last_##BTN##_KEY_time) < PHYS_DODGING_TIMEOUT(this) || frozen_no_doubletap)	\
 					dodge_detected = true;													\
 				this.last_##BTN##_KEY_time = time;										\
 		}
@@ -176,7 +176,7 @@ void PM_dodging(entity this)
 	if (!PHYS_DODGING)
 		return;
 
-    if (PHYS_DEAD(this))
+    if (IS_DEAD(this))
         return;
 
 	// when swimming, no dodging allowed..
@@ -226,7 +226,7 @@ void PM_dodging(entity this)
 
 #ifdef SVQC
 		if (autocvar_sv_dodging_sound)
-			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 		animdecide_setaction(this, ANIMACTION_JUMP, true);
 #endif
@@ -275,11 +275,7 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 
 #ifdef SVQC
 
-MUTATOR_HOOKFUNCTION(dodging, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
-	return false;
-}
+REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {

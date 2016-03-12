@@ -43,11 +43,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 		nix_nextchange = 0;
 		nix_nextweapon = 0;
 
-		for (int i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if (NIX_CanChooseWeapon(i)) {
-				Weapon w = get_weaponinfo(i);
-				w.wr_init(w);
-			}
+		FOREACH(Weapons, it != WEP_Null && NIX_CanChooseWeapon(it.m_id), LAMBDA(it.wr_init(it)));
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -58,19 +54,17 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 	MUTATOR_ONREMOVE
 	{
 		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
-		entity e;
-		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
-		{
-			e.ammo_cells = start_ammo_cells;
-			e.ammo_plasma = start_ammo_plasma;
-			e.ammo_shells = start_ammo_shells;
-			e.ammo_nails = start_ammo_nails;
-			e.ammo_rockets = start_ammo_rockets;
-			e.ammo_fuel = start_ammo_fuel;
-			e.weapons = start_weapons;
-			if(!client_hasweapon(e, e.weapon, true, false))
-				e.switchweapon = w_getbestweapon(self);
-		}
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+			it.ammo_cells = start_ammo_cells;
+			it.ammo_plasma = start_ammo_plasma;
+			it.ammo_shells = start_ammo_shells;
+			it.ammo_nails = start_ammo_nails;
+			it.ammo_rockets = start_ammo_rockets;
+			it.ammo_fuel = start_ammo_fuel;
+			it.weapons = start_weapons;
+			if(!client_hasweapon(it, PS(it).m_weapon, true, false))
+				PS(it).m_switchweapon = w_getbestweapon(self);
+		));
 	}
 
 	return 0;
@@ -78,9 +72,8 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 
 bool NIX_CanChooseWeapon(int wpn)
 {
-	entity e = get_weaponinfo(wpn);
-	if(!e.weapon) // skip dummies
-		return false;
+	entity e = Weapons_from(wpn);
+	if (e == WEP_Null) return false; // skip dummies
 	if(g_weaponarena)
 	{
 		if(!(g_weaponarena_weapons & e.m_wepset))
@@ -99,11 +92,11 @@ bool NIX_CanChooseWeapon(int wpn)
 }
 void NIX_ChooseNextWeapon()
 {
-	float j;
 	RandomSelection_Init();
-	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-		if(NIX_CanChooseWeapon(j))
-			RandomSelection_Add(world, j, string_null, 1, (j != nix_weapon));
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if(NIX_CanChooseWeapon(it.m_id))
+			RandomSelection_Add(world, it.m_id, string_null, 1, (it.m_id != nix_weapon));
+	));
 	nix_nextweapon = RandomSelection_chosen_float;
 }
 
@@ -124,12 +117,12 @@ void NIX_GiveCurrentWeapon()
 			nix_nextchange = time; // start the first round now!
 		else
 			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
-		// Weapon w = get_weaponinfo(nix_weapon);
+		// Weapon w = Weapons_from(nix_weapon);
 		// w.wr_init(w); // forget it, too slow
 	}
 
 	// get weapon info
-	entity e = get_weaponinfo(nix_weapon);
+	entity e = Weapons_from(nix_weapon);
 
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
 	{
@@ -210,10 +203,13 @@ void NIX_GiveCurrentWeapon()
 		self.weapons |= WEPSET(BLASTER);
 	self.weapons |= e.m_wepset;
 
-	if(self.switchweapon != nix_weapon)
-		if(!client_hasweapon(self, self.switchweapon, true, false))
-			if(client_hasweapon(self, nix_weapon, true, false))
-				W_SwitchWeapon(nix_weapon);
+    Weapon w = Weapons_from(nix_weapon);
+	if(PS(self).m_switchweapon != w)
+		if(!client_hasweapon(self, PS(self).m_switchweapon, true, false))
+		{
+			if(client_hasweapon(self, w, true, false))
+				W_SwitchWeapon(w);
+		}
 }
 
 MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)
@@ -268,7 +264,7 @@ MUTATOR_HOOKFUNCTION(nix, OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
 {SELFPARAM();
 	if(!intermission_running)
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	if(IS_PLAYER(self))
 		NIX_GiveCurrentWeapon();
 	return 0;

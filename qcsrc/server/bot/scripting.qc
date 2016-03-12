@@ -524,8 +524,6 @@ float bot_cmd_wait_until()
 
 float bot_cmd_barrier()
 {SELFPARAM();
-	entity cl;
-
 	// 0 = no barrier, 1 = waiting, 2 = waiting finished
 
 	if(self.bot_barrier == 0) // initialization
@@ -537,18 +535,16 @@ float bot_cmd_barrier()
 
 	if(self.bot_barrier == 1) // find other bots
 	{
-		FOR_EACH_CLIENT(cl) if(cl.isbot)
-		{
-			if(cl.bot_cmdqueuebuf_allocated)
-				if(cl.bot_barrier != 1)
-					return CMD_STATUS_EXECUTING; // not all are at the barrier yet
-		}
+		FOREACH_CLIENT(it.isbot, LAMBDA(
+			if(it.bot_cmdqueuebuf_allocated)
+			if(it.bot_barrier != 1)
+				return CMD_STATUS_EXECUTING; // not all are at the barrier yet
+		));
 
 		// all bots hit the barrier!
-		FOR_EACH_CLIENT(cl) if(cl.isbot)
-		{
-			cl.bot_barrier = 2; // acknowledge barrier
-		}
+
+		// acknowledge barrier
+		FOREACH_CLIENT(it.isbot, LAMBDA(it.bot_barrier = 2));
 
 		bot_barriertime = time;
 	}
@@ -570,15 +566,13 @@ float bot_cmd_turn()
 
 float bot_cmd_select_weapon()
 {SELFPARAM();
-	float id;
-
-	id = bot_cmd.bot_cmd_parm_float;
+	float id = bot_cmd.bot_cmd_parm_float;
 
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	if(client_hasweapon(self, id, true, false))
-		self.switchweapon = id;
+	if(client_hasweapon(self, Weapons_from(id), true, false))
+		PS(self).m_switchweapon = Weapons_from(id);
 	else
 		return CMD_STATUS_ERROR;
 
@@ -830,13 +824,13 @@ const int BOT_CMD_KEY_CHAT 		= BIT(10);
 float bot_presskeys()
 {SELFPARAM();
 	self.movement = '0 0 0';
-	self.BUTTON_JUMP = false;
-	self.BUTTON_CROUCH = false;
-	self.BUTTON_ATCK = false;
-	self.BUTTON_ATCK2 = false;
-	self.BUTTON_USE = false;
-	self.BUTTON_HOOK = false;
-	self.BUTTON_CHAT = false;
+	PHYS_INPUT_BUTTON_JUMP(self) = false;
+	PHYS_INPUT_BUTTON_CROUCH(self) = false;
+	PHYS_INPUT_BUTTON_ATCK(self) = false;
+	PHYS_INPUT_BUTTON_ATCK2(self) = false;
+	PHYS_INPUT_BUTTON_USE(self) = false;
+	PHYS_INPUT_BUTTON_HOOK(self) = false;
+	PHYS_INPUT_BUTTON_CHAT(self) = false;
 
 	if(self.bot_cmd_keys == BOT_CMD_KEY_NONE)
 		return false;
@@ -852,25 +846,25 @@ float bot_presskeys()
 		self.movement_y = -autocvar_sv_maxspeed;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_JUMP)
-		self.BUTTON_JUMP = true;
+		PHYS_INPUT_BUTTON_JUMP(self) = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_CROUCH)
-		self.BUTTON_CROUCH = true;
+		PHYS_INPUT_BUTTON_CROUCH(self) = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK1)
-		self.BUTTON_ATCK = true;
+		PHYS_INPUT_BUTTON_ATCK(self) = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK2)
-		self.BUTTON_ATCK2 = true;
+		PHYS_INPUT_BUTTON_ATCK2(self) = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_USE)
-		self.BUTTON_USE = true;
+		PHYS_INPUT_BUTTON_USE(self) = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_HOOK)
-		self.BUTTON_HOOK = true;
+		PHYS_INPUT_BUTTON_HOOK(self) = true;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_CHAT)
-		self.BUTTON_CHAT = true;
+		PHYS_INPUT_BUTTON_CHAT(self) = true;
 
 	return true;
 }
@@ -992,15 +986,14 @@ float bot_cmd_releasekey()
 
 float bot_cmd_pause()
 {SELFPARAM();
-	self.button1        = 0;
-	self.button8        = 0;
-	self.BUTTON_USE     = 0;
-	self.BUTTON_ATCK    = 0;
-	self.BUTTON_JUMP    = 0;
-	self.BUTTON_HOOK    = 0;
-	self.BUTTON_CHAT    = 0;
-	self.BUTTON_ATCK2   = 0;
-	self.BUTTON_CROUCH  = 0;
+	PHYS_INPUT_BUTTON_DRAG(self) = false;
+	PHYS_INPUT_BUTTON_USE(self) = false;
+	PHYS_INPUT_BUTTON_ATCK(self) = false;
+	PHYS_INPUT_BUTTON_JUMP(self) = false;
+	PHYS_INPUT_BUTTON_HOOK(self) = false;
+	PHYS_INPUT_BUTTON_CHAT(self) = false;
+	PHYS_INPUT_BUTTON_ATCK2(self) = false;
+	PHYS_INPUT_BUTTON_CROUCH(self) = false;
 
 	self.movement = '0 0 0';
 	self.bot_cmd_keys = BOT_CMD_KEY_NONE;
@@ -1150,21 +1143,18 @@ void bot_setcurrentcommand()
 
 void bot_resetqueues()
 {
-	entity cl;
-
-	FOR_EACH_CLIENT(cl) if(cl.isbot)
-	{
-		cl.bot_cmd_execution_index = 0;
-		bot_clearqueue(cl);
+	FOREACH_CLIENT(it.isbot, LAMBDA(
+		it.bot_cmd_execution_index = 0;
+		bot_clearqueue(it);
 		// also, cancel all barriers
-		cl.bot_barrier = 0;
-		for(int i = 0; i < cl.bot_places_count; ++i)
+		it.bot_barrier = 0;
+		for(int i = 0; i < it.bot_places_count; ++i)
 		{
-			strunzone(cl.(bot_placenames[i]));
-			cl.(bot_placenames[i]) = string_null;
+			strunzone(it.(bot_placenames[i]));
+			it.(bot_placenames[i]) = string_null;
 		}
-		cl.bot_places_count = 0;
-	}
+		it.bot_places_count = 0;
+	));
 
 	bot_barriertime = time;
 }

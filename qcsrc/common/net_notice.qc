@@ -30,10 +30,7 @@ void sv_notice_to(entity _to, string _notice, float _howlong, float _modal)
 
 void sv_notice_toall(string _notice, float _howlong, float _modal)
 {
-    entity _head;
-    FOR_EACH_REALCLIENT(_head)
-        sv_notice_to(_head, _notice, _howlong, _modal);
-
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(sv_notice_to(it, _notice, _howlong, _modal)));
 }
 
 #endif // SVQC
@@ -79,7 +76,7 @@ void cl_notice_run()
     drawfill(v1, v2, '0.5 0.5 0.5', 0.5, DRAWFLAG_NORMAL);
 
     vector v3 = v1 + '10 10 0';
-    #define OUT(s, z) do { drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3.y += z + 4; } while (0)
+    #define OUT(s, z) MACRO_BEGIN { drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3.y += z + 4; } MACRO_END
 
     OUT(_("^1Server notices:"), 32);
     LL_EACH(cl_notices, it.alpha > time, LAMBDA(

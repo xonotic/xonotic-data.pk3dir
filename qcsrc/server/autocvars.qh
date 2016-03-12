@@ -58,13 +58,11 @@ bool autocvar_bot_nofire;
 #define autocvar_bot_suffix cvar_string("bot_suffix")
 bool autocvar_bot_usemodelnames;
 int autocvar_bot_vs_human;
-int autocvar_bot_debug;
 bool autocvar_bot_debug_tracewalk;
 bool autocvar_bot_debug_goalstack;
 bool autocvar_bot_wander_enable;
 int autocvar_captureleadlimit_override;
 #define autocvar_capturelimit_override cvar("capturelimit_override")
-#define autocvar_developer cvar("developer")
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
@@ -74,7 +72,7 @@ float autocvar_g_antilag_nudge;
 float autocvar_g_balance_armor_blockpercent;
 int autocvar_g_balance_armor_limit;
 float autocvar_g_balance_armor_regen;
-float autocvar_g_balance_armor_regenlinear; // TODO: int/bool?
+float autocvar_g_balance_armor_regenlinear;
 int autocvar_g_balance_armor_regenstable;
 float autocvar_g_balance_armor_rot;
 float autocvar_g_balance_armor_rotlinear;
@@ -267,6 +265,7 @@ float autocvar_g_spawn_furthest;
 bool autocvar_g_spawn_useallspawns;
 bool autocvar_g_spawnpoints_auto_move_out_of_solid;
 #define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
+float autocvar_g_spawnshield_blockdamage;
 float autocvar_g_teamdamage_resetspeed;
 float autocvar_g_teamdamage_threshold;
 bool autocvar_g_telefrags;
@@ -466,6 +465,8 @@ vector autocvar_g_nades_throw_offset;
 bool autocvar_g_nades_spawn;
 int autocvar_g_nades_spawn_count;
 bool autocvar_g_nades_client_select;
+bool autocvar_g_nades_pickup = true;
+float autocvar_g_nades_pickup_time = 2;
 float autocvar_g_nades_nade_lifetime;
 float autocvar_g_nades_nade_minforce;
 float autocvar_g_nades_nade_maxforce;

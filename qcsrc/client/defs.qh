@@ -95,7 +95,7 @@ float ticrate;
 const float MIN_DAMAGEEXTRARADIUS = 2;
 const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
-.void(float thisdmg, int hittype, vector org, vector thisforce) event_damage;
+.void(entity this, float thisdmg, int hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto
 float angles_held_status;
@@ -107,13 +107,6 @@ vector angles_held;
 int w_deathtype;
 float w_issilent, w_random;
 vector w_org, w_backoff;
-
-float rifle_scope;
-float vortex_scope;
-
-float minelayer_maxmines;
-
-float hagar_maxrockets;
 
 float bgmtime;
 
@@ -130,5 +123,4 @@ float uid2name_dialog;
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
 
-float g_balance_porto_secondary;
 #endif

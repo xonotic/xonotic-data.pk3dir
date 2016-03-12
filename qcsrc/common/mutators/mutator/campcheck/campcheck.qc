@@ -9,9 +9,8 @@ REGISTER_MUTATOR(campcheck, cvar("g_campcheck"));
 .float campcheck_traveled_distance;
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
-{SELFPARAM();
-	Kill_Notification(NOTIF_ONE, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
-
+{
+	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CPID_CAMPCHECK);
 	return false;
 }
 
@@ -35,9 +34,9 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 	if(time >= game_starttime)
 	if(IS_PLAYER(self))
 	if(IS_REAL_CLIENT(self)) // bots may camp, but that's no reason to constantly kill them
-	if(self.deadflag == DEAD_NO)
-	if(!self.frozen)
-	if(!self.BUTTON_CHAT)
+	if(!IS_DEAD(self))
+	if(!STAT(FROZEN, self))
+	if(!PHYS_INPUT_BUTTON_CHAT(self))
 	if(autocvar_g_campcheck_interval)
 	{
 		vector dist;

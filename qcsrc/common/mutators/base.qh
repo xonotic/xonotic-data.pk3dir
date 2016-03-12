@@ -132,7 +132,11 @@ void RegisterCallbacks() {};
         return ret; \
     } \
     [[accumulate]] void RegisterHooks() { HOOK_##id = NEW(CallbackChain, #id); }
-#define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+#ifdef __STDC__
+    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0 P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+#else
+    #define MUTATOR_CALLHOOK(id, ...) APPLY(__Mutator_Send_##id, 0, ##__VA_ARGS__)
+#endif
 
 enum {
     MUTATOR_REMOVING,
@@ -162,6 +166,7 @@ void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 
 #ifndef MENUQC
+/** server mutators activate corresponding client mutators for all clients */
 REGISTER_NET_LINKED(Mutator)
 
 #ifdef SVQC
@@ -175,9 +180,8 @@ bool Mutator_SendEntity(entity this, entity to, int sf)
 #endif
 
 #ifdef CSQC
-void NET_Mutator_Remove()
+void NET_Mutator_Remove(entity this)
 {
-    SELFPARAM();
     string s = this.netname;
     WITH(bool, mutator_log, true, LAMBDA(
         FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Remove(it)));
@@ -185,6 +189,7 @@ void NET_Mutator_Remove()
 }
 NET_HANDLE(Mutator, bool isNew)
 {
+    make_pure(this);
     string s = this.netname = ReadString();
     return = true;
     if (isNew)
@@ -289,7 +294,8 @@ STATIC_INIT_LATE(Mutators) {
     [[accumulate]] void RegisterCallbacks() { CALLBACK_##name = NEW(Callback, func); }
 
 #define MUTATOR_HOOKFUNCTION(...) \
-    EVAL(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
+    EVAL_MUTATOR_HOOKFUNCTION(OVERLOAD(MUTATOR_HOOKFUNCTION, __VA_ARGS__))
+#define EVAL_MUTATOR_HOOKFUNCTION(...) __VA_ARGS__
 
 #define MUTATOR_HOOKFUNCTION_2(mut, cb) \
     MUTATOR_HOOKFUNCTION_3(mut, cb, CBC_ORDER_ANY)
@@ -300,7 +306,7 @@ STATIC_INIT_LATE(Mutators) {
     bool mut##_##cb() { return = false; } \
     [[accumulate]] bool mut##_##cb()
 
-#define MUTATOR_HOOK(cb, func, order) do {                              \
+#define MUTATOR_HOOK(cb, func, order) MACRO_BEGIN {                     \
     MUTATOR_ONADD {                                                     \
         if (!CallbackChain_Add(HOOK_##cb, CALLBACK_##func, order)) {    \
             LOG_INFO("HOOK FAILED: ", #cb, ":", #func, "\n");           \
@@ -310,7 +316,7 @@ STATIC_INIT_LATE(Mutators) {
     MUTATOR_ONROLLBACK_OR_REMOVE {                                      \
         CallbackChain_Remove(HOOK_##cb, CALLBACK_##func);               \
     }                                                                   \
-} while (0)
+} MACRO_END
 
 #include "events.qh"
 

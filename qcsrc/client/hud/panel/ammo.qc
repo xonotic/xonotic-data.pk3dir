@@ -141,7 +141,7 @@ void HUD_Ammo()
 	columns = ceil((total_ammo_count)/rows);
 	ammo_size = eX * mySize.x*(1/columns) + eY * mySize.y*(1/rows);
 
-	vector offset = '0 0 0'; // fteqcc sucks
+	vector offset = '0 0 0';
 	float newSize;
 	if(ammo_size.x/ammo_size.y > 3)
 	{
@@ -158,8 +158,9 @@ void HUD_Ammo()
 		ammo_size.y = newSize;
 	}
 
+	Weapon wep = switchweapon;
 	int i;
-	bool infinite_ammo = (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_WEAPON_AMMO);
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
 	row = column = 0;
 	if(autocvar_hud_panel_ammo_onlycurrent)
 	{
@@ -172,7 +173,7 @@ void HUD_Ammo()
 			DrawAmmoItem(
 				pos,
 				ammo_size,
-				(get_weaponinfo(switchweapon)).ammo_field,
+				wep.ammo_field,
 				true,
 				infinite_ammo
 			);
@@ -196,7 +197,7 @@ void HUD_Ammo()
 				pos + eX * column * (ammo_size.x + offset.x) + eY * row * (ammo_size.y + offset.y),
 				ammo_size,
 				ammotype,
-				((get_weaponinfo(switchweapon)).ammo_field == ammotype),
+				(wep.ammo_field == ammotype),
 				infinite_ammo
 			);
 

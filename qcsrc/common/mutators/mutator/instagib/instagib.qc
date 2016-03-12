@@ -16,9 +16,9 @@ int autocvar_g_instagib_ammo_drop;
 int autocvar_g_instagib_extralives;
 float autocvar_g_instagib_speed_highspeed;
 
-#include "../../../../server/cl_client.qh"
+#include <server/cl_client.qh>
 
-#include "../../../items/all.qc"
+#include <common/items/all.qc>
 
 REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
 
@@ -52,7 +52,7 @@ void instagib_stop_countdown(entity e)
 {
 	if (!e.instagib_needammo)
 		return;
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_INSTAGIB_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_INSTAGIB_FINDAMMO);
 	e.instagib_needammo = false;
 }
 void instagib_ammocheck()
@@ -62,7 +62,7 @@ void instagib_ammocheck()
 	if(!IS_PLAYER(self))
 		return; // not a player
 
-	if(self.deadflag || gameover)
+	if(IS_DEAD(self) || gameover)
 		instagib_stop_countdown(self);
 	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
@@ -139,10 +139,7 @@ void instagib_ammocheck()
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		instagib_stop_countdown(head);
-
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(instagib_stop_countdown(it)));
 	return false;
 }
 
@@ -296,7 +293,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 				frag_target.armorvalue -= 1;
 				frag_damage = 0;
 				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
+				frag_attacker.damage_dealt += 1;
 				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}
@@ -408,7 +405,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		frag_damage = 1000; // always gib if it was a vaporizer death
 
-	return FALSE;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)

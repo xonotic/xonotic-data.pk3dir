@@ -2,7 +2,7 @@
 #define MUTATOR_DAMAGETEXT_H
 
 #ifdef MENUQC
-#include "../../../../menu/xonotic/tab.qc"
+#include <menu/xonotic/tab.qc>
 #endif
 
 #endif
@@ -11,16 +11,17 @@
 REGISTER_MUTATOR(damagetext, true);
 
 #if defined(CSQC) || defined(MENUQC)
-AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      _("Draw damage dealt. 0: disabled, 1: enabled"));
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$d",    _("How to format the damage text. 1$ is health, 2$ is armor, 3$ is both"));
-AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    _("Default damage text color"));
-AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      _("Damage text uses weapon color"));
-AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          _("Damage text font size"));
-AUTOCVAR_SAVE(cl_damagetext_alpha_start,        float,  1,          _("Damage text initial alpha"));
-AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,     float,  3,          _("Damage text lifetime in seconds"));
-AUTOCVAR_SAVE(cl_damagetext_velocity,           vector, '0 0 20',   _("Damage text move direction"));
-AUTOCVAR_SAVE(cl_damagetext_offset,             vector, '0 -40 0',  _("Damage text offset"));
-AUTOCVAR_SAVE(cl_damagetext_accumulate_range,   float,  30,         _("Damage text spawned within this range is accumulated"));
+// no translatable cvar description please
+AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      "Draw damage dealt where you hit the enemy");
+AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$$d",   "How to format the damage text. 1$ is health, 2$ is armor, 3$ is both");
+AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    "Damage text color");
+AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      "Damage text uses weapon color");
+AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          "Damage text font size");
+AUTOCVAR_SAVE(cl_damagetext_alpha_start,        float,  1,          "Damage text initial alpha");
+AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,     float,  3,          "Damage text lifetime in seconds");
+AUTOCVAR_SAVE(cl_damagetext_velocity,           vector, '0 0 20',   "Damage text move direction");
+AUTOCVAR_SAVE(cl_damagetext_offset,             vector, '0 -40 0',  "Damage text offset");
+AUTOCVAR_SAVE(cl_damagetext_accumulate_range,   float,  30,         "Damage text spawned within this range is accumulated");
 #endif
 
 #ifdef CSQC
@@ -88,23 +89,24 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const int armor = MUTATOR_ARGV(1, int);
     const int deathtype = MUTATOR_ARGV(2, int);
     const vector location = hit.origin;
-    entity e;
-    FOR_EACH_REALCLIENT(e) if (
-        (SV_DAMAGETEXT_ALL()) ||
-        (SV_DAMAGETEXT_PLAYERS() && e == attacker) ||
-        (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(e) && e.enemy == attacker) ||
-        (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(e))
-    ) {
-        msg_entity = e;
-        WriteHeader(MSG_ONE, damagetext);
-        WriteShort(MSG_ONE, health);
-        WriteShort(MSG_ONE, armor);
-        WriteEntity(MSG_ONE, hit);
-        WriteCoord(MSG_ONE, location.x);
-        WriteCoord(MSG_ONE, location.y);
-        WriteCoord(MSG_ONE, location.z);
-        WriteInt24_t(MSG_ONE, deathtype);
-    }
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+        if (
+            (SV_DAMAGETEXT_ALL()) ||
+            (SV_DAMAGETEXT_PLAYERS() && it == attacker) ||
+            (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_SPEC(it) && it.enemy == attacker) ||
+            (SV_DAMAGETEXT_SPECTATORS_ONLY() && IS_OBSERVER(it))
+        ) {
+            msg_entity = it;
+            WriteHeader(MSG_ONE, damagetext);
+            WriteShort(MSG_ONE, rint(health));
+            WriteShort(MSG_ONE, rint(armor));
+            WriteEntity(MSG_ONE, hit);
+            WriteCoord(MSG_ONE, location.x);
+            WriteCoord(MSG_ONE, location.y);
+            WriteCoord(MSG_ONE, location.z);
+            WriteInt24_t(MSG_ONE, deathtype);
+        }
+    ));
 }
 #endif
 
@@ -133,11 +135,11 @@ NET_HANDLE(damagetext, bool isNew)
 
 #ifdef MENUQC
 CLASS(XonoticDamageTextSettings, XonoticTab)
-    #include "../../../../menu/gamesettings.qh"
+    #include <menu/gamesettings.qh>
     REGISTER_SETTINGS(damagetext, NEW(XonoticDamageTextSettings));
     ATTRIB(XonoticDamageTextSettings, title, string, _("Damage text"))
     ATTRIB(XonoticDamageTextSettings, intendedWidth, float, 0.9)
-    ATTRIB(XonoticDamageTextSettings, rows, float, 13)
+    ATTRIB(XonoticDamageTextSettings, rows, float, 15.5)
     ATTRIB(XonoticDamageTextSettings, columns, float, 5)
     INIT(XonoticDamageTextSettings) { this.configureDialog(this); }
     METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }

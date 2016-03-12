@@ -11,9 +11,8 @@ void weaponorder_swap(int i, int j, entity pass)
 string weaponorder_cmp_str;
 int weaponorder_cmp(int i, int j, entity pass)
 {
-	int ai, aj;
-	ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].weapon), 0);
-	aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].weapon), 0);
+	int ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].m_id), 0);
+	int aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].m_id), 0);
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
@@ -77,18 +76,10 @@ void HUD_Weapons()
 		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
 
 		weapon_cnt = 0;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			setself(get_weaponinfo(i));
-			if(self.impulse >= 0)
-			{
-				weaponorder[weapon_cnt] = self;
-				++weapon_cnt;
-			}
-		}
+		FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, LAMBDA(weaponorder[weapon_cnt++] = it));
 		for(i = weapon_cnt; i < Weapons_MAX; ++i)
-			weaponorder[i] = world;
-		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+			weaponorder[i] = NULL;
+		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, NULL);
 
 		weaponorder_cmp_str = string_null;
 	}
@@ -100,7 +91,7 @@ void HUD_Weapons()
 	{
 		if(!weapons_stat)
 			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
-				weapons_stat |= WepSet_FromWeapon(i);
+				weapons_stat |= WepSet_FromWeapon(Weapons_from(i));
 
 		#if 0
 		/// debug code
@@ -109,7 +100,7 @@ void HUD_Weapons()
 			weapons_stat = '0 0 0';
 			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (Weapons_COUNT - 1));
 			for(i = WEP_FIRST; i <= countw; ++i)
-				weapons_stat |= WepSet_FromWeapon(i);
+				weapons_stat |= WepSet_FromWeapon(Weapons_from(i));
 		}
 		#endif
 	}
@@ -126,7 +117,7 @@ void HUD_Weapons()
 		// do we own this weapon?
 		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if((weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon)) || (weaponorder[i].weapon == complain_weapon))
+			if((weapons_stat & WepSet_FromWeapon(weaponorder[i])) || (weaponorder[i].m_id == complain_weapon))
 				++weapon_count;
 
 
@@ -140,11 +131,10 @@ void HUD_Weapons()
 		// get the all-weapons layout
 		int nHidden = 0;
 		WepSet weapons_stat = WepSet_GetFromStat();
-		for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-			Weapon w = get_weaponinfo(i);
-			if (weapons_stat & w.m_wepset) continue;
-			if (w.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
-		}
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if (weapons_stat & it.m_wepset) continue;
+			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+		));
 		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
@@ -346,16 +336,16 @@ void HUD_Weapons()
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
-		setself(weaponorder[i]);
-		weapon_id = self.impulse;
-		isCurrent = (self.weapon == switchweapon);
+		entity it = weaponorder[i];
+		weapon_id = it.impulse;
+		isCurrent = (it == switchweapon);
 
 		// skip if this weapon doesn't exist
-		if(!self || weapon_id < 0) { continue; }
+		if(!it || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if (!((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon)))
+		if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
 			continue;
 
 		// figure out the drawing position of weapon
@@ -370,7 +360,7 @@ void HUD_Weapons()
 		// draw the weapon accuracy
 		if(autocvar_hud_panel_weapons_accuracy)
 		{
-			float panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
+			float panel_weapon_accuracy = weapon_accuracy[it.m_id-WEP_FIRST];
 			if(panel_weapon_accuracy >= 0)
 			{
 				color = Accuracy_GetColor(panel_weapon_accuracy);
@@ -379,13 +369,13 @@ void HUD_Weapons()
 		}
 
 		// drawing all the weapon items
-		if(weapons_stat & WepSet_FromWeapon(self.weapon))
+		if(weapons_stat & WepSet_FromWeapon(it))
 		{
 			// draw the weapon image
 			if(isCurrent)
-				drawpic_aspect_skin(weapon_pos, self.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(weapon_pos, it.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			else
-				drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(noncurrent_pos, it.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -399,7 +389,7 @@ void HUD_Weapons()
 					break;
 
 				case 3: // weapon name
-					drawstring(weapon_pos, strtolower(self.m_name), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, strtolower(it.m_name), label_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				default: // nothing
@@ -407,14 +397,14 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && (self.ammo_field != ammo_none))
+			if(autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
 			{
 				float ammo_full;
-				a = getstati(GetAmmoStat(self.ammo_field)); // how much ammo do we have?
+				a = getstati(GetAmmoStat(it.ammo_field)); // how much ammo do we have?
 
 				if(a > 0)
 				{
-					switch(self.ammo_field)
+					switch(it.ammo_field)
 					{
 						case ammo_shells:  ammo_full = autocvar_hud_panel_weapons_ammo_full_shells;  break;
 						case ammo_nails:   ammo_full = autocvar_hud_panel_weapons_ammo_full_nails;   break;
@@ -447,11 +437,11 @@ void HUD_Weapons()
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
 		{
-			drawpic_aspect_skin(noncurrent_pos, self.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(noncurrent_pos, it.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
-		if(self.weapon == complain_weapon)
+		if(it.m_id == complain_weapon)
 		{
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));

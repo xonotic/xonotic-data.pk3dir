@@ -1,5 +1,4 @@
-#ifndef LIB_STATS_H
-#define LIB_STATS_H
+#pragma once
 
 // TODO: rename to 'netvars'
 
@@ -9,11 +8,13 @@
 .int m_id;
 typedef vector vectori;
 
-#define REGISTER_STAT(...) EVAL(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
+#define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
+#define EVAL_REGISTER_STAT(...) __VA_ARGS__
 #if defined(CSQC)
 	/** Get all stats and store them as globals, access with `STAT(ID)` */
 	void stats_get() {}
-	#define STAT(...) EVAL(OVERLOAD(STAT, __VA_ARGS__))
+	#define STAT(...) EVAL_STAT(OVERLOAD(STAT, __VA_ARGS__))
+	#define EVAL_STAT(...) __VA_ARGS__
     #define STAT_1(id) STAT_2(id, NULL)
 	#define STAT_2(id, cl) (0, _STAT(id))
 
@@ -26,9 +27,9 @@ typedef vector vectori;
 	#define _STAT(id) g_stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		T _STAT(id); \
-		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
+		T CAT(_STAT(id), _prev); \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			make_pure(this); \
 			if (#T == "vector" || #T == "vectori") { \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
@@ -36,27 +37,29 @@ typedef vector vectori;
 		} \
 		[[accumulate]] void stats_get() \
 		{ \
-			_STAT(id) = getstat_##T(STAT_##id.m_id); \
+			T it = getstat_##T(STAT_##id.m_id); \
+			if (it != CAT(_STAT(id), _prev)) \
+				CAT(_STAT(id), _prev) = _STAT(id) = it; \
 		}
-	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT(x, T)
+	#define REGISTER_STAT_3(x, T, expr) REGISTER_STAT_2(x, T)
 #elif defined(SVQC)
 	/** Add all registered stats, access with `STAT(ID, player)` or `.type stat = _STAT(ID); player.stat` */
 	void stats_add() {}
-	#define STAT(id, cl) (cl._STAT(id))
+	#define STAT(id, cl) (cl)._STAT(id)
 
 	#define addstat_int(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_bool(id, fld) addstat(id, AS_INT, fld)
 	#define addstat_float(id, fld) addstat(id, AS_FLOAT, fld)
-	#define addstat_vector(id, fld) do { \
+	#define addstat_vector(id, fld) MACRO_BEGIN { \
 		addstat_float(id + 0, fld##_x); \
 		addstat_float(id + 1, fld##_y); \
 		addstat_float(id + 2, fld##_z); \
-	} while (0)
-	#define addstat_vectori(id, fld) do { \
+	} MACRO_END
+	#define addstat_vectori(id, fld) MACRO_BEGIN { \
 		addstat_int(id + 0, fld##_x); \
 		addstat_int(id + 1, fld##_y); \
 		addstat_int(id + 2, fld##_z); \
-	} while (0)
+	} MACRO_END
 	const int AS_STRING = 1;
 	const int AS_INT = 2;
 	const int AS_FLOAT = 8;
@@ -74,9 +77,8 @@ typedef vector vectori;
 	#define _STAT(id) stat_##id
 	#define REGISTER_STAT_2(id, T) \
 		.T _STAT(id); \
-		REGISTER(Stats, STAT_##id, m_id, new(stat)) \
+		REGISTER(Stats, STAT_##id, m_id, new_pure(stat)) \
 		{ \
-			make_pure(this); \
 			if (#T == "vector" || #T == "vectori") { \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, y); \
 				REGISTRY_RESERVE(Stats, m_id, STAT_##id, z); \
@@ -84,16 +86,17 @@ typedef vector vectori;
 		} \
 		[[accumulate]] void stats_add() \
 		{ \
-			addstat_##T(STAT_##id.m_id, _STAT(id)); \
+			.T fld = _STAT(id); \
+			addstat_##T(STAT_##id.m_id, fld); \
 		}
 	void GlobalStats_update(entity this) {}
-    #define REGISTER_STAT_3(x, T, expr) \
-    	REGISTER_STAT(x, T); \
-    	[[accumulate]] void GlobalStats_update(entity this) { STAT(x, this) = (expr); } \
-    	STATIC_INIT(worldstat_##x) { entity this = world; STAT(x, this) = (expr); }
+    #define REGISTER_STAT_3(id, T, expr) \
+    	REGISTER_STAT_2(id, T); \
+    	[[accumulate]] void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
+    	STATIC_INIT(worldstat_##id) { entity this = world; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)
-    #define REGISTER_STAT_3(x, T, expr)
+    #define REGISTER_STAT_3(id, T, expr)
 #endif
 
 const int STATS_ENGINE_RESERVE = 32;
@@ -108,6 +111,4 @@ STATIC_INIT(RegisterStats_renumber)
 }
 #ifdef SVQC
 STATIC_INIT(stats_add) { stats_add(); }
-#endif
-
 #endif

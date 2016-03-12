@@ -1,11 +1,5 @@
-csprogs.dat
-menu.dat
-progs.dat
-qcsrc/client/fteqcc.log
-qcsrc/menu/fteqcc.log
-qcsrc/server/fteqcc.log
-weapons.qc.tmp
-*.lno
-qcsrc/qccversion*
-qcsrc/server/precache-for-csqc.inc
+/*.dat
+/*.lno
+
 .DS_Store
+.idea/

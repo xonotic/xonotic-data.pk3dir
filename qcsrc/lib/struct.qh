@@ -1,5 +1,4 @@
-#ifndef STRUCT_H
-#define STRUCT_H
+#pragma once
 
 #ifndef QCC_SUPPORT_STRUCT
 	#define _STRUCT_DECLARE(x, id, type, END) noref type x##_##id;
@@ -30,6 +29,4 @@
 	#define STRUCT_STORE(from, to, s) to = from
 	#define _STRUCT_MEMBER(my, id, type, END) type id;
 	#define STRUCT(id, s) struct STRUCT_##id { s(_STRUCT_MEMBER, ) };
-#endif
-
 #endif

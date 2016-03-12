@@ -1,7 +1,7 @@
 #ifndef VEHICLE_SPIDERBOT_WEAPONS_H
 #define VEHICLE_SPIDERBOT_WEAPONS_H
 
-#include "../../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 #endif
 
@@ -50,7 +50,7 @@ void spiderbot_rocket_unguided()
 
     UpdateCSQCProjectile(self);
 
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time || vlen(self.pos1 - self.origin) < 16)
+    if (IS_DEAD(self.owner) || self.cnt < time || vdist(self.pos1 - self.origin, <, 16))
         self.use();
 }
 
@@ -70,7 +70,7 @@ void spiderbot_rocket_guided()
 
     UpdateCSQCProjectile(self);
 
-    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+    if (IS_DEAD(self.owner) || self.cnt < time)
         self.use();
 }
 
@@ -174,7 +174,7 @@ void spiderbot_rocket_do()
 
     if (self.wait != -10)
     {
-        if (self.owner.BUTTON_ATCK2 && self.vehicle_weapon2mode == SBRM_GUIDE)
+        if (PHYS_INPUT_BUTTON_ATCK2(self.owner) && self.vehicle_weapon2mode == SBRM_GUIDE)
         {
             if (self.wait == 1)
             if (self.tur_head.frame == 9 || self.tur_head.frame == 1)
@@ -205,7 +205,7 @@ void spiderbot_rocket_do()
     }
 
     if(self.wait != -10)
-    if(!self.owner.BUTTON_ATCK2)
+    if(!PHYS_INPUT_BUTTON_ATCK2(self.owner))
         return;
 
     if(forbidWeaponUse(self.owner))
@@ -226,7 +226,7 @@ void spiderbot_rocket_do()
             rocket.nextthink  = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
             rocket.think	 = vehicles_projectile_explode;
 
-            if(self.owner.BUTTON_ATCK2 && self.tur_head.frame == 1)
+            if(PHYS_INPUT_BUTTON_ATCK2(self.owner) && self.tur_head.frame == 1)
                 self.wait = -10;
             break;
         case SBRM_GUIDE:

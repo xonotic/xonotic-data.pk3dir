@@ -31,7 +31,7 @@ void door_blocked()
 #ifdef SVQC
 		&& (other.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
-		&& !PHYS_DEAD(other)
+		&& !IS_DEAD(other)
 #endif
 	)
 	{ // KIll Kill Kill!!
@@ -47,7 +47,7 @@ void door_blocked()
 #endif
 
 		 // don't change direction for dead or dying stuff
-		if(PHYS_DEAD(other)
+		if(IS_DEAD(other)
 #ifdef SVQC
 			&& (other.takedamage == DAMAGE_NO)
 #endif
@@ -272,24 +272,24 @@ void door_use()
 	}
 }
 
-void door_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.spawnflags & DOOR_NOSPLASH)
+void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if (self.itemkeys)
+	if (this.itemkeys)
 	{
 		// don't allow opening doors through damage if keys are required
 		return;
 	}
 
-	if (self.health <= 0)
+	if (this.health <= 0)
 	{
-		self.owner.health = self.owner.max_health;
-		self.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
-		WITH(entity, self, self.owner, door_use());
+		this.owner.health = this.owner.max_health;
+		this.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
+		WITH(entity, self, this.owner, door_use());
 	}
 }
 
@@ -339,7 +339,7 @@ void door_generic_plat_blocked()
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
-		if(PHYS_DEAD(other) && (other.takedamage == DAMAGE_NO))
+		if(IS_DEAD(other) && (other.takedamage == DAMAGE_NO))
 		{
 			if (self.wait >= 0)
 			{
@@ -432,9 +432,9 @@ void door_trigger_touch()
 {SELFPARAM();
 	if (other.health < 1)
 #ifdef SVQC
-		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !PHYS_DEAD(other)))
+		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !IS_DEAD(other)))
 #elif defined(CSQC)
-		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !PHYS_DEAD(other)))
+		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !IS_DEAD(other)))
 #endif
 			return;
 
@@ -643,7 +643,7 @@ float door_send(entity to, float sf)
 
 		WriteString(MSG_ENTITY, self.model);
 
-		trigger_common_write(true);
+		trigger_common_write(self, true);
 
 		WriteCoord(MSG_ENTITY, self.pos1_x);
 		WriteCoord(MSG_ENTITY, self.pos1_y);

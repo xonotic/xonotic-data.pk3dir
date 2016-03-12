@@ -144,11 +144,7 @@ vector findperpendicular(vector v)
 
 int W_GetGunAlignment(entity player)
 {
-#ifdef SVQC
-	int gunalign = player.cvar_cl_gunalign;
-#else
-	int gunalign = autocvar_cl_gunalign;
-#endif
+	int gunalign = STAT(GUNALIGN, player);
 	if(gunalign < 1 || gunalign > 4)
 		gunalign = 3; // default value
 	--gunalign;

@@ -24,8 +24,8 @@
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
-#include "../common/notifications.qh"
-#include "../common/physics.qh"
+#include "../common/notifications/all.qh"
+#include "../common/physics/player.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
 #include "../common/teams.qh"
@@ -269,7 +269,9 @@ void cvar_changes_init()
 		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
+		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
+		BADCVAR("g_race_qualifying_timelimit_override");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("leadlimit");
@@ -300,47 +302,52 @@ void cvar_changes_init()
 
 		// now check if the changes are actually gameplay relevant
 
-		// does nothing visible
+		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("gameversion");
+		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
-		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_ca_point_leadlimit");
+		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
-		BADCVAR("g_freezetag_point_limit");
 		BADCVAR("g_freezetag_point_leadlimit");
-		BADCVAR("g_keyhunt_point_leadlimit");
-		BADPREFIX("g_mod_");
+		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_hats");
 		BADCVAR("g_invasion_point_limit");
+		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
-		BADCVAR("g_tdm_point_limit");
 		BADCVAR("g_tdm_point_leadlimit");
+		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_intermission_cdtrack");
+		BADCVAR("sv_minigames");
+		BADCVAR("sv_namechangetimer");
+		BADCVAR("sv_precacheplayermodels");
 		BADCVAR("sv_timeout");
-		BADPREFIX("sv_timeout_");
 		BADPREFIX("crypto_");
+		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_maplist_votable_");
+		BADPREFIX("g_mod_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_minigames_");
+		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
-		BADCVAR("gameversion");
-		BADPREFIX("gameversion_");
-		BADCVAR("sv_minigames");
-		BADPREFIX("sv_minigames_");
-		BADCVAR("sv_namechangetimer");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -385,7 +392,9 @@ void cvar_changes_init()
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
+		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
@@ -423,7 +432,6 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
-		BADCVAR("g_spawnshieldtime");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
 
@@ -480,7 +488,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, PL_MIN, PL_MAX, o - '0 0 32768', MOVE_WORLDONLY, world);
+		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, world);
 		if(trace_fraction == 1)
 			continue;
 
@@ -563,7 +571,71 @@ void WeaponStats_Init();
 void WeaponStats_Shutdown();
 spawnfunc(worldspawn)
 {
-	float fd, l, j, n;
+	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
+
+	{
+		bool wantrestart = false;
+
+		if (!server_is_dedicated)
+		{
+			// force unloading of server pk3 files when starting a listen server
+			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
+			// restore csqc_progname too
+			string expect = "csprogs.dat";
+			wantrestart = cvar_string_normal("csqc_progname") != expect;
+			cvar_set_normal("csqc_progname", expect);
+		}
+		else
+		{
+			// Try to use versioned csprogs from pk3
+			// Only ever use versioned csprogs.dat files on dedicated servers;
+			// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
+			string pk3csprogs = "csprogs-" WATERMARK ".dat";
+			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
+			string select = "csprogs.dat";
+			if (fexists(pk3csprogs)) select = pk3csprogs;
+			if (cvar_string_normal("csqc_progname") != select)
+			{
+				cvar_set_normal("csqc_progname", select);
+				wantrestart = true;
+			}
+			// Check for updates on startup
+			// We do it this way for atomicity so that connecting clients still match the server progs and don't disconnect
+			int sentinel = fopen("progs.txt", FILE_READ);
+			if (sentinel >= 0)
+			{
+				string switchversion = fgets(sentinel);
+				fclose(sentinel);
+				if (switchversion != "" && switchversion != WATERMARK)
+				{
+					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+					// if it doesn't exist, assume either:
+					//   a) the current program was overwritten
+					//   b) this is a client only update
+					string newprogs = sprintf("progs-%s.dat", switchversion);
+					if (fexists(newprogs))
+					{
+						cvar_set_normal("sv_progs", newprogs);
+						wantrestart = true;
+					}
+					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
+					if (fexists(newcsprogs))
+					{
+						cvar_set_normal("csqc_progname", newcsprogs);
+						wantrestart = true;
+					}
+				}
+			}
+		}
+		if (wantrestart)
+		{
+			LOG_INFOF("Restart requested\n");
+			changelevel(mapname);
+			// let initialization continue, shutdown depends on it
+		}
+	}
+
+	float fd, l;
 	string s;
 
 	cvar = cvar_normal;
@@ -585,8 +657,6 @@ spawnfunc(worldspawn)
 	{
 		++maxclients;
 	}
-
-	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? true : false);
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -783,31 +853,34 @@ spawnfunc(worldspawn)
 	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	// fill sv_curl_serverpackages from .serverpackage files
-	if(autocvar_sv_curl_serverpackages_auto)
+	if (autocvar_sv_curl_serverpackages_auto)
 	{
-		s = "";
-		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
-		for(int i = 0; i < n; ++i)
-			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
-			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
-				s = strcat(s, " ", argv(i));
-		fd = search_begin("*-serverpackage.txt", true, false);
-		if(fd >= 0)
+		s = "csprogs-" WATERMARK ".txt";
+		// remove automatically managed files from the list to prevent duplicates
+		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
 		{
-			j = search_getsize(fd);
-			for(int i = 0; i < j; ++i)
-				s = strcat(s, " ", search_getfilename(fd, i));
-			search_end(fd);
+			string pkg = argv(i);
+			if (startsWith(pkg, "csprogs-")) continue;
+			if (endsWith(pkg, "-serverpackage.txt")) continue;
+			if (endsWith(pkg, ".serverpackage")) continue;  // OLD legacy
+			s = cons(s, pkg);
 		}
-		fd = search_begin("*.serverpackage", true, false);
-		if(fd >= 0)
-		{
-			j = search_getsize(fd);
-			for(int i = 0; i < j; ++i)
-				s = strcat(s, " ", search_getfilename(fd, i));
-			search_end(fd);
-		}
-		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
+		// add automatically managed files to the list
+		#define X(match) MACRO_BEGIN { \
+			fd = search_begin(match, true, false); \
+			if (fd >= 0) \
+			{ \
+				for (int i = 0, j = search_getsize(fd); i < j; ++i) \
+				{ \
+					s = cons(s, search_getfilename(fd, i)); \
+				} \
+				search_end(fd); \
+			} \
+		} MACRO_END
+		X("*-serverpackage.txt");
+		X("*.serverpackage");
+		#undef X
+		cvar_set("sv_curl_serverpackages", s);
 	}
 
 	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
@@ -1225,7 +1298,7 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !(self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE))
+		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self)))
 			return;
 
 	MapVote_Start();
@@ -1339,25 +1412,21 @@ void DumpStats(float final)
 	if(to_file)
 		fputs(file, strcat(s, "\n"));
 
-	FOR_EACH_CLIENT(other)
-	{
-		if ((IS_REAL_CLIENT(other)) || (IS_BOT_CLIENT(other) && autocvar_sv_logscores_bots))
-		{
-			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
-			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(IS_PLAYER(other) || MUTATOR_CALLHOOK(GetPlayerStatus, other, s))
-				s = strcat(s, ftos(other.team), ":");
-			else
-				s = strcat(s, "spectator:");
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
+		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
+		s = strcat(s, ftos(rint(time - it.jointime)), ":");
+		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+			s = strcat(s, ftos(it.team), ":");
+		else
+			s = strcat(s, "spectator:");
 
-			if(to_console)
-				LOG_INFO(s, other.netname, "\n");
-			if(to_eventlog)
-				GameLogEcho(strcat(s, ftos(other.playerid), ":", other.netname));
-			if(to_file)
-				fputs(file, strcat(s, other.netname, "\n"));
-		}
-	}
+		if(to_console)
+			LOG_INFO(s, it.netname, "\n");
+		if(to_eventlog)
+			GameLogEcho(strcat(s, ftos(it.playerid), ":", it.netname));
+		if(to_file)
+			fputs(file, strcat(s, it.netname, "\n"));
+	));
 
 	if(teamplay)
 	{
@@ -1463,18 +1532,18 @@ void NextLevel()
 	PlayerStats_GameReport(true);
 	WeaponStats_Shutdown();
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_Null); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
 
 	GameLogClose();
 
-	FOR_EACH_PLAYER(other) {
-		FixIntermissionClient(other);
-		if(other.winning)
-			bprint(other.netname, " ^7wins.\n");
-	}
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FixIntermissionClient(it);
+		if(it.winning)
+			bprint(it.netname, " ^7wins.\n");
+	));
 
 	entity oldself = self;
 	target_music_kill();
@@ -1500,7 +1569,7 @@ void CheckRules_Player()
 	if (gameover)	// someone else quit the game already
 		return;
 
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 		self.play_time += frametime;
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
@@ -1569,71 +1638,22 @@ float GetWinningCode(float fraglimitreached, float equality)
 // set the .winning flag for exactly those players with a given field value
 void SetWinners(.float field, float value)
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		head.winning = (head.(field) == value);
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = (it.(field) == value)));
 }
 
 // set the .winning flag for those players with a given field value
 void AddWinners(.float field, float value)
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		if (head.(field) == value)
-			head.winning = 1;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		if(it.(field) == value)
+			it.winning = 1;
+	));
 }
 
 // clear the .winning flags
 void ClearWinners()
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-		head.winning = 0;
-}
-
-// Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
-// they win. Otherwise the defending team wins once the timelimit passes.
-void assault_new_round();
-float WinningCondition_Assault()
-{SELFPARAM();
-	float status;
-
-	WinningConditionHelper(); // set worldstatus
-
-	status = WINNING_NO;
-	// as the timelimit has not yet passed just assume the defending team will win
-	if(assault_attacker_team == NUM_TEAM_1)
-	{
-		SetWinners(team, NUM_TEAM_2);
-	}
-	else
-	{
-		SetWinners(team, NUM_TEAM_1);
-	}
-
-	entity ent;
-	ent = find(world, classname, "target_assault_roundend");
-	if(ent)
-	{
-		if(ent.winning)	// round end has been triggered by attacking team
-		{
-			bprint("ASSAULT: round completed...\n");
-			SetWinners(team, assault_attacker_team);
-
-			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
-
-			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round
-			{
-				status = WINNING_YES;
-			}
-			else
-			{
-				WITH(entity, self, ent, assault_new_round());
-			}
-		}
-	}
-
-	return status;
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.winning = 0));
 }
 
 void ShuffleMaplist()
@@ -1715,8 +1735,6 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 float WinningCondition_RanOutOfSpawns()
 {
-	entity head;
-
 	if(have_team_spawns <= 0)
 		return WINNING_NO;
 
@@ -1728,29 +1746,25 @@ float WinningCondition_RanOutOfSpawns()
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
-	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
-	{
-		if(head.team == NUM_TEAM_1)
-			team1_score = 1;
-		else if(head.team == NUM_TEAM_2)
-			team2_score = 1;
-		else if(head.team == NUM_TEAM_3)
-			team3_score = 1;
-		else if(head.team == NUM_TEAM_4)
-			team4_score = 1;
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+		switch(it.team)
+		{
+			case NUM_TEAM_1: team1_score = 1; break;
+			case NUM_TEAM_2: team2_score = 1; break;
+			case NUM_TEAM_3: team3_score = 1; break;
+			case NUM_TEAM_4: team4_score = 1; break;
+		}
+	));
 
-	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
-	{
-		if(head.team == NUM_TEAM_1)
-			team1_score = 1;
-		else if(head.team == NUM_TEAM_2)
-			team2_score = 1;
-		else if(head.team == NUM_TEAM_3)
-			team3_score = 1;
-		else if(head.team == NUM_TEAM_4)
-			team4_score = 1;
-	}
+	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, LAMBDA(
+		switch(it.team)
+		{
+			case NUM_TEAM_1: team1_score = 1; break;
+			case NUM_TEAM_2: team2_score = 1; break;
+			case NUM_TEAM_3: team3_score = 1; break;
+			case NUM_TEAM_4: team4_score = 1; break;
+		}
+	));
 
 	ClearWinners();
 	if(team1_score + team2_score + team3_score + team4_score == 0)
@@ -1864,16 +1878,14 @@ void CheckRules_World()
 				float totalplayers;
 				float playerswithlaps;
 				float readyplayers;
-				entity head;
 				totalplayers = playerswithlaps = readyplayers = 0;
-				FOR_EACH_PLAYER(head)
-				{
+				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 					++totalplayers;
-					if(PlayerScore_Add(head, SP_RACE_FASTEST, 0))
+					if(PlayerScore_Add(it, SP_RACE_FASTEST, 0))
 						++playerswithlaps;
-					if(head.ready)
+					if(it.ready)
 						++readyplayers;
-				}
+				));
 
 				// at least 2 of the players have completed a lap: start the RACE
 				// otherwise, the players should end the qualifying on their own
@@ -1962,36 +1974,36 @@ void EndFrame()
 	anticheat_endframe();
 
 	float altime;
-	entity e_;
-	FOR_EACH_REALCLIENT(e_)
-	{
-		entity e = IS_SPEC(e_) ? e_.enemy : e_;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		entity e = IS_SPEC(it) ? it.enemy : it;
 		if(e.typehitsound)
-			e_.typehit_time = time;
+			it.typehit_time = time;
 		else if(e.damage_dealt)
 		{
-			e_.hit_time = time;
-			e_.damage_dealt_total += ceil(e.damage_dealt);
+			it.hit_time = time;
+			it.damage_dealt_total += ceil(e.damage_dealt);
 		}
-	}
+	));
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	// add 1 frametime because after this, engine SV_Physics
 	// increases time by a frametime and then networks the frame
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOR_EACH_CLIENT(e_)
-	{
-		e_.typehitsound = false;
-		e_.damage_dealt = 0;
-		setself(e_);
-		antilag_record(e_, altime);
-	}
-	FOR_EACH_MONSTER(e_)
-	{
-		setself(e_);
-		antilag_record(e_, altime);
-	}
+	FOREACH_CLIENT(true, LAMBDA(
+		it.typehitsound = false;
+		it.damage_dealt = 0;
+		setself(it);
+		antilag_record(it, altime);
+	));
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+		setself(it);
+		antilag_record(it, altime);
+	));
+	FOREACH_CLIENT(PS(it), LAMBDA(
+		PlayerState s = PS(it);
+		s.ps_push(s, it);
+	));
 }
 
 
@@ -2024,10 +2036,8 @@ float RedirectionThink()
 	redirection_nextthink = time + 1;
 
 	clients_found = 0;
-	entity e;
-	FOR_EACH_REALCLIENT(e)
-	{
-		setself(e);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+		setself(it);
 		// TODO add timer
 		LOG_INFO("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")
@@ -2035,7 +2045,7 @@ float RedirectionThink()
 		else
 			stuffcmd(self, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
-	}
+	));
 
 	LOG_INFO("Redirecting: ", ftos(clients_found), " clients left.\n");
 
@@ -2070,7 +2080,7 @@ void Shutdown()
 	if(world_initialized > 0)
 	{
 		world_initialized = 0;
-		LOG_INFO("Saving persistent data...\n");
+		LOG_TRACE("Saving persistent data...\n");
 		Ban_SaveBans();
 
 		// playerstats with unfinished match
@@ -2093,7 +2103,7 @@ void Shutdown()
 		CheatShutdown(); // must be after cheatcount check
 		db_close(ServerProgsDB);
 		db_close(TemporaryDB);
-		LOG_INFO("done!\n");
+		LOG_TRACE("Saving persistent data... done!\n");
 		// tell the bot system the game is ending now
 		bot_endgame();
 

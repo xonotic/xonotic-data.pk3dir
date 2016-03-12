@@ -168,27 +168,28 @@ bool trigger_impulse_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_IMPULSE);
 
-	WriteInt24_t(MSG_ENTITY, self.spawnflags);
-	WriteCoord(MSG_ENTITY, self.radius);
-	WriteCoord(MSG_ENTITY, self.strength);
-	WriteByte(MSG_ENTITY, self.falloff);
-	WriteByte(MSG_ENTITY, self.active);
+	WriteInt24_t(MSG_ENTITY, this.spawnflags);
+	WriteCoord(MSG_ENTITY, this.radius);
+	WriteCoord(MSG_ENTITY, this.strength);
+	WriteByte(MSG_ENTITY, this.falloff);
+	WriteByte(MSG_ENTITY, this.active);
 
-	trigger_common_write(true);
+	trigger_common_write(this, true);
 
 	return true;
 }
 
 void trigger_impulse_link()
 {
-	Net_LinkEntity(self, 0, false, trigger_impulse_send);
+	trigger_link(self, trigger_impulse_send);
 }
 
 spawnfunc(trigger_impulse)
 {
 	self.active = ACTIVE_ACTIVE;
 
-	EXACTTRIGGER_INIT;
+	trigger_init(self);
+
 	if(self.radius)
 	{
 		if(!self.strength) self.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;

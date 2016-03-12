@@ -158,7 +158,7 @@ void kh_ScoreRules(float teams)
 
 float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the time
 {SELFPARAM();
-	if(!IS_PLAYER(e) || self.team != e.team)
+	if(!IS_PLAYER(e) || DIFF_TEAM(self, e))
 		if(!kh_tracking_enabled)
 			return false;
 
@@ -178,7 +178,6 @@ float kh_Key_waypointsprite_visible_for_player(entity e) // ??
 
 void kh_update_state()
 {
-	entity player;
 	entity key;
 	float s;
 	float f;
@@ -193,10 +192,7 @@ void kh_update_state()
 		s |= pow(32, key.count) * f;
 	}
 
-	FOR_EACH_CLIENT(player)
-	{
-		player.kh_state = s;
-	}
+	FOREACH_CLIENT(true, LAMBDA(it.kh_state = s));
 
 	FOR_EACH_KH_KEY(key)
 	{
@@ -340,7 +336,7 @@ void kh_Key_Detach(entity key) // runs every time a key is dropped or lost. Runs
 	}
 	// in any case:
 	setattachment(key, world, "");
-	setorigin(key, key.owner.origin + '0 0 1' * (PL_MIN.z - KH_KEY_MIN_z));
+	setorigin(key, key.owner.origin + '0 0 1' * (STAT(PL_MIN, NULL).z - KH_KEY_MIN_z));
 	key.angles = key.owner.angles;
 #else
 	setorigin(key, key.owner.origin + key.origin.z * '0 0 1');
@@ -475,9 +471,9 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 	}
 }
 
-void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.owner)
+void kh_Key_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.owner)
 		return;
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
@@ -488,9 +484,9 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, int deathtyp
 	}
 	if(vlen(force) <= 0)
 		return;
-	if(time > self.pushltime)
+	if(time > this.pushltime)
 		if(IS_PLAYER(attacker))
-			self.team = attacker.team;
+			this.team = attacker.team;
 }
 
 void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped key
@@ -503,7 +499,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_PICKUP_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_PICKUP), player.netname);
 
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
@@ -526,7 +522,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 
 	if (!IS_PLAYER(other))
 		return;
-	if(other.deadflag != DEAD_NO)
+	if(IS_DEAD(other))
 		return;
 	if(other == self.enemy)
 		if(time < self.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
@@ -612,7 +608,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 			first = false;
 		}
 
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(teem, INFO_KEYHUNT_CAPTURE_), keyowner);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(teem, INFO_KEYHUNT_CAPTURE), keyowner);
 
 	first = true;
 	midpoint = '0 0 0';
@@ -646,7 +642,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 
 void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a flag carrier off the map
 {
-	entity player, key, attacker;
+	entity key, attacker;
 	float players;
 	float keys;
 	float f;
@@ -673,9 +669,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		float of, fragsleft, i, j, thisteam;
 		of = autocvar_g_balance_keyhunt_score_destroyed_ownfactor;
 
-		FOR_EACH_PLAYER(player)
-			if(player.team != teem)
-				++players;
+		FOREACH_CLIENT(IS_PLAYER(it) && it.team != teem, LAMBDA(++players));
 
 		FOR_EACH_KH_KEY(key)
 			if(key.owner && key.team != teem)
@@ -708,26 +702,22 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 				continue;
 
 			players = 0;
-			FOR_EACH_PLAYER(player)
-				if(player.team == thisteam)
-					++players;
+			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(++players));
 
 			DistributeEvenly_Init(fragsleft, j);
 			fragsleft = DistributeEvenly_Get(j - 1);
 			DistributeEvenly_Init(DistributeEvenly_Get(1), players);
 
-			FOR_EACH_PLAYER(player)
-				if(player.team == thisteam)
-				{
-					f = DistributeEvenly_Get(1);
-					kh_Scores_Event(player, world, "destroyed", f, 0);
-				}
+			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(
+				f = DistributeEvenly_Get(1);
+				kh_Scores_Event(it, world, "destroyed", f, 0);
+			));
 
 			--j;
 		}
 	}
 
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(lostkey, INFO_KEYHUNT_LOST), lostkey.kh_previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
@@ -737,9 +727,6 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 void kh_Key_Think()  // runs all the time
 {SELFPARAM();
-	entity head;
-	//entity player;  // needed by FOR_EACH_PLAYER
-
 	if(intermission_running)
 		return;
 
@@ -778,16 +765,15 @@ void kh_Key_Think()  // runs all the time
 	if(kh_interferemsg_time && time > kh_interferemsg_time)
 	{
 		kh_interferemsg_time = 0;
-		FOR_EACH_PLAYER(head)
-		{
-			if(head.team == kh_interferemsg_team)
-				if(head.kh_next)
-					Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_KEYHUNT_MEET);
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if(it.team == kh_interferemsg_team)
+				if(it.kh_next)
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_MEET);
 				else
-					Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_KEYHUNT_HELP);
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
 			else
-				Send_Notification(NOTIF_ONE, head, MSG_CENTER, APP_TEAM_NUM_4(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE_));
-		}
+				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
+		));
 	}
 
 	self.nextthink = time + 0.05;
@@ -844,7 +830,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.kh_worldkeynext = kh_worldkeylist;
 	kh_worldkeylist = key;
 
-	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM_4(initial_owner.team, CENTER_KEYHUNT_START_));
+	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM(initial_owner.team, CENTER_KEYHUNT_START));
 
 	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
@@ -887,7 +873,7 @@ void kh_Key_DropOne(entity key)
 
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_DROP_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_DROP), player.netname);
 
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
@@ -913,7 +899,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 		{
 			kh_Scores_Event(player, key, "losekey", 0, 0);
 			PlayerScore_Add(player, SP_KH_LOSSES, 1);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_LOST_), player.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_LOST), player.netname);
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
 			key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, false);
@@ -932,12 +918,10 @@ float kh_CheckPlayers(float num)
 	{
 		float t_team = kh_Team_ByID(num);
 		float players = 0;
-		entity tmp_player;
-		FOR_EACH_PLAYER(tmp_player)
-			if(tmp_player.deadflag == DEAD_NO)
-				if(!tmp_player.BUTTON_CHAT)
-					if(tmp_player.team == t_team)
-						++players;
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == t_team)
+				++players;
+		));
 
 		if (!players) { return t_team; }
 	}
@@ -959,7 +943,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	if(KH_READY_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
@@ -969,7 +953,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		if(player_count == 0)
 		{
 			if(prev_missing_teams_mask > 0)
-				Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+				Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 			prev_missing_teams_mask = -1;
 		}
 		else
@@ -989,8 +973,8 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	kh_tracking_enabled = true;
 }
@@ -998,7 +982,6 @@ void kh_EnableTrackingDevice()  // runs after each round
 void kh_StartRound()  // runs at the start of each round
 {
 	float i, players, teem;
-	entity player;
 
 	if(time < game_starttime)
 	{
@@ -1013,23 +996,22 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	for(i = 0; i < kh_teams; ++i)
 	{
 		teem = kh_Team_ByID(i);
 		players = 0;
 		entity my_player = world;
-		FOR_EACH_PLAYER(player)
-			if(player.deadflag == DEAD_NO)
-				if(!player.BUTTON_CHAT)
-					if(player.team == teem)
-					{
-						++players;
-						if(random() * players <= 1)
-							my_player = player;
-					}
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
+			{
+				++players;
+				if(random() * players <= 1)
+					my_player = it;
+			}
+		));
 		kh_Key_Spawn(my_player, 360 * i / kh_teams, i);
 	}
 
@@ -1145,7 +1127,7 @@ void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, f
 
 void havocbot_role_kh_carrier()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (!(self.kh_next))
@@ -1172,7 +1154,7 @@ void havocbot_role_kh_carrier()
 
 void havocbot_role_kh_defense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1213,7 +1195,7 @@ void havocbot_role_kh_defense()
 
 void havocbot_role_kh_offense()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1255,7 +1237,7 @@ void havocbot_role_kh_offense()
 
 void havocbot_role_kh_freelancer()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	if (self.kh_next)
@@ -1319,13 +1301,13 @@ MUTATOR_HOOKFUNCTION(kh, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerDies)
-{SELFPARAM();
-	if(self == other)
-		kh_Key_DropAll(self, true);
+{
+	if(frag_target == other)
+		kh_Key_DropAll(frag_target, true);
 	else if(IS_PLAYER(other))
-		kh_Key_DropAll(self, false);
+		kh_Key_DropAll(frag_target, false);
 	else
-		kh_Key_DropAll(self, true);
+		kh_Key_DropAll(frag_target, true);
 	return 0;
 }
 
@@ -1370,7 +1352,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return true;
 
 	float r = random() * 3;

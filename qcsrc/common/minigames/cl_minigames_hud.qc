@@ -685,9 +685,7 @@ void HUD_Minigame_Mouse()
 	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
 		HUD_MinigameMenu_MouseInput();
 
-	vector cursorsize = '32 32 0';
-	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"),
-			cursorsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }
 
 bool HUD_Minigame_Showpanels()

@@ -109,7 +109,7 @@ void HUD_UpdatePlayerTeams()
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		num += 1;
-		Team = entcs_GetTeam(pl.sv_entnum);
+		Team = entcs_GetScoreTeam(pl.sv_entnum);
 		if(SetTeam(pl, Team))
 		{
 			tmp = pl.sort_prev;
@@ -608,17 +608,17 @@ string HUD_GetField(entity pl, int field)
 		case SP_DMG:
 			num = pl.(scores[SP_DMG]);
 			denom = 1000;
-			
+
 			str = sprintf("%.1f k", num/denom);
 			return str;
-			
+
 		case SP_DMGTAKEN:
 			num = pl.(scores[SP_DMGTAKEN]);
 			denom = 1000;
-			
+
 			str = sprintf("%.1f k", num/denom);
-			return str; 
-		
+			return str;
+
 		default:
 			tmp = pl.(scores[field]);
 			f = scores_flags[field];
@@ -986,7 +986,7 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
+	else if (spectatee_status != -1 && STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS && !active_minigame)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
@@ -1001,17 +1001,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
-	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		Weapon e = get_weaponinfo(i);
-		setself(e);
-		if (!self.weapon) continue;
-
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		WepSet set = e.m_wepset;
+		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			++disownedcnt;
-	}
+	));
 
 	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
 	if (weapon_cnt <= 0) return pos;
@@ -1065,13 +1061,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	for (int i = WEP_FIRST; i <= WEP_LAST; ++i) {
-		Weapon e = get_weaponinfo(i);
-		setself(e);
-		if (!self.weapon) continue;
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
-		WepSet set = e.m_wepset;
+		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			continue;
 
@@ -1082,7 +1075,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect_skin(tmpos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(tmpos, it.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if (weapon_stats >= 0) {
 			weapons_with_stats += 1;
@@ -1107,7 +1100,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			pos.y += height;
 		}
 		++column;
-	}
+	));
 
 	if (weapons_with_stats)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
@@ -1320,6 +1313,8 @@ void HUD_DrawScoreboard()
 		{
 			if(tm.team == NUM_SPECTATOR)
 				continue;
+			if(!tm.team && teamplay)
+				continue;
 
 			draw_beginBoldFont();
 			rgb = Team_ColorRGB(tm.team);
@@ -1348,6 +1343,8 @@ void HUD_DrawScoreboard()
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
 			if(tm.team == NUM_SPECTATOR)
+				continue;
+			if(!tm.team && teamplay)
 				continue;
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);

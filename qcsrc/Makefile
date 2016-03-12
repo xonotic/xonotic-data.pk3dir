@@ -1,63 +1,113 @@
-SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
-PERL ?= perl
-QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
+CPP := cc -xc -E
 QCC ?= gmqcc
- 
-QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
-# We eventually need to get rid of these.
+PROGS_OUT ?= $(CURDIR)/..
+WORKDIR ?= ../.tmp
+
+QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='*')
+VER = $(QCCFLAGS_WATERMARK)
+NDEBUG ?= 1
+BUILD_MOD ?= 0
+
+ifndef ZIP
+	ifneq ($(shell which zip),)
+		ZIP := zip -9
+	endif
+	ifneq ($(shell which 7z),)
+		ZIP := 7z a -tzip -mx=9
+	endif
+	ifneq ($(shell which 7za),)
+		ZIP := 7za a -tzip -mx=9
+	endif
+    ifndef ZIP
+        $(warning "No zip in ($(PATH))")
+        ZIP := : zip_not_found
+    endif
+endif
+
+# We eventually need to get rid of these
 QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared
 
-QCCFLAGS_FEATURES ?= \
-	-DVEHICLES_ENABLED=1 \
-	-DVEHICLES_USE_ODE=0 \
-	-DBUILD_MOD=$(BUILD_MOD)
+QCCDEFS ?= \
+	-DWATERMARK="$(QCCFLAGS_WATERMARK)" \
+	-DNDEBUG=$(NDEBUG) \
+	-DBUILD_MOD=$(BUILD_MOD) \
+	$(QCCDEFS_EXTRA)
 
+# -Ooverlap-locals is required
 QCCFLAGS ?= \
 	-std=gmqcc \
+	-Ooverlap-locals \
 	-O3 \
-	-Werror -Wall -Wcpp \
+	-Werror -Wall \
 	$(QCCFLAGS_WTFS) \
-	-fftepp -flno -futf8 -fno-bail-on-werror -fftepp-predefs \
+	-flno -futf8 -fno-bail-on-werror \
 	-frelaxed-switch -freturn-assignments \
-	$(QCCFLAGS_WATERMARK) \
-	-DNDEBUG=1 \
-	$(QCCFLAGS_FEATURES) \
 	$(QCCFLAGS_EXTRA)
 
-# xonotic build system overrides this by command line argument to turn off the update-cvarcount step
-XON_BUILDSYSTEM =
+
 
 .PHONY: all
-all: qc
+all: qc pk3
 
-.PHONY: qc
-qc: ../menu.dat ../progs.dat ../csprogs.dat
+$(WORKDIR):
+	@mkdir -p $@
 
 .PHONY: clean
-clean:
-	rm -f ../progs.dat ../menu.dat ../csprogs.dat
+clean: | $(WORKDIR)
+	$(RM) $(PROGS_OUT)/csprogs.dat
+	$(RM) $(PROGS_OUT)/menu.dat
+	$(RM) $(PROGS_OUT)/progs.dat
+	$(RM) $(WORKDIR)/*.d
+	$(RM) $(WORKDIR)/*.qc
+	$(RM) $(WORKDIR)/*.txt
 
-$(QCCVERSIONFILE):
-	$(RM) qccversion.*
-	echo This file intentionally left blank. > $@
+.PHONY: qc
+qc: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat
 
-FILES_CSPROGS = $(shell find lib common client -type f)
-../csprogs.dat: $(FILES_CSPROGS) $(QCCVERSIONFILE)
-	@echo make[1]: Entering directory \`$(PWD)/client\'
-	cd client && $(QCC) $(QCCFLAGS) -DCSQC
+.PHONY: pk3
+pk3: csprogs-$(VER).pk3
 
-FILES_PROGS = $(shell find lib common server -type f)
-../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE)
-	@echo make[1]: Entering directory \`$(PWD)/server\'
-	cd server && $(QCC) $(QCCFLAGS) -DSVQC
 
-FILES_MENU = $(shell find lib common menu -type f)
-../menu.dat: $(FILES_MENU) $(QCCVERSIONFILE)
-	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	cd menu && $(QCC) $(QCCFLAGS) -DMENUQC
 
-.PHONY: testcase
-testcase:
-	cd testcase && $(QCC) $(QCCFLAGS) -DTESTCASE="$$TESTCASE"
+
+
+%-$(VER).pk3: $(PROGS_OUT)/%.dat
+	$(eval PROG=$*)
+	$(eval PK3=$(PROG)-$(VER).pk3)
+	$(eval TXT=$(PROG)-$(VER).txt)
+	$(eval DAT=$(PROG)-$(VER).dat)
+	$(eval LNO=$(PROG)-$(VER).lno)
+	@ echo "http://xonotic.org" > $(TXT)
+	@ ln -f $(PROGS_OUT)/$(PROG).dat $(DAT)
+	@ ln -f $(PROGS_OUT)/$(PROG).lno $(LNO)
+	@ $(RM) *.pk3
+	$(ZIP) $(PK3) $(TXT) $(DAT) $(LNO)
+	@ $(RM) $(TXT) $(DAT) $(LNO)
+
+QCCVERSION := $(shell cd lib && $(QCC) --version)
+QCCVERSIONFILE := $(WORKDIR)/qccversion.$(shell echo ${QCCVERSION} | git hash-object --stdin)
+$(QCCVERSIONFILE): | $(WORKDIR)
+	@ $(RM) $(WORKDIR)/qccversion.*
+	@ echo $(QCCVERSION) > $@
+
+export CPP
+export QCC
+export QCCDEFS
+export QCCFLAGS
+
+$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
+	@ echo make[1]: Entering directory \`$(CURDIR)/client\'
+	@ ./qcc.sh client $@ $<
+-include $(WORKDIR)/client.d
+
+$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
+	@ echo make[1]: Entering directory \`$(CURDIR)/server\'
+	@ ./qcc.sh server $@ $<
+-include $(WORKDIR)/server.d
+
+$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
+	@ echo make[1]: Entering directory \`$(CURDIR)/menu\'
+	@ ./qcc.sh menu $@ $<
+-include $(WORKDIR)/menu.d

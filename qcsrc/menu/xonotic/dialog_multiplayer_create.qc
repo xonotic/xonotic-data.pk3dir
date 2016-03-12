@@ -185,7 +185,6 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onChange = MapList_StringFilterBox_Change;
 			e.keyDown = MapList_StringFilterBox_keyDown;
 			e.onChangeEntity = me.mapListBox;
-			me.mapListBox.controlledTextbox = e;
 
 	me.gotoRC(me, me.rows - 3.5, me.firstColumn);
 		// the selection buttons

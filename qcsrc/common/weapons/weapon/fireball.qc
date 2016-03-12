@@ -14,42 +14,45 @@ CLASS(Fireball, Weapon)
 /* wepimg    */ ATTRIB(Fireball, model2, string, "weaponfireball");
 /* refname   */ ATTRIB(Fireball, netname, string, "fireball");
 /* wepname   */ ATTRIB(Fireball, m_name, string, _("Fireball"));
-ENDCLASS(Fireball)
-REGISTER_WEAPON(FIREBALL, NEW(Fireball));
 
-#define FIREBALL_SETTINGS(w_cvar,w_prop) FIREBALL_SETTINGS_LIST(w_cvar, w_prop, FIREBALL, fireball)
-#define FIREBALL_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, damageforcescale) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, spread) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, BOTH, laserburntime) \
-	w_cvar(id, sn, BOTH, laserdamage) \
-	w_cvar(id, sn, BOTH, laseredgedamage) \
-	w_cvar(id, sn, BOTH, laserradius) \
-	w_cvar(id, sn, PRI,  edgedamage) \
-	w_cvar(id, sn, PRI,  force) \
-	w_cvar(id, sn, PRI,  radius) \
-	w_cvar(id, sn, PRI,  health) \
-	w_cvar(id, sn, PRI,  refire2) \
-	w_cvar(id, sn, PRI,  bfgdamage) \
-	w_cvar(id, sn, PRI,  bfgforce) \
-	w_cvar(id, sn, PRI,  bfgradius) \
-	w_cvar(id, sn, SEC,  damagetime) \
-	w_cvar(id, sn, SEC,  speed_up) \
-	w_cvar(id, sn, SEC,  speed_z) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bfgdamage, float, PRI) \
+		P(class, prefix, bfgforce, float, PRI) \
+		P(class, prefix, bfgradius, float, PRI) \
+		P(class, prefix, damageforcescale, float, BOTH) \
+		P(class, prefix, damagetime, float, SEC) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, PRI) \
+		P(class, prefix, force, float, PRI) \
+		P(class, prefix, health, float, PRI) \
+		P(class, prefix, laserburntime, float, BOTH) \
+		P(class, prefix, laserdamage, float, BOTH) \
+		P(class, prefix, laseredgedamage, float, BOTH) \
+		P(class, prefix, laserradius, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, radius, float, PRI) \
+		P(class, prefix, refire2, float, PRI) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, speed_up, float, SEC) \
+		P(class, prefix, speed_z, float, SEC) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Fireball, fireball)
+#undef X
+
+ENDCLASS(Fireball)
+REGISTER_WEAPON(FIREBALL, fireball, NEW(Fireball));
 
 #ifdef SVQC
-FIREBALL_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float bot_primary_fireballmooth; // whatever a mooth is
 .vector fireball_impactvec;
 .float fireball_primarytime;
@@ -164,19 +167,19 @@ void W_Fireball_Think()
 	self.nextthink = time + 0.1;
 }
 
-void W_Fireball_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
-	if(self.health <= 0)
+	this.health = this.health - damage;
+	if(this.health <= 0)
 	{
-		self.cnt = 1;
-		W_PrepareExplosionByDamage(attacker, W_Fireball_Explode);
+		this.cnt = 1;
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_Fireball_Explode));
 	}
 }
 
@@ -267,7 +270,7 @@ void W_Fireball_Firemine_Think()
 	// make it "hot" once it leaves its owner
 	if(self.owner)
 	{
-		if(vlen(self.origin - self.owner.origin - self.owner.view_ofs) > WEP_CVAR_SEC(fireball, laserradius))
+		if(vdist(self.origin - self.owner.origin - self.owner.view_ofs, >, WEP_CVAR_SEC(fireball, laserradius)))
 		{
 			self.cnt += 1;
 			if(self.cnt == 3)
@@ -348,104 +351,96 @@ void W_Fireball_Attack2()
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-		METHOD(Fireball, wr_aim, void(entity thiswep))
-		{
-			self.BUTTON_ATCK = false;
-			self.BUTTON_ATCK2 = false;
-			if(self.bot_primary_fireballmooth == 0)
-			{
-				if(bot_aim(WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
-				{
-					self.BUTTON_ATCK = true;
-					if(random() < 0.02) self.bot_primary_fireballmooth = 0;
-				}
-			}
-			else
-			{
-				if(bot_aim(WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
-				{
-					self.BUTTON_ATCK2 = true;
-					if(random() < 0.01) self.bot_primary_fireballmooth = 1;
-				}
-			}
-		}
-		METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(fire & 1)
-			{
-				if(time >= actor.fireball_primarytime)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(fireball, refire)))
-				{
-					W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
-					actor.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
-				}
-			}
-			else if(fire & 2)
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(fireball, refire)))
-				{
-					W_Fireball_Attack2();
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);
-				}
-			}
-		}
-		METHOD(Fireball, wr_init, void(entity thiswep))
-		{
-			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
-		METHOD(Fireball, wr_setup, void(entity thiswep))
-		{
-			self.ammo_field = ammo_none;
-		}
-		METHOD(Fireball, wr_checkammo1, bool(entity thiswep))
-		{
-			return true; // infinite ammo
-		}
-		METHOD(Fireball, wr_checkammo2, bool(entity thiswep))
-		{
-			return true; // fireball has infinite ammo
-		}
-		METHOD(Fireball, wr_config, void(entity thiswep))
-		{
-			FIREBALL_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-		}
-		METHOD(Fireball, wr_resetplayer, void(entity thiswep))
-		{
-			self.fireball_primarytime = time;
-		}
-		METHOD(Fireball, wr_suicidemessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_FIREBALL_SUICIDE_FIREMINE;
-			else
-				return WEAPON_FIREBALL_SUICIDE_BLAST;
-		}
-		METHOD(Fireball, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_FIREBALL_MURDER_FIREMINE;
-			else
-				return WEAPON_FIREBALL_MURDER_BLAST;
-		}
+METHOD(Fireball, wr_aim, void(entity thiswep))
+{
+    PHYS_INPUT_BUTTON_ATCK(self) = false;
+    PHYS_INPUT_BUTTON_ATCK2(self) = false;
+    if(self.bot_primary_fireballmooth == 0)
+    {
+        if(bot_aim(WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
+        {
+            PHYS_INPUT_BUTTON_ATCK(self) = true;
+            if(random() < 0.02) self.bot_primary_fireballmooth = 0;
+        }
+    }
+    else
+    {
+        if(bot_aim(WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
+        {
+            PHYS_INPUT_BUTTON_ATCK2(self) = true;
+            if(random() < 0.01) self.bot_primary_fireballmooth = 1;
+        }
+    }
+}
+METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(fire & 1)
+    {
+        if(time >= actor.fireball_primarytime)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(fireball, refire)))
+        {
+            W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
+            actor.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
+        }
+    }
+    else if(fire & 2)
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(fireball, refire)))
+        {
+            W_Fireball_Attack2();
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(fireball, animtime), w_ready);
+        }
+    }
+}
+METHOD(Fireball, wr_setup, void(entity thiswep))
+{
+    self.ammo_field = ammo_none;
+}
+METHOD(Fireball, wr_checkammo1, bool(entity thiswep))
+{
+    return true; // infinite ammo
+}
+METHOD(Fireball, wr_checkammo2, bool(entity thiswep))
+{
+    return true; // fireball has infinite ammo
+}
+METHOD(Fireball, wr_resetplayer, void(entity thiswep))
+{
+    self.fireball_primarytime = time;
+}
+METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_FIREBALL_SUICIDE_FIREMINE;
+    else
+        return WEAPON_FIREBALL_SUICIDE_BLAST;
+}
+METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_FIREBALL_MURDER_FIREMINE;
+    else
+        return WEAPON_FIREBALL_MURDER_BLAST;
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(Fireball, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				// firemine goes out silently
-			}
-			else
-			{
-				org2 = w_org + w_backoff * 16;
-				pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
-			}
-		}
+METHOD(Fireball, wr_impacteffect, void(entity thiswep))
+{
+    vector org2;
+    if(w_deathtype & HITTYPE_SECONDARY)
+    {
+        // firemine goes out silently
+    }
+    else
+    {
+        org2 = w_org + w_backoff * 16;
+        pointparticles(EFFECT_FIREBALL_EXPLODE, org2, '0 0 0', 1);
+        if(!w_issilent)
+            sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM * 0.25); // long range boom
+    }
+}
 
 #endif
 #endif

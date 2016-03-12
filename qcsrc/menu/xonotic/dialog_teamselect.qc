@@ -2,9 +2,9 @@
 #define DIALOG_TEAMSELECT_H
 #include "rootdialog.qc"
 CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
-	METHOD(XonoticTeamSelectDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
+	METHOD(XonoticTeamSelectDialog, fill, void(entity));
 	METHOD(XonoticTeamSelectDialog, showNotify, void(entity));
-	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection")) // ;)
+	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection"))
 	ATTRIB(XonoticTeamSelectDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
 	ATTRIB(XonoticTeamSelectDialog, intendedWidth, float, 0.4)
 	ATTRIB(XonoticTeamSelectDialog, rows, float, 5)
@@ -32,6 +32,7 @@ entity makeTeamButton(string theName, vector theColor, string commandtheName)
 
 void XonoticTeamSelectDialog_showNotify(entity me)
 {
+	SUPER(XonoticTeamSelectDialog).showNotify(me);
 	float teams, nTeams;
 	teams = cvar("_teams_available");
 	nTeams = 0;

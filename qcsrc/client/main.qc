@@ -1,34 +1,84 @@
 #include "main.qh"
 
-#include "../common/effects/qc/all.qh"
-#include "hook.qh"
+#include <common/effects/qc/all.qh>
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
 #include "quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "tuba.qh"
-#include "t_items.qh"
+#include <common/t_items.qh>
 #include "wall.qh"
 #include "weapons/projectile.qh"
-#include "../common/deathtypes/all.qh"
-#include "../common/items/all.qh"
-#include "../common/mapinfo.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/minigames/cl_minigames_hud.qh"
-#include "../common/net_notice.qh"
-#include "../common/triggers/include.qh"
-#include "../common/vehicles/all.qh"
-#include "../lib/csqcmodel/cl_model.qh"
-#include "../lib/csqcmodel/interpolate.qh"
-#include "../lib/warpzone/client.qh"
+#include <common/deathtypes/all.qh>
+#include <common/items/all.qh>
+#include <common/mapinfo.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/minigames/cl_minigames_hud.qh>
+#include <common/net_notice.qh>
+#include <common/triggers/include.qh>
+#include <common/vehicles/all.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include <lib/csqcmodel/interpolate.qh>
+#include <lib/warpzone/client.qh>
 
 // --------------------------------------------------------------------------
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
+
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
+{
+	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
+	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
+}
+
+void draw_cursor_normal(vector pos, vector col, float a)
+{
+	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
+}
+
+void LoadMenuSkinValues()
+{
+	int fh = -1;
+	if(cvar_string("menu_skin") != "")
+	{
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0 && cvar_defstring("menu_skin") != "")
+	{
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0)
+	{
+		draw_currentSkin = "gfx/menu/default";
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+
+	draw_currentSkin = strzone(draw_currentSkin);
+
+	if(fh >= 0)
+	{
+		string s;
+		while((s = fgets(fh)))
+		{
+			int n = tokenize_console(s);
+			if (n < 2)
+				continue;
+			if(substring(argv(0), 0, 2) == "//")
+				continue;
+			if(argv(0) == "SIZE_CURSOR")
+				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			else if(argv(0) == "OFFSET_CURSOR")
+				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		}
+		fclose(fh);
+	}
+}
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
@@ -42,13 +92,6 @@ void CSQC_Init()
 	LOG_INFOF("^4CSQC Build information: ^1%s\n", WATERMARK);
 #endif
 
-	binddb = db_create();
-	tempdb = db_create();
-	ClientProgsDB = db_load("client.db");
-	compressShortVector_init();
-
-	draw_endBoldFont();
-
 	{
 		int i = 0;
 		for ( ; i < 255; ++i)
@@ -56,6 +99,18 @@ void CSQC_Init()
 				break;
 		maxclients = i;
 	}
+
+	// needs to be done so early because of the constants they create
+	static_init();
+	static_init_late();
+	static_init_precache();
+
+	binddb = db_create();
+	tempdb = db_create();
+	ClientProgsDB = db_load("client.db");
+	compressShortVector_init();
+
+	draw_endBoldFont();
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
@@ -93,11 +148,6 @@ void CSQC_Init()
 
 	GetTeam(NUM_SPECTATOR, true); // add specs first
 
-	// needs to be done so early because of the constants they create
-	static_init();
-	static_init_late();
-	static_init_precache();
-
 	// precaches
 
 	if(autocvar_cl_reticle)
@@ -127,7 +177,7 @@ void CSQC_Init()
 	}
 
 	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
-	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
+	LoadMenuSkinValues();
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -152,6 +202,8 @@ void Shutdown()
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
 
+	cvar_set("slowmo", cvar_defstring("slowmo")); // reset it back to 'default'
+
 	if (!isdemo())
 	{
 		if (!(calledhooks & HOOK_START))
@@ -167,6 +219,7 @@ void Shutdown()
 .float has_team;
 float SetTeam(entity o, int Team)
 {
+	devassert_once(Team);
 	entity tm;
 	if(teamplay)
 	{
@@ -270,7 +323,8 @@ void Playerchecker_Think()
 				e.ping_packetloss = 0;
 				e.ping_movementloss = 0;
 				//e.gotscores = 0; // we might already have the scores...
-				SetTeam(e, entcs_GetTeam(i)); // will not hurt; later updates come with HUD_UpdatePlayerTeams
+				int t = entcs_GetScoreTeam(i);
+				if (t) SetTeam(e, t); // will not hurt; later updates come with HUD_UpdatePlayerTeams
 				RegisterPlayer(e);
 				HUD_UpdatePlayerPos(e);
 			}
@@ -327,11 +381,23 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
 
-void Ent_Remove();
-
-void Ent_RemovePlayerScore()
+.void(entity) predraw_qc;
+void PreDraw_self()
 {
 	SELFPARAM();
+	if (this.predraw_qc) this.predraw_qc(this);
+}
+
+void setpredraw(entity this, void(entity) pdfunc)
+{
+	this.predraw = PreDraw_self;
+	this.predraw_qc = pdfunc;
+}
+
+void Ent_Remove(entity this);
+
+void Ent_RemovePlayerScore(entity this)
+{
 	if(this.owner) {
 		SetTeam(this.owner, -1);
 		this.owner.gotscores = 0;
@@ -357,9 +423,9 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	if(!isNew && n != this.sv_entnum)
 	{
 		//print("A CSQC entity changed its owner!\n");
-		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", num_for_edict(this), this.classname);
+		LOG_INFOF("A CSQC entity changed its owner! (edict: %d, classname: %s)\n", etof(this), this.classname);
 		isNew = true;
-		Ent_Remove();
+		Ent_Remove(this);
 	}
 #endif
 
@@ -610,13 +676,29 @@ void Spawn_Draw(entity this)
 	__pointparticles(this.cnt, this.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
 }
 
+void Spawn_PreDraw(entity this)
+{
+	float alph;
+	vector org = getpropertyvec(VF_ORIGIN);
+	if(this.fade_start)
+		alph = bound(0, (this.fade_end - vlen(org - this.origin - 0.5 * (this.mins + this.maxs))) / (this.fade_end - this.fade_start), 1);
+	else
+		alph = 1;
+	//printf("%v <-> %v\n", view_origin, this.origin + 0.5 * (this.mins + this.maxs));
+	this.alpha = alph;
+	if(alph <= 0)
+		this.drawmask = 0;
+	else
+		this.drawmask = MASK_NORMAL;
+}
+
 NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 {
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
-	spn_origin.x = ReadShort();
-	spn_origin.y = ReadShort();
-	spn_origin.z = ReadShort();
+	spn_origin.x = ReadCoord();
+	spn_origin.y = ReadCoord();
+	spn_origin.z = ReadCoord();
 
 	//if(is_new)
 	//{
@@ -650,6 +732,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 			else { this.cnt = particleeffectnum(EFFECT_SPAWNPOINT_NEUTRAL); }
 
 			this.draw = Spawn_Draw;
+			setpredraw(this, Spawn_PreDraw);
+			this.fade_start = autocvar_cl_spawn_point_dist_min;
+			this.fade_end = autocvar_cl_spawn_point_dist_max;
 		}
 	//}
 
@@ -666,9 +751,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 	if(entnum)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 
 		if(is_new)
 		{
@@ -714,8 +799,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 void CSQC_Ent_Update(bool isnew)
 {
 	SELFPARAM();
-	this.sourceLocLine = __LINE__;
-	this.sourceLocFile = __FILE__;
+	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
@@ -736,8 +820,8 @@ void CSQC_Ent_Update(bool isnew)
 	{
 		if (t != this.enttype || isnew)
 		{
-			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", num_for_edict(this), this.entnum, this.enttype, t);
-			Ent_Remove();
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
+			Ent_Remove(this);
 			clearentity(this);
 			isnew = true;
 		}
@@ -746,7 +830,7 @@ void CSQC_Ent_Update(bool isnew)
 	{
 		if (!isnew)
 		{
-			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", num_for_edict(this), this.entnum, t);
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
 			isnew = true;
 		}
 	}
@@ -757,7 +841,7 @@ void CSQC_Ent_Update(bool isnew)
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
-		done = it.m_read(this, isnew);
+		done = it.m_read(this, NULL, isnew);
 		break;
 	));
 	time = savetime;
@@ -770,10 +854,9 @@ void CSQC_Ent_Update(bool isnew)
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
-void Ent_Remove()
+void Ent_Remove(entity this)
 {
-	SELFPARAM();
-	if(this.entremove) this.entremove();
+	if(this.entremove) this.entremove(this);
 
 	if(this.skeletonindex)
 	{
@@ -803,7 +886,7 @@ void CSQC_Ent_Remove()
 		LOG_WARNING("CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
-	if (this.enttype) Ent_Remove();
+	if (this.enttype) Ent_Remove(this);
 	remove(this);
 }
 
@@ -847,7 +930,7 @@ bool CSQC_Parse_TempEntity()
 	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
 		if (autocvar_developer_csqcentities)
 			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
-		return it.m_read(NULL, true);
+		return it.m_read(NULL, NULL, true);
 	));
 
 	if (autocvar_developer_csqcentities)
@@ -857,7 +940,6 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
-/** TODO somehow thwart prvm_globalset client ... */
 string forcefog;
 void Fog_Force()
 {
@@ -908,22 +990,10 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 
 	armorblockpercent = ReadByte() / 255.0;
 
-	g_balance_mortar_bouncefactor = ReadCoord();
-	g_balance_mortar_bouncestop = ReadCoord();
-	g_balance_electro_secondary_bouncefactor = ReadCoord();
-	g_balance_electro_secondary_bouncestop = ReadCoord();
-
-	vortex_scope = !ReadByte();
-	rifle_scope = !ReadByte();
-
 	serverflags = ReadByte();
 
-	minelayer_maxmines = ReadByte();
-
-	hagar_maxrockets = ReadByte();
-
 	g_trueaim_minrange = ReadCoord();
-	g_balance_porto_secondary = ReadByte();
+
 	return = true;
 
 	MUTATOR_CALLHOOK(Ent_Init);
@@ -1109,8 +1179,6 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 NET_HANDLE(TE_CSQC_WEAPONCOMPLAIN, bool isNew)
 {
 	complain_weapon = ReadByte();
-	if (complain_weapon_name) strunzone(complain_weapon_name);
-	complain_weapon_name = strzone(WEP_NAME(complain_weapon));
 	complain_weapon_type = ReadByte();
 	return = true;
 

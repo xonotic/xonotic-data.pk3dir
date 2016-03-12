@@ -12,6 +12,8 @@
 #include "../common/deathtypes/all.qh"
 #include "../common/util.qh"
 
+#include <common/physics/player.qh>
+
 #include "../common/monsters/all.qh"
 
 #include "../common/weapons/all.qh"
@@ -25,17 +27,15 @@
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/util_server.qh"
 
-void CopyBody(float keepvelocity);
+void CopyBody(entity this, float keepvelocity);
 
 #ifdef NOCHEATS
 
-float CheatImpulse(float i) { return 0; }
+float CheatImpulse(int imp) { return 0; }
 float CheatCommand(float argc) { return 0; }
 float CheatFrame() { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
 void CheatShutdown() { }
-void CheatInitClient() { }
-void CheatShutdownClient() { }
 void Drag_MoveDrag(entity from, entity to) { }
 
 #else
@@ -54,24 +54,16 @@ void CheatShutdown()
 {
 }
 
-void CheatInitClient()
-{
-}
-
-void CheatShutdownClient()
-{
-}
-
 float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {SELFPARAM();
 	// dead people cannot cheat
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
 
 	// sv_clones
-	if(i == CHIMPULSE_CLONE_MOVING || i == CHIMPULSE_CLONE_STANDING)
+	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
 		if(self.lip < sv_clones)
 			return 1;
 
@@ -139,14 +131,14 @@ spawnfunc(info_autoscreenshot)
 	// this one just has to exist
 }
 
-float CheatImpulse(float i)
+float CheatImpulse(int imp)
 {SELFPARAM();
 	BEGIN_CHEAT_FUNCTION();
-	switch(i)
+	switch(imp)
 	{
 		entity e, e2;
 
-		case CHIMPULSE_SPEEDRUN_INIT: // deploy personal waypoint
+		case CHIMPULSE_SPEEDRUN_INIT.impulse: // deploy personal waypoint
 			// shared with regular waypoint init, so this is not a cheat by itself
 			if(!self.personal)
 			{
@@ -173,27 +165,27 @@ float CheatImpulse(float i)
 			self.personal.invincible_finished = self.invincible_finished;
 			self.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
-		case CHIMPULSE_CLONE_MOVING:
-			IS_CHEAT(i, 0, 0);
+		case CHIMPULSE_CLONE_MOVING.impulse:
+			IS_CHEAT(imp, 0, 0);
 			makevectors (self.v_angle);
 			self.velocity = self.velocity + v_forward * 300;
-			CopyBody(1);
+			CopyBody(self, 1);
 			self.lip += 1;
 			self.velocity = self.velocity - v_forward * 300;
 			DID_CHEAT();
 			break;
-		case CHIMPULSE_CLONE_STANDING:
-			IS_CHEAT(i, 0, 0);
-			CopyBody(0);
+		case CHIMPULSE_CLONE_STANDING.impulse:
+			IS_CHEAT(imp, 0, 0);
+			CopyBody(self, 0);
 			self.lip += 1;
 			DID_CHEAT();
 			break;
-		case CHIMPULSE_GIVE_ALL:
-			IS_CHEAT(i, 0, 0);
+		case CHIMPULSE_GIVE_ALL.impulse:
+			IS_CHEAT(imp, 0, 0);
 			CheatCommand(tokenize_console("give all"));
 			break; // already counted as cheat
-		case CHIMPULSE_SPEEDRUN:
-			IS_CHEAT(i, 0, 0);
+		case CHIMPULSE_SPEEDRUN.impulse:
+			IS_CHEAT(imp, 0, 0);
 			if(self.personal)
 			{
 				self.speedrunning = true;
@@ -233,13 +225,13 @@ float CheatImpulse(float i)
 				DID_CHEAT();
 				break;
 			}
-			if(self.deadflag != DEAD_NO)
+			if(IS_DEAD(self))
 				sprint(self, "UR DEAD AHAHAH))\n");
 			else
 				sprint(self, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
 			break;
-		case CHIMPULSE_TELEPORT:
-			IS_CHEAT(i, 0, 0);
+		case CHIMPULSE_TELEPORT.impulse:
+			IS_CHEAT(imp, 0, 0);
 			if(self.movetype == MOVETYPE_NOCLIP)
 			{
 				e = find(world, classname, "info_autoscreenshot");
@@ -267,13 +259,10 @@ float CheatImpulse(float i)
 			}
 			sprint(self, "Emergency teleport could not find a good location, forget it!\n");
 			break;
-		case CHIMPULSE_R00T:
-			IS_CHEAT(i, 0, 0);
+		case CHIMPULSE_R00T.impulse:
+			IS_CHEAT(imp, 0, 0);
 			RandomSelection_Init();
-			FOR_EACH_PLAYER(e)
-				if(e.deadflag == DEAD_NO)
-					if(DIFF_TEAM(e, self))
-						RandomSelection_Add(e, 0, string_null, 1, 1);
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, self), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
@@ -456,7 +445,7 @@ float CheatCommand(float argc)
 			e.nextthink = time;
 			e.solid = 0; // nothing special
 			setmodel(e, MDL_MARKER);
-			setsize(e, PL_MIN, PL_MAX);
+			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 			e.skin = 2;
 			if(argc == 3)
 				e.cnt = stof(argv(1));
@@ -599,7 +588,7 @@ float CheatCommand(float argc)
 							{
 								if(vlen(oldself.origin - start) < vlen(e.origin - start))
 									++effectnum;
-								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && num_for_edict(oldself) < num_for_edict(e))
+								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && etof(oldself) < etof(e))
 									++effectnum;
 							}
 							fputs(f, strcat("\"race_place\" \"", ftos(effectnum), "\"\n"));
@@ -792,7 +781,7 @@ float Drag(float force_allow_pick, float ischeat)
 		default:
 			if(Drag_IsDragging(self))
 			{
-				if(self.BUTTON_DRAG)
+				if(PHYS_INPUT_BUTTON_DRAG(self))
 				{
 					if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
 					{
@@ -824,7 +813,7 @@ float Drag(float force_allow_pick, float ischeat)
 			else
 			{
 				if(Drag_CanDrag(self))
-					if(self.BUTTON_DRAG)
+					if(PHYS_INPUT_BUTTON_DRAG(self))
 					{
 						crosshair_trace_plusvisibletriggers(self);
 						entity e = trace_ent;
@@ -888,7 +877,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	draggee.draggravity = draggee.gravity;
 	draggee.movetype = MOVETYPE_WALK;
 	draggee.gravity = 0.00001;
-	draggee.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(draggee);
 	draggee.draggedby = dragger;
 
 	dragger.dragentity = draggee;
@@ -932,7 +921,7 @@ void Drag_Finish(entity dragger)
 	if((draggee.flags & FL_ITEM) && (vlen(draggee.velocity) < 32))
 	{
 		draggee.velocity = '0 0 0';
-		draggee.flags |= FL_ONGROUND; // floating items are FUN
+		SET_ONGROUND(draggee); // floating items are FUN
 	}
 }
 
@@ -993,7 +982,7 @@ void Drag_Update(entity dragger)
 	entity draggee;
 
 	draggee = dragger.dragentity;
-	draggee.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(draggee);
 
 	curorigin = gettaginfo(draggee, 0);
 	curorigin = curorigin + v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
@@ -1026,7 +1015,7 @@ void Drag_Update(entity dragger)
 
 float Drag_CanDrag(entity dragger)
 {
-	return (dragger.deadflag == DEAD_NO) || (IS_PLAYER(dragger));
+	return (!IS_DEAD(dragger)) || (IS_PLAYER(dragger));
 }
 
 float Drag_IsDragging(entity dragger)
@@ -1067,7 +1056,8 @@ void DragBox_Think()
 		self.maxs_y = fabs(self.aiment.origin.y - self.enemy.origin.y) * 0.5;
 		self.maxs_z = fabs(self.aiment.origin.z - self.enemy.origin.z) * 0.5;
 		self.mins = -1 * self.maxs;
-		setorigin(self, self.origin); setsize(self, self.mins, self.maxs); // link edict
+		setorigin(self, self.origin);
+		setsize(self, self.mins, self.maxs); // link edict
 	}
 
 	if(self.cnt == -1) // actually race_place -1

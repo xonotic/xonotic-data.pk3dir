@@ -85,7 +85,7 @@ void anticheat_physics(entity this)
 	this.anticheat_div0_strafebot_movement_prev = this.movement;
 
 	// Note: this actually tries to detect snap-aim.
-	if(vlen(this.anticheat_div0_strafebot_forward_prev) && time > this.anticheat_fixangle_endtime) {
+	if(this.anticheat_div0_strafebot_forward_prev && time > this.anticheat_fixangle_endtime) {
 		float cosangle = this.anticheat_div0_strafebot_forward_prev * v_forward;
 		float angle = cosangle < -1 ? M_PI : cosangle > 1 ? 0 : acos(cosangle);
 		/*
@@ -232,20 +232,15 @@ void anticheat_fixangle()
 
 void anticheat_endframe()
 {SELFPARAM();
-	entity e;
-	FOR_EACH_CLIENT(e)
-		if (e.fixangle) {
-			WITH(entity, self, e, anticheat_fixangle());
-		}
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it.fixangle)
+			WITH(entity, self, it, anticheat_fixangle());
+	));
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }
 
-void anticheat_init()
-{SELFPARAM();
-	self.anticheat_speedhack_offset = 0;
-	self.anticheat_jointime = servertime;
-}
-
-void anticheat_shutdown()
+void anticheat_init(entity this)
 {
+	this.anticheat_speedhack_offset = 0;
+	this.anticheat_jointime = servertime;
 }

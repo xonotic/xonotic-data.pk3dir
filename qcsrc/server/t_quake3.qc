@@ -141,7 +141,7 @@ spawnfunc(target_give)
 	InitializeEntity(self, target_give_init, INITPRIO_FINDTARGET);
 }
 
-//spawnfunc(item_flight)       /* handled by buffs mutator or jetpack */
+//spawnfunc(item_flight)       /* handled by jetpack */
 //spawnfunc(item_haste)        /* handled by buffs mutator */
 //spawnfunc(item_health)       /* handled in t_quake.qc */
 //spawnfunc(item_health_large) /* handled in t_items.qc */

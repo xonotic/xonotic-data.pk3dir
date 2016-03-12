@@ -33,46 +33,42 @@ void infection_GetColorOwner(entity me)
 		color_owner_red = "^1their own";
 		return;
 	}
-	entity e;
-	FOR_EACH_PLAYER(e)
-	{
-		if (me.infectioncolor == e.infectioncolor_original)
-		{
-			color_owner_green = sprintf("%s^2's", e.netname);
-			color_owner_red = sprintf("%s^1's", e.netname);
-			break;
-		}
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && me.infectioncolor == it.infectioncolor_original, {
+        color_owner_green = sprintf("%s^2's", it.netname);
+        color_owner_red = sprintf("%s^1's", it.netname);
+        break;
+	});
 }
 
 void infection_Assign(bool late)
 {
+    SELFPARAM();
 	if (!late)
 	{
 		int infection_coloridx = 0;
-		entity e;
-		FOR_EACH_PLAYER(e)
-		{
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if (infection_coloridx < autocvar_g_infection_teams)  // Limit alphas
-				e.infectioncolor_original = infection_coloridx;
-			infection_SetColor(e, infection_coloridx++ % bound(0, autocvar_g_infection_teams, 15));
-		}
+				it.infectioncolor_original = infection_coloridx;
+			infection_SetColor(it, infection_coloridx++ % bound(0, autocvar_g_infection_teams, 15));
+		});
 	}
 	else
 	{
 		// Spawn too late, give player a random color
 		int color = 15;
 		int skip = rint(random() * (infection_players_count - 1));  // Ignore self
-		entity e;
-		FOR_EACH_PLAYER(e)
-		{
-			if (e == self || IS_OBSERVER(e)) continue;
-			if (!skip-- > 0) break;
-		}
-		dprintf("[INFECTION] copying %s's color\n", e.netname);
+		entity e = NULL;
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if (it == this || IS_OBSERVER(it)) continue;
+			if (!skip-- > 0) {
+			    e = it;
+                break;
+			}
+		});
+		LOG_DEBUGF("[INFECTION] copying %s's color", e.netname);
 		color = e.infectioncolor;
-		self.infectioncolor_original = INFECTIONTEAM_NONE;  // Can't win if player didn't spawn during the round delay
-		infection_SetColor(self, color);
+		this.infectioncolor_original = INFECTIONTEAM_NONE;  // Can't win if player didn't spawn during the round delay
+		infection_SetColor(this, color);
 	}
 }
 
@@ -96,31 +92,25 @@ bool infection_CheckWinner()
 	// Check if only one color remains
 	int previnfectioncolor = -1;
 	bool we_have_a_winner = true;  // until loop below proves us wrong
-	entity e;
-	FOR_EACH_PLAYER(e)
-	{
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		// All infection colors are the same if we have a winner
-		if (previnfectioncolor != -1 && previnfectioncolor != e.infectioncolor)
+		if (previnfectioncolor != -1 && previnfectioncolor != it.infectioncolor)
 		{
 			// In this case we still have more than one color alive
 			we_have_a_winner = false;
 			break;
 		}
-		previnfectioncolor = e.infectioncolor;
-	}
+		previnfectioncolor = it.infectioncolor;
+	});
 
 	if (!we_have_a_winner) return false;
 
 	// Who is it?
-	FOR_EACH_PLAYER(e)
-	{
-		if (e.infectioncolor == e.infectioncolor_original)
-		{
-			UpdateFrags(e, 10);  // Bonus points
-			Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, e.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, e.netname);
-		}
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && it.infectioncolor == it.infectioncolor_original, {
+        UpdateFrags(it, 10);  // Bonus points
+        Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, it.netname);
+        Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, it.netname);
+	});
 
 	round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
 	return true;
@@ -149,23 +139,19 @@ MUTATOR_HOOKFUNCTION(inf, ClientDisconnect)
 }
 bool inf_RemovePlayer()
 {
-	if (!IS_PLAYER(self)) return true;  // Wasn't playing
+    SELFPARAM();
+	if (!IS_PLAYER(this)) return true;  // Wasn't playing
 
 	infection_players_count--;
 
-	self.infectioncolor_original = INFECTIONTEAM_UNDEFINED;
+	this.infectioncolor_original = INFECTIONTEAM_UNDEFINED;
 
 	// Grant alpha status to next of kin
-	entity e;
-	FOR_EACH_PLAYER(e)
-	{
-		if (e.infectioncolor == self.infectioncolor_original)
-		{
-			e.infectioncolor_original = self.infectioncolor;
-			centerprint(e, "^2You are now an alpha.\n");
-			break;
-		}
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && it.infectioncolor == this.infectioncolor_original, {
+        it.infectioncolor_original = this.infectioncolor;
+        centerprint(it, "^2You are now an alpha.\n");
+        break;
+	});
 
 	infection_CheckWinner();
 	return true;
@@ -173,7 +159,8 @@ bool inf_RemovePlayer()
 
 MUTATOR_HOOKFUNCTION(inf, PlayerSpawn)
 {
-	if (self.infectioncolor_original != INFECTIONTEAM_UNDEFINED) return true;  // Wasn't observing
+    SELFPARAM();
+	if (this.infectioncolor_original != INFECTIONTEAM_UNDEFINED) return true;  // Wasn't observing
 	infection_players_count++;
 
 	infection_Assign(true);
@@ -188,18 +175,15 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
 	// If this is the first time we die... (our infectioncolor remained unchanged)
 	if (autocvar_g_infection_conversions && frag_target.infectioncolor == frag_target.infectioncolor_original)
 	{
-		entity e;
-		FOR_EACH_PLAYER(e)                    // check other players...
-		{
-			if (INF_SAMETEAM(e, frag_target)) // And see if they have our original infection color
-			{  // If so, remove it, our infection color has now "died out" from this round and we can not win anymore.
-				// The attacker will "summon" all of our previously fragged targets, and also us.
-				centerprint(e, sprintf("^1Your alpha ^7%s^1 was infected by ^7%s^1 with ^7%s^1 color.\n",
-					frag_target.netname, frag_attacker.netname, color_owner_red));
-				infection_SetColor(e, frag_attacker.infectioncolor);
-				frag_score++;
-			}
-		}
+	    // check other players and see if they have our original infection color
+		FOREACH_CLIENT(IS_PLAYER(it) && INF_SAMETEAM(it, frag_target), {
+            // If so, remove it, our infection color has now "died out" from this round and we can not win anymore.
+            // The attacker will "summon" all of our previously fragged targets, and also us.
+            centerprint(it, sprintf("^1Your alpha ^7%s^1 was infected by ^7%s^1 with ^7%s^1 color.\n",
+                frag_target.netname, frag_attacker.netname, color_owner_red));
+            infection_SetColor(it, frag_attacker.infectioncolor);
+            frag_score++;
+		});
 	}
 	else
 	{
@@ -220,12 +204,13 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(inf, PlayerPreThink, CBC_ORDER_FIRST)
 {
-	if (IS_PLAYER(self))
+    SELFPARAM();
+	if (IS_PLAYER(this))
 	{
 		// Prevent cheating by changing player colors
-		infection_SetColor(self, round_handler_IsRoundStarted()
-			? self.infectioncolor : 15
-		                  );
+		infection_SetColor(this, round_handler_IsRoundStarted()
+			? this.infectioncolor
+			: 15);
 	}
 	return true;
 }
@@ -245,13 +230,15 @@ MUTATOR_HOOKFUNCTION(inf, PlayerDamage_Calculate)
 
 MUTATOR_HOOKFUNCTION(inf, BotShouldAttack)
 {
-	return INF_SAMETEAM(checkentity, self);
+    SELFPARAM();
+	return INF_SAMETEAM(checkentity, this);
 }
 
 MUTATOR_HOOKFUNCTION(inf, ClientConnect)
 {
-	self.infectioncolor_original = INFECTIONTEAM_UNDEFINED;
-	stuffcmd(self, "settemp cl_forceplayercolors 0\n");
+    SELFPARAM();
+	this.infectioncolor_original = INFECTIONTEAM_UNDEFINED;
+	stuffcmd(this, "settemp cl_forceplayercolors 0\n");
 
 	return false;
 }

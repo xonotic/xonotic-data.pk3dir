@@ -1,9 +1,8 @@
 #ifndef ANTICHEAT_H
 #define ANTICHEAT_H
 
-void anticheat_init();
+void anticheat_init(entity this);
 void anticheat_report();
-void anticheat_shutdown();
 
 void anticheat_physics(entity this);
 void anticheat_spectatecopy(entity spectatee);

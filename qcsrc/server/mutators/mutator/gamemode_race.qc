@@ -10,9 +10,9 @@ REGISTER_MUTATOR(rc, false)
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		race_Initialize();
 
 		rc_SetLimits();
+		race_Initialize();
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -42,7 +42,7 @@ const float SP_RACE_FASTEST = 6;
 
 #ifdef IMPLEMENTATION
 
-#include "../../race.qh"
+#include <server/race.qh>
 
 #define autocvar_g_race_laps_limit cvar("g_race_laps_limit")
 float autocvar_g_race_qualifying_timelimit;
@@ -53,7 +53,7 @@ int autocvar_g_race_teams;
 .float race_checkpoint;
 void havocbot_role_race()
 {SELFPARAM();
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(self))
 		return;
 
 	entity e;
@@ -110,17 +110,15 @@ void race_EventLog(string mode, entity actor) // use an alias for easy changing 
 float WinningCondition_Race(float fraglimit)
 {
 	float wc;
-	entity p;
 	float n, c;
 
 	n = 0;
 	c = 0;
-	FOR_EACH_PLAYER(p)
-	{
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		++n;
-		if(p.race_completed)
+		if(it.race_completed)
 			++c;
-	}
+	));
 	if(n && (n == c))
 		return WINNING_YES;
 	wc = WinningCondition_Scores(fraglimit, 0);
@@ -228,17 +226,15 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
 
-	entity e;
-	FOR_EACH_CLIENT(e)
-	{
-		if(e.race_place)
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it.race_place)
 		{
-			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			s = PlayerScore_Add(it, SP_RACE_FASTEST, 0);
 			if(!s)
-				e.race_place = 0;
+				it.race_place = 0;
 		}
-		race_EventLog(ftos(e.race_place), e);
-	}
+		race_EventLog(ftos(it.race_place), it);
+	));
 
 	if(g_race_qualifying == 2)
 	{
@@ -249,16 +245,6 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 		cvar_set("timelimit", ftos(race_timelimit));
 		race_ScoreRules();
 	}
-
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(rc, PlayerPreThink)
-{SELFPARAM();
-	if(IS_SPEC(self) || IS_OBSERVER(self))
-	if(g_race_qualifying)
-	if(msg_entity.enemy.race_laptime)
-		race_SendNextCheckpoint(msg_entity.enemy, 1);
 
 	return false;
 }
@@ -335,9 +321,9 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
-{SELFPARAM();
-	self.respawn_flags |= RESPAWN_FORCE;
-	race_AbandonRaceCheck(self);
+{
+	frag_target.respawn_flags |= RESPAWN_FORCE;
+	race_AbandonRaceCheck(frag_target);
 	return false;
 }
 

@@ -23,14 +23,17 @@
 #include "bot/navigation.qh"
 
 #include "../common/ent_cs.qh"
-#include "../common/vehicles/all.qh"
+#include "../common/state.qh"
+
 #include "../common/triggers/teleporters.qh"
+
+#include "../common/vehicles/all.qh"
 
 #include "weapons/hitplot.qh"
 #include "weapons/weaponsystem.qh"
 
 #include "../common/net_notice.qh"
-#include "../common/physics.qh"
+#include "../common/physics/player.qh"
 
 #include "../common/items/all.qc"
 
@@ -55,56 +58,44 @@ void send_CSQC_teamnagger() {
 
 bool ClientData_Send(entity this, entity to, int sf)
 {
-	if(to != self.owner)
-	{
-		error("wtf");
-		return false;
-	}
+	assert(to == this.owner, return false);
 
-	entity e;
-
-	e = to;
-	if(IS_SPEC(to))
-		e = to.enemy;
+	entity e = to;
+	if (IS_SPEC(e)) e = e.enemy;
 
 	sf = 0;
-
-	if(e.race_completed)
-		sf |= 1; // forced scoreboard
-	if(to.spectatee_status)
-		sf |= 2; // spectator ent number follows
-	if(e.zoomstate)
-		sf |= 4; // zoomed
-	if(e.porto_v_angle_held)
-		sf |= 8; // angles held
+	if (e.race_completed)       sf |= 1; // forced scoreboard
+	if (to.spectatee_status)    sf |= 2; // spectator ent number follows
+	if (e.zoomstate)            sf |= 4; // zoomed
+	if (e.porto_v_angle_held)   sf |= 8; // angles held
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 2)
+	if (sf & 2)
+	{
 		WriteByte(MSG_ENTITY, to.spectatee_status);
-
-	if(sf & 8)
+	}
+	if (sf & 8)
 	{
 		WriteAngle(MSG_ENTITY, e.v_angle.x);
 		WriteAngle(MSG_ENTITY, e.v_angle.y);
 	}
-
 	return true;
 }
 
-void ClientData_Attach()
-{SELFPARAM();
+void ClientData_Attach(entity this)
+{
 	Net_LinkEntity(this.clientdata = new(clientdata), false, 0, ClientData_Send);
 	make_pure(this.clientdata);
 	self.clientdata.drawonlytoclient = this;
 	self.clientdata.owner = this;
 }
 
-void ClientData_Detach()
-{SELFPARAM();
-	remove(self.clientdata);
-	self.clientdata = world;
+void ClientData_Detach(entity this)
+{
+	remove(this.clientdata);
+	self.clientdata = NULL;
 }
 
 void ClientData_Touch(entity e)
@@ -112,14 +103,7 @@ void ClientData_Touch(entity e)
 	e.clientdata.SendFlags = 1;
 
 	// make it spectatable
-	entity e2;
-	FOR_EACH_REALCLIENT(e2)
-	{
-		if(e2 != e)
-			if(IS_SPEC(e2))
-				if(e2.enemy == e)
-					e2.clientdata.SendFlags = 1;
-	}
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != e && IS_SPEC(it) && it.enemy == e, LAMBDA(it.clientdata.SendFlags = 1));
 }
 
 .string netname_previous;
@@ -177,145 +161,135 @@ void setplayermodel(entity e, string modelname)
 	player_setupanimsformodel();
 }
 
-/*
-=============
-PutObserverInServer
-
-putting a client as observer in the server
-=============
-*/
 void FixPlayermodel(entity player);
+/** putting a client as observer in the server */
 void PutObserverInServer()
-{SELFPARAM();
-	entity	spot;
-    self.hud = HUD_NORMAL;
+{
+	SELFPARAM();
+    bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver);
+	PlayerState_detach(this);
 
-	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
+	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 
-	spot = SelectSpawnPoint (true);
-	if(!spot)
-		error("No spawnpoints for observers?!?\n");
-	RemoveGrapplingHook(self); // Wazat's Grappling Hook
+    {
+        entity spot = SelectSpawnPoint(true);
+        if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
+        this.angles = spot.angles;
+        this.angles_z = 0;
+        this.fixangle = true;
+        // offset it so that the spectator spawns higher off the ground, looks better this way
+        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, NULL));
+        this.prevorigin = this.origin;
+        if (IS_REAL_CLIENT(this))
+        {
+            msg_entity = this;
+            WriteByte(MSG_ONE, SVC_SETVIEW);
+            WriteEntity(MSG_ONE, this);
+        }
+        // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+        // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+        setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
+        this.view_ofs = '0 0 0';
+    }
 
-	if(IS_REAL_CLIENT(self))
+    RemoveGrapplingHook(this);
+	Portal_ClearAll(this);
+	Unfreeze(this);
+
+	if (this.alivetime)
 	{
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self);
+		if (!warmup_stage)
+			PS_GR_P_ADDVAL(this, PLAYERSTATS_ALIVETIME, time - this.alivetime);
+		this.alivetime = 0;
 	}
 
-	self.frags = FRAGS_SPECTATOR;
-	self.bot_attack = false;
+	if (this.vehicle) vehicles_exit(VHEF_RELEASE);
 
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver);
+	WaypointSprite_PlayerDead(this);
 
-	Portal_ClearAll(self);
+	if (!mutator_returnvalue)  // mutator prevents resetting teams
+		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
-	Unfreeze(self);
-
-	if(self.alivetime)
+	if (this.killcount != FRAGS_SPECTATOR)
 	{
-		if(!warmup_stage)
-			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
-		self.alivetime = 0;
-	}
-
-	if(self.vehicle)
-		vehicles_exit(VHEF_RELEASE);
-
-	WaypointSprite_PlayerDead();
-
-	if(!mutator_returnvalue)  // mutator prevents resetting teams
-		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
-
-	if(self.killcount != FRAGS_SPECTATOR)
-	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
 		if(!intermission_running)
 		if(autocvar_g_chat_nospectators == 1 || (!(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CHAT_NOSPECTATORS);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
 
-		if(self.just_joined == false) {
-			LogTeamchange(self.playerid, -1, 4);
+		if(this.just_joined == false) {
+			LogTeamchange(this.playerid, -1, 4);
 		} else
-			self.just_joined = false;
+			this.just_joined = false;
 	}
 
-	PlayerScore_Clear(self); // clear scores when needed
+	PlayerScore_Clear(this); // clear scores when needed
 
-	accuracy_resend(self);
+	accuracy_resend(this);
 
-	self.spectatortime = time;
+	this.spectatortime = time;
+    this.frags = FRAGS_SPECTATOR;
+	this.bot_attack = false;
+    this.hud = HUD_NORMAL;
+	this.classname = STR_OBSERVER;
+	this.iscreature = false;
+	this.teleportable = TELEPORT_SIMPLE;
+	this.damagedbycontents = false;
+	this.health = FRAGS_SPECTATOR;
+	this.takedamage = DAMAGE_NO;
+	this.solid = SOLID_NOT;
+	this.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
+	this.flags = FL_CLIENT | FL_NOTARGET;
+	this.armorvalue = 666;
+	this.effects = 0;
+	this.armorvalue = autocvar_g_balance_armor_start;
+	this.pauserotarmor_finished = 0;
+	this.pauserothealth_finished = 0;
+	this.pauseregen_finished = 0;
+	this.damageforcescale = 0;
+	this.death_time = 0;
+	this.respawn_flags = 0;
+	this.respawn_time = 0;
+	this.stat_respawn_time = 0;
+	this.alpha = 0;
+	this.scale = 0;
+	this.fade_time = 0;
+	this.pain_frame = 0;
+	this.pain_finished = 0;
+	this.strength_finished = 0;
+	this.invincible_finished = 0;
+	this.superweapons_finished = 0;
+	this.pushltime = 0;
+	this.istypefrag = 0;
+	this.think = func_null;
+	this.nextthink = 0;
+	this.hook_time = 0;
+	this.deadflag = DEAD_NO;
+	this.crouch = false;
+	this.revival_time = 0;
 
-	self.classname = STR_OBSERVER;
-	self.iscreature = false;
-	self.teleportable = TELEPORT_SIMPLE;
-	self.damagedbycontents = false;
-	self.health = FRAGS_SPECTATOR;
-	self.takedamage = DAMAGE_NO;
-	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
-	self.flags = FL_CLIENT | FL_NOTARGET;
-	self.armorvalue = 666;
-	self.effects = 0;
-	self.armorvalue = autocvar_g_balance_armor_start;
-	self.pauserotarmor_finished = 0;
-	self.pauserothealth_finished = 0;
-	self.pauseregen_finished = 0;
-	self.damageforcescale = 0;
-	self.death_time = 0;
-	self.respawn_flags = 0;
-	self.respawn_time = 0;
-	self.stat_respawn_time = 0;
-	self.alpha = 0;
-	self.scale = 0;
-	self.fade_time = 0;
-	self.pain_frame = 0;
-	self.pain_finished = 0;
-	self.strength_finished = 0;
-	self.invincible_finished = 0;
-	self.superweapons_finished = 0;
-	self.pushltime = 0;
-	self.istypefrag = 0;
-	self.think = func_null;
-	self.nextthink = 0;
-	self.hook_time = 0;
-	self.deadflag = DEAD_NO;
-	self.angles = spot.angles;
-	self.angles_z = 0;
-	self.fixangle = true;
-	self.crouch = false;
-	self.revival_time = 0;
+	this.items = 0;
+	this.weapons = '0 0 0';
+	this.model = "";
+	FixPlayermodel(this);
+	setmodel(this, MDL_Null);
+	this.drawonlytoclient = this;
 
-	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
-	self.prevorigin = self.origin;
-	self.items = 0;
-	self.weapons = '0 0 0';
-	self.model = "";
-	FixPlayermodel(self);
-	setmodel(self, MDL_Null);
-	self.drawonlytoclient = self;
-
-	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
-	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
-
-	self.weapon = 0;
-	self.weaponname = "";
-	self.switchingweapon = 0;
-	self.weaponmodel = "";
+	this.weaponname = "";
+	this.weaponmodel = "";
 	for (int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		self.weaponentities[slot] = NULL;
+		this.weaponentities[slot] = NULL;
 	}
-	self.exteriorweaponentity = world;
-	self.killcount = FRAGS_SPECTATOR;
-	self.velocity = '0 0 0';
-	self.avelocity = '0 0 0';
-	self.punchangle = '0 0 0';
-	self.punchvector = '0 0 0';
-	self.oldvelocity = self.velocity;
-	self.fire_endtime = -1;
-	self.event_damage = func_null;
+	this.exteriorweaponentity = NULL;
+	this.killcount = FRAGS_SPECTATOR;
+	this.velocity = '0 0 0';
+	this.avelocity = '0 0 0';
+	this.punchangle = '0 0 0';
+	this.punchvector = '0 0 0';
+	this.oldvelocity = this.velocity;
+	this.fire_endtime = -1;
+	this.event_damage = func_null;
 }
 
 int player_getspecies(entity this)
@@ -438,6 +412,7 @@ void PutClientInServer()
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer();
 	} else if (IS_PLAYER(this)) {
+		PlayerState_attach(this);
 		accuracy_resend(this);
 
 		if (this.team < 0)
@@ -555,8 +530,8 @@ void PutClientInServer()
 		this.drawonlytoclient = NULL;
 
 		this.crouch = false;
-		this.view_ofs = PL_VIEW_OFS;
-		setsize(this, PL_MIN, PL_MAX);
+		this.view_ofs = STAT(PL_VIEW_OFS, NULL);
+		setsize(this, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 		this.spawnorigin = spot.origin;
 		setorigin(this, spot.origin + '0 0 1' * (1 - this.mins.z - 24));
 		// don't reset back to last position, even if new position is stuck in solid
@@ -570,7 +545,7 @@ void PutClientInServer()
 		this.bot_attack = true;
 		this.monster_attack = true;
 
-		this.BUTTON_ATCK = this.BUTTON_JUMP = this.BUTTON_ATCK2 = false;
+		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 
 		if (this.killcount == FRAGS_SPECTATOR) {
 			PlayerScore_Clear(this);
@@ -617,11 +592,11 @@ void PutClientInServer()
 			remove(spot); // usefull for checking if there are spawnpoints, that let drop through the floor
 		}
 
-		this.switchweapon = w_getbestweapon(this);
+		PS(this).m_switchweapon = w_getbestweapon(this);
 		this.cnt = -1; // W_LastWeapon will not complain
-		this.weapon = 0;
+		PS(this).m_weapon = WEP_Null;
 		this.weaponname = "";
-		this.switchingweapon = 0;
+		PS(this).m_switchingweapon = WEP_Null;
 
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
@@ -629,6 +604,8 @@ void PutClientInServer()
 		antilag_clear(this);
 	}
 }
+
+void ClientInit_misc();
 
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
@@ -638,7 +615,15 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, _ENT_CLIENT_INIT);
 	return = true;
 	msg_entity = to;
+	// MSG_INIT replacement
+	// TODO: make easier to use
 	Registry_send_all();
+	W_PROP_reload(MSG_ONE, to);
+	ClientInit_misc();
+	MUTATOR_CALLHOOK(Ent_Init);
+}
+void ClientInit_misc()
+{
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);
@@ -656,19 +641,8 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	else
 		WriteString(channel, "");
 	WriteByte(channel, self.count * 255.0); // g_balance_armor_blockpercent
-	WriteCoord(channel, self.bouncefactor); // g_balance_mortar_bouncefactor // WEAPONTODO
-	WriteCoord(channel, self.bouncestop); // g_balance_mortar_bouncestop
-	WriteCoord(channel, self.ebouncefactor); // g_balance_mortar_bouncefactor
-	WriteCoord(channel, self.ebouncestop); // g_balance_mortar_bouncestop
-	WriteByte(channel, WEP_CVAR(vortex, secondary)); // client has to know if it should zoom or not // WEAPONTODO
-	WriteByte(channel, WEP_CVAR(rifle, secondary)); // client has to know if it should zoom or not // WEAPONTODO
 	WriteByte(channel, serverflags); // client has to know if it should zoom or not
-	WriteByte(channel, WEP_CVAR(minelayer, limit)); // minelayer max mines // WEAPONTODO
-	WriteByte(channel, WEP_CVAR_SEC(hagar, load_max)); // hagar max loadable rockets // WEAPONTODO
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
-	WriteByte(channel, WEP_CVAR(porto, secondary)); // WEAPONTODO
-
-	MUTATOR_CALLHOOK(Ent_Init);
 }
 
 void ClientInit_CheckUpdate()
@@ -677,26 +651,6 @@ void ClientInit_CheckUpdate()
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{
 		self.count = autocvar_g_balance_armor_blockpercent;
-		self.SendFlags |= 1;
-	}
-	if(self.bouncefactor != autocvar_g_balance_mortar_bouncefactor) // WEAPONTODO
-	{
-		self.bouncefactor = autocvar_g_balance_mortar_bouncefactor;
-		self.SendFlags |= 1;
-	}
-	if(self.bouncestop != autocvar_g_balance_mortar_bouncestop)
-	{
-		self.bouncestop = autocvar_g_balance_mortar_bouncestop;
-		self.SendFlags |= 1;
-	}
-	if(self.ebouncefactor != autocvar_g_balance_electro_secondary_bouncefactor)
-	{
-		self.ebouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
-		self.SendFlags |= 1;
-	}
-	if(self.ebouncestop != autocvar_g_balance_electro_secondary_bouncestop)
-	{
-		self.ebouncestop = autocvar_g_balance_electro_secondary_bouncestop;
 		self.SendFlags |= 1;
 	}
 }
@@ -743,15 +697,15 @@ void SetChangeParms ()
 DecodeLevelParms
 =============
 */
-void DecodeLevelParms ()
-{SELFPARAM();
+void DecodeLevelParms(entity this)
+{
 	// load parms
-	self.parm_idlesince = parm1;
-	if(self.parm_idlesince == -(86400 * 366))
-		self.parm_idlesince = time;
+	this.parm_idlesince = parm1;
+	if (this.parm_idlesince == -(86400 * 366))
+		this.parm_idlesince = time;
 
 	// whatever happens, allow 60 seconds of idling directly after connect for map loading
-	self.parm_idlesince = max(self.parm_idlesince, time - sv_maxidle + 60);
+	this.parm_idlesince = max(this.parm_idlesince, time - sv_maxidle + 60);
 
 	MUTATOR_CALLHOOK(DecodeLevelParms);
 }
@@ -765,21 +719,21 @@ Called when a client types 'kill' in the console
 */
 
 .float clientkill_nexttime;
-void ClientKill_Now_TeamChange()
-{SELFPARAM();
-	if(self.killindicator_teamchange == -1)
+void ClientKill_Now_TeamChange(entity this)
+{
+	if(this.killindicator_teamchange == -1)
 	{
-		JoinBestTeam( self, false, true );
+		JoinBestTeam( this, false, true );
 	}
-	else if(self.killindicator_teamchange == -2)
+	else if(this.killindicator_teamchange == -2)
 	{
 		if(blockSpectators)
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-		PutObserverInServer();
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+		WITH(entity, self, this, PutObserverInServer());
 	}
 	else
-		SV_ChangeTeam(self.killindicator_teamchange - 1);
-	self.killindicator_teamchange = 0;
+		WITH(entity, self, this, SV_ChangeTeam(this.killindicator_teamchange - 1));
+	this.killindicator_teamchange = 0;
 }
 
 void ClientKill_Now()
@@ -800,7 +754,7 @@ void ClientKill_Now()
 	self.killindicator = world;
 
 	if(self.killindicator_teamchange)
-		ClientKill_Now_TeamChange();
+		ClientKill_Now_TeamChange(self);
 
 	if(IS_PLAYER(self))
 		Damage(self, self, self, 100000, DEATH_KILL.m_id, self.origin, '0 0 0');
@@ -869,13 +823,13 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
     if(!self.killindicator)
 	{
-		if(self.deadflag == DEAD_NO)
+		if(!IS_DEAD(self))
 		{
 			killtime = max(killtime, self.clientkill_nexttime - time);
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || !IS_PLAYER(self) || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || !IS_PLAYER(self) || IS_DEAD(self))
 		{
 			ClientKill_Now();
 		}
@@ -940,7 +894,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.killindicator.colormod = Team_ColorRGB(targetteam);
 			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
-				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, APP_TEAM_NUM_4(targetteam, CENTER_TEAMCHANGE_), self.killindicator.cnt);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, APP_TEAM_NUM(targetteam, CENTER_TEAMCHANGE), self.killindicator.cnt);
 		}
 	}
 
@@ -950,7 +904,7 @@ void ClientKill ()
 {SELFPARAM();
 	if(gameover) return;
 	if(self.player_blocked) return;
-	if(self.frozen) return;
+	if(STAT(FROZEN, self)) return;
 
 	ClientKill_TeamChange(0);
 }
@@ -963,6 +917,8 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
 		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
+
+	MUTATOR_CALLHOOK(FixClientCvars, e);
 }
 
 float PlayerInIDList(entity p, string idlist)
@@ -1000,229 +956,169 @@ void ClientPreConnect ()
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
 			self.playerid,
-			num_for_edict(self),
+			etof(self),
 			((IS_REAL_CLIENT(self)) ? self.netaddress : "bot")
 		));
 	}
 }
 #endif
 
-/*
+/**
 =============
 ClientConnect
 
 Called when a client connects to the server
 =============
 */
-void DecodeLevelParms ();
-void ClientConnect ()
-{SELFPARAM();
-	float t;
-
-	if(IS_CLIENT(self))
-	{
-		LOG_INFO("Warning: ClientConnect, but already connected!\n");
-		return;
-	}
-
-	if(Ban_MaybeEnforceBanOnce(self))
-		return;
-
-	DecodeLevelParms();
+void ClientConnect()
+{
+	SELFPARAM();
+	if (Ban_MaybeEnforceBanOnce(this)) return;
+	assert(!IS_CLIENT(this), return);
+	assert(player_count >= 0, player_count = 0);
+	this.classname = "player_joining";
+	this.flags = FL_CLIENT;
 
 #ifdef WATERMARK
-	Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_WATERMARK, WATERMARK);
+	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
 #endif
+	this.version_nagtime = time + 10 + random() * 10;
 
-	self.classname = "player_joining";
-
-	self.flags = FL_CLIENT;
-	self.version_nagtime = time + 10 + random() * 10;
-
-	if(player_count<0)
-	{
-		LOG_TRACE("BUG player count is lower than zero, this cannot happen!\n");
-		player_count = 0;
-	}
-
-	if(IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
-
-	PlayerScore_Attach(self);
-	ClientData_Attach();
-	accuracy_init(self);
-	Inventory_new(self);
-
-	bot_clientconnect();
-
-	playerdemo_init();
-
-	anticheat_init();
+	ClientState_attach(this);
 
 	// identify the right forced team
-	if(autocvar_g_campaign)
+	if (autocvar_g_campaign)
 	{
-		if(IS_REAL_CLIENT(self)) // only players, not bots
+		if (IS_REAL_CLIENT(this)) // only players, not bots
 		{
-			switch(autocvar_g_campaign_forceteam)
+			switch (autocvar_g_campaign_forceteam)
 			{
-				case 1: self.team_forced = NUM_TEAM_1; break;
-				case 2: self.team_forced = NUM_TEAM_2; break;
-				case 3: self.team_forced = NUM_TEAM_3; break;
-				case 4: self.team_forced = NUM_TEAM_4; break;
-				default: self.team_forced = 0;
+				case 1: this.team_forced = NUM_TEAM_1; break;
+				case 2: this.team_forced = NUM_TEAM_2; break;
+				case 3: this.team_forced = NUM_TEAM_3; break;
+				case 4: this.team_forced = NUM_TEAM_4; break;
+				default: this.team_forced = 0;
 			}
 		}
 	}
-	else if(PlayerInIDList(self, autocvar_g_forced_team_red))
-		self.team_forced = NUM_TEAM_1;
-	else if(PlayerInIDList(self, autocvar_g_forced_team_blue))
-		self.team_forced = NUM_TEAM_2;
-	else if(PlayerInIDList(self, autocvar_g_forced_team_yellow))
-		self.team_forced = NUM_TEAM_3;
-	else if(PlayerInIDList(self, autocvar_g_forced_team_pink))
-		self.team_forced = NUM_TEAM_4;
-	else if(autocvar_g_forced_team_otherwise == "red")
-		self.team_forced = NUM_TEAM_1;
-	else if(autocvar_g_forced_team_otherwise == "blue")
-		self.team_forced = NUM_TEAM_2;
-	else if(autocvar_g_forced_team_otherwise == "yellow")
-		self.team_forced = NUM_TEAM_3;
-	else if(autocvar_g_forced_team_otherwise == "pink")
-		self.team_forced = NUM_TEAM_4;
-	else if(autocvar_g_forced_team_otherwise == "spectate")
-		self.team_forced = -1;
-	else if(autocvar_g_forced_team_otherwise == "spectator")
-		self.team_forced = -1;
-	else
-		self.team_forced = 0;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_red))    this.team_forced = NUM_TEAM_1;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_blue))   this.team_forced = NUM_TEAM_2;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_yellow)) this.team_forced = NUM_TEAM_3;
+	else if (PlayerInIDList(this, autocvar_g_forced_team_pink))   this.team_forced = NUM_TEAM_4;
+	else switch (autocvar_g_forced_team_otherwise)
+	{
+		default: this.team_forced = 0; break;
+		case "red": this.team_forced = NUM_TEAM_1; break;
+		case "blue": this.team_forced = NUM_TEAM_2; break;
+		case "yellow": this.team_forced = NUM_TEAM_3; break;
+		case "pink": this.team_forced = NUM_TEAM_4; break;
+		case "spectate":
+		case "spectator":
+			this.team_forced = -1;
+			break;
+	}
+	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-	if(!teamplay)
-		if(self.team_forced > 0)
-			self.team_forced = 0;
+	JoinBestTeam(this, false, false); // if the team number is valid, keep it
 
-	JoinBestTeam(self, false, false); // if the team number is valid, keep it
-
-	if((autocvar_sv_spectate == 1) || autocvar_g_campaign || self.team_forced < 0) {
-		self.classname = STR_OBSERVER;
+	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
+		this.classname = STR_OBSERVER;
 	} else {
-		if(teamplay)
+		if (!teamplay || autocvar_g_balance_teams)
 		{
-			if(autocvar_g_balance_teams)
-			{
-				self.classname = STR_PLAYER;
-				campaign_bots_may_start = 1;
-			}
-			else
-			{
-				self.classname = STR_OBSERVER; // do it anyway
-			}
+			this.classname = STR_PLAYER;
+			campaign_bots_may_start = 1;
 		}
 		else
 		{
-			self.classname = STR_PLAYER;
-			campaign_bots_may_start = 1;
+			this.classname = STR_OBSERVER; // do it anyway
 		}
 	}
 
-	self.playerid = (playerid_last = playerid_last + 1);
+	this.playerid = ++playerid_last;
 
-	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", self.playerid));
+	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
-    if(IS_BOT_CLIENT(self))
-        PlayerStats_GameReport_AddPlayer(self);
+	// always track bots, don't ask for cl_allow_uidtracking
+    if (IS_BOT_CLIENT(this)) PlayerStats_GameReport_AddPlayer(this);
 
-	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
+	if (autocvar_sv_eventlog)
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", this.netname));
 
-	LogTeamchange(self.playerid, self.team, 1);
+	LogTeamchange(this.playerid, this.team, 1);
 
-	self.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
+	this.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
-	self.netname_previous = strzone(self.netname);
+	this.netname_previous = strzone(this.netname);
 
-	if(IS_PLAYER(self) && teamplay)
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(self, INFO_JOIN_CONNECT_TEAM_), self.netname);
-	else
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_CONNECT, self.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_ENT(this, INFO_JOIN_CONNECT_TEAM) : INFO_JOIN_CONNECT), this.netname);
 
-	stuffcmd(self, strcat(clientstuff, "\n"));
-	stuffcmd(self, "cl_particles_reloadeffects\n"); // TODO do we still need this?
+	stuffcmd(this, clientstuff, "\n");
+	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
 
-	FixClientCvars(self);
-
-	// spawnfunc_waypoint sprites
-	WaypointSprite_InitClient(self);
-
-	// Wazat's grappling hook
-	SetGrappleHookBindings();
-
-	// Jetpack binds
-	stuffcmd(self, "alias +jetpack +button10\n");
-	stuffcmd(self, "alias -jetpack -button10\n");
+	FixClientCvars(this);
 
 	// get version info from player
-	stuffcmd(self, "cmd clientversion $gameversion\n");
-
-	// get other cvars from player
-	GetCvars(0);
+	stuffcmd(this, "cmd clientversion $gameversion\n");
 
 	// notify about available teams
-	if(teamplay)
+	if (teamplay)
 	{
-		CheckAllowedTeams(self);
-		t = 0; if(c1 >= 0) t |= 1; if(c2 >= 0) t |= 2; if(c3 >= 0) t |= 4; if(c4 >= 0) t |= 8;
-		stuffcmd(self, strcat("set _teams_available ", ftos(t), "\n"));
+		CheckAllowedTeams(this);
+		int t = 0;
+		if (c1 >= 0) t |= BIT(0);
+		if (c2 >= 0) t |= BIT(1);
+		if (c3 >= 0) t |= BIT(2);
+		if (c4 >= 0) t |= BIT(3);
+		stuffcmd(this, sprintf("set _teams_available %d\n", t));
 	}
 	else
-		stuffcmd(self, "set _teams_available 0\n");
-
-	entcs_attach(self);
+	{
+		stuffcmd(this, "set _teams_available 0\n");
+	}
 
 	bot_relinkplayerlist();
 
-	self.spectatortime = time;
-	if(blockSpectators)
+	this.spectatortime = time;
+	if (blockSpectators)
 	{
-		Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
+		Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 	}
 
-	self.jointime = time;
-	self.allowed_timeouts = autocvar_sv_timeout_number;
+	this.jointime = time;
+	this.allowed_timeouts = autocvar_sv_timeout_number;
 
-	if(IS_REAL_CLIENT(self))
+	if (IS_REAL_CLIENT(this))
 	{
-		if(!autocvar_g_campaign)
+		if (!autocvar_g_campaign)
 		{
-			self.motd_actived_time = -1;
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
+			this.motd_actived_time = -1;
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 		}
 
-		if(g_weaponarena_weapons == WEPSET(TUBA))
-			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
+		if (g_weaponarena_weapons == WEPSET(TUBA))
+			stuffcmd(this, "cl_cmd settemp chase_active 1\n");
 	}
 
-	if(!sv_foginterval && world.fog != "")
-		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
+	if (!sv_foginterval && world.fog != "")
+		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	W_HitPlotOpen(self);
+	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)))
+		if (!g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
+			send_CSQC_teamnagger();
 
-	if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
-		send_CSQC_teamnagger();
+	CSQCMODEL_AUTOINIT(this);
 
-	CheatInitClient();
+	this.model_randomizer = random();
 
-	CSQCMODEL_AUTOINIT(self);
+	if (IS_REAL_CLIENT(this))
+		sv_notice_join(this);
 
-	self.model_randomizer = random();
+	FOREACH_ENTITY_FLOAT(init_for_player_needed, true, {
+		WITH(entity, self, it, it.init_for_player(it));
+	});
 
-	if(IS_REAL_CLIENT(self))
-		sv_notice_join(self);
-
-	for (entity e = world; (e = findfloat(e, init_for_player_needed, 1)); ) {
-		WITH(entity, self, e, e.init_for_player(this));
-	}
-
-	MUTATOR_CALLHOOK(ClientConnect, self);
+	MUTATOR_CALLHOOK(ClientConnect, this);
 }
 /*
 =============
@@ -1233,43 +1129,24 @@ Called when a client disconnects from the server
 */
 .entity chatbubbleentity;
 void ReadyCount();
-void ClientDisconnect ()
-{SELFPARAM();
-	if(self.vehicle)
-	    vehicles_exit(VHEF_RELEASE);
+void ClientDisconnect()
+{
+	SELFPARAM();
+	assert(IS_CLIENT(this), return);
 
-	if (!IS_CLIENT(self))
-	{
-		LOG_INFO("Warning: ClientDisconnect without ClientConnect\n");
-		return;
-	}
+	PlayerStats_GameReport_FinalizePlayer(this);
+	if (this.vehicle) vehicles_exit(VHEF_RELEASE);
+	if (this.active_minigame) part_minigame(this);
+	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 
-	PlayerStats_GameReport_FinalizePlayer(self);
+	if (autocvar_sv_eventlog)
+		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 
-	if ( self.active_minigame )
-		part_minigame(self);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
-	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
+    MUTATOR_CALLHOOK(ClientDisconnect);
 
-	CheatShutdownClient();
-
-	W_HitPlotClose(self);
-
-	anticheat_report();
-	anticheat_shutdown();
-
-	playerdemo_shutdown();
-
-	bot_clientdisconnect();
-
-	entcs_detach(self);
-
-	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":part:", ftos(self.playerid)));
-
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
-
-	MUTATOR_CALLHOOK(ClientDisconnect);
+	ClientState_detach(this);
 
 	Portal_ClearAll(self);
 
@@ -1281,39 +1158,23 @@ void ClientDisconnect ()
 
 	self.flags &= ~FL_CLIENT;
 
-	if (self.chatbubbleentity)
-		remove (self.chatbubbleentity);
-
-	if (self.killindicator)
-		remove (self.killindicator);
+	if (this.chatbubbleentity) remove(this.chatbubbleentity);
+	if (this.killindicator) remove(this.killindicator);
 
 	WaypointSprite_PlayerGone();
 
 	bot_relinkplayerlist();
 
-	accuracy_free(self);
-	Inventory_delete(self);
-	ClientData_Detach();
-	PlayerScore_Detach(self);
+	if (self.netname_previous) strunzone(self.netname_previous);
+	if (self.clientstatus) strunzone(self.clientstatus);
+	if (self.weaponorder_byimpulse) strunzone(self.weaponorder_byimpulse);
+	if (self.personal) remove(self.personal);
 
-	if(self.netname_previous)
-		strunzone(self.netname_previous);
-	if(self.clientstatus)
-		strunzone(self.clientstatus);
-	if(self.weaponorder_byimpulse)
-		strunzone(self.weaponorder_byimpulse);
-
-	if(self.personal)
-		remove(self.personal);
-
-	self.playerid = 0;
+	this.playerid = 0;
 	ReadyCount();
-
-	// free cvars
-	GetCvars(-1);
+	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 }
 
-.float BUTTON_CHAT;
 void ChatBubbleThink()
 {SELFPARAM();
 	self.nextthink = time;
@@ -1327,11 +1188,11 @@ void ChatBubbleThink()
 
 	self.mdl = "";
 
-	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
+	if ( !IS_DEAD(self.owner) && IS_PLAYER(self.owner) )
 	{
 		if ( self.owner.active_minigame )
 			self.mdl = "models/sprites/minigame_busy.iqm";
-		else if ( self.owner.BUTTON_CHAT )
+		else if (PHYS_INPUT_BUTTON_CHAT(self.owner))
 			self.mdl = "models/misc/chatbubble.spr";
 	}
 
@@ -1394,7 +1255,7 @@ void respawn()
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
 
-	CopyBody(1);
+	CopyBody(self, 1);
 
 	self.effects |= EF_NODRAW; // prevent another CopyBody
 	PutClientInServer();
@@ -1413,14 +1274,14 @@ void player_powerups ()
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = self.items;
 
-	if((self.items & IT_USING_JETPACK) && !self.deadflag && !gameover)
+	if((self.items & IT_USING_JETPACK) && !IS_DEAD(self) && !gameover)
 		self.modelflags |= MF_ROCKET;
 	else
 		self.modelflags &= ~MF_ROCKET;
 
 	self.effects &= ~(EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if((self.alpha < 0 || self.deadflag) && !self.vehicle) // don't apply the flags if the player is gibbed
+	if((self.alpha < 0 || IS_DEAD(self)) && !self.vehicle) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);
@@ -1587,7 +1448,7 @@ void player_regen ()
 	regen_health_stable = autocvar_g_balance_health_regenstable;
 	regen_health_rotstable = autocvar_g_balance_health_rotstable;
 	if(!MUTATOR_CALLHOOK(PlayerRegen))
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	{
 		float mina, maxa, limith, limita;
 		maxa = autocvar_g_balance_armor_rotstable;
@@ -1615,7 +1476,8 @@ void player_regen ()
 	{
 		if(self.vehicle)
 			vehicles_exit(VHEF_RELEASE);
-		self.event_damage(self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
+		if(self.event_damage)
+			self.event_damage(self, self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
 	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -1687,9 +1549,9 @@ void SpectateCopy(entity this, entity spectatee)
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
-	self.switchweapon = spectatee.switchweapon;
-	self.switchingweapon = spectatee.switchingweapon;
-	self.weapon = spectatee.weapon;
+	PS(self).m_switchweapon = PS(spectatee).m_switchweapon;
+	PS(self).m_switchingweapon = PS(spectatee).m_switchingweapon;
+	PS(self).m_weapon = PS(spectatee).m_weapon;
 	self.vortex_charge = spectatee.vortex_charge;
 	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
@@ -1703,9 +1565,9 @@ void SpectateCopy(entity this, entity spectatee)
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
-	self.frozen = spectatee.frozen;
+	STAT(FROZEN, self) = STAT(FROZEN, spectatee);
 	self.revive_progress = spectatee.revive_progress;
-	if(!self.BUTTON_USE)
+	if(!PHYS_INPUT_BUTTON_USE(self))
 		self.fixangle = true;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
@@ -1796,12 +1658,12 @@ bool Spectate(entity pl)
 
 bool SpectateNext()
 {SELFPARAM();
-	other = find(self.enemy, classname, "player");
+	other = find(self.enemy, classname, STR_PLAYER);
 
 	if (MUTATOR_CALLHOOK(SpectateNext, self, other))
 		other = spec_player;
 	else if (!other)
-		other = find(other, classname, "player");
+		other = find(other, classname, STR_PLAYER);
 
 	if(other) { SetSpectatee(self, other); }
 
@@ -1811,7 +1673,7 @@ bool SpectateNext()
 bool SpectatePrev()
 {SELFPARAM();
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
-	other = findchain(classname, "player");
+	other = findchain(classname, STR_PLAYER);
 	if (!other) // no player
 		return false;
 
@@ -1854,7 +1716,7 @@ Update a respawn countdown display.
 void ShowRespawnCountdown()
 {SELFPARAM();
 	float number;
-	if(self.deadflag == DEAD_NO) // just respawned?
+	if(!IS_DEAD(self)) // just respawned?
 		return;
 	else
 	{
@@ -1874,7 +1736,7 @@ void LeaveSpectatorMode()
 {SELFPARAM();
 	if(self.caplayer)
 		return;
-	if(nJoinAllowed(self))
+	if(nJoinAllowed(self, self))
 	{
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
 		{
@@ -1886,11 +1748,11 @@ void LeaveSpectatorMode()
 			if(autocvar_g_campaign)
 				{ campaign_bots_may_start = 1; }
 
-			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
 
 			PutClientInServer();
 
-			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname); }
+			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname); }
 		}
 		else
 			stuffcmd(self, "menu_showteamselect\n");
@@ -1908,40 +1770,39 @@ void LeaveSpectatorMode()
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-float nJoinAllowed(entity ignore)
-{SELFPARAM();
+bool nJoinAllowed(entity this, entity ignore)
+{
 	if(!ignore)
 	// this is called that way when checking if anyone may be able to join (to build qcstatus)
 	// so report 0 free slots if restricted
 	{
 		if(autocvar_g_forced_team_otherwise == "spectate")
-			return 0;
+			return false;
 		if(autocvar_g_forced_team_otherwise == "spectator")
-			return 0;
+			return false;
 	}
 
-	if(self.team_forced < 0)
-		return 0; // forced spectators can never join
+	if(this.team_forced < 0)
+		return false; // forced spectators can never join
 
 	// TODO simplify this
-	entity e;
-	float totalClients = 0;
-	FOR_EACH_CLIENT(e)
-		if(e != ignore)
-			totalClients += 1;
+	int totalClients = 0;
+	int currentlyPlaying = 0;
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it != ignore)
+			++totalClients;
+		if(IS_REAL_CLIENT(it))
+		if(IS_PLAYER(it) || it.caplayer)
+			++currentlyPlaying;
+	));
 
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients;
 
-	float currentlyPlaying = 0;
-	FOR_EACH_REALCLIENT(e)
-		if(IS_PLAYER(e) || e.caplayer)
-			currentlyPlaying += 1;
-
 	if(currentlyPlaying < autocvar_g_maxplayers)
 		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
-	return 0;
+	return false;
 }
 
 /**
@@ -1966,12 +1827,12 @@ void PrintWelcomeMessage()
 	if(self.motd_actived_time == 0)
 	{
 		if (autocvar_g_campaign) {
-			if ((IS_PLAYER(self) && self.BUTTON_INFO) || (!IS_PLAYER(self))) {
+			if ((IS_PLAYER(self) && PHYS_INPUT_BUTTON_INFO(self)) || (!IS_PLAYER(self))) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, campaign_message);
 			}
 		} else {
-			if (self.BUTTON_INFO) {
+			if (PHYS_INPUT_BUTTON_INFO(self)) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 			}
@@ -1980,30 +1841,30 @@ void PrintWelcomeMessage()
 	else if(self.motd_actived_time > 0) // showing MOTD or campaign message
 	{
 		if (autocvar_g_campaign) {
-			if (self.BUTTON_INFO)
+			if (PHYS_INPUT_BUTTON_INFO(self))
 				self.motd_actived_time = time;
 			else if ((time - self.motd_actived_time > 2) && IS_PLAYER(self)) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 			}
 		} else {
-			if (self.BUTTON_INFO)
+			if (PHYS_INPUT_BUTTON_INFO(self))
 				self.motd_actived_time = time;
 			else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 			}
 		}
 	}
 	else //if(self.motd_actived_time < 0) // just connected, motd is active
 	{
-		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
+		if(PHYS_INPUT_BUTTON_INFO(self)) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
 		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || IS_SPEC(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
-			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_MOTD);
 		}
 	}
 }
@@ -2012,26 +1873,26 @@ void ObserverThink()
 {SELFPARAM();
 	if ( self.impulse )
 	{
-		MinigameImpulse(self.impulse);
+		MinigameImpulse(self, self.impulse);
 		self.impulse = 0;
 	}
 	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
-		if (self.BUTTON_JUMP && !self.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
 				self.classname = STR_SPECTATOR;
 			}
 		} else {
-			prefered_movetype = ((!self.BUTTON_USE ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			prefered_movetype = ((!PHYS_INPUT_BUTTON_USE(self) ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			if (self.movetype != prefered_movetype)
 				self.movetype = prefered_movetype;
 		}
 	} else {
-		if (!(self.BUTTON_ATCK || self.BUTTON_JUMP)) {
+		if (!(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self))) {
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)
 			{
@@ -2047,14 +1908,14 @@ void SpectatorThink()
 {SELFPARAM();
 	if ( self.impulse )
 	{
-		if(MinigameImpulse(self.impulse))
+		if(MinigameImpulse(self, self.impulse))
 			self.impulse = 0;
 	}
 	if (self.flags & FL_JUMPRELEASED) {
-		if (self.BUTTON_JUMP && !self.version_mismatch) {
+		if (PHYS_INPUT_BUTTON_JUMP(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209)) {
+		} else if(PHYS_INPUT_BUTTON_ATCK(self) || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
 				self.classname = STR_SPECTATOR;
@@ -2072,7 +1933,7 @@ void SpectatorThink()
 				PutClientInServer();
 			}
 			self.impulse = 0;
-		} else if (self.BUTTON_ATCK2) {
+		} else if (PHYS_INPUT_BUTTON_ATCK2(self)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			self.classname = STR_OBSERVER;
 			PutClientInServer();
@@ -2081,7 +1942,7 @@ void SpectatorThink()
 				PutObserverInServer();
 		}
 	} else {
-		if (!(self.BUTTON_ATCK || self.BUTTON_ATCK2)) {
+		if (!(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_ATCK2(self))) {
 			self.flags |= FL_JUMPRELEASED;
 			if(self.flags & FL_SPAWNING)
 			{
@@ -2113,17 +1974,17 @@ void PlayerUseKey()
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if(!self.frozen)
-		if(self.deadflag == DEAD_NO)
+		if(!STAT(FROZEN, self))
+		if(!IS_DEAD(self))
 		if(!gameover)
 		{
 			entity head, closest_target = world;
-			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
+			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, true);
 
 			while(head) // find the closest acceptable target to enter
 			{
 				if(head.vehicle_flags & VHF_ISVEHICLE)
-				if(head.deadflag == DEAD_NO)
+				if(!IS_DEAD(head))
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, self)))
 				if(head.takedamage != DAMAGE_NO)
 				{
@@ -2241,7 +2102,7 @@ void PlayerPreThink ()
 		self.max_armorvalue = 0;
 	}
 
-	if(self.frozen == 2)
+	if(STAT(FROZEN, self) == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
 		self.health = max(1, self.revive_progress * start_health);
@@ -2250,7 +2111,7 @@ void PlayerPreThink ()
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
 	}
-	else if(self.frozen == 3)
+	else if(STAT(FROZEN, self) == 3)
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * self.revive_progress );
@@ -2259,7 +2120,7 @@ void PlayerPreThink ()
 		{
 			if(self.vehicle)
 				vehicles_exit(VHEF_RELEASE);
-			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, self.origin, '0 0 0');
+			self.event_damage(self, self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
 			Unfreeze(self);
@@ -2271,14 +2132,14 @@ void PlayerPreThink ()
 	if(time > self.last_vehiclecheck)
 	if(IS_PLAYER(self))
 	if(!gameover)
-	if(!self.frozen)
+	if(!STAT(FROZEN, self))
 	if(!self.vehicle)
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
-		if(veh.deadflag == DEAD_NO)
+		if(!IS_DEAD(veh))
 		if(veh.takedamage != DAMAGE_NO)
 		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, self))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
@@ -2293,9 +2154,9 @@ void PlayerPreThink ()
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
-		if(self.BUTTON_USE && !self.usekeypressed)
+		if(PHYS_INPUT_BUTTON_USE(self) && !self.usekeypressed)
 			PlayerUseKey();
-		self.usekeypressed = self.BUTTON_USE;
+		self.usekeypressed = PHYS_INPUT_BUTTON_USE(self);
 	}
 
 	if(IS_REAL_CLIENT(self))
@@ -2325,7 +2186,7 @@ void PlayerPreThink ()
 			player_powerups();
 		}
 
-		if (self.deadflag != DEAD_NO)
+		if (IS_DEAD(self))
 		{
 			if(self.personal && g_race_qualifying)
 			{
@@ -2342,7 +2203,7 @@ void PlayerPreThink ()
 				float button_pressed;
 				if(frametime)
 					player_anim();
-				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
+				button_pressed = (PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self));
 
 				if (self.deadflag == DEAD_DYING)
 				{
@@ -2392,18 +2253,18 @@ void PlayerPreThink ()
 
 		self.prevorigin = self.origin;
 
-		float do_crouch = self.BUTTON_CROUCH;
+		float do_crouch = PHYS_INPUT_BUTTON_CROUCH(self);
 		if(self.hook.state)
 			do_crouch = 0;
 		if(self.vehicle)
 			do_crouch = 0;
-		if(self.frozen)
+		if(STAT(FROZEN, self))
 			do_crouch = 0;
 
 		// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 		// It cannot be predicted by the engine!
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
+		if((PS(self).m_weapon == WEP_SHOCKWAVE || PS(self).m_weapon == WEP_SHOTGUN) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
 			do_crouch = 0;
 
 		if (do_crouch)
@@ -2461,7 +2322,7 @@ void PlayerPreThink ()
 		secrets_setstatus();
 
 		// monsters status
-		monsters_setstatus();
+		monsters_setstatus(self);
 
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
@@ -2478,19 +2339,26 @@ void PlayerPreThink ()
 
 	// WEAPONTODO: Add weapon request for this
 	if(!zoomstate_set)
-		SetZoomState(self.BUTTON_ZOOM || self.BUTTON_ZOOMSCRIPT || (self.BUTTON_ATCK2 && self.weapon == WEP_VORTEX.m_id) || (self.BUTTON_ATCK2 && self.weapon == WEP_RIFLE.m_id && WEP_CVAR(rifle, secondary) == 0)); // WEAPONTODO
+		SetZoomState(
+			PHYS_INPUT_BUTTON_ZOOM(self)
+			|| PHYS_INPUT_BUTTON_ZOOMSCRIPT(self)
+			|| (PHYS_INPUT_BUTTON_ATCK2(self) && PS(self).m_weapon == WEP_VORTEX)
+			|| (PHYS_INPUT_BUTTON_ATCK2(self) && PS(self).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
+		); // WEAPONTODO
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
 	if(IS_SPEC(self))
-		self.spectatee_status = num_for_edict(self.enemy);
+		self.spectatee_status = etof(self.enemy);
 	else if(IS_OBSERVER(self))
-		self.spectatee_status = num_for_edict(self);
+		self.spectatee_status = etof(self);
 	else
 		self.spectatee_status = 0;
 	if(self.spectatee_status != oldspectatee_status)
 	{
 		ClientData_Touch(self);
+		if(g_race || g_cts)
+			race_InitSpectator();
 	}
 
 	if(self.teamkill_soundtime)
@@ -2498,29 +2366,48 @@ void PlayerPreThink ()
 	{
 		self.teamkill_soundtime = 0;
 
-		setself(self.teamkill_soundsource);
-		entity oldpusher = self.pusher;
-		self.pusher = this;
-
-		PlayerSound(playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
-
-		self.pusher = oldpusher;
-		setself(this);
+		entity e = self.teamkill_soundsource;
+		entity oldpusher = e.pusher;
+		e.pusher = this;
+		PlayerSound(e, playersound_teamshoot, CH_VOICE, VOICETYPE_LASTATTACKER_ONLY);
+		e.pusher = oldpusher;
 	}
 
 	if(self.taunt_soundtime)
 	if(time > self.taunt_soundtime)
 	{
 		self.taunt_soundtime = 0;
-		PlayerSound(playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
+		PlayerSound(self, playersound_taunt, CH_VOICE, VOICETYPE_AUTOTAUNT);
 	}
 
 	target_voicescript_next(self);
 
 	// WEAPONTODO: Move into weaponsystem somehow
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
-	if(!self.weapon)
+	if (PS(self).m_weapon == WEP_Null)
 		self.clip_load = self.clip_size = 0;
+}
+
+void DrownPlayer(entity this)
+{
+	if(IS_DEAD(this))
+		return;
+
+	if (this.waterlevel != WATERLEVEL_SUBMERGED)
+	{
+		if(this.air_finished < time)
+			PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		this.air_finished = time + autocvar_g_balance_contents_drowndelay;
+		this.dmg = 2;
+	}
+	else if (this.air_finished < time)
+	{	// drown!
+		if (this.pain_finished < time)
+		{
+			Damage (this, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
+			this.pain_finished = time + 0.5;
+		}
+	}
 }
 
 /*
@@ -2542,7 +2429,7 @@ void PlayerPostThink ()
 			if(self.idlekick_lasttimeleft)
 			{
 				self.idlekick_lasttimeleft = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_IDLING);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_IDLING);
 			}
 		}
 		else
@@ -2574,10 +2461,11 @@ void PlayerPostThink ()
 	//CheckPlayerJump();
 
 	if(IS_PLAYER(self)) {
+		DrownPlayer(self);
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)
-			ImpulseCommands();
+			ImpulseCommands(self);
 		if (intermission_running)
 			return;		// intermission or finale
 		GetPressedKeys();

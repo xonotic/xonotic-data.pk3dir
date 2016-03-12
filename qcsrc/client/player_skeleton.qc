@@ -176,14 +176,14 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
-		if(self == csqcplayer)
-			self.v_angle_x = input_angles_x;
+		if(e == csqcplayer)
+			e.v_angle_x = input_angles_x;
 		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(e.(bone_aim[i]))
 			{
-				vector aim = '1 0 0' * bound(-90, self.v_angle.x, 90) * e.(bone_aimweight[i]);
+				vector aim = '1 0 0' * bound(-90, e.v_angle.x, 90) * e.(bone_aimweight[i]);
 				vector org = skel_get_boneabs(s, e.(bone_aim[i]));
 				vector ang_cur = fixedvectoangles2(v_forward, v_up);
 				vector ang = AnglesTransform_Multiply(aim, ang_cur);

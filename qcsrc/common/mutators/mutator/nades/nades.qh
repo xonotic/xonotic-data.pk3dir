@@ -1,7 +1,7 @@
 #ifndef NADES_ALL_H
 #define NADES_ALL_H
 
-#include "../../../teams.qh"
+#include <common/teams.qh>
 
 // use slots 70-100
 const int PROJECTILE_NADE = 71;

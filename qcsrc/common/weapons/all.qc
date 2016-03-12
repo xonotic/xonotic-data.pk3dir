@@ -4,48 +4,51 @@
 #include "all.qh"
 
 #if defined(CSQC)
-	#include "../../client/defs.qh"
+	#include <client/defs.qh>
 	#include "../constants.qh"
 	#include "../stats.qh"
-	#include "../../lib/warpzone/anglestransform.qh"
-	#include "../../lib/warpzone/common.qh"
-	#include "../../lib/warpzone/client.qh"
+	#include <lib/warpzone/anglestransform.qh>
+	#include <lib/warpzone/common.qh>
+	#include <lib/warpzone/client.qh>
 	#include "../util.qh"
-	#include "../../client/autocvars.qh"
+	#include <client/autocvars.qh>
 	#include "../deathtypes/all.qh"
-	#include "../../lib/csqcmodel/interpolate.qh"
-	#include "../movetypes/movetypes.qh"
-	#include "../../client/main.qh"
-	#include "../../lib/csqcmodel/cl_model.qh"
+	#include <lib/csqcmodel/interpolate.qh>
+	#include "../physics/movetypes/movetypes.qh"
+	#include <client/main.qh>
+	#include <lib/csqcmodel/cl_model.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../lib/warpzone/anglestransform.qh"
-    #include "../../lib/warpzone/common.qh"
-    #include "../../lib/warpzone/util_server.qh"
-    #include "../../lib/warpzone/server.qh"
+    #include <lib/warpzone/anglestransform.qh>
+    #include <lib/warpzone/common.qh>
+    #include <lib/warpzone/util_server.qh>
+    #include <lib/warpzone/server.qh>
     #include "../constants.qh"
     #include "../stats.qh"
     #include "../teams.qh"
     #include "../util.qh"
     #include "../monsters/all.qh"
     #include "config.qh"
-    #include "../../server/weapons/csqcprojectile.qh"
-    #include "../../server/weapons/tracing.qh"
-    #include "../../server/t_items.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/constants.qh"
-    #include "../../server/defs.qh"
-    #include "../notifications.qh"
+    #include <server/weapons/csqcprojectile.qh>
+    #include <server/weapons/tracing.qh>
+    #include "../t_items.qh"
+    #include <server/autocvars.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
+    #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
-    #include "../../server/mutators/all.qh"
+    #include <server/mutators/all.qh>
     #include "../mapinfo.qh"
-    #include "../../server/command/common.qh"
-    #include "../../lib/csqcmodel/sv_model.qh"
-    #include "../../server/portals.qh"
-    #include "../../server/g_hook.qh"
+    #include <server/command/common.qh>
+    #include <lib/csqcmodel/sv_model.qh>
+    #include <server/portals.qh>
+    #include <server/g_hook.qh>
 #endif
 #ifndef MENUQC
 	#include "calculations.qc"
+#endif
+#ifdef SVQC
+	#include "config.qc"
 #endif
 #define IMPLEMENTATION
 #include "all.inc"
@@ -101,10 +104,10 @@ string W_FixWeaponOrder(string order, float complete)
 }
 string W_NameWeaponOrder_MapFunc(string s)
 {
-	entity wi;
-	if (s == "0" || stof(s))
+	int i = stof(s);
+	if (s == "0" || i)
 	{
-		wi = get_weaponinfo(stof(s));
+		entity wi = Weapons_from(i);
 		if (wi != WEP_Null) return wi.netname;
 	}
 	return s;
@@ -129,11 +132,9 @@ string W_NameWeaponOrder(string order)
 }
 string W_NumberWeaponOrder_MapFunc(string s)
 {
-	int i;
 	if (s == "0" || stof(s)) return s;
 	s = W_UndeprecateName(s);
-	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
-		if (s == get_weaponinfo(i).netname) return ftos(i);
+	FOREACH(Weapons, it != WEP_Null && it.netname == s, LAMBDA(return ftos(i)));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
@@ -152,17 +153,17 @@ void W_FixWeaponOrder_BuildImpulseList_swap(int i, int j, entity pass)
 }
 float W_FixWeaponOrder_BuildImpulseList_cmp(int i, int j, entity pass)
 {
-	entity e1, e2;
-	float d;
-	e1 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[i]);
-	e2 = get_weaponinfo(W_FixWeaponOrder_BuildImpulseList_buf[j]);
-	d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
+	int si = W_FixWeaponOrder_BuildImpulseList_buf[i];
+	Weapon e1 = Weapons_from(si);
+	int sj = W_FixWeaponOrder_BuildImpulseList_buf[j];
+	Weapon e2 = Weapons_from(sj);
+	int d = (e1.impulse + 9) % 10 - (e2.impulse + 9) % 10;
 	if (d != 0) return -d;  // high impulse first!
 	return strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
-		sprintf(" %d ", W_FixWeaponOrder_BuildImpulseList_buf[i]), 0)
+		sprintf(" %d ", si), 0)
 	       -
 	       strstrofs(strcat(" ", W_FixWeaponOrder_BuildImpulseList_order, " "),
-		sprintf(" %d ", W_FixWeaponOrder_BuildImpulseList_buf[j]), 0)
+		sprintf(" %d ", sj), 0)
 	;  // low char index first!
 }
 string W_FixWeaponOrder_BuildImpulseList(string o)
@@ -193,7 +194,7 @@ string W_FixWeaponOrder_ForceComplete(string order)
 
 void W_RandomWeapons(entity e, float n)
 {
-	int i, j;
+	int i;
 	WepSet remaining;
 	WepSet result;
 	remaining = e.weapons;
@@ -201,10 +202,13 @@ void W_RandomWeapons(entity e, float n)
 	for (i = 0; i < n; ++i)
 	{
 		RandomSelection_Init();
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			if (remaining & WepSet_FromWeapon(j)) RandomSelection_Add(world, j, string_null, 1, 1);
-		result |= WepSet_FromWeapon(RandomSelection_chosen_float);
-		remaining &= ~WepSet_FromWeapon(RandomSelection_chosen_float);
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			if (remaining & (it.m_wepset))
+				RandomSelection_Add(it, 0, string_null, 1, 1);
+		));
+		Weapon w = RandomSelection_chosen_ent;
+		result |= WepSet_FromWeapon(w);
+		remaining &= ~WepSet_FromWeapon(w);
 	}
 	e.weapons = result;
 }
@@ -267,12 +271,8 @@ string W_Sound(string w_snd)
 string W_Model(string w_mdl)
 {
 	string output = strcat("models/weapons/", w_mdl);
-#ifdef SVQC
-		MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
-		return weapon_model_output;
-#else
-		return output;
-#endif
+	MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
+	return weapon_model_output;
 }
 
 #ifndef MENUQC
@@ -432,6 +432,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 #endif
 			}
 			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
+			setsize(this.weaponchild, '0 0 0', '0 0 0');
 			setattachment(this.weaponchild, this, t);
 		}
 		else
@@ -440,6 +441,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 			this.weaponchild = NULL;
 		}
 
+		setsize(this, '0 0 0', '0 0 0');
 		setorigin(this, '0 0 0');
 		this.angles = '0 0 0';
 		this.frame = 0;
@@ -522,11 +524,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 
 	if (this.movedir.x >= 0)
 	{
-#ifdef SVQC
-		int algn = this.owner.cvar_cl_gunalign;
-#else
-		int algn = autocvar_cl_gunalign;
-#endif
+		int algn = STAT(GUNALIGN, this.owner);
 		vector v = this.movedir;
 		this.movedir = shotorg_adjust(v, false, false, algn);
 		this.view_ofs = shotorg_adjust(v, false, true, algn) - v;
@@ -567,8 +565,10 @@ NET_HANDLE(wframe, bool isNew)
 	switch (viewmodel.state)
 	{
 		case WS_RAISE:
+			viewmodel.weapon_switchdelay = activeweapon.switchdelay_raise;
+			break;
 		case WS_DROP:
-			viewmodel.weapon_switchdelay = ReadFloat();
+			viewmodel.weapon_switchdelay = activeweapon.switchdelay_drop;
 			break;
         default:
             viewmodel.weapon_switchdelay = 0;
@@ -592,18 +592,62 @@ void wframe_send(entity actor, entity weaponentity, vector a, bool restartanim)
 	WriteByte(channel, weaponentity.state);
 	WriteFloat(channel, weaponentity.weapon_nextthink);
 	WriteByte(channel, weaponentity.m_alpha * 255);
-	Weapon w = Weapons_from(actor.weapon);
-	switch (weaponentity.state)
+}
+#endif
+
+REGISTER_NET_C2S(w_whereis)
+#ifdef SVQC
+void Weapon_whereis(Weapon this, entity cl);
+NET_HANDLE(w_whereis, bool)
+{
+	Weapon wpn = ReadRegistered(Weapons);
+	if (wpn != WEP_Null) Weapon_whereis(wpn, sender);
+	return true;
+}
+#else
+void w_whereis(Weapon this)
+{
+	int channel = MSG_C2S;
+	WriteHeader(channel, w_whereis);
+	WriteRegistered(Weapons, channel, this);
+}
+CLIENT_COMMAND(weapon_find, "Show spawn locations of a weapon")
+{
+	switch (request)
 	{
-		case WS_RAISE:
-			WriteFloat(channel, w.switchdelay_raise);
-			break;
-		case WS_DROP:
-			WriteFloat(channel, w.switchdelay_drop);
-			break;
+		case CMD_REQUEST_COMMAND:
+		{
+			string s = argv(1);
+			if (s == "all")
+			{
+				FOREACH(Weapons, it != WEP_Null, w_whereis(it));
+				return;
+			}
+			if (s == "unowned")
+			{
+				FOREACH(Weapons, it != WEP_Null && !(STAT(WEAPONS) & it.m_wepset), w_whereis(it));
+				return;
+			}
+			FOREACH(Weapons, it != WEP_Null && it.netname == s,
+			{
+				w_whereis(it);
+				return;
+			});
+		}
+		default:
+		{
+			LOG_INFOF("Incorrect parameters for ^2%s^7\n", "weapon_find");
+		}
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 cl_cmd weapon_find weapon\n");
+			LOG_INFO("  Where 'weapon' is the lowercase weapon name, 'all' or 'unowned'.\n");
+			return;
+		}
 	}
 }
 #endif
+
 
 #endif
 

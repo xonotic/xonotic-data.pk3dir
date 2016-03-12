@@ -2,8 +2,8 @@
 
 #include "mutators/events.qh"
 
-#include "../common/notifications.qh"
-#include "../common/stats.qh"
+#include <common/notifications/all.qh>
+#include <common/stats.qh>
 
 bool announcer_1min;
 bool announcer_5min;
@@ -77,6 +77,19 @@ void Announcer_Gamestart()
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
+	if(intermission)
+	{
+		if(announcer_countdown)
+		{
+			centerprint_kill(ORDINAL(CPID_ROUND));
+			if(announcer_countdown)
+			{
+				remove(announcer_countdown);
+				announcer_countdown = NULL;
+			}
+		}
+		return;
+	}
 
 	if(previous_game_starttime != startTime)
 	{

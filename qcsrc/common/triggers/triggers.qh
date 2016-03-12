@@ -10,6 +10,8 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 
 .void() trigger_touch;
 
+.bool pushable;
+
 .float antiwall_flag; // Variable to define what to do with func_clientwall
 // 0 == do nothing, 1 == deactivate, 2 == activate
 
@@ -22,7 +24,7 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 
 // used elsewhere (will fix)
 #ifdef SVQC
-void trigger_common_write(bool withtarget);
+void trigger_common_write(entity this, bool withtarget);
 
 string trigger_magicear_processmessage_forallears(entity source, float teamsay, entity privatesay, string msgin);
 
@@ -38,7 +40,7 @@ void FixSize(entity e);
 
 #ifdef CSQC
 void trigger_common_read(bool withtarget);
-void trigger_remove_generic();
+void trigger_remove_generic(entity this);
 
 .float active;
 .string target;

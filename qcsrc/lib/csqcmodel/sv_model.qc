@@ -22,16 +22,16 @@
 #include "sv_model.qh"
 
 #include "common.qh"
-#include "../../common/animdecide.qh"
-#include "../../common/constants.qh"
-#include "../../common/util.qh"
-#include "../../server/constants.qh"
-#include "../../server/defs.qh"
+#include <common/animdecide.qh>
+#include <common/constants.qh>
+#include <common/util.qh>
+#include <server/constants.qh>
+#include <server/defs.qh>
 
 // generic CSQC model code
 
 bool CSQCModel_Send(entity to, int sf)
-{SELFPARAM();
+{
 	// some nice flags for CSQCMODEL_IF
 	float isplayer = (IS_CLIENT(self));
 	float islocalplayer = (self == to);
@@ -79,7 +79,7 @@ void CSQCModel_CheckUpdate(entity e)
 	if(isplayer && time > e.csqcmodel_nextforcedupdate)
 	{
 		e.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
-		e.csqcmodel_nextforcedupdate = time + CSQCPLAYER_FORCE_UPDATES * (0.5 + random()); // ensure about 4 origin sends per sec
+		e.csqcmodel_nextforcedupdate = time + (1 / (CSQCPLAYER_FORCE_UPDATES)) * (0.5 + random()); // ensure about 4 origin sends per sec
 	}
 #endif
 

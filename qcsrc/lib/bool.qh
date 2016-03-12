@@ -1,15 +1,10 @@
-#ifndef BOOL_H
-#define BOOL_H
+#pragma once
 
 #ifndef QCC_SUPPORT_BOOL
 	// Boolean Constants
 	const int true  = 1;
 	const int false = 0;
 #endif
-
-// Transitional aliases
-[[deprecated("use true")]][[alias("true")]] const bool TRUE;
-[[deprecated("use false")]][[alias("false")]] const bool FALSE;
 
 #define boolean(value) ((value) != 0)
 
@@ -31,5 +26,3 @@ float InterpretBoolean(string input)
 		default: return boolean(stof(input));
 	}
 }
-
-#endif

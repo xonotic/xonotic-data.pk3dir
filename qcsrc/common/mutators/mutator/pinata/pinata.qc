@@ -2,12 +2,13 @@
 REGISTER_MUTATOR(pinata, cvar("g_pinata") && !cvar("g_instagib") && !cvar("g_overkill"));
 
 MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
-{SELFPARAM();
-	for(int j = WEP_FIRST; j <= WEP_LAST; ++j)
-	if(self.weapons & WepSet_FromWeapon(j))
-	if(self.switchweapon != j)
-	if(W_IsWeaponThrowable(j))
-		W_ThrowNewWeapon(self, j, false, self.origin + (self.mins + self.maxs) * 0.5, randomvec() * 175 + '0 0 325');
+{
+	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		if(frag_target.weapons & WepSet_FromWeapon(it))
+		if(PS(frag_target).m_switchweapon != it)
+		if(W_IsWeaponThrowable(it.m_id))
+			W_ThrowNewWeapon(frag_target, it.m_id, false, CENTER_OR_VIEWOFS(frag_target), randomvec() * 175 + '0 0 325');
+	));
 
 	return true;
 }

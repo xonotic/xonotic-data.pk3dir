@@ -12,9 +12,9 @@
 const float PLAYERDEMO_MODE_OFF = 0;
 const float PLAYERDEMO_MODE_READING = 1;
 const float PLAYERDEMO_MODE_WRITING = 2;
-void playerdemo_init()
-{SELFPARAM();
-	self.playerdemo_mode = PLAYERDEMO_MODE_OFF;
+void playerdemo_init(entity this)
+{
+	this.playerdemo_mode = PLAYERDEMO_MODE_OFF;
 }
 void playerdemo_shutdown()
 {SELFPARAM();
@@ -58,12 +58,12 @@ void playerdemo_open_write(string f)
 	PLAYERDEMO_FIELD(func,string,playerskin) \
 	PLAYERDEMO_FIELD(func,float,frame) \
 	PLAYERDEMO_FIELD(func,float,effects) \
-	PLAYERDEMO_FIELD(func,float,switchweapon) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK2) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_CROUCH) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_HOOK) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_USE) \
+	/* PLAYERDEMO_FIELD(func,float,switchweapon) */ \
+	PLAYERDEMO_FIELD(func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
+	PLAYERDEMO_FIELD(func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
+	PLAYERDEMO_FIELD(func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
+	PLAYERDEMO_FIELD(func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
+	PLAYERDEMO_FIELD(func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
 	PLAYERDEMO_FIELD(func,float,flags) \
 	// end of list
 
@@ -146,9 +146,9 @@ float playerdemo_read(entity this)
 		PLAYERDEMO_FIELDS(playerdemo_read_)
 		{
 			time = this.playerdemo_time;
-			WITH(entity, this, this, PlayerPreThink());
+			WITH(entity, self, this, PlayerPreThink());
 			// not running physics though... this is just so we can run weapon stuff
-			WITH(entity, this, this, PlayerPostThink());
+			WITH(entity, self, this, PlayerPostThink());
 		}
 		this.playerdemo_time = stof(fgets(this.playerdemo_fh));
 		if(this.playerdemo_time == 0)

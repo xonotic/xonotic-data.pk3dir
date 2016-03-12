@@ -62,10 +62,14 @@ void spawn_tdeath(vector v0, entity e, vector v);
 
 void Reset_ArcBeam(entity player, vector forward);
 
-void WarpZone_PostTeleportPlayer_Callback(entity pl);
 #endif
 
+void WarpZone_PostTeleportPlayer_Callback(entity pl);
+
 #ifdef CSQC
+.entity realowner;
+.float lastteleporttime;
+
 #define TDEATHLOOP(o) \
 	entity head; \
 	vector deathmin; \

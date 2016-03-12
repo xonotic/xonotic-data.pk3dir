@@ -1,5 +1,4 @@
-#ifndef FILE_H
-#define FILE_H
+#pragma once
 
 bool fexists(string f)
 {
@@ -8,5 +7,3 @@ bool fexists(string f)
 	fclose(fh);
 	return true;
 }
-
-#endif

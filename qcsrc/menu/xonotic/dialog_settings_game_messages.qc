@@ -6,7 +6,7 @@ CLASS(XonoticGameMessageSettingsTab, XonoticTab)
 	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity));
 	ATTRIB(XonoticGameMessageSettingsTab, title, string, _("Messages"))
 	ATTRIB(XonoticGameMessageSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameMessageSettingsTab, rows, float, 13)
+	ATTRIB(XonoticGameMessageSettingsTab, rows, float, 15.5)
 	ATTRIB(XonoticGameMessageSettingsTab, columns, float, 6)
 	ATTRIB(XonoticGameMessageSettingsTab, weaponsList, entity, NULL)
 ENDCLASS(XonoticGameMessageSettingsTab)
@@ -106,12 +106,9 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 
 	me.gotoRC(me, 9, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Announcers")));
-	#if 0
-	// there's just not enough room for this, and it's not important enough to justify...
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 0, "notification_ANNCE_NUM_RESPAWN_1", _("Respawn countdown sounds"), "-"));
 			makeMulti(e, "notification_ANNCE_NUM_RESPAWN_2 notification_ANNCE_NUM_RESPAWN_3 notification_ANNCE_NUM_RESPAWN_4 notification_ANNCE_NUM_RESPAWN_5 notification_ANNCE_NUM_RESPAWN_6 notification_ANNCE_NUM_RESPAWN_7 notification_ANNCE_NUM_RESPAWN_8 notification_ANNCE_NUM_RESPAWN_9 notification_ANNCE_NUM_RESPAWN_10");
-	#endif
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(1, 0, "notification_ANNCE_KILLSTREAK_03", _("Killstreak sounds"), "-"));
 			makeMulti(e, "notification_ANNCE_KILLSTREAK_05 notification_ANNCE_KILLSTREAK_10 notification_ANNCE_KILLSTREAK_15 notification_ANNCE_KILLSTREAK_20 notification_ANNCE_KILLSTREAK_25 notification_ANNCE_KILLSTREAK_30");

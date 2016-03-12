@@ -56,7 +56,7 @@ int getPowerupItemAlign(int align, int column, int row, int columns, int rows, b
 
 void HUD_Powerups()
 {
-	int allItems = getstati(STAT_ITEMS, 0, 24);
+	int allItems = STAT(ITEMS);
 	int allBuffs = STAT(BUFFS);
 	int strengthTime, shieldTime, superTime;
 
@@ -65,7 +65,7 @@ void HUD_Powerups()
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if(getstati(STAT_HEALTH) <= 0) return;
+		if(STAT(HEALTH) <= 0) return;
 		if(!(allItems & (ITEM_Strength.m_itemid | ITEM_Shield.m_itemid | IT_SUPERWEAPON)) && !allBuffs) return;
 
 		strengthTime = bound(0, STAT(STRENGTH_FINISHED) - time, 99);

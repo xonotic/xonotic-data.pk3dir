@@ -31,11 +31,11 @@ glauncher
 		rgbgen lightingDiffuse
 	}
 }
-hagar2
+hagar
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/hagar2.tga
+		map textures/hagar.tga
 		rgbgen lightingDiffuse
 	}
 }
@@ -108,6 +108,14 @@ shotgun
 	dpreflectcube cubemaps/default/sky
 	{
 		map textures/arc.tga
+		rgbgen lightingDiffuse
+	}
+}
+SniperRifle
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/sniperrifle.tga
 		rgbgen lightingDiffuse
 	}
 }

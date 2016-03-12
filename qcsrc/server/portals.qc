@@ -4,7 +4,7 @@
 #include "mutators/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/triggers/teleporters.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"
@@ -208,8 +208,8 @@ float Portal_FindSafeOrigin(entity portal)
 {
 	vector o;
 	o = portal.origin;
-	portal.mins = PL_MIN - SAFERNUDGE;
-	portal.maxs = PL_MAX + SAFERNUDGE;
+	portal.mins = STAT(PL_MIN, NULL) - SAFERNUDGE;
+	portal.maxs = STAT(PL_MAX, NULL) + SAFERNUDGE;
 	fixedmakevectors(portal.mangle);
 	portal.origin += 16 * v_forward;
 	if(!move_out_of_solid(portal))
@@ -428,16 +428,16 @@ void Portal_Remove(entity portal, float killed)
 	}
 }
 
-void Portal_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+void Portal_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
 	if(deathtype == DEATH_TELEFRAG.m_id)
 		return;
-	if(attacker != self.aiment)
-		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(self.aiment))
+	if(attacker != this.aiment)
+		if(IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(this.aiment))
 			return;
-	self.health -= damage;
-	if(self.health < 0)
-		Portal_Remove(self, 1);
+	this.health -= damage;
+	if(this.health < 0)
+		Portal_Remove(this, 1);
 }
 
 void Portal_Think_TryTeleportPlayer(entity e, vector g)
@@ -454,7 +454,7 @@ void Portal_Think_TryTeleportPlayer(entity e, vector g)
 
 void Portal_Think()
 {SELFPARAM();
-	entity e, o;
+	entity o;
 	vector g;
 
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -473,18 +473,17 @@ void Portal_Think()
 
 	fixedmakevectors(self.mangle);
 
-	FOR_EACH_PLAYER(e)
-	{
-		if(e != o)
-			if(IS_INDEPENDENT_PLAYER(e) || IS_INDEPENDENT_PLAYER(o))
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		if(it != o)
+			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
 
-		if(e != o || time >= self.portal_activatetime)
-			Portal_Think_TryTeleportPlayer(e, g);
+		if(it != o || time >= self.portal_activatetime)
+			Portal_Think_TryTeleportPlayer(it, g);
 
-		if(e.hook)
-			Portal_Think_TryTeleportPlayer(e.hook, g);
-	}
+		if(it.hook)
+			Portal_Think_TryTeleportPlayer(it.hook, g);
+	));
 	self.solid = SOLID_TRIGGER;
 	self.aiment = o;
 #endif

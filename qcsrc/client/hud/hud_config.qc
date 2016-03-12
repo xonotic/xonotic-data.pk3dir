@@ -13,6 +13,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 	fh = fopen(filename, FILE_WRITE);
 	if(fh >= 0)
 	{
+		HUD_Write("//title \n");
+		HUD_Write("//author \n");
+		HUD_Write("\n");
 		HUD_Write_Cvar("hud_skin");
 		HUD_Write_Cvar("hud_panel_bg");
 		HUD_Write_Cvar("hud_panel_bg_color");
@@ -1189,17 +1192,16 @@ void HUD_Panel_Mouse()
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .1, DRAWFLAG_NORMAL);
 	}
 	// draw cursor after performing move/resize to have the panel pos/size updated before mouse_over_panel
-	const vector cursorsize = '32 32 0';
 	float cursor_alpha = 1 - autocvar__menu_alpha;
 
 	if(!mouse_over_panel)
-		drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
+		draw_cursor_normal(mousepos, '1 1 1', cursor_alpha);
 	else if(mouse_over_panel == 1)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_move", '1 1 1', cursor_alpha);
 	else if(mouse_over_panel == 2)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize", '1 1 1', cursor_alpha);
 	else
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
+		draw_cursor(mousepos, '0.5 0.5 0', "/cursor_resize2", '1 1 1', cursor_alpha);
 
 	prevMouseClicked = mouseClicked;
 }

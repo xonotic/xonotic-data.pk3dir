@@ -1,10 +1,10 @@
 #include "accuracy.qh"
 
 #include "../mutators/all.qh"
-#include "../../common/constants.qh"
-#include "../../common/teams.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
+#include <common/constants.qh>
+#include <common/teams.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
 
 int accuracy_byte(float n, float d)
 {
@@ -85,9 +85,7 @@ void accuracy_add(entity this, int w, int fired, int hit)
 	if (b == accuracy_byte(a.accuracy_hit[w], a.accuracy_fired[w])) return; // no change
 	int sf = 1 << (w % 24);
 	a.SendFlags |= sf;
-	entity e; FOR_EACH_CLIENT(e) if (IS_SPEC(e)) if (e.enemy == this) {
-		e.accuracy.SendFlags |= sf;
-	}
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == this, LAMBDA(it.accuracy.SendFlags |= sf));
 }
 
 bool accuracy_isgooddamage(entity attacker, entity targ)
@@ -95,8 +93,8 @@ bool accuracy_isgooddamage(entity attacker, entity targ)
 	int mutator_check = MUTATOR_CALLHOOK(AccuracyTargetValid, attacker, targ);
 
 	if (warmup_stage) return false;
-	if (targ.deadflag != DEAD_NO) return false;
-	if (targ.frozen) return false;
+	if (IS_DEAD(targ)) return false;
+	if (STAT(FROZEN, targ)) return false;
 	if (SAME_TEAM(attacker, targ)) return false;
 
 	if (mutator_check == MUT_ACCADD_INVALID) return true;

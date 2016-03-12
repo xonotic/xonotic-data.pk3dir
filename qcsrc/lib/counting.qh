@@ -1,5 +1,4 @@
-#ifndef COUNTING_H
-#define COUNTING_H
+#pragma once
 
 #include "i18n.qh"
 
@@ -225,4 +224,3 @@ string process_time(float outputtype, float seconds)
 	}
 	return "";
 }
-#endif

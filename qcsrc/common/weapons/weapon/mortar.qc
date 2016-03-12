@@ -14,43 +14,46 @@ CLASS(Mortar, Weapon)
 /* wepimg    */ ATTRIB(Mortar, model2, string, "weapongrenadelauncher");
 /* refname   */ ATTRIB(Mortar, netname, string, "mortar");
 /* wepname   */ ATTRIB(Mortar, m_name, string, _("Mortar"));
-ENDCLASS(Mortar)
-REGISTER_WEAPON(MORTAR, NEW(Mortar));
 
-#define MORTAR_SETTINGS(w_cvar,w_prop) MORTAR_SETTINGS_LIST(w_cvar, w_prop, MORTAR, mortar)
-#define MORTAR_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, NONE, bouncefactor) \
-	w_cvar(id, sn, NONE, bouncestop) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, damageforcescale) \
-	w_cvar(id, sn, BOTH, edgedamage) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, health) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, SEC,  lifetime_bounce) \
-	w_cvar(id, sn, BOTH, lifetime_stick) \
-	w_cvar(id, sn, BOTH, radius) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, SEC,  remote_detonateprimary) \
-	w_cvar(id, sn, PRI,  remote_minbouncecnt) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, speed_up) \
-	w_cvar(id, sn, BOTH, speed_z) \
-	w_cvar(id, sn, BOTH, spread) \
-	w_cvar(id, sn, BOTH, type) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, BOTH) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bouncefactor, float, NONE) \
+		P(class, prefix, bouncestop, float, NONE) \
+		P(class, prefix, damageforcescale, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, health, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, lifetime_bounce, float, SEC) \
+		P(class, prefix, lifetime_stick, float, BOTH) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, remote_detonateprimary, float, SEC) \
+		P(class, prefix, remote_minbouncecnt, float, PRI) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, speed_up, float, BOTH) \
+		P(class, prefix, speed_z, float, BOTH) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, type, float, BOTH) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Mortar, mortar)
+#undef X
+ENDCLASS(Mortar)
+REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
+
 
 #ifdef SVQC
-MORTAR_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float gl_detonate_later;
 .float gl_bouncecnt;
 #endif
@@ -66,7 +69,7 @@ void W_Mortar_Grenade_Explode()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
@@ -86,7 +89,7 @@ void W_Mortar_Grenade_Explode2()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
@@ -102,18 +105,18 @@ void W_Mortar_Grenade_Explode2()
 }
 
 
-void W_Mortar_Grenade_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, self.use);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void W_Mortar_Grenade_Think1()
@@ -295,130 +298,121 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 .float bot_secondary_grenademooth;
 
-		METHOD(Mortar, wr_aim, void(entity thiswep))
-		{
-			self.BUTTON_ATCK = false;
-			self.BUTTON_ATCK2 = false;
-			if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
-			{
-				if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
-				{
-					self.BUTTON_ATCK = true;
-					if(random() < 0.01) self.bot_secondary_grenademooth = 1;
-				}
-			}
-			else
-			{
-				if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
-				{
-					self.BUTTON_ATCK2 = true;
-					if(random() < 0.02) self.bot_secondary_grenademooth = 0;
-				}
-			}
-		}
-		/*case WR_CALCINFO:
-		{
-			wepinfo_pri_refire = max3(sys_frametime, WEP_CVAR_PRI(mortar, refire), WEP_CVAR_PRI(mortar, animtime));
-			wepinfo_pri_dps = (WEP_CVAR_PRI(mortar, damage) * (1 / wepinfo_pri_refire));
-			wepinfo_pri_speed = (1 / max(1, (10000 / max(1, WEP_CVAR_PRI(mortar, speed)))));
+METHOD(Mortar, wr_aim, void(entity thiswep))
+{
+    PHYS_INPUT_BUTTON_ATCK(self) = false;
+    PHYS_INPUT_BUTTON_ATCK2(self) = false;
+    if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
+    {
+        if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
+        {
+            PHYS_INPUT_BUTTON_ATCK(self) = true;
+            if(random() < 0.01) self.bot_secondary_grenademooth = 1;
+        }
+    }
+    else
+    {
+        if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
+        {
+            PHYS_INPUT_BUTTON_ATCK2(self) = true;
+            if(random() < 0.02) self.bot_secondary_grenademooth = 0;
+        }
+    }
+}
+/*case WR_CALCINFO:
+{
+    wepinfo_pri_refire = max3(sys_frametime, WEP_CVAR_PRI(mortar, refire), WEP_CVAR_PRI(mortar, animtime));
+    wepinfo_pri_dps = (WEP_CVAR_PRI(mortar, damage) * (1 / wepinfo_pri_refire));
+    wepinfo_pri_speed = (1 / max(1, (10000 / max(1, WEP_CVAR_PRI(mortar, speed)))));
 
-			// for the range calculation, closer to 1 is better
-			wepinfo_pri_range_max = 2000 * wepinfo_pri_speed;
-			wepinfo_pri_range = wepinfo_pri_speed * WEP_CVAR_PRI(mortar,
+    // for the range calculation, closer to 1 is better
+    wepinfo_pri_range_max = 2000 * wepinfo_pri_speed;
+    wepinfo_pri_range = wepinfo_pri_speed * WEP_CVAR_PRI(mortar,
 
-			wepinfo_sec_refire = max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime));
-			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / wepinfo_sec_refire));
+    wepinfo_sec_refire = max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime));
+    wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / wepinfo_sec_refire));
 
-			wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
-			wepinfo_ter_dps = 0;
-			*/
-		METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(autocvar_g_balance_mortar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
-				w.wr_reload(w);
-			} else if(fire & 1)
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(mortar, refire)))
-				{
-					W_Mortar_Attack(thiswep);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
-				}
-			}
-			else if(fire & 2)
-			{
-				if(WEP_CVAR_SEC(mortar, remote_detonateprimary))
-				{
-					bool nadefound = false;
-					entity nade;
-					for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == actor)
-					{
-						if(!nade.gl_detonate_later)
-						{
-							nade.gl_detonate_later = true;
-							nadefound = true;
-						}
-					}
-					if(nadefound)
-						sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
-				}
-				else if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(mortar, refire)))
-				{
-					W_Mortar_Attack2(thiswep);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
-				}
-			}
-		}
-		METHOD(Mortar, wr_init, void(entity thiswep))
-		{
-			MORTAR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
-		METHOD(Mortar, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_PRI(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
-			return ammo_amount;
-		}
-		METHOD(Mortar, wr_checkammo2, bool(entity thiswep))
-		{
-			float ammo_amount = self.WEP_AMMO(MORTAR) >= WEP_CVAR_SEC(mortar, ammo);
-			ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
-			return ammo_amount;
-		}
-		METHOD(Mortar, wr_config, void(entity thiswep))
-		{
-			MORTAR_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-		}
-		METHOD(Mortar, wr_reload, void(entity thiswep))
-		{
-			W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
-		}
-		METHOD(Mortar, wr_suicidemessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_MORTAR_SUICIDE_BOUNCE;
-			else
-				return WEAPON_MORTAR_SUICIDE_EXPLODE;
-		}
-		METHOD(Mortar, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_MORTAR_MURDER_BOUNCE;
-			else
-				return WEAPON_MORTAR_MURDER_EXPLODE;
-		}
+    wepinfo_sec_dps = (WEP_CVAR_SEC(mortar, damage) * (1 / max3(sys_frametime, WEP_CVAR_SEC(mortar, refire), WEP_CVAR_SEC(mortar, animtime))));
+    wepinfo_ter_dps = 0;
+    */
+METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(autocvar_g_balance_mortar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo))) { // forced reload
+        thiswep.wr_reload(thiswep, actor, weaponentity);
+    } else if(fire & 1)
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(mortar, refire)))
+        {
+            W_Mortar_Attack(thiswep);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
+        }
+    }
+    else if(fire & 2)
+    {
+        if(WEP_CVAR_SEC(mortar, remote_detonateprimary))
+        {
+            bool nadefound = false;
+            entity nade;
+            for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == actor)
+            {
+                if(!nade.gl_detonate_later)
+                {
+                    nade.gl_detonate_later = true;
+                    nadefound = true;
+                }
+            }
+            if(nadefound)
+                sound(actor, CH_WEAPON_B, SND_ROCKET_DET, VOL_BASE, ATTN_NORM);
+        }
+        else if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(mortar, refire)))
+        {
+            W_Mortar_Attack2(thiswep);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
+        }
+    }
+}
+METHOD(Mortar, wr_checkammo1, bool(entity thiswep))
+{
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(mortar, ammo);
+    ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
+    return ammo_amount;
+}
+METHOD(Mortar, wr_checkammo2, bool(entity thiswep))
+{
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(mortar, ammo);
+    ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
+    return ammo_amount;
+}
+METHOD(Mortar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
+}
+METHOD(Mortar, wr_suicidemessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_MORTAR_SUICIDE_BOUNCE;
+    else
+        return WEAPON_MORTAR_SUICIDE_EXPLODE;
+}
+METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_MORTAR_MURDER_BOUNCE;
+    else
+        return WEAPON_MORTAR_MURDER_EXPLODE;
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(Mortar, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 12;
-			pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
-		}
+METHOD(Mortar, wr_impacteffect, void(entity thiswep))
+{
+    vector org2;
+    org2 = w_org + w_backoff * 12;
+    pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
+    if(!w_issilent)
+        sound(self, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTN_NORM);
+}
 
 #endif
 #endif

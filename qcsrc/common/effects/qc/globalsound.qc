@@ -1,18 +1,22 @@
 #include "globalsound.qh"
 
-#include "../common/ent_cs.qh"
+#include <common/ent_cs.qh>
 
 #ifdef IMPLEMENTATION
-	#include "../../animdecide.qh"
+	#include <common/animdecide.qh>
 
 	#ifdef SVQC
-		#include "../../../server/cl_player.qh"
+		#include <server/cl_player.qh>
 	#endif
 
 	REGISTER_NET_TEMP(globalsound)
 	REGISTER_NET_TEMP(playersound)
 
+	string GlobalSound_sample(string pair, float r);
+
 	#ifdef SVQC
+		/** Use new sound handling. TODO: use when sounds play correctly on clients */
+		bool autocvar_g_debug_globalsounds = false;
 		/**
 		 * @param from the source entity, its position is sent
 		 * @param gs the global sound def
@@ -20,7 +24,20 @@
 		 */
 		void globalsound(int channel, entity from, entity gs, float r, int chan, float vol, float atten)
 		{
+			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
+			if (!autocvar_g_debug_globalsounds) {
+				string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
+				switch (channel) {
+					case MSG_ONE:
+						soundto(channel, from, chan, sample, vol, atten);
+						break;
+					case MSG_ALL:
+						_sound(from, chan, sample, vol, atten);
+						break;
+				}
+				return;
+			}
 			WriteHeader(channel, globalsound);
 			WriteByte(channel, gs.m_id);
 			WriteByte(channel, r * 255);
@@ -42,7 +59,22 @@
 		*/
 		void playersound(int channel, entity from, entity ps, float r, int chan, float vol, float atten)
 		{
+			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
+			if (!autocvar_g_debug_globalsounds) {
+				UpdatePlayerSounds(from);
+				string s = from.(ps.m_playersoundfld);
+				string sample = GlobalSound_sample(s, r);
+				switch (channel) {
+					case MSG_ONE:
+						soundto(channel, from, chan, sample, vol, atten);
+						break;
+					case MSG_ALL:
+						_sound(from, chan, sample, vol, atten);
+						break;
+				}
+				return;
+			}
 			WriteHeader(channel, playersound);
 			WriteByte(channel, ps.m_id);
 			WriteByte(channel, r * 255);
@@ -58,8 +90,6 @@
 		}
 	#endif
 
-	string GlobalSound_sample(string pair, float r);
-
 	#ifdef CSQC
 
 		NET_HANDLE(globalsound, bool isnew)
@@ -69,8 +99,7 @@
 			string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 			int who = ReadByte();
 			entity e = entcs_receiver(who - 1);
-			int chan = ReadByte();
-			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
+			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -102,8 +131,7 @@
 			UpdatePlayerSounds(e);
 			string s = e.(ps.m_playersoundfld);
 			string sample = GlobalSound_sample(s, r);
-			int chan = ReadByte();
-			chan = (chan & BIT(7) ? -1 : 1) * (chan & BITS(7));
+			int chan = ReadSByte();
 			float vol = ReadByte() / 255;
 			float atten = ReadByte() / 64;
 			vector o;
@@ -220,7 +248,7 @@
 		fclose(fh);
 	}
 
-	#ifdef CSQC
+	//#ifdef CSQC
 
 		.string GetPlayerSoundSampleField(string type)
 		{
@@ -229,14 +257,14 @@
 
 		void ClearPlayerSounds(entity this)
 		{
-			FOREACH(PlayerSounds, true, LAMBDA(
+			FOREACH(PlayerSounds, true, {
 				.string fld = it.m_playersoundfld;
 				if (this.(fld))
-	{
-		strunzone(this.(fld));
-		this.(fld) = string_null;
-	}
-				                              ));
+				{
+					strunzone(this.(fld));
+					this.(fld) = string_null;
+				}
+			});
 		}
 
 		bool LoadPlayerSounds(entity this, string f, bool strict)
@@ -290,14 +318,14 @@
 			LoadPlayerSounds(this, get_model_datafilename(this.model, 0, "sounds"), true);
 		}
 
-	#endif
+	//#endif
 
 	#ifdef SVQC
 
-		void _GlobalSound(entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
+		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
 		{
-			SELFPARAM();
 			if (gs == NULL && ps == NULL && sample == "") return;
+			if(this.classname == "body") return;
 			float r = random();
 			if (sample != "") sample = GlobalSound_sample(sample, r);
 			switch (voicetype)
@@ -330,22 +358,21 @@
 				case VOICETYPE_TEAMRADIO:
 				{
 					#define X() \
-						do \
+						MACRO_BEGIN \
 						{ \
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
 							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
 							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
-						} \
-						while (0)
+						} MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
 					else
 					{
-						FOR_EACH_REALCLIENT(msg_entity)
-						{
-							if (!teamplay || msg_entity.team == this.team) X();
-						}
+						FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!teamplay || msg_entity.team == this.team), LAMBDA(
+							msg_entity = it;
+							X();
+						));
 					}
 		#undef X
 					break;
@@ -354,14 +381,14 @@
 				case VOICETYPE_TAUNT:
 				{
 					if (voicetype == VOICETYPE_AUTOTAUNT) if (!sv_autotaunt) { break; }else {}
-					else if (IS_PLAYER(this) && this.deadflag == DEAD_NO) animdecide_setaction(this, ANIMACTION_TAUNT,
+					else if (IS_PLAYER(this) && !IS_DEAD(this)) animdecide_setaction(this, ANIMACTION_TAUNT,
 							true);
 					if (!sv_taunt) break;
 					if (autocvar_sv_gentle) break;
 					float tauntrand = 0;
 					if (voicetype == VOICETYPE_AUTOTAUNT) tauntrand = random();
 					#define X() \
-						do \
+						MACRO_BEGIN \
 						{ \
 							if (voicetype != VOICETYPE_AUTOTAUNT || tauntrand < msg_entity.cvar_cl_autotaunt) \
 							{ \
@@ -373,8 +400,7 @@
 								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
 								else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
 							} \
-						} \
-						while (0)
+						} MACRO_END
 					if (fake)
 					{
 						msg_entity = this;
@@ -382,10 +408,10 @@
 					}
 					else
 					{
-						FOR_EACH_REALCLIENT(msg_entity)
-						{
+						FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+							msg_entity = it;
 							X();
-						}
+						));
 					}
 		#undef X
 					break;

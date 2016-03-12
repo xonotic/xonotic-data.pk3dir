@@ -1,5 +1,4 @@
-#ifndef STRING_H
-#define STRING_H
+#pragma once
 
 #include "nil.qh"
 #include "sort.qh"
@@ -17,7 +16,6 @@
 	}
 #endif
 
-// TODO: macro
 string seconds_tostring(float sec)
 {
 	float minutes = floor(sec / 60);
@@ -105,6 +103,9 @@ bool startsWithNocase(string haystack, string needle)
 	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
 }
 
+noref string _endsWith_suffix;
+#define endsWith(this, suffix) (_endsWith_suffix = suffix, substring(this, -strlen(_endsWith_suffix), -1) == _endsWith_suffix)
+
 /** unzone the string, and return it as tempstring. Safe to be called on string_null */
 string fstrunzone(string s)
 {
@@ -128,6 +129,13 @@ string cdr(string s)
 	int o = strstrofs(s, " ", 0);
 	if (o < 0) return string_null;
 	return substring(s, o + 1, strlen(s) - (o + 1));
+}
+
+string cons(string a, string b)
+{
+	if (a == "") return b;
+	if (b == "") return a;
+	return strcat(a, " ", b);
 }
 
 string substring_range(string s, float b, float e)
@@ -316,5 +324,3 @@ const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
 #define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
 #define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
 #define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
-
-#endif

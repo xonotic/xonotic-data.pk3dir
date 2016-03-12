@@ -26,7 +26,7 @@ bool teleport_dest_send(entity this, entity to, int sf)
 
 void teleport_dest_link()
 {SELFPARAM();
-	Net_LinkEntity(self, false, 0, teleport_dest_send);
+	//Net_LinkEntity(self, false, 0, teleport_dest_send);
 	//self.SendFlags |= 1; // update
 }
 
@@ -61,15 +61,15 @@ spawnfunc(target_teleporter)
 
 #elif defined(CSQC)
 
-void teleport_dest_remove()
-{SELFPARAM();
+void teleport_dest_remove(entity this)
+{
 	//if(self.classname)
 		//strunzone(self.classname);
 	//self.classname = string_null;
 
-	if(self.targetname)
-		strunzone(self.targetname);
-	self.targetname = string_null;
+	if(this.targetname)
+		strunzone(this.targetname);
+	this.targetname = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)

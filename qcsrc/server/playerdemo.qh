@@ -1,7 +1,7 @@
 #ifndef PLAYERDEMO_H
 #define PLAYERDEMO_H
 
-void playerdemo_init();
+void playerdemo_init(entity this);
 void playerdemo_shutdown();
 void playerdemo_write();
 float playerdemo_read(entity this);

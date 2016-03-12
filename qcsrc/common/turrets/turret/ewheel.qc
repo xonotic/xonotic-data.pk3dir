@@ -42,7 +42,7 @@ void ewheel_move_path()
 {SELFPARAM();
 #ifdef EWHEEL_FANCYPATH
     // Are we close enougth to a path node to switch to the next?
-    if (vlen(self.origin  - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         if (self.pathcurrent.path_next == world)
         {
             // Path endpoint reached
@@ -67,7 +67,7 @@ void ewheel_move_path()
             self.pathcurrent = self.pathcurrent.path_next;
 
 #else
-    if (vlen(self.origin - self.pathcurrent.origin) < 64)
+    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
         self.pathcurrent = self.pathcurrent.enemy;
 #endif
 
@@ -75,9 +75,9 @@ void ewheel_move_path()
     {
 
         self.moveto = self.pathcurrent.origin;
-        self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+        self.steerto = steerlib_attract2(self, self.moveto, 0.5, 500, 0.95);
 
-        movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+        movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
     }
 }
 
@@ -94,29 +94,29 @@ void ewheel_move_enemy()
         if ( self.tur_head.spawnshieldtime < 1 )
         {
             newframe = ewheel_anim_fwd_fast;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
         }
         else if (self.tur_head.spawnshieldtime < 2)
         {
 
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
        }
         else
         {
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
+            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
         }
     }
     else if (self.tur_dist_enemy < self.target_range_optimal * 0.5)
     {
         newframe = ewheel_anim_bck_slow;
-        movelib_move_simple(v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+        movelib_move_simple(self, v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
     }
     else
     {
         newframe = ewheel_anim_stop;
-        movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
     }
 
     turrets_setframe(newframe, false);
@@ -131,108 +131,110 @@ void ewheel_move_idle()
     }
 
     self.frame = 0;
-    if (vlen(self.velocity))
-        movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
+    if(self.velocity)
+        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
 spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
-        METHOD(EWheel, tr_think, void(EWheel thistur))
-        {
-            SELFPARAM();
-            float vz;
-            vector wish_angle, real_angle;
+METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
+{
+    SELFPARAM();
+    float vz;
+    vector wish_angle, real_angle;
 
-            vz = self.velocity_z;
+    vz = self.velocity_z;
 
-            self.angles_x = anglemods(self.angles_x);
-            self.angles_y = anglemods(self.angles_y);
+    self.angles_x = anglemods(self.angles_x);
+    self.angles_y = anglemods(self.angles_y);
 
-            fixedmakevectors(self.angles);
+    fixedmakevectors(self.angles);
 
-            wish_angle = normalize(self.steerto);
-            wish_angle = vectoangles(wish_angle);
-            real_angle = wish_angle - self.angles;
-            real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
+    wish_angle = normalize(self.steerto);
+    wish_angle = vectoangles(wish_angle);
+    real_angle = wish_angle - self.angles;
+    real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
 
-            self.tur_head.spawnshieldtime = fabs(real_angle_y);
-            real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
-            self.angles_y = (self.angles_y + real_angle_y);
+    self.tur_head.spawnshieldtime = fabs(real_angle_y);
+    real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
+    self.angles_y = (self.angles_y + real_angle_y);
 
-            if(self.enemy)
-                ewheel_move_enemy();
-            else if(self.pathcurrent)
-                ewheel_move_path();
-            else
-                ewheel_move_idle();
+    if(self.enemy)
+        ewheel_move_enemy();
+    else if(self.pathcurrent)
+        ewheel_move_path();
+    else
+        ewheel_move_idle();
 
-            self.velocity_z = vz;
+    self.velocity_z = vz;
 
-            if(vlen(self.velocity))
-                self.SendFlags |= TNSF_MOVE;
-        }
-        METHOD(EWheel, tr_death, void(EWheel this, entity it))
-        {
-            it.velocity = '0 0 0';
+    if(self.velocity)
+        self.SendFlags |= TNSF_MOVE;
+}
+
+METHOD(EWheel, tr_death, void(EWheel this, entity it))
+{
+    it.velocity = '0 0 0';
 
 #ifdef EWHEEL_FANCYPATH
-            if (self.pathcurrent)
-                pathlib_deletepath(it.pathcurrent.owner);
+    if (self.pathcurrent)
+        pathlib_deletepath(it.pathcurrent.owner);
 #endif
-            it.pathcurrent = NULL;
-        }
-        METHOD(EWheel, tr_setup, void(EWheel this, entity it))
-        {
-            entity e;
+    it.pathcurrent = NULL;
+}
 
-            if(it.movetype == MOVETYPE_WALK)
+METHOD(EWheel, tr_setup, void(EWheel this, entity it))
+{
+    entity e;
+
+    if(it.movetype == MOVETYPE_WALK)
+    {
+        it.velocity = '0 0 0';
+        it.enemy = world;
+
+        setorigin(it, it.pos1);
+
+        if (it.target != "")
+        {
+            e = find(world, targetname, it.target);
+            if (!e)
             {
-                it.velocity = '0 0 0';
-                it.enemy = world;
-
-                setorigin(it, it.pos1);
-
-                if (it.target != "")
-                {
-                    e = find(world, targetname, it.target);
-                    if (!e)
-                    {
-                        LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
-                        it.target = "";
-                    }
-
-                    if (e.classname != "turret_checkpoint")
-                        LOG_TRACE("Warning: not a turrret path\n");
-                    else
-                    {
-
-#ifdef EWHEEL_FANCYPATH
-                        it.pathcurrent = WALKER_PATH(it.origin,e.origin);
-                        it.pathgoal = e;
-#else
-                        it.pathcurrent  = e;
-#endif
-                    }
-                }
+                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
+                it.target = "";
             }
 
-            it.iscreature				= true;
-            it.teleportable			= TELEPORT_NORMAL;
-            it.damagedbycontents		= true;
-            it.movetype				= MOVETYPE_WALK;
-            it.solid					= SOLID_SLIDEBOX;
-            it.takedamage				= DAMAGE_AIM;
-            it.idle_aim				= '0 0 0';
-            it.pos1					= it.origin;
-            it.target_select_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            it.target_validate_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            it.frame					= it.tur_head.frame = 1;
-            it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+            if (e.classname != "turret_checkpoint")
+                LOG_TRACE("Warning: not a turrret path\n");
+            else
+            {
 
-            // Convert from dgr / sec to dgr / tic
-            it.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
-            it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / it.ticrate);
+#ifdef EWHEEL_FANCYPATH
+                it.pathcurrent = WALKER_PATH(it.origin,e.origin);
+                it.pathgoal = e;
+#else
+                it.pathcurrent  = e;
+#endif
+            }
         }
+    }
+
+    it.iscreature				= true;
+    it.teleportable			= TELEPORT_NORMAL;
+    it.damagedbycontents		= true;
+    it.movetype				= MOVETYPE_WALK;
+    it.solid					= SOLID_SLIDEBOX;
+    it.takedamage				= DAMAGE_AIM;
+    it.idle_aim				= '0 0 0';
+    it.pos1					= it.origin;
+    it.target_select_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+    it.target_validate_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+    it.frame					= it.tur_head.frame = 1;
+    it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+
+    // Convert from dgr / sec to dgr / tic
+    it.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
+    it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / it.ticrate);
+}
 
 #endif // SVQC
 #ifdef CSQC
@@ -241,19 +243,19 @@ void ewheel_draw(entity this)
 {
     float dt;
 
-    dt = time - self.move_time;
-    self.move_time = time;
+    dt = time - this.move_time;
+    this.move_time = time;
     if(dt <= 0)
         return;
 
-    fixedmakevectors(self.angles);
-    setorigin(self, self.origin + self.velocity * dt);
-    self.tur_head.angles += dt * self.tur_head.move_avelocity;
-    self.angles_y = self.move_angles_y;
+    fixedmakevectors(this.angles);
+    setorigin(this, this.origin + this.velocity * dt);
+    this.tur_head.angles += dt * this.tur_head.move_avelocity;
+    this.angles_y = this.move_angles_y;
 
-    if (self.health < 127)
+    if (this.health < 127)
     if(random() < 0.05)
-        te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
+        te_spark(this.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);
 }
 
         METHOD(EWheel, tr_setup, void(EWheel this, entity it))

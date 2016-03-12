@@ -1,3 +1,3 @@
 // QuickMenu (#23)
 
-#include "../../quickmenu.qc"
+#include <client/quickmenu.qc>

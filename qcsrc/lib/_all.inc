@@ -13,21 +13,24 @@
 #endif
 
 #if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "../dpdefs/keycodes.qh"
+	#include <dpdefs/csprogsdefs.qh>
+	#include <dpdefs/keycodes.qh>
 #elif defined(SVQC)
-	#include "../server/sys-pre.qh"
-	#include "../dpdefs/progsdefs.qh"
-	#include "../dpdefs/dpextensions.qh"
-	#include "../server/sys-post.qh"
+	#include <server/sys-pre.qh>
+	#include <dpdefs/progsdefs.qh>
+	#include <dpdefs/dpextensions.qh>
+	#include <server/sys-post.qh>
 #elif defined(MENUQC)
-	#include "../dpdefs/menudefs.qh"
-	#include "../dpdefs/keycodes.qh"
+	#include <dpdefs/menudefs.qh>
+	#include <dpdefs/keycodes.qh>
 #endif
+
+#include "macro.qh"
 
 #include "warpzone/mathlib.qc"
 
 #include "accumulate.qh"
+#include "angle.qc"
 #include "arraylist.qh"
 #include "bits.qh"
 #include "bool.qh"
@@ -45,12 +48,13 @@
 #include "lazy.qh"
 #include "linkedlist.qh"
 #include "log.qh"
-#include "map.qc"
+#include "map.qh"
+#include "markdown.qh"
 #include "math.qh"
 #include "misc.qh"
 #include "net.qh"
 #include "nil.qh"
-#include "noise.qc"
+#include "noise.qh"
 #include "oo.qh"
 #include "p2mathlib.qc"
 #include "progname.qh"
@@ -67,5 +71,7 @@
 #include "string.qh"
 #include "struct.qh"
 #include "test.qc"
+#include "unsafe.qh"
 #include "urllib.qc"
 #include "vector.qh"
+#include "yenc.qh"

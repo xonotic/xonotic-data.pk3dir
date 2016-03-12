@@ -1,5 +1,5 @@
-#ifndef DEFER_H
-#define DEFER_H
+#pragma once
+
 #ifndef MENUQC
 
 	#include "oo.qh"
@@ -45,5 +45,4 @@
 		e.nextthink = time + fdelay;
 	}
 
-#endif
 #endif

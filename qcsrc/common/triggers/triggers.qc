@@ -21,47 +21,82 @@ void FixSize(entity e)
 }
 
 #ifdef SVQC
-void trigger_common_write(bool withtarget)
-{SELFPARAM();
-	WriteByte(MSG_ENTITY, self.warpzone_isboxy);
-	WriteByte(MSG_ENTITY, self.scale);
+
+void trigger_init(entity this)
+{
+	string m = this.model;
+	WITH(entity, self, this, WarpZoneLib_ExactTrigger_Init());
+ 	if(m != "")
+ 	{
+ 		precache_model(m);
+ 		_setmodel(this, m); // no precision needed
+	}
+	setorigin(this, this.origin);
+	if(this.scale)
+		setsize(this, this.mins * this.scale, this.maxs * this.scale);
+	else
+		setsize(this, this.mins, this.maxs);
+
+	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
+}
+
+void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)
+{
+	this.SendEntity = SendEntity_self;
+	this.SendEntity3 = sendfunc;
+	this.SendFlags = 0xFFFFFF;
+}
+
+void trigger_common_write(entity this, bool withtarget)
+{
+	int f = 0;
+	if(this.warpzone_isboxy)
+		BITSET_ASSIGN(f, 1);
+	if(this.origin != '0 0 0')
+		BITSET_ASSIGN(f, 4);
+	WriteByte(MSG_ENTITY, f);
 
 	if(withtarget)
 	{
-		WriteString(MSG_ENTITY, self.target);
-		WriteString(MSG_ENTITY, self.target2);
-		WriteString(MSG_ENTITY, self.target3);
-		WriteString(MSG_ENTITY, self.target4);
-		WriteString(MSG_ENTITY, self.targetname);
-		WriteString(MSG_ENTITY, self.killtarget);
+		WriteString(MSG_ENTITY, this.target);
+		WriteString(MSG_ENTITY, this.target2);
+		WriteString(MSG_ENTITY, this.target3);
+		WriteString(MSG_ENTITY, this.target4);
+		WriteString(MSG_ENTITY, this.targetname);
+		WriteString(MSG_ENTITY, this.killtarget);
 	}
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	if(f & 4)
+	{
+		WriteCoord(MSG_ENTITY, this.origin.x);
+		WriteCoord(MSG_ENTITY, this.origin.y);
+		WriteCoord(MSG_ENTITY, this.origin.z);
+	}
 
-	WriteCoord(MSG_ENTITY, self.mins_x);
-	WriteCoord(MSG_ENTITY, self.mins_y);
-	WriteCoord(MSG_ENTITY, self.mins_z);
-	WriteCoord(MSG_ENTITY, self.maxs_x);
-	WriteCoord(MSG_ENTITY, self.maxs_y);
-	WriteCoord(MSG_ENTITY, self.maxs_z);
+	WriteShort(MSG_ENTITY, this.modelindex);
+	WriteCoord(MSG_ENTITY, this.mins.x);
+	WriteCoord(MSG_ENTITY, this.mins.y);
+	WriteCoord(MSG_ENTITY, this.mins.z);
+	WriteCoord(MSG_ENTITY, this.maxs.x);
+	WriteCoord(MSG_ENTITY, this.maxs.y);
+	WriteCoord(MSG_ENTITY, this.maxs.z);
+	WriteByte(MSG_ENTITY, bound(1, this.scale * 16, 255));
 
-	WriteCoord(MSG_ENTITY, self.movedir_x);
-	WriteCoord(MSG_ENTITY, self.movedir_y);
-	WriteCoord(MSG_ENTITY, self.movedir_z);
+	WriteCoord(MSG_ENTITY, this.movedir_x);
+	WriteCoord(MSG_ENTITY, this.movedir_y);
+	WriteCoord(MSG_ENTITY, this.movedir_z);
 
-	WriteCoord(MSG_ENTITY, self.angles_x);
-	WriteCoord(MSG_ENTITY, self.angles_y);
-	WriteCoord(MSG_ENTITY, self.angles_z);
+	WriteCoord(MSG_ENTITY, this.angles_x);
+	WriteCoord(MSG_ENTITY, this.angles_y);
+	WriteCoord(MSG_ENTITY, this.angles_z);
 }
 
 #elif defined(CSQC)
 
 void trigger_common_read(bool withtarget)
 {SELFPARAM();
-	self.warpzone_isboxy = ReadByte();
-	self.scale = ReadByte();
+	int f = ReadByte();
+	self.warpzone_isboxy = (f & 1);
 
 	if(withtarget)
 	{
@@ -79,17 +114,24 @@ void trigger_common_read(bool withtarget)
 		self.killtarget = strzone(ReadString());
 	}
 
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+	if(f & 4)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+	}
+	else
+		self.origin = '0 0 0';
 	setorigin(self, self.origin);
 
+	self.modelindex = ReadShort();
 	self.mins_x = ReadCoord();
 	self.mins_y = ReadCoord();
 	self.mins_z = ReadCoord();
 	self.maxs_x = ReadCoord();
 	self.maxs_y = ReadCoord();
 	self.maxs_z = ReadCoord();
+	self.scale = ReadByte() / 16;
 	setsize(self, self.mins, self.maxs);
 
 	self.movedir_x = ReadCoord();
@@ -101,25 +143,25 @@ void trigger_common_read(bool withtarget)
 	self.angles_z = ReadCoord();
 }
 
-void trigger_remove_generic()
-{SELFPARAM();
-	if(self.target) { strunzone(self.target); }
-	self.target = string_null;
+void trigger_remove_generic(entity this)
+{
+	if(this.target) { strunzone(this.target); }
+	this.target = string_null;
 
-	if(self.target2) { strunzone(self.target2); }
-	self.target2 = string_null;
+	if(this.target2) { strunzone(this.target2); }
+	this.target2 = string_null;
 
-	if(self.target3) { strunzone(self.target3); }
-	self.target3 = string_null;
+	if(this.target3) { strunzone(this.target3); }
+	this.target3 = string_null;
 
-	if(self.target4) { strunzone(self.target4); }
-	self.target4 = string_null;
+	if(this.target4) { strunzone(this.target4); }
+	this.target4 = string_null;
 
-	if(self.targetname) { strunzone(self.targetname); }
-	self.target = string_null;
+	if(this.targetname) { strunzone(this.targetname); }
+	this.target = string_null;
 
-	if(self.killtarget) { strunzone(self.killtarget); }
-	self.killtarget = string_null;
+	if(this.killtarget) { strunzone(this.killtarget); }
+	this.killtarget = string_null;
 }
 #endif
 
@@ -250,32 +292,32 @@ void SUB_UseTargets()
 }
 
 #ifdef CSQC
-void trigger_touch_generic(void() touchfunc)
-{SELFPARAM();
+void trigger_touch_generic(entity this, void() touchfunc)
+{
 	entity e;
-	for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+	for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
 	if(e.isplayermodel || e.classname == "csqcprojectile")
 	{
 		vector emin = e.absmin, emax = e.absmax;
-		if(self.solid == SOLID_BSP)
+		if(this.solid == SOLID_BSP)
 		{
 			emin -= '1 1 1';
 			emax += '1 1 1';
 		}
-		if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-		if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+		if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
 		{
 			other = e;
-			touchfunc();
+			WITH(entity, self, this, touchfunc());
 		}
 	}
 }
 void trigger_draw_generic(entity this)
 {
-	float dt = time - self.move_time;
-	self.move_time = time;
+	float dt = time - this.move_time;
+	this.move_time = time;
 	if(dt <= 0) { return; }
 
-	if(self.trigger_touch) { trigger_touch_generic(self.trigger_touch); }
+	if(this.trigger_touch) { trigger_touch_generic(this, this.trigger_touch); }
 }
 #endif

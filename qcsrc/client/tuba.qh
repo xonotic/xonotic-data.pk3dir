@@ -1,6 +1,0 @@
-#ifndef CLIENT_TUBA_H
-#define CLIENT_TUBA_H
-
-entityclass(Tuba);
-
-#endif

@@ -26,9 +26,12 @@ void Teleport_Touch ()
 
 	if(IS_TURRET(other))
 		return;
+#elif defined(CSQC)
+	if(!IS_PLAYER(other))
+		return;
 #endif
 
-	if(PHYS_DEAD(other))
+	if(IS_DEAD(other))
 		return;
 
 	if(self.team)
@@ -59,41 +62,33 @@ void Teleport_Touch ()
 float trigger_teleport_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_TELEPORT);
-	WriteByte(MSG_ENTITY, sf);
 
-	if(sf & 1)
-	{
-		WriteByte(MSG_ENTITY, this.team);
-		WriteInt24_t(MSG_ENTITY, this.spawnflags);
-		WriteByte(MSG_ENTITY, this.active);
-		WriteCoord(MSG_ENTITY, this.speed);
+	WriteByte(MSG_ENTITY, this.team);
+	WriteInt24_t(MSG_ENTITY, this.spawnflags);
+	WriteByte(MSG_ENTITY, this.active);
+	WriteCoord(MSG_ENTITY, this.speed);
 
-		trigger_common_write(true);
-	}
-
-	if(sf & 2)
-	{
-		WriteByte(MSG_ENTITY, this.team);
-		WriteByte(MSG_ENTITY, this.active);
-	}
+	trigger_common_write(this, true);
 
 	return true;
 }
 
 void trigger_teleport_link(entity this)
 {
-	Net_LinkEntity(this, false, 0, trigger_teleport_send);
+	//trigger_link(this, trigger_teleport_send);
 }
 
 spawnfunc(trigger_teleport)
 {
 	self.angles = '0 0 0';
 
-	EXACTTRIGGER_INIT;
-
 	self.active = ACTIVE_ACTIVE;
-
+	//trigger_init(self); // only for predicted triggers?
+	EXACTTRIGGER_INIT;
 	self.use = trigger_teleport_use;
+
+	if(self.noise != "")
+		FOREACH_WORD(self.noise, true, LAMBDA(precache_sound(it)));
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
@@ -110,35 +105,25 @@ spawnfunc(trigger_teleport)
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 {
-	int sf = ReadByte();
+	self.classname = "trigger_teleport";
+	int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
+	self.spawnflags = ReadInt24_t();
+	self.active = ReadByte();
+	self.speed = ReadCoord();
 
-	if(sf & 1)
-	{
-		self.classname = "trigger_teleport";
-		int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
-		self.spawnflags = ReadInt24_t();
-		self.active = ReadByte();
-		self.speed = ReadCoord();
+	trigger_common_read(true);
 
-		trigger_common_read(true);
+	self.entremove = trigger_remove_generic;
+	self.solid = SOLID_TRIGGER;
+	//self.draw = trigger_draw_generic;
+	//self.move_touch = trigger_push_touch;
+	self.drawmask = MASK_NORMAL;
+	self.move_time = time;
+	defer(self, 0.25, teleport_findtarget);
 
-		self.entremove = trigger_remove_generic;
-		self.solid = SOLID_TRIGGER;
-		//self.draw = trigger_draw_generic;
-		//self.move_touch = trigger_push_touch;
-		self.drawmask = MASK_NORMAL;
-		self.move_time = time;
-		defer(self, 0.25, teleport_findtarget);
+	self.teleport_next = teleport_first;
+	teleport_first = self;
 
-		self.teleport_next = teleport_first;
-		teleport_first = self;
-	}
-
-	if(sf & 2)
-	{
-		self.team = ReadByte();
-		self.active = ReadByte();
-	}
 	return true;
 }
 

@@ -1,5 +1,4 @@
-#ifndef COMPILER_H
-#define COMPILER_H
+#pragma once
 
 #ifndef QCC_SUPPORT_ACCUMULATE
 	#ifdef GMQCC
@@ -11,6 +10,4 @@
 	#ifdef GMQCC
 		#define QCC_SUPPORT_NIL
 	#endif
-#endif
-
 #endif

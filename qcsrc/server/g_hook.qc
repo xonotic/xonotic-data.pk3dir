@@ -113,7 +113,7 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, num_for_edict(self.realowner));
+		WriteByte(MSG_ENTITY, etof(self.realowner));
 	}
 	if(sf & 2)
 	{
@@ -240,10 +240,10 @@ void GrapplingHookThink()
 					{
 						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
-						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
+						if((frozen_pulling && STAT(FROZEN, self.aiment)) || !frozen_pulling)
 						{
 							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-							self.aiment.flags &= ~FL_ONGROUND;
+							UNSET_ONGROUND(self.aiment);
 							if(self.aiment.flags & FL_PROJECTILE)
 								UpdateCSQCProjectile(self.aiment);
 						}
@@ -251,17 +251,17 @@ void GrapplingHookThink()
 							self.aiment.nextthink = time + autocvar_g_balance_grapplehook_nade_time; // set time after letting go?
 						aim_ent.pusher = self.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
-						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
+						aim_ent.istypefrag = PHYS_INPUT_BUTTON_CHAT(aim_ent);
 					}
 				}
 
-				pull_entity.flags &= ~FL_ONGROUND;
+				UNSET_ONGROUND(pull_entity);
 			}
 
 			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
 				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(self, pull_entity, v * velocity_multiplier);
 
-			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !self.aiment.frozen)
+			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, self.aiment))
 			{
 				RemoveGrapplingHook(self.realowner);
 				return;
@@ -280,7 +280,7 @@ void GrapplingHookThink()
 			self.realowner.velocity = dir*spd;
 			self.realowner.movetype = MOVETYPE_FLY;
 
-			self.realowner.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(self.realowner);
 		}
 	}
 
@@ -317,25 +317,25 @@ void GrapplingHookTouch ()
 	//self.realowner.disableclientprediction = true;
 }
 
-void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if (self.health <= 0)
+	if (this.health <= 0)
 	{
-		if(attacker != self.realowner)
+		if(attacker != this.realowner)
 		{
-			self.realowner.pusher = attacker;
-			self.realowner.pushltime = time + autocvar_g_maxpushtime;
-			self.realowner.istypefrag = self.realowner.BUTTON_CHAT;
+			this.realowner.pusher = attacker;
+			this.realowner.pushltime = time + autocvar_g_maxpushtime;
+			this.realowner.istypefrag = PHYS_INPUT_BUTTON_CHAT(this.realowner);
 		}
-		RemoveGrapplingHook(self.realowner);
+		RemoveGrapplingHook(this.realowner);
 	}
 }
 
@@ -418,12 +418,4 @@ void GrappleHookInit()
 		hook_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 3);
 		hook_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_HOOK.m_id), false, false, 4);
 	}
-}
-
-void SetGrappleHookBindings()
-{SELFPARAM();
-	// this function has been modified for Xonotic
-	// don't remove these lines! old server or demos coud overwrite the new aliases
-	stuffcmd(self, "alias +hook +button6\n");
-	stuffcmd(self, "alias -hook -button6\n");
 }

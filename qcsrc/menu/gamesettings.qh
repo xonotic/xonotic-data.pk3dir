@@ -1,6 +1,6 @@
+#pragma once
+
 #ifdef MENUQC
-#ifndef GAMESETTINGS_H
-#define GAMESETTINGS_H
 
 #include "xonotic/tab.qc"
 
@@ -11,5 +11,4 @@ REGISTER_REGISTRY(Settings)
     LAZY_NEW(id, impl) \
     REGISTER(Settings, MENU, id, m_id, NEW(Lazy, LAZY(id)))
 
-#endif
 #endif

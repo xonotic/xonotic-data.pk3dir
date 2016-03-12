@@ -14,54 +14,58 @@ CLASS(Electro, Weapon)
 /* wepimg    */ ATTRIB(Electro, model2, string, "weaponelectro");
 /* refname   */ ATTRIB(Electro, netname, string, "electro");
 /* wepname   */ ATTRIB(Electro, m_name, string, _("Electro"));
-ENDCLASS(Electro)
-REGISTER_WEAPON(ELECTRO, NEW(Electro));
 
-#define ELECTRO_SETTINGS(w_cvar,w_prop) ELECTRO_SETTINGS_LIST(w_cvar, w_prop, ELECTRO, electro)
-#define ELECTRO_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, edgedamage) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, radius) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, spread) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, PRI,  comboradius) \
-	w_cvar(id, sn, PRI,  midaircombo_explode) \
-	w_cvar(id, sn, PRI,  midaircombo_interval) \
-	w_cvar(id, sn, PRI,  midaircombo_radius) \
-	w_cvar(id, sn, SEC,  bouncefactor) \
-	w_cvar(id, sn, SEC,  bouncestop) \
-	w_cvar(id, sn, SEC,  count) \
-	w_cvar(id, sn, SEC,  damageforcescale) \
-	w_cvar(id, sn, SEC,  damagedbycontents) \
-	w_cvar(id, sn, SEC,  health) \
-	w_cvar(id, sn, SEC,  refire2) \
-	w_cvar(id, sn, SEC,  speed_up) \
-	w_cvar(id, sn, SEC,  speed_z) \
-	w_cvar(id, sn, SEC,  touchexplode) \
-	w_cvar(id, sn, NONE, combo_comboradius) \
-	w_cvar(id, sn, NONE, combo_comboradius_thruwall) \
-	w_cvar(id, sn, NONE, combo_damage) \
-	w_cvar(id, sn, NONE, combo_edgedamage) \
-	w_cvar(id, sn, NONE, combo_force) \
-	w_cvar(id, sn, NONE, combo_radius) \
-	w_cvar(id, sn, NONE, combo_speed) \
-	w_cvar(id, sn, NONE, combo_safeammocheck) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, BOTH) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bouncefactor, float, SEC) \
+		P(class, prefix, bouncestop, float, SEC) \
+		P(class, prefix, comboradius, float, PRI) \
+		P(class, prefix, combo_comboradius, float, NONE) \
+		P(class, prefix, combo_comboradius_thruwall, float, NONE) \
+		P(class, prefix, combo_damage, float, NONE) \
+		P(class, prefix, combo_edgedamage, float, NONE) \
+		P(class, prefix, combo_force, float, NONE) \
+		P(class, prefix, combo_radius, float, NONE) \
+		P(class, prefix, combo_safeammocheck, float, NONE) \
+		P(class, prefix, combo_speed, float, NONE) \
+		P(class, prefix, count, float, SEC) \
+		P(class, prefix, damagedbycontents, float, SEC) \
+		P(class, prefix, damageforcescale, float, SEC) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, health, float, SEC) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, midaircombo_explode, float, PRI) \
+		P(class, prefix, midaircombo_interval, float, PRI) \
+		P(class, prefix, midaircombo_radius, float, PRI) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire2, float, SEC) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, speed_up, float, SEC) \
+		P(class, prefix, speed_z, float, SEC) \
+		P(class, prefix, spread, float, BOTH) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, touchexplode, float, SEC) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+	W_PROPS(X, Electro, electro)
+#undef X
+
+ENDCLASS(Electro)
+REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
+
 
 #ifdef SVQC
-ELECTRO_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float electro_count;
 .float electro_secondarytime;
 void W_Electro_ExplodeCombo();
@@ -82,7 +86,7 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 			if(WEP_CVAR(electro, combo_comboradius_thruwall))
 			{
 				// if distance is greater than thruwall distance, check to make sure it's not through a wall
-				if(vlen(e.WarpZone_findradius_dist) > WEP_CVAR(electro, combo_comboradius_thruwall))
+				if(vdist(e.WarpZone_findradius_dist, >, WEP_CVAR(electro, combo_comboradius_thruwall)))
 				{
 					WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
 					if(trace_fraction != 1)
@@ -145,7 +149,7 @@ void W_Electro_Explode()
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
-				if(other.deadflag == DEAD_NO)
+				if(!IS_DEAD(other))
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 
@@ -302,34 +306,34 @@ void W_Electro_Orb_Touch()
 	}
 }
 
-void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
-	if(self.health <= 0)
+void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
 		return;
 
 	// note: combos are usually triggered by W_Electro_TriggerCombo, not damage
 	float is_combo = (inflictor.classname == "electro_orb_chain" || inflictor.classname == "electro_bolt");
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, (is_combo ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
-	if(self.health <= 0)
+	this.health = this.health - damage;
+	if(this.health <= 0)
 	{
-		self.takedamage = DAMAGE_NO;
-		self.nextthink = time;
+		this.takedamage = DAMAGE_NO;
+		this.nextthink = time;
 		if(is_combo)
 		{
 			// change owner to whoever caused the combo explosion
-			self.realowner = inflictor.realowner;
-			self.classname = "electro_orb_chain";
-			self.think = W_Electro_ExplodeCombo;
-			self.nextthink = time +
+			this.realowner = inflictor.realowner;
+			this.classname = "electro_orb_chain";
+			this.think = W_Electro_ExplodeCombo;
+			this.nextthink = time +
 				(
 					// bound the length, inflictor may be in a galaxy far far away (warpzones)
 					min(
 						WEP_CVAR(electro, combo_radius),
-						vlen(self.origin - inflictor.origin)
+						vlen(this.origin - inflictor.origin)
 					)
 					/
 					// delay combo chains, looks cooler
@@ -338,8 +342,8 @@ void W_Electro_Orb_Damage(entity inflictor, entity attacker, float damage, int d
 		}
 		else
 		{
-			self.use = W_Electro_Explode;
-			self.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
+			this.use = W_Electro_Explode;
+			this.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
 		}
 	}
 }
@@ -407,7 +411,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {SELFPARAM();
 	if(self.electro_count > 1)
-	if(self.BUTTON_ATCK2)
+	if(PHYS_INPUT_BUTTON_ATCK2(self))
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO);
@@ -421,161 +425,152 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 .float bot_secondary_electromooth;
 
-		METHOD(Electro, wr_aim, void(entity thiswep))
-		{
-			self.BUTTON_ATCK = self.BUTTON_ATCK2 = false;
-			if(vlen(self.origin-self.enemy.origin) > 1000) { self.bot_secondary_electromooth = 0; }
-			if(self.bot_secondary_electromooth == 0)
-			{
-				float shoot;
+METHOD(Electro, wr_aim, void(entity thiswep))
+{
+    PHYS_INPUT_BUTTON_ATCK(self) = PHYS_INPUT_BUTTON_ATCK2(self) = false;
+    if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
+    if(self.bot_secondary_electromooth == 0)
+    {
+        float shoot;
 
-				if(WEP_CVAR_PRI(electro, speed))
-					shoot = bot_aim(WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
-				else
-					shoot = bot_aim(1000000, 0, 0.001, false);
+        if(WEP_CVAR_PRI(electro, speed))
+            shoot = bot_aim(WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
+        else
+            shoot = bot_aim(1000000, 0, 0.001, false);
 
-				if(shoot)
-				{
-					self.BUTTON_ATCK = true;
-					if(random() < 0.01) self.bot_secondary_electromooth = 1;
-				}
-			}
-			else
-			{
-				if(bot_aim(WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
-				{
-					self.BUTTON_ATCK2 = true;
-					if(random() < 0.03) self.bot_secondary_electromooth = 0;
-				}
-			}
-		}
-		METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
-			{
-				float ammo_amount = 0;
-				if(actor.clip_load >= WEP_CVAR_PRI(electro, ammo))
-					ammo_amount = 1;
-				if(actor.clip_load >= WEP_CVAR_SEC(electro, ammo))
-					ammo_amount += 1;
+        if(shoot)
+        {
+            PHYS_INPUT_BUTTON_ATCK(self) = true;
+            if(random() < 0.01) self.bot_secondary_electromooth = 1;
+        }
+    }
+    else
+    {
+        if(bot_aim(WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
+        {
+            PHYS_INPUT_BUTTON_ATCK2(self) = true;
+            if(random() < 0.03) self.bot_secondary_electromooth = 0;
+        }
+    }
+}
+METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
+    {
+        float ammo_amount = 0;
+        if(actor.clip_load >= WEP_CVAR_PRI(electro, ammo))
+            ammo_amount = 1;
+        if(actor.clip_load >= WEP_CVAR_SEC(electro, ammo))
+            ammo_amount += 1;
 
-				if(!ammo_amount)
-				{
-					Weapon w = get_weaponinfo(actor.weapon);
-					w.wr_reload(w);
-					return;
-				}
-			}
+        if(!ammo_amount)
+        {
+            thiswep.wr_reload(thiswep, actor, weaponentity);
+            return;
+        }
+    }
 
-			if(fire & 1)
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
-				{
-						W_Electro_Attack_Bolt(thiswep);
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
-				}
-			}
-			else if(fire & 2)
-			{
-				if(time >= actor.electro_secondarytime)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
-				{
-					W_Electro_Attack_Orb(thiswep);
-					actor.electro_count = WEP_CVAR_SEC(electro, count);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
-					actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
-				}
-			}
-		}
-		METHOD(Electro, wr_init, void(entity thiswep))
-		{
-			ELECTRO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
-		METHOD(Electro, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount = self.WEP_AMMO(ELECTRO) >= WEP_CVAR_PRI(electro, ammo);
-			ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
-			return ammo_amount;
-		}
-		METHOD(Electro, wr_checkammo2, bool(entity thiswep))
-		{
-			float ammo_amount;
-			if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
-			{
-				ammo_amount = self.WEP_AMMO(ELECTRO) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
-				ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
-			}
-			else
-			{
-				ammo_amount = self.WEP_AMMO(ELECTRO) >= WEP_CVAR_SEC(electro, ammo);
-				ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo);
-			}
-			return ammo_amount;
-		}
-		METHOD(Electro, wr_config, void(entity thiswep))
-		{
-			ELECTRO_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-		}
-		METHOD(Electro, wr_resetplayer, void(entity thiswep))
-		{
-			self.electro_secondarytime = time;
-		}
-		METHOD(Electro, wr_reload, void(entity thiswep))
-		{
-			W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
-		}
-		METHOD(Electro, wr_suicidemessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_ELECTRO_SUICIDE_ORBS;
-			else
-				return WEAPON_ELECTRO_SUICIDE_BOLT;
-		}
-		METHOD(Electro, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				return WEAPON_ELECTRO_MURDER_ORBS;
-			}
-			else
-			{
-				if(w_deathtype & HITTYPE_BOUNCE)
-					return WEAPON_ELECTRO_MURDER_COMBO;
-				else
-					return WEAPON_ELECTRO_MURDER_BOLT;
-			}
-		}
+    if(fire & 1)
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
+        {
+                W_Electro_Attack_Bolt(thiswep);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+        }
+    }
+    else if(fire & 2)
+    {
+        if(time >= actor.electro_secondarytime)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
+        {
+            W_Electro_Attack_Orb(thiswep);
+            actor.electro_count = WEP_CVAR_SEC(electro, count);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+            actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
+        }
+    }
+}
+METHOD(Electro, wr_checkammo1, bool(entity thiswep))
+{
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(electro, ammo);
+    ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
+    return ammo_amount;
+}
+METHOD(Electro, wr_checkammo2, bool(entity thiswep))
+{
+    float ammo_amount;
+    if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+        ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+    }
+    else
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo);
+        ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo);
+    }
+    return ammo_amount;
+}
+METHOD(Electro, wr_resetplayer, void(entity thiswep))
+{
+    self.electro_secondarytime = time;
+}
+METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
+}
+METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_ELECTRO_SUICIDE_ORBS;
+    else
+        return WEAPON_ELECTRO_SUICIDE_BOLT;
+}
+METHOD(Electro, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+    {
+        return WEAPON_ELECTRO_MURDER_ORBS;
+    }
+    else
+    {
+        if(w_deathtype & HITTYPE_BOUNCE)
+            return WEAPON_ELECTRO_MURDER_COMBO;
+        else
+            return WEAPON_ELECTRO_MURDER_BOLT;
+    }
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(Electro, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 6;
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
-			}
-			else
-			{
-				if(w_deathtype & HITTYPE_BOUNCE)
-				{
-					// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
-					pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
-					if(!w_issilent)
-						sound(self, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
-				}
-				else
-				{
-					pointparticles(EFFECT_ELECTRO_IMPACT, org2, '0 0 0', 1);
-					if(!w_issilent)
-						sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
-				}
-			}
-		}
+METHOD(Electro, wr_impacteffect, void(entity thiswep))
+{
+    vector org2;
+    org2 = w_org + w_backoff * 6;
+    if(w_deathtype & HITTYPE_SECONDARY)
+    {
+        pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);
+        if(!w_issilent)
+            sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+    }
+    else
+    {
+        if(w_deathtype & HITTYPE_BOUNCE)
+        {
+            // this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
+            pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
+            if(!w_issilent)
+                sound(self, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
+        }
+        else
+        {
+            pointparticles(EFFECT_ELECTRO_IMPACT, org2, '0 0 0', 1);
+            if(!w_issilent)
+                sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+        }
+    }
+}
 
 #endif
 #endif
