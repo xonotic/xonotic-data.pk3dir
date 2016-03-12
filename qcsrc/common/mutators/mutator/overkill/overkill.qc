@@ -182,7 +182,13 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 
 	if(self.ok_lastwep)
 	{
-		PS(self).m_switchweapon = Weapons_from(self.ok_lastwep);
+		Weapon newwep = Weapons_from(self.ok_lastwep);
+		if(self.ok_lastwep == WEP_HMG.m_id)
+			newwep = WEP_MACHINEGUN;
+		if(self.ok_lastwep == WEP_RPC.m_id)
+			newwep = WEP_VORTEX;
+		PS(self).m_switchweapon = newwep;
+		LOG_INFO("Overkill PlayerPreThink weapon setting at time ", ftos(time), "\n");
 		self.ok_lastwep = 0;
 	}
 

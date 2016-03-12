@@ -53,7 +53,12 @@
 #define X(slot) \
 	IMPULSE(weapon_group_##slot) \
 	{ \
-		if (IS_DEAD(this)) return; \
+		if (IS_DEAD(this)) \
+		{ \
+			this.impulse = IMP_weapon_group_##slot.impulse; \
+			return; \
+		} \
+		LOG_INFO("PlayerPostThink impulse setting at time ", ftos(time), "\n"); \
 		W_NextWeaponOnImpulse(slot); \
 	}
 X(1)
@@ -74,10 +79,15 @@ X(0)
 	IMPULSE(weapon_priority_##slot##_##dir) \
 	{ \
 		if (this.vehicle) return; \
-		if (IS_DEAD(this)) return; \
+		if (IS_DEAD(this)) \
+		{ \
+			this.impulse = IMP_weapon_priority_##slot##_##dir.impulse; \
+			return; \
+		} \
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
+		LOG_INFO("Setting weapon by cycle\n"); \
 		W_CycleWeapon(this.cvar_cl_weaponpriorities[slot], dir); \
 	}
 X(0, prev)
@@ -120,7 +130,12 @@ X(9, next)
 	IMPULSE(weapon_byid_##i) \
 	{ \
 		if (this.vehicle) return; \
-		if (IS_DEAD(this)) return; \
+		if (IS_DEAD(this)) \
+		{ \
+			this.impulse = IMP_weapon_byid_##i.impulse; \
+			return; \
+		} \
+		LOG_INFO("Setting weapon by ID\n"); \
 		W_SwitchWeapon(Weapons_from(WEP_FIRST + i)); \
 	}
 X(0)
@@ -152,42 +167,72 @@ X(23)
 IMPULSE(weapon_next_byid)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_next_byid.impulse;
+		return;
+	}
+	LOG_INFO("Setting next by ID\n");
 	W_NextWeapon(0);
 }
 
 IMPULSE(weapon_prev_byid)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_prev_byid.impulse;
+		return;
+	}
+	LOG_INFO("Setting prev by ID\n");
 	W_PreviousWeapon(0);
 }
 
 IMPULSE(weapon_next_bygroup)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_next_bygroup.impulse;
+		return;
+	}
+	LOG_INFO("Setting next by group\n");
 	W_NextWeapon(1);
 }
 
 IMPULSE(weapon_prev_bygroup)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_prev_bygroup.impulse;
+		return;
+	}
+	LOG_INFO("Setting prev by group\n");
 	W_PreviousWeapon(1);
 }
 
 IMPULSE(weapon_next_bypriority)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_next_bypriority.impulse;
+		return;
+	}
+	LOG_INFO("Setting next by priority\n");
 	W_NextWeapon(2);
 }
 
 IMPULSE(weapon_prev_bypriority)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_prev_bypriority.impulse;
+		return;
+	}
+	LOG_INFO("Setting prev by priority\n");
 	W_PreviousWeapon(2);
 }
 
