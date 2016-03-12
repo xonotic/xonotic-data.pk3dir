@@ -121,7 +121,6 @@ REGISTRY_CHECK(Minigames)
     void name##_hud_status(vector, vector); \
     int name##_client_event(entity, string, ...); \
     REGISTER_INIT_POST(MINIGAME_##name) { \
-        make_pure(this); \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
         this.minigame_hud_board = name##_hud_board; \

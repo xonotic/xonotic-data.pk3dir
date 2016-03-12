@@ -48,8 +48,7 @@ STATIC_INIT(cl_notice)
 }
 void cl_notice_read()
 {
-    entity _notice = new(sv_notice);
-    make_pure(_notice);
+    entity _notice = new_pure(sv_notice);
     _notice.netname = strzone(ReadString());
     _notice.alpha = ReadLong() + time;
     _notice.skin = ReadByte();

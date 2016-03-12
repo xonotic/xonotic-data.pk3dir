@@ -6,6 +6,12 @@
 REGISTER_NET_TEMP(net_debug)
 #endif
 
+#ifdef SVQC
+
+#include <server/command/all.qh>
+
+#endif
+
 #ifdef CSQC
 	NET_HANDLE(net_debug, bool isNew)
 	{
@@ -33,7 +39,9 @@ REGISTER_NET_TEMP(net_debug)
 		WriteByte(channel, is_pure(this));
 		vector o = this.origin;
 		if (o == '0 0 0') // brushes
-		    o = (this.absmin + this.absmax) / 2;
+			o = (this.absmin + this.absmax) / 2;
+		if (this.tag_entity)
+			o += this.tag_entity.origin;
 		WriteCoord(channel, o.x); WriteCoord(channel, o.y); WriteCoord(channel, o.z);
 		WriteString(channel, this.classname);
 		WriteString(channel, this.sourceLoc);
@@ -83,9 +91,9 @@ bool autocvar_debugdraw;
 					if (e.origin) continue;
 				}
 				if (autocvar_debugdraw == 5)
-                {
-                    if (!e.debug) continue;
-                }
+				{
+					if (!e.debug) continue;
+				}
 				else if (autocvar_debugdraw > 5)
 				{
 					bool flag = true;
@@ -131,7 +139,10 @@ bool autocvar_debugdraw;
 					if (autocvar_debugdraw < 2) continue;
 					rgb.y = 1;
 				}
-				vector pos = project_3d_to_2d(e.origin);
+				vector o = e.origin;
+				if (e.tag_entity)
+					o += e.tag_entity.origin;
+				vector pos = project_3d_to_2d(o);
 				if (pos.z < 0) continue;
 				pos.z = 0;
 				pos.y += ofs * sz;
@@ -158,7 +169,7 @@ bool autocvar_debugdraw;
 				for (entity e = NULL; (e = findfloat(e, debug, 0)) && rem > 0; )
 				{
 					if (autocvar_debugdraw < 2 && is_pure(e)) continue;
-					debug_send(e, nextent(NULL), 0);
+					debug_send(e, caller, 0);
 					e.debug = true;
 					--rem;
 				}
@@ -268,5 +279,50 @@ STATIC_INIT(TRACE_ENT)
 {
 	entity e = TRACE_ENT = new_pure(TRACE_ENT);
 	e.draw2d = Trace_draw2d;
+}
+#endif
+
+#ifdef SVQC
+SERVER_COMMAND(find, "Search through entities for matching classname")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			for (entity client = NULL; (client = find(client, classname, argv(1))); )
+				LOG_INFO(etos(client), "\n");
+			return;
+		}
+
+		default:
+			LOG_INFO("Incorrect parameters for ^2find^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 sv_cmd find classname\n");
+			LOG_INFO("  Where 'classname' is the classname to search for.\n");
+			return;
+		}
+	}
+}
+
+SERVER_COMMAND(findat, "Search through entities for matching origin")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+		    vector match = stov(argv(1));
+		    FOREACH_ENTITY_ORDERED(it.origin == match, LAMBDA(LOG_INFOF("%i\n", it)));
+			return;
+		}
+
+		default:
+			LOG_INFO("Incorrect parameters for ^2findat^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 sv_cmd findat \"0 0 0\"\n");
+			return;
+		}
+	}
 }
 #endif

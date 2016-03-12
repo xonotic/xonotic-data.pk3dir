@@ -23,8 +23,7 @@ STATIC_INIT(shownames_ent)
 	shownames_ent = LL_NEW();
 	for (int i = 0; i < maxclients; ++i)
 	{
-		entity e = new(shownames_tag);
-		make_pure(e);
+		entity e = new_pure(shownames_tag);
 		e.sv_entnum = i + 1;
 		LL_PUSH(shownames_ent, e);
 	}

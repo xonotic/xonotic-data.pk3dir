@@ -213,8 +213,7 @@ void Net_TargetMusic()
 	LL_EACH(TargetMusic_list, it.count == id, LAMBDA(e = it; break));
 	if (!e)
 	{
-		LL_PUSH(TargetMusic_list, e = new(TargetMusic));
-		make_pure(e);
+		LL_PUSH(TargetMusic_list, e = new_pure(TargetMusic));
 		e.count = id;
 	}
 	if(e.noise != noi)

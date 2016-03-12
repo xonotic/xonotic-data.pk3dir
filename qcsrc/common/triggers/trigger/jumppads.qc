@@ -433,7 +433,7 @@ void target_push_init(entity this)
 
 spawnfunc(target_push) { target_push_init(this); }
 spawnfunc(info_notnull) { target_push_init(this); }
-spawnfunc(target_position) { make_pure(this); target_push_init(this); }
+spawnfunc(target_position) { target_push_init(this); }
 
 #elif defined(CSQC)
 
@@ -473,7 +473,6 @@ void target_push_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 {
-	make_pure(this);
 	self.classname = "push_target";
 	self.cnt = ReadByte();
 	self.targetname = strzone(ReadString());

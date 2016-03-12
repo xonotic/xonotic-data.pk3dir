@@ -1112,7 +1112,7 @@ void bot_setcurrentcommand()
 
 	if(!self.bot_cmd_current)
 	{
-		self.bot_cmd_current = new(bot_cmd);
+		self.bot_cmd_current = new_pure(bot_cmd);
 		self.bot_cmd_current.is_bot_cmd = true;
 	}
 

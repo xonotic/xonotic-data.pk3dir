@@ -1681,8 +1681,7 @@ void Send_Notification(
 	}
 	else
 	{
-		entity net_notif = new(net_notification);
-		make_pure(net_notif);
+		entity net_notif = new_pure(net_notification);
 		net_notif.owner = notif;
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;

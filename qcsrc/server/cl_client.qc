@@ -86,8 +86,7 @@ bool ClientData_Send(entity this, entity to, int sf)
 
 void ClientData_Attach(entity this)
 {
-	Net_LinkEntity(this.clientdata = new(clientdata), false, 0, ClientData_Send);
-	make_pure(this.clientdata);
+	Net_LinkEntity(this.clientdata = new_pure(clientdata), false, 0, ClientData_Send);
 	self.clientdata.drawonlytoclient = this;
 	self.clientdata.owner = this;
 }
@@ -517,8 +516,7 @@ void PutClientInServer()
 		this.revival_time = 0;
 		this.air_finished = time + 12;
 
-		entity spawnevent = new(spawnevent);
-		make_pure(spawnevent);
+		entity spawnevent = new_pure(spawnevent);
 		spawnevent.owner = this;
 		Net_LinkEntity(spawnevent, false, 0.5, SpawnEvent_Send);
 
@@ -658,8 +656,7 @@ void ClientInit_CheckUpdate()
 void ClientInit_Spawn()
 {SELFPARAM();
 
-	entity e = new(clientinit);
-	make_pure(e);
+	entity e = new_pure(clientinit);
 	e.think = ClientInit_CheckUpdate;
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 

@@ -338,7 +338,6 @@ void viewmodel_draw(entity this)
 entity viewmodel;
 STATIC_INIT(viewmodel) {
     viewmodel = new(viewmodel);
-    make_pure(viewmodel);
 }
 
 entity porto;
@@ -422,8 +421,7 @@ void Porto_Draw(entity this)
 
 void Porto_Init()
 {
-	porto = new(porto);
-	make_pure(porto);
+	porto = new_pure(porto);
 	porto.draw = Porto_Draw;
 	porto.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
@@ -590,12 +588,8 @@ const float SHOTTYPE_HITENEMY = 4;
 
 void TrueAim_Init()
 {
-	trueaim = new(trueaim);
-	make_pure(trueaim);
-	trueaim.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaim_rifle = new(trueaim_rifle);
-	make_pure(trueaim_rifle);
-	trueaim_rifle.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	(trueaim = new_pure(trueaim)).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
 float EnemyHitCheck()

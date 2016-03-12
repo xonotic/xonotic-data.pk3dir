@@ -315,8 +315,7 @@ void Playerchecker_Think()
 				// player connected
 				if (!e)
 				{
-					playerslots[i] = e = new(playerslot);
-					make_pure(e);
+					playerslots[i] = e = new_pure(playerslot);
 				}
 				e.sv_entnum = i;
 				e.ping = 0;
@@ -337,8 +336,7 @@ void Porto_Init();
 void TrueAim_Init();
 void PostInit()
 {
-	entity playerchecker = new(playerchecker);
-	make_pure(playerchecker);
+	entity playerchecker = new_pure(playerchecker);
 	playerchecker.think = Playerchecker_Think;
 	playerchecker.nextthink = time + 0.2;
 
@@ -434,8 +432,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	o = playerslots[this.sv_entnum];
 	if (!o)
 	{
-		o = playerslots[this.sv_entnum] = new(playerslot);
-		make_pure(o);
+		o = playerslots[this.sv_entnum] = new_pure(playerslot);
 	}
 	this.owner = o;
 	o.sv_entnum = this.sv_entnum;

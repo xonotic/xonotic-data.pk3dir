@@ -86,8 +86,7 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 
 void Nagger_Init()
 {
-	Net_LinkEntity(nagger = new(nagger), false, 0, Nagger_SendEntity);
-	make_pure(nagger);
+	Net_LinkEntity(nagger = new_pure(nagger), false, 0, Nagger_SendEntity);
 }
 
 void Nagger_VoteChanged()
@@ -445,8 +444,7 @@ void ReadyRestart_force()
 	// initiate the restart-countdown-announcer entity
 	if (autocvar_sv_ready_restart_after_countdown)
 	{
-		entity restart_timer = new(restart_timer);
-		make_pure(restart_timer);
+		entity restart_timer = new_pure(restart_timer);
 		restart_timer.think = ReadyRestart_think;
 		restart_timer.nextthink = game_starttime;
 	}

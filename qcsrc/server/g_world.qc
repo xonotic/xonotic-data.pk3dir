@@ -80,8 +80,7 @@ void PingPLReport_Think()
 }
 void PingPLReport_Spawn()
 {
-	pingplreport = new(pingplreport);
-	make_pure(pingplreport);
+	pingplreport = new_pure(pingplreport);
 	pingplreport.think = PingPLReport_Think;
 	pingplreport.nextthink = time;
 }
@@ -523,8 +522,7 @@ void RandomSeed_Think()
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
-	randomseed = new(randomseed);
-	make_pure(randomseed);
+	randomseed = new_pure(randomseed);
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 

@@ -186,8 +186,7 @@ void WarpZone_Trace_InitTransform()
 {
 	if(!WarpZone_trace_transform)
 	{
-		WarpZone_trace_transform = new(warpzone_trace_transform);
-		make_pure(WarpZone_trace_transform);
+		WarpZone_trace_transform = new_pure(warpzone_trace_transform);
 	}
 	WarpZone_Accumulator_Clear(WarpZone_trace_transform);
 }

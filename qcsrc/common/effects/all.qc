@@ -66,8 +66,7 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
 	if(!eff) { return; }
 	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
-	entity net_eff = new(net_effect);
-	make_pure(net_eff);
+	entity net_eff = new_pure(net_effect);
 	net_eff.owner = eff;
 	//net_eff.eent_broadcast = broadcast;
 	net_eff.m_id = eff.m_id;

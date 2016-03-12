@@ -239,8 +239,7 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
-	entity meleetemp = new(meleetemp);
-	make_pure(meleetemp);
+	entity meleetemp = new_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	meleetemp.think = W_Shockwave_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor();

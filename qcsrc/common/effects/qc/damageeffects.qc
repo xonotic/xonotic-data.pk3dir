@@ -43,7 +43,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 		deathtype |= 0x8000;
 
 	e = new(damageinfo);
-	make_pure(e);
 	setorigin(e, org);
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
@@ -179,7 +178,6 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 	}
 
 	e = new(damage);
-	make_pure(e);
 	setmodel(e, MDL_Null); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.owner = self;
