@@ -95,7 +95,7 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
 
 #ifdef SVQC
 entity W_PROP_reloader;
-float autocvar_w_prop_interval = 0;
+float autocvar_w_prop_interval = 5;
 .void(Weapon this, int) wr_net;
 void W_PROP_reload(int chan, entity to)
 {
