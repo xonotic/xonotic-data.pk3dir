@@ -216,7 +216,7 @@ void PutObserverInServer(entity this)
         	// needed for player sounds
         	this.model = "";
 	        FixPlayermodel(this);
-        } 
+        }
         setmodel(this, MDL_Null);
         setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
@@ -2279,20 +2279,46 @@ void PlayerPreThink ()
 			do_crouch = false;
         }
 
-		if (do_crouch) {
-			if (!this.crouch) {
+		if (do_crouch)
+		{
+			if (!this.crouch)
+			{
 				this.crouch = true;
-				this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
-				setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+				vector mn = STAT(PL_CROUCH_MIN, this);
+				vector mx = STAT(PL_CROUCH_MAX, this);
+				if (autocvar_sv_player_crouch_natural && !IS_ONGROUND(this)) {
+					// pull feet up
+					float h = STAT(PL_MAX, this).z - STAT(PL_CROUCH_MAX, this).z;
+					mn.z += h;
+					mx.z += h;
+					this.view_ofs = STAT(PL_VIEW_OFS, this);
+				} else {
+					this.view_ofs = STAT(PL_CROUCH_VIEW_OFS, this);
+				}
+				setsize(this, mn, mx);
 				// setanim(this, this.anim_duck, false, true, true); // this anim is BROKEN anyway
 			}
-		} else if (this.crouch) {
-            tracebox(this.origin, STAT(PL_MIN, this), STAT(PL_MAX, this), this.origin, false, this);
-            if (!trace_startsolid) {
-                this.crouch = false;
-                this.view_ofs = STAT(PL_VIEW_OFS, this);
-                setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
-            }
+		}
+		else
+		{
+			if (this.crouch)
+			{
+			    vector mn = STAT(PL_MIN, this);
+                vector mx = STAT(PL_MAX, this);
+                if (autocvar_sv_player_crouch_natural && IS_ONGROUND(this)) {
+                    // let feet down
+                    float h = STAT(PL_MAX, this).z - STAT(PL_CROUCH_MAX, this).z;
+                    mn.z += h;
+                    mx.z += h;
+                }
+				tracebox(this.origin, mn, mx, this.origin, false, this);
+				if (!trace_startsolid)
+				{
+					this.crouch = false;
+					this.view_ofs = STAT(PL_VIEW_OFS, this);
+					setsize(this, STAT(PL_MIN, this), STAT(PL_MAX, this));
+				}
+			}
 		}
 
 		FixPlayermodel(this);
