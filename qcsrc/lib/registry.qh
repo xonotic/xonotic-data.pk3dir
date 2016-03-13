@@ -21,13 +21,25 @@
  *     REGISTER_REGISTRY(Foos)
  */
 #define REGISTRY(id, max) \
-	void Register##id() {} \
+	void Register##id(); \
+	[[accumulate]] REGISTRY_BEGIN(id) {} \
+	[[accumulate]] REGISTRY_END(id) {} \
+	void _Register##id() {} \
+	void Register##id() { REGISTRY_BEGIN_(id); _Register##id(); REGISTRY_END_(id); } \
 	const int id##_MAX = max; \
+	int id##_COUNT; \
 	noref entity id##_first, id##_last; \
 	_R_MAP(_##id, id##_MAX); \
 	SHUTDOWN(id) { _R_DEL(_##id); } \
-	int id##_COUNT; \
 	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+/** Called before initializing a registry. */
+#define REGISTRY_BEGIN(id) [[accumulate]] void REGISTRY_BEGIN_(id) { noref void() f = Register##id; } void REGISTRY_BEGIN_(id)
+#define REGISTRY_BEGIN_(id) Register##id##_First()
+
+/** Called after initializing a registry. */
+#define REGISTRY_END(id) [[accumulate]] void REGISTRY_END_(id) { noref void() f = Register##id; } void REGISTRY_END_(id)
+#define REGISTRY_END_(id) Register##id##_Done()
 
 REGISTRY(Registries, BITS(8))
 
@@ -68,7 +80,7 @@ REGISTRY(Registries, BITS(8))
 		Register_##id##_init(this); \
 		Register_##id##_init_post(this); \
 	} \
-	ACCUMULATE_FUNCTION(Register##registry, Register_##id) \
+	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
 	REGISTER_INIT(id)
 
 #define REGISTRY_PUSH(registry, fld, it) MACRO_BEGIN { \
@@ -146,7 +158,7 @@ void Registry_send(string id, string hash);
 		string algo = "MD4"; \
 		string join = ":"; \
 		string s = ""; \
-		FOREACH(id, true, LAMBDA(s = strcat(s, join, it.registered_id))); \
+		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
 		s = substring(s, strlen(join), -1); \
 		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
 		LOG_TRACEF(#id ": %s\n[%s]\n", h, s); \

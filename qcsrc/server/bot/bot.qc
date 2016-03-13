@@ -92,17 +92,16 @@ void bot_think()
 	// skill 0 = ping 0.7 (slightly drunk)
 
 	// clear buttons
-	self.BUTTON_ATCK = 0;
-	self.button1 = 0;
-	self.BUTTON_JUMP = 0;
-	self.BUTTON_ATCK2 = 0;
-	self.BUTTON_ZOOM = 0;
-	self.BUTTON_CROUCH = 0;
-	self.BUTTON_HOOK = 0;
-	self.BUTTON_INFO = 0;
-	self.button8 = 0;
-	self.BUTTON_CHAT = 0;
-	self.BUTTON_USE = 0;
+	PHYS_INPUT_BUTTON_ATCK(self) = false;
+	PHYS_INPUT_BUTTON_JUMP(self) = false;
+	PHYS_INPUT_BUTTON_ATCK2(self) = false;
+	PHYS_INPUT_BUTTON_ZOOM(self) = false;
+	PHYS_INPUT_BUTTON_CROUCH(self) = false;
+	PHYS_INPUT_BUTTON_HOOK(self) = false;
+	PHYS_INPUT_BUTTON_INFO(self) = false;
+	PHYS_INPUT_BUTTON_DRAG(self) = false;
+	PHYS_INPUT_BUTTON_CHAT(self) = false;
+	PHYS_INPUT_BUTTON_USE(self) = false;
 
 	if (time < game_starttime)
 	{
@@ -117,7 +116,7 @@ void bot_think()
 	{
 		if (self.deadflag == DEAD_DEAD)
 		{
-			self.BUTTON_JUMP = 1; // press jump to respawn
+			PHYS_INPUT_BUTTON_JUMP(self) = true; // press jump to respawn
 			self.bot_strategytime = 0;
 		}
 	}

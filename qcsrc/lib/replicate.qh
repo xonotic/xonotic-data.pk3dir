@@ -2,6 +2,13 @@
 
 #ifndef MENUQC
 
+    /**
+     * Replicate a client cvar into a server field
+     *
+     * @param fld   The field to replicate into
+     * @param type  The field type
+     * @param cvar  The cvar name
+     */
 	#define REPLICATE(...) EVAL_REPLICATE(OVERLOAD(REPLICATE, __VA_ARGS__))
 	#define EVAL_REPLICATE(...) __VA_ARGS__
 

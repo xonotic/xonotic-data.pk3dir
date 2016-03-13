@@ -417,16 +417,23 @@ bool target_push_send(entity this, entity to, float sf)
 	return true;
 }
 
-void target_push_link()
-{SELFPARAM();
-	BITSET_ASSIGN(self.effects, EF_NODEPTHTEST);
-	Net_LinkEntity(self, false, 0, target_push_send);
-	//self.SendFlags |= 1; // update
+void target_push_link(entity this)
+{
+	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
+	Net_LinkEntity(this, false, 0, target_push_send);
+	//this.SendFlags |= 1; // update
 }
 
-spawnfunc(target_push) { target_push_link(); }
-spawnfunc(info_notnull) { target_push_link(); }
-spawnfunc(target_position) { make_pure(this); target_push_link(); }
+void target_push_init(entity this)
+{
+	this.mangle = this.angles;
+	setorigin(this, this.origin);
+	target_push_link(this);
+}
+
+spawnfunc(target_push) { target_push_init(this); }
+spawnfunc(info_notnull) { target_push_init(this); }
+spawnfunc(target_position) { target_push_init(this); }
 
 #elif defined(CSQC)
 
@@ -466,7 +473,6 @@ void target_push_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 {
-	make_pure(this);
 	self.classname = "push_target";
 	self.cnt = ReadByte();
 	self.targetname = strzone(ReadString());

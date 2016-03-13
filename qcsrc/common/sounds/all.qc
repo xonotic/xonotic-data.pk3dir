@@ -128,7 +128,7 @@ float spamsound(entity e, int chan, string samp, float vol, float _atten)
 void play2team(float t, string filename)
 {
 	if (autocvar_bot_sound_monopoly) return;
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.team == t, LAMBDA(play2(it, filename)));
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.team == t, play2(it, filename));
 }
 
 void play2all(string samp)

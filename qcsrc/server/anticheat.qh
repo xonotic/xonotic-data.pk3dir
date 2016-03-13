@@ -3,7 +3,6 @@
 
 void anticheat_init(entity this);
 void anticheat_report();
-void anticheat_shutdown();
 
 void anticheat_physics(entity this);
 void anticheat_spectatecopy(entity spectatee);
@@ -14,5 +13,5 @@ float anticheat_getvalue(string name);
 void anticheat_startframe();
 void anticheat_endframe();
 
-void anticheat_fixangle();
+void anticheat_fixangle(entity this);
 #endif

@@ -16,7 +16,6 @@
 	}
 #endif
 
-// TODO: macro
 string seconds_tostring(float sec)
 {
 	float minutes = floor(sec / 60);

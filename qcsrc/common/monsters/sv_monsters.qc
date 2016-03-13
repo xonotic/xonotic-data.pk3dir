@@ -90,7 +90,7 @@ bool Monster_ValidTarget(entity this, entity targ)
 	|| (!IS_VEHICLE(targ) && (IS_DEAD(targ) || IS_DEAD(this) || targ.health <= 0 || this.health <= 0))
 	|| (this.monster_follow == targ || targ.monster_follow == this)
 	|| (!IS_VEHICLE(targ) && (targ.flags & FL_NOTARGET))
-	|| (!autocvar_g_monsters_typefrag && targ.BUTTON_CHAT)
+	|| (!autocvar_g_monsters_typefrag && PHYS_INPUT_BUTTON_CHAT(targ))
 	|| (SAME_TEAM(targ, this))
 	|| (STAT(FROZEN, targ))
 	|| (targ.alpha != 0 && targ.alpha < 0.5)
@@ -1360,6 +1360,9 @@ bool Monster_Spawn(entity this, int mon_id)
 	if(autocvar_g_fullbrightplayers) { this.effects |= EF_FULLBRIGHT; }
 	if(autocvar_g_nodepthtestplayers) { this.effects |= EF_NODEPTHTEST; }
 	if(mon.spawnflags & MONSTER_TYPE_SWIM) { this.flags |= FL_SWIM; }
+
+	if(autocvar_g_playerclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
 	if(mon.spawnflags & MONSTER_TYPE_FLY)
 	{

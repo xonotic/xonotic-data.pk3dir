@@ -52,7 +52,7 @@ void instagib_stop_countdown(entity e)
 {
 	if (!e.instagib_needammo)
 		return;
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_INSTAGIB_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_INSTAGIB_FINDAMMO);
 	e.instagib_needammo = false;
 }
 void instagib_ammocheck()
@@ -293,7 +293,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 				frag_target.armorvalue -= 1;
 				frag_damage = 0;
 				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
+				frag_attacker.damage_dealt += 1;
 				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}

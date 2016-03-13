@@ -251,7 +251,7 @@ void GrapplingHookThink()
 							self.aiment.nextthink = time + autocvar_g_balance_grapplehook_nade_time; // set time after letting go?
 						aim_ent.pusher = self.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
-						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
+						aim_ent.istypefrag = PHYS_INPUT_BUTTON_CHAT(aim_ent);
 					}
 				}
 
@@ -333,7 +333,7 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 		{
 			this.realowner.pusher = attacker;
 			this.realowner.pushltime = time + autocvar_g_maxpushtime;
-			this.realowner.istypefrag = this.realowner.BUTTON_CHAT;
+			this.realowner.istypefrag = PHYS_INPUT_BUTTON_CHAT(this.realowner);
 		}
 		RemoveGrapplingHook(this.realowner);
 	}

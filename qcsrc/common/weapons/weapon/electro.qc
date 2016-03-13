@@ -411,7 +411,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {SELFPARAM();
 	if(self.electro_count > 1)
-	if(self.BUTTON_ATCK2)
+	if(PHYS_INPUT_BUTTON_ATCK2(self))
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO);
@@ -425,152 +425,152 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 .float bot_secondary_electromooth;
 
-		METHOD(Electro, wr_aim, void(entity thiswep))
-		{
-			self.BUTTON_ATCK = self.BUTTON_ATCK2 = false;
-			if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
-			if(self.bot_secondary_electromooth == 0)
-			{
-				float shoot;
+METHOD(Electro, wr_aim, void(entity thiswep))
+{
+    PHYS_INPUT_BUTTON_ATCK(self) = PHYS_INPUT_BUTTON_ATCK2(self) = false;
+    if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
+    if(self.bot_secondary_electromooth == 0)
+    {
+        float shoot;
 
-				if(WEP_CVAR_PRI(electro, speed))
-					shoot = bot_aim(WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
-				else
-					shoot = bot_aim(1000000, 0, 0.001, false);
+        if(WEP_CVAR_PRI(electro, speed))
+            shoot = bot_aim(WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
+        else
+            shoot = bot_aim(1000000, 0, 0.001, false);
 
-				if(shoot)
-				{
-					self.BUTTON_ATCK = true;
-					if(random() < 0.01) self.bot_secondary_electromooth = 1;
-				}
-			}
-			else
-			{
-				if(bot_aim(WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
-				{
-					self.BUTTON_ATCK2 = true;
-					if(random() < 0.03) self.bot_secondary_electromooth = 0;
-				}
-			}
-		}
-		METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
-			{
-				float ammo_amount = 0;
-				if(actor.clip_load >= WEP_CVAR_PRI(electro, ammo))
-					ammo_amount = 1;
-				if(actor.clip_load >= WEP_CVAR_SEC(electro, ammo))
-					ammo_amount += 1;
+        if(shoot)
+        {
+            PHYS_INPUT_BUTTON_ATCK(self) = true;
+            if(random() < 0.01) self.bot_secondary_electromooth = 1;
+        }
+    }
+    else
+    {
+        if(bot_aim(WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
+        {
+            PHYS_INPUT_BUTTON_ATCK2(self) = true;
+            if(random() < 0.03) self.bot_secondary_electromooth = 0;
+        }
+    }
+}
+METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(autocvar_g_balance_electro_reload_ammo) // forced reload // WEAPONTODO
+    {
+        float ammo_amount = 0;
+        if(actor.clip_load >= WEP_CVAR_PRI(electro, ammo))
+            ammo_amount = 1;
+        if(actor.clip_load >= WEP_CVAR_SEC(electro, ammo))
+            ammo_amount += 1;
 
-				if(!ammo_amount)
-				{
-					thiswep.wr_reload(thiswep, actor, weaponentity);
-					return;
-				}
-			}
+        if(!ammo_amount)
+        {
+            thiswep.wr_reload(thiswep, actor, weaponentity);
+            return;
+        }
+    }
 
-			if(fire & 1)
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
-				{
-						W_Electro_Attack_Bolt(thiswep);
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
-				}
-			}
-			else if(fire & 2)
-			{
-				if(time >= actor.electro_secondarytime)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
-				{
-					W_Electro_Attack_Orb(thiswep);
-					actor.electro_count = WEP_CVAR_SEC(electro, count);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
-					actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
-				}
-			}
-		}
-		METHOD(Electro, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(electro, ammo);
-			ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
-			return ammo_amount;
-		}
-		METHOD(Electro, wr_checkammo2, bool(entity thiswep))
-		{
-			float ammo_amount;
-			if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
-			{
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
-				ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
-			}
-			else
-			{
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo);
-				ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo);
-			}
-			return ammo_amount;
-		}
-		METHOD(Electro, wr_resetplayer, void(entity thiswep))
-		{
-			self.electro_secondarytime = time;
-		}
-		METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
-			W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
-		}
-		METHOD(Electro, wr_suicidemessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_ELECTRO_SUICIDE_ORBS;
-			else
-				return WEAPON_ELECTRO_SUICIDE_BOLT;
-		}
-		METHOD(Electro, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				return WEAPON_ELECTRO_MURDER_ORBS;
-			}
-			else
-			{
-				if(w_deathtype & HITTYPE_BOUNCE)
-					return WEAPON_ELECTRO_MURDER_COMBO;
-				else
-					return WEAPON_ELECTRO_MURDER_BOLT;
-			}
-		}
+    if(fire & 1)
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
+        {
+                W_Electro_Attack_Bolt(thiswep);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
+        }
+    }
+    else if(fire & 2)
+    {
+        if(time >= actor.electro_secondarytime)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
+        {
+            W_Electro_Attack_Orb(thiswep);
+            actor.electro_count = WEP_CVAR_SEC(electro, count);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
+            actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
+        }
+    }
+}
+METHOD(Electro, wr_checkammo1, bool(entity thiswep))
+{
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(electro, ammo);
+    ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
+    return ammo_amount;
+}
+METHOD(Electro, wr_checkammo2, bool(entity thiswep))
+{
+    float ammo_amount;
+    if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+        ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo) + WEP_CVAR_PRI(electro, ammo);
+    }
+    else
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(electro, ammo);
+        ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_SEC(electro, ammo);
+    }
+    return ammo_amount;
+}
+METHOD(Electro, wr_resetplayer, void(entity thiswep))
+{
+    self.electro_secondarytime = time;
+}
+METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
+}
+METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_ELECTRO_SUICIDE_ORBS;
+    else
+        return WEAPON_ELECTRO_SUICIDE_BOLT;
+}
+METHOD(Electro, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+    {
+        return WEAPON_ELECTRO_MURDER_ORBS;
+    }
+    else
+    {
+        if(w_deathtype & HITTYPE_BOUNCE)
+            return WEAPON_ELECTRO_MURDER_COMBO;
+        else
+            return WEAPON_ELECTRO_MURDER_BOLT;
+    }
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(Electro, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 6;
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);
-				if(!w_issilent)
-					sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
-			}
-			else
-			{
-				if(w_deathtype & HITTYPE_BOUNCE)
-				{
-					// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
-					pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
-					if(!w_issilent)
-						sound(self, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
-				}
-				else
-				{
-					pointparticles(EFFECT_ELECTRO_IMPACT, org2, '0 0 0', 1);
-					if(!w_issilent)
-						sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
-				}
-			}
-		}
+METHOD(Electro, wr_impacteffect, void(entity thiswep))
+{
+    vector org2;
+    org2 = w_org + w_backoff * 6;
+    if(w_deathtype & HITTYPE_SECONDARY)
+    {
+        pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);
+        if(!w_issilent)
+            sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+    }
+    else
+    {
+        if(w_deathtype & HITTYPE_BOUNCE)
+        {
+            // this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
+            pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
+            if(!w_issilent)
+                sound(self, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
+        }
+        else
+        {
+            pointparticles(EFFECT_ELECTRO_IMPACT, org2, '0 0 0', 1);
+            if(!w_issilent)
+                sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+        }
+    }
+}
 
 #endif
 #endif

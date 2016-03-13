@@ -54,7 +54,6 @@ REGISTRY_CHECK(Minigames)
     REGISTER(Minigames, MINIGAME_##name, m_id, new_pure(minigame_descriptor)); \
     int name##_server_event(entity, string, ...); \
     REGISTER_INIT_POST(MINIGAME_##name) { \
-        make_pure(this); \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
 		this.minigame_event = name##_server_event; \

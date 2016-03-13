@@ -9,7 +9,7 @@
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/monsters/all.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/util.qh>
 #include <common/weapons/all.qh>
 #include <lib/csqcmodel/sv_model.qh>
@@ -126,7 +126,11 @@ void CL_ExteriorWeaponentity_Think()
 		this.weaponname = this.owner.weaponname;
 		this.dmg = this.owner.modelindex;
 		this.deadflag = this.owner.deadflag;
-		if (this.owner.weaponname != "") _setmodel(this, W_Model(strcat("v_", this.owner.weaponname, ".md3")));
+		if (this.owner.weaponname != "")
+		{
+			_setmodel(this, W_Model(strcat("v_", this.owner.weaponname, ".md3")));
+			setsize(this, '0 0 0', '0 0 0');
+		}
 		else this.model = "";
 
 		int tag_found;
@@ -157,7 +161,6 @@ void CL_ExteriorWeaponentity_Think()
 void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 {
 	entity view = actor.(weaponentity) = new(weaponentity);
-	make_pure(view);
 	view.solid = SOLID_NOT;
 	view.owner = actor;
 	setmodel(view, MDL_Null);  // precision set when changed
@@ -171,7 +174,6 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	if (weaponentity == weaponentities[0])
 	{
 		entity exterior = actor.exteriorweaponentity = new(exteriorweaponentity);
-		make_pure(exterior);
 		exterior.solid = SOLID_NOT;
 		exterior.owner = actor;
 		setorigin(exterior, '0 0 0');
@@ -423,7 +425,7 @@ void W_WeaponFrame(entity actor)
 		if (actor.(weaponentity).state != WS_CLEAR)
 		{
 			Weapon wpn = PS(actor).m_weapon;
-			w_ready(wpn, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+			w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			return;
 		}
 	}
@@ -529,7 +531,7 @@ void W_WeaponFrame(entity actor)
 
 		bool block_weapon = false;
 		{
-			bool key_pressed = actor.BUTTON_HOOK && !actor.vehicle;
+			bool key_pressed = PHYS_INPUT_BUTTON_HOOK(actor) && !actor.vehicle;
 			Weapon off = actor.offhand;
 			if (off && !(actor.weapons & WEPSET(HOOK)))
 			{
@@ -541,7 +543,7 @@ void W_WeaponFrame(entity actor)
 					W_SwitchWeapon(WEP_HOOK);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
-				block_weapon = (PS(actor).m_weapon == h && (actor.BUTTON_ATCK || key_pressed));
+				block_weapon = (PS(actor).m_weapon == h && (PHYS_INPUT_BUTTON_ATCK(actor) || key_pressed));
 				h.wr_think(h, actor, weaponentity, block_weapon ? 1 : 0);
 			}
 		}
@@ -555,7 +557,7 @@ void W_WeaponFrame(entity actor)
 			if (w)
 			{
 				Weapon e = PS(actor).m_weapon;
-				e.wr_think(e, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+				e.wr_think(e, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
 			else
 			{
@@ -573,7 +575,7 @@ void W_WeaponFrame(entity actor)
 				v_up = up;
 				Weapon wpn = PS(actor).m_weapon;
 				this.weapon_think(wpn, actor, weaponentity,
-					(actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+					PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
 			else
 			{
@@ -677,7 +679,7 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	// ATTACK_FINISHED(actor, slot) -= actor.reload_time - 1;
 
 	Weapon wpn = Weapons_from(PS(actor).m_weapon.m_id);
-	w_ready(wpn, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
 void W_Reload(entity actor, float sent_ammo_min, string sent_sound)

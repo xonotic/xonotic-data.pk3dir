@@ -18,12 +18,12 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
     make_pure(this);
     const int bits = ReadInt24_t();
-    FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
+    FOREACH(Items, bits & BIT(it.m_id), {
         .int fld = inv_items[it.m_id];
         int prev = this.(fld);
         int next = this.(fld) = ReadByte();
         LOG_TRACEF("%s: %.0f -> %.0f\n", it.m_name, prev, next);
-    ));
+    });
     return true;
 }
 #endif
@@ -32,14 +32,14 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 void Inventory_Write(Inventory data)
 {
     int bits = 0;
-    FOREACH(Items, true, LAMBDA(
+    FOREACH(Items, true, {
         .int fld = inv_items[it.m_id];
         bits = BITSET(bits, BIT(it.m_id), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
-    ));
+    });
     WriteInt24_t(MSG_ENTITY, bits);
-    FOREACH(Items, bits & BIT(it.m_id), LAMBDA(
+    FOREACH(Items, bits & BIT(it.m_id), {
         WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
-    ));
+    });
 }
 #endif
 
@@ -56,8 +56,7 @@ bool Inventory_Send(entity this, entity to, int sf)
 
 void Inventory_new(entity e)
 {
-    Inventory inv = new(Inventory), bak = new(Inventory);
-    make_pure(inv); make_pure(bak);
+    Inventory inv = new_pure(Inventory), bak = new_pure(Inventory);
     inv.inventory = bak;
     inv.drawonlytoclient = e;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);

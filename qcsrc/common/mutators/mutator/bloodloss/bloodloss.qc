@@ -8,7 +8,7 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 	if(IS_PLAYER(self))
 	if(self.health <= autocvar_g_bloodloss && !IS_DEAD(self))
 	{
-		self.BUTTON_CROUCH = true;
+		PHYS_INPUT_BUTTON_CROUCH(self) = true;
 
 		if(time >= self.bloodloss_timer)
 		{

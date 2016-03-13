@@ -690,7 +690,7 @@ void PM_check_nickspam(entity this)
 	{
 		// slight annoyance for nick change scripts
 		this.movement = -1 * this.movement;
-		this.BUTTON_ATCK = this.BUTTON_JUMP = this.BUTTON_ATCK2 = this.BUTTON_ZOOM = this.BUTTON_CROUCH = this.BUTTON_HOOK = this.BUTTON_USE = 0;
+		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = PHYS_INPUT_BUTTON_HOOK(this) = PHYS_INPUT_BUTTON_USE(this) = false;
 
 		if (this.nickspamcount >= autocvar_g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
 		{
@@ -992,7 +992,7 @@ void PM_jetpack(entity this, float maxspd_mod)
 	// add the unused velocity as up component
 	wishvel_z = 0;
 
-	// if (this.BUTTON_JUMP)
+	// if (PHYS_INPUT_BUTTON_JUMP(this))
 		wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
 
 	// it is now normalized, so...
@@ -1283,6 +1283,10 @@ bool IsFlying(entity this)
 	return true;
 }
 
+#ifdef CSQC
+float autocvar_slowmo;
+#endif
+
 void PM_Main(entity this)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
@@ -1321,6 +1325,9 @@ void PM_Main(entity this)
 	if (this.PlayerPhysplug)
 		if (this.PlayerPhysplug())
 			return;
+#elif defined(CSQC)
+	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
+		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 #endif
 
 #ifdef SVQC

@@ -852,48 +852,51 @@ float ball_customize()
 	return true;
 }
 
-	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
-	{
-		if(fire & 1)
-			if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
-				if(autocvar_g_nexball_basketball_meter)
-				{
-					if(self.ballcarried && !self.metertime)
-						self.metertime = time;
-					else
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-				}
-				else
-				{
-					W_Nexball_Attack(-1);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-				}
-		if(fire & 2)
-			if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
-			{
-				W_Nexball_Attack2();
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
-			}
+METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(fire & 1)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
+            if(autocvar_g_nexball_basketball_meter)
+            {
+                if(self.ballcarried && !self.metertime)
+                    self.metertime = time;
+                else
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+            }
+            else
+            {
+                W_Nexball_Attack(-1);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+            }
+    if(fire & 2)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
+        {
+            W_Nexball_Attack2();
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
+        }
 
-		if(!(fire & 1) && self.metertime && self.ballcarried)
-		{
-			W_Nexball_Attack(time - self.metertime);
-			// DropBall or stealing will set metertime back to 0
-			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-		}
-	}
-	METHOD(BallStealer, wr_setup, void(BallStealer thiswep))
-	{
-		//weapon_setup(WEP_PORTO.m_id);
-	}
-	METHOD(BallStealer, wr_checkammo1, bool(BallStealer thiswep))
-	{
-		return true;
-	}
-	METHOD(BallStealer, wr_checkammo2, bool(BallStealer thiswep))
-	{
-		return true;
-	}
+    if(!(fire & 1) && self.metertime && self.ballcarried)
+    {
+        W_Nexball_Attack(time - self.metertime);
+        // DropBall or stealing will set metertime back to 0
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+    }
+}
+
+METHOD(BallStealer, wr_setup, void(BallStealer thiswep))
+{
+    //weapon_setup(WEP_PORTO.m_id);
+}
+
+METHOD(BallStealer, wr_checkammo1, bool(BallStealer thiswep))
+{
+    return true;
+}
+
+METHOD(BallStealer, wr_checkammo2, bool(BallStealer thiswep))
+{
+    return true;
+}
 
 void nb_DropBall(entity player)
 {

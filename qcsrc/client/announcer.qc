@@ -2,7 +2,7 @@
 
 #include "mutators/events.qh"
 
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/stats.qh>
 
 bool announcer_1min;
@@ -81,7 +81,7 @@ void Announcer_Gamestart()
 	{
 		if(announcer_countdown)
 		{
-			centerprint_kill(CPID_ROUND);
+			centerprint_kill(ORDINAL(CPID_ROUND));
 			if(announcer_countdown)
 			{
 				remove(announcer_countdown);

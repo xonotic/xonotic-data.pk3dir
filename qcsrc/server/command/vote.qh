@@ -54,4 +54,5 @@ float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was al
 void reset_map(float dorespawn);
 void ReadyCount();
 void ReadyRestart_force();
+void VoteCount(float first_count);
 #endif

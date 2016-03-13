@@ -37,8 +37,7 @@
 */
 	void defer(entity this, float fdelay, void() func)
 	{
-		entity e    = new(deferred);
-		make_pure(e);
+		entity e    = new_pure(deferred);
 		e.owner     = this;
 		e.use       = func;
 		e.think     = defer_think;

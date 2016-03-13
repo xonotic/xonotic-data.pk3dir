@@ -133,7 +133,7 @@ float bot_shouldattack(entity e)
 		return false;
 	if (IS_DEAD(e))
 		return false;
-	if (e.BUTTON_CHAT)
+	if (PHYS_INPUT_BUTTON_CHAT(e))
 		return false;
 	if(e.flags & FL_NOTARGET)
 		return false;

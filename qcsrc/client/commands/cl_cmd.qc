@@ -395,29 +395,6 @@ void LocalCommand_mv_download(int request, int argc)
 	}
 }
 
-void LocalCommand_find(int request, int argc)
-{
-	switch (request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			FOREACH_ENTITY_CLASS(argv(1), true, LAMBDA(LOG_INFO(etos(it), "\n")));
-			return;
-		}
-
-		default:
-		{
-			LOG_INFO("Incorrect parameters for ^2find^7\n");
-		}
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO("\nUsage:^3 cl_cmd find classname\n");
-			LOG_INFO("  Where 'classname' is the classname to search for.\n");
-			return;
-		}
-	}
-}
-
 void LocalCommand_sendcvar(int request, int argc)
 {
 	switch (request)
@@ -490,38 +467,37 @@ CLIENT_COMMAND(debugmodel, "Spawn a debug model manually") { LocalCommand_debugm
 CLIENT_COMMAND(handlevote, "System to handle selecting a vote or option") { LocalCommand_handlevote(request, arguments); }
 CLIENT_COMMAND(hud, "Commands regarding/controlling the HUD system") { LocalCommand_hud(request, arguments); }
 CLIENT_COMMAND(localprint, "Create your own centerprint sent to yourself") { LocalCommand_localprint(request, arguments); }
-CLIENT_COMMAND(find, "Search through entities for matching classname") { LocalCommand_find(request, arguments); }
 CLIENT_COMMAND(mv_download, "Retrieve mapshot picture from the server") { LocalCommand_mv_download(request, arguments); }
 CLIENT_COMMAND(sendcvar, "Send a cvar to the server (like weaponpriority)") { LocalCommand_sendcvar(request, arguments); }
 
 void LocalCommand_macro_help()
 {
-	FOREACH(CLIENT_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
+	FOREACH(CLIENT_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description));
 }
 
 bool LocalCommand_macro_command(int argc, string command)
 {
 	string c = strtolower(argv(0));
-	FOREACH(CLIENT_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(CLIENT_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
-	));
+	});
 	return false;
 }
 
 bool LocalCommand_macro_usage(int argc)
 {
 	string c = strtolower(argv(1));
-	FOREACH(CLIENT_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(CLIENT_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
-	));
+	});
 	return false;
 }
 
 void LocalCommand_macro_write_aliases(int fh)
 {
-	FOREACH(CLIENT_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_cl", it.m_name, it.m_description)));
+	FOREACH(CLIENT_COMMANDS, true, CMD_Write_Alias("qc_cmd_cl", it.m_name, it.m_description));
 }
 
 

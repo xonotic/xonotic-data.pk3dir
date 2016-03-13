@@ -43,7 +43,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 		deathtype |= 0x8000;
 
 	e = new(damageinfo);
-	make_pure(e);
 	setorigin(e, org);
 	e.projectiledeathtype = deathtype;
 	e.dmg = coredamage;
@@ -179,7 +178,6 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 	}
 
 	e = new(damage);
-	make_pure(e);
 	setmodel(e, MDL_Null); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.owner = self;
@@ -225,15 +223,10 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 	else
 		forcemul = 1;
 
-	for(entity e = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); e; e = e.chain)
-	{
-		setself(e);
-		// attached ents suck
-		if(self.tag_entity)
-			continue;
-
+    FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity, {
+		setself(it);
 		vector nearest = NearestPointOnBox(self, w_org);
-		if(rad)
+		if (rad)
 		{
 			thisdmg = ((vlen (nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
 			if(thisdmg >= 1)
@@ -277,7 +270,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		if(self.isplayermodel)
 			hitplayer = true; // this impact damaged a player
-	}
+	});
 	setself(this);
 
 	if(DEATH_ISVEHICLE(w_deathtype))

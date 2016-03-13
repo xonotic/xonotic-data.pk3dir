@@ -13,7 +13,7 @@
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/playerstats.qh>
 #include <common/util.qh>
 
@@ -86,8 +86,7 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 
 void Nagger_Init()
 {
-	Net_LinkEntity(nagger = new(nagger), false, 0, Nagger_SendEntity);
-	make_pure(nagger);
+	Net_LinkEntity(nagger = new_pure(nagger), false, 0, Nagger_SendEntity);
 }
 
 void Nagger_VoteChanged()
@@ -215,7 +214,7 @@ void VoteCount(float first_count)
 	Nagger_VoteCountChanged();
 
 	// add up all the votes from each connected client
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_CLIENT(it), LAMBDA(
 		++vote_player_count;
 		if (IS_PLAYER(it))   ++vote_real_player_count;
 		switch (it.vote_selection)
@@ -445,8 +444,7 @@ void ReadyRestart_force()
 	// initiate the restart-countdown-announcer entity
 	if (autocvar_sv_ready_restart_after_countdown)
 	{
-		entity restart_timer = new(restart_timer);
-		make_pure(restart_timer);
+		entity restart_timer = new_pure(restart_timer);
 		restart_timer.think = ReadyRestart_think;
 		restart_timer.nextthink = game_starttime;
 	}

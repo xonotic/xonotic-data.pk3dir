@@ -35,7 +35,7 @@
     #include <server/autocvars.qh>
     #include <server/constants.qh>
     #include <server/defs.qh>
-    #include "../notifications.qh"
+    #include "../notifications/all.qh"
     #include "../deathtypes/all.qh"
     #include <server/mutators/all.qh>
     #include "../mapinfo.qh"
@@ -134,7 +134,7 @@ string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
 	s = W_UndeprecateName(s);
-	FOREACH(Weapons, it != WEP_Null && it.netname == s, LAMBDA(return ftos(i)));
+	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
@@ -202,10 +202,10 @@ void W_RandomWeapons(entity e, float n)
 	for (i = 0; i < n; ++i)
 	{
 		RandomSelection_Init();
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if (remaining & (it.m_wepset))
 				RandomSelection_Add(it, 0, string_null, 1, 1);
-		));
+		});
 		Weapon w = RandomSelection_chosen_ent;
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
@@ -425,13 +425,13 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 			if (!this.weaponchild)
 			{
 				this.weaponchild = new(weaponchild);
-				make_pure(this.weaponchild);
 #ifdef CSQC
 				this.weaponchild.drawmask = MASK_NORMAL;
 				this.weaponchild.renderflags |= RF_VIEWMODEL;
 #endif
 			}
 			_setmodel(this.weaponchild, W_Model(strcat("v_", name, ".md3")));
+			setsize(this.weaponchild, '0 0 0', '0 0 0');
 			setattachment(this.weaponchild, this, t);
 		}
 		else
@@ -440,6 +440,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 			this.weaponchild = NULL;
 		}
 
+		setsize(this, '0 0 0', '0 0 0');
 		setorigin(this, '0 0 0');
 		this.angles = '0 0 0';
 		this.frame = 0;

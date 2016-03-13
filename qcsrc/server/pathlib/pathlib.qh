@@ -13,7 +13,7 @@ const vector PLIB_FORWARD = '0 1 0';
 const vector PLIB_RIGHT = '1 0 0';
 //#define PLIB_LEFT    '-1 0 0'
 
-#ifdef DEBUGPATHING
+#if DEBUGPATHING
 void pathlib_showpath(entity start);
 void pathlib_showpath2(entity path);
 #endif

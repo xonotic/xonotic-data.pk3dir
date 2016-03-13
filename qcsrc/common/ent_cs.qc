@@ -98,21 +98,21 @@
 			i += 1;
 		ENTCS_NETPROPS(X);
 	#undef X
+	    setorigin(this, this.origin);  // relink
 	}
 
 	void entcs_attach(entity player)
 	{
 		entity e = player.entcs = new(entcs_sender);
-		make_pure(e);
 		e.owner = player;
 		e.think = entcs_think;
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
 		if (!IS_REAL_CLIENT(player)) return;
-		FOREACH_CLIENT(true, LAMBDA(
+		FOREACH_CLIENT(true, {
 			assert(it.entcs);
 			_entcs_send(it.entcs, msg_entity = player, BITS(23), MSG_ONE);
-		));
+		});
 	}
 
 	void entcs_detach(entity player)

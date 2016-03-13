@@ -19,11 +19,9 @@ REGISTER_REGISTRY(PlayerSounds)
 REGISTRY_SORT(PlayerSounds)
 STATIC_INIT(PlayerSounds_renumber)
 {
-	FOREACH(PlayerSounds, true, LAMBDA(it.m_id = i));
+	FOREACH(PlayerSounds, true, it.m_id = i);
 }
 REGISTRY_CHECK(PlayerSounds)
-
-// TODO implement fall and falling
 
 REGISTER_PLAYERSOUND(death)
 REGISTER_PLAYERSOUND(drown)
@@ -92,13 +90,13 @@ REGISTER_REGISTRY(GlobalSounds)
 REGISTRY_SORT(GlobalSounds)
 STATIC_INIT(GlobalSounds_renumber)
 {
-	FOREACH(GlobalSounds, true, LAMBDA(it.m_id = i));
+	FOREACH(GlobalSounds, true, it.m_id = i);
 }
 REGISTRY_CHECK(GlobalSounds)
 void PrecacheGlobalSound(string samplestring);
 PRECACHE(GlobalSounds)
 {
-	FOREACH(GlobalSounds, true, LAMBDA(PrecacheGlobalSound(it.m_globalsoundstr)));
+	FOREACH(GlobalSounds, true, PrecacheGlobalSound(it.m_globalsoundstr));
 }
 
 REGISTER_GLOBALSOUND(STEP, "misc/footstep0 6")
@@ -108,13 +106,13 @@ REGISTER_GLOBALSOUND(FALL_METAL, "misc/metalhitground 4")
 
 bool GetPlayerSoundSampleField_notFound;
 void PrecachePlayerSounds(string f);
-#ifdef CSQC
+//#ifdef CSQC
 	.string GetVoiceMessageSampleField(string type);
 	.string GetPlayerSoundSampleField(string type);
 	void ClearPlayerSounds(entity this);
 	float LoadPlayerSounds(entity this, string f, bool strict);
 	void UpdatePlayerSounds(entity this);
-#endif
+//#endif
 
 #ifdef SVQC
 

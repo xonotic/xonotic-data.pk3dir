@@ -12,7 +12,7 @@
 
 .vector origin;
 .bool pure_data;
-/** deprecated, use new_pure or NEW(class) */
+/** @deprecated, use new_pure or NEW(class) */
 #define make_pure(e) \
 	MACRO_BEGIN \
 	{ \
@@ -34,6 +34,7 @@ entity _spawn();
 #define SPAWN_PURE 0
 #endif
 
+// pure entities: need no .origin
 #if SPAWN_PURE
 entity spawn_pure() = #600;
 #else
@@ -50,6 +51,9 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 		#ifdef CSQC
 		setorigin(this, '0 0 10000');
 		#endif
+		#ifdef SVQC
+        setorigin(this, '0 0 -10000');
+        #endif
 	}
 	return this;
 }
@@ -77,7 +81,6 @@ entity _clearentity_ent;
 STATIC_INIT(clearentity)
 {
 	_clearentity_ent = new_pure(clearentity);
-	make_pure(_clearentity_ent);
 }
 void clearentity(entity e)
 {

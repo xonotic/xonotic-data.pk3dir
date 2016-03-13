@@ -72,7 +72,7 @@ float autocvar_g_antilag_nudge;
 float autocvar_g_balance_armor_blockpercent;
 int autocvar_g_balance_armor_limit;
 float autocvar_g_balance_armor_regen;
-float autocvar_g_balance_armor_regenlinear; // TODO: int/bool?
+float autocvar_g_balance_armor_regenlinear;
 int autocvar_g_balance_armor_regenstable;
 float autocvar_g_balance_armor_rot;
 float autocvar_g_balance_armor_rotlinear;
@@ -465,6 +465,8 @@ vector autocvar_g_nades_throw_offset;
 bool autocvar_g_nades_spawn;
 int autocvar_g_nades_spawn_count;
 bool autocvar_g_nades_client_select;
+bool autocvar_g_nades_pickup = true;
+float autocvar_g_nades_pickup_time = 2;
 float autocvar_g_nades_nade_lifetime;
 float autocvar_g_nades_nade_minforce;
 float autocvar_g_nades_nade_maxforce;

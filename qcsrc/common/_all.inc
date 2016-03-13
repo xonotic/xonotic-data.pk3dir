@@ -7,6 +7,9 @@
 
 #include "mapinfo.qc"
 #include "playerstats.qc"
+#ifdef SVQC
+    #include "state.qc"
+#endif
 #include "util.qc"
 
 #ifndef CSQC
@@ -30,7 +33,7 @@
 #include "deathtypes/all.qc"
 #include "effects/all.qc"
 #include "impulses/all.qc"
-#include "notifications.qc"
+#include "notifications/all.qc"
 #include "t_items.qc"
 #endif
 

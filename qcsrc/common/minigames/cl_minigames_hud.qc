@@ -213,15 +213,13 @@ void HUD_MinigameMenu_ClickCreate()
 	{
 		entity curr;
 		entity prev = self;
-		FOREACH(Minigames, true, LAMBDA(
-		{
-			curr = HUD_MinigameMenu_SpawnSubEntry(
-				it.message, HUD_MinigameMenu_ClickCreate_Entry,  self );
+		FOREACH(Minigames, true, {
+			curr = HUD_MinigameMenu_SpawnSubEntry(it.message, HUD_MinigameMenu_ClickCreate_Entry, self);
 			curr.netname = it.netname;
 			curr.model = strzone(minigame_texture(strcat(it.netname,"/icon")));
 			HUD_MinigameMenu_InsertEntry( curr, prev );
 			prev = curr;
-		}));
+		});
 	}
 }
 
@@ -685,7 +683,7 @@ void HUD_Minigame_Mouse()
 	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
 		HUD_MinigameMenu_MouseInput();
 
-	draw_cursor_normal(mousepos-'8 4 0', '1 1 1', panel_fg_alpha);
+	draw_cursor_normal(mousepos, '1 1 1', panel_fg_alpha);
 }
 
 bool HUD_Minigame_Showpanels()

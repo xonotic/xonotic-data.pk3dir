@@ -10,11 +10,6 @@
     #include "mapinfo.qh"
 #endif
 
-bool autocvar_developer_mapper;
-
-#define LOG_MAPWARN(...) MACRO_BEGIN { if (autocvar_developer_mapper) LOG_WARNING(__VA_ARGS__); } MACRO_END
-#define LOG_MAPWARNF(...) MACRO_BEGIN { if (autocvar_developer_mapper) LOG_WARNINGF(__VA_ARGS__); } MACRO_END
-
 // generic string stuff
 
 int _MapInfo_Cache_Active;
@@ -602,13 +597,13 @@ void _MapInfo_Map_ApplyGametype(string s, int pWantedType, int pThisType, int lo
 
 string _MapInfo_GetDefaultEx(float t)
 {
-	FOREACH(Gametypes, it.items == t, LAMBDA(return it.model2));
+	FOREACH(Gametypes, it.items == t, return it.model2);
 	return "";
 }
 
 float _MapInfo_GetTeamPlayBool(float t)
 {
-	FOREACH(Gametypes, it.items == t, LAMBDA(return it.team));
+	FOREACH(Gametypes, it.items == t, return it.team);
 	return false;
 }
 
@@ -623,7 +618,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 	cvar_set("timelimit", cvar_defstring("timelimit"));
 	cvar_set("leadlimit", cvar_defstring("leadlimit"));
 	cvar_set("fraglimit", cvar_defstring("fraglimit"));
-	FOREACH(Gametypes, true, LAMBDA(it.m_parse_mapinfo(string_null, string_null)));
+	FOREACH(Gametypes, true, it.m_parse_mapinfo(string_null, string_null));
 
 	string fraglimit_normal = string_null;
 	string fraglimit_teams = string_null;
@@ -671,7 +666,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 			    break;
 			}
 		}
-		FOREACH(Gametypes, true, LAMBDA(handled |= it.m_parse_mapinfo(k, v)));
+		FOREACH(Gametypes, true, handled |= it.m_parse_mapinfo(k, v));
 		if (!handled)
             LOG_MAPWARNF("Invalid gametype setting in mapinfo for gametype %s: %s\n", MapInfo_Type_ToString(pWantedType), sa);
 	}
@@ -690,7 +685,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, int pWantedType, int pThisType)
 
 Gametype MapInfo_Type(int t)
 {
-	FOREACH(Gametypes, it.items == t, LAMBDA(return it));
+	FOREACH(Gametypes, it.items == t, return it);
 	return NULL;
 }
 
@@ -710,14 +705,14 @@ int MapInfo_Type_FromString(string t)
 	deprecate(assault, as);
 	deprecate(race, rc);
 	if (t == "all") return MAPINFO_TYPE_ALL;
-	FOREACH(Gametypes, it.mdl == t, LAMBDA(return it.items));
+	FOREACH(Gametypes, it.mdl == t, return it.items);
 	return 0;
 #undef deprecate
 }
 
 string MapInfo_Type_Description(float t)
 {
-	FOREACH(Gametypes, it.items == t, LAMBDA(return it.gametype_description));
+	FOREACH(Gametypes, it.items == t, return it.gametype_description);
 	return "";
 }
 
@@ -725,13 +720,13 @@ string MapInfo_Type_ToString(float t)
 {
 	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
-	FOREACH(Gametypes, it.items == t, LAMBDA(return it.mdl));
+	FOREACH(Gametypes, it.items == t, return it.mdl);
 	return "";
 }
 
 string MapInfo_Type_ToText(float t)
 {
-	FOREACH(Gametypes, it.items == t, LAMBDA(return it.message));
+	FOREACH(Gametypes, it.items == t, return it.message);
 	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
@@ -1241,7 +1236,7 @@ int MapInfo_CurrentFeatures()
 int MapInfo_CurrentGametype()
 {
 	int prev = cvar("gamecfg");
-	FOREACH(Gametypes, cvar(it.netname) && it.items != prev, LAMBDA(return it.items));
+	FOREACH(Gametypes, cvar(it.netname) && it.items != prev, return it.items);
 	if (prev) return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
 }
@@ -1267,9 +1262,7 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 
 void MapInfo_SwitchGameType(int t)
 {
-	FOREACH(Gametypes, true, LAMBDA(
-		cvar_set(it.netname, (it.items == t) ? "1" : "0")
-	));
+	FOREACH(Gametypes, true, cvar_set(it.netname, (it.items == t) ? "1" : "0"));
 }
 
 void MapInfo_LoadMap(string s, float reinit)

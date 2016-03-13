@@ -93,9 +93,9 @@ CLASS(Weapon, Object)
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
     METHOD(Weapon, wr_init, void(Weapon this)) {}
     /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
-    METHOD(Weapon, wr_suicidemessage, int(Weapon this)) {return 0;}
+    METHOD(Weapon, wr_suicidemessage, entity(Weapon this)) {return NULL;}
     /** (SERVER) notification number for kill message (may inspect w_deathtype for details) */
-    METHOD(Weapon, wr_killmessage, int(Weapon this)) {return 0;}
+    METHOD(Weapon, wr_killmessage, entity(Weapon this)) {return NULL;}
     /** (SERVER) handles reloading for weapon */
     METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) clears fields that the weapon may use */

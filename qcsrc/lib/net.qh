@@ -145,9 +145,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void UncustomizeEntitiesRun()
 	{
-		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, LAMBDA(
-			WITH(entity, self, it, it.uncustomizeentityforclient());
-		));
+		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, WITH(entity, self, it, it.uncustomizeentityforclient()));
 	}
 
 	STRING_ITERATOR(g_buf, string_null, 0);
@@ -265,28 +263,14 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			v += ReadByte();          // note: this is unsigned
 			return v;
 		}
-		vector ReadInt48_t()
-		{
-			vector v;
-			v.x = ReadInt24_t();
-			v.y = ReadInt24_t();
-			v.z = 0;
-			return v;
-		}
-		vector ReadInt72_t()
-		{
-			vector v;
-			v.x = ReadInt24_t();
-			v.y = ReadInt24_t();
-			v.z = ReadInt24_t();
-			return v;
-		}
+		#define ReadInt48_t() vec3(ReadInt24_t(), ReadInt24_t(), 0)
+		#define ReadInt72_t() vec3(ReadInt24_t(), ReadInt24_t(), ReadInt24_t())
 
 		int _ReadSByte;
 		#define ReadSByte() (_ReadSByte = ReadByte(), (_ReadSByte & BIT(7) ? -128 : 0) + (_ReadSByte & BITS(7)))
 		#define ReadFloat() ReadCoord()
-        vector ReadVector() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = ReadFloat(); return v; }
-		vector ReadVector2D() { vector v; v.x = ReadFloat(); v.y = ReadFloat(); v.z = 0; return v; }
+		#define ReadVector() vec3(ReadFloat(), ReadFloat(), ReadFloat())
+		#define ReadVector2D() vec3(ReadFloat(), ReadFloat(), 0)
 
 		float ReadApproxPastTime()
 		{

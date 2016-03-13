@@ -332,11 +332,9 @@ void HUD_Radar()
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
-	FOREACH_ENTITY_CLASS("radarlink", true, LAMBDA(
-		draw_teamradar_link(it.origin, it.velocity, it.team);
-	));
+	FOREACH_ENTITY_CLASS("radarlink", true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
-	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, LAMBDA(
+	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
 		if ( hud_panel_radar_mouse )
 		if ( it.health > 0 )
 		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE )
@@ -353,13 +351,13 @@ void HUD_Radar()
 		}
 		entity icon = RadarIcons_from(it.teamradar_icon);
 		draw_teamradar_icon(it.origin, icon, it, spritelookupcolor(it, icon.netname, it.teamradar_color), panel_fg_alpha);
-	));
-	AL_EACH(_entcs, e, it != NULL, LAMBDA(
+	});
+	AL_EACH(_entcs, e, it != NULL, {
 		if (!it.m_entcs_private) continue;
 		if (entcs_is_self(it)) continue;
 		color2 = entcs_GetTeam(it.sv_entnum);
 		draw_teamradar_player(it.origin, it.angles, Team_ColorRGB(color2));
-	));
+	});
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
