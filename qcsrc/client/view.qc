@@ -1414,7 +1414,7 @@ void CSQC_UpdateView(float w, float h)
 	if(myteam != prev_myteam)
 	{
 		myteamcolors = colormapPaletteColor(myteam, 1);
-		FOREACH(hud_panels, true, LAMBDA(it.update_time = time));
+		FOREACH(hud_panels, true, it.update_time = time);
 		prev_myteam = myteam;
 	}
 
@@ -1460,10 +1460,10 @@ void CSQC_UpdateView(float w, float h)
 
 		if(ons_roundlost)
 		{
-			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, LAMBDA(
+			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, {
 				gen = it;
 				break;
-			));
+			});
 			if(!gen)
 				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
@@ -1829,7 +1829,7 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
+	FOREACH_ENTITY(it.draw, it.draw(it));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -2159,7 +2159,7 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY(it.draw2d, LAMBDA(it.draw2d(it)));
+	FOREACH_ENTITY(it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 	Debug_Draw();
 

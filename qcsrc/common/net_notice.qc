@@ -30,7 +30,7 @@ void sv_notice_to(entity _to, string _notice, float _howlong, float _modal)
 
 void sv_notice_toall(string _notice, float _howlong, float _modal)
 {
-    FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(sv_notice_to(it, _notice, _howlong, _modal)));
+    FOREACH_CLIENT(IS_REAL_CLIENT(it), sv_notice_to(it, _notice, _howlong, _modal));
 }
 
 #endif // SVQC
@@ -58,7 +58,7 @@ void cl_notice_read()
 void cl_notice_run()
 {
     bool flag = false;
-    LL_EACH(cl_notices, it.alpha > time, LAMBDA(flag = true; break));
+    LL_EACH(cl_notices, it.alpha > time, { flag = true; break; });
     if (!flag) return;
     const int M1 = 30;
     const int M2 = 10;
@@ -78,10 +78,10 @@ void cl_notice_run()
     #define OUT(s, z) MACRO_BEGIN { drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3.y += z + 4; } MACRO_END
 
     OUT(_("^1Server notices:"), 32);
-    LL_EACH(cl_notices, it.alpha > time, LAMBDA(
+    LL_EACH(cl_notices, it.alpha > time, {
         string s = sprintf(_("^7%s (^3%d sec left)"), it.netname , rint(it.alpha - time));
         OUT(s, 16);
-    ));
+    });
     #undef OUT
 }
 

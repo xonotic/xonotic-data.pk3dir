@@ -571,7 +571,7 @@ void ons_ControlPoint_Icon_Think()
 		int _enemy_count = 0;
 		int _friendly_count = 0;
 
-		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
 			if(vdist(it.origin - self.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
 			{
 				if(SAME_TEAM(it, self))
@@ -579,7 +579,7 @@ void ons_ControlPoint_Icon_Think()
 				else
 					++_enemy_count;
 			}
-		));
+		});
 
 		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
@@ -976,7 +976,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		if (time > this.pain_finished)
 		{
 			this.pain_finished = time + 10;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, this), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK)));
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, this), Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK));
 			play2team(this.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
@@ -1043,7 +1043,7 @@ void ons_GeneratorThink()
 		if(!self.isshielded && self.wait < time)
 		{
 			self.wait = time + 5;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 				if(SAME_TEAM(it, self))
 				{
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
@@ -1051,7 +1051,7 @@ void ons_GeneratorThink()
 				}
 				else
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(self.team, CENTER_ONS_NOTSHIELDED));
-			));
+			});
 		}
 	}
 }
@@ -1270,12 +1270,12 @@ bool Onslaught_CheckWinner()
 
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = true;
 		it.player_blocked = true;
 
 		nades_Clear(it);
-	));
+	});
 
 	return 1;
 }
@@ -1288,7 +1288,7 @@ bool Onslaught_CheckPlayers()
 void Onslaught_RoundStart()
 {
 	entity tmp_entity;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.player_blocked = false));
+	FOREACH_CLIENT(IS_PLAYER(it), it.player_blocked = false);
 
 	for(tmp_entity = ons_worldcplist; tmp_entity; tmp_entity = tmp_entity.ons_worldcpnext)
 		tmp_entity.sprite.SendFlags |= 16;
@@ -1316,11 +1316,11 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 
 	// Needs weapons?
 	c = 0;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		if(self.weapons & (it.m_wepset))
 		if(++c >= 4)
 			break;
-	));
+	});
 
 	if(c<4)
 		needweapons = true;
@@ -1397,12 +1397,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it), {
 			if(SAME_TEAM(it, self))
 			if(it.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
 			if(it.havocbot_ons_target == cp2)
 				++c;
-		));
+		});
 
 		// NOTE: probably decrease the cost of attackable control points
 		cp2.wpcost = c;
@@ -1772,11 +1772,11 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 
 MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 {SELFPARAM();
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = false;
 		it.ons_deathloc = '0 0 0';
 		WITH(entity, self, it, PutClientInServer());
-	));
+	});
 	return false;
 }
 

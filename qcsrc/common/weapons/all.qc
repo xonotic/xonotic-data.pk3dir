@@ -134,7 +134,7 @@ string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
 	s = W_UndeprecateName(s);
-	FOREACH(Weapons, it != WEP_Null && it.netname == s, LAMBDA(return ftos(i)));
+	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
@@ -202,10 +202,10 @@ void W_RandomWeapons(entity e, float n)
 	for (i = 0; i < n; ++i)
 	{
 		RandomSelection_Init();
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if (remaining & (it.m_wepset))
 				RandomSelection_Add(it, 0, string_null, 1, 1);
-		));
+		});
 		Weapon w = RandomSelection_chosen_ent;
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);

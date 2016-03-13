@@ -537,32 +537,32 @@ GENERIC_COMMAND(runtest, "Run unit tests") { GenericCommand_runtest(request, arg
 
 void GenericCommand_macro_help()
 {
-	FOREACH(GENERIC_COMMANDS, true, LAMBDA(LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description)));
+	FOREACH(GENERIC_COMMANDS, true, LOG_INFOF("  ^2%s^7: %s\n", it.m_name, it.m_description));
 }
 
 float GenericCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
-	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
-	));
+	});
 	return false;
 }
 
 float GenericCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
-	FOREACH(GENERIC_COMMANDS, it.m_name == c, LAMBDA(
+	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
 		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
-	));
+	});
 	return false;
 }
 
 void GenericCommand_macro_write_aliases(float fh)
 {
-	FOREACH(GENERIC_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_svmenu", it.m_name, it.m_description)));
+	FOREACH(GENERIC_COMMANDS, true, CMD_Write_Alias("qc_cmd_svmenu", it.m_name, it.m_description));
 }
 
 

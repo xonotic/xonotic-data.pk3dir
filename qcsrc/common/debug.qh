@@ -66,7 +66,7 @@ bool autocvar_debugdraw;
 		static int debugdraw_frame;
 		++debugdraw_frame;
 		const int sz = 8;
-		FOREACH_ENTITY(true, LAMBDA(
+		FOREACH_ENTITY(true, {
 			if (it.debugdraw_last == debugdraw_frame) continue;
 			int ofs = 0;
 			FOREACH_ENTITY_RADIUS(it.origin, 100, it.debugdraw_last != debugdraw_frame, {
@@ -144,7 +144,7 @@ bool autocvar_debugdraw;
 					sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
 				++ofs;
             });
-		));
+		});
 	}
 #endif
 
@@ -280,7 +280,7 @@ GENERIC_COMMAND(find, "Search through entities for matching classname")
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LAMBDA(LOG_INFOF("%i (%s)\n", it, it.classname)));
+			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
 			return;
 		}
 
@@ -304,7 +304,7 @@ GENERIC_COMMAND(findat, "Search through entities for matching origin")
 		case CMD_REQUEST_COMMAND:
 		{
 		    vector match = stov(argv(1));
-		    FOREACH_ENTITY_ORDERED(it.origin == match, LAMBDA(LOG_INFOF("%i (%s)\n", it, it.classname)));
+		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)\n", it, it.classname));
 			return;
 		}
 

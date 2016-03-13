@@ -158,7 +158,7 @@ void Registry_send(string id, string hash);
 		string algo = "MD4"; \
 		string join = ":"; \
 		string s = ""; \
-		FOREACH(id, true, LAMBDA(s = strcat(s, join, it.registered_id))); \
+		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
 		s = substring(s, strlen(join), -1); \
 		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
 		LOG_TRACEF(#id ": %s\n[%s]\n", h, s); \

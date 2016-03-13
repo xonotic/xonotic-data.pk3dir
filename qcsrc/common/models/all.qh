@@ -12,9 +12,7 @@ REGISTER_REGISTRY(Models)
     REGISTER(Models, MDL, name, m_id, NEW(Model, MDL_##name##_get))
 
 PRECACHE(Models) {
-    FOREACH(Models, true, LAMBDA({
-        it.model_precache(it);
-    }));
+    FOREACH(Models, true, it.model_precache(it));
 }
 
 MODEL(Null, "null");

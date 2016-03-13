@@ -287,7 +287,7 @@ void W_Tuba_NoteThink()
 	}
 	self.nextthink = time;
 	dist_mult = WEP_CVAR(tuba, attenuation) / autocvar_snd_soundradius;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self.realowner, LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self.realowner, {
 		v = self.origin - (it.origin + it.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
 		dir0 = normalize(v);
@@ -306,7 +306,7 @@ void W_Tuba_NoteThink()
 			self.SendFlags |= 2;
 			break;
 		}
-	));
+	});
 }
 
 void W_Tuba_NoteOn(float hittype)

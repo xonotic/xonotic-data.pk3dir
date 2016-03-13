@@ -1206,11 +1206,11 @@ void turrets_manager_think()
 
 	if (autocvar_g_turrets_reloadcvars == 1)
 	{
-		FOREACH_ENTITY(IS_TURRET(it), LAMBDA(
+		FOREACH_ENTITY(IS_TURRET(it), {
 			load_unit_settings(it, true);
 			Turret tur = get_turretinfo(it.m_id);
 			tur.tr_think(tur, it);
-		));
+		});
 		cvar_set("g_turrets_reloadcvars", "0");
 	}
 }
