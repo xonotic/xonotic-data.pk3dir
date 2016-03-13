@@ -1155,16 +1155,12 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		if(autocvar_spawn_debug >= 2)
 		{
-			for(entity otheritem = findradius(this.origin, 3); otheritem; otheritem = otheritem.chain)
-			{
-			    // why not flags & fl_item?
-				if(otheritem.is_item)
-				{
-					LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
-					LOG_TRACE(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
-					error("Mapper sucks.");
-				}
-			}
+            // why not flags & fl_item?
+		    FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
+                LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
+                LOG_TRACE(" vs ", it.netname, vtos(it.origin), "\n");
+                error("Mapper sucks.");
+            });
 			this.is_item = true;
 		}
 

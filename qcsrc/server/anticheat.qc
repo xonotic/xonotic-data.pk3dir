@@ -225,17 +225,14 @@ void anticheat_startframe()
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }
 
-void anticheat_fixangle()
-{SELFPARAM();
-	CS(self).anticheat_fixangle_endtime = servertime + ANTILAG_LATENCY(self) + 0.2;
+void anticheat_fixangle(entity this)
+{
+	CS(this).anticheat_fixangle_endtime = servertime + ANTILAG_LATENCY(this) + 0.2;
 }
 
 void anticheat_endframe()
 {SELFPARAM();
-	FOREACH_CLIENT(true, LAMBDA(
-		if(it.fixangle)
-			WITH(entity, self, it, anticheat_fixangle());
-	));
+	FOREACH_CLIENT(it.fixangle, anticheat_fixangle(it));
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }
 

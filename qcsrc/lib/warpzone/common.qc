@@ -572,8 +572,8 @@ vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org)
 
 bool WarpZoneLib_BadEntity(entity e)
 {
-	string s = e.classname;
 	if (is_pure(e)) return true;
+	string s = e.classname;
 	switch (s)
 	{
 		// case "net_linked": // actually some real entities are linked without classname, fail
@@ -590,68 +590,62 @@ bool WarpZoneLib_BadEntity(entity e)
 
 .float WarpZone_findradius_hit;
 .entity WarpZone_findradius_next;
-void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,               vector transform, vector shift, float needlineofsight)
-//                               blast origin of current search   original blast origin   how to untransform (victim to blast system)
+void WarpZone_FindRadius_Recurse(
+    /** blast origin of current search */
+    vector org,
+    float rad,
+    /** original blast origin */
+    vector org0,
+    /** how to untransform (victim to blast system) */
+    vector transform,
+    vector shift,
+    bool needlineofsight)
 {
-	vector org_new;
-	vector org0_new;
-	vector shift_new, transform_new;
-	vector p;
-	entity e, e0;
-	entity wz;
-	if(rad <= 0)
-		return;
-	e0 = findradius(org, rad);
-	wz = world;
-
-	for(e = e0; e; e = e.chain)
-	{
-		if(WarpZoneLib_BadEntity(e))
-			continue;
-		p = WarpZoneLib_NearestPointOnBox(e.origin + e.mins, e.origin + e.maxs, org0);
-		if(needlineofsight)
+	if (rad <= 0) return;
+	entity wz = NULL;
+	FOREACH_ENTITY_RADIUS(org, rad, !WarpZoneLib_BadEntity(it), {
+		vector p = WarpZoneLib_NearestPointOnBox(it.origin + it.mins, it.origin + it.maxs, org0);
+		if (needlineofsight)
 		{
-			traceline(org, p, MOVE_NOMONSTERS, e);
-			if(trace_fraction < 1)
-				continue;
+			traceline(org, p, MOVE_NOMONSTERS, it);
+			if (trace_fraction < 1) continue;
 		}
-		if(!e.WarpZone_findradius_hit || vlen2(e.WarpZone_findradius_dist) > vlen2(org0 - p))
+		if (!it.WarpZone_findradius_hit || vlen2(it.WarpZone_findradius_dist) > vlen2(org0 - p))
 		{
-			e.WarpZone_findradius_nearest = p;
-			e.WarpZone_findradius_dist = org0 - p;
-			e.WarpZone_findradius_findorigin = org;
-			e.WarpZone_findradius_findradius = rad;
-			if(e.classname == "warpzone_refsys")
+			it.WarpZone_findradius_nearest = p;
+			it.WarpZone_findradius_dist = org0 - p;
+			it.WarpZone_findradius_findorigin = org;
+			it.WarpZone_findradius_findradius = rad;
+			if (it.classname == "warpzone_refsys")
 			{
 				// ignore, especially: do not overwrite the refsys parameters
 			}
-			else if(e.classname == "trigger_warpzone")
+			else if (it.classname == "trigger_warpzone")
 			{
-				e.WarpZone_findradius_next = wz;
-				wz = e;
-				e.WarpZone_findradius_hit = 1;
-				e.enemy.WarpZone_findradius_dist = '0 0 0'; // we don't want to go through this zone ever again
-				e.enemy.WarpZone_findradius_hit = 1;
+				it.WarpZone_findradius_next = wz;
+				wz = it;
+				it.WarpZone_findradius_hit = 1;
+				it.enemy.WarpZone_findradius_dist = '0 0 0'; // we don't want to go through this zone ever again
+				it.enemy.WarpZone_findradius_hit = 1;
 			}
 			else
 			{
-				e.warpzone_transform = transform;
-				e.warpzone_shift = shift;
-				e.WarpZone_findradius_hit = 1;
+				it.warpzone_transform = transform;
+				it.warpzone_shift = shift;
+				it.WarpZone_findradius_hit = 1;
 			}
 		}
-	}
-	for(e = wz; e; e = e.WarpZone_findradius_next)
+    });
+	for(entity e = wz; e; e = e.WarpZone_findradius_next)
 	{
-		if(WarpZoneLib_BadEntity(e))
-			continue;
+		if (WarpZoneLib_BadEntity(e)) continue;
 
-		org0_new = WarpZone_TransformOrigin(e, org);
+		vector org0_new = WarpZone_TransformOrigin(e, org);
 		traceline(e.warpzone_targetorigin, org0_new, MOVE_NOMONSTERS, e);
-		org_new = trace_endpos;
+		vector org_new = trace_endpos;
 
-		transform_new = AnglesTransform_Multiply(e.warpzone_transform, transform);
-		shift_new = AnglesTransform_Multiply_GetPostShift(e.warpzone_transform, e.warpzone_shift, transform, shift);
+		vector transform_new = AnglesTransform_Multiply(e.warpzone_transform, transform);
+		vector shift_new = AnglesTransform_Multiply_GetPostShift(e.warpzone_transform, e.warpzone_shift, transform, shift);
 		WarpZone_FindRadius_Recurse(
 			org_new,
 			bound(0, rad - vlen(org_new - org0_new), rad - 8),
@@ -662,14 +656,13 @@ void WarpZone_FindRadius_Recurse(vector org, float rad,        vector org0,     
 		e.enemy.WarpZone_findradius_hit = 0;
 	}
 }
-entity WarpZone_FindRadius(vector org, float rad, float needlineofsight)
+entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 {
-	entity e0, e;
+    if (!warpzone_warpzones_exist && !needlineofsight) return findradius(org, rad);
 	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
-	e0 = findchainfloat(WarpZone_findradius_hit, 1);
-	for(e = e0; e; e = e.chain)
-		e.WarpZone_findradius_hit = 0;
-	return e0;
+	entity list_first = findchainfloat(WarpZone_findradius_hit, 1);
+	FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
+	return list_first;
 }
 
 .entity WarpZone_refsys;
