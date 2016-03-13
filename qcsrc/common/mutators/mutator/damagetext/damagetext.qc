@@ -13,7 +13,7 @@ REGISTER_MUTATOR(damagetext, true);
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$$d",   "How to format the damage text. 1$ is health, 2$ is armor, 3$ is both");
+AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$d",    "How to format the damage text. 1$ is health, 2$ is armor, 3$ is both");
 AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    "Damage text color");
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      "Damage text uses weapon color");
 AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          "Damage text font size");
