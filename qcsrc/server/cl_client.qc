@@ -23,7 +23,7 @@
 #include "bot/navigation.qh"
 
 #include "../common/ent_cs.qh"
-#include "../common/state.qh"
+#include <common/state.qh>
 
 #include "../common/triggers/teleporters.qh"
 

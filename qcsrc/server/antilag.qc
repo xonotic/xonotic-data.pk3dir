@@ -1,7 +1,8 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../common/vehicles/all.qh"
+    #include <common/state.qh>
+    #include <common/vehicles/all.qh>
     #include "antilag.qh"
 #endif
 
@@ -22,13 +23,13 @@ void antilag_record(entity e, float t)
     if(e.vehicle)
         antilag_record(e.vehicle, t);
 
-	if(time < e.(antilag_times[e.antilag_index]))
+	if(time < CS(e).antilag_times[e.antilag_index])
 		return;
 	e.antilag_index = e.antilag_index + 1;
 	if(e.antilag_index >= ANTILAG_MAX_ORIGINS)
 		e.antilag_index = 0;
-	e.(antilag_times[e.antilag_index]) = t;
-	e.(antilag_origins[e.antilag_index]) = e.origin;
+	CS(e).antilag_times[e.antilag_index] = t;
+	CS(e).antilag_origins[e.antilag_index] = e.origin;
 
 	if(e.antilag_debug)
 		te_spark(antilag_takebackorigin(e, t - e.antilag_debug), '0 0 0', 32);
@@ -39,17 +40,17 @@ void antilag_record(entity e, float t)
 float antilag_find(entity e, float t)
 {
 	for(int i = e.antilag_index; i > 0; --i)
-		if(e.(antilag_times[i]) >= t)
-			if(e.(antilag_times[i - 1]) < t)
+		if(CS(e).antilag_times[i] >= t)
+			if(CS(e).antilag_times[i - 1] < t)
 				return i - 1;
 
-	if(e.(antilag_times[0]) >= t)
-		if(e.(antilag_times[ANTILAG_MAX_ORIGINS - 1]) < t)
+	if(CS(e).antilag_times[0] >= t)
+		if(CS(e).antilag_times[ANTILAG_MAX_ORIGINS - 1] < t)
 			return ANTILAG_MAX_ORIGINS - 1;
 
 	for(int i = ANTILAG_MAX_ORIGINS - 1; i > e.antilag_index + 1; --i)
-		if(e.(antilag_times[i]) >= t)
-			if(e.(antilag_times[i - 1]) < t)
+		if(CS(e).antilag_times[i] >= t)
+			if(CS(e).antilag_times[i - 1] < t)
 				return i - 1;
 
 	// if we get here, t is sandwiched nowhere, so let's assume it's in the present
@@ -71,7 +72,7 @@ vector antilag_takebackorigin(entity e, float t)
 	if (i1 >= ANTILAG_MAX_ORIGINS)
 		i1 = 0;
 
-	return lerpv(e.(antilag_times[i0]), e.(antilag_origins[i0]), e.(antilag_times[i1]), e.(antilag_origins[i1]), t);
+	return lerpv(CS(e).antilag_times[i0], CS(e).antilag_origins[i0], CS(e).antilag_times[i1], CS(e).antilag_origins[i1], t);
 }
 
 vector antilag_takebackavgvelocity(entity e, float t0, float t1)
@@ -122,8 +123,8 @@ void antilag_clear(entity e)
 	antilag_restore(e);
 	for (int i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
 	{
-		e.(antilag_times[i]) = -2342;
-		e.(antilag_origins[i]) = e.origin;
+		CS(e).antilag_times[i] = -2342;
+		CS(e).antilag_origins[i] = e.origin;
 	}
 	e.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
 }

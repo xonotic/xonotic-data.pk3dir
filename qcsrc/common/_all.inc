@@ -7,6 +7,9 @@
 
 #include "mapinfo.qc"
 #include "playerstats.qc"
+#ifdef SVQC
+    #include "state.qc"
+#endif
 #include "util.qc"
 
 #ifndef CSQC
