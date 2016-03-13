@@ -43,7 +43,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 
 	e.oldorigin_x = compressShortVector(e.velocity);
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(Violence_GibSplash_SendEntity(e, it, 0)));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), Violence_GibSplash_SendEntity(e, it, 0));
 	remove(e);
 }
 

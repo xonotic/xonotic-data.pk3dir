@@ -16,11 +16,11 @@ void target_changelevel_use()
 		int plnum = 0;
 		int realplnum = 0;
 		// let's not count bots
-		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 			++realplnum;
 			if(it.chlevel_targ == self)
 				++plnum;
-		));
+		});
 		if(plnum < ceil(realplnum * min(1, self.count))) // 70% of players
 			return;
 	}

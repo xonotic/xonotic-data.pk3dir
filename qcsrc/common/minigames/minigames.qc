@@ -4,12 +4,8 @@ REGISTER_NET_LINKED(ENT_CLIENT_MINIGAME)
 
 entity minigame_get_descriptor(string id)
 {
-	FOREACH(Minigames, true, LAMBDA(
-	{
-		if(it.netname == id)
-			return it;
-	}));
-	return world;
+	FOREACH(Minigames, it.netname == id, return it);
+	return NULL;
 }
 
 // Get letter index of a tile name

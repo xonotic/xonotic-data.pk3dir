@@ -88,7 +88,7 @@ spawnfunc(trigger_teleport)
 	self.use = trigger_teleport_use;
 
 	if(self.noise != "")
-		FOREACH_WORD(self.noise, true, LAMBDA(precache_sound(it)));
+		FOREACH_WORD(self.noise, true, precache_sound(it));
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);

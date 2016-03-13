@@ -26,13 +26,12 @@ void dumpnode(entity n)
     n.nextthink    = time;
 }
 
-#ifdef DEBUGPATHING
+#if DEBUGPATHING
 void pathlib_showpath(entity start);
 void pathlib_showpath2(entity path);
+void pathlib_showsquare(vector where,float goodsquare,float _lifetime);
 #endif
 
-void pathlib_showsquare(vector where,float goodsquare,float _lifetime);
-void pathlib_showsquare2(entity node ,vector ncolor,float align);
 
 entity pathlib_mknode(vector where,entity parent)
 {
@@ -60,8 +59,9 @@ entity pathlib_mknode(vector where,entity parent)
 
     setorigin(node, where);
     node.medium = pointcontents(where);
+#if DEBUGPATHING
     pathlib_showsquare(where, 1 ,15);
-
+#endif
     ++pathlib_made_cnt;
     ++pathlib_open_cnt;
 
@@ -157,7 +157,9 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         if (!tile_check(where))
         {
             LOG_TRACE("tile_check fail\n");
+#if DEBUGPATHING
             pathlib_showsquare(where, 0 ,30);
+#endif
             return 0;
         }
 
@@ -545,7 +547,7 @@ entity pathlib_astar(vector from,vector to)
             ctime = gettime(GETTIME_REALTIME) - ctime;
 
 
-#ifdef DEBUGPATHING
+#if DEBUGPATHING
             pathlib_showpath2(start);
 
             LOG_TRACE("Time used -      pathfinding: ", ftos(ptime),"\n");

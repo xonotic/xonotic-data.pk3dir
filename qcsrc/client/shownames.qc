@@ -53,7 +53,7 @@ void Draw_ShowNames(entity this)
 	if (autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
-		LL_EACH(shownames_ent, it != this && entcs_receiver(i), LAMBDA(
+		LL_EACH(shownames_ent, it != this && entcs_receiver(i), {
 			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
@@ -63,7 +63,7 @@ void Draw_ShowNames(entity this)
 				overlap = true;
 				break;
 			}
-		));
+		});
 	}
 	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	if (autocvar_hud_shownames_crosshairdistance)
@@ -167,7 +167,7 @@ void Draw_ShowNames(entity this)
 void Draw_ShowNames_All()
 {
 	if (!autocvar_hud_shownames) return;
-	LL_EACH(shownames_ent, true, LAMBDA(
+	LL_EACH(shownames_ent, true, {
 		entity entcs = entcs_receiver(i);
 		if (!entcs)
 		{
@@ -194,5 +194,5 @@ void Draw_ShowNames_All()
 		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
-	));
+	});
 }

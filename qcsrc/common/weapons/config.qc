@@ -25,7 +25,7 @@ float W_Config_Queue_Compare(int root, int child, entity pass)
 void Dump_Weapon_Settings()
 {
 	int totalweapons = 0, totalsettings = 0;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		// step 1: clear the queue
 		WEP_CONFIG_COUNT = 0;
 		for (int x = 0; x <= MAX_WEP_CONFIG; ++x)
@@ -51,7 +51,7 @@ void Dump_Weapon_Settings()
 		LOG_INFO(sprintf("#%d: %s: %d settings...\n", i, it.m_name, WEP_CONFIG_COUNT));
 		totalweapons += 1;
 		totalsettings += WEP_CONFIG_COUNT;
-	));
+	});
 
 	// clear queue now that we're finished
 	WEP_CONFIG_COUNT = 0;

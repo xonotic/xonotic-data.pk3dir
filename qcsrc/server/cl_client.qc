@@ -23,7 +23,7 @@
 #include "bot/navigation.qh"
 
 #include "../common/ent_cs.qh"
-#include "../common/state.qh"
+#include <common/state.qh>
 
 #include "../common/triggers/teleporters.qh"
 
@@ -168,7 +168,10 @@ void PutObserverInServer()
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver);
 	PlayerState_detach(this);
 
-	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this) && this.health >= 1) {
+        // despawn effect
+		Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+    }
 
     {
         entity spot = SelectSpawnPoint(true);
@@ -187,6 +190,7 @@ void PutObserverInServer()
         }
         // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
         // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+        setmodel(this, MDL_Null);
         setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
     }
@@ -206,8 +210,13 @@ void PutObserverInServer()
 
 	WaypointSprite_PlayerDead(this);
 
-	if (!mutator_returnvalue)  // mutator prevents resetting teams
+	if (mutator_returnvalue) {
+	    // mutator prevents resetting teams+score
+	} else {
 		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
+        this.frags = FRAGS_SPECTATOR;
+        PlayerScore_Clear(this);  // clear scores when needed
+    }
 
 	if (this.killcount != FRAGS_SPECTATOR)
 	{
@@ -222,12 +231,9 @@ void PutObserverInServer()
 			this.just_joined = false;
 	}
 
-	PlayerScore_Clear(this); // clear scores when needed
-
 	accuracy_resend(this);
 
 	this.spectatortime = time;
-    this.frags = FRAGS_SPECTATOR;
 	this.bot_attack = false;
     this.hud = HUD_NORMAL;
 	this.classname = STR_OBSERVER;
@@ -269,9 +275,6 @@ void PutObserverInServer()
 
 	this.items = 0;
 	this.weapons = '0 0 0';
-	this.model = "";
-	FixPlayermodel(this);
-	setmodel(this, MDL_Null);
 	this.drawonlytoclient = this;
 
 	this.weaponname = "";
@@ -1525,66 +1528,64 @@ spectate mode routines
 
 void SpectateCopy(entity this, entity spectatee)
 {
-	MUTATOR_CALLHOOK(SpectateCopy, spectatee, self);
-	self.armortype = spectatee.armortype;
-	self.armorvalue = spectatee.armorvalue;
-	self.ammo_cells = spectatee.ammo_cells;
-	self.ammo_plasma = spectatee.ammo_plasma;
-	self.ammo_shells = spectatee.ammo_shells;
-	self.ammo_nails = spectatee.ammo_nails;
-	self.ammo_rockets = spectatee.ammo_rockets;
-	self.ammo_fuel = spectatee.ammo_fuel;
-	self.clip_load = spectatee.clip_load;
-	self.clip_size = spectatee.clip_size;
-	self.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
-	self.health = spectatee.health;
-	self.impulse = 0;
-	self.items = spectatee.items;
-	self.last_pickup = spectatee.last_pickup;
-	self.hit_time = spectatee.hit_time;
-	self.strength_finished = spectatee.strength_finished;
-	self.invincible_finished = spectatee.invincible_finished;
-	self.pressedkeys = spectatee.pressedkeys;
-	self.weapons = spectatee.weapons;
-	PS(self).m_switchweapon = PS(spectatee).m_switchweapon;
-	PS(self).m_switchingweapon = PS(spectatee).m_switchingweapon;
-	PS(self).m_weapon = PS(spectatee).m_weapon;
-	self.vortex_charge = spectatee.vortex_charge;
-	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
-	self.hagar_load = spectatee.hagar_load;
-	self.arc_heat_percent = spectatee.arc_heat_percent;
-	self.minelayer_mines = spectatee.minelayer_mines;
-	self.punchangle = spectatee.punchangle;
-	self.view_ofs = spectatee.view_ofs;
-	self.velocity = spectatee.velocity;
-	self.dmg_take = spectatee.dmg_take;
-	self.dmg_save = spectatee.dmg_save;
-	self.dmg_inflictor = spectatee.dmg_inflictor;
-	self.v_angle = spectatee.v_angle;
-	self.angles = spectatee.v_angle;
-	STAT(FROZEN, self) = STAT(FROZEN, spectatee);
-	self.revive_progress = spectatee.revive_progress;
-	if(!PHYS_INPUT_BUTTON_USE(self))
-		self.fixangle = true;
-	setorigin(self, spectatee.origin);
-	setsize(self, spectatee.mins, spectatee.maxs);
+	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
+	PS(this) = PS(spectatee);
+	this.armortype = spectatee.armortype;
+	this.armorvalue = spectatee.armorvalue;
+	this.ammo_cells = spectatee.ammo_cells;
+	this.ammo_plasma = spectatee.ammo_plasma;
+	this.ammo_shells = spectatee.ammo_shells;
+	this.ammo_nails = spectatee.ammo_nails;
+	this.ammo_rockets = spectatee.ammo_rockets;
+	this.ammo_fuel = spectatee.ammo_fuel;
+	this.clip_load = spectatee.clip_load;
+	this.clip_size = spectatee.clip_size;
+	this.effects = spectatee.effects & EFMASK_CHEAP; // eat performance
+	this.health = spectatee.health;
+	this.impulse = 0;
+	this.items = spectatee.items;
+	this.last_pickup = spectatee.last_pickup;
+	this.hit_time = spectatee.hit_time;
+	this.strength_finished = spectatee.strength_finished;
+	this.invincible_finished = spectatee.invincible_finished;
+	this.pressedkeys = spectatee.pressedkeys;
+	this.weapons = spectatee.weapons;
+	this.vortex_charge = spectatee.vortex_charge;
+	this.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
+	this.hagar_load = spectatee.hagar_load;
+	this.arc_heat_percent = spectatee.arc_heat_percent;
+	this.minelayer_mines = spectatee.minelayer_mines;
+	this.punchangle = spectatee.punchangle;
+	this.view_ofs = spectatee.view_ofs;
+	this.velocity = spectatee.velocity;
+	this.dmg_take = spectatee.dmg_take;
+	this.dmg_save = spectatee.dmg_save;
+	this.dmg_inflictor = spectatee.dmg_inflictor;
+	this.v_angle = spectatee.v_angle;
+	this.angles = spectatee.v_angle;
+	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
+	this.revive_progress = spectatee.revive_progress;
+	if(!PHYS_INPUT_BUTTON_USE(this))
+		this.fixangle = true;
+	setorigin(this, spectatee.origin);
+	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
 
     anticheat_spectatecopy(spectatee);
-	self.hud = spectatee.hud;
+	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        self.fixangle = false;
-        //self.velocity = spectatee.vehicle.velocity;
-        self.vehicle_health = spectatee.vehicle_health;
-        self.vehicle_shield = spectatee.vehicle_shield;
-        self.vehicle_energy = spectatee.vehicle_energy;
-        self.vehicle_ammo1 = spectatee.vehicle_ammo1;
-        self.vehicle_ammo2 = spectatee.vehicle_ammo2;
-        self.vehicle_reload1 = spectatee.vehicle_reload1;
-        self.vehicle_reload2 = spectatee.vehicle_reload2;
+        this.fixangle = false;
+        //this.velocity = spectatee.vehicle.velocity;
+        this.vehicle_health = spectatee.vehicle_health;
+        this.vehicle_shield = spectatee.vehicle_shield;
+        this.vehicle_energy = spectatee.vehicle_energy;
+        this.vehicle_ammo1 = spectatee.vehicle_ammo1;
+        this.vehicle_ammo2 = spectatee.vehicle_ammo2;
+        this.vehicle_reload1 = spectatee.vehicle_reload1;
+        this.vehicle_reload2 = spectatee.vehicle_reload2;
 
-        msg_entity = self;
+        msg_entity = this;
 
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
             WriteAngle(MSG_ONE,  spectatee.v_angle.x);
@@ -1592,9 +1593,9 @@ void SpectateCopy(entity this, entity spectatee)
             WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
-        //    WriteEntity(MSG_ONE, self);
+        //    WriteEntity(MSG_ONE, this);
         //makevectors(spectatee.v_angle);
-        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/
+        //setorigin(this, spectatee.origin - v_forward * 400 + v_up * 300);*/
     }
 }
 

@@ -6,9 +6,7 @@
 
 void Dump_Items()
 {
-    FOREACH(Items, true, LAMBDA(
-        ITEM_HANDLE(Show, it);
-    ));
+    FOREACH(Items, true, ITEM_HANDLE(Show, it));
 }
 
 string Item_Model(string item_mdl)

@@ -21,7 +21,7 @@ REGISTER_MUTATOR(multijump, true);
 .bool multijump_ready;
 
 #ifdef CSQC
-bool autocvar_cl_multijump = false;
+bool autocvar_cl_multijump = true;
 
 	#define PHYS_MULTIJUMP_CLIENT(s)	autocvar_cl_multijump
 #elif defined(SVQC)

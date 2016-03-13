@@ -184,7 +184,7 @@ void NET_Mutator_Remove(entity this)
 {
     string s = this.netname;
     WITH(bool, mutator_log, true, LAMBDA(
-        FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Remove(it)));
+        FOREACH(Mutators, it.registered_id == s, Mutator_Remove(it));
     ));
 }
 NET_HANDLE(Mutator, bool isNew)
@@ -198,7 +198,7 @@ NET_HANDLE(Mutator, bool isNew)
         this.entremove = NET_Mutator_Remove;
         int added = 0;
         WITH(bool, mutator_log, true, LAMBDA(
-            FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Add(it); ++added));
+            FOREACH(Mutators, it.registered_id == s, { Mutator_Add(it); ++added; });
         ));
         if (added > 1) LOG_WARNINGF("Added more than one mutator for %s\n", s);
     }
@@ -278,7 +278,7 @@ STATIC_INIT(Mutators) {
 }
 
 STATIC_INIT_LATE(Mutators) {
-    FOREACH(Mutators, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
+    FOREACH(Mutators, it.mutatorcheck(), Mutator_Add(it));
 }
 
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)

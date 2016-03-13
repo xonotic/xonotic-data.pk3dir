@@ -172,8 +172,6 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 		self.classname = STR_OBSERVER;
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerDies)
@@ -204,9 +202,10 @@ MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
 }
 
 MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
-{SELFPARAM();
-	lms_RemovePlayer(self);
-	return false;
+{
+    SELFPARAM();
+	lms_RemovePlayer(this);
+	return true;  // prevent team reset
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)

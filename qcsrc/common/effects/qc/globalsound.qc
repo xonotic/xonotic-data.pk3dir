@@ -192,22 +192,20 @@
 
 	entity GetVoiceMessage(string type)
 	{
-		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == true, LAMBDA(return it));
+		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == true, return it);
 		return NULL;
 	}
 
 	entity GetPlayerSound(string type)
 	{
-		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == false, LAMBDA(return it));
+		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == false, return it);
 		return NULL;
 	}
 
 	string allvoicesamples;
 	STATIC_INIT(allvoicesamples)
 	{
-		FOREACH(PlayerSounds, it.instanceOfVoiceMessage, LAMBDA(
-			allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr)
-			                                                   ));
+		FOREACH(PlayerSounds, it.instanceOfVoiceMessage, allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr));
 		allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
 	}
 
@@ -369,10 +367,10 @@
 					if (fake) { msg_entity = this; X(); }
 					else
 					{
-						FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!teamplay || msg_entity.team == this.team), LAMBDA(
+						FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!teamplay || msg_entity.team == this.team), {
 							msg_entity = it;
 							X();
-						));
+						});
 					}
 		#undef X
 					break;
@@ -408,10 +406,10 @@
 					}
 					else
 					{
-						FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+						FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 							msg_entity = it;
 							X();
-						));
+						});
 					}
 		#undef X
 					break;
