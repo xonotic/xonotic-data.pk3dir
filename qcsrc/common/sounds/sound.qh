@@ -124,7 +124,7 @@ CLASS(Sound, Object)
 	{
 		string s = Sound_fixpath(this);
 		if (!s) return;
-		LOG_TRACEF("precache_sound(\"%s\")\n", s);
+		LOG_DEBUGF("precache_sound(\"%s\")\n", s);
 		precache_sound(s);
 	}
 ENDCLASS(Sound)

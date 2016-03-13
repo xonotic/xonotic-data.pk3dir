@@ -17,7 +17,7 @@ CLASS(Model, Object)
             LOG_WARNINGF("Missing model: \"%s\"\n", s);
             return;
         }
-        LOG_TRACEF("precache_model(\"%s\")\n", s);
+        LOG_DEBUGF("precache_model(\"%s\")\n", s);
         precache_model(s);
     }
 ENDCLASS(Model)
