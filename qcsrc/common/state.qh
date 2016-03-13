@@ -45,6 +45,7 @@ void PlayerState_attach(entity this)
 void PlayerState_detach(entity this)
 {
 	if (!PS(this)) return;  // initial connect
+	FOREACH_CLIENT(PS(it) == PS(this), { PS(it) = NULL; });
 	remove(PS(this));
 	this._ps = NULL;
 
