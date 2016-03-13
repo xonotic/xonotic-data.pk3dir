@@ -127,7 +127,7 @@ void CSQC_Init()
 	registercvar("cl_jumpspeedcap_min", "");
 	registercvar("cl_jumpspeedcap_max", "");
 
-	registercvar("cl_multijump", "0");
+	registercvar("cl_multijump", "1");
 
 	registercvar("cl_spawn_near_teammate", "1");
 
