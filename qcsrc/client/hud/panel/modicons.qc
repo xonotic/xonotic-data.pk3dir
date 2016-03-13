@@ -485,6 +485,16 @@ float race_status_time;
 int race_status_prev;
 string race_status_name_prev;
 
+// Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
+int race_CheckName(string net_name)
+{
+	int i;
+	for (i=RANKINGS_CNT-1;i>=0;--i)
+		if(grecordholder[i] == net_name)
+			return i+1;
+	return 0;
+}
+
 void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, vector textSize, float f)
 {
 	drawstring_aspect(pos, text, textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
