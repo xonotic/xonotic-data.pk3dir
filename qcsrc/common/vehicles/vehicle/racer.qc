@@ -31,67 +31,75 @@ REGISTER_VEHICLE(RACER, NEW(Racer));
 #ifdef SVQC
 #include <common/triggers/trigger/impulse.qh>
 
-bool autocvar_g_vehicle_racer;
+bool autocvar_g_vehicle_racer = true;
 
-float autocvar_g_vehicle_racer_speed_afterburn;
-float autocvar_g_vehicle_racer_afterburn_cost;
+float autocvar_g_vehicle_racer_speed_afterburn = 3000;
+// energy consumed per second
+float autocvar_g_vehicle_racer_afterburn_cost = 100;
 
-float autocvar_g_vehicle_racer_waterburn_cost;
-float autocvar_g_vehicle_racer_waterburn_speed;
+float autocvar_g_vehicle_racer_waterburn_cost = 5;
+float autocvar_g_vehicle_racer_waterburn_speed = 750;
 
-float autocvar_g_vehicle_racer_water_speed_forward;
-float autocvar_g_vehicle_racer_water_speed_strafe;
+float autocvar_g_vehicle_racer_water_speed_forward = 600;
+float autocvar_g_vehicle_racer_water_speed_strafe = 600;
 
 float autocvar_g_vehicle_racer_pitchlimit = 30;
 
 float autocvar_g_vehicle_racer_water_downforce = 0.03;
 float autocvar_g_vehicle_racer_water_upforcedamper = 15;
 
-float autocvar_g_vehicle_racer_anglestabilizer;
-float autocvar_g_vehicle_racer_downforce;
+float autocvar_g_vehicle_racer_anglestabilizer = 1.75;
+float autocvar_g_vehicle_racer_downforce = 0.01;
 
-float autocvar_g_vehicle_racer_speed_forward;
-float autocvar_g_vehicle_racer_speed_strafe;
-float autocvar_g_vehicle_racer_springlength;
-float autocvar_g_vehicle_racer_upforcedamper;
-float autocvar_g_vehicle_racer_friction;
+float autocvar_g_vehicle_racer_speed_forward = 650;
+float autocvar_g_vehicle_racer_speed_strafe = 650;
+float autocvar_g_vehicle_racer_springlength = 70;
+float autocvar_g_vehicle_racer_upforcedamper = 10;
+float autocvar_g_vehicle_racer_friction = 0.45;
 
 float autocvar_g_vehicle_racer_water_time = 5;
 
-float autocvar_g_vehicle_racer_hovertype;
-float autocvar_g_vehicle_racer_hoverpower;
+float autocvar_g_vehicle_racer_collision_multiplier = 0.05;
 
-float autocvar_g_vehicle_racer_turnroll;
-float autocvar_g_vehicle_racer_turnspeed;
-float autocvar_g_vehicle_racer_pitchspeed;
+// 0 = hover, != 0 = maglev
+int autocvar_g_vehicle_racer_hovertype = 0;
+// NOTE!! x 4 (4 engines)
+float autocvar_g_vehicle_racer_hoverpower = 8000;
 
-float autocvar_g_vehicle_racer_energy;
-float autocvar_g_vehicle_racer_energy_regen;
-float autocvar_g_vehicle_racer_energy_regen_pause;
+float autocvar_g_vehicle_racer_turnroll = 30;
+float autocvar_g_vehicle_racer_turnspeed = 220;
+float autocvar_g_vehicle_racer_pitchspeed = 125;
 
-float autocvar_g_vehicle_racer_health;
-float autocvar_g_vehicle_racer_health_regen;
-float autocvar_g_vehicle_racer_health_regen_pause;
+float autocvar_g_vehicle_racer_energy = 100;
+float autocvar_g_vehicle_racer_energy_regen = 50;
+float autocvar_g_vehicle_racer_energy_regen_pause = 1;
 
-float autocvar_g_vehicle_racer_shield;
-float autocvar_g_vehicle_racer_shield_regen;
-float autocvar_g_vehicle_racer_shield_regen_pause;
+float autocvar_g_vehicle_racer_health = 200;
+float autocvar_g_vehicle_racer_health_regen = 0;
+float autocvar_g_vehicle_racer_health_regen_pause = 0;
 
-float autocvar_g_vehicle_racer_rocket_locktarget;
-float autocvar_g_vehicle_racer_rocket_locking_time;
-float autocvar_g_vehicle_racer_rocket_locking_releasetime;
-float autocvar_g_vehicle_racer_rocket_locked_time;
+float autocvar_g_vehicle_racer_shield = 100;
+float autocvar_g_vehicle_racer_shield_regen = 30;
+float autocvar_g_vehicle_racer_shield_regen_pause = 1;
 
-float autocvar_g_vehicle_racer_respawntime;
+bool autocvar_g_vehicle_racer_rocket_locktarget = true;
+float autocvar_g_vehicle_racer_rocket_locking_time = 0.9;
+float autocvar_g_vehicle_racer_rocket_locking_releasetime = 0.5;
+float autocvar_g_vehicle_racer_rocket_locked_time = 4;
 
-float autocvar_g_vehicle_racer_blowup_radius;
-float autocvar_g_vehicle_racer_blowup_coredamage;
-float autocvar_g_vehicle_racer_blowup_edgedamage;
-float autocvar_g_vehicle_racer_blowup_forceintensity;
+float autocvar_g_vehicle_racer_respawntime = 35;
 
-float autocvar_g_vehicle_racer_bouncefactor;
-float autocvar_g_vehicle_racer_bouncestop;
-vector autocvar_g_vehicle_racer_bouncepain;
+float autocvar_g_vehicle_racer_blowup_radius = 250;
+float autocvar_g_vehicle_racer_blowup_coredamage = 250;
+float autocvar_g_vehicle_racer_blowup_edgedamage = 15;
+float autocvar_g_vehicle_racer_blowup_forceintensity = 250;
+
+// Factor of old velocity to keep after collision
+float autocvar_g_vehicle_racer_bouncefactor = 0.25;
+// if != 0, New veloctiy after bounce = 0 if new velocity < this
+float autocvar_g_vehicle_racer_bouncestop = 0;
+// "minspeed_for_pain speedchange_to_pain_factor max_damage"
+vector autocvar_g_vehicle_racer_bouncepain = '60 0.75 300';
 
 .float racer_watertime;
 

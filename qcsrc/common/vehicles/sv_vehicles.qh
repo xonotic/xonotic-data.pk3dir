@@ -5,17 +5,18 @@
 #include "../turrets/sv_turrets.qh"
 
 // vehicle cvars
-float autocvar_g_vehicles;
-float autocvar_g_vehicles_enter;
-float autocvar_g_vehicles_enter_radius;
-float autocvar_g_vehicles_steal;
-float autocvar_g_vehicles_steal_show_waypoint;
-float autocvar_g_vehicles_crush_dmg;
-float autocvar_g_vehicles_crush_force;
-float autocvar_g_vehicles_delayspawn;
-float autocvar_g_vehicles_delayspawn_jitter;
+bool autocvar_g_vehicles = true;
+AUTOCVAR(g_vehicles_enter, bool, false, "require pressing use key to enter a vehicle");
+float autocvar_g_vehicles_enter_radius = 250;
+AUTOCVAR(g_vehicles_steal, bool, true, "allow stealing enemy vehicles in teamplay modes");
+AUTOCVAR(g_vehicles_steal_show_waypoint, bool, true, "show a waypoint above the thief");
+float autocvar_g_vehicles_crush_dmg = 70;
+float autocvar_g_vehicles_crush_force = 50;
+bool autocvar_g_vehicles_delayspawn = true;
+float autocvar_g_vehicles_delayspawn_jitter = 10;
 float autocvar_g_vehicles_allow_bots;
-float autocvar_g_vehicles_teams;
+
+AUTOCVAR(g_vehicles_teams, bool, true, "allow team specific vehicles");
 float autocvar_g_vehicles_teleportable;
 float autocvar_g_vehicles_vortex_damagerate = 0.5;
 float autocvar_g_vehicles_machinegun_damagerate = 0.5;

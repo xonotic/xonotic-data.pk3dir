@@ -34,67 +34,67 @@ const float BRG_END = 8;
 #include "bumblebee_weapons.qc"
 
 #ifdef SVQC
-float autocvar_g_vehicle_bumblebee_speed_forward;
-float autocvar_g_vehicle_bumblebee_speed_strafe;
-float autocvar_g_vehicle_bumblebee_speed_up;
-float autocvar_g_vehicle_bumblebee_speed_down;
-float autocvar_g_vehicle_bumblebee_turnspeed;
-float autocvar_g_vehicle_bumblebee_pitchspeed;
-float autocvar_g_vehicle_bumblebee_pitchlimit;
-float autocvar_g_vehicle_bumblebee_friction;
+float autocvar_g_vehicle_bumblebee_respawntime = 60;
 
-float autocvar_g_vehicle_bumblebee_energy;
-float autocvar_g_vehicle_bumblebee_energy_regen;
-float autocvar_g_vehicle_bumblebee_energy_regen_pause;
+float autocvar_g_vehicle_bumblebee_speed_forward = 350;
+float autocvar_g_vehicle_bumblebee_speed_strafe = 350;
+float autocvar_g_vehicle_bumblebee_speed_up = 350;
+float autocvar_g_vehicle_bumblebee_speed_down = 350;
+float autocvar_g_vehicle_bumblebee_turnspeed = 120;
+float autocvar_g_vehicle_bumblebee_pitchspeed = 60;
+float autocvar_g_vehicle_bumblebee_pitchlimit = 60;
+float autocvar_g_vehicle_bumblebee_friction = 0.5;
 
-float autocvar_g_vehicle_bumblebee_health;
-float autocvar_g_vehicle_bumblebee_health_regen;
-float autocvar_g_vehicle_bumblebee_health_regen_pause;
+float autocvar_g_vehicle_bumblebee_energy = 500;
+float autocvar_g_vehicle_bumblebee_energy_regen = 50;
+float autocvar_g_vehicle_bumblebee_energy_regen_pause = 1;
 
-float autocvar_g_vehicle_bumblebee_shield;
-float autocvar_g_vehicle_bumblebee_shield_regen;
-float autocvar_g_vehicle_bumblebee_shield_regen_pause;
+float autocvar_g_vehicle_bumblebee_health = 1000;
+float autocvar_g_vehicle_bumblebee_health_regen = 65;
+float autocvar_g_vehicle_bumblebee_health_regen_pause = 10;
 
-float autocvar_g_vehicle_bumblebee_cannon_ammo;
-float autocvar_g_vehicle_bumblebee_cannon_ammo_regen;
-float autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause;
+float autocvar_g_vehicle_bumblebee_shield = 400;
+float autocvar_g_vehicle_bumblebee_shield_regen = 150;
+float autocvar_g_vehicle_bumblebee_shield_regen_pause = 0.75;
+
+float autocvar_g_vehicle_bumblebee_cannon_ammo = 100;
+float autocvar_g_vehicle_bumblebee_cannon_ammo_regen = 100;
+float autocvar_g_vehicle_bumblebee_cannon_ammo_regen_pause = 1;
 
 float autocvar_g_vehicle_bumblebee_cannon_lock = 0;
 
-float autocvar_g_vehicle_bumblebee_cannon_turnspeed;
-float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down;
-float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up;
-float autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
-float autocvar_g_vehicle_bumblebee_cannon_turnlimit_out;
+float autocvar_g_vehicle_bumblebee_cannon_turnspeed = 160;
+float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down = 60;
+float autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up = 60;
+float autocvar_g_vehicle_bumblebee_cannon_turnlimit_in = 20;
+float autocvar_g_vehicle_bumblebee_cannon_turnlimit_out = 80;
 
 
-float autocvar_g_vehicle_bumblebee_raygun_turnspeed;
-float autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down;
-float autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up;
-float autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides;
+float autocvar_g_vehicle_bumblebee_raygun_turnspeed = 180;
+float autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down = 20;
+float autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up = 5;
+float autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides = 35;
 
-float autocvar_g_vehicle_bumblebee_raygun_range;
-float autocvar_g_vehicle_bumblebee_raygun_dps;
-float autocvar_g_vehicle_bumblebee_raygun_aps;
-float autocvar_g_vehicle_bumblebee_raygun_fps;
+bool autocvar_g_vehicle_bumblebee_raygun = false;
+float autocvar_g_vehicle_bumblebee_raygun_range = 2048;
+float autocvar_g_vehicle_bumblebee_raygun_dps = 250;
+float autocvar_g_vehicle_bumblebee_raygun_aps = 100;
+float autocvar_g_vehicle_bumblebee_raygun_fps = 100;
 
-float autocvar_g_vehicle_bumblebee_raygun;
-float autocvar_g_vehicle_bumblebee_healgun_hps;
-float autocvar_g_vehicle_bumblebee_healgun_hmax;
-float autocvar_g_vehicle_bumblebee_healgun_aps;
-float autocvar_g_vehicle_bumblebee_healgun_amax;
-float autocvar_g_vehicle_bumblebee_healgun_sps;
-float autocvar_g_vehicle_bumblebee_healgun_locktime;
+float autocvar_g_vehicle_bumblebee_healgun_hps = 150;
+float autocvar_g_vehicle_bumblebee_healgun_hmax = 100;
+float autocvar_g_vehicle_bumblebee_healgun_aps = 75;
+float autocvar_g_vehicle_bumblebee_healgun_amax = 100;
+float autocvar_g_vehicle_bumblebee_healgun_sps = 100;
+float autocvar_g_vehicle_bumblebee_healgun_locktime = 2.5;
 
-float autocvar_g_vehicle_bumblebee_respawntime;
+float autocvar_g_vehicle_bumblebee_blowup_radius = 500;
+float autocvar_g_vehicle_bumblebee_blowup_coredamage = 500;
+float autocvar_g_vehicle_bumblebee_blowup_edgedamage = 100;
+float autocvar_g_vehicle_bumblebee_blowup_forceintensity = 600;
+vector autocvar_g_vehicle_bumblebee_bouncepain = '1 100 200';
 
-float autocvar_g_vehicle_bumblebee_blowup_radius;
-float autocvar_g_vehicle_bumblebee_blowup_coredamage;
-float autocvar_g_vehicle_bumblebee_blowup_edgedamage;
-float autocvar_g_vehicle_bumblebee_blowup_forceintensity;
-vector autocvar_g_vehicle_bumblebee_bouncepain;
-
-bool autocvar_g_vehicle_bumblebee = 0;
+bool autocvar_g_vehicle_bumblebee = true;
 
 float bumblebee_gunner_frame()
 {SELFPARAM();

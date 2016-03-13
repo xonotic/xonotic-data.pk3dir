@@ -31,48 +31,50 @@ REGISTER_VEHICLE(RAPTOR, NEW(Raptor));
 
 #ifdef SVQC
 
-bool autocvar_g_vehicle_raptor;
+bool autocvar_g_vehicle_raptor = true;
 
-float autocvar_g_vehicle_raptor_respawntime;
-float autocvar_g_vehicle_raptor_takeofftime;
+float autocvar_g_vehicle_raptor_respawntime = 40;
+float autocvar_g_vehicle_raptor_takeofftime = 1.5;
 
-float autocvar_g_vehicle_raptor_movestyle;
-float autocvar_g_vehicle_raptor_turnspeed;
-float autocvar_g_vehicle_raptor_pitchspeed;
-float autocvar_g_vehicle_raptor_pitchlimit;
+// 0: go where player aims, +forward etc relative to aim angles
+// 1: ignore aim for up/down movement. +forward always moved forward, +jump always moves up
+int autocvar_g_vehicle_raptor_movestyle = 1;
+float autocvar_g_vehicle_raptor_turnspeed = 200;
+float autocvar_g_vehicle_raptor_pitchspeed = 50;
+float autocvar_g_vehicle_raptor_pitchlimit = 45;
 
-float autocvar_g_vehicle_raptor_speed_forward;
-float autocvar_g_vehicle_raptor_speed_strafe;
-float autocvar_g_vehicle_raptor_speed_up;
-float autocvar_g_vehicle_raptor_speed_down;
-float autocvar_g_vehicle_raptor_friction;
+float autocvar_g_vehicle_raptor_speed_forward = 1700;
+float autocvar_g_vehicle_raptor_speed_strafe = 900;
+float autocvar_g_vehicle_raptor_speed_up = 1700;
+float autocvar_g_vehicle_raptor_speed_down = 1700;
+float autocvar_g_vehicle_raptor_friction = 2;
 
-float autocvar_g_vehicle_raptor_cannon_turnspeed;
-float autocvar_g_vehicle_raptor_cannon_turnlimit;
-float autocvar_g_vehicle_raptor_cannon_pitchlimit_up;
-float autocvar_g_vehicle_raptor_cannon_pitchlimit_down;
+float autocvar_g_vehicle_raptor_cannon_turnspeed = 120;
+float autocvar_g_vehicle_raptor_cannon_turnlimit = 20;
+float autocvar_g_vehicle_raptor_cannon_pitchlimit_up = 12;
+float autocvar_g_vehicle_raptor_cannon_pitchlimit_down = 32;
 
-float autocvar_g_vehicle_raptor_cannon_locktarget;
-float autocvar_g_vehicle_raptor_cannon_locking_time;
-float autocvar_g_vehicle_raptor_cannon_locking_releasetime;
-float autocvar_g_vehicle_raptor_cannon_locked_time;
-float autocvar_g_vehicle_raptor_cannon_predicttarget;
+float autocvar_g_vehicle_raptor_cannon_locktarget = 0;
+float autocvar_g_vehicle_raptor_cannon_locking_time = 0.2;
+float autocvar_g_vehicle_raptor_cannon_locking_releasetime = 0.45;
+float autocvar_g_vehicle_raptor_cannon_locked_time = 1;
+float autocvar_g_vehicle_raptor_cannon_predicttarget = 1;
 
-float autocvar_g_vehicle_raptor_energy;
-float autocvar_g_vehicle_raptor_energy_regen;
-float autocvar_g_vehicle_raptor_energy_regen_pause;
+float autocvar_g_vehicle_raptor_energy = 100;
+float autocvar_g_vehicle_raptor_energy_regen = 25;
+float autocvar_g_vehicle_raptor_energy_regen_pause = 0.25;
 
-float autocvar_g_vehicle_raptor_health;
-float autocvar_g_vehicle_raptor_health_regen;
-float autocvar_g_vehicle_raptor_health_regen_pause;
+float autocvar_g_vehicle_raptor_health = 150;
+float autocvar_g_vehicle_raptor_health_regen = 0;
+float autocvar_g_vehicle_raptor_health_regen_pause = 0;
 
-float autocvar_g_vehicle_raptor_shield;
-float autocvar_g_vehicle_raptor_shield_regen;
-float autocvar_g_vehicle_raptor_shield_regen_pause;
+float autocvar_g_vehicle_raptor_shield = 75;
+float autocvar_g_vehicle_raptor_shield_regen = 25;
+float autocvar_g_vehicle_raptor_shield_regen_pause = 1.5;
 
-float autocvar_g_vehicle_raptor_bouncefactor;
-float autocvar_g_vehicle_raptor_bouncestop;
-vector autocvar_g_vehicle_raptor_bouncepain;
+float autocvar_g_vehicle_raptor_bouncefactor = 0.2;
+float autocvar_g_vehicle_raptor_bouncestop = 0;
+vector autocvar_g_vehicle_raptor_bouncepain = '1 4 1000';
 
 .entity bomb1;
 .entity bomb2;

@@ -33,23 +33,23 @@ REGISTER_WEAPON(RAPTOR_FLARE, NEW(RaptorFlare));
 
 #ifdef SVQC
 
-float autocvar_g_vehicle_raptor_cannon_cost;
-float autocvar_g_vehicle_raptor_cannon_damage;
-float autocvar_g_vehicle_raptor_cannon_radius;
-float autocvar_g_vehicle_raptor_cannon_refire;
-float autocvar_g_vehicle_raptor_cannon_speed;
-float autocvar_g_vehicle_raptor_cannon_spread;
-float autocvar_g_vehicle_raptor_cannon_force;
+float autocvar_g_vehicle_raptor_cannon_cost = 1;
+float autocvar_g_vehicle_raptor_cannon_damage = 10;
+float autocvar_g_vehicle_raptor_cannon_radius = 60;
+float autocvar_g_vehicle_raptor_cannon_refire = 0.03;
+float autocvar_g_vehicle_raptor_cannon_speed = 24000;
+float autocvar_g_vehicle_raptor_cannon_spread = 0.01;
+float autocvar_g_vehicle_raptor_cannon_force = 25;
 
-float autocvar_g_vehicle_raptor_bomblets;
-float autocvar_g_vehicle_raptor_bomblet_alt;
-float autocvar_g_vehicle_raptor_bomblet_time;
-float autocvar_g_vehicle_raptor_bomblet_damage;
-float autocvar_g_vehicle_raptor_bomblet_spread;
-float autocvar_g_vehicle_raptor_bomblet_edgedamage;
-float autocvar_g_vehicle_raptor_bomblet_radius;
-float autocvar_g_vehicle_raptor_bomblet_force;
-float autocvar_g_vehicle_raptor_bomblet_explode_delay;
+float autocvar_g_vehicle_raptor_bomblets = 8;
+float autocvar_g_vehicle_raptor_bomblet_alt = 750;
+float autocvar_g_vehicle_raptor_bomblet_time = 0.5;
+float autocvar_g_vehicle_raptor_bomblet_damage = 55;
+float autocvar_g_vehicle_raptor_bomblet_spread = 0.4;
+float autocvar_g_vehicle_raptor_bomblet_edgedamage = 25;
+float autocvar_g_vehicle_raptor_bomblet_radius = 350;
+float autocvar_g_vehicle_raptor_bomblet_force = 150;
+float autocvar_g_vehicle_raptor_bomblet_explode_delay = 0.4;
 
 METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -85,7 +85,7 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
     return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_raptor_cannon_cost;
 }
 
-float autocvar_g_vehicle_raptor_bombs_refire;
+float autocvar_g_vehicle_raptor_bombs_refire = 5;
 
 void raptor_bombdrop();
 METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -100,10 +100,10 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
     }
 }
 
-float autocvar_g_vehicle_raptor_flare_refire;
-float autocvar_g_vehicle_raptor_flare_lifetime;
-float autocvar_g_vehicle_raptor_flare_chase;
-float autocvar_g_vehicle_raptor_flare_range;
+float autocvar_g_vehicle_raptor_flare_refire = 5;
+float autocvar_g_vehicle_raptor_flare_lifetime = 10;
+float autocvar_g_vehicle_raptor_flare_chase = 0.9;
+float autocvar_g_vehicle_raptor_flare_range = 2000;
 
 void raptor_flare_think();
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);

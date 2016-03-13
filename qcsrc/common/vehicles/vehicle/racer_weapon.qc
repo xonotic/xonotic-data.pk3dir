@@ -13,7 +13,6 @@ REGISTER_WEAPON(RACER, NEW(RacerAttack));
 
 // TODO: move into implementation
 #ifdef SVQC
-float autocvar_g_vehicle_racer_rocket_refire;
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
 #endif
 
@@ -23,23 +22,24 @@ void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
 
 #ifdef SVQC
 
-float autocvar_g_vehicle_racer_cannon_cost;
-float autocvar_g_vehicle_racer_cannon_damage;
-float autocvar_g_vehicle_racer_cannon_radius;
-float autocvar_g_vehicle_racer_cannon_refire;
-float autocvar_g_vehicle_racer_cannon_speed;
-float autocvar_g_vehicle_racer_cannon_spread;
-float autocvar_g_vehicle_racer_cannon_force;
+float autocvar_g_vehicle_racer_cannon_cost = 2;
+float autocvar_g_vehicle_racer_cannon_damage = 15;
+float autocvar_g_vehicle_racer_cannon_radius = 100;
+float autocvar_g_vehicle_racer_cannon_refire = 0.05;
+float autocvar_g_vehicle_racer_cannon_speed = 15000;
+float autocvar_g_vehicle_racer_cannon_spread = 0.0125;
+float autocvar_g_vehicle_racer_cannon_force = 50;
 
-float autocvar_g_vehicle_racer_rocket_accel;
-float autocvar_g_vehicle_racer_rocket_damage;
-float autocvar_g_vehicle_racer_rocket_radius;
-float autocvar_g_vehicle_racer_rocket_force;
-float autocvar_g_vehicle_racer_rocket_speed;
-float autocvar_g_vehicle_racer_rocket_turnrate;
+float autocvar_g_vehicle_racer_rocket_accel = 1600;
+float autocvar_g_vehicle_racer_rocket_damage = 100;
+float autocvar_g_vehicle_racer_rocket_radius = 125;
+float autocvar_g_vehicle_racer_rocket_force = 350;
+float autocvar_g_vehicle_racer_rocket_speed = 900;
+float autocvar_g_vehicle_racer_rocket_turnrate = 0.2;
+float autocvar_g_vehicle_racer_rocket_refire = 3;
 
-float autocvar_g_vehicle_racer_rocket_climbspeed;
-float autocvar_g_vehicle_racer_rocket_locked_maxangle;
+float autocvar_g_vehicle_racer_rocket_climbspeed = 1600;
+float autocvar_g_vehicle_racer_rocket_locked_maxangle = 1.8;
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
 METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

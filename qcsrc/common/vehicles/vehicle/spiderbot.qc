@@ -36,37 +36,38 @@ const int SBRM_LAST = 3;
 #include "spiderbot_weapons.qc"
 
 #ifdef SVQC
-bool autocvar_g_vehicle_spiderbot;
+bool autocvar_g_vehicle_spiderbot = true;
 
-float autocvar_g_vehicle_spiderbot_respawntime;
+float autocvar_g_vehicle_spiderbot_respawntime = 45;
 
-float autocvar_g_vehicle_spiderbot_speed_stop;
-float autocvar_g_vehicle_spiderbot_speed_strafe;
-float autocvar_g_vehicle_spiderbot_speed_walk;
+float autocvar_g_vehicle_spiderbot_speed_stop = 50;
+float autocvar_g_vehicle_spiderbot_speed_strafe = 400;
+float autocvar_g_vehicle_spiderbot_speed_walk = 500;
 float autocvar_g_vehicle_spiderbot_speed_run = 700;
-float autocvar_g_vehicle_spiderbot_turnspeed;
-float autocvar_g_vehicle_spiderbot_turnspeed_strafe;
-float autocvar_g_vehicle_spiderbot_movement_inertia;
+float autocvar_g_vehicle_spiderbot_turnspeed = 90;
+float autocvar_g_vehicle_spiderbot_turnspeed_strafe = 300;
+float autocvar_g_vehicle_spiderbot_movement_inertia = 0.15;
 
-float autocvar_g_vehicle_spiderbot_springlength;
-float autocvar_g_vehicle_spiderbot_springup;
-float autocvar_g_vehicle_spiderbot_springblend;
-float autocvar_g_vehicle_spiderbot_tiltlimit;
+float autocvar_g_vehicle_spiderbot_springlength = 150;
+float autocvar_g_vehicle_spiderbot_springup = 20;
+float autocvar_g_vehicle_spiderbot_springblend = 0.1;
+float autocvar_g_vehicle_spiderbot_tiltlimit = 90;
 
-float autocvar_g_vehicle_spiderbot_head_pitchlimit_down;
-float autocvar_g_vehicle_spiderbot_head_pitchlimit_up;
-float autocvar_g_vehicle_spiderbot_head_turnlimit;
-float autocvar_g_vehicle_spiderbot_head_turnspeed;
+float autocvar_g_vehicle_spiderbot_head_pitchlimit_down = -20;
+float autocvar_g_vehicle_spiderbot_head_pitchlimit_up = 30;
+float autocvar_g_vehicle_spiderbot_head_turnlimit = 90;
+float autocvar_g_vehicle_spiderbot_head_turnspeed = 110;
 
-int autocvar_g_vehicle_spiderbot_health;
-float autocvar_g_vehicle_spiderbot_health_regen;
-float autocvar_g_vehicle_spiderbot_health_regen_pause;
+int autocvar_g_vehicle_spiderbot_health = 800;
+float autocvar_g_vehicle_spiderbot_health_regen = 10;
+float autocvar_g_vehicle_spiderbot_health_regen_pause = 5;
 
-int autocvar_g_vehicle_spiderbot_shield;
-float autocvar_g_vehicle_spiderbot_shield_regen;
-float autocvar_g_vehicle_spiderbot_shield_regen_pause;
+int autocvar_g_vehicle_spiderbot_shield = 200;
+float autocvar_g_vehicle_spiderbot_shield_regen = 25;
+float autocvar_g_vehicle_spiderbot_shield_regen_pause = 0.35;
 
-vector autocvar_g_vehicle_spiderbot_bouncepain;
+// 'minspeed_for_pain speedchange_to_pain_factor max_damage'
+vector autocvar_g_vehicle_spiderbot_bouncepain = '0 0 0';
 
 .float jump_delay;
 float spiderbot_frame()

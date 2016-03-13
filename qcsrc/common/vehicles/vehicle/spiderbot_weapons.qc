@@ -9,28 +9,30 @@
 
 #ifdef SVQC
 
-float autocvar_g_vehicle_spiderbot_minigun_damage;
-float autocvar_g_vehicle_spiderbot_minigun_refire;
-float autocvar_g_vehicle_spiderbot_minigun_spread;
-int autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
-int autocvar_g_vehicle_spiderbot_minigun_ammo_max;
-int autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
-float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause;
-float autocvar_g_vehicle_spiderbot_minigun_force;
-float autocvar_g_vehicle_spiderbot_minigun_solidpenetration;
+// 400 (x2) DPS
+float autocvar_g_vehicle_spiderbot_minigun_damage = 24;
+float autocvar_g_vehicle_spiderbot_minigun_refire = 0.06;
+float autocvar_g_vehicle_spiderbot_minigun_spread = 0.015;
+int autocvar_g_vehicle_spiderbot_minigun_ammo_cost = 1;
+int autocvar_g_vehicle_spiderbot_minigun_ammo_max = 100;
+int autocvar_g_vehicle_spiderbot_minigun_ammo_regen = 40;
+float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause = 1;
+float autocvar_g_vehicle_spiderbot_minigun_force = 9;
+float autocvar_g_vehicle_spiderbot_minigun_solidpenetration = 32;
 
-float autocvar_g_vehicle_spiderbot_rocket_damage;
-float autocvar_g_vehicle_spiderbot_rocket_force;
-float autocvar_g_vehicle_spiderbot_rocket_radius;
-float autocvar_g_vehicle_spiderbot_rocket_speed;
-float autocvar_g_vehicle_spiderbot_rocket_spread;
-float autocvar_g_vehicle_spiderbot_rocket_refire;
-float autocvar_g_vehicle_spiderbot_rocket_refire2;
-float autocvar_g_vehicle_spiderbot_rocket_reload;
-float autocvar_g_vehicle_spiderbot_rocket_health;
-float autocvar_g_vehicle_spiderbot_rocket_noise;
-float autocvar_g_vehicle_spiderbot_rocket_turnrate;
-float autocvar_g_vehicle_spiderbot_rocket_lifetime;
+float autocvar_g_vehicle_spiderbot_rocket_damage = 50;
+float autocvar_g_vehicle_spiderbot_rocket_force = 150;
+float autocvar_g_vehicle_spiderbot_rocket_radius = 250;
+float autocvar_g_vehicle_spiderbot_rocket_speed = 3500;
+float autocvar_g_vehicle_spiderbot_rocket_spread = 0.05;
+float autocvar_g_vehicle_spiderbot_rocket_refire = 0.1;
+// volley
+float autocvar_g_vehicle_spiderbot_rocket_refire2 = 0.025;
+float autocvar_g_vehicle_spiderbot_rocket_reload = 4;
+float autocvar_g_vehicle_spiderbot_rocket_health = 100;
+float autocvar_g_vehicle_spiderbot_rocket_noise = 0.2;
+float autocvar_g_vehicle_spiderbot_rocket_turnrate = 0.25;
+float autocvar_g_vehicle_spiderbot_rocket_lifetime = 20;
 
 void spiderbot_rocket_artillery()
 {SELFPARAM();

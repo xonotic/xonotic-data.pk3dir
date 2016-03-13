@@ -11,13 +11,13 @@ REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
 
 #ifdef SVQC
 
-float autocvar_g_vehicle_bumblebee_cannon_cost;
-float autocvar_g_vehicle_bumblebee_cannon_damage;
-float autocvar_g_vehicle_bumblebee_cannon_radius;
-float autocvar_g_vehicle_bumblebee_cannon_refire;
-float autocvar_g_vehicle_bumblebee_cannon_speed;
-float autocvar_g_vehicle_bumblebee_cannon_spread;
-float autocvar_g_vehicle_bumblebee_cannon_force;
+float autocvar_g_vehicle_bumblebee_cannon_cost = 2;
+float autocvar_g_vehicle_bumblebee_cannon_damage = 60;
+float autocvar_g_vehicle_bumblebee_cannon_radius = 225;
+float autocvar_g_vehicle_bumblebee_cannon_refire = 0.2;
+float autocvar_g_vehicle_bumblebee_cannon_speed = 20000;
+float autocvar_g_vehicle_bumblebee_cannon_spread = 0.02;
+float autocvar_g_vehicle_bumblebee_cannon_force = -35;
 
 bool bumble_raygun_send(entity this, entity to, int sf);
 
