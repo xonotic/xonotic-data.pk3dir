@@ -168,7 +168,10 @@ void PutObserverInServer()
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver);
 	PlayerState_detach(this);
 
-	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	if (IS_PLAYER(this) && this.health >= 1) {
+        // despawn effect
+		Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+    }
 
     {
         entity spot = SelectSpawnPoint(true);
@@ -206,8 +209,13 @@ void PutObserverInServer()
 
 	WaypointSprite_PlayerDead(this);
 
-	if (!mutator_returnvalue)  // mutator prevents resetting teams
+	if (mutator_returnvalue) {
+	    // mutator prevents resetting teams+score
+	} else {
 		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
+        this.frags = FRAGS_SPECTATOR;
+        PlayerScore_Clear(this);  // clear scores when needed
+    }
 
 	if (this.killcount != FRAGS_SPECTATOR)
 	{
@@ -222,12 +230,9 @@ void PutObserverInServer()
 			this.just_joined = false;
 	}
 
-	PlayerScore_Clear(this); // clear scores when needed
-
 	accuracy_resend(this);
 
 	this.spectatortime = time;
-    this.frags = FRAGS_SPECTATOR;
 	this.bot_attack = false;
     this.hud = HUD_NORMAL;
 	this.classname = STR_OBSERVER;
