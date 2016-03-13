@@ -190,6 +190,7 @@ void PutObserverInServer()
         }
         // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
         // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+        setmodel(this, MDL_Null);
         setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
     }
@@ -274,9 +275,6 @@ void PutObserverInServer()
 
 	this.items = 0;
 	this.weapons = '0 0 0';
-	this.model = "";
-	FixPlayermodel(this);
-	setmodel(this, MDL_Null);
 	this.drawonlytoclient = this;
 
 	this.weaponname = "";
