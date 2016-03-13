@@ -27,19 +27,6 @@
 //  Last updated: February 19th, 2012
 // =========================================================
 
-// used by generic commands for better help/usage information
-string GetProgramCommandPrefix()
-{
-	#ifdef SVQC
-	return "sv_cmd";
-	#endif
-	#ifdef CSQC
-	return "cl_cmd";
-	#endif
-	#ifdef MENUQC
-	return "menu_cmd";
-	#endif
-}
 
 // used by curl command
 void Curl_URI_Get_Callback(int id, float status, string data)
