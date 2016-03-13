@@ -69,8 +69,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	// now move the shotorg forward as much as requested if possible
 	if(antilag)
 	{
-		if(ent.antilag_debug)
-			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent, ent.antilag_debug);
+		if(CS(ent).antilag_debug)
+			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent, CS(ent).antilag_debug);
 		else
 			tracebox_antilag(ent, w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
 	}
@@ -227,8 +227,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	o = self;
 	while (1)
 	{
-		if(self.antilag_debug)
-			WarpZone_traceline_antilag (self, start, end, false, o, self.antilag_debug);
+		if(CS(self).antilag_debug)
+			WarpZone_traceline_antilag (self, start, end, false, o, CS(self).antilag_debug);
 		else
 			WarpZone_traceline_antilag (self, start, end, false, o, ANTILAG_LATENCY(self));
 		if(o && WarpZone_trace_firstzone)

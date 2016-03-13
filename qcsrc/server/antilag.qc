@@ -23,23 +23,23 @@ void antilag_record(entity e, float t)
     if(e.vehicle)
         antilag_record(e.vehicle, t);
 
-	if(time < CS(e).antilag_times[e.antilag_index])
+	if(time < CS(e).antilag_times[CS(e).antilag_index])
 		return;
-	e.antilag_index = e.antilag_index + 1;
-	if(e.antilag_index >= ANTILAG_MAX_ORIGINS)
-		e.antilag_index = 0;
-	CS(e).antilag_times[e.antilag_index] = t;
-	CS(e).antilag_origins[e.antilag_index] = e.origin;
+	CS(e).antilag_index += 1;
+	if(CS(e).antilag_index >= ANTILAG_MAX_ORIGINS)
+		CS(e).antilag_index = 0;
+	CS(e).antilag_times[CS(e).antilag_index] = t;
+	CS(e).antilag_origins[CS(e).antilag_index] = e.origin;
 
-	if(e.antilag_debug)
-		te_spark(antilag_takebackorigin(e, t - e.antilag_debug), '0 0 0', 32);
+	if(CS(e).antilag_debug)
+		te_spark(antilag_takebackorigin(e, t - CS(e).antilag_debug), '0 0 0', 32);
 
 }
 
 // finds the index BEFORE t
 float antilag_find(entity e, float t)
 {
-	for(int i = e.antilag_index; i > 0; --i)
+	for(int i = CS(e).antilag_index; i > 0; --i)
 		if(CS(e).antilag_times[i] >= t)
 			if(CS(e).antilag_times[i - 1] < t)
 				return i - 1;
@@ -48,7 +48,7 @@ float antilag_find(entity e, float t)
 		if(CS(e).antilag_times[ANTILAG_MAX_ORIGINS - 1] < t)
 			return ANTILAG_MAX_ORIGINS - 1;
 
-	for(int i = ANTILAG_MAX_ORIGINS - 1; i > e.antilag_index + 1; --i)
+	for(int i = ANTILAG_MAX_ORIGINS - 1; i > CS(e).antilag_index + 1; --i)
 		if(CS(e).antilag_times[i] >= t)
 			if(CS(e).antilag_times[i - 1] < t)
 				return i - 1;
@@ -63,8 +63,8 @@ vector antilag_takebackorigin(entity e, float t)
 	if (i0 < 0)
 	{
 		// IN THE PRESENT
-		if(e.antilag_takenback)
-			return e.antilag_saved_origin;
+		if(CS(e).antilag_takenback)
+			return CS(e).antilag_saved_origin;
 		else
 			return e.origin;
 	}
@@ -95,12 +95,12 @@ void antilag_takeback(entity e, float t)
 	if(e.vehicle)
 		antilag_takeback(e.vehicle, t);
 
-	if(!e.antilag_takenback)
-		e.antilag_saved_origin = e.origin;
+	if(!CS(e).antilag_takenback)
+		CS(e).antilag_saved_origin = e.origin;
 
 	vector org = antilag_takebackorigin(e, t);
 	setorigin(e, org);
-	e.antilag_takenback = true;
+	CS(e).antilag_takenback = true;
 }
 
 void antilag_restore(entity e)
@@ -111,11 +111,11 @@ void antilag_restore(entity e)
 	if(e.vehicle)
 		antilag_restore(e.vehicle);
 
-	if(!e.antilag_takenback)
+	if(!CS(e).antilag_takenback)
 		return;
 
-	setorigin(e, e.antilag_saved_origin);
-	e.antilag_takenback = false;
+	setorigin(e, CS(e).antilag_saved_origin);
+	CS(e).antilag_takenback = false;
 }
 
 void antilag_clear(entity e)
@@ -126,5 +126,5 @@ void antilag_clear(entity e)
 		CS(e).antilag_times[i] = -2342;
 		CS(e).antilag_origins[i] = e.origin;
 	}
-	e.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
+	CS(e).antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
 }
