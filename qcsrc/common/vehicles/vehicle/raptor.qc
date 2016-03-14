@@ -156,7 +156,7 @@ void raptor_exit(float eject)
 		setorigin(self.owner , spot);
 	}
 
-	antilag_clear(self.owner);
+	antilag_clear(self.owner, CS(self.owner));
 	self.owner = world;
 }
 

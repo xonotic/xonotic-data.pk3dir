@@ -720,7 +720,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 				WITH(entity, self, this, vehicles_exit(VHEF_RELEASE));
 
 
-		antilag_clear(this);
+		antilag_clear(this, this);
 
 		Vehicle info = Vehicles_from(this.vehicleid);
 		info.vr_death(info, this);
@@ -1107,7 +1107,7 @@ void vehicles_enter(entity pl, entity veh)
 	info.vr_enter(info, veh);
 	setself(this);
 
-	antilag_clear(pl);
+	antilag_clear(pl, CS(pl));
 }
 
 void vehicles_think()

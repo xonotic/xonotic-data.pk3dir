@@ -983,7 +983,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		}
 
 		t = (tmin + tmax) * 0.5;
-		o = antilag_takebackorigin(p, time - t);
+		o = antilag_takebackorigin(p, CS(p), time - t);
 		if(!botframe_autowaypoints_fixdown(o))
 			return -2;
 		o = trace_endpos;

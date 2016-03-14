@@ -695,7 +695,7 @@ void bumblebee_exit(float eject)
 	self.owner.velocity_z += 10;
 	setorigin(self.owner, spot);
 
-	antilag_clear(self.owner);
+	antilag_clear(self.owner, CS(self.owner));
 	self.owner = world;
 }
 

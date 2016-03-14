@@ -602,7 +602,7 @@ void PutClientInServer()
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
 
-		antilag_clear(this);
+		antilag_clear(this, CS(this));
 	}
 }
 

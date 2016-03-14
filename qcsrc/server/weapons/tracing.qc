@@ -375,11 +375,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_takeback(it, time - lag)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-			if(it != self)
-				antilag_takeback(it, time - lag);
-		));
+		FOREACH_CLIENT(IS_PLAYER(it) && it != self, antilag_takeback(it, CS(it), time - lag));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != self)
+				antilag_takeback(it, it, time - lag);
+		});
 	}
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
@@ -490,11 +490,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 
 	if(lag)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_restore(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-			if(it != self)
-				antilag_restore(it);
-		));
+		FOREACH_CLIENT(IS_PLAYER(it) && it != self, antilag_restore(it, CS(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != self)
+				antilag_restore(it, it);
+		});
 	}
 
 	// restore shooter solid type

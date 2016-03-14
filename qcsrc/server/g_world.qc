@@ -1968,40 +1968,36 @@ string GotoMap(string m)
 
 
 void EndFrame()
-{SELFPARAM();
+{
 	anticheat_endframe();
 
-	float altime;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
-		if(e.typehitsound)
+		if (e.typehitsound) {
 			it.typehit_time = time;
-		else if(e.damage_dealt)
-		{
+		} else if (e.damage_dealt) {
 			it.hit_time = time;
 			it.damage_dealt_total += ceil(e.damage_dealt);
 		}
-	));
-	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	});
 	// add 1 frametime because after this, engine SV_Physics
 	// increases time by a frametime and then networks the frame
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOREACH_CLIENT(true, LAMBDA(
+	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
 		it.damage_dealt = 0;
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_CLIENT(PS(it), LAMBDA(
+		antilag_record(it, CS(it), altime);
+	});
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+		antilag_record(it, it, altime);
+	});
+	FOREACH_CLIENT(PS(it), {
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
-	));
+	});
 }
 
 

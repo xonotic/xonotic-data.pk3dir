@@ -479,7 +479,7 @@ void racer_exit(float eject)
 		self.owner.oldvelocity = self.owner.velocity;
 		setorigin(self.owner , spot);
 	}
-	antilag_clear(self.owner);
+	antilag_clear(self.owner, CS(self.owner));
 	self.owner = world;
 }
 
