@@ -512,17 +512,17 @@ void W_WeaponFrame(entity actor)
 	// if (actor.button0)
 	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(actor, slot)), " >= ", ftos(this.weapon_nextthink), "\n");
 
-	int w = PS(actor).m_weapon.m_id;
+	Weapon w = PS(actor).m_weapon;
 
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
 	// server framerate is very low and the weapon fire rate very high
 	for (int c = 0; c < W_TICSPERFRAME; ++c)
 	{
-		if (w && !(actor.weapons & WepSet_FromWeapon(Weapons_from(w))))
+		if (w != WEP_Null && !(actor.weapons & WepSet_FromWeapon(w)))
 		{
 			if (PS(actor).m_weapon == PS(actor).m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-			w = 0;
+			w = WEP_Null;
 		}
 
 		v_forward = fo;
@@ -554,15 +554,14 @@ void W_WeaponFrame(entity actor)
 
 		if (!block_weapon)
 		{
-			if (w)
+            Weapon e = PS(actor).m_weapon;
+			if (w != WEP_Null)
 			{
-				Weapon e = PS(actor).m_weapon;
 				e.wr_think(e, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
 			else
 			{
-				Weapon w = PS(actor).m_weapon;
-				w.wr_gonethink(w);
+				e.wr_gonethink(e);
 			}
 		}
 
