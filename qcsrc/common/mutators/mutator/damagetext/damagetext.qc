@@ -14,6 +14,9 @@ REGISTER_MUTATOR(damagetext, true);
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      "Draw damage dealt where you hit the enemy");
 AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
+STATIC_INIT(DamageText_LegacyFormat) {
+    if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
+}
 AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    "Damage text color");
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      "Damage text uses weapon color");
 AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          "Damage text font size");
