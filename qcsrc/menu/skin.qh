@@ -1,5 +1,4 @@
-#ifndef SKIN_H
-#define SKIN_H
+#pragma once
 
 #define SKINBEGIN
 #define SKINVECTOR(name,def) vector SKIN##name = def
@@ -27,4 +26,3 @@
 #undef SKINFLOAT
 #undef SKINVECTOR
 #undef SKINBEGIN
-#endif

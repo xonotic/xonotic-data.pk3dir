@@ -1,5 +1,4 @@
-#ifndef NAVIGATION_H
-#define NAVIGATION_H
+#pragma once
 /*
  * Globals and Fields
  */
@@ -77,4 +76,3 @@ void botframe_updatedangerousobjects(float maxupdate);
 
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
 float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist);
-#endif

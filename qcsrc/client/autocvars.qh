@@ -1,5 +1,4 @@
-#ifndef CLIENT_AUTOCVARS_H
-#define CLIENT_AUTOCVARS_H
+#pragma once
 
 bool autocvar__con_chat_maximized;
 bool autocvar__hud_configure;
@@ -454,4 +453,3 @@ float autocvar_crosshair_rpc_alpha = 1;
 float autocvar_crosshair_rpc_size = 1;
 int autocvar_cl_nade_timer;
 bool autocvar_cl_items_nofade;
-#endif

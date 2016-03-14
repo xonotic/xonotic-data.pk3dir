@@ -1,5 +1,4 @@
-#ifndef HAVOCBOT_H
-#define HAVOCBOT_H
+#pragma once
 
 /*
  * Globals and Fields
@@ -63,4 +62,3 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 .entity draggedby;
 .float ladder_time;
 .entity ladder_entity;
-#endif

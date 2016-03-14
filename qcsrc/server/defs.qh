@@ -1,5 +1,4 @@
-#ifndef SERVER_DEFS_H
-#define SERVER_DEFS_H
+#pragma once
 
 #include "../common/weapons/all.qh"
 #include "../common/stats.qh"
@@ -452,5 +451,3 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .float init_for_player_needed;
 .void(entity) init_for_player;
-
-#endif

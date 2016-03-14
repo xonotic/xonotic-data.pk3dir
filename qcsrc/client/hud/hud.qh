@@ -1,5 +1,4 @@
-#ifndef CLIENT_HUD_H
-#define CLIENT_HUD_H
+#pragma once
 
 #include <common/weapons/all.qh>
 
@@ -412,4 +411,3 @@ void HUD_Notify_Push(string icon, string attacker, string victim);
 
 var void HUD_ModIcons_GameType(vector pos, vector size);
 void HUD_ModIcons_SetFunc();
-#endif

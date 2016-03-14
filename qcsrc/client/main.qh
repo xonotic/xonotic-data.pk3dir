@@ -1,5 +1,4 @@
-#ifndef CLIENT_MAIN_H
-#define CLIENT_MAIN_H
+#pragma once
 
 #include <common/constants.qh>
 #include <common/weapons/all.qh>
@@ -152,5 +151,3 @@ float hud;
 float view_quality;
 int framecount;
 .float health;
-
-#endif

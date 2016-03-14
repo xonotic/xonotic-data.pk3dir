@@ -1,5 +1,4 @@
-#ifndef CLIENT_MUTATORS_EVENTS_H
-#define CLIENT_MUTATORS_EVENTS_H
+#pragma once
 
 #include <common/mutators/base.qh>
 
@@ -132,5 +131,3 @@ MUTATOR_HOOKABLE(Weapon_ImpactEffect, EV_Weapon_ImpactEffect);
 	/** also, argv() can be used */ i(int, cmd_argc) \
 	/**/
 MUTATOR_HOOKABLE(HUD_Command, EV_HUD_Command);
-
-#endif

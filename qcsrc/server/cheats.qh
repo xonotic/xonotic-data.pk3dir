@@ -1,5 +1,4 @@
-#ifndef CHEATS_H
-#define CHEATS_H
+#pragma once
 
 #include "../common/impulses/all.qh"
 
@@ -16,4 +15,3 @@ float CheatFrame();
 const float CHRAME_DRAG = 8;
 
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
-#endif

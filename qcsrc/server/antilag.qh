@@ -1,5 +1,4 @@
-#ifndef ANTILAG_H
-#define ANTILAG_H
+#pragma once
 
 void antilag_record(entity e, entity store, float t);
 vector antilag_takebackorigin(entity e, entity store, float t);
@@ -11,4 +10,3 @@ void antilag_clear(entity e, entity store);
 
 #define ANTILAG_LATENCY(e) min(0.4, e.ping * 0.001)
 // add one ticrate?
-#endif

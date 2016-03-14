@@ -1,5 +1,4 @@
-#ifndef G_WORLD_H
-#define G_WORLD_H
+#pragma once
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
@@ -24,5 +23,3 @@ void Map_Goto_SetStr(string nextmapname);
 void Map_Goto(float reinit);
 float DoNextMapOverride(float reinit);
 void CheckRules_World();
-
-#endif

@@ -1,8 +1,5 @@
-#ifndef CLIENT_ANNOUNCER_H
-#define CLIENT_ANNOUNCER_H
+#pragma once
 
 void Announcer();
 
 string AnnouncerOption();
-
-#endif

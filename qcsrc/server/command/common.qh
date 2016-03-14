@@ -1,5 +1,4 @@
-#ifndef COMMAND_COMMON_H
-#define COMMAND_COMMON_H
+#pragma once
 
 #include <common/command/command.qh>
 REGISTRY(COMMON_COMMANDS, BITS(7))
@@ -186,6 +185,3 @@ void CommonCommand_macro_write_aliases(float fh)
 {
 	FOREACH(COMMON_COMMANDS, true, LAMBDA(CMD_Write_Alias("qc_cmd_svcmd", it.m_name, it.m_description)));
 }
-
-
-#endif

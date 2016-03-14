@@ -1,5 +1,4 @@
-#ifndef G_DAMAGE_H
-#define G_DAMAGE_H
+#pragma once
 
 #if defined(CSQC)
 #elif defined(MENUQC)
@@ -118,4 +117,3 @@ void Fire_ApplyDamage(entity e);
 void Fire_ApplyEffect(entity e);
 
 void fireburner_think();
-#endif

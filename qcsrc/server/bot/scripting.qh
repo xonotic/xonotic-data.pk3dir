@@ -1,5 +1,4 @@
-#ifndef BOT_SCRIPTING_H
-#define BOT_SCRIPTING_H
+#pragma once
 
 #define BOT_EXEC_STATUS_IDLE 0
 #define BOT_EXEC_STATUS_PAUSED 1
@@ -80,4 +79,3 @@ void bot_list_commands();
 float bot_execute_commands();
 entity find_bot_by_name(string name);
 entity find_bot_by_number(float number);
-#endif

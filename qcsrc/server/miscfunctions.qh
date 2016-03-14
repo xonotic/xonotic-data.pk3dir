@@ -1,5 +1,4 @@
-#ifndef MISCFUNCTIONS_H
-#define MISCFUNCTIONS_H
+#pragma once
 
 #include "../common/t_items.qh"
 
@@ -369,5 +368,3 @@ entity initialize_entity_first;
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void() func, float order);
 void SetCustomizer(entity e, float() customizer, void() uncustomizer);
-
-#endif

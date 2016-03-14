@@ -1,5 +1,4 @@
-#ifndef SERVER_COMMANDS_ALL_H
-#define SERVER_COMMANDS_ALL_H
+#pragma once
 
 #include <common/command/command.qh>
 REGISTRY(SERVER_COMMANDS, BITS(7))
@@ -27,5 +26,3 @@ STATIC_INIT(SERVER_COMMANDS_aliases) {
 #include "getreplies.qh"
 #include "radarmap.qh"
 #include "vote.qh"
-
-#endif

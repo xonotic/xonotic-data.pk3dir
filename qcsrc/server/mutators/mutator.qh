@@ -1,5 +1,4 @@
-#ifndef MUTATOR_H
-#define MUTATOR_H
+#pragma once
 
 #include <common/mutators/base.qh>
 
@@ -39,5 +38,3 @@
 #include <lib/warpzone/anglestransform.qh>
 #include <lib/warpzone/server.qh>
 #include <lib/warpzone/util_server.qh>
-
-#endif

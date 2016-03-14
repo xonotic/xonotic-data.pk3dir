@@ -1,5 +1,4 @@
-#ifndef SERVER_ALL_H
-#define SERVER_ALL_H
+#pragma once
 
 int maxclients;
 
@@ -51,5 +50,3 @@ const string STR_OBSERVER = "observer";
 #include "constants.qh"
 #include "defs.qh"
 #include "miscfunctions.qh"
-
-#endif

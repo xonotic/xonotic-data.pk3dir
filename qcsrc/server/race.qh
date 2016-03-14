@@ -1,5 +1,4 @@
-#ifndef RACE_H
-#define RACE_H
+#pragma once
 
 bool g_race_qualifying;
 
@@ -58,5 +57,3 @@ void race_SendRankings(float pos, float prevpos, float del, float msg);
 void race_RetractPlayer();
 
 void race_InitSpectator();
-
-#endif

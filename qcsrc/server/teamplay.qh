@@ -1,5 +1,4 @@
-#ifndef TEAMPLAY_H
-#define TEAMPLAY_H
+#pragma once
 
 string cache_mutatormsg;
 string cache_lastmutatormsg;
@@ -54,4 +53,3 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
 void SV_ChangeTeam(float _color);
 
 void ShufflePlayerOutOfTeam (float source_team);
-#endif

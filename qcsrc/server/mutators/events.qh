@@ -1,5 +1,4 @@
-#ifndef SERVER_MUTATORS_EVENTS_H
-#define SERVER_MUTATORS_EVENTS_H
+#pragma once
 
 #include <common/mutators/base.qh>
 
@@ -857,4 +856,3 @@ float uricb_id;
 float uricb_status;
 string uricb_data;
 MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
-#endif

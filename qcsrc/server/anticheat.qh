@@ -1,5 +1,4 @@
-#ifndef ANTICHEAT_H
-#define ANTICHEAT_H
+#pragma once
 
 void anticheat_init(entity this);
 void anticheat_report();
@@ -14,4 +13,3 @@ void anticheat_startframe();
 void anticheat_endframe();
 
 void anticheat_fixangle(entity this);
-#endif

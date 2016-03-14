@@ -1,5 +1,4 @@
-#ifndef GAMEMODE_H
-#define GAMEMODE_H
+#pragma once
 
 #include "../cl_client.qh"
 #include "../cl_player.qh"
@@ -44,5 +43,3 @@ float redalive, bluealive, yellowalive, pinkalive;
 .float bluealive_stat = _STAT(BLUEALIVE);
 .float yellowalive_stat = _STAT(YELLOWALIVE);
 .float pinkalive_stat = _STAT(PINKALIVE);
-
-#endif

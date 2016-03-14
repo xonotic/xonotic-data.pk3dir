@@ -1,5 +1,4 @@
-#ifndef TRACING_H
-#define TRACING_H
+#pragma once
 
 vector w_shotorg;
 vector w_shotdir;
@@ -56,4 +55,3 @@ entity fireBullet_trace_callback_eff;
 entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end);
 void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects);
-#endif

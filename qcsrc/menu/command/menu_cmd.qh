@@ -1,5 +1,3 @@
-#ifndef MENU_CMD_H
-#define MENU_CMD_H
+#pragma once
 
 void GameCommand(string command);
-#endif

@@ -1,5 +1,4 @@
-#ifndef SERVER_SYS_PRE_H
-#define SERVER_SYS_PRE_H
+#pragma once
 
 #define objerror builtin_objerror
 #define droptofloor builtin_droptofloor
@@ -34,5 +33,3 @@
 #define IT_QUAD             _IT_QUAD /* BIT(22) */
 
 #pragma noref 1
-
-#endif

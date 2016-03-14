@@ -1,5 +1,4 @@
-#ifndef SELECTION_H
-#define SELECTION_H
+#pragma once
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
@@ -30,4 +29,3 @@ void W_PreviousWeapon(float list);
 
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(entity this);
-#endif
