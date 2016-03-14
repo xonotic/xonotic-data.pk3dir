@@ -1,7 +1,7 @@
 #ifndef TURRET_H
 #define TURRET_H
 
-#include "../weapons/all.qh"
+#include <common/weapons/all.qh>
 
 CLASS(Turret, Object)
     ATTRIB(Turret, m_id, int, 0)

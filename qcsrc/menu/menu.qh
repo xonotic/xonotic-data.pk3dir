@@ -5,8 +5,8 @@
 
 #include "xonotic/util.qh"
 
-#include "../common/constants.qh"
-#include "../common/util.qh"
+#include <common/constants.qh>
+#include <common/util.qh>
 
 const int GAME_ISSERVER     = BIT(0);
 const int GAME_CONNECTED    = BIT(1);

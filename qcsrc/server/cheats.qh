@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../common/impulses/all.qh"
+#include <common/impulses/all.qh>
 
 //float autocvar_sv_cheats; // must... declare... global
 

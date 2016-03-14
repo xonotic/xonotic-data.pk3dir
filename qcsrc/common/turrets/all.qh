@@ -1,7 +1,7 @@
 #ifndef TURRETS_ALL_H
 #define TURRETS_ALL_H
 
-#include "../command/all.qh"
+#include <common/command/all.qh>
 #include "config.qh"
 
 #include "turret.qh"

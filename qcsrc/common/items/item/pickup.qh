@@ -1,7 +1,7 @@
 #ifndef PICKUP_H
 #define PICKUP_H
-#include "../inventory.qh"
-#include "../item.qh"
+#include <common/items/inventory.qh>
+#include <common/items/item.qh>
 CLASS(Pickup, GameItem)
 #ifndef MENUQC
     ATTRIB(Pickup, m_model, Model, NULL)

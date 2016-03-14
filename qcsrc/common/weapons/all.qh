@@ -1,8 +1,8 @@
 #ifndef WEAPONS_ALL_H
 #define WEAPONS_ALL_H
 
-#include "../command/all.qh"
-#include "../stats.qh"
+#include <common/command/all.qh>
+#include <common/stats.qh>
 #include "config.qh"
 
 // weapon sets
@@ -24,7 +24,7 @@ WepSet ReadWepSet();
 #include <common/models/all.qh>
 #endif
 
-#include "../util.qh"
+#include <common/util.qh>
 
 #ifdef SVQC
 #include <server/bot/aim.qh>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../common/weapons/all.qh"
-#include "../common/stats.qh"
+#include <common/weapons/all.qh>
+#include <common/stats.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
 

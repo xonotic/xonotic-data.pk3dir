@@ -1,7 +1,7 @@
 #ifndef ITEMS_ALL_H
 #define ITEMS_ALL_H
 
-#include "../command/all.qh"
+#include <common/command/all.qh>
 
 #include "item.qh"
 

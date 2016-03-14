@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../common/t_items.qh"
+#include <common/t_items.qh>
 
 #include "mutators/events.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/turrets/all.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/turrets/all.qh>
 
 #ifdef RELEASE
 #define cvar_string_normal builtin_cvar_string
