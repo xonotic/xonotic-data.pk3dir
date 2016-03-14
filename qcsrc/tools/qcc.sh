@@ -1,26 +1,47 @@
 #!/bin/sh
 set -eu
 
-MODE=$1
-IN=$3
-OUT=$2
-
+WORKDIR=${WORKDIR}
+CPP=${CPP}
 QCC=${QCC}
 QCCIDENT="-DGMQCC"
+QCCDEFS=${QCCDEFS}
+QCCFLAGS=${QCCFLAGS}
 
-case ${MODE} in
-    client) PROG=CSQC
-    ;;
-    menu) PROG=MENUQC
-    ;;
-    server) PROG=SVQC
-    ;;
-esac
+function qpp() {
+    IN=$1
+    OUT=$2
+    >&2 echo + ${CPP} ${@:3} ${IN}
+    # additional information
+    ${CPP} ${@:3} \
+        -dM 1>${WORKDIR}/${MODE}_macros.txt \
+        -H 2>${WORKDIR}/${MODE}_includes.txt \
+        ${IN}
+    # main step
+    ${CPP} ${@:3} -MMD -MP -MT ${OUT} -Wall -Wundef -Werror ${IN} -o ${WORKDIR}/${MODE}.txt
+    sed 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' ${WORKDIR}/${MODE}.txt
+}
 
-CPP="${CPP} -I. ${QCCIDENT} ${QCCDEFS} -D${PROG}"
-${CPP} -MMD -MP -MT ${OUT} -Wall -Wundef -Werror -o ../.tmp/${MODE}.txt ${IN}
-${CPP} -dM 1>../.tmp/${MODE}_macros.txt -H 2>../.tmp/${MODE}_includes.txt ${IN}
-sed 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' ../.tmp/${MODE}.txt > ../.tmp/${MODE}.qc
-cd ${MODE}
-echo $(basename ${QCC}) ${QCCFLAGS} -o ${OUT} ${MODE}.qc
-${QCC} ${QCCFLAGS} -o ${OUT} ../../.tmp/${MODE}.qc
+function qcc() {
+    >&2 echo + $(basename ${QCC}) $@
+    # FIXME: relative compiler path is too deep
+    (cd tools && ${QCC} $@)
+}
+
+$(return >/dev/null 2>&1) || {
+    MODE=$1
+    OUT=$2
+    IN=$3
+
+    case ${MODE} in
+        client) PROG=CSQC
+        ;;
+        menu) PROG=MENUQC
+        ;;
+        server) PROG=SVQC
+        ;;
+    esac
+
+    qpp ${IN} ${OUT} -I. ${QCCIDENT} ${QCCDEFS} -D${PROG} > ${WORKDIR}/${MODE}.qc
+    qcc ${QCCFLAGS} -o ${OUT} ../${WORKDIR}/${MODE}.qc
+}

@@ -528,7 +528,7 @@ void m_tooltip(vector pos)
 		{
 			it = m_findtooltipitem(main, pos);
 
-			if (it.instanceOfListBox && it.isScrolling(it)) it = world;
+			if (it.instanceOfListBox && it.isScrolling(it)) it = NULL;
 
 			if (it && prev_tooltip != it.tooltip)
 			{

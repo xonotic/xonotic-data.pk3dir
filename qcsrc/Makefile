@@ -92,6 +92,7 @@ $(QCCVERSIONFILE): | $(WORKDIR)
 	@ $(RM) $(WORKDIR)/qccversion.*
 	@ echo $(QCCVERSION) > $@
 
+export WORKDIR
 export CPP
 export QCC
 export QCCDEFS
