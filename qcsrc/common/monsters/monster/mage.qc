@@ -326,7 +326,7 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
-	
+
 	setorigin(this, newpos);
 
 	vector a = vectoangles(targ.origin - this.origin);

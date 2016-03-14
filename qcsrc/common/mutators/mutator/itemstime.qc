@@ -366,7 +366,7 @@ void HUD_ItemsTime()
     FOREACH(Items, Item_ItemsTime_Allow(it) && ItemsTime_time[it.m_id] != -1, LAMBDA(
     	id = it.m_id;
     	icon = it.m_icon;
-    	
+
     	:iteration
         float item_time = ItemsTime_time[id];
         if (item_time < -1)
