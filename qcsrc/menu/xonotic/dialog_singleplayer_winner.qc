@@ -1,3 +1,4 @@
+#include "dialog_singleplayer_winner.qh"
 #ifndef DIALOG_SINGLEPLAYER_WINNER_H
 #define DIALOG_SINGLEPLAYER_WINNER_H
 #include "dialog.qc"

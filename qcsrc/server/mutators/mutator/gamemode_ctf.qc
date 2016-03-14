@@ -1,3 +1,4 @@
+#include "gamemode_ctf.qh"
 #ifndef GAMEMODE_CTF_H
 #define GAMEMODE_CTF_H
 

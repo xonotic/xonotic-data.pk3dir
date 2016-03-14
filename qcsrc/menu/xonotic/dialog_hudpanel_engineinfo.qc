@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_engineinfo.qh"
 #ifndef DIALOG_HUDPANEL_ENGINEINFO_H
 #define DIALOG_HUDPANEL_ENGINEINFO_H
 #include "rootdialog.qc"

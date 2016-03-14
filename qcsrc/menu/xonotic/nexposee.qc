@@ -1,3 +1,4 @@
+#include "nexposee.qh"
 #ifndef NEXPOSEE_H
 #define NEXPOSEE_H
 #include "../item/nexposee.qc"

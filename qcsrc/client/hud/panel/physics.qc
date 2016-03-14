@@ -1,3 +1,4 @@
+#include "physics.qh"
 // Physics panel (#15)
 
 vector acc_prevspeed;

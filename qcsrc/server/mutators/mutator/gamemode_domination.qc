@@ -1,3 +1,4 @@
+#include "gamemode_domination.qh"
 #ifndef GAMEMODE_DOMINATION_H
 #define GAMEMODE_DOMINATION_H
 

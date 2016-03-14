@@ -1,3 +1,4 @@
+#include "dialog_settings_misc_reset.qh"
 #ifndef DIALOG_SETTINGS_MISC_RESET_H
 #define DIALOG_SETTINGS_MISC_RESET_H
 #include "dialog.qc"

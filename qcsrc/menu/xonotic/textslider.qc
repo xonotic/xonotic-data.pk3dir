@@ -1,3 +1,4 @@
+#include "textslider.qh"
 #ifndef TEXTSLIDER_H
 #define TEXTSLIDER_H
 #include "../item/textslider.qc"

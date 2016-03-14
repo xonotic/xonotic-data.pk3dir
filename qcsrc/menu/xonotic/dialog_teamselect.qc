@@ -1,3 +1,4 @@
+#include "dialog_teamselect.qh"
 #ifndef DIALOG_TEAMSELECT_H
 #define DIALOG_TEAMSELECT_H
 #include "rootdialog.qc"

@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_weapons.qh"
 #ifndef DIALOG_HUDPANEL_WEAPONS_H
 #define DIALOG_HUDPANEL_WEAPONS_H
 #include "rootdialog.qc"

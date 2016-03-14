@@ -1,3 +1,4 @@
+#include "label.qh"
 #ifndef ITEM_LABEL_H
 	#define ITEM_LABEL_H
 	#include "../item.qc"

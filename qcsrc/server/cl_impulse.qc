@@ -1,3 +1,4 @@
+#include "cl_impulse.qh"
 #include "round_handler.qh"
 
 #include "bot/waypoints.qh"

@@ -1,3 +1,4 @@
+#include "modicons.qh"
 // Mod icons panel (#10)
 
 bool mod_active; // is there any active mod icon?

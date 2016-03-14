@@ -1,3 +1,4 @@
+#include "dialog_firstrun.qh"
 #ifndef DIALOG_FIRSTRUN_H
 #define DIALOG_FIRSTRUN_H
 #include "rootdialog.qc"

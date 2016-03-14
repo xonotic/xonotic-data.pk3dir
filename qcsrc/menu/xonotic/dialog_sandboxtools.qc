@@ -1,3 +1,4 @@
+#include "dialog_sandboxtools.qh"
 #ifndef DIALOG_SANDBOXTOOLS_H
 #define DIALOG_SANDBOXTOOLS_H
 #include "rootdialog.qc"

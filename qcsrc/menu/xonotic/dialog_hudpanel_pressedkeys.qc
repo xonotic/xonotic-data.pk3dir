@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_pressedkeys.qh"
 #ifndef DIALOG_HUDPANEL_PRESSEDKEYS_H
 #define DIALOG_HUDPANEL_PRESSEDKEYS_H
 #include "rootdialog.qc"

@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_create_mapinfo.qh"
 #ifndef DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
 #define DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
 #include "dialog.qc"

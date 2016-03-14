@@ -1,3 +1,4 @@
+#include "weaponslist.qh"
 #ifndef WEAPONSLIST_H
 #define WEAPONSLIST_H
 #include "listbox.qc"

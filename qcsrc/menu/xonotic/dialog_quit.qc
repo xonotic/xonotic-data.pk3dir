@@ -1,3 +1,4 @@
+#include "dialog_quit.qh"
 #ifndef DIALOG_QUIT_H
 #define DIALOG_QUIT_H
 #include "dialog.qc"

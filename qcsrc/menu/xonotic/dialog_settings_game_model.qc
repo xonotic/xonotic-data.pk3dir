@@ -1,3 +1,4 @@
+#include "dialog_settings_game_model.qh"
 #ifndef DIALOG_SETTINGS_GAME_MODEL_H
 #define DIALOG_SETTINGS_GAME_MODEL_H
 #include "tab.qc"

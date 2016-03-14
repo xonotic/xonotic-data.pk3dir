@@ -1,3 +1,4 @@
+#include "hudskinlist.qh"
 #ifndef HUDSKINLIST_H
 #define HUDSKINLIST_H
 #include "listbox.qc"

@@ -1,3 +1,4 @@
+#include "gamemode_assault.qh"
 #ifndef GAMEMODE_ASSAULT_H
 #define GAMEMODE_ASSAULT_H
 

@@ -1,3 +1,4 @@
+#include "crosshairpreview.qh"
 #ifndef CROSSHAIRPREVIEW_H
 #define CROSSHAIRPREVIEW_H
 #include "../item.qc"

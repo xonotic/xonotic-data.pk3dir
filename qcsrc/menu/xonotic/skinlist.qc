@@ -1,3 +1,4 @@
+#include "skinlist.qh"
 #ifndef SKINLIST_H
 #define SKINLIST_H
 #include "listbox.qc"

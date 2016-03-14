@@ -1,3 +1,4 @@
+#include "inputcontainer.qh"
 #ifndef ITEM_INPUTCONTAINER_H
 	#define ITEM_INPUTCONTAINER_H
 	#include "container.qc"

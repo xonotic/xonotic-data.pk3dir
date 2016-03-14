@@ -1,3 +1,4 @@
+#include "dialog_monstertools.qh"
 #ifndef DIALOG_MONSTERTOOLS_H
 #define DIALOG_MONSTERTOOLS_H
 #include "rootdialog.qc"

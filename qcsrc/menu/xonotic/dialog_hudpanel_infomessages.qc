@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_infomessages.qh"
 #ifndef DIALOG_HUDPANEL_INFOMESSAGES_H
 #define DIALOG_HUDPANEL_INFOMESSAGES_H
 #include "rootdialog.qc"

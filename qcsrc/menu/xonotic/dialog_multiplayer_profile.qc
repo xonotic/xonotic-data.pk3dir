@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_profile.qh"
 #ifndef DIALOG_MULTIPLAYER_PROFILE_H
 #define DIALOG_MULTIPLAYER_PROFILE_H
 #include "tab.qc"

@@ -1,3 +1,4 @@
+#include "ammo.qh"
 // Ammo (#1)
 
 void DrawNadeProgressBar(vector myPos, vector mySize, float progress, vector color)

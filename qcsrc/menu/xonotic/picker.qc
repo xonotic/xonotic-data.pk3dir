@@ -1,3 +1,4 @@
+#include "picker.qh"
 #ifndef PICKER_H
 #define PICKER_H
 #include "../item.qc"

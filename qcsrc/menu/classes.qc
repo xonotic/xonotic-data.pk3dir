@@ -1,3 +1,4 @@
+#include "classes.qh"
 #ifndef CLASSES_H
 #define CLASSES_H
 

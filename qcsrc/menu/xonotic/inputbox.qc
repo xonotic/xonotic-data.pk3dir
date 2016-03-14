@@ -1,3 +1,4 @@
+#include "inputbox.qh"
 #ifndef INPUTBOX_H
 #define INPUTBOX_H
 #include "../item/inputbox.qc"

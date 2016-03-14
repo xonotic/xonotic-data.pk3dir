@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_racetimer.qh"
 #ifndef DIALOG_HUDPANEL_RACETIMER_H
 #define DIALOG_HUDPANEL_RACETIMER_H
 #include "rootdialog.qc"

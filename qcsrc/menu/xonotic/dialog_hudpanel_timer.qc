@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_timer.qh"
 #ifndef DIALOG_HUDPANEL_TIMER_H
 #define DIALOG_HUDPANEL_TIMER_H
 #include "rootdialog.qc"

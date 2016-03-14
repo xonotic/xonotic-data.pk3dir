@@ -1,3 +1,4 @@
+#include "dialog_settings_user_languagewarning.qh"
 #ifndef DIALOG_SETTINGS_USER_LANGUAGEWARNING_H
 #define DIALOG_SETTINGS_USER_LANGUAGEWARNING_H
 #include "dialog.qc"

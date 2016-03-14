@@ -1,3 +1,4 @@
+#include "rootdialog.qh"
 #ifndef ROOTDIALOG_H
 #define ROOTDIALOG_H
 #include "dialog.qc"

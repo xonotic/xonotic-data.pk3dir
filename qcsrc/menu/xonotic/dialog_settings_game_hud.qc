@@ -1,3 +1,4 @@
+#include "dialog_settings_game_hud.qh"
 #ifndef DIALOG_SETTINGS_GAME_HUD_H
 #define DIALOG_SETTINGS_GAME_HUD_H
 #include "tab.qc"

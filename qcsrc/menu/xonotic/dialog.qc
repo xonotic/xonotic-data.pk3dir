@@ -1,3 +1,4 @@
+#include "dialog.qh"
 #ifndef DIALOG_H
 #define DIALOG_H
 #include "../item/dialog.qc"

@@ -1,3 +1,4 @@
+#include "cl_cmd.qh"
 // ==============================================
 //  CSQC client commands code, written by Samual
 //  Last updated: December 28th, 2011

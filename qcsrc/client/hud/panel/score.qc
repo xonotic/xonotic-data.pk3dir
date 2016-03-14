@@ -1,3 +1,4 @@
+#include "score.qh"
 // Score (#7)
 
 void HUD_UpdatePlayerTeams();

@@ -1,3 +1,4 @@
+#include "dialog_settings_misc_cvars.qh"
 #ifndef DIALOG_SETTINGS_MISC_CVARS_H
 #define DIALOG_SETTINGS_MISC_CVARS_H
 #include "dialog.qc"

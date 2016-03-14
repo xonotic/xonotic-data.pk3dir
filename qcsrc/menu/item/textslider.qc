@@ -1,3 +1,4 @@
+#include "textslider.qh"
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
 #ifndef ITEM_TEXTSLIDER_H

@@ -1,3 +1,4 @@
+#include "commandbutton.qh"
 #ifndef COMMANDBUTTON_CLOSE
 # define COMMANDBUTTON_CLOSE 1
 # define COMMANDBUTTON_APPLY 2

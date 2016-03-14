@@ -1,3 +1,4 @@
+#include "keybinder.qh"
 #ifndef KEYBINDER_H
 #define KEYBINDER_H
 #include "listbox.qc"

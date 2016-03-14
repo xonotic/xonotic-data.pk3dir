@@ -1,3 +1,4 @@
+#include "dialog_settings_effects.qh"
 #ifndef DIALOG_SETTINGS_EFFECTS_H
 #define DIALOG_SETTINGS_EFFECTS_H
 #include "tab.qc"

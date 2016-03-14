@@ -1,3 +1,4 @@
+#include "campaign.qh"
 #include <common/campaign_common.qh>
 
 #ifndef CAMPAIGN_H

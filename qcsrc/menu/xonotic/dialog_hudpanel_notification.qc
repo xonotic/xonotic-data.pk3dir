@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_notification.qh"
 #ifndef DIALOG_HUDPANEL_NOTIFICATION_H
 #define DIALOG_HUDPANEL_NOTIFICATION_H
 #include "rootdialog.qc"

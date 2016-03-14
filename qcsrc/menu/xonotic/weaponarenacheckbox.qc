@@ -1,3 +1,4 @@
+#include "weaponarenacheckbox.qh"
 #ifndef WEAPONARENACHECKBOX_H
 #define WEAPONARENACHECKBOX_H
 #include "../item/checkbox.qc"

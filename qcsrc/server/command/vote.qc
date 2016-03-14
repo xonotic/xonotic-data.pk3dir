@@ -1,3 +1,4 @@
+#include "vote.qh"
 #include <common/command/command.qh>
 #include "vote.qh"
 

@@ -1,3 +1,4 @@
+#include "playermodel.qh"
 #ifndef PLAYERMODEL_H
 #define PLAYERMODEL_H
 #include "image.qc"

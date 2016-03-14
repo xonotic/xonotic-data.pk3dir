@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_media_screenshot_viewer.qh"
 #ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
 #define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
 #include "dialog.qc"

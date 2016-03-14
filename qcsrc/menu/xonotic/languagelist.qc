@@ -1,3 +1,4 @@
+#include "languagelist.qh"
 #ifndef LANGUAGELIST_H
 #define LANGUAGELIST_H
 #include "listbox.qc"

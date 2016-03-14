@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_quickmenu.qh"
 #ifndef DIALOG_HUDPANEL_QUICKMENU_H
 #define DIALOG_HUDPANEL_QUICKMENU_H
 #include "rootdialog.qc"

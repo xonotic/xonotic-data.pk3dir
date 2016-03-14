@@ -1,3 +1,4 @@
+#include "weapons.qh"
 // Weapon icons (#0)
 
 entity weaponorder[Weapons_MAX];

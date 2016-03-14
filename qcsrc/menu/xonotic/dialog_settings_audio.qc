@@ -1,3 +1,4 @@
+#include "dialog_settings_audio.qh"
 #ifndef DIALOG_SETTINGS_AUDIO_H
 #define DIALOG_SETTINGS_AUDIO_H
 #include "tab.qc"

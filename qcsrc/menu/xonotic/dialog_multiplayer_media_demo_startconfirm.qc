@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_media_demo_startconfirm.qh"
 #ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_STARTCONFIRM_H
 #define DIALOG_MULTIPLAYER_MEDIA_DEMO_STARTCONFIRM_H
 #include "dialog.qc"

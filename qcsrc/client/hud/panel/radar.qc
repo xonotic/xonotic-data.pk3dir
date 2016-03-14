@@ -1,3 +1,4 @@
+#include "radar.qh"
 // Radar (#6)
 
 float HUD_Radar_Clickable()

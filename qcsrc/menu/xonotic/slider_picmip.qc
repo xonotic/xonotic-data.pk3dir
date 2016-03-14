@@ -1,3 +1,4 @@
+#include "slider_picmip.qh"
 #ifndef SLIDER_PICMIP_H
 #define SLIDER_PICMIP_H
 #include "textslider.qc"

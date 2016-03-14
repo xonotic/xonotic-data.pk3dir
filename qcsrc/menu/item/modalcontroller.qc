@@ -1,3 +1,4 @@
+#include "modalcontroller.qh"
 #ifndef ITEM_MODALCONTROLLER_H
 	#define ITEM_MODALCONTROLLER_H
 	#include "container.qc"

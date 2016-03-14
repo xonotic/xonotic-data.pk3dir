@@ -1,3 +1,4 @@
+#include "sv_main.qh"
 
 #include "anticheat.qh"
 #include "g_hook.qh"

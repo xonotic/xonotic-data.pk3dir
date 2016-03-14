@@ -1,3 +1,4 @@
+#include "dialog_hudsetup_exit.qh"
 #ifndef DIALOG_HUDSETUP_EXIT_H
 #define DIALOG_HUDSETUP_EXIT_H
 #include "rootdialog.qc"

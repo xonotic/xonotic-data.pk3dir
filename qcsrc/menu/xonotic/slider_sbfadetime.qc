@@ -1,3 +1,4 @@
+#include "slider_sbfadetime.qh"
 #ifndef SLIDER_SBFADETIME_H
 #define SLIDER_SBFADETIME_H
 #include "textslider.qc"

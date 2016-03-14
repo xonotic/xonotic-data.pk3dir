@@ -1,3 +1,4 @@
+#include "borderimage.qh"
 #ifndef ITEM_BORDERIMAGE_H
 	#define ITEM_BORDERIMAGE_H
 	#include "label.qc"

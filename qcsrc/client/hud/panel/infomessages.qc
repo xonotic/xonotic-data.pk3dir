@@ -1,3 +1,4 @@
+#include "infomessages.qh"
 // Info messages panel (#14)
 
 #define drawInfoMessage(s) MACRO_BEGIN {																			\

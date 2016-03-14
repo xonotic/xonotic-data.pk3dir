@@ -1,3 +1,4 @@
+#include "dialog_settings_game_crosshair.qh"
 #ifndef DIALOG_SETTINGS_GAME_CROSSHAIR_H
 #define DIALOG_SETTINGS_GAME_CROSSHAIR_H
 #include "tab.qc"

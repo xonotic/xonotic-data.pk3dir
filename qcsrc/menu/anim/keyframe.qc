@@ -1,3 +1,4 @@
+#include "keyframe.qh"
 #ifndef ANIM_KEYFRAME_H
 	#define ANIM_KEYFRAME_H
 	#include "animation.qc"

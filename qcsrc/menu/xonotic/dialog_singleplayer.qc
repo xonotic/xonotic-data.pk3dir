@@ -1,3 +1,4 @@
+#include "dialog_singleplayer.qh"
 #ifndef DIALOG_SINGLEPLAYER_H
 #define DIALOG_SINGLEPLAYER_H
 #include "dialog.qc"

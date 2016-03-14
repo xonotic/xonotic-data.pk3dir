@@ -1,3 +1,4 @@
+#include "slider.qh"
 // Note:
 //   to use this, you FIRST call configureSliderVisuals, then configureSliderValues
 #ifndef ITEM_SLIDER_H

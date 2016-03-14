@@ -1,3 +1,4 @@
+#include "tabcontroller.qh"
 #ifndef TABCONTROLLER_H
 #define TABCONTROLLER_H
 #include "../item/modalcontroller.qc"

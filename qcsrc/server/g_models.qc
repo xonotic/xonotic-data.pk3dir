@@ -1,3 +1,4 @@
+#include "g_models.qh"
 
 #include "g_subs.qh"
 #include "../common/triggers/subs.qh"

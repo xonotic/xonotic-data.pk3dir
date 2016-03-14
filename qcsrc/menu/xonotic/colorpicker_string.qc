@@ -1,3 +1,4 @@
+#include "colorpicker_string.qh"
 #ifndef COLORPICKER_STRING_H
 #define COLORPICKER_STRING_H
 #include "../item/image.qc"

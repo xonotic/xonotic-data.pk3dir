@@ -1,3 +1,4 @@
+#include "tab.qh"
 #ifndef TAB_H
 #define TAB_H
 #include "../item/tab.qc"

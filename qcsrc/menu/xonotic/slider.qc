@@ -1,3 +1,4 @@
+#include "slider.qh"
 #ifndef SLIDER_H
 #define SLIDER_H
 #include "../item/slider.qc"

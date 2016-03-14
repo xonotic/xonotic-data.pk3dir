@@ -1,3 +1,4 @@
+#include "dialog_settings_input.qh"
 #ifndef DIALOG_SETTINGS_INPUT_H
 #define DIALOG_SETTINGS_INPUT_H
 #include "tab.qc"

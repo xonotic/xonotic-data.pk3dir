@@ -1,3 +1,4 @@
+#include "dialog_settings_game_hudconfirm.qh"
 #ifndef DIALOG_SETTINGS_GAME_HUDCONFIRM_H
 #define DIALOG_SETTINGS_GAME_HUDCONFIRM_H
 #include "dialog.qc"

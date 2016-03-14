@@ -1,3 +1,4 @@
+#include "cvarlist.qh"
 #ifndef CVARLIST_H
 #define CVARLIST_H
 #include "listbox.qc"

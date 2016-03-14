@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_physics.qh"
 #ifndef DIALOG_HUDPANEL_PHYSICS_H
 #define DIALOG_HUDPANEL_PHYSICS_H
 #include "rootdialog.qc"

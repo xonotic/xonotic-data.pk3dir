@@ -1,3 +1,4 @@
+#include "dialog_settings_game_view.qh"
 #ifndef DIALOG_SETTINGS_GAME_VIEW_H
 #define DIALOG_SETTINGS_GAME_VIEW_H
 #include "tab.qc"

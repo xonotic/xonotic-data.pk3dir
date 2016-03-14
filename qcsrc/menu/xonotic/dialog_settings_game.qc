@@ -1,3 +1,4 @@
+#include "dialog_settings_game.qh"
 #ifndef DIALOG_SETTINGS_GAME_H
 #define DIALOG_SETTINGS_GAME_H
 

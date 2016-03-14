@@ -1,3 +1,4 @@
+#include "gamemode_race.qh"
 #ifndef GAMEMODE_RACE_H
 #define GAMEMODE_RACE_H
 

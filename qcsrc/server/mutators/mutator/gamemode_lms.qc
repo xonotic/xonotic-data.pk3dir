@@ -1,3 +1,4 @@
+#include "gamemode_lms.qh"
 #ifndef GAMEMODE_LMS_H
 #define GAMEMODE_LMS_H
 

@@ -1,3 +1,4 @@
+#include "antilag.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)

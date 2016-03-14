@@ -1,3 +1,4 @@
+#include "dialog_settings_game_messages.qh"
 #ifndef DIALOG_SETTINGS_GAME_MESSAGES_H
 #define DIALOG_SETTINGS_GAME_MESSAGES_H
 #include "tab.qc"

@@ -1,3 +1,4 @@
+#include "gamemode_keepaway.qh"
 #ifndef GAMEMODE_KEEPAWAY_H
 #define GAMEMODE_KEEPAWAY_H
 

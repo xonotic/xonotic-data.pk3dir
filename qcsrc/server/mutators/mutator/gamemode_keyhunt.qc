@@ -1,3 +1,4 @@
+#include "gamemode_keyhunt.qh"
 #ifndef GAMEMODE_KEYHUNT_H
 #define GAMEMODE_KEYHUNT_H
 

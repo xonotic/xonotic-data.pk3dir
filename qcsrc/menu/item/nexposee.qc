@@ -1,3 +1,4 @@
+#include "nexposee.qh"
 #ifndef ITEM_NEXPOSEE_H
 	#define ITEM_NEXPOSEE_H
 	#include "container.qc"

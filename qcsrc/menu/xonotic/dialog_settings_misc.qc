@@ -1,3 +1,4 @@
+#include "dialog_settings_misc.qh"
 #ifndef DIALOG_SETTINGS_MISC_H
 #define DIALOG_SETTINGS_MISC_H
 #include "tab.qc"

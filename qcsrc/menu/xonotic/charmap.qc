@@ -1,3 +1,4 @@
+#include "charmap.qh"
 #ifndef CHARMAP_H
 #define CHARMAP_H
 #include "picker.qc"

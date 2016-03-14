@@ -1,3 +1,4 @@
+#include "textlabel.qh"
 #ifndef TEXTLABEL_H
 #define TEXTLABEL_H
 #include "../item/label.qc"

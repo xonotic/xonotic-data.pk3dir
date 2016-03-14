@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_media_screenshot.qh"
 #ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
 #define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_H
 #include "tab.qc"

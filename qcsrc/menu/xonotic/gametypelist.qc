@@ -1,3 +1,4 @@
+#include "gametypelist.qh"
 #ifndef GAMETYPELIST_H
 #define GAMETYPELIST_H
 #include "listbox.qc"

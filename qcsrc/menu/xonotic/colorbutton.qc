@@ -1,3 +1,4 @@
+#include "colorbutton.qh"
 #ifndef COLORBUTTON_H
 #define COLORBUTTON_H
 #include "../item/radiobutton.qc"

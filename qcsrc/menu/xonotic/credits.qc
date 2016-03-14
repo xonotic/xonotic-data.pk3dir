@@ -1,3 +1,4 @@
+#include "credits.qh"
 #ifndef CREDITS_H
 #define CREDITS_H
 

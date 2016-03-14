@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_vote.qh"
 #ifndef DIALOG_HUDPANEL_VOTE_H
 #define DIALOG_HUDPANEL_VOTE_H
 #include "rootdialog.qc"

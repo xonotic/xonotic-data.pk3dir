@@ -1,3 +1,4 @@
+#include "soundlist.qh"
 #ifndef SOUNDLIST_H
 #define SOUNDLIST_H
 #include "listbox.qc"

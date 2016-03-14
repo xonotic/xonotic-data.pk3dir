@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_itemstime.qh"
 #ifndef DIALOG_HUDPANEL_ITEMSTIME_H
 #define DIALOG_HUDPANEL_ITEMSTIME_H
 #include "rootdialog.qc"

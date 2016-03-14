@@ -1,3 +1,4 @@
+#include "playerlist.qh"
 #ifndef PLAYERLIST_H
 #define PLAYERLIST_H
 #include "listbox.qc"

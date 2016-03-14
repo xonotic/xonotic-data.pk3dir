@@ -1,3 +1,4 @@
+#include "sv_cmd.qh"
 #include "all.qh"
 
 #include "banning.qh"

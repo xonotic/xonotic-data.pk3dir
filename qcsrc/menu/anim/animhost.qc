@@ -1,3 +1,4 @@
+#include "animhost.qh"
 #include "../menu.qh"
 
 #ifndef ANIM_ANIMHOST_H

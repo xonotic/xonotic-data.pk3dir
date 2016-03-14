@@ -1,3 +1,4 @@
+#include "dialog_settings_game_weapons.qh"
 #ifndef DIALOG_SETTINGS_GAME_WEAPONS_H
 #define DIALOG_SETTINGS_GAME_WEAPONS_H
 #include "tab.qc"

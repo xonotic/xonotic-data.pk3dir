@@ -1,3 +1,4 @@
+#include "slider_particles.qh"
 #ifndef SLIDER_PARTICLES_H
 #define SLIDER_PARTICLES_H
 #include "textslider.qc"

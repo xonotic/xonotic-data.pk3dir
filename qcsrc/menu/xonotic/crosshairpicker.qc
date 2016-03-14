@@ -1,3 +1,4 @@
+#include "crosshairpicker.qh"
 #ifndef CROSSHAIRPICKER_H
 #define CROSSHAIRPICKER_H
 #include "picker.qc"

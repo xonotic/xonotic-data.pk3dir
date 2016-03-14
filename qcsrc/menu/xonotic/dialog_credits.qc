@@ -1,3 +1,4 @@
+#include "dialog_credits.qh"
 #ifndef DIALOG_CREDITS_H
 #define DIALOG_CREDITS_H
 #include "dialog.qc"

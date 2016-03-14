@@ -1,3 +1,4 @@
+#include "csqcmodel_hooks.qh"
 #include "mutators/events.qh"
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"

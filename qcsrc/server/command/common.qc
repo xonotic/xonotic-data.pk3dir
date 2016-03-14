@@ -1,3 +1,4 @@
+#include "common.qh"
 #include <common/command/command.qh>
 #include "common.qh"
 

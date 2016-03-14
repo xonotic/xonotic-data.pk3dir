@@ -1,3 +1,4 @@
+#include "screenshotlist.qh"
 #ifndef SCREENSHOTLIST_H
 #define SCREENSHOTLIST_H
 #include "listbox.qc"

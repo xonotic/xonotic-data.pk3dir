@@ -1,3 +1,4 @@
+#include "cmd.qh"
 #include <common/command/command.qh>
 #include "cmd.qh"
 

@@ -1,3 +1,4 @@
+#include "checkbox.qh"
 #ifndef CHECKBOX_H
 #define CHECKBOX_H
 #include "../item/checkbox.qc"

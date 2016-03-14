@@ -1,3 +1,4 @@
+#include "dialog_multiplayer.qh"
 #ifndef DIALOG_MULTIPLAYER_H
 #define DIALOG_MULTIPLAYER_H
 #include "dialog.qc"

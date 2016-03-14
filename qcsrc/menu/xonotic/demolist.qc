@@ -1,3 +1,4 @@
+#include "demolist.qh"
 #ifndef DEMOLIST_H
 #define DEMOLIST_H
 #include "listbox.qc"

@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_healtharmor.qh"
 #ifndef DIALOG_HUDPANEL_HEALTHARMOR_H
 #define DIALOG_HUDPANEL_HEALTHARMOR_H
 #include "rootdialog.qc"

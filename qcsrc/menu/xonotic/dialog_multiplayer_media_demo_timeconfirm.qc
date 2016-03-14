@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_media_demo_timeconfirm.qh"
 #ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
 #define DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
 #include "dialog.qc"

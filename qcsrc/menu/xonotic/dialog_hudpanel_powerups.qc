@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_powerups.qh"
 #ifndef DIALOG_HUDPANEL_POWERUPS_H
 #define DIALOG_HUDPANEL_POWERUPS_H
 #include "rootdialog.qc"

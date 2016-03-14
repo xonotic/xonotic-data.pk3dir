@@ -1,3 +1,4 @@
+#include "item.qh"
 #ifndef ITEM_H
 #define ITEM_H
 #include "skin.qh"

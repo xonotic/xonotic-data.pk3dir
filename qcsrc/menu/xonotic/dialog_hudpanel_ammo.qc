@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_ammo.qh"
 #ifndef DIALOG_HUDPANEL_AMMO_H
 #define DIALOG_HUDPANEL_AMMO_H
 #include "rootdialog.qc"

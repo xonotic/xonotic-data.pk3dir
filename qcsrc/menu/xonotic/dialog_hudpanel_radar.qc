@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_radar.qh"
 #ifndef DIALOG_HUDPANEL_RADAR_H
 #define DIALOG_HUDPANEL_RADAR_H
 #include "rootdialog.qc"

@@ -1,3 +1,4 @@
+#include "easing.qh"
 #ifndef ANIM_EASING_H
 	#define ANIM_EASING_H
 	#include "animation.qc"

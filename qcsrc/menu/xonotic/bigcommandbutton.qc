@@ -1,3 +1,4 @@
+#include "bigcommandbutton.qh"
 #ifndef BIGCOMMANDBUTTON_H
 #define BIGCOMMANDBUTTON_H
 #include "commandbutton.qc"

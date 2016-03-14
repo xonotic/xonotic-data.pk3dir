@@ -1,3 +1,4 @@
+#include "statslist.qh"
 #include <common/playerstats.qh>
 
 #ifndef STATSLIST_H

@@ -1,3 +1,4 @@
+#include "image.qh"
 #ifndef ITEM_IMAGE_H
 	#define ITEM_IMAGE_H
 	#include "../item.qc"

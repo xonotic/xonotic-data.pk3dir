@@ -1,3 +1,4 @@
+#include "slider_resolution.qh"
 #ifndef SLIDER_RESOLUTION_H
 #define SLIDER_RESOLUTION_H
 #include "textslider.qc"

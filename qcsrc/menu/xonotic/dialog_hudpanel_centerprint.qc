@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_centerprint.qh"
 #ifndef DIALOG_HUDPANEL_CENTERPRINT_H
 #define DIALOG_HUDPANEL_CENTERPRINT_H
 #include "rootdialog.qc"

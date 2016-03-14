@@ -1,3 +1,4 @@
+#include "maplist.qh"
 #ifndef MAPLIST_H
 #define MAPLIST_H
 #include "listbox.qc"

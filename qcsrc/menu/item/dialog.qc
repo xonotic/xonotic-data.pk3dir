@@ -1,3 +1,4 @@
+#include "dialog.qh"
 // Note: this class is called Dialog, but it can also handle a tab under the following conditions:
 // - isTabRoot is 0
 // - backgroundImage is the tab's background

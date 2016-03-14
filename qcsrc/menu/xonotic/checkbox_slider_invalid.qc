@@ -1,3 +1,4 @@
+#include "checkbox_slider_invalid.qh"
 #ifndef CHECKBOX_SLIDER_INVALID_H
 #define CHECKBOX_SLIDER_INVALID_H
 #include "../item/checkbox.qc"

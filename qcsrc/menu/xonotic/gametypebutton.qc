@@ -1,3 +1,4 @@
+#include "gametypebutton.qh"
 #ifndef GAMETYPEBUTTON_H
 #define GAMETYPEBUTTON_H
 #include "../item/radiobutton.qc"

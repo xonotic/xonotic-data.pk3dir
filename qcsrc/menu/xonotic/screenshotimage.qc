@@ -1,3 +1,4 @@
+#include "screenshotimage.qh"
 #ifndef SCREENSHOTIMAGE_H
 #define SCREENSHOTIMAGE_H
 #include "image.qc"

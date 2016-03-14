@@ -1,3 +1,4 @@
+#include "dialog_settings_input_userbind.qh"
 #ifndef DIALOG_SETTINGS_INPUT_USERBIND_H
 #define DIALOG_SETTINGS_INPUT_USERBIND_H
 #include "dialog.qc"

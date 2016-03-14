@@ -1,3 +1,4 @@
+#include "powerups.qh"
 // Powerups (#2)
 
 // Powerup item fields (reusing existing fields)

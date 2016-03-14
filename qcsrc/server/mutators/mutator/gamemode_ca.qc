@@ -1,3 +1,4 @@
+#include "gamemode_ca.qh"
 #ifndef GAMEMODE_CA_H
 #define GAMEMODE_CA_H
 

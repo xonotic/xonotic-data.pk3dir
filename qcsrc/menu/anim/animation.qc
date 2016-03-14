@@ -1,3 +1,4 @@
+#include "animation.qh"
 #ifndef ANIM_ANIMATION_H
 	#define ANIM_ANIMATION_H
 	CLASS(Animation, Object)

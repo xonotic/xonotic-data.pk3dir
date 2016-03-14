@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_media_musicplayer.qh"
 #ifndef DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
 #define DIALOG_MULTIPLAYER_MEDIA_MUSICPLAYER_H
 #include "tab.qc"

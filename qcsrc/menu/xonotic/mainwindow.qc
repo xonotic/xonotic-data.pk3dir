@@ -1,3 +1,4 @@
+#include "mainwindow.qh"
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "../item/modalcontroller.qc"

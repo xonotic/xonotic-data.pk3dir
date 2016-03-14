@@ -1,3 +1,4 @@
+#include "gamemode_cts.qh"
 #include <server/race.qh>
 
 #ifndef GAMEMODE_CTS_H

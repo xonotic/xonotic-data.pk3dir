@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_score.qh"
 #ifndef DIALOG_HUDPANEL_SCORE_H
 #define DIALOG_HUDPANEL_SCORE_H
 #include "rootdialog.qc"

@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_create_mutators.qh"
 #include <common/weapons/all.qh>
 
 #ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H

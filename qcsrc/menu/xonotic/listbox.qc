@@ -1,3 +1,4 @@
+#include "listbox.qh"
 #ifndef LISTBOX_H
 #define LISTBOX_H
 #include "../item/listbox.qc"

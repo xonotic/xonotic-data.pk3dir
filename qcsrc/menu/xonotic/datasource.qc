@@ -1,3 +1,4 @@
+#include "datasource.qh"
 #ifndef DATASOURCE_H
 #define DATASOURCE_H
 CLASS(DataSource, Object)

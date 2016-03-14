@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_create.qh"
 #ifndef DIALOG_MULTIPLAYER_CREATE_H
 #define DIALOG_MULTIPLAYER_CREATE_H
 #include "tab.qc"

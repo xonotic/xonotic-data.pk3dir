@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_chat.qh"
 #ifndef DIALOG_HUDPANEL_CHAT_H
 #define DIALOG_HUDPANEL_CHAT_H
 #include "rootdialog.qc"

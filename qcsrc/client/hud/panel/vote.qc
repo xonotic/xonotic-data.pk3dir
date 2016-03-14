@@ -1,3 +1,4 @@
+#include "vote.qh"
 /** Vote window (#9) */
 void HUD_Vote()
 {

@@ -1,3 +1,4 @@
+#include "racetimer.qh"
 /** Race timer (#8) */
 void HUD_RaceTimer ()
 {

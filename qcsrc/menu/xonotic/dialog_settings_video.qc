@@ -1,3 +1,4 @@
+#include "dialog_settings_video.qh"
 #ifndef DIALOG_SETTINGS_VIDEO_H
 #define DIALOG_SETTINGS_VIDEO_H
 #include "tab.qc"

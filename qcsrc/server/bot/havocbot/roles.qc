@@ -1,3 +1,4 @@
+#include "roles.qh"
 
 #include "havocbot.qh"
 

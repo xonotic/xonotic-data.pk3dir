@@ -1,3 +1,4 @@
+#include "button.qh"
 #ifndef ITEM_BUTTON_H
 	#define ITEM_BUTTON_H
 	#include "label.qc"

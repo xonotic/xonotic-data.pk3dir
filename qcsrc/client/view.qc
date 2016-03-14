@@ -1,3 +1,4 @@
+#include "view.qh"
 
 #include "announcer.qh"
 #include "hud/all.qh"

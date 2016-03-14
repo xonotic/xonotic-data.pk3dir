@@ -1,3 +1,4 @@
+#include "gamemode_freezetag.qh"
 #ifndef GAMEMODE_FREEZETAG_H
 #define GAMEMODE_FREEZETAG_H
 

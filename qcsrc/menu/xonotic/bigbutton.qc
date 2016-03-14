@@ -1,3 +1,4 @@
+#include "bigbutton.qh"
 #ifndef BIGBUTTON_H
 #define BIGBUTTON_H
 #include "button.qc"

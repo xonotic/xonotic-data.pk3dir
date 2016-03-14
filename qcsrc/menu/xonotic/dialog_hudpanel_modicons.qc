@@ -1,3 +1,4 @@
+#include "dialog_hudpanel_modicons.qh"
 #ifndef DIALOG_HUDPANEL_MODICONS_H
 #define DIALOG_HUDPANEL_MODICONS_H
 #include "rootdialog.qc"

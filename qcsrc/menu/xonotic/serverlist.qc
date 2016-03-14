@@ -1,3 +1,4 @@
+#include "serverlist.qh"
 #ifndef SERVERLIST_H
 #define SERVERLIST_H
 #include "listbox.qc"

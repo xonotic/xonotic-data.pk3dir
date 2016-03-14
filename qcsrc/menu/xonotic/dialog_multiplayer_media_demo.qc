@@ -1,3 +1,4 @@
+#include "dialog_multiplayer_media_demo.qh"
 #ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_H
 #define DIALOG_MULTIPLAYER_MEDIA_DEMO_H
 #include "tab.qc"
