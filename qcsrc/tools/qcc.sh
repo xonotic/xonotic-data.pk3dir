@@ -1,5 +1,6 @@
 #!/bin/bash
-set -eu
+set -euo pipefail
+IFS=$' \n\t'
 
 WORKDIR=${WORKDIR}
 CPP=${CPP}
@@ -12,6 +13,7 @@ function qpp() {
     IN=$1
     OUT=$2
     >&2 echo + ${CPP} ${@:3} ${IN}
+    set +e
     # additional information
     ${CPP} ${@:3} \
         -dM 1>${WORKDIR}/${MODE}_macros.txt \
@@ -19,6 +21,9 @@ function qpp() {
         ${IN}
     # main step
     ${CPP} ${@:3} -MMD -MP -MT ${OUT} -Wall -Wundef -Werror ${IN} -o ${WORKDIR}/${MODE}.txt
+    err=$?
+    set -e
+    if [ ${err} -ne 0 ]; then return ${err}; fi
     sed 's/^#\(line\)\? \([[:digit:]]\+\) "\(.*\)".*/\n#pragma file(\3)\n#pragma line(\2)/g' ${WORKDIR}/${MODE}.txt
 }
 
