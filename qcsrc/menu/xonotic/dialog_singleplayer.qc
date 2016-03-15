@@ -1,20 +1,10 @@
 #include "dialog_singleplayer.qh"
-#ifndef DIALOG_SINGLEPLAYER_H
-#define DIALOG_SINGLEPLAYER_H
-#include "dialog.qc"
-CLASS(XonoticSingleplayerDialog, XonoticDialog)
-	METHOD(XonoticSingleplayerDialog, fill, void(entity));
-	ATTRIB(XonoticSingleplayerDialog, title, string, _("Singleplayer"))
-	ATTRIB(XonoticSingleplayerDialog, tooltip, string, _("Play the singleplayer campaign or instant action matches against bots"))
-	ATTRIB(XonoticSingleplayerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
-	ATTRIB(XonoticSingleplayerDialog, intendedWidth, float, 0.80)
-	ATTRIB(XonoticSingleplayerDialog, rows, float, 24)
-	ATTRIB(XonoticSingleplayerDialog, columns, float, 5)
-	ATTRIB(XonoticSingleplayerDialog, campaignBox, entity, NULL)
-ENDCLASS(XonoticSingleplayerDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include <common/mapinfo.qh>
+#include "bigbutton.qh"
+#include "radiobutton.qh"
+#include "textlabel.qh"
+#include "campaign.qh"
 
 void InstantAction_LoadMap(entity btn, entity dummy)
 {
@@ -146,4 +136,3 @@ void XonoticSingleplayerDialog_fill(entity me)
 			e.onClick = CampaignList_LoadMap;
 			e.onClickEntity = me.campaignBox;
 }
-#endif

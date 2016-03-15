@@ -1,19 +1,11 @@
 #include "dialog_hudpanel_itemstime.qh"
-#ifndef DIALOG_HUDPANEL_ITEMSTIME_H
-#define DIALOG_HUDPANEL_ITEMSTIME_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDItemsTimeDialog, XonoticRootDialog)
-	METHOD(XonoticHUDItemsTimeDialog, fill, void(entity));
-	ATTRIB(XonoticHUDItemsTimeDialog, title, string, _("Items Time Panel"))
-	ATTRIB(XonoticHUDItemsTimeDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDItemsTimeDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDItemsTimeDialog, rows, float, 15)
-	ATTRIB(XonoticHUDItemsTimeDialog, columns, float, 4)
-	ATTRIB(XonoticHUDItemsTimeDialog, name, string, "HUDitemstime")
-ENDCLASS(XonoticHUDItemsTimeDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "textslider.qh"
+#include "radiobutton.qh"
+#include "checkbox.qh"
+#include "slider.qh"
+
 void XonoticHUDItemsTimeDialog_fill(entity me)
 {
 	entity e;
@@ -46,4 +38,3 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_dynamicsize", _("Dynamic size")));
 }
-#endif

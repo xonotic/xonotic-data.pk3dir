@@ -1,20 +1,9 @@
 #include "dialog_quit.qh"
-#ifndef DIALOG_QUIT_H
-#define DIALOG_QUIT_H
-#include "dialog.qc"
-CLASS(XonoticQuitDialog, XonoticDialog)
-	METHOD(XonoticQuitDialog, fill, void(entity));
-	ATTRIB(XonoticQuitDialog, title, string, _("Quit"))
-	ATTRIB(XonoticQuitDialog, tooltip, string, _("Quit the game"))
-	ATTRIB(XonoticQuitDialog, color, vector, SKINCOLOR_DIALOG_QUIT)
-	ATTRIB(XonoticQuitDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticQuitDialog, rows, float, 3)
-	ATTRIB(XonoticQuitDialog, columns, float, 2)
-	ATTRIB(XonoticQuitDialog, name, string, "Quit")
-ENDCLASS(XonoticQuitDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "commandbutton.qh"
+#include "button.qh"
+
 void XonoticQuitDialog_fill(entity me)
 {
 	entity e;
@@ -29,4 +18,3 @@ void XonoticQuitDialog_fill(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-#endif

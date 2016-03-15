@@ -1,16 +1,5 @@
 #include "slider_sbfadetime.qh"
-#ifndef SLIDER_SBFADETIME_H
-#define SLIDER_SBFADETIME_H
-#include "textslider.qc"
-CLASS(XonoticScoreboardFadeTimeSlider, XonoticTextSlider)
-	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity));
-	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity));
-	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity));
-ENDCLASS(XonoticScoreboardFadeTimeSlider)
-entity makeXonoticScoreboardFadeTimeSlider();
-#endif
 
-#ifdef IMPLEMENTATION
 entity makeXonoticScoreboardFadeTimeSlider()
 {
 	entity me;
@@ -43,4 +32,3 @@ void XonoticScoreboardFadeTimeSlider_saveCvars(entity me)
 		cvar_set("scoreboard_fadeoutspeed", argv(1));
 	}
 }
-#endif

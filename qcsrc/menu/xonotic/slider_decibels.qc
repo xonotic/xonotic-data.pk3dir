@@ -1,17 +1,4 @@
 #include "slider_decibels.qh"
-#ifndef SLIDER_DECIBELS_H
-#define SLIDER_DECIBELS_H
-#include "slider.qc"
-CLASS(XonoticDecibelsSlider, XonoticSlider)
-	METHOD(XonoticDecibelsSlider, loadCvars, void(entity));
-	METHOD(XonoticDecibelsSlider, saveCvars, void(entity));
-	METHOD(XonoticDecibelsSlider, valueToText, string(entity, float));
-ENDCLASS(XonoticDecibelsSlider)
-entity makeXonoticDecibelsSlider_T(float, float, float, string, string);
-entity makeXonoticDecibelsSlider(float, float, float, string);
-#endif
-
-#ifdef IMPLEMENTATION
 
 float toDecibelOfSquare(float f, float mi)
 {
@@ -110,5 +97,3 @@ TEST(XonoticDecibelsSlider, SoundTest)
 	}
 	SUCCEED();
 }
-
-#endif

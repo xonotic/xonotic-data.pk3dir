@@ -1,27 +1,6 @@
 #include "charmap.qh"
-#ifndef CHARMAP_H
-#define CHARMAP_H
-#include "picker.qc"
-CLASS(XonoticCharmap, XonoticPicker)
-	METHOD(XonoticCharmap, configureXonoticCharmap, void(entity, entity));
-	METHOD(XonoticCharmap, focusLeave, void(entity));
-	METHOD(XonoticCharmap, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticCharmap, keyDown, float(entity, float, float, float));
-	ATTRIB(XonoticCharmap, inputBox, entity, NULL)
-	ATTRIB(XonoticCharmap, realFontSize, vector, '0 0 0')
 
-	ATTRIB(XonoticCharmap, rows, float, 10)
-	ATTRIB(XonoticCharmap, columns, float, 14)
-
-	METHOD(XonoticCharmap, cellSelect, void(entity, vector));
-	METHOD(XonoticCharmap, cellIsValid, bool(entity, vector));
-	METHOD(XonoticCharmap, cellDraw, void(entity, vector, vector));
-	ATTRIB(XonoticCharmap, charOffset, vector, '0 0 0')
-ENDCLASS(XonoticCharmap)
-entity makeXonoticCharmap(entity controlledInputBox);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "inputbox.qh"
 
 string CHARMAP =
 	"★◆■▮▰▬◣◤◥◢◀▲▶▼"
@@ -122,4 +101,3 @@ void XonoticCharmap_focusLeave(entity me)
 {
 	me.inputBox.saveCvars(me.inputBox);
 }
-#endif

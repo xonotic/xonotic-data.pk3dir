@@ -1,18 +1,14 @@
 #include "dialog_multiplayer_media.qh"
-#ifndef DIALOG_MULTIPLAYER_MEDIA_H
-#define DIALOG_MULTIPLAYER_MEDIA_H
-#include "tab.qc"
-CLASS(XonoticMediaTab, XonoticTab)
-	METHOD(XonoticMediaTab, fill, void(entity));
-	ATTRIB(XonoticMediaTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMediaTab, rows, float, 23)
-	ATTRIB(XonoticMediaTab, columns, float, 3)
-	ATTRIB(XonoticMediaTab, name, string, "Media")
-ENDCLASS(XonoticMediaTab)
-entity makeXonoticMediaTab();
-#endif
 
-#ifdef IMPLEMENTATION
+#include "demolist.qh"
+#include "dialog_multiplayer_media_demo.qh"
+#include "dialog_multiplayer_media_screenshot.qh"
+#include "dialog_multiplayer_media_musicplayer.qh"
+#include "dialog_multiplayer_media_demo_timeconfirm.qh"
+#include "dialog_multiplayer_media_demo_startconfirm.qh"
+
+#include "tabcontroller.qh"
+
 entity makeXonoticMediaTab()
 {
 	entity me;
@@ -33,4 +29,3 @@ void XonoticMediaTab_fill(entity me)
 	me.gotoRC(me, 3, 0);
 		me.TD(me, me.rows - 2, me.columns, mc);
 }
-#endif

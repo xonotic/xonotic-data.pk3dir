@@ -1,21 +1,11 @@
 #include "dialog_settings_game_view.qh"
-#ifndef DIALOG_SETTINGS_GAME_VIEW_H
-#define DIALOG_SETTINGS_GAME_VIEW_H
-#include "tab.qc"
-CLASS(XonoticGameViewSettingsTab, XonoticTab)
-	METHOD(XonoticGameViewSettingsTab, fill, void(entity));
-	METHOD(XonoticGameViewSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameViewSettingsTab, title, string, _("View"))
-	ATTRIB(XonoticGameViewSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameViewSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticGameViewSettingsTab, columns, float, 6.2)
-ENDCLASS(XonoticGameViewSettingsTab)
-entity makeXonoticGameViewSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(View, makeXonoticGameViewSettingsTab());
-#endif
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "textslider.qh"
+#include "slider.qh"
+#include "radiobutton.qh"
+
 void XonoticGameViewSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
@@ -129,4 +119,3 @@ void XonoticGameViewSettingsTab_fill(entity me)
 		//me.TDempty(me, 0.2);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_unpress_zoom_on_weapon_switch", _("Release zoom when you switch weapons")));
 }
-#endif

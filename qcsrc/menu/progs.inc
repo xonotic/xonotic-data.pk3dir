@@ -2,16 +2,17 @@
 
 #define world NULL
 
-#include "classes.qc"
+#include "classes.inc"
 
 #include "draw.qc"
 #include "menu.qc"
 
-#include "command/all.qc"
+#include <common/command/all.qc>
+#include "command/menu_cmd.qc"
 
 #include "xonotic/util.qc"
 
-#include "../common/_all.inc"
+#include <common/_all.inc>
 
 #if BUILD_MOD
 #include "../../mod/menu/progs.inc"

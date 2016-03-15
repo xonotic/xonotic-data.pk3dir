@@ -1,26 +1,19 @@
 #include "dialog_multiplayer_create.qh"
-#ifndef DIALOG_MULTIPLAYER_CREATE_H
-#define DIALOG_MULTIPLAYER_CREATE_H
-#include "tab.qc"
-CLASS(XonoticServerCreateTab, XonoticTab)
-	METHOD(XonoticServerCreateTab, fill, void(entity));
-	METHOD(XonoticServerCreateTab, gameTypeChangeNotify, void(entity));
-	METHOD(XonoticServerCreateTab, gameTypeSelectNotify, void(entity));
-	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticServerCreateTab, rows, float, 23)
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space
 
-	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, sliderTeams, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, sliderTimelimit, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, labelFraglimit, entity, NULL)
-	ATTRIB(XonoticServerCreateTab, labelTeams, entity, NULL)
-ENDCLASS(XonoticServerCreateTab)
-entity makeXonoticServerCreateTab();
-#endif
+#include "dialog_multiplayer_create_mapinfo.qh"
+#include "dialog_multiplayer_create_mutators.qh"
 
-#ifdef IMPLEMENTATION
+#include "gametypelist.qh"
+#include "maplist.qh"
+#include <common/mapinfo.qh>
+
+#include "image.qh"
+#include "textslider.qh"
+#include "textlabel.qh"
+#include "slider.qh"
+#include "mainwindow.qh"
+#include "button.qh"
+#include "inputbox.qh"
 
 void GameType_ConfigureSliders(entity me, string pLabel, float pMin, float pMax, float pStep, string pCvar, string tCvar, string pTooltip)
 {
@@ -247,5 +240,3 @@ void XonoticServerCreateTab_gameTypeSelectNotify(entity me)
 {
 	me.setFocus(me, me.mapListBox);
 }
-
-#endif

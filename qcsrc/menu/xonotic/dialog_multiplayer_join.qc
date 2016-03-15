@@ -1,17 +1,11 @@
 #include "dialog_multiplayer_join.qh"
-#ifndef DIALOG_MULTIPLAYER_JOIN_H
-#define DIALOG_MULTIPLAYER_JOIN_H
-#include "tab.qc"
-CLASS(XonoticServerListTab, XonoticTab)
-	METHOD(XonoticServerListTab, fill, void(entity));
-	ATTRIB(XonoticServerListTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticServerListTab, rows, float, 23)
-	ATTRIB(XonoticServerListTab, columns, float, 6.5)
-ENDCLASS(XonoticServerListTab)
-entity makeXonoticServerListTab();
-#endif
 
-#ifdef IMPLEMENTATION
+#include "serverlist.qh"
+
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "checkbox.qh"
+#include "button.qh"
 
 entity makeXonoticServerListTab()
 {
@@ -82,4 +76,3 @@ void XonoticServerListTab_fill(entity me)
 			e.onClickEntity = slist;
 			slist.connectButton = e;
 }
-#endif

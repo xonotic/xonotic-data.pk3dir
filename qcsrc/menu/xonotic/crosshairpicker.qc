@@ -1,21 +1,4 @@
 #include "crosshairpicker.qh"
-#ifndef CROSSHAIRPICKER_H
-#define CROSSHAIRPICKER_H
-#include "picker.qc"
-CLASS(XonoticCrosshairPicker, XonoticPicker)
-	METHOD(XonoticCrosshairPicker, configureXonoticCrosshairPicker, void(entity));
-
-	ATTRIB(XonoticCrosshairPicker, rows, float, 3)
-	ATTRIB(XonoticCrosshairPicker, columns, float, 12)
-
-	METHOD(XonoticCrosshairPicker, cellSelect, void(entity, vector));
-	METHOD(XonoticCrosshairPicker, cellIsValid, bool(entity, vector));
-	METHOD(XonoticCrosshairPicker, cellDraw, void(entity, vector, vector));
-ENDCLASS(XonoticCrosshairPicker)
-entity makeXonoticCrosshairPicker();
-#endif
-
-#ifdef IMPLEMENTATION
 
 string crosshairpicker_cellToCrosshair(entity me, vector cell)
 {
@@ -76,4 +59,3 @@ void XonoticCrosshairPicker_cellDraw(entity me, vector cell, vector cellPos)
 	if(cvar("crosshair_dot"))
 		draw_Picture(crosshairPos - 0.5 * sz * cvar("crosshair_dot_size"), "/gfx/crosshairdot", sz * cvar("crosshair_dot_size"), SKINCOLOR_CROSSHAIRPICKER_CROSSHAIR, SKINALPHA_CROSSHAIRPICKER_CROSSHAIR);
 }
-#endif

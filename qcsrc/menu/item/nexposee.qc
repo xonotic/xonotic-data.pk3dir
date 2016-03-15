@@ -1,54 +1,5 @@
 #include "nexposee.qh"
-#ifndef ITEM_NEXPOSEE_H
-	#define ITEM_NEXPOSEE_H
-	#include "container.qc"
-	CLASS(Nexposee, Container)
-		METHOD(Nexposee, draw, void(entity));
-		METHOD(Nexposee, keyDown, float(entity, float, float, float));
-		METHOD(Nexposee, keyUp, float(entity, float, float, float));
-		METHOD(Nexposee, mousePress, float(entity, vector));
-		METHOD(Nexposee, mouseMove, float(entity, vector));
-		METHOD(Nexposee, mouseRelease, float(entity, vector));
-		METHOD(Nexposee, mouseDrag, float(entity, vector));
-		METHOD(Nexposee, resizeNotify, void(entity, vector, vector, vector, vector));
-		METHOD(Nexposee, focusEnter, void(entity));
-		METHOD(Nexposee, close, void(entity));
 
-		ATTRIB(Nexposee, animationState, float, -1)
-		ATTRIB(Nexposee, animationFactor, float, 0)
-		ATTRIB(Nexposee, selectedChild, entity, NULL)
-		ATTRIB(Nexposee, mouseFocusedChild, entity, NULL)
-		METHOD(Nexposee, addItem, void(entity, entity, vector, vector, float));
-		METHOD(Nexposee, calc, void(entity));
-		METHOD(Nexposee, setNexposee, void(entity, entity, vector, float, float));
-		ATTRIB(Nexposee, mousePosition, vector, '0 0 0')
-		METHOD(Nexposee, pullNexposee, void(entity, entity, vector));
-	ENDCLASS(Nexposee)
-
-	void ExposeeCloseButton_Click(entity button, entity other);  // un-exposees the current state
-
-// animation states:
-//   0 = thumbnails seen
-//   1 = zooming in
-//   2 = zoomed in
-//   3 = zooming out
-// animation factor: 0 = minimum theSize, 1 = maximum theSize
-	.vector Nexposee_initialSize;
-	.vector Nexposee_initialFontScale;
-	.vector Nexposee_initialOrigin;
-	.float Nexposee_initialAlpha;
-
-	.vector Nexposee_smallSize;
-	.vector Nexposee_smallOrigin;
-	.float Nexposee_smallAlpha;
-	.float Nexposee_mediumAlpha;
-	.vector Nexposee_scaleCenter;
-	.vector Nexposee_align;
-	.float Nexposee_animationFactor;
-
-#endif
-
-#ifdef IMPLEMENTATION
 	void Nexposee_close(entity me)
 	{
 		// user must override this
@@ -344,4 +295,3 @@
 	{
 		other.Nexposee_align = theAlign;
 	}
-#endif

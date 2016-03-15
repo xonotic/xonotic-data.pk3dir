@@ -2,7 +2,7 @@
 #define MUTATOR_DAMAGETEXT_H
 
 #ifdef MENUQC
-#include <menu/xonotic/tab.qc>
+#include <menu/xonotic/tab.qh>
 #endif
 
 #endif

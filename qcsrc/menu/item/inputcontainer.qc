@@ -1,23 +1,5 @@
 #include "inputcontainer.qh"
-#ifndef ITEM_INPUTCONTAINER_H
-	#define ITEM_INPUTCONTAINER_H
-	#include "container.qc"
-	CLASS(InputContainer, Container)
-		METHOD(InputContainer, keyDown, float(entity, float, float, float));
-		METHOD(InputContainer, mouseMove, float(entity, vector));
-		METHOD(InputContainer, mousePress, float(entity, vector));
-		METHOD(InputContainer, mouseRelease, float(entity, vector));
-		METHOD(InputContainer, mouseDrag, float(entity, vector));
-		METHOD(InputContainer, focusLeave, void(entity));
-		METHOD(InputContainer, resizeNotify, void(entity, vector, vector, vector, vector));
 
-		METHOD(InputContainer, _changeFocusXY, bool(entity this, vector pos));
-		ATTRIB(InputContainer, mouseFocusedChild, entity, NULL)
-		ATTRIB(InputContainer, isTabRoot, float, 0)
-	ENDCLASS(InputContainer)
-#endif
-
-#ifdef IMPLEMENTATION
 	void InputContainer_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
 		SUPER(InputContainer).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -150,4 +132,3 @@
 		if (pos.x >= 0 && pos.y >= 0 && pos.x < 1 && pos.y < 1) return 1;
 		return 0;
 	}
-#endif

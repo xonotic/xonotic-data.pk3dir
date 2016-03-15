@@ -1,20 +1,17 @@
 #include "dialog_multiplayer_profile.qh"
-#ifndef DIALOG_MULTIPLAYER_PROFILE_H
-#define DIALOG_MULTIPLAYER_PROFILE_H
-#include "tab.qc"
-CLASS(XonoticProfileTab, XonoticTab)
-	METHOD(XonoticProfileTab, fill, void(entity));
-	METHOD(XonoticProfileTab, draw, void(entity));
-	ATTRIB(XonoticProfileTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticProfileTab, rows, float, 23)
-	ATTRIB(XonoticProfileTab, columns, float, 6.1) // added extra .2 for center space
-	ATTRIB(XonoticProfileTab, playerNameLabel, entity, NULL)
-	ATTRIB(XonoticProfileTab, playerNameLabelAlpha, float, SKINALPHA_HEADER)
-ENDCLASS(XonoticProfileTab)
-entity makeXonoticProfileTab();
-#endif
 
-#ifdef IMPLEMENTATION
+#include "playermodel.qh"
+#include "statslist.qh"
+#include "languagelist.qh"
+#include "textlabel.qh"
+#include "commandbutton.qh"
+#include "inputbox.qh"
+#include "colorpicker.qh"
+#include "charmap.qh"
+#include "colorbutton.qh"
+#include "checkbox.qh"
+#include "radiobutton.qh"
+
 entity makeXonoticProfileTab()
 {
 	entity me;
@@ -180,4 +177,3 @@ void XonoticProfileTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, profileApplyButton);
 }
-#endif

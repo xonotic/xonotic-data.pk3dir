@@ -1,28 +1,10 @@
 #include "animhost.qh"
+
 #include "../menu.qh"
 
-#ifndef ANIM_ANIMHOST_H
-	#define ANIM_ANIMHOST_H
-	CLASS(AnimHost, Object)
-		METHOD(AnimHost, addAnim, void(entity, entity));
-		METHOD(AnimHost, removeAnim, void(entity, entity));
-		METHOD(AnimHost, removeAllAnim, void(entity));
-		METHOD(AnimHost, removeObjAnim, void(entity, entity));
-		METHOD(AnimHost, stopAllAnim, void(entity));
-		METHOD(AnimHost, stopObjAnim, void(entity, entity));
-		METHOD(AnimHost, resumeAllAnim, void(entity));
-		METHOD(AnimHost, resumeObjAnim, void(entity, entity));
-		METHOD(AnimHost, finishAllAnim, void(entity));
-		METHOD(AnimHost, finishObjAnim, void(entity, entity));
-		METHOD(AnimHost, tickAll, void(entity));
-		ATTRIB(AnimHost, firstChild, entity, NULL)
-		ATTRIB(AnimHost, lastChild, entity, NULL)
-	ENDCLASS(AnimHost)
-	.entity nextSibling;
-	.entity prevSibling;
-#endif
+#include "animation.qh"
 
-#ifdef IMPLEMENTATION
+    .entity parent;
 	METHOD(AnimHost, addAnim, void(entity this, entity other))
 	{
 		if (other.parent) error("Can't add already added anim!");
@@ -141,4 +123,3 @@
 			}
 		}
 	}
-#endif

@@ -1,18 +1,5 @@
 #include "radiobutton.qh"
-#ifndef ITEM_RADIOBUTTON_H
-	#define ITEM_RADIOBUTTON_H
-	#include "checkbox.qc"
-	void RadioButton_Click(entity me, entity other);
-	CLASS(RadioButton, CheckBox)
-		METHOD(RadioButton, configureRadioButton, void(entity, string, float, string, float, float));
-		ATTRIB(RadioButton, checked, float, 0)
-		ATTRIB(RadioButton, group, float, 0)
-		ATTRIB(RadioButton, allowDeselect, float, 0)
-		ATTRIB(RadioButton, onClick, void(entity, entity), RadioButton_Click)
-	ENDCLASS(RadioButton)
-#endif
 
-#ifdef IMPLEMENTATION
 	void RadioButton_configureRadioButton(entity me, string txt, float sz, string gfx, float theGroup, float doAllowDeselect)
 	{
 		me.configureCheckBox(me, txt, sz, gfx);
@@ -35,4 +22,3 @@
 			me.setChecked(me, 1);
 		}
 	}
-#endif

@@ -1,23 +1,5 @@
 #include "checkbox.qh"
-#ifndef ITEM_CHECKBOX_H
-	#define ITEM_CHECKBOX_H
-	#include "button.qc"
-	void CheckBox_Click(entity me, entity other);
-	CLASS(CheckBox, Button)
-		METHOD(CheckBox, configureCheckBox, void(entity, string, float, string));
-		METHOD(CheckBox, draw, void(entity));
-		METHOD(CheckBox, playClickSound, void(entity));
-		METHOD(CheckBox, toString, string(entity));
-		METHOD(CheckBox, setChecked, void(entity, float));
-		ATTRIB(CheckBox, useDownAsChecked, float, 0)
-		ATTRIB(CheckBox, checked, float, 0)
-		ATTRIB(CheckBox, onClick, void(entity, entity), CheckBox_Click)
-		ATTRIB(CheckBox, srcMulti, float, 0)
-		ATTRIB(CheckBox, disabled, float, 0)
-	ENDCLASS(CheckBox)
-#endif
 
-#ifdef IMPLEMENTATION
 	void CheckBox_setChecked(entity me, float val)
 	{
 		me.checked = val;
@@ -55,4 +37,3 @@
 	{
 		m_play_click_sound(MENU_SOUND_SELECT);
 	}
-#endif

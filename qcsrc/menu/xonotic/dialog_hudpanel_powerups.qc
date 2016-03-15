@@ -1,20 +1,9 @@
 #include "dialog_hudpanel_powerups.qh"
-#ifndef DIALOG_HUDPANEL_POWERUPS_H
-#define DIALOG_HUDPANEL_POWERUPS_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDPowerupsDialog, XonoticRootDialog)
-	METHOD(XonoticHUDPowerupsDialog, fill, void(entity));
-	ATTRIB(XonoticHUDPowerupsDialog, title, string, _("Powerups Panel"))
-	ATTRIB(XonoticHUDPowerupsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDPowerupsDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDPowerupsDialog, rows, float, 14)
-	ATTRIB(XonoticHUDPowerupsDialog, columns, float, 4)
-	ATTRIB(XonoticHUDPowerupsDialog, name, string, "HUDpowerups")
-	ATTRIB(XonoticHUDPowerupsDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDPowerupsDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "radiobutton.qh"
+
 void XonoticHUDPowerupsDialog_fill(entity me)
 {
 	entity e;
@@ -46,4 +35,3 @@ void XonoticHUDPowerupsDialog_fill(entity me)
 			me.TD(me, 1, 0.95, e = makeXonoticRadioButton(3, "hud_panel_powerups_iconalign", "2", _("Inward")));
 			me.TD(me, 1, 0.95, e = makeXonoticRadioButton(3, "hud_panel_powerups_iconalign", "3", _("Outward")));
 }
-#endif

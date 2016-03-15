@@ -1,20 +1,9 @@
 #include "dialog_hudpanel_vote.qh"
-#ifndef DIALOG_HUDPANEL_VOTE_H
-#define DIALOG_HUDPANEL_VOTE_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDVoteDialog, XonoticRootDialog)
-	METHOD(XonoticHUDVoteDialog, fill, void(entity));
-	ATTRIB(XonoticHUDVoteDialog, title, string, _("Vote Panel"))
-	ATTRIB(XonoticHUDVoteDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDVoteDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDVoteDialog, rows, float, 15)
-	ATTRIB(XonoticHUDVoteDialog, columns, float, 4)
-	ATTRIB(XonoticHUDVoteDialog, name, string, "HUDvote")
-	ATTRIB(XonoticHUDVoteDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDVoteDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "slider.qh"
+
 void XonoticHUDVoteDialog_fill(entity me)
 {
 	entity e;
@@ -26,4 +15,3 @@ void XonoticHUDVoteDialog_fill(entity me)
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Alpha after voting:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_vote_alreadyvoted_alpha"));
 }
-#endif

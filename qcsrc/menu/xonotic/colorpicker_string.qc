@@ -1,28 +1,7 @@
 #include "colorpicker_string.qh"
-#ifndef COLORPICKER_STRING_H
-#define COLORPICKER_STRING_H
-#include "../item/image.qc"
-CLASS(XonoticColorpickerString, Image)
-	METHOD(XonoticColorpickerString, configureXonoticColorpickerString, void(entity, string, string));
-	METHOD(XonoticColorpickerString, mousePress, float(entity, vector));
-	METHOD(XonoticColorpickerString, mouseRelease, float(entity, vector));
-	METHOD(XonoticColorpickerString, mouseDrag, float(entity, vector));
 
-	ATTRIB(XonoticColorpickerString, cvarName, string, string_null)
-	METHOD(XonoticColorpickerString, loadCvars, void(entity));
-	METHOD(XonoticColorpickerString, saveCvars, void(entity));
+.bool disabled;
 
-	ATTRIB(XonoticColorpickerString, prevcoords, vector, '0 0 0')
-	ATTRIB(XonoticColorpickerString, image, string, SKINGFX_COLORPICKER)
-	ATTRIB(XonoticColorpickerString, imagemargin, vector, SKINMARGIN_COLORPICKER)
-	ATTRIB(XonoticColorpickerString, focusable, float, 1)
-	METHOD(XonoticColorpickerString, draw, void(entity));
-	ATTRIB(XonoticColorpickerString, disabledAlpha, float, 0.3)
-ENDCLASS(XonoticColorpickerString)
-entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar)
 {
 	entity me;
@@ -120,4 +99,3 @@ void XonoticColorpickerString_draw(entity me)
 
 	draw_alpha = save;
 }
-#endif

@@ -1,20 +1,8 @@
 #include "dialog_hudpanel_infomessages.qh"
-#ifndef DIALOG_HUDPANEL_INFOMESSAGES_H
-#define DIALOG_HUDPANEL_INFOMESSAGES_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDInfoMessagesDialog, XonoticRootDialog)
-	METHOD(XonoticHUDInfoMessagesDialog, fill, void(entity));
-	ATTRIB(XonoticHUDInfoMessagesDialog, title, string, _("Info Messages Panel"))
-	ATTRIB(XonoticHUDInfoMessagesDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDInfoMessagesDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDInfoMessagesDialog, rows, float, 15)
-	ATTRIB(XonoticHUDInfoMessagesDialog, columns, float, 4)
-	ATTRIB(XonoticHUDInfoMessagesDialog, name, string, "HUDinfomessages")
-	ATTRIB(XonoticHUDInfoMessagesDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDInfoMessagesDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+
 void XonoticHUDInfoMessagesDialog_fill(entity me)
 {
 	entity e;
@@ -28,4 +16,3 @@ void XonoticHUDInfoMessagesDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_infomessages_flip", _("Flip align")));
 }
-#endif

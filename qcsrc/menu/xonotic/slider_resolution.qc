@@ -1,23 +1,4 @@
 #include "slider_resolution.qh"
-#ifndef SLIDER_RESOLUTION_H
-#define SLIDER_RESOLUTION_H
-#include "textslider.qc"
-CLASS(XonoticResolutionSlider, XonoticTextSlider)
-	METHOD(XonoticResolutionSlider, configureXonoticResolutionSlider, void(entity));
-	METHOD(XonoticResolutionSlider, loadResolutions, void(entity, float));
-	METHOD(XonoticResolutionSlider, addResolution, void(entity, float, float, float));
-	METHOD(XonoticResolutionSlider, loadCvars, void(entity));
-	METHOD(XonoticResolutionSlider, saveCvars, void(entity));
-	METHOD(XonoticResolutionSlider, draw, void(entity));
-	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1)
-	ATTRIB(XonoticResolutionSlider, maxAllowedWidth, float, 0)
-	ATTRIB(XonoticResolutionSlider, maxAllowedHeight, float, 0)
-ENDCLASS(XonoticResolutionSlider)
-entity makeXonoticResolutionSlider();
-float updateConwidths(float width, float height, float pixelheight);
-#endif
-
-#ifdef IMPLEMENTATION
 
 /* private static */ float XonoticResolutionSlider_DataHasChanged;
 
@@ -244,4 +225,3 @@ void XonoticResolutionSlider_draw(entity me)
 	}
 	SUPER(XonoticResolutionSlider).draw(me);
 }
-#endif

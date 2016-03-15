@@ -1,18 +1,13 @@
 #include "dialog_settings_video.qh"
-#ifndef DIALOG_SETTINGS_VIDEO_H
-#define DIALOG_SETTINGS_VIDEO_H
-#include "tab.qc"
-CLASS(XonoticVideoSettingsTab, XonoticTab)
-	METHOD(XonoticVideoSettingsTab, fill, void(entity));
-	ATTRIB(XonoticVideoSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticVideoSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.2) // added extra .2 for center space
-	ATTRIB(XonoticVideoSettingsTab, name, string, "videosettings")
-ENDCLASS(XonoticVideoSettingsTab)
-entity makeXonoticVideoSettingsTab();
-#endif
 
-#ifdef IMPLEMENTATION
+#include "commandbutton.qh"
+#include "textlabel.qh"
+#include "textslider.qh"
+#include "checkbox.qh"
+#include "slider.qh"
+#include "slider_resolution.qh"
+#include "radiobutton.qh"
+
 entity makeXonoticVideoSettingsTab()
 {
 	entity me;
@@ -177,4 +172,3 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, videoApplyButton);
 }
-#endif

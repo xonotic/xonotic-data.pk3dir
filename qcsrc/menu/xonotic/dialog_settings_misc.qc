@@ -1,17 +1,13 @@
 #include "dialog_settings_misc.qh"
-#ifndef DIALOG_SETTINGS_MISC_H
-#define DIALOG_SETTINGS_MISC_H
-#include "tab.qc"
-CLASS(XonoticMiscSettingsTab, XonoticTab)
-	METHOD(XonoticMiscSettingsTab, fill, void(entity));
-	ATTRIB(XonoticMiscSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMiscSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticMiscSettingsTab, columns, float, 6.2)
-ENDCLASS(XonoticMiscSettingsTab)
-entity makeXonoticMiscSettingsTab();
-#endif
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "textslider.qh"
+#include "slider.qh"
+#include "checkbox.qh"
+#include "button.qh"
+#include "mainwindow.qh"
+
 #define ADDVALUE_FPS(i) e.addValue(e, strzone(sprintf(_("%d fps"), i)), #i)
 entity makeXonoticMiscSettingsTab()
 {
@@ -153,4 +149,3 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.onClickEntity = main.resetDialog;
 }
 #undef ADDVALUE_FPS
-#endif

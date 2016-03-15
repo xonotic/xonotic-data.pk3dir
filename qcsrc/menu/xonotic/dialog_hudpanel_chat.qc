@@ -1,20 +1,9 @@
 #include "dialog_hudpanel_chat.qh"
-#ifndef DIALOG_HUDPANEL_CHAT_H
-#define DIALOG_HUDPANEL_CHAT_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDChatDialog, XonoticRootDialog)
-	METHOD(XonoticHUDChatDialog, fill, void(entity));
-	ATTRIB(XonoticHUDChatDialog, title, string, _("Chat Panel"))
-	ATTRIB(XonoticHUDChatDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDChatDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDChatDialog, rows, float, 15)
-	ATTRIB(XonoticHUDChatDialog, columns, float, 4)
-	ATTRIB(XonoticHUDChatDialog, name, string, "HUDchat")
-	ATTRIB(XonoticHUDChatDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDChatDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "slider.qh"
+
 void XonoticHUDChatDialog_fill(entity me)
 {
 	entity e;
@@ -36,4 +25,3 @@ void XonoticHUDChatDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "con_chatsound", _("Chat beep sound")));
 }
-#endif

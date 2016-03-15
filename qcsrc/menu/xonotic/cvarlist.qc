@@ -1,50 +1,8 @@
 #include "cvarlist.qh"
-#ifndef CVARLIST_H
-#define CVARLIST_H
-#include "listbox.qc"
-CLASS(XonoticCvarList, XonoticListBox)
-	METHOD(XonoticCvarList, configureXonoticCvarList, void(entity));
-	ATTRIB(XonoticCvarList, rowsPerItem, float, 1)
-	METHOD(XonoticCvarList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticCvarList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticCvarList, keyDown, float(entity, float, float, float));
-	METHOD(XonoticCvarList, showNotify, void(entity));
 
-	METHOD(XonoticCvarList, destroy, void(entity));
+#include "inputbox.qh"
+#include "../item/container.qh"
 
-	ATTRIB(XonoticCvarList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticCvarList, realUpperMargin, float, 0)
-	ATTRIB(XonoticCvarList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticCvarList, columnNameSize, float, 0)
-	ATTRIB(XonoticCvarList, columnValueOrigin, float, 0)
-	ATTRIB(XonoticCvarList, columnValueSize, float, 0)
-
-	METHOD(XonoticCvarList, mouseRelease, float(entity, vector));
-	METHOD(XonoticCvarList, setSelected, void(entity, float));
-	METHOD(XonoticCvarList, updateCvarType, float(entity));
-
-	ATTRIB(XonoticCvarList, controlledTextbox, entity, NULL)
-	ATTRIB(XonoticCvarList, cvarNameBox, entity, NULL)
-	ATTRIB(XonoticCvarList, cvarDescriptionBox, entity, NULL)
-	ATTRIB(XonoticCvarList, cvarTypeBox, entity, NULL)
-	ATTRIB(XonoticCvarList, cvarValueBox, entity, NULL)
-	ATTRIB(XonoticCvarList, cvarDefaultBox, entity, NULL)
-	ATTRIB(XonoticCvarList, cvarNeedsForcing, float, 0)
-
-	ATTRIB(XonoticCvarList, handle, float, -1)
-	ATTRIB(XonoticCvarList, cvarName, string, string_null)
-	ATTRIB(XonoticCvarList, cvarDescription, string, string_null)
-	ATTRIB(XonoticCvarList, cvarType, string, string_null)
-	ATTRIB(XonoticCvarList, cvarDefault, string, string_null)
-ENDCLASS(XonoticCvarList)
-entity makeXonoticCvarList();
-void CvarList_Filter_Change(entity box, entity me);
-void CvarList_Value_Change(entity box, entity me);
-void CvarList_Revert_Click(entity btn, entity me);
-void CvarList_End_Editing(entity box, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticCvarList()
 {
 	entity me;
@@ -266,5 +224,3 @@ void CvarList_End_Editing(entity box, entity me)
 {
 	box.parent.setFocus(box.parent, me);
 }
-
-#endif

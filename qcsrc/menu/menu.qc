@@ -1,9 +1,24 @@
 #include "menu.qh"
-#include "classes.qc"
+
+#include "item.qh"
+
+#include "anim/animhost.qh"
+
+#include "item/dialog.qh"
+#include "item/listbox.qh"
+#include "item/nexposee.qh"
+
+#include "xonotic/commandbutton.qh"
+#include "xonotic/mainwindow.qh"
+#include "xonotic/serverlist.qh"
+#include "xonotic/slider_resolution.qh"
+
+.string cvarName;
+
 #include "xonotic/util.qh"
 
 #include "../common/items/all.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 #include "../common/mapinfo.qh"
 #include "../common/mutators/base.qh"
 

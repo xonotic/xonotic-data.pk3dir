@@ -1,42 +1,6 @@
 #include "demolist.qh"
-#ifndef DEMOLIST_H
-#define DEMOLIST_H
-#include "listbox.qc"
-CLASS(XonoticDemoList, XonoticListBox)
-	METHOD(XonoticDemoList, configureXonoticDemoList, void(entity));
-	ATTRIB(XonoticDemoList, rowsPerItem, float, 1)
-	METHOD(XonoticDemoList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticDemoList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticDemoList, getDemos, void(entity));
-	METHOD(XonoticDemoList, startDemo, void(entity));
-	METHOD(XonoticDemoList, timeDemo, void(entity));
-	METHOD(XonoticDemoList, demoName, string(entity, float));
-	METHOD(XonoticDemoList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float));
-	METHOD(XonoticDemoList, destroy, void(entity));
-	METHOD(XonoticDemoList, showNotify, void(entity));
 
-	ATTRIB(XonoticDemoList, listDemo, float, -1)
-	ATTRIB(XonoticDemoList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticDemoList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticDemoList, columnNameSize, float, 0)
-	ATTRIB(XonoticDemoList, realUpperMargin, float, 0)
-	ATTRIB(XonoticDemoList, origin, vector, '0 0 0')
-	ATTRIB(XonoticDemoList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticDemoList, filterString, string, string_null)
-ENDCLASS(XonoticDemoList)
-
-#ifndef IMPLEMENTATION
-// public:
-entity demolist; // for reference elsewhere
-entity makeXonoticDemoList();
-#endif
-void DemoList_Refresh_Click(entity btn, entity me);
-void DemoList_Filter_Change(entity box, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "inputbox.qh"
 
 entity makeXonoticDemoList()
 {
@@ -233,5 +197,3 @@ float XonoticDemoList_keyDown(entity me, float scan, float ascii, float shift)
 		return SUPER(XonoticDemoList).keyDown(me, scan, ascii, shift);
 	}
 }
-#endif
-

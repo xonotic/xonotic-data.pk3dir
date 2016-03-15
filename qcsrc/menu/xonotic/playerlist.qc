@@ -1,29 +1,6 @@
 #include "playerlist.qh"
-#ifndef PLAYERLIST_H
-#define PLAYERLIST_H
-#include "listbox.qc"
-CLASS(XonoticPlayerList, XonoticListBox)
-	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
-	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	ATTRIB(XonoticPlayerList, allowFocusSound, float, 0)
-	ATTRIB(XonoticPlayerList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticPlayerList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticPlayerList, columnNameSize, float, 0)
-	ATTRIB(XonoticPlayerList, columnScoreOrigin, float, 0)
-	ATTRIB(XonoticPlayerList, columnScoreSize, float, 0)
-	ATTRIB(XonoticPlayerList, realUpperMargin, float, 0)
-	ATTRIB(XonoticPlayerList, origin, vector, '0 0 0')
-	ATTRIB(XonoticPlayerList, itemAbsSize, vector, '0 0 0')
-	METHOD(XonoticPlayerList, setPlayerList, void(entity, string));
-	METHOD(XonoticPlayerList, getPlayerList, string(entity, float, float));
-	ATTRIB(XonoticPlayerList, playerList, float, -1)
-	ATTRIB(XonoticPlayerList, selectionDoesntMatter, bool, true)
-ENDCLASS(XonoticPlayerList)
-entity makeXonoticPlayerList();
-#endif
 
-#ifdef IMPLEMENTATION
+.float realUpperMargin2;
 
 const float PLAYERPARM_SCORE = 0;
 const float PLAYERPARM_PING = 1;
@@ -139,5 +116,3 @@ void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool is
 	score = draw_TextShortenToWidth(score, me.columnScoreSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin2 * eY + (me.columnScoreOrigin + 1.00 * (me.columnScoreSize - draw_TextWidth(score, 1, me.realFontSize))) * eX, score, me.realFontSize, rgb, 1, 0);
 }
-
-#endif

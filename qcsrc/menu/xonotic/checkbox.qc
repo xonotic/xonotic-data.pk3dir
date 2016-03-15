@@ -1,35 +1,5 @@
 #include "checkbox.qh"
-#ifndef CHECKBOX_H
-#define CHECKBOX_H
-#include "../item/checkbox.qc"
-CLASS(XonoticCheckBox, CheckBox)
-	METHOD(XonoticCheckBox, configureXonoticCheckBox, void(entity, float, float, string, string, string));
-	METHOD(XonoticCheckBox, setChecked, void(entity, float));
-	ATTRIB(XonoticCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticCheckBox, image, string, SKINGFX_CHECKBOX)
-	ATTRIB(XonoticCheckBox, yesValue, float, 1)
-	ATTRIB(XonoticCheckBox, noValue, float, 0)
 
-	ATTRIB(XonoticCheckBox, color, vector, SKINCOLOR_CHECKBOX_N)
-	ATTRIB(XonoticCheckBox, colorC, vector, SKINCOLOR_CHECKBOX_C)
-	ATTRIB(XonoticCheckBox, colorF, vector, SKINCOLOR_CHECKBOX_F)
-	ATTRIB(XonoticCheckBox, colorD, vector, SKINCOLOR_CHECKBOX_D)
-
-	ATTRIB(XonoticCheckBox, cvarName, string, string_null)
-	METHOD(XonoticCheckBox, loadCvars, void(entity));
-	METHOD(XonoticCheckBox, saveCvars, void(entity));
-	ATTRIB(XonoticCheckBox, sendCvars, float, 0)
-
-	ATTRIB(XonoticCheckBox, alpha, float, SKINALPHA_TEXT)
-	ATTRIB(XonoticCheckBox, disabledAlpha, float, SKINALPHA_DISABLED)
-ENDCLASS(XonoticCheckBox)
-entity makeXonoticCheckBox_T(float, string, string, string);
-entity makeXonoticCheckBox(float, string, string);
-entity makeXonoticCheckBoxEx_T(float, float, string, string, string);
-entity makeXonoticCheckBoxEx(float, float, string, string);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticCheckBox_T(float isInverted, string theCvar, string theText, string theTooltip)
 {
 	float y, n;
@@ -113,4 +83,3 @@ void XonoticCheckBox_saveCvars(entity me)
 
 	CheckSendCvars(me, me.cvarName);
 }
-#endif

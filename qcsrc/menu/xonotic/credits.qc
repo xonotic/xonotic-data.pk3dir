@@ -1,6 +1,4 @@
 #include "credits.qh"
-#ifndef CREDITS_H
-#define CREDITS_H
 
 #define CREDITS(TITLE, FUNCTION, PERSON, PERSON_, NL) \
 	TITLE(_("Core Team")) \
@@ -368,28 +366,6 @@ int credits_get()
 
 #undef CREDITS
 
-#include "listbox.qc"
-CLASS(XonoticCreditsList, XonoticListBox)
-	METHOD(XonoticCreditsList, configureXonoticCreditsList, void(entity));
-	ATTRIB(XonoticCreditsList, rowsPerItem, float, 1)
-	METHOD(XonoticCreditsList, draw, void(entity));
-	METHOD(XonoticCreditsList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticCreditsList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticCreditsList, keyDown, float(entity, float, float, float));
-	METHOD(XonoticCreditsList, destroy, void(entity));
-	ATTRIB(XonoticCreditsList, selectionDoesntMatter, bool, true)
-
-	ATTRIB(XonoticCreditsList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticCreditsList, realUpperMargin, float, 0)
-	ATTRIB(XonoticCreditsList, bufferIndex, float, 0)
-	ATTRIB(XonoticCreditsList, scrolling, float, 0)
-
-	ATTRIB(XonoticCreditsList, alphaBG, float, 0)
-ENDCLASS(XonoticCreditsList)
-entity makeXonoticCreditsList();
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticCreditsList()
 {
 	entity me;
@@ -459,4 +435,3 @@ float XonoticCreditsList_keyDown(entity me, float key, float ascii, float shift)
 	me.scrolling = 0;
 	return SUPER(XonoticCreditsList).keyDown(me, key, ascii, shift);
 }
-#endif

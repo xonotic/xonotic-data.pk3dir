@@ -1,54 +1,8 @@
 #include "campaign.qh"
+
 #include <common/campaign_common.qh>
+#include "inputbox.qh"
 
-#ifndef CAMPAIGN_H
-#define CAMPAIGN_H
-#include "listbox.qc"
-CLASS(XonoticCampaignList, XonoticListBox)
-	METHOD(XonoticCampaignList, configureXonoticCampaignList, void(entity));
-	ATTRIB(XonoticCampaignList, rowsPerItem, float, 10)
-	METHOD(XonoticCampaignList, draw, void(entity));
-	METHOD(XonoticCampaignList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticCampaignList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticCampaignList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticCampaignList, setSelected, void(entity, float));
-	METHOD(XonoticCampaignList, keyDown, float(entity, float, float, float));
-	METHOD(XonoticCampaignList, campaignGo, void(entity, float));
-	METHOD(XonoticCampaignList, destroy, void(entity));
-
-	ATTRIB(XonoticCampaignList, campaignGlob, float, 0)
-	ATTRIB(XonoticCampaignList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticCampaignList, columnPreviewOrigin, float, 0)
-	ATTRIB(XonoticCampaignList, columnPreviewSize, float, 0)
-	ATTRIB(XonoticCampaignList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticCampaignList, columnNameSize, float, 0)
-	ATTRIB(XonoticCampaignList, columnCheckMarkOrigin, float, 0)
-	ATTRIB(XonoticCampaignList, columnCheckMarkSize, float, 0)
-	ATTRIB(XonoticCampaignList, checkMarkOrigin, vector, '0 0 0')
-	ATTRIB(XonoticCampaignList, checkMarkSize, vector, '0 0 0')
-	ATTRIB(XonoticCampaignList, realUpperMargin1, float, 0)
-	ATTRIB(XonoticCampaignList, realUpperMargin2, float, 0)
-
-	ATTRIB(XonoticCampaignList, origin, vector, '0 0 0')
-	ATTRIB(XonoticCampaignList, itemAbsSize, vector, '0 0 0')
-	ATTRIB(XonoticCampaignList, emptyLineHeight, float, 0.5)
-
-	ATTRIB(XonoticCampaignList, campaignIndex, float, 0)
-	ATTRIB(XonoticCampaignList, cvarName, string, string_null)
-	METHOD(XonoticCampaignList, loadCvars, void(entity));
-	METHOD(XonoticCampaignList, saveCvars, void(entity));
-
-	ATTRIB(XonoticCampaignList, buttonNext, entity, NULL)
-	ATTRIB(XonoticCampaignList, buttonPrev, entity, NULL)
-	ATTRIB(XonoticCampaignList, labelTitle, entity, NULL)
-ENDCLASS(XonoticCampaignList)
-entity makeXonoticCampaignList();
-void CampaignList_LoadMap(entity btn, entity me);
-void MultiCampaign_Next(entity btn, entity me);
-void MultiCampaign_Prev(entity btn, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
 string campaign_longdesc_wrapped[CAMPAIGN_MAX_ENTRIES];
 
 void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
@@ -323,4 +277,3 @@ float XonoticCampaignList_keyDown(entity me, float scan, float ascii, float shif
 		return SUPER(XonoticCampaignList).keyDown(me, scan, ascii, shift);
 	return 1;
 }
-#endif

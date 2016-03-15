@@ -1,20 +1,8 @@
 #include "dialog_hudpanel_timer.qh"
-#ifndef DIALOG_HUDPANEL_TIMER_H
-#define DIALOG_HUDPANEL_TIMER_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDTimerDialog, XonoticRootDialog)
-	METHOD(XonoticHUDTimerDialog, fill, void(entity));
-	ATTRIB(XonoticHUDTimerDialog, title, string, _("Timer Panel"))
-	ATTRIB(XonoticHUDTimerDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDTimerDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDTimerDialog, rows, float, 15)
-	ATTRIB(XonoticHUDTimerDialog, columns, float, 4)
-	ATTRIB(XonoticHUDTimerDialog, name, string, "HUDtimer")
-	ATTRIB(XonoticHUDTimerDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDTimerDialog)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+
 void XonoticHUDTimerDialog_fill(entity me)
 {
 	entity e;
@@ -28,4 +16,3 @@ void XonoticHUDTimerDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "hud_panel_timer_increment", _("Show elapsed time")));
 }
-#endif

@@ -1,51 +1,8 @@
 #include "inputbox.qh"
-#ifndef ITEM_INPUTBOX_H
-	#define ITEM_INPUTBOX_H
-	#include "label.qc"
-	CLASS(InputBox, Label)
-		METHOD(InputBox, configureInputBox, void(entity, string, float, float, string));
-		METHOD(InputBox, draw, void(entity));
-		METHOD(InputBox, setText, void(entity, string));
-		METHOD(InputBox, enterText, void(entity, string));
-		METHOD(InputBox, keyDown, float(entity, float, float, float));
-		METHOD(InputBox, mouseMove, float(entity, vector));
-		METHOD(InputBox, mouseRelease, float(entity, vector));
-		METHOD(InputBox, mousePress, float(entity, vector));
-		METHOD(InputBox, mouseDrag, float(entity, vector));
-		METHOD(InputBox, showNotify, void(entity));
-		METHOD(InputBox, resizeNotify, void(entity, vector, vector, vector, vector));
 
-		ATTRIB(InputBox, src, string, string_null)
+.float cb_offset;
+.string cb_src;
 
-		ATTRIB(InputBox, cursorPos, float, 0)  // characters
-		ATTRIB(InputBox, scrollPos, float, 0)  // widths
-
-		ATTRIB(InputBox, focusable, float, 1)
-		ATTRIB(InputBox, allowFocusSound, float, 1)
-		ATTRIB(InputBox, disabled, float, 0)
-		ATTRIB(InputBox, lastChangeTime, float, 0)
-		ATTRIB(InputBox, dragScrollTimer, float, 0)
-		ATTRIB(InputBox, dragScrollPos, vector, '0 0 0')
-		ATTRIB(InputBox, pressed, float, 0)
-		ATTRIB(InputBox, editColorCodes, float, 1)
-		ATTRIB(InputBox, forbiddenCharacters, string, "")
-		ATTRIB(InputBox, color, vector, '1 1 1')
-		ATTRIB(InputBox, colorF, vector, '1 1 1')
-		ATTRIB(InputBox, maxLength, float, 255)  // if negative, it counts bytes, not chars
-		ATTRIB(InputBox, applyButton, entity, NULL)
-
-		ATTRIB(InputBox, enableClearButton, float, 1)
-		ATTRIB(InputBox, clearButton, entity, NULL)
-		ATTRIB(InputBox, cb_width, float, 0)
-		ATTRIB(InputBox, cb_pressed, float, 0)
-		ATTRIB(InputBox, cb_focused, float, 0)
-		ATTRIB(InputBox, cb_color, vector, '1 1 1')
-		ATTRIB(InputBox, cb_colorF, vector, '1 1 1')
-		ATTRIB(InputBox, cb_colorC, vector, '1 1 1')
-	ENDCLASS(InputBox)
-#endif
-
-#ifdef IMPLEMENTATION
 	void InputBox_configureInputBox(entity me, string theText, float theCursorPos, float theFontSize, string gfx)
 	{
 		SUPER(InputBox).configureLabel(me, theText, theFontSize, 0.0);
@@ -406,4 +363,3 @@
 	{
 		me.focusable = !me.disabled;
 	}
-#endif

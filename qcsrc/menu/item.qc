@@ -1,35 +1,8 @@
 #include "item.qh"
-#ifndef ITEM_H
-#define ITEM_H
-#include "skin.qh"
-CLASS(Item, Object)
-	METHOD(Item, draw, void(Item));
-	METHOD(Item, keyDown, float(Item, float, float, float));
-	METHOD(Item, keyUp, float(Item, float, float, float));
-	METHOD(Item, mouseMove, float(Item, vector));
-	METHOD(Item, mousePress, float(Item, vector));
-	METHOD(Item, mouseDrag, float(Item, vector));
-	METHOD(Item, mouseRelease, float(Item, vector));
-	METHOD(Item, focusEnter, void(Item));
-	METHOD(Item, focusLeave, void(Item));
-	METHOD(Item, resizeNotify, void(Item, vector, vector, vector, vector));
-	METHOD(Item, relinquishFocus, void(Item));
-	METHOD(Item, showNotify, void(Item));
-	METHOD(Item, hideNotify, void(Item));
-	METHOD(Item, toString, string(Item));
-	METHOD(Item, destroy, void(Item));
-	ATTRIB(Item, focused, float, 0)
-	ATTRIB(Item, focusable, float, 0)
-	ATTRIB(Item, allowFocusSound, float, 0)
-	ATTRIB(Item, parent, entity, NULL)
-	ATTRIB(Item, preferredFocusPriority, float, 0)
-	ATTRIB(Item, origin, vector, '0 0 0')
-	ATTRIB(Item, size, vector, '0 0 0')
-	ATTRIB(Item, tooltip, string, string_null)
-ENDCLASS(Item)
-#endif
 
-#ifdef IMPLEMENTATION
+#include "item/container.qh"
+#include "item/borderimage.qh"
+
 	METHOD(Item, destroy, void(Item this))
 	{
 		// free memory associated with this
@@ -128,4 +101,3 @@ ENDCLASS(Item)
 	{
 		return string_null;
 	}
-#endif

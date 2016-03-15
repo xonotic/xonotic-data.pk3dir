@@ -1,19 +1,7 @@
 #include "tabcontroller.qh"
-#ifndef TABCONTROLLER_H
-#define TABCONTROLLER_H
-#include "../item/modalcontroller.qc"
-CLASS(XonoticTabController, ModalController)
-	METHOD(XonoticTabController, configureXonoticTabController, void(entity, float));
-	METHOD(XonoticTabController, makeTabButton_T, entity(entity, string, entity, string));
-	METHOD(XonoticTabController, makeTabButton, entity(entity, string, entity));
-	ATTRIB(XonoticTabController, rows, float, 0)
-	ATTRIB(XonoticTabController, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticTabController, image, string, SKINGFX_BUTTON)
-ENDCLASS(XonoticTabController)
-entity makeXonoticTabController(float theRows);
-#endif
 
-#ifdef IMPLEMENTATION
+#include "button.qh"
+
 entity makeXonoticTabController(float theRows)
 {
 	entity me;
@@ -39,4 +27,3 @@ entity XonoticTabController_makeTabButton(entity me, string theTitle, entity tab
 {
 	return XonoticTabController_makeTabButton_T(me, theTitle, tab, string_null);
 }
-#endif
