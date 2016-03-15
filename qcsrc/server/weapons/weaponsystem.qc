@@ -52,9 +52,9 @@ vector CL_Weapon_GetShotOrg(int wpn)
 {
 	entity wi = Weapons_from(wpn);
 	entity e = spawn();
-	CL_WeaponEntity_SetModel(e, wi.mdl);
+	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
-	CL_WeaponEntity_SetModel(e, "");
+	CL_WeaponEntity_SetModel(e, "", false);
 	remove(e);
 	return ret;
 }
@@ -91,7 +91,7 @@ void CL_Weaponentity_Think()
 		this.dmg = this.owner.modelindex;
 		this.deadflag = this.owner.deadflag;
 
-		CL_WeaponEntity_SetModel(this, this.owner.weaponname);
+		CL_WeaponEntity_SetModel(this, this.owner.weaponname, true);
 	}
 
 	this.alpha = -1;  // TODO: don't render this entity at all

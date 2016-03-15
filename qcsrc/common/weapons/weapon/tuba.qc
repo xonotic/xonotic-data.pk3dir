@@ -413,7 +413,7 @@ NET_HANDLE(tuba_instrument, bool)
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
-	CL_WeaponEntity_SetModel(viewmodel, s);
+	CL_WeaponEntity_SetModel(viewmodel, s, true);
 }
 #endif
 #ifdef SVQC

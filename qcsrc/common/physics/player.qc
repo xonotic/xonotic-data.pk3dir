@@ -1247,8 +1247,10 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 
 		if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && this.movement.y == 0 && this.movement.x != 0)
 			PM_AirAccelerate(this, wishdir, wishspeed2);
-		else
-			PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(this), PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd, PHYS_AIRSPEEDLIMIT_NONQW(this));
+		else {
+		    float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
+			PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
+        }
 
 		if (PHYS_AIRCONTROL(this))
 			CPM_PM_Aircontrol(this, wishdir, wishspeed2);

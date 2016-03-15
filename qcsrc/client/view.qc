@@ -300,10 +300,11 @@ void viewmodel_draw(entity this)
 	{
 		static string name_last;
 		string name = wep.mdl;
-		if (name != name_last)
+		bool swap = name != name_last;
+		// if (swap)
 		{
 			name_last = name;
-			CL_WeaponEntity_SetModel(this, name);
+			CL_WeaponEntity_SetModel(this, name, swap);
 			this.viewmodel_origin = this.origin;
 			this.viewmodel_angles = this.angles;
 		}
@@ -312,7 +313,8 @@ void viewmodel_draw(entity this)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
-	float eta = (this.weapon_nextthink - time) / STAT(WEAPONRATEFACTOR);
+	float rate = STAT(WEAPONRATEFACTOR);
+	float eta = rate ? ((this.weapon_nextthink - time) / rate) : 0;
 	if (eta <= 0) f = this.weapon_eta_last;
 	else switch (this.state)
 	{
