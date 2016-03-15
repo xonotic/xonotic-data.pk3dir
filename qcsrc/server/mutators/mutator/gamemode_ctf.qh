@@ -1,6 +1,8 @@
 #pragma once
 
 #ifdef SVQC
+
+#include "../gamemode.qh"
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag);
 

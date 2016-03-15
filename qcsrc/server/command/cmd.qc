@@ -1,6 +1,5 @@
 #include "cmd.qh"
 #include <common/command/command.qh>
-#include "cmd.qh"
 
 #include "common.qh"
 #include "vote.qh"
@@ -21,6 +20,7 @@
 
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
 #include <common/mapinfo.qh>
 #include <common/notifications/all.qh>
 #include <common/physics/player.qh>

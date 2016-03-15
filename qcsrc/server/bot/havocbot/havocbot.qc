@@ -7,6 +7,8 @@
 #include "../waypoints.qh"
 
 #include <common/constants.qh>
+#include <common/physics/player.qh>
+#include <common/state.qh>
 #include <common/items/all.qh>
 
 #include <common/triggers/trigger/jumppads.qh>

@@ -511,6 +511,8 @@ void shockwave_spawn(string m, vector org, float sz, float t1, float t2)
 // Event Handlers
 // ==============
 
+void nades_GiveBonus(entity player, float score);
+
 void ctf_Handle_Capture(entity flag, entity toucher, int capturetype)
 {
 	entity enemy_flag = ((capturetype == CAPTURE_NORMAL) ? toucher.flagcarried : toucher);
@@ -1181,6 +1183,8 @@ void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_Fla
 	// captureshield setup
 	ctf_CaptureShield_Spawn(self);
 }
+
+.bool pushable;
 
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {SELFPARAM();

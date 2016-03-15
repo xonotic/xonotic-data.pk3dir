@@ -45,6 +45,7 @@ float LMS_NewPlayerLives();
 
 #ifdef IMPLEMENTATION
 
+#include <common/mutators/mutator/instagib/items.qc>
 #include <server/campaign.qh>
 #include <server/command/cmd.qh>
 
@@ -71,6 +72,8 @@ float LMS_NewPlayerLives()
 
 	return bound(1, lms_lowest_lives, fl);
 }
+
+void ClearWinners();
 
 // LMS winning condition: game terminates if and only if there's at most one
 // one player who's living lives. Top two scores being equal cancels the time

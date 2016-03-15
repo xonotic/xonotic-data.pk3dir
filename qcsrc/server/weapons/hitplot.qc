@@ -3,6 +3,7 @@
 #include "../antilag.qh"
 #include "../g_subs.qh"
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {

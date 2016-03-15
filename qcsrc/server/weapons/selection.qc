@@ -6,6 +6,7 @@
 #include <common/util.qh>
 #include <common/items/item.qh>
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
 // switch between weapons

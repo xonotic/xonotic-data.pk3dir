@@ -22,7 +22,7 @@
 		 * @param gs the global sound def
 		 * @param r a random number in 0..1
 		 */
-		void globalsound(int channel, entity from, entity gs, float r, int chan, float vol, float atten)
+		void globalsound(int channel, entity from, entity gs, float r, int chan, float _vol, float _atten)
 		{
 			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
@@ -30,10 +30,10 @@
 				string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
 				switch (channel) {
 					case MSG_ONE:
-						soundto(channel, from, chan, sample, vol, atten);
+						soundto(channel, from, chan, sample, _vol, _atten);
 						break;
 					case MSG_ALL:
-						_sound(from, chan, sample, vol, atten);
+						_sound(from, chan, sample, _vol, _atten);
 						break;
 				}
 				return;
@@ -43,8 +43,8 @@
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
 			WriteByte(channel, chan);
-			WriteByte(channel, floor(vol * 255));
-			WriteByte(channel, floor(atten * 64));
+			WriteByte(channel, floor(_vol * 255));
+			WriteByte(channel, floor(_atten * 64));
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
 			WriteCoord(channel, o.x);
@@ -57,7 +57,7 @@
 		* @param ps the player sound def
 		* @param r a random number in 0..1
 		*/
-		void playersound(int channel, entity from, entity ps, float r, int chan, float vol, float atten)
+		void playersound(int channel, entity from, entity ps, float r, int chan, float _vol, float _atten)
 		{
 			assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
@@ -67,10 +67,10 @@
 				string sample = GlobalSound_sample(s, r);
 				switch (channel) {
 					case MSG_ONE:
-						soundto(channel, from, chan, sample, vol, atten);
+						soundto(channel, from, chan, sample, _vol, _atten);
 						break;
 					case MSG_ALL:
-						_sound(from, chan, sample, vol, atten);
+						_sound(from, chan, sample, _vol, _atten);
 						break;
 				}
 				return;
@@ -80,8 +80,8 @@
 			WriteByte(channel, r * 255);
 			WriteByte(channel, etof(from));
 			WriteByte(channel, chan);
-			WriteByte(channel, floor(vol * 255));
-			WriteByte(channel, floor(atten * 64));
+			WriteByte(channel, floor(_vol * 255));
+			WriteByte(channel, floor(_atten * 64));
 			entcs_force_origin(from);
 			vector o = from.origin + 0.5 * (from.mins + from.maxs);
 			WriteCoord(channel, o.x);
@@ -200,13 +200,6 @@
 	{
 		FOREACH(PlayerSounds, it.m_playersoundstr == type && it.instanceOfVoiceMessage == false, return it);
 		return NULL;
-	}
-
-	string allvoicesamples;
-	STATIC_INIT(allvoicesamples)
-	{
-		FOREACH(PlayerSounds, it.instanceOfVoiceMessage, allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr));
-		allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
 	}
 
 	.string _GetPlayerSoundSampleField(string type, bool voice)

@@ -1,4 +1,5 @@
 #include "gamemode_race.qh"
+
 #ifndef GAMEMODE_RACE_H
 #define GAMEMODE_RACE_H
 
@@ -32,13 +33,6 @@ REGISTER_MUTATOR(rc, false)
 	return 0;
 }
 
-float race_teams;
-
-// scores
-const float ST_RACE_LAPS = 1;
-const float SP_RACE_LAPS = 4;
-const float SP_RACE_TIME = 5;
-const float SP_RACE_FASTEST = 6;
 #endif
 
 #ifdef IMPLEMENTATION

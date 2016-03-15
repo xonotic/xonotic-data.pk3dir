@@ -5,6 +5,8 @@
 #include "mutators/all.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
+#include "../common/state.qh"
+#include "../common/physics/player.qh"
 #include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/all.qc"

@@ -11,6 +11,11 @@ before_script:
 
   - ln -s $PWD data/xonotic-data.pk3dir
 
+test_compilation_units:
+  stage: test
+  script:
+    - ./qcsrc/tools/compilationunits.sh
+
 test_sv_unit:
   stage: test
   script:

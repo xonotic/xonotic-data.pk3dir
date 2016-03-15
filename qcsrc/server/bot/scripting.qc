@@ -1,5 +1,8 @@
 #include "scripting.qh"
 
+#include <common/state.qh>
+#include <common/physics/player.qh>
+
 #include "bot.qh"
 
 .int state;

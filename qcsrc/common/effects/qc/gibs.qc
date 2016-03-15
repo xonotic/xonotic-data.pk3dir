@@ -1,3 +1,5 @@
+#include "gibs.qh"
+
 #ifdef IMPLEMENTATION
 REGISTER_NET_TEMP(net_gibsplash)
 

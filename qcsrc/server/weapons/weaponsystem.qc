@@ -12,6 +12,7 @@
 #include <common/notifications/all.qh>
 #include <common/util.qh>
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 #include <lib/csqcmodel/sv_model.qh>
 
 .int state;

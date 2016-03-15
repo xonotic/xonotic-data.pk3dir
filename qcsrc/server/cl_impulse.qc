@@ -11,6 +11,8 @@
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
 
+#include <common/state.qh>
+
 #include "../common/minigames/sv_minigames.qh"
 
 #include "../common/weapons/all.qh"

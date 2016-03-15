@@ -96,6 +96,7 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+void KillIndicator_Think();
 void CTS_ClientKill(entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
 {
     e.killindicator = spawn();
@@ -384,6 +385,7 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 	return false;
 }
 
+void ClientKill_Now();
 MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
 	ret_float = 0;

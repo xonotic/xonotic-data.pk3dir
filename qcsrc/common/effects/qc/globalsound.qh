@@ -113,6 +113,7 @@ void PrecachePlayerSounds(string f);
 	float LoadPlayerSounds(entity this, string f, bool strict);
 	void UpdatePlayerSounds(entity this);
 //#endif
+entity GetVoiceMessage(string type);
 
 #ifdef SVQC
 
@@ -135,5 +136,12 @@ void PrecachePlayerSounds(string f);
 		} MACRO_END
 
 #endif
+
+string allvoicesamples;
+STATIC_INIT(allvoicesamples)
+{
+    FOREACH(PlayerSounds, it.instanceOfVoiceMessage, allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr));
+    allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
+}
 
 #endif

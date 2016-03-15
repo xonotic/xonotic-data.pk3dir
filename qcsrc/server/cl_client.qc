@@ -25,6 +25,8 @@
 #include "../common/ent_cs.qh"
 #include <common/state.qh>
 
+#include <common/effects/qc/globalsound.qh>
+
 #include "../common/triggers/teleporters.qh"
 
 #include "../common/vehicles/all.qh"

@@ -21,6 +21,8 @@ bool CA_CheckWinner();
 void CA_RoundStart();
 bool ca_isEliminated(entity e);
 
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override);
+
 REGISTER_MUTATOR(ca, false)
 {
 	MUTATOR_ONADD
@@ -112,6 +114,8 @@ float CA_GetWinnerTeam()
 		return winner_team;
 	return -1; // no player left
 }
+
+void nades_Clear(entity player);
 
 #define CA_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)

@@ -34,6 +34,7 @@
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
+#include "../common/state.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;

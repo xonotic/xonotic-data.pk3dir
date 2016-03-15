@@ -2,6 +2,9 @@
 
 #include "bot.qh"
 
+#include <common/physics/player.qh>
+#include <common/state.qh>
+
 #include "../weapons/weaponsystem.qh"
 
 #include "../mutators/all.qh"

@@ -2,6 +2,7 @@
 
 #include "antilag.qh"
 #include "command/common.qh"
+#include "../common/state.qh"
 #include "../lib/warpzone/common.qh"
 #include "../common/triggers/subs.qh"
 

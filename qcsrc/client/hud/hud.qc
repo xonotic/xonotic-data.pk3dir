@@ -12,8 +12,7 @@
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
 #include <lib/csqcmodel/cl_player.qh>
-// TODO: remove
-#include <server/mutators/mutator/gamemode_ctf.qc>
+#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
 
 
 /*

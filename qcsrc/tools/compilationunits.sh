@@ -5,11 +5,12 @@ cd "$(dirname "$0")"
 WORKDIR=../.tmp
 
 CPP="cc -xc -E"
-QCC=../../../../gmqcc/gmqcc
+: ${QCC:=$PWD/../../../../gmqcc/gmqcc}
 
 declare -a QCCDEFS=(
     -DNDEBUG=1
     -DWATERMARK="\"$(git describe --tags --dirty='*')\""
+    -DDEBUGPATHING=0
 )
 QCCDEFS="${QCCDEFS[@]}"
 

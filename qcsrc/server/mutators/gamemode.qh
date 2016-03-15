@@ -5,6 +5,7 @@
 #include <server/cl_impulse.qh>
 #include <server/cheats.qh>
 #include <server/g_damage.qh>
+#include <server/g_world.qh>
 #include <server/round_handler.qh>
 #include <server/scores.qh>
 #include <server/scores_rules.qh>
@@ -26,6 +27,8 @@
 #include <server/weapons/tracing.qh>
 #include <server/weapons/weaponsystem.qh>
 
+#include <common/physics/player.qh>
+#include <common/effects/qc/all.qh>
 #include <common/deathtypes/all.qh>
 #include <common/notifications/all.qh>
 #include <common/triggers/teleporters.qh>

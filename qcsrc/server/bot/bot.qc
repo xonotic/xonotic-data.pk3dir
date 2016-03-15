@@ -23,6 +23,7 @@
 
 #include "../weapons/accuracy.qh"
 
+#include <common/physics/player.qh>
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/teams.qh>
