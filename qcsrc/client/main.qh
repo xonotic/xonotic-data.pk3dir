@@ -6,13 +6,6 @@
 // --------------------------------------------------------------------------
 // MENU Functionality
 
-const float DATABUF_PING = 0;
-#define DATABUF_CAPTURES (1*maxclients)
-#define DATABUF_DEATHS (2*maxclients)
-#define DATABUF_RETURNS (3*maxclients)
-
-#define DATABUF_NEXT (5*maxclients)
-
 void setpredraw(entity this, void(entity) pdfunc);
 
 // --------------------------------------------------------------------------

@@ -132,13 +132,12 @@ string strcat1(string s) = #115; // FRIK_FILE
 float logfile_open;
 float logfile;
 
-#define strstr strstrofs
 /*
 // NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
 // IT WILL MOST PROBABLY DESTROY _ALL_ OTHER TEMP
 // STRINGS AND TAKE QUITE LONG. haystack and needle MUST
 // BE CONSTANT OR strzoneD!
-float strstr(string haystack, string needle, float offset)
+float strstrofs(string haystack, string needle, float offset)
 {
 	float len, endpos;
 	string found;

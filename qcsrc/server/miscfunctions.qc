@@ -237,8 +237,8 @@ string formatmessage(string msg)
 			break; // too many replacements
 
 		n = n - 1;
-		p1 = strstr(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-		p2 = strstr(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+		p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
+		p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
 
 		if (p1 < 0)
 			p1 = p2;
