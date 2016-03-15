@@ -1,4 +1,9 @@
 #include "modicons.qh"
+
+#include <common/mapinfo.qh>
+#include <common/ent_cs.qh>
+#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+
 // Mod icons panel (#10)
 
 bool mod_active; // is there any active mod icon?

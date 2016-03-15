@@ -1,4 +1,7 @@
 #include "centerprint.qh"
+
+#include <client/scoreboard.qh>
+
 // CenterPrint (#16)
 
 const int CENTERPRINT_MAX_MSGS = 10;

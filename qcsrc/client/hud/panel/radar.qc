@@ -1,4 +1,11 @@
 #include "radar.qh"
+
+#include <common/ent_cs.qh>
+#include <common/mapinfo.qh>
+#include <client/mapvoting.qh>
+#include <client/teamradar.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
+
 // Radar (#6)
 
 float HUD_Radar_Clickable()

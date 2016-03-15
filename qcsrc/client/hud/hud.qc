@@ -8,6 +8,7 @@
 #include <common/deathtypes/all.qh>
 #include <common/items/all.qc>
 #include <common/mapinfo.qh>
+#include <common/vehicles/all.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
 #include <lib/csqcmodel/cl_player.qh>
@@ -409,6 +410,8 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertica
 Main HUD system
 ==================
 */
+
+void CSQC_BUMBLE_GUN_HUD();
 
 void HUD_Vehicle()
 {

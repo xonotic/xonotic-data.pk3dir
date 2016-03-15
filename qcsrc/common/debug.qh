@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+.entity tag_entity;
+#endif
+
 #ifndef MENUQC
 .bool debug;
 .int sv_entnum;

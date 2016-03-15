@@ -9,26 +9,30 @@
 
 #include "mutators/events.qh"
 
-#include "../common/anim.qh"
-#include "../common/constants.qh"
-#include "../common/debug.qh"
-#include "../common/mapinfo.qh"
+#include <common/animdecide.qh>
+#include <common/ent_cs.qh>
+#include <common/anim.qh>
+#include <common/constants.qh>
+#include <common/debug.qh>
+#include <common/mapinfo.qh>
 #include <common/gamemodes/all.qh>
-#include "../common/physics/player.qh"
-#include "../common/stats.qh"
-#include "../common/triggers/target/music.qh"
-#include "../common/teams.qh"
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/triggers/target/music.qh>
+#include <common/teams.qh>
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/all.qh>
-#include "../common/viewloc.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/minigames/cl_minigames_hud.qh"
+#include <common/viewloc.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/minigames/cl_minigames_hud.qh>
 
-#include "../lib/csqcmodel/cl_player.qh"
+#include <lib/csqcmodel/cl_player.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include "csqcmodel_hooks.qh"
 
-#include "../lib/warpzone/client.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/warpzone/client.qh>
+#include <lib/warpzone/common.qh>
 
 #define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 
@@ -149,7 +153,7 @@ void viewmodel_animate(entity this)
 			vel = view.velocity;
 		else
 		{
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			vel.x = view.velocity * forward;
 			vel.y = view.velocity * right * -1;
@@ -175,7 +179,7 @@ void viewmodel_animate(entity this)
 		if(autocvar_cl_followmodel_velocity_absolute)
 		{
 			vector fixed_gunorg;
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			fixed_gunorg.x = gunorg * forward;
 			fixed_gunorg.y = gunorg * right * -1;

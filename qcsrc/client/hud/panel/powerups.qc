@@ -1,4 +1,7 @@
 #include "powerups.qh"
+
+#include <common/items/all.qc>
+
 // Powerups (#2)
 
 // Powerup item fields (reusing existing fields)

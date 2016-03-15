@@ -1,4 +1,7 @@
 #include "racetimer.qh"
+
+#include <common/mapinfo.qh>
+
 /** Race timer (#8) */
 void HUD_RaceTimer ()
 {

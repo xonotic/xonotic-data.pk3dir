@@ -2,11 +2,12 @@
 
 #include "hud/all.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/teams.qh"
+#include <common/ent_cs.qh>
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/teams.qh>
 
-#include "../lib/csqcmodel/cl_model.qh"
+#include <lib/csqcmodel/cl_model.qh>
 
 // this.isactive = player is in range and coordinates/status (health and armor) are up to date
 // this.origin = player origin

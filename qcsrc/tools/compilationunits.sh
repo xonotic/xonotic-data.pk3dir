@@ -9,13 +9,13 @@ QCC=../../../../gmqcc/gmqcc
 
 declare -a QCCDEFS=(
     -DNDEBUG=1
+    -DWATERMARK="\"$(git describe --tags --dirty='*')\""
 )
 QCCDEFS="${QCCDEFS[@]}"
 
 declare -a QCCFLAGS=(
     -std=gmqcc
     -Wall -Werror
-    -fftepp -fftepp-predefs -Wcpp
     -futf8
     -freturn-assignments
     -frelaxed-switch

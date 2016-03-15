@@ -1,5 +1,6 @@
 #include "quickmenu.qh"
 
+#include <common/ent_cs.qh>
 #include "hud/all.qh"
 #include "mapvoting.qh"
 

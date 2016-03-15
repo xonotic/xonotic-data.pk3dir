@@ -3,11 +3,12 @@
 #include "quickmenu.qh"
 #include "hud/all.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/stats.qh"
-#include "../common/teams.qh"
+#include <common/ent_cs.qh>
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
 
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;

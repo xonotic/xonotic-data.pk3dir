@@ -1,4 +1,7 @@
 #include "healtharmor.qh"
+
+#include <common/deathtypes/all.qh>
+
 /** Health/armor (#3) */
 void HUD_HealthArmor()
 {
