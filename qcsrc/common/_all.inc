@@ -1,3 +1,5 @@
+float autocvar_net_connecttimeout = 30;
+
 #ifndef MENUQC
 #include "anim.qc"
 #include "animdecide.qc"
