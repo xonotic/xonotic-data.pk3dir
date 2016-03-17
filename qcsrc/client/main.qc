@@ -217,13 +217,13 @@ void Shutdown()
 }
 
 .float has_team;
-float SetTeam(entity o, int Team)
+float SetTeam(entity o, int _team)
 {
-	devassert_once(Team);
+	devassert_once(_team);
 	entity tm;
 	if(teamplay)
 	{
-		switch(Team)
+		switch(_team)
 		{
 			case -1:
 			case NUM_TEAM_1:
@@ -232,31 +232,31 @@ float SetTeam(entity o, int Team)
 			case NUM_TEAM_4:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(_team, false) == world)
 				{
-					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
-					Team = NUM_SPECTATOR;
+					LOG_TRACEF("trying to switch to unsupported team %d\n", _team);
+					_team = NUM_SPECTATOR;
 				}
 				break;
 		}
 	}
 	else
 	{
-		switch(Team)
+		switch(_team)
 		{
 			case -1:
 			case 0:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(_team, false) == world)
 				{
-					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
-					Team = NUM_SPECTATOR;
+					LOG_TRACEF("trying to switch to unsupported team %d\n", _team);
+					_team = NUM_SPECTATOR;
 				}
 				break;
 		}
 	}
-	if(Team == -1) // leave
+	if(_team == -1) // leave
 	{
 		if(o.has_team)
 		{
@@ -270,18 +270,18 @@ float SetTeam(entity o, int Team)
 	{
 		if (!o.has_team)
 		{
-			o.team = Team;
-			tm = GetTeam(Team, true);
+			o.team = _team;
+			tm = GetTeam(_team, true);
 			tm.team_size += 1;
 			o.has_team = 1;
 			return true;
 		}
-		else if(Team != o.team)
+		else if(_team != o.team)
 		{
 			tm = GetTeam(o.team, false);
 			tm.team_size -= 1;
-			o.team = Team;
-			tm = GetTeam(Team, true);
+			o.team = _team;
+			tm = GetTeam(_team, true);
 			tm.team_size += 1;
 			return true;
 		}

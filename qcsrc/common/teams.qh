@@ -1,104 +1,99 @@
 #ifndef TEAMS_H
 #define TEAMS_H
 
-#ifdef TEAMNUMBERS_THAT_ARENT_STUPID
-const int NUM_TEAM_1 = 1;  // red
-const int NUM_TEAM_2 = 2; // blue
-const int NUM_TEAM_3 = 3; // yellow
-const int NUM_TEAM_4 = 4; // pink
-const int NUM_SPECTATOR = 5;
-#else
-#ifdef CSQC
-const int NUM_TEAM_1 = 4;  // red
-const int NUM_TEAM_2 = 13; // blue
-const int NUM_TEAM_3 = 12; // yellow
-const int NUM_TEAM_4 = 9; // pink
-#else
-const int NUM_TEAM_1 = 5;  // red
-const int NUM_TEAM_2 = 14; // blue
-const int NUM_TEAM_3 = 13; // yellow
-const int NUM_TEAM_4 = 10; // pink
-#endif
-const int NUM_SPECTATOR = 1337;
-#endif
+REGISTRY(Teams, BITS(5))
+#define Teams_from(i) _Teams_from(i, TEAM_SPECTATOR)
+REGISTER_REGISTRY(Teams)
+REGISTRY_CHECK(Teams)
 
-const string COL_TEAM_1 = "^1";
-const string COL_TEAM_2 = "^4";
-const string COL_TEAM_3 = "^3";
-const string COL_TEAM_4 = "^6";
-// must be #defined, const globals drop the translation attribute
-#define NAME_TEAM_1 _("Red")
-#define NAME_TEAM_2 _("Blue")
-#define NAME_TEAM_3 _("Yellow")
-#define NAME_TEAM_4 _("Pink")
+CLASS(Team, Object)
+    ATTRIB(Team, m_name, string, string_null)
+    ATTRIB(Team, m_name_nonls, string, string_null)
+    ATTRIB(Team, m_playercolor, int, 0)
+    ATTRIB(Team, m_colorstr, string, string_null)
+    ATTRIB(Team, m_color, vector, '0 0 0')
+    CONSTRUCTOR(Team, string _name, string _name_nonls, int _playercolor, string _colorstr, vector _color) {
+        CONSTRUCT(Team);
+        #ifndef CSQC
+        _playercolor++;
+        #endif
+        this.team = _playercolor; // for team numbers that aren't stupid, use `this.m_id`
+
+        this.m_name = _name;
+        this.m_name_nonls = _name_nonls;
+        this.m_playercolor = _playercolor;
+        this.m_colorstr = _colorstr;
+        this.m_color = _color;
+    }
+ENDCLASS(Team)
+
+#define TEAM(id, ...) REGISTER(Teams, id, m_id, NEW(Team, __VA_ARGS__))
+
+TEAM(TEAM_1,    _("Red"),       "Red",      4,      "^1", '1      0.0625 0.0625'); // 0xFF0F0F
+TEAM(TEAM_2,    _("Blue"),      "Blue",     13,     "^4", '0.0625 0.0625 1     '); // 0x0F0FFF
+TEAM(TEAM_3,    _("Yellow"),    "Yellow",   12,     "^3", '1      1      0.0625'); // 0xFFFF0F
+TEAM(TEAM_4,    _("Pink"),      "Pink",     9,      "^6", '1      0.0625 1     '); // 0xFF0FFF
+TEAM(TEAM_SPEC, _("Neutral"),   "Neutral",  1337,   "^7", '0      0      0     ');
+
+#define NUM_TEAM_1 (TEAM_1.m_playercolor)
+#define NUM_TEAM_2 (TEAM_2.m_playercolor)
+#define NUM_TEAM_3 (TEAM_3.m_playercolor)
+#define NUM_TEAM_4 (TEAM_4.m_playercolor)
+#define NUM_SPECTATOR (TEAM_SPEC.m_playercolor)
+
+#define COL_TEAM_1 (TEAM_1.m_colorstr)
+#define COL_TEAM_2 (TEAM_2.m_colorstr)
+#define COL_TEAM_3 (TEAM_3.m_colorstr)
+#define COL_TEAM_4 (TEAM_4.m_colorstr)
+/** must be #defined, const globals drop the translation attribute */
 #define NAME_TEAM _("Team")
-#define NAME_NEUTRAL _("Neutral")
+#define NAME_TEAM_1 (TEAM_1.m_name)
+#define NAME_TEAM_2 (TEAM_2.m_name)
+#define NAME_TEAM_3 (TEAM_3.m_name)
+#define NAME_TEAM_4 (TEAM_4.m_name)
+#define NAME_NEUTRAL (TEAM_SPEC.m_name)
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
-const string STATIC_NAME_TEAM_1 = "Red";
-const string STATIC_NAME_TEAM_2 = "Blue";
-const string STATIC_NAME_TEAM_3 = "Yellow";
-const string STATIC_NAME_TEAM_4 = "Pink";
+#define STATIC_NAME_TEAM_1 (TEAM_1.m_name_nonls)
+#define STATIC_NAME_TEAM_2 (TEAM_2.m_name_nonls)
+#define STATIC_NAME_TEAM_3 (TEAM_3.m_name_nonls)
+#define STATIC_NAME_TEAM_4 (TEAM_4.m_name_nonls)
 
 #ifdef CSQC
 float teamplay;
 float myteam;
 #endif
 
-string Team_ColorCode(float teamid)
+string Team_ColorCode(int teamid)
 {
-    switch(teamid)
-    {
-		case NUM_TEAM_1: return COL_TEAM_1;
-    	case NUM_TEAM_2: return COL_TEAM_2;
-    	case NUM_TEAM_3: return COL_TEAM_3;
-    	case NUM_TEAM_4: return COL_TEAM_4;
-	}
-
-	return "^7";
+    Team t = TEAM_SPEC;
+    FOREACH(Teams, it.team == teamid, t = it; break);
+	return t.m_colorstr;
 }
 
-vector Team_ColorRGB(float teamid)
+vector Team_ColorRGB(int teamid)
 {
-	switch(teamid)
-	{
-		case NUM_TEAM_1: return '1 0.0625 0.0625'; // 0xFF0F0F
-		case NUM_TEAM_2: return '0.0625 0.0625 1'; // 0x0F0FFF
-		case NUM_TEAM_3: return '1 1 0.0625'; // 0xFFFF0F
-		case NUM_TEAM_4: return '1 0.0625 1'; // 0xFF0FFF
-	}
-
-    return '0 0 0';
+    Team t = TEAM_SPEC;
+    FOREACH(Teams, it.team == teamid, t = it; break);
+	return t.m_color;
 }
 
-string Team_ColorName(float teamid)
+string Team_ColorName(int teamid)
 {
-    switch(teamid)
-    {
-		case NUM_TEAM_1: return NAME_TEAM_1;
-    	case NUM_TEAM_2: return NAME_TEAM_2;
-    	case NUM_TEAM_3: return NAME_TEAM_3;
-    	case NUM_TEAM_4: return NAME_TEAM_4;
-	}
-
-    return NAME_NEUTRAL;
+    Team t = TEAM_SPEC;
+    FOREACH(Teams, it.team == teamid, t = it; break);
+	return t.m_name_nonls;
 }
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
-string Static_Team_ColorName(float teamid)
+string Static_Team_ColorName(int teamid)
 {
-    switch(teamid)
-    {
-		case NUM_TEAM_1: return STATIC_NAME_TEAM_1;
-    	case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
-    	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
-    	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
-	}
-
-    return NAME_NEUTRAL;
+    Team t = TEAM_SPEC;
+    FOREACH(Teams, it.team == teamid, t = it; break);
+	return t.m_name;
 }
 
-float Team_ColorToTeam(string team_color)
+int Team_ColorToTeam(string team_color)
 {
 	switch(strtolower(team_color))
 	{
@@ -112,7 +107,7 @@ float Team_ColorToTeam(string team_color)
 	return -1;
 }
 
-float Team_NumberToTeam(float number)
+int Team_NumberToTeam(int number)
 {
 	switch(number)
 	{
@@ -125,7 +120,7 @@ float Team_NumberToTeam(float number)
 	return -1;
 }
 
-float Team_TeamToNumber(float teamid)
+int Team_TeamToNumber(int teamid)
 {
 	switch(teamid)
 	{
@@ -140,7 +135,6 @@ float Team_TeamToNumber(float teamid)
 
 
 // legacy aliases for shitty code
-#define TeamByColor(teamid) (Team_TeamToNumber(teamid) - 1)
 #define ColorByTeam(number) Team_NumberToTeam(number + 1)
 
 // useful aliases

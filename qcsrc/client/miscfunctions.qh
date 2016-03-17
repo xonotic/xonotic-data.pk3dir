@@ -21,11 +21,11 @@ void RemovePlayer(entity player);
 
 void MoveToLast(entity e);
 
-float RegisterTeam(entity Team);
+float RegisterTeam(entity _team);
 
-void RemoveTeam(entity Team);
+void RemoveTeam(entity _team);
 
-entity GetTeam(int Team, bool add);
+entity GetTeam(int _team, bool add);
 
 vector HUD_GetFontsize(string cvarname);
 

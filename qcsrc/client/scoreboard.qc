@@ -98,11 +98,11 @@ void HUD_InitScores()
 	Cmd_HUD_SetFields(0);
 }
 
-float SetTeam(entity pl, float Team);
+float SetTeam(entity pl, float _team);
 //float lastpnum;
 void HUD_UpdatePlayerTeams()
 {
-	float Team;
+	float _team;
 	entity pl, tmp;
 	float num;
 
@@ -110,8 +110,8 @@ void HUD_UpdatePlayerTeams()
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		num += 1;
-		Team = entcs_GetScoreTeam(pl.sv_entnum);
-		if(SetTeam(pl, Team))
+		_team = entcs_GetScoreTeam(pl.sv_entnum);
+		if(SetTeam(pl, _team))
 		{
 			tmp = pl.sort_prev;
 			HUD_UpdatePlayerPos(pl);
@@ -233,15 +233,15 @@ float HUD_CompareTeamScores(entity left, entity right)
 	return false;
 }
 
-void HUD_UpdateTeamPos(entity Team)
+void HUD_UpdateTeamPos(entity _team)
 {
-	for(other = Team.sort_next; other && HUD_CompareTeamScores(Team, other); other = Team.sort_next)
+	for(other = _team.sort_next; other && HUD_CompareTeamScores(_team, other); other = _team.sort_next)
 	{
-		SORT_SWAP(Team, other);
+		SORT_SWAP(_team, other);
 	}
-	for(other = Team.sort_prev; other != teams && HUD_CompareTeamScores(other, Team); other = Team.sort_prev)
+	for(other = _team.sort_prev; other != teams && HUD_CompareTeamScores(other, _team); other = _team.sort_prev)
 	{
-		SORT_SWAP(other, Team);
+		SORT_SWAP(other, _team);
 	}
 }
 

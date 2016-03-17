@@ -77,31 +77,31 @@ void MoveToLast(entity e)
 	AuditLists();
 }
 
-float RegisterTeam(entity Team)
+float RegisterTeam(entity _team)
 {
-	assert_once(Team.team, eprint(Team));
+	assert_once(_team.team, eprint(_team));
 	entity tm;
 	AuditLists();
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm == Team)
-			error("Team already registered!");
-	Team.sort_next = teams.sort_next;
-	Team.sort_prev = teams;
+		if(tm == _team)
+			error("_team already registered!");
+	_team.sort_next = teams.sort_next;
+	_team.sort_prev = teams;
 	if(teams.sort_next)
-		teams.sort_next.sort_prev = Team;
-	teams.sort_next = Team;
-	if(Team.team && Team.team != NUM_SPECTATOR)
+		teams.sort_next.sort_prev = _team;
+	teams.sort_next = _team;
+	if(_team.team && _team.team != NUM_SPECTATOR)
 		++team_count;
 	AuditLists();
 	return true;
 }
 
-void RemoveTeam(entity Team)
+void RemoveTeam(entity _team)
 {
 	entity tm, parent;
 	AuditLists();
 	parent = teams;
-	for(tm = teams.sort_next; tm && tm != Team; tm = tm.sort_next)
+	for(tm = teams.sort_next; tm && tm != _team; tm = tm.sort_next)
 		parent = tm;
 
 	if(!tm)
@@ -109,23 +109,23 @@ void RemoveTeam(entity Team)
 		LOG_INFO(_("Trying to remove a team which is not in the teamlist!"));
 		return;
 	}
-	parent.sort_next = Team.sort_next;
-	if(Team.sort_next)
-		Team.sort_next.sort_prev = parent;
-	if(Team.team && Team.team != NUM_SPECTATOR)
+	parent.sort_next = _team.sort_next;
+	if(_team.sort_next)
+		_team.sort_next.sort_prev = parent;
+	if(_team.team && _team.team != NUM_SPECTATOR)
 		--team_count;
 	AuditLists();
 }
 
-entity GetTeam(int Team, bool add)
+entity GetTeam(int _team, bool add)
 {
-	int num = (Team == NUM_SPECTATOR) ? 16 : Team;
+	int num = (_team == NUM_SPECTATOR) ? 16 : _team;
 	if(teamslots[num])
 		return teamslots[num];
 	if (!add)
 		return world;
 	entity tm = new_pure(team);
-	tm.team = Team;
+	tm.team = _team;
 	teamslots[num] = tm;
 	RegisterTeam(tm);
 	return tm;

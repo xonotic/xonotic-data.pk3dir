@@ -9,5 +9,5 @@ void Cmd_HUD_SetFields(float argc);
 void HUD_DrawScoreboard();
 void HUD_InitScores();
 void HUD_UpdatePlayerPos(entity pl);
-void HUD_UpdateTeamPos(entity Team);
+void HUD_UpdateTeamPos(entity _team);
 float HUD_WouldDrawScoreboard();
