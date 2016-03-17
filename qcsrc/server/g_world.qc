@@ -1411,11 +1411,11 @@ void DumpStats(float final)
 	if(to_file)
 		fputs(file, strcat(s, "\n"));
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), {
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - it.jointime)), ":");
 		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
-			s = strcat(s, ftos(it.team), ":");
+			s = strcat(s, ftos(TMID(it.team)), ":");
 		else
 			s = strcat(s, "spectator:");
 
@@ -1425,7 +1425,7 @@ void DumpStats(float final)
 			GameLogEcho(strcat(s, ftos(it.playerid), ":", it.netname));
 		if(to_file)
 			fputs(file, strcat(s, it.netname, "\n"));
-	));
+	});
 
 	if(teamplay)
 	{
@@ -1680,7 +1680,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_winner)
 		WinningConditionHelper_winner.winning = 1;
 	if(WinningConditionHelper_winnerteam >= 0)
-		SetWinners(team, WinningConditionHelper_winnerteam);
+		SetWinners(__team, WinningConditionHelper_winnerteam);
 
 	if(WinningConditionHelper_lowerisbetter)
 	{
@@ -1745,25 +1745,25 @@ float WinningCondition_RanOutOfSpawns()
 
 	team1_score = team2_score = team3_score = team4_score = 0;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
-		switch(it.team)
+	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
+		switch(TMID(it.team))
 		{
 			case NUM_TEAM_1: team1_score = 1; break;
 			case NUM_TEAM_2: team2_score = 1; break;
 			case NUM_TEAM_3: team3_score = 1; break;
 			case NUM_TEAM_4: team4_score = 1; break;
 		}
-	));
+	});
 
-	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, LAMBDA(
-		switch(it.team)
+	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, {
+		switch(TMID(it.team))
 		{
 			case NUM_TEAM_1: team1_score = 1; break;
 			case NUM_TEAM_2: team2_score = 1; break;
 			case NUM_TEAM_3: team3_score = 1; break;
 			case NUM_TEAM_4: team4_score = 1; break;
 		}
-	));
+	});
 
 	ClearWinners();
 	if(team1_score + team2_score + team3_score + team4_score == 0)
@@ -1791,7 +1791,7 @@ float WinningCondition_RanOutOfSpawns()
 			if(t != NUM_TEAM_4) if(c4 >= 0) TeamScore_AddToTeam(NUM_TEAM_4, i, -1000);
 		}
 
-		AddWinners(team, t);
+		AddWinners(__team, t);
 		return WINNING_YES;
 	}
 	else

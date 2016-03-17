@@ -45,7 +45,7 @@ ENDCLASS(Buff)
 	void buff_Init_Compat(entity ent, entity replacement);
 	#define BUFF_SPAWNFUNC(e, b, t) spawnfunc(item_buff_##e) { \
 		self.buffs = b.m_itemid; \
-		self.team = t; \
+		self.__team = t; \
 		buff_Init(self); \
 	}
 	#define BUFF_SPAWNFUNCS(e, b)                       \

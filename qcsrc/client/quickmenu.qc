@@ -752,9 +752,9 @@ void HUD_Quickmenu_PlayerListEntries(string cmd, float teamplayers, float withou
 
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
-		if(teamplayers == 1 && (pl.team != myteam || pl.team == NUM_SPECTATOR)) // only own team players
+		if(teamplayers == 1 && (TMID(pl.team) != myteam || TMID(pl.team) == NUM_SPECTATOR)) // only own team players
 			continue;
-		if(teamplayers == 2 && (pl.team == myteam || pl.team == NUM_SPECTATOR)) // only enemy team players
+		if(teamplayers == 2 && (TMID(pl.team) == myteam || TMID(pl.team) == NUM_SPECTATOR)) // only enemy team players
 			continue;
 		if(without_me && pl.sv_entnum == player_localnum)
 			continue;

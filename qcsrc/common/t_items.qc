@@ -826,7 +826,7 @@ void Item_Touch()
 		if(this.team)
 		{
 			RandomSelection_Init();
-			for(entity head = world; (head = findfloat(head, team, this.team)); )
+			for(entity head = world; (head = findfloat(head, __team, TMID(this.team))); )
 			{
 				if(head.flags & FL_ITEM)
 				if(head.classname != "item_flag_team" && head.classname != "item_key_team")
@@ -870,10 +870,9 @@ void Item_FindTeam()
 	if(self.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
+		LOG_TRACE("Initializing item team ", ftos(TMID(self.team)), "\n");
 		RandomSelection_Init();
-		FOREACH_ENTITY_FLOAT(team, self.team,
-		{
+		FOREACH_ENTITY_FLOAT(__team, TMID(self.team), {
 			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 				RandomSelection_Add(it, 0, string_null, it.cnt, 0);
@@ -883,8 +882,7 @@ void Item_FindTeam()
 		e.state = 0;
 		Item_Show(e, 1);
 
-		FOREACH_ENTITY_FLOAT(team, self.team,
-		{
+		FOREACH_ENTITY_FLOAT(__team, TMID(self.team), {
 			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 			{

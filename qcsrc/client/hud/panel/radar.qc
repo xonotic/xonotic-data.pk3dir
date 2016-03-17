@@ -340,12 +340,12 @@ void HUD_Radar()
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
-	FOREACH_ENTITY_CLASS("radarlink", true, draw_teamradar_link(it.origin, it.velocity, it.team));
+	FOREACH_ENTITY_CLASS("radarlink", true, draw_teamradar_link(it.origin, it.velocity, TMID(it.team)));
 
 	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
 		if ( hud_panel_radar_mouse )
 		if ( it.health > 0 )
-		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE )
+		if ( TMID(it.team) == myteam+1 || gametype == MAPINFO_TYPE_RACE )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
 			if(vdist((mousepos - coord), <, 8))

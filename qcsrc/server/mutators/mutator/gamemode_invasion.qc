@@ -152,7 +152,7 @@ void invasion_SpawnChosenMonster(float mon)
 	if(spawn_point && spawn_point.target_range) monster.target_range = spawn_point.target_range;
 
 	if(teamplay)
-	if(spawn_point && spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
+	if(spawn_point && spawn_point.team && inv_monsters_perteam[TMID(spawn_point.team)] > 0)
 		monster.team = spawn_point.team;
 	else
 	{
@@ -162,7 +162,7 @@ void invasion_SpawnChosenMonster(float mon)
 		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(world, NUM_TEAM_3, string_null, 1, 1); }
 		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(world, NUM_TEAM_4, string_null, 1, 1); }
 
-		monster.team = RandomSelection_chosen_float;
+		monster.__team = RandomSelection_chosen_float;
 	}
 
 	if(teamplay)
@@ -171,9 +171,9 @@ void invasion_SpawnChosenMonster(float mon)
 
 		if(monster.sprite)
 		{
-			WaypointSprite_UpdateTeamRadar(monster.sprite, RADARICON_DANGER, ((monster.team) ? Team_ColorRGB(monster.team) : '1 0 0'));
+			WaypointSprite_UpdateTeamRadar(monster.sprite, RADARICON_DANGER, ((monster.team) ? Team_ColorRGB(TMID(monster.team)) : '1 0 0'));
 
-			monster.sprite.team = 0;
+			monster.sprite.__team = 0;
 			monster.sprite.SendFlags |= 1;
 		}
 	}
@@ -205,7 +205,7 @@ float Invasion_CheckWinner()
 
 	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;
 
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
 		if(it.health > 0)
 		{
 			if((get_monsterinfo(it.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
@@ -213,7 +213,7 @@ float Invasion_CheckWinner()
 			++total_alive_monsters;
 
 			if(teamplay)
-			switch(it.team)
+			switch(TMID(it.team))
 			{
 				case NUM_TEAM_1: ++red_alive; break;
 				case NUM_TEAM_2: ++blue_alive; break;
@@ -221,7 +221,7 @@ float Invasion_CheckWinner()
 				case NUM_TEAM_4: ++pink_alive; break;
 			}
 		}
-	));
+	});
 
 	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < inv_maxspawned)
 	{
@@ -335,7 +335,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 	{
 		inv_numkilled += 1;
 		inv_maxcurrent -= 1;
-		if(teamplay) { inv_monsters_perteam[frag_target.team] -= 1; }
+		if(teamplay) { inv_monsters_perteam[TMID(frag_target.team)] -= 1; }
 
 		if(IS_PLAYER(frag_attacker))
 		if(SAME_TEAM(frag_attacker, frag_target)) // in non-teamplay modes, same team = same player, so this works
@@ -344,7 +344,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 		{
 			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
 			if(teamplay)
-				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
+				TeamScore_AddToTeam(TMID(frag_attacker.team), ST_INV_KILLS, +1);
 		}
 	}
 

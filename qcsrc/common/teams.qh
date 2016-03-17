@@ -2,7 +2,6 @@
 #define TEAMS_H
 
 REGISTRY(Teams, BITS(5))
-#define Teams_from(i) _Teams_from(i, TEAM_SPECTATOR)
 REGISTER_REGISTRY(Teams)
 REGISTRY_CHECK(Teams)
 
@@ -12,12 +11,13 @@ CLASS(Team, Object)
     ATTRIB(Team, m_playercolor, int, 0)
     ATTRIB(Team, m_colorstr, string, string_null)
     ATTRIB(Team, m_color, vector, '0 0 0')
+    .int Team_id;
     CONSTRUCTOR(Team, string _name, string _name_nonls, int _playercolor, string _colorstr, vector _color) {
         CONSTRUCT(Team);
         #ifndef CSQC
         _playercolor++;
         #endif
-        this.team = _playercolor; // for team numbers that aren't stupid, use `this.m_id`
+        this.Team_id = _playercolor; // for team numbers that aren't stupid, use `this.m_id`
 
         this.m_name = _name;
         this.m_name_nonls = _name_nonls;
@@ -66,7 +66,7 @@ float myteam;
 
 Team TM(int teamid) {
     if (teamid == 0) return NULL;
-    FOREACH(Teams, it.team == teamid, return it);
+    FOREACH(Teams, it.Team_id == teamid, return it);
     LOG_SEVEREF("Unknown team: %d", teamid);
     return NULL;
 }

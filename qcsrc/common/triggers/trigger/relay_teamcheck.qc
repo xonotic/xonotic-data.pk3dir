@@ -23,12 +23,12 @@ void trigger_relay_teamcheck_use()
 
 void trigger_relay_teamcheck_reset(entity this)
 {
-	this.team = this.team_saved;
+	this.__team = this.team_saved;
 }
 
 spawnfunc(trigger_relay_teamcheck)
 {
-	this.team_saved = this.team;
+	this.team_saved = TMID(this.team);
 	this.use = trigger_relay_teamcheck_use;
 	this.reset = trigger_relay_teamcheck_reset;
 }

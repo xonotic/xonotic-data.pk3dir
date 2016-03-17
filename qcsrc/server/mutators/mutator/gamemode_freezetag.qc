@@ -72,15 +72,15 @@ void freezetag_ScoreRules(float teams)
 void freezetag_count_alive_players()
 {
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		switch(it.team)
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		switch(TMID(it.team))
 		{
 			case NUM_TEAM_1: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++redalive; break;
 			case NUM_TEAM_2: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++bluealive; break;
 			case NUM_TEAM_3: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++yellowalive; break;
 			case NUM_TEAM_4: ++total_players; if(it.health >= 1 && STAT(FROZEN, it) != 1) ++pinkalive; break;
 		}
-	));
+	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		it.redalive_stat = redalive;
 		it.bluealive_stat = bluealive;

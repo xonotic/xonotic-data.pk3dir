@@ -654,7 +654,7 @@ void MoveToTeam(entity client, int team_colour, int type)
 	SetPlayerColors(client, team_colour - 1);  // set the players colour
 	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE.m_id, client.origin, '0 0 0');  // kill the player
 	lockteams = lockteams_backup;  // restore the team lock
-	LogTeamchange(client.playerid, client.team, type);
+	LogTeamchange(client.playerid, TMID(client.team), type);
 }
 
 /**
@@ -681,7 +681,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	if (!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
-		colorstr = Team_ColorCode(source.team);
+		colorstr = Team_ColorCode(TMID(source.team));
 	else
 	{
 		colorstr = "";

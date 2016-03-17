@@ -220,7 +220,7 @@ NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 
 	if(sendflags & 4)
 	{
-		this.team = ReadByte();
+		this.__team = ReadByte();
 	}
 
 	return = true;

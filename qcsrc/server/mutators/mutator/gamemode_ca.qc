@@ -73,21 +73,21 @@ bool autocvar_g_ca_spectate_enemies;
 void CA_count_alive_players()
 {
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		switch(it.team)
+	FOREACH_CLIENT(IS_PLAYER(it), {
+		switch(TMID(it.team))
 		{
 			case NUM_TEAM_1: ++total_players; if(!IS_DEAD(it)) ++redalive; break;
 			case NUM_TEAM_2: ++total_players; if(!IS_DEAD(it)) ++bluealive; break;
 			case NUM_TEAM_3: ++total_players; if(!IS_DEAD(it)) ++yellowalive; break;
 			case NUM_TEAM_4: ++total_players; if(!IS_DEAD(it)) ++pinkalive; break;
 		}
-	));
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	});
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		it.redalive_stat = redalive;
 		it.bluealive_stat = bluealive;
 		it.yellowalive_stat = yellowalive;
 		it.pinkalive_stat = pinkalive;
-	));
+	});
 }
 
 float CA_GetWinnerTeam()
@@ -246,7 +246,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 		it.killcount = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 		{
-			it.team = -1;
+			it.__team = -1;
 			it.caplayer = 1;
 		}
 		if (it.caplayer)

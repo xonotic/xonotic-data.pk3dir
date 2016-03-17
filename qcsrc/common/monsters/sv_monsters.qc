@@ -155,7 +155,7 @@ void monster_setupcolors(entity mon)
 	if(IS_PLAYER(mon.realowner))
 		mon.colormap = mon.realowner.colormap;
 	else if(teamplay && mon.team)
-		mon.colormap = 1024 + (mon.team - 1) * 17;
+		mon.colormap = 1024 + (TMID(mon.team) - 1) * 17;
 	else
 	{
 		if(mon.monster_skill <= MONSTER_SKILL_EASY)
@@ -177,7 +177,7 @@ void monster_changeteam(entity ent, float newteam)
 {
 	if(!teamplay) { return; }
 
-	ent.team = newteam;
+	ent.__team = newteam;
 	ent.monster_attack = true; // new team, activate attacking
 	monster_setupcolors(ent);
 
@@ -185,7 +185,7 @@ void monster_changeteam(entity ent, float newteam)
 	{
 		WaypointSprite_UpdateTeamRadar(ent.sprite, RADARICON_DANGER, ((newteam) ? Team_ColorRGB(newteam) : '1 0 0'));
 
-		ent.sprite.team = newteam;
+		ent.sprite.__team = newteam;
 		ent.sprite.SendFlags |= 1;
 	}
 }
@@ -1275,9 +1275,9 @@ bool Monster_Spawn_Setup(entity this)
 
 	if(autocvar_g_monsters_healthbars)
 	{
-		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 1024, this, '0 0 1' * (this.maxs.z + 15), world, this.team, this, sprite, true, RADARICON_DANGER);
+		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 1024, this, '0 0 1' * (this.maxs.z + 15), world, TMID(this.team), this, sprite, true, RADARICON_DANGER);
 		wp.wp_extra = this.monsterid;
-		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0 0');
+		wp.colormod = ((TMID(this.team)) ? Team_ColorRGB(TMID(this.team)) : '1 0 0');
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE))
 		{
 			WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
@@ -1313,7 +1313,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	if(this.monster_skill == MONSTER_SKILL_HARD) if(this.spawnflags & MONSTERSKILL_NOTHARD) { Monster_Remove(this); return false; }
 
 	if(this.team && !teamplay)
-		this.team = 0;
+		this.__team = 0;
 
 	if(!(this.spawnflags & MONSTERFLAG_SPAWNED)) // naturally spawned monster
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either

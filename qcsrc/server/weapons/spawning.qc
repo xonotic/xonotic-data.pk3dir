@@ -46,7 +46,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 		int t = tokenize_console(s);
 		if (t >= 2)
 		{
-			this.team = --internalteam;
+			this.__team = --internalteam;
 			for (int i = 1; i < t; ++i)
 			{
 				s = argv(i);

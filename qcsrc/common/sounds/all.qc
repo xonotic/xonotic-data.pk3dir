@@ -125,7 +125,7 @@ float spamsound(entity e, int chan, string samp, float vol, float _atten)
 	return false;
 }
 
-void play2team(float t, string filename)
+void play2team(team_t t, string filename)
 {
 	if (autocvar_bot_sound_monopoly) return;
 	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.team == t, play2(it, filename));

@@ -25,6 +25,18 @@
 	#include <dpdefs/keycodes.qh>
 #endif
 
+.int team;
+.int __team = team;
+.entity m_team;
+#if 1
+#define team_t int
+#define TMID(t) (t)
+#else
+#define team_t Team
+#define TMID(t) (t.Team_id)
+#define team m_team
+#endif
+
 #include "macro.qh"
 
 #include "warpzone/mathlib.qc"

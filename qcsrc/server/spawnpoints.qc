@@ -14,7 +14,7 @@ bool SpawnPoint_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
-	WriteByte(MSG_ENTITY, self.team);
+	WriteByte(MSG_ENTITY, TMID(self.team));
 	WriteCoord(MSG_ENTITY, self.origin.x);
 	WriteCoord(MSG_ENTITY, self.origin.y);
 	WriteCoord(MSG_ENTITY, self.origin.z);
@@ -104,14 +104,14 @@ void relocate_spawnpoint()
     self.use = spawnpoint_use;
     self.think = spawnpoint_think;
     self.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
-    self.team_saved = self.team;
+    self.team_saved = TMID(self.team);
     if (!self.cnt)
         self.cnt = 1;
 
     if (have_team_spawns != 0)
         if (self.team)
             have_team_spawns = 1;
-    have_team_spawns_forteam[self.team] = 1;
+    have_team_spawns_forteam[TMID(self.team)] = 1;
 
     if (autocvar_r_showbboxes)
     {
@@ -130,20 +130,20 @@ void relocate_spawnpoint()
 		!(
 			( // if this passes, there is a DM spawn on a team match
 				teamplay
-				&& (self.team != NUM_TEAM_1)
-				&& (self.team != NUM_TEAM_2)
-				&& (self.team != NUM_TEAM_3)
-				&& (self.team != NUM_TEAM_4)
+				&& (TMID(self.team) != NUM_TEAM_1)
+				&& (TMID(self.team) != NUM_TEAM_2)
+				&& (TMID(self.team) != NUM_TEAM_3)
+				&& (TMID(self.team) != NUM_TEAM_4)
 			)
 			||
 			( // if this passes, there is a team spawn on a DM match
 				!teamplay
 				&&
 				(
-					(self.team == NUM_TEAM_1)
-					|| (self.team == NUM_TEAM_2)
-					|| (self.team == NUM_TEAM_3)
-					|| (self.team == NUM_TEAM_4)
+					   (TMID(self.team) == NUM_TEAM_1)
+					|| (TMID(self.team) == NUM_TEAM_2)
+					|| (TMID(self.team) == NUM_TEAM_3)
+					|| (TMID(self.team) == NUM_TEAM_4)
 				)
 			)
 		)
@@ -174,7 +174,7 @@ Starting point for a player in team one (Red).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team1)
 {
-	this.team = NUM_TEAM_1; // red
+	this.__team = NUM_TEAM_1; // red
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -184,7 +184,7 @@ Starting point for a player in team two (Blue).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team2)
 {
-	this.team = NUM_TEAM_2; // blue
+	this.__team = NUM_TEAM_2; // blue
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -193,7 +193,7 @@ Starting point for a player in team three (Yellow).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team3)
 {
-	this.team = NUM_TEAM_3; // yellow
+	this.__team = NUM_TEAM_3; // yellow
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -203,7 +203,7 @@ Starting point for a player in team four (Purple).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team4)
 {
-	this.team = NUM_TEAM_4; // purple
+	this.__team = NUM_TEAM_4; // purple
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -219,7 +219,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 
 	// filter out spots for the wrong team
 	if(teamcheck >= 0)
-		if(spot.team != teamcheck)
+		if(TMID(spot.team) != teamcheck)
 			return '-1 0 0';
 
 	if(race_spawns)
@@ -345,7 +345,7 @@ entity SelectSpawnPoint (float anypoint)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
 	{
-		if(have_team_spawns_forteam[self.team] == 0)
+		if(have_team_spawns_forteam[TMID(self.team)] == 0)
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
@@ -357,7 +357,7 @@ entity SelectSpawnPoint (float anypoint)
 				teamcheck = -1;
 		}
 		else
-			teamcheck = self.team; // MUST be team
+			teamcheck = TMID(self.team); // MUST be team
 	}
 	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
 		teamcheck = 0; // MUST be noteam

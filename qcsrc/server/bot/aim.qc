@@ -116,7 +116,7 @@ float bot_shouldattack(entity e)
 		if (e == self)
 			return false;
 		if (teamplay)
-		if (e.team != 0)
+		if (TMID(e.team) != 0)
 			return false;
 	}
 
@@ -125,7 +125,7 @@ float bot_shouldattack(entity e)
 
 	if(teamplay)
 	{
-		if(e.team==0)
+		if(TMID(e.team)==0)
 			return false;
 	}
 	else if(bot_ignore_bots)

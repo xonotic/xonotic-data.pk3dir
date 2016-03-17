@@ -49,7 +49,7 @@ void pong_ball_throw(entity ball)
 	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ball_speed;
 	ball.think = pong_ball_think;
 	ball.nextthink = time;
-	ball.team = 0;
+	ball.__team = 0;
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
 }
 
@@ -65,7 +65,7 @@ void pong_ball_reset(entity ball)
 	ball.velocity = '0 0 0';
 	ball.origin = '0.5 0.5 0';
 	ball.think = SUB_NullThink;
-	ball.team = 0;
+	ball.__team = 0;
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
 	ball.think = pong_ball_throwthink;
 	ball.nextthink = time + autocvar_sv_minigames_pong_ball_wait;
@@ -136,7 +136,7 @@ bool pong_goal(entity ball, int pteam)
 
 	if ( !pong_paddle_hit(ball, pteam) )
 	{
-		pong_add_score(ball.owner ,ball.team, pteam, 1);
+		pong_add_score(ball.owner ,TMID(ball.team), pteam, 1);
 		pong_ball_reset(ball);
 		return true;
 	}
@@ -159,7 +159,7 @@ void pong_ball_think()
 		if ( pong_paddle_hit(self, i) )
 		{
 			pong_paddle_bounce(self,i);
-			self.team = i;
+			self.__team = i;
 			self.SendFlags |= PONG_SF_BALLTEAM;
 			return;
 		}
@@ -227,7 +227,7 @@ void pong_ai_think()
 	float self_pos;
 
 
-	if ( self.team <= 2 )
+	if ( TMID(self.team) <= 2 )
 	{
 		if ( ball )
 			target = ball.origin_y + ball.velocity_y*think_speed;
@@ -280,7 +280,7 @@ void pong_paddle_think()
 		if ( self.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
 			movement *= -1;
 
-		if ( self.team > 2 )
+		if ( TMID(self.team) > 2 )
 			self.origin_x = bound(halflen, self.origin_x+movement, 1-halflen);
 		else
 			self.origin_y = bound(halflen, self.origin_y+movement, 1-halflen);
@@ -317,7 +317,7 @@ entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 	paddle.origin = pong_team_to_paddlepos(pl_team);
 	paddle.think = pong_paddle_think;
 	paddle.nextthink = time;
-	paddle.team = pl_team;
+	paddle.__team = pl_team;
 	paddle.mins = pong_team_to_box_halfsize(pl_team,-paddle.pong_length,-1/16);
 	paddle.maxs = pong_team_to_box_halfsize(pl_team,paddle.pong_length,1/16);
 
@@ -519,7 +519,7 @@ void pong_hud_board(vector pos, vector mySize)
 					obj_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 
 			minigame_drawpic_centered( obj_pos, minigame_texture("pong/ball-glow"),
-					obj_size, pong_team_to_color(e.team),
+					obj_size, pong_team_to_color(TMID(e.team)),
 					panel_fg_alpha, DRAWFLAG_ADDITIVE );
 		}
 		else if ( e.classname == "pong_paddle" )
@@ -527,11 +527,11 @@ void pong_hud_board(vector pos, vector mySize)
 			obj_pos = minigame_hud_denormalize(e.origin,pos,mySize);
 			obj_size = minigame_hud_denormalize_size(eX / 16 + eY*e.pong_length,pos,mySize);
 
-			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle-glow"),
-				obj_size, obj_size/2, pong_team_to_color(e.team),
+			drawrotpic(obj_pos, pong_team_to_angle(TMID(e.team)), minigame_texture("pong/paddle-glow"),
+				obj_size, obj_size/2, pong_team_to_color(TMID(e.team)),
 				panel_fg_alpha, DRAWFLAG_ADDITIVE );
 
-			drawrotpic(obj_pos, pong_team_to_angle(e.team), minigame_texture("pong/paddle"),
+			drawrotpic(obj_pos, pong_team_to_angle(TMID(e.team)), minigame_texture("pong/paddle"),
 				obj_size, obj_size/2, '1 1 1',
 				panel_fg_alpha, DRAWFLAG_NORMAL );
 
@@ -561,9 +561,9 @@ void pong_hud_status(vector pos, vector mySize)
 		if ( e.classname == "minigame_player" || e.classname == "pong_ai" )
 		{
 			mypos = pos;
-			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
+			mypos_y  += (TMID(e.team)-1) * (player_fontsize_y + ts_y);
 
-			drawfill(mypos, ts, pong_team_to_color(e.team), 0.25, DRAWFLAG_ADDITIVE);
+			drawfill(mypos, ts, pong_team_to_color(TMID(e.team)), 0.25, DRAWFLAG_ADDITIVE);
 
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				(e.minigame_playerslot ? entcs_GetName(e.minigame_playerslot-1) : _("AI")),
@@ -573,7 +573,7 @@ void pong_hud_status(vector pos, vector mySize)
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if ( e == minigame_self )
-				drawborderlines(1, mypos, ts, pong_team_to_color(e.team), 1, DRAWFLAG_NORMAL);
+				drawborderlines(1, mypos, ts, pong_team_to_color(TMID(e.team)), 1, DRAWFLAG_NORMAL);
 		}
 	}
 }

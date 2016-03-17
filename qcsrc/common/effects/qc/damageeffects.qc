@@ -99,7 +99,7 @@ void DamageEffect_Think()
 	// now generate the particles
 	vector org;
 	org = gettaginfo(self, 0); // origin at attached location
-	__pointparticles(self.team, org, '0 0 0', 1);
+	__pointparticles(TMID(self.team), org, '0 0 0', 1);
 }
 
 string species_prefix(int specnum)
@@ -182,7 +182,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.owner = self;
 	e.cnt = time + life;
-	e.team = _particleeffectnum(effectname);
+	e.__team = _particleeffectnum(effectname);
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
 	self.total_damages += 1;

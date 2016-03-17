@@ -77,7 +77,7 @@ bool ttt_valid_tile(string tile)
 void ttt_move(entity minigame, entity player, string pos )
 {
 	if ( minigame.minigame_flags & TTT_TURN_PLACE )
-	if ( pos && player.team == (minigame.minigame_flags & TTT_TURN_TEAM) )
+	if ( pos && TMID(player.team) == (minigame.minigame_flags & TTT_TURN_TEAM) )
 	{
 		if ( ttt_valid_tile(pos) )
 		if ( !ttt_find_piece(minigame,pos) )
@@ -86,14 +86,14 @@ void ttt_move(entity minigame, entity player, string pos )
 			piece.team = player.team;
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
-			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
+			minigame_server_sendflags(minigame, MINIG_SF_UPDATE);
 			minigame.ttt_npieces++;
-			minigame.ttt_nexteam = minigame_next_team(player.team,2);
+			minigame.ttt_nexteam = minigame_next_team(TMID(player.team), 2);
 			if ( ttt_winning_piece(piece) )
 			{
 				player.minigame_flags++;
 				minigame_server_sendflags(player, TTT_SF_PLAYERSCORE);
-				minigame.minigame_flags = TTT_TURN_WIN | player.team;
+				minigame.minigame_flags = TTT_TURN_WIN | TMID(player.team);
 			}
 			else if ( minigame.ttt_npieces >= (TTT_LET_CNT * TTT_NUM_CNT) )
 				minigame.minigame_flags = TTT_TURN_DRAW;
@@ -110,11 +110,11 @@ void ttt_next_match(entity minigame, entity player)
 	// on multiplayer matches, wait for both players to agree
 	if ( minigame.minigame_flags & (TTT_TURN_WIN|TTT_TURN_DRAW) )
 	{
-		minigame.minigame_flags = TTT_TURN_NEXT | player.team;
+		minigame.minigame_flags = TTT_TURN_NEXT | TMID(player.team);
 		minigame.SendFlags |= MINIG_SF_UPDATE;
 	}
 	else if ( (minigame.minigame_flags & TTT_TURN_NEXT) &&
-			!( minigame.minigame_flags & player.team ) )
+			!( minigame.minigame_flags & TMID(player.team) ) )
 #endif
 	{
 		minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
@@ -164,7 +164,7 @@ int ttt_server_event(entity minigame, string event, ...)
 
 			// Get the right team
 			if(minigame.minigame_players)
-				return minigame_next_team(minigame.minigame_players.team, 2);
+				return minigame_next_team(TMID(minigame.minigame_players.team), 2);
 
 			// Team 1 by default
 			return 1;
@@ -182,7 +182,7 @@ int ttt_server_event(entity minigame, string event, ...)
 				case "singleplayer":
 					if ( minigame_count_players(minigame) == 1 )
 					{
-						minigame.ttt_ai = minigame_next_team(minigame.minigame_players.team, 2);
+						minigame.ttt_ai = minigame_next_team(TMID(minigame.minigame_players.team), 2);
 						minigame.SendFlags = TTT_SF_SINGLEPLAYER;
 					}
 					return true;
@@ -229,13 +229,13 @@ void ttt_hud_board(vector pos, vector mySize)
 	vector tile_size = minigame_hud_denormalize_size('1 1 0'/TTT_TILE_SIZE,pos,mySize);
 	vector tile_pos;
 
-	if ( (active_minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team )
+	if ( (active_minigame.minigame_flags & TTT_TURN_TEAM) == TMID(minigame_self.team) )
 	if ( ttt_valid_tile(ttt_curr_pos) )
 	{
 		tile_pos = minigame_tile_pos(ttt_curr_pos,TTT_LET_CNT,TTT_NUM_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 		minigame_drawpic_centered( tile_pos,
-				minigame_texture(strcat("ttt/piece",ftos(minigame_self.team))),
+				minigame_texture(strcat("ttt/piece",ftos(TMID(minigame_self.team)))),
 				tile_size, '1 1 1', panel_fg_alpha/2, DRAWFLAG_NORMAL );
 	}
 
@@ -262,7 +262,7 @@ void ttt_hud_board(vector pos, vector mySize)
 			}
 
 			minigame_drawpic_centered( tile_pos,
-					minigame_texture(strcat("ttt/piece",ftos(e.team))),
+					minigame_texture(strcat("ttt/piece",ftos(TMID(e.team)))),
 					tile_size, '1 1 1'*icon_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
 	}
@@ -292,7 +292,7 @@ void ttt_hud_status(vector pos, vector mySize)
 		if ( e.classname == "minigame_player" )
 		{
 			mypos = pos;
-			if ( e.team == 2 )
+			if ( TMID(e.team) == 2 )
 				mypos_y  += player_fontsize_y + ts_y;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				(e.minigame_playerslot ? entcs_GetName(e.minigame_playerslot-1) : _("AI")),
@@ -300,7 +300,7 @@ void ttt_hud_status(vector pos, vector mySize)
 
 			mypos_y += player_fontsize_y;
 			drawpic( mypos,
-					minigame_texture(strcat("ttt/piece",ftos(e.team))),
+					minigame_texture(strcat("ttt/piece",ftos(TMID(e.team)))),
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 
 			mypos_x += tile_size_x;
@@ -319,19 +319,19 @@ string ttt_turn_to_string(int turnflags)
 
 	if ( turnflags & TTT_TURN_WIN )
 	{
-		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags&TTT_TURN_TEAM) != TMID(minigame_self.team) )
 			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
 		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
 	}
 
 	if ( turnflags & TTT_TURN_NEXT )
 	{
-		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags&TTT_TURN_TEAM) != TMID(minigame_self.team) )
 			return _("Select \"^1Next Match^7\" on the menu to start a new match!");
 		return _("Wait for your opponent to confirm the rematch");
 	}
 
-	if ( (turnflags & TTT_TURN_TEAM) != minigame_self.team )
+	if ( (turnflags & TTT_TURN_TEAM) != TMID(minigame_self.team) )
 		return _("Wait for your opponent to make their move");
 
 	if ( turnflags & TTT_TURN_PLACE )
@@ -525,7 +525,7 @@ void ttt_aimove(entity minigame)
 // Make the correct move
 void ttt_make_move(entity minigame)
 {
-	if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
+	if ( minigame.minigame_flags == (TTT_TURN_PLACE|TMID(minigame_self.team)) )
 	{
 		if ( minigame.ttt_ai  )
 		{
@@ -559,7 +559,7 @@ int ttt_client_event(entity minigame, string event, ...)
 		}
 		case "key_pressed":
 		{
-			if((minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team)
+			if((minigame.minigame_flags & TTT_TURN_TEAM) == TMID(minigame_self.team))
 			{
 				switch ( ...(0,int) )
 				{
@@ -614,7 +614,7 @@ int ttt_client_event(entity minigame, string event, ...)
 		case "mouse_moved":
 		{
 			vector mouse_pos = minigame_hud_normalize(mousepos,ttt_boardpos,ttt_boardsize);
-			if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
+			if ( minigame.minigame_flags == (TTT_TURN_PLACE|TMID(minigame_self.team)) )
 				ttt_set_curr_pos(minigame_tile_name(mouse_pos,TTT_LET_CNT,TTT_NUM_CNT));
 			if ( ! ttt_valid_tile(ttt_curr_pos) )
 				ttt_set_curr_pos("");
@@ -630,7 +630,7 @@ int ttt_client_event(entity minigame, string event, ...)
 				if ( sf & MINIG_SF_UPDATE )
 				{
 					sent.message = ttt_turn_to_string(sent.minigame_flags);
-					if ( sent.minigame_flags & minigame_self.team )
+					if ( sent.minigame_flags & TMID(minigame_self.team) )
 						minigame_prompt();
 				}
 
@@ -644,7 +644,7 @@ int ttt_client_event(entity minigame, string event, ...)
 					{
 						entity aiplayer = new(minigame_player);
 						aiplayer.owner = minigame;
-						aiplayer.team = ai;
+						aiplayer.__team = ai;
 						aiplayer.minigame_playerslot = 0;
 						aiplayer.minigame_autoclean = 1;
 						ttt_aimove(minigame);

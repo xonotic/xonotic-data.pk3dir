@@ -127,7 +127,7 @@ void multi_reset(entity this)
 	}
 	this.think = func_null;
 	this.nextthink = 0;
-	this.team = this.team_saved;
+	this.__team = this.team_saved;
 }
 
 /*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch
@@ -164,7 +164,7 @@ spawnfunc(trigger_multiple)
 
 	EXACTTRIGGER_INIT;
 
-	self.team_saved = self.team;
+	self.team_saved = TMID(self.team);
 
 	if (self.health)
 	{

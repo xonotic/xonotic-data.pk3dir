@@ -187,7 +187,7 @@ void kh_update_state()
 	FOR_EACH_KH_KEY(key)
 	{
 		if(key.owner)
-			f = key.team;
+			f = TMID(key.team);
 		else
 			f = 30;
 		s |= pow(32, key.count) * f;
@@ -414,16 +414,16 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		{
 			// player is now a key carrier
 			entity wp = WaypointSprite_AttachCarrier(WP_Null, player, RADARICON_FLAGCARRIER);
-			wp.colormod = colormapPaletteColor(player.team - 1, 0);
+			wp.colormod = colormapPaletteColor(TMID(player.team) - 1, 0);
 			player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
-			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team, SPRITERULE_TEAMPLAY);
-			if(player.team == NUM_TEAM_1)
+			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, TMID(player.team), SPRITERULE_TEAMPLAY);
+			if (TMID(player.team) == NUM_TEAM_1)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierRed, WP_KeyCarrierFriend, WP_KeyCarrierRed);
-			else if(player.team == NUM_TEAM_2)
+			else if (TMID(player.team) == NUM_TEAM_2)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierBlue, WP_KeyCarrierFriend, WP_KeyCarrierBlue);
-			else if(player.team == NUM_TEAM_3)
+			else if (TMID(player.team) == NUM_TEAM_3)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierYellow, WP_KeyCarrierFriend, WP_KeyCarrierYellow);
-			else if(player.team == NUM_TEAM_4)
+			else if (TMID(player.team) == NUM_TEAM_4)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, WP_KeyCarrierPink, WP_KeyCarrierFriend, WP_KeyCarrierPink);
 			if(!kh_no_radar_circles)
 				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
@@ -441,7 +441,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 		if(ownerteam != -1)
 		{
 			kh_interferemsg_time = time + 0.2;
-			kh_interferemsg_team = player.team;
+			kh_interferemsg_team = TMID(player.team);
 
 			// audit all key carrier sprites, update them to RUN HERE
 			FOR_EACH_KH_KEY(k)
@@ -494,7 +494,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 {
 	sound(player, CH_TRIGGER, SND_KH_COLLECT, VOL_BASE, ATTEN_NORM);
 
-	if(key.kh_dropperteam != player.team)
+	if(key.kh_dropperteam != TMID(player.team))
 	{
 		kh_Scores_Event(player, key, "collect", autocvar_g_balance_keyhunt_score_collect, 0);
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
@@ -650,7 +650,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 	attacker = world;
 	if(lostkey.pusher)
-		if(lostkey.pusher.team != teem)
+		if(TMID(lostkey.pusher.team) != teem)
 			if(IS_PLAYER(lostkey.pusher))
 				attacker = lostkey.pusher;
 
@@ -670,10 +670,10 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		float of, fragsleft, i, j, thisteam;
 		of = autocvar_g_balance_keyhunt_score_destroyed_ownfactor;
 
-		FOREACH_CLIENT(IS_PLAYER(it) && it.team != teem, LAMBDA(++players));
+		FOREACH_CLIENT(IS_PLAYER(it) && TMID(it.team) != teem, ++players);
 
 		FOR_EACH_KH_KEY(key)
-			if(key.owner && key.team != teem)
+			if(key.owner && TMID(key.team) != teem)
 				++keys;
 
 		if(lostkey.kh_previous_owner)
@@ -686,7 +686,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		DistributeEvenly_Init(autocvar_g_balance_keyhunt_score_destroyed, keys * of + players);
 
 		FOR_EACH_KH_KEY(key)
-			if(key.owner && key.team != teem)
+			if(key.owner && TMID(key.team) != teem)
 			{
 				f = DistributeEvenly_Get(of);
 				kh_Scores_Event(key.owner, world, "destroyed_holdingkey", f, 0);
@@ -703,16 +703,16 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 				continue;
 
 			players = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(++players));
+			FOREACH_CLIENT(IS_PLAYER(it) && TMID(it.team) == thisteam, ++players);
 
 			DistributeEvenly_Init(fragsleft, j);
 			fragsleft = DistributeEvenly_Get(j - 1);
 			DistributeEvenly_Init(DistributeEvenly_Get(1), players);
 
-			FOREACH_CLIENT(IS_PLAYER(it) && it.team == thisteam, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && TMID(it.team) == thisteam, {
 				f = DistributeEvenly_Get(1);
 				kh_Scores_Event(it, world, "destroyed", f, 0);
-			));
+			});
 
 			--j;
 		}
@@ -742,7 +742,7 @@ void kh_Key_Think()  // runs all the time
 	// if in nodrop or time over, end the round
 	if(!self.owner)
 		if(time > self.pain_finished)
-			kh_LoserTeam(self.team, self);
+			kh_LoserTeam(TMID(self.team), self);
 
 	if(self.owner)
 	if(kh_Key_AllOwnedByWhichTeam() != -1)
@@ -759,22 +759,22 @@ void kh_Key_Think()  // runs all the time
 		FOR_EACH_KH_KEY(key)
 			if(vlen(key.owner.origin - p) > autocvar_g_balance_keyhunt_maxdist)
 				goto not_winning;
-		kh_WinnerTeam(self.team);
+		kh_WinnerTeam(TMID(self.team));
 :not_winning
 	}
 
 	if(kh_interferemsg_time && time > kh_interferemsg_time)
 	{
 		kh_interferemsg_time = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(it.team == kh_interferemsg_team)
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if (TMID(it.team) == kh_interferemsg_team)
 				if(it.kh_next)
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_MEET);
 				else
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
-		));
+		});
 	}
 
 	self.nextthink = time + 0.05;
@@ -805,10 +805,10 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.kh_dropperteam = 0;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
-	key.colormod = Team_ColorRGB(initial_owner.team) * KH_KEY_BRIGHTNESS;
+	key.colormod = Team_ColorRGB(TMID(initial_owner.team)) * KH_KEY_BRIGHTNESS;
 	key.reset = key_reset;
 
-	switch(initial_owner.team)
+	switch(TMID(initial_owner.team))
 	{
 		case NUM_TEAM_1:
 			key.netname = "^1red key";
@@ -831,9 +831,9 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.kh_worldkeynext = kh_worldkeylist;
 	kh_worldkeylist = key;
 
-	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM(initial_owner.team, CENTER_KEYHUNT_START));
+	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM(TMID(initial_owner.team), CENTER_KEYHUNT_START));
 
-	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
+	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, TMID(key.team), key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
 
 	kh_Key_AssignTo(key, initial_owner);
@@ -853,8 +853,8 @@ float kh_Key_AllOwnedByWhichTeam()  // constantly called. check to see if all th
 		if(!key.owner)
 			return -1;
 		if(teem == -1)
-			teem = key.team;
-		else if(teem != key.team)
+			teem = TMID(key.team);
+		else if(teem != TMID(key.team))
 			return -1;
 		--keys;
 	}
@@ -881,7 +881,7 @@ void kh_Key_DropOne(entity key)
 	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, false);
 	key.pusher = world;
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
-	key.kh_dropperteam = key.team;
+	key.kh_dropperteam = TMID(key.team);
 
 	sound(player, CH_TRIGGER, SND_KH_DROP, VOL_BASE, ATTEN_NORM);
 }
@@ -907,7 +907,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			key.pusher = mypusher;
 			key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 			if(suicide)
-				key.kh_dropperteam = player.team;
+				key.kh_dropperteam = TMID(player.team);
 		}
 		sound(player, CH_TRIGGER, SND_KH_DROP, VOL_BASE, ATTEN_NORM);
 	}
@@ -919,10 +919,10 @@ float kh_CheckPlayers(float num)
 	{
 		float t_team = kh_Team_ByID(num);
 		float players = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == t_team)
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && TMID(it.team) == t_team)
 				++players;
-		));
+		});
 
 		if (!players) { return t_team; }
 	}
@@ -1005,14 +1005,14 @@ void kh_StartRound()  // runs at the start of each round
 		teem = kh_Team_ByID(i);
 		players = 0;
 		entity my_player = world;
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && TMID(it.team) == teem)
 			{
 				++players;
 				if(random() * players <= 1)
 					my_player = it;
 			}
-		));
+		});
 		kh_Key_Spawn(my_player, 360 * i / kh_teams, i);
 	}
 
@@ -1144,7 +1144,7 @@ void havocbot_role_kh_carrier()
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start();
 
-		if(kh_Key_AllOwnedByWhichTeam() == self.team)
+		if(kh_Key_AllOwnedByWhichTeam() == TMID(self.team))
 			havocbot_goalrating_kh(10, 0.1, 0.1); // bring home
 		else
 			havocbot_goalrating_kh(4, 4, 1); // play defensively
@@ -1183,7 +1183,7 @@ void havocbot_role_kh_defense()
 		navigation_goalrating_start();
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
-		if(key_owner_team == self.team)
+		if(key_owner_team == TMID(self.team))
 			havocbot_goalrating_kh(10, 0.1, 0.1); // defend key carriers
 		else if(key_owner_team == -1)
 			havocbot_goalrating_kh(4, 1, 0.1); // play defensively
@@ -1225,7 +1225,7 @@ void havocbot_role_kh_offense()
 		navigation_goalrating_start();
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
-		if(key_owner_team == self.team)
+		if(key_owner_team == TMID(self.team))
 			havocbot_goalrating_kh(10, 0.1, 0.1); // defend anyway
 		else if(key_owner_team == -1)
 			havocbot_goalrating_kh(0.1, 1, 4); // play offensively
@@ -1275,7 +1275,7 @@ void havocbot_role_kh_freelancer()
 		navigation_goalrating_start();
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
-		if(key_owner_team == self.team)
+		if(key_owner_team == TMID(self.team))
 			havocbot_goalrating_kh(10, 0.1, 0.1); // defend anyway
 		else if(key_owner_team == -1)
 			havocbot_goalrating_kh(1, 10, 4); // prefer dropped keys

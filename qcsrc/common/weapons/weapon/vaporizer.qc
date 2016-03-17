@@ -76,7 +76,7 @@ void SendCSQCVaporizerBeamParticle(entity player, int hit) {
 	WriteCoord(MSG_BROADCAST, v.z);
 	WriteByte(MSG_BROADCAST, hit);
 	WriteByte(MSG_BROADCAST, etof(player));
-	WriteByte(MSG_BROADCAST, player.team);
+	WriteByte(MSG_BROADCAST, TMID(player.team));
 }
 #elif defined(CSQC)
 bool autocvar_cl_vaporizerbeam_particle = false;
@@ -148,11 +148,11 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	int myowner = ReadByte();
 	this.owner = playerslots[myowner - 1];
 	this.sv_entnum = myowner;
-	this.team = ReadByte() - 1;
+	this.__team = ReadByte() - 1;
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
+		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(TMID(this.team)) : EFFECT_VAPORIZER(TMID(this.team)))), this.vorg1, this.vorg2);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
 		remove(this);

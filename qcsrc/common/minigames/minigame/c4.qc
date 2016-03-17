@@ -157,7 +157,7 @@ void c4_move(entity minigame, entity player, string pos )
 	pos = c4_get_lowest_tile(minigame, pos);
 
 	if ( minigame.minigame_flags & C4_TURN_PLACE )
-	if ( pos && player.team == (minigame.minigame_flags & C4_TURN_TEAM) )
+	if ( pos && TMID(player.team) == (minigame.minigame_flags & C4_TURN_TEAM) )
 	{
 		if ( c4_valid_tile(pos) )
 		if ( !c4_find_piece(minigame,pos) )
@@ -168,10 +168,10 @@ void c4_move(entity minigame, entity player, string pos )
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 			minigame.c4_npieces++;
-			minigame.c4_nexteam = minigame_next_team(player.team,C4_TEAMS);
+			minigame.c4_nexteam = minigame_next_team(TMID(player.team),C4_TEAMS);
 			if ( c4_winning_piece(piece) )
 			{
-				minigame.minigame_flags = C4_TURN_WIN | player.team;
+				minigame.minigame_flags = C4_TURN_WIN | TMID(player.team);
 			}
 			else if ( minigame.c4_npieces >= C4_MAX_TILES )
 				minigame.minigame_flags = C4_TURN_DRAW;
@@ -214,7 +214,7 @@ int c4_server_event(entity minigame, string event, ...)
 
 			// Get the right team
 			if(minigame.minigame_players)
-				return minigame_next_team(minigame.minigame_players.team, C4_TEAMS);
+				return minigame_next_team(TMID(minigame.minigame_players.team), C4_TEAMS);
 
 			// Team 1 by default
 			return 1;
@@ -257,13 +257,13 @@ void c4_hud_board(vector pos, vector mySize)
 	vector tile_size = minigame_hud_denormalize_size('1 1 0' / C4_TILE_SIZE,pos,mySize);
 	vector tile_pos;
 
-	if ( (active_minigame.minigame_flags & C4_TURN_TEAM) == minigame_self.team )
+	if ( (active_minigame.minigame_flags & C4_TURN_TEAM) == TMID(minigame_self.team) )
 	if ( c4_valid_tile(c4_curr_pos) )
 	{
 		tile_pos = minigame_tile_pos(c4_curr_pos,C4_NUM_CNT,C4_LET_CNT);
 		tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 		minigame_drawpic_centered( tile_pos,
-				minigame_texture(strcat("c4/piece",ftos(minigame_self.team))),
+				minigame_texture(strcat("c4/piece",ftos(TMID(minigame_self.team)))),
 				tile_size, '1 1 1', panel_fg_alpha/2, DRAWFLAG_NORMAL );
 	}
 
@@ -290,7 +290,7 @@ void c4_hud_board(vector pos, vector mySize)
 			}
 
 			minigame_drawpic_centered( tile_pos,
-					minigame_texture(strcat("c4/piece",ftos(e.team))),
+					minigame_texture(strcat("c4/piece",ftos(TMID(e.team)))),
 					tile_size, '1 1 1'*icon_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
 	}
@@ -301,7 +301,7 @@ void c4_hud_board(vector pos, vector mySize)
 		string playername = "";
 		FOREACH_MINIGAME_ENTITY(e)
 			if ( e.classname == "minigame_player" &&
-					e.team == (active_minigame.minigame_flags & C4_TURN_TEAM) )
+					TMID(e.team) == (active_minigame.minigame_flags & C4_TURN_TEAM) )
 				playername = entcs_GetName(e.minigame_playerslot-1);
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
@@ -349,7 +349,7 @@ void c4_hud_status(vector pos, vector mySize)
 		if ( e.classname == "minigame_player" )
 		{
 			mypos = pos;
-			if ( e.team == 2 )
+			if ( TMID(e.team) == 2 )
 				mypos_y  += player_fontsize_y + ts_y;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				entcs_GetName(e.minigame_playerslot-1),
@@ -357,7 +357,7 @@ void c4_hud_status(vector pos, vector mySize)
 
 			mypos_y += player_fontsize_y;
 			drawpic( mypos,
-					minigame_texture(strcat("c4/piece",ftos(e.team))),
+					minigame_texture(strcat("c4/piece",ftos(TMID(e.team)))),
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 
 			mypos_x += tile_size_x;
@@ -373,12 +373,12 @@ string c4_turn_to_string(int turnflags)
 
 	if ( turnflags & C4_TURN_WIN )
 	{
-		if ( (turnflags&C4_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags&C4_TURN_TEAM) != TMID(minigame_self.team) )
 			return _("You lost the game!");
 		return _("You win!");
 	}
 
-	if ( (turnflags & C4_TURN_TEAM) != minigame_self.team )
+	if ( (turnflags & C4_TURN_TEAM) != TMID(minigame_self.team) )
 		return _("Wait for your opponent to make their move");
 
 	if ( turnflags & C4_TURN_PLACE )
@@ -390,7 +390,7 @@ string c4_turn_to_string(int turnflags)
 // Make the correct move
 void c4_make_move(entity minigame)
 {
-	if ( minigame.minigame_flags == (C4_TURN_PLACE|minigame_self.team) )
+	if ( minigame.minigame_flags == (C4_TURN_PLACE|TMID(minigame_self.team)) )
 	{
 		minigame_cmd("move ",c4_curr_pos);
 	}
@@ -418,7 +418,7 @@ int c4_client_event(entity minigame, string event, ...)
 		}
 		case "key_pressed":
 		{
-			if((minigame.minigame_flags & C4_TURN_TEAM) == minigame_self.team)
+			if((minigame.minigame_flags & C4_TURN_TEAM) == TMID(minigame_self.team))
 			{
 				switch ( ...(0,int) )
 				{
@@ -473,7 +473,7 @@ int c4_client_event(entity minigame, string event, ...)
 		case "mouse_moved":
 		{
 			vector mouse_pos = minigame_hud_normalize(mousepos,c4_boardpos,c4_boardsize);
-			if ( minigame.minigame_flags == (C4_TURN_PLACE|minigame_self.team) )
+			if ( minigame.minigame_flags == (C4_TURN_PLACE|TMID(minigame_self.team)) )
 			{
 				c4_set_curr_pos(c4_get_lowest_tile(minigame, minigame_tile_name(mouse_pos,C4_NUM_CNT,C4_LET_CNT)));
 			}
@@ -491,7 +491,7 @@ int c4_client_event(entity minigame, string event, ...)
 				if ( sf & MINIG_SF_UPDATE )
 				{
 					sent.message = c4_turn_to_string(sent.minigame_flags);
-					if ( sent.minigame_flags & minigame_self.team )
+					if ( sent.minigame_flags & TMID(minigame_self.team) )
 						minigame_prompt();
 				}
 			}

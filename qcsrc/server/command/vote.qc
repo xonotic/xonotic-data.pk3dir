@@ -341,15 +341,15 @@ void reset_map(bool dorespawn)
 
 	MUTATOR_CALLHOOK(reset_map_global);
 
-	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(
+	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
 		if (it.reset)
 		{
 			WITH(entity, self, it, it.reset(it));
 			continue;
 		}
-		if (it.team_saved) it.team = it.team_saved;
+		if (it.team_saved) it.__team = it.team_saved;
 		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
-	));
+	});
 
 	// Waypoints and assault start come LAST
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(

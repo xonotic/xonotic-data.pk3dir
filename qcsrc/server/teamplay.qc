@@ -215,7 +215,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 	SetPlayerColors(pl,_color);
 
 	if(t != s) {
-		LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
+		LogTeamchange(pl.playerid, TMID(pl.team), 3);  // log manual team join
 
 		if(!noprint)
 		bprint(pl.netname, "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
@@ -253,7 +253,7 @@ void CheckAllowedTeams (entity for_whom)
 		entity head = find(world, classname, teament_name);
 		while(head)
 		{
-			switch(head.team)
+			switch(TMID(head.team))
 			{
 				case NUM_TEAM_1: c1 = 0; break;
 				case NUM_TEAM_2: c2 = 0; break;
@@ -314,10 +314,10 @@ void GetTeamCounts(entity ignore)
 	// FIXME: also find and memorize the lowest-scoring bot on each team (in case players must be shuffled around)
 	// also remember the lowest-scoring player
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		float t;
 		if(IS_PLAYER(it) || it.caplayer)
-			t = it.team;
+			t = TMID(it.team);
 		else if(it.team_forced > 0)
 			t = it.team_forced; // reserve the spot
 		else
@@ -362,7 +362,7 @@ void GetTeamCounts(entity ignore)
 				}
 			}
 		}
-	));
+	});
 
 	// if the player who has a forced team has not joined yet, reserve the spot
 	if(autocvar_g_campaign)
@@ -514,14 +514,14 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
 	{
-		if(     c1 >= 0 && pl.team == NUM_TEAM_1)
-			selectedteam = pl.team;
-		else if(c2 >= 0 && pl.team == NUM_TEAM_2)
-			selectedteam = pl.team;
-		else if(c3 >= 0 && pl.team == NUM_TEAM_3)
-			selectedteam = pl.team;
-		else if(c4 >= 0 && pl.team == NUM_TEAM_4)
-			selectedteam = pl.team;
+		if(     c1 >= 0 && TMID(pl.team) == NUM_TEAM_1)
+			selectedteam = TMID(pl.team);
+		else if(c2 >= 0 && TMID(pl.team) == NUM_TEAM_2)
+			selectedteam = TMID(pl.team);
+		else if(c3 >= 0 && TMID(pl.team) == NUM_TEAM_3)
+			selectedteam = TMID(pl.team);
+		else if(c4 >= 0 && TMID(pl.team) == NUM_TEAM_4)
+			selectedteam = TMID(pl.team);
 		else
 			selectedteam = -1;
 
@@ -533,7 +533,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
 				// when JoinBestTeam is called by cl_client.qc/ClientConnect the player_id is 0 the log attempt is rejected
-				LogTeamchange(pl.playerid, pl.team, 99);
+				LogTeamchange(pl.playerid, TMID(pl.team), 99);
 			}
 			return selectedteam;
 		}
@@ -566,7 +566,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 			error("smallest team: invalid team\n");
 		}
 
-		LogTeamchange(pl.playerid, pl.team, 2); // log auto join
+		LogTeamchange(pl.playerid, TMID(pl.team), 2); // log auto join
 
 		if(!IS_DEAD(pl))
 			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE.m_id, pl.origin, '0 0 0');
@@ -716,7 +716,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
-	FOREACH_CLIENT(IS_PLAYER(it) && it.team == steam, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && TMID(it.team) == steam, {
 		if(it.isbot)
 		{
 			if(it.totalfrags < lowest_bot_score)
@@ -733,7 +733,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 				lowest_player_score = it.totalfrags;
 			}
 		}
-	));
+	});
 
 	// prefers to move a bot...
 	if(lowest_bot != world)

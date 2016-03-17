@@ -63,7 +63,7 @@ float trigger_teleport_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_TELEPORT);
 
-	WriteByte(MSG_ENTITY, this.team);
+	WriteByte(MSG_ENTITY, TMID(this.team));
 	WriteInt24_t(MSG_ENTITY, this.spawnflags);
 	WriteByte(MSG_ENTITY, this.active);
 	WriteCoord(MSG_ENTITY, this.speed);
@@ -106,7 +106,7 @@ spawnfunc(trigger_teleport)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 {
 	self.classname = "trigger_teleport";
-	int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
+	int mytm = ReadByte(); if(mytm) { self.__team = mytm - 1; }
 	self.spawnflags = ReadInt24_t();
 	self.active = ReadByte();
 	self.speed = ReadCoord();

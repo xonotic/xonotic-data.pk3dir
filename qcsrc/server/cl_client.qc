@@ -215,7 +215,7 @@ void PutObserverInServer()
 	if (mutator_returnvalue) {
 	    // mutator prevents resetting teams+score
 	} else {
-		this.team = -1;  // move this as it is needed to log the player spectating in eventlog
+		this.__team = -1;  // move this as it is needed to log the player spectating in eventlog
         this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }
@@ -314,7 +314,7 @@ void FixPlayermodel(entity player)
 	{
 		if(teamplay)
 		{
-			string s = Static_Team_ColorName_Lower(player.team);
+			string s = Static_Team_ColorName_Lower(TMID(player.team));
 			if (s != "neutral")
 			{
 				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
@@ -419,7 +419,7 @@ void PutClientInServer()
 		PlayerState_attach(this);
 		accuracy_resend(this);
 
-		if (this.team < 0)
+		if (TMID(this.team) < 0)
 			JoinBestTeam(this, false, true);
 
 		entity spot = SelectSpawnPoint(false);
@@ -1047,13 +1047,13 @@ void ClientConnect()
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", ((IS_REAL_CLIENT(this)) ? this.netaddress : "bot"), ":", this.netname));
 
-	LogTeamchange(this.playerid, this.team, 1);
+	LogTeamchange(this.playerid, TMID(this.team), 1);
 
 	this.just_joined = true;  // stop spamming the eventlog with additional lines when the client connects
 
 	this.netname_previous = strzone(this.netname);
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_ENT(this, INFO_JOIN_CONNECT_TEAM) : INFO_JOIN_CONNECT), this.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && IS_PLAYER(this)) ? APP_TEAM_NUM(TMID(this.team), INFO_JOIN_CONNECT_TEAM) : INFO_JOIN_CONNECT), this.netname);
 
 	stuffcmd(this, clientstuff, "\n");
 	stuffcmd(this, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1752,7 +1752,7 @@ void LeaveSpectatorMode()
 
 			PutClientInServer();
 
-			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname); }
+			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && TMID(this.team) != -1) ? APP_TEAM_NUM(TMID(this.team), INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname); }
 		}
 		else
 			stuffcmd(self, "menu_showteamselect\n");

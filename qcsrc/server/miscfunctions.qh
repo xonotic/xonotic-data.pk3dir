@@ -38,7 +38,7 @@ void write_recordmarker(entity pl, float tstart, float dt);
 
 void play2all(string samp);
 
-void play2team(float t, string filename);
+void play2team(team_t t, string filename);
 
 void GetCvars_handleFloat(string thisname, float f, .float field, string name);
 

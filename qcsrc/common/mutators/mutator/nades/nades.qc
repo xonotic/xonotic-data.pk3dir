@@ -53,7 +53,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 	if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
 	{
 		setmodel(self, MDL_PROJECTILE_NADE);
-		entity trail = Nade_TrailEffect(self.cnt, self.team);
+		entity trail = Nade_TrailEffect(self.cnt, TMID(self.team));
 		if (trail.eent_eff_name) self.traileffect = trail.m_id;
 		return true;
 	}
@@ -374,7 +374,7 @@ void nade_ice_think()
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(self.realowner.team);
+			entity expef = EFFECT_NADE_EXPLODE(TMID(self.realowner.team));
 			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
 			sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
@@ -616,7 +616,7 @@ void nade_boom()
 		case NADE_TYPE_MONSTER:
 		case NADE_TYPE_SPAWN:
 			nade_blast = false;
-			switch(self.realowner.team)
+			switch(TMID(self.realowner.team))
 			{
 				case NUM_TEAM_1: expef = EFFECT_SPAWN_RED; break;
 				case NUM_TEAM_2: expef = EFFECT_SPAWN_BLUE; break;
@@ -632,7 +632,7 @@ void nade_boom()
 
 		default:
 		case NADE_TYPE_NORMAL:
-			expef = EFFECT_NADE_EXPLODE(self.realowner.team);
+			expef = EFFECT_NADE_EXPLODE(TMID(self.realowner.team));
 			break;
 	}
 
@@ -941,7 +941,7 @@ float nade_customize()
 	{
 		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 		if(!self.traileffectnum)
-			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(self.nade_type).m_projectile[false], self.team).eent_eff_name);
+			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(self.nade_type).m_projectile[false], TMID(self.team)).eent_eff_name);
 		self.alpha = 1;
 	}
 
@@ -959,7 +959,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
 	n.customizeentityforclient = nade_customize;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], player.team).eent_eff_name);
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], TMID(player.team)).eent_eff_name);
 	n.colormod = Nades_from(n.nade_type).m_color;
 	n.realowner = nowner;
 	n.colormap = player.colormap;

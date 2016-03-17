@@ -61,7 +61,7 @@ entity snake_find_cnt(entity minig, int steam, int tile)
 {
 	entity e = world;
 	while ( ( e = findentity(e,owner,minig) ) )
-		if ( e.classname == "minigame_board_piece" && e.cnt == tile && e.team == steam )
+		if ( e.classname == "minigame_board_piece" && e.cnt == tile && TMID(e.team) == steam )
 			return e;
 	return world;
 }
@@ -80,7 +80,7 @@ entity snake_find_head(entity minig, int steam)
 {
 	entity e = world;
 	while ( ( e = findentity(e,owner,minig) ) )
-		if ( e.classname == "minigame_board_piece" && e.cnt == 1 && e.team == steam )
+		if ( e.classname == "minigame_board_piece" && e.cnt == 1 && TMID(e.team) == steam )
 			return e;
 	return world;
 }
@@ -98,7 +98,7 @@ void snake_new_mouse(entity minigame)
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");
-	piece.team = 0;
+	piece.__team = 0;
 	piece.netname = strzone(RandomSelection_chosen_string);
 	minigame_server_sendflags(piece,MINIG_SF_ALL);
 
@@ -178,7 +178,7 @@ void minigame_setup_snake(entity minigame, int pteam)
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");
-	piece.team = pteam;
+	piece.__team = pteam;
 	piece.netname = strzone(RandomSelection_chosen_string);
 	piece.cnt = 1;
 	piece.snake_next = world;
@@ -207,7 +207,7 @@ entity snake_get_player(entity minigame, int pteam)
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif
-	if(e.team == pteam)
+	if(TMID(e.team) == pteam)
 		return e;
 	return world;
 }
@@ -248,7 +248,7 @@ void snake_move_body(entity minigame, entity head, bool ate_mouse)
 
 		int newcnt = tail.cnt + 1;
 		head.snake_delay = max(autocvar_sv_minigames_snake_delay_min, autocvar_sv_minigames_snake_delay_initial - (newcnt / autocvar_sv_minigames_snake_delay_multiplier));
-		snake_add_score(minigame, head.team, 1);
+		snake_add_score(minigame, TMID(head.team), 1);
 
 		entity piece = msle_spawn(minigame,"minigame_board_piece");
 		piece.cnt = newcnt;
@@ -284,7 +284,7 @@ void snake_eat_team(entity minigame, int pteam)
 
 	entity e = world;
 	while ( ( e = findentity(e,owner,minigame) ) )
-		if ( e.classname == "minigame_board_piece" && e.cnt && e.team == pteam )
+		if ( e.classname == "minigame_board_piece" && e.cnt && TMID(e.team) == pteam )
 		{
 			if(e.netname) { strunzone(e.netname); }
 			remove(e);
@@ -328,8 +328,8 @@ void snake_move_head(entity minigame, entity head)
 		}
 		else
 		{
-			snake_add_score(minigame, head.team, -1);
-			snake_eat_team(minigame, head.team);
+			snake_add_score(minigame, TMID(head.team), -1);
+			snake_eat_team(minigame, TMID(head.team));
 		}
 
 		return;
@@ -347,8 +347,8 @@ void snake_move_head(entity minigame, entity head)
 	// above check makes sure it's not our team
 	if(hit.cnt)
 	{
-		snake_eat_team(minigame, hit.team);
-		snake_add_score(minigame, head.team, 1);
+		snake_eat_team(minigame, TMID(hit.team));
+		snake_add_score(minigame, TMID(head.team), 1);
 	}
 
 	if(ate_mouse)
@@ -369,7 +369,7 @@ void snake_move(entity minigame, entity player, string dxs, string dys )
 		//if ( snake_valid_tile(pos) )
 		//if ( snake_find_piece(minigame, pos) )
 		{
-			entity head = snake_find_head(minigame, player.team);
+			entity head = snake_find_head(minigame, TMID(player.team));
 			if(!head)
 				return; // their head is already dead
 
@@ -497,7 +497,7 @@ int snake_server_event(entity minigame, string event, ...)
 			else if ( sent.classname == "minigame_player" && (sf & SNAKE_SF_PLAYERSCORE ) )
 			{
 				WriteLong(MSG_ENTITY,sent.snake_score);
-				WriteByte(MSG_ENTITY,max(0, minigame.snake_lives[sent.team]));
+				WriteByte(MSG_ENTITY,max(0, minigame.snake_lives[TMID(sent.team)]));
 			}
 			else if ( sent.classname == "minigame" && (sf & MINIG_SF_UPDATE ) )
 			{
@@ -553,7 +553,7 @@ void snake_hud_board(vector pos, vector mySize)
 			tile_pos = minigame_tile_pos(e.netname,SNAKE_NUM_CNT,SNAKE_LET_CNT);
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 
-			vector tile_color = snake_teamcolor(e.team);
+			vector tile_color = snake_teamcolor(TMID(e.team));
 
 			string thepiece = "snake/mouse";
 			if(e.cnt)
@@ -599,7 +599,7 @@ void snake_hud_board(vector pos, vector mySize)
 				{
 					int thex = minigame_tile_letter(e.netname);
 					int they = minigame_tile_number(e.netname);
-					entity t = snake_find_cnt(active_minigame, e.team, e.cnt - 1);
+					entity t = snake_find_cnt(active_minigame, TMID(e.team), e.cnt - 1);
 					int tx = minigame_tile_letter(t.netname);
 					int ty = minigame_tile_number(t.netname);
 
@@ -640,7 +640,7 @@ void snake_hud_board(vector pos, vector mySize)
 		}
 	}
 
-	if ( (active_minigame.minigame_flags & SNAKE_TURN_LOSS) || (active_minigame.minigame_flags & SNAKE_TURN_WIN) || (active_minigame.snake_lives[minigame_self.team] <= 0) )
+	if ( (active_minigame.minigame_flags & SNAKE_TURN_LOSS) || (active_minigame.minigame_flags & SNAKE_TURN_WIN) || (active_minigame.snake_lives[TMID(minigame_self.team)] <= 0) )
 	{
 		int scores = minigame_self.snake_score;
 
@@ -650,9 +650,9 @@ void snake_hud_board(vector pos, vector mySize)
 		scores_text = strcat("Score: ", ftos(scores));
 
 		if(active_minigame.minigame_flags & SNAKE_TURN_WIN)
-		if((active_minigame.minigame_flags & SNAKE_TURN_TEAM) == minigame_self.team)
+		if((active_minigame.minigame_flags & SNAKE_TURN_TEAM) == TMID(minigame_self.team))
 			victory_text = "You win!";
-		if(active_minigame.snake_lives[minigame_self.team] <= 0)
+		if(active_minigame.snake_lives[TMID(minigame_self.team)] <= 0)
 			victory_text = "You ran out of lives!";
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
@@ -692,9 +692,9 @@ void snake_hud_status(vector pos, vector mySize)
 		if ( e.classname == "minigame_player" )
 		{
 			mypos = pos;
-			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
+			mypos_y  += (TMID(e.team)-1) * (player_fontsize_y + ts_y);
 
-			drawfill(mypos, ts, snake_teamcolor(e.team), 0.25, DRAWFLAG_ADDITIVE);
+			drawfill(mypos, ts, snake_teamcolor(TMID(e.team)), 0.25, DRAWFLAG_ADDITIVE);
 
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				entcs_GetName(e.minigame_playerslot-1),
@@ -702,11 +702,11 @@ void snake_hud_status(vector pos, vector mySize)
 
 			drawstring(mypos+eY*player_fontsize_y,ftos(e.snake_score),'48 48 0' * (SNAKE_TEAMS * 0.1),
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring(mypos+(eY*player_fontsize_y) + (eX*player_fontsize_x),strcat("1UP: ", ftos(active_minigame.snake_lives[e.team])),'48 48 0' * (SNAKE_TEAMS * 0.1),
+			drawstring(mypos+(eY*player_fontsize_y) + (eX*player_fontsize_x),strcat("1UP: ", ftos(active_minigame.snake_lives[TMID(e.team)])),'48 48 0' * (SNAKE_TEAMS * 0.1),
 							 '1 0.44 0.54', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if ( e == minigame_self )
-				drawborderlines(1, mypos, ts, snake_teamcolor(e.team), 1, DRAWFLAG_NORMAL);
+				drawborderlines(1, mypos, ts, snake_teamcolor(TMID(e.team)), 1, DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -719,15 +719,15 @@ string snake_turn_to_string(int turnflags)
 
 	if ( turnflags & SNAKE_TURN_WIN )
 	{
-		if ( (turnflags&SNAKE_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags&SNAKE_TURN_TEAM) != TMID(minigame_self.team) )
 			return _("You ran out of lives!");
 		return _("You win!");
 	}
 
-	if(active_minigame.snake_lives[minigame_self.team] <= 0)
+	if(active_minigame.snake_lives[TMID(minigame_self.team)] <= 0)
 		return _("You ran out of lives!");
 
-	if ( (snake_find_head(active_minigame, minigame_self.team)).snake_dir == '0 0 0' )
+	if ( (snake_find_head(active_minigame, TMID(minigame_self.team))).snake_dir == '0 0 0' )
 		return _("Press an arrow key to begin the game");
 
 	if ( turnflags & SNAKE_TURN_MOVE )
@@ -825,7 +825,7 @@ int snake_client_event(entity minigame, string event, ...)
 			else if ( sent.classname == "minigame_player" && (sf & SNAKE_SF_PLAYERSCORE ) )
 			{
 				sent.snake_score = ReadLong();
-				minigame.snake_lives[sent.team] = ReadByte();
+				minigame.snake_lives[TMID(sent.team)] = ReadByte();
 			}
 
 			return false;

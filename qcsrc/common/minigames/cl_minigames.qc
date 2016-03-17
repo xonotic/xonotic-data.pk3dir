@@ -220,7 +220,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 		minigame_ent = self.owner;
 
 		if ( sf & MINIG_SF_UPDATE )
-			self.team = ReadByte();
+			self.__team = ReadByte();
 
 		if ( activate )
 		{

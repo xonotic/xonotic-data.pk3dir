@@ -349,7 +349,7 @@ bool turret_send(entity this, entity to, float sf)
 
 	if(sf & TNSF_STATUS)
 	{
-		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, TMID(self.team));
 
 		if(self.health <= 0)
 			WriteByte(MSG_ENTITY, 0);
@@ -1184,7 +1184,7 @@ void turret_use()
 
 	self.team = activator.team;
 
-	if(self.team == 0)
+	if(TMID(self.team) == 0)
 		self.active = ACTIVE_NOT;
 	else
 		self.active = ACTIVE_ACTIVE;
@@ -1271,7 +1271,7 @@ float turret_initialize(Turret tur)
 	self.netname = tur.netname;
 	load_unit_settings(self, 0);
 
-	if(!self.team || !teamplay)		{ self.team = MAX_SHOT_DISTANCE; }
+	if(!self.team || !teamplay)		{ self.__team = MAX_SHOT_DISTANCE; }
 	if(!self.ticrate)				{ self.ticrate = ((self.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
 	if(!self.health)				{ self.health = 1000; }
 	if(!self.shot_refire)			{ self.shot_refire = 1; }

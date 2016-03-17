@@ -53,14 +53,14 @@ bool pp_winning_piece(entity piece)
 	int letter = minigame_tile_letter(piece.netname);
 
 	// here goes
-	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter,number-1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter,number-1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter,number+1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter,number+1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number+1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number+1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number-1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number-1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number-1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number-1)).team == 5)
-	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number+1)) || pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number+1)).team == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number  )) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number  )).team) == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number  )) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number  )).team) == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter  ,number-1)) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter,  number-1)).team) == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter  ,number+1)) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter,  number+1)).team) == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number+1)) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number+1)).team) == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number-1)) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number-1)).team) == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter+1,number-1)) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter+1,number-1)).team) == 5)
+	if(!pp_valid_tile(minigame_tile_buildname(letter-1,number+1)) || TMID(pp_find_piece(piece.owner,minigame_tile_buildname(letter-1,number+1)).team) == 5)
 		return true;
 
 	return false;
@@ -70,7 +70,7 @@ bool pp_valid_move(entity minigame, string pos)
 {
 	if(!pp_valid_tile(pos))
 		return false;
-	if(pp_find_piece(minigame,pos).team == 5)
+	if(TMID(pp_find_piece(minigame,pos).team) == 5)
 		return false;
 
 	entity current = minigame.pp_curr_piece;
@@ -97,24 +97,24 @@ bool pp_valid_move(entity minigame, string pos)
 void pp_move(entity minigame, entity player, string pos )
 {
 	if ( minigame.minigame_flags & PP_TURN_PLACE )
-	if ( pos && player.team == (minigame.minigame_flags & PP_TURN_TEAM) )
+	if ( pos && TMID(player.team) == (minigame.minigame_flags & PP_TURN_TEAM) )
 	{
 		if ( pp_valid_move(minigame,pos))
 		{
 			entity existing = pp_find_piece(minigame,pos);
 
-			if(existing && existing.team != 5)
+			if(existing && TMID(existing.team) != 5)
 			{
-				if(existing.team == 1)
+				if(TMID(existing.team) == 1)
 					minigame.pp_team1_score++;
-				if(existing.team == 2)
+				if(TMID(existing.team) == 2)
 					minigame.pp_team2_score++;
 			}
 
 			if(minigame.pp_curr_piece)
 			{
 				minigame.pp_curr_piece.cnt = 0;
-				minigame.pp_curr_piece.team = 5;
+				minigame.pp_curr_piece.__team = 5;
 				minigame_server_sendflags(minigame.pp_curr_piece,MINIG_SF_ALL);
 			}
 
@@ -130,7 +130,7 @@ void pp_move(entity minigame, entity player, string pos )
 			piece.netname = strzone(pos);
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
-			minigame.pp_nexteam = minigame_next_team(player.team,2);
+			minigame.pp_nexteam = minigame_next_team(TMID(player.team),2);
 			minigame.pp_curr_piece = piece;
 			if ( pp_winning_piece(piece) )
 			{
@@ -157,7 +157,7 @@ void pp_setup_pieces(entity minigame)
 		if(t1_true || t2_true)
 		{
 			entity piece = msle_spawn(minigame,"minigame_board_piece");
-			piece.team = ((t1_true) ? 1 : 2);
+			piece.__team = ((t1_true) ? 1 : 2);
 			piece.netname = strzone(minigame_tile_buildname(i,t));
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
@@ -174,11 +174,11 @@ void pp_next_match(entity minigame, entity player)
 	// on multiplayer matches, wait for both players to agree
 	if ( minigame.minigame_flags & (PP_TURN_WIN|PP_TURN_DRAW) )
 	{
-		minigame.minigame_flags = PP_TURN_NEXT | player.team;
+		minigame.minigame_flags = PP_TURN_NEXT | TMID(player.team);
 		minigame.SendFlags |= MINIG_SF_UPDATE;
 	}
 	else if ( (minigame.minigame_flags & PP_TURN_NEXT) &&
-			!( minigame.minigame_flags & player.team ) )
+			!( minigame.minigame_flags & TMID(player.team) ) )
 #endif
 	{
 		minigame.minigame_flags = PP_TURN_PLACE | minigame.pp_nexteam;
@@ -228,7 +228,7 @@ int pp_server_event(entity minigame, string event, ...)
 
 			// Get the right team
 			if(minigame.minigame_players)
-				return minigame_next_team(minigame.minigame_players.team, 2);
+				return minigame_next_team(TMID(minigame.minigame_players.team), 2);
 
 			// Team 1 by default
 			return 1;
@@ -303,15 +303,15 @@ void pp_hud_board(vector pos, vector mySize)
 			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 
 			vector tile_color = '1 1 1';
-			switch(e.team)
+			switch(TMID(e.team))
 			{
 				case 1: tile_color = '1 0.3 0.3'; break;
 				case 2: tile_color = '0.3 0.3 1'; break;
 				// 3, 4 coming later?
 			}
 
-			string tile_name = strcat("pp/piece",ftos(e.team));
-			if(e.team == 5) { tile_name = "pp/piece_taken"; }
+			string tile_name = strcat("pp/piece",ftos(TMID(e.team)));
+			if(TMID(e.team) == 5) { tile_name = "pp/piece_taken"; }
 
 			if(e == active_minigame.pp_curr_piece)
 			{
@@ -329,7 +329,7 @@ void pp_hud_board(vector pos, vector mySize)
 		}
 	}
 
-	if ( (active_minigame.minigame_flags & PP_TURN_TEAM) == minigame_self.team )
+	if ( (active_minigame.minigame_flags & PP_TURN_TEAM) == TMID(minigame_self.team) )
 	if ( pp_valid_move(active_minigame, pp_curr_pos) )
 	{
 		tile_pos = minigame_tile_pos(pp_curr_pos,PP_LET_CNT,PP_NUM_CNT);
@@ -353,7 +353,7 @@ void pp_hud_board(vector pos, vector mySize)
 		string playername = "";
 		FOREACH_MINIGAME_ENTITY(e)
 			if ( e.classname == "minigame_player" &&
-					e.team == (active_minigame.minigame_flags & PP_TURN_TEAM) )
+					TMID(e.team) == (active_minigame.minigame_flags & PP_TURN_TEAM) )
 				playername = entcs_GetName(e.minigame_playerslot-1);
 
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
@@ -401,7 +401,7 @@ void pp_hud_status(vector pos, vector mySize)
 		if ( e.classname == "minigame_player" )
 		{
 			vector tile_color = '1 1 1';
-			switch(e.team)
+			switch(TMID(e.team))
 			{
 				case 1: tile_color = '1 0.3 0.3'; break;
 				case 2: tile_color = '0.3 0.3 1'; break;
@@ -409,7 +409,7 @@ void pp_hud_status(vector pos, vector mySize)
 			}
 
 			mypos = pos;
-			if ( e.team == 2 )
+			if ( TMID(e.team) == 2 )
 				mypos_y  += player_fontsize_y + ts_y;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				entcs_GetName(e.minigame_playerslot-1),
@@ -417,13 +417,13 @@ void pp_hud_status(vector pos, vector mySize)
 
 			mypos_y += player_fontsize_y;
 			drawpic( mypos,
-					minigame_texture(strcat("pp/piece",ftos(e.team))),
+					minigame_texture(strcat("pp/piece",ftos(TMID(e.team)))),
 					tile_size, tile_color, panel_fg_alpha, DRAWFLAG_NORMAL );
 
 			mypos_x += tile_size_x;
 			int myscore = 0;
-			if(e.team == 1) { myscore = active_minigame.pp_team1_score; }
-			if(e.team == 2) { myscore = active_minigame.pp_team2_score; }
+			if(TMID(e.team) == 1) { myscore = active_minigame.pp_team1_score; }
+			if(TMID(e.team) == 2) { myscore = active_minigame.pp_team2_score; }
 
 			drawstring(mypos,ftos(myscore),tile_size,
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -439,19 +439,19 @@ string pp_turn_to_string(int turnflags)
 
 	if ( turnflags & PP_TURN_WIN )
 	{
-		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags&PP_TURN_TEAM) != TMID(minigame_self.team) )
 			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
 		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
 	}
 
 	if ( turnflags & PP_TURN_NEXT )
 	{
-		if ( (turnflags&PP_TURN_TEAM) != minigame_self.team )
+		if ( (turnflags&PP_TURN_TEAM) != TMID(minigame_self.team) )
 			return _("Select \"^1Next Match^7\" on the menu to start a new match!");
 		return _("Wait for your opponent to confirm the rematch");
 	}
 
-	if ( (turnflags & PP_TURN_TEAM) != minigame_self.team )
+	if ( (turnflags & PP_TURN_TEAM) != TMID(minigame_self.team) )
 		return _("Wait for your opponent to make their move");
 
 	if ( turnflags & PP_TURN_PLACE )
@@ -463,7 +463,7 @@ string pp_turn_to_string(int turnflags)
 // Make the correct move
 void pp_make_move(entity minigame)
 {
-	if ( minigame.minigame_flags == (PP_TURN_PLACE|minigame_self.team) )
+	if ( minigame.minigame_flags == (PP_TURN_PLACE|TMID(minigame_self.team)) )
 	{
 		minigame_cmd("move ",pp_curr_pos);
 	}
@@ -491,7 +491,7 @@ int pp_client_event(entity minigame, string event, ...)
 		}
 		case "key_pressed":
 		{
-			if((minigame.minigame_flags & PP_TURN_TEAM) == minigame_self.team)
+			if((minigame.minigame_flags & PP_TURN_TEAM) == TMID(minigame_self.team))
 			{
 				switch ( ...(0,int) )
 				{
@@ -546,7 +546,7 @@ int pp_client_event(entity minigame, string event, ...)
 		case "mouse_moved":
 		{
 			vector mouse_pos = minigame_hud_normalize(mousepos,pp_boardpos,pp_boardsize);
-			if ( minigame.minigame_flags == (PP_TURN_PLACE|minigame_self.team) )
+			if ( minigame.minigame_flags == (PP_TURN_PLACE|TMID(minigame_self.team)) )
 				pp_set_curr_pos(minigame_tile_name(mouse_pos,PP_LET_CNT,PP_NUM_CNT));
 			if ( ! pp_valid_tile(pp_curr_pos) )
 				pp_set_curr_pos("");
@@ -562,7 +562,7 @@ int pp_client_event(entity minigame, string event, ...)
 				if ( sf & MINIG_SF_UPDATE )
 				{
 					sent.message = pp_turn_to_string(sent.minigame_flags);
-					if ( sent.minigame_flags & minigame_self.team )
+					if ( sent.minigame_flags & TMID(minigame_self.team) )
 						minigame_prompt();
 					sent.pp_team1_score = ReadByte();
 					sent.pp_team2_score = ReadByte();

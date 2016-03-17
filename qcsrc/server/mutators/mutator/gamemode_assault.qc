@@ -104,7 +104,7 @@ void assault_objective_reset(entity this)
 // decrease the health of targeted objectives
 void assault_objective_decrease_use()
 {SELFPARAM();
-	if(activator.team != assault_attacker_team)
+	if(TMID(activator.team) != assault_attacker_team)
 	{
 		// wrong team triggered decrease
 		return;
@@ -231,16 +231,16 @@ void assault_roundstart_use()
 	SUB_UseTargets();
 
 	//(Re)spawn all turrets
-	FOREACH_ENTITY_CLASS("turret_main", true, LAMBDA(
+	FOREACH_ENTITY_CLASS("turret_main", true, {
 		// Swap turret teams
-		if(it.team == NUM_TEAM_1)
-			it.team = NUM_TEAM_2;
+		if(TMID(it.team) == NUM_TEAM_1)
+			it.__team = NUM_TEAM_2;
 		else
-			it.team = NUM_TEAM_1;
+			it.__team = NUM_TEAM_1;
 
-		// Dubbles as teamchange
+		// Doubles as teamchange
 		WITH(entity, self, it, turret_respawn());
-	));
+	});
 }
 
 void assault_wall_think()
@@ -307,11 +307,11 @@ int WinningCondition_Assault()
 	// as the timelimit has not yet passed just assume the defending team will win
 	if(assault_attacker_team == NUM_TEAM_1)
 	{
-		SetWinners(team, NUM_TEAM_2);
+		SetWinners(__team, NUM_TEAM_2);
 	}
 	else
 	{
-		SetWinners(team, NUM_TEAM_1);
+		SetWinners(__team, NUM_TEAM_1);
 	}
 
 	entity ent;
@@ -321,7 +321,7 @@ int WinningCondition_Assault()
 		if(ent.winning)	// round end has been triggered by attacking team
 		{
 			bprint("ASSAULT: round completed...\n");
-			SetWinners(team, assault_attacker_team);
+			SetWinners(__team, assault_attacker_team);
 
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
@@ -344,7 +344,7 @@ spawnfunc(info_player_attacker)
 {
 	if (!g_assault) { remove(self); return; }
 
-	self.team = NUM_TEAM_1; // red, gets swapped every round
+	self.__team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -352,7 +352,7 @@ spawnfunc(info_player_defender)
 {
 	if (!g_assault) { remove(self); return; }
 
-	self.team = NUM_TEAM_2; // blue, gets swapped every round
+	self.__team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -394,9 +394,9 @@ spawnfunc(func_assault_destructible)
 	self.classname = "func_assault_destructible";
 
 	if(assault_attacker_team == NUM_TEAM_1)
-		self.team = NUM_TEAM_2;
+		self.__team = NUM_TEAM_2;
 	else
-		self.team = NUM_TEAM_1;
+		self.__team = NUM_TEAM_1;
 
 	spawnfunc_func_breakable(this);
 }
@@ -613,7 +613,7 @@ void havocbot_ast_reset_role(entity bot)
 	if(IS_DEAD(self))
 		return;
 
-	if(bot.team == assault_attacker_team)
+	if(TMID(bot.team) == assault_attacker_team)
 		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_OFFENSE);
 	else
 		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_DEFENSE);
@@ -622,7 +622,7 @@ void havocbot_ast_reset_role(entity bot)
 // mutator hooks
 MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
 {SELFPARAM();
-	if(self.team == assault_attacker_team)
+	if(TMID(self.team) == assault_attacker_team)
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
@@ -632,8 +632,8 @@ MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 {SELFPARAM();
-	if(!self.team || self.team == MAX_SHOT_DISTANCE)
-		self.team = 5; // this gets reversed when match starts?
+	if(!self.team || TMID(self.team) == MAX_SHOT_DISTANCE)
+		self.__team = 5; // this gets reversed when match starts?
 
 	return false;
 }

@@ -414,13 +414,13 @@ void bot_clientconnect(entity this)
 		bot_setnameandstuff();
 
 	if(self.bot_forced_team==1)
-		self.team = NUM_TEAM_1;
+		self.__team = NUM_TEAM_1;
 	else if(self.bot_forced_team==2)
-		self.team = NUM_TEAM_2;
+		self.__team = NUM_TEAM_2;
 	else if(self.bot_forced_team==3)
-		self.team = NUM_TEAM_3;
+		self.__team = NUM_TEAM_3;
 	else if(self.bot_forced_team==4)
-		self.team = NUM_TEAM_4;
+		self.__team = NUM_TEAM_4;
 	else
 		JoinBestTeam(self, false, true);
 
@@ -441,13 +441,13 @@ void bot_removefromlargestteam()
 	bestcount = 0;
 	while (head)
 	{
-		if(head.team == NUM_TEAM_1)
+		if(TMID(head.team) == NUM_TEAM_1)
 			thiscount = c1;
-		else if(head.team == NUM_TEAM_2)
+		else if(TMID(head.team) == NUM_TEAM_2)
 			thiscount = c2;
-		else if(head.team == NUM_TEAM_3)
+		else if(TMID(head.team) == NUM_TEAM_3)
 			thiscount = c3;
-		else if(head.team == NUM_TEAM_4)
+		else if(TMID(head.team) == NUM_TEAM_4)
 			thiscount = c4;
 		else
 			thiscount = 0;

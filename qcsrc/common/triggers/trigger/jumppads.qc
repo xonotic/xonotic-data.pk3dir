@@ -344,7 +344,7 @@ float trigger_push_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
 
-	WriteByte(MSG_ENTITY, self.team);
+	WriteByte(MSG_ENTITY, TMID(self.team));
 	WriteInt24_t(MSG_ENTITY, self.spawnflags);
 	WriteByte(MSG_ENTITY, self.active);
 	WriteCoord(MSG_ENTITY, self.height);
@@ -442,7 +442,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	make_pure(this);
 
 	self.classname = "jumppad";
-	int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
+	int mytm = ReadByte(); if(mytm) { self.__team = mytm - 1; }
 	self.spawnflags = ReadInt24_t();
 	self.active = ReadByte();
 	self.height = ReadCoord();

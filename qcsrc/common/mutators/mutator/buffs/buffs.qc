@@ -169,7 +169,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 void buff_Waypoint_Spawn(entity e)
 {
 	entity buff = buff_FirstFromFlags(e.buffs);
-	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_Buff);
+	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, TMID(e.team), e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
 	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
 	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
@@ -412,7 +412,7 @@ void buff_Init(entity ent)
 {SELFPARAM();
 	if(!cvar("g_buffs")) { remove(ent); return; }
 
-	if(!teamplay && ent.team) { ent.team = 0; }
+	if(!teamplay && ent.team) { ent.__team = 0; }
 
 	entity buff = buff_FirstFromFlags(self.buffs);
 
@@ -459,9 +459,9 @@ void buff_Init(entity ent)
 void buff_Init_Compat(entity ent, entity replacement)
 {
 	if (ent.spawnflags & 2)
-		ent.team = NUM_TEAM_1;
+		ent.__team = NUM_TEAM_1;
 	else if (ent.spawnflags & 4)
-		ent.team = NUM_TEAM_2;
+		ent.__team = NUM_TEAM_2;
 
 	ent.buffs = replacement.m_itemid;
 

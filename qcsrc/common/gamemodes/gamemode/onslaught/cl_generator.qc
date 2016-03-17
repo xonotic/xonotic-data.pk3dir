@@ -167,9 +167,9 @@ void generator_changeteam(entity this)
 {
 	if(this.team)
 	{
-		this.glowmod = Team_ColorRGB(this.team - 1);
-		this.teamradar_color = Team_ColorRGB(this.team - 1);
-		this.colormap = 1024 + (this.team - 1) * 17;
+		this.glowmod = Team_ColorRGB(TMID(this.team) - 1);
+		this.teamradar_color = Team_ColorRGB(TMID(this.team) - 1);
+		this.colormap = 1024 + (TMID(this.team) - 1) * 17;
 	}
 	else
 	{
@@ -194,7 +194,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 		this.health = ReadByte();
 		this.max_health = ReadByte();
 		this.count = ReadByte();
-		this.team = ReadByte();
+		this.__team = ReadByte();
 
 		if(!this.count)
 			this.count = 40;
@@ -207,9 +207,9 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 	{
 		int _tmp;
 		_tmp = ReadByte();
-		if(_tmp != this.team)
+		if(_tmp != TMID(this.team))
 		{
-			this.team = _tmp;
+			this.__team = _tmp;
 			generator_changeteam(this);
 		}
 

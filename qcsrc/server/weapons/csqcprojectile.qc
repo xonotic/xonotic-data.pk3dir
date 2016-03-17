@@ -58,7 +58,7 @@ bool CSQCProjectile_SendEntity(entity this, entity to, int sf)
 			WriteByte(MSG_ENTITY, fr);
 		}
 
-		WriteByte(MSG_ENTITY, self.realowner.team);
+		WriteByte(MSG_ENTITY, TMID(self.realowner.team));
 	}
 
 	if(sf & 2)

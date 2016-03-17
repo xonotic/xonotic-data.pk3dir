@@ -59,7 +59,7 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 	float i, p, longflags;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
-	int t = this.team - 1;
+	int t = TMID(this.team) - 1;
 	assert(t, eprint(this));
 	WriteByte(MSG_ENTITY, t);
 
@@ -91,7 +91,7 @@ void TeamScore_Spawn(float t, string name)
 {
 	entity ts = new_pure(csqc_score_team);
 	ts.netname = name; // not used yet, FIXME
-	ts.team = t;
+	ts.__team = t;
 	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
@@ -127,7 +127,7 @@ float TeamScore_AddToTeam(float t, float scorefield, float score)
 
 float TeamScore_Add(entity player, float scorefield, float score)
 {
-	return TeamScore_AddToTeam(player.team, scorefield, score);
+	return TeamScore_AddToTeam(TMID(player.team), scorefield, score);
 }
 
 float TeamScore_Compare(entity t1, entity t2, float strict)
@@ -144,7 +144,7 @@ float TeamScore_Compare(entity t1, entity t2, float strict)
 	}
 
 	if (result.x == 0 && strict)
-		result.x = t1.team - t2.team;
+		result.x = TMID(t1.team) - TMID(t2.team);
 
 	return result.x;
 }
@@ -682,8 +682,8 @@ float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 		{
 			entity t1, t2;
 			float r;
-			t1 = teamscorekeepers[p1.team - 1];
-			t2 = teamscorekeepers[p2.team - 1];
+			t1 = teamscorekeepers[TMID(p1.team) - 1];
+			t2 = teamscorekeepers[TMID(p2.team) - 1];
 			r = TeamScore_Compare(t1, t2, ((teams >= 0) ? 1 : strict));
 			return r;
 		}
@@ -891,10 +891,10 @@ void Score_NicePrint(entity to)
 	while(p)
 	{
 		if(teamscores_entities_count)
-			if(t != p.team)
-				Score_NicePrint_Team(to, p.team, w);
+			if(t != TMID(p.team))
+				Score_NicePrint_Team(to, TMID(p.team), w);
 		Score_NicePrint_Player(to, p, w);
-		t = p.team;
+		t = TMID(p.team);
 		p = p.chain;
 	}
 

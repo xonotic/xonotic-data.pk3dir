@@ -455,7 +455,7 @@ string playername(entity p)
     string t;
     if (teamplay && !intermission_running && IS_PLAYER(p))
     {
-        t = Team_ColorCode(p.team);
+        t = Team_ColorCode(TMID(p.team));
         return strcat(t, strdecolorize(p.netname));
     }
     else

@@ -89,7 +89,7 @@ bool minigame_SendEntity(entity this, entity to, int sf)
 			WriteLong(MSG_ENTITY,etof(self.minigame_players));
 		}
 		if ( sf & MINIG_SF_UPDATE )
-			WriteByte(MSG_ENTITY,self.team);
+			WriteByte(MSG_ENTITY, TMID(self.team));
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES
 
@@ -136,7 +136,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 	{
 		player_pointer.owner = minigame_session;
 		player_pointer.minigame_players = player;
-		player_pointer.team = mgteam;
+		player_pointer.__team = mgteam;
 		player_pointer.list_next = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;

@@ -13,12 +13,12 @@ bool generator_send(entity this, entity to, int sf)
 		WriteByte(MSG_ENTITY, self.health);
 		WriteByte(MSG_ENTITY, self.max_health);
 		WriteByte(MSG_ENTITY, self.count);
-		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, TMID(self.team));
 	}
 
 	if(sf & GSF_STATUS)
 	{
-		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, TMID(self.team));
 
 		if(self.health <= 0)
 			WriteByte(MSG_ENTITY, 0);

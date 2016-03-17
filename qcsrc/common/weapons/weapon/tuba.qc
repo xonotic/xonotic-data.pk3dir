@@ -226,7 +226,7 @@ int W_Tuba_GetNote(entity pl, int hittype)
 	// that way, holes in the range of notes are "plugged"
 	if(teamplay)
 	{
-		if(pl.team == NUM_TEAM_2 || pl.team == NUM_TEAM_4)
+		if(TMID(pl.team) == NUM_TEAM_2 || TMID(pl.team) == NUM_TEAM_4)
 			note += 3;
 	}
 	else

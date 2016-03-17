@@ -603,7 +603,7 @@ string _MapInfo_GetDefaultEx(float t)
 
 float _MapInfo_GetTeamPlayBool(float t)
 {
-	FOREACH(Gametypes, it.items == t, return it.team);
+	FOREACH(Gametypes, it.items == t, return it.__team);
 	return false;
 }
 

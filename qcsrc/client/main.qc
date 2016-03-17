@@ -260,7 +260,7 @@ float SetTeam(entity o, int _team)
 	{
 		if(o.has_team)
 		{
-			tm = GetTeam(o.team, false);
+			tm = GetTeam(TMID(o.team), false);
 			tm.team_size -= 1;
 			o.has_team = 0;
 			return true;
@@ -270,17 +270,17 @@ float SetTeam(entity o, int _team)
 	{
 		if (!o.has_team)
 		{
-			o.team = _team;
+			o.__team = _team;
 			tm = GetTeam(_team, true);
 			tm.team_size += 1;
 			o.has_team = 1;
 			return true;
 		}
-		else if(_team != o.team)
+		else if(_team != TMID(o.team))
 		{
-			tm = GetTeam(o.team, false);
+			tm = GetTeam(TMID(o.team), false);
 			tm.team_size -= 1;
-			o.team = _team;
+			o.__team = _team;
 			tm = GetTeam(_team, true);
 			tm.team_size += 1;
 			return true;
@@ -472,8 +472,8 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 	int i;
 	entity o;
 
-	this.team = ReadByte();
-	o = this.owner = GetTeam(this.team, true); // these team numbers can always be trusted
+	this.__team = ReadByte();
+	o = this.owner = GetTeam(TMID(this.team), true); // these team numbers can always be trusted
 
     int sf, lf;
 #if MAX_TEAMSCORE <= 8

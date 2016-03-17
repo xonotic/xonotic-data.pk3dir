@@ -8,11 +8,11 @@ void turret_remove(entity this)
 .vector glowmod;
 void turret_changeteam()
 {SELFPARAM();
-	self.glowmod = Team_ColorRGB(self.team - 1) * 2;
-	self.teamradar_color = Team_ColorRGB(self.team - 1);
+	self.glowmod = Team_ColorRGB(TMID(self.team) - 1) * 2;
+	self.teamradar_color = Team_ColorRGB(TMID(self.team) - 1);
 
 	if(self.team)
-		self.colormap = 1024 + (self.team - 1) * 17;
+		self.colormap = 1024 + (TMID(self.team) - 1) * 17;
 
 	self.tur_head.colormap = self.colormap;
 	self.tur_head.glowmod = self.glowmod;
@@ -71,7 +71,7 @@ void turret_draw2d(entity this)
 	string txt;
 
 	if(autocvar_cl_vehicles_hud_tactical)
-	if(dist < 10240 && t != this.team)
+	if(dist < 10240 && t != TMID(this.team))
 	{
 		// TODO: Vehicle tactical hud
 		o = project_3d_to_2d(this.origin + '0 0 32');
@@ -119,7 +119,7 @@ void turret_draw2d(entity this)
 	else
 		txt = spritelookuptext(this, spriteimage);
 
-	if(time - floor(time) > 0.5 && t == this.team)
+	if(time - floor(time) > 0.5 && t == TMID(this.team))
 	{
 		if(this.helpme && time < this.helpme)
 		{
@@ -424,9 +424,9 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 	{
 		float _tmp;
 		_tmp = ReadByte();
-		if(_tmp != self.team)
+		if(_tmp != TMID(self.team))
 		{
-			self.team = _tmp;
+			self.__team = _tmp;
 			turret_changeteam();
 		}
 

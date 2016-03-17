@@ -302,7 +302,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 		{
 			if(deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 			{
-				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", targ.team, 0, 0);
+				Obituary_SpecialDeath(targ, false, deathtype, targ.netname, deathlocation, "", TMID(targ.team), 0, 0);
 			}
 			else
 			{
@@ -345,7 +345,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(TMID(targ.team), INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -535,7 +535,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	setmodel(ice, MDL_ICE);
 	ice.alpha = 1;
-	ice.colormod = Team_ColorRGB(targ.team);
+	ice.colormod = Team_ColorRGB(TMID(targ.team));
 	ice.glowmod = ice.colormod;
 	targ.iceblock = ice;
 	targ.revival_time = 0;
@@ -548,7 +548,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	// add waypoint
 	if(show_waypoint)
-		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
+		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', world, TMID(targ.team), targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
 void Unfreeze (entity targ)

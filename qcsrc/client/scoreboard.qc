@@ -207,9 +207,9 @@ float HUD_CompareTeamScores(entity left, entity right)
 {
 	int i, r;
 
-	if(left.team == NUM_SPECTATOR)
+	if(TMID(left.team) == NUM_SPECTATOR)
 		return 1;
-	if(right.team == NUM_SPECTATOR)
+	if(TMID(right.team) == NUM_SPECTATOR)
 		return 0;
 
 	r = HUD_CompareScore(left.teamscores[ts_primary], right.teamscores[ts_primary], teamscores_flags[ts_primary]);
@@ -227,7 +227,7 @@ float HUD_CompareTeamScores(entity left, entity right)
 			return r;
 	}
 
-	if (left.team < right.team)
+	if (TMID(left.team) < TMID(right.team))
 		return true;
 
 	return false;
@@ -707,7 +707,7 @@ string HUD_FixScoreboardColumnWidth(int i, string str)
 void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_self, int pl_number)
 {
 	vector tmp, rgb;
-	rgb = Team_ColorRGB(pl.team);
+	rgb = Team_ColorRGB(TMID(pl.team));
 	string str;
 	int field;
 	float is_spec;
@@ -960,7 +960,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	else
 		for(pl = players.sort_next; pl; pl = pl.sort_next)
 		{
-			if(pl.team == NUM_SPECTATOR)
+			if(TMID(pl.team) == NUM_SPECTATOR)
 				continue;
 			HUD_PrintScoreboardItem(pos, tmp, pl, (pl.sv_entnum == player_localnum), i);
 			pos.y += 1.25 * hud_fontsize.y;
@@ -1312,13 +1312,13 @@ void HUD_DrawScoreboard()
 		team_score_baseoffset = eY * (2 * autocvar_scoreboard_border_thickness + hud_fontsize.y) - eX * (autocvar_scoreboard_border_thickness + hud_fontsize.x * 0.25);
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == NUM_SPECTATOR)
+			if(TMID(tm.team) == NUM_SPECTATOR)
 				continue;
 			if(!tm.team && teamplay)
 				continue;
 
 			draw_beginBoldFont();
-			rgb = Team_ColorRGB(tm.team);
+			rgb = Team_ColorRGB(TMID(tm.team));
 			str = ftos(tm.(teamscores[ts_primary]));
 			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
@@ -1343,7 +1343,7 @@ void HUD_DrawScoreboard()
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == NUM_SPECTATOR)
+			if(TMID(tm.team) == NUM_SPECTATOR)
 				continue;
 			if(!tm.team && teamplay)
 				continue;
@@ -1386,7 +1386,7 @@ void HUD_DrawScoreboard()
 	item_size.z = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
-		if(pl.team != NUM_SPECTATOR)
+		if(TMID(pl.team) != NUM_SPECTATOR)
 			continue;
 		pos.y += 1.25 * hud_fontsize.y;
 		HUD_PrintScoreboardItem(pos, item_size, pl, (pl.sv_entnum == player_localnum), specs);

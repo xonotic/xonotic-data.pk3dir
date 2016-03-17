@@ -254,7 +254,7 @@ void CSQCPlayer_ModelAppearance_Apply(entity this, bool islocalplayer)
 				// if we rejected because we matched our OWN team color,
 				// this is not bad; we then simply keep our color as is
 				// anyway.
-				if(forcecolor_friend == 1024 + 17 * tm.team)
+				if(forcecolor_friend == 1024 + 17 * TMID(tm.team))
 					forcecolor_friend = 0;
 		}
 

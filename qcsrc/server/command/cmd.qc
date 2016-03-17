@@ -181,7 +181,7 @@ void ClientCommand_join(float request)
 						self.classname = STR_PLAYER;
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && self.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && TMID(self.team) != -1) ? APP_TEAM_NUM(TMID(this.team), INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname);
 						PutClientInServer();
 					}
 					else
@@ -373,7 +373,7 @@ void ClientCommand_selectteam(float request, float argc)
 
 								if (selection)
 								{
-									if (self.team == selection && !IS_DEAD(self))
+									if (TMID(self.team) == selection && !IS_DEAD(self))
 									{
 										sprint(self, "^7You already are on that team.\n");
 									}
@@ -387,7 +387,7 @@ void ClientCommand_selectteam(float request, float argc)
 										{
 											CheckAllowedTeams(self);
 											GetTeamCounts(self);
-											if (!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(self.team), self))
+											if (!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(TMID(self.team)), self))
 											{
 												Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 												return;

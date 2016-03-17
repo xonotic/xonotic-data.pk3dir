@@ -38,7 +38,7 @@ bool bumble_raygun_send(entity this, entity to, float sf)
     if(sf & BRG_SETUP)
     {
         WriteByte(MSG_ENTITY, etof(self.realowner));
-        WriteByte(MSG_ENTITY, self.realowner.team);
+        WriteByte(MSG_ENTITY, TMID(self.realowner.team));
         WriteByte(MSG_ENTITY, self.cnt);
     }
 
@@ -71,9 +71,9 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
 
     if(sf & BRG_SETUP)
     {
-        self.cnt  = ReadByte();
-        self.team = ReadByte();
-        self.cnt  = ReadByte();
+        self.cnt    = ReadByte();
+        self.__team = ReadByte();
+        self.cnt    = ReadByte();
 
         if(self.cnt)
             self.colormod = '1 0 0';

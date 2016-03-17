@@ -153,7 +153,7 @@ void HUD_InfoMessages()
 			{
 				for (; tm.sort_next; tm = tm.sort_next)
 				{
-					if(!tm.team_size || tm.team == NUM_SPECTATOR)
+					if(!tm.team_size || TMID(tm.team) == NUM_SPECTATOR)
 						continue;
 					if(!ts_min) ts_min = tm.team_size;
 					else ts_min = min(ts_min, tm.team_size);
@@ -165,7 +165,7 @@ void HUD_InfoMessages()
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm)
-					if (tm.team != NUM_SPECTATOR)
+					if (TMID(tm.team) != NUM_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
 					drawInfoMessage(s);

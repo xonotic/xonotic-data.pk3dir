@@ -55,7 +55,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 	int num_red = 0, num_blue = 0, num_yellow = 0, num_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		switch(it.team)
+		switch(TMID(it.team))
 		{
 			case NUM_TEAM_1: ++num_red; break;
 			case NUM_TEAM_2: ++num_blue; break;

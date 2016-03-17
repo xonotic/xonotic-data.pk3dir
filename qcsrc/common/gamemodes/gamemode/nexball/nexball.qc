@@ -50,9 +50,9 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 {
 	entity e;
 	e = find(world, classname, "nexball_team");
-	if(e.team == t)
+	if(TMID(e.team) == t)
 		e = find(e, classname, "nexball_team");
-	return e.team;
+	return TMID(e.team);
 }
 
 const float ST_NEXBALL_GOALS = 1;
@@ -92,7 +92,7 @@ void nexball_setstatus()
 	{
 		if(self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
 		{
-			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
+			bprint("The ", Team_ColoredFullName(TMID(self.team)), " held the ball for too long.\n");
 			setself(self.ballcarried);
 			DropBall(self, self.owner.origin, '0 0 0');
 			ResetBall();
@@ -215,7 +215,7 @@ void DropBall(entity ball, vector org, vector vel)
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	WaypointSprite_Spawn(WP_NbBall, 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER); // no health bar please
+	WaypointSprite_Spawn(WP_NbBall, 0, 0, ball, '0 0 64', world, TMID(ball.team), ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
 	ball.owner.ballcarried = world;
@@ -236,7 +236,7 @@ void InitBall()
 	self.nextthink = time + autocvar_g_nexball_delay_idle + 3;
 	self.teamtime = 0;
 	self.pusher = world;
-	self.team = false;
+	self.__team = 0;
 	_sound(self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 	LogNB("init", world);
@@ -247,7 +247,7 @@ void ResetBall()
 	if(self.cnt < 2)	// step 1
 	{
 		if(time == self.teamtime)
-			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
+			bprint("The ", Team_ColoredFullName(TMID(self.team)), " held the ball for too long.\n");
 
 		self.touch = func_null;
 		self.movetype = MOVETYPE_NOCLIP;
@@ -360,13 +360,13 @@ void GoalTouch()
 	if(ball.classname != "nexball_basketball")
 		if(ball.classname != "nexball_football")
 			return;
-	if((!ball.pusher && self.team != GOAL_OUT) || ball.cnt)
+	if((!ball.pusher && TMID(self.team) != GOAL_OUT) || ball.cnt)
 		return;
 	EXACTTRIGGER_TOUCH;
 
 
 	if(nb_teams == 2)
-		otherteam = OtherTeam(ball.team);
+		otherteam = OtherTeam(TMID(ball.team));
 	else
 		otherteam = 0;
 
@@ -381,16 +381,16 @@ void GoalTouch()
 		bprint("Boo! ", pname, "^7 scored a goal against their own team!\n");
 		pscore = -1;
 	}
-	else if(self.team == GOAL_FAULT)
+	else if(TMID(self.team) == GOAL_FAULT)
 	{
 		LogNB("fault", ball.pusher);
 		if(nb_teams == 2)
 			bprint(Team_ColoredFullName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
-			bprint(Team_ColoredFullName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
+			bprint(Team_ColoredFullName(TMID(ball.team)), " loses a point due to ", pname, "^7's silliness.\n");
 		pscore = -1;
 	}
-	else if(self.team == GOAL_OUT)
+	else if(TMID(self.team) == GOAL_OUT)
 	{
 		LogNB("out", ball.pusher);
 		if((self.spawnflags & GOAL_TOUCHPLAYER) && ball.owner)
@@ -401,8 +401,8 @@ void GoalTouch()
 	}
 	else							   //score
 	{
-		LogNB(strcat("goal:", ftos(self.team)), ball.pusher);
-		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", Team_ColoredFullName(ball.team), ".\n");
+		LogNB(strcat("goal:", ftos(TMID(self.team))), ball.pusher);
+		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", Team_ColoredFullName(TMID(ball.team)), ".\n");
 		pscore = 1;
 	}
 
@@ -413,7 +413,7 @@ void GoalTouch()
 		if(nb_teams == 2 && pscore < 0)
 			TeamScore_AddToTeam(otherteam, ST_NEXBALL_GOALS, -pscore);
 		else
-			TeamScore_AddToTeam(ball.team, ST_NEXBALL_GOALS, pscore);
+			TeamScore_AddToTeam(TMID(ball.team), ST_NEXBALL_GOALS, pscore);
 	}
 	if(isclient)
 	{
@@ -432,7 +432,7 @@ void GoalTouch()
 	ball.think = ResetBall;
 	if(ball.classname == "nexball_basketball")
 		ball.touch = football_touch; // better than func_null: football control until the ball gets reset
-	ball.nextthink = time + autocvar_g_nexball_delay_goal * (self.team != GOAL_OUT);
+	ball.nextthink = time + autocvar_g_nexball_delay_goal * (TMID(self.team) != GOAL_OUT);
 }
 
 //=======================//
@@ -445,7 +445,7 @@ spawnfunc(nexball_team)
 		remove(self);
 		return;
 	}
-	self.team = self.cnt + 1;
+	self.__team = self.cnt + 1;
 }
 
 void nb_spawnteam(string teamname, float teamcolor)
@@ -454,7 +454,7 @@ void nb_spawnteam(string teamname, float teamcolor)
 	entity e = new(nexball_team);
 	e.netname = teamname;
 	e.cnt = teamcolor;
-	e.team = e.cnt + 1;
+	e.__team = e.cnt + 1;
 	nb_teams += 1;
 }
 
@@ -464,33 +464,33 @@ void nb_spawnteams()
 	entity e;
 	for(e = world; (e = find(e, classname, "nexball_goal"));)
 	{
-		switch(e.team)
+		switch(TMID(e.team))
 		{
 		case NUM_TEAM_1:
 			if(!t_red)
 			{
-				nb_spawnteam("Red", e.team-1)   ;
+				nb_spawnteam("Red", TMID(e.team)-1)   ;
 				t_red = true;
 			}
 			break;
 		case NUM_TEAM_2:
 			if(!t_blue)
 			{
-				nb_spawnteam("Blue", e.team-1)  ;
+				nb_spawnteam("Blue", TMID(e.team)-1)  ;
 				t_blue = true;
 			}
 			break;
 		case NUM_TEAM_3:
 			if(!t_yellow)
 			{
-				nb_spawnteam("Yellow", e.team-1);
+				nb_spawnteam("Yellow", TMID(e.team)-1);
 				t_yellow = true;
 			}
 			break;
 		case NUM_TEAM_4:
 			if(!t_pink)
 			{
-				nb_spawnteam("Pink", e.team-1)  ;
+				nb_spawnteam("Pink", TMID(e.team)-1)  ;
 				t_pink = true;
 			}
 			break;
@@ -612,10 +612,10 @@ void SpawnGoal()
 
 	EXACTTRIGGER_INIT;
 
-	if(self.team != GOAL_OUT && Team_TeamToNumber(self.team) != -1)
+	if(TMID(self.team) != GOAL_OUT && Team_TeamToNumber(TMID(self.team)) != -1)
 	{
 		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE);
-		wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0');
+		wp.colormod = ((self.team) ? Team_ColorRGB(TMID(self.team)) : '1 0.5 0');
 		self.sprite.customizeentityforclient = nb_Goal_Customize;
 	}
 
@@ -628,28 +628,28 @@ void SpawnGoal()
 
 spawnfunc(nexball_redgoal)
 {
-	self.team = NUM_TEAM_1;
+	self.__team = NUM_TEAM_1;
 	SpawnGoal();
 }
 spawnfunc(nexball_bluegoal)
 {
-	self.team = NUM_TEAM_2;
+	self.__team = NUM_TEAM_2;
 	SpawnGoal();
 }
 spawnfunc(nexball_yellowgoal)
 {
-	self.team = NUM_TEAM_3;
+	self.__team = NUM_TEAM_3;
 	SpawnGoal();
 }
 spawnfunc(nexball_pinkgoal)
 {
-	self.team = NUM_TEAM_4;
+	self.__team = NUM_TEAM_4;
 	SpawnGoal();
 }
 
 spawnfunc(nexball_fault)
 {
-	self.team = GOAL_FAULT;
+	self.__team = GOAL_FAULT;
 	if(self.noise == "")
 		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();
@@ -657,7 +657,7 @@ spawnfunc(nexball_fault)
 
 spawnfunc(nexball_out)
 {
-	self.team = GOAL_OUT;
+	self.__team = GOAL_OUT;
 	if(self.noise == "")
 		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();

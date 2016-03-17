@@ -107,7 +107,7 @@ void dompoint_captured ()
 	real_team = self.cnt;
 	self.cnt = -1;
 
-	dom_EventLog("taken", self.team, self.dmg_inflictor);
+	dom_EventLog("taken", TMID(self.team), self.dmg_inflictor);
 	self.dmg_inflictor = world;
 
 	self.goalentity = head;
@@ -147,16 +147,16 @@ void dompoint_captured ()
 
 	// do trigger work
 	old_delay = self.delay;
-	old_team = self.team;
-	self.team = real_team;
+	old_team = TMID(self.team);
+	self.__team = real_team;
 	self.delay = 0;
 	activator = self;
 	SUB_UseTargets ();
 	self.delay = old_delay;
-	self.team = old_team;
+	self.__team = old_team;
 
 	entity msg = WP_DomNeut;
-	switch(self.team)
+	switch(TMID(self.team))
 	{
 		case NUM_TEAM_1: msg = WP_DomRed; break;
 		case NUM_TEAM_2: msg = WP_DomBlue; break;
@@ -168,7 +168,7 @@ void dompoint_captured ()
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
-	FOREACH_ENTITY_CLASS("dom_controlpoint", true, LAMBDA(
+	FOREACH_ENTITY_CLASS("dom_controlpoint", true, {
 		if (autocvar_g_domination_point_amt)
 			points = autocvar_g_domination_point_amt;
 		else
@@ -177,7 +177,7 @@ void dompoint_captured ()
 			wait_time = autocvar_g_domination_point_rate;
 		else
 			wait_time = it.wait;
-		switch(it.goalentity.team)
+		switch(TMID(it.goalentity.team))
 		{
 			case NUM_TEAM_1: pps_red += points/wait_time; break;
 			case NUM_TEAM_2: pps_blue += points/wait_time; break;
@@ -185,9 +185,9 @@ void dompoint_captured ()
 			case NUM_TEAM_4: pps_pink += points/wait_time; break;
 		}
 		total_pps += points/wait_time;
-	));
+	});
 
-	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(self.goalentity.team - 1, 0));
+	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, colormapPaletteColor(TMID(self.goalentity.team) - 1, 0));
 	WaypointSprite_Ping(self.sprite);
 
 	self.captime = time;
@@ -238,8 +238,8 @@ void dompointthink()
 			fragamt = autocvar_g_domination_point_amt;
 		else
 			fragamt = self.frags;
-		TeamScore_AddToTeam(self.goalentity.team, ST_SCORE, fragamt);
-		TeamScore_AddToTeam(self.goalentity.team, ST_DOM_TICKS, fragamt);
+		TeamScore_AddToTeam(TMID(self.goalentity.team), ST_SCORE, fragamt);
+		TeamScore_AddToTeam(TMID(self.goalentity.team), ST_DOM_TICKS, fragamt);
 
 		// give credit to the individual player, if he is still there
 		if (self.enemy.playerid == self.enemy_playerid)
@@ -277,7 +277,7 @@ void dompointtouch()
 
 	self.team = self.goalentity.team; // this stores the PREVIOUS team!
 
-	self.cnt = other.team;
+	self.cnt = TMID(other.team);
 	self.owner = head; // team to switch to after the delay
 	self.dmg_inflictor = other;
 
@@ -372,10 +372,10 @@ void Domination_count_controlpoints()
 	for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
 	{
 		++total_controlpoints;
-		redowned += (e.goalentity.team == NUM_TEAM_1);
-		blueowned += (e.goalentity.team == NUM_TEAM_2);
-		yellowowned += (e.goalentity.team == NUM_TEAM_3);
-		pinkowned += (e.goalentity.team == NUM_TEAM_4);
+		redowned    += (TMID(e.goalentity.team) == NUM_TEAM_1);
+		blueowned   += (TMID(e.goalentity.team) == NUM_TEAM_2);
+		yellowowned += (TMID(e.goalentity.team) == NUM_TEAM_3);
+		pinkowned   += (TMID(e.goalentity.team) == NUM_TEAM_4);
 	}
 }
 
@@ -479,7 +479,7 @@ MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 	{
 		if(head.netname != "")
 		{
-			switch(head.team)
+			switch(TMID(head.team))
 			{
 				case NUM_TEAM_1: c1 = 0; break;
 				case NUM_TEAM_2: c2 = 0; break;
@@ -600,7 +600,7 @@ spawnfunc(dom_team)
 	self.modelindex = 0;
 	// this would have to be changed if used in quakeworld
 	if(self.cnt)
-		self.team = self.cnt + 1; // WHY are these different anyway?
+		self.__team = self.cnt + 1; // WHY are these different anyway?
 }
 
 // scoreboard setup
@@ -649,7 +649,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.model = "";
 	self.modelindex = 0;
 	// this would have to be changed if used in quakeworld
-	self.team = self.cnt + 1;
+	self.__team = self.cnt + 1;
 
 	//eprint(self);
 	setself(this);

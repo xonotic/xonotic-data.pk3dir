@@ -267,7 +267,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 
 void func_breakable_reset(entity this)
 {
-	this.team = this.team_saved;
+	this.__team = this.team_saved;
 	func_breakable_look_restore();
 	if(this.spawnflags & 1)
 		func_breakable_behave_destroyed();
@@ -334,7 +334,7 @@ spawnfunc(func_breakable)
 	if(this.noise1)
 		precache_sound(this.noise1);
 
-	this.team_saved = this.team;
+	this.team_saved = TMID(this.team);
 	this.dropped_origin = this.origin;
 
 	this.reset = func_breakable_reset;

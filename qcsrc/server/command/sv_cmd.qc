@@ -1052,10 +1052,10 @@ void GameCommand_moveplayer(float request, float argc)
 
 								// find the team to move the player to
 								team_id = Team_ColorToTeam(destination);
-								if (team_id == client.team)  // already on the destination team
+								if (team_id == TMID(client.team))  // already on the destination team
 								{
 									// keep the forcing undone
-									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
+									LOG_INFO("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(TMID(client.team)), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
 									continue;
 								}
 								else if (team_id == 0)  // auto team
@@ -1387,7 +1387,7 @@ void GameCommand_shuffleteams(float request)
 
 							if (VerifyClientNumber(shuffleteams_players[z])) setself(edict_num(shuffleteams_players[z]));
 
-							if (self.team != team_color) MoveToTeam(self, team_color, 6);
+							if (TMID(self.team) != team_color) MoveToTeam(self, team_color, 6);
 
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;

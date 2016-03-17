@@ -90,7 +90,7 @@ float RegisterTeam(entity _team)
 	if(teams.sort_next)
 		teams.sort_next.sort_prev = _team;
 	teams.sort_next = _team;
-	if(_team.team && _team.team != NUM_SPECTATOR)
+	if(TMID(_team.team) && TMID(_team.team) != NUM_SPECTATOR)
 		++team_count;
 	AuditLists();
 	return true;
@@ -112,7 +112,7 @@ void RemoveTeam(entity _team)
 	parent.sort_next = _team.sort_next;
 	if(_team.sort_next)
 		_team.sort_next.sort_prev = parent;
-	if(_team.team && _team.team != NUM_SPECTATOR)
+	if(TMID(_team.team) && TMID(_team.team) != NUM_SPECTATOR)
 		--team_count;
 	AuditLists();
 }
@@ -125,7 +125,7 @@ entity GetTeam(int _team, bool add)
 	if (!add)
 		return world;
 	entity tm = new_pure(team);
-	tm.team = _team;
+	tm.__team = _team;
 	teamslots[num] = tm;
 	RegisterTeam(tm);
 	return tm;

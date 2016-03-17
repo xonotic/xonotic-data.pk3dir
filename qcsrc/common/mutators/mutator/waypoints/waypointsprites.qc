@@ -52,7 +52,7 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     if (sendflags & 1)
     {
-        WriteByte(MSG_ENTITY, self.team);
+        WriteByte(MSG_ENTITY, TMID(self.team));
         WriteByte(MSG_ENTITY, self.rule);
     }
 
@@ -161,7 +161,7 @@ void Ent_WaypointSprite(entity this)
 
     if (sendflags & 1)
     {
-        this.team = ReadByte();
+        this.__team = ReadByte();
         this.rule = ReadByte();
     }
 
@@ -487,7 +487,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_DEFAULT:
             if (this.team)
             {
-                if (this.team == t)
+                if (TMID(this.team) == t)
                     spriteimage = this.netname;
                 else
                     spriteimage = "";
@@ -498,7 +498,7 @@ void Draw_WaypointSprite(entity this)
         case SPRITERULE_TEAMPLAY:
             if (t == NUM_SPECTATOR + 1)
                 spriteimage = this.netname3;
-            else if (this.team == t)
+            else if (TMID(this.team) == t)
                 spriteimage = this.netname2;
             else
                 spriteimage = this.netname;
@@ -818,7 +818,7 @@ void WaypointSprite_UpdateRule(entity e, float t, float r)
 {
     // no check, as this is never called without doing an actual change (usually only once)
     e.rule = r;
-    e.team = t;
+    e.__team = t;
     e.SendFlags |= 1;
 }
 
@@ -1008,7 +1008,7 @@ entity WaypointSprite_Spawn(
     else
         setorigin(wp, ofs);
     wp.enemy = showto;
-    wp.team = t;
+    wp.__team = t;
     wp.owner = own;
     wp.currentammo = hideable;
     if (own)
@@ -1051,7 +1051,7 @@ entity WaypointSprite_DeployFixed(
 {SELFPARAM();
     float t;
     if (teamplay)
-        t = self.team;
+        t = TMID(self.team);
     else
         t = 0;
     float maxdistance;
@@ -1081,7 +1081,7 @@ entity WaypointSprite_Attach(
     if (self.waypointsprite_attachedforcarrier)
         return world; // can't attach to FC
     if (teamplay)
-        t = self.team;
+        t = TMID(self.team);
     else
         t = 0;
     float maxdistance;
@@ -1099,7 +1099,7 @@ entity WaypointSprite_AttachCarrier(
 )
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
+    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, TMID(carrier.team), carrier, waypointsprite_attachedforcarrier, false, icon);
     if (e)
     {
         WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);

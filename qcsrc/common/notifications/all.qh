@@ -77,7 +77,7 @@ typedef entity Notification;
 // used for notification system multi-team identifiers
 #define APP_TEAM_NUM(num, prefix) ((num == NUM_TEAM_1) ? prefix##_RED : ((num == NUM_TEAM_2) ? prefix##_BLUE : ((num == NUM_TEAM_3) ? prefix##_YELLOW : prefix##_PINK)))
 /** @deprecated use APP_TEAM_NUM */
-#define APP_TEAM_ENT(ent, prefix) APP_TEAM_NUM(ent.team, prefix)
+#define APP_TEAM_ENT(ent, prefix) APP_TEAM_NUM(TMID(ent.team), prefix)
 
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
 	VARITEM(1, 0, s1) \

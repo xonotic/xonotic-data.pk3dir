@@ -393,7 +393,7 @@ void vehicles_reset_colors()
 		_effects |= EF_FULLBRIGHT;
 
 	if(self.team)
-		_colormap = 1024 + (self.team - 1) * 17;
+		_colormap = 1024 + (TMID(self.team) - 1) * 17;
 	else
 		_colormap = 1024;
 
@@ -507,14 +507,14 @@ void vehicles_showwp()
 	}
 
 	if(teamplay && self.team)
-		rgb = Team_ColorRGB(self.team);
+		rgb = Team_ColorRGB(TMID(self.team));
 	else
 		rgb = '1 1 1';
 	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Vehicle);
 	wp.colormod = rgb;
 	if(self.waypointsprite_attached)
 	{
-		WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
+		WaypointSprite_UpdateRule(self.waypointsprite_attached, TMID(self.wp00.team), SPRITERULE_DEFAULT);
 		if(this == NULL)
 			WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);
 		WaypointSprite_Ping(self.waypointsprite_attached);
@@ -556,7 +556,7 @@ void vehicle_use()
 
 	self.tur_head.team = activator.team;
 
-	if(self.tur_head.team == 0)
+	if(TMID(self.tur_head.team) == 0)
 		self.active = ACTIVE_NOT;
 	else
 		self.active = ACTIVE_ACTIVE;
@@ -882,7 +882,7 @@ void vehicles_exit(bool eject)
 	_vehicle.tur_head.nodrawtoclient = world;
 
 	if(!teamplay)
-		_vehicle.team = 0;
+		_vehicle.__team = 0;
 
 	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES);
 	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
@@ -1012,8 +1012,8 @@ void vehicles_enter(entity pl, entity veh)
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
 		if (autocvar_g_vehicles_steal_show_waypoint) {
-			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER);
-			wp.colormod = Team_ColorRGB(pl.team);
+			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', world, TMID(veh.team), veh, wps_intruder, true, RADARICON_DANGER);
+			wp.colormod = Team_ColorRGB(TMID(pl.team));
 		}
 	}
 	else return;
@@ -1202,7 +1202,7 @@ bool vehicle_initialize(entity veh, bool nodrop)
 
 			if(teamplay)
 			{
-				if(self.vehicle_controller.team == 0)
+				if(TMID(self.vehicle_controller.team) == 0)
 					self.active = ACTIVE_NOT;
 				else
 					self.active = ACTIVE_ACTIVE;
@@ -1212,7 +1212,7 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	else { self.active = ACTIVE_ACTIVE; }
 
 	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
-		self.team = 0;
+		self.__team = 0;
 
 	if(self.mdl == "" || !self.mdl)
 		_setmodel(self, veh.model);
