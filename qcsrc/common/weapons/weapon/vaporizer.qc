@@ -148,7 +148,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	int myowner = ReadByte();
 	this.owner = playerslots[myowner - 1];
 	this.sv_entnum = myowner;
-	this.__team = ReadByte() - 1;
+	setteam(this, ReadByte() - 1);
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{

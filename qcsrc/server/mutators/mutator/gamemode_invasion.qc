@@ -162,7 +162,7 @@ void invasion_SpawnChosenMonster(float mon)
 		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(world, NUM_TEAM_3, string_null, 1, 1); }
 		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(world, NUM_TEAM_4, string_null, 1, 1); }
 
-		monster.__team = RandomSelection_chosen_float;
+		setteam(monster, RandomSelection_chosen_float);
 	}
 
 	if(teamplay)
@@ -173,7 +173,7 @@ void invasion_SpawnChosenMonster(float mon)
 		{
 			WaypointSprite_UpdateTeamRadar(monster.sprite, RADARICON_DANGER, ((monster.team) ? Team_ColorRGB(TMID(monster.team)) : '1 0 0'));
 
-			monster.sprite.__team = 0;
+			setteam(monster.sprite, 0);
 			monster.sprite.SendFlags |= 1;
 		}
 	}

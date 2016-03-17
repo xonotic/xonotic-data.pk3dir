@@ -148,12 +148,12 @@ void dompoint_captured ()
 	// do trigger work
 	old_delay = self.delay;
 	old_team = TMID(self.team);
-	self.__team = real_team;
+	setteam(self, real_team);
 	self.delay = 0;
 	activator = self;
 	SUB_UseTargets ();
 	self.delay = old_delay;
-	self.__team = old_team;
+	setteam(self, old_team);
 
 	entity msg = WP_DomNeut;
 	switch(TMID(self.team))
@@ -600,7 +600,7 @@ spawnfunc(dom_team)
 	self.modelindex = 0;
 	// this would have to be changed if used in quakeworld
 	if(self.cnt)
-		self.__team = self.cnt + 1; // WHY are these different anyway?
+		setteam(self, self.cnt + 1); // WHY are these different anyway?
 }
 
 // scoreboard setup
@@ -649,7 +649,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.model = "";
 	self.modelindex = 0;
 	// this would have to be changed if used in quakeworld
-	self.__team = self.cnt + 1;
+	setteam(self, self.cnt + 1);
 
 	//eprint(self);
 	setself(this);

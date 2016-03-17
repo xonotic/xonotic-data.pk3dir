@@ -106,7 +106,7 @@ spawnfunc(trigger_teleport)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 {
 	self.classname = "trigger_teleport";
-	int mytm = ReadByte(); if(mytm) { self.__team = mytm - 1; }
+	int mytm = ReadByte(); if(mytm) { setteam(self, mytm - 1); }
 	self.spawnflags = ReadInt24_t();
 	self.active = ReadByte();
 	self.speed = ReadCoord();

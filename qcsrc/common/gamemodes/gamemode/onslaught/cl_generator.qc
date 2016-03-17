@@ -194,7 +194,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 		this.health = ReadByte();
 		this.max_health = ReadByte();
 		this.count = ReadByte();
-		this.__team = ReadByte();
+		setteam(this, ReadByte());
 
 		if(!this.count)
 			this.count = 40;
@@ -209,7 +209,7 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 		_tmp = ReadByte();
 		if(_tmp != TMID(this.team))
 		{
-			this.__team = _tmp;
+			setteam(this, _tmp);
 			generator_changeteam(this);
 		}
 

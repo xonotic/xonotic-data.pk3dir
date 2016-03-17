@@ -1304,7 +1304,7 @@ void PM_Main(entity this)
 	this.v_angle = PHYS_INPUT_ANGLES(this);
 	this.angles = PHYS_WORLD_ANGLES(this);
 
-	this.__team = myteam + 1; // is this correct?
+	setteam(this, myteam);
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
 		UNSET_JUMP_HELD(this); // canjump = true
 	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;

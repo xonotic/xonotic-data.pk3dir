@@ -127,7 +127,7 @@ void multi_reset(entity this)
 	}
 	this.think = func_null;
 	this.nextthink = 0;
-	this.__team = this.team_saved;
+	setteam(this, this.team_saved);
 }
 
 /*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch

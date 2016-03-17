@@ -270,7 +270,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			this.fade_rate = 0;
 		}
 
-		this.__team = ReadByte() - 1;
+		setteam(this, ReadByte() - 1);
 	}
 
 	if (f & 2)

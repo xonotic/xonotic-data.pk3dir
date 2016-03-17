@@ -426,7 +426,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		_tmp = ReadByte();
 		if(_tmp != TMID(self.team))
 		{
-			self.__team = _tmp;
+			setteam(self, _tmp);
 			turret_changeteam();
 		}
 

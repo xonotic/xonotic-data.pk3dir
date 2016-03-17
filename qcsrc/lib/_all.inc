@@ -25,16 +25,29 @@
 	#include <dpdefs/keycodes.qh>
 #endif
 
+#define DEBUG_TEAM_ENTS 1
+
 .int team;
-.int __team = team;
 .entity m_team;
-#if 1
-#define team_t int
-#define TMID(t) (t)
+.int __team = team;
+
+#if DEBUG_TEAM_ENTS
+    #define team_t int
+    #define TMID(t) (t)
+    #define team team
+    #define setteam(e, t) MACRO_BEGIN { \
+        (e).team = (t); \
+    } MACRO_END
 #else
-#define team_t Team
-#define TMID(t) (t.Team_id)
-#define team m_team
+    #define team_t Team
+    #define TMID(t) ((t).m_playercolor)
+    #define team m_team
+    #define setteam(e, t) MACRO_BEGIN { \
+        entity _e = (e); \
+        int _t = (t); \
+        _e.__team = _t; \
+        _e.team = TM(_t); \
+    } MACRO_END
 #endif
 
 #include "macro.qh"

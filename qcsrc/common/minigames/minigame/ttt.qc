@@ -644,7 +644,7 @@ int ttt_client_event(entity minigame, string event, ...)
 					{
 						entity aiplayer = new(minigame_player);
 						aiplayer.owner = minigame;
-						aiplayer.__team = ai;
+						setteam(aiplayer, ai);
 						aiplayer.minigame_playerslot = 0;
 						aiplayer.minigame_autoclean = 1;
 						ttt_aimove(minigame);

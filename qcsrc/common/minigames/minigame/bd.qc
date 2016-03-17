@@ -255,7 +255,7 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 			}
 
 			entity piece = msle_spawn(minigame,"minigame_board_piece");
-			piece.__team = 1;
+			setteam(piece, 1);
 			piece.netname = strzone(pos);
 			piece.bd_tiletype = thetile;
 			piece.bd_dir = '0 -1 0';
@@ -467,7 +467,7 @@ entity bd_load_piece(entity minigame, string s)
 	tokenize_console(bd_string);
 
 	entity e = msle_spawn(minigame,"minigame_board_piece");
-	e.__team = 1;
+	setteam(e, 1);
 	e.bd_dir = '0 -1 0';
 
 	int argv_num = 0;

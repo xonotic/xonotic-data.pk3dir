@@ -91,7 +91,7 @@ void TeamScore_Spawn(float t, string name)
 {
 	entity ts = new_pure(csqc_score_team);
 	ts.netname = name; // not used yet, FIXME
-	ts.__team = t;
+	setteam(ts, t);
 	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;

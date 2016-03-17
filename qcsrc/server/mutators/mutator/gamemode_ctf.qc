@@ -1198,7 +1198,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	setattachment(flag, world, "");
 
 	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber)));
-	flag.__team = teamnumber;
+	setteam(flag, teamnumber);
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
 	flag.flags = FL_ITEM | FL_NOTARGET;
@@ -2507,7 +2507,7 @@ spawnfunc(ctf_team)
 	if(!g_ctf) { remove(self); return; }
 
 	self.classname = "ctf_team";
-	self.__team = self.cnt + 1;
+	setteam(self, self.cnt + 1);
 }
 
 // compatibility for quake maps

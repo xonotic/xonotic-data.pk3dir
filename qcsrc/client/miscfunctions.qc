@@ -125,7 +125,7 @@ entity GetTeam(int _team, bool add)
 	if (!add)
 		return world;
 	entity tm = new_pure(team);
-	tm.__team = _team;
+	setteam(tm, _team);
 	teamslots[num] = tm;
 	RegisterTeam(tm);
 	return tm;

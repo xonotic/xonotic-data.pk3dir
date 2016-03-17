@@ -442,7 +442,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	make_pure(this);
 
 	self.classname = "jumppad";
-	int mytm = ReadByte(); if(mytm) { self.__team = mytm - 1; }
+	int mytm = ReadByte(); if(mytm) { setteam(self, mytm - 1); }
 	self.spawnflags = ReadInt24_t();
 	self.active = ReadByte();
 	self.height = ReadCoord();

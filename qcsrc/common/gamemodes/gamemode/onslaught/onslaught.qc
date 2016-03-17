@@ -538,7 +538,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		this.owner.goalentity = world;
 		this.owner.islinked = false;
 		this.owner.iscaptured = false;
-		this.owner.__team = 0;
+		setteam(this.owner, 0);
 		this.owner.colormap = 1024;
 
 		WaypointSprite_UpdateMaxHealth(this.owner.sprite, 0);
@@ -609,14 +609,14 @@ void ons_ControlPoint_Icon_Think()
 		// unteam the spawnpoint if needed
 		int t = TMID(self.owner.team);
 		if(!self.owner.islinked)
-			self.owner.__team = 0;
+			setteam(self.owner, 0);
 
 		setself(self.owner);
 		activator = self;
 		SUB_UseTargets ();
 		setself(this);
 
-		self.owner.__team = t;
+		setteam(self.owner, t);
 
 		self.owner.waslinked = self.owner.islinked;
 	}
@@ -834,7 +834,7 @@ void ons_ControlPoint_Reset(entity this)
 		remove(this.goalentity);
 
 	this.goalentity = world;
-	this.__team = 0;
+	setteam(this, 0);
 	this.colormap = 1024;
 	this.iscaptured = false;
 	this.islinked = false;
@@ -875,7 +875,7 @@ void ons_ControlPoint_Setup(entity cp)
 	ons_worldcplist = cp;
 
 	cp.netname = "Control point";
-	cp.__team = 0;
+	setteam(cp, 0);
 	cp.solid = SOLID_BBOX;
 	cp.movetype = MOVETYPE_NONE;
 	cp.touch = ons_ControlPoint_Touch;
@@ -1058,7 +1058,7 @@ void ons_GeneratorThink()
 
 void ons_GeneratorReset(entity this)
 {
-	this.__team = this.team_saved;
+	setteam(this, this.team_saved);
 	this.lasthealth = this.max_health = this.health = autocvar_g_onslaught_gen_health;
 	this.takedamage = DAMAGE_AIM;
 	this.bot_attack = true;

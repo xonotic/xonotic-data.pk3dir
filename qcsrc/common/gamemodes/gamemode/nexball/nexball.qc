@@ -236,7 +236,7 @@ void InitBall()
 	self.nextthink = time + autocvar_g_nexball_delay_idle + 3;
 	self.teamtime = 0;
 	self.pusher = world;
-	self.__team = 0;
+	setteam(self, 0);
 	_sound(self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
 	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 	LogNB("init", world);
@@ -445,7 +445,7 @@ spawnfunc(nexball_team)
 		remove(self);
 		return;
 	}
-	self.__team = self.cnt + 1;
+	setteam(self, self.cnt + 1);
 }
 
 void nb_spawnteam(string teamname, float teamcolor)
@@ -454,7 +454,7 @@ void nb_spawnteam(string teamname, float teamcolor)
 	entity e = new(nexball_team);
 	e.netname = teamname;
 	e.cnt = teamcolor;
-	e.__team = e.cnt + 1;
+	setteam(e, e.cnt + 1);
 	nb_teams += 1;
 }
 
@@ -628,28 +628,28 @@ void SpawnGoal()
 
 spawnfunc(nexball_redgoal)
 {
-	self.__team = NUM_TEAM_1;
+	setteam(self, NUM_TEAM_1);
 	SpawnGoal();
 }
 spawnfunc(nexball_bluegoal)
 {
-	self.__team = NUM_TEAM_2;
+	setteam(self, NUM_TEAM_2);
 	SpawnGoal();
 }
 spawnfunc(nexball_yellowgoal)
 {
-	self.__team = NUM_TEAM_3;
+	setteam(self, NUM_TEAM_3);
 	SpawnGoal();
 }
 spawnfunc(nexball_pinkgoal)
 {
-	self.__team = NUM_TEAM_4;
+	setteam(self, NUM_TEAM_4);
 	SpawnGoal();
 }
 
 spawnfunc(nexball_fault)
 {
-	self.__team = GOAL_FAULT;
+	setteam(self, GOAL_FAULT);
 	if(self.noise == "")
 		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();
@@ -657,7 +657,7 @@ spawnfunc(nexball_fault)
 
 spawnfunc(nexball_out)
 {
-	self.__team = GOAL_OUT;
+	setteam(self, GOAL_OUT);
 	if(self.noise == "")
 		self.noise = strzone(SND(TYPEHIT));
 	SpawnGoal();

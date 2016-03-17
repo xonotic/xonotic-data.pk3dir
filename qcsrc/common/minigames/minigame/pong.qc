@@ -49,7 +49,7 @@ void pong_ball_throw(entity ball)
 	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ball_speed;
 	ball.think = pong_ball_think;
 	ball.nextthink = time;
-	ball.__team = 0;
+	setteam(ball, 0);
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
 }
 
@@ -65,7 +65,7 @@ void pong_ball_reset(entity ball)
 	ball.velocity = '0 0 0';
 	ball.origin = '0.5 0.5 0';
 	ball.think = SUB_NullThink;
-	ball.__team = 0;
+	setteam(ball, 0);
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
 	ball.think = pong_ball_throwthink;
 	ball.nextthink = time + autocvar_sv_minigames_pong_ball_wait;
@@ -159,7 +159,7 @@ void pong_ball_think()
 		if ( pong_paddle_hit(self, i) )
 		{
 			pong_paddle_bounce(self,i);
-			self.__team = i;
+			setteam(self, i);
 			self.SendFlags |= PONG_SF_BALLTEAM;
 			return;
 		}
@@ -317,7 +317,7 @@ entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 	paddle.origin = pong_team_to_paddlepos(pl_team);
 	paddle.think = pong_paddle_think;
 	paddle.nextthink = time;
-	paddle.__team = pl_team;
+	setteam(paddle, pl_team);
 	paddle.mins = pong_team_to_box_halfsize(pl_team,-paddle.pong_length,-1/16);
 	paddle.maxs = pong_team_to_box_halfsize(pl_team,paddle.pong_length,1/16);
 

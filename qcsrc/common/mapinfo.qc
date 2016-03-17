@@ -601,9 +601,9 @@ string _MapInfo_GetDefaultEx(float t)
 	return "";
 }
 
-float _MapInfo_GetTeamPlayBool(float t)
+bool _MapInfo_GetTeamPlayBool(float t)
 {
-	FOREACH(Gametypes, it.items == t, return it.__team);
+	FOREACH(Gametypes, it.items == t, return it.m_teamplay);
 	return false;
 }
 

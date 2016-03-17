@@ -114,7 +114,7 @@ void pp_move(entity minigame, entity player, string pos )
 			if(minigame.pp_curr_piece)
 			{
 				minigame.pp_curr_piece.cnt = 0;
-				minigame.pp_curr_piece.__team = 5;
+				setteam(minigame.pp_curr_piece, 5);
 				minigame_server_sendflags(minigame.pp_curr_piece,MINIG_SF_ALL);
 			}
 
@@ -157,7 +157,7 @@ void pp_setup_pieces(entity minigame)
 		if(t1_true || t2_true)
 		{
 			entity piece = msle_spawn(minigame,"minigame_board_piece");
-			piece.__team = ((t1_true) ? 1 : 2);
+			setteam(piece, ((t1_true) ? 1 : 2));
 			piece.netname = strzone(minigame_tile_buildname(i,t));
 			minigame_server_sendflags(piece,MINIG_SF_ALL);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);

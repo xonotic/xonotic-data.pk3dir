@@ -234,9 +234,9 @@ void assault_roundstart_use()
 	FOREACH_ENTITY_CLASS("turret_main", true, {
 		// Swap turret teams
 		if(TMID(it.team) == NUM_TEAM_1)
-			it.__team = NUM_TEAM_2;
+			setteam(it, NUM_TEAM_2);
 		else
-			it.__team = NUM_TEAM_1;
+			setteam(it, NUM_TEAM_1);
 
 		// Doubles as teamchange
 		WITH(entity, self, it, turret_respawn());
@@ -344,7 +344,7 @@ spawnfunc(info_player_attacker)
 {
 	if (!g_assault) { remove(self); return; }
 
-	self.__team = NUM_TEAM_1; // red, gets swapped every round
+	setteam(self, NUM_TEAM_1); // red, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -352,7 +352,7 @@ spawnfunc(info_player_defender)
 {
 	if (!g_assault) { remove(self); return; }
 
-	self.__team = NUM_TEAM_2; // blue, gets swapped every round
+	setteam(self, NUM_TEAM_2); // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -394,9 +394,9 @@ spawnfunc(func_assault_destructible)
 	self.classname = "func_assault_destructible";
 
 	if(assault_attacker_team == NUM_TEAM_1)
-		self.__team = NUM_TEAM_2;
+		setteam(self, NUM_TEAM_2);
 	else
-		self.__team = NUM_TEAM_1;
+		setteam(self, NUM_TEAM_1);
 
 	spawnfunc_func_breakable(this);
 }
@@ -633,7 +633,7 @@ MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
 MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 {SELFPARAM();
 	if(!self.team || TMID(self.team) == MAX_SHOT_DISTANCE)
-		self.__team = 5; // this gets reversed when match starts?
+		setteam(self, 5); // this gets reversed when match starts?
 
 	return false;
 }

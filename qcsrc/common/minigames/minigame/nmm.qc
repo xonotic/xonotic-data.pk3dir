@@ -83,7 +83,7 @@ void nmm_spawn_tile(string id, entity minig, int distance)
 	e.origin = minigame_tile_pos(id,7,7);
 	e.netname = id;
 	e.owner = minig;
-	e.__team = 0;
+	setteam(e, 0);
 	e.nmm_tile_distance = distance;
 	e.nmm_tile_hmill = strzone(nmm_tile_build_hmill(e));
 	e.nmm_tile_vmill = strzone(nmm_tile_build_vmill(e));
@@ -222,10 +222,10 @@ int nmm_server_event(entity minigame, string event, ...)
 		for ( int i = 0; i < 7; i++ )
 		{
 			e = msle_spawn(minigame,"minigame_board_piece");
-			e.__team = 1;
+			setteam(e, 1);
 			e.minigame_flags = NMM_PIECE_HOME;
 			e = msle_spawn(minigame,"minigame_board_piece");
-			e.__team = 2;
+			setteam(e, 2);
 			e.minigame_flags = NMM_PIECE_HOME;
 		}
 

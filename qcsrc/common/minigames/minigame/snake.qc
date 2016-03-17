@@ -98,7 +98,7 @@ void snake_new_mouse(entity minigame)
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");
-	piece.__team = 0;
+	setteam(piece, 0);
 	piece.netname = strzone(RandomSelection_chosen_string);
 	minigame_server_sendflags(piece,MINIG_SF_ALL);
 
@@ -178,7 +178,7 @@ void minigame_setup_snake(entity minigame, int pteam)
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");
-	piece.__team = pteam;
+	setteam(piece, pteam);
 	piece.netname = strzone(RandomSelection_chosen_string);
 	piece.cnt = 1;
 	piece.snake_next = world;

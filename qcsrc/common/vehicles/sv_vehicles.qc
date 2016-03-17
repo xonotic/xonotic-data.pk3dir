@@ -882,7 +882,7 @@ void vehicles_exit(bool eject)
 	_vehicle.tur_head.nodrawtoclient = world;
 
 	if(!teamplay)
-		_vehicle.__team = 0;
+		setteam(_vehicle, 0);
 
 	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES);
 	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
@@ -1212,7 +1212,7 @@ bool vehicle_initialize(entity veh, bool nodrop)
 	else { self.active = ACTIVE_ACTIVE; }
 
 	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
-		self.__team = 0;
+		setteam(self, 0);
 
 	if(self.mdl == "" || !self.mdl)
 		_setmodel(self, veh.model);

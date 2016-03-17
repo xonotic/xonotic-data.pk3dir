@@ -23,7 +23,7 @@ void trigger_relay_teamcheck_use()
 
 void trigger_relay_teamcheck_reset(entity this)
 {
-	this.__team = this.team_saved;
+	setteam(this, this.team_saved);
 }
 
 spawnfunc(trigger_relay_teamcheck)

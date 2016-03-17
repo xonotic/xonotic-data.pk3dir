@@ -136,7 +136,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 	{
 		player_pointer.owner = minigame_session;
 		player_pointer.minigame_players = player;
-		player_pointer.__team = mgteam;
+		setteam(player_pointer, mgteam);
 		player_pointer.list_next = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;

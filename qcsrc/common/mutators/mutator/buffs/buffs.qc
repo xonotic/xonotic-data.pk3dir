@@ -412,7 +412,7 @@ void buff_Init(entity ent)
 {SELFPARAM();
 	if(!cvar("g_buffs")) { remove(ent); return; }
 
-	if(!teamplay && ent.team) { ent.__team = 0; }
+	if(!teamplay && ent.team) { setteam(ent, 0); }
 
 	entity buff = buff_FirstFromFlags(self.buffs);
 
@@ -459,9 +459,9 @@ void buff_Init(entity ent)
 void buff_Init_Compat(entity ent, entity replacement)
 {
 	if (ent.spawnflags & 2)
-		ent.__team = NUM_TEAM_1;
+		setteam(ent, NUM_TEAM_1);
 	else if (ent.spawnflags & 4)
-		ent.__team = NUM_TEAM_2;
+		setteam(ent, NUM_TEAM_2);
 
 	ent.buffs = replacement.m_itemid;
 

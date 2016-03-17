@@ -19,7 +19,7 @@ CLASS(Gametype, Object)
     /** human readable name */
     ATTRIB(Gametype, message, string, string_null)
     /** does this gametype support teamplay? */
-    ATTRIB(Gametype, __team, bool, false)
+    ATTRIB(Gametype, m_teamplay, bool, false)
     /** game type defaults */
     ATTRIB(Gametype, model2, string, string_null)
     /** game type description */
@@ -40,7 +40,7 @@ CLASS(Gametype, Object)
         this.netname = g_name;
         this.mdl = sname;
         this.message = hname;
-        this.__team = gteamplay;
+        this.m_teamplay = gteamplay;
         this.m_mutators = mutators;
         this.model2 = defaults;
         this.gametype_description = gdescription;

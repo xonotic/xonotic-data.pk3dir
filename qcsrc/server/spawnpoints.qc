@@ -174,7 +174,7 @@ Starting point for a player in team one (Red).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team1)
 {
-	this.__team = NUM_TEAM_1; // red
+	setteam(this, NUM_TEAM_1); // red
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -184,7 +184,7 @@ Starting point for a player in team two (Blue).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team2)
 {
-	this.__team = NUM_TEAM_2; // blue
+	setteam(this, NUM_TEAM_2); // blue
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -193,7 +193,7 @@ Starting point for a player in team three (Yellow).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team3)
 {
-	this.__team = NUM_TEAM_3; // yellow
+	setteam(this, NUM_TEAM_3); // yellow
 	spawnfunc_info_player_deathmatch(this);
 }
 
@@ -203,7 +203,7 @@ Starting point for a player in team four (Purple).
 Keys: "angle" viewing angle when spawning. */
 spawnfunc(info_player_team4)
 {
-	this.__team = NUM_TEAM_4; // purple
+	setteam(this, NUM_TEAM_4); // purple
 	spawnfunc_info_player_deathmatch(this);
 }
 

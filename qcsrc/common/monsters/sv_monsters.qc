@@ -177,7 +177,7 @@ void monster_changeteam(entity ent, float newteam)
 {
 	if(!teamplay) { return; }
 
-	ent.__team = newteam;
+	setteam(ent, newteam);
 	ent.monster_attack = true; // new team, activate attacking
 	monster_setupcolors(ent);
 
@@ -185,7 +185,7 @@ void monster_changeteam(entity ent, float newteam)
 	{
 		WaypointSprite_UpdateTeamRadar(ent.sprite, RADARICON_DANGER, ((newteam) ? Team_ColorRGB(newteam) : '1 0 0'));
 
-		ent.sprite.__team = newteam;
+		setteam(ent.sprite, newteam);
 		ent.sprite.SendFlags |= 1;
 	}
 }
@@ -1313,7 +1313,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	if(this.monster_skill == MONSTER_SKILL_HARD) if(this.spawnflags & MONSTERSKILL_NOTHARD) { Monster_Remove(this); return false; }
 
 	if(this.team && !teamplay)
-		this.__team = 0;
+		setteam(this, 0);
 
 	if(!(this.spawnflags & MONSTERFLAG_SPAWNED)) // naturally spawned monster
 	if(!(this.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either

@@ -347,7 +347,7 @@ void reset_map(bool dorespawn)
 			WITH(entity, self, it, it.reset(it));
 			continue;
 		}
-		if (it.team_saved) it.__team = it.team_saved;
+		if (it.team_saved) setteam(it, it.team_saved);
 		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
 	});
 

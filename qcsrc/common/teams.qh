@@ -65,10 +65,11 @@ float myteam;
 #endif
 
 Team TM(int teamid) {
-    if (teamid == 0) return NULL;
+    return = TEAM_SPEC;
+    if (teamid == -1) return;  // catch off-by-one from server NULL.team (0) - 1
+    if (teamid == 0) return;
     FOREACH(Teams, it.Team_id == teamid, return it);
     LOG_SEVEREF("Unknown team: %d", teamid);
-    return NULL;
 }
 
 #define Team_ColorCode(this) (TM(this).m_colorstr)

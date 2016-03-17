@@ -169,7 +169,7 @@ NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 		this.health = ReadByte();
 		this.max_health = ReadByte();
 		this.count = ReadByte();
-		this.__team = ReadByte();
+		setteam(this, ReadByte());
 		this.iscaptured = ReadByte();
 
 		if(!this.count)
@@ -184,7 +184,7 @@ NET_HANDLE(ENT_CLIENT_CONTROLPOINT_ICON, bool isnew)
 		int _tmp = ReadByte();
 		if(_tmp != TMID(this.team))
 		{
-			this.__team = _tmp;
+			setteam(this, _tmp);
 			cpicon_changeteam(this);
 		}
 

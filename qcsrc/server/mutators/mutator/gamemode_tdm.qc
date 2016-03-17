@@ -54,7 +54,7 @@ spawnfunc(tdm_team)
 	if(!g_tdm || !self.cnt) { remove(self); return; }
 
 	self.classname = "tdm_team";
-	self.__team = self.cnt + 1;
+	setteam(self, self.cnt + 1);
 }
 
 // code from here on is just to support maps that don't have team entities

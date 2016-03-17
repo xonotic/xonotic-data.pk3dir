@@ -161,7 +161,7 @@ void Ent_WaypointSprite(entity this)
 
     if (sendflags & 1)
     {
-        this.__team = ReadByte();
+        setteam(this, ReadByte());
         this.rule = ReadByte();
     }
 
@@ -818,7 +818,7 @@ void WaypointSprite_UpdateRule(entity e, float t, float r)
 {
     // no check, as this is never called without doing an actual change (usually only once)
     e.rule = r;
-    e.__team = t;
+    setteam(e, t);
     e.SendFlags |= 1;
 }
 
@@ -1008,7 +1008,7 @@ entity WaypointSprite_Spawn(
     else
         setorigin(wp, ofs);
     wp.enemy = showto;
-    wp.__team = t;
+    setteam(wp, t);
     wp.owner = own;
     wp.currentammo = hideable;
     if (own)

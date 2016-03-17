@@ -267,7 +267,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 
 void func_breakable_reset(entity this)
 {
-	this.__team = this.team_saved;
+	setteam(this, this.team_saved);
 	func_breakable_look_restore();
 	if(this.spawnflags & 1)
 		func_breakable_behave_destroyed();

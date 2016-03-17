@@ -414,13 +414,13 @@ void bot_clientconnect(entity this)
 		bot_setnameandstuff();
 
 	if(self.bot_forced_team==1)
-		self.__team = NUM_TEAM_1;
+		setteam(self, NUM_TEAM_1);
 	else if(self.bot_forced_team==2)
-		self.__team = NUM_TEAM_2;
+		setteam(self, NUM_TEAM_2);
 	else if(self.bot_forced_team==3)
-		self.__team = NUM_TEAM_3;
+		setteam(self, NUM_TEAM_3);
 	else if(self.bot_forced_team==4)
-		self.__team = NUM_TEAM_4;
+		setteam(self, NUM_TEAM_4);
 	else
 		JoinBestTeam(self, false, true);
 

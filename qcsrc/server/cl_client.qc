@@ -215,7 +215,7 @@ void PutObserverInServer()
 	if (mutator_returnvalue) {
 	    // mutator prevents resetting teams+score
 	} else {
-		this.__team = -1;  // move this as it is needed to log the player spectating in eventlog
+		setteam(this, -1);  // move this as it is needed to log the player spectating in eventlog
         this.frags = FRAGS_SPECTATOR;
         PlayerScore_Clear(this);  // clear scores when needed
     }

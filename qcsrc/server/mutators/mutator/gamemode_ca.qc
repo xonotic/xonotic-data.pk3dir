@@ -246,7 +246,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 		it.killcount = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
 		{
-			it.__team = -1;
+			setteam(it, -1);
 			it.caplayer = 1;
 		}
 		if (it.caplayer)

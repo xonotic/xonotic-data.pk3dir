@@ -36,9 +36,9 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	// if this is a copied dead body, send the num of its player instead
 	// TODO: remove this field, read from model txt files
 	if(gibowner.classname == "body")
-		e.__team = etof(gibowner.enemy);
+		setteam(e, etof(gibowner.enemy));
 	else
-		e.__team = etof(gibowner);
+		setteam(e, etof(gibowner));
 
 	setorigin(e, org);
 	e.velocity = dir;

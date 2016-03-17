@@ -72,7 +72,7 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
     if(sf & BRG_SETUP)
     {
         self.cnt    = ReadByte();
-        self.__team = ReadByte();
+        setteam(self, ReadByte());
         self.cnt    = ReadByte();
 
         if(self.cnt)

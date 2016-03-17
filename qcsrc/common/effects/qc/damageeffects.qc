@@ -182,7 +182,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.owner = self;
 	e.cnt = time + life;
-	e.__team = _particleeffectnum(effectname);
+	setteam(e, _particleeffectnum(effectname));
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
 	self.total_damages += 1;

@@ -270,7 +270,7 @@ float SetTeam(entity o, int _team)
 	{
 		if (!o.has_team)
 		{
-			o.__team = _team;
+		    setteam(o, _team);
 			tm = GetTeam(_team, true);
 			tm.team_size += 1;
 			o.has_team = 1;
@@ -280,7 +280,7 @@ float SetTeam(entity o, int _team)
 		{
 			tm = GetTeam(TMID(o.team), false);
 			tm.team_size -= 1;
-			o.__team = _team;
+			setteam(o, _team);
 			tm = GetTeam(_team, true);
 			tm.team_size += 1;
 			return true;
@@ -472,7 +472,7 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 	int i;
 	entity o;
 
-	this.__team = ReadByte();
+	setteam(this, ReadByte());
 	o = this.owner = GetTeam(TMID(this.team), true); // these team numbers can always be trusted
 
     int sf, lf;
