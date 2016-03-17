@@ -5,7 +5,7 @@ PROGS_OUT ?= $(CURDIR)/..
 WORKDIR ?= ../.tmp
 
 QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='*')
-VER = $(QCCFLAGS_WATERMARK)
+VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
 NDEBUG ?= 1
 BUILD_MOD ?= 0
 
