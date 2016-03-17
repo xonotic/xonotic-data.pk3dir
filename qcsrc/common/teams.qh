@@ -64,34 +64,21 @@ float teamplay;
 float myteam;
 #endif
 
-string Team_ColorCode(int teamid)
-{
-    Team t = TEAM_SPEC;
-    FOREACH(Teams, it.team == teamid, t = it; break);
-	return t.m_colorstr;
+Team TM(int teamid) {
+    if (teamid == 0) return NULL;
+    FOREACH(Teams, it.team == teamid, return it);
+    LOG_SEVEREF("Unknown team: %d", teamid);
+    return NULL;
 }
 
-vector Team_ColorRGB(int teamid)
-{
-    Team t = TEAM_SPEC;
-    FOREACH(Teams, it.team == teamid, t = it; break);
-	return t.m_color;
-}
+#define Team_ColorCode(this) (TM(this).m_colorstr)
 
-string Team_ColorName(int teamid)
-{
-    Team t = TEAM_SPEC;
-    FOREACH(Teams, it.team == teamid, t = it; break);
-	return t.m_name_nonls;
-}
+#define Team_ColorRGB(this) (TM(this).m_color)
+
+#define Team_ColorName(this) (TM(this).m_name_nonls)
 
 // used for replacement in filenames or such where the name CANNOT be allowed to be translated
-string Static_Team_ColorName(int teamid)
-{
-    Team t = TEAM_SPEC;
-    FOREACH(Teams, it.team == teamid, t = it; break);
-	return t.m_name;
-}
+#define Static_Team_ColorName(this) (TM(this).m_name)
 
 int Team_ColorToTeam(string team_color)
 {
