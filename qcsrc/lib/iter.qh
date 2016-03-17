@@ -1,12 +1,18 @@
 #pragma once
 
+#if 1
+#define ITER_CONST const
+#else
+#define ITER_CONST
+#endif
+
 #define FOREACH_ARRAY(arr, start, end, cond, body) \
 	MACRO_BEGIN \
 	{ \
 		for (int _i = start; _i < end; ++_i) \
 		{ \
 			const noref int i = _i; \
-			const noref entity it = arr[i]; \
+			ITER_CONST noref entity it = arr[i]; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
@@ -20,7 +26,7 @@
 		for (entity _it = list##_first; _it; (_it = _it.next, ++_i)) \
 		{ \
 			const noref int i = _i; \
-			const noref entity it = _it; \
+			ITER_CONST noref entity it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
@@ -88,7 +94,7 @@
 		for (entity _it = NULL; (_it = nextent(_it)); ++_i) \
 		{ \
 			const noref int i = _i; \
-			const noref entity it = _it; \
+			ITER_CONST noref entity it = _it; \
 			if (cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END

@@ -33,7 +33,7 @@ const string STR_OBSERVER = "observer";
 		for(int _i = 1; _i <= maxclients; ++_i) \
 		{ \
 			const noref int i = _i; \
-			const noref entity it = ftoe(i); \
+			ITER_CONST noref entity it = ftoe(i); \
 			if(cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
