@@ -77,6 +77,13 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 #define new_pure(class) _new(class, true)
 #define spawn() __spawn("entity", __FILE__ ":" STR(__LINE__), false)
 
+#define delete(this) MACRO_BEGIN { \
+    entity _this = (this); \
+    void(entity) _dtor = _this.dtor; \
+    if (_dtor) _dtor(_this); else remove(_this); \
+    /* this = NULL; */  \
+} MACRO_END
+
 entity _clearentity_ent;
 STATIC_INIT(clearentity)
 {
@@ -187,6 +194,16 @@ STATIC_INIT(RegisterClasses)
 	} \
 	STATIC_METHOD(cname, name, prototype)
 
+#define DESTRUCTOR(cname) \
+	STATIC_METHOD(cname, dtorimpl, void(cname this)); \
+    METHOD(cname, dtor, void(cname this)) \
+    { \
+        METHOD_REFERENCE(cname, dtorimpl)(this); \
+        entity super = SUPER(cname); \
+        if (super != cname##_vtbl) super.dtor(this); \
+    } \
+	STATIC_METHOD(cname, dtorimpl, void(cname this))
+
 #define ATTRIB(cname, name, type, val)      \
 	class(cname).type name;                \
 	INIT(cname) \
@@ -219,7 +236,9 @@ STATIC_INIT(RegisterClasses)
 #define spawn_1(this)
 #define _vtbl NULL
 CLASS(Object, );
-	METHOD(Object, describe, string(entity this))
+    DESTRUCTOR(Object) { remove(this); }
+    #define remove(this) delete(this)
+	METHOD(Object, describe, string(Object this))
 	{
 		string s = _("No description");
 		if (cvar("developer"))
@@ -232,7 +251,7 @@ CLASS(Object, );
 		}
 		return s;
 	}
-	METHOD(Object, display, void(entity this, void(string name, string icon) returns))
+	METHOD(Object, display, void(Object this, void(string name, string icon) returns))
 	{
 		returns(sprintf("entity %i", this), "nopreview_map");
 	}
