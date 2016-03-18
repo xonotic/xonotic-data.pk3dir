@@ -51,12 +51,16 @@ void Announcer_Countdown()
 		if(roundstarttime == starttime)
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
-			Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded));
+			Notification annce_num = Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded);
+			if(annce_num != NULL)
+				Local_Notification(MSG_ANNCE, annce_num);
 		}
 		else
 		{
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
-			Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_GAMESTART, countdown_rounded));
+			Notification annce_num = Announcer_PickNumber(CNT_GAMESTART, countdown_rounded);
+			if(annce_num != NULL)		
+				Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_GAMESTART, countdown_rounded));
 		}
 
 		this.nextthink = (starttime - (countdown - 1));
