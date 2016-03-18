@@ -24,7 +24,7 @@
 		 */
 		void globalsound(int channel, entity from, entity gs, float r, int chan, float _vol, float _atten)
 		{
-			assert(IS_PLAYER(from), eprint(from));
+			//assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			if (!autocvar_g_debug_globalsounds) {
 				string sample = GlobalSound_sample(gs.m_globalsoundstr, r);
@@ -59,10 +59,10 @@
 		*/
 		void playersound(int channel, entity from, entity ps, float r, int chan, float _vol, float _atten)
 		{
-			assert(IS_PLAYER(from), eprint(from));
+			//assert(IS_PLAYER(from), eprint(from));
 			if (channel == MSG_ONE && !IS_REAL_CLIENT(msg_entity)) return;
 			if (!autocvar_g_debug_globalsounds) {
-				UpdatePlayerSounds(from);
+				//UpdatePlayerSounds(from);
 				string s = from.(ps.m_playersoundfld);
 				string sample = GlobalSound_sample(s, r);
 				switch (channel) {
@@ -304,7 +304,12 @@
 			this.skin_for_playersound = this.skin;
 			ClearPlayerSounds(this);
 			LoadPlayerSounds(this, "sound/player/default.sounds", true);
-			if (this.model == "null" || autocvar_g_debug_defaultsounds) return;
+			if (this.model == "null"
+			#ifdef SVQC
+			    && autocvar_g_debug_globalsounds
+			#endif
+			 ) return;
+			if (autocvar_g_debug_defaultsounds) return;
 			if (LoadPlayerSounds(this, get_model_datafilename(this.model, this.skin, "sounds"), false)) return;
 			LoadPlayerSounds(this, get_model_datafilename(this.model, 0, "sounds"), true);
 		}

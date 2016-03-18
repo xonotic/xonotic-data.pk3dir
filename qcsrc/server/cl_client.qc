@@ -160,6 +160,8 @@ void setplayermodel(entity e, string modelname)
 	precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel();
+	if(!autocvar_g_debug_globalsounds)
+		UpdatePlayerSounds(e);
 }
 
 void FixPlayermodel(entity player);
@@ -192,6 +194,12 @@ void PutObserverInServer()
         }
         // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
         // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+        if(!autocvar_g_debug_globalsounds)
+        {
+        	// needed for player sounds
+        	this.model = "";
+	        FixPlayermodel(this);
+        } 
         setmodel(this, MDL_Null);
         setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
@@ -382,6 +390,8 @@ void FixPlayermodel(entity player)
 	if(chmdl || oldskin != player.skin) // model or skin has changed
 	{
 		player.species = player_getspecies(player); // update species
+		if(!autocvar_g_debug_globalsounds)
+			UpdatePlayerSounds(player); // update skin sounds
 	}
 
 	if(!teamplay)
