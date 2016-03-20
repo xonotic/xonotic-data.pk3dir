@@ -2,9 +2,18 @@ cmake_minimum_required(VERSION 2.8.11)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 project(xonotic-data LANGUAGES ASM)
 
-add_definitions(-DWATERMARK=\"12345\")
-add_definitions(-DNDEBUG=1)
 include_directories(qcsrc)
+
+add_definitions(-DNDEBUG=1)
+
+find_package(Git REQUIRED)
+execute_process(
+        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty=*
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_DESC
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+add_definitions(-DWATERMARK=\"${GIT_DESC}\")
 
 set_source_files_properties(
         qcsrc/client/progs.inc
@@ -17,9 +26,30 @@ set_source_files_properties(
 
 add_executable(csprogs qcsrc/client/progs.inc)
 target_compile_definitions(csprogs PRIVATE -DCSQC)
+add_dependencies(csprogs gmqcc)
 
 add_executable(progs qcsrc/server/progs.inc)
 target_compile_definitions(progs PRIVATE -DSVQC)
+add_dependencies(progs gmqcc)
 
 add_executable(menu qcsrc/menu/progs.inc)
 target_compile_definitions(menu PRIVATE -DMENUQC)
+add_dependencies(menu gmqcc)
+
+function(pack prog)
+    add_custom_target(${prog}.pk3
+            DEPENDS ${prog}-${GIT_DESC}.pk3
+            )
+    add_custom_command(OUTPUT ${prog}-${GIT_DESC}.pk3
+            DEPENDS ${prog}
+            COMMAND ${CMAKE_COMMAND} -E echo "http://xonotic.org" > "${prog}-${GIT_DESC}.txt"
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE_DIR:${prog}>/${prog}.dat" "${prog}-${GIT_DESC}.dat"
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE_DIR:${prog}>/${prog}.lno" "${prog}-${GIT_DESC}.lno"
+            COMMAND ${CMAKE_COMMAND} -E tar "cfv" "${prog}-${GIT_DESC}.pk3" --format=zip
+            "${prog}-${GIT_DESC}.txt"
+            "${prog}-${GIT_DESC}.dat"
+            "${prog}-${GIT_DESC}.lno"
+             VERBATIM
+            )
+endfunction()
+pack(csprogs)
