@@ -424,7 +424,7 @@ MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
 	{
 		if(!g_race_qualifying)
 		{
-			ret_float = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
+			ret_float = WinningCondition_Race(checkrules_fraglimit);
 			return true;
 		}
 		else if(g_race_qualifying == 2)
