@@ -36,6 +36,29 @@ add_executable(menu qcsrc/menu/progs.inc)
 target_compile_definitions(menu PRIVATE -DMENUQC)
 add_dependencies(menu gmqcc)
 
+function(set_prelude target prelude)
+    get_target_property(MY_PROJECT_SOURCES target SOURCES)
+    foreach (source IN LISTS MY_PROJECT_SOURCES)
+        set_property(
+                SOURCE ${source}
+                APPEND PROPERTY COMPILE_FLAGS
+                "-include ${PROJECT_SOURCE_DIR}/${prelude}"
+        )
+    endforeach ()
+endfunction()
+# set_prelude(csprogs qcsrc/lib/_all.inc)
+
+function(copy prog)
+    add_custom_command(TARGET ${prog} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE_DIR:${prog}>/${prog}.dat" "${prog}.dat"
+            COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE_DIR:${prog}>/${prog}.lno" "${prog}.lno"
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+            VERBATIM)
+endfunction()
+copy(csprogs)
+copy(progs)
+copy(menu)
+
 function(pack prog)
     add_custom_target(${prog}.pk3
             DEPENDS ${prog}-${GIT_DESC}.pk3
@@ -49,7 +72,7 @@ function(pack prog)
             "${prog}-${GIT_DESC}.txt"
             "${prog}-${GIT_DESC}.dat"
             "${prog}-${GIT_DESC}.lno"
-             VERBATIM
+            VERBATIM
             )
 endfunction()
 pack(csprogs)
