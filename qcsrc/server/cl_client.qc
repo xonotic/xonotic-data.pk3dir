@@ -989,8 +989,8 @@ void ClientConnect()
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
 	assert(player_count >= 0, player_count = 0);
+	TRANSMUTE(Client, this);
 	this.classname = "player_joining";
-	this.flags = FL_CLIENT;
 
 #ifdef WATERMARK
 	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
