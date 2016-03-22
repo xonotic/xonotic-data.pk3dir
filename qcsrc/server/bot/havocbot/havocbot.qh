@@ -35,7 +35,7 @@
 
 void havocbot_ai(entity this);
 void havocbot_aim(entity this);
-void havocbot_setupbot();
+void havocbot_setupbot(entity this);
 void havocbot_movetogoal(entity this);
 void havocbot_chooserole();
 void havocbot_chooseenemy(entity this);

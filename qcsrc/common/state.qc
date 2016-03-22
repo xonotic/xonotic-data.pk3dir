@@ -55,7 +55,7 @@ void ClientState_attach(entity this)
 	bot_clientconnect(this);
 }
 
-void bot_clientdisconnect();
+void bot_clientdisconnect(entity this);
 void W_HitPlotClose(entity this);
 void anticheat_report(entity this);
 void playerdemo_shutdown();
@@ -71,7 +71,7 @@ void ClientState_detach(entity this)
 
     GetCvars(-1);  // free cvars
 
-    bot_clientdisconnect();
+    bot_clientdisconnect(this);
 
     W_HitPlotClose(this);
     anticheat_report(this);

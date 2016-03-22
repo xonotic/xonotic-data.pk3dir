@@ -70,7 +70,7 @@ void navigation_routerating(entity e, float f, float rangebias);
 void navigation_poptouchedgoals();
 void navigation_goalrating_start();
 void navigation_goalrating_end();
-void navigation_unstuck();
+void navigation_unstuck(entity this);
 
 void botframe_updatedangerousobjects(float maxupdate);
 

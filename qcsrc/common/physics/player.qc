@@ -1358,7 +1358,7 @@ void PM_Main(entity this)
 	{
 		if (playerdemo_read(this))
 			return;
-		WITH(entity, self, this, bot_think());
+		bot_think(this);
 	}
 #endif
 

@@ -296,10 +296,10 @@ void waypoint_schedulerelink(entity wp)
 // spawnfunc_waypoint map entity
 spawnfunc(waypoint)
 {
-	setorigin(self, self.origin);
+	setorigin(this, this.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
-	waypoint_clearlinks(self);
-	//waypoint_schedulerelink(self);
+	waypoint_clearlinks(this);
+	//waypoint_schedulerelink(this);
 }
 
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink

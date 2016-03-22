@@ -1259,13 +1259,13 @@ float havocbot_resetgoal(entity this)
 	return CMD_STATUS_FINISHED;
 }
 
-void havocbot_setupbot()
-{SELFPARAM();
-	self.bot_ai = havocbot_ai;
-	self.cmd_moveto = havocbot_moveto;
-	self.cmd_resetgoal = havocbot_resetgoal;
+void havocbot_setupbot(entity this)
+{
+	this.bot_ai = havocbot_ai;
+	this.cmd_moveto = havocbot_moveto;
+	this.cmd_resetgoal = havocbot_resetgoal;
 
-	havocbot_chooserole();
+	WITH(entity, self, this, havocbot_chooserole());
 }
 
 vector havocbot_dodge()
