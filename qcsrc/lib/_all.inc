@@ -25,7 +25,21 @@
 	#include <dpdefs/keycodes.qh>
 #endif
 
+#include "bool.qh"
+#include "int.qh"
+
 #include "macro.qh"
+
+#ifndef NDEBUG
+    #define TC(T, sym) MACRO_BEGIN \
+        if (!is_##T(sym)) LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
+    MACRO_END
+#else
+    #define TC(T, sym) MACRO_BEGIN MACRO_END
+#endif
+
+bool is_int(float f) { return f == f | 0; }
+bool is_bool(float f) { return f == true || f == false; }
 
 #include "warpzone/mathlib.qc"
 
@@ -33,7 +47,6 @@
 #include "angle.qc"
 #include "arraylist.qh"
 #include "bits.qh"
-#include "bool.qh"
 #include "color.qh"
 #include "counting.qh"
 #include "cvar.qh"
@@ -43,7 +56,6 @@
 #include "file.qh"
 #include "functional.qh"
 #include "i18n.qh"
-#include "int.qh"
 #include "iter.qh"
 #include "lazy.qh"
 #include "linkedlist.qh"

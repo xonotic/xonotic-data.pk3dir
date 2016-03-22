@@ -24,11 +24,7 @@ CLASS(PlayerState, Object)
 ENDCLASS(PlayerState)
 
 .PlayerState _ps;
-#if NDEBUG
-	#define PS(this) (this._ps)
-#else
-	PlayerState PS(entity this) { assert(IS_CLIENT(this)); return this._ps; }
-#endif
+#define PS(this) (this._ps)
 
 // TODO: renew on death
 void PlayerState_attach(entity this);

@@ -155,6 +155,7 @@ STATIC_INIT(RegisterClasses)
 #define CLASS(cname, base)                  \
 	entityclass(cname, base);               \
 	class(cname).bool instanceOf##cname;   \
+    bool is_##cname(entity e) { return e.instanceOf##cname; } \
 	VTBL(cname, base)                       \
 	INIT_STATIC(cname) \
 	{                    \

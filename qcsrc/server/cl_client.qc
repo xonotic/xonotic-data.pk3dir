@@ -1540,6 +1540,8 @@ spectate mode routines
 
 void SpectateCopy(entity this, entity spectatee)
 {
+    TC(Client, this); TC(Client, spectatee);
+
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
