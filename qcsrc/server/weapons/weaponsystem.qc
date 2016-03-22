@@ -152,7 +152,8 @@ void CL_ExteriorWeaponentity_Think()
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
 	else this.alpha = 1;
 
-	this.glowmod = weaponentity_glowmod(PS(this.owner).m_weapon, this.owner.clientcolors);
+    Weapon wep = PS(this.owner).m_weapon;
+	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner.clientcolors);
 	this.colormap = this.owner.colormap;
 
 	CSQCMODEL_AUTOUPDATE(this);
