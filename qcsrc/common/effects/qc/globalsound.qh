@@ -1,6 +1,11 @@
 #ifndef GLOBALSOUND_H
 #define GLOBALSOUND_H
 
+#ifdef SVQC
+	/** Use new sound handling. TODO: use when sounds play correctly on clients */
+	bool autocvar_g_debug_globalsounds = false;
+#endif
+
 // player sounds, voice messages
 
 .string m_playersoundstr;
