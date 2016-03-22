@@ -468,9 +468,8 @@ void rc_SetLimits()
 	qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 	fraglimit_override = autocvar_g_race_laps_limit;
 	leadlimit_override = 0; // currently not supported by race
-	timelimit_override = -1; // use default if we don't set it below
+	timelimit_override = autocvar_timelimit_override;
 
-	// we need to find out the correct value for g_race_qualifying
 	float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
 
 	if(autocvar_g_campaign)
@@ -478,20 +477,20 @@ void rc_SetLimits()
 		g_race_qualifying = 1;
 		independent_players = 1;
 	}
-	else if(!autocvar_g_campaign && want_qualifying)
+	else if(want_qualifying)
 	{
 		g_race_qualifying = 2;
 		independent_players = 1;
-		race_fraglimit = (race_fraglimit >= 0) ? fraglimit_override : autocvar_fraglimit;
-		race_leadlimit = (race_leadlimit >= 0) ? leadlimit_override : autocvar_leadlimit;
-		race_timelimit = (race_timelimit >= 0) ? timelimit_override : autocvar_timelimit;
+		race_fraglimit = (fraglimit_override >= 0) ? fraglimit_override : autocvar_fraglimit;
+		race_leadlimit = (leadlimit_override >= 0) ? leadlimit_override : autocvar_leadlimit;
+		race_timelimit = (timelimit_override >= 0) ? timelimit_override : autocvar_timelimit;
+		qualifying_override = (qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
-		timelimit_override = autocvar_g_race_qualifying_timelimit;
+		timelimit_override = qualifying_override;
 	}
 	else
 		g_race_qualifying = 0;
-
 	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
 }
 

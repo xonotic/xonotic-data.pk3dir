@@ -562,6 +562,18 @@ void __init_dedicated_server_shutdown() {
 	MapInfo_Shutdown();
 }
 
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
+{
+	if(!autocvar_g_campaign)
+	{
+		if(fraglimit_override >= 0) cvar_set("fraglimit", ftos(fraglimit_override));
+		if(timelimit_override >= 0) cvar_set("timelimit", ftos(timelimit_override));
+		if(leadlimit_override >= 0) cvar_set("leadlimit", ftos(leadlimit_override));
+		if(qualifying_override >= 0) cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
+	}
+	limits_are_set = true;
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
@@ -717,6 +729,9 @@ spawnfunc(worldspawn)
 	static_init_precache();
 	readlevelcvars();
 	GrappleHookInit();
+
+	if(!limits_are_set)
+		SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
