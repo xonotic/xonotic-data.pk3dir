@@ -57,7 +57,7 @@ void ClientState_attach(entity this)
 
 void bot_clientdisconnect();
 void W_HitPlotClose(entity this);
-void anticheat_report();
+void anticheat_report(entity this);
 void playerdemo_shutdown();
 void entcs_detach(entity this);
 void accuracy_free(entity this);
@@ -74,7 +74,7 @@ void ClientState_detach(entity this)
     bot_clientdisconnect();
 
     W_HitPlotClose(this);
-    anticheat_report();
+    anticheat_report(this);
     playerdemo_shutdown();
     entcs_detach(this);
     accuracy_free(self);

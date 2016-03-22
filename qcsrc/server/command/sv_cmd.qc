@@ -230,7 +230,7 @@ void GameCommand_anticheat(float request, float argc)
 
 			if (accepted > 0)
 			{
-				WITH(entity, self, client, anticheat_report());
+				anticheat_report(client);
 				return;
 			}
 			else

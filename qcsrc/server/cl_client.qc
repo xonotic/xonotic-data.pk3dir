@@ -1586,7 +1586,7 @@ void SpectateCopy(entity this, entity spectatee)
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
 
-    anticheat_spectatecopy(spectatee);
+    anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
@@ -2046,7 +2046,7 @@ void PlayerPreThink ()
 	if(frametime)
 	{
 		// physics frames: update anticheat stuff
-		anticheat_prethink();
+		anticheat_prethink(self);
 	}
 
 	if(blockSpectators && frametime)
