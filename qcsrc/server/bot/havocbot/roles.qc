@@ -158,13 +158,11 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 	if(self.waterlevel>WATERLEVEL_WETFEET)
 		return;
 
-	float distance;
 	int t;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && bot_shouldattack(self, it), LAMBDA(
 		// TODO: Merge this logic with the bot_shouldattack function
-		distance = vlen(it.origin - org);
-		if (distance < 100 || distance > sradius)
+		if(vdist(it.origin - org, <, 100) || vdist(it.origin - org, >, sradius))
 			continue;
 
 		// rate only visible enemies

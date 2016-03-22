@@ -42,8 +42,8 @@ const int BOT_CMD_COUNTER 		= 24;	// Update this value if you add/remove a comma
 
 // NOTE: Following commands should be implemented on the bot ai
 //		 If a new command should be handled by the target ai(s) please declare it here
-.float(vector) cmd_moveto;
-.float() cmd_resetgoal;
+.float(entity, vector) cmd_moveto;
+.float(entity) cmd_resetgoal;
 
 //
 const int BOT_CMD_PARAMETER_NONE = 0;
@@ -76,6 +76,6 @@ void bot_resetqueues();
 void bot_queuecommand(entity bot, string cmdstring);
 void bot_cmdhelp(string scmd);
 void bot_list_commands();
-float bot_execute_commands();
+float bot_execute_commands(entity this);
 entity find_bot_by_name(string name);
 entity find_bot_by_number(float number);

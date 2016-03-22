@@ -444,7 +444,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep))
                     selfdamage = selfdamage + d;
                 else if(targ.team == self.team && teamplay)
                     teamdamage = teamdamage + d;
-                else if(bot_shouldattack(targ))
+                else if(bot_shouldattack(self, targ))
                     enemydamage = enemydamage + d;
                 targ = targ.chain;
             }

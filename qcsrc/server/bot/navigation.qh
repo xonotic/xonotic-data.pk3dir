@@ -53,15 +53,15 @@ void debugresetnodes();
 void debugnode(vector node);
 void debugnodestatus(vector position, float status);
 
-void debuggoalstack();
+void debuggoalstack(entity this);
 
 float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
 
 float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist);
-float navigation_routetogoal(entity e, vector startposition);
+float navigation_routetogoal(entity this, entity e, vector startposition);
 
-void navigation_clearroute();
-void navigation_pushroute(entity e);
+void navigation_clearroute(entity this);
+void navigation_pushroute(entity this, entity e);
 void navigation_poproute();
 void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vector p);
 void navigation_markroutes(entity fixed_source_waypoint);

@@ -790,8 +790,8 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 	waypoint_spawnforteleporter_boxes(e, e.absmin, e.absmax, destination, destination, timetaken);
 }
 
-entity waypoint_spawnpersonal(vector position)
-{SELFPARAM();
+entity waypoint_spawnpersonal(entity this, vector position)
+{
 	entity w;
 
 	// drop the waypoint to a proper location:
@@ -802,7 +802,7 @@ entity waypoint_spawnpersonal(vector position)
 	w = waypoint_spawn(position, position, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_PERSONAL);
 	w.nearestwaypoint = world;
 	w.nearestwaypointtimeout = 0;
-	w.owner = self;
+	w.owner = this;
 
 	waypoint_schedulerelink(w);
 

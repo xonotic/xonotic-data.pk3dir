@@ -225,42 +225,42 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 /////////////////////////////////////////////////////////////////////////////
 
 // completely empty the goal stack, used when deciding where to go
-void navigation_clearroute()
-{SELFPARAM();
-	//print("bot ", etos(self), " clear\n");
-	self.navigation_hasgoals = false;
-	self.goalcurrent = world;
-	self.goalstack01 = world;
-	self.goalstack02 = world;
-	self.goalstack03 = world;
-	self.goalstack04 = world;
-	self.goalstack05 = world;
-	self.goalstack06 = world;
-	self.goalstack07 = world;
-	self.goalstack08 = world;
-	self.goalstack09 = world;
-	self.goalstack10 = world;
-	self.goalstack11 = world;
-	self.goalstack12 = world;
-	self.goalstack13 = world;
-	self.goalstack14 = world;
-	self.goalstack15 = world;
-	self.goalstack16 = world;
-	self.goalstack17 = world;
-	self.goalstack18 = world;
-	self.goalstack19 = world;
-	self.goalstack20 = world;
-	self.goalstack21 = world;
-	self.goalstack22 = world;
-	self.goalstack23 = world;
-	self.goalstack24 = world;
-	self.goalstack25 = world;
-	self.goalstack26 = world;
-	self.goalstack27 = world;
-	self.goalstack28 = world;
-	self.goalstack29 = world;
-	self.goalstack30 = world;
-	self.goalstack31 = world;
+void navigation_clearroute(entity this)
+{
+	//print("bot ", etos(this), " clear\n");
+	this.navigation_hasgoals = false;
+	this.goalcurrent = world;
+	this.goalstack01 = world;
+	this.goalstack02 = world;
+	this.goalstack03 = world;
+	this.goalstack04 = world;
+	this.goalstack05 = world;
+	this.goalstack06 = world;
+	this.goalstack07 = world;
+	this.goalstack08 = world;
+	this.goalstack09 = world;
+	this.goalstack10 = world;
+	this.goalstack11 = world;
+	this.goalstack12 = world;
+	this.goalstack13 = world;
+	this.goalstack14 = world;
+	this.goalstack15 = world;
+	this.goalstack16 = world;
+	this.goalstack17 = world;
+	this.goalstack18 = world;
+	this.goalstack19 = world;
+	this.goalstack20 = world;
+	this.goalstack21 = world;
+	this.goalstack22 = world;
+	this.goalstack23 = world;
+	this.goalstack24 = world;
+	this.goalstack25 = world;
+	this.goalstack26 = world;
+	this.goalstack27 = world;
+	this.goalstack28 = world;
+	this.goalstack29 = world;
+	this.goalstack30 = world;
+	this.goalstack31 = world;
 }
 
 // add a new goal at the beginning of the stack
@@ -269,41 +269,41 @@ void navigation_clearroute()
 // next-closest WP on the shortest path to the WP
 // That means, if the stack overflows, the bot will know how to do the FIRST 32
 // steps to the goal, and then recalculate the path.
-void navigation_pushroute(entity e)
-{SELFPARAM();
-	//print("bot ", etos(self), " push ", etos(e), "\n");
-	self.goalstack31 = self.goalstack30;
-	self.goalstack30 = self.goalstack29;
-	self.goalstack29 = self.goalstack28;
-	self.goalstack28 = self.goalstack27;
-	self.goalstack27 = self.goalstack26;
-	self.goalstack26 = self.goalstack25;
-	self.goalstack25 = self.goalstack24;
-	self.goalstack24 = self.goalstack23;
-	self.goalstack23 = self.goalstack22;
-	self.goalstack22 = self.goalstack21;
-	self.goalstack21 = self.goalstack20;
-	self.goalstack20 = self.goalstack19;
-	self.goalstack19 = self.goalstack18;
-	self.goalstack18 = self.goalstack17;
-	self.goalstack17 = self.goalstack16;
-	self.goalstack16 = self.goalstack15;
-	self.goalstack15 = self.goalstack14;
-	self.goalstack14 = self.goalstack13;
-	self.goalstack13 = self.goalstack12;
-	self.goalstack12 = self.goalstack11;
-	self.goalstack11 = self.goalstack10;
-	self.goalstack10 = self.goalstack09;
-	self.goalstack09 = self.goalstack08;
-	self.goalstack08 = self.goalstack07;
-	self.goalstack07 = self.goalstack06;
-	self.goalstack06 = self.goalstack05;
-	self.goalstack05 = self.goalstack04;
-	self.goalstack04 = self.goalstack03;
-	self.goalstack03 = self.goalstack02;
-	self.goalstack02 = self.goalstack01;
-	self.goalstack01 = self.goalcurrent;
-	self.goalcurrent = e;
+void navigation_pushroute(entity this, entity e)
+{
+	//print("bot ", etos(this), " push ", etos(e), "\n");
+	this.goalstack31 = this.goalstack30;
+	this.goalstack30 = this.goalstack29;
+	this.goalstack29 = this.goalstack28;
+	this.goalstack28 = this.goalstack27;
+	this.goalstack27 = this.goalstack26;
+	this.goalstack26 = this.goalstack25;
+	this.goalstack25 = this.goalstack24;
+	this.goalstack24 = this.goalstack23;
+	this.goalstack23 = this.goalstack22;
+	this.goalstack22 = this.goalstack21;
+	this.goalstack21 = this.goalstack20;
+	this.goalstack20 = this.goalstack19;
+	this.goalstack19 = this.goalstack18;
+	this.goalstack18 = this.goalstack17;
+	this.goalstack17 = this.goalstack16;
+	this.goalstack16 = this.goalstack15;
+	this.goalstack15 = this.goalstack14;
+	this.goalstack14 = this.goalstack13;
+	this.goalstack13 = this.goalstack12;
+	this.goalstack12 = this.goalstack11;
+	this.goalstack11 = this.goalstack10;
+	this.goalstack10 = this.goalstack09;
+	this.goalstack09 = this.goalstack08;
+	this.goalstack08 = this.goalstack07;
+	this.goalstack07 = this.goalstack06;
+	this.goalstack06 = this.goalstack05;
+	this.goalstack05 = this.goalstack04;
+	this.goalstack04 = this.goalstack03;
+	this.goalstack03 = this.goalstack02;
+	this.goalstack02 = this.goalstack01;
+	this.goalstack01 = this.goalcurrent;
+	this.goalcurrent = e;
 }
 
 // remove first goal from stack
@@ -854,26 +854,26 @@ void navigation_routerating(entity e, float f, float rangebias)
 }
 
 // adds an item to the the goal stack with the path to a given item
-float navigation_routetogoal(entity e, vector startposition)
-{SELFPARAM();
-	self.goalentity = e;
+bool navigation_routetogoal(entity this, entity e, vector startposition)
+{
+	this.goalentity = e;
 
 	// if there is no goal, just exit
 	if (!e)
 		return false;
 
-	self.navigation_hasgoals = true;
+	this.navigation_hasgoals = true;
 
 	// put the entity on the goal stack
 	//print("routetogoal ", etos(e), "\n");
-	navigation_pushroute(e);
+	navigation_pushroute(this, e);
 
 	if(g_jetpack)
-	if(e==self.navigation_jetpack_goal)
+	if(e==this.navigation_jetpack_goal)
 		return true;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(self, startposition, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
+	if (tracewalk(this, startposition, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
 		return true;
 
 	// see if there are waypoints describing a path to the item
@@ -888,7 +888,7 @@ float navigation_routetogoal(entity e, vector startposition)
 	for (;;)
 	{
 		// add the spawnfunc_waypoint to the path
-		navigation_pushroute(e);
+		navigation_pushroute(this, e);
 		e = e.enemy;
 
 		if(e==world)
@@ -994,7 +994,7 @@ void navigation_goalrating_start()
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
 	self.navigation_hasgoals = false;
-	navigation_clearroute();
+	navigation_clearroute(self);
 	navigation_bestgoal = world;
 	navigation_markroutes(world);
 }
@@ -1005,7 +1005,7 @@ void navigation_goalrating_end()
 	if(self.aistatus & AI_STATUS_STUCK)
 		return;
 
-	navigation_routetogoal(navigation_bestgoal, self.origin);
+	navigation_routetogoal(self, navigation_bestgoal, self.origin);
 	LOG_DEBUG(strcat("best goal ", self.goalcurrent.classname , "\n"));
 
 	// If the bot got stuck then try to reach the farthest waypoint
@@ -1098,7 +1098,7 @@ void navigation_unstuck()
 			if (bot_waypoint_queue_bestgoal)
 			{
 				LOG_DEBUG(strcat(self.netname, " stuck, reachable waypoint found, heading to it\n"));
-				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
+				navigation_routetogoal(self, bot_waypoint_queue_bestgoal, self.origin);
 				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 				self.aistatus &= ~AI_STATUS_STUCK;
 			}
@@ -1200,61 +1200,61 @@ void debugnodestatus(vector position, float status)
 .vector lastposition;
 
 // Debug the goal stack visually
-void debuggoalstack()
-{SELFPARAM();
+void debuggoalstack(entity this)
+{
 	entity goal;
 	vector org, go;
 
-	if(self.goalcounter==0)goal=self.goalcurrent;
-	else if(self.goalcounter==1)goal=self.goalstack01;
-	else if(self.goalcounter==2)goal=self.goalstack02;
-	else if(self.goalcounter==3)goal=self.goalstack03;
-	else if(self.goalcounter==4)goal=self.goalstack04;
-	else if(self.goalcounter==5)goal=self.goalstack05;
-	else if(self.goalcounter==6)goal=self.goalstack06;
-	else if(self.goalcounter==7)goal=self.goalstack07;
-	else if(self.goalcounter==8)goal=self.goalstack08;
-	else if(self.goalcounter==9)goal=self.goalstack09;
-	else if(self.goalcounter==10)goal=self.goalstack10;
-	else if(self.goalcounter==11)goal=self.goalstack11;
-	else if(self.goalcounter==12)goal=self.goalstack12;
-	else if(self.goalcounter==13)goal=self.goalstack13;
-	else if(self.goalcounter==14)goal=self.goalstack14;
-	else if(self.goalcounter==15)goal=self.goalstack15;
-	else if(self.goalcounter==16)goal=self.goalstack16;
-	else if(self.goalcounter==17)goal=self.goalstack17;
-	else if(self.goalcounter==18)goal=self.goalstack18;
-	else if(self.goalcounter==19)goal=self.goalstack19;
-	else if(self.goalcounter==20)goal=self.goalstack20;
-	else if(self.goalcounter==21)goal=self.goalstack21;
-	else if(self.goalcounter==22)goal=self.goalstack22;
-	else if(self.goalcounter==23)goal=self.goalstack23;
-	else if(self.goalcounter==24)goal=self.goalstack24;
-	else if(self.goalcounter==25)goal=self.goalstack25;
-	else if(self.goalcounter==26)goal=self.goalstack26;
-	else if(self.goalcounter==27)goal=self.goalstack27;
-	else if(self.goalcounter==28)goal=self.goalstack28;
-	else if(self.goalcounter==29)goal=self.goalstack29;
-	else if(self.goalcounter==30)goal=self.goalstack30;
-	else if(self.goalcounter==31)goal=self.goalstack31;
+	if(this.goalcounter==0)goal=this.goalcurrent;
+	else if(this.goalcounter==1)goal=this.goalstack01;
+	else if(this.goalcounter==2)goal=this.goalstack02;
+	else if(this.goalcounter==3)goal=this.goalstack03;
+	else if(this.goalcounter==4)goal=this.goalstack04;
+	else if(this.goalcounter==5)goal=this.goalstack05;
+	else if(this.goalcounter==6)goal=this.goalstack06;
+	else if(this.goalcounter==7)goal=this.goalstack07;
+	else if(this.goalcounter==8)goal=this.goalstack08;
+	else if(this.goalcounter==9)goal=this.goalstack09;
+	else if(this.goalcounter==10)goal=this.goalstack10;
+	else if(this.goalcounter==11)goal=this.goalstack11;
+	else if(this.goalcounter==12)goal=this.goalstack12;
+	else if(this.goalcounter==13)goal=this.goalstack13;
+	else if(this.goalcounter==14)goal=this.goalstack14;
+	else if(this.goalcounter==15)goal=this.goalstack15;
+	else if(this.goalcounter==16)goal=this.goalstack16;
+	else if(this.goalcounter==17)goal=this.goalstack17;
+	else if(this.goalcounter==18)goal=this.goalstack18;
+	else if(this.goalcounter==19)goal=this.goalstack19;
+	else if(this.goalcounter==20)goal=this.goalstack20;
+	else if(this.goalcounter==21)goal=this.goalstack21;
+	else if(this.goalcounter==22)goal=this.goalstack22;
+	else if(this.goalcounter==23)goal=this.goalstack23;
+	else if(this.goalcounter==24)goal=this.goalstack24;
+	else if(this.goalcounter==25)goal=this.goalstack25;
+	else if(this.goalcounter==26)goal=this.goalstack26;
+	else if(this.goalcounter==27)goal=this.goalstack27;
+	else if(this.goalcounter==28)goal=this.goalstack28;
+	else if(this.goalcounter==29)goal=this.goalstack29;
+	else if(this.goalcounter==30)goal=this.goalstack30;
+	else if(this.goalcounter==31)goal=this.goalstack31;
 	else goal=world;
 
 	if(goal==world)
 	{
-		self.goalcounter = 0;
-		self.lastposition='0 0 0';
+		this.goalcounter = 0;
+		this.lastposition='0 0 0';
 		return;
 	}
 
-	if(self.lastposition=='0 0 0')
-		org = self.origin;
+	if(this.lastposition=='0 0 0')
+		org = this.origin;
 	else
-		org = self.lastposition;
+		org = this.lastposition;
 
 
 	go = ( goal.absmin + goal.absmax ) * 0.5;
 	te_lightning2(world, org, go);
-	self.lastposition = go;
+	this.lastposition = go;
 
-	self.goalcounter++;
+	this.goalcounter++;
 }

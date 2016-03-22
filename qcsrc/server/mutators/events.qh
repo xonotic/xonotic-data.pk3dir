@@ -472,6 +472,7 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
 /** called when a bot checks a target to attack */
 #define EV_BotShouldAttack(i, o) \
+    /**/ i(entity, __self) \
     /**/ i(entity, checkentity) \
     /**/
 entity checkentity;

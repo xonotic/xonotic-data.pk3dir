@@ -60,7 +60,7 @@ float waypoint_loadall();
 float waypoint_load_links();
 
 entity waypoint_spawn(vector m1, vector m2, float f);
-entity waypoint_spawnpersonal(vector position);
+entity waypoint_spawnpersonal(entity this, vector position);
 
 vector waypoint_fixorigin(vector position);
 

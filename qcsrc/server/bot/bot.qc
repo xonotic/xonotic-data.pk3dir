@@ -125,7 +125,7 @@ void bot_think()
 		navigation_unstuck();
 
 	// now call the current bot AI (havocbot for example)
-	self.bot_ai();
+	self.bot_ai(self);
 }
 
 void bot_setnameandstuff()
