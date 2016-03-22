@@ -518,7 +518,7 @@ IMPULSE(navwaypoint_unreachable)
 		e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 	}
 	entity e2 = navigation_findnearestwaypoint(this, false);
-	navigation_markroutes(e2);
+	navigation_markroutes(this, e2);
 
 	int i, m;
 

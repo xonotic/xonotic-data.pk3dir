@@ -64,12 +64,12 @@ void navigation_clearroute(entity this);
 void navigation_pushroute(entity this, entity e);
 void navigation_poproute();
 void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vector p);
-void navigation_markroutes(entity fixed_source_waypoint);
+void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
-void navigation_routerating(entity e, float f, float rangebias);
+void navigation_routerating(entity this, entity e, float f, float rangebias);
 void navigation_poptouchedgoals();
-void navigation_goalrating_start();
-void navigation_goalrating_end();
+void navigation_goalrating_start(entity this);
+void navigation_goalrating_end(entity this);
 void navigation_unstuck(entity this);
 
 void botframe_updatedangerousobjects(float maxupdate);

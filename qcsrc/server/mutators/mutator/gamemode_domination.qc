@@ -451,20 +451,20 @@ void Domination_RoundStart()
 }
 
 //go to best items, or control points you don't own
-void havocbot_role_dom()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_dom(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
-		havocbot_goalrating_controlpoints(10000, self.origin, 15000);
-		havocbot_goalrating_items(8000, self.origin, 8000);
-		//havocbot_goalrating_enemyplayers(3000, self.origin, 2000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
-		navigation_goalrating_end();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
+		havocbot_goalrating_controlpoints(this, 10000, this.origin, 15000);
+		havocbot_goalrating_items(this, 8000, this.origin, 8000);
+		//havocbot_goalrating_enemyplayers(this, 3000, this.origin, 2000);
+		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		navigation_goalrating_end(this);
 	}
 }
 

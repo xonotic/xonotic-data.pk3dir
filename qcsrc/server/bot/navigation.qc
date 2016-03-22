@@ -513,8 +513,8 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 }
 
 // queries the entire spawnfunc_waypoint network for pathes leading away from the bot
-void navigation_markroutes(entity fixed_source_waypoint)
-{SELFPARAM();
+void navigation_markroutes(entity this, entity fixed_source_waypoint)
+{
 	entity w, wp, waylist;
 	float searching, cost, cost2;
 	vector p;
@@ -542,7 +542,7 @@ void navigation_markroutes(entity fixed_source_waypoint)
 		// try a short range search for the nearest waypoints, and expand the search repeatedly if none are found
 		// as this search is expensive we will use lower values if the bot is on the air
 		float i, increment, maxdistance;
-		if(IS_ONGROUND(self))
+		if(IS_ONGROUND(this))
 		{
 			increment = 750;
 			maxdistance = 50000;
@@ -672,8 +672,8 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 }
 
 // updates the best goal according to a weighted calculation of travel cost and item value of a new proposed item
-void navigation_routerating(entity e, float f, float rangebias)
-{SELFPARAM();
+void navigation_routerating(entity this, entity e, float f, float rangebias)
+{
 	entity nwp;
 	vector o;
 	if (!e)
@@ -688,16 +688,16 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 	// Evaluate path using jetpack
 	if(g_jetpack)
-	if(self.items & IT_JETPACK)
+	if(this.items & IT_JETPACK)
 	if(autocvar_bot_ai_navigation_jetpack)
-	if(vlen(self.origin - o) > autocvar_bot_ai_navigation_jetpack_mindistance)
+	if(vlen(this.origin - o) > autocvar_bot_ai_navigation_jetpack_mindistance)
 	{
 		vector pointa, pointb;
 
 		LOG_DEBUG("jetpack ai: evaluating path for ", e.classname, "\n");
 
 		// Point A
-		traceline(self.origin, self.origin + '0 0 65535', MOVE_NORMAL, self);
+		traceline(this.origin, this.origin + '0 0 65535', MOVE_NORMAL, this);
 		pointa = trace_endpos - '0 0 1';
 
 		// Point B
@@ -705,7 +705,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 		pointb = trace_endpos - '0 0 1';
 
 		// Can I see these two points from the sky?
-		traceline(pointa, pointb, MOVE_NORMAL, self);
+		traceline(pointa, pointb, MOVE_NORMAL, this);
 
 		if(trace_fraction==1)
 		{
@@ -721,13 +721,13 @@ void navigation_routerating(entity e, float f, float rangebias)
 				npa = pointa + down;
 				npb = pointb + down;
 
-				if(npa.z<=self.absmax.z)
+				if(npa.z<=this.absmax.z)
 					break;
 
 				if(npb.z<=e.absmax.z)
 					break;
 
-				traceline(npa, npb, MOVE_NORMAL, self);
+				traceline(npa, npb, MOVE_NORMAL, this);
 				if(trace_fraction==1)
 				{
 					pointa = npa;
@@ -740,16 +740,16 @@ void navigation_routerating(entity e, float f, float rangebias)
 			// Rough estimation of fuel consumption
 			// (ignores acceleration and current xyz velocity)
 			xydistance = vlen(pointa - pointb);
-			zdistance = fabs(pointa.z - self.origin.z);
+			zdistance = fabs(pointa.z - this.origin.z);
 
 			t = zdistance / autocvar_g_jetpack_maxspeed_up;
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
 
-			LOG_DEBUG(strcat("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel), "\n"));
+			LOG_DEBUG(strcat("jetpack ai: required fuel ", ftos(fuel), " this.ammo_fuel ", ftos(this.ammo_fuel), "\n"));
 
 			// enough fuel ?
-			if(self.ammo_fuel>fuel)
+			if(this.ammo_fuel>fuel)
 			{
 				// Estimate cost
 				// (as onground costs calculation is mostly based on distances, here we do the same establishing some relationship
@@ -767,8 +767,8 @@ void navigation_routerating(entity e, float f, float rangebias)
 					LOG_DEBUG(strcat("jetpack path: added goal ", e.classname, " (with rating ", ftos(f), ")\n"));
 					navigation_bestrating = f;
 					navigation_bestgoal = e;
-					self.navigation_jetpack_goal = e;
-					self.navigation_jetpack_point = pointb;
+					this.navigation_jetpack_goal = e;
+					this.navigation_jetpack_point = pointb;
 				}
 				return;
 			}
@@ -986,39 +986,39 @@ void navigation_poptouchedgoals()
 }
 
 // begin a goal selection session (queries spawnfunc_waypoint network)
-void navigation_goalrating_start()
-{SELFPARAM();
-	if(self.aistatus & AI_STATUS_STUCK)
+void navigation_goalrating_start(entity this)
+{
+	if(this.aistatus & AI_STATUS_STUCK)
 		return;
 
-	self.navigation_jetpack_goal = world;
+	this.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
-	self.navigation_hasgoals = false;
-	navigation_clearroute(self);
+	this.navigation_hasgoals = false;
+	navigation_clearroute(this);
 	navigation_bestgoal = world;
-	navigation_markroutes(world);
+	navigation_markroutes(this, world);
 }
 
 // ends a goal selection session (updates goal stack to the best goal)
-void navigation_goalrating_end()
-{SELFPARAM();
-	if(self.aistatus & AI_STATUS_STUCK)
+void navigation_goalrating_end(entity this)
+{
+	if(this.aistatus & AI_STATUS_STUCK)
 		return;
 
-	navigation_routetogoal(self, navigation_bestgoal, self.origin);
-	LOG_DEBUG(strcat("best goal ", self.goalcurrent.classname , "\n"));
+	navigation_routetogoal(this, navigation_bestgoal, this.origin);
+	LOG_DEBUG(strcat("best goal ", this.goalcurrent.classname , "\n"));
 
 	// If the bot got stuck then try to reach the farthest waypoint
-	if (!self.navigation_hasgoals)
+	if (!this.navigation_hasgoals)
 	if (autocvar_bot_wander_enable)
 	{
-		if (!(self.aistatus & AI_STATUS_STUCK))
+		if (!(this.aistatus & AI_STATUS_STUCK))
 		{
-			LOG_DEBUG(strcat(self.netname, " cannot walk to any goal\n"));
-			self.aistatus |= AI_STATUS_STUCK;
+			LOG_DEBUG(strcat(this.netname, " cannot walk to any goal\n"));
+			this.aistatus |= AI_STATUS_STUCK;
 		}
 
-		self.navigation_hasgoals = false; // Reset this value
+		this.navigation_hasgoals = false; // Reset this value
 	}
 }
 

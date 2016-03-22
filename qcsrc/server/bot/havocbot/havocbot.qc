@@ -35,7 +35,7 @@ void havocbot_ai(entity this)
 		else
 		{
 			if (!this.jumppadcount)
-				WITH(entity, self, this, this.havocbot_role()); // little too far down the rabbit hole
+				this.havocbot_role(this); // little too far down the rabbit hole
 		}
 
 		// TODO: tracewalk() should take care of this job (better path finding under water)
@@ -1126,14 +1126,14 @@ void havocbot_aim(entity this)
 		lag_additem(this, time + this.ping, 0, 0, world, this.origin, selfvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
 }
 
-float havocbot_moveto_refresh_route(entity this)
+bool havocbot_moveto_refresh_route(entity this)
 {
 	// Refresh path to goal if necessary
 	entity wp;
 	wp = this.havocbot_personal_waypoint;
-	WITH(entity, self, this, navigation_goalrating_start());
-	WITH(entity, self, this, navigation_routerating(wp, 10000, 10000));
-	WITH(entity, self, this, navigation_goalrating_end());
+	navigation_goalrating_start(this);
+	navigation_routerating(this, wp, 10000, 10000);
+	navigation_goalrating_end(this);
 	return this.navigation_hasgoals;
 }
 
@@ -1265,7 +1265,7 @@ void havocbot_setupbot(entity this)
 	this.cmd_moveto = havocbot_moveto;
 	this.cmd_resetgoal = havocbot_resetgoal;
 
-	WITH(entity, self, this, havocbot_chooserole());
+	havocbot_chooserole(this);
 }
 
 vector havocbot_dodge()
