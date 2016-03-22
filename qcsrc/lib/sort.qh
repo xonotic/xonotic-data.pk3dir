@@ -1,9 +1,9 @@
 #pragma once
 
 /** is only ever called for i1 < i2 */
-typedef void (int i1, int i2, entity pass) swapfunc_t;
+USING(swapfunc_t, void (int i1, int i2, entity pass));
 /** <0 for <, ==0 for ==, >0 for > (like strcmp) */
-typedef int (int i1, int i2, entity pass) comparefunc_t;
+USING(comparefunc_t, int (int i1, int i2, entity pass));
 
 void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
 {

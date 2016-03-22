@@ -46,7 +46,7 @@ float kh_tracking_enabled;
 .entity kh_next;
 float kh_Key_AllOwnedByWhichTeam();
 
-typedef void() kh_Think_t;
+USING(kh_Think_t, void());
 void kh_StartRound();
 void kh_Controller_SetThink(float t, kh_Think_t func);
 

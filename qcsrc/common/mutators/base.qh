@@ -144,7 +144,7 @@ enum {
     MUTATOR_ROLLING_BACK
 };
 
-typedef bool(int) mutatorfunc_t;
+USING(mutatorfunc_t, bool(int));
 
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0)

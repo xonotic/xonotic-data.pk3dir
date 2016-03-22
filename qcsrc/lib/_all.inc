@@ -25,6 +25,8 @@
 	#include <dpdefs/keycodes.qh>
 #endif
 
+#define USING(name, T) typedef T name
+
 #include "bool.qh"
 #include "int.qh"
 

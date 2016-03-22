@@ -12,7 +12,7 @@
 
 .vector origin;
 .bool pure_data;
-/** @deprecated, use new_pure or NEW(class) */
+/** @deprecated use new_pure or NEW(class) */
 #define make_pure(e) \
 	MACRO_BEGIN \
 	{ \
@@ -63,7 +63,7 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 #define EVAL_entityclass(...) __VA_ARGS__
 #define entityclass_1(name) entityclass_2(name, Object)
 #ifndef QCC_SUPPORT_ENTITYCLASS
-	#define entityclass_2(name, base) typedef entity name
+	#define entityclass_2(name, base) USING(name, entity)
 	#define class(name)
 	#define _new(class, pure) __spawn( #class, __FILE__ ":" STR(__LINE__), pure)
 #else

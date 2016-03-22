@@ -6,7 +6,7 @@
 #include "config.qh"
 
 // weapon sets
-typedef vector WepSet;
+USING(WepSet, vector);
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
 #endif
