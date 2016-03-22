@@ -2002,6 +2002,9 @@ PREDEFINED             = \
     "CONSTRUCTOR(class)=class::class(" \
     "DESTRUCTOR(class)=class::~class()" \
     "ATTRIB(class, name, T, val)=T name = val;" \
+    "ATTRIB_STRZONE(class, name, T, val)=T name = val;" \
+    "STATIC_ATTRIB(class, name, T, val)=static T name = val;" \
+    "STATIC_ATTRIB_STRZONE(class, name, T, val)=static T name = val;" \
     "METHOD(class, name, prototype)=virtual void class::name()" \
     "ENDCLASS(class)=};" \
     __STDC__
@@ -2018,7 +2021,8 @@ EXPAND_AS_DEFINED      = \
     CLASS \
     CONSTRUCTOR \
     DESTRUCTOR \
-    ATTRIB \
+    ATTRIB ATTRIB_STRZONE \
+    STATIC_ATTRIB STATIC_ATTRIB_STRZONE \
     METHOD \
     ENDCLASS \
     LABEL \

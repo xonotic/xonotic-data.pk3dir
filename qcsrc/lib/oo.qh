@@ -136,7 +136,7 @@ STATIC_INIT(RegisterClasses)
 }
 
 #define VTBL(cname, base) \
-	INIT_STATIC(cname); \
+	_INIT_STATIC(cname); \
 	entity cname##_vtbl; \
 	void cname##_vtbl_init() \
 	{ \
@@ -149,7 +149,7 @@ STATIC_INIT(RegisterClasses)
 	} \
 	ACCUMULATE_FUNCTION(RegisterClasses, cname##_vtbl_init)
 
-#define INIT_STATIC(cname) [[accumulate]] void spawn##cname##_static(cname this)
+#define _INIT_STATIC(cname) [[accumulate]] void spawn##cname##_static(cname this)
 #define INIT(cname) [[accumulate]] cname spawn##cname##_1(cname this)
 
 #define CLASS(cname, base)                  \
@@ -157,7 +157,7 @@ STATIC_INIT(RegisterClasses)
 	class(cname).bool instanceOf##cname;   \
     bool is_##cname(entity e) { return e.instanceOf##cname; } \
 	VTBL(cname, base)                       \
-	INIT_STATIC(cname) \
+	_INIT_STATIC(cname) \
 	{                    \
 		if (cname##_vtbl) \
 		{                 \
@@ -189,7 +189,7 @@ STATIC_INIT(RegisterClasses)
 #define METHOD(cname, name, prototype) \
 	STATIC_METHOD(cname, name, prototype); \
 	class(cname) .prototype name; \
-	INIT_STATIC(cname) \
+	_INIT_STATIC(cname) \
 	{ \
 		this.name = METHOD_REFERENCE(cname, name); \
 	} \
@@ -213,6 +213,16 @@ STATIC_INIT(RegisterClasses)
 		this.name = val; \
 	}
 
+#define STATIC_ATTRIB(cname, name, type, val) \
+	type cname##_##name; \
+	_INIT_STATIC(cname) \
+	{ \
+		noref bool strzone; /* Error on strzone() calls. */ \
+		cname##_##name = val; \
+	}
+
+// cleanup potentially zoned strings from base classes
+
 #define ATTRIB_STRZONE(cname, name, type, val)      \
 	class(cname).type name;                \
 	INIT(cname) \
@@ -220,6 +230,15 @@ STATIC_INIT(RegisterClasses)
 		if (this.name) \
 			strunzone(this.name); \
 		this.name = strzone(val); \
+	}
+
+#define STATIC_ATTRIB_STRZONE(cname, name, type, val) \
+	type cname##_##name; \
+	_INIT_STATIC(cname) \
+	{ \
+        if (cname##_##name) \
+            strunzone(cname##_##name); \
+		cname##_##name = val; \
 	}
 
 #define ATTRIBARRAY(cname, name, type, cnt) \
