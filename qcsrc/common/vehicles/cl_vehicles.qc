@@ -18,12 +18,13 @@ entity AuxiliaryXhair[MAX_AXH];
 float alarm1time;
 float alarm2time;
 
-void vehicle_alarm(entity e, int ch, string s0und)
+void vehicle_alarm(entity e, int ch, Sound s0und)
 {
+    TC(Sound, s0und);
 	if(!autocvar_cl_vehicles_alarm)
 		return;
 
-	_sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
+	sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
 }
 
 void AuxiliaryXhair_Draw2D(entity this)
@@ -231,7 +232,7 @@ void Vehicles_drawHUD(
 		if(alarm1time < time)
 		{
 			alarm1time = time + 2;
-			vehicle_alarm(self, CH_PAIN_SINGLE, SND(VEH_ALARM));
+			vehicle_alarm(self, CH_PAIN_SINGLE, SND_VEH_ALARM);
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -239,7 +240,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm1time)
 		{
-			vehicle_alarm(self, CH_PAIN_SINGLE, SND(Null));
+			vehicle_alarm(self, CH_PAIN_SINGLE, SND_Null);
 			alarm1time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
@@ -253,7 +254,7 @@ void Vehicles_drawHUD(
 		if(alarm2time < time)
 		{
 			alarm2time = time + 1;
-			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND(VEH_ALARM_SHIELD));
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND_VEH_ALARM_SHIELD);
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -261,7 +262,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm2time)
 		{
-			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND(Null));
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND_Null);
 			alarm2time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);

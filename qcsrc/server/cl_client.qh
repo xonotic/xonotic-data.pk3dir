@@ -2,7 +2,7 @@
 
 float c1, c2, c3, c4;
 
-void play_countdown(float finished, string samp);
+void play_countdown(float finished, Sound samp);
 
 float CalcRotRegen(float current, float regenstable, float regenfactor, float regenlinear, float regenframetime, float rotstable, float rotfactor, float rotlinear, float rotframetime, float limit);
 

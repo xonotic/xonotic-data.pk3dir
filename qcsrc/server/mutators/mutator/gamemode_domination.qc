@@ -630,15 +630,16 @@ void ScoreRules_dom(float teams)
 }
 
 // code from here on is just to support maps that don't have control point and team entities
-void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
+void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
 {SELFPARAM();
+    TC(Sound, capsound);
 	setself(spawn());
 	self.classname = "dom_team";
 	self.netname = strzone(teamname);
 	self.cnt = teamcolor;
 	self.model = pointmodel;
 	self.skin = pointskin;
-	self.noise = strzone(capsound);
+	self.noise = strzone(Sound_fixpath(capsound));
 	self.noise1 = strzone(capnarration);
 	self.message = strzone(capmessage);
 
@@ -668,15 +669,16 @@ void dom_spawnpoint(vector org)
 }
 
 // spawn some default teams if the map is not set up for domination
-void dom_spawnteams(float teams)
+void dom_spawnteams(int teams)
 {
-	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND(DOM_CLAIM), "", "Red team has captured a control point");
-	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND(DOM_CLAIM), "", "Blue team has captured a control point");
+    TC(int, teams);
+	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND_DOM_CLAIM, "", "Red team has captured a control point");
+	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND_DOM_CLAIM, "", "Blue team has captured a control point");
 	if(teams >= 3)
-		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_3), NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND(DOM_CLAIM), "", "Yellow team has captured a control point");
+		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_3), NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND_DOM_CLAIM, "", "Yellow team has captured a control point");
 	if(teams >= 4)
-		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_4), NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND(DOM_CLAIM), "", "Pink team has captured a control point");
-	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
+		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_4), NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND_DOM_CLAIM, "", "Pink team has captured a control point");
+	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, SND_Null, "", "");
 }
 
 void dom_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.

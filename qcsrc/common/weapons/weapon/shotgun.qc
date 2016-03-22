@@ -65,7 +65,7 @@ void W_Shotgun_Attack(Weapon thiswep, float isprimary)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(self, true, 5, SND(SHOTGUN_FIRE), ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(self, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
@@ -192,7 +192,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	meleetemp.realowner = actor;
 	meleetemp.think = W_Shotgun_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
-	W_SetupShot_Range(actor, true, 0, "", 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
+	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 
 // alternate secondary weapon frames
@@ -308,7 +308,7 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
+    W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Shotgun, wr_suicidemessage, Notification(entity thiswep))
 {

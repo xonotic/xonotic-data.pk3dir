@@ -182,7 +182,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, true, 5, SND(NEXFIRE), CH_WEAPON_A, mydmg);
+	W_SetupShot(self, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
 		sound(self, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
@@ -356,7 +356,7 @@ METHOD(Vortex, wr_resetplayer, void(entity thiswep))
 }
 METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
+    W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND_RELOAD);
 }
 METHOD(Vortex, wr_suicidemessage, Notification(entity thiswep))
 {

@@ -683,8 +683,9 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
-void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
+void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 {
+    TC(Sound, sent_sound);
 	.entity weaponentity = weaponentities[0];
 	// set global values to work with
 	Weapon e = PS(actor).m_weapon;
@@ -694,7 +695,8 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 	actor.reload_ammo_min = sent_ammo_min;
 	actor.reload_ammo_amount = e.reloading_ammo;
 	actor.reload_time = e.reloading_time;
-	actor.reload_sound = sent_sound;
+	if (actor.reload_sound) strunzone(actor.reload_sound);
+	actor.reload_sound = strzone(Sound_fixpath(sent_sound));
 
 	// don't reload weapons that don't have the RELOADABLE flag
 	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))

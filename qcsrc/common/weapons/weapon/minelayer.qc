@@ -330,7 +330,7 @@ void W_MineLayer_Attack(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(minelayer, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND(MINE_FIRE), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -551,7 +551,7 @@ METHOD(MineLayer, wr_resetplayers, void(entity thiswep))
 }
 METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, WEP_CVAR(minelayer, ammo), SND(RELOAD));
+    W_Reload(self, WEP_CVAR(minelayer, ammo), SND_RELOAD);
 }
 METHOD(MineLayer, wr_suicidemessage, Notification(entity thiswep))
 {

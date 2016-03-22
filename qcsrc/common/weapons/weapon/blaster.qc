@@ -101,7 +101,7 @@ void W_Blaster_Attack(
 {SELFPARAM();
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(actor, s_forward, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, atk_damage);
+	W_SetupShot_Dir(actor, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = new(blasterbolt);

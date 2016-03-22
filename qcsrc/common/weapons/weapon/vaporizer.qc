@@ -183,7 +183,7 @@ void W_Vaporizer_Attack(Weapon thiswep)
 	bool flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(self, true, 0, "", CH_WEAPON_A, vaporizer_damage);
+	W_SetupShot(self, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
 	sound (self, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
@@ -247,7 +247,7 @@ void W_RocketMinsta_Attack2()
 
 	Weapon w = PS(self).m_weapon;
 	PS(self).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(CRYLINK_FIRE), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	PS(self).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -299,7 +299,7 @@ void W_RocketMinsta_Attack3 ()
 
 	Weapon w = PS(self).m_weapon;
 	PS(self).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(ELECTRO_FIRE2), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	PS(self).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -453,7 +453,7 @@ METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponen
     else
         used_ammo = vaporizer_ammo;
 
-    W_Reload(self, used_ammo, SND(RELOAD));
+    W_Reload(self, used_ammo, SND_RELOAD);
 }
 METHOD(Vaporizer, wr_suicidemessage, Notification(entity thiswep))
 {

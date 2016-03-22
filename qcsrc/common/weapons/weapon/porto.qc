@@ -244,7 +244,7 @@ void W_Porto_Attack(float type)
 {SELFPARAM();
 	entity gren;
 
-	W_SetupShot(self, false, 4, SND(PORTO_FIRE), CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;

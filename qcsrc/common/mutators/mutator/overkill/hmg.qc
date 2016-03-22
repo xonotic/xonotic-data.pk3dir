@@ -72,7 +72,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	W_DecreaseAmmo(WEP_HMG, self, WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (actor, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (actor, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -143,7 +143,7 @@ METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep))
 
 METHOD(HeavyMachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, WEP_CVAR(hmg, ammo), SND(RELOAD));
+    W_Reload(self, WEP_CVAR(hmg, ammo), SND_RELOAD);
 }
 
 METHOD(HeavyMachineGun, wr_suicidemessage, Notification(entity thiswep))

@@ -266,7 +266,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(arc, bolt_ammo));
 
-	W_SetupShot(self, false, 2, SND(LASERGUN_FIRE), CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
+	W_SetupShot(self, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
 
 	Send_Effect(EFFECT_ARC_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -405,7 +405,7 @@ void W_Arc_Beam_Think()
 		self.owner,
 		true,
 		0,
-		"",
+		SND_Null,
 		0,
 		WEP_CVAR(arc, beam_damage) * coefficient,
 		WEP_CVAR(arc, beam_range)
@@ -693,7 +693,7 @@ void W_Arc_Beam(float burst)
 void Arc_Smoke()
 {SELFPARAM();
 	makevectors(self.v_angle);
-	W_SetupShot_Range(self,true,0,"",0,0,0);
+	W_SetupShot_Range(self,true,0,SND_Null,0,0,0);
 
 	vector smoke_origin = w_shotorg + self.velocity*frametime;
 	if ( self.arc_overheat > time )

@@ -261,7 +261,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep)
 		'0 0 -3',
 		false,
 		2,
-		SND(ELECTRO_FIRE),
+		SND_ELECTRO_FIRE,
 		CH_WEAPON_A,
 		WEP_CVAR_PRI(electro, damage)
 	);
@@ -358,7 +358,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 		'0 0 -4',
 		false,
 		2,
-		SND(ELECTRO_FIRE2),
+		SND_ELECTRO_FIRE2,
 		CH_WEAPON_A,
 		WEP_CVAR_SEC(electro, damage)
 	);
@@ -517,7 +517,7 @@ METHOD(Electro, wr_resetplayer, void(entity thiswep))
 }
 METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND(RELOAD));
+    W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND_RELOAD);
 }
 METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
 {

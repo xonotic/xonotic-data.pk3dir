@@ -755,7 +755,7 @@ void W_Nexball_Attack(float t)
 	if(!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot(self, false, 4, SND(NB_SHOOT1), CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
@@ -791,7 +791,7 @@ void W_Nexball_Attack2()
 	if(self.ballcarried.enemy)
 	{
 		entity _ball = self.ballcarried;
-		W_SetupShot(self, false, 4, SND(NB_SHOOT1), CH_WEAPON_A, 0);
+		W_SetupShot(self, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
 		_ball.think = W_Nexball_Think;
 		_ball.nextthink = time;
@@ -801,7 +801,7 @@ void W_Nexball_Attack2()
 	if(!autocvar_g_nexball_tackling)
 		return;
 
-	W_SetupShot(self, false, 2, SND(NB_SHOOT2), CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0);
 	entity missile = new(ballstealer);
 
 	missile.owner = self;

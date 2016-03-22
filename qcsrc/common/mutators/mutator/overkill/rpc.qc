@@ -111,7 +111,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(rpc, ammo));
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -191,7 +191,7 @@ METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep))
 
 METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
+    W_Reload(self, WEP_CVAR(rpc, ammo), SND_RELOAD);
 }
 
 METHOD(RocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
