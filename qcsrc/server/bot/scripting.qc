@@ -824,50 +824,50 @@ const int BOT_CMD_KEY_HOOK 		= BIT(8);
 const int BOT_CMD_KEY_CROUCH 	= BIT(9);
 const int BOT_CMD_KEY_CHAT 		= BIT(10);
 
-float bot_presskeys()
-{SELFPARAM();
-	self.movement = '0 0 0';
-	PHYS_INPUT_BUTTON_JUMP(self) = false;
-	PHYS_INPUT_BUTTON_CROUCH(self) = false;
-	PHYS_INPUT_BUTTON_ATCK(self) = false;
-	PHYS_INPUT_BUTTON_ATCK2(self) = false;
-	PHYS_INPUT_BUTTON_USE(self) = false;
-	PHYS_INPUT_BUTTON_HOOK(self) = false;
-	PHYS_INPUT_BUTTON_CHAT(self) = false;
+bool bot_presskeys(entity this)
+{
+	this.movement = '0 0 0';
+	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	PHYS_INPUT_BUTTON_CROUCH(this) = false;
+	PHYS_INPUT_BUTTON_ATCK(this) = false;
+	PHYS_INPUT_BUTTON_ATCK2(this) = false;
+	PHYS_INPUT_BUTTON_USE(this) = false;
+	PHYS_INPUT_BUTTON_HOOK(this) = false;
+	PHYS_INPUT_BUTTON_CHAT(this) = false;
 
-	if(self.bot_cmd_keys == BOT_CMD_KEY_NONE)
+	if(this.bot_cmd_keys == BOT_CMD_KEY_NONE)
 		return false;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
-		self.movement_x = autocvar_sv_maxspeed;
-	else if(self.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
-		self.movement_x = -autocvar_sv_maxspeed;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
+		this.movement_x = autocvar_sv_maxspeed;
+	else if(this.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
+		this.movement_x = -autocvar_sv_maxspeed;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
-		self.movement_y = autocvar_sv_maxspeed;
-	else if(self.bot_cmd_keys & BOT_CMD_KEY_LEFT)
-		self.movement_y = -autocvar_sv_maxspeed;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
+		this.movement_y = autocvar_sv_maxspeed;
+	else if(this.bot_cmd_keys & BOT_CMD_KEY_LEFT)
+		this.movement_y = -autocvar_sv_maxspeed;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_JUMP)
-		PHYS_INPUT_BUTTON_JUMP(self) = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_JUMP)
+		PHYS_INPUT_BUTTON_JUMP(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_CROUCH)
-		PHYS_INPUT_BUTTON_CROUCH(self) = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_CROUCH)
+		PHYS_INPUT_BUTTON_CROUCH(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK1)
-		PHYS_INPUT_BUTTON_ATCK(self) = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_ATTACK1)
+		PHYS_INPUT_BUTTON_ATCK(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK2)
-		PHYS_INPUT_BUTTON_ATCK2(self) = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_ATTACK2)
+		PHYS_INPUT_BUTTON_ATCK2(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_USE)
-		PHYS_INPUT_BUTTON_USE(self) = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_USE)
+		PHYS_INPUT_BUTTON_USE(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_HOOK)
-		PHYS_INPUT_BUTTON_HOOK(self) = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_HOOK)
+		PHYS_INPUT_BUTTON_HOOK(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_CHAT)
-		PHYS_INPUT_BUTTON_CHAT(self) = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_CHAT)
+		PHYS_INPUT_BUTTON_CHAT(this) = true;
 
 	return true;
 }
@@ -1191,7 +1191,7 @@ float bot_execute_commands_once(entity this)
 	}
 
 	// Keep pressing keys raised by the "presskey" command
-	ispressingkey = boolean(bot_presskeys());
+	ispressingkey = boolean(bot_presskeys(this));
 
 	// Handle conditions
 	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
