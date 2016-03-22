@@ -36,6 +36,7 @@ void target_music_reset(entity this)
 }
 void target_music_kill()
 {
+    SELFPARAM();
 	for(self = world; (self = find(self, classname, "target_music")); )
 	{
 		self.volume = 0;

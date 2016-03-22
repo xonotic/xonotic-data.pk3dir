@@ -788,6 +788,7 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 }
 METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 {
+    SELFPARAM();
     entity oldself = self;
     setself(instance);
 

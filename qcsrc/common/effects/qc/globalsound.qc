@@ -15,8 +15,6 @@
 	string GlobalSound_sample(string pair, float r);
 
 	#ifdef SVQC
-		/** Use new sound handling. TODO: use when sounds play correctly on clients */
-		bool autocvar_g_debug_globalsounds = false;
 		/**
 		 * @param from the source entity, its position is sent
 		 * @param gs the global sound def

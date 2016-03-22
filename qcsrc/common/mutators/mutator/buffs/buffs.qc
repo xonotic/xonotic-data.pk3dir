@@ -785,8 +785,8 @@ bool buffs_RemovePlayer(entity player)
 
 	return false;
 }
-MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { return buffs_RemovePlayer(self); }
-MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { SELFPARAM(); return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { SELFPARAM(); return buffs_RemovePlayer(self); }
 
 MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 {SELFPARAM();

@@ -46,30 +46,30 @@ int autocvar_g_race_teams;
 
 // legacy bot roles
 .float race_checkpoint;
-void havocbot_role_race()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_race(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
 	entity e;
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
 		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
 		{
-			if(e.cnt == self.race_checkpoint)
+			if(e.cnt == this.race_checkpoint)
 			{
-				navigation_routerating(e, 1000000, 5000);
+				navigation_routerating(this, e, 1000000, 5000);
 			}
-			else if(self.race_checkpoint == -1)
+			else if(this.race_checkpoint == -1)
 			{
-				navigation_routerating(e, 1000000, 5000);
+				navigation_routerating(this, e, 1000000, 5000);
 			}
 		}
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 

@@ -242,6 +242,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
+    SELFPARAM();
 	FOREACH_CLIENT(true, {
 		it.killcount = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))

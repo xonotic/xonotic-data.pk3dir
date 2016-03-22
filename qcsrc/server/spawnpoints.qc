@@ -49,6 +49,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 .vector spawnpoint_prevorigin;
 void spawnpoint_think()
 {
+    SELFPARAM();
 	self.nextthink = time + 0.1;
 	if(self.origin != self.spawnpoint_prevorigin)
 	{

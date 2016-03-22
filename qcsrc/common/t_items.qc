@@ -644,7 +644,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 	return false;
 
-:YEAH
+LABEL(YEAH)
 	switch(mode)
 	{
 		case ITEM_MODE_FUEL:
@@ -740,7 +740,7 @@ float Item_GiveTo(entity item, entity player)
 		player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
 	}
 
-:skip
+LABEL(skip)
 
 	// always eat teamed entities
 	if(item.team)
@@ -811,7 +811,7 @@ void Item_Touch()
 		return;
 	}
 
-	:pickup
+LABEL(pickup)
 
 	other.last_pickup = time;
 

@@ -994,7 +994,7 @@ void HUD_Crosshair()
 				wcross_color = rainbow_prev_color;
 				break;
 			}
-			:normalcolor
+LABEL(normalcolor)
 			default: { wcross_color = stov(autocvar_crosshair_color); break; }
 		}
 
@@ -1352,6 +1352,7 @@ float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
 {SELFPARAM();
+    TC(int, w); TC(int, h);
 	entity e;
 	float fov;
 	float f;

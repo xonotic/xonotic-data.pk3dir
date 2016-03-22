@@ -20,8 +20,9 @@
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range)
 {
+    TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid;
 	vector vecs, dv;
@@ -133,9 +134,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (!autocvar_g_norecoil)
 		ent.punchangle_x = recoil * -1;
 
-	if (snd != "")
-	{
-		_sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+	if (snd != SND_Null) {
+		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 

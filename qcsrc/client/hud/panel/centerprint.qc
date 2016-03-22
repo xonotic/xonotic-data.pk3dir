@@ -17,6 +17,7 @@ bool centerprint_showing;
 
 void centerprint_generic(int new_id, string strMessage, float duration, int countdown_num)
 {
+    TC(int, new_id); TC(int, countdown_num);
 	//printf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num);
 	int i, j;
 
@@ -91,8 +92,9 @@ void centerprint_generic(int new_id, string strMessage, float duration, int coun
 	centerprint_countdown_num[j] = countdown_num;
 }
 
-void centerprint_kill(float id)
+void centerprint_kill(int id)
 {
+    TC(int, id);
 	centerprint_generic(id, "", 0, 0);
 }
 
@@ -103,8 +105,7 @@ void centerprint_hud(string strMessage)
 
 void reset_centerprint_messages()
 {
-	int i;
-	for (i=0; i<CENTERPRINT_MAX_MSGS; ++i)
+	for (int i=0; i<CENTERPRINT_MAX_MSGS; ++i)
 	{
 		centerprint_expire_time[i] = 0;
 		centerprint_time[i] = 1;

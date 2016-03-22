@@ -67,7 +67,7 @@
 			}
 
 			break;
-			: have_overlap
+LABEL(have_overlap)
 		}
 
 		scale *= 0.95;

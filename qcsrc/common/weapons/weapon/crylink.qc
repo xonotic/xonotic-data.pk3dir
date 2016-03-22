@@ -359,7 +359,7 @@ void W_Crylink_Attack(Weapon thiswep)
 	if(WEP_CVAR_PRI(crylink, joinexplode))
 		maxdmg += WEP_CVAR_PRI(crylink, joinexplode_damage);
 
-	W_SetupShot(self, false, 2, SND(CRYLINK_FIRE), CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -467,7 +467,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 	if(WEP_CVAR_SEC(crylink, joinexplode))
 		maxdmg += WEP_CVAR_SEC(crylink, joinexplode_damage);
 
-	W_SetupShot(self, false, 2, SND(CRYLINK_FIRE2), CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, false, 2, SND_CRYLINK_FIRE2, CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -571,9 +571,9 @@ METHOD(Crylink, wr_aim, void(entity thiswep))
 {
     SELFPARAM();
     if(random() < 0.10)
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
     else
-        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR_SEC(crylink, speed), 0, WEP_CVAR_SEC(crylink, middle_lifetime), false);
 }
 METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -655,7 +655,8 @@ METHOD(Crylink, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND(RELOAD));
+    SELFPARAM();
+    W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND_RELOAD);
 }
 METHOD(Crylink, wr_suicidemessage, Notification(entity thiswep))
 {

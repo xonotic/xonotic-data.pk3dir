@@ -178,6 +178,7 @@ void train_link()
 
 void train_use()
 {
+    SELFPARAM();
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
 	self.SUB_THINK = train_next;
 	self.use = func_null; // not again

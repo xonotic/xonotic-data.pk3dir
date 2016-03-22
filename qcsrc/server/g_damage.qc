@@ -553,6 +553,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
+    SELFPARAM();
 	if(!STAT(FROZEN, targ))
 		return;
 

@@ -266,7 +266,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(arc, bolt_ammo));
 
-	W_SetupShot(self, false, 2, SND(LASERGUN_FIRE), CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
+	W_SetupShot(self, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
 
 	Send_Effect(EFFECT_ARC_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -405,7 +405,7 @@ void W_Arc_Beam_Think()
 		self.owner,
 		true,
 		0,
-		"",
+		SND_Null,
 		0,
 		WEP_CVAR(arc, beam_damage) * coefficient,
 		WEP_CVAR(arc, beam_range)
@@ -693,7 +693,7 @@ void W_Arc_Beam(float burst)
 void Arc_Smoke()
 {SELFPARAM();
 	makevectors(self.v_angle);
-	W_SetupShot_Range(self,true,0,"",0,0,0);
+	W_SetupShot_Range(self,true,0,SND_Null,0,0,0);
 
 	vector smoke_origin = w_shotorg + self.velocity*frametime;
 	if ( self.arc_overheat > time )
@@ -732,6 +732,7 @@ METHOD(Arc, wr_aim, void(entity thiswep))
     if(WEP_CVAR(arc, beam_botaimspeed))
     {
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(
+        	self,
             WEP_CVAR(arc, beam_botaimspeed),
             0,
             WEP_CVAR(arc, beam_botaimlifetime),
@@ -741,6 +742,7 @@ METHOD(Arc, wr_aim, void(entity thiswep))
     else
     {
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(
+        	self,
             1000000,
             0,
             0.001,
@@ -851,6 +853,7 @@ METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 }
 METHOD(Arc, wr_drop, void(entity thiswep))
 {
+    SELFPARAM();
     weapon_dropevent_item.arc_overheat = self.arc_overheat;
     weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
     self.arc_overheat = 0;
@@ -858,6 +861,7 @@ METHOD(Arc, wr_drop, void(entity thiswep))
 }
 METHOD(Arc, wr_pickup, void(entity thiswep))
 {
+    SELFPARAM();
     if ( !client_hasweapon(self, thiswep, false, false) &&
         weapon_dropevent_item.arc_overheat > time )
     {
@@ -871,6 +875,7 @@ bool autocvar_cl_arcbeam_teamcolor = true;
 
 METHOD(Arc, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         vector org2;

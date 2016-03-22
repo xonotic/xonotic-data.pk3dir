@@ -33,27 +33,27 @@
  * Functions
  */
 
-void havocbot_ai();
-void havocbot_aim();
-void havocbot_setupbot();
-void havocbot_movetogoal();
-void havocbot_chooserole();
-void havocbot_chooseenemy();
-void havocbot_chooseweapon();
-void havocbot_bunnyhop(vector dir);
-void havocbot_keyboard_movement(vector destorg);
+void havocbot_ai(entity this);
+void havocbot_aim(entity this);
+void havocbot_setupbot(entity this);
+void havocbot_movetogoal(entity this);
+void havocbot_chooserole(entity this);
+void havocbot_chooseenemy(entity this);
+void havocbot_chooseweapon(entity this);
+void havocbot_bunnyhop(entity this, vector dir);
+void havocbot_keyboard_movement(entity this, vector destorg);
 
-float havocbot_resetgoal();
-float havocbot_moveto(vector pos);
-float havocbot_moveto_refresh_route();
+float havocbot_resetgoal(entity this);
+float havocbot_moveto(entity this, vector pos);
+float havocbot_moveto_refresh_route(entity this);
 
 vector havocbot_dodge();
 
-.void() havocbot_role;
-.void() havocbot_previous_role;
+.void(entity this) havocbot_role;
+.void(entity this) havocbot_previous_role;
 
-void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
-void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
 /*
  * Imports

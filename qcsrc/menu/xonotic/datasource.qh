@@ -1,12 +1,8 @@
 #pragma once
 
 CLASS(DataSource, Object)
-    entity DataSource_true;
-    entity DataSource_false;
-    INIT_STATIC(DataSource) {
-        DataSource_true = NEW(Object);
-        DataSource_false = NULL;
-    }
+    STATIC_ATTRIB(DataSource, true, entity, NEW(Object));
+    STATIC_ATTRIB(DataSource, false, entity, NULL);
     /**
      * get entry `i` passing `name` and `icon` through `returns` if it is not null
      * returns `DataSource_false` if out of bounds

@@ -51,8 +51,7 @@ REGISTRY(Registries, BITS(8))
  * Must be followed by a semicolon or a function body with a `this` parameter.
  * Wrapper macros may perform actions after user initialization like so:
  *     #define REGISTER_FOO(id) \
- *         REGISTER(Foos, FOO, id, m_id, NEW(Foo)); \
- *         REGISTER_INIT_POST(FOO, id) { \
+ *         REGISTER(Foos, FOO, id, m_id, NEW(Foo)) { \
  *             print("Registering foo #", this.m_id + 1, "\n"); \
  *         } \
  *         REGISTER_INIT(FOO, id)
@@ -70,7 +69,6 @@ REGISTRY(Registries, BITS(8))
 #define REGISTER_4(registry, id, fld, inst) \
 	entity id; \
 	REGISTER_INIT(id) {} \
-	REGISTER_INIT_POST(id) {} \
 	void Register_##id() \
 	{ \
 		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
@@ -78,7 +76,6 @@ REGISTRY(Registries, BITS(8))
 		this.registered_id = #id; \
 		REGISTRY_PUSH(registry, fld, this); \
 		Register_##id##_init(this); \
-		Register_##id##_init_post(this); \
 	} \
 	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
 	REGISTER_INIT(id)
@@ -99,7 +96,6 @@ REGISTRY(Registries, BITS(8))
 } MACRO_END
 
 #define REGISTER_INIT(id) [[accumulate]] void Register_##id##_init(entity this)
-#define REGISTER_INIT_POST(id) [[accumulate]] void Register_##id##_init_post(entity this)
 
 /** internal next pointer */
 #define REGISTRY_NEXT enemy

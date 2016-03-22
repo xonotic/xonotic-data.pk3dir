@@ -68,7 +68,7 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #endif
 
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
-{SELFPARAM();
+{
 	entity telefragger;
 	vector from;
 
@@ -80,6 +80,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	makevectors (to_angles);
 
 #ifdef SVQC
+    SELFPARAM();
 	if(player.teleportable == TELEPORT_NORMAL) // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
 	{
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
@@ -248,6 +249,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 
 void teleport_findtarget()
 {
+    SELFPARAM();
 	int n = 0;
 	entity e;
 	for(e = world; (e = find(e, targetname, self.target)); )
@@ -298,7 +300,7 @@ entity Teleport_Find(vector mi, vector ma)
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
-{SELFPARAM();
+{
 #ifdef SVQC
 	makevectors(pl.angles);
 	Reset_ArcBeam(pl, v_forward);

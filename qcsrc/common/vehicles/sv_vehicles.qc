@@ -232,12 +232,13 @@ void vehicles_projectile_explode()
 	remove (self);
 }
 
-entity vehicles_projectile(string _mzlfx, string _mzlsound,
+entity vehicles_projectile(string _mzlfx, Sound _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
 {SELFPARAM();
+    TC(Sound, _mzlsound);
 	entity proj;
 
 	proj = spawn();
@@ -271,8 +272,8 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 	else
 		proj.flags		   = FL_PROJECTILE | FL_NOTARGET;
 
-	if(_mzlsound)
-		_sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
+	if(_mzlsound != SND_Null)
+		sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
 	if(_mzlfx)
 		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);

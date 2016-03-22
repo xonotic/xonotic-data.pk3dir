@@ -361,6 +361,7 @@ void trigger_push_updatelink()
 
 void trigger_push_link()
 {
+    SELFPARAM();
 	trigger_link(self, trigger_push_send);
 }
 

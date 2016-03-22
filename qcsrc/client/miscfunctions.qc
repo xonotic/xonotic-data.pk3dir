@@ -119,6 +119,7 @@ void RemoveTeam(entity Team)
 
 entity GetTeam(int Team, bool add)
 {
+    TC(int, Team); TC(bool, add);
 	int num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
@@ -159,6 +160,7 @@ float PreviewExists(string name)
 // decolorizes and team colors the player name when needed
 string playername(string thename, float teamid)
 {
+    TC(int, teamid);
     string t;
     if (teamplay)
     {
@@ -483,8 +485,9 @@ void DrawCircleClippedPic(vector centre, float radi, string pic, float f, vector
 }
 
 /** engine callback */
-void URI_Get_Callback(int id, float status, string data)
+void URI_Get_Callback(int id, int status, string data)
 {
+    TC(int, id); TC(int, status);
 	if(url_URI_Get_Callback(id, status, data))
 	{
 		// handled

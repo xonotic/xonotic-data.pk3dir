@@ -48,6 +48,7 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 }
 METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
+    SELFPARAM();
     if (self.tur_head.frame != 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 

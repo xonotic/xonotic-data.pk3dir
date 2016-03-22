@@ -152,7 +152,8 @@ void CL_ExteriorWeaponentity_Think()
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
 	else this.alpha = 1;
 
-	this.glowmod = weaponentity_glowmod(PS(this.owner).m_weapon, this.owner.clientcolors);
+    Weapon wep = PS(this.owner).m_weapon;
+	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner.clientcolors);
 	this.colormap = this.owner.colormap;
 
 	CSQCMODEL_AUTOUPDATE(this);
@@ -209,6 +210,7 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary)
 {
+    SELFPARAM();
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
 	if (secondary) WITH(entity, self, actor, ammo = thiswep.wr_checkammo2(thiswep));
@@ -682,8 +684,9 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
-void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
+void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 {
+    TC(Sound, sent_sound);
 	.entity weaponentity = weaponentities[0];
 	// set global values to work with
 	Weapon e = PS(actor).m_weapon;
@@ -693,7 +696,8 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 	actor.reload_ammo_min = sent_ammo_min;
 	actor.reload_ammo_amount = e.reloading_ammo;
 	actor.reload_time = e.reloading_time;
-	actor.reload_sound = sent_sound;
+	if (actor.reload_sound) strunzone(actor.reload_sound);
+	actor.reload_sound = strzone(Sound_fixpath(sent_sound));
 
 	// don't reload weapons that don't have the RELOADABLE flag
 	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))
@@ -762,6 +766,7 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 
 void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item)
 {
+    SELFPARAM();
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
 	WITH(entity, self, player, w.event(w));

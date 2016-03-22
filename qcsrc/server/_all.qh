@@ -11,6 +11,7 @@ const string STR_OBSERVER = "observer";
 #define IS_OBSERVER(v) ((v).classname == STR_OBSERVER)
 
 #define IS_CLIENT(v) (v.flags & FL_CLIENT)
+#define is_Client IS_CLIENT
 #define IS_BOT_CLIENT(v) (clienttype(v) == CLIENTTYPE_BOT)
 #define IS_REAL_CLIENT(v) (clienttype(v) == CLIENTTYPE_REAL)
 #define IS_NOT_A_CLIENT(v) (clienttype(v) == CLIENTTYPE_NOTACLIENT)

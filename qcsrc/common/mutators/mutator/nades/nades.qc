@@ -44,6 +44,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
+    SELFPARAM();
 	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		self.modelindex = 0;
@@ -60,6 +61,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 {
+    SELFPARAM();
 	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
@@ -820,7 +822,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	makevectors(e.v_angle);
 
-	W_SetupShot(e, false, false, "", CH_WEAPON_A, 0);
+	W_SetupShot(e, false, false, SND_Null, CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
@@ -923,6 +925,7 @@ void nades_RemoveBonus(entity player)
 
 MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 {
+    SELFPARAM();
 	nades_RemoveBonus(self);
 }
 
@@ -1128,6 +1131,7 @@ NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOff
 
 MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
+    SELFPARAM();
 	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow();
 		return true;

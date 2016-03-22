@@ -17,6 +17,7 @@ CLASS(PlayerState, Object)
 	ATTRIB(PlayerState, m_weapon, Weapon, Weapons_from(-1))
 	METHOD(PlayerState, ps_push, void(PlayerState this, entity cl))
 	{
+	    TC(PlayerState, this);
 		STAT(ACTIVEWEAPON, cl) = this.m_weapon.m_id;
 		STAT(SWITCHINGWEAPON, cl) = this.m_switchingweapon.m_id;
 		STAT(SWITCHWEAPON, cl) = this.m_switchweapon.m_id;
@@ -24,11 +25,7 @@ CLASS(PlayerState, Object)
 ENDCLASS(PlayerState)
 
 .PlayerState _ps;
-#if NDEBUG
-	#define PS(this) (this._ps)
-#else
-	PlayerState PS(entity this) { assert(IS_CLIENT(this)); return this._ps; }
-#endif
+#define PS(this) (this._ps)
 
 // TODO: renew on death
 void PlayerState_attach(entity this);

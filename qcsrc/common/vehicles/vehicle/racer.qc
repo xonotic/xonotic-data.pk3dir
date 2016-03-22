@@ -579,6 +579,7 @@ METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
+    SELFPARAM();
     self.movetype = MOVETYPE_BOUNCE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
@@ -586,7 +587,7 @@ METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
     if(self.owner.flagcarried)
        setorigin(self.owner.flagcarried, '-190 0 96');
 #elif defined(CSQC)
-
+    SELFPARAM();
     self.move_movetype = MOVETYPE_BOUNCE;
 #endif
 }
@@ -594,6 +595,7 @@ METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
+    SELFPARAM();
     if(self.scale != 0.5)
     {
         if(autocvar_g_vehicle_racer_hovertype != 0)
@@ -675,6 +677,7 @@ METHOD(Racer, vr_crosshair, void(Racer thisveh))
 METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
+    SELFPARAM();
     self.vehicle_exit = racer_exit;
 #endif
 

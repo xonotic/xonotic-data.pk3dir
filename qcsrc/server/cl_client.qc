@@ -637,6 +637,7 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 }
 void ClientInit_misc()
 {
+    SELFPARAM();
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);
@@ -1273,12 +1274,13 @@ void respawn()
 	PutClientInServer();
 }
 
-void play_countdown(float finished, string samp)
+void play_countdown(float finished, Sound samp)
 {SELFPARAM();
+    TC(Sound, samp);
 	if(IS_REAL_CLIENT(self))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
-				_sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
+				sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
 void player_powerups ()
@@ -1303,7 +1305,7 @@ void player_powerups ()
 	{
 		if (self.items & ITEM_Strength.m_itemid)
 		{
-			play_countdown(self.strength_finished, SND(POWEROFF));
+			play_countdown(self.strength_finished, SND_POWEROFF);
 			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.strength_finished)
 			{
@@ -1323,7 +1325,7 @@ void player_powerups ()
 		}
 		if (self.items & ITEM_Shield.m_itemid)
 		{
-			play_countdown(self.invincible_finished, SND(POWEROFF));
+			play_countdown(self.invincible_finished, SND_POWEROFF);
 			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.invincible_finished)
 			{
@@ -1356,7 +1358,7 @@ void player_powerups ()
 			}
 			else
 			{
-				play_countdown(self.superweapons_finished, SND(POWEROFF));
+				play_countdown(self.superweapons_finished, SND_POWEROFF);
 				if (time > self.superweapons_finished)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
@@ -1540,6 +1542,8 @@ spectate mode routines
 
 void SpectateCopy(entity this, entity spectatee)
 {
+    TC(Client, this); TC(Client, spectatee);
+
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
@@ -1583,7 +1587,7 @@ void SpectateCopy(entity this, entity spectatee)
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
 
-    anticheat_spectatecopy(spectatee);
+    anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
@@ -2043,7 +2047,7 @@ void PlayerPreThink ()
 	if(frametime)
 	{
 		// physics frames: update anticheat stuff
-		anticheat_prethink();
+		anticheat_prethink(self);
 	}
 
 	if(blockSpectators && frametime)

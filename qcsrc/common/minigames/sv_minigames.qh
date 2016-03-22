@@ -53,7 +53,7 @@ REGISTRY_CHECK(Minigames)
 #define REGISTER_MINIGAME(name,nicename) \
     REGISTER(Minigames, MINIGAME_##name, m_id, new_pure(minigame_descriptor)); \
     int name##_server_event(entity, string, ...); \
-    REGISTER_INIT_POST(MINIGAME_##name) { \
+    REGISTER_INIT(MINIGAME_##name) { \
         this.netname = strzone(strtolower(#name)); \
         this.message = nicename; \
 		this.minigame_event = name##_server_event; \

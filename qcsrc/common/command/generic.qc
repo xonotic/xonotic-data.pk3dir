@@ -544,7 +544,7 @@ float GenericCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
-		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
 	});
 	return false;
@@ -554,7 +554,7 @@ float GenericCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(GENERIC_COMMANDS, it.m_name == c, {
-		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
 	});
 	return false;

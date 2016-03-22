@@ -149,7 +149,7 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
-{SELFPARAM();
+{
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups
@@ -367,7 +367,7 @@ void HUD_ItemsTime()
     	id = it.m_id;
     	icon = it.m_icon;
 
-    	:iteration
+LABEL(iteration)
         float item_time = ItemsTime_time[id];
         if (item_time < -1)
         {

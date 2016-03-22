@@ -187,7 +187,7 @@ void W_Fireball_Attack1()
 {SELFPARAM();
 	entity proj;
 
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, SND(FIREBALL_FIRE2), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 2, SND_FIREBALL_FIRE2, CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
 
 	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -223,7 +223,7 @@ void W_Fireball_Attack1()
 
 void W_Fireball_AttackEffect(float i, vector f_diff)
 {SELFPARAM();
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 0, "", 0, 0);
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', false, 0, SND_Null, 0, 0);
 	w_shotorg += f_diff.x * v_up + f_diff.y * v_right;
 	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
@@ -320,7 +320,7 @@ void W_Fireball_Attack2()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, SND(FIREBALL_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 2, SND_FIREBALL_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
@@ -353,11 +353,12 @@ void W_Fireball_Attack2()
 
 METHOD(Fireball, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(self.bot_primary_fireballmooth == 0)
     {
-        if(bot_aim(WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
+        if(bot_aim(self, WEP_CVAR_PRI(fireball, speed), 0, WEP_CVAR_PRI(fireball, lifetime), false))
         {
             PHYS_INPUT_BUTTON_ATCK(self) = true;
             if(random() < 0.02) self.bot_primary_fireballmooth = 0;
@@ -365,7 +366,7 @@ METHOD(Fireball, wr_aim, void(entity thiswep))
     }
     else
     {
-        if(bot_aim(WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
+        if(bot_aim(self, WEP_CVAR_SEC(fireball, speed), WEP_CVAR_SEC(fireball, speed_up), WEP_CVAR_SEC(fireball, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK2(self) = true;
             if(random() < 0.01) self.bot_primary_fireballmooth = 1;
@@ -394,6 +395,7 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 }
 METHOD(Fireball, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.ammo_field = ammo_none;
 }
 METHOD(Fireball, wr_checkammo1, bool(entity thiswep))
@@ -406,6 +408,7 @@ METHOD(Fireball, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Fireball, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     self.fireball_primarytime = time;
 }
 METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
@@ -428,6 +431,7 @@ METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Fireball, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {

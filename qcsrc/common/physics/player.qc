@@ -1358,7 +1358,7 @@ void PM_Main(entity this)
 	{
 		if (playerdemo_read(this))
 			return;
-		WITH(entity, self, this, bot_think());
+		bot_think(this);
 	}
 #endif
 
@@ -1532,7 +1532,7 @@ void PM_Main(entity this)
 	else
 		PM_air(this, buttons_prev, maxspeed_mod);
 
-:end
+LABEL(end)
 	if (IS_ONGROUND(this))
 		this.lastground = time;
 

@@ -181,6 +181,7 @@ bool trigger_impulse_send(entity this, entity to, int sf)
 
 void trigger_impulse_link()
 {
+    SELFPARAM();
 	trigger_link(self, trigger_impulse_send);
 }
 

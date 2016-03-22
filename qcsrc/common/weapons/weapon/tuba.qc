@@ -314,7 +314,7 @@ void W_Tuba_NoteOn(float hittype)
 	vector o;
 	float n;
 
-	W_SetupShot(self, false, 2, "", 0, WEP_CVAR(tuba, damage));
+	W_SetupShot(self, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
 
 	n = W_Tuba_GetNote(self, hittype);
 
@@ -450,7 +450,7 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				break;
 		}
 		tuba_instrument_send(actor, actor.tuba_instrument);
-		W_SetupShot(actor, false, 0, "", 0, 0);
+		W_SetupShot(actor, false, 0, SND_Null, 0, 0);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
@@ -588,7 +588,7 @@ void Ent_TubaNote_StopSound(entity this)
 	this.enemy = NULL;
 }
 
-void Ent_TubaNote_StopSound_self() { Ent_TubaNote_StopSound(self); }
+void Ent_TubaNote_StopSound_self() { SELFPARAM(); Ent_TubaNote_StopSound(self); }
 
 NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 {

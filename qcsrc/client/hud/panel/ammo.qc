@@ -18,6 +18,7 @@ void DrawAmmoNades(vector myPos, vector mySize, bool draw_expanding, float expan
 
 void DrawAmmoItem(vector myPos, vector mySize, .int ammoType, bool isCurrent, bool isInfinite)
 {
+    TC(bool, isCurrent); TC(bool, isInfinite);
 	if(ammoType == ammo_none)
 		return;
 
