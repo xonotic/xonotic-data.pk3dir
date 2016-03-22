@@ -562,6 +562,7 @@ METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 {
+    SELFPARAM();
     self.vehicle_weapon2mode = SBRM_GUIDE;
     self.movetype = MOVETYPE_WALK;
     CSQCVehicleSetup(self.owner, 0);
@@ -576,6 +577,7 @@ METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_think, void(Spiderbot thisveh, entity instance))
 {
+    SELFPARAM();
     if(IS_ONGROUND(self))
         movelib_brake_simple(self, autocvar_g_vehicle_spiderbot_speed_stop);
 }
@@ -599,6 +601,7 @@ METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 {
+    SELFPARAM();
     if(!self.gun1)
     {
         self.vehicles_impulse = spiderbot_impulse;
@@ -630,6 +633,7 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 {
+    SELFPARAM();
     if(autocvar_g_vehicle_spiderbot_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
 

@@ -140,6 +140,7 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFR
 
 METHOD(Rifle, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(vdist(self.origin - self.enemy.origin, >, 1000))
@@ -198,22 +199,26 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
 }
 METHOD(Rifle, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(rifle, ammo);
     ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_PRI(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(rifle, ammo);
     ammo_amount += self.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }
 METHOD(Rifle, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     self.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
 }
 METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND_RELOAD);
 }
 METHOD(Rifle, wr_suicidemessage, Notification(entity thiswep))
@@ -243,6 +248,7 @@ METHOD(Rifle, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Rifle, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_RIFLE_IMPACT, org2, w_backoff * 1000, 1);

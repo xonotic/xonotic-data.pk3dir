@@ -244,6 +244,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 METHOD(MachineGun, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
     else
@@ -302,6 +303,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
 }
 METHOD(MachineGun, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
         ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(machinegun, sustained_ammo);
@@ -319,6 +321,7 @@ METHOD(MachineGun, wr_checkammo1, bool(entity thiswep))
 }
 METHOD(MachineGun, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount;
     if(WEP_CVAR(machinegun, mode) == 1)
         ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(machinegun, burst_ammo);
@@ -336,6 +339,7 @@ METHOD(MachineGun, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(MachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND_RELOAD);
 }
 METHOD(MachineGun, wr_suicidemessage, Notification(entity thiswep))
@@ -355,6 +359,7 @@ METHOD(MachineGun, wr_killmessage, Notification(entity thiswep))
 
 METHOD(MachineGun, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);

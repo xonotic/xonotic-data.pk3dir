@@ -578,6 +578,7 @@ METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 
 METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 {
+    SELFPARAM();
 #ifdef SVQC
     self.movetype = MOVETYPE_BOUNCE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
@@ -593,6 +594,7 @@ METHOD(Racer, vr_enter, void(Racer thisveh, entity instance))
 
 METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 {
+    SELFPARAM();
 #ifdef SVQC
     if(self.scale != 0.5)
     {
@@ -674,6 +676,7 @@ METHOD(Racer, vr_crosshair, void(Racer thisveh))
 #endif
 METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 {
+    SELFPARAM();
 #ifdef SVQC
     self.vehicle_exit = racer_exit;
 #endif

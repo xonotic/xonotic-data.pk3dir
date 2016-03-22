@@ -427,6 +427,7 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 METHOD(Electro, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     PHYS_INPUT_BUTTON_ATCK(self) = PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
     if(self.bot_secondary_electromooth == 0)
@@ -492,12 +493,14 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Electro, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(electro, ammo);
     ammo_amount += self.(weapon_load[WEP_ELECTRO.m_id]) >= WEP_CVAR_PRI(electro, ammo);
     return ammo_amount;
 }
 METHOD(Electro, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount;
     if(WEP_CVAR(electro, combo_safeammocheck)) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
     {
@@ -513,10 +516,12 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Electro, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     self.electro_secondarytime = time;
 }
 METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND_RELOAD);
 }
 METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
@@ -546,6 +551,7 @@ METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Electro, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 6;
     if(w_deathtype & HITTYPE_SECONDARY)

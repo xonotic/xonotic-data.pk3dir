@@ -228,6 +228,7 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 
 METHOD(Shotgun, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
         PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false);
     else
@@ -281,16 +282,19 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Shotgun, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.ammo_field = ammo_none;
 }
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
     ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
     return ammo_amount;
 }
 METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     if(IS_BOT_CLIENT(self))
     if(vdist(self.origin - self.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
         return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
@@ -308,6 +312,7 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Shotgun, wr_suicidemessage, Notification(entity thiswep))
@@ -328,6 +333,7 @@ METHOD(Shotgun, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Shotgun, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
     if(!w_issilent && time - self.prevric > 0.25)

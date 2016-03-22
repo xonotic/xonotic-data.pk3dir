@@ -1504,6 +1504,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+    SELFPARAM();
 	gameover = true;
 
 	intermission_running = 1;

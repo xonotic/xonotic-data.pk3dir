@@ -588,7 +588,7 @@ void Ent_TubaNote_StopSound(entity this)
 	this.enemy = NULL;
 }
 
-void Ent_TubaNote_StopSound_self() { Ent_TubaNote_StopSound(self); }
+void Ent_TubaNote_StopSound_self() { SELFPARAM(); Ent_TubaNote_StopSound(self); }
 
 NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 {

@@ -47,6 +47,7 @@ REGISTER_WEAPON(HMG, hmg, NEW(HeavyMachineGun));
 REGISTER_MUTATOR(hmg_nadesupport, true);
 MUTATOR_HOOKFUNCTION(hmg_nadesupport, Nade_Damage)
 {
+    SELFPARAM();
 	if (MUTATOR_ARGV(0, entity) != WEP_HMG) return;
 	return = true;
 	MUTATOR_ARGV(0, float) /* damage */ = self.max_health * 0.1;
@@ -56,6 +57,7 @@ spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
 
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
+    SELFPARAM();
 	if (!PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -100,6 +102,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
     else
@@ -123,6 +126,7 @@ METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity wea
 
 METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
 
     if(autocvar_g_balance_hmg_reload_ammo)
@@ -133,6 +137,7 @@ METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep))
 
 METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
 
     if(autocvar_g_balance_hmg_reload_ammo)
@@ -143,6 +148,7 @@ METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep))
 
 METHOD(HeavyMachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, WEP_CVAR(hmg, ammo), SND_RELOAD);
 }
 
@@ -164,6 +170,7 @@ METHOD(HeavyMachineGun, wr_killmessage, Notification(entity thiswep))
 
 METHOD(HeavyMachineGun, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);

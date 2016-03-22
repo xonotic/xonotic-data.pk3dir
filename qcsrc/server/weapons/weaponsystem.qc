@@ -210,6 +210,7 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary)
 {
+    SELFPARAM();
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
 	if (secondary) WITH(entity, self, actor, ammo = thiswep.wr_checkammo2(thiswep));
@@ -765,6 +766,7 @@ void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 
 void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item)
 {
+    SELFPARAM();
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
 	WITH(entity, self, player, w.event(w));

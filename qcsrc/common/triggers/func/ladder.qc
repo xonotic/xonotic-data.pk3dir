@@ -34,6 +34,7 @@ bool func_ladder_send(entity to, int sf)
 
 void func_ladder_link()
 {
+    SELFPARAM();
 	self.SendEntity = func_ladder_send;
 	self.SendFlags = 0xFFFFFF;
 	//self.model = "null";
@@ -41,6 +42,7 @@ void func_ladder_link()
 
 void func_ladder_init()
 {
+    SELFPARAM();
 	self.touch = func_ladder_touch;
 
 	trigger_init(self);

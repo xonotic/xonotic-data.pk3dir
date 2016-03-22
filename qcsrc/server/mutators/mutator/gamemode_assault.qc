@@ -301,6 +301,7 @@ void assault_new_round()
 // they win. Otherwise the defending team wins once the timelimit passes.
 int WinningCondition_Assault()
 {
+    SELFPARAM();
 	WinningConditionHelper(); // set worldstatus
 
 	int status = WINNING_NO;
@@ -678,6 +679,7 @@ MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 
 MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 {
+    SELFPARAM();
 	switch(self.classname)
 	{
 		case "info_player_team1":

@@ -182,6 +182,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
+    SELFPARAM();
     if (fire & 1) {
         if(!actor.hook)
         if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
@@ -274,10 +275,12 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(Hook, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 }
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep))
 {
+    SELFPARAM();
     if (!thiswep.ammo_factor) return true;
     if(self.hook)
         return self.ammo_fuel > 0;
@@ -291,6 +294,7 @@ METHOD(Hook, wr_checkammo2, bool(Hook thiswep))
 }
 METHOD(Hook, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     RemoveGrapplingHook(self);
     self.hook_time = 0;
     self.hook_refire = time;
@@ -305,6 +309,7 @@ METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Hook, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);

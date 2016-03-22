@@ -434,6 +434,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep))
 #else
 METHOD(Devastator, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     // aim and decide to fire if appropriate
     PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
@@ -557,10 +558,12 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
 }
 METHOD(Devastator, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.rl_release = 1;
 }
 METHOD(Devastator, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     #if 0
     // don't switch while guiding a missile
     if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_DEVASTATOR)
@@ -601,11 +604,13 @@ METHOD(Devastator, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Devastator, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     self.lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
     self.rl_release = 0;
 }
 METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, WEP_CVAR(devastator, ammo), SND_RELOAD);
 }
 METHOD(Devastator, wr_suicidemessage, Notification(entity thiswep))
@@ -625,6 +630,7 @@ METHOD(Devastator, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Devastator, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

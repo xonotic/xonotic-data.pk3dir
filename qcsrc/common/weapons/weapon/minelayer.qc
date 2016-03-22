@@ -406,6 +406,7 @@ float W_MineLayer_PlacedMines(float detonate)
 
 METHOD(MineLayer, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     // aim and decide to fire if appropriate
     if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
         PHYS_INPUT_BUTTON_ATCK(self) = false;
@@ -528,6 +529,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     int slot = 0; // TODO: unhardcode
     // don't switch while placing a mine
     if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_MINE_LAYER)
@@ -547,10 +549,12 @@ METHOD(MineLayer, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(MineLayer, wr_resetplayers, void(entity thiswep))
 {
+    SELFPARAM();
     self.minelayer_mines = 0;
 }
 METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, WEP_CVAR(minelayer, ammo), SND_RELOAD);
 }
 METHOD(MineLayer, wr_suicidemessage, Notification(entity thiswep))
@@ -567,6 +571,7 @@ METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(MineLayer, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

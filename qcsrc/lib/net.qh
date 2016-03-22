@@ -101,7 +101,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	/** return false to remove from the client */
 	.bool(entity this, entity to, int sendflags) SendEntity3;
 
-	bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }
+	bool SendEntity_self(entity to, int sendflags) { SELFPARAM(); return this.SendEntity3(this, to, sendflags); }
 
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
@@ -145,6 +145,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void UncustomizeEntitiesRun()
 	{
+	    SELFPARAM();
 		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, WITH(entity, self, it, it.uncustomizeentityforclient()));
 	}
 

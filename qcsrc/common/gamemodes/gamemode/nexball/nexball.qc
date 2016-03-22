@@ -854,6 +854,7 @@ float ball_customize()
 
 METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
 {
+    SELFPARAM();
     TC(BallStealer, thiswep);
     if(fire & 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))

@@ -152,6 +152,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 
 METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 }
 
@@ -179,6 +180,7 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
 
 METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
     ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
     return ammo_amount;
@@ -191,6 +193,7 @@ METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep))
 
 METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, WEP_CVAR(rpc, ammo), SND_RELOAD);
 }
 
@@ -218,6 +221,7 @@ METHOD(RocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 
 METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

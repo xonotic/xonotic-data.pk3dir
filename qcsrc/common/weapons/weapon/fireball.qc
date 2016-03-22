@@ -353,6 +353,7 @@ void W_Fireball_Attack2()
 
 METHOD(Fireball, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(self.bot_primary_fireballmooth == 0)
@@ -394,6 +395,7 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 }
 METHOD(Fireball, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.ammo_field = ammo_none;
 }
 METHOD(Fireball, wr_checkammo1, bool(entity thiswep))
@@ -406,6 +408,7 @@ METHOD(Fireball, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Fireball, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     self.fireball_primarytime = time;
 }
 METHOD(Fireball, wr_suicidemessage, Notification(entity thiswep))
@@ -428,6 +431,7 @@ METHOD(Fireball, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Fireball, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     if(w_deathtype & HITTYPE_SECONDARY)
     {

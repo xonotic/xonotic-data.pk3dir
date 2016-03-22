@@ -626,6 +626,7 @@ METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 {
+    SELFPARAM();
     self.vehicle_weapon2mode = RSM_BOMB;
     self.owner.PlayerPhysplug = raptor_takeoff;
     self.movetype	   = MOVETYPE_BOUNCEMISSILE;
@@ -667,6 +668,7 @@ METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 {
+    SELFPARAM();
     if(!self.gun1)
     {
         entity spinner;
@@ -758,6 +760,7 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 {
+    SELFPARAM();
     if(autocvar_g_vehicle_raptor_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
 
@@ -788,6 +791,7 @@ METHOD(Raptor, vr_hud, void(Raptor thisveh))
 }
 METHOD(Raptor, vr_crosshair, void(Raptor thisveh))
 {
+    SELFPARAM();
     string crosshair;
 
     switch(weapon2mode)

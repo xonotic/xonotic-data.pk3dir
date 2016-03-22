@@ -637,6 +637,7 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 }
 void ClientInit_misc()
 {
+    SELFPARAM();
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);

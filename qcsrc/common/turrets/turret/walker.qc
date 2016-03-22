@@ -350,6 +350,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
 METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 {
+    SELFPARAM();
     fixedmakevectors(self.angles);
 
     if (self.spawnflags & TSF_NO_PATHBREAK && self.pathcurrent)

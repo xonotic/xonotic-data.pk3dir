@@ -378,6 +378,7 @@ MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 {
+    SELFPARAM();
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{

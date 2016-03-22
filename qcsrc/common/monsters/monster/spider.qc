@@ -56,6 +56,7 @@ REGISTER_MUTATOR(spiderweb, true);
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
 {
+    SELFPARAM();
 	if (time >= self.spider_slowness)
 		return false;
 	PHYS_MAXSPEED(self) *= 0.5; // half speed while slow from spider
@@ -67,6 +68,7 @@ MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 {
+    SELFPARAM();
 	if(time < self.spider_slowness)
 	{
 		monster_speed_run *= 0.5;
@@ -77,12 +79,14 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
 {
+    SELFPARAM();
 	self.spider_slowness = 0;
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
 {
+    SELFPARAM();
 	self.spider_slowness = 0;
 	return false;
 }
@@ -90,6 +94,7 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
 {
+    SELFPARAM();
     TC(SpiderAttack, thiswep);
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)

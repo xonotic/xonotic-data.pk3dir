@@ -341,6 +341,7 @@ void W_RocketMinsta_Attack3 ()
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(self.(thiswep.ammo_field) > 0)
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 1, false);
     else
@@ -422,11 +423,13 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(Vaporizer, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.ammo_field = (thiswep.ammo_field);
     self.vaporizer_lasthit = 0;
 }
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
     float ammo_amount = self.(thiswep.ammo_field) >= vaporizer_ammo;
     ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
@@ -434,6 +437,7 @@ METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
 }
 METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     if(!WEP_CVAR_SEC(vaporizer, ammo))
         return true;
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vaporizer, ammo);
@@ -442,10 +446,12 @@ METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     self.vaporizer_lasthit = 0;
 }
 METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
     float used_ammo;
     if(WEP_CVAR_SEC(vaporizer, ammo))
@@ -469,6 +475,7 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Vaporizer, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2 = w_org + w_backoff * 6;
     if(w_deathtype & HITTYPE_SECONDARY)
     {

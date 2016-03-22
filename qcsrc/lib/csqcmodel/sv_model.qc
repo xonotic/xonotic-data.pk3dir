@@ -32,6 +32,7 @@
 
 bool CSQCModel_Send(entity to, int sf)
 {
+    SELFPARAM();
 	// some nice flags for CSQCMODEL_IF
 	float isplayer = (IS_CLIENT(self));
 	float islocalplayer = (self == to);

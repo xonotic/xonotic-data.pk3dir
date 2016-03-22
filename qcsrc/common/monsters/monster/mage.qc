@@ -162,6 +162,7 @@ void M_Mage_Attack_Spike_Explode(entity this)
 
 void M_Mage_Attack_Spike_Touch()
 {
+    SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	M_Mage_Attack_Spike_Explode(self);

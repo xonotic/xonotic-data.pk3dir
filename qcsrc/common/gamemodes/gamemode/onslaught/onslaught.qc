@@ -2130,6 +2130,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayHitsound)
 
 MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 {
+    SELFPARAM();
 	if(wp_sendflags & 16)
 	{
 		if(self.owner.classname == "onslaught_controlpoint")
@@ -2163,6 +2164,7 @@ MUTATOR_HOOKFUNCTION(ons, TurretValidateTarget)
 
 MUTATOR_HOOKFUNCTION(ons, TurretThink)
 {
+    SELFPARAM();
 	// ONS uses somewhat backwards linking.
 	if(self.target)
 	{

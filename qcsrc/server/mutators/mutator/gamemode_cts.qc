@@ -388,6 +388,7 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 void ClientKill_Now();
 MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
+    SELFPARAM();
 	ret_float = 0;
 
 	if(self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill

@@ -851,6 +851,7 @@ METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 }
 METHOD(Arc, wr_drop, void(entity thiswep))
 {
+    SELFPARAM();
     weapon_dropevent_item.arc_overheat = self.arc_overheat;
     weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
     self.arc_overheat = 0;
@@ -858,6 +859,7 @@ METHOD(Arc, wr_drop, void(entity thiswep))
 }
 METHOD(Arc, wr_pickup, void(entity thiswep))
 {
+    SELFPARAM();
     if ( !client_hasweapon(self, thiswep, false, false) &&
         weapon_dropevent_item.arc_overheat > time )
     {
@@ -871,6 +873,7 @@ bool autocvar_cl_arcbeam_teamcolor = true;
 
 METHOD(Arc, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         vector org2;

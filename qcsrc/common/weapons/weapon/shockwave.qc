@@ -673,6 +673,7 @@ void W_Shockwave_Attack()
 
 METHOD(Shockwave, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
         { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false); }
     else

@@ -42,6 +42,7 @@ void Weapon_whereis(Weapon this, entity cl)
 
 bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 {
+    SELFPARAM();
 	float f = 0;
 
 	if (time < cl.hasweapon_complain_spam)

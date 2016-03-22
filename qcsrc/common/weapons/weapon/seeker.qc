@@ -600,6 +600,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 
 METHOD(Seeker, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(WEP_CVAR(seeker, type) == 1)
         if(W_Seeker_Tagged_Info(self, self.enemy) != world)
             PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
@@ -654,6 +655,7 @@ METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Seeker, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
@@ -669,6 +671,7 @@ METHOD(Seeker, wr_checkammo1, bool(entity thiswep))
 }
 METHOD(Seeker, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
@@ -684,6 +687,7 @@ METHOD(Seeker, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Seeker, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     W_Reload(self, min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND_RELOAD);
 }
 METHOD(Seeker, wr_suicidemessage, Notification(entity thiswep))
@@ -703,6 +707,7 @@ METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Seeker, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 6;
     if(w_deathtype & HITTYPE_BOUNCE)

@@ -346,6 +346,7 @@ MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
+    SELFPARAM();
 	if(self.lms_spectate_warning)
 	{
 		// for the forfeit message...

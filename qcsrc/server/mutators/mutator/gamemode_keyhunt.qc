@@ -1353,6 +1353,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
+    SELFPARAM();
 	if(IS_DEAD(self))
 		return true;
 

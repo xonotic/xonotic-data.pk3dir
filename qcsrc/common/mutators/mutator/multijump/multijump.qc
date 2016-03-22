@@ -99,6 +99,7 @@ bool PM_multijump_checkjump(entity this)
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
+    SELFPARAM();
 #ifdef CSQC
 	self.multijump_count = PHYS_MULTIJUMP_COUNT(self);
 #endif
@@ -111,6 +112,7 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 {
+    SELFPARAM();
 	return PM_multijump_checkjump(self);
 }
 
