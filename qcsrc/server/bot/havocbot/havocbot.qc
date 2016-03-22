@@ -653,7 +653,7 @@ void havocbot_movetogoal(entity this)
 		return;
 
 	if (this.goalcurrent)
-		navigation_poptouchedgoals();
+		navigation_poptouchedgoals(this);
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap
 	if(this.goalcurrent == world)

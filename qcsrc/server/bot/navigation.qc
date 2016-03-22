@@ -30,7 +30,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	if(autocvar_bot_debug_tracewalk)
 	{
 		debugresetnodes();
-		debugnode(start);
+		debugnode(self, start);
 	}
 
 	move = end - start;
@@ -81,7 +81,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			return true;
 		}
 		if(autocvar_bot_debug_tracewalk)
-			debugnode(org);
+			debugnode(self, org);
 
 		if (dist <= 0)
 			break;
@@ -107,7 +107,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
-				debugnode(trace_endpos);
+				debugnode(self, trace_endpos);
 
 			if (trace_fraction < 1)
 			{
@@ -116,7 +116,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				for (; org.z < end.z + self.maxs.z; org.z += stepdist)
 				{
 						if(autocvar_bot_debug_tracewalk)
-							debugnode(org);
+							debugnode(self, org);
 
 				        if(pointcontents(org) == CONTENT_EMPTY)
 							break;
@@ -142,7 +142,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			tracebox(org, m1, m2, move, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
-				debugnode(trace_endpos);
+				debugnode(self, trace_endpos);
 
 			// hit something
 			if (trace_fraction < 1)
@@ -309,41 +309,41 @@ void navigation_pushroute(entity this, entity e)
 // remove first goal from stack
 // (in other words: remove a prerequisite for reaching the later goals)
 // (used when a spawnfunc_waypoint is reached)
-void navigation_poproute()
-{SELFPARAM();
-	//print("bot ", etos(self), " pop\n");
-	self.goalcurrent = self.goalstack01;
-	self.goalstack01 = self.goalstack02;
-	self.goalstack02 = self.goalstack03;
-	self.goalstack03 = self.goalstack04;
-	self.goalstack04 = self.goalstack05;
-	self.goalstack05 = self.goalstack06;
-	self.goalstack06 = self.goalstack07;
-	self.goalstack07 = self.goalstack08;
-	self.goalstack08 = self.goalstack09;
-	self.goalstack09 = self.goalstack10;
-	self.goalstack10 = self.goalstack11;
-	self.goalstack11 = self.goalstack12;
-	self.goalstack12 = self.goalstack13;
-	self.goalstack13 = self.goalstack14;
-	self.goalstack14 = self.goalstack15;
-	self.goalstack15 = self.goalstack16;
-	self.goalstack16 = self.goalstack17;
-	self.goalstack17 = self.goalstack18;
-	self.goalstack18 = self.goalstack19;
-	self.goalstack19 = self.goalstack20;
-	self.goalstack20 = self.goalstack21;
-	self.goalstack21 = self.goalstack22;
-	self.goalstack22 = self.goalstack23;
-	self.goalstack23 = self.goalstack24;
-	self.goalstack24 = self.goalstack25;
-	self.goalstack25 = self.goalstack26;
-	self.goalstack26 = self.goalstack27;
-	self.goalstack27 = self.goalstack28;
-	self.goalstack28 = self.goalstack29;
-	self.goalstack29 = self.goalstack30;
-	self.goalstack30 = self.goalstack31;
-	self.goalstack31 = world;
+void navigation_poproute(entity this)
+{
+	//print("bot ", etos(this), " pop\n");
+	this.goalcurrent = this.goalstack01;
+	this.goalstack01 = this.goalstack02;
+	this.goalstack02 = this.goalstack03;
+	this.goalstack03 = this.goalstack04;
+	this.goalstack04 = this.goalstack05;
+	this.goalstack05 = this.goalstack06;
+	this.goalstack06 = this.goalstack07;
+	this.goalstack07 = this.goalstack08;
+	this.goalstack08 = this.goalstack09;
+	this.goalstack09 = this.goalstack10;
+	this.goalstack10 = this.goalstack11;
+	this.goalstack11 = this.goalstack12;
+	this.goalstack12 = this.goalstack13;
+	this.goalstack13 = this.goalstack14;
+	this.goalstack14 = this.goalstack15;
+	this.goalstack15 = this.goalstack16;
+	this.goalstack16 = this.goalstack17;
+	this.goalstack17 = this.goalstack18;
+	this.goalstack18 = this.goalstack19;
+	this.goalstack19 = this.goalstack20;
+	this.goalstack20 = this.goalstack21;
+	this.goalstack21 = this.goalstack22;
+	this.goalstack22 = this.goalstack23;
+	this.goalstack23 = this.goalstack24;
+	this.goalstack24 = this.goalstack25;
+	this.goalstack25 = this.goalstack26;
+	this.goalstack26 = this.goalstack27;
+	this.goalstack27 = this.goalstack28;
+	this.goalstack28 = this.goalstack29;
+	this.goalstack29 = this.goalstack30;
+	this.goalstack30 = this.goalstack31;
+	this.goalstack31 = world;
 }
 
 float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist)
@@ -442,8 +442,8 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 }
 
 // finds the waypoints near the bot initiating a navigation query
-float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist)
-{SELFPARAM();
+float navigation_markroutes_nearestwaypoints(entity this, entity waylist, float maxdist)
+{
 	entity head;
 	vector v, m1, m2, diff;
 	float c;
@@ -458,26 +458,29 @@ float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist)
 			{
 				m1 = head.origin + head.mins;
 				m2 = head.origin + head.maxs;
-				v = self.origin;
+				v = this.origin;
 				v.x = bound(m1_x, v.x, m2_x);
 				v.y = bound(m1_y, v.y, m2_y);
 				v.z = bound(m1_z, v.z, m2_z);
 			}
 			else
 				v = head.origin;
-			diff = v - self.origin;
+			diff = v - this.origin;
 			diff.z = max(0, diff.z);
-			if (vlen(diff) < maxdist)
+			if(vdist(diff, <, maxdist))
 			{
 				head.wpconsidered = true;
-				if (tracewalk(self, self.origin, self.mins, self.maxs, v, bot_navigation_movemode))
+				entity oldself = self;
+				setself(this);
+				if (tracewalk(this, this.origin, this.mins, this.maxs, v, bot_navigation_movemode))
 				{
 					head.wpnearestpoint = v;
-					head.wpcost = vlen(v - self.origin) + head.dmg;
+					head.wpcost = vlen(v - this.origin) + head.dmg;
 					head.wpfire = 1;
 					head.enemy = world;
 					c = c + 1;
 				}
+				setself(oldself);
 			}
 		}
 		head = head.chain;
@@ -553,7 +556,7 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint)
 			maxdistance = 1500;
 		}
 
-		for(i=increment;!navigation_markroutes_nearestwaypoints(waylist, i)&&i<maxdistance;i+=increment);
+		for(i=increment;!navigation_markroutes_nearestwaypoints(this, waylist, i)&&i<maxdistance;i+=increment);
 	}
 
 	searching = true;
@@ -900,37 +903,37 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 
 // removes any currently touching waypoints from the goal stack
 // (this is how bots detect if they reached a goal)
-void navigation_poptouchedgoals()
-{SELFPARAM();
+void navigation_poptouchedgoals(entity this)
+{
 	vector org, m1, m2;
-	org = self.origin;
-	m1 = org + self.mins;
-	m2 = org + self.maxs;
+	org = this.origin;
+	m1 = org + this.mins;
+	m2 = org + this.maxs;
 
-	if(self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
+	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 	{
-		if(self.lastteleporttime>0)
-		if(time-self.lastteleporttime<(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)?2:0.15)
+		if(this.lastteleporttime>0)
+		if(time-this.lastteleporttime<(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)?2:0.15)
 		{
-			if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-			if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
+			if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
+			if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
 			{
-				self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
-				self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
+				this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
+				this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			}
-			navigation_poproute();
+			navigation_poproute(this);
 			return;
 		}
 	}
 
 	// If for some reason the bot is closer to the next goal, pop the current one
-	if(self.goalstack01)
-	if(vlen(self.goalcurrent.origin - self.origin) > vlen(self.goalstack01.origin - self.origin))
-	if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
-	if(tracewalk(self, self.origin, self.mins, self.maxs, (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5, bot_navigation_movemode))
+	if(this.goalstack01)
+	if(vlen(this.goalcurrent.origin - this.origin) > vlen(this.goalstack01.origin - this.origin))
+	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
+	if(tracewalk(this, this.origin, this.mins, this.maxs, (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5, bot_navigation_movemode))
 	{
-		LOG_DEBUG(strcat("path optimized for ", self.netname, ", removed a goal from the queue\n"));
-		navigation_poproute();
+		LOG_DEBUG(strcat("path optimized for ", this.netname, ", removed a goal from the queue\n"));
+		navigation_poproute(this);
 		// TODO this may also be a nice idea to do "early" (e.g. by
 		// manipulating the vlen() comparisons) to shorten paths in
 		// general - this would make bots walk more "on rails" than
@@ -940,48 +943,48 @@ void navigation_poptouchedgoals()
 	}
 
 	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
-	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
-	if(IS_PLAYER(self.goalcurrent))
-		navigation_poproute();
+	// TODO: rate waypoints near the targetted player at that moment, instead of the player itthis
+	if(IS_PLAYER(this.goalcurrent))
+		navigation_poproute(this);
 
 	// aid for detecting jump pads better (distance based check fails sometimes)
-	if(self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT && self.jumppadcount > 0 )
-		navigation_poproute();
+	if(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT && this.jumppadcount > 0 )
+		navigation_poproute(this);
 
 	// Loose goal touching check when running
-	if(self.aistatus & AI_STATUS_RUNNING)
-	if(self.speed >= autocvar_sv_maxspeed) // if -really- running
-	if(self.goalcurrent.classname=="waypoint")
+	if(this.aistatus & AI_STATUS_RUNNING)
+	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
+	if(this.goalcurrent.classname=="waypoint")
 	{
-		if(vlen(self.origin - self.goalcurrent.origin)<150)
+		if(vlen(this.origin - this.goalcurrent.origin)<150)
 		{
-			traceline(self.origin + self.view_ofs , self.goalcurrent.origin, true, world);
+			traceline(this.origin + this.view_ofs , this.goalcurrent.origin, true, world);
 			if(trace_fraction==1)
 			{
 				// Detect personal waypoints
-				if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-				if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
+				if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
+				if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
 				{
-					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
-					self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
+					this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
+					this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 				}
 
-				navigation_poproute();
+				navigation_poproute(this);
 			}
 		}
 	}
 
-	while (self.goalcurrent && boxesoverlap(m1, m2, self.goalcurrent.absmin, self.goalcurrent.absmax))
+	while (this.goalcurrent && boxesoverlap(m1, m2, this.goalcurrent.absmin, this.goalcurrent.absmax))
 	{
 		// Detect personal waypoints
-		if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
-		if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
+		if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
+		if(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && this.goalcurrent.owner==this)
 		{
-			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
-			self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
+			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
+			this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 		}
 
-		navigation_poproute();
+		navigation_poproute(this);
 	}
 }
 
@@ -1160,9 +1163,9 @@ void debugresetnodes()
 	debuglastnode = '0 0 0';
 }
 
-void debugnode(vector node)
-{SELFPARAM();
-	if (!IS_PLAYER(self))
+void debugnode(entity this, vector node)
+{
+	if (!IS_PLAYER(this))
 		return;
 
 	if(debuglastnode=='0 0 0')
