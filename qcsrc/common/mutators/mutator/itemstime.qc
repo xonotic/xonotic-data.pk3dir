@@ -367,7 +367,7 @@ void HUD_ItemsTime()
     	id = it.m_id;
     	icon = it.m_icon;
 
-    	:iteration
+LABEL(iteration)
         float item_time = ItemsTime_time[id];
         if (item_time < -1)
         {

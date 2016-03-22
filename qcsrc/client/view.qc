@@ -994,7 +994,7 @@ void HUD_Crosshair()
 				wcross_color = rainbow_prev_color;
 				break;
 			}
-			:normalcolor
+LABEL(normalcolor)
 			default: { wcross_color = stov(autocvar_crosshair_color); break; }
 		}
 

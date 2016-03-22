@@ -348,7 +348,7 @@ void SV_OnEntityPreSpawnFunction()
 			}
 		}
 		inv = !inv;
-:cvar_fail
+LABEL(cvar_fail)
 		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
 		if (!inv)
 		{

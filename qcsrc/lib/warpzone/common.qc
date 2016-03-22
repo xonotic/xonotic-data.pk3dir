@@ -320,7 +320,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		org = trace_endpos;
 	}
 	WarpZone_MakeAllOther();
-:fail
+LABEL(fail)
 	if(contentshack)
 		BITCLR_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 	trace_startsolid = sol;
@@ -438,7 +438,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		e.velocity = -e.velocity;
 	}
 	WarpZone_MakeAllOther();
-:fail
+LABEL(fail)
 	WarpZone_tracetoss_velocity = e.velocity;
 	v_forward = vf;
 	v_right = vr;

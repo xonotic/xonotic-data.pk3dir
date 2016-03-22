@@ -760,7 +760,7 @@ void kh_Key_Think()  // runs all the time
 			if(vlen(key.owner.origin - p) > autocvar_g_balance_keyhunt_maxdist)
 				goto not_winning;
 		kh_WinnerTeam(self.team);
-:not_winning
+LABEL(not_winning)
 	}
 
 	if(kh_interferemsg_time && time > kh_interferemsg_time)

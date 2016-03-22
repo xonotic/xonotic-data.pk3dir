@@ -917,7 +917,7 @@ void havocbot_chooseenemy()
 	while(true)
 	{
 		scan_secondary_targets = false;
-		:scan_targets
+LABEL(scan_targets)
 		for( ; head; head = head.chain)
 		{
 			if(!scan_secondary_targets)

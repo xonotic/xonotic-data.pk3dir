@@ -410,7 +410,7 @@ void Cmd_HUD_SetFields(int argc)
 					if(str == strtolower(scores_label[j]))
 						goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
 
-:notfound
+LABEL(notfound)
 				if(str == "frags")
 					j = SP_FRAGS;
 				else
@@ -419,7 +419,7 @@ void Cmd_HUD_SetFields(int argc)
 						LOG_INFOF("^1Error:^7 Unknown score field: '%s'\n", str);
 					continue;
 				}
-:found
+LABEL(found)
 				hud_field[hud_num_fields] = j;
 				if(j == ps_primary)
 					have_primary = 1;

@@ -1109,7 +1109,7 @@ void botframe_deleteuselesswaypoints()
 					goto next;
 				}
 			}
-:next
+LABEL(next)
 		}
 	}
 	// d) The waypoint is a dead end. Dead end waypoints must be kept as

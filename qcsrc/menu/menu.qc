@@ -399,7 +399,7 @@ void drawBackground(string img, float a, string algn, float force1)
 			draw_Picture_Aligned(v, scalemode, strcat(img, "_l", ftos(l + 1)), a);
 		}
 		++l;
-		: nopic
+LABEL(nopic)
 	}
 }
 

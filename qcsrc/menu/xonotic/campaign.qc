@@ -37,11 +37,11 @@ void rewrapCampaign(float w, float l0, float emptyheight, vector theFontSize)
 			}
 		}
 		goto nottoolong;
-:toolong
+LABEL(toolong)
 		while(substring(r, strlen(r) - 1, 1) == "\n")
 			r = substring(r, 0, strlen(r) - 1);
 		r = strcat(r, "...\n");
-:nottoolong
+LABEL(nottoolong)
 		campaign_longdesc_wrapped[i] = strzone(substring(r, 0, strlen(r) - 1));
 	}
 }
