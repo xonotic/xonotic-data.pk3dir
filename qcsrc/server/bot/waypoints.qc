@@ -201,7 +201,7 @@ void waypoint_think()
 			ev.z = bound(em1_z, ev.z, em2_z);
 			dv = ev - sv;
 			dv.z = 0;
-			if (vlen(dv) >= 1050) // max search distance in XY
+			if(vdist(dv, >=, 1050)) // max search distance in XY
 			{
 				++relink_lengthculled;
 				continue;
