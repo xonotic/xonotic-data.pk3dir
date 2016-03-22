@@ -435,9 +435,9 @@ METHOD(Electro, wr_aim, void(entity thiswep))
         float shoot;
 
         if(WEP_CVAR_PRI(electro, speed))
-            shoot = bot_aim(WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
+            shoot = bot_aim(self, WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
         else
-            shoot = bot_aim(1000000, 0, 0.001, false);
+            shoot = bot_aim(self, 1000000, 0, 0.001, false);
 
         if(shoot)
         {
@@ -447,7 +447,7 @@ METHOD(Electro, wr_aim, void(entity thiswep))
     }
     else
     {
-        if(bot_aim(WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
+        if(bot_aim(self, WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK2(self) = true;
             if(random() < 0.03) self.bot_secondary_electromooth = 0;

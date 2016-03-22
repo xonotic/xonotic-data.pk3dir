@@ -732,6 +732,7 @@ METHOD(Arc, wr_aim, void(entity thiswep))
     if(WEP_CVAR(arc, beam_botaimspeed))
     {
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(
+        	self,
             WEP_CVAR(arc, beam_botaimspeed),
             0,
             WEP_CVAR(arc, beam_botaimlifetime),
@@ -741,6 +742,7 @@ METHOD(Arc, wr_aim, void(entity thiswep))
     else
     {
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(
+        	self,
             1000000,
             0,
             0.001,

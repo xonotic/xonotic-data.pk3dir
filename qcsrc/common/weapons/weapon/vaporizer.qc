@@ -343,9 +343,9 @@ METHOD(Vaporizer, wr_aim, void(entity thiswep))
 {
     SELFPARAM();
     if(self.(thiswep.ammo_field) > 0)
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 1, false);
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 1, false);
     else
-        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
+        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
 }
 METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {

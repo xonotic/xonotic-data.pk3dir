@@ -603,11 +603,11 @@ METHOD(Seeker, wr_aim, void(entity thiswep))
     SELFPARAM();
     if(WEP_CVAR(seeker, type) == 1)
         if(W_Seeker_Tagged_Info(self, self.enemy) != world)
-            PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
+            PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
         else
-            PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+            PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
     else
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
 }
 METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {

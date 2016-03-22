@@ -213,7 +213,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 METHOD(Vortex, wr_aim, void(entity thiswep))
 {
     SELFPARAM();
-    if(bot_aim(1000000, 0, 1, false))
+    if(bot_aim(self, 1000000, 0, 1, false))
         PHYS_INPUT_BUTTON_ATCK(self) = true;
     else
     {

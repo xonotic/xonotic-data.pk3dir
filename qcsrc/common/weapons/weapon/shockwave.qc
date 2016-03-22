@@ -675,9 +675,9 @@ METHOD(Shockwave, wr_aim, void(entity thiswep))
 {
     SELFPARAM();
     if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
-        { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false); }
+        { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false); }
     else
-        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false); }
+        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false); }
 }
 METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {

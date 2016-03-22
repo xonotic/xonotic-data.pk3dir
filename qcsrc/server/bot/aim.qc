@@ -321,12 +321,12 @@ vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, flo
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
 }
 
-float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity)
-{SELFPARAM();
+bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity)
+{
 	float f, r, hf, distanceratio;
 	vector v;
 	/*
-	eprint(self);
+	eprint(this);
 	dprint("bot_aim(", ftos(shotspeed));
 	dprint(", ", ftos(shotspeedupward));
 	dprint(", ", ftos(maxshottime));
@@ -334,60 +334,60 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	dprint(");\n");
 	*/
 
-	hf = self.dphitcontentsmask;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	hf = this.dphitcontentsmask;
+	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	shotspeed *= W_WeaponSpeedFactor();
 	shotspeedupward *= W_WeaponSpeedFactor();
 	if (!shotspeed)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(self).m_weapon.m_name, " shotspeed is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!\n");
 		shotspeed = 1000000;
 	}
 	if (!maxshottime)
 	{
-		LOG_TRACE("bot_aim: WARNING: weapon ", PS(self).m_weapon.m_name, " maxshottime is zero!\n");
+		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " maxshottime is zero!\n");
 		maxshottime = 1;
 	}
-	makevectors(self.v_angle);
-	shotorg = self.origin + self.view_ofs;
+	makevectors(this.v_angle);
+	shotorg = this.origin + this.view_ofs;
 	shotdir = v_forward;
-	v = bot_shotlead(self.bot_aimtargorigin, self.bot_aimtargvelocity, shotspeed, self.bot_aimlatency);
+	v = bot_shotlead(this.bot_aimtargorigin, this.bot_aimtargvelocity, shotspeed, this.bot_aimlatency);
 	distanceratio = sqrt(bound(0,skill,10000))*0.3*(vlen(v-shotorg)-100)/autocvar_bot_ai_aimskill_firetolerance_distdegrees;
 	distanceratio = bound(0,distanceratio,1);
 	r =  (autocvar_bot_ai_aimskill_firetolerance_maxdegrees-autocvar_bot_ai_aimskill_firetolerance_mindegrees)
 		* (1-distanceratio) + autocvar_bot_ai_aimskill_firetolerance_mindegrees;
-	if (applygravity && self.bot_aimtarg)
+	if (applygravity && this.bot_aimtarg)
 	{
-		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', self.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, self))
+		if (!findtrajectorywithleading(shotorg, '0 0 0', '0 0 0', this.bot_aimtarg, shotspeed, shotspeedupward, maxshottime, 0, this))
 		{
-			self.dphitcontentsmask = hf;
+			this.dphitcontentsmask = hf;
 			return false;
 		}
 
-		f = bot_aimdir(self, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
+		f = bot_aimdir(this, findtrajectory_velocity - shotspeedupward * '0 0 1', r);
 	}
 	else
 	{
-		f = bot_aimdir(self, v - shotorg, r);
-		//dprint("AIM: ");dprint(vtos(self.bot_aimtargorigin));dprint(" + ");dprint(vtos(self.bot_aimtargvelocity));dprint(" * ");dprint(ftos(self.bot_aimlatency + vlen(self.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
-		//traceline(shotorg, shotorg + shotdir * 10000, false, self);
+		f = bot_aimdir(this, v - shotorg, r);
+		//dprint("AIM: ");dprint(vtos(this.bot_aimtargorigin));dprint(" + ");dprint(vtos(this.bot_aimtargvelocity));dprint(" * ");dprint(ftos(this.bot_aimlatency + vlen(this.bot_aimtargorigin - shotorg) / shotspeed));dprint(" = ");dprint(vtos(v));dprint(" : aimdir = ");dprint(vtos(normalize(v - shotorg)));dprint(" : ");dprint(vtos(shotdir));dprint("\n");
+		//traceline(shotorg, shotorg + shotdir * 10000, false, this);
 		//if (trace_ent.takedamage)
 		//if (trace_fraction < 1)
-		//if (!bot_shouldattack(self, trace_ent))
+		//if (!bot_shouldattack(this, trace_ent))
 		//	return false;
-		traceline(shotorg, self.bot_aimtargorigin, false, self);
+		traceline(shotorg, this.bot_aimtargorigin, false, this);
 		if (trace_fraction < 1)
-		if (trace_ent != self.enemy)
-		if (!bot_shouldattack(self, trace_ent))
+		if (trace_ent != this.enemy)
+		if (!bot_shouldattack(this, trace_ent))
 		{
-			self.dphitcontentsmask = hf;
+			this.dphitcontentsmask = hf;
 			return false;
 		}
 	}
 
 	//if (r > maxshottime * shotspeed)
 	//	return false;
-	self.dphitcontentsmask = hf;
+	this.dphitcontentsmask = hf;
 	return true;
 }

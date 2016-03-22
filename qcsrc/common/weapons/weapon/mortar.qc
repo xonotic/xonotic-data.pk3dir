@@ -305,7 +305,7 @@ METHOD(Mortar, wr_aim, void(entity thiswep))
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
     {
-        if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
+        if(bot_aim(self, WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK(self) = true;
             if(random() < 0.01) self.bot_secondary_grenademooth = 1;
@@ -313,7 +313,7 @@ METHOD(Mortar, wr_aim, void(entity thiswep))
     }
     else
     {
-        if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
+        if(bot_aim(self, WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK2(self) = true;
             if(random() < 0.02) self.bot_secondary_grenademooth = 0;

@@ -408,7 +408,7 @@ void W_Devastator_Attack(Weapon thiswep)
 METHOD(Devastator, wr_aim, void(entity thiswep))
 {
     // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {
         // decide whether to detonate rockets
@@ -436,7 +436,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep))
 {
     SELFPARAM();
     // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
     {
         // decide whether to detonate rockets

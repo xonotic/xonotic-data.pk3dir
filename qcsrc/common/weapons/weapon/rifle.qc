@@ -147,7 +147,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep))
         self.bot_secondary_riflemooth = 0;
     if(self.bot_secondary_riflemooth == 0)
     {
-        if(bot_aim(1000000, 0, 0.001, false))
+        if(bot_aim(self, 1000000, 0, 0.001, false))
         {
             PHYS_INPUT_BUTTON_ATCK(self) = true;
             if(random() < 0.01) self.bot_secondary_riflemooth = 1;
@@ -155,7 +155,7 @@ METHOD(Rifle, wr_aim, void(entity thiswep))
     }
     else
     {
-        if(bot_aim(1000000, 0, 0.001, false))
+        if(bot_aim(self, 1000000, 0, 0.001, false))
         {
             PHYS_INPUT_BUTTON_ATCK2(self) = true;
             if(random() < 0.03) self.bot_secondary_riflemooth = 0;
