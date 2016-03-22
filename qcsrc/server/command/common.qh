@@ -12,7 +12,7 @@ REGISTRY_SORT(COMMON_COMMANDS)
     	ATTRIB(commoncommand_##id, m_description, string, description); \
 	ENDCLASS(commoncommand_##id) \
     REGISTER(COMMON_COMMANDS, CMD_SV, id, m_id, NEW(commoncommand_##id)); \
-	METHOD(commoncommand_##id, m_invokecmd, void(int request, entity caller, int arguments, string command))
+	METHOD(commoncommand_##id, m_invokecmd, void(commoncommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(COMMON_COMMANDS_aliases) {
 	FOREACH(COMMON_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_svcmd"))));
@@ -165,7 +165,7 @@ float CommonCommand_macro_command(float argc, entity caller, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(COMMON_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_COMMAND, caller, argc, command);
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, caller, argc, command);
 		return true;
 	));
 	return false;
@@ -175,7 +175,7 @@ float CommonCommand_macro_usage(float argc, entity caller)
 {
 	string c = strtolower(argv(1));
 	FOREACH(COMMON_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_USAGE, caller, argc, "");
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, caller, argc, "");
 		return true;
 	));
 	return false;

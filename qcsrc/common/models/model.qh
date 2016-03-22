@@ -11,7 +11,9 @@ CLASS(Model, Object)
         CONSTRUCT(Model);
         this.model_str = path;
     }
-    METHOD(Model, model_precache, void(entity this)) {
+    METHOD(Model, model_precache, void(Model this))
+    {
+        TC(Model, this);
         string s = this.model_str();
         if (s != "" && s != "null" && !fexists(s)) {
             LOG_WARNINGF("Missing model: \"%s\"\n", s);

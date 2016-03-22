@@ -155,22 +155,25 @@ spawnfunc(monster_zombie) { Monster_Spawn(this, MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
-METHOD(Zombie, mr_think, bool(Zombie thismon, entity actor))
+METHOD(Zombie, mr_think, bool(Zombie this, entity actor))
 {
+    TC(Zombie, this);
     if(time >= actor.spawn_time)
         actor.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
     return true;
 }
 
-METHOD(Zombie, mr_pain, bool(Zombie thismon, entity actor))
+METHOD(Zombie, mr_pain, bool(Zombie this, entity actor))
 {
+    TC(Zombie, this);
     actor.pain_finished = time + 0.34;
     setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
     return true;
 }
 
-METHOD(Zombie, mr_death, bool(Zombie thismon, entity actor))
+METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
 {
+    TC(Zombie, this);
     actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
 
     setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
@@ -178,8 +181,9 @@ METHOD(Zombie, mr_death, bool(Zombie thismon, entity actor))
 }
 #endif
 #ifndef MENUQC
-METHOD(Zombie, mr_anim, bool(Zombie thismon, entity actor))
+METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
 {
+    TC(Zombie, this);
     vector none = '0 0 0';
     actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
     actor.anim_die2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
@@ -199,8 +203,9 @@ METHOD(Zombie, mr_anim, bool(Zombie thismon, entity actor))
 }
 #endif
 #ifdef SVQC
-METHOD(Zombie, mr_setup, bool(Zombie thismon, entity actor))
+METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
 {
+    TC(Zombie, this);
     if(!actor.health) actor.health = (autocvar_g_monster_zombie_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_zombie_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_zombie_speed_run); }
@@ -223,8 +228,9 @@ METHOD(Zombie, mr_setup, bool(Zombie thismon, entity actor))
     return true;
 }
 
-METHOD(Zombie, mr_precache, bool(Zombie thismon))
+METHOD(Zombie, mr_precache, bool(Zombie this))
 {
+    TC(Zombie, this);
     return true;
 }
 #endif

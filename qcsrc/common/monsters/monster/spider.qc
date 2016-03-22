@@ -88,7 +88,9 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
 }
 
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
-METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire)) {
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
+{
+    TC(SpiderAttack, thiswep);
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
     if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_spider_attack_web_delay)) {
@@ -215,26 +217,30 @@ spawnfunc(monster_spider) { Monster_Spawn(this, MON_SPIDER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
-METHOD(Spider, mr_think, bool(Spider thismon, entity actor))
+METHOD(Spider, mr_think, bool(Spider this, entity actor))
 {
+    TC(Spider, this);
     return true;
 }
 
-METHOD(Spider, mr_pain, bool(Spider thismon, entity actor))
+METHOD(Spider, mr_pain, bool(Spider this, entity actor))
 {
+    TC(Spider, this);
     return true;
 }
 
-METHOD(Spider, mr_death, bool(Spider thismon, entity actor))
+METHOD(Spider, mr_death, bool(Spider this, entity actor))
 {
+    TC(Spider, this);
     setanim(actor, actor.anim_melee, false, true, true);
     actor.angles_x = 180;
     return true;
 }
 #endif
 #ifndef MENUQC
-METHOD(Spider, mr_anim, bool(Spider thismon, entity actor))
+METHOD(Spider, mr_anim, bool(Spider this, entity actor))
 {
+    TC(Spider, this);
     vector none = '0 0 0';
     actor.anim_walk = animfixfps(actor, '1 1 1', none);
     actor.anim_idle = animfixfps(actor, '0 1 1', none);
@@ -246,8 +252,9 @@ METHOD(Spider, mr_anim, bool(Spider thismon, entity actor))
 #endif
 #ifdef SVQC
 spawnfunc(item_health_medium);
-METHOD(Spider, mr_setup, bool(Spider thismon, entity actor))
+METHOD(Spider, mr_setup, bool(Spider this, entity actor))
 {
+    TC(Spider, this);
     if(!actor.health) actor.health = (autocvar_g_monster_spider_health);
     if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
@@ -260,8 +267,9 @@ METHOD(Spider, mr_setup, bool(Spider thismon, entity actor))
     return true;
 }
 
-METHOD(Spider, mr_precache, bool(Spider thismon))
+METHOD(Spider, mr_precache, bool(Spider this))
 {
+    TC(Spider, this);
     return true;
 }
 #endif

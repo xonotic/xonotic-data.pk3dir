@@ -1781,7 +1781,7 @@ float GameCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
 	));
 	return false;
@@ -1791,7 +1791,7 @@ float GameCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
 	));
 	return false;

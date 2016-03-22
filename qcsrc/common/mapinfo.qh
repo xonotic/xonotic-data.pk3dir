@@ -28,9 +28,15 @@ CLASS(Gametype, Object)
     ATTRIB(Gametype, m_mutators, string, string_null)
     ATTRIB(Gametype, m_parse_mapinfo, bool(string k, string v), func_null)
 
-    METHOD(Gametype, describe, string(entity this)) { return this.gametype_description; }
+    METHOD(Gametype, describe, string(Gametype this))
+    {
+        TC(Gametype, this);
+        return this.gametype_description;
+    }
 
-    METHOD(Gametype, display, void(entity this, void(string name, string icon) returns)) {
+    METHOD(Gametype, display, void(Gametype this, void(string name, string icon) returns))
+    {
+        TC(Gametype, this);
         returns(this.message, strcat("gametype_", this.mdl));
     }
 

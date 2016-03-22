@@ -120,8 +120,9 @@ CLASS(Sound, Object)
 		return string_null;
 #endif
 	}
-	METHOD(Sound, sound_precache, void(entity this))
+	METHOD(Sound, sound_precache, void(Sound this))
 	{
+	    TC(Sound, this);
 		string s = Sound_fixpath(this);
 		if (!s) return;
 		LOG_DEBUGF("precache_sound(\"%s\")\n", s);

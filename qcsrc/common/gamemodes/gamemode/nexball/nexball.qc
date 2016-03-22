@@ -854,6 +854,7 @@ float ball_customize()
 
 METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
 {
+    TC(BallStealer, thiswep);
     if(fire & 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
             if(autocvar_g_nexball_basketball_meter)
@@ -883,18 +884,21 @@ METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity we
     }
 }
 
-METHOD(BallStealer, wr_setup, void(BallStealer thiswep))
+METHOD(BallStealer, wr_setup, void(BallStealer this))
 {
+    TC(BallStealer, this);
     //weapon_setup(WEP_PORTO.m_id);
 }
 
-METHOD(BallStealer, wr_checkammo1, bool(BallStealer thiswep))
+METHOD(BallStealer, wr_checkammo1, bool(BallStealer this))
 {
+    TC(BallStealer, this);
     return true;
 }
 
-METHOD(BallStealer, wr_checkammo2, bool(BallStealer thiswep))
+METHOD(BallStealer, wr_checkammo2, bool(BallStealer this))
 {
+    TC(BallStealer, this);
     return true;
 }
 

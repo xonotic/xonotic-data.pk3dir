@@ -489,7 +489,7 @@ bool LocalCommand_macro_command(int argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(CLIENT_COMMANDS, it.m_name == c, {
-		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
 	});
 	return false;
@@ -499,7 +499,7 @@ bool LocalCommand_macro_usage(int argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(CLIENT_COMMANDS, it.m_name == c, {
-		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
 	});
 	return false;

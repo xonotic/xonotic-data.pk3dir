@@ -241,6 +241,7 @@ CLASS(Object, );
     #define remove(this) delete(this)
 	METHOD(Object, describe, string(Object this))
 	{
+	    TC(Object, this);
 		string s = _("No description");
 		if (cvar("developer"))
 		{
@@ -254,6 +255,7 @@ CLASS(Object, );
 	}
 	METHOD(Object, display, void(Object this, void(string name, string icon) returns))
 	{
+	    TC(Object, this);
 		returns(sprintf("entity %i", this), "nopreview_map");
 	}
 ENDCLASS(Object)
