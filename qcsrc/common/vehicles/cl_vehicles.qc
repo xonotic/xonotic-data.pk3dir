@@ -294,7 +294,6 @@ void Vehicles_drawHUD(
 
 void Vehicles_drawCrosshair(string crosshair)
 {
-	SELFPARAM();
 	vector tmpSize = '0 0 0';
 	vector tmpPos  = '0 0 0';
 

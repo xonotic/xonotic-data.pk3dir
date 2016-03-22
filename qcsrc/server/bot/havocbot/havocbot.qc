@@ -1270,7 +1270,7 @@ void havocbot_setupbot()
 }
 
 vector havocbot_dodge()
-{SELFPARAM();
+{
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
 #if 0

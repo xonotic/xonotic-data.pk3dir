@@ -110,7 +110,7 @@ void free_skeleton_from_frames(entity e)
 }
 
 void skeleton_from_frames(entity e, bool is_dead)
-{SELFPARAM();
+{
     TC(bool, is_dead);
 	float m = e.modelindex;
 	if(!e.skeletonindex)

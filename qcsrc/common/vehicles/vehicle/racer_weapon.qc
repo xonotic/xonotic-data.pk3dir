@@ -84,7 +84,7 @@ void racer_rocket_tracker();
 void racer_rocket_groundhugger();
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
-{SELFPARAM();
+{
     entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
                            org, dir * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,

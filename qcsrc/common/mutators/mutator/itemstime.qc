@@ -149,7 +149,7 @@ float Item_ItemsTime_UpdateTime(entity e, float t)
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
-{SELFPARAM();
+{
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups

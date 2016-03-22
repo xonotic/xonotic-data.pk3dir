@@ -1923,7 +1923,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerDies)
-{SELFPARAM();
+{
 	frag_target.ons_deathloc = frag_target.origin;
 	entity l;
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)

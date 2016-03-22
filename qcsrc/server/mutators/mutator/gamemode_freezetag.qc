@@ -365,13 +365,13 @@ void ft_RemovePlayer()
 }
 
 MUTATOR_HOOKFUNCTION(ft, ClientDisconnect)
-{SELFPARAM();
+{
 	ft_RemovePlayer();
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
-{SELFPARAM();
+{
 	ft_RemovePlayer();
 	return false;
 }
@@ -455,7 +455,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
-{SELFPARAM();
+{
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		it.killcount = 0;
 		it.freezetag_frozen_timeout = -1;

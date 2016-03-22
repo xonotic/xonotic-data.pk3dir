@@ -284,7 +284,9 @@ MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 
 MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 {
+#ifdef SVQC
     SELFPARAM();
+#endif
 	if(!PHYS_BUGRIGS(self)) { return false; }
 #ifdef SVQC
 	self.bugrigs_prevangles = self.angles;

@@ -1187,7 +1187,7 @@ void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_Fla
 .bool pushable;
 
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
-{SELFPARAM();
+{
 	// declarations
 	setself(flag); // for later usage with droptofloor()
 

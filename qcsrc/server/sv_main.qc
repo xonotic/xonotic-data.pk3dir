@@ -156,7 +156,6 @@ bool autocvar_sv_autopause = true;
 float RedirectionThink();
 void StartFrame()
 {
-	SELFPARAM();
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 

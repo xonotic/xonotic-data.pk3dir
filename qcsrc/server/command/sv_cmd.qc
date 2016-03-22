@@ -220,7 +220,6 @@ void GameCommand_allspec(float request, float argc)
 
 void GameCommand_anticheat(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:

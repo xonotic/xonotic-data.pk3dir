@@ -754,7 +754,7 @@ void precache_playermodels(string s)
 }
 
 void precache()
-{SELFPARAM();
+{
     // gamemode related things
 
     // Precache all player models if desired
