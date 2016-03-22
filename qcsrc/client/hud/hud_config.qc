@@ -641,8 +641,7 @@ float tab_backward;
 void HUD_Panel_FirstInDrawQ(float id);
 void reset_tab_panels()
 {
-	int i;
-	for(i = 0; i < hud_panels_COUNT; ++i)
+	for (int i = 0; i < hud_panels_COUNT; ++i)
 		tab_panels[i] = world;
 }
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)

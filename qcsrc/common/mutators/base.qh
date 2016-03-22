@@ -112,7 +112,7 @@ ENDCLASS(CallbackChain)
 #define _MUTATOR_HANDLE_NOP(type, id)
 #define _MUTATOR_HANDLE_PARAMS(type, id) , type in_##id
 #define _MUTATOR_HANDLE_PREPARE(type, id) id = in_##id;
-#define _MUTATOR_HANDLE_PUSHTMP(type, id) type tmp_##id = id;
+#define _MUTATOR_HANDLE_PUSHTMP(type, id) TC(type, id); type tmp_##id = id;
 #define _MUTATOR_HANDLE_PUSHOUT(type, id) type out_##id = id;
 #define _MUTATOR_HANDLE_POPTMP(type, id) id = tmp_##id;
 #define _MUTATOR_HANDLE_POPOUT(type, id) id = out_##id;

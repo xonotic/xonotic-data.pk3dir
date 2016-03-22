@@ -79,8 +79,9 @@ void skeleton_markbones(entity e)
 	}
 }
 
-void skel_set_boneabs(float s, float bone, vector absorg)
+void skel_set_boneabs(float s, int bone, vector absorg)
 {
+    TC(int, bone);
 	vector absang = fixedvectoangles2(v_forward, v_up);
 
 	vector parentorg = skel_get_boneabs(s, skel_get_boneparent(s, bone));
@@ -108,8 +109,9 @@ void free_skeleton_from_frames(entity e)
 	}
 }
 
-void skeleton_from_frames(entity e, float is_dead)
+void skeleton_from_frames(entity e, bool is_dead)
 {SELFPARAM();
+    TC(bool, is_dead);
 	float m = e.modelindex;
 	if(!e.skeletonindex)
 	{

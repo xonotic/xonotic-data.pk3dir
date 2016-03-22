@@ -30,16 +30,20 @@
 
 #include "macro.qh"
 
-#ifndef NDEBUG
+#if NDEBUG
+    #define TC(T, sym) MACRO_BEGIN MACRO_END
+#else
     #define TC(T, sym) MACRO_BEGIN \
         if (!is_##T(sym)) LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
     MACRO_END
-#else
-    #define TC(T, sym) MACRO_BEGIN MACRO_END
 #endif
 
-bool is_int(float f) { return f == f | 0; }
-bool is_bool(float f) { return f == true || f == false; }
+bool is_float (float  this) { return true; }
+bool is_vector(vector this) { return true; }
+bool is_string(string this) { return true; }
+bool is_entity(entity this) { return true; }
+bool is_int   (float  this) { return this == floor(this); }
+bool is_bool  (float  this) { return this == true || this == false; }
 
 #include "warpzone/mathlib.qc"
 

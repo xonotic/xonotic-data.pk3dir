@@ -219,6 +219,7 @@ void Shutdown()
 .float has_team;
 float SetTeam(entity o, int Team)
 {
+    TC(int, Team);
 	devassert_once(Team);
 	entity tm;
 	if(teamplay)
@@ -351,8 +352,9 @@ void PostInit()
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
 // In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
-float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
+float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
+    TC(int, bInputType);
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
