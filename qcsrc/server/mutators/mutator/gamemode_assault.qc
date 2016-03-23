@@ -3,6 +3,7 @@
 #define GAMEMODE_ASSAULT_H
 
 void assault_ScoreRules();
+void ActivateTeamplay();
 
 REGISTER_MUTATOR(as, false)
 {
