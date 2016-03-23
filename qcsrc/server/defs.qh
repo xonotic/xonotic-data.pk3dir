@@ -1,5 +1,6 @@
 #pragma once
 
+float warmup_limit;
 #include <common/weapons/all.qh>
 #include <common/stats.qh>
 
@@ -8,7 +9,6 @@
 // Globals
 
 float g_footsteps, g_grappling_hook, g_instagib;
-float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
