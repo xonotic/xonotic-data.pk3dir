@@ -1325,7 +1325,7 @@ void PM_Main(entity this)
 	Physics_UpdateStats(this, maxspeed_mod);
 
 	if (this.PlayerPhysplug)
-		if (this.PlayerPhysplug())
+		if (this.PlayerPhysplug(this))
 			return;
 #elif defined(CSQC)
 	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))

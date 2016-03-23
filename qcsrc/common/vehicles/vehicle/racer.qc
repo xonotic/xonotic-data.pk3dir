@@ -170,240 +170,230 @@ void racer_fire_rocket_aim(entity player, string tagname, entity trg)
 	racer_fire_rocket(player, v, v_forward, trg);
 }
 
-float racer_frame()
-{SELFPARAM();
-	entity player, racer;
-	vector df;
-	float ftmp;
+bool racer_frame(entity this)
+{
+	entity vehic = this.vehicle;
+	return = true;
 
 	if(intermission_running)
 	{
-		self.vehicle.velocity = '0 0 0';
-		self.vehicle.avelocity = '0 0 0';
-		return 1;
+		vehic.velocity = '0 0 0';
+		vehic.avelocity = '0 0 0';
+		return;
 	}
 
-	player  = self;
-	racer   = self.vehicle;
-	setself(racer);
+	vehicles_frame(vehic, this);
 
-	vehicles_frame(racer, player);
+	if(pointcontents(vehic.origin) != CONTENT_WATER)
+		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
-	if(pointcontents(racer.origin) != CONTENT_WATER)
-		racer.air_finished = time + autocvar_g_vehicle_racer_water_time;
-
-	if(IS_DEAD(racer))
+	if(IS_DEAD(vehic))
 	{
-		setself(player);
-		PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = false;
-		return 1;
+		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
+		return;
 	}
 
-	racer_align4point(self, PHYS_INPUT_TIMELENGTH);
+	racer_align4point(vehic, PHYS_INPUT_TIMELENGTH);
 
-	PHYS_INPUT_BUTTON_ZOOM(player) = PHYS_INPUT_BUTTON_CROUCH(player) = false;
+	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	crosshair_trace(player);
+	crosshair_trace(this);
 
-	racer.angles_x *= -1;
+	vehic.angles_x *= -1;
 
 	// Yaw
-	ftmp = autocvar_g_vehicle_racer_turnspeed * PHYS_INPUT_TIMELENGTH;
-	ftmp = bound(-ftmp, shortangle_f(player.v_angle_y - racer.angles_y, racer.angles_y), ftmp);
-	racer.angles_y = anglemods(racer.angles_y + ftmp);
+	float ftmp = autocvar_g_vehicle_racer_turnspeed * PHYS_INPUT_TIMELENGTH;
+	ftmp = bound(-ftmp, shortangle_f(this.v_angle_y - vehic.angles_y, vehic.angles_y), ftmp);
+	vehic.angles_y = anglemods(vehic.angles_y + ftmp);
 
 	// Roll
-	racer.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * PHYS_INPUT_TIMELENGTH;
+	vehic.angles_z += -ftmp * autocvar_g_vehicle_racer_turnroll * PHYS_INPUT_TIMELENGTH;
 
 	// Pitch
 	ftmp = autocvar_g_vehicle_racer_pitchspeed  * PHYS_INPUT_TIMELENGTH;
-	ftmp = bound(-ftmp, shortangle_f(player.v_angle_x - racer.angles_x, racer.angles_x), ftmp);
-	racer.angles_x = bound(-autocvar_g_vehicle_racer_pitchlimit, anglemods(racer.angles_x + ftmp), autocvar_g_vehicle_racer_pitchlimit);
+	ftmp = bound(-ftmp, shortangle_f(this.v_angle_x - vehic.angles_x, vehic.angles_x), ftmp);
+	vehic.angles_x = bound(-autocvar_g_vehicle_racer_pitchlimit, anglemods(vehic.angles_x + ftmp), autocvar_g_vehicle_racer_pitchlimit);
 
-	makevectors(racer.angles);
-	racer.angles_x *= -1;
+	makevectors(vehic.angles);
+	vehic.angles_x *= -1;
 
-	//ftmp = racer.velocity_z;
-	df = racer.velocity * -autocvar_g_vehicle_racer_friction;
-	//racer.velocity_z = ftmp;
+	//ftmp = vehic.velocity_z;
+	vector df = vehic.velocity * -autocvar_g_vehicle_racer_friction;
+	//vehic.velocity_z = ftmp;
 
-	int cont = pointcontents(racer.origin);
-	if(player.movement)
+	int cont = pointcontents(vehic.origin);
+	if(this.movement)
 	{
 		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
-			if(player.movement_x) { df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
-			if(player.movement_y) { df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
+			if(this.movement_x) { df += v_forward * ((this.movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
+			if(this.movement_y) { df += v_right * ((this.movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
 		}
 		else
 		{
-			if(player.movement_x) { df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward); }
-			if(player.movement_y) { df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
+			if(this.movement_x) { df += v_forward * ((this.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward); }
+			if(this.movement_y) { df += v_right * ((this.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
 		}
 
 #ifdef SVQC
-		if(self.sound_nexttime < time || self.sounds != 1)
+		if(vehic.sound_nexttime < time || vehic.sounds != 1)
 		{
-			self.sounds = 1;
-			self.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
-			sound (self, CH_TRIGGER_SINGLE, SND_VEH_RACER_MOVE, VOL_VEHICLEENGINE, ATTEN_NORM);
+			vehic.sounds = 1;
+			vehic.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
+			sound (vehic, CH_TRIGGER_SINGLE, SND_VEH_RACER_MOVE, VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
 #endif
 	}
 #ifdef SVQC
 	else
 	{
-		if(self.sound_nexttime < time || self.sounds != 0)
+		if(vehic.sound_nexttime < time || vehic.sounds != 0)
 		{
-			self.sounds = 0;
-			self.sound_nexttime = time + 11.888604; //soundlength("vehicles/racer_idle.wav");
-			sound (self, CH_TRIGGER_SINGLE, SND_VEH_RACER_IDLE, VOL_VEHICLEENGINE, ATTEN_NORM);
+			vehic.sounds = 0;
+			vehic.sound_nexttime = time + 11.888604; //soundlength("vehicles/racer_idle.wav");
+			sound (vehic, CH_TRIGGER_SINGLE, SND_VEH_RACER_IDLE, VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
 	}
 #endif
 
 	// Afterburn
-	if (PHYS_INPUT_BUTTON_JUMP(player) && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH))
+	if (PHYS_INPUT_BUTTON_JUMP(this) && vehic.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH))
 	{
 #ifdef SVQC
-		if(time - racer.wait > 0.2)
-			pointparticles(EFFECT_RACER_BOOSTER, self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
+		if(time - vehic.wait > 0.2)
+			pointparticles(EFFECT_RACER_BOOSTER, vehic.origin - v_forward * 32, v_forward  * vlen(vehic.velocity), 1);
 #endif
 
-		racer.wait = time;
+		vehic.wait = time;
 
 		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 		{
-			racer.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * PHYS_INPUT_TIMELENGTH;
+			vehic.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * PHYS_INPUT_TIMELENGTH;
 			df += (v_forward * autocvar_g_vehicle_racer_waterburn_speed);
 		}
 		else
 		{
-			racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH;
+			vehic.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * PHYS_INPUT_TIMELENGTH;
 			df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
 		}
 
 #ifdef SVQC
-		if(racer.invincible_finished < time)
+		if(vehic.invincible_finished < time)
 		{
-			traceline(racer.origin, racer.origin - '0 0 256', MOVE_NORMAL, self);
+			traceline(vehic.origin, vehic.origin - '0 0 256', MOVE_NORMAL, vehic);
 			if(trace_fraction != 1.0)
 				pointparticles(EFFECT_SMOKE_SMALL, trace_endpos, '0 0 0', 1);
 
-			racer.invincible_finished = time + 0.1 + (random() * 0.1);
+			vehic.invincible_finished = time + 0.1 + (random() * 0.1);
 		}
 
-		if(racer.strength_finished < time)
+		if(vehic.strength_finished < time)
 		{
-			racer.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
-			sound (racer.tur_head, CH_TRIGGER_SINGLE, SND_VEH_RACER_BOOST, VOL_VEHICLEENGINE, ATTEN_NORM);
+			vehic.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
+			sound (vehic.tur_head, CH_TRIGGER_SINGLE, SND_VEH_RACER_BOOST, VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
 #endif
 	}
 	else
 	{
-		racer.strength_finished = 0;
-		sound (racer.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
+		vehic.strength_finished = 0;
+		sound (vehic.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
 	}
 
 	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
-		racer.racer_watertime = time;
+		vehic.racer_watertime = time;
 
 	float dforce = autocvar_g_vehicle_racer_downforce;
-	if(time - racer.racer_watertime <= 3)
+	if(time - vehic.racer_watertime <= 3)
 		dforce = autocvar_g_vehicle_racer_water_downforce;
 
-	df -= v_up * (vlen(racer.velocity) * dforce);
-	player.movement = racer.velocity += df * PHYS_INPUT_TIMELENGTH;
+	df -= v_up * (vlen(vehic.velocity) * dforce);
+	this.movement = vehic.velocity += df * PHYS_INPUT_TIMELENGTH;
 
 #ifdef SVQC
 	Weapon wep1 = WEP_RACER;
-	if (!forbidWeaponUse(player))
-	if (PHYS_INPUT_BUTTON_ATCK(player))
+	if (!forbidWeaponUse(this))
+	if (PHYS_INPUT_BUTTON_ATCK(this))
 	if (wep1.wr_checkammo1(wep1))
 	{
-		string tagname = (racer.cnt)
-		    ? (racer.cnt = 0, "tag_fire1")
-		    : (racer.cnt = 1, "tag_fire2");
-		vector org = gettaginfo(self, gettagindex(self, tagname));
+		string tagname = (vehic.cnt)
+		    ? (vehic.cnt = 0, "tag_fire1")
+		    : (vehic.cnt = 1, "tag_fire2");
+		vector org = gettaginfo(vehic, gettagindex(vehic, tagname));
 		w_shotorg = org;
 		w_shotdir = v_forward;
 		// Fix z-aim (for chase mode)
-		crosshair_trace(player);
+		crosshair_trace(this);
 		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
 		.entity weaponentity = weaponentities[0];
-		wep1.wr_think(wep1, self, weaponentity, 1);
+		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
-		vehicles_locktarget(self, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
+		vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
 						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
 						 autocvar_g_vehicle_racer_rocket_locked_time);
 
-		if(self.lock_target)
+		if(vehic.lock_target)
 		{
-			if(racer.lock_strength == 1)
-				UpdateAuxiliaryXhair(player, real_origin(self.lock_target), '1 0 0', 0);
-			else if(self.lock_strength > 0.5)
-				UpdateAuxiliaryXhair(player, real_origin(self.lock_target), '0 1 0', 0);
-			else if(self.lock_strength < 0.5)
-				UpdateAuxiliaryXhair(player, real_origin(self.lock_target), '0 0 1', 0);
+			if(vehic.lock_strength == 1)
+				UpdateAuxiliaryXhair(this, real_origin(vehic.lock_target), '1 0 0', 0);
+			else if(vehic.lock_strength > 0.5)
+				UpdateAuxiliaryXhair(this, real_origin(vehic.lock_target), '0 1 0', 0);
+			else if(vehic.lock_strength < 0.5)
+				UpdateAuxiliaryXhair(this, real_origin(vehic.lock_target), '0 0 1', 0);
 		}
 	}
 
-	if(!forbidWeaponUse(player))
-	if(time > racer.delay)
-	if(PHYS_INPUT_BUTTON_ATCK2(player))
+	if(!forbidWeaponUse(this))
+	if(time > vehic.delay)
+	if(PHYS_INPUT_BUTTON_ATCK2(this))
 	{
-		racer.misc_bulletcounter += 1;
-		racer.delay = time + 0.3;
+		vehic.misc_bulletcounter += 1;
+		vehic.delay = time + 0.3;
 
-		if(racer.misc_bulletcounter == 1)
+		if(vehic.misc_bulletcounter == 1)
 		{
-			racer_fire_rocket_aim(player, "tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
-			player.vehicle_ammo2 = 50;
+			racer_fire_rocket_aim(this, "tag_rocket_r", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : world);
+			this.vehicle_ammo2 = 50;
 		}
-		else if(racer.misc_bulletcounter == 2)
+		else if(vehic.misc_bulletcounter == 2)
 		{
-			racer_fire_rocket_aim(player, "tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
-			racer.lock_strength  = 0;
-			racer.lock_target	= world;
-			racer.misc_bulletcounter = 0;
-			racer.delay = time + autocvar_g_vehicle_racer_rocket_refire;
-			racer.lip = time;
-			player.vehicle_ammo2 = 0;
+			racer_fire_rocket_aim(this, "tag_rocket_l", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : world);
+			vehic.lock_strength  = 0;
+			vehic.lock_target	= world;
+			vehic.misc_bulletcounter = 0;
+			vehic.delay = time + autocvar_g_vehicle_racer_rocket_refire;
+			vehic.lip = time;
+			this.vehicle_ammo2 = 0;
 		}
 	}
-	else if(racer.misc_bulletcounter == 0)
-		player.vehicle_ammo2 = 100;
+	else if(vehic.misc_bulletcounter == 0)
+		this.vehicle_ammo2 = 100;
 
-	player.vehicle_reload2 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
+	this.vehicle_reload2 = bound(0, 100 * ((time - vehic.lip) / (vehic.delay - vehic.lip)), 100);
 
-	if(racer.vehicle_flags  & VHF_SHIELDREGEN)
-		vehicles_regen(racer.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, true);
+	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
+		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, true);
 
-	if(racer.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(racer.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, false);
+	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
+		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, false);
 
-	if(racer.vehicle_flags  & VHF_ENERGYREGEN)
-		vehicles_regen(racer.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, false);
+	if(vehic.vehicle_flags  & VHF_ENERGYREGEN)
+		vehicles_regen(vehic, vehic.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, false);
 
+	VEHICLE_UPDATE_PLAYER(this, vehic, health, racer);
+	VEHICLE_UPDATE_PLAYER(this, vehic, energy, racer);
 
-	VEHICLE_UPDATE_PLAYER(player, health, racer);
-	VEHICLE_UPDATE_PLAYER(player, energy, racer);
+	if(vehic.vehicle_flags & VHF_HASSHIELD)
+		VEHICLE_UPDATE_PLAYER(this, vehic, shield, racer);
 
-	if(racer.vehicle_flags & VHF_HASSHIELD)
-		VEHICLE_UPDATE_PLAYER(player, shield, racer);
-
-	PHYS_INPUT_BUTTON_ATCK(player) = PHYS_INPUT_BUTTON_ATCK2(player) = false;
+	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
 #endif
 
-	setorigin(player,racer.origin + '0 0 32');
-	player.velocity = racer.velocity;
-
-	setself(player);
-	return 1;
+	setorigin(this, vehic.origin + '0 0 32');
+	this.velocity = vehic.velocity;
 }
 
 void racer_think()
