@@ -1,6 +1,11 @@
 #ifndef GLOBALSOUND_H
 #define GLOBALSOUND_H
 
+#ifdef SVQC
+	/** Use new sound handling. TODO: use when sounds play correctly on clients */
+	bool autocvar_g_debug_globalsounds = false;
+#endif
+
 // player sounds, voice messages
 
 .string m_playersoundstr;
@@ -19,11 +24,9 @@ REGISTER_REGISTRY(PlayerSounds)
 REGISTRY_SORT(PlayerSounds)
 STATIC_INIT(PlayerSounds_renumber)
 {
-	FOREACH(PlayerSounds, true, LAMBDA(it.m_id = i));
+	FOREACH(PlayerSounds, true, it.m_id = i);
 }
 REGISTRY_CHECK(PlayerSounds)
-
-// TODO implement fall and falling
 
 REGISTER_PLAYERSOUND(death)
 REGISTER_PLAYERSOUND(drown)
@@ -92,13 +95,13 @@ REGISTER_REGISTRY(GlobalSounds)
 REGISTRY_SORT(GlobalSounds)
 STATIC_INIT(GlobalSounds_renumber)
 {
-	FOREACH(GlobalSounds, true, LAMBDA(it.m_id = i));
+	FOREACH(GlobalSounds, true, it.m_id = i);
 }
 REGISTRY_CHECK(GlobalSounds)
 void PrecacheGlobalSound(string samplestring);
 PRECACHE(GlobalSounds)
 {
-	FOREACH(GlobalSounds, true, LAMBDA(PrecacheGlobalSound(it.m_globalsoundstr)));
+	FOREACH(GlobalSounds, true, PrecacheGlobalSound(it.m_globalsoundstr));
 }
 
 REGISTER_GLOBALSOUND(STEP, "misc/footstep0 6")
@@ -115,6 +118,7 @@ void PrecachePlayerSounds(string f);
 	float LoadPlayerSounds(entity this, string f, bool strict);
 	void UpdatePlayerSounds(entity this);
 //#endif
+entity GetVoiceMessage(string type);
 
 #ifdef SVQC
 
@@ -137,5 +141,12 @@ void PrecachePlayerSounds(string f);
 		} MACRO_END
 
 #endif
+
+string allvoicesamples;
+STATIC_INIT(allvoicesamples)
+{
+    FOREACH(PlayerSounds, it.instanceOfVoiceMessage, allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr));
+    allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
+}
 
 #endif

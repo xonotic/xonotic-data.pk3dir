@@ -1,6 +1,4 @@
-#ifndef WEAPONSYSTEM_H
-#define WEAPONSYSTEM_H
-
+#pragma once
 
 float internalteam;
 float weaponswapping;
@@ -18,7 +16,7 @@ void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use);
 
 void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item);
 
-void W_Reload(entity actor, float sent_ammo_min, string sent_sound);
+void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound);
 
 void W_WeaponFrame(entity actor);
 
@@ -33,5 +31,3 @@ bool weapon_prepareattack_check(Weapon thiswep, entity actor, .entity weaponenti
 void weapon_prepareattack_do(entity actor, .entity weaponentity, float secondary, float attacktime);
 
 void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(Weapon thiswep, entity actor, .entity weaponentity, int fire) func);
-
-#endif

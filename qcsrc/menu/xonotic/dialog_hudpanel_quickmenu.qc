@@ -1,18 +1,9 @@
-#ifndef DIALOG_HUDPANEL_QUICKMENU_H
-#define DIALOG_HUDPANEL_QUICKMENU_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDQuickMenuDialog, XonoticRootDialog)
-	METHOD(XonoticHUDQuickMenuDialog, fill, void(entity));
-	ATTRIB(XonoticHUDQuickMenuDialog, title, string, _("Quick Menu Panel"))
-	ATTRIB(XonoticHUDQuickMenuDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDQuickMenuDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDQuickMenuDialog, rows, float, 15)
-	ATTRIB(XonoticHUDQuickMenuDialog, columns, float, 4)
-	ATTRIB(XonoticHUDQuickMenuDialog, name, string, "HUDquickmenu")
-ENDCLASS(XonoticHUDQuickMenuDialog)
-#endif
+#include "dialog_hudpanel_quickmenu.qh"
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "radiobutton.qh"
+
 void XonoticHUDQuickMenuDialog_fill(entity me)
 {
 	entity e;
@@ -28,4 +19,3 @@ void XonoticHUDQuickMenuDialog_fill(entity me)
 			me.TD(me, 1, 3.8/3, e = makeXonoticRadioButton(3, "hud_panel_quickmenu_align", "0.5", _("Center")));
 			me.TD(me, 1, 3.8/3, e = makeXonoticRadioButton(3, "hud_panel_quickmenu_align", "1", _("Right")));
 }
-#endif

@@ -1,5 +1,6 @@
 #ifndef MENUQC
 #include "../animdecide.qh"
+#include "../anim.qh"
 vector animfixfps(entity e, vector a, vector b);
 #endif
 

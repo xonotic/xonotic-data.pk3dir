@@ -83,11 +83,12 @@ spawnfunc(trigger_teleport)
 	self.angles = '0 0 0';
 
 	self.active = ACTIVE_ACTIVE;
-	trigger_init(self);
+	//trigger_init(self); // only for predicted triggers?
+	EXACTTRIGGER_INIT;
 	self.use = trigger_teleport_use;
 
 	if(self.noise != "")
-		FOREACH_WORD(self.noise, true, LAMBDA(precache_sound(it)));
+		FOREACH_WORD(self.noise, true, precache_sound(it));
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);

@@ -1,20 +1,14 @@
-#ifndef DIALOG_HUDSETUP_EXIT_H
-#define DIALOG_HUDSETUP_EXIT_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDExitDialog, XonoticRootDialog)
-	METHOD(XonoticHUDExitDialog, fill, void(entity));
-	ATTRIB(XonoticHUDExitDialog, title, string, _("Panel HUD Setup"))
-	ATTRIB(XonoticHUDExitDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDExitDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticHUDExitDialog, rows, float, 18)
-	ATTRIB(XonoticHUDExitDialog, columns, float, 8.2)
-	ATTRIB(XonoticHUDExitDialog, name, string, "HUDExit")
-	ATTRIB(XonoticHUDExitDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDExitDialog)
+#include "dialog_hudsetup_exit.qh"
 
-#endif
+#include "textlabel.qh"
+#include "button.qh"
+#include "textslider.qh"
+#include "inputbox.qh"
+#include "hudskinlist.qh"
+#include "colorpicker_string.qh"
+#include "checkbox.qh"
+#include "commandbutton.qh"
 
-#ifdef IMPLEMENTATION
 void XonoticHUDExitDialog_fill(entity me)
 {
 	entity e;
@@ -150,4 +144,3 @@ void XonoticHUDExitDialog_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Exit setup"), '0 0 0', "_hud_configure 0", 1));
 }
-#endif

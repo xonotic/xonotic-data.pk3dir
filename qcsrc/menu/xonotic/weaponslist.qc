@@ -1,26 +1,9 @@
-#ifndef WEAPONSLIST_H
-#define WEAPONSLIST_H
-#include "listbox.qc"
-CLASS(XonoticWeaponsList, XonoticListBox)
-	METHOD(XonoticWeaponsList, configureXonoticWeaponsList, void(entity));
-	METHOD(XonoticWeaponsList, toString, string(entity));
-	ATTRIB(XonoticWeaponsList, rowsPerItem, float, 1)
-	METHOD(XonoticWeaponsList, draw, void(entity));
-	METHOD(XonoticWeaponsList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticWeaponsList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticWeaponsList, keyDown, float(entity, float, float, float));
-	ATTRIB(XonoticWeaponsList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticWeaponsList, realUpperMargin, float, 0)
-	METHOD(XonoticWeaponsList, mouseDrag, float(entity, vector));
+#include "weaponslist.qh"
 
-	ATTRIB(XonoticWeaponsList, applyButton, entity, NULL)
-ENDCLASS(XonoticWeaponsList)
-entity makeXonoticWeaponsList();
-void WeaponsList_MoveUp_Click(entity btn, entity me);
-void WeaponsList_MoveDown_Click(entity box, entity me);
-#endif
+#include <common/weapons/all.qh>
 
-#ifdef IMPLEMENTATION
+.bool disabled;
+
 entity makeXonoticWeaponsList()
 {
 	entity me;
@@ -138,4 +121,3 @@ float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift
 		return 1;
 	return 0;
 }
-#endif

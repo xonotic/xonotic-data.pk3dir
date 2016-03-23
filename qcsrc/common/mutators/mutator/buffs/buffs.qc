@@ -755,7 +755,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 			// set pusher so self gets the kill if they fall into void
 			closest.pusher = self;
 			closest.pushltime = time + autocvar_g_maxpushtime;
-			closest.istypefrag = closest.BUTTON_CHAT;
+			closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
 
 			Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
 			Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
@@ -785,8 +785,8 @@ bool buffs_RemovePlayer(entity player)
 
 	return false;
 }
-MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { return buffs_RemovePlayer(self); }
-MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { SELFPARAM(); return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { SELFPARAM(); return buffs_RemovePlayer(self); }
 
 MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 {SELFPARAM();
@@ -1031,11 +1031,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_buffs_autoreplace, "cl_buffs_autoreplace");
-	return false;
-}
+REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {

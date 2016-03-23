@@ -137,102 +137,104 @@ void ewheel_move_idle()
 
 spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
-        METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
-        {
-            SELFPARAM();
-            float vz;
-            vector wish_angle, real_angle;
+METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
+{
+    SELFPARAM();
+    float vz;
+    vector wish_angle, real_angle;
 
-            vz = self.velocity_z;
+    vz = self.velocity_z;
 
-            self.angles_x = anglemods(self.angles_x);
-            self.angles_y = anglemods(self.angles_y);
+    self.angles_x = anglemods(self.angles_x);
+    self.angles_y = anglemods(self.angles_y);
 
-            fixedmakevectors(self.angles);
+    fixedmakevectors(self.angles);
 
-            wish_angle = normalize(self.steerto);
-            wish_angle = vectoangles(wish_angle);
-            real_angle = wish_angle - self.angles;
-            real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
+    wish_angle = normalize(self.steerto);
+    wish_angle = vectoangles(wish_angle);
+    real_angle = wish_angle - self.angles;
+    real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
 
-            self.tur_head.spawnshieldtime = fabs(real_angle_y);
-            real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
-            self.angles_y = (self.angles_y + real_angle_y);
+    self.tur_head.spawnshieldtime = fabs(real_angle_y);
+    real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
+    self.angles_y = (self.angles_y + real_angle_y);
 
-            if(self.enemy)
-                ewheel_move_enemy();
-            else if(self.pathcurrent)
-                ewheel_move_path();
-            else
-                ewheel_move_idle();
+    if(self.enemy)
+        ewheel_move_enemy();
+    else if(self.pathcurrent)
+        ewheel_move_path();
+    else
+        ewheel_move_idle();
 
-            self.velocity_z = vz;
+    self.velocity_z = vz;
 
-            if(self.velocity)
-                self.SendFlags |= TNSF_MOVE;
-        }
-        METHOD(EWheel, tr_death, void(EWheel this, entity it))
-        {
-            it.velocity = '0 0 0';
+    if(self.velocity)
+        self.SendFlags |= TNSF_MOVE;
+}
+
+METHOD(EWheel, tr_death, void(EWheel this, entity it))
+{
+    it.velocity = '0 0 0';
 
 #ifdef EWHEEL_FANCYPATH
-            if (self.pathcurrent)
-                pathlib_deletepath(it.pathcurrent.owner);
+    if (self.pathcurrent)
+        pathlib_deletepath(it.pathcurrent.owner);
 #endif
-            it.pathcurrent = NULL;
-        }
-        METHOD(EWheel, tr_setup, void(EWheel this, entity it))
-        {
-            entity e;
+    it.pathcurrent = NULL;
+}
 
-            if(it.movetype == MOVETYPE_WALK)
+METHOD(EWheel, tr_setup, void(EWheel this, entity it))
+{
+    entity e;
+
+    if(it.movetype == MOVETYPE_WALK)
+    {
+        it.velocity = '0 0 0';
+        it.enemy = world;
+
+        setorigin(it, it.pos1);
+
+        if (it.target != "")
+        {
+            e = find(world, targetname, it.target);
+            if (!e)
             {
-                it.velocity = '0 0 0';
-                it.enemy = world;
-
-                setorigin(it, it.pos1);
-
-                if (it.target != "")
-                {
-                    e = find(world, targetname, it.target);
-                    if (!e)
-                    {
-                        LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
-                        it.target = "";
-                    }
-
-                    if (e.classname != "turret_checkpoint")
-                        LOG_TRACE("Warning: not a turrret path\n");
-                    else
-                    {
-
-#ifdef EWHEEL_FANCYPATH
-                        it.pathcurrent = WALKER_PATH(it.origin,e.origin);
-                        it.pathgoal = e;
-#else
-                        it.pathcurrent  = e;
-#endif
-                    }
-                }
+                LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");
+                it.target = "";
             }
 
-            it.iscreature				= true;
-            it.teleportable			= TELEPORT_NORMAL;
-            it.damagedbycontents		= true;
-            it.movetype				= MOVETYPE_WALK;
-            it.solid					= SOLID_SLIDEBOX;
-            it.takedamage				= DAMAGE_AIM;
-            it.idle_aim				= '0 0 0';
-            it.pos1					= it.origin;
-            it.target_select_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            it.target_validate_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-            it.frame					= it.tur_head.frame = 1;
-            it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+            if (e.classname != "turret_checkpoint")
+                LOG_TRACE("Warning: not a turrret path\n");
+            else
+            {
 
-            // Convert from dgr / sec to dgr / tic
-            it.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
-            it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / it.ticrate);
+#ifdef EWHEEL_FANCYPATH
+                it.pathcurrent = WALKER_PATH(it.origin,e.origin);
+                it.pathgoal = e;
+#else
+                it.pathcurrent  = e;
+#endif
+            }
         }
+    }
+
+    it.iscreature				= true;
+    it.teleportable			= TELEPORT_NORMAL;
+    it.damagedbycontents		= true;
+    it.movetype				= MOVETYPE_WALK;
+    it.solid					= SOLID_SLIDEBOX;
+    it.takedamage				= DAMAGE_AIM;
+    it.idle_aim				= '0 0 0';
+    it.pos1					= it.origin;
+    it.target_select_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+    it.target_validate_flags	= TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
+    it.frame					= it.tur_head.frame = 1;
+    it.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
+
+    // Convert from dgr / sec to dgr / tic
+    it.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
+    it.tur_head.aim_speed = it.tur_head.aim_speed / (1 / it.ticrate);
+}
 
 #endif // SVQC
 #ifdef CSQC

@@ -28,6 +28,7 @@ spawnfunc(turret_tesla) { if (!turret_initialize(TUR_TESLA)) remove(self); }
 
 METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur, entity it))
 {
+    SELFPARAM();
     if(!self.active)
     {
         self.tur_head.avelocity = '0 0 0';

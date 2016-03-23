@@ -1,3 +1,4 @@
+#include "debug.qh"
 #include "pathlib.qh"
 
 MODEL(SQUARE,       "models/pathlib/square.md3");

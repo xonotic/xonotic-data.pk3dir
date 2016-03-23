@@ -1,5 +1,4 @@
-#ifndef GETREPLIES_H
-#define GETREPLIES_H
+#pragma once
 
 // ======================================================
 //  Declarations for reply messages, re-worked by Samual
@@ -21,4 +20,3 @@ string getladder();
 string getmaplist();
 string getlsmaps();
 string getmonsterlist();
-#endif

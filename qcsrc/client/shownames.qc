@@ -2,11 +2,12 @@
 
 #include "hud/all.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/teams.qh"
+#include <common/ent_cs.qh>
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/teams.qh>
 
-#include "../lib/csqcmodel/cl_model.qh"
+#include <lib/csqcmodel/cl_model.qh>
 
 // this.isactive = player is in range and coordinates/status (health and armor) are up to date
 // this.origin = player origin
@@ -23,8 +24,7 @@ STATIC_INIT(shownames_ent)
 	shownames_ent = LL_NEW();
 	for (int i = 0; i < maxclients; ++i)
 	{
-		entity e = new(shownames_tag);
-		make_pure(e);
+		entity e = new_pure(shownames_tag);
 		e.sv_entnum = i + 1;
 		LL_PUSH(shownames_ent, e);
 	}
@@ -54,7 +54,7 @@ void Draw_ShowNames(entity this)
 	if (autocvar_hud_shownames_antioverlap)
 	{
 		// fade tag out if another tag that is closer to you overlaps
-		LL_EACH(shownames_ent, it != this && entcs_receiver(i), LAMBDA(
+		LL_EACH(shownames_ent, it != this && entcs_receiver(i), {
 			vector eo = project_3d_to_2d(it.origin);
 			if (eo.z < 0 || eo.x < 0 || eo.y < 0 || eo.x > vid_conwidth || eo.y > vid_conheight) continue;
 			eo.z = 0;
@@ -64,7 +64,7 @@ void Draw_ShowNames(entity this)
 				overlap = true;
 				break;
 			}
-		));
+		});
 	}
 	bool onscreen = (o.z >= 0 && o.x >= 0 && o.y >= 0 && o.x <= vid_conwidth && o.y <= vid_conheight);
 	if (autocvar_hud_shownames_crosshairdistance)
@@ -167,8 +167,9 @@ void Draw_ShowNames(entity this)
 
 void Draw_ShowNames_All()
 {
+    SELFPARAM();
 	if (!autocvar_hud_shownames) return;
-	LL_EACH(shownames_ent, true, LAMBDA(
+	LL_EACH(shownames_ent, true, {
 		entity entcs = entcs_receiver(i);
 		if (!entcs)
 		{
@@ -195,5 +196,5 @@ void Draw_ShowNames_All()
 		if (!it.csqcmodel_isdead) setorigin(it, entcs.origin);
 		it.csqcmodel_isdead = dead;
 		Draw_ShowNames(it);
-	));
+	});
 }

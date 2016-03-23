@@ -171,6 +171,7 @@ void Projectile_Draw(entity this)
 
 void loopsound(entity e, int ch, string samp, float vol, float attn)
 {
+    TC(int, ch);
 	if (e.silent)
 		return;
 

@@ -1,34 +1,36 @@
-#ifndef GAMEMODE_H
-#define GAMEMODE_H
+#pragma once
 
-#include "../cl_client.qh"
-#include "../cl_player.qh"
-#include "../cl_impulse.qh"
-#include "../cheats.qh"
-#include "../g_damage.qh"
-#include "../round_handler.qh"
-#include "../scores.qh"
-#include "../scores_rules.qh"
-#include "../teamplay.qh"
+#include <server/cl_client.qh>
+#include <server/cl_player.qh>
+#include <server/cl_impulse.qh>
+#include <server/cheats.qh>
+#include <server/g_damage.qh>
+#include <server/g_world.qh>
+#include <server/round_handler.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
 
-#include "../bot/bot.qh"
-#include "../bot/navigation.qh"
-#include "../bot/waypoints.qh"
-#include "../bot/havocbot/roles.qh"
+#include <server/bot/bot.qh>
+#include <server/bot/navigation.qh>
+#include <server/bot/waypoints.qh>
+#include <server/bot/havocbot/roles.qh>
 
-#include "../bot/havocbot/havocbot.qh"
+#include <server/bot/havocbot/havocbot.qh>
 
-#include "../command/vote.qh"
+#include <server/command/vote.qh>
 
 #include <common/monsters/all.qh>
 
-#include "../command/common.qh"
+#include <server/command/common.qh>
 
-#include "../weapons/tracing.qh"
-#include "../weapons/weaponsystem.qh"
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
 
+#include <common/physics/player.qh>
+#include <common/effects/qc/all.qh>
 #include <common/deathtypes/all.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/triggers/teleporters.qh>
 #include <common/triggers/subs.qh>
 #include <common/stats.qh>
@@ -44,5 +46,3 @@ float redalive, bluealive, yellowalive, pinkalive;
 .float bluealive_stat = _STAT(BLUEALIVE);
 .float yellowalive_stat = _STAT(YELLOWALIVE);
 .float pinkalive_stat = _STAT(PINKALIVE);
-
-#endif

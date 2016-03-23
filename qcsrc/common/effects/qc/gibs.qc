@@ -1,3 +1,5 @@
+#include "gibs.qh"
+
 #ifdef IMPLEMENTATION
 REGISTER_NET_TEMP(net_gibsplash)
 
@@ -43,7 +45,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 
 	e.oldorigin_x = compressShortVector(e.velocity);
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(Violence_GibSplash_SendEntity(e, it, 0)));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), Violence_GibSplash_SendEntity(e, it, 0));
 	remove(e);
 }
 
@@ -111,6 +113,7 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 
 void SUB_RemoveOnNoImpact()
 {
+    SELFPARAM();
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		Gib_Delete(self);
 }

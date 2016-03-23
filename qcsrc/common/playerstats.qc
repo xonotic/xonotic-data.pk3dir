@@ -108,13 +108,13 @@ void PlayerStats_GameReport_Accuracy(entity p)
 {
 	#define ACCMAC(suffix, field) \
 		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), p.accuracy.(field[i-1]));
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
 		ACCMAC("cnt-hit", accuracy_cnt_hit)
 		ACCMAC("cnt-fired", accuracy_cnt_fired)
 		ACCMAC("frags", accuracy_frags)
-	));
+	});
 	#undef ACCMAC
 }
 
@@ -163,7 +163,7 @@ void PlayerStats_GameReport(float finished)
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
-	FOREACH_CLIENT(true, LAMBDA(
+	FOREACH_CLIENT(true, {
 		// add personal score rank
 		PS_GR_P_ADDVAL(it, PLAYERSTATS_RANK, it.score_dummyfield);
 
@@ -189,7 +189,7 @@ void PlayerStats_GameReport(float finished)
 
 		// collect final player information
 		PlayerStats_GameReport_FinalizePlayer(it);
-	));
+	});
 
 	if(autocvar_g_playerstats_gamereport_uri != "")
 	{
@@ -231,13 +231,13 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
 
 		// accuracy stats
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-hit"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-fired"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-hit"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-fired"));
 			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-frags"));
-		));
+		});
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -457,7 +457,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 			db_close(PS_B_IN_DB);
 			PS_B_IN_DB = -1;
 
-			FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(it.playerstats_basicstatus = PS_B_STATUS_IDLE));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), it.playerstats_basicstatus = PS_B_STATUS_IDLE);
 		}
 	}
 }

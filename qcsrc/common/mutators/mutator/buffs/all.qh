@@ -13,13 +13,7 @@ REGISTER_REGISTRY(Buffs)
 REGISTRY_CHECK(Buffs)
 
 #define REGISTER_BUFF(id) \
-    REGISTER(Buffs, BUFF_##id, m_id, NEW(Buff)); \
-    REGISTER_INIT_POST(BUFF_##id) { \
-        this.netname = this.m_name; \
-        this.m_itemid = BIT(this.m_id - 1); \
-        this.m_sprite = strzone(strcat("buff-", this.m_name)); \
-    } \
-    REGISTER_INIT(BUFF_##id)
+    REGISTER(Buffs, BUFF_##id, m_id, NEW(Buff))
 
 #include <common/items/item/pickup.qh>
 CLASS(Buff, Pickup)
@@ -38,6 +32,14 @@ CLASS(Buff, Pickup)
 	{ return cvar(strcat("g_buffs_", this.netname, "_time")); }
 #endif
 ENDCLASS(Buff)
+
+STATIC_INIT(REGISTER_BUFFS) {
+    FOREACH(Buffs, true, {
+        it.netname = it.m_name; \
+        it.m_itemid = BIT(it.m_id - 1); \
+        it.m_sprite = strzone(strcat("buff-", it.m_name)); \
+    });
+}
 
 #ifdef SVQC
 	// .int buffs = _STAT(BUFFS);

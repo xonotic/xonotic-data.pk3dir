@@ -1,3 +1,5 @@
+#include "modeleffects.qh"
+
 #ifdef IMPLEMENTATION
 
 REGISTER_NET_LINKED(ENT_CLIENT_MODELEFFECT)
@@ -114,7 +116,7 @@ void ModelEffect_Draw(entity this)
 
 NET_HANDLE(ENT_CLIENT_MODELEFFECT, bool isnew)
 {
-	make_pure(self);
+	make_pure(this);
 
 	int f = ReadByte();
 

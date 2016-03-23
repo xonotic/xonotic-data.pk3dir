@@ -337,10 +337,7 @@ void ClientCommand_minigame(int request, int argc, string command)
 		}
 		else if ( minig_cmd == "list" )
 		{
-			FOREACH(Minigames, true, LAMBDA(
-			{
-				sprint(self,it.netname," (",it.message,") ","\n");
-			}));
+			FOREACH(Minigames, true, sprint(self, it.netname, " (", it.message, ") ", "\n"));
 			return;
 		}
 		else if ( minig_cmd == "list-sessions" )

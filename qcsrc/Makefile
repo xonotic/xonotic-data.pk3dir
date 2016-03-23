@@ -1,13 +1,29 @@
-SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
-PERL ?= perl
-QCCFLAGS_WATERMARK ?= $(shell git describe)
 CPP := cc -xc -E
 QCC ?= gmqcc
-NDEBUG ?= 1
+
 PROGS_OUT ?= $(CURDIR)/..
+WORKDIR ?= ../.tmp
+
+QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='*')
+VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
+NDEBUG ?= 1
 BUILD_MOD ?= 0
 
-QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
+ifndef ZIP
+	ifneq ($(shell which zip),)
+		ZIP := zip -9
+	endif
+	ifneq ($(shell which 7z),)
+		ZIP := 7z a -tzip -mx=9
+	endif
+	ifneq ($(shell which 7za),)
+		ZIP := 7za a -tzip -mx=9
+	endif
+    ifndef ZIP
+        $(warning "No zip in ($(PATH))")
+        ZIP := : zip_not_found
+    endif
+endif
 
 # We eventually need to get rid of these
 QCCFLAGS_WTFS ?= \
@@ -30,48 +46,69 @@ QCCFLAGS ?= \
 	-frelaxed-switch -freturn-assignments \
 	$(QCCFLAGS_EXTRA)
 
-# xonotic build system overrides this by command line argument to turn off the update-cvarcount step
-XON_BUILDSYSTEM =
+
 
 .PHONY: all
-all: qc
+all: qc pk3
 
-.PHONY: qc
-qc: $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat $(PROGS_OUT)/csprogs.dat
+$(WORKDIR):
+	@mkdir -p $@
 
 .PHONY: clean
-clean:
-	rm -f $(PROGS_OUT)/csprogs.dat
-	rm -f $(PROGS_OUT)/progs.dat
-	rm -f $(PROGS_OUT)/menu.dat
-	rm -f ../.tmp/*.qc
-	rm -f ../.tmp/*.d
-	rm -f ../.tmp/*.txt
+clean: | $(WORKDIR)
+	$(RM) $(PROGS_OUT)/csprogs.dat
+	$(RM) $(PROGS_OUT)/menu.dat
+	$(RM) $(PROGS_OUT)/progs.dat
+	$(RM) $(WORKDIR)/*.d
+	$(RM) $(WORKDIR)/*.qc
+	$(RM) $(WORKDIR)/*.txt
 
-$(QCCVERSIONFILE):
-	$(RM) qccversion.*
-	echo This file intentionally left blank. > $@
+.PHONY: qc
+qc: $(PROGS_OUT)/csprogs.dat $(PROGS_OUT)/menu.dat $(PROGS_OUT)/progs.dat
 
-export QCC
+.PHONY: pk3
+pk3: csprogs-$(VER).pk3
+
+
+
+
+
+%-$(VER).pk3: $(PROGS_OUT)/%.dat
+	$(eval PROG=$*)
+	$(eval PK3=$(PROG)-$(VER).pk3)
+	$(eval TXT=$(PROG)-$(VER).txt)
+	$(eval DAT=$(PROG)-$(VER).dat)
+	$(eval LNO=$(PROG)-$(VER).lno)
+	@ echo "http://xonotic.org" > $(TXT)
+	@ ln -f $(PROGS_OUT)/$(PROG).dat $(DAT)
+	@ ln -f $(PROGS_OUT)/$(PROG).lno $(LNO)
+	@ $(RM) *.pk3
+	$(ZIP) $(PK3) $(TXT) $(DAT) $(LNO)
+	@ $(RM) $(TXT) $(DAT) $(LNO)
+
+QCCVERSION := $(shell cd lib && $(QCC) --version)
+QCCVERSIONFILE := $(WORKDIR)/qccversion.$(shell echo ${QCCVERSION} | git hash-object --stdin)
+$(QCCVERSIONFILE): | $(WORKDIR)
+	@ $(RM) $(WORKDIR)/qccversion.*
+	@ echo $(QCCVERSION) > $@
+
+export WORKDIR
 export CPP
+export QCC
 export QCCDEFS
 export QCCFLAGS
 
-$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE)
-	@echo make[1]: Entering directory \`$(PWD)/client\'
-	sh ./qcc.sh client $@ $<
--include ../.tmp/client.d
+$(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
+	@ echo make[1]: Entering directory \`$(CURDIR)/client\'
+	@ ./tools/qcc.sh client $@ $<
+-include $(WORKDIR)/client.d
 
-$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE)
-	@echo make[1]: Entering directory \`$(PWD)/server\'
-	sh ./qcc.sh server $@ $<
--include ../.tmp/server.d
+$(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
+	@ echo make[1]: Entering directory \`$(CURDIR)/server\'
+	@ ./tools/qcc.sh server $@ $<
+-include $(WORKDIR)/server.d
 
-$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE)
-	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	sh ./qcc.sh menu $@ $<
--include ../.tmp/menu.d
-
-.PHONY: testcase
-testcase:
-	cd testcase && $(QCC) $(QCCDEFS) $(QCCFLAGS) -DTESTCASE="$$TESTCASE"
+$(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
+	@ echo make[1]: Entering directory \`$(CURDIR)/menu\'
+	@ ./tools/qcc.sh menu $@ $<
+-include $(WORKDIR)/menu.d

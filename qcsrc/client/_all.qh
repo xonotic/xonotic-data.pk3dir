@@ -1,5 +1,4 @@
-#ifndef CLIENT_ALL_H
-#define CLIENT_ALL_H
+#pragma once
 
 #include <common/util.qh>
 
@@ -11,5 +10,3 @@
 #include "defs.qh"
 #include "main.qh"
 #include "miscfunctions.qh"
-
-#endif

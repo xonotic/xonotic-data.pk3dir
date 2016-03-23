@@ -29,7 +29,7 @@
 .vector move_origin;
 
 	void SUB_SETORIGIN(entity s, vector v)
-	{SELFPARAM();
+	{
 		s.move_origin = v;
 		_Movetype_LinkEdict(s, true);
 	}

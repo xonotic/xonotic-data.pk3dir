@@ -1,5 +1,4 @@
-#ifndef SERVER_COMMANDS_ALL_H
-#define SERVER_COMMANDS_ALL_H
+#pragma once
 
 #include <common/command/command.qh>
 REGISTRY(SERVER_COMMANDS, BITS(7))
@@ -13,7 +12,7 @@ REGISTRY_SORT(SERVER_COMMANDS)
     	ATTRIB(servercommand_##id, m_description, string, description); \
 	ENDCLASS(servercommand_##id) \
     REGISTER(SERVER_COMMANDS, CMD_SV, id, m_id, NEW(servercommand_##id)); \
-	METHOD(servercommand_##id, m_invokecmd, void(int request, entity caller, int arguments, string command))
+	METHOD(servercommand_##id, m_invokecmd, void(servercommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(SERVER_COMMANDS_aliases) {
 	FOREACH(SERVER_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_sv"))));
@@ -27,5 +26,3 @@ STATIC_INIT(SERVER_COMMANDS_aliases) {
 #include "getreplies.qh"
 #include "radarmap.qh"
 #include "vote.qh"
-
-#endif

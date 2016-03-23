@@ -1,3 +1,4 @@
+#include "gamemode_cts.qh"
 #include <server/race.qh>
 
 #ifndef GAMEMODE_CTS_H
@@ -51,25 +52,25 @@ bool autocvar_g_cts_selfdamage;
 
 // legacy bot roles
 .float race_checkpoint;
-void havocbot_role_cts()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_cts(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
 		FOREACH_ENTITY_CLASS("trigger_race_checkpoint", true,
 		{
-			if(it.cnt == self.race_checkpoint)
-				navigation_routerating(it, 1000000, 5000);
-			else if(self.race_checkpoint == -1)
-				navigation_routerating(it, 1000000, 5000);
+			if(it.cnt == this.race_checkpoint)
+				navigation_routerating(this, it, 1000000, 5000);
+			else if(this.race_checkpoint == -1)
+				navigation_routerating(this, it, 1000000, 5000);
 		});
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 
@@ -95,6 +96,7 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+void KillIndicator_Think();
 void CTS_ClientKill(entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
 {
     e.killindicator = spawn();
@@ -383,8 +385,10 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 	return false;
 }
 
+void ClientKill_Now();
 MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
+    SELFPARAM();
 	ret_float = 0;
 
 	if(self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill

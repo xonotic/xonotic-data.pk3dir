@@ -1,18 +1,5 @@
-#ifndef CROSSHAIRPREVIEW_H
-#define CROSSHAIRPREVIEW_H
-#include "../item.qc"
-CLASS(XonoticCrosshairPreview, Item)
-	METHOD(XonoticCrosshairPreview, configureXonoticCrosshairPreview, void(entity));
-	METHOD(XonoticCrosshairPreview, draw, void(entity));
-	ATTRIB(XonoticCrosshairPreview, src, string, string_null)
-	ATTRIB(XonoticCrosshairPreview, src2, string, string_null)
-	ATTRIB(XonoticCrosshairPreview, disabled, float, 0)
-	ATTRIB(XonoticCrosshairPreview, disabledAlpha, float, SKINALPHA_DISABLED)
-ENDCLASS(XonoticCrosshairPreview)
-entity makeXonoticCrosshairPreview();
-#endif
+#include "crosshairpreview.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticCrosshairPreview()
 {
 	entity me;
@@ -59,4 +46,3 @@ void XonoticCrosshairPreview_draw(entity me)
 
 	SUPER(XonoticCrosshairPreview).draw(me);
 }
-#endif

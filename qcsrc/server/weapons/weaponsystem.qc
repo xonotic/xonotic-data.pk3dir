@@ -9,9 +9,10 @@
 #include <common/animdecide.qh>
 #include <common/constants.qh>
 #include <common/monsters/all.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/util.qh>
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 #include <lib/csqcmodel/sv_model.qh>
 
 .int state;
@@ -51,9 +52,9 @@ vector CL_Weapon_GetShotOrg(int wpn)
 {
 	entity wi = Weapons_from(wpn);
 	entity e = spawn();
-	CL_WeaponEntity_SetModel(e, wi.mdl);
+	CL_WeaponEntity_SetModel(e, wi.mdl, false);
 	vector ret = e.movedir;
-	CL_WeaponEntity_SetModel(e, "");
+	CL_WeaponEntity_SetModel(e, "", false);
 	remove(e);
 	return ret;
 }
@@ -90,7 +91,7 @@ void CL_Weaponentity_Think()
 		this.dmg = this.owner.modelindex;
 		this.deadflag = this.owner.deadflag;
 
-		CL_WeaponEntity_SetModel(this, this.owner.weaponname);
+		CL_WeaponEntity_SetModel(this, this.owner.weaponname, true);
 	}
 
 	this.alpha = -1;  // TODO: don't render this entity at all
@@ -151,7 +152,8 @@ void CL_ExteriorWeaponentity_Think()
 	else if (this.owner.alpha != 0) this.alpha = this.owner.alpha;
 	else this.alpha = 1;
 
-	this.glowmod = weaponentity_glowmod(PS(this.owner).m_weapon, this.owner.clientcolors);
+    Weapon wep = PS(this.owner).m_weapon;
+	if (wep) this.glowmod = weaponentity_glowmod(wep, this.owner.clientcolors);
 	this.colormap = this.owner.colormap;
 
 	CSQCMODEL_AUTOUPDATE(this);
@@ -161,7 +163,6 @@ void CL_ExteriorWeaponentity_Think()
 void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 {
 	entity view = actor.(weaponentity) = new(weaponentity);
-	make_pure(view);
 	view.solid = SOLID_NOT;
 	view.owner = actor;
 	setmodel(view, MDL_Null);  // precision set when changed
@@ -175,7 +176,6 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	if (weaponentity == weaponentities[0])
 	{
 		entity exterior = actor.exteriorweaponentity = new(exteriorweaponentity);
-		make_pure(exterior);
 		exterior.solid = SOLID_NOT;
 		exterior.owner = actor;
 		setorigin(exterior, '0 0 0');
@@ -210,6 +210,7 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary)
 {
+    SELFPARAM();
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
 	if (secondary) WITH(entity, self, actor, ammo = thiswep.wr_checkammo2(thiswep));
@@ -427,7 +428,7 @@ void W_WeaponFrame(entity actor)
 		if (actor.(weaponentity).state != WS_CLEAR)
 		{
 			Weapon wpn = PS(actor).m_weapon;
-			w_ready(wpn, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+			w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			return;
 		}
 	}
@@ -514,17 +515,17 @@ void W_WeaponFrame(entity actor)
 	// if (actor.button0)
 	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(actor, slot)), " >= ", ftos(this.weapon_nextthink), "\n");
 
-	int w = PS(actor).m_weapon.m_id;
+	Weapon w = PS(actor).m_weapon;
 
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
 	// server framerate is very low and the weapon fire rate very high
 	for (int c = 0; c < W_TICSPERFRAME; ++c)
 	{
-		if (w && !(actor.weapons & WepSet_FromWeapon(Weapons_from(w))))
+		if (w != WEP_Null && !(actor.weapons & WepSet_FromWeapon(w)))
 		{
 			if (PS(actor).m_weapon == PS(actor).m_switchweapon) W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-			w = 0;
+			w = WEP_Null;
 		}
 
 		v_forward = fo;
@@ -533,7 +534,7 @@ void W_WeaponFrame(entity actor)
 
 		bool block_weapon = false;
 		{
-			bool key_pressed = actor.BUTTON_HOOK && !actor.vehicle;
+			bool key_pressed = PHYS_INPUT_BUTTON_HOOK(actor) && !actor.vehicle;
 			Weapon off = actor.offhand;
 			if (off && !(actor.weapons & WEPSET(HOOK)))
 			{
@@ -545,7 +546,7 @@ void W_WeaponFrame(entity actor)
 					W_SwitchWeapon(WEP_HOOK);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
-				block_weapon = (PS(actor).m_weapon == h && (actor.BUTTON_ATCK || key_pressed));
+				block_weapon = (PS(actor).m_weapon == h && (PHYS_INPUT_BUTTON_ATCK(actor) || key_pressed));
 				h.wr_think(h, actor, weaponentity, block_weapon ? 1 : 0);
 			}
 		}
@@ -556,15 +557,14 @@ void W_WeaponFrame(entity actor)
 
 		if (!block_weapon)
 		{
-			if (w)
+            Weapon e = PS(actor).m_weapon;
+			if (w != WEP_Null)
 			{
-				Weapon e = PS(actor).m_weapon;
-				e.wr_think(e, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+				e.wr_think(e, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
 			else
 			{
-				Weapon w = PS(actor).m_weapon;
-				w.wr_gonethink(w);
+				e.wr_gonethink(e);
 			}
 		}
 
@@ -577,7 +577,7 @@ void W_WeaponFrame(entity actor)
 				v_up = up;
 				Weapon wpn = PS(actor).m_weapon;
 				this.weapon_think(wpn, actor, weaponentity,
-					(actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+					PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
 			else
 			{
@@ -681,11 +681,12 @@ void W_ReloadedAndReady(Weapon thiswep, entity actor, .entity weaponentity, int 
 	// ATTACK_FINISHED(actor, slot) -= actor.reload_time - 1;
 
 	Weapon wpn = Weapons_from(PS(actor).m_weapon.m_id);
-	w_ready(wpn, actor, weaponentity, (actor.BUTTON_ATCK ? 1 : 0) | (actor.BUTTON_ATCK2 ? 2 : 0));
+	w_ready(wpn, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 }
 
-void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
+void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 {
+    TC(Sound, sent_sound);
 	.entity weaponentity = weaponentities[0];
 	// set global values to work with
 	Weapon e = PS(actor).m_weapon;
@@ -695,7 +696,8 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 	actor.reload_ammo_min = sent_ammo_min;
 	actor.reload_ammo_amount = e.reloading_ammo;
 	actor.reload_time = e.reloading_time;
-	actor.reload_sound = sent_sound;
+	if (actor.reload_sound) strunzone(actor.reload_sound);
+	actor.reload_sound = strzone(Sound_fixpath(sent_sound));
 
 	// don't reload weapons that don't have the RELOADABLE flag
 	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))
@@ -764,6 +766,7 @@ void W_Reload(entity actor, float sent_ammo_min, string sent_sound)
 
 void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item)
 {
+    SELFPARAM();
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
 	WITH(entity, self, player, w.event(w));

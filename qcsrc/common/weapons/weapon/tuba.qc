@@ -213,9 +213,9 @@ int W_Tuba_GetNote(entity pl, int hittype)
 		case 8: note = +4; break; // e
 		case 9: note = -1; break; // B
 	}
-	if(pl.BUTTON_CROUCH)
+	if(PHYS_INPUT_BUTTON_CROUCH(pl))
 		note -= 12;
-	if(pl.BUTTON_JUMP)
+	if(PHYS_INPUT_BUTTON_JUMP(pl))
 		note += 12;
 	if(hittype & HITTYPE_SECONDARY)
 		note += 7;
@@ -287,7 +287,7 @@ void W_Tuba_NoteThink()
 	}
 	self.nextthink = time;
 	dist_mult = WEP_CVAR(tuba, attenuation) / autocvar_snd_soundradius;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self.realowner, LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self.realowner, {
 		v = self.origin - (it.origin + it.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
 		dir0 = normalize(v);
@@ -306,7 +306,7 @@ void W_Tuba_NoteThink()
 			self.SendFlags |= 2;
 			break;
 		}
-	));
+	});
 }
 
 void W_Tuba_NoteOn(float hittype)
@@ -314,7 +314,7 @@ void W_Tuba_NoteOn(float hittype)
 	vector o;
 	float n;
 
-	W_SetupShot(self, false, 2, "", 0, WEP_CVAR(tuba, damage));
+	W_SetupShot(self, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
 
 	n = W_Tuba_GetNote(self, hittype);
 
@@ -367,9 +367,9 @@ METHOD(Tuba, wr_aim, void(Tuba this))
 	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(tuba, radius)))
 	{
 		if (random() > 0.5)
-			actor.BUTTON_ATCK = 1;
+			PHYS_INPUT_BUTTON_ATCK(actor) = true;
 		else
-			actor.BUTTON_ATCK2 = 1;
+			PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 	}
 }
 
@@ -413,7 +413,7 @@ NET_HANDLE(tuba_instrument, bool)
 	string s = (i == 0) ? "tuba" :
 	           (i == 1) ? "akordeon" :
 	                      "kleinbottle" ;
-	CL_WeaponEntity_SetModel(viewmodel, s);
+	CL_WeaponEntity_SetModel(viewmodel, s, true);
 }
 #endif
 #ifdef SVQC
@@ -450,7 +450,7 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 				break;
 		}
 		tuba_instrument_send(actor, actor.tuba_instrument);
-		W_SetupShot(actor, false, 0, "", 0, 0);
+		W_SetupShot(actor, false, 0, SND_Null, 0, 0);
 		Send_Effect(EFFECT_TELEPORT, w_shotorg, '0 0 0', 1);
 		actor.(weaponentity).state = WS_INUSE;
 		weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.5, w_ready);
@@ -464,7 +464,7 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 METHOD(Tuba, wr_checkammo1, bool(Tuba this)) { return true; }
 METHOD(Tuba, wr_checkammo2, bool(Tuba this)) { return true; }
 
-METHOD(Tuba, wr_suicidemessage, int(Tuba this))
+METHOD(Tuba, wr_suicidemessage, Notification(Tuba this))
 {
 	if (w_deathtype & HITTYPE_BOUNCE)
 		return WEAPON_KLEINBOTTLE_SUICIDE;
@@ -473,7 +473,7 @@ METHOD(Tuba, wr_suicidemessage, int(Tuba this))
 	else
 		return WEAPON_TUBA_SUICIDE;
 }
-METHOD(Tuba, wr_killmessage, int(Tuba this))
+METHOD(Tuba, wr_killmessage, Notification(Tuba this))
 {
 	if (w_deathtype & HITTYPE_BOUNCE)
 		return WEAPON_KLEINBOTTLE_MURDER;
@@ -588,7 +588,7 @@ void Ent_TubaNote_StopSound(entity this)
 	this.enemy = NULL;
 }
 
-void Ent_TubaNote_StopSound_self() { Ent_TubaNote_StopSound(self); }
+void Ent_TubaNote_StopSound_self() { SELFPARAM(); Ent_TubaNote_StopSound(self); }
 
 NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 {

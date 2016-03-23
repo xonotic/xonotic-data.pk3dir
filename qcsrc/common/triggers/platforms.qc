@@ -1,6 +1,7 @@
 void generic_plat_blocked()
-{SELFPARAM();
+{
 #ifdef SVQC
+    SELFPARAM();
 	if(self.dmg && other.takedamage != DAMAGE_NO)
 	{
 		if(self.dmgtime2 < time)

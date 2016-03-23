@@ -1,3 +1,4 @@
+#include "getreplies.qh"
 #include <common/command/command.qh>
 #include "getreplies.qh"
 

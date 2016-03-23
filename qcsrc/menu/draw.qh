@@ -1,5 +1,4 @@
-#ifndef DRAW_H
-#define DRAW_H
+#pragma once
 
 // from the engine
 vector drawfontscale;
@@ -41,4 +40,3 @@ vector globalToBoxSize(vector v, vector scale);
 
 float draw_TextWidth_WithColors(string s, vector size);
 float draw_TextWidth_WithoutColors(string s, vector size);
-#endif

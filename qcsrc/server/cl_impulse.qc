@@ -1,3 +1,4 @@
+#include "cl_impulse.qh"
 #include "round_handler.qh"
 
 #include "bot/waypoints.qh"
@@ -9,6 +10,8 @@
 #include "weapons/selection.qh"
 #include "weapons/tracing.qh"
 #include "weapons/weaponsystem.qh"
+
+#include <common/state.qh>
 
 #include "../common/minigames/sv_minigames.qh"
 
@@ -53,7 +56,11 @@
 #define X(slot) \
 	IMPULSE(weapon_group_##slot) \
 	{ \
-		if (IS_DEAD(this)) return; \
+		if (IS_DEAD(this)) \
+		{ \
+			this.impulse = IMP_weapon_group_##slot.impulse; \
+			return; \
+		} \
 		W_NextWeaponOnImpulse(slot); \
 	}
 X(1)
@@ -74,7 +81,11 @@ X(0)
 	IMPULSE(weapon_priority_##slot##_##dir) \
 	{ \
 		if (this.vehicle) return; \
-		if (IS_DEAD(this)) return; \
+		if (IS_DEAD(this)) \
+		{ \
+			this.impulse = IMP_weapon_priority_##slot##_##dir.impulse; \
+			return; \
+		} \
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
@@ -120,7 +131,11 @@ X(9, next)
 	IMPULSE(weapon_byid_##i) \
 	{ \
 		if (this.vehicle) return; \
-		if (IS_DEAD(this)) return; \
+		if (IS_DEAD(this)) \
+		{ \
+			this.impulse = IMP_weapon_byid_##i.impulse; \
+			return; \
+		} \
 		W_SwitchWeapon(Weapons_from(WEP_FIRST + i)); \
 	}
 X(0)
@@ -152,42 +167,66 @@ X(23)
 IMPULSE(weapon_next_byid)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_next_byid.impulse;
+		return;
+	}
 	W_NextWeapon(0);
 }
 
 IMPULSE(weapon_prev_byid)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_prev_byid.impulse;
+		return;
+	}
 	W_PreviousWeapon(0);
 }
 
 IMPULSE(weapon_next_bygroup)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_next_bygroup.impulse;
+		return;
+	}
 	W_NextWeapon(1);
 }
 
 IMPULSE(weapon_prev_bygroup)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_prev_bygroup.impulse;
+		return;
+	}
 	W_PreviousWeapon(1);
 }
 
 IMPULSE(weapon_next_bypriority)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_next_bypriority.impulse;
+		return;
+	}
 	W_NextWeapon(2);
 }
 
 IMPULSE(weapon_prev_bypriority)
 {
 	if (this.vehicle) return;
-	if (IS_DEAD(this)) return;
+	if (IS_DEAD(this))
+	{
+		this.impulse = IMP_weapon_prev_bypriority.impulse;
+		return;
+	}
 	W_PreviousWeapon(2);
 }
 
@@ -479,7 +518,7 @@ IMPULSE(navwaypoint_unreachable)
 		e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 	}
 	entity e2 = navigation_findnearestwaypoint(this, false);
-	navigation_markroutes(e2);
+	navigation_markroutes(this, e2);
 
 	int i, m;
 

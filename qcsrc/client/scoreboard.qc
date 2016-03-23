@@ -3,11 +3,12 @@
 #include "quickmenu.qh"
 #include "hud/all.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/stats.qh"
-#include "../common/teams.qh"
+#include <common/ent_cs.qh>
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
 
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;
@@ -127,8 +128,9 @@ void HUD_UpdatePlayerTeams()
 	*/
 }
 
-int HUD_CompareScore(float vl, float vr, int f)
+int HUD_CompareScore(int vl, int vr, int f)
 {
+    TC(int, vl); TC(int, vr); TC(int, f);
 	if(f & SFL_ZERO_IS_WORST)
 	{
 		if(vl == 0 && vr != 0)
@@ -312,8 +314,9 @@ void Cmd_HUD_Help()
 "+as/objectives +nb/faults +nb/goals +ka/pickups +ka/bckills +ka/bctime +ft/revivals " \
 "-lms,rc,nb/score"
 
-void Cmd_HUD_SetFields(float argc)
+void Cmd_HUD_SetFields(int argc)
 {
+    TC(int, argc);
 	int i, j, slash;
 	string str, pattern;
 	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
@@ -407,7 +410,7 @@ void Cmd_HUD_SetFields(float argc)
 					if(str == strtolower(scores_label[j]))
 						goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
 
-:notfound
+LABEL(notfound)
 				if(str == "frags")
 					j = SP_FRAGS;
 				else
@@ -416,7 +419,7 @@ void Cmd_HUD_SetFields(float argc)
 						LOG_INFOF("^1Error:^7 Unknown score field: '%s'\n", str);
 					continue;
 				}
-:found
+LABEL(found)
 				hud_field[hud_num_fields] = j;
 				if(j == ps_primary)
 					have_primary = 1;
@@ -515,6 +518,7 @@ float hud_field_icon1_alpha;
 float hud_field_icon2_alpha;
 string HUD_GetField(entity pl, int field)
 {
+    TC(int, field);
 	float tmp, num, denom;
 	int f;
 	string str;
@@ -639,6 +643,7 @@ float hud_fixscoreboardcolumnwidth_marginlen;
 
 string HUD_FixScoreboardColumnWidth(int i, string str)
 {
+    TC(int, i);
 	float field, f;
 	vector sz;
 	field = hud_field[i];
@@ -703,8 +708,9 @@ string HUD_FixScoreboardColumnWidth(int i, string str)
 	return str;
 }
 
-void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_self, int pl_number)
+void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, bool is_self, int pl_number)
 {
+    TC(bool, is_self); TC(int, pl_number);
 	vector tmp, rgb;
 	rgb = Team_ColorRGB(pl.team);
 	string str;
@@ -996,18 +1002,17 @@ float HUD_WouldDrawScoreboard() {
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
-	SELFPARAM();
 	WepSet weapons_stat = WepSet_GetFromStat();
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			++disownedcnt;
-	));
+	});
 
 	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
 	if (weapon_cnt <= 0) return pos;
@@ -1061,7 +1066,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
@@ -1100,7 +1105,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			pos.y += height;
 		}
 		++column;
-	));
+	});
 
 	if (weapons_with_stats)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);

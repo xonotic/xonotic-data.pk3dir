@@ -1,3 +1,4 @@
+#include "chat.qh"
 /** Handle chat as a panel (#12) */
 void HUD_Chat()
 {

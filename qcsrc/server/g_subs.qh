@@ -1,5 +1,4 @@
-#ifndef G_SUBS_H
-#define G_SUBS_H
+#pragma once
 
 void SUB_NullThink();
 
@@ -165,4 +164,3 @@ void InitTrigger();
 void InitSolidBSPTrigger();
 
 float InitMovingBrushTrigger();
-#endif

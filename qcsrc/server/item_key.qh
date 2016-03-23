@@ -1,5 +1,4 @@
-#ifndef ITEM_KEY
-#define ITEM_KEY
+#pragma once
 
 /**
  * Returns the bit ID of a key
@@ -24,6 +23,4 @@ float item_keys_usekey(entity l, entity p);
  * Returns a string with a comma separated list of key names, as specified in keylist.
  */
 string item_keys_keylist(float keylist);
-#endif
-
 #endif

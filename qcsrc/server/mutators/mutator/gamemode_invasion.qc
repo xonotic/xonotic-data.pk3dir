@@ -1,3 +1,4 @@
+#include "gamemode_invasion.qh"
 #ifndef GAMEMODE_INVASION_H
 #define GAMEMODE_INVASION_H
 
@@ -279,8 +280,8 @@ float Invasion_CheckWinner()
 	{
 		if(winner_team)
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+			Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		}
 	}
 	else if(winner)

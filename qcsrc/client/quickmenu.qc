@@ -1,5 +1,6 @@
 #include "quickmenu.qh"
 
+#include <common/ent_cs.qh>
 #include "hud/all.qh"
 #include "mapvoting.qh"
 
@@ -37,6 +38,7 @@ float QuickMenu_TimeOut;
 // if s1 is not empty s will be displayed as command otherwise as submenu
 void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 {
+    TC(int, i);
 	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
 	if (QuickMenu_Page_Description[i])
 		strunzone(QuickMenu_Page_Description[i]);
@@ -48,6 +50,7 @@ void QuickMenu_Page_LoadEntry(int i, string s, string s1)
 
 void QuickMenu_Page_ClearEntry(int i)
 {
+    TC(int, i);
 	if (QuickMenu_Page_Description[i])
 		strunzone(QuickMenu_Page_Description[i]);
 	QuickMenu_Page_Description[i] = string_null;
@@ -227,9 +230,10 @@ bool QuickMenu_IsOpened()
 	return (QuickMenu_Page_Entries > 0);
 }
 
-void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, float without_me);
-bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, float without_me)
+void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me);
+bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, bool without_me)
 {
+    TC(int, teamplayers); TC(bool, without_me);
 	int i;
 	for(i = 0; i < QUICKMENU_MAXLINES; ++i)
 		QuickMenu_Page_ClearEntry(i);
@@ -252,8 +256,9 @@ bool HUD_Quickmenu_PlayerListEntries_Create(string cmd, int teamplayers, float w
 
 // new_page 0 means page 0, new_page != 0 means next page
 int QuickMenu_Buffer_Index_Prev;
-bool QuickMenu_Page_Load(string target_submenu, int new_page)
+bool QuickMenu_Page_Load(string target_submenu, bool new_page)
 {
+    TC(bool, new_page);
 	string s = string_null, cmd = string_null, z_submenu;
 
 	if (new_page == 0)
@@ -362,6 +367,7 @@ bool QuickMenu_Page_Load(string target_submenu, int new_page)
 
 bool QuickMenu_ActionForNumber(int num)
 {
+    TC(int, num);
 	if (!QuickMenu_IsLastPage)
 	{
 		if (num < 0 || num >= QUICKMENU_MAXLINES)
@@ -387,8 +393,9 @@ bool QuickMenu_ActionForNumber(int num)
 	return false;
 }
 
-void QuickMenu_Page_ActiveEntry(float entry_num)
+void QuickMenu_Page_ActiveEntry(int entry_num)
 {
+    TC(int, entry_num);
 	QuickMenu_Page_ActivatedEntry = entry_num;
 	QuickMenu_Page_ActivatedEntry_Time = time + 0.1;
 	if(QuickMenu_Page_Command[QuickMenu_Page_ActivatedEntry])
@@ -404,8 +411,9 @@ void QuickMenu_Page_ActiveEntry(float entry_num)
 		QuickMenu_Page_ActivatedEntry_Close = (!(hudShiftState & S_CTRL));
 }
 
-bool QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
+bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
+    TC(int, bInputType);
 	// we only care for keyboard events
 	if(bInputType == 2)
 		return false;
@@ -743,8 +751,9 @@ void HUD_QuickMenu()
 		QUICKMENU_ENTRY(strcat("(", prvm_language, ")", title), sprintf(command, translated_text)) \
 }
 
-void HUD_Quickmenu_PlayerListEntries(string cmd, float teamplayers, float without_me)
+void HUD_Quickmenu_PlayerListEntries(string cmd, int teamplayers, bool without_me)
 {
+    TC(int, teamplayers); TC(bool, without_me);
 	entity pl;
 	if(teamplayers && !team_count)
 		return;

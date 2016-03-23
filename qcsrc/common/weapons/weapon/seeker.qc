@@ -255,7 +255,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, vector f_diff, entity m_target)
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(seeker, missile_ammo));
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(SEEKER_FIRE), CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND_SEEKER_FIRE, CH_WEAPON_A, 0);
 	w_shotorg += f_diff;
 	Send_Effect(EFFECT_SEEKER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -345,7 +345,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(FLAC_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND_FLAC_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, flac_damage));
 	w_shotorg += f_diff;
 
 	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -562,7 +562,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 	entity missile;
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(seeker, tag_ammo));
 
-	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND(TAG_FIRE), CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
+	W_SetupShot_ProjectileSize(self, '-2 -2 -2', '2 2 2', false, 2, SND_TAG_FIRE, CH_WEAPON_A, WEP_CVAR(seeker, missile_damage) * WEP_CVAR(seeker, missile_count));
 
 	missile                 = new(seeker_tag);
 	missile.owner           = missile.realowner = self;
@@ -598,148 +598,153 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 // Begin: Genereal weapon functions
 // ============================
 
-		METHOD(Seeker, wr_aim, void(entity thiswep))
-		{
-			if(WEP_CVAR(seeker, type) == 1)
-				if(W_Seeker_Tagged_Info(self, self.enemy) != world)
-					self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
-				else
-					self.BUTTON_ATCK2 = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
-			else
-				self.BUTTON_ATCK = bot_aim(WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
-		}
-		METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(autocvar_g_balance_seeker_reload_ammo && actor.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
-				thiswep.wr_reload(thiswep, actor, weaponentity);
-			} else if(fire & 1)
-			{
-				if(WEP_CVAR(seeker, type) == 1)
-				{
-					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, missile_refire)))
-					{
-						W_Seeker_Attack();
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
-					}
-				}
-				else
-				{
-					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, tag_refire)))
-					{
-						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
-					}
-				}
-			}
+METHOD(Seeker, wr_aim, void(entity thiswep))
+{
+    SELFPARAM();
+    if(WEP_CVAR(seeker, type) == 1)
+        if(W_Seeker_Tagged_Info(self, self.enemy) != world)
+            PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
+        else
+            PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+    else
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);
+}
+METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(autocvar_g_balance_seeker_reload_ammo && actor.clip_load < min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo))) { // forced reload
+        thiswep.wr_reload(thiswep, actor, weaponentity);
+    } else if(fire & 1)
+    {
+        if(WEP_CVAR(seeker, type) == 1)
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, missile_refire)))
+            {
+                W_Seeker_Attack();
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, missile_animtime), w_ready);
+            }
+        }
+        else
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, tag_refire)))
+            {
+                W_Seeker_Fire_Tag(thiswep);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+            }
+        }
+    }
 
-			else if(fire & 2)
-			{
-				if(WEP_CVAR(seeker, type) == 1)
-				{
-					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, tag_refire)))
-					{
-						W_Seeker_Fire_Tag(thiswep);
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
-					}
-				}
-				else
-				{
-					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, flac_refire)))
-					{
-						W_Seeker_Fire_Flac(thiswep);
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
-					}
-				}
-			}
-		}
-		METHOD(Seeker, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount;
-			if(WEP_CVAR(seeker, type) == 1)
-			{
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, missile_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
-			}
-			else
-			{
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
-			}
-			return ammo_amount;
-		}
-		METHOD(Seeker, wr_checkammo2, bool(entity thiswep))
-		{
-			float ammo_amount;
-			if(WEP_CVAR(seeker, type) == 1)
-			{
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
-			}
-			else
-			{
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, flac_ammo);
-				ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
-			}
-			return ammo_amount;
-		}
-		METHOD(Seeker, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
-			W_Reload(self, min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND(RELOAD));
-		}
-		METHOD(Seeker, wr_suicidemessage, int(entity thiswep))
-		{
-			return WEAPON_SEEKER_SUICIDE;
-		}
-		METHOD(Seeker, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_SEEKER_MURDER_TAG;
-			else
-				return WEAPON_SEEKER_MURDER_SPRAY;
-		}
+    else if(fire & 2)
+    {
+        if(WEP_CVAR(seeker, type) == 1)
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, tag_refire)))
+            {
+                W_Seeker_Fire_Tag(thiswep);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, tag_animtime), w_ready);
+            }
+        }
+        else
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(seeker, flac_refire)))
+            {
+                W_Seeker_Fire_Flac(thiswep);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(seeker, flac_animtime), w_ready);
+            }
+        }
+    }
+}
+METHOD(Seeker, wr_checkammo1, bool(entity thiswep))
+{
+    SELFPARAM();
+    float ammo_amount;
+    if(WEP_CVAR(seeker, type) == 1)
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
+    }
+    else
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+    }
+    return ammo_amount;
+}
+METHOD(Seeker, wr_checkammo2, bool(entity thiswep))
+{
+    SELFPARAM();
+    float ammo_amount;
+    if(WEP_CVAR(seeker, type) == 1)
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+    }
+    else
+    {
+        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
+    }
+    return ammo_amount;
+}
+METHOD(Seeker, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    SELFPARAM();
+    W_Reload(self, min(WEP_CVAR(seeker, missile_ammo), WEP_CVAR(seeker, tag_ammo)), SND_RELOAD);
+}
+METHOD(Seeker, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_SEEKER_SUICIDE;
+}
+METHOD(Seeker, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_SEEKER_MURDER_TAG;
+    else
+        return WEAPON_SEEKER_MURDER_SPRAY;
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(Seeker, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 6;
-			if(w_deathtype & HITTYPE_BOUNCE)
-			{
-				if(w_deathtype & HITTYPE_SECONDARY)
-				{
-					if(!w_issilent)
-						sound(self, CH_SHOTS, SND_TAG_IMPACT, 1, ATTEN_NORM);
-				}
-				else
-				{
-					pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
-					if(!w_issilent)
-					{
-						if(w_random<0.15)
-							sound(self, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
-						else if(w_random<0.7)
-							sound(self, CH_SHOTS, SND_TAGEXP2, 1, ATTEN_NORM);
-						else
-							sound(self, CH_SHOTS, SND_TAGEXP3, 1, ATTEN_NORM);
-					}
-				}
-			}
-			else
-			{
-				pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
-				if(!w_issilent)
-				{
-					if(w_random<0.15)
-						sound(self, CH_SHOTS, SND_SEEKEREXP1, 1, ATTEN_NORM);
-					else if(w_random<0.7)
-						sound(self, CH_SHOTS, SND_SEEKEREXP2, 1, ATTEN_NORM);
-					else
-						sound(self, CH_SHOTS, SND_SEEKEREXP3, 1, ATTEN_NORM);
-				}
-			}
-		}
+METHOD(Seeker, wr_impacteffect, void(entity thiswep))
+{
+    SELFPARAM();
+    vector org2;
+    org2 = w_org + w_backoff * 6;
+    if(w_deathtype & HITTYPE_BOUNCE)
+    {
+        if(w_deathtype & HITTYPE_SECONDARY)
+        {
+            if(!w_issilent)
+                sound(self, CH_SHOTS, SND_TAG_IMPACT, 1, ATTEN_NORM);
+        }
+        else
+        {
+            pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+            if(!w_issilent)
+            {
+                if(w_random<0.15)
+                    sound(self, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
+                else if(w_random<0.7)
+                    sound(self, CH_SHOTS, SND_TAGEXP2, 1, ATTEN_NORM);
+                else
+                    sound(self, CH_SHOTS, SND_TAGEXP3, 1, ATTEN_NORM);
+            }
+        }
+    }
+    else
+    {
+        pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+        if(!w_issilent)
+        {
+            if(w_random<0.15)
+                sound(self, CH_SHOTS, SND_SEEKEREXP1, 1, ATTEN_NORM);
+            else if(w_random<0.7)
+                sound(self, CH_SHOTS, SND_SEEKEREXP2, 1, ATTEN_NORM);
+            else
+                sound(self, CH_SHOTS, SND_SEEKEREXP3, 1, ATTEN_NORM);
+        }
+    }
+}
 
 #endif
 #endif

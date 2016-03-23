@@ -34,6 +34,8 @@
 #include "t_quake3.qc"
 #include "t_quake.qc"
 
+#include "tests.qc"
+
 #include "bot/_all.inc"
 
 #include "command/all.qc"

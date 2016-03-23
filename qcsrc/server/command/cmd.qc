@@ -1,5 +1,5 @@
-#include <common/command/command.qh>
 #include "cmd.qh"
+#include <common/command/command.qh>
 
 #include "common.qh"
 #include "vote.qh"
@@ -20,8 +20,9 @@
 
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
+#include <common/effects/all.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/physics/player.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
@@ -116,7 +117,7 @@ void ClientCommand_clientversion(float request, float argc)  // internal command
 					}
 					else if (teamplay && !autocvar_sv_spectate && !(self.team_forced > 0))
 					{
-						self.classname = STR_OBSERVER;  // really?
+						TRANSMUTE(Observer, self);  // really?
 						stuffcmd(self, "menu_showteamselect\n");
 					}
 				}
@@ -176,11 +177,11 @@ void ClientCommand_join(float request)
 					if (self.caplayer) return;
 					if (nJoinAllowed(self, self))
 					{
-						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
-						self.classname = STR_PLAYER;
+						if (autocvar_g_campaign)   campaign_bots_may_start = true;
+						TRANSMUTE(Player, self);
 						PlayerScore_Clear(self);
-						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && self.team != -1) ? APP_TEAM_ENT_4(this, INFO_JOIN_PLAY_TEAM_) : INFO_JOIN_PLAY), self.netname);
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && self.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname);
 						PutClientInServer();
 					}
 					else
@@ -470,7 +471,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 					tokenize_console(s);
 				}
 
-				GetCvars(1);
+				GetCvars(this, 1);
 
 				return;
 			}

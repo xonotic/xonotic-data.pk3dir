@@ -1,18 +1,10 @@
-#ifndef DIALOG_SETTINGS_MISC_CVARS_H
-#define DIALOG_SETTINGS_MISC_CVARS_H
-#include "dialog.qc"
-CLASS(XonoticCvarsDialog, XonoticDialog)
-	METHOD(XonoticCvarsDialog, fill, void(entity));
-	METHOD(XonoticCvarsDialog, showNotify, void(entity));
-	ATTRIB(XonoticCvarsDialog, title, string, _("Advanced settings"))
-	ATTRIB(XonoticCvarsDialog, color, vector, SKINCOLOR_DIALOG_CVARS)
-	ATTRIB(XonoticCvarsDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticCvarsDialog, rows, float, 24)
-	ATTRIB(XonoticCvarsDialog, columns, float, 6)
-ENDCLASS(XonoticCvarsDialog)
-#endif
+#include "dialog_settings_misc_cvars.qh"
 
-#ifdef IMPLEMENTATION
+#include "cvarlist.qh"
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "button.qh"
+
 void XonoticCvarsDialog_showNotify(entity me)
 {
 	SUPER(XonoticCvarsDialog).showNotify(me);
@@ -85,5 +77,3 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-
-#endif

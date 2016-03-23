@@ -28,6 +28,7 @@ spawnfunc(turret_hellion) { if (!turret_initialize(TUR_HELLION)) remove(self); }
 
 METHOD(Hellion, tr_think, void(Hellion thistur, entity it))
 {
+    SELFPARAM();
     if (self.tur_head.frame != 0)
         self.tur_head.frame += 1;
 

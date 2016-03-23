@@ -1,22 +1,5 @@
-#ifndef COMMANDBUTTON_CLOSE
-# define COMMANDBUTTON_CLOSE 1
-# define COMMANDBUTTON_APPLY 2
-//# define COMMANDBUTTON_REVERT 4
-#endif
+#include "commandbutton.qh"
 
-#ifndef COMMANDBUTTON_H
-#define COMMANDBUTTON_H
-#include "button.qc"
-CLASS(XonoticCommandButton, XonoticButton)
-	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float, string));
-	ATTRIB(XonoticCommandButton, onClickCommand, string, string_null)
-	ATTRIB(XonoticCommandButton, flags, float, 0)
-ENDCLASS(XonoticCommandButton)
-entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, float closesMenu, string theTooltip);
-entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, float closesMenu);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, float theFlags, string theTooltip)
 {
 	entity me;
@@ -48,4 +31,3 @@ void XonoticCommandButton_configureXonoticCommandButton(entity me, string theTex
 	me.onClick = XonoticCommandButton_Click;
 	me.onClickEntity = me;
 }
-#endif

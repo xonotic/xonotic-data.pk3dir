@@ -1,14 +1,5 @@
-#ifndef NEXPOSEE_H
-#define NEXPOSEE_H
-#include "../item/nexposee.qc"
-CLASS(XonoticNexposee, Nexposee)
-	METHOD(XonoticNexposee, configureXonoticNexposee, void(entity));
-	METHOD(XonoticNexposee, close, void(entity));
-ENDCLASS(XonoticNexposee)
-entity makeXonoticNexposee();
-#endif
+#include "nexposee.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticNexposee()
 {
 	entity me;
@@ -25,4 +16,3 @@ void XonoticNexposee_close(entity me)
 {
 	m_goto(string_null); // hide
 }
-#endif

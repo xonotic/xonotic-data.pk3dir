@@ -58,6 +58,7 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 			}
 		}
 		WriteShort(MSG_ENTITY, self.cnt);
+		WriteString(MSG_ENTITY, self.mdl);
 		if(fl & 0x20)
 		{
 			WriteShort(MSG_ENTITY, compressShortVector(self.velocity));
@@ -112,8 +113,9 @@ void pointparticles_reset(entity this)
 
 spawnfunc(func_pointparticles)
 {
-	if(this.model != "") _setmodel(this, this.model);
+	if(this.model != "") { precache_model(this.model); _setmodel(this, this.model); }
 	if(this.noise != "") precache_sound(this.noise);
+	if(this.mdl != "") this.cnt = 0; // use a good handler
 
 	if(!this.bgmscriptsustain) this.bgmscriptsustain = 1;
 	else if(this.bgmscriptsustain < 0) this.bgmscriptsustain = 0;
@@ -129,7 +131,7 @@ spawnfunc(func_pointparticles)
 		setorigin(this, this.origin + this.mins);
 		setsize(this, '0 0 0', this.maxs - this.mins);
 	}
-	if(!this.cnt) this.cnt = _particleeffectnum(this.mdl);
+	//if(!this.cnt) this.cnt = _particleeffectnum(this.mdl);
 
 	Net_LinkEntity(this, (this.spawnflags & 4), 0, pointparticles_SendEntity);
 
@@ -224,11 +226,21 @@ void Draw_PointParticles(entity this)
 			{
 				traceline(p, p + normalize(self.movedir) * 4096, 0, world);
 				p = trace_endpos;
-				__pointparticles(self.cnt, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
+				int eff_num;
+				if(self.cnt)
+					eff_num = self.cnt;
+				else
+					eff_num = _particleeffectnum(self.mdl);
+				__pointparticles(eff_num, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
 			}
 			else
 			{
-				__pointparticles(self.cnt, p, self.velocity + randomvec() * self.waterlevel, self.count);
+				int eff_num;
+				if(self.cnt)
+					eff_num = self.cnt;
+				else
+					eff_num = _particleeffectnum(self.mdl);
+				__pointparticles(eff_num, p, self.velocity + randomvec() * self.waterlevel, self.count);
 			}
 			if(self.noise != "")
 			{
@@ -254,6 +266,9 @@ void Ent_PointParticles_Remove(entity this)
 	if(this.bgmscript)
 		strunzone(this.bgmscript);
 	this.bgmscript = string_null;
+	if(this.mdl)
+		strunzone(this.mdl);
+	this.mdl = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
@@ -264,7 +279,7 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 	if(f & 2)
 	{
 		i = ReadCoord(); // density (<0: point, >0: volume)
-		if(i && !self.impulse && self.cnt) // self.cnt check is so it only happens if the ent already existed
+		if(i && !self.impulse && (self.cnt || self.mdl)) // self.cnt check is so it only happens if the ent already existed
 			self.just_toggled = 1;
 		self.impulse = i;
 	}
@@ -302,6 +317,7 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 		}
 
 		self.cnt = ReadShort(); // effect number
+		self.mdl = strzone(ReadString()); // effect string
 
 		if(f & 0x20)
 		{

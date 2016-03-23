@@ -1,3 +1,8 @@
+#include "physics.qh"
+
+#include <common/mapinfo.qh>
+#include <lib/csqcmodel/cl_player.qh>
+
 // Physics panel (#15)
 
 vector acc_prevspeed;

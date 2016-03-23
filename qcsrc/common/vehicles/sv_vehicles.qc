@@ -232,12 +232,13 @@ void vehicles_projectile_explode()
 	remove (self);
 }
 
-entity vehicles_projectile(string _mzlfx, string _mzlsound,
+entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 						   vector _org, vector _vel,
 						   float _dmg, float _radi, float _force,  float _size,
 						   int _deahtype, float _projtype, float _health,
 						   bool _cull, bool _clianim, entity _owner)
-{SELFPARAM();
+{
+    TC(Sound, _mzlsound);
 	entity proj;
 
 	proj = spawn();
@@ -257,7 +258,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 	proj.velocity		 = _vel;
 	proj.touch			= vehicles_projectile_explode;
 	proj.use			  = vehicles_projectile_explode;
-	proj.owner			= self;
+	proj.owner			= this;
 	proj.realowner		= _owner;
 	proj.think			= SUB_Remove_self;
 	proj.nextthink		= time + 30;
@@ -271,8 +272,8 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 	else
 		proj.flags		   = FL_PROJECTILE | FL_NOTARGET;
 
-	if(_mzlsound)
-		_sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
+	if(_mzlsound != SND_Null)
+		sound (this, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
 	if(_mzlfx)
 		Send_Effect_(_mzlfx, proj.origin, proj.velocity, 1);
@@ -337,7 +338,7 @@ bool vehicle_addplayerslot(	entity _owner,
 								entity _slot,
 								int _hud,
 								string _hud_model,
-								bool() _framefunc,
+								bool(entity) _framefunc,
 								void(bool) _exitfunc, float() _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
@@ -577,18 +578,18 @@ void vehicle_use()
 	}
 }
 
-void vehicles_regen(float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
-{SELFPARAM();
-	if(self.(regen_field) < field_max)
+void vehicles_regen(entity this, float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
+{
+	if(this.(regen_field) < field_max)
 	if(timer + rpause < time)
 	{
 		if(_healthscale)
-			regen = regen * (self.vehicle_health / self.max_health);
+			regen = regen * (this.vehicle_health / this.max_health);
 
-		self.(regen_field) = min(self.(regen_field) + regen * delta_time, field_max);
+		this.(regen_field) = min(this.(regen_field) + regen * delta_time, field_max);
 
-		if(self.owner)
-			self.owner.(regen_field) = (self.(regen_field) / field_max) * 100;
+		if(this.owner)
+			this.owner.(regen_field) = (this.(regen_field) / field_max) * 100;
 	}
 }
 
@@ -720,7 +721,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 				WITH(entity, self, this, vehicles_exit(VHEF_RELEASE));
 
 
-		antilag_clear(this);
+		antilag_clear(this, this);
 
 		Vehicle info = Vehicles_from(this.vehicleid);
 		info.vr_death(info, this);
@@ -884,8 +885,8 @@ void vehicles_exit(bool eject)
 	if(!teamplay)
 		_vehicle.team = 0;
 
-	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER_CPID, CPID_VEHICLES);
-	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER_CPID, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
+	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES);
+	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
 
 	WaypointSprite_Kill(_vehicle.wps_intruder);
 
@@ -1007,7 +1008,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(DIFF_TEAM(pl, veh))
 	if(autocvar_g_vehicles_steal)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, veh), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VEHICLE_STEAL)));
+		FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, veh), Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VEHICLE_STEAL));
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
@@ -1107,7 +1108,7 @@ void vehicles_enter(entity pl, entity veh)
 	info.vr_enter(info, veh);
 	setself(this);
 
-	antilag_clear(pl);
+	antilag_clear(pl, CS(pl));
 }
 
 void vehicles_think()
@@ -1164,7 +1165,7 @@ void vehicles_spawn()
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == self, LAMBDA(RemoveGrapplingHook(it)));
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == self, RemoveGrapplingHook(it));
 
 	vehicles_reset_colors();
 

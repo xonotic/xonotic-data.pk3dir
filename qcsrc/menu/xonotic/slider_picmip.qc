@@ -1,16 +1,5 @@
-#ifndef SLIDER_PICMIP_H
-#define SLIDER_PICMIP_H
-#include "textslider.qc"
-CLASS(XonoticPicmipSlider, XonoticTextSlider)
-	METHOD(XonoticPicmipSlider, configureXonoticPicmipSlider, void(entity));
-	METHOD(XonoticPicmipSlider, draw, void(entity));
-	METHOD(XonoticPicmipSlider, autofix, void(entity));
-	ATTRIB(XonoticPicmipSlider, have_s3tc, float, 0)
-ENDCLASS(XonoticPicmipSlider)
-entity makeXonoticPicmipSlider(); // note: you still need to call addValue and configureXonoticTextSliderValues!
-#endif
+#include "slider_picmip.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticPicmipSlider()
 {
 	entity me;
@@ -53,4 +42,3 @@ void XonoticPicmipSlider_draw(entity me)
 	me.autofix(me);
 	SUPER(XonoticPicmipSlider).draw(me);
 }
-#endif

@@ -1,3 +1,5 @@
+#include "lightningarc.qh"
+
 #ifdef IMPLEMENTATION
 REGISTER_NET_TEMP(TE_CSQC_ARC)
 

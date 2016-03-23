@@ -2,7 +2,7 @@
 #define STATS_H
 
 #ifdef SVQC
-#include "../server/cl_client.qh"
+#include <server/cl_client.qh>
 #endif
 
 // Full list of all stat constants, included in a single location for easy reference
@@ -273,6 +273,7 @@ REGISTER_STAT(MOVEVARS_MAXAIRSTRAFESPEED, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL, float)
 REGISTER_STAT(FRAGLIMIT, float, autocvar_fraglimit)
 REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
+REGISTER_STAT(WARMUP_TIMELIMIT, float, warmup_limit)
 #ifdef SVQC
 float autocvar_sv_wallfriction;
 #endif

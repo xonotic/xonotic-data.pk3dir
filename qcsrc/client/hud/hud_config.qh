@@ -1,5 +1,4 @@
-#ifndef CLIENT_HUD_CONFIG_H
-#define CLIENT_HUD_CONFIG_H
+#pragma once
 
 const int S_MOUSE1 = 1;
 const int S_MOUSE2 = 2;
@@ -18,5 +17,3 @@ void HUD_Configure_Frame();
 void HUD_Configure_PostDraw();
 
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary);
-
-#endif

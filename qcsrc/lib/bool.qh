@@ -6,10 +6,6 @@
 	const int false = 0;
 #endif
 
-// Transitional aliases
-[[deprecated("use true")]][[alias("true")]] const bool TRUE;
-[[deprecated("use false")]][[alias("false")]] const bool FALSE;
-
 #define boolean(value) ((value) != 0)
 
 // get true/false value of a string with multiple different inputs

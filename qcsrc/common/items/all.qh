@@ -1,7 +1,7 @@
 #ifndef ITEMS_ALL_H
 #define ITEMS_ALL_H
 
-#include "../command/all.qh"
+#include <common/command/all.qh>
 
 #include "item.qh"
 
@@ -13,7 +13,7 @@ REGISTER_REGISTRY(Items)
 
 REGISTRY_SORT(Items)
 REGISTRY_CHECK(Items)
-STATIC_INIT(Items) { FOREACH(Items, true, LAMBDA(it.m_id = i)); }
+STATIC_INIT(Items) { FOREACH(Items, true, it.m_id = i); }
 
 void Dump_Items();
 

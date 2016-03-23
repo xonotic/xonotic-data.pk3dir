@@ -6,6 +6,7 @@
 #include <common/util.qh>
 #include <common/items/item.qh>
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
 // switch between weapons
@@ -41,6 +42,7 @@ void Weapon_whereis(Weapon this, entity cl)
 
 bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 {
+    SELFPARAM();
 	float f = 0;
 
 	if (time < cl.hasweapon_complain_spam)

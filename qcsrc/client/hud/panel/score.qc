@@ -1,3 +1,9 @@
+#include "score.qh"
+
+#include <client/scoreboard.qh>
+#include <common/ent_cs.qh>
+#include <common/mapinfo.qh>
+
 // Score (#7)
 
 void HUD_UpdatePlayerTeams();

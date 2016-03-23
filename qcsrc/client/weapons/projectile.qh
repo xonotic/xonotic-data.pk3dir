@@ -1,5 +1,4 @@
-#ifndef CLIENT_WEAPONS_PROJECTILE_H
-#define CLIENT_WEAPONS_PROJECTILE_H
+#pragma once
 
 entityclass(Projectile);
 class(Projectile).int traileffect;
@@ -30,5 +29,3 @@ void loopsound(entity e, int ch, string samp, float vol, float attn);
 void Ent_RemoveProjectile(entity this);
 
 const int FL_PROJECTILE = BIT(15);
-
-#endif

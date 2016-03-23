@@ -2,8 +2,7 @@
 
 entity Sort_Spawn()
 {
-	entity sort = new(sortlist);
-	make_pure(sort);
+	entity sort = new_pure(sortlist);
 	sort.sort_next = NULL;
 	sort.chain = sort;
 	return sort;

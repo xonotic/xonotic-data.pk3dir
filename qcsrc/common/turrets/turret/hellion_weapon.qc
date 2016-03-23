@@ -26,7 +26,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND(HellionAttack_FIRE), CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, v_forward, false, 0, SND_HellionAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -40,7 +40,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
                 actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire2"));
         }
 
-        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
+        entity missile = turret_projectile(SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
         missile.think		= turret_hellion_missile_think;
         missile.nextthink	= time;

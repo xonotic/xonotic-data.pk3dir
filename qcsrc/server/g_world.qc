@@ -24,7 +24,7 @@
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/physics/player.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
@@ -34,6 +34,7 @@
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
+#include "../common/state.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -80,8 +81,7 @@ void PingPLReport_Think()
 }
 void PingPLReport_Spawn()
 {
-	pingplreport = new(pingplreport);
-	make_pure(pingplreport);
+	pingplreport = new_pure(pingplreport);
 	pingplreport.think = PingPLReport_Think;
 	pingplreport.nextthink = time;
 }
@@ -232,7 +232,6 @@ void cvar_changes_init()
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
-		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("log_file");
 		BADPREFIX("rcon_");
@@ -269,7 +268,9 @@ void cvar_changes_init()
 		BADCVAR("g_nexball");
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
+		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
+		BADCVAR("g_race_qualifying_timelimit_override");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("leadlimit");
@@ -300,47 +301,53 @@ void cvar_changes_init()
 
 		// now check if the changes are actually gameplay relevant
 
-		// does nothing visible
+		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("gameversion");
+		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
-		BADCVAR("g_ca_point_limit");
+		BADCVAR("g_campcheck_distance");
 		BADCVAR("g_ca_point_leadlimit");
+		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
-		BADCVAR("g_freezetag_point_limit");
 		BADCVAR("g_freezetag_point_leadlimit");
-		BADCVAR("g_keyhunt_point_leadlimit");
-		BADPREFIX("g_mod_");
+		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_hats");
 		BADCVAR("g_invasion_point_limit");
+		BADCVAR("g_keyhunt_point_leadlimit");
 		BADCVAR("g_nexball_goalleadlimit");
-		BADCVAR("g_tdm_point_limit");
 		BADCVAR("g_tdm_point_leadlimit");
+		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_intermission_cdtrack");
+		BADCVAR("sv_minigames");
+		BADCVAR("sv_namechangetimer");
+		BADCVAR("sv_precacheplayermodels");
 		BADCVAR("sv_timeout");
-		BADPREFIX("sv_timeout_");
 		BADPREFIX("crypto_");
+		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_maplist_votable_");
+		BADPREFIX("g_mod_");
+		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_cullentities_");
 		BADPREFIX("sv_maxidle_");
+		BADPREFIX("sv_minigames_");
+		BADPREFIX("sv_timeout_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
-		BADCVAR("gameversion");
-		BADPREFIX("gameversion_");
-		BADCVAR("sv_minigames");
-		BADPREFIX("sv_minigames_");
-		BADCVAR("sv_namechangetimer");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -385,7 +392,9 @@ void cvar_changes_init()
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
+		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_superspectate");
 		BADCVAR("g_tdm_teams_override");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
@@ -423,7 +432,6 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_simple_majority_factor");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
-		BADCVAR("g_spawnshieldtime");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
 
@@ -515,8 +523,7 @@ void RandomSeed_Think()
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
-	randomseed = new(randomseed);
-	make_pure(randomseed);
+	randomseed = new_pure(randomseed);
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
@@ -1290,7 +1297,7 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !(self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE))
+		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self)))
 			return;
 
 	MapVote_Start();
@@ -1497,6 +1504,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+    SELFPARAM();
 	gameover = true;
 
 	intermission_running = 1;
@@ -1524,7 +1532,7 @@ void NextLevel()
 	PlayerStats_GameReport(true);
 	WeaponStats_Shutdown();
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_Null); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1962,40 +1970,36 @@ string GotoMap(string m)
 
 
 void EndFrame()
-{SELFPARAM();
+{
 	anticheat_endframe();
 
-	float altime;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
-		if(e.typehitsound)
+		if (e.typehitsound) {
 			it.typehit_time = time;
-		else if(e.damage_dealt)
-		{
+		} else if (e.damage_dealt) {
 			it.hit_time = time;
 			it.damage_dealt_total += ceil(e.damage_dealt);
 		}
-	));
-	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	});
 	// add 1 frametime because after this, engine SV_Physics
 	// increases time by a frametime and then networks the frame
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOREACH_CLIENT(true, LAMBDA(
+	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
 		it.damage_dealt = 0;
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_CLIENT(PS(it), LAMBDA(
+		antilag_record(it, CS(it), altime);
+	});
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+		antilag_record(it, it, altime);
+	});
+	FOREACH_CLIENT(PS(it), {
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
-	));
+	});
 }
 
 
