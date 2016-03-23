@@ -28,8 +28,8 @@ CLASS(Client, Object)
 
     // custom
 
-    ATTRIB(Client, flags, int, 0)
-    ATTRIB(Client, playerid, int, 0)
+    ATTRIB(Client, flags, int, this.flags)
+    ATTRIB(Client, playerid, int, this.playerid)
 
     METHOD(Client, m_unwind, bool(Client this));
 

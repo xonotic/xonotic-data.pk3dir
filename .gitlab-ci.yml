@@ -1,35 +1,17 @@
 before_script:
-  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
-  - cd darkplaces && make sv-debug -j $(nproc)
-  - cd ..
-  - export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic"
-
-  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - cd gmqcc && make -j $(nproc)
-  - cd ..
-  - export QCC="$PWD/gmqcc/gmqcc"
-
   - ln -s $PWD data/xonotic-data.pk3dir
 
-test_compilation_units:
-  stage: test
-  script:
-    - ./qcsrc/tools/compilationunits.sh
-
-test_sv_unit:
-  stage: test
-  script:
-    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
-    - make
-    - while read line; do
-        echo $line;
-        if [[ $line == "All tests OK" ]]; then exit 0; fi;
-      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
-    - exit 1
+  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
+  - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
+  - cd ..
 
 test_sv_game:
   stage: test
   script:
+    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
+    - cd ..
+
     - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
     - make
     - EXPECT=8573348372f9b9f82183b01598950eb5
@@ -43,6 +25,26 @@ test_sv_game:
     - echo '  actual:' $HASH
     - test "$HASH" == "$EXPECT"
     - exit $?
+
+test_sv_unit:
+  stage: test
+  script:
+    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
+    - cd ..
+
+    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+    - make
+    - while read line; do
+        echo $line;
+        if [[ $line == "All tests OK" ]]; then exit 0; fi;
+      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
+    - exit 1
+
+test_compilation_units:
+  stage: test
+  script:
+    - ./qcsrc/tools/compilationunits.sh
 
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy

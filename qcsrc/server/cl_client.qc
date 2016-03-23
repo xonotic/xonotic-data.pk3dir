@@ -989,12 +989,12 @@ void ClientConnect()
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
 	assert(player_count >= 0, player_count = 0);
-	TRANSMUTE(Client, this);
 
 #ifdef WATERMARK
 	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
 #endif
 	this.version_nagtime = time + 10 + random() * 10;
+	TRANSMUTE(Client, this);
 
 	// identify the right forced team
 	if (autocvar_g_campaign)
@@ -1029,8 +1029,12 @@ void ClientConnect()
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-	JoinBestTeam(this, false, false); // if the team number is valid, keep it
-
+    {
+        int id = this.playerid;
+        this.playerid = 0; // silent
+	    JoinBestTeam(this, false, false); // if the team number is valid, keep it
+	    this.playerid = id;
+    }
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
 		TRANSMUTE(Observer, this);
 	} else {
