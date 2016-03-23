@@ -112,8 +112,8 @@ void clearentity(entity e)
 	#define NEW(cname, ...) \
 		OVERLOAD_(spawn##cname, new_pure(cname) P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 
-    #define TRANSMUTE(cname, this, ...) \
-        OVERLOAD_(spawn##cname, (this.transmute = true, this.classname = #cname, this) P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+    #define _TRANSMUTE(cname, this, ...) \
+        OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 
 	#define CONSTRUCT(cname, ...) \
 		OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
@@ -121,12 +121,21 @@ void clearentity(entity e)
 	#define NEW(cname, ...) \
 		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)
 
-    #define TRANSMUTE(cname, this, ...) \
-        OVERLOAD(spawn##cname, (this.transmute = true, this.classname = #cname, this),##__VA_ARGS__)
+    #define _TRANSMUTE(cname, this, ...) \
+        OVERLOAD(spawn##cname, this,##__VA_ARGS__)
 
 	#define CONSTRUCT(cname, ...) \
 		OVERLOAD(spawn##cname, this,##__VA_ARGS__)
 #endif
+
+#define TRANSMUTE(cname, this, ...) MACRO_BEGIN \
+    entity _e = (this); \
+    if (_e.vtblbase != cname##_vtbl) { \
+        _e.transmute = true; \
+        _e.classname = #cname; \
+        _TRANSMUTE(cname, _e, __VA_ARGS__); \
+    } \
+    MACRO_END
 
 #define CONSTRUCTOR(cname, ...) \
 	cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__) \
@@ -210,6 +219,7 @@ STATIC_INIT(RegisterClasses)
     METHOD(cname, dtor, void(cname this)) \
     { \
         METHOD_REFERENCE(cname, dtorimpl)(this); \
+        this.instanceOf##cname = false; \
         entity super = SUPER(cname); \
         if (super != cname##_vtbl) super.dtor(this); \
     } \

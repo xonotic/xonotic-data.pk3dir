@@ -117,7 +117,7 @@ void ClientCommand_clientversion(float request, float argc)  // internal command
 					}
 					else if (teamplay && !autocvar_sv_spectate && !(self.team_forced > 0))
 					{
-						self.classname = STR_OBSERVER;  // really?
+						TRANSMUTE(Observer, self);  // really?
 						stuffcmd(self, "menu_showteamselect\n");
 					}
 				}
@@ -178,7 +178,7 @@ void ClientCommand_join(float request)
 					if (nJoinAllowed(self, self))
 					{
 						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
-						self.classname = STR_PLAYER;
+						TRANSMUTE(Player, self);
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && self.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname);

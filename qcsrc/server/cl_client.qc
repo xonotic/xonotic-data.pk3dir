@@ -246,7 +246,7 @@ void PutObserverInServer()
 	this.spectatortime = time;
 	this.bot_attack = false;
     this.hud = HUD_NORMAL;
-	this.classname = STR_OBSERVER;
+	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
 	this.damagedbycontents = false;
@@ -406,14 +406,14 @@ void PutClientInServer()
 {
 	SELFPARAM();
 	if (IS_BOT_CLIENT(this)) {
-		this.classname = STR_PLAYER;
+		TRANSMUTE(Player, this);
 	} else if (IS_REAL_CLIENT(this)) {
 		msg_entity = this;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
 	}
 	if (gameover) {
-		this.classname = STR_OBSERVER;
+		TRANSMUTE(Observer, this);
 	}
 
 	SetSpectatee(this, NULL);
@@ -438,7 +438,7 @@ void PutClientInServer()
 			return; // spawn failed
 		}
 
-		this.classname = STR_PLAYER;
+		TRANSMUTE(Player, this);
 		this.wasplayer = true;
 		this.iscreature = true;
 		this.teleportable = TELEPORT_NORMAL;
@@ -990,14 +990,11 @@ void ClientConnect()
 	assert(!IS_CLIENT(this), return);
 	assert(player_count >= 0, player_count = 0);
 	TRANSMUTE(Client, this);
-	this.classname = "player_joining";
 
 #ifdef WATERMARK
 	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
 #endif
 	this.version_nagtime = time + 10 + random() * 10;
-
-	ClientState_attach(this);
 
 	// identify the right forced team
 	if (autocvar_g_campaign)
@@ -1035,20 +1032,18 @@ void ClientConnect()
 	JoinBestTeam(this, false, false); // if the team number is valid, keep it
 
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
-		this.classname = STR_OBSERVER;
+		TRANSMUTE(Observer, this);
 	} else {
 		if (!teamplay || autocvar_g_balance_teams)
 		{
-			this.classname = STR_PLAYER;
+			TRANSMUTE(Player, this);
 			campaign_bots_may_start = 1;
 		}
 		else
 		{
-			this.classname = STR_OBSERVER; // do it anyway
+			TRANSMUTE(Observer, this); // do it anyway
 		}
 	}
-
-	this.playerid = ++playerid_last;
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
@@ -1754,7 +1749,7 @@ void LeaveSpectatorMode()
 	{
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
 		{
-			self.classname = STR_PLAYER;
+			TRANSMUTE(Player, self);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, false, true); }
@@ -1898,7 +1893,7 @@ void ObserverThink()
 		} else if(PHYS_INPUT_BUTTON_ATCK(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
-				self.classname = STR_SPECTATOR;
+				TRANSMUTE(Spectator, self);
 			}
 		} else {
 			prefered_movetype = ((!PHYS_INPUT_BUTTON_USE(self) ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
@@ -1932,24 +1927,24 @@ void SpectatorThink()
 		} else if(PHYS_INPUT_BUTTON_ATCK(self) || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
-				self.classname = STR_SPECTATOR;
+				TRANSMUTE(Spectator, self);
 			} else {
-				self.classname = STR_OBSERVER;
+				TRANSMUTE(Observer, self);
 				PutClientInServer();
 			}
 			self.impulse = 0;
 		} else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || (self.impulse >= 220 && self.impulse <= 229)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectatePrev()) {
-				self.classname = STR_SPECTATOR;
+				TRANSMUTE(Spectator, self);
 			} else {
-				self.classname = STR_OBSERVER;
+				TRANSMUTE(Observer, self);
 				PutClientInServer();
 			}
 			self.impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(self)) {
 			self.flags &= ~FL_JUMPRELEASED;
-			self.classname = STR_OBSERVER;
+			TRANSMUTE(Observer, self);
 			PutClientInServer();
 		} else {
 			if(!SpectateUpdate())

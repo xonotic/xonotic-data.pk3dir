@@ -403,9 +403,9 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
-    TC(bool, vertical); TC(bool, icon_right_align);
+    TC(bool, vertical); TC(int, icon_right_align);
 	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
