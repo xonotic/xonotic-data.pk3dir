@@ -122,11 +122,15 @@ void Announcer_Time()
 {
 	float timelimit = STAT(TIMELIMIT);
 	float timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
-	float warmup_timeleft = 0;
 
 	if(warmup_stage)
-		if(autocvar_g_warmup_limit > 0)
-			warmup_timeleft = max(0, autocvar_g_warmup_limit + STAT(GAMESTARTTIME) - time);
+	{
+		float warmup_timelimit = STAT(WARMUP_TIMELIMIT);
+		if(warmup_timelimit > 0)
+			timeleft = max(0, warmup_timelimit - time);
+		else
+			timeleft = 0;
+	}
 
 	// 5 minute check
 	if(autocvar_cl_announcer_maptime >= 2)
@@ -134,21 +138,15 @@ void Announcer_Time()
 		// make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
 		if(announcer_5min)
 		{
-			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 300)
-				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 300))
-					announcer_5min = false;
+			if(timeleft > 300)
+				announcer_5min = false;
 		}
 		else
 		{
-			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 300 && timeleft > 299)
-				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 300 && warmup_timeleft > 299))
+			if(timeleft < 300 && timeleft > 299)
 			{
-				//if we're in warmup mode, check whether there's a warmup timelimit
-				if(!(autocvar_g_warmup_limit == -1 && warmup_stage))
-				{
-					announcer_5min = true;
-					Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_5);
-				}
+				announcer_5min = true;
+				Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_5);
 			}
 		}
 	}
@@ -156,17 +154,14 @@ void Announcer_Time()
 	// 1 minute check
 	if((autocvar_cl_announcer_maptime == 1) || (autocvar_cl_announcer_maptime == 3))
 	{
-		if (announcer_1min)
+		if(announcer_1min)
 		{
-			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 60)
-				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 60))
-					announcer_1min = false;
+			if(timeleft > 60)
+				announcer_1min = false;
 		}
-		else if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 60)
-			|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 60))
+		else
 		{
-			// if we're in warmup mode, check whether there's a warmup timelimit
-			if(!(autocvar_g_warmup_limit == -1 && warmup_stage))
+			if(timeleft < 60 && timeleft > 59)
 			{
 				announcer_1min = true;
 				Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_1);
