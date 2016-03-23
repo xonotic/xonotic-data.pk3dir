@@ -220,14 +220,14 @@ NET_HANDLE(ENT_CLIENT_MODEL, bool isnew)
 	int sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
-	bool isplayer = (this.entnum >= 1 && this.entnum <= maxclients);
+	bool isplayer = ReadByte() || (this.entnum >= 1 && this.entnum <= maxclients);
 	if (isnew && isplayer)
 	{
 		CSQCModel_players[this.entnum - 1] = this;
 		this.entremove = CSQCModel_remove;
 	}
 	bool islocalplayer = (this.entnum == player_localnum + 1);
-	noref bool isnolocalplayer = (isplayer && (this.entnum != player_localnum + 1));
+	noref bool isnolocalplayer = (isplayer && !islocalplayer);
 
 	this.classname = "csqcmodel";
 	this.iflags |= IFLAG_ORIGIN; // interpolate origin too

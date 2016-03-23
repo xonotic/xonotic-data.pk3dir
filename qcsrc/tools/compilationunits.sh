@@ -33,14 +33,21 @@ QCCFLAGS="${QCCFLAGS[@]} ${NOWARN[@]}"
 . qcc.sh
 cd ..
 
+function check1() {
+    declare -l base="${1}"
+    MODE=${2}
+    declare -l file="${3}"
+    qpp ${file} test.dat \
+            -include lib/_all.inc -include ${base}/_all.qh \
+            -I. ${QCCIDENT} ${QCCDEFS} -D${MODE} > ${WORKDIR}/${MODE}.qc
+    qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${MODE}.qc >/dev/null
+}
+
 function check() {
     declare -l base="${1}"
     MODE=${2}
     find ${base} -type f -name '*.qc' -print0 | sort -z | while read -r -d '' file; do
-        qpp ${file} test.dat \
-            -include lib/_all.inc -include ${base}/_all.qh \
-            -I. ${QCCIDENT} ${QCCDEFS} -D${MODE} > ${WORKDIR}/${MODE}.qc
-        qcc ${QCCFLAGS} -o ../${WORKDIR}/test.dat ../${WORKDIR}/${MODE}.qc >/dev/null
+        check1 ${base} ${MODE} ${file}
     done
 }
 

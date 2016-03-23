@@ -410,8 +410,8 @@ REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
-void GetCvars(int f)
-{SELFPARAM();
+void GetCvars(entity this, int f)
+{
 	string s = string_null;
 
 	if (f > 0)

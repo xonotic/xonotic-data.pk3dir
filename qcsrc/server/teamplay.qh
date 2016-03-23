@@ -47,7 +47,7 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e);
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl);
 
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
+int JoinBestTeam(entity pl, bool only_return_best, bool forcebestteam);
 
 //void() ctf_playerchanged;
 void SV_ChangeTeam(float _color);

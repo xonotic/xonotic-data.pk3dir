@@ -124,6 +124,7 @@ void SV_OnEntityPostSpawnFunction();
 //   parm1..n
 void SetNewParms();
 
+// Runs every frame
 // input:
 //
 .bool customizeentityforclient();

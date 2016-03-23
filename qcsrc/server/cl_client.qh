@@ -28,18 +28,29 @@ CLASS(Client, Object)
 
     // custom
 
-    ATTRIB(Client, flags, int, this.flags)
     ATTRIB(Client, playerid, int, this.playerid)
 
     METHOD(Client, m_unwind, bool(Client this));
 
+    STATIC_METHOD(Client, Add, void(Client this, int _team));
+    STATIC_METHOD(Client, Remove, void(Client this));
+
     INIT(Client) {
         if (this.m_unwind(this)) return this;
+        make_impure(this);
         this.classname = "player_joining";
-        this.flags = FL_CLIENT;
         static int playerid_last;
         this.playerid = ++playerid_last;
         ClientState_attach(this);
+    }
+    DESTRUCTOR(Client) {
+        Client_Remove(this);
+    }
+    CONSTRUCTOR(Client, string name) {
+        CONSTRUCT(Client);
+        this.netname = name;
+        this.netaddress = "local";
+        this.playermodel = "models/player/megaerebus.iqm";
     }
 ENDCLASS(Client)
 

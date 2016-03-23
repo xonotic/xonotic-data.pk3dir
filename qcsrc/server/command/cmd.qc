@@ -177,7 +177,7 @@ void ClientCommand_join(float request)
 					if (self.caplayer) return;
 					if (nJoinAllowed(self, self))
 					{
-						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
+						if (autocvar_g_campaign)   campaign_bots_may_start = true;
 						TRANSMUTE(Player, self);
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
@@ -471,7 +471,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 					tokenize_console(s);
 				}
 
-				GetCvars(1);
+				GetCvars(this, 1);
 
 				return;
 			}

@@ -53,6 +53,23 @@
 
 #include "../lib/warpzone/server.qh"
 
+STATIC_METHOD(Client, Add, void(Client this, int _team))
+{
+    WITH(entity, self, this, ClientConnect());
+    TRANSMUTE(Player, this);
+    this.frame = 12; // 7
+    this.team = _team;
+    WITH(entity, self, this, PutClientInServer());
+}
+
+void PutObserverInServer();
+void ClientDisconnect();
+
+STATIC_METHOD(Client, Remove, void(Client this))
+{
+    TRANSMUTE(Observer, this);
+    WITH(entity, self, this, PutClientInServer(); ClientDisconnect());
+}
 
 void send_CSQC_teamnagger() {
 	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
@@ -89,14 +106,14 @@ bool ClientData_Send(entity this, entity to, int sf)
 void ClientData_Attach(entity this)
 {
 	Net_LinkEntity(this.clientdata = new_pure(clientdata), false, 0, ClientData_Send);
-	self.clientdata.drawonlytoclient = this;
-	self.clientdata.owner = this;
+	this.clientdata.drawonlytoclient = this;
+	this.clientdata.owner = this;
 }
 
 void ClientData_Detach(entity this)
 {
 	remove(this.clientdata);
-	self.clientdata = NULL;
+	this.clientdata = NULL;
 }
 
 void ClientData_Touch(entity e)
@@ -988,6 +1005,7 @@ void ClientConnect()
 	SELFPARAM();
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
+	this.flags |= FL_CLIENT;
 	assert(player_count >= 0, player_count = 0);
 
 #ifdef WATERMARK
@@ -1035,16 +1053,14 @@ void ClientConnect()
 	    JoinBestTeam(this, false, false); // if the team number is valid, keep it
 	    this.playerid = id;
     }
+
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
 		TRANSMUTE(Observer, this);
 	} else {
-		if (!teamplay || autocvar_g_balance_teams)
-		{
+		if (!teamplay || autocvar_g_balance_teams) {
 			TRANSMUTE(Player, this);
-			campaign_bots_may_start = 1;
-		}
-		else
-		{
+			campaign_bots_may_start = true;
+		} else {
 			TRANSMUTE(Observer, this); // do it anyway
 		}
 	}
@@ -1759,7 +1775,7 @@ void LeaveSpectatorMode()
 				{ JoinBestTeam(self, false, true); }
 
 			if(autocvar_g_campaign)
-				{ campaign_bots_may_start = 1; }
+				{ campaign_bots_may_start = true; }
 
 			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
 

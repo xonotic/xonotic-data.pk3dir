@@ -215,7 +215,7 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 {SELFPARAM();
 	TRANSMUTE(Player, self);
-	campaign_bots_may_start = 1;
+	campaign_bots_may_start = true;
 
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
