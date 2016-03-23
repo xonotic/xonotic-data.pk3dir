@@ -414,8 +414,9 @@ bool forbidWeaponUse(entity player)
 
 .bool hook_switchweapon;
 
-void W_WeaponFrame(entity actor)
+void W_WeaponFrame(Player actor)
 {
+    TC(Player, actor);
 	.entity weaponentity = weaponentities[0];  // TODO: unhardcode
 	entity this = actor.(weaponentity);
 	if (frametime) actor.weapon_frametime = frametime;

@@ -226,11 +226,12 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	return 0;
 }
 
-void W_SwitchWeapon_Force(entity e, Weapon wep)
+void W_SwitchWeapon_Force(Player this, Weapon wep)
 {
-	e.cnt = PS(e).m_switchweapon.m_id;
-	PS(e).m_switchweapon = wep;
-	e.selectweapon = wep.m_id;
+    TC(Player, this); TC(Weapon, wep);
+	this.cnt = PS(this).m_switchweapon.m_id;
+	PS(this).m_switchweapon = wep;
+	this.selectweapon = wep.m_id;
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
