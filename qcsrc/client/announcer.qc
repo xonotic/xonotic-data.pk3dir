@@ -116,13 +116,21 @@ void Announcer_Gamestart()
 	previous_game_starttime = startTime;
 }
 
+#define ANNOUNCER_CHECKMINUTE(minute) MACRO_BEGIN { \
+	if(announcer_##minute##min) { \
+		if(timeleft > minute * 60) \
+			announcer_##minute##min = false; \
+	} else { \
+		if(timeleft < minute * 60 && timeleft > minute * 60 - 1) { \
+			announcer_##minute##min = true; \
+			Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_##minute); \
+		} \
+	} \
+} MACRO_END
 
-// Plays the 1 minute or 5 minutes (of maptime) remaining sound, if client wants it
 void Announcer_Time()
 {
-	float timelimit = STAT(TIMELIMIT);
-	float timeleft = max(0, timelimit * 60 + STAT(GAMESTARTTIME) - time);
-
+	float timeleft;
 	if(warmup_stage)
 	{
 		float warmup_timelimit = STAT(WARMUP_TIMELIMIT);
@@ -131,43 +139,14 @@ void Announcer_Time()
 		else
 			timeleft = 0;
 	}
+	else
+		timeleft = max(0, STAT(TIMELIMIT) * 60 + STAT(GAMESTARTTIME) - time);
 
-	// 5 minute check
 	if(autocvar_cl_announcer_maptime >= 2)
-	{
-		// make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
-		if(announcer_5min)
-		{
-			if(timeleft > 300)
-				announcer_5min = false;
-		}
-		else
-		{
-			if(timeleft < 300 && timeleft > 299)
-			{
-				announcer_5min = true;
-				Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_5);
-			}
-		}
-	}
+		ANNOUNCER_CHECKMINUTE(5);
 
-	// 1 minute check
 	if((autocvar_cl_announcer_maptime == 1) || (autocvar_cl_announcer_maptime == 3))
-	{
-		if(announcer_1min)
-		{
-			if(timeleft > 60)
-				announcer_1min = false;
-		}
-		else
-		{
-			if(timeleft < 60 && timeleft > 59)
-			{
-				announcer_1min = true;
-				Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_1);
-			}
-		}
-	}
+		ANNOUNCER_CHECKMINUTE(1);
 }
 
 void Announcer()
