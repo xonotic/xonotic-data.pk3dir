@@ -82,6 +82,7 @@ bool autocvar_cl_vehicles_hud_tactical = true;
 float autocvar_cl_vehicles_hudscale = 0.5;
 float autocvar_cl_vehicles_notify_time = 15;
 float autocvar_cl_vehicles_crosshair_size = 0.5;
+bool autocvar_cl_vehicles_crosshair_colorize = true;
 bool autocvar__vehicles_shownchasemessage;
 bool autocvar_cl_velocityzoom_enabled;
 float autocvar_cl_velocityzoom_factor;
