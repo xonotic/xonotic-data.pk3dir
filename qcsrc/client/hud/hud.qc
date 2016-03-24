@@ -521,13 +521,13 @@ void Hud_Dynamic_Frame()
 	hud_scale.x = (1 + hud_shift.z);
 	hud_scale.y = hud_scale.x;
 
-	float health = STAT(HEALTH);
-	if(autocvar_hud_dynamic_shake > 0 && !autocvar__hud_configure && health > 0)
+	if(autocvar_hud_dynamic_shake > 0)
 	{
 		if(hud_dynamic_shake_factor == -1) // don't allow the effect for this frame
 			hud_dynamic_shake_factor = 0;
 		else
 		{
+			float health = STAT(HEALTH);
 			float new_hud_dynamic_shake_factor = 0;
 			if(prev_health - health >= autocvar_hud_dynamic_shake_damage_min && autocvar_hud_dynamic_shake_damage_max > autocvar_hud_dynamic_shake_damage_min)
 			{
