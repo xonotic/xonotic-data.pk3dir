@@ -11,12 +11,12 @@ TEST(Weapons, Hurt)
 {
     entity it;
 
-    Client a = it = NEW(Client, "A");
+    noref Client a = it = NEW(Client, "A");
     WITH(float, autocvar_g_spawnshieldtime, 0, Client_Add(it, NUM_TEAM_1));
     it.origin = '-100 0 0';
     it.angles = '0 0 0';
 
-    Client b = it = NEW(Client, "B");
+    noref Client b = it = NEW(Client, "B");
     WITH(float, autocvar_g_spawnshieldtime, 0, Client_Add(it, NUM_TEAM_2));
     it.origin = '100 0 0';
     it.angles = '0 180 0';
@@ -33,6 +33,22 @@ TEST(Weapons, Hurt)
     it.enemy = a;
 
     defer(it, wep.switchdelay_raise + 0.1, test_weapons_hurt);
+
+    SUCCEED();
+}
+
+TEST(Vehicles, Spawn)
+{
+    entity it;
+
+    noref Client bot = it = NEW(Client, "Rider");
+    Client_Add(it, NUM_TEAM_1);
+    it.origin = '0 0 100';
+
+    noref entity v = it = new(vehicle);
+    Vehicle veh = VEH_BUMBLEBEE;
+    it.active = ACTIVE_NOT;
+    WITH(entity, self, it, vehicle_initialize(veh, false); it.nextthink = time);
 
     SUCCEED();
 }
