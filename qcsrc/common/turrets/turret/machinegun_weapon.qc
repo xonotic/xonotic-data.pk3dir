@@ -1,15 +1,4 @@
-#ifndef TURRET_MACHINEGUN_WEAPON_H
-#define TURRET_MACHINEGUN_WEAPON_H
-
-CLASS(MachineGunTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(MachineGunTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(MachineGunTurretAttack, impulse, int, 9);
-/* refname   */ ATTRIB(MachineGunTurretAttack, netname, string, "turret_machinegun");
-/* wepname   */ ATTRIB(MachineGunTurretAttack, m_name, string, _("Machinegun"));
-ENDCLASS(MachineGunTurretAttack)
-REGISTER_WEAPON(TUR_MACHINEGUN, NEW(MachineGunTurretAttack));
-
-#endif
+#include "machinegun_weapon.qh"
 
 #ifdef IMPLEMENTATION
 

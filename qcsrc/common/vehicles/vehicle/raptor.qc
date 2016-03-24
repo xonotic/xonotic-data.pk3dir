@@ -2,7 +2,7 @@
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
 
-#include "raptor_weapons.qc"
+#include "raptor_weapons.qh"
 
 CLASS(Raptor, Vehicle)
 /* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
@@ -26,8 +26,6 @@ REGISTER_VEHICLE(RAPTOR, NEW(Raptor));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "raptor_weapons.qc"
 
 #ifdef SVQC
 

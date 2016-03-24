@@ -5,7 +5,7 @@
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"
 

@@ -1,7 +1,7 @@
 #ifndef VEHICLE_RACER
 #define VEHICLE_RACER
 
-#include "racer_weapon.qc"
+#include "racer_weapon.qh"
 
 CLASS(Racer, Vehicle)
 /* spawnflags */ ATTRIB(Racer, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
@@ -25,8 +25,6 @@ REGISTER_VEHICLE(RACER, NEW(Racer));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "racer_weapon.qc"
 
 #ifdef SVQC
 #include <common/triggers/trigger/impulse.qh>

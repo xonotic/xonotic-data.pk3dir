@@ -2,7 +2,7 @@
 #define VEHICLE_BUMBLEBEE
 #include "bumblebee.qh"
 
-#include "bumblebee_weapons.qc"
+#include "bumblebee_weapons.qh"
 
 CLASS(Bumblebee, Vehicle)
 /* spawnflags */ ATTRIB(Bumblebee, spawnflags, int, VHF_DMGSHAKE);
@@ -30,8 +30,6 @@ REGISTER_VEHICLE(BUMBLEBEE, NEW(Bumblebee));
 const float BRG_SETUP = 2;
 const float BRG_START = 4;
 const float BRG_END = 8;
-
-#include "bumblebee_weapons.qc"
 
 #ifdef SVQC
 float autocvar_g_vehicle_bumblebee_respawntime = 60;

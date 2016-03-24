@@ -1,7 +1,7 @@
 #ifndef VEHICLE_SPIDERBOT
 #define VEHICLE_SPIDERBOT
 
-#include "spiderbot_weapons.qc"
+#include "spiderbot_weapons.qh"
 
 CLASS(Spiderbot, Vehicle)
 /* spawnflags */ ATTRIB(Spiderbot, spawnflags, int, VHF_DMGSHAKE);
@@ -32,8 +32,6 @@ const int SBRM_VOLLY = 1;
 const int SBRM_GUIDE = 2;
 const int SBRM_ARTILLERY = 3;
 const int SBRM_LAST = 3;
-
-#include "spiderbot_weapons.qc"
 
 #ifdef SVQC
 bool autocvar_g_vehicle_spiderbot = true;

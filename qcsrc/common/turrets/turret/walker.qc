@@ -3,7 +3,7 @@
 
 //#define WALKER_FANCYPATHING
 
-#include "walker_weapon.qc"
+#include "walker_weapon.qh"
 
 CLASS(WalkerTurret, Turret)
 /* spawnflags */ ATTRIB(WalkerTurret, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE);
@@ -21,8 +21,6 @@ REGISTER_TURRET(WALKER, NEW(WalkerTurret));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "walker_weapon.qc"
 
 #ifdef SVQC
 

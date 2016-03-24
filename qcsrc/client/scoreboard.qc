@@ -1,6 +1,6 @@
 #include "scoreboard.qh"
 
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 #include "hud/all.qh"
 
 #include <common/ent_cs.qh>

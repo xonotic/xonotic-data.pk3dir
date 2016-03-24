@@ -6,6 +6,7 @@
 
 #ifdef MENUQC
 	#define NULL (0, null_entity)
+	#define world NULL
 #else
 	#define NULL (0, world)
 #endif

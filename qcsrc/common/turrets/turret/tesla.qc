@@ -1,7 +1,7 @@
 #ifndef TURRET_TESLA_H
 #define TURRET_TESLA_H
 
-#include "tesla_weapon.qc"
+#include "tesla_weapon.qh"
 
 CLASS(TeslaCoil, Turret)
 /* spawnflags */ ATTRIB(TeslaCoil, spawnflags, int, TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
@@ -19,8 +19,6 @@ REGISTER_TURRET(TESLA, NEW(TeslaCoil));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "tesla_weapon.qc"
 
 #ifdef SVQC
 

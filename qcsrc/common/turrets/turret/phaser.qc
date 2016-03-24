@@ -1,7 +1,7 @@
 #ifndef TURRET_PHASER_H
 #define TURRET_PHASER_H
 
-#include "phaser_weapon.qc"
+#include "phaser_weapon.qh"
 
 CLASS(PhaserTurret, Turret)
 /* spawnflags */ ATTRIB(PhaserTurret, spawnflags, int, TUR_FLAG_SNIPER | TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER);
@@ -20,11 +20,11 @@ REGISTER_TURRET(PHASER, NEW(PhaserTurret));
 
 #ifdef IMPLEMENTATION
 
-#include "phaser_weapon.qc"
-
 #ifdef SVQC
 
 spawnfunc(turret_phaser) { if (!turret_initialize(TUR_PHASER)) remove(self); }
+
+.int fireflag;
 
 METHOD(PhaserTurret, tr_think, void(PhaserTurret thistur, entity it))
 {

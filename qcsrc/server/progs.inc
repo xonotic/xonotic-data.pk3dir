@@ -1,67 +1,27 @@
-#include "../lib/_all.inc"
+#ifndef DEBUGPATHING
+	#define DEBUGPATHING 0
+#endif
+
+#include <lib/_all.inc>
 #include "_all.qh"
 
-#include "../common/effects/qc/all.qc"
-
-#include "anticheat.qc"
-#include "antilag.qc"
-#include "campaign.qc"
-#include "cheats.qc"
-#include "cl_client.qc"
-#include "cl_impulse.qc"
-#include "cl_player.qc"
-#include "g_damage.qc"
-#include "g_hook.qc"
-// #include "g_lights.qc" // TODO: was never used
-#include "g_models.qc"
-#include "g_subs.qc"
-#include "g_world.qc"
-#include "ipban.qc"
-#include "item_key.qc"
-#include "mapvoting.qc"
-#include "miscfunctions.qc"
-#include "playerdemo.qc"
-#include "portals.qc"
-#include "race.qc"
-#include "round_handler.qc"
-#include "scores.qc"
-#include "scores_rules.qc"
-#include "spawnpoints.qc"
-#include "steerlib.qc"
-#include "sv_main.qc"
-#include "teamplay.qc"
-#include "t_halflife.qc"
-#include "t_quake3.qc"
-#include "t_quake.qc"
-
-#include "tests.qc"
-
-#include "bot/_all.inc"
-
-#include "command/all.qc"
-
+#include "_mod.inc"
+#include "bot/_mod.inc"
+#include "bot/havocbot/_mod.inc"
+#include "command/_mod.inc"
+#include "mutators/_mod.inc"
 #include "pathlib/_all.inc"
+#include "weapons/_mod.inc"
 
-#include "weapons/accuracy.qc"
-#include "weapons/common.qc"
-#include "weapons/csqcprojectile.qc" // TODO
-#include "weapons/hitplot.qc"
-#include "weapons/selection.qc"
-#include "weapons/spawning.qc"
-#include "weapons/throwing.qc"
-#include "weapons/tracing.qc"
-#include "weapons/weaponstats.qc"
-#include "weapons/weaponsystem.qc"
+#include <common/_all.inc>
+#include <common/effects/qc/all.qc>
 
-#include "../common/_all.inc"
-#include "mutators/all.qc"
+#include <lib/csqcmodel/sv_model.qc>
 
-#include "../lib/csqcmodel/sv_model.qc"
-
-#include "../lib/warpzone/anglestransform.qc"
-#include "../lib/warpzone/common.qc"
-#include "../lib/warpzone/server.qc"
-#include "../lib/warpzone/util_server.qc"
+#include <lib/warpzone/anglestransform.qc>
+#include <lib/warpzone/common.qc>
+#include <lib/warpzone/server.qc>
+#include <lib/warpzone/util_server.qc>
 
 #if BUILD_MOD
 #include "../../mod/server/progs.inc"
