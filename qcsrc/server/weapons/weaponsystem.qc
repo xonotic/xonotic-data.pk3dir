@@ -417,6 +417,7 @@ bool forbidWeaponUse(entity player)
 void W_WeaponFrame(Player actor)
 {
     TC(Player, actor);
+    TC(PlayerState, PS(actor));
 	.entity weaponentity = weaponentities[0];  // TODO: unhardcode
 	entity this = actor.(weaponentity);
 	if (frametime) actor.weapon_frametime = frametime;
@@ -559,11 +560,12 @@ void W_WeaponFrame(Player actor)
 		if (!block_weapon)
 		{
             Weapon e = PS(actor).m_weapon;
+            TC(Weapon, e);
 			if (w != WEP_Null)
 			{
 				e.wr_think(e, actor, weaponentity, PHYS_INPUT_BUTTON_ATCK(actor) | (PHYS_INPUT_BUTTON_ATCK2(actor) << 1));
 			}
-			else
+			else if (e)
 			{
 				e.wr_gonethink(e);
 			}
