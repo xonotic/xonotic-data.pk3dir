@@ -505,21 +505,21 @@ void Hud_Dynamic_Frame()
 		entity view = CSQCModel_server2csqc(player_localentnum - 1);
 		calc_followmodel_ofs(view);
 		ofs = -cl_followmodel_ofs * autocvar_hud_dynamic_follow_scale;
+
+		if (fabs(ofs.x) < 0.001) ofs.x = 0;
+		if (fabs(ofs.y) < 0.001) ofs.y = 0;
+		if (fabs(ofs.z) < 0.001) ofs.z = 0;
+		ofs.x = bound(-0.1, ofs.x, 0.1);
+		ofs.y = bound(-0.1, ofs.y, 0.1);
+		ofs.z = bound(-0.1, ofs.z, 0.1);
+
+		hud_shift.x = ofs.y * vid_conwidth;
+		hud_shift.y = ofs.z * vid_conheight;
+		hud_shift.z = ofs.x;
+
+		hud_scale.x = (1 + hud_shift.z);
+		hud_scale.y = hud_scale.x;
 	}
-
-	if (fabs(ofs.x) < 0.001) ofs.x = 0;
-	if (fabs(ofs.y) < 0.001) ofs.y = 0;
-	if (fabs(ofs.z) < 0.001) ofs.z = 0;
-	ofs.x = bound(-0.1, ofs.x, 0.1);
-	ofs.y = bound(-0.1, ofs.y, 0.1);
-	ofs.z = bound(-0.1, ofs.z, 0.1);
-
-	hud_shift.x = ofs.y * vid_conwidth;
-	hud_shift.y = ofs.z * vid_conheight;
-	hud_shift.z = ofs.x;
-
-	hud_scale.x = (1 + hud_shift.z);
-	hud_scale.y = hud_scale.x;
 
 	if(autocvar_hud_dynamic_shake > 0)
 	{
@@ -545,12 +545,12 @@ void Hud_Dynamic_Frame()
 				if(!Hud_Shake_Update())
 					hud_dynamic_shake_factor = 0;
 		}
-	}
 
-	if(hud_dynamic_shake_factor > 0)
-	{
-		hud_shift.x += hud_dynamic_shake_realofs.x;
-		hud_shift.y += hud_dynamic_shake_realofs.y;
+		if(hud_dynamic_shake_factor > 0)
+		{
+			hud_shift.x += hud_dynamic_shake_realofs.x;
+			hud_shift.y += hud_dynamic_shake_realofs.y;
+		}
 	}
 
 	hud_scale_center.x = 0.5 * vid_conwidth;
