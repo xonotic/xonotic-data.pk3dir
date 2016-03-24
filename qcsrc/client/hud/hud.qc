@@ -216,6 +216,9 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 	else if(length_ratio < 0)
 		return;
 
+	theOrigin = HUD_Shift(theOrigin);
+	theSize = HUD_Scale(theSize);
+
 	vector square;
 	vector width, height;
 	if(vertical) {
@@ -310,6 +313,9 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
     TC(int, drawflag);
 	if(!theAlpha)
 		return;
+
+	pos = HUD_Shift(pos);
+	mySize = HUD_Scale(mySize);
 
 	string pic;
 	pic = strcat(hud_skin_path, "/num_leading");
@@ -491,20 +497,29 @@ bool Hud_Shake_Update()
 void calc_followmodel_ofs(entity view);
 void Hud_Dynamic_Frame()
 {
-	hud_dynamic_ofs = '0 0 0';
+	vector ofs = '0 0 0';
+	hud_scale = '1 1 0';
+	hud_shift = '0 0 0';
 	if (autocvar_hud_dynamic_follow)
 	{
 		entity view = CSQCModel_server2csqc(player_localentnum - 1);
 		calc_followmodel_ofs(view);
-		hud_dynamic_ofs -= cl_followmodel_ofs * autocvar_hud_dynamic_follow_scale;
+		ofs = -cl_followmodel_ofs * autocvar_hud_dynamic_follow_scale;
 	}
 
-	if (fabs(hud_dynamic_ofs.x) < 0.001) hud_dynamic_ofs.x = 0;
-	if (fabs(hud_dynamic_ofs.y) < 0.001) hud_dynamic_ofs.y = 0;
-	if (fabs(hud_dynamic_ofs.z) < 0.001) hud_dynamic_ofs.z = 0;
-	hud_dynamic_ofs.x = bound(-0.1, hud_dynamic_ofs.x, 0.1);
-	hud_dynamic_ofs.y = bound(-0.1, hud_dynamic_ofs.y, 0.1);
-	hud_dynamic_ofs.z = bound(-0.1, hud_dynamic_ofs.z, 0.1);
+	if (fabs(ofs.x) < 0.001) ofs.x = 0;
+	if (fabs(ofs.y) < 0.001) ofs.y = 0;
+	if (fabs(ofs.z) < 0.001) ofs.z = 0;
+	ofs.x = bound(-0.1, ofs.x, 0.1);
+	ofs.y = bound(-0.1, ofs.y, 0.1);
+	ofs.z = bound(-0.1, ofs.z, 0.1);
+
+	hud_shift.x = ofs.y * vid_conwidth;
+	hud_shift.y = ofs.z * vid_conheight;
+	hud_shift.z = ofs.x;
+
+	hud_scale.x = (1 + hud_shift.z);
+	hud_scale.y = hud_scale.x;
 
 	float health = STAT(HEALTH);
 	if(autocvar_hud_dynamic_shake > 0 && !autocvar__hud_configure && health > 0)
@@ -531,6 +546,18 @@ void Hud_Dynamic_Frame()
 					hud_dynamic_shake_factor = 0;
 		}
 	}
+
+	if(hud_dynamic_shake_factor > 0)
+	{
+		hud_shift.x += hud_dynamic_shake_realofs.x;
+		hud_shift.y += hud_dynamic_shake_realofs.y;
+	}
+
+	hud_scale_center.x = 0.5 * vid_conwidth;
+	hud_scale_center.y = 0.5 * vid_conheight;
+
+	hud_scale_current = hud_scale;
+	hud_shift_current = hud_shift;
 }
 
 void HUD_Main()
@@ -547,6 +574,8 @@ void HUD_Main()
 
 	HUD_Configure_Frame();
 
+	Hud_Dynamic_Frame();
+
 	// panels that we want to be active together with the scoreboard
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
@@ -562,8 +591,6 @@ void HUD_Main()
 		hud_fade_alpha = 0;
 		return;
 	}
-
-	Hud_Dynamic_Frame();
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)

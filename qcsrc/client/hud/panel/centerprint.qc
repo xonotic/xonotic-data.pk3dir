@@ -186,6 +186,7 @@ void HUD_CenterPrint ()
 		}
 	}
 
+	HUD_Scale_Enable();
 	HUD_Panel_DrawBg(1);
 
 	if (!centerprint_showing)
@@ -263,7 +264,7 @@ void HUD_CenterPrint ()
 
 		// finally set the size based on the new theAlpha from subsequent fading
 		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize));
-		drawfontscale = sz * '1 1 0';
+		drawfontscale = hud_scale * sz;
 
 		if (centerprint_countdown_num[j])
 			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
@@ -278,7 +279,7 @@ void HUD_CenterPrint ()
 				getWrappedLine_remaining = argv(k);
 				while(getWrappedLine_remaining)
 				{
-					ts = getWrappedLine(panel_size.x * sz, fontsize, stringwidth_colors);
+					ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 					if (ts != "")
 						pos.y -= fontsize.y;
 					else
@@ -294,13 +295,13 @@ void HUD_CenterPrint ()
 			getWrappedLine_remaining = argv(k);
 			while(getWrappedLine_remaining)
 			{
-				ts = getWrappedLine(panel_size.x * sz, fontsize, stringwidth_colors);
+				ts = getWrappedLine(panel_size.x * hud_scale.x * sz, fontsize, stringwidth_colors);
 				if (ts != "")
 				{
 					if (align)
-						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize)) * align;
+						pos.x = panel_pos.x + (panel_size.x - stringwidth(ts, true, fontsize) * sz) * align;
 					if (a > 0.5/255.0)  // Otherwise guaranteed invisible - don't show. This is checked a second time after some multiplications with other factors were done so temporary changes of these cannot cause flicker.
-						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
+						drawcolorcodedstring(pos + eY * 0.5 * (1 - sz * hud_scale.x) * fontsize.y, ts, fontsize, a, DRAWFLAG_NORMAL);
 					pos.y += fontsize.y;
 				}
 				else
@@ -319,7 +320,7 @@ void HUD_CenterPrint ()
 
 			if (pos.y < panel_pos.y) // check if the next message can be shown
 			{
-				drawfontscale = '1 1 0';
+				drawfontscale = hud_scale;
 				return;
 			}
 		}
@@ -331,12 +332,12 @@ void HUD_CenterPrint ()
 
 			if(pos.y > panel_pos.y + panel_size.y - fontsize.y) // check if the next message can be shown
 			{
-				drawfontscale = '1 1 0';
+				drawfontscale = hud_scale;
 				return;
 			}
 		}
 	}
-	drawfontscale = '1 1 0';
+	drawfontscale = hud_scale;
 	if (all_messages_expired)
 	{
 		centerprint_showing = false;

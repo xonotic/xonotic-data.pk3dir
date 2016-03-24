@@ -21,6 +21,7 @@ void HUD_Physics()
 
 	draw_beginBoldFont();
 
+	HUD_Scale_Enable();
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{

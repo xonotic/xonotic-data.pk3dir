@@ -275,6 +275,7 @@ void HUD_Radar()
 	pos = panel_pos;
 	mySize = panel_size;
 
+	HUD_Scale_Enable();
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
@@ -285,7 +286,7 @@ void HUD_Radar()
 	int color2;
 	float scale2d, normalsize, bigsize;
 
-	teamradar_origin2d = pos + 0.5 * mySize;
+	teamradar_origin2d = HUD_Shift(pos + 0.5 * mySize);
 	teamradar_size2d = mySize;
 
 	if(minimapname == "")
@@ -294,7 +295,7 @@ void HUD_Radar()
 	teamradar_loadcvars();
 
 	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
-	teamradar_size2d = mySize;
+	teamradar_size2d = HUD_Scale(mySize);
 
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 

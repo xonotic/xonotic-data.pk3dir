@@ -766,6 +766,7 @@ void HUD_ModIcons()
 	else
 		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
 
+	HUD_Scale_Enable();
 	if(mod_alpha)
 		HUD_Panel_DrawBg(mod_alpha);
 

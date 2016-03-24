@@ -1340,6 +1340,7 @@ void HUD_Draw()
 
 			HUD_Main();
 			HUD_DrawScoreboard();
+			HUD_Scale_Disable();
 		}
 
 	// crosshair goes VERY LAST
@@ -1381,6 +1382,8 @@ void CSQC_UpdateView(float w, float h)
 		vh_notice_time = time + autocvar_cl_vehicles_notify_time;
 
 	lasthud = hud;
+
+	HUD_Scale_Disable();
 
 	if(autocvar__hud_showbinds_reload) // menu can set this one
 	{

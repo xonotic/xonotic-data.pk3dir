@@ -69,6 +69,7 @@ void HUD_Vote()
 	mySize = panel_size;
 
 	a = vote_alpha * (vote_highlighted ? autocvar_hud_panel_vote_alreadyvoted_alpha : 1);
+	HUD_Scale_Enable();
 	HUD_Panel_DrawBg(a);
 	a = panel_fg_alpha * a;
 

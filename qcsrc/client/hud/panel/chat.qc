@@ -54,6 +54,7 @@ void HUD_Chat()
 	pos = panel_pos;
 	mySize = panel_size;
 
+	HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if(panel_bg_padding)

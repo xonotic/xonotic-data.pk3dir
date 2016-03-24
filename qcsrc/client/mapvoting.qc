@@ -442,6 +442,7 @@ void MapVote_Draw()
 	panel_pos.y = pos.y;
 	panel_size.x = xmax - xmin;
 	panel_size.y = ymax - ymin;
+	HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if(panel_bg_padding)

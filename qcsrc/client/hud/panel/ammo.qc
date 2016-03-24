@@ -110,6 +110,7 @@ void HUD_Ammo()
 	pos = panel_pos;
 	mySize = panel_size;
 
+	HUD_Scale_Enable();
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{

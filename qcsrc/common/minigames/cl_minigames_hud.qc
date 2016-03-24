@@ -476,6 +476,7 @@ void HUD_MinigameMenu ()
 
 	HUD_Panel_UpdateCvars();
 
+	HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if(panel_bg_padding)

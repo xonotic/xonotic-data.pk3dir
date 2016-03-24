@@ -58,7 +58,7 @@ CLASS(DamageText, Object)
             s = strreplace("{health}", sprintf("%d", this.m_damage), s);
             s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
             s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
-            drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)

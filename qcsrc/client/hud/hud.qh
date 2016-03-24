@@ -22,9 +22,16 @@ REGISTER_REGISTRY(hud_panels)
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
 // draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha) MACRO_BEGIN {																				\
-	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
-		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+#define HUD_Panel_DrawBg(theAlpha) MACRO_BEGIN { \
+	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "") \
+		draw_BorderPicture( \
+			HUD_Shift(panel_pos - '1 1 0' * panel_bg_border), \
+			panel.current_panel_bg, \
+			HUD_Scale(panel_size + '1 1 0' * 2 * panel_bg_border), \
+			panel_bg_color, \
+			panel_bg_alpha * theAlpha, \
+			HUD_Scale('1 1 0' * (panel_bg_border/BORDER_MULTIPLIER)) \
+		); \
 } MACRO_END
 
 int panel_order[hud_panels_MAX];
@@ -166,7 +173,11 @@ float hud_dynamic_shake_time;
 vector cl_followmodel_ofs;
 float cl_followmodel_time;
 
-vector hud_dynamic_ofs;
+vector hud_scale;
+vector hud_scale_current;
+vector hud_shift;
+vector hud_shift_current;
+vector hud_scale_center;
 
 float stringwidth_colors(string s, vector theSize);
 float stringwidth_nocolors(string s, vector theSize);
@@ -406,15 +417,6 @@ REGISTER_HUD_PANEL(QUICKMENU,       HUD_QuickMenu,      quickmenu,      PANEL_CO
 		panel_bg_padding = panel.current_panel_bg_padding;                                                          \
 		panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha;                                             \
 	}                                                                                                               \
-	if(hud_dynamic_shake_factor > 0) panel_pos += hud_dynamic_shake_realofs; \
-	if(hud_dynamic_ofs.y) panel_pos.x += hud_dynamic_ofs.y * vid_conwidth; \
-	if(hud_dynamic_ofs.z) panel_pos.y += hud_dynamic_ofs.z * vid_conheight; \
-	if(hud_dynamic_ofs.x) { \
-		panel_size.x += hud_dynamic_ofs.x * panel_size.x; \
-		panel_size.y += hud_dynamic_ofs.x * panel_size.y; \
-		panel_pos.x += hud_dynamic_ofs.x * (panel_pos.x - vid_conwidth * 0.5); \
-		panel_pos.y += hud_dynamic_ofs.x * (panel_pos.y - vid_conheight * 0.5); \
-	} \
 } MACRO_END
 
 #define HUD_Panel_UpdatePosSize() MACRO_BEGIN {                                                                     \
