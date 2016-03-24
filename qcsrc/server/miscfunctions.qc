@@ -13,7 +13,7 @@
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
 #include "../common/mapinfo.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
 #include "../common/triggers/subs.qh"
@@ -23,6 +23,8 @@
 #include "../common/vehicles/sv_vehicles.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/items/all.qc"
+#include "../common/state.qh"
+#include "../common/effects/qc/globalsound.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/server.qh"
@@ -235,8 +237,8 @@ string formatmessage(string msg)
 			break; // too many replacements
 
 		n = n - 1;
-		p1 = strstr(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-		p2 = strstr(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+		p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
+		p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
 
 		if (p1 < 0)
 			p1 = p2;
@@ -375,11 +377,41 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 	return o;
 }
 
+REPLICATE(autoswitch, bool, "cl_autoswitch");
+
+REPLICATE(cvar_cl_allow_uid2name, bool, "cl_allow_uid2name");
+
+REPLICATE(cvar_cl_autoscreenshot, int, "cl_autoscreenshot");
+
+REPLICATE(cvar_cl_autotaunt, float, "cl_autotaunt");
+
+REPLICATE(cvar_cl_clippedspectating, bool, "cl_clippedspectating");
+
+REPLICATE(cvar_cl_handicap, float, "cl_handicap");
+
+REPLICATE(cvar_cl_jetpack_jump, bool, "cl_jetpack_jump");
+
+REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
+
+REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
+
+REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
+
+REPLICATE(cvar_cl_physics, string, "cl_physics");
+
+REPLICATE(cvar_cl_voice_directional, int, "cl_voice_directional");
+
+REPLICATE(cvar_cl_voice_directional_taunt_attenuation, float, "cl_voice_directional_taunt_attenuation");
+
+REPLICATE(cvar_cl_weaponimpulsemode, int, "cl_weaponimpulsemode");
+
+REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
+
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
-void GetCvars(int f)
-{SELFPARAM();
+void GetCvars(entity this, int f)
+{
 	string s = string_null;
 
 	if (f > 0)
@@ -393,13 +425,6 @@ void GetCvars(int f)
 
 	ReplicateVars(this, s, f);
 
-	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
-	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
-	GetCvars_handleFloat(s, f, cvar_cl_jetpack_jump, "cl_jetpack_jump");
-	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
-	GetCvars_handleString(s, f, cvar_cl_physics, "cl_physics");
-	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
-	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
@@ -411,16 +436,8 @@ void GetCvars(int f)
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleFloat(s, f, cvar_cl_weaponimpulsemode, "cl_weaponimpulsemode");
-	GetCvars_handleFloat(s, f, cvar_cl_autotaunt, "cl_autotaunt");
-	GetCvars_handleFloat(s, f, cvar_cl_noantilag, "cl_noantilag");
-	GetCvars_handleFloat(s, f, cvar_cl_voice_directional, "cl_voice_directional");
-	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
 
-	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
-	GetCvars_handleFloat(s, f, cvar_cl_movement_track_canjump, "cl_movement_track_canjump");
-	GetCvars_handleFloat(s, f, cvar_cl_newusekeysupported, "cl_newusekeysupported");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -737,7 +754,7 @@ void precache_playermodels(string s)
 }
 
 void precache()
-{SELFPARAM();
+{
     // gamemode related things
 
     // Precache all player models if desired
@@ -1391,7 +1408,8 @@ float LostMovetypeFollow(entity ent)
 	return 0;
 }
 
-float isPushable(entity e)
+.bool pushable;
+bool isPushable(entity e)
 {
 	if(e.pushable)
 		return true;

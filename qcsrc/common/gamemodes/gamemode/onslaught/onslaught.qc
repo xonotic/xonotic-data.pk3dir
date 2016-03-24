@@ -110,13 +110,13 @@ const int HAVOCBOT_ONS_ROLE_OFFENSE 	= 8;
 .int havocbot_role_flags;
 .float havocbot_attack_time;
 
-void havocbot_role_ons_defense();
-void havocbot_role_ons_offense();
-void havocbot_role_ons_assistant();
+void havocbot_role_ons_defense(entity this);
+void havocbot_role_ons_offense(entity this);
+void havocbot_role_ons_assistant(entity this);
 
-void havocbot_ons_reset_role(entity bot);
-void havocbot_goalrating_items(float ratingscale, vector org, float sradius);
-void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius);
+void havocbot_ons_reset_role(entity this);
+void havocbot_goalrating_items(entity this, float ratingscale, vector org, float sradius);
+void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org, float sradius);
 
 // score rule declarations
 const int ST_ONS_CAPS = 1;
@@ -530,7 +530,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	{
 		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_CPDESTROYED_), this.owner.message, attacker.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
 		PlayerScore_Add(attacker, SP_SCORE, 10);
@@ -571,7 +571,7 @@ void ons_ControlPoint_Icon_Think()
 		int _enemy_count = 0;
 		int _friendly_count = 0;
 
-		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
 			if(vdist(it.origin - self.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
 			{
 				if(SAME_TEAM(it, self))
@@ -579,7 +579,7 @@ void ons_ControlPoint_Icon_Think()
 				else
 					++_enemy_count;
 			}
-		));
+		});
 
 		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
@@ -665,7 +665,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		if(IS_PLAYER(self.owner.ons_toucher))
 		{
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
-			Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_4(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
+			Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(self.owner.ons_toucher.team, CENTER_ONS_CAPTURE), self.owner.message);
 			Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
 			PlayerScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, 1);
 			PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
@@ -976,7 +976,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		if (time > this.pain_finished)
 		{
 			this.pain_finished = time + 10;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, this), LAMBDA(Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK)));
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && SAME_TEAM(it, this), Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_GENERATOR_UNDERATTACK));
 			play2team(this.team, SND(ONS_GENERATOR_UNDERATTACK));
 		}
 	}
@@ -992,10 +992,10 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 	else
 	{
 		if (attacker == this)
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME));
 		else
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(this.team, INFO_ONSLAUGHT_GENDESTROYED_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED));
 			PlayerScore_Add(attacker, SP_SCORE, 100);
 		}
 		this.iscaptured = false;
@@ -1043,15 +1043,15 @@ void ons_GeneratorThink()
 		if(!self.isshielded && self.wait < time)
 		{
 			self.wait = time + 5;
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 				if(SAME_TEAM(it, self))
 				{
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
 					soundto(MSG_ONE, it, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
 				}
 				else
-					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
-			));
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(self.team, CENTER_ONS_NOTSHIELDED));
+			});
 		}
 	}
 }
@@ -1254,8 +1254,8 @@ bool Onslaught_CheckWinner()
 
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
 	}
 	else if(winner_team == -1)
@@ -1270,12 +1270,12 @@ bool Onslaught_CheckWinner()
 
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = true;
 		it.player_blocked = true;
 
 		nades_Clear(it);
-	));
+	});
 
 	return 1;
 }
@@ -1288,7 +1288,7 @@ bool Onslaught_CheckPlayers()
 void Onslaught_RoundStart()
 {
 	entity tmp_entity;
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.player_blocked = false));
+	FOREACH_CLIENT(IS_PLAYER(it), it.player_blocked = false);
 
 	for(tmp_entity = ons_worldcplist; tmp_entity; tmp_entity = tmp_entity.ons_worldcpnext)
 		tmp_entity.sprite.SendFlags |= 16;
@@ -1304,23 +1304,23 @@ void Onslaught_RoundStart()
 
 // NOTE: LEGACY CODE, needs to be re-written!
 
-void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float sradius)
-{SELFPARAM();
+void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector org, float sradius)
+{
 	entity head;
 	float t, c;
 	bool needarmor = false, needweapons = false;
 
 	// Needs armor/health?
-	if(self.health<100)
+	if(this.health<100)
 		needarmor = true;
 
 	// Needs weapons?
 	c = 0;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
-		if(self.weapons & (it.m_wepset))
+	FOREACH(Weapons, it != WEP_Null, {
+		if(this.weapons & (it.m_wepset))
 		if(++c >= 4)
 			break;
-	));
+	});
 
 	if(c<4)
 		needweapons = true;
@@ -1328,8 +1328,8 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	if(!needweapons && !needarmor)
 		return;
 
-	LOG_DEBUG(strcat(self.netname, " needs weapons ", ftos(needweapons) , "\n"));
-	LOG_DEBUG(strcat(self.netname, " needs armor ", ftos(needarmor) , "\n"));
+	LOG_DEBUG(strcat(this.netname, " needs weapons ", ftos(needweapons) , "\n"));
+	LOG_DEBUG(strcat(this.netname, " needs armor ", ftos(needarmor) , "\n"));
 
 	// See what is around
 	head = findchainfloat(bot_pickup, true);
@@ -1340,43 +1340,43 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 		if ( ((head.health || head.armorvalue) && needarmor) || (head.weapons && needweapons ) )
 		if (vlen(head.origin - org) < sradius)
 		{
-			t = head.bot_pickupevalfunc(self, head);
+			t = head.bot_pickupevalfunc(this, head);
 			if (t > 0)
-				navigation_routerating(head, t * ratingscale, 500);
+				navigation_routerating(this, head, t * ratingscale, 500);
 		}
 		head = head.chain;
 	}
 }
 
-void havocbot_role_ons_setrole(entity bot, int role)
+void havocbot_role_ons_setrole(entity this, int role)
 {
-	LOG_DEBUG(strcat(bot.netname," switched to "));
+	LOG_DEBUG(strcat(this.netname," switched to "));
 	switch(role)
 	{
 		case HAVOCBOT_ONS_ROLE_DEFENSE:
 			LOG_DEBUG("defense");
-			bot.havocbot_role = havocbot_role_ons_defense;
-			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
-			bot.havocbot_role_timeout = 0;
+			this.havocbot_role = havocbot_role_ons_defense;
+			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
+			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_ASSISTANT:
 			LOG_DEBUG("assistant");
-			bot.havocbot_role = havocbot_role_ons_assistant;
-			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
-			bot.havocbot_role_timeout = 0;
+			this.havocbot_role = havocbot_role_ons_assistant;
+			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
+			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_OFFENSE:
 			LOG_DEBUG("offense");
-			bot.havocbot_role = havocbot_role_ons_offense;
-			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
-			bot.havocbot_role_timeout = 0;
+			this.havocbot_role = havocbot_role_ons_offense;
+			this.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
+			this.havocbot_role_timeout = 0;
 			break;
 	}
 	LOG_DEBUG("\n");
 }
 
-void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
-{SELFPARAM();
+void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale)
+{
 	entity cp, cp1, cp2, best, wp;
 	float radius, bestvalue;
 	int c;
@@ -1392,17 +1392,17 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 			continue;
 
 		// Ignore owned controlpoints
-		if(!(cp2.isgenneighbor[self.team] || cp2.iscpneighbor[self.team]))
+		if(!(cp2.isgenneighbor[this.team] || cp2.iscpneighbor[this.team]))
 			continue;
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(SAME_TEAM(it, self))
+		FOREACH_CLIENT(IS_PLAYER(it), {
+			if(SAME_TEAM(it, this))
 			if(it.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
 			if(it.havocbot_ons_target == cp2)
 				++c;
-		));
+		});
 
 		// NOTE: probably decrease the cost of attackable control points
 		cp2.wpcost = c;
@@ -1421,14 +1421,14 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		{
 			bestvalue = cp1.wpcost;
 			cp = cp1;
-			self.havocbot_ons_target = cp1;
+			this.havocbot_ons_target = cp1;
 		}
 	}
 
 	if (!cp)
 		return;
 
-	LOG_DEBUG(strcat(self.netname, " chose cp ranked ", ftos(bestvalue), "\n"));
+	LOG_DEBUG(strcat(this.netname, " chose cp ranked ", ftos(bestvalue), "\n"));
 
 	if(cp.goalentity)
 	{
@@ -1457,24 +1457,24 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 		if(best)
 		{
-			navigation_routerating(best, ratingscale, 10000);
+			navigation_routerating(this, best, ratingscale, 10000);
 			best.cnt += 1;
 
-			self.havocbot_attack_time = 0;
-			if(checkpvs(self.view_ofs,cp))
-			if(checkpvs(self.view_ofs,best))
-				self.havocbot_attack_time = time + 2;
+			this.havocbot_attack_time = 0;
+			if(checkpvs(this.view_ofs,cp))
+			if(checkpvs(this.view_ofs,best))
+				this.havocbot_attack_time = time + 2;
 		}
 		else
 		{
-			navigation_routerating(cp, ratingscale, 10000);
+			navigation_routerating(this, cp, ratingscale, 10000);
 		}
-		LOG_DEBUG(strcat(self.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n"));
+		LOG_DEBUG(strcat(this.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n"));
 	}
 	else
 	{
 		// Should be touched
-		LOG_DEBUG(strcat(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n"));
+		LOG_DEBUG(strcat(this.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n"));
 		found = false;
 
 		// Look for auto generated waypoint
@@ -1483,26 +1483,26 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		{
 			if(wp.classname=="waypoint")
 			{
-				navigation_routerating(wp, ratingscale, 10000);
+				navigation_routerating(this, wp, ratingscale, 10000);
 				found = true;
 			}
 		}
 
 		// Nothing found, rate the controlpoint itself
 		if (!found)
-			navigation_routerating(cp, ratingscale, 10000);
+			navigation_routerating(this, cp, ratingscale, 10000);
 	}
 }
 
-bool havocbot_goalrating_ons_generator_attack(float ratingscale)
-{SELFPARAM();
+bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
+{
 	entity g, wp, bestwp;
 	bool found;
 	int best;
 
 	for(g = ons_worldgeneratorlist; g; g = g.ons_worldgeneratornext)
 	{
-		if(SAME_TEAM(g, self) || g.isshielded)
+		if(SAME_TEAM(g, this) || g.isshielded)
 			continue;
 
 		// Should be attacked
@@ -1528,13 +1528,13 @@ bool havocbot_goalrating_ons_generator_attack(float ratingscale)
 		if(bestwp)
 		{
 			LOG_DEBUG("waypoints found around generator\n");
-			navigation_routerating(bestwp, ratingscale, 10000);
+			navigation_routerating(this, bestwp, ratingscale, 10000);
 			bestwp.cnt += 1;
 
-			self.havocbot_attack_time = 0;
-			if(checkpvs(self.view_ofs,g))
-			if(checkpvs(self.view_ofs,bestwp))
-				self.havocbot_attack_time = time + 5;
+			this.havocbot_attack_time = 0;
+			if(checkpvs(this.view_ofs,g))
+			if(checkpvs(this.view_ofs,bestwp))
+				this.havocbot_attack_time = time + 5;
 
 			return true;
 		}
@@ -1542,69 +1542,69 @@ bool havocbot_goalrating_ons_generator_attack(float ratingscale)
 		{
 			LOG_DEBUG("generator found without waypoints around\n");
 			// if there aren't waypoints near the generator go straight to it
-			navigation_routerating(g, ratingscale, 10000);
-			self.havocbot_attack_time = 0;
+			navigation_routerating(this, g, ratingscale, 10000);
+			this.havocbot_attack_time = 0;
 			return true;
 		}
 	}
 	return false;
 }
 
-void havocbot_role_ons_offense()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_ons_offense(entity this)
+{
+	if(IS_DEAD(this))
 	{
-		self.havocbot_attack_time = 0;
-		havocbot_ons_reset_role(self);
+		this.havocbot_attack_time = 0;
+		havocbot_ons_reset_role(this);
 		return;
 	}
 
 	// Set the role timeout if necessary
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + 120;
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + 120;
 
-	if (time > self.havocbot_role_timeout)
+	if (time > this.havocbot_role_timeout)
 	{
-		havocbot_ons_reset_role(self);
+		havocbot_ons_reset_role(this);
 		return;
 	}
 
-	if(self.havocbot_attack_time>time)
+	if(this.havocbot_attack_time>time)
 		return;
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		navigation_goalrating_start();
-		havocbot_goalrating_enemyplayers(20000, self.origin, 650);
-		if(!havocbot_goalrating_ons_generator_attack(20000))
-			havocbot_goalrating_ons_controlpoints_attack(20000);
-		havocbot_goalrating_ons_offenseitems(10000, self.origin, 10000);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
+		if(!havocbot_goalrating_ons_generator_attack(this, 20000))
+			havocbot_goalrating_ons_controlpoints_attack(this, 20000);
+		havocbot_goalrating_ons_offenseitems(this, 10000, this.origin, 10000);
+		navigation_goalrating_end(this);
 
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 	}
 }
 
-void havocbot_role_ons_assistant()
-{SELFPARAM();
-	havocbot_ons_reset_role(self);
+void havocbot_role_ons_assistant(entity this)
+{
+	havocbot_ons_reset_role(this);
 }
 
-void havocbot_role_ons_defense()
-{SELFPARAM();
-	havocbot_ons_reset_role(self);
+void havocbot_role_ons_defense(entity this)
+{
+	havocbot_ons_reset_role(this);
 }
 
-void havocbot_ons_reset_role(entity bot)
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_ons_reset_role(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	bot.havocbot_ons_target = world;
+	this.havocbot_ons_target = world;
 
 	// TODO: Defend control points or generator if necessary
 
-	havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
+	havocbot_role_ons_setrole(this, HAVOCBOT_ONS_ROLE_OFFENSE);
 }
 
 
@@ -1772,11 +1772,11 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 
 MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 {SELFPARAM();
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = false;
 		it.ons_deathloc = '0 0 0';
 		WITH(entity, self, it, PutClientInServer());
-	));
+	});
 	return false;
 }
 
@@ -1923,7 +1923,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerDies)
-{SELFPARAM();
+{
 	frag_target.ons_deathloc = frag_target.origin;
 	entity l;
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
@@ -2130,6 +2130,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayHitsound)
 
 MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 {
+    SELFPARAM();
 	if(wp_sendflags & 16)
 	{
 		if(self.owner.classname == "onslaught_controlpoint")
@@ -2163,6 +2164,7 @@ MUTATOR_HOOKFUNCTION(ons, TurretValidateTarget)
 
 MUTATOR_HOOKFUNCTION(ons, TurretThink)
 {
+    SELFPARAM();
 	// ONS uses somewhat backwards linking.
 	if(self.target)
 	{

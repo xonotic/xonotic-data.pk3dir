@@ -1,5 +1,4 @@
-#ifndef BANNING_H
-#define BANNING_H
+#pragma once
 
 // ====================================
 //  Declarations for kick/ban commands
@@ -19,5 +18,3 @@ void BanCommand_macro_write_aliases(float fh);
 
 void BanCommand_macro_help();
 float BanCommand_macro_usage(float argc);
-
-#endif

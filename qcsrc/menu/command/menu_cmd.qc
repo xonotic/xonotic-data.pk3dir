@@ -1,7 +1,7 @@
 #include "menu_cmd.qh"
 
 #include "../menu.qh"
-#include "../classes.qc"
+#include "../item.qh"
 
 #include "../mutators/events.qh"
 

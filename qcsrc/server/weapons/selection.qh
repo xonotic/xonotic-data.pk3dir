@@ -1,5 +1,4 @@
-#ifndef SELECTION_H
-#define SELECTION_H
+#pragma once
 
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
@@ -12,7 +11,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 
 #define w_getbestweapon(ent) Weapons_from(W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true))
 
-void W_SwitchWeapon_Force(entity e, Weapon w);
+void W_SwitchWeapon_Force(Player this, Weapon w);
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity pl);
@@ -30,4 +29,3 @@ void W_PreviousWeapon(float list);
 
 // previously used if exists and has ammo, (second) best otherwise
 void W_LastWeapon(entity this);
-#endif

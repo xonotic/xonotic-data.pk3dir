@@ -1,3 +1,7 @@
+#include "powerups.qh"
+
+#include <common/items/all.qc>
+
 // Powerups (#2)
 
 // Powerup item fields (reusing existing fields)
@@ -40,6 +44,7 @@ void addPowerupItem(string name, string icon, vector color, float currentTime, f
 
 int getPowerupItemAlign(int align, int column, int row, int columns, int rows, bool isVertical)
 {
+    TC(int, align); TC(int, column); TC(int, row); TC(int, columns); TC(int, rows); TC(bool, isVertical);
 	if(align < 2)
 		return align;
 

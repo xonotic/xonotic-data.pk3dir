@@ -112,7 +112,7 @@ ENDCLASS(CallbackChain)
 #define _MUTATOR_HANDLE_NOP(type, id)
 #define _MUTATOR_HANDLE_PARAMS(type, id) , type in_##id
 #define _MUTATOR_HANDLE_PREPARE(type, id) id = in_##id;
-#define _MUTATOR_HANDLE_PUSHTMP(type, id) type tmp_##id = id;
+#define _MUTATOR_HANDLE_PUSHTMP(type, id) TC(type, id); type tmp_##id = id;
 #define _MUTATOR_HANDLE_PUSHOUT(type, id) type out_##id = id;
 #define _MUTATOR_HANDLE_POPTMP(type, id) id = tmp_##id;
 #define _MUTATOR_HANDLE_POPOUT(type, id) id = out_##id;
@@ -144,7 +144,7 @@ enum {
     MUTATOR_ROLLING_BACK
 };
 
-typedef bool(int) mutatorfunc_t;
+USING(mutatorfunc_t, bool(int));
 
 CLASS(Mutator, Object)
     ATTRIB(Mutator, m_id, int, 0)
@@ -166,6 +166,7 @@ void Mutator_Remove(Mutator mut);
 bool mutator_log = false;
 
 #ifndef MENUQC
+/** server mutators activate corresponding client mutators for all clients */
 REGISTER_NET_LINKED(Mutator)
 
 #ifdef SVQC
@@ -183,11 +184,12 @@ void NET_Mutator_Remove(entity this)
 {
     string s = this.netname;
     WITH(bool, mutator_log, true, LAMBDA(
-        FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Remove(it)));
+        FOREACH(Mutators, it.registered_id == s, Mutator_Remove(it));
     ));
 }
 NET_HANDLE(Mutator, bool isNew)
 {
+    make_pure(this);
     string s = this.netname = ReadString();
     return = true;
     if (isNew)
@@ -196,7 +198,7 @@ NET_HANDLE(Mutator, bool isNew)
         this.entremove = NET_Mutator_Remove;
         int added = 0;
         WITH(bool, mutator_log, true, LAMBDA(
-            FOREACH(Mutators, it.registered_id == s, LAMBDA(Mutator_Add(it); ++added));
+            FOREACH(Mutators, it.registered_id == s, { Mutator_Add(it); ++added; });
         ));
         if (added > 1) LOG_WARNINGF("Added more than one mutator for %s\n", s);
     }
@@ -276,7 +278,7 @@ STATIC_INIT(Mutators) {
 }
 
 STATIC_INIT_LATE(Mutators) {
-    FOREACH(Mutators, it.mutatorcheck(), LAMBDA(Mutator_Add(it)));
+    FOREACH(Mutators, it.mutatorcheck(), Mutator_Add(it));
 }
 
 #define MUTATOR_ONADD                   if (mode == MUTATOR_ADDING)

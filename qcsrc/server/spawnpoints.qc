@@ -15,9 +15,9 @@ bool SpawnPoint_Send(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
 	WriteByte(MSG_ENTITY, self.team);
-	WriteShort(MSG_ENTITY, self.origin.x);
-	WriteShort(MSG_ENTITY, self.origin.y);
-	WriteShort(MSG_ENTITY, self.origin.z);
+	WriteCoord(MSG_ENTITY, self.origin.x);
+	WriteCoord(MSG_ENTITY, self.origin.y);
+	WriteCoord(MSG_ENTITY, self.origin.z);
 
 	return true;
 }
@@ -30,13 +30,13 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 
 	if(autocvar_g_spawn_alloweffects)
 	{
-		WriteByte(MSG_ENTITY, etof(self.owner));
-		WriteShort(MSG_ENTITY, self.owner.origin.x);
-		WriteShort(MSG_ENTITY, self.owner.origin.y);
-		WriteShort(MSG_ENTITY, self.owner.origin.z);
+		WriteByte(MSG_ENTITY, etof(this.owner));
+		WriteCoord(MSG_ENTITY, this.owner.origin.x);
+		WriteCoord(MSG_ENTITY, this.owner.origin.y);
+		WriteCoord(MSG_ENTITY, this.owner.origin.z);
 		send = true;
 	}
-	else if((to == self.owner) || (IS_SPEC(to) && (to.enemy == self.owner)) )
+	else if((to == this.owner) || (IS_SPEC(to) && (to.enemy == this.owner)) )
 	{
 		WriteByte(MSG_ENTITY, 0);
 		send = true;
@@ -49,6 +49,7 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 .vector spawnpoint_prevorigin;
 void spawnpoint_think()
 {
+    SELFPARAM();
 	self.nextthink = time + 0.1;
 	if(self.origin != self.spawnpoint_prevorigin)
 	{

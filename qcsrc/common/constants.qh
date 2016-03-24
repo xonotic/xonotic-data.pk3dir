@@ -1,31 +1,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-// COMMIT-TODO: Update if necessary before committing
-// Revision 1: additional statistics sent (flag caps, returns, deaths)
-// Revision 2: Mapvote preview pictures
-// Revision 3: optimized map vote protocol
-// Revision 4: CSQC config var system
-// Revision 5: mapvote time fix
-// Revision 6: more robust against packet loss/delays, also show not yet connected clients
-// Revision 7: packet loss column
-// Revision 8: race
-// Revision 9: race delta
-// Revision 10: scoreboard force
-// Revision 11: scoreboard unforce; spectator support beginning
-// Revision 12: smaller scores updates (SERVER: requires new engine)
-// Revision 13: pointparticles
-// Revision 14: laser
-// Revision 15: zoom
-// Revision 16: multi-weapons
-// Revision 17: multi-weaponimpulses
-// Revision 18: warmup
-// Revision 19: fog
-// Revision 20: naggers
-// Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
-// Revision 22: hook shot origin
-#define CSQC_REVISION 22
-
 REGISTER_NET_TEMP(TE_CSQC_PICTURE)
 REGISTER_NET_TEMP(TE_CSQC_RACE)
 REGISTER_NET_TEMP(TE_CSQC_TEAMNAGGER)
@@ -50,7 +25,7 @@ const int RANKINGS_CNT = 15;
 
 REGISTER_NET_LINKED(_ENT_CLIENT_INIT)
 #ifdef CSQC
-NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { return true; }
+NET_HANDLE(_ENT_CLIENT_INIT, bool isnew) { make_pure(this); return true; }
 #endif
 /** Sent as a temp entity from a persistent linked entity */
 REGISTER_NET_TEMP(ENT_CLIENT_INIT)

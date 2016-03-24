@@ -1,18 +1,5 @@
-#ifndef TEXTLABEL_H
-#define TEXTLABEL_H
-#include "../item/label.qc"
-CLASS(XonoticTextLabel, Label)
-	METHOD(XonoticTextLabel, configureXonoticTextLabel, void(entity, float, string));
-	METHOD(XonoticTextLabel, draw, void(entity));
-	ATTRIB(XonoticTextLabel, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticTextLabel, alpha, float, SKINALPHA_TEXT)
-	ATTRIB(XonoticTextLabel, disabledAlpha, float, SKINALPHA_DISABLED)
-ENDCLASS(XonoticTextLabel)
-entity makeXonoticTextLabel(float theAlign, string theText);
-entity makeXonoticHeaderLabel(string theText);
-#endif
+#include "textlabel.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticTextLabel(float theAlign, string theText)
 {
 	entity me;
@@ -37,4 +24,3 @@ void XonoticTextLabel_draw(entity me)
 {
 	SUPER(XonoticTextLabel).draw(me);
 }
-#endif

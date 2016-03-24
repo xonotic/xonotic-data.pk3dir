@@ -1,3 +1,4 @@
+#include "sv_cmd.qh"
 #include "all.qh"
 
 #include "banning.qh"
@@ -23,7 +24,7 @@
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/teams.qh>
 #include <common/util.qh>
 
@@ -219,7 +220,6 @@ void GameCommand_allspec(float request, float argc)
 
 void GameCommand_anticheat(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -229,7 +229,7 @@ void GameCommand_anticheat(float request, float argc)
 
 			if (accepted > 0)
 			{
-				WITH(entity, self, client, anticheat_report());
+				anticheat_report(client);
 				return;
 			}
 			else
@@ -730,31 +730,6 @@ void GameCommand_extendmatchtime(float request)
 			LOG_INFO("\nUsage:^3 sv_cmd extendmatchtime\n");
 			LOG_INFO("  No arguments required.\n");
 			LOG_INFO("See also: ^2reducematchtime^7\n");
-			return;
-		}
-	}
-}
-
-void GameCommand_find(float request, float argc)  // is this even needed? We have prvm_edicts command and such ANYWAY
-{
-	switch (request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			entity client;
-
-			for (client = world; (client = find(client, classname, argv(1))); )
-				LOG_INFO(etos(client), "\n");
-
-			return;
-		}
-
-		default:
-			LOG_INFO("Incorrect parameters for ^2find^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			LOG_INFO("\nUsage:^3 sv_cmd find classname\n");
-			LOG_INFO("  Where 'classname' is the classname to search for.\n");
 			return;
 		}
 	}
@@ -1778,7 +1753,6 @@ SERVER_COMMAND(defer_clear_all, "Clear all queued defer commands for all clients
 SERVER_COMMAND(delrec, "Delete race time record for a map") { GameCommand_delrec(request, arguments); }
 SERVER_COMMAND(effectindexdump, "Dump list of effects from code and effectinfo.txt") { GameCommand_effectindexdump(request); }
 SERVER_COMMAND(extendmatchtime, "Increase the timelimit value incrementally") { GameCommand_extendmatchtime(request); }
-SERVER_COMMAND(find, "Search through entities for matching classname") { GameCommand_find(request, arguments); }
 SERVER_COMMAND(gametype, "Simple command to change the active gametype") { GameCommand_gametype(request, arguments); }
 SERVER_COMMAND(gettaginfo, "Get specific information about a weapon model") { GameCommand_gettaginfo(request, arguments); }
 SERVER_COMMAND(gotomap, "Simple command to switch to another map") { GameCommand_gotomap(request, arguments); }
@@ -1806,7 +1780,7 @@ float GameCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
 	));
 	return false;
@@ -1816,7 +1790,7 @@ float GameCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
 	));
 	return false;

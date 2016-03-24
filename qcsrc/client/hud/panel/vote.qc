@@ -1,3 +1,7 @@
+#include "vote.qh"
+
+#include <common/mapinfo.qh>
+
 /** Vote window (#9) */
 void HUD_Vote()
 {

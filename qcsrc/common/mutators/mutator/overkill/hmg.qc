@@ -47,6 +47,7 @@ REGISTER_WEAPON(HMG, hmg, NEW(HeavyMachineGun));
 REGISTER_MUTATOR(hmg_nadesupport, true);
 MUTATOR_HOOKFUNCTION(hmg_nadesupport, Nade_Damage)
 {
+    SELFPARAM();
 	if (MUTATOR_ARGV(0, entity) != WEP_HMG) return;
 	return = true;
 	MUTATOR_ARGV(0, float) /* damage */ = self.max_health * 0.1;
@@ -56,7 +57,8 @@ spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }
 
 void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!actor.BUTTON_ATCK)
+    SELFPARAM();
+	if (!PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
@@ -72,7 +74,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	W_DecreaseAmmo(WEP_HMG, self, WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (actor, true, 0, SND(UZI_FIRE), CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (actor, true, 0, SND_UZI_FIRE, CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -98,72 +100,83 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
-		METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
-		{
-			if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
-			else
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
-		}
-		METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(WEP_CVAR(hmg, reload_ammo) && actor.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
-				thiswep.wr_reload(thiswep, actor, weaponentity);
-			} else
-			{
-				if (fire & 1)
-				if (weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
-				{
-					actor.misc_bulletcounter = 0;
-					W_HeavyMachineGun_Attack_Auto(thiswep, actor, weaponentity, fire);
-				}
-			}
-		}
-		METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
+METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
+{
+    SELFPARAM();
+    if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
+    else
+        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
+}
 
-			if(autocvar_g_balance_hmg_reload_ammo)
-				ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
+METHOD(HeavyMachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(WEP_CVAR(hmg, reload_ammo) && actor.clip_load < WEP_CVAR(hmg, ammo)) { // forced reload
+        thiswep.wr_reload(thiswep, actor, weaponentity);
+    } else
+    {
+        if (fire & 1)
+        if (weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
+        {
+            actor.misc_bulletcounter = 0;
+            W_HeavyMachineGun_Attack_Auto(thiswep, actor, weaponentity, fire);
+        }
+    }
+}
 
-			return ammo_amount;
-		}
-		METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep))
-		{
-			float ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
+METHOD(HeavyMachineGun, wr_checkammo1, bool(entity thiswep))
+{
+    SELFPARAM();
+    float ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
 
-			if(autocvar_g_balance_hmg_reload_ammo)
-				ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
+    if(autocvar_g_balance_hmg_reload_ammo)
+        ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
 
-			return ammo_amount;
-		}
-		METHOD(HeavyMachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
-			W_Reload(self, WEP_CVAR(hmg, ammo), SND(RELOAD));
-		}
-		METHOD(HeavyMachineGun, wr_suicidemessage, int(entity thiswep))
-		{
-			return WEAPON_THINKING_WITH_PORTALS;
-		}
-		METHOD(HeavyMachineGun, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_HMG_MURDER_SNIPE;
-			else
-				return WEAPON_HMG_MURDER_SPRAY;
-		}
+    return ammo_amount;
+}
+
+METHOD(HeavyMachineGun, wr_checkammo2, bool(entity thiswep))
+{
+    SELFPARAM();
+    float ammo_amount = self.ammo_nails >= WEP_CVAR(hmg, ammo);
+
+    if(autocvar_g_balance_hmg_reload_ammo)
+        ammo_amount += self.(weapon_load[WEP_HMG.m_id]) >= WEP_CVAR(hmg, ammo);
+
+    return ammo_amount;
+}
+
+METHOD(HeavyMachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    SELFPARAM();
+    W_Reload(self, WEP_CVAR(hmg, ammo), SND_RELOAD);
+}
+
+METHOD(HeavyMachineGun, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_THINKING_WITH_PORTALS;
+}
+
+METHOD(HeavyMachineGun, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_HMG_MURDER_SNIPE;
+    else
+        return WEAPON_HMG_MURDER_SPRAY;
+}
 
 #endif
 #ifdef CSQC
 
-		METHOD(HeavyMachineGun, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 2;
-			pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
-		}
+METHOD(HeavyMachineGun, wr_impacteffect, void(entity thiswep))
+{
+    SELFPARAM();
+    vector org2;
+    org2 = w_org + w_backoff * 2;
+    pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
+    if(!w_issilent)
+        sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
+}
 
 #endif
 #endif

@@ -1,33 +1,38 @@
+#include "view.qh"
 
 #include "announcer.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"
 
-#include "../common/anim.qh"
-#include "../common/constants.qh"
-#include "../common/debug.qh"
-#include "../common/mapinfo.qh"
+#include <common/animdecide.qh>
+#include <common/ent_cs.qh>
+#include <common/anim.qh>
+#include <common/constants.qh>
+#include <common/debug.qh>
+#include <common/mapinfo.qh>
 #include <common/gamemodes/all.qh>
-#include "../common/physics/player.qh"
-#include "../common/stats.qh"
-#include "../common/triggers/target/music.qh"
-#include "../common/teams.qh"
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/triggers/target/music.qh>
+#include <common/teams.qh>
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/all.qh>
-#include "../common/viewloc.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/minigames/cl_minigames_hud.qh"
+#include <common/viewloc.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/minigames/cl_minigames_hud.qh>
 
-#include "../lib/csqcmodel/cl_player.qh"
+#include <lib/csqcmodel/cl_player.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include "csqcmodel_hooks.qh"
 
-#include "../lib/warpzone/client.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/warpzone/client.qh>
+#include <lib/warpzone/common.qh>
 
 #define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 
@@ -40,14 +45,15 @@ float autocvar_cl_bobmodel_up;
 
 float autocvar_cl_followmodel;
 float autocvar_cl_followmodel_speed = 0.3;
-float autocvar_cl_followmodel_limit = 1000;
+float autocvar_cl_followmodel_limit = 135;
 float autocvar_cl_followmodel_velocity_lowpass = 0.05;
 float autocvar_cl_followmodel_highpass = 0.05;
 float autocvar_cl_followmodel_lowpass = 0.03;
+bool autocvar_cl_followmodel_velocity_absolute;
 
 float autocvar_cl_leanmodel;
 float autocvar_cl_leanmodel_speed = 0.3;
-float autocvar_cl_leanmodel_limit = 1000;
+float autocvar_cl_leanmodel_limit = 30;
 float autocvar_cl_leanmodel_highpass1 = 0.2;
 float autocvar_cl_leanmodel_highpass = 0.2;
 float autocvar_cl_leanmodel_lowpass = 0.05;
@@ -82,12 +88,6 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	lowpass(value.y, frac, ref_store.y, ref_out.y); \
 } MACRO_END
 
-#define lowpass2_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-} MACRO_END
-
 #define highpass2(value, frac, ref_store, ref_out) MACRO_BEGIN \
 { \
 	highpass(value.x, frac, ref_store.x, ref_out.x); \
@@ -114,21 +114,6 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	highpass(value.z, frac, ref_store.z, ref_out.z); \
 } MACRO_END
 
-#define highpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	highpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	highpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-	highpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
-} MACRO_END
-
-#define lowpass3_limited(value, frac, limit, ref_store, ref_out) MACRO_BEGIN \
-{ \
-	lowpass_limited(value.x, frac, limit, ref_store.x, ref_out.x); \
-	lowpass_limited(value.y, frac, limit, ref_store.y, ref_out.y); \
-	lowpass_limited(value.z, frac, limit, ref_store.z, ref_out.z); \
-} MACRO_END
-
-bool autocvar_cl_followmodel_velocity_absolute;
 void viewmodel_animate(entity this)
 {
 	static float prevtime;
@@ -143,13 +128,11 @@ void viewmodel_animate(entity this)
 	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 	static bool oldonground;
 	static float hitgroundtime;
-	static float lastongroundtime;
 	if (clonground)
 	{
 		float f = time; // cl.movecmd[0].time
 		if (!oldonground)
 			hitgroundtime = f;
-		lastongroundtime = f;
 	}
 	oldonground = clonground;
 
@@ -170,15 +153,19 @@ void viewmodel_animate(entity this)
 			vel = view.velocity;
 		else
 		{
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			vel.x = view.velocity * forward;
 			vel.y = view.velocity * right * -1;
 			vel.z = view.velocity * up;
 		}
 
+		vel.x = bound(vel_average.x - autocvar_cl_followmodel_limit, vel.x, vel_average.x + autocvar_cl_followmodel_limit);
+		vel.y = bound(vel_average.y - autocvar_cl_followmodel_limit, vel.y, vel_average.y + autocvar_cl_followmodel_limit);
+		vel.z = bound(vel_average.z - autocvar_cl_followmodel_limit, vel.z, vel_average.z + autocvar_cl_followmodel_limit);
+
 		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
-		lowpass3_limited(vel, frac, autocvar_cl_followmodel_limit, vel_average, gunorg);
+		lowpass3(vel, frac, vel_average, gunorg);
 
 		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
 
@@ -192,7 +179,7 @@ void viewmodel_animate(entity this)
 		if(autocvar_cl_followmodel_velocity_absolute)
 		{
 			vector fixed_gunorg;
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			fixed_gunorg.x = gunorg * forward;
 			fixed_gunorg.y = gunorg * right * -1;
@@ -254,35 +241,27 @@ void viewmodel_animate(entity this)
 	{
 		// calculate for swinging gun model
 		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
-		// Sajt: I tried to smooth out the transitions between bob and no bob, which works
-		// for the most part, but for some reason when you go through a message trigger or
-		// pick up an item or anything like that it will momentarily jolt the gun.
-		float bspeed;
-		float t = 1;
-		float s = time * autocvar_cl_bobmodel_speed;
+		static float bobmodel_scale = 0;
+		static float time_ofs = 0; // makes the effect always restart in the same way
 		if (clonground)
 		{
-			if (time - hitgroundtime < 0.2)
-			{
-				// just hit the ground, speed the bob back up over the next 0.2 seconds
-				t = time - hitgroundtime;
-				t = bound(0, t, 0.2);
-				t *= 5;
-			}
+			if (time - hitgroundtime > 0.05)
+				bobmodel_scale = min(1, bobmodel_scale + frametime * 5);
 		}
 		else
+			bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
+		if(bobmodel_scale && xyspeed)
 		{
-			// recently left the ground, slow the bob down over the next 0.2 seconds
-			t = time - lastongroundtime;
-			t = 0.2 - bound(0, t, 0.2);
-			t *= 5;
-		}
-		bspeed = xyspeed * 0.01;
-		vector gunorg = '0 0 0';
-		gunorg.y += bspeed * autocvar_cl_bobmodel_side * autocvar_cl_viewmodel_scale * sin(s) * t;
-		gunorg.z += bspeed * autocvar_cl_bobmodel_up * autocvar_cl_viewmodel_scale * cos(s * 2) * t;
+			float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
+			vector gunorg = '0 0 0';
+			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
 
-		this.origin += gunorg;
+			this.origin += gunorg;
+		}
+		else
+			time_ofs = time;
 	}
 }
 
@@ -321,10 +300,11 @@ void viewmodel_draw(entity this)
 	{
 		static string name_last;
 		string name = wep.mdl;
-		if (name != name_last)
+		bool swap = name != name_last;
+		// if (swap)
 		{
 			name_last = name;
-			CL_WeaponEntity_SetModel(this, name);
+			CL_WeaponEntity_SetModel(this, name, swap);
 			this.viewmodel_origin = this.origin;
 			this.viewmodel_angles = this.angles;
 		}
@@ -333,7 +313,8 @@ void viewmodel_draw(entity this)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
-	float eta = (this.weapon_nextthink - time) / STAT(WEAPONRATEFACTOR);
+	float rate = STAT(WEAPONRATEFACTOR);
+	float eta = rate ? ((this.weapon_nextthink - time) / rate) : 0;
 	if (eta <= 0) f = this.weapon_eta_last;
 	else switch (this.state)
 	{
@@ -364,94 +345,77 @@ void viewmodel_draw(entity this)
 entity viewmodel;
 STATIC_INIT(viewmodel) {
     viewmodel = new(viewmodel);
-    make_pure(viewmodel);
 }
 
-entity porto;
-vector polyline[16];
+void Porto_Draw(entity this);
+STATIC_INIT(Porto)
+{
+	entity e = new_pure(porto);
+	e.draw = Porto_Draw;
+	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+}
+
+const int polyline_length = 16;
+vector polyline[polyline_length];
 void Porto_Draw(entity this)
 {
-	vector p, dir, ang, q, nextdir;
-	float portal_number, portal1_idx;
+	if (activeweapon != WEP_PORTO) return;
+	if (spectatee_status) return;
+	if (WEP_CVAR(porto, secondary)) return;
+	if (intermission == 1) return;
+	if (intermission == 2) return;
+	if (STAT(HEALTH) <= 0) return;
 
-	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
-		return;
-	if(WEP_CVAR(porto, secondary))
-		return;
-	if(intermission == 1)
-		return;
-	if(intermission == 2)
-		return;
-	if (STAT(HEALTH) <= 0)
-		return;
-
-	dir = view_forward;
-
-	if(angles_held_status)
+	vector pos = view_origin;
+	vector dir = view_forward;
+	if (angles_held_status)
 	{
 		makevectors(angles_held);
 		dir = v_forward;
 	}
 
-	p = view_origin;
+	polyline[0] = pos;
 
-	polyline[0] = p;
-	int idx = 1;
-	portal_number = 0;
-	nextdir = dir;
-
-	for (;;)
+	int portal_number = 0, portal1_idx = 1, portal_max = 2;
+	int n = 1 + 2;  // 2 lines == 3 points
+	for (int idx = 0; idx < n && idx < polyline_length - 1; )
 	{
-		dir = nextdir;
-		traceline(p, p + 65536 * dir, true, porto);
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			return;
-		nextdir = dir - 2 * (dir * trace_plane_normal) * trace_plane_normal; // mirror dir at trace_plane_normal
-		p = trace_endpos;
-		polyline[idx] = p;
-		++idx;
-		if(idx >= 16)
-			return;
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+		traceline(pos, pos + 65536 * dir, true, this);
+		dir = reflect(dir, trace_plane_normal);
+		pos = trace_endpos;
+		polyline[++idx] = pos;
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+		{
+			n += 1;
 			continue;
-		++portal_number;
-		ang = vectoangles2(trace_plane_normal, dir);
-		ang.x = -ang.x;
-		makevectors(ang);
-		if(!CheckWireframeBox(porto, p - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
-			return;
-		if(portal_number == 1)
+		}
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		{
-			portal1_idx = idx;
-			if(portal_number >= 2)
+			n = max(2, idx);
+			break;
+		}
+		// check size
+		{
+			vector ang = vectoangles2(trace_plane_normal, dir);
+			ang.x = -ang.x;
+			makevectors(ang);
+			if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+			{
+				n = max(2, idx);
 				break;
+			}
 		}
+		portal_number += 1;
+		if (portal_number >= portal_max) break;
+		if (portal_number == 1) portal1_idx = idx;
 	}
-
-	while(idx >= 2)
+	for (int idx = 0; idx < n - 1; ++idx)
 	{
-		p = polyline[idx-2];
-		q = polyline[idx-1];
-		if(idx == 2)
-			p = p - view_up * 16;
-		if(idx-1 >= portal1_idx)
-		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL, view_origin);
-		}
-		else
-		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL, view_origin);
-		}
-		--idx;
+		vector p = polyline[idx], q = polyline[idx + 1];
+		if (idx == 0) p -= view_up * 16;  // line from player
+		vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
+		Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
 	}
-}
-
-void Porto_Init()
-{
-	porto = new(porto);
-	make_pure(porto);
-	porto.draw = Porto_Draw;
-	porto.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
 
 float drawtime;
@@ -616,12 +580,8 @@ const float SHOTTYPE_HITENEMY = 4;
 
 void TrueAim_Init()
 {
-	trueaim = new(trueaim);
-	make_pure(trueaim);
-	trueaim.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaim_rifle = new(trueaim_rifle);
-	make_pure(trueaim_rifle);
-	trueaim_rifle.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	(trueaim = new_pure(trueaim)).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
 float EnemyHitCheck()
@@ -882,10 +842,88 @@ void HitSound()
 	}
 }
 
-void HUD_Crosshair()
-{SELFPARAM();
+vector crosshair_getcolor(entity this, float health_stat)
+{
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
+	vector wcross_color = '0 0 0';
+	switch(autocvar_crosshair_color_special)
+	{
+		case 1: // crosshair_color_per_weapon
+		{
+			if(this)
+			{
+				wcross_color = this.wpcolor;
+				break;
+			}
+			else { goto normalcolor; }
+		}
+
+		case 2: // crosshair_color_by_health
+		{
+			float x = health_stat;
+
+			//x = red
+			//y = green
+			//z = blue
+
+			wcross_color.z = 0;
+
+			if(x > 200)
+			{
+				wcross_color.x = 0;
+				wcross_color.y = 1;
+			}
+			else if(x > 150)
+			{
+				wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
+				wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
+			}
+			else if(x > 100)
+			{
+				wcross_color.x = 1 - (x-100)*0.02 * 0.6;
+				wcross_color.y = 1 - (x-100)*0.02 * 0.1;
+				wcross_color.z = 1 - (x-100)*0.02;
+			}
+			else if(x > 50)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 1;
+				wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
+			}
+			else if(x > 20)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = (x-20)*90/27/100;
+				wcross_color.z = (x-20)*90/27/100 * 0.2;
+			}
+			else
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 0;
+			}
+			break;
+		}
+
+		case 3: // crosshair_color_rainbow
+		{
+			if(time >= rainbow_last_flicker)
+			{
+				rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
+				rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
+			}
+			wcross_color = rainbow_prev_color;
+			break;
+		}
+LABEL(normalcolor)
+		default: { wcross_color = stov(autocvar_crosshair_color); break; }
+	}
+
+	return wcross_color;
+}
+
+void HUD_Crosshair()
+{SELFPARAM();
 	entity e = this;
 	float f, i, j;
 	vector v;
@@ -966,77 +1004,7 @@ void HUD_Crosshair()
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
 		// MAIN CROSSHAIR COLOR DECISION
-		switch(autocvar_crosshair_color_special)
-		{
-			case 1: // crosshair_color_per_weapon
-			{
-				if(e)
-				{
-					wcross_color = e.wpcolor;
-					break;
-				}
-				else { goto normalcolor; }
-			}
-
-			case 2: // crosshair_color_by_health
-			{
-				float x = STAT(HEALTH);
-
-				//x = red
-				//y = green
-				//z = blue
-
-				wcross_color.z = 0;
-
-				if(x > 200)
-				{
-					wcross_color.x = 0;
-					wcross_color.y = 1;
-				}
-				else if(x > 150)
-				{
-					wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
-					wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
-				}
-				else if(x > 100)
-				{
-					wcross_color.x = 1 - (x-100)*0.02 * 0.6;
-					wcross_color.y = 1 - (x-100)*0.02 * 0.1;
-					wcross_color.z = 1 - (x-100)*0.02;
-				}
-				else if(x > 50)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 1;
-					wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
-				}
-				else if(x > 20)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = (x-20)*90/27/100;
-					wcross_color.z = (x-20)*90/27/100 * 0.2;
-				}
-				else
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 0;
-				}
-				break;
-			}
-
-			case 3: // crosshair_color_rainbow
-			{
-				if(time >= rainbow_last_flicker)
-				{
-					rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
-					rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
-				}
-				wcross_color = rainbow_prev_color;
-				break;
-			}
-			:normalcolor
-			default: { wcross_color = stov(autocvar_crosshair_color); break; }
-		}
+		wcross_color = crosshair_getcolor(e, STAT(HEALTH));
 
 		if(autocvar_crosshair_effect_scalefade)
 		{
@@ -1341,18 +1309,14 @@ void HUD_Crosshair()
 
 void HUD_Draw()
 {
-	vector rgb = '0 0 0';
-	float a = 1;
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		rgb = MUTATOR_ARGV(0, vector);
-		a = MUTATOR_ARGV(0, float);
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, MUTATOR_ARGV(0, vector), autocvar_hud_colorflash_alpha * MUTATOR_ARGV(0, float), DRAWFLAG_ADDITIVE);
 	}
 	else if(STAT(FROZEN))
 	{
-		rgb = ((STAT(REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * STAT(REVIVE_PROGRESS)) + ('0 1 1' * STAT(REVIVE_PROGRESS) * -1)) : '0.25 0.90 1');
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((STAT(REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * STAT(REVIVE_PROGRESS)) + ('0 1 1' * STAT(REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 	}
-	drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, rgb, autocvar_hud_colorflash_alpha * a, DRAWFLAG_ADDITIVE);
 	if(!intermission)
 	if(STAT(NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
 	{
@@ -1396,6 +1360,7 @@ float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
 {SELFPARAM();
+    TC(int, w); TC(int, h);
 	entity e;
 	float fov;
 	float f;
@@ -1450,7 +1415,7 @@ void CSQC_UpdateView(float w, float h)
 	if(myteam != prev_myteam)
 	{
 		myteamcolors = colormapPaletteColor(myteam, 1);
-		FOREACH(hud_panels, true, LAMBDA(it.update_time = time));
+		FOREACH(hud_panels, true, it.update_time = time);
 		prev_myteam = myteam;
 	}
 
@@ -1496,10 +1461,10 @@ void CSQC_UpdateView(float w, float h)
 
 		if(ons_roundlost)
 		{
-			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, LAMBDA(
+			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, {
 				gen = it;
 				break;
-			));
+			});
 			if(!gen)
 				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
@@ -1865,7 +1830,7 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
+	FOREACH_ENTITY(it.draw, it.draw(it));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -2195,7 +2160,7 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY(it.draw2d, LAMBDA(it.draw2d(it)));
+	FOREACH_ENTITY(it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 	Debug_Draw();
 

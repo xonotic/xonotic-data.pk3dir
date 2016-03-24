@@ -1,5 +1,3 @@
-#ifndef CL_IMPULSE_H
-#define CL_IMPULSE_H
+#pragma once
 
 void ImpulseCommands(entity this);
-#endif

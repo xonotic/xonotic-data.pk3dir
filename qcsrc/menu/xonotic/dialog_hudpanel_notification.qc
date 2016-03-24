@@ -1,19 +1,9 @@
-#ifndef DIALOG_HUDPANEL_NOTIFICATION_H
-#define DIALOG_HUDPANEL_NOTIFICATION_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDNotificationDialog, XonoticRootDialog)
-	METHOD(XonoticHUDNotificationDialog, fill, void(entity));
-	ATTRIB(XonoticHUDNotificationDialog, title, string, _("Notification Panel"))
-	ATTRIB(XonoticHUDNotificationDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDNotificationDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDNotificationDialog, rows, float, 15)
-	ATTRIB(XonoticHUDNotificationDialog, columns, float, 4)
-	ATTRIB(XonoticHUDNotificationDialog, name, string, "HUDnotify")
-	ATTRIB(XonoticHUDNotificationDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDNotificationDialog)
-#endif
+#include "dialog_hudpanel_notification.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "slider.qh"
+
 void XonoticHUDNotificationDialog_fill(entity me)
 {
 	entity e;
@@ -38,4 +28,3 @@ void XonoticHUDNotificationDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Entry fadetime:")));
 			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.5, 5, 0.5, "hud_panel_notify_fadetime"));
 }
-#endif

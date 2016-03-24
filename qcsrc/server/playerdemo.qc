@@ -1,3 +1,4 @@
+#include "playerdemo.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -59,11 +60,11 @@ void playerdemo_open_write(string f)
 	PLAYERDEMO_FIELD(func,float,frame) \
 	PLAYERDEMO_FIELD(func,float,effects) \
 	/* PLAYERDEMO_FIELD(func,float,switchweapon) */ \
-	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK2) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_CROUCH) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_HOOK) \
-	PLAYERDEMO_FIELD(func,float,BUTTON_USE) \
+	PLAYERDEMO_FIELD(func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
+	PLAYERDEMO_FIELD(func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
+	PLAYERDEMO_FIELD(func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
+	PLAYERDEMO_FIELD(func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
+	PLAYERDEMO_FIELD(func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
 	PLAYERDEMO_FIELD(func,float,flags) \
 	// end of list
 

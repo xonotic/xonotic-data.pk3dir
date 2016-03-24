@@ -1,3 +1,11 @@
+#include "radar.qh"
+
+#include <common/ent_cs.qh>
+#include <common/mapinfo.qh>
+#include <client/mapvoting.qh>
+#include <client/teamradar.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
+
 // Radar (#6)
 
 float HUD_Radar_Clickable()
@@ -7,6 +15,7 @@ float HUD_Radar_Clickable()
 
 void HUD_Radar_Show_Maximized(bool doshow,float clickable)
 {
+    TC(bool, doshow);
 	hud_panel_radar_maximized = doshow;
 	hud_panel_radar_temp_hidden = 0;
 
@@ -34,8 +43,9 @@ void HUD_Radar_Hide_Maximized()
 }
 
 
-float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
+float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
+    TC(int, bInputType);
 	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
 		autocvar__hud_configure || mv_active)
 		return false;
@@ -332,11 +342,9 @@ void HUD_Radar()
 
 	draw_teamradar_background(hud_panel_radar_foreground_alpha);
 
-	FOREACH_ENTITY_CLASS("radarlink", true, LAMBDA(
-		draw_teamradar_link(it.origin, it.velocity, it.team);
-	));
+	FOREACH_ENTITY_CLASS("radarlink", true, draw_teamradar_link(it.origin, it.velocity, it.team));
 
-	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, LAMBDA(
+	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
 		if ( hud_panel_radar_mouse )
 		if ( it.health > 0 )
 		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE )
@@ -353,13 +361,13 @@ void HUD_Radar()
 		}
 		entity icon = RadarIcons_from(it.teamradar_icon);
 		draw_teamradar_icon(it.origin, icon, it, spritelookupcolor(it, icon.netname, it.teamradar_color), panel_fg_alpha);
-	));
-	AL_EACH(_entcs, e, it != NULL, LAMBDA(
+	});
+	AL_EACH(_entcs, e, it != NULL, {
 		if (!it.m_entcs_private) continue;
 		if (entcs_is_self(it)) continue;
 		color2 = entcs_GetTeam(it.sv_entnum);
 		draw_teamradar_player(it.origin, it.angles, Team_ColorRGB(color2));
-	));
+	});
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();

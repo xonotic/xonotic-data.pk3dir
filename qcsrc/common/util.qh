@@ -114,8 +114,8 @@ string rgb_to_hexcolor(vector rgb);
 float boxesoverlap(vector m1, vector m2, vector m3, vector m4);
 float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs);
 
-typedef float(string s, vector size) textLengthUpToWidth_widthFunction_t;
-typedef float(string s) textLengthUpToLength_lenFunction_t;
+USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
+USING(textLengthUpToLength_lenFunction_t, float(string s));
 float textLengthUpToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
 string textShortenToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
 float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw);
@@ -159,8 +159,6 @@ string getcurrentmod();
 #ifndef MENUQC
 #ifdef CSQC
 int ReadInt24_t();
-vector ReadInt48_t();
-vector ReadInt72_t();
 #else
 void WriteInt24_t(float dest, float val);
 void WriteInt48_t(float dest, vector val);
@@ -249,8 +247,8 @@ float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x);
 // as it may exceed 0..1 bounds, or go in reverse
 float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor);
 
-typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_t;
-typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
+USING(findNextEntityNearFunction_t, entity(entity cur, entity near, entity pass));
+USING(isConnectedFunction_t, float(entity a, entity b, entity pass));
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
 // expand multiple arguments into one argument by stripping parenthesis
@@ -286,7 +284,7 @@ const float CNT_IDLE = 3;
 const float CNT_KILL = 4;
 const float CNT_RESPAWN = 5;
 const float CNT_ROUNDSTART = 6;
-float Announcer_PickNumber(float type, float num);
+entity Announcer_PickNumber(float type, float num);
 #endif
 
 #ifndef MENUQC

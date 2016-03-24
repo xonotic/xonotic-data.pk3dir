@@ -1,3 +1,4 @@
+#include "gamemode_keepaway.qh"
 #ifndef GAMEMODE_KEEPAWAY_H
 #define GAMEMODE_KEEPAWAY_H
 
@@ -35,8 +36,8 @@ const float SP_KEEPAWAY_PICKUPS = 4;
 const float SP_KEEPAWAY_CARRIERKILLS = 5;
 const float SP_KEEPAWAY_BCTIME = 6;
 
-void() havocbot_role_ka_carrier;
-void() havocbot_role_ka_collector;
+void(entity this) havocbot_role_ka_carrier;
+void(entity this) havocbot_role_ka_collector;
 
 void ka_DropEvent(entity plyr);
 #endif
@@ -242,68 +243,68 @@ void ka_Reset(entity this)
 // Bot player logic
 // ================
 
-void havocbot_goalrating_ball(float ratingscale, vector org)
-{SELFPARAM();
+void havocbot_goalrating_ball(entity this, float ratingscale, vector org)
+{
 	float t;
 	entity ball_owner;
 	ball_owner = ka_ball.owner;
 
-	if (ball_owner == self)
+	if (ball_owner == this)
 		return;
 
 	// If ball is carried by player then hunt them down.
 	if (ball_owner)
 	{
-		t = (self.health + self.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
-		navigation_routerating(ball_owner, t * ratingscale, 2000);
+		t = (this.health + this.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
+		navigation_routerating(this, ball_owner, t * ratingscale, 2000);
 	}
 	else // Ball has been dropped so collect.
-		navigation_routerating(ka_ball, ratingscale, 2000);
+		navigation_routerating(this, ka_ball, ratingscale, 2000);
 }
 
-void havocbot_role_ka_carrier()
-{SELFPARAM();
-	if (IS_DEAD(self))
+void havocbot_role_ka_carrier(entity this)
+{
+	if (IS_DEAD(this))
 		return;
 
-	if (time > self.bot_strategytime)
+	if (time > this.bot_strategytime)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
-		navigation_goalrating_start();
-		havocbot_goalrating_items(10000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		navigation_goalrating_end(this);
 	}
 
-	if (!self.ballcarried)
+	if (!this.ballcarried)
 	{
-		self.havocbot_role = havocbot_role_ka_collector;
-		self.bot_strategytime = 0;
+		this.havocbot_role = havocbot_role_ka_collector;
+		this.bot_strategytime = 0;
 	}
 }
 
-void havocbot_role_ka_collector()
-{SELFPARAM();
-	if (IS_DEAD(self))
+void havocbot_role_ka_collector(entity this)
+{
+	if (IS_DEAD(this))
 		return;
 
-	if (time > self.bot_strategytime)
+	if (time > this.bot_strategytime)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
-		navigation_goalrating_start();
-		havocbot_goalrating_items(10000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(1000, self.origin, 10000);
-		havocbot_goalrating_ball(20000, self.origin);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 1000, this.origin, 10000);
+		havocbot_goalrating_ball(this, 20000, this.origin);
+		navigation_goalrating_end(this);
 	}
 
-	if (self.ballcarried)
+	if (this.ballcarried)
 	{
-		self.havocbot_role = havocbot_role_ka_carrier;
-		self.bot_strategytime = 0;
+		this.havocbot_role = havocbot_role_ka_carrier;
+		this.bot_strategytime = 0;
 	}
 }
 

@@ -1,3 +1,4 @@
+#include "g_lights.qh"
 
 void train_next();
 

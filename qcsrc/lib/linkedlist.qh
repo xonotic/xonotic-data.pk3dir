@@ -67,7 +67,7 @@ entity LL_POP(LinkedList this)
 #define LL_DELETE_2(this, dtor) \
 	MACRO_BEGIN \
 	{ \
-		LL_CLEAR(this, dtor); \
+		LL_CLEAR_2(this, dtor); \
 		remove(this); \
 		this = NULL; \
 	} MACRO_END
@@ -78,7 +78,7 @@ entity LL_POP(LinkedList this)
 		noref int i = 0;                                                \
 		for (entity _it = list.ll_head; _it; (_it = _it.ll_next, ++i))  \
 		{                                                               \
-			noref entity it = _it.ll_data;                              \
+			ITER_CONST noref entity it = _it.ll_data;                   \
 			if (cond) { body }                                          \
 		}                                                               \
 	} MACRO_END

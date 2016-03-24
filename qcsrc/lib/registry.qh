@@ -21,13 +21,25 @@
  *     REGISTER_REGISTRY(Foos)
  */
 #define REGISTRY(id, max) \
-	void Register##id() {} \
+	void Register##id(); \
+	[[accumulate]] REGISTRY_BEGIN(id) {} \
+	[[accumulate]] REGISTRY_END(id) {} \
+	void _Register##id() {} \
+	void Register##id() { REGISTRY_BEGIN_(id); _Register##id(); REGISTRY_END_(id); } \
 	const int id##_MAX = max; \
+	int id##_COUNT; \
 	noref entity id##_first, id##_last; \
 	_R_MAP(_##id, id##_MAX); \
 	SHUTDOWN(id) { _R_DEL(_##id); } \
-	int id##_COUNT; \
 	entity _##id##_from(int i, entity null) { if (i >= 0 && i < id##_COUNT) { entity e = _R_GET(_##id, i); if (e) return e; } return null; }
+
+/** Called before initializing a registry. */
+#define REGISTRY_BEGIN(id) [[accumulate]] void REGISTRY_BEGIN_(id) { noref void() f = Register##id; } void REGISTRY_BEGIN_(id)
+#define REGISTRY_BEGIN_(id) Register##id##_First()
+
+/** Called after initializing a registry. */
+#define REGISTRY_END(id) [[accumulate]] void REGISTRY_END_(id) { noref void() f = Register##id; } void REGISTRY_END_(id)
+#define REGISTRY_END_(id) Register##id##_Done()
 
 REGISTRY(Registries, BITS(8))
 
@@ -39,8 +51,7 @@ REGISTRY(Registries, BITS(8))
  * Must be followed by a semicolon or a function body with a `this` parameter.
  * Wrapper macros may perform actions after user initialization like so:
  *     #define REGISTER_FOO(id) \
- *         REGISTER(Foos, FOO, id, m_id, NEW(Foo)); \
- *         REGISTER_INIT_POST(FOO, id) { \
+ *         REGISTER(Foos, FOO, id, m_id, NEW(Foo)) { \
  *             print("Registering foo #", this.m_id + 1, "\n"); \
  *         } \
  *         REGISTER_INIT(FOO, id)
@@ -58,7 +69,6 @@ REGISTRY(Registries, BITS(8))
 #define REGISTER_4(registry, id, fld, inst) \
 	entity id; \
 	REGISTER_INIT(id) {} \
-	REGISTER_INIT_POST(id) {} \
 	void Register_##id() \
 	{ \
 		if (registry##_COUNT >= registry##_MAX) LOG_FATALF("Registry capacity exceeded (%d)", registry##_MAX); \
@@ -66,9 +76,8 @@ REGISTRY(Registries, BITS(8))
 		this.registered_id = #id; \
 		REGISTRY_PUSH(registry, fld, this); \
 		Register_##id##_init(this); \
-		Register_##id##_init_post(this); \
 	} \
-	ACCUMULATE_FUNCTION(Register##registry, Register_##id) \
+	ACCUMULATE_FUNCTION(_Register##registry, Register_##id) \
 	REGISTER_INIT(id)
 
 #define REGISTRY_PUSH(registry, fld, it) MACRO_BEGIN { \
@@ -87,7 +96,6 @@ REGISTRY(Registries, BITS(8))
 } MACRO_END
 
 #define REGISTER_INIT(id) [[accumulate]] void Register_##id##_init(entity this)
-#define REGISTER_INIT_POST(id) [[accumulate]] void Register_##id##_init_post(entity this)
 
 /** internal next pointer */
 #define REGISTRY_NEXT enemy
@@ -146,10 +154,10 @@ void Registry_send(string id, string hash);
 		string algo = "MD4"; \
 		string join = ":"; \
 		string s = ""; \
-		FOREACH(id, true, LAMBDA(s = strcat(s, join, it.registered_id))); \
+		FOREACH(id, true, s = strcat(s, join, it.registered_id)); \
 		s = substring(s, strlen(join), -1); \
 		string h = REGISTRY_HASH(id) = strzone(digest_hex(algo, s)); \
-		LOG_TRACEF(#id ": %s\n[%s]\n", h, s); \
+		LOG_DEBUGF(#id ": %s\n[%s]\n", h, s); \
 	} \
 	void Registry_check(string r, string sv) \
 	{ \

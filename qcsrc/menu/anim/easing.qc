@@ -1,20 +1,8 @@
-#ifndef ANIM_EASING_H
-	#define ANIM_EASING_H
-	#include "animation.qc"
-	entity makeHostedEasing(entity, void(entity, float), float(float, float, float, float), float, float, float);
-	entity makeEasing(entity, void(entity, float), float(float, float, float, float), float, float, float, float);
-	float easingLinear(float, float, float, float);
-	float easingQuadIn(float, float, float, float);
-	float easingQuadOut(float, float, float, float);
-	float easingQuadInOut(float, float, float, float);
-	CLASS(Easing, Animation)
-		METHOD(Easing, calcValue, float(entity, float, float, float, float));
-		METHOD(Easing, setMath, void(entity, float(float, float, float, float)));
-		ATTRIB(Easing, math, float(float, float, float, float), easingLinear)
-	ENDCLASS(Easing)
-#endif
+#include "easing.qh"
 
-#ifdef IMPLEMENTATION
+#include "../menu.qh"
+#include "keyframe.qh"
+
 	entity makeHostedEasing(entity obj, void(entity, float) objSetter, float(float, float, float, float) func, float animDuration, float animStartValue, float animEnd)
 	{
 		entity this = makeEasing(obj, objSetter, func, time, animDuration, animStartValue, animEnd);
@@ -62,5 +50,3 @@
 		if (tickTime < (animDuration / 2)) return easingQuadIn(tickTime, (animDuration / 2), animStart, (animDelta / 2));
 		else return easingQuadOut((tickTime - (animDuration / 2)), (animDuration / 2), (animStart + (animDelta / 2)), (animDelta / 2));
 	}
-
-#endif

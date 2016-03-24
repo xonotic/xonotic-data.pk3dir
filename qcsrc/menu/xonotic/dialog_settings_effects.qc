@@ -1,16 +1,18 @@
-#ifndef DIALOG_SETTINGS_EFFECTS_H
-#define DIALOG_SETTINGS_EFFECTS_H
-#include "tab.qc"
-CLASS(XonoticEffectsSettingsTab, XonoticTab)
-	METHOD(XonoticEffectsSettingsTab, fill, void(entity));
-	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticEffectsSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space
-ENDCLASS(XonoticEffectsSettingsTab)
-entity makeXonoticEffectsSettingsTab();
-#endif
+#include "dialog_settings_effects.qh"
 
-#ifdef IMPLEMENTATION
+#include "slider_picmip.qh"
+#include "slider_particles.qh"
+#include "slider_sbfadetime.qh"
+#include "weaponslist.qh"
+#include "keybinder.qh"
+#include "commandbutton.qh"
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "textslider.qh"
+#include "slider.qh"
+#include "radiobutton.qh"
+#include "checkbox_slider_invalid.qh"
+
 entity makeXonoticEffectsSettingsTab()
 {
 	entity me;
@@ -256,4 +258,3 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, effectsApplyButton);
 }
-#endif

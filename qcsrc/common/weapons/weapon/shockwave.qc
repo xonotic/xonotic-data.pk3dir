@@ -239,12 +239,11 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(shockwave, melee_animtime), w_ready);
 
-	entity meleetemp = new(meleetemp);
-	make_pure(meleetemp);
+	entity meleetemp = new_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	meleetemp.think = W_Shockwave_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor();
-	W_SetupShot_Range(actor, true, 0, "", 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
+	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
 }
 
 // SHOCKWAVE ATTACK MODE
@@ -366,7 +365,7 @@ void W_Shockwave_Attack()
 	float i, queue = 0;
 
 	// set up the shot direction
-	W_SetupShot(self, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
+	W_SetupShot(self, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, WEP_CVAR(shockwave, blast_damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(shockwave, blast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
@@ -672,58 +671,59 @@ void W_Shockwave_Attack()
 	}
 }
 
-		METHOD(Shockwave, wr_aim, void(entity thiswep))
-		{
-			if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
-				{ self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false); }
-			else
-				{ self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false); }
-		}
-		METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(fire & 1)
-			{
-				if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
-				{
-					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
-					{
-						W_Shockwave_Attack();
-						actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
-					}
-				}
-			}
-			else if(fire & 2)
-			{
-				//if(actor.clip_load >= 0) // we are not currently reloading
-				if(!actor.crouch) // no crouchmelee please
-				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(shockwave, melee_refire)))
-				{
-					// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shockwave_Melee);
-				}
-			}
-		}
-		METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
-		{
-			return true; // infinite ammo
-		}
-		METHOD(Shockwave, wr_checkammo2, bool(entity thiswep))
-		{
-			// shockwave has infinite ammo
-			return true;
-		}
-		METHOD(Shockwave, wr_suicidemessage, int(entity thiswep))
-		{
-			return WEAPON_THINKING_WITH_PORTALS;
-		}
-		METHOD(Shockwave, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_SHOCKWAVE_MURDER_SLAP;
-			else
-				return WEAPON_SHOCKWAVE_MURDER;
-		}
+METHOD(Shockwave, wr_aim, void(entity thiswep))
+{
+    SELFPARAM();
+    if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
+        { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false); }
+    else
+        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false); }
+}
+METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(fire & 1)
+    {
+        if(time >= actor.shockwave_blasttime) // handle refire separately so the secondary can be fired straight after a primary
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
+            {
+                W_Shockwave_Attack();
+                actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
+            }
+        }
+    }
+    else if(fire & 2)
+    {
+        //if(actor.clip_load >= 0) // we are not currently reloading
+        if(!actor.crouch) // no crouchmelee please
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(shockwave, melee_refire)))
+        {
+            // attempt forcing playback of the anim by switching to another anim (that we never play) here...
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shockwave_Melee);
+        }
+    }
+}
+METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
+{
+    return true; // infinite ammo
+}
+METHOD(Shockwave, wr_checkammo2, bool(entity thiswep))
+{
+    // shockwave has infinite ammo
+    return true;
+}
+METHOD(Shockwave, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_THINKING_WITH_PORTALS;
+}
+METHOD(Shockwave, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_SHOCKWAVE_MURDER_SLAP;
+    else
+        return WEAPON_SHOCKWAVE_MURDER;
+}
 
 #endif
 #ifdef CSQC
@@ -853,13 +853,13 @@ void Net_ReadShockwaveParticle()
 	shockwave.sw_time = time;
 }
 
-		METHOD(Shockwave, wr_impacteffect, void(entity thiswep))
-		{
-			// handled by Net_ReadShockwaveParticle
-			//vector org2;
-			//org2 = w_org + w_backoff * 2;
-			//pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-		}
+METHOD(Shockwave, wr_impacteffect, void(entity thiswep))
+{
+    // handled by Net_ReadShockwaveParticle
+    //vector org2;
+    //org2 = w_org + w_backoff * 2;
+    //pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
+}
 
 #endif
 #endif

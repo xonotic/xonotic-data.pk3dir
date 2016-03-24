@@ -1,3 +1,4 @@
+#include "movenode.qh"
 
 #include "pathlib.qh"
 #include "utility.qh"

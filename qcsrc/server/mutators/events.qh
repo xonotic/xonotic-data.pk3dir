@@ -1,5 +1,4 @@
-#ifndef SERVER_MUTATORS_EVENTS_H
-#define SERVER_MUTATORS_EVENTS_H
+#pragma once
 
 #include <common/mutators/base.qh>
 
@@ -473,6 +472,7 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown, EV_Item_RespawnCountdown);
 
 /** called when a bot checks a target to attack */
 #define EV_BotShouldAttack(i, o) \
+    /**/ i(entity, __self) \
     /**/ i(entity, checkentity) \
     /**/
 entity checkentity;
@@ -857,4 +857,3 @@ float uricb_id;
 float uricb_status;
 string uricb_data;
 MUTATOR_HOOKABLE(URI_GetCallback, EV_URI_GetCallback);
-#endif

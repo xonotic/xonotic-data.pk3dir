@@ -1,5 +1,4 @@
-#ifndef MENU_MUTATORS_EVENTS_H
-#define MENU_MUTATORS_EVENTS_H
+#pragma once
 
 #include <common/mutators/base.qh>
 
@@ -34,4 +33,3 @@ string cmd_string;
 	/** whole command, use only if you really have to */ i(string, cmd_string) \
 	/**/
 MUTATOR_HOOKABLE(Menu_ConsoleCommand, EV_Menu_ConsoleCommand);
-#endif

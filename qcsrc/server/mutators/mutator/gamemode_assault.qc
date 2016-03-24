@@ -1,7 +1,9 @@
+#include "gamemode_assault.qh"
 #ifndef GAMEMODE_ASSAULT_H
 #define GAMEMODE_ASSAULT_H
 
 void assault_ScoreRules();
+void ActivateTeamplay();
 
 REGISTER_MUTATOR(as, false)
 {
@@ -43,17 +45,17 @@ const int HAVOCBOT_AST_ROLE_OFFENSE = 4;
 .int havocbot_role_flags;
 .float havocbot_attack_time;
 
-.void() havocbot_role;
-.void() havocbot_previous_role;
+.void(entity this) havocbot_role;
+.void(entity this) havocbot_previous_role;
 
-void() havocbot_role_ast_defense;
-void() havocbot_role_ast_offense;
+void(entity this) havocbot_role_ast_defense;
+void(entity this) havocbot_role_ast_offense;
 .entity havocbot_ast_target;
 
 void(entity bot) havocbot_ast_reset_role;
 
-void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
-void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(entity this, float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
 // scoreboard stuff
 const float ST_ASSAULT_OBJECTIVES = 1;
@@ -299,6 +301,7 @@ void assault_new_round()
 // they win. Otherwise the defending team wins once the timelimit passes.
 int WinningCondition_Assault()
 {
+    SELFPARAM();
 	WinningConditionHelper(); // set worldstatus
 
 	int status = WINNING_NO;
@@ -435,8 +438,8 @@ spawnfunc(target_assault_roundstart)
 }
 
 // legacy bot code
-void havocbot_goalrating_ast_targets(float ratingscale)
-{SELFPARAM();
+void havocbot_goalrating_ast_targets(entity this, float ratingscale)
+{
 	entity ad, best, wp, tod;
 	float radius, found, bestvalue;
 	vector p;
@@ -506,115 +509,115 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 		//	te_lightning2(world, '0 0 0', best.origin);
 		//	te_knightspike(best.origin);
 
-			navigation_routerating(best, ratingscale, 4000);
+			navigation_routerating(this, best, ratingscale, 4000);
 			best.cnt += 1;
 
-			self.havocbot_attack_time = 0;
+			this.havocbot_attack_time = 0;
 
-			if(checkpvs(self.view_ofs,ad))
-			if(checkpvs(self.view_ofs,best))
+			if(checkpvs(this.view_ofs,ad))
+			if(checkpvs(this.view_ofs,best))
 			{
 			//	dprint("increasing attack time for this target\n");
-				self.havocbot_attack_time = time + 2;
+				this.havocbot_attack_time = time + 2;
 			}
 		}
 	}
 }
 
-void havocbot_role_ast_offense()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_ast_offense(entity this)
+{
+	if(IS_DEAD(this))
 	{
-		self.havocbot_attack_time = 0;
-		havocbot_ast_reset_role(self);
+		this.havocbot_attack_time = 0;
+		havocbot_ast_reset_role(this);
 		return;
 	}
 
 	// Set the role timeout if necessary
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + 120;
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + 120;
 
-	if (time > self.havocbot_role_timeout)
+	if (time > this.havocbot_role_timeout)
 	{
-		havocbot_ast_reset_role(self);
+		havocbot_ast_reset_role(this);
 		return;
 	}
 
-	if(self.havocbot_attack_time>time)
+	if(this.havocbot_attack_time>time)
 		return;
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		navigation_goalrating_start();
-		havocbot_goalrating_enemyplayers(20000, self.origin, 650);
-		havocbot_goalrating_ast_targets(20000);
-		havocbot_goalrating_items(15000, self.origin, 10000);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 650);
+		havocbot_goalrating_ast_targets(this, 20000);
+		havocbot_goalrating_items(this, 15000, this.origin, 10000);
+		navigation_goalrating_end(this);
 
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 	}
 }
 
-void havocbot_role_ast_defense()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_ast_defense(entity this)
+{
+	if(IS_DEAD(this))
 	{
-		self.havocbot_attack_time = 0;
-		havocbot_ast_reset_role(self);
+		this.havocbot_attack_time = 0;
+		havocbot_ast_reset_role(this);
 		return;
 	}
 
 	// Set the role timeout if necessary
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + 120;
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + 120;
 
-	if (time > self.havocbot_role_timeout)
+	if (time > this.havocbot_role_timeout)
 	{
-		havocbot_ast_reset_role(self);
+		havocbot_ast_reset_role(this);
 		return;
 	}
 
-	if(self.havocbot_attack_time>time)
+	if(this.havocbot_attack_time>time)
 		return;
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		navigation_goalrating_start();
-		havocbot_goalrating_enemyplayers(20000, self.origin, 3000);
-		havocbot_goalrating_ast_targets(20000);
-		havocbot_goalrating_items(15000, self.origin, 10000);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 3000);
+		havocbot_goalrating_ast_targets(this, 20000);
+		havocbot_goalrating_items(this, 15000, this.origin, 10000);
+		navigation_goalrating_end(this);
 
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 	}
 }
 
-void havocbot_role_ast_setrole(entity bot, float role)
+void havocbot_role_ast_setrole(entity this, float role)
 {
 	switch(role)
 	{
 		case HAVOCBOT_AST_ROLE_DEFENSE:
-			bot.havocbot_role = havocbot_role_ast_defense;
-			bot.havocbot_role_flags = HAVOCBOT_AST_ROLE_DEFENSE;
-			bot.havocbot_role_timeout = 0;
+			this.havocbot_role = havocbot_role_ast_defense;
+			this.havocbot_role_flags = HAVOCBOT_AST_ROLE_DEFENSE;
+			this.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_AST_ROLE_OFFENSE:
-			bot.havocbot_role = havocbot_role_ast_offense;
-			bot.havocbot_role_flags = HAVOCBOT_AST_ROLE_OFFENSE;
-			bot.havocbot_role_timeout = 0;
+			this.havocbot_role = havocbot_role_ast_offense;
+			this.havocbot_role_flags = HAVOCBOT_AST_ROLE_OFFENSE;
+			this.havocbot_role_timeout = 0;
 			break;
 	}
 }
 
-void havocbot_ast_reset_role(entity bot)
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_ast_reset_role(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if(bot.team == assault_attacker_team)
-		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_OFFENSE);
+	if(this.team == assault_attacker_team)
+		havocbot_role_ast_setrole(this, HAVOCBOT_AST_ROLE_OFFENSE);
 	else
-		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_DEFENSE);
+		havocbot_role_ast_setrole(this, HAVOCBOT_AST_ROLE_DEFENSE);
 }
 
 // mutator hooks
@@ -676,6 +679,7 @@ MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 
 MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 {
+    SELFPARAM();
 	switch(self.classname)
 	{
 		case "info_player_team1":

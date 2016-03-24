@@ -1,3 +1,8 @@
+#include "infomessages.qh"
+
+#include <common/ent_cs.qh>
+#include <common/mapinfo.qh>
+
 // Info messages panel (#14)
 
 #define drawInfoMessage(s) MACRO_BEGIN {																			\

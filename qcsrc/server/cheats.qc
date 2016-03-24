@@ -12,6 +12,8 @@
 #include "../common/deathtypes/all.qh"
 #include "../common/util.qh"
 
+#include <common/physics/player.qh>
+
 #include "../common/monsters/all.qh"
 
 #include "../common/weapons/all.qh"
@@ -34,7 +36,6 @@ float CheatCommand(float argc) { return 0; }
 float CheatFrame() { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
 void CheatShutdown() { }
-void CheatShutdownClient() { }
 void Drag_MoveDrag(entity from, entity to) { }
 
 #else
@@ -50,10 +51,6 @@ void CheatInit()
 }
 
 void CheatShutdown()
-{
-}
-
-void CheatShutdownClient()
 {
 }
 
@@ -327,7 +324,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
-				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, SND_Null, CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				__trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -342,7 +339,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, SND_Null, CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
@@ -784,7 +781,7 @@ float Drag(float force_allow_pick, float ischeat)
 		default:
 			if(Drag_IsDragging(self))
 			{
-				if(self.BUTTON_DRAG)
+				if(PHYS_INPUT_BUTTON_DRAG(self))
 				{
 					if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
 					{
@@ -816,7 +813,7 @@ float Drag(float force_allow_pick, float ischeat)
 			else
 			{
 				if(Drag_CanDrag(self))
-					if(self.BUTTON_DRAG)
+					if(PHYS_INPUT_BUTTON_DRAG(self))
 					{
 						crosshair_trace_plusvisibletriggers(self);
 						entity e = trace_ent;

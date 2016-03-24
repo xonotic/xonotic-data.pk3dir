@@ -2,7 +2,7 @@
 #define MUTATOR_DAMAGETEXT_H
 
 #ifdef MENUQC
-#include <menu/xonotic/tab.qc>
+#include <menu/xonotic/tab.qh>
 #endif
 
 #endif
@@ -13,7 +13,10 @@ REGISTER_MUTATOR(damagetext, true);
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$$d",   "How to format the damage text. 1$ is health, 2$ is armor, 3$ is both");
+AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
+STATIC_INIT(DamageText_LegacyFormat) {
+    if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
+}
 AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    "Damage text color");
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      "Damage text uses weapon color");
 AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          "Damage text font size");
@@ -51,7 +54,10 @@ CLASS(DamageText, Object)
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
-            string s = sprintf(autocvar_cl_damagetext_format, this.m_damage, this.m_armordamage, this.m_damage + this.m_armordamage);
+            string s = autocvar_cl_damagetext_format;
+            s = strreplace("{health}", sprintf("%d", this.m_damage), s);
+            s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
+            s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
             drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
@@ -98,8 +104,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
         ) {
             msg_entity = it;
             WriteHeader(MSG_ONE, damagetext);
-            WriteShort(MSG_ONE, health);
-            WriteShort(MSG_ONE, armor);
+            WriteShort(MSG_ONE, rint(health));
+            WriteShort(MSG_ONE, rint(armor));
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
             WriteCoord(MSG_ONE, location.y);

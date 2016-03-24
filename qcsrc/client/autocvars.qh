@@ -1,5 +1,4 @@
-#ifndef CLIENT_AUTOCVARS_H
-#define CLIENT_AUTOCVARS_H
+#pragma once
 
 bool autocvar__con_chat_maximized;
 bool autocvar__hud_configure;
@@ -72,15 +71,18 @@ bool autocvar_cl_spawn_event_particles;
 bool autocvar_cl_spawn_event_sound = 1;
 // float autocvar_cl_spawn_point_model;
 bool autocvar_cl_spawn_point_particles;
+float autocvar_cl_spawn_point_dist_min = 1200;
+float autocvar_cl_spawn_point_dist_max = 1600;
 bool autocvar_cl_spawnzoom = 1;
 float autocvar_cl_spawnzoom_speed = 1;
 float autocvar_cl_spawnzoom_factor = 2;
 bool autocvar_cl_stripcolorcodes;
 bool autocvar_cl_vehicles_alarm = true;
-bool autocvar_cl_vehicles_hud_tactical = 1;
+bool autocvar_cl_vehicles_hud_tactical = true;
 float autocvar_cl_vehicles_hudscale = 0.5;
 float autocvar_cl_vehicles_notify_time = 15;
 float autocvar_cl_vehicles_crosshair_size = 0.5;
+bool autocvar_cl_vehicles_crosshair_colorize = true;
 bool autocvar__vehicles_shownchasemessage;
 bool autocvar_cl_velocityzoom_enabled;
 float autocvar_cl_velocityzoom_factor;
@@ -152,7 +154,6 @@ float autocvar_crosshair_size;
 int autocvar_ekg;
 float autocvar_fov;
 float autocvar_g_balance_damagepush_speedfactor;
-float autocvar_g_warmup_limit;
 bool autocvar_hud_cursormode = true;
 float autocvar_hud_colorflash_alpha;
 bool autocvar_hud_configure_checkcollisions;
@@ -193,7 +194,7 @@ float autocvar_hud_dock_alpha;
 string autocvar_hud_dock_color;
 bool autocvar_hud_dock_color_team;
 bool autocvar_hud_panel_ammo;
-bool autocvar_hud_panel_ammo_iconalign; // TODO: check if this should be turned into an int
+bool autocvar_hud_panel_ammo_iconalign;
 int autocvar_hud_panel_ammo_maxammo;
 bool autocvar_hud_panel_ammo_onlycurrent;
 float autocvar_hud_panel_ammo_noncurrent_alpha = 0.7;
@@ -205,8 +206,8 @@ bool autocvar_hud_panel_ammo_text;
 string autocvar_hud_panel_bg;
 float autocvar_hud_panel_bg_alpha;
 float autocvar_hud_panel_bg_border;
-vector autocvar_hud_panel_bg_color; // TODO: int?
-float autocvar_hud_panel_bg_color_team; // ^
+vector autocvar_hud_panel_bg_color;
+float autocvar_hud_panel_bg_color_team;
 float autocvar_hud_panel_bg_padding;
 bool autocvar_hud_panel_centerprint;
 float autocvar_hud_panel_centerprint_align;
@@ -452,4 +453,3 @@ float autocvar_crosshair_rpc_alpha = 1;
 float autocvar_crosshair_rpc_size = 1;
 int autocvar_cl_nade_timer;
 bool autocvar_cl_items_nofade;
-#endif

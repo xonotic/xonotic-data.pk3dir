@@ -1,31 +1,50 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-#include "../item/modalcontroller.qc"
-CLASS(MainWindow, ModalController)
-	METHOD(MainWindow, configureMainWindow, void(entity));
-	METHOD(MainWindow, draw, void(entity));
-	ATTRIB(MainWindow, firstRunDialog, entity, NULL)
-	ATTRIB(MainWindow, advancedDialog, entity, NULL)
-	ATTRIB(MainWindow, mutatorsDialog, entity, NULL)
-	ATTRIB(MainWindow, mapInfoDialog, entity, NULL)
-	ATTRIB(MainWindow, userbindEditDialog, entity, NULL)
-	ATTRIB(MainWindow, winnerDialog, entity, NULL)
-	ATTRIB(MainWindow, serverInfoDialog, entity, NULL)
-	ATTRIB(MainWindow, cvarsDialog, entity, NULL)
-	ATTRIB(MainWindow, screenshotViewerDialog, entity, NULL)
-	ATTRIB(MainWindow, viewDialog, entity, NULL)
-	ATTRIB(MainWindow, hudconfirmDialog, entity, NULL)
-	ATTRIB(MainWindow, languageWarningDialog, entity, NULL)
-	ATTRIB(MainWindow, mainNexposee, entity, NULL)
-	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
-	ATTRIB(MainWindow, dialogToShow, entity, NULL)
-	ATTRIB(MainWindow, demostartconfirmDialog, entity, NULL)
-	ATTRIB(MainWindow, demotimeconfirmDialog, entity, NULL)
-	ATTRIB(MainWindow, resetDialog, entity, NULL)
-ENDCLASS(MainWindow)
-#endif
+#include "mainwindow.qh"
 
-#ifdef IMPLEMENTATION
+#include "nexposee.qh"
+#include "inputbox.qh"
+#include "dialog_firstrun.qh"
+#include "dialog_hudsetup_exit.qh"
+#include "dialog_hudpanel_notification.qh"
+#include "dialog_hudpanel_ammo.qh"
+#include "dialog_hudpanel_healtharmor.qh"
+#include "dialog_hudpanel_chat.qh"
+#include "dialog_hudpanel_modicons.qh"
+#include "dialog_hudpanel_powerups.qh"
+#include "dialog_hudpanel_pressedkeys.qh"
+#include "dialog_hudpanel_racetimer.qh"
+#include "dialog_hudpanel_radar.qh"
+#include "dialog_hudpanel_score.qh"
+#include "dialog_hudpanel_timer.qh"
+#include "dialog_hudpanel_vote.qh"
+#include "dialog_hudpanel_weapons.qh"
+#include "dialog_hudpanel_engineinfo.qh"
+#include "dialog_hudpanel_infomessages.qh"
+#include "dialog_hudpanel_physics.qh"
+#include "dialog_hudpanel_centerprint.qh"
+#include "dialog_hudpanel_itemstime.qh"
+#include "dialog_hudpanel_quickmenu.qh"
+
+#include "dialog_settings_input_userbind.qh"
+#include "dialog_settings_misc_cvars.qh"
+#include "dialog_settings_misc_reset.qh"
+#include "dialog_settings_user_languagewarning.qh"
+#include "dialog_settings_game_hudconfirm.qh"
+#include "dialog_singleplayer_winner.qh"
+#include "dialog_multiplayer_join_serverinfo.qh"
+#include "dialog_multiplayer_media_demo_startconfirm.qh"
+#include "dialog_multiplayer_media_demo_timeconfirm.qh"
+#include "dialog_multiplayer_media_screenshot_viewer.qh"
+#include "dialog_multiplayer_create_mapinfo.qh"
+#include "dialog_multiplayer_create_mutators.qh"
+#include "dialog_sandboxtools.qh"
+#include "dialog_monstertools.qh"
+#include "dialog_teamselect.qh"
+#include "dialog_singleplayer.qh"
+#include "dialog_multiplayer.qh"
+#include "dialog_settings.qh"
+#include "dialog_credits.qh"
+#include "dialog_quit.qh"
+
 void MainWindow_draw(entity me)
 {
 	SUPER(MainWindow).draw(me);
@@ -256,6 +275,3 @@ void MainWindow_configureMainWindow(entity me)
 	if(cvar_string("_cl_name") == cvar_defstring("_cl_name"))
 		me.dialogToShow = me.firstRunDialog;
 }
-#endif
-
-/* Click. The c-word is here so you can grep for it :-) */

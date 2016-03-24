@@ -128,7 +128,17 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		PM_ClientMovement_Unstick(this);
 
 	// set crouched
-	if (PHYS_INPUT_BUTTON_CROUCH(this))
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if(this.hook && !wasfreed(this.hook))
+		do_crouch = false;
+	if(hud != HUD_NORMAL)
+		do_crouch = false;
+	if(STAT(FROZEN, this))
+		do_crouch = false;
+	if((activeweapon == WEP_SHOCKWAVE || activeweapon == WEP_SHOTGUN) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
+		do_crouch = false;
+
+	if (do_crouch)
 	{
 		// wants to crouch, this always works
 		if (!IS_DUCKED(this)) SET_DUCKED(this);
@@ -690,7 +700,7 @@ void PM_check_nickspam(entity this)
 	{
 		// slight annoyance for nick change scripts
 		this.movement = -1 * this.movement;
-		this.BUTTON_ATCK = this.BUTTON_JUMP = this.BUTTON_ATCK2 = this.BUTTON_ZOOM = this.BUTTON_CROUCH = this.BUTTON_HOOK = this.BUTTON_USE = 0;
+		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_JUMP(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = PHYS_INPUT_BUTTON_HOOK(this) = PHYS_INPUT_BUTTON_USE(this) = false;
 
 		if (this.nickspamcount >= autocvar_g_nick_flood_penalty_red) // if you are persistent and the slight annoyance above does not stop you, I'll show you!
 		{
@@ -992,7 +1002,7 @@ void PM_jetpack(entity this, float maxspd_mod)
 	// add the unused velocity as up component
 	wishvel_z = 0;
 
-	// if (this.BUTTON_JUMP)
+	// if (PHYS_INPUT_BUTTON_JUMP(this))
 		wishvel_z = sqrt(max(0, 1 - wishvel * wishvel));
 
 	// it is now normalized, so...
@@ -1247,8 +1257,10 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 
 		if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && this.movement.y == 0 && this.movement.x != 0)
 			PM_AirAccelerate(this, wishdir, wishspeed2);
-		else
-			PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(this), PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd, PHYS_AIRSPEEDLIMIT_NONQW(this));
+		else {
+		    float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
+			PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
+        }
 
 		if (PHYS_AIRCONTROL(this))
 			CPM_PM_Aircontrol(this, wishdir, wishspeed2);
@@ -1282,6 +1294,10 @@ bool IsFlying(entity this)
 		return false;
 	return true;
 }
+
+#ifdef CSQC
+float autocvar_slowmo;
+#endif
 
 void PM_Main(entity this)
 {
@@ -1319,8 +1335,11 @@ void PM_Main(entity this)
 	Physics_UpdateStats(this, maxspeed_mod);
 
 	if (this.PlayerPhysplug)
-		if (this.PlayerPhysplug())
+		if (this.PlayerPhysplug(this))
 			return;
+#elif defined(CSQC)
+	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
+		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 #endif
 
 #ifdef SVQC
@@ -1349,7 +1368,7 @@ void PM_Main(entity this)
 	{
 		if (playerdemo_read(this))
 			return;
-		WITH(entity, self, this, bot_think());
+		bot_think(this);
 	}
 #endif
 
@@ -1523,7 +1542,7 @@ void PM_Main(entity this)
 	else
 		PM_air(this, buttons_prev, maxspeed_mod);
 
-:end
+LABEL(end)
 	if (IS_ONGROUND(this))
 		this.lastground = time;
 

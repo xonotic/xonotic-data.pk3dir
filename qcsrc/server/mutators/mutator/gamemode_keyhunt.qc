@@ -1,3 +1,4 @@
+#include "gamemode_keyhunt.qh"
 #ifndef GAMEMODE_KEYHUNT_H
 #define GAMEMODE_KEYHUNT_H
 
@@ -45,7 +46,7 @@ float kh_tracking_enabled;
 .entity kh_next;
 float kh_Key_AllOwnedByWhichTeam();
 
-typedef void() kh_Think_t;
+USING(kh_Think_t, void());
 void kh_StartRound();
 void kh_Controller_SetThink(float t, kh_Think_t func);
 
@@ -499,7 +500,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_PICKUP_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_PICKUP), player.netname);
 
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
@@ -608,7 +609,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 			first = false;
 		}
 
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(teem, INFO_KEYHUNT_CAPTURE_), keyowner);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(teem, INFO_KEYHUNT_CAPTURE), keyowner);
 
 	first = true;
 	midpoint = '0 0 0';
@@ -717,7 +718,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		}
 	}
 
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(lostkey, INFO_KEYHUNT_LOST), lostkey.kh_previous_owner.netname);
 
 	play2all(SND(KH_DESTROY));
 	te_tarexplosion(lostkey.origin);
@@ -759,7 +760,7 @@ void kh_Key_Think()  // runs all the time
 			if(vlen(key.owner.origin - p) > autocvar_g_balance_keyhunt_maxdist)
 				goto not_winning;
 		kh_WinnerTeam(self.team);
-:not_winning
+LABEL(not_winning)
 	}
 
 	if(kh_interferemsg_time && time > kh_interferemsg_time)
@@ -772,7 +773,7 @@ void kh_Key_Think()  // runs all the time
 				else
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_KEYHUNT_HELP);
 			else
-				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM_4(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE_));
+				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(kh_interferemsg_team, CENTER_KEYHUNT_INTERFERE));
 		));
 	}
 
@@ -830,7 +831,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.kh_worldkeynext = kh_worldkeylist;
 	kh_worldkeylist = key;
 
-	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM_4(initial_owner.team, CENTER_KEYHUNT_START_));
+	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM(initial_owner.team, CENTER_KEYHUNT_START));
 
 	WaypointSprite_Spawn(WP_KeyDropped, 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, false, RADARICON_FLAG);
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
@@ -873,7 +874,7 @@ void kh_Key_DropOne(entity key)
 
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_DROP_), player.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_DROP), player.netname);
 
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
@@ -899,7 +900,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 		{
 			kh_Scores_Event(player, key, "losekey", 0, 0);
 			PlayerScore_Add(player, SP_KH_LOSSES, 1);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_LOST_), player.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_LOST), player.netname);
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
 			key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, false);
@@ -919,7 +920,7 @@ float kh_CheckPlayers(float num)
 		float t_team = kh_Team_ByID(num);
 		float players = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == t_team)
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == t_team)
 				++players;
 		));
 
@@ -943,7 +944,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	if(KH_READY_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
@@ -953,7 +954,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		if(player_count == 0)
 		{
 			if(prev_missing_teams_mask > 0)
-				Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+				Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 			prev_missing_teams_mask = -1;
 		}
 		else
@@ -973,8 +974,8 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	kh_tracking_enabled = true;
 }
@@ -996,8 +997,8 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_KEYHUNT_OTHER);
 
 	for(i = 0; i < kh_teams; ++i)
 	{
@@ -1005,7 +1006,7 @@ void kh_StartRound()  // runs at the start of each round
 		players = 0;
 		entity my_player = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(!IS_DEAD(it) && !it.BUTTON_CHAT && it.team == teem)
+			if(!IS_DEAD(it) && !PHYS_INPUT_BUTTON_CHAT(it) && it.team == teem)
 			{
 				++players;
 				if(random() * players <= 1)
@@ -1090,198 +1091,198 @@ void kh_finalize()
 
 // legacy bot role
 
-void() havocbot_role_kh_carrier;
-void() havocbot_role_kh_defense;
-void() havocbot_role_kh_offense;
-void() havocbot_role_kh_freelancer;
+void(entity this) havocbot_role_kh_carrier;
+void(entity this) havocbot_role_kh_defense;
+void(entity this) havocbot_role_kh_offense;
+void(entity this) havocbot_role_kh_freelancer;
 
 
-void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
-{SELFPARAM();
+void havocbot_goalrating_kh(entity this, float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
+{
 	entity head;
 	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
-		if(head.owner == self)
+		if(head.owner == this)
 			continue;
 		if(!kh_tracking_enabled)
 		{
 			// if it's carried by our team we know about it
 			// otherwise we have to see it to know about it
-			if(!head.owner || head.team != self.team)
+			if(!head.owner || head.team != this.team)
 			{
-				traceline(self.origin + self.view_ofs, head.origin, MOVE_NOMONSTERS, self);
+				traceline(this.origin + this.view_ofs, head.origin, MOVE_NOMONSTERS, this);
 				if (trace_fraction < 1 && trace_ent != head)
 					continue; // skip what I can't see
 			}
 		}
 		if(!head.owner)
-			navigation_routerating(head, ratingscale_dropped * BOT_PICKUP_RATING_HIGH, 100000);
-		else if(head.team == self.team)
-			navigation_routerating(head.owner, ratingscale_team * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head, ratingscale_dropped * BOT_PICKUP_RATING_HIGH, 100000);
+		else if(head.team == this.team)
+			navigation_routerating(this, head.owner, ratingscale_team * BOT_PICKUP_RATING_HIGH, 100000);
 		else
-			navigation_routerating(head.owner, ratingscale_enemy * BOT_PICKUP_RATING_HIGH, 100000);
+			navigation_routerating(this, head.owner, ratingscale_enemy * BOT_PICKUP_RATING_HIGH, 100000);
 	}
 
-	havocbot_goalrating_items(1, self.origin, 10000);
+	havocbot_goalrating_items(this, 1, this.origin, 10000);
 }
 
-void havocbot_role_kh_carrier()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_kh_carrier(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (!(self.kh_next))
+	if (!(this.kh_next))
 	{
 		LOG_TRACE("changing role to freelancer\n");
-		self.havocbot_role = havocbot_role_kh_freelancer;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_kh_freelancer;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
-		if(kh_Key_AllOwnedByWhichTeam() == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // bring home
+		if(kh_Key_AllOwnedByWhichTeam() == this.team)
+			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // bring home
 		else
-			havocbot_goalrating_kh(4, 4, 1); // play defensively
+			havocbot_goalrating_kh(this, 4, 4, 1); // play defensively
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 
-void havocbot_role_kh_defense()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_kh_defense(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (self.kh_next)
+	if (this.kh_next)
 	{
 		LOG_TRACE("changing role to carrier\n");
-		self.havocbot_role = havocbot_role_kh_carrier;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_kh_carrier;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + random() * 10 + 20;
-	if (time > self.havocbot_role_timeout)
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + random() * 10 + 20;
+	if (time > this.havocbot_role_timeout)
 	{
 		LOG_TRACE("changing role to freelancer\n");
-		self.havocbot_role = havocbot_role_kh_freelancer;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_kh_freelancer;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
 		float key_owner_team;
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
-		if(key_owner_team == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // defend key carriers
+		if(key_owner_team == this.team)
+			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // defend key carriers
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(4, 1, 0.1); // play defensively
+			havocbot_goalrating_kh(this, 4, 1, 0.1); // play defensively
 		else
-			havocbot_goalrating_kh(0.1, 0.1, 10); // ATTACK ANYWAY
+			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 
-void havocbot_role_kh_offense()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_kh_offense(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (self.kh_next)
+	if (this.kh_next)
 	{
 		LOG_TRACE("changing role to carrier\n");
-		self.havocbot_role = havocbot_role_kh_carrier;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_kh_carrier;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + random() * 10 + 20;
-	if (time > self.havocbot_role_timeout)
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + random() * 10 + 20;
+	if (time > this.havocbot_role_timeout)
 	{
 		LOG_TRACE("changing role to freelancer\n");
-		self.havocbot_role = havocbot_role_kh_freelancer;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_kh_freelancer;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
 		float key_owner_team;
 
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
-		if(key_owner_team == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // defend anyway
+		if(key_owner_team == this.team)
+			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // defend anyway
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(0.1, 1, 4); // play offensively
+			havocbot_goalrating_kh(this, 0.1, 1, 4); // play offensively
 		else
-			havocbot_goalrating_kh(0.1, 0.1, 10); // ATTACK! EMERGENCY!
+			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK! EMERGENCY!
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 
-void havocbot_role_kh_freelancer()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_kh_freelancer(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (self.kh_next)
+	if (this.kh_next)
 	{
 		LOG_TRACE("changing role to carrier\n");
-		self.havocbot_role = havocbot_role_kh_carrier;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_kh_carrier;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + random() * 10 + 10;
-	if (time > self.havocbot_role_timeout)
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + random() * 10 + 10;
+	if (time > this.havocbot_role_timeout)
 	{
 		if (random() < 0.5)
 		{
 			LOG_TRACE("changing role to offense\n");
-			self.havocbot_role = havocbot_role_kh_offense;
+			this.havocbot_role = havocbot_role_kh_offense;
 		}
 		else
 		{
 			LOG_TRACE("changing role to defense\n");
-			self.havocbot_role = havocbot_role_kh_defense;
+			this.havocbot_role = havocbot_role_kh_defense;
 		}
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
 		float key_owner_team;
 
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
 		key_owner_team = kh_Key_AllOwnedByWhichTeam();
-		if(key_owner_team == self.team)
-			havocbot_goalrating_kh(10, 0.1, 0.1); // defend anyway
+		if(key_owner_team == this.team)
+			havocbot_goalrating_kh(this, 10, 0.1, 0.1); // defend anyway
 		else if(key_owner_team == -1)
-			havocbot_goalrating_kh(1, 10, 4); // prefer dropped keys
+			havocbot_goalrating_kh(this, 1, 10, 4); // prefer dropped keys
 		else
-			havocbot_goalrating_kh(0.1, 0.1, 10); // ATTACK ANYWAY
+			havocbot_goalrating_kh(this, 0.1, 0.1, 10); // ATTACK ANYWAY
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 
@@ -1352,6 +1353,7 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
+    SELFPARAM();
 	if(IS_DEAD(self))
 		return true;
 

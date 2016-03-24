@@ -343,11 +343,10 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 
 	entity oldother = other;
 
-	for (entity e = findradius(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin)); e; e = e.chain)
-	{
-		if(e.solid == SOLID_TRIGGER && e != this)
-		if(e.move_nomonsters != MOVE_NOMONSTERS && e.move_nomonsters != MOVE_WORLDONLY)
-		if(e.move_touch && boxesoverlap(e.absmin, e.absmax, this.absmin, this.absmax))
+    FOREACH_ENTITY_RADIUS(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
+		if (it.solid == SOLID_TRIGGER && it != this)
+		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
+		if (it.move_touch && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
 		{
 			other = this;
 
@@ -356,14 +355,14 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_fraction = 1;
 			trace_inwater = false;
 			trace_inopen = true;
-			trace_endpos = e.move_origin;
+			trace_endpos = it.move_origin;
 			trace_plane_normal = '0 0 1';
 			trace_plane_dist = 0;
 			trace_ent = this;
 
-			WITH(entity, self, e, e.move_touch());
+			WITH(entity, self, it, it.move_touch());
 		}
-	}
+    });
 
 	other = oldother;
 }
@@ -411,8 +410,10 @@ void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict
 		_Movetype_LinkEdict_TouchAreaGrid(this);
 }
 
-bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosition
+entity _Movetype_TestEntityPosition_ent;
+bool _Movetype_TestEntityPosition(vector ofs)  // SV_TestEntityPosition
 {
+    entity this = _Movetype_TestEntityPosition_ent;
 //	vector org = this.move_origin + ofs;
 
 	int cont = this.dphitcontentsmask;
@@ -430,24 +431,30 @@ bool _Movetype_TestEntityPosition(entity this, vector ofs)  // SV_TestEntityPosi
 
 bool _Movetype_UnstickEntity(entity this)  // SV_UnstickEntity
 {
-	if(!_Movetype_TestEntityPosition(this, '0 0 0')) return true;
-	if(!_Movetype_TestEntityPosition(this, '-1 0 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '1 0 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '0 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '0 1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '-1 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '1 -1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '-1 1 0')) goto success;
-	if(!_Movetype_TestEntityPosition(this, '1 1 0')) goto success;
-	for (int i = 1; i <= 17; ++i)
-	{
-		if(!_Movetype_TestEntityPosition(this, '0 0 -1' * i)) goto success;
-		if(!_Movetype_TestEntityPosition(this, '0 0 1' * i)) goto success;
+    _Movetype_TestEntityPosition_ent = this;
+	if (!_Movetype_TestEntityPosition(' 0  0  0')) {
+	    return true;
 	}
-	LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
-		etof(this), this.classname, vtos(this.move_origin));
-	return false;
-	: success;
+	#define X(v) if (_Movetype_TestEntityPosition(v))
+	X('-1  0  0') X(' 1  0  0')
+	X(' 0 -1  0') X(' 0  1  0')
+	X('-1 -1  0') X(' 1 -1  0')
+	X('-1  1  0') X(' 1  1  0')
+	#undef X
+	{
+        #define X(i) \
+            if (_Movetype_TestEntityPosition('0 0 -1' * i)) \
+            if (_Movetype_TestEntityPosition('0 0 1' * i))
+        X(01) X(02) X(03) X(04) X(05) X(06) X(07) X(08)
+        X(09) X(10) X(11) X(12) X(13) X(14) X(15) X(16)
+        X(17)
+        #undef X
+        {
+            LOG_DEBUGF("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n",
+                etof(this), this.classname, vtos(this.move_origin));
+            return false;
+        }
+	}
 	LOG_DEBUGF("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n",
 		etof(this), this.classname, vtos(this.move_origin));
 	_Movetype_LinkEdict(this, true);

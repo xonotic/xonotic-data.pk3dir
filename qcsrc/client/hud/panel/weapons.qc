@@ -1,8 +1,10 @@
+#include "weapons.qh"
 // Weapon icons (#0)
 
 entity weaponorder[Weapons_MAX];
 void weaponorder_swap(int i, int j, entity pass)
 {
+    TC(int, i); TC(int, j);
 	entity h = weaponorder[i];
 	weaponorder[i] = weaponorder[j];
 	weaponorder[j] = h;
@@ -11,6 +13,7 @@ void weaponorder_swap(int i, int j, entity pass)
 string weaponorder_cmp_str;
 int weaponorder_cmp(int i, int j, entity pass)
 {
+    TC(int, i); TC(int, j);
 	int ai = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[i].m_id), 0);
 	int aj = strstrofs(weaponorder_cmp_str, sprintf(" %d ", weaponorder[j].m_id), 0);
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
@@ -18,7 +21,6 @@ int weaponorder_cmp(int i, int j, entity pass)
 
 void HUD_Weapons()
 {
-	SELFPARAM();
 	// declarations
 	WepSet weapons_stat = WepSet_GetFromStat();
 	int i;
@@ -76,7 +78,7 @@ void HUD_Weapons()
 		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
 
 		weapon_cnt = 0;
-		FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, LAMBDA(weaponorder[weapon_cnt++] = it));
+		FOREACH(Weapons, it != WEP_Null && it.impulse >= 0, weaponorder[weapon_cnt++] = it);
 		for(i = weapon_cnt; i < Weapons_MAX; ++i)
 			weaponorder[i] = NULL;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, NULL);
@@ -131,10 +133,10 @@ void HUD_Weapons()
 		// get the all-weapons layout
 		int nHidden = 0;
 		WepSet weapons_stat = WepSet_GetFromStat();
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if (weapons_stat & it.m_wepset) continue;
 			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
-		));
+		});
 		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, padded_panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;

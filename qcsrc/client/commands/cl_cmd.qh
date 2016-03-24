@@ -1,5 +1,4 @@
-#ifndef CLIENT_COMMANDS_CL_CMD_H
-#define CLIENT_COMMANDS_CL_CMD_H
+#pragma once
 
 void Cmd_HUD_SetFields(int);
 void Cmd_HUD_Help();
@@ -18,10 +17,8 @@ REGISTRY_SORT(CLIENT_COMMANDS)
     	ATTRIB(clientcommand_##id, m_description, string, description); \
 	ENDCLASS(clientcommand_##id) \
     REGISTER(CLIENT_COMMANDS, CMD_CL, id, m_id, NEW(clientcommand_##id)); \
-	METHOD(clientcommand_##id, m_invokecmd, void(int request, entity caller, int arguments, string command))
+	METHOD(clientcommand_##id, m_invokecmd, void(clientcommand_##id this, int request, entity caller, int arguments, string command))
 
 STATIC_INIT(CLIENT_COMMANDS_aliases) {
-	FOREACH(CLIENT_COMMANDS, true, LAMBDA(localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_cl"))));
+	FOREACH(CLIENT_COMMANDS, true, localcmd(sprintf("alias %1$s \"%2$s %1$s ${* ?}\"\n", it.m_name, "qc_cmd_cl")));
 }
-
-#endif

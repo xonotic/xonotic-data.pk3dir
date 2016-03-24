@@ -1,7 +1,7 @@
 #ifndef TURRET_TESLA_H
 #define TURRET_TESLA_H
 
-#include "tesla_weapon.qc"
+#include "tesla_weapon.qh"
 
 CLASS(TeslaCoil, Turret)
 /* spawnflags */ ATTRIB(TeslaCoil, spawnflags, int, TUR_FLAG_HITSCAN | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
@@ -20,14 +20,13 @@ REGISTER_TURRET(TESLA, NEW(TeslaCoil));
 
 #ifdef IMPLEMENTATION
 
-#include "tesla_weapon.qc"
-
 #ifdef SVQC
 
 spawnfunc(turret_tesla) { if (!turret_initialize(TUR_TESLA)) remove(self); }
 
 METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur, entity it))
 {
+    SELFPARAM();
     if(!self.active)
     {
         self.tur_head.avelocity = '0 0 0';

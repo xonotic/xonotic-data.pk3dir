@@ -1,9 +1,24 @@
 #include "menu.qh"
-#include "classes.qc"
+
+#include "item.qh"
+
+#include "anim/animhost.qh"
+
+#include "item/dialog.qh"
+#include "item/listbox.qh"
+#include "item/nexposee.qh"
+
+#include "xonotic/commandbutton.qh"
+#include "xonotic/mainwindow.qh"
+#include "xonotic/serverlist.qh"
+#include "xonotic/slider_resolution.qh"
+
+.string cvarName;
+
 #include "xonotic/util.qh"
 
 #include "../common/items/all.qh"
-#include "../common/weapons/all.qh"
+#include <common/weapons/all.qh>
 #include "../common/mapinfo.qh"
 #include "../common/mutators/base.qh"
 
@@ -384,7 +399,7 @@ void drawBackground(string img, float a, string algn, float force1)
 			draw_Picture_Aligned(v, scalemode, strcat(img, "_l", ftos(l + 1)), a);
 		}
 		++l;
-		: nopic
+LABEL(nopic)
 	}
 }
 
@@ -528,7 +543,7 @@ void m_tooltip(vector pos)
 		{
 			it = m_findtooltipitem(main, pos);
 
-			if (it.instanceOfListBox && it.isScrolling(it)) it = world;
+			if (it.instanceOfListBox && it.isScrolling(it)) it = NULL;
 
 			if (it && prev_tooltip != it.tooltip)
 			{

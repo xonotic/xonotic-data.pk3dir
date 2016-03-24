@@ -9,6 +9,7 @@
 #include "teamplay.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "../common/state.qh"
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
@@ -19,6 +20,8 @@
 
 #include "../common/minigames/sv_minigames.qh"
 
+#include "../common/physics/player.qh"
+#include "../common/effects/qc/all.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
 
@@ -361,7 +364,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	{
 		this.pusher = attacker;
 		this.pushltime = time + autocvar_g_maxpushtime;
-		this.istypefrag = this.BUTTON_CHAT;
+		this.istypefrag = PHYS_INPUT_BUTTON_CHAT(this);
 	}
 	else if(time < this.pushltime)
 	{
@@ -435,7 +438,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 					{
 						if(deathtype == DEATH_FALL.m_id)
 							PlayerSound(this, playersound_fall, CH_PAIN, VOICETYPE_PLAYERSOUND);
-						else if(this.health > 75) // TODO make a "gentle" version?
+						else if(this.health > 75)
 							PlayerSound(this, playersound_pain100, CH_PAIN, VOICETYPE_PLAYERSOUND);
 						else if(this.health > 50)
 							PlayerSound(this, playersound_pain75, CH_PAIN, VOICETYPE_PLAYERSOUND);
@@ -514,7 +517,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(awep.m_id, abot, PS(this).m_weapon.m_id, vbot);
 
-		if(autocvar_sv_gentle < 1) // TODO make a "gentle" version?
+		if(autocvar_sv_gentle < 1)
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN.m_id)

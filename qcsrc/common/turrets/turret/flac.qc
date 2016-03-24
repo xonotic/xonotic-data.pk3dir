@@ -1,7 +1,7 @@
 #ifndef TURRET_FLAC_H
 #define TURRET_FLAC_H
 
-#include "flac_weapon.qc"
+#include "flac_weapon.qh"
 
 CLASS(Flac, Turret)
 /* spawnflags */ ATTRIB(Flac, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_MISSILE);
@@ -19,8 +19,6 @@ REGISTER_TURRET(FLAC, NEW(Flac));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "flac_weapon.qc"
 
 #ifdef SVQC
 

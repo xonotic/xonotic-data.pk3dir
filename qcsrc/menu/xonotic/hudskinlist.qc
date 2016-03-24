@@ -1,49 +1,6 @@
-#ifndef HUDSKINLIST_H
-#define HUDSKINLIST_H
-#include "listbox.qc"
-CLASS(XonoticHUDSkinList, XonoticListBox)
-	METHOD(XonoticHUDSkinList, configureXonoticHUDSkinList, void(entity));
-	ATTRIB(XonoticHUDSkinList, rowsPerItem, float, 1)
-	METHOD(XonoticHUDSkinList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticHUDSkinList, draw, void(entity));
-	METHOD(XonoticHUDSkinList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticHUDSkinList, getHUDSkins, void(entity));
-	METHOD(XonoticHUDSkinList, setHUDSkin, void(entity));
-	METHOD(XonoticHUDSkinList, hudskinName, string(entity, float));
-	METHOD(XonoticHUDSkinList, hudskinPath, string(entity, float));
-	METHOD(XonoticHUDSkinList, hudskinTitle, string(entity, float));
-	METHOD(XonoticHUDSkinList, hudskinAuthor, string(entity, float));
-	METHOD(XonoticHUDSkinList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticHUDSkinList, keyDown, float(entity, float, float, float));
-	METHOD(XonoticHUDSkinList, destroy, void(entity));
-	METHOD(XonoticHUDSkinList, showNotify, void(entity));
+#include "hudskinlist.qh"
 
-	ATTRIB(XonoticHUDSkinList, listHUDSkin, float, -1)
-	ATTRIB(XonoticHUDSkinList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticHUDSkinList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticHUDSkinList, columnNameSize, float, 0)
-	ATTRIB(XonoticHUDSkinList, realUpperMargin, float, 0)
-	ATTRIB(XonoticHUDSkinList, origin, vector, '0 0 0')
-	ATTRIB(XonoticHUDSkinList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticHUDSkinList, filterString, string, string_null)
-	ATTRIB(XonoticHUDSkinList, delayedRefreshTime, float, 0)
-	ATTRIB(XonoticHUDSkinList, savedName, string, string_null)
-ENDCLASS(XonoticHUDSkinList)
-
-#ifndef IMPLEMENTATION
-// public:
-entity hudskinlist;
-entity makeXonoticHUDSkinList();
-void SaveHUDSkin_Click(entity btn, entity me);
-void SetHUDSkin_Click(entity btn, entity me);
-#endif
-void HUDSkinList_Refresh_Click(entity btn, entity me);
-void HUDSkinList_Filter_Change(entity box, entity me);
-void HUDSkinList_SavedName_Change(entity box, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "inputbox.qh"
 
 entity makeXonoticHUDSkinList()
 {
@@ -306,5 +263,3 @@ float XonoticHUDSkinList_keyDown(entity me, float scan, float ascii, float shift
 		return SUPER(XonoticHUDSkinList).keyDown(me, scan, ascii, shift);
 	}
 }
-#endif
-

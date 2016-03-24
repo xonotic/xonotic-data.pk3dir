@@ -28,10 +28,9 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it != self && SAME_TEAM(it, self) && !IS_DEAD(it), LAMBDA(
-		float l = vlen(spawn_spot.origin - it.origin);
-		if(l > autocvar_g_spawn_near_teammate_distance)
+		if(vdist(spawn_spot.origin - it.origin, >, autocvar_g_spawn_near_teammate_distance))
 			continue;
-		if(l < 48)
+		if(vdist(spawn_spot.origin - it.origin, <, 48))
 			continue;
 		if(!checkpvs(spawn_spot.origin, it))
 			continue;
@@ -52,6 +51,22 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {SELFPARAM();
 	if(!teamplay) { return false; }
+
+	int num_red = 0, num_blue = 0, num_yellow = 0, num_pink = 0;
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		switch(it.team)
+		{
+			case NUM_TEAM_1: ++num_red; break;
+			case NUM_TEAM_2: ++num_blue; break;
+			case NUM_TEAM_3: ++num_yellow; break;
+			case NUM_TEAM_4: ++num_pink; break;
+		}
+	});
+
+	if(num_red == 1 || num_blue == 1 || num_yellow == 1 || num_pink == 1)
+		return false; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
+
 	// Note: when entering this, fixangle is already set.
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
 	{
@@ -70,7 +85,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 			if(STAT(FROZEN, it) == 0)
 			if(it != self)
 			{
-				tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 100', MOVE_WORLDONLY, it);
+				tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 100', MOVE_NOMONSTERS, it);
 				if(trace_fraction != 1.0)
 				if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 				{
@@ -82,30 +97,30 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 						else
 							fixedmakevectors(it.angles);
 
-						for(pc = 0; pc < 5; ++pc) // test 5 diffrent spots close to mate
+						for(pc = 0; pc < 4; ++pc) // test 4 diffrent spots close to mate
 						{
 							switch(pc)
 							{
 								case 0:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128, MOVE_NOMONSTERS, it);
 									break;
 								case 1:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 , MOVE_NOMONSTERS, it);
 									break;
 								case 2:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin + v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
 									break;
 								case 3:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 64 - v_forward * 64, MOVE_NORMAL, it);
+									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_right * 128 - v_forward * 64, MOVE_NOMONSTERS, it);
 									break;
-								case 4:
-									tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NORMAL, it);
-									break;
+								//case 4:
+									//tracebox(it.origin , STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - v_forward * 128, MOVE_NOMONSTERS, it);
+									//break;
 							}
 
 							if(trace_fraction == 1.0)
 							{
-								traceline(trace_endpos + '0 0 4', trace_endpos - '0 0 100', MOVE_NORMAL, it);
+								traceline(trace_endpos + '0 0 4', trace_endpos - '0 0 100', MOVE_NOMONSTERS, it);
 								if(trace_fraction != 1.0)
 								{
 									if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
@@ -164,9 +179,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(spawn_near_teammate, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_spawn_near_teammate, "cl_spawn_near_teammate");
-	return false;
-}
+REPLICATE(cvar_cl_spawn_near_teammate, bool, "cl_spawn_near_teammate");
+
 #endif

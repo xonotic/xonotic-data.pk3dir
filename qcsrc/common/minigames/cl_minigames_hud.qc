@@ -1,5 +1,13 @@
 #include "cl_minigames_hud.qh"
+
+#include <common/ent_cs.qh>
+
 #include "minigames.qh"
+
+.vector colormod;
+
+#include <client/hud/hud_config.qh>
+#include <client/mapvoting.qh>
 
 // whether the mouse is over the given panel
 bool HUD_mouse_over(entity somepanel)
@@ -213,15 +221,13 @@ void HUD_MinigameMenu_ClickCreate()
 	{
 		entity curr;
 		entity prev = self;
-		FOREACH(Minigames, true, LAMBDA(
-		{
-			curr = HUD_MinigameMenu_SpawnSubEntry(
-				it.message, HUD_MinigameMenu_ClickCreate_Entry,  self );
+		FOREACH(Minigames, true, {
+			curr = HUD_MinigameMenu_SpawnSubEntry(it.message, HUD_MinigameMenu_ClickCreate_Entry, self);
 			curr.netname = it.netname;
 			curr.model = strzone(minigame_texture(strcat(it.netname,"/icon")));
 			HUD_MinigameMenu_InsertEntry( curr, prev );
 			prev = curr;
-		}));
+		});
 	}
 }
 

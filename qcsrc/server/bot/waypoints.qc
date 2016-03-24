@@ -3,6 +3,8 @@
 #include "bot.qh"
 #include "navigation.qh"
 
+#include <common/state.qh>
+
 #include "../antilag.qh"
 
 #include <common/constants.qh>
@@ -28,7 +30,6 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	}
 
 	w = new(waypoint);
-	make_pure(w);
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	w.wpflags = f;
 	setorigin(w, (m1 + m2) * 0.5);
@@ -200,7 +201,7 @@ void waypoint_think()
 			ev.z = bound(em1_z, ev.z, em2_z);
 			dv = ev - sv;
 			dv.z = 0;
-			if (vlen(dv) >= 1050) // max search distance in XY
+			if(vdist(dv, >=, 1050)) // max search distance in XY
 			{
 				++relink_lengthculled;
 				continue;
@@ -295,10 +296,10 @@ void waypoint_schedulerelink(entity wp)
 // spawnfunc_waypoint map entity
 spawnfunc(waypoint)
 {
-	setorigin(self, self.origin);
+	setorigin(this, this.origin);
 	// schedule a relink after other waypoints have had a chance to spawn
-	waypoint_clearlinks(self);
-	//waypoint_schedulerelink(self);
+	waypoint_clearlinks(this);
+	//waypoint_schedulerelink(this);
 }
 
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink
@@ -789,8 +790,8 @@ void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 	waypoint_spawnforteleporter_boxes(e, e.absmin, e.absmax, destination, destination, timetaken);
 }
 
-entity waypoint_spawnpersonal(vector position)
-{SELFPARAM();
+entity waypoint_spawnpersonal(entity this, vector position)
+{
 	entity w;
 
 	// drop the waypoint to a proper location:
@@ -801,7 +802,7 @@ entity waypoint_spawnpersonal(vector position)
 	w = waypoint_spawn(position, position, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_PERSONAL);
 	w.nearestwaypoint = world;
 	w.nearestwaypointtimeout = 0;
-	w.owner = self;
+	w.owner = this;
 
 	waypoint_schedulerelink(w);
 
@@ -984,7 +985,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 		}
 
 		t = (tmin + tmax) * 0.5;
-		o = antilag_takebackorigin(p, time - t);
+		o = antilag_takebackorigin(p, CS(p), time - t);
 		if(!botframe_autowaypoints_fixdown(o))
 			return -2;
 		o = trace_endpos;
@@ -1108,7 +1109,7 @@ void botframe_deleteuselesswaypoints()
 					goto next;
 				}
 			}
-:next
+LABEL(next)
 		}
 	}
 	// d) The waypoint is a dead end. Dead end waypoints must be kept as

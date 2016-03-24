@@ -89,8 +89,7 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 
 void TeamScore_Spawn(float t, string name)
 {
-	entity ts = new(csqc_score_team);
-	make_pure(ts);
+	entity ts = new_pure(csqc_score_team);
 	ts.netname = name; // not used yet, FIXME
 	ts.team = t;
 	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
@@ -212,8 +211,7 @@ void ScoreInfo_Init(float teams)
 	}
 	else
 	{
-		scores_initialized = new(ent_client_scoreinfo);
-		make_pure(scores_initialized);
+		scores_initialized = new_pure(ent_client_scoreinfo);
 		Net_LinkEntity(scores_initialized, false, 0, ScoreInfo_SendEntity);
 	}
 	if(teams >= 1)
@@ -319,8 +317,7 @@ void PlayerScore_Attach(entity player)
 {
 	if(player.scorekeeper)
 		error("player already has a scorekeeper");
-	entity sk = new(scorekeeper);
-	make_pure(sk);
+	entity sk = new_pure(scorekeeper);
 	sk.owner = player;
 	Net_LinkEntity(sk, false, 0, PlayerScore_SendEntity);
 	player.scorekeeper = sk;
@@ -349,7 +346,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	{
 		if(gameover)
 			return 0;
-		backtrace("Adding score to unknown player!");
+		LOG_WARNING("Adding score to unknown player!");
 		return 0;
 	}
 	if(score)
@@ -390,6 +387,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 
 void WinningConditionHelper()
 {
+    SELFPARAM();
 	float c;
 	string s;
 	float fullstatus;

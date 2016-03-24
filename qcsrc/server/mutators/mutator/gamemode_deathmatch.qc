@@ -1,3 +1,4 @@
+#include "gamemode_deathmatch.qh"
 #ifndef GAMEMODE_DEATHMATCH_H
 #define GAMEMODE_DEATHMATCH_H
 

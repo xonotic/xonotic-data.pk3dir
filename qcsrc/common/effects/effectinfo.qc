@@ -197,7 +197,9 @@ CLASS(EffectInfo, Object)
     FIELDS(MY)
     #undef MY
 
-    METHOD(EffectInfo, describe, string(EffectInfo this)) {
+    METHOD(EffectInfo, describe, string(EffectInfo this))
+    {
+        TC(EffectInfo, this);
         string s = sprintf("SUB(%s) {\n", this.effectinfo_name);
         #define str_bool(it) (it ? "true" : "false")
         #define str_float(it) ftos(it)
@@ -209,7 +211,9 @@ CLASS(EffectInfo, Object)
         return strcat(s, "}\n");
     }
 
-    METHOD(EffectInfo, dump, string(EffectInfo this)) {
+    METHOD(EffectInfo, dump, string(EffectInfo this))
+    {
+        TC(EffectInfo, this);
         string s = sprintf("effect %s\n", this.effectinfo_name);
         #define MY(f) this.effectinfo_##f
         #define p(k, isset, parse, unparse) if (isset) { s = strcat(s, "\t", #k, unparse, "\n"); }

@@ -6,10 +6,11 @@
 #include "../g_damage.qh"
 #include <common/items/item.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/triggers/subs.qh>
 #include <common/util.qh>
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 
 void thrown_wep_think()
 {SELFPARAM();

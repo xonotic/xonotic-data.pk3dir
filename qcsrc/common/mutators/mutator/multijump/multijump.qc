@@ -21,7 +21,7 @@ REGISTER_MUTATOR(multijump, true);
 .bool multijump_ready;
 
 #ifdef CSQC
-bool autocvar_cl_multijump = false;
+bool autocvar_cl_multijump = true;
 
 	#define PHYS_MULTIJUMP_CLIENT(s)	autocvar_cl_multijump
 #elif defined(SVQC)
@@ -99,6 +99,7 @@ bool PM_multijump_checkjump(entity this)
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
+    SELFPARAM();
 #ifdef CSQC
 	self.multijump_count = PHYS_MULTIJUMP_COUNT(self);
 #endif
@@ -111,16 +112,13 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 {
+    SELFPARAM();
 	return PM_multijump_checkjump(self);
 }
 
 #ifdef SVQC
 
-MUTATOR_HOOKFUNCTION(multijump, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_multijump, "cl_multijump");
-	return false;
-}
+REPLICATE(cvar_cl_multijump, bool, "cl_multijump");
 
 MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsString)
 {

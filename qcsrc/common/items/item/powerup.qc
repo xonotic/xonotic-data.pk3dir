@@ -1,9 +1,5 @@
 #include "powerup.qh"
 
-#ifndef SVQC
-.int m_itemid;
-#endif
-
 #ifndef MENUQC
 MODEL(Strength_ITEM, Item_Model("g_strength.md3"));
 SOUND(Strength, "misc/powerup");

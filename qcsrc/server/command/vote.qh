@@ -1,5 +1,4 @@
-#ifndef VOTE_H
-#define VOTE_H
+#pragma once
 
 // ================================================
 //  Declarations for the vote system/vote commands
@@ -54,4 +53,4 @@ float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was al
 void reset_map(float dorespawn);
 void ReadyCount();
 void ReadyRestart_force();
-#endif
+void VoteCount(float first_count);

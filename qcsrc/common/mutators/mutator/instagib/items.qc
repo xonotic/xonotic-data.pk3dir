@@ -1,3 +1,5 @@
+#pragma once
+
 #include <common/items/all.qh>
 #include <common/items/item/ammo.qh>
 #include <common/items/item/powerup.qh>

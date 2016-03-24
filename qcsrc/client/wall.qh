@@ -1,5 +1,4 @@
-#ifndef CLIENT_WALL_H
-#define CLIENT_WALL_H
+#pragma once
 
 entityclass(Wall);
 class(Wall) .float lip;
@@ -19,5 +18,3 @@ class(Wall) .vector saved;
 void Ent_Wall_Draw(entity this);
 
 void Ent_Wall_Remove(entity this);
-
-#endif

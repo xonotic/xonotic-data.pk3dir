@@ -997,7 +997,6 @@ entity WaypointSprite_Spawn(
 )
 {
     entity wp = new(sprite_waypoint);
-    make_pure(wp);
     wp.teleport_time = time + _lifetime;
     wp.fade_time = _lifetime;
     wp.exteriormodeltoclient = ref;

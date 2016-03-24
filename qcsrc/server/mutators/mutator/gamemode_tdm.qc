@@ -1,3 +1,4 @@
+#include "gamemode_tdm.qh"
 #ifndef GAMEMODE_TDM_H
 #define GAMEMODE_TDM_H
 
