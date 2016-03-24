@@ -484,6 +484,9 @@ void Draw_GrapplingHook(entity this)
 void Remove_GrapplingHook(entity this)
 {
 	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+
+	if(csqcplayer && csqcplayer.hook == this)
+		csqcplayer.hook = NULL;
 }
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
@@ -502,6 +505,8 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 		int myowner = ReadByte();
 		self.owner = playerslots[myowner - 1];
 		self.sv_entnum = myowner;
+		if(csqcplayer && myowner == player_localentnum)
+			csqcplayer.hook = self;
 		switch(self.HookType)
 		{
 			default:
