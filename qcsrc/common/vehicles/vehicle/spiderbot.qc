@@ -75,8 +75,8 @@ bool spiderbot_frame(entity this)
 
 	if(intermission_running)
 	{
-		self.vehicle.velocity = '0 0 0';
-		self.vehicle.avelocity = '0 0 0';
+		vehic.velocity = '0 0 0';
+		vehic.avelocity = '0 0 0';
 		return;
 	}
 
