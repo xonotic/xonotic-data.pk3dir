@@ -34,6 +34,10 @@ NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 #ifdef SVQC
 void Inventory_Write(Inventory data)
 {
+    if (!data) {
+        WriteInt24_t(MSG_ENTITY, 0);
+        return;
+    }
     TC(Inventory, data);
     int bits = 0;
     FOREACH(Items, true, {
