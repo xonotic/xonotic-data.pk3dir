@@ -158,8 +158,8 @@ void PM_Main(Client this);
 void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_NOT_A_CLIENT(it), PM_Main(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_NOT_A_CLIENT(it), WITH(entity, self, it, PlayerPreThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITH(entity, self, it, PlayerPreThink()));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
@@ -231,7 +231,7 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
     FOREACH_CLIENT(true, LAMBDA(GlobalStats_update(it)));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_NOT_A_CLIENT(it), WITH(entity, self, it, PlayerPostThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITH(entity, self, it, PlayerPostThink()));
 }
 
 .vector originjitter;
