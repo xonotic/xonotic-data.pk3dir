@@ -100,7 +100,7 @@ void antilag_restore(entity e, entity store)
 {
 	if (e.vehicle) {
 	    if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
-		antilag_restore(e.vehicle, e.vehicle);
+		antilag_restore(e.vehicle, store);
 	}
 
 	if (!store.antilag_takenback) return;
