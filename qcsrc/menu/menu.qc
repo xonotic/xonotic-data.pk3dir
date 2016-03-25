@@ -671,6 +671,7 @@ void m_tooltip(vector pos)
 
 void m_draw(float width, float height)
 {
+	if (clientstate() == CS_DISCONNECTED) m_toggle(true);
 	m_gamestatus();
 
 	execute_next_frame();
