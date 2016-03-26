@@ -440,20 +440,23 @@ bool raptor_frame(entity this)
 
 	if(vehic.bomb1.cnt < time)
 	{
-		entity _missile = findchainentity(enemy, vehic);
-		float _incomming = 0;
-		while(_missile)
+		bool incoming = false;
+		FOREACH_ENTITY_ENT(enemy, vehic,
 		{
-			if(_missile.flags & FL_PROJECTILE)
-			if(MISSILE_IS_TRACKING(_missile))
-			if(vdist(vehic.origin - _missile.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
-				++_incomming;
+			if(it.flags & FL_PROJECTILE)
+			if(MISSILE_IS_TRACKING(it))
+			if(vdist(vehic.origin - it.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
+			{
+				incoming = true;
+				break;
+			}
+		});
 
-			_missile = _missile.chain;
+		if(incoming)
+		{
+			msg_entity = this;
+			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE);
 		}
-
-		if(_incomming)
-			sound(vehic, CH_PAIN_SINGLE, SND_VEH_MISSILE_ALARM, VOL_BASE, ATTEN_NONE);
 
 		vehic.bomb1.cnt = time + 1;
 	}
