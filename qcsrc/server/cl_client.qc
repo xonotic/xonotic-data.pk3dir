@@ -2050,7 +2050,7 @@ void() nexball_setstatus;
 .int items_added;
 void PlayerPreThink ()
 {SELFPARAM();
-	WarpZone_PlayerPhysics_FixVAngle();
+	WarpZone_PlayerPhysics_FixVAngle(self);
 
 	self.stat_game_starttime = game_starttime;
 	self.stat_round_starttime = round_starttime;
