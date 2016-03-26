@@ -47,15 +47,15 @@ void SUB_VanishOrRemove (entity ent)
 
 void SUB_SetFade_Think ()
 {SELFPARAM();
-	if(self.alpha == 0)
-		self.alpha = 1;
-	self.SUB_THINK = SUB_SetFade_Think;
-	self.SUB_NEXTTHINK = time;
-	self.alpha -= frametime * self.fade_rate;
-	if (self.alpha < 0.01)
-		SUB_VanishOrRemove(self);
+	if(this.alpha == 0)
+		this.alpha = 1;
+	this.SUB_THINK = SUB_SetFade_Think;
+	this.SUB_NEXTTHINK = time;
+	this.alpha -= frametime * this.fade_rate;
+	if (this.alpha < 0.01)
+		SUB_VanishOrRemove(this);
 	else
-		self.SUB_NEXTTHINK = time;
+		this.SUB_NEXTTHINK = time;
 }
 
 /*
@@ -295,7 +295,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
 {SELFPARAM();
-	WITH(entity, self, ent, SUB_CalcMove(tdest, tspeedtype, tspeed, func));
+	WITHSELF(ent, SUB_CalcMove(tdest, tspeedtype, tspeed, func));
 }
 
 /*
@@ -363,5 +363,5 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
 {SELFPARAM();
-	WITH(entity, self, ent, SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func));
+	WITHSELF(ent, SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func));
 }

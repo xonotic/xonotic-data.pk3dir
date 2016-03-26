@@ -28,7 +28,7 @@
 		SELFPARAM();
 		this.think     = SUB_Remove_self;
 		this.nextthink = time;
-		WITH(entity, self, this.owner, this.use());
+		WITHSELF(this.owner, this.use());
 	}
 
 /*

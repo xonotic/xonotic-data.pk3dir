@@ -6,9 +6,16 @@
 
 // Step 1: auto oldself
 #if 1
+#if NDEBUG
 	#define SELFPARAM() noref entity this = __self
 	#define setself(s) (__self = s)
 	#define self __self
+#else
+    noref string self_str;
+	#define SELFPARAM() self_str = "self"; noref entity this = __self
+	#define setself(s) (self_str = #s, __self = s)
+	#define self (print(__SOURCELOC__, ": ", self_str, "\n"), __self)
+#endif
 #endif
 
 // Step 2: check SELFPARAM() is present for functions that use self

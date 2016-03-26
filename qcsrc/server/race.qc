@@ -1075,7 +1075,7 @@ void race_ClearRecords()
 
 	FOREACH_CLIENT(true, LAMBDA(
 		float p = it.race_place;
-		WITH(entity, self, it, race_PreparePlayer());
+		WITHSELF(it, race_PreparePlayer());
 		it.race_place = p;
 	));
 }

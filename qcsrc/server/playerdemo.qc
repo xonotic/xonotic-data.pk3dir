@@ -94,9 +94,9 @@ void playerdemo_write_float(.float f, string name)
 }
 void playerdemo_write()
 {SELFPARAM();
-	if(self.playerdemo_mode != PLAYERDEMO_MODE_WRITING)
+	if(this.playerdemo_mode != PLAYERDEMO_MODE_WRITING)
 		return;
-	fputs(self.playerdemo_fh, strcat(ftos(time - self.playerdemo_starttime), "\n"));
+	fputs(this.playerdemo_fh, strcat(ftos(time - this.playerdemo_starttime), "\n"));
 	PLAYERDEMO_FIELDS(playerdemo_write_)
 }
 void playerdemo_read_originvector(.vector f, string name)
@@ -147,9 +147,9 @@ float playerdemo_read(entity this)
 		PLAYERDEMO_FIELDS(playerdemo_read_)
 		{
 			time = this.playerdemo_time;
-			WITH(entity, self, this, PlayerPreThink());
+			WITHSELF(this, PlayerPreThink());
 			// not running physics though... this is just so we can run weapon stuff
-			WITH(entity, self, this, PlayerPostThink());
+			WITHSELF(this, PlayerPostThink());
 		}
 		this.playerdemo_time = stof(fgets(this.playerdemo_fh));
 		if(this.playerdemo_time == 0)

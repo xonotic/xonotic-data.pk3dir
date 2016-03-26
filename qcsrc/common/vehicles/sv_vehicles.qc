@@ -706,9 +706,9 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	{
 		if(this.owner)
 			if(this.vehicle_flags & VHF_DEATHEJECT)
-				WITH(entity, self, this, vehicles_exit(VHEF_EJECT));
+				WITHSELF(this, vehicles_exit(VHEF_EJECT));
 			else
-				WITH(entity, self, this, vehicles_exit(VHEF_RELEASE));
+				WITHSELF(this, vehicles_exit(VHEF_RELEASE));
 
 
 		antilag_clear(this, this);
@@ -1163,9 +1163,6 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	if(!info.vehicleid)
 		return false;
-
-	if(!this.tur_head)
-		info.vr_precache(info);
 
 	if(this.targetname && this.targetname != "")
 	{

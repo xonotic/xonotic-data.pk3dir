@@ -251,7 +251,7 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.think));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.think));
 }
 
 void W_Arc_Bolt_Touch()
@@ -687,7 +687,7 @@ void W_Arc_Beam(float burst)
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
-	WITH(entity, self, beam, beam.think());
+	WITHSELF(beam, beam.think());
 }
 
 void Arc_Smoke()

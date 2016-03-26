@@ -179,7 +179,7 @@ void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float dam
 	if(this.health <= 0)
 	{
 		this.cnt = 1;
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_Fireball_Explode));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_Fireball_Explode));
 	}
 }
 

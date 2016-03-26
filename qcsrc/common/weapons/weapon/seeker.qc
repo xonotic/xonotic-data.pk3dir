@@ -220,7 +220,7 @@ void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, flo
 		this.health = this.health - damage;
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_Seeker_Missile_Explode));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_Seeker_Missile_Explode));
 }
 
 /*

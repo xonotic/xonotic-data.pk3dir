@@ -117,12 +117,12 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	FOREACH_ENTITY_FLOAT(damagedbycontents, true, LAMBDA(
-		if(it.movetype == MOVETYPE_NOCLIP) continue;
+	FOREACH_ENTITY_FLOAT(damagedbycontents, true, {
+		if (it.movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
 		CreatureFrame_FallDamage(it);
 		it.oldvelocity = it.velocity;
-	));
+	});
 }
 
 void Pause_TryPause(bool ispaused)
@@ -159,7 +159,7 @@ void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
     FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITH(entity, self, it, PlayerPreThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPreThink()));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
@@ -190,10 +190,9 @@ void StartFrame()
 	}
 #endif
 
-	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, LAMBDA(CSQCProjectile_Check(it)));
+	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, CSQCProjectile_Check(it));
 
-	if(RedirectionThink())
-		return;
+	if (RedirectionThink()) return;
 
 	UncustomizeEntitiesRun();
 	InitializeEntitiesRun();
@@ -201,8 +200,7 @@ void StartFrame()
 	WarpZone_StartFrame();
 
 	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
-	if(sys_frametime <= 0)
-		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
+	if (sys_frametime <= 0) sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 
 	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
@@ -212,7 +210,7 @@ void StartFrame()
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime);
 
-	if(autocvar_sv_eventlog && game_delay_last && !game_delay)
+	if (autocvar_sv_eventlog && game_delay_last && !game_delay)
 		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
@@ -220,8 +218,7 @@ void StartFrame()
 	CreatureFrame_All();
 	CheckRules_World();
 
-	if(warmup_stage && !gameover && warmup_limit > 0 && time >= warmup_limit)
-	{
+	if (warmup_stage && !gameover && warmup_limit > 0 && time >= warmup_limit) {
 		ReadyRestart();
 		return;
 	}
@@ -230,8 +227,8 @@ void StartFrame()
 	anticheat_startframe();
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
-    FOREACH_CLIENT(true, LAMBDA(GlobalStats_update(it)));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITH(entity, self, it, PlayerPostThink()));
+    FOREACH_CLIENT(true, GlobalStats_update(it));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPostThink()));
 }
 
 .vector originjitter;

@@ -75,7 +75,7 @@ void CL_Weaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (IS_DEAD(self.owner))
+	if (IS_DEAD(this.owner))
 	{
 		// owner died; disappear
 		this.model = "";
@@ -116,7 +116,7 @@ void CL_ExteriorWeaponentity_Think()
 		remove(this);
 		return;
 	}
-	if (IS_DEAD(self.owner))
+	if (IS_DEAD(this.owner))
 	{
 		this.model = "";
 		return;
@@ -213,8 +213,8 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
     SELFPARAM();
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
-	if (secondary) WITH(entity, self, actor, ammo = thiswep.wr_checkammo2(thiswep));
-	else WITH(entity, self, actor, ammo = thiswep.wr_checkammo1(thiswep));
+	if (secondary) WITHSELF(actor, ammo = thiswep.wr_checkammo2(thiswep));
+	else WITHSELF(actor, ammo = thiswep.wr_checkammo1(thiswep));
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
@@ -232,8 +232,8 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 
 	// check if the other firing mode has enough ammo
 	bool ammo_other = false;
-	if (secondary) WITH(entity, self, actor, ammo_other = thiswep.wr_checkammo1(thiswep));
-	else WITH(entity, self, actor, ammo_other = thiswep.wr_checkammo2(thiswep));
+	if (secondary) WITHSELF(actor, ammo_other = thiswep.wr_checkammo1(thiswep));
+	else WITHSELF(actor, ammo_other = thiswep.wr_checkammo2(thiswep));
 	if (ammo_other)
 	{
 		if (time - actor.prevwarntime > 1)
@@ -772,5 +772,5 @@ void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity w
     SELFPARAM();
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
-	WITH(entity, self, player, w.event(w));
+	WITHSELF(player, w.event(w));
 }

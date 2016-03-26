@@ -5,7 +5,7 @@ void train_use();
 #endif
 void train_wait()
 {SELFPARAM();
-	WITH(entity, self, self.enemy, SUB_UseTargets());
+	WITHSELF(self.enemy, SUB_UseTargets());
 	self.enemy = world;
 
 	// if turning is enabled, the train will turn toward the next point while waiting

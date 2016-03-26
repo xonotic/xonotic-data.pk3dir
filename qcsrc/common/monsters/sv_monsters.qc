@@ -48,7 +48,7 @@ void monster_dropitem(entity this)
 	if(e && e.monster_loot)
 	{
 		e.noalign = true;
-		WITH(entity, self, e, e.monster_loot(e));
+		WITHSELF(e, e.monster_loot(e));
 		e.gravity = 1;
 		e.movetype = MOVETYPE_TOSS;
 		e.reset = SUB_Remove;
@@ -1104,7 +1104,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 		// TODO: fix this?
 		activator = attacker;
 		other = this.enemy;
-		WITH(entity, self, this, SUB_UseTargets());
+		WITHSELF(this, SUB_UseTargets());
 		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
 		Monster_Dead(this, attacker, (this.health <= -100 || deathtype == DEATH_KILL.m_id));

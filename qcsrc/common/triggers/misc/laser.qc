@@ -98,7 +98,7 @@ void misc_laser_think()
 				self.count = 1;
 
 				activator = self.enemy.pusher;
-				WITH(entity, self, self.enemy, SUB_UseTargets());
+				WITHSELF(self.enemy, SUB_UseTargets());
 			}
 		}
 		else
@@ -108,7 +108,7 @@ void misc_laser_think()
 				self.count = 0;
 
 				activator = self.enemy.pusher;
-				WITH(entity, self, self.enemy, SUB_UseTargets());
+				WITHSELF(self.enemy, SUB_UseTargets());
 			}
 		}
 	}

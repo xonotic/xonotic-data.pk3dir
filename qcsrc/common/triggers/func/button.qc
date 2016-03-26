@@ -92,7 +92,7 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (this.health <= 0)
 	{
 		this.enemy = damage_attacker;
-		WITH(entity, self, this, button_fire());
+		WITHSELF(this, button_fire());
 	}
 }
 

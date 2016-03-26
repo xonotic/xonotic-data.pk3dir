@@ -479,7 +479,7 @@ void bot_list_commands()
 void SV_ParseClientCommand(string s);
 float bot_cmd_cc(entity this)
 {
-	WITH(entity, self, this, SV_ParseClientCommand(bot_cmd.bot_cmd_parm_string));
+	WITHSELF(this, SV_ParseClientCommand(bot_cmd.bot_cmd_parm_string));
 	return CMD_STATUS_FINISHED;
 }
 

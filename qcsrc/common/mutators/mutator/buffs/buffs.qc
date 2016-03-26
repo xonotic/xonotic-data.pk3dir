@@ -892,7 +892,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 				{
 					entity oldother = other;
 					other = self;
-					WITH(entity, self, it, it.touch());
+					WITHSELF(it, it.touch());
 
 					other = oldother;
 				}

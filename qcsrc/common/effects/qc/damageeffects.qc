@@ -73,33 +73,33 @@ void DamageEffect_Think()
 {SELFPARAM();
 	// if particle distribution is enabled, slow ticrate by total number of damages
 	if(autocvar_cl_damageeffect_distribute)
-		self.nextthink = time + autocvar_cl_damageeffect_ticrate * self.owner.total_damages;
+		this.nextthink = time + autocvar_cl_damageeffect_ticrate * this.owner.total_damages;
 	else
-		self.nextthink = time + autocvar_cl_damageeffect_ticrate;
+		this.nextthink = time + autocvar_cl_damageeffect_ticrate;
 
-	if(time >= self.cnt || !self.owner || !self.owner.modelindex || !self.owner.drawmask)
+	if(time >= this.cnt || !this.owner || !this.owner.modelindex || !this.owner.drawmask)
 	{
 		// time is up or the player got gibbed / disconnected
-		self.owner.total_damages = max(0, self.owner.total_damages - 1);
-		remove(self);
+		this.owner.total_damages = max(0, this.owner.total_damages - 1);
+		remove(this);
 		return;
 	}
-	if(self.state && !self.owner.csqcmodel_isdead)
+	if(this.state && !this.owner.csqcmodel_isdead)
 	{
 		// if the player was dead but is now alive, it means he respawned
 		// if so, clear his damage effects, or damages from his dead body will be copied back
-		self.owner.total_damages = max(0, self.owner.total_damages - 1);
-		remove(self);
+		this.owner.total_damages = max(0, this.owner.total_damages - 1);
+		remove(this);
 		return;
 	}
-	self.state = self.owner.csqcmodel_isdead;
-	if(self.owner.isplayermodel && (self.owner.entnum == player_localentnum) && !autocvar_chase_active)
+	this.state = this.owner.csqcmodel_isdead;
+	if(this.owner.isplayermodel && (this.owner.entnum == player_localentnum) && !autocvar_chase_active)
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
 	vector org;
-	org = gettaginfo(self, 0); // origin at attached location
-	__pointparticles(self.team, org, '0 0 0', 1);
+	org = gettaginfo(this, 0); // origin at attached location
+	__pointparticles(this.team, org, '0 0 0', 1);
 }
 
 string species_prefix(int specnum)
@@ -117,8 +117,8 @@ string species_prefix(int specnum)
 	}
 }
 
-void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
-{SELFPARAM();
+void DamageEffect(entity this, vector hitorg, float thedamage, int type, int specnum)
+{
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
 	int nearestbone = 0;
@@ -128,13 +128,13 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 
 	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
-	if(!self || !self.modelindex || !self.drawmask)
+	if(!this || !this.modelindex || !this.drawmask)
 		return;
 
 	// if this is a rigged mesh, the effect will show on the bone where damage was dealt
 	// we do this by choosing the skeletal bone closest to the impact, and attaching our entity to it
 	// if there's no skeleton, object origin will automatically be selected
-	FOR_EACH_TAG(self)
+	FOR_EACH_TAG(this)
 	{
 		if(!tagnum)
 			continue; // skip empty bones
@@ -144,21 +144,21 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 			continue; // player model bone blacklist
 
 		// now choose the bone closest to impact origin
-		if(nearestbone == 0 || vlen2(hitorg - gettaginfo(self, tagnum)) <= vlen2(hitorg - gettaginfo(self, nearestbone)))
+		if(nearestbone == 0 || vlen2(hitorg - gettaginfo(this, tagnum)) <= vlen2(hitorg - gettaginfo(this, nearestbone)))
 			nearestbone = tagnum;
 	}
-	gettaginfo(self, nearestbone); // set gettaginfo_name
+	gettaginfo(this, nearestbone); // set gettaginfo_name
 
 	// return if we reached our damage effect limit or damages are disabled
 	// TODO: When the limit is reached, it would be better if the oldest damage was removed instead of not adding a new one
 	if(nearestbone)
 	{
-		if(self.total_damages >= autocvar_cl_damageeffect_bones)
+		if(this.total_damages >= autocvar_cl_damageeffect_bones)
 			return; // allow multiple damages on skeletal models
 	}
 	else
 	{
-		if(autocvar_cl_damageeffect < 2 || self.total_damages)
+		if(autocvar_cl_damageeffect < 2 || this.total_damages)
 			return; // allow a single damage on non-skeletal models
 	}
 
@@ -168,7 +168,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 
 	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
 	{
-		if(self.isplayermodel)
+		if(this.isplayermodel)
 		{
 			specstr = species_prefix(specnum);
 			specstr = substring(specstr, 0, strlen(specstr) - 1);
@@ -179,13 +179,13 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 
 	e = new(damage);
 	setmodel(e, MDL_Null); // necessary to attach and read origin
-	setattachment(e, self, gettaginfo_name); // attach to the given bone
-	e.owner = self;
+	setattachment(e, this, gettaginfo_name); // attach to the given bone
+	e.owner = this;
 	e.cnt = time + life;
 	e.team = _particleeffectnum(effectname);
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
-	self.total_damages += 1;
+	this.total_damages += 1;
 }
 
 NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
@@ -224,11 +224,10 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		forcemul = 1;
 
     FOREACH_ENTITY_RADIUS(w_org, rad + MAX_DAMAGEEXTRARADIUS, !it.tag_entity, {
-		setself(it);
-		vector nearest = NearestPointOnBox(self, w_org);
+		vector nearest = NearestPointOnBox(it, w_org);
 		if (rad)
 		{
-			thisdmg = ((vlen (nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
+			thisdmg = ((vlen (nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
 			if(thisdmg >= 1)
 				continue;
 			if(thisdmg < 0)
@@ -236,42 +235,41 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 			if(thedamage)
 			{
 				thisdmg = thedamage + (edge - thedamage) * thisdmg;
-				thisforce = forcemul * vlen(force) * (thisdmg / thedamage) * normalize(self.origin - w_org);
+				thisforce = forcemul * vlen(force) * (thisdmg / thedamage) * normalize(it.origin - w_org);
 			}
 			else
 			{
 				thisdmg = 0;
-				thisforce = forcemul * vlen(force) * normalize(self.origin - w_org);
+				thisforce = forcemul * vlen(force) * normalize(it.origin - w_org);
 			}
 		}
 		else
 		{
-			if(vdist((nearest - w_org), >, bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS)))
+			if(vdist((nearest - w_org), >, bound(MIN_DAMAGEEXTRARADIUS, it.damageextraradius, MAX_DAMAGEEXTRARADIUS)))
 				continue;
 
 			thisdmg = thedamage;
 			thisforce = forcemul * force;
 		}
 
-		if(self.damageforcescale)
+		if(it.damageforcescale)
 			if(vdist(thisforce, !=, 0))
 			{
-				self.move_velocity = self.move_velocity + damage_explosion_calcpush(self.damageforcescale * thisforce, self.move_velocity, autocvar_g_balance_damagepush_speedfactor);
-				self.move_flags &= ~FL_ONGROUND;
+				it.move_velocity = it.move_velocity + damage_explosion_calcpush(it.damageforcescale * thisforce, it.move_velocity, autocvar_g_balance_damagepush_speedfactor);
+				it.move_flags &= ~FL_ONGROUND;
 			}
 
 		if(w_issilent)
-			self.silent = 1;
+			it.silent = 1;
 
-		if(self.event_damage)
-			self.event_damage(self, thisdmg, w_deathtype, w_org, thisforce);
+		if(it.event_damage)
+			it.event_damage(it, thisdmg, w_deathtype, w_org, thisforce);
 
-		DamageEffect(w_org, thisdmg, w_deathtype, species);
+		DamageEffect(it, w_org, thisdmg, w_deathtype, species);
 
-		if(self.isplayermodel)
+		if(it.isplayermodel)
 			hitplayer = true; // this impact damaged a player
 	});
-	setself(this);
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
@@ -281,7 +279,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		else
 			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
 
-		setorigin(self, w_org + w_backoff * 2); // for sound() calls
+		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		switch(DEATH_ENT(w_deathtype))
 		{
@@ -290,34 +288,34 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 			// spiderbot
 			case DEATH_VH_SPID_MINIGUN:
-				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_SPIDERBOT_MINIGUN_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_SPIDERBOT_MINIGUN_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_ROCKET:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_SPIDERBOT_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_SPIDERBOT_ROCKET_EXPLODE, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_DEATH:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
-				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
+				pointparticles(EFFECT_EXPLOSION_BIG, this.origin, w_backoff * 1000, 1);
 				break;
 
 			case DEATH_VH_WAKI_GUN:
-				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_RACER_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_RACER_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_ROCKET:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_RACER_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_RACER_ROCKET_EXPLODE, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_DEATH:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
-				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
+				pointparticles(EFFECT_EXPLOSION_BIG, this.origin, w_backoff * 1000, 1);
 				break;
 
 			case DEATH_VH_RAPT_CANNON:
-				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_RAPTOR_CANNON_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_RAPTOR_CANNON_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_FRAGMENT:
 				float i;
@@ -328,20 +326,20 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 					ang = vectoangles(vel);
 					RaptorCBShellfragToss(w_org, vel, ang + '0 0 1' * (120 * i));
 				}
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_RAPTOR_BOMB_SPREAD, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_RAPTOR_BOMB_SPREAD, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_BOMB:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_RAPTOR_BOMB_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_RAPTOR_BOMB_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_DEATH:
-				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
-				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
+				pointparticles(EFFECT_EXPLOSION_BIG, this.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_BUMB_GUN:
-				sound(self, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_BIGPLASMA_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_FIREBALL_IMPACT2, VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_BIGPLASMA_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 		}
 	}
@@ -355,49 +353,49 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		else
 			w_backoff = -1 * normalize(w_org - (w_org + normalize(force) * 16));
 
-		setorigin(self, w_org + w_backoff * 2); // for sound() calls
+		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		switch(DEATH_ENT(w_deathtype))
 		{
 			 case DEATH_TURRET_EWHEEL:
-				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
-				pointparticles(EFFECT_BLASTER_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
+				pointparticles(EFFECT_BLASTER_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_FLAC:
 				pointparticles(EFFECT_HAGAR_EXPLODE, w_org, '0 0 0', 1);
-				sound(self, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
+				sound(this, CH_SHOTS, SND_HAGEXP_RANDOM(), VOL_BASE, ATTEN_NORM);
 				break;
 
 			 case DEATH_TURRET_MLRS:
 			 case DEATH_TURRET_HK:
 			 case DEATH_TURRET_WALK_ROCKET:
 			 case DEATH_TURRET_HELLION:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
-				pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
+				pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_MACHINEGUN:
 			 case DEATH_TURRET_WALK_GUN:
-				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
-				pointparticles(EFFECT_MACHINEGUN_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
+				pointparticles(EFFECT_MACHINEGUN_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_PLASMA:
-				sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_LOW);
-				pointparticles(EFFECT_ELECTRO_IMPACT, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_LOW);
+				pointparticles(EFFECT_ELECTRO_IMPACT, this.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_WALK_MELEE:
-				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_LOW);
-				pointparticles(EFFECT_TE_SPARK, self.origin, w_backoff * 1000, 1);
+				sound(this, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_LOW);
+				pointparticles(EFFECT_TE_SPARK, this.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_PHASER:
 				break;
 
 			 case DEATH_TURRET_TESLA:
-				te_smallflash(self.origin);
+				te_smallflash(this.origin);
 				break;
 
 		}
@@ -415,7 +413,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
-		setorigin(self, w_org + w_backoff * 2); // for sound() calls
+		setorigin(this, w_org + w_backoff * 2); // for sound() calls
 
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 		{

@@ -109,7 +109,7 @@ void walker_rocket_damage(entity this, entity inflictor, entity attacker, float 
     this.velocity = this.velocity + vforce;
 
     if (this.health <= 0)
-        WITH(entity, self, this, W_PrepareExplosionByDamage(this.owner, walker_rocket_explode));
+        WITHSELF(this, W_PrepareExplosionByDamage(this.owner, walker_rocket_explode));
 }
 
 #define WALKER_ROCKET_MOVE movelib_move_simple(self, newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)

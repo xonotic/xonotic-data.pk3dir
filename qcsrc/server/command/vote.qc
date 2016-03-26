@@ -344,7 +344,7 @@ void reset_map(bool dorespawn)
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
 		if (it.reset)
 		{
-			WITH(entity, self, it, it.reset(it));
+			WITHSELF(it, it.reset(it));
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;
@@ -353,10 +353,10 @@ void reset_map(bool dorespawn)
 
 	// Waypoints and assault start come LAST
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
-		if (it.reset2) WITH(entity, self, it, it.reset2());
+		if (it.reset2) WITHSELF(it, it.reset2());
 	});
 
-	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITH(entity, self, it, Unfreeze(it))));
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITHSELF(it, Unfreeze(it))));
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
