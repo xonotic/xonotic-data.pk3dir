@@ -195,7 +195,7 @@ bool racer_frame(entity this)
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	crosshair_trace(this);
+	//crosshair_trace(this);
 
 	vehic.angles_x *= -1;
 
