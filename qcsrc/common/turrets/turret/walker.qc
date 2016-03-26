@@ -3,7 +3,7 @@
 
 //#define WALKER_FANCYPATHING
 
-#include "walker_weapon.qc"
+#include "walker_weapon.qh"
 
 CLASS(WalkerTurret, Turret)
 /* spawnflags */ ATTRIB(WalkerTurret, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE);
@@ -21,8 +21,6 @@ REGISTER_TURRET(WALKER, NEW(WalkerTurret));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "walker_weapon.qc"
 
 #ifdef SVQC
 
@@ -350,6 +348,7 @@ spawnfunc(turret_walker) { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
 METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 {
+    SELFPARAM();
     fixedmakevectors(self.angles);
 
     if (self.spawnflags & TSF_NO_PATHBREAK && self.pathcurrent)

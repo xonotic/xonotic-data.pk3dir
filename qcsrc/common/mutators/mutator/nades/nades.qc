@@ -44,6 +44,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
+    SELFPARAM();
 	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		self.modelindex = 0;
@@ -60,6 +61,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 {
+    SELFPARAM();
 	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
@@ -256,7 +258,7 @@ void nade_napalm_ball()
 	proj = new(grenade);
 	proj.owner = self.owner;
 	proj.realowner = self.realowner;
-	proj.team = self.team;
+	proj.team = self.owner.team;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
@@ -374,7 +376,7 @@ void nade_ice_think()
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(self.team);
+			entity expef = EFFECT_NADE_EXPLODE(self.realowner.team);
 			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
 			sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
@@ -569,7 +571,7 @@ void nade_heal_boom()
 	setorigin(healer, self.origin);
 	healer.healer_lifetime = autocvar_g_nades_heal_time; // save the cvar
 	healer.ltime = time + healer.healer_lifetime;
-	healer.team = self.team;
+	healer.team = self.realowner.team;
 	healer.bot_dodge = false;
 	healer.solid = SOLID_TRIGGER;
 	healer.touch = nade_heal_touch;
@@ -616,7 +618,7 @@ void nade_boom()
 		case NADE_TYPE_MONSTER:
 		case NADE_TYPE_SPAWN:
 			nade_blast = false;
-			switch(self.team)
+			switch(self.realowner.team)
 			{
 				case NUM_TEAM_1: expef = EFFECT_SPAWN_RED; break;
 				case NUM_TEAM_2: expef = EFFECT_SPAWN_BLUE; break;
@@ -632,7 +634,7 @@ void nade_boom()
 
 		default:
 		case NADE_TYPE_NORMAL:
-			expef = EFFECT_NADE_EXPLODE(self.team);
+			expef = EFFECT_NADE_EXPLODE(self.realowner.team);
 			break;
 	}
 
@@ -799,10 +801,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	this.health -= damage;
 
 	if ( this.nade_type != NADE_TYPE_HEAL.m_id || IS_PLAYER(attacker) )
-	{
-		this.team = attacker.team;
 		this.realowner = attacker;
-	}
 
 	if(this.health <= 0)
 		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, nade_boom));
@@ -823,7 +822,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	makevectors(e.v_angle);
 
-	W_SetupShot(e, false, false, "", CH_WEAPON_A, 0);
+	W_SetupShot(e, false, false, SND_Null, CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
@@ -926,6 +925,7 @@ void nades_RemoveBonus(entity player)
 
 MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 {
+    SELFPARAM();
 	nades_RemoveBonus(self);
 }
 
@@ -962,8 +962,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
 	n.customizeentityforclient = nade_customize;
-	n.team = player.team;
-	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], n.team).eent_eff_name);
+	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], player.team).eent_eff_name);
 	n.colormod = Nades_from(n.nade_type).m_color;
 	n.realowner = nowner;
 	n.colormap = player.colormap;
@@ -1132,6 +1131,7 @@ NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOff
 
 MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
+    SELFPARAM();
 	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow();
 		return true;

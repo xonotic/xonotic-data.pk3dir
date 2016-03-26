@@ -1,5 +1,12 @@
-#ifndef RACE_H
-#define RACE_H
+#pragma once
+
+float race_teams;
+
+// scores
+const float ST_RACE_LAPS = 1;
+const float SP_RACE_LAPS = 4;
+const float SP_RACE_TIME = 5;
+const float SP_RACE_FASTEST = 6;
 
 bool g_race_qualifying;
 
@@ -58,5 +65,3 @@ void race_SendRankings(float pos, float prevpos, float del, float msg);
 void race_RetractPlayer();
 
 void race_InitSpectator();
-
-#endif

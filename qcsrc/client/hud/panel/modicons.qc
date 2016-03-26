@@ -1,9 +1,16 @@
+#include "modicons.qh"
+
+#include <common/mapinfo.qh>
+#include <common/ent_cs.qh>
+#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+
 // Mod icons panel (#10)
 
 bool mod_active; // is there any active mod icon?
 
 void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
+    TC(int, layout); TC(int, i);
 	int stat = -1;
 	string pic = "";
 	vector color = '0 0 0';
@@ -627,6 +634,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
+    TC(int, layout); TC(int, i);
 	float stat = -1;
 	string pic = "";
 	vector color = '0 0 0';

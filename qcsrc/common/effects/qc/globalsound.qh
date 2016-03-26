@@ -1,6 +1,11 @@
 #ifndef GLOBALSOUND_H
 #define GLOBALSOUND_H
 
+#ifdef SVQC
+	/** Use new sound handling. TODO: use when sounds play correctly on clients */
+	bool autocvar_g_debug_globalsounds = false;
+#endif
+
 // player sounds, voice messages
 
 .string m_playersoundstr;
@@ -113,6 +118,7 @@ void PrecachePlayerSounds(string f);
 	float LoadPlayerSounds(entity this, string f, bool strict);
 	void UpdatePlayerSounds(entity this);
 //#endif
+entity GetVoiceMessage(string type);
 
 #ifdef SVQC
 
@@ -135,5 +141,12 @@ void PrecachePlayerSounds(string f);
 		} MACRO_END
 
 #endif
+
+string allvoicesamples;
+STATIC_INIT(allvoicesamples)
+{
+    FOREACH(PlayerSounds, it.instanceOfVoiceMessage, allvoicesamples = strcat(allvoicesamples, " ", it.m_playersoundstr));
+    allvoicesamples = strzone(substring(allvoicesamples, 1, -1));
+}
 
 #endif

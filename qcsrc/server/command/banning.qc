@@ -1,3 +1,4 @@
+#include "banning.qh"
 #include <common/command/command.qh>
 #include "banning.qh"
 

@@ -7,7 +7,7 @@ X(int)
 X(float)
 X(entity)
 X(string)
-typedef float(...) rawfunc;
+USING(rawfunc, float(...));
 X(rawfunc)
 #undef X
 

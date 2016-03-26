@@ -1,22 +1,13 @@
-#ifndef DIALOG_FIRSTRUN_H
-#define DIALOG_FIRSTRUN_H
-#include "rootdialog.qc"
-CLASS(XonoticFirstRunDialog, XonoticRootDialog)
-	METHOD(XonoticFirstRunDialog, fill, void(entity));
-	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"))
-	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN)
-	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.7)
-	ATTRIB(XonoticFirstRunDialog, rows, float, 16)
-	ATTRIB(XonoticFirstRunDialog, columns, float, 6)
-	ATTRIB(XonoticFirstRunDialog, name, string, "FirstRun")
-	ATTRIB(XonoticFirstRunDialog, playerNameLabel, entity, NULL)
-	ATTRIB(XonoticFirstRunDialog, playerNameLabelAlpha, float, 0)
+#include "dialog_firstrun.qh"
 
-	ATTRIB(XonoticFirstRunDialog, closable, float, 0)
-ENDCLASS(XonoticFirstRunDialog)
-#endif
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "languagelist.qh"
+#include "radiobutton.qh"
+#include "colorpicker.qh"
+#include "charmap.qh"
+#include "commandbutton.qh"
 
-#ifdef IMPLEMENTATION
 float CheckFirstRunButton(entity me)
 {
 	if(cvar_string("_cl_name") != cvar_defstring("_cl_name"))
@@ -97,4 +88,3 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Save settings"), '0 0 0', "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart", COMMANDBUTTON_APPLY));
 		setDependentWeird(e, CheckFirstRunButton);
 }
-#endif

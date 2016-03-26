@@ -7,24 +7,24 @@
 
 void ons_generator_ray_draw(entity this)
 {
-	if(time < self.move_time)
+	if(time < this.move_time)
 		return;
 
-	self.move_time = time + 0.05;
+	this.move_time = time + 0.05;
 
-	if(self.count > 10)
+	if(this.count > 10)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
-	if(self.count > 5)
-		self.alpha -= 0.1;
+	if(this.count > 5)
+		this.alpha -= 0.1;
 	else
-		self.alpha += 0.1;
+		this.alpha += 0.1;
 
-	self.scale += 0.2;
-	self.count +=1;
+	this.scale += 0.2;
+	this.count +=1;
 }
 
 void ons_generator_ray_spawn(vector org)
@@ -115,67 +115,67 @@ void generator_draw(entity this)
 	this.count -= 1;
 }
 
-void generator_damage(float hp)
-{SELFPARAM();
+void generator_damage(entity this, float hp)
+{
 	if(hp <= 0)
-		setmodel(self, MDL_ONS_GEN_DEAD);
-	else if(hp < self.max_health * 0.10)
-		setmodel(self, MDL_ONS_GEN9);
-	else if(hp < self.max_health * 0.20)
-		setmodel(self, MDL_ONS_GEN8);
-	else if(hp < self.max_health * 0.30)
-		setmodel(self, MDL_ONS_GEN7);
-	else if(hp < self.max_health * 0.40)
-		setmodel(self, MDL_ONS_GEN6);
-	else if(hp < self.max_health * 0.50)
-		setmodel(self, MDL_ONS_GEN5);
-	else if(hp < self.max_health * 0.60)
-		setmodel(self, MDL_ONS_GEN4);
-	else if(hp < self.max_health * 0.70)
-		setmodel(self, MDL_ONS_GEN3);
-	else if(hp < self.max_health * 0.80)
-		setmodel(self, MDL_ONS_GEN2);
-	else if(hp < self.max_health * 0.90)
-		setmodel(self, MDL_ONS_GEN1);
-	else if(hp <= self.max_health || hp >= self.max_health)
-		setmodel(self, MDL_ONS_GEN);
+		setmodel(this, MDL_ONS_GEN_DEAD);
+	else if(hp < this.max_health * 0.10)
+		setmodel(this, MDL_ONS_GEN9);
+	else if(hp < this.max_health * 0.20)
+		setmodel(this, MDL_ONS_GEN8);
+	else if(hp < this.max_health * 0.30)
+		setmodel(this, MDL_ONS_GEN7);
+	else if(hp < this.max_health * 0.40)
+		setmodel(this, MDL_ONS_GEN6);
+	else if(hp < this.max_health * 0.50)
+		setmodel(this, MDL_ONS_GEN5);
+	else if(hp < this.max_health * 0.60)
+		setmodel(this, MDL_ONS_GEN4);
+	else if(hp < this.max_health * 0.70)
+		setmodel(this, MDL_ONS_GEN3);
+	else if(hp < this.max_health * 0.80)
+		setmodel(this, MDL_ONS_GEN2);
+	else if(hp < this.max_health * 0.90)
+		setmodel(this, MDL_ONS_GEN1);
+	else if(hp <= this.max_health || hp >= this.max_health)
+		setmodel(this, MDL_ONS_GEN);
 
-	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	setsize(this, GENERATOR_MIN, GENERATOR_MAX);
 }
 
-void generator_construct()
-{SELFPARAM();
-	self.netname = "Generator";
-	self.classname = "onslaught_generator";
+void generator_construct(entity this)
+{
+	this.netname = "Generator";
+	this.classname = "onslaught_generator";
 
-	setorigin(self, self.origin);
-	setmodel(self, MDL_ONS_GEN);
-	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	setorigin(this, this.origin);
+	setmodel(this, MDL_ONS_GEN);
+	setsize(this, GENERATOR_MIN, GENERATOR_MAX);
 
-	self.move_movetype	= MOVETYPE_NOCLIP;
-	self.solid			= SOLID_BBOX;
-	self.movetype		= MOVETYPE_NOCLIP;
-	self.move_origin	= self.origin;
-	self.move_time		= time;
-	self.drawmask		= MASK_NORMAL;
-	self.alpha			= 1;
-	self.draw			= generator_draw;
+	this.move_movetype	= MOVETYPE_NOCLIP;
+	this.solid			= SOLID_BBOX;
+	this.movetype		= MOVETYPE_NOCLIP;
+	this.move_origin	= this.origin;
+	this.move_time		= time;
+	this.drawmask		= MASK_NORMAL;
+	this.alpha			= 1;
+	this.draw			= generator_draw;
 }
 
 .vector glowmod;
-void generator_changeteam()
-{SELFPARAM();
-	if(self.team)
+void generator_changeteam(entity this)
+{
+	if(this.team)
 	{
-		self.glowmod = Team_ColorRGB(self.team - 1);
-		self.teamradar_color = Team_ColorRGB(self.team - 1);
-		self.colormap = 1024 + (self.team - 1) * 17;
+		this.glowmod = Team_ColorRGB(this.team - 1);
+		this.teamradar_color = Team_ColorRGB(this.team - 1);
+		this.colormap = 1024 + (this.team - 1) * 17;
 	}
 	else
 	{
-		self.colormap = 1024;
-		self.glowmod = '1 1 0';
-		self.teamradar_color = '1 1 0';
+		this.colormap = 1024;
+		this.glowmod = '1 1 0';
+		this.teamradar_color = '1 1 0';
 	}
 }
 
@@ -186,38 +186,38 @@ NET_HANDLE(ENT_CLIENT_GENERATOR, bool isnew)
 
 	if(sf & GSF_SETUP)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 
-		self.health = ReadByte();
-		self.max_health = ReadByte();
-		self.count = ReadByte();
-		self.team = ReadByte();
+		this.health = ReadByte();
+		this.max_health = ReadByte();
+		this.count = ReadByte();
+		this.team = ReadByte();
 
-		if(!self.count)
-			self.count = 40;
+		if(!this.count)
+			this.count = 40;
 
-		generator_changeteam();
-		generator_construct();
+		generator_changeteam(this);
+		generator_construct(this);
 	}
 
 	if(sf & GSF_STATUS)
 	{
 		int _tmp;
 		_tmp = ReadByte();
-		if(_tmp != self.team)
+		if(_tmp != this.team)
 		{
-			self.team = _tmp;
-			generator_changeteam();
+			this.team = _tmp;
+			generator_changeteam(this);
 		}
 
 		_tmp = ReadByte();
 
-		if(_tmp != self.health)
-			generator_damage(_tmp);
+		if(_tmp != this.health)
+			generator_damage(this, _tmp);
 
-		self.health = _tmp;
+		this.health = _tmp;
 	}
 }

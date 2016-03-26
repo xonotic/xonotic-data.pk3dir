@@ -8,6 +8,8 @@
 #include "cl_player.qh"
 #include "command/common.qh"
 #include "round_handler.qh"
+#include "../common/state.qh"
+#include "../common/physics/player.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"

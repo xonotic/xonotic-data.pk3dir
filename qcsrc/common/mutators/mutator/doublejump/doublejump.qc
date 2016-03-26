@@ -15,6 +15,7 @@ REGISTER_MUTATOR(doublejump, true);
 
 MUTATOR_HOOKFUNCTION(doublejump, PlayerJump)
 {
+    SELFPARAM();
 	if (PHYS_DOUBLEJUMP(self))
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);

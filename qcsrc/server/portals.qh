@@ -1,5 +1,4 @@
-#ifndef PORTALS_H
-#define PORTALS_H
+#pragma once
 
 .float portal_id;
 .entity portal_in, portal_out;
@@ -12,4 +11,3 @@ void Portal_ClearWithID(entity own, float id);
 
 vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle);
 void Portal_ClearAll_PortalsOnly(entity own);
-#endif

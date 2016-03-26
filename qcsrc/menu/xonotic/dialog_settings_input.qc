@@ -1,16 +1,15 @@
-#ifndef DIALOG_SETTINGS_INPUT_H
-#define DIALOG_SETTINGS_INPUT_H
-#include "tab.qc"
-CLASS(XonoticInputSettingsTab, XonoticTab)
-	METHOD(XonoticInputSettingsTab, fill, void(entity));
-	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticInputSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space
-ENDCLASS(XonoticInputSettingsTab)
-entity makeXonoticInputSettingsTab();
-#endif
+#include "dialog_settings_input.qh"
 
-#ifdef IMPLEMENTATION
+#include "dialog_settings_input_userbind.qh"
+#include "skinlist.qh"
+#include "slider_resolution.qh"
+#include "../item/checkbox.qh"
+#include "keybinder.qh"
+#include "textlabel.qh"
+#include "button.qh"
+#include "slider.qh"
+#include "checkbox.qh"
+
 entity makeXonoticInputSettingsTab()
 {
 	entity me;
@@ -121,4 +120,3 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.disabled = 1; // the option is never available in this case, just there for show
 		}
 }
-#endif

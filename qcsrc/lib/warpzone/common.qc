@@ -320,7 +320,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		org = trace_endpos;
 	}
 	WarpZone_MakeAllOther();
-:fail
+LABEL(fail)
 	if(contentshack)
 		BITCLR_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 	trace_startsolid = sol;
@@ -438,7 +438,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		e.velocity = -e.velocity;
 	}
 	WarpZone_MakeAllOther();
-:fail
+LABEL(fail)
 	WarpZone_tracetoss_velocity = e.velocity;
 	v_forward = vf;
 	v_right = vr;
@@ -658,7 +658,8 @@ void WarpZone_FindRadius_Recurse(
 }
 entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 {
-    if (!warpzone_warpzones_exist && !needlineofsight) return findradius(org, rad);
+    // FIXME: why can't we do this? (sometimes finds nothing, breaking explosions)
+    // if (!warpzone_warpzones_exist && !needlineofsight) return findradius(org, rad);
 	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
 	entity list_first = findchainfloat(WarpZone_findradius_hit, 1);
 	FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);

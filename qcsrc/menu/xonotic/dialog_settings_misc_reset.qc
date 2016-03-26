@@ -1,18 +1,9 @@
-#ifndef DIALOG_SETTINGS_MISC_RESET_H
-#define DIALOG_SETTINGS_MISC_RESET_H
-#include "dialog.qc"
-CLASS(XonoticResetDialog, XonoticDialog)
-	METHOD(XonoticResetDialog, fill, void(entity));
-	ATTRIB(XonoticResetDialog, title, string, _("Factory reset"))
-	ATTRIB(XonoticResetDialog, color, vector, SKINCOLOR_DIALOG_QUIT)
-	ATTRIB(XonoticResetDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticResetDialog, rows, float, 4)
-	ATTRIB(XonoticResetDialog, columns, float, 2)
-	ATTRIB(XonoticResetDialog, name, string, "Factory reset")
-ENDCLASS(XonoticResetDialog)
-#endif
+#include "dialog_settings_misc_reset.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "commandbutton.qh"
+#include "button.qh"
+
 void XonoticResetDialog_fill(entity me)
 {
 	entity e;
@@ -27,4 +18,3 @@ void XonoticResetDialog_fill(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-#endif

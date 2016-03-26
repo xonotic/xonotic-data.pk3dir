@@ -10,6 +10,7 @@
 #include <common/triggers/subs.qh>
 #include <common/util.qh>
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 
 void thrown_wep_think()
 {SELFPARAM();

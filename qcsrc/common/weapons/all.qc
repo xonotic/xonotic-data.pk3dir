@@ -387,7 +387,7 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
  *   call again with ""
  *   remove the ent
  */
-void CL_WeaponEntity_SetModel(entity this, string name)
+void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 {
 	if (name == "")
 	{
@@ -540,6 +540,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 
 	// check if an instant weapon switch occurred
 	setorigin(this, this.view_ofs);
+	if (!_anim) return;
 	// reset animstate now
 	this.wframe = WFRAME_IDLE;
 	setanim(this, this.anim_idle, true, false, true);

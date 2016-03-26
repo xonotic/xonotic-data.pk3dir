@@ -207,7 +207,7 @@ void W_Mortar_Attack(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(mortar, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND(GRENADE_FIRE), CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -255,7 +255,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(mortar, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND(GRENADE_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 4, SND_GRENADE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(mortar, damage));
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -300,11 +300,12 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 METHOD(Mortar, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
     {
-        if(bot_aim(WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
+        if(bot_aim(self, WEP_CVAR_PRI(mortar, speed), WEP_CVAR_PRI(mortar, speed_up), WEP_CVAR_PRI(mortar, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK(self) = true;
             if(random() < 0.01) self.bot_secondary_grenademooth = 1;
@@ -312,7 +313,7 @@ METHOD(Mortar, wr_aim, void(entity thiswep))
     }
     else
     {
-        if(bot_aim(WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
+        if(bot_aim(self, WEP_CVAR_SEC(mortar, speed), WEP_CVAR_SEC(mortar, speed_up), WEP_CVAR_SEC(mortar, lifetime), true))
         {
             PHYS_INPUT_BUTTON_ATCK2(self) = true;
             if(random() < 0.02) self.bot_secondary_grenademooth = 0;
@@ -373,19 +374,22 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Mortar, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(mortar, ammo);
     ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_PRI(mortar, ammo);
     return ammo_amount;
 }
 METHOD(Mortar, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(mortar, ammo);
     ammo_amount += self.(weapon_load[WEP_MORTAR.m_id]) >= WEP_CVAR_SEC(mortar, ammo);
     return ammo_amount;
 }
 METHOD(Mortar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND(RELOAD)); // WEAPONTODO
+    SELFPARAM();
+    W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Mortar, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -407,6 +411,7 @@ METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Mortar, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);

@@ -1,3 +1,4 @@
+#include "gamemode_invasion.qh"
 #ifndef GAMEMODE_INVASION_H
 #define GAMEMODE_INVASION_H
 

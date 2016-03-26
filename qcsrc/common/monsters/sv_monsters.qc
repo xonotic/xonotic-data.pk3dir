@@ -211,6 +211,7 @@ void Monster_Delay_Action(entity this)
 
 void Monster_Delay_Action_self()
 {
+    SELFPARAM();
 	Monster_Delay_Action(self);
 }
 

@@ -1,12 +1,12 @@
 #ifndef WEAPONS_ALL_H
 #define WEAPONS_ALL_H
 
-#include "../command/all.qh"
-#include "../stats.qh"
+#include <common/command/all.qh>
+#include <common/stats.qh>
 #include "config.qh"
 
 // weapon sets
-typedef vector WepSet;
+USING(WepSet, vector);
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
 #endif
@@ -24,7 +24,7 @@ WepSet ReadWepSet();
 #include <common/models/all.qh>
 #endif
 
-#include "../util.qh"
+#include <common/util.qh>
 
 #ifdef SVQC
 #include <server/bot/aim.qh>
@@ -113,6 +113,7 @@ void W_PROP_think()
 }
 STATIC_INIT_LATE(W_PROP_reloader)
 {
+    SELFPARAM();
     entity e = W_PROP_reloader = new_pure(W_PROP_reloader);
     WITH(entity, self, e, (e.think = W_PROP_think)());
 }
@@ -355,7 +356,7 @@ ENUMCLASS_END(WFRAME)
 .WFRAME wframe;
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
-void CL_WeaponEntity_SetModel(entity this, string name);
+void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 #endif
 
 #endif

@@ -2,7 +2,7 @@
 #define ITEMS_ALL_C
 #include "all.qh"
 
-#include "all.inc"
+#include "item/_mod.inc"
 
 void Dump_Items()
 {

@@ -8,11 +8,11 @@
 #include <common/deathtypes/all.qh>
 #include <common/items/all.qc>
 #include <common/mapinfo.qh>
+#include <common/vehicles/all.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
 #include <lib/csqcmodel/cl_player.qh>
-// TODO: remove
-#include <server/mutators/mutator/gamemode_ctf.qc>
+#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
 
 
 /*
@@ -68,12 +68,14 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect)
 {
+    TC(int, item_count);
 	float aspect = size_y / size_x;
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
 vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect)
 {
+    TC(int, item_count);
 	float columns, rows;
 	float ratio, best_ratio = 0;
 	float best_columns = 1, best_rows = 1;
@@ -121,6 +123,7 @@ HUD panels
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
 {
+    TC(bool, vertical); TC(int, drawflag);
 	if(!length_ratio || !theAlpha)
 		return;
 	if(length_ratio > 1)
@@ -224,6 +227,7 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag)
 {
+    TC(int, drawflag);
 	if(!theAlpha)
 		return;
 
@@ -241,6 +245,7 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 
 void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha, float fadelerp)
 {
+    TC(bool, vertical); TC(bool, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 
@@ -318,8 +323,9 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
+    TC(bool, vertical); TC(int, icon_right_align);
 	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
@@ -330,6 +336,8 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertica
 Main HUD system
 ==================
 */
+
+void CSQC_BUMBLE_GUN_HUD();
 
 void HUD_Vehicle()
 {
@@ -346,6 +354,7 @@ void HUD_Vehicle()
 
 bool HUD_Panel_CheckFlags(int showflags)
 {
+    TC(int, showflags);
 	if ( HUD_Minigame_Showpanels() )
 		return showflags & PANEL_SHOW_MINIGAME;
 	if(intermission == 2)

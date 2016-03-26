@@ -1,15 +1,14 @@
-#ifndef SERVER_DEFS_H
-#define SERVER_DEFS_H
+#pragma once
 
-#include "../common/weapons/all.qh"
-#include "../common/stats.qh"
+float warmup_limit;
+#include <common/weapons/all.qh>
+#include <common/stats.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
 
 // Globals
 
 float g_footsteps, g_grappling_hook, g_instagib;
-float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
@@ -172,7 +171,6 @@ bool nJoinAllowed(entity this, entity ignore);
 .entity flagcarried;
 
 .int playerid;
-float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .vector death_origin;
@@ -380,7 +378,7 @@ float client_cefc_accumulatortime;
 
 string deathmessage;
 
-.float just_joined;
+.bool just_joined;
 
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player
@@ -417,7 +415,7 @@ const float ACTIVE_TOGGLE 	= 3;
 
 void PlayerUseKey();
 
-typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
+USING(spawn_evalfunc_t, vector(entity player, entity spot, vector current));
 .spawn_evalfunc_t spawn_evalfunc;
 
 string modname;
@@ -452,5 +450,3 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .float init_for_player_needed;
 .void(entity) init_for_player;
-
-#endif

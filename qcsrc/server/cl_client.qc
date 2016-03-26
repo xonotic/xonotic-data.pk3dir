@@ -25,6 +25,8 @@
 #include "../common/ent_cs.qh"
 #include <common/state.qh>
 
+#include <common/effects/qc/globalsound.qh>
+
 #include "../common/triggers/teleporters.qh"
 
 #include "../common/vehicles/all.qh"
@@ -51,6 +53,23 @@
 
 #include "../lib/warpzone/server.qh"
 
+STATIC_METHOD(Client, Add, void(Client this, int _team))
+{
+    WITH(entity, self, this, ClientConnect());
+    TRANSMUTE(Player, this);
+    this.frame = 12; // 7
+    this.team = _team;
+    WITH(entity, self, this, PutClientInServer());
+}
+
+void PutObserverInServer();
+void ClientDisconnect();
+
+STATIC_METHOD(Client, Remove, void(Client this))
+{
+    TRANSMUTE(Observer, this);
+    WITH(entity, self, this, PutClientInServer(); ClientDisconnect());
+}
 
 void send_CSQC_teamnagger() {
 	WriteHeader(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
@@ -87,14 +106,14 @@ bool ClientData_Send(entity this, entity to, int sf)
 void ClientData_Attach(entity this)
 {
 	Net_LinkEntity(this.clientdata = new_pure(clientdata), false, 0, ClientData_Send);
-	self.clientdata.drawonlytoclient = this;
-	self.clientdata.owner = this;
+	this.clientdata.drawonlytoclient = this;
+	this.clientdata.owner = this;
 }
 
 void ClientData_Detach(entity this)
 {
 	remove(this.clientdata);
-	self.clientdata = NULL;
+	this.clientdata = NULL;
 }
 
 void ClientData_Touch(entity e)
@@ -158,6 +177,8 @@ void setplayermodel(entity e, string modelname)
 	precache_model(modelname);
 	_setmodel(e, modelname);
 	player_setupanimsformodel();
+	if(!autocvar_g_debug_globalsounds)
+		UpdatePlayerSounds(e);
 }
 
 void FixPlayermodel(entity player);
@@ -190,6 +211,12 @@ void PutObserverInServer()
         }
         // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
         // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+        if(!autocvar_g_debug_globalsounds)
+        {
+        	// needed for player sounds
+        	this.model = "";
+	        FixPlayermodel(this);
+        } 
         setmodel(this, MDL_Null);
         setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
@@ -236,7 +263,7 @@ void PutObserverInServer()
 	this.spectatortime = time;
 	this.bot_attack = false;
     this.hud = HUD_NORMAL;
-	this.classname = STR_OBSERVER;
+	TRANSMUTE(Observer, this);
 	this.iscreature = false;
 	this.teleportable = TELEPORT_SIMPLE;
 	this.damagedbycontents = false;
@@ -380,6 +407,8 @@ void FixPlayermodel(entity player)
 	if(chmdl || oldskin != player.skin) // model or skin has changed
 	{
 		player.species = player_getspecies(player); // update species
+		if(!autocvar_g_debug_globalsounds)
+			UpdatePlayerSounds(player); // update skin sounds
 	}
 
 	if(!teamplay)
@@ -394,14 +423,14 @@ void PutClientInServer()
 {
 	SELFPARAM();
 	if (IS_BOT_CLIENT(this)) {
-		this.classname = STR_PLAYER;
+		TRANSMUTE(Player, this);
 	} else if (IS_REAL_CLIENT(this)) {
 		msg_entity = this;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, this);
 	}
 	if (gameover) {
-		this.classname = STR_OBSERVER;
+		TRANSMUTE(Observer, this);
 	}
 
 	SetSpectatee(this, NULL);
@@ -426,7 +455,7 @@ void PutClientInServer()
 			return; // spawn failed
 		}
 
-		this.classname = STR_PLAYER;
+		TRANSMUTE(Player, this);
 		this.wasplayer = true;
 		this.iscreature = true;
 		this.teleportable = TELEPORT_NORMAL;
@@ -602,7 +631,7 @@ void PutClientInServer()
 		if (!warmup_stage && !this.alivetime)
 			this.alivetime = time;
 
-		antilag_clear(this);
+		antilag_clear(this, CS(this));
 	}
 }
 
@@ -625,6 +654,7 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 }
 void ClientInit_misc()
 {
+    SELFPARAM();
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);
@@ -975,16 +1005,14 @@ void ClientConnect()
 	SELFPARAM();
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
+	this.flags |= FL_CLIENT;
 	assert(player_count >= 0, player_count = 0);
-	this.classname = "player_joining";
-	this.flags = FL_CLIENT;
 
 #ifdef WATERMARK
 	Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_WATERMARK, WATERMARK);
 #endif
 	this.version_nagtime = time + 10 + random() * 10;
-
-	ClientState_attach(this);
+	TRANSMUTE(Client, this);
 
 	// identify the right forced team
 	if (autocvar_g_campaign)
@@ -1019,23 +1047,23 @@ void ClientConnect()
 	}
 	if (!teamplay && this.team_forced > 0) this.team_forced = 0;
 
-	JoinBestTeam(this, false, false); // if the team number is valid, keep it
+    {
+        int id = this.playerid;
+        this.playerid = 0; // silent
+	    JoinBestTeam(this, false, false); // if the team number is valid, keep it
+	    this.playerid = id;
+    }
 
 	if (autocvar_sv_spectate || autocvar_g_campaign || this.team_forced < 0) {
-		this.classname = STR_OBSERVER;
+		TRANSMUTE(Observer, this);
 	} else {
-		if (!teamplay || autocvar_g_balance_teams)
-		{
-			this.classname = STR_PLAYER;
-			campaign_bots_may_start = 1;
-		}
-		else
-		{
-			this.classname = STR_OBSERVER; // do it anyway
+		if (!teamplay || autocvar_g_balance_teams) {
+			TRANSMUTE(Player, this);
+			campaign_bots_may_start = true;
+		} else {
+			TRANSMUTE(Observer, this); // do it anyway
 		}
 	}
-
-	this.playerid = ++playerid_last;
 
 	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", this.playerid));
 
@@ -1261,12 +1289,13 @@ void respawn()
 	PutClientInServer();
 }
 
-void play_countdown(float finished, string samp)
+void play_countdown(float finished, Sound samp)
 {SELFPARAM();
+    TC(Sound, samp);
 	if(IS_REAL_CLIENT(self))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
-				_sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
+				sound (self, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
 void player_powerups ()
@@ -1291,7 +1320,7 @@ void player_powerups ()
 	{
 		if (self.items & ITEM_Strength.m_itemid)
 		{
-			play_countdown(self.strength_finished, SND(POWEROFF));
+			play_countdown(self.strength_finished, SND_POWEROFF);
 			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.strength_finished)
 			{
@@ -1311,7 +1340,7 @@ void player_powerups ()
 		}
 		if (self.items & ITEM_Shield.m_itemid)
 		{
-			play_countdown(self.invincible_finished, SND(POWEROFF));
+			play_countdown(self.invincible_finished, SND_POWEROFF);
 			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > self.invincible_finished)
 			{
@@ -1344,7 +1373,7 @@ void player_powerups ()
 			}
 			else
 			{
-				play_countdown(self.superweapons_finished, SND(POWEROFF));
+				play_countdown(self.superweapons_finished, SND_POWEROFF);
 				if (time > self.superweapons_finished)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
@@ -1528,6 +1557,8 @@ spectate mode routines
 
 void SpectateCopy(entity this, entity spectatee)
 {
+    TC(Client, this); TC(Client, spectatee);
+
 	MUTATOR_CALLHOOK(SpectateCopy, spectatee, this);
 	PS(this) = PS(spectatee);
 	this.armortype = spectatee.armortype;
@@ -1571,7 +1602,7 @@ void SpectateCopy(entity this, entity spectatee)
 	setsize(this, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
 
-    anticheat_spectatecopy(spectatee);
+    anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
@@ -1738,13 +1769,13 @@ void LeaveSpectatorMode()
 	{
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
 		{
-			self.classname = STR_PLAYER;
+			TRANSMUTE(Player, self);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, false, true); }
 
 			if(autocvar_g_campaign)
-				{ campaign_bots_may_start = 1; }
+				{ campaign_bots_may_start = true; }
 
 			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
 
@@ -1882,7 +1913,7 @@ void ObserverThink()
 		} else if(PHYS_INPUT_BUTTON_ATCK(self) && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
-				self.classname = STR_SPECTATOR;
+				TRANSMUTE(Spectator, self);
 			}
 		} else {
 			prefered_movetype = ((!PHYS_INPUT_BUTTON_USE(self) ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
@@ -1916,24 +1947,24 @@ void SpectatorThink()
 		} else if(PHYS_INPUT_BUTTON_ATCK(self) || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectateNext()) {
-				self.classname = STR_SPECTATOR;
+				TRANSMUTE(Spectator, self);
 			} else {
-				self.classname = STR_OBSERVER;
+				TRANSMUTE(Observer, self);
 				PutClientInServer();
 			}
 			self.impulse = 0;
 		} else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || (self.impulse >= 220 && self.impulse <= 229)) {
 			self.flags &= ~FL_JUMPRELEASED;
 			if(SpectatePrev()) {
-				self.classname = STR_SPECTATOR;
+				TRANSMUTE(Spectator, self);
 			} else {
-				self.classname = STR_OBSERVER;
+				TRANSMUTE(Observer, self);
 				PutClientInServer();
 			}
 			self.impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(self)) {
 			self.flags &= ~FL_JUMPRELEASED;
-			self.classname = STR_OBSERVER;
+			TRANSMUTE(Observer, self);
 			PutClientInServer();
 		} else {
 			if(!SpectateUpdate())
@@ -2031,7 +2062,7 @@ void PlayerPreThink ()
 	if(frametime)
 	{
 		// physics frames: update anticheat stuff
-		anticheat_prethink();
+		anticheat_prethink(self);
 	}
 
 	if(blockSpectators && frametime)
@@ -2064,9 +2095,9 @@ void PlayerPreThink ()
 			if(time > self.version_nagtime)
 			{
 				// don't notify git users
-				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0 && strstr(self.cvar_g_xonoticversion, "autobuild", 0) < 0)
+				if(strstrofs(self.cvar_g_xonoticversion, "git", 0) < 0 && strstrofs(self.cvar_g_xonoticversion, "autobuild", 0) < 0)
 				{
-					if(strstr(autocvar_g_xonoticversion, "git", 0) >= 0 || strstr(autocvar_g_xonoticversion, "autobuild", 0) >= 0)
+					if(strstrofs(autocvar_g_xonoticversion, "git", 0) >= 0 || strstrofs(autocvar_g_xonoticversion, "autobuild", 0) >= 0)
 					{
 						// notify release users if connecting to git
 						LOG_TRACE("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");

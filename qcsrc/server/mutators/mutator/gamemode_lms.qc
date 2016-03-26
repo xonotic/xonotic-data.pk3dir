@@ -1,3 +1,4 @@
+#include "gamemode_lms.qh"
 #ifndef GAMEMODE_LMS_H
 #define GAMEMODE_LMS_H
 
@@ -44,6 +45,7 @@ float LMS_NewPlayerLives();
 
 #ifdef IMPLEMENTATION
 
+#include <common/mutators/mutator/instagib/items.qc>
 #include <server/campaign.qh>
 #include <server/command/cmd.qh>
 
@@ -70,6 +72,8 @@ float LMS_NewPlayerLives()
 
 	return bound(1, lms_lowest_lives, fl);
 }
+
+void ClearWinners();
 
 // LMS winning condition: game terminates if and only if there's at most one
 // one player who's living lives. Top two scores being equal cancels the time
@@ -169,7 +173,7 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
 	{
-		self.classname = STR_OBSERVER;
+		TRANSMUTE(Observer, self);
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
 	}
 }
@@ -210,8 +214,8 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 {SELFPARAM();
-	self.classname = STR_PLAYER;
-	campaign_bots_may_start = 1;
+	TRANSMUTE(Player, self);
+	campaign_bots_may_start = true;
 
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
@@ -342,6 +346,7 @@ MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
+    SELFPARAM();
 	if(self.lms_spectate_warning)
 	{
 		// for the forfeit message...

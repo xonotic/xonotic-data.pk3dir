@@ -1,3 +1,5 @@
+float autocvar_net_connecttimeout = 30;
+
 #ifndef MENUQC
 #include "anim.qc"
 #include "animdecide.qc"
@@ -37,11 +39,11 @@
 #include "t_items.qc"
 #endif
 
-#include "items/all.qc"
+#include "items/_mod.inc"
     #include "weapons/all.qc"
         #include "monsters/all.qc"
         #include "turrets/all.qc"
         #include "vehicles/all.qc"
 
-#include "mutators/all.qc"
-    #include "gamemodes/all.qc"
+#include "mutators/_mod.inc"
+    #include "gamemodes/_mod.inc"

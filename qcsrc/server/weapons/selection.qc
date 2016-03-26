@@ -6,6 +6,7 @@
 #include <common/util.qh>
 #include <common/items/item.qh>
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 #include <common/mutators/mutator/waypoints/waypointsprites.qh>
 
 // switch between weapons
@@ -41,6 +42,7 @@ void Weapon_whereis(Weapon this, entity cl)
 
 bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 {
+    SELFPARAM();
 	float f = 0;
 
 	if (time < cl.hasweapon_complain_spam)
@@ -224,11 +226,12 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	return 0;
 }
 
-void W_SwitchWeapon_Force(entity e, Weapon wep)
+void W_SwitchWeapon_Force(Player this, Weapon wep)
 {
-	e.cnt = PS(e).m_switchweapon.m_id;
-	PS(e).m_switchweapon = wep;
-	e.selectweapon = wep.m_id;
+    TC(Player, this); TC(Weapon, wep);
+	this.cnt = PS(this).m_switchweapon.m_id;
+	PS(this).m_switchweapon = wep;
+	this.selectweapon = wep.m_id;
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)

@@ -1,33 +1,38 @@
+#include "view.qh"
 
 #include "announcer.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"
 
-#include "../common/anim.qh"
-#include "../common/constants.qh"
-#include "../common/debug.qh"
-#include "../common/mapinfo.qh"
+#include <common/animdecide.qh>
+#include <common/ent_cs.qh>
+#include <common/anim.qh>
+#include <common/constants.qh>
+#include <common/debug.qh>
+#include <common/mapinfo.qh>
 #include <common/gamemodes/all.qh>
-#include "../common/physics/player.qh"
-#include "../common/stats.qh"
-#include "../common/triggers/target/music.qh"
-#include "../common/teams.qh"
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/triggers/target/music.qh>
+#include <common/teams.qh>
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/all.qh>
-#include "../common/viewloc.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/minigames/cl_minigames_hud.qh"
+#include <common/viewloc.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/minigames/cl_minigames_hud.qh>
 
-#include "../lib/csqcmodel/cl_player.qh"
+#include <lib/csqcmodel/cl_player.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include "csqcmodel_hooks.qh"
 
-#include "../lib/warpzone/client.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/warpzone/client.qh>
+#include <lib/warpzone/common.qh>
 
 #define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 
@@ -148,7 +153,7 @@ void viewmodel_animate(entity this)
 			vel = view.velocity;
 		else
 		{
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			vel.x = view.velocity * forward;
 			vel.y = view.velocity * right * -1;
@@ -174,7 +179,7 @@ void viewmodel_animate(entity this)
 		if(autocvar_cl_followmodel_velocity_absolute)
 		{
 			vector fixed_gunorg;
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			fixed_gunorg.x = gunorg * forward;
 			fixed_gunorg.y = gunorg * right * -1;
@@ -295,10 +300,11 @@ void viewmodel_draw(entity this)
 	{
 		static string name_last;
 		string name = wep.mdl;
-		if (name != name_last)
+		bool swap = name != name_last;
+		// if (swap)
 		{
 			name_last = name;
-			CL_WeaponEntity_SetModel(this, name);
+			CL_WeaponEntity_SetModel(this, name, swap);
 			this.viewmodel_origin = this.origin;
 			this.viewmodel_angles = this.angles;
 		}
@@ -307,7 +313,8 @@ void viewmodel_draw(entity this)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
-	float eta = (this.weapon_nextthink - time) / STAT(WEAPONRATEFACTOR);
+	float rate = STAT(WEAPONRATEFACTOR);
+	float eta = rate ? ((this.weapon_nextthink - time) / rate) : 0;
 	if (eta <= 0) f = this.weapon_eta_last;
 	else switch (this.state)
 	{
@@ -835,10 +842,88 @@ void HitSound()
 	}
 }
 
-void HUD_Crosshair()
-{SELFPARAM();
+vector crosshair_getcolor(entity this, float health_stat)
+{
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
+	vector wcross_color = '0 0 0';
+	switch(autocvar_crosshair_color_special)
+	{
+		case 1: // crosshair_color_per_weapon
+		{
+			if(this)
+			{
+				wcross_color = this.wpcolor;
+				break;
+			}
+			else { goto normalcolor; }
+		}
+
+		case 2: // crosshair_color_by_health
+		{
+			float x = health_stat;
+
+			//x = red
+			//y = green
+			//z = blue
+
+			wcross_color.z = 0;
+
+			if(x > 200)
+			{
+				wcross_color.x = 0;
+				wcross_color.y = 1;
+			}
+			else if(x > 150)
+			{
+				wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
+				wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
+			}
+			else if(x > 100)
+			{
+				wcross_color.x = 1 - (x-100)*0.02 * 0.6;
+				wcross_color.y = 1 - (x-100)*0.02 * 0.1;
+				wcross_color.z = 1 - (x-100)*0.02;
+			}
+			else if(x > 50)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 1;
+				wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
+			}
+			else if(x > 20)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = (x-20)*90/27/100;
+				wcross_color.z = (x-20)*90/27/100 * 0.2;
+			}
+			else
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 0;
+			}
+			break;
+		}
+
+		case 3: // crosshair_color_rainbow
+		{
+			if(time >= rainbow_last_flicker)
+			{
+				rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
+				rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
+			}
+			wcross_color = rainbow_prev_color;
+			break;
+		}
+LABEL(normalcolor)
+		default: { wcross_color = stov(autocvar_crosshair_color); break; }
+	}
+
+	return wcross_color;
+}
+
+void HUD_Crosshair()
+{SELFPARAM();
 	entity e = this;
 	float f, i, j;
 	vector v;
@@ -919,77 +1004,7 @@ void HUD_Crosshair()
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
 		// MAIN CROSSHAIR COLOR DECISION
-		switch(autocvar_crosshair_color_special)
-		{
-			case 1: // crosshair_color_per_weapon
-			{
-				if(e)
-				{
-					wcross_color = e.wpcolor;
-					break;
-				}
-				else { goto normalcolor; }
-			}
-
-			case 2: // crosshair_color_by_health
-			{
-				float x = STAT(HEALTH);
-
-				//x = red
-				//y = green
-				//z = blue
-
-				wcross_color.z = 0;
-
-				if(x > 200)
-				{
-					wcross_color.x = 0;
-					wcross_color.y = 1;
-				}
-				else if(x > 150)
-				{
-					wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
-					wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
-				}
-				else if(x > 100)
-				{
-					wcross_color.x = 1 - (x-100)*0.02 * 0.6;
-					wcross_color.y = 1 - (x-100)*0.02 * 0.1;
-					wcross_color.z = 1 - (x-100)*0.02;
-				}
-				else if(x > 50)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 1;
-					wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
-				}
-				else if(x > 20)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = (x-20)*90/27/100;
-					wcross_color.z = (x-20)*90/27/100 * 0.2;
-				}
-				else
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 0;
-				}
-				break;
-			}
-
-			case 3: // crosshair_color_rainbow
-			{
-				if(time >= rainbow_last_flicker)
-				{
-					rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
-					rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
-				}
-				wcross_color = rainbow_prev_color;
-				break;
-			}
-			:normalcolor
-			default: { wcross_color = stov(autocvar_crosshair_color); break; }
-		}
+		wcross_color = crosshair_getcolor(e, STAT(HEALTH));
 
 		if(autocvar_crosshair_effect_scalefade)
 		{
@@ -1345,6 +1360,7 @@ float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
 {SELFPARAM();
+    TC(int, w); TC(int, h);
 	entity e;
 	float fov;
 	float f;

@@ -1,5 +1,4 @@
-#ifndef PLAYERDEMO_H
-#define PLAYERDEMO_H
+#pragma once
 
 void playerdemo_init(entity this);
 void playerdemo_shutdown();
@@ -8,4 +7,3 @@ float playerdemo_read(entity this);
 
 void playerdemo_open_read(string f);
 void playerdemo_open_write(string f);
-#endif

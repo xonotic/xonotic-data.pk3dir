@@ -1,3 +1,4 @@
+#include "sv_cmd.qh"
 #include "all.qh"
 
 #include "banning.qh"
@@ -219,7 +220,6 @@ void GameCommand_allspec(float request, float argc)
 
 void GameCommand_anticheat(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -229,7 +229,7 @@ void GameCommand_anticheat(float request, float argc)
 
 			if (accepted > 0)
 			{
-				WITH(entity, self, client, anticheat_report());
+				anticheat_report(client);
 				return;
 			}
 			else
@@ -1780,7 +1780,7 @@ float GameCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
 	));
 	return false;
@@ -1790,7 +1790,7 @@ float GameCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
 	));
 	return false;

@@ -7,7 +7,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_TURRET)
 #endif
 
 #define IMPLEMENTATION
-#include "all.inc"
+#include "turret/_mod.inc"
 #undef IMPLEMENTATION
 
 #ifdef CSQC

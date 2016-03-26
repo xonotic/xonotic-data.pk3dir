@@ -128,7 +128,17 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		PM_ClientMovement_Unstick(this);
 
 	// set crouched
-	if (PHYS_INPUT_BUTTON_CROUCH(this))
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if(this.hook && !wasfreed(this.hook))
+		do_crouch = false;
+	if(hud != HUD_NORMAL)
+		do_crouch = false;
+	if(STAT(FROZEN, this))
+		do_crouch = false;
+	if((activeweapon == WEP_SHOCKWAVE || activeweapon == WEP_SHOTGUN) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
+		do_crouch = false;
+
+	if (do_crouch)
 	{
 		// wants to crouch, this always works
 		if (!IS_DUCKED(this)) SET_DUCKED(this);
@@ -1247,8 +1257,10 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 
 		if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && this.movement.y == 0 && this.movement.x != 0)
 			PM_AirAccelerate(this, wishdir, wishspeed2);
-		else
-			PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(this), PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd, PHYS_AIRSPEEDLIMIT_NONQW(this));
+		else {
+		    float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
+			PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw, PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
+        }
 
 		if (PHYS_AIRCONTROL(this))
 			CPM_PM_Aircontrol(this, wishdir, wishspeed2);
@@ -1323,7 +1335,7 @@ void PM_Main(entity this)
 	Physics_UpdateStats(this, maxspeed_mod);
 
 	if (this.PlayerPhysplug)
-		if (this.PlayerPhysplug())
+		if (this.PlayerPhysplug(this))
 			return;
 #elif defined(CSQC)
 	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
@@ -1356,7 +1368,7 @@ void PM_Main(entity this)
 	{
 		if (playerdemo_read(this))
 			return;
-		WITH(entity, self, this, bot_think());
+		bot_think(this);
 	}
 #endif
 
@@ -1530,7 +1542,7 @@ void PM_Main(entity this)
 	else
 		PM_air(this, buttons_prev, maxspeed_mod);
 
-:end
+LABEL(end)
 	if (IS_ONGROUND(this))
 		this.lastground = time;
 

@@ -2,6 +2,7 @@
 
 #include "antilag.qh"
 #include "command/common.qh"
+#include "../common/state.qh"
 #include "../lib/warpzone/common.qh"
 #include "../common/triggers/subs.qh"
 
@@ -49,11 +50,11 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	if (lag)
 	{
 		// take players back into the past
-		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, LAMBDA(antilag_takeback(it, time - lag)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
 			if(it != forent)
-				antilag_takeback(it, time - lag);
-		));
+				antilag_takeback(it, it, time - lag);
+		});
 	}
 
 	// do the trace
@@ -65,11 +66,11 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// restore players to current positions
 	if (lag)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, LAMBDA(antilag_restore(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-			if(it != forent)
-				antilag_restore(it);
-		));
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != forent)
+				antilag_restore(it, it);
+		});
 	}
 
 	// restore shooter solid type

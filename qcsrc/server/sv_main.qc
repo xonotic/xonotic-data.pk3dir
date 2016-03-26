@@ -1,3 +1,4 @@
+#include "sv_main.qh"
 
 #include "anticheat.qh"
 #include "g_hook.qh"
@@ -153,9 +154,13 @@ float game_delay_last;
 
 bool autocvar_sv_autopause = true;
 float RedirectionThink();
+void PM_Main(Client this);
 void StartFrame()
 {
-	SELFPARAM();
+    // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITH(entity, self, it, PlayerPreThink()));
+
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
@@ -215,11 +220,7 @@ void StartFrame()
 	CreatureFrame_All();
 	CheckRules_World();
 
-	// if in warmup stage and limit for warmup is hit start match
-	if(warmup_stage)
-	if(!gameover)
-	if((g_warmup_limit > 0 && time >= g_warmup_limit)
-	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
+	if(warmup_stage && !gameover && warmup_limit > 0 && time >= warmup_limit)
 	{
 		ReadyRestart();
 		return;
@@ -230,6 +231,7 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
     FOREACH_CLIENT(true, LAMBDA(GlobalStats_update(it)));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITH(entity, self, it, PlayerPostThink()));
 }
 
 .vector originjitter;
@@ -348,7 +350,7 @@ void SV_OnEntityPreSpawnFunction()
 			}
 		}
 		inv = !inv;
-:cvar_fail
+LABEL(cvar_fail)
 		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
 		if (!inv)
 		{

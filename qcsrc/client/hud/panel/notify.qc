@@ -1,3 +1,4 @@
+#include "notify.qh"
 // Notification area (#4)
 
 void HUD_Notify_Push(string icon, string attacker, string victim)

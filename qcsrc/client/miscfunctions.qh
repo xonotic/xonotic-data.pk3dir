@@ -1,5 +1,4 @@
-#ifndef CLIENT_MISCFUNCTIONS_H
-#define CLIENT_MISCFUNCTIONS_H
+#pragma once
 
 entity players;
 entity teams;
@@ -155,5 +154,3 @@ void Accuracy_LoadLevels();
 void Accuracy_LoadColors();
 
 vector Accuracy_GetColor(float accuracy);
-
-#endif

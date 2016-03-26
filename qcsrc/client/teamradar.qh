@@ -1,5 +1,4 @@
-#ifndef CLIENT_TEAMRADAR_H
-#define CLIENT_TEAMRADAR_H
+#pragma once
 
 const int MAX_TEAMRADAR_TIMES = 32;
 
@@ -44,5 +43,3 @@ void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb,
 void draw_teamradar_link(vector start, vector end, int colors);
 
 void teamradar_loadcvars();
-
-#endif

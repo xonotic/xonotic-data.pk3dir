@@ -1,7 +1,7 @@
 #ifndef COMMAND_GENERIC_H
 #define COMMAND_GENERIC_H
 
-#include "../constants.qh"
+#include <common/constants.qh>
 
 // =========================================================
 //  Declarations for common command code, written by Samual

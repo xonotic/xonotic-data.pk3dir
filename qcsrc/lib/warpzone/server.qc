@@ -873,7 +873,7 @@ void WarpZone_StartFrame()
 		if(warpzone_warpzones_exist)
 			WarpZone_StoreProjectileData(it);
 
-		if((IS_OBSERVER(it) || it.solid == SOLID_NOT))
+		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
 		if(IS_CLIENT(it)) // we don't care about it being a bot
 		{
 			other = it; // player
@@ -888,10 +888,13 @@ void WarpZone_StartFrame()
 			}
 
 			// teleporters
-			setself(Teleport_Find(it.origin + it.mins, it.origin + it.maxs));
-			if (self)
-			if (!WarpZoneLib_ExactTrigger_Touch())
-				Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
+			if(other.teleportable)
+			{
+				setself(Teleport_Find(it.origin + it.mins, it.origin + it.maxs));
+				if (self)
+				if (!WarpZoneLib_ExactTrigger_Touch())
+					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
+			}
 		}
 	});
 	setself(this);

@@ -1,7 +1,7 @@
 #ifndef DEATHTYPES_ALL_H
 #define DEATHTYPES_ALL_H
 
-#include "../notifications/all.qh"
+#include <common/notifications/all.qh>
 
 REGISTRY(Deathtypes, BITS(8))
 #define Deathtypes_from(i) _Deathtypes_from(i, NULL)

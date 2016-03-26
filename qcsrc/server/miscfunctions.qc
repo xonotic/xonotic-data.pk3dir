@@ -23,6 +23,8 @@
 #include "../common/vehicles/sv_vehicles.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/items/all.qc"
+#include "../common/state.qh"
+#include "../common/effects/qc/globalsound.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/server.qh"
@@ -235,8 +237,8 @@ string formatmessage(string msg)
 			break; // too many replacements
 
 		n = n - 1;
-		p1 = strstr(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-		p2 = strstr(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+		p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
+		p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
 
 		if (p1 < 0)
 			p1 = p2;
@@ -408,8 +410,8 @@ REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
-void GetCvars(int f)
-{SELFPARAM();
+void GetCvars(entity this, int f)
+{
 	string s = string_null;
 
 	if (f > 0)
@@ -752,7 +754,7 @@ void precache_playermodels(string s)
 }
 
 void precache()
-{SELFPARAM();
+{
     // gamemode related things
 
     // Precache all player models if desired
@@ -1406,7 +1408,8 @@ float LostMovetypeFollow(entity ent)
 	return 0;
 }
 
-float isPushable(entity e)
+.bool pushable;
+bool isPushable(entity e)
 {
 	if(e.pushable)
 		return true;

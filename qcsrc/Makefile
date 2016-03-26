@@ -4,8 +4,8 @@ QCC ?= gmqcc
 PROGS_OUT ?= $(CURDIR)/..
 WORKDIR ?= ../.tmp
 
-QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='*')
-VER = $(QCCFLAGS_WATERMARK)
+QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='~')
+VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
 NDEBUG ?= 1
 BUILD_MOD ?= 0
 
@@ -92,6 +92,7 @@ $(QCCVERSIONFILE): | $(WORKDIR)
 	@ $(RM) $(WORKDIR)/qccversion.*
 	@ echo $(QCCVERSION) > $@
 
+export WORKDIR
 export CPP
 export QCC
 export QCCDEFS
@@ -99,15 +100,15 @@ export QCCFLAGS
 
 $(PROGS_OUT)/csprogs.dat: client/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
 	@ echo make[1]: Entering directory \`$(CURDIR)/client\'
-	@ ./qcc.sh client $@ $<
+	@ ./tools/qcc.sh client $@ $<
 -include $(WORKDIR)/client.d
 
 $(PROGS_OUT)/progs.dat: server/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
 	@ echo make[1]: Entering directory \`$(CURDIR)/server\'
-	@ ./qcc.sh server $@ $<
+	@ ./tools/qcc.sh server $@ $<
 -include $(WORKDIR)/server.d
 
 $(PROGS_OUT)/menu.dat: menu/progs.inc $(QCCVERSIONFILE) | $(WORKDIR)
 	@ echo make[1]: Entering directory \`$(CURDIR)/menu\'
-	@ ./qcc.sh menu $@ $<
+	@ ./tools/qcc.sh menu $@ $<
 -include $(WORKDIR)/menu.d

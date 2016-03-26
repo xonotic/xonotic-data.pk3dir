@@ -1,8 +1,13 @@
+#include "racetimer.qh"
+
+#include <common/mapinfo.qh>
+
 /** Race timer (#8) */
 
 // return the string of the onscreen race timer
 string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
 {
+	TC(int, cp);
 	string col;
 	string timestr;
 	string cpname;

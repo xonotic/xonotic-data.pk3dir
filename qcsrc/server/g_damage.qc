@@ -5,6 +5,8 @@
 #include "mutators/all.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
+#include "../common/state.qh"
+#include "../common/physics/player.qh"
 #include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/all.qc"
@@ -551,6 +553,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
+    SELFPARAM();
 	if(!STAT(FROZEN, targ))
 		return;
 

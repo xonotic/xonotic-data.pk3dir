@@ -1,3 +1,4 @@
+#include "gamemode_ca.qh"
 #ifndef GAMEMODE_CA_H
 #define GAMEMODE_CA_H
 
@@ -19,6 +20,8 @@ bool CA_CheckTeams();
 bool CA_CheckWinner();
 void CA_RoundStart();
 bool ca_isEliminated(entity e);
+
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override);
 
 REGISTER_MUTATOR(ca, false)
 {
@@ -111,6 +114,8 @@ float CA_GetWinnerTeam()
 		return winner_team;
 	return -1; // no player left
 }
+
+void nades_Clear(entity player);
 
 #define CA_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
 #define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
@@ -226,7 +231,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
     SELFPARAM();
 	if (!allowed_to_spawn && IS_PLAYER(this)) // this is true even when player is trying to join
 	{
-		this.classname = STR_OBSERVER;
+		TRANSMUTE(Observer, this);
 		if (this.jointime != time && !this.caplayer) // not when connecting
 		{
 			this.caplayer = 0.5;
@@ -237,6 +242,7 @@ MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
+    SELFPARAM();
 	FOREACH_CLIENT(true, {
 		it.killcount = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
@@ -246,7 +252,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 		}
 		if (it.caplayer)
 		{
-			it.classname = STR_PLAYER;
+			TRANSMUTE(Player, it);
 			it.caplayer = 1;
 			WITH(entity, self, it, PutClientInServer());
 		}
@@ -257,7 +263,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {
     SELFPARAM();
-	this.classname = STR_OBSERVER;
+	TRANSMUTE(Observer, this);
 	return true;
 }
 

@@ -1,3 +1,4 @@
+#include "t_quake3.qh"
 
 #include "../common/weapons/all.qh"
 

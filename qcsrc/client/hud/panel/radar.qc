@@ -1,3 +1,11 @@
+#include "radar.qh"
+
+#include <common/ent_cs.qh>
+#include <common/mapinfo.qh>
+#include <client/mapvoting.qh>
+#include <client/teamradar.qh>
+#include <common/mutators/mutator/waypoints/all.qh>
+
 // Radar (#6)
 
 float HUD_Radar_Clickable()
@@ -7,6 +15,7 @@ float HUD_Radar_Clickable()
 
 void HUD_Radar_Show_Maximized(bool doshow,float clickable)
 {
+    TC(bool, doshow);
 	hud_panel_radar_maximized = doshow;
 	hud_panel_radar_temp_hidden = 0;
 
@@ -34,8 +43,9 @@ void HUD_Radar_Hide_Maximized()
 }
 
 
-float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
+float HUD_Radar_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
+    TC(int, bInputType);
 	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse ||
 		autocvar__hud_configure || mv_active)
 		return false;

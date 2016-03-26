@@ -1,21 +1,12 @@
-#ifndef DIALOG_SETTINGS_GAME_WEAPONS_H
-#define DIALOG_SETTINGS_GAME_WEAPONS_H
-#include "tab.qc"
-CLASS(XonoticGameWeaponsSettingsTab, XonoticTab)
-	METHOD(XonoticGameWeaponsSettingsTab, fill, void(entity));
-	METHOD(XonoticGameWeaponsSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameWeaponsSettingsTab, title, string, _("Weapons"))
-	ATTRIB(XonoticGameWeaponsSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameWeaponsSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticGameWeaponsSettingsTab, columns, float, 6)
-	ATTRIB(XonoticGameWeaponsSettingsTab, weaponsList, entity, NULL)
-ENDCLASS(XonoticGameWeaponsSettingsTab)
-entity makeXonoticGameWeaponsSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Weapons, makeXonoticGameWeaponsSettingsTab());
-#endif
+#include "dialog_settings_game_weapons.qh"
 
-#ifdef IMPLEMENTATION
+#include "weaponslist.qh"
+#include "commandbutton.qh"
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "button.qh"
+#include "radiobutton.qh"
+
 void XonoticGameWeaponsSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
@@ -96,4 +87,3 @@ void XonoticGameWeaponsSettingsTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, me.columns, weaponsApplyButton);
 }
-#endif

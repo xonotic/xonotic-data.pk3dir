@@ -9,6 +9,7 @@
 #include "teamplay.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "../common/state.qh"
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
@@ -19,6 +20,8 @@
 
 #include "../common/minigames/sv_minigames.qh"
 
+#include "../common/physics/player.qh"
+#include "../common/effects/qc/all.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
 
