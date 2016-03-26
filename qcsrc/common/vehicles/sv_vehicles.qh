@@ -3,6 +3,7 @@
 #ifdef SVQC
 
 #include <common/turrets/sv_turrets.qh>
+#include "vehicle.qh"
 
 // vehicle cvars
 bool autocvar_g_vehicles = true;
@@ -99,7 +100,7 @@ float vehicles_exit_running;
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
 void vehicles_exit(float eject);
-float vehicle_initialize(entity this, Vehicle info, float nodrop);
+bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 
