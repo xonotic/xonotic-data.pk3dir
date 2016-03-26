@@ -164,6 +164,7 @@ float current_player;
 
 float autocvar_hud_dynamic_follow;
 float autocvar_hud_dynamic_follow_scale;
+vector autocvar_hud_dynamic_follow_scale_xyz;
 
 vector hud_dynamic_shake_realofs;
 float hud_dynamic_shake_factor;

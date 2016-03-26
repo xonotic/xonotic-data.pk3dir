@@ -505,6 +505,9 @@ void Hud_Dynamic_Frame()
 		entity view = CSQCModel_server2csqc(player_localentnum - 1);
 		calc_followmodel_ofs(view);
 		ofs = -cl_followmodel_ofs * autocvar_hud_dynamic_follow_scale;
+		ofs.x *= autocvar_hud_dynamic_follow_scale_xyz.z;
+		ofs.y *= autocvar_hud_dynamic_follow_scale_xyz.x;
+		ofs.z *= autocvar_hud_dynamic_follow_scale_xyz.y;
 
 		if (fabs(ofs.x) < 0.001) ofs.x = 0;
 		if (fabs(ofs.y) < 0.001) ofs.y = 0;
