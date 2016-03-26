@@ -302,7 +302,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				if(!autocvar_g_instagib_blaster_keepdamage)
+				if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
 					frag_damage = frag_mirrordamage = 0;
 
 				if(frag_target != frag_attacker)
