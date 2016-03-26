@@ -38,12 +38,10 @@ void target_music_kill()
 {
 	FOREACH_ENTITY_CLASS("target_music", true, {
 		it.volume = 0;
-		WITHSELF(it, {
-            if (it.targetname == "")
-                target_music_sendto(MSG_ALL, 1);
-            else
-                target_music_sendto(MSG_ALL, 0);
-		});
+        if (it.targetname == "")
+            WITHSELF(it, target_music_sendto(MSG_ALL, 1));
+        else
+            WITHSELF(it, target_music_sendto(MSG_ALL, 0));
 	});
 }
 void target_music_use()

@@ -953,6 +953,7 @@ bool vehicle_impulse(entity this, int imp)
 
 void vehicles_enter(entity pl, entity veh)
 {
+    SELFPARAM();
 	entity oldself = self;
 
    // Remove this when bots know how to use vehicles

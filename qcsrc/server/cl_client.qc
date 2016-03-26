@@ -68,7 +68,8 @@ void ClientDisconnect();
 STATIC_METHOD(Client, Remove, void(Client this))
 {
     TRANSMUTE(Observer, this);
-    WITHSELF(this, PutClientInServer(); ClientDisconnect());
+    WITHSELF(this, PutClientInServer());
+    WITHSELF(this, ClientDisconnect());
 }
 
 void send_CSQC_teamnagger() {

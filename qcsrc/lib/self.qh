@@ -2,40 +2,33 @@
 
 // Transition from global 'self' to local 'this'
 
-[[alias("self")]] entity __self;
-
 // Step 1: auto oldself
 #if 1
-#if NDEBUG
-	#define SELFPARAM() noref entity this = __self
-	#define setself(s) (__self = s)
-	#define self __self
-#else
-    noref string self_str;
-	#define SELFPARAM() self_str = "self"; noref entity this = __self
-	#define setself(s) (self_str = #s, __self = s)
-	#define self (print(__SOURCELOC__, ": ", self_str, "\n"), __self)
-#endif
+    #define SELFPARAM() noref const entity this = self
 #endif
 
-// Step 2: check SELFPARAM() is present for functions that use self
-#if 0
-	#define SELFPARAM() [[alias("__self")]] noref entity this = __self
-	#define setself(s) (__self = s)
-	#define self this
+// Step 2: const self
+#if 1
+    #define self (0, self)
+    [[alias("self")]] entity __self;
+    #define setself(s) (__self = s)
+    #define WITHSELF(value, block) WITH(entity, __self, value, (0, block))
 #endif
 
-// Step 3: const self
-#if 0
-	#define SELFPARAM() noref const entity this = __self
-	entity setself(entity e) { return self = e; }
-	entity getself() { return self; }
-	#define self getself()
+// Step 3: propagate SELFPARAM()
+#if 1
+    #undef self
+    #define self (this, self)
 #endif
 
-// Step 4: enable when possible
-// TODO: Remove SELFPARAM in favor of a parameter
+// Step 4: kill unstructured setself
 #if 0
-	#define SELFPARAM() noref const entity this = __self
-	#define self this
+    #undef setself
 #endif
+
+// Step 5: this should work
+#if 0
+    #define self (0, this)
+#endif
+
+// Step 6: Remove SELFPARAM in favor of a parameter
