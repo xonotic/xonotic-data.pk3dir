@@ -80,7 +80,7 @@ void assault_objective_use()
 	{
 		if (e.classname == "target_objective_decrease")
 		{
-			WITH(entity, self, e, target_objective_decrease_activate());
+			WITHSELF(e, target_objective_decrease_activate());
 		}
 	}
 
@@ -239,7 +239,7 @@ void assault_roundstart_use()
 			it.team = NUM_TEAM_1;
 
 		// Dubbles as teamchange
-		WITH(entity, self, it, turret_respawn());
+		WITHSELF(it, turret_respawn());
 	));
 }
 
@@ -268,7 +268,7 @@ void assault_new_round()
 	//bprint("ASSAULT: new round\n");
 
 	// Eject players from vehicles
-    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, LAMBDA(WITH(entity, self, it, vehicles_exit(VHEF_RELEASE))));
+    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, WITHSELF(it, vehicles_exit(VHEF_RELEASE)));
 
     FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
     	setself(it);
@@ -332,7 +332,7 @@ int WinningCondition_Assault()
 			}
 			else
 			{
-				WITH(entity, self, ent, assault_new_round());
+				WITHSELF(ent, assault_new_round());
 			}
 		}
 	}

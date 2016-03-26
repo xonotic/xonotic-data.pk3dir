@@ -6,4 +6,8 @@
 void CSQC_BUMBLE_GUN_HUD();
 #endif
 
+#ifdef SVQC
+float raptor_altitude(float amax);
+#endif
+
 #endif

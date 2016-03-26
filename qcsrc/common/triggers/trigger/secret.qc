@@ -10,8 +10,8 @@
 
 void secrets_setstatus()
 {SELFPARAM();
-	self.stat_secrets_total = secrets_total;
-	self.stat_secrets_found = secrets_found;
+	this.stat_secrets_total = secrets_total;
+	this.stat_secrets_found = secrets_found;
 }
 
 /**

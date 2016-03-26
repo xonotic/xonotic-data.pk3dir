@@ -146,7 +146,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 
 		if ( !IS_OBSERVER(player) && autocvar_sv_minigames_observer )
 		{
-			WITH(entity, self, player, PutObserverInServer());
+			WITHSELF(player, PutObserverInServer());
 		}
 		if ( autocvar_sv_minigames_observer == 2 )
 			player.team_forced = -1;

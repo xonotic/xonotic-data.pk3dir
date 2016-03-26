@@ -321,7 +321,7 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 	{
 		other = oth;
 
-		WITH(entity, self, this, this.move_touch());
+		WITHSELF(this, this.move_touch());
 
 		other = oldother;
 	}
@@ -330,7 +330,7 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 	{
 		other = this;
 
-		WITH(entity, self, oth, oth.move_touch());
+		WITHSELF(oth, oth.move_touch());
 
 		other = oldother;
 	}
@@ -360,7 +360,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_dist = 0;
 			trace_ent = this;
 
-			WITH(entity, self, it, it.move_touch());
+			WITHSELF(it, it.move_touch());
 		}
     });
 

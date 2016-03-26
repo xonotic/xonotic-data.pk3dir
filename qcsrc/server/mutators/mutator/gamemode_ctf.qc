@@ -2551,7 +2551,7 @@ void ctf_SpawnTeam (string teamname, int teamcolor)
 	this.netname = teamname;
 	this.cnt = teamcolor;
 	this.spawnfunc_checked = true;
-	WITH(entity, self, this, spawnfunc_ctf_team(this));
+	WITHSELF(this, spawnfunc_ctf_team(this));
 }
 
 void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.

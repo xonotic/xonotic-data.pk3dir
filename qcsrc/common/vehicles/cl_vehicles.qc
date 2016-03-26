@@ -304,6 +304,10 @@ void Vehicles_drawCrosshair(string crosshair)
 		tmpPos.x = (vid_conwidth - tmpSize.x) / 2;
 		tmpPos.y = (vid_conheight - tmpSize.y) / 2;
 
-		drawpic(tmpPos, crosshair, tmpSize, '1 1 1', autocvar_crosshair_alpha, DRAWFLAG_NORMAL);
+		vector wcross_color = '1 1 1';
+		if(autocvar_cl_vehicles_crosshair_colorize)
+			wcross_color = crosshair_getcolor(NULL, STAT(VEHICLESTAT_HEALTH));
+
+		drawpic(tmpPos, crosshair, tmpSize, wcross_color, autocvar_crosshair_alpha, DRAWFLAG_NORMAL);
 	}
 }

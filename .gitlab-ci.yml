@@ -5,6 +5,11 @@ before_script:
   - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
   - cd ..
 
+test_compilation_units:
+  stage: test
+  script:
+    - ./qcsrc/tools/compilationunits.sh
+
 test_sv_game:
   stage: test
   script:
@@ -14,7 +19,7 @@ test_sv_game:
 
     - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
     - make
-    - EXPECT=8573348372f9b9f82183b01598950eb5
+    - EXPECT=07fdfd9a19025920a599995730eb2a78
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
@@ -40,11 +45,6 @@ test_sv_unit:
         if [[ $line == "All tests OK" ]]; then exit 0; fi;
       done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
     - exit 1
-
-test_compilation_units:
-  stage: test
-  script:
-    - ./qcsrc/tools/compilationunits.sh
 
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy

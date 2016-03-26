@@ -36,6 +36,7 @@ flags:
 */
 void dynlight_think()
 {
+    SELFPARAM();
 	if(!self.owner)
 		remove(self);
 
@@ -43,6 +44,7 @@ void dynlight_think()
 }
 void dynlight_find_aiment()
 {
+    SELFPARAM();
 	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
@@ -59,6 +61,7 @@ void dynlight_find_aiment()
 }
 void dynlight_find_path()
 {
+    SELFPARAM();
 	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
@@ -71,6 +74,7 @@ void dynlight_find_path()
 }
 void dynlight_find_target()
 {
+    SELFPARAM();
 	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
@@ -83,6 +87,7 @@ void dynlight_find_target()
 }
 void dynlight_use()
 {
+    SELFPARAM();
 	if (self.light_lev == 0)
 		self.light_lev = self.lefty;
 	else

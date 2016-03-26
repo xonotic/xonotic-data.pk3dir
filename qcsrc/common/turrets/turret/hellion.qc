@@ -1,7 +1,7 @@
 #ifndef TURRET_HELLION_H
 #define TURRET_HELLION_H
 
-#include "hellion_weapon.qc"
+#include "hellion_weapon.qh"
 
 CLASS(Hellion, Turret)
 /* spawnflags */ ATTRIB(Hellion, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_FASTPROJ | TUR_FLAG_PLAYER | TUR_FLAG_MISSILE);
@@ -19,8 +19,6 @@ REGISTER_TURRET(HELLION, NEW(Hellion));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "hellion_weapon.qc"
 
 #ifdef SVQC
 

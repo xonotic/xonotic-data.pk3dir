@@ -2,7 +2,7 @@
 #define VEHICLE_RAPTOR
 #include "raptor.qh"
 
-#include "raptor_weapons.qc"
+#include "raptor_weapons.qh"
 
 CLASS(Raptor, Vehicle)
 /* spawnflags */ ATTRIB(Raptor, spawnflags, int, VHF_DMGSHAKE | VHF_DMGROLL);
@@ -26,8 +26,6 @@ REGISTER_VEHICLE(RAPTOR, NEW(Raptor));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "raptor_weapons.qc"
 
 #ifdef SVQC
 
@@ -202,7 +200,7 @@ bool raptor_frame(entity this)
 	if(IS_DEAD(vehic))
 	{
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
-		return 1;
+		return;
 	}
 	crosshair_trace(this);
 
@@ -387,6 +385,9 @@ bool raptor_frame(entity this)
 	UpdateAuxiliaryXhair(this, trace_endpos, '0 1 0', 0);
 	*/
 
+	// TODO: fix wr_checkammo and its use of self!
+	setself(vehic);
+
 	Weapon wep1 = WEP_RAPTOR;
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
@@ -431,26 +432,31 @@ bool raptor_frame(entity this)
 		}
 	}
 
+	setself(this);
+
 	vehic.bomb1.alpha = vehic.bomb2.alpha = (time - vehic.lip) / (vehic.delay - vehic.lip);
 	this.vehicle_reload2 = bound(0, vehic.bomb1.alpha * 100, 100);
 	this.vehicle_ammo2 = (this.vehicle_reload2 == 100) ? 100 : 0;
 
 	if(vehic.bomb1.cnt < time)
 	{
-		entity _missile = findchainentity(enemy, vehic);
-		float _incomming = 0;
-		while(_missile)
+		bool incoming = false;
+		FOREACH_ENTITY_ENT(enemy, vehic,
 		{
-			if(_missile.flags & FL_PROJECTILE)
-			if(MISSILE_IS_TRACKING(_missile))
-			if(vdist(vehic.origin - _missile.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
-				++_incomming;
+			if(it.flags & FL_PROJECTILE)
+			if(MISSILE_IS_TRACKING(it))
+			if(vdist(vehic.origin - it.origin, <, 2 * autocvar_g_vehicle_raptor_flare_range))
+			{
+				incoming = true;
+				break;
+			}
+		});
 
-			_missile = _missile.chain;
+		if(incoming)
+		{
+			msg_entity = this;
+			soundto(MSG_ONE, vehic, CH_PAIN_SINGLE, SND(VEH_MISSILE_ALARM), VOL_BASE, ATTEN_NONE);
 		}
-
-		if(_incomming)
-			sound(vehic, CH_PAIN_SINGLE, SND_VEH_MISSILE_ALARM, VOL_BASE, ATTEN_NONE);
 
 		vehic.bomb1.cnt = time + 1;
 	}
@@ -602,14 +608,14 @@ float raptor_impulse(float _imp)
 
 spawnfunc(vehicle_raptor)
 {
-	if(!autocvar_g_vehicle_raptor) { remove(self); return; }
-	if(!vehicle_initialize(VEH_RAPTOR, false)) { remove(self); return; }
+	if(!autocvar_g_vehicle_raptor) { remove(this); return; }
+	if(!vehicle_initialize(this, VEH_RAPTOR, false)) { remove(this); return; }
 }
 
 METHOD(Raptor, vr_impact, void(Raptor thisveh, entity instance))
 {
     if(autocvar_g_vehicle_raptor_bouncepain)
-        vehicles_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
+        vehicles_impact(instance, autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 }
 METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
 {
@@ -747,24 +753,23 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 }
 METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
 {
-    SELFPARAM();
     if(autocvar_g_vehicle_raptor_shield)
-        self.vehicle_flags |= VHF_HASSHIELD;
+        instance.vehicle_flags |= VHF_HASSHIELD;
 
     if(autocvar_g_vehicle_raptor_shield_regen)
-        self.vehicle_flags |= VHF_SHIELDREGEN;
+        instance.vehicle_flags |= VHF_SHIELDREGEN;
 
     if(autocvar_g_vehicle_raptor_health_regen)
-        self.vehicle_flags |= VHF_HEALTHREGEN;
+        instance.vehicle_flags |= VHF_HEALTHREGEN;
 
     if(autocvar_g_vehicle_raptor_energy_regen)
-        self.vehicle_flags |= VHF_ENERGYREGEN;
+        instance.vehicle_flags |= VHF_ENERGYREGEN;
 
-    self.vehicle_exit = raptor_exit;
-    self.respawntime = autocvar_g_vehicle_raptor_respawntime;
-    self.vehicle_health = autocvar_g_vehicle_raptor_health;
-    self.vehicle_shield = autocvar_g_vehicle_raptor_shield;
-    self.max_health = self.vehicle_health;
+    instance.vehicle_exit = raptor_exit;
+    instance.respawntime = autocvar_g_vehicle_raptor_respawntime;
+    instance.vehicle_health = autocvar_g_vehicle_raptor_health;
+    instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
+    instance.max_health = instance.vehicle_health;
 }
 
 #endif

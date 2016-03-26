@@ -1,6 +1,8 @@
 #ifndef TURRET_PLASMA_DUAL_H
 #define TURRET_PLASMA_DUAL_H
 
+#include "plasma_weapon.qh"
+
 CLASS(PlasmaDualAttack, PlasmaAttack)
 /* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "turret_plasma_dual");
 /* wepname   */ ATTRIB(PlasmaDualAttack, m_name, string, _("Dual plasma"));

@@ -3,6 +3,7 @@
 #ifdef SVQC
 
 #include <common/turrets/sv_turrets.qh>
+#include "vehicle.qh"
 
 // vehicle cvars
 bool autocvar_g_vehicles = true;
@@ -81,7 +82,7 @@ const float	DAMAGE_TARGETDRONE = 10;
 .bool(int _imp) vehicles_impulse;
 .int vehicle_weapon2mode = _STAT(VEHICLESTAT_W2MODE);
 .void(int exit_flags) vehicle_exit;
-.bool() vehicle_enter;
+.bool(entity this, entity player) vehicle_enter;
 const int VHEF_NORMAL = 0;  /// User pressed exit key
 const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
 const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
@@ -99,7 +100,7 @@ float vehicles_exit_running;
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
 void vehicles_exit(float eject);
-float vehicle_initialize(entity vehicle, float nodrop);
+bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 

@@ -85,7 +85,7 @@ void antilag_takeback(entity e, entity store, float t)
 {
 	if (e.vehicle) {
 	    if (e.vehicle.vehicle_flags == VHF_PLAYERSLOT) return;
-		antilag_takeback(e.vehicle, store, t);
+		antilag_takeback(e.vehicle, e.vehicle, t);
     }
 
 	if (!store.antilag_takenback)

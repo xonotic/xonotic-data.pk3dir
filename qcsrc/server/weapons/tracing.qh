@@ -54,4 +54,4 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 entity fireBullet_trace_callback_eff;
 entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end);
-void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects);
+void fireBullet(entity this, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects);

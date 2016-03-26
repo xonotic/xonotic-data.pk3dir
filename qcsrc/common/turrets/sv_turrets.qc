@@ -455,7 +455,7 @@ void turret_projectile_damage(entity this, entity inflictor, entity attacker, fl
 	this.health	-= damage;
 	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(this.owner, turret_projectile_explode));
+		WITHSELF(this, W_PrepareExplosionByDamage(this.owner, turret_projectile_explode));
 }
 
 entity turret_projectile(Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)

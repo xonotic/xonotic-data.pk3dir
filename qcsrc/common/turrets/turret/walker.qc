@@ -3,7 +3,7 @@
 
 //#define WALKER_FANCYPATHING
 
-#include "walker_weapon.qc"
+#include "walker_weapon.qh"
 
 CLASS(WalkerTurret, Turret)
 /* spawnflags */ ATTRIB(WalkerTurret, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE);
@@ -21,8 +21,6 @@ REGISTER_TURRET(WALKER, NEW(WalkerTurret));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "walker_weapon.qc"
 
 #ifdef SVQC
 
@@ -111,7 +109,7 @@ void walker_rocket_damage(entity this, entity inflictor, entity attacker, float 
     this.velocity = this.velocity + vforce;
 
     if (this.health <= 0)
-        WITH(entity, self, this, W_PrepareExplosionByDamage(this.owner, walker_rocket_explode));
+        WITHSELF(this, W_PrepareExplosionByDamage(this.owner, walker_rocket_explode));
 }
 
 #define WALKER_ROCKET_MOVE movelib_move_simple(self, newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)
@@ -643,7 +641,7 @@ void walker_draw(entity this)
         return;
 
     fixedmakevectors(this.angles);
-    movelib_groundalign4point(300, 100, 0.25, 45);
+    movelib_groundalign4point(this, 300, 100, 0.25, 45);
     setorigin(this, this.origin + this.velocity * dt);
     this.tur_head.angles += dt * this.tur_head.move_avelocity;
     this.angles_y = this.move_angles_y;

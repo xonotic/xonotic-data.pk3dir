@@ -4,7 +4,7 @@ QCC ?= gmqcc
 PROGS_OUT ?= $(CURDIR)/..
 WORKDIR ?= ../.tmp
 
-QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='*')
+QCCFLAGS_WATERMARK ?= $(shell git describe --tags --dirty='~')
 VER = $(subst *,\*,$(QCCFLAGS_WATERMARK))
 NDEBUG ?= 1
 BUILD_MOD ?= 0

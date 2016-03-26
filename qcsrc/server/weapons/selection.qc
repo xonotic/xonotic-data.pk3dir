@@ -72,7 +72,7 @@ bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain)
 			}
 			else
 			{
-				WITH(entity, self, cl, f = wpn.wr_checkammo1(wpn) + wpn.wr_checkammo2(wpn));
+				WITHSELF(cl, f = wpn.wr_checkammo1(wpn) + wpn.wr_checkammo2(wpn));
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)
@@ -226,11 +226,12 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 	return 0;
 }
 
-void W_SwitchWeapon_Force(entity e, Weapon wep)
+void W_SwitchWeapon_Force(Player this, Weapon wep)
 {
-	e.cnt = PS(e).m_switchweapon.m_id;
-	PS(e).m_switchweapon = wep;
-	e.selectweapon = wep.m_id;
+    TC(Player, this); TC(Weapon, wep);
+	this.cnt = PS(this).m_switchweapon.m_id;
+	PS(this).m_switchweapon = wep;
+	this.selectweapon = wep.m_id;
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)

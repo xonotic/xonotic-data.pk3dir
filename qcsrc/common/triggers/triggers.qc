@@ -4,9 +4,9 @@ void() SUB_UseTargets;
 
 void DelayThink()
 {SELFPARAM();
-	activator = self.enemy;
+	activator = this.enemy;
 	SUB_UseTargets ();
-	remove(self);
+	remove(this);
 }
 
 void FixSize(entity e)
@@ -25,7 +25,7 @@ void FixSize(entity e)
 void trigger_init(entity this)
 {
 	string m = this.model;
-	WITH(entity, self, this, WarpZoneLib_ExactTrigger_Init());
+	WITHSELF(this, WarpZoneLib_ExactTrigger_Init());
  	if(m != "")
  	{
  		precache_model(m);
@@ -96,51 +96,51 @@ void trigger_common_write(entity this, bool withtarget)
 void trigger_common_read(bool withtarget)
 {SELFPARAM();
 	int f = ReadByte();
-	self.warpzone_isboxy = (f & 1);
+	this.warpzone_isboxy = (f & 1);
 
 	if(withtarget)
 	{
-		if(self.target) { strunzone(self.target); }
-		self.target = strzone(ReadString());
-		if(self.target2) { strunzone(self.target2); }
-		self.target2 = strzone(ReadString());
-		if(self.target3) { strunzone(self.target3); }
-		self.target3 = strzone(ReadString());
-		if(self.target4) { strunzone(self.target4); }
-		self.target4 = strzone(ReadString());
-		if(self.targetname) { strunzone(self.targetname); }
-		self.targetname = strzone(ReadString());
-		if(self.killtarget) { strunzone(self.killtarget); }
-		self.killtarget = strzone(ReadString());
+		if(this.target) { strunzone(this.target); }
+		this.target = strzone(ReadString());
+		if(this.target2) { strunzone(this.target2); }
+		this.target2 = strzone(ReadString());
+		if(this.target3) { strunzone(this.target3); }
+		this.target3 = strzone(ReadString());
+		if(this.target4) { strunzone(this.target4); }
+		this.target4 = strzone(ReadString());
+		if(this.targetname) { strunzone(this.targetname); }
+		this.targetname = strzone(ReadString());
+		if(this.killtarget) { strunzone(this.killtarget); }
+		this.killtarget = strzone(ReadString());
 	}
 
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	else
-		self.origin = '0 0 0';
-	setorigin(self, self.origin);
+		this.origin = '0 0 0';
+	setorigin(this, this.origin);
 
-	self.modelindex = ReadShort();
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	self.scale = ReadByte() / 16;
-	setsize(self, self.mins, self.maxs);
+	this.modelindex = ReadShort();
+	this.mins_x = ReadCoord();
+	this.mins_y = ReadCoord();
+	this.mins_z = ReadCoord();
+	this.maxs_x = ReadCoord();
+	this.maxs_y = ReadCoord();
+	this.maxs_z = ReadCoord();
+	this.scale = ReadByte() / 16;
+	setsize(this, this.mins, this.maxs);
 
-	self.movedir_x = ReadCoord();
-	self.movedir_y = ReadCoord();
-	self.movedir_z = ReadCoord();
+	this.movedir_x = ReadCoord();
+	this.movedir_y = ReadCoord();
+	this.movedir_z = ReadCoord();
 
-	self.angles_x = ReadCoord();
-	self.angles_y = ReadCoord();
-	self.angles_z = ReadCoord();
+	this.angles_x = ReadCoord();
+	this.angles_y = ReadCoord();
+	this.angles_z = ReadCoord();
 }
 
 void trigger_remove_generic(entity this)
@@ -193,19 +193,19 @@ void SUB_UseTargets()
 //
 // check for a delay
 //
-	if (self.delay)
+	if (this.delay)
 	{
 	// create a temp object to fire at a later time
 		t = new(DelayedUse);
-		t.nextthink = time + self.delay;
+		t.nextthink = time + this.delay;
 		t.think = DelayThink;
 		t.enemy = activator;
-		t.message = self.message;
-		t.killtarget = self.killtarget;
-		t.target = self.target;
-		t.target2 = self.target2;
-		t.target3 = self.target3;
-		t.target4 = self.target4;
+		t.message = this.message;
+		t.killtarget = this.killtarget;
+		t.target = this.target;
+		t.target2 = this.target2;
+		t.target3 = this.target3;
+		t.target4 = this.target4;
 		return;
 	}
 
@@ -214,19 +214,19 @@ void SUB_UseTargets()
 // print the message
 //
 #ifdef SVQC
-	if(self)
-	if(IS_PLAYER(activator) && self.message != "")
+	if(this)
+	if(IS_PLAYER(activator) && this.message != "")
 	if(IS_REAL_CLIENT(activator))
 	{
-		centerprint(activator, self.message);
-		if (self.noise == "")
+		centerprint(activator, this.message);
+		if (this.noise == "")
 			play2(activator, SND(TALK));
 	}
 
 //
 // kill the killtagets
 //
-	s = self.killtarget;
+	s = this.killtarget;
 	if (s != "")
 	{
 		for(t = world; (t = find(t, targetname, s)); )
@@ -257,7 +257,7 @@ void SUB_UseTargets()
 		{
 			// Flag to set func_clientwall state
 			// 1 == deactivate, 2 == activate, 0 == do nothing
-			float aw_flag = self.antiwall_flag;
+			float aw_flag = this.antiwall_flag;
 			for(t = world; (t = find(t, targetname, s)); )
 			if(t.use)
 			{
@@ -308,7 +308,7 @@ void trigger_touch_generic(entity this, void() touchfunc)
 		if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
 		{
 			other = e;
-			WITH(entity, self, this, touchfunc());
+			WITHSELF(this, touchfunc());
 		}
 	}
 }

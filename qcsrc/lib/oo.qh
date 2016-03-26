@@ -6,6 +6,7 @@
 
 #ifdef MENUQC
 	#define NULL (0, null_entity)
+	#define world NULL
 #else
 	#define NULL (0, world)
 #endif
@@ -174,6 +175,7 @@ STATIC_INIT(RegisterClasses)
 	entityclass(cname, base);               \
 	class(cname).bool instanceOf##cname;    \
     bool is_##cname(entity e) { return e.instanceOf##cname; } \
+    void isnt_##cname(entity e) { eprint(e); } \
 	VTBL(cname, base)                       \
 	_INIT_STATIC(cname)                     \
 	{                                       \

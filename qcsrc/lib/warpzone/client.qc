@@ -29,139 +29,139 @@ void WarpZone_Touch ();
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
 	warpzone_warpzones_exist = 1;
-	if (!self.enemy)
+	if (!this.enemy)
 	{
-		self.enemy = new(warpzone_from);
+		this.enemy = new(warpzone_from);
 	}
-	self.classname = "trigger_warpzone";
+	this.classname = "trigger_warpzone";
 
 	int f = ReadByte();
-	self.warpzone_isboxy = (f & 1);
+	this.warpzone_isboxy = (f & 1);
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	else
-		self.origin = '0 0 0';
-	self.modelindex = ReadShort();
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	self.scale = ReadByte() / 16;
-	self.enemy.oldorigin_x = ReadCoord();
-	self.enemy.oldorigin_y = ReadCoord();
-	self.enemy.oldorigin_z = ReadCoord();
-	self.enemy.avelocity_x = ReadCoord();
-	self.enemy.avelocity_y = ReadCoord();
-	self.enemy.avelocity_z = ReadCoord();
-	self.oldorigin_x = ReadCoord();
-	self.oldorigin_y = ReadCoord();
-	self.oldorigin_z = ReadCoord();
-	self.avelocity_x = ReadCoord();
-	self.avelocity_y = ReadCoord();
-	self.avelocity_z = ReadCoord();
+		this.origin = '0 0 0';
+	this.modelindex = ReadShort();
+	this.mins_x = ReadCoord();
+	this.mins_y = ReadCoord();
+	this.mins_z = ReadCoord();
+	this.maxs_x = ReadCoord();
+	this.maxs_y = ReadCoord();
+	this.maxs_z = ReadCoord();
+	this.scale = ReadByte() / 16;
+	this.enemy.oldorigin_x = ReadCoord();
+	this.enemy.oldorigin_y = ReadCoord();
+	this.enemy.oldorigin_z = ReadCoord();
+	this.enemy.avelocity_x = ReadCoord();
+	this.enemy.avelocity_y = ReadCoord();
+	this.enemy.avelocity_z = ReadCoord();
+	this.oldorigin_x = ReadCoord();
+	this.oldorigin_y = ReadCoord();
+	this.oldorigin_z = ReadCoord();
+	this.avelocity_x = ReadCoord();
+	this.avelocity_y = ReadCoord();
+	this.avelocity_z = ReadCoord();
 
 	if(f & 2)
 	{
-		self.warpzone_fadestart = ReadShort();
-		self.warpzone_fadeend = max(self.warpzone_fadestart + 1, ReadShort());
+		this.warpzone_fadestart = ReadShort();
+		this.warpzone_fadeend = max(this.warpzone_fadestart + 1, ReadShort());
 	}
 	else
 	{
-		self.warpzone_fadestart = 0;
-		self.warpzone_fadeend = 0;
+		this.warpzone_fadestart = 0;
+		this.warpzone_fadeend = 0;
 	}
 
 	// common stuff
-	WarpZone_SetUp(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
+	WarpZone_SetUp(this, this.enemy.oldorigin, this.enemy.avelocity, this.oldorigin, this.avelocity);
 
 	// link me
-	//setmodel(self, self.model);
-	setorigin(self, self.origin);
-	setsize(self, self.mins, self.maxs);
+	//setmodel(this, this.model);
+	setorigin(this, this.origin);
+	setsize(this, this.mins, this.maxs);
 
 	// how to draw
 	// engine currently wants this
-	setpredraw(self, WarpZone_Fade_PreDraw);
+	setpredraw(this, WarpZone_Fade_PreDraw);
 
-	//self.move_touch = WarpZone_Touch;
+	//this.move_touch = WarpZone_Touch;
 	return true;
 }
 
 NET_HANDLE(ENT_CLIENT_WARPZONE_CAMERA, bool isnew)
 {
 	warpzone_cameras_exist = 1;
-	self.classname = "func_warpzone_camera";
+	this.classname = "func_warpzone_camera";
 
 	int f = ReadByte();
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	else
-		self.origin = '0 0 0';
-	self.modelindex = ReadShort();
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	self.scale = ReadByte() / 16;
-	self.oldorigin_x = ReadCoord();
-	self.oldorigin_y = ReadCoord();
-	self.oldorigin_z = ReadCoord();
-	self.avelocity_x = ReadCoord();
-	self.avelocity_y = ReadCoord();
-	self.avelocity_z = ReadCoord();
+		this.origin = '0 0 0';
+	this.modelindex = ReadShort();
+	this.mins_x = ReadCoord();
+	this.mins_y = ReadCoord();
+	this.mins_z = ReadCoord();
+	this.maxs_x = ReadCoord();
+	this.maxs_y = ReadCoord();
+	this.maxs_z = ReadCoord();
+	this.scale = ReadByte() / 16;
+	this.oldorigin_x = ReadCoord();
+	this.oldorigin_y = ReadCoord();
+	this.oldorigin_z = ReadCoord();
+	this.avelocity_x = ReadCoord();
+	this.avelocity_y = ReadCoord();
+	this.avelocity_z = ReadCoord();
 
 	if(f & 2)
 	{
-		self.warpzone_fadestart = ReadShort();
-		self.warpzone_fadeend = max(self.warpzone_fadestart + 1, ReadShort());
+		this.warpzone_fadestart = ReadShort();
+		this.warpzone_fadeend = max(this.warpzone_fadestart + 1, ReadShort());
 	}
 	else
 	{
-		self.warpzone_fadestart = 0;
-		self.warpzone_fadeend = 0;
+		this.warpzone_fadestart = 0;
+		this.warpzone_fadeend = 0;
 	}
 
 	// common stuff
-	WarpZone_Camera_SetUp(self, self.oldorigin, self.avelocity);
+	WarpZone_Camera_SetUp(this, this.oldorigin, this.avelocity);
 
 	// engine currently wants this
-	self.drawmask = MASK_NORMAL;
+	this.drawmask = MASK_NORMAL;
 
 	// link me
-	//setmodel(self, self.model);
-	setorigin(self, self.origin);
-	setsize(self, self.mins, self.maxs);
+	//setmodel(this, this.model);
+	setorigin(this, this.origin);
+	setsize(this, this.mins, this.maxs);
 
 	// how to draw
 	// engine currently wants this
-	setpredraw(self, WarpZone_Fade_PreDraw);
+	setpredraw(this, WarpZone_Fade_PreDraw);
 	return true;
 }
 
 void CL_RotateMoves(vector ang) = #638;
 NET_HANDLE(ENT_CLIENT_WARPZONE_TELEPORTED, bool isnew)
 {
-	self.classname = "warpzone_teleported";
+	this.classname = "warpzone_teleported";
 	vector v;
 	v.x = ReadCoord();
 	v.y = ReadCoord();
 	v.z = ReadCoord();
 	return = true;
 	if (!isnew) return;
-	self.warpzone_transform = v;
-	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(self, getpropertyvec(VF_CL_VIEWANGLES)));
+	this.warpzone_transform = v;
+	setproperty(VF_CL_VIEWANGLES, WarpZone_TransformVAngles(this, getpropertyvec(VF_CL_VIEWANGLES)));
 	if(checkextension("DP_CSQC_ROTATEMOVES"))
 		CL_RotateMoves(v);
 		//CL_RotateMoves('0 90 0');
@@ -226,8 +226,7 @@ vector WarpZone_FixNearClip(vector o, vector c0, vector c1, vector c2, vector c3
 
 void WarpZone_FixPMove()
 {
-	entity e;
-	e = WarpZone_Find(pmove_org, pmove_org);
+	entity e = WarpZone_Find(pmove_org, pmove_org);
 	if(e)
 	{
 		pmove_org = WarpZone_TransformOrigin(e, pmove_org);

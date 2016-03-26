@@ -155,6 +155,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 
 #define ITEMS_STAT(s)                       ((s).items)
 
+.float teleport_time;
+
 #ifdef CSQC
 
 	string autocvar_cl_jumpspeedcap_min;
@@ -171,6 +173,8 @@ STATIC_INIT(PHYS_INPUT_BUTTON_JETPACK)
 
 	.vector movement;
 	.vector v_angle;
+
+	.entity hook;
 
 // TODO
 	#define IS_CLIENT(s)                        ((s).isplayermodel)

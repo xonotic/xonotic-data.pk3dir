@@ -129,7 +129,7 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 	this.health = this.health - damage;
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(this.realowner, W_Hook_Explode2));
+		WITHSELF(this, W_PrepareExplosionByDamage(this.realowner, W_Hook_Explode2));
 }
 
 void W_Hook_Touch2()
@@ -262,7 +262,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if (actor.hook)
             RemoveGrapplingHook(actor);
-        WITH(entity, self, actor, FireGrapplingHook());
+        WITHSELF(actor, FireGrapplingHook());
         actor.hook_state &= ~HOOK_FIRING;
         actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
     }
@@ -484,6 +484,9 @@ void Draw_GrapplingHook(entity this)
 void Remove_GrapplingHook(entity this)
 {
 	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+
+	if(csqcplayer && csqcplayer.hook == this)
+		csqcplayer.hook = NULL;
 }
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
@@ -502,6 +505,8 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 		int myowner = ReadByte();
 		self.owner = playerslots[myowner - 1];
 		self.sv_entnum = myowner;
+		if(csqcplayer && myowner == player_localentnum)
+			csqcplayer.hook = self;
 		switch(self.HookType)
 		{
 			default:

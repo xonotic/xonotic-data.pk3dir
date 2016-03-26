@@ -1,25 +1,10 @@
-#ifndef VEHICLE_BUMBLEBEE_WEAPONS_H
-#define VEHICLE_BUMBLEBEE_WEAPONS_H
-
-#include <common/weapons/all.qh>
-
-#endif
+#include "bumblebee_weapons.qh"
 
 #ifdef IMPLEMENTATION
 
 REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
 
 #ifdef SVQC
-
-float autocvar_g_vehicle_bumblebee_cannon_cost = 2;
-float autocvar_g_vehicle_bumblebee_cannon_damage = 60;
-float autocvar_g_vehicle_bumblebee_cannon_radius = 225;
-float autocvar_g_vehicle_bumblebee_cannon_refire = 0.2;
-float autocvar_g_vehicle_bumblebee_cannon_speed = 20000;
-float autocvar_g_vehicle_bumblebee_cannon_spread = 0.02;
-float autocvar_g_vehicle_bumblebee_cannon_force = -35;
-
-bool bumble_raygun_send(entity this, entity to, int sf);
 
 void bumblebee_fire_cannon(entity this, entity _gun, string _tagname, entity _owner)
 {

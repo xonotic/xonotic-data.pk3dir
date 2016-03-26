@@ -48,6 +48,6 @@ Yed need to set v_up and v_forward (generally by calling makevectors) before cal
 **/
 #endif
 
-void movelib_groundalign4point(float spring_length, float spring_up, float blendrate, float _max);
+void movelib_groundalign4point(entity this, float spring_length, float spring_up, float blendrate, float _max);
 
 #endif

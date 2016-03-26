@@ -12,6 +12,12 @@
 #include <lib/warpzone/server.qh>
 #endif
 
+#ifndef MENUQC
+#include "../animdecide.qh"
+#include "../anim.qh"
+vector animfixfps(entity e, vector a, vector b);
+#endif
+
 // special spawn flags
 const int MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
 const int MONSTER_TYPE_FLY = 32;
@@ -39,7 +45,6 @@ const int MONSTER_SIZE_QUAKE = 8192;
 .vector anim_walk;
 .vector anim_spawn;
 
-/** If you register a new monster, make sure to add it to all.inc */
 CLASS(Monster, Object)
     ATTRIB(Monster, monsterid, int, 0)
     /** attributes */

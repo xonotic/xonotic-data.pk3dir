@@ -128,7 +128,17 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		PM_ClientMovement_Unstick(this);
 
 	// set crouched
-	if (PHYS_INPUT_BUTTON_CROUCH(this))
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(this);
+	if(this.hook && !wasfreed(this.hook))
+		do_crouch = false;
+	if(hud != HUD_NORMAL)
+		do_crouch = false;
+	if(STAT(FROZEN, this))
+		do_crouch = false;
+	if((activeweapon == WEP_SHOCKWAVE || activeweapon == WEP_SHOTGUN) && viewmodel.animstate_startframe == viewmodel.anim_fire2_x && time < viewmodel.weapon_nextthink)
+		do_crouch = false;
+
+	if (do_crouch)
 	{
 		// wants to crouch, this always works
 		if (!IS_DUCKED(this)) SET_DUCKED(this);
@@ -1316,7 +1326,7 @@ void PM_Main(entity this)
 
 
 #ifdef SVQC
-	WarpZone_PlayerPhysics_FixVAngle();
+	WarpZone_PlayerPhysics_FixVAngle(this);
 #endif
 	float maxspeed_mod = 1;
 	maxspeed_mod *= PHYS_HIGHSPEED(this);

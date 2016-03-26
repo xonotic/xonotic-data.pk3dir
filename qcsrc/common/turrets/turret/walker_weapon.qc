@@ -1,15 +1,4 @@
-#ifndef TURRET_WALKER_WEAPON_H
-#define TURRET_WALKER_WEAPON_H
-
-CLASS(WalkerTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(WalkerTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(WalkerTurretAttack, impulse, int, 5);
-/* refname   */ ATTRIB(WalkerTurretAttack, netname, string, "turret_walker");
-/* wepname   */ ATTRIB(WalkerTurretAttack, m_name, string, _("Walker"));
-ENDCLASS(WalkerTurretAttack)
-REGISTER_WEAPON(WALKER, NEW(WalkerTurretAttack));
-
-#endif
+#include "walker_weapon.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -29,7 +18,7 @@ METHOD(WalkerTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
         sound (actor, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
-        fireBullet (actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_WALK_GUN.m_id, 0);
+        fireBullet (actor, actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_WALK_GUN.m_id, 0);
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
     }
 }

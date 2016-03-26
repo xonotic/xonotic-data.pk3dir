@@ -1,0 +1,13 @@
+// generated file; do not modify
+#include "announcer.qc"
+#include "bgmscript.qc"
+#include "csqcmodel_hooks.qc"
+#include "main.qc"
+#include "mapvoting.qc"
+#include "miscfunctions.qc"
+#include "player_skeleton.qc"
+#include "scoreboard.qc"
+#include "shownames.qc"
+#include "teamradar.qc"
+#include "view.qc"
+#include "wall.qc"

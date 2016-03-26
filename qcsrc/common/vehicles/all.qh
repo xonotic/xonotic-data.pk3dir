@@ -11,7 +11,6 @@ REGISTRY_CHECK(Vehicles)
 const int VEH_FIRST = 1;
 #define VEH_LAST (Vehicles_COUNT - 1)
 
-/** If you register a new vehicle, make sure to add it to all.inc */
 #define REGISTER_VEHICLE(id, inst) REGISTER(Vehicles, VEH, id, vehicleid, inst)
 
 #if defined(SVQC)
@@ -22,6 +21,6 @@ const int VEH_FIRST = 1;
 
 REGISTER_VEHICLE(Null, NEW(Vehicle));
 
-#include "all.inc"
+#include "vehicle/_mod.inc"
 
 #endif

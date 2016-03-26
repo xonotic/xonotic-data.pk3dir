@@ -1,38 +1,8 @@
-#ifndef VEHICLE_SPIDERBOT_WEAPONS_H
-#define VEHICLE_SPIDERBOT_WEAPONS_H
-
-#include <common/weapons/all.qh>
-
-#endif
+#include "spiderbot_weapons.qh"
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-
-// 400 (x2) DPS
-float autocvar_g_vehicle_spiderbot_minigun_damage = 24;
-float autocvar_g_vehicle_spiderbot_minigun_refire = 0.06;
-float autocvar_g_vehicle_spiderbot_minigun_spread = 0.015;
-int autocvar_g_vehicle_spiderbot_minigun_ammo_cost = 1;
-int autocvar_g_vehicle_spiderbot_minigun_ammo_max = 100;
-int autocvar_g_vehicle_spiderbot_minigun_ammo_regen = 40;
-float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause = 1;
-float autocvar_g_vehicle_spiderbot_minigun_force = 9;
-float autocvar_g_vehicle_spiderbot_minigun_solidpenetration = 32;
-
-float autocvar_g_vehicle_spiderbot_rocket_damage = 50;
-float autocvar_g_vehicle_spiderbot_rocket_force = 150;
-float autocvar_g_vehicle_spiderbot_rocket_radius = 250;
-float autocvar_g_vehicle_spiderbot_rocket_speed = 3500;
-float autocvar_g_vehicle_spiderbot_rocket_spread = 0.05;
-float autocvar_g_vehicle_spiderbot_rocket_refire = 0.1;
-// volley
-float autocvar_g_vehicle_spiderbot_rocket_refire2 = 0.025;
-float autocvar_g_vehicle_spiderbot_rocket_reload = 4;
-float autocvar_g_vehicle_spiderbot_rocket_health = 100;
-float autocvar_g_vehicle_spiderbot_rocket_noise = 0.2;
-float autocvar_g_vehicle_spiderbot_rocket_turnrate = 0.25;
-float autocvar_g_vehicle_spiderbot_rocket_lifetime = 20;
 
 void spiderbot_rocket_artillery()
 {SELFPARAM();
@@ -76,14 +46,14 @@ void spiderbot_rocket_guided()
         self.use();
 }
 
-void spiderbot_guide_release()
-{SELFPARAM();
+void spiderbot_guide_release(entity this)
+{
     entity rkt;
-    rkt = findchainentity(realowner, self.owner);
+    rkt = findchainentity(realowner, this.owner);
     if(!rkt)
         return;
 
-    crosshair_trace(self.owner);
+    crosshair_trace(this.owner);
     while(rkt)
     {
         if(rkt.think == spiderbot_rocket_guided)
@@ -169,74 +139,74 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
     return sdir * vs + '0 0 1' * vz;
 }
 
-void spiderbot_rocket_do()
-{SELFPARAM();
+void spiderbot_rocket_do(entity this)
+{;
     vector v;
     entity rocket = world;
 
-    if (self.wait != -10)
+    if (this.wait != -10)
     {
-        if (PHYS_INPUT_BUTTON_ATCK2(self.owner) && self.vehicle_weapon2mode == SBRM_GUIDE)
+        if (PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.vehicle_weapon2mode == SBRM_GUIDE)
         {
-            if (self.wait == 1)
-            if (self.tur_head.frame == 9 || self.tur_head.frame == 1)
+            if (this.wait == 1)
+            if (this.tur_head.frame == 9 || this.tur_head.frame == 1)
             {
-                if(self.gun2.cnt < time && self.tur_head.frame == 9)
-                    self.tur_head.frame = 1;
+                if(this.gun2.cnt < time && this.tur_head.frame == 9)
+                    this.tur_head.frame = 1;
 
                 return;
             }
-            self.wait = 1;
+            this.wait = 1;
         }
         else
         {
-            if(self.wait)
-                spiderbot_guide_release();
+            if(this.wait)
+                spiderbot_guide_release(this);
 
-            self.wait = 0;
+            this.wait = 0;
         }
     }
 
-    if(self.gun2.cnt > time)
+    if(this.gun2.cnt > time)
         return;
 
-    if (self.tur_head.frame >= 9)
+    if (this.tur_head.frame >= 9)
     {
-        self.tur_head.frame = 1;
-        self.wait = 0;
+        this.tur_head.frame = 1;
+        this.wait = 0;
     }
 
-    if(self.wait != -10)
-    if(!PHYS_INPUT_BUTTON_ATCK2(self.owner))
+    if(this.wait != -10)
+    if(!PHYS_INPUT_BUTTON_ATCK2(this.owner))
         return;
 
-    if(forbidWeaponUse(self.owner))
+    if(forbidWeaponUse(this.owner))
         return;
 
-    v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
+    v = gettaginfo(this.tur_head,gettagindex(this.tur_head,"tag_fire"));
 
-    switch(self.vehicle_weapon2mode)
+    switch(this.vehicle_weapon2mode)
     {
         case SBRM_VOLLY:
-            rocket = vehicles_projectile(self, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
                                    v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, self.owner);
-            crosshair_trace(self.owner);
+                                   DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, this.owner);
+            crosshair_trace(this.owner);
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
             rocket.nextthink  = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
             rocket.think	 = vehicles_projectile_explode;
 
-            if(PHYS_INPUT_BUTTON_ATCK2(self.owner) && self.tur_head.frame == 1)
-                self.wait = -10;
+            if(PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.tur_head.frame == 1)
+                this.wait = -10;
             break;
         case SBRM_GUIDE:
-            rocket = vehicles_projectile(self, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, false, self.owner);
-            crosshair_trace(self.owner);
+                                   DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, false, this.owner);
+            crosshair_trace(this.owner);
             rocket.pos1	   = trace_endpos;
             rocket.nextthink  = time;
             rocket.think	  = spiderbot_rocket_guided;
@@ -244,21 +214,21 @@ void spiderbot_rocket_do()
 
         break;
         case SBRM_ARTILLERY:
-            rocket = vehicles_projectile(self, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+            rocket = vehicles_projectile(this, EFFECT_SPIDERBOT_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, self.owner);
+                                   DEATH_VH_SPID_ROCKET.m_id, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, false, true, this.owner);
 
-            crosshair_trace(self.owner);
+            crosshair_trace(this.owner);
 
             rocket.pos1	   = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
             rocket.pos1_z	   = trace_endpos_z;
 
-            traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, self);
+            traceline(v, v + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
             float h1 = 0.75 * vlen(v - trace_endpos);
 
             //v = trace_endpos;
-            traceline(v , rocket.pos1 + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, self);
+            traceline(v , rocket.pos1 + '0 0 1' * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, this);
             float h2 = 0.75 * vlen(rocket.pos1 - v);
 
             rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
@@ -271,13 +241,13 @@ void spiderbot_rocket_do()
 
     rocket.cnt = time + autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
-    self.tur_head.frame += 1;
-    if (self.tur_head.frame == 9)
-        self.attack_finished_single[0] = autocvar_g_vehicle_spiderbot_rocket_reload;
+    this.tur_head.frame += 1;
+    if (this.tur_head.frame == 9)
+        this.attack_finished_single[0] = autocvar_g_vehicle_spiderbot_rocket_reload;
     else
-        self.attack_finished_single[0] = ((self.vehicle_weapon2mode ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
+        this.attack_finished_single[0] = ((this.vehicle_weapon2mode ==  SBRM_VOLLY) ? autocvar_g_vehicle_spiderbot_rocket_refire2 : autocvar_g_vehicle_spiderbot_rocket_refire);
 
-    self.gun2.cnt = time + self.attack_finished_single[0];
+    this.gun2.cnt = time + this.attack_finished_single[0];
 }
 
 #endif

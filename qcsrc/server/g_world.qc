@@ -49,13 +49,13 @@ void PingPLReport_Think()
 	delta = 3 / maxclients;
 	if(delta < sys_frametime)
 		delta = 0;
-	self.nextthink = time + delta;
+	this.nextthink = time + delta;
 
-	e = edict_num(self.cnt + 1);
+	e = edict_num(this.cnt + 1);
 	if(IS_REAL_CLIENT(e))
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_movementloss * 255));
@@ -72,12 +72,12 @@ void PingPLReport_Think()
 	else
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 	}
-	self.cnt = (self.cnt + 1) % maxclients;
+	this.cnt = (this.cnt + 1) % maxclients;
 }
 void PingPLReport_Spawn()
 {
@@ -511,15 +511,15 @@ entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
-	WriteShort(MSG_ENTITY, self.cnt);
+	WriteShort(MSG_ENTITY, this.cnt);
 	return true;
 }
 void RandomSeed_Think()
 {SELFPARAM();
-	self.cnt = bound(0, floor(random() * 65536), 65535);
-	self.nextthink = time + 5;
+	this.cnt = bound(0, floor(random() * 65536), 65535);
+	this.nextthink = time + 5;
 
-	self.SendFlags |= 1;
+	this.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
@@ -527,7 +527,7 @@ void RandomSeed_Spawn()
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITH(entity, self, randomseed, randomseed.think()); // sets random seed and nextthink
+	WITHSELF(randomseed, randomseed.think()); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -1545,9 +1545,7 @@ void NextLevel()
 			bprint(it.netname, " ^7wins.\n");
 	));
 
-	entity oldself = self;
-	target_music_kill();
-	self = oldself;
+	WITHSELF(NULL, target_music_kill());
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
@@ -1569,8 +1567,8 @@ void CheckRules_Player()
 	if (gameover)	// someone else quit the game already
 		return;
 
-	if(!IS_DEAD(self))
-		self.play_time += frametime;
+	if(!IS_DEAD(this))
+		this.play_time += frametime;
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
 	//   (div0: and that in CheckRules_World please)

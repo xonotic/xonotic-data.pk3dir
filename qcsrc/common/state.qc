@@ -12,12 +12,14 @@ void PlayerState_attach(entity this)
 
 void PlayerState_detach(entity this)
 {
-	if (!PS(this)) return;  // initial connect
-	FOREACH_CLIENT(PS(it) == PS(this), { PS(it) = NULL; });
-	remove(PS(this));
-	this._ps = NULL;
+    PlayerState ps = PS(this);
+	if (!ps) return;  // initial connect
+	PS(this) = NULL;
+	if (ps.m_client != this) return;  // don't own state, spectator
+	FOREACH_CLIENT(PS(it) == ps, { PS(it) = NULL; });
+	remove(ps);
 
-    Inventory_delete(self);
+    Inventory_delete(this);
 }
 
 void GetCvars(entity this, int);

@@ -548,7 +548,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		// Use targets now (somebody make sure this is in the right place..)
 		setself(this.owner);
 		activator = this;
-		WITH(entity, self, this, SUB_UseTargets());
+		WITHSELF(this, SUB_UseTargets());
 		setself(this);
 
 		this.owner.waslinked = this.owner.islinked;
@@ -1775,7 +1775,7 @@ MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = false;
 		it.ons_deathloc = '0 0 0';
-		WITH(entity, self, it, PutClientInServer());
+		WITHSELF(it, PutClientInServer());
 	});
 	return false;
 }

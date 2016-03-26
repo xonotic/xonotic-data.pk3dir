@@ -101,19 +101,19 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerPhysics)
 {
     SELFPARAM();
 #ifdef CSQC
-	self.multijump_count = PHYS_MULTIJUMP_COUNT(self);
+	this.multijump_count = PHYS_MULTIJUMP_COUNT(this);
 #endif
 	if(!PHYS_MULTIJUMP) { return; }
 
-	if(IS_ONGROUND(self))
-		self.multijump_count = 0;
+	if(IS_ONGROUND(this))
+		this.multijump_count = 0;
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 {
     SELFPARAM();
-	return PM_multijump_checkjump(self);
+	return PM_multijump_checkjump(this);
 }
 
 #ifdef SVQC

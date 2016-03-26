@@ -1,16 +1,11 @@
-#include "../lib/_all.inc"
+#include <lib/_all.inc>
 
-#define world NULL
-
-#include "classes.inc"
-
-#include "draw.qc"
-#include "menu.qc"
-
-#include <common/command/all.qc>
-#include "command/menu_cmd.qc"
-
-#include "xonotic/util.qc"
+#include "_mod.inc"
+#include "anim/_mod.inc"
+#include "command/_mod.inc"
+#include "item/_mod.inc"
+#include "mutators/_mod.inc"
+#include "xonotic/_mod.inc"
 
 #include <common/_all.inc>
 

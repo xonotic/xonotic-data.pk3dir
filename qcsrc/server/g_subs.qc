@@ -240,89 +240,89 @@ float LOD_customize()
 	{
 		int d = autocvar_loddebug;
 		if(d == 1)
-			self.modelindex = self.lodmodelindex0;
-		else if(d == 2 || !self.lodmodelindex2)
-			self.modelindex = self.lodmodelindex1;
+			this.modelindex = this.lodmodelindex0;
+		else if(d == 2 || !this.lodmodelindex2)
+			this.modelindex = this.lodmodelindex1;
 		else // if(d == 3)
-			self.modelindex = self.lodmodelindex2;
+			this.modelindex = this.lodmodelindex2;
 		return true;
 	}
 
 	// TODO csqc network this so it only gets sent once
-	vector near_point = NearestPointOnBox(self, other.origin);
-	if(vdist(near_point - other.origin, <, self.loddistance1))
-		self.modelindex = self.lodmodelindex0;
-	else if(!self.lodmodelindex2 || vdist(near_point - other.origin, <, self.loddistance2))
-		self.modelindex = self.lodmodelindex1;
+	vector near_point = NearestPointOnBox(this, other.origin);
+	if(vdist(near_point - other.origin, <, this.loddistance1))
+		this.modelindex = this.lodmodelindex0;
+	else if(!this.lodmodelindex2 || vdist(near_point - other.origin, <, this.loddistance2))
+		this.modelindex = this.lodmodelindex1;
 	else
-		self.modelindex = self.lodmodelindex2;
+		this.modelindex = this.lodmodelindex2;
 
 	return true;
 }
 
 void LOD_uncustomize()
 {SELFPARAM();
-	self.modelindex = self.lodmodelindex0;
+	this.modelindex = this.lodmodelindex0;
 }
 
 void LODmodel_attach()
 {SELFPARAM();
 	entity e;
 
-	if(!self.loddistance1)
-		self.loddistance1 = 1000;
-	if(!self.loddistance2)
-		self.loddistance2 = 2000;
-	self.lodmodelindex0 = self.modelindex;
+	if(!this.loddistance1)
+		this.loddistance1 = 1000;
+	if(!this.loddistance2)
+		this.loddistance2 = 2000;
+	this.lodmodelindex0 = this.modelindex;
 
-	if(self.lodtarget1 != "")
+	if(this.lodtarget1 != "")
 	{
-		e = find(world, targetname, self.lodtarget1);
+		e = find(world, targetname, this.lodtarget1);
 		if(e)
 		{
-			self.lodmodel1 = e.model;
+			this.lodmodel1 = e.model;
 			remove(e);
 		}
 	}
-	if(self.lodtarget2 != "")
+	if(this.lodtarget2 != "")
 	{
-		e = find(world, targetname, self.lodtarget2);
+		e = find(world, targetname, this.lodtarget2);
 		if(e)
 		{
-			self.lodmodel2 = e.model;
+			this.lodmodel2 = e.model;
 			remove(e);
 		}
 	}
 
 	if(autocvar_loddebug < 0)
 	{
-		self.lodmodel1 = self.lodmodel2 = ""; // don't even initialize
+		this.lodmodel1 = this.lodmodel2 = ""; // don't even initialize
 	}
 
-	if(self.lodmodel1 != "")
+	if(this.lodmodel1 != "")
 	{
 		vector mi, ma;
-		mi = self.mins;
-		ma = self.maxs;
+		mi = this.mins;
+		ma = this.maxs;
 
-		precache_model(self.lodmodel1);
-		_setmodel(self, self.lodmodel1);
-		self.lodmodelindex1 = self.modelindex;
+		precache_model(this.lodmodel1);
+		_setmodel(this, this.lodmodel1);
+		this.lodmodelindex1 = this.modelindex;
 
-		if(self.lodmodel2 != "")
+		if(this.lodmodel2 != "")
 		{
-			precache_model(self.lodmodel2);
-			_setmodel(self, self.lodmodel2);
-			self.lodmodelindex2 = self.modelindex;
+			precache_model(this.lodmodel2);
+			_setmodel(this, this.lodmodel2);
+			this.lodmodelindex2 = this.modelindex;
 		}
 
-		self.modelindex = self.lodmodelindex0;
-		setsize(self, mi, ma);
+		this.modelindex = this.lodmodelindex0;
+		setsize(this, mi, ma);
 	}
 
-	if(self.lodmodelindex1)
-		if (!self.SendEntity)
-			SetCustomizer(self, LOD_customize, LOD_uncustomize);
+	if(this.lodmodelindex1)
+		if (!this.SendEntity)
+			SetCustomizer(this, LOD_customize, LOD_uncustomize);
 }
 
 void ApplyMinMaxScaleAngles(entity e)

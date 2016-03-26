@@ -910,7 +910,7 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", e.classname, "\n");
         if (func)
         {
-        	WITH(entity, self, e, func());
+        	WITHSELF(e, func());
         }
         else
         {
