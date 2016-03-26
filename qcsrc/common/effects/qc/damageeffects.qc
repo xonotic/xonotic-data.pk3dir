@@ -190,7 +190,7 @@ void DamageEffect(vector hitorg, float thedamage, int type, int specnum)
 
 NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 {
-	make_pure(this);
+	const float ATTEN_LOW = 0.2;
 	float thedamage, rad, edge, thisdmg;
 	bool hitplayer = false;
 	int species, forcemul;
@@ -298,7 +298,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				pointparticles(EFFECT_SPIDERBOT_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_SPID_DEATH:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
 				break;
 
@@ -311,7 +311,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				pointparticles(EFFECT_RACER_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_WAKI_DEATH:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
 				break;
 
@@ -336,7 +336,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				pointparticles(EFFECT_RAPTOR_BOMB_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_RAPT_DEATH:
-				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_EXPLOSION_BIG, self.origin, w_backoff * 1000, 1);
 				break;
 			case DEATH_VH_BUMB_GUN:
@@ -360,7 +360,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		switch(DEATH_ENT(w_deathtype))
 		{
 			 case DEATH_TURRET_EWHEEL:
-				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_BLASTER_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 
@@ -373,7 +373,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 			 case DEATH_TURRET_HK:
 			 case DEATH_TURRET_WALK_ROCKET:
 			 case DEATH_TURRET_HELLION:
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, w_backoff * 1000, 1);
 				break;
 
@@ -384,12 +384,12 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 				break;
 
 			 case DEATH_TURRET_PLASMA:
-				sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_ELECTRO_IMPACT, self.origin, w_backoff * 1000, 1);
 				break;
 
 			 case DEATH_TURRET_WALK_MELEE:
-				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_LOW);
 				pointparticles(EFFECT_TE_SPARK, self.origin, w_backoff * 1000, 1);
 				break;
 
