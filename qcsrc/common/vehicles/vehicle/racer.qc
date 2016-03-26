@@ -519,8 +519,8 @@ void racer_deadtouch()
 
 spawnfunc(vehicle_racer)
 {
-	if(!autocvar_g_vehicle_racer) { remove(self); return; }
-	if(!vehicle_initialize(VEH_RACER, false)) { remove(self); return; }
+	if(!autocvar_g_vehicle_racer) { remove(this); return; }
+	if(!vehicle_initialize(this, VEH_RACER, false)) { remove(this); return; }
 }
 
 #endif // SVQC
@@ -564,7 +564,7 @@ METHOD(Racer, vr_impact, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
     if(autocvar_g_vehicle_racer_bouncepain)
-        vehicles_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
+        vehicles_impact(instance, autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 #endif
 }
 
@@ -669,29 +669,26 @@ METHOD(Racer, vr_crosshair, void(Racer thisveh))
 METHOD(Racer, vr_setup, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
-    SELFPARAM();
-    self.vehicle_exit = racer_exit;
-#endif
+    instance.vehicle_exit = racer_exit;
 
-#ifdef SVQC
     // we have no need to network energy
     if(autocvar_g_vehicle_racer_energy)
     if(autocvar_g_vehicle_racer_energy_regen)
-        self.vehicle_flags |= VHF_ENERGYREGEN;
+        instance.vehicle_flags |= VHF_ENERGYREGEN;
 
     if(autocvar_g_vehicle_racer_shield)
-        self.vehicle_flags |= VHF_HASSHIELD;
+        instance.vehicle_flags |= VHF_HASSHIELD;
 
     if(autocvar_g_vehicle_racer_shield_regen)
-        self.vehicle_flags |= VHF_SHIELDREGEN;
+        instance.vehicle_flags |= VHF_SHIELDREGEN;
 
     if(autocvar_g_vehicle_racer_health_regen)
-        self.vehicle_flags |= VHF_HEALTHREGEN;
+        instance.vehicle_flags |= VHF_HEALTHREGEN;
 
-    self.respawntime = autocvar_g_vehicle_racer_respawntime;
-    self.vehicle_health = autocvar_g_vehicle_racer_health;
-    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
-    self.max_health = self.vehicle_health;
+    instance.respawntime = autocvar_g_vehicle_racer_respawntime;
+    instance.vehicle_health = autocvar_g_vehicle_racer_health;
+    instance.vehicle_shield = autocvar_g_vehicle_racer_shield;
+    instance.max_health = instance.vehicle_health;
 #endif
 
 #ifdef CSQC

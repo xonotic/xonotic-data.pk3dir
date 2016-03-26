@@ -536,14 +536,14 @@ bool spiderbot_impulse(int _imp)
 
 spawnfunc(vehicle_spiderbot)
 {
-	if(!autocvar_g_vehicle_spiderbot) { remove(self); return; }
-	if(!vehicle_initialize(VEH_SPIDERBOT, false)) { remove(self); return; }
+	if(!autocvar_g_vehicle_spiderbot) { remove(this); return; }
+	if(!vehicle_initialize(this, VEH_SPIDERBOT, false)) { remove(this); return; }
 }
 
 METHOD(Spiderbot, vr_impact, void(Spiderbot thisveh, entity instance))
 {
     if(autocvar_g_vehicle_spiderbot_bouncepain)
-        vehicles_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
+        vehicles_impact(instance, autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);
 }
 METHOD(Spiderbot, vr_enter, void(Spiderbot thisveh, entity instance))
 {
@@ -618,21 +618,20 @@ METHOD(Spiderbot, vr_spawn, void(Spiderbot thisveh, entity instance))
 }
 METHOD(Spiderbot, vr_setup, void(Spiderbot thisveh, entity instance))
 {
-    SELFPARAM();
     if(autocvar_g_vehicle_spiderbot_shield)
-        self.vehicle_flags |= VHF_HASSHIELD;
+        instance.vehicle_flags |= VHF_HASSHIELD;
 
     if(autocvar_g_vehicle_spiderbot_shield_regen)
-        self.vehicle_flags |= VHF_SHIELDREGEN;
+        instance.vehicle_flags |= VHF_SHIELDREGEN;
 
     if(autocvar_g_vehicle_spiderbot_health_regen)
-        self.vehicle_flags |= VHF_HEALTHREGEN;
+        instance.vehicle_flags |= VHF_HEALTHREGEN;
 
-    self.respawntime = autocvar_g_vehicle_spiderbot_respawntime;
-    self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
-    self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
-    self.max_health = self.vehicle_health;
-    self.pushable = true; // spiderbot can use jumppads
+    instance.respawntime = autocvar_g_vehicle_spiderbot_respawntime;
+    instance.vehicle_health = autocvar_g_vehicle_spiderbot_health;
+    instance.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
+    instance.max_health = instance.vehicle_health;
+    instance.pushable = true; // spiderbot can use jumppads
 }
 
 #endif // SVQC

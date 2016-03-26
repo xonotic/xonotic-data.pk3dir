@@ -23,6 +23,10 @@ CLASS(Bumblebee, Vehicle)
 ENDCLASS(Bumblebee)
 REGISTER_VEHICLE(BUMBLEBEE, NEW(Bumblebee));
 
+#ifndef MENUQC
+	MODEL(VEH_BUMBLEBEE_GUNCOCKPIT, "models/vehicles/wakizashi_cockpit.dpm");
+#endif
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -285,10 +289,9 @@ void bumblebee_gunner_exit(int _exitflag)
 	player.vehicle = world;
 }
 
-bool bumblebee_gunner_enter()
-{SELFPARAM();
-	entity vehic = self;
-	entity player = other;
+bool bumblebee_gunner_enter(entity this, entity player)
+{
+	entity vehic = this;
 	entity gunner = world;
 
 	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
@@ -381,7 +384,7 @@ void bumblebee_touch()
 		float phase_time = (time >= self.gun1.phase) + (time >= self.gun2.phase);
 
 		if(time >= other.vehicle_enter_delay && phase_time)
-		if(bumblebee_gunner_enter())
+		if(bumblebee_gunner_enter(self, other))
 			return;
 	}
 
@@ -715,14 +718,14 @@ void bumblebee_diethink()
 
 spawnfunc(vehicle_bumblebee)
 {
-	if(!autocvar_g_vehicle_bumblebee) { remove(self); return; }
-	if(!vehicle_initialize(VEH_BUMBLEBEE, false)) { remove(self); return; }
+	if(!autocvar_g_vehicle_bumblebee) { remove(this); return; }
+	if(!vehicle_initialize(this, VEH_BUMBLEBEE, false)) { remove(this); return; }
 }
 
 METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))
 {
     if(autocvar_g_vehicle_bumblebee_bouncepain)
-        vehicles_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
+        vehicles_impact(instance, autocvar_g_vehicle_bumblebee_bouncepain_x, autocvar_g_vehicle_bumblebee_bouncepain_y, autocvar_g_vehicle_bumblebee_bouncepain_z);
 }
 METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 {
@@ -798,11 +801,11 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     self.vehicle_exit(VHEF_EJECT);
 
     fixedmakevectors(self.angles);
-    vehicle_tossgib(self.gun1, self.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
-    vehicle_tossgib(self.gun2, self.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 200);
-    vehicle_tossgib(self.gun3, self.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
+    vehicle_tossgib(instance, self.gun1, self.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
+    vehicle_tossgib(instance, self.gun2, self.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 200);
+    vehicle_tossgib(instance, self.gun3, self.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
 
-    entity _body = vehicle_tossgib(self, self.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
+    entity _body = vehicle_tossgib(instance, self, self.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
     if(random() > 0.5)
         _body.touch = bumblebee_blowup;
@@ -878,8 +881,8 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
         setorigin(self.gun3, ofs);
         self.angles = self.gun3.pos1;
 
-        vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
-        vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+        vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+        vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
 
         setorigin(self.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
         setorigin(self.vehicle_viewport, '5 0 2');    // Move camera forward up
@@ -916,25 +919,24 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 }
 METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 {
-    SELFPARAM();
     if(autocvar_g_vehicle_bumblebee_energy)
     if(autocvar_g_vehicle_bumblebee_energy_regen)
-        self.vehicle_flags |= VHF_ENERGYREGEN;
+        instance.vehicle_flags |= VHF_ENERGYREGEN;
 
     if(autocvar_g_vehicle_bumblebee_shield)
-        self.vehicle_flags |= VHF_HASSHIELD;
+        instance.vehicle_flags |= VHF_HASSHIELD;
 
     if(autocvar_g_vehicle_bumblebee_shield_regen)
-        self.vehicle_flags |= VHF_SHIELDREGEN;
+        instance.vehicle_flags |= VHF_SHIELDREGEN;
 
     if(autocvar_g_vehicle_bumblebee_health_regen)
-        self.vehicle_flags |= VHF_HEALTHREGEN;
+        instance.vehicle_flags |= VHF_HEALTHREGEN;
 
-    self.vehicle_exit = bumblebee_exit;
-    self.respawntime = autocvar_g_vehicle_bumblebee_respawntime;
-    self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
-    self.max_health = self.vehicle_health;
-    self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
+    instance.vehicle_exit = bumblebee_exit;
+    instance.respawntime = autocvar_g_vehicle_bumblebee_respawntime;
+    instance.vehicle_health = autocvar_g_vehicle_bumblebee_health;
+    instance.max_health = instance.vehicle_health;
+    instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
 }
 
 #endif // SVQC
