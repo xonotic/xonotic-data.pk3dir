@@ -1165,6 +1165,9 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	if(!info.vehicleid)
 		return false;
 
+	if(!this.tur_head)
+		info.vr_precache(info);
+
 	if(this.targetname && this.targetname != "")
 	{
 		this.vehicle_controller = find(world, target, this.targetname);
