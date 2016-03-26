@@ -3,7 +3,7 @@
 #include <common/weapons/all.qh>
 
 #ifdef SVQC
-void spiderbot_rocket_do();
+void spiderbot_rocket_do(entity this);
 #endif
 
 // 400 (x2) DPS

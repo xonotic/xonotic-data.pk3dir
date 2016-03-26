@@ -170,8 +170,6 @@ bool raptor_frame(entity this)
 		return;
 	}
 
-	setself(vehic);
-
 	vehicles_frame(vehic, this);
 
 	float ftmp = 0;
@@ -387,6 +385,9 @@ bool raptor_frame(entity this)
 	UpdateAuxiliaryXhair(this, trace_endpos, '0 1 0', 0);
 	*/
 
+	// TODO: fix wr_checkammo and its use of self!
+	setself(vehic);
+
 	Weapon wep1 = WEP_RAPTOR;
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
@@ -431,6 +432,8 @@ bool raptor_frame(entity this)
 		}
 	}
 
+	setself(this);
+
 	vehic.bomb1.alpha = vehic.bomb2.alpha = (time - vehic.lip) / (vehic.delay - vehic.lip);
 	this.vehicle_reload2 = bound(0, vehic.bomb1.alpha * 100, 100);
 	this.vehicle_ammo2 = (this.vehicle_reload2 == 100) ? 100 : 0;
@@ -462,16 +465,12 @@ bool raptor_frame(entity this)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, raptor);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
-
-	setself(this);
 }
 
 bool raptor_takeoff(entity this)
 {
 	entity vehic = this.vehicle;
 	return = true;
-
-	setself(this);
 
 	vehic.nextthink = time;
 	CSQCMODEL_AUTOUPDATE(vehic);
@@ -517,8 +516,6 @@ bool raptor_takeoff(entity this)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, raptor);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
-
-	setself(vehic);
 }
 
 void raptor_blowup()

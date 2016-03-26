@@ -100,8 +100,6 @@ bool bumblebee_gunner_frame(entity this)
 	entity gun = this.vehicle;
 	return = true;
 
-	setself(vehic);
-
 	// this isn't technically a vehicle (yet), let's not do frame functions on it (yet)
 	//vehicles_frame(gun, player);
 
@@ -203,8 +201,6 @@ bool bumblebee_gunner_frame(entity this)
 	vehic.solid = SOLID_BBOX;
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 	this.vehicle_energy = (gun.vehicle_energy / autocvar_g_vehicle_bumblebee_cannon_ammo) * 100;
-
-	setself(this);
 }
 
 vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity player)
@@ -433,8 +429,6 @@ bool bumblebee_pilot_frame(entity this)
 		return;
 	}
 
-	setself(vehic);
-
 	bumblebee_regen(vehic);
 
 	crosshair_trace(this);
@@ -626,8 +620,6 @@ bool bumblebee_pilot_frame(entity this)
 	setorigin(this, vehic.origin + v_up * 48 + v_forward * 160);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
-
-	setself(this);
 }
 
 void bumblebee_land()

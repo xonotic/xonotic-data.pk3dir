@@ -80,8 +80,6 @@ bool spiderbot_frame(entity this)
 		return;
 	}
 
-	setself(vehic);
-
 	vehicles_frame(vehic, this);
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
@@ -286,8 +284,8 @@ bool spiderbot_frame(entity this)
 			v_forward = normalize(v_forward);
 			v += v_forward * 50;
 
-			WITH(entity, self, this, fireBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
-				autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0));
+			fireBullet(this, v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
+				autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 
 			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 			//trailparticles(self, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
@@ -311,7 +309,7 @@ bool spiderbot_frame(entity this)
 										   autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime, false);
 
 
-	WITH(entity, self, vehic, spiderbot_rocket_do());
+	spiderbot_rocket_do(vehic);
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime, true);
@@ -335,8 +333,6 @@ bool spiderbot_frame(entity this)
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, spiderbot);
-
-	setself(this);
 }
 
 void spiderbot_exit(float eject)

@@ -191,8 +191,6 @@ bool racer_frame(entity this)
 		return;
 	}
 
-	setself(vehic);
-
 	racer_align4point(vehic, PHYS_INPUT_TIMELENGTH);
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
@@ -311,6 +309,8 @@ bool racer_frame(entity this)
 	this.movement = vehic.velocity += df * PHYS_INPUT_TIMELENGTH;
 
 #ifdef SVQC
+	setself(vehic);
+
 	Weapon wep1 = WEP_RACER;
 	if (!forbidWeaponUse(this))
 	if (PHYS_INPUT_BUTTON_ATCK(this))
@@ -328,6 +328,8 @@ bool racer_frame(entity this)
 		.entity weaponentity = weaponentities[0];
 		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
+
+	setself(this);
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
@@ -394,8 +396,6 @@ bool racer_frame(entity this)
 
 	setorigin(this, vehic.origin + '0 0 32');
 	this.velocity = vehic.velocity;
-
-	setself(this);
 }
 
 void racer_think()
