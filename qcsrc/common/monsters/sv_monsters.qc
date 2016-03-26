@@ -904,6 +904,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 
 void Monster_Remove(entity this)
 {
+	if(IS_CLIENT(this))
+		return; // don't remove it?
+
 	.entity weaponentity = weaponentities[0];
 	if(!this) { return; }
 
