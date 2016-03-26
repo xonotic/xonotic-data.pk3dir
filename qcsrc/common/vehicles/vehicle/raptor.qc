@@ -170,6 +170,8 @@ bool raptor_frame(entity this)
 		return;
 	}
 
+	setself(vehic);
+
 	vehicles_frame(vehic, this);
 
 	float ftmp = 0;
@@ -200,7 +202,7 @@ bool raptor_frame(entity this)
 	if(IS_DEAD(vehic))
 	{
 		PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;
-		return 1;
+		return;
 	}
 	crosshair_trace(this);
 
@@ -460,12 +462,16 @@ bool raptor_frame(entity this)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, raptor);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
+
+	setself(this);
 }
 
 bool raptor_takeoff(entity this)
 {
 	entity vehic = this.vehicle;
 	return = true;
+
+	setself(this);
 
 	vehic.nextthink = time;
 	CSQCMODEL_AUTOUPDATE(vehic);
@@ -511,6 +517,8 @@ bool raptor_takeoff(entity this)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, raptor);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
+
+	setself(vehic);
 }
 
 void raptor_blowup()

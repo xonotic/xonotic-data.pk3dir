@@ -191,6 +191,8 @@ bool racer_frame(entity this)
 		return;
 	}
 
+	setself(vehic);
+
 	racer_align4point(vehic, PHYS_INPUT_TIMELENGTH);
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
@@ -392,6 +394,8 @@ bool racer_frame(entity this)
 
 	setorigin(this, vehic.origin + '0 0 32');
 	this.velocity = vehic.velocity;
+
+	setself(this);
 }
 
 void racer_think()

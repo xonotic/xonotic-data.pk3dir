@@ -641,7 +641,7 @@ void walker_draw(entity this)
         return;
 
     fixedmakevectors(this.angles);
-    movelib_groundalign4point(300, 100, 0.25, 45);
+    movelib_groundalign4point(this, 300, 100, 0.25, 45);
     setorigin(this, this.origin + this.velocity * dt);
     this.tur_head.angles += dt * this.tur_head.move_avelocity;
     this.angles_y = this.move_angles_y;

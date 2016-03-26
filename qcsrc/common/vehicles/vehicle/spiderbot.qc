@@ -80,6 +80,8 @@ bool spiderbot_frame(entity this)
 		return;
 	}
 
+	setself(vehic);
+
 	vehicles_frame(vehic, this);
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = false;
@@ -128,7 +130,7 @@ bool spiderbot_frame(entity this)
 	//fixedmakevectors(vehic.angles);
 	makevectors(vehic.angles + '-2 0 0' * vehic.angles_x);
 
-	WITH(entity, self, vehic, movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend, autocvar_g_vehicle_spiderbot_tiltlimit));
+	movelib_groundalign4point(vehic, autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend, autocvar_g_vehicle_spiderbot_tiltlimit);
 
 	if(IS_ONGROUND(vehic))
 		vehic.jump_delay = time; // reset now so movement can begin
@@ -333,6 +335,8 @@ bool spiderbot_frame(entity this)
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, spiderbot);
+
+	setself(this);
 }
 
 void spiderbot_exit(float eject)
