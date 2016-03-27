@@ -82,8 +82,8 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 }
 
 void ka_TouchEvent();
-void ka_RespawnBall() // runs whenever the ball needs to be relocated
-{SELFPARAM();
+void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
+{
 	if(gameover) { return; }
 	vector oldballorigin = self.origin;
 
@@ -100,7 +100,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.angles = '0 0 0';
 	self.effects = autocvar_g_keepawayball_effects;
 	self.touch = ka_TouchEvent;
-	self.think = ka_RespawnBall;
+	setthink(self, ka_RespawnBall);
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
@@ -130,7 +130,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The ball fell off the map, respawn it since players can't get to it
-		ka_RespawnBall();
+		ka_RespawnBall(self);
 		return;
 	}
 	if(IS_DEAD(other)) { return; }
@@ -193,7 +193,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.movetype = MOVETYPE_BOUNCE;
 	ball.wait = time + 1;
 	ball.touch = ka_TouchEvent;
-	ball.think = ka_RespawnBall;
+	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &= ~EF_NODRAW;
@@ -230,12 +230,12 @@ void ka_Reset(entity this)
 
 	if(time < game_starttime)
 	{
-		this.think = ka_RespawnBall;
+		setthink(this, ka_RespawnBall);
 		this.touch = func_null;
 		this.nextthink = game_starttime;
 	}
 	else
-		ka_RespawnBall();
+		ka_RespawnBall(this);
 }
 
 

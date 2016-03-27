@@ -1,3 +1,7 @@
+#ifdef SVQC
+void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner);
+#endif
+
 #ifdef IMPLEMENTATION
 
 #include <common/util.qh>

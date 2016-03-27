@@ -65,7 +65,7 @@ void fd_secret_use()
 
 void fd_secret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	WITH(entity, self, this, fd_secret_use());
+	WITHSELF(this, fd_secret_use());
 }
 
 // Wait after first movement...

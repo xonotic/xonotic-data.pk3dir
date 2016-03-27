@@ -1,55 +1,8 @@
-#ifndef VEHICLE_RAPTOR_WEAPONS_H
-#define VEHICLE_RAPTOR_WEAPONS_H
-
-#include <common/weapons/all.qh>
-
-CLASS(RaptorCannon, PortoLaunch)
-/* flags     */ ATTRIB(RaptorCannon, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(RaptorCannon, impulse, int, 3);
-/* refname   */ ATTRIB(RaptorCannon, netname, string, "raptorcannon");
-/* wepname   */ ATTRIB(RaptorCannon, m_name, string, _("Raptor cannon"));
-ENDCLASS(RaptorCannon)
-REGISTER_WEAPON(RAPTOR, NEW(RaptorCannon));
-
-CLASS(RaptorBomb, PortoLaunch)
-/* flags     */ ATTRIB(RaptorBomb, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(RaptorBomb, impulse, int, 3);
-/* refname   */ ATTRIB(RaptorBomb, netname, string, "raptorbomb");
-/* wepname   */ ATTRIB(RaptorBomb, m_name, string, _("Raptor bomb"));
-ENDCLASS(RaptorBomb)
-REGISTER_WEAPON(RAPTOR_BOMB, NEW(RaptorBomb));
-
-CLASS(RaptorFlare, PortoLaunch)
-/* flags     */ ATTRIB(RaptorFlare, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(RaptorFlare, impulse, int, 3);
-/* refname   */ ATTRIB(RaptorFlare, netname, string, "raptorflare");
-/* wepname   */ ATTRIB(RaptorFlare, m_name, string, _("Raptor flare"));
-ENDCLASS(RaptorFlare)
-REGISTER_WEAPON(RAPTOR_FLARE, NEW(RaptorFlare));
-
-#endif
+#include "raptor_weapons.qh"
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-
-float autocvar_g_vehicle_raptor_cannon_cost = 1;
-float autocvar_g_vehicle_raptor_cannon_damage = 10;
-float autocvar_g_vehicle_raptor_cannon_radius = 60;
-float autocvar_g_vehicle_raptor_cannon_refire = 0.03;
-float autocvar_g_vehicle_raptor_cannon_speed = 24000;
-float autocvar_g_vehicle_raptor_cannon_spread = 0.01;
-float autocvar_g_vehicle_raptor_cannon_force = 25;
-
-float autocvar_g_vehicle_raptor_bomblets = 8;
-float autocvar_g_vehicle_raptor_bomblet_alt = 750;
-float autocvar_g_vehicle_raptor_bomblet_time = 0.5;
-float autocvar_g_vehicle_raptor_bomblet_damage = 55;
-float autocvar_g_vehicle_raptor_bomblet_spread = 0.4;
-float autocvar_g_vehicle_raptor_bomblet_edgedamage = 25;
-float autocvar_g_vehicle_raptor_bomblet_radius = 350;
-float autocvar_g_vehicle_raptor_bomblet_force = 150;
-float autocvar_g_vehicle_raptor_bomblet_explode_delay = 0.4;
 
 METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -70,7 +23,7 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
             veh.vehicle_energy -= autocvar_g_vehicle_raptor_cannon_cost;
             actor.cnt = time;
         }
-        vehicles_projectile(EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
+        vehicles_projectile(veh, EFFECT_RAPTOR_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
                                org, normalize(dir + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                                autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
                                DEATH_VH_RAPT_CANNON.m_id, PROJECTILE_RAPTORCANNON, 0, true, true, player);
@@ -85,7 +38,6 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
     return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_raptor_cannon_cost;
 }
 
-float autocvar_g_vehicle_raptor_bombs_refire = 5;
 
 void raptor_bombdrop();
 METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
@@ -99,11 +51,6 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
         weapon_thinkf(player, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
-
-float autocvar_g_vehicle_raptor_flare_refire = 5;
-float autocvar_g_vehicle_raptor_flare_lifetime = 10;
-float autocvar_g_vehicle_raptor_flare_chase = 0.9;
-float autocvar_g_vehicle_raptor_flare_range = 2000;
 
 void raptor_flare_think();
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);

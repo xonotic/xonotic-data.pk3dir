@@ -1,6 +1,6 @@
 #include "scoreboard.qh"
 
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 #include "hud/all.qh"
 
 #include <common/ent_cs.qh>
@@ -1308,7 +1308,7 @@ void HUD_DrawScoreboard()
 	pos.y += sb_heading_fontsize.y + hud_fontsize.y * 0.25;
 
 	// Draw the scoreboard
-	vector bg_size = draw_getimagesize("gfx/scoreboard/scoreboard_bg") * autocvar_scoreboard_bg_scale;
+	vector bg_size = draw_getimagesize("gfx/scoreboard/scoreboard_bg") * ((autocvar_scoreboard_bg_scale > 0) ? autocvar_scoreboard_bg_scale : 0.25);
 
 	if(teamplay)
 	{

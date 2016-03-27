@@ -38,9 +38,11 @@ string(string...) strcat0n = #53;
 string(string...) strcat0n = #115;
 #endif
 
+#define __SOURCELOC__ (sprintf("^9"__FILE__"^7"  ":"  "^9%s^7"  ":"  "^9"STR(__LINE__)"^7", __FUNC__))
+
 #define _LOG(f, level, s) \
 	MACRO_BEGIN { \
-		f(sprintf("^9[::^7" PROGNAME "^9::" level "^9] [" __FILE__ "^7:^9%s^7:^9" STR(__LINE__) "] \n^7%s\n", __FUNC__, s)); \
+		f(sprintf("^9[::^7" PROGNAME "^9::" level "^9] [%s^9]\n^7%s\n", __SOURCELOC__, s)); \
 	} MACRO_END
 
 #define  LOG_FATAL(...) _LOG_FATAL(strcat0n(__VA_ARGS__))

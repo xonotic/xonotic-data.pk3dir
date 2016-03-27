@@ -1,9 +1,4 @@
-#ifndef VEHICLE_BUMBLEBEE_WEAPONS_H
-#define VEHICLE_BUMBLEBEE_WEAPONS_H
-
-#include <common/weapons/all.qh>
-
-#endif
+#include "bumblebee_weapons.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -11,20 +6,10 @@ REGISTER_NET_LINKED(ENT_CLIENT_BUMBLE_RAYGUN)
 
 #ifdef SVQC
 
-float autocvar_g_vehicle_bumblebee_cannon_cost = 2;
-float autocvar_g_vehicle_bumblebee_cannon_damage = 60;
-float autocvar_g_vehicle_bumblebee_cannon_radius = 225;
-float autocvar_g_vehicle_bumblebee_cannon_refire = 0.2;
-float autocvar_g_vehicle_bumblebee_cannon_speed = 20000;
-float autocvar_g_vehicle_bumblebee_cannon_spread = 0.02;
-float autocvar_g_vehicle_bumblebee_cannon_force = -35;
-
-bool bumble_raygun_send(entity this, entity to, int sf);
-
-void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
+void bumblebee_fire_cannon(entity this, entity _gun, string _tagname, entity _owner)
 {
     vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-    vehicles_projectile(EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND_VEH_BUMBLEBEE_FIRE,
+    vehicles_projectile(this, EFFECT_BIGPLASMA_MUZZLEFLASH.eent_eff_name, SND_VEH_BUMBLEBEE_FIRE,
                         v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
                         autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
                         DEATH_VH_BUMB_GUN.m_id, PROJECTILE_BUMBLE_GUN, 0, true, true, _owner);

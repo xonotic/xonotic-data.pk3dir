@@ -51,8 +51,8 @@ void g_clientmodel_use()
 	g_clientmodel_setcolormaptoactivator();
 }
 
-void g_model_dropbyspawnflags()
-{SELFPARAM();
+void g_model_dropbyspawnflags(entity this)
+{
 	if((self.spawnflags & 3) == 1) // ALIGN_ORIGIN
 	{
 		traceline(self.origin, self.origin - '0 0 4096', MOVE_NOMONSTERS, self);
@@ -70,11 +70,11 @@ void g_model_dropbyspawnflags()
 	}
 }
 
-void g_clientmodel_dropbyspawnflags()
-{SELFPARAM();
+void g_clientmodel_dropbyspawnflags(entity this)
+{
 	vector o0;
 	o0 = self.origin;
-	g_model_dropbyspawnflags();
+	g_model_dropbyspawnflags(self);
 	if(self.origin != o0)
 		self.SendFlags |= 2;
 }

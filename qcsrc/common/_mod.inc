@@ -1,0 +1,13 @@
+// generated file; do not modify
+#include "anim.qc"
+#include "animdecide.qc"
+#include "campaign_file.qc"
+#include "campaign_setup.qc"
+#include "ent_cs.qc"
+#include "mapinfo.qc"
+#include "net_notice.qc"
+#include "playerstats.qc"
+#include "state.qc"
+#include "t_items.qc"
+#include "util.qc"
+#include "viewloc.qc"

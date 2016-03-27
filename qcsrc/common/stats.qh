@@ -273,6 +273,7 @@ REGISTER_STAT(MOVEVARS_MAXAIRSTRAFESPEED, float)
 REGISTER_STAT(MOVEVARS_AIRCONTROL, float)
 REGISTER_STAT(FRAGLIMIT, float, autocvar_fraglimit)
 REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
+REGISTER_STAT(WARMUP_TIMELIMIT, float, warmup_limit)
 #ifdef SVQC
 float autocvar_sv_wallfriction;
 #endif

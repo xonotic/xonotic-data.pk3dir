@@ -117,7 +117,7 @@ void ClientCommand_clientversion(float request, float argc)  // internal command
 					}
 					else if (teamplay && !autocvar_sv_spectate && !(self.team_forced > 0))
 					{
-						self.classname = STR_OBSERVER;  // really?
+						TRANSMUTE(Observer, self);  // really?
 						stuffcmd(self, "menu_showteamselect\n");
 					}
 				}
@@ -177,8 +177,8 @@ void ClientCommand_join(float request)
 					if (self.caplayer) return;
 					if (nJoinAllowed(self, self))
 					{
-						if (autocvar_g_campaign)   campaign_bots_may_start = 1;
-						self.classname = STR_PLAYER;
+						if (autocvar_g_campaign)   campaign_bots_may_start = true;
+						TRANSMUTE(Player, self);
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CPID_PREVENT_JOIN);
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && self.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), self.netname);
@@ -471,7 +471,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 					tokenize_console(s);
 				}
 
-				GetCvars(1);
+				GetCvars(this, 1);
 
 				return;
 			}
@@ -733,7 +733,7 @@ void SV_ParseClientCommand(string command)
 	if (command != command2) return;
 
 	// if we're banned, don't even parse the command
-	if (Ban_MaybeEnforceBanOnce(self)) return;
+	if (Ban_MaybeEnforceBanOnce(this)) return;
 
 	float argc = tokenize_console(command);
 
@@ -765,17 +765,17 @@ void SV_ParseClientCommand(string command)
 	{
 		if (argc == 1)
 		{
-			sprint(self, "\nClient networked commands:\n");
+			sprint(this, "\nClient networked commands:\n");
 			ClientCommand_macro_help();
 
-			sprint(self, "\nCommon networked commands:\n");
-			CommonCommand_macro_help(self);
+			sprint(this, "\nCommon networked commands:\n");
+			CommonCommand_macro_help(this);
 
-			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are listed above.\n");
-			sprint(self, "For help about a specific command, type cmd help COMMAND\n");
+			sprint(this, "\nUsage:^3 cmd COMMAND...^7, where possible commands are listed above.\n");
+			sprint(this, "For help about a specific command, type cmd help COMMAND\n");
 			return;
 		}
-		else if (CommonCommand_macro_usage(argc, self))  // Instead of trying to call a command, we're going to see detailed information about it
+		else if (CommonCommand_macro_usage(argc, this))  // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
 		}
@@ -792,7 +792,7 @@ void SV_ParseClientCommand(string command)
 	{
 		return;  // handled by server/cheats.qc
 	}
-	else if (CommonCommand_macro_command(argc, self, command))
+	else if (CommonCommand_macro_command(argc, this, command))
 	{
 		return;                                          // handled by server/command/common.qc
 	}
@@ -802,6 +802,6 @@ void SV_ParseClientCommand(string command)
 	}
 	else
 	{
-		clientcommand(self, command);
+		clientcommand(this, command);
 	}
 }

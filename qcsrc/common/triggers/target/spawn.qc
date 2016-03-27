@@ -221,7 +221,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 			oldactivator = activator;
 
 			activator = act;
-			WITH(entity, self, e, e.target_spawn_spawnfunc(e));
+			WITHSELF(e, e.target_spawn_spawnfunc(e));
 			activator = oldactivator;
 
 			// We called an external function, so we have to re-tokenize msg.
@@ -297,8 +297,8 @@ void target_spawn_use()
 	}
 }
 
-void target_spawn_spawnfirst()
-{SELFPARAM();
+void target_spawn_spawnfirst(entity this)
+{
 	activator = self.target_spawn_activator;
 	if(self.spawnflags & 2)
 		target_spawn_use();

@@ -82,7 +82,7 @@ const vector BUFF_MAX = ('16 16 20');
 #include <common/gamemodes/all.qh>
 
 .float buff_time = _STAT(BUFF_TIME);
-void buffs_DelayedInit();
+void buffs_DelayedInit(entity this);
 
 REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 {
@@ -892,7 +892,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 				{
 					entity oldother = other;
 					other = self;
-					WITH(entity, self, it, it.touch());
+					WITHSELF(it, it.touch());
 
 					other = oldother;
 				}
@@ -1045,7 +1045,7 @@ MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 	return false;
 }
 
-void buffs_DelayedInit()
+void buffs_DelayedInit(entity this)
 {
 	if(autocvar_g_buffs_spawn_count > 0)
 	if(find(world, classname, "item_buff") == world)

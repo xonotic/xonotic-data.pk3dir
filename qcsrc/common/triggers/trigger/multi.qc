@@ -111,7 +111,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 	{
 		this.enemy = attacker;
 		this.goalentity = inflictor;
-		WITH(entity, self, this, multi_trigger());
+		WITHSELF(this, multi_trigger());
 	}
 }
 

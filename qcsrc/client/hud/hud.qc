@@ -114,86 +114,6 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 		return eX * best_columns + eY * best_rows;
 }
 
-// return the string of the onscreen race timer
-string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
-{
-    TC(int, cp);
-	string col;
-	string timestr;
-	string cpname;
-	string lapstr;
-	lapstr = "";
-
-	if(theirtime == 0) // goal hit
-	{
-		if(mytime > 0)
-		{
-			timestr = strcat("+", ftos_decimals(+mytime, TIME_DECIMALS));
-			col = "^1";
-		}
-		else if(mytime == 0)
-		{
-			timestr = "+0.0";
-			col = "^3";
-		}
-		else
-		{
-			timestr = strcat("-", ftos_decimals(-mytime, TIME_DECIMALS));
-			col = "^2";
-		}
-
-		if(lapdelta > 0)
-		{
-			lapstr = sprintf(_(" (-%dL)"), lapdelta);
-			col = "^2";
-		}
-		else if(lapdelta < 0)
-		{
-			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
-			col = "^1";
-		}
-	}
-	else if(theirtime > 0) // anticipation
-	{
-		if(mytime >= theirtime)
-			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
-		else
-			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime));
-		col = "^3";
-	}
-	else
-	{
-		col = "^7";
-		timestr = "";
-	}
-
-	if(cp == 254)
-		cpname = _("Start line");
-	else if(cp == 255)
-		cpname = _("Finish line");
-	else if(cp)
-		cpname = sprintf(_("Intermediate %d"), cp);
-	else
-		cpname = _("Finish line");
-
-	if(theirtime < 0)
-		return strcat(col, cpname);
-	else if(theirname == "")
-		return strcat(col, sprintf("%s (%s)", cpname, timestr));
-	else
-		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
-}
-
-// Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
-int race_CheckName(string net_name)
-{
-	int i;
-	for (i=RANKINGS_CNT-1;i>=0;--i)
-		if(grecordholder[i] == net_name)
-			return i+1;
-	return 0;
-}
-
 /*
 ==================
 HUD panels
@@ -323,9 +243,9 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 	drawsubpic(pos + eX * mySize.x - eX * min(mySize.x * 0.5, mySize.y), eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha, float fadelerp)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
-    TC(bool, vertical); TC(bool, icon_right_align);
+    TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 
@@ -403,9 +323,9 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
-    TC(bool, vertical); TC(bool, icon_right_align);
+    TC(bool, vertical); TC(int, icon_right_align);
 	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 

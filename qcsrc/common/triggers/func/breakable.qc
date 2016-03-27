@@ -243,7 +243,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		WaypointSprite_Ping(this.sprite);
 		WaypointSprite_UpdateHealth(this.sprite, this.health);
 	}
-	WITH(entity, self, this, func_breakable_colormod());
+	WITHSELF(this, func_breakable_colormod());
 
 	if(this.health <= 0)
 	{

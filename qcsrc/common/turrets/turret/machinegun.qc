@@ -1,7 +1,7 @@
 #ifndef TURRET_MACHINEGUN_H
 #define TURRET_MACHINEGUN_H
 
-#include "machinegun_weapon.qc"
+#include "machinegun_weapon.qh"
 
 CLASS(MachineGunTurret, Turret)
 /* spawnflags */ ATTRIB(MachineGunTurret, spawnflags, int, TUR_FLAG_PLAYER);
@@ -19,8 +19,6 @@ REGISTER_TURRET(MACHINEGUN, NEW(MachineGunTurret));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "machinegun_weapon.qc"
 
 #ifdef SVQC
 

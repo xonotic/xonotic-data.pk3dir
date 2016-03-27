@@ -35,11 +35,11 @@ noref bool require_spawnfunc_prefix;
 		void __spawnfunc_##id(entity this); \
 		[[accumulate]] void spawnfunc_##id(entity this) \
 		{ \
-			if (self == __spawnfunc_expect) \
+			if (__self == __spawnfunc_expect) \
 			{ \
 				/* engine call */ \
 				__spawnfunc_expect = NULL; \
-				this = self; \
+				this = __self; \
 			} \
 			else \
 			{ \

@@ -11,7 +11,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 
 #define w_getbestweapon(ent) Weapons_from(W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true))
 
-void W_SwitchWeapon_Force(entity e, Weapon w);
+void W_SwitchWeapon_Force(Player this, Weapon w);
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity pl);

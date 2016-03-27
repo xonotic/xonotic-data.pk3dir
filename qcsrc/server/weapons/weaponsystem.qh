@@ -18,7 +18,7 @@ void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity w
 
 void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound);
 
-void W_WeaponFrame(entity actor);
+void W_WeaponFrame(Player actor);
 
 float W_WeaponRateFactor();
 

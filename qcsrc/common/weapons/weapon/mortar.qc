@@ -116,7 +116,7 @@ void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, flo
 	this.health = this.health - damage;
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void W_Mortar_Grenade_Think1()

@@ -1,15 +1,4 @@
-#ifndef TURRET_MLRS_WEAPON_H
-#define TURRET_MLRS_WEAPON_H
-
-CLASS(MLRSTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(MLRSTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(MLRSTurretAttack, impulse, int, 9);
-/* refname   */ ATTRIB(MLRSTurretAttack, netname, string, "turret_mlrs");
-/* wepname   */ ATTRIB(MLRSTurretAttack, m_name, string, _("MLRS"));
-ENDCLASS(MLRSTurretAttack)
-REGISTER_WEAPON(TUR_MLRS, NEW(MLRSTurretAttack));
-
-#endif
+#include "mlrs_weapon.qh"
 
 #ifdef IMPLEMENTATION
 

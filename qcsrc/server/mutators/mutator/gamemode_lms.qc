@@ -173,7 +173,7 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
 	{
-		self.classname = STR_OBSERVER;
+		TRANSMUTE(Observer, self);
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
 	}
 }
@@ -214,8 +214,8 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 {SELFPARAM();
-	self.classname = STR_PLAYER;
-	campaign_bots_may_start = 1;
+	TRANSMUTE(Player, self);
+	campaign_bots_may_start = true;
 
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
@@ -228,8 +228,8 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {SELFPARAM();
-	if(self.deadflag == DEAD_DYING)
-		self.deadflag = DEAD_RESPAWNING;
+	if(this.deadflag == DEAD_DYING)
+		this.deadflag = DEAD_RESPAWNING;
 
 	return false;
 }

@@ -30,13 +30,13 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 
 	if(autocvar_g_spawn_alloweffects)
 	{
-		WriteByte(MSG_ENTITY, etof(self.owner));
-		WriteCoord(MSG_ENTITY, self.owner.origin.x);
-		WriteCoord(MSG_ENTITY, self.owner.origin.y);
-		WriteCoord(MSG_ENTITY, self.owner.origin.z);
+		WriteByte(MSG_ENTITY, etof(this.owner));
+		WriteCoord(MSG_ENTITY, this.owner.origin.x);
+		WriteCoord(MSG_ENTITY, this.owner.origin.y);
+		WriteCoord(MSG_ENTITY, this.owner.origin.z);
 		send = true;
 	}
-	else if((to == self.owner) || (IS_SPEC(to) && (to.enemy == self.owner)) )
+	else if((to == this.owner) || (IS_SPEC(to) && (to.enemy == this.owner)) )
 	{
 		WriteByte(MSG_ENTITY, 0);
 		send = true;
@@ -50,11 +50,11 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 void spawnpoint_think()
 {
     SELFPARAM();
-	self.nextthink = time + 0.1;
-	if(self.origin != self.spawnpoint_prevorigin)
+	this.nextthink = time + 0.1;
+	if(this.origin != this.spawnpoint_prevorigin)
 	{
-		self.spawnpoint_prevorigin = self.origin;
-		self.SendFlags |= 1;
+		this.spawnpoint_prevorigin = this.origin;
+		this.SendFlags |= 1;
 	}
 }
 
@@ -261,9 +261,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 			++found;
 			if(ent.spawn_evalfunc)
 			{
-				WITH(entity, self, ent, {
-					spawn_score = ent.spawn_evalfunc(this, spot, spawn_score);
-				});
+				WITHSELF(ent, spawn_score = ent.spawn_evalfunc(this, spot, spawn_score));
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}

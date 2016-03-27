@@ -146,7 +146,7 @@ void W_Blaster_Attack(
 
 	if (time >= missile.nextthink)
 	{
-		WITH(entity, self, missile, missile.think());
+		WITHSELF(missile, missile.think());
 	}
 }
 

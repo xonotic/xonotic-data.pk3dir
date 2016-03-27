@@ -1,8 +1,8 @@
 // the way this entity works makes it no use to CSQC, as it removes itself instantly
 
 #ifdef SVQC
-void follow_init()
-{SELFPARAM();
+void follow_init(entity this)
+{
 	entity src, dst;
 	src = world;
 	dst = world;

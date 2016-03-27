@@ -3,7 +3,7 @@
 
 //#define TURRET_DEBUG_HK
 
-#include "hk_weapon.qc"
+#include "hk_weapon.qh"
 
 CLASS(HunterKiller, Turret)
 /* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
@@ -21,8 +21,6 @@ REGISTER_TURRET(HK, NEW(HunterKiller));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "hk_weapon.qc"
 
 #ifdef SVQC
 

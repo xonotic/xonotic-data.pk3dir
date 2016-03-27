@@ -5,7 +5,7 @@
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"
 
@@ -842,10 +842,88 @@ void HitSound()
 	}
 }
 
-void HUD_Crosshair()
-{SELFPARAM();
+vector crosshair_getcolor(entity this, float health_stat)
+{
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
+	vector wcross_color = '0 0 0';
+	switch(autocvar_crosshair_color_special)
+	{
+		case 1: // crosshair_color_per_weapon
+		{
+			if(this)
+			{
+				wcross_color = this.wpcolor;
+				break;
+			}
+			else { goto normalcolor; }
+		}
+
+		case 2: // crosshair_color_by_health
+		{
+			float x = health_stat;
+
+			//x = red
+			//y = green
+			//z = blue
+
+			wcross_color.z = 0;
+
+			if(x > 200)
+			{
+				wcross_color.x = 0;
+				wcross_color.y = 1;
+			}
+			else if(x > 150)
+			{
+				wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
+				wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
+			}
+			else if(x > 100)
+			{
+				wcross_color.x = 1 - (x-100)*0.02 * 0.6;
+				wcross_color.y = 1 - (x-100)*0.02 * 0.1;
+				wcross_color.z = 1 - (x-100)*0.02;
+			}
+			else if(x > 50)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 1;
+				wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
+			}
+			else if(x > 20)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = (x-20)*90/27/100;
+				wcross_color.z = (x-20)*90/27/100 * 0.2;
+			}
+			else
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 0;
+			}
+			break;
+		}
+
+		case 3: // crosshair_color_rainbow
+		{
+			if(time >= rainbow_last_flicker)
+			{
+				rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
+				rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
+			}
+			wcross_color = rainbow_prev_color;
+			break;
+		}
+LABEL(normalcolor)
+		default: { wcross_color = stov(autocvar_crosshair_color); break; }
+	}
+
+	return wcross_color;
+}
+
+void HUD_Crosshair()
+{SELFPARAM();
 	entity e = this;
 	float f, i, j;
 	vector v;
@@ -926,77 +1004,7 @@ void HUD_Crosshair()
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
 		// MAIN CROSSHAIR COLOR DECISION
-		switch(autocvar_crosshair_color_special)
-		{
-			case 1: // crosshair_color_per_weapon
-			{
-				if(e)
-				{
-					wcross_color = e.wpcolor;
-					break;
-				}
-				else { goto normalcolor; }
-			}
-
-			case 2: // crosshair_color_by_health
-			{
-				float x = STAT(HEALTH);
-
-				//x = red
-				//y = green
-				//z = blue
-
-				wcross_color.z = 0;
-
-				if(x > 200)
-				{
-					wcross_color.x = 0;
-					wcross_color.y = 1;
-				}
-				else if(x > 150)
-				{
-					wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
-					wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
-				}
-				else if(x > 100)
-				{
-					wcross_color.x = 1 - (x-100)*0.02 * 0.6;
-					wcross_color.y = 1 - (x-100)*0.02 * 0.1;
-					wcross_color.z = 1 - (x-100)*0.02;
-				}
-				else if(x > 50)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 1;
-					wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
-				}
-				else if(x > 20)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = (x-20)*90/27/100;
-					wcross_color.z = (x-20)*90/27/100 * 0.2;
-				}
-				else
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 0;
-				}
-				break;
-			}
-
-			case 3: // crosshair_color_rainbow
-			{
-				if(time >= rainbow_last_flicker)
-				{
-					rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
-					rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
-				}
-				wcross_color = rainbow_prev_color;
-				break;
-			}
-LABEL(normalcolor)
-			default: { wcross_color = stov(autocvar_crosshair_color); break; }
-		}
+		wcross_color = crosshair_getcolor(e, STAT(HEALTH));
 
 		if(autocvar_crosshair_effect_scalefade)
 		{
@@ -1460,13 +1468,13 @@ void CSQC_UpdateView(float w, float h)
 			if(!gen)
 				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
-		if(WantEventchase(self) || (!autocvar_cl_orthoview && ons_roundlost))
+		if(WantEventchase(this) || (!autocvar_cl_orthoview && ons_roundlost))
 		{
 			eventchase_running = true;
 
 			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 			if(!local_player)
-				local_player = self; // fall back!
+				local_player = this; // fall back!
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -1485,7 +1493,7 @@ void CSQC_UpdateView(float w, float h)
 
 			if(view_offset)
 			{
-				WarpZone_TraceLine(current_view_origin, current_view_origin + view_offset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, self);
+				WarpZone_TraceLine(current_view_origin, current_view_origin + view_offset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, this);
 				if(trace_fraction == 1) { current_view_origin += view_offset; }
 				else { current_view_origin.z += max(0, (trace_endpos.z - current_view_origin.z) - autocvar_cl_eventchase_maxs.z); }
 			}
@@ -1514,14 +1522,14 @@ void CSQC_UpdateView(float w, float h)
 			makevectors(view_angles);
 
 			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
-			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
+			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
 
 			// If the boxtrace fails, revert back to line tracing.
 			if(!local_player.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
-				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
+				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, this);
 				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins.z)));
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }

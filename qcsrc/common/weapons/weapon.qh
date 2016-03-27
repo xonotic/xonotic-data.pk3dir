@@ -3,6 +3,10 @@
 #include <common/items/item/pickup.qh>
 #include <common/stats.qh>
 
+#ifdef SVQC
+#include <common/effects/qc/all.qh>
+#endif
+
 const int MAX_WEAPONSLOTS = 2;
 .entity weaponentities[MAX_WEAPONSLOTS];
 

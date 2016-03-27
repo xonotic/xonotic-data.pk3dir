@@ -89,6 +89,8 @@
 		return 0;  // unhandled
 	}
 
+    void m_play_focus_sound();
+
 	METHOD(Item, focusEnter, void(Item this))
 	{
 		if (this.allowFocusSound) m_play_focus_sound();

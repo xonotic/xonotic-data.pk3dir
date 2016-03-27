@@ -1,7 +1,7 @@
 #ifndef TURRET_MLRS_H
 #define TURRET_MLRS_H
 
-#include "mlrs_weapon.qc"
+#include "mlrs_weapon.qh"
 
 CLASS(MLRSTurret, Turret)
 /* spawnflags */ ATTRIB(MLRSTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
@@ -19,8 +19,6 @@ REGISTER_TURRET(MLRS, NEW(MLRSTurret));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "mlrs_weapon.qc"
 
 #ifdef SVQC
 

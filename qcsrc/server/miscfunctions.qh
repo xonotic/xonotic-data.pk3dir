@@ -76,7 +76,7 @@ void GameLogInit();
 
 void GameLogClose();
 
-void GetCvars(float f);
+void GetCvars(entity this, float f);
 
 string GetMapname();
 
@@ -261,7 +261,9 @@ void readlevelcvars()
 	sv_taunt = cvar("sv_taunt");
 
 	warmup_stage = cvar("g_warmup");
-	g_warmup_limit = cvar("g_warmup_limit");
+	warmup_limit = cvar("g_warmup_limit");
+	if(warmup_limit == 0)
+		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
@@ -355,7 +357,7 @@ const float INITPRIO_SETLOCATION 		= 90;
 const float INITPRIO_LINKDOORS 			= 91;
 const float INITPRIO_LAST 				= 99;
 
-.void() initialize_entity;
+.void(entity this) initialize_entity;
 .float initialize_entity_order;
 .entity initialize_entity_next;
 entity initialize_entity_first;
@@ -365,5 +367,5 @@ entity initialize_entity_first;
 
 
 float sound_allowed(float dest, entity e);
-void InitializeEntity(entity e, void() func, float order);
+void InitializeEntity(entity e, void(entity this) func, float order);
 void SetCustomizer(entity e, float() customizer, void() uncustomizer);

@@ -1,45 +1,8 @@
-#ifndef VEHICLE_RACER_WEAPON_H
-#define VEHICLE_RACER_WEAPON_H
-
-#include <common/weapons/all.qh>
-
-CLASS(RacerAttack, PortoLaunch)
-/* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
-/* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
-/* wepname   */ ATTRIB(RacerAttack, m_name, string, _("Racer cannon"));
-ENDCLASS(RacerAttack)
-REGISTER_WEAPON(RACER, NEW(RacerAttack));
-
-// TODO: move into implementation
-#ifdef SVQC
-void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
-#endif
-
-#endif
+#include "racer_weapon.qh"
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-
-float autocvar_g_vehicle_racer_cannon_cost = 2;
-float autocvar_g_vehicle_racer_cannon_damage = 15;
-float autocvar_g_vehicle_racer_cannon_radius = 100;
-float autocvar_g_vehicle_racer_cannon_refire = 0.05;
-float autocvar_g_vehicle_racer_cannon_speed = 15000;
-float autocvar_g_vehicle_racer_cannon_spread = 0.0125;
-float autocvar_g_vehicle_racer_cannon_force = 50;
-
-float autocvar_g_vehicle_racer_rocket_accel = 1600;
-float autocvar_g_vehicle_racer_rocket_damage = 100;
-float autocvar_g_vehicle_racer_rocket_radius = 125;
-float autocvar_g_vehicle_racer_rocket_force = 350;
-float autocvar_g_vehicle_racer_rocket_speed = 900;
-float autocvar_g_vehicle_racer_rocket_turnrate = 0.2;
-float autocvar_g_vehicle_racer_rocket_refire = 3;
-
-float autocvar_g_vehicle_racer_rocket_climbspeed = 1600;
-float autocvar_g_vehicle_racer_rocket_locked_maxangle = 1.8;
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
 METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -56,7 +19,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
         if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
         vector org = w_shotorg;
         vector dir = w_shotdir;
-        entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
+        entity bolt = vehicles_projectile(veh, EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
                                org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                                autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
                                DEATH_VH_WAKI_GUN.m_id, PROJECTILE_WAKICANNON, 0, true, true, player);
@@ -85,7 +48,7 @@ void racer_rocket_groundhugger();
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
 {
-    entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+    entity rocket = vehicles_projectile(player.vehicle, EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
                            org, dir * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
                            DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);

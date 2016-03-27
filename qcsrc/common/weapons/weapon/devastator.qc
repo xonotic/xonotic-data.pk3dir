@@ -344,7 +344,7 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_Devastator_Explode));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_Devastator_Explode));
 }
 
 void W_Devastator_Attack(Weapon thiswep)
