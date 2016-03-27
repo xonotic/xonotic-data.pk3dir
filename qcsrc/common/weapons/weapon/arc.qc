@@ -239,6 +239,11 @@ void W_Arc_Bolt_Explode()
 	remove(self);
 }
 
+void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, W_Arc_Bolt_Explode());
+}
+
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(this.health <= 0)
@@ -251,13 +256,13 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.think));
+		W_PrepareExplosionByDamage(this, attacker, this.think);
 }
 
 void W_Arc_Bolt_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
-	self.use();
+	self.use1(this, NULL, NULL);
 }
 
 void W_Arc_Attack_Bolt(Weapon thiswep)
@@ -282,7 +287,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep)
 	missile.damagedbycontents = true;
 
 	missile.touch = W_Arc_Bolt_Touch;
-	missile.use = W_Arc_Bolt_Explode;
+	missile.use1 = W_Arc_Bolt_Explode_use;
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
 	PROJECTILE_MAKETRIGGER(missile);

@@ -62,29 +62,27 @@ const float ST_ASSAULT_OBJECTIVES = 1;
 const float SP_ASSAULT_OBJECTIVES = 4;
 
 // predefined spawnfuncs
-void target_objective_decrease_activate();
+void target_objective_decrease_activate(entity this);
 #endif
 
 #ifdef IMPLEMENTATION
 .entity sprite;
 
 // random functions
-void assault_objective_use()
-{SELFPARAM();
+void assault_objective_use(entity this, entity actor, entity trigger)
+{
 	// activate objective
-	self.health = 100;
-	//print("^2Activated objective ", self.targetname, "=", etos(self), "\n");
-	//print("Activator is ", activator.classname, "\n");
+	this.health = 100;
+	//print("^2Activated objective ", this.targetname, "=", etos(this), "\n");
+	//print("Activator is ", actor.classname, "\n");
 
 	for (entity e = world; (e = find(e, target, this.targetname)); )
 	{
 		if (e.classname == "target_objective_decrease")
 		{
-			WITHSELF(e, target_objective_decrease_activate());
+			target_objective_decrease_activate(e);
 		}
 	}
-
-	setself(this);
 }
 
 vector target_objective_spawn_evalfunc(entity player, entity spot, vector current)
@@ -102,9 +100,9 @@ void assault_objective_reset(entity this)
 }
 
 // decrease the health of targeted objectives
-void assault_objective_decrease_use()
-{SELFPARAM();
-	if(activator.team != assault_attacker_team)
+void assault_objective_decrease_use(entity this, entity actor, entity trigger)
+{
+	if(actor.team != assault_attacker_team)
 	{
 		// wrong team triggered decrease
 		return;
@@ -123,26 +121,19 @@ void assault_objective_decrease_use()
 	{
 		if(self.enemy.health - self.dmg > 0.5)
 		{
-			PlayerTeamScore_Add(activator, SP_SCORE, ST_SCORE, self.dmg);
+			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, self.dmg);
 			self.enemy.health = self.enemy.health - self.dmg;
 		}
 		else
 		{
-			PlayerTeamScore_Add(activator, SP_SCORE, ST_SCORE, self.enemy.health);
-			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
+			PlayerTeamScore_Add(actor, SP_SCORE, ST_SCORE, self.enemy.health);
+			PlayerTeamScore_Add(actor, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldactivator;
+			if(this.enemy.message)
+				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(centerprint(it, this.enemy.message)));
 
-			setself(this.enemy);
-			if(self.message)
-				FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(centerprint(it, self.message)));
-
-			oldactivator = activator;
-			activator = this;
-			SUB_UseTargets();
-			activator = oldactivator;
-			setself(this);
+			SUB_UseTargets(this.enemy, this, trigger);
 		}
 	}
 }
@@ -178,11 +169,11 @@ float assault_decreaser_sprite_visible(entity e)
 	return true;
 }
 
-void target_objective_decrease_activate()
-{SELFPARAM();
+void target_objective_decrease_activate(entity this)
+{
 	entity ent, spr;
-	self.owner = world;
-	for(ent = world; (ent = find(ent, target, self.targetname)); )
+	this.owner = world;
+	for(ent = world; (ent = find(ent, target, this.targetname)); )
 	{
 		if(ent.assault_sprite != world)
 		{
@@ -192,7 +183,7 @@ void target_objective_decrease_activate()
 		}
 
 		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE);
-		spr.assault_decreaser = self;
+		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
@@ -220,15 +211,14 @@ void target_assault_roundend_reset(entity this)
 	this.winning = false; // up round
 }
 
-void target_assault_roundend_use()
-{SELFPARAM();
-	self.winning = 1; // round has been won by attackers
+void target_assault_roundend_use(entity this, entity actor, entity trigger)
+{
+	this.winning = 1; // round has been won by attackers
 }
 
-void assault_roundstart_use()
-{SELFPARAM();
-	activator = self;
-	SUB_UseTargets();
+void assault_roundstart_use(entity this, entity actor, entity trigger)
+{
+	SUB_UseTargets(this, this, trigger);
 
 	//(Re)spawn all turrets
 	FOREACH_ENTITY_CLASS("turret_main", true, LAMBDA(
@@ -362,7 +352,7 @@ spawnfunc(target_objective)
 	if (!g_assault) { remove(this); return; }
 
 	this.classname = "target_objective";
-	this.use = assault_objective_use;
+	this.use1 = assault_objective_use;
 	this.reset = assault_objective_reset;
 	this.reset(this);
 	this.spawn_evalfunc = target_objective_spawn_evalfunc;
@@ -377,7 +367,7 @@ spawnfunc(target_objective_decrease)
 	if(!self.dmg)
 		self.dmg = 101;
 
-	self.use = assault_objective_decrease_use;
+	self.use1 = assault_objective_decrease_use;
 	self.health = ASSAULT_VALUE_INACTIVE;
 	self.max_health = ASSAULT_VALUE_INACTIVE;
 	self.enemy = world;
@@ -421,7 +411,7 @@ spawnfunc(target_assault_roundend)
 
 	self.winning = 0; // round not yet won by attackers
 	self.classname = "target_assault_roundend";
-	self.use = target_assault_roundend_use;
+	self.use1 = target_assault_roundend_use;
 	self.cnt = 0; // first round
 	self.reset = target_assault_roundend_reset;
 }
@@ -432,9 +422,9 @@ spawnfunc(target_assault_roundstart)
 
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
-	self.use = assault_roundstart_use;
-	self.reset2 = assault_roundstart_use;
-	InitializeEntity(self, assault_roundstart_use, INITPRIO_FINDTARGET);
+	self.use1 = assault_roundstart_use;
+	self.reset2 = adaptor_think2use;
+	InitializeEntity(self, adaptor_think2use, INITPRIO_FINDTARGET);
 }
 
 // legacy bot code

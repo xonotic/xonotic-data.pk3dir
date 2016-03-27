@@ -171,7 +171,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 		this.movetype = MOVETYPE_PUSH;
 		this.drawmask = MASK_NORMAL;
 		this.draw = plat_draw;
-		this.use = plat_use;
+		this.use1 = plat_use;
 		this.entremove = trigger_remove_generic;
 
 		plat_reset(this); // also called here

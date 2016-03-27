@@ -3,22 +3,9 @@
  */
 void trigger_keylock_trigger(string s)
 {SELFPARAM();
-	entity otemp = other;
-	entity atemp = activator;
-
-	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
-		if(t.use)
-		{
-			setself(t);
-			other = this;
-			activator = atemp;
-			self.use();
-		}
-
-	setself(this);
-	other = otemp;
-	activator = atemp;
+	for(entity t = world; (t = find(t, targetname, s)); )
+		if(t.use1)
+			t.use1(t, NULL, this);
 }
 
 /**

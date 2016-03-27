@@ -41,9 +41,7 @@ void multi_trigger()
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
 
-	activator = self.enemy;
-	other = self.goalentity;
-	SUB_UseTargets();
+	SUB_UseTargets(self, self.enemy, self.goalentity);
 
 	if (self.wait > 0)
 	{
@@ -61,11 +59,11 @@ void multi_trigger()
 	}
 }
 
-void multi_use()
-{SELFPARAM();
-	self.goalentity = other;
-	self.enemy = activator;
-	multi_trigger();
+void multi_use(entity this, entity actor, entity trigger)
+{
+	this.goalentity = trigger;
+	this.enemy = actor;
+	WITHSELF(this, multi_trigger());
 }
 
 void multi_touch()
@@ -160,7 +158,7 @@ spawnfunc(trigger_multiple)
 		self.wait = 0.2;
 	else if(self.wait < -1)
 		self.wait = 0;
-	self.use = multi_use;
+	self.use1 = multi_use;
 
 	EXACTTRIGGER_INIT;
 

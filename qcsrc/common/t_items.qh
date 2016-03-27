@@ -114,8 +114,6 @@ float commodity_pickupevalfunc(entity player, entity item);
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
 
-void target_items_use ();
-
 float GiveWeapon(entity e, float wpn, float op, float val);
 
 float GiveBit(entity e, .float fld, float bit, float op, float val);

@@ -1,21 +1,18 @@
 #ifdef SVQC
-void trigger_disablerelay_use()
-{SELFPARAM();
-	entity e;
+void trigger_disablerelay_use(entity this, entity actor, entity trigger)
+{
+	int a = 0, b = 0;
 
-	float a, b;
-	a = b = 0;
-
-	for(e = world; (e = find(e, targetname, self.target)); )
+	for(entity e = world; (e = find(e, targetname, this.target)); )
 	{
-		if(e.use == SUB_UseTargets)
+		if(e.use1 == SUB_UseTargets)
 		{
-			e.use = SUB_DontUseTargets;
+			e.use1 = SUB_DontUseTargets;
 			++a;
 		}
-		else if(e.use == SUB_DontUseTargets)
+		else if(e.use1 == SUB_DontUseTargets)
 		{
-			e.use = SUB_UseTargets;
+			e.use1 = SUB_UseTargets;
 			++b;
 		}
 	}
@@ -26,6 +23,6 @@ void trigger_disablerelay_use()
 
 spawnfunc(trigger_disablerelay)
 {
-	self.use = trigger_disablerelay_use;
+	this.use1 = trigger_disablerelay_use;
 }
 #endif

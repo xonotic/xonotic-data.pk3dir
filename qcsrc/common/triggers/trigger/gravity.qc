@@ -32,9 +32,9 @@ void trigger_gravity_check_think()
 	}
 }
 
-void trigger_gravity_use()
-{SELFPARAM();
-	self.state = !self.state;
+void trigger_gravity_use(entity this, entity actor, entity trigger)
+{
+	this.state = !this.state;
 }
 
 void trigger_gravity_touch()
@@ -98,7 +98,7 @@ spawnfunc(trigger_gravity)
 	self.state = true;
 	IFTARGETED
 	{
-		self.use = trigger_gravity_use;
+		self.use1 = trigger_gravity_use;
 		if(self.spawnflags & 2)
 			self.state = false;
 	}

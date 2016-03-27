@@ -2,42 +2,40 @@
 .string chmap, gametype;
 .entity chlevel_targ;
 
-
-void target_changelevel_use()
+void target_changelevel_use(entity this, entity actor, entity trigger)
 {
-	SELFPARAM();
-	if(self.spawnflags & 2)
+	if(this.spawnflags & 2)
 	{
 		// simply don't react if a non-player triggers it
-		if(!IS_PLAYER(activator)) { return; }
+		if(!IS_PLAYER(actor)) { return; }
 
-		activator.chlevel_targ = self;
+		actor.chlevel_targ = this;
 
 		int plnum = 0;
 		int realplnum = 0;
 		// let's not count bots
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
 			++realplnum;
-			if(it.chlevel_targ == self)
+			if(it.chlevel_targ == this)
 				++plnum;
 		});
-		if(plnum < ceil(realplnum * min(1, self.count))) // 70% of players
+		if(plnum < ceil(realplnum * min(1, this.count))) // 70% of players
 			return;
 	}
 
-	if(self.gametype != "")
-		MapInfo_SwitchGameType(MapInfo_Type_FromString(self.gametype));
+	if(this.gametype != "")
+		MapInfo_SwitchGameType(MapInfo_Type_FromString(this.gametype));
 
-	if (self.chmap == "")
+	if (this.chmap == "")
 		localcmd("endmatch\n");
 	else
-		localcmd(strcat("changelevel ", self.chmap, "\n"));
+		localcmd(strcat("changelevel ", this.chmap, "\n"));
 }
 
 spawnfunc(target_changelevel)
 {
-	self.use = target_changelevel_use;
+	this.use1 = target_changelevel_use;
 
-	if(!self.count) { self.count = 0.7; }
+	if(!this.count) { this.count = 0.7; }
 }
 #endif

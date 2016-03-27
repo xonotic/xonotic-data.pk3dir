@@ -44,23 +44,23 @@ void target_music_kill()
             WITHSELF(it, target_music_sendto(MSG_ALL, 0));
 	});
 }
-void target_music_use()
+void target_music_use(entity this, entity actor, entity trigger)
 {
-	if(!activator)
+	if(!actor)
 		return;
-	if(IS_REAL_CLIENT(activator))
+	if(IS_REAL_CLIENT(actor))
 	{
-		msg_entity = activator;
+		msg_entity = actor;
 		target_music_sendto(MSG_ONE, 1);
 	}
-	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == activator, {
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == actor, {
 		msg_entity = it;
 		target_music_sendto(MSG_ONE, 1);
 	});
 }
 spawnfunc(target_music)
 {
-	self.use = target_music_use;
+	self.use1 = target_music_use;
 	self.reset = target_music_reset;
 	if(!self.volume)
 		self.volume = 1;
@@ -132,10 +132,10 @@ void trigger_music_reset(entity this)
 	this.cnt = !(this.spawnflags & 1);
 	this.SendFlags |= 0x80;
 }
-void trigger_music_use()
-{SELFPARAM();
-	self.cnt = !self.cnt;
-	self.SendFlags |= 0x80;
+void trigger_music_use(entity this, entity actor, entity trigger)
+{
+	this.cnt = !this.cnt;
+	this.SendFlags |= 0x80;
 }
 spawnfunc(trigger_music)
 {
@@ -148,7 +148,7 @@ spawnfunc(trigger_music)
 	}
 	trigger_music_reset(this);
 
-	this.use = trigger_music_use;
+	this.use1 = trigger_music_use;
 	this.reset = trigger_music_reset;
 
 	Net_LinkEntity(this, false, 0, trigger_music_SendEntity);

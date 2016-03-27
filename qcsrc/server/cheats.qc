@@ -675,8 +675,7 @@ float CheatCommand(float argc)
 			IS_CHEAT(0, argc, 0);
 			setself(spawn());
 			self.target = argv(1);
-			activator = this;
-			SUB_UseTargets();
+			SUB_UseTargets(self, this, NULL);
 			remove(self);
 			setself(this);
 			DID_CHEAT();
@@ -685,8 +684,7 @@ float CheatCommand(float argc)
 			IS_CHEAT(0, argc, 0);
 			setself(spawn());
 			self.killtarget = argv(1);
-			activator = this;
-			SUB_UseTargets();
+			SUB_UseTargets(self, this, NULL);
 			remove(self);
 			setself(this);
 			DID_CHEAT();

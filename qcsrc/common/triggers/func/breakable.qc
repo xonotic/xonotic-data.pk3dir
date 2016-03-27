@@ -137,7 +137,7 @@ void func_breakable_behave_destroyed()
 	self.event_damage = func_null;
 	self.state = 1;
 	if(self.spawnflags & 4)
-		self.use = func_null;
+		self.use1 = func_null;
 	func_breakable_colormod();
 	if (self.noise1)
 		stopsound (self, CH_TRIGGER_SINGLE);
@@ -181,49 +181,59 @@ void func_breakable_destroyed()
 	CSQCMODEL_AUTOUPDATE(self);
 }
 
-void func_breakable_restore()
-{SELFPARAM();
-	func_breakable_look_restore();
-	func_breakable_behave_restore();
+void func_breakable_restore(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, func_breakable_look_restore());
+	WITHSELF(this, func_breakable_behave_restore());
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
+void func_breakable_restore_self()
+{SELFPARAM();
+	func_breakable_restore(this, NULL, NULL);
 }
 
 vector debrisforce; // global, set before calling this
-void func_breakable_destroy()
-{SELFPARAM();
+void func_breakable_destroy(entity this, entity actor, entity trigger)
+{
 	float n, i;
 	string oldmsg;
 
-	activator = self.owner;
-	self.owner = world; // set by W_PrepareExplosionByDamage
+	entity act = this.owner;
+	this.owner = world; // set by W_PrepareExplosionByDamage
 
 	// now throw around the debris
-	n = tokenize_console(self.debris);
+	n = tokenize_console(this.debris);
 	for(i = 0; i < n; ++i)
 		LaunchDebris(argv(i), debrisforce);
 
 	func_breakable_destroyed();
 
-	if(self.noise)
-		_sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+	if(this.noise)
+		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
-	if(self.dmg)
-		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, world, self.dmg_force, DEATH_HURTTRIGGER.m_id, world);
+	if(this.dmg)
+		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, world, this.dmg_force, DEATH_HURTTRIGGER.m_id, world);
 
-	if(self.cnt) // TODO
-		__pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
+	if(this.cnt) // TODO
+		__pointparticles(this.cnt, this.absmin * 0.5 + this.absmax * 0.5, '0 0 0', this.count);
 
-	if(self.respawntime)
+	if(this.respawntime)
 	{
-		self.think = func_breakable_restore;
-		self.nextthink = time + self.respawntime + crandom() * self.respawntimejitter;
+		this.think = func_breakable_restore_self;
+		this.nextthink = time + this.respawntime + crandom() * this.respawntimejitter;
 	}
 
-	oldmsg = self.message;
-	self.message = "";
-	SUB_UseTargets();
-	self.message = oldmsg;
+	oldmsg = this.message;
+	this.message = "";
+	SUB_UseTargets(this, act, trigger);
+	this.message = oldmsg;
+}
+
+void func_breakable_destroy_self()
+{SELFPARAM();
+	func_breakable_destroy(this, NULL, NULL);
 }
 
 void func_breakable_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -261,18 +271,18 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		// do not explode NOW but in the NEXT FRAME!
 		// because recursive calls to RadiusDamage are not allowed
 		this.nextthink = time;
-		this.think = func_breakable_destroy;
+		this.think = func_breakable_destroy_self;
 	}
 }
 
 void func_breakable_reset(entity this)
 {
 	this.team = this.team_saved;
-	func_breakable_look_restore();
+	WITHSELF(this, func_breakable_look_restore());
 	if(this.spawnflags & 1)
-		func_breakable_behave_destroyed();
+		WITHSELF(this, func_breakable_behave_destroyed());
 	else
-		func_breakable_behave_restore();
+		WITHSELF(this, func_breakable_behave_restore());
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -312,9 +322,9 @@ spawnfunc(func_breakable)
 	SetBrushEntityModel();
 
 	if(this.spawnflags & 4)
-		this.use = func_breakable_destroy;
+		this.use1 = func_breakable_destroy;
 	else
-		this.use = func_breakable_restore;
+		this.use1 = func_breakable_restore;
 
 	if(this.spawnflags & 4)
 	{

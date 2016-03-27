@@ -118,6 +118,11 @@ void W_Hook_Explode2()
 	self.movetype = MOVETYPE_NONE;
 }
 
+void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, W_Hook_Explode2());
+}
+
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(this.health <= 0)
@@ -129,13 +134,13 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 	this.health = this.health - damage;
 
 	if(this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(this.realowner, W_Hook_Explode2));
+		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
 void W_Hook_Touch2()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
-	self.use();
+	this.use1(this, NULL, NULL);
 }
 
 void W_Hook_Attack2(Weapon thiswep, entity actor)
@@ -155,7 +160,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
-	gren.use = W_Hook_Explode2;
+	gren.use1 = W_Hook_Explode2_use;
 	gren.touch = W_Hook_Touch2;
 
 	gren.takedamage = DAMAGE_YES;

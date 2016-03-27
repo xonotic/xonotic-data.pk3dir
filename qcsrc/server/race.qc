@@ -580,10 +580,9 @@ void checkpoint_passed()
 	 */
 	if (!((self.spawnflags & 2) && (IS_PLAYER(other))))
 	{
-		activator = other;
 		oldmsg = self.message;
 		self.message = "";
-		SUB_UseTargets();
+		SUB_UseTargets(self, other, other); // TODO: should we be using other for the trigger here?
 		self.message = oldmsg;
 	}
 
@@ -652,10 +651,9 @@ void checkpoint_passed()
 		 */
 		if(self.spawnflags & 2)
 		{
-			activator = other;
 			oldmsg = self.message;
 			self.message = "";
-			SUB_UseTargets();
+			SUB_UseTargets(self, other, other); // TODO: should we be using other for the trigger here?
 			self.message = oldmsg;
 		}
 
@@ -707,12 +705,12 @@ void checkpoint_touch()
 	checkpoint_passed();
 }
 
-void checkpoint_use()
+void checkpoint_use(entity this, entity actor, entity trigger)
 {
-	if(other.classname == "info_player_deathmatch") // a spawn, a spawn
+	if(trigger.classname == "info_player_deathmatch") // a spawn, a spawn
 		return;
 
-	other = activator;
+	other = actor;
 	checkpoint_passed();
 }
 
@@ -929,7 +927,7 @@ spawnfunc(trigger_race_checkpoint)
 
 	EXACTTRIGGER_INIT;
 
-	self.use = checkpoint_use;
+	self.use1 = checkpoint_use;
 	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
@@ -978,7 +976,7 @@ spawnfunc(target_checkpoint) // defrag entity
 
 	EXACTTRIGGER_INIT;
 
-	self.use = checkpoint_use;
+	self.use1 = checkpoint_use;
 	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
@@ -1122,9 +1120,9 @@ void penalty_touch()
 	}
 }
 
-void penalty_use()
-{SELFPARAM();
-	race_ImposePenaltyTime(activator, self.race_penalty, self.race_penalty_reason);
+void penalty_use(entity this, entity actor, entity trigger)
+{
+	race_ImposePenaltyTime(actor, this.race_penalty, this.race_penalty_reason);
 }
 
 spawnfunc(trigger_race_penalty)
@@ -1134,7 +1132,7 @@ spawnfunc(trigger_race_penalty)
 
 	EXACTTRIGGER_INIT;
 
-	self.use = penalty_use;
+	self.use1 = penalty_use;
 	if (!(self.spawnflags & 1))
 		self.touch = penalty_touch;
 

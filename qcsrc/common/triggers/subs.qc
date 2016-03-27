@@ -2,7 +2,6 @@ void SUB_NullThink() { }
 
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
-//void() SUB_UseTargets;
 
 /*
 ==================

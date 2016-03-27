@@ -2,30 +2,29 @@
 /*QUAKED spawnfunc_trigger_monoflop (.5 .5 .5) (-8 -8 -8) (8 8 8)
 "Mono-flop" trigger gate... turns one trigger event into one "on" and one "off" event, separated by a delay of "wait"
 */
-void monoflop_use()
-{SELFPARAM();
-	self.nextthink = time + self.wait;
-	self.enemy = activator;
-	if(self.state)
+void monoflop_use(entity this, entity actor, entity trigger)
+{
+	this.nextthink = time + this.wait;
+	this.enemy = actor;
+	if(this.state)
 		return;
-	self.state = 1;
-	SUB_UseTargets();
+	this.state = 1;
+	SUB_UseTargets(this, actor, trigger);
 }
-void monoflop_fixed_use()
-{SELFPARAM();
-	if(self.state)
+void monoflop_fixed_use(entity this, entity actor, entity trigger)
+{
+	if(this.state)
 		return;
-	self.nextthink = time + self.wait;
-	self.state = 1;
-	self.enemy = activator;
-	SUB_UseTargets();
+	this.nextthink = time + this.wait;
+	this.state = 1;
+	this.enemy = actor;
+	SUB_UseTargets(this, actor, trigger);
 }
 
 void monoflop_think()
 {SELFPARAM();
-	self.state = 0;
-	activator = self.enemy;
-	SUB_UseTargets();
+	this.state = 0;
+	SUB_UseTargets(this, this.enemy, NULL);
 }
 
 void monoflop_reset(entity this)
@@ -36,14 +35,14 @@ void monoflop_reset(entity this)
 
 spawnfunc(trigger_monoflop)
 {
-	if(!self.wait)
-		self.wait = 1;
-	if(self.spawnflags & 1)
-		self.use = monoflop_fixed_use;
+	if(!this.wait)
+		this.wait = 1;
+	if(this.spawnflags & 1)
+		this.use1 = monoflop_fixed_use;
 	else
-		self.use = monoflop_use;
-	self.think = monoflop_think;
-	self.state = 0;
-	self.reset = monoflop_reset;
+		this.use1 = monoflop_use;
+	this.think = monoflop_think;
+	this.state = 0;
+	this.reset = monoflop_reset;
 }
 #endif

@@ -3,12 +3,12 @@
 #include "jumppads.qh"
 #include <common/physics/movetypes/movetypes.qh>
 
-void trigger_push_use()
-{SELFPARAM();
+void trigger_push_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
 	{
-		self.team = activator.team;
-		self.SendFlags |= 2;
+		this.team = actor.team;
+		this.SendFlags |= 2;
 	}
 }
 #endif
@@ -235,10 +235,7 @@ void trigger_push_touch()
 	}
 
 	if(this.enemy.target)
-	{
-		activator = other;
-		WITHSELF(this.enemy, SUB_UseTargets());
-	}
+		SUB_UseTargets(this.enemy, other, other); // TODO: do we need other as trigger too?
 
 	if (other.flags & FL_PROJECTILE)
 	{
@@ -384,7 +381,7 @@ spawnfunc(trigger_push)
 	trigger_init(this);
 
 	this.active = ACTIVE_ACTIVE;
-	this.use = trigger_push_use;
+	this.use1 = trigger_push_use;
 	this.touch = trigger_push_touch;
 
 	// normal push setup

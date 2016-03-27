@@ -9,6 +9,7 @@
 	class(Defer).entity owner;
 	class(Defer).void() think;
 	class(Defer).float nextthink;
+	class(Defer).void() defer_func;
 
 	/** Remove self */
 	void SUB_Remove(entity this)
@@ -28,7 +29,7 @@
 		SELFPARAM();
 		this.think     = SUB_Remove_self;
 		this.nextthink = time;
-		WITHSELF(this.owner, this.use());
+		WITHSELF(this.owner, this.defer_func());
 	}
 
 /*
@@ -39,7 +40,7 @@
 	{
 		entity e    = new_pure(deferred);
 		e.owner     = this;
-		e.use       = func;
+		e.defer_func  = func;
 		e.think     = defer_think;
 		e.nextthink = time + fdelay;
 	}

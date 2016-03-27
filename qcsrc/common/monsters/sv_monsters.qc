@@ -548,9 +548,9 @@ void Monster_Dead_Fade(entity this)
 	}
 }
 
-void Monster_Use()
-{SELFPARAM();
-	if(Monster_ValidTarget(this, activator)) { this.enemy = activator; }
+void Monster_Use(entity this, entity actor, entity trigger)
+{
+	if(Monster_ValidTarget(this, actor)) { this.enemy = actor; }
 }
 
 vector Monster_Move_Target(entity this, entity targ)
@@ -931,9 +931,9 @@ void Monster_Dead_Think()
 	}
 }
 
-void Monster_Appear()
-{SELFPARAM();
-	this.enemy = activator;
+void Monster_Appear(entity this, entity actor, entity trigger)
+{
+	this.enemy = actor;
 	this.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
 	Monster_Spawn(this, this.monsterid);
 }
@@ -946,7 +946,7 @@ bool Monster_Appear_Check(entity this, int monster_id)
 	this.think = func_null;
 	this.monsterid = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	this.nextthink = 0;
-	this.use = Monster_Appear;
+	this.use1 = Monster_Appear;
 	this.flags = FL_MONSTER; // set so this monster can get butchered
 
 	return true;
@@ -1102,9 +1102,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 			this.candrop = false; // killed by mobkill command
 
 		// TODO: fix this?
-		activator = attacker;
-		other = this.enemy;
-		WITHSELF(this, SUB_UseTargets());
+		SUB_UseTargets(this, attacker, this.enemy);
 		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
 		Monster_Dead(this, attacker, (this.health <= -100 || deathtype == DEATH_KILL.m_id));
@@ -1334,7 +1332,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;
 	this.touch				= Monster_Touch;
-	this.use				= Monster_Use;
+	this.use1				= Monster_Use;
 	this.solid				= SOLID_BBOX;
 	this.movetype			= MOVETYPE_WALK;
 	this.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;

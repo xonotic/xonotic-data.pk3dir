@@ -1,21 +1,21 @@
 #ifdef SVQC
 // TODO add a way to do looped sounds with sound(); then complete this entity
-void target_speaker_use_off();
-void target_speaker_use_activator()
-{SELFPARAM();
-	if (!IS_REAL_CLIENT(activator))
+void target_speaker_use_off(entity this, entity actor, entity trigger);
+void target_speaker_use_activator(entity this, entity actor, entity trigger)
+{
+	if (!IS_REAL_CLIENT(actor))
 		return;
 	string snd;
-	if(substring(self.noise, 0, 1) == "*")
+	if(substring(this.noise, 0, 1) == "*")
 	{
-		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		var .string sample = GetVoiceMessageSampleField(substring(this.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
 			snd = SND(Null);
-		else if(activator.(sample) == "")
+		else if(actor.(sample) == "")
 			snd = SND(Null);
 		else
 		{
-			tokenize_console(activator.(sample));
+			tokenize_console(actor.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)
@@ -25,23 +25,23 @@ void target_speaker_use_activator()
 		}
 	}
 	else
-		snd = self.noise;
-	msg_entity = activator;
-	soundto(MSG_ONE, self, CH_TRIGGER, snd, VOL_BASE * self.volume, self.atten);
+		snd = this.noise;
+	msg_entity = actor;
+	soundto(MSG_ONE, this, CH_TRIGGER, snd, VOL_BASE * this.volume, this.atten);
 }
-void target_speaker_use_on()
-{SELFPARAM();
+void target_speaker_use_on(entity this, entity actor, entity trigger)
+{
 	string snd;
-	if(substring(self.noise, 0, 1) == "*")
+	if(substring(this.noise, 0, 1) == "*")
 	{
-		var .string sample = GetVoiceMessageSampleField(substring(self.noise, 1, -1));
+		var .string sample = GetVoiceMessageSampleField(substring(this.noise, 1, -1));
 		if(GetPlayerSoundSampleField_notFound)
 			snd = SND(Null);
-		else if(activator.(sample) == "")
+		else if(actor.(sample) == "")
 			snd = SND(Null);
 		else
 		{
-			tokenize_console(activator.(sample));
+			tokenize_console(actor.(sample));
 			float n;
 			n = stof(argv(1));
 			if(n > 0)
@@ -51,27 +51,27 @@ void target_speaker_use_on()
 		}
 	}
 	else
-		snd = self.noise;
-	_sound(self, CH_TRIGGER_SINGLE, snd, VOL_BASE * self.volume, self.atten);
-	if(self.spawnflags & 3)
-		self.use = target_speaker_use_off;
+		snd = this.noise;
+	_sound(this, CH_TRIGGER_SINGLE, snd, VOL_BASE * this.volume, this.atten);
+	if(this.spawnflags & 3)
+		this.use1 = target_speaker_use_off;
 }
-void target_speaker_use_off()
-{SELFPARAM();
-	sound(self, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE * self.volume, self.atten);
-	self.use = target_speaker_use_on;
+void target_speaker_use_off(entity this, entity actor, entity trigger)
+{
+	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE * this.volume, this.atten);
+	this.use1 = target_speaker_use_on;
 }
 void target_speaker_reset(entity this)
 {
 	if(this.spawnflags & 1) // LOOPED_ON
 	{
-		if(this.use == target_speaker_use_on)
-			target_speaker_use_on();
+		if(this.use1 == target_speaker_use_on)
+			target_speaker_use_on(this, NULL, NULL);
 	}
 	else if(this.spawnflags & 2)
 	{
-		if(this.use == target_speaker_use_off)
-			target_speaker_use_off();
+		if(this.use1 == target_speaker_use_off)
+			target_speaker_use_off(this, NULL, NULL);
 	}
 }
 
@@ -98,19 +98,19 @@ spawnfunc(target_speaker)
 	IFTARGETED
 	{
 		if(self.spawnflags & 8) // ACTIVATOR
-			self.use = target_speaker_use_activator;
+			self.use1 = target_speaker_use_activator;
 		else if(self.spawnflags & 1) // LOOPED_ON
 		{
-			target_speaker_use_on();
+			target_speaker_use_on(self, NULL, NULL);
 			self.reset = target_speaker_reset;
 		}
 		else if(self.spawnflags & 2) // LOOPED_OFF
 		{
-			self.use = target_speaker_use_on;
+			self.use1 = target_speaker_use_on;
 			self.reset = target_speaker_reset;
 		}
 		else
-			self.use = target_speaker_use_on;
+			self.use1 = target_speaker_use_on;
 	}
 	else if(self.spawnflags & 1) // LOOPED_ON
 	{

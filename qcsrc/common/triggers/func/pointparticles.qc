@@ -87,10 +87,10 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 	return 1;
 }
 
-void pointparticles_use()
-{SELFPARAM();
-	self.state = !self.state;
-	self.SendFlags |= 2;
+void pointparticles_use(entity this, entity actor, entity trigger)
+{
+	this.state = !this.state;
+	this.SendFlags |= 2;
 }
 
 void pointparticles_think()
@@ -137,7 +137,7 @@ spawnfunc(func_pointparticles)
 
 	IFTARGETED
 	{
-		this.use = pointparticles_use;
+		this.use1 = pointparticles_use;
 		this.reset = pointparticles_reset;
 		this.reset(this);
 	}

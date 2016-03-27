@@ -105,6 +105,11 @@ void M_Shambler_Attack_Lightning_Explode()
 	self.nextthink = time + 0.2;
 }
 
+void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, M_Shambler_Attack_Lightning_Explode());
+}
+
 void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (this.health <= 0)
@@ -116,14 +121,14 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.use));
+		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
 void M_Shambler_Attack_Lightning_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 
-	self.use ();
+	self.use1(this, NULL, NULL);
 }
 
 void M_Shambler_Attack_Lightning_Think()
@@ -157,7 +162,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.cnt = time + 5;
 	gren.nextthink = time;
 	gren.think = M_Shambler_Attack_Lightning_Think;
-	gren.use = M_Shambler_Attack_Lightning_Explode;
+	gren.use1 = M_Shambler_Attack_Lightning_Explode_use;
 	gren.touch = M_Shambler_Attack_Lightning_Touch;
 
 	gren.takedamage = DAMAGE_YES;

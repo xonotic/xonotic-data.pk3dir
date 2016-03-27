@@ -308,7 +308,7 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode));
+		W_PrepareExplosionByDamage(this, attacker, W_MineLayer_Explode);
 }
 
 void W_MineLayer_Attack(Weapon thiswep)

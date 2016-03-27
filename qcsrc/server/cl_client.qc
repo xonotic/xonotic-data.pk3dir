@@ -607,9 +607,7 @@ void PutClientInServer()
 		{
 			string s = spot.target;
 			spot.target = string_null;
-			WITH(entity, activator, this, LAMBDA(
-				WITHSELF(spot, SUB_UseTargets())
-			));
+			SUB_UseTargets(spot, this, NULL);
 			spot.target = s;
 		}
 

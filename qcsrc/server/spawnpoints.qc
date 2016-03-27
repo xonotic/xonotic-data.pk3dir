@@ -58,12 +58,12 @@ void spawnpoint_think()
 	}
 }
 
-void spawnpoint_use()
-{SELFPARAM();
+void spawnpoint_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
 	if(have_team_spawns > 0)
 	{
-		self.team = activator.team;
+		this.team = actor.team;
 		some_spawn_has_been_used = 1;
 	}
 	//LOG_INFO("spawnpoint was used!\n");
@@ -102,7 +102,7 @@ void relocate_spawnpoint()
         }
     }
 
-    self.use = spawnpoint_use;
+    self.use1 = spawnpoint_use;
     self.think = spawnpoint_think;
     self.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
     self.team_saved = self.team;

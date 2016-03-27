@@ -1,10 +1,10 @@
 #ifdef SVQC
-void trigger_hurt_use()
-{SELFPARAM();
-	if(IS_PLAYER(activator))
-		self.enemy = activator;
+void trigger_hurt_use(entity this, entity actor, entity trigger)
+{
+	if(IS_PLAYER(actor))
+		this.enemy = actor;
 	else
-		self.enemy = world; // let's just destroy it, if taking over is too much work
+		this.enemy = world; // let's just destroy it, if taking over is too much work
 }
 
 .float triggerhurttime;
@@ -62,7 +62,7 @@ spawnfunc(trigger_hurt)
 	EXACTTRIGGER_INIT;
 	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;
-	self.use = trigger_hurt_use;
+	self.use1 = trigger_hurt_use;
 	self.enemy = world; // I hate you all
 	if (!self.dmg)
 		self.dmg = 1000;

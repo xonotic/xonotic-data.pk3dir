@@ -85,13 +85,12 @@ void dynlight_find_target()
 	self.think = dynlight_think;
 	self.nextthink = time + 0.1;
 }
-void dynlight_use()
+void dynlight_use(entity this, entity actor, entity trigger)
 {
-    SELFPARAM();
-	if (self.light_lev == 0)
-		self.light_lev = self.lefty;
+	if (this.light_lev == 0)
+		this.light_lev = this.lefty;
 	else
-		self.light_lev = 0;
+		this.light_lev = 0;
 }
 spawnfunc(dynlight)
 {
@@ -100,7 +99,7 @@ spawnfunc(dynlight)
 	if (!self.color)
 		self.color = '1 1 1';
 	self.lefty = self.light_lev;
-	self.use = dynlight_use;
+	self.use1 = dynlight_use;
 	setsize (self, '0 0 0', '0 0 0');
 	setorigin (self, self.origin);
 	//self.pflags = PFLAGS_FULLDYNAMIC;

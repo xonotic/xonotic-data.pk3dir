@@ -455,7 +455,7 @@ void turret_projectile_damage(entity this, entity inflictor, entity attacker, fl
 	this.health	-= damage;
 	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
 	if(this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(this.owner, turret_projectile_explode));
+		W_PrepareExplosionByDamage(this, this.owner, turret_projectile_explode);
 }
 
 entity turret_projectile(Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
@@ -1179,16 +1179,16 @@ void turret_think()
 	When .used a turret switch team to activator.team.
 	If activator is world, the turret go inactive.
 */
-void turret_use()
-{SELFPARAM();
-	LOG_TRACE("Turret ",self.netname, " used by ", activator.classname, "\n");
+void turret_use(entity this, entity actor, entity trigger)
+{
+	LOG_TRACE("Turret ",this.netname, " used by ", actor.classname, "\n");
 
-	self.team = activator.team;
+	this.team = actor.team;
 
-	if(self.team == 0)
-		self.active = ACTIVE_NOT;
+	if(this.team == 0)
+		this.active = ACTIVE_NOT;
 	else
-		self.active = ACTIVE_ACTIVE;
+		this.active = ACTIVE_ACTIVE;
 
 }
 
@@ -1341,7 +1341,7 @@ float turret_initialize(Turret tur)
 	self.view_ofs				= '0 0 0';
 	self.turret_firecheckfunc	= turret_firecheck;
 	self.event_damage			= turret_damage;
-	self.use					= turret_use;
+	self.use1					= turret_use;
 	self.bot_attack				= true;
 	self.nextthink				= time + 1;
 	self.nextthink			   += turret_count * sys_frametime;

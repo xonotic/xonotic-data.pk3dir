@@ -241,21 +241,18 @@ void WarpZone_Touch ()
 	{
 #ifdef SVQC
 		string save1, save2;
-		activator = other;
 
 		save1 = this.target; this.target = string_null;
 		save2 = this.target3; this.target3 = string_null;
-		SUB_UseTargets();
+		SUB_UseTargets(this, other, other); // use other too?
 		if (!this.target) this.target = save1;
 		if (!this.target3) this.target3 = save2;
 
-		setself(this.enemy);
-		save1 = this.target; this.target = string_null;
-		save2 = this.target2; this.target2 = string_null;
-		SUB_UseTargets();
-		if (!this.target) this.target = save1;
-		if (!this.target2) this.target2 = save2;
-		setself(this);
+		save1 = this.enemy.target; this.enemy.target = string_null;
+		save2 = this.enemy.target2; this.enemy.target2 = string_null;
+		SUB_UseTargets(this.enemy, other, other); // use other too?
+		if (!this.enemy.target) this.enemy.target = save1;
+		if (!this.enemy.target2) this.enemy.target2 = save2;
 #endif
 	}
 	else
@@ -412,27 +409,19 @@ float WarpZone_CheckProjectileImpact(entity player)
 	player.velvec = player.warpzone_oldvelocity;
 	if(WarpZone_Teleport(wz, player, 0, 1))
 	{
-		entity oldself;
 		string save1, save2;
 
-		oldself = self;
-		self = wz;
-		other = player;
-		activator = player;
+		save1 = wz.target; wz.target = string_null;
+		save2 = wz.target3; wz.target3 = string_null;
+		SUB_UseTargets(wz, player, player);
+		if (!wz.target) wz.target = save1;
+		if (!wz.target3) wz.target3 = save2;
 
-		save1 = self.target; self.target = string_null;
-		save2 = self.target3; self.target3 = string_null;
-		SUB_UseTargets();
-		if (!self.target) self.target = save1;
-		if (!self.target3) self.target3 = save2;
-
-		self = self.enemy;
-		save1 = self.target; self.target = string_null;
-		save2 = self.target2; self.target2 = string_null;
-		SUB_UseTargets();
-		if (!self.target) self.target = save1;
-		if (!self.target2) self.target2 = save2;
-		self = oldself;
+		save1 = wz.enemy.target; wz.enemy.target = string_null;
+		save2 = wz.enemy.target2; wz.enemy.target2 = string_null;
+		SUB_UseTargets(wz.enemy, player, player);
+		if (!wz.enemy.target) wz.enemy.target = save1;
+		if (!wz.enemy.target2) wz.enemy.target2 = save2;
 	}
 	else
 	{
@@ -906,8 +895,8 @@ bool visible_to_some_client(entity ent)
 	));
 	return false;
 }
-void trigger_warpzone_reconnect_use()
-{SELFPARAM();
+void trigger_warpzone_reconnect_use(entity this, entity actor, entity trigger)
+{
 	// NOTE: this matches for target, not targetname, but of course
 	// targetname must be set too on the other entities
 	for(entity e = warpzone_first; e; e = e.warpzone_next)
@@ -930,7 +919,7 @@ void trigger_warpzone_reconnect_use()
 
 spawnfunc(trigger_warpzone_reconnect)
 {
-	this.use = trigger_warpzone_reconnect_use;
+	this.use1 = trigger_warpzone_reconnect_use;
 }
 
 spawnfunc(target_warpzone_reconnect)

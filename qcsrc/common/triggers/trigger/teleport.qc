@@ -1,12 +1,12 @@
 REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_TELEPORT)
 
 #ifdef SVQC
-void trigger_teleport_use()
-{SELFPARAM();
+void trigger_teleport_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
-		self.team = activator.team;
+		this.team = actor.team;
 #ifdef SVQC
-	self.SendFlags |= SF_TRIGGER_UPDATE;
+	this.SendFlags |= SF_TRIGGER_UPDATE;
 #endif
 }
 #endif
@@ -49,12 +49,11 @@ void Teleport_Touch ()
 	e = Simple_TeleportPlayer(self, other);
 
 #ifdef SVQC
-	activator = other;
 	string s = self.target; self.target = string_null;
-	SUB_UseTargets();
+	SUB_UseTargets(self, other, other); // TODO: should we be using other for trigger too?
 	if (!self.target) self.target = s;
 
-	WITHSELF(e, SUB_UseTargets());
+	SUB_UseTargets(e, other, other);
 #endif
 }
 
@@ -85,7 +84,7 @@ spawnfunc(trigger_teleport)
 	self.active = ACTIVE_ACTIVE;
 	//trigger_init(self); // only for predicted triggers?
 	EXACTTRIGGER_INIT;
-	self.use = trigger_teleport_use;
+	self.use1 = trigger_teleport_use;
 
 	if(self.noise != "")
 		FOREACH_WORD(self.noise, true, precache_sound(it));

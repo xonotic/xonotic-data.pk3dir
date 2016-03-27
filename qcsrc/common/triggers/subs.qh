@@ -36,6 +36,9 @@
 
 #endif
 
+
+.void(entity this, entity actor, entity trigger) use1;
+
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
 
