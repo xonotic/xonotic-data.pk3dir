@@ -232,6 +232,10 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 		WITHSELF(it, turret_respawn());
 	));
 }
+void assault_roundstart_use_this(entity this)
+{
+	assault_roundstart_use(this, NULL, NULL);
+}
 void assault_roundstart_use_self()
 {
     SELFPARAM();
@@ -427,9 +431,9 @@ spawnfunc(target_assault_roundstart)
 
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
-	self.use = assault_roundstart_use;
+	self.use1 = assault_roundstart_use;
 	self.reset2 = assault_roundstart_use_self;
-	InitializeEntity(self, assault_roundstart_use_self, INITPRIO_FINDTARGET);
+	InitializeEntity(self, assault_roundstart_use_this, INITPRIO_FINDTARGET);
 }
 
 // legacy bot code
