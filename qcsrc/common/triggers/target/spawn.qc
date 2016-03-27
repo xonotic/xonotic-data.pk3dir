@@ -37,7 +37,6 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 	string key, value, valuefield, valueoffset, valueoffsetrandom;
 	entity valueent;
 	vector data, data2;
-	entity oldactivator;
 
 	n = tokenize_console(msg);
 
@@ -218,11 +217,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 				value = strcat("target_spawn_helper", value);
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
-			oldactivator = activator;
-
-			activator = act;
 			WITHSELF(e, e.target_spawn_spawnfunc(e));
-			activator = oldactivator;
 
 			// We called an external function, so we have to re-tokenize msg.
 			n = tokenize_console(msg);
@@ -286,7 +281,7 @@ void target_spawn_use(entity this, entity actor, entity trigger)
 	else if(this.target == "*activator")
 	{
 		// edit entity
-		if(activator)
+		if(actor)
 			target_spawn_useon(actor, this, actor, trigger);
 	}
 	else

@@ -58,7 +58,7 @@ void SUB_VanishOrRemove (entity ent);
 .string  platmovetype;
 .float platmovetype_start, platmovetype_end;
 
-entity activator;
+//entity activator;
 
 .string killtarget;
 
