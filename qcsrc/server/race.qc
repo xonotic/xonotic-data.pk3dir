@@ -727,8 +727,8 @@ float race_waypointsprite_visible_for_player(entity e)
 }
 
 float have_verified;
-void trigger_race_checkpoint_verify()
-{SELFPARAM();
+void trigger_race_checkpoint_verify(entity this)
+{
 	entity cp;
 	float i, p;
 	float qual;

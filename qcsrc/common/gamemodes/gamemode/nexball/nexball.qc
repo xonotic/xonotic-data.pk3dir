@@ -498,7 +498,7 @@ void nb_spawnteams()
 	}
 }
 
-void nb_delayedinit()
+void nb_delayedinit(entity this)
 {
 	if(find(world, classname, "nexball_team") == world)
 		nb_spawnteams();

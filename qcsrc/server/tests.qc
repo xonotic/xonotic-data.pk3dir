@@ -1,7 +1,7 @@
 #include "tests.qh"
 
-void test_weapons_hurt() {
-    SELFPARAM();
+void test_weapons_hurt(entity this)
+{
     EXPECT_NE(100, this.health);
     remove(this.enemy);
     remove(this);

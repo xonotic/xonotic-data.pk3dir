@@ -31,7 +31,7 @@ void LogTeamchange(float player_id, float team_number, float type)
 	GameLogEcho(strcat(":team:", ftos(player_id), ":", ftos(team_number), ":", ftos(type)));
 }
 
-void default_delayedinit()
+void default_delayedinit(entity this)
 {
 	if(!scores_initialized)
 		ScoreRules_generic();

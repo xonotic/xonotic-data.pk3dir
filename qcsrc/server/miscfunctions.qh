@@ -357,7 +357,7 @@ const float INITPRIO_SETLOCATION 		= 90;
 const float INITPRIO_LINKDOORS 			= 91;
 const float INITPRIO_LAST 				= 99;
 
-.void() initialize_entity;
+.void(entity this) initialize_entity;
 .float initialize_entity_order;
 .entity initialize_entity_next;
 entity initialize_entity_first;
@@ -367,5 +367,5 @@ entity initialize_entity_first;
 
 
 float sound_allowed(float dest, entity e);
-void InitializeEntity(entity e, void() func, float order);
+void InitializeEntity(entity e, void(entity this) func, float order);
 void SetCustomizer(entity e, float() customizer, void() uncustomizer);

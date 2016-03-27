@@ -863,8 +863,8 @@ void Item_Reset(entity this)
 }
 void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
-void Item_FindTeam()
-{SELFPARAM();
+void Item_FindTeam(entity this)
+{
 	entity e;
 
 	if(self.effects & EF_NODRAW)

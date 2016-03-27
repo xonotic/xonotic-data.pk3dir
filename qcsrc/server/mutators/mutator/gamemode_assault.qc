@@ -147,8 +147,8 @@ void assault_objective_decrease_use()
 	}
 }
 
-void assault_setenemytoobjective()
-{SELFPARAM();
+void assault_setenemytoobjective(entity this)
+{
 	entity objective;
 	for(objective = world; (objective = find(objective, targetname, self.target)); )
 	{
@@ -208,9 +208,9 @@ void target_objective_decrease_activate()
 	}
 }
 
-void target_objective_decrease_findtarget()
+void target_objective_decrease_findtarget(entity this)
 {
-	assault_setenemytoobjective();
+	assault_setenemytoobjective(this);
 }
 
 void target_assault_roundend_reset(entity this)
@@ -225,8 +225,8 @@ void target_assault_roundend_use()
 	self.winning = 1; // round has been won by attackers
 }
 
-void assault_roundstart_use()
-{SELFPARAM();
+void assault_roundstart_use(entity this)
+{
 	activator = self;
 	SUB_UseTargets();
 
@@ -241,6 +241,11 @@ void assault_roundstart_use()
 		// Dubbles as teamchange
 		WITHSELF(it, turret_respawn());
 	));
+}
+void assault_roundstart_use_self()
+{
+    SELFPARAM();
+    assault_roundstart_use(this);
 }
 
 void assault_wall_think()
@@ -432,8 +437,8 @@ spawnfunc(target_assault_roundstart)
 
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
-	self.use = assault_roundstart_use;
-	self.reset2 = assault_roundstart_use;
+	self.use = assault_roundstart_use_self;
+	self.reset2 = assault_roundstart_use_self;
 	InitializeEntity(self, assault_roundstart_use, INITPRIO_FINDTARGET);
 }
 

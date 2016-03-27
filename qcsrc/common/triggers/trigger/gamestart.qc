@@ -1,6 +1,6 @@
 #ifdef SVQC
-void gamestart_use()
-{SELFPARAM();
+void gamestart_use(entity this)
+{
 	activator = self;
 	SUB_UseTargets();
 	remove(self);
@@ -9,7 +9,7 @@ void gamestart_use()
 void self_spawnfunc_trigger_gamestart();
 spawnfunc(trigger_gamestart)
 {
-	this.use = gamestart_use;
+	setuse(this, gamestart_use);
 	this.reset2 = self_spawnfunc_trigger_gamestart;
 
 	if(this.wait)
