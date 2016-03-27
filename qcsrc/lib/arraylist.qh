@@ -1,6 +1,6 @@
 #pragma once
 
-typedef entity ArrayList;
+USING(ArrayList, entity);
 .int al_buf;
 .int al_len;
 

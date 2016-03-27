@@ -1,3 +1,4 @@
+#include "engineinfo.qh"
 // Engine info panel (#13)
 
 float prevfps;

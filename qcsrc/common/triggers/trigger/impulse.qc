@@ -181,6 +181,7 @@ bool trigger_impulse_send(entity this, entity to, int sf)
 
 void trigger_impulse_link()
 {
+    SELFPARAM();
 	trigger_link(self, trigger_impulse_send);
 }
 
@@ -217,24 +218,24 @@ spawnfunc(trigger_impulse)
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 {
-	self.spawnflags = ReadInt24_t();
-	self.radius = ReadCoord();
-	self.strength = ReadCoord();
-	self.falloff = ReadByte();
-	self.active = ReadByte();
+	this.spawnflags = ReadInt24_t();
+	this.radius = ReadCoord();
+	this.strength = ReadCoord();
+	this.falloff = ReadByte();
+	this.active = ReadByte();
 
 	trigger_common_read(true);
 	return = true;
 
-	self.classname = "trigger_impulse";
-	self.solid = SOLID_TRIGGER;
-	self.entremove = trigger_remove_generic;
-	//self.draw = trigger_draw_generic;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
+	this.classname = "trigger_impulse";
+	this.solid = SOLID_TRIGGER;
+	this.entremove = trigger_remove_generic;
+	//this.draw = trigger_draw_generic;
+	this.drawmask = MASK_NORMAL;
+	this.move_time = time;
 
-	if(self.radius) { self.move_touch = trigger_impulse_touch3; }
-	else if(self.target) { self.move_touch = trigger_impulse_touch1; }
-	else { self.move_touch = trigger_impulse_touch2; }
+	if(this.radius) { this.move_touch = trigger_impulse_touch3; }
+	else if(this.target) { this.move_touch = trigger_impulse_touch1; }
+	else { this.move_touch = trigger_impulse_touch2; }
 }
 #endif

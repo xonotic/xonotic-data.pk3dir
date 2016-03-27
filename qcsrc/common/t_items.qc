@@ -644,7 +644,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 	return false;
 
-:YEAH
+LABEL(YEAH)
 	switch(mode)
 	{
 		case ITEM_MODE_FUEL:
@@ -740,7 +740,7 @@ float Item_GiveTo(entity item, entity player)
 		player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
 	}
 
-:skip
+LABEL(skip)
 
 	// always eat teamed entities
 	if(item.team)
@@ -811,7 +811,7 @@ void Item_Touch()
 		return;
 	}
 
-	:pickup
+LABEL(pickup)
 
 	other.last_pickup = time;
 
@@ -863,8 +863,8 @@ void Item_Reset(entity this)
 }
 void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
-void Item_FindTeam()
-{SELFPARAM();
+void Item_FindTeam(entity this)
+{
 	entity e;
 
 	if(self.effects & EF_NODRAW)
@@ -1030,7 +1030,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		WITH(entity, self, this, RemoveItem());
+		WITHSELF(this, RemoveItem());
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
@@ -1135,7 +1135,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				WITH(entity, self, this, droptofloor());
+				WITHSELF(this, droptofloor());
 			waypoint_spawnforitem(this);
 		}
 

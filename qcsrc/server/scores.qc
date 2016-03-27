@@ -387,6 +387,7 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 
 void WinningConditionHelper()
 {
+    SELFPARAM();
 	float c;
 	string s;
 	float fullstatus;

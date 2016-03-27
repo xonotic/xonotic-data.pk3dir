@@ -105,7 +105,7 @@ void W_Porto_Remove(entity p)
 {SELFPARAM();
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
-		WITH(entity, self, p.porto_current, W_Porto_Fail(1));
+		WITHSELF(p.porto_current, W_Porto_Fail(1));
 	}
 }
 
@@ -244,7 +244,7 @@ void W_Porto_Attack(float type)
 {SELFPARAM();
 	entity gren;
 
-	W_SetupShot(self, false, 4, SND(PORTO_FIRE), CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
@@ -298,7 +298,7 @@ METHOD(PortoLaunch, wr_aim, void(entity thiswep))
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(!WEP_CVAR(porto, secondary))
-        if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
+        if(bot_aim(self, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
             PHYS_INPUT_BUTTON_ATCK(self) = true;
 }
 METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))

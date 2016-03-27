@@ -1,12 +1,11 @@
-#ifndef PATHLIB_H
-#define PATHLIB_H
+#pragma once
 
 .entity pathlib_list;
 .entity path_next;
 .entity path_prev;
 
 #define inwater(point) (pointcontents(point) == CONTENT_WATER)
-#define medium spawnshieldtime
+.int medium;
 
 const vector PLIB_FORWARD = '0 1 0';
 //#define PLIB_BACK    '0 -1 0'
@@ -107,5 +106,3 @@ var float  pathlib_makenode(entity parent,vector start, vector to, vector goal,f
 var float  buildpath_nodefilter(vector n,vector c,vector p);
 
 var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
-
-#endif

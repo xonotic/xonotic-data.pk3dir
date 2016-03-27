@@ -35,6 +35,7 @@ MUTATOR_HOOKFUNCTION(hook, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(hook, FilterItem)
 {
+    SELFPARAM();
     return self.weapon == WEP_HOOK.m_id;
 }
 

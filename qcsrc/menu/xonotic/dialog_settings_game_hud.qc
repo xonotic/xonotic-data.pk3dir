@@ -1,21 +1,13 @@
-#ifndef DIALOG_SETTINGS_GAME_HUD_H
-#define DIALOG_SETTINGS_GAME_HUD_H
-#include "tab.qc"
-CLASS(XonoticGameHUDSettingsTab, XonoticTab)
-	METHOD(XonoticGameHUDSettingsTab, fill, void(entity));
-	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameHUDSettingsTab, title, string, _("HUD"))
-	ATTRIB(XonoticGameHUDSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticGameHUDSettingsTab, columns, float, 6.2)
-ENDCLASS(XonoticGameHUDSettingsTab)
-entity makeXonoticGameHUDSettingsTab();
-void HUDSetup_Start(entity me, entity btn);
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(HUD, makeXonoticGameHUDSettingsTab());
-#endif
+#include "dialog_settings_game_hud.qh"
 
-#ifdef IMPLEMENTATION
+#include "../item/modalcontroller.qh"
+#include "mainwindow.qh"
+#include "textlabel.qh"
+#include "slider.qh"
+#include "slider_sbfadetime.qh"
+#include "checkbox.qh"
+#include "button.qh"
+
 void HUDSetup_Check_Gamestatus(entity me, entity btn)
 {
 	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, ask the player if they want to start one anyway
@@ -174,4 +166,3 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			e.onClickEntity = me;
 		// TODO: show hud config name with text here
 }
-#endif

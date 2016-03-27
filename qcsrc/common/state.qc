@@ -12,15 +12,17 @@ void PlayerState_attach(entity this)
 
 void PlayerState_detach(entity this)
 {
-	if (!PS(this)) return;  // initial connect
-	FOREACH_CLIENT(PS(it) == PS(this), { PS(it) = NULL; });
-	remove(PS(this));
-	this._ps = NULL;
+    PlayerState ps = PS(this);
+	if (!ps) return;  // initial connect
+	PS(this) = NULL;
+	if (ps.m_client != this) return;  // don't own state, spectator
+	FOREACH_CLIENT(PS(it) == ps, { PS(it) = NULL; });
+	remove(ps);
 
-    Inventory_delete(self);
+    Inventory_delete(this);
 }
 
-void GetCvars(int);
+void GetCvars(entity this, int);
 void DecodeLevelParms(entity this);
 void PlayerScore_Attach(entity this);
 void ClientData_Attach(entity this);
@@ -35,7 +37,7 @@ void ClientState_attach(entity this)
 {
 	this._cs = NEW(ClientState, this);
 
-    GetCvars(0);  // get other cvars from player
+    GetCvars(this, 0);  // get other cvars from player
 
 	// TODO: xonstat elo.txt support, until then just 404s
 	if (false && IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
@@ -55,9 +57,9 @@ void ClientState_attach(entity this)
 	bot_clientconnect(this);
 }
 
-void bot_clientdisconnect();
+void bot_clientdisconnect(entity this);
 void W_HitPlotClose(entity this);
-void anticheat_report();
+void anticheat_report(entity this);
 void playerdemo_shutdown();
 void entcs_detach(entity this);
 void accuracy_free(entity this);
@@ -69,12 +71,12 @@ void ClientState_detach(entity this)
 	remove(CS(this));
 	this._cs = NULL;
 
-    GetCvars(-1);  // free cvars
+    GetCvars(this, -1);  // free cvars
 
-    bot_clientdisconnect();
+    bot_clientdisconnect(this);
 
     W_HitPlotClose(this);
-    anticheat_report();
+    anticheat_report(this);
     playerdemo_shutdown();
     entcs_detach(this);
     accuracy_free(self);

@@ -1,46 +1,5 @@
-#ifndef ITEM_BUTTON_H
-	#define ITEM_BUTTON_H
-	#include "label.qc"
-	CLASS(Button, Label)
-		METHOD(Button, configureButton, void(entity, string, float, string));
-		METHOD(Button, draw, void(entity));
-		METHOD(Button, showNotify, void(entity));
-		METHOD(Button, resizeNotify, void(entity, vector, vector, vector, vector));
-		METHOD(Button, keyDown, float(entity, float, float, float));
-		METHOD(Button, mousePress, float(entity, vector));
-		METHOD(Button, mouseDrag, float(entity, vector));
-		METHOD(Button, mouseRelease, float(entity, vector));
-		METHOD(Button, playClickSound, void(entity));
-		ATTRIB(Button, onClick, void(entity, entity), func_null)
-		ATTRIB(Button, onClickEntity, entity, NULL)
-		ATTRIB(Button, src, string, string_null)
-		ATTRIB(Button, srcSuffix, string, string_null)
-		ATTRIB(Button, src2, string, string_null) // is centered, same aspect, and stretched to label size
-		ATTRIB(Button, src2scale, float, 1)
-		ATTRIB(Button, srcMulti, float, 1)        // 0: button square left, text right; 1: button stretched, text over it
-		ATTRIB(Button, buttonLeftOfText, float, 0)
-		ATTRIB(Button, focusable, float, 1)
-		ATTRIB(Button, allowFocusSound, float, 1)
-		ATTRIB(Button, pressed, float, 0)
-		ATTRIB(Button, clickTime, float, 0)
-		ATTRIB(Button, applyButton, entity, NULL)
-		ATTRIB(Button, disableOnClick, bool, false)
-		ATTRIB(Button, disabled, float, 0)
-		ATTRIB(Button, disabledAlpha, float, 0.3)
-		ATTRIB(Button, forcePressed, float, 0)
-		ATTRIB(Button, color, vector, '1 1 1')
-		ATTRIB(Button, colorC, vector, '1 1 1')
-		ATTRIB(Button, colorF, vector, '1 1 1')
-		ATTRIB(Button, colorD, vector, '1 1 1')
-		ATTRIB(Button, color2, vector, '1 1 1')
-		ATTRIB(Button, alpha2, float, 1)
+#include "button.qh"
 
-		ATTRIB(Button, origin, vector, '0 0 0')
-		ATTRIB(Button, size, vector, '0 0 0')
-	ENDCLASS(Button)
-#endif
-
-#ifdef IMPLEMENTATION
 	void Button_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 	{
 		if (me.srcMulti) me.keepspaceLeft = 0;
@@ -176,4 +135,3 @@
 		else if (me.onClick == Dialog_Close) m_play_click_sound(MENU_SOUND_CLOSE);
 		else m_play_click_sound(MENU_SOUND_EXECUTE);
 	}
-#endif

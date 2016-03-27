@@ -1,0 +1,9 @@
+#pragma once
+
+#include "textslider.qh"
+CLASS(XonoticParticlesSlider, XonoticTextSlider)
+	METHOD(XonoticParticlesSlider, configureXonoticParticlesSlider, void(entity));
+	METHOD(XonoticParticlesSlider, loadCvars, void(entity));
+	METHOD(XonoticParticlesSlider, saveCvars, void(entity));
+ENDCLASS(XonoticParticlesSlider)
+entity makeXonoticParticlesSlider();

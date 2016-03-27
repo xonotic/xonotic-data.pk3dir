@@ -1,3 +1,4 @@
+#include "t_quake3.qh"
 
 #include "../common/weapons/all.qh"
 
@@ -67,7 +68,7 @@ spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }
 .float delay;
 
 // weapon remove ent from df
-void target_init_verify()
+void target_init_verify(entity this)
 {
 	entity trigger, targ;
 	for(trigger = world; (trigger = find(trigger, classname, "trigger_multiple")); )
@@ -94,8 +95,8 @@ spawnfunc(target_init)
 }
 
 // weapon give ent from defrag
-void target_give_init()
-{SELFPARAM();
+void target_give_init(entity this)
+{
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher" || targ.classname == "weapon_devastator") {

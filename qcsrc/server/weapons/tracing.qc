@@ -13,14 +13,16 @@
 #include <common/util.qh>
 
 #include <common/weapons/all.qh>
+#include <common/state.qh>
 
 #include <lib/warpzone/common.qh>
 
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range)
 {
+    TC(Sound, snd);
 	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid;
 	vector vecs, dv;
@@ -132,9 +134,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (!autocvar_g_norecoil)
 		ent.punchangle_x = recoil * -1;
 
-	if (snd != "")
-	{
-		_sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+	if (snd != SND_Null) {
+		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 
@@ -348,8 +349,8 @@ void fireBullet_trace_callback(vector start, vector hit, vector end)
 	fireBullet_last_hit = world;
 }
 
-void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
-{SELFPARAM();
+void fireBullet(entity this, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
+{
 	vector  end;
 
 	dir = normalize(dir + randomvec() * spread);
@@ -366,28 +367,28 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	else
 		fireBullet_trace_callback_eff = EFFECT_BULLET;
 
-	float lag = ANTILAG_LATENCY(self);
+	float lag = ANTILAG_LATENCY(this);
 	if(lag < 0.001)
 		lag = 0;
-	if (!IS_REAL_CLIENT(self))
+	if (!IS_REAL_CLIENT(this))
 		lag = 0;
-	if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
+	if(autocvar_g_antilag == 0 || this.cvar_cl_noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_takeback(it, time - lag)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-			if(it != self)
-				antilag_takeback(it, time - lag);
-		));
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_takeback(it, CS(it), time - lag));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != this)
+				antilag_takeback(it, it, time - lag);
+		});
 	}
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
-	int oldsolid = self.dphitcontentsmask;
-	if(self)
-		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	int oldsolid = this.dphitcontentsmask;
+	if(this)
+		this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	WarpZone_trace_forent = self;
+	WarpZone_trace_forent = this;
 
 	for (;;)
 	{
@@ -425,23 +426,23 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			is_weapclip = true;
 
 		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
-			Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
+			Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, this);
 
 		if (hit && hit != WarpZone_trace_forent && hit != fireBullet_last_hit)  // Avoid self-damage (except after going through a warp); avoid hitting the same entity twice (engine bug).
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
-			MUTATOR_CALLHOOK(FireBullet_Hit, self, hit, start, end, damage);
+			MUTATOR_CALLHOOK(FireBullet_Hit, this, hit, start, end, damage);
 			damage = frag_damage;
-			float g = accuracy_isgooddamage(self, hit);
-			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
+			float g = accuracy_isgooddamage(this, hit);
+			Damage(hit, this, this, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons
 			if(g)
 			{
 				// do not exceed 100%
 				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
 				total_damage += damage * solid_penetration_left;
-				accuracy_add(self, PS(self).m_weapon.m_id, 0, added_damage);
+				accuracy_add(this, PS(this).m_weapon.m_id, 0, added_damage);
 			}
 		}
 
@@ -480,24 +481,24 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		// Only show effect when going through a player (invisible otherwise)
 		if (hit && (hit.solid != SOLID_BSP))
 			if(vdist(trace_endpos - start, >, 4))
-				trailparticles(self, fireBullet_trace_callback_eff, start, trace_endpos);
+				trailparticles(this, fireBullet_trace_callback_eff, start, trace_endpos);
 
 		start = trace_endpos;
 
 		if(hit.solid == SOLID_BSP)
-			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -solid_penetration_left, dtype, 0, self);
+			Damage_DamageInfo(start, 0, 0, 0, max(1, force) * normalize(dir) * -solid_penetration_left, dtype, 0, this);
 	}
 
 	if(lag)
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(antilag_restore(it)));
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-			if(it != self)
-				antilag_restore(it);
-		));
+		FOREACH_CLIENT(IS_PLAYER(it) && it != this, antilag_restore(it, CS(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != this)
+				antilag_restore(it, it);
+		});
 	}
 
 	// restore shooter solid type
-	if(self)
-		self.dphitcontentsmask = oldsolid;
+	if(this)
+		this.dphitcontentsmask = oldsolid;
 }

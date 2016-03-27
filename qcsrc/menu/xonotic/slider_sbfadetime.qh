@@ -1,0 +1,9 @@
+#pragma once
+
+#include "textslider.qh"
+CLASS(XonoticScoreboardFadeTimeSlider, XonoticTextSlider)
+	METHOD(XonoticScoreboardFadeTimeSlider, configureXonoticScoreboardFadeTimeSlider, void(entity));
+	METHOD(XonoticScoreboardFadeTimeSlider, loadCvars, void(entity));
+	METHOD(XonoticScoreboardFadeTimeSlider, saveCvars, void(entity));
+ENDCLASS(XonoticScoreboardFadeTimeSlider)
+entity makeXonoticScoreboardFadeTimeSlider();

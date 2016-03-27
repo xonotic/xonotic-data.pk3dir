@@ -1,31 +1,5 @@
-#ifndef CHECKBOX_STRING_H
-#define CHECKBOX_STRING_H
-#include "../item/checkbox.qc"
-CLASS(XonoticCheckBoxString, CheckBox)
-	METHOD(XonoticCheckBoxString, configureXonoticCheckBoxString, void(entity, string, string, string, string));
-	METHOD(XonoticCheckBoxString, setChecked, void(entity, float));
-	ATTRIB(XonoticCheckBoxString, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticCheckBoxString, image, string, SKINGFX_CHECKBOX)
-	ATTRIB(XonoticCheckBoxString, yesString, string, string_null)
-	ATTRIB(XonoticCheckBoxString, noString, string, string_null)
+#include "checkbox_string.qh"
 
-	ATTRIB(XonoticCheckBoxString, color, vector, SKINCOLOR_CHECKBOX_N)
-	ATTRIB(XonoticCheckBoxString, colorC, vector, SKINCOLOR_CHECKBOX_C)
-	ATTRIB(XonoticCheckBoxString, colorF, vector, SKINCOLOR_CHECKBOX_F)
-	ATTRIB(XonoticCheckBoxString, colorD, vector, SKINCOLOR_CHECKBOX_D)
-
-	ATTRIB(XonoticCheckBoxString, cvarName, string, string_null)
-	METHOD(XonoticCheckBoxString, loadCvars, void(entity));
-	METHOD(XonoticCheckBoxString, saveCvars, void(entity));
-	ATTRIB(XonoticCheckBoxString, sendCvars, float, 0)
-
-	ATTRIB(XonoticCheckBoxString, alpha, float, SKINALPHA_TEXT)
-	ATTRIB(XonoticCheckBoxString, disabledAlpha, float, SKINALPHA_DISABLED)
-ENDCLASS(XonoticCheckBoxString)
-entity makeXonoticCheckBoxString(string, string, string, string);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticCheckBoxString(string theYesValue, string theNoValue, string theCvar, string theText)
 {
 	entity me;
@@ -67,4 +41,3 @@ void XonoticCheckBoxString_saveCvars(entity me)
 
 	CheckSendCvars(me, me.cvarName);
 }
-#endif

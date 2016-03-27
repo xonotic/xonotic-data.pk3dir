@@ -80,7 +80,7 @@ void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity atta
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_RocketPropelledChainsaw_Explode));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_RocketPropelledChainsaw_Explode));
 }
 
 void W_RocketPropelledChainsaw_Think()
@@ -111,7 +111,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(rpc, ammo));
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKET_FIRE), CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(rpc, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -152,7 +152,8 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 
 METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep))
 {
-    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
+    SELFPARAM();
+    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 }
 
 METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -179,6 +180,7 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
 
 METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
     ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
     return ammo_amount;
@@ -191,7 +193,8 @@ METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep))
 
 METHOD(RocketPropelledChainsaw, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, WEP_CVAR(rpc, ammo), SND(RELOAD));
+    SELFPARAM();
+    W_Reload(self, WEP_CVAR(rpc, ammo), SND_RELOAD);
 }
 
 METHOD(RocketPropelledChainsaw, wr_suicidemessage, Notification(entity thiswep))
@@ -218,6 +221,7 @@ METHOD(RocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 
 METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

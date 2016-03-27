@@ -1,24 +1,7 @@
-#ifndef DIALOG_TEAMSELECT_H
-#define DIALOG_TEAMSELECT_H
-#include "rootdialog.qc"
-CLASS(XonoticTeamSelectDialog, XonoticRootDialog)
-	METHOD(XonoticTeamSelectDialog, fill, void(entity));
-	METHOD(XonoticTeamSelectDialog, showNotify, void(entity));
-	ATTRIB(XonoticTeamSelectDialog, title, string, _("Team Selection"))
-	ATTRIB(XonoticTeamSelectDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticTeamSelectDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticTeamSelectDialog, rows, float, 5)
-	ATTRIB(XonoticTeamSelectDialog, columns, float, 4)
-	ATTRIB(XonoticTeamSelectDialog, name, string, "TeamSelect")
-	ATTRIB(XonoticTeamSelectDialog, team1, entity, NULL)
-	ATTRIB(XonoticTeamSelectDialog, team2, entity, NULL)
-	ATTRIB(XonoticTeamSelectDialog, team3, entity, NULL)
-	ATTRIB(XonoticTeamSelectDialog, team4, entity, NULL)
-	ATTRIB(XonoticTeamSelectDialog, requiresConnection, float, true)
-ENDCLASS(XonoticTeamSelectDialog)
-#endif
+#include "dialog_teamselect.qh"
 
-#ifdef IMPLEMENTATION
+#include "bigcommandbutton.qh"
+
 entity makeTeamButton_T(string theName, vector theColor, string commandtheName, string theTooltip)
 {
 	entity b;
@@ -59,6 +42,3 @@ void XonoticTeamSelectDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticCommandButton(_("spectate"), '0 0 0', "cmd spectate", 1));
 }
-#endif
-
-/* Click. The c-word is here so you can grep for it :-) */

@@ -1,17 +1,9 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_STARTCONFIRM_H
-#define DIALOG_MULTIPLAYER_MEDIA_DEMO_STARTCONFIRM_H
-#include "dialog.qc"
-CLASS(XonoticDemoStartConfirmDialog, XonoticDialog)
-	METHOD(XonoticDemoStartConfirmDialog, fill, void(entity));
-	ATTRIB(XonoticDemoStartConfirmDialog, title, string, _("Disconnect"))
-	ATTRIB(XonoticDemoStartConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)
-	ATTRIB(XonoticDemoStartConfirmDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticDemoStartConfirmDialog, rows, float, 4)
-	ATTRIB(XonoticDemoStartConfirmDialog, columns, float, 2)
-ENDCLASS(XonoticDemoStartConfirmDialog)
-#endif
+#include "dialog_multiplayer_media_demo_startconfirm.qh"
 
-#ifdef IMPLEMENTATION
+#include "demolist.qh"
+#include "textlabel.qh"
+#include "button.qh"
+
 void Handle_StartDemo_Click(entity unused, entity me) { demolist.startDemo(demolist); }
 void XonoticDemoStartConfirmDialog_fill(entity me)
 {
@@ -30,4 +22,3 @@ void XonoticDemoStartConfirmDialog_fill(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-#endif

@@ -36,14 +36,13 @@ void target_music_reset(entity this)
 }
 void target_music_kill()
 {
-	for(self = world; (self = find(self, classname, "target_music")); )
-	{
-		self.volume = 0;
-		if(self.targetname == "")
-			target_music_sendto(MSG_ALL, 1);
-		else
-			target_music_sendto(MSG_ALL, 0);
-	}
+	FOREACH_ENTITY_CLASS("target_music", true, {
+		it.volume = 0;
+        if (it.targetname == "")
+            WITHSELF(it, target_music_sendto(MSG_ALL, 1));
+        else
+            WITHSELF(it, target_music_sendto(MSG_ALL, 0));
+	});
 }
 void target_music_use()
 {

@@ -2,11 +2,12 @@
 
 #include "hud/all.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/teams.qh"
+#include <common/ent_cs.qh>
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/teams.qh>
 
-#include "../lib/csqcmodel/cl_model.qh"
+#include <lib/csqcmodel/cl_model.qh>
 
 // this.isactive = player is in range and coordinates/status (health and armor) are up to date
 // this.origin = player origin
@@ -166,6 +167,7 @@ void Draw_ShowNames(entity this)
 
 void Draw_ShowNames_All()
 {
+    SELFPARAM();
 	if (!autocvar_hud_shownames) return;
 	LL_EACH(shownames_ent, true, {
 		entity entcs = entcs_receiver(i);
@@ -176,7 +178,7 @@ void Draw_ShowNames_All()
 		}
 		make_impure(it);
 		assert(entcs.think, eprint(entcs));
-		WITH(entity, self, entcs, entcs.think());
+		WITHSELF(entcs, entcs.think());
 		if (!entcs.has_origin) continue;
 		if (entcs.m_entcs_private)
 		{

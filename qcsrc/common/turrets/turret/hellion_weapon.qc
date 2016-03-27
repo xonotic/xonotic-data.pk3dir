@@ -1,15 +1,4 @@
-#ifndef TURRET_HELLION_WEAPON_H
-#define TURRET_HELLION_WEAPON_H
-
-CLASS(HellionAttack, PortoLaunch)
-/* flags     */ ATTRIB(HellionAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(HellionAttack, impulse, int, 9);
-/* refname   */ ATTRIB(HellionAttack, netname, string, "turret_hellion");
-/* wepname   */ ATTRIB(HellionAttack, m_name, string, _("Hellion"));
-ENDCLASS(HellionAttack)
-REGISTER_WEAPON(HELLION, NEW(HellionAttack));
-
-#endif
+#include "hellion_weapon.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -26,7 +15,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND(HellionAttack_FIRE), CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, v_forward, false, 0, SND_HellionAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;
@@ -40,7 +29,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
                 actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire2"));
         }
 
-        entity missile = turret_projectile(SND(ROCKET_FIRE), 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
+        entity missile = turret_projectile(SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
         missile.think		= turret_hellion_missile_think;
         missile.nextthink	= time;

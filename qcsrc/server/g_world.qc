@@ -34,6 +34,7 @@
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
+#include "../common/state.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -48,13 +49,13 @@ void PingPLReport_Think()
 	delta = 3 / maxclients;
 	if(delta < sys_frametime)
 		delta = 0;
-	self.nextthink = time + delta;
+	this.nextthink = time + delta;
 
-	e = edict_num(self.cnt + 1);
+	e = edict_num(this.cnt + 1);
 	if(IS_REAL_CLIENT(e))
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_movementloss * 255));
@@ -71,12 +72,12 @@ void PingPLReport_Think()
 	else
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 	}
-	self.cnt = (self.cnt + 1) % maxclients;
+	this.cnt = (this.cnt + 1) % maxclients;
 }
 void PingPLReport_Spawn()
 {
@@ -510,15 +511,15 @@ entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
-	WriteShort(MSG_ENTITY, self.cnt);
+	WriteShort(MSG_ENTITY, this.cnt);
 	return true;
 }
 void RandomSeed_Think()
 {SELFPARAM();
-	self.cnt = bound(0, floor(random() * 65536), 65535);
-	self.nextthink = time + 5;
+	this.cnt = bound(0, floor(random() * 65536), 65535);
+	this.nextthink = time + 5;
 
-	self.SendFlags |= 1;
+	this.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
@@ -526,7 +527,7 @@ void RandomSeed_Spawn()
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITH(entity, self, randomseed, randomseed.think()); // sets random seed and nextthink
+	WITHSELF(randomseed, randomseed.think()); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -1503,6 +1504,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+    SELFPARAM();
 	gameover = true;
 
 	intermission_running = 1;
@@ -1543,9 +1545,7 @@ void NextLevel()
 			bprint(it.netname, " ^7wins.\n");
 	));
 
-	entity oldself = self;
-	target_music_kill();
-	self = oldself;
+	WITHSELF(NULL, target_music_kill());
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
@@ -1567,8 +1567,8 @@ void CheckRules_Player()
 	if (gameover)	// someone else quit the game already
 		return;
 
-	if(!IS_DEAD(self))
-		self.play_time += frametime;
+	if(!IS_DEAD(this))
+		this.play_time += frametime;
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
 	//   (div0: and that in CheckRules_World please)
@@ -1968,40 +1968,36 @@ string GotoMap(string m)
 
 
 void EndFrame()
-{SELFPARAM();
+{
 	anticheat_endframe();
 
-	float altime;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
-		if(e.typehitsound)
+		if (e.typehitsound) {
 			it.typehit_time = time;
-		else if(e.damage_dealt)
-		{
+		} else if (e.damage_dealt) {
 			it.hit_time = time;
 			it.damage_dealt_total += ceil(e.damage_dealt);
 		}
-	));
-	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	});
 	// add 1 frametime because after this, engine SV_Physics
 	// increases time by a frametime and then networks the frame
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOREACH_CLIENT(true, LAMBDA(
+	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
 		it.damage_dealt = 0;
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_CLIENT(PS(it), LAMBDA(
+		antilag_record(it, CS(it), altime);
+	});
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+		antilag_record(it, it, altime);
+	});
+	FOREACH_CLIENT(PS(it), {
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
-	));
+	});
 }
 
 

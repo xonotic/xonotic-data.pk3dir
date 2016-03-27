@@ -1,15 +1,4 @@
-#ifndef TURRET_PHASER_WEAPON_H
-#define TURRET_PHASER_WEAPON_H
-
-CLASS(PhaserTurretAttack, PortoLaunch)
-/* flags     */ ATTRIB(PhaserTurretAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(PhaserTurretAttack, impulse, int, 9);
-/* refname   */ ATTRIB(PhaserTurretAttack, netname, string, "turret_phaser");
-/* wepname   */ ATTRIB(PhaserTurretAttack, m_name, string, _("Phaser"));
-ENDCLASS(PhaserTurretAttack)
-REGISTER_WEAPON(PHASER, NEW(PhaserTurretAttack));
-
-#endif
+#include "phaser_weapon.qh"
 
 #ifdef IMPLEMENTATION
 
@@ -25,7 +14,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire))) {
         if (isPlayer) {
             turret_initparams(actor);
-            W_SetupShot_Dir(actor, v_forward, false, 0, SND(PhaserTurretAttack_FIRE), CH_WEAPON_B, 0);
+            W_SetupShot_Dir(actor, v_forward, false, 0, SND_PhaserTurretAttack_FIRE, CH_WEAPON_B, 0);
             actor.tur_shotdir_updated = w_shotdir;
             actor.tur_shotorg = w_shotorg;
             actor.tur_head = actor;

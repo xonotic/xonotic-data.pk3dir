@@ -1,5 +1,4 @@
-#ifndef SPAWNPOINTS_H
-#define SPAWNPOINTS_H
+#pragma once
 
 .vector spawnpoint_score;
 float spawnpoint_nag;
@@ -8,4 +7,3 @@ entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck)
 entity SelectSpawnPoint (float anypoint);
 spawnfunc(info_player_deathmatch);
 void spawnpoint_use();
-#endif

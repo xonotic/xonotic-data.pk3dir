@@ -42,22 +42,22 @@ float autocvar_cl_warpzone_usetrace = 1;
 vector WarpZone_camera_transform(vector org, vector ang)
 {SELFPARAM();
 	vector vf, vr, vu;
-	if(self.warpzone_fadestart)
-		if(vdist(org - self.origin - 0.5 * (self.mins + self.maxs), >, self.warpzone_fadeend + 400))
+	if(this.warpzone_fadestart)
+		if(vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
 			return org;
 			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
 			// unneeded on client, on server this helps a lot
 	vf = v_forward;
 	vr = v_right;
 	vu = v_up;
-	org = WarpZone_TransformOrigin(self, org);
-	vf = WarpZone_TransformVelocity(self, vf);
-	vr = WarpZone_TransformVelocity(self, vr);
-	vu = WarpZone_TransformVelocity(self, vu);
+	org = WarpZone_TransformOrigin(this, org);
+	vf = WarpZone_TransformVelocity(this, vf);
+	vr = WarpZone_TransformVelocity(this, vr);
+	vu = WarpZone_TransformVelocity(this, vu);
 	if(autocvar_cl_warpzone_usetrace)
-		traceline(self.warpzone_targetorigin, org, MOVE_NOMONSTERS, world);
+		traceline(this.warpzone_targetorigin, org, MOVE_NOMONSTERS, world);
 	else
-		trace_endpos = self.warpzone_targetorigin;
+		trace_endpos = this.warpzone_targetorigin;
 	v_forward = vf;
 	v_right = vr;
 	v_up = vu;
@@ -80,14 +80,14 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 vector WarpZone_Camera_camera_transform(vector org, vector ang)
 {SELFPARAM();
 	// a fixed camera view
-	if(self.warpzone_fadestart)
-		if(vdist(org - self.origin - 0.5 * (self.mins + self.maxs), >, self.warpzone_fadeend + 400))
+	if(this.warpzone_fadestart)
+		if(vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
 			return org;
 			// don't transform if zone faded out (plus 400qu safety margin for typical speeds and latencies)
 			// unneeded on client, on server this helps a lot
-	trace_endpos = self.warpzone_origin;
-	makevectors(self.warpzone_angles);
-	return self.warpzone_origin;
+	trace_endpos = this.warpzone_origin;
+	makevectors(this.warpzone_angles);
+	return this.warpzone_origin;
 }
 
 void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang) // we assume that e.oldorigin and e.avelocity point to view origin and direction
@@ -320,7 +320,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		org = trace_endpos;
 	}
 	WarpZone_MakeAllOther();
-:fail
+LABEL(fail)
 	if(contentshack)
 		BITCLR_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 	trace_startsolid = sol;
@@ -438,7 +438,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 		e.velocity = -e.velocity;
 	}
 	WarpZone_MakeAllOther();
-:fail
+LABEL(fail)
 	WarpZone_tracetoss_velocity = e.velocity;
 	v_forward = vf;
 	v_right = vr;
@@ -658,7 +658,8 @@ void WarpZone_FindRadius_Recurse(
 }
 entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 {
-    if (!warpzone_warpzones_exist && !needlineofsight) return findradius(org, rad);
+    // FIXME: why can't we do this? (sometimes finds nothing, breaking explosions)
+    // if (!warpzone_warpzones_exist && !needlineofsight) return findradius(org, rad);
 	WarpZone_FindRadius_Recurse(org, rad, org, '0 0 0', '0 0 0', needlineofsight);
 	entity list_first = findchainfloat(WarpZone_findradius_hit, 1);
 	FOREACH_LIST(list, chain, true, it.WarpZone_findradius_hit = 0);
@@ -669,9 +670,9 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 void WarpZone_RefSys_GC()
 {SELFPARAM();
 	// garbage collect unused reference systems
-	self.nextthink = time + 1;
-	if(self.owner.WarpZone_refsys != self)
-		remove(self);
+	this.nextthink = time + 1;
+	if(this.owner.WarpZone_refsys != this)
+		remove(this);
 }
 void WarpZone_RefSys_CheckCreate(entity me)
 {
@@ -787,7 +788,7 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 
 float WarpZoneLib_ExactTrigger_Touch()
 {SELFPARAM();
-	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, self, other);
+	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, this, other);
 }
 
 

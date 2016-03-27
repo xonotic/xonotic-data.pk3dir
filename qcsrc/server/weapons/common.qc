@@ -8,20 +8,15 @@
 #include <common/weapons/all.qh>
 #include <common/items/all.qc>
 
-void W_GiveWeapon (entity e, float wep)
-{SELFPARAM();
-
-	if (!wep)
-		return;
+void W_GiveWeapon(entity e, int wep)
+{
+	if (!wep) return;
 
 	e.weapons |= WepSet_FromWeapon(Weapons_from(wep));
 
-	setself(e);
-
-	if(IS_PLAYER(other))
-		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
-
-	setself(this);
+	if (IS_PLAYER(e)) {
+	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);
+    }
 }
 
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound

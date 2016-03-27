@@ -1,3 +1,4 @@
+#include "sv_cmd.qh"
 #include "all.qh"
 
 #include "banning.qh"
@@ -198,7 +199,7 @@ void GameCommand_allspec(float request, float argc)
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
 				if (it.caplayer) it.caplayer = 0;
-				WITH(entity, self, it, PutObserverInServer());
+				WITHSELF(it, PutObserverInServer());
 				++n;
 			));
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -219,7 +220,6 @@ void GameCommand_allspec(float request, float argc)
 
 void GameCommand_anticheat(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -229,7 +229,7 @@ void GameCommand_anticheat(float request, float argc)
 
 			if (accepted > 0)
 			{
-				WITH(entity, self, client, anticheat_report());
+				anticheat_report(client);
 				return;
 			}
 			else
@@ -1028,7 +1028,7 @@ void GameCommand_moveplayer(float request, float argc)
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							if (client.caplayer) client.caplayer = 0;
-							WITH(entity, self, client, PutObserverInServer());
+							WITHSELF(client, PutObserverInServer());
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
 						}
@@ -1178,7 +1178,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						WITH(entity, self, client, playerdemo_open_read(argv(next_token)));
+						WITHSELF(client, playerdemo_open_read(argv(next_token)));
 						return;
 					}
 
@@ -1193,7 +1193,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						WITH(entity, self, client, playerdemo_open_write(argv(next_token)));
+						WITHSELF(client, playerdemo_open_write(argv(next_token)));
 						return;
 					}
 
@@ -1780,7 +1780,7 @@ float GameCommand_macro_command(float argc, string command)
 {
 	string c = strtolower(argv(0));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_COMMAND, NULL, argc, command);
+		it.m_invokecmd(it, CMD_REQUEST_COMMAND, NULL, argc, command);
 		return true;
 	));
 	return false;
@@ -1790,7 +1790,7 @@ float GameCommand_macro_usage(float argc)
 {
 	string c = strtolower(argv(1));
 	FOREACH(SERVER_COMMANDS, it.m_name == c, LAMBDA(
-		it.m_invokecmd(CMD_REQUEST_USAGE, NULL, argc, "");
+		it.m_invokecmd(it, CMD_REQUEST_USAGE, NULL, argc, "");
 		return true;
 	));
 	return false;

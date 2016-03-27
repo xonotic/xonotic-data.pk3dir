@@ -1,3 +1,4 @@
+#include "common.qh"
 #include <common/command/command.qh>
 #include "common.qh"
 
@@ -320,7 +321,6 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 
 void CommonCommand_editmob(int request, entity caller, int argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:

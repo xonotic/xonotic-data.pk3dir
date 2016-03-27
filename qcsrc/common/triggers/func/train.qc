@@ -5,7 +5,7 @@ void train_use();
 #endif
 void train_wait()
 {SELFPARAM();
-	WITH(entity, self, self.enemy, SUB_UseTargets());
+	WITHSELF(self.enemy, SUB_UseTargets());
 	self.enemy = world;
 
 	// if turning is enabled, the train will turn toward the next point while waiting
@@ -178,13 +178,14 @@ void train_link()
 
 void train_use()
 {
+    SELFPARAM();
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
 	self.SUB_THINK = train_next;
 	self.use = func_null; // not again
 }
 
-void func_train_find()
-{SELFPARAM();
+void func_train_find(entity this)
+{
 	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;

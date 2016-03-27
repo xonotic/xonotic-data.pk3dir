@@ -144,14 +144,14 @@ REGISTER_MUTATOR(vortex_charge, true);
 MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 {SELFPARAM();
 	// WEAPONTODO
-	float xyspeed = vlen(vec2(self.velocity));
-	if (PS(self).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
+	float xyspeed = vlen(vec2(this.velocity));
+	if (PS(this).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
 	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
 		float f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
 		// add the extra charge
-		self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
+		this.vortex_charge = min(1, this.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
 	}
 }
 
@@ -182,7 +182,7 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, true, 5, SND(NEXFIRE), CH_WEAPON_A, mydmg);
+	W_SetupShot(self, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
 		sound(self, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
@@ -212,7 +212,8 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 
 METHOD(Vortex, wr_aim, void(entity thiswep))
 {
-    if(bot_aim(1000000, 0, 1, false))
+    SELFPARAM();
+    if(bot_aim(self, 1000000, 0, 1, false))
         PHYS_INPUT_BUTTON_ATCK(self) = true;
     else
     {
@@ -322,16 +323,19 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
 }
 METHOD(Vortex, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.vortex_lasthit = 0;
 }
 METHOD(Vortex, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
     ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
     return ammo_amount;
 }
 METHOD(Vortex, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     if(WEP_CVAR(vortex, secondary))
     {
         // don't allow charging if we don't have enough ammo
@@ -346,6 +350,7 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Vortex, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     if (WEP_CVAR(vortex, charge)) {
         if (WEP_CVAR_SEC(vortex, chargepool)) {
             self.vortex_chargepool_ammo = 1;
@@ -356,7 +361,8 @@ METHOD(Vortex, wr_resetplayer, void(entity thiswep))
 }
 METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND(RELOAD));
+    SELFPARAM();
+    W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND_RELOAD);
 }
 METHOD(Vortex, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -372,10 +378,11 @@ METHOD(Vortex, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Vortex, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
     if(!w_issilent)
-        sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+        sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 }
 METHOD(Vortex, wr_init, void(entity thiswep))
 {

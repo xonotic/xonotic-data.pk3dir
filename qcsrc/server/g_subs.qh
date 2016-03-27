@@ -1,5 +1,4 @@
-#ifndef G_SUBS_H
-#define G_SUBS_H
+#pragma once
 
 void SUB_NullThink();
 
@@ -144,7 +143,7 @@ float LOD_customize();
 
 void LOD_uncustomize();
 
-void LODmodel_attach();
+void LODmodel_attach(entity this);
 
 void ApplyMinMaxScaleAngles(entity e);
 
@@ -165,4 +164,3 @@ void InitTrigger();
 void InitSolidBSPTrigger();
 
 float InitMovingBrushTrigger();
-#endif

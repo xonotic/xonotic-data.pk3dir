@@ -23,6 +23,8 @@
 #include "../common/vehicles/sv_vehicles.qh"
 #include "../common/vehicles/vehicle.qh"
 #include "../common/items/all.qc"
+#include "../common/state.qh"
+#include "../common/effects/qc/globalsound.qh"
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/anglestransform.qh"
 #include "../lib/warpzone/server.qh"
@@ -235,8 +237,8 @@ string formatmessage(string msg)
 			break; // too many replacements
 
 		n = n - 1;
-		p1 = strstr(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
-		p2 = strstr(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
+		p1 = strstrofs(msg, "%", p); // NOTE: this destroys msg as it's a tempstring!
+		p2 = strstrofs(msg, "\\", p); // NOTE: this destroys msg as it's a tempstring!
 
 		if (p1 < 0)
 			p1 = p2;
@@ -408,8 +410,8 @@ REPLICATE(cvar_g_xonoticversion, string, "g_xonoticversion");
 /**
  * @param f -1: cleanup, 0: request, 1: receive
  */
-void GetCvars(int f)
-{SELFPARAM();
+void GetCvars(entity this, int f)
+{
 	string s = string_null;
 
 	if (f > 0)
@@ -752,7 +754,7 @@ void precache_playermodels(string s)
 }
 
 void precache()
-{SELFPARAM();
+{
     // gamemode related things
 
     // Precache all player models if desired
@@ -849,7 +851,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void() func, float order)
+void InitializeEntity(entity e, void(entity this) func, float order)
 {
     entity prev, cur;
 
@@ -883,7 +885,7 @@ void InitializeEntity(entity e, void() func, float order)
     }
 }
 void InitializeEntitiesRun()
-{SELFPARAM();
+{
     entity startoflist = initialize_entity_first;
     initialize_entity_first = NULL;
     remove = remove_except_protected;
@@ -897,7 +899,7 @@ void InitializeEntitiesRun()
         e.initialize_entity_order = 0;
     	entity next = e.initialize_entity_next;
         e.initialize_entity_next = NULL;
-        var void() func = e.initialize_entity;
+        var void(entity this) func = e.initialize_entity;
         e.initialize_entity = func_null;
         if (e.classname == "initialize_entity")
         {
@@ -908,7 +910,7 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", e.classname, "\n");
         if (func)
         {
-        	WITH(entity, self, e, func());
+        	WITHSELF(e, func(e));
         }
         else
         {
@@ -985,8 +987,8 @@ void adaptor_think2use_hittype_splash() // for timed projectile detonation
 }
 
 // deferred dropping
-void DropToFloor_Handler()
-{SELFPARAM();
+void DropToFloor_Handler(entity this)
+{
     builtin_droptofloor();
     self.dropped_origin = self.origin;
 }
@@ -1406,7 +1408,8 @@ float LostMovetypeFollow(entity ent)
 	return 0;
 }
 
-float isPushable(entity e)
+.bool pushable;
+bool isPushable(entity e)
 {
 	if(e.pushable)
 		return true;

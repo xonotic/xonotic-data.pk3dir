@@ -1,3 +1,5 @@
+#include "gibs.qh"
+
 #ifdef IMPLEMENTATION
 REGISTER_NET_TEMP(net_gibsplash)
 
@@ -111,6 +113,7 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 
 void SUB_RemoveOnNoImpact()
 {
+    SELFPARAM();
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		Gib_Delete(self);
 }

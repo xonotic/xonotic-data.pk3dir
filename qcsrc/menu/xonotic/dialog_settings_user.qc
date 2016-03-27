@@ -1,16 +1,11 @@
-#ifndef DIALOG_SETTINGS_USER_H
-#define DIALOG_SETTINGS_USER_H
-#include "tab.qc"
-CLASS(XonoticUserSettingsTab, XonoticTab)
-	METHOD(XonoticUserSettingsTab, fill, void(entity));
-	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticUserSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticUserSettingsTab, columns, float, 6)
-ENDCLASS(XonoticUserSettingsTab)
-entity makeXonoticUserSettingsTab();
-#endif
+#include "dialog_settings_user.qh"
 
-#ifdef IMPLEMENTATION
+#include "commandbutton.qh"
+#include "textlabel.qh"
+#include "languagelist.qh"
+#include "skinlist.qh"
+#include "checkbox.qh"
+
 entity makeXonoticUserSettingsTab()
 {
 	entity me;
@@ -84,4 +79,3 @@ void XonoticUserSettingsTab_fill(entity me)
 		me.TD(me, 1, 6, userApplyButton);
 
 }
-#endif

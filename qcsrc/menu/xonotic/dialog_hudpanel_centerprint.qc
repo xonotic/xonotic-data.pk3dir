@@ -1,19 +1,10 @@
-#ifndef DIALOG_HUDPANEL_CENTERPRINT_H
-#define DIALOG_HUDPANEL_CENTERPRINT_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDCenterprintDialog, XonoticRootDialog)
-	METHOD(XonoticHUDCenterprintDialog, fill, void(entity));
-	ATTRIB(XonoticHUDCenterprintDialog, title, string, _("Centerprint Panel"))
-	ATTRIB(XonoticHUDCenterprintDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDCenterprintDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDCenterprintDialog, rows, float, 15)
-	ATTRIB(XonoticHUDCenterprintDialog, columns, float, 4)
-	ATTRIB(XonoticHUDCenterprintDialog, name, string, "HUDcenterprint")
-	ATTRIB(XonoticHUDCenterprintDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDCenterprintDialog)
-#endif
+#include "dialog_hudpanel_centerprint.qh"
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "slider.qh"
+#include "radiobutton.qh"
+
 void XonoticHUDCenterprintDialog_fill(entity me)
 {
 	entity e;
@@ -44,4 +35,3 @@ void XonoticHUDCenterprintDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Font scale:")));
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(0.5, 2, 0.1, "hud_panel_centerprint_fontscale"));
 }
-#endif

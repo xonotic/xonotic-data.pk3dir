@@ -56,6 +56,7 @@ METHOD(FusionReactor, tr_attack, void(FusionReactor this, entity it))
 }
 METHOD(FusionReactor, tr_think, void(FusionReactor thistur, entity it))
 {
+    SELFPARAM();
     self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
 }
 METHOD(FusionReactor, tr_setup, void(FusionReactor this, entity it))

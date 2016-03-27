@@ -1,3 +1,4 @@
+#include "g_lights.qh"
 
 void train_next();
 
@@ -35,12 +36,13 @@ flags:
 */
 void dynlight_think()
 {
+    SELFPARAM();
 	if(!self.owner)
 		remove(self);
 
 	self.nextthink = time + 0.1;
 }
-void dynlight_find_aiment()
+void dynlight_find_aiment(entity this)
 {
 	entity targ;
 	if (!self.target)
@@ -56,7 +58,7 @@ void dynlight_find_aiment()
 	self.think = dynlight_think;
 	self.nextthink = time + 0.1;
 }
-void dynlight_find_path()
+void dynlight_find_path(entity this)
 {
 	entity targ;
 	if (!self.target)
@@ -68,7 +70,7 @@ void dynlight_find_path()
 	self.think = train_next;
 	self.nextthink = time + 0.1;
 }
-void dynlight_find_target()
+void dynlight_find_target(entity this)
 {
 	entity targ;
 	if (!self.target)
@@ -82,6 +84,7 @@ void dynlight_find_target()
 }
 void dynlight_use()
 {
+    SELFPARAM();
 	if (self.light_lev == 0)
 		self.light_lev = self.lefty;
 	else

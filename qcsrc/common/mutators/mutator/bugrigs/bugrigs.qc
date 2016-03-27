@@ -271,6 +271,7 @@ void RaceCarPhysics(entity this)
 #endif
 MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 {
+    SELFPARAM();
 	if(!PHYS_BUGRIGS(self) || !IS_PLAYER(self)) { return false; }
 
 #ifdef SVQC
@@ -283,6 +284,9 @@ MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 
 MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 {
+#ifdef SVQC
+    SELFPARAM();
+#endif
 	if(!PHYS_BUGRIGS(self)) { return false; }
 #ifdef SVQC
 	self.bugrigs_prevangles = self.angles;
@@ -294,6 +298,7 @@ MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(bugrigs, ClientConnect)
 {
+    SELFPARAM();
 	stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	return false;
 }

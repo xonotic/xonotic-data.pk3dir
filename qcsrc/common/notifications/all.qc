@@ -1548,7 +1548,7 @@ void Send_Notification(
 	MSG net_type, Notification net_name,
 	...count)
 {
-    if (!IS_REAL_CLIENT(client)) return;
+    if (broadcast != NOTIF_ALL && broadcast != NOTIF_ALL_EXCEPT && !IS_REAL_CLIENT(client)) return;
 	entity notif = net_name;
 	string parms = sprintf("%s, '%s', %s, %s",
 		Get_Notif_BroadcastName(broadcast),

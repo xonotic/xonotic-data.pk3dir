@@ -6,7 +6,7 @@
 #include "sort.qh"
 
 .int m_id;
-typedef vector vectori;
+USING(vectori, vector);
 
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__

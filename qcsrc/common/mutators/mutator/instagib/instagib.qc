@@ -198,7 +198,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (self.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(self.strength_finished, SND(POWEROFF));
+		play_countdown(self.strength_finished, SND_POWEROFF);
 		if (time > self.strength_finished)
 		{
 			self.alpha = default_player_alpha;
@@ -221,7 +221,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (self.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(self.invincible_finished, SND(POWEROFF));
+		play_countdown(self.invincible_finished, SND_POWEROFF);
 		if (time > self.invincible_finished)
 		{
 			self.items &= ~ITEM_Speed.m_itemid;
@@ -302,7 +302,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				if(!autocvar_g_instagib_blaster_keepdamage)
+				if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
 					frag_damage = frag_mirrordamage = 0;
 
 				if(frag_target != frag_attacker)
@@ -371,7 +371,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
         e.cnt = self.cnt;
         e.team = self.team;
         e.spawnfunc_checked = true;
-		WITH(entity, self, e, spawnfunc_item_minst_cells(e));
+		WITHSELF(e, spawnfunc_item_minst_cells(e));
 		return true;
 	}
 

@@ -1,5 +1,4 @@
-#ifndef ACCURACY_H
-#define ACCURACY_H
+#pragma once
 
 .bool cvar_cl_accuracy_data_share;
 REPLICATE(cvar_cl_accuracy_data_share, bool, "cl_accuracy_data_share");
@@ -28,4 +27,3 @@ void accuracy_add(entity e, float w, float fired, float hit);
 // helper
 bool accuracy_isgooddamage(entity attacker, entity targ);
 bool accuracy_canbegooddamage(entity attacker);
-#endif

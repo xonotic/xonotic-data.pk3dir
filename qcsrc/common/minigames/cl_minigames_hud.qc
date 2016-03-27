@@ -1,5 +1,13 @@
 #include "cl_minigames_hud.qh"
+
+#include <common/ent_cs.qh>
+
 #include "minigames.qh"
+
+.vector colormod;
+
+#include <client/hud/hud_config.qh>
+#include <client/mapvoting.qh>
 
 // whether the mouse is over the given panel
 bool HUD_mouse_over(entity somepanel)
@@ -107,7 +115,7 @@ void HUD_MinigameMenu_Click(entity menuitem)
 {SELFPARAM();
 	if ( menuitem )
 	{
-		WITH(entity, self, menuitem, menuitem.use());
+		WITHSELF(menuitem, menuitem.use());
 	}
 }
 

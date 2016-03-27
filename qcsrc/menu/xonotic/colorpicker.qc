@@ -1,23 +1,7 @@
-#ifndef COLORPICKER_H
-#define COLORPICKER_H
-#include "../item/image.qc"
-CLASS(XonoticColorpicker, Image)
-	METHOD(XonoticColorpicker, configureXonoticColorpicker, void(entity, entity));
-	METHOD(XonoticColorpicker, mousePress, float(entity, vector));
-	METHOD(XonoticColorpicker, mouseRelease, float(entity, vector));
-	METHOD(XonoticColorpicker, mouseDrag, float(entity, vector));
-	ATTRIB(XonoticColorpicker, controlledTextbox, entity, NULL)
-	ATTRIB(XonoticColorpicker, image, string, SKINGFX_COLORPICKER)
-	ATTRIB(XonoticColorpicker, imagemargin, vector, SKINMARGIN_COLORPICKER)
-	ATTRIB(XonoticColorpicker, focusable, float, 1)
-	METHOD(XonoticColorpicker, focusLeave, void(entity));
-	METHOD(XonoticColorpicker, keyDown, float(entity, float, float, float));
-	METHOD(XonoticColorpicker, draw, void(entity));
-ENDCLASS(XonoticColorpicker)
-entity makeXonoticColorpicker(entity theTextbox);
-#endif
+#include "colorpicker.qh"
 
-#ifdef IMPLEMENTATION
+#include "inputbox.qh"
+
 entity makeXonoticColorpicker(entity theTextbox)
 {
 	entity me;
@@ -174,4 +158,3 @@ void XonoticColorpicker_draw(entity me)
 	draw_Picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, '0 0 0', aC);
 	draw_Picture(me.imgOrigin, strcat(me.src, "_m"), me.imgSize, me.color, B);
 }
-#endif

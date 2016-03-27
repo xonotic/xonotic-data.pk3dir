@@ -1,5 +1,4 @@
-#ifndef SERVER_ALL_H
-#define SERVER_ALL_H
+#pragma once
 
 int maxclients;
 
@@ -12,9 +11,12 @@ const string STR_OBSERVER = "observer";
 #define IS_OBSERVER(v) ((v).classname == STR_OBSERVER)
 
 #define IS_CLIENT(v) (v.flags & FL_CLIENT)
+/** want: (IS_CLIENT(v) && !IS_REAL_CLIENT(v)) */
 #define IS_BOT_CLIENT(v) (clienttype(v) == CLIENTTYPE_BOT)
+#define IS_FAKE_CLIENT(v) (clienttype(v) == CLIENTTYPE_NOTACLIENT)
 #define IS_REAL_CLIENT(v) (clienttype(v) == CLIENTTYPE_REAL)
-#define IS_NOT_A_CLIENT(v) (clienttype(v) == CLIENTTYPE_NOTACLIENT)
+/** was: (clienttype(v) == CLIENTTYPE_NOTACLIENT) */
+#define IS_NOT_A_CLIENT(v) (!IS_CLIENT(v))
 
 #define IS_MONSTER(v) (v.flags & FL_MONSTER)
 #define IS_VEHICLE(v) (v.vehicle_flags & VHF_ISVEHICLE)
@@ -34,7 +36,7 @@ const string STR_OBSERVER = "observer";
 		for(int _i = 1; _i <= maxclients; ++_i) \
 		{ \
 			const noref int i = _i; \
-			const noref entity it = ftoe(i); \
+			ITER_CONST noref entity it = ftoe(i); \
 			if(cond) { LAMBDA(body) } \
 		} \
 	} MACRO_END
@@ -51,5 +53,3 @@ const string STR_OBSERVER = "observer";
 #include "constants.qh"
 #include "defs.qh"
 #include "miscfunctions.qh"
-
-#endif

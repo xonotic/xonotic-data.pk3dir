@@ -1,15 +1,14 @@
-#ifndef SERVER_DEFS_H
-#define SERVER_DEFS_H
+#pragma once
 
-#include "../common/weapons/all.qh"
-#include "../common/stats.qh"
+float warmup_limit;
+#include <common/weapons/all.qh>
+#include <common/stats.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
 
 // Globals
 
 float g_footsteps, g_grappling_hook, g_instagib;
-float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
@@ -172,7 +171,6 @@ bool nJoinAllowed(entity this, entity ignore);
 .entity flagcarried;
 
 .int playerid;
-float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .vector death_origin;
@@ -215,7 +213,6 @@ void FixClientCvars(entity e);
 WepSet weaponsInMap;
 
 #define weapons _STAT(WEAPONS)
-#define weaponsinmap _STAT(WEAPONSINMAP)
 
 .float respawn_countdown; // next number to count
 
@@ -287,16 +284,12 @@ float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
-.float stat_game_starttime = _STAT(GAMESTARTTIME);
-.float stat_round_starttime = _STAT(ROUNDSTARTTIME);
 
 void W_Porto_Remove (entity p);
 
 .int projectiledeathtype;
 
 .string message2;
-
-.bool stat_allow_oldvortexbeam = _STAT(ALLOW_OLDVORTEXBEAM);
 
 // reset to 0 on weapon switch
 // may be useful to all weapons
@@ -344,8 +337,6 @@ string matchid;
 
 .float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 
-.float stat_leadlimit = _STAT(LEADLIMIT);
-
 bool radar_showennemies;
 
 #ifdef PROFILING
@@ -380,7 +371,7 @@ float client_cefc_accumulatortime;
 
 string deathmessage;
 
-.float just_joined;
+.bool just_joined;
 
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player
@@ -417,7 +408,7 @@ const float ACTIVE_TOGGLE 	= 3;
 
 void PlayerUseKey();
 
-typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
+USING(spawn_evalfunc_t, vector(entity player, entity spot, vector current));
 .spawn_evalfunc_t spawn_evalfunc;
 
 string modname;
@@ -452,5 +443,3 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .float init_for_player_needed;
 .void(entity) init_for_player;
-
-#endif

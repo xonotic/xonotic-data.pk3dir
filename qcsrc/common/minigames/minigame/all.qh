@@ -1,9 +1,9 @@
 #pragma once
 
 #if defined(SVQC)
-#include "../sv_minigames.qh"
+#include <common/minigames/sv_minigames.qh>
 #elif defined(CSQC)
-#include "../cl_minigames.qh"
+#include <common/minigames/cl_minigames.qh>
 #endif
 
 /**

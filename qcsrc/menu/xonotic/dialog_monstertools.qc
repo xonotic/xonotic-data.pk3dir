@@ -1,18 +1,10 @@
-#ifndef DIALOG_MONSTERTOOLS_H
-#define DIALOG_MONSTERTOOLS_H
-#include "rootdialog.qc"
-CLASS(XonoticMonsterToolsDialog, XonoticRootDialog)
-	METHOD(XonoticMonsterToolsDialog, fill, void(entity));
-	ATTRIB(XonoticMonsterToolsDialog, title, string, _("Monster Tools"))
-	ATTRIB(XonoticMonsterToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS)
-	ATTRIB(XonoticMonsterToolsDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticMonsterToolsDialog, rows, float, 16)
-	ATTRIB(XonoticMonsterToolsDialog, columns, float, 4)
-	ATTRIB(XonoticMonsterToolsDialog, name, string, "MonsterTools")
-ENDCLASS(XonoticMonsterToolsDialog)
-#endif
+#include "dialog_monstertools.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "radiobutton.qh"
+#include "commandbutton.qh"
+#include "slider.qh"
+
 void XonoticMonsterToolsDialog_fill(entity me)
 {
 	entity e;
@@ -47,6 +39,3 @@ void XonoticMonsterToolsDialog_fill(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-#endif
-
-/* Click. The c-word is here so you can grep for it :-) */

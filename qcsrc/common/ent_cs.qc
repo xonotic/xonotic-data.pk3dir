@@ -189,7 +189,7 @@
 	#undef X
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
-		WITH(entity, self, this, this.think());
+		WITHSELF(this, this.think());
 		return true;
 	}
 

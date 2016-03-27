@@ -1,22 +1,12 @@
-#ifndef ANIM_KEYFRAME_H
-	#define ANIM_KEYFRAME_H
-	#include "animation.qc"
-	CLASS(Keyframe, Animation)
-		METHOD(Keyframe, addEasing, entity(entity, float, float, float(float, float, float, float)));
-		METHOD(Keyframe, addAnim, void(entity, entity));
-		METHOD(Keyframe, calcValue, float(entity, float, float, float, float));
-		ATTRIB(Keyframe, currentChild, entity, NULL)
-		ATTRIB(Keyframe, firstChild, entity, NULL)
-		ATTRIB(Keyframe, lastChild, entity, NULL)
-	ENDCLASS(Keyframe)
-	entity makeHostedKeyframe(entity, void(entity, float), float, float, float);
-	entity makeKeyframe(entity, void(entity, float), float, float, float);
-	float getNewChildStart(entity);
-	float getNewChildDuration(entity, float);
-	float getNewChildValue(entity);
-#endif
+#include "keyframe.qh"
 
-#ifdef IMPLEMENTATION
+#include "../menu.qh"
+#include "easing.qh"
+
+#include "../item/container.qh"
+
+.entity parent;
+
 	entity makeHostedKeyframe(entity obj, void(entity, float) objSetter, float animDuration, float animStart, float animEnd)
 	{
 		entity this = makeKeyframe(obj, objSetter, animDuration, animStart, animEnd);
@@ -97,4 +87,3 @@
 
 		return animStartValue + animDelta;
 	}
-#endif

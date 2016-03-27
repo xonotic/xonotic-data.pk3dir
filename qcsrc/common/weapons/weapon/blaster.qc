@@ -101,7 +101,7 @@ void W_Blaster_Attack(
 {SELFPARAM();
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(actor, s_forward, false, 3, SND(LASERGUN_FIRE), CH_WEAPON_B, atk_damage);
+	W_SetupShot_Dir(actor, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage);
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = new(blasterbolt);
@@ -146,21 +146,22 @@ void W_Blaster_Attack(
 
 	if (time >= missile.nextthink)
 	{
-		WITH(entity, self, missile, missile.think());
+		WITHSELF(missile, missile.think());
 	}
 }
 
 METHOD(Blaster, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(WEP_CVAR(blaster, secondary))
     {
         if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
-            { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
         else
-            { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
     }
     else
-        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 }
 
 METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
@@ -224,6 +225,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
 
 METHOD(Blaster, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.ammo_field = ammo_none;
 }
 
@@ -252,6 +254,7 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Blaster, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);

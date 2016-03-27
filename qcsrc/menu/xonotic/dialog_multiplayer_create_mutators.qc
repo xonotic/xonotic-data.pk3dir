@@ -1,23 +1,14 @@
+#include "dialog_multiplayer_create_mutators.qh"
 #include <common/weapons/all.qh>
 
-#ifndef DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
-#define DIALOG_MULTIPLAYER_CREATE_MUTATORS_H
-#include "dialog.qc"
-CLASS(XonoticMutatorsDialog, XonoticDialog)
-	METHOD(XonoticMutatorsDialog, toString, string(entity));
-	METHOD(XonoticMutatorsDialog, fill, void(entity));
-	METHOD(XonoticMutatorsDialog, showNotify, void(entity));
-	METHOD(XonoticMutatorsDialog, close, void(entity));
-	ATTRIB(XonoticMutatorsDialog, title, string, _("Mutators"))
-	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
-	ATTRIB(XonoticMutatorsDialog, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMutatorsDialog, rows, float, 20)
-	ATTRIB(XonoticMutatorsDialog, columns, float, 6)
-	ATTRIB(XonoticMutatorsDialog, refilterEntity, entity, NULL)
-ENDCLASS(XonoticMutatorsDialog)
-#endif
+#include "weaponarenacheckbox.qh"
+#include "checkbox.qh"
+#include "slider.qh"
+#include "textlabel.qh"
+#include "checkbox_slider_invalid.qh"
+#include "radiobutton.qh"
+#include "button.qh"
 
-#ifdef IMPLEMENTATION
 void XonoticMutatorsDialog_showNotify(entity me)
 {
 	SUPER(XonoticMutatorsDialog).showNotify(me);
@@ -300,10 +291,11 @@ void XonoticMutatorsDialog_fill(entity me)
 			e.onClickEntity = me;
 }
 
+.void(entity) refilter;
+
 void XonoticMutatorsDialog_close(entity me)
 {
 	if(me.refilterEntity)
 		me.refilterEntity.refilter(me.refilterEntity);
 	SUPER(XonoticMutatorsDialog).close(me);
 }
-#endif

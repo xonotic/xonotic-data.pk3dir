@@ -1,6 +1,8 @@
 #ifndef TURRET_PLASMA_DUAL_H
 #define TURRET_PLASMA_DUAL_H
 
+#include "plasma_weapon.qh"
+
 CLASS(PlasmaDualAttack, PlasmaAttack)
 /* refname   */ ATTRIB(PlasmaDualAttack, netname, string, "turret_plasma_dual");
 /* wepname   */ ATTRIB(PlasmaDualAttack, m_name, string, _("Dual plasma"));
@@ -28,8 +30,9 @@ REGISTER_TURRET(PLASMA_DUAL, NEW(DualPlasmaTurret));
 
 spawnfunc(turret_plasma_dual) { if (!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
 
-METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this, entity it))
+METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
 {
+    SELFPARAM();
     if (g_instagib) {
         FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                            800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
@@ -41,12 +44,13 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret this, entity it))
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
         WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
     } else {
-        SUPER(PlasmaTurret).tr_attack(this, it);
+        SUPER(PlasmaTurret).tr_attack(thistur, it);
     }
     self.tur_head.frame += 1;
 }
 METHOD(DualPlasmaTurret, tr_think, void(DualPlasmaTurret thistur, entity it))
 {
+    SELFPARAM();
     if ((self.tur_head.frame != 0) && (self.tur_head.frame != 3))
         self.tur_head.frame = self.tur_head.frame + 1;
 

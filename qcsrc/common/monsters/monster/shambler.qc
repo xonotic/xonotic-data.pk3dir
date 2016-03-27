@@ -116,7 +116,7 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void M_Shambler_Attack_Lightning_Touch()
@@ -225,27 +225,31 @@ spawnfunc(monster_shambler) { Monster_Spawn(this, MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
 #ifdef SVQC
-METHOD(Shambler, mr_think, bool(Shambler thismon, entity actor))
+METHOD(Shambler, mr_think, bool(Shambler this, entity actor))
 {
+    TC(Shambler, this);
     return true;
 }
 
-METHOD(Shambler, mr_pain, bool(Shambler thismon, entity actor))
+METHOD(Shambler, mr_pain, bool(Shambler this, entity actor))
 {
+    TC(Shambler, this);
     actor.pain_finished = time + 0.5;
     setanim(actor, actor.anim_pain1, true, true, false);
     return true;
 }
 
-METHOD(Shambler, mr_death, bool(Shambler thismon, entity actor))
+METHOD(Shambler, mr_death, bool(Shambler this, entity actor))
 {
+    TC(Shambler, this);
     setanim(actor, actor.anim_die1, false, true, true);
     return true;
 }
 #endif
 #ifndef MENUQC
-METHOD(Shambler, mr_anim, bool(Shambler thismon, entity actor))
+METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
 {
+    TC(Shambler, this);
     vector none = '0 0 0';
     actor.anim_die1 = animfixfps(actor, '8 1 0.5', none); // 2 seconds
     actor.anim_walk = animfixfps(actor, '1 1 1', none);
@@ -262,8 +266,9 @@ METHOD(Shambler, mr_anim, bool(Shambler thismon, entity actor))
 #ifdef SVQC
 spawnfunc(item_health_mega);
 .float animstate_endtime;
-METHOD(Shambler, mr_setup, bool(Shambler thismon, entity actor))
+METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
 {
+    TC(Shambler, this);
     if(!actor.health) actor.health = (autocvar_g_monster_shambler_health);
     if(!actor.attack_range) actor.attack_range = 150;
     if(!actor.speed) { actor.speed = (autocvar_g_monster_shambler_speed_walk); }
@@ -282,8 +287,9 @@ METHOD(Shambler, mr_setup, bool(Shambler thismon, entity actor))
     return true;
 }
 
-METHOD(Shambler, mr_precache, bool(Shambler thismon))
+METHOD(Shambler, mr_precache, bool(Shambler this))
 {
+    TC(Shambler, this);
     return true;
 }
 #endif

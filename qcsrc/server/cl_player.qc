@@ -9,6 +9,7 @@
 #include "teamplay.qh"
 #include "weapons/throwing.qh"
 #include "command/common.qh"
+#include "../common/state.qh"
 #include "../common/anim.qh"
 #include "../common/animdecide.qh"
 #include "../common/csqcmodel_settings.qh"
@@ -19,6 +20,8 @@
 
 #include "../common/minigames/sv_minigames.qh"
 
+#include "../common/physics/player.qh"
+#include "../common/effects/qc/all.qh"
 #include "../common/mutators/mutator/waypoints/waypointsprites.qh"
 #include "../common/triggers/include.qh"
 
@@ -36,17 +39,17 @@ void Drop_Special_Items(entity player)
 
 void CopyBody_Think()
 {SELFPARAM();
-	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
+	if(this.CopyBody_nextthink && time > this.CopyBody_nextthink)
 	{
-		self.CopyBody_think();
-		if(wasfreed(self))
+		this.CopyBody_think();
+		if(wasfreed(this))
 			return;
-		self.CopyBody_nextthink = self.nextthink;
-		self.CopyBody_think = self.think;
-		self.think = CopyBody_Think;
+		this.CopyBody_nextthink = this.nextthink;
+		this.CopyBody_think = this.think;
+		this.think = CopyBody_Think;
 	}
-	CSQCMODEL_AUTOUPDATE(self);
-	self.nextthink = time;
+	CSQCMODEL_AUTOUPDATE(this);
+	this.nextthink = time;
 }
 void CopyBody(entity this, float keepvelocity)
 {
@@ -132,8 +135,8 @@ void player_setupanimsformodel()
 
 void player_anim ()
 {SELFPARAM();
-	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(IS_DEAD(self)) {
+	int deadbits = (this.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+	if(IS_DEAD(this)) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
 			if(random() < 0.5)
@@ -146,14 +149,14 @@ void player_anim ()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(STAT(FROZEN, self))
+	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(self.movetype == MOVETYPE_FOLLOW)
+	if(this.movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
-	if(self.crouch)
+	if(this.crouch)
 		animbits |= ANIMSTATE_DUCK;
-	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, IS_ONGROUND(self));
+	animdecide_setstate(this, animbits, false);
+	animdecide_setimplicitstate(this, IS_ONGROUND(this));
 }
 
 void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -553,7 +556,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		excess = frag_damage;
 
 		Weapon wep = PS(this).m_weapon;
-		WITH(entity, self, this, wep.wr_playerdeath(wep));
+		WITHSELF(this, wep.wr_playerdeath(wep));
 
 		RemoveGrapplingHook(this);
 
@@ -634,7 +637,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// reset fields the weapons may use just in case
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			WITH(entity, self, this, it.wr_resetplayer(it));
+			WITHSELF(this, it.wr_resetplayer(it));
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;

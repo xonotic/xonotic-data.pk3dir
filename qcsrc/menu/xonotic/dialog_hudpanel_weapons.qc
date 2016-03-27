@@ -1,19 +1,12 @@
-#ifndef DIALOG_HUDPANEL_WEAPONS_H
-#define DIALOG_HUDPANEL_WEAPONS_H
-#include "rootdialog.qc"
-CLASS(XonoticHUDWeaponsDialog, XonoticRootDialog)
-	METHOD(XonoticHUDWeaponsDialog, fill, void(entity));
-	ATTRIB(XonoticHUDWeaponsDialog, title, string, _("Weapons Panel"))
-	ATTRIB(XonoticHUDWeaponsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDWeaponsDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 21)
-	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4)
-	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons")
-	ATTRIB(XonoticHUDWeaponsDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDWeaponsDialog)
-#endif
+#include "dialog_hudpanel_weapons.qh"
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "textslider.qh"
+#include "slider.qh"
+#include "radiobutton.qh"
+#include "colorpicker_string.qh"
+
 void XonoticHUDWeaponsDialog_fill(entity me)
 {
 	entity e;
@@ -81,4 +74,3 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 		me.TR(me);
 }
-#endif

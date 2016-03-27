@@ -25,7 +25,36 @@
 	#include <dpdefs/keycodes.qh>
 #endif
 
+#define USING(name, T) typedef T name
+
+#include "bool.qh"
+#include "int.qh"
+
 #include "macro.qh"
+
+#if NDEBUG
+    #define TC(T, sym) MACRO_BEGIN MACRO_END
+#else
+    #define TC(T, sym) MACRO_BEGIN \
+        if (!is_##T(sym)) { \
+            LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
+            isnt_##T(sym); \
+        } \
+    MACRO_END
+#endif
+
+#define   is_float(        this) (true || ftoe(this))
+#define isnt_float(        this)
+#define   is_vector(       this) (true || vtos(this))
+#define isnt_vector(       this)
+#define   is_string(       this) (true || stof(this))
+#define isnt_string(       this)
+#define   is_entity(       this) (true || etof(this))
+#define isnt_entity(       this)
+bool      is_int(    float this) { return this == floor(this); }
+void    isnt_int(    float this) { print(ftos(this)); }
+bool      is_bool(   float this) { return this == true || this == false; }
+void    isnt_bool(   float this) { print(ftos(this)); }
 
 #include "warpzone/mathlib.qc"
 
@@ -33,7 +62,6 @@
 #include "angle.qc"
 #include "arraylist.qh"
 #include "bits.qh"
-#include "bool.qh"
 #include "color.qh"
 #include "counting.qh"
 #include "cvar.qh"
@@ -43,7 +71,6 @@
 #include "file.qh"
 #include "functional.qh"
 #include "i18n.qh"
-#include "int.qh"
 #include "iter.qh"
 #include "lazy.qh"
 #include "linkedlist.qh"

@@ -182,41 +182,41 @@ Yed need to set v_up and v_forward (generally by calling makevectors) before cal
 **/
 #endif
 
-void movelib_groundalign4point(float spring_length, float spring_up, float blendrate, float _max)
-{SELFPARAM();
+void movelib_groundalign4point(entity this, float spring_length, float spring_up, float blendrate, float _max)
+{
     vector a, b, c, d, e, r, push_angle, ahead, side;
 
     push_angle.y = 0;
-    r = (self.absmax + self.absmin) * 0.5 + (v_up * spring_up);
+    r = (this.absmax + this.absmin) * 0.5 + (v_up * spring_up);
     e = v_up * spring_length;
 
     // Put springs slightly inside bbox
-    ahead = v_forward * (self.maxs.x * 0.8);
-    side  = v_right   * (self.maxs.y * 0.8);
+    ahead = v_forward * (this.maxs.x * 0.8);
+    side  = v_right   * (this.maxs.y * 0.8);
 
     a = r + ahead + side;
     b = r + ahead - side;
     c = r - ahead + side;
     d = r - ahead - side;
 
-    traceline(a, a - e,MOVE_NORMAL,self);
+    traceline(a, a - e,MOVE_NORMAL,this);
     a.z =  (1 - trace_fraction);
     r = trace_endpos;
 
-    traceline(b, b - e,MOVE_NORMAL,self);
+    traceline(b, b - e,MOVE_NORMAL,this);
     b.z =  (1 - trace_fraction);
     r += trace_endpos;
 
-    traceline(c, c - e,MOVE_NORMAL,self);
+    traceline(c, c - e,MOVE_NORMAL,this);
     c.z =  (1 - trace_fraction);
     r += trace_endpos;
 
-    traceline(d, d - e,MOVE_NORMAL,self);
+    traceline(d, d - e,MOVE_NORMAL,this);
     d.z =  (1 - trace_fraction);
     r += trace_endpos;
 
     a.x = r.z;
-    r = self.origin;
+    r = this.origin;
     r.z = r.z;
 
     push_angle.x = (a.z - c.z) * _max;
@@ -225,13 +225,13 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
     push_angle.z = (b.z - a.z) * _max;
     push_angle.z += (d.z - c.z) * _max;
 
-    //self.angles_x += push_angle_x * 0.95;
-    //self.angles_z += push_angle_z * 0.95;
+    //this.angles_x += push_angle_x * 0.95;
+    //this.angles_z += push_angle_z * 0.95;
 
-    self.angles_x = ((1-blendrate) *  self.angles.x)  + (push_angle.x * blendrate);
-    self.angles_z = ((1-blendrate) *  self.angles.z)  + (push_angle.z * blendrate);
+    this.angles_x = ((1-blendrate) *  this.angles.x)  + (push_angle.x * blendrate);
+    this.angles_z = ((1-blendrate) *  this.angles.z)  + (push_angle.z * blendrate);
 
-    //a = self.origin;
-    setorigin(self,r);
+    //a = this.origin;
+    setorigin(this,r);
 }
 
