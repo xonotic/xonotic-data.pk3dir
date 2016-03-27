@@ -281,7 +281,6 @@ void buf_save(float buf, string pFilename)
 
 /**
  * converts a number to a string with the indicated number of decimals
- * works for up to 10 decimals!
  */
 string ftos_decimals(float number, int decimals)
 {
@@ -289,6 +288,20 @@ string ftos_decimals(float number, int decimals)
 	if (number == 0) number = 0;
 	// we have sprintf...
 	return sprintf("%.*f", decimals, number);
+}
+
+// strips trailing 0s from a float number, e.g. 1.200000 -> 1.2
+string ftos_mindecimals(float number)
+{
+	string s = ftos(number);
+	int k = strstrofs(s, ".", 0);
+	if(k >= 0)
+	{
+		int i = strlen(s);
+		while(substring(s, i - 1, 1) == "0") i--;
+		s = substring(s, 0, i);
+	}
+	return s;
 }
 
 int vercmp_recursive(string v1, string v2)
