@@ -116,6 +116,8 @@ void WarpZone_crosshair_trace(entity pl);
 
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 
+void adaptor_think2use();
+
 #define IS_DEAD(s) ((s).deadflag != DEAD_NO)
 
 
