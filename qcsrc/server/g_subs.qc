@@ -265,8 +265,8 @@ void LOD_uncustomize()
 	this.modelindex = this.lodmodelindex0;
 }
 
-void LODmodel_attach()
-{SELFPARAM();
+void LODmodel_attach(entity this)
+{
 	entity e;
 
 	if(!this.loddistance1)

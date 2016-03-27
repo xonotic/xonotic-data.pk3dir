@@ -292,10 +292,10 @@ void target_spawn_use(entity this, entity actor, entity trigger)
 	}
 }
 
-void target_spawn_spawnfirst()
-{SELFPARAM();
-	entity act = self.target_spawn_activator;
-	if(self.spawnflags & 2)
+void target_spawn_spawnfirst(entity this)
+{
+	entity act = this.target_spawn_activator;
+	if(this.spawnflags & 2)
 		target_spawn_use(this, act, NULL);
 }
 

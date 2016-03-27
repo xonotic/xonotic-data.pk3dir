@@ -500,8 +500,8 @@ bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 #ifdef SVQC
 void door_link();
 #endif
-void LinkDoors()
-{SELFPARAM();
+void LinkDoors(entity this)
+{
 	entity	t;
 	vector	cmins, cmaxs;
 
@@ -687,8 +687,8 @@ void door_link()
 }
 #endif
 
-void door_init_startopen()
-{SELFPARAM();
+void door_init_startopen(entity this)
+{
 	SUB_SETORIGIN(self, self.pos2);
 	self.pos2 = self.pos1;
 	self.pos1 = self.origin;
@@ -844,10 +844,10 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.drawmask = MASK_NORMAL;
 		this.use1 = door_use;
 
-		LinkDoors();
+		LinkDoors(this);
 
 		if(this.spawnflags & DOOR_START_OPEN)
-			door_init_startopen();
+			door_init_startopen(this);
 
 		this.move_time = time;
 		this.move_origin = this.origin;

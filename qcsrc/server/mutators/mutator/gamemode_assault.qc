@@ -138,8 +138,8 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 	}
 }
 
-void assault_setenemytoobjective()
-{SELFPARAM();
+void assault_setenemytoobjective(entity this)
+{
 	entity objective;
 	for(objective = world; (objective = find(objective, targetname, self.target)); )
 	{
@@ -199,9 +199,9 @@ void target_objective_decrease_activate(entity this)
 	}
 }
 
-void target_objective_decrease_findtarget()
+void target_objective_decrease_findtarget(entity this)
 {
-	assault_setenemytoobjective();
+	assault_setenemytoobjective(this);
 }
 
 void target_assault_roundend_reset(entity this)
@@ -231,6 +231,11 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 		// Dubbles as teamchange
 		WITHSELF(it, turret_respawn());
 	));
+}
+void assault_roundstart_use_self()
+{
+    SELFPARAM();
+    assault_roundstart_use(this, NULL, NULL);
 }
 
 void assault_wall_think()
@@ -422,9 +427,9 @@ spawnfunc(target_assault_roundstart)
 
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
-	self.use1 = assault_roundstart_use;
-	self.reset2 = adaptor_think2use;
-	InitializeEntity(self, adaptor_think2use, INITPRIO_FINDTARGET);
+	self.use = assault_roundstart_use;
+	self.reset2 = assault_roundstart_use_self;
+	InitializeEntity(self, assault_roundstart_use_self, INITPRIO_FINDTARGET);
 }
 
 // legacy bot code

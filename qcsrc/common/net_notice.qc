@@ -3,9 +3,8 @@
 REGISTER_NET_TEMP(TE_CSQC_SVNOTICE)
 
 #ifdef SVQC
-void sv_notice_join_think()
+void sv_notice_join_think(entity this)
 {
-    SELFPARAM();
     int argc = tokenizebyseparator(autocvar_sv_join_notices, "|");
     if (argc <= 0) return;
     for (int i = 0; i < argc; ++i)

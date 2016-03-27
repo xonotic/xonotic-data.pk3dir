@@ -36,8 +36,8 @@ void door_rotating_reset(entity this)
 	this.nextthink = 0;
 }
 
-void door_rotating_init_startopen()
-{SELFPARAM();
+void door_rotating_init_startopen(entity this)
+{
 	self.angles = self.movedir;
 	self.pos2 = '0 0 0';
 	self.pos1 = self.movedir;

@@ -5,7 +5,7 @@
 int autocvar_g_tdm_point_limit;
 int autocvar_g_tdm_point_leadlimit;
 bool autocvar_g_tdm_team_spawns;
-void tdm_DelayedInit();
+void tdm_DelayedInit(entity this);
 
 REGISTER_MUTATOR(tdm, false)
 {
@@ -67,7 +67,7 @@ void tdm_SpawnTeam (string teamname, float teamcolor)
 	WITHSELF(this, spawnfunc_tdm_team(this));
 }
 
-void tdm_DelayedInit()
+void tdm_DelayedInit(entity this)
 {
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "tdm_team") == world)

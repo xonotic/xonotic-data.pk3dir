@@ -73,8 +73,8 @@ float walker_firecheck()
     return turret_firecheck();
 }
 
-void walker_melee_do_dmg()
-{SELFPARAM();
+void walker_melee_do_dmg(entity this)
+{
     vector where;
     entity e;
 
@@ -92,8 +92,8 @@ void walker_melee_do_dmg()
     }
 }
 
-void walker_setnoanim()
-{SELFPARAM();
+void walker_setnoanim(entity this)
+{
     turrets_setframe(ANIM_NO, false);
     self.animflag = self.frame;
 }

@@ -142,7 +142,7 @@ float LOD_customize();
 
 void LOD_uncustomize();
 
-void LODmodel_attach();
+void LODmodel_attach(entity this);
 
 void ApplyMinMaxScaleAngles(entity e);
 

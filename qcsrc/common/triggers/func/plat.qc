@@ -3,7 +3,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_PLAT)
 #ifdef SVQC
 void plat_link();
 
-void plat_delayedinit()
+void plat_delayedinit(entity this)
 {
 	plat_link();
 	plat_spawn_inside_trigger(); // the "start moving" trigger
