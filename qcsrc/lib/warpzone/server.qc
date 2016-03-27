@@ -248,11 +248,11 @@ void WarpZone_Touch ()
 		if (!this.target) this.target = save1;
 		if (!this.target3) this.target3 = save2;
 
-		save1 = this.enemy.target; this.enemy.target = string_null;
-		save2 = this.enemy.target2; this.enemy.target2 = string_null;
+		save1 = this.target; this.target = string_null;
+		save2 = this.target2; this.target2 = string_null;
 		SUB_UseTargets(this.enemy, other, other); // use other too?
-		if (!this.enemy.target) this.enemy.target = save1;
-		if (!this.enemy.target2) this.enemy.target2 = save2;
+		if (!this.target) this.target = save1;
+		if (!this.target2) this.target2 = save2;
 #endif
 	}
 	else
