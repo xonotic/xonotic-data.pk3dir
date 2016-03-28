@@ -17,6 +17,7 @@ bool _json_parse_value();
     bool _json_parse_null();
 bool _json_parse_string(bool add);
 bool _json_parse_number();
+    bool _json_parse_float();
     bool _json_parse_int();
 
 #define JSON_BEGIN() int __i = STRING_ITERATOR_SAVE(_json)
@@ -69,13 +70,18 @@ bool _json_parse_array() {
     JSON_BEGIN();
     if (STRING_ITERATOR_GET(_json) != '[') JSON_FAIL("expected '['");
     int len = bufstr_add(_json_buffer, "0", 0);
-    bufstr_set(_json_buffer, len - 1, strcat(bufstr_get(_json_buffer, len - 1), ".length"));
-    int n = -1;
+    if (len) bufstr_set(_json_buffer, len - 1, strcat(bufstr_get(_json_buffer, len - 1), ".length"));
     bool required = false;
-    for (;;) {
-        bufstr_set(_json_buffer, len, ftos(++n));
-        if (!_json_parse_value()) if (required) JSON_FAIL("expected value"); else break;
-        bufstr_add(_json_buffer, strcat(_json_ns, ".", ftos(n)), 0);
+    for (int n = 0; ; n++) {
+        string key = ftos(n);
+        key = _json_ns ? strcat(_json_ns, ".", key) : key;
+        int it = bufstr_add(_json_buffer, key, 0);
+        bool ret = false; WITH(string, _json_ns, key, ret = _json_parse_value());
+        if (!ret) {
+            bufstr_set(_json_buffer, it, string_null);
+            if (required) JSON_FAIL("expected value"); else break;
+        }
+        bufstr_set(_json_buffer, len, ftos(n + 1));
         if (STRING_ITERATOR_PEEK(_json) == ',') {
             STRING_ITERATOR_NEXT(_json);
             required = true;
@@ -150,6 +156,7 @@ bool _json_parse_string(bool add) {
                 case '\\': esc = "\\"; break;
                 case 'n': esc = "\n"; break;
                 case 't': esc = "\t"; break;
+                case 'u': esc = "\\u"; break; // TODO
             }
             s = strcat(s, esc);
         } else {
@@ -164,9 +171,30 @@ bool _json_parse_string(bool add) {
 
 bool _json_parse_number() {
     JSON_BEGIN();
-    if (!_json_parse_int()) JSON_FAIL("expected number");
+    if (!(_json_parse_float() || _json_parse_int())) JSON_FAIL("expected number");
     JSON_END();
 }
+
+    bool _json_parse_float() {
+        JSON_BEGIN();
+        string s = "";
+        bool needdot = true;
+        for (int c; (c = STRING_ITERATOR_GET(_json)); ) {
+            if (!(c >= '0' && c <= '9')) {
+                if (c == '.' && needdot) {
+                    // fine
+                    needdot = false;
+                } else {
+                    STRING_ITERATOR_UNGET(_json);
+                    break;
+                }
+            }
+            s = strcat(s, chr2str(c));
+        }
+        if (s == "") JSON_FAIL("expected float");
+        bufstr_add(_json_buffer, s, 0);
+        JSON_END();
+    }
 
     bool _json_parse_int() {
         JSON_BEGIN();
@@ -185,7 +213,7 @@ bool _json_parse_number() {
         JSON_END();
     }
 
-int json_parse(string in) {
+int json_parse(string in, bool() func) {
     string trimmed = "";
     LABEL(trim) {
         int o = strstrofs(in, "\"", 0);
@@ -222,7 +250,7 @@ int json_parse(string in) {
 
     STRING_ITERATOR_SET(_json, trimmed, 0);
     _json_buffer = buf_create();
-    bool ret = _json_parse_object();
+    bool ret = func();
     if (!ret) {
         buf_del(_json_buffer);
         _json_buffer = -1;
@@ -244,7 +272,7 @@ TEST(json, Parse)
     \"m_obj\": { },\n\
     \"m_arr\": [ ]\n}"; // "
     print(s, "\n");
-    int buf = json_parse(s);
+    int buf = json_parse(s, _json_parse_object);
     EXPECT_NE(-1, buf);
     for (int i = 0, n = buf_getsize(buf); i < n; ++i) {
         print(bufstr_get(buf, i), "\n");
