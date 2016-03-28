@@ -331,7 +331,7 @@ MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
     SELFPARAM();
-	if (this.caplayer == 1)
+	if (!IS_DEAD(this))
 		ca_LastPlayerForTeam_Notify();
 	if (this.killindicator_teamchange == -2)
 		this.caplayer = 0;
