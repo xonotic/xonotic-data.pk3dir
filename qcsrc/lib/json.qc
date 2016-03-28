@@ -186,8 +186,41 @@ bool _json_parse_number() {
     }
 
 int json_parse(string in) {
-    // TODO: remove insignificant whitespace
-    STRING_ITERATOR_SET(_json, in, 0);
+    string trimmed = "";
+    LABEL(trim) {
+        int o = strstrofs(in, "\"", 0);
+        if (o >= 0) {
+            string part = substring(in, 0, o + 1); in = substring(in, o + 1, -1);
+            part = strreplace(" ", "", part);
+            part = strreplace("\n", "", part);
+            trimmed = strcat(trimmed, part);
+            goto trim_str;
+        } else {
+            string part = in;
+            part = strreplace(" ", "", part);
+            part = strreplace("\n", "", part);
+            trimmed = strcat(trimmed, part);
+            goto done;
+        }
+    }
+    LABEL(trim_str) {
+        int o = strstrofs(in, "\"", 0);
+        int esc = strstrofs(in, "\\\"", 0);
+        if (o < esc || esc < 0) {
+            // simple string
+            string part = substring(in, 0, o + 1); in = substring(in, o + 1, -1);
+            trimmed = strcat(trimmed, part);
+            goto trim;
+        } else {
+            // has escape
+            string part = substring(in, 0, esc + 2); in = substring(in, esc + 2, -1);
+            trimmed = strcat(trimmed, part);
+            goto trim_str;
+        }
+    }
+    LABEL(done);
+
+    STRING_ITERATOR_SET(_json, trimmed, 0);
     _json_buffer = buf_create();
     bool ret = _json_parse_object();
     if (!ret) {
@@ -203,7 +236,13 @@ int json_parse(string in) {
 
 TEST(json, Parse)
 {
-    string s = "{\"m_string\":\"string\",\"m_int\":123,\"m_bool\":true,\"m_null\":null,\"m_obj\":{},\"m_arr\":[]}";
+    string s = "{\n\
+    \"m_string\": \"\\\"string\\\"\",\n\
+    \"m_int\": 123,\n\
+    \"m_bool\": true,\n\
+    \"m_null\": null,\n\
+    \"m_obj\": { },\n\
+    \"m_arr\": [ ]\n}"; // "
     print(s, "\n");
     int buf = json_parse(s);
     EXPECT_NE(-1, buf);
