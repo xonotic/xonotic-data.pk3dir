@@ -2,7 +2,6 @@
 #define COMMON_UTIL_H
 
 #ifndef MENUQC
-.void(entity this, entity actor, entity trigger) use1;
 
 vector real_origin(entity ent);
 #endif

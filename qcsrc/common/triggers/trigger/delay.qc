@@ -16,7 +16,7 @@ spawnfunc(trigger_delay)
     if(!self.wait)
         self.wait = 1;
 
-    self.use1 = delay_use;
+    self.use = delay_use;
     self.reset = delay_reset;
 }
 #endif

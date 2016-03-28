@@ -38,9 +38,9 @@ spawnfunc(trigger_monoflop)
 	if(!this.wait)
 		this.wait = 1;
 	if(this.spawnflags & 1)
-		this.use1 = monoflop_fixed_use;
+		this.use = monoflop_fixed_use;
 	else
-		this.use1 = monoflop_use;
+		this.use = monoflop_use;
 	this.think = monoflop_think;
 	this.state = 0;
 	this.reset = monoflop_reset;

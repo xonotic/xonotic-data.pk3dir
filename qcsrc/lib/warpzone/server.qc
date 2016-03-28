@@ -919,7 +919,7 @@ void trigger_warpzone_reconnect_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_warpzone_reconnect)
 {
-	this.use1 = trigger_warpzone_reconnect_use;
+	this.use = trigger_warpzone_reconnect_use;
 }
 
 spawnfunc(target_warpzone_reconnect)

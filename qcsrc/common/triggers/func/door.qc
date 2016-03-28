@@ -738,7 +738,7 @@ spawnfunc(func_door)
 	precache_sound(self.noise3);
 
 	self.blocked = door_blocked;
-	self.use1 = door_use;
+	self.use = door_use;
 
 	if(self.dmg && (self.message == ""))
 		self.message = "was squished";
@@ -842,7 +842,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.trigger_touch = door_touch;
 		this.draw = door_draw;
 		this.drawmask = MASK_NORMAL;
-		this.use1 = door_use;
+		this.use = door_use;
 
 		LinkDoors(this);
 

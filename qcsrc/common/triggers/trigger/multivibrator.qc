@@ -62,7 +62,7 @@ spawnfunc(trigger_multivibrator)
 		self.respawntime = self.wait;
 
 	self.state = 0;
-	self.use1 = multivibrator_toggle;
+	self.use = multivibrator_toggle;
 	self.think = multivibrator_send;
 	self.nextthink = max(1, time);
 

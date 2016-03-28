@@ -128,7 +128,7 @@ void M_Shambler_Attack_Lightning_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 
-	self.use1(this, NULL, NULL);
+	self.use(this, NULL, NULL);
 }
 
 void M_Shambler_Attack_Lightning_Think()
@@ -162,7 +162,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.cnt = time + 5;
 	gren.nextthink = time;
 	gren.think = M_Shambler_Attack_Lightning_Think;
-	gren.use1 = M_Shambler_Attack_Lightning_Explode_use;
+	gren.use = M_Shambler_Attack_Lightning_Explode_use;
 	gren.touch = M_Shambler_Attack_Lightning_Touch;
 
 	gren.takedamage = DAMAGE_YES;

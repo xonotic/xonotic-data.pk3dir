@@ -946,7 +946,7 @@ bool Monster_Appear_Check(entity this, int monster_id)
 	this.think = func_null;
 	this.monsterid = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	this.nextthink = 0;
-	this.use1 = Monster_Appear;
+	this.use = Monster_Appear;
 	this.flags = FL_MONSTER; // set so this monster can get butchered
 
 	return true;
@@ -1332,7 +1332,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;
 	this.touch				= Monster_Touch;
-	this.use1				= Monster_Use;
+	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
 	this.movetype			= MOVETYPE_WALK;
 	this.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;

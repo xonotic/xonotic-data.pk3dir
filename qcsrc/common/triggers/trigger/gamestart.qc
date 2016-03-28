@@ -13,7 +13,7 @@ void gamestart_use_this(entity this)
 void self_spawnfunc_trigger_gamestart();
 spawnfunc(trigger_gamestart)
 {
-	this.use1 = gamestart_use;
+	this.use = gamestart_use;
 	this.reset2 = self_spawnfunc_trigger_gamestart;
 
 	if(this.wait)

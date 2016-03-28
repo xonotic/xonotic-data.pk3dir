@@ -116,7 +116,7 @@ void conveyor_init()
 	this.nextthink = time;
 	IFTARGETED
 	{
-		this.use1 = conveyor_use;
+		this.use = conveyor_use;
 		this.reset = conveyor_reset;
 		this.reset(this);
 	}

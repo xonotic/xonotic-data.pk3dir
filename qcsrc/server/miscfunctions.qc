@@ -969,8 +969,8 @@ void adaptor_think2touch()
 
 void adaptor_think2use()
 {SELFPARAM();
-	if(this.use1)
-    	this.use1(this, NULL, NULL);
+	if(this.use)
+    	this.use(this, NULL, NULL);
 }
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation

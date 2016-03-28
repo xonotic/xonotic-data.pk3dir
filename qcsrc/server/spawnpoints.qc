@@ -102,7 +102,7 @@ void relocate_spawnpoint()
         }
     }
 
-    self.use1 = spawnpoint_use;
+    self.use = spawnpoint_use;
     self.think = spawnpoint_think;
     self.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
     self.team_saved = self.team;

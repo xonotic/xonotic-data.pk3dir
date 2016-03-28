@@ -96,7 +96,7 @@ spawnfunc(dynlight)
 	if (!self.color)
 		self.color = '1 1 1';
 	self.lefty = self.light_lev;
-	self.use1 = dynlight_use;
+	self.use = dynlight_use;
 	setsize (self, '0 0 0', '0 0 0');
 	setorigin (self, self.origin);
 	//self.pflags = PFLAGS_FULLDYNAMIC;

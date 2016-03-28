@@ -361,7 +361,7 @@ spawnfunc(target_objective)
 	if (!g_assault) { remove(this); return; }
 
 	this.classname = "target_objective";
-	this.use1 = assault_objective_use;
+	this.use = assault_objective_use;
 	this.reset = assault_objective_reset;
 	this.reset(this);
 	this.spawn_evalfunc = target_objective_spawn_evalfunc;
@@ -376,7 +376,7 @@ spawnfunc(target_objective_decrease)
 	if(!self.dmg)
 		self.dmg = 101;
 
-	self.use1 = assault_objective_decrease_use;
+	self.use = assault_objective_decrease_use;
 	self.health = ASSAULT_VALUE_INACTIVE;
 	self.max_health = ASSAULT_VALUE_INACTIVE;
 	self.enemy = world;
@@ -420,7 +420,7 @@ spawnfunc(target_assault_roundend)
 
 	self.winning = 0; // round not yet won by attackers
 	self.classname = "target_assault_roundend";
-	self.use1 = target_assault_roundend_use;
+	self.use = target_assault_roundend_use;
 	self.cnt = 0; // first round
 	self.reset = target_assault_roundend_reset;
 }
@@ -431,7 +431,7 @@ spawnfunc(target_assault_roundstart)
 
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
-	self.use1 = assault_roundstart_use;
+	self.use = assault_roundstart_use;
 	self.reset2 = assault_roundstart_use_self;
 	InitializeEntity(self, assault_roundstart_use_this, INITPRIO_FINDTARGET);
 }

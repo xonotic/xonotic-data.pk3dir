@@ -82,6 +82,6 @@ spawnfunc(trigger_secret)
 	// take over the touch() function, so we can mark secret as found
 	self.touch = trigger_secret_touch;
 	// ignore triggering;
-	self.use1 = func_null;
+	self.use = func_null;
 }
 #endif

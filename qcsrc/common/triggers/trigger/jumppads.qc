@@ -381,7 +381,7 @@ spawnfunc(trigger_push)
 	trigger_init(this);
 
 	this.active = ACTIVE_ACTIVE;
-	this.use1 = trigger_push_use;
+	this.use = trigger_push_use;
 	this.touch = trigger_push_touch;
 
 	// normal push setup

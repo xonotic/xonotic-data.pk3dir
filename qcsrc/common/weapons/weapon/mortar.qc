@@ -147,7 +147,7 @@ void W_Mortar_Grenade_Touch1()
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use1(this, NULL, NULL);
+		this.use(this, NULL, NULL);
 	}
 	else if(WEP_CVAR_PRI(mortar, type) == 1) // bounce
 	{
@@ -179,7 +179,7 @@ void W_Mortar_Grenade_Touch2()
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use1(this, NULL, NULL);
+		this.use(this, NULL, NULL);
 	}
 	else if(WEP_CVAR_SEC(mortar, type) == 1) // bounce
 	{
@@ -236,7 +236,7 @@ void W_Mortar_Attack(Weapon thiswep)
 	gren.cnt = time + WEP_CVAR_PRI(mortar, lifetime);
 	gren.nextthink = time;
 	gren.think = W_Mortar_Grenade_Think1;
-	gren.use1 = W_Mortar_Grenade_Explode_use;
+	gren.use = W_Mortar_Grenade_Explode_use;
 	gren.touch = W_Mortar_Grenade_Touch1;
 
 	gren.takedamage = DAMAGE_YES;
@@ -283,7 +283,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 	gren.nextthink = time + WEP_CVAR_SEC(mortar, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
-	gren.use1 = W_Mortar_Grenade_Explode2_use;
+	gren.use = W_Mortar_Grenade_Explode2_use;
 	gren.touch = W_Mortar_Grenade_Touch2;
 
 	gren.takedamage = DAMAGE_YES;

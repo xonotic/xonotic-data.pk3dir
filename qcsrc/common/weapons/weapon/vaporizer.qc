@@ -263,7 +263,7 @@ void W_RocketMinsta_Attack2()
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
-        proj.use1 = W_RocketMinsta_Laser_Explode_use;
+        proj.use = W_RocketMinsta_Laser_Explode_use;
         proj.think = adaptor_think2use_hittype_splash;
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);
@@ -315,7 +315,7 @@ void W_RocketMinsta_Attack3 ()
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
-        proj.use1 = W_RocketMinsta_Laser_Explode_use;
+        proj.use = W_RocketMinsta_Laser_Explode_use;
         proj.think = adaptor_think2use_hittype_splash;
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);

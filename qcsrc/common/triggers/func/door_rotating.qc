@@ -72,7 +72,7 @@ spawnfunc(func_door_rotating)
 	self.classname = "door_rotating";
 
 	self.blocked = door_blocked;
-	self.use1 = door_use;
+	self.use = door_use;
 
     if(self.spawnflags & 8)
         self.dmg = 10000;

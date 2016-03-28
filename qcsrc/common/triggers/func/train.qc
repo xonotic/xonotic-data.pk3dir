@@ -43,7 +43,7 @@ void train_wait()
 	entity tg = find(world, targetname, self.target);
 	if(tg.spawnflags & 4)
 	{
-		self.use1 = train_use;
+		self.use = train_use;
 		self.SUB_THINK = func_null;
 		self.SUB_NEXTTHINK = 0;
 	}
@@ -180,7 +180,7 @@ void train_use(entity this, entity actor, entity trigger)
 {
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 1;
 	this.SUB_THINK = train_next;
-	this.use1 = func_null; // not again
+	this.use = func_null; // not again
 }
 
 void func_train_find(entity this)
@@ -224,7 +224,7 @@ spawnfunc(func_train)
 	self.effects |= EF_LOWPRECISION;
 
 	if(self.spawnflags & 4)
-		self.use1 = train_use;
+		self.use = train_use;
 
 	if (self.spawnflags & 2)
 	{

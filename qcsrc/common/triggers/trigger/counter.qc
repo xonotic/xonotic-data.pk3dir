@@ -43,7 +43,7 @@ spawnfunc(trigger_counter)
 		self.count = 2;
 	self.cnt = self.count;
 
-	self.use1 = counter_use;
+	self.use = counter_use;
 	self.reset = counter_reset;
 }
 #endif

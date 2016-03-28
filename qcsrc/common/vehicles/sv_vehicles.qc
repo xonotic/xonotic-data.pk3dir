@@ -262,7 +262,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
 	proj.touch			= vehicles_projectile_explode;
-	proj.use1			  = vehicles_projectile_explode_use;
+	proj.use			  = vehicles_projectile_explode_use;
 	proj.owner			= this;
 	proj.realowner		= _owner;
 	proj.think			= SUB_Remove_self;
@@ -1184,7 +1184,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		else
 		{
 			this.team = this.vehicle_controller.team;
-			this.use1 = vehicle_use;
+			this.use = vehicle_use;
 
 			if(teamplay)
 			{

@@ -1954,7 +1954,7 @@ void ons_MonsterSpawn_Delayed(entity this)
 		{
 			own.team = e.team;
 
-			own.use1(own, e, NULL);
+			own.use(own, e, NULL);
 		}
 	}
 
@@ -1984,7 +1984,7 @@ void ons_TurretSpawn_Delayed(entity this)
 			own.team = e.team;
 			own.active = ACTIVE_NOT;
 
-			own.use1(own, e, NULL);
+			own.use(own, e, NULL);
 		}
 	}
 

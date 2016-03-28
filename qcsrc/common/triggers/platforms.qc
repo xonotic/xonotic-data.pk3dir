@@ -178,7 +178,7 @@ void plat_crush()
 
 void plat_use(entity this, entity actor, entity trigger)
 {
-	this.use1 = func_null;
+	this.use = func_null;
 	if (this.state != 4)
 		objerror ("plat_use: not in up state");
 	WITHSELF(this, plat_go_down());
@@ -192,13 +192,13 @@ void plat_reset(entity this)
 	{
 		setorigin (this, this.pos1);
 		this.state = 4;
-		this.use1 = plat_use;
+		this.use = plat_use;
 	}
 	else
 	{
 		setorigin (this, this.pos2);
 		this.state = 2;
-		this.use1 = plat_trigger_use;
+		this.use = plat_trigger_use;
 	}
 
 #ifdef SVQC

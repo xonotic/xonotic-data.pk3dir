@@ -98,7 +98,7 @@ spawnfunc(trigger_gravity)
 	self.state = true;
 	IFTARGETED
 	{
-		self.use1 = trigger_gravity_use;
+		self.use = trigger_gravity_use;
 		if(self.spawnflags & 2)
 			self.state = false;
 	}

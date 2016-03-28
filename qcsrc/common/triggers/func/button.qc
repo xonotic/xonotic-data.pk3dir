@@ -120,7 +120,7 @@ spawnfunc(func_button)
 	self.effects |= EF_LOWPRECISION;
 
 	self.blocked = button_blocked;
-	self.use1 = button_use;
+	self.use = button_use;
 
 //	if (self.health == 0) // all buttons are now shootable
 //		self.health = 10;

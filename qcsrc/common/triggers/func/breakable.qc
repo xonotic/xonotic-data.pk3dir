@@ -137,7 +137,7 @@ void func_breakable_behave_destroyed()
 	self.event_damage = func_null;
 	self.state = 1;
 	if(self.spawnflags & 4)
-		self.use1 = func_null;
+		self.use = func_null;
 	func_breakable_colormod();
 	if (self.noise1)
 		stopsound (self, CH_TRIGGER_SINGLE);
@@ -322,9 +322,9 @@ spawnfunc(func_breakable)
 	SetBrushEntityModel();
 
 	if(this.spawnflags & 4)
-		this.use1 = func_breakable_destroy;
+		this.use = func_breakable_destroy;
 	else
-		this.use1 = func_breakable_restore;
+		this.use = func_breakable_restore;
 
 	if(this.spawnflags & 4)
 	{

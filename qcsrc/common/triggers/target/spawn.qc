@@ -330,7 +330,7 @@ void initialize_field_db()
 spawnfunc(target_spawn)
 {
 	initialize_field_db();
-	self.use1 = target_spawn_use;
+	self.use = target_spawn_use;
 	self.message = strzone(strreplace("'", "\"", self.message));
 	self.target_spawn_id = ++target_spawn_count;
 	InitializeEntity(self, target_spawn_spawnfirst, INITPRIO_LAST);

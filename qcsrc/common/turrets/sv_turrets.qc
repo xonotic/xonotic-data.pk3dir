@@ -1341,7 +1341,7 @@ float turret_initialize(Turret tur)
 	self.view_ofs				= '0 0 0';
 	self.turret_firecheckfunc	= turret_firecheck;
 	self.event_damage			= turret_damage;
-	self.use1					= turret_use;
+	self.use					= turret_use;
 	self.bot_attack				= true;
 	self.nextthink				= time + 1;
 	self.nextthink			   += turret_count * sys_frametime;

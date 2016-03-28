@@ -41,4 +41,7 @@
 
 #pragma noref 0
 
+#define use use1
+.void(entity this, entity actor, entity trigger) use;
+
 #endif

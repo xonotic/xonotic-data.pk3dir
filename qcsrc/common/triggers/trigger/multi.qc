@@ -158,7 +158,7 @@ spawnfunc(trigger_multiple)
 		self.wait = 0.2;
 	else if(self.wait < -1)
 		self.wait = 0;
-	self.use1 = multi_use;
+	self.use = multi_use;
 
 	EXACTTRIGGER_INIT;
 

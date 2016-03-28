@@ -244,7 +244,7 @@ spawnfunc(misc_laser)
 	{
 		this.reset = laser_reset;
 		this.reset(this);
-		this.use1 = laser_use;
+		this.use = laser_use;
 	}
 	else
 		this.state = 1;

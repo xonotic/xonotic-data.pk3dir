@@ -254,7 +254,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 			int aw_flag = this.antiwall_flag;
 			for(entity t = world; (t = find(t, targetname, s)); )
 			{
-				if(t.use1)
+				if(t.use)
 				{
 					if(this.target_random)
 					{
@@ -265,7 +265,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 						if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
 							t.antiwall_flag = aw_flag;
 
-						t.use1(t, actor, this);
+						t.use(t, actor, this);
 					}
 				}
 			}
@@ -273,7 +273,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	}
 
 	if(this.target_random && RandomSelection_chosen_ent)
-		RandomSelection_chosen_ent.use1(RandomSelection_chosen_ent, actor, this);
+		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
 }
 
 void SUB_UseTargets_self()

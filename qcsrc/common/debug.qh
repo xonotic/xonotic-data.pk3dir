@@ -116,7 +116,7 @@ bool autocvar_debugdraw;
 //						if (it.maxs) break;
 //						if (it.size) break;
 //						if (it.touch) break;
-//						if (it.use1) break;
+//						if (it.use) break;
 //						if (it.think) break;
 //						if (it.blocked) break;
 //						if (it.nextthink) break;

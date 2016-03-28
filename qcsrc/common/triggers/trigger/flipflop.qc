@@ -13,7 +13,7 @@ spawnfunc(trigger_flipflop)
 {
     if(this.spawnflags & 1)
         this.state = 1;
-    this.use1 = flipflop_use;
+    this.use = flipflop_use;
     this.reset = spawnfunc_trigger_flipflop; // perfect resetter
 }
 

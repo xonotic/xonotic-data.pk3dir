@@ -360,7 +360,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep)
 	missile.bot_dodge 		= true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, flac_damage);
 	missile.touch 			= W_Seeker_Flac_Explode;
-	missile.use1 			= W_Seeker_Flac_Explode_use;
+	missile.use 			= W_Seeker_Flac_Explode_use;
 	missile.think 			= adaptor_think2use_hittype_splash;
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
 	missile.solid 			= SOLID_BBOX;

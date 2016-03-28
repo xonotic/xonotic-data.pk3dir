@@ -137,7 +137,7 @@ spawnfunc(func_pointparticles)
 
 	IFTARGETED
 	{
-		this.use1 = pointparticles_use;
+		this.use = pointparticles_use;
 		this.reset = pointparticles_reset;
 		this.reset(this);
 	}

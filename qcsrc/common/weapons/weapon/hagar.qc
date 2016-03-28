@@ -116,7 +116,7 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 void W_Hagar_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
-	this.use1(this, NULL, NULL);
+	this.use(this, NULL, NULL);
 }
 
 void W_Hagar_Touch2()
@@ -124,7 +124,7 @@ void W_Hagar_Touch2()
 	PROJECTILE_TOUCH;
 
 	if(self.cnt > 0 || other.takedamage == DAMAGE_AIM) {
-		this.use1(this, NULL, NULL);
+		this.use(this, NULL, NULL);
 	} else {
 		self.cnt++;
 		Send_Effect(EFFECT_HAGAR_BOUNCE, self.origin, self.velocity, 1);
@@ -156,7 +156,7 @@ void W_Hagar_Attack(Weapon thiswep)
 	missile.damagedbycontents = true;
 
 	missile.touch = W_Hagar_Touch;
-	missile.use1 = W_Hagar_Explode_use;
+	missile.use = W_Hagar_Explode_use;
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR_PRI(hagar, lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
@@ -199,7 +199,7 @@ void W_Hagar_Attack2(Weapon thiswep)
 
 	missile.touch = W_Hagar_Touch2;
 	missile.cnt = 0;
-	missile.use1 = W_Hagar_Explode2_use;
+	missile.use = W_Hagar_Explode2_use;
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 	PROJECTILE_MAKETRIGGER(missile);
@@ -257,7 +257,7 @@ void W_Hagar_Attack2_Load_Release(.entity weaponentity)
 		missile.damagedbycontents = true;
 
 		missile.touch = W_Hagar_Touch; // not bouncy
-		missile.use1 = W_Hagar_Explode2_use;
+		missile.use = W_Hagar_Explode2_use;
 		missile.think = adaptor_think2use_hittype_splash;
 		missile.nextthink = time + WEP_CVAR_SEC(hagar, lifetime_min) + random() * WEP_CVAR_SEC(hagar, lifetime_rand);
 		PROJECTILE_MAKETRIGGER(missile);

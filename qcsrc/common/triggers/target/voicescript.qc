@@ -84,7 +84,7 @@ spawnfunc(target_voicescript)
 	// delay: initial delay before the first message
 
 	float i, n;
-	self.use1 = target_voicescript_use;
+	self.use = target_voicescript_use;
 
 	n = tokenize_console(self.message);
 	self.cnt = n / 2;

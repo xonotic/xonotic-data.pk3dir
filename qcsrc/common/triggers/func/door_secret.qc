@@ -216,7 +216,7 @@ spawnfunc(func_door_secret)
 	this.touch = secret_touch;
 	this.blocked = secret_blocked;
 	this.speed = 50;
-	this.use1 = fd_secret_use;
+	this.use = fd_secret_use;
 	IFTARGETED
 	{
 	}

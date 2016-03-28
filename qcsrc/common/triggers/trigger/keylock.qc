@@ -4,8 +4,8 @@
 void trigger_keylock_trigger(entity this, entity actor, string s)
 {
 	for(entity t = world; (t = find(t, targetname, s)); )
-		if(t.use1)
-			t.use1(t, actor, this);
+		if(t.use)
+			t.use(t, actor, this);
 }
 
 /**

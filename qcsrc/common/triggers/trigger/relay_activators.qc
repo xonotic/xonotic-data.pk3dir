@@ -22,18 +22,18 @@ void relay_activators_use(entity this, entity actor, entity trigger)
 spawnfunc(relay_activate)
 {
 	this.cnt = ACTIVE_ACTIVE;
-	this.use1 = relay_activators_use;
+	this.use = relay_activators_use;
 }
 
 spawnfunc(relay_deactivate)
 {
 	this.cnt = ACTIVE_NOT;
-	this.use1 = relay_activators_use;
+	this.use = relay_activators_use;
 }
 
 spawnfunc(relay_activatetoggle)
 {
 	this.cnt = ACTIVE_TOGGLE;
-	this.use1 = relay_activators_use;
+	this.use = relay_activators_use;
 }
 #endif

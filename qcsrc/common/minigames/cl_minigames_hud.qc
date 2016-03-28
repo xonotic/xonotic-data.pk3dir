@@ -115,7 +115,7 @@ void HUD_MinigameMenu_Click(entity menuitem)
 {
 	if ( menuitem )
 	{
-		menuitem.use1(menuitem, NULL, NULL);
+		menuitem.use(menuitem, NULL, NULL);
 	}
 }
 
@@ -154,7 +154,7 @@ entity HUD_MinigameMenu_SpawnEntry(string s, vector offset, vector fontsize, vec
 	entry.size = fontsize;
 	entry.colormod = color;
 	entry.flags = 0;
-	entry.use1 = click;
+	entry.use = click;
 	panel_pos_y += fontsize_y;
 	return entry;
 }

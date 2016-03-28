@@ -14,6 +14,6 @@ void trigger_relay_if_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_relay_if)
 {
-	this.use1 = trigger_relay_if_use;
+	this.use = trigger_relay_if_use;
 }
 #endif

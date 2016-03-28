@@ -54,23 +54,23 @@ void target_speaker_use_on(entity this, entity actor, entity trigger)
 		snd = this.noise;
 	_sound(this, CH_TRIGGER_SINGLE, snd, VOL_BASE * this.volume, this.atten);
 	if(this.spawnflags & 3)
-		this.use1 = target_speaker_use_off;
+		this.use = target_speaker_use_off;
 }
 void target_speaker_use_off(entity this, entity actor, entity trigger)
 {
 	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE * this.volume, this.atten);
-	this.use1 = target_speaker_use_on;
+	this.use = target_speaker_use_on;
 }
 void target_speaker_reset(entity this)
 {
 	if(this.spawnflags & 1) // LOOPED_ON
 	{
-		if(this.use1 == target_speaker_use_on)
+		if(this.use == target_speaker_use_on)
 			target_speaker_use_on(this, NULL, NULL);
 	}
 	else if(this.spawnflags & 2)
 	{
-		if(this.use1 == target_speaker_use_off)
+		if(this.use == target_speaker_use_off)
 			target_speaker_use_off(this, NULL, NULL);
 	}
 }
@@ -98,7 +98,7 @@ spawnfunc(target_speaker)
 	IFTARGETED
 	{
 		if(self.spawnflags & 8) // ACTIVATOR
-			self.use1 = target_speaker_use_activator;
+			self.use = target_speaker_use_activator;
 		else if(self.spawnflags & 1) // LOOPED_ON
 		{
 			target_speaker_use_on(self, NULL, NULL);
@@ -106,11 +106,11 @@ spawnfunc(target_speaker)
 		}
 		else if(self.spawnflags & 2) // LOOPED_OFF
 		{
-			self.use1 = target_speaker_use_on;
+			self.use = target_speaker_use_on;
 			self.reset = target_speaker_reset;
 		}
 		else
-			self.use1 = target_speaker_use_on;
+			self.use = target_speaker_use_on;
 	}
 	else if(self.spawnflags & 1) // LOOPED_ON
 	{

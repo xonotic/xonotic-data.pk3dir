@@ -912,7 +912,7 @@ spawnfunc(trigger_race_checkpoint)
 
 	EXACTTRIGGER_INIT;
 
-	self.use1 = checkpoint_use;
+	self.use = checkpoint_use;
 	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
@@ -961,7 +961,7 @@ spawnfunc(target_checkpoint) // defrag entity
 
 	EXACTTRIGGER_INIT;
 
-	self.use1 = checkpoint_use;
+	self.use = checkpoint_use;
 	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
@@ -1117,7 +1117,7 @@ spawnfunc(trigger_race_penalty)
 
 	EXACTTRIGGER_INIT;
 
-	self.use1 = penalty_use;
+	self.use = penalty_use;
 	if (!(self.spawnflags & 1))
 		self.touch = penalty_touch;
 

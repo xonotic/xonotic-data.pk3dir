@@ -140,7 +140,7 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 void W_Hook_Touch2()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
-	this.use1(this, NULL, NULL);
+	this.use(this, NULL, NULL);
 }
 
 void W_Hook_Attack2(Weapon thiswep, entity actor)
@@ -160,7 +160,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
-	gren.use1 = W_Hook_Explode2_use;
+	gren.use = W_Hook_Explode2_use;
 	gren.touch = W_Hook_Touch2;
 
 	gren.takedamage = DAMAGE_YES;

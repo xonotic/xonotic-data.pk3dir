@@ -29,7 +29,7 @@ void trigger_relay_teamcheck_reset(entity this)
 spawnfunc(trigger_relay_teamcheck)
 {
 	this.team_saved = this.team;
-	this.use1 = trigger_relay_teamcheck_use;
+	this.use = trigger_relay_teamcheck_use;
 	this.reset = trigger_relay_teamcheck_reset;
 }
 #endif

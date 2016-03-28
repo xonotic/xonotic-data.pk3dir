@@ -34,7 +34,7 @@ void target_changelevel_use(entity this, entity actor, entity trigger)
 
 spawnfunc(target_changelevel)
 {
-	this.use1 = target_changelevel_use;
+	this.use = target_changelevel_use;
 
 	if(!this.count) { this.count = 0.7; }
 }

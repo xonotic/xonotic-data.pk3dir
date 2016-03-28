@@ -5,14 +5,14 @@ void trigger_disablerelay_use(entity this, entity actor, entity trigger)
 
 	for(entity e = world; (e = find(e, targetname, this.target)); )
 	{
-		if(e.use1 == SUB_UseTargets)
+		if(e.use == SUB_UseTargets)
 		{
-			e.use1 = SUB_DontUseTargets;
+			e.use = SUB_DontUseTargets;
 			++a;
 		}
-		else if(e.use1 == SUB_DontUseTargets)
+		else if(e.use == SUB_DontUseTargets)
 		{
-			e.use1 = SUB_UseTargets;
+			e.use = SUB_UseTargets;
 			++b;
 		}
 	}
@@ -23,6 +23,6 @@ void trigger_disablerelay_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_disablerelay)
 {
-	this.use1 = trigger_disablerelay_use;
+	this.use = trigger_disablerelay_use;
 }
 #endif

@@ -62,7 +62,7 @@ spawnfunc(trigger_hurt)
 	EXACTTRIGGER_INIT;
 	self.active = ACTIVE_ACTIVE;
 	self.touch = trigger_hurt_touch;
-	self.use1 = trigger_hurt_use;
+	self.use = trigger_hurt_use;
 	self.enemy = world; // I hate you all
 	if (!self.dmg)
 		self.dmg = 1000;

@@ -74,7 +74,7 @@ void racer_rocket_tracker()
 
     if (IS_DEAD(self.owner) || self.cnt < time)
     {
-        self.use1(self, NULL, NULL);
+        self.use(self, NULL, NULL);
         return;
     }
 
@@ -126,7 +126,7 @@ void racer_rocket_groundhugger()
 
     if(IS_DEAD(self.owner) || self.cnt < time)
     {
-        self.use1(self, NULL, NULL);
+        self.use(self, NULL, NULL);
         return;
     }
 

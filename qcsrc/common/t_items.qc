@@ -1453,7 +1453,7 @@ spawnfunc(target_items)
 	float n, i;
 	string s;
 
-	self.use1 = target_items_use;
+	self.use = target_items_use;
 	if(!self.strength_finished)
 		self.strength_finished = autocvar_g_balance_powerup_strength_time;
 	if(!self.invincible_finished)

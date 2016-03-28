@@ -84,7 +84,7 @@ spawnfunc(trigger_teleport)
 	self.active = ACTIVE_ACTIVE;
 	//trigger_init(self); // only for predicted triggers?
 	EXACTTRIGGER_INIT;
-	self.use1 = trigger_teleport_use;
+	self.use = trigger_teleport_use;
 
 	if(self.noise != "")
 		FOREACH_WORD(self.noise, true, precache_sound(it));

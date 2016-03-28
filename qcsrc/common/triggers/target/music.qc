@@ -60,7 +60,7 @@ void target_music_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(target_music)
 {
-	self.use1 = target_music_use;
+	self.use = target_music_use;
 	self.reset = target_music_reset;
 	if(!self.volume)
 		self.volume = 1;
@@ -148,7 +148,7 @@ spawnfunc(trigger_music)
 	}
 	trigger_music_reset(this);
 
-	this.use1 = trigger_music_use;
+	this.use = trigger_music_use;
 	this.reset = trigger_music_reset;
 
 	Net_LinkEntity(this, false, 0, trigger_music_SendEntity);

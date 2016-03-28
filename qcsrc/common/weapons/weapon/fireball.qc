@@ -201,7 +201,7 @@ void W_Fireball_Attack1()
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(fireball, damage);
 	proj.pushltime = time + WEP_CVAR_PRI(fireball, lifetime);
-	proj.use1 = W_Fireball_Explode_use;
+	proj.use = W_Fireball_Explode_use;
 	proj.think = W_Fireball_Think;
 	proj.nextthink = time;
 	proj.health = WEP_CVAR_PRI(fireball, health);

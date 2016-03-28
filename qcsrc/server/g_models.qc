@@ -168,7 +168,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(self.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) self.movetype = MOVETYPE_PHYSICS; \
 	if(!self.scale) self.scale = self.modelscale; \
 	SetBrushEntityModel(); \
-	self.use1 = g_model_setcolormaptoactivator; \
+	self.use = g_model_setcolormaptoactivator; \
 	InitializeEntity(self, g_model_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT;
 
@@ -176,7 +176,7 @@ bool g_clientmodel_genericsendentity(entity this, entity to, int sf)
 	if(self.geomtype) if(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")) self.movetype = MOVETYPE_PHYSICS; \
 	if(!self.scale) self.scale = self.modelscale; \
 	SetBrushEntityModel(); \
-	self.use1 = g_clientmodel_use; \
+	self.use = g_clientmodel_use; \
 	InitializeEntity(self, g_clientmodel_dropbyspawnflags, INITPRIO_DROPTOFLOOR); \
 	if(!self.solid) self.solid = (sol); else if(self.solid < 0) self.solid = SOLID_NOT; \
 	if(!self.bgmscriptsustain) self.bgmscriptsustain = 1; else if(self.bgmscriptsustain < 0) self.bgmscriptsustain = 0; \
