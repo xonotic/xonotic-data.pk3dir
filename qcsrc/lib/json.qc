@@ -1,18 +1,21 @@
 #include "test.qh"
 
 STRING_ITERATOR(_json, string_null, 0);
+// Store interleaved keys/values in a string buffer
+int _json_buffer;
+// Last read string
+string _json_temp;
 
 /** parse a json object */
 bool _json_parse_object();
     bool _json_parse_members();
         bool _json_parse_pair();
 bool _json_parse_array();
-    bool _json_parse_elements();
 bool _json_parse_value();
     bool _json_parse_true();
     bool _json_parse_false();
     bool _json_parse_null();
-bool _json_parse_string();
+bool _json_parse_string(bool add);
 bool _json_parse_number();
     bool _json_parse_int();
 
@@ -23,58 +26,70 @@ bool _json_parse_number();
 :fail \
    STRING_ITERATOR_LOAD(_json, __i); \
    return false;
+// Current namespace
+string _json_ns;
+// Current keys
+int _json_keys;
 
 bool _json_parse_object() {
     JSON_BEGIN();
     if (STRING_ITERATOR_GET(_json) != '{') JSON_FAIL("expected '{'");
-    LOG_INFO(">> object\n");
-    _json_parse_members();
+    WITH(int, _json_keys, bufstr_add(_json_buffer, "", 0), _json_parse_members());
     if (STRING_ITERATOR_GET(_json) != '}') JSON_FAIL("expected '}'");
-    LOG_INFO("<< object\n");
     JSON_END();
 }
 
     bool _json_parse_members() {
         JSON_BEGIN();
-        if (!_json_parse_pair()) JSON_FAIL("expected pair");
-        if (STRING_ITERATOR_PEEK(_json) == ',') {
-            STRING_ITERATOR_NEXT(_json);
-            if (!_json_parse_members()) JSON_FAIL("expected pair");
+        for (;;) {
+            if (!_json_parse_pair()) JSON_FAIL("expected pair");
+            if (STRING_ITERATOR_PEEK(_json) == ',') {
+                STRING_ITERATOR_NEXT(_json);
+                continue;
+            }
+            break;
         }
         JSON_END();
     }
 
         bool _json_parse_pair() {
             JSON_BEGIN();
-            if (!_json_parse_string()) JSON_FAIL("expected string");
+            if (!_json_parse_string(false)) JSON_FAIL("expected string");
+            string key = _json_temp;
+            bufstr_set(_json_buffer, _json_keys, cons(bufstr_get(_json_buffer, _json_keys), key));
+            key = _json_ns ? strcat(_json_ns, ".", key) : key;
+            bufstr_add(_json_buffer, key, 0);
             if (STRING_ITERATOR_GET(_json) != ':') JSON_FAIL("expected ':'");
-            if (!_json_parse_value()) JSON_FAIL("expected value");
+            bool ret = false; WITH(string, _json_ns, key, ret = _json_parse_value());
+            if (!ret) JSON_FAIL("expected value");
             JSON_END();
         }
 
 bool _json_parse_array() {
     JSON_BEGIN();
     if (STRING_ITERATOR_GET(_json) != '[') JSON_FAIL("expected '['");
-    LOG_INFO(">> array\n");
-    _json_parse_elements();
+    int len = bufstr_add(_json_buffer, "0", 0);
+    bufstr_set(_json_buffer, len - 1, strcat(bufstr_get(_json_buffer, len - 1), ".length"));
+    int n = -1;
+    bool required = false;
+    for (;;) {
+        bufstr_set(_json_buffer, len, ftos(++n));
+        if (!_json_parse_value()) if (required) JSON_FAIL("expected value"); else break;
+        bufstr_add(_json_buffer, strcat(_json_ns, ".", ftos(n)), 0);
+        if (STRING_ITERATOR_PEEK(_json) == ',') {
+            STRING_ITERATOR_NEXT(_json);
+            required = true;
+            continue;
+        }
+        break;
+    }
     if (STRING_ITERATOR_GET(_json) != ']') JSON_FAIL("expected ']'");
-    LOG_INFO("<< array\n");
     JSON_END();
 }
 
-    bool _json_parse_elements() {
-        JSON_BEGIN();
-        if (!_json_parse_value()) JSON_FAIL("expected value");
-        if (STRING_ITERATOR_PEEK(_json) == ',') {
-            STRING_ITERATOR_NEXT(_json);
-            if (!_json_parse_elements()) JSON_FAIL("expected value");
-        }
-        JSON_END();
-    }
-
 bool _json_parse_value() {
     JSON_BEGIN();
-    if (!(_json_parse_string()
+    if (!(_json_parse_string(true)
         || _json_parse_number()
         || _json_parse_object()
         || _json_parse_array()
@@ -91,7 +106,7 @@ bool _json_parse_value() {
             && STRING_ITERATOR_GET(_json) == 'u'
             && STRING_ITERATOR_GET(_json) == 'e'))
             JSON_FAIL("expected 'true'");
-        LOG_INFO(">> bool (true)\n");
+        bufstr_add(_json_buffer, "1", 0);
         JSON_END();
     }
 
@@ -103,7 +118,7 @@ bool _json_parse_value() {
             && STRING_ITERATOR_GET(_json) == 's'
             && STRING_ITERATOR_GET(_json) == 'e'))
             JSON_FAIL("expected 'false'");
-        LOG_INFO(">> bool (false)\n");
+        bufstr_add(_json_buffer, "0", 0);
         JSON_END();
     }
 
@@ -114,11 +129,11 @@ bool _json_parse_value() {
             && STRING_ITERATOR_GET(_json) == 'l'
             && STRING_ITERATOR_GET(_json) == 'l'))
             JSON_FAIL("expected 'null'");
-        LOG_INFO(">> null\n");
+        bufstr_add(_json_buffer, "", 0);
         JSON_END();
     }
 
-bool _json_parse_string() {
+bool _json_parse_string(bool add) {
     JSON_BEGIN();
     if (STRING_ITERATOR_GET(_json) != '"') JSON_FAIL("expected opening '\"'");
     string s = "";
@@ -142,13 +157,14 @@ bool _json_parse_string() {
         }
     }
     if (STRING_ITERATOR_GET(_json) != '"') JSON_FAIL("expected closing '\"'");
-    LOG_INFOF(">> string ('%s')\n", s);
+    if (add) bufstr_add(_json_buffer, s, 0);
+    _json_temp = s;
     JSON_END();
 }
 
 bool _json_parse_number() {
     JSON_BEGIN();
-    if (!_json_parse_int()) JSON_FAIL("expected int");
+    if (!_json_parse_int()) JSON_FAIL("expected number");
     JSON_END();
 }
 
@@ -164,15 +180,21 @@ bool _json_parse_number() {
             s = strcat(s, chr2str(c));
         }
         if (s == "") JSON_FAIL("expected int");
-        int i = stof(s);
-        LOG_INFOF(">> int (%d)\n", i);
+        if (ftos(stof(s)) != s) JSON_FAIL("expected int");
+        bufstr_add(_json_buffer, s, 0);
         JSON_END();
     }
 
-bool json_parse(string in) {
+int json_parse(string in) {
     // TODO: remove insignificant whitespace
     STRING_ITERATOR_SET(_json, in, 0);
-    return _json_parse_object();
+    _json_buffer = buf_create();
+    bool ret = _json_parse_object();
+    if (!ret) {
+        buf_del(_json_buffer);
+        _json_buffer = -1;
+    }
+    return _json_buffer;
 }
 
 #undef JSON_BEGIN
@@ -181,6 +203,12 @@ bool json_parse(string in) {
 
 TEST(json, Parse)
 {
-    EXPECT_EQ(true, json_parse("{\"string\":\"string\",\"int\":123,\"bool\":true,\"null\":null,\"obj\":{\"arr\":[1,2,3]}}"));
+    string s = "{\"m_string\":\"string\",\"m_int\":123,\"m_bool\":true,\"m_null\":null,\"m_obj\":{},\"m_arr\":[]}";
+    print(s, "\n");
+    int buf = json_parse(s);
+    EXPECT_NE(-1, buf);
+    for (int i = 0, n = buf_getsize(buf); i < n; ++i) {
+        print(bufstr_get(buf, i), "\n");
+    }
 	SUCCEED();
 }
