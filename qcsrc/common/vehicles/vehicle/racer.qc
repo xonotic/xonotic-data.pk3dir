@@ -31,6 +31,8 @@ REGISTER_VEHICLE(RACER, NEW(Racer));
 
 bool autocvar_g_vehicle_racer = true;
 
+float autocvar_g_vehicle_racer_thinkrate = 0.05; // TODO: any higher causes it to sink in liquids
+
 float autocvar_g_vehicle_racer_speed_afterburn = 3000;
 // energy consumed per second
 float autocvar_g_vehicle_racer_afterburn_cost = 100;
@@ -182,7 +184,9 @@ bool racer_frame(entity this)
 
 	vehicles_frame(vehic, this);
 
-	if(pointcontents(vehic.origin) != CONTENT_WATER)
+	traceline(vehic.origin, vehic.origin + '0 0 1', MOVE_NOMONSTERS, this);
+	int cont = trace_dpstartcontents;
+	if(cont & DPCONTENTS_WATER)
 		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
@@ -195,7 +199,11 @@ bool racer_frame(entity this)
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	crosshair_trace(this);
+	if(time >= vehic.vehicle_last_trace)
+	{
+		crosshair_trace(this);
+		vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
+	}
 
 	vehic.angles_x *= -1;
 
@@ -219,10 +227,9 @@ bool racer_frame(entity this)
 	vector df = vehic.velocity * -autocvar_g_vehicle_racer_friction;
 	//vehic.velocity_z = ftmp;
 
-	int cont = pointcontents(vehic.origin);
 	if(this.movement)
 	{
-		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+		if(cont & DPCONTENTS_LIQUIDSMASK)
 		{
 			if(this.movement_x) { df += v_forward * ((this.movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
 			if(this.movement_y) { df += v_right * ((this.movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
@@ -264,7 +271,7 @@ bool racer_frame(entity this)
 
 		vehic.wait = time;
 
-		if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+		if(cont & DPCONTENTS_LIQUIDSMASK)
 		{
 			vehic.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * PHYS_INPUT_TIMELENGTH;
 			df += (v_forward * autocvar_g_vehicle_racer_waterburn_speed);
@@ -298,7 +305,7 @@ bool racer_frame(entity this)
 		sound (vehic.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
 	}
 
-	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+	if(cont & DPCONTENTS_LIQUIDSMASK)
 		vehic.racer_watertime = time;
 
 	float dforce = autocvar_g_vehicle_racer_downforce;
@@ -333,6 +340,7 @@ bool racer_frame(entity this)
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
+		if(vehic.vehicle_last_trace == time + autocvar_g_vehicle_racer_thinkrate)
 		vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
 						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
 						 autocvar_g_vehicle_racer_rocket_locked_time);
@@ -400,35 +408,32 @@ bool racer_frame(entity this)
 
 void racer_think()
 {SELFPARAM();
-	self.nextthink = time;
+	this.nextthink = time + autocvar_g_vehicle_racer_thinkrate;
 
-	float pushdeltatime = time - self.lastpushtime;
-	if (pushdeltatime > 0.15) pushdeltatime = 0;
-	self.lastpushtime = time;
-	if(!pushdeltatime) return;
+	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NOMONSTERS, this);
 
-	tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NOMONSTERS, self);
-
-	vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
+	vector df = this.velocity * -autocvar_g_vehicle_racer_friction;
 	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
 
 	float forced = autocvar_g_vehicle_racer_upforcedamper;
 
-	int cont = pointcontents(self.origin - '0 0 64');
-	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+	//int cont = pointcontents(self.origin - '0 0 64');
+	traceline(this.origin - '0 0 64', this.origin - '0 0 64', MOVE_NOMONSTERS, this);
+	//if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+	if(trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)
 	{
 		forced = autocvar_g_vehicle_racer_water_upforcedamper;
-		self.velocity_z += 200;
+		this.velocity_z += 200;
 	}
 
-	self.velocity += df * pushdeltatime;
-	if(self.velocity_z > 0)
-		self.velocity_z *= 1 - forced * pushdeltatime;
+	this.velocity += df * autocvar_g_vehicle_racer_thinkrate;
+	if(this.velocity_z > 0)
+		this.velocity_z *= 1 - forced * autocvar_g_vehicle_racer_thinkrate;
 
-	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
-	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
+	this.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * autocvar_g_vehicle_racer_thinkrate);
+	this.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * autocvar_g_vehicle_racer_thinkrate);
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void racer_exit(float eject)
