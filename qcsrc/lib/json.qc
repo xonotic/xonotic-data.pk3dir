@@ -258,6 +258,19 @@ int json_parse(string in, bool() func) {
     return _json_buffer;
 }
 
+string json_get(int buf, string key)
+{
+    for (int i = 1, n = buf_getsize(buf); i < n; i += 2) {
+        if (bufstr_get(buf, i) == key) return bufstr_get(buf, i + 1);
+    }
+    return string_null;
+}
+
+void json_del(int buf)
+{
+    buf_del(buf);
+}
+
 #undef JSON_BEGIN
 #undef JSON_FAIL
 #undef JSON_END
@@ -277,5 +290,5 @@ TEST(json, Parse)
     for (int i = 0, n = buf_getsize(buf); i < n; ++i) {
         print(bufstr_get(buf, i), "\n");
     }
-	SUCCEED();
+    SUCCEED();
 }
