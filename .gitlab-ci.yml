@@ -17,9 +17,14 @@ test_sv_game:
     - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
     - cd ..
 
+    - mkdir -p data/maps
     - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
+    - wget -O data/maps/g-23.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.mapinfo
+    - wget -O data/maps/g-23.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints
+    - wget -O data/maps/g-23.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.cache
+    - wget -O data/maps/g-23.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.hardwired
     - make
-    - EXPECT=07fdfd9a19025920a599995730eb2a78
+    - EXPECT=aee47a6a7952ac3ed4d937512b58d152
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
