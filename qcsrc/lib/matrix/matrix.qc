@@ -5,6 +5,7 @@
 void MX_Nick_(entity fh, entity pass, int status);
 void MX_Nick(string name)
 {
+    if (!matrix_access_token) return;
     entity pass = new_pure(mx);
     pass.message = name;
     url_single_fopen(
@@ -32,6 +33,7 @@ void MX_Nick_(entity fh, entity pass, int status)
 void MX_Messages_(entity fh, entity pass, int status);
 void MX_Messages(string from)
 {
+    if (!matrix_access_token) return;
     string s = sprintf("%s/_matrix/client/r0/events?room_id=%s&limit=50&timeout=30000&from=%s&access_token=%s", autocvar_matrix_server, matrix_room, from, matrix_access_token);
     url_single_fopen(
         s,
@@ -67,6 +69,7 @@ void MX_Messages_(entity fh, entity pass, int status)
 void MX_Sync_(entity fh, entity pass, int status);
 void MX_Sync(string since)
 {
+    if (!matrix_access_token) return;
     string s = strcat(autocvar_matrix_server, "/_matrix/client/r0/sync?");
     if (since) {
         s = strcat(s,
@@ -111,6 +114,7 @@ void MX_Sync_(entity fh, entity pass, int status)
 void MX_JLF_(entity fh, entity pass, int status);
 void MX_Join(string room)
 {
+    if (!matrix_access_token) return;
     url_single_fopen(
         sprintf("%s/_matrix/client/r0/rooms/%s/join?access_token=%s", autocvar_matrix_server, matrix_room, matrix_access_token),
         FILE_WRITE,
@@ -120,6 +124,7 @@ void MX_Join(string room)
 }
 void MX_Leave(string room)
 {
+    if (!matrix_access_token) return;
     url_single_fopen(
         sprintf("%s/_matrix/client/r0/rooms/%s/leave?access_token=%s", autocvar_matrix_server, matrix_room, matrix_access_token),
         FILE_WRITE,
@@ -129,6 +134,7 @@ void MX_Leave(string room)
 }
 void MX_Forget(string room)
 {
+    if (!matrix_access_token) return;
     url_single_fopen(
         sprintf("%s/_matrix/client/r0/rooms/%s/forget?access_token=%s", autocvar_matrix_server, matrix_room, matrix_access_token),
         FILE_WRITE,
@@ -152,6 +158,7 @@ void MX_JLF_(entity fh, entity pass, int status)
 void MX_Typing_(entity fh, entity pass, int status);
 void MX_Typing(bool state)
 {
+    if (!matrix_access_token) return;
     entity pass = new_pure(mx);
     pass.message = state ? "true" : "false";
     url_single_fopen(
@@ -179,6 +186,7 @@ void MX_Typing_(entity fh, entity pass, int status)
 void MX_Say_(entity fh, entity pass, int status);
 void MX_Say(string body)
 {
+    if (!matrix_access_token) return;
     static int txnid;
     entity pass = new_pure(mx);
     pass.message = strzone(body);
