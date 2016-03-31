@@ -933,15 +933,14 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 			dedicated_print(msgstr); // send to server console too
 			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
 		}
-		else {
-            if (sourcemsgstr != msgstr) { // trimmed/server fixed message, sent to all players
+		else
+		{
+            if (source) {
                 sprint(source, sourcemsgstr);
                 dedicated_print(msgstr); // send to server console too
-                FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
-            } else { // entirely normal message, sent to all players -- bprint sends to server console too.
-                bprint(msgstr);
+                MX_Say(strcat(playername(source), "^7: ", msgin));
             }
-            if (source) MX_Say(strcat(playername(source), "^7: ", msgin));
+            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
         }
 	}
 
