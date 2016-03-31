@@ -857,8 +857,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 		sourcecmsgstr = cmsgstr;
 	}
 
-	if(!privatesay)
-	if (!IS_PLAYER(source))
+	if (!privatesay && source && !IS_PLAYER(source))
 	{
 		if (!intermission_running)
 			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
