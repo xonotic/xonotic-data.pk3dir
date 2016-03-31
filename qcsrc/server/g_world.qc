@@ -584,9 +584,8 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+    bool wantrestart = false;
 	{
-		bool wantrestart = false;
-
 		if (!server_is_dedicated)
 		{
 			// force unloading of server pk3 files when starting a listen server
@@ -867,7 +866,7 @@ spawnfunc(worldspawn)
 
 	CheatInit();
 
-	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
+	if (!wantrestart) localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
