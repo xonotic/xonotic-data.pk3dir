@@ -103,3 +103,5 @@ void    isnt_bool(   float this) { print(ftos(this)); }
 #include "urllib.qc"
 #include "vector.qh"
 #include "yenc.qh"
+
+#include "matrix/_mod.inc"

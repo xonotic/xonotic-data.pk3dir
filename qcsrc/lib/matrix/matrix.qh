@@ -1,0 +1,17 @@
+#pragma once
+
+string autocvar_matrix_server = "http://matrix.org";
+string matrix_user;
+string matrix_access_token;
+string matrix_room;
+
+void MX_Messages(string from);
+void MX_Nick(string name);
+void MX_Join(string room);
+void MX_Sync(string since);
+void MX_Typing(bool state);
+void MX_Say(string body);
+void MX_Leave(string room);
+void MX_Forget(string room);
+
+var void(int buf, string ancestor) MX_Handle;

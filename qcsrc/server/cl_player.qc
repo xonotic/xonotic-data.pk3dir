@@ -664,20 +664,14 @@ void MoveToTeam(entity client, int team_colour, int type)
  *   0 = reject
  *  -1 = fake accept
  */
-int Say(entity source, float teamsay, entity privatesay, string msgin, bool floodcontrol)
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
-	float flood;
-	var .float flood_field;
-	float ret;
-	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
-
-	if(!teamsay && !privatesay)
-		if(substring(msgin, 0, 1) == " ")
-			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
+	if (!teamsay && !privatesay) if (substring(msgin, 0, 1) == " ")
+        msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
 	msgin = formatmessage(msgin);
 
+    string colorstr;
 	if (!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
@@ -690,6 +684,11 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 
 	if(intermission_running)
 		teamsay = false;
+
+    if (!source) {
+		colorstr = "";
+		teamsay = false;
+    }
 
 	if(msgin != "")
 		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
@@ -705,18 +704,18 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	}
 	*/
 
-	if(autocvar_g_chat_teamcolors)
-		namestr = playername(source);
-	else
-		namestr = source.netname;
+    string namestr = "";
+    if (source)
+        namestr = autocvar_g_chat_teamcolors ? playername(source) : source.netname;
 
-	if(strdecolorize(namestr) == namestr)
-		colorprefix = "^3";
-	else
-		colorprefix = "^7";
+    string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
-	if(msgin != "")
-	{
+    string msgstr, cmsgstr;
+    string privatemsgprefix = string_null;
+    int privatemsgprefixlen = 0;
+	if (msgin == "") {
+        msgstr = cmsgstr = "";
+	} else {
 		if(privatesay)
 		{
 			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
@@ -750,23 +749,22 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 				msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
 				msgstr = strcat("\{1}^4* ", "^7", msgin);
 			}
-			else
-				msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
+			else {
+                msgstr = "\{1}";
+                msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
+                msgstr = strcat(msgstr, msgin);
+            }
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 	}
-	else
-	{
-		msgstr = cmsgstr = "";
-	}
 
-	fullmsgstr = msgstr;
-	fullcmsgstr = cmsgstr;
+	string fullmsgstr = msgstr;
+	string fullcmsgstr = cmsgstr;
 
 	// FLOOD CONTROL
-	flood = 0;
-	flood_field = floodcontrol_chat;
+	int flood = 0;
+	var .float flood_field = floodcontrol_chat;
 	if(floodcontrol)
 	{
 		float flood_spl;
@@ -838,6 +836,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 			source.(flood_field) = flood = 0;
 	}
 
+    string sourcemsgstr, sourcecmsgstr;
 	if(flood == 2) // cannot happen for empty msgstr
 	{
 		if(autocvar_g_chat_flood_notify_flooder)
@@ -873,6 +872,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	if(privatesay)
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
+    int ret;
 	if(source.muted)
 	{
 		// always fake the message
@@ -913,7 +913,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, LAMBDA(sprint(it, msgstr)));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, sprint(it, msgstr));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -921,26 +921,28 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, {
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
-			));
+			});
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
+			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
 		}
-		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
-		{
-			sprint(source, sourcemsgstr);
-			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
-		}
-		else
-			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.
+		else {
+            if (sourcemsgstr != msgstr) { // trimmed/server fixed message, sent to all players
+                sprint(source, sourcemsgstr);
+                dedicated_print(msgstr); // send to server console too
+                FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
+            } else { // entirely normal message, sent to all players -- bprint sends to server console too.
+                bprint(msgstr);
+            }
+            if (source) MX_Say(strcat(playername(source), "^7: ", msgin));
+        }
 	}
 
 	return ret;

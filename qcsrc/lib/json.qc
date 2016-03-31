@@ -78,7 +78,7 @@ bool _json_parse_array() {
         int it = bufstr_add(_json_buffer, key, 0);
         bool ret = false; WITH(string, _json_ns, key, ret = _json_parse_value());
         if (!ret) {
-            bufstr_set(_json_buffer, it, string_null);
+            bufstr_free(_json_buffer, it);
             if (required) JSON_FAIL("expected value"); else break;
         }
         bufstr_set(_json_buffer, len, ftos(n + 1));
@@ -157,6 +157,7 @@ bool _json_parse_string(bool add) {
                 case 'n': esc = "\n"; break;
                 case 't': esc = "\t"; break;
                 case 'u': esc = "\\u"; break; // TODO
+                case '/': esc = "/"; break;
             }
             s = strcat(s, esc);
         } else {
@@ -271,6 +272,13 @@ void json_del(int buf)
     buf_del(buf);
 }
 
+void json_dump(int buf)
+{
+    for (int i = 0, n = buf_getsize(buf); i < n; ++i) {
+        print(bufstr_get(buf, i), "\n");
+    }
+}
+
 #undef JSON_BEGIN
 #undef JSON_FAIL
 #undef JSON_END
@@ -287,8 +295,6 @@ TEST(json, Parse)
     print(s, "\n");
     int buf = json_parse(s, _json_parse_object);
     EXPECT_NE(-1, buf);
-    for (int i = 0, n = buf_getsize(buf); i < n; ++i) {
-        print(bufstr_get(buf, i), "\n");
-    }
+    json_dump(buf);
     SUCCEED();
 }
