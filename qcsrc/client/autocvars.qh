@@ -19,6 +19,7 @@ float autocvar_camera_speed_chase;
 float autocvar_camera_speed_free;
 float autocvar_camera_speed_roll;
 int autocvar_chase_active;
+float autocvar_camera_spectator;
 int autocvar_cl_allow_uid2name;
 string autocvar_cl_announcer;
 float autocvar_cl_announcer_antispam = 2;

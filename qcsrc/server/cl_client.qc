@@ -1598,7 +1598,7 @@ void SpectateCopy(entity this, entity spectatee)
 	this.angles = spectatee.v_angle;
 	STAT(FROZEN, this) = STAT(FROZEN, spectatee);
 	this.revive_progress = spectatee.revive_progress;
-	if(!PHYS_INPUT_BUTTON_USE(this))
+	if(!PHYS_INPUT_BUTTON_USE(this) && this.cvar_camera_spectator != 2)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);

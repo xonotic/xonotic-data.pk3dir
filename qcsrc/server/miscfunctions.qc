@@ -395,6 +395,8 @@ REPLICATE(cvar_cl_movement_track_canjump, bool, "cl_movement_track_canjump");
 
 REPLICATE(cvar_cl_newusekeysupported, bool, "cl_newusekeysupported");
 
+REPLICATE(cvar_camera_spectator, int, "camera_spectator");
+
 REPLICATE(cvar_cl_noantilag, bool, "cl_noantilag");
 
 REPLICATE(cvar_cl_physics, string, "cl_physics");

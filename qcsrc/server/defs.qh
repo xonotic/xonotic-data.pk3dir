@@ -186,6 +186,7 @@ float default_weapon_alpha;
 .float cvar_cl_jetpack_jump;
 .float cvar_cl_movement_track_canjump = _STAT(MOVEVARS_CL_TRACK_CANJUMP);
 .float cvar_cl_newusekeysupported;
+.float cvar_camera_spectator;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;

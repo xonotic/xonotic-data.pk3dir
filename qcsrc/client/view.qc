@@ -1353,6 +1353,8 @@ float oldr_novis;
 float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
+int camera_spectator_prev;
+int camera_spectator_change_allowed;
 void cl_notice_run();
 float prev_myteam;
 int lasthud;
@@ -1439,9 +1441,50 @@ void CSQC_UpdateView(float w, float h)
 		button_zoom = false;
 	}
 
+	if(!isdemo())
+	if(spectatee_status > 0 && button_zoom)
+	{
+		// without camera_spectator_change_allowed camera_spectator_change would be
+		// called twice since -zoom takes another frame to reset the zoom button
+		if(camera_spectator_change_allowed)
+		{
+			localcmd("camera_spectator_change\n");
+			camera_spectator_change_allowed = false;
+			localcmd("-zoom\n");
+			button_zoom = false;
+		}
+		else
+			camera_spectator_change_allowed = true; // allow change in the next frame
+	}
+
+	if(camera_spectator_prev != autocvar_camera_spectator)
+	{
+		localcmd("cl_cmd sendcvar camera_spectator\n");
+		camera_spectator_prev = autocvar_camera_spectator;
+	}
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
+		if(autocvar_camera_spectator)
+		{
+			if(spectatee_status > 0)
+			{
+				if(!autocvar_chase_active)
+				{
+					cvar_set("chase_active", "-2");
+					goto skip_eventchase_death;
+				}
+			}
+			else if(autocvar_chase_active == -2)
+				cvar_set("chase_active", "0");
+
+			if(autocvar_chase_active == -2)
+				goto skip_eventchase_death;
+		}
+		else if(autocvar_chase_active == -2)
+			cvar_set("chase_active", "0");
+
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
 		entity gen = world;
@@ -1551,6 +1594,8 @@ void CSQC_UpdateView(float w, float h)
 		cvar_settemp("chase_active", "-1");
 		eventchase_current_distance = 0;
 	}
+
+	LABEL(skip_eventchase_death);
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
 	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1 || QuickMenu_IsOpened())))

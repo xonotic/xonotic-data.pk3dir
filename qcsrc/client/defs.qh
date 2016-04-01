@@ -71,6 +71,7 @@ float nb_pb_period;
 
 // Spectating
 float spectatee_status;
+float spectatee_status_prev;
 
 // short mapname
 string shortmapname;
