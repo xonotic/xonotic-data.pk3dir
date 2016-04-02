@@ -60,7 +60,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 		{
 			panel = hud_panels_from(i);
 
-			HUD_Write_PanelCvar("");
 			HUD_Write_PanelCvar("_pos");
 			HUD_Write_PanelCvar("_size");
 			HUD_Write_PanelCvar("_bg");
