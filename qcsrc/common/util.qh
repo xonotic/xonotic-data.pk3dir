@@ -273,10 +273,6 @@ string CCR(string input);
 vector animfixfps(entity e, vector a, vector b);
 #endif
 
-#ifdef SVQC
-void dedicated_print(string input);
-#endif
-
 #ifndef MENUQC
 const float CNT_NORMAL = 1;
 const float CNT_GAMESTART = 2;

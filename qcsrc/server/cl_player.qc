@@ -657,6 +657,12 @@ void MoveToTeam(entity client, int team_colour, int type)
 	LogTeamchange(client.playerid, client.team, type);
 }
 
+/** print(), but only print if the server is not local */
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:
