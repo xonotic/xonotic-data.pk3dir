@@ -26,6 +26,8 @@ float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
 float autocvar_g_vehicles_tag_damagerate = 5;
 float autocvar_g_vehicles_weapon_damagerate = 1;
 
+.float vehicle_last_trace;
+
 // flags:
 .int vehicle_flags;
 

@@ -482,7 +482,7 @@ void invasion_ScoreRules(float inv_teams)
 	ScoreRules_basics_end();
 }
 
-void invasion_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	if(autocvar_g_invasion_teams)
 		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);

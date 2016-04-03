@@ -49,8 +49,8 @@ void misc_laser_aim()
 	}
 }
 
-void misc_laser_init()
-{SELFPARAM();
+void misc_laser_init(entity this)
+{
 	if(self.target != "")
 		self.enemy = find(world, targetname, self.target);
 }

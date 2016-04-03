@@ -104,8 +104,8 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 		break
 
 float num_autoscreenshot;
-void info_autoscreenshot_findtarget()
-{SELFPARAM();
+void info_autoscreenshot_findtarget(entity this)
+{
 	entity e;
 	e = find(world, targetname, self.target);
 	if(!e)
@@ -696,7 +696,7 @@ float CheatCommand(float argc)
 			setself(new(cheattriggerteleport));
 			setorigin(self, self.origin);
 			self.target = argv(1);
-			teleport_findtarget();
+			teleport_findtarget(self);
 			if(!wasfreed(self))
 			{
 				Simple_TeleportPlayer(self, this);

@@ -32,6 +32,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	w = new(waypoint);
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	w.wpflags = f;
+	w.solid = SOLID_TRIGGER;
 	setorigin(w, (m1 + m2) * 0.5);
 	setsize(w, m1 - w.origin, m2 - w.origin);
 	if (vlen(w.size) > 0)

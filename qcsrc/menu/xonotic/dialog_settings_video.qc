@@ -86,6 +86,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, _("4x"), "4");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "r_viewfbo", 0, 0);
+			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
 			setDependent(e, "vid_samples", 1, 1);
@@ -154,6 +155,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 			_("Make the CPU wait for the GPU to finish each frame, can help with some strange input or video lag on some machines (default: disabled)")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
+			e.applyButton = videoApplyButton;
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox_T(0, "v_glslgamma", _("Use GLSL to handle color control"),

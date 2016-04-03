@@ -414,8 +414,8 @@ void ons_Link_CheckUpdate()
 	self.nextthink = time;
 }
 
-void ons_DelayedLinkSetup()
-{SELFPARAM();
+void ons_DelayedLinkSetup(entity this)
+{
 	self.goalentity = find(world, targetname, self.target);
 	self.enemy = find(world, targetname, self.target2);
 	if(!self.goalentity) { objerror("can not find target\n"); }
@@ -855,8 +855,8 @@ void ons_ControlPoint_Reset(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void ons_DelayedControlPoint_Setup()
-{SELFPARAM();
+void ons_DelayedControlPoint_Setup(entity this)
+{
 	onslaught_updatelinks();
 
 	// captureshield setup
@@ -1081,8 +1081,8 @@ void ons_GeneratorReset(entity this)
 	onslaught_updatelinks();
 }
 
-void ons_DelayedGeneratorSetup()
-{SELFPARAM();
+void ons_DelayedGeneratorSetup(entity this)
+{
 	// bot waypoints
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
@@ -1951,8 +1951,8 @@ MUTATOR_HOOKFUNCTION(ons, MonsterMove)
 	return false;
 }
 
-void ons_MonsterSpawn_Delayed()
-{SELFPARAM();
+void ons_MonsterSpawn_Delayed(entity this)
+{
 	entity e, own = self.owner;
 
 	if(!own) { remove(self); return; }
@@ -1981,8 +1981,8 @@ MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
 	return false;
 }
 
-void ons_TurretSpawn_Delayed()
-{SELFPARAM();
+void ons_TurretSpawn_Delayed(entity this)
+{
 	entity e, own = self.owner;
 
 	if(!own) { remove(self); return; }
@@ -2253,7 +2253,7 @@ void ons_ScoreRules()
 	ScoreRules_basics_end();
 }
 
-void ons_DelayedInit() // Do this check with a delay so we can wait for teams to be set up
+void ons_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up
 {
 	ons_ScoreRules();
 

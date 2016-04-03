@@ -247,9 +247,8 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	return e;
 }
 
-void teleport_findtarget()
+void teleport_findtarget(entity this)
 {
-    SELFPARAM();
 	int n = 0;
 	entity e;
 	for(e = world; (e = find(e, targetname, self.target)); )

@@ -681,7 +681,7 @@ void dom_spawnteams(int teams)
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, SND_Null, "", "");
 }
 
-void dom_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+void dom_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
