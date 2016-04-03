@@ -14,6 +14,12 @@ entity makeXonoticServerListTab()
 	me.configureDialog(me);
 	return me;
 }
+
+void XonoticServerListTab_refresh(entity this, entity slist)
+{
+    slist.refreshServerList(slist, REFRESHSERVERLIST_RESET);
+}
+
 void XonoticServerListTab_fill(entity me)
 {
 	entity e, slist;
@@ -21,13 +27,13 @@ void XonoticServerListTab_fill(entity me)
 	slist  = makeXonoticServerList();
 
 	me.gotoRC(me, 0.5, 0);
-		me.TD(me, 1, 0.6, e = makeXonoticTextLabel(1, _("Filter:")));
-		me.TD(me, 1, 2.8, e = makeXonoticInputBox(0, string_null));
+		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(1, _("Filter:")));
+		me.TD(me, 1, 2, e = makeXonoticInputBox(0, string_null));
 			e.onChange = ServerList_Filter_Change;
 			e.onChangeEntity = slist;
 			slist.controlledTextbox = e;
 
-	me.gotoRC(me, 0.5, 3.6);
+	me.gotoRC(me, 0.5, 2.6);
 		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "menu_slist_categories", ZCTX(_("SRVS^Categories"))));
 			e.onClickEntity = slist;
 			e.onClick = ServerList_Categories_Click;
@@ -43,6 +49,9 @@ void XonoticServerListTab_fill(entity me)
 			e.onClick = ServerList_ShowFull_Click;
 		me.TD(me, 1, 0.6, e = makeXonoticCheckBox_T(0, "net_slist_pause", _("Pause"),
 			_("Pause updating the server list to prevent servers from \"jumping around\"")));
+		me.TD(me, 1, 1, e = makeXonoticButton_T(_("Refresh"), '0 0 0', _("Reload the server list")));
+			e.onClick = XonoticServerListTab_refresh;
+			e.onClickEntity = slist;
 
 	me.gotoRC(me, 2, 0);
 		me.TD(me, 1, 1, slist.sortButton1 = makeXonoticButton(string_null, '0 0 0'));
