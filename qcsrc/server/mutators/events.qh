@@ -759,11 +759,11 @@ bool want_mutatorblocked;
 MUTATOR_HOOKABLE(WantWeapon, EV_WantWeapon);
 
 #define EV_AddPlayerScore(i, o) \
-    /**/ i(int, score_field) \
+    /**/ i(entity, score_field) \
     /**/ i(float, ret_float) \
     /**/ o(float, ret_float) \
     /**/
-int score_field;
+PlayerScoreField score_field;
 MUTATOR_HOOKABLE(AddPlayerScore, EV_AddPlayerScore);
 
 #define EV_GetPlayerStatus(i, o) \

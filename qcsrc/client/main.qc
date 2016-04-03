@@ -399,23 +399,21 @@ void Ent_RemovePlayerScore(entity this)
 	if(this.owner) {
 		SetTeam(this.owner, -1);
 		this.owner.gotscores = 0;
-		for(int i = 0; i < MAX_SCORE; ++i) {
-			this.owner.(scores[i]) = 0; // clear all scores
-		}
+		FOREACH(Scores, true, {
+			this.owner.(scores(it)) = 0; // clear all scores
+		});
 	}
 }
 
 NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 {
 	make_pure(this);
-	int i, n;
-	bool isNew;
 	entity o;
 
 	// damnit -.- don't want to go change every single .sv_entnum in hud.qc AGAIN
 	// (no I've never heard of M-x replace-string, sed, or anything like that)
-	isNew = !this.owner; // workaround for DP bug
-	n = ReadByte()-1;
+	bool isNew = !this.owner; // workaround for DP bug
+	int n = ReadByte()-1;
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(!isNew && n != this.sv_entnum)
@@ -443,22 +441,18 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	//playerchecker will do this for us later, if it has not already done so
 
     int sf, lf;
-#if MAX_SCORE <= 8
-	sf = ReadByte();
-	lf = ReadByte();
-#else
 	sf = ReadShort();
 	lf = ReadShort();
-#endif
-    int p;
-	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(sf & p)
+	FOREACH(Scores, true, {
+        int p = 1 << (i % 16);
+		if (sf & p)
 		{
-			if(lf & p)
-				o.(scores[i]) = ReadInt24_t();
+			if (lf & p)
+				o.(scores(it)) = ReadInt24_t();
 			else
-				o.(scores[i]) = ReadChar();
+				o.(scores(it)) = ReadChar();
 		}
+    });
 
 	return = true;
 
@@ -490,9 +484,9 @@ NET_HANDLE(ENT_CLIENT_TEAMSCORES, bool isnew)
 		if(sf & p)
 		{
 			if(lf & p)
-				o.(teamscores[i]) = ReadInt24_t();
+				o.(teamscores(i)) = ReadInt24_t();
 			else
-				o.(teamscores[i]) = ReadChar();
+				o.(teamscores(i)) = ReadChar();
 		}
 
 	return = true;
@@ -952,17 +946,16 @@ NET_HANDLE(ENT_CLIENT_SCORES_INFO, bool isnew)
 	make_pure(this);
 	gametype = ReadInt24_t();
 	HUD_ModIcons_SetFunc();
-	for (int i = 0; i < MAX_SCORE; ++i)
-	{
-		if (scores_label[i]) strunzone(scores_label[i]);
-		scores_label[i] = strzone(ReadString());
-		scores_flags[i] = ReadByte();
-	}
+	FOREACH(Scores, true, {
+		if (scores_label(it)) strunzone(scores_label(it));
+		scores_label(it) = strzone(ReadString());
+		scores_flags(it) = ReadByte();
+	});
 	for (int i = 0; i < MAX_TEAMSCORE; ++i)
 	{
-		if (teamscores_label[i]) strunzone(teamscores_label[i]);
-		teamscores_label[i] = strzone(ReadString());
-		teamscores_flags[i] = ReadByte();
+		if (teamscores_label(i)) strunzone(teamscores_label(i));
+		teamscores_label(i) = strzone(ReadString());
+		teamscores_flags(i) = ReadByte();
 	}
 	return = true;
 	HUD_InitScores();

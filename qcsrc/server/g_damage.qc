@@ -25,7 +25,7 @@
 #include "../lib/csqcmodel/sv_model.qh"
 #include "../lib/warpzone/common.qh"
 
-void UpdateFrags(entity player, float f)
+void UpdateFrags(entity player, int f)
 {
 	PlayerTeamScore_AddScore(player, f);
 }

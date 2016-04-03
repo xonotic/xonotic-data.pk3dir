@@ -72,21 +72,21 @@ void HUD_InitScores()
 {
 	int i, f;
 
-	ps_primary = ps_secondary = ts_primary = ts_secondary = -1;
-	for(i = 0; i < MAX_SCORE; ++i)
-	{
-		f = (scores_flags[i] & SFL_SORT_PRIO_MASK);
+	ps_primary = ps_secondary = NULL;
+	ts_primary = ts_secondary = -1;
+	FOREACH(Scores, true, {
+		f = (scores_flags(it) & SFL_SORT_PRIO_MASK);
 		if(f == SFL_SORT_PRIO_PRIMARY)
-			ps_primary = i;
+			ps_primary = it;
 		if(f == SFL_SORT_PRIO_SECONDARY)
-			ps_secondary = i;
-	}
-	if(ps_secondary == -1)
+			ps_secondary = it;
+	});
+	if(ps_secondary == NULL)
 		ps_secondary = ps_primary;
 
 	for(i = 0; i < MAX_TEAMSCORE; ++i)
 	{
-		f = (teamscores_flags[i] & SFL_SORT_PRIO_MASK);
+		f = (teamscores_flags(i) & SFL_SORT_PRIO_MASK);
 		if(f == SFL_SORT_PRIO_PRIMARY)
 			ts_primary = i;
 		if(f == SFL_SORT_PRIO_SECONDARY)
@@ -170,21 +170,18 @@ float HUD_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	r = HUD_CompareScore(left.scores[ps_primary], right.scores[ps_primary], scores_flags[ps_primary]);
+	r = HUD_CompareScore(left.scores(ps_primary), right.scores(ps_primary), scores_flags(ps_primary));
 	if (r >= 0)
 		return r;
 
-	r = HUD_CompareScore(left.scores[ps_secondary], right.scores[ps_secondary], scores_flags[ps_secondary]);
+	r = HUD_CompareScore(left.scores(ps_secondary), right.scores(ps_secondary), scores_flags(ps_secondary));
 	if (r >= 0)
 		return r;
 
-	int i;
-	for(i = 0; i < MAX_SCORE; ++i)
-	{
-		r = HUD_CompareScore(left.scores[i], right.scores[i], scores_flags[i]);
-		if (r >= 0)
-			return r;
-	}
+	FOREACH(Scores, true, {
+		r = HUD_CompareScore(left.scores(it), right.scores(it), scores_flags(it));
+		if (r >= 0) return r;
+	});
 
 	if (left.sv_entnum < right.sv_entnum)
 		return true;
@@ -213,17 +210,17 @@ float HUD_CompareTeamScores(entity left, entity right)
 	if(right.team == NUM_SPECTATOR)
 		return 0;
 
-	r = HUD_CompareScore(left.teamscores[ts_primary], right.teamscores[ts_primary], teamscores_flags[ts_primary]);
+	r = HUD_CompareScore(left.teamscores(ts_primary), right.teamscores(ts_primary), teamscores_flags(ts_primary));
 	if (r >= 0)
 		return r;
 
-	r = HUD_CompareScore(left.teamscores[ts_secondary], right.teamscores[ts_secondary], teamscores_flags[ts_secondary]);
+	r = HUD_CompareScore(left.teamscores(ts_secondary), right.teamscores(ts_secondary), teamscores_flags(ts_secondary));
 	if (r >= 0)
 		return r;
 
-	for(i = 0; i < MAX_SCORE; ++i)
+	for(i = 0; i < MAX_TEAMSCORE; ++i)
 	{
-		r = HUD_CompareScore(left.teamscores[i], right.teamscores[i], teamscores_flags[i]);
+		r = HUD_CompareScore(left.teamscores(i), right.teamscores(i), teamscores_flags(i));
 		if (r >= 0)
 			return r;
 	}
@@ -325,7 +322,7 @@ void Cmd_HUD_Help()
 void Cmd_HUD_SetFields(int argc)
 {
     TC(int, argc);
-	int i, j, slash;
+	int i, slash;
 	string str, pattern;
 	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
@@ -335,9 +332,9 @@ void Cmd_HUD_SetFields(int argc)
 		// set up a temporary scoreboard layout
 		// no layout can be properly set up until score_info data haven't been received
 		argc = tokenizebyseparator("0 1 ping pl name | score", " ");
-		ps_primary = 0;
-		scores_label[ps_primary] = strzone("score");
-		scores_flags[ps_primary] = SFL_ALLOW_HIDE;
+		ps_primary = SP_SCORE;
+		scores_label(ps_primary) = strzone("score");
+		scores_flags(ps_primary) = SFL_ALLOW_HIDE;
 	}
 
 	// TODO: re enable with gametype dependant cvars?
@@ -355,16 +352,15 @@ void Cmd_HUD_SetFields(int argc)
 		{
 			string s;
 			s = "ping pl name |";
-			for(i = 0; i < MAX_SCORE; ++i)
-			{
-				if(i != ps_primary)
-				if(i != ps_secondary)
-				if(scores_label[i] != "")
-					s = strcat(s, " ", scores_label[i]);
-			}
+			FOREACH(Scores, true, {
+				if(it != ps_primary)
+				if(it != ps_secondary)
+				if(scores_label(it) != "")
+					s = strcat(s, " ", scores_label(it));
+			});
 			if(ps_secondary != ps_primary)
-				s = strcat(s, " ", scores_label[ps_secondary]);
-			s = strcat(s, " ", scores_label[ps_primary]);
+				s = strcat(s, " ", scores_label(ps_secondary));
+			s = strcat(s, " ", scores_label(ps_primary));
 			argc = tokenizebyseparator(strcat("0 1 ", s), " ");
 		}
 	}
@@ -401,6 +397,7 @@ void Cmd_HUD_SetFields(int argc)
 		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 		str = strtolower(str);
 
+        PlayerScoreField j;
 		switch(str)
 		{
 			case "ping": hud_field[hud_num_fields] = SP_PING; break;
@@ -413,9 +410,12 @@ void Cmd_HUD_SetFields(int argc)
 			case "dmgtaken": hud_field[hud_num_fields] = SP_DMGTAKEN; break;
 			default:
 			{
-				for(j = 0; j < MAX_SCORE; ++j)
-					if(str == strtolower(scores_label[j]))
+				FOREACH(Scores, true, {
+					if (str == strtolower(scores_label(it))) {
+					    j = it;
 						goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
+                    }
+                });
 
 LABEL(notfound)
 				if(str == "frags")
@@ -440,9 +440,9 @@ LABEL(found)
 			break;
 	}
 
-	if(scores_flags[ps_primary] & SFL_ALLOW_HIDE)
+	if(scores_flags(ps_primary) & SFL_ALLOW_HIDE)
 		have_primary = 1;
-	if(scores_flags[ps_secondary] & SFL_ALLOW_HIDE)
+	if(scores_flags(ps_secondary) & SFL_ALLOW_HIDE)
 		have_secondary = 1;
 	if(ps_primary == ps_secondary)
 		have_secondary = 1;
@@ -492,20 +492,20 @@ LABEL(found)
 		if(!have_secondary)
 		{
 			strunzone(hud_title[hud_num_fields]);
-			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label[ps_secondary]));
+			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label(ps_secondary)));
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
-			LOG_INFOF("fixed missing field '%s'\n", scores_label[ps_secondary]);
+			LOG_INFOF("fixed missing field '%s'\n", scores_label(ps_secondary));
 		}
 		if(!have_primary)
 		{
 			strunzone(hud_title[hud_num_fields]);
-			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label[ps_primary]));
+			hud_title[hud_num_fields] = strzone(TranslateScoresLabel(scores_label(ps_primary)));
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], false, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
-			LOG_INFOF("fixed missing field '%s'\n", scores_label[ps_primary]);
+			LOG_INFOF("fixed missing field '%s'\n", scores_label(ps_primary));
 		}
 	}
 
@@ -523,9 +523,8 @@ vector hud_field_icon2_rgb;
 float hud_field_icon0_alpha;
 float hud_field_icon1_alpha;
 float hud_field_icon2_alpha;
-string HUD_GetField(entity pl, int field)
+string HUD_GetField(entity pl, PlayerScoreField field)
 {
-    TC(int, field);
 	float tmp, num, denom;
 	int f;
 	string str;
@@ -585,13 +584,13 @@ string HUD_GetField(entity pl, int field)
 			return entcs_GetName(pl.sv_entnum);
 
 		case SP_FRAGS:
-			f = pl.(scores[SP_KILLS]);
-			f -= pl.(scores[SP_SUICIDES]);
+			f = pl.(scores(SP_KILLS));
+			f -= pl.(scores(SP_SUICIDES));
 			return ftos(f);
 
 		case SP_KDRATIO:
-			num = pl.(scores[SP_KILLS]);
-			denom = pl.(scores[SP_DEATHS]);
+			num = pl.(scores(SP_KILLS));
+			denom = pl.(scores(SP_DEATHS));
 
 			if(denom == 0) {
 				hud_field_rgb = '0 1 0';
@@ -604,8 +603,8 @@ string HUD_GetField(entity pl, int field)
 			return str;
 
 		case SP_SUM:
-			f = pl.(scores[SP_KILLS]);
-			f -= pl.(scores[SP_DEATHS]);
+			f = pl.(scores(SP_KILLS));
+			f -= pl.(scores(SP_DEATHS));
 
 			if(f > 0) {
 				hud_field_rgb = '0 1 0';
@@ -617,22 +616,22 @@ string HUD_GetField(entity pl, int field)
 			return ftos(f);
 
 		case SP_DMG:
-			num = pl.(scores[SP_DMG]);
+			num = pl.(scores(SP_DMG));
 			denom = 1000;
 
 			str = sprintf("%.1f k", num/denom);
 			return str;
 
 		case SP_DMGTAKEN:
-			num = pl.(scores[SP_DMGTAKEN]);
+			num = pl.(scores(SP_DMGTAKEN));
 			denom = 1000;
 
 			str = sprintf("%.1f k", num/denom);
 			return str;
 
 		default:
-			tmp = pl.(scores[field]);
-			f = scores_flags[field];
+			tmp = pl.(scores(field));
+			f = scores_flags(field);
 			if(field == ps_primary)
 				hud_field_rgb = '1 1 0';
 			else if(field == ps_secondary)
@@ -651,9 +650,9 @@ float hud_fixscoreboardcolumnwidth_marginlen;
 string HUD_FixScoreboardColumnWidth(int i, string str)
 {
     TC(int, i);
-	float field, f;
+	float f;
 	vector sz;
-	field = hud_field[i];
+	PlayerScoreField field = hud_field[i];
 
 	hud_fixscoreboardcolumnwidth_iconlen = 0;
 
@@ -718,12 +717,10 @@ string HUD_FixScoreboardColumnWidth(int i, string str)
 void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, bool is_self, int pl_number)
 {
     TC(bool, is_self); TC(int, pl_number);
-	vector tmp, rgb;
-	rgb = Team_ColorRGB(pl.team);
+	vector tmp;
+	vector rgb = Team_ColorRGB(pl.team);
 	string str;
-	int field;
-	float is_spec;
-	is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
+	bool is_spec = (entcs_GetTeam(pl.sv_entnum) == NUM_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
 		rgb.x = autocvar_scoreboard_color_bg_r + 0.5;
@@ -742,6 +739,7 @@ void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, bool is_se
 	tmp.y = 0;
 	tmp.z = 0;
 	int i;
+    PlayerScoreField field;
 	for(i = 0; i < hud_num_fields; ++i)
 	{
 		field = hud_field[i];
@@ -1330,12 +1328,12 @@ void HUD_DrawScoreboard()
 
 			draw_beginBoldFont();
 			rgb = Team_ColorRGB(tm.team);
-			str = ftos(tm.(teamscores[ts_primary]));
+			str = ftos(tm.(teamscores(ts_primary)));
 			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
 			if(ts_primary != ts_secondary)
 			{
-				str = ftos(tm.(teamscores[ts_secondary]));
+				str = ftos(tm.(teamscores(ts_secondary)));
 				drawstring(pos + team_score_baseoffset - eX * stringwidth(str, false, hud_fontsize) + eY * hud_fontsize.y * 1.5, str, hud_fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			}
 			draw_endBoldFont();
@@ -1433,17 +1431,17 @@ void HUD_DrawScoreboard()
 				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], fl),
-					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
-					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(teamscores_label[ts_primary])));
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(teamscores_flags(ts_primary), fl),
+					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
+					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(teamscores_label(ts_primary))));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags[ps_primary], fl),
-					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
-					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(scores_label[ps_primary])));
+				str = strcat(str, sprintf(_(" until ^3%s %s^7"), ScoreString(scores_flags(ps_primary), fl),
+					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
+					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(scores_label(ps_primary))));
 			}
 		}
 		if(ll > 0)
@@ -1452,17 +1450,17 @@ void HUD_DrawScoreboard()
 				str = strcat(str, _(" or"));
 			if(teamplay)
 			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags[ts_primary], ll),
-					(teamscores_label[ts_primary] == "score")   ? CTX(_("SCO^points")) :
-					(teamscores_label[ts_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(teamscores_label[ts_primary])));
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(teamscores_flags(ts_primary), ll),
+					(teamscores_label(ts_primary) == "score")   ? CTX(_("SCO^points")) :
+					(teamscores_label(ts_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(teamscores_label(ts_primary))));
 			}
 			else
 			{
-				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags[ps_primary], ll),
-					(scores_label[ps_primary] == "score")   ? CTX(_("SCO^points")) :
-					(scores_label[ps_primary] == "fastest") ? CTX(_("SCO^is beaten")) :
-					TranslateScoresLabel(scores_label[ps_primary])));
+				str = strcat(str, sprintf(_(" until a lead of ^3%s %s^7"), ScoreString(scores_flags(ps_primary), ll),
+					(scores_label(ps_primary) == "score")   ? CTX(_("SCO^points")) :
+					(scores_label(ps_primary) == "fastest") ? CTX(_("SCO^is beaten")) :
+					TranslateScoresLabel(scores_label(ps_primary))));
 			}
 		}
 	}

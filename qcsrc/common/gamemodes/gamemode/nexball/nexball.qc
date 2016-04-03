@@ -56,13 +56,11 @@ float OtherTeam(float t)  //works only if there are two teams on the map!
 }
 
 const float ST_NEXBALL_GOALS = 1;
-const float SP_NEXBALL_GOALS = 4;
-const float SP_NEXBALL_FAULTS = 5;
 void nb_ScoreRules(float teams)
 {
 	ScoreRules_basics(teams, 0, 0, true);
 	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
 }

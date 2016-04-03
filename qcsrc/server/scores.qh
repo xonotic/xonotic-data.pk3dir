@@ -3,8 +3,6 @@
 #include <common/constants.qh>
 
 entity scores_initialized; // non-world when scores labels/rules have been set
-.float scores[MAX_SCORE];
-.float teamscores[MAX_TEAMSCORE];
 .float scoreboard_pos;
 
 /**
@@ -24,7 +22,7 @@ void PlayerScore_Detach(entity player);
  * Means: FIXME make players unable to join the game when not called ClientConnect yet.
  * Returns the new score.
  */
-float PlayerScore_Add(entity player, float scorefield, float score);
+float PlayerScore_Add(entity player, PlayerScoreField scorefield, float score);
 
 /**
  * Initialize the score of this player if needed.
@@ -57,12 +55,12 @@ float TeamScore_GetCompareValue(float t);
  * Adds a score to both the player and the team. Returns the team score if
  * possible, otherwise the player score.
  */
-float PlayerTeamScore_Add(entity player, float pscorefield, float tscorefield, float score);
+float PlayerTeamScore_Add(entity player, PlayerScoreField pscorefield, float tscorefield, float score);
 
 /**
  * Adds to the generic score fields for both the player and the team.
  */
-#define PlayerTeamScore_AddScore(p,s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
+#define PlayerTeamScore_AddScore(p, s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
 
 /**
  * Set the label of a team score item, as well as the scoring flags.
@@ -72,7 +70,7 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags);
 /**
  * Set the label of a player score item, as well as the scoring flags.
  */
-void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags);
+void ScoreInfo_SetLabel_PlayerScore(PlayerScoreField i, string label, float scoreflags);
 
 /**
  * Initialize the scores info for the given number of teams.

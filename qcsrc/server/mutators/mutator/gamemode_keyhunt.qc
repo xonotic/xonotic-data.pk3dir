@@ -138,22 +138,16 @@ float kh_interferemsg_time, kh_interferemsg_team;
 float kh_key_dropped, kh_key_carried;
 
 const float ST_KH_CAPS = 1;
-const float SP_KH_CAPS = 4;
-const float SP_KH_PUSHES = 5;
-const float SP_KH_DESTROYS = 6;
-const float SP_KH_PICKUPS = 7;
-const float SP_KH_KCKILLS = 8;
-const float SP_KH_LOSSES = 9;
 void kh_ScoreRules(float teams)
 {
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	ScoreInfo_SetLabel_TeamScore(  ST_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,      "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,    "pushes",    0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_DESTROYS,  "destroyed", SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,   "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,   "kckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,    "losses",    SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_PUSHES,   "pushes",    0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_DESTROYS, "destroyed", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_PICKUPS,  "pickups",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_KCKILLS,  "kckills",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KH_LOSSES,   "losses",    SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
 }
 

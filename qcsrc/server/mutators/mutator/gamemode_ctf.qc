@@ -233,7 +233,7 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 	if(ctf_captureshield_max_ratio <= 0)
 		return false;
 
-	s = PlayerScore_Add(p, SP_CTF_CAPS, 0);
+	s  = PlayerScore_Add(p, SP_CTF_CAPS,    0);
 	s2 = PlayerScore_Add(p, SP_CTF_PICKUPS, 0);
 	s3 = PlayerScore_Add(p, SP_CTF_RETURNS, 0);
 	s4 = PlayerScore_Add(p, SP_CTF_FCKILLS, 0);
@@ -247,7 +247,7 @@ bool ctf_CaptureShield_CheckStatus(entity p)
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		if(DIFF_TEAM(it, p))
 			continue;
-		se = PlayerScore_Add(it, SP_CTF_CAPS, 0);
+		se  = PlayerScore_Add(it, SP_CTF_CAPS,    0);
 		se2 = PlayerScore_Add(it, SP_CTF_PICKUPS, 0);
 		se3 = PlayerScore_Add(it, SP_CTF_RETURNS, 0);
 		se4 = PlayerScore_Add(it, SP_CTF_FCKILLS, 0);
@@ -2535,12 +2535,12 @@ void ctf_ScoreRules(int teams)
 	CheckAllowedTeams(world);
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME,  "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,    "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME, "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS, "pickups",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS, "fckills",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS, "returns",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,   "drops",     SFL_LOWER_IS_BETTER);
 	ScoreRules_basics_end();
 }
 

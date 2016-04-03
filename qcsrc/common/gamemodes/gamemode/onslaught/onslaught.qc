@@ -120,8 +120,6 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 
 // score rule declarations
 const int ST_ONS_CAPS = 1;
-const int SP_ONS_CAPS = 4;
-const int SP_ONS_TAKES = 6;
 
 #endif
 #endif
@@ -2248,7 +2246,7 @@ void ons_ScoreRules()
 	CheckAllowedTeams(world);
 	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,    "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
 	ScoreRules_basics_end();
 }

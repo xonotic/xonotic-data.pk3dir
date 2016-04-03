@@ -37,10 +37,7 @@ REGISTER_MUTATOR(dom, false)
 
 // score rule declarations
 const float ST_DOM_TICKS = 1;
-const float SP_DOM_TICKS = 4;
-const float SP_DOM_TAKES = 5;
 const float ST_DOM_CAPS = 1;
-const float SP_DOM_CAPS = 4;
 
 // pps: points per second
 .float dom_total_pps = _STAT(DOM_TOTAL_PPS);

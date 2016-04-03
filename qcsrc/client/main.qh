@@ -42,35 +42,12 @@ void LoadMenuSkinValues();
 // --------------------------------------------------------------------------
 // Scoreboard stuff
 
-const int MAX_HUD_FIELDS = 16;
+const int MAX_HUD_FIELDS = 64;
 
-const int SP_END = -1;
-
-const int SP_PING = -2;
-const int SP_NAME = -3;
-const int SP_KDRATIO = -4;
-const int SP_CLRATIO = -5;
-const int SP_PL = -6;
-const int SP_FRAGS = -7;
-const int SP_SUM = -8;
-
-const int SP_SEPARATOR = -100;
-
-float hud_field[MAX_HUD_FIELDS + 1];
+PlayerScoreField hud_field[MAX_HUD_FIELDS + 1];
 float hud_size[MAX_HUD_FIELDS + 1];
 string hud_title[MAX_HUD_FIELDS + 1];
 int hud_num_fields;
-
-string scores_label[MAX_SCORE];
-int scores_flags[MAX_SCORE];
-string teamscores_label[MAX_SCORE];
-int teamscores_flags[MAX_SCORE];
-.int scores[MAX_SCORE];
-.float teamscores[MAX_TEAMSCORE];
-
-#define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
-#define IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
-
 
 vector hud_fontsize;
 

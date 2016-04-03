@@ -35,7 +35,7 @@ float player_count;
 float currentbots;
 float bots_would_leave;
 
-void UpdateFrags(entity player, float f);
+void UpdateFrags(entity player, int f);
 .float totalfrags;
 
 float team1_score, team2_score, team3_score, team4_score;

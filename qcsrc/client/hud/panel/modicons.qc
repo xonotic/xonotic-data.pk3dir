@@ -518,9 +518,9 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	entity me;
 	me = playerslots[player_localnum];
 	float score;
-	score = me.(scores[ps_primary]);
+	score = me.(scores(ps_primary));
 
-	if(!(scores_flags[ps_primary] & SFL_TIME) || teamplay) // race/cts record display on HUD
+	if(!(scores_flags(ps_primary) & SFL_TIME) || teamplay) // race/cts record display on HUD
 		return; // no records in the actual race
 
 	// clientside personal record

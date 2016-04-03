@@ -32,10 +32,6 @@ REGISTER_MUTATOR(lms, false)
 	return 0;
 }
 
-// scoreboard stuff
-const float SP_LMS_LIVES = 4;
-const float SP_LMS_RANK = 5;
-
 // lives related defs
 float lms_lowest_lives;
 float lms_next_place;
