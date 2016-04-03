@@ -1354,7 +1354,7 @@ float oldr_useportalculling;
 float oldr_useinfinitefarclip;
 
 int camera_spectator_prev;
-int camera_spectator_change_allowed;
+int camera_spectator_changed;
 void cl_notice_run();
 float prev_myteam;
 int lasthud;
@@ -1444,17 +1444,17 @@ void CSQC_UpdateView(float w, float h)
 	if(!isdemo())
 	if(spectatee_status > 0 && button_zoom)
 	{
-		// without camera_spectator_change_allowed camera_spectator_change would be
+		// without camera_spectator_changed camera_spectator_change would be
 		// called twice since -zoom takes another frame to reset the zoom button
-		if(camera_spectator_change_allowed)
+		if(!camera_spectator_changed)
 		{
 			localcmd("camera_spectator_change\n");
-			camera_spectator_change_allowed = false;
+			camera_spectator_changed = true;
 			localcmd("-zoom\n");
 			button_zoom = false;
 		}
 		else
-			camera_spectator_change_allowed = true; // allow change in the next frame
+			camera_spectator_changed = false;
 	}
 
 	if(camera_spectator_prev != autocvar_camera_spectator)
