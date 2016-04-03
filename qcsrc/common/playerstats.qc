@@ -427,7 +427,7 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 				PS_B_IN_DB = db_create();
 
 			// now request the information
-			uri = strcat(uri, "/player/", uri_escape(uri_escape(joiningplayer.crypto_idfp)), "/elo.txt");
+			uri = strcat(uri, "/player/", uri_escape(uri_escape(uri_escape(joiningplayer.crypto_idfp))), "/elo.txt");
 			LOG_TRACE("Retrieving playerstats from URL: ", uri, "\n");
 			url_single_fopen(
 				uri,
