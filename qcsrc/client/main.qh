@@ -42,7 +42,7 @@ void LoadMenuSkinValues();
 // --------------------------------------------------------------------------
 // Scoreboard stuff
 
-const int MAX_HUD_FIELDS = 64;
+const int MAX_HUD_FIELDS = MAX_SCORE;
 
 PlayerScoreField hud_field[MAX_HUD_FIELDS + 1];
 float hud_size[MAX_HUD_FIELDS + 1];

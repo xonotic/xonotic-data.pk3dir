@@ -34,6 +34,7 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 
 	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "damage", 0);
 	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "damagetaken", SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_ELO, "elo", 0);
 }
 void ScoreRules_basics_end()
 {

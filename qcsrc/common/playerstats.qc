@@ -508,63 +508,60 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 
 		case URL_READY_CANREAD:
 		{
-			string s = "";
-			LOG_TRACE("-- Got response from player stats server:\n");
-			//string gametype = string_null;
-			while((s = url_fgets(fh)))
-			{
-				LOG_TRACE("  ", s, "\n");
-				/*
+			string gt = string_null;
+			for (string s = ""; (s = url_fgets(fh)); ) {
+				int n = tokenizebyseparator(s, " "); // key value? data
+				if (n == 1) continue;
 				string key = "", value = "", data = "";
-
-				n = tokenizebyseparator(s, " "); // key (value) data
-				if (n == 1)
-					continue;
-				else if (n == 2)
-				{
-				key = argv(0);
-				data = argv(1);
+				if (n == 2) {
+                    key = argv(0);
+                    data = argv(1);
+				} else if (n >= 3) {
+                    key = argv(0);
+                    value = argv(1);
+                    data = argv(2);
 				}
-				else if (n >= 3)
-				{
-								key = argv(0);
-								value = argv(1);
-								data = argv(2);
-				}
-
-				if (data == "")
-				continue;
-
-				if (key == "#")
-				continue;
-				else if (key == "V")
-				PlayerInfo_AddItem(p, "_version", data);
-				else if (key == "R")
-				PlayerInfo_AddItem(p, "_release", data);
-				else if (key == "T")
-				PlayerInfo_AddItem(p, "_time", data);
-				else if (key == "S")
-				PlayerInfo_AddItem(p, "_statsurl", data);
-				else if (key == "P")
-				PlayerInfo_AddItem(p, "_hashkey", data);
-				else if (key == "n")
-				PlayerInfo_AddItem(p, "_playernick", data);
-				else if (key == "i")
-				PlayerInfo_AddItem(p, "_playerid", data);
-				else if (key == "G")
-				gametype = data;
-				else if (key == "e" && value != "")
-				{
-				if (gametype == "")
-				PlayerInfo_AddItem(p, value, data);
-				else
-				PlayerInfo_AddItem(p, sprintf("%s/%s", gametype, value), data);
-				}
-				else
-				continue;
-				*/
+                switch (key) {
+                    case "V":
+                        // PlayerInfo_AddItem(p, "_version", data);
+                        break;
+                    case "R":
+                        // PlayerInfo_AddItem(p, "_release", data);
+                        break;
+                    case "T":
+                        // PlayerInfo_AddItem(p, "_time", data);
+                        break;
+                    case "S":
+                        // PlayerInfo_AddItem(p, "_statsurl", data);
+                        break;
+                    case "P":
+                        // PlayerInfo_AddItem(p, "_hashkey", data);
+                        break;
+                    case "n":
+                        // PlayerInfo_AddItem(p, "_playernick", data);
+                        break;
+                    case "i":
+                        // PlayerInfo_AddItem(p, "_playerid", data);
+                        // p.xonstat_id = stof(data);
+                        break;
+                    case "G":
+                        gt = data;
+                        break;
+                    case "e":
+                        LOG_TRACE("G: ", gt);
+                        LOG_TRACE("e: ", data);
+                        if (gt == GetGametype()) {
+                            float e = stof(data);
+                            PlayerScore_Add(p, SP_ELO, e);
+                        }
+                        if (gt == "") {
+                            // PlayerInfo_AddItem(p, value, data);
+                        } else {
+                            // PlayerInfo_AddItem(p, sprintf("%s/%s", gt, value), data);
+                        }
+                        break;
+                }
 			}
-			LOG_TRACE("-- End of response.\n");
 			url_fclose(fh);
 			break;
 		}
