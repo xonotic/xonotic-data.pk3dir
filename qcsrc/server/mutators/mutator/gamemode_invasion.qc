@@ -19,7 +19,7 @@ REGISTER_MUTATOR(inv, false)
 
 		cvar_settemp("g_monsters", "1");
 
-		SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
+		SetLimits(autocvar_g_invasion_point_limit, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
 		if (autocvar_g_invasion_teams >= 2)
 		{
 			ActivateTeamplay();
