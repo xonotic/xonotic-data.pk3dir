@@ -58,7 +58,7 @@ void XonoticSlider_saveCvars(entity me)
 	if (!me.cvarName)
 		return;
 
-	cvar_set(me.cvarName, ftos(me.value));
+	cvar_set(me.cvarName, ftos_mindecimals(me.value));
 
 	CheckSendCvars(me, me.cvarName);
 }
