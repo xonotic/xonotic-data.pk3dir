@@ -2050,6 +2050,7 @@ Called every frame for each client before the physics are run
 void() nexball_setstatus;
 .float last_vehiclecheck;
 .int items_added;
+.float fixangle_stat = _STAT(FIXANGLE);
 void PlayerPreThink ()
 {
     SELFPARAM();
@@ -2362,6 +2363,8 @@ void PlayerPreThink ()
 	// if a player goes unarmed after holding a loaded weapon, empty his clip size and remove the crosshair ammo ring
 	if (PS(this).m_weapon == WEP_Null)
 		this.clip_load = this.clip_size = 0;
+
+	this.fixangle_stat = this.fixangle;
 }
 
 void DrownPlayer(entity this)

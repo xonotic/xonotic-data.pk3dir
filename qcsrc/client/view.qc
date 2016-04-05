@@ -934,6 +934,9 @@ void HUD_Crosshair()
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;
 
+		if (spectatee_status > 0 && !STAT(FIXANGLE))
+			return;
+
 		if (hud != HUD_NORMAL)
 		{
 			HUD_Crosshair_Vehicle();
