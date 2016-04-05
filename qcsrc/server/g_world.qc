@@ -413,6 +413,7 @@ void cvar_changes_init()
 		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
+		BADCVAR("sv_defaultcharacterskin");
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");

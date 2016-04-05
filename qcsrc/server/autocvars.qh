@@ -331,6 +331,7 @@ int autocvar_sv_clientcommand_antispam_count;
 bool autocvar_sv_curl_serverpackages_auto;
 bool autocvar_sv_db_saveasdump;
 bool autocvar_sv_defaultcharacter;
+bool autocvar_sv_defaultcharacterskin;
 string autocvar_sv_defaultplayercolors;
 string autocvar_sv_defaultplayermodel;
 string autocvar_sv_defaultplayermodel_blue;
