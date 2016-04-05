@@ -49,13 +49,13 @@ void PingPLReport_Think()
 	delta = 3 / maxclients;
 	if(delta < sys_frametime)
 		delta = 0;
-	self.nextthink = time + delta;
+	this.nextthink = time + delta;
 
-	e = edict_num(self.cnt + 1);
+	e = edict_num(this.cnt + 1);
 	if(IS_REAL_CLIENT(e))
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_movementloss * 255));
@@ -72,12 +72,12 @@ void PingPLReport_Think()
 	else
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 	}
-	self.cnt = (self.cnt + 1) % maxclients;
+	this.cnt = (this.cnt + 1) % maxclients;
 }
 void PingPLReport_Spawn()
 {
@@ -413,6 +413,7 @@ void cvar_changes_init()
 		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
+		BADCVAR("sv_defaultcharacterskin");
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
@@ -511,15 +512,15 @@ entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
-	WriteShort(MSG_ENTITY, self.cnt);
+	WriteShort(MSG_ENTITY, this.cnt);
 	return true;
 }
 void RandomSeed_Think()
 {SELFPARAM();
-	self.cnt = bound(0, floor(random() * 65536), 65535);
-	self.nextthink = time + 5;
+	this.cnt = bound(0, floor(random() * 65536), 65535);
+	this.nextthink = time + 5;
 
-	self.SendFlags |= 1;
+	this.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
@@ -527,7 +528,7 @@ void RandomSeed_Spawn()
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITH(entity, self, randomseed, randomseed.think()); // sets random seed and nextthink
+	WITHSELF(randomseed, randomseed.think()); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -562,6 +563,18 @@ void __init_dedicated_server_shutdown() {
 	MapInfo_Shutdown();
 }
 
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
+{
+	if(!autocvar_g_campaign)
+	{
+		if(fraglimit_override >= 0) cvar_set("fraglimit", ftos(fraglimit_override));
+		if(timelimit_override >= 0) cvar_set("timelimit", ftos(timelimit_override));
+		if(leadlimit_override >= 0) cvar_set("leadlimit", ftos(leadlimit_override));
+		if(qualifying_override >= 0) cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
+	}
+	limits_are_set = true;
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
@@ -572,9 +585,8 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+    bool wantrestart = false;
 	{
-		bool wantrestart = false;
-
 		if (!server_is_dedicated)
 		{
 			// force unloading of server pk3 files when starting a listen server
@@ -718,6 +730,12 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 	GrappleHookInit();
 
+	if(!limits_are_set)
+		SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
+
+	if(warmup_limit == 0)
+		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
+
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
 	if(bot_waypoints_for_items == 1)
@@ -849,7 +867,7 @@ spawnfunc(worldspawn)
 
 	CheatInit();
 
-	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
+	if (!wantrestart) localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
@@ -1545,9 +1563,7 @@ void NextLevel()
 			bprint(it.netname, " ^7wins.\n");
 	));
 
-	entity oldself = self;
-	target_music_kill();
-	self = oldself;
+	WITHSELF(NULL, target_music_kill());
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
@@ -1569,8 +1585,8 @@ void CheckRules_Player()
 	if (gameover)	// someone else quit the game already
 		return;
 
-	if(!IS_DEAD(self))
-		self.play_time += frametime;
+	if(!IS_DEAD(this))
+		this.play_time += frametime;
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
 	//   (div0: and that in CheckRules_World please)

@@ -1326,7 +1326,7 @@ void PM_Main(entity this)
 
 
 #ifdef SVQC
-	WarpZone_PlayerPhysics_FixVAngle();
+	WarpZone_PlayerPhysics_FixVAngle(this);
 #endif
 	float maxspeed_mod = 1;
 	maxspeed_mod *= PHYS_HIGHSPEED(this);

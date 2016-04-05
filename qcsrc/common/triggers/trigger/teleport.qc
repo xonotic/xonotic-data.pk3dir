@@ -54,7 +54,7 @@ void Teleport_Touch ()
 	SUB_UseTargets();
 	if (!self.target) self.target = s;
 
-	WITH(entity, self, e, SUB_UseTargets());
+	WITHSELF(e, SUB_UseTargets());
 #endif
 }
 

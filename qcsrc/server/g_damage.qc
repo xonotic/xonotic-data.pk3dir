@@ -540,7 +540,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	WITH(entity, self, ice, Ice_Think());
+	WITHSELF(ice, Ice_Think());
 
 	RemoveGrapplingHook(targ);
 

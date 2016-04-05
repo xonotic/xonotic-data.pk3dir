@@ -144,14 +144,14 @@ REGISTER_MUTATOR(vortex_charge, true);
 MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 {SELFPARAM();
 	// WEAPONTODO
-	float xyspeed = vlen(vec2(self.velocity));
-	if (PS(self).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
+	float xyspeed = vlen(vec2(this.velocity));
+	if (PS(this).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
 	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
 		float f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
 		// add the extra charge
-		self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
+		this.vortex_charge = min(1, this.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
 	}
 }
 
@@ -382,7 +382,7 @@ METHOD(Vortex, wr_impacteffect, void(entity thiswep))
     vector org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
     if(!w_issilent)
-        sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+        sound(this, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 }
 METHOD(Vortex, wr_init, void(entity thiswep))
 {

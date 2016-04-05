@@ -36,16 +36,25 @@
     #define TC(T, sym) MACRO_BEGIN MACRO_END
 #else
     #define TC(T, sym) MACRO_BEGIN \
-        if (!is_##T(sym)) LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
+        if (!is_##T(sym)) { \
+            LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
+            isnt_##T(sym); \
+        } \
     MACRO_END
 #endif
 
-bool is_float (float  this) { return true; }
-bool is_vector(vector this) { return true; }
-bool is_string(string this) { return true; }
-bool is_entity(entity this) { return true; }
-bool is_int   (float  this) { return this == floor(this); }
-bool is_bool  (float  this) { return this == true || this == false; }
+#define   is_float(        this) (true || ftoe(this))
+#define isnt_float(        this)
+#define   is_vector(       this) (true || vtos(this))
+#define isnt_vector(       this)
+#define   is_string(       this) (true || stof(this))
+#define isnt_string(       this)
+#define   is_entity(       this) (true || etof(this))
+#define isnt_entity(       this)
+bool      is_int(    float this) { return this == floor(this); }
+void    isnt_int(    float this) { print(ftos(this)); }
+bool      is_bool(   float this) { return this == true || this == false; }
+void    isnt_bool(   float this) { print(ftos(this)); }
 
 #include "warpzone/mathlib.qc"
 
@@ -63,6 +72,7 @@ bool is_bool  (float  this) { return this == true || this == false; }
 #include "functional.qh"
 #include "i18n.qh"
 #include "iter.qh"
+#include "json.qc"
 #include "lazy.qh"
 #include "linkedlist.qh"
 #include "log.qh"
@@ -93,3 +103,5 @@ bool is_bool  (float  this) { return this == true || this == false; }
 #include "urllib.qc"
 #include "vector.qh"
 #include "yenc.qh"
+
+#include "matrix/_mod.inc"

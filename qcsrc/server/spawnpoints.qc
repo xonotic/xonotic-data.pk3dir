@@ -50,11 +50,11 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 void spawnpoint_think()
 {
     SELFPARAM();
-	self.nextthink = time + 0.1;
-	if(self.origin != self.spawnpoint_prevorigin)
+	this.nextthink = time + 0.1;
+	if(this.origin != this.spawnpoint_prevorigin)
 	{
-		self.spawnpoint_prevorigin = self.origin;
-		self.SendFlags |= 1;
+		this.spawnpoint_prevorigin = this.origin;
+		this.SendFlags |= 1;
 	}
 }
 
@@ -261,9 +261,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 			++found;
 			if(ent.spawn_evalfunc)
 			{
-				WITH(entity, self, ent, {
-					spawn_score = ent.spawn_evalfunc(this, spot, spawn_score);
-				});
+				WITHSELF(ent, spawn_score = ent.spawn_evalfunc(this, spot, spawn_score));
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}

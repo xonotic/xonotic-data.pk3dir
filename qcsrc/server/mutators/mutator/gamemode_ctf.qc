@@ -13,7 +13,7 @@ REGISTER_MUTATOR(ctf, false)
 		ctf_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_capturelimit_override, autocvar_captureleadlimit_override, -1, -1);
+		SetLimits(autocvar_capturelimit_override, autocvar_captureleadlimit_override, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -1158,8 +1158,8 @@ void ctf_Reset(entity this)
 	ctf_RespawnFlag(this);
 }
 
-void ctf_DelayedFlagSetup() // called after a flag is placed on a map by ctf_FlagSetup()
-{SELFPARAM();
+void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map by ctf_FlagSetup()
+{
 	// bot waypoints
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
@@ -2551,10 +2551,10 @@ void ctf_SpawnTeam (string teamname, int teamcolor)
 	this.netname = teamname;
 	this.cnt = teamcolor;
 	this.spawnfunc_checked = true;
-	WITH(entity, self, this, spawnfunc_ctf_team(this));
+	WITHSELF(this, spawnfunc_ctf_team(this));
 }
 
-void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	ctf_teams = 2;
 

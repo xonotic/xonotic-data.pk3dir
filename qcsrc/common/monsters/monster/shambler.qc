@@ -116,7 +116,7 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void M_Shambler_Attack_Lightning_Touch()

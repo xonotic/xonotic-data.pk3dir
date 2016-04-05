@@ -213,7 +213,6 @@ void FixClientCvars(entity e);
 WepSet weaponsInMap;
 
 #define weapons _STAT(WEAPONS)
-#define weaponsinmap _STAT(WEAPONSINMAP)
 
 .float respawn_countdown; // next number to count
 
@@ -285,16 +284,12 @@ float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
-.float stat_game_starttime = _STAT(GAMESTARTTIME);
-.float stat_round_starttime = _STAT(ROUNDSTARTTIME);
 
 void W_Porto_Remove (entity p);
 
 .int projectiledeathtype;
 
 .string message2;
-
-.bool stat_allow_oldvortexbeam = _STAT(ALLOW_OLDVORTEXBEAM);
 
 // reset to 0 on weapon switch
 // may be useful to all weapons
@@ -341,8 +336,6 @@ string matchid;
 .float typehit_time = _STAT(TYPEHIT_TIME);
 
 .float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
-
-.float stat_leadlimit = _STAT(LEADLIMIT);
 
 bool radar_showennemies;
 

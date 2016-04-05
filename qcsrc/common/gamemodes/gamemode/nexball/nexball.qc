@@ -498,7 +498,7 @@ void nb_spawnteams()
 	}
 }
 
-void nb_delayedinit()
+void nb_delayedinit(entity this)
 {
 	if(find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
@@ -1095,7 +1095,7 @@ REGISTER_MUTATOR(nb, g_nexball)
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, -1, -1);
+		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 

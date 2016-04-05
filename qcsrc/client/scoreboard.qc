@@ -303,16 +303,24 @@ void Cmd_HUD_Help()
 	        "other gamemodes except DM.\n"));
 }
 
-#define HUD_DefaultColumnLayout() \
-"ping pl name | " \
-"-teams,cts,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -cts,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"-rc,cts,nb/dmg -rc,cts,nb/dmgtaken " \
-"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
-"+lms/lives +lms/rank " \
-"+kh/caps +kh/pushes +kh/destroyed " \
-"?+rc/laps ?+rc/time ?+rc/fastest " \
-"+as/objectives +nb/faults +nb/goals +ka/pickups +ka/bckills +ka/bctime +ft/revivals " \
-"-lms,rc,nb/score"
+// NOTE: adding a gametype with ? to not warn for an optional field
+// make sure it's excluded in a previous exclusive rule, if any
+// otherwise the previous exclusive rule warns anyway
+// e.g. -teams,rc,cts,lms/kills ?+rc/kills
+#define SCOREBOARD_DEFAULT_COLUMNS \
+"ping pl name |" \
+" -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
+" -teams,lms/deaths +ft,tdm/deaths" \
+" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
+" -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
+" +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes" \
+" +lms/lives +lms/rank" \
+" +kh/caps +kh/pushes +kh/destroyed" \
+" ?+rc/laps ?+rc/time +rc,cts/fastest" \
+" +as/objectives +nb/faults +nb/goals" \
+" +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
+" -lms,rc,cts,inv,nb/score"
 
 void Cmd_HUD_SetFields(int argc)
 {
@@ -337,12 +345,12 @@ void Cmd_HUD_SetFields(int argc)
 		argc = tokenizebyseparator(strcat("0 1 ", autocvar_scoreboard_columns), " ");
 
 	if(argc < 3)
-		argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
+		argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 
 	if(argc == 3)
 	{
 		if(argv(2) == "default")
-			argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
+			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 		else if(argv(2) == "all")
 		{
 			string s;
@@ -396,7 +404,6 @@ void Cmd_HUD_SetFields(int argc)
 		switch(str)
 		{
 			case "ping": hud_field[hud_num_fields] = SP_PING; break;
-			case "pl": hud_field[hud_num_fields] = SP_PL; break;
 			case "pl": hud_field[hud_num_fields] = SP_PL; break;
 			case "kd": case "kdr": case "kdratio": case "k/d": hud_field[hud_num_fields] = SP_KDRATIO; break;
 			case "sum": case "diff": case "k-d": hud_field[hud_num_fields] = SP_SUM; break;

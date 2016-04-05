@@ -1,7 +1,7 @@
 #include "tests.qh"
 
-void test_weapons_hurt() {
-    SELFPARAM();
+void test_weapons_hurt(entity this)
+{
     EXPECT_NE(100, this.health);
     remove(this.enemy);
     remove(this);
@@ -48,7 +48,8 @@ TEST(Vehicles, Spawn)
     noref entity v = it = new(vehicle);
     Vehicle veh = VEH_BUMBLEBEE;
     it.active = ACTIVE_NOT;
-    WITH(entity, self, it, vehicle_initialize(veh, false); it.nextthink = time);
+    vehicle_initialize(it, veh, false);
+    it.nextthink = time;
 
     SUCCEED();
 }

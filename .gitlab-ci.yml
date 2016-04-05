@@ -5,6 +5,11 @@ before_script:
   - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
   - cd ..
 
+test_compilation_units:
+  stage: test
+  script:
+    - ./qcsrc/tools/compilationunits.sh
+
 test_sv_game:
   stage: test
   script:
@@ -12,9 +17,14 @@ test_sv_game:
     - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
     - cd ..
 
+    - mkdir -p data/maps
     - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
+    - wget -O data/maps/g-23.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.mapinfo
+    - wget -O data/maps/g-23.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints
+    - wget -O data/maps/g-23.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.cache
+    - wget -O data/maps/g-23.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.hardwired
     - make
-    - EXPECT=8573348372f9b9f82183b01598950eb5
+    - EXPECT=814b0e609bcf01dc2a44f2b17fa366b4
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
@@ -40,11 +50,6 @@ test_sv_unit:
         if [[ $line == "All tests OK" ]]; then exit 0; fi;
       done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
     - exit 1
-
-test_compilation_units:
-  stage: test
-  script:
-    - ./qcsrc/tools/compilationunits.sh
 
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy

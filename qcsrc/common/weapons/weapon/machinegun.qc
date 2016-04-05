@@ -119,9 +119,9 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, .entity weaponentity)
 	ATTACK_FINISHED(self, slot) = time + WEP_CVAR(machinegun, first_refire) * W_WeaponRateFactor();
 
 	if(self.misc_bulletcounter == 1)
-		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(machinegun, first_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, first_damage), WEP_CVAR(machinegun, first_force), deathtype, 0);
+		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR(machinegun, first_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, first_damage), WEP_CVAR(machinegun, first_force), deathtype, 0);
 	else
-		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, 0);
+		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -192,7 +192,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 	}
 
 	machinegun_spread = bound(WEP_CVAR(machinegun, spread_min), WEP_CVAR(machinegun, spread_min) + (WEP_CVAR(machinegun, spread_add) * actor.misc_bulletcounter), WEP_CVAR(machinegun, spread_max));
-	fireBullet(w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), WEP_MACHINEGUN.m_id, 0);
+	fireBullet(actor, w_shotorg, w_shotdir, machinegun_spread, WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), WEP_MACHINEGUN.m_id, 0);
 
 	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 
@@ -218,7 +218,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	fireBullet(w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_speed), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), WEP_MACHINEGUN.m_id, 0);
+	fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_speed), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), WEP_MACHINEGUN.m_id, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 

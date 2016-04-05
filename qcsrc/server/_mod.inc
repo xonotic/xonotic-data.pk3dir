@@ -15,6 +15,7 @@
 #include "ipban.qc"
 #include "item_key.qc"
 #include "mapvoting.qc"
+#include "matrix.qc"
 #include "miscfunctions.qc"
 #include "playerdemo.qc"
 #include "portals.qc"

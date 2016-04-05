@@ -50,10 +50,10 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 	if (pure) {
 		make_pure(this);
 		#ifdef CSQC
-		setorigin(this, '0 0 10000');
+		setorigin(this, (world.mins + world.maxs) * 0.5);
 		#endif
 		#ifdef SVQC
-        setorigin(this, '0 0 -10000');
+        setorigin(this, (world.mins + world.maxs) * 0.5);
         #endif
 	}
 	return this;
@@ -175,6 +175,7 @@ STATIC_INIT(RegisterClasses)
 	entityclass(cname, base);               \
 	class(cname).bool instanceOf##cname;    \
     bool is_##cname(entity e) { return e.instanceOf##cname; } \
+    void isnt_##cname(entity e) { eprint(e); } \
 	VTBL(cname, base)                       \
 	_INIT_STATIC(cname)                     \
 	{                                       \

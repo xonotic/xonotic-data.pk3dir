@@ -268,7 +268,7 @@ void door_use()
 
 	if (self.owner)
 	{
-		WITH(entity, self, self.owner, door_fire());
+		WITHSELF(self.owner, door_fire());
 	}
 }
 
@@ -289,7 +289,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 	{
 		this.owner.health = this.owner.max_health;
 		this.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
-		WITH(entity, self, this.owner, door_use());
+		WITHSELF(this.owner, door_use());
 	}
 }
 
@@ -506,8 +506,8 @@ bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
 #ifdef SVQC
 void door_link();
 #endif
-void LinkDoors()
-{SELFPARAM();
+void LinkDoors(entity this)
+{
 	entity	t;
 	vector	cmins, cmaxs;
 
@@ -693,8 +693,8 @@ void door_link()
 }
 #endif
 
-void door_init_startopen()
-{SELFPARAM();
+void door_init_startopen(entity this)
+{
 	SUB_SETORIGIN(self, self.pos2);
 	self.pos2 = self.pos1;
 	self.pos1 = self.origin;
@@ -850,10 +850,10 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.drawmask = MASK_NORMAL;
 		this.use = door_use;
 
-		LinkDoors();
+		LinkDoors(this);
 
 		if(this.spawnflags & DOOR_START_OPEN)
-			door_init_startopen();
+			door_init_startopen(this);
 
 		this.move_time = time;
 		this.move_origin = this.origin;

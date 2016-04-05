@@ -39,17 +39,17 @@ void Drop_Special_Items(entity player)
 
 void CopyBody_Think()
 {SELFPARAM();
-	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
+	if(this.CopyBody_nextthink && time > this.CopyBody_nextthink)
 	{
-		self.CopyBody_think();
-		if(wasfreed(self))
+		this.CopyBody_think();
+		if(wasfreed(this))
 			return;
-		self.CopyBody_nextthink = self.nextthink;
-		self.CopyBody_think = self.think;
-		self.think = CopyBody_Think;
+		this.CopyBody_nextthink = this.nextthink;
+		this.CopyBody_think = this.think;
+		this.think = CopyBody_Think;
 	}
-	CSQCMODEL_AUTOUPDATE(self);
-	self.nextthink = time;
+	CSQCMODEL_AUTOUPDATE(this);
+	this.nextthink = time;
 }
 void CopyBody(entity this, float keepvelocity)
 {
@@ -135,8 +135,8 @@ void player_setupanimsformodel()
 
 void player_anim ()
 {SELFPARAM();
-	int deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
-	if(IS_DEAD(self)) {
+	int deadbits = (this.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+	if(IS_DEAD(this)) {
 		if (!deadbits) {
 			// Decide on which death animation to use.
 			if(random() < 0.5)
@@ -149,14 +149,14 @@ void player_anim ()
 		deadbits = 0;
 	}
 	int animbits = deadbits;
-	if(STAT(FROZEN, self))
+	if(STAT(FROZEN, this))
 		animbits |= ANIMSTATE_FROZEN;
-	if(self.movetype == MOVETYPE_FOLLOW)
+	if(this.movetype == MOVETYPE_FOLLOW)
 		animbits |= ANIMSTATE_FOLLOW;
-	if(self.crouch)
+	if(this.crouch)
 		animbits |= ANIMSTATE_DUCK;
-	animdecide_setstate(self, animbits, false);
-	animdecide_setimplicitstate(self, IS_ONGROUND(self));
+	animdecide_setstate(this, animbits, false);
+	animdecide_setimplicitstate(this, IS_ONGROUND(this));
 }
 
 void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -556,7 +556,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		excess = frag_damage;
 
 		Weapon wep = PS(this).m_weapon;
-		WITH(entity, self, this, wep.wr_playerdeath(wep));
+		WITHSELF(this, wep.wr_playerdeath(wep));
 
 		RemoveGrapplingHook(this);
 
@@ -637,7 +637,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// reset fields the weapons may use just in case
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			WITH(entity, self, this, it.wr_resetplayer(it));
+			WITHSELF(this, it.wr_resetplayer(it));
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
@@ -657,6 +657,12 @@ void MoveToTeam(entity client, int team_colour, int type)
 	LogTeamchange(client.playerid, client.team, type);
 }
 
+/** print(), but only print if the server is not local */
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:
@@ -664,20 +670,14 @@ void MoveToTeam(entity client, int team_colour, int type)
  *   0 = reject
  *  -1 = fake accept
  */
-int Say(entity source, float teamsay, entity privatesay, string msgin, bool floodcontrol)
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol)
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
-	float flood;
-	var .float flood_field;
-	float ret;
-	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
-
-	if(!teamsay && !privatesay)
-		if(substring(msgin, 0, 1) == " ")
-			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
+	if (!teamsay && !privatesay) if (substring(msgin, 0, 1) == " ")
+        msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
 	msgin = formatmessage(msgin);
 
+    string colorstr;
 	if (!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
@@ -690,6 +690,11 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 
 	if(intermission_running)
 		teamsay = false;
+
+    if (!source) {
+		colorstr = "";
+		teamsay = false;
+    }
 
 	if(msgin != "")
 		msgin = trigger_magicear_processmessage_forallears(source, teamsay, privatesay, msgin);
@@ -705,18 +710,18 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	}
 	*/
 
-	if(autocvar_g_chat_teamcolors)
-		namestr = playername(source);
-	else
-		namestr = source.netname;
+    string namestr = "";
+    if (source)
+        namestr = autocvar_g_chat_teamcolors ? playername(source) : source.netname;
 
-	if(strdecolorize(namestr) == namestr)
-		colorprefix = "^3";
-	else
-		colorprefix = "^7";
+    string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
-	if(msgin != "")
-	{
+    string msgstr, cmsgstr;
+    string privatemsgprefix = string_null;
+    int privatemsgprefixlen = 0;
+	if (msgin == "") {
+        msgstr = cmsgstr = "";
+	} else {
 		if(privatesay)
 		{
 			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
@@ -750,23 +755,22 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 				msgin = strreplace("/me", strcat(colorprefix, namestr), msgin);
 				msgstr = strcat("\{1}^4* ", "^7", msgin);
 			}
-			else
-				msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
+			else {
+                msgstr = "\{1}";
+                msgstr = strcat(msgstr, (namestr != "") ? strcat(colorprefix, namestr, "^7: ") : "^7");
+                msgstr = strcat(msgstr, msgin);
+            }
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 	}
-	else
-	{
-		msgstr = cmsgstr = "";
-	}
 
-	fullmsgstr = msgstr;
-	fullcmsgstr = cmsgstr;
+	string fullmsgstr = msgstr;
+	string fullcmsgstr = cmsgstr;
 
 	// FLOOD CONTROL
-	flood = 0;
-	flood_field = floodcontrol_chat;
+	int flood = 0;
+	var .float flood_field = floodcontrol_chat;
 	if(floodcontrol)
 	{
 		float flood_spl;
@@ -838,6 +842,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 			source.(flood_field) = flood = 0;
 	}
 
+    string sourcemsgstr, sourcecmsgstr;
 	if(flood == 2) // cannot happen for empty msgstr
 	{
 		if(autocvar_g_chat_flood_notify_flooder)
@@ -858,8 +863,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 		sourcecmsgstr = cmsgstr;
 	}
 
-	if(!privatesay)
-	if (!IS_PLAYER(source))
+	if (!privatesay && source && !IS_PLAYER(source))
 	{
 		if (!intermission_running)
 			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
@@ -873,6 +877,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 	if(privatesay)
 		sourcemsgstr = strcat(privatemsgprefix, substring(sourcemsgstr, privatemsgprefixlen, -1));
 
+    int ret;
 	if(source.muted)
 	{
 		// always fake the message
@@ -913,7 +918,7 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, LAMBDA(sprint(it, msgstr)));
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source && it.active_minigame == source.active_minigame, sprint(it, msgstr));
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
@@ -921,26 +926,27 @@ int Say(entity source, float teamsay, entity privatesay, string msgin, bool floo
 			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
-			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source && it.team == source.team, {
 				sprint(it, msgstr);
 				if(cmsgstr != "")
 					centerprint(it, cmsgstr);
-			));
+			});
 		}
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
-		}
-		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
-		{
-			sprint(source, sourcemsgstr);
-			dedicated_print(msgstr); // send to server console too
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, LAMBDA(sprint(it, msgstr)));
+			FOREACH_CLIENT(!IS_PLAYER(it) && IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
 		}
 		else
-			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.
+		{
+            if (source) {
+                sprint(source, sourcemsgstr);
+                dedicated_print(msgstr); // send to server console too
+                MX_Say(strcat(playername(source), "^7: ", msgin));
+            }
+            FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != source, sprint(it, msgstr));
+        }
 	}
 
 	return ret;

@@ -115,7 +115,7 @@ STATIC_INIT_LATE(W_PROP_reloader)
 {
     SELFPARAM();
     entity e = W_PROP_reloader = new_pure(W_PROP_reloader);
-    WITH(entity, self, e, (e.think = W_PROP_think)());
+    WITHSELF(e, (e.think = W_PROP_think)());
 }
 #endif
 

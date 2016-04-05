@@ -1468,13 +1468,13 @@ void CSQC_UpdateView(float w, float h)
 			if(!gen)
 				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
-		if(WantEventchase(self) || (!autocvar_cl_orthoview && ons_roundlost))
+		if(WantEventchase(this) || (!autocvar_cl_orthoview && ons_roundlost))
 		{
 			eventchase_running = true;
 
 			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 			if(!local_player)
-				local_player = self; // fall back!
+				local_player = this; // fall back!
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -1493,7 +1493,7 @@ void CSQC_UpdateView(float w, float h)
 
 			if(view_offset)
 			{
-				WarpZone_TraceLine(current_view_origin, current_view_origin + view_offset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, self);
+				WarpZone_TraceLine(current_view_origin, current_view_origin + view_offset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, this);
 				if(trace_fraction == 1) { current_view_origin += view_offset; }
 				else { current_view_origin.z += max(0, (trace_endpos.z - current_view_origin.z) - autocvar_cl_eventchase_maxs.z); }
 			}
@@ -1522,14 +1522,14 @@ void CSQC_UpdateView(float w, float h)
 			makevectors(view_angles);
 
 			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
-			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
+			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
 
 			// If the boxtrace fails, revert back to line tracing.
 			if(!local_player.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
-				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
+				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, this);
 				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins.z)));
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }

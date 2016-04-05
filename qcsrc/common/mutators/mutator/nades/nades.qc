@@ -749,7 +749,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		this.takedamage = DAMAGE_NO;
-		WITH(entity, self, this, nade_boom());
+		WITHSELF(this, nade_boom());
 		return;
 	}
 
@@ -804,7 +804,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		this.realowner = attacker;
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, nade_boom));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, nade_boom));
 	else
 		nade_burn_spawn(this);
 }

@@ -55,8 +55,8 @@ bool trigger_viewloc_send(entity this, entity to, int sf)
 	return true;
 }
 
-void viewloc_init()
-{SELFPARAM();
+void viewloc_init(entity this)
+{
 	entity e;
 	for(e = world; (e = find(e, targetname, self.target)); )
 		if(e.classname == "target_viewlocation_start")

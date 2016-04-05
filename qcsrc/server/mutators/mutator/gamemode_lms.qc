@@ -13,7 +13,7 @@ REGISTER_MUTATOR(lms, false)
 			error("This is a game type and it cannot be added at runtime.");
 		lms_Initialize();
 
-		SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, -1, -1);
+		SetLimits(((!autocvar_g_lms_lives_override) ? -1 : autocvar_g_lms_lives_override), 0, autocvar_timelimit_override, -1);
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE
@@ -228,8 +228,8 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
 {SELFPARAM();
-	if(self.deadflag == DEAD_DYING)
-		self.deadflag = DEAD_RESPAWNING;
+	if(this.deadflag == DEAD_DYING)
+		this.deadflag = DEAD_RESPAWNING;
 
 	return false;
 }

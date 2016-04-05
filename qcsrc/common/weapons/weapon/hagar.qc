@@ -100,7 +100,7 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.think));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.think));
 }
 
 void W_Hagar_Touch()

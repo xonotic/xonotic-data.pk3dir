@@ -16,7 +16,7 @@ REGISTER_MUTATOR(ft, false)
 		freezetag_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, -1, -1);
+		SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, autocvar_timelimit_override, -1);
 
 		if (autocvar_g_freezetag_team_spawns)
 			have_team_spawns = -1; // request team spawns
@@ -380,7 +380,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(round_handler_CountdownRunning())
 	{
 		if(STAT(FROZEN, frag_target))
-			WITH(entity, self, frag_target, freezetag_Unfreeze(world));
+			WITHSELF(frag_target, freezetag_Unfreeze(world));
 		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
@@ -398,7 +398,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_LastPlayerForTeam_Notify();
 		}
 		else
-			WITH(entity, self, frag_target, freezetag_Unfreeze(world)); // remove ice
+			WITHSELF(frag_target, freezetag_Unfreeze(world)); // remove ice
 		frag_target.health = 0; // Unfreeze resets health
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return 1;
@@ -407,7 +407,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(STAT(FROZEN, frag_target))
 		return 1;
 
-	WITH(entity, self, frag_target, freezetag_Freeze(frag_attacker));
+	WITHSELF(frag_target, freezetag_Freeze(frag_attacker));
 	freezetag_LastPlayerForTeam_Notify();
 
 	if(frag_attacker == frag_target || frag_attacker == world)
