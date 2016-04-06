@@ -450,12 +450,15 @@ void Hud_Dynamic_Frame()
 			hud_dynamic_shake_factor = 0;
 		else
 		{
-			float health = STAT(HEALTH);
+			static float old_health = 0;
+			float health = max(-1, STAT(HEALTH));
 			float new_hud_dynamic_shake_factor = 0;
-			if(prev_health - health >= autocvar_hud_dynamic_shake_damage_min && autocvar_hud_dynamic_shake_damage_max > autocvar_hud_dynamic_shake_damage_min)
+			if (old_health - health >= autocvar_hud_dynamic_shake_damage_min
+				&& autocvar_hud_dynamic_shake_damage_max > autocvar_hud_dynamic_shake_damage_min
+				&& old_health > 0 && !intermission)
 			{
 				float m = max(autocvar_hud_dynamic_shake_damage_min, 1);
-				new_hud_dynamic_shake_factor = (prev_health - health - m) / (autocvar_hud_dynamic_shake_damage_max - m);
+				new_hud_dynamic_shake_factor = (old_health - health - m) / (autocvar_hud_dynamic_shake_damage_max - m);
 				if(new_hud_dynamic_shake_factor >= 1)
 					new_hud_dynamic_shake_factor = 1;
 				if(new_hud_dynamic_shake_factor >= hud_dynamic_shake_factor)
@@ -464,6 +467,7 @@ void Hud_Dynamic_Frame()
 					hud_dynamic_shake_time = time;
 				}
 			}
+			old_health = health;
 			if(hud_dynamic_shake_factor)
 				if(!Hud_Shake_Update())
 					hud_dynamic_shake_factor = 0;
