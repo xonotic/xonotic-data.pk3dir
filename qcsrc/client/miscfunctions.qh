@@ -66,13 +66,10 @@ void HUD_Scale_Enable();
 vector HUD_Scale(vector v);
 vector HUD_Shift(vector v);
 
-// call draw*_builtin (and stringwidth_builtin) functions only when
-// pos and size don't have to be scaled by the hud_dynamic code
-// (typically outside the real HUD code)
-
-// NOTE: drawsubpic usually gets called multiple times within an utility function
-// so instead of remapping it, scaling pos and size in every call,
-// we prefer to scale pos and size once for all in the utility function
+// The following functions / macros must be called from within
+// the panel HUD / scoreboard code so that pos and size are scaled
+// when the hud_dynamic code is running.
+// Make use of stringwidth_builtin and draw*_builtin everywhere else.
 
 float stringwidth(string text, float handleColors, vector sz);
 
@@ -96,6 +93,15 @@ float stringwidth(string text, float handleColors, vector sz);
 
 #define drawsetcliparea(xposition, yposition, w, h) \
 	drawsetcliparea_builtin(HUD_ShiftX(xposition), HUD_ShiftY(yposition), HUD_ScaleX(w), HUD_ScaleY(h))
+
+// Since drawsubpic usually gets called multiple times from within an
+// utility function, instead of scaling pos and size in every call
+// we scale them once for all in the beginning of that utility function.
+// That's why drawsubpic isn't remapped.
+/*
+#define drawsubpic(position, size, pic, srcPosition, srcSize, rgb, alpha, flag) \
+	drawsubpic_builtin(HUD_Shift(position), HUD_Scale(size), pic, HUD_Shift(srcPosition), HUD_Scale(srcSize), rgb, alpha, flag)
+*/
 
 // drawpic wrapper to draw an image as large as possible with preserved aspect ratio into a box
 float _drawpic_imgaspect;
