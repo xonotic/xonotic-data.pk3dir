@@ -341,7 +341,6 @@ void MapVote_Draw()
 		if ( mpos.x != mv_mousepos.x || mpos.y != mv_mousepos.y )
 			mv_selection_keyboard = 0;
 		mv_mousepos = mpos;
-
 	}
 
 	center = (vid_conwidth - 1)/2;
@@ -360,6 +359,7 @@ void MapVote_Draw()
 	pos.y = ymin;
 	pos.z = 0;
 
+	HUD_Scale_Disable();
 	draw_beginBoldFont();
 
 	map = ((gametypevote) ? _("Decide the gametype") : _("Vote for a map"));
@@ -373,10 +373,8 @@ void MapVote_Draw()
 		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.5) * 0.5;
 		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
 		pos.y += hud_fontsize.y * 1.5;
-		pos.y += hud_fontsize.y * 0.5;
 	}
-	else
-		pos.y += hud_fontsize.y * 0.5;
+	pos.y += hud_fontsize.y * 0.5;
 
 	draw_endBoldFont();
 
@@ -442,7 +440,6 @@ void MapVote_Draw()
 	panel_pos.y = pos.y;
 	panel_size.x = xmax - xmin;
 	panel_size.y = ymax - ymin;
-	HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if(panel_bg_padding)
