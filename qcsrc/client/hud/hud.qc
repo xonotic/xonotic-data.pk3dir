@@ -249,9 +249,9 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 	drawsubpic(pos + eX * mySize.x - eX * min(mySize.x * 0.5, mySize.y), eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha, float fadelerp)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
-    TC(bool, vertical); TC(bool, icon_right_align);
+    TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 

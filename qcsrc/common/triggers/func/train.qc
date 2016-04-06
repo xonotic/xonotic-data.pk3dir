@@ -184,8 +184,8 @@ void train_use()
 	self.use = func_null; // not again
 }
 
-void func_train_find()
-{SELFPARAM();
+void func_train_find(entity this)
+{
 	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;

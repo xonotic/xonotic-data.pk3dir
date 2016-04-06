@@ -1480,13 +1480,6 @@ vector animfixfps(entity e, vector a, vector b)
 }
 #endif
 
-#ifdef SVQC
-void dedicated_print(string input) // print(), but only print if the server is not local
-{
-	if(server_is_dedicated) { LOG_INFO(input); }
-}
-#endif
-
 #ifndef MENUQC
 Notification Announcer_PickNumber(int type, int num)
 {

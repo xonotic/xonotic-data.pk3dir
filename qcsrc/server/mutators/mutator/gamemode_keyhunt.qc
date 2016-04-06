@@ -16,7 +16,7 @@ REGISTER_MUTATOR(kh, false)
 		kh_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, -1, -1);
+		SetLimits(autocvar_g_keyhunt_point_limit, autocvar_g_keyhunt_point_leadlimit, autocvar_timelimit_override, -1);
 		if (autocvar_g_keyhunt_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}

@@ -42,9 +42,8 @@ void dynlight_think()
 
 	self.nextthink = time + 0.1;
 }
-void dynlight_find_aiment()
+void dynlight_find_aiment(entity this)
 {
-    SELFPARAM();
 	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
@@ -59,9 +58,8 @@ void dynlight_find_aiment()
 	self.think = dynlight_think;
 	self.nextthink = time + 0.1;
 }
-void dynlight_find_path()
+void dynlight_find_path(entity this)
 {
-    SELFPARAM();
 	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
@@ -72,9 +70,8 @@ void dynlight_find_path()
 	self.think = train_next;
 	self.nextthink = time + 0.1;
 }
-void dynlight_find_target()
+void dynlight_find_target(entity this)
 {
-    SELFPARAM();
 	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");

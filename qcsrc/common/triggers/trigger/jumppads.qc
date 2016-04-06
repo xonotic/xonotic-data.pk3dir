@@ -274,10 +274,10 @@ void trigger_push_touch()
 
 #ifdef SVQC
 void trigger_push_link();
-void trigger_push_updatelink();
+void trigger_push_updatelink(entity this);
 #endif
-void trigger_push_findtarget()
-{SELFPARAM();
+void trigger_push_findtarget(entity this)
+{
 	entity t;
 	vector org;
 
@@ -354,8 +354,8 @@ float trigger_push_send(entity this, entity to, float sf)
 	return true;
 }
 
-void trigger_push_updatelink()
-{SELFPARAM();
+void trigger_push_updatelink(entity this)
+{
 	this.SendFlags |= 1;
 }
 

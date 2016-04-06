@@ -27,8 +27,8 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 float median(float a, float b, float c);
 
 // converts a number to a string with the indicated number of decimals
-// works for up to 10 decimals!
 string ftos_decimals(float number, float decimals);
+string ftos_mindecimals(float number);
 
 bool fexists(string f);
 
@@ -271,10 +271,6 @@ string CCR(string input);
 
 #ifndef MENUQC
 vector animfixfps(entity e, vector a, vector b);
-#endif
-
-#ifdef SVQC
-void dedicated_print(string input);
 #endif
 
 #ifndef MENUQC

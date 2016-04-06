@@ -851,7 +851,7 @@ void remove_safely(entity e)
     builtin_remove(e);
 }
 
-void InitializeEntity(entity e, void() func, float order)
+void InitializeEntity(entity e, void(entity this) func, float order)
 {
     entity prev, cur;
 
@@ -885,7 +885,7 @@ void InitializeEntity(entity e, void() func, float order)
     }
 }
 void InitializeEntitiesRun()
-{SELFPARAM();
+{
     entity startoflist = initialize_entity_first;
     initialize_entity_first = NULL;
     remove = remove_except_protected;
@@ -899,7 +899,7 @@ void InitializeEntitiesRun()
         e.initialize_entity_order = 0;
     	entity next = e.initialize_entity_next;
         e.initialize_entity_next = NULL;
-        var void() func = e.initialize_entity;
+        var void(entity this) func = e.initialize_entity;
         e.initialize_entity = func_null;
         if (e.classname == "initialize_entity")
         {
@@ -910,7 +910,7 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", e.classname, "\n");
         if (func)
         {
-        	WITHSELF(e, func());
+        	WITHSELF(e, func(e));
         }
         else
         {
@@ -987,8 +987,8 @@ void adaptor_think2use_hittype_splash() // for timed projectile detonation
 }
 
 // deferred dropping
-void DropToFloor_Handler()
-{SELFPARAM();
+void DropToFloor_Handler(entity this)
+{
     builtin_droptofloor();
     self.dropped_origin = self.origin;
 }

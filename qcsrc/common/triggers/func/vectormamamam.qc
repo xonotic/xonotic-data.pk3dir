@@ -71,8 +71,8 @@ void func_vectormamamam_controller_think()
 		self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
 }
 
-void func_vectormamamam_findtarget()
-{SELFPARAM();
+void func_vectormamamam_findtarget(entity this)
+{
 	if(self.target != "")
 		self.wp00 = find(world, targetname, self.target);
 

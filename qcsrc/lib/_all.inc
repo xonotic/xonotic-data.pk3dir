@@ -72,6 +72,7 @@ void    isnt_bool(   float this) { print(ftos(this)); }
 #include "functional.qh"
 #include "i18n.qh"
 #include "iter.qh"
+#include "json.qc"
 #include "lazy.qh"
 #include "linkedlist.qh"
 #include "log.qh"
@@ -102,3 +103,5 @@ void    isnt_bool(   float this) { print(ftos(this)); }
 #include "urllib.qc"
 #include "vector.qh"
 #include "yenc.qh"
+
+#include "matrix/_mod.inc"

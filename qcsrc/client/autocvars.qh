@@ -230,6 +230,7 @@ float autocvar_hud_panel_engineinfo_framecounter_time;
 float autocvar_hud_panel_fg_alpha;
 bool autocvar_hud_panel_healtharmor;
 int autocvar_hud_panel_healtharmor_baralign;
+bool autocvar_hud_panel_healtharmor_combined;
 bool autocvar_hud_panel_healtharmor_flip;
 int autocvar_hud_panel_healtharmor_iconalign;
 int autocvar_hud_panel_healtharmor_maxarmor;

@@ -816,7 +816,7 @@ LABEL(pickup)
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
+	_sound (other, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
 		remove (this);
@@ -863,8 +863,8 @@ void Item_Reset(entity this)
 }
 void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
-void Item_FindTeam()
-{SELFPARAM();
+void Item_FindTeam(entity this)
+{
 	entity e;
 
 	if(self.effects & EF_NODRAW)

@@ -60,7 +60,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 		{
 			panel = hud_panels_from(i);
 
-			HUD_Write_PanelCvar("");
 			HUD_Write_PanelCvar("_pos");
 			HUD_Write_PanelCvar("_size");
 			HUD_Write_PanelCvar("_bg");
@@ -120,6 +119,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar("_progressbar_armor");
 					HUD_Write_PanelCvar("_progressbar_gfx");
 					HUD_Write_PanelCvar("_progressbar_gfx_smooth");
+					HUD_Write_PanelCvar("_combined");
 					HUD_Write_PanelCvar("_text");
 					break;
 				case HUD_PANEL_NOTIFY:

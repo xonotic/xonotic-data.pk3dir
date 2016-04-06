@@ -28,18 +28,18 @@
 		SELFPARAM();
 		this.think     = SUB_Remove_self;
 		this.nextthink = time;
-		WITHSELF(this.owner, this.use());
+		WITHSELF(this.owner, this.selfthink(this));
 	}
 
-/*
-    Execute func() after time + fdelay.
-    self when func is executed = self when defer is called
-*/
-	void defer(entity this, float fdelay, void() func)
+    /**
+     * Execute func() after time + fdelay.
+     * self when func is executed = self when defer is called
+     */
+	void defer(entity this, float fdelay, void(entity this) func)
 	{
 		entity e    = new_pure(deferred);
 		e.owner     = this;
-		e.use       = func;
+		setthink(e, func);
 		e.think     = defer_think;
 		e.nextthink = time + fdelay;
 	}

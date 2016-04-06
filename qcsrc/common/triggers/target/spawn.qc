@@ -297,8 +297,8 @@ void target_spawn_use()
 	}
 }
 
-void target_spawn_spawnfirst()
-{SELFPARAM();
+void target_spawn_spawnfirst(entity this)
+{
 	activator = self.target_spawn_activator;
 	if(self.spawnflags & 2)
 		target_spawn_use();
