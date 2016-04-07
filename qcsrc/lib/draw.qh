@@ -5,7 +5,7 @@
 	#include "i18n.qh"
 	#include "vector.qh"
 
-	#include <client/defs.qh>
+	noref float vid_conwidth, vid_conheight;
 
 	void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 	{

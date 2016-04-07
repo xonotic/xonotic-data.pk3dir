@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include "changelevel.qh"
+#include "include.qh"
+#include "location.qh"
+#include "music.qh"
+#include "spawn.qh"
+#include "speaker.qh"
+#include "voicescript.qh"

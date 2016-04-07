@@ -2,8 +2,10 @@
 #include "all.qc"
 #include "banning.qc"
 #include "cmd.qc"
+#ifdef SVQC
+    #include "sv_cmd.qc"
+#endif
 #include "common.qc"
 #include "getreplies.qc"
 #include "radarmap.qc"
-#include "sv_cmd.qc"
 #include "vote.qc"

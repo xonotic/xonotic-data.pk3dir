@@ -1,0 +1,6 @@
+// generated file; do not modify
+#include "mage.qh"
+#include "shambler.qh"
+#include "spider.qh"
+#include "wyvern.qh"
+#include "zombie.qh"

@@ -2,6 +2,8 @@
 
 #include "cl_player.qh"
 
+#include <lib/matrix/matrix.qh>
+
 var void MX_Handle(int buf, string ancestor)
 {
     string type = json_get(buf, strcat(ancestor, ".type"));

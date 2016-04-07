@@ -1,0 +1,6 @@
+// generated file; do not modify
+#include "include.qh"
+#include "platforms.qh"
+#include "subs.qh"
+#include "teleporters.qh"
+#include "triggers.qh"

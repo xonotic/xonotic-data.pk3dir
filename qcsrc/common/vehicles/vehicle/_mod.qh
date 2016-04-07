@@ -1,0 +1,9 @@
+// generated file; do not modify
+#include "bumblebee.qh"
+#include "bumblebee_weapons.qh"
+#include "racer.qh"
+#include "racer_weapon.qh"
+#include "raptor.qh"
+#include "raptor_weapons.qh"
+#include "spiderbot.qh"
+#include "spiderbot_weapons.qh"

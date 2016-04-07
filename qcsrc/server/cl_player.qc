@@ -29,6 +29,8 @@
 
 #include "../common/animdecide.qh"
 
+#include <lib/matrix/matrix.qh>
+
 void Drop_Special_Items(entity player)
 {
 	// called when the player has become stuck or frozen

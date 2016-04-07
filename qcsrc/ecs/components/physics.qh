@@ -1,0 +1,15 @@
+#pragma once
+
+COMPONENT(phys);
+.vector com_phys_pos;
+.vector com_phys_pos_prev;
+.vector com_phys_vel;
+.vector com_phys_acc;
+
+.bool   com_phys_grounded;
+.bool   com_phys_nogravityonground;
+.float  com_phys_stepheight;
+.float  com_phys_jumpvel;
+.float  com_phys_bounce;
+.float  com_phys_friction;
+.float  com_phys_gravity;

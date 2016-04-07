@@ -1,0 +1,11 @@
+// generated file; do not modify
+#include "accuracy.qh"
+#include "common.qh"
+#include "csqcprojectile.qh"
+#include "hitplot.qh"
+#include "selection.qh"
+#include "spawning.qh"
+#include "throwing.qh"
+#include "tracing.qh"
+#include "weaponstats.qh"
+#include "weaponsystem.qh"

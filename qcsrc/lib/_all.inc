@@ -33,28 +33,30 @@
 #include "macro.qh"
 
 #if NDEBUG
-    #define TC(T, sym) MACRO_BEGIN MACRO_END
+	#define TC(T, sym) MACRO_BEGIN MACRO_END
 #else
-    #define TC(T, sym) MACRO_BEGIN \
-        if (!is_##T(sym)) { \
-            LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
-            isnt_##T(sym); \
-        } \
-    MACRO_END
+	#define TC(T, sym) \
+		MACRO_BEGIN \
+		if (!is_##T(sym)) \
+		{ \
+			LOG_WARNINGF("Type check failed: " #sym " :: " #T); \
+			isnt_##T(sym); \
+		} \
+		MACRO_END
 #endif
 
-#define   is_float(        this) (true || ftoe(this))
-#define isnt_float(        this)
-#define   is_vector(       this) (true || vtos(this))
-#define isnt_vector(       this)
-#define   is_string(       this) (true || stof(this))
-#define isnt_string(       this)
-#define   is_entity(       this) (true || etof(this))
-#define isnt_entity(       this)
-bool      is_int(    float this) { return this == floor(this); }
-void    isnt_int(    float this) { print(ftos(this)); }
-bool      is_bool(   float this) { return this == true || this == false; }
-void    isnt_bool(   float this) { print(ftos(this)); }
+#define   is_float(this) (true || ftoe(this))
+#define isnt_float(this)
+#define   is_vector(this) (true || vtos(this))
+#define isnt_vector(this)
+#define   is_string(this) (true || stof(this))
+#define isnt_string(this)
+#define   is_entity(this) (true || etof(this))
+#define isnt_entity(this)
+bool      is_int(float this) { return this == floor(this); }
+void    isnt_int(float this) { print(ftos(this)); }
+bool      is_bool(float this) { return this == true || this == false; }
+void    isnt_bool(float this) { print(ftos(this)); }
 
 #include "warpzone/mathlib.qc"
 
@@ -104,4 +106,96 @@ void    isnt_bool(   float this) { print(ftos(this)); }
 #include "vector.qh"
 #include "yenc.qh"
 
-#include "matrix/_mod.inc"
+#ifdef MENUQC
+	void _m_init();
+	void m_init() { if (_m_init) _m_init(); }
+	#define m_init _m_init
+
+	void _m_shutdown();
+	void m_shutdown() { if (_m_shutdown) _m_shutdown(); }
+	#define m_shutdown _m_shutdown
+
+	void _m_draw(float width, float height);
+	void m_draw(float width, float height) { if (_m_draw) _m_draw(width, height); }
+	#define m_draw _m_draw
+
+	void _m_keydown(int keynr, int ascii);
+	void m_keydown(int keynr, int ascii) { if (_m_keydown) _m_keydown(keynr, ascii); }
+	#define m_keydown _m_keydown
+
+	void _m_toggle(int mode);
+	void m_toggle(int mode) { if (_m_toggle) _m_toggle(mode); }
+	#define m_toggle _m_toggle
+#endif
+
+#ifdef SVQC
+	void _main();
+	void main() { if (_main) _main(); }
+	#define main _main
+
+    void _SV_Shutdown();
+    void SV_Shutdown() { if (_SV_Shutdown) _SV_Shutdown(); }
+    #define SV_Shutdown _SV_Shutdown
+
+	void _StartFrame();
+	void StartFrame() { if (_StartFrame) _StartFrame(); }
+	#define StartFrame _StartFrame
+
+	void _SetNewParms();
+	void SetNewParms() { if (_SetNewParms) _SetNewParms(); }
+	#define SetNewParms _SetNewParms
+
+	void _SetChangeParms();
+	void SetChangeParms() { if (_SetChangeParms) _SetChangeParms(); }
+	#define SetChangeParms _SetChangeParms
+
+	void _ClientConnect();
+	void ClientConnect() { if (_ClientConnect) _ClientConnect(); }
+	#define ClientConnect _ClientConnect
+
+	void _ClientDisconnect();
+	void ClientDisconnect() { if (_ClientDisconnect) _ClientDisconnect(); }
+	#define ClientDisconnect _ClientDisconnect
+
+	void _PutClientInServer();
+	void PutClientInServer() { if (_PutClientInServer) _PutClientInServer(); }
+	#define PutClientInServer _PutClientInServer
+
+	void _ClientKill();
+	void ClientKill() { if (_ClientKill) _ClientKill(); }
+	#define ClientKill _ClientKill
+
+	void _PlayerPreThink();
+	void PlayerPreThink() { if (_PlayerPreThink) _PlayerPreThink(); }
+	#define PlayerPreThink _PlayerPreThink
+
+	void _PlayerPostThink();
+	void PlayerPostThink() { if (_PlayerPostThink) _PlayerPostThink(); }
+	#define PlayerPostThink _PlayerPostThink
+#endif
+
+#ifdef CSQC
+	void _CSQC_Init();
+	void CSQC_Init() { if (_CSQC_Init) _CSQC_Init(); }
+	#define CSQC_Init _CSQC_Init
+
+    void _CSQC_Shutdown();
+    void CSQC_Shutdown() { if (_CSQC_Shutdown) _CSQC_Shutdown(); }
+    #define CSQC_Shutdown _CSQC_Shutdown
+
+	void _CSQC_UpdateView(float w, float h);
+	void CSQC_UpdateView(float w, float h) { if (_CSQC_UpdateView) _CSQC_UpdateView(w, h); }
+	#define CSQC_UpdateView _CSQC_UpdateView
+
+	bool _CSQC_InputEvent(int inputType, float nPrimary, float nSecondary);
+	bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
+	{
+		return _CSQC_InputEvent ? _CSQC_InputEvent(inputType, nPrimary, nSecondary) : false;
+	}
+	#define CSQC_InputEvent _CSQC_InputEvent
+
+	bool _CSQC_ConsoleCommand(string s);
+	bool CSQC_ConsoleCommand(string s) { return _CSQC_ConsoleCommand ? _CSQC_ConsoleCommand(s) : false; }
+	#define CSQC_ConsoleCommand _CSQC_ConsoleCommand
+
+#endif
