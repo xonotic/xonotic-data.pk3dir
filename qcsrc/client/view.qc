@@ -440,7 +440,7 @@ vector GetCurrentFov(float fov)
 	if(switchweapon == activeweapon)
 	if((activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
 		zoomdir += button_attack2;
-	if(spectatee_status > 0 || isdemo())
+	if((spectatee_status > 0 && autocvar_camera_spectator != 2) || isdemo())
 	{
 		if(spectatorbutton_zoom)
 		{
