@@ -303,7 +303,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
 				if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
-					frag_damage = frag_mirrordamage = 0;
+				{
+					frag_damage = 0;
+					if(!autocvar_g_instagib_mirrordamage)
+						frag_mirrordamage = 0; // never do mirror damage on enemies
+				}
 
 				if(frag_target != frag_attacker)
 				{
@@ -315,6 +319,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		}
 	}
 
+	if(!autocvar_g_instagib_mirrordamage) // only apply the taking lives hack if we don't want to support real damage mirroring
 	if(IS_PLAYER(frag_attacker))
 	if(frag_mirrordamage > 0)
 	{
