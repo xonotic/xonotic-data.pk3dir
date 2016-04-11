@@ -1445,25 +1445,29 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	if(!isdemo())
-	if(spectatee_status > 0 && button_zoom)
+	if(spectatee_status > 0)
 	{
-		// without camera_spectator_changed camera_spectator_change would be
-		// called twice since -zoom takes another frame to reset the zoom button
-		if(!camera_spectator_changed)
+		if(button_zoom)
 		{
-			localcmd("camera_spectator_change\n");
-			camera_spectator_changed = true;
-			localcmd("-zoom\n");
+			// camera_spectator_changed is needed to avoid executing
+			// camera_spectator_change more than once since -zoom
+			// may take a few frames to reset the zoom button
+			if(!camera_spectator_changed)
+			{
+				localcmd("camera_spectator_change\n");
+				localcmd("-zoom\n");
+				camera_spectator_changed = true;
+			}
 			button_zoom = false;
 		}
 		else
 			camera_spectator_changed = false;
-	}
 
-	if(camera_spectator_prev != autocvar_camera_spectator)
-	{
-		localcmd("cl_cmd sendcvar camera_spectator\n");
-		camera_spectator_prev = autocvar_camera_spectator;
+		if(camera_spectator_prev != autocvar_camera_spectator)
+		{
+			localcmd("cl_cmd sendcvar camera_spectator\n");
+			camera_spectator_prev = autocvar_camera_spectator;
+		}
 	}
 
 	// event chase camera
