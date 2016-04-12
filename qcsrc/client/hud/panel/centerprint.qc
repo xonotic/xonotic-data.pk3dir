@@ -186,7 +186,10 @@ void HUD_CenterPrint ()
 		}
 	}
 
-	HUD_Scale_Enable();
+	if (autocvar_hud_panel_centerprint_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if (!centerprint_showing)

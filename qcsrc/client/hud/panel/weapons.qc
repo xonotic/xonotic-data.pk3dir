@@ -282,7 +282,10 @@ void HUD_Weapons()
 	}
 
 	// draw the background, then change the virtual size of it to better fit other items inside
-	HUD_Scale_Enable();
+	if (autocvar_hud_panel_weapons_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if(center.x == -1)

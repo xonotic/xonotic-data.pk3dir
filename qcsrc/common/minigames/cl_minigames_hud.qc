@@ -74,6 +74,7 @@ void HUD_MinigameStatus ()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	HUD_Scale_Disable();
 	hud_minigame.minigame_hud_status(pos,mySize);
 }
 

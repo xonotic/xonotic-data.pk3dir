@@ -48,7 +48,10 @@ void HUD_Notify()
 			return;
 
 	HUD_Panel_UpdateCvars();
-	HUD_Scale_Enable();
+	if (autocvar_hud_panel_notify_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if (!autocvar__hud_configure)

@@ -54,6 +54,7 @@ void HUD_Chat()
 	pos = panel_pos;
 	mySize = panel_size;
 
+	// chat messages don't scale properly since they are displayed directly by the engine
 	HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 

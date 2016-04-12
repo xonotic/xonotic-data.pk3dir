@@ -272,7 +272,6 @@ void ttt_hud_board(vector pos, vector mySize)
 // Required function, draw the game status panel
 void ttt_hud_status(vector pos, vector mySize)
 {
-	HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 	vector ts;
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,

@@ -1278,6 +1278,11 @@ void HUD_DrawScoreboard()
 	if (!scoreboard_fade_alpha)
 		return;
 
+	if (autocvar_scoreboard_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
+
 	HUD_UpdatePlayerTeams();
 
 	scoreboard_alpha_bg = autocvar_scoreboard_alpha_bg * scoreboard_fade_alpha * (1 - autocvar__menu_alpha);
