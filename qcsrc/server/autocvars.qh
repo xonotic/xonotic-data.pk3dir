@@ -224,6 +224,7 @@ bool autocvar_g_instagib_mirrordamage;
 bool autocvar_g_instagib_friendlypush = true;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
+bool autocvar_g_mirrordamage_onlyweapons;
 
 float autocvar_g_movement_highspeed = 1;
 string autocvar_g_mutatormsg;

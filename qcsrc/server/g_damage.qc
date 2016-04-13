@@ -873,6 +873,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	setself(this);
 
 	// apply mirror damage if any
+	if(!autocvar_g_mirrordamage_onlyweapons || DEATH_WEAPONOF(deathtype) != WEP_Null)
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;
