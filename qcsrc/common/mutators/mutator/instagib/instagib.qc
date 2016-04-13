@@ -288,7 +288,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		if(IS_PLAYER(frag_attacker))
 		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		{
-			if(autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
+			if(!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
 				frag_force = '0 0 0';
 
 			if(frag_target.armorvalue)
