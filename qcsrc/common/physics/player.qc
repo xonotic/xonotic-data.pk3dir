@@ -1391,7 +1391,7 @@ void PM_Main(entity this)
 		return;
 
 	// when we get here, disableclientprediction cannot be 2
-	this.disableclientprediction = -1;
+	this.disableclientprediction = 0;
 #endif
 
 	viewloc_PlayerPhysics(this);
