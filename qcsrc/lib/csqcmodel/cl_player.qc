@@ -164,6 +164,11 @@ void CSQCPlayer_Physics(entity this)
 		if(autocvar_cl_movement == 1)
 			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
+		vector oldv_angle = this.v_angle;
+		vector oldangles = this.angles; // we need to save these, as they're abused by other code
+		this.v_angle = PHYS_INPUT_ANGLES(this);
+		this.angles = PHYS_WORLD_ANGLES(this);
+
 		CSQC_ClientMovement_PlayerMove_Frame(this);
 
 		if(autocvar_cl_movement == 1)
@@ -179,6 +184,11 @@ void CSQCPlayer_Physics(entity this)
 			this.move_watertype = this.watertype;
 			Movetype_Physics_Spam(this);
 		}
+
+		view_angles = this.v_angle;
+		input_angles = this.angles;
+		this.v_angle = oldv_angle;
+		this.angles = oldangles;
 
 		this.pmove_flags =
 				((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
