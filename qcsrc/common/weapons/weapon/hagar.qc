@@ -397,6 +397,36 @@ void W_Hagar_Attack2_Load(Weapon thiswep, .entity weaponentity)
 	}
 }
 
+void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
+{
+	if(!(fire & 1) || actor.hagar_load || actor.hagar_loadblock)
+	{
+		w_ready(thiswep, actor, weaponentity, fire);
+		return;
+	}
+
+	if(!thiswep.wr_checkammo1(thiswep))
+	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	{
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		w_ready(thiswep, actor, weaponentity, fire);
+		return;
+	}
+
+	W_Hagar_Attack(thiswep);
+
+	int slot = weaponslot(weaponentity);
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hagar, refire) * W_WeaponRateFactor();
+	int theframe = WFRAME_FIRE1;
+	entity this = actor.(weaponentity);
+	if(this)
+	{
+		if(this.wframe == WFRAME_FIRE1)
+			theframe = WFRAME_DONTCHANGE;
+	}
+	weapon_thinkf(actor, weaponentity, theframe, WEP_CVAR_PRI(hagar, refire), W_Hagar_Attack_Auto);
+}
+
 METHOD(Hagar, wr_aim, void(entity thiswep))
 {
     SELFPARAM();
@@ -414,14 +444,12 @@ METHOD(Hagar, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
         W_Hagar_Attack2_Load(thiswep, weaponentity); // must always run each frame
     if(autocvar_g_balance_hagar_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hagar, ammo), WEP_CVAR_SEC(hagar, ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
-    } else if((fire & 1) && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
-    {
-        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hagar, refire)))
-        {
-            W_Hagar_Attack(thiswep);
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hagar, refire), w_ready);
-        }
     }
+    else if((fire & 1) && !actor.hagar_load && !actor.hagar_loadblock) // not while secondary is loaded or awaiting reset
+	{
+		if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
+			W_Hagar_Attack_Auto(thiswep, actor, weaponentity, fire);
+	}
     else if((fire & 2) && !loadable_secondary && WEP_CVAR(hagar, secondary))
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hagar, refire)))

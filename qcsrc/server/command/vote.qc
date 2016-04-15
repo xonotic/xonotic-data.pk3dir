@@ -570,9 +570,14 @@ float VoteCommand_checkargs(float startpos, float argc)
 {
 	float p, q, check, minargs;
 	string cvarname = strcat("sv_vote_command_restriction_", argv(startpos));
-	string cmdrestriction = cvar_string(cvarname);  // note: this warns on undefined cvar. We want that.
+	string cmdrestriction = "";  // No we don't.
 	string charlist, arg;
 	float checkmate;
+
+	if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
+		cmdrestriction = cvar_string(cvarname);
+	else
+		LOG_INFO("NOTE: ", cvarname, " does not exist, no restrictions will be applied.\n");
 
 	if (cmdrestriction == "") return true;
 

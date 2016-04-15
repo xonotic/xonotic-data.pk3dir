@@ -47,7 +47,7 @@ REGISTER_MUTATOR(ca, false)
 		EliminatedPlayers_Init(ca_isEliminated);
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_ca_point_limit, autocvar_g_ca_point_leadlimit, -1, -1);
+		SetLimits(autocvar_g_ca_point_limit, autocvar_g_ca_point_leadlimit, autocvar_timelimit_override, -1);
 
 		if (autocvar_g_ca_team_spawns)
 			have_team_spawns = -1; // request team spawns

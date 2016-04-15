@@ -281,14 +281,22 @@ void buf_save(float buf, string pFilename)
 
 /**
  * converts a number to a string with the indicated number of decimals
- * works for up to 10 decimals!
  */
 string ftos_decimals(float number, int decimals)
 {
 	// inhibit stupid negative zero
 	if (number == 0) number = 0;
-	// we have sprintf...
 	return sprintf("%.*f", decimals, number);
+}
+
+/**
+ * converts a number to a string with the minimum number of decimals
+ */
+string ftos_mindecimals(float number)
+{
+	// inhibit stupid negative zero
+	if (number == 0) number = 0;
+	return sprintf("%.7g", number);
 }
 
 int vercmp_recursive(string v1, string v2)

@@ -328,7 +328,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			return;
 		}
 		LogDeath("suicide", deathtype, targ, targ);
-		GiveFrags(attacker, targ, -1, deathtype);
+		if(deathtype != DEATH_AUTOTEAMCHANGE.m_id) // special case: don't negate frags if auto switched
+			GiveFrags(attacker, targ, -1, deathtype);
 	}
 
 	// ======
@@ -873,6 +874,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	setself(this);
 
 	// apply mirror damage if any
+	if(!autocvar_g_mirrordamage_onlyweapons || DEATH_WEAPONOF(deathtype) != WEP_Null)
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;

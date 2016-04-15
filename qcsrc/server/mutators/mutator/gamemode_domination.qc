@@ -22,7 +22,7 @@ REGISTER_MUTATOR(dom, false)
 			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
 
 		ActivateTeamplay();
-		SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, -1, -1);
+		SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 
