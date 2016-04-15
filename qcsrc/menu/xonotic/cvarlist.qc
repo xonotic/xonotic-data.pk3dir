@@ -46,9 +46,17 @@ void XonoticCvarList_showNotify(entity me)
 	if(force_initial_selection)
 		me.setSelected(me, 0);
 }
+void XonoticCvarList_hideNotify(entity me)
+{
+	if(me.handle)
+		buf_del(me.handle);
+	me.handle = buf_create();
+	me.nItems = 0;
+}
 void XonoticCvarList_destroy(entity me)
 {
-	buf_del(me.handle);
+	if(me.handle)
+		buf_del(me.handle);
 }
 string autocvar_menu_forced_saved_cvars;
 string autocvar_menu_reverted_nonsaved_cvars;
