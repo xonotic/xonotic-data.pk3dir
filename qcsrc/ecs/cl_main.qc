@@ -3,6 +3,11 @@
 #if !XONOTIC
 	entity me;
 
+    /** 6 bits provides up to 64 remembered states */
+    const int SNAP_BITS = 13;
+    .int snap;
+    .float times[1 << SNAP_BITS];
+
 	void CSQC_Init()
 	{
 		entity it = me = spawn();
@@ -14,6 +19,39 @@
 		it.com_phys_jumpvel = 260;
 		it.com_phys_friction = 6;
 		it.com_phys_gravity = 800;
+	}
+
+	void CSQC_Ent_Update(bool isnew)
+	{
+	    SELFPARAM();
+	    int id = ReadByte();
+	    entity recv = LinkedEntities_from(id);
+        if (isnew) this.classname = recv.netname;
+        if (recv) recv.m_read(this, NULL, isnew);
+	}
+
+	void rec()
+	{
+        me.ARRAY_INDEX(float, times, me.snap) = time;
+        // me.times[me.snap] = time;
+        me.snap = (me.snap + 1) & BITS(SNAP_BITS);
+	}
+
+	NET_HANDLE(ENT_OBJECT, bool isnew)
+	{
+	    if (isnew)
+	    {
+	        this.com_phys = true;
+            precache_model("models/player/erebus.iqm");
+            _setmodel(this, "models/player/erebus.iqm");
+            this.drawmask = MASK_NORMAL;
+	    }
+	    this.com_phys_pos_prev = this.com_phys_pos;
+	    this.com_phys_ang_prev = this.com_phys_ang;
+	    serialize(ENT_OBJECT, 0, this);
+	    this.com_phys_pos = this.origin;
+	    this.com_phys_ang = this.angles;
+        return true;
 	}
 
 	void CSQC_UpdateView(float w, float h)

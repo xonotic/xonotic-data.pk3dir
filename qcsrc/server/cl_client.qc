@@ -2071,9 +2071,8 @@ Called every frame for each client before the physics are run
 void() nexball_setstatus;
 .float last_vehiclecheck;
 .int items_added;
-void PlayerPreThink ()
+void PlayerPreThink (entity this)
 {
-    SELFPARAM();
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
     STAT(GAMESTARTTIME, this) = game_starttime;

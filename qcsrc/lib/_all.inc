@@ -165,8 +165,8 @@ void    isnt_bool(float this) { print(ftos(this)); }
 	void ClientKill() { if (_ClientKill) _ClientKill(); }
 	#define ClientKill _ClientKill
 
-	void _PlayerPreThink();
-	void PlayerPreThink() { if (_PlayerPreThink) _PlayerPreThink(); }
+	void _PlayerPreThink(entity this);
+	void PlayerPreThink() { SELFPARAM(); if (_PlayerPreThink) _PlayerPreThink(this); }
 	#define PlayerPreThink _PlayerPreThink
 
 	void _PlayerPostThink();
@@ -176,7 +176,12 @@ void    isnt_bool(float this) { print(ftos(this)); }
 
 #ifdef CSQC
 	void _CSQC_Init();
-	void CSQC_Init() { if (_CSQC_Init) _CSQC_Init(); }
+	void CSQC_Init() {
+        static_init();
+        static_init_late();
+        static_init_precache();
+        if (_CSQC_Init) _CSQC_Init();
+    }
 	#define CSQC_Init _CSQC_Init
 
     void _CSQC_Shutdown();

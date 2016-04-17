@@ -125,6 +125,8 @@ void InterpolateOrigin_Note(entity this)
 	}
 }
 
+float autocvar_cl_lerpexcess;
+
 /** set origin based on iorigin1 (old pos), iorigin2 (desired pos), and time */
 void InterpolateOrigin_Do(entity this)
 {

@@ -3,3 +3,6 @@
 #ifdef CSQC
     #include "cl_main.qc"
 #endif
+#ifdef SVQC
+    #include "sv_main.qc"
+#endif

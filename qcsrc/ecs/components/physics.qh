@@ -1,8 +1,9 @@
 #pragma once
 
+// TODO: store more frames for interpolation
 COMPONENT(phys);
-.vector com_phys_pos;
-.vector com_phys_pos_prev;
+.vector com_phys_pos; .vector com_phys_pos_prev;
+.vector com_phys_ang; .vector com_phys_ang_prev;
 .vector com_phys_vel;
 .vector com_phys_acc;
 
