@@ -440,8 +440,6 @@ spawnfunc(target_position) { target_push_init(this); }
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
-	make_pure(this);
-
 	this.classname = "jumppad";
 	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
 	this.spawnflags = ReadInt24_t();
