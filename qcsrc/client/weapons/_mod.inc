@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "projectile.qc"
+#include <client/weapons/projectile.qc>

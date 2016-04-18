@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "cloaked.qc"
+#include <common/mutators/mutator/cloaked/cloaked.qc>

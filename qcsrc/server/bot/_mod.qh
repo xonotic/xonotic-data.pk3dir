@@ -1,0 +1,6 @@
+// generated file; do not modify
+#include <server/bot/aim.qh>
+#include <server/bot/bot.qh>
+#include <server/bot/navigation.qh>
+#include <server/bot/scripting.qh>
+#include <server/bot/waypoints.qh>

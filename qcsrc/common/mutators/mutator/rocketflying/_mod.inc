@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "rocketflying.qc"
+#include <common/mutators/mutator/rocketflying/rocketflying.qc>

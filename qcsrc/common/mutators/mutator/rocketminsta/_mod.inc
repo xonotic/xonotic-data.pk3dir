@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "rocketminsta.qc"
+#include <common/mutators/mutator/rocketminsta/rocketminsta.qc>

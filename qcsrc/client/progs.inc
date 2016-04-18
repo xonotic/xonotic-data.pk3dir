@@ -1,7 +1,7 @@
 #include <lib/_all.inc>
 #include "_all.qh"
 
-#include "_mod.inc"
+#include "../client/_mod.inc"
 #include "commands/_mod.inc"
 #include "hud/_mod.inc"
 #include "mutators/_mod.inc"

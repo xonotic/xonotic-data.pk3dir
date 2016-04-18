@@ -1,4 +1,4 @@
 // generated file; do not modify
-#include "all.qc"
-#include "cl_vehicles.qc"
-#include "sv_vehicles.qc"
+#include <common/vehicles/all.qc>
+#include <common/vehicles/cl_vehicles.qc>
+#include <common/vehicles/sv_vehicles.qc>

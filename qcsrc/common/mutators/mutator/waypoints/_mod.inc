@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "waypointsprites.qc"
+#include <common/mutators/mutator/waypoints/waypointsprites.qc>

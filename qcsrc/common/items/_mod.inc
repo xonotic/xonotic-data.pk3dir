@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "all.qc"
+#include <common/items/all.qc>

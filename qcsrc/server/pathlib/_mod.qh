@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include <server/pathlib/costs.qh>
+#include <server/pathlib/debug.qh>
+#include <server/pathlib/expandnode.qh>
+#include <server/pathlib/main.qh>
+#include <server/pathlib/movenode.qh>
+#include <server/pathlib/path_waypoint.qh>
+#include <server/pathlib/utility.qh>
