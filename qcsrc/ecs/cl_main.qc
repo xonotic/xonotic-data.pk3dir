@@ -18,7 +18,10 @@
 		it.com_phys_stepheight = 31;
 		it.com_phys_jumpvel = 260;
 		it.com_phys_friction = 6;
-		it.com_phys_gravity = 800;
+		// it.com_phys_gravity = 800;
+		it.com_phys_noclip = true;
+
+		it.com_phys_pos = '0 0 200';
 	}
 
 	void CSQC_Ent_Update(bool isnew)
@@ -64,7 +67,7 @@
 		vector dir = normalize(it.com_in_move);
 		vector upvec = '0 0 1';
 		vector vel = (v_forward * dir.x + v_right * dir.y + upvec * dir.z);
-		vel = vec_reflect(vel, upvec, 0);
+		if (!it.com_phys_noclip) vel = vec_reflect(vel, upvec, 0);
 		vel = normalize(vel);
 		vel *= 360 * frametime * 8;
 		it.com_phys_vel += vel;

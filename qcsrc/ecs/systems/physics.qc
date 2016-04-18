@@ -29,6 +29,11 @@ void sys_phys_update(entity this, float dt)
 	float bounce = this.com_phys_bounce;
 	float friction = this.com_phys_friction;
 	float gravity = this.com_phys_gravity;
+	bool noclip = this.com_phys_noclip;
+	if (noclip) {
+	    jump = false;
+	    nogravityonground = false;
+	}
 
 	vector g = upvec * -gravity;
 
@@ -36,7 +41,7 @@ void sys_phys_update(entity this, float dt)
 	// alternatives: rk4, verlet, euler
 	vel += (acc + g) * dt / 2;
 	{
-		if (onground)
+		if (onground || noclip)
 		{
 			if (nogravityonground)
 			{
@@ -50,7 +55,7 @@ void sys_phys_update(entity this, float dt)
 			else  // the first landing frame is free
 			{
 				// friction
-				vector slide = vec_reflect(vel, upvec, 0);
+				vector slide = noclip ? vel : vec_reflect(vel, upvec, 0);
 				vector push = vel - slide;
 				// TODO: slick
 				slide *= 1 - friction * dt;
@@ -62,6 +67,7 @@ void sys_phys_update(entity this, float dt)
 		bool foundground = false;                  // assume until proven otherwise
 		if (nogravityonground) foundground = true; // override
 		bool steplimit = 1;
+		if (noclip) pass = true; else
 		for (int i = 0; i < PHYSICS_TRACE_PLANE_MAX; ++i)
 		{
 			vector p0 = pos;
