@@ -337,6 +337,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 	}
 
 	if(frag_target.alpha && frag_target.alpha < 1)
+	if(IS_PLAYER(frag_target))
 		yoda = 1;
 
 	return false;
