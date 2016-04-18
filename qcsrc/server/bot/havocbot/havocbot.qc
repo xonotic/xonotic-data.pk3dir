@@ -1106,24 +1106,24 @@ void havocbot_chooseweapon(entity this)
 
 void havocbot_aim(entity this)
 {
-	vector selfvel, enemyvel;
+	vector myvel, enemyvel;
 //	if(this.flags & FL_INWATER)
 //		return;
 	if (time < this.nextaim)
 		return;
 	this.nextaim = time + 0.1;
-	selfvel = this.velocity;
+	myvel = this.velocity;
 	if (!this.waterlevel)
-		selfvel.z = 0;
+		myvel.z = 0;
 	if (this.enemy)
 	{
 		enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
-		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, selfvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
+		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
 	}
 	else
-		lag_additem(this, time + this.ping, 0, 0, world, this.origin, selfvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
+		lag_additem(this, time + this.ping, 0, 0, world, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
 }
 
 bool havocbot_moveto_refresh_route(entity this)
@@ -1273,6 +1273,7 @@ vector havocbot_dodge()
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
 #if 0
+SELFPARAM();
 	entity head;
 	vector dodge, v, n;
 	float danger, bestdanger, vl, d;
@@ -1282,13 +1283,13 @@ vector havocbot_dodge()
 	head = findchainfloat(bot_dodge, true);
 	while(head)
 	{
-		if (head.owner != self)
+		if (head.owner != this)
 		{
 			vl = vlen(head.velocity);
 			if (vl > autocvar_sv_maxspeed * 0.3)
 			{
 				n = normalize(head.velocity);
-				v = self.origin - head.origin;
+				v = this.origin - head.origin;
 				d = v * n;
 				if (d > (0 - head.bot_dodgerating))
 				if (d < (vl * 0.2 + head.bot_dodgerating))
@@ -1306,11 +1307,11 @@ vector havocbot_dodge()
 			}
 			else
 			{
-				danger = head.bot_dodgerating - vlen(head.origin - self.origin);
+				danger = head.bot_dodgerating - vlen(head.origin - this.origin);
 				if (bestdanger < danger)
 				{
 					bestdanger = danger;
-					dodge = normalize(self.origin - head.origin);
+					dodge = normalize(this.origin - head.origin);
 				}
 			}
 		}
