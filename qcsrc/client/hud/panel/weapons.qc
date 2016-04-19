@@ -297,7 +297,13 @@ void HUD_Weapons()
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1), panel_size, aspect);
+		int nHidden = 0;
+		WepSet weapons_stat = WepSet_GetFromStat();
+		FOREACH(Weapons, it != WEP_Null, {
+			if (weapons_stat & it.m_wepset) continue;
+			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+		});
+		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect);
 		columns = table_size.x;
 		rows = table_size.y;
 		weapon_size.x = panel_size.x / columns;
@@ -347,8 +353,15 @@ void HUD_Weapons()
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
-			continue;
+		{
+			if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
+				continue;
+		}
+		else
+		{
+			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED && !(weapons_stat & WepSet_FromWeapon(it)))
+				continue;
+		}
 
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
