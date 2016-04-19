@@ -344,7 +344,6 @@ void HUD_Weapons()
 		// retrieve information about the current weapon to be drawn
 		entity it = weaponorder[i];
 		weapon_id = it.impulse;
-		isCurrent = (it == switchweapon);
 
 		// skip if this weapon doesn't exist
 		if(!it || weapon_id < 0) { continue; }
@@ -367,6 +366,7 @@ void HUD_Weapons()
 		noncurrent_pos.y = weapon_pos.y + (weapon_size.y - noncurrent_size.y) / 2;
 
 		// draw background behind currently selected weapon
+		isCurrent = (it == switchweapon);
 		if(isCurrent)
 			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
