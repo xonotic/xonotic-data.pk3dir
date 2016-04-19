@@ -21,9 +21,8 @@ int weaponorder_cmp(int i, int j, entity pass)
 
 #define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN { \
 	int nHidden = 0; \
-	WepSet weapons_stat = WepSet_GetFromStat(); \
 	FOREACH(Weapons, it != WEP_Null, { \
-		if (weapons_stat & it.m_wepset) continue; \
+		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
 		if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1; \
 	}); \
 	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
@@ -106,8 +105,14 @@ void HUD_Weapons()
 	if(autocvar__hud_configure)
 	{
 		if(!weapons_stat)
-			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
-				weapons_stat |= WepSet_FromWeapon(Weapons_from(i));
+		{
+			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_BLASTER.m_id));
+			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_SHOTGUN.m_id));
+			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_MORTAR.m_id));
+			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_CRYLINK.m_id));
+			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_VORTEX.m_id));
+			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_DEVASTATOR.m_id));
+		}
 
 		#if 0
 		/// debug code
