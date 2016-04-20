@@ -106,12 +106,14 @@ void HUD_Weapons()
 	{
 		if(!weapons_stat)
 		{
-			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_BLASTER.m_id));
-			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_SHOTGUN.m_id));
-			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_MORTAR.m_id));
-			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_CRYLINK.m_id));
-			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_VORTEX.m_id));
-			weapons_stat |= WepSet_FromWeapon(Weapons_from(WEP_DEVASTATOR.m_id));
+			int j = 0;
+			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
+				if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				{
+					weapons_stat |= it.m_wepset;
+					++j;
+				}
+			});
 		}
 
 		#if 0
