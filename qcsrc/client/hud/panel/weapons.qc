@@ -120,10 +120,20 @@ void HUD_Weapons()
 		/// debug code
 		if(cvar("wep_add"))
 		{
+			int j;
+			int nHidden = 0;
+			FOREACH(Weapons, it != WEP_Null, {
+				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+			});
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (Weapons_COUNT - 1));
-			for(i = WEP_FIRST; i <= countw; ++i)
-				weapons_stat |= WepSet_FromWeapon(Weapons_from(i));
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((Weapons_COUNT - 1) - nHidden));
+			for(i = 0, j = 0; i <= (Weapons_COUNT - 1) && j < countw; ++i)
+			{
+				if(weaponorder[i].spawnflags & WEP_FLAG_MUTATORBLOCKED)
+					continue;
+				weapons_stat |= weaponorder[i].m_wepset;
+				++j;
+			}
 		}
 		#endif
 	}
