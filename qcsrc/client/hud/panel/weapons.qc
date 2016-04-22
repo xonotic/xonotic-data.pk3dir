@@ -19,6 +19,19 @@ int weaponorder_cmp(int i, int j, entity pass)
 	return aj - ai; // the string is in REVERSE order (higher prio at the right is what we want, but higher prio first is the string)
 }
 
+#define HUD_WEAPONS_GET_FULL_LAYOUT() MACRO_BEGIN { \
+	int nHidden = 0; \
+	FOREACH(Weapons, it != WEP_Null, { \
+		if (weapons_stat & WepSet_FromWeapon(it)) continue; \
+		if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1; \
+	}); \
+	vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, panel_size, aspect); \
+	columns = table_size.x; \
+	rows = table_size.y; \
+	weapon_size.x = panel_size.x / columns; \
+	weapon_size.y = panel_size.y / rows; \
+} MACRO_END
+
 void HUD_Weapons()
 {
 	// declarations
@@ -92,17 +105,35 @@ void HUD_Weapons()
 	if(autocvar__hud_configure)
 	{
 		if(!weapons_stat)
-			for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
-				weapons_stat |= WepSet_FromWeapon(Weapons_from(i));
+		{
+			int j = 0;
+			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
+				if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
+				{
+					weapons_stat |= it.m_wepset;
+					++j;
+				}
+			});
+		}
 
 		#if 0
 		/// debug code
 		if(cvar("wep_add"))
 		{
+			int j;
+			int nHidden = 0;
+			FOREACH(Weapons, it != WEP_Null, {
+				if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
+			});
 			weapons_stat = '0 0 0';
-			float countw = 1 + floor((floor(time * cvar("wep_add"))) % (Weapons_COUNT - 1));
-			for(i = WEP_FIRST; i <= countw; ++i)
-				weapons_stat |= WepSet_FromWeapon(Weapons_from(i));
+			float countw = 1 + floor((floor(time * cvar("wep_add"))) % ((Weapons_COUNT - 1) - nHidden));
+			for(i = 0, j = 0; i <= (Weapons_COUNT - 1) && j < countw; ++i)
+			{
+				if(weaponorder[i].spawnflags & WEP_FLAG_MUTATORBLOCKED)
+					continue;
+				weapons_stat |= weaponorder[i].m_wepset;
+				++j;
+			}
 		}
 		#endif
 	}
@@ -128,40 +159,29 @@ void HUD_Weapons()
 			return;
 
 		vector old_panel_size = panel_size;
-		vector padded_panel_size = panel_size - '2 2 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 
-		// get the all-weapons layout
-		int nHidden = 0;
-		WepSet weapons_stat = WepSet_GetFromStat();
-		FOREACH(Weapons, it != WEP_Null, {
-			if (weapons_stat & it.m_wepset) continue;
-			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED) nHidden += 1;
-		});
-		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1) - nHidden, padded_panel_size, aspect);
-		columns = table_size.x;
-		rows = table_size.y;
-		weapon_size.x = padded_panel_size.x / columns;
-		weapon_size.y = padded_panel_size.y / rows;
+		HUD_WEAPONS_GET_FULL_LAYOUT();
 
 		// NOTE: although weapons should aways look the same even if onlyowned is enabled,
 		// we enlarge them a bit when possible to better match the desired aspect ratio
-		if(padded_panel_size.x / padded_panel_size.y < aspect)
+		if(panel_size.x / panel_size.y < aspect)
 		{
 			// maximum number of rows that allows to display items with the desired aspect ratio
-			int max_rows = floor(padded_panel_size.y / (weapon_size.x / aspect));
+			int max_rows = floor(panel_size.y / (weapon_size.x / aspect));
 			columns = min(columns, ceil(weapon_count / max_rows));
 			rows = ceil(weapon_count / columns);
-			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
-			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
+			weapon_size.y = min(panel_size.y / rows, weapon_size.x / aspect);
+			weapon_size.x = min(panel_size.x / columns, aspect * weapon_size.y);
 			vertical_order = false;
 		}
 		else
 		{
-			int max_columns = floor(padded_panel_size.x / (weapon_size.y * aspect));
+			int max_columns = floor(panel_size.x / (weapon_size.y * aspect));
 			rows = min(rows, ceil(weapon_count / max_columns));
 			columns = ceil(weapon_count / rows);
-			weapon_size.x = min(padded_panel_size.x / columns, aspect * weapon_size.y);
-			weapon_size.y = min(padded_panel_size.y / rows, weapon_size.x / aspect);
+			weapon_size.x = min(panel_size.x / columns, aspect * weapon_size.y);
+			weapon_size.y = min(panel_size.y / rows, weapon_size.x / aspect);
 			vertical_order = true;
 		}
 
@@ -285,7 +305,7 @@ void HUD_Weapons()
 	HUD_Panel_DrawBg(1);
 
 	if(center.x == -1)
-		return;
+		return; // panel has gone off screen
 
 	if(panel_bg_padding)
 	{
@@ -297,11 +317,7 @@ void HUD_Weapons()
 
 	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
 	{
-		vector table_size = HUD_GetTableSize_BestItemAR((Weapons_COUNT - 1), panel_size, aspect);
-		columns = table_size.x;
-		rows = table_size.y;
-		weapon_size.x = panel_size.x / columns;
-		weapon_size.y = panel_size.y / rows;
+		HUD_WEAPONS_GET_FULL_LAYOUT();
 		vertical_order = (panel_size.x / panel_size.y >= aspect);
 	}
 
@@ -340,15 +356,21 @@ void HUD_Weapons()
 		// retrieve information about the current weapon to be drawn
 		entity it = weaponorder[i];
 		weapon_id = it.impulse;
-		isCurrent = (it == switchweapon);
 
 		// skip if this weapon doesn't exist
 		if(!it || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
-			continue;
+		{
+			if (!((weapons_stat & WepSet_FromWeapon(it)) || (it.m_id == complain_weapon)))
+				continue;
+		}
+		else
+		{
+			if (it.spawnflags & WEP_FLAG_MUTATORBLOCKED && !(weapons_stat & WepSet_FromWeapon(it)))
+				continue;
+		}
 
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
@@ -356,6 +378,7 @@ void HUD_Weapons()
 		noncurrent_pos.y = weapon_pos.y + (weapon_size.y - noncurrent_size.y) / 2;
 
 		// draw background behind currently selected weapon
+		isCurrent = (it == switchweapon);
 		if(isCurrent)
 			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
