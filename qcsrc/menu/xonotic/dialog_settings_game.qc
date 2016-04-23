@@ -13,7 +13,7 @@ METHOD(SettingSource, getEntryTooltip, entity(entity this, int i, void(string th
 {
     Lazy l = Settings_from(i);
     entity it = l.m_get();
-    if (returns) returns(it.tooltip);
+    if (returns) returns(it.titleTooltip);
     return it;
 }
 METHOD(SettingSource, reload, int(entity this, string filter)) { return Settings_COUNT; }
