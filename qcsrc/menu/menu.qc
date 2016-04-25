@@ -669,9 +669,24 @@ void m_tooltip(vector pos)
 	}
 }
 
+float autocvar_menu_force_on_disconnection;
 void m_draw(float width, float height)
 {
-	if (clientstate() == CS_DISCONNECTED) m_toggle(true);
+	if (autocvar_menu_force_on_disconnection > 0)
+	{
+		static float connected_time;
+		if (clientstate() == CS_DISCONNECTED)
+		{
+			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
+			{
+				m_toggle(true);
+				connected_time = 0;
+			}
+		}
+		else
+			connected_time = time;
+	}
+
 	m_gamestatus();
 
 	execute_next_frame();
