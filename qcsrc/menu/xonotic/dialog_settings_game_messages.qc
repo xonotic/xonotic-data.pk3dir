@@ -75,7 +75,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(4, 1, "con_notify", _("Display console messages in the top left corner"), "-"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(4, 0, "con_notify", _("Display console messages in the top left corner"), "-"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_allow_chatboxprint", _("Display all info messages in the chatbox"), "-"));
 	me.TR(me);
