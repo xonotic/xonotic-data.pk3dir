@@ -1,5 +1,6 @@
 #include "dialog_settings_misc_cvars.qh"
 
+#include "checkbox.qh"
 #include "cvarlist.qh"
 #include "textlabel.qh"
 #include "inputbox.qh"

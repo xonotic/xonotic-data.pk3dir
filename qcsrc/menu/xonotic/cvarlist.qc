@@ -2,6 +2,7 @@
 
 #include "inputbox.qh"
 #include "../item/container.qh"
+#include "../item/checkbox.qh"
 
 entity makeXonoticCvarList()
 {
