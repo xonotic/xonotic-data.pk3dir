@@ -5,17 +5,18 @@
 
 entity testent;
 
-bool net_object_send(entity this, entity to, int sendflags) {
-    WriteHeader(MSG_ENTITY, ENT_OBJECT);
-    serialize(ENT_OBJECT, MSG_ENTITY, this);
-    return true;
+bool net_object_send(entity this, entity to, int sendflags)
+{
+	WriteHeader(MSG_ENTITY, ENT_OBJECT);
+	serialize(ENT_OBJECT, MSG_ENTITY, this);
+	return true;
 }
 
 void spawnfunc_worldspawn()
 {
-    static_init();
-    static_init_late();
-    // static_init_precache();
+	static_init();
+	static_init_late();
+	// static_init_precache();
 
 	entity it = testent = spawn();
 	precache_model("models/player/erebus.iqm");
