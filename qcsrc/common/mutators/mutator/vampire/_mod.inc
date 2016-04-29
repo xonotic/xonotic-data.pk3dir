@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "vampire.qc"
+#include <common/mutators/mutator/vampire/vampire.qc>

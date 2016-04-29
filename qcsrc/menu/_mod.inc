@@ -1,4 +1,5 @@
 // generated file; do not modify
-#include "draw.qc"
-#include "item.qc"
-#include "menu.qc"
+#include <menu/draw.qc>
+#include <menu/item.qc>
+#include <menu/matrix.qc>
+#include <menu/menu.qc>

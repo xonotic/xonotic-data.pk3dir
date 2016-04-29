@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "all.qc"
-#include "menu_cmd.qc"
+#include <menu/command/all.qc>
+#include <menu/command/menu_cmd.qc>

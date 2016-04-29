@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include <server/command/all.qh>
+#include <server/command/banning.qh>
+#include <server/command/cmd.qh>
+#include <server/command/common.qh>
+#include <server/command/getreplies.qh>
+#include <server/command/radarmap.qh>
+#include <server/command/vote.qh>

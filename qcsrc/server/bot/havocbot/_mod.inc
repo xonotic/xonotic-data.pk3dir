@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "havocbot.qc"
-#include "roles.qc"
+#include <server/bot/havocbot/havocbot.qc>
+#include <server/bot/havocbot/roles.qc>

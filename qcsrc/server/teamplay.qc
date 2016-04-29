@@ -44,23 +44,6 @@ void ActivateTeamplay()
 	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
 }
 
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
-{
-	// enforce the server's universal frag/time limits
-	// set to -1 to not change value
-	if(!autocvar_g_campaign)
-	{
-		if(fraglimit_override >= 0)
-			cvar_set("fraglimit", ftos(fraglimit_override));
-		if(timelimit_override >= 0)
-			cvar_set("timelimit", ftos(timelimit_override));
-		if(leadlimit_override >= 0)
-			cvar_set("leadlimit", ftos(leadlimit_override));
-		if(qualifying_override >= 0)
-			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-	}
-}
-
 void InitGameplayMode()
 {
 	VoteReset();
@@ -89,8 +72,6 @@ void InitGameplayMode()
 
 	MapInfo_ClearTemps();
 
-	// set both here, gamemode can override it later
-	SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
 	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
 
 	cache_mutatormsg = strzone("");

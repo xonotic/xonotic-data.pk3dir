@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "invincibleproj.qc"
+#include <common/mutators/mutator/invincibleproj/invincibleproj.qc>

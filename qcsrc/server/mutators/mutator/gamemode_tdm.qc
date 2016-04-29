@@ -16,7 +16,7 @@ REGISTER_MUTATOR(tdm, false)
 		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
+		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
 		if (autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}

@@ -1,6 +1,6 @@
 // generated file; do not modify
-#include "corner.qc"
-#include "follow.qc"
-#include "include.qc"
-#include "laser.qc"
-#include "teleport_dest.qc"
+#include <common/triggers/misc/corner.qc>
+#include <common/triggers/misc/follow.qc>
+#include <common/triggers/misc/include.qc>
+#include <common/triggers/misc/laser.qc>
+#include <common/triggers/misc/teleport_dest.qc>

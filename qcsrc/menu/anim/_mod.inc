@@ -1,5 +1,5 @@
 // generated file; do not modify
-#include "animation.qc"
-#include "animhost.qc"
-#include "easing.qc"
-#include "keyframe.qc"
+#include <menu/anim/animation.qc>
+#include <menu/anim/animhost.qc>
+#include <menu/anim/easing.qc>
+#include <menu/anim/keyframe.qc>

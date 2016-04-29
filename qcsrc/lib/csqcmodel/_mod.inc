@@ -1,5 +1,5 @@
 // generated file; do not modify
-#include "cl_model.qc"
-#include "cl_player.qc"
-#include "interpolate.qc"
-#include "sv_model.qc"
+#include <lib/csqcmodel/cl_model.qc>
+#include <lib/csqcmodel/cl_player.qc>
+#include <lib/csqcmodel/interpolate.qc>
+#include <lib/csqcmodel/sv_model.qc>

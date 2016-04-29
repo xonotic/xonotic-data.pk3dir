@@ -77,9 +77,9 @@ void XonoticCheckBox_saveCvars(entity me)
 		return;
 
 	if(me.checked)
-		cvar_set(me.cvarName, ftos(me.yesValue));
+		cvar_set(me.cvarName, ftos_mindecimals(me.yesValue));
 	else
-		cvar_set(me.cvarName, ftos(me.noValue));
+		cvar_set(me.cvarName, ftos_mindecimals(me.noValue));
 
 	CheckSendCvars(me, me.cvarName);
 }

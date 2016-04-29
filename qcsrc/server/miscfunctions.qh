@@ -264,8 +264,6 @@ void readlevelcvars()
 
 	warmup_stage = cvar("g_warmup");
 	warmup_limit = cvar("g_warmup_limit");
-	if(warmup_limit == 0)
-		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 

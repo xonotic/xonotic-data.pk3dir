@@ -7,6 +7,8 @@ const float URL_FH_STDOUT = -2;
 
 // URLs
 .string url_url;
+.string url_content_type;
+.string url_verb;
 .float url_wbuf;
 .float url_wbufpos;
 .float url_rbuf;
@@ -96,6 +98,8 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				// create a writing end that does nothing yet
 				e = new_pure(url_single_fopen_file);
 				e.url_url = strzone(url);
+				e.url_content_type = "text/plain";
+				e.url_verb = "";
 				e.url_fh = URL_FH_CURL;
 				e.url_wbuf = buf_create();
 				if (e.url_wbuf < 0)
@@ -231,7 +235,7 @@ void url_fclose(entity e)
 			}
 
 			// POST the data
-			if (!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, "text/plain", "", e.url_wbuf, 0))
+			if (!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, e.url_content_type, e.url_verb, e.url_wbuf, 0))
 			{
 				LOG_INFO("url_fclose: failure in crypto_uri_postbuf\n");
 				e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);

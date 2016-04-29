@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "melee_only.qc"
+#include <common/mutators/mutator/melee_only/melee_only.qc>

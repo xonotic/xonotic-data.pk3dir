@@ -55,6 +55,11 @@
 	} MACRO_END
 
 #define STRING_ITERATOR_GET(this) str2chr(this##_s, this##_i++)
+#define STRING_ITERATOR_PEEK(this) str2chr(this##_s, this##_i)
+#define STRING_ITERATOR_NEXT(this) MACRO_BEGIN ++this##_i; MACRO_END
+#define STRING_ITERATOR_UNGET(this) MACRO_BEGIN --this##_i; MACRO_END
+#define STRING_ITERATOR_SAVE(this) this##_i
+#define STRING_ITERATOR_LOAD(this, n) MACRO_BEGIN this##_i = n; MACRO_END
 
 #define FOREACH_CHAR(s, cond, body) \
 	MACRO_BEGIN \

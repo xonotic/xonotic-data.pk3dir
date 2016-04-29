@@ -413,6 +413,7 @@ void cvar_changes_init()
 		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
+		BADCVAR("sv_defaultcharacterskin");
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
@@ -562,6 +563,18 @@ void __init_dedicated_server_shutdown() {
 	MapInfo_Shutdown();
 }
 
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
+{
+	if(!autocvar_g_campaign)
+	{
+		if(fraglimit_override >= 0) cvar_set("fraglimit", ftos(fraglimit_override));
+		if(timelimit_override >= 0) cvar_set("timelimit", ftos(timelimit_override));
+		if(leadlimit_override >= 0) cvar_set("leadlimit", ftos(leadlimit_override));
+		if(qualifying_override >= 0) cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
+	}
+	limits_are_set = true;
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
@@ -572,9 +585,8 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+    bool wantrestart = false;
 	{
-		bool wantrestart = false;
-
 		if (!server_is_dedicated)
 		{
 			// force unloading of server pk3 files when starting a listen server
@@ -718,6 +730,12 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 	GrappleHookInit();
 
+	if(!limits_are_set)
+		SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
+
+	if(warmup_limit == 0)
+		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
+
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
 	if(bot_waypoints_for_items == 1)
@@ -849,7 +867,7 @@ spawnfunc(worldspawn)
 
 	CheatInit();
 
-	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
+	if (!wantrestart) localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)

@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "damagetext.qc"
+#include <common/mutators/mutator/damagetext/damagetext.qc>

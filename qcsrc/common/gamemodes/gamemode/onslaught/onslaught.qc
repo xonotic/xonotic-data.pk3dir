@@ -13,7 +13,7 @@ REGISTER_MUTATOR(ons, false)
 		ons_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_onslaught_point_limit, -1, -1, -1);
+		SetLimits(autocvar_g_onslaught_point_limit, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 
