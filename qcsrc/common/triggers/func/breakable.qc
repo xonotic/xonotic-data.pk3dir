@@ -47,121 +47,121 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 // func_breakable
 // - basically func_assault_destructible for general gameplay use
 //
-void LaunchDebris (string debrisname, vector force)
-{SELFPARAM();
+void LaunchDebris (entity this, string debrisname, vector force)
+{
 	entity dbr = spawn();
-	vector org = self.absmin
-	           + '1 0 0' * random() * (self.absmax.x - self.absmin.x)
-	           + '0 1 0' * random() * (self.absmax.y - self.absmin.y)
-	           + '0 0 1' * random() * (self.absmax.z - self.absmin.z);
+	vector org = this.absmin
+	           + '1 0 0' * random() * (this.absmax.x - this.absmin.x)
+	           + '0 1 0' * random() * (this.absmax.y - this.absmin.y)
+	           + '0 0 1' * random() * (this.absmax.z - this.absmin.z);
 	setorigin(dbr, org);
 	_setmodel (dbr, debrisname );
-	dbr.skin = self.debrisskin;
-	dbr.colormap = self.colormap; // inherit team colors
-	dbr.owner = self; // do not be affected by our own explosion
-	dbr.movetype = self.debrismovetype;
-	dbr.solid = self.debrissolid;
+	dbr.skin = this.debrisskin;
+	dbr.colormap = this.colormap; // inherit team colors
+	dbr.owner = this; // do not be affected by our own explosion
+	dbr.movetype = this.debrismovetype;
+	dbr.solid = this.debrissolid;
 	if(dbr.solid != SOLID_BSP) // SOLID_BSP has exact collision, MAYBE this works? TODO check this out
 		setsize(dbr, '0 0 0', '0 0 0'); // needed for performance, until engine can deal better with it
-	dbr.velocity_x = self.debrisvelocity.x + self.debrisvelocityjitter.x * crandom();
-	dbr.velocity_y = self.debrisvelocity.y + self.debrisvelocityjitter.y * crandom();
-	dbr.velocity_z = self.debrisvelocity.z + self.debrisvelocityjitter.z * crandom();
-	self.velocity = self.velocity + force * self.debrisdamageforcescale;
-	dbr.avelocity_x = random()*self.debrisavelocityjitter.x;
-	dbr.avelocity_y = random()*self.debrisavelocityjitter.y;
-	dbr.avelocity_z = random()*self.debrisavelocityjitter.z;
-	dbr.damageforcescale = self.debrisdamageforcescale;
+	dbr.velocity_x = this.debrisvelocity.x + this.debrisvelocityjitter.x * crandom();
+	dbr.velocity_y = this.debrisvelocity.y + this.debrisvelocityjitter.y * crandom();
+	dbr.velocity_z = this.debrisvelocity.z + this.debrisvelocityjitter.z * crandom();
+	this.velocity = this.velocity + force * this.debrisdamageforcescale;
+	dbr.avelocity_x = random()*this.debrisavelocityjitter.x;
+	dbr.avelocity_y = random()*this.debrisavelocityjitter.y;
+	dbr.avelocity_z = random()*this.debrisavelocityjitter.z;
+	dbr.damageforcescale = this.debrisdamageforcescale;
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
-	SUB_SetFade(dbr, time + self.debristime + crandom() * self.debristimejitter, self.debrisfadetime);
+	SUB_SetFade(dbr, time + this.debristime + crandom() * this.debristimejitter, this.debrisfadetime);
 }
 
-void func_breakable_colormod()
-{SELFPARAM();
+void func_breakable_colormod(entity this)
+{
 	float h;
-	if (!(self.spawnflags & 2))
+	if (!(this.spawnflags & 2))
 		return;
-	h = self.health / self.max_health;
+	h = this.health / this.max_health;
 	if(h < 0.25)
-		self.colormod = '1 0 0';
+		this.colormod = '1 0 0';
 	else if(h <= 0.75)
-		self.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
+		this.colormod = '1 0 0' + '0 1 0' * (2 * h - 0.5);
 	else
-		self.colormod = '1 1 1';
+		this.colormod = '1 1 1';
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void func_breakable_look_destroyed()
-{SELFPARAM();
+void func_breakable_look_destroyed(entity this)
+{
 	float floorZ;
 
-	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
-		self.dropped_origin = self.origin;
+	if(this.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
+		this.dropped_origin = this.origin;
 
-	if(self.mdl_dead == "")
-		self.effects |= EF_NODRAW;
+	if(this.mdl_dead == "")
+		this.effects |= EF_NODRAW;
 	else {
-		if (self.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
-			floorZ = self.absmin.z;
-			setorigin(self,((self.absmax+self.absmin)*.5));
-			self.origin_z = floorZ;
+		if (this.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
+			floorZ = this.absmin.z;
+			setorigin(this,((this.absmax+this.absmin)*.5));
+			this.origin_z = floorZ;
 		}
-		_setmodel(self, self.mdl_dead);
-		self.effects &= ~EF_NODRAW;
+		_setmodel(this, this.mdl_dead);
+		this.effects &= ~EF_NODRAW;
 	}
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 
-	self.solid = SOLID_NOT;
+	this.solid = SOLID_NOT;
 }
 
-void func_breakable_look_restore()
-{SELFPARAM();
-	_setmodel(self, self.mdl);
-	self.effects &= ~EF_NODRAW;
+void func_breakable_look_restore(entity this)
+{
+	_setmodel(this, this.mdl);
+	this.effects &= ~EF_NODRAW;
 
-	if(self.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
-		setorigin(self, self.dropped_origin);
+	if(this.mdl_dead != "") // only do this if we use mdl_dead, to behave better with misc_follow
+		setorigin(this, this.dropped_origin);
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 
-	self.solid = SOLID_BSP;
+	this.solid = SOLID_BSP;
 }
 
-void func_breakable_behave_destroyed()
-{SELFPARAM();
-	self.health = self.max_health;
-	self.takedamage = DAMAGE_NO;
-	self.bot_attack = false;
-	self.event_damage = func_null;
-	self.state = 1;
-	if(self.spawnflags & 4)
-		self.use = func_null;
-	func_breakable_colormod();
-	if (self.noise1)
-		stopsound (self, CH_TRIGGER_SINGLE);
+void func_breakable_behave_destroyed(entity this)
+{
+	this.health = this.max_health;
+	this.takedamage = DAMAGE_NO;
+	this.bot_attack = false;
+	this.event_damage = func_null;
+	this.state = 1;
+	if(this.spawnflags & 4)
+		this.use = func_null;
+	func_breakable_colormod(this);
+	if (this.noise1)
+		stopsound (this, CH_TRIGGER_SINGLE);
 }
 
-void func_breakable_behave_restore()
-{SELFPARAM();
-	self.health = self.max_health;
-	if(self.sprite)
+void func_breakable_behave_restore(entity this)
+{
+	this.health = this.max_health;
+	if(this.sprite)
 	{
-		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		WaypointSprite_UpdateMaxHealth(this.sprite, this.max_health);
+		WaypointSprite_UpdateHealth(this.sprite, this.health);
 	}
-	if(!(self.spawnflags & 4))
+	if(!(this.spawnflags & 4))
 	{
-		self.takedamage = DAMAGE_AIM;
-		self.bot_attack = true;
-		self.event_damage = func_breakable_damage;
+		this.takedamage = DAMAGE_AIM;
+		this.bot_attack = true;
+		this.event_damage = func_breakable_damage;
 	}
-	self.state = 0;
-	self.nextthink = 0; // cancel auto respawn
-	func_breakable_colormod();
-	if (self.noise1)
-		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+	this.state = 0;
+	this.nextthink = 0; // cancel auto respawn
+	func_breakable_colormod(this);
+	if (this.noise1)
+		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 }
 
 void func_breakable_init_for_player(entity player)
@@ -173,18 +173,18 @@ void func_breakable_init_for_player(entity player)
 	}
 }
 
-void func_breakable_destroyed()
-{SELFPARAM();
-	func_breakable_look_destroyed();
-	func_breakable_behave_destroyed();
+void func_breakable_destroyed(entity this)
+{
+	func_breakable_look_destroyed(this);
+	func_breakable_behave_destroyed(this);
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void func_breakable_restore(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, func_breakable_look_restore());
-	WITHSELF(this, func_breakable_behave_restore());
+	func_breakable_look_restore(this);
+	func_breakable_behave_restore(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -206,9 +206,9 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 	// now throw around the debris
 	n = tokenize_console(this.debris);
 	for(i = 0; i < n; ++i)
-		LaunchDebris(argv(i), debrisforce);
+		LaunchDebris(this, argv(i), debrisforce);
 
-	func_breakable_destroyed();
+	func_breakable_destroyed(this);
 
 	if(this.noise)
 		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
@@ -253,7 +253,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		WaypointSprite_Ping(this.sprite);
 		WaypointSprite_UpdateHealth(this.sprite, this.health);
 	}
-	WITHSELF(this, func_breakable_colormod());
+	func_breakable_colormod(this);
 
 	if(this.health <= 0)
 	{
@@ -278,11 +278,11 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 void func_breakable_reset(entity this)
 {
 	this.team = this.team_saved;
-	WITHSELF(this, func_breakable_look_restore());
+	func_breakable_look_restore(this);
 	if(this.spawnflags & 1)
-		WITHSELF(this, func_breakable_behave_destroyed());
+		func_breakable_behave_destroyed(this);
 	else
-		WITHSELF(this, func_breakable_behave_restore());
+		func_breakable_behave_restore(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
