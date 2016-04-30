@@ -1295,10 +1295,6 @@ bool IsFlying(entity this)
 	return true;
 }
 
-#ifdef CSQC
-float autocvar_slowmo;
-#endif
-
 void PM_Main(entity this)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
