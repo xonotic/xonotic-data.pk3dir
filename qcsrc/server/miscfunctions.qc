@@ -1415,9 +1415,6 @@ bool isPushable(entity e)
 	{
 		case "body":
 		case "droppedweapon":
-		case "keepawayball":
-		case "nexball_basketball":
-		case "nexball_football":
 			return true;
 		case "bullet": // antilagged bullets can't hit this either
 			return false;
