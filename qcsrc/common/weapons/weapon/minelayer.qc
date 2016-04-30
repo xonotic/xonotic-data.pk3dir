@@ -530,15 +530,15 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
 {
     SELFPARAM();
-    int slot = 0; // TODO: unhardcode
-    // don't switch while placing a mine
-    if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_MINE_LAYER)
-    {
+    //int slot = 0; // TODO: unhardcode
+    // actually do // don't switch while placing a mine
+    //if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_MINE_LAYER)
+    //{
         float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
         ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
-    }
-    return true;
+    //}
+    //return true;
 }
 METHOD(MineLayer, wr_checkammo2, bool(entity thiswep))
 {
