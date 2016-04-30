@@ -220,7 +220,7 @@ void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, flo
 		this.health = this.health - damage;
 
 	if(this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_Seeker_Missile_Explode));
+		W_PrepareExplosionByDamage(this, attacker, W_Seeker_Missile_Explode);
 }
 
 /*
@@ -313,6 +313,11 @@ void W_Seeker_Flac_Explode()
 	remove(self);
 }
 
+void W_Seeker_Flac_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, W_Seeker_Flac_Explode());
+}
+
 void W_Seeker_Flac_Touch()
 {
 	PROJECTILE_TOUCH;
@@ -355,7 +360,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep)
 	missile.bot_dodge 		= true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, flac_damage);
 	missile.touch 			= W_Seeker_Flac_Explode;
-	missile.use 			= W_Seeker_Flac_Explode;
+	missile.use 			= W_Seeker_Flac_Explode_use;
 	missile.think 			= adaptor_think2use_hittype_splash;
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
 	missile.solid 			= SOLID_BBOX;

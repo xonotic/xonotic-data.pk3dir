@@ -1,11 +1,11 @@
 .float train_wait_turning;
 void() train_next;
 #ifdef SVQC
-void train_use();
+void train_use(entity this, entity actor, entity trigger);
 #endif
 void train_wait()
 {SELFPARAM();
-	WITHSELF(self.enemy, SUB_UseTargets());
+	SUB_UseTargets(this.enemy, NULL, NULL);
 	self.enemy = world;
 
 	// if turning is enabled, the train will turn toward the next point while waiting
@@ -176,12 +176,11 @@ void train_link()
 	//Net_LinkEntity(self, 0, false, train_send);
 }
 
-void train_use()
+void train_use(entity this, entity actor, entity trigger)
 {
-    SELFPARAM();
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
-	self.SUB_THINK = train_next;
-	self.use = func_null; // not again
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 1;
+	this.SUB_THINK = train_next;
+	this.use = func_null; // not again
 }
 
 void func_train_find(entity this)

@@ -13,59 +13,59 @@ const float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
 const float SECRET_NO_SHOOT = 8;		// only opened by trigger
 const float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
-void fd_secret_use()
-{SELFPARAM();
+void fd_secret_use(entity this, entity actor, entity trigger)
+{
 	float temp;
 	string message_save;
 
-	self.health = 10000;
-	self.bot_attack = true;
+	this.health = 10000;
+	this.bot_attack = true;
 
 	// exit if still moving around...
-	if (self.origin != self.oldorigin)
+	if (this.origin != this.oldorigin)
 		return;
 
-	message_save = self.message;
-	self.message = ""; // no more message
-	SUB_UseTargets();				// fire all targets / killtargets
-	self.message = message_save;
+	message_save = this.message;
+	this.message = ""; // no more message
+	SUB_UseTargets(this, actor, trigger);				// fire all targets / killtargets
+	this.message = message_save;
 
-	self.velocity = '0 0 0';
+	this.velocity = '0 0 0';
 
 	// Make a sound, wait a little...
 
-	if (self.noise1 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 0.1;
+	if (this.noise1 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 0.1;
 
-	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
-	makevectors(self.mangle);
+	temp = 1 - (this.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
+	makevectors(this.mangle);
 
-	if (!self.t_width)
+	if (!this.t_width)
 	{
-		if (self.spawnflags & SECRET_1ST_DOWN)
-			self.t_width = fabs(v_up * self.size);
+		if (this.spawnflags & SECRET_1ST_DOWN)
+			this.t_width = fabs(v_up * this.size);
 		else
-			self.t_width = fabs(v_right * self.size);
+			this.t_width = fabs(v_right * this.size);
 	}
 
-	if (!self.t_length)
-		self.t_length = fabs(v_forward * self.size);
+	if (!this.t_length)
+		this.t_length = fabs(v_forward * this.size);
 
-	if (self.spawnflags & SECRET_1ST_DOWN)
-		self.dest1 = self.origin - v_up * self.t_width;
+	if (this.spawnflags & SECRET_1ST_DOWN)
+		this.dest1 = this.origin - v_up * this.t_width;
 	else
-		self.dest1 = self.origin + v_right * (self.t_width * temp);
+		this.dest1 = this.origin + v_right * (this.t_width * temp);
 
-	self.dest2 = self.dest1 + v_forward * self.t_length;
-	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move1);
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
+	this.dest2 = this.dest1 + v_forward * this.t_length;
+	WITHSELF(this, SUB_CalcMove(this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1));
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
 }
 
 void fd_secret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	WITHSELF(this, fd_secret_use());
+	fd_secret_use(this, NULL, NULL);
 }
 
 // Wait after first movement...

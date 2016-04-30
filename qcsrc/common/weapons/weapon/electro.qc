@@ -191,6 +191,11 @@ void W_Electro_Explode()
 	remove(self);
 }
 
+void W_Electro_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, W_Electro_Explode());
+}
+
 void W_Electro_TouchExplode()
 {
 	PROJECTILE_TOUCH;
@@ -201,7 +206,7 @@ void W_Electro_Bolt_Think()
 {SELFPARAM();
 	if(time >= self.ltime)
 	{
-		self.use();
+		this.use(this, NULL, NULL);
 		return;
 	}
 
@@ -242,7 +247,7 @@ void W_Electro_Bolt_Think()
 
 		// if we triggered an orb, should we explode? if not, lets try again next time
 		if(found && WEP_CVAR_PRI(electro, midaircombo_explode))
-			{ self.use(); }
+			{ this.use(this, NULL, NULL); }
 		else
 			{ self.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), self.ltime); }
 	}
@@ -272,7 +277,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep)
 	proj.owner = proj.realowner = self;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(electro, damage);
-	proj.use = W_Electro_Explode;
+	proj.use = W_Electro_Explode_use;
 	proj.think = W_Electro_Bolt_Think;
 	proj.nextthink = time;
 	proj.ltime = time + WEP_CVAR_PRI(electro, lifetime);
@@ -342,7 +347,7 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 		}
 		else
 		{
-			this.use = W_Electro_Explode;
+			this.use = W_Electro_Explode_use;
 			this.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
 		}
 	}
@@ -369,7 +374,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 
 	entity proj = new(electro_orb);
 	proj.owner = proj.realowner = self;
-	proj.use = W_Electro_Explode;
+	proj.use = W_Electro_Explode_use;
 	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(electro, damage);

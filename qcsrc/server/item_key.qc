@@ -84,8 +84,7 @@ void item_key_touch()
 
 	string oldmsg = self.message;
 	self.message = "";
-	activator = other;
-	SUB_UseTargets();
+	SUB_UseTargets(self, other, other); // TODO: should we be using other for the trigger here?
 	self.message = oldmsg;
 };
 

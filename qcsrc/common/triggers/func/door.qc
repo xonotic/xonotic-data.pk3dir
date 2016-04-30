@@ -141,7 +141,7 @@ void door_go_up()
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
-	SUB_UseTargets();
+	SUB_UseTargets(self, NULL, NULL);
 	self.message = oldmessage;
 }
 
@@ -206,16 +206,15 @@ bool door_check_keys(entity door, entity player)
 	return false;
 }
 
-void door_fire()
-{SELFPARAM();
-	entity	starte;
+void door_fire(entity this, entity actor, entity trigger)
+{
+	entity starte;
+	if (this.owner != this)
+		objerror ("door_fire: this.owner != this");
 
-	if (self.owner != self)
-		objerror ("door_fire: self.owner != self");
-
-	if (self.spawnflags & DOOR_TOGGLE)
+	if (this.spawnflags & DOOR_TOGGLE)
 	{
-		if (self.state == STATE_UP || self.state == STATE_TOP)
+		if (this.state == STATE_UP || this.state == STATE_TOP)
 		{
 			starte = self;
 			do
@@ -262,14 +261,12 @@ void door_fire()
 	setself(this);
 }
 
-void door_use()
-{SELFPARAM();
+void door_use(entity this, entity actor, entity trigger)
+{
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
 
-	if (self.owner)
-	{
-		WITHSELF(self.owner, door_fire());
-	}
+	if (this.owner)
+		WITHSELF(this.owner, door_fire(this.owner, actor, trigger));
 }
 
 void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -289,7 +286,7 @@ void door_damage(entity this, entity inflictor, entity attacker, float damage, i
 	{
 		this.owner.health = this.owner.max_health;
 		this.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
-		WITHSELF(this.owner, door_use());
+		door_use(this.owner, NULL, NULL);
 	}
 }
 
@@ -415,7 +412,7 @@ void door_rotating_go_up()
 	string oldmessage;
 	oldmessage = self.message;
 	self.message = "";
-	SUB_UseTargets();
+	SUB_UseTargets(self, NULL, other); // TODO: is other needed here?
 	self.message = oldmessage;
 }
 
@@ -447,10 +444,7 @@ void door_trigger_touch()
 
 	self.door_finished = time + 1;
 
-	activator = other;
-
-	setself(self.owner);
-	door_use ();
+	door_use(this.owner, other, NULL);
 }
 
 void door_spawnfield(vector fmins, vector fmaxs)

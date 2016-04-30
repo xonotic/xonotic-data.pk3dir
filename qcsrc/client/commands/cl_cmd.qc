@@ -252,7 +252,7 @@ void QuickMenu_Close();
 bool QuickMenu_Open(string mode, string submenu);
 
 bool HUD_MinigameMenu_IsOpened();
-void HUD_MinigameMenu_Close();
+void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger);
 void HUD_MinigameMenu_Open();
 
 void HUD_Radar_Show_Maximized(bool doshow, bool clickable);

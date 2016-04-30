@@ -213,7 +213,7 @@ void Shutdown()
 	}
 
 	deactivate_minigame();
-	HUD_MinigameMenu_Close();
+	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 }
 
 .float has_team;

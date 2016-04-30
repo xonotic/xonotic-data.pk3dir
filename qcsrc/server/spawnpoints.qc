@@ -58,12 +58,12 @@ void spawnpoint_think()
 	}
 }
 
-void spawnpoint_use()
-{SELFPARAM();
+void spawnpoint_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
 	if(have_team_spawns > 0)
 	{
-		self.team = activator.team;
+		this.team = actor.team;
 		some_spawn_has_been_used = 1;
 	}
 	//LOG_INFO("spawnpoint was used!\n");
