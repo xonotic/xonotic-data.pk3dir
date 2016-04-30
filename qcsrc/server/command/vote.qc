@@ -202,9 +202,7 @@ void VoteCount(float first_count)
 	// declarations
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
 
-	float spectators_allowed = ((autocvar_sv_vote_nospectators != 2)
-	    || ((autocvar_sv_vote_nospectators == 1) && (warmup_stage || gameover))
-	    || (autocvar_sv_vote_nospectators == 0));
+	bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 	float vote_player_count = 0, notvoters = 0;
 	float vote_real_player_count = 0, vote_real_accept_count = 0;
@@ -752,9 +750,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float spectators_allowed = ((autocvar_sv_vote_nospectators != 2)
-			    || ((autocvar_sv_vote_nospectators == 1) && warmup_stage)
-			    || (autocvar_sv_vote_nospectators == 0));
+			bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 			float tmp_playercount = 0;
 
@@ -892,9 +888,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 
 					default:  // calling a vote for master
 					{
-						float spectators_allowed = ((autocvar_sv_vote_nospectators != 2)
-						    || ((autocvar_sv_vote_nospectators == 1) && warmup_stage)
-						    || (autocvar_sv_vote_nospectators == 0));
+						bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 						if (!autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if (vote_called)
