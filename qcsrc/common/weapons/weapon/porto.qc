@@ -50,7 +50,7 @@ spawnfunc(weapon_porto) { weapon_defaultspawnfunc(this, WEP_PORTO); }
 
 REGISTER_MUTATOR(porto_ticker, true);
 MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
-	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(it.porto_forbidden = max(0, it.porto_forbidden - 1)));
+	FOREACH_CLIENT(IS_PLAYER(it), it.porto_forbidden = max(0, it.porto_forbidden - 1));
 }
 
 void W_Porto_Success()
@@ -105,7 +105,7 @@ void W_Porto_Remove(entity p)
 {SELFPARAM();
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
-		WITH(entity, self, p.porto_current, W_Porto_Fail(1));
+		WITHSELF(p.porto_current, W_Porto_Fail(1));
 	}
 }
 
@@ -244,7 +244,7 @@ void W_Porto_Attack(float type)
 {SELFPARAM();
 	entity gren;
 
-	W_SetupShot(self, false, 4, SND(PORTO_FIRE), CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
 	// always shoot from the eye
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
@@ -292,95 +292,95 @@ void W_Porto_Attack(float type)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-		METHOD(PortoLaunch, wr_aim, void(entity thiswep))
-		{
-			SELFPARAM();
-			self.BUTTON_ATCK = false;
-			self.BUTTON_ATCK2 = false;
-			if(!WEP_CVAR(porto, secondary))
-				if(bot_aim(WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
-					self.BUTTON_ATCK = true;
-		}
-		METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(WEP_CVAR(porto, secondary))
-			{
-				if(fire & 1)
-				if(!actor.porto_current)
-				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
-				{
-					W_Porto_Attack(0);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
-				}
+METHOD(PortoLaunch, wr_aim, void(entity thiswep))
+{
+    SELFPARAM();
+    PHYS_INPUT_BUTTON_ATCK(self) = false;
+    PHYS_INPUT_BUTTON_ATCK2(self) = false;
+    if(!WEP_CVAR(porto, secondary))
+        if(bot_aim(self, WEP_CVAR_PRI(porto, speed), 0, WEP_CVAR_PRI(porto, lifetime), false))
+            PHYS_INPUT_BUTTON_ATCK(self) = true;
+}
+METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(WEP_CVAR(porto, secondary))
+    {
+        if(fire & 1)
+        if(!actor.porto_current)
+        if(!actor.porto_forbidden)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
+        {
+            W_Porto_Attack(0);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+        }
 
-				if(fire & 2)
-				if(!actor.porto_current)
-				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
-				{
-					W_Porto_Attack(1);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
-				}
-			}
-			else
-			{
-				if(actor.porto_v_angle_held)
-				{
-					if(!(fire & 2))
-					{
-						actor.porto_v_angle_held = 0;
+        if(fire & 2)
+        if(!actor.porto_current)
+        if(!actor.porto_forbidden)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
+        {
+            W_Porto_Attack(1);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
+        }
+    }
+    else
+    {
+        if(actor.porto_v_angle_held)
+        {
+            if(!(fire & 2))
+            {
+                actor.porto_v_angle_held = 0;
 
-						ClientData_Touch(actor);
-					}
-				}
-				else
-				{
-					if(fire & 2)
-					{
-						actor.porto_v_angle = actor.v_angle;
-						actor.porto_v_angle_held = 1;
+                ClientData_Touch(actor);
+            }
+        }
+        else
+        {
+            if(fire & 2)
+            {
+                actor.porto_v_angle = actor.v_angle;
+                actor.porto_v_angle_held = 1;
 
-						ClientData_Touch(actor);
-					}
-				}
-				if(actor.porto_v_angle_held)
-					makevectors(actor.porto_v_angle); // override the previously set angles
+                ClientData_Touch(actor);
+            }
+        }
+        if(actor.porto_v_angle_held)
+            makevectors(actor.porto_v_angle); // override the previously set angles
 
-				if(fire & 1)
-				if(!actor.porto_current)
-				if(!actor.porto_forbidden)
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
-				{
-					W_Porto_Attack(-1);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
-				}
-			}
-		}
-		METHOD(PortoLaunch, wr_checkammo1, bool(entity this))
-		{
-			// always allow infinite ammo
-			return true;
-		}
-		METHOD(PortoLaunch, wr_checkammo2, bool(entity this))
-		{
-			// always allow infinite ammo
-			return true;
-		}
-		METHOD(PortoLaunch, wr_setup, void(entity thiswep))
-		{
-			SELFPARAM();
-			self.ammo_field = ammo_none;
-		}
-		METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep))
-		{
-			SELFPARAM();
-			self.porto_current = world;
-		}
+        if(fire & 1)
+        if(!actor.porto_current)
+        if(!actor.porto_forbidden)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
+        {
+            W_Porto_Attack(-1);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
+        }
+    }
+}
+METHOD(PortoLaunch, wr_checkammo1, bool(entity this))
+{
+    // always allow infinite ammo
+    return true;
+}
+METHOD(PortoLaunch, wr_checkammo2, bool(entity this))
+{
+    // always allow infinite ammo
+    return true;
+}
+METHOD(PortoLaunch, wr_setup, void(entity thiswep))
+{
+    SELFPARAM();
+    self.ammo_field = ammo_none;
+}
+METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep))
+{
+    SELFPARAM();
+    self.porto_current = world;
+}
 #endif
 #ifdef CSQC
-		METHOD(PortoLaunch, wr_impacteffect, void(entity this)) {
-			LOG_WARNING("Since when does Porto send DamageInfo?\n");
-		}
+METHOD(PortoLaunch, wr_impacteffect, void(entity this)) {
+    LOG_WARNING("Since when does Porto send DamageInfo?\n");
+}
 #endif
 #endif

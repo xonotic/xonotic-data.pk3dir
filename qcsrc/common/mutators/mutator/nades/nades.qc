@@ -4,6 +4,7 @@
 
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
+float autocvar_g_nades_spread = 0.04;
 #endif
 
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
@@ -44,6 +45,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
+    SELFPARAM();
 	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		self.modelindex = 0;
@@ -60,6 +62,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 {
+    SELFPARAM();
 	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
 		loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
@@ -747,7 +750,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		this.takedamage = DAMAGE_NO;
-		WITH(entity, self, this, nade_boom());
+		WITHSELF(this, nade_boom());
 		return;
 	}
 
@@ -802,7 +805,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		this.realowner = attacker;
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, nade_boom));
+		W_PrepareExplosionByDamage(this, attacker, nade_boom);
 	else
 		nade_burn_spawn(this);
 }
@@ -820,9 +823,9 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	makevectors(e.v_angle);
 
-	W_SetupShot(e, false, false, "", CH_WEAPON_A, 0);
+	W_SetupShot(e, false, false, SND_Null, CH_WEAPON_A, 0);
 
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_NADES);
 
 	vector offset = (v_forward * autocvar_g_nades_throw_offset.x)
 				  + (v_right * autocvar_g_nades_throw_offset.y)
@@ -844,7 +847,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
-	if(self.v_angle.x >= 70 && self.v_angle.x <= 110 && self.BUTTON_CROUCH)
+	if(self.v_angle.x >= 70 && self.v_angle.x <= 110 && PHYS_INPUT_BUTTON_CROUCH(self))
 		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
 		_nade.velocity = e.velocity + _velocity;
@@ -923,6 +926,7 @@ void nades_RemoveBonus(entity player)
 
 MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 {
+    SELFPARAM();
 	nades_RemoveBonus(self);
 }
 
@@ -1065,7 +1069,9 @@ void nades_CheckThrow()
 			float _force = time - held_nade.nade_time_primed;
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-			toss_nade(self, true, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
+			vector dir = (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05);
+			dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+			toss_nade(self, true, dir * _force, 0);
 		}
 	}
 }
@@ -1119,7 +1125,9 @@ CLASS(NadeOffhand, OffhandWeapon)
 				float _force = time - held_nade.nade_time_primed;
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-				toss_nade(player, false, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
+				vector dir = (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1);
+				dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+				toss_nade(player, false, dir * _force, 0);
 			}
 		}
     }
@@ -1128,6 +1136,7 @@ NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOff
 
 MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
+    SELFPARAM();
 	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
 		nades_CheckThrow();
 		return true;
@@ -1349,13 +1358,8 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(nades, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nade_type, "cl_nade_type");
-	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_pokenade_type, "cl_pokenade_type");
-
-	return false;
-}
+REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");
+REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {

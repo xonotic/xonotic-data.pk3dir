@@ -1,33 +1,11 @@
-#ifndef DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
-#define DIALOG_MULTIPLAYER_CREATE_MAPINFO_H
-#include "dialog.qc"
-CLASS(XonoticMapInfoDialog, XonoticDialog)
-	METHOD(XonoticMapInfoDialog, fill, void(entity));
-	METHOD(XonoticMapInfoDialog, loadMapInfo, void(entity, float, entity));
-	ATTRIB(XonoticMapInfoDialog, title, string, _("Map Information"))
-	ATTRIB(XonoticMapInfoDialog, color, vector, SKINCOLOR_DIALOG_MAPINFO)
-	ATTRIB(XonoticMapInfoDialog, intendedWidth, float, 1.0)
-	ATTRIB(XonoticMapInfoDialog, rows, float, 11)
-	ATTRIB(XonoticMapInfoDialog, columns, float, 10)
+#include "dialog_multiplayer_create_mapinfo.qh"
 
-	ATTRIB(XonoticMapInfoDialog, previewImage, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, titleLabel, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, authorLabel, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, descriptionLabel, entity, NULL)
-	ATTRIB(XonoticMapInfoDialog, featuresLabel, entity, NULL)
+#include "button.qh"
+#include "image.qh"
+#include "maplist.qh"
+#include "textlabel.qh"
+#include <common/mapinfo.qh>
 
-	ATTRIBARRAY(XonoticMapInfoDialog, typeLabels, entity, 24)
-
-	ATTRIB(XonoticMapInfoDialog, currentMapIndex, float, 0)
-	ATTRIB(XonoticMapInfoDialog, currentMapBSPName, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapTitle, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapAuthor, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapDescription, string, string_null)
-	ATTRIB(XonoticMapInfoDialog, currentMapPreviewImage, string, string_null)
-ENDCLASS(XonoticMapInfoDialog)
-#endif
-
-#ifdef IMPLEMENTATION
 void XonoticMapInfoDialog_loadMapInfo(entity me, int i, entity mlb)
 {
 	me.currentMapIndex = i;
@@ -119,4 +97,3 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.startButton.onClick = MapList_LoadMap;
 			me.startButton.onClickEntity = NULL; // filled later
 }
-#endif

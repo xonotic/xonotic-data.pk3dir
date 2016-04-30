@@ -1,3 +1,4 @@
+#include "pressedkeys.qh"
 /** Draw pressed keys (#11) */
 void HUD_PressedKeys()
 {

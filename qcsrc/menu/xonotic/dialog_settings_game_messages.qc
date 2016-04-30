@@ -1,21 +1,9 @@
-#ifndef DIALOG_SETTINGS_GAME_MESSAGES_H
-#define DIALOG_SETTINGS_GAME_MESSAGES_H
-#include "tab.qc"
-CLASS(XonoticGameMessageSettingsTab, XonoticTab)
-	METHOD(XonoticGameMessageSettingsTab, fill, void(entity));
-	METHOD(XonoticGameMessageSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameMessageSettingsTab, title, string, _("Messages"))
-	ATTRIB(XonoticGameMessageSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameMessageSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticGameMessageSettingsTab, columns, float, 6)
-	ATTRIB(XonoticGameMessageSettingsTab, weaponsList, entity, NULL)
-ENDCLASS(XonoticGameMessageSettingsTab)
-entity makeXonoticGameMessageSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Messages, makeXonoticGameMessageSettingsTab());
-#endif
+#include "dialog_settings_game_messages.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "textslider.qh"
+
 void XonoticGameMessageSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
@@ -116,4 +104,3 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(1, 0, "notification_ANNCE_ACHIEVEMENT_AIRSHOT", _("Achievement sounds"), "-"));
 			makeMulti(e, "notification_ANNCE_ACHIEVEMENT_AMAZING notification_ANNCE_ACHIEVEMENT_AWESOME notification_ANNCE_ACHIEVEMENT_BOTLIKE notification_ANNCE_ACHIEVEMENT_ELECTROBITCH notification_ANNCE_ACHIEVEMENT_IMPRESSIVE notification_ANNCE_ACHIEVEMENT_YODA");
 }
-#endif

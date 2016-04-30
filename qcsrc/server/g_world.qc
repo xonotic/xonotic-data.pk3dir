@@ -24,7 +24,7 @@
 #include "../common/monsters/all.qh"
 #include "../common/monsters/sv_monsters.qh"
 #include "../common/vehicles/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/physics/player.qh"
 #include "../common/playerstats.qh"
 #include "../common/stats.qh"
@@ -34,6 +34,7 @@
 #include "../common/util.qh"
 #include "../common/items/all.qh"
 #include "../common/weapons/all.qh"
+#include "../common/state.qh"
 
 const float LATENCY_THINKRATE = 10;
 .float latency_sum;
@@ -48,13 +49,13 @@ void PingPLReport_Think()
 	delta = 3 / maxclients;
 	if(delta < sys_frametime)
 		delta = 0;
-	self.nextthink = time + delta;
+	this.nextthink = time + delta;
 
-	e = edict_num(self.cnt + 1);
+	e = edict_num(this.cnt + 1);
 	if(IS_REAL_CLIENT(e))
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_movementloss * 255));
@@ -71,17 +72,16 @@ void PingPLReport_Think()
 	else
 	{
 		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
-		WriteByte(MSG_BROADCAST, self.cnt);
+		WriteByte(MSG_BROADCAST, this.cnt);
 		WriteShort(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 		WriteByte(MSG_BROADCAST, 0);
 	}
-	self.cnt = (self.cnt + 1) % maxclients;
+	this.cnt = (this.cnt + 1) % maxclients;
 }
 void PingPLReport_Spawn()
 {
-	pingplreport = new(pingplreport);
-	make_pure(pingplreport);
+	pingplreport = new_pure(pingplreport);
 	pingplreport.think = PingPLReport_Think;
 	pingplreport.nextthink = time;
 }
@@ -232,7 +232,6 @@ void cvar_changes_init()
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
-		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("log_file");
 		BADPREFIX("rcon_");
@@ -339,6 +338,7 @@ void cvar_changes_init()
 		BADPREFIX("g_ctf_captimerecord_");
 		BADPREFIX("g_maplist_votable_");
 		BADPREFIX("g_mod_");
+		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
@@ -413,6 +413,7 @@ void cvar_changes_init()
 		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
+		BADCVAR("sv_defaultcharacterskin");
 		BADCVAR("sv_defaultplayercolors");
 		BADCVAR("sv_defaultplayermodel");
 		BADCVAR("sv_defaultplayerskin");
@@ -511,24 +512,23 @@ entity randomseed;
 bool RandomSeed_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_RANDOMSEED);
-	WriteShort(MSG_ENTITY, self.cnt);
+	WriteShort(MSG_ENTITY, this.cnt);
 	return true;
 }
 void RandomSeed_Think()
 {SELFPARAM();
-	self.cnt = bound(0, floor(random() * 65536), 65535);
-	self.nextthink = time + 5;
+	this.cnt = bound(0, floor(random() * 65536), 65535);
+	this.nextthink = time + 5;
 
-	self.SendFlags |= 1;
+	this.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
 {SELFPARAM();
-	randomseed = new(randomseed);
-	make_pure(randomseed);
+	randomseed = new_pure(randomseed);
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITH(entity, self, randomseed, randomseed.think()); // sets random seed and nextthink
+	WITHSELF(randomseed, randomseed.think()); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -563,6 +563,18 @@ void __init_dedicated_server_shutdown() {
 	MapInfo_Shutdown();
 }
 
+void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
+{
+	if(!autocvar_g_campaign)
+	{
+		if(fraglimit_override >= 0) cvar_set("fraglimit", ftos(fraglimit_override));
+		if(timelimit_override >= 0) cvar_set("timelimit", ftos(timelimit_override));
+		if(leadlimit_override >= 0) cvar_set("leadlimit", ftos(leadlimit_override));
+		if(qualifying_override >= 0) cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
+	}
+	limits_are_set = true;
+}
+
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void Nagger_Init();
@@ -573,9 +585,8 @@ spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
 
+    bool wantrestart = false;
 	{
-		bool wantrestart = false;
-
 		if (!server_is_dedicated)
 		{
 			// force unloading of server pk3 files when starting a listen server
@@ -719,6 +730,12 @@ spawnfunc(worldspawn)
 	readlevelcvars();
 	GrappleHookInit();
 
+	if(!limits_are_set)
+		SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
+
+	if(warmup_limit == 0)
+		warmup_limit = (autocvar_timelimit > 0) ? autocvar_timelimit * 60 : autocvar_timelimit;
+
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
 	if(bot_waypoints_for_items == 1)
@@ -850,7 +867,7 @@ spawnfunc(worldspawn)
 
 	CheatInit();
 
-	localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
+	if (!wantrestart) localcmd("\n_sv_hook_gamestart ", GetGametype(), "\n");
 
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
@@ -1298,7 +1315,7 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !(self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE))
+		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self)))
 			return;
 
 	MapVote_Start();
@@ -1505,6 +1522,7 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
+    SELFPARAM();
 	gameover = true;
 
 	intermission_running = 1;
@@ -1532,7 +1550,7 @@ void NextLevel()
 	PlayerStats_GameReport(true);
 	WeaponStats_Shutdown();
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_Null); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1545,9 +1563,7 @@ void NextLevel()
 			bprint(it.netname, " ^7wins.\n");
 	));
 
-	entity oldself = self;
-	target_music_kill();
-	self = oldself;
+	WITHSELF(NULL, target_music_kill());
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
@@ -1569,8 +1585,8 @@ void CheckRules_Player()
 	if (gameover)	// someone else quit the game already
 		return;
 
-	if(!IS_DEAD(self))
-		self.play_time += frametime;
+	if(!IS_DEAD(this))
+		this.play_time += frametime;
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
 	//   (div0: and that in CheckRules_World please)
@@ -1970,40 +1986,36 @@ string GotoMap(string m)
 
 
 void EndFrame()
-{SELFPARAM();
+{
 	anticheat_endframe();
 
-	float altime;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		entity e = IS_SPEC(it) ? it.enemy : it;
-		if(e.typehitsound)
+		if (e.typehitsound) {
 			it.typehit_time = time;
-		else if(e.damage_dealt)
-		{
+		} else if (e.damage_dealt) {
 			it.hit_time = time;
 			it.damage_dealt_total += ceil(e.damage_dealt);
 		}
-	));
-	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	});
 	// add 1 frametime because after this, engine SV_Physics
 	// increases time by a frametime and then networks the frame
 	// add another frametime because client shows everything with
 	// 1 frame of lag (cl_nolerp 0). The last +1 however should not be
 	// needed!
-	FOREACH_CLIENT(true, LAMBDA(
+	float altime = time + frametime * (1 + autocvar_g_antilag_nudge);
+	FOREACH_CLIENT(true, {
 		it.typehitsound = false;
 		it.damage_dealt = 0;
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-		setself(it);
-		antilag_record(it, altime);
-	));
-	FOREACH_CLIENT(PS(it), LAMBDA(
+		antilag_record(it, CS(it), altime);
+	});
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+		antilag_record(it, it, altime);
+	});
+	FOREACH_CLIENT(PS(it), {
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
-	));
+	});
 }
 
 

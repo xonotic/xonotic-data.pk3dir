@@ -42,8 +42,6 @@ void _Movetype_CheckWaterTransition(entity ent);
 float _Movetype_CheckWater(entity ent);
 void _Movetype_LinkEdict_TouchAreaGrid(entity this);
 void _Movetype_LinkEdict(entity this, float touch_triggers);
-float _Movetype_TestEntityPosition(entity this, vector ofs);
-float _Movetype_UnstickEntity(entity this);
 vector _Movetype_ClipVelocity(vector vel, vector norm, float f);
 void _Movetype_PushEntityTrace(entity this, vector push);
 float _Movetype_PushEntity(entity this, vector push, float failonstartsolid);

@@ -1,3 +1,4 @@
+#include "all.qh"
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -34,7 +35,7 @@
     #include "../autocvars.qh"
     #include "../constants.qh"
     #include "../defs.qh"
-    #include <common/notifications.qh>
+    #include <common/notifications/all.qh>
     #include <common/deathtypes/all.qh>
     #include "all.qh"
     #include <common/turrets/sv_turrets.qh>

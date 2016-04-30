@@ -1,13 +1,14 @@
 #include "scoreboard.qh"
 
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 #include "hud/all.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/stats.qh"
-#include "../common/teams.qh"
+#include <common/ent_cs.qh>
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
 
 float scoreboard_alpha_bg;
 float scoreboard_alpha_fg;
@@ -127,8 +128,9 @@ void HUD_UpdatePlayerTeams()
 	*/
 }
 
-int HUD_CompareScore(float vl, float vr, int f)
+int HUD_CompareScore(int vl, int vr, int f)
 {
+    TC(int, vl); TC(int, vr); TC(int, f);
 	if(f & SFL_ZERO_IS_WORST)
 	{
 		if(vl == 0 && vr != 0)
@@ -301,19 +303,28 @@ void Cmd_HUD_Help()
 	        "other gamemodes except DM.\n"));
 }
 
-#define HUD_DefaultColumnLayout() \
-"ping pl name | " \
-"-teams,cts,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -cts,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
-"-rc,cts,nb/dmg -rc,cts,nb/dmgtaken " \
-"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes " \
-"+lms/lives +lms/rank " \
-"+kh/caps +kh/pushes +kh/destroyed " \
-"?+rc/laps ?+rc/time ?+rc/fastest " \
-"+as/objectives +nb/faults +nb/goals +ka/pickups +ka/bckills +ka/bctime +ft/revivals " \
-"-lms,rc,nb/score"
+// NOTE: adding a gametype with ? to not warn for an optional field
+// make sure it's excluded in a previous exclusive rule, if any
+// otherwise the previous exclusive rule warns anyway
+// e.g. -teams,rc,cts,lms/kills ?+rc/kills
+#define SCOREBOARD_DEFAULT_COLUMNS \
+"ping pl name |" \
+" -teams,rc,cts,inv,lms/kills +ft,tdm/kills ?+rc,inv/kills" \
+" -teams,lms/deaths +ft,tdm/deaths" \
+" -teams,lms,rc,cts,inv,ka/suicides +ft,tdm/suicides ?+rc,inv/suicides" \
+" -cts,dm,tdm,ka,ft/frags" /* tdm already has this in "score" */ \
+" -rc,cts,nb/dmg -rc,cts,nb/dmgtaken" \
+" +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes" \
+" +lms/lives +lms/rank" \
+" +kh/caps +kh/pushes +kh/destroyed" \
+" ?+rc/laps ?+rc/time +rc,cts/fastest" \
+" +as/objectives +nb/faults +nb/goals" \
+" +ka/pickups +ka/bckills +ka/bctime +ft/revivals" \
+" -lms,rc,cts,inv,nb/score"
 
-void Cmd_HUD_SetFields(float argc)
+void Cmd_HUD_SetFields(int argc)
 {
+    TC(int, argc);
 	int i, j, slash;
 	string str, pattern;
 	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
@@ -334,12 +345,12 @@ void Cmd_HUD_SetFields(float argc)
 		argc = tokenizebyseparator(strcat("0 1 ", autocvar_scoreboard_columns), " ");
 
 	if(argc < 3)
-		argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
+		argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 
 	if(argc == 3)
 	{
 		if(argv(2) == "default")
-			argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
+			argc = tokenizebyseparator(strcat("0 1 ", SCOREBOARD_DEFAULT_COLUMNS), " ");
 		else if(argv(2) == "all")
 		{
 			string s;
@@ -394,7 +405,6 @@ void Cmd_HUD_SetFields(float argc)
 		{
 			case "ping": hud_field[hud_num_fields] = SP_PING; break;
 			case "pl": hud_field[hud_num_fields] = SP_PL; break;
-			case "pl": hud_field[hud_num_fields] = SP_PL; break;
 			case "kd": case "kdr": case "kdratio": case "k/d": hud_field[hud_num_fields] = SP_KDRATIO; break;
 			case "sum": case "diff": case "k-d": hud_field[hud_num_fields] = SP_SUM; break;
 			case "name": case "nick": hud_field[hud_num_fields] = SP_NAME; have_name = true; break;
@@ -407,7 +417,7 @@ void Cmd_HUD_SetFields(float argc)
 					if(str == strtolower(scores_label[j]))
 						goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
 
-:notfound
+LABEL(notfound)
 				if(str == "frags")
 					j = SP_FRAGS;
 				else
@@ -416,7 +426,7 @@ void Cmd_HUD_SetFields(float argc)
 						LOG_INFOF("^1Error:^7 Unknown score field: '%s'\n", str);
 					continue;
 				}
-:found
+LABEL(found)
 				hud_field[hud_num_fields] = j;
 				if(j == ps_primary)
 					have_primary = 1;
@@ -515,6 +525,7 @@ float hud_field_icon1_alpha;
 float hud_field_icon2_alpha;
 string HUD_GetField(entity pl, int field)
 {
+    TC(int, field);
 	float tmp, num, denom;
 	int f;
 	string str;
@@ -639,6 +650,7 @@ float hud_fixscoreboardcolumnwidth_marginlen;
 
 string HUD_FixScoreboardColumnWidth(int i, string str)
 {
+    TC(int, i);
 	float field, f;
 	vector sz;
 	field = hud_field[i];
@@ -703,8 +715,9 @@ string HUD_FixScoreboardColumnWidth(int i, string str)
 	return str;
 }
 
-void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_self, int pl_number)
+void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, bool is_self, int pl_number)
 {
+    TC(bool, is_self); TC(int, pl_number);
 	vector tmp, rgb;
 	rgb = Team_ColorRGB(pl.team);
 	string str;
@@ -996,18 +1009,17 @@ float HUD_WouldDrawScoreboard() {
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
-	SELFPARAM();
 	WepSet weapons_stat = WepSet_GetFromStat();
 	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float initial_posx = pos.x;
 	int disownedcnt = 0;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
 		if (weapon_stats < 0 && !(weapons_stat & set || weapons_inmap & set))
 			++disownedcnt;
-	));
+	});
 
 	int weapon_cnt = (Weapons_COUNT - 1) - disownedcnt;
 	if (weapon_cnt <= 0) return pos;
@@ -1061,7 +1073,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	vector tmpos = pos;
 
 	int column = 0;
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		int weapon_stats = weapon_accuracy[i - WEP_FIRST];
 
 		WepSet set = it.m_wepset;
@@ -1100,7 +1112,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			pos.y += height;
 		}
 		++column;
-	));
+	});
 
 	if (weapons_with_stats)
 		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
@@ -1303,7 +1315,7 @@ void HUD_DrawScoreboard()
 	pos.y += sb_heading_fontsize.y + hud_fontsize.y * 0.25;
 
 	// Draw the scoreboard
-	vector bg_size = draw_getimagesize("gfx/scoreboard/scoreboard_bg") * autocvar_scoreboard_bg_scale;
+	vector bg_size = draw_getimagesize("gfx/scoreboard/scoreboard_bg") * ((autocvar_scoreboard_bg_scale > 0) ? autocvar_scoreboard_bg_scale : 0.25);
 
 	if(teamplay)
 	{

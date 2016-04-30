@@ -2,7 +2,7 @@
 
 #ifdef MENUQC
 
-#include "xonotic/tab.qc"
+#include "xonotic/tab.qh"
 
 REGISTRY(Settings, BITS(3))
 #define Settings_from(i) _Settings_from(i, NULL)

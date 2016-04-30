@@ -997,7 +997,6 @@ entity WaypointSprite_Spawn(
 )
 {
     entity wp = new(sprite_waypoint);
-    make_pure(wp);
     wp.teleport_time = time + _lifetime;
     wp.fade_time = _lifetime;
     wp.exteriormodeltoclient = ref;
@@ -1101,7 +1100,7 @@ entity WaypointSprite_AttachCarrier(
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
     entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
-    if (e)
+    if (carrier.health)
     {
         WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
         WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));

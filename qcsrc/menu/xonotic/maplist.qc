@@ -1,63 +1,12 @@
-#ifndef MAPLIST_H
-#define MAPLIST_H
-#include "listbox.qc"
-CLASS(XonoticMapList, XonoticListBox)
-	METHOD(XonoticMapList, configureXonoticMapList, void(entity));
-	ATTRIB(XonoticMapList, rowsPerItem, float, 4)
-	METHOD(XonoticMapList, draw, void(entity));
-	METHOD(XonoticMapList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticMapList, clickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticMapList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticMapList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticMapList, refilter, void(entity));
-	METHOD(XonoticMapList, refilterCallback, void(entity, entity));
-	METHOD(XonoticMapList, keyDown, float(entity, float, float, float));
+#include "maplist.qh"
 
-	ATTRIB(XonoticMapList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticMapList, columnPreviewOrigin, float, 0)
-	ATTRIB(XonoticMapList, columnPreviewSize, float, 0)
-	ATTRIB(XonoticMapList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticMapList, columnNameSize, float, 0)
-	ATTRIB(XonoticMapList, checkMarkOrigin, vector, '0 0 0')
-	ATTRIB(XonoticMapList, checkMarkSize, vector, '0 0 0')
-	ATTRIB(XonoticMapList, realUpperMargin1, float, 0)
-	ATTRIB(XonoticMapList, realUpperMargin2, float, 0)
+#include <common/mapinfo.qh>
+#include "dialog_multiplayer_create_mapinfo.qh"
+#include "mainwindow.qh"
+#include "inputbox.qh"
 
-	ATTRIB(XonoticMapList, lastGametype, float, 0)
-	ATTRIB(XonoticMapList, lastFeatures, float, 0)
+.bool disabled;
 
-	ATTRIB(XonoticMapList, origin, vector, '0 0 0')
-	ATTRIB(XonoticMapList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticMapList, g_maplistCache, string, string_null)
-	METHOD(XonoticMapList, g_maplistCacheToggle, void(entity, float));
-	METHOD(XonoticMapList, g_maplistCacheQuery, float(entity, float));
-
-	ATTRIB(XonoticMapList, stringFilter, string, string_null)
-	ATTRIB(XonoticMapList, stringFilterBox, entity, NULL)
-
-	ATTRIB(XonoticMapList, startButton, entity, NULL)
-
-	METHOD(XonoticMapList, loadCvars, void(entity));
-
-	ATTRIB(XonoticMapList, typeToSearchString, string, string_null)
-	ATTRIB(XonoticMapList, typeToSearchTime, float, 0)
-
-	METHOD(XonoticMapList, destroy, void(entity));
-
-	ATTRIB(XonoticMapList, alphaBG, float, 0)
-ENDCLASS(XonoticMapList)
-entity makeXonoticMapList();
-void MapList_StringFilterBox_Change(entity box, entity me);
-float MapList_StringFilterBox_keyDown(entity me, float key, float ascii, float shift);
-void MapList_Add_Shown(entity btn, entity me);
-void MapList_Remove_Shown(entity btn, entity me);
-void MapList_Add_All(entity btn, entity me);
-void MapList_Remove_All(entity btn, entity me);
-void MapList_LoadMap(entity btn, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
 void XonoticMapList_destroy(entity me)
 {
 	MapInfo_Shutdown();
@@ -458,4 +407,3 @@ float MapList_StringFilterBox_keyDown(entity me, float scan, float ascii, float 
 	}
 	return SUPER(XonoticInputBox).keyDown(me, scan, ascii, shift);
 }
-#endif

@@ -1,3 +1,4 @@
+#include "gamemode_freezetag.qh"
 #ifndef GAMEMODE_FREEZETAG_H
 #define GAMEMODE_FREEZETAG_H
 
@@ -15,7 +16,7 @@ REGISTER_MUTATOR(ft, false)
 		freezetag_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, -1, -1);
+		SetLimits(autocvar_g_freezetag_point_limit, autocvar_g_freezetag_point_leadlimit, autocvar_timelimit_override, -1);
 
 		if (autocvar_g_freezetag_team_spawns)
 			have_team_spawns = -1; // request team spawns
@@ -98,14 +99,14 @@ float freezetag_CheckTeams()
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return 1;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return 0;
 	}
@@ -165,8 +166,8 @@ float freezetag_CheckWinner()
 	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
 	}
 	else if(winner_team == -1)
@@ -262,90 +263,87 @@ float freezetag_isEliminated(entity e)
 // Bot player logic
 // ================
 
-void() havocbot_role_ft_freeing;
-void() havocbot_role_ft_offense;
+void(entity this) havocbot_role_ft_freeing;
+void(entity this) havocbot_role_ft_offense;
 
-void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradius)
-{SELFPARAM();
-	float distance;
-
-	FOREACH_CLIENT(IS_PLAYER(it) && it != self && SAME_TEAM(it, self), LAMBDA(
+void havocbot_goalrating_freeplayers(entity this, float ratingscale, vector org, float sradius)
+{
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this && SAME_TEAM(it, this), LAMBDA(
 		if (STAT(FROZEN, it) == 1)
 		{
-			distance = vlen(it.origin - org);
-			if (distance > sradius)
+			if(vdist(it.origin - org, >, sradius))
 				continue;
-			navigation_routerating(it, ratingscale, 2000);
+			navigation_routerating(this, it, ratingscale, 2000);
 		}
 		else
 		{
 			// If teamate is not frozen still seek them out as fight better
 			// in a group.
-			navigation_routerating(it, ratingscale/3, 2000);
+			navigation_routerating(this, it, ratingscale/3, 2000);
 		}
 	));
 }
 
-void havocbot_role_ft_offense()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_ft_offense(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + random() * 10 + 20;
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + random() * 10 + 20;
 
 	// Count how many players on team are unfrozen.
 	int unfrozen = 0;
-	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self) && !(STAT(FROZEN, it) != 1), LAMBDA(unfrozen++));
+	FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, this) && !(STAT(FROZEN, it) != 1), LAMBDA(unfrozen++));
 
 	// If only one left on team or if role has timed out then start trying to free players.
-	if (((unfrozen == 0) && (!STAT(FROZEN, self))) || (time > self.havocbot_role_timeout))
+	if (((unfrozen == 0) && (!STAT(FROZEN, this))) || (time > this.havocbot_role_timeout))
 	{
 		LOG_TRACE("changing role to freeing\n");
-		self.havocbot_role = havocbot_role_ft_freeing;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_ft_freeing;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (time > self.bot_strategytime)
+	if (time > this.bot_strategytime)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
-		navigation_goalrating_start();
-		havocbot_goalrating_items(10000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
-		havocbot_goalrating_freeplayers(9000, self.origin, 10000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		havocbot_goalrating_freeplayers(this, 9000, this.origin, 10000);
+		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		navigation_goalrating_end(this);
 	}
 }
 
-void havocbot_role_ft_freeing()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_ft_freeing(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (!self.havocbot_role_timeout)
-		self.havocbot_role_timeout = time + random() * 10 + 20;
+	if (!this.havocbot_role_timeout)
+		this.havocbot_role_timeout = time + random() * 10 + 20;
 
-	if (time > self.havocbot_role_timeout)
+	if (time > this.havocbot_role_timeout)
 	{
 		LOG_TRACE("changing role to offense\n");
-		self.havocbot_role = havocbot_role_ft_offense;
-		self.havocbot_role_timeout = 0;
+		this.havocbot_role = havocbot_role_ft_offense;
+		this.havocbot_role_timeout = 0;
 		return;
 	}
 
-	if (time > self.bot_strategytime)
+	if (time > this.bot_strategytime)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
-		navigation_goalrating_start();
-		havocbot_goalrating_items(8000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(10000, self.origin, 10000);
-		havocbot_goalrating_freeplayers(20000, self.origin, 10000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_items(this, 8000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 10000, this.origin, 10000);
+		havocbot_goalrating_freeplayers(this, 20000, this.origin, 10000);
+		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		navigation_goalrating_end(this);
 	}
 }
 
@@ -364,24 +362,25 @@ void ft_RemovePlayer()
 }
 
 MUTATOR_HOOKFUNCTION(ft, ClientDisconnect)
-{SELFPARAM();
+{
 	ft_RemovePlayer();
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
-{SELFPARAM();
+{
 	ft_RemovePlayer();
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 {
+    SELFPARAM();
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{
 		if(STAT(FROZEN, frag_target))
-			WITH(entity, self, frag_target, freezetag_Unfreeze(world));
+			WITHSELF(frag_target, freezetag_Unfreeze(world));
 		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
@@ -399,7 +398,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_LastPlayerForTeam_Notify();
 		}
 		else
-			WITH(entity, self, frag_target, freezetag_Unfreeze(world)); // remove ice
+			WITHSELF(frag_target, freezetag_Unfreeze(world)); // remove ice
 		frag_target.health = 0; // Unfreeze resets health
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return 1;
@@ -408,7 +407,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(STAT(FROZEN, frag_target))
 		return 1;
 
-	WITH(entity, self, frag_target, freezetag_Freeze(frag_attacker));
+	WITHSELF(frag_target, freezetag_Freeze(frag_attacker));
 	freezetag_LastPlayerForTeam_Notify();
 
 	if(frag_attacker == frag_target || frag_attacker == world)
@@ -453,7 +452,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
-{SELFPARAM();
+{
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		it.killcount = 0;
 		it.freezetag_frozen_timeout = -1;

@@ -1,34 +1,5 @@
-#ifndef SLIDER_H
-#define SLIDER_H
-#include "../item/slider.qc"
-CLASS(XonoticSlider, Slider)
-	METHOD(XonoticSlider, configureXonoticSlider, void(entity, float, float, float, string, string));
-	METHOD(XonoticSlider, setValue, void(entity, float));
-	METHOD(XonoticSlider, setValue_noAnim, void(entity, float));
-	ATTRIB(XonoticSlider, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticSlider, valueSpace, float, SKINWIDTH_SLIDERTEXT)
-	ATTRIB(XonoticSlider, image, string, SKINGFX_SLIDER)
-	ATTRIB(XonoticSlider, tolerance, vector, SKINTOLERANCE_SLIDER)
-	ATTRIB(XonoticSlider, align, float, 0.5)
-	ATTRIB(XonoticSlider, color, vector, SKINCOLOR_SLIDER_N)
-	ATTRIB(XonoticSlider, colorC, vector, SKINCOLOR_SLIDER_C)
-	ATTRIB(XonoticSlider, colorF, vector, SKINCOLOR_SLIDER_F)
-	ATTRIB(XonoticSlider, colorD, vector, SKINCOLOR_SLIDER_D)
-	ATTRIB(XonoticSlider, color2, vector, SKINCOLOR_SLIDER_S)
+#include "slider.qh"
 
-	ATTRIB(XonoticSlider, cvarName, string, string_null)
-	METHOD(XonoticSlider, loadCvars, void(entity));
-	METHOD(XonoticSlider, saveCvars, void(entity));
-	ATTRIB(XonoticSlider, sendCvars, float, 0)
-
-	ATTRIB(XonoticSlider, alpha, float, SKINALPHA_TEXT)
-	ATTRIB(XonoticSlider, disabledAlpha, float, SKINALPHA_DISABLED)
-ENDCLASS(XonoticSlider)
-entity makeXonoticSlider_T(float, float, float, string, string theTooltip);
-entity makeXonoticSlider(float, float, float, string);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticSlider_T(float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
 {
 	entity me;
@@ -87,8 +58,7 @@ void XonoticSlider_saveCvars(entity me)
 	if (!me.cvarName)
 		return;
 
-	cvar_set(me.cvarName, ftos(me.value));
+	cvar_set(me.cvarName, ftos_mindecimals(me.value));
 
 	CheckSendCvars(me, me.cvarName);
 }
-#endif

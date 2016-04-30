@@ -36,28 +36,27 @@ void target_music_reset(entity this)
 }
 void target_music_kill()
 {
-	for(self = world; (self = find(self, classname, "target_music")); )
-	{
-		self.volume = 0;
-		if(self.targetname == "")
-			target_music_sendto(MSG_ALL, 1);
-		else
-			target_music_sendto(MSG_ALL, 0);
-	}
+	FOREACH_ENTITY_CLASS("target_music", true, {
+		it.volume = 0;
+        if (it.targetname == "")
+            WITHSELF(it, target_music_sendto(MSG_ALL, 1));
+        else
+            WITHSELF(it, target_music_sendto(MSG_ALL, 0));
+	});
 }
-void target_music_use()
+void target_music_use(entity this, entity actor, entity trigger)
 {
-	if(!activator)
+	if(!actor)
 		return;
-	if(IS_REAL_CLIENT(activator))
+	if(IS_REAL_CLIENT(actor))
 	{
-		msg_entity = activator;
+		msg_entity = actor;
 		target_music_sendto(MSG_ONE, 1);
 	}
-	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == activator, LAMBDA(
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == actor, {
 		msg_entity = it;
 		target_music_sendto(MSG_ONE, 1);
-	));
+	});
 }
 spawnfunc(target_music)
 {
@@ -133,10 +132,10 @@ void trigger_music_reset(entity this)
 	this.cnt = !(this.spawnflags & 1);
 	this.SendFlags |= 0x80;
 }
-void trigger_music_use()
-{SELFPARAM();
-	self.cnt = !self.cnt;
-	self.SendFlags |= 0x80;
+void trigger_music_use(entity this, entity actor, entity trigger)
+{
+	this.cnt = !this.cnt;
+	this.SendFlags |= 0x80;
 }
 spawnfunc(trigger_music)
 {
@@ -168,7 +167,7 @@ void TargetMusic_Advance()
 	entity best = music_default;
 	if (music_target && time < music_target.lifetime) best = music_target;
 	if (music_trigger) best = music_trigger;
-	LL_EACH(TargetMusic_list, it.noise, LAMBDA(
+	LL_EACH(TargetMusic_list, it.noise, {
 		const float vol0 = (getsoundtime(it, CH_BGM_SINGLE) >= 0) ? it.lastvol : -1;
 		if (it == best)
 		{
@@ -189,7 +188,7 @@ void TargetMusic_Advance()
 				_sound(it, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
 			it.lastvol = vol;
 		}
-	));
+	});
 	music_trigger = world;
 	bgmtime = (best) ? getsoundtime(best, CH_BGM_SINGLE) : gettime(GETTIME_CDTRACK);
 }
@@ -210,11 +209,10 @@ void Net_TargetMusic()
 	const string noi = ReadString();
 
 	entity e = NULL;
-	LL_EACH(TargetMusic_list, it.count == id, LAMBDA(e = it; break));
+	LL_EACH(TargetMusic_list, it.count == id, { e = it; break; });
 	if (!e)
 	{
-		LL_PUSH(TargetMusic_list, e = new(TargetMusic));
-		make_pure(e);
+		LL_PUSH(TargetMusic_list, e = new_pure(TargetMusic));
 		e.count = id;
 	}
 	if(e.noise != noi)

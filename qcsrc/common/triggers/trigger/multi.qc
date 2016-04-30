@@ -41,9 +41,7 @@ void multi_trigger()
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
 
-	activator = self.enemy;
-	other = self.goalentity;
-	SUB_UseTargets();
+	SUB_UseTargets(self, self.enemy, self.goalentity);
 
 	if (self.wait > 0)
 	{
@@ -61,11 +59,11 @@ void multi_trigger()
 	}
 }
 
-void multi_use()
-{SELFPARAM();
-	self.goalentity = other;
-	self.enemy = activator;
-	multi_trigger();
+void multi_use(entity this, entity actor, entity trigger)
+{
+	this.goalentity = trigger;
+	this.enemy = actor;
+	WITHSELF(this, multi_trigger());
 }
 
 void multi_touch()
@@ -111,7 +109,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 	{
 		this.enemy = attacker;
 		this.goalentity = inflictor;
-		WITH(entity, self, this, multi_trigger());
+		WITHSELF(this, multi_trigger());
 	}
 }
 
@@ -147,19 +145,14 @@ spawnfunc(trigger_multiple)
 {
 	self.reset = multi_reset;
 	if (self.sounds == 1)
-	{
-		precache_sound ("misc/secret.wav");
 		self.noise = "misc/secret.wav";
-	}
 	else if (self.sounds == 2)
-	{
 		self.noise = strzone(SND(TALK));
-	}
 	else if (self.sounds == 3)
-	{
-		precache_sound ("misc/trigger1.wav");
 		self.noise = "misc/trigger1.wav";
-	}
+
+	if(self.noise)
+		precache_sound(self.noise);
 
 	if (!self.wait)
 		self.wait = 0.2;

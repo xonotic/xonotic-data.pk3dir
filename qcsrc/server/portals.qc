@@ -4,7 +4,7 @@
 #include "mutators/all.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/triggers/teleporters.qh"
 #include "../common/triggers/subs.qh"
 #include "../common/util.qh"

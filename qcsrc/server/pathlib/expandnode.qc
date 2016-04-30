@@ -1,3 +1,4 @@
+#include "expandnode.qh"
 #include "pathlib.qh"
 #include "utility.qh"
 

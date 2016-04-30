@@ -10,7 +10,6 @@
 		func()
 #else
 	#ifdef HAVE_YO_DAWG_CPP
-// TODO make ascii art pic of xzibit
 // YO DAWG!
 // I HERD YO LIEK MACROS
 // SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION

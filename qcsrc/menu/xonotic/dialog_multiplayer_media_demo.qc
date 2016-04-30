@@ -1,18 +1,11 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_H
-#define DIALOG_MULTIPLAYER_MEDIA_DEMO_H
-#include "tab.qc"
-CLASS(XonoticDemoBrowserTab, XonoticTab)
-	METHOD(XonoticDemoBrowserTab, fill, void(entity));
-	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticDemoBrowserTab, rows, float, 21)
-	ATTRIB(XonoticDemoBrowserTab, columns, float, 6.5)
-	ATTRIB(XonoticDemoBrowserTab, name, string, "DemoBrowser")
-	ATTRIB(XonoticDemoBrowserTab, democlicktype, float, 0)
-ENDCLASS(XonoticDemoBrowserTab)
-entity makeXonoticDemoBrowserTab();
-#endif
+#include "dialog_multiplayer_media_demo.qh"
 
-#ifdef IMPLEMENTATION
+#include "demolist.qh"
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "checkbox.qh"
+#include "button.qh"
+
 const float DMO_PLAY = 1;
 const float DMO_TIME = 2;
 void DemoConfirm_Check_Gamestatus(entity btn, entity me)
@@ -71,4 +64,3 @@ void XonoticDemoBrowserTab_fill(entity me)
 			e.onClick = DemoConfirm_Check_Gamestatus;
 			e.onClickEntity = me; // demolist is global anyway
 }
-#endif

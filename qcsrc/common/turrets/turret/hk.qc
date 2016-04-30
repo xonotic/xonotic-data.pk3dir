@@ -3,7 +3,7 @@
 
 //#define TURRET_DEBUG_HK
 
-#include "hk_weapon.qc"
+#include "hk_weapon.qh"
 
 CLASS(HunterKiller, Turret)
 /* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
@@ -22,8 +22,6 @@ REGISTER_TURRET(HK, NEW(HunterKiller));
 
 #ifdef IMPLEMENTATION
 
-#include "hk_weapon.qc"
-
 #ifdef SVQC
 
 #ifdef TURRET_DEBUG_HK
@@ -34,6 +32,7 @@ spawnfunc(turret_hk) { if(!turret_initialize(TUR_HK)) remove(self); }
 
 METHOD(HunterKiller, tr_think, void(HunterKiller thistur, entity it))
 {
+    SELFPARAM();
     if (self.tur_head.frame != 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 

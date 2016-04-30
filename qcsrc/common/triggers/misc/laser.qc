@@ -10,47 +10,47 @@ REGISTER_NET_LINKED(ENT_CLIENT_LASER)
 
 #ifdef SVQC
 .float modelscale;
-void misc_laser_aim()
-{SELFPARAM();
+void misc_laser_aim(entity this)
+{
 	vector a;
-	if(self.enemy)
+	if(this.enemy)
 	{
-		if(self.spawnflags & 2)
+		if(this.spawnflags & 2)
 		{
-			if(self.enemy.origin != self.mangle)
+			if(this.enemy.origin != this.mangle)
 			{
-				self.mangle = self.enemy.origin;
-				self.SendFlags |= 2;
+				this.mangle = this.enemy.origin;
+				this.SendFlags |= 2;
 			}
 		}
 		else
 		{
-			a = vectoangles(self.enemy.origin - self.origin);
+			a = vectoangles(this.enemy.origin - this.origin);
 			a_x = -a_x;
-			if(a != self.mangle)
+			if(a != this.mangle)
 			{
-				self.mangle = a;
-				self.SendFlags |= 2;
+				this.mangle = a;
+				this.SendFlags |= 2;
 			}
 		}
 	}
 	else
 	{
-		if(self.angles != self.mangle)
+		if(this.angles != this.mangle)
 		{
-			self.mangle = self.angles;
-			self.SendFlags |= 2;
+			this.mangle = this.angles;
+			this.SendFlags |= 2;
 		}
 	}
-	if(self.origin != self.oldorigin)
+	if(this.origin != this.oldorigin)
 	{
-		self.SendFlags |= 1;
-		self.oldorigin = self.origin;
+		this.SendFlags |= 1;
+		this.oldorigin = this.origin;
 	}
 }
 
-void misc_laser_init()
-{SELFPARAM();
+void misc_laser_init(entity this)
+{
 	if(self.target != "")
 		self.enemy = find(world, targetname, self.target);
 }
@@ -67,7 +67,7 @@ void misc_laser_think()
 	if(!self.state)
 		return;
 
-	misc_laser_aim();
+	misc_laser_aim(this);
 
 	if(self.enemy)
 	{
@@ -97,8 +97,7 @@ void misc_laser_think()
 			{
 				self.count = 1;
 
-				activator = self.enemy.pusher;
-				WITH(entity, self, self.enemy, SUB_UseTargets());
+				SUB_UseTargets(self.enemy, self.enemy.pusher, NULL);
 			}
 		}
 		else
@@ -107,8 +106,7 @@ void misc_laser_think()
 			{
 				self.count = 0;
 
-				activator = self.enemy.pusher;
-				WITH(entity, self, self.enemy, SUB_UseTargets());
+				SUB_UseTargets(self.enemy, self.enemy.pusher, NULL);
 			}
 		}
 	}
@@ -188,11 +186,11 @@ Keys:
 "dmg"
  damage per second (-1 for a laser that kills immediately)
 */
-void laser_use()
-{SELFPARAM();
-	self.state = !self.state;
-	self.SendFlags |= 4;
-	misc_laser_aim();
+void laser_use(entity this, entity actor, entity trigger)
+{
+	this.state = !this.state;
+	this.SendFlags |= 4;
+	misc_laser_aim(this);
 }
 
 void laser_reset(entity this)

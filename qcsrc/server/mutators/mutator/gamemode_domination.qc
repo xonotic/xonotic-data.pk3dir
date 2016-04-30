@@ -1,3 +1,4 @@
+#include "gamemode_domination.qh"
 #ifndef GAMEMODE_DOMINATION_H
 #define GAMEMODE_DOMINATION_H
 
@@ -21,7 +22,7 @@ REGISTER_MUTATOR(dom, false)
 			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
 
 		ActivateTeamplay();
-		SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, -1, -1);
+		SetLimits(fraglimit_override, autocvar_g_domination_point_leadlimit, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -149,8 +150,7 @@ void dompoint_captured ()
 	old_team = self.team;
 	self.team = real_team;
 	self.delay = 0;
-	activator = self;
-	SUB_UseTargets ();
+	SUB_UseTargets (self, self, NULL);
 	self.delay = old_delay;
 	self.team = old_team;
 
@@ -424,8 +424,8 @@ float Domination_CheckWinner()
 
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_DOM_CAPS, +1);
 	}
 	else if(winner_team == -1)
@@ -450,20 +450,20 @@ void Domination_RoundStart()
 }
 
 //go to best items, or control points you don't own
-void havocbot_role_dom()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_dom(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
-		havocbot_goalrating_controlpoints(10000, self.origin, 15000);
-		havocbot_goalrating_items(8000, self.origin, 8000);
-		//havocbot_goalrating_enemyplayers(3000, self.origin, 2000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
-		navigation_goalrating_end();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
+		havocbot_goalrating_controlpoints(this, 10000, this.origin, 15000);
+		havocbot_goalrating_items(this, 8000, this.origin, 8000);
+		//havocbot_goalrating_enemyplayers(this, 3000, this.origin, 2000);
+		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		navigation_goalrating_end(this);
 	}
 }
 
@@ -629,15 +629,16 @@ void ScoreRules_dom(float teams)
 }
 
 // code from here on is just to support maps that don't have control point and team entities
-void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
+void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
 {SELFPARAM();
+    TC(Sound, capsound);
 	setself(spawn());
 	self.classname = "dom_team";
 	self.netname = strzone(teamname);
 	self.cnt = teamcolor;
 	self.model = pointmodel;
 	self.skin = pointskin;
-	self.noise = strzone(capsound);
+	self.noise = strzone(Sound_fixpath(capsound));
 	self.noise1 = strzone(capnarration);
 	self.message = strzone(capmessage);
 
@@ -667,18 +668,19 @@ void dom_spawnpoint(vector org)
 }
 
 // spawn some default teams if the map is not set up for domination
-void dom_spawnteams(float teams)
+void dom_spawnteams(int teams)
 {
-	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND(DOM_CLAIM), "", "Red team has captured a control point");
-	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND(DOM_CLAIM), "", "Blue team has captured a control point");
+    TC(int, teams);
+	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_1), NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, SND_DOM_CLAIM, "", "Red team has captured a control point");
+	dom_spawnteam(Team_ColoredFullName(NUM_TEAM_2), NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, SND_DOM_CLAIM, "", "Blue team has captured a control point");
 	if(teams >= 3)
-		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_3), NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND(DOM_CLAIM), "", "Yellow team has captured a control point");
+		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_3), NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, SND_DOM_CLAIM, "", "Yellow team has captured a control point");
 	if(teams >= 4)
-		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_4), NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND(DOM_CLAIM), "", "Pink team has captured a control point");
-	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
+		dom_spawnteam(Team_ColoredFullName(NUM_TEAM_4), NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, SND_DOM_CLAIM, "", "Pink team has captured a control point");
+	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, SND_Null, "", "");
 }
 
-void dom_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+void dom_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)

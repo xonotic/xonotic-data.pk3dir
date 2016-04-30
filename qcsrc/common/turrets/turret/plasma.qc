@@ -1,7 +1,7 @@
 #ifndef TURRET_PLASMA_H
 #define TURRET_PLASMA_H
 
-#include "plasma_weapon.qc"
+#include "plasma_weapon.qh"
 
 CLASS(PlasmaTurret, Turret)
 /* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
@@ -19,8 +19,6 @@ REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "plasma_weapon.qc"
 
 #ifdef SVQC
 
@@ -48,6 +46,7 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 }
 METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
+    SELFPARAM();
     if (self.tur_head.frame != 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 

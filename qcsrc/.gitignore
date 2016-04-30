@@ -1,3 +1,2 @@
-html/
-qccversion*
-*.d
+/html/
+/*.pk3

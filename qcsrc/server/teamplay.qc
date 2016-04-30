@@ -31,7 +31,7 @@ void LogTeamchange(float player_id, float team_number, float type)
 	GameLogEcho(strcat(":team:", ftos(player_id), ":", ftos(team_number), ":", ftos(type)));
 }
 
-void default_delayedinit()
+void default_delayedinit(entity this)
 {
 	if(!scores_initialized)
 		ScoreRules_generic();
@@ -42,23 +42,6 @@ void ActivateTeamplay()
 	serverflags |= SERVERFLAG_TEAMPLAY;
 	teamplay = 1;
 	cvar_set("teamplay", "2");  // DP needs this for sending proper getstatus replies.
-}
-
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override)
-{
-	// enforce the server's universal frag/time limits
-	// set to -1 to not change value
-	if(!autocvar_g_campaign)
-	{
-		if(fraglimit_override >= 0)
-			cvar_set("fraglimit", ftos(fraglimit_override));
-		if(timelimit_override >= 0)
-			cvar_set("timelimit", ftos(timelimit_override));
-		if(leadlimit_override >= 0)
-			cvar_set("leadlimit", ftos(leadlimit_override));
-		if(qualifying_override >= 0)
-			cvar_set("g_race_qualifying_timelimit", ftos(qualifying_override));
-	}
 }
 
 void InitGameplayMode()
@@ -89,8 +72,6 @@ void InitGameplayMode()
 
 	MapInfo_ClearTemps();
 
-	// set both here, gamemode can override it later
-	SetLimits(autocvar_fraglimit_override, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
 	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
 
 	cache_mutatormsg = strzone("");
@@ -499,7 +480,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	return RandomSelection_chosen_float;
 }
 
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
+int JoinBestTeam(entity pl, bool only_return_best, bool forcebestteam)
 {SELFPARAM();
 	float smallest, selectedteam;
 

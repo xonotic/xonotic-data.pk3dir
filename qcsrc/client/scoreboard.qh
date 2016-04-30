@@ -1,5 +1,4 @@
-#ifndef CLIENT_SCOREBOARD_H
-#define CLIENT_SCOREBOARD_H
+#pragma once
 
 float xmin, xmax, ymin, ymax, sbwidth;
 
@@ -12,4 +11,3 @@ void HUD_InitScores();
 void HUD_UpdatePlayerPos(entity pl);
 void HUD_UpdateTeamPos(entity Team);
 float HUD_WouldDrawScoreboard();
-#endif

@@ -4,7 +4,7 @@
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "mutators/events.qh"
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
 #include <common/t_items.qh>
@@ -127,7 +127,7 @@ void CSQC_Init()
 	registercvar("cl_jumpspeedcap_min", "");
 	registercvar("cl_jumpspeedcap_max", "");
 
-	registercvar("cl_multijump", "0");
+	registercvar("cl_multijump", "1");
 
 	registercvar("cl_spawn_near_teammate", "1");
 
@@ -213,12 +213,13 @@ void Shutdown()
 	}
 
 	deactivate_minigame();
-	HUD_MinigameMenu_Close();
+	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 }
 
 .float has_team;
 float SetTeam(entity o, int Team)
 {
+    TC(int, Team);
 	devassert_once(Team);
 	entity tm;
 	if(teamplay)
@@ -315,8 +316,7 @@ void Playerchecker_Think()
 				// player connected
 				if (!e)
 				{
-					playerslots[i] = e = new(playerslot);
-					make_pure(e);
+					playerslots[i] = e = new_pure(playerslot);
 				}
 				e.sv_entnum = i;
 				e.ping = 0;
@@ -333,16 +333,13 @@ void Playerchecker_Think()
 	this.nextthink = time + 0.2;
 }
 
-void Porto_Init();
 void TrueAim_Init();
 void PostInit()
 {
-	entity playerchecker = new(playerchecker);
-	make_pure(playerchecker);
+	entity playerchecker = new_pure(playerchecker);
 	playerchecker.think = Playerchecker_Think;
 	playerchecker.nextthink = time + 0.2;
 
-	Porto_Init();
 	TrueAim_Init();
 
 	postinit = true;
@@ -355,8 +352,9 @@ void PostInit()
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
 // In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
-float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
+float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 {
+    TC(int, bInputType);
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
@@ -434,8 +432,7 @@ NET_HANDLE(ENT_CLIENT_SCORES, bool isnew)
 	o = playerslots[this.sv_entnum];
 	if (!o)
 	{
-		o = playerslots[this.sv_entnum] = new(playerslot);
-		make_pure(o);
+		o = playerslots[this.sv_entnum] = new_pure(playerslot);
 	}
 	this.owner = o;
 	o.sv_entnum = this.sv_entnum;
@@ -696,9 +693,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 {
 	float teamnum = (ReadByte() - 1);
 	vector spn_origin;
-	spn_origin.x = ReadShort();
-	spn_origin.y = ReadShort();
-	spn_origin.z = ReadShort();
+	spn_origin.x = ReadCoord();
+	spn_origin.y = ReadCoord();
+	spn_origin.z = ReadCoord();
 
 	//if(is_new)
 	//{
@@ -751,9 +748,9 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 	if(entnum)
 	{
-		this.origin_x = ReadShort();
-		this.origin_y = ReadShort();
-		this.origin_z = ReadShort();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 
 		if(is_new)
 		{
@@ -837,13 +834,13 @@ void CSQC_Ent_Update(bool isnew)
 #endif
 	this.enttype = t;
 	bool done = false;
-	FOREACH(LinkedEntities, it.m_id == t, LAMBDA(
+	FOREACH(LinkedEntities, it.m_id == t, {
 		if (isnew) this.classname = it.netname;
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
 		break;
-	));
+	});
 	time = savetime;
 	if (!done)
 	{
@@ -927,11 +924,11 @@ bool CSQC_Parse_TempEntity()
 	// Acquire TE ID
 	int nTEID = ReadByte();
 
-	FOREACH(TempEntities, it.m_id == nTEID, LAMBDA(
+	FOREACH(TempEntities, it.m_id == nTEID, {
 		if (autocvar_developer_csqcentities)
 			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
 		return it.m_read(NULL, NULL, true);
-	));
+	});
 
 	if (autocvar_developer_csqcentities)
 		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
@@ -940,7 +937,6 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
-/** TODO somehow thwart prvm_globalset client ... */
 string forcefog;
 void Fog_Force()
 {

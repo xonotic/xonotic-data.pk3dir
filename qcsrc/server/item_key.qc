@@ -2,7 +2,7 @@
 
 #include "../common/triggers/subs.qh"
 #include "../common/monsters/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/util.qh"
 #include "../lib/warpzone/util_server.qh"
 
@@ -84,8 +84,7 @@ void item_key_touch()
 
 	string oldmsg = self.message;
 	self.message = "";
-	activator = other;
-	SUB_UseTargets();
+	SUB_UseTargets(self, other, other); // TODO: should we be using other for the trigger here?
 	self.message = oldmsg;
 };
 

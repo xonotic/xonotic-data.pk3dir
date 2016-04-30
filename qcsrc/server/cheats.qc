@@ -12,6 +12,8 @@
 #include "../common/deathtypes/all.qh"
 #include "../common/util.qh"
 
+#include <common/physics/player.qh>
+
 #include "../common/monsters/all.qh"
 
 #include "../common/weapons/all.qh"
@@ -34,7 +36,6 @@ float CheatCommand(float argc) { return 0; }
 float CheatFrame() { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
 void CheatShutdown() { }
-void CheatShutdownClient() { }
 void Drag_MoveDrag(entity from, entity to) { }
 
 #else
@@ -50,10 +51,6 @@ void CheatInit()
 }
 
 void CheatShutdown()
-{
-}
-
-void CheatShutdownClient()
 {
 }
 
@@ -100,15 +97,15 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	cheatcount_total += n; \
 	e.cheatcount += n
 #define END_CHEAT_FUNCTION() \
-	ADD_CHEATS(self,cheating); \
+	ADD_CHEATS(this, cheating); \
 	return attempting
 #define IS_CHEAT(i,argc,fr) \
 	if((++attempting, !CheatsAllowed(i,argc,fr))) \
 		break
 
 float num_autoscreenshot;
-void info_autoscreenshot_findtarget()
-{SELFPARAM();
+void info_autoscreenshot_findtarget(entity this)
+{
 	entity e;
 	e = find(world, targetname, self.target);
 	if(!e)
@@ -327,7 +324,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
-				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, SND_Null, CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				__trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -342,7 +339,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
+				W_SetupShot(self, false, false, SND_Null, CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
@@ -361,7 +358,7 @@ float CheatCommand(float argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					WITH(entity, self, e, spawnfunc_func_breakable(e));
+					WITHSELF(e, spawnfunc_func_breakable(e));
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -678,8 +675,7 @@ float CheatCommand(float argc)
 			IS_CHEAT(0, argc, 0);
 			setself(spawn());
 			self.target = argv(1);
-			activator = this;
-			SUB_UseTargets();
+			SUB_UseTargets(self, this, NULL);
 			remove(self);
 			setself(this);
 			DID_CHEAT();
@@ -688,8 +684,7 @@ float CheatCommand(float argc)
 			IS_CHEAT(0, argc, 0);
 			setself(spawn());
 			self.killtarget = argv(1);
-			activator = this;
-			SUB_UseTargets();
+			SUB_UseTargets(self, this, NULL);
 			remove(self);
 			setself(this);
 			DID_CHEAT();
@@ -699,7 +694,7 @@ float CheatCommand(float argc)
 			setself(new(cheattriggerteleport));
 			setorigin(self, self.origin);
 			self.target = argv(1);
-			teleport_findtarget();
+			teleport_findtarget(self);
 			if(!wasfreed(self))
 			{
 				Simple_TeleportPlayer(self, this);
@@ -739,10 +734,10 @@ float CheatFrame()
 	switch(0)
 	{
 		default:
-			if(self.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
+			if(this.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
 			{
 				// use cheat dragging if cheats are enabled
-				crosshair_trace_plusvisibletriggers(self);
+				crosshair_trace_plusvisibletriggers(this);
 				Drag(true, true);
 			}
 			else
@@ -782,43 +777,43 @@ float Drag(float force_allow_pick, float ischeat)
 	switch(0)
 	{
 		default:
-			if(Drag_IsDragging(self))
+			if(Drag_IsDragging(this))
 			{
-				if(self.BUTTON_DRAG)
+				if(PHYS_INPUT_BUTTON_DRAG(this))
 				{
-					if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
+					if(this.impulse == 10 || this.impulse == 15 || this.impulse == 18)
 					{
-						Drag_MoveForward(self);
-						self.impulse = 0;
+						Drag_MoveForward(this);
+						this.impulse = 0;
 					}
-					else if(self.impulse == 12 || self.impulse == 16 || self.impulse == 19)
+					else if(this.impulse == 12 || this.impulse == 16 || this.impulse == 19)
 					{
-						Drag_MoveBackward(self);
-						self.impulse = 0;
+						Drag_MoveBackward(this);
+						this.impulse = 0;
 					}
-					else if(self.impulse >= 1 && self.impulse <= 9)
+					else if(this.impulse >= 1 && this.impulse <= 9)
 					{
-						Drag_SetSpeed(self, self.impulse - 1);
+						Drag_SetSpeed(this, this.impulse - 1);
 					}
-					else if(self.impulse == 14)
+					else if(this.impulse == 14)
 					{
-						Drag_SetSpeed(self, 9);
+						Drag_SetSpeed(this, 9);
 					}
 
 					if(frametime)
-						Drag_Update(self);
+						Drag_Update(this);
 				}
 				else
 				{
-					Drag_Finish(self);
+					Drag_Finish(this);
 				}
 			}
 			else
 			{
-				if(Drag_CanDrag(self))
-					if(self.BUTTON_DRAG)
+				if(Drag_CanDrag(this))
+					if(PHYS_INPUT_BUTTON_DRAG(this))
 					{
-						crosshair_trace_plusvisibletriggers(self);
+						crosshair_trace_plusvisibletriggers(this);
 						entity e = trace_ent;
 						float pick = force_allow_pick;
 						if (e && !pick)
@@ -828,18 +823,18 @@ float Drag(float force_allow_pick, float ischeat)
 							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 							// it goes out of range while slinging it around.
 
-							if(vlen(self.origin - e.origin) <= autocvar_g_grab_range)
+							if(vlen(this.origin - e.origin) <= autocvar_g_grab_range)
 							{
 								switch(e.grab)
 								{
 									case 0: // can't grab
 										break;
 									case 1: // owner can grab
-										if(e.owner == self || e.realowner == self)
+										if(e.owner == this || e.realowner == this)
 											pick = true;
 										break;
 									case 2: // owner and team mates can grab
-										if(SAME_TEAM(e.owner, self) || SAME_TEAM(e.realowner, self) || e.team == self.team)
+										if(SAME_TEAM(e.owner, this) || SAME_TEAM(e.realowner, this) || e.team == this.team)
 											pick = true;
 										break;
 									case 3: // anyone can grab
@@ -860,7 +855,7 @@ float Drag(float force_allow_pick, float ischeat)
 									Drag_Finish(e.draggedby);
 								if(e.tag_entity)
 									detach_sameorigin(e);
-								Drag_Begin(self, e, trace_endpos);
+								Drag_Begin(this, e, trace_endpos);
 								if(ischeat)
 									DID_CHEAT();
 								return true;
@@ -1050,38 +1045,38 @@ void Drag_MoveDrag(entity from, entity to)
 
 void DragBox_Think()
 {SELFPARAM();
-	if(self.aiment && self.enemy)
+	if(this.aiment && this.enemy)
 	{
-		self.origin_x = (self.aiment.origin.x + self.enemy.origin.x) * 0.5;
-		self.origin_y = (self.aiment.origin.y + self.enemy.origin.y) * 0.5;
-		self.origin_z = (self.aiment.origin.z + self.enemy.origin.z) * 0.5;
-		self.maxs_x = fabs(self.aiment.origin.x - self.enemy.origin.x) * 0.5;
-		self.maxs_y = fabs(self.aiment.origin.y - self.enemy.origin.y) * 0.5;
-		self.maxs_z = fabs(self.aiment.origin.z - self.enemy.origin.z) * 0.5;
-		self.mins = -1 * self.maxs;
-		setorigin(self, self.origin);
-		setsize(self, self.mins, self.maxs); // link edict
+		this.origin_x = (this.aiment.origin.x + this.enemy.origin.x) * 0.5;
+		this.origin_y = (this.aiment.origin.y + this.enemy.origin.y) * 0.5;
+		this.origin_z = (this.aiment.origin.z + this.enemy.origin.z) * 0.5;
+		this.maxs_x = fabs(this.aiment.origin.x - this.enemy.origin.x) * 0.5;
+		this.maxs_y = fabs(this.aiment.origin.y - this.enemy.origin.y) * 0.5;
+		this.maxs_z = fabs(this.aiment.origin.z - this.enemy.origin.z) * 0.5;
+		this.mins = -1 * this.maxs;
+		setorigin(this, this.origin);
+		setsize(this, this.mins, this.maxs); // link edict
 	}
 
-	if(self.cnt == -1) // actually race_place -1
+	if(this.cnt == -1) // actually race_place -1
 	{
 		// show "10 10" for qualifying spawns
-		setmodel(self.killindicator, MDL_NUM(10));
-		setmodel(self.killindicator.killindicator, MDL_NUM(10));
+		setmodel(this.killindicator, MDL_NUM(10));
+		setmodel(this.killindicator.killindicator, MDL_NUM(10));
 	}
-	else if(self.cnt == -2) // actually race_place 0
+	else if(this.cnt == -2) // actually race_place 0
 	{
 		// show "10 0" for loser spawns
-		setmodel(self.killindicator, MDL_NUM(10));
-		setmodel(self.killindicator.killindicator, MDL_NUM(0));
+		setmodel(this.killindicator, MDL_NUM(10));
+		setmodel(this.killindicator.killindicator, MDL_NUM(0));
 	}
 	else
 	{
-		setmodel(self.killindicator, MDL_NUM(self.cnt % 10));
-		setmodel(self.killindicator.killindicator, MDL_NUM(floor(self.cnt / 10)));
+		setmodel(this.killindicator, MDL_NUM(this.cnt % 10));
+		setmodel(this.killindicator.killindicator, MDL_NUM(floor(this.cnt / 10)));
 	}
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 #endif

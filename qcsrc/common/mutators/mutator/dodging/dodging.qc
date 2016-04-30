@@ -267,6 +267,7 @@ void PM_dodging_GetPressedKeys(entity this)
 
 MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 {
+    SELFPARAM();
 	// print("dodging_PlayerPhysics\n");
 	PM_dodging_GetPressedKeys(self);
 	PM_dodging(self);
@@ -275,14 +276,11 @@ MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 
 #ifdef SVQC
 
-MUTATOR_HOOKFUNCTION(dodging, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
-	return false;
-}
+REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
+    SELFPARAM();
 	PM_dodging_checkpressedkeys(self);
 	return false;
 }

@@ -23,6 +23,7 @@
 
 #include "../weapons/accuracy.qh"
 
+#include <common/physics/player.qh>
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
 #include <common/teams.qh>
@@ -36,100 +37,97 @@
 #include <lib/warpzone/util_server.qh>
 
 entity bot_spawn()
-{SELFPARAM();
+{
 	entity bot = spawnclient();
 	if (bot)
 	{
 		currentbots = currentbots + 1;
-		setself(bot);
-		bot_setnameandstuff();
-		ClientConnect();
-		PutClientInServer();
-		setself(this);
+		bot_setnameandstuff(bot);
+		WITHSELF(bot, ClientConnect());
+		WITHSELF(bot, PutClientInServer());
 	}
 	return bot;
 }
 
-void bot_think()
-{SELFPARAM();
-	if (self.bot_nextthink > time)
+void bot_think(entity this)
+{
+	if (this.bot_nextthink > time)
 		return;
 
-	self.flags &= ~FL_GODMODE;
+	this.flags &= ~FL_GODMODE;
 	if(autocvar_bot_god)
-		self.flags |= FL_GODMODE;
+		this.flags |= FL_GODMODE;
 
-	self.bot_nextthink = self.bot_nextthink + autocvar_bot_ai_thinkinterval * pow(0.5, self.bot_aiskill);
-	//if (self.bot_painintensity > 0)
-	//	self.bot_painintensity = self.bot_painintensity - (skill + 1) * 40 * frametime;
+	this.bot_nextthink = this.bot_nextthink + autocvar_bot_ai_thinkinterval * pow(0.5, this.bot_aiskill);
+	//if (this.bot_painintensity > 0)
+	//	this.bot_painintensity = this.bot_painintensity - (skill + 1) * 40 * frametime;
 
-	//self.bot_painintensity = self.bot_painintensity + self.bot_oldhealth - self.health;
-	//self.bot_painintensity = bound(0, self.bot_painintensity, 100);
+	//this.bot_painintensity = this.bot_painintensity + this.bot_oldhealth - this.health;
+	//this.bot_painintensity = bound(0, this.bot_painintensity, 100);
 
-	if (!IS_PLAYER(self) || (autocvar_g_campaign && !campaign_bots_may_start))
+	if (!IS_PLAYER(this) || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
-		self.bot_nextthink = time + 0.5;
+		this.bot_nextthink = time + 0.5;
 		return;
 	}
 
-	if (self.fixangle)
+	if (this.fixangle)
 	{
-		self.v_angle = self.angles;
-		self.v_angle_z = 0;
-		self.fixangle = false;
+		this.v_angle = this.angles;
+		this.v_angle_z = 0;
+		this.fixangle = false;
 	}
 
-	self.dmg_take = 0;
-	self.dmg_save = 0;
-	self.dmg_inflictor = world;
+	this.dmg_take = 0;
+	this.dmg_save = 0;
+	this.dmg_inflictor = world;
 
 	// calculate an aiming latency based on the skill setting
 	// (simulated network latency + naturally delayed reflexes)
-	//self.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
+	//this.ping = 0.7 - bound(0, 0.05 * skill, 0.5); // moved the reflexes to bot_aimdir (under the name 'think')
 	// minimum ping 20+10 random
-	self.ping = bound(0,0.07 - bound(0, (skill + self.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
+	this.ping = bound(0,0.07 - bound(0, (skill + this.bot_pingskill) * 0.005,0.05)+random()*0.01,0.65); // Now holds real lag to server, and higer skill players take a less laggy server
 	// skill 10 = ping 0.2 (adrenaline)
 	// skill 0 = ping 0.7 (slightly drunk)
 
 	// clear buttons
-	self.BUTTON_ATCK = 0;
-	self.button1 = 0;
-	self.BUTTON_JUMP = 0;
-	self.BUTTON_ATCK2 = 0;
-	self.BUTTON_ZOOM = 0;
-	self.BUTTON_CROUCH = 0;
-	self.BUTTON_HOOK = 0;
-	self.BUTTON_INFO = 0;
-	self.button8 = 0;
-	self.BUTTON_CHAT = 0;
-	self.BUTTON_USE = 0;
+	PHYS_INPUT_BUTTON_ATCK(this) = false;
+	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	PHYS_INPUT_BUTTON_ATCK2(this) = false;
+	PHYS_INPUT_BUTTON_ZOOM(this) = false;
+	PHYS_INPUT_BUTTON_CROUCH(this) = false;
+	PHYS_INPUT_BUTTON_HOOK(this) = false;
+	PHYS_INPUT_BUTTON_INFO(this) = false;
+	PHYS_INPUT_BUTTON_DRAG(this) = false;
+	PHYS_INPUT_BUTTON_CHAT(this) = false;
+	PHYS_INPUT_BUTTON_USE(this) = false;
 
 	if (time < game_starttime)
 	{
 		// block the bot during the countdown to game start
-		self.movement = '0 0 0';
-		self.bot_nextthink = game_starttime;
+		this.movement = '0 0 0';
+		this.bot_nextthink = game_starttime;
 		return;
 	}
 
 	// if dead, just wait until we can respawn
-	if (IS_DEAD(self))
+	if (IS_DEAD(this))
 	{
-		if (self.deadflag == DEAD_DEAD)
+		if (this.deadflag == DEAD_DEAD)
 		{
-			self.BUTTON_JUMP = 1; // press jump to respawn
-			self.bot_strategytime = 0;
+			PHYS_INPUT_BUTTON_JUMP(this) = true; // press jump to respawn
+			this.bot_strategytime = 0;
 		}
 	}
-	else if(self.aistatus & AI_STATUS_STUCK)
-		navigation_unstuck();
+	else if(this.aistatus & AI_STATUS_STUCK)
+		navigation_unstuck(this);
 
 	// now call the current bot AI (havocbot for example)
-	self.bot_ai();
+	this.bot_ai(this);
 }
 
-void bot_setnameandstuff()
-{SELFPARAM();
+void bot_setnameandstuff(entity this)
+{
 	string readfile, s;
 	float file, tokens, prio;
 
@@ -197,11 +195,11 @@ void bot_setnameandstuff()
 	if(argv(4) != "" && stof(argv(4)) >= 0) bot_pants = argv(4);
 	else bot_pants = ftos(floor(random() * 15));
 
-	self.bot_forced_team = stof(argv(5));
+	this.bot_forced_team = stof(argv(5));
 
 	prio = 6;
 
-	#define READSKILL(f,w,r) if(argv(prio) != "") self.f = stof(argv(prio)) * (w); else self.f = (!autocvar_g_campaign) * (2 * random() - 1) * (r) * (w); ++prio
+	#define READSKILL(f,w,r) if(argv(prio) != "") this.f = stof(argv(prio)) * (w); else this.f = (!autocvar_g_campaign) * (2 * random() - 1) * (r) * (w); ++prio
 	//print(bot_name, ": ping=", argv(9), "\n");
 
 	READSKILL(havocbot_keyboardskill, 0.5, 0.5); // keyboard skill
@@ -221,11 +219,11 @@ void bot_setnameandstuff()
 	READSKILL(bot_thinkskill, 1, 0.5); // think skill
 	READSKILL(bot_aiskill, 2, 0); // "ai" skill
 
-	self.bot_config_loaded = true;
+	this.bot_config_loaded = true;
 
 	// this is really only a default, JoinBestTeam is called later
-	setcolor(self, stof(bot_shirt) * 16 + stof(bot_pants));
-	self.bot_preferredcolors = self.clientcolors;
+	setcolor(this, stof(bot_shirt) * 16 + stof(bot_pants));
+	this.bot_preferredcolors = this.clientcolors;
 
 	// pick the name
 	if (autocvar_bot_usemodelnames)
@@ -240,20 +238,20 @@ void bot_setnameandstuff()
 			++j;
 	));
 	if (j)
-		self.netname = self.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
+		this.netname = this.netname_freeme = strzone(strcat(prefix, name, "(", ftos(j), ")", suffix));
 	else
-		self.netname = self.netname_freeme = strzone(strcat(prefix, name, suffix));
+		this.netname = this.netname_freeme = strzone(strcat(prefix, name, suffix));
 
-	self.cleanname = strzone(name);
+	this.cleanname = strzone(name);
 
 	// pick the model and skin
 	if(substring(bot_model, -4, 1) != ".")
 		bot_model = strcat(bot_model, ".iqm");
-	self.playermodel = self.playermodel_freeme = strzone(strcat("models/player/", bot_model));
-	self.playerskin = self.playerskin_freeme = strzone(bot_skin);
+	this.playermodel = this.playermodel_freeme = strzone(strcat("models/player/", bot_model));
+	this.playerskin = this.playerskin_freeme = strzone(bot_skin);
 
-	self.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
-	self.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
+	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	this.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
 void bot_custom_weapon_priority_setup()
@@ -378,53 +376,53 @@ void bot_relinkplayerlist()
 	bot_strategytoken_taken = true;
 }
 
-void bot_clientdisconnect()
-{SELFPARAM();
-	if (!IS_BOT_CLIENT(self))
+void bot_clientdisconnect(entity this)
+{
+	if (!IS_BOT_CLIENT(this))
 		return;
-	bot_clearqueue(self);
-	if(self.cleanname)
-		strunzone(self.cleanname);
-	if(self.netname_freeme)
-		strunzone(self.netname_freeme);
-	if(self.playermodel_freeme)
-		strunzone(self.playermodel_freeme);
-	if(self.playerskin_freeme)
-		strunzone(self.playerskin_freeme);
-	self.cleanname = string_null;
-	self.netname_freeme = string_null;
-	self.playermodel_freeme = string_null;
-	self.playerskin_freeme = string_null;
-	if(self.bot_cmd_current)
-		remove(self.bot_cmd_current);
-	if(bot_waypoint_queue_owner==self)
+	bot_clearqueue(this);
+	if(this.cleanname)
+		strunzone(this.cleanname);
+	if(this.netname_freeme)
+		strunzone(this.netname_freeme);
+	if(this.playermodel_freeme)
+		strunzone(this.playermodel_freeme);
+	if(this.playerskin_freeme)
+		strunzone(this.playerskin_freeme);
+	this.cleanname = string_null;
+	this.netname_freeme = string_null;
+	this.playermodel_freeme = string_null;
+	this.playerskin_freeme = string_null;
+	if(this.bot_cmd_current)
+		remove(this.bot_cmd_current);
+	if(bot_waypoint_queue_owner==this)
 		bot_waypoint_queue_owner = world;
 }
 
 void bot_clientconnect(entity this)
 {
 	if (!IS_BOT_CLIENT(this)) return;
-	self.bot_preferredcolors = self.clientcolors;
-	self.bot_nextthink = time - random();
-	self.lag_func = bot_lagfunc;
-	self.isbot = true;
-	self.createdtime = self.bot_nextthink;
+	this.bot_preferredcolors = this.clientcolors;
+	this.bot_nextthink = time - random();
+	this.lag_func = bot_lagfunc;
+	this.isbot = true;
+	this.createdtime = this.bot_nextthink;
 
-	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
-		bot_setnameandstuff();
+	if(!this.bot_config_loaded) // This is needed so team overrider doesn't break between matches
+		bot_setnameandstuff(this);
 
-	if(self.bot_forced_team==1)
-		self.team = NUM_TEAM_1;
-	else if(self.bot_forced_team==2)
-		self.team = NUM_TEAM_2;
-	else if(self.bot_forced_team==3)
-		self.team = NUM_TEAM_3;
-	else if(self.bot_forced_team==4)
-		self.team = NUM_TEAM_4;
+	if(this.bot_forced_team==1)
+		this.team = NUM_TEAM_1;
+	else if(this.bot_forced_team==2)
+		this.team = NUM_TEAM_2;
+	else if(this.bot_forced_team==3)
+		this.team = NUM_TEAM_3;
+	else if(this.bot_forced_team==4)
+		this.team = NUM_TEAM_4;
 	else
-		JoinBestTeam(self, false, true);
+		JoinBestTeam(this, false, true);
 
-	havocbot_setupbot();
+	havocbot_setupbot(this);
 }
 
 void bot_removefromlargestteam()

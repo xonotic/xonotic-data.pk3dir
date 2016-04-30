@@ -105,6 +105,11 @@ void M_Shambler_Attack_Lightning_Explode()
 	self.nextthink = time + 0.2;
 }
 
+void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, M_Shambler_Attack_Lightning_Explode());
+}
+
 void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (this.health <= 0)
@@ -116,14 +121,14 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
+		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
 void M_Shambler_Attack_Lightning_Touch()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
 
-	self.use ();
+	self.use(this, NULL, NULL);
 }
 
 void M_Shambler_Attack_Lightning_Think()
@@ -157,7 +162,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.cnt = time + 5;
 	gren.nextthink = time;
 	gren.think = M_Shambler_Attack_Lightning_Think;
-	gren.use = M_Shambler_Attack_Lightning_Explode;
+	gren.use = M_Shambler_Attack_Lightning_Explode_use;
 	gren.touch = M_Shambler_Attack_Lightning_Touch;
 
 	gren.takedamage = DAMAGE_YES;
@@ -224,65 +229,74 @@ bool M_Shambler_Attack(int attack_type, entity actor, entity targ)
 spawnfunc(monster_shambler) { Monster_Spawn(this, MON_SHAMBLER.monsterid); }
 #endif // SVQC
 
-		#ifdef SVQC
-		METHOD(Shambler, mr_think, bool(Shambler thismon, entity actor))
-		{
-			return true;
-		}
-		METHOD(Shambler, mr_pain, bool(Shambler thismon, entity actor))
-		{
-			actor.pain_finished = time + 0.5;
-			setanim(actor, actor.anim_pain1, true, true, false);
-			return true;
-		}
-		METHOD(Shambler, mr_death, bool(Shambler thismon, entity actor))
-		{
-			setanim(actor, actor.anim_die1, false, true, true);
-			return true;
-		}
-		#endif
-		#ifndef MENUQC
-		METHOD(Shambler, mr_anim, bool(Shambler thismon, entity actor))
-		{
-			vector none = '0 0 0';
-			actor.anim_die1 = animfixfps(actor, '8 1 0.5', none); // 2 seconds
-			actor.anim_walk = animfixfps(actor, '1 1 1', none);
-			actor.anim_idle = animfixfps(actor, '0 1 1', none);
-			actor.anim_pain1 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
-			actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-			actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-			actor.anim_melee3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
-			actor.anim_shoot = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
-			actor.anim_run = animfixfps(actor, '2 1 1', none);
-			return true;
-		}
-		#endif
-		#ifdef SVQC
-		spawnfunc(item_health_mega);
-		.float animstate_endtime;
-		METHOD(Shambler, mr_setup, bool(Shambler thismon, entity actor))
-		{
-			if(!actor.health) actor.health = (autocvar_g_monster_shambler_health);
-			if(!actor.attack_range) actor.attack_range = 150;
-			if(!actor.speed) { actor.speed = (autocvar_g_monster_shambler_speed_walk); }
-			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_shambler_speed_run); }
-			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_shambler_speed_stop); }
-			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_shambler_damageforcescale); }
+#ifdef SVQC
+METHOD(Shambler, mr_think, bool(Shambler this, entity actor))
+{
+    TC(Shambler, this);
+    return true;
+}
 
-			actor.monster_loot = spawnfunc_item_health_mega;
-			actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
+METHOD(Shambler, mr_pain, bool(Shambler this, entity actor))
+{
+    TC(Shambler, this);
+    actor.pain_finished = time + 0.5;
+    setanim(actor, actor.anim_pain1, true, true, false);
+    return true;
+}
 
-			setanim(actor, actor.anim_shoot, false, true, true);
-			actor.spawn_time = actor.animstate_endtime;
-			actor.spawnshieldtime = actor.spawn_time;
-			actor.monster_attackfunc = M_Shambler_Attack;
+METHOD(Shambler, mr_death, bool(Shambler this, entity actor))
+{
+    TC(Shambler, this);
+    setanim(actor, actor.anim_die1, false, true, true);
+    return true;
+}
+#endif
+#ifndef MENUQC
+METHOD(Shambler, mr_anim, bool(Shambler this, entity actor))
+{
+    TC(Shambler, this);
+    vector none = '0 0 0';
+    actor.anim_die1 = animfixfps(actor, '8 1 0.5', none); // 2 seconds
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_idle = animfixfps(actor, '0 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
+    actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+    actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_melee3 = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+    actor.anim_shoot = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '2 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+spawnfunc(item_health_mega);
+.float animstate_endtime;
+METHOD(Shambler, mr_setup, bool(Shambler this, entity actor))
+{
+    TC(Shambler, this);
+    if(!actor.health) actor.health = (autocvar_g_monster_shambler_health);
+    if(!actor.attack_range) actor.attack_range = 150;
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_shambler_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_shambler_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_shambler_speed_stop); }
+    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_shambler_damageforcescale); }
 
-			return true;
-		}
-		METHOD(Shambler, mr_precache, bool(Shambler thismon))
-		{
-			return true;
-		}
-		#endif
+    actor.monster_loot = spawnfunc_item_health_mega;
+    actor.weapon = WEP_ELECTRO.m_id; // matches attacks better than WEP_VORTEX
+
+    setanim(actor, actor.anim_shoot, false, true, true);
+    actor.spawn_time = actor.animstate_endtime;
+    actor.spawnshieldtime = actor.spawn_time;
+    actor.monster_attackfunc = M_Shambler_Attack;
+
+    return true;
+}
+
+METHOD(Shambler, mr_precache, bool(Shambler this))
+{
+    TC(Shambler, this);
+    return true;
+}
+#endif
 
 #endif

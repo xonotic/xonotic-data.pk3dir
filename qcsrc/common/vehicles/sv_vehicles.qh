@@ -2,20 +2,22 @@
 #define VEHICLES_DEF_H
 #ifdef SVQC
 
-#include "../turrets/sv_turrets.qh"
+#include <common/turrets/sv_turrets.qh>
+#include "vehicle.qh"
 
 // vehicle cvars
-float autocvar_g_vehicles;
-float autocvar_g_vehicles_enter;
-float autocvar_g_vehicles_enter_radius;
-float autocvar_g_vehicles_steal;
-float autocvar_g_vehicles_steal_show_waypoint;
-float autocvar_g_vehicles_crush_dmg;
-float autocvar_g_vehicles_crush_force;
-float autocvar_g_vehicles_delayspawn;
-float autocvar_g_vehicles_delayspawn_jitter;
+bool autocvar_g_vehicles = true;
+AUTOCVAR(g_vehicles_enter, bool, false, "require pressing use key to enter a vehicle");
+float autocvar_g_vehicles_enter_radius = 250;
+AUTOCVAR(g_vehicles_steal, bool, true, "allow stealing enemy vehicles in teamplay modes");
+AUTOCVAR(g_vehicles_steal_show_waypoint, bool, true, "show a waypoint above the thief");
+float autocvar_g_vehicles_crush_dmg = 70;
+float autocvar_g_vehicles_crush_force = 50;
+bool autocvar_g_vehicles_delayspawn = true;
+float autocvar_g_vehicles_delayspawn_jitter = 10;
 float autocvar_g_vehicles_allow_bots;
-float autocvar_g_vehicles_teams;
+
+AUTOCVAR(g_vehicles_teams, bool, true, "allow team specific vehicles");
 float autocvar_g_vehicles_teleportable;
 float autocvar_g_vehicles_vortex_damagerate = 0.5;
 float autocvar_g_vehicles_machinegun_damagerate = 0.5;
@@ -23,6 +25,8 @@ float autocvar_g_vehicles_rifle_damagerate = 0.75;
 float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
 float autocvar_g_vehicles_tag_damagerate = 5;
 float autocvar_g_vehicles_weapon_damagerate = 1;
+
+.float vehicle_last_trace;
 
 // flags:
 .int vehicle_flags;
@@ -80,7 +84,7 @@ const float	DAMAGE_TARGETDRONE = 10;
 .bool(int _imp) vehicles_impulse;
 .int vehicle_weapon2mode = _STAT(VEHICLESTAT_W2MODE);
 .void(int exit_flags) vehicle_exit;
-.bool() vehicle_enter;
+.bool(entity this, entity player) vehicle_enter;
 const int VHEF_NORMAL = 0;  /// User pressed exit key
 const int VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
 const int VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
@@ -92,13 +96,13 @@ vector force_fromtag_origin;
 float vehicles_exit_running;
 
 // macros
-#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
-	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
+#define VEHICLE_UPDATE_PLAYER(ply,vehi,fld,vhname) \
+	ply.vehicle_##fld = (vehi.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
 .float vehicle_enter_delay; // prevent players jumping to and from vehicles instantly
 
 void vehicles_exit(float eject);
-float vehicle_initialize(entity vehicle, float nodrop);
+bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
 

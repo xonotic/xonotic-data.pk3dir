@@ -76,7 +76,6 @@ const float VOL_BASEVOICE = 1.0;
 			auto = true; \
 			__chan = fabs(__chan); \
 			entity tmp = __e = new(csqc_autochannel); \
-			make_pure(tmp); \
 			tmp.think = SUB_Remove_self; \
 			tmp.nextthink = time + soundlength(__samp); \
 		} \
@@ -121,11 +120,12 @@ CLASS(Sound, Object)
 		return string_null;
 #endif
 	}
-	METHOD(Sound, sound_precache, void(entity this))
+	METHOD(Sound, sound_precache, void(Sound this))
 	{
+	    TC(Sound, this);
 		string s = Sound_fixpath(this);
 		if (!s) return;
-		LOG_TRACEF("precache_sound(\"%s\")\n", s);
+		LOG_DEBUGF("precache_sound(\"%s\")\n", s);
 		precache_sound(s);
 	}
 ENDCLASS(Sound)

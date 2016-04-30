@@ -1,12 +1,12 @@
 #ifndef WEAPONS_ALL_H
 #define WEAPONS_ALL_H
 
-#include "../command/all.qh"
-#include "../stats.qh"
+#include <common/command/all.qh>
+#include <common/stats.qh>
 #include "config.qh"
 
 // weapon sets
-typedef vector WepSet;
+USING(WepSet, vector);
 #ifdef SVQC
 void WriteWepSet(float dest, WepSet w);
 #endif
@@ -24,7 +24,7 @@ WepSet ReadWepSet();
 #include <common/models/all.qh>
 #endif
 
-#include "../util.qh"
+#include <common/util.qh>
 
 #ifdef SVQC
 #include <server/bot/aim.qh>
@@ -33,7 +33,7 @@ WepSet ReadWepSet();
 REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
 #define Weapons_from(i) _Weapons_from(i, WEP_Null)
 REGISTER_REGISTRY(Weapons)
-STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, LAMBDA(it.m_pickup = NEW(WeaponPickup, it))); }
+STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPickup, it)); }
 
 .WepSet m_wepset;
 #define WEPSET(id) (WEP_##id.m_wepset)
@@ -95,7 +95,7 @@ GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPON
 
 #ifdef SVQC
 entity W_PROP_reloader;
-float autocvar_w_prop_interval = 0;
+float autocvar_w_prop_interval = 5;
 .void(Weapon this, int) wr_net;
 void W_PROP_reload(int chan, entity to)
 {
@@ -113,9 +113,9 @@ void W_PROP_think()
 }
 STATIC_INIT_LATE(W_PROP_reloader)
 {
-    entity e = W_PROP_reloader = new(W_PROP_reloader);
-    make_pure(e);
-    WITH(entity, self, e, (e.think = W_PROP_think)());
+    SELFPARAM();
+    entity e = W_PROP_reloader = new_pure(W_PROP_reloader);
+    WITHSELF(e, (e.think = W_PROP_think)());
 }
 #endif
 
@@ -299,7 +299,7 @@ REGISTRY_CHECK(Weapons)
 
 STATIC_INIT(register_weapons_done)
 {
-    FOREACH(Weapons, true, LAMBDA(
+    FOREACH(Weapons, true, {
         WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
         WEPSET_ALL |= set;
         if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
@@ -310,9 +310,9 @@ STATIC_INIT(register_weapons_done)
             localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
         else
             LOG_TRACEF("Impulse limit exceeded, weapon will not be directly accessible: %s\n", it.netname);
-    ));
+    });
     #ifdef CSQC
-    FOREACH(Weapons, true, LAMBDA(it.wr_init(it)));
+    FOREACH(Weapons, true, it.wr_init(it));
     #endif
     weaponorder_byid = "";
     for (int i = Weapons_MAX - 1; i >= 1; --i)
@@ -356,7 +356,7 @@ ENUMCLASS_END(WFRAME)
 .WFRAME wframe;
 
 vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
-void CL_WeaponEntity_SetModel(entity this, string name);
+void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
 #endif
 
 #endif

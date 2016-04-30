@@ -1,18 +1,15 @@
-#ifndef DIALOG_SETTINGS_H
-#define DIALOG_SETTINGS_H
-#include "dialog.qc"
-CLASS(XonoticSettingsDialog, XonoticDialog)
-	METHOD(XonoticSettingsDialog, fill, void(entity));
-	ATTRIB(XonoticSettingsDialog, title, string, _("Settings"))
-	ATTRIB(XonoticSettingsDialog, tooltip, string, _("Change the game settings"))
-	ATTRIB(XonoticSettingsDialog, color, vector, SKINCOLOR_DIALOG_SETTINGS)
-	ATTRIB(XonoticSettingsDialog, intendedWidth, float, 0.96)
-	ATTRIB(XonoticSettingsDialog, rows, float, 18)
-	ATTRIB(XonoticSettingsDialog, columns, float, 6)
-ENDCLASS(XonoticSettingsDialog)
-#endif
+#include "dialog_settings.qh"
 
-#ifdef IMPLEMENTATION
+#include "dialog_settings_video.qh"
+#include "dialog_settings_effects.qh"
+#include "dialog_settings_audio.qh"
+#include "dialog_settings_game.qh"
+#include "dialog_settings_input.qh"
+#include "dialog_settings_user.qh"
+#include "dialog_settings_misc.qh"
+
+#include "tabcontroller.qh"
+
 void XonoticSettingsDialog_fill(entity me)
 {
 	entity mc;
@@ -29,4 +26,3 @@ void XonoticSettingsDialog_fill(entity me)
 	me.gotoRC(me, 2.5, 0);
 		me.TD(me, me.rows - 2.5, me.columns, mc);
 }
-#endif

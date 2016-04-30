@@ -192,7 +192,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 		LOG_INFO("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ");
 		LOG_INFO(reason, "\n");
 
-:skip
+LABEL(skip)
 	}
 }
 
@@ -242,7 +242,7 @@ void OnlineBanList_Think()
 		goto killme;
 	return;
 
-:killme
+LABEL(killme)
 	remove(self);
 }
 
@@ -380,7 +380,7 @@ float Ban_GetClientIP(entity client)
 	ban_ip4 = strcat1(s); // 32
 	return true;
 
-:ipv6
+LABEL(ipv6)
 	i1 = strstrofs(s, ":", 0);
 	if(i1 < 0)
 		return false;

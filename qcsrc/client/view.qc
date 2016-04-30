@@ -1,33 +1,38 @@
+#include "view.qh"
 
 #include "announcer.qh"
 #include "hud/all.qh"
 #include "mapvoting.qh"
 #include "scoreboard.qh"
 #include "shownames.qh"
-#include "quickmenu.qh"
+#include "hud/panel/quickmenu.qh"
 
 #include "mutators/events.qh"
 
-#include "../common/anim.qh"
-#include "../common/constants.qh"
-#include "../common/debug.qh"
-#include "../common/mapinfo.qh"
+#include <common/animdecide.qh>
+#include <common/ent_cs.qh>
+#include <common/anim.qh>
+#include <common/constants.qh>
+#include <common/debug.qh>
+#include <common/mapinfo.qh>
 #include <common/gamemodes/all.qh>
-#include "../common/physics/player.qh"
-#include "../common/stats.qh"
-#include "../common/triggers/target/music.qh"
-#include "../common/teams.qh"
+#include <common/physics/player.qh>
+#include <common/stats.qh>
+#include <common/triggers/target/music.qh>
+#include <common/teams.qh>
 
 #include <common/vehicles/all.qh>
 #include <common/weapons/all.qh>
-#include "../common/viewloc.qh"
-#include "../common/minigames/cl_minigames.qh"
-#include "../common/minigames/cl_minigames_hud.qh"
+#include <common/viewloc.qh>
+#include <common/minigames/cl_minigames.qh>
+#include <common/minigames/cl_minigames_hud.qh>
 
-#include "../lib/csqcmodel/cl_player.qh"
+#include <lib/csqcmodel/cl_player.qh>
+#include <lib/csqcmodel/cl_model.qh>
+#include "csqcmodel_hooks.qh"
 
-#include "../lib/warpzone/client.qh"
-#include "../lib/warpzone/common.qh"
+#include <lib/warpzone/client.qh>
+#include <lib/warpzone/common.qh>
 
 #define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOSHADOW | EF_SELECTABLE | EF_TELEPORT_BIT)
 
@@ -148,7 +153,7 @@ void viewmodel_animate(entity this)
 			vel = view.velocity;
 		else
 		{
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			vel.x = view.velocity * forward;
 			vel.y = view.velocity * right * -1;
@@ -174,7 +179,7 @@ void viewmodel_animate(entity this)
 		if(autocvar_cl_followmodel_velocity_absolute)
 		{
 			vector fixed_gunorg;
-			vector forward, right = '0 0 0', up = '0 0 0';
+			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
 			MAKEVECTORS(makevectors, view_angles, forward, right, up);
 			fixed_gunorg.x = gunorg * forward;
 			fixed_gunorg.y = gunorg * right * -1;
@@ -295,19 +300,21 @@ void viewmodel_draw(entity this)
 	{
 		static string name_last;
 		string name = wep.mdl;
-		if (name != name_last)
+		bool swap = name != name_last;
+		// if (swap)
 		{
 			name_last = name;
-			CL_WeaponEntity_SetModel(this, name);
+			CL_WeaponEntity_SetModel(this, name, swap);
 			this.viewmodel_origin = this.origin;
 			this.viewmodel_angles = this.angles;
 		}
 		anim_update(this);
-		if (!this.animstate_override)
+		if (!this.animstate_override && !this.animstate_looping)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
-	float eta = (this.weapon_nextthink - time) / STAT(WEAPONRATEFACTOR);
+	float rate = STAT(WEAPONRATEFACTOR);
+	float eta = rate ? ((this.weapon_nextthink - time) / rate) : 0;
 	if (eta <= 0) f = this.weapon_eta_last;
 	else switch (this.state)
 	{
@@ -338,94 +345,77 @@ void viewmodel_draw(entity this)
 entity viewmodel;
 STATIC_INIT(viewmodel) {
     viewmodel = new(viewmodel);
-    make_pure(viewmodel);
 }
 
-entity porto;
-vector polyline[16];
+void Porto_Draw(entity this);
+STATIC_INIT(Porto)
+{
+	entity e = new_pure(porto);
+	e.draw = Porto_Draw;
+	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
+}
+
+const int polyline_length = 16;
+vector polyline[polyline_length];
 void Porto_Draw(entity this)
 {
-	vector p, dir, ang, q, nextdir;
-	float portal_number, portal1_idx;
+	if (activeweapon != WEP_PORTO) return;
+	if (spectatee_status) return;
+	if (WEP_CVAR(porto, secondary)) return;
+	if (intermission == 1) return;
+	if (intermission == 2) return;
+	if (STAT(HEALTH) <= 0) return;
 
-	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
-		return;
-	if(WEP_CVAR(porto, secondary))
-		return;
-	if(intermission == 1)
-		return;
-	if(intermission == 2)
-		return;
-	if (STAT(HEALTH) <= 0)
-		return;
-
-	dir = view_forward;
-
-	if(angles_held_status)
+	vector pos = view_origin;
+	vector dir = view_forward;
+	if (angles_held_status)
 	{
 		makevectors(angles_held);
 		dir = v_forward;
 	}
 
-	p = view_origin;
+	polyline[0] = pos;
 
-	polyline[0] = p;
-	int idx = 1;
-	portal_number = 0;
-	nextdir = dir;
-
-	for (;;)
+	int portal_number = 0, portal1_idx = 1, portal_max = 2;
+	int n = 1 + 2;  // 2 lines == 3 points
+	for (int idx = 0; idx < n && idx < polyline_length - 1; )
 	{
-		dir = nextdir;
-		traceline(p, p + 65536 * dir, true, porto);
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			return;
-		nextdir = dir - 2 * (dir * trace_plane_normal) * trace_plane_normal; // mirror dir at trace_plane_normal
-		p = trace_endpos;
-		polyline[idx] = p;
-		++idx;
-		if(idx >= 16)
-			return;
-		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+		traceline(pos, pos + 65536 * dir, true, this);
+		dir = reflect(dir, trace_plane_normal);
+		pos = trace_endpos;
+		polyline[++idx] = pos;
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK || trace_dphitcontents & DPCONTENTS_PLAYERCLIP)
+		{
+			n += 1;
 			continue;
-		++portal_number;
-		ang = vectoangles2(trace_plane_normal, dir);
-		ang.x = -ang.x;
-		makevectors(ang);
-		if(!CheckWireframeBox(porto, p - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
-			return;
-		if(portal_number == 1)
+		}
+		if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		{
-			portal1_idx = idx;
-			if(portal_number >= 2)
+			n = max(2, idx);
+			break;
+		}
+		// check size
+		{
+			vector ang = vectoangles2(trace_plane_normal, dir);
+			ang.x = -ang.x;
+			makevectors(ang);
+			if (!CheckWireframeBox(this, pos - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
+			{
+				n = max(2, idx);
 				break;
+			}
 		}
+		portal_number += 1;
+		if (portal_number >= portal_max) break;
+		if (portal_number == 1) portal1_idx = idx;
 	}
-
-	while(idx >= 2)
+	for (int idx = 0; idx < n - 1; ++idx)
 	{
-		p = polyline[idx-2];
-		q = polyline[idx-1];
-		if(idx == 2)
-			p = p - view_up * 16;
-		if(idx-1 >= portal1_idx)
-		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '0 0 1', 0.5, DRAWFLAG_NORMAL, view_origin);
-		}
-		else
-		{
-			Draw_CylindricLine(p, q, 4, "", 1, 0, '1 0 0', 0.5, DRAWFLAG_NORMAL, view_origin);
-		}
-		--idx;
+		vector p = polyline[idx], q = polyline[idx + 1];
+		if (idx == 0) p -= view_up * 16;  // line from player
+		vector rgb = (idx < portal1_idx) ? '1 0 0' : '0 0 1';
+		Draw_CylindricLine(p, q, 4, "", 1, 0, rgb, 0.5, DRAWFLAG_NORMAL, view_origin);
 	}
-}
-
-void Porto_Init()
-{
-	porto = new(porto);
-	make_pure(porto);
-	porto.draw = Porto_Draw;
-	porto.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 }
 
 float drawtime;
@@ -590,12 +580,8 @@ const float SHOTTYPE_HITENEMY = 4;
 
 void TrueAim_Init()
 {
-	trueaim = new(trueaim);
-	make_pure(trueaim);
-	trueaim.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	trueaim_rifle = new(trueaim_rifle);
-	make_pure(trueaim_rifle);
-	trueaim_rifle.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	(trueaim = new_pure(trueaim)).dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	(trueaim_rifle = new_pure(trueaim_rifle)).dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 }
 
 float EnemyHitCheck()
@@ -856,10 +842,88 @@ void HitSound()
 	}
 }
 
-void HUD_Crosshair()
-{SELFPARAM();
+vector crosshair_getcolor(entity this, float health_stat)
+{
 	static float rainbow_last_flicker;
 	static vector rainbow_prev_color;
+	vector wcross_color = '0 0 0';
+	switch(autocvar_crosshair_color_special)
+	{
+		case 1: // crosshair_color_per_weapon
+		{
+			if(this)
+			{
+				wcross_color = this.wpcolor;
+				break;
+			}
+			else { goto normalcolor; }
+		}
+
+		case 2: // crosshair_color_by_health
+		{
+			float x = health_stat;
+
+			//x = red
+			//y = green
+			//z = blue
+
+			wcross_color.z = 0;
+
+			if(x > 200)
+			{
+				wcross_color.x = 0;
+				wcross_color.y = 1;
+			}
+			else if(x > 150)
+			{
+				wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
+				wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
+			}
+			else if(x > 100)
+			{
+				wcross_color.x = 1 - (x-100)*0.02 * 0.6;
+				wcross_color.y = 1 - (x-100)*0.02 * 0.1;
+				wcross_color.z = 1 - (x-100)*0.02;
+			}
+			else if(x > 50)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 1;
+				wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
+			}
+			else if(x > 20)
+			{
+				wcross_color.x = 1;
+				wcross_color.y = (x-20)*90/27/100;
+				wcross_color.z = (x-20)*90/27/100 * 0.2;
+			}
+			else
+			{
+				wcross_color.x = 1;
+				wcross_color.y = 0;
+			}
+			break;
+		}
+
+		case 3: // crosshair_color_rainbow
+		{
+			if(time >= rainbow_last_flicker)
+			{
+				rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
+				rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
+			}
+			wcross_color = rainbow_prev_color;
+			break;
+		}
+LABEL(normalcolor)
+		default: { wcross_color = stov(autocvar_crosshair_color); break; }
+	}
+
+	return wcross_color;
+}
+
+void HUD_Crosshair()
+{SELFPARAM();
 	entity e = this;
 	float f, i, j;
 	vector v;
@@ -940,77 +1004,7 @@ void HUD_Crosshair()
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
 		// MAIN CROSSHAIR COLOR DECISION
-		switch(autocvar_crosshair_color_special)
-		{
-			case 1: // crosshair_color_per_weapon
-			{
-				if(e)
-				{
-					wcross_color = e.wpcolor;
-					break;
-				}
-				else { goto normalcolor; }
-			}
-
-			case 2: // crosshair_color_by_health
-			{
-				float x = STAT(HEALTH);
-
-				//x = red
-				//y = green
-				//z = blue
-
-				wcross_color.z = 0;
-
-				if(x > 200)
-				{
-					wcross_color.x = 0;
-					wcross_color.y = 1;
-				}
-				else if(x > 150)
-				{
-					wcross_color.x = 0.4 - (x-150)*0.02 * 0.4;
-					wcross_color.y = 0.9 + (x-150)*0.02 * 0.1;
-				}
-				else if(x > 100)
-				{
-					wcross_color.x = 1 - (x-100)*0.02 * 0.6;
-					wcross_color.y = 1 - (x-100)*0.02 * 0.1;
-					wcross_color.z = 1 - (x-100)*0.02;
-				}
-				else if(x > 50)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 1;
-					wcross_color.z = 0.2 + (x-50)*0.02 * 0.8;
-				}
-				else if(x > 20)
-				{
-					wcross_color.x = 1;
-					wcross_color.y = (x-20)*90/27/100;
-					wcross_color.z = (x-20)*90/27/100 * 0.2;
-				}
-				else
-				{
-					wcross_color.x = 1;
-					wcross_color.y = 0;
-				}
-				break;
-			}
-
-			case 3: // crosshair_color_rainbow
-			{
-				if(time >= rainbow_last_flicker)
-				{
-					rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
-					rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
-				}
-				wcross_color = rainbow_prev_color;
-				break;
-			}
-			:normalcolor
-			default: { wcross_color = stov(autocvar_crosshair_color); break; }
-		}
+		wcross_color = crosshair_getcolor(e, STAT(HEALTH));
 
 		if(autocvar_crosshair_effect_scalefade)
 		{
@@ -1315,6 +1309,7 @@ void HUD_Crosshair()
 
 void HUD_Draw()
 {
+	if(!intermission)
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
 		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, MUTATOR_ARGV(0, vector), autocvar_hud_colorflash_alpha * MUTATOR_ARGV(0, float), DRAWFLAG_ADDITIVE);
@@ -1366,6 +1361,7 @@ float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
 {SELFPARAM();
+    TC(int, w); TC(int, h);
 	entity e;
 	float fov;
 	float f;
@@ -1396,6 +1392,10 @@ void CSQC_UpdateView(float w, float h)
 	else
 		view_quality = 1;
 
+	// this needs to be updated manually now due to the destruction of engine physics stats
+	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
+		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
+
 	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
 	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);
 
@@ -1420,7 +1420,7 @@ void CSQC_UpdateView(float w, float h)
 	if(myteam != prev_myteam)
 	{
 		myteamcolors = colormapPaletteColor(myteam, 1);
-		FOREACH(hud_panels, true, LAMBDA(it.update_time = time));
+		FOREACH(hud_panels, true, it.update_time = time);
 		prev_myteam = myteam;
 	}
 
@@ -1466,20 +1466,20 @@ void CSQC_UpdateView(float w, float h)
 
 		if(ons_roundlost)
 		{
-			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, LAMBDA(
+			FOREACH_ENTITY_CLASS("onslaught_generator", it.health <= 0, {
 				gen = it;
 				break;
-			));
+			});
 			if(!gen)
 				ons_roundlost = false; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
-		if(WantEventchase(self) || (!autocvar_cl_orthoview && ons_roundlost))
+		if(WantEventchase(this) || (!autocvar_cl_orthoview && ons_roundlost))
 		{
 			eventchase_running = true;
 
 			entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
 			if(!local_player)
-				local_player = self; // fall back!
+				local_player = this; // fall back!
 
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -1498,7 +1498,7 @@ void CSQC_UpdateView(float w, float h)
 
 			if(view_offset)
 			{
-				WarpZone_TraceLine(current_view_origin, current_view_origin + view_offset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, self);
+				WarpZone_TraceLine(current_view_origin, current_view_origin + view_offset + ('0 0 1' * autocvar_cl_eventchase_maxs.z), MOVE_WORLDONLY, this);
 				if(trace_fraction == 1) { current_view_origin += view_offset; }
 				else { current_view_origin.z += max(0, (trace_endpos.z - current_view_origin.z) - autocvar_cl_eventchase_maxs.z); }
 			}
@@ -1527,14 +1527,14 @@ void CSQC_UpdateView(float w, float h)
 			makevectors(view_angles);
 
 			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
-			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
+			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, this);
 
 			// If the boxtrace fails, revert back to line tracing.
 			if(!local_player.viewloc)
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
-				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
+				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, this);
 				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins.z)));
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
@@ -1835,7 +1835,7 @@ void CSQC_UpdateView(float w, float h)
 	   mousepos = mousepos*0.5 + getmousepos();
 	 */
 
-	FOREACH_ENTITY(it.draw, LAMBDA(it.draw(it)));
+	FOREACH_ENTITY(it.draw, it.draw(it));
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -2165,7 +2165,7 @@ void CSQC_UpdateView(float w, float h)
 	  } else */
 
 	// draw 2D entities
-	FOREACH_ENTITY(it.draw2d, LAMBDA(it.draw2d(it)));
+	FOREACH_ENTITY(it.draw2d, it.draw2d(it));
 	Draw_ShowNames_All();
 	Debug_Draw();
 

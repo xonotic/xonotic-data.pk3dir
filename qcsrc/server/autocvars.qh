@@ -1,5 +1,4 @@
-#ifndef SERVER_AUTOCVARS_H
-#define SERVER_AUTOCVARS_H
+#pragma once
 
 bool autocvar__notarget;
 bool autocvar__campaign_testrun;
@@ -72,7 +71,7 @@ float autocvar_g_antilag_nudge;
 float autocvar_g_balance_armor_blockpercent;
 int autocvar_g_balance_armor_limit;
 float autocvar_g_balance_armor_regen;
-float autocvar_g_balance_armor_regenlinear; // TODO: int/bool?
+float autocvar_g_balance_armor_regenlinear;
 int autocvar_g_balance_armor_regenstable;
 float autocvar_g_balance_armor_rot;
 float autocvar_g_balance_armor_rotlinear;
@@ -221,8 +220,11 @@ float autocvar_g_maxspeed;
 bool autocvar_g_instagib_damagedbycontents = true;
 bool autocvar_g_instagib_blaster_keepdamage = false;
 bool autocvar_g_instagib_blaster_keepforce = false;
+bool autocvar_g_instagib_mirrordamage;
+bool autocvar_g_instagib_friendlypush = true;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
+bool autocvar_g_mirrordamage_onlyweapons;
 
 float autocvar_g_movement_highspeed = 1;
 string autocvar_g_mutatormsg;
@@ -264,7 +266,7 @@ bool autocvar_g_spawn_alloweffects;
 float autocvar_g_spawn_furthest;
 bool autocvar_g_spawn_useallspawns;
 bool autocvar_g_spawnpoints_auto_move_out_of_solid;
-#define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
+float autocvar_g_spawnshieldtime;
 float autocvar_g_spawnshield_blockdamage;
 float autocvar_g_teamdamage_resetspeed;
 float autocvar_g_teamdamage_threshold;
@@ -332,6 +334,7 @@ int autocvar_sv_clientcommand_antispam_count;
 bool autocvar_sv_curl_serverpackages_auto;
 bool autocvar_sv_db_saveasdump;
 bool autocvar_sv_defaultcharacter;
+bool autocvar_sv_defaultcharacterskin;
 string autocvar_sv_defaultplayercolors;
 string autocvar_sv_defaultplayermodel;
 string autocvar_sv_defaultplayermodel_blue;
@@ -545,4 +548,3 @@ float autocvar_g_frozen_revive_falldamage;
 int autocvar_g_frozen_revive_falldamage_health;
 bool autocvar_g_frozen_damage_trigger;
 float autocvar_g_frozen_force;
-#endif

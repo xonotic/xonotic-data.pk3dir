@@ -1,5 +1,4 @@
-#ifndef CMD_H
-#define CMD_H
+#pragma once
 
 // =================================================
 //  Declarations for server side networked commands
@@ -14,4 +13,3 @@ string MapVote_Suggest(string m);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void ClientCommand_macro_write_aliases(float fh);
-#endif

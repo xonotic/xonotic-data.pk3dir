@@ -9,8 +9,7 @@ void button_wait()
 	self.state = STATE_TOP;
 	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 	self.SUB_THINK = button_return;
-	activator = self.enemy;
-	SUB_UseTargets();
+	SUB_UseTargets(self, self.enemy, NULL);
 	self.frame = 1;			// use alternate textures
 }
 
@@ -60,13 +59,13 @@ void button_reset()
 		self.takedamage = DAMAGE_YES;	// can be shot again
 }
 
-void button_use()
-{SELFPARAM();
-	if(self.active != ACTIVE_ACTIVE)
+void button_use(entity this, entity actor, entity trigger)
+{
+	if(this.active != ACTIVE_ACTIVE)
 		return;
 
-	self.enemy = activator;
-	button_fire ();
+	this.enemy = actor;
+	WITHSELF(this, button_fire());
 }
 
 void button_touch()
@@ -92,7 +91,7 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (this.health <= 0)
 	{
 		this.enemy = damage_attacker;
-		WITH(entity, self, this, button_fire());
+		WITHSELF(this, button_fire());
 	}
 }
 

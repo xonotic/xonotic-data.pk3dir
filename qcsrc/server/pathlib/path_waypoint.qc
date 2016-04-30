@@ -1,3 +1,4 @@
+#include "path_waypoint.qh"
 #include "../bot/waypoints.qh"
 
 #include "pathlib.qh"

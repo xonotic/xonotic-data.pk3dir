@@ -1,13 +1,12 @@
-#ifndef MISCFUNCTIONS_H
-#define MISCFUNCTIONS_H
+#pragma once
 
-#include "../common/t_items.qh"
+#include <common/t_items.qh>
 
 #include "mutators/events.qh"
 
-#include "../common/constants.qh"
-#include "../common/mapinfo.qh"
-#include "../common/turrets/all.qh"
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/turrets/all.qh>
 
 #ifdef RELEASE
 #define cvar_string_normal builtin_cvar_string
@@ -77,7 +76,7 @@ void GameLogInit();
 
 void GameLogClose();
 
-void GetCvars(float f);
+void GetCvars(entity this, float f);
 
 string GetMapname();
 
@@ -117,6 +116,8 @@ void WarpZone_crosshair_trace(entity pl);
 
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 
+void adaptor_think2use();
+
 #define IS_DEAD(s) ((s).deadflag != DEAD_NO)
 
 
@@ -133,13 +134,12 @@ string strcat1(string s) = #115; // FRIK_FILE
 float logfile_open;
 float logfile;
 
-#define strstr strstrofs
 /*
 // NOTE: DO NOT USE THIS FUNCTION TOO OFTEN.
 // IT WILL MOST PROBABLY DESTROY _ALL_ OTHER TEMP
 // STRINGS AND TAKE QUITE LONG. haystack and needle MUST
 // BE CONSTANT OR strzoneD!
-float strstr(string haystack, string needle, float offset)
+float strstrofs(string haystack, string needle, float offset)
 {
 	float len, endpos;
 	string found;
@@ -263,7 +263,7 @@ void readlevelcvars()
 	sv_taunt = cvar("sv_taunt");
 
 	warmup_stage = cvar("g_warmup");
-	g_warmup_limit = cvar("g_warmup_limit");
+	warmup_limit = cvar("g_warmup_limit");
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
@@ -357,7 +357,7 @@ const float INITPRIO_SETLOCATION 		= 90;
 const float INITPRIO_LINKDOORS 			= 91;
 const float INITPRIO_LAST 				= 99;
 
-.void() initialize_entity;
+.void(entity this) initialize_entity;
 .float initialize_entity_order;
 .entity initialize_entity_next;
 entity initialize_entity_first;
@@ -367,7 +367,5 @@ entity initialize_entity_first;
 
 
 float sound_allowed(float dest, entity e);
-void InitializeEntity(entity e, void() func, float order);
+void InitializeEntity(entity e, void(entity this) func, float order);
 void SetCustomizer(entity e, float() customizer, void() uncustomizer);
-
-#endif

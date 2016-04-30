@@ -498,7 +498,7 @@ void nb_spawnteams()
 	}
 }
 
-void nb_delayedinit()
+void nb_delayedinit(entity this)
 {
 	if(find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
@@ -755,7 +755,7 @@ void W_Nexball_Attack(float t)
 	if(!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot(self, false, 4, SND(NB_SHOOT1), CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
@@ -791,7 +791,7 @@ void W_Nexball_Attack2()
 	if(self.ballcarried.enemy)
 	{
 		entity _ball = self.ballcarried;
-		W_SetupShot(self, false, 4, SND(NB_SHOOT1), CH_WEAPON_A, 0);
+		W_SetupShot(self, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
 		_ball.think = W_Nexball_Think;
 		_ball.nextthink = time;
@@ -801,7 +801,7 @@ void W_Nexball_Attack2()
 	if(!autocvar_g_nexball_tackling)
 		return;
 
-	W_SetupShot(self, false, 2, SND(NB_SHOOT2), CH_WEAPON_A, 0);
+	W_SetupShot(self, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0);
 	entity missile = new(ballstealer);
 
 	missile.owner = self;
@@ -852,48 +852,56 @@ float ball_customize()
 	return true;
 }
 
-	METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
-	{
-		if(fire & 1)
-			if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
-				if(autocvar_g_nexball_basketball_meter)
-				{
-					if(self.ballcarried && !self.metertime)
-						self.metertime = time;
-					else
-						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-				}
-				else
-				{
-					W_Nexball_Attack(-1);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-				}
-		if(fire & 2)
-			if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
-			{
-				W_Nexball_Attack2();
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
-			}
+METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
+{
+    SELFPARAM();
+    TC(BallStealer, thiswep);
+    if(fire & 1)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
+            if(autocvar_g_nexball_basketball_meter)
+            {
+                if(self.ballcarried && !self.metertime)
+                    self.metertime = time;
+                else
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+            }
+            else
+            {
+                W_Nexball_Attack(-1);
+                weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+            }
+    if(fire & 2)
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
+        {
+            W_Nexball_Attack2();
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
+        }
 
-		if(!(fire & 1) && self.metertime && self.ballcarried)
-		{
-			W_Nexball_Attack(time - self.metertime);
-			// DropBall or stealing will set metertime back to 0
-			weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
-		}
-	}
-	METHOD(BallStealer, wr_setup, void(BallStealer thiswep))
-	{
-		//weapon_setup(WEP_PORTO.m_id);
-	}
-	METHOD(BallStealer, wr_checkammo1, bool(BallStealer thiswep))
-	{
-		return true;
-	}
-	METHOD(BallStealer, wr_checkammo2, bool(BallStealer thiswep))
-	{
-		return true;
-	}
+    if(!(fire & 1) && self.metertime && self.ballcarried)
+    {
+        W_Nexball_Attack(time - self.metertime);
+        // DropBall or stealing will set metertime back to 0
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
+    }
+}
+
+METHOD(BallStealer, wr_setup, void(BallStealer this))
+{
+    TC(BallStealer, this);
+    //weapon_setup(WEP_PORTO.m_id);
+}
+
+METHOD(BallStealer, wr_checkammo1, bool(BallStealer this))
+{
+    TC(BallStealer, this);
+    return true;
+}
+
+METHOD(BallStealer, wr_checkammo2, bool(BallStealer this))
+{
+    TC(BallStealer, this);
+    return true;
+}
 
 void nb_DropBall(entity player)
 {
@@ -1087,7 +1095,7 @@ REGISTER_MUTATOR(nb, g_nexball)
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, -1, -1);
+		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 

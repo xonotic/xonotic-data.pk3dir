@@ -1,45 +1,8 @@
-#ifndef VEHICLE_RACER_WEAPON_H
-#define VEHICLE_RACER_WEAPON_H
-
-#include <common/weapons/all.qh>
-
-CLASS(RacerAttack, PortoLaunch)
-/* flags     */ ATTRIB(RacerAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
-/* impulse   */ ATTRIB(RacerAttack, impulse, int, 3);
-/* refname   */ ATTRIB(RacerAttack, netname, string, "racercannon");
-/* wepname   */ ATTRIB(RacerAttack, m_name, string, _("Racer cannon"));
-ENDCLASS(RacerAttack)
-REGISTER_WEAPON(RACER, NEW(RacerAttack));
-
-// TODO: move into implementation
-#ifdef SVQC
-float autocvar_g_vehicle_racer_rocket_refire;
-void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
-#endif
-
-#endif
+#include "racer_weapon.qh"
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-
-float autocvar_g_vehicle_racer_cannon_cost;
-float autocvar_g_vehicle_racer_cannon_damage;
-float autocvar_g_vehicle_racer_cannon_radius;
-float autocvar_g_vehicle_racer_cannon_refire;
-float autocvar_g_vehicle_racer_cannon_speed;
-float autocvar_g_vehicle_racer_cannon_spread;
-float autocvar_g_vehicle_racer_cannon_force;
-
-float autocvar_g_vehicle_racer_rocket_accel;
-float autocvar_g_vehicle_racer_rocket_damage;
-float autocvar_g_vehicle_racer_rocket_radius;
-float autocvar_g_vehicle_racer_rocket_force;
-float autocvar_g_vehicle_racer_rocket_speed;
-float autocvar_g_vehicle_racer_rocket_turnrate;
-
-float autocvar_g_vehicle_racer_rocket_climbspeed;
-float autocvar_g_vehicle_racer_rocket_locked_maxangle;
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg);
 METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -53,10 +16,10 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
             veh.vehicle_energy -= autocvar_g_vehicle_racer_cannon_cost;
             veh.wait = time;
         }
-        if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
+        if (isPlayer) W_SetupShot_Dir(player, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
         vector org = w_shotorg;
         vector dir = w_shotdir;
-        entity bolt = vehicles_projectile(EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND(LASERGUN_FIRE),
+        entity bolt = vehicles_projectile(veh, EFFECT_RACER_MUZZLEFLASH.eent_eff_name, SND_LASERGUN_FIRE,
                                org, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                                autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
                                DEATH_VH_WAKI_GUN.m_id, PROJECTILE_WAKICANNON, 0, true, true, player);
@@ -65,7 +28,7 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
     }
     if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
-        if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND(Null), CH_WEAPON_B, 0);
+        if (isPlayer) W_SetupShot_Dir(actor, v_forward, false, 0, SND_Null, CH_WEAPON_B, 0);
         racer_fire_rocket(player, w_shotorg, w_shotdir, NULL);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
@@ -84,8 +47,8 @@ void racer_rocket_tracker();
 void racer_rocket_groundhugger();
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
-{SELFPARAM();
-    entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND(ROCKET_FIRE),
+{
+    entity rocket = vehicles_projectile(player.vehicle, EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
                            org, dir * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
                            DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);
@@ -111,7 +74,7 @@ void racer_rocket_tracker()
 
     if (IS_DEAD(self.owner) || self.cnt < time)
     {
-        self.use();
+        self.use(self, NULL, NULL);
         return;
     }
 
@@ -163,7 +126,7 @@ void racer_rocket_groundhugger()
 
     if(IS_DEAD(self.owner) || self.cnt < time)
     {
-        self.use();
+        self.use(self, NULL, NULL);
         return;
     }
 

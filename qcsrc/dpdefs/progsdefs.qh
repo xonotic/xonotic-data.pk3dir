@@ -21,6 +21,14 @@
 #undef spawn
 #undef setmodel
 
+#define stuffcmd(cl, ...) MACRO_BEGIN \
+    entity _cl = (cl); \
+    if (IS_REAL_CLIENT(_cl)) stuffcmd(_cl, __VA_ARGS__); \
+MACRO_END
+
 #pragma noref 0
+
+#define use use1
+.void(entity this, entity actor, entity trigger) use;
 
 #endif

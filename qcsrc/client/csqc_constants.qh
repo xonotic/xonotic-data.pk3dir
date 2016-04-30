@@ -1,5 +1,4 @@
-#ifndef CLIENT_CSQC_CONSTANTS
-#define CLIENT_CSQC_CONSTANTS
+#pragma once
 
 // Mask Constants (set .drawmask on entities; use R_AddEntities to add all entities based on mask)
 const int		MASK_ENGINE						= BIT(0);
@@ -141,5 +140,3 @@ const int CAMERA_FREE = 1;
 const int CAMERA_CHASE = 2;
 
 const int EF_NOMODELFLAGS = BIT(23);
-
-#endif

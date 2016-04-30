@@ -1,10 +1,11 @@
+#include "gamemode_tdm.qh"
 #ifndef GAMEMODE_TDM_H
 #define GAMEMODE_TDM_H
 
 int autocvar_g_tdm_point_limit;
 int autocvar_g_tdm_point_leadlimit;
 bool autocvar_g_tdm_team_spawns;
-void tdm_DelayedInit();
+void tdm_DelayedInit(entity this);
 
 REGISTER_MUTATOR(tdm, false)
 {
@@ -15,7 +16,7 @@ REGISTER_MUTATOR(tdm, false)
 		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
+		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
 		if (autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}
@@ -63,10 +64,10 @@ void tdm_SpawnTeam (string teamname, float teamcolor)
 	this.netname = teamname;
 	this.cnt = teamcolor;
 	this.spawnfunc_checked = true;
-	WITH(entity, self, this, spawnfunc_tdm_team(this));
+	WITHSELF(this, spawnfunc_tdm_team(this));
 }
 
-void tdm_DelayedInit()
+void tdm_DelayedInit(entity this)
 {
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "tdm_team") == world)

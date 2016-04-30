@@ -154,76 +154,85 @@ bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
 spawnfunc(monster_zombie) { Monster_Spawn(this, MON_ZOMBIE.monsterid); }
 #endif // SVQC
 
-		#ifdef SVQC
-		METHOD(Zombie, mr_think, bool(Zombie thismon, entity actor))
-		{
-			if(time >= actor.spawn_time)
-				actor.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
-			return true;
-		}
-		METHOD(Zombie, mr_pain, bool(Zombie thismon, entity actor))
-		{
-			actor.pain_finished = time + 0.34;
-			setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
-			return true;
-		}
-		METHOD(Zombie, mr_death, bool(Zombie thismon, entity actor))
-		{
-			actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
+#ifdef SVQC
+METHOD(Zombie, mr_think, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    if(time >= actor.spawn_time)
+        actor.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
+    return true;
+}
 
-			setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
-			return true;
-		}
-		#endif
-		#ifndef MENUQC
-		METHOD(Zombie, mr_anim, bool(Zombie thismon, entity actor))
-		{
-			vector none = '0 0 0';
-			actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
-			actor.anim_die2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
-			actor.anim_spawn = animfixfps(actor, '30 1 3', none);
-			actor.anim_walk = animfixfps(actor, '27 1 1', none);
-			actor.anim_idle = animfixfps(actor, '19 1 1', none);
-			actor.anim_pain1 = animfixfps(actor, '20 1 2', none); // 0.5 seconds
-			actor.anim_pain2 = animfixfps(actor, '22 1 2', none); // 0.5 seconds
-			actor.anim_melee1 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-			actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-			actor.anim_melee3 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
-			actor.anim_shoot = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
-			actor.anim_run = animfixfps(actor, '27 1 1', none);
-			actor.anim_blockstart = animfixfps(actor, '8 1 1', none);
-			actor.anim_blockend = animfixfps(actor, '7 1 1', none);
-			return true;
-		}
-		#endif
-		#ifdef SVQC
-		METHOD(Zombie, mr_setup, bool(Zombie thismon, entity actor))
-		{
-			if(!actor.health) actor.health = (autocvar_g_monster_zombie_health);
-			if(!actor.speed) { actor.speed = (autocvar_g_monster_zombie_speed_walk); }
-			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_zombie_speed_run); }
-			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
+METHOD(Zombie, mr_pain, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    actor.pain_finished = time + 0.34;
+    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
+    return true;
+}
 
-			if(actor.spawnflags & MONSTERFLAG_NORESPAWN)
-				actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
+METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
 
-			actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
+    setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
+    return true;
+}
+#endif
+#ifndef MENUQC
+METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    vector none = '0 0 0';
+    actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
+    actor.anim_die2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
+    actor.anim_spawn = animfixfps(actor, '30 1 3', none);
+    actor.anim_walk = animfixfps(actor, '27 1 1', none);
+    actor.anim_idle = animfixfps(actor, '19 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '20 1 2', none); // 0.5 seconds
+    actor.anim_pain2 = animfixfps(actor, '22 1 2', none); // 0.5 seconds
+    actor.anim_melee1 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_melee3 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_shoot = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '27 1 1', none);
+    actor.anim_blockstart = animfixfps(actor, '8 1 1', none);
+    actor.anim_blockend = animfixfps(actor, '7 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    if(!actor.health) actor.health = (autocvar_g_monster_zombie_health);
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_zombie_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_zombie_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
 
-			actor.monster_loot = spawnfunc_item_health_medium;
-			actor.monster_attackfunc = M_Zombie_Attack;
-			actor.spawnshieldtime = actor.spawn_time;
-			actor.respawntime = 0.2;
-			actor.damageforcescale = 0.0001; // no push while spawning
+    if(actor.spawnflags & MONSTERFLAG_NORESPAWN)
+        actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
 
-			setanim(actor, actor.anim_spawn, false, true, true);
-			actor.spawn_time = actor.animstate_endtime;
+    actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
-			return true;
-		}
-		METHOD(Zombie, mr_precache, bool(Zombie thismon))
-		{
-			return true;
-		}
-		#endif
+    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_attackfunc = M_Zombie_Attack;
+    actor.spawnshieldtime = actor.spawn_time;
+    actor.respawntime = 0.2;
+    actor.damageforcescale = 0.0001; // no push while spawning
+
+    setanim(actor, actor.anim_spawn, false, true, true);
+    actor.spawn_time = actor.animstate_endtime;
+
+    return true;
+}
+
+METHOD(Zombie, mr_precache, bool(Zombie this))
+{
+    TC(Zombie, this);
+    return true;
+}
+#endif
 
 #endif

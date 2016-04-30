@@ -45,9 +45,9 @@ void viewloc_PlayerPhysics(entity this)
 
 		//if(!PHYS_INPUT_BUTTON_CROUCH(this) && !IS_DUCKED(this))
 #ifdef SVQC
-			//this.BUTTON_CROUCH = (old_movement_x < 0);
+			//PHYS_INPUT_BUTTON_CROUCH(this) = (old_movement_x < 0);
 			if (old_movement.x < 0)
-				this.BUTTON_CROUCH = true;
+				PHYS_INPUT_BUTTON_CROUCH(this) = true;
 #elif defined(CSQC)
 			if (old_movement.x < 0)
 			{

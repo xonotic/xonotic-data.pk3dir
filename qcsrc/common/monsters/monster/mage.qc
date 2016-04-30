@@ -42,12 +42,14 @@ REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
 SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
 void M_Mage_Attack_Spike(entity this, vector dir);
 void M_Mage_Attack_Push(entity this);
-METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire)) {
+METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire))
+{
+    TC(MageSpike, thiswep);
     if (fire & 1)
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, SND(MageSpike_FIRE), CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Mage_Attack_Spike(actor, w_shotdir);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -65,6 +67,7 @@ CLASS(OffhandMageTeleport, OffhandWeapon)
     .bool OffhandMageTeleport_key_pressed;
     METHOD(OffhandMageTeleport, offhand_think, void(OffhandMageTeleport this, entity player, bool key_pressed))
     {
+        TC(OffhandMageTeleport, this);
         if (key_pressed && !player.OffhandMageTeleport_key_pressed)
         	M_Mage_Attack_Teleport(player, player.enemy);
         player.OffhandMageTeleport_key_pressed = key_pressed;
@@ -159,6 +162,7 @@ void M_Mage_Attack_Spike_Explode(entity this)
 
 void M_Mage_Attack_Spike_Touch()
 {
+    SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	M_Mage_Attack_Spike_Explode(self);
@@ -326,7 +330,7 @@ void M_Mage_Attack_Teleport(entity this, entity targ)
 
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
-	
+
 	setorigin(this, newpos);
 
 	vector a = vectoangles(targ.origin - this.origin);
@@ -408,81 +412,91 @@ spawnfunc(monster_mage) { Monster_Spawn(this, MON_MAGE.monsterid); }
 
 #endif // SVQC
 
-		#ifdef SVQC
-		METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
-		{
-			bool need_help = false;
+#ifdef SVQC
+METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
+{
+    TC(Mage, thismon);
+    bool need_help = false;
 
-			FOREACH_ENTITY_FLOAT(iscreature, true,
-			{
-				if(it != actor)
-				if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
-				if(M_Mage_Defend_Heal_Check(actor, it))
-				{
-					need_help = true;
-					break;
-				}
-			});
+    FOREACH_ENTITY_FLOAT(iscreature, true,
+    {
+        if(it != actor)
+        if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+        if(M_Mage_Defend_Heal_Check(actor, it))
+        {
+            need_help = true;
+            break;
+        }
+    });
 
-			if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
-			if(time >= actor.attack_finished_single[0])
-			if(random() < 0.5)
-				M_Mage_Defend_Heal(actor);
+    if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
+    if(time >= actor.attack_finished_single[0])
+    if(random() < 0.5)
+        M_Mage_Defend_Heal(actor);
 
-			if(time >= actor.mage_shield_time && actor.armorvalue)
-				M_Mage_Defend_Shield_Remove(actor);
+    if(time >= actor.mage_shield_time && actor.armorvalue)
+        M_Mage_Defend_Shield_Remove(actor);
 
-			if(actor.enemy)
-			if(actor.health < actor.max_health)
-			if(time >= actor.mage_shield_delay)
-			if(random() < 0.5)
-				M_Mage_Defend_Shield(actor);
+    if(actor.enemy)
+    if(actor.health < actor.max_health)
+    if(time >= actor.mage_shield_delay)
+    if(random() < 0.5)
+        M_Mage_Defend_Shield(actor);
 
-			return true;
-		}
-		METHOD(Mage, mr_pain, bool(Mage thismon, entity actor))
-		{
-			return true;
-		}
-		METHOD(Mage, mr_death, bool(Mage thismon, entity actor))
-		{
-			setanim(actor, actor.anim_die1, false, true, true);
-			return true;
-		}
-		#endif
-		#ifndef MENUQC
-		METHOD(Mage, mr_anim, bool(Mage thismon, entity actor))
-		{
-			vector none = '0 0 0';
-			actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
-			actor.anim_walk = animfixfps(actor, '1 1 1', none);
-			actor.anim_idle = animfixfps(actor, '0 1 1', none);
-			actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
-			actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-			actor.anim_run = animfixfps(actor, '5 1 1', none);
-			return true;
-		}
-		#endif
-		#ifdef SVQC
-		.float speed;
-		spawnfunc(item_health_large);
-		METHOD(Mage, mr_setup, bool(Mage thismon, entity actor))
-		{
-			if(!actor.health) actor.health = (autocvar_g_monster_mage_health);
-			if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
-			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
-			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
-			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
+    return true;
+}
 
-			actor.monster_loot = spawnfunc_item_health_large;
-			actor.monster_attackfunc = M_Mage_Attack;
+METHOD(Mage, mr_pain, bool(Mage this, entity actor))
+{
+    TC(Mage, this);
+    return true;
+}
 
-			return true;
-		}
-		METHOD(Mage, mr_precache, bool(Mage thismon))
-		{
-			return true;
-		}
-		#endif
+METHOD(Mage, mr_death, bool(Mage this, entity actor))
+{
+    TC(Mage, this);
+    setanim(actor, actor.anim_die1, false, true, true);
+    return true;
+}
+
+#endif
+#ifndef MENUQC
+METHOD(Mage, mr_anim, bool(Mage this, entity actor))
+{
+    TC(Mage, this);
+    vector none = '0 0 0';
+    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_idle = animfixfps(actor, '0 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '5 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+.float speed;
+spawnfunc(item_health_large);
+METHOD(Mage, mr_setup, bool(Mage this, entity actor))
+{
+    TC(Mage, this);
+    if(!actor.health) actor.health = (autocvar_g_monster_mage_health);
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
+    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
+
+    actor.monster_loot = spawnfunc_item_health_large;
+    actor.monster_attackfunc = M_Mage_Attack;
+
+    return true;
+}
+
+METHOD(Mage, mr_precache, bool(Mage this))
+{
+    TC(Mage, this);
+    return true;
+}
+#endif
 
 #endif

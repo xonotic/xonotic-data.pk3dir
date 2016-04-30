@@ -5,6 +5,8 @@
 #include "mutators/all.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
+#include "../common/state.qh"
+#include "../common/physics/player.qh"
 #include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/all.qc"
@@ -14,7 +16,7 @@
 #include "weapons/selection.qh"
 #include "../common/constants.qh"
 #include "../common/deathtypes/all.qh"
-#include "../common/notifications.qh"
+#include "../common/notifications/all.qh"
 #include "../common/physics/movetypes/movetypes.qh"
 #include "../common/playerstats.qh"
 #include "../common/teams.qh"
@@ -125,7 +127,7 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "I");
 	if(player.flagcarried != world)
 		s = strcat(s, "F");
-	if(player.BUTTON_CHAT)
+	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
 	if(player.kh_next)
 		s = strcat(s, "K");
@@ -174,7 +176,7 @@ void Obituary_SpecialDeath(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
-					deathent.death_msgmurder.nent_id,
+					deathent.death_msgmurder,
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
@@ -182,7 +184,7 @@ void Obituary_SpecialDeath(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
-					deathent.death_msgmurder.nent_msginfo.nent_id,
+					deathent.death_msgmurder.nent_msginfo,
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
@@ -196,7 +198,7 @@ void Obituary_SpecialDeath(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
-					deathent.death_msgself.nent_id,
+					deathent.death_msgself,
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
@@ -204,7 +206,7 @@ void Obituary_SpecialDeath(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
-					deathent.death_msgself.nent_msginfo.nent_id,
+					deathent.death_msgself.nent_msginfo,
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
@@ -225,7 +227,7 @@ float Obituary_WeaponDeath(
 	if (death_weapon != WEP_Null)
 	{
 		w_deathtype = deathtype;
-		int death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
+		Notification death_message = ((murder) ? death_weapon.wr_killmessage(death_weapon) : death_weapon.wr_suicidemessage(death_weapon));
 		w_deathtype = false;
 
 		if (death_message)
@@ -238,11 +240,12 @@ float Obituary_WeaponDeath(
 				s1, s2, s3, "",
 				f1, f2, 0, 0
 			);
+			// send the info part to everyone
 			Send_Notification_WOCOVA(
 				NOTIF_ALL_EXCEPT,
 				notif_target,
 				MSG_INFO,
-				msg_multi_notifs[death_message - 1].nent_msginfo.nent_id,
+				death_message.nent_msginfo,
 				s1, s2, s3, "",
 				f1, f2, 0, 0
 			);
@@ -325,7 +328,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			return;
 		}
 		LogDeath("suicide", deathtype, targ, targ);
-		GiveFrags(attacker, targ, -1, deathtype);
+		if(deathtype != DEATH_AUTOTEAMCHANGE.m_id) // special case: don't negate frags if auto switched
+			GiveFrags(attacker, targ, -1, deathtype);
 	}
 
 	// ======
@@ -342,7 +346,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, deathlocation, targ.killcount);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -395,7 +399,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_TYPEFRAG,
 					targ.netname,
 					kill_count_to_attacker,
-					(IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping)
+					(IS_BOT_CLIENT(targ) ? -1 : targ.ping)
 				);
 				Send_Notification(
 					NOTIF_ONE,
@@ -406,7 +410,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					kill_count_to_target,
 					attacker.health,
 					attacker.armorvalue,
-					(IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping)
+					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
 				);
 			}
 			else
@@ -418,7 +422,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					CHOICE_FRAG,
 					targ.netname,
 					kill_count_to_attacker,
-					(IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping)
+					(IS_BOT_CLIENT(targ) ? -1 : targ.ping)
 				);
 				Send_Notification(
 					NOTIF_ONE,
@@ -429,7 +433,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 					kill_count_to_target,
 					attacker.health,
 					attacker.armorvalue,
-					(IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping)
+					(IS_BOT_CLIENT(attacker) ? -1 : attacker.ping)
 				);
 			}
 
@@ -537,7 +541,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	WITH(entity, self, ice, Ice_Think());
+	WITHSELF(ice, Ice_Think());
 
 	RemoveGrapplingHook(targ);
 
@@ -550,6 +554,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
+    SELFPARAM();
 	if(!STAT(FROZEN, targ))
 		return;
 
@@ -800,7 +805,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 					{
 						if(deathtype != DEATH_FIRE.m_id)
 						{
-							if(victim.BUTTON_CHAT)
+							if(PHYS_INPUT_BUTTON_CHAT(victim))
 								attacker.typehitsound += 1;
 							else
 								attacker.damage_dealt += damage;
@@ -869,6 +874,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	setself(this);
 
 	// apply mirror damage if any
+	if(!autocvar_g_mirrordamage_onlyweapons || DEATH_WEAPONOF(deathtype) != WEP_Null)
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;

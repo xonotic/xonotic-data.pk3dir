@@ -1,3 +1,7 @@
+#include "healtharmor.qh"
+
+#include <common/deathtypes/all.qh>
+
 /** Health/armor (#3) */
 void HUD_HealthArmor()
 {
@@ -70,7 +74,7 @@ void HUD_HealthArmor()
 
     int maxhealth = autocvar_hud_panel_healtharmor_maxhealth;
     int maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
-	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
+	if(autocvar_hud_panel_healtharmor_combined) // combined health and armor display
 	{
 		vector v;
 		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);

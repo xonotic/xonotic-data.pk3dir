@@ -1,21 +1,20 @@
 #ifdef SVQC
-void func_rotating_setactive(float astate)
-{SELFPARAM();
-
+void func_rotating_setactive(entity this, int astate)
+{
 	if (astate == ACTIVE_TOGGLE)
 	{
-		if(self.active == ACTIVE_ACTIVE)
-			self.active = ACTIVE_NOT;
+		if(this.active == ACTIVE_ACTIVE)
+			this.active = ACTIVE_NOT;
 		else
-			self.active = ACTIVE_ACTIVE;
+			this.active = ACTIVE_ACTIVE;
 	}
 	else
-		self.active = astate;
+		this.active = astate;
 
-	if(self.active  == ACTIVE_NOT)
-		self.avelocity = '0 0 0';
+	if(this.active  == ACTIVE_NOT)
+		this.avelocity = '0 0 0';
 	else
-		self.avelocity = self.pos1;
+		this.avelocity = this.pos1;
 }
 
 /*QUAKED spawnfunc_func_rotating (0 .5 .8) ? - - X_AXIS Y_AXIS

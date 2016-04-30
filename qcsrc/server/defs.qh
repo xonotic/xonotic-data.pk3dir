@@ -1,31 +1,14 @@
-#ifndef SERVER_DEFS_H
-#define SERVER_DEFS_H
+#pragma once
 
-#include "../common/weapons/all.qh"
-#include "../common/stats.qh"
+float warmup_limit;
+#include <common/weapons/all.qh>
+#include <common/stats.qh>
 
 #define INDEPENDENT_ATTACK_FINISHED 1
-
-// TODO: deprecated: remove. Replaced by physics.qh PHYS_INPUT_BUTTON_*
-
-#define BUTTON_ATCK       button0
-#define BUTTON_JUMP       button2
-#define BUTTON_ATCK2      button3
-#define BUTTON_ZOOM       button4
-#define BUTTON_CROUCH     button5
-#define BUTTON_HOOK       button6
-#define BUTTON_INFO       button7
-#define BUTTON_DRAG       button8
-#define BUTTON_USE        buttonuse
-#define BUTTON_CHAT       buttonchat
-#define BUTTON_PRYDON     cursor_active
-#define BUTTON_ZOOMSCRIPT button9
-#define BUTTON_JETPACK    button10
 
 // Globals
 
 float g_footsteps, g_grappling_hook, g_instagib;
-float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
 float warmup_stage;
@@ -106,6 +89,7 @@ void() player_setupanimsformodel;
 .float	scheduledrespawntime;
 .float	respawntime;
 .float	respawntimejitter;
+.float	respawntimestart;
 //.float	chasecam;
 
 .float	damageforcescale;
@@ -187,7 +171,6 @@ bool nJoinAllowed(entity this, entity ignore);
 .entity flagcarried;
 
 .int playerid;
-float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
 
 .vector death_origin;
@@ -230,7 +213,6 @@ void FixClientCvars(entity e);
 WepSet weaponsInMap;
 
 #define weapons _STAT(WEAPONS)
-#define weaponsinmap _STAT(WEAPONSINMAP)
 
 .float respawn_countdown; // next number to count
 
@@ -302,16 +284,12 @@ float cvar_purechanges_count;
 
 float game_starttime; //point in time when the countdown to game start is over
 float round_starttime; //point in time when the countdown to round start is over
-.float stat_game_starttime = _STAT(GAMESTARTTIME);
-.float stat_round_starttime = _STAT(ROUNDSTARTTIME);
 
 void W_Porto_Remove (entity p);
 
 .int projectiledeathtype;
 
 .string message2;
-
-.bool stat_allow_oldvortexbeam = _STAT(ALLOW_OLDVORTEXBEAM);
 
 // reset to 0 on weapon switch
 // may be useful to all weapons
@@ -321,8 +299,8 @@ void W_Porto_Remove (entity p);
 .entity ballcarried; // Also used for keepaway
 float g_nexball_meter_period;
 
-void SUB_DontUseTargets();
-void SUB_UseTargets();
+void SUB_DontUseTargets(entity this, entity actor, entity trigger);
+void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 .void(entity this) reset; // if set, an entity is reset using this
 .void() reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
@@ -359,8 +337,6 @@ string matchid;
 
 .float damage_dealt_total = _STAT(DAMAGE_DEALT_TOTAL);
 
-.float stat_leadlimit = _STAT(LEADLIMIT);
-
 bool radar_showennemies;
 
 #ifdef PROFILING
@@ -395,7 +371,7 @@ float client_cefc_accumulatortime;
 
 string deathmessage;
 
-.float just_joined;
+.bool just_joined;
 
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player
@@ -408,7 +384,7 @@ const float ACTIVE_IDLE 	= 2;
 const float ACTIVE_BUSY 	= 2;
 const float ACTIVE_TOGGLE 	= 3;
 .float active;
-.void (float act_state) setactive;
+.void (entity this, int act_state) setactive;
 .entity realowner;
 
 //float serverflags;
@@ -432,7 +408,7 @@ const float ACTIVE_TOGGLE 	= 3;
 
 void PlayerUseKey();
 
-typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
+USING(spawn_evalfunc_t, vector(entity player, entity spot, vector current));
 .spawn_evalfunc_t spawn_evalfunc;
 
 string modname;
@@ -467,5 +443,3 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .float init_for_player_needed;
 .void(entity) init_for_player;
-
-#endif

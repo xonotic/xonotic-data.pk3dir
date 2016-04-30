@@ -26,8 +26,8 @@ bool teleport_dest_send(entity this, entity to, int sf)
 
 void teleport_dest_link()
 {SELFPARAM();
-	//Net_LinkEntity(self, false, 0, teleport_dest_send);
-	//self.SendFlags |= 1; // update
+	Net_LinkEntity(self, false, 0, teleport_dest_send);
+	self.SendFlags |= 1; // update
 }
 
 spawnfunc(info_teleport_destination)

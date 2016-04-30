@@ -6,7 +6,7 @@
 #include "sort.qh"
 
 .int m_id;
-typedef vector vectori;
+USING(vectori, vector);
 
 #define REGISTER_STAT(...) EVAL_REGISTER_STAT(OVERLOAD(REGISTER_STAT, __VA_ARGS__))
 #define EVAL_REGISTER_STAT(...) __VA_ARGS__
@@ -107,7 +107,7 @@ REGISTRY_SORT(Stats)
 REGISTRY_CHECK(Stats)
 STATIC_INIT(RegisterStats_renumber)
 {
-	FOREACH(Stats, true, LAMBDA(it.m_id = STATS_ENGINE_RESERVE + i));
+	FOREACH(Stats, true, it.m_id = STATS_ENGINE_RESERVE + i);
 }
 #ifdef SVQC
 STATIC_INIT(stats_add) { stats_add(); }

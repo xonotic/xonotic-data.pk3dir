@@ -1,3 +1,5 @@
+float autocvar_net_connecttimeout = 30;
+
 #ifndef MENUQC
 #include "anim.qc"
 #include "animdecide.qc"
@@ -7,6 +9,9 @@
 
 #include "mapinfo.qc"
 #include "playerstats.qc"
+#ifdef SVQC
+    #include "state.qc"
+#endif
 #include "util.qc"
 
 #ifndef CSQC
@@ -30,15 +35,15 @@
 #include "deathtypes/all.qc"
 #include "effects/all.qc"
 #include "impulses/all.qc"
-#include "notifications.qc"
+#include "notifications/all.qc"
 #include "t_items.qc"
 #endif
 
-#include "items/all.qc"
+#include "items/_mod.inc"
     #include "weapons/all.qc"
         #include "monsters/all.qc"
         #include "turrets/all.qc"
         #include "vehicles/all.qc"
 
-#include "mutators/all.qc"
-    #include "gamemodes/all.qc"
+#include "mutators/_mod.inc"
+    #include "gamemodes/_mod.inc"

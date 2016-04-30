@@ -455,14 +455,15 @@ void turret_projectile_damage(entity this, entity inflictor, entity attacker, fl
 	this.health	-= damage;
 	//this.realowner = attacker; // Dont change realowner, it does not make much sense for turrets
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(this.owner, turret_projectile_explode));
+		W_PrepareExplosionByDamage(this, this.owner, turret_projectile_explode);
 }
 
-entity turret_projectile(string _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
+entity turret_projectile(Sound _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
 {SELFPARAM();
+    TC(Sound, _snd);
 	entity proj;
 
-	_sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTEN_NORM);
 	proj				 = spawn ();
 	setorigin(proj, self.tur_shotorg);
 	setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);
@@ -1178,16 +1179,16 @@ void turret_think()
 	When .used a turret switch team to activator.team.
 	If activator is world, the turret go inactive.
 */
-void turret_use()
-{SELFPARAM();
-	LOG_TRACE("Turret ",self.netname, " used by ", activator.classname, "\n");
+void turret_use(entity this, entity actor, entity trigger)
+{
+	LOG_TRACE("Turret ",this.netname, " used by ", actor.classname, "\n");
 
-	self.team = activator.team;
+	this.team = actor.team;
 
-	if(self.team == 0)
-		self.active = ACTIVE_NOT;
+	if(this.team == 0)
+		this.active = ACTIVE_NOT;
 	else
-		self.active = ACTIVE_ACTIVE;
+		this.active = ACTIVE_ACTIVE;
 
 }
 
@@ -1206,11 +1207,11 @@ void turrets_manager_think()
 
 	if (autocvar_g_turrets_reloadcvars == 1)
 	{
-		FOREACH_ENTITY(IS_TURRET(it), LAMBDA(
+		FOREACH_ENTITY(IS_TURRET(it), {
 			load_unit_settings(it, true);
 			Turret tur = get_turretinfo(it.m_id);
 			tur.tr_think(tur, it);
-		));
+		});
 		cvar_set("g_turrets_reloadcvars", "0");
 	}
 }

@@ -53,9 +53,8 @@ void _Movetype_PushMove(entity this, float dt)  // SV_PushMove
 
 	if (this.move_movetype != MOVETYPE_FAKEPUSH)
 	{
-		for (entity check = findradius(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin)); check; check = check.chain)
-		{
-			switch (check.move_movetype)
+	    FOREACH_ENTITY_RADIUS(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
+			switch (it.move_movetype)
 			{
 				case MOVETYPE_NONE:
 				case MOVETYPE_PUSH:
@@ -67,17 +66,17 @@ void _Movetype_PushMove(entity this, float dt)  // SV_PushMove
 					break;
 			}
 
-			if (check.owner == this)
+			if (it.owner == this)
 				continue;
 
-			if (this.owner == check)
+			if (this.owner == it)
 				continue;
 
-			vector pivot = check.mins + 0.5 * (check.maxs - check.mins);
+			vector pivot = it.mins + 0.5 * (it.maxs - it.mins);
 			vector move;
 			if (rotated)
 			{
-				vector org = (check.move_origin - this.move_origin) + pivot;
+				vector org = (it.move_origin - this.move_origin) + pivot;
 				vector org2;
 				org2.x = org * v_forward;
 				org2.y = org * v_right;
@@ -90,34 +89,34 @@ void _Movetype_PushMove(entity this, float dt)  // SV_PushMove
 			}
 
 			// physics objects need better collisions than this code can do
-			if (check.move_movetype == 32)  // MOVETYPE_PHYSICS
+			if (it.move_movetype == 32)  // MOVETYPE_PHYSICS
 			{
-				check.move_origin = check.move_origin + move;
-				_Movetype_LinkEdict(check, true);
+				it.move_origin = it.move_origin + move;
+				_Movetype_LinkEdict(it, true);
 				continue;
 			}
 
 			// try moving the contacted entity
 			this.solid = SOLID_NOT;
 			bool flag = false;
-			flag = _Movetype_PushEntity(check, move, true);
+			flag = _Movetype_PushEntity(it, move, true);
 			if (!flag)
 			{
-				// entity "check" got teleported
-				check.move_angles_y += trace_fraction * moveangle.y;
+				// entity "it" got teleported
+				it.move_angles_y += trace_fraction * moveangle.y;
 				this.solid = savesolid;
 				continue;  // pushed enough
 			}
 			// FIXME: turn players specially
-			check.move_angles_y += trace_fraction * moveangle.y;
+			it.move_angles_y += trace_fraction * moveangle.y;
 			this.solid = savesolid;
 
 			// this trace.fraction < 1 check causes items to fall off of pushers
 			// if they pass under or through a wall
 			// the groundentity check causes items to fall off of ledges
-			if (check.move_movetype != MOVETYPE_WALK && (trace_fraction < 1 || check.move_groundentity != this))
-				check.move_flags &= ~FL_ONGROUND;
-		}
+			if (it.move_movetype != MOVETYPE_WALK && (trace_fraction < 1 || it.move_groundentity != this))
+				it.move_flags &= ~FL_ONGROUND;
+        });
 	}
 
 	this.move_angles_x -= 360.0 * floor(this.move_angles.x * (1.0 / 360.0));
@@ -150,6 +149,6 @@ void _Movetype_Physics_Pusher(entity this, float dt)  // SV_Physics_Pusher
 		this.move_nextthink = 0;
 		this.move_time = time;
 		other = world;
-		WITH(entity, self, this, this.move_think());
+		WITHSELF(this, this.move_think());
 	}
 }

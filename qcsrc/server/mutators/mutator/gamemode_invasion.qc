@@ -1,3 +1,4 @@
+#include "gamemode_invasion.qh"
 #ifndef GAMEMODE_INVASION_H
 #define GAMEMODE_INVASION_H
 
@@ -18,7 +19,7 @@ REGISTER_MUTATOR(inv, false)
 
 		cvar_settemp("g_monsters", "1");
 
-		SetLimits(autocvar_g_invasion_point_limit, -1, -1, -1);
+		SetLimits(autocvar_g_invasion_point_limit, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
 		if (autocvar_g_invasion_teams >= 2)
 		{
 			ActivateTeamplay();
@@ -279,8 +280,8 @@ float Invasion_CheckWinner()
 	{
 		if(winner_team)
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+			Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		}
 	}
 	else if(winner)
@@ -481,7 +482,7 @@ void invasion_ScoreRules(float inv_teams)
 	ScoreRules_basics_end();
 }
 
-void invasion_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+void invasion_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	if(autocvar_g_invasion_teams)
 		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);

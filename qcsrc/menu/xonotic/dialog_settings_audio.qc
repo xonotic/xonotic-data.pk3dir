@@ -1,17 +1,12 @@
-#ifndef DIALOG_SETTINGS_AUDIO_H
-#define DIALOG_SETTINGS_AUDIO_H
-#include "tab.qc"
-CLASS(XonoticAudioSettingsTab, XonoticTab)
-	METHOD(XonoticAudioSettingsTab, fill, void(entity));
-	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticAudioSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space
-	ATTRIB(XonoticAudioSettingsTab, hiddenMenuSoundsSlider, entity, NULL)
-ENDCLASS(XonoticAudioSettingsTab)
-entity makeXonoticAudioSettingsTab();
-#endif
+#include "dialog_settings_audio.qh"
 
-#ifdef IMPLEMENTATION
+#include "slider_decibels.qh"
+#include "commandbutton.qh"
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "textslider.qh"
+#include "checkbox_slider_invalid.qh"
+
 entity makeXonoticAudioSettingsTab()
 {
 	entity me;
@@ -185,4 +180,3 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, audioApplyButton);
 }
-#endif

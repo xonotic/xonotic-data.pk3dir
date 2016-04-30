@@ -1,5 +1,4 @@
-#ifndef CLIENT_DEFS_H
-#define CLIENT_DEFS_H
+#pragma once
 
 // Additional OPTIONAL Fields and Globals
 //float		intermission;
@@ -122,5 +121,3 @@ float uid2name_dialog;
 .bool csqcmodel_isdead; // used by shownames and miscfunctions (entcs_IsDead) to know when a player is dead
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
-
-#endif

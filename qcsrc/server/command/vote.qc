@@ -1,3 +1,4 @@
+#include "vote.qh"
 #include <common/command/command.qh>
 #include "vote.qh"
 
@@ -13,7 +14,7 @@
 
 #include <common/constants.qh>
 #include <common/mapinfo.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/playerstats.qh>
 #include <common/util.qh>
 
@@ -86,8 +87,7 @@ bool Nagger_SendEntity(entity this, entity to, float sendflags)
 
 void Nagger_Init()
 {
-	Net_LinkEntity(nagger = new(nagger), false, 0, Nagger_SendEntity);
-	make_pure(nagger);
+	Net_LinkEntity(nagger = new_pure(nagger), false, 0, Nagger_SendEntity);
 }
 
 void Nagger_VoteChanged()
@@ -202,9 +202,7 @@ void VoteCount(float first_count)
 	// declarations
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
 
-	float spectators_allowed = ((autocvar_sv_vote_nospectators != 2)
-	    || ((autocvar_sv_vote_nospectators == 1) && (warmup_stage || gameover))
-	    || (autocvar_sv_vote_nospectators == 0));
+	bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 	float vote_player_count = 0, notvoters = 0;
 	float vote_real_player_count = 0, vote_real_accept_count = 0;
@@ -341,22 +339,22 @@ void reset_map(bool dorespawn)
 
 	MUTATOR_CALLHOOK(reset_map_global);
 
-	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(
+	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
 		if (it.reset)
 		{
-			WITH(entity, self, it, it.reset(it));
+			WITHSELF(it, it.reset(it));
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;
 		if (it.flags & FL_PROJECTILE) remove(it);  // remove any projectiles left
-	));
+	});
 
 	// Waypoints and assault start come LAST
-	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), LAMBDA(
-		if (it.reset2) WITH(entity, self, it, it.reset2());
-	));
+	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
+		if (it.reset2) WITHSELF(it, it.reset2());
+	});
 
-	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITH(entity, self, it, Unfreeze(it))));
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITHSELF(it, Unfreeze(it))));
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
@@ -445,8 +443,7 @@ void ReadyRestart_force()
 	// initiate the restart-countdown-announcer entity
 	if (autocvar_sv_ready_restart_after_countdown)
 	{
-		entity restart_timer = new(restart_timer);
-		make_pure(restart_timer);
+		entity restart_timer = new_pure(restart_timer);
 		restart_timer.think = ReadyRestart_think;
 		restart_timer.nextthink = game_starttime;
 	}
@@ -571,9 +568,14 @@ float VoteCommand_checkargs(float startpos, float argc)
 {
 	float p, q, check, minargs;
 	string cvarname = strcat("sv_vote_command_restriction_", argv(startpos));
-	string cmdrestriction = cvar_string(cvarname);  // note: this warns on undefined cvar. We want that.
+	string cmdrestriction = "";  // No we don't.
 	string charlist, arg;
 	float checkmate;
+
+	if(cvar_type(cvarname) & CVAR_TYPEFLAG_EXISTS)
+		cmdrestriction = cvar_string(cvarname);
+	else
+		LOG_INFO("NOTE: ", cvarname, " does not exist, no restrictions will be applied.\n");
 
 	if (cmdrestriction == "") return true;
 
@@ -748,9 +750,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float spectators_allowed = ((autocvar_sv_vote_nospectators != 2)
-			    || ((autocvar_sv_vote_nospectators == 1) && warmup_stage)
-			    || (autocvar_sv_vote_nospectators == 0));
+			bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 			float tmp_playercount = 0;
 
@@ -888,9 +888,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 
 					default:  // calling a vote for master
 					{
-						float spectators_allowed = ((autocvar_sv_vote_nospectators != 2)
-						    || ((autocvar_sv_vote_nospectators == 1) && warmup_stage)
-						    || (autocvar_sv_vote_nospectators == 0));
+						bool spectators_allowed = (!autocvar_sv_vote_nospectators || (autocvar_sv_vote_nospectators == 1 && (warmup_stage || gameover)));
 
 						if (!autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if (vote_called)

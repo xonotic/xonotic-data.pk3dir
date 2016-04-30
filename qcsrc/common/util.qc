@@ -5,7 +5,7 @@
     #include "constants.qh"
 	#include "../client/mutators/events.qh"
     #include "mapinfo.qh"
-    #include "notifications.qh"
+    #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
 #elif defined(MENUQC)
 #elif defined(SVQC)
@@ -13,7 +13,7 @@
     #include "../server/autocvars.qh"
     #include "../server/defs.qh"
 	#include "../server/mutators/events.qh"
-    #include "notifications.qh"
+    #include "notifications/all.qh"
     #include <common/deathtypes/all.qh>
     #include "mapinfo.qh"
 #endif
@@ -608,8 +608,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	if(created_saved_value != -1)
 	{
 		// creating a new entity to keep track of this cvar
-		entity e = new(saved_cvar_value);
-		make_pure(e);
+		entity e = new_pure(saved_cvar_value);
 		e.netname = strzone(tmp_cvar);
 		e.message = strzone(cvar_string(tmp_cvar));
 		created_saved_value = 1;
@@ -1481,17 +1480,11 @@ vector animfixfps(entity e, vector a, vector b)
 }
 #endif
 
-#ifdef SVQC
-void dedicated_print(string input) // print(), but only print if the server is not local
-{
-	if(server_is_dedicated) { LOG_INFO(input); }
-}
-#endif
-
 #ifndef MENUQC
-float Announcer_PickNumber(float type, float num)
+Notification Announcer_PickNumber(int type, int num)
 {
-	switch(type)
+    return = NULL;
+	switch (type)
 	{
 		case CNT_GAMESTART:
 		{
@@ -1596,7 +1589,6 @@ float Announcer_PickNumber(float type, float num)
 			break;
 		}
 	}
-	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif
 

@@ -191,7 +191,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	}
 	if(i >= mapvote_screenshot_dirs_count)
 		i = 0; // FIXME maybe network this error case, as that means there is no mapshot on the server?
-	for(o = strstr(pakfile, "/", 0)+1; o > 0; o = strstr(pakfile, "/", 0)+1)
+	for(o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
 		pakfile = substring(pakfile, o, -1);
 
 	mapvote_maps_screenshot_dir[mapvote_count] = i;

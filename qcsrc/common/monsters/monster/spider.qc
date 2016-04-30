@@ -56,17 +56,19 @@ REGISTER_MUTATOR(spiderweb, true);
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
 {
-	if (time >= self.spider_slowness)
+    SELFPARAM();
+	if (time >= this.spider_slowness)
 		return false;
-	PHYS_MAXSPEED(self) *= 0.5; // half speed while slow from spider
-	PHYS_MAXAIRSPEED(self) *= 0.5;
-	PHYS_AIRSPEEDLIMIT_NONQW(self) *= 0.5;
-	PHYS_AIRSTRAFEACCELERATE(self) *= 0.5;
+	PHYS_MAXSPEED(this) *= 0.5; // half speed while slow from spider
+	PHYS_MAXAIRSPEED(this) *= 0.5;
+	PHYS_AIRSPEEDLIMIT_NONQW(this) *= 0.5;
+	PHYS_AIRSTRAFEACCELERATE(this) *= 0.5;
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 {
+    SELFPARAM();
 	if(time < self.spider_slowness)
 	{
 		monster_speed_run *= 0.5;
@@ -77,18 +79,23 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
 {
+    SELFPARAM();
 	self.spider_slowness = 0;
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
 {
+    SELFPARAM();
 	self.spider_slowness = 0;
 	return false;
 }
 
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
-METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire)) {
+METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
+{
+    SELFPARAM();
+    TC(SpiderAttack, thiswep);
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
     if ((!isPlayer && time >= actor.spider_web_delay) || weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_monster_spider_attack_web_delay)) {
@@ -99,7 +106,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
 			actor.anim_finished = time + 1;
 		}
         if (isPlayer) actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, SND(SpiderAttack_FIRE), CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, v_forward, false, 0, SND_SpiderAttack_FIRE, CH_WEAPON_B, 0);
     	if (!isPlayer) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 		M_Spider_Attack_Web(actor);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -144,6 +151,11 @@ void M_Spider_Attack_Web_Explode()
 	}
 }
 
+void M_Spider_Attack_Web_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, M_Spider_Attack_Web_Explode());
+}
+
 void M_Spider_Attack_Web_Touch()
 {
 	PROJECTILE_TOUCH;
@@ -161,7 +173,7 @@ void M_Spider_Attack_Web(entity this)
 
 	entity proj = new(plasma);
 	proj.owner = proj.realowner = this;
-	proj.use = M_Spider_Attack_Web_Explode;
+	proj.use = M_Spider_Attack_Web_Explode_use;
 	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = 0;
@@ -214,53 +226,62 @@ bool M_Spider_Attack(int attack_type, entity actor, entity targ)
 spawnfunc(monster_spider) { Monster_Spawn(this, MON_SPIDER.monsterid); }
 #endif // SVQC
 
-		#ifdef SVQC
-		METHOD(Spider, mr_think, bool(Spider thismon, entity actor))
-		{
-			return true;
-		}
-		METHOD(Spider, mr_pain, bool(Spider thismon, entity actor))
-		{
-			return true;
-		}
-		METHOD(Spider, mr_death, bool(Spider thismon, entity actor))
-		{
-			setanim(actor, actor.anim_melee, false, true, true);
-			actor.angles_x = 180;
-			return true;
-		}
-		#endif
-		#ifndef MENUQC
-		METHOD(Spider, mr_anim, bool(Spider thismon, entity actor))
-		{
-			vector none = '0 0 0';
-			actor.anim_walk = animfixfps(actor, '1 1 1', none);
-			actor.anim_idle = animfixfps(actor, '0 1 1', none);
-			actor.anim_melee = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
-			actor.anim_shoot = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
-			actor.anim_run = animfixfps(actor, '1 1 1', none);
-			return true;
-		}
-		#endif
-		#ifdef SVQC
-		spawnfunc(item_health_medium);
-		METHOD(Spider, mr_setup, bool(Spider thismon, entity actor))
-		{
-			if(!actor.health) actor.health = (autocvar_g_monster_spider_health);
-			if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
-			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
-			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
-			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
+#ifdef SVQC
+METHOD(Spider, mr_think, bool(Spider this, entity actor))
+{
+    TC(Spider, this);
+    return true;
+}
 
-			actor.monster_loot = spawnfunc_item_health_medium;
-			actor.monster_attackfunc = M_Spider_Attack;
+METHOD(Spider, mr_pain, bool(Spider this, entity actor))
+{
+    TC(Spider, this);
+    return true;
+}
 
-			return true;
-		}
-		METHOD(Spider, mr_precache, bool(Spider thismon))
-		{
-			return true;
-		}
-		#endif
+METHOD(Spider, mr_death, bool(Spider this, entity actor))
+{
+    TC(Spider, this);
+    setanim(actor, actor.anim_melee, false, true, true);
+    actor.angles_x = 180;
+    return true;
+}
+#endif
+#ifndef MENUQC
+METHOD(Spider, mr_anim, bool(Spider this, entity actor))
+{
+    TC(Spider, this);
+    vector none = '0 0 0';
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_idle = animfixfps(actor, '0 1 1', none);
+    actor.anim_melee = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+    actor.anim_shoot = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '1 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+spawnfunc(item_health_medium);
+METHOD(Spider, mr_setup, bool(Spider this, entity actor))
+{
+    TC(Spider, this);
+    if(!actor.health) actor.health = (autocvar_g_monster_spider_health);
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_spider_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spider_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spider_speed_stop); }
+    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
+
+    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_attackfunc = M_Spider_Attack;
+
+    return true;
+}
+
+METHOD(Spider, mr_precache, bool(Spider this))
+{
+    TC(Spider, this);
+    return true;
+}
+#endif
 
 #endif

@@ -1,9 +1,16 @@
+#include "modicons.qh"
+
+#include <common/mapinfo.qh>
+#include <common/ent_cs.qh>
+#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
+
 // Mod icons panel (#10)
 
 bool mod_active; // is there any active mod icon?
 
 void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
+    TC(int, layout); TC(int, i);
 	int stat = -1;
 	string pic = "";
 	vector color = '0 0 0';
@@ -484,13 +491,33 @@ float srecordtime_change_time; // time when srecordtime last changed
 float race_status_time;
 int race_status_prev;
 string race_status_name_prev;
+
+// Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
+int race_CheckName(string net_name)
+{
+	int i;
+	for (i=RANKINGS_CNT-1;i>=0;--i)
+		if(grecordholder[i] == net_name)
+			return i+1;
+	return 0;
+}
+
+void race_showTime(string text, vector pos, vector timeText_ofs, float theTime, vector textSize, float f)
+{
+	drawstring_aspect(pos, text, textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(pos + timeText_ofs, TIME_ENCODED_TOSTRING(theTime), textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	if (f < 1) {
+		drawstring_aspect_expanding(pos, text, textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+		drawstring_aspect_expanding(pos + timeText_ofs, TIME_ENCODED_TOSTRING(theTime), textSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
+	}
+}
+
 void HUD_Mod_Race(vector pos, vector mySize)
 {
 	mod_active = 1; // race should never hide the mod icons panel
 	entity me;
 	me = playerslots[player_localnum];
 	float score;
-	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
 
 	if(!(scores_flags[ps_primary] & SFL_TIME) || teamplay) // race/cts record display on HUD
@@ -508,7 +535,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		db_put(ClientProgsDB, strcat(shortmapname, rr, "time"), ftos(score));
 		if(autocvar_cl_autodemo_delete_keeprecords)
 		{
-			f = autocvar_cl_autodemo_delete;
+			float f = autocvar_cl_autodemo_delete;
 			f &= ~1;
 			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
 		}
@@ -532,18 +559,9 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		textPos = pos + eY * 0.5 * max(0, mySize.y/2 - squareSize) + eX * 0.5 * (mySize.x - squareSize);
 		medalPos = pos + eY * 0.5 * max(0, mySize.y/2 - squareSize) + eY * 0.5 * mySize.y + eX * 0.5 * (mySize.x - squareSize);
 	}
+	vector textSize = eX * squareSize + eY * 0.25 * squareSize;
 
-	f = time - crecordtime_change_time;
-
-	if (f > 1) {
-		drawstring_aspect(textPos, _("Personal best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	} else {
-		drawstring_aspect(textPos, _("Personal best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(textPos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(pos, _("Personal best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		drawstring_aspect_expanding(pos + eY * 0.25 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-	}
+	race_showTime(_("Personal best"), textPos, eY * 0.25 * squareSize, t, textSize, time - crecordtime_change_time);
 
 	// server record
 	t = race_server_record;
@@ -551,17 +569,9 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		srecordtime_prev = t;
 		srecordtime_change_time = time;
 	}
-	f = time - srecordtime_change_time;
 
-	if (f > 1) {
-		drawstring_aspect(textPos + eY * 0.5 * squareSize, _("Server best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	} else {
-		drawstring_aspect(textPos + eY * 0.5 * squareSize, _("Server best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-		drawstring_aspect_expanding(textPos + eY * 0.5 * squareSize, _("Server best"), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-		drawstring_aspect_expanding(textPos + eY * 0.75 * squareSize, TIME_ENCODED_TOSTRING(t), eX * squareSize + eY * 0.25 * squareSize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL, f);
-	}
+	textPos += eY * 0.5 * squareSize;
+	race_showTime(_("Server best"), textPos, eY * 0.25 * squareSize, t, textSize, time - srecordtime_change_time);
 
 	if (race_status != race_status_prev || race_status_name != race_status_name_prev) {
 		race_status_time = time + 5;
@@ -624,6 +634,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, int layout, int i)
 {
+    TC(int, layout); TC(int, i);
 	float stat = -1;
 	string pic = "";
 	vector color = '0 0 0';

@@ -155,6 +155,7 @@ void snake_check_winner(entity minigame)
 void snake_move_head(entity minigame, entity head);
 void snake_head_think()
 {
+    SELFPARAM();
 	entity minigame = self.owner;
 
 	if(minigame.minigame_flags & SNAKE_TURN_MOVE)

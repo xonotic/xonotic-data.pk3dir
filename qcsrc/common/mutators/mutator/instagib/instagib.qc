@@ -52,7 +52,7 @@ void instagib_stop_countdown(entity e)
 {
 	if (!e.instagib_needammo)
 		return;
-	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_INSTAGIB_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_INSTAGIB_FINDAMMO);
 	e.instagib_needammo = false;
 }
 void instagib_ammocheck()
@@ -198,7 +198,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (self.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(self.strength_finished, SND(POWEROFF));
+		play_countdown(self.strength_finished, SND_POWEROFF);
 		if (time > self.strength_finished)
 		{
 			self.alpha = default_player_alpha;
@@ -221,7 +221,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (self.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(self.invincible_finished, SND(POWEROFF));
+		play_countdown(self.invincible_finished, SND_POWEROFF);
 		if (time > self.invincible_finished)
 		{
 			self.items &= ~ITEM_Speed.m_itemid;
@@ -288,12 +288,15 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		if(IS_PLAYER(frag_attacker))
 		if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		{
+			if(!autocvar_g_instagib_friendlypush && SAME_TEAM(frag_target, frag_attacker))
+				frag_force = '0 0 0';
+
 			if(frag_target.armorvalue)
 			{
 				frag_target.armorvalue -= 1;
 				frag_damage = 0;
 				frag_target.damage_dealt += 1;
-				frag_attacker.damage_dealt += 1; // TODO: change this to a specific hitsound for armor hit
+				frag_attacker.damage_dealt += 1;
 				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INSTAGIB_LIVES_REMAINING, frag_target.armorvalue);
 			}
 		}
@@ -302,8 +305,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				if(!autocvar_g_instagib_blaster_keepdamage)
-					frag_damage = frag_mirrordamage = 0;
+				if(!autocvar_g_instagib_blaster_keepdamage || frag_attacker == frag_target)
+				{
+					frag_damage = 0;
+					if(!autocvar_g_instagib_mirrordamage)
+						frag_mirrordamage = 0; // never do mirror damage on enemies
+				}
 
 				if(frag_target != frag_attacker)
 				{
@@ -315,6 +322,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 		}
 	}
 
+	if(!autocvar_g_instagib_mirrordamage) // only apply the taking lives hack if we don't want to support real damage mirroring
 	if(IS_PLAYER(frag_attacker))
 	if(frag_mirrordamage > 0)
 	{
@@ -329,6 +337,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 	}
 
 	if(frag_target.alpha && frag_target.alpha < 1)
+	if(IS_PLAYER(frag_target))
 		yoda = 1;
 
 	return false;
@@ -371,7 +380,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
         e.cnt = self.cnt;
         e.team = self.team;
         e.spawnfunc_checked = true;
-		WITH(entity, self, e, spawnfunc_item_minst_cells(e));
+		WITHSELF(e, spawnfunc_item_minst_cells(e));
 		return true;
 	}
 

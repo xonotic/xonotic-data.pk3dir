@@ -1,18 +1,10 @@
-#ifndef CLIENT_MAIN_H
-#define CLIENT_MAIN_H
+#pragma once
 
 #include <common/constants.qh>
 #include <common/weapons/all.qh>
 
 // --------------------------------------------------------------------------
 // MENU Functionality
-
-const float DATABUF_PING = 0;
-#define DATABUF_CAPTURES (1*maxclients)
-#define DATABUF_DEATHS (2*maxclients)
-#define DATABUF_RETURNS (3*maxclients)
-
-#define DATABUF_NEXT (5*maxclients)
 
 void setpredraw(entity this, void(entity) pdfunc);
 
@@ -152,5 +144,3 @@ float hud;
 float view_quality;
 int framecount;
 .float health;
-
-#endif

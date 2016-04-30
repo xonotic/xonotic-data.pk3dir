@@ -3,25 +3,20 @@
 #include <common/t_items.qh>
 #include <common/constants.qh>
 #include <common/deathtypes/all.qh>
-#include <common/notifications.qh>
+#include <common/notifications/all.qh>
 #include <common/util.qh>
 #include <common/weapons/all.qh>
 #include <common/items/all.qc>
 
-void W_GiveWeapon (entity e, float wep)
-{SELFPARAM();
-
-	if (!wep)
-		return;
+void W_GiveWeapon(entity e, int wep)
+{
+	if (!wep) return;
 
 	e.weapons |= WepSet_FromWeapon(Weapons_from(wep));
 
-	setself(e);
-
-	if(IS_PLAYER(other))
-		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
-
-	setself(this);
+	if (IS_PLAYER(e)) {
+	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);
+    }
 }
 
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
@@ -78,21 +73,21 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype,
 	return true; // if none of these return, then allow damage anyway.
 }
 
-void W_PrepareExplosionByDamage(entity attacker, void() explode)
-{SELFPARAM();
-	self.takedamage = DAMAGE_NO;
-	self.event_damage = func_null;
+void W_PrepareExplosionByDamage(entity this, entity attacker, void() explode)
+{
+	this.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
 
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
-		self.owner = attacker;
-		self.realowner = attacker;
+		this.owner = attacker;
+		this.realowner = attacker;
 	}
 
-	MUTATOR_CALLHOOK(PrepareExplosionByDamage, self, attacker);
+	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
 
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
-	self.nextthink = time;
-	self.think = explode;
+	this.nextthink = time;
+	this.think = explode;
 }

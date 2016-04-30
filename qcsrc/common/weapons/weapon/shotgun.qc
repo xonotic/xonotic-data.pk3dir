@@ -65,9 +65,9 @@ void W_Shotgun_Attack(Weapon thiswep, float isprimary)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(self, true, 5, SND(SHOTGUN_FIRE), ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(self, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
-		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
@@ -188,12 +188,11 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	sound(actor, CH_WEAPON_A, SND_SHOTGUN_MELEE, VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(shotgun, animtime), w_ready);
 
-	entity meleetemp = new(meleetemp);
-	make_pure(meleetemp);
+	entity meleetemp = new_pure(meleetemp);
 	meleetemp.realowner = actor;
 	meleetemp.think = W_Shotgun_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
-	W_SetupShot_Range(actor, true, 0, "", 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
+	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 
 // alternate secondary weapon frames
@@ -227,117 +226,123 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 
 .float shotgun_primarytime;
 
-		METHOD(Shotgun, wr_aim, void(entity thiswep))
-		{
-			if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
-			else
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
-		}
-		METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
-			if(WEP_CVAR(shotgun, reload_ammo) && actor.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
-			{
-				// don't force reload an empty shotgun if its melee attack is active
-				if(WEP_CVAR(shotgun, secondary) < 2) {
-					thiswep.wr_reload(thiswep, actor, weaponentity);
-				}
-			}
-			else
-			{
-				if(fire & 1)
-				{
-					if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
-					{
-						if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
-						{
-							W_Shotgun_Attack(thiswep, true);
-							actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
-							weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
-						}
-					}
-				}
-				else if((fire & 2) && WEP_CVAR(shotgun, secondary) == 2)
-				{
-					if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
-					{
-						if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
-						{
-							W_Shotgun_Attack(thiswep, false);
-							actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
-							weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
-						}
-					}
-				}
-			}
-			if(actor.clip_load >= 0) // we are not currently reloading
-			if(!actor.crouch) // no crouchmelee please
-			if(WEP_CVAR(shotgun, secondary) == 1)
-			if(((fire & 1) && actor.(thiswep.ammo_field) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
-			if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))
-			{
-				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
-			}
-		}
-		METHOD(Shotgun, wr_setup, void(entity thiswep))
-		{
-			self.ammo_field = ammo_none;
-		}
-		METHOD(Shotgun, wr_checkammo1, bool(entity thiswep))
-		{
-			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-			ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
-			return ammo_amount;
-		}
-		METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
-		{
-			if(IS_BOT_CLIENT(self))
-			if(vdist(self.origin - self.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
-				return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
-			switch(WEP_CVAR(shotgun, secondary))
-			{
-				case 1: return true; // melee does not use ammo
-				case 2: // secondary triple shot
-				{
-					float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-					ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
-					return ammo_amount;
-				}
-				default: return false; // secondary unavailable
-			}
-		}
-		METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
-			W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND(RELOAD)); // WEAPONTODO
-		}
-		METHOD(Shotgun, wr_suicidemessage, int(entity thiswep))
-		{
-			return WEAPON_THINKING_WITH_PORTALS;
-		}
-		METHOD(Shotgun, wr_killmessage, int(entity thiswep))
-		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-				return WEAPON_SHOTGUN_MURDER_SLAP;
-			else
-				return WEAPON_SHOTGUN_MURDER;
-		}
+METHOD(Shotgun, wr_aim, void(entity thiswep))
+{
+    SELFPARAM();
+    if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
+        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
+    else
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
+}
+METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(WEP_CVAR(shotgun, reload_ammo) && actor.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
+    {
+        // don't force reload an empty shotgun if its melee attack is active
+        if(WEP_CVAR(shotgun, secondary) < 2) {
+            thiswep.wr_reload(thiswep, actor, weaponentity);
+        }
+    }
+    else
+    {
+        if(fire & 1)
+        {
+            if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+            {
+                if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
+                {
+                    W_Shotgun_Attack(thiswep, true);
+                    actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
+                }
+            }
+        }
+        else if((fire & 2) && WEP_CVAR(shotgun, secondary) == 2)
+        {
+            if(time >= actor.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+            {
+                if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
+                {
+                    W_Shotgun_Attack(thiswep, false);
+                    actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
+                }
+            }
+        }
+    }
+    if(actor.clip_load >= 0) // we are not currently reloading
+    if(!actor.crouch) // no crouchmelee please
+    if(WEP_CVAR(shotgun, secondary) == 1)
+    if(((fire & 1) && actor.(thiswep.ammo_field) <= 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO)) || (fire & 2))
+    if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(shotgun, refire)))
+    {
+        // attempt forcing playback of the anim by switching to another anim (that we never play) here...
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
+    }
+}
+METHOD(Shotgun, wr_setup, void(entity thiswep))
+{
+    SELFPARAM();
+    self.ammo_field = ammo_none;
+}
+METHOD(Shotgun, wr_checkammo1, bool(entity thiswep))
+{
+    SELFPARAM();
+    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
+    ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+    return ammo_amount;
+}
+METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
+{
+    SELFPARAM();
+    if(IS_BOT_CLIENT(self))
+    if(vdist(self.origin - self.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
+        return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
+    switch(WEP_CVAR(shotgun, secondary))
+    {
+        case 1: return true; // melee does not use ammo
+        case 2: // secondary triple shot
+        {
+            float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
+            ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+            return ammo_amount;
+        }
+        default: return false; // secondary unavailable
+    }
+}
+METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    SELFPARAM();
+    W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND_RELOAD); // WEAPONTODO
+}
+METHOD(Shotgun, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_THINKING_WITH_PORTALS;
+}
+METHOD(Shotgun, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_SHOTGUN_MURDER_SLAP;
+    else
+        return WEAPON_SHOTGUN_MURDER;
+}
 
 #endif
 #ifdef CSQC
 .float prevric;
 
-		METHOD(Shotgun, wr_impacteffect, void(entity thiswep))
-		{
-			vector org2 = w_org + w_backoff * 2;
-			pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
-			if(!w_issilent && time - self.prevric > 0.25)
-			{
-				if(w_random < 0.05)
-					sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
-				self.prevric = time;
-			}
-		}
+METHOD(Shotgun, wr_impacteffect, void(entity thiswep))
+{
+    SELFPARAM();
+    vector org2 = w_org + w_backoff * 2;
+    pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
+    if(!w_issilent && time - self.prevric > 0.25)
+    {
+        if(w_random < 0.05)
+            sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
+        self.prevric = time;
+    }
+}
 
 #endif
 #endif
