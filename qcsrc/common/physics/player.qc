@@ -1332,9 +1332,6 @@ void PM_Main(entity this)
 	if (this.PlayerPhysplug)
 		if (this.PlayerPhysplug(this))
 			return;
-#elif defined(CSQC)
-	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
-		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 #endif
 
 #ifdef SVQC
