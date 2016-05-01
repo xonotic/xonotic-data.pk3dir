@@ -151,6 +151,11 @@ void M_Spider_Attack_Web_Explode()
 	}
 }
 
+void M_Spider_Attack_Web_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, M_Spider_Attack_Web_Explode());
+}
+
 void M_Spider_Attack_Web_Touch()
 {
 	PROJECTILE_TOUCH;
@@ -168,7 +173,7 @@ void M_Spider_Attack_Web(entity this)
 
 	entity proj = new(plasma);
 	proj.owner = proj.realowner = this;
-	proj.use = M_Spider_Attack_Web_Explode;
+	proj.use = M_Spider_Attack_Web_Explode_use;
 	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = 0;

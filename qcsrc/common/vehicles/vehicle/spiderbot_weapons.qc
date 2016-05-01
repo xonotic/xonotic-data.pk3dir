@@ -23,7 +23,7 @@ void spiderbot_rocket_unguided()
     UpdateCSQCProjectile(self);
 
     if (IS_DEAD(self.owner) || self.cnt < time || vdist(self.pos1 - self.origin, <, 16))
-        self.use();
+        self.use(self, NULL, NULL);
 }
 
 void spiderbot_rocket_guided()
@@ -43,7 +43,7 @@ void spiderbot_rocket_guided()
     UpdateCSQCProjectile(self);
 
     if (IS_DEAD(self.owner) || self.cnt < time)
-        self.use();
+        self.use(self, NULL, NULL);
 }
 
 void spiderbot_guide_release(entity this)

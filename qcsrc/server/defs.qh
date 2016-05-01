@@ -299,8 +299,8 @@ void W_Porto_Remove (entity p);
 .entity ballcarried; // Also used for keepaway
 float g_nexball_meter_period;
 
-void SUB_DontUseTargets();
-void SUB_UseTargets();
+void SUB_DontUseTargets(entity this, entity actor, entity trigger);
+void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 .void(entity this) reset; // if set, an entity is reset using this
 .void() reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
@@ -384,7 +384,7 @@ const float ACTIVE_IDLE 	= 2;
 const float ACTIVE_BUSY 	= 2;
 const float ACTIVE_TOGGLE 	= 3;
 .float active;
-.void (float act_state) setactive;
+.void (entity this, int act_state) setactive;
 .entity realowner;
 
 //float serverflags;

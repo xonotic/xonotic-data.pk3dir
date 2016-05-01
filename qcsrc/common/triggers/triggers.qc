@@ -1,11 +1,10 @@
-void SUB_DontUseTargets() { }
+void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
-void() SUB_UseTargets;
+void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 void DelayThink()
 {SELFPARAM();
-	activator = this.enemy;
-	SUB_UseTargets ();
+	SUB_UseTargets (this, this.enemy, NULL);
 	remove(this);
 }
 
@@ -184,22 +183,18 @@ match (string)self.target and call their .use function
 
 ==============================
 */
-void SUB_UseTargets()
-{SELFPARAM();
-	entity t, otemp, act;
-	string s;
-	float i;
-
+void SUB_UseTargets(entity this, entity actor, entity trigger)
+{
 //
 // check for a delay
 //
 	if (this.delay)
 	{
 	// create a temp object to fire at a later time
-		t = new(DelayedUse);
+		entity t = new(DelayedUse);
 		t.nextthink = time + this.delay;
 		t.think = DelayThink;
-		t.enemy = activator;
+		t.enemy = actor;
 		t.message = this.message;
 		t.killtarget = this.killtarget;
 		t.target = this.target;
@@ -209,18 +204,19 @@ void SUB_UseTargets()
 		return;
 	}
 
+	string s;
 
 //
 // print the message
 //
 #ifdef SVQC
 	if(this)
-	if(IS_PLAYER(activator) && this.message != "")
-	if(IS_REAL_CLIENT(activator))
+	if(IS_PLAYER(actor) && this.message != "")
+	if(IS_REAL_CLIENT(actor))
 	{
-		centerprint(activator, this.message);
+		centerprint(actor, this.message);
 		if (this.noise == "")
-			play2(activator, SND(TALK));
+			play2(actor, SND(TALK));
 	}
 
 //
@@ -229,7 +225,7 @@ void SUB_UseTargets()
 	s = this.killtarget;
 	if (s != "")
 	{
-		for(t = world; (t = find(t, targetname, s)); )
+		for(entity t = world; (t = find(t, targetname, s)); )
 			remove(t);
 	}
 #endif
@@ -237,13 +233,11 @@ void SUB_UseTargets()
 //
 // fire targets
 //
-	act = activator;
-	otemp = other;
 
 	if(this.target_random)
 		RandomSelection_Init();
 
-	for(i = 0; i < 4; ++i)
+	for(int i = 0; i < 4; ++i)
 	{
 		switch(i)
 		{
@@ -257,38 +251,34 @@ void SUB_UseTargets()
 		{
 			// Flag to set func_clientwall state
 			// 1 == deactivate, 2 == activate, 0 == do nothing
-			float aw_flag = this.antiwall_flag;
-			for(t = world; (t = find(t, targetname, s)); )
-			if(t.use)
+			int aw_flag = this.antiwall_flag;
+			for(entity t = world; (t = find(t, targetname, s)); )
 			{
-				if(this.target_random)
+				if(t.use)
 				{
-					RandomSelection_Add(t, 0, string_null, 1, 0);
-				}
-				else
-				{
-					if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
-						t.antiwall_flag = aw_flag;
-					setself(t);
-					other = this;
-					activator = act;
-					self.use();
+					if(this.target_random)
+					{
+						RandomSelection_Add(t, 0, string_null, 1, 0);
+					}
+					else
+					{
+						if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
+							t.antiwall_flag = aw_flag;
+
+						t.use(t, actor, this);
+					}
 				}
 			}
 		}
 	}
 
 	if(this.target_random && RandomSelection_chosen_ent)
-	{
-		setself(RandomSelection_chosen_ent);
-		other = this;
-		activator = act;
-		self.use();
-	}
+		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
+}
 
-	activator = act;
-	setself(this);
-	other = otemp;
+void SUB_UseTargets_self()
+{SELFPARAM();
+	SUB_UseTargets(this, NULL, NULL);
 }
 
 #ifdef CSQC

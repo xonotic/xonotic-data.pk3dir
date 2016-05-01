@@ -969,21 +969,15 @@ void adaptor_think2touch()
 
 void adaptor_think2use()
 {SELFPARAM();
-    entity o, a;
-    o = other;
-    a = activator;
-    activator = world;
-    other = world;
-    self.use();
-    other = o;
-    activator = a;
+	if(this.use)
+    	this.use(this, NULL, NULL);
 }
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
 {SELFPARAM();
-	if(!(IS_ONGROUND(self))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
-		self.projectiledeathtype |= HITTYPE_SPLASH;
-	adaptor_think2use();
+	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+		this.projectiledeathtype |= HITTYPE_SPLASH;
+	WITHSELF(this, adaptor_think2use());
 }
 
 // deferred dropping
@@ -1421,9 +1415,6 @@ bool isPushable(entity e)
 	{
 		case "body":
 		case "droppedweapon":
-		case "keepawayball":
-		case "nexball_basketball":
-		case "nexball_football":
 			return true;
 		case "bullet": // antilagged bullets can't hit this either
 			return false;

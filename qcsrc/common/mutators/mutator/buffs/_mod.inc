@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "all.qc"
-#include "buffs.qc"
+#include <common/mutators/mutator/buffs/all.qc>
+#include <common/mutators/mutator/buffs/buffs.qc>

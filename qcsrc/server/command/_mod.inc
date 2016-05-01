@@ -1,9 +1,11 @@
 // generated file; do not modify
-#include "all.qc"
-#include "banning.qc"
-#include "cmd.qc"
-#include "common.qc"
-#include "getreplies.qc"
-#include "radarmap.qc"
-#include "sv_cmd.qc"
-#include "vote.qc"
+#include <server/command/all.qc>
+#include <server/command/banning.qc>
+#include <server/command/cmd.qc>
+#ifdef SVQC
+    #include <server/command/sv_cmd.qc>
+#endif
+#include <server/command/common.qc>
+#include <server/command/getreplies.qc>
+#include <server/command/radarmap.qc>
+#include <server/command/vote.qc>

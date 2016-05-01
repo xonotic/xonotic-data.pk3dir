@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "weaponarena_random.qc"
+#include <common/mutators/mutator/weaponarena_random/weaponarena_random.qc>

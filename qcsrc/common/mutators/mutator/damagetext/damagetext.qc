@@ -151,20 +151,29 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
     METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }
     METHOD(XonoticDamageTextSettings, fill, void(entity this))
     {
+    	entity e;
         this.gotoRC(this, 0, 1); this.setFirstColumn(this, this.currentColumn);
             this.TD(this, 1, 3, makeXonoticCheckBox(0, "cl_damagetext", _("Draw damage numbers")));
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Font size:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Accumulate range:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate range:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Lifetime:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 10, 1, "cl_damagetext_alpha_lifetime"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Lifetime:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 10, 1, "cl_damagetext_alpha_lifetime"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Color:")));
-            this.TD(this, 2, 2, makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Color:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 2, 2, e = makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
+                setDependent(e, "cl_damagetext", 1, 1);
     }
 ENDCLASS(XonoticDamageTextSettings)
 #endif

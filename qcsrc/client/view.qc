@@ -320,7 +320,7 @@ void viewmodel_draw(entity this)
 			this.viewmodel_angles = this.angles;
 		}
 		anim_update(this);
-		if (!this.animstate_override)
+		if (!this.animstate_override && !this.animstate_looping)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
@@ -1320,6 +1320,7 @@ void HUD_Crosshair()
 
 void HUD_Draw()
 {
+	if(!intermission)
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
 		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, MUTATOR_ARGV(0, vector), autocvar_hud_colorflash_alpha * MUTATOR_ARGV(0, float), DRAWFLAG_ADDITIVE);
@@ -1404,6 +1405,10 @@ void CSQC_UpdateView(float w, float h)
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
 		view_quality = 1;
+
+	// this needs to be updated manually now due to the destruction of engine physics stats
+	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
+		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 
 	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
 	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);

@@ -1,6 +1,6 @@
 // generated file; do not modify
-#include "aim.qc"
-#include "bot.qc"
-#include "navigation.qc"
-#include "scripting.qc"
-#include "waypoints.qc"
+#include <server/bot/aim.qc>
+#include <server/bot/bot.qc>
+#include <server/bot/navigation.qc>
+#include <server/bot/scripting.qc>
+#include <server/bot/waypoints.qc>

@@ -1,4 +1,4 @@
 // generated file; do not modify
-#include "all.qc"
-#include "calculations.qc"
-#include "config.qc"
+#include <common/weapons/all.qc>
+#include <common/weapons/calculations.qc>
+#include <common/weapons/config.qc>

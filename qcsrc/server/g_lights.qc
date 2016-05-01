@@ -82,13 +82,12 @@ void dynlight_find_target(entity this)
 	self.think = dynlight_think;
 	self.nextthink = time + 0.1;
 }
-void dynlight_use()
+void dynlight_use(entity this, entity actor, entity trigger)
 {
-    SELFPARAM();
-	if (self.light_lev == 0)
-		self.light_lev = self.lefty;
+	if (this.light_lev == 0)
+		this.light_lev = this.lefty;
 	else
-		self.light_lev = 0;
+		this.light_lev = 0;
 }
 spawnfunc(dynlight)
 {

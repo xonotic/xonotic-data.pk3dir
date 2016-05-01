@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "nix.qc"
+#include <common/mutators/mutator/nix/nix.qc>

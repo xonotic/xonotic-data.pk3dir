@@ -546,10 +546,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		setself(this.owner);
-		activator = this;
-		WITHSELF(this, SUB_UseTargets());
-		setself(this);
+		SUB_UseTargets(this.owner, this, NULL);
 
 		this.owner.waslinked = this.owner.islinked;
 		if(this.owner.model != "models/onslaught/controlpoint_pad.md3")
@@ -611,10 +608,7 @@ void ons_ControlPoint_Icon_Think()
 		if(!self.owner.islinked)
 			self.owner.team = 0;
 
-		setself(self.owner);
-		activator = self;
-		SUB_UseTargets ();
-		setself(this);
+		SUB_UseTargets(self.owner, self, NULL);
 
 		self.owner.team = t;
 
@@ -676,10 +670,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		setself(self.owner);
-		activator = self;
-		SUB_UseTargets ();
-		setself(this);
+		SUB_UseTargets(self.owner, self, NULL);
 
 		self.SendFlags |= CPSF_SETUP;
 	}
@@ -849,8 +840,7 @@ void ons_ControlPoint_Reset(entity this)
 
 	onslaught_updatelinks();
 
-	activator = this;
-	SUB_UseTargets(); // to reset the structures, playerspawns etc.
+	SUB_UseTargets(this, this, NULL); // to reset the structures, playerspawns etc.
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -1953,23 +1943,22 @@ MUTATOR_HOOKFUNCTION(ons, MonsterMove)
 
 void ons_MonsterSpawn_Delayed(entity this)
 {
-	entity e, own = self.owner;
+	entity own = self.owner;
 
-	if(!own) { remove(self); return; }
+	if(!own) { remove(this); return; }
 
 	if(own.targetname)
 	{
-		e = find(world, target, own.targetname);
+		entity e = find(world, target, own.targetname);
 		if(e != world)
 		{
 			own.team = e.team;
 
-			activator = e;
-			own.use();
+			own.use(own, e, NULL);
 		}
 	}
 
-	remove(self);
+	remove(this);
 }
 
 MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
@@ -1983,20 +1972,19 @@ MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
 
 void ons_TurretSpawn_Delayed(entity this)
 {
-	entity e, own = self.owner;
+	entity own = self.owner;
 
 	if(!own) { remove(self); return; }
 
 	if(own.targetname)
 	{
-		e = find(world, target, own.targetname);
+		entity e = find(world, target, own.targetname);
 		if(e != world)
 		{
 			own.team = e.team;
 			own.active = ACTIVE_NOT;
 
-			activator = e;
-			own.use();
+			own.use(own, e, NULL);
 		}
 	}
 

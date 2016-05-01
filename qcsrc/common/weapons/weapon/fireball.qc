@@ -112,6 +112,11 @@ void W_Fireball_Explode()
 	remove(self);
 }
 
+void W_Fireball_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, W_Fireball_Explode());
+}
+
 void W_Fireball_TouchExplode()
 {
 	PROJECTILE_TOUCH;
@@ -179,7 +184,7 @@ void W_Fireball_Damage(entity this, entity inflictor, entity attacker, float dam
 	if(this.health <= 0)
 	{
 		this.cnt = 1;
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_Fireball_Explode));
+		W_PrepareExplosionByDamage(this, attacker, W_Fireball_Explode);
 	}
 }
 
@@ -196,7 +201,7 @@ void W_Fireball_Attack1()
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(fireball, damage);
 	proj.pushltime = time + WEP_CVAR_PRI(fireball, lifetime);
-	proj.use = W_Fireball_Explode;
+	proj.use = W_Fireball_Explode_use;
 	proj.think = W_Fireball_Think;
 	proj.nextthink = time;
 	proj.health = WEP_CVAR_PRI(fireball, health);

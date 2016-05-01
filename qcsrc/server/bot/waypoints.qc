@@ -172,20 +172,20 @@ void waypoint_think()
 
 	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
 
-	//dprint("waypoint_think wpisbox = ", ftos(self.wpisbox), "\n");
-	sm1 = self.origin + self.mins;
-	sm2 = self.origin + self.maxs;
+	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
+	sm1 = this.origin + this.mins;
+	sm2 = this.origin + this.maxs;
 	for(e = world; (e = find(e, classname, "waypoint")); )
 	{
-		if (boxesoverlap(self.absmin, self.absmax, e.absmin, e.absmax))
+		if (boxesoverlap(this.absmin, this.absmax, e.absmin, e.absmax))
 		{
-			waypoint_addlink(self, e);
-			waypoint_addlink(e, self);
+			waypoint_addlink(this, e);
+			waypoint_addlink(e, this);
 		}
 		else
 		{
 			++relink_total;
-			if(!checkpvs(self.origin, e))
+			if(!checkpvs(this.origin, e))
 			{
 				++relink_pvsculled;
 				continue;
@@ -194,7 +194,7 @@ void waypoint_think()
 			sv.x = bound(sm1_x, sv.x, sm2_x);
 			sv.y = bound(sm1_y, sv.y, sm2_y);
 			sv.z = bound(sm1_z, sv.z, sm2_z);
-			ev = self.origin;
+			ev = this.origin;
 			em1 = e.origin + e.mins;
 			em2 = e.origin + e.maxs;
 			ev.x = bound(em1_x, ev.x, em2_x);
@@ -208,9 +208,9 @@ void waypoint_think()
 				continue;
 			}
 			navigation_testtracewalk = 0;
-			if (!self.wpisbox)
+			if (!this.wpisbox)
 			{
-				tracebox(sv - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, false, self);
+				tracebox(sv - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, false, this);
 				if (!trace_startsolid)
 				{
 					//dprint("sv deviation", vtos(trace_endpos - sv), "\n");
@@ -226,20 +226,20 @@ void waypoint_think()
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			//traceline(self.origin, e.origin, false, world);
+			//traceline(this.origin, e.origin, false, world);
 			//if (trace_fraction == 1)
-			if (!self.wpisbox && tracewalk(self, sv, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, MOVE_NOMONSTERS))
-				waypoint_addlink(self, e);
+			if (!this.wpisbox && tracewalk(this, sv, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, MOVE_NOMONSTERS))
+				waypoint_addlink(this, e);
 			else
 				relink_walkculled += 0.5;
 			if (!e.wpisbox && tracewalk(e, ev, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, MOVE_NOMONSTERS))
-				waypoint_addlink(e, self);
+				waypoint_addlink(e, this);
 			else
 				relink_walkculled += 0.5;
 		}
 	}
 	navigation_testtracewalk = 0;
-	self.wplinked = true;
+	this.wplinked = true;
 }
 
 void waypoint_clearlinks(entity wp)

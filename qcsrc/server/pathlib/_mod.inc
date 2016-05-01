@@ -1,8 +1,8 @@
 // generated file; do not modify
-#include "costs.qc"
-#include "debug.qc"
-#include "expandnode.qc"
-#include "main.qc"
-#include "movenode.qc"
-#include "path_waypoint.qc"
-#include "utility.qc"
+#include <server/pathlib/costs.qc>
+#include <server/pathlib/debug.qc>
+#include <server/pathlib/expandnode.qc>
+#include <server/pathlib/main.qc>
+#include <server/pathlib/movenode.qc>
+#include <server/pathlib/path_waypoint.qc>
+#include <server/pathlib/utility.qc>

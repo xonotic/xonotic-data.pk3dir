@@ -1,14 +1,14 @@
 // generated file; do not modify
-#include "gamemode_assault.qc"
-#include "gamemode_ca.qc"
-#include "gamemode_ctf.qc"
-#include "gamemode_cts.qc"
-#include "gamemode_deathmatch.qc"
-#include "gamemode_domination.qc"
-#include "gamemode_freezetag.qc"
-#include "gamemode_invasion.qc"
-#include "gamemode_keepaway.qc"
-#include "gamemode_keyhunt.qc"
-#include "gamemode_lms.qc"
-#include "gamemode_race.qc"
-#include "gamemode_tdm.qc"
+#include <server/mutators/mutator/gamemode_assault.qc>
+#include <server/mutators/mutator/gamemode_ca.qc>
+#include <server/mutators/mutator/gamemode_ctf.qc>
+#include <server/mutators/mutator/gamemode_cts.qc>
+#include <server/mutators/mutator/gamemode_deathmatch.qc>
+#include <server/mutators/mutator/gamemode_domination.qc>
+#include <server/mutators/mutator/gamemode_freezetag.qc>
+#include <server/mutators/mutator/gamemode_invasion.qc>
+#include <server/mutators/mutator/gamemode_keepaway.qc>
+#include <server/mutators/mutator/gamemode_keyhunt.qc>
+#include <server/mutators/mutator/gamemode_lms.qc>
+#include <server/mutators/mutator/gamemode_race.qc>
+#include <server/mutators/mutator/gamemode_tdm.qc>

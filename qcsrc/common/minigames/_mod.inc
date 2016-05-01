@@ -1,5 +1,9 @@
 // generated file; do not modify
-#include "cl_minigames.qc"
-#include "cl_minigames_hud.qc"
-#include "minigames.qc"
-#include "sv_minigames.qc"
+#include <common/minigames/cl_minigames_hud.qc>
+#include <common/minigames/minigames.qc>
+#ifdef CSQC
+    #include <common/minigames/cl_minigames.qc>
+#endif
+#ifdef SVQC
+    #include <common/minigames/sv_minigames.qc>
+#endif
