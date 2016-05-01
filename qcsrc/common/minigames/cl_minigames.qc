@@ -98,7 +98,7 @@ void deactivate_minigame()
 
 	if ( auto_close_minigamemenu )
 	{
-		HUD_MinigameMenu_Close();
+		HUD_MinigameMenu_Close(NULL, NULL, NULL);
 		auto_close_minigamemenu = 0;
 	}
 	else
@@ -393,7 +393,7 @@ MUTATOR_HOOKFUNCTION(minigames, HUD_Command)
 	if(argv(1) == "minigame")
 	{
 		if (HUD_MinigameMenu_IsOpened())
-			HUD_MinigameMenu_Close();
+			HUD_MinigameMenu_Close(NULL, NULL, NULL);
 		else
 			HUD_MinigameMenu_Open();
 		return true;

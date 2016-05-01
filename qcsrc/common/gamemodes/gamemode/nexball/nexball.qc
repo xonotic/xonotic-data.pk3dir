@@ -7,6 +7,7 @@
 int autocvar_g_nexball_goalleadlimit;
 #define autocvar_g_nexball_goallimit cvar("g_nexball_goallimit")
 
+bool autocvar_g_nexball_basketball_jumppad = true;
 float autocvar_g_nexball_basketball_bouncefactor;
 float autocvar_g_nexball_basketball_bouncestop;
 float autocvar_g_nexball_basketball_carrier_highspeed;
@@ -16,6 +17,7 @@ float autocvar_g_nexball_basketball_meter_minpower;
 float autocvar_g_nexball_delay_collect;
 float autocvar_g_nexball_delay_goal;
 float autocvar_g_nexball_delay_start;
+bool autocvar_g_nexball_football_jumppad = true;
 float autocvar_g_nexball_football_bouncefactor;
 float autocvar_g_nexball_football_bouncestop;
 bool autocvar_g_nexball_radar_showallplayers;
@@ -579,6 +581,7 @@ spawnfunc(nexball_basketball)
 	if(!self.effects)
 		self.effects = autocvar_g_nexball_basketball_effects_default;
 	self.solid = SOLID_TRIGGER;
+	self.pushable = autocvar_g_nexball_basketball_jumppad;
 	balls |= BALL_BASKET;
 	self.bouncefactor = autocvar_g_nexball_basketball_bouncefactor;
 	self.bouncestop = autocvar_g_nexball_basketball_bouncestop;
@@ -591,6 +594,7 @@ spawnfunc(nexball_football)
 	self.classname = "nexball_football";
 	self.solid = SOLID_TRIGGER;
 	balls |= BALL_FOOT;
+	self.pushable = autocvar_g_nexball_football_jumppad;
 	self.bouncefactor = autocvar_g_nexball_football_bouncefactor;
 	self.bouncestop = autocvar_g_nexball_football_bouncestop;
 	SpawnBall();
@@ -1095,7 +1099,7 @@ REGISTER_MUTATOR(nb, g_nexball)
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, -1, -1);
+		SetLimits(autocvar_g_nexball_goallimit, autocvar_g_nexball_goalleadlimit, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 

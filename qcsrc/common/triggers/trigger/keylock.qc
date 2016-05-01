@@ -1,24 +1,11 @@
 /**
  * trigger given targets
  */
-void trigger_keylock_trigger(string s)
-{SELFPARAM();
-	entity otemp = other;
-	entity atemp = activator;
-
-	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
+void trigger_keylock_trigger(entity this, entity actor, string s)
+{
+	for(entity t = world; (t = find(t, targetname, s)); )
 		if(t.use)
-		{
-			setself(t);
-			other = this;
-			activator = atemp;
-			self.use();
-		}
-
-	setself(this);
-	other = otemp;
-	activator = atemp;
+			t.use(t, actor, this);
 }
 
 /**
@@ -44,8 +31,6 @@ void trigger_keylock_touch()
 	if(self.itemkeys)
 		key_used = item_keys_usekey(self, other);
 
-	activator = other;
-
 	if(self.itemkeys)
 	{
 #ifdef SVQC
@@ -70,7 +55,7 @@ void trigger_keylock_touch()
 		if(self.delay <= time || started_delay == true)
 		if(self.target2)
 		{
-			trigger_keylock_trigger(self.target2);
+			trigger_keylock_trigger(this, other, self.target2);
 			started_delay = true;
 			self.delay = time + self.wait;
 		}
@@ -84,7 +69,7 @@ void trigger_keylock_touch()
 #endif
 
 		if(self.target)
-			trigger_keylock_trigger(self.target);
+			trigger_keylock_trigger(this, other, self.target);
 
 		if(self.killtarget)
 			trigger_keylock_kill(self.killtarget);

@@ -80,7 +80,7 @@ void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity atta
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_RocketPropelledChainsaw_Explode));
+		W_PrepareExplosionByDamage(this, attacker, W_RocketPropelledChainsaw_Explode);
 }
 
 void W_RocketPropelledChainsaw_Think()

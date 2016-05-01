@@ -1,11 +1,11 @@
 // generated file; do not modify
-#include "accuracy.qc"
-#include "common.qc"
-#include "csqcprojectile.qc"
-#include "hitplot.qc"
-#include "selection.qc"
-#include "spawning.qc"
-#include "throwing.qc"
-#include "tracing.qc"
-#include "weaponstats.qc"
-#include "weaponsystem.qc"
+#include <server/weapons/accuracy.qc>
+#include <server/weapons/common.qc>
+#include <server/weapons/csqcprojectile.qc>
+#include <server/weapons/hitplot.qc>
+#include <server/weapons/selection.qc>
+#include <server/weapons/spawning.qc>
+#include <server/weapons/throwing.qc>
+#include <server/weapons/tracing.qc>
+#include <server/weapons/weaponstats.qc>
+#include <server/weapons/weaponsystem.qc>

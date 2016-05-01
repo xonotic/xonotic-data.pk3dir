@@ -1,0 +1,11 @@
+// generated file; do not modify
+#include <server/weapons/accuracy.qh>
+#include <server/weapons/common.qh>
+#include <server/weapons/csqcprojectile.qh>
+#include <server/weapons/hitplot.qh>
+#include <server/weapons/selection.qh>
+#include <server/weapons/spawning.qh>
+#include <server/weapons/throwing.qh>
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponstats.qh>
+#include <server/weapons/weaponsystem.qh>

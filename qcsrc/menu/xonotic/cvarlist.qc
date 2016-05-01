@@ -2,6 +2,7 @@
 
 #include "inputbox.qh"
 #include "../item/container.qh"
+#include "../item/checkbox.qh"
 
 entity makeXonoticCvarList()
 {
@@ -16,19 +17,47 @@ void XonoticCvarList_configureXonoticCvarList(entity me)
 	me.handle = buf_create();
 	me.nItems = 0;
 }
+void CvarList_Load(entity me, string filter)
+{
+	if(me.handle < 0)
+		return;
+
+	buf_cvarlist(me.handle, filter, "_");
+	me.nItems = buf_getsize(me.handle);
+	if(autocvar_menu_cvarlist_onlymodified)
+	{
+		float newbuf = buf_create();
+		for (int i = 0; i < me.nItems; ++i)
+		{
+			string k = bufstr_get(me.handle, i);
+			if(cvar_string(k) != cvar_defstring(k))
+				bufstr_add(newbuf, k, false);
+		}
+		buf_del(me.handle);
+		me.handle = newbuf;
+		me.nItems = buf_getsize(me.handle);
+	}
+}
 void XonoticCvarList_showNotify(entity me)
 {
 	bool force_initial_selection = false;
 	if(me.handle >= 0 && me.nItems <= 0) // me.handle not loaded yet?
 		force_initial_selection = true;
-	buf_cvarlist(me.handle, "", "_");
-	me.nItems = buf_getsize(me.handle);
+	CvarList_Load(me, me.controlledTextbox.text);
 	if(force_initial_selection)
 		me.setSelected(me, 0);
 }
+void XonoticCvarList_hideNotify(entity me)
+{
+	if(me.handle)
+		buf_del(me.handle);
+	me.handle = buf_create();
+	me.nItems = 0;
+}
 void XonoticCvarList_destroy(entity me)
 {
-	buf_del(me.handle);
+	if(me.handle)
+		buf_del(me.handle);
 }
 string autocvar_menu_forced_saved_cvars;
 string autocvar_menu_reverted_nonsaved_cvars;
@@ -102,9 +131,14 @@ void XonoticCvarList_setSelected(entity me, float i)
 }
 void CvarList_Filter_Change(entity box, entity me)
 {
-	buf_cvarlist(me.handle, box.text, "_");
-	me.nItems = buf_getsize(me.handle);
-
+	CvarList_Load(me, box.text);
+	me.setSelected(me, 0);
+}
+void CvarList_Filter_ModifiedCvars(entity box, entity me)
+{
+	cvar_set("menu_cvarlist_onlymodified", ftos(!autocvar_menu_cvarlist_onlymodified));
+	box.setChecked(box, autocvar_menu_cvarlist_onlymodified);
+	CvarList_Load(me, me.controlledTextbox.text);
 	me.setSelected(me, 0);
 }
 void XonoticCvarList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

@@ -1,0 +1,3 @@
+// generated file; do not modify
+#include <common/mutators/mutator/instagib/instagib.qh>
+#include <common/mutators/mutator/instagib/items.qh>

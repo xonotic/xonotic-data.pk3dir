@@ -73,21 +73,21 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype,
 	return true; // if none of these return, then allow damage anyway.
 }
 
-void W_PrepareExplosionByDamage(entity attacker, void() explode)
-{SELFPARAM();
-	self.takedamage = DAMAGE_NO;
-	self.event_damage = func_null;
+void W_PrepareExplosionByDamage(entity this, entity attacker, void() explode)
+{
+	this.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
 
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
-		self.owner = attacker;
-		self.realowner = attacker;
+		this.owner = attacker;
+		this.realowner = attacker;
 	}
 
-	MUTATOR_CALLHOOK(PrepareExplosionByDamage, self, attacker);
+	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
 
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
-	self.nextthink = time;
-	self.think = explode;
+	this.nextthink = time;
+	this.think = explode;
 }

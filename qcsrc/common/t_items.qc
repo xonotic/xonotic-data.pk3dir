@@ -816,7 +816,7 @@ LABEL(pickup)
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
+	_sound (other, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
 		remove (this);
@@ -1421,29 +1421,31 @@ spawnfunc(item_invincible)
 // compatibility:
 spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(this);}
 
-void target_items_use()
-{SELFPARAM();
-	if(activator.classname == "droppedweapon")
+void target_items_use(entity this, entity actor, entity trigger)
+{
+	other = trigger; // TODO
+
+	if(actor.classname == "droppedweapon")
 	{
 		EXACTTRIGGER_TOUCH;
-		remove(activator);
+		remove(actor);
 		return;
 	}
 
-	if (!IS_PLAYER(activator))
+	if (!IS_PLAYER(actor))
 		return;
-	if(IS_DEAD(activator))
+	if(IS_DEAD(actor))
 		return;
 	EXACTTRIGGER_TOUCH;
 
-	FOREACH_ENTITY_ENT(enemy, activator,
+	FOREACH_ENTITY_ENT(enemy, actor,
 	{
 		if(it.classname == "droppedweapon")
 			remove(it);
 	});
 
-	if(GiveItems(activator, 0, tokenize_console(self.netname)))
-		centerprint(activator, self.message);
+	if(GiveItems(actor, 0, tokenize_console(this.netname)))
+		centerprint(actor, this.message);
 }
 
 spawnfunc(target_items)

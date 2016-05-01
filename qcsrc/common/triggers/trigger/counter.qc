@@ -1,25 +1,25 @@
 #ifdef SVQC
-void counter_use()
-{SELFPARAM();
-	self.count -= 1;
-	if (self.count < 0)
+void counter_use(entity this, entity actor, entity trigger)
+{
+	this.count -= 1;
+	if (this.count < 0)
 		return;
 
-	if (self.count == 0)
+	if (this.count == 0)
 	{
-		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
+		if(IS_PLAYER(actor) && (this.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
-		self.enemy = activator;
-		multi_trigger ();
+		this.enemy = actor;
+		WITHSELF(this, multi_trigger ());
 	}
 	else
 	{
-		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-		if(self.count >= 4)
-			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
+		if(IS_PLAYER(actor) && (this.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+		if(this.count >= 4)
+			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
 		else
-			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, self.count);
+			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, this.count);
 	}
 }
 

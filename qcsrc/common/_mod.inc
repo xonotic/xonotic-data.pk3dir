@@ -1,13 +1,13 @@
 // generated file; do not modify
-#include "anim.qc"
-#include "animdecide.qc"
-#include "campaign_file.qc"
-#include "campaign_setup.qc"
-#include "ent_cs.qc"
-#include "mapinfo.qc"
-#include "net_notice.qc"
-#include "playerstats.qc"
-#include "state.qc"
-#include "t_items.qc"
-#include "util.qc"
-#include "viewloc.qc"
+#include <common/anim.qc>
+#include <common/animdecide.qc>
+#include <common/campaign_file.qc>
+#include <common/campaign_setup.qc>
+#include <common/ent_cs.qc>
+#include <common/mapinfo.qc>
+#include <common/net_notice.qc>
+#include <common/playerstats.qc>
+#include <common/state.qc>
+#include <common/t_items.qc>
+#include <common/util.qc>
+#include <common/viewloc.qc>

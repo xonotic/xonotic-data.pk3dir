@@ -1,9 +1,9 @@
 // generated file; do not modify
-#include "bumblebee.qc"
-#include "bumblebee_weapons.qc"
-#include "racer.qc"
-#include "racer_weapon.qc"
-#include "raptor.qc"
-#include "raptor_weapons.qc"
-#include "spiderbot.qc"
-#include "spiderbot_weapons.qc"
+#include <common/vehicles/vehicle/bumblebee.qc>
+#include <common/vehicles/vehicle/bumblebee_weapons.qc>
+#include <common/vehicles/vehicle/racer.qc>
+#include <common/vehicles/vehicle/racer_weapon.qc>
+#include <common/vehicles/vehicle/raptor.qc>
+#include <common/vehicles/vehicle/raptor_weapons.qc>
+#include <common/vehicles/vehicle/spiderbot.qc>
+#include <common/vehicles/vehicle/spiderbot_weapons.qc>

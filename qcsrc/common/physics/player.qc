@@ -596,7 +596,7 @@ void CheckPlayerJump(entity this)
 	{
 		float air_jump = !PlayerJump(this) || player_multijump; // PlayerJump() has important side effects
 		float activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
-		float has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO;
+		float has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO);
 
 		if (!(ITEMS_STAT(this) & ITEM_Jetpack.m_itemid)) { }
 		else if (this.jetpack_stopped) { }
@@ -1295,10 +1295,6 @@ bool IsFlying(entity this)
 	return true;
 }
 
-#ifdef CSQC
-float autocvar_slowmo;
-#endif
-
 void PM_Main(entity this)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
@@ -1308,11 +1304,6 @@ void PM_Main(entity this)
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
 
 	this.spectatorspeed = STAT(SPECTATORSPEED);
-
-	vector oldv_angle = this.v_angle;
-	vector oldangles = this.angles; // we need to save these, as they're abused by other code
-	this.v_angle = PHYS_INPUT_ANGLES(this);
-	this.angles = PHYS_WORLD_ANGLES(this);
 
 	this.team = myteam + 1; // is this correct?
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
@@ -1337,9 +1328,6 @@ void PM_Main(entity this)
 	if (this.PlayerPhysplug)
 		if (this.PlayerPhysplug(this))
 			return;
-#elif defined(CSQC)
-	if(autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
-		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 #endif
 
 #ifdef SVQC
@@ -1553,11 +1541,6 @@ LABEL(end)
 	this.lastflags = this.flags;
 
 	this.lastclassname = this.classname;
-
-#ifdef CSQC
-	this.v_angle = oldv_angle;
-	this.angles = oldangles;
-#endif
 }
 
 #if defined(SVQC)

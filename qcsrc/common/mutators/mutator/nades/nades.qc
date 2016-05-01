@@ -4,6 +4,7 @@
 
 #ifdef SVQC
 bool autocvar_g_nades_nade_small;
+float autocvar_g_nades_spread = 0.04;
 #endif
 
 REGISTER_STAT(NADES_SMALL, int, autocvar_g_nades_nade_small)
@@ -804,7 +805,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 		this.realowner = attacker;
 
 	if(this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, nade_boom));
+		W_PrepareExplosionByDamage(this, attacker, nade_boom);
 	else
 		nade_burn_spawn(this);
 }
@@ -1068,7 +1069,9 @@ void nades_CheckThrow()
 			float _force = time - held_nade.nade_time_primed;
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-			toss_nade(self, true, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
+			vector dir = (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05);
+			dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+			toss_nade(self, true, dir * _force, 0);
 		}
 	}
 }
@@ -1122,7 +1125,9 @@ CLASS(NadeOffhand, OffhandWeapon)
 				float _force = time - held_nade.nade_time_primed;
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
-				toss_nade(player, false, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
+				vector dir = (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1);
+				dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
+				toss_nade(player, false, dir * _force, 0);
 			}
 		}
     }

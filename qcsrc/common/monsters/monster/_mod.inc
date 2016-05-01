@@ -1,6 +1,6 @@
 // generated file; do not modify
-#include "mage.qc"
-#include "shambler.qc"
-#include "spider.qc"
-#include "wyvern.qc"
-#include "zombie.qc"
+#include <common/monsters/monster/mage.qc>
+#include <common/monsters/monster/shambler.qc>
+#include <common/monsters/monster/spider.qc>
+#include <common/monsters/monster/wyvern.qc>
+#include <common/monsters/monster/zombie.qc>

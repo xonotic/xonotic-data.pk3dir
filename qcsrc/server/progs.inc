@@ -5,7 +5,7 @@
 #include <lib/_all.inc>
 #include "_all.qh"
 
-#include "_mod.inc"
+#include "../server/_mod.inc"
 #include "bot/_mod.inc"
 #include "bot/havocbot/_mod.inc"
 #include "command/_mod.inc"

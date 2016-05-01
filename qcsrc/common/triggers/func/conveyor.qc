@@ -58,11 +58,11 @@ void conveyor_think()
 
 #ifdef SVQC
 
-void conveyor_use()
-{SELFPARAM();
-	self.state = !self.state;
+void conveyor_use(entity this, entity actor, entity trigger)
+{
+	this.state = !this.state;
 
-	self.SendFlags |= 2;
+	this.SendFlags |= 2;
 }
 
 void conveyor_reset(entity this)

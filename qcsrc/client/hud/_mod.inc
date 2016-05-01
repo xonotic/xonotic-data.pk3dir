@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "hud.qc"
-#include "hud_config.qc"
+#include <client/hud/hud.qc>
+#include <client/hud/hud_config.qc>

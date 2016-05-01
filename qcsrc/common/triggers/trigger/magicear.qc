@@ -28,13 +28,10 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 		if(dotrigger)
 		{
-			activator = source;
-			setself(ear);
 			savemessage = self.message;
 			self.message = string_null;
-			SUB_UseTargets();
+			SUB_UseTargets(ear, source, NULL);
 			self.message = savemessage;
-			setself(this);
 		}
 
 		if(ear.netname != "")
@@ -118,13 +115,10 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	if(dotrigger)
 	{
-		activator = source;
-		setself(ear);
 		savemessage = self.message;
 		self.message = string_null;
-		SUB_UseTargets();
+		SUB_UseTargets(ear, source, NULL);
 		self.message = savemessage;
-		setself(this);
 	}
 
 	if(ear.spawnflags & 16)

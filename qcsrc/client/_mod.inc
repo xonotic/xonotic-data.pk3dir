@@ -1,13 +1,13 @@
 // generated file; do not modify
-#include "announcer.qc"
-#include "bgmscript.qc"
-#include "csqcmodel_hooks.qc"
-#include "main.qc"
-#include "mapvoting.qc"
-#include "miscfunctions.qc"
-#include "player_skeleton.qc"
-#include "scoreboard.qc"
-#include "shownames.qc"
-#include "teamradar.qc"
-#include "view.qc"
-#include "wall.qc"
+#include <client/announcer.qc>
+#include <client/bgmscript.qc>
+#include <client/csqcmodel_hooks.qc>
+#include <client/main.qc>
+#include <client/mapvoting.qc>
+#include <client/miscfunctions.qc>
+#include <client/player_skeleton.qc>
+#include <client/scoreboard.qc>
+#include <client/shownames.qc>
+#include <client/teamradar.qc>
+#include <client/view.qc>
+#include <client/wall.qc>

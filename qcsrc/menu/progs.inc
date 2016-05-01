@@ -1,6 +1,6 @@
 #include <lib/_all.inc>
 
-#include "_mod.inc"
+#include "../menu/_mod.inc"
 #include "anim/_mod.inc"
 #include "command/_mod.inc"
 #include "item/_mod.inc"
