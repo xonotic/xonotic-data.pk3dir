@@ -588,9 +588,11 @@ void m_tooltip(vector pos)
 
 					int i = 0;
 					float w = 0;
-					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining; ++i)
+					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i)
 					{
 						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+						if (i == 16)
+							s = "...";
 						float f = draw_TextWidth(s, false, fontsize);
 						if (f > w) w = f;
 					}
@@ -660,9 +662,12 @@ void m_tooltip(vector pos)
 			p = menuTooltipOrigin;
 			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p.y += SKINMARGIN_TOOLTIP_y / conheight;
-			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining; p.y += fontsize.y)
+			int i = 0;
+			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y)
 			{
 				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+				if (i == 16)
+					s = "...";
 				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
 			}
 		}
