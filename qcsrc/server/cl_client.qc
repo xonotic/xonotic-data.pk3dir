@@ -2250,7 +2250,12 @@ void PlayerPreThink ()
 				if (this.respawn_flags & RESPAWN_SILENT)
 					STAT(RESPAWN_TIME, this) = 0;
 				else if ((this.respawn_flags & RESPAWN_FORCE) && this.respawn_time < this.respawn_time_max)
-					STAT(RESPAWN_TIME, this) = this.respawn_time_max;
+				{
+					if (time < this.respawn_time)
+						STAT(RESPAWN_TIME, this) = this.respawn_time;
+					else if (this.deadflag != DEAD_RESPAWNING)
+						STAT(RESPAWN_TIME, this) = -this.respawn_time_max;
+				}
 				else
 					STAT(RESPAWN_TIME, this) = this.respawn_time;
 			}
