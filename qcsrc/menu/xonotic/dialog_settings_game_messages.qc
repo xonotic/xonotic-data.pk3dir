@@ -65,7 +65,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gamemode Settings")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME_RED", _("Display capture times in Capture The Flag"), "-"));
-			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_TIME_BLUE notification_CHOICE_CTF_CAPTURE_BROKEN_RED notification_CHOICE_CTF_CAPTURE_BROKEN_BLUE notification_CHOICE_CTF_CAPTURE_UNBROKEN_RED notification_CHOICE_CTF_CAPTURE_UNBROKEN_BLUE ");
+			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_TIME_BLUE notification_CHOICE_CTF_CAPTURE_TIME_YELLOW notification_CHOICE_CTF_CAPTURE_TIME_PINK notification_CHOICE_CTF_CAPTURE_BROKEN_RED notification_CHOICE_CTF_CAPTURE_BROKEN_BLUE notification_CHOICE_CTF_CAPTURE_BROKEN_YELLOW notification_CHOICE_CTF_CAPTURE_BROKEN_PINK notification_CHOICE_CTF_CAPTURE_UNBROKEN_RED notification_CHOICE_CTF_CAPTURE_UNBROKEN_BLUE notification_CHOICE_CTF_CAPTURE_UNBROKEN_YELLOW notification_CHOICE_CTF_CAPTURE_UNBROKEN_PINK");
 			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_PICKUP_ENEMY", _("Display name of flag stealer in Capture The Flag"), "-"));
