@@ -125,7 +125,7 @@ MODEL(PROJECTILE_ROCKETMINSTA_LASER,    "models/elaser.mdl");
 MODEL(PROJECTILE_NADE,                  W_Model("v_ok_grenade.md3"));
 MODEL(NADE_VIEW,                        W_Model("h_ok_grenade.iqm"));
 MODEL(NADE_TIMER,                       "models/ok_nade_counter/ok_nade_counter.md3");
-MODEL(NADE_HEAL,                        "models/ctf/shield.md3");
+MODEL(NADE_ORB,                         "models/nades/orb.md3");
 
 MODEL(GIB_CHUNK,                        "models/gibs/chunk.mdl");
 MODEL(GIB_LEG1,                         "models/gibs/leg1.md3");

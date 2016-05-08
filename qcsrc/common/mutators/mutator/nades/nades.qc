@@ -38,10 +38,19 @@ entity Nade_TrailEffect(int proj, int nade_team)
 REGISTER_MUTATOR(cl_nades, true);
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
-	if (STAT(HEALING_ORB) <= time) return false;
-	MUTATOR_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
-	MUTATOR_ARGV(0, float) = STAT(HEALING_ORB_ALPHA);
-	return true;
+	if (STAT(HEALING_ORB) > time)
+	{
+		MUTATOR_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
+		MUTATOR_ARGV(0, float) = STAT(HEALING_ORB_ALPHA);
+		return true;
+	}
+	if (STAT(ENTRAP_ORB) > time)
+	{
+		MUTATOR_ARGV(0, vector) = NADE_TYPE_ENTRAP.m_color;
+		MUTATOR_ARGV(0, float) = STAT(ENTRAP_ORB_ALPHA);
+		return true;
+	}
+	return false;
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
@@ -502,23 +511,91 @@ void nade_spawn_boom()
 	self.realowner.nade_spawnloc = spawnloc;
 }
 
-void nade_heal_think()
+void nades_orb_think()
 {SELFPARAM();
-	if(time >= self.ltime)
+	if(time >= this.ltime)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	if(time >= self.nade_special_time)
+	if(time >= this.nade_special_time)
 	{
-		self.nade_special_time = time+0.25;
-		self.nade_show_particles = 1;
+		this.nade_special_time = time+0.25;
+		this.nade_show_particles = 1;
 	}
 	else
-		self.nade_show_particles = 0;
+		this.nade_show_particles = 0;
+}
+
+entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, float orb_rad)
+{
+	// NOTE: this function merely places an orb
+	// you must add a custom touch function to the returned entity if desired
+	// also set .colormod if you wish to have it colorized
+	entity orb = spawn(); // Net_LinkEntity sets the classname (TODO)
+	orb.owner = own;
+	orb.realowner = realown;
+	setorigin(orb, org);
+
+	orb.orb_lifetime = orb_ltime; // required for timers
+	orb.ltime = time + orb.orb_lifetime;
+	orb.bot_dodge = false;
+	orb.team = realown.team;
+	orb.solid = SOLID_TRIGGER;
+
+	setmodel(orb, MDL_NADE_ORB);
+	orb.orb_radius = orb_rad; // required for fading
+	vector size = '1 1 1' * orb.orb_radius / 2;
+	setsize(orb, -size, size);
+
+	Net_LinkEntity(orb, true, 0, orb_send);
+	orb.SendFlags |= 1;
+
+	orb.think = nades_orb_think;
+	orb.nextthink = time;
+
+	return orb;
+}
+
+void nade_entrap_touch()
+{SELFPARAM();
+	if(DIFF_TEAM(other, self.realowner)) // TODO: what if realowner changes team or disconnects?
+	{
+		if (!isPushable(other))
+			return;
+
+		float pushdeltatime = time - other.lastpushtime;
+		if (pushdeltatime > 0.15) pushdeltatime = 0;
+		other.lastpushtime = time;
+		if(!pushdeltatime) return;
+
+		// div0: ticrate independent, 1 = identity (not 20)
+#ifdef SVQC
+		other.velocity = other.velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
+
+		UpdateCSQCProjectile(other);
+#elif defined(CSQC)
+		other.move_velocity = other.move_velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
+#endif
+
+		if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
+		{
+			entity show_tint = (IS_VEHICLE(other)) ? other.owner : other;
+			STAT(ENTRAP_ORB, show_tint) = time + 0.1;
+			STAT(ENTRAP_ORB_ALPHA, show_tint) = 0.75 * (self.ltime - time) / self.orb_lifetime;
+		}
+	}
+}
+
+void nade_entrap_boom(entity this)
+{
+	entity healer = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_entrap_time, autocvar_g_nades_entrap_radius);
+
+	healer.touch = nade_entrap_touch;
+	healer.colormod = NADE_TYPE_ENTRAP.m_color;
 }
 
 void nade_heal_touch()
@@ -559,34 +636,16 @@ void nade_heal_touch()
 	{
 		entity show_red = (IS_VEHICLE(other)) ? other.owner : other;
 		show_red.stat_healing_orb = time+0.1;
-		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
+		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.orb_lifetime;
 	}
 }
 
-void nade_heal_boom()
-{SELFPARAM();
-	entity healer;
-	healer = spawn();
-	healer.owner = self.owner;
-	healer.realowner = self.realowner;
-	setorigin(healer, self.origin);
-	healer.healer_lifetime = autocvar_g_nades_heal_time; // save the cvar
-	healer.ltime = time + healer.healer_lifetime;
-	healer.team = self.realowner.team;
-	healer.bot_dodge = false;
-	healer.solid = SOLID_TRIGGER;
+void nade_heal_boom(entity this)
+{
+	entity healer = nades_spawn_orb(this.owner, this.realowner, this.origin, autocvar_g_nades_heal_time, autocvar_g_nades_nade_radius);
+
 	healer.touch = nade_heal_touch;
-
-	setmodel(healer, MDL_NADE_HEAL);
-	healer.healer_radius = autocvar_g_nades_nade_radius;
-	vector size = '1 1 1' * healer.healer_radius / 2;
-	setsize(healer,-size,size);
-
-	Net_LinkEntity(healer, true, 0, healer_send);
-
-	healer.think = nade_heal_think;
-	healer.nextthink = time;
-	healer.SendFlags |= 1;
+	healer.colormod = '1 0 0';
 }
 
 void nade_monster_boom()
@@ -633,6 +692,11 @@ void nade_boom()
 			expef = EFFECT_SPAWN_RED;
 			break;
 
+		case NADE_TYPE_ENTRAP:
+			nade_blast = false;
+			expef = EFFECT_SPAWN_YELLOW;
+			break;
+
 		default:
 		case NADE_TYPE_NORMAL:
 			expef = EFFECT_NADE_EXPLODE(self.realowner.team);
@@ -661,8 +725,9 @@ void nade_boom()
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(); break;
 		case NADE_TYPE_SPAWN: nade_spawn_boom(); break;
-		case NADE_TYPE_HEAL: nade_heal_boom(); break;
+		case NADE_TYPE_HEAL: nade_heal_boom(self); break;
 		case NADE_TYPE_MONSTER: nade_monster_boom(); break;
+		case NADE_TYPE_ENTRAP: nade_entrap_boom(self); break;
 	}
 
 	FOREACH_ENTITY_ENT(aiment, self,
@@ -1234,6 +1299,16 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(nades, PlayerPhysics)
+{SELFPARAM();
+	if (STAT(ENTRAP_ORB, this) > time)
+	{
+		this.stat_sv_maxspeed *= autocvar_g_nades_entrap_speed;
+		this.stat_sv_airspeedlimit_nonqw *= autocvar_g_nades_entrap_speed;
+	}
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 {SELFPARAM();
 	if(autocvar_g_nades_spawn)
@@ -1355,6 +1430,8 @@ MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
 	self.bonus_nade_score = other.bonus_nade_score;
 	self.stat_healing_orb = other.stat_healing_orb;
 	self.stat_healing_orb_alpha = other.stat_healing_orb_alpha;
+	STAT(ENTRAP_ORB, this) = STAT(ENTRAP_ORB, other);
+	STAT(ENTRAP_ORB_ALPHA, this) = STAT(ENTRAP_ORB_ALPHA, other);
 	return false;
 }
 

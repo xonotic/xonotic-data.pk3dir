@@ -17,6 +17,8 @@ const int PROJECTILE_NADE_HEAL = 80;
 const int PROJECTILE_NADE_HEAL_BURN = 81;
 const int PROJECTILE_NADE_MONSTER = 82;
 const int PROJECTILE_NADE_MONSTER_BURN = 83;
+const int PROJECTILE_NADE_ENTRAP = 84;
+const int PROJECTILE_NADE_ENTRAP_BURN = 85;
 
 REGISTRY(Nades, BITS(4))
 #define Nades_from(i) _Nades_from(i, NADE_TYPE_Null)
@@ -56,8 +58,8 @@ Nade Nade_FromProjectile(int proj)
 
 #include "nades.inc"
 
-.float healer_lifetime;
-.float healer_radius;
+.float orb_lifetime;
+.float orb_radius;
 
 #ifdef SVQC
 
@@ -78,7 +80,7 @@ Nade Nade_FromProjectile(int proj)
 .float stat_healing_orb_alpha = _STAT(HEALING_ORB_ALPHA);
 .float nade_show_particles;
 
-bool healer_send(entity this, entity to, int sf);
+bool orb_send(entity this, entity to, int sf);
 
 // Remove nades that are being thrown
 void nades_Clear(entity player);
