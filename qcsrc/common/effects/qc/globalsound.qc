@@ -413,17 +413,18 @@
 				case VOICETYPE_PLAYERSOUND:
 				{
 					msg_entity = this;
+					float thevol = ((IS_DUCKED(this)) ? VOL_BASE * 0.5 : VOL_BASE);
 					if (fake)
 					{
-						if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
-						else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
-						else soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
+						if (gs) globalsound(MSG_ONE, this, gs, r, chan, thevol, ATTEN_NORM);
+						else if (ps) playersound(MSG_ONE, this, ps, r, chan, thevol, ATTEN_NORM);
+						else soundto(MSG_ONE, this, chan, sample, thevol, ATTEN_NORM);
 					}
 					else
 					{
-						if (gs) globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
-						else if (ps) playersound(MSG_ALL, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
-						else _sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
+						if (gs) globalsound(MSG_ALL, this, gs, r, chan, thevol, ATTEN_NORM);
+						else if (ps) playersound(MSG_ALL, this, ps, r, chan, thevol, ATTEN_NORM);
+						else _sound(this, chan, sample, thevol, ATTEN_NORM);
 					}
 					break;
 				}
