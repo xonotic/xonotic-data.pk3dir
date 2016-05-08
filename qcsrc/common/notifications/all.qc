@@ -760,12 +760,11 @@ void Create_Notification_Entity_Choice(entity notif,
 #ifdef SVQC
 void Notification_GetCvars()
 {
-	int idx = 0;
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
 		GetCvars_handleFloat(
 			get_cvars_s,
 			get_cvars_f,
-			msg_choice_choices[idx++],
+			msg_choice_choices[it.nent_choice_idx],
 			sprintf("notification_%s", it.nent_name)
 		);
 	});
