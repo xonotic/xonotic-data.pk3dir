@@ -413,7 +413,7 @@
 				case VOICETYPE_PLAYERSOUND:
 				{
 					msg_entity = this;
-					float thevol = ((IS_DUCKED(this)) ? VOL_BASE * 0.5 : VOL_BASE);
+					float thevol = ((IS_DUCKED(this)) ? VOL_BASE * autocvar_g_playersounds_crouch_volume : VOL_BASE);
 					if (fake)
 					{
 						if (gs) globalsound(MSG_ONE, this, gs, r, chan, thevol, ATTEN_NORM);
