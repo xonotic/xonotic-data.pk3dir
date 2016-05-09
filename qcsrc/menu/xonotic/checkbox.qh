@@ -21,6 +21,7 @@ CLASS(XonoticCheckBox, CheckBox)
 
 	ATTRIB(XonoticCheckBox, alpha, float, SKINALPHA_TEXT)
 	ATTRIB(XonoticCheckBox, disabledAlpha, float, SKINALPHA_DISABLED)
+	ATTRIB(XonoticCheckBox, linkedCheckBox, entity, NULL)
 ENDCLASS(XonoticCheckBox)
 entity makeXonoticCheckBox_T(float, string, string, string);
 entity makeXonoticCheckBox(float, string, string);

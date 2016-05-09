@@ -588,9 +588,11 @@ void m_tooltip(vector pos)
 
 					int i = 0;
 					float w = 0;
-					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining; ++i)
+					for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i)
 					{
 						string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+						if (i == 16)
+							s = "...";
 						float f = draw_TextWidth(s, false, fontsize);
 						if (f > w) w = f;
 					}
@@ -660,18 +662,36 @@ void m_tooltip(vector pos)
 			p = menuTooltipOrigin;
 			p.x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p.y += SKINMARGIN_TOOLTIP_y / conheight;
-			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining; p.y += fontsize.y)
+			int i = 0;
+			for (getWrappedLine_remaining = menuTooltipText; getWrappedLine_remaining && i <= 16; ++i, p.y += fontsize.y)
 			{
 				string s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
+				if (i == 16)
+					s = "...";
 				draw_Text(p, s, fontsize, SKINCOLOR_TOOLTIP, SKINALPHA_TOOLTIP * menuTooltipAlpha, false);
 			}
 		}
 	}
 }
 
+float autocvar_menu_force_on_disconnection;
 void m_draw(float width, float height)
 {
-	if (clientstate() == CS_DISCONNECTED) m_toggle(true);
+	if (autocvar_menu_force_on_disconnection > 0)
+	{
+		static float connected_time;
+		if (clientstate() == CS_DISCONNECTED)
+		{
+			if (connected_time && time - connected_time > autocvar_menu_force_on_disconnection)
+			{
+				m_toggle(true);
+				connected_time = 0;
+			}
+		}
+		else
+			connected_time = time;
+	}
+
 	m_gamestatus();
 
 	execute_next_frame();
@@ -790,15 +810,11 @@ void m_draw(float width, float height)
 
 	draw_alpha *= menuAlpha;
 
-	if (!Menu_Active)
+	if (menuMouseMode)
 	{
-		// do not update mouse position
-		// it prevents mouse jumping to '0 0 0' when menu is fading out
-	}
-	else if (menuMouseMode)
-	{
-		vector newMouse = globalToBox(getmousepos(), draw_shift, draw_scale);
-		if (newMouse != '0 0 0' && newMouse != menuMousePos)
+		vector rawMousePos = getmousepos();
+		vector newMouse = globalToBox(rawMousePos, draw_shift, draw_scale);
+		if (rawMousePos != '0 0 0' && newMouse != menuMousePos)
 		{
 			menuMousePos = newMouse;
 			if (mouseButtonsPressed) main.mouseDrag(main, menuMousePos);
