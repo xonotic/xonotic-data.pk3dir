@@ -208,7 +208,7 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	{
 		this.takedamage = DAMAGE_NO;
 		this.event_damage = func_null;
-		this.think = this.use;
+		this.think = adaptor_think2use;
 		this.nextthink = time;
 	}
 }
@@ -230,6 +230,11 @@ void vehicles_projectile_explode()
 	RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);
 
 	remove (self);
+}
+
+void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, vehicles_projectile_explode());
 }
 
 entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
@@ -257,7 +262,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
 	proj.touch			= vehicles_projectile_explode;
-	proj.use			  = vehicles_projectile_explode;
+	proj.use			  = vehicles_projectile_explode_use;
 	proj.owner			= this;
 	proj.realowner		= _owner;
 	proj.think			= SUB_Remove_self;
@@ -541,29 +546,29 @@ void vehicles_setreturn(entity veh)
 
 }
 
-void vehicle_use()
-{SELFPARAM();
-	LOG_TRACE("vehicle ",self.netname, " used by ", activator.classname, "\n");
+void vehicle_use(entity this, entity actor, entity trigger)
+{
+	LOG_TRACE("vehicle ",this.netname, " used by ", actor.classname, "\n");
 
-	self.tur_head.team = activator.team;
+	this.tur_head.team = actor.team;
 
-	if(self.tur_head.team == 0)
-		self.active = ACTIVE_NOT;
+	if(this.tur_head.team == 0)
+		this.active = ACTIVE_NOT;
 	else
-		self.active = ACTIVE_ACTIVE;
+		this.active = ACTIVE_ACTIVE;
 
-	if(self.active == ACTIVE_ACTIVE && !IS_DEAD(self) && !gameover)
+	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
 	{
-		LOG_TRACE("Respawning vehicle: ", self.netname, "\n");
-		if(self.effects & EF_NODRAW)
+		LOG_TRACE("Respawning vehicle: ", this.netname, "\n");
+		if(this.effects & EF_NODRAW)
 		{
-			self.think = vehicles_spawn;
-			self.nextthink = time + 3;
+			this.think = vehicles_spawn;
+			this.nextthink = time + 3;
 		}
 		else
 		{
-			vehicles_setreturn(self);
-			vehicles_reset_colors(self);
+			vehicles_setreturn(this);
+			vehicles_reset_colors(this);
 		}
 	}
 }

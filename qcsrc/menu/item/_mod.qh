@@ -1,0 +1,17 @@
+// generated file; do not modify
+#include <menu/item/borderimage.qh>
+#include <menu/item/button.qh>
+#include <menu/item/checkbox.qh>
+#include <menu/item/container.qh>
+#include <menu/item/dialog.qh>
+#include <menu/item/image.qh>
+#include <menu/item/inputbox.qh>
+#include <menu/item/inputcontainer.qh>
+#include <menu/item/label.qh>
+#include <menu/item/listbox.qh>
+#include <menu/item/modalcontroller.qh>
+#include <menu/item/nexposee.qh>
+#include <menu/item/radiobutton.qh>
+#include <menu/item/slider.qh>
+#include <menu/item/tab.qh>
+#include <menu/item/textslider.qh>

@@ -9,13 +9,13 @@ void target_voicescript_clear(entity pl)
 	pl.voicescript = world;
 }
 
-void target_voicescript_use()
-{SELFPARAM();
-	if(activator.voicescript != self)
+void target_voicescript_use(entity this, entity actor, entity trigger)
+{
+	if(actor.voicescript != this)
 	{
-		activator.voicescript = self;
-		activator.voicescript_index = 0;
-		activator.voicescript_nextthink = time + self.delay;
+		actor.voicescript = this;
+		actor.voicescript_index = 0;
+		actor.voicescript_nextthink = time + this.delay;
 	}
 }
 

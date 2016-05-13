@@ -15,8 +15,8 @@
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 
-float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode)
-{SELFPARAM();
+bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode)
+{
 	vector org;
 	vector move;
 	vector dir;
@@ -30,7 +30,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	if(autocvar_bot_debug_tracewalk)
 	{
 		debugresetnodes();
-		debugnode(self, start);
+		debugnode(e, start);
 	}
 
 	move = end - start;
@@ -81,7 +81,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			return true;
 		}
 		if(autocvar_bot_debug_tracewalk)
-			debugnode(self, org);
+			debugnode(e, org);
 
 		if (dist <= 0)
 			break;
@@ -107,16 +107,16 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
-				debugnode(self, trace_endpos);
+				debugnode(e, trace_endpos);
 
 			if (trace_fraction < 1)
 			{
 				swimming = true;
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
-				for (; org.z < end.z + self.maxs.z; org.z += stepdist)
+				for (; org.z < end.z + e.maxs.z; org.z += stepdist)
 				{
 						if(autocvar_bot_debug_tracewalk)
-							debugnode(self, org);
+							debugnode(e, org);
 
 				        if(pointcontents(org) == CONTENT_EMPTY)
 							break;
@@ -142,7 +142,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			tracebox(org, m1, m2, move, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
-				debugnode(self, trace_endpos);
+				debugnode(e, trace_endpos);
 
 			// hit something
 			if (trace_fraction < 1)
@@ -470,8 +470,6 @@ float navigation_markroutes_nearestwaypoints(entity this, entity waylist, float 
 			if(vdist(diff, <, maxdist))
 			{
 				head.wpconsidered = true;
-				entity oldself = self;
-				setself(this);
 				if (tracewalk(this, this.origin, this.mins, this.maxs, v, bot_navigation_movemode))
 				{
 					head.wpnearestpoint = v;
@@ -480,7 +478,6 @@ float navigation_markroutes_nearestwaypoints(entity this, entity waylist, float 
 					head.enemy = world;
 					c = c + 1;
 				}
-				setself(oldself);
 			}
 		}
 		head = head.chain;
@@ -1086,8 +1083,6 @@ void navigation_unstuck(entity this)
 		// evaluate the next goal on the queue
 		float d = vlen(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(strcat(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n"));
-		entity oldself = self;
-		setself(this); // tracewalk has questionable use of self
 		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
@@ -1096,7 +1091,6 @@ void navigation_unstuck(entity this)
 				bot_waypoint_queue_bestgoal = bot_waypoint_queue_goal;
 			}
 		}
-		setself(oldself);
 		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
 
 		if (!bot_waypoint_queue_goal)

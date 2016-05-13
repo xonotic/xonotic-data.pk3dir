@@ -1,8 +1,8 @@
 #ifdef SVQC
-void delay_use()
-{SELFPARAM();
-    self.think = SUB_UseTargets;
-   self.nextthink = self.wait;
+void delay_use(entity this, entity actor, entity trigger)
+{
+   this.think = SUB_UseTargets_self;
+   this.nextthink = this.wait;
 }
 
 void delay_reset(entity this)

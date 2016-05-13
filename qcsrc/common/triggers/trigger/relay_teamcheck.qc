@@ -1,23 +1,23 @@
 #ifdef SVQC
-void trigger_relay_teamcheck_use()
-{SELFPARAM();
-	if(activator.team)
+void trigger_relay_teamcheck_use(entity this, entity actor, entity trigger)
+{
+	if(actor.team)
 	{
-		if(self.spawnflags & 2)
+		if(this.spawnflags & 2)
 		{
-			if(DIFF_TEAM(activator, self))
-				SUB_UseTargets();
+			if(DIFF_TEAM(actor, this))
+				SUB_UseTargets(this, actor, trigger);
 		}
 		else
 		{
-			if(SAME_TEAM(activator, self))
-				SUB_UseTargets();
+			if(SAME_TEAM(actor, this))
+				SUB_UseTargets(this, actor, trigger);
 		}
 	}
 	else
 	{
-		if(self.spawnflags & 1)
-			SUB_UseTargets();
+		if(this.spawnflags & 1)
+			SUB_UseTargets(this, actor, trigger);
 	}
 }
 

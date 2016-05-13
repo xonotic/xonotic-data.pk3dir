@@ -133,16 +133,16 @@ void plat_outside_touch()
 		plat_go_down ();
 }
 
-void plat_trigger_use()
-{SELFPARAM();
+void plat_trigger_use(entity this, entity actor, entity trigger)
+{
 #ifdef SVQC
-	if (self.think)
+	if (this.think)
 		return;		// already activated
 #elif defined(CSQC)
-	if(self.move_think)
+	if(this.move_think)
 		return;
 #endif
-	plat_go_down();
+	WITHSELF(this, plat_go_down());
 }
 
 
@@ -176,12 +176,12 @@ void plat_crush()
 	}
 }
 
-void plat_use()
-{SELFPARAM();
-	self.use = func_null;
-	if (self.state != 4)
+void plat_use(entity this, entity actor, entity trigger)
+{
+	this.use = func_null;
+	if (this.state != 4)
 		objerror ("plat_use: not in up state");
-	plat_go_down();
+	WITHSELF(this, plat_go_down());
 }
 
 .string sound1, sound2;

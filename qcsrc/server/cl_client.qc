@@ -371,6 +371,19 @@ void FixPlayermodel(entity player)
 			defaultmodel = substring(defaultmodel, 0, i);
 		}
 	}
+	if(autocvar_sv_defaultcharacterskin && !defaultskin)
+	{
+		if(teamplay)
+		{
+			string s = Static_Team_ColorName_Lower(player.team);
+			if (s != "neutral")
+				defaultskin = cvar(strcat("sv_defaultplayerskin_", s));
+		}
+
+		if(!defaultskin)
+			defaultskin = autocvar_sv_defaultplayerskin;
+	}
+
 	MUTATOR_CALLHOOK(FixPlayermodel, defaultmodel, defaultskin);
 	defaultmodel = ret_string;
 	defaultskin = ret_int;
@@ -401,8 +414,16 @@ void FixPlayermodel(entity player)
 			chmdl = true;
 		}
 
-		oldskin = player.skin;
-		player.skin = stof(player.playerskin);
+		if(!autocvar_sv_defaultcharacterskin)
+		{
+			oldskin = player.skin;
+			player.skin = stof(player.playerskin);
+		}
+		else
+		{
+			oldskin = player.skin;
+			player.skin = defaultskin;
+		}
 	}
 
 	if(chmdl || oldskin != player.skin) // model or skin has changed
@@ -608,9 +629,7 @@ void PutClientInServer()
 		{
 			string s = spot.target;
 			spot.target = string_null;
-			WITH(entity, activator, this, LAMBDA(
-				WITHSELF(spot, SUB_UseTargets())
-			));
+			SUB_UseTargets(spot, this, NULL);
 			spot.target = s;
 		}
 

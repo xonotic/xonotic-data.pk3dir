@@ -1,6 +1,6 @@
 // generated file; do not modify
-#include "include.qc"
-#include "platforms.qc"
-#include "subs.qc"
-#include "teleporters.qc"
-#include "triggers.qc"
+#include <common/triggers/include.qc>
+#include <common/triggers/platforms.qc>
+#include <common/triggers/subs.qc>
+#include <common/triggers/teleporters.qc>
+#include <common/triggers/triggers.qc>

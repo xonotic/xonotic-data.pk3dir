@@ -123,6 +123,7 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit testing:")));
+			setDependent(e, "crosshair_enabled", 1, 2);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("crosshair_hittest",
 			_("None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy")));
 			e.addValue(e, ZCTX(_("HTTST^Disabled")), "0");

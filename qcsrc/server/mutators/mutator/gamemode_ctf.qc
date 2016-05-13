@@ -13,7 +13,7 @@ REGISTER_MUTATOR(ctf, false)
 		ctf_Initialize();
 
 		ActivateTeamplay();
-		SetLimits(autocvar_capturelimit_override, autocvar_captureleadlimit_override, -1, -1);
+		SetLimits(autocvar_capturelimit_override, autocvar_captureleadlimit_override, autocvar_timelimit_override, -1);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -1231,16 +1231,18 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	if (flag.capeffect == "") 	{ flag.capeffect = EFFECT_CAP(teamnumber).eent_eff_name; }
 
 	// sounds
-	flag.snd_flag_taken = strzone(SND(CTF_TAKEN(teamnumber)));
-	flag.snd_flag_returned = strzone(SND(CTF_RETURNED(teamnumber)));
-	flag.snd_flag_capture = strzone(SND(CTF_CAPTURE(teamnumber)));
-	flag.snd_flag_dropped = strzone(SND(CTF_DROPPED(teamnumber)));
-	if (flag.snd_flag_respawn == "") flag.snd_flag_respawn = strzone(SND(CTF_RESPAWN)); // if there is ever a team-based sound for this, update the code to match.
-	precache_sound(flag.snd_flag_respawn);
-	if (flag.snd_flag_touch == "") flag.snd_flag_touch = strzone(SND(CTF_TOUCH)); // again has no team-based sound
-	precache_sound(flag.snd_flag_touch);
-	if (flag.snd_flag_pass == "") flag.snd_flag_pass = strzone(SND(CTF_PASS)); // same story here
-	precache_sound(flag.snd_flag_pass);
+#define X(s,b) \
+		if(flag.s == "") flag.s = b; \
+		precache_sound(flag.s);
+
+	X(snd_flag_taken, 		strzone(SND(CTF_TAKEN(teamnumber))))
+	X(snd_flag_returned, 	strzone(SND(CTF_RETURNED(teamnumber))))
+	X(snd_flag_capture, 	strzone(SND(CTF_CAPTURE(teamnumber))))
+	X(snd_flag_dropped, 	strzone(SND(CTF_DROPPED(teamnumber))))
+	X(snd_flag_respawn, 	strzone(SND(CTF_RESPAWN)))
+	X(snd_flag_touch, 		strzone(SND(CTF_TOUCH)))
+	X(snd_flag_pass, 		strzone(SND(CTF_PASS)))
+#undef X
 
 	// precache
 	precache_model(flag.model);

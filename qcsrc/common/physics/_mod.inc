@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "movelib.qc"
-#include "player.qc"
+#include <common/physics/movelib.qc>
+#include <common/physics/player.qc>

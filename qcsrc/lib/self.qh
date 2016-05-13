@@ -37,9 +37,9 @@
 void touch_self() { SELFPARAM(); this.selftouch(this); }
 #define settouch(e, f) (e.touch = touch_self, e.selftouch = f)
 
-.void(entity this) selfuse;
-void use_self() { SELFPARAM(); this.selfuse(this); }
-#define setuse(e, f) (e.use = use_self, e.selfuse = f)
+//.void(entity this) selfuse;
+//void use_self() { SELFPARAM(); this.selfuse(this); }
+//#define setuse(e, f) (e.use = use_self, e.selfuse = f)
 
 .void(entity this) selfthink;
 void think_self() { SELFPARAM(); this.selfthink(this); }

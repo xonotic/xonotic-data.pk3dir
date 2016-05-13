@@ -8,9 +8,8 @@ void multivibrator_send()
 
 	newstate = (time < cyclestart + self.wait);
 
-	activator = self;
 	if(self.state != newstate)
-		SUB_UseTargets();
+		SUB_UseTargets(self, self, NULL);
 	self.state = newstate;
 
 	if(self.state)
@@ -19,20 +18,20 @@ void multivibrator_send()
 		self.nextthink = cyclestart + self.wait + self.respawntime + 0.01;
 }
 
-void multivibrator_toggle()
-{SELFPARAM();
-	if(self.nextthink == 0)
+void multivibrator_toggle(entity this, entity actor, entity trigger)
+{
+	if(this.nextthink == 0)
 	{
-		multivibrator_send();
+		WITHSELF(this, multivibrator_send());
 	}
 	else
 	{
-		if(self.state)
+		if(this.state)
 		{
-			SUB_UseTargets();
-			self.state = 0;
+			SUB_UseTargets(this, actor, trigger);
+			this.state = 0;
 		}
-		self.nextthink = 0;
+		this.nextthink = 0;
 	}
 }
 

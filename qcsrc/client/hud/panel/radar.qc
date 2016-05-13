@@ -364,11 +364,11 @@ void HUD_Radar()
 	});
 	AL_EACH(_entcs, e, it != NULL, {
 		if (!it.m_entcs_private) continue;
-		if (entcs_is_self(it)) continue;
+		if (it.sv_entnum == current_player) continue;
 		color2 = entcs_GetTeam(it.sv_entnum);
 		draw_teamradar_player(it.origin, it.angles, Team_ColorRGB(color2));
 	});
-	draw_teamradar_player(view_origin, view_angles, '1 1 1');
+	draw_teamradar_player(entcs_receiver(current_player).origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
 

@@ -50,7 +50,7 @@ void ewheel_move_path()
             if (self.pathgoal)
             {
                 if (self.pathgoal.use)
-                    self.pathgoal.use();
+                    self.pathgoal.use(self.pathgoal, NULL, NULL);
 
                 if (self.pathgoal.enemy)
                 {

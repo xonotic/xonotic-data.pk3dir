@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "touchexplode.qc"
+#include <common/mutators/mutator/touchexplode/touchexplode.qc>

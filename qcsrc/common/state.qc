@@ -39,8 +39,7 @@ void ClientState_attach(entity this)
 
     GetCvars(this, 0);  // get other cvars from player
 
-	// TODO: xonstat elo.txt support, until then just 404s
-	if (false && IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
+	if (IS_REAL_CLIENT(this)) { PlayerStats_PlayerBasic_CheckUpdate(this); }
 
 	// TODO: fold all of these into ClientState
 
