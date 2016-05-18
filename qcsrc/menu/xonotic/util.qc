@@ -1,6 +1,6 @@
 #include "util.qh"
 
-#include "../item.qc"
+#include "../item.qh"
 
 #include "../menu.qh"
 #include <common/campaign_common.qh>

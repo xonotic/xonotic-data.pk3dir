@@ -92,7 +92,7 @@ void Item_Touch();
 
 void Item_Reset(entity this);
 
-void Item_FindTeam();
+void Item_FindTeam(entity this);
 // Savage: used for item garbage-collection
 
 bool ItemSend(entity this, entity to, int sf);
@@ -113,8 +113,6 @@ float commodity_pickupevalfunc(entity player, entity item);
 .entity itemdef;
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
-
-void target_items_use ();
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 

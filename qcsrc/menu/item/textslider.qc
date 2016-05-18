@@ -1,26 +1,5 @@
-// Note:
-//   to use this, you FIRST call configureSliderVisuals, then multiple times addValue, then configureTextSlider
-#ifndef ITEM_TEXTSLIDER_H
-	#define ITEM_TEXTSLIDER_H
-	#include "slider.qc"
-	CLASS(TextSlider, Slider)
-		METHOD(TextSlider, valueToText, string(entity, float));
-		METHOD(TextSlider, valueToIdentifier, string(entity, float));
-		METHOD(TextSlider, setValueFromIdentifier_allowAnim, void(entity, string, bool));
-		METHOD(TextSlider, setValueFromIdentifier_noAnim, void(entity, string));
-		METHOD(TextSlider, setValueFromIdentifier, void(entity, string));
-		METHOD(TextSlider, getIdentifier, string(entity));
-		METHOD(TextSlider, clearValues, void(entity));
-		METHOD(TextSlider, addValue, void(entity, string, string));
-		METHOD(TextSlider, insertValue, void(entity, float, string, string));
-		METHOD(TextSlider, configureTextSliderValues, void(entity, string));
-		ATTRIBARRAY(TextSlider, valueStrings, string, 256)
-		ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
-		ATTRIB(TextSlider, nValues, int, 0)
-	ENDCLASS(TextSlider)
-#endif
+#include "textslider.qh"
 
-#ifdef IMPLEMENTATION
 	string TextSlider_valueToIdentifier(entity me, int val)
 	{
 		if (val >= me.nValues) return "custom";
@@ -83,4 +62,3 @@
 		me.configureSliderValues(me, 0, 0, me.nValues - 1, 1, 1, 1);
 		me.setValueFromIdentifier_noAnim(me, theDefault);
 	}
-#endif

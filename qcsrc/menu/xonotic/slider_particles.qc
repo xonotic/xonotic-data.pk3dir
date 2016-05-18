@@ -1,15 +1,5 @@
-#ifndef SLIDER_PARTICLES_H
-#define SLIDER_PARTICLES_H
-#include "textslider.qc"
-CLASS(XonoticParticlesSlider, XonoticTextSlider)
-	METHOD(XonoticParticlesSlider, configureXonoticParticlesSlider, void(entity));
-	METHOD(XonoticParticlesSlider, loadCvars, void(entity));
-	METHOD(XonoticParticlesSlider, saveCvars, void(entity));
-ENDCLASS(XonoticParticlesSlider)
-entity makeXonoticParticlesSlider();
-#endif
+#include "slider_particles.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticParticlesSlider()
 {
 	entity me;
@@ -48,4 +38,3 @@ void XonoticParticlesSlider_saveCvars(entity me)
 		cvar_set("cl_damageeffect", argv(2));
 	}
 }
-#endif

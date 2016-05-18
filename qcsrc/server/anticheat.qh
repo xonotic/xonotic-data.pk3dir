@@ -1,17 +1,15 @@
-#ifndef ANTICHEAT_H
-#define ANTICHEAT_H
+#pragma once
 
 void anticheat_init(entity this);
-void anticheat_report();
+void anticheat_report(entity this);
 
 void anticheat_physics(entity this);
-void anticheat_spectatecopy(entity spectatee);
-void anticheat_prethink();
+void anticheat_spectatecopy(entity this, entity spectatee);
+void anticheat_prethink(entity this);
 
-float anticheat_getvalue(string name);
+float anticheat_getvalue(entity this, string name);
 
 void anticheat_startframe();
 void anticheat_endframe();
 
-void anticheat_fixangle();
-#endif
+void anticheat_fixangle(entity this);

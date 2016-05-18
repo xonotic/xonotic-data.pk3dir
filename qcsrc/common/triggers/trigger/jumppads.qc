@@ -3,12 +3,12 @@
 #include "jumppads.qh"
 #include <common/physics/movetypes/movetypes.qh>
 
-void trigger_push_use()
-{SELFPARAM();
+void trigger_push_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
 	{
-		self.team = activator.team;
-		self.SendFlags |= 2;
+		this.team = actor.team;
+		this.SendFlags |= 2;
 	}
 }
 #endif
@@ -235,10 +235,7 @@ void trigger_push_touch()
 	}
 
 	if(this.enemy.target)
-	{
-		activator = other;
-		WITH(entity, self, this.enemy, SUB_UseTargets());
-	}
+		SUB_UseTargets(this.enemy, other, other); // TODO: do we need other as trigger too?
 
 	if (other.flags & FL_PROJECTILE)
 	{
@@ -274,31 +271,31 @@ void trigger_push_touch()
 
 #ifdef SVQC
 void trigger_push_link();
-void trigger_push_updatelink();
+void trigger_push_updatelink(entity this);
 #endif
-void trigger_push_findtarget()
-{SELFPARAM();
+void trigger_push_findtarget(entity this)
+{
 	entity t;
 	vector org;
 
 	// first calculate a typical start point for the jump
-	org = (self.absmin + self.absmax) * 0.5;
-	org_z = self.absmax.z - STAT(PL_MIN, NULL).z;
+	org = (this.absmin + this.absmax) * 0.5;
+	org_z = this.absmax.z - STAT(PL_MIN, NULL).z;
 
-	if (self.target)
+	if (this.target)
 	{
 		float n = 0;
-		for(t = world; (t = find(t, targetname, self.target)); )
+		for(t = world; (t = find(t, targetname, this.target)); )
 		{
 			++n;
 #ifdef SVQC
 			entity e = spawn();
 			setorigin(e, org);
 			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
-			e.velocity = trigger_push_calculatevelocity(org, t, self.height);
+			e.velocity = trigger_push_calculatevelocity(org, t, this.height);
 			tracetoss(e, e);
 			if(e.movetype == MOVETYPE_NONE)
-				waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+				waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 			remove(e);
 #endif
 		}
@@ -314,12 +311,12 @@ void trigger_push_findtarget()
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			self.enemy = find(world, targetname, self.target);
+			this.enemy = find(world, targetname, this.target);
 		}
 		else
 		{
 			// have to use random selection every single time
-			self.enemy = world;
+			this.enemy = world;
 		}
 	}
 #ifdef SVQC
@@ -328,14 +325,14 @@ void trigger_push_findtarget()
 		entity e = spawn();
 		setorigin(e, org);
 		setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
-		e.velocity = self.movedir;
+		e.velocity = this.movedir;
 		tracetoss(e, e);
-		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+		waypoint_spawnforteleporter(this, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 		remove(e);
 	}
 
 	trigger_push_link();
-	defer(self, 0.1, trigger_push_updatelink);
+	defer(this, 0.1, trigger_push_updatelink);
 #endif
 }
 
@@ -344,24 +341,25 @@ float trigger_push_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_PUSH);
 
-	WriteByte(MSG_ENTITY, self.team);
-	WriteInt24_t(MSG_ENTITY, self.spawnflags);
-	WriteByte(MSG_ENTITY, self.active);
-	WriteCoord(MSG_ENTITY, self.height);
+	WriteByte(MSG_ENTITY, this.team);
+	WriteInt24_t(MSG_ENTITY, this.spawnflags);
+	WriteByte(MSG_ENTITY, this.active);
+	WriteCoord(MSG_ENTITY, this.height);
 
-	trigger_common_write(self, true);
+	trigger_common_write(this, true);
 
 	return true;
 }
 
-void trigger_push_updatelink()
-{SELFPARAM();
-	self.SendFlags |= 1;
+void trigger_push_updatelink(entity this)
+{
+	this.SendFlags |= 1;
 }
 
 void trigger_push_link()
 {
-	trigger_link(self, trigger_push_send);
+    SELFPARAM();
+	trigger_link(this, trigger_push_send);
 }
 
 /*
@@ -378,25 +376,25 @@ void trigger_push_link()
  */
 spawnfunc(trigger_push)
 {
-	SetMovedir(self);
+	SetMovedir(this);
 
-	trigger_init(self);
+	trigger_init(this);
 
-	self.active = ACTIVE_ACTIVE;
-	self.use = trigger_push_use;
-	self.touch = trigger_push_touch;
+	this.active = ACTIVE_ACTIVE;
+	this.use = trigger_push_use;
+	this.touch = trigger_push_touch;
 
 	// normal push setup
-	if (!self.speed)
-		self.speed = 1000;
-	self.movedir = self.movedir * self.speed * 10;
+	if (!this.speed)
+		this.speed = 1000;
+	this.movedir = this.movedir * this.speed * 10;
 
-	if (!self.noise)
-		self.noise = "misc/jumppad.wav";
-	precache_sound (self.noise);
+	if (!this.noise)
+		this.noise = "misc/jumppad.wav";
+	precache_sound (this.noise);
 
 	// this must be called to spawn the teleport waypoints for bots
-	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
+	InitializeEntity(this, trigger_push_findtarget, INITPRIO_FINDTARGET);
 }
 
 
@@ -404,15 +402,15 @@ bool target_push_send(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TARGET_PUSH);
 
-	WriteByte(MSG_ENTITY, self.cnt);
-	WriteString(MSG_ENTITY, self.targetname);
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteByte(MSG_ENTITY, this.cnt);
+	WriteString(MSG_ENTITY, this.targetname);
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
 
-	WriteAngle(MSG_ENTITY, self.angles_x);
-	WriteAngle(MSG_ENTITY, self.angles_y);
-	WriteAngle(MSG_ENTITY, self.angles_z);
+	WriteAngle(MSG_ENTITY, this.angles_x);
+	WriteAngle(MSG_ENTITY, this.angles_y);
+	WriteAngle(MSG_ENTITY, this.angles_z);
 
 	return true;
 }
@@ -433,29 +431,27 @@ void target_push_init(entity this)
 
 spawnfunc(target_push) { target_push_init(this); }
 spawnfunc(info_notnull) { target_push_init(this); }
-spawnfunc(target_position) { make_pure(this); target_push_init(this); }
+spawnfunc(target_position) { target_push_init(this); }
 
 #elif defined(CSQC)
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
-	make_pure(this);
-
-	self.classname = "jumppad";
-	int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
-	self.spawnflags = ReadInt24_t();
-	self.active = ReadByte();
-	self.height = ReadCoord();
+	this.classname = "jumppad";
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
+	this.spawnflags = ReadInt24_t();
+	this.active = ReadByte();
+	this.height = ReadCoord();
 
 	trigger_common_read(true);
 
-	self.entremove = trigger_remove_generic;
-	self.solid = SOLID_TRIGGER;
-	//self.draw = trigger_draw_generic;
-	self.move_touch = trigger_push_touch;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-	defer(self, 0.25, trigger_push_findtarget);
+	this.entremove = trigger_remove_generic;
+	this.solid = SOLID_TRIGGER;
+	//this.draw = trigger_draw_generic;
+	this.move_touch = trigger_push_touch;
+	this.drawmask = MASK_NORMAL;
+	this.move_time = time;
+	defer(this, 0.25, trigger_push_findtarget);
 
 	return true;
 }
@@ -473,23 +469,22 @@ void target_push_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_TARGET_PUSH, bool isnew)
 {
-	make_pure(this);
-	self.classname = "push_target";
-	self.cnt = ReadByte();
-	self.targetname = strzone(ReadString());
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+	this.classname = "push_target";
+	this.cnt = ReadByte();
+	this.targetname = strzone(ReadString());
+	this.origin_x = ReadCoord();
+	this.origin_y = ReadCoord();
+	this.origin_z = ReadCoord();
 
-	self.angles_x = ReadAngle();
-	self.angles_y = ReadAngle();
-	self.angles_z = ReadAngle();
+	this.angles_x = ReadAngle();
+	this.angles_y = ReadAngle();
+	this.angles_z = ReadAngle();
 
 	return = true;
 
-	setorigin(self, self.origin);
+	setorigin(this, this.origin);
 
-	self.drawmask = MASK_NORMAL;
-	self.entremove = target_push_remove;
+	this.drawmask = MASK_NORMAL;
+	this.entremove = target_push_remove;
 }
 #endif

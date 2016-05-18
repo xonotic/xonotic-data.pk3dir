@@ -134,7 +134,7 @@ string W_NumberWeaponOrder_MapFunc(string s)
 {
 	if (s == "0" || stof(s)) return s;
 	s = W_UndeprecateName(s);
-	FOREACH(Weapons, it != WEP_Null && it.netname == s, LAMBDA(return ftos(i)));
+	FOREACH(Weapons, it != WEP_Null && it.netname == s, return ftos(i));
 	return s;
 }
 string W_NumberWeaponOrder(string order)
@@ -202,10 +202,10 @@ void W_RandomWeapons(entity e, float n)
 	for (i = 0; i < n; ++i)
 	{
 		RandomSelection_Init();
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
+		FOREACH(Weapons, it != WEP_Null, {
 			if (remaining & (it.m_wepset))
 				RandomSelection_Add(it, 0, string_null, 1, 1);
-		));
+		});
 		Weapon w = RandomSelection_chosen_ent;
 		result |= WepSet_FromWeapon(w);
 		remaining &= ~WepSet_FromWeapon(w);
@@ -387,7 +387,7 @@ vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn
  *   call again with ""
  *   remove the ent
  */
-void CL_WeaponEntity_SetModel(entity this, string name)
+void CL_WeaponEntity_SetModel(entity this, string name, bool _anim)
 {
 	if (name == "")
 	{
@@ -425,7 +425,6 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 			if (!this.weaponchild)
 			{
 				this.weaponchild = new(weaponchild);
-				make_pure(this.weaponchild);
 #ifdef CSQC
 				this.weaponchild.drawmask = MASK_NORMAL;
 				this.weaponchild.renderflags |= RF_VIEWMODEL;
@@ -541,6 +540,7 @@ void CL_WeaponEntity_SetModel(entity this, string name)
 
 	// check if an instant weapon switch occurred
 	setorigin(this, this.view_ofs);
+	if (!_anim) return;
 	// reset animstate now
 	this.wframe = WFRAME_IDLE;
 	setanim(this, this.anim_idle, true, false, true);

@@ -46,19 +46,19 @@ bool RUN_ALL_TESTS();
 #define EXPECT_FALSE(condition) EXPECT_EQ(false, condition)
 #define ASSERT_FALSE(condition) ASSERT_EQ(false, condition)
 
-#define EXPECT_NE(val1, val2) EXPECT_TRUE(val1 != val2)
+#define EXPECT_NE(val1, val2) EXPECT_TRUE((val1) != (val2))
 #define ASSERT_NE(val1, val2) _TEST_ASSERT(EXPECT_NE(val1, val2))
 
-#define EXPECT_LT(val1, val2) EXPECT_TRUE(val1 < val2)
+#define EXPECT_LT(val1, val2) EXPECT_TRUE((val1) < (val2))
 #define ASSERT_LT(val1, val2) _TEST_ASSERT(EXPECT_LT(val1, val2))
 
-#define EXPECT_LE(val1, val2) EXPECT_TRUE(val1 <= val2)
+#define EXPECT_LE(val1, val2) EXPECT_TRUE((val1) <= (val2))
 #define ASSERT_LE(val1, val2) _TEST_ASSERT(EXPECT_LE(val1, val2))
 
-#define EXPECT_GT(val1, val2) EXPECT_TRUE(val1 > val2)
+#define EXPECT_GT(val1, val2) EXPECT_TRUE((val1) > (val2))
 #define ASSERT_GT(val1, val2) _TEST_ASSERT(EXPECT_GT(val1, val2))
 
-#define EXPECT_GE(val1, val2) EXPECT_TRUE(val1 >= val2)
+#define EXPECT_GE(val1, val2) EXPECT_TRUE((val1) >= (val2))
 #define ASSERT_GE(val1, val2) _TEST_ASSERT(EXPECT_GE(val1, val2))
 
 #define EXPECT_NO_FATAL_FAILURE(statement) EXPECT_NO_FATAL_FAILURE_(statement, { })

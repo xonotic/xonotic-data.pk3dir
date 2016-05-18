@@ -7,6 +7,8 @@ const float URL_FH_STDOUT = -2;
 
 // URLs
 .string url_url;
+.string url_content_type;
+.string url_verb;
 .float url_wbuf;
 .float url_wbufpos;
 .float url_rbuf;
@@ -94,9 +96,10 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				// attempts to close will result in a reading handle
 
 				// create a writing end that does nothing yet
-				e = new(url_single_fopen_file);
-				make_pure(e);
+				e = new_pure(url_single_fopen_file);
 				e.url_url = strzone(url);
+				e.url_content_type = "text/plain";
+				e.url_verb = "";
 				e.url_fh = URL_FH_CURL;
 				e.url_wbuf = buf_create();
 				if (e.url_wbuf < 0)
@@ -143,8 +146,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 				// Make a dummy handle object (no buffers at
 				// all). Wait for data to come from the
 				// server, then call the callback
-				e = new(url_single_fopen_file);
-				make_pure(e);
+				e = new_pure(url_single_fopen_file);
 				e.url_url = strzone(url);
 				e.url_fh = URL_FH_CURL;
 				e.url_rbuf = -1;
@@ -165,8 +167,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 		{
 			case FILE_WRITE:
 			case FILE_APPEND:
-				e = new(url_single_fopen_stdout);
-				make_pure(e);
+				e = new_pure(url_single_fopen_stdout);
 				e.url_fh = URL_FH_STDOUT;
 				e.url_ready = rdy;
 				e.url_ready_pass = pass;
@@ -189,8 +190,7 @@ void url_single_fopen(string url, int mode, url_ready_func rdy, entity pass)
 		}
 		else
 		{
-			e = new(url_single_fopen_file);
-			make_pure(e);
+			e = new_pure(url_single_fopen_file);
 			e.url_fh = fh;
 			e.url_ready = rdy;
 			e.url_ready_pass = pass;
@@ -235,7 +235,7 @@ void url_fclose(entity e)
 			}
 
 			// POST the data
-			if (!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, "text/plain", "", e.url_wbuf, 0))
+			if (!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, e.url_content_type, e.url_verb, e.url_wbuf, 0))
 			{
 				LOG_INFO("url_fclose: failure in crypto_uri_postbuf\n");
 				e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
@@ -364,8 +364,7 @@ void url_multi_fopen(string url, int mode, url_ready_func rdy, entity pass)
 		return;
 	}
 
-	entity me = new(url_multi);
-	make_pure(me);
+	entity me = new_pure(url_multi);
 	me.url_url = strzone(url);
 	me.url_attempt = 0;
 	me.url_mode = mode;

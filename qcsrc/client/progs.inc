@@ -1,37 +1,24 @@
-#include "../lib/_all.inc"
+#include <lib/_all.inc>
 #include "_all.qh"
 
-#include "../common/effects/qc/all.qc"
+#include "../client/_mod.inc"
+#include "commands/_mod.inc"
+#include "hud/_mod.inc"
+#include "mutators/_mod.inc"
+#include "weapons/_mod.inc"
 
-#include "announcer.qc"
-#include "bgmscript.qc"
-#include "csqcmodel_hooks.qc"
-#include "hud/all.qc"
-#include "main.qc"
-#include "mapvoting.qc"
-#include "miscfunctions.qc"
-#include "player_skeleton.qc"
-#include "scoreboard.qc"
-#include "shownames.qc"
-#include "teamradar.qc"
-#include "view.qc"
-#include "wall.qc"
+#include <common/_all.inc>
+#include <common/effects/qc/all.qc>
 
-#include "commands/all.qc"
+#include <lib/csqcmodel/cl_model.qc>
+#include <lib/csqcmodel/cl_player.qc>
+#include <lib/csqcmodel/interpolate.qc>
 
-#include "weapons/projectile.qc" // TODO
-
-#include "../common/_all.inc"
-
-#include "../lib/csqcmodel/cl_model.qc"
-#include "../lib/csqcmodel/cl_player.qc"
-#include "../lib/csqcmodel/interpolate.qc"
-
-#include "../lib/warpzone/anglestransform.qc"
-#include "../lib/warpzone/client.qc"
-#include "../lib/warpzone/common.qc"
-#include "../lib/warpzone/server.qc"
-#include "../lib/warpzone/util_server.qc"
+#include <lib/warpzone/anglestransform.qc>
+#include <lib/warpzone/common.qc>
+#include <lib/warpzone/client.qc>
+#include <lib/warpzone/server.qc>
+#include <lib/warpzone/util_server.qc>
 
 #if BUILD_MOD
 #include "../../mod/client/progs.inc"

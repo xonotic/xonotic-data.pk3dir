@@ -1,7 +1,7 @@
 #include "menu_cmd.qh"
 
 #include "../menu.qh"
-#include "../classes.qc"
+#include "../item.qh"
 
 #include "../mutators/events.qh"
 
@@ -78,7 +78,7 @@ void GameCommand(string theCommand)
 		{
 			LOG_INFO(_("Available options:\n"));
 
-			FOREACH_ENTITY_ORDERED(it.name != "", LAMBDA(
+			FOREACH_ENTITY_ORDERED(it.name != "", {
 				if (it.classname == "vtbl") continue;
 				string s = it.name;
 				if (filter)
@@ -87,7 +87,7 @@ void GameCommand(string theCommand)
 					s = substring(s, strlen(filter), strlen(s) - strlen(filter));
 				}
 				LOG_INFOF(" %s\n", s);
-			));
+			});
 		}
 		else if (argc == 2 && !isdemo())     // don't allow this command in demos
 		{

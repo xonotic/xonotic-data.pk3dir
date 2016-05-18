@@ -3,7 +3,7 @@
 
 //#define EWHEEL_FANCYPATH
 
-#include "ewheel_weapon.qc"
+#include "ewheel_weapon.qh"
 
 CLASS(EWheel, Turret)
 /* spawnflags */ ATTRIB(EWheel, spawnflags, int, TUR_FLAG_PLAYER | TUR_FLAG_MOVE | TUR_FLAG_ROAM);
@@ -21,8 +21,6 @@ REGISTER_TURRET(EWHEEL, NEW(EWheel));
 #endif
 
 #ifdef IMPLEMENTATION
-
-#include "ewheel_weapon.qc"
 
 #ifdef SVQC
 
@@ -52,7 +50,7 @@ void ewheel_move_path()
             if (self.pathgoal)
             {
                 if (self.pathgoal.use)
-                    self.pathgoal.use();
+                    self.pathgoal.use(self.pathgoal, NULL, NULL);
 
                 if (self.pathgoal.enemy)
                 {

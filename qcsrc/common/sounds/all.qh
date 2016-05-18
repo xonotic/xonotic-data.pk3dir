@@ -15,9 +15,7 @@ REGISTER_REGISTRY(Sounds)
 #define SND(id) Sound_fixpath(SND_##id)
 
 PRECACHE(Sounds) {
-    FOREACH(Sounds, true, LAMBDA({
-        it.sound_precache(it);
-    }));
+    FOREACH(Sounds, true, it.sound_precache(it));
 }
 
 SOUND(Null, "misc/null");

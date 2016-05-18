@@ -1,13 +1,12 @@
-#ifndef MENU_H
-#define MENU_H
+#pragma once
 
 #include "draw.qh"
 #include "skin.qh"
 
 #include "xonotic/util.qh"
 
-#include "../common/constants.qh"
-#include "../common/util.qh"
+#include <common/constants.qh>
+#include <common/util.qh>
 
 const int GAME_ISSERVER     = BIT(0);
 const int GAME_CONNECTED    = BIT(1);
@@ -58,4 +57,3 @@ const string MENU_SOUND_WINNER  = "sound/menu/winner.wav";
 
 void m_play_focus_sound();
 void m_play_click_sound(string soundfile);
-#endif

@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+.entity tag_entity;
+#endif
+
 #ifndef MENUQC
 .bool debug;
 .int sv_entnum;
@@ -33,7 +37,9 @@ REGISTER_NET_TEMP(net_debug)
 		WriteByte(channel, is_pure(this));
 		vector o = this.origin;
 		if (o == '0 0 0') // brushes
-		    o = (this.absmin + this.absmax) / 2;
+			o = (this.absmin + this.absmax) / 2;
+		if (this.tag_entity)
+			o += this.tag_entity.origin;
 		WriteCoord(channel, o.x); WriteCoord(channel, o.y); WriteCoord(channel, o.z);
 		WriteString(channel, this.classname);
 		WriteString(channel, this.sourceLoc);
@@ -64,84 +70,85 @@ bool autocvar_debugdraw;
 		static int debugdraw_frame;
 		++debugdraw_frame;
 		const int sz = 8;
-		FOREACH_ENTITY(true, LAMBDA(
+		FOREACH_ENTITY(true, {
 			if (it.debugdraw_last == debugdraw_frame) continue;
 			int ofs = 0;
-			for (entity e = findradius(it.origin, 100); e; e = e.chain)
-			{
-				if (e.debugdraw_last == debugdraw_frame) continue;
-				e.debugdraw_last = debugdraw_frame;
-				vector rgb = (e.debug) ? '0 0 1' : '1 0 0';
-				if (autocvar_debugdraw_filterout != "" && strhasword(autocvar_debugdraw_filterout, e.classname)) continue;
-				if (autocvar_debugdraw_filter != "" && !strhasword(autocvar_debugdraw_filter, e.classname)) continue;
+			FOREACH_ENTITY_RADIUS(it.origin, 100, it.debugdraw_last != debugdraw_frame, {
+				it.debugdraw_last = debugdraw_frame;
+				vector rgb = (it.debug) ? '0 0 1' : '1 0 0';
+				if (autocvar_debugdraw_filterout != "" && strhasword(autocvar_debugdraw_filterout, it.classname)) continue;
+				if (autocvar_debugdraw_filter != "" && !strhasword(autocvar_debugdraw_filter, it.classname)) continue;
 				if (autocvar_debugdraw == 3)
 				{
-					if (!e.entnum) continue;
+					if (!it.entnum) continue;
 				}
 				if (autocvar_debugdraw == 4)
 				{
-					if (e.origin) continue;
+					if (it.origin) continue;
 				}
 				if (autocvar_debugdraw == 5)
-                {
-                    if (!e.debug) continue;
-                }
+				{
+					if (!it.debug) continue;
+				}
 				else if (autocvar_debugdraw > 5)
 				{
 					bool flag = true;
 					do {
-//						if (e.modelindex) break;
-//						if (e.absmin) break;
-//						if (e.absmax) break;
-//						if (e.entnum) break;
-//						if (e.drawmask) break;
-//						if (e.predraw) break;
-//						if (e.movetype) break;
-						if (e.solid) break;
-//						if (e.origin) break;
-//						if (e.oldorigin) break;
-//						if (e.velocity) break;
-//						if (e.angles) break;
-//						if (e.avelocity) break;
-//						if (e.classname) break;
-//						if (e.model) break;
-//						if (e.frame) break;
-//						if (e.skin) break;
-//						if (e.effects) break;
-//						if (e.mins) break;
-//						if (e.maxs) break;
-//						if (e.size) break;
-//						if (e.touch) break;
-//						if (e.use) break;
-//						if (e.think) break;
-//						if (e.blocked) break;
-//						if (e.nextthink) break;
-//						if (e.chain) break;
-//						if (e.netname) break;
-//						if (e.enemy) break;
-//						if (e.flags) break;
-//						if (e.colormap) break;
-//						if (e.owner) break;
+//						if (it.modelindex) break;
+//						if (it.absmin) break;
+//						if (it.absmax) break;
+//						if (it.entnum) break;
+//						if (it.drawmask) break;
+//						if (it.predraw) break;
+//						if (it.movetype) break;
+						if (it.solid) break;
+//						if (it.origin) break;
+//						if (it.oldorigin) break;
+//						if (it.velocity) break;
+//						if (it.angles) break;
+//						if (it.avelocity) break;
+//						if (it.classname) break;
+//						if (it.model) break;
+//						if (it.frame) break;
+//						if (it.skin) break;
+//						if (it.effects) break;
+//						if (it.mins) break;
+//						if (it.maxs) break;
+//						if (it.size) break;
+//						if (it.touch) break;
+//						if (it.use) break;
+//						if (it.think) break;
+//						if (it.blocked) break;
+//						if (it.nextthink) break;
+//						if (it.chain) break;
+//						if (it.netname) break;
+//						if (it.enemy) break;
+//						if (it.flags) break;
+//						if (it.colormap) break;
+//						if (it.owner) break;
 						flag = false;
 					} while (0);
 					if (!flag) continue;
 				}
-				else if (is_pure(e))
+				else if (is_pure(it))
 				{
 					if (autocvar_debugdraw < 2) continue;
 					rgb.y = 1;
 				}
-				vector pos = project_3d_to_2d(e.origin);
+				vector o = it.origin;
+				if (it.tag_entity)
+					o += it.tag_entity.origin;
+				vector pos = project_3d_to_2d(o);
 				if (pos.z < 0) continue;
 				pos.z = 0;
 				pos.y += ofs * sz;
 				drawcolorcodedstring2(pos,
-					sprintf("%d: '%s'@%s", (e.debug ? e.sv_entnum : etof(e)),
-					e.classname, e.sourceLoc),
+					sprintf("%d: '%s'@%s", (it.debug ? it.sv_entnum : etof(it)),
+					it.classname, it.sourceLoc),
 					sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);
 				++ofs;
-			}
-		));
+            });
+		});
 	}
 #endif
 
@@ -158,7 +165,7 @@ bool autocvar_debugdraw;
 				for (entity e = NULL; (e = findfloat(e, debug, 0)) && rem > 0; )
 				{
 					if (autocvar_debugdraw < 2 && is_pure(e)) continue;
-					debug_send(e, nextent(NULL), 0);
+					debug_send(e, caller, 0);
 					e.debug = true;
 					--rem;
 				}
@@ -236,7 +243,7 @@ MUTATOR_HOOKFUNCTION(trace, SV_StartFrame)
 		    it.solid_prev = it.solid;
 			it.solid = SOLID_BBOX;
 		});
-		vector forward; vector right; vector up;
+		vector forward = '0 0 0'; vector right = '0 0 0'; vector up = '0 0 0';
 		MAKEVECTORS(makevectors, it.v_angle, forward, right, up);
 		vector pos = it.origin + it.view_ofs;
 		traceline(pos, pos + forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, it);
@@ -270,3 +277,47 @@ STATIC_INIT(TRACE_ENT)
 	e.draw2d = Trace_draw2d;
 }
 #endif
+
+GENERIC_COMMAND(find, "Search through entities for matching classname")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			FOREACH_ENTITY_CLASS_ORDERED(argv(1), true, LOG_INFOF("%i (%s)\n", it, it.classname));
+			return;
+		}
+
+		default:
+		{
+			LOG_INFO("Incorrect parameters for ^2find^7\n");
+        }
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 " GetProgramCommandPrefix() " find classname\n");
+			LOG_INFO("  Where 'classname' is the classname to search for.\n");
+			return;
+		}
+	}
+}
+
+GENERIC_COMMAND(findat, "Search through entities for matching origin")
+{
+	switch (request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+		    vector match = stov(argv(1));
+		    FOREACH_ENTITY_ORDERED(it.origin == match, LOG_INFOF("%i (%s)\n", it, it.classname));
+			return;
+		}
+
+		default:
+			LOG_INFO("Incorrect parameters for ^2findat^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			LOG_INFO("\nUsage:^3 " GetProgramCommandPrefix() " findat \"0 0 0\"\n");
+			return;
+		}
+	}
+}

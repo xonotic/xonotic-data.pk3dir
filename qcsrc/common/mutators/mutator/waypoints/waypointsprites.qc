@@ -921,25 +921,25 @@ void WaypointSprite_Think()
         self.nextthink = time; // WHY?!?
 }
 
-float WaypointSprite_visible_for_player(entity e)
-{SELFPARAM();
+bool WaypointSprite_visible_for_player(entity this, entity player, entity view)
+{
     // personal waypoints
-    if (self.enemy && self.enemy != e)
+    if (this.enemy && this.enemy != view)
         return false;
 
     // team waypoints
-    if (self.rule == SPRITERULE_SPECTATOR)
+    if (this.rule == SPRITERULE_SPECTATOR)
     {
         if (!autocvar_sv_itemstime)
             return false;
-        if (!warmup_stage && IS_PLAYER(e))
+        if (!warmup_stage && IS_PLAYER(view))
             return false;
     }
-    else if (self.team && self.rule == SPRITERULE_DEFAULT)
+    else if (this.team && this.rule == SPRITERULE_DEFAULT)
     {
-        if (self.team != e.team)
+        if (this.team != view.team)
             return false;
-        if (!IS_PLAYER(e))
+        if (!IS_PLAYER(view))
             return false;
     }
 
@@ -973,7 +973,7 @@ float WaypointSprite_Customize()
     if (MUTATOR_CALLHOOK(CustomizeWaypoint, self, other))
         return false;
 
-    return self.waypointsprite_visible_for_player(e);
+    return self.waypointsprite_visible_for_player(self, other, e);
 }
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
@@ -997,7 +997,6 @@ entity WaypointSprite_Spawn(
 )
 {
     entity wp = new(sprite_waypoint);
-    make_pure(wp);
     wp.teleport_time = time + _lifetime;
     wp.fade_time = _lifetime;
     wp.exteriormodeltoclient = ref;
@@ -1101,7 +1100,7 @@ entity WaypointSprite_AttachCarrier(
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
     entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
-    if (e)
+    if (carrier.health)
     {
         WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
         WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));

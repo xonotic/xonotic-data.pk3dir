@@ -128,7 +128,7 @@ float autocvar_sv_waypointsprite_limitedrange;
 .string model2;
 .string model3;
 
-.float(entity) waypointsprite_visible_for_player;
+.bool(entity, entity, entity) waypointsprite_visible_for_player;
 
 void WaypointSprite_UpdateSprites(entity e, entity m1, entity m2, entity m3);
 
@@ -162,7 +162,7 @@ void WaypointSprite_Disown(entity wp, float fadetime);
 
 void WaypointSprite_Think();
 
-float WaypointSprite_visible_for_player(entity e);
+bool WaypointSprite_visible_for_player(entity this, entity player, entity view);
 
 entity WaypointSprite_getviewentity(entity e);
 

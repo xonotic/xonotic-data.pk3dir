@@ -1,3 +1,4 @@
+#include "csqcmodel_hooks.qh"
 #include "mutators/events.qh"
 #include "player_skeleton.qh"
 #include "weapons/projectile.qh"
@@ -352,6 +353,7 @@ void CSQCPlayer_AnimDecide_PostUpdate(entity this, bool isnew)
 }
 int CSQCPlayer_FallbackFrame(entity this, int f)
 {
+    TC(int, f);
 	if(frameduration(this.modelindex, f) > 0)
 		return f; // goooooood
 	if(frameduration(this.modelindex, 1) <= 0)
@@ -459,26 +461,6 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 	}
 }
 
-// FEATURE: EF_NODRAW workalike
-const int EF_BRIGHTFIELD	= BIT(0);
-const int EF_BRIGHTLIGHT 	= BIT(2);
-const int EF_DIMLIGHT 		= BIT(3);
-const int EF_DOUBLESIDED 	= BIT(15);
-const int EF_NOSELFSHADOW 	= BIT(16);
-const int EF_DYNAMICMODELLIGHT = BIT(17);
-const int EF_RESTARTANIM_BIT = BIT(20);
-const int EF_TELEPORT_BIT = BIT(21);
-const int MF_ROCKET  =  BIT(0); // leave a trail
-const int MF_GRENADE =  BIT(1); // leave a trail
-const int MF_GIB     =  BIT(2); // leave a trail
-const int MF_ROTATE  =  BIT(3); // rotate (bonus items)
-const int MF_TRACER  =  BIT(4); // green split trail
-const int MF_ZOMGIB  =  BIT(5); // small blood trail
-const int MF_TRACER2 =  BIT(6); // orange split trail
-const int MF_TRACER3 = BIT(7); // purple trail
-.int csqcmodel_effects;
-.int csqcmodel_modelflags;
-.int csqcmodel_traileffect;
 void CSQCModel_Effects_PreUpdate(entity this)
 {
 	this.effects = this.csqcmodel_effects;

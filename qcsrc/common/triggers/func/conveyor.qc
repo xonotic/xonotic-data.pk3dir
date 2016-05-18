@@ -58,11 +58,11 @@ void conveyor_think()
 
 #ifdef SVQC
 
-void conveyor_use()
-{SELFPARAM();
-	self.state = !self.state;
+void conveyor_use(entity this, entity actor, entity trigger)
+{
+	this.state = !this.state;
 
-	self.SendFlags |= 2;
+	this.SendFlags |= 2;
 }
 
 void conveyor_reset(entity this)
@@ -147,7 +147,7 @@ spawnfunc(func_conveyor)
 
 #elif defined(CSQC)
 
-void conveyor_draw(entity this) { WITH(entity, self, this, conveyor_think()); }
+void conveyor_draw(entity this) { WITHSELF(this, conveyor_think()); }
 
 void conveyor_init()
 {SELFPARAM();

@@ -1,3 +1,5 @@
+#include "gamemode_race.qh"
+
 #ifndef GAMEMODE_RACE_H
 #define GAMEMODE_RACE_H
 
@@ -31,13 +33,6 @@ REGISTER_MUTATOR(rc, false)
 	return 0;
 }
 
-float race_teams;
-
-// scores
-const float ST_RACE_LAPS = 1;
-const float SP_RACE_LAPS = 4;
-const float SP_RACE_TIME = 5;
-const float SP_RACE_FASTEST = 6;
 #endif
 
 #ifdef IMPLEMENTATION
@@ -51,30 +46,30 @@ int autocvar_g_race_teams;
 
 // legacy bot roles
 .float race_checkpoint;
-void havocbot_role_race()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_race(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
 	entity e;
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
 		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
 		{
-			if(e.cnt == self.race_checkpoint)
+			if(e.cnt == this.race_checkpoint)
 			{
-				navigation_routerating(e, 1000000, 5000);
+				navigation_routerating(this, e, 1000000, 5000);
 			}
-			else if(self.race_checkpoint == -1)
+			else if(this.race_checkpoint == -1)
 			{
-				navigation_routerating(e, 1000000, 5000);
+				navigation_routerating(this, e, 1000000, 5000);
 			}
 		}
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 
@@ -251,7 +246,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 {SELFPARAM();
-	race_PreparePlayer();
+	race_PreparePlayer(this);
 	self.race_checkpoint = -1;
 
 	string rr = RACE_RECORD;
@@ -284,7 +279,7 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	else
 		self.frags = FRAGS_SPECTATOR;
 
-	race_PreparePlayer();
+	race_PreparePlayer(this);
 	self.race_checkpoint = -1;
 
 	return false;
@@ -294,7 +289,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
 {SELFPARAM();
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
-		race_PreparePlayer();
+		race_PreparePlayer(this);
 
 	// if we need to respawn, do it right
 	self.race_respawn_checkpoint = self.race_checkpoint;
@@ -311,9 +306,9 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	if(!gameover)
 	{
 		if(self.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
-			race_PreparePlayer();
+			race_PreparePlayer(this);
 		else // respawn
-			race_RetractPlayer();
+			race_RetractPlayer(this);
 
 		race_AbandonRaceCheck(self);
 	}
@@ -429,7 +424,7 @@ MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
 	{
 		if(!g_race_qualifying)
 		{
-			ret_float = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
+			ret_float = WinningCondition_Race(checkrules_fraglimit);
 			return true;
 		}
 		else if(g_race_qualifying == 2)
@@ -473,9 +468,8 @@ void rc_SetLimits()
 	qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 	fraglimit_override = autocvar_g_race_laps_limit;
 	leadlimit_override = 0; // currently not supported by race
-	timelimit_override = -1; // use default if we don't set it below
+	timelimit_override = autocvar_timelimit_override;
 
-	// we need to find out the correct value for g_race_qualifying
 	float want_qualifying = ((qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit) > 0;
 
 	if(autocvar_g_campaign)
@@ -483,20 +477,20 @@ void rc_SetLimits()
 		g_race_qualifying = 1;
 		independent_players = 1;
 	}
-	else if(!autocvar_g_campaign && want_qualifying)
+	else if(want_qualifying)
 	{
 		g_race_qualifying = 2;
 		independent_players = 1;
-		race_fraglimit = (race_fraglimit >= 0) ? fraglimit_override : autocvar_fraglimit;
-		race_leadlimit = (race_leadlimit >= 0) ? leadlimit_override : autocvar_leadlimit;
-		race_timelimit = (race_timelimit >= 0) ? timelimit_override : autocvar_timelimit;
+		race_fraglimit = (fraglimit_override >= 0) ? fraglimit_override : autocvar_fraglimit;
+		race_leadlimit = (leadlimit_override >= 0) ? leadlimit_override : autocvar_leadlimit;
+		race_timelimit = (timelimit_override >= 0) ? timelimit_override : autocvar_timelimit;
+		qualifying_override = (qualifying_override >= 0) ? qualifying_override : autocvar_g_race_qualifying_timelimit;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
-		timelimit_override = autocvar_g_race_qualifying_timelimit;
+		timelimit_override = qualifying_override;
 	}
 	else
 		g_race_qualifying = 0;
-
 	SetLimits(fraglimit_override, leadlimit_override, timelimit_override, qualifying_override);
 }
 

@@ -8,11 +8,11 @@
 #include <common/deathtypes/all.qh>
 #include <common/items/all.qc>
 #include <common/mapinfo.qh>
+#include <common/vehicles/all.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 #include <common/stats.qh>
 #include <lib/csqcmodel/cl_player.qh>
-// TODO: remove
-#include <server/mutators/mutator/gamemode_ctf.qc>
+#include <server/mutators/mutator/gamemode_ctf.qh> // TODO: remove
 
 
 /*
@@ -68,12 +68,14 @@ vector HUD_Get_Num_Color (float x, float maxvalue)
 
 float HUD_GetRowCount(int item_count, vector size, float item_aspect)
 {
+    TC(int, item_count);
 	float aspect = size_y / size_x;
 	return bound(1, floor((sqrt(4 * item_aspect * aspect * item_count + aspect * aspect) + aspect + 0.5) / 2), item_count);
 }
 
 vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspect)
 {
+    TC(int, item_count);
 	float columns, rows;
 	float ratio, best_ratio = 0;
 	float best_columns = 1, best_rows = 1;
@@ -112,85 +114,6 @@ vector HUD_GetTableSize_BestItemAR(int item_count, vector psize, float item_aspe
 		return eX * best_columns + eY * best_rows;
 }
 
-// return the string of the onscreen race timer
-string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
-{
-	string col;
-	string timestr;
-	string cpname;
-	string lapstr;
-	lapstr = "";
-
-	if(theirtime == 0) // goal hit
-	{
-		if(mytime > 0)
-		{
-			timestr = strcat("+", ftos_decimals(+mytime, TIME_DECIMALS));
-			col = "^1";
-		}
-		else if(mytime == 0)
-		{
-			timestr = "+0.0";
-			col = "^3";
-		}
-		else
-		{
-			timestr = strcat("-", ftos_decimals(-mytime, TIME_DECIMALS));
-			col = "^2";
-		}
-
-		if(lapdelta > 0)
-		{
-			lapstr = sprintf(_(" (-%dL)"), lapdelta);
-			col = "^2";
-		}
-		else if(lapdelta < 0)
-		{
-			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
-			col = "^1";
-		}
-	}
-	else if(theirtime > 0) // anticipation
-	{
-		if(mytime >= theirtime)
-			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
-		else
-			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime));
-		col = "^3";
-	}
-	else
-	{
-		col = "^7";
-		timestr = "";
-	}
-
-	if(cp == 254)
-		cpname = _("Start line");
-	else if(cp == 255)
-		cpname = _("Finish line");
-	else if(cp)
-		cpname = sprintf(_("Intermediate %d"), cp);
-	else
-		cpname = _("Finish line");
-
-	if(theirtime < 0)
-		return strcat(col, cpname);
-	else if(theirname == "")
-		return strcat(col, sprintf("%s (%s)", cpname, timestr));
-	else
-		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
-}
-
-// Check if the given name already exist in race rankings? In that case, where? (otherwise return 0)
-int race_CheckName(string net_name)
-{
-	int i;
-	for (i=RANKINGS_CNT-1;i>=0;--i)
-		if(grecordholder[i] == net_name)
-			return i+1;
-	return 0;
-}
-
 /*
 ==================
 HUD panels
@@ -200,6 +123,7 @@ HUD panels
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, bool vertical, float baralign, vector theColor, float theAlpha, int drawflag)
 {
+    TC(bool, vertical); TC(int, drawflag);
 	if(!length_ratio || !theAlpha)
 		return;
 	if(length_ratio > 1)
@@ -303,6 +227,7 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 
 void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, int drawflag)
 {
+    TC(int, drawflag);
 	if(!theAlpha)
 		return;
 
@@ -318,8 +243,9 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
 	drawsubpic(pos + eX * mySize.x - eX * min(mySize.x * 0.5, mySize.y), eX * min(mySize.x * 0.5, mySize.y) + eY * mySize.y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha, float fadelerp)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha, float fadelerp)
 {
+    TC(bool, vertical); TC(int, icon_right_align);
 	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 
@@ -397,8 +323,9 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, bo
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize.y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, bool icon_right_align, vector color, float theAlpha)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertical, int icon_right_align, vector color, float theAlpha)
 {
+    TC(bool, vertical); TC(int, icon_right_align);
 	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
@@ -409,6 +336,8 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, bool vertica
 Main HUD system
 ==================
 */
+
+void CSQC_BUMBLE_GUN_HUD();
 
 void HUD_Vehicle()
 {
@@ -425,6 +354,7 @@ void HUD_Vehicle()
 
 bool HUD_Panel_CheckFlags(int showflags)
 {
+    TC(int, showflags);
 	if ( HUD_Minigame_Showpanels() )
 		return showflags & PANEL_SHOW_MINIGAME;
 	if(intermission == 2)

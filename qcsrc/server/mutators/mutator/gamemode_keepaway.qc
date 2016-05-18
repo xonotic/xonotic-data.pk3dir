@@ -1,3 +1,4 @@
+#include "gamemode_keepaway.qh"
 #ifndef GAMEMODE_KEEPAWAY_H
 #define GAMEMODE_KEEPAWAY_H
 
@@ -35,8 +36,8 @@ const float SP_KEEPAWAY_PICKUPS = 4;
 const float SP_KEEPAWAY_CARRIERKILLS = 5;
 const float SP_KEEPAWAY_BCTIME = 6;
 
-void() havocbot_role_ka_carrier;
-void() havocbot_role_ka_collector;
+void(entity this) havocbot_role_ka_carrier;
+void(entity this) havocbot_role_ka_collector;
 
 void ka_DropEvent(entity plyr);
 #endif
@@ -63,10 +64,10 @@ int autocvar_g_keepawayball_effects;
 float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
 
-float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame
+bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
-	if(e.ballcarried)
-		if(IS_SPEC(other))
+	if(view.ballcarried)
+		if(IS_SPEC(player))
 			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
 
 	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
@@ -81,8 +82,8 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 }
 
 void ka_TouchEvent();
-void ka_RespawnBall() // runs whenever the ball needs to be relocated
-{SELFPARAM();
+void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
+{
 	if(gameover) { return; }
 	vector oldballorigin = self.origin;
 
@@ -99,7 +100,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	self.angles = '0 0 0';
 	self.effects = autocvar_g_keepawayball_effects;
 	self.touch = ka_TouchEvent;
-	self.think = ka_RespawnBall;
+	setthink(self, ka_RespawnBall);
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
@@ -129,7 +130,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The ball fell off the map, respawn it since players can't get to it
-		ka_RespawnBall();
+		ka_RespawnBall(self);
 		return;
 	}
 	if(IS_DEAD(other)) { return; }
@@ -192,7 +193,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.movetype = MOVETYPE_BOUNCE;
 	ball.wait = time + 1;
 	ball.touch = ka_TouchEvent;
-	ball.think = ka_RespawnBall;
+	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &= ~EF_NODRAW;
@@ -229,12 +230,12 @@ void ka_Reset(entity this)
 
 	if(time < game_starttime)
 	{
-		this.think = ka_RespawnBall;
+		setthink(this, ka_RespawnBall);
 		this.touch = func_null;
 		this.nextthink = game_starttime;
 	}
 	else
-		ka_RespawnBall();
+		ka_RespawnBall(this);
 }
 
 
@@ -242,68 +243,68 @@ void ka_Reset(entity this)
 // Bot player logic
 // ================
 
-void havocbot_goalrating_ball(float ratingscale, vector org)
-{SELFPARAM();
+void havocbot_goalrating_ball(entity this, float ratingscale, vector org)
+{
 	float t;
 	entity ball_owner;
 	ball_owner = ka_ball.owner;
 
-	if (ball_owner == self)
+	if (ball_owner == this)
 		return;
 
 	// If ball is carried by player then hunt them down.
 	if (ball_owner)
 	{
-		t = (self.health + self.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
-		navigation_routerating(ball_owner, t * ratingscale, 2000);
+		t = (this.health + this.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
+		navigation_routerating(this, ball_owner, t * ratingscale, 2000);
 	}
 	else // Ball has been dropped so collect.
-		navigation_routerating(ka_ball, ratingscale, 2000);
+		navigation_routerating(this, ka_ball, ratingscale, 2000);
 }
 
-void havocbot_role_ka_carrier()
-{SELFPARAM();
-	if (IS_DEAD(self))
+void havocbot_role_ka_carrier(entity this)
+{
+	if (IS_DEAD(this))
 		return;
 
-	if (time > self.bot_strategytime)
+	if (time > this.bot_strategytime)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
-		navigation_goalrating_start();
-		havocbot_goalrating_items(10000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
-		//havocbot_goalrating_waypoints(1, self.origin, 1000);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 20000, this.origin, 10000);
+		//havocbot_goalrating_waypoints(1, this.origin, 1000);
+		navigation_goalrating_end(this);
 	}
 
-	if (!self.ballcarried)
+	if (!this.ballcarried)
 	{
-		self.havocbot_role = havocbot_role_ka_collector;
-		self.bot_strategytime = 0;
+		this.havocbot_role = havocbot_role_ka_collector;
+		this.bot_strategytime = 0;
 	}
 }
 
-void havocbot_role_ka_collector()
-{SELFPARAM();
-	if (IS_DEAD(self))
+void havocbot_role_ka_collector(entity this)
+{
+	if (IS_DEAD(this))
 		return;
 
-	if (time > self.bot_strategytime)
+	if (time > this.bot_strategytime)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 
-		navigation_goalrating_start();
-		havocbot_goalrating_items(10000, self.origin, 10000);
-		havocbot_goalrating_enemyplayers(1000, self.origin, 10000);
-		havocbot_goalrating_ball(20000, self.origin);
-		navigation_goalrating_end();
+		navigation_goalrating_start(this);
+		havocbot_goalrating_items(this, 10000, this.origin, 10000);
+		havocbot_goalrating_enemyplayers(this, 1000, this.origin, 10000);
+		havocbot_goalrating_ball(this, 20000, this.origin);
+		navigation_goalrating_end(this);
 	}
 
-	if (self.ballcarried)
+	if (this.ballcarried)
 	{
-		self.havocbot_role = havocbot_role_ka_carrier;
-		self.bot_strategytime = 0;
+		this.havocbot_role = havocbot_role_ka_carrier;
+		this.bot_strategytime = 0;
 	}
 }
 
@@ -475,6 +476,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.glow_color = autocvar_g_keepawayball_trail_color;
 	e.glow_trail = true;
 	e.flags = FL_ITEM;
+	e.pushable = true;
 	e.reset = ka_Reset;
 	e.touch = ka_TouchEvent;
 	e.owner = world;

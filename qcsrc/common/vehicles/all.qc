@@ -12,7 +12,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_AUXILIARYXHAIR)
 #endif
 
 #define IMPLEMENTATION
-#include "all.inc"
+#include "vehicle/_mod.inc"
 #undef IMPLEMENTATION
 
 #endif

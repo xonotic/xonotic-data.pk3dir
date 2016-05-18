@@ -18,7 +18,7 @@ void db_save(int db, string filename)
 	fclose(fh);
 }
 
-typedef int HashMap;
+USING(HashMap, int);
 
 int db_create()
 {

@@ -19,7 +19,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player);
 
 void Teleport_Touch ();
 
-void teleport_findtarget();
+void teleport_findtarget(entity this);
 
 entity Teleport_Find(vector mi, vector ma);
 
@@ -30,7 +30,7 @@ entity teleport_first;
 
 #ifdef SVQC
 
-void trigger_teleport_use();
+void trigger_teleport_use(entity this, entity actor, entity trigger);
 
 #define TDEATHLOOP(o) \
 	entity head; \

@@ -41,7 +41,7 @@ STATIC_INIT(RegisterTempEntities_renumber) { FOREACH(TempEntities, true, it.m_id
 	#define REGISTER_NET_LINKED(id) \
 		[[accumulate]] NET_HANDLE(id, bool isnew) \
 		{ \
-			this = self; \
+			this = __self; \
 			this.sourceLoc = __FILE__ ":" STR(__LINE__); \
 			if (!this) isnew = true; \
 		} \
@@ -101,7 +101,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	/** return false to remove from the client */
 	.bool(entity this, entity to, int sendflags) SendEntity3;
 
-	bool SendEntity_self(entity to, int sendflags) { return self.SendEntity3(self, to, sendflags); }
+	bool SendEntity_self(entity to, int sendflags) { SELFPARAM(); return this.SendEntity3(this, to, sendflags); }
 
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
@@ -145,9 +145,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void UncustomizeEntitiesRun()
 	{
-		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, LAMBDA(
-			WITH(entity, self, it, it.uncustomizeentityforclient());
-		));
+		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, WITHSELF(it, it.uncustomizeentityforclient()));
 	}
 
 	STRING_ITERATOR(g_buf, string_null, 0);

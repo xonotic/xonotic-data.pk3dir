@@ -48,7 +48,7 @@ void monster_dropitem(entity this)
 	if(e && e.monster_loot)
 	{
 		e.noalign = true;
-		WITH(entity, self, e, e.monster_loot(e));
+		WITHSELF(e, e.monster_loot(e));
 		e.gravity = 1;
 		e.movetype = MOVETYPE_TOSS;
 		e.reset = SUB_Remove;
@@ -211,6 +211,7 @@ void Monster_Delay_Action(entity this)
 
 void Monster_Delay_Action_self()
 {
+    SELFPARAM();
 	Monster_Delay_Action(self);
 }
 
@@ -547,9 +548,9 @@ void Monster_Dead_Fade(entity this)
 	}
 }
 
-void Monster_Use()
-{SELFPARAM();
-	if(Monster_ValidTarget(this, activator)) { this.enemy = activator; }
+void Monster_Use(entity this, entity actor, entity trigger)
+{
+	if(Monster_ValidTarget(this, actor)) { this.enemy = actor; }
 }
 
 vector Monster_Move_Target(entity this, entity targ)
@@ -903,6 +904,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 
 void Monster_Remove(entity this)
 {
+	if(IS_CLIENT(this))
+		return; // don't remove it?
+
 	.entity weaponentity = weaponentities[0];
 	if(!this) { return; }
 
@@ -927,9 +931,9 @@ void Monster_Dead_Think()
 	}
 }
 
-void Monster_Appear()
-{SELFPARAM();
-	this.enemy = activator;
+void Monster_Appear(entity this, entity actor, entity trigger)
+{
+	this.enemy = actor;
 	this.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
 	Monster_Spawn(this, this.monsterid);
 }
@@ -1098,9 +1102,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 			this.candrop = false; // killed by mobkill command
 
 		// TODO: fix this?
-		activator = attacker;
-		other = this.enemy;
-		WITH(entity, self, this, SUB_UseTargets());
+		SUB_UseTargets(this, attacker, this.enemy);
 		this.target2 = this.oldtarget2; // reset to original target on death, incase we respawn
 
 		Monster_Dead(this, attacker, (this.health <= -100 || deathtype == DEATH_KILL.m_id));

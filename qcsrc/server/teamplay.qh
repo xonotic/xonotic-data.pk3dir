@@ -1,5 +1,4 @@
-#ifndef TEAMPLAY_H
-#define TEAMPLAY_H
+#pragma once
 
 string cache_mutatormsg;
 string cache_lastmutatormsg;
@@ -17,11 +16,9 @@ void TeamchangeFrags(entity e);
 
 void LogTeamchange(float player_id, float team_number, float type);
 
-void default_delayedinit();
+void default_delayedinit(entity this);
 
 void ActivateTeamplay();
-
-void SetLimits(int fraglimit_override, int leadlimit_override, float timelimit_override, float qualifying_override);
 
 void InitGameplayMode();
 
@@ -48,10 +45,9 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e);
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl);
 
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
+int JoinBestTeam(entity pl, bool only_return_best, bool forcebestteam);
 
 //void() ctf_playerchanged;
 void SV_ChangeTeam(float _color);
 
 void ShufflePlayerOutOfTeam (float source_team);
-#endif

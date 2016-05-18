@@ -66,8 +66,7 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 {
 	if(!eff) { return; }
 	if(!eff.eent_eff_trail && !eff_cnt) { return; } // effect has no count!
-	entity net_eff = new(net_effect);
-	make_pure(net_eff);
+	entity net_eff = new_pure(net_effect);
 	net_eff.owner = eff;
 	//net_eff.eent_broadcast = broadcast;
 	net_eff.m_id = eff.m_id;
@@ -76,17 +75,17 @@ void Send_Effect(entity eff, vector eff_loc, vector eff_vel, int eff_cnt)
 	net_eff.eent_net_count = eff_cnt;
 	net_eff.eent_eff_trail = eff.eent_eff_trail;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(Net_Write_Effect(net_eff, it, 0)));
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), Net_Write_Effect(net_eff, it, 0));
 	remove(net_eff);
 }
 
 void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt)
 {
 	// problem with this is, we might not have all the available effects for it
-	FOREACH(Effects, it.eent_eff_name == eff_name, LAMBDA(
+	FOREACH(Effects, it.eent_eff_name == eff_name, {
 		Send_Effect(it, eff_loc, eff_vel, eff_cnt);
 		return;
-	));
+	});
 	// revert to engine handling
 	__pointparticles(_particleeffectnum(eff_name), eff_loc, eff_vel, eff_cnt);
 }

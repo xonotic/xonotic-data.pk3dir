@@ -1,32 +1,5 @@
-#ifndef RADIOBUTTON_H
-#define RADIOBUTTON_H
-#include "../item/radiobutton.qc"
-CLASS(XonoticRadioButton, RadioButton)
-	METHOD(XonoticRadioButton, configureXonoticRadioButton, void(entity, float, string, string, string, string));
-	METHOD(XonoticRadioButton, draw, void(entity));
-	METHOD(XonoticRadioButton, setChecked, void(entity, float));
-	ATTRIB(XonoticRadioButton, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticRadioButton, image, string, SKINGFX_RADIOBUTTON)
-	ATTRIB(XonoticRadioButton, color, vector, SKINCOLOR_RADIOBUTTON_N)
-	ATTRIB(XonoticRadioButton, colorC, vector, SKINCOLOR_RADIOBUTTON_C)
-	ATTRIB(XonoticRadioButton, colorF, vector, SKINCOLOR_RADIOBUTTON_F)
-	ATTRIB(XonoticRadioButton, colorD, vector, SKINCOLOR_RADIOBUTTON_D)
+#include "radiobutton.qh"
 
-	ATTRIB(XonoticRadioButton, cvarName, string, string_null)
-	ATTRIB(XonoticRadioButton, cvarValue, string, string_null)
-	ATTRIB(XonoticRadioButton, cvarOffValue, string, string_null)
-	ATTRIB(XonoticRadioButton, cvarValueIsAnotherCvar, float, 0)
-	METHOD(XonoticRadioButton, loadCvars, void(entity));
-	METHOD(XonoticRadioButton, saveCvars, void(entity));
-
-	ATTRIB(XonoticRadioButton, alpha, float, SKINALPHA_TEXT)
-	ATTRIB(XonoticRadioButton, disabledAlpha, float, SKINALPHA_DISABLED)
-ENDCLASS(XonoticRadioButton)
-entity makeXonoticRadioButton_T(float, string, string, string, string theTooltip);
-entity makeXonoticRadioButton(float, string, string, string);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticRadioButton_T(float theGroup, string theCvar, string theValue, string theText, string theTooltip)
 {
 	entity me;
@@ -126,4 +99,3 @@ void XonoticRadioButton_saveCvars(entity me)
 		}
 	}
 }
-#endif

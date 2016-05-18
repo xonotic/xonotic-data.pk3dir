@@ -135,12 +135,14 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDies)
 	e.pickup_anyway = true;
 	e.spawnfunc_checked = true;
 	spawnfunc_item_armor_small(e);
-	e.movetype = MOVETYPE_TOSS;
-	e.gravity = 1;
-	e.reset = SUB_Remove;
-	setorigin(e, frag_target.origin + '0 0 32');
-	e.velocity = '0 0 200' + normalize(targ.origin - frag_target.origin) * 500;
-	SUB_SetFade(e, time + 5, 1);
+	if (!wasfreed(e)) { // might have been blocked by a mutator
+        e.movetype = MOVETYPE_TOSS;
+        e.gravity = 1;
+        e.reset = SUB_Remove;
+        setorigin(e, frag_target.origin + '0 0 32');
+        e.velocity = '0 0 200' + normalize(targ.origin - frag_target.origin) * 500;
+        SUB_SetFade(e, time + 5, 1);
+	}
 
 	frag_target.ok_lastwep = PS(frag_target).m_switchweapon.m_id;
 
@@ -182,7 +184,12 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 
 	if(self.ok_lastwep)
 	{
-		PS(self).m_switchweapon = Weapons_from(self.ok_lastwep);
+		Weapon newwep = Weapons_from(self.ok_lastwep);
+		if(self.ok_lastwep == WEP_HMG.m_id)
+			newwep = WEP_MACHINEGUN;
+		if(self.ok_lastwep == WEP_RPC.m_id)
+			newwep = WEP_VORTEX;
+		PS(self).m_switchweapon = newwep;
 		self.ok_lastwep = 0;
 	}
 
@@ -250,6 +257,10 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	}
 	else
 		self.ok_use_ammocharge = 0;
+
+	// if player changed their weapon while dead, don't switch to their death weapon
+	if(self.impulse)
+		self.ok_lastwep = 0;
 
 	self.ok_pauseregen_finished = time + 2;
 

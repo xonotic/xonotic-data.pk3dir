@@ -760,12 +760,11 @@ void Create_Notification_Entity_Choice(entity notif,
 #ifdef SVQC
 void Notification_GetCvars()
 {
-	int idx = 0;
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
 		GetCvars_handleFloat(
 			get_cvars_s,
 			get_cvars_f,
-			msg_choice_choices[idx++],
+			msg_choice_choices[it.nent_choice_idx],
 			sprintf("notification_%s", it.nent_name)
 		);
 	});
@@ -1548,6 +1547,7 @@ void Send_Notification(
 	MSG net_type, Notification net_name,
 	...count)
 {
+    if (broadcast != NOTIF_ALL && broadcast != NOTIF_ALL_EXCEPT && !IS_REAL_CLIENT(client)) return;
 	entity notif = net_name;
 	string parms = sprintf("%s, '%s', %s, %s",
 		Get_Notif_BroadcastName(broadcast),
@@ -1681,8 +1681,7 @@ void Send_Notification(
 	}
 	else
 	{
-		entity net_notif = new(net_notification);
-		make_pure(net_notif);
+		entity net_notif = new_pure(net_notification);
 		net_notif.owner = notif;
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;

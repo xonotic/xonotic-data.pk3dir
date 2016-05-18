@@ -26,7 +26,7 @@ const float SSF_ITEMMSG = 4;
 bool superspec_Spectate(entity _player)
 {SELFPARAM();
 	if(Spectate(_player) == 1)
-		self.classname = STR_SPECTATOR;
+	    TRANSMUTE(Spectator, self);
 
 	return true;
 }
@@ -440,6 +440,7 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 
 MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 {
+    SELFPARAM();
 	FOREACH_CLIENT(IS_SPEC(it), LAMBDA(
 		setself(it);
 		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == frag_target)

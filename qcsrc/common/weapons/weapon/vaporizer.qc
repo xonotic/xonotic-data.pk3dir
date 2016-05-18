@@ -183,14 +183,14 @@ void W_Vaporizer_Attack(Weapon thiswep)
 	bool flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(self, true, 0, "", CH_WEAPON_A, vaporizer_damage);
+	W_SetupShot(self, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
 	sound (self, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
+	FireRailgunBullet(self, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
 
 	// do this now, as goodhits is disabled below
 	SendCSQCVaporizerBeamParticle(self, damage_goodhits);
@@ -227,6 +227,11 @@ void W_RocketMinsta_Laser_Explode ()
 	remove(self);
 }
 
+void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, W_RocketMinsta_Laser_Explode());
+}
+
 void W_RocketMinsta_Laser_Touch ()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
@@ -247,7 +252,7 @@ void W_RocketMinsta_Attack2()
 
 	Weapon w = PS(self).m_weapon;
 	PS(self).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(CRYLINK_FIRE), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	PS(self).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -258,7 +263,7 @@ void W_RocketMinsta_Attack2()
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
-        proj.use = W_RocketMinsta_Laser_Explode;
+        proj.use = W_RocketMinsta_Laser_Explode_use;
         proj.think = adaptor_think2use_hittype_splash;
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);
@@ -299,7 +304,7 @@ void W_RocketMinsta_Attack3 ()
 
 	Weapon w = PS(self).m_weapon;
 	PS(self).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND(ELECTRO_FIRE2), CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	PS(self).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -310,7 +315,7 @@ void W_RocketMinsta_Attack3 ()
         proj.owner = proj.realowner = self;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
-        proj.use = W_RocketMinsta_Laser_Explode;
+        proj.use = W_RocketMinsta_Laser_Explode_use;
         proj.think = adaptor_think2use_hittype_splash;
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);
@@ -341,10 +346,11 @@ void W_RocketMinsta_Attack3 ()
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     if(self.(thiswep.ammo_field) > 0)
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 1, false);
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 1, false);
     else
-        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
+        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
 }
 METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -422,11 +428,13 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(Vaporizer, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.ammo_field = (thiswep.ammo_field);
     self.vaporizer_lasthit = 0;
 }
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
 {
+    SELFPARAM();
     float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
     float ammo_amount = self.(thiswep.ammo_field) >= vaporizer_ammo;
     ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
@@ -434,6 +442,7 @@ METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
 }
 METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep))
 {
+    SELFPARAM();
     if(!WEP_CVAR_SEC(vaporizer, ammo))
         return true;
     float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vaporizer, ammo);
@@ -442,10 +451,12 @@ METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     self.vaporizer_lasthit = 0;
 }
 METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
+    SELFPARAM();
     float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
     float used_ammo;
     if(WEP_CVAR_SEC(vaporizer, ammo))
@@ -453,7 +464,7 @@ METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponen
     else
         used_ammo = vaporizer_ammo;
 
-    W_Reload(self, used_ammo, SND(RELOAD));
+    W_Reload(self, used_ammo, SND_RELOAD);
 }
 METHOD(Vaporizer, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -469,6 +480,7 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Vaporizer, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2 = w_org + w_backoff * 6;
     if(w_deathtype & HITTYPE_SECONDARY)
     {

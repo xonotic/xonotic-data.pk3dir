@@ -1,34 +1,7 @@
-#ifndef ANIM_ANIMATION_H
-	#define ANIM_ANIMATION_H
-	CLASS(Animation, Object)
-		METHOD(Animation, configureAnimation, void(entity, entity, void(entity, float), float, float, float, float));
-		METHOD(Animation, update, void(entity, float, float, float));
-		METHOD(Animation, setTimeStartEnd, void(entity, float, float));
-		METHOD(Animation, setTimeStartDuration, void(entity, float, float));
-		METHOD(Animation, setValueStartEnd, void(entity, float, float));
-		METHOD(Animation, setValueStartDelta, void(entity, float, float));
-		METHOD(Animation, setObjectSetter, void(entity, entity, void(entity, float)));
-		METHOD(Animation, tick, void(entity, float));
-		METHOD(Animation, calcValue, float(entity, float, float, float, float));
-		METHOD(Animation, isStopped, float(entity));
-		METHOD(Animation, stopAnim, void(entity));
-		METHOD(Animation, resumeAnim, void(entity));
-		METHOD(Animation, isFinished, float(entity));
-		METHOD(Animation, finishAnim, void(entity));
-		ATTRIB(Animation, object, entity, NULL)
-		void setterDummy(entity, float) {}
-		ATTRIB(Animation, setter, void(entity, float), setterDummy)
-		ATTRIB(Animation, value, float, 0)
-		ATTRIB(Animation, startTime, float, 0)
-		ATTRIB(Animation, duration, float, 0)
-		ATTRIB(Animation, startValue, float, 0)
-		ATTRIB(Animation, delta, float, 0)
-		ATTRIB(Animation, stopped, float, false)
-		ATTRIB(Animation, finished, float, false)
-	ENDCLASS(Animation)
-#endif
+#include "animation.qh"
 
-#ifdef IMPLEMENTATION
+#include "../menu.qh"
+
 	METHOD(Animation, configureAnimation, void(entity this, entity obj, void(entity, float) objSetter, float animStartTime, float animDuration, float animStartValue, float animEndValue))
 	{
 		this.setObjectSetter(this, obj, objSetter);
@@ -113,5 +86,3 @@
 		this.finished = true;
 		this.setter(this.object, this.value);
 	}
-
-#endif

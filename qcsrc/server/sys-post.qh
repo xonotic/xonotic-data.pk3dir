@@ -1,5 +1,4 @@
-#ifndef SERVER_SYS_POST_H
-#define SERVER_SYS_POST_H
+#pragma once
 
 #undef objerror
 #undef droptofloor
@@ -39,5 +38,3 @@ var void remove(entity e);
 #undef IT_QUAD
 
 #pragma noref 0
-
-#endif

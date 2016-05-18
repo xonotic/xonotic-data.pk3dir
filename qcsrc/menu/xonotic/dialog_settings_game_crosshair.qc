@@ -1,20 +1,14 @@
-#ifndef DIALOG_SETTINGS_GAME_CROSSHAIR_H
-#define DIALOG_SETTINGS_GAME_CROSSHAIR_H
-#include "tab.qc"
-CLASS(XonoticGameCrosshairSettingsTab, XonoticTab)
-	METHOD(XonoticGameCrosshairSettingsTab, fill, void(entity));
-	METHOD(XonoticGameCrosshairSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameCrosshairSettingsTab, title, string, _("Crosshair"))
-	ATTRIB(XonoticGameCrosshairSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameCrosshairSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticGameCrosshairSettingsTab, columns, float, 6.2)
-ENDCLASS(XonoticGameCrosshairSettingsTab)
-entity makeXonoticGameCrosshairSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Crosshair, makeXonoticGameCrosshairSettingsTab());
-#endif
+#include "dialog_settings_game_crosshair.qh"
 
-#ifdef IMPLEMENTATION
+#include "radiobutton.qh"
+#include "crosshairpicker.qh"
+#include "crosshairpreview.qh"
+#include "textlabel.qh"
+#include "slider.qh"
+#include "colorpicker_string.qh"
+#include "checkbox.qh"
+#include "textslider.qh"
+
 void XonoticGameCrosshairSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
@@ -129,6 +123,7 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit testing:")));
+			setDependent(e, "crosshair_enabled", 1, 2);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider_T("crosshair_hittest",
 			_("None: do not do hit tests for the crosshair; TrueAim: blur the crosshair when you would not hit the wall; Enemies: also enlarge the crosshair when you would hit an enemy")));
 			e.addValue(e, ZCTX(_("HTTST^Disabled")), "0");
@@ -151,4 +146,3 @@ void XonoticGameCrosshairSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.25, 0, "crosshair_pickup", _("Animate crosshair when picking up an item")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 }
-#endif

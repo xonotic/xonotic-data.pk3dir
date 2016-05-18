@@ -5,6 +5,8 @@
 #include "mutators/all.qh"
 #include "scores.qh"
 #include "spawnpoints.qh"
+#include "../common/state.qh"
+#include "../common/physics/player.qh"
 #include "../common/t_items.qh"
 #include "../common/vehicles/all.qh"
 #include "../common/items/all.qc"
@@ -326,7 +328,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			return;
 		}
 		LogDeath("suicide", deathtype, targ, targ);
-		GiveFrags(attacker, targ, -1, deathtype);
+		if(deathtype != DEATH_AUTOTEAMCHANGE.m_id) // special case: don't negate frags if auto switched
+			GiveFrags(attacker, targ, -1, deathtype);
 	}
 
 	// ======
@@ -538,7 +541,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	WITH(entity, self, ice, Ice_Think());
+	WITHSELF(ice, Ice_Think());
 
 	RemoveGrapplingHook(targ);
 
@@ -551,6 +554,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
+    SELFPARAM();
 	if(!STAT(FROZEN, targ))
 		return;
 
@@ -870,6 +874,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	setself(this);
 
 	// apply mirror damage if any
+	if(!autocvar_g_mirrordamage_onlyweapons || DEATH_WEAPONOF(deathtype) != WEP_Null)
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;

@@ -5,14 +5,15 @@
 #include "static.qh"
 
 #ifdef MENUQC
-	#define NULL (null_entity)
+	#define NULL (0, null_entity)
+	#define world NULL
 #else
-	#define NULL (world)
+	#define NULL (0, world)
 #endif
 
 .vector origin;
 .bool pure_data;
-/** deprecated, use new_pure or NEW(class) */
+/** @deprecated use new_pure or NEW(class) */
 #define make_pure(e) \
 	MACRO_BEGIN \
 	{ \
@@ -34,6 +35,7 @@ entity _spawn();
 #define SPAWN_PURE 0
 #endif
 
+// pure entities: need no .origin
 #if SPAWN_PURE
 entity spawn_pure() = #600;
 #else
@@ -48,10 +50,10 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 	if (pure) {
 		make_pure(this);
 		#ifdef CSQC
-		setorigin(this, '0 0 10000');
+		setorigin(this, (world.mins + world.maxs) * 0.5);
 		#endif
 		#ifdef SVQC
-        setorigin(this, '0 0 -10000');
+        setorigin(this, (world.mins + world.maxs) * 0.5);
         #endif
 	}
 	return this;
@@ -62,7 +64,7 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 #define EVAL_entityclass(...) __VA_ARGS__
 #define entityclass_1(name) entityclass_2(name, Object)
 #ifndef QCC_SUPPORT_ENTITYCLASS
-	#define entityclass_2(name, base) typedef entity name
+	#define entityclass_2(name, base) USING(name, entity)
 	#define class(name)
 	#define _new(class, pure) __spawn( #class, __FILE__ ":" STR(__LINE__), pure)
 #else
@@ -76,11 +78,17 @@ entity __spawn(string _classname, string _sourceLoc, bool pure)
 #define new_pure(class) _new(class, true)
 #define spawn() __spawn("entity", __FILE__ ":" STR(__LINE__), false)
 
+#define delete(this) MACRO_BEGIN { \
+    entity _this = (this); \
+    void(entity) _dtor = _this.dtor; \
+    if (_dtor) _dtor(_this); else remove(_this); \
+    /* this = NULL; */  \
+} MACRO_END
+
 entity _clearentity_ent;
 STATIC_INIT(clearentity)
 {
 	_clearentity_ent = new_pure(clearentity);
-	make_pure(_clearentity_ent);
 }
 void clearentity(entity e)
 {
@@ -98,19 +106,37 @@ void clearentity(entity e)
 // Classes have a `spawn##cname(entity)` constructor
 // The parameter is used across [[accumulate]] functions
 
+.bool transmute;
+
 // Macros to hide this implementation detail:
 #ifdef __STDC__
 	#define NEW(cname, ...) \
 		OVERLOAD_(spawn##cname, new_pure(cname) P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+
+    #define _TRANSMUTE(cname, this, ...) \
+        OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
+
 	#define CONSTRUCT(cname, ...) \
 		OVERLOAD_(spawn##cname, this P99_IF_EMPTY(__VA_ARGS__)()(, __VA_ARGS__))
 #else
 	#define NEW(cname, ...) \
 		OVERLOAD(spawn##cname, new_pure(cname),##__VA_ARGS__)
 
+    #define _TRANSMUTE(cname, this, ...) \
+        OVERLOAD(spawn##cname, this,##__VA_ARGS__)
+
 	#define CONSTRUCT(cname, ...) \
 		OVERLOAD(spawn##cname, this,##__VA_ARGS__)
 #endif
+
+#define TRANSMUTE(cname, this, ...) MACRO_BEGIN \
+    entity _e = (this); \
+    if (_e.vtblbase != cname##_vtbl) { \
+        _e.transmute = true; \
+        _e.classname = #cname; \
+        _TRANSMUTE(cname, _e, __VA_ARGS__); \
+    } \
+    MACRO_END
 
 #define CONSTRUCTOR(cname, ...) \
 	cname OVERLOAD(spawn##cname, cname this, __VA_ARGS__) \
@@ -129,7 +155,7 @@ STATIC_INIT(RegisterClasses)
 }
 
 #define VTBL(cname, base) \
-	INIT_STATIC(cname); \
+	_INIT_STATIC(cname); \
 	entity cname##_vtbl; \
 	void cname##_vtbl_init() \
 	{ \
@@ -142,29 +168,32 @@ STATIC_INIT(RegisterClasses)
 	} \
 	ACCUMULATE_FUNCTION(RegisterClasses, cname##_vtbl_init)
 
-#define INIT_STATIC(cname) [[accumulate]] void spawn##cname##_static(cname this)
+#define _INIT_STATIC(cname) [[accumulate]] void spawn##cname##_static(cname this)
 #define INIT(cname) [[accumulate]] cname spawn##cname##_1(cname this)
 
 #define CLASS(cname, base)                  \
 	entityclass(cname, base);               \
-	class(cname).bool instanceOf##cname;   \
+	class(cname).bool instanceOf##cname;    \
+    bool is_##cname(entity e) { return e.instanceOf##cname; } \
+    void isnt_##cname(entity e) { eprint(e); } \
 	VTBL(cname, base)                       \
-	INIT_STATIC(cname) \
-	{                    \
-		if (cname##_vtbl) \
-		{                 \
+	_INIT_STATIC(cname)                     \
+	{                                       \
+		if (cname##_vtbl && !this.transmute)\
+		{                                   \
 			copyentity(cname##_vtbl, this); \
 			return;                         \
 		}                                   \
 		spawn##base##_static(this);         \
 		this.instanceOf##cname = true;      \
 	}                                       \
-	INIT(cname) \
-	{                           \
+	INIT(cname)                             \
+	{                                       \
 		/* Only statically initialize the current class, it contains everything it inherits */ \
 		if (cname##_vtbl.vtblname == this.classname) \
-		{ \
+		{                                   \
 			spawn##cname##_static(this);    \
+			this.transmute = false;         \
 			this.classname = #cname;        \
 			this.vtblname = string_null;    \
 			this.vtblbase = cname##_vtbl;   \
@@ -181,11 +210,22 @@ STATIC_INIT(RegisterClasses)
 #define METHOD(cname, name, prototype) \
 	STATIC_METHOD(cname, name, prototype); \
 	class(cname) .prototype name; \
-	INIT_STATIC(cname) \
+	_INIT_STATIC(cname) \
 	{ \
 		this.name = METHOD_REFERENCE(cname, name); \
 	} \
 	STATIC_METHOD(cname, name, prototype)
+
+#define DESTRUCTOR(cname) \
+	STATIC_METHOD(cname, dtorimpl, void(cname this)); \
+    METHOD(cname, dtor, void(cname this)) \
+    { \
+        METHOD_REFERENCE(cname, dtorimpl)(this); \
+        this.instanceOf##cname = false; \
+        entity super = SUPER(cname); \
+        if (super != cname##_vtbl) super.dtor(this); \
+    } \
+	STATIC_METHOD(cname, dtorimpl, void(cname this))
 
 #define ATTRIB(cname, name, type, val)      \
 	class(cname).type name;                \
@@ -195,6 +235,16 @@ STATIC_INIT(RegisterClasses)
 		this.name = val; \
 	}
 
+#define STATIC_ATTRIB(cname, name, type, val) \
+	type cname##_##name; \
+	_INIT_STATIC(cname) \
+	{ \
+		noref bool strzone; /* Error on strzone() calls. */ \
+		cname##_##name = val; \
+	}
+
+// cleanup potentially zoned strings from base classes
+
 #define ATTRIB_STRZONE(cname, name, type, val)      \
 	class(cname).type name;                \
 	INIT(cname) \
@@ -202,6 +252,15 @@ STATIC_INIT(RegisterClasses)
 		if (this.name) \
 			strunzone(this.name); \
 		this.name = strzone(val); \
+	}
+
+#define STATIC_ATTRIB_STRZONE(cname, name, type, val) \
+	type cname##_##name; \
+	_INIT_STATIC(cname) \
+	{ \
+        if (cname##_##name) \
+            strunzone(cname##_##name); \
+		cname##_##name = val; \
 	}
 
 #define ATTRIBARRAY(cname, name, type, cnt) \
@@ -219,8 +278,11 @@ STATIC_INIT(RegisterClasses)
 #define spawn_1(this)
 #define _vtbl NULL
 CLASS(Object, );
-	METHOD(Object, describe, string(entity this))
+    DESTRUCTOR(Object) { remove(this); }
+    #define remove(this) delete(this)
+	METHOD(Object, describe, string(Object this))
 	{
+	    TC(Object, this);
 		string s = _("No description");
 		if (cvar("developer"))
 		{
@@ -232,8 +294,9 @@ CLASS(Object, );
 		}
 		return s;
 	}
-	METHOD(Object, display, void(entity this, void(string name, string icon) returns))
+	METHOD(Object, display, void(Object this, void(string name, string icon) returns))
 	{
+	    TC(Object, this);
 		returns(sprintf("entity %i", this), "nopreview_map");
 	}
 ENDCLASS(Object)

@@ -1,5 +1,12 @@
-#ifndef RACE_H
-#define RACE_H
+#pragma once
+
+float race_teams;
+
+// scores
+const float ST_RACE_LAPS = 1;
+const float SP_RACE_LAPS = 4;
+const float SP_RACE_TIME = 5;
+const float SP_RACE_FASTEST = 6;
 
 bool g_race_qualifying;
 
@@ -37,7 +44,7 @@ string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
 void race_ClearRecords();
 void race_SendNextCheckpoint(entity e, float spec);
-void race_PreparePlayer();
+void race_PreparePlayer(entity this);
 void race_send_recordtime(float msg);
 void race_send_speedaward(float msg);
 
@@ -55,8 +62,6 @@ void race_send_speedaward_alltimebest(float msg);
 
 void race_SendRankings(float pos, float prevpos, float del, float msg);
 
-void race_RetractPlayer();
+void race_RetractPlayer(entity this);
 
 void race_InitSpectator();
-
-#endif

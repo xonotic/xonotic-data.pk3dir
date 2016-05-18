@@ -1,25 +1,9 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
-#define DIALOG_MULTIPLAYER_MEDIA_SCREENSHOT_VIEWER_H
-#include "dialog.qc"
-CLASS(XonoticScreenshotViewerDialog, XonoticDialog)
-	METHOD(XonoticScreenshotViewerDialog, fill, void(entity));
-	METHOD(XonoticScreenshotViewerDialog, keyDown, float(entity, float, float, float));
-	METHOD(XonoticScreenshotViewerDialog, loadScreenshot, void(entity, string));
-	METHOD(XonoticScreenshotViewerDialog, close, void(entity));
-	ATTRIB(XonoticScreenshotViewerDialog, title, string, "Screenshot Viewer")
-	ATTRIB(XonoticScreenshotViewerDialog, name, string, "ScreenshotViewer")
-	ATTRIB(XonoticScreenshotViewerDialog, intendedWidth, float, 1)
-	ATTRIB(XonoticScreenshotViewerDialog, rows, float, 25)
-	ATTRIB(XonoticScreenshotViewerDialog, columns, float, 4)
-	ATTRIB(XonoticScreenshotViewerDialog, color, vector, SKINCOLOR_DIALOG_SCREENSHOTVIEWER)
-	ATTRIB(XonoticScreenshotViewerDialog, scrList, entity, NULL)
-	ATTRIB(XonoticScreenshotViewerDialog, screenshotImage, entity, NULL)
-	ATTRIB(XonoticScreenshotViewerDialog, slideShowButton, entity, NULL)
-	ATTRIB(XonoticScreenshotViewerDialog, currentScrPath, string, string_null)
-ENDCLASS(XonoticScreenshotViewerDialog)
-#endif
+#include "dialog_multiplayer_media_screenshot_viewer.qh"
 
-#ifdef IMPLEMENTATION
+#include "screenshotlist.qh"
+#include "inputbox.qh"
+#include "button.qh"
+
 float music_playlist_index_backup;
 void XonoticScreenshotViewerDialog_loadScreenshot(entity me, string scrImage)
 {
@@ -170,4 +154,3 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 			e.onClickEntity = me;
 			me.slideShowButton = e;
 }
-#endif

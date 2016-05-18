@@ -2,7 +2,7 @@
 #define MUTATOR_DAMAGETEXT_H
 
 #ifdef MENUQC
-#include <menu/xonotic/tab.qc>
+#include <menu/xonotic/tab.qh>
 #endif
 
 #endif
@@ -13,7 +13,10 @@ REGISTER_MUTATOR(damagetext, true);
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                    bool,   false,      "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-%3$$d",   "How to format the damage text. 1$ is health, 2$ is armor, 3$ is both");
+AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
+STATIC_INIT(DamageText_LegacyFormat) {
+    if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
+}
 AUTOCVAR_SAVE(cl_damagetext_color,              vector, '1 1 0',    "Damage text color");
 AUTOCVAR_SAVE(cl_damagetext_color_per_weapon,   bool,   false,      "Damage text uses weapon color");
 AUTOCVAR_SAVE(cl_damagetext_size,               float,  8,          "Damage text font size");
@@ -51,7 +54,10 @@ CLASS(DamageText, Object)
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
             }
-            string s = sprintf(autocvar_cl_damagetext_format, this.m_damage, this.m_armordamage, this.m_damage + this.m_armordamage);
+            string s = autocvar_cl_damagetext_format;
+            s = strreplace("{health}", sprintf("%d", this.m_damage), s);
+            s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
+            s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
             drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
@@ -145,20 +151,29 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
     METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }
     METHOD(XonoticDamageTextSettings, fill, void(entity this))
     {
+    	entity e;
         this.gotoRC(this, 0, 1); this.setFirstColumn(this, this.currentColumn);
             this.TD(this, 1, 3, makeXonoticCheckBox(0, "cl_damagetext", _("Draw damage numbers")));
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Font size:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Accumulate range:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate range:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Lifetime:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 10, 1, "cl_damagetext_alpha_lifetime"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Lifetime:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 10, 1, "cl_damagetext_alpha_lifetime"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Color:")));
-            this.TD(this, 2, 2, makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Color:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 2, 2, e = makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
+                setDependent(e, "cl_damagetext", 1, 1);
     }
 ENDCLASS(XonoticDamageTextSettings)
 #endif

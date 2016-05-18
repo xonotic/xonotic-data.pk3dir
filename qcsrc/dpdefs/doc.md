@@ -86,12 +86,14 @@ void ClientKill();
 //   self
 void RestoreGame();
 
+// Called when a client connects to the server
 // input:
 //   time
 //   self
 //   parm1..n
 void ClientConnect();
 
+// Called when a client spawns in the server
 // input:
 //   time
 //   self
@@ -122,6 +124,7 @@ void SV_OnEntityPostSpawnFunction();
 //   parm1..n
 void SetNewParms();
 
+// Runs every frame
 // input:
 //
 .bool customizeentityforclient();

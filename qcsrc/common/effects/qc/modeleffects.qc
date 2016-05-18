@@ -1,3 +1,5 @@
+#include "modeleffects.qh"
+
 #ifdef IMPLEMENTATION
 
 REGISTER_NET_LINKED(ENT_CLIENT_MODELEFFECT)

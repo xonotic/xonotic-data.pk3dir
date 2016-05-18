@@ -82,7 +82,7 @@ const vector BUFF_MAX = ('16 16 20');
 #include <common/gamemodes/all.qh>
 
 .float buff_time = _STAT(BUFF_TIME);
-void buffs_DelayedInit();
+void buffs_DelayedInit(entity this);
 
 REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 {
@@ -153,17 +153,17 @@ void buff_Effect(entity player, string eff)
 }
 
 // buff item
-float buff_Waypoint_visible_for_player(entity plr)
-{SELFPARAM();
-	if(!self.owner.buff_active && !self.owner.buff_activetime)
+bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
+{
+	if(!this.owner.buff_active && !this.owner.buff_activetime)
 		return false;
 
-	if (plr.buffs)
+	if (view.buffs)
 	{
-		return plr.cvar_cl_buffs_autoreplace == false || plr.buffs != self.owner.buffs;
+		return view.cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
 	}
 
-	return WaypointSprite_visible_for_player(plr);
+	return WaypointSprite_visible_for_player(this, player, view);
 }
 
 void buff_Waypoint_Spawn(entity e)
@@ -785,8 +785,8 @@ bool buffs_RemovePlayer(entity player)
 
 	return false;
 }
-MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { return buffs_RemovePlayer(self); }
-MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { SELFPARAM(); return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { SELFPARAM(); return buffs_RemovePlayer(self); }
 
 MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 {SELFPARAM();
@@ -892,7 +892,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 				{
 					entity oldother = other;
 					other = self;
-					WITH(entity, self, it, it.touch());
+					WITHSELF(it, it.touch());
 
 					other = oldother;
 				}
@@ -1045,7 +1045,7 @@ MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 	return false;
 }
 
-void buffs_DelayedInit()
+void buffs_DelayedInit(entity this)
 {
 	if(autocvar_g_buffs_spawn_count > 0)
 	if(find(world, classname, "item_buff") == world)

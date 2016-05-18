@@ -437,7 +437,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 								if(argv(i) == argv(j))
 									goto skip_union;
 							s = strcat(s, " ", argv(i));
-							:skip_union
+LABEL(skip_union)
 						}
 						if(substring(s, 0, 1) == " ")
 							s = substring(s, 1, 99999);
@@ -480,7 +480,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 								if(argv(i) == argv(j))
 									goto skip_difference;
 							s = strcat(s, " ", argv(i));
-							:skip_difference
+LABEL(skip_difference)
 						}
 						if(substring(s, 0, 1) == " ")
 							s = substring(s, 1, 99999);

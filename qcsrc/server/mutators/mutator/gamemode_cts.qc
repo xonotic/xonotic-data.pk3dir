@@ -1,3 +1,4 @@
+#include "gamemode_cts.qh"
 #include <server/race.qh>
 
 #ifndef GAMEMODE_CTS_H
@@ -14,7 +15,7 @@ REGISTER_MUTATOR(cts, false)
 
 		g_race_qualifying = true;
 		independent_players = 1;
-		SetLimits(0, 0, -1, -1);
+		SetLimits(0, 0, autocvar_timelimit_override, -1);
 
 		cts_Initialize();
 	}
@@ -51,25 +52,25 @@ bool autocvar_g_cts_selfdamage;
 
 // legacy bot roles
 .float race_checkpoint;
-void havocbot_role_cts()
-{SELFPARAM();
-	if(IS_DEAD(self))
+void havocbot_role_cts(entity this)
+{
+	if(IS_DEAD(this))
 		return;
 
-	if (self.bot_strategytime < time)
+	if (this.bot_strategytime < time)
 	{
-		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-		navigation_goalrating_start();
+		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start(this);
 
 		FOREACH_ENTITY_CLASS("trigger_race_checkpoint", true,
 		{
-			if(it.cnt == self.race_checkpoint)
-				navigation_routerating(it, 1000000, 5000);
-			else if(self.race_checkpoint == -1)
-				navigation_routerating(it, 1000000, 5000);
+			if(it.cnt == this.race_checkpoint)
+				navigation_routerating(this, it, 1000000, 5000);
+			else if(this.race_checkpoint == -1)
+				navigation_routerating(this, it, 1000000, 5000);
 		});
 
-		navigation_goalrating_end();
+		navigation_goalrating_end(this);
 	}
 }
 
@@ -95,6 +96,7 @@ void cts_EventLog(string mode, entity actor) // use an alias for easy changing a
 		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+void KillIndicator_Think();
 void CTS_ClientKill(entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
 {
     e.killindicator = spawn();
@@ -212,7 +214,7 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 {SELFPARAM();
-	race_PreparePlayer();
+	race_PreparePlayer(this);
 	self.race_checkpoint = -1;
 
 	if(IS_REAL_CLIENT(self))
@@ -244,7 +246,7 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 	else
 		self.frags = FRAGS_SPECTATOR;
 
-	race_PreparePlayer();
+	race_PreparePlayer(this);
 	self.race_checkpoint = -1;
 
 	return false;
@@ -254,7 +256,7 @@ MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
 {SELFPARAM();
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
-		race_PreparePlayer();
+		race_PreparePlayer(this);
 
 	// if we need to respawn, do it right
 	self.race_respawn_checkpoint = self.race_checkpoint;
@@ -271,9 +273,9 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 	if(!gameover)
 	{
 		if(self.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
-			race_PreparePlayer();
+			race_PreparePlayer(this);
 		else // respawn
-			race_RetractPlayer();
+			race_RetractPlayer(this);
 
 		race_AbandonRaceCheck(self);
 	}
@@ -383,8 +385,10 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 	return false;
 }
 
+void ClientKill_Now();
 MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
+    SELFPARAM();
 	ret_float = 0;
 
 	if(self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill

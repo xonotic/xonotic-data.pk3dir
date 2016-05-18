@@ -1,4 +1,79 @@
+#include "racetimer.qh"
+
+#include <common/mapinfo.qh>
+
 /** Race timer (#8) */
+
+// return the string of the onscreen race timer
+string MakeRaceString(int cp, float mytime, float theirtime, float lapdelta, string theirname)
+{
+	TC(int, cp);
+	string col;
+	string timestr;
+	string cpname;
+	string lapstr;
+	lapstr = "";
+
+	if(theirtime == 0) // goal hit
+	{
+		if(mytime > 0)
+		{
+			timestr = strcat("+", ftos_decimals(+mytime, TIME_DECIMALS));
+			col = "^1";
+		}
+		else if(mytime == 0)
+		{
+			timestr = "+0.0";
+			col = "^3";
+		}
+		else
+		{
+			timestr = strcat("-", ftos_decimals(-mytime, TIME_DECIMALS));
+			col = "^2";
+		}
+
+		if(lapdelta > 0)
+		{
+			lapstr = sprintf(_(" (-%dL)"), lapdelta);
+			col = "^2";
+		}
+		else if(lapdelta < 0)
+		{
+			lapstr = sprintf(_(" (+%dL)"), -lapdelta);
+			col = "^1";
+		}
+	}
+	else if(theirtime > 0) // anticipation
+	{
+		if(mytime >= theirtime)
+			timestr = strcat("+", ftos_decimals(mytime - theirtime, TIME_DECIMALS));
+		else
+			timestr = TIME_ENCODED_TOSTRING(TIME_ENCODE(theirtime));
+		col = "^3";
+	}
+	else
+	{
+		col = "^7";
+		timestr = "";
+	}
+
+	if(cp == 254)
+		cpname = _("Start line");
+	else if(cp == 255)
+		cpname = _("Finish line");
+	else if(cp)
+		cpname = sprintf(_("Intermediate %d"), cp);
+	else
+		cpname = _("Finish line");
+
+	if(theirtime < 0)
+		return strcat(col, cpname);
+	else if(theirname == "")
+		return strcat(col, sprintf("%s (%s)", cpname, timestr));
+	else
+		return strcat(col, sprintf("%s (%s %s)", cpname, timestr, strcat(theirname, col, lapstr)));
+}
+
 void HUD_RaceTimer ()
 {
 	if(!autocvar__hud_configure)

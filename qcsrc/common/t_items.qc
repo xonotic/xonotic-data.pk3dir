@@ -554,15 +554,13 @@ void Item_RespawnCountdown ()
 
 		if(self.waypointsprite_attached)
 		{
-			setself(self.waypointsprite_attached);
-			FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
-				if(self.waypointsprite_visible_for_player(it))
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), {
+				if(self.waypointsprite_attached.waypointsprite_visible_for_player(self.waypointsprite_attached, it, it))
 				{
 					msg_entity = it;
 					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM);	// play respawn sound
 				}
-			));
-			setself(this);
+			});
 
 			WaypointSprite_Ping(self.waypointsprite_attached);
 			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
@@ -644,7 +642,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 	return false;
 
-:YEAH
+LABEL(YEAH)
 	switch(mode)
 	{
 		case ITEM_MODE_FUEL:
@@ -698,13 +696,13 @@ float Item_GiveTo(entity item, entity player)
 		if (w || (item.spawnshieldtime && item.pickup_anyway > 0))
 		{
 			pickedup = true;
-			FOREACH(Weapons, it != WEP_Null, LAMBDA(
+			FOREACH(Weapons, it != WEP_Null, {
 				if(w & (it.m_wepset))
 				{
 					W_DropEvent(wr_pickup, player, it.m_id, item);
 					W_GiveWeapon(player, it.m_id);
 				}
-			));
+			});
 		}
 	}
 
@@ -740,7 +738,7 @@ float Item_GiveTo(entity item, entity player)
 		player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
 	}
 
-:skip
+LABEL(skip)
 
 	// always eat teamed entities
 	if(item.team)
@@ -811,12 +809,12 @@ void Item_Touch()
 		return;
 	}
 
-	:pickup
+LABEL(pickup)
 
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (other, CH_TRIGGER, (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
+	_sound (other, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
 		remove (this);
@@ -863,8 +861,8 @@ void Item_Reset(entity this)
 }
 void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
-void Item_FindTeam()
-{SELFPARAM();
+void Item_FindTeam(entity this)
+{
 	entity e;
 
 	if(self.effects & EF_NODRAW)
@@ -972,7 +970,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	c = 0;
 
 	// Detect needed ammo
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		if(!(player.weapons & (it.m_wepset)))
 			continue;
 
@@ -988,7 +986,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 			need_plasma = true;
 		else if(it.items & ITEM_JetpackFuel.m_itemid)
 			need_fuel = true;
-	));
+	});
 
 	// TODO: figure out if the player even has the weapon this ammo is for?
 	// may not affect strategy much though...
@@ -1030,7 +1028,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		WITH(entity, self, this, RemoveItem());
+		WITHSELF(this, RemoveItem());
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
@@ -1135,7 +1133,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				WITH(entity, self, this, droptofloor());
+				WITHSELF(this, droptofloor());
 			waypoint_spawnforitem(this);
 		}
 
@@ -1155,16 +1153,12 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 
 		if(autocvar_spawn_debug >= 2)
 		{
-			for(entity otheritem = findradius(this.origin, 3); otheritem; otheritem = otheritem.chain)
-			{
-			    // why not flags & fl_item?
-				if(otheritem.is_item)
-				{
-					LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
-					LOG_TRACE(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
-					error("Mapper sucks.");
-				}
-			}
+            // why not flags & fl_item?
+		    FOREACH_ENTITY_RADIUS(this.origin, 3, it.is_item, {
+                LOG_TRACE("XXX Found duplicated item: ", itemname, vtos(this.origin));
+                LOG_TRACE(" vs ", it.netname, vtos(it.origin), "\n");
+                error("Mapper sucks.");
+            });
 			this.is_item = true;
 		}
 
@@ -1425,29 +1419,31 @@ spawnfunc(item_invincible)
 // compatibility:
 spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(this);}
 
-void target_items_use()
-{SELFPARAM();
-	if(activator.classname == "droppedweapon")
+void target_items_use(entity this, entity actor, entity trigger)
+{
+	other = trigger; // TODO
+
+	if(actor.classname == "droppedweapon")
 	{
 		EXACTTRIGGER_TOUCH;
-		remove(activator);
+		remove(actor);
 		return;
 	}
 
-	if (!IS_PLAYER(activator))
+	if (!IS_PLAYER(actor))
 		return;
-	if(IS_DEAD(activator))
+	if(IS_DEAD(actor))
 		return;
 	EXACTTRIGGER_TOUCH;
 
-	FOREACH_ENTITY_ENT(enemy, activator,
+	FOREACH_ENTITY_ENT(enemy, actor,
 	{
 		if(it.classname == "droppedweapon")
 			remove(it);
 	});
 
-	if(GiveItems(activator, 0, tokenize_console(self.netname)))
-		centerprint(activator, self.message);
+	if(GiveItems(actor, 0, tokenize_console(this.netname)))
+		centerprint(actor, this.message);
 }
 
 spawnfunc(target_items)
@@ -1482,7 +1478,7 @@ spawnfunc(target_items)
 			else if(argv(i) == "fuel_regen")             self.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
-				FOREACH(Weapons, it != WEP_Null, LAMBDA(
+				FOREACH(Weapons, it != WEP_Null, {
 					s = W_UndeprecateName(argv(i));
 					if(s == it.netname)
 					{
@@ -1491,7 +1487,7 @@ spawnfunc(target_items)
 							it.wr_init(it);
 						break;
 					}
-				));
+				});
 			}
 		}
 
@@ -1538,7 +1534,7 @@ spawnfunc(target_items)
 		if(self.ammo_fuel != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_fuel), "fuel");
 		if(self.health != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "health");
 		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.armorvalue), "armor");
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (it.m_wepset)), it.netname)));
+		FOREACH(Weapons, it != WEP_Null, self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (it.m_wepset)), it.netname));
 	}
 	self.netname = strzone(self.netname);
 	//print(self.netname, "\n");
@@ -1546,13 +1542,10 @@ spawnfunc(target_items)
 	n = tokenize_console(self.netname);
 	for(i = 0; i < n; ++i)
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			if(argv(i) == it.netname)
-			{
-				it.wr_init(it);
-				break;
-			}
-		));
+		FOREACH(Weapons, it != WEP_Null && argv(i) == it.netname, {
+            it.wr_init(it);
+            break;
+		});
 	}
 }
 
@@ -1713,10 +1706,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, health, op, val);
 				got += GiveValue(e, armorvalue, op, val);
 			case "allweapons":
-				FOREACH(Weapons, it != WEP_Null, LAMBDA(
-					if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
-						got += GiveWeapon(e, it.m_id, op, val);
-				));
+				FOREACH(Weapons, it != WEP_Null && !(it.spawnflags & WEP_FLAG_MUTATORBLOCKED), got += GiveWeapon(e, it.m_id, op, val));
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
 				got += GiveValue(e, ammo_plasma, op, val);
@@ -1775,13 +1765,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, ammo_fuel, op, val);
 				break;
 			default:
-				FOREACH(Weapons, it != WEP_Null, LAMBDA(
-					if(cmd == it.netname)
-					{
-						got += GiveWeapon(e, it.m_id, op, val);
-						break;
-					}
-				));
+				FOREACH(Weapons, it != WEP_Null && cmd == it.netname, {
+                    got += GiveWeapon(e, it.m_id, op, val);
+                    break;
+				});
 				break;
 		}
 		val = 999;
@@ -1792,12 +1779,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_SUPERWEAPONS, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_BIT(e, items, IT_UNLIMITED_WEAPON_AMMO, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_BIT(e, items, ITEM_Jetpack.m_itemid, SND_ITEMPICKUP, SND_Null);
-	FOREACH(Weapons, it != WEP_Null, LAMBDA(
+	FOREACH(Weapons, it != WEP_Null, {
 		POSTGIVE_WEAPON(e, it, SND_WEAPONPICKUP, SND_Null);
 		if(!(save_weapons & (it.m_wepset)))
 			if(e.weapons & (it.m_wepset))
 				it.wr_init(it);
-	));
+	});
 	POSTGIVE_VALUE(e, strength_finished, 1, SND_POWERUP, SND_POWEROFF);
 	POSTGIVE_VALUE(e, invincible_finished, 1, SND_Shield, SND_POWEROFF);
 	POSTGIVE_VALUE(e, ammo_nails, 0, SND_ITEMPICKUP, SND_Null);

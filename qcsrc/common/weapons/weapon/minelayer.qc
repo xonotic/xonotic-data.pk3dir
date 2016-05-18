@@ -308,7 +308,7 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_MineLayer_Explode));
+		W_PrepareExplosionByDamage(this, attacker, W_MineLayer_Explode);
 }
 
 void W_MineLayer_Attack(Weapon thiswep)
@@ -330,7 +330,7 @@ void W_MineLayer_Attack(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(minelayer, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND(MINE_FIRE), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', false, 5, SND_MINE_FIRE, CH_WEAPON_A, WEP_CVAR(minelayer, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -406,11 +406,12 @@ float W_MineLayer_PlacedMines(float detonate)
 
 METHOD(MineLayer, wr_aim, void(entity thiswep))
 {
+    SELFPARAM();
     // aim and decide to fire if appropriate
     if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
         PHYS_INPUT_BUTTON_ATCK(self) = false;
     else
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), false);
+        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
     {
         // decide whether to detonate mines
@@ -443,7 +444,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep))
                     selfdamage = selfdamage + d;
                 else if(targ.team == self.team && teamplay)
                     teamdamage = teamdamage + d;
-                else if(bot_shouldattack(targ))
+                else if(bot_shouldattack(self, targ))
                     enemydamage = enemydamage + d;
                 targ = targ.chain;
             }
@@ -528,15 +529,16 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
 {
-    int slot = 0; // TODO: unhardcode
-    // don't switch while placing a mine
-    if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_MINE_LAYER)
-    {
+    SELFPARAM();
+    //int slot = 0; // TODO: unhardcode
+    // actually do // don't switch while placing a mine
+    //if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_MINE_LAYER)
+    //{
         float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
         ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
-    }
-    return true;
+    //}
+    //return true;
 }
 METHOD(MineLayer, wr_checkammo2, bool(entity thiswep))
 {
@@ -547,11 +549,13 @@ METHOD(MineLayer, wr_checkammo2, bool(entity thiswep))
 }
 METHOD(MineLayer, wr_resetplayers, void(entity thiswep))
 {
+    SELFPARAM();
     self.minelayer_mines = 0;
 }
 METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(self, WEP_CVAR(minelayer, ammo), SND(RELOAD));
+    SELFPARAM();
+    W_Reload(self, WEP_CVAR(minelayer, ammo), SND_RELOAD);
 }
 METHOD(MineLayer, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -567,6 +571,7 @@ METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(MineLayer, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

@@ -1,5 +1,4 @@
-#ifndef CL_PLAYER_H
-#define CL_PLAYER_H
+#pragma once
 
 .entity pusher;
 .float pushltime;
@@ -38,5 +37,3 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 /** to be used by `prvm_edictset server playernumber muted 1` */
 .float muted;
 int Say(entity source, float teamsay, entity privatesay, string msgin, float floodcontrol);
-
-#endif

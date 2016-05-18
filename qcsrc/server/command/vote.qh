@@ -1,5 +1,4 @@
-#ifndef VOTE_H
-#define VOTE_H
+#pragma once
 
 // ================================================
 //  Declarations for the vote system/vote commands
@@ -55,4 +54,3 @@ void reset_map(float dorespawn);
 void ReadyCount();
 void ReadyRestart_force();
 void VoteCount(float first_count);
-#endif

@@ -1,33 +1,30 @@
 before_script:
-  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
-  - cd darkplaces && make sv-debug -j $(nproc)
-  - cd ..
-  - export ENGINE="$PWD/darkplaces/darkplaces-dedicated -xonotic"
-
-  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - cd gmqcc && make -j $(nproc)
-  - cd ..
-  - export QCC="$PWD/gmqcc/gmqcc"
-
   - ln -s $PWD data/xonotic-data.pk3dir
 
-test_sv_unit:
+  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
+  - cd gmqcc && make -j $(nproc) && export QCC="$PWD/gmqcc"
+  - cd ..
+
+test_compilation_units:
   stage: test
   script:
-    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
-    - make
-    - while read line; do
-        echo $line;
-        if [[ $line == "All tests OK" ]]; then exit 0; fi;
-      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
-    - exit 1
+    - ./qcsrc/tools/compilationunits.sh
 
 test_sv_game:
   stage: test
   script:
+    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
+    - cd ..
+
+    - mkdir -p data/maps
     - wget -O data/g-23.pk3 http://beta.xonotic.org/autobuild-bsp/latest/g-23.pk3
+    - wget -O data/maps/g-23.mapinfo https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.mapinfo
+    - wget -O data/maps/g-23.waypoints https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints
+    - wget -O data/maps/g-23.waypoints.cache https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.cache
+    - wget -O data/maps/g-23.waypoints.hardwired https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/g-23.waypoints.hardwired
     - make
-    - EXPECT=e53fb00597ea9a38aa31230e4edfbd54
+    - EXPECT=4bd5b0276cdd100c831c73f0400eca71
     - HASH=$(${ENGINE} -noconfig -nohome +exec serverbench.cfg
       | tee /dev/stderr
       | grep '^:'
@@ -38,6 +35,21 @@ test_sv_game:
     - echo '  actual:' $HASH
     - test "$HASH" == "$EXPECT"
     - exit $?
+
+test_sv_unit:
+  stage: test
+  script:
+    - git clone --depth=1 --branch=master https://gitlab.com/xonotic/darkplaces.git darkplaces
+    - cd darkplaces && make sv-debug -j $(nproc) && export ENGINE="$PWD/darkplaces-dedicated -xonotic"
+    - cd ..
+
+    - mkdir maps && wget -O maps/gitlab-ci.bsp https://gitlab.com/xonotic/xonotic-maps.pk3dir/raw/master/maps/_init/_init.bsp
+    - make
+    - while read line; do
+        echo $line;
+        if [[ $line == "All tests OK" ]]; then exit 0; fi;
+      done < <(${ENGINE} +developer 1 +map gitlab-ci +sv_cmd runtest +exit)
+    - exit 1
 
 doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
   stage: deploy
@@ -53,7 +65,7 @@ doxygen:  # rename to 'pages' when gitlab.com allows pages to exceed 100MiB
     - git clone --single-branch --depth 1 ${DEPLOY_HOST}:${DEPLOY_REPO} ~/deploy_
     - mkdir ~/deploy && mv ~/deploy_/.git ~/deploy && rm -r ~/deploy_
     - cp -r ../public/* ~/deploy
-    - cd ~/deploy && git add -A . && git commit -m "Update" && git push origin gh-pages
+    - cd ~/deploy && git add -A . && git commit -m "Deploy ${CI_BUILD_REF}" && git push origin gh-pages
   artifacts:
     paths:
       - public

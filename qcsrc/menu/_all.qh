@@ -1,7 +1,5 @@
-#ifndef MENU_ALL_H
-#define MENU_ALL_H
+#pragma once
 
 #include "draw.qh"
 #include "xonotic/util.qh"
-
-#endif
+#include "menu.qh"

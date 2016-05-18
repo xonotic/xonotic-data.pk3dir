@@ -118,6 +118,11 @@ void W_Hook_Explode2()
 	self.movetype = MOVETYPE_NONE;
 }
 
+void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, W_Hook_Explode2());
+}
+
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(this.health <= 0)
@@ -129,19 +134,19 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 	this.health = this.health - damage;
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(this.realowner, W_Hook_Explode2));
+		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
 void W_Hook_Touch2()
 {SELFPARAM();
 	PROJECTILE_TOUCH;
-	self.use();
+	this.use(this, NULL, NULL);
 }
 
 void W_Hook_Attack2(Weapon thiswep, entity actor)
 {
 	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hook, ammo)); // WEAPONTODO: Figure out how to handle ammo with hook secondary (gravitybomb)
-	W_SetupShot(actor, false, 4, SND(HOOKBOMB_FIRE), CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
+	W_SetupShot(actor, false, 4, SND_HOOKBOMB_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hook, damage));
 
 	entity gren = new(hookbomb);
 	gren.owner = gren.realowner = actor;
@@ -155,7 +160,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
-	gren.use = W_Hook_Explode2;
+	gren.use = W_Hook_Explode2_use;
 	gren.touch = W_Hook_Touch2;
 
 	gren.takedamage = DAMAGE_YES;
@@ -182,6 +187,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
+    SELFPARAM();
     if (fire & 1) {
         if(!actor.hook)
         if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
@@ -261,7 +267,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if (actor.hook)
             RemoveGrapplingHook(actor);
-        WITH(entity, self, actor, FireGrapplingHook());
+        WITHSELF(actor, FireGrapplingHook());
         actor.hook_state &= ~HOOK_FIRING;
         actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
     }
@@ -274,10 +280,12 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(Hook, wr_setup, void(entity thiswep))
 {
+    SELFPARAM();
     self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 }
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep))
 {
+    SELFPARAM();
     if (!thiswep.ammo_factor) return true;
     if(self.hook)
         return self.ammo_fuel > 0;
@@ -291,6 +299,7 @@ METHOD(Hook, wr_checkammo2, bool(Hook thiswep))
 }
 METHOD(Hook, wr_resetplayer, void(entity thiswep))
 {
+    SELFPARAM();
     RemoveGrapplingHook(self);
     self.hook_time = 0;
     self.hook_refire = time;
@@ -305,6 +314,7 @@ METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Hook, wr_impacteffect, void(entity thiswep))
 {
+    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);
@@ -479,6 +489,9 @@ void Draw_GrapplingHook(entity this)
 void Remove_GrapplingHook(entity this)
 {
 	sound (this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+
+	if(csqcplayer && csqcplayer.hook == this)
+		csqcplayer.hook = NULL;
 }
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
@@ -497,6 +510,8 @@ NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 		int myowner = ReadByte();
 		self.owner = playerslots[myowner - 1];
 		self.sv_entnum = myowner;
+		if(csqcplayer && myowner == player_localentnum)
+			csqcplayer.hook = self;
 		switch(self.HookType)
 		{
 			default:

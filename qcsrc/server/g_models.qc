@@ -1,3 +1,4 @@
+#include "g_models.qh"
 
 #include "g_subs.qh"
 #include "../common/triggers/subs.qh"
@@ -15,43 +16,43 @@ class(BGMScript) .float bgmscriptrelease;
 
 .float modelscale;
 
-void g_model_setcolormaptoactivator ()
-{SELFPARAM();
+void g_model_setcolormaptoactivator(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
 	{
-		if(activator.team)
-			self.colormap = (activator.team - 1) * 0x11;
+		if(actor.team)
+			this.colormap = (actor.team - 1) * 0x11;
 		else
-			self.colormap = 0x00;
+			this.colormap = 0x00;
 	}
 	else
-		self.colormap = floor(random() * 256);
-	self.colormap |= BIT(10); // RENDER_COLORMAPPED
+		this.colormap = floor(random() * 256);
+	this.colormap |= BIT(10); // RENDER_COLORMAPPED
 }
 
-void g_clientmodel_setcolormaptoactivator ()
-{SELFPARAM();
-	g_model_setcolormaptoactivator();
-	self.SendFlags |= (BIT(3) | BIT(0));
+void g_clientmodel_setcolormaptoactivator(entity this, entity actor, entity trigger)
+{
+	g_model_setcolormaptoactivator(this, actor, trigger);
+	this.SendFlags |= (BIT(3) | BIT(0));
 }
 
-void g_clientmodel_use()
-{SELFPARAM();
-	if (self.antiwall_flag == 1)
+void g_clientmodel_use(entity this, entity actor, entity trigger)
+{
+	if (this.antiwall_flag == 1)
 	{
-		self.inactive = 1;
-		self.solid = SOLID_NOT;
+		this.inactive = 1;
+		this.solid = SOLID_NOT;
 	}
-	else if (self.antiwall_flag == 2)
+	else if (this.antiwall_flag == 2)
 	{
-		self.inactive = 0;
-		self.solid = self.default_solid;
+		this.inactive = 0;
+		this.solid = this.default_solid;
 	}
-	g_clientmodel_setcolormaptoactivator();
+	g_clientmodel_setcolormaptoactivator(this, actor, trigger);
 }
 
-void g_model_dropbyspawnflags()
-{SELFPARAM();
+void g_model_dropbyspawnflags(entity this)
+{
 	if((self.spawnflags & 3) == 1) // ALIGN_ORIGIN
 	{
 		traceline(self.origin, self.origin - '0 0 4096', MOVE_NOMONSTERS, self);
@@ -69,11 +70,11 @@ void g_model_dropbyspawnflags()
 	}
 }
 
-void g_clientmodel_dropbyspawnflags()
-{SELFPARAM();
+void g_clientmodel_dropbyspawnflags(entity this)
+{
 	vector o0;
 	o0 = self.origin;
-	g_model_dropbyspawnflags();
+	g_model_dropbyspawnflags(self);
 	if(self.origin != o0)
 		self.SendFlags |= 2;
 }

@@ -1,12 +1,11 @@
-void SUB_DontUseTargets() { }
+void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
-void() SUB_UseTargets;
+void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 void DelayThink()
 {SELFPARAM();
-	activator = self.enemy;
-	SUB_UseTargets ();
-	remove(self);
+	SUB_UseTargets (this, this.enemy, NULL);
+	remove(this);
 }
 
 void FixSize(entity e)
@@ -25,7 +24,7 @@ void FixSize(entity e)
 void trigger_init(entity this)
 {
 	string m = this.model;
-	WITH(entity, self, this, WarpZoneLib_ExactTrigger_Init());
+	WITHSELF(this, WarpZoneLib_ExactTrigger_Init());
  	if(m != "")
  	{
  		precache_model(m);
@@ -96,51 +95,51 @@ void trigger_common_write(entity this, bool withtarget)
 void trigger_common_read(bool withtarget)
 {SELFPARAM();
 	int f = ReadByte();
-	self.warpzone_isboxy = (f & 1);
+	this.warpzone_isboxy = (f & 1);
 
 	if(withtarget)
 	{
-		if(self.target) { strunzone(self.target); }
-		self.target = strzone(ReadString());
-		if(self.target2) { strunzone(self.target2); }
-		self.target2 = strzone(ReadString());
-		if(self.target3) { strunzone(self.target3); }
-		self.target3 = strzone(ReadString());
-		if(self.target4) { strunzone(self.target4); }
-		self.target4 = strzone(ReadString());
-		if(self.targetname) { strunzone(self.targetname); }
-		self.targetname = strzone(ReadString());
-		if(self.killtarget) { strunzone(self.killtarget); }
-		self.killtarget = strzone(ReadString());
+		if(this.target) { strunzone(this.target); }
+		this.target = strzone(ReadString());
+		if(this.target2) { strunzone(this.target2); }
+		this.target2 = strzone(ReadString());
+		if(this.target3) { strunzone(this.target3); }
+		this.target3 = strzone(ReadString());
+		if(this.target4) { strunzone(this.target4); }
+		this.target4 = strzone(ReadString());
+		if(this.targetname) { strunzone(this.targetname); }
+		this.targetname = strzone(ReadString());
+		if(this.killtarget) { strunzone(this.killtarget); }
+		this.killtarget = strzone(ReadString());
 	}
 
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	else
-		self.origin = '0 0 0';
-	setorigin(self, self.origin);
+		this.origin = '0 0 0';
+	setorigin(this, this.origin);
 
-	self.modelindex = ReadShort();
-	self.mins_x = ReadCoord();
-	self.mins_y = ReadCoord();
-	self.mins_z = ReadCoord();
-	self.maxs_x = ReadCoord();
-	self.maxs_y = ReadCoord();
-	self.maxs_z = ReadCoord();
-	self.scale = ReadByte() / 16;
-	setsize(self, self.mins, self.maxs);
+	this.modelindex = ReadShort();
+	this.mins_x = ReadCoord();
+	this.mins_y = ReadCoord();
+	this.mins_z = ReadCoord();
+	this.maxs_x = ReadCoord();
+	this.maxs_y = ReadCoord();
+	this.maxs_z = ReadCoord();
+	this.scale = ReadByte() / 16;
+	setsize(this, this.mins, this.maxs);
 
-	self.movedir_x = ReadCoord();
-	self.movedir_y = ReadCoord();
-	self.movedir_z = ReadCoord();
+	this.movedir_x = ReadCoord();
+	this.movedir_y = ReadCoord();
+	this.movedir_z = ReadCoord();
 
-	self.angles_x = ReadCoord();
-	self.angles_y = ReadCoord();
-	self.angles_z = ReadCoord();
+	this.angles_x = ReadCoord();
+	this.angles_y = ReadCoord();
+	this.angles_z = ReadCoord();
 }
 
 void trigger_remove_generic(entity this)
@@ -184,52 +183,49 @@ match (string)self.target and call their .use function
 
 ==============================
 */
-void SUB_UseTargets()
-{SELFPARAM();
-	entity t, otemp, act;
-	string s;
-	float i;
-
+void SUB_UseTargets(entity this, entity actor, entity trigger)
+{
 //
 // check for a delay
 //
-	if (self.delay)
+	if (this.delay)
 	{
 	// create a temp object to fire at a later time
-		t = new(DelayedUse);
-		t.nextthink = time + self.delay;
+		entity t = new(DelayedUse);
+		t.nextthink = time + this.delay;
 		t.think = DelayThink;
-		t.enemy = activator;
-		t.message = self.message;
-		t.killtarget = self.killtarget;
-		t.target = self.target;
-		t.target2 = self.target2;
-		t.target3 = self.target3;
-		t.target4 = self.target4;
+		t.enemy = actor;
+		t.message = this.message;
+		t.killtarget = this.killtarget;
+		t.target = this.target;
+		t.target2 = this.target2;
+		t.target3 = this.target3;
+		t.target4 = this.target4;
 		return;
 	}
 
+	string s;
 
 //
 // print the message
 //
 #ifdef SVQC
-	if(self)
-	if(IS_PLAYER(activator) && self.message != "")
-	if(IS_REAL_CLIENT(activator))
+	if(this)
+	if(IS_PLAYER(actor) && this.message != "")
+	if(IS_REAL_CLIENT(actor))
 	{
-		centerprint(activator, self.message);
-		if (self.noise == "")
-			play2(activator, SND(TALK));
+		centerprint(actor, this.message);
+		if (this.noise == "")
+			play2(actor, SND(TALK));
 	}
 
 //
 // kill the killtagets
 //
-	s = self.killtarget;
+	s = this.killtarget;
 	if (s != "")
 	{
-		for(t = world; (t = find(t, targetname, s)); )
+		for(entity t = world; (t = find(t, targetname, s)); )
 			remove(t);
 	}
 #endif
@@ -237,13 +233,11 @@ void SUB_UseTargets()
 //
 // fire targets
 //
-	act = activator;
-	otemp = other;
 
 	if(this.target_random)
 		RandomSelection_Init();
 
-	for(i = 0; i < 4; ++i)
+	for(int i = 0; i < 4; ++i)
 	{
 		switch(i)
 		{
@@ -257,38 +251,34 @@ void SUB_UseTargets()
 		{
 			// Flag to set func_clientwall state
 			// 1 == deactivate, 2 == activate, 0 == do nothing
-			float aw_flag = self.antiwall_flag;
-			for(t = world; (t = find(t, targetname, s)); )
-			if(t.use)
+			int aw_flag = this.antiwall_flag;
+			for(entity t = world; (t = find(t, targetname, s)); )
 			{
-				if(this.target_random)
+				if(t.use)
 				{
-					RandomSelection_Add(t, 0, string_null, 1, 0);
-				}
-				else
-				{
-					if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
-						t.antiwall_flag = aw_flag;
-					setself(t);
-					other = this;
-					activator = act;
-					self.use();
+					if(this.target_random)
+					{
+						RandomSelection_Add(t, 0, string_null, 1, 0);
+					}
+					else
+					{
+						if (t.classname == "func_clientwall" || t.classname == "func_clientillusionary")
+							t.antiwall_flag = aw_flag;
+
+						t.use(t, actor, this);
+					}
 				}
 			}
 		}
 	}
 
 	if(this.target_random && RandomSelection_chosen_ent)
-	{
-		setself(RandomSelection_chosen_ent);
-		other = this;
-		activator = act;
-		self.use();
-	}
+		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
+}
 
-	activator = act;
-	setself(this);
-	other = otemp;
+void SUB_UseTargets_self()
+{SELFPARAM();
+	SUB_UseTargets(this, NULL, NULL);
 }
 
 #ifdef CSQC
@@ -296,7 +286,7 @@ void trigger_touch_generic(entity this, void() touchfunc)
 {
 	entity e;
 	for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
-	if(e.isplayermodel || e.classname == "csqcprojectile")
+	if(e.classname == "csqcprojectile")
 	{
 		vector emin = e.absmin, emax = e.absmax;
 		if(this.solid == SOLID_BSP)
@@ -308,7 +298,7 @@ void trigger_touch_generic(entity this, void() touchfunc)
 		if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
 		{
 			other = e;
-			WITH(entity, self, this, touchfunc());
+			WITHSELF(this, touchfunc());
 		}
 	}
 }

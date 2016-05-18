@@ -29,12 +29,13 @@
 .vector move_origin;
 
 	void SUB_SETORIGIN(entity s, vector v)
-	{SELFPARAM();
+	{
 		s.move_origin = v;
 		_Movetype_LinkEdict(s, true);
 	}
 
 #endif
+
 
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
@@ -55,7 +56,7 @@ void SUB_VanishOrRemove (entity ent);
 .string  platmovetype;
 .float platmovetype_start, platmovetype_end;
 
-entity activator;
+//entity activator;
 
 .string killtarget;
 

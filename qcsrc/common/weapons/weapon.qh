@@ -1,7 +1,11 @@
 #ifndef WEAPON_H
 #define WEAPON_H
-#include "../items/item/pickup.qh"
-#include "../stats.qh"
+#include <common/items/item/pickup.qh>
+#include <common/stats.qh>
+
+#ifdef SVQC
+#include <common/effects/qc/all.qh>
+#endif
 
 const int MAX_WEAPONSLOTS = 2;
 .entity weaponentities[MAX_WEAPONSLOTS];
@@ -126,7 +130,7 @@ CLASS(Weapon, Object)
 	}
 ENDCLASS(Weapon)
 
-#include "../items/all.qh"
+#include <common/items/all.qh>
 CLASS(WeaponPickup, Pickup)
     ATTRIB(WeaponPickup, m_weapon, Weapon, NULL)
     ATTRIB(WeaponPickup, m_name, string, string_null)

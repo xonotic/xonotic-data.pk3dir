@@ -28,7 +28,7 @@ float T_Config_Queue_Compare(float root, float child, entity pass)
 void Dump_Turret_Settings()
 {
 	float x, totalsettings = 0;
-	FOREACH(Turrets, it != TUR_Null, LAMBDA({
+	FOREACH(Turrets, it != TUR_Null, {
 		// step 1: clear the queue
 		TUR_CONFIG_COUNT = 0;
 		for(x = 0; x <= MAX_TUR_CONFIG; ++x)
@@ -49,7 +49,7 @@ void Dump_Turret_Settings()
 		// step 5: debug info
 		LOG_INFO(sprintf("#%d: %s: %d settings...\n", i, it.turret_name, TUR_CONFIG_COUNT));
 		totalsettings += TUR_CONFIG_COUNT;
-	}));
+	});
 
 	// clear queue now that we're finished
 	TUR_CONFIG_COUNT = 0;

@@ -1,7 +1,7 @@
 #ifndef TURRET_PLASMA_H
 #define TURRET_PLASMA_H
 
-#include "plasma_weapon.qc"
+#include "plasma_weapon.qh"
 
 CLASS(PlasmaTurret, Turret)
 /* spawnflags */ ATTRIB(PlasmaTurret, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER);
@@ -20,8 +20,6 @@ REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 
 #ifdef IMPLEMENTATION
 
-#include "plasma_weapon.qc"
-
 #ifdef SVQC
 
 spawnfunc(turret_plasma) { if (!turret_initialize(TUR_PLASMA)) remove(self); }
@@ -30,7 +28,7 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
     if(g_instagib)
     {
-        FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+        FireRailgunBullet (self, self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                            800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
 
         Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
@@ -48,6 +46,7 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 }
 METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
+    SELFPARAM();
     if (self.tur_head.frame != 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 
