@@ -197,8 +197,8 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 //  Ballistics Tracing
 // ====================
 
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
-{SELFPARAM();
+void FireRailgunBullet (entity this, vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, int deathtype)
+{
 	vector hitloc, force, endpoint, dir;
 	entity ent, endent;
 	float endq3surfaceflags;
@@ -225,13 +225,13 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// trace multiple times until we hit a wall, each obstacle will be made
 	// non-solid so we can hit the next, while doing this we spawn effects and
 	// note down which entities were hit so we can damage them later
-	o = self;
+	o = this;
 	while (1)
 	{
-		if(CS(self).antilag_debug)
-			WarpZone_traceline_antilag (self, start, end, false, o, CS(self).antilag_debug);
+		if(CS(this).antilag_debug)
+			WarpZone_traceline_antilag (this, start, end, false, o, CS(this).antilag_debug);
 		else
-			WarpZone_traceline_antilag (self, start, end, false, o, ANTILAG_LATENCY(self));
+			WarpZone_traceline_antilag (this, start, end, false, o, ANTILAG_LATENCY(this));
 		if(o && WarpZone_trace_firstzone)
 		{
 			o = world;
@@ -239,7 +239,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		}
 
 		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
-			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, self);
+			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, this);
 
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
@@ -279,9 +279,9 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	// Find all non-hit players the beam passed close by
 	if(deathtype == WEP_VAPORIZER.m_id || deathtype == WEP_VORTEX.m_id)
 	{
-		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self, LAMBDA(
+		FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this, LAMBDA(
 			if(!it.railgunhit)
-			if(!(IS_SPEC(it) && it.enemy == self))
+			if(!(IS_SPEC(it) && it.enemy == this))
 			{
 				msg_entity = it;
 				// nearest point on the beam
@@ -313,16 +313,16 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
 
-		if(accuracy_isgooddamage(self, ent))
+		if(accuracy_isgooddamage(this, ent))
 			totaldmg += bdamage * f;
 
 		// apply the damage
 		if (ent.takedamage)
-			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
+			Damage (ent, this, this, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
-		//RadiusDamage (explosion, self, 10, 0, 50, world, world, 300, deathtype);
+		//RadiusDamage (explosion, this, 10, 0, 50, world, world, 300, deathtype);
 
 		ent.railgunhitloc = '0 0 0';
 		ent.railgunhitsolidbackup = SOLID_NOT;
@@ -334,7 +334,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	}
 
 	// calculate hits and fired shots for hitscan
-	accuracy_add(self, PS(self).m_weapon.m_id, 0, min(bdamage, totaldmg));
+	accuracy_add(this, PS(this).m_weapon.m_id, 0, min(bdamage, totaldmg));
 
 	trace_endpos = endpoint;
 	trace_ent = endent;

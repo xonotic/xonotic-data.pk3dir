@@ -34,7 +34,7 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
 {
     SELFPARAM();
     if (g_instagib) {
-        FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+        FireRailgunBullet (self, self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                            800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
 
 

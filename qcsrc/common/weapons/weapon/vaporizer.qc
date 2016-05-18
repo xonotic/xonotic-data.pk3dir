@@ -190,7 +190,7 @@ void W_Vaporizer_Attack(Weapon thiswep)
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
+	FireRailgunBullet(self, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
 
 	// do this now, as goodhits is disabled below
 	SendCSQCVaporizerBeamParticle(self, damage_goodhits);
