@@ -921,25 +921,25 @@ void WaypointSprite_Think()
         self.nextthink = time; // WHY?!?
 }
 
-float WaypointSprite_visible_for_player(entity e)
-{SELFPARAM();
+bool WaypointSprite_visible_for_player(entity this, entity player, entity view)
+{
     // personal waypoints
-    if (self.enemy && self.enemy != e)
+    if (this.enemy && this.enemy != view)
         return false;
 
     // team waypoints
-    if (self.rule == SPRITERULE_SPECTATOR)
+    if (this.rule == SPRITERULE_SPECTATOR)
     {
         if (!autocvar_sv_itemstime)
             return false;
-        if (!warmup_stage && IS_PLAYER(e))
+        if (!warmup_stage && IS_PLAYER(view))
             return false;
     }
-    else if (self.team && self.rule == SPRITERULE_DEFAULT)
+    else if (this.team && this.rule == SPRITERULE_DEFAULT)
     {
-        if (self.team != e.team)
+        if (this.team != view.team)
             return false;
-        if (!IS_PLAYER(e))
+        if (!IS_PLAYER(view))
             return false;
     }
 
@@ -973,7 +973,7 @@ float WaypointSprite_Customize()
     if (MUTATOR_CALLHOOK(CustomizeWaypoint, self, other))
         return false;
 
-    return self.waypointsprite_visible_for_player(e);
+    return self.waypointsprite_visible_for_player(self, other, e);
 }
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);

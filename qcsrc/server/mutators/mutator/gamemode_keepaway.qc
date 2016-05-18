@@ -64,10 +64,10 @@ int autocvar_g_keepawayball_effects;
 float autocvar_g_keepawayball_respawntime;
 int autocvar_g_keepawayball_trail_color;
 
-float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame
+bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player, entity view) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
-	if(e.ballcarried)
-		if(IS_SPEC(other))
+	if(view.ballcarried)
+		if(IS_SPEC(player))
 			return false; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
 
 	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup

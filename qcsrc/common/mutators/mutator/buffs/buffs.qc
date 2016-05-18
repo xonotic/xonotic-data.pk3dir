@@ -153,17 +153,17 @@ void buff_Effect(entity player, string eff)
 }
 
 // buff item
-float buff_Waypoint_visible_for_player(entity plr)
-{SELFPARAM();
-	if(!self.owner.buff_active && !self.owner.buff_activetime)
+bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
+{
+	if(!this.owner.buff_active && !this.owner.buff_activetime)
 		return false;
 
-	if (plr.buffs)
+	if (view.buffs)
 	{
-		return plr.cvar_cl_buffs_autoreplace == false || plr.buffs != self.owner.buffs;
+		return view.cvar_cl_buffs_autoreplace == false || view.buffs != this.owner.buffs;
 	}
 
-	return WaypointSprite_visible_for_player(plr);
+	return WaypointSprite_visible_for_player(this, player, view);
 }
 
 void buff_Waypoint_Spawn(entity e)

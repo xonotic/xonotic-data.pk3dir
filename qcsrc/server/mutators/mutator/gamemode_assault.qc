@@ -157,13 +157,9 @@ void assault_setenemytoobjective(entity this)
 		objerror("no objective as target - fix the map!");
 }
 
-float assault_decreaser_sprite_visible(entity e)
-{SELFPARAM();
-	entity decreaser;
-
-	decreaser = self.assault_decreaser;
-
-	if(decreaser.enemy.health >= ASSAULT_VALUE_INACTIVE)
+bool assault_decreaser_sprite_visible(entity this, entity player, entity view)
+{
+	if(this.assault_decreaser.enemy.health >= ASSAULT_VALUE_INACTIVE)
 		return false;
 
 	return true;

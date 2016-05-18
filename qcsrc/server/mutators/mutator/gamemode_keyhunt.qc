@@ -157,22 +157,22 @@ void kh_ScoreRules(float teams)
 	ScoreRules_basics_end();
 }
 
-float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the time
-{SELFPARAM();
-	if(!IS_PLAYER(e) || DIFF_TEAM(self, e))
+bool kh_KeyCarrier_waypointsprite_visible_for_player(entity this, entity player, entity view)  // runs all the time
+{
+	if(!IS_PLAYER(view) || DIFF_TEAM(this, view))
 		if(!kh_tracking_enabled)
 			return false;
 
 	return true;
 }
 
-float kh_Key_waypointsprite_visible_for_player(entity e) // ??
-{SELFPARAM();
+bool kh_Key_waypointsprite_visible_for_player(entity this, entity player, entity view)
+{
 	if(!kh_tracking_enabled)
 		return false;
-	if(!self.owner)
+	if(!this.owner)
 		return true;
-	if(!self.owner.owner)
+	if(!this.owner.owner)
 		return true;
 	return false;  // draw only when key is not owned
 }

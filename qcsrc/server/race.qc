@@ -714,11 +714,11 @@ void checkpoint_use(entity this, entity actor, entity trigger)
 	checkpoint_passed();
 }
 
-float race_waypointsprite_visible_for_player(entity e)
-{SELFPARAM();
-	if(e.race_checkpoint == -1 || self.owner.race_checkpoint == -2)
+bool race_waypointsprite_visible_for_player(entity this, entity player, entity view)
+{
+	if(view.race_checkpoint == -1 || this.owner.race_checkpoint == -2)
 		return true;
-	else if(e.race_checkpoint == self.owner.race_checkpoint)
+	else if(view.race_checkpoint == this.owner.race_checkpoint)
 		return true;
 	else
 		return false;
