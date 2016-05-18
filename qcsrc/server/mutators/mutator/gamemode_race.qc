@@ -246,7 +246,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 {SELFPARAM();
-	race_PreparePlayer();
+	race_PreparePlayer(this);
 	self.race_checkpoint = -1;
 
 	string rr = RACE_RECORD;
@@ -279,7 +279,7 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 	else
 		self.frags = FRAGS_SPECTATOR;
 
-	race_PreparePlayer();
+	race_PreparePlayer(this);
 	self.race_checkpoint = -1;
 
 	return false;
@@ -289,7 +289,7 @@ MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
 {SELFPARAM();
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
-		race_PreparePlayer();
+		race_PreparePlayer(this);
 
 	// if we need to respawn, do it right
 	self.race_respawn_checkpoint = self.race_checkpoint;
@@ -306,9 +306,9 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 	if(!gameover)
 	{
 		if(self.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
-			race_PreparePlayer();
+			race_PreparePlayer(this);
 		else // respawn
-			race_RetractPlayer();
+			race_RetractPlayer(this);
 
 		race_AbandonRaceCheck(self);
 	}
