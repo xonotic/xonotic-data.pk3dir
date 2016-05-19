@@ -59,6 +59,8 @@ void HUD_Weapons()
 	vector weapon_pos, weapon_size = '0 0 0';
 	vector color;
 
+	entity panel_switchweapon = NULL;
+
 	// check to see if we want to continue
 	if(hud != HUD_NORMAL) return;
 
@@ -110,6 +112,8 @@ void HUD_Weapons()
 			FOREACH(Weapons, it != WEP_Null && it.impulse >= 0 && (it.impulse % 3 != 0) && j < 6, {
 				if(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED))
 				{
+					if(!panel_switchweapon || j < 4)
+						panel_switchweapon = it;
 					weapons_stat |= it.m_wepset;
 					++j;
 				}
@@ -360,9 +364,13 @@ void HUD_Weapons()
 		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
 	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
 
+	if(!panel_switchweapon)
+		panel_switchweapon = switchweapon;
+
 	// draw background behind currently selected weapon
 	// do it earlier to make sure bg is drawn behind every weapon icons while it's moving
-	drawpic_aspect_skin(weapon_pos_current, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	if(panel_switchweapon)
+		drawpic_aspect_skin(weapon_pos_current, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
@@ -389,7 +397,7 @@ void HUD_Weapons()
 		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
 
 		// update position of the currently selected weapon
-		isCurrent = (it == switchweapon);
+		isCurrent = (it == panel_switchweapon);
 		if(isCurrent)
 		{
 			if(weapon_pos_current.y > weapon_pos.y)
