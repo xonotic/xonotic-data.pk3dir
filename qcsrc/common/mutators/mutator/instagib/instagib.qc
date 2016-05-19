@@ -31,7 +31,7 @@ spawnfunc(item_minst_cells)
 
 void instagib_invisibility()
 {SELFPARAM();
-	self.strength_finished = autocvar_g_balance_powerup_strength_time;
+	this.strength_finished = autocvar_g_balance_powerup_strength_time;
 	StartItem(this, ITEM_Invisibility);
 }
 
@@ -42,7 +42,7 @@ void instagib_extralife()
 
 void instagib_speed()
 {SELFPARAM();
-	self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	StartItem(this, ITEM_Speed);
 }
 
@@ -55,86 +55,86 @@ void instagib_stop_countdown(entity e)
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CPID_INSTAGIB_FINDAMMO);
 	e.instagib_needammo = false;
 }
-void instagib_ammocheck()
-{SELFPARAM();
-	if(time < self.instagib_nextthink)
+void instagib_ammocheck(entity this)
+{
+	if(time < this.instagib_nextthink)
 		return;
-	if(!IS_PLAYER(self))
+	if(!IS_PLAYER(this))
 		return; // not a player
 
-	if(IS_DEAD(self) || gameover)
-		instagib_stop_countdown(self);
-	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
-		instagib_stop_countdown(self);
+	if(IS_DEAD(this) || gameover)
+		instagib_stop_countdown(this);
+	else if (this.ammo_cells > 0 || (this.items & IT_UNLIMITED_WEAPON_AMMO) || (this.flags & FL_GODMODE))
+		instagib_stop_countdown(this);
 	else if(autocvar_g_rm && autocvar_g_rm_laser)
 	{
-		if(!self.instagib_needammo)
+		if(!this.instagib_needammo)
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
-			self.instagib_needammo = true;
+			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_INSTAGIB_DOWNGRADE);
+			this.instagib_needammo = true;
 		}
 	}
 	else
 	{
-		self.instagib_needammo = true;
-		if (self.health <= 5)
+		this.instagib_needammo = true;
+		if (this.health <= 5)
 		{
-			Damage(self, self, self, 5, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_INSTAGIB_TERMINATED);
 		}
-		else if (self.health <= 10)
+		else if (this.health <= 10)
 		{
-			Damage(self, self, self, 5, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_1);
+			Damage(this, this, this, 5, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_1);
 		}
-		else if (self.health <= 20)
+		else if (this.health <= 20)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_2);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_2);
 		}
-		else if (self.health <= 30)
+		else if (this.health <= 30)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_3);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_3);
 		}
-		else if (self.health <= 40)
+		else if (this.health <= 40)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_4);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_4);
 		}
-		else if (self.health <= 50)
+		else if (this.health <= 50)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_5);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_5);
 		}
-		else if (self.health <= 60)
+		else if (this.health <= 60)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_6);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_6);
 		}
-		else if (self.health <= 70)
+		else if (this.health <= 70)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_7);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_7);
 		}
-		else if (self.health <= 80)
+		else if (this.health <= 80)
 		{
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_8);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_8);
 		}
-		else if (self.health <= 90)
+		else if (this.health <= 90)
 		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_9);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_INSTAGIB_FINDAMMO);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE, this, MSG_ANNCE, ANNCE_NUM_9);
 		}
 		else
 		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
-			Damage(self, self, self, 10, DEATH_NOAMMO.m_id, self.origin, '0 0 0');
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_MULTI, MULTI_INSTAGIB_FINDAMMO);
+			Damage(this, this, this, 10, DEATH_NOAMMO.m_id, this.origin, '0 0 0');
 		}
 	}
-	self.instagib_nextthink = time + 1;
+	this.instagib_nextthink = time + 1;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
@@ -180,8 +180,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPreThink)
-{
-	instagib_ammocheck();
+{SELFPARAM();
+	instagib_ammocheck(self);
 	return false;
 }
 

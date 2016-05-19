@@ -102,19 +102,19 @@ const float wyvern_anim_death	= 4;
 void M_Wyvern_Attack_Fireball_Explode()
 {
 	SELFPARAM();
-	Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
 
-	entity own = self.realowner;
+	entity own = this.realowner;
 
-	RadiusDamage(self, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, world, world, autocvar_g_monster_wyvern_attack_fireball_radius, self.projectiledeathtype, world);
+	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, world, world, autocvar_g_monster_wyvern_attack_fireball_radius, this.projectiledeathtype, world);
 
 	FOREACH_ENTITY_FLOAT(takedamage, DAMAGE_AIM,
 	{
-		if(vdist(it.origin - self.origin, <=, autocvar_g_monster_wyvern_attack_fireball_radius))
-			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, self.projectiledeathtype);
+		if(vdist(it.origin - this.origin, <=, autocvar_g_monster_wyvern_attack_fireball_radius))
+			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 	});
 
-	remove(self);
+	remove(this);
 }
 
 void M_Wyvern_Attack_Fireball_Touch()

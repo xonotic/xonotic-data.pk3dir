@@ -125,8 +125,8 @@ void relocate_nexball(entity this)
 void DropOwner()
 {SELFPARAM();
 	entity ownr;
-	ownr = self.owner;
-	DropBall(self, ownr.origin, ownr.velocity);
+	ownr = this.owner;
+	DropBall(this, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle.y * '0 1 0');
 	ownr.velocity += ('0 0 0.75' - v_forward) * 1000;
 	UNSET_ONGROUND(ownr);
@@ -227,56 +227,56 @@ void DropBall(entity ball, vector org, vector vel)
 void InitBall()
 {SELFPARAM();
 	if(gameover) return;
-	UNSET_ONGROUND(self);
-	self.movetype = MOVETYPE_BOUNCE;
-	if(self.classname == "nexball_basketball")
-		self.touch = basketball_touch;
-	else if(self.classname == "nexball_football")
-		self.touch = football_touch;
-	self.cnt = 0;
-	self.think = ResetBall;
-	self.nextthink = time + autocvar_g_nexball_delay_idle + 3;
-	self.teamtime = 0;
-	self.pusher = world;
-	self.team = false;
-	_sound(self, CH_TRIGGER, self.noise1, VOL_BASE, ATTEN_NORM);
-	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
+	UNSET_ONGROUND(this);
+	this.movetype = MOVETYPE_BOUNCE;
+	if(this.classname == "nexball_basketball")
+		this.touch = basketball_touch;
+	else if(this.classname == "nexball_football")
+		this.touch = football_touch;
+	this.cnt = 0;
+	this.think = ResetBall;
+	this.nextthink = time + autocvar_g_nexball_delay_idle + 3;
+	this.teamtime = 0;
+	this.pusher = world;
+	this.team = false;
+	_sound(this, CH_TRIGGER, this.noise1, VOL_BASE, ATTEN_NORM);
+	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
 	LogNB("init", world);
 }
 
 void ResetBall()
 {SELFPARAM();
-	if(self.cnt < 2)	// step 1
+	if(this.cnt < 2)	// step 1
 	{
-		if(time == self.teamtime)
-			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
+		if(time == this.teamtime)
+			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
 
-		self.touch = func_null;
-		self.movetype = MOVETYPE_NOCLIP;
-		self.velocity = '0 0 0'; // just in case?
-		if(!self.cnt)
+		this.touch = func_null;
+		this.movetype = MOVETYPE_NOCLIP;
+		this.velocity = '0 0 0'; // just in case?
+		if(!this.cnt)
 			LogNB("resetidle", world);
-		self.cnt = 2;
-		self.nextthink = time;
+		this.cnt = 2;
+		this.nextthink = time;
 	}
-	else if(self.cnt < 4)	  // step 2 and 3
+	else if(this.cnt < 4)	  // step 2 and 3
 	{
-//		dprint("Step ", ftos(self.cnt), ": Calculated velocity: ", vtos(self.spawnorigin - self.origin), ", time: ", ftos(time), "\n");
-		self.velocity = (self.spawnorigin - self.origin) * (self.cnt - 1); // 1 or 0.5 second movement
-		self.nextthink = time + 0.5;
-		self.cnt += 1;
+//		dprint("Step ", ftos(this.cnt), ": Calculated velocity: ", vtos(this.spawnorigin - this.origin), ", time: ", ftos(time), "\n");
+		this.velocity = (this.spawnorigin - this.origin) * (this.cnt - 1); // 1 or 0.5 second movement
+		this.nextthink = time + 0.5;
+		this.cnt += 1;
 	}
 	else	 // step 4
 	{
 //		dprint("Step 4: time: ", ftos(time), "\n");
-		if(vlen(self.origin - self.spawnorigin) > 10)  // should not happen anymore
+		if(vlen(this.origin - this.spawnorigin) > 10)  // should not happen anymore
 			LOG_TRACE("The ball moved too far away from its spawn origin.\nOffset: ",
-				   vtos(self.origin - self.spawnorigin), " Velocity: ", vtos(self.velocity), "\n");
-		self.velocity = '0 0 0';
-		setorigin(self, self.spawnorigin); // make sure it's positioned correctly anyway
-		self.movetype = MOVETYPE_NONE;
-		self.think = InitBall;
-		self.nextthink = max(time, game_starttime) + autocvar_g_nexball_delay_start;
+				   vtos(this.origin - this.spawnorigin), " Velocity: ", vtos(this.velocity), "\n");
+		this.velocity = '0 0 0';
+		setorigin(this, this.spawnorigin); // make sure it's positioned correctly anyway
+		this.movetype = MOVETYPE_NONE;
+		this.think = InitBall;
+		this.nextthink = max(time, game_starttime) + autocvar_g_nexball_delay_start;
 	}
 }
 
@@ -709,16 +709,16 @@ spawnfunc(ball_bound)
 void W_Nexball_Think()
 {SELFPARAM();
 	//dprint("W_Nexball_Think\n");
-	//vector new_dir = steerlib_arrive(self.enemy.origin, 2500);
-	vector new_dir = normalize(self.enemy.origin + '0 0 50' - self.origin);
-	vector old_dir = normalize(self.velocity);
-	float _speed = vlen(self.velocity);
+	//vector new_dir = steerlib_arrive(this.enemy.origin, 2500);
+	vector new_dir = normalize(this.enemy.origin + '0 0 50' - this.origin);
+	vector old_dir = normalize(this.velocity);
+	float _speed = vlen(this.velocity);
 	vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
 	//vector new_vel = (new_dir * autocvar_g_nexball_safepass_turnrate
 
-	self.velocity = new_vel;
+	this.velocity = new_vel;
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 void W_Nexball_Touch()

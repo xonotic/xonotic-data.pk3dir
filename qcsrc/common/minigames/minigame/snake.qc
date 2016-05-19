@@ -156,14 +156,14 @@ void snake_move_head(entity minigame, entity head);
 void snake_head_think()
 {
     SELFPARAM();
-	entity minigame = self.owner;
+	entity minigame = this.owner;
 
 	if(minigame.minigame_flags & SNAKE_TURN_MOVE)
-		snake_move_head(minigame, self);
+		snake_move_head(minigame, this);
 
 	snake_check_winner(minigame);
 
-	self.nextthink = time + self.snake_delay;
+	this.nextthink = time + this.snake_delay;
 }
 
 void minigame_setup_snake(entity minigame, int pteam)

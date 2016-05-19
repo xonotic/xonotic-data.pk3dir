@@ -148,53 +148,53 @@ bool pong_goal(entity ball, int pteam)
 void pong_ball_think()
 {SELFPARAM();
 	float think_speed = autocvar_sys_ticrate;
-	self.nextthink = time + think_speed;
+	this.nextthink = time + think_speed;
 
-	self.origin_x += self.velocity_x * think_speed;
-	self.origin_y += self.velocity_y * think_speed;
-	self.SendFlags |= MINIG_SF_UPDATE;
+	this.origin_x += this.velocity_x * think_speed;
+	this.origin_y += this.velocity_y * think_speed;
+	this.SendFlags |= MINIG_SF_UPDATE;
 
 	int i;
 	for ( i = 1; i <= PONG_MAX_PLAYERS; i++ )
-		if ( pong_paddle_hit(self, i) )
+		if ( pong_paddle_hit(this, i) )
 		{
-			pong_paddle_bounce(self,i);
-			self.team = i;
-			self.SendFlags |= PONG_SF_BALLTEAM;
+			pong_paddle_bounce(this,i);
+			this.team = i;
+			this.SendFlags |= PONG_SF_BALLTEAM;
 			return;
 		}
 
-	if ( self.origin_y <= self.pong_length )
+	if ( this.origin_y <= this.pong_length )
 	{
-		if ( !pong_goal(self,3) )
+		if ( !pong_goal(this,3) )
 		{
-			self.origin_y = self.pong_length;
-			self.velocity_y *= -1;
+			this.origin_y = this.pong_length;
+			this.velocity_y *= -1;
 		}
 	}
-	else if ( self.origin_y >= 1-self.pong_length )
+	else if ( this.origin_y >= 1-this.pong_length )
 	{
-		if ( !pong_goal(self,4) )
+		if ( !pong_goal(this,4) )
 		{
-			self.origin_y = 1-self.pong_length;
-			self.velocity_y *= -1;
+			this.origin_y = 1-this.pong_length;
+			this.velocity_y *= -1;
 		}
 	}
 
-	if ( self.origin_x <= self.pong_length )
+	if ( this.origin_x <= this.pong_length )
 	{
-		if ( !pong_goal(self,2) )
+		if ( !pong_goal(this,2) )
 		{
-			 self.origin_x = self.pong_length;
-			 self.velocity_x *= -1;
+			 this.origin_x = this.pong_length;
+			 this.velocity_x *= -1;
 		}
 	}
-	else if ( self.origin_x >= 1-self.pong_length )
+	else if ( this.origin_x >= 1-this.pong_length )
 	{
-		if ( !pong_goal(self,1) )
+		if ( !pong_goal(this,1) )
 		{
-			 self.origin_x = 1-self.pong_length;
-			 self.velocity_x *= -1;
+			 this.origin_x = 1-this.pong_length;
+			 this.velocity_x *= -1;
 		}
 	}
 
@@ -204,18 +204,18 @@ void pong_ball_think()
 void pong_ai_think()
 {SELFPARAM();
 	float think_speed = autocvar_sv_minigames_pong_ai_thinkspeed;
-	self.nextthink = time + think_speed;
+	this.nextthink = time + think_speed;
 
 	float distance;
 	float next_distance;
 	float min_distance = 1;
 	entity ball = world;
 	entity mayball = world;
-	while ( ( mayball = findentity(mayball,owner,self.owner) ) )
+	while ( ( mayball = findentity(mayball,owner,this.owner) ) )
 		if ( mayball.classname == "pong_ball" )
 		{
-			distance = vlen(mayball.origin-self.pong_ai_paddle.origin);
-			next_distance = vlen(mayball.origin+mayball.velocity-self.pong_ai_paddle.origin);
+			distance = vlen(mayball.origin-this.pong_ai_paddle.origin);
+			next_distance = vlen(mayball.origin+mayball.velocity-this.pong_ai_paddle.origin);
 			if (  distance < min_distance && ( distance < 0.5 || next_distance < distance ) )
 			{
 				min_distance = distance;
@@ -224,31 +224,31 @@ void pong_ai_think()
 		}
 
 	float target = 0.5;
-	float self_pos;
+	float my_pos;
 
 
-	if ( self.team <= 2 )
+	if ( this.team <= 2 )
 	{
 		if ( ball )
 			target = ball.origin_y + ball.velocity_y*think_speed;
-		self_pos = self.pong_ai_paddle.origin_y;
+		my_pos = this.pong_ai_paddle.origin_y;
 	}
 	else
 	{
 		if ( ball )
 			target = ball.origin_x + ball.velocity_x*think_speed;
-		self_pos = self.pong_ai_paddle.origin_x;
+		my_pos = this.pong_ai_paddle.origin_x;
 	}
 
-	distance = self.pong_length/2 * autocvar_sv_minigames_pong_ai_tolerance
+	distance = this.pong_length/2 * autocvar_sv_minigames_pong_ai_tolerance
 		+ autocvar_sv_minigames_pong_paddle_speed * think_speed;
 
-	if (target < self_pos - distance)
-		self.pong_keys = PONG_KEY_DECREASE;
-	else if (target > self_pos + distance)
-		self.pong_keys = PONG_KEY_INCREASE;
+	if (target < my_pos - distance)
+		this.pong_keys = PONG_KEY_DECREASE;
+	else if (target > my_pos + distance)
+		this.pong_keys = PONG_KEY_INCREASE;
 	else
-		self.pong_keys = 0;
+		this.pong_keys = 0;
 }
 
 entity pong_ai_spawn(entity paddle)
@@ -269,23 +269,23 @@ entity pong_ai_spawn(entity paddle)
 void pong_paddle_think()
 {SELFPARAM();
 	float think_speed = autocvar_sys_ticrate;
-	self.nextthink = time + think_speed;
+	this.nextthink = time + think_speed;
 
-	if ( self.realowner.minigame_players.pong_keys == PONG_KEY_INCREASE ||
-		 self.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
+	if ( this.realowner.minigame_players.pong_keys == PONG_KEY_INCREASE ||
+		 this.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
 	{
 		float movement = autocvar_sv_minigames_pong_paddle_speed * think_speed;
-		float halflen = self.pong_length/2;
+		float halflen = this.pong_length/2;
 
-		if ( self.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
+		if ( this.realowner.minigame_players.pong_keys == PONG_KEY_DECREASE )
 			movement *= -1;
 
-		if ( self.team > 2 )
-			self.origin_x = bound(halflen, self.origin_x+movement, 1-halflen);
+		if ( this.team > 2 )
+			this.origin_x = bound(halflen, this.origin_x+movement, 1-halflen);
 		else
-			self.origin_y = bound(halflen, self.origin_y+movement, 1-halflen);
+			this.origin_y = bound(halflen, this.origin_y+movement, 1-halflen);
 
-		self.SendFlags |= MINIG_SF_UPDATE;
+		this.SendFlags |= MINIG_SF_UPDATE;
 	}
 }
 

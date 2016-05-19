@@ -212,7 +212,7 @@ void Monster_Delay_Action(entity this)
 void Monster_Delay_Action_self()
 {
     SELFPARAM();
-	Monster_Delay_Action(self);
+	Monster_Delay_Action(this);
 }
 
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)

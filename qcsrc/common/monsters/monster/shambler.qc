@@ -78,36 +78,36 @@ void M_Shambler_Attack_Swing(entity this)
 
 #include <common/effects/qc/all.qh>
 
-void M_Shambler_Attack_Lightning_Explode()
-{SELFPARAM();
+void M_Shambler_Attack_Lightning_Explode(entity this)
+{
 	entity head;
 
-	sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
-	Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
+	sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
-	self.movetype = MOVETYPE_NONE;
-	self.velocity = '0 0 0';
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
+	this.movetype = MOVETYPE_NONE;
+	this.velocity = '0 0 0';
 
-	if(self.movetype == MOVETYPE_NONE)
-		self.velocity = self.oldvelocity;
+	if(this.movetype == MOVETYPE_NONE)
+		this.velocity = this.oldvelocity;
 
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, world, (autocvar_g_monster_shambler_attack_lightning_force), self.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, world, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, other);
 
-	for(head = findradius(self.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
+	for(head = findradius(this.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != this.realowner) if(head.takedamage)
 	{
-		te_csqc_lightningarc(self.origin, head.origin);
-		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
+		te_csqc_lightningarc(this.origin, head.origin);
+		Damage(head, this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
 	}
 
-	self.think = SUB_Remove_self;
-	self.nextthink = time + 0.2;
+	this.think = SUB_Remove_self;
+	this.nextthink = time + 0.2;
 }
 
 void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, M_Shambler_Attack_Lightning_Explode());
+	M_Shambler_Attack_Lightning_Explode(this);
 }
 
 void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -133,11 +133,11 @@ void M_Shambler_Attack_Lightning_Touch()
 
 void M_Shambler_Attack_Lightning_Think()
 {SELFPARAM();
-	self.nextthink = time;
-	if (time > self.cnt)
+	this.nextthink = time;
+	if (time > this.cnt)
 	{
 		other = world;
-		M_Shambler_Attack_Lightning_Explode();
+		M_Shambler_Attack_Lightning_Explode(this);
 		return;
 	}
 }

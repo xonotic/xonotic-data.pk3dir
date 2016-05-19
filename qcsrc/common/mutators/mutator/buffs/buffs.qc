@@ -175,16 +175,16 @@ void buff_Waypoint_Spawn(entity e)
 	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
 
-void buff_SetCooldown(float cd)
-{SELFPARAM();
+void buff_SetCooldown(entity this, float cd)
+{
 	cd = max(0, cd);
 
-	if(!self.buff_waypoint)
-		buff_Waypoint_Spawn(self);
+	if(!this.buff_waypoint)
+		buff_Waypoint_Spawn(this);
 
-	WaypointSprite_UpdateBuildFinished(self.buff_waypoint, time + cd);
-	self.buff_activetime = cd;
-	self.buff_active = !cd;
+	WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + cd);
+	this.buff_activetime = cd;
+	this.buff_active = !cd;
 }
 
 void buff_Respawn(entity this)
@@ -300,80 +300,80 @@ void buff_NewType(entity ent, float cb)
 
 void buff_Think()
 {SELFPARAM();
-	if(self.buffs != self.oldbuffs)
+	if(this.buffs != this.oldbuffs)
 	{
-		entity buff = buff_FirstFromFlags(self.buffs);
-		self.color = buff.m_color;
-		self.glowmod = buff_GlowColor(buff);
-		self.skin = buff.m_skin;
+		entity buff = buff_FirstFromFlags(this.buffs);
+		this.color = buff.m_color;
+		this.glowmod = buff_GlowColor(buff);
+		this.skin = buff.m_skin;
 
-		setmodel(self, MDL_BUFF);
+		setmodel(this, MDL_BUFF);
 
-		if(self.buff_waypoint)
+		if(this.buff_waypoint)
 		{
-			//WaypointSprite_Disown(self.buff_waypoint, 1);
-			WaypointSprite_Kill(self.buff_waypoint);
-			buff_Waypoint_Spawn(self);
-			if(self.buff_activetime)
-				WaypointSprite_UpdateBuildFinished(self.buff_waypoint, time + self.buff_activetime - frametime);
+			//WaypointSprite_Disown(this.buff_waypoint, 1);
+			WaypointSprite_Kill(this.buff_waypoint);
+			buff_Waypoint_Spawn(this);
+			if(this.buff_activetime)
+				WaypointSprite_UpdateBuildFinished(this.buff_waypoint, time + this.buff_activetime - frametime);
 		}
 
-		self.oldbuffs = self.buffs;
+		this.oldbuffs = this.buffs;
 	}
 
 	if(!gameover)
 	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
-	if(!self.buff_activetime_updated)
+	if(!this.buff_activetime_updated)
 	{
-		buff_SetCooldown(self.buff_activetime);
-		self.buff_activetime_updated = true;
+		buff_SetCooldown(this, this.buff_activetime);
+		this.buff_activetime_updated = true;
 	}
 
-	if(!self.buff_active && !self.buff_activetime)
-	if(!self.owner || STAT(FROZEN, self.owner) || IS_DEAD(self.owner) || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
+	if(!this.buff_active && !this.buff_activetime)
+	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || !(this.owner.buffs & this.buffs))
 	{
-		buff_SetCooldown(autocvar_g_buffs_cooldown_respawn + frametime);
-		self.owner = world;
+		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
+		this.owner = world;
 		if(autocvar_g_buffs_randomize)
-			buff_NewType(self, self.buffs);
+			buff_NewType(this, this.buffs);
 
-		if(autocvar_g_buffs_random_location || (self.spawnflags & 64))
-			buff_Respawn(self);
+		if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
+			buff_Respawn(this);
 	}
 
-	if(self.buff_activetime)
+	if(this.buff_activetime)
 	if(!gameover)
 	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
 	{
-		self.buff_activetime = max(0, self.buff_activetime - frametime);
+		this.buff_activetime = max(0, this.buff_activetime - frametime);
 
-		if(!self.buff_activetime)
+		if(!this.buff_activetime)
 		{
-			self.buff_active = true;
-			sound(self, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTN_NORM);
-			Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+			this.buff_active = true;
+			sound(this, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTN_NORM);
+			Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 		}
 	}
 
-	if(self.buff_active)
+	if(this.buff_active)
 	{
-		if(self.team && !self.buff_waypoint)
-			buff_Waypoint_Spawn(self);
+		if(this.team && !this.buff_waypoint)
+			buff_Waypoint_Spawn(this);
 
-		if(self.lifetime)
-		if(time >= self.lifetime)
-			buff_Respawn(self);
+		if(this.lifetime)
+		if(time >= this.lifetime)
+			buff_Respawn(this);
 	}
 
-	self.nextthink = time;
-	//self.angles_y = time * 110.1;
+	this.nextthink = time;
+	//this.angles_y = time * 110.1;
 }
 
-void buff_Waypoint_Reset()
-{SELFPARAM();
-	WaypointSprite_Kill(self.buff_waypoint);
+void buff_Waypoint_Reset(entity this)
+{
+	WaypointSprite_Kill(this.buff_waypoint);
 
-	if(self.buff_activetime) { buff_Waypoint_Spawn(self); }
+	if(this.buff_activetime) { buff_Waypoint_Spawn(this); }
 }
 
 void buff_Reset(entity this)
@@ -381,8 +381,8 @@ void buff_Reset(entity this)
 	if(autocvar_g_buffs_randomize)
 		buff_NewType(this, this.buffs);
 	this.owner = world;
-	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
-	buff_Waypoint_Reset();
+	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
+	buff_Waypoint_Reset(this);
 	this.buff_activetime_updated = false;
 
 	if(autocvar_g_buffs_random_location || (this.spawnflags & 64))
@@ -392,68 +392,65 @@ void buff_Reset(entity this)
 float buff_Customize()
 {SELFPARAM();
 	entity player = WaypointSprite_getviewentity(other);
-	if(!self.buff_active || (self.team && DIFF_TEAM(player, self)))
+	if(!this.buff_active || (this.team && DIFF_TEAM(player, this)))
 	{
-		self.alpha = 0.3;
-		if(self.effects & EF_FULLBRIGHT) { self.effects &= ~(EF_FULLBRIGHT); }
-		self.pflags = 0;
+		this.alpha = 0.3;
+		if(this.effects & EF_FULLBRIGHT) { this.effects &= ~(EF_FULLBRIGHT); }
+		this.pflags = 0;
 	}
 	else
 	{
-		self.alpha = 1;
-		if(!(self.effects & EF_FULLBRIGHT)) { self.effects |= EF_FULLBRIGHT; }
-		self.light_lev = 220 + 36 * sin(time);
-		self.pflags = PFLAGS_FULLDYNAMIC;
+		this.alpha = 1;
+		if(!(this.effects & EF_FULLBRIGHT)) { this.effects |= EF_FULLBRIGHT; }
+		this.light_lev = 220 + 36 * sin(time);
+		this.pflags = PFLAGS_FULLDYNAMIC;
 	}
 	return true;
 }
 
-void buff_Init(entity ent)
-{SELFPARAM();
-	if(!cvar("g_buffs")) { remove(ent); return; }
+void buff_Init(entity this)
+{
+	if(!cvar("g_buffs")) { remove(this); return; }
 
-	if(!teamplay && ent.team) { ent.team = 0; }
+	if(!teamplay && this.team) { this.team = 0; }
 
-	entity buff = buff_FirstFromFlags(self.buffs);
+	entity buff = buff_FirstFromFlags(this.buffs);
 
-	setself(ent);
-	if(!self.buffs || buff_Available(buff))
-		buff_NewType(self, 0);
+	if(!this.buffs || buff_Available(buff))
+		buff_NewType(this, 0);
 
-	self.classname = "item_buff";
-	self.solid = SOLID_TRIGGER;
-	self.flags = FL_ITEM;
-	self.think = buff_Think;
-	self.touch = buff_Touch;
-	self.reset = buff_Reset;
-	self.nextthink = time + 0.1;
-	self.gravity = 1;
-	self.movetype = MOVETYPE_TOSS;
-	self.scale = 1;
-	self.skin = buff.m_skin;
-	self.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
-	self.customizeentityforclient = buff_Customize;
-	//self.gravity = 100;
-	self.color = buff.m_color;
-	self.glowmod = buff_GlowColor(self);
-	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
-	self.buff_active = !self.buff_activetime;
-	self.pflags = PFLAGS_FULLDYNAMIC;
+	this.classname = "item_buff";
+	this.solid = SOLID_TRIGGER;
+	this.flags = FL_ITEM;
+	this.think = buff_Think;
+	this.touch = buff_Touch;
+	this.reset = buff_Reset;
+	this.nextthink = time + 0.1;
+	this.gravity = 1;
+	this.movetype = MOVETYPE_TOSS;
+	this.scale = 1;
+	this.skin = buff.m_skin;
+	this.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
+	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+	this.customizeentityforclient = buff_Customize;
+	//this.gravity = 100;
+	this.color = buff.m_color;
+	this.glowmod = buff_GlowColor(this);
+	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate + game_starttime);
+	this.buff_active = !this.buff_activetime;
+	this.pflags = PFLAGS_FULLDYNAMIC;
 
-	if(self.spawnflags & 1)
-		self.noalign = true;
+	if(this.spawnflags & 1)
+		this.noalign = true;
 
-	if(self.noalign)
-		self.movetype = MOVETYPE_NONE; // reset by random location
+	if(this.noalign)
+		this.movetype = MOVETYPE_NONE; // reset by random location
 
-	setmodel(self, MDL_BUFF);
-	setsize(self, BUFF_MIN, BUFF_MAX);
+	setmodel(this, MDL_BUFF);
+	setsize(this, BUFF_MIN, BUFF_MAX);
 
-	if(cvar("g_buffs_random_location") || (self.spawnflags & 64))
-		buff_Respawn(self);
-
-	setself(this);
+	if(cvar("g_buffs_random_location") || (this.spawnflags & 64))
+		buff_Respawn(this);
 }
 
 void buff_Init_Compat(entity ent, entity replacement)
@@ -479,10 +476,10 @@ void buff_SpawnReplacement(entity ent, entity old)
 
 void buff_Vengeance_DelayedDamage()
 {SELFPARAM();
-	if(self.enemy)
-		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF.m_id, self.enemy.origin, '0 0 0');
+	if(this.enemy)
+		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, this.enemy.origin, '0 0 0');
 
-	remove(self);
+	remove(this);
 	return;
 }
 

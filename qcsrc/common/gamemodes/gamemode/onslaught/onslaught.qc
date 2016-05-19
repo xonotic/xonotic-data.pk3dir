@@ -400,31 +400,31 @@ void ons_Link_CheckUpdate()
 	// TODO check if the two sides have moved (currently they won't move anyway)
 	float cc = 0, cc1 = 0, cc2 = 0;
 
-	if(self.goalentity.islinked || self.goalentity.iscaptured) { cc1 = (self.goalentity.team - 1) * 0x01; }
-	if(self.enemy.islinked || self.enemy.iscaptured) { cc2 = (self.enemy.team - 1) * 0x10; }
+	if(this.goalentity.islinked || this.goalentity.iscaptured) { cc1 = (this.goalentity.team - 1) * 0x01; }
+	if(this.enemy.islinked || this.enemy.iscaptured) { cc2 = (this.enemy.team - 1) * 0x10; }
 
 	cc = cc1 + cc2;
 
-	if(cc != self.clientcolors)
+	if(cc != this.clientcolors)
 	{
-		self.clientcolors = cc;
-		self.SendFlags |= 4;
+		this.clientcolors = cc;
+		this.SendFlags |= 4;
 	}
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 void ons_DelayedLinkSetup(entity this)
 {
-	self.goalentity = find(world, targetname, self.target);
-	self.enemy = find(world, targetname, self.target2);
-	if(!self.goalentity) { objerror("can not find target\n"); }
-	if(!self.enemy) { objerror("can not find target2\n"); }
+	this.goalentity = find(world, targetname, this.target);
+	this.enemy = find(world, targetname, this.target2);
+	if(!this.goalentity) { objerror("can not find target\n"); }
+	if(!this.enemy) { objerror("can not find target2\n"); }
 
-	LOG_DEBUG(strcat(etos(self.goalentity), " linked with ", etos(self.enemy), "\n"));
-	self.SendFlags |= 3;
-	self.think = ons_Link_CheckUpdate;
-	self.nextthink = time;
+	LOG_DEBUG(strcat(etos(this.goalentity), " linked with ", etos(this.enemy), "\n"));
+	this.SendFlags |= 3;
+	this.think = ons_Link_CheckUpdate;
+	this.nextthink = time;
 }
 
 
@@ -561,7 +561,7 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 
 void ons_ControlPoint_Icon_Think()
 {SELFPARAM();
-	self.nextthink = time + ONS_CP_THINKRATE;
+	this.nextthink = time + ONS_CP_THINKRATE;
 
 	if(autocvar_g_onslaught_cp_proxydecap)
 	{
@@ -569,9 +569,9 @@ void ons_ControlPoint_Icon_Think()
 		int _friendly_count = 0;
 
 		FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it), {
-			if(vdist(it.origin - self.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
+			if(vdist(it.origin - this.origin, <, autocvar_g_onslaught_cp_proxydecap_distance))
 			{
-				if(SAME_TEAM(it, self))
+				if(SAME_TEAM(it, this))
 					++_friendly_count;
 				else
 					++_enemy_count;
@@ -581,49 +581,49 @@ void ons_ControlPoint_Icon_Think()
 		_friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 		_enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
-		self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
-		self.SendFlags |= CPSF_STATUS;
-		if(self.health <= 0)
+		this.health = bound(0, this.health + (_friendly_count - _enemy_count), this.max_health);
+		this.SendFlags |= CPSF_STATUS;
+		if(this.health <= 0)
 		{
-			ons_ControlPoint_Icon_Damage(self, self, self, 1, 0, self.origin, '0 0 0');
+			ons_ControlPoint_Icon_Damage(this, this, this, 1, 0, this.origin, '0 0 0');
 			return;
 		}
 	}
 
-	if (time > self.pain_finished + 5)
+	if (time > this.pain_finished + 5)
 	{
-		if(self.health < self.max_health)
+		if(this.health < this.max_health)
 		{
-			self.health = self.health + self.count;
-			if (self.health >= self.max_health)
-				self.health = self.max_health;
-			WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
+			this.health = this.health + this.count;
+			if (this.health >= this.max_health)
+				this.health = this.max_health;
+			WaypointSprite_UpdateHealth(this.owner.sprite, this.health);
 		}
 	}
 
-	if(self.owner.islinked != self.owner.waslinked)
+	if(this.owner.islinked != this.owner.waslinked)
 	{
 		// unteam the spawnpoint if needed
-		int t = self.owner.team;
-		if(!self.owner.islinked)
-			self.owner.team = 0;
+		int t = this.owner.team;
+		if(!this.owner.islinked)
+			this.owner.team = 0;
 
-		SUB_UseTargets(self.owner, self, NULL);
+		SUB_UseTargets(this.owner, this, NULL);
 
-		self.owner.team = t;
+		this.owner.team = t;
 
-		self.owner.waslinked = self.owner.islinked;
+		this.owner.waslinked = this.owner.islinked;
 	}
 
 	// damaged fx
-	if(random() < 0.6 - self.health / self.max_health)
+	if(random() < 0.6 - this.health / this.max_health)
 	{
-		Send_Effect(EFFECT_ELECTRIC_SPARKS, self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
+		Send_Effect(EFFECT_ELECTRIC_SPARKS, this.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
-			sound(self, CH_PAIN, SND_ONS_SPARK1, VOL_BASE, ATTEN_NORM);
+			sound(this, CH_PAIN, SND_ONS_SPARK1, VOL_BASE, ATTEN_NORM);
 		else if (random() > 0.5)
-			sound(self, CH_PAIN, SND_ONS_SPARK2, VOL_BASE, ATTEN_NORM);
+			sound(this, CH_PAIN, SND_ONS_SPARK2, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -631,54 +631,54 @@ void ons_ControlPoint_Icon_BuildThink()
 {SELFPARAM();
 	int a;
 
-	self.nextthink = time + ONS_CP_THINKRATE;
+	this.nextthink = time + ONS_CP_THINKRATE;
 
 	// only do this if there is power
-	a = ons_ControlPoint_CanBeLinked(self.owner, self.owner.team);
+	a = ons_ControlPoint_CanBeLinked(this.owner, this.owner.team);
 	if(!a)
 		return;
 
-	self.health = self.health + self.count;
+	this.health = this.health + this.count;
 
-	self.SendFlags |= CPSF_STATUS;
+	this.SendFlags |= CPSF_STATUS;
 
-	if (self.health >= self.max_health)
+	if (this.health >= this.max_health)
 	{
-		self.health = self.max_health;
-		self.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
-		self.think = ons_ControlPoint_Icon_Think;
-		sound(self, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
-		self.owner.iscaptured = true;
-		self.solid = SOLID_BBOX;
+		this.health = this.max_health;
+		this.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
+		this.think = ons_ControlPoint_Icon_Think;
+		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
+		this.owner.iscaptured = true;
+		this.solid = SOLID_BBOX;
 
-		Send_Effect(EFFECT_CAP(self.owner.team), self.owner.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_CAP(this.owner.team), this.owner.origin, '0 0 0', 1);
 
-		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
-		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
+		WaypointSprite_UpdateMaxHealth(this.owner.sprite, this.max_health);
+		WaypointSprite_UpdateHealth(this.owner.sprite, this.health);
 
-		if(IS_PLAYER(self.owner.ons_toucher))
+		if(IS_PLAYER(this.owner.ons_toucher))
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
-			Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(self.owner.ons_toucher.team, CENTER_ONS_CAPTURE), self.owner.message);
-			Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
-			PlayerScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, 1);
-			PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
+			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE), this.owner.message);
+			Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
+			PlayerScore_Add(this.owner.ons_toucher, SP_ONS_CAPS, 1);
+			PlayerTeamScore_AddScore(this.owner.ons_toucher, 10);
 		}
 
-		self.owner.ons_toucher = world;
+		this.owner.ons_toucher = world;
 
 		onslaught_updatelinks();
 
 		// Use targets now (somebody make sure this is in the right place..)
-		SUB_UseTargets(self.owner, self, NULL);
+		SUB_UseTargets(this.owner, this, NULL);
 
-		self.SendFlags |= CPSF_SETUP;
+		this.SendFlags |= CPSF_SETUP;
 	}
-	if(self.owner.model != MDL_ONS_CP_PAD2.model_str())
-		setmodel_fixsize(self.owner, MDL_ONS_CP_PAD2);
+	if(this.owner.model != MDL_ONS_CP_PAD2.model_str())
+		setmodel_fixsize(this.owner, MDL_ONS_CP_PAD2);
 
-	if(random() < 0.9 - self.health / self.max_health)
-		Send_Effect(EFFECT_RAGE, self.origin + 10 * randomvec(), '0 0 -1', 1);
+	if(random() < 0.9 - this.health / this.max_health)
+		Send_Effect(EFFECT_RAGE, this.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
 void onslaught_controlpoint_icon_link(entity e, void() spawnproc);
@@ -1027,20 +1027,20 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 
 void ons_GeneratorThink()
 {SELFPARAM();
-	self.nextthink = time + GEN_THINKRATE;
+	this.nextthink = time + GEN_THINKRATE;
 	if (!gameover)
 	{
-		if(!self.isshielded && self.wait < time)
+		if(!this.isshielded && this.wait < time)
 		{
-			self.wait = time + 5;
+			this.wait = time + 5;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), {
-				if(SAME_TEAM(it, self))
+				if(SAME_TEAM(it, this))
 				{
 					Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
 					soundto(MSG_ONE, it, CHAN_AUTO, SND(KH_ALARM), VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
 				}
 				else
-					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(self.team, CENTER_ONS_NOTSHIELDED));
+					Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_ONS_NOTSHIELDED));
 			});
 		}
 	}
