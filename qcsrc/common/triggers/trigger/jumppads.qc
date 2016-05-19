@@ -443,7 +443,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	this.active = ReadByte();
 	this.height = ReadCoord();
 
-	trigger_common_read(true);
+	trigger_common_read(this, true);
 
 	this.entremove = trigger_remove_generic;
 	this.solid = SOLID_TRIGGER;

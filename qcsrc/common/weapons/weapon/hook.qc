@@ -496,73 +496,73 @@ void Remove_GrapplingHook(entity this)
 
 NET_HANDLE(ENT_CLIENT_HOOK, bool bIsNew)
 {
-	self.HookType = NET_ENT_CLIENT_HOOK;
+	this.HookType = NET_ENT_CLIENT_HOOK;
 
 	int sf = ReadByte();
 
-	self.HookSilent = (sf & 0x80);
-	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
+	this.HookSilent = (sf & 0x80);
+	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
-	InterpolateOrigin_Undo(self);
+	InterpolateOrigin_Undo(this);
 
 	if(sf & 1)
 	{
 		int myowner = ReadByte();
-		self.owner = playerslots[myowner - 1];
-		self.sv_entnum = myowner;
+		this.owner = playerslots[myowner - 1];
+		this.sv_entnum = myowner;
 		if(csqcplayer && myowner == player_localentnum)
-			csqcplayer.hook = self;
-		switch(self.HookType)
+			csqcplayer.hook = this;
+		switch(this.HookType)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
-				self.HookRange = 0;
+				this.HookRange = 0;
 				break;
 			case NET_ENT_CLIENT_ARC_BEAM:
-				self.HookRange = ReadCoord();
+				this.HookRange = ReadCoord();
 				break;
 		}
 	}
 	if(sf & 2)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 	}
 	if(sf & 4)
 	{
-		self.velocity_x = ReadCoord();
-		self.velocity_y = ReadCoord();
-		self.velocity_z = ReadCoord();
+		this.velocity_x = ReadCoord();
+		this.velocity_y = ReadCoord();
+		this.velocity_z = ReadCoord();
 	}
 
 	InterpolateOrigin_Note(this);
 
-	if(bIsNew || !self.teleport_time)
+	if(bIsNew || !this.teleport_time)
 	{
-		self.draw = Draw_GrapplingHook;
-		self.entremove = Remove_GrapplingHook;
+		this.draw = Draw_GrapplingHook;
+		this.entremove = Remove_GrapplingHook;
 
-		switch(self.HookType)
+		switch(this.HookType)
 		{
 			default:
 			case NET_ENT_CLIENT_HOOK:
 				// for the model
-				setmodel(self, MDL_HOOK);
-				self.drawmask = MASK_NORMAL;
+				setmodel(this, MDL_HOOK);
+				this.drawmask = MASK_NORMAL;
 				break;
 			case NET_ENT_CLIENT_ARC_BEAM:
-				sound (self, CH_SHOTS_SINGLE, SND_LGBEAM_FLY, VOL_BASE, ATTEN_NORM);
+				sound (this, CH_SHOTS_SINGLE, SND_LGBEAM_FLY, VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
 
-	self.teleport_time = time + 10;
+	this.teleport_time = time + 10;
 	return true;
 }
 
-// TODO: hook: temporarily transform self.origin for drawing the model along warpzones!
+// TODO: hook: temporarily transform this.origin for drawing the model along warpzones!
 #endif
 
 #endif

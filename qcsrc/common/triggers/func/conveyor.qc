@@ -149,53 +149,53 @@ spawnfunc(func_conveyor)
 
 void conveyor_draw(entity this) { WITHSELF(this, conveyor_think()); }
 
-void conveyor_init()
-{SELFPARAM();
-	self.draw = conveyor_draw;
-	self.drawmask = MASK_NORMAL;
+void conveyor_init(entity this)
+{
+	this.draw = conveyor_draw;
+	this.drawmask = MASK_NORMAL;
 
-	self.movetype = MOVETYPE_NONE;
-	self.model = "";
-	self.solid = SOLID_TRIGGER;
-	self.move_origin = self.origin;
-	self.move_time = time;
+	this.movetype = MOVETYPE_NONE;
+	this.model = "";
+	this.solid = SOLID_TRIGGER;
+	this.move_origin = this.origin;
+	this.move_time = time;
 }
 
 NET_HANDLE(ENT_CLIENT_CONVEYOR, bool isnew)
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & 1)
 	{
-		self.warpzone_isboxy = ReadByte();
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.warpzone_isboxy = ReadByte();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
-		setsize(self, self.mins, self.maxs);
+		this.mins_x = ReadCoord();
+		this.mins_y = ReadCoord();
+		this.mins_z = ReadCoord();
+		this.maxs_x = ReadCoord();
+		this.maxs_y = ReadCoord();
+		this.maxs_z = ReadCoord();
+		setsize(this, this.mins, this.maxs);
 
-		self.movedir_x = ReadCoord();
-		self.movedir_y = ReadCoord();
-		self.movedir_z = ReadCoord();
+		this.movedir_x = ReadCoord();
+		this.movedir_y = ReadCoord();
+		this.movedir_z = ReadCoord();
 
-		self.speed = ReadByte();
-		self.state = ReadByte();
+		this.speed = ReadByte();
+		this.state = ReadByte();
 
-		self.targetname = strzone(ReadString());
-		self.target = strzone(ReadString());
+		this.targetname = strzone(ReadString());
+		this.target = strzone(ReadString());
 
-		conveyor_init();
+		conveyor_init(this);
 	}
 
 	if(sf & 2)
-		self.state = ReadByte();
+		this.state = ReadByte();
 
 	return true;
 }

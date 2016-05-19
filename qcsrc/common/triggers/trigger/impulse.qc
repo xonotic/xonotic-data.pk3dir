@@ -223,7 +223,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 	this.falloff = ReadByte();
 	this.active = ReadByte();
 
-	trigger_common_read(true);
+	trigger_common_read(this, true);
 	return = true;
 
 	this.classname = "trigger_impulse";

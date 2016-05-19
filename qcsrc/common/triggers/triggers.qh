@@ -39,7 +39,7 @@ void target_voicescript_clear(entity pl);
 void FixSize(entity e);
 
 #ifdef CSQC
-void trigger_common_read(bool withtarget);
+void trigger_common_read(entity this, bool withtarget);
 void trigger_remove_generic(entity this);
 
 .float active;

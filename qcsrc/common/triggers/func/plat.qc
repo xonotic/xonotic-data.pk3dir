@@ -142,7 +142,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 		this.model = strzone(ReadString());
 		_setmodel(this, this.model);
 
-		trigger_common_read(true);
+		trigger_common_read(this, true);
 
 		this.pos1_x = ReadCoord();
 		this.pos1_y = ReadCoord();

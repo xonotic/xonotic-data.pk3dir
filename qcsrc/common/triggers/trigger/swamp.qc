@@ -142,7 +142,7 @@ NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
 	this.swamp_slowdown = ReadByte();
 	this.swamp_interval = ReadByte();
 
-	trigger_common_read(false);
+	trigger_common_read(this, false);
 
 	return = true;
 

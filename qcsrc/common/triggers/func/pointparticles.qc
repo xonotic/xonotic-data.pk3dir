@@ -279,105 +279,105 @@ NET_HANDLE(ENT_CLIENT_POINTPARTICLES, bool isnew)
 	if(f & 2)
 	{
 		i = ReadCoord(); // density (<0: point, >0: volume)
-		if(i && !self.impulse && (self.cnt || self.mdl)) // self.cnt check is so it only happens if the ent already existed
-			self.just_toggled = 1;
-		self.impulse = i;
+		if(i && !this.impulse && (this.cnt || this.mdl)) // this.cnt check is so it only happens if the ent already existed
+			this.just_toggled = 1;
+		this.impulse = i;
 	}
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	if(f & 1)
 	{
-		self.modelindex = ReadShort();
+		this.modelindex = ReadShort();
 		if(f & 0x80)
 		{
-			if(self.modelindex)
+			if(this.modelindex)
 			{
-				self.mins_x = ReadCoord();
-				self.mins_y = ReadCoord();
-				self.mins_z = ReadCoord();
-				self.maxs_x = ReadCoord();
-				self.maxs_y = ReadCoord();
-				self.maxs_z = ReadCoord();
+				this.mins_x = ReadCoord();
+				this.mins_y = ReadCoord();
+				this.mins_z = ReadCoord();
+				this.maxs_x = ReadCoord();
+				this.maxs_y = ReadCoord();
+				this.maxs_z = ReadCoord();
 			}
 			else
 			{
-				self.mins    = '0 0 0';
-				self.maxs_x = ReadCoord();
-				self.maxs_y = ReadCoord();
-				self.maxs_z = ReadCoord();
+				this.mins    = '0 0 0';
+				this.maxs_x = ReadCoord();
+				this.maxs_y = ReadCoord();
+				this.maxs_z = ReadCoord();
 			}
 		}
 		else
 		{
-			self.mins = self.maxs = '0 0 0';
+			this.mins = this.maxs = '0 0 0';
 		}
 
-		self.cnt = ReadShort(); // effect number
-		self.mdl = strzone(ReadString()); // effect string
+		this.cnt = ReadShort(); // effect number
+		this.mdl = strzone(ReadString()); // effect string
 
 		if(f & 0x20)
 		{
-			self.velocity = decompressShortVector(ReadShort());
-			self.movedir = decompressShortVector(ReadShort());
+			this.velocity = decompressShortVector(ReadShort());
+			this.movedir = decompressShortVector(ReadShort());
 		}
 		else
 		{
-			self.velocity = self.movedir = '0 0 0';
+			this.velocity = this.movedir = '0 0 0';
 		}
 		if(f & 0x40)
 		{
-			self.waterlevel = ReadShort() / 16.0;
-			self.count = ReadByte() / 16.0;
+			this.waterlevel = ReadShort() / 16.0;
+			this.count = ReadByte() / 16.0;
 		}
 		else
 		{
-			self.waterlevel = 0;
-			self.count = 1;
+			this.waterlevel = 0;
+			this.count = 1;
 		}
-		if(self.noise)
-			strunzone(self.noise);
-		if(self.bgmscript)
-			strunzone(self.bgmscript);
-		self.noise = strzone(ReadString());
-		if(self.noise != "")
+		if(this.noise)
+			strunzone(this.noise);
+		if(this.bgmscript)
+			strunzone(this.bgmscript);
+		this.noise = strzone(ReadString());
+		if(this.noise != "")
 		{
-			self.atten = ReadByte() / 64.0;
-			self.volume = ReadByte() / 255.0;
+			this.atten = ReadByte() / 64.0;
+			this.volume = ReadByte() / 255.0;
 		}
-		self.bgmscript = strzone(ReadString());
-		if(self.bgmscript != "")
+		this.bgmscript = strzone(ReadString());
+		if(this.bgmscript != "")
 		{
-			self.bgmscriptattack = ReadByte() / 64.0;
-			self.bgmscriptdecay = ReadByte() / 64.0;
-			self.bgmscriptsustain = ReadByte() / 255.0;
-			self.bgmscriptrelease = ReadByte() / 64.0;
+			this.bgmscriptattack = ReadByte() / 64.0;
+			this.bgmscriptdecay = ReadByte() / 64.0;
+			this.bgmscriptsustain = ReadByte() / 255.0;
+			this.bgmscriptrelease = ReadByte() / 64.0;
 		}
-		BGMScript_InitEntity(self);
+		BGMScript_InitEntity(this);
 	}
 
 	return = true;
 
 	if(f & 2)
 	{
-		self.absolute = (self.impulse >= 0);
-		if(!self.absolute)
+		this.absolute = (this.impulse >= 0);
+		if(!this.absolute)
 		{
-			v = self.maxs - self.mins;
-			self.impulse *= -v.x * v.y * v.z / 262144; // relative: particles per 64^3 cube
+			v = this.maxs - this.mins;
+			this.impulse *= -v.x * v.y * v.z / 262144; // relative: particles per 64^3 cube
 		}
 	}
 
 	if(f & 0x10)
-		self.absolute = 2;
+		this.absolute = 2;
 
-	setorigin(self, self.origin);
-	setsize(self, self.mins, self.maxs);
-	self.solid = SOLID_NOT;
-	self.draw = Draw_PointParticles;
-	self.entremove = Ent_PointParticles_Remove;
+	setorigin(this, this.origin);
+	setsize(this, this.mins, this.maxs);
+	this.solid = SOLID_NOT;
+	this.draw = Draw_PointParticles;
+	this.entremove = Ent_PointParticles_Remove;
 }
 #endif

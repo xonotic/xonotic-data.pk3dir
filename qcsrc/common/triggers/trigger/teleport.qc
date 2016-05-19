@@ -104,24 +104,24 @@ spawnfunc(trigger_teleport)
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 {
-	self.classname = "trigger_teleport";
-	int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
-	self.spawnflags = ReadInt24_t();
-	self.active = ReadByte();
-	self.speed = ReadCoord();
+	this.classname = "trigger_teleport";
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
+	this.spawnflags = ReadInt24_t();
+	this.active = ReadByte();
+	this.speed = ReadCoord();
 
-	trigger_common_read(true);
+	trigger_common_read(this, true);
 
-	self.entremove = trigger_remove_generic;
-	self.solid = SOLID_TRIGGER;
-	//self.draw = trigger_draw_generic;
-	//self.move_touch = trigger_push_touch;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-	defer(self, 0.25, teleport_findtarget);
+	this.entremove = trigger_remove_generic;
+	this.solid = SOLID_TRIGGER;
+	//this.draw = trigger_draw_generic;
+	//this.move_touch = trigger_push_touch;
+	this.drawmask = MASK_NORMAL;
+	this.move_time = time;
+	defer(this, 0.25, teleport_findtarget);
 
-	self.teleport_next = teleport_first;
-	teleport_first = self;
+	this.teleport_next = teleport_first;
+	teleport_first = this;
 
 	return true;
 }

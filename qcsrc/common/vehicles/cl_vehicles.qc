@@ -82,8 +82,8 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 	// hud_id == 0 means we exited a vehicle, so stop alarm sound/s
 	if(hud_id == 0)
 	{
-		sound(self, CH_TRIGGER_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
-		sound(self, CH_PAIN_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
+		sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
+		sound(this, CH_PAIN_SINGLE, SND_Null, VOL_BASEVOICE, ATTEN_NONE);
 		return;
 	}
 

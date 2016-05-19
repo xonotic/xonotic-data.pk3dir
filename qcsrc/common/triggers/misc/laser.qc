@@ -317,65 +317,65 @@ void Draw_Laser(entity this)
 
 NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 {
-	InterpolateOrigin_Undo(self);
+	InterpolateOrigin_Undo(this);
 
 	// 30 bytes, or 13 bytes for just moving
 	int f = ReadByte();
-	self.count = (f & 0xF0);
+	this.count = (f & 0xF0);
 
-	if(self.count & 0x80)
-		self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
+	if(this.count & 0x80)
+		this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 	else
-		self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
+		this.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
 
 	if(f & 1)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 	}
 	if(f & 8)
 	{
-		self.colormod_x = ReadByte() / 255.0;
-		self.colormod_y = ReadByte() / 255.0;
-		self.colormod_z = ReadByte() / 255.0;
+		this.colormod_x = ReadByte() / 255.0;
+		this.colormod_y = ReadByte() / 255.0;
+		this.colormod_z = ReadByte() / 255.0;
 		if(f & 0x40)
-			self.alpha = ReadByte() / 255.0;
+			this.alpha = ReadByte() / 255.0;
 		else
-			self.alpha = 0;
-		self.scale = 2;
-		self.modelscale = 50;
+			this.alpha = 0;
+		this.scale = 2;
+		this.modelscale = 50;
 		if(f & 0x20)
 		{
-			self.scale *= ReadByte() / 16.0; // beam radius
-			self.modelscale *= ReadByte() / 16.0; // dlight radius
+			this.scale *= ReadByte() / 16.0; // beam radius
+			this.modelscale *= ReadByte() / 16.0; // dlight radius
 		}
 		if((f & 0x80) || !(f & 0x10))
-			self.cnt = ReadShort() - 1; // effect number
+			this.cnt = ReadShort() - 1; // effect number
 		else
-			self.cnt = 0;
+			this.cnt = 0;
 	}
 	if(f & 2)
 	{
 		if(f & 0x80)
 		{
-			self.velocity_x = ReadCoord();
-			self.velocity_y = ReadCoord();
-			self.velocity_z = ReadCoord();
+			this.velocity_x = ReadCoord();
+			this.velocity_y = ReadCoord();
+			this.velocity_z = ReadCoord();
 		}
 		else
 		{
-			self.angles_x = ReadAngle();
-			self.angles_y = ReadAngle();
+			this.angles_x = ReadAngle();
+			this.angles_y = ReadAngle();
 		}
 	}
 	if(f & 4)
-		self.state = ReadByte();
+		this.state = ReadByte();
 
 	return = true;
 
 	InterpolateOrigin_Note(this);
-	self.draw = Draw_Laser;
+	this.draw = Draw_Laser;
 }
 #endif

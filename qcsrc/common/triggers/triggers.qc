@@ -92,8 +92,8 @@ void trigger_common_write(entity this, bool withtarget)
 
 #elif defined(CSQC)
 
-void trigger_common_read(bool withtarget)
-{SELFPARAM();
+void trigger_common_read(entity this, bool withtarget)
+{
 	int f = ReadByte();
 	this.warpzone_isboxy = (f & 1);
 

@@ -61,29 +61,29 @@ void corner_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_CORNER, bool isnew)
 {
-	self.platmovetype = strzone(ReadString());
+	this.platmovetype = strzone(ReadString());
 
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	setorigin(self, self.origin);
+	this.origin_x = ReadCoord();
+	this.origin_y = ReadCoord();
+	this.origin_z = ReadCoord();
+	setorigin(this, this.origin);
 
-	self.target = strzone(ReadString());
-	self.target2 = strzone(ReadString());
-	self.target3 = strzone(ReadString());
-	self.target4 = strzone(ReadString());
-	self.targetname = strzone(ReadString());
-	self.target_random = ReadByte();
+	this.target = strzone(ReadString());
+	this.target2 = strzone(ReadString());
+	this.target3 = strzone(ReadString());
+	this.target4 = strzone(ReadString());
+	this.targetname = strzone(ReadString());
+	this.target_random = ReadByte();
 
-	self.wait = ReadByte();
+	this.wait = ReadByte();
 
 	return = true;
 
-	self.classname = "path_corner";
-	self.drawmask = MASK_NORMAL;
-	self.entremove = corner_remove;
+	this.classname = "path_corner";
+	this.drawmask = MASK_NORMAL;
+	this.entremove = corner_remove;
 
-	set_platmovetype(self, self.platmovetype);
+	set_platmovetype(this, this.platmovetype);
 }
 
 #endif

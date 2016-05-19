@@ -72,7 +72,7 @@ NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
 	this.skin = ReadByte();
 	this.speed = ReadCoord();
 
-	trigger_common_read(false);
+	trigger_common_read(this, false);
 
 	this.solid = SOLID_TRIGGER;
 	this.move_touch = func_ladder_touch;

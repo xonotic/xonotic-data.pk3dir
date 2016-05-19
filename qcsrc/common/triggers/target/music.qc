@@ -273,55 +273,55 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 	int f = ReadByte();
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	if(f & 1)
 	{
-		self.modelindex = ReadShort();
-		if(self.modelindex)
+		this.modelindex = ReadShort();
+		if(this.modelindex)
 		{
-			self.mins_x = ReadCoord();
-			self.mins_y = ReadCoord();
-			self.mins_z = ReadCoord();
-			self.maxs_x = ReadCoord();
-			self.maxs_y = ReadCoord();
-			self.maxs_z = ReadCoord();
+			this.mins_x = ReadCoord();
+			this.mins_y = ReadCoord();
+			this.mins_z = ReadCoord();
+			this.maxs_x = ReadCoord();
+			this.maxs_y = ReadCoord();
+			this.maxs_z = ReadCoord();
 		}
 		else
 		{
-			self.mins    = '0 0 0';
-			self.maxs_x = ReadCoord();
-			self.maxs_y = ReadCoord();
-			self.maxs_z = ReadCoord();
+			this.mins    = '0 0 0';
+			this.maxs_x = ReadCoord();
+			this.maxs_y = ReadCoord();
+			this.maxs_z = ReadCoord();
 		}
 
-		self.volume = ReadByte() / 255.0;
-		self.fade_time = ReadByte() / 16.0;
-		self.fade_rate = ReadByte() / 16.0;
-		string s = self.noise;
-		if(self.noise)
-			strunzone(self.noise);
-		self.noise = strzone(ReadString());
-		if(self.noise != s)
+		this.volume = ReadByte() / 255.0;
+		this.fade_time = ReadByte() / 16.0;
+		this.fade_rate = ReadByte() / 16.0;
+		string s = this.noise;
+		if(this.noise)
+			strunzone(this.noise);
+		this.noise = strzone(ReadString());
+		if(this.noise != s)
 		{
-			precache_sound(self.noise);
-			_sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
-			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
+			precache_sound(this.noise);
+			_sound(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE);
+			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{
-				LOG_TRACEF("Cannot initialize sound %s\n", self.noise);
-				strunzone(self.noise);
-				self.noise = string_null;
+				LOG_TRACEF("Cannot initialize sound %s\n", this.noise);
+				strunzone(this.noise);
+				this.noise = string_null;
 			}
 		}
 	}
 
-	setorigin(self, self.origin);
-	setsize(self, self.mins, self.maxs);
-	self.cnt = 1;
-	self.think = Ent_TriggerMusic_Think;
-	self.nextthink = time;
+	setorigin(this, this.origin);
+	setsize(this, this.mins, this.maxs);
+	this.cnt = 1;
+	this.think = Ent_TriggerMusic_Think;
+	this.nextthink = time;
 	return true;
 }
 

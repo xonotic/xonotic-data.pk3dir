@@ -6,16 +6,16 @@ void turret_remove(entity this)
 }
 
 .vector glowmod;
-void turret_changeteam()
-{SELFPARAM();
-	self.glowmod = Team_ColorRGB(self.team - 1) * 2;
-	self.teamradar_color = Team_ColorRGB(self.team - 1);
+void turret_changeteam(entity this)
+{
+	this.glowmod = Team_ColorRGB(this.team - 1) * 2;
+	this.teamradar_color = Team_ColorRGB(this.team - 1);
 
-	if(self.team)
-		self.colormap = 1024 + (self.team - 1) * 17;
+	if(this.team)
+		this.colormap = 1024 + (this.team - 1) * 17;
 
-	self.tur_head.colormap = self.colormap;
-	self.tur_head.glowmod = self.glowmod;
+	this.tur_head.colormap = this.colormap;
+	this.tur_head.glowmod = this.glowmod;
 
 }
 
@@ -359,85 +359,85 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_SETUP)
 	{
-		self.m_id = ReadByte();
+		this.m_id = ReadByte();
 
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 
-		self.angles_x = ReadAngle();
-		self.angles_y = ReadAngle();
+		this.angles_x = ReadAngle();
+		this.angles_y = ReadAngle();
 
 		turret_construct();
-		self.colormap = 1024;
-		self.glowmod = '0 1 1';
-		self.tur_head.colormap = self.colormap;
-		self.tur_head.glowmod = self.glowmod;
+		this.colormap = 1024;
+		this.glowmod = '0 1 1';
+		this.tur_head.colormap = this.colormap;
+		this.tur_head.glowmod = this.glowmod;
 	}
 
 	if(sf & TNSF_ANG)
 	{
-		if(self.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
-			self.tur_head = spawn();
+		if(this.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
+			this.tur_head = spawn();
 
-		self.tur_head.move_angles_x = ReadShort();
-		self.tur_head.move_angles_y = ReadShort();
-		//self.tur_head.angles = self.angles + self.tur_head.move_angles;
-		self.tur_head.angles = self.tur_head.move_angles;
+		this.tur_head.move_angles_x = ReadShort();
+		this.tur_head.move_angles_y = ReadShort();
+		//this.tur_head.angles = this.angles + this.tur_head.move_angles;
+		this.tur_head.angles = this.tur_head.move_angles;
 	}
 
 	if(sf & TNSF_AVEL)
 	{
-		if(self.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
-			self.tur_head = spawn();
+		if(this.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
+			this.tur_head = spawn();
 
-		self.tur_head.move_avelocity_x = ReadShort();
-		self.tur_head.move_avelocity_y = ReadShort();
+		this.tur_head.move_avelocity_x = ReadShort();
+		this.tur_head.move_avelocity_y = ReadShort();
 	}
 
 	if(sf & TNSF_MOVE)
 	{
-		self.origin_x = ReadShort();
-		self.origin_y = ReadShort();
-		self.origin_z = ReadShort();
-		setorigin(self, self.origin);
+		this.origin_x = ReadShort();
+		this.origin_y = ReadShort();
+		this.origin_z = ReadShort();
+		setorigin(this, this.origin);
 
-		self.velocity_x = ReadShort();
-		self.velocity_y = ReadShort();
-		self.velocity_z = ReadShort();
+		this.velocity_x = ReadShort();
+		this.velocity_y = ReadShort();
+		this.velocity_z = ReadShort();
 
-		self.move_angles_y = ReadShort();
+		this.move_angles_y = ReadShort();
 
-		self.move_time	 = time;
-		self.move_velocity = self.velocity;
-		self.move_origin   = self.origin;
+		this.move_time	 = time;
+		this.move_velocity = this.velocity;
+		this.move_origin   = this.origin;
 	}
 
 	if(sf & TNSF_ANIM)
 	{
-		self.frame1time = ReadCoord();
-		self.frame	  = ReadByte();
+		this.frame1time = ReadCoord();
+		this.frame	  = ReadByte();
 	}
 
 	if(sf & TNSF_STATUS)
 	{
 		float _tmp;
 		_tmp = ReadByte();
-		if(_tmp != self.team)
+		if(_tmp != this.team)
 		{
-			self.team = _tmp;
-			turret_changeteam();
+			this.team = _tmp;
+			turret_changeteam(this);
 		}
 
 		_tmp = ReadByte();
-		if(_tmp == 0 && self.health != 0)
+		if(_tmp == 0 && this.health != 0)
 			turret_die();
-		else if(self.health && self.health != _tmp)
-			self.helpme = servertime + 10;
+		else if(this.health && this.health != _tmp)
+			this.helpme = servertime + 10;
 
-		self.health = _tmp;
+		this.health = _tmp;
 	}
-	//self.enemy.health = self.health / 255;
+	//this.enemy.health = this.health / 255;
 	return true;
 }

@@ -152,134 +152,134 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_LOCATION)
     {
-        self.origin_x = ReadCoord();
-        self.origin_y = ReadCoord();
-        self.origin_z = ReadCoord();
-        setorigin(self, self.origin);
-        self.oldorigin = self.origin;
+        this.origin_x = ReadCoord();
+        this.origin_y = ReadCoord();
+        this.origin_z = ReadCoord();
+        setorigin(this, this.origin);
+        this.oldorigin = this.origin;
     }
 
     if(sf & ISF_ANGLES)
     {
-        self.angles_x = ReadAngle();
-        self.angles_y = ReadAngle();
-        self.angles_z = ReadAngle();
-        self.move_angles = self.angles;
+        this.angles_x = ReadAngle();
+        this.angles_y = ReadAngle();
+        this.angles_z = ReadAngle();
+        this.move_angles = this.angles;
     }
 
     if(sf & ISF_SIZE)
     {
         float use_bigsize = ReadByte();
-        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
     {
-        self.ItemStatus = ReadByte();
+        this.ItemStatus = ReadByte();
 
-        Item_SetAlpha(self);
+        Item_SetAlpha(this);
 
         if(autocvar_cl_fullbright_items)
-            if(self.ItemStatus & ITS_ALLOWFB)
-                self.effects |= EF_FULLBRIGHT;
+            if(this.ItemStatus & ITS_ALLOWFB)
+                this.effects |= EF_FULLBRIGHT;
 
-        if(self.ItemStatus & ITS_POWERUP)
+        if(this.ItemStatus & ITS_POWERUP)
         {
-            if(self.ItemStatus & ITS_AVAILABLE)
-                self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+            if(this.ItemStatus & ITS_AVAILABLE)
+                this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
             else
-                 self.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+                 this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
         }
     }
 
     if(sf & ISF_MODEL)
     {
-        self.drawmask  = MASK_NORMAL;
-		self.move_movetype = MOVETYPE_TOSS;
-        self.draw       = ItemDraw;
-        self.solid = SOLID_TRIGGER;
-        //self.move_flags |= FL_ITEM;
+        this.drawmask  = MASK_NORMAL;
+		this.move_movetype = MOVETYPE_TOSS;
+        this.draw       = ItemDraw;
+        this.solid = SOLID_TRIGGER;
+        //this.move_flags |= FL_ITEM;
 
         bool use_bigsize = ReadByte();
 
-        self.fade_end = ReadShort();
-        self.fade_start = ReadShort();
-        if(self.fade_start && !autocvar_cl_items_nofade)
-        	setpredraw(self, Item_PreDraw);
+        this.fade_end = ReadShort();
+        this.fade_start = ReadShort();
+        if(this.fade_start && !autocvar_cl_items_nofade)
+        	setpredraw(this, Item_PreDraw);
 
-        if(self.mdl)
-            strunzone(self.mdl);
+        if(this.mdl)
+            strunzone(this.mdl);
 
-        self.mdl = "";
+        this.mdl = "";
         string _fn = ReadString();
 
-        if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
+        if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-            self.draw = ItemDrawSimple;
+            this.draw = ItemDrawSimple;
 
             if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
             else
             {
-                self.draw = ItemDraw;
+                this.draw = ItemDraw;
                 LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it\n");
             }
         }
 
-        if(self.draw != ItemDrawSimple)
-            self.mdl = strzone(_fn);
+        if(this.draw != ItemDrawSimple)
+            this.mdl = strzone(_fn);
 
 
-        if(self.mdl == "")
-            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, ", tell tZork about this!\n");
+        if(this.mdl == "")
+            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!\n");
 
-        precache_model(self.mdl);
-        _setmodel(self, self.mdl);
+        precache_model(this.mdl);
+        _setmodel(this, this.mdl);
 
-        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_COLORMAP)
-        self.colormap = ReadShort();
+        this.colormap = ReadShort();
 
     if(sf & ISF_DROP)
     {
-        self.gravity = 1;
-        self.pushable = true;
-        //self.move_angles = '0 0 0';
-        self.move_movetype = MOVETYPE_TOSS;
-        self.move_velocity_x = ReadCoord();
-        self.move_velocity_y = ReadCoord();
-        self.move_velocity_z = ReadCoord();
-        self.velocity = self.move_velocity;
-        self.move_origin = self.oldorigin;
+        this.gravity = 1;
+        this.pushable = true;
+        //this.move_angles = '0 0 0';
+        this.move_movetype = MOVETYPE_TOSS;
+        this.move_velocity_x = ReadCoord();
+        this.move_velocity_y = ReadCoord();
+        this.move_velocity_z = ReadCoord();
+        this.velocity = this.move_velocity;
+        this.move_origin = this.oldorigin;
 
-        if(!self.move_time)
+        if(!this.move_time)
         {
-            self.move_time = time;
-            self.spawntime = time;
+            this.move_time = time;
+            this.spawntime = time;
         }
         else
-            self.move_time = max(self.move_time, time);
+            this.move_time = max(this.move_time, time);
     }
 
     if(autocvar_cl_animate_items)
     {
-        if(self.ItemStatus & ITS_ANIMATE1)
-            self.move_avelocity = '0 180 0';
+        if(this.ItemStatus & ITS_ANIMATE1)
+            this.move_avelocity = '0 180 0';
 
-        if(self.ItemStatus & ITS_ANIMATE2)
-            self.move_avelocity = '0 -90 0';
+        if(this.ItemStatus & ITS_ANIMATE2)
+            this.move_avelocity = '0 -90 0';
     }
 
-    self.entremove = ItemRemove;
+    this.entremove = ItemRemove;
 
     return true;
 }

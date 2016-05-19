@@ -184,17 +184,17 @@ void keylock_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
 {
-	self.itemkeys = ReadInt24_t();
-	self.height = ReadByte();
+	this.itemkeys = ReadInt24_t();
+	this.height = ReadByte();
 
-	trigger_common_read(true);
+	trigger_common_read(this, true);
 
 	return = true;
 
-	self.classname = "trigger_keylock";
-	self.drawmask = MASK_NORMAL;
-	self.draw = trigger_draw_generic;
-	self.trigger_touch = trigger_keylock_touch;
-	self.entremove = keylock_remove;
+	this.classname = "trigger_keylock";
+	this.drawmask = MASK_NORMAL;
+	this.draw = trigger_draw_generic;
+	this.trigger_touch = trigger_keylock_touch;
+	this.entremove = keylock_remove;
 }
 #endif

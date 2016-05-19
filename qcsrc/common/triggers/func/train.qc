@@ -266,70 +266,70 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		self.platmovetype = strzone(ReadString());
-		self.platmovetype_turn = ReadByte();
-		self.spawnflags = ReadByte();
+		this.platmovetype = strzone(ReadString());
+		this.platmovetype_turn = ReadByte();
+		this.spawnflags = ReadByte();
 
-		self.model = strzone(ReadString());
-		_setmodel(self, self.model);
+		this.model = strzone(ReadString());
+		_setmodel(this, this.model);
 
-		trigger_common_read(true);
+		trigger_common_read(this, true);
 
-		self.curvetarget = strzone(ReadString());
+		this.curvetarget = strzone(ReadString());
 
-		self.pos1_x = ReadCoord();
-		self.pos1_y = ReadCoord();
-		self.pos1_z = ReadCoord();
-		self.pos2_x = ReadCoord();
-		self.pos2_y = ReadCoord();
-		self.pos2_z = ReadCoord();
+		this.pos1_x = ReadCoord();
+		this.pos1_y = ReadCoord();
+		this.pos1_z = ReadCoord();
+		this.pos2_x = ReadCoord();
+		this.pos2_y = ReadCoord();
+		this.pos2_z = ReadCoord();
 
-		self.size_x = ReadCoord();
-		self.size_y = ReadCoord();
-		self.size_z = ReadCoord();
+		this.size_x = ReadCoord();
+		this.size_y = ReadCoord();
+		this.size_z = ReadCoord();
 
-		self.view_ofs_x = ReadCoord();
-		self.view_ofs_y = ReadCoord();
-		self.view_ofs_z = ReadCoord();
+		this.view_ofs_x = ReadCoord();
+		this.view_ofs_y = ReadCoord();
+		this.view_ofs_z = ReadCoord();
 
-		self.mangle_x = ReadAngle();
-		self.mangle_y = ReadAngle();
-		self.mangle_z = ReadAngle();
+		this.mangle_x = ReadAngle();
+		this.mangle_y = ReadAngle();
+		this.mangle_z = ReadAngle();
 
-		self.speed = ReadShort();
-		self.height = ReadShort();
-		self.lip = ReadByte();
-		self.state = ReadByte();
-		self.wait = ReadByte();
+		this.speed = ReadShort();
+		this.height = ReadShort();
+		this.lip = ReadByte();
+		this.state = ReadByte();
+		this.wait = ReadByte();
 
-		self.dmg = ReadShort();
-		self.dmgtime = ReadByte();
+		this.dmg = ReadShort();
+		this.dmgtime = ReadByte();
 
-		self.classname = "func_train";
-		self.solid = SOLID_BSP;
-		self.movetype = MOVETYPE_PUSH;
-		self.drawmask = MASK_NORMAL;
-		self.draw = train_draw;
-		self.entremove = trigger_remove_generic;
+		this.classname = "func_train";
+		this.solid = SOLID_BSP;
+		this.movetype = MOVETYPE_PUSH;
+		this.drawmask = MASK_NORMAL;
+		this.draw = train_draw;
+		this.entremove = trigger_remove_generic;
 
-		if(set_platmovetype(self, self.platmovetype))
+		if(set_platmovetype(this, this.platmovetype))
 		{
-			self.platmovetype_start_default = self.platmovetype_start;
-			self.platmovetype_end_default = self.platmovetype_end;
+			this.platmovetype_start_default = this.platmovetype_start;
+			this.platmovetype_end_default = this.platmovetype_end;
 		}
 
 		// everything is set up by the time the train is linked, we shouldn't need this
 		//func_train_find();
 
 		// but we will need these
-		//self.move_nextthink = self.move_ltime + 0.1;
-		//self.move_think = train_next;
-		train_next();
+		//this.move_nextthink = this.move_ltime + 0.1;
+		//this.move_think = train_next;
+		WITHSELF(this, train_next());
 
-		self.move_movetype = MOVETYPE_PUSH;
-		self.move_origin = self.origin;
-		self.move_angles = self.angles;
-		self.move_time = time;
+		this.move_movetype = MOVETYPE_PUSH;
+		this.move_origin = this.origin;
+		this.move_angles = this.angles;
+		this.move_time = time;
 	}
 
 	if(sf & SF_TRIGGER_RESET)

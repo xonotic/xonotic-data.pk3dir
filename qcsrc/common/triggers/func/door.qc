@@ -802,7 +802,7 @@ void door_draw(entity this)
 
 NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 {
-	float sf = ReadByte();
+	int sf = ReadByte();
 
 	if(sf & SF_TRIGGER_INIT)
 	{
@@ -812,7 +812,7 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 		this.mdl = strzone(ReadString());
 		_setmodel(this, this.mdl);
 
-		trigger_common_read(true);
+		trigger_common_read(this, true);
 
 		vector v;
 

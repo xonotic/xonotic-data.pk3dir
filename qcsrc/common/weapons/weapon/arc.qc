@@ -1289,308 +1289,308 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 	{
 		int gunalign = W_GetGunAlignment(world);
 
-		self.beam_shotorigin = arc_shotorigin[gunalign];
+		this.beam_shotorigin = arc_shotorigin[gunalign];
 
 		// set other main attributes of the beam
-		self.draw = Draw_ArcBeam;
-		self.entremove = Remove_ArcBeam;
-		self.move_time = time;
-		loopsound(self, CH_SHOTS_SINGLE, SND(ARC_LOOP), VOL_BASE, ATTEN_NORM);
+		this.draw = Draw_ArcBeam;
+		this.entremove = Remove_ArcBeam;
+		this.move_time = time;
+		loopsound(this, CH_SHOTS_SINGLE, SND(ARC_LOOP), VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
-		flash.owner = self;
+		flash.owner = this;
 		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
 		flash.drawmask = MASK_NORMAL;
 		flash.solid = SOLID_NOT;
 		flash.avelocity_z = 5000;
-		setattachment(flash, self, "");
+		setattachment(flash, this, "");
 		setorigin(flash, '0 0 0');
 
-		self.beam_muzzleentity = flash;
+		this.beam_muzzleentity = flash;
 	}
 	else
 	{
-		flash = self.beam_muzzleentity;
+		flash = this.beam_muzzleentity;
 	}
 
 	if(sf & ARC_SF_SETTINGS) // settings information
 	{
-		self.beam_degreespersegment = ReadShort();
-		self.beam_distancepersegment = ReadShort();
-		self.beam_maxangle = ReadShort();
-		self.beam_range = ReadCoord();
-		self.beam_returnspeed = ReadShort();
-		self.beam_tightness = (ReadByte() / 10);
+		this.beam_degreespersegment = ReadShort();
+		this.beam_distancepersegment = ReadShort();
+		this.beam_maxangle = ReadShort();
+		this.beam_range = ReadCoord();
+		this.beam_returnspeed = ReadShort();
+		this.beam_tightness = (ReadByte() / 10);
 
 		if(ReadByte())
 		{
 			if(autocvar_chase_active)
-				{ self.beam_usevieworigin = 1; }
+				{ this.beam_usevieworigin = 1; }
 			else // use view origin
-				{ self.beam_usevieworigin = 2; }
+				{ this.beam_usevieworigin = 2; }
 		}
 		else
 		{
-			self.beam_usevieworigin = 0;
+			this.beam_usevieworigin = 0;
 		}
 
-		self.sv_entnum = ReadByte();
+		this.sv_entnum = ReadByte();
 	}
 
-	if(!self.beam_usevieworigin)
+	if(!this.beam_usevieworigin)
 	{
-		// self.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
-		self.iflags = IFLAG_ORIGIN;
+		// this.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
+		this.iflags = IFLAG_ORIGIN;
 
-		InterpolateOrigin_Undo(self);
+		InterpolateOrigin_Undo(this);
 	}
 
 	if(sf & ARC_SF_START) // starting location
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
-	else if(self.beam_usevieworigin) // infer the location from player location
+	else if(this.beam_usevieworigin) // infer the location from player location
 	{
-		if(self.beam_usevieworigin == 2)
+		if(this.beam_usevieworigin == 2)
 		{
 			// use view origin
-			self.origin = view_origin;
+			this.origin = view_origin;
 		}
 		else
 		{
 			// use player origin so that third person display still works
-			self.origin = entcs_receiver(player_localnum).origin + ('0 0 1' * STAT(VIEWHEIGHT));
+			this.origin = entcs_receiver(player_localnum).origin + ('0 0 1' * STAT(VIEWHEIGHT));
 		}
 	}
 
-	setorigin(self, self.origin);
+	setorigin(this, this.origin);
 
 	if(sf & ARC_SF_WANTDIR) // want/aim direction
 	{
-		self.v_angle_x = ReadCoord();
-		self.v_angle_y = ReadCoord();
-		self.v_angle_z = ReadCoord();
+		this.v_angle_x = ReadCoord();
+		this.v_angle_y = ReadCoord();
+		this.v_angle_z = ReadCoord();
 	}
 
 	if(sf & ARC_SF_BEAMDIR) // beam direction
 	{
-		self.angles_x = ReadCoord();
-		self.angles_y = ReadCoord();
-		self.angles_z = ReadCoord();
+		this.angles_x = ReadCoord();
+		this.angles_y = ReadCoord();
+		this.angles_z = ReadCoord();
 	}
 
 	if(sf & ARC_SF_BEAMTYPE) // beam type
 	{
-		self.beam_type = ReadByte();
+		this.beam_type = ReadByte();
 
-		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(stof(getplayerkeyvalue(self.sv_entnum - 1, "colors")) & 0x0F, true) : '1 1 1');
-		switch(self.beam_type)
+		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true) : '1 1 1');
+		switch(this.beam_type)
 		{
 			case ARC_BT_MISS:
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 8;
-				self.beam_traileffect = (EFFECT_ARC_BEAM);
-				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
 			}
 			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 8;
-				self.beam_traileffect = (EFFECT_ARC_BEAM);
-				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; // (EFFECT_GRENADE_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; // (EFFECT_GRENADE_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
 			}
 			case ARC_BT_HEAL:
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 8;
-				self.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
-				self.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT);
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
+				this.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
 			}
 			case ARC_BT_HIT:
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 8;
-				self.beam_traileffect = (EFFECT_ARC_BEAM);
-				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
-				self.beam_hitlight[0] = 20;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 0;
-				self.beam_hitlight[3] = 0;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 50;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 0;
-				self.beam_muzzlelight[3] = 0;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 20;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 0;
+				this.beam_hitlight[3] = 0;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 50;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 0;
+				this.beam_muzzlelight[3] = 0;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
 			}
 			case ARC_BT_BURST_MISS:
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 14;
-				self.beam_traileffect = (EFFECT_ARC_BEAM);
-				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
 			}
 			case ARC_BT_BURST_WALL:
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 14;
-				self.beam_traileffect = (EFFECT_ARC_BEAM);
-				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
 			}
 			case ARC_BT_BURST_HEAL:
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 14;
-				self.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
-				self.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT2);
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
+				this.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT2);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
 			}
 			case ARC_BT_BURST_HIT:
 			{
-				self.beam_color = beamcolor;
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 14;
-				self.beam_traileffect = (EFFECT_ARC_BEAM);
-				self.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
@@ -1599,26 +1599,26 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 			// shouldn't be possible, but lets make it colorful if it does :D
 			default:
 			{
-				self.beam_color = randomvec();
-				self.beam_alpha = 1;
-				self.beam_thickness = 8;
-				self.beam_traileffect = NULL;
-				self.beam_hiteffect = NULL;
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				if(self.beam_muzzleeffect)
+				this.beam_color = randomvec();
+				this.beam_alpha = 1;
+				this.beam_thickness = 8;
+				this.beam_traileffect = NULL;
+				this.beam_hiteffect = NULL;
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
 				{
 					setmodel(flash, MDL_ARC_MUZZLEFLASH);
-					flash.alpha = self.beam_alpha;
-					flash.colormod = self.beam_color;
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
 					flash.scale = 0.5;
 				}
 				break;
@@ -1626,7 +1626,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 		}
 	}
 
-	if(!self.beam_usevieworigin)
+	if(!this.beam_usevieworigin)
 	{
 		InterpolateOrigin_Note(this);
 	}
