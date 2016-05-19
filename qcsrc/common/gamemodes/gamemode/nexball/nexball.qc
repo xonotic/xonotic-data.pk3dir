@@ -614,7 +614,7 @@ void SpawnGoal(entity this)
 {
 	if(!g_nexball) { remove(this); return; }
 
-	WITHSELF(this, WarpZoneLib_ExactTrigger_Init());
+	EXACTTRIGGER_INIT;
 
 	if(this.team != GOAL_OUT && Team_TeamToNumber(this.team) != -1)
 	{

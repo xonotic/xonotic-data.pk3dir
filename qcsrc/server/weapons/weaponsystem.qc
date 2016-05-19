@@ -769,7 +769,6 @@ void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 
 void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item)
 {
-    SELFPARAM();
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
 	WITHSELF(player, w.event(w));

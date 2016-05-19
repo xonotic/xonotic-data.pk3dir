@@ -761,7 +761,7 @@ spawnfunc(trigger_warpzone)
 		this.scale = 1;
 	string m;
 	m = this.model;
-	WarpZoneLib_ExactTrigger_Init();
+	WarpZoneLib_ExactTrigger_Init(this);
  	if(m != "")
  	{
  		precache_model(m);

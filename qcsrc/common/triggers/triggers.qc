@@ -24,7 +24,7 @@ void FixSize(entity e)
 void trigger_init(entity this)
 {
 	string m = this.model;
-	WITHSELF(this, WarpZoneLib_ExactTrigger_Init());
+	EXACTTRIGGER_INIT;
  	if(m != "")
  	{
  		precache_model(m);

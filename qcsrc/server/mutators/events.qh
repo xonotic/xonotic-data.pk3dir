@@ -126,10 +126,16 @@ string format_message;
 MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 
 /** returns true if throwing the current weapon shall not be allowed */
-MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_NO_ARGS);
+#define EV_ForbidThrowCurrentWeapon(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_ForbidThrowCurrentWeapon);
 
 /** returns true if dropping the current weapon shall not be allowed at any time including death */
-MUTATOR_HOOKABLE(ForbidDropCurrentWeapon, EV_NO_ARGS);
+#define EV_ForbidDropCurrentWeapon(i, o) \
+    /**/ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(ForbidDropCurrentWeapon, EV_ForbidDropCurrentWeapon);
 
 /**  */
 MUTATOR_HOOKABLE(SetDefaultAlpha, EV_NO_ARGS);
