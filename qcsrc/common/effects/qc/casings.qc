@@ -15,10 +15,10 @@ REGISTER_NET_TEMP(casings)
 
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
-{SELFPARAM();
+{
     .entity weaponentity = weaponentities[0]; // TODO: parameter
-    entity wep = self.(weaponentity);
-    vector org = self.origin + self.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
+    entity wep = casingowner.(weaponentity);
+    vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
     if (!sound_allowed(MSG_BROADCAST, casingowner))
         casingtype |= 0x80;
