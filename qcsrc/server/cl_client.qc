@@ -196,7 +196,7 @@ void PutObserverInServer()
     }
 
     {
-        entity spot = SelectSpawnPoint(true);
+        entity spot = SelectSpawnPoint(this, true);
         if (!spot) LOG_FATAL("No spawnpoints for observers?!?");
         this.angles = spot.angles;
         this.angles_z = 0;
@@ -471,7 +471,7 @@ void PutClientInServer()
 		if (this.team < 0)
 			JoinBestTeam(this, false, true);
 
-		entity spot = SelectSpawnPoint(false);
+		entity spot = SelectSpawnPoint(this, false);
 		if (!spot) {
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_JOIN_NOSPAWNS);
 			return; // spawn failed

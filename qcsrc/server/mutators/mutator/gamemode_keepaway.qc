@@ -89,7 +89,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 
 	if(!MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
-		entity spot = SelectSpawnPoint(true);
+		entity spot = SelectSpawnPoint(this, true);
 		setorigin(self, spot.origin);
 		self.angles = spot.angles;
 	}

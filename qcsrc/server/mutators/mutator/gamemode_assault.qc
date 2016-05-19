@@ -85,9 +85,9 @@ void assault_objective_use(entity this, entity actor, entity trigger)
 	}
 }
 
-vector target_objective_spawn_evalfunc(entity player, entity spot, vector current)
-{SELFPARAM();
-	if(self.health < 0 || self.health >= ASSAULT_VALUE_INACTIVE)
+vector target_objective_spawn_evalfunc(entity this, entity player, entity spot, vector current)
+{
+	if(this.health < 0 || this.health >= ASSAULT_VALUE_INACTIVE)
 		return '-1 0 0';
 	return current;
 }

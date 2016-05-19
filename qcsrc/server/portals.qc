@@ -440,16 +440,16 @@ void Portal_Damage(entity this, entity inflictor, entity attacker, float damage,
 		Portal_Remove(this, 1);
 }
 
-void Portal_Think_TryTeleportPlayer(entity e, vector g)
-{SELFPARAM();
-	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, self.origin, v_forward, self.maxs.x))
+void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g)
+{
+	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
 
 	// if e would hit the portal in a frame...
 	// already teleport him
 	tracebox(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, MOVE_NORMAL, e);
-	if(trace_ent == self)
-		Portal_TeleportPlayer(self, e);
+	if(trace_ent == this)
+		Portal_TeleportPlayer(this, e);
 }
 
 void Portal_Think()
@@ -479,10 +479,10 @@ void Portal_Think()
 				continue; // cannot go through someone else's portal
 
 		if(it != o || time >= self.portal_activatetime)
-			Portal_Think_TryTeleportPlayer(it, g);
+			Portal_Think_TryTeleportPlayer(self, it, g);
 
 		if(it.hook)
-			Portal_Think_TryTeleportPlayer(it.hook, g);
+			Portal_Think_TryTeleportPlayer(self, it.hook, g);
 	));
 	self.solid = SOLID_TRIGGER;
 	self.aiment = o;

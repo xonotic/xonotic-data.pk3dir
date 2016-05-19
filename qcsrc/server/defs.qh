@@ -408,7 +408,7 @@ const float ACTIVE_TOGGLE 	= 3;
 
 void PlayerUseKey();
 
-USING(spawn_evalfunc_t, vector(entity player, entity spot, vector current));
+USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
 .spawn_evalfunc_t spawn_evalfunc;
 
 string modname;

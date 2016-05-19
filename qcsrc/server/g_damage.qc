@@ -726,37 +726,34 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
-			setself(targ);
-			entity spot = SelectSpawnPoint (false);
+			entity spot = SelectSpawnPoint (targ, false);
 
 			if(spot)
 			{
 				damage = 0;
-				self.deadflag = DEAD_NO;
+				targ.deadflag = DEAD_NO;
 
-				self.angles = spot.angles;
+				targ.angles = spot.angles;
 
-				self.effects = 0;
-				self.effects |= EF_TELEPORT_BIT;
+				targ.effects = 0;
+				targ.effects |= EF_TELEPORT_BIT;
 
-				self.angles_z = 0; // never spawn tilted even if the spot says to
-				self.fixangle = true; // turn this way immediately
-				self.velocity = '0 0 0';
-				self.avelocity = '0 0 0';
-				self.punchangle = '0 0 0';
-				self.punchvector = '0 0 0';
-				self.oldvelocity = self.velocity;
+				targ.angles_z = 0; // never spawn tilted even if the spot says to
+				targ.fixangle = true; // turn this way immediately
+				targ.velocity = '0 0 0';
+				targ.avelocity = '0 0 0';
+				targ.punchangle = '0 0 0';
+				targ.punchvector = '0 0 0';
+				targ.oldvelocity = targ.velocity;
 
-				self.spawnorigin = spot.origin;
-				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins.z - 24));
+				targ.spawnorigin = spot.origin;
+				setorigin (targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
-				self.oldorigin = self.origin;
-				self.prevorigin = self.origin;
+				targ.oldorigin = targ.origin;
+				targ.prevorigin = targ.origin;
 
-				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 			}
-
-			setself(this);
 		}
 
 		if(!g_instagib)
