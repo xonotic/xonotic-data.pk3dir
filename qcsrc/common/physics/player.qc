@@ -646,15 +646,15 @@ float racecar_angle(float forward, float down)
 
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
-void SpecialCommand()
+void SpecialCommand(entity this)
 {
 #ifdef SVQC
-	if (!CheatImpulse(CHIMPULSE_GIVE_ALL.impulse))
+	if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
 		LOG_INFO("A hollow voice says \"Plugh\".\n");
 #endif
 }
 
-float PM_check_specialcommand(entity this, float buttons)
+bool PM_check_specialcommand(entity this, int buttons)
 {
 #ifdef SVQC
 	string c;
@@ -681,7 +681,7 @@ float PM_check_specialcommand(entity this, float buttons)
 		if (this.specialcommand_pos >= strlen(specialcommand))
 		{
 			this.specialcommand_pos = 0;
-			SpecialCommand();
+			SpecialCommand(this);
 			return true;
 		}
 	}

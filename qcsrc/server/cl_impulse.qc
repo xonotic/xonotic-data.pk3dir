@@ -361,7 +361,7 @@ void ImpulseCommands(entity this)
 
 	if (vehicle_impulse(this, imp)) return;
 
-	if (CheatImpulse(imp)) return;
+	if (CheatImpulse(this, imp)) return;
 
 	FOREACH(IMPULSES, it.impulse == imp, {
 		void(entity) f = it.impulse_handle;

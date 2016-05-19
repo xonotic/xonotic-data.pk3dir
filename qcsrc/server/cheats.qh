@@ -8,8 +8,8 @@ float cheatcount_total;
 .float cheatcount;
 void CheatInit();
 void CheatShutdown();
-float CheatImpulse(int imp);
-float CheatCommand(float argc);
+float CheatImpulse(entity this, int imp);
+float CheatCommand(entity this, int argc);
 float CheatFrame();
 
 const float CHRAME_DRAG = 8;

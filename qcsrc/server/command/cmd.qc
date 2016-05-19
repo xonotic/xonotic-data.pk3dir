@@ -788,7 +788,7 @@ void SV_ParseClientCommand(string command)
 	{
 		return;  // handled by a mutator
 	}
-	else if (CheatCommand(argc))
+	else if (CheatCommand(this, argc))
 	{
 		return;  // handled by server/cheats.qc
 	}

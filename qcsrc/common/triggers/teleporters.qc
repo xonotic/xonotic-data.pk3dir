@@ -251,12 +251,12 @@ void teleport_findtarget(entity this)
 {
 	int n = 0;
 	entity e;
-	for(e = world; (e = find(e, targetname, self.target)); )
+	for(e = world; (e = find(e, targetname, this.target)); )
 	{
 		++n;
 #ifdef SVQC
 		if(e.movetype == MOVETYPE_NONE)
-			waypoint_spawnforteleporter(self, e.origin, 0);
+			waypoint_spawnforteleporter(this, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
 			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
 #endif
@@ -271,21 +271,21 @@ void teleport_findtarget(entity this)
 	else if(n == 1)
 	{
 		// exactly one dest - bots love that
-		self.enemy = find(e, targetname, self.target);
+		this.enemy = find(e, targetname, this.target);
 	}
 	else
 	{
 		// have to use random selection every single time
-		self.enemy = world;
+		this.enemy = world;
 	}
 
 	// now enable touch
 #ifdef SVQC
-	self.touch = Teleport_Touch;
+	this.touch = Teleport_Touch;
 
-	trigger_teleport_link(self);
+	trigger_teleport_link(this);
 #elif defined(CSQC)
-	self.move_touch = Teleport_Touch;
+	this.move_touch = Teleport_Touch;
 #endif
 }
 
