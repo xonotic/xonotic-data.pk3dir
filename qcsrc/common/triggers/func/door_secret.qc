@@ -207,7 +207,7 @@ spawnfunc(func_door_secret)
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 	this.classname = "door";
-	if (!InitMovingBrushTrigger()) return;
+	if (!InitMovingBrushTrigger(this)) return;
 	this.effects |= EF_LOWPRECISION;
 
 	if (this.noise == "") this.noise = "misc/talk.wav";

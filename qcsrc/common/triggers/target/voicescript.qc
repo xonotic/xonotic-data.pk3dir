@@ -84,18 +84,18 @@ spawnfunc(target_voicescript)
 	// delay: initial delay before the first message
 
 	float i, n;
-	self.use = target_voicescript_use;
+	this.use = target_voicescript_use;
 
-	n = tokenize_console(self.message);
-	self.cnt = n / 2;
+	n = tokenize_console(this.message);
+	this.cnt = n / 2;
 	for(i = 0; i+1 < n; i += 2)
 	{
 		if(argv(i) == "*")
 		{
-			self.cnt = i / 2;
+			this.cnt = i / 2;
 			++i;
 		}
-		precache_sound(strcat(self.netname, "/", argv(i), ".wav"));
+		precache_sound(strcat(this.netname, "/", argv(i), ".wav"));
 	}
 }
 #endif

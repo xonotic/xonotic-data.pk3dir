@@ -60,23 +60,23 @@ entity trigger_hurt_first;
 spawnfunc(trigger_hurt)
 {
 	EXACTTRIGGER_INIT;
-	self.active = ACTIVE_ACTIVE;
-	self.touch = trigger_hurt_touch;
-	self.use = trigger_hurt_use;
-	self.enemy = world; // I hate you all
-	if (!self.dmg)
-		self.dmg = 1000;
-	if (self.message == "")
-		self.message = "was in the wrong place";
-	if (self.message2 == "")
-		self.message2 = "was thrown into a world of hurt by";
-	// self.message = "someone like %s always gets wrongplaced";
+	this.active = ACTIVE_ACTIVE;
+	this.touch = trigger_hurt_touch;
+	this.use = trigger_hurt_use;
+	this.enemy = world; // I hate you all
+	if (!this.dmg)
+		this.dmg = 1000;
+	if (this.message == "")
+		this.message = "was in the wrong place";
+	if (this.message2 == "")
+		this.message2 = "was thrown into a world of hurt by";
+	// this.message = "someone like %s always gets wrongplaced";
 
 	if(!trigger_hurt_first)
-		trigger_hurt_first = self;
+		trigger_hurt_first = this;
 	if(trigger_hurt_last)
-		trigger_hurt_last.trigger_hurt_next = self;
-	trigger_hurt_last = self;
+		trigger_hurt_last.trigger_hurt_next = this;
+	trigger_hurt_last = this;
 }
 
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)

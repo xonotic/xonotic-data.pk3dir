@@ -28,7 +28,7 @@ REGISTER_TURRET(PLASMA_DUAL, NEW(DualPlasmaTurret));
 
 #ifdef SVQC
 
-spawnfunc(turret_plasma_dual) { if (!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
+spawnfunc(turret_plasma_dual) { if (!turret_initialize(TUR_PLASMA_DUAL)) remove(this); }
 
 METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
 {

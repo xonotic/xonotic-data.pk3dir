@@ -640,26 +640,26 @@ spawnfunc(flockerspawn)
 {SELFPARAM();
     ++globflockcnt;
 
-    if(!self.cnt)      self.cnt = 20;
-    if(!self.delay)    self.delay = 0.25;
-    if(!self.flock_id) self.flock_id = globflockcnt;
+    if(!this.cnt)      this.cnt = 20;
+    if(!this.delay)    this.delay = 0.25;
+    if(!this.flock_id) this.flock_id = globflockcnt;
 
-    self.think     = flockerspawn_think;
-    self.nextthink = time + 0.25;
+    this.think     = flockerspawn_think;
+    this.nextthink = time + 0.25;
 
-    self.enemy = new(FLock Hunter);
+    this.enemy = new(FLock Hunter);
 
-    setmodel(self.enemy, MDL_FLOCKER);
-    setorigin(self.enemy,self.origin + '0 0 768' + (randomvec() * 128));
+    setmodel(this.enemy, MDL_FLOCKER);
+    setorigin(this.enemy,this.origin + '0 0 768' + (randomvec() * 128));
 
-    self.enemy.scale     = 3;
-    self.enemy.effects   = EF_LOWPRECISION;
-    self.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;
-    PROJECTILE_MAKETRIGGER(self.enemy);
-    self.enemy.think     = flocker_hunter_think;
-    self.enemy.nextthink = time + 10;
-    self.enemy.flock_id  = self.flock_id;
-    self.enemy.owner     = self;
+    this.enemy.scale     = 3;
+    this.enemy.effects   = EF_LOWPRECISION;
+    this.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;
+    PROJECTILE_MAKETRIGGER(this.enemy);
+    this.enemy.think     = flocker_hunter_think;
+    this.enemy.nextthink = time + 10;
+    this.enemy.flock_id  = this.flock_id;
+    this.enemy.owner     = this;
 }
 #endif
 

@@ -51,10 +51,10 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(tdm_team)
 {
-	if(!g_tdm || !self.cnt) { remove(self); return; }
+	if(!g_tdm || !this.cnt) { remove(this); return; }
 
-	self.classname = "tdm_team";
-	self.team = self.cnt + 1;
+	this.classname = "tdm_team";
+	this.team = this.cnt + 1;
 }
 
 // code from here on is just to support maps that don't have team entities

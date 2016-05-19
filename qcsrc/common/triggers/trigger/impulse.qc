@@ -179,41 +179,40 @@ bool trigger_impulse_send(entity this, entity to, int sf)
 	return true;
 }
 
-void trigger_impulse_link()
+void trigger_impulse_link(entity this)
 {
-    SELFPARAM();
-	trigger_link(self, trigger_impulse_send);
+	trigger_link(this, trigger_impulse_send);
 }
 
 spawnfunc(trigger_impulse)
 {
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
-	trigger_init(self);
+	trigger_init(this);
 
-	if(self.radius)
+	if(this.radius)
 	{
-		if(!self.strength) self.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
-		setorigin(self, self.origin);
-		setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
-		self.touch = trigger_impulse_touch3;
+		if(!this.strength) this.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
+		setorigin(this, this.origin);
+		setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
+		this.touch = trigger_impulse_touch3;
 	}
 	else
 	{
-		if(self.target)
+		if(this.target)
 		{
-			if(!self.strength) self.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
-			self.touch = trigger_impulse_touch1;
+			if(!this.strength) this.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
+			this.touch = trigger_impulse_touch1;
 		}
 		else
 		{
-			if(!self.strength) self.strength = 0.9;
-			self.strength = pow(self.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
-			self.touch = trigger_impulse_touch2;
+			if(!this.strength) this.strength = 0.9;
+			this.strength = pow(this.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
+			this.touch = trigger_impulse_touch2;
 		}
 	}
 
-	trigger_impulse_link();
+	trigger_impulse_link(this);
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)

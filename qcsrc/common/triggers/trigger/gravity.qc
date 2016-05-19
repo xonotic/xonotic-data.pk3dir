@@ -87,20 +87,20 @@ void trigger_gravity_touch()
 
 spawnfunc(trigger_gravity)
 {
-	if(self.gravity == 1)
+	if(this.gravity == 1)
 		return;
 
 	EXACTTRIGGER_INIT;
-	self.touch = trigger_gravity_touch;
-	if(self.noise != "")
-		precache_sound(self.noise);
+	this.touch = trigger_gravity_touch;
+	if(this.noise != "")
+		precache_sound(this.noise);
 
-	self.state = true;
+	this.state = true;
 	IFTARGETED
 	{
-		self.use = trigger_gravity_use;
-		if(self.spawnflags & 2)
-			self.state = false;
+		this.use = trigger_gravity_use;
+		if(this.spawnflags & 2)
+			this.state = false;
 	}
 }
 #endif

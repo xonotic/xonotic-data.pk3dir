@@ -233,11 +233,11 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 	float i, p, longflags;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES);
-	WriteByte(MSG_ENTITY, etof(self.owner));
+	WriteByte(MSG_ENTITY, etof(this.owner));
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(self.(scores[i]) > 127 || self.(scores[i]) <= -128)
+		if(this.(scores[i]) > 127 || this.(scores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_SCORE <= 8
@@ -251,9 +251,9 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.(scores[i]));
+				WriteInt24_t(MSG_ENTITY, this.(scores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.(scores[i]));
+				WriteChar(MSG_ENTITY, this.(scores[i]));
 		}
 
 	return true;

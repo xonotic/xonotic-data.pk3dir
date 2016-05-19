@@ -58,30 +58,30 @@ spawnfunc(trigger_secret)
 	secrets_total += 1;
 
 	// add default message
-	if (self.message == "")
-		self.message = "You found a secret!";
+	if (this.message == "")
+		this.message = "You found a secret!";
 
 	// set default sound
-	if (self.noise == "")
-	if (!self.sounds)
-		self.sounds = 1; // misc/secret.wav
+	if (this.noise == "")
+	if (!this.sounds)
+		this.sounds = 1; // misc/secret.wav
 
 	// this entity can't be a target itself!!!!
-	self.targetname = "";
+	this.targetname = "";
 
 	// you can't just shoot a room to find it, can you?
-	self.health = 0;
+	this.health = 0;
 
 	// a secret can not be delayed
-	self.delay = 0;
+	this.delay = 0;
 
 	// convert this trigger to trigger_once
-	self.classname = "trigger_once";
+	this.classname = "trigger_once";
 	spawnfunc_trigger_once(this);
 
 	// take over the touch() function, so we can mark secret as found
-	self.touch = trigger_secret_touch;
+	this.touch = trigger_secret_touch;
 	// ignore triggering;
-	self.use = func_null;
+	this.use = func_null;
 }
 #endif

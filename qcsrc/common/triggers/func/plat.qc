@@ -101,7 +101,7 @@ spawnfunc(func_plat)
 	this.angles = '0 0 0';
 
 	this.classname = "plat";
-	if (!InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger(this))
 		return;
 	this.effects |= EF_LOWPRECISION;
 	setsize (this, this.mins , this.maxs);

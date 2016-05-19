@@ -158,8 +158,8 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 
 spawnfunc(trigger_magicear)
 {
-	self.enemy = magicears;
-	magicears = self;
+	this.enemy = magicears;
+	magicears = this;
 
 	// actually handled in "say" processing
 	// spawnflags:
@@ -190,6 +190,6 @@ spawnfunc(trigger_magicear)
 	// movedir:
 	//   for spawnflags 256, defines 'instrument+1 mintempo maxtempo' (zero component doesn't matter)
 
-	self.movedir_x -= 1; // map to tuba instrument numbers
+	this.movedir_x -= 1; // map to tuba instrument numbers
 }
 #endif

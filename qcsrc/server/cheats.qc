@@ -126,8 +126,8 @@ spawnfunc(info_autoscreenshot)
 		objerror("Too many info_autoscreenshot entitites. FAIL!");
 		return;
 	}
-	if(self.target != "")
-		InitializeEntity(self, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
+	if(this.target != "")
+		InitializeEntity(this, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
 	// this one just has to exist
 }
 

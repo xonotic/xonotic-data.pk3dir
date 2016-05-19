@@ -2421,9 +2421,9 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team1)
 {
-	if(!g_ctf) { remove(self); return; }
+	if(!g_ctf) { remove(this); return; }
 
-	ctf_FlagSetup(NUM_TEAM_1, self);
+	ctf_FlagSetup(NUM_TEAM_1, this);
 }
 
 /*QUAKED spawnfunc_item_flag_team2 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -2439,9 +2439,9 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team2)
 {
-	if(!g_ctf) { remove(self); return; }
+	if(!g_ctf) { remove(this); return; }
 
-	ctf_FlagSetup(NUM_TEAM_2, self);
+	ctf_FlagSetup(NUM_TEAM_2, this);
 }
 
 /*QUAKED spawnfunc_item_flag_team3 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -2457,9 +2457,9 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team3)
 {
-	if(!g_ctf) { remove(self); return; }
+	if(!g_ctf) { remove(this); return; }
 
-	ctf_FlagSetup(NUM_TEAM_3, self);
+	ctf_FlagSetup(NUM_TEAM_3, this);
 }
 
 /*QUAKED spawnfunc_item_flag_team4 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -2475,9 +2475,9 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_team4)
 {
-	if(!g_ctf) { remove(self); return; }
+	if(!g_ctf) { remove(this); return; }
 
-	ctf_FlagSetup(NUM_TEAM_4, self);
+	ctf_FlagSetup(NUM_TEAM_4, this);
 }
 
 /*QUAKED spawnfunc_item_flag_neutral (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -2493,10 +2493,10 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 spawnfunc(item_flag_neutral)
 {
-	if(!g_ctf) { remove(self); return; }
-	if(!cvar("g_ctf_oneflag")) { remove(self); return; }
+	if(!g_ctf) { remove(this); return; }
+	if(!cvar("g_ctf_oneflag")) { remove(this); return; }
 
-	ctf_FlagSetup(0, self);
+	ctf_FlagSetup(0, this);
 }
 
 /*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
@@ -2507,10 +2507,10 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(ctf_team)
 {
-	if(!g_ctf) { remove(self); return; }
+	if(!g_ctf) { remove(this); return; }
 
-	self.classname = "ctf_team";
-	self.team = self.cnt + 1;
+	this.classname = "ctf_team";
+	this.team = this.cnt + 1;
 }
 
 // compatibility for quake maps

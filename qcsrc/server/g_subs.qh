@@ -162,4 +162,4 @@ void InitTrigger();
 
 void InitSolidBSPTrigger();
 
-float InitMovingBrushTrigger();
+bool InitMovingBrushTrigger(entity this);

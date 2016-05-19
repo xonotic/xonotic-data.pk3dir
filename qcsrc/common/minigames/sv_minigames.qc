@@ -65,35 +65,35 @@ bool minigame_SendEntity(entity this, entity to, int sf)
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		WriteShort(MSG_ENTITY,msle_id(self.classname));
-		WriteString(MSG_ENTITY,self.netname);
+		WriteShort(MSG_ENTITY,msle_id(this.classname));
+		WriteString(MSG_ENTITY,this.netname);
 	}
 
-	entity minigame_ent = self.owner;
+	entity minigame_ent = this.owner;
 
-	if ( self.classname == "minigame" )
+	if ( this.classname == "minigame" )
 	{
-		minigame_ent = self;
+		minigame_ent = this;
 
 		if ( sf & MINIG_SF_CREATE )
-			WriteString(MSG_ENTITY,self.descriptor.netname);
+			WriteString(MSG_ENTITY,this.descriptor.netname);
 
 		if ( sf & MINIG_SF_UPDATE )
-			WriteLong(MSG_ENTITY,self.minigame_flags);
+			WriteLong(MSG_ENTITY,this.minigame_flags);
 	}
-	else if ( self.classname == "minigame_player" )
+	else if ( this.classname == "minigame_player" )
 	{
 		if ( sf & MINIG_SF_CREATE )
 		{
-			WriteString(MSG_ENTITY,self.owner.netname);
-			WriteLong(MSG_ENTITY,etof(self.minigame_players));
+			WriteString(MSG_ENTITY,this.owner.netname);
+			WriteLong(MSG_ENTITY,etof(this.minigame_players));
 		}
 		if ( sf & MINIG_SF_UPDATE )
-			WriteByte(MSG_ENTITY,self.team);
+			WriteByte(MSG_ENTITY,this.team);
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES
 
-	minigame_ent.minigame_event(minigame_ent,"network_send",self,sf);
+	minigame_ent.minigame_event(minigame_ent,"network_send",this,sf);
 
 	return true;
 

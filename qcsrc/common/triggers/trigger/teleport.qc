@@ -79,27 +79,27 @@ void trigger_teleport_link(entity this)
 
 spawnfunc(trigger_teleport)
 {
-	self.angles = '0 0 0';
+	this.angles = '0 0 0';
 
-	self.active = ACTIVE_ACTIVE;
-	//trigger_init(self); // only for predicted triggers?
+	this.active = ACTIVE_ACTIVE;
+	//trigger_init(this); // only for predicted triggers?
 	EXACTTRIGGER_INIT;
-	self.use = trigger_teleport_use;
+	this.use = trigger_teleport_use;
 
-	if(self.noise != "")
-		FOREACH_WORD(self.noise, true, precache_sound(it));
+	if(this.noise != "")
+		FOREACH_WORD(this.noise, true, precache_sound(it));
 
 	// this must be called to spawn the teleport waypoints for bots
-	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
+	InitializeEntity(this, teleport_findtarget, INITPRIO_FINDTARGET);
 
-	if (self.target == "")
+	if (this.target == "")
 	{
 		objerror ("Teleporter with no target");
 		return;
 	}
 
-	self.teleport_next = teleport_first;
-	teleport_first = self;
+	this.teleport_next = teleport_first;
+	teleport_first = this;
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)

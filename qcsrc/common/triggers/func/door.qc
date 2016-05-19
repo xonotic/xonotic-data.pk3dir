@@ -717,78 +717,78 @@ void door_reset(entity this)
 spawnfunc(func_door)
 {
 	// Quake 1 keys compatibility
-	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
-		self.itemkeys |= ITEM_KEY_BIT(0);
-	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
-		self.itemkeys |= ITEM_KEY_BIT(1);
+	if (this.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		this.itemkeys |= ITEM_KEY_BIT(0);
+	if (this.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		this.itemkeys |= ITEM_KEY_BIT(1);
 
-	SetMovedir(self);
+	SetMovedir(this);
 
-	self.max_health = self.health;
-	if (!InitMovingBrushTrigger())
+	this.max_health = this.health;
+	if (!InitMovingBrushTrigger(this))
 		return;
-	self.effects |= EF_LOWPRECISION;
-	self.classname = "door";
+	this.effects |= EF_LOWPRECISION;
+	this.classname = "door";
 
-	if(self.noise == "")
-		self.noise = "misc/talk.wav";
-	if(self.noise3 == "")
-		self.noise3 = "misc/talk.wav";
-	precache_sound(self.noise);
-	precache_sound(self.noise3);
+	if(this.noise == "")
+		this.noise = "misc/talk.wav";
+	if(this.noise3 == "")
+		this.noise3 = "misc/talk.wav";
+	precache_sound(this.noise);
+	precache_sound(this.noise3);
 
-	self.blocked = door_blocked;
-	self.use = door_use;
+	this.blocked = door_blocked;
+	this.use = door_use;
 
-	if(self.dmg && (self.message == ""))
-		self.message = "was squished";
-	if(self.dmg && (self.message2 == ""))
-		self.message2 = "was squished by";
+	if(this.dmg && (this.message == ""))
+		this.message = "was squished";
+	if(this.dmg && (this.message2 == ""))
+		this.message2 = "was squished by";
 
-	if (self.sounds > 0)
+	if (this.sounds > 0)
 	{
 		precache_sound ("plats/medplat1.wav");
 		precache_sound ("plats/medplat2.wav");
-		self.noise2 = "plats/medplat1.wav";
-		self.noise1 = "plats/medplat2.wav";
+		this.noise2 = "plats/medplat1.wav";
+		this.noise1 = "plats/medplat2.wav";
 	}
 
-	if (!self.speed)
-		self.speed = 100;
-	if (!self.wait)
-		self.wait = 3;
-	if (!self.lip)
-		self.lip = 8;
+	if (!this.speed)
+		this.speed = 100;
+	if (!this.wait)
+		this.wait = 3;
+	if (!this.lip)
+		this.lip = 8;
 
-	self.pos1 = self.SUB_ORIGIN;
-	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
+	this.pos1 = this.SUB_ORIGIN;
+	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 
-	if(self.spawnflags & DOOR_NONSOLID)
-		self.solid = SOLID_NOT;
+	if(this.spawnflags & DOOR_NONSOLID)
+		this.solid = SOLID_NOT;
 
 // DOOR_START_OPEN is to allow an entity to be lighted in the closed position
 // but spawn in the open position
-	if (self.spawnflags & DOOR_START_OPEN)
-		InitializeEntity(self, door_init_startopen, INITPRIO_SETLOCATION);
+	if (this.spawnflags & DOOR_START_OPEN)
+		InitializeEntity(this, door_init_startopen, INITPRIO_SETLOCATION);
 
-	self.state = STATE_BOTTOM;
+	this.state = STATE_BOTTOM;
 
-	if (self.health)
+	if (this.health)
 	{
-		self.takedamage = DAMAGE_YES;
-		self.event_damage = door_damage;
+		this.takedamage = DAMAGE_YES;
+		this.event_damage = door_damage;
 	}
 
-	if (self.items)
-		self.wait = -1;
+	if (this.items)
+		this.wait = -1;
 
-	self.touch = door_touch;
+	this.touch = door_touch;
 
 // LinkDoors can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.
-	InitializeEntity(self, LinkDoors, INITPRIO_LINKDOORS);
+	InitializeEntity(this, LinkDoors, INITPRIO_LINKDOORS);
 
-	self.reset = door_reset;
+	this.reset = door_reset;
 }
 
 #elif defined(CSQC)

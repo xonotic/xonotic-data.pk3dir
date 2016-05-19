@@ -923,7 +923,7 @@ spawnfunc(worldspawn)
 spawnfunc(light)
 {
 	//makestatic (self); // Who the f___ did that?
-	remove(self);
+	remove(this);
 }
 
 string GetGametype()

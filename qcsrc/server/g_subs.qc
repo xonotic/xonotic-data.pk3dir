@@ -8,7 +8,7 @@
 
 spawnfunc(info_null)
 {
-	remove(self);
+	remove(this);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
 }
 
@@ -434,17 +434,17 @@ void InitSolidBSPTrigger()
 	self.model = "";
 }
 
-float InitMovingBrushTrigger()
-{SELFPARAM();
+bool InitMovingBrushTrigger(entity this)
+{
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_PUSH;
-	if(self.modelindex == 0)
+	this.solid = SOLID_BSP;
+	WITHSELF(this, SetBrushEntityModel());
+	this.movetype = MOVETYPE_PUSH;
+	if(this.modelindex == 0)
 	{
 		objerror("InitMovingBrushTrigger: no brushes found!");
-		return 0;
+		return false;
 	}
-	return 1;
+	return true;
 }

@@ -24,21 +24,21 @@ bool teleport_dest_send(entity this, entity to, int sf)
 	return true;
 }
 
-void teleport_dest_link()
-{SELFPARAM();
-	Net_LinkEntity(self, false, 0, teleport_dest_send);
-	self.SendFlags |= 1; // update
+void teleport_dest_link(entity this)
+{
+	Net_LinkEntity(this, false, 0, teleport_dest_send);
+	this.SendFlags |= 1; // update
 }
 
 spawnfunc(info_teleport_destination)
 {
-	self.classname = "info_teleport_destination";
+	this.classname = "info_teleport_destination";
 
-	self.mangle = self.angles;
-	self.angles = '0 0 0';
+	this.mangle = this.angles;
+	this.angles = '0 0 0';
 
-	//setorigin (self, self.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
-	setorigin (self, self.origin);
+	//setorigin (this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
+	setorigin (this, this.origin);
 
 	IFTARGETED
 	{
@@ -46,7 +46,7 @@ spawnfunc(info_teleport_destination)
 	else
 		objerror ("^3Teleport destination without a targetname");
 
-	teleport_dest_link();
+	teleport_dest_link(this);
 }
 
 spawnfunc(misc_teleporter_dest)
@@ -63,9 +63,9 @@ spawnfunc(target_teleporter)
 
 void teleport_dest_remove(entity this)
 {
-	//if(self.classname)
-		//strunzone(self.classname);
-	//self.classname = string_null;
+	//if(this.classname)
+		//strunzone(this.classname);
+	//this.classname = string_null;
 
 	if(this.targetname)
 		strunzone(this.targetname);
@@ -78,22 +78,22 @@ NET_HANDLE(ENT_CLIENT_TELEPORT_DEST, bool isnew)
 
 	if(sf & 1)
 	{
-		self.classname = "info_teleport_destination";
-		self.cnt = ReadByte();
-		self.speed = ReadCoord();
-		self.targetname = strzone(ReadString());
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.classname = "info_teleport_destination";
+		this.cnt = ReadByte();
+		this.speed = ReadCoord();
+		this.targetname = strzone(ReadString());
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 
-		self.mangle_x = ReadAngle();
-		self.mangle_y = ReadAngle();
-		self.mangle_z = ReadAngle();
+		this.mangle_x = ReadAngle();
+		this.mangle_y = ReadAngle();
+		this.mangle_z = ReadAngle();
 
-		setorigin(self, self.origin);
+		setorigin(this, this.origin);
 
-		self.drawmask = MASK_NORMAL;
-		self.entremove = teleport_dest_remove;
+		this.drawmask = MASK_NORMAL;
+		this.entremove = teleport_dest_remove;
 	}
 
 	return = true;

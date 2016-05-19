@@ -62,7 +62,7 @@ REGISTER_WEAPON(MACHINEGUN, machinegun, NEW(MachineGun));
 spawnfunc(weapon_machinegun)
 {
 	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(self.classname != "droppedweapon")
+	if(this.classname != "droppedweapon")
 	{
 		weapon_defaultspawnfunc(this, WEP_SHOCKWAVE);
 		return;

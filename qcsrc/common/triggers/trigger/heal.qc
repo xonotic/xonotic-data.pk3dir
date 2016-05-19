@@ -27,16 +27,16 @@ void trigger_heal_touch()
 
 spawnfunc(trigger_heal)
 {
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
 	EXACTTRIGGER_INIT;
-	self.touch = trigger_heal_touch;
-	if (!self.health)
-		self.health = 10;
-	if (!self.max_health)
-		self.max_health = 200; //Max health topoff for field
-	if(self.noise == "")
-		self.noise = "misc/mediumhealth.wav";
-	precache_sound(self.noise);
+	this.touch = trigger_heal_touch;
+	if (!this.health)
+		this.health = 10;
+	if (!this.max_health)
+		this.max_health = 200; //Max health topoff for field
+	if(this.noise == "")
+		this.noise = "misc/mediumhealth.wav";
+	precache_sound(this.noise);
 }
 #endif

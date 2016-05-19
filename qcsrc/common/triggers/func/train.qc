@@ -211,45 +211,45 @@ target : targetname of first spawnfunc_path_corner (starts here)
 #ifdef SVQC
 spawnfunc(func_train)
 {
-	if (self.noise != "")
-		precache_sound(self.noise);
+	if (this.noise != "")
+		precache_sound(this.noise);
 
-	if (self.target == "")
+	if (this.target == "")
 		objerror("func_train without a target");
-	if (!self.speed)
-		self.speed = 100;
+	if (!this.speed)
+		this.speed = 100;
 
-	if (!InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger(this))
 		return;
-	self.effects |= EF_LOWPRECISION;
+	this.effects |= EF_LOWPRECISION;
 
-	if(self.spawnflags & 4)
-		self.use = train_use;
+	if(this.spawnflags & 4)
+		this.use = train_use;
 
-	if (self.spawnflags & 2)
+	if (this.spawnflags & 2)
 	{
-		self.platmovetype_turn = true;
-		self.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
+		this.platmovetype_turn = true;
+		this.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
 	}
 	else
-		self.view_ofs = self.mins;
+		this.view_ofs = this.mins;
 
 	// wait for targets to spawn
-	InitializeEntity(self, func_train_find, INITPRIO_FINDTARGET);
+	InitializeEntity(this, func_train_find, INITPRIO_FINDTARGET);
 
-	self.blocked = generic_plat_blocked;
-	if(self.dmg && (self.message == ""))
-		self.message = " was squished";
-    if(self.dmg && (self.message2 == ""))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
+	this.blocked = generic_plat_blocked;
+	if(this.dmg && (this.message == ""))
+		this.message = " was squished";
+    if(this.dmg && (this.message2 == ""))
+		this.message2 = "was squished by";
+	if(this.dmg && (!this.dmgtime))
+		this.dmgtime = 0.25;
+	this.dmgtime2 = time;
 
-	if(!set_platmovetype(self, self.platmovetype))
+	if(!set_platmovetype(this, this.platmovetype))
 		return;
-	self.platmovetype_start_default = self.platmovetype_start;
-	self.platmovetype_end_default = self.platmovetype_end;
+	this.platmovetype_start_default = this.platmovetype_start;
+	this.platmovetype_end_default = this.platmovetype_end;
 
 	// TODO make a reset function for this one
 }

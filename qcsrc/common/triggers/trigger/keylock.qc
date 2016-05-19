@@ -82,22 +82,22 @@ void trigger_keylock_touch()
 REGISTER_NET_LINKED(ENT_CLIENT_KEYLOCK)
 
 #ifdef SVQC
-bool trigger_keylock_send(entity to, int sf)
-{SELFPARAM();
+bool trigger_keylock_send(entity this, entity to, int sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
 
-	WriteInt24_t(MSG_ENTITY, self.itemkeys);
-	WriteByte(MSG_ENTITY, self.height);
+	WriteInt24_t(MSG_ENTITY, this.itemkeys);
+	WriteByte(MSG_ENTITY, this.height);
 
-	trigger_common_write(self, true);
+	trigger_common_write(this, true);
 
 	return true;
 }
 
-void trigger_keylock_link()
+void trigger_keylock_link(entity this)
 {
 	// uncomment to network keylocks
-	//Net_LinkEntity(self, false, 0, trigger_keylock_send);
+	//Net_LinkEntity(this, false, 0, trigger_keylock_send);
 }
 
 /*QUAKED trigger_keylock (.0 .5 .8) ?
@@ -121,44 +121,44 @@ message2 and noise2 will be resent to the player every 2 seconds while he is in 
 */
 spawnfunc(trigger_keylock)
 {
-	if(!self.itemkeys) { remove(self); return; }
+	if(!this.itemkeys) { remove(this); return; }
 
 	// set unlocked message
-	if(self.message == "")
-		self.message = "Unlocked!";
+	if(this.message == "")
+		this.message = "Unlocked!";
 
 	// set default unlock noise
-	if(self.noise == "")
+	if(this.noise == "")
 	{
-		if(self.sounds == 1)
-			self.noise = "misc/secret.wav";
-		else if(self.sounds == 2)
-			self.noise = strzone(SND(TALK));
-		else //if (self.sounds == 3) {
-			self.noise = "misc/trigger1.wav";
+		if(this.sounds == 1)
+			this.noise = "misc/secret.wav";
+		else if(this.sounds == 2)
+			this.noise = strzone(SND(TALK));
+		else //if (this.sounds == 3) {
+			this.noise = "misc/trigger1.wav";
 	}
 
 	// set default use key sound
-	if(self.noise1 == "")
-		self.noise1 = "misc/decreasevalue.wav";
+	if(this.noise1 == "")
+		this.noise1 = "misc/decreasevalue.wav";
 
 	// set closed sourd
-	if(self.noise2 == "")
-		self.noise2 = SND(TALK);
+	if(this.noise2 == "")
+		this.noise2 = SND(TALK);
 
 	// delay between triggering message2 and trigger2
-	if(!self.wait) { self.wait = 5; }
+	if(!this.wait) { this.wait = 5; }
 
 	// precache sounds
-	precache_sound(self.noise);
-	precache_sound(self.noise1);
-	precache_sound(self.noise2);
+	precache_sound(this.noise);
+	precache_sound(this.noise1);
+	precache_sound(this.noise2);
 
 	EXACTTRIGGER_INIT;
 
-	self.touch = trigger_keylock_touch;
+	this.touch = trigger_keylock_touch;
 
-	trigger_keylock_link();
+	trigger_keylock_link(this);
 }
 #elif defined(CSQC)
 void keylock_remove(entity this)

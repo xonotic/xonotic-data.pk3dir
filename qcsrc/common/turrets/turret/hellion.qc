@@ -22,7 +22,7 @@ REGISTER_TURRET(HELLION, NEW(Hellion));
 
 #ifdef SVQC
 
-spawnfunc(turret_hellion) { if (!turret_initialize(TUR_HELLION)) remove(self); }
+spawnfunc(turret_hellion) { if (!turret_initialize(TUR_HELLION)) remove(this); }
 
 METHOD(Hellion, tr_think, void(Hellion thistur, entity it))
 {

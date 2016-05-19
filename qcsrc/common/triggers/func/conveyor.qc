@@ -108,8 +108,8 @@ bool conveyor_send(entity this, entity to, int sf)
 	return true;
 }
 
-void conveyor_init()
-{SELFPARAM();
+void conveyor_init(entity this)
+{
 	if (!this.speed) this.speed = 200;
 	this.movedir *= this.speed;
 	this.think = conveyor_think;
@@ -132,17 +132,17 @@ void conveyor_init()
 
 spawnfunc(trigger_conveyor)
 {
-	SetMovedir(self);
+	SetMovedir(this);
 	EXACTTRIGGER_INIT;
-	conveyor_init();
+	conveyor_init(this);
 }
 
 spawnfunc(func_conveyor)
 {
-	SetMovedir(self);
-	InitMovingBrushTrigger();
-	self.movetype = MOVETYPE_NONE;
-	conveyor_init();
+	SetMovedir(this);
+	InitMovingBrushTrigger(this);
+	this.movetype = MOVETYPE_NONE;
+	conveyor_init(this);
 }
 
 #elif defined(CSQC)

@@ -2183,16 +2183,16 @@ keys:
  */
 spawnfunc(onslaught_link)
 {
-	if(!g_onslaught) { remove(self); return; }
+	if(!g_onslaught) { remove(this); return; }
 
-	if (self.target == "" || self.target2 == "")
+	if (this.target == "" || this.target2 == "")
 		objerror("target and target2 must be set\n");
 
-	self.ons_worldlinknext = ons_worldlinklist; // link into ons_worldlinklist
-	ons_worldlinklist = self;
+	this.ons_worldlinknext = ons_worldlinklist; // link into ons_worldlinklist
+	ons_worldlinklist = this;
 
-	InitializeEntity(self, ons_DelayedLinkSetup, INITPRIO_FINDTARGET);
-	Net_LinkEntity(self, false, 0, ons_Link_Send);
+	InitializeEntity(this, ons_DelayedLinkSetup, INITPRIO_FINDTARGET);
+	Net_LinkEntity(this, false, 0, ons_Link_Send);
 }
 
 /*QUAKED spawnfunc_onslaught_controlpoint (0 .5 .8) (-32 -32 0) (32 32 128)
@@ -2208,9 +2208,9 @@ keys:
 
 spawnfunc(onslaught_controlpoint)
 {
-	if(!g_onslaught) { remove(self); return; }
+	if(!g_onslaught) { remove(this); return; }
 
-	ons_ControlPoint_Setup(self);
+	ons_ControlPoint_Setup(this);
 }
 
 /*QUAKED spawnfunc_onslaught_generator (0 .5 .8) (-32 -32 -24) (32 32 64)
@@ -2224,10 +2224,10 @@ keys:
  */
 spawnfunc(onslaught_generator)
 {
-	if(!g_onslaught) { remove(self); return; }
-	if(!self.team) { objerror("team must be set"); }
+	if(!g_onslaught) { remove(this); return; }
+	if(!this.team) { objerror("team must be set"); }
 
-	ons_GeneratorSetup(self);
+	ons_GeneratorSetup(this);
 }
 
 // scoreboard setup

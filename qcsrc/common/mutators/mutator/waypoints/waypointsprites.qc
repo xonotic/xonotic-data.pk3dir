@@ -14,29 +14,29 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     sendflags = sendflags & 0x7F;
 
-    if (self.max_health || (self.pain_finished && (time < self.pain_finished + 0.25)))
+    if (this.max_health || (this.pain_finished && (time < this.pain_finished + 0.25)))
         sendflags |= 0x80;
 
     int f = 0;
-    if(self.currentammo)
+    if(this.currentammo)
         f |= 1; // hideable
-    if(self.exteriormodeltoclient == to)
+    if(this.exteriormodeltoclient == to)
         f |= 2; // my own
 
     MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
 
     WriteByte(MSG_ENTITY, sendflags);
-    WriteByte(MSG_ENTITY, self.wp_extra);
+    WriteByte(MSG_ENTITY, this.wp_extra);
 
     if (sendflags & 0x80)
     {
-        if (self.max_health)
+        if (this.max_health)
         {
-            WriteByte(MSG_ENTITY, (self.health / self.max_health) * 191.0);
+            WriteByte(MSG_ENTITY, (this.health / this.max_health) * 191.0);
         }
         else
         {
-            float dt = self.pain_finished - time;
+            float dt = this.pain_finished - time;
             dt = bound(0, dt * 32, 16383);
             WriteByte(MSG_ENTITY, (dt & 0xFF00) / 256 + 192);
             WriteByte(MSG_ENTITY, (dt & 0x00FF));
@@ -45,44 +45,44 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     if (sendflags & 64)
     {
-        WriteCoord(MSG_ENTITY, self.origin.x);
-        WriteCoord(MSG_ENTITY, self.origin.y);
-        WriteCoord(MSG_ENTITY, self.origin.z);
+        WriteCoord(MSG_ENTITY, this.origin.x);
+        WriteCoord(MSG_ENTITY, this.origin.y);
+        WriteCoord(MSG_ENTITY, this.origin.z);
     }
 
     if (sendflags & 1)
     {
-        WriteByte(MSG_ENTITY, self.team);
-        WriteByte(MSG_ENTITY, self.rule);
+        WriteByte(MSG_ENTITY, this.team);
+        WriteByte(MSG_ENTITY, this.rule);
     }
 
     if (sendflags & 2)
-        WriteString(MSG_ENTITY, self.model1);
+        WriteString(MSG_ENTITY, this.model1);
 
     if (sendflags & 4)
-        WriteString(MSG_ENTITY, self.model2);
+        WriteString(MSG_ENTITY, this.model2);
 
     if (sendflags & 8)
-        WriteString(MSG_ENTITY, self.model3);
+        WriteString(MSG_ENTITY, this.model3);
 
     if (sendflags & 16)
     {
-        WriteCoord(MSG_ENTITY, self.fade_time);
-        WriteCoord(MSG_ENTITY, self.teleport_time);
-        WriteShort(MSG_ENTITY, self.fade_rate); // maxdist
+        WriteCoord(MSG_ENTITY, this.fade_time);
+        WriteCoord(MSG_ENTITY, this.teleport_time);
+        WriteShort(MSG_ENTITY, this.fade_rate); // maxdist
         WriteByte(MSG_ENTITY, f);
     }
 
     if (sendflags & 32)
     {
-        WriteByte(MSG_ENTITY, self.cnt); // icon on radar
-        WriteByte(MSG_ENTITY, self.colormod.x * 255.0);
-        WriteByte(MSG_ENTITY, self.colormod.y * 255.0);
-        WriteByte(MSG_ENTITY, self.colormod.z * 255.0);
+        WriteByte(MSG_ENTITY, this.cnt); // icon on radar
+        WriteByte(MSG_ENTITY, this.colormod.x * 255.0);
+        WriteByte(MSG_ENTITY, this.colormod.y * 255.0);
+        WriteByte(MSG_ENTITY, this.colormod.z * 255.0);
 
-        if (WaypointSprite_isteammate(self.owner, WaypointSprite_getviewentity(to)))
+        if (WaypointSprite_isteammate(this.owner, WaypointSprite_getviewentity(to)))
         {
-            float dt = (self.waypointsprite_helpmetime - time) / 0.1;
+            float dt = (this.waypointsprite_helpmetime - time) / 0.1;
             if (dt < 0)
                 dt = 0;
             if (dt > 255)

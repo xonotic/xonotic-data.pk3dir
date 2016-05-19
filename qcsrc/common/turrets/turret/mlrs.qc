@@ -22,7 +22,7 @@ REGISTER_TURRET(MLRS, NEW(MLRSTurret));
 
 #ifdef SVQC
 
-spawnfunc(turret_mlrs) { if (!turret_initialize(TUR_MLRS)) remove(self); }
+spawnfunc(turret_mlrs) { if (!turret_initialize(TUR_MLRS)) remove(this); }
 
 METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur, entity it))
 {

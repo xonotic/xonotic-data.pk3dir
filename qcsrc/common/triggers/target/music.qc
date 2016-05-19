@@ -20,28 +20,28 @@ REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
 //   fade_rate
 // when triggered, the music is overridden for activator until lifetime (or forever, if lifetime is 0)
 // when targetname is not set, THIS ONE is default
-void target_music_sendto(float to, float is)
-{SELFPARAM();
+void target_music_sendto(entity this, int to, bool is)
+{
 	WriteHeader(to, TE_CSQC_TARGET_MUSIC);
-	WriteShort(to, etof(self));
-	WriteByte(to, self.volume * 255.0 * is);
-	WriteByte(to, self.fade_time * 16.0);
-	WriteByte(to, self.fade_rate * 16.0);
-	WriteByte(to, self.lifetime);
-	WriteString(to, self.noise);
+	WriteShort(to, etof(this));
+	WriteByte(to, this.volume * 255.0 * is);
+	WriteByte(to, this.fade_time * 16.0);
+	WriteByte(to, this.fade_rate * 16.0);
+	WriteByte(to, this.lifetime);
+	WriteString(to, this.noise);
 }
 void target_music_reset(entity this)
 {
-	if (this.targetname == "") target_music_sendto(MSG_ALL, 1);
+	if (this.targetname == "") target_music_sendto(this, MSG_ALL, 1);
 }
 void target_music_kill()
 {
 	FOREACH_ENTITY_CLASS("target_music", true, {
 		it.volume = 0;
         if (it.targetname == "")
-            WITHSELF(it, target_music_sendto(MSG_ALL, 1));
+            WITHSELF(it, target_music_sendto(it, MSG_ALL, 1));
         else
-            WITHSELF(it, target_music_sendto(MSG_ALL, 0));
+            WITHSELF(it, target_music_sendto(it, MSG_ALL, 0));
 	});
 }
 void target_music_use(entity this, entity actor, entity trigger)
@@ -51,33 +51,32 @@ void target_music_use(entity this, entity actor, entity trigger)
 	if(IS_REAL_CLIENT(actor))
 	{
 		msg_entity = actor;
-		target_music_sendto(MSG_ONE, 1);
+		target_music_sendto(this, MSG_ONE, 1);
 	}
 	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == actor, {
 		msg_entity = it;
-		target_music_sendto(MSG_ONE, 1);
+		target_music_sendto(this, MSG_ONE, 1);
 	});
 }
 spawnfunc(target_music)
 {
-	self.use = target_music_use;
-	self.reset = target_music_reset;
-	if(!self.volume)
-		self.volume = 1;
-	if(self.targetname == "")
-		target_music_sendto(MSG_INIT, 1);
+	this.use = target_music_use;
+	this.reset = target_music_reset;
+	if(!this.volume)
+		this.volume = 1;
+	if(this.targetname == "")
+		target_music_sendto(this, MSG_INIT, 1);
 	else
-		target_music_sendto(MSG_INIT, 0);
+		target_music_sendto(this, MSG_INIT, 0);
 }
 void TargetMusic_RestoreGame()
 {SELFPARAM();
 	for(entity e = world; (e = find(e, classname, "target_music")); )
 	{
-		setself(e);
-		if(self.targetname == "")
-			target_music_sendto(MSG_INIT, 1);
+		if(e.targetname == "")
+			target_music_sendto(e, MSG_INIT, 1);
 		else
-			target_music_sendto(MSG_INIT, 0);
+			target_music_sendto(e, MSG_INIT, 0);
 	}
 }
 // values:
@@ -92,38 +91,38 @@ bool trigger_music_SendEntity(entity this, entity to, float sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
 	sf &= ~0x80;
-	if(self.cnt)
+	if(this.cnt)
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin.x);
-		WriteCoord(MSG_ENTITY, self.origin.y);
-		WriteCoord(MSG_ENTITY, self.origin.z);
+		WriteCoord(MSG_ENTITY, this.origin.x);
+		WriteCoord(MSG_ENTITY, this.origin.y);
+		WriteCoord(MSG_ENTITY, this.origin.z);
 	}
 	if(sf & 1)
 	{
-		if(self.model != "null")
+		if(this.model != "null")
 		{
-			WriteShort(MSG_ENTITY, self.modelindex);
-			WriteCoord(MSG_ENTITY, self.mins.x);
-			WriteCoord(MSG_ENTITY, self.mins.y);
-			WriteCoord(MSG_ENTITY, self.mins.z);
-			WriteCoord(MSG_ENTITY, self.maxs.x);
-			WriteCoord(MSG_ENTITY, self.maxs.y);
-			WriteCoord(MSG_ENTITY, self.maxs.z);
+			WriteShort(MSG_ENTITY, this.modelindex);
+			WriteCoord(MSG_ENTITY, this.mins.x);
+			WriteCoord(MSG_ENTITY, this.mins.y);
+			WriteCoord(MSG_ENTITY, this.mins.z);
+			WriteCoord(MSG_ENTITY, this.maxs.x);
+			WriteCoord(MSG_ENTITY, this.maxs.y);
+			WriteCoord(MSG_ENTITY, this.maxs.z);
 		}
 		else
 		{
 			WriteShort(MSG_ENTITY, 0);
-			WriteCoord(MSG_ENTITY, self.maxs.x);
-			WriteCoord(MSG_ENTITY, self.maxs.y);
-			WriteCoord(MSG_ENTITY, self.maxs.z);
+			WriteCoord(MSG_ENTITY, this.maxs.x);
+			WriteCoord(MSG_ENTITY, this.maxs.y);
+			WriteCoord(MSG_ENTITY, this.maxs.z);
 		}
-		WriteByte(MSG_ENTITY, self.volume * 255.0);
-		WriteByte(MSG_ENTITY, self.fade_time * 16.0);
-		WriteByte(MSG_ENTITY, self.fade_rate * 16.0);
-		WriteString(MSG_ENTITY, self.noise);
+		WriteByte(MSG_ENTITY, this.volume * 255.0);
+		WriteByte(MSG_ENTITY, this.fade_time * 16.0);
+		WriteByte(MSG_ENTITY, this.fade_rate * 16.0);
+		WriteString(MSG_ENTITY, this.noise);
 	}
 	return 1;
 }

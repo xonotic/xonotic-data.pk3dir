@@ -538,19 +538,19 @@ spawnfunc(dom_controlpoint)
 {
 	if(!g_domination)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	self.think = dom_controlpoint_setup_self;
-	self.nextthink = time + 0.1;
-	self.reset = dom_controlpoint_setup;
+	this.think = dom_controlpoint_setup_self;
+	this.nextthink = time + 0.1;
+	this.reset = dom_controlpoint_setup;
 
-	if(!self.scale)
-		self.scale = 0.6;
+	if(!this.scale)
+		this.scale = 0.6;
 
-	self.effects = self.effects | EF_LOWPRECISION;
+	this.effects = this.effects | EF_LOWPRECISION;
 	if (autocvar_g_domination_point_fullbright)
-		self.effects |= EF_FULLBRIGHT;
+		this.effects |= EF_FULLBRIGHT;
 }
 
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)
@@ -583,23 +583,23 @@ spawnfunc(dom_team)
 {
 	if(!g_domination || autocvar_g_domination_teams_override >= 2)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	precache_model(self.model);
-	if (self.noise != "")
-		precache_sound(self.noise);
-	if (self.noise1 != "")
-		precache_sound(self.noise1);
-	self.classname = "dom_team";
-	_setmodel(self, self.model); // precision not needed
-	self.mdl = self.model;
-	self.dmg = self.modelindex;
-	self.model = "";
-	self.modelindex = 0;
+	precache_model(this.model);
+	if (this.noise != "")
+		precache_sound(this.noise);
+	if (this.noise1 != "")
+		precache_sound(this.noise1);
+	this.classname = "dom_team";
+	_setmodel(this, this.model); // precision not needed
+	this.mdl = this.model;
+	this.dmg = this.modelindex;
+	this.model = "";
+	this.modelindex = 0;
 	// this would have to be changed if used in quakeworld
-	if(self.cnt)
-		self.team = self.cnt + 1; // WHY are these different anyway?
+	if(this.cnt)
+		this.team = this.cnt + 1; // WHY are these different anyway?
 }
 
 // scoreboard setup

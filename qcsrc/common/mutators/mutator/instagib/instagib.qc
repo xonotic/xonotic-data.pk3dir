@@ -24,8 +24,8 @@ REGISTER_MUTATOR(mutator_instagib, cvar("g_instagib") && !g_nexball);
 
 spawnfunc(item_minst_cells)
 {
-	if (!g_instagib) { remove(self); return; }
-	if (!self.ammo_cells) self.ammo_cells = autocvar_g_instagib_ammo_drop;
+	if (!g_instagib) { remove(this); return; }
+	if (!this.ammo_cells) this.ammo_cells = autocvar_g_instagib_ammo_drop;
 	StartItem(this, ITEM_VaporizerCells);
 }
 

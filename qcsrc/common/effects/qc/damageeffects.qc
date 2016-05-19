@@ -20,15 +20,15 @@ REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
-	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin.x));
-	WriteCoord(MSG_ENTITY, floor(self.origin.y));
-	WriteCoord(MSG_ENTITY, floor(self.origin.z));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
-	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, self.oldorigin.x);
-	WriteByte(MSG_ENTITY, self.species);
+	WriteShort(MSG_ENTITY, this.projectiledeathtype);
+	WriteCoord(MSG_ENTITY, floor(this.origin.x));
+	WriteCoord(MSG_ENTITY, floor(this.origin.y));
+	WriteCoord(MSG_ENTITY, floor(this.origin.z));
+	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
+	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
+	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
+	WriteShort(MSG_ENTITY, this.oldorigin.x);
+	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
 

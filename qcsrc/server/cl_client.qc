@@ -656,7 +656,7 @@ void PutClientInServer()
 	}
 }
 
-void ClientInit_misc();
+void ClientInit_misc(entity this);
 
 .float ebouncefactor, ebouncestop; // electro's values
 // TODO do we need all these fields, or should we stop autodetecting runtime
@@ -670,12 +670,11 @@ bool ClientInit_SendEntity(entity this, entity to, int sf)
 	// TODO: make easier to use
 	Registry_send_all();
 	W_PROP_reload(MSG_ONE, to);
-	ClientInit_misc();
+	ClientInit_misc(this);
 	MUTATOR_CALLHOOK(Ent_Init);
 }
-void ClientInit_misc()
+void ClientInit_misc(entity this)
 {
-    SELFPARAM();
 	int channel = MSG_ONE;
 	WriteHeader(channel, ENT_CLIENT_INIT);
 	WriteByte(channel, g_nexball_meter_period * 32);

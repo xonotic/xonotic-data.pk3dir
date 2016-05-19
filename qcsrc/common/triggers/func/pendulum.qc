@@ -24,52 +24,52 @@ void func_pendulum_controller_think()
 spawnfunc(func_pendulum)
 {
 	entity controller;
-	if (self.noise != "")
+	if (this.noise != "")
 	{
-		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
+		precache_sound(this.noise);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
 	// keys: angle, speed, phase, noise, freq
 
-	if(!self.speed)
-		self.speed = 30;
-	// not initializing self.dmg to 2, to allow damageless pendulum
+	if(!this.speed)
+		this.speed = 30;
+	// not initializing this.dmg to 2, to allow damageless pendulum
 
-	if(self.dmg && (self.message == ""))
-		self.message = " was squished";
-	if(self.dmg && (self.message2 == ""))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
+	if(this.dmg && (this.message == ""))
+		this.message = " was squished";
+	if(this.dmg && (this.message2 == ""))
+		this.message2 = "was squished by";
+	if(this.dmg && (!this.dmgtime))
+		this.dmgtime = 0.25;
+	this.dmgtime2 = time;
 
-	self.blocked = generic_plat_blocked;
+	this.blocked = generic_plat_blocked;
 
-	self.avelocity_z = 0.0000001;
-	if (!InitMovingBrushTrigger())
+	this.avelocity_z = 0.0000001;
+	if (!InitMovingBrushTrigger(this))
 		return;
 
-	if(!self.freq)
+	if(!this.freq)
 	{
 		// find pendulum length (same formula as Q3A)
-		self.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(self.mins_z))));
+		this.freq = 1 / (M_PI * 2) * sqrt(autocvar_sv_gravity / (3 * max(8, fabs(this.mins_z))));
 	}
 
 	// copy initial angle
-	self.cnt = self.angles_z;
+	this.cnt = this.angles_z;
 
 	// wait for targets to spawn
 	controller = new(func_pendulum_controller);
-	controller.owner = self;
+	controller.owner = this;
 	controller.nextthink = time + 1;
 	controller.think = func_pendulum_controller_think;
-	self.nextthink = self.SUB_LTIME + 999999999;
-	self.SUB_THINK = SUB_NullThink; // for PushMove
+	this.nextthink = this.SUB_LTIME + 999999999;
+	this.SUB_THINK = SUB_NullThink; // for PushMove
 
-	//self.effects |= EF_LOWPRECISION;
+	//this.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
 }

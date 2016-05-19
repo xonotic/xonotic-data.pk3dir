@@ -108,9 +108,9 @@ float swamp_send(entity this, entity to, float sf)
 	return true;
 }
 
-void swamp_link()
-{SELFPARAM();
-	trigger_link(self, swamp_send);
+void swamp_link(entity this)
+{
+	trigger_link(this, swamp_send);
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?
@@ -120,37 +120,37 @@ get slowd down and damaged
 spawnfunc(trigger_swamp)
 {
 	// Init stuff
-	trigger_init(self);
-	self.touch = swamp_touch;
+	trigger_init(this);
+	this.touch = swamp_touch;
 
 	// Setup default keys, if missing
-	if(self.dmg <= 0)
-		self.dmg = 5;
-	if(self.swamp_interval <= 0)
-		self.swamp_interval = 1;
-	if(self.swamp_slowdown <= 0)
-		self.swamp_slowdown = 0.5;
+	if(this.dmg <= 0)
+		this.dmg = 5;
+	if(this.swamp_interval <= 0)
+		this.swamp_interval = 1;
+	if(this.swamp_slowdown <= 0)
+		this.swamp_slowdown = 0.5;
 
-	swamp_link();
+	swamp_link(this);
 }
 
 #elif defined(CSQC)
 
 NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
 {
-	self.dmg = ReadByte();
-	self.swamp_slowdown = ReadByte();
-	self.swamp_interval = ReadByte();
+	this.dmg = ReadByte();
+	this.swamp_slowdown = ReadByte();
+	this.swamp_interval = ReadByte();
 
 	trigger_common_read(false);
 
 	return = true;
 
-	self.classname = "trigger_swamp";
-	self.solid = SOLID_TRIGGER;
-	self.move_touch = swamp_touch;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-	self.entremove = trigger_remove_generic;
+	this.classname = "trigger_swamp";
+	this.solid = SOLID_TRIGGER;
+	this.move_touch = swamp_touch;
+	this.drawmask = MASK_NORMAL;
+	this.move_time = time;
+	this.entremove = trigger_remove_generic;
 }
 #endif

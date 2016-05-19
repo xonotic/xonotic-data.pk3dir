@@ -31,53 +31,53 @@ dmgtime : See above.
 spawnfunc(func_bobbing)
 {
 	entity controller;
-	if (self.noise != "")
+	if (this.noise != "")
 	{
-		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
+		precache_sound(this.noise);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
-	if (!self.speed)
-		self.speed = 4;
-	if (!self.height)
-		self.height = 32;
+	if (!this.speed)
+		this.speed = 4;
+	if (!this.height)
+		this.height = 32;
 	// center of bobbing motion
-	self.destvec = self.origin;
+	this.destvec = this.origin;
 	// time scale to get degrees
-	self.cnt = 360 / self.speed;
+	this.cnt = 360 / this.speed;
 
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
-	self.blocked = generic_plat_blocked;
-	if(self.dmg && (self.message == ""))
-		self.message = " was squished";
-    if(self.dmg && (self.message2 == ""))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
+	this.blocked = generic_plat_blocked;
+	if(this.dmg && (this.message == ""))
+		this.message = " was squished";
+    if(this.dmg && (this.message2 == ""))
+		this.message2 = "was squished by";
+	if(this.dmg && (!this.dmgtime))
+		this.dmgtime = 0.25;
+	this.dmgtime2 = time;
 
 	// how far to bob
-	if (self.spawnflags & 1) // X
-		self.movedir = '1 0 0' * self.height;
-	else if (self.spawnflags & 2) // Y
-		self.movedir = '0 1 0' * self.height;
+	if (this.spawnflags & 1) // X
+		this.movedir = '1 0 0' * this.height;
+	else if (this.spawnflags & 2) // Y
+		this.movedir = '0 1 0' * this.height;
 	else // Z
-		self.movedir = '0 0 1' * self.height;
+		this.movedir = '0 0 1' * this.height;
 
-	if (!InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger(this))
 		return;
 
 	// wait for targets to spawn
 	controller = new(func_bobbing_controller);
-	controller.owner = self;
+	controller.owner = this;
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 999999999;
-	self.SUB_THINK = SUB_NullThink;
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
+	this.SUB_THINK = SUB_NullThink;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
-	self.effects |= EF_LOWPRECISION;
+	this.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
 }

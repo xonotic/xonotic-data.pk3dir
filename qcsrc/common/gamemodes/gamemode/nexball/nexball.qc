@@ -105,20 +105,20 @@ void nexball_setstatus()
 	}
 }
 
-void relocate_nexball()
-{SELFPARAM();
-	tracebox(self.origin, BALL_MINS, BALL_MAXS, self.origin, true, self);
+void relocate_nexball(entity this)
+{
+	tracebox(this.origin, BALL_MINS, BALL_MAXS, this.origin, true, this);
 	if(trace_startsolid)
 	{
 		vector o;
-		o = self.origin;
-		if(!move_out_of_solid(self))
+		o = this.origin;
+		if(!move_out_of_solid(this))
 			objerror("could not get out of solid at all!");
-		LOG_INFO("^1NOTE: this map needs FIXING. ", self.classname, " at ", vtos(o - '0 0 1'));
-		LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
-		LOG_INFO(" ", ftos(self.origin.y - o.y));
-		LOG_INFO(" ", ftos(self.origin.z - o.z), "'\n");
-		self.origin = o;
+		LOG_INFO("^1NOTE: this map needs FIXING. ", this.classname, " at ", vtos(o - '0 0 1'));
+		LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(this.origin.x - o.x));
+		LOG_INFO(" ", ftos(this.origin.y - o.y));
+		LOG_INFO(" ", ftos(this.origin.z - o.z), "'\n");
+		this.origin = o;
 	}
 }
 
@@ -444,10 +444,10 @@ spawnfunc(nexball_team)
 {
 	if(!g_nexball)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	self.team = self.cnt + 1;
+	this.team = this.cnt + 1;
 }
 
 void nb_spawnteam(string teamname, float teamcolor)
@@ -512,62 +512,62 @@ void nb_delayedinit(entity this)
 //	  spawnfuncs	   //
 //=======================//
 
-void SpawnBall()
-{SELFPARAM();
-	if(!g_nexball) { remove(self); return; }
+void SpawnBall(entity this)
+{
+	if(!g_nexball) { remove(this); return; }
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
 
-	if(self.model == "")
+	if(this.model == "")
 	{
-		self.model = "models/nexball/ball.md3";
-		self.scale = 1.3;
+		this.model = "models/nexball/ball.md3";
+		this.scale = 1.3;
 	}
 
-	precache_model(self.model);
-	_setmodel(self, self.model);
-	setsize(self, BALL_MINS, BALL_MAXS);
-	ball_scale = self.scale;
+	precache_model(this.model);
+	_setmodel(this, this.model);
+	setsize(this, BALL_MINS, BALL_MAXS);
+	ball_scale = this.scale;
 
-	relocate_nexball();
-	self.spawnorigin = self.origin;
+	relocate_nexball(this);
+	this.spawnorigin = this.origin;
 
-	self.effects = self.effects | EF_LOWPRECISION;
+	this.effects = this.effects | EF_LOWPRECISION;
 
-	if(cvar(strcat("g_", self.classname, "_trail")))  //nexball_basketball :p
+	if(cvar(strcat("g_", this.classname, "_trail")))  //nexball_basketball :p
 	{
-		self.glow_color = autocvar_g_nexball_trail_color;
-		self.glow_trail = true;
+		this.glow_color = autocvar_g_nexball_trail_color;
+		this.glow_trail = true;
 	}
 
-	self.movetype = MOVETYPE_FLY;
+	this.movetype = MOVETYPE_FLY;
 
 	if(!autocvar_g_nexball_sound_bounce)
-		self.noise = "";
-	else if(self.noise == "")
-		self.noise = strzone(SND(NB_BOUNCE));
+		this.noise = "";
+	else if(this.noise == "")
+		this.noise = strzone(SND(NB_BOUNCE));
 	//bounce sound placeholder (FIXME)
-	if(self.noise1 == "")
-		self.noise1 = strzone(SND(NB_DROP));
+	if(this.noise1 == "")
+		this.noise1 = strzone(SND(NB_DROP));
 	//ball drop sound placeholder (FIXME)
-	if(self.noise2 == "")
-		self.noise2 = strzone(SND(NB_STEAL));
+	if(this.noise2 == "")
+		this.noise2 = strzone(SND(NB_STEAL));
 	//stealing sound placeholder (FIXME)
-	if(self.noise) precache_sound(self.noise);
-	precache_sound(self.noise1);
-	precache_sound(self.noise2);
+	if(this.noise) precache_sound(this.noise);
+	precache_sound(this.noise1);
+	precache_sound(this.noise2);
 
-	WaypointSprite_AttachCarrier(WP_NbBall, self, RADARICON_FLAGCARRIER); // the ball's team is not set yet, no rule update needed
+	WaypointSprite_AttachCarrier(WP_NbBall, this, RADARICON_FLAGCARRIER); // the ball's team is not set yet, no rule update needed
 
-	self.reset = ball_restart;
-	self.think = InitBall;
-	self.nextthink = game_starttime + autocvar_g_nexball_delay_start;
+	this.reset = ball_restart;
+	this.think = InitBall;
+	this.nextthink = game_starttime + autocvar_g_nexball_delay_start;
 }
 
 spawnfunc(nexball_basketball)
 {
 	nexball_mode |= NBM_BASKETBALL;
-	self.classname = "nexball_basketball";
+	this.classname = "nexball_basketball";
 	if (!(balls & BALL_BASKET))
 	{
 		/*
@@ -578,26 +578,26 @@ spawnfunc(nexball_basketball)
 		*/
 		autocvar_g_nexball_basketball_effects_default = autocvar_g_nexball_basketball_effects_default & BALL_EFFECTMASK;
 	}
-	if(!self.effects)
-		self.effects = autocvar_g_nexball_basketball_effects_default;
-	self.solid = SOLID_TRIGGER;
-	self.pushable = autocvar_g_nexball_basketball_jumppad;
+	if(!this.effects)
+		this.effects = autocvar_g_nexball_basketball_effects_default;
+	this.solid = SOLID_TRIGGER;
+	this.pushable = autocvar_g_nexball_basketball_jumppad;
 	balls |= BALL_BASKET;
-	self.bouncefactor = autocvar_g_nexball_basketball_bouncefactor;
-	self.bouncestop = autocvar_g_nexball_basketball_bouncestop;
-	SpawnBall();
+	this.bouncefactor = autocvar_g_nexball_basketball_bouncefactor;
+	this.bouncestop = autocvar_g_nexball_basketball_bouncestop;
+	SpawnBall(this);
 }
 
 spawnfunc(nexball_football)
 {
 	nexball_mode |= NBM_FOOTBALL;
-	self.classname = "nexball_football";
-	self.solid = SOLID_TRIGGER;
+	this.classname = "nexball_football";
+	this.solid = SOLID_TRIGGER;
 	balls |= BALL_FOOT;
-	self.pushable = autocvar_g_nexball_football_jumppad;
-	self.bouncefactor = autocvar_g_nexball_football_bouncefactor;
-	self.bouncestop = autocvar_g_nexball_football_bouncestop;
-	SpawnBall();
+	this.pushable = autocvar_g_nexball_football_jumppad;
+	this.bouncefactor = autocvar_g_nexball_football_bouncefactor;
+	this.bouncestop = autocvar_g_nexball_football_bouncestop;
+	SpawnBall(this);
 }
 
 float nb_Goal_Customize()
@@ -610,61 +610,61 @@ float nb_Goal_Customize()
 	return true;
 }
 
-void SpawnGoal()
-{SELFPARAM();
-	if(!g_nexball) { remove(self); return; }
+void SpawnGoal(entity this)
+{
+	if(!g_nexball) { remove(this); return; }
 
-	EXACTTRIGGER_INIT;
+	WITHSELF(this, WarpZoneLib_ExactTrigger_Init());
 
-	if(self.team != GOAL_OUT && Team_TeamToNumber(self.team) != -1)
+	if(this.team != GOAL_OUT && Team_TeamToNumber(this.team) != -1)
 	{
-		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE);
-		wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0');
-		self.sprite.customizeentityforclient = nb_Goal_Customize;
+		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (this.absmin + this.absmax) * 0.5, this, sprite, RADARICON_NONE);
+		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0.5 0');
+		this.sprite.customizeentityforclient = nb_Goal_Customize;
 	}
 
-	self.classname = "nexball_goal";
-	if(self.noise == "")
-		self.noise = "ctf/respawn.wav";
-	precache_sound(self.noise);
-	self.touch = GoalTouch;
+	this.classname = "nexball_goal";
+	if(this.noise == "")
+		this.noise = "ctf/respawn.wav";
+	precache_sound(this.noise);
+	this.touch = GoalTouch;
 }
 
 spawnfunc(nexball_redgoal)
 {
-	self.team = NUM_TEAM_1;
-	SpawnGoal();
+	this.team = NUM_TEAM_1;
+	SpawnGoal(this);
 }
 spawnfunc(nexball_bluegoal)
 {
-	self.team = NUM_TEAM_2;
-	SpawnGoal();
+	this.team = NUM_TEAM_2;
+	SpawnGoal(this);
 }
 spawnfunc(nexball_yellowgoal)
 {
-	self.team = NUM_TEAM_3;
-	SpawnGoal();
+	this.team = NUM_TEAM_3;
+	SpawnGoal(this);
 }
 spawnfunc(nexball_pinkgoal)
 {
-	self.team = NUM_TEAM_4;
-	SpawnGoal();
+	this.team = NUM_TEAM_4;
+	SpawnGoal(this);
 }
 
 spawnfunc(nexball_fault)
 {
-	self.team = GOAL_FAULT;
-	if(self.noise == "")
-		self.noise = strzone(SND(TYPEHIT));
-	SpawnGoal();
+	this.team = GOAL_FAULT;
+	if(this.noise == "")
+		this.noise = strzone(SND(TYPEHIT));
+	SpawnGoal(this);
 }
 
 spawnfunc(nexball_out)
 {
-	self.team = GOAL_OUT;
-	if(self.noise == "")
-		self.noise = strzone(SND(TYPEHIT));
-	SpawnGoal();
+	this.team = GOAL_OUT;
+	if(this.noise == "")
+		this.noise = strzone(SND(TYPEHIT));
+	SpawnGoal(this);
 }
 
 //

@@ -69,14 +69,14 @@ void turret_checkpoint_init()
 
 spawnfunc(turret_checkpoint)
 {
-    setorigin(self,self.origin);
-    self.think = turret_checkpoint_init;
-    self.nextthink = time + 0.2;
+    setorigin(this,this.origin);
+    this.think = turret_checkpoint_init;
+    this.nextthink = time + 0.2;
 }
 
 // Compat.
 spawnfunc(walker_checkpoint)
 {
-    self.classname = "turret_checkpoint";
+    this.classname = "turret_checkpoint";
     spawnfunc_turret_checkpoint(this);
 }

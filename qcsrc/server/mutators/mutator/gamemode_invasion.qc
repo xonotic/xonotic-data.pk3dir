@@ -77,13 +77,13 @@ float autocvar_g_invasion_spawn_delay;
 
 spawnfunc(invasion_spawnpoint)
 {
-	if(!g_invasion) { remove(self); return; }
+	if(!g_invasion) { remove(this); return; }
 
-	self.classname = "invasion_spawnpoint";
+	this.classname = "invasion_spawnpoint";
 
 	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
-	if(self.monsterid) {
-		Monster mon = get_monsterinfo(self.monsterid);
+	if(this.monsterid) {
+		Monster mon = get_monsterinfo(this.monsterid);
 		mon.mr_precache(mon);
 	}
 }

@@ -91,43 +91,43 @@ void dynlight_use(entity this, entity actor, entity trigger)
 }
 spawnfunc(dynlight)
 {
-	if (!self.light_lev)
-		self.light_lev = 200;
-	if (!self.color)
-		self.color = '1 1 1';
-	self.lefty = self.light_lev;
-	self.use = dynlight_use;
-	setsize (self, '0 0 0', '0 0 0');
-	setorigin (self, self.origin);
-	//self.pflags = PFLAGS_FULLDYNAMIC;
-	self.solid = SOLID_NOT;
-	//self.blocked = func_null;
-	//if (self.spawnflags & DNOSHADOW)
-	//	self.pflags = self.pflags + PFLAGS_NOSHADOW;
-	//if (self.spawnflags & START_OFF)
-	//	self.light_lev = 0;
+	if (!this.light_lev)
+		this.light_lev = 200;
+	if (!this.color)
+		this.color = '1 1 1';
+	this.lefty = this.light_lev;
+	this.use = dynlight_use;
+	setsize (this, '0 0 0', '0 0 0');
+	setorigin (this, this.origin);
+	//this.pflags = PFLAGS_FULLDYNAMIC;
+	this.solid = SOLID_NOT;
+	//this.blocked = func_null;
+	//if (this.spawnflags & DNOSHADOW)
+	//	this.pflags = this.pflags + PFLAGS_NOSHADOW;
+	//if (this.spawnflags & START_OFF)
+	//	this.light_lev = 0;
 
 //tag attaching
-	if (self.dtagname)
+	if (this.dtagname)
 	{
-		InitializeEntity(self, dynlight_find_target, INITPRIO_FINDTARGET);
+		InitializeEntity(this, dynlight_find_target, INITPRIO_FINDTARGET);
 		return;
 	}
 
 // entity following
-	if (self.spawnflags & DFOLLOW)
+	if (this.spawnflags & DFOLLOW)
 	{
-		InitializeEntity(self, dynlight_find_aiment, INITPRIO_FINDTARGET);
+		InitializeEntity(this, dynlight_find_aiment, INITPRIO_FINDTARGET);
 		return;
 	}
 // path following
-	if (self.target)
-//	if (!(self.spawnflags & DFOLLOW))
+	if (this.target)
+//	if (!(this.spawnflags & DFOLLOW))
 	{
-		self.movetype = MOVETYPE_NOCLIP;
-		if (!self.speed)
-			self.speed = 100;
-		InitializeEntity(self, dynlight_find_path, INITPRIO_FINDTARGET);
+		this.movetype = MOVETYPE_NOCLIP;
+		if (!this.speed)
+			this.speed = 100;
+		InitializeEntity(this, dynlight_find_path, INITPRIO_FINDTARGET);
 		return;
 	}
 }
