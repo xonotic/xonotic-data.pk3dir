@@ -11,7 +11,7 @@ void counter_use(entity this, entity actor, entity trigger)
 			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
 		this.enemy = actor;
-		WITHSELF(this, multi_trigger ());
+		multi_trigger(this);
 	}
 	else
 	{

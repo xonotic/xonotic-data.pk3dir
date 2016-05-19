@@ -4,58 +4,58 @@
 // the wait time has passed, so set back up for another activation
 void multi_wait()
 {SELFPARAM();
-	if (self.max_health)
+	if (this.max_health)
 	{
-		self.health = self.max_health;
-		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
+		this.health = this.max_health;
+		this.takedamage = DAMAGE_YES;
+		this.solid = SOLID_BBOX;
 	}
 }
 
 
 // the trigger was just touched/killed/used
-// self.enemy should be set to the activator so it can be held through a delay
+// this.enemy should be set to the activator so it can be held through a delay
 // so wait for the delay time before firing
-void multi_trigger()
-{SELFPARAM();
-	if (self.nextthink > time)
+void multi_trigger(entity this)
+{
+	if (this.nextthink > time)
 	{
 		return;		// allready been triggered
 	}
 
-	if(self.spawnflags & 16384)
-	if(!IS_PLAYER(self.enemy))
+	if(this.spawnflags & 16384)
+	if(!IS_PLAYER(this.enemy))
 		return; // only players
 
-	if (self.classname == "trigger_secret")
+	if (this.classname == "trigger_secret")
 	{
-		if (!IS_PLAYER(self.enemy))
+		if (!IS_PLAYER(this.enemy))
 			return;
 		found_secrets = found_secrets + 1;
 		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
 	}
 
-	if (self.noise)
-		_sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+	if (this.noise)
+		_sound (this.enemy, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 // don't trigger again until reset
-	self.takedamage = DAMAGE_NO;
+	this.takedamage = DAMAGE_NO;
 
-	SUB_UseTargets(self, self.enemy, self.goalentity);
+	SUB_UseTargets(this, this.enemy, this.goalentity);
 
-	if (self.wait > 0)
+	if (this.wait > 0)
 	{
-		self.think = multi_wait;
-		self.nextthink = time + self.wait;
+		this.think = multi_wait;
+		this.nextthink = time + this.wait;
 	}
-	else if (self.wait == 0)
+	else if (this.wait == 0)
 	{
-		multi_wait(); // waiting finished
+		WITHSELF(this, multi_wait()); // waiting finished
 	}
 	else
-	{	// we can't just remove (self) here, because this is a touch function
+	{	// we can't just remove (this) here, because this is a touch function
 		// called wheil C code is looping through area links...
-		self.touch = func_null;
+		this.touch = func_null;
 	}
 }
 
@@ -63,7 +63,7 @@ void multi_use(entity this, entity actor, entity trigger)
 {
 	this.goalentity = trigger;
 	this.enemy = actor;
-	WITHSELF(this, multi_trigger());
+	multi_trigger(this);
 }
 
 void multi_touch()
@@ -94,7 +94,7 @@ void multi_touch()
 
 	self.enemy = other;
 	self.goalentity = other;
-	multi_trigger ();
+	multi_trigger(self);
 }
 
 void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -109,7 +109,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 	{
 		this.enemy = attacker;
 		this.goalentity = inflictor;
-		WITHSELF(this, multi_trigger());
+		multi_trigger(this);
 	}
 }
 
@@ -143,43 +143,43 @@ set "message" to text string
 */
 spawnfunc(trigger_multiple)
 {
-	self.reset = multi_reset;
-	if (self.sounds == 1)
-		self.noise = "misc/secret.wav";
-	else if (self.sounds == 2)
-		self.noise = strzone(SND(TALK));
-	else if (self.sounds == 3)
-		self.noise = "misc/trigger1.wav";
+	this.reset = multi_reset;
+	if (this.sounds == 1)
+		this.noise = "misc/secret.wav";
+	else if (this.sounds == 2)
+		this.noise = strzone(SND(TALK));
+	else if (this.sounds == 3)
+		this.noise = "misc/trigger1.wav";
 
-	if(self.noise)
-		precache_sound(self.noise);
+	if(this.noise)
+		precache_sound(this.noise);
 
-	if (!self.wait)
-		self.wait = 0.2;
-	else if(self.wait < -1)
-		self.wait = 0;
-	self.use = multi_use;
+	if (!this.wait)
+		this.wait = 0.2;
+	else if(this.wait < -1)
+		this.wait = 0;
+	this.use = multi_use;
 
 	EXACTTRIGGER_INIT;
 
-	self.team_saved = self.team;
+	this.team_saved = this.team;
 
-	if (self.health)
+	if (this.health)
 	{
-		if (self.spawnflags & SPAWNFLAG_NOTOUCH)
+		if (this.spawnflags & SPAWNFLAG_NOTOUCH)
 			objerror ("health and notouch don't make sense\n");
-		self.max_health = self.health;
-		self.event_damage = multi_eventdamage;
-		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
-		setorigin (self, self.origin);	// make sure it links into the world
+		this.max_health = this.health;
+		this.event_damage = multi_eventdamage;
+		this.takedamage = DAMAGE_YES;
+		this.solid = SOLID_BBOX;
+		setorigin (this, this.origin);	// make sure it links into the world
 	}
 	else
 	{
-		if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
+		if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
 		{
-			self.touch = multi_touch;
-			setorigin (self, self.origin);	// make sure it links into the world
+			this.touch = multi_touch;
+			setorigin (this, this.origin);	// make sure it links into the world
 		}
 	}
 }
