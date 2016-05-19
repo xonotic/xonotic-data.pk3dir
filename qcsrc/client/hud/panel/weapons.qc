@@ -350,7 +350,7 @@ void HUD_Weapons()
 	// draw items
 	row = column = 0;
 	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
-	vector noncurrent_size = weapon_size * bound(0, autocvar_hud_panel_weapons_noncurrent_scale, 1);
+	vector noncurrent_size = weapon_size * bound(0.01, autocvar_hud_panel_weapons_noncurrent_scale, 1);
 	float noncurrent_alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_weapons_noncurrent_alpha, 1);
 	bool isCurrent;
 	static vector weapon_pos_current = '-1 0 0';
