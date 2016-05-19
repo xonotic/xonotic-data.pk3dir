@@ -22,9 +22,9 @@ void ActivateTeamplay();
 
 void InitGameplayMode();
 
-string GetClientVersionMessage();
+string GetClientVersionMessage(entity this);
 
-string getwelcomemessage();
+string getwelcomemessage(entity this);
 
 void SetPlayerColors(entity pl, float _color);
 

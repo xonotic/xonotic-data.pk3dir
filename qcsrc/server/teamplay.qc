@@ -80,11 +80,11 @@ void InitGameplayMode()
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
 
-string GetClientVersionMessage()
-{SELFPARAM();
+string GetClientVersionMessage(entity this)
+{
 	string versionmsg;
-	if (self.version_mismatch) {
-		if(self.version < autocvar_gameversion) {
+	if (this.version_mismatch) {
+		if(this.version < autocvar_gameversion) {
 			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
 		} else {
 			versionmsg = "^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8";
@@ -95,7 +95,7 @@ string GetClientVersionMessage()
 	return versionmsg;
 }
 
-string getwelcomemessage()
+string getwelcomemessage(entity this)
 {
 	string s, modifications, motd;
 
@@ -123,8 +123,7 @@ string getwelcomemessage()
 		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	string versionmessage;
-	versionmessage = GetClientVersionMessage();
+	string versionmessage = GetClientVersionMessage(this);
 
 	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");

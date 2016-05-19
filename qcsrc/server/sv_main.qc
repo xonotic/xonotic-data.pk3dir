@@ -236,7 +236,7 @@ void StartFrame()
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
-float DoesQ3ARemoveThisEntity();
+bool DoesQ3ARemoveThisEntity(entity this);
 void SV_OnEntityPreSpawnFunction()
 {SELFPARAM();
 	__spawnfunc_expect = this;
@@ -357,7 +357,7 @@ LABEL(cvar_fail)
 		}
 	}
 
-	if(DoesQ3ARemoveThisEntity())
+	if(DoesQ3ARemoveThisEntity(self))
 	{
 		remove(self);
 		return;

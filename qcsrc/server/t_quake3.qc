@@ -88,58 +88,58 @@ void target_init_verify(entity this)
 
 spawnfunc(target_init)
 {
-	self.spawnflags = 0; // remove all weapons except the ones listed below
-	self.netname = "shotgun"; // keep these weapons through the remove trigger
+	this.spawnflags = 0; // remove all weapons except the ones listed below
+	this.netname = "shotgun"; // keep these weapons through the remove trigger
 	spawnfunc_target_items(this);
-	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
+	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 
 // weapon give ent from defrag
 void target_give_init(entity this)
 {
 	entity targ;
-	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
+	for (targ = world; (targ = find(targ, targetname, this.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher" || targ.classname == "weapon_devastator") {
-			self.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
-			self.netname = "devastator";
+			this.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
+			this.netname = "devastator";
 		}
 		else if (targ.classname == "weapon_plasmagun") {
-			self.ammo_rockets += targ.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
-			if(self.netname == "")
-				self.netname = "hagar";
+			this.ammo_rockets += targ.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
+			if(this.netname == "")
+				this.netname = "hagar";
 			else
-				self.netname = strcat(self.netname, " hagar");
+				this.netname = strcat(this.netname, " hagar");
 		}
 		else if (targ.classname == "weapon_bfg") {
-			self.ammo_cells += targ.count * WEP_CVAR_PRI(crylink, ammo);
-			if(self.netname == "")
-				self.netname = "crylink";
+			this.ammo_cells += targ.count * WEP_CVAR_PRI(crylink, ammo);
+			if(this.netname == "")
+				this.netname = "crylink";
 			else
-				self.netname = strcat(self.netname, " crylink");
+				this.netname = strcat(this.netname, " crylink");
 		}
 		else if (targ.classname == "weapon_grenadelauncher" || targ.classname == "weapon_mortar") {
-			self.ammo_rockets += targ.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
-			if(self.netname == "")
-				self.netname = "mortar";
+			this.ammo_rockets += targ.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
+			if(this.netname == "")
+				this.netname = "mortar";
 			else
-				self.netname = strcat(self.netname, " mortar");
+				this.netname = strcat(this.netname, " mortar");
 		}
 		else if (targ.classname == "item_armor_body")
-			self.armorvalue = 100;
+			this.armorvalue = 100;
 		else if (targ.classname == "item_health_mega")
-			self.health = 200;
+			this.health = 200;
 		//remove(targ); // removing ents in init functions causes havoc, workaround:
         targ.think = SUB_Remove_self;
         targ.nextthink = time;
 	}
-	self.spawnflags = 2;
+	this.spawnflags = 2;
 	spawnfunc_target_items(this);
-	InitializeEntity(self, target_init_verify, INITPRIO_FINDTARGET);
+	InitializeEntity(this, target_init_verify, INITPRIO_FINDTARGET);
 }
 
 spawnfunc(target_give)
 {
-	InitializeEntity(self, target_give_init, INITPRIO_FINDTARGET);
+	InitializeEntity(this, target_give_init, INITPRIO_FINDTARGET);
 }
 
 //spawnfunc(item_flight)       /* handled by jetpack */
@@ -164,31 +164,31 @@ spawnfunc(item_flight)
 .float notq3a;
 .float notta;
 .string gametype;
-float DoesQ3ARemoveThisEntity()
-{SELFPARAM();
+bool DoesQ3ARemoveThisEntity(entity this)
+{
 	// Q3 style filters (DO NOT USE, THIS IS COMPAT ONLY)
 
-	if(self.notq3a)
+	if(this.notq3a)
 		if(!teamplay || g_tdm || g_ctf)
-			return 1;
+			return true;
 
-	if(self.notta)
+	if(this.notta)
 		if (!(!teamplay || g_tdm || g_ctf))
-			return 1;
+			return true;
 
-	if(self.notsingle)
+	if(this.notsingle)
 		if(maxclients == 1)
-			return 1;
+			return true;
 
-	if(self.notteam)
+	if(this.notteam)
 		if(teamplay)
-			return 1;
+			return true;
 
-	if(self.notfree)
+	if(this.notfree)
 		if(!teamplay)
-			return 1;
+			return true;
 
-	if(self.gametype)
+	if(this.gametype)
 	{
 		string gametypename;
 		// static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"}
@@ -200,9 +200,9 @@ float DoesQ3ARemoveThisEntity()
 		if(maxclients == 1)
 			gametypename = "single";
 		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
-		if(strstrofs(self.gametype, gametypename, 0) < 0)
-			return 1;
+		if(strstrofs(this.gametype, gametypename, 0) < 0)
+			return true;
 	}
 
-	return 0;
+	return false;
 }
