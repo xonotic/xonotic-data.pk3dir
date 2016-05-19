@@ -122,6 +122,11 @@ void infection_RoundStart()
 	infection_CheckWinner();
 }
 
+bool infection_IsAlpha(entity e)
+{
+    return e.infectioncolor == e.infectioncolor_original;
+}
+
 MUTATOR_HOOKFUNCTION(inf, PlayerDies)
 {
 	infection_CheckWinner();
@@ -150,6 +155,13 @@ bool inf_RemovePlayer()
 	FOREACH_CLIENT(IS_PLAYER(it) && it.infectioncolor == this.infectioncolor_original, {
         it.infectioncolor_original = this.infectioncolor;
         centerprint(it, "^2You are now an alpha.\n");
+        infection_GetColorOwner(it);
+        break;
+	});
+
+	// notify all team members
+	FOREACH_CLIENT(IS_PLAYER(it) && it.infectioncolor == this.infectioncolor_original && !infection_IsAlpha(it), {
+        centerprint(it, sprintf("^2Your alpha is now: ^7%s^2.\n", color_owner_red));
         break;
 	});
 
@@ -179,8 +191,8 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
 		FOREACH_CLIENT(IS_PLAYER(it) && INF_SAMETEAM(it, frag_target), {
             // If so, remove it, our infection color has now "died out" from this round and we can not win anymore.
             // The attacker will "summon" all of our previously fragged targets, and also us.
-            centerprint(it, sprintf("^1Your alpha ^7%s^1 was infected by ^7%s^1 with ^7%s^1 color.\n",
-                frag_target.netname, frag_attacker.netname, color_owner_red));
+            centerprint(it, sprintf("^1Your alpha ^7%s^1 was infected by ^7%s^1 with ^7%s^1's color.\nYou now belong to ^7%s^1's team!",
+                frag_target.netname, frag_attacker.netname, color_owner_red, color_owner_red));
             infection_SetColor(it, frag_attacker.infectioncolor);
             frag_score++;
 		});
