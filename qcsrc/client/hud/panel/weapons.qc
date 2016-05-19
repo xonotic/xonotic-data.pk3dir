@@ -346,10 +346,23 @@ void HUD_Weapons()
 	// draw items
 	row = column = 0;
 	vector label_size = '1 1 0' * min(weapon_size.x, weapon_size.y) * bound(0, autocvar_hud_panel_weapons_label_scale, 1);
-	vector noncurrent_pos = '0 0 0';
 	vector noncurrent_size = weapon_size * bound(0, autocvar_hud_panel_weapons_noncurrent_scale, 1);
 	float noncurrent_alpha = panel_fg_alpha * bound(0, autocvar_hud_panel_weapons_noncurrent_alpha, 1);
 	bool isCurrent;
+	static vector weapon_pos_current = '-1 0 0';
+	if(weapon_pos_current.x == -1)
+		weapon_pos_current = panel_pos;
+
+	float switch_speed;
+	if(autocvar_hud_panel_weapons_selection_speed <= 0 || autocvar__hud_configure)
+		switch_speed = 999;
+	else
+		switch_speed = frametime * autocvar_hud_panel_weapons_selection_speed;
+	vector radius_size = weapon_size * (autocvar_hud_panel_weapons_selection_radius + 1);
+
+	// draw background behind currently selected weapon
+	// do it earlier to make sure bg is drawn behind every weapon icons while it's moving
+	drawpic_aspect_skin(weapon_pos_current, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
@@ -374,13 +387,20 @@ void HUD_Weapons()
 
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos + eX * column * weapon_size.x + eY * row * weapon_size.y);
-		noncurrent_pos.x = weapon_pos.x + (weapon_size.x - noncurrent_size.x) / 2;
-		noncurrent_pos.y = weapon_pos.y + (weapon_size.y - noncurrent_size.y) / 2;
 
-		// draw background behind currently selected weapon
+		// update position of the currently selected weapon
 		isCurrent = (it == switchweapon);
 		if(isCurrent)
-			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		{
+			if(weapon_pos_current.y > weapon_pos.y)
+				weapon_pos_current.y = max(weapon_pos.y, weapon_pos_current.y - switch_speed * (weapon_pos_current.y - weapon_pos.y));
+			else if(weapon_pos_current.y < weapon_pos.y)
+				weapon_pos_current.y = min(weapon_pos.y, weapon_pos_current.y + switch_speed * (weapon_pos.y - weapon_pos_current.y));
+			if(weapon_pos_current.x > weapon_pos.x)
+				weapon_pos_current.x = max(weapon_pos.x, weapon_pos_current.x - switch_speed * (weapon_pos_current.x - weapon_pos.x));
+			else if(weapon_pos_current.x < weapon_pos.x)
+				weapon_pos_current.x = min(weapon_pos.x, weapon_pos_current.x + switch_speed * (weapon_pos.x - weapon_pos_current.x));
+		}
 
 		// draw the weapon accuracy
 		if(autocvar_hud_panel_weapons_accuracy)
@@ -393,14 +413,26 @@ void HUD_Weapons()
 			}
 		}
 
+		vector weapon_size_real = noncurrent_size;
+		float weapon_alpha_real = noncurrent_alpha;
+		float radius_factor_x = 1 - bound(0, fabs(weapon_pos.x - weapon_pos_current.x) / radius_size.x, 1);
+		float radius_factor_y = 1 - bound(0, fabs(weapon_pos.y - weapon_pos_current.y) / radius_size.y, 1);
+		if(radius_factor_x || radius_factor_y)
+		{
+			weapon_size_real.x += (weapon_size.x - noncurrent_size.x) * radius_factor_x;
+			weapon_size_real.y += (weapon_size.y - noncurrent_size.y) * radius_factor_y;
+			weapon_alpha_real += (panel_fg_alpha - noncurrent_alpha) * min(radius_factor_x, radius_factor_y);
+		}
+
+		vector weapon_pos_real = weapon_pos;
+		weapon_pos_real.x = weapon_pos.x + (weapon_size.x - weapon_size_real.x) / 2;
+		weapon_pos_real.y = weapon_pos.y + (weapon_size.y - weapon_size_real.y) / 2;
+
 		// drawing all the weapon items
 		if(weapons_stat & WepSet_FromWeapon(it))
 		{
 			// draw the weapon image
-			if(isCurrent)
-				drawpic_aspect_skin(weapon_pos, it.model2, weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-			else
-				drawpic_aspect_skin(noncurrent_pos, it.model2, noncurrent_size, '1 1 1', noncurrent_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos_real, it.model2, weapon_size_real, '1 1 1', weapon_alpha_real, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -462,7 +494,7 @@ void HUD_Weapons()
 		}
 		else // draw a "ghost weapon icon" if you don't have the weapon
 		{
-			drawpic_aspect_skin(noncurrent_pos, it.model2, noncurrent_size, '0.2 0.2 0.2', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos_real, it.model2, weapon_size_real, '0.2 0.2 0.2', weapon_alpha_real * 0.5, DRAWFLAG_NORMAL);
 		}
 
 		// draw the complain message
