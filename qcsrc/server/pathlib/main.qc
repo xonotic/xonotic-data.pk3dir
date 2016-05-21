@@ -155,7 +155,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
 
     if(doedge)
-        if (!tile_check(where))
+        if (!tile_check(parent, where))
         {
             LOG_TRACE("tile_check fail\n");
 #if DEBUGPATHING

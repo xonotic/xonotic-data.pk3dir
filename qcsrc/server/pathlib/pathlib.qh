@@ -63,10 +63,10 @@ entity best_open_node;
 vector tile_check_up;
 vector tile_check_down;
 float  tile_check_size;
-float     tile_check_cross(vector where);
-float     tile_check_plus(vector where);
-float     tile_check_star(vector where);
-var float tile_check(vector where);
+float     tile_check_cross(entity this, vector where);
+float     tile_check_plus(entity this, vector where);
+float     tile_check_star(entity this, vector where);
+var float tile_check(entity this, vector where);
 
 float  movenode_stepsize;
 vector movenode_stepup;
