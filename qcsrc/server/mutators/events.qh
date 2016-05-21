@@ -195,7 +195,10 @@ bool ret_bool;
 MUTATOR_HOOKABLE(Turret_CheckFire, EV_Turret_CheckFire);
 
 /** return error to prevent entity spawn, or modify the entity */
-MUTATOR_HOOKABLE(OnEntityPreSpawn, EV_NO_ARGS);
+#define EV_OnEntityPreSpawn(i, o) \
+    /** turret */ i(entity, __self) \
+    /**/
+MUTATOR_HOOKABLE(OnEntityPreSpawn, EV_OnEntityPreSpawn);
 
 /** runs in the event loop for players; is called for ALL player entities, also bots, also the dead, or spectators */
 MUTATOR_HOOKABLE(PlayerPreThink, EV_NO_ARGS);

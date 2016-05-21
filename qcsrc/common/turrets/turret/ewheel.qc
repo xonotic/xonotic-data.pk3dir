@@ -83,7 +83,7 @@ void ewheel_move_enemy()
 {SELFPARAM();
     float newframe;
 
-    self.steerto = steerlib_arrive(self.enemy.origin,self.target_range_optimal);
+    self.steerto = steerlib_arrive(self, self.enemy.origin,self.target_range_optimal);
 
     self.moveto  = self.origin + self.steerto * 128;
 

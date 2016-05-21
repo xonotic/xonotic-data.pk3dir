@@ -161,7 +161,7 @@ void walker_rocket_think()
     if (self.enemy)
     {
         itime = max(edist / m_speed, 1);
-        newdir = steerlib_pull(self.enemy.origin + self.tur_shotorg);
+        newdir = steerlib_pull(self, self.enemy.origin + self.tur_shotorg);
     }
     else
         newdir  = normalize(self.velocity);
@@ -186,7 +186,7 @@ void walker_rocket_loop3()
         return;
     }
 
-    newdir = steerlib_pull(self.tur_shotorg);
+    newdir = steerlib_pull(self, self.tur_shotorg);
     WALKER_ROCKET_MOVE;
 
     self.angles = vectoangles(self.velocity);
@@ -211,7 +211,7 @@ void walker_rocket_loop2()
         return;
     }
 
-    newdir = steerlib_pull(self.tur_shotorg);
+    newdir = steerlib_pull(self, self.tur_shotorg);
     WALKER_ROCKET_MOVE;
 }
 
