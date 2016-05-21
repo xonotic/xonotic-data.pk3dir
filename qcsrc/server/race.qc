@@ -1096,10 +1096,10 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 void penalty_touch()
 {SELFPARAM();
 	EXACTTRIGGER_TOUCH;
-	if(other.race_lastpenalty != self)
+	if(other.race_lastpenalty != this)
 	{
-		other.race_lastpenalty = self;
-		race_ImposePenaltyTime(other, self.race_penalty, self.race_penalty_reason);
+		other.race_lastpenalty = this;
+		race_ImposePenaltyTime(other, this.race_penalty, this.race_penalty_reason);
 	}
 }
 

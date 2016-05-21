@@ -65,7 +65,7 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(self.(teamscores[i]) > 127 || self.(teamscores[i]) <= -128)
+		if(this.(teamscores[i]) > 127 || this.(teamscores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_TEAMSCORE <= 8
@@ -79,9 +79,9 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.(teamscores[i]));
+				WriteInt24_t(MSG_ENTITY, this.(teamscores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.(teamscores[i]));
+				WriteChar(MSG_ENTITY, this.(teamscores[i]));
 		}
 
 	return true;
@@ -406,7 +406,7 @@ void WinningConditionHelper()
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
-	s = strcat(s, ":S", ftos(nJoinAllowed(self, world)));
+	s = strcat(s, ":S", ftos(nJoinAllowed(this, world))); // note: self/this is most likely world in this case
 	s = strcat(s, ":F", ftos(serverflags));
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(world, (fullstatus ? 1 : 2)));

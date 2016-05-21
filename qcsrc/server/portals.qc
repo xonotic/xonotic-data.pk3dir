@@ -255,7 +255,7 @@ void Portal_Touch()
 
 #ifdef PORTALS_ARE_NOT_SOLID
 	// portal is being removed?
-	if(self.solid != SOLID_TRIGGER)
+	if(this.solid != SOLID_TRIGGER)
 		return; // possibly engine bug
 
 	if(IS_PLAYER(other))
@@ -272,7 +272,7 @@ void Portal_Touch()
 	if(other.vehicle_flags & VHF_ISVEHICLE)
 		return; // no teleporting vehicles?
 
-	if(!self.enemy)
+	if(!this.enemy)
 		error("Portal_Touch called for a broken portal\n");
 
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -285,26 +285,26 @@ void Portal_Touch()
 
 	if(other.classname == "porto")
 	{
-		if(other.portal_id == self.portal_id)
+		if(other.portal_id == this.portal_id)
 			return;
 	}
-	if(time < self.portal_activatetime)
-		if(other == self.aiment)
+	if(time < this.portal_activatetime)
+		if(other == this.aiment)
 		{
-			self.portal_activatetime = time + 0.1;
+			this.portal_activatetime = time + 0.1;
 			return;
 		}
-	if(other != self.aiment)
+	if(other != this.aiment)
 		if(IS_PLAYER(other))
-			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
+			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
-	if(other.aiment != self.aiment)
+	if(other.aiment != this.aiment)
 		if(IS_PLAYER(other.aiment))
-			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(self.aiment))
+			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
-	fixedmakevectors(self.mangle);
+	fixedmakevectors(this.mangle);
 	g = frametime * '0 0 -1' * autocvar_sv_gravity;
-	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, self.origin, v_forward, self.maxs.x))
+	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
 
 	/*
@@ -316,7 +316,7 @@ void Portal_Touch()
 	}
 	*/
 
-	if(Portal_TeleportPlayer(self, other))
+	if(Portal_TeleportPlayer(this, other))
 		if(other.classname == "porto")
 			if(other.effects & EF_RED)
 				other.effects += EF_BLUE - EF_RED;
@@ -459,56 +459,56 @@ void Portal_Think()
 
 #ifdef PORTALS_ARE_NOT_SOLID
 	// portal is being removed?
-	if(self.solid != SOLID_TRIGGER)
+	if(this.solid != SOLID_TRIGGER)
 		return; // possibly engine bug
 
-	if(!self.enemy)
+	if(!this.enemy)
 		error("Portal_Think called for a broken portal\n");
 
-	o = self.aiment;
-	self.solid = SOLID_BBOX;
-	self.aiment = world;
+	o = this.aiment;
+	this.solid = SOLID_BBOX;
+	this.aiment = world;
 
 	g = frametime * '0 0 -1' * autocvar_sv_gravity;
 
-	fixedmakevectors(self.mangle);
+	fixedmakevectors(this.mangle);
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		if(it != o)
 			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
 
-		if(it != o || time >= self.portal_activatetime)
-			Portal_Think_TryTeleportPlayer(self, it, g);
+		if(it != o || time >= this.portal_activatetime)
+			Portal_Think_TryTeleportPlayer(this, it, g);
 
 		if(it.hook)
-			Portal_Think_TryTeleportPlayer(self, it.hook, g);
+			Portal_Think_TryTeleportPlayer(this, it.hook, g);
 	));
-	self.solid = SOLID_TRIGGER;
-	self.aiment = o;
+	this.solid = SOLID_TRIGGER;
+	this.aiment = o;
 #endif
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	if(time > self.fade_time)
-		Portal_Remove(self, 0);
+	if(time > this.fade_time)
+		Portal_Remove(this, 0);
 }
 
 float Portal_Customize()
 {SELFPARAM();
 	if(IS_SPEC(other))
 		other = other.enemy;
-	if(other == self.aiment)
+	if(other == this.aiment)
 	{
-		self.modelindex = self.savemodelindex;
+		this.modelindex = this.savemodelindex;
 	}
-	else if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
+	else if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(this.aiment))
 	{
-		self.modelindex = 0;
+		this.modelindex = 0;
 	}
 	else
 	{
-		self.modelindex = self.savemodelindex;
+		this.modelindex = this.savemodelindex;
 	}
 	return true;
 }
@@ -576,7 +576,7 @@ void Portal_ClearAll(entity own)
 }
 void Portal_RemoveLater_Think()
 {SELFPARAM();
-	Portal_Remove(self, self.cnt);
+	Portal_Remove(this, this.cnt);
 }
 void Portal_RemoveLater(entity portal, float kill)
 {

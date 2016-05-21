@@ -1178,7 +1178,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						WITHSELF(client, playerdemo_open_read(argv(next_token)));
+						playerdemo_open_read(client, argv(next_token));
 						return;
 					}
 
@@ -1193,7 +1193,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						WITHSELF(client, playerdemo_open_write(argv(next_token)));
+						playerdemo_open_write(client, argv(next_token));
 						return;
 					}
 

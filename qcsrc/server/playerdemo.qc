@@ -17,33 +17,33 @@ void playerdemo_init(entity this)
 {
 	this.playerdemo_mode = PLAYERDEMO_MODE_OFF;
 }
-void playerdemo_shutdown()
-{SELFPARAM();
-	if(self.playerdemo_mode != PLAYERDEMO_MODE_OFF)
+void playerdemo_shutdown(entity this)
+{
+	if(this.playerdemo_mode != PLAYERDEMO_MODE_OFF)
 	{
-		LOG_INFO("playerdemo: ", self.netname, " closed\n");
-		fclose(self.playerdemo_fh);
+		LOG_INFO("playerdemo: ", this.netname, " closed\n");
+		fclose(this.playerdemo_fh);
 	}
-	self.playerdemo_mode = 0;
+	this.playerdemo_mode = 0;
 }
-void playerdemo_open_read(string f)
-{SELFPARAM();
-	playerdemo_shutdown();
-	self.playerdemo_mode = PLAYERDEMO_MODE_READING;
-	self.playerdemo_fh = fopen(f, FILE_READ);
-	self.playerdemo_starttime = time - 1;
-	self.playerdemo_time = stof(fgets(self.playerdemo_fh));
-	self.playerdemo_time += self.playerdemo_starttime;
-	self.movetype = MOVETYPE_NONE;
-	LOG_INFO("playerdemo: ", self.netname, " reading from ", f, "\n");
+void playerdemo_open_read(entity this, string f)
+{
+	playerdemo_shutdown(this);
+	this.playerdemo_mode = PLAYERDEMO_MODE_READING;
+	this.playerdemo_fh = fopen(f, FILE_READ);
+	this.playerdemo_starttime = time - 1;
+	this.playerdemo_time = stof(fgets(this.playerdemo_fh));
+	this.playerdemo_time += this.playerdemo_starttime;
+	this.movetype = MOVETYPE_NONE;
+	LOG_INFO("playerdemo: ", this.netname, " reading from ", f, "\n");
 }
-void playerdemo_open_write(string f)
-{SELFPARAM();
-	playerdemo_shutdown();
-	self.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
-	self.playerdemo_fh = fopen(f, FILE_WRITE);
-	self.playerdemo_starttime = time - 1;
-	LOG_INFO("playerdemo: ", self.netname, " writing to ", f, "\n");
+void playerdemo_open_write(entity this, string f)
+{
+	playerdemo_shutdown(this);
+	this.playerdemo_mode = PLAYERDEMO_MODE_WRITING;
+	this.playerdemo_fh = fopen(f, FILE_WRITE);
+	this.playerdemo_starttime = time - 1;
+	LOG_INFO("playerdemo: ", this.netname, " writing to ", f, "\n");
 	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
 }
 #define PLAYERDEMO_FIELD(func,t,f) func##t(f,#f);
