@@ -61,7 +61,7 @@
 			this.impulse = IMP_weapon_group_##slot.impulse; \
 			return; \
 		} \
-		W_NextWeaponOnImpulse(slot); \
+		W_NextWeaponOnImpulse(this, slot); \
 	}
 X(1)
 X(2)
@@ -89,7 +89,7 @@ X(0)
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
-		W_CycleWeapon(this.cvar_cl_weaponpriorities[slot], dir); \
+		W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir); \
 	}
 X(0, prev)
 X(1, prev)
@@ -136,7 +136,7 @@ X(9, next)
 			this.impulse = IMP_weapon_byid_##i.impulse; \
 			return; \
 		} \
-		W_SwitchWeapon(Weapons_from(WEP_FIRST + i)); \
+		W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i)); \
 	}
 X(0)
 X(1)
@@ -172,7 +172,7 @@ IMPULSE(weapon_next_byid)
 		this.impulse = IMP_weapon_next_byid.impulse;
 		return;
 	}
-	W_NextWeapon(0);
+	W_NextWeapon(this, 0);
 }
 
 IMPULSE(weapon_prev_byid)
@@ -183,7 +183,7 @@ IMPULSE(weapon_prev_byid)
 		this.impulse = IMP_weapon_prev_byid.impulse;
 		return;
 	}
-	W_PreviousWeapon(0);
+	W_PreviousWeapon(this, 0);
 }
 
 IMPULSE(weapon_next_bygroup)
@@ -194,7 +194,7 @@ IMPULSE(weapon_next_bygroup)
 		this.impulse = IMP_weapon_next_bygroup.impulse;
 		return;
 	}
-	W_NextWeapon(1);
+	W_NextWeapon(this, 1);
 }
 
 IMPULSE(weapon_prev_bygroup)
@@ -205,7 +205,7 @@ IMPULSE(weapon_prev_bygroup)
 		this.impulse = IMP_weapon_prev_bygroup.impulse;
 		return;
 	}
-	W_PreviousWeapon(1);
+	W_PreviousWeapon(this, 1);
 }
 
 IMPULSE(weapon_next_bypriority)
@@ -216,7 +216,7 @@ IMPULSE(weapon_next_bypriority)
 		this.impulse = IMP_weapon_next_bypriority.impulse;
 		return;
 	}
-	W_NextWeapon(2);
+	W_NextWeapon(this, 2);
 }
 
 IMPULSE(weapon_prev_bypriority)
@@ -227,7 +227,7 @@ IMPULSE(weapon_prev_bypriority)
 		this.impulse = IMP_weapon_prev_bypriority.impulse;
 		return;
 	}
-	W_PreviousWeapon(2);
+	W_PreviousWeapon(this, 2);
 }
 
 IMPULSE(weapon_last)
@@ -241,7 +241,7 @@ IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_SwitchWeapon(w_getbestweapon(this));
+	W_SwitchWeapon(this, w_getbestweapon(this));
 }
 
 IMPULSE(weapon_drop)

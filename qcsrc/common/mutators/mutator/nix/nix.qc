@@ -209,7 +209,7 @@ void NIX_GiveCurrentWeapon()
 		if(!client_hasweapon(self, PS(self).m_switchweapon, true, false))
 		{
 			if(client_hasweapon(self, w, true, false))
-				W_SwitchWeapon(w);
+				W_SwitchWeapon(self, w);
 		}
 }
 

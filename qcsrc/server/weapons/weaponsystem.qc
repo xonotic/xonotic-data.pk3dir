@@ -545,7 +545,7 @@ void W_WeaponFrame(Player actor)
 			else
 			{
 				if (key_pressed && PS(actor).m_switchweapon != WEP_HOOK && !actor.hook_switchweapon)
-					W_SwitchWeapon(WEP_HOOK);
+					W_SwitchWeapon(actor, WEP_HOOK);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
 				block_weapon = (PS(actor).m_weapon == h && (PHYS_INPUT_BUTTON_ATCK(actor) || key_pressed));

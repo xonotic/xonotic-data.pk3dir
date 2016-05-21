@@ -14,20 +14,20 @@
 
 void thrown_wep_think()
 {SELFPARAM();
-	self.nextthink = time;
-	if(self.oldorigin != self.origin)
+	this.nextthink = time;
+	if(this.oldorigin != this.origin)
 	{
-		self.SendFlags |= ISF_LOCATION;
-		self.oldorigin = self.origin;
+		this.SendFlags |= ISF_LOCATION;
+		this.oldorigin = this.origin;
 	}
-	self.owner = world;
-	float timeleft = self.savenextthink - time;
+	this.owner = world;
+	float timeleft = this.savenextthink - time;
 	if(timeleft > 1)
-		SUB_SetFade(self, self.savenextthink - 1, 1);
+		SUB_SetFade(this, this.savenextthink - 1, 1);
 	else if(timeleft > 0)
-		SUB_SetFade(self, time, timeleft);
+		SUB_SetFade(this, time, timeleft);
 	else
-		SUB_VanishOrRemove(self);
+		SUB_VanishOrRemove(this);
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
