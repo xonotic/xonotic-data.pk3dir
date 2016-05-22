@@ -208,7 +208,6 @@ bool door_check_keys(entity door, entity player)
 
 void door_fire(entity this, entity actor, entity trigger)
 {
-	entity starte;
 	if (this.owner != this)
 		objerror ("door_fire: this.owner != this");
 
@@ -216,49 +215,39 @@ void door_fire(entity this, entity actor, entity trigger)
 	{
 		if (this.state == STATE_UP || this.state == STATE_TOP)
 		{
-			starte = self;
-			do
-			{
-				if (self.classname == "door")
-				{
-					door_go_down ();
+			entity e = this;
+			do {
+				if (e.classname == "door") {
+					WITHSELF(e, door_go_down());
+				} else {
+					WITHSELF(e, door_rotating_go_down());
 				}
-				else
-				{
-					door_rotating_go_down ();
-				}
-				setself(self.enemy);
-			} while ( (self != starte) && (self != world) );
-			setself(this);
+				e = e.enemy;
+			} while ((e != this) && (e != NULL));
 			return;
 		}
 	}
 
 // trigger all paired doors
-	starte = self;
-	do
-	{
-		if (self.classname == "door")
-		{
-			door_go_up ();
-		} else
-		{
+	entity e = this;
+	do {
+		if (e.classname == "door") {
+			WITHSELF(e, door_go_up());
+		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
-			if ((self.spawnflags & 2) && other.trigger_reverse!=0 && self.lip!=666 && self.state == STATE_BOTTOM)
-			{
-				self.lip = 666; // self.lip is used to remember reverse opening direction for door_rotating
-				self.pos2 = '0 0 0' - self.pos2;
+			if ((e.spawnflags & 2) && other.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
+				e.lip = 666; // e.lip is used to remember reverse opening direction for door_rotating
+				e.pos2 = '0 0 0' - e.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
-			if (!((self.spawnflags & 2) &&  (self.spawnflags & 8) && self.state == STATE_DOWN
-				&& (((self.lip==666) && (other.trigger_reverse==0)) || ((self.lip!=666) && (other.trigger_reverse!=0)))))
+			if (!((e.spawnflags & 2) &&  (e.spawnflags & 8) && e.state == STATE_DOWN
+				&& (((e.lip == 666) && (other.trigger_reverse == 0)) || ((e.lip != 666) && (other.trigger_reverse != 0)))))
 			{
-				door_rotating_go_up ();
+				WITHSELF(e, door_rotating_go_up());
 			}
 		}
-		setself(self.enemy);
-	} while ( (self != starte) && (self != world) );
-	setself(this);
+		e = e.enemy;
+	} while ((e != this) && (e != NULL));
 }
 
 void door_use(entity this, entity actor, entity trigger)

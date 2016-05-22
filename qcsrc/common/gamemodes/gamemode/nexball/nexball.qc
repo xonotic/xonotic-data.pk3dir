@@ -89,19 +89,17 @@ void ball_restart(entity this)
 
 void nexball_setstatus()
 {SELFPARAM();
-	self.items &= ~IT_KEY1;
-	if(self.ballcarried)
+	this.items &= ~IT_KEY1;
+	if(this.ballcarried)
 	{
-		if(self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
+		if(this.ballcarried.teamtime && (this.ballcarried.teamtime < time))
 		{
-			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
-			setself(self.ballcarried);
-			DropBall(self, self.owner.origin, '0 0 0');
-			ResetBall();
-			setself(this);
+			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
+			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
+			WITHSELF(this.ballcarried, ResetBall());
 		}
 		else
-			self.items |= IT_KEY1;
+			this.items |= IT_KEY1;
 	}
 }
 
@@ -133,7 +131,7 @@ void DropOwner()
 }
 
 void GiveBall(entity plyr, entity ball)
-{SELFPARAM();
+{
 	.entity weaponentity = weaponentities[0]; // TODO: find ballstealer
 	entity ownr = ball.owner;
 	if(ownr)
@@ -184,12 +182,10 @@ void GiveBall(entity plyr, entity ball)
 	plyr.(weaponentity).weapons = plyr.weapons;
 	plyr.(weaponentity).m_switchweapon = PS(plyr).m_weapon;
 	plyr.weapons = WEPSET(NEXBALL);
-	setself(plyr);
 	Weapon w = WEP_NEXBALL;
-	w.wr_resetplayer(w);
+	WITHSELF(plyr, w.wr_resetplayer(w));
 	PS(plyr).m_switchweapon = WEP_NEXBALL;
-	W_SwitchWeapon(plyr, WEP_NEXBALL);
-	setself(this);
+	WITHSELF(plyr, W_SwitchWeapon(plyr, WEP_NEXBALL));
 }
 
 void DropBall(entity ball, vector org, vector vel)
