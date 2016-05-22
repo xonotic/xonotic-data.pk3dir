@@ -822,7 +822,6 @@ void vehicles_exit(bool eject)
 		if (_vehicle.vehicle_flags & VHF_PLAYERSLOT)
 		{
 			_vehicle.vehicle_exit(eject);
-			setself(this);
 			vehicles_exit_running = false;
 			return;
 		}
@@ -1086,11 +1085,9 @@ void vehicles_enter(entity pl, entity veh)
 
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
-	setself(veh);
 	CSQCModel_UnlinkEntity(veh);
 	Vehicle info = Vehicles_from(veh.vehicleid);
-	info.vr_enter(info, veh);
-	setself(oldself);
+	WITHSELF(veh, info.vr_enter(info, veh));
 
 	antilag_clear(pl, CS(pl));
 }
