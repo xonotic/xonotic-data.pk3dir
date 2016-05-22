@@ -45,8 +45,8 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
     entity veh = player.vehicle;
     if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, player, weaponentity, true, autocvar_g_vehicle_raptor_bombs_refire)) {
-        if (veh) setself(veh);
-        raptor_bombdrop();
+        entity e = (veh) ? veh : player;
+        WITHSELF(e, raptor_bombdrop());
         weapon_thinkf(player, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }

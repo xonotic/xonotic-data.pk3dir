@@ -747,65 +747,51 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         entity oldself = self;
         if(self.gunner1)
         {
-            setself(self.gunner1);
-            oldself.gun1.vehicle_exit(VHEF_EJECT);
-            entity oldother = other;
-            other = self;
-            setself(oldself);
-            self.phase = 0;
-            self.touch();
-            other = oldother;
-            return;
+        	entity e = self.gunner1;
+        	WITHSELF(e, self.gun1.vehicle_exit(VHEF_EJECT));
+        	entity oldother = other;
+        	other = e;
+        	self.phase = 0;
+        	self.touch();
+        	other = oldother;
+        	return;
         }
 
         if(self.gunner2)
         {
-            setself(self.gunner2);
-            oldself.gun2.vehicle_exit(VHEF_EJECT);
-            entity oldother = other;
-            other = self;
-            setself(oldself);
-            self.phase = 0;
-            self.touch();
-            other = oldother;
+        	entity e = self.gunner2;
+        	WITHSELF(e, self.gun2.vehicle_exit(VHEF_EJECT));
+        	entity oldother = other;
+        	other = e;
+        	self.phase = 0;
+        	self.touch();
+        	other = oldother;
             return;
         }
     }
 }
 METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 {
-    SELFPARAM();
-    entity oldself = self;
-    setself(instance);
+	CSQCModel_UnlinkEntity(instance);
 
-    CSQCModel_UnlinkEntity(self);
+	// hide beam
+	if(instance.gun3.enemy || !wasfreed(instance.gun3.enemy))
+		instance.gun3.enemy.effects |= EF_NODRAW;
 
-    // Hide beam
-    if(self.gun3.enemy || !wasfreed(self.gun3.enemy))
-        self.gun3.enemy.effects |= EF_NODRAW;
+	if(instance.gunner1)
+		WITHSELF(instance.gunner1, instance.gun1.vehicle_exit(VHEF_EJECT));
 
-    if(self.gunner1)
-    {
-        setself(self.gunner1);
-        oldself.gun1.vehicle_exit(VHEF_EJECT);
-        setself(oldself);
-    }
+	if(instance.gunner2)
+		WITHSELF(instance.gunner2, instance.gun2.vehicle_exit(VHEF_EJECT));
 
-    if(self.gunner2)
-    {
-        setself(self.gunner2);
-        oldself.gun2.vehicle_exit(VHEF_EJECT);
-        setself(oldself);
-    }
+	WITHSELF(instance, instance.vehicle_exit(VHEF_EJECT));
 
-    self.vehicle_exit(VHEF_EJECT);
+    fixedmakevectors(instance.angles);
+    vehicle_tossgib(instance, instance.gun1, instance.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
+    vehicle_tossgib(instance, instance.gun2, instance.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 200);
+    vehicle_tossgib(instance, instance.gun3, instance.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
 
-    fixedmakevectors(self.angles);
-    vehicle_tossgib(instance, self.gun1, self.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
-    vehicle_tossgib(instance, self.gun2, self.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 200);
-    vehicle_tossgib(instance, self.gun3, self.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
-
-    entity _body = vehicle_tossgib(instance, self, self.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
+    entity _body = vehicle_tossgib(instance, instance, instance.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
     if(random() > 0.5)
         _body.touch = bumblebee_blowup;
@@ -815,29 +801,27 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     _body.think = bumblebee_diethink;
     _body.nextthink = time;
     _body.wait = time + 2 + (random() * 8);
-    _body.owner = self;
-    _body.enemy = self.enemy;
+    _body.owner = instance;
+    _body.enemy = instance.enemy;
     _body.scale = 1.5;
-    _body.angles = self.angles;
+    _body.angles = instance.angles;
 
-    Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation(self.origin, 16), '0 0 0', 1);
+    Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation(instance.origin, 16), '0 0 0', 1);
 
-    self.health			= 0;
-    self.event_damage	= func_null;
-    self.solid			= SOLID_NOT;
-    self.takedamage		= DAMAGE_NO;
-    self.deadflag		= DEAD_DYING;
-    self.movetype		= MOVETYPE_NONE;
-    self.effects		= EF_NODRAW;
-    self.colormod		= '0 0 0';
-    self.avelocity		= '0 0 0';
-    self.velocity		= '0 0 0';
-    self.touch 			= func_null;
-    self.nextthink 		= 0;
+    instance.health			= 0;
+    instance.event_damage	= func_null;
+    instance.solid			= SOLID_NOT;
+    instance.takedamage		= DAMAGE_NO;
+    instance.deadflag		= DEAD_DYING;
+    instance.movetype		= MOVETYPE_NONE;
+    instance.effects		= EF_NODRAW;
+    instance.colormod		= '0 0 0';
+    instance.avelocity		= '0 0 0';
+    instance.velocity		= '0 0 0';
+    instance.touch 			= func_null;
+    instance.nextthink 		= 0;
 
-    setorigin(self, self.pos1);
-
-    setself(oldself);
+    setorigin(instance, instance.pos1);
 }
 METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 {

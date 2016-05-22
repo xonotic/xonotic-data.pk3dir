@@ -103,10 +103,9 @@ void W_MineLayer_Stick(entity to)
 	newmine.flags = self.flags;
 
 	remove(self);
-	setself(newmine);
 
 	if(to)
-		SetMovetypeFollow(self, to);
+		SetMovetypeFollow(newmine, to);
 }
 
 void W_MineLayer_Explode()
@@ -125,16 +124,15 @@ void W_MineLayer_Explode()
 
 	if(PS(self.realowner).m_weapon == WEP_MINE_LAYER)
 	{
-		setself(self.realowner);
+		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, self))
+		if(!w.wr_checkammo1(w, own))
 		{
-			self.cnt = WEP_MINE_LAYER.m_id;
+			own.cnt = WEP_MINE_LAYER.m_id;
 			int slot = 0; // TODO: unhardcode
-			ATTACK_FINISHED(self, slot) = time;
-			PS(self).m_switchweapon = w_getbestweapon(self);
+			ATTACK_FINISHED(own, slot) = time;
+			PS(own).m_switchweapon = w_getbestweapon(own);
 		}
-		setself(this);
 	}
 	self.realowner.minelayer_mines -= 1;
 	remove(self);
@@ -152,18 +150,17 @@ void W_MineLayer_DoRemoteExplode()
 
 	if(PS(self.realowner).m_weapon == WEP_MINE_LAYER)
 	{
-		setself(self.realowner);
+		entity own = this.realowner;
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w, self))
+		if(!w.wr_checkammo1(w, own))
 		{
-			self.cnt = WEP_MINE_LAYER.m_id;
+			own.cnt = WEP_MINE_LAYER.m_id;
 			int slot = 0; // TODO: unhardcode
-			ATTACK_FINISHED(self, slot) = time;
-			PS(self).m_switchweapon = w_getbestweapon(self);
+			ATTACK_FINISHED(own, slot) = time;
+			PS(own).m_switchweapon = w_getbestweapon(own);
 		}
-		setself(this);
 	}
-	self.realowner.minelayer_mines -= 1;
+	this.realowner.minelayer_mines -= 1;
 	remove(self);
 }
 
