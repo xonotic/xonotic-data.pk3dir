@@ -76,8 +76,7 @@ void beam_think()
     self.nextthink = time + self.ticrate;
 
     self.owner.attack_finished_single[0] = time + frametime;
-    setself(self.owner);
-    FireImoBeam (   self.tur_shotorg,
+    FireImoBeam (   self.owner, self.tur_shotorg,
                     self.tur_shotorg + self.tur_shotdir_updated * self.target_range,
                     '-1 -1 -1' * self.shot_radius,
                     '1 1 1' * self.shot_radius,
@@ -85,7 +84,6 @@ void beam_think()
                     this.shot_dmg,
                     0.75,
                     DEATH_TURRET_PHASER.m_id);
-    setself(this);
     self.scale = vlen(self.owner.tur_shotorg - trace_endpos) / 256;
 
 }

@@ -850,16 +850,13 @@ void ons_DelayedControlPoint_Setup(entity this)
 	onslaught_updatelinks();
 
 	// captureshield setup
-	ons_CaptureShield_Spawn(self, false);
+	ons_CaptureShield_Spawn(this, false);
 
-	CSQCMODEL_AUTOINIT(self);
+	CSQCMODEL_AUTOINIT(this);
 }
 
 void ons_ControlPoint_Setup(entity cp)
-{SELFPARAM();
-	// declarations
-	setself(cp); // for later usage with droptofloor()
-
+{
 	// main setup
 	cp.ons_worldcpnext = ons_worldcplist; // link control point into ons_worldcplist
 	ons_worldcplist = cp;
@@ -892,14 +889,13 @@ void ons_ControlPoint_Setup(entity cp)
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
-		setself(cp);
-		droptofloor();
+		WITHSELF(cp, droptofloor());
 		cp.movetype = MOVETYPE_TOSS;
 	}
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(WP_Null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE);
-	WaypointSprite_UpdateRule(self.sprite, self.team, SPRITERULE_TEAMPLAY);
+	WaypointSprite_SpawnFixed(WP_Null, cp.origin + CPGEN_WAYPOINT_OFFSET, cp, sprite, RADARICON_NONE);
+	WaypointSprite_UpdateRule(cp.sprite, cp.team, SPRITERULE_TEAMPLAY);
 
 	InitializeEntity(cp, ons_DelayedControlPoint_Setup, INITPRIO_SETLOCATION);
 }
@@ -1098,10 +1094,9 @@ void onslaught_generator_touch()
 }
 
 void ons_GeneratorSetup(entity gen) // called when spawning a generator entity on the map as a spawnfunc
-{SELFPARAM();
+{
 	// declarations
 	int teamnumber = gen.team;
-	setself(gen); // for later usage with droptofloor()
 
 	// main setup
 	gen.ons_worldgeneratornext = ons_worldgeneratorlist; // link generator into ons_worldgeneratorlist
@@ -1131,14 +1126,13 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.colormap = 1024 + (teamnumber - 1) * 17;
 
 	// generator placement
-	setself(gen);
-	droptofloor();
+	WITHSELF(gen, droptofloor());
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(WP_Null, self.origin + CPGEN_WAYPOINT_OFFSET, self, sprite, RADARICON_NONE);
-	WaypointSprite_UpdateRule(self.sprite, self.team, SPRITERULE_TEAMPLAY);
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	WaypointSprite_SpawnFixed(WP_Null, gen.origin + CPGEN_WAYPOINT_OFFSET, gen, sprite, RADARICON_NONE);
+	WaypointSprite_UpdateRule(gen.sprite, gen.team, SPRITERULE_TEAMPLAY);
+	WaypointSprite_UpdateMaxHealth(gen.sprite, gen.max_health);
+	WaypointSprite_UpdateHealth(gen.sprite, gen.health);
 
 	InitializeEntity(gen, ons_DelayedGeneratorSetup, INITPRIO_SETLOCATION);
 }

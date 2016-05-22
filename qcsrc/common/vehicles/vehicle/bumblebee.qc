@@ -744,7 +744,6 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 
     if(!self.owner)
     {
-        entity oldself = self;
         if(self.gunner1)
         {
         	entity e = self.gunner1;

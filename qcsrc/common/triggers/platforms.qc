@@ -108,11 +108,10 @@ void plat_center_touch()
 		return;
 #endif
 
-	setself(self.enemy);
-	if (self.state == 2)
-		plat_go_up ();
-	else if (self.state == 1)
-		self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
+	if (self.enemy.state == 2)
+		WITHSELF(self.enemy, plat_go_up());
+	else if (self.enemy.state == 1)
+		self.enemy.SUB_NEXTTHINK = self.enemy.SUB_LTIME + 1;
 }
 
 void plat_outside_touch()
@@ -128,9 +127,8 @@ void plat_outside_touch()
 		return;
 #endif
 
-	setself(self.enemy);
-	if (self.state == 1)
-		plat_go_down ();
+	if (self.enemy.state == 1)
+		WITHSELF(self.enemy, plat_go_down());
 }
 
 void plat_trigger_use(entity this, entity actor, entity trigger)

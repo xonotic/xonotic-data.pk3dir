@@ -478,46 +478,43 @@ void vehicles_showwp_goaway()
 
 void vehicles_showwp()
 {SELFPARAM();
-	entity oldself = world;
 	vector rgb;
 
-	if(self.cnt)
+	entity ent = this;
+
+	if(ent.cnt)
 	{
-		self.think	  = vehicles_return;
-		self.nextthink  = self.cnt;
+		ent.think = vehicles_return;
+		ent.nextthink = ent.cnt;
 	}
 	else
 	{
-		self.think	  = vehicles_return;
-		self.nextthink  = time +1;
+		ent.think	  = vehicles_return;
+		ent.nextthink  = time + 1;
 
-		oldself = self;
-		setself(spawn());
-		setmodel(self, MDL_Null);
-		self.team = oldself.wp00.team;
-		self.wp00 = oldself.wp00;
-		setorigin(self, oldself.wp00.pos1);
+		ent = spawn();
+		setmodel(ent, MDL_Null);
+		ent.team = this.wp00.team;
+		ent.wp00 = this.wp00;
+		setorigin(ent, this.wp00.pos1);
 
-		self.nextthink = time + 5;
-		self.think = vehicles_showwp_goaway;
+		ent.nextthink = time + 5;
+		ent.think = vehicles_showwp_goaway;
 	}
 
-	if(teamplay && self.team)
-		rgb = Team_ColorRGB(self.team);
+	if(teamplay && ent.team)
+		rgb = Team_ColorRGB(ent.team);
 	else
 		rgb = '1 1 1';
-	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Vehicle);
+	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, ent, '0 0 64', world, 0, ent, waypointsprite_attached, true, RADARICON_Vehicle);
 	wp.colormod = rgb;
-	if(self.waypointsprite_attached)
+	if(ent.waypointsprite_attached)
 	{
-		WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
+		WaypointSprite_UpdateRule(ent.waypointsprite_attached, ent.wp00.team, SPRITERULE_DEFAULT);
 		if(this == NULL)
-			WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);
-		WaypointSprite_Ping(self.waypointsprite_attached);
+			WaypointSprite_UpdateBuildFinished(ent.waypointsprite_attached, ent.nextthink);
+		WaypointSprite_Ping(ent.waypointsprite_attached);
 	}
-
-	if(this)
-		setself(this);
 }
 
 void vehicles_setreturn(entity veh)

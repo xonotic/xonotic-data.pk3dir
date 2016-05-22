@@ -93,7 +93,6 @@ void SUB_CalcMoveDone ()
 .float platmovetype_turn;
 void SUB_CalcMove_controller_think ()
 {SELFPARAM();
-	entity oldself;
 	float traveltime;
 	float phasepos;
 	float nexttick;
@@ -143,11 +142,10 @@ void SUB_CalcMove_controller_think ()
 	else
 	{
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
-		oldself = self;
-		self.owner.SUB_THINK = self.think1;
-		setself(self.owner);
-		remove(oldself);
-		self.SUB_THINK();
+		entity own = self.owner;
+		own.SUB_THINK = self.think1;
+		remove(self);
+		WITHSELF(own, own.SUB_THINK());
 	}
 }
 
@@ -238,9 +236,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	self.SUB_NEXTTHINK = self.SUB_LTIME + traveltime;
 
 	// invoke controller
-	setself(controller);
-	self.think();
-	setself(self.owner);
+	WITHSELF(controller, controller.think());
 }
 
 void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)

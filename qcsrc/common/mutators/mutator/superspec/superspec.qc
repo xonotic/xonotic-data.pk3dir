@@ -104,49 +104,44 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 	FOREACH_CLIENT(true, LAMBDA(
 		if(!IS_SPEC(it) && !IS_OBSERVER(it))
 			continue;
-		setself(it);
-		if(self.superspec_flags & SSF_ITEMMSG)
-			if(superspec_filteritem(self, _item))
+		if(it.superspec_flags & SSF_ITEMMSG)
+			if(superspec_filteritem(it, _item))
 			{
-				if(self.superspec_flags & SSF_VERBOSE)
-					superspec_msg("", "", self, sprintf("Player %s^7 just picked up ^3%s\n", other.netname, _item.netname), 1);
+				if(it.superspec_flags & SSF_VERBOSE)
+					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n", other.netname, _item.netname), 1);
 				else
-					superspec_msg("", "", self, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", other.netname, _item.netname, _item.classname), 1);
-				if((self.autospec_flags & ASF_SSIM) && self.enemy != other)
+					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", other.netname, _item.netname, _item.classname), 1);
+				if((it.autospec_flags & ASF_SSIM) && it.enemy != other)
 				{
-					superspec_Spectate(other);
-
-					setself(this);
+					WITHSELF(it, superspec_Spectate(other));
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
 
-		if((self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
-			(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
-			(self.autospec_flags & ASF_MEGA_AR && _item.itemdef == ITEM_ArmorMega) ||
-			(self.autospec_flags & ASF_MEGA_HP && _item.itemdef == ITEM_HealthMega) ||
-			(self.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
+		if((it.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
+			(it.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
+			(it.autospec_flags & ASF_MEGA_AR && _item.itemdef == ITEM_ArmorMega) ||
+			(it.autospec_flags & ASF_MEGA_HP && _item.itemdef == ITEM_HealthMega) ||
+			(it.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
 		{
 
-			if((self.enemy != other) || IS_OBSERVER(self))
+			if((it.enemy != other) || IS_OBSERVER(it))
 			{
-				if(self.autospec_flags & ASF_OBSERVER_ONLY && !IS_OBSERVER(self))
+				if(it.autospec_flags & ASF_OBSERVER_ONLY && !IS_OBSERVER(it))
 				{
-					if(self.superspec_flags & SSF_VERBOSE)
-						superspec_msg("", "", self, sprintf("^8Ignored that ^7%s^8 grabbed %s^8 since the observer_only option is ON\n", other.netname, _item.netname), 2);
+					if(it.superspec_flags & SSF_VERBOSE)
+						superspec_msg("", "", it, sprintf("^8Ignored that ^7%s^8 grabbed %s^8 since the observer_only option is ON\n", other.netname, _item.netname), 2);
 				}
 				else
 				{
-					if(self.autospec_flags & ASF_SHOWWHAT)
-						superspec_msg("", "", self, sprintf("^7Following %s^7 due to picking up %s\n", other.netname, _item.netname), 2);
+					if(it.autospec_flags & ASF_SHOWWHAT)
+						superspec_msg("", "", it, sprintf("^7Following %s^7 due to picking up %s\n", other.netname, _item.netname), 2);
 
-					superspec_Spectate(other);
+					WITHSELF(it, superspec_Spectate(other));
 				}
 			}
 		}
 	));
-
-	setself(this);
 
 	return MUT_ITEMTOUCH_CONTINUE;
 }
@@ -442,17 +437,15 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 {
     SELFPARAM();
 	FOREACH_CLIENT(IS_SPEC(it), LAMBDA(
-		setself(it);
-		if(self.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && self.enemy == frag_target)
+		if(it.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && it.enemy == frag_target)
 		{
-			if(self.autospec_flags & ASF_SHOWWHAT)
-				superspec_msg("", "", self, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
+			if(it.autospec_flags & ASF_SHOWWHAT)
+				superspec_msg("", "", it, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
 
-			superspec_Spectate(frag_attacker);
+			WITHSELF(it, superspec_Spectate(frag_attacker));
 		}
 	));
 
-	setself(frag_target);
 	return false;
 }
 

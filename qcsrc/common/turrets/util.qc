@@ -20,10 +20,10 @@ float turret_tag_fire_update()
 /*
 * Railgun-like beam, but has thickness and suppots slowing of target
 */
-void FireImoBeam (vector start, vector end, vector smin, vector smax,
+void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax,
 				  float bforce, float f_dmg, float f_velfactor, int deathtype)
 
-{SELFPARAM();
+{
 	vector hitloc, force, endpoint, dir;
 	entity ent;
 
@@ -37,7 +37,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 	// note down which entities were hit so we can damage them later
 	while (1)
 	{
-		tracebox(start, smin, smax, end, false, self);
+		tracebox(start, smin, smax, end, false, this);
 
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
@@ -81,7 +81,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 		// apply the damage
 		if (ent.takedamage)
 		{
-			Damage (ent, self, self, f_dmg, deathtype, hitloc, force);
+			Damage (ent, this, this, f_dmg, deathtype, hitloc, force);
 			ent.velocity = ent.velocity * f_velfactor;
 			//ent.alpha = 0.25 + random() * 0.75;
 		}
