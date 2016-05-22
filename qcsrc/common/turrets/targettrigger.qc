@@ -3,26 +3,13 @@ void turret_targettrigger_touch();
 
 void turret_targettrigger_touch()
 {SELFPARAM();
-    entity e;
-    if (self.cnt > time) return;
-    entity oldself = this;
-
-    e = find(world, targetname, self.target);
-    while (e)
-    {
-        if (e.turret_flags & TUR_FLAG_RECIEVETARGETS)
-        {
-            setself(e);
-            if(e.turret_addtarget)
-                e.turret_addtarget(other,oldself);
-        }
-
-        e = find(e, targetname, oldself.target);
-    }
-
-    oldself.cnt = time + 0.5;
-
-    setself(this);
+    if (this.cnt > time) return;
+    FOREACH_ENTITY_STRING_ORDERED(targetname, this.target, {
+        if (!(it.turret_flags & TUR_FLAG_RECIEVETARGETS)) continue;
+        if (!it.turret_addtarget) continue;
+        WITHSELF(it, it.turret_addtarget(other, this));
+    });
+    this.cnt = time + 0.5;
 }
 
 /*QUAKED turret_targettrigger (.5 .5 .5) ?

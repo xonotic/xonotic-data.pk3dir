@@ -499,39 +499,33 @@ entity turret_projectile(Sound _snd, float _size, float _health, float _death, f
 ** and updated aim<->predict impact distance.
 **/
 void turret_do_updates(entity t_turret)
-{SELFPARAM();
-	vector enemy_pos;
+{
+	vector enemy_pos = real_origin(t_turret.enemy);
 
-	setself(t_turret);
+	WITHSELF(t_turret, turret_tag_fire_update());
 
-	enemy_pos = real_origin(self.enemy);
+	t_turret.tur_shotdir_updated = v_forward;
+	t_turret.tur_dist_enemy = vlen(t_turret.tur_shotorg - enemy_pos);
+	t_turret.tur_dist_aimpos = vlen(t_turret.tur_shotorg - t_turret.tur_aimpos);
 
-	turret_tag_fire_update();
-
-	self.tur_shotdir_updated = v_forward;
-	self.tur_dist_enemy = vlen(self.tur_shotorg - enemy_pos);
-	self.tur_dist_aimpos = vlen(self.tur_shotorg - self.tur_aimpos);
-
-	/*if((self.firecheck_flags & TFL_FIRECHECK_VERIFIED) && (self.enemy))
+	/*if((t_turret.firecheck_flags & TFL_FIRECHECK_VERIFIED) && (t_turret.enemy))
 	{
-		oldpos = self.enemy.origin;
-		setorigin(self.enemy, self.tur_aimpos);
-		tracebox(self.tur_shotorg, '-1 -1 -1', '1 1 1', self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos), MOVE_NORMAL,self);
-		setorigin(self.enemy, oldpos);
+		oldpos = t_turret.enemy.origin;
+		setorigin(t_turret.enemy, t_turret.tur_aimpos);
+		tracebox(t_turret.tur_shotorg, '-1 -1 -1', '1 1 1', t_turret.tur_shotorg + (t_turret.tur_shotdir_updated * t_turret.tur_dist_aimpos), MOVE_NORMAL,t_turret);
+		setorigin(t_turret.enemy, oldpos);
 
-		if(trace_ent == self.enemy)
-			self.tur_dist_impact_to_aimpos = 0;
+		if(trace_ent == t_turret.enemy)
+			t_turret.tur_dist_impact_to_aimpos = 0;
 		else
-			self.tur_dist_impact_to_aimpos = vlen(trace_endpos - self.tur_aimpos);
+			t_turret.tur_dist_impact_to_aimpos = vlen(trace_endpos - t_turret.tur_aimpos);
 	}
 	else*/
-		tracebox(self.tur_shotorg, '-1 -1 -1','1 1 1', self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos), MOVE_NORMAL,self);
+		tracebox(t_turret.tur_shotorg, '-1 -1 -1','1 1 1', t_turret.tur_shotorg + (t_turret.tur_shotdir_updated * t_turret.tur_dist_aimpos), MOVE_NORMAL,t_turret);
 
-	self.tur_dist_impact_to_aimpos = vlen(trace_endpos - self.tur_aimpos) - (vlen(self.enemy.maxs - self.enemy.mins) * 0.5);
-	self.tur_impactent			 = trace_ent;
-	self.tur_impacttime			= vlen(self.tur_shotorg - trace_endpos) / self.shot_speed;
-
-	setself(this);
+	t_turret.tur_dist_impact_to_aimpos = vlen(trace_endpos - t_turret.tur_aimpos) - (vlen(t_turret.enemy.maxs - t_turret.enemy.mins) * 0.5);
+	t_turret.tur_impactent			 = trace_ent;
+	t_turret.tur_impacttime			= vlen(t_turret.tur_shotorg - trace_endpos) / t_turret.shot_speed;
 }
 
 /**
