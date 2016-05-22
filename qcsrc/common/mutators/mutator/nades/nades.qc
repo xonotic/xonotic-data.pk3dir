@@ -84,7 +84,7 @@ MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 	}
 	self.colormod = nade_type.m_color;
 	self.move_movetype = MOVETYPE_BOUNCE;
-	self.move_touch = func_null;
+	settouch(self, func_null);
 	self.scale = 1.5;
 	self.avelocity = randomvec() * 720;
 

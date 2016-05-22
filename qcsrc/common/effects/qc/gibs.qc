@@ -182,9 +182,9 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	gib.draw = Gib_Draw;
 	if(destroyontouch)
-		gib.move_touch = Gib_Touch;
+		settouch(gib, Gib_Touch);
 	else
-		gib.move_touch = SUB_RemoveOnNoImpact;
+		settouch(gib, SUB_RemoveOnNoImpact);
 
 	// don't spawn gibs inside solid - just don't
 	if(org != safeorg)

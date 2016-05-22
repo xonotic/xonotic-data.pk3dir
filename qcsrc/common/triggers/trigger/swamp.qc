@@ -148,7 +148,7 @@ NET_HANDLE(ENT_CLIENT_SWAMP, bool isnew)
 
 	this.classname = "trigger_swamp";
 	this.solid = SOLID_TRIGGER;
-	this.move_touch = swamp_touch;
+	settouch(this, swamp_touch);
 	this.drawmask = MASK_NORMAL;
 	this.move_time = time;
 	this.entremove = trigger_remove_generic;

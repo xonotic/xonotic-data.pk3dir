@@ -75,7 +75,7 @@ NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
 	trigger_common_read(this, false);
 
 	this.solid = SOLID_TRIGGER;
-	this.move_touch = func_ladder_touch;
+	settouch(this, func_ladder_touch);
 	this.drawmask = MASK_NORMAL;
 	this.move_time = time;
 	this.entremove = func_ladder_remove;

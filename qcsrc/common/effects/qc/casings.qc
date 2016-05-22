@@ -156,7 +156,7 @@ NET_HANDLE(casings, bool isNew)
     casing.move_angles = casing.angles;
     casing.move_avelocity = '0 250 0' + 100 * prandomvec();
     casing.move_movetype = MOVETYPE_BOUNCE;
-    casing.move_touch = Casing_Touch;
+    settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;
     casing.solid = SOLID_TRIGGER;

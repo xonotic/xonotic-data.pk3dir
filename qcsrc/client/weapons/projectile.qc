@@ -337,7 +337,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		this.mins = '0 0 0';
 		this.maxs = '0 0 0';
 		this.colormod = '0 0 0';
-		this.move_touch = SUB_Stop_self;
+		settouch(this, SUB_Stop_self);
 		this.move_movetype = MOVETYPE_TOSS;
 		this.alphamod = 1;
 
@@ -349,7 +349,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.mins = '0 0 -4';
 				this.maxs = '0 0 -4';
 				this.move_movetype = MOVETYPE_BOUNCE;
-				this.move_touch = func_null;
+				settouch(this, func_null);
 				this.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
 				this.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
 				break;
@@ -367,7 +367,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.mins = '-3 -3 -3';
 				this.maxs = '3 3 3';
 				this.move_movetype = MOVETYPE_BOUNCE;
-				this.move_touch = func_null;
+				settouch(this, func_null);
 				this.move_bounce_factor = WEP_CVAR(mortar, bouncefactor);
 				this.move_bounce_stopspeed = WEP_CVAR(mortar, bouncestop);
 				break;
@@ -385,21 +385,21 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 				this.colormod = '2 1 1';
 				this.alphamod = 0.5;
 				this.move_movetype = MOVETYPE_BOUNCE;
-				this.move_touch = func_null;
+				settouch(this, func_null);
 				break;
 			case PROJECTILE_PORTO_BLUE:
 				this.colormod = '1 1 2';
 				this.alphamod = 0.5;
 				this.move_movetype = MOVETYPE_BOUNCE;
-				this.move_touch = func_null;
+				settouch(this, func_null);
 				break;
 			case PROJECTILE_HAGAR_BOUNCING:
 				this.move_movetype = MOVETYPE_BOUNCE;
-				this.move_touch = func_null;
+				settouch(this, func_null);
 				break;
 			case PROJECTILE_CRYLINK_BOUNCING:
 				this.move_movetype = MOVETYPE_BOUNCE;
-				this.move_touch = func_null;
+				settouch(this, func_null);
 				break;
 			case PROJECTILE_FIREBALL:
 				loopsound(this, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
@@ -409,7 +409,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 			case PROJECTILE_FIREMINE:
 				loopsound(this, CH_SHOTS_SINGLE, SND(FIREBALL_FLY), VOL_BASE, ATTEN_NORM);
 				this.move_movetype = MOVETYPE_BOUNCE;
-				this.move_touch = func_null;
+				settouch(this, func_null);
 				this.mins = '-4 -4 -4';
 				this.maxs = '4 4 4';
 				break;

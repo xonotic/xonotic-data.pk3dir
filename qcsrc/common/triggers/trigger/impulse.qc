@@ -231,8 +231,8 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 	this.entremove = trigger_remove_generic;
 	this.move_time = time;
 
-	if(this.radius) { this.move_touch = trigger_impulse_touch3; }
-	else if(this.target) { this.move_touch = trigger_impulse_touch1; }
-	else { this.move_touch = trigger_impulse_touch2; }
+	if (this.radius) { settouch(this, trigger_impulse_touch3); }
+	else if (this.target) { settouch(this, trigger_impulse_touch1); }
+	else { settouch(this, trigger_impulse_touch2); }
 }
 #endif
