@@ -45,14 +45,20 @@
     #define WITHSELF(value, block) block
 #endif
 
-.void(entity this) selftouch;
-void touch_self() { SELFPARAM(); this.selftouch(this); }
-#define settouch(e, f) (e.touch = touch_self, e.selftouch = f)
+#define SELFWRAP(T, R) \
+    [[alias(#T)]] .R() __##T; \
+    .R(entity this) self##T; \
+    R T##_self() { SELFPARAM(); return this.self##T(this); }
 
-//.void(entity this) selfuse;
-//void use_self() { SELFPARAM(); this.selfuse(this); }
-//#define setuse(e, f) (e.use = use_self, e.selfuse = f)
+noref entity _selftemp;
+#define SELFWRAP_SET(T, e, f) \
+    (_selftemp = (e), _selftemp.__##T = T##_self, _selftemp.self##T = f)
 
-.void(entity this) selfthink;
-void think_self() { SELFPARAM(); this.selfthink(this); }
-#define setthink(e, f) (e.think = think_self, e.selfthink = f)
+SELFWRAP(think, void)
+#define setthink(e, f) SELFWRAP_SET(think, e, f)
+
+SELFWRAP(touch, void)
+#define settouch(e, f) SELFWRAP_SET(touch, e, f)
+
+SELFWRAP(predraw, void)
+#define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
