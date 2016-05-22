@@ -943,10 +943,8 @@ void ctf_FlagThink()
 				self.health = 0;
 				ctf_CheckFlagReturn(self, RETURN_SPEEDRUN);
 
-				setself(self.owner);
-				self.impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
-				ImpulseCommands(self);
-				setself(this);
+				self.owner.impulse = CHIMPULSE_SPEEDRUN.impulse; // move the player back to the waypoint they set
+				ImpulseCommands(self.owner);
 			}
 			if(autocvar_g_ctf_stalemate)
 			{
@@ -1188,9 +1186,6 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 
 void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {
-	// declarations
-	setself(flag); // for later usage with droptofloor()
-
 	// main setup
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
 	ctf_worldflaglist = flag;
@@ -1290,8 +1285,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{
 		flag.noalign = false;
-		setself(flag);
-		droptofloor();
+		WITHSELF(flag, droptofloor());
 		flag.movetype = MOVETYPE_TOSS;
 	}
 

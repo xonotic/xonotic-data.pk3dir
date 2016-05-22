@@ -895,13 +895,13 @@ METHOD(BallStealer, wr_setup, void(BallStealer this))
     //weapon_setup(WEP_PORTO.m_id);
 }
 
-METHOD(BallStealer, wr_checkammo1, bool(BallStealer this))
+METHOD(BallStealer, wr_checkammo1, bool(BallStealer this, entity actor))
 {
     TC(BallStealer, this);
     return true;
 }
 
-METHOD(BallStealer, wr_checkammo2, bool(BallStealer this))
+METHOD(BallStealer, wr_checkammo2, bool(BallStealer this, entity actor))
 {
     TC(BallStealer, this);
     return true;

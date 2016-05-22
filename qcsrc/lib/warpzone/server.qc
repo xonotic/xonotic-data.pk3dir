@@ -206,7 +206,7 @@ void WarpZone_Touch ()
 #endif
 		return;
 
-	if(WarpZoneLib_ExactTrigger_Touch())
+	if(WarpZoneLib_ExactTrigger_Touch(self, other))
 		return;
 
 #ifdef SVQC
@@ -866,24 +866,23 @@ void WarpZone_StartFrame()
 
 			// warpzones
 			if (warpzone_warpzones_exist) {
-				setself(WarpZone_Find(it.origin + it.mins, it.origin + it.maxs));
-				if (self)
-				if (!WarpZoneLib_ExactTrigger_Touch())
-				if (WarpZone_PlaneDist(self, it.origin + it.view_ofs) <= 0)
-					WarpZone_Teleport(self, it, -1, 0); // NOT triggering targets by this!
+				entity e = WarpZone_Find(it.origin + it.mins, it.origin + it.maxs);
+				if (e)
+				if (!WarpZoneLib_ExactTrigger_Touch(e, other))
+				if (WarpZone_PlaneDist(e, it.origin + it.view_ofs) <= 0)
+					WarpZone_Teleport(e, it, -1, 0); // NOT triggering targets by this!
 			}
 
 			// teleporters
 			if(other.teleportable)
 			{
-				setself(Teleport_Find(it.origin + it.mins, it.origin + it.maxs));
-				if (self)
-				if (!WarpZoneLib_ExactTrigger_Touch())
-					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
+				entity ent = Teleport_Find(it.origin + it.mins, it.origin + it.maxs);
+				if (ent)
+				if (!WarpZoneLib_ExactTrigger_Touch(ent, other))
+					Simple_TeleportPlayer(ent, other); // NOT triggering targets by this!
 			}
 		}
 	});
-	setself(this);
 	other = oldother;
 }
 

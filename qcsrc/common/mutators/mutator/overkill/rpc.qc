@@ -178,15 +178,14 @@ METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .en
     }
 }
 
-METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep))
+METHOD(RocketPropelledChainsaw, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
-    ammo_amount += self.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(rpc, ammo);
+    ammo_amount += actor.(weapon_load[WEP_RPC.m_id]) >= WEP_CVAR(rpc, ammo);
     return ammo_amount;
 }
 
-METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep))
+METHOD(RocketPropelledChainsaw, wr_checkammo2, bool(entity thiswep, entity actor))
 {
     return false;
 }

@@ -496,15 +496,14 @@ MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(dom, reset_map_players)
-{SELFPARAM();
+{
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		setself(it);
-		PutClientInServer();
+		WITHSELF(it, PutClientInServer());
 		if(domination_roundbased)
-			self.player_blocked = 1;
-		if(IS_REAL_CLIENT(self))
-			set_dom_state(self);
+			it.player_blocked = 1;
+		if(IS_REAL_CLIENT(it))
+			set_dom_state(it);
 	));
 	return 1;
 }
@@ -630,41 +629,38 @@ void ScoreRules_dom(float teams)
 
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, Sound capsound, string capnarration, string capmessage)
-{SELFPARAM();
+{
     TC(Sound, capsound);
-	setself(spawn());
-	self.classname = "dom_team";
-	self.netname = strzone(teamname);
-	self.cnt = teamcolor;
-	self.model = pointmodel;
-	self.skin = pointskin;
-	self.noise = strzone(Sound_fixpath(capsound));
-	self.noise1 = strzone(capnarration);
-	self.message = strzone(capmessage);
+    entity e = new_pure(dom_team);
+	e.netname = strzone(teamname);
+	e.cnt = teamcolor;
+	e.model = pointmodel;
+	e.skin = pointskin;
+	e.noise = strzone(Sound_fixpath(capsound));
+	e.noise1 = strzone(capnarration);
+	e.message = strzone(capmessage);
 
 	// this code is identical to spawnfunc_dom_team
-	_setmodel(self, self.model); // precision not needed
-	self.mdl = self.model;
-	self.dmg = self.modelindex;
-	self.model = "";
-	self.modelindex = 0;
+	_setmodel(e, e.model); // precision not needed
+	e.mdl = e.model;
+	e.dmg = e.modelindex;
+	e.model = "";
+	e.modelindex = 0;
 	// this would have to be changed if used in quakeworld
-	self.team = self.cnt + 1;
+	e.team = e.cnt + 1;
 
-	//eprint(self);
-	setself(this);
+	//eprint(e);
 }
 
 void self_spawnfunc_dom_controlpoint() { SELFPARAM(); spawnfunc_dom_controlpoint(self); }
 void dom_spawnpoint(vector org)
-{SELFPARAM();
-	setself(spawn());
-	self.classname = "dom_controlpoint";
-	self.think = self_spawnfunc_dom_controlpoint;
-	self.nextthink = time;
-	setorigin(self, org);
-	spawnfunc_dom_controlpoint(this);
-	setself(this);
+{
+	entity e = spawn();
+	e.classname = "dom_controlpoint";
+	e.think = self_spawnfunc_dom_controlpoint;
+	e.nextthink = time;
+	setorigin(e, org);
+	spawnfunc_dom_controlpoint(e);
 }
 
 // spawn some default teams if the map is not set up for domination

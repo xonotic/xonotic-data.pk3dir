@@ -461,8 +461,8 @@ METHOD(Tuba, wr_reload, void(Tuba this, entity actor, .entity weaponentity))
 #ifdef SVQC
 
 // infinite ammo
-METHOD(Tuba, wr_checkammo1, bool(Tuba this)) { return true; }
-METHOD(Tuba, wr_checkammo2, bool(Tuba this)) { return true; }
+METHOD(Tuba, wr_checkammo1, bool(Tuba this, entity actor)) { return true; }
+METHOD(Tuba, wr_checkammo2, bool(Tuba this, entity actor)) { return true; }
 
 METHOD(Tuba, wr_suicidemessage, Notification(Tuba this))
 {

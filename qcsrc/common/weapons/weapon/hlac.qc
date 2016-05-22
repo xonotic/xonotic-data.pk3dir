@@ -171,7 +171,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
-		if(!thiswep.wr_checkammo1(thiswep))
+		if(!thiswep.wr_checkammo1(thiswep, actor))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -235,18 +235,16 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         }
     }
 }
-METHOD(HLAC, wr_checkammo1, bool(entity thiswep))
+METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(hlac, ammo);
-    ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hlac, ammo);
+    ammo_amount += actor.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
     return ammo_amount;
 }
-METHOD(HLAC, wr_checkammo2, bool(entity thiswep))
+METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(hlac, ammo);
-    ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hlac, ammo);
+    ammo_amount += actor.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
     return ammo_amount;
 }
 METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))

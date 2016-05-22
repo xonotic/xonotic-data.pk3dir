@@ -621,7 +621,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                 setorigin(linkjoineffect, pos);
             }
             actor.crylink_waitrelease = 0;
-            if(!thiswep.wr_checkammo1(thiswep) && !thiswep.wr_checkammo2(thiswep))
+            if(!thiswep.wr_checkammo1(thiswep, actor) && !thiswep.wr_checkammo2(thiswep, actor))
             if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
             {
                 // ran out of ammo!
@@ -631,26 +631,24 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         }
     }
 }
-METHOD(Crylink, wr_checkammo1, bool(entity thiswep))
+METHOD(Crylink, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     // don't "run out of ammo" and switch weapons while waiting for release
-    if(self.crylink_lastgroup && self.crylink_waitrelease)
+    if(actor.crylink_lastgroup && actor.crylink_waitrelease)
         return true;
 
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
-    ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(crylink, ammo);
+    ammo_amount += actor.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_PRI(crylink, ammo);
     return ammo_amount;
 }
-METHOD(Crylink, wr_checkammo2, bool(entity thiswep))
+METHOD(Crylink, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     // don't "run out of ammo" and switch weapons while waiting for release
-    if(self.crylink_lastgroup && self.crylink_waitrelease)
+    if(actor.crylink_lastgroup && actor.crylink_waitrelease)
         return true;
 
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
-    ammo_amount += self.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(crylink, ammo);
+    ammo_amount += actor.(weapon_load[WEP_CRYLINK.m_id]) >= WEP_CVAR_SEC(crylink, ammo);
     return ammo_amount;
 }
 METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))

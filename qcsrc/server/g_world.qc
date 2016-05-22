@@ -2049,13 +2049,12 @@ float RedirectionThink()
 
 	clients_found = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
-		setself(it);
 		// TODO add timer
-		LOG_INFO("Redirecting: sending connect command to ", self.netname, "\n");
+		LOG_INFO("Redirecting: sending connect command to ", it.netname, "\n");
 		if(redirection_target == "self")
-			stuffcmd(self, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
+			stuffcmd(it, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
-			stuffcmd(self, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
+			stuffcmd(it, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
 	));
 

@@ -198,7 +198,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 // alternate secondary weapon frames
 void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!thiswep.wr_checkammo2(thiswep))
+	if (!thiswep.wr_checkammo2(thiswep, actor))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -212,7 +212,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if (!thiswep.wr_checkammo2(thiswep))
+	if (!thiswep.wr_checkammo2(thiswep, actor))
 	if (!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -285,26 +285,24 @@ METHOD(Shotgun, wr_setup, void(entity thiswep))
     SELFPARAM();
     self.ammo_field = ammo_none;
 }
-METHOD(Shotgun, wr_checkammo1, bool(entity thiswep))
+METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-    ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
+    ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
     return ammo_amount;
 }
-METHOD(Shotgun, wr_checkammo2, bool(entity thiswep))
+METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    if(IS_BOT_CLIENT(self))
-    if(vdist(self.origin - self.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
+    if(IS_BOT_CLIENT(actor))
+    if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR_SEC(shotgun, melee_range)))
         return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
     switch(WEP_CVAR(shotgun, secondary))
     {
         case 1: return true; // melee does not use ammo
         case 2: // secondary triple shot
         {
-            float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
-            ammo_amount += self.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
+            float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(shotgun, ammo);
+            ammo_amount += actor.(weapon_load[WEP_SHOTGUN.m_id]) >= WEP_CVAR_PRI(shotgun, ammo);
             return ammo_amount;
         }
         default: return false; // secondary unavailable

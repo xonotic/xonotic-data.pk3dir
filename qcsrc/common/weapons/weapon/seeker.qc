@@ -423,42 +423,41 @@ void W_Seeker_Vollycontroller_Think() // TODO: Merge this with W_Seeker_Attack
 {SELFPARAM();
 	float c;
 	entity oldenemy;
-	self.cnt = self.cnt - 1;
+	this.cnt = this.cnt - 1;
 
 	Weapon thiswep = WEP_SEEKER;
-	if((!(self.realowner.items & IT_UNLIMITED_AMMO) && self.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (self.cnt <= -1) || (IS_DEAD(self.realowner)) || (PS(self.realowner).m_switchweapon != WEP_SEEKER))
+	if((!(this.realowner.items & IT_UNLIMITED_AMMO) && this.realowner.(thiswep.ammo_field) < WEP_CVAR(seeker, missile_ammo)) || (this.cnt <= -1) || (IS_DEAD(this.realowner)) || (PS(this.realowner).m_switchweapon != WEP_SEEKER))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
-	self.nextthink = time + WEP_CVAR(seeker, missile_delay) * W_WeaponRateFactor();
+	this.nextthink = time + WEP_CVAR(seeker, missile_delay) * W_WeaponRateFactor();
 
-	setself(self.realowner);
+	entity own = this.realowner;
 
-	oldenemy = self.enemy;
-	self.enemy = this.enemy;
+	oldenemy = own.enemy;
+	own.enemy = this.enemy;
 
-	c = self.cnt % 4;
+	c = own.cnt % 4;
 	switch(c)
 	{
 		case 0:
-			W_Seeker_Fire_Missile(WEP_SEEKER, '-1.25 -3.75 0', self.enemy);
+			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, '-1.25 -3.75 0', own.enemy));
 			break;
 		case 1:
-			W_Seeker_Fire_Missile(WEP_SEEKER, '+1.25 -3.75 0', self.enemy);
+			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, '+1.25 -3.75 0', own.enemy));
 			break;
 		case 2:
-			W_Seeker_Fire_Missile(WEP_SEEKER, '-1.25 +3.75 0', self.enemy);
+			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, '-1.25 +3.75 0', own.enemy));
 			break;
 		case 3:
 		default:
-			W_Seeker_Fire_Missile(WEP_SEEKER, '+1.25 +3.75 0', self.enemy);
+			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, '+1.25 +3.75 0', own.enemy));
 			break;
 	}
 
-	self.enemy = oldenemy;
-	setself(this);
+	own.enemy = oldenemy;
 }
 
 void W_Seeker_Tracker_Think()
@@ -658,35 +657,33 @@ METHOD(Seeker, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         }
     }
 }
-METHOD(Seeker, wr_checkammo1, bool(entity thiswep))
+METHOD(Seeker, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, missile_ammo);
-        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, missile_ammo);
+        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, missile_ammo);
     }
     else
     {
-        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     return ammo_amount;
 }
-METHOD(Seeker, wr_checkammo2, bool(entity thiswep))
+METHOD(Seeker, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     float ammo_amount;
     if(WEP_CVAR(seeker, type) == 1)
     {
-        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
-        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, tag_ammo);
+        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, tag_ammo);
     }
     else
     {
-        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(seeker, flac_ammo);
-        ammo_amount += self.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(seeker, flac_ammo);
+        ammo_amount += actor.(weapon_load[WEP_SEEKER.m_id]) >= WEP_CVAR(seeker, flac_ammo);
     }
     return ammo_amount;
 }

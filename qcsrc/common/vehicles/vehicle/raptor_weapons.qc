@@ -30,10 +30,9 @@ METHOD(RaptorCannon, wr_think, void(entity thiswep, entity actor, .entity weapon
         weapon_thinkf(player, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
 }
-METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep)) {
-    SELFPARAM();
-    bool isPlayer = IS_PLAYER(self);
-    entity player = isPlayer ? self : self.owner;
+METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep, entity actor)) {
+    bool isPlayer = IS_PLAYER(actor);
+    entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_raptor_cannon_cost;
 }

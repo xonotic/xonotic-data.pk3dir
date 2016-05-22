@@ -326,21 +326,19 @@ METHOD(Vortex, wr_setup, void(entity thiswep))
     SELFPARAM();
     self.vortex_lasthit = 0;
 }
-METHOD(Vortex, wr_checkammo1, bool(entity thiswep))
+METHOD(Vortex, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
-    ammo_amount += (autocvar_g_balance_vortex_reload_ammo && self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(vortex, ammo);
+    ammo_amount += (autocvar_g_balance_vortex_reload_ammo && actor.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_PRI(vortex, ammo));
     return ammo_amount;
 }
-METHOD(Vortex, wr_checkammo2, bool(entity thiswep))
+METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     if(WEP_CVAR(vortex, secondary))
     {
         // don't allow charging if we don't have enough ammo
-        float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vortex, ammo);
-        ammo_amount += self.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
+        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(vortex, ammo);
+        ammo_amount += actor.(weapon_load[WEP_VORTEX.m_id]) >= WEP_CVAR_SEC(vortex, ammo);
         return ammo_amount;
     }
     else

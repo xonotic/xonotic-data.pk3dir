@@ -374,7 +374,7 @@ void W_Arc_Beam_Think()
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		setself(self.owner);
 		Weapon w = WEP_ARC;
-		if(!w.wr_checkammo1(w) && !w.wr_checkammo2(w))
+		if(!w.wr_checkammo1(w, self) && !w.wr_checkammo2(w, self))
 		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			// note: this doesn't force the switch
@@ -831,23 +831,21 @@ METHOD(Arc, wr_init, void(entity thiswep))
         arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
     }
 }
-METHOD(Arc, wr_checkammo1, bool(entity thiswep))
+METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    return ((!WEP_CVAR(arc, beam_ammo)) || (self.(thiswep.ammo_field) > 0));
+    return ((!WEP_CVAR(arc, beam_ammo)) || (actor.(thiswep.ammo_field) > 0));
 }
-METHOD(Arc, wr_checkammo2, bool(entity thiswep))
+METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     if(WEP_CVAR(arc, bolt))
     {
-        float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(arc, bolt_ammo);
-        ammo_amount += self.(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(arc, bolt_ammo);
+        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(arc, bolt_ammo);
+        ammo_amount += actor.(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(arc, bolt_ammo);
         return ammo_amount;
     }
     else
         return WEP_CVAR(arc, overheat_max) > 0 &&
-            ((!WEP_CVAR(arc, burst_ammo)) || (self.(thiswep.ammo_field) > 0));
+            ((!WEP_CVAR(arc, burst_ammo)) || (actor.(thiswep.ammo_field) > 0));
 }
 METHOD(Arc, wr_killmessage, Notification(entity thiswep))
 {

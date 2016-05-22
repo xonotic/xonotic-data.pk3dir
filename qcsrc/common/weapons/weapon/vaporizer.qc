@@ -432,21 +432,19 @@ METHOD(Vaporizer, wr_setup, void(entity thiswep))
     self.ammo_field = (thiswep.ammo_field);
     self.vaporizer_lasthit = 0;
 }
-METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep))
+METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     float vaporizer_ammo = ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo));
-    float ammo_amount = self.(thiswep.ammo_field) >= vaporizer_ammo;
-    ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
+    float ammo_amount = actor.(thiswep.ammo_field) >= vaporizer_ammo;
+    ammo_amount += actor.(weapon_load[WEP_VAPORIZER.m_id]) >= vaporizer_ammo;
     return ammo_amount;
 }
-METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep))
+METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     if(!WEP_CVAR_SEC(vaporizer, ammo))
         return true;
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_SEC(vaporizer, ammo);
-    ammo_amount += self.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(vaporizer, ammo);
+    ammo_amount += actor.(weapon_load[WEP_VAPORIZER.m_id]) >= WEP_CVAR_SEC(vaporizer, ammo);
     return ammo_amount;
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep))

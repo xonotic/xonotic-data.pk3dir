@@ -213,8 +213,8 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
     SELFPARAM();
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
-	if (secondary) WITHSELF(actor, ammo = thiswep.wr_checkammo2(thiswep));
-	else WITHSELF(actor, ammo = thiswep.wr_checkammo1(thiswep));
+	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor);
+	else ammo = thiswep.wr_checkammo1(thiswep, actor);
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
@@ -232,8 +232,8 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 
 	// check if the other firing mode has enough ammo
 	bool ammo_other = false;
-	if (secondary) WITHSELF(actor, ammo_other = thiswep.wr_checkammo1(thiswep));
-	else WITHSELF(actor, ammo_other = thiswep.wr_checkammo2(thiswep));
+	if (secondary) ammo_other = thiswep.wr_checkammo1(thiswep, actor);
+	else ammo_other = thiswep.wr_checkammo2(thiswep, actor);
 	if (ammo_other)
 	{
 		if (time - actor.prevwarntime > 1)
@@ -731,7 +731,7 @@ void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 				}
 				// switch away if the amount of ammo is not enough to keep using this weapon
 				Weapon w = PS(actor).m_weapon;
-				if (!(w.wr_checkammo1(w) + w.wr_checkammo2(w)))
+				if (!(w.wr_checkammo1(w, actor) + w.wr_checkammo2(w, actor)))
 				{
 					actor.clip_load = -1;  // reload later
 					W_SwitchToOtherWeapon(actor);

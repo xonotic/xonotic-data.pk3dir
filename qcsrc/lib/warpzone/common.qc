@@ -786,9 +786,9 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	return e;
 }
 
-float WarpZoneLib_ExactTrigger_Touch()
-{SELFPARAM();
-	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, this, other);
+float WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
+{
+	return !WarpZoneLib_BoxTouchesBrush(toucher.absmin, toucher.absmax, this, toucher);
 }
 
 

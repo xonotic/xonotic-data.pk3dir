@@ -71,7 +71,7 @@ bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)
 			}
 			else
 			{
-				WITHSELF(this, f = wpn.wr_checkammo1(wpn) + wpn.wr_checkammo2(wpn));
+				f = wpn.wr_checkammo1(wpn, this) + wpn.wr_checkammo2(wpn, this);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
 				if(wpn == WEP_MINE_LAYER)

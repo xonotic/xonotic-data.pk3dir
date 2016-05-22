@@ -127,7 +127,7 @@ void W_MineLayer_Explode()
 	{
 		setself(self.realowner);
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w))
+		if(!w.wr_checkammo1(w, self))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			int slot = 0; // TODO: unhardcode
@@ -154,7 +154,7 @@ void W_MineLayer_DoRemoteExplode()
 	{
 		setself(self.realowner);
 		Weapon w = WEP_MINE_LAYER;
-		if(!w.wr_checkammo1(w))
+		if(!w.wr_checkammo1(w, self))
 		{
 			self.cnt = WEP_MINE_LAYER.m_id;
 			int slot = 0; // TODO: unhardcode
@@ -383,12 +383,12 @@ void W_MineLayer_Attack(Weapon thiswep)
 	self.minelayer_mines = W_MineLayer_Count(self);
 }
 
-float W_MineLayer_PlacedMines(float detonate)
-{SELFPARAM();
+float W_MineLayer_PlacedMines(entity this, float detonate)
+{
 	entity mine;
 	float minfound = 0;
 
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == self)
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == this)
 	{
 		if(detonate)
 		{
@@ -508,7 +508,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     if(autocvar_g_balance_minelayer_reload_ammo && actor.clip_load < WEP_CVAR(minelayer, ammo)) // forced reload
     {
         // not if we're holding the minelayer without enough ammo, but can detonate existing mines
-        if(!(W_MineLayer_PlacedMines(false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
+        if(!(W_MineLayer_PlacedMines(actor, false) && actor.(thiswep.ammo_field) < WEP_CVAR(minelayer, ammo))) {
             thiswep.wr_reload(thiswep, actor, weaponentity);
         }
     }
@@ -523,26 +523,25 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 
     if(fire & 2)
     {
-        if(W_MineLayer_PlacedMines(true))
+        if(W_MineLayer_PlacedMines(actor, true))
             sound(actor, CH_WEAPON_B, SND_MINE_DET, VOL_BASE, ATTN_NORM);
     }
 }
-METHOD(MineLayer, wr_checkammo1, bool(entity thiswep))
+METHOD(MineLayer, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     //int slot = 0; // TODO: unhardcode
     // actually do // don't switch while placing a mine
-    //if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_MINE_LAYER)
+    //if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_MINE_LAYER)
     //{
-        float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
-        ammo_amount += self.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
+        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(minelayer, ammo);
+        ammo_amount += actor.(weapon_load[WEP_MINE_LAYER.m_id]) >= WEP_CVAR(minelayer, ammo);
         return ammo_amount;
     //}
     //return true;
 }
-METHOD(MineLayer, wr_checkammo2, bool(entity thiswep))
+METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor))
 {
-    if(W_MineLayer_PlacedMines(false))
+    if(W_MineLayer_PlacedMines(actor, false))
         return true;
     else
         return false;

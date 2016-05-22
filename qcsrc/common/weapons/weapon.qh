@@ -89,9 +89,9 @@ CLASS(Weapon, Object)
     /** (SERVER) logic to run every frame */
     METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
-    METHOD(Weapon, wr_checkammo1, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor)) {return false;}
     /** (SERVER) checks ammo for weapon second */
-    METHOD(Weapon, wr_checkammo2, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor)) {return false;}
     /** (SERVER) runs bot aiming code for this weapon */
     METHOD(Weapon, wr_aim, void(Weapon this)) {}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */

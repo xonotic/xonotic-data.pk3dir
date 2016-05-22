@@ -1384,9 +1384,13 @@ void GameCommand_shuffleteams(float request)
 						{
 							if (!(shuffleteams_players[z])) continue;  // not a player, move on to next random slot
 
-							if (VerifyClientNumber(shuffleteams_players[z])) setself(edict_num(shuffleteams_players[z]));
+							entity e = NULL;
+							if(VerifyClientNumber(shuffleteams_players[z]))
+								e = edict_num(shuffleteams_players[z]);
 
-							if (self.team != team_color) MoveToTeam(self, team_color, 6);
+							if(!e) continue; // unverified
+
+							if (e.team != team_color) MoveToTeam(e, team_color, 6);
 
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;

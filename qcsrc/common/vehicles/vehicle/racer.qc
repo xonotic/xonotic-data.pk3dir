@@ -321,7 +321,7 @@ bool racer_frame(entity this)
 	Weapon wep1 = WEP_RACER;
 	if (!forbidWeaponUse(this))
 	if (PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1))
+	if (wep1.wr_checkammo1(wep1, vehic))
 	{
 		string tagname = (vehic.cnt)
 		    ? (vehic.cnt = 0, "tag_fire1")

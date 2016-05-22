@@ -704,11 +704,11 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
         }
     }
 }
-METHOD(Shockwave, wr_checkammo1, bool(entity thiswep))
+METHOD(Shockwave, wr_checkammo1, bool(entity thiswep, entity actor))
 {
     return true; // infinite ammo
 }
-METHOD(Shockwave, wr_checkammo2, bool(entity thiswep))
+METHOD(Shockwave, wr_checkammo2, bool(entity thiswep, entity actor))
 {
     // shockwave has infinite ammo
     return true;

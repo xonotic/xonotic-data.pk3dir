@@ -577,7 +577,7 @@ void Unfreeze (entity targ)
 }
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+{
 	float mirrordamage;
 	float mirrorforce;
 	float complainteamdamage = 0;
@@ -588,11 +588,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (gameover || targ.killcount == FRAGS_SPECTATOR)
 		return;
 
-	setself(targ);
-        damage_targ = targ;
-        damage_inflictor = inflictor;
-        damage_attacker = attacker;
-		attacker_save = attacker;
+    damage_targ = targ;
+    damage_inflictor = inflictor;
+    damage_attacker = attacker;
+	attacker_save = attacker;
 
 	if(IS_PLAYER(targ))
 		if(targ.hook)
@@ -603,19 +602,17 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
-		if(IS_PLAYER(targ))
-			if(SAME_TEAM(targ, attacker))
-			{
-				setself(this);
-				return;
-			}
+		if(IS_PLAYER(targ) && SAME_TEAM(targ, attacker))
+		{
+			return;
+		}
 	}
 
 	if(deathtype == DEATH_KILL.m_id || deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			vehicles_exit(VHEF_RELEASE);
+			WITHSELF(targ, vehicles_exit(VHEF_RELEASE));
 
 		// These are ALWAYS lethal
 		// No damage modification here
@@ -838,18 +835,18 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	}
 
 	// apply push
-	if (self.damageforcescale)
+	if (targ.damageforcescale)
 	if (vlen(force))
-	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || self == attacker)
+	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
-		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
-		if(self.movetype == MOVETYPE_PHYSICS)
+		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
+		if(targ.movetype == MOVETYPE_PHYSICS)
 		{
 			entity farcent = new(farce);
-			farcent.enemy = self;
+			farcent.enemy = targ;
 			farcent.movedir = farce * 10;
-			if(self.mass)
-				farcent.movedir = farcent.movedir * self.mass;
+			if(targ.mass)
+				farcent.movedir = farcent.movedir * targ.mass;
 			farcent.origin = hitloc;
 			farcent.forcetype = FORCETYPE_FORCEATPOS;
 			farcent.nextthink = time + 0.1;
@@ -857,18 +854,17 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		}
 		else
 		{
-			self.velocity = self.velocity + farce;
-			self.move_velocity = self.velocity;
+			targ.velocity = targ.velocity + farce;
+			targ.move_velocity = targ.velocity;
 		}
-		UNSET_ONGROUND(self);
-		self.move_flags &= ~FL_ONGROUND;
-		UpdateCSQCProjectile(self);
+		UNSET_ONGROUND(targ);
+		targ.move_flags &= ~FL_ONGROUND;
+		UpdateCSQCProjectile(targ);
 	}
 	// apply damage
-	if (damage != 0 || (self.damageforcescale && vlen(force)))
-	if (self.event_damage)
-		self.event_damage (self, inflictor, attacker, damage, deathtype, hitloc, force);
-	setself(this);
+	if (damage != 0 || (targ.damageforcescale && vlen(force)))
+	if (targ.event_damage)
+		targ.event_damage (targ, inflictor, attacker, damage, deathtype, hitloc, force);
 
 	// apply mirror damage if any
 	if(!autocvar_g_mirrordamage_onlyweapons || DEATH_WEAPONOF(deathtype) != WEP_Null)

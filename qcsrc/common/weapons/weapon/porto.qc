@@ -357,12 +357,12 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         }
     }
 }
-METHOD(PortoLaunch, wr_checkammo1, bool(entity this))
+METHOD(PortoLaunch, wr_checkammo1, bool(entity thiswep, entity this))
 {
     // always allow infinite ammo
     return true;
 }
-METHOD(PortoLaunch, wr_checkammo2, bool(entity this))
+METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this))
 {
     // always allow infinite ammo
     return true;

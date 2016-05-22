@@ -993,7 +993,7 @@ float havocbot_chooseweapon_checkreload(entity this, int new_weapon)
 	{
 		bool other_weapon_available = false;
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			if(it.wr_checkammo1(it) + it.wr_checkammo2(it))
+			if(it.wr_checkammo1(it, this) + it.wr_checkammo2(it, this))
 				other_weapon_available = true;
 		));
 		if(other_weapon_available)

@@ -80,7 +80,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
     }
 }
 
-METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this)) {
+METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor)) {
     TC(WyvernAttack, this);
 	return true;
 }

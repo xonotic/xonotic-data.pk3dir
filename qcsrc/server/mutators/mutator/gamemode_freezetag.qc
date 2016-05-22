@@ -456,8 +456,7 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		it.killcount = 0;
 		it.freezetag_frozen_timeout = -1;
-		setself(it);
-		PutClientInServer();
+		WITHSELF(it, PutClientInServer());
 		it.freezetag_frozen_timeout = 0;
 	));
 	freezetag_count_alive_players();

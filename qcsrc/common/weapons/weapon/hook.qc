@@ -283,19 +283,19 @@ METHOD(Hook, wr_setup, void(entity thiswep))
     SELFPARAM();
     self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 }
-METHOD(Hook, wr_checkammo1, bool(Hook thiswep))
+METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor))
 {
     SELFPARAM();
     if (!thiswep.ammo_factor) return true;
-    if(self.hook)
-        return self.ammo_fuel > 0;
+    if(actor.hook)
+        return actor.ammo_fuel > 0;
     else
-        return self.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
+        return actor.ammo_fuel >= WEP_CVAR_PRI(hook, ammo);
 }
-METHOD(Hook, wr_checkammo2, bool(Hook thiswep))
+METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor))
 {
     // infinite ammo for now
-    return true; // self.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
+    return true; // actor.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
 }
 METHOD(Hook, wr_resetplayer, void(entity thiswep))
 {

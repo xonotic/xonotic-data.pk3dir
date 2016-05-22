@@ -385,13 +385,12 @@ bool raptor_frame(entity this)
 	UpdateAuxiliaryXhair(this, trace_endpos, '0 1 0', 0);
 	*/
 
-	// TODO: fix wr_checkammo and its use of self!
 	setself(vehic);
 
 	Weapon wep1 = WEP_RAPTOR;
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
-	if (wep1.wr_checkammo1(wep1))
+	if (wep1.wr_checkammo1(wep1, vehic))
 	{
 	    .entity weaponentity = weaponentities[0];
 		wep1.wr_think(wep1, vehic, weaponentity, 1);

@@ -363,7 +363,6 @@ void reset_map(bool dorespawn)
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
 			FOREACH_CLIENT(true, LAMBDA(
-				setself(it);
 				/*
 				only reset players if a restart countdown is active
 				this can either be due to cvar sv_ready_restart_after_countdown having set
@@ -373,20 +372,18 @@ void reset_map(bool dorespawn)
 				if (restart_mapalreadyrestarted || (time < game_starttime))
 				{
 					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (IS_PLAYER(self))
+					if (IS_PLAYER(it))
 					{
-						// PlayerScore_Clear(self);
-						self.killcount = 0;
+						// PlayerScore_Clear(it);
+						it.killcount = 0;
 						// stop the player from moving so that he stands still once he gets respawned
-						self.velocity = '0 0 0';
-						self.avelocity = '0 0 0';
-						self.movement = '0 0 0';
-						PutClientInServer();
+						it.velocity = '0 0 0';
+						it.avelocity = '0 0 0';
+						it.movement = '0 0 0';
+						WITHSELF(it, PutClientInServer());
 					}
 				}
 			));
-
-			setself(this);
 		}
 	}
 }

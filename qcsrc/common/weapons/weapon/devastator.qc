@@ -561,44 +561,43 @@ METHOD(Devastator, wr_setup, void(entity thiswep))
     SELFPARAM();
     self.rl_release = 1;
 }
-METHOD(Devastator, wr_checkammo1, bool(entity thiswep))
+METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor))
 {
-    SELFPARAM();
     #if 0
     // don't switch while guiding a missile
-    if(ATTACK_FINISHED(self, slot) <= time || PS(self).m_weapon != WEP_DEVASTATOR)
+    if(ATTACK_FINISHED(actor, slot) <= time || PS(actor).m_weapon != WEP_DEVASTATOR)
     {
         ammo_amount = false;
         if(WEP_CVAR(devastator, reload_ammo))
         {
-            if(self.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo) && self.(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
+            if(actor.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo) && actor.(weapon_load[WEP_DEVASTATOR.m_id]) < WEP_CVAR(devastator, ammo))
                 ammo_amount = true;
         }
-        else if(self.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
+        else if(actor.(thiswep.ammo_field) < WEP_CVAR(devastator, ammo))
             ammo_amount = true;
         return !ammo_amount;
     }
     #endif
     #if 0
-    if(self.rl_release == 0)
+    if(actor.rl_release == 0)
     {
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.(thiswep.ammo_field), WEP_CVAR(devastator, ammo));
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo));
         return true;
     }
     else
     {
-        ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
-        ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
-        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.(thiswep.ammo_field), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
+        ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
+        ammo_amount += actor.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
+        LOG_INFOF("W_Devastator(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", actor.rl_release, actor.(thiswep.ammo_field), WEP_CVAR(devastator, ammo), (ammo_amount ? "TRUE" : "FALSE"));
         return ammo_amount;
     }
     #else
-    float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
-    ammo_amount += self.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(devastator, ammo);
+    ammo_amount += actor.(weapon_load[WEP_DEVASTATOR.m_id]) >= WEP_CVAR(devastator, ammo);
     return ammo_amount;
     #endif
 }
-METHOD(Devastator, wr_checkammo2, bool(entity thiswep))
+METHOD(Devastator, wr_checkammo2, bool(entity thiswep, entity actor))
 {
     return false;
 }
