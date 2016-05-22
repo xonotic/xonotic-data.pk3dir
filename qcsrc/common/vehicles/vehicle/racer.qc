@@ -316,7 +316,6 @@ bool racer_frame(entity this)
 	this.movement = vehic.velocity += df * PHYS_INPUT_TIMELENGTH;
 
 #ifdef SVQC
-	setself(vehic);
 
 	Weapon wep1 = WEP_RACER;
 	if (!forbidWeaponUse(this))
@@ -333,10 +332,8 @@ bool racer_frame(entity this)
 		crosshair_trace(this);
 		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
 		.entity weaponentity = weaponentities[0];
-		wep1.wr_think(wep1, vehic, weaponentity, 1);
+		WITHSELF(vehic, wep1.wr_think(wep1, vehic, weaponentity, 1));
 	}
-
-	setself(this);
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
