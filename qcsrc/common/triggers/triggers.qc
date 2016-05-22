@@ -280,34 +280,3 @@ void SUB_UseTargets_self()
 {SELFPARAM();
 	SUB_UseTargets(this, NULL, NULL);
 }
-
-#ifdef CSQC
-void trigger_touch_generic(entity this, void() touchfunc)
-{
-	entity e;
-	for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
-	if(e.classname == "csqcprojectile")
-	{
-		vector emin = e.absmin, emax = e.absmax;
-		if(this.solid == SOLID_BSP)
-		{
-			emin -= '1 1 1';
-			emax += '1 1 1';
-		}
-		if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
-		if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
-		{
-			other = e;
-			WITHSELF(this, touchfunc());
-		}
-	}
-}
-void trigger_draw_generic(entity this)
-{
-	float dt = time - this.move_time;
-	this.move_time = time;
-	if(dt <= 0) { return; }
-
-	if(this.trigger_touch) { trigger_touch_generic(this, this.trigger_touch); }
-}
-#endif

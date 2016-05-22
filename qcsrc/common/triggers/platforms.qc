@@ -28,12 +28,6 @@ void plat_spawn_inside_trigger()
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = self;
 
-#ifdef CSQC
-	trigger.drawmask = MASK_NORMAL;
-	trigger.trigger_touch = plat_center_touch;
-	trigger.draw = trigger_draw_generic;
-#endif
-
 	tmin = self.absmin + '25 25 0';
 	tmax = self.absmax - '25 25 -8';
 	tmin_z = tmax_z - (self.pos1_z - self.pos2_z + 8);

@@ -8,8 +8,6 @@ const float SF_TRIGGER_RESET = 4;
 const float	SPAWNFLAG_NOMESSAGE = 1;
 const float	SPAWNFLAG_NOTOUCH = 1;
 
-.void() trigger_touch;
-
 .bool pushable;
 
 .float antiwall_flag; // Variable to define what to do with func_clientwall

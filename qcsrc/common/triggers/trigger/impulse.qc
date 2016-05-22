@@ -229,8 +229,6 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 	this.classname = "trigger_impulse";
 	this.solid = SOLID_TRIGGER;
 	this.entremove = trigger_remove_generic;
-	//this.draw = trigger_draw_generic;
-	this.drawmask = MASK_NORMAL;
 	this.move_time = time;
 
 	if(this.radius) { this.move_touch = trigger_impulse_touch3; }

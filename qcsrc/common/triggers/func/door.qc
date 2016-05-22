@@ -447,10 +447,6 @@ void door_spawnfield(vector fmins, vector fmaxs)
 	trigger.owner = self;
 #ifdef SVQC
 	settouch(trigger, door_trigger_touch);
-#elif defined(CSQC)
-	trigger.trigger_touch = door_trigger_touch;
-	trigger.draw = trigger_draw_generic;
-	trigger.drawmask = MASK_NORMAL;
 #endif
 
 	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
@@ -782,13 +778,6 @@ spawnfunc(func_door)
 
 #elif defined(CSQC)
 
-void door_draw(entity this)
-{
-	Movetype_Physics_NoMatchServer(this);
-
-	trigger_draw_generic(this);
-}
-
 NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 {
 	int sf = ReadByte();
@@ -828,9 +817,6 @@ NET_HANDLE(ENT_CLIENT_DOOR, bool isnew)
 
 		this.solid = SOLID_BSP;
 		this.movetype = MOVETYPE_PUSH;
-		this.trigger_touch = door_touch;
-		this.draw = door_draw;
-		this.drawmask = MASK_NORMAL;
 		this.use = door_use;
 
 		LinkDoors(this);

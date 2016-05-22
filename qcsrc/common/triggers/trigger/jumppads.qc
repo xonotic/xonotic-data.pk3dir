@@ -447,9 +447,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 
 	this.entremove = trigger_remove_generic;
 	this.solid = SOLID_TRIGGER;
-	//this.draw = trigger_draw_generic;
 	this.move_touch = trigger_push_touch;
-	this.drawmask = MASK_NORMAL;
 	this.move_time = time;
 	defer(this, 0.25, trigger_push_findtarget);
 

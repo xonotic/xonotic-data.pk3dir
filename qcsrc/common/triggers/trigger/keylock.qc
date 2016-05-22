@@ -192,9 +192,6 @@ NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
 	return = true;
 
 	this.classname = "trigger_keylock";
-	this.drawmask = MASK_NORMAL;
-	this.draw = trigger_draw_generic;
-	this.trigger_touch = trigger_keylock_touch;
 	this.entremove = keylock_remove;
 }
 #endif
