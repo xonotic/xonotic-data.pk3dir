@@ -102,7 +102,7 @@ void W_Porto_Fail(float failhard)
 }
 
 void W_Porto_Remove(entity p)
-{SELFPARAM();
+{
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
 		WITHSELF(p.porto_current, W_Porto_Fail(1));

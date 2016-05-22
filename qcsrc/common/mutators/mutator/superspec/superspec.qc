@@ -435,7 +435,6 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 
 MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 {
-    SELFPARAM();
 	FOREACH_CLIENT(IS_SPEC(it), LAMBDA(
 		if(it.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && it.enemy == frag_target)
 		{

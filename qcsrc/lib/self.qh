@@ -19,6 +19,8 @@
 #if 1
     #undef self
     #define self (this, self)
+    #undef SELFPARAM
+    #define SELFPARAM() const entity this = __self
 #endif
 
 // Step 4: kill unstructured setself

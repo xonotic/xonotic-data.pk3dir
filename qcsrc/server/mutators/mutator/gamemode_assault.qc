@@ -293,7 +293,6 @@ void assault_new_round()
 // they win. Otherwise the defending team wins once the timelimit passes.
 int WinningCondition_Assault()
 {
-    SELFPARAM();
 	WinningConditionHelper(); // set worldstatus
 
 	int status = WINNING_NO;

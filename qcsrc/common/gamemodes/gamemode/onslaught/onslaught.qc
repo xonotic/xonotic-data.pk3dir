@@ -1755,7 +1755,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 // ==============
 
 MUTATOR_HOOKFUNCTION(ons, reset_map_global)
-{SELFPARAM();
+{
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = false;
 		it.ons_deathloc = '0 0 0';

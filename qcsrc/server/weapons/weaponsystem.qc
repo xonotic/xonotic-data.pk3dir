@@ -210,7 +210,6 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary)
 {
-    SELFPARAM();
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
 	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor);

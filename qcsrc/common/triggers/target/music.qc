@@ -70,7 +70,7 @@ spawnfunc(target_music)
 		target_music_sendto(this, MSG_INIT, 0);
 }
 void TargetMusic_RestoreGame()
-{SELFPARAM();
+{
 	for(entity e = world; (e = find(e, classname, "target_music")); )
 	{
 		if(e.targetname == "")

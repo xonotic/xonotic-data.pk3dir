@@ -98,7 +98,7 @@ void W_Blaster_Attack(
 	float atk_spread,
 	float atk_delay,
 	float atk_lifetime)
-{SELFPARAM();
+{
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
 	W_SetupShot_Dir(actor, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage);

@@ -1043,7 +1043,7 @@ spawnfunc(info_player_race)
 }
 
 void race_ClearRecords()
-{SELFPARAM();
+{
 	float i;
 
 	for(i = 0; i < MAX_CHECKPOINTS; ++i)

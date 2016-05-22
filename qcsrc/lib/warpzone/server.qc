@@ -838,7 +838,6 @@ void WarpZone_Think()
 
 void WarpZone_StartFrame()
 {
-	SELFPARAM();
 	if (!warpzone_initialized)
 	{
 		warpzone_initialized = true;

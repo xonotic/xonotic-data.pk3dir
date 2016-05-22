@@ -190,7 +190,6 @@ void GameCommand_allready(float request)
 
 void GameCommand_allspec(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -989,7 +988,6 @@ void GameCommand_make_mapinfo(float request)
 
 void GameCommand_moveplayer(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1155,7 +1153,6 @@ void GameCommand_nospectators(float request)
 
 void GameCommand_playerdemo(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1327,7 +1324,6 @@ void GameCommand_setbots(float request, float argc)
 
 void GameCommand_shuffleteams(float request)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:

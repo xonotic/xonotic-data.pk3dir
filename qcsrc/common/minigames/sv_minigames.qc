@@ -122,7 +122,7 @@ bool minigame_CheckSend()
 }
 
 int minigame_addplayer(entity minigame_session, entity player)
-{SELFPARAM();
+{
 	if ( player.active_minigame )
 	{
 		if ( player.active_minigame == minigame_session )

@@ -707,8 +707,7 @@ void ClientInit_CheckUpdate()
 }
 
 void ClientInit_Spawn()
-{SELFPARAM();
-
+{
 	entity e = new_pure(clientinit);
 	e.think = ClientInit_CheckUpdate;
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);

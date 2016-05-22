@@ -333,8 +333,6 @@ void VoteThink()
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
 void reset_map(bool dorespawn)
 {
-	SELFPARAM();
-
 	if (time <= game_starttime && round_handler_IsActive()) round_handler_Reset(game_starttime);
 
 	MUTATOR_CALLHOOK(reset_map_global);

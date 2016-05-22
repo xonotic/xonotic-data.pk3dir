@@ -187,7 +187,6 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 
 METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    SELFPARAM();
     if (fire & 1) {
         if(!actor.hook)
         if(!(actor.hook_state & HOOK_WAITING_FOR_RELEASE))
@@ -285,7 +284,6 @@ METHOD(Hook, wr_setup, void(entity thiswep))
 }
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor))
 {
-    SELFPARAM();
     if (!thiswep.ammo_factor) return true;
     if(actor.hook)
         return actor.ammo_fuel > 0;

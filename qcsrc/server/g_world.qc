@@ -523,7 +523,7 @@ void RandomSeed_Think()
 	this.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
-{SELFPARAM();
+{
 	randomseed = new_pure(randomseed);
 	randomseed.think = RandomSeed_Think;
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
@@ -1522,7 +1522,6 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-    SELFPARAM();
 	gameover = true;
 
 	intermission_running = 1;
@@ -2026,7 +2025,7 @@ void EndFrame()
 float redirection_timeout;
 float redirection_nextthink;
 float RedirectionThink()
-{SELFPARAM();
+{
 	float clients_found;
 
 	if(redirection_target == "")
