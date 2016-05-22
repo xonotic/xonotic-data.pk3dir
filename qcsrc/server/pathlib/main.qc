@@ -133,7 +133,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         return 1;
     }
 
-    where = pathlib_movenode(parent.origin, to, 0);
+    where = pathlib_movenode(parent, parent.origin, to, 0);
 
     if (!pathlib_movenode_goodnode)
     {
@@ -180,7 +180,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
             {
                 if(node.pathlib_node_g > g)
                 {
-                    //pathlib_movenode(where,node.origin,0);
+                    //pathlib_movenode(node, where,node.origin,0);
                     //if(pathlib_movenode_goodnode)
                     //{
                         //mark_error(node.origin + '0 0 128',30);
@@ -263,11 +263,11 @@ void pathlib_close_node(entity node,vector goal)
 
     node.owner = closedlist;
 
-    if(vlen(node.origin - goal) <= pathlib_gridsize)
+    if(vdist(node.origin - goal, <=, pathlib_gridsize))
     {
         vector goalmove;
 
-        goalmove = pathlib_walknode(node.origin,goal,1);
+        goalmove = pathlib_walknode(node, node.origin, goal, 1);
         if(pathlib_movenode_goodnode)
         {
             goal_node         = node;
@@ -336,9 +336,9 @@ float buildpath_nodefilter_directional(vector n,vector c,vector p)
     return 0;
 }
 
-float buildpath_nodefilter_moveskip(vector n,vector c,vector p)
+float buildpath_nodefilter_moveskip(entity this, vector n,vector c,vector p)
 {
-    pathlib_walknode(p,n,1);
+    pathlib_walknode(this, p, n, 1);
     if(pathlib_movenode_goodnode)
         return 1;
 

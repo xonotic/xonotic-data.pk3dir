@@ -239,7 +239,7 @@ void plas_think()
     pathlib_waypointpath_step();
     if(pathlib_foundgoal)
         return;
-    self.nextthink = time + 0.1;
+    this.nextthink = time + 0.1;
 }
 
 void pathlib_waypointpath_autostep()
