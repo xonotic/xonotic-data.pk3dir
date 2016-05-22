@@ -118,7 +118,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 
 	wep.think = physical_item_think;
 	wep.nextthink = time;
-	wep.touch = physical_item_touch;
+	settouch(wep, physical_item_touch);
 	wep.event_damage = physical_item_damage;
 
 	if(!wep.cnt)

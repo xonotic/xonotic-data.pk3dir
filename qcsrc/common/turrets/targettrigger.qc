@@ -20,5 +20,5 @@ spawnfunc(turret_targettrigger)
 
     WITHSELF(this, InitTrigger());
 
-    this.touch = turret_targettrigger_touch;
+    settouch(this, turret_targettrigger_touch);
 }

@@ -414,7 +414,7 @@ void W_Crylink_Attack(Weapon thiswep)
 		}
 		s = s * WEP_CVAR_PRI(crylink, spread) * g_weaponspreadfactor;
 		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, false);
-		proj.touch = W_Crylink_Touch;
+		settouch(proj, W_Crylink_Touch);
 
 		proj.think = W_Crylink_Fadethink;
 		if(counter == 0)
@@ -530,7 +530,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 		}
 
 		W_SetupProjVelocity_Explicit(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, false);
-		proj.touch = W_Crylink_Touch;
+		settouch(proj, W_Crylink_Touch);
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
 		{

@@ -241,7 +241,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = this.enemy;
-	missile.touch = M_Mage_Attack_Spike_Touch;
+	settouch(missile, M_Mage_Attack_Spike_Touch);
 
 	this.mage_spike = missile;
 

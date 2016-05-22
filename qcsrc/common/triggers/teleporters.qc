@@ -281,7 +281,7 @@ void teleport_findtarget(entity this)
 
 	// now enable touch
 #ifdef SVQC
-	this.touch = Teleport_Touch;
+	settouch(this, Teleport_Touch);
 
 	trigger_teleport_link(this);
 #elif defined(CSQC)

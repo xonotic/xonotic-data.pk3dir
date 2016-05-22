@@ -575,7 +575,7 @@ void nade_heal_boom(entity this)
 	healer.team = this.realowner.team;
 	healer.bot_dodge = false;
 	healer.solid = SOLID_TRIGGER;
-	healer.touch = nade_heal_touch;
+	settouch(healer, nade_heal_touch);
 
 	setmodel(healer, MDL_NADE_HEAL);
 	healer.healer_radius = autocvar_g_nades_nade_radius;
@@ -859,7 +859,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	if(set_owner)
 		_nade.realowner = e;
 
-	_nade.touch = nade_touch;
+	settouch(_nade, nade_touch);
 	_nade.spawnshieldtime = time + 0.1; // prevent instantly picking up again
 	_nade.health = autocvar_g_nades_nade_health;
 	_nade.max_health = _nade.health;

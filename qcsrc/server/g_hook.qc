@@ -99,7 +99,7 @@ void GrapplingHook_Stop()
 	self.state = 1;
 	self.think = GrapplingHookThink;
 	self.nextthink = time;
-	self.touch = func_null;
+	settouch(self, func_null);
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.hook_length = -1;
@@ -385,7 +385,7 @@ void FireGrapplingHook ()
 	missile.angles = vectoangles (missile.velocity);
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
-	missile.touch = GrapplingHookTouch;
+	settouch(missile, GrapplingHookTouch);
 	missile.think = GrapplingHookThink;
 	missile.nextthink = time;
 

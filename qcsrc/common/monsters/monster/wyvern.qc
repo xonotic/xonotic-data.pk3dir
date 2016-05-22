@@ -73,7 +73,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		missile.avelocity = '300 300 300';
 		missile.nextthink = time + 5;
 		missile.think = M_Wyvern_Attack_Fireball_Explode;
-		missile.touch = M_Wyvern_Attack_Fireball_Touch;
+		settouch(missile, M_Wyvern_Attack_Fireball_Touch);
 		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);

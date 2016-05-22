@@ -132,7 +132,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR(rpc, speed), 0);
 
-	missile.touch = W_RocketPropelledChainsaw_Touch;
+	settouch(missile, W_RocketPropelledChainsaw_Touch);
 
 	missile.think = W_RocketPropelledChainsaw_Think;
 	missile.cnt = time + WEP_CVAR(rpc, lifetime);

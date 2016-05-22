@@ -415,7 +415,7 @@ bool Monster_Attack_Leap(entity this, vector anm, void() touchfunc, vector vel, 
 
 	if(this.flags & FL_MONSTER)
 		this.state = MONSTER_ATTACK_RANGED;
-	this.touch = touchfunc;
+	settouch(this, touchfunc);
 	this.origin_z += 1;
 	this.velocity = vel;
 	UNSET_ONGROUND(this);
@@ -835,7 +835,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(this.state == MONSTER_ATTACK_RANGED && IS_ONGROUND(this))
 	{
 		this.state = 0;
-		this.touch = Monster_Touch;
+		settouch(this, Monster_Touch);
 	}
 
 	if(this.state && time >= this.attack_finished_single[0])
@@ -1022,7 +1022,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.enemy			= world;
 	this.movetype		= MOVETYPE_TOSS;
 	this.moveto			= this.origin;
-	this.touch			= Monster_Touch; // reset incase monster was pouncing
+	settouch(this, Monster_Touch); // reset incase monster was pouncing
 	this.reset			= func_null;
 	this.state			= 0;
 	this.attack_finished_single[0] = 0;
@@ -1331,7 +1331,7 @@ bool Monster_Spawn(entity this, int mon_id)
 	this.damagedbycontents	= true;
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;
-	this.touch				= Monster_Touch;
+	settouch(this, Monster_Touch);
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
 	this.movetype			= MOVETYPE_WALK;

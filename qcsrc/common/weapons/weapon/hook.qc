@@ -102,7 +102,7 @@ void W_Hook_ExplodeThink()
 void W_Hook_Explode2()
 {SELFPARAM();
 	self.event_damage = func_null;
-	self.touch = func_null;
+	settouch(self, func_null);
 	self.effects |= EF_NODRAW;
 
 	self.think = W_Hook_ExplodeThink;
@@ -161,7 +161,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Hook_Explode2_use;
-	gren.touch = W_Hook_Touch2;
+	settouch(gren, W_Hook_Touch2);
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = WEP_CVAR_SEC(hook, health);

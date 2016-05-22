@@ -282,7 +282,7 @@ void W_RocketMinsta_Attack2()
 		proj.velocity_z = proj.velocity_z + cvar("g_rm_laser_zspread") * (random() - 0.5);
 		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);
-        proj.touch = W_RocketMinsta_Laser_Touch;
+        settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
@@ -332,7 +332,7 @@ void W_RocketMinsta_Attack3 ()
 		proj.velocity = w_shotdir * autocvar_g_rm_laser_speed;
 		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);
-        proj.touch = W_RocketMinsta_Laser_Touch;
+        settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
         proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;

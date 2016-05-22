@@ -352,7 +352,7 @@ void dom_controlpoint_setup(entity this)
 
 	self.think = dompointthink;
 	self.nextthink = time;
-	self.touch = dompointtouch;
+	settouch(self, dompointtouch);
 	self.solid = SOLID_TRIGGER;
 	self.flags = FL_ITEM;
 	setsize(self, '-32 -32 -32', '32 32 32');

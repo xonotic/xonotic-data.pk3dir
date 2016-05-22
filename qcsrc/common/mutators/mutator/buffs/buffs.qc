@@ -423,7 +423,7 @@ void buff_Init(entity this)
 	this.solid = SOLID_TRIGGER;
 	this.flags = FL_ITEM;
 	this.think = buff_Think;
-	this.touch = buff_Touch;
+	settouch(this, buff_Touch);
 	this.reset = buff_Reset;
 	this.nextthink = time + 0.1;
 	this.gravity = 1;
@@ -885,12 +885,11 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 			if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, it.absmin, it.absmax))
 			{
-				if(it.touch)
+				if(gettouch(it))
 				{
 					entity oldother = other;
 					other = self;
-					WITHSELF(it, it.touch());
-
+					WITHSELF(it, gettouch(it)());
 					other = oldother;
 				}
 			}

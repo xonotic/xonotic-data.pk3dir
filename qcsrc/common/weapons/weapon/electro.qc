@@ -288,7 +288,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep)
 	proj.movetype = MOVETYPE_FLY;
 	W_SetupProjVelocity_PRI(proj, electro);
 	proj.angles = vectoangles(proj.velocity);
-	proj.touch = W_Electro_TouchExplode;
+	settouch(proj, W_Electro_TouchExplode);
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
 	proj.missile_flags = MIF_SPLASH;
@@ -387,7 +387,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
 	W_SetupProjVelocity_UP_SEC(proj, electro);
-	proj.touch = W_Electro_Orb_Touch;
+	settouch(proj, W_Electro_Orb_Touch);
 	setsize(proj, '0 0 -4', '0 0 -4');
 	proj.takedamage = DAMAGE_YES;
 	proj.damageforcescale = WEP_CVAR_SEC(electro, damageforcescale);

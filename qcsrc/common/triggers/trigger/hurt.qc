@@ -61,7 +61,7 @@ spawnfunc(trigger_hurt)
 {
 	EXACTTRIGGER_INIT;
 	this.active = ACTIVE_ACTIVE;
-	this.touch = trigger_hurt_touch;
+	settouch(this, trigger_hurt_touch);
 	this.use = trigger_hurt_use;
 	this.enemy = world; // I hate you all
 	if (!this.dmg)

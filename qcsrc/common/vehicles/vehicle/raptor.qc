@@ -534,7 +534,7 @@ void raptor_blowup()
 	self.velocity	   = '0 0 0';
 
 	setorigin(self, self.pos1);
-	self.touch = func_null;
+	settouch(self, func_null);
 	self.nextthink = 0;
 }
 
@@ -656,7 +656,7 @@ METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
     instance.avelocity -= '0 0.5 1' * (random() * 400);
 
     instance.colormod = '-0.5 -0.5 -0.5';
-    instance.touch = raptor_blowup;
+    settouch(instance, raptor_blowup);
 }
 METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
 {

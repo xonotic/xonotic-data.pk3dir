@@ -571,7 +571,7 @@ METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
     instance.health				= 0;
     instance.event_damage		= func_null;
     instance.takedamage			= DAMAGE_NO;
-    instance.touch				= func_null;
+    settouch(instance, func_null);
     instance.cnt				= 3.4 + time + random() * 2;
     instance.think				= spiderbot_blowup;
     instance.nextthink			= time;

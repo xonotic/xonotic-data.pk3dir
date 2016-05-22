@@ -267,7 +267,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, vector f_diff, entity m_target)
 	missile.bot_dodgerating = WEP_CVAR(seeker, missile_damage);
 
 	missile.think           = W_Seeker_Missile_Think;
-	missile.touch           = W_Seeker_Missile_Touch;
+	settouch(missile, W_Seeker_Missile_Touch);
 	missile.event_damage    = W_Seeker_Missile_Damage;
 	missile.nextthink       = time;// + 0.2;// + cvar("g_balance_seeker_missile_activate_delay");
 	missile.cnt             = time + WEP_CVAR(seeker, missile_lifetime);
@@ -359,7 +359,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep)
 	missile.owner 			= missile.realowner = self;
 	missile.bot_dodge 		= true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, flac_damage);
-	missile.touch 			= W_Seeker_Flac_Explode;
+	settouch(missile, W_Seeker_Flac_Explode);
 	missile.use 			= W_Seeker_Flac_Explode_use;
 	missile.think 			= adaptor_think2use_hittype_splash;
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
@@ -572,7 +572,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep)
 	missile.owner           = missile.realowner = self;
 	missile.bot_dodge       = true;
 	missile.bot_dodgerating = 50;
-	missile.touch           = W_Seeker_Tag_Touch;
+	settouch(missile, W_Seeker_Tag_Touch);
 	missile.think           = SUB_Remove_self;
 	missile.nextthink       = time + WEP_CVAR(seeker, tag_lifetime);
 	missile.movetype        = MOVETYPE_FLY;

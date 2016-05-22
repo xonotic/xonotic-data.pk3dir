@@ -121,7 +121,7 @@ spawnfunc(trigger_swamp)
 {
 	// Init stuff
 	trigger_init(this);
-	this.touch = swamp_touch;
+	settouch(this, swamp_touch);
 
 	// Setup default keys, if missing
 	if(this.dmg <= 0)

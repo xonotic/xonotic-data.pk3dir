@@ -208,7 +208,7 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 	shield.team = generator.team;
 	shield.colormap = generator.colormap;
 	shield.reset = ons_CaptureShield_Reset;
-	shield.touch = ons_CaptureShield_Touch;
+	settouch(shield, ons_CaptureShield_Touch);
 	shield.customizeentityforclient = ons_CaptureShield_Customize;
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
@@ -865,7 +865,7 @@ void ons_ControlPoint_Setup(entity cp)
 	cp.team = 0;
 	cp.solid = SOLID_BBOX;
 	cp.movetype = MOVETYPE_NONE;
-	cp.touch = ons_ControlPoint_Touch;
+	settouch(cp, ons_ControlPoint_Touch);
 	cp.think = ons_ControlPoint_Think;
 	cp.nextthink = time + ONS_CP_THINKRATE;
 	cp.reset = ons_ControlPoint_Reset;
@@ -1117,7 +1117,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.iscaptured = true;
 	gen.islinked = true;
 	gen.isshielded = true;
-	gen.touch = onslaught_generator_touch;
+	settouch(gen, onslaught_generator_touch);
 
 	// appearence
 	// model handled by CSQC

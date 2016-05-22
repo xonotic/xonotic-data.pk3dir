@@ -163,7 +163,7 @@ void M_Shambler_Attack_Lightning(entity this)
 	gren.nextthink = time;
 	gren.think = M_Shambler_Attack_Lightning_Think;
 	gren.use = M_Shambler_Attack_Lightning_Explode_use;
-	gren.touch = M_Shambler_Attack_Lightning_Touch;
+	settouch(gren, M_Shambler_Attack_Lightning_Touch);
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = 50;

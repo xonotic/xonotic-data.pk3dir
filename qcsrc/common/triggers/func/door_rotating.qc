@@ -115,7 +115,7 @@ spawnfunc(func_door_rotating)
 	if (this.items)
 		this.wait = -1;
 
-	this.touch = door_touch;
+	settouch(this, door_touch);
 
 // LinkDoors can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.

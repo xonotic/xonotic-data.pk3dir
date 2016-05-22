@@ -286,7 +286,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep)
 	missile.event_damage = W_Arc_Bolt_Damage;
 	missile.damagedbycontents = true;
 
-	missile.touch = W_Arc_Bolt_Touch;
+	settouch(missile, W_Arc_Bolt_Touch);
 	missile.use = W_Arc_Bolt_Explode_use;
 	missile.think = adaptor_think2use_hittype_splash;
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);

@@ -78,7 +78,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             _flare.event_damage = raptor_flare_damage;
             _flare.health = 20;
             _flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
-            _flare.touch = raptor_flare_touch;
+            settouch(_flare, raptor_flare_touch);
         }
         weapon_thinkf(player, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
@@ -129,7 +129,7 @@ void raptor_bomb_burst()
         setorigin(bomblet, self.origin);
 
         bomblet.movetype	= MOVETYPE_TOSS;
-        bomblet.touch	   = raptor_bomblet_touch;
+        settouch(bomblet, raptor_bomblet_touch);
         bomblet.think	   = raptor_bomblet_boom;
         bomblet.nextthink   = time + 5;
         bomblet.owner	   = self.owner;
@@ -157,7 +157,8 @@ void raptor_bombdrop()
 
     bomb_1.movetype	 = bomb_2.movetype   = MOVETYPE_BOUNCE;
     bomb_1.velocity	 = bomb_2.velocity   = self.velocity;
-    bomb_1.touch		= bomb_2.touch	  = raptor_bomb_burst;
+    settouch(bomb_1, raptor_bomb_burst);
+    settouch(bomb_2, raptor_bomb_burst);
     bomb_1.think		= bomb_2.think	  = raptor_bomb_burst;
     bomb_1.cnt		  = bomb_2.cnt		= time + 10;
 

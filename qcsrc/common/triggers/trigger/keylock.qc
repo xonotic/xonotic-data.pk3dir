@@ -156,7 +156,7 @@ spawnfunc(trigger_keylock)
 
 	EXACTTRIGGER_INIT;
 
-	this.touch = trigger_keylock_touch;
+	settouch(this, trigger_keylock_touch);
 
 	trigger_keylock_link(this);
 }

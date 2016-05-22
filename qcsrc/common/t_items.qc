@@ -1182,7 +1182,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	this.bot_pickupbasevalue = pickupbasevalue;
 	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
 	this.netname = itemname;
-	this.touch = Item_Touch;
+	settouch(this, Item_Touch);
 	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
 

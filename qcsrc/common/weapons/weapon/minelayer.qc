@@ -96,7 +96,7 @@ void W_MineLayer_Stick(entity to)
 
 	newmine.mine_time = self.mine_time;
 
-	newmine.touch = func_null;
+	settouch(newmine, func_null);
 	newmine.think = W_MineLayer_Think;
 	newmine.nextthink = time;
 	newmine.cnt = self.cnt;
@@ -355,7 +355,7 @@ void W_MineLayer_Attack(Weapon thiswep)
 	W_SetupProjVelocity_Basic(mine, WEP_CVAR(minelayer, speed), 0);
 	mine.angles = vectoangles(mine.velocity);
 
-	mine.touch = W_MineLayer_Touch;
+	settouch(mine, W_MineLayer_Touch);
 	mine.think = W_MineLayer_Think;
 	mine.nextthink = time;
 	mine.cnt = (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));

@@ -258,7 +258,7 @@ void walker_fire_rocket(vector org)
     rocket.movetype		   = MOVETYPE_FLY;
     rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * (autocvar_g_turrets_unit_walker_rocket_speed);
     rocket.angles			 = vectoangles(rocket.velocity);
-    rocket.touch			  = walker_rocket_explode;
+    settouch(rocket, walker_rocket_explode);
     rocket.flags			  = FL_PROJECTILE;
     rocket.solid			  = SOLID_BBOX;
     rocket.max_health		 = time + 9;

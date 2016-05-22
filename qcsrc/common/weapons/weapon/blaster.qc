@@ -135,7 +135,7 @@ void W_Blaster_Attack(
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 
-	missile.touch = W_Blaster_Touch;
+	settouch(missile, W_Blaster_Touch);
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = atk_deathtype;

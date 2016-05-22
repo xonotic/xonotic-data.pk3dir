@@ -144,7 +144,7 @@ void Gib_Draw(entity this)
 	if(wasfreed(this))
 		return;
 
-	if(this.touch == Gib_Touch) // don't do this for the "chunk" thingie...
+	if(gettouch(this) == Gib_Touch) // don't do this for the "chunk" thingie...
 		// TODO somehow make it spray in a direction dependent on this.angles
 		__trailparticles(this, _particleeffectnum(strcat(species_prefix(this.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, this.origin);
 	else

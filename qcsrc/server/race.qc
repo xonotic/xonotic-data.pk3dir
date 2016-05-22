@@ -912,7 +912,7 @@ spawnfunc(trigger_race_checkpoint)
 
 	this.use = checkpoint_use;
 	if (!(this.spawnflags & 1))
-		this.touch = checkpoint_touch;
+		settouch(this, checkpoint_touch);
 
 	o = (this.absmin + this.absmax) * 0.5;
 	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
@@ -961,7 +961,7 @@ spawnfunc(target_checkpoint) // defrag entity
 
 	this.use = checkpoint_use;
 	if (!(this.spawnflags & 1))
-		this.touch = checkpoint_touch;
+		settouch(this, checkpoint_touch);
 
 	o = (this.absmin + this.absmax) * 0.5;
 	tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 1' * (o.z - this.absmin.z), MOVE_NORMAL, this);
@@ -1117,7 +1117,7 @@ spawnfunc(trigger_race_penalty)
 
 	this.use = penalty_use;
 	if (!(this.spawnflags & 1))
-		this.touch = penalty_touch;
+		settouch(this, penalty_touch);
 
 	if (this.race_penalty_reason == "")
 		this.race_penalty_reason = "missing a checkpoint";

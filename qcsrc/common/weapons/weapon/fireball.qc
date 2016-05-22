@@ -216,7 +216,7 @@ void W_Fireball_Attack1()
 	proj.movetype = MOVETYPE_FLY;
 	W_SetupProjVelocity_PRI(proj, fireball);
 	proj.angles = vectoangles(proj.velocity);
-	proj.touch = W_Fireball_TouchExplode;
+	settouch(proj, W_Fireball_TouchExplode);
 	setsize(proj, '-16 -16 -16', '16 16 16');
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY;
@@ -337,7 +337,7 @@ void W_Fireball_Attack2()
 	proj.bot_dodgerating = WEP_CVAR_SEC(fireball, damage);
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = WEP_FIREBALL.m_id | HITTYPE_SECONDARY;
-	proj.touch = W_Fireball_Firemine_Touch;
+	settouch(proj, W_Fireball_Firemine_Touch);
 	PROJECTILE_MAKETRIGGER(proj);
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, w_shotorg);

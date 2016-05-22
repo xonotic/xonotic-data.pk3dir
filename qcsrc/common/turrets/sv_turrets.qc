@@ -472,7 +472,7 @@ entity turret_projectile(Sound _snd, float _size, float _health, float _death, f
 	proj.bot_dodge	  = true;
 	proj.bot_dodgerating = self.shot_dmg;
 	proj.think		  = turret_projectile_explode;
-	proj.touch		  = turret_projectile_touch;
+	settouch(proj, turret_projectile_touch);
 	proj.nextthink	  = time + 9;
 	proj.movetype		= MOVETYPE_FLYMISSILE;
 	proj.velocity		= normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;

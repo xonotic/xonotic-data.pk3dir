@@ -91,7 +91,7 @@ spawnfunc(trigger_gravity)
 		return;
 
 	EXACTTRIGGER_INIT;
-	this.touch = trigger_gravity_touch;
+	settouch(this, trigger_gravity_touch);
 	if(this.noise != "")
 		precache_sound(this.noise);
 

@@ -55,7 +55,7 @@ void multi_trigger(entity this)
 	else
 	{	// we can't just remove (this) here, because this is a touch function
 		// called wheil C code is looping through area links...
-		this.touch = func_null;
+		settouch(this, func_null);
 	}
 }
 
@@ -116,7 +116,7 @@ void multi_eventdamage(entity this, entity inflictor, entity attacker, float dam
 void multi_reset(entity this)
 {
 	if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
-		this.touch = multi_touch;
+		settouch(this, multi_touch);
 	if (this.max_health)
 	{
 		this.health = this.max_health;
@@ -178,7 +178,7 @@ spawnfunc(trigger_multiple)
 	{
 		if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
 		{
-			this.touch = multi_touch;
+			settouch(this, multi_touch);
 			setorigin (this, this.origin);	// make sure it links into the world
 		}
 	}

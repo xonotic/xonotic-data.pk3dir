@@ -122,7 +122,7 @@ void spawn_item_key(entity this)
 		WITHSELF(this, droptofloor());
 	}
 
-	this.touch = item_key_touch;
+	settouch(this, item_key_touch);
 };
 
 

@@ -638,7 +638,7 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
     instance.wait			= time;
     instance.delay			= 2 + time + random() * 3;
     instance.cnt			= 1 + random() * 2;
-    instance.touch			= racer_deadtouch;
+    settouch(instance, racer_deadtouch);
 
     Send_Effect(EFFECT_EXPLOSION_MEDIUM, instance.origin, '0 0 0', 1);
 

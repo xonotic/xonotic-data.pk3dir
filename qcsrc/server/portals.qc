@@ -327,7 +327,7 @@ void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = func_null;
+	settouch(portal, func_null);
 	portal.think = func_null;
 	portal.effects = 0;
 	portal.nextthink = 0;
@@ -338,7 +338,7 @@ void Portal_MakeWaitingPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = func_null;
+	settouch(portal, func_null);
 	portal.think = func_null;
 	portal.effects = EF_ADDITIVE;
 	portal.nextthink = 0;
@@ -349,7 +349,7 @@ void Portal_MakeInPortal(entity portal)
 {
 	portal.skin = 0;
 	portal.solid = SOLID_NOT; // this is done when connecting them!
-	portal.touch = Portal_Touch;
+	settouch(portal, Portal_Touch);
 	portal.think = Portal_Think;
 	portal.effects = EF_RED;
 	portal.nextthink = time;
@@ -360,7 +360,7 @@ void Portal_MakeOutPortal(entity portal)
 {
 	portal.skin = 1;
 	portal.solid = SOLID_NOT;
-	portal.touch = func_null;
+	settouch(portal, func_null);
 	portal.think = func_null;
 	portal.effects = EF_STARDUST | EF_BLUE;
 	portal.nextthink = 0;

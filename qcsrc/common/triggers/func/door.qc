@@ -446,7 +446,7 @@ void door_spawnfield(vector fmins, vector fmaxs)
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = self;
 #ifdef SVQC
-	trigger.touch = door_trigger_touch;
+	settouch(trigger, door_trigger_touch);
 #elif defined(CSQC)
 	trigger.trigger_touch = door_trigger_touch;
 	trigger.draw = trigger_draw_generic;
@@ -771,7 +771,7 @@ spawnfunc(func_door)
 	if (this.items)
 		this.wait = -1;
 
-	this.touch = door_touch;
+	settouch(this, door_touch);
 
 // LinkDoors can't be done until all of the doors have been spawned, so
 // the sizes can be detected properly.

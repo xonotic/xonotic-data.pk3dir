@@ -262,7 +262,7 @@ void trigger_push_touch()
 
 	if (this.spawnflags & PUSH_ONCE)
 	{
-		this.touch = func_null;
+		settouch(this, func_null);
 		this.think = SUB_Remove_self;
 		this.nextthink = time;
 	}
@@ -382,7 +382,7 @@ spawnfunc(trigger_push)
 
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;
-	this.touch = trigger_push_touch;
+	settouch(this, trigger_push_touch);
 
 	// normal push setup
 	if (!this.speed)

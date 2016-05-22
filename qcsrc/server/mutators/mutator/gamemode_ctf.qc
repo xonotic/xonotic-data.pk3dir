@@ -304,7 +304,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 
 	shield.enemy = self;
 	shield.team = self.team;
-	shield.touch = ctf_CaptureShield_Touch;
+	settouch(shield, ctf_CaptureShield_Touch);
 	shield.customizeentityforclient = ctf_CaptureShield_Customize;
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
@@ -1211,7 +1211,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;
-	flag.touch = ctf_FlagTouch;
+	settouch(flag, ctf_FlagTouch);
 	flag.think = ctf_FlagThink;
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;

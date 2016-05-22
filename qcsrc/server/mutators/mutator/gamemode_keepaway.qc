@@ -99,7 +99,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	self.velocity = '0 0 200';
 	self.angles = '0 0 0';
 	self.effects = autocvar_g_keepawayball_effects;
-	self.touch = ka_TouchEvent;
+	settouch(self, ka_TouchEvent);
 	setthink(self, ka_RespawnBall);
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
@@ -153,7 +153,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.effects |= EF_NODRAW;
-	self.touch = func_null;
+	settouch(self, func_null);
 	self.think = ka_TimeScoring;
 	self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	self.takedamage = DAMAGE_NO;
@@ -192,7 +192,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	setattachment(ball, world, "");
 	ball.movetype = MOVETYPE_BOUNCE;
 	ball.wait = time + 1;
-	ball.touch = ka_TouchEvent;
+	settouch(ball, ka_TouchEvent);
 	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
@@ -231,7 +231,7 @@ void ka_Reset(entity this)
 	if(time < game_starttime)
 	{
 		setthink(this, ka_RespawnBall);
-		this.touch = func_null;
+		settouch(this, func_null);
 		this.nextthink = game_starttime;
 	}
 	else
@@ -478,7 +478,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.flags = FL_ITEM;
 	e.pushable = true;
 	e.reset = ka_Reset;
-	e.touch = ka_TouchEvent;
+	settouch(e, ka_TouchEvent);
 	e.owner = world;
 	ka_ball = e;
 

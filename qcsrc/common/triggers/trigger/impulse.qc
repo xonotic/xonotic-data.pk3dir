@@ -195,20 +195,20 @@ spawnfunc(trigger_impulse)
 		if(!this.strength) this.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
 		setorigin(this, this.origin);
 		setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
-		this.touch = trigger_impulse_touch3;
+		settouch(this, trigger_impulse_touch3);
 	}
 	else
 	{
 		if(this.target)
 		{
 			if(!this.strength) this.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
-			this.touch = trigger_impulse_touch1;
+			settouch(this, trigger_impulse_touch1);
 		}
 		else
 		{
 			if(!this.strength) this.strength = 0.9;
 			this.strength = pow(this.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
-			this.touch = trigger_impulse_touch2;
+			settouch(this, trigger_impulse_touch2);
 		}
 	}
 

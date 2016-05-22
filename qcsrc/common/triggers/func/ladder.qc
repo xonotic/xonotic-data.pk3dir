@@ -41,7 +41,7 @@ void func_ladder_link(entity this)
 
 void func_ladder_init(entity this)
 {
-	this.touch = func_ladder_touch;
+	settouch(this, func_ladder_touch);
 
 	trigger_init(this);
 	func_ladder_link(this);

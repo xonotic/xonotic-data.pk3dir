@@ -87,14 +87,14 @@ void M_Zombie_Attack_Leap_Touch()
 		angles_face = vectoangles(self.moveto - self.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
 		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP.m_id, other.origin, angles_face);
-		self.touch = Monster_Touch; // instantly turn it off to stop damage spam
+		settouch(self, Monster_Touch); // instantly turn it off to stop damage spam
 		self.state = 0;
 	}
 
 	if (trace_dphitcontents)
 	{
 		self.state = 0;
-		self.touch = Monster_Touch;
+		settouch(self, Monster_Touch);
 	}
 }
 

@@ -261,7 +261,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.bot_dodge		= true;
 	proj.bot_dodgerating  = _dmg;
 	proj.velocity		 = _vel;
-	proj.touch			= vehicles_projectile_explode;
+	settouch(proj, vehicles_projectile_explode);
 	proj.use			  = vehicles_projectile_explode_use;
 	proj.owner			= this;
 	proj.realowner		= _owner;
@@ -327,7 +327,7 @@ entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, 
 	{
 		_gib.think = vehicles_gib_explode;
 		_gib.nextthink = time + random() * _explode;
-		_gib.touch = vehicles_gib_explode;
+		settouch(_gib, vehicles_gib_explode);
 	}
 	else
 	{
@@ -1113,7 +1113,7 @@ void vehicles_spawn()
 	self.vehicle_hudmodel.viewmodelforclient = self;
 
 	self.owner				= world;
-	self.touch				= vehicles_touch;
+	settouch(self, vehicles_touch);
 	self.event_damage		= vehicles_damage;
 	self.iscreature			= true;
 	self.teleportable		= false; // no teleporting for vehicles, too buggy
@@ -1210,7 +1210,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.vehicleid				= info.vehicleid;
 	this.PlayerPhysplug			= info.PlayerPhysplug;
 	this.event_damage			= func_null;
-	this.touch					= vehicles_touch;
+	settouch(this, vehicles_touch);
 	this.think					= vehicles_spawn;
 	this.nextthink				= time;
 	this.effects				= EF_NODRAW;

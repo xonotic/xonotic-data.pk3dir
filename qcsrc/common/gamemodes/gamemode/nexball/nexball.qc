@@ -166,7 +166,7 @@ void GiveBall(entity plyr, entity ball)
 
 	ball.velocity = '0 0 0';
 	ball.movetype = MOVETYPE_NONE;
-	ball.touch = func_null;
+	settouch(ball, func_null);
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
@@ -201,7 +201,7 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.scale = ball_scale;
 	ball.velocity = vel;
 	ball.nb_droptime = time;
-	ball.touch = basketball_touch;
+	settouch(ball, basketball_touch);
 	ball.think = ResetBall;
 	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.teamtime);
 
@@ -226,9 +226,9 @@ void InitBall()
 	UNSET_ONGROUND(this);
 	this.movetype = MOVETYPE_BOUNCE;
 	if(this.classname == "nexball_basketball")
-		this.touch = basketball_touch;
+		settouch(this, basketball_touch);
 	else if(this.classname == "nexball_football")
-		this.touch = football_touch;
+		settouch(this, football_touch);
 	this.cnt = 0;
 	this.think = ResetBall;
 	this.nextthink = time + autocvar_g_nexball_delay_idle + 3;
@@ -247,7 +247,7 @@ void ResetBall()
 		if(time == this.teamtime)
 			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
 
-		this.touch = func_null;
+		settouch(this, func_null);
 		this.movetype = MOVETYPE_NOCLIP;
 		this.velocity = '0 0 0'; // just in case?
 		if(!this.cnt)
@@ -429,7 +429,7 @@ void GoalTouch()
 	ball.cnt = 1;
 	ball.think = ResetBall;
 	if(ball.classname == "nexball_basketball")
-		ball.touch = football_touch; // better than func_null: football control until the ball gets reset
+		settouch(ball, football_touch); // better than func_null: football control until the ball gets reset
 	ball.nextthink = time + autocvar_g_nexball_delay_goal * (self.team != GOAL_OUT);
 }
 
@@ -623,7 +623,7 @@ void SpawnGoal(entity this)
 	if(this.noise == "")
 		this.noise = "ctf/respawn.wav";
 	precache_sound(this.noise);
-	this.touch = GoalTouch;
+	settouch(this, GoalTouch);
 }
 
 spawnfunc(nexball_redgoal)
@@ -815,7 +815,7 @@ void W_Nexball_Attack2()
 
 	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
-	missile.touch = W_Nexball_Touch;
+	settouch(missile, W_Nexball_Touch);
 	missile.think = SUB_Remove_self;
 	missile.nextthink = time + autocvar_g_balance_nexball_secondary_lifetime; //FIXME: use a distance instead?
 

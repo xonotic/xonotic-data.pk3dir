@@ -213,7 +213,7 @@ spawnfunc(func_door_secret)
 	if (this.noise == "") this.noise = "misc/talk.wav";
 	precache_sound(this.noise);
 
-	this.touch = secret_touch;
+	settouch(this, secret_touch);
 	this.blocked = secret_blocked;
 	this.speed = 50;
 	this.use = fd_secret_use;

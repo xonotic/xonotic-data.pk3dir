@@ -719,7 +719,7 @@ void WarpZone_InitStep_FinalizeTransform(entity this)
 
 	warpzone_warpzones_exist = 1;
 	WarpZone_SetUp(this, this.warpzone_origin, this.warpzone_angles, this.enemy.warpzone_origin, this.enemy.warpzone_angles);
-	this.touch = WarpZone_Touch;
+	settouch(this, WarpZone_Touch);
 	this.SendFlags = 0xFFFFFF;
 	if(this.spawnflags & 1)
 	{

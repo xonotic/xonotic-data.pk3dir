@@ -30,7 +30,7 @@ spawnfunc(trigger_heal)
 	this.active = ACTIVE_ACTIVE;
 
 	EXACTTRIGGER_INIT;
-	this.touch = trigger_heal_touch;
+	settouch(this, trigger_heal_touch);
 	if (!this.health)
 		this.health = 10;
 	if (!this.max_health)

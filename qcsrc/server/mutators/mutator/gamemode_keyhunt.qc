@@ -792,7 +792,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	entity key = spawn();
 	key.count = i;
 	key.classname = STR_ITEM_KH_KEY;
-	key.touch = kh_Key_Touch;
+	settouch(key, kh_Key_Touch);
 	key.think = kh_Key_Think;
 	key.nextthink = time;
 	key.items = IT_KEY1 | IT_KEY2;

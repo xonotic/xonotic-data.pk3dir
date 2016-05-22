@@ -131,7 +131,7 @@ spawnfunc(func_button)
 		this.takedamage = DAMAGE_YES;
 	}
 	else
-		this.touch = button_touch;
+		settouch(this, button_touch);
 
 	if (!this.speed)
 		this.speed = 40;

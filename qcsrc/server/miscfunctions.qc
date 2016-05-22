@@ -958,20 +958,7 @@ void EliminatedPlayers_Init(float(entity) isEliminated_func)
 }
 
 
-void adaptor_think2touch()
-{SELFPARAM();
-    entity o;
-    o = other;
-    other = world;
-    self.touch();
-    other = o;
-}
 
-void adaptor_think2use()
-{SELFPARAM();
-	if(this.use)
-    	this.use(this, NULL, NULL);
-}
 
 void adaptor_think2use_hittype_splash() // for timed projectile detonation
 {SELFPARAM();

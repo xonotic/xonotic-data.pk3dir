@@ -80,7 +80,7 @@ spawnfunc(trigger_secret)
 	spawnfunc_trigger_once(this);
 
 	// take over the touch() function, so we can mark secret as found
-	this.touch = trigger_secret_touch;
+	settouch(this, trigger_secret_touch);
 	// ignore triggering;
 	this.use = func_null;
 }

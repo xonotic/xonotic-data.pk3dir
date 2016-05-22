@@ -45,20 +45,33 @@
     #define WITHSELF(value, block) block
 #endif
 
-#define SELFWRAP(T, R) \
-    [[alias(#T)]] .R() __##T; \
-    .R(entity this) self##T; \
-    R T##_self() { SELFPARAM(); return this.self##T(this); }
+#define SELFWRAP(T, R, args, forward) \
+    .R() T; \
+    .R() __##T = T; \
+    .R args self##T; \
+    R T##_self() { SELFPARAM(); return this.self##T forward; }
 
 noref entity _selftemp;
 #define SELFWRAP_SET(T, e, f) \
-    (_selftemp = (e), _selftemp.__##T = T##_self, _selftemp.self##T = f)
+    (_selftemp = (e), _selftemp.__##T = ((f) ? T##_self : func_null), _selftemp.self##T = (f))
+#define SELFWRAP_GET(T, e) \
+    (0, (e).self##T)
+#define _SELFWRAP_SET(T, e, f) \
+    ((e).__##T = (f))
+#define _SELFWRAP_GET(T, e) \
+    (0, (e).__##T)
 
-SELFWRAP(think, void)
+SELFWRAP(think, void, (entity this), (this))
 #define setthink(e, f) SELFWRAP_SET(think, e, f)
 
-SELFWRAP(touch, void)
-#define settouch(e, f) SELFWRAP_SET(touch, e, f)
+SELFWRAP(touch, void, (entity this), (this))
+#define settouch(e, f) _SELFWRAP_SET(touch, e, f)
+#define gettouch(e) _SELFWRAP_GET(touch, e)
 
-SELFWRAP(predraw, void)
+SELFWRAP(predraw, void, (entity this), (this))
 #define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
+
+#ifndef MENUQC
+void adaptor_think2touch() { SELFPARAM(); WITH(entity, other, NULL, gettouch(this)()); }
+void adaptor_think2use() { SELFPARAM(); if (this.use) this.use(this, NULL, NULL); }
+#endif

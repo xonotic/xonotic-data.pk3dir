@@ -650,7 +650,7 @@ void bumblebee_exit(float eject)
 		return;
 	}
 
-	self.touch = vehicles_touch;
+	settouch(self, vehicles_touch);
 
 	if(!IS_DEAD(self))
 	{
@@ -730,7 +730,7 @@ METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))
 METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 {
     SELFPARAM();
-    self.touch = bumblebee_touch;
+    settouch(self, bumblebee_touch);
     self.nextthink = 0;
     self.movetype = MOVETYPE_BOUNCEMISSILE;
 }
@@ -751,7 +751,7 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         	entity oldother = other;
         	other = e;
         	self.phase = 0;
-        	self.touch();
+        	gettouch(self)();
         	other = oldother;
         	return;
         }
@@ -763,7 +763,7 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         	entity oldother = other;
         	other = e;
         	self.phase = 0;
-        	self.touch();
+        	gettouch(self)();
         	other = oldother;
             return;
         }
@@ -793,9 +793,9 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     entity _body = vehicle_tossgib(instance, instance, instance.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
     if(random() > 0.5)
-        _body.touch = bumblebee_blowup;
+        settouch(_body, bumblebee_blowup);
     else
-        _body.touch = func_null;
+        settouch(_body, func_null);
 
     _body.think = bumblebee_diethink;
     _body.nextthink = time;
@@ -817,7 +817,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     instance.colormod		= '0 0 0';
     instance.avelocity		= '0 0 0';
     instance.velocity		= '0 0 0';
-    instance.touch 			= func_null;
+    settouch(instance, func_null);
     instance.nextthink 		= 0;
 
     setorigin(instance, instance.pos1);
