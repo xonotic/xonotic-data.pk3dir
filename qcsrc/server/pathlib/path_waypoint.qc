@@ -246,6 +246,6 @@ void pathlib_waypointpath_autostep()
 {
     entity n;
     n = spawn();
-    n.think = plas_think;
+    setthink(n, plas_think);
     n.nextthink = time + 0.1;
 }

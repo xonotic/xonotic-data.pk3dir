@@ -116,7 +116,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	wep.dphitcontentsmask = self.dphitcontentsmask;
 	wep.cnt = (self.owner != world);
 
-	wep.think = physical_item_think;
+	setthink(wep, physical_item_think);
 	wep.nextthink = time;
 	settouch(wep, physical_item_touch);
 	wep.event_damage = physical_item_damage;

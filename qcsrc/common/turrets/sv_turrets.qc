@@ -168,7 +168,7 @@ void turret_hide()
 {SELFPARAM();
 	self.effects   |= EF_NODRAW;
 	self.nextthink = time + self.respawntime - 0.2;
-	self.think	 = turret_respawn;
+	setthink(self, turret_respawn);
 }
 
 void turret_die()
@@ -201,7 +201,7 @@ void turret_die()
 		// Setup respawn
 		self.SendFlags	  |= TNSF_STATUS;
 		self.nextthink	 = time + 0.2;
-		self.think		 = turret_hide;
+		setthink(self, turret_hide);
 
 		tur.tr_death(tur, self);
 	}
@@ -245,7 +245,7 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 		this.tur_head.event_damage = func_null;
 		this.takedamage			 = DAMAGE_NO;
 		this.nextthink = time;
-		this.think = turret_die;
+		setthink(this, turret_die);
 	}
 
 	this.SendFlags  |= TNSF_STATUS;
@@ -272,7 +272,7 @@ void turret_respawn()
 	self.ammo					= self.ammo_max;
 
 	self.nextthink = time + self.ticrate;
-	self.think	 = turret_think;
+	setthink(self, turret_think);
 
 	self.SendFlags = TNSF_FULL_UPDATE;
 
@@ -471,7 +471,7 @@ entity turret_projectile(Sound _snd, float _size, float _health, float _death, f
 	proj.realowner	  = self;
 	proj.bot_dodge	  = true;
 	proj.bot_dodgerating = self.shot_dmg;
-	proj.think		  = turret_projectile_explode;
+	setthink(proj, turret_projectile_explode);
 	settouch(proj, turret_projectile_touch);
 	proj.nextthink	  = time + 9;
 	proj.movetype		= MOVETYPE_FLYMISSILE;
@@ -1189,7 +1189,7 @@ void turret_use(entity this, entity actor, entity trigger)
 void turret_link()
 {SELFPARAM();
 	Net_LinkEntity(self, true, 0, turret_send);
-	self.think	 = turret_think;
+	setthink(self, turret_think);
 	self.nextthink = time;
 	self.tur_head.effects = EF_NODRAW;
 }
@@ -1256,7 +1256,7 @@ float turret_initialize(Turret tur)
 	if(!e)
 	{
 		e = new(turret_manager);
-		e.think = turrets_manager_think;
+		setthink(e, turrets_manager_think);
 		e.nextthink = time + 2;
 	}
 

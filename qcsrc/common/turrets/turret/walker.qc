@@ -141,7 +141,7 @@ void walker_rocket_think()
 
     if (self.max_health < time)
     {
-        self.think	  = walker_rocket_explode;
+        setthink(self, walker_rocket_explode);
         self.nextthink  = time;
         return;
     }
@@ -176,13 +176,13 @@ void walker_rocket_loop3()
 
     if (self.max_health < time)
     {
-        self.think = walker_rocket_explode;
+        setthink(self, walker_rocket_explode);
         return;
     }
 
     if(vdist(self.origin - self.tur_shotorg, <, 100))
     {
-        self.think = walker_rocket_think;
+        setthink(self, walker_rocket_think);
         return;
     }
 
@@ -200,14 +200,14 @@ void walker_rocket_loop2()
 
     if (self.max_health < time)
     {
-        self.think = walker_rocket_explode;
+        setthink(self, walker_rocket_explode);
         return;
     }
 
     if(vdist(self.origin - self.tur_shotorg, <, 100))
     {
         self.tur_shotorg = self.origin - '0 0 200';
-        self.think = walker_rocket_loop3;
+        setthink(self, walker_rocket_loop3);
         return;
     }
 
@@ -219,7 +219,7 @@ void walker_rocket_loop()
 {SELFPARAM();
     self.nextthink = time;
     self.tur_shotorg = self.origin + '0 0 300';
-    self.think = walker_rocket_loop2;
+    setthink(self, walker_rocket_loop2);
     self.shot_dmg = 1337;
 }
 
@@ -248,9 +248,9 @@ void walker_fire_rocket(vector org)
     rocket.enemy			  = self.enemy;
 
     if (random() < 0.01)
-        rocket.think		  = walker_rocket_loop;
+        setthink(rocket, walker_rocket_loop);
     else
-        rocket.think		  = walker_rocket_think;
+        setthink(rocket, walker_rocket_think);
 
     rocket.event_damage	   = walker_rocket_damage;
 

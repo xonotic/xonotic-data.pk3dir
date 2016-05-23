@@ -401,7 +401,7 @@ spawnfunc(func_assault_wall)
 	this.mdl = this.model;
 	_setmodel(this, this.mdl);
 	this.solid = SOLID_BSP;
-	this.think = assault_wall_think;
+	setthink(this, assault_wall_think);
 	this.nextthink = time;
 	InitializeEntity(this, assault_setenemytoobjective, INITPRIO_FINDTARGET);
 }

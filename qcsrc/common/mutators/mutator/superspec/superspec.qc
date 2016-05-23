@@ -398,7 +398,7 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 
 	entity _hello = spawn();
 	_hello.enemy = self;
-	_hello.think = superspec_hello;
+	setthink(_hello, superspec_hello);
 	_hello.nextthink = time + 5;
 
 	if (!_ISLOCAL)

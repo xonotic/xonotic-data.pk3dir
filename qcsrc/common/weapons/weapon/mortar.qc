@@ -235,7 +235,7 @@ void W_Mortar_Attack(Weapon thiswep)
 
 	gren.cnt = time + WEP_CVAR_PRI(mortar, lifetime);
 	gren.nextthink = time;
-	gren.think = W_Mortar_Grenade_Think1;
+	setthink(gren, W_Mortar_Grenade_Think1);
 	gren.use = W_Mortar_Grenade_Explode_use;
 	settouch(gren, W_Mortar_Grenade_Touch1);
 
@@ -282,7 +282,7 @@ void W_Mortar_Attack2(Weapon thiswep)
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
 	gren.nextthink = time + WEP_CVAR_SEC(mortar, lifetime);
-	gren.think = adaptor_think2use_hittype_splash;
+	setthink(gren, adaptor_think2use_hittype_splash);
 	gren.use = W_Mortar_Grenade_Explode2_use;
 	settouch(gren, W_Mortar_Grenade_Touch2);
 

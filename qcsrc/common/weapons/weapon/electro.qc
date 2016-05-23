@@ -104,7 +104,7 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 			e.classname = "electro_orb_chain";
 
 			// now set the next one to trigger as well
-			e.think = W_Electro_ExplodeCombo;
+			setthink(e, W_Electro_ExplodeCombo);
 
 			// delay combo chains, looks cooler
 			e.nextthink =
@@ -226,7 +226,7 @@ void W_Electro_Bolt_Think()
 				e.classname = "electro_orb_chain";
 
 				// now set the next one to trigger as well
-				e.think = W_Electro_ExplodeCombo;
+				setthink(e, W_Electro_ExplodeCombo);
 
 				// delay combo chains, looks cooler
 				e.nextthink =
@@ -278,7 +278,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep)
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(electro, damage);
 	proj.use = W_Electro_Explode_use;
-	proj.think = W_Electro_Bolt_Think;
+	setthink(proj, W_Electro_Bolt_Think);
 	proj.nextthink = time;
 	proj.ltime = time + WEP_CVAR_PRI(electro, lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
@@ -332,7 +332,7 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 			// change owner to whoever caused the combo explosion
 			this.realowner = inflictor.realowner;
 			this.classname = "electro_orb_chain";
-			this.think = W_Electro_ExplodeCombo;
+			setthink(this, W_Electro_ExplodeCombo);
 			this.nextthink = time +
 				(
 					// bound the length, inflictor may be in a galaxy far far away (warpzones)
@@ -348,7 +348,7 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 		else
 		{
 			this.use = W_Electro_Explode_use;
-			this.think = adaptor_think2use; // not _hittype_splash, as this runs "immediately"
+			setthink(this, adaptor_think2use); // not _hittype_splash, as this runs "immediately"
 		}
 	}
 }
@@ -375,7 +375,7 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 	entity proj = new(electro_orb);
 	proj.owner = proj.realowner = self;
 	proj.use = W_Electro_Explode_use;
-	proj.think = adaptor_think2use_hittype_splash;
+	setthink(proj, adaptor_think2use_hittype_splash);
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_SEC(electro, damage);
 	proj.nextthink = time + WEP_CVAR_SEC(electro, lifetime);

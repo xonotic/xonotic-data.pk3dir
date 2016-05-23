@@ -80,7 +80,7 @@ void W_MachineGun_MuzzleFlash_Think()
 
 	if(this.alpha <= 0)
 	{
-		this.think = SUB_Remove_self;
+		setthink(this, SUB_Remove_self);
 		this.nextthink = time;
 		this.realowner.muzzle_flash = world;
 		return;
@@ -97,7 +97,7 @@ void W_MachineGun_MuzzleFlash()
 	setmodel(self.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
 
 	self.muzzle_flash.scale = 0.75;
-	self.muzzle_flash.think = W_MachineGun_MuzzleFlash_Think;
+	setthink(self.muzzle_flash, W_MachineGun_MuzzleFlash_Think);
 	self.muzzle_flash.nextthink = time + 0.02;
 	self.muzzle_flash.frame = 2;
 	self.muzzle_flash.alpha = 0.75;

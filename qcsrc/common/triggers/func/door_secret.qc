@@ -72,7 +72,7 @@ void fd_secret_damage(entity this, entity inflictor, entity attacker, float dama
 void fd_secret_move1()
 {SELFPARAM();
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
-	self.think = fd_secret_move2;
+	setthink(self, fd_secret_move2);
 	if (self.noise3 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
@@ -93,7 +93,7 @@ void fd_secret_move3()
 	if (!(self.spawnflags & SECRET_OPEN_ONCE))
 	{
 		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
-		self.think = fd_secret_move4;
+		setthink(self, fd_secret_move4);
 	}
 }
 
@@ -109,7 +109,7 @@ void fd_secret_move4()
 void fd_secret_move5()
 {SELFPARAM();
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
-	self.think = fd_secret_move6;
+	setthink(self, fd_secret_move6);
 	if (self.noise3 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
@@ -175,7 +175,7 @@ void secret_reset(entity this)
 		this.takedamage = DAMAGE_YES;
 	}
 	setorigin(this, this.oldorigin);
-	this.think = func_null;
+	setthink(this, func_null);
 	this.SUB_NEXTTHINK = 0;
 }
 

@@ -230,7 +230,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 
 	entity missile = spawn();
 	missile.owner = missile.realowner = this;
-	missile.think = M_Mage_Attack_Spike_Think;
+	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;
 	missile.nextthink = time;
 	missile.solid = SOLID_BBOX;

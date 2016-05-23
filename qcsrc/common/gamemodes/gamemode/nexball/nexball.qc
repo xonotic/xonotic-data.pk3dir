@@ -175,7 +175,7 @@ void GiveBall(entity plyr, entity ball)
 
 	if(autocvar_g_nexball_basketball_delay_hold)
 	{
-		ball.think = DropOwner;
+		setthink(ball, DropOwner);
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
 
@@ -202,7 +202,7 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.velocity = vel;
 	ball.nb_droptime = time;
 	settouch(ball, basketball_touch);
-	ball.think = ResetBall;
+	setthink(ball, ResetBall);
 	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.teamtime);
 
 	if(ball.owner.metertime)
@@ -230,7 +230,7 @@ void InitBall()
 	else if(this.classname == "nexball_football")
 		settouch(this, football_touch);
 	this.cnt = 0;
-	this.think = ResetBall;
+	setthink(this, ResetBall);
 	this.nextthink = time + autocvar_g_nexball_delay_idle + 3;
 	this.teamtime = 0;
 	this.pusher = world;
@@ -271,7 +271,7 @@ void ResetBall()
 		this.velocity = '0 0 0';
 		setorigin(this, this.spawnorigin); // make sure it's positioned correctly anyway
 		this.movetype = MOVETYPE_NONE;
-		this.think = InitBall;
+		setthink(this, InitBall);
 		this.nextthink = max(time, game_starttime) + autocvar_g_nexball_delay_start;
 	}
 }
@@ -427,7 +427,7 @@ void GoalTouch()
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 
 	ball.cnt = 1;
-	ball.think = ResetBall;
+	setthink(ball, ResetBall);
 	if(ball.classname == "nexball_basketball")
 		settouch(ball, football_touch); // better than func_null: football control until the ball gets reset
 	ball.nextthink = time + autocvar_g_nexball_delay_goal * (self.team != GOAL_OUT);
@@ -556,7 +556,7 @@ void SpawnBall(entity this)
 	WaypointSprite_AttachCarrier(WP_NbBall, this, RADARICON_FLAGCARRIER); // the ball's team is not set yet, no rule update needed
 
 	this.reset = ball_restart;
-	this.think = InitBall;
+	setthink(this, InitBall);
 	this.nextthink = game_starttime + autocvar_g_nexball_delay_start;
 }
 
@@ -793,7 +793,7 @@ void W_Nexball_Attack2()
 		entity _ball = self.ballcarried;
 		W_SetupShot(self, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
-		_ball.think = W_Nexball_Think;
+		setthink(_ball, W_Nexball_Think);
 		_ball.nextthink = time;
 		return;
 	}
@@ -816,7 +816,7 @@ void W_Nexball_Attack2()
 	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	settouch(missile, W_Nexball_Touch);
-	missile.think = SUB_Remove_self;
+	setthink(missile, SUB_Remove_self);
 	missile.nextthink = time + autocvar_g_balance_nexball_secondary_lifetime; //FIXME: use a distance instead?
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;

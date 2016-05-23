@@ -221,7 +221,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 
 	if(this.respawntime)
 	{
-		this.think = func_breakable_restore_self;
+		setthink(this, func_breakable_restore_self);
 		this.nextthink = time + this.respawntime + crandom() * this.respawntimejitter;
 	}
 
@@ -271,7 +271,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		// do not explode NOW but in the NEXT FRAME!
 		// because recursive calls to RadiusDamage are not allowed
 		this.nextthink = time;
-		this.think = func_breakable_destroy_self;
+		setthink(this, func_breakable_destroy_self);
 	}
 }
 

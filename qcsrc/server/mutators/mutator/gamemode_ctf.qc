@@ -1212,7 +1212,7 @@ void ctf_FlagSetup(int teamnumber, entity flag) // called when spawning a flag e
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;
 	settouch(flag, ctf_FlagTouch);
-	flag.think = ctf_FlagThink;
+	setthink(flag, ctf_FlagThink);
 	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
 

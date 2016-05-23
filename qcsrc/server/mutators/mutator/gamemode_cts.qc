@@ -101,7 +101,7 @@ void CTS_ClientKill(entity e) // silent version of ClientKill, used when player 
 {
     e.killindicator = spawn();
     e.killindicator.owner = e;
-    e.killindicator.think = KillIndicator_Think;
+    setthink(e.killindicator, KillIndicator_Think);
     e.killindicator.nextthink = time + (e.lip) * 0.05;
     e.killindicator.cnt = ceil(autocvar_g_cts_finish_kill_delay);
     e.killindicator.health = 1; // this is used to indicate that it should be silent

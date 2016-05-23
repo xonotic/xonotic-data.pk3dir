@@ -265,7 +265,7 @@ void W_Porto_Attack(float type)
 	setsize(gren, '0 0 0', '0 0 0');
 
 	gren.nextthink = time + WEP_CVAR_BOTH(porto, (type <= 0), lifetime);
-	gren.think = W_Porto_Think;
+	setthink(gren, W_Porto_Think);
 	settouch(gren, W_Porto_Touch);
 
 	if(self.items & ITEM_Strength.m_itemid)

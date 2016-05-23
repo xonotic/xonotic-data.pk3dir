@@ -680,7 +680,7 @@ void WarpZone_RefSys_CheckCreate(entity me)
 	{
 		me.WarpZone_refsys = new(warpzone_refsys);
 		me.WarpZone_refsys.owner = me;
-		me.WarpZone_refsys.think = WarpZone_RefSys_GC;
+		setthink(me.WarpZone_refsys, WarpZone_RefSys_GC);
 		me.WarpZone_refsys.nextthink = time + 1;
 		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
 	}

@@ -391,7 +391,7 @@ float CheatCommand(entity this, int argc)
 		case "dragbox_spawn": {
 			IS_CHEAT(this, 0, argc, 0);
 			entity e = new(dragbox_box);
-			e.think = DragBox_Think;
+			setthink(e, DragBox_Think);
 			e.nextthink = time;
 			e.solid = -1; // black
 			setmodel(e, MDL_Null); // network it
@@ -441,7 +441,7 @@ float CheatCommand(entity this, int argc)
 		case "dragpoint_spawn": {
 			IS_CHEAT(this, 0, argc, 0);
 			entity e = new(dragpoint);
-			e.think = DragBox_Think;
+			setthink(e, DragBox_Think);
 			e.nextthink = time;
 			e.solid = 0; // nothing special
 			setmodel(e, MDL_MARKER);

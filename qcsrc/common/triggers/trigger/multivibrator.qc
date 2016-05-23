@@ -68,7 +68,7 @@ spawnfunc(trigger_multivibrator)
 
 	this.state = 0;
 	this.use = multivibrator_toggle;
-	this.think = multivibrator_send_think;
+	setthink(this, multivibrator_send_think);
 	this.nextthink = max(1, time);
 
 	IFTARGETED

@@ -328,7 +328,7 @@ void Portal_MakeBrokenPortal(entity portal)
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
 	settouch(portal, func_null);
-	portal.think = func_null;
+	setthink(portal, func_null);
 	portal.effects = 0;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_NO;
@@ -339,7 +339,7 @@ void Portal_MakeWaitingPortal(entity portal)
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
 	settouch(portal, func_null);
-	portal.think = func_null;
+	setthink(portal, func_null);
 	portal.effects = EF_ADDITIVE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
@@ -350,7 +350,7 @@ void Portal_MakeInPortal(entity portal)
 	portal.skin = 0;
 	portal.solid = SOLID_NOT; // this is done when connecting them!
 	settouch(portal, Portal_Touch);
-	portal.think = Portal_Think;
+	setthink(portal, Portal_Think);
 	portal.effects = EF_RED;
 	portal.nextthink = time;
 	portal.takedamage = DAMAGE_NO;
@@ -361,7 +361,7 @@ void Portal_MakeOutPortal(entity portal)
 	portal.skin = 1;
 	portal.solid = SOLID_NOT;
 	settouch(portal, func_null);
-	portal.think = func_null;
+	setthink(portal, func_null);
 	portal.effects = EF_STARDUST | EF_BLUE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
@@ -582,7 +582,7 @@ void Portal_RemoveLater(entity portal, float kill)
 {
 	Portal_MakeBrokenPortal(portal);
 	portal.cnt = kill;
-	portal.think = Portal_RemoveLater_Think;
+	setthink(portal, Portal_RemoveLater_Think);
 	portal.nextthink = time;
 }
 void Portal_ClearAllLater_PortalsOnly(entity own)
@@ -629,7 +629,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.mangle = ang;
 	portal.angles = ang;
 	portal.angles_x = -portal.angles.x; // is a bmodel
-	portal.think = Portal_Think;
+	setthink(portal, Portal_Think);
 	portal.nextthink = 0;
 	portal.portal_activatetime = time + 0.1;
 	portal.takedamage = DAMAGE_AIM;

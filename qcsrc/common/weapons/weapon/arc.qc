@@ -256,7 +256,7 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, this.think);
+		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
 void W_Arc_Bolt_Touch()
@@ -288,7 +288,7 @@ void W_Arc_Attack_Bolt(Weapon thiswep)
 
 	settouch(missile, W_Arc_Bolt_Touch);
 	missile.use = W_Arc_Bolt_Explode_use;
-	missile.think = adaptor_think2use_hittype_splash;
+	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_ARC.m_id | HITTYPE_SECONDARY;
@@ -683,7 +683,7 @@ void W_Arc_Beam(float burst)
 
 	entity beam = self.arc_beam = new(W_Arc_Beam);
 	beam.solid = SOLID_NOT;
-	beam.think = W_Arc_Beam_Think;
+	setthink(beam, W_Arc_Beam_Think);
 	beam.owner = self;
 	beam.movetype = MOVETYPE_NONE;
 	beam.bot_dodge = true;
@@ -691,7 +691,7 @@ void W_Arc_Beam(float burst)
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
-	WITHSELF(beam, beam.think());
+	WITHSELF(beam, getthink(beam)());
 }
 
 void Arc_Smoke()

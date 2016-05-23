@@ -69,7 +69,7 @@ void trigger_gravity_touch()
 		other.trigger_gravity_check.enemy = self;
 		other.trigger_gravity_check.owner = other;
 		other.trigger_gravity_check.gravity = other.gravity;
-		other.trigger_gravity_check.think = trigger_gravity_check_think;
+		setthink(other.trigger_gravity_check, trigger_gravity_check_think);
 		other.trigger_gravity_check.nextthink = time;
 		other.trigger_gravity_check.count = 2;
 		if(other.gravity)

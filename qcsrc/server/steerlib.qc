@@ -500,7 +500,7 @@ void flocker_die(entity this)
     this.owner = world;
 
     this.nextthink = time;
-    this.think = SUB_Remove;
+    setthink(this, SUB_Remove);
 }
 
 
@@ -553,7 +553,7 @@ void spawn_flocker(entity this)
 
     flocker.flock_id   = this.flock_id;
     flocker.owner      = this;
-    flocker.think      = flocker_think;
+    setthink(flocker, flocker_think);
     flocker.nextthink  = time + random() * 5;
     PROJECTILE_MAKETRIGGER(flocker);
     flocker.movetype   = MOVETYPE_BOUNCEMISSILE;
@@ -639,7 +639,7 @@ spawnfunc(flockerspawn)
     if(!this.delay)    this.delay = 0.25;
     if(!this.flock_id) this.flock_id = globflockcnt;
 
-    this.think     = flockerspawn_think;
+    setthink(this, flockerspawn_think);
     this.nextthink = time + 0.25;
 
     this.enemy = new(FLock Hunter);
@@ -651,7 +651,7 @@ spawnfunc(flockerspawn)
     this.enemy.effects   = EF_LOWPRECISION;
     this.enemy.movetype  = MOVETYPE_BOUNCEMISSILE;
     PROJECTILE_MAKETRIGGER(this.enemy);
-    this.enemy.think     = flocker_hunter_think;
+    setthink(this.enemy, flocker_hunter_think);
     this.enemy.nextthink = time + 10;
     this.enemy.flock_id  = this.flock_id;
     this.enemy.owner     = this;

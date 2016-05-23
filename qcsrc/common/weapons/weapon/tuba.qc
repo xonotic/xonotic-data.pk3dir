@@ -338,7 +338,7 @@ void W_Tuba_NoteOn(float hittype)
 		self.tuba_note.owner = self.tuba_note.realowner = self;
 		self.tuba_note.cnt = n;
 		self.tuba_note.tuba_instrument = self.tuba_instrument;
-		self.tuba_note.think = W_Tuba_NoteThink;
+		setthink(self.tuba_note, W_Tuba_NoteThink);
 		self.tuba_note.nextthink = time;
 		self.tuba_note.spawnshieldtime = time;
 		Net_LinkEntity(self.tuba_note, false, 0, W_Tuba_NoteSendEntity);
@@ -631,9 +631,9 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 		}
 	}
 
-	this.think = Ent_TubaNote_StopSound_self;
+	setthink(this, Ent_TubaNote_StopSound_self);
 	this.entremove = Ent_TubaNote_StopSound;
-	this.enemy.think = Ent_TubaNote_Think;
+	setthink(this.enemy, Ent_TubaNote_Think);
 	this.enemy.nextthink = time + 10;
 
 	if (upd) {

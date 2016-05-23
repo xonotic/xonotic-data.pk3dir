@@ -103,7 +103,7 @@ void relocate_spawnpoint(entity this)
     }
 
     this.use = spawnpoint_use;
-    this.think = spawnpoint_think;
+    setthink(this, spawnpoint_think);
     this.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
     this.team_saved = this.team;
     if (!this.cnt)

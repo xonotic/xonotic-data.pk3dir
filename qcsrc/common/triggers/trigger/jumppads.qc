@@ -263,7 +263,7 @@ void trigger_push_touch()
 	if (this.spawnflags & PUSH_ONCE)
 	{
 		settouch(this, func_null);
-		this.think = SUB_Remove_self;
+		setthink(this, SUB_Remove_self);
 		this.nextthink = time;
 	}
 #endif

@@ -1,13 +1,13 @@
 #ifdef SVQC
 void delay_use(entity this, entity actor, entity trigger)
 {
-   this.think = SUB_UseTargets_self;
+   setthink(this, SUB_UseTargets_self);
    this.nextthink = this.wait;
 }
 
 void delay_reset(entity this)
 {
-	this.think = func_null;
+	setthink(this, func_null);
 	this.nextthink = 0;
 }
 

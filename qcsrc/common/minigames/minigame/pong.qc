@@ -47,7 +47,7 @@ void pong_ball_throw(entity ball)
 	while ( fabs(sin(angle)) < 0.17 || fabs(cos(angle)) < 0.17 );
 	ball.velocity_x = cos(angle)*autocvar_sv_minigames_pong_ball_speed;
 	ball.velocity_y = sin(angle)*autocvar_sv_minigames_pong_ball_speed;
-	ball.think = pong_ball_think;
+	setthink(ball, pong_ball_think);
 	ball.nextthink = time;
 	ball.team = 0;
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
@@ -64,10 +64,10 @@ void pong_ball_reset(entity ball)
 {
 	ball.velocity = '0 0 0';
 	ball.origin = '0.5 0.5 0';
-	ball.think = SUB_NullThink;
+	setthink(ball, SUB_NullThink);
 	ball.team = 0;
 	ball.SendFlags |= MINIG_SF_UPDATE|PONG_SF_BALLTEAM;
-	ball.think = pong_ball_throwthink;
+	setthink(ball, pong_ball_throwthink);
 	ball.nextthink = time + autocvar_sv_minigames_pong_ball_wait;
 }
 
@@ -256,7 +256,7 @@ entity pong_ai_spawn(entity paddle)
 	entity ai = msle_spawn(paddle.owner,"pong_ai");
 	ai.minigame_players = ai;
 	ai.team = paddle.team;
-	ai.think = pong_ai_think;
+	setthink(ai, pong_ai_think);
 	ai.nextthink = time;
 	ai.pong_ai_paddle = paddle;
 
@@ -315,7 +315,7 @@ entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 	entity paddle = msle_spawn(minigame,"pong_paddle");
 	paddle.pong_length = autocvar_sv_minigames_pong_paddle_size;
 	paddle.origin = pong_team_to_paddlepos(pl_team);
-	paddle.think = pong_paddle_think;
+	setthink(paddle, pong_paddle_think);
 	paddle.nextthink = time;
 	paddle.team = pl_team;
 	paddle.mins = pong_team_to_box_halfsize(pl_team,-paddle.pong_length,-1/16);

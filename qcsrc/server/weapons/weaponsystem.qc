@@ -168,7 +168,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	setmodel(view, MDL_Null);  // precision set when changed
 	setorigin(view, '0 0 0');
 	view.weaponentity_fld = weaponentity;
-	view.think = CL_Weaponentity_Think;
+	setthink(view, CL_Weaponentity_Think);
 	view.nextthink = time;
 	view.viewmodelforclient = actor;
 	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
@@ -179,7 +179,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 		exterior.solid = SOLID_NOT;
 		exterior.owner = actor;
 		setorigin(exterior, '0 0 0');
-		exterior.think = CL_ExteriorWeaponentity_Think;
+		setthink(exterior, CL_ExteriorWeaponentity_Think);
 		exterior.nextthink = time;
 
 		CSQCMODEL_AUTOINIT(exterior);

@@ -193,7 +193,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	// create a temp object to fire at a later time
 		entity t = new(DelayedUse);
 		t.nextthink = time + this.delay;
-		t.think = DelayThink;
+		setthink(t, DelayThink);
 		t.enemy = actor;
 		t.message = this.message;
 		t.killtarget = this.killtarget;

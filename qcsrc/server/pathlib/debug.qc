@@ -36,19 +36,19 @@ void __showpath2_think()
 	#endif
     if(self.path_next)
     {
-        self.path_next.think     = __showpath2_think;
+        setthink(self.path_next, __showpath2_think);
         self.path_next.nextthink = time + 0.15;
     }
     else
     {
-        self.owner.think     = __showpath2_think;
+        setthink(self.owner, __showpath2_think);
         self.owner.nextthink = time + 0.15;
     }
 }
 
 void pathlib_showpath2(entity path)
 {
-    path.think     = __showpath2_think;
+    setthink(path, __showpath2_think);
     path.nextthink = time;
 }
 
@@ -82,7 +82,7 @@ void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 
     s           = spawn();
     s.alpha     = 0.25;
-    s.think     = SUB_Remove_self;
+    setthink(s, SUB_Remove_self);
     s.nextthink = _lifetime;
     s.scale     = pathlib_gridsize / 512.001;
     s.solid     = SOLID_NOT;
@@ -107,7 +107,7 @@ void pathlib_showedge(vector where,float _lifetime,float rot)
 
     e           = spawn();
     e.alpha     = 0.25;
-    e.think     = SUB_Remove_self;
+    setthink(e, SUB_Remove_self);
     e.nextthink = _lifetime;
     e.scale     = pathlib_gridsize / 512;
     e.solid     = SOLID_NOT;

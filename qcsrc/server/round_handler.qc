@@ -80,7 +80,7 @@ void round_handler_FirstThink()
 {
 	SELFPARAM();
 	round_starttime = max(time, game_starttime) + this.count;
-	this.think = round_handler_Think;
+	setthink(this, round_handler_Think);
 	this.nextthink = max(time, game_starttime);
 }
 
@@ -93,7 +93,7 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, v
 	}
 	entity this = round_handler = new(round_handler);
 
-	this.think = round_handler_FirstThink;
+	setthink(this, round_handler_FirstThink);
 	this.canRoundStart = canRoundStart_func;
 	this.canRoundEnd = canRoundEnd_func;
 	this.roundStart = roundStart_func;

@@ -32,6 +32,6 @@ bool generator_send(entity this, entity to, int sf)
 void generator_link(void() spawnproc)
 {SELFPARAM();
 	Net_LinkEntity(self, true, 0, generator_send);
-	self.think		= spawnproc;
+	setthink(self, spawnproc);
 	self.nextthink	= time;
 }

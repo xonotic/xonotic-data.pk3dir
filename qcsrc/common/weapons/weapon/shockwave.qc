@@ -241,7 +241,7 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
-	meleetemp.think = W_Shockwave_Melee_Think;
+	setthink(meleetemp, W_Shockwave_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor();
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
 }

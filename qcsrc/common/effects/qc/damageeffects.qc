@@ -183,7 +183,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 	e.owner = this;
 	e.cnt = time + life;
 	e.team = _particleeffectnum(effectname);
-	e.think = DamageEffect_Think;
+	setthink(e, DamageEffect_Think);
 	e.nextthink = time;
 	this.total_damages += 1;
 }

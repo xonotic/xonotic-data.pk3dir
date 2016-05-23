@@ -312,7 +312,7 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 	if (self.classname != "item_health_mega") return false;
 
 	entity e = spawn();
-	e.think = lms_extralife;
+	setthink(e, lms_extralife);
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = self.spawnflags;

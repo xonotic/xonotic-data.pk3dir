@@ -439,7 +439,7 @@ void ReadyRestart_force()
 	if (autocvar_sv_ready_restart_after_countdown)
 	{
 		entity restart_timer = new_pure(restart_timer);
-		restart_timer.think = ReadyRestart_think;
+		setthink(restart_timer, ReadyRestart_think);
 		restart_timer.nextthink = game_starttime;
 	}
 

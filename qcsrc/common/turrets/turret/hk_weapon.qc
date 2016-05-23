@@ -29,7 +29,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
         entity missile = turret_projectile(SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HK.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
 
-        missile.think = turret_hk_missile_think;
+        setthink(missile, turret_hk_missile_think);
         missile.nextthink = time + 0.25;
         missile.movetype = MOVETYPE_BOUNCEMISSILE;
         missile.velocity = actor.tur_shotdir_updated * (actor.shot_speed * 0.75);

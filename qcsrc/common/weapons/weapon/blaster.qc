@@ -81,7 +81,7 @@ void W_Blaster_Touch()
 void W_Blaster_Think()
 {SELFPARAM();
 	this.movetype = MOVETYPE_FLY;
-	this.think = SUB_Remove_self;
+	setthink(this, SUB_Remove_self);
 	this.nextthink = time + this.blaster_lifetime;
 	CSQCProjectile(this, true, PROJECTILE_BLASTER, true);
 }
@@ -139,14 +139,14 @@ void W_Blaster_Attack(
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = atk_deathtype;
-	missile.think = W_Blaster_Think;
+	setthink(missile, W_Blaster_Think);
 	missile.nextthink = time + atk_delay;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
 	if (time >= missile.nextthink)
 	{
-		WITHSELF(missile, missile.think());
+		WITHSELF(missile, getthink(missile)());
 	}
 }
 

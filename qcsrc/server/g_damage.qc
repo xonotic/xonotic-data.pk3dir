@@ -531,7 +531,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	entity ice = new(ice);
 	ice.owner = targ;
 	ice.scale = targ.scale;
-	ice.think = Ice_Think;
+	setthink(ice, Ice_Think);
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	setmodel(ice, MDL_ICE);
@@ -850,7 +850,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			farcent.origin = hitloc;
 			farcent.forcetype = FORCETYPE_FORCEATPOS;
 			farcent.nextthink = time + 0.1;
-			farcent.think = SUB_Remove_self;
+			setthink(farcent, SUB_Remove_self);
 		}
 		else
 		{
@@ -1092,7 +1092,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		{
 			// print("adding a fire burner to ", e.classname, "\n");
 			e.fire_burner = new(fireburner);
-			e.fire_burner.think = fireburner_think;
+			setthink(e.fire_burner, fireburner_think);
 			e.fire_burner.nextthink = time;
 			e.fire_burner.owner = e;
 		}

@@ -76,7 +76,7 @@ spawnfunc(func_fourier)
 	controller = new(func_fourier_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
-	controller.think = func_fourier_controller_think;
+	setthink(controller, func_fourier_controller_think);
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
 	this.SUB_THINK = SUB_NullThink; // for PushMove
 

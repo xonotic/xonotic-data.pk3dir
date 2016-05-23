@@ -137,7 +137,7 @@ void VaporizerBeam_Draw(entity this)
 NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 {
 	Net_Accept(vortex_beam);
-	this.think = SUB_Remove_self;
+	setthink(this, SUB_Remove_self);
 	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = VaporizerBeam_Draw;
 	this.drawmask = MASK_NORMAL;
@@ -264,7 +264,7 @@ void W_RocketMinsta_Attack2()
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
         proj.use = W_RocketMinsta_Laser_Explode_use;
-        proj.think = adaptor_think2use_hittype_splash;
+        setthink(proj, adaptor_think2use_hittype_splash);
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);
         proj.projectiledeathtype = WEP_ELECTRO.m_id;
@@ -316,7 +316,7 @@ void W_RocketMinsta_Attack3 ()
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
         proj.use = W_RocketMinsta_Laser_Explode_use;
-        proj.think = adaptor_think2use_hittype_splash;
+        setthink(proj, adaptor_think2use_hittype_splash);
         proj.nextthink = time + autocvar_g_rm_laser_lifetime;
         PROJECTILE_MAKETRIGGER(proj);
         proj.projectiledeathtype = WEP_ELECTRO.m_id;

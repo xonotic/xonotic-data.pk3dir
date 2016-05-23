@@ -128,7 +128,7 @@ void plat_outside_touch()
 void plat_trigger_use(entity this, entity actor, entity trigger)
 {
 #ifdef SVQC
-	if (this.think)
+	if (getthink(this))
 		return;		// already activated
 #elif defined(CSQC)
 	if(this.move_think)

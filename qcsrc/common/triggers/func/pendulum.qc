@@ -65,7 +65,7 @@ spawnfunc(func_pendulum)
 	controller = new(func_pendulum_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
-	controller.think = func_pendulum_controller_think;
+	setthink(controller, func_pendulum_controller_think);
 	this.nextthink = this.SUB_LTIME + 999999999;
 	this.SUB_THINK = SUB_NullThink; // for PushMove
 

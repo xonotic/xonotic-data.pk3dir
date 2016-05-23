@@ -76,7 +76,7 @@ void swamp_touch()
 		//centerprint(other,"Entering swamp!\n");
 		other.swampslug = spawn();
 		other.swampslug.health = 2;
-		other.swampslug.think = swampslug_think;
+		setthink(other.swampslug, swampslug_think);
 		other.swampslug.nextthink = time;
 		other.swampslug.owner = other;
 		other.swampslug.dmg = self.dmg;

@@ -319,7 +319,7 @@ void Ban_LoadBans()
 	}
 
 	entity e = new(bansyncer);
-	e.think = OnlineBanList_Think;
+	setthink(e, OnlineBanList_Think);
 	e.nextthink = time + 1;
 }
 

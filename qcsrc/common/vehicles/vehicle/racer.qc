@@ -437,7 +437,7 @@ void racer_exit(float eject)
 {SELFPARAM();
 	vector spot;
 
-	self.think	  = racer_think;
+	setthink(self, racer_think);
 	self.nextthink  = time;
 	self.movetype   = MOVETYPE_BOUNCE;
 	sound (self.tur_head, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
@@ -489,7 +489,7 @@ void racer_blowup()
 					DEATH_VH_WAKI_DEATH.m_id, world);
 
 	self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
-	self.think	  = vehicles_spawn;
+	setthink(self, vehicles_spawn);
 	self.movetype   = MOVETYPE_NONE;
 	self.effects	= EF_NODRAW;
 	self.solid = SOLID_NOT;
@@ -605,7 +605,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
         self.mass			   = 900;
     }
 
-    self.think		  = racer_think;
+    setthink(self, racer_think);
     self.nextthink	  = time;
     self.vehicle_health = autocvar_g_vehicle_racer_health;
     self.vehicle_shield = autocvar_g_vehicle_racer_shield;
@@ -651,7 +651,7 @@ METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
     instance.velocity += '0 0 700';
     instance.colormod = '-0.5 -0.5 -0.5';
 
-    instance.think = racer_blowup_think;
+    setthink(instance, racer_blowup_think);
     instance.nextthink = time;
 #endif
 }

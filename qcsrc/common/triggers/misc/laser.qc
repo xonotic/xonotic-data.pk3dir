@@ -232,7 +232,7 @@ spawnfunc(misc_laser)
 	if(!this.scale) this.scale = 1;
 	if(!this.modelscale) this.modelscale = 1;
 	else if(this.modelscale < 0) this.modelscale = 0;
-	this.think = misc_laser_think;
+	setthink(this, misc_laser_think);
 	this.nextthink = time;
 	InitializeEntity(this, misc_laser_init, INITPRIO_FINDTARGET);
 

@@ -134,7 +134,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 
 	settouch(missile, W_RocketPropelledChainsaw_Touch);
 
-	missile.think = W_RocketPropelledChainsaw_Think;
+	setthink(missile, W_RocketPropelledChainsaw_Think);
 	missile.cnt = time + WEP_CVAR(rpc, lifetime);
 	missile.nextthink = time;
 	missile.flags = FL_PROJECTILE;

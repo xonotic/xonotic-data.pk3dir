@@ -79,7 +79,7 @@ void W_Shotgun_Attack(Weapon thiswep, float isprimary)
 	// muzzle flash for 1st person view
 	flash = spawn();
 	setmodel(flash, MDL_SHOTGUN_MUZZLEFLASH); // precision set below
-	flash.think = SUB_Remove_self;
+	setthink(flash, SUB_Remove_self);
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(self, flash, '5 0 0');
@@ -190,7 +190,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.realowner = actor;
-	meleetemp.think = W_Shotgun_Melee_Think;
+	setthink(meleetemp, W_Shotgun_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }

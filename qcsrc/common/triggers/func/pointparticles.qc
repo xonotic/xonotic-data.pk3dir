@@ -143,7 +143,7 @@ spawnfunc(func_pointparticles)
 	}
 	else
 		this.state = 1;
-	this.think = pointparticles_think;
+	setthink(this, pointparticles_think);
 	this.nextthink = time;
 }
 

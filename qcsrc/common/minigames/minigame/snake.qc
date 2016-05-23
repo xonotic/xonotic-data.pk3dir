@@ -185,7 +185,7 @@ void minigame_setup_snake(entity minigame, int pteam)
 	piece.snake_next = world;
 	piece.snake_prev = world;
 	piece.snake_last = piece;
-	piece.think = snake_head_think;
+	setthink(piece, snake_head_think);
 	piece.snake_delay = autocvar_sv_minigames_snake_delay_initial;
 	piece.nextthink = time + 0.1;
 	minigame_server_sendflags(piece,MINIG_SF_ALL);

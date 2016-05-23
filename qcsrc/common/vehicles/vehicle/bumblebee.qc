@@ -635,7 +635,7 @@ void bumblebee_land()
 	self.angles_z *= 0.95;
 
 	if(hgt < 16)
-		self.think	= vehicles_think;
+		setthink(self, vehicles_think);
 
 	self.nextthink = time;
 
@@ -654,7 +654,7 @@ void bumblebee_exit(float eject)
 
 	if(!IS_DEAD(self))
 	{
-		self.think = bumblebee_land;
+		setthink(self, bumblebee_land);
 		self.nextthink  = time;
 	}
 
@@ -705,7 +705,7 @@ void bumblebee_blowup()
 void bumblebee_diethink()
 {SELFPARAM();
 	if(time >= self.wait)
-		self.think = bumblebee_blowup;
+		setthink(self, bumblebee_blowup);
 
 	if(random() < 0.1)
 	{
@@ -797,7 +797,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     else
         settouch(_body, func_null);
 
-    _body.think = bumblebee_diethink;
+    setthink(_body, bumblebee_diethink);
     _body.nextthink = time;
     _body.wait = time + 2 + (random() * 8);
     _body.owner = instance;
@@ -834,7 +834,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
         setattachment(self.vehicle_shieldent, self, "");
         setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
         self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
-        self.vehicle_shieldent.think       = shieldhit_think;
+        setthink(self.vehicle_shieldent, shieldhit_think);
         self.vehicle_shieldent.alpha = -1;
         self.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
 

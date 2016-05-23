@@ -70,7 +70,7 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
             _flare.movetype = MOVETYPE_TOSS;
             _flare.gravity = 0.15;
             _flare.velocity = 0.25 * actor.velocity + (v_forward + randomvec() * 0.25)* -500;
-            _flare.think = raptor_flare_think;
+            setthink(_flare, raptor_flare_think);
             _flare.nextthink = time;
             _flare.owner = veh ? veh : player;
             _flare.solid = SOLID_CORPSE;
@@ -100,7 +100,7 @@ void raptor_bomblet_touch()
         return;
 
     PROJECTILE_TOUCH;
-    self.think = raptor_bomblet_boom;
+    setthink(self, raptor_bomblet_boom);
     self.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
 }
 
@@ -130,7 +130,7 @@ void raptor_bomb_burst()
 
         bomblet.movetype	= MOVETYPE_TOSS;
         settouch(bomblet, raptor_bomblet_touch);
-        bomblet.think	   = raptor_bomblet_boom;
+        setthink(bomblet, raptor_bomblet_boom);
         bomblet.nextthink   = time + 5;
         bomblet.owner	   = self.owner;
         bomblet.realowner   = self.realowner;
@@ -159,7 +159,8 @@ void raptor_bombdrop()
     bomb_1.velocity	 = bomb_2.velocity   = self.velocity;
     settouch(bomb_1, raptor_bomb_burst);
     settouch(bomb_2, raptor_bomb_burst);
-    bomb_1.think		= bomb_2.think	  = raptor_bomb_burst;
+    setthink(bomb_1, raptor_bomb_burst);
+    setthink(bomb_2, raptor_bomb_burst);
     bomb_1.cnt		  = bomb_2.cnt		= time + 10;
 
     if(autocvar_g_vehicle_raptor_bomblet_alt)

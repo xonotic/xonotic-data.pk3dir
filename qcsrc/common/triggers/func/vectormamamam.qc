@@ -94,7 +94,7 @@ void func_vectormamamam_findtarget(entity this)
 	controller = new(func_vectormamamam_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
-	controller.think = func_vectormamamam_controller_think;
+	setthink(controller, func_vectormamamam_controller_think);
 }
 
 spawnfunc(func_vectormamamam)

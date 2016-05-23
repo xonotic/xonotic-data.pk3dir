@@ -423,7 +423,7 @@ void ons_DelayedLinkSetup(entity this)
 
 	LOG_DEBUG(strcat(etos(this.goalentity), " linked with ", etos(this.enemy), "\n"));
 	this.SendFlags |= 3;
-	this.think = ons_Link_CheckUpdate;
+	setthink(this, ons_Link_CheckUpdate);
 	this.nextthink = time;
 }
 
@@ -646,7 +646,7 @@ void ons_ControlPoint_Icon_BuildThink()
 	{
 		this.health = this.max_health;
 		this.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
-		this.think = ons_ControlPoint_Icon_Think;
+		setthink(this, ons_ControlPoint_Icon_Think);
 		sound(this, CH_TRIGGER, SND_ONS_CONTROLPOINT_BUILT, VOL_BASE, ATTEN_NORM);
 		this.owner.iscaptured = true;
 		this.solid = SOLID_BBOX;
@@ -830,7 +830,7 @@ void ons_ControlPoint_Reset(entity this)
 	this.iscaptured = false;
 	this.islinked = false;
 	this.isshielded = true;
-	this.think = ons_ControlPoint_Think;
+	setthink(this, ons_ControlPoint_Think);
 	this.ons_toucher = world;
 	this.nextthink = time + ONS_CP_THINKRATE;
 	setmodel_fixsize(this, MDL_ONS_CP_PAD1);
@@ -866,7 +866,7 @@ void ons_ControlPoint_Setup(entity cp)
 	cp.solid = SOLID_BBOX;
 	cp.movetype = MOVETYPE_NONE;
 	settouch(cp, ons_ControlPoint_Touch);
-	cp.think = ons_ControlPoint_Think;
+	setthink(cp, ons_ControlPoint_Think);
 	cp.nextthink = time + ONS_CP_THINKRATE;
 	cp.reset = ons_ControlPoint_Reset;
 	cp.colormap = 1024;
@@ -990,7 +990,7 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 		this.takedamage = DAMAGE_NO; // can't be hurt anymore
 		this.event_damage = func_null; // won't do anything if hurt
 		this.count = 0;	// reset counter
-		this.think = func_null;
+		setthink(this, func_null);
 		this.nextthink = 0;
 		//this.think(); // do the first explosion now
 
@@ -1052,7 +1052,7 @@ void ons_GeneratorReset(entity this)
 	this.islinked = true;
 	this.isshielded = true;
 	this.event_damage = ons_GeneratorDamage;
-	this.think = ons_GeneratorThink;
+	setthink(this, ons_GeneratorThink);
 	this.nextthink = time + GEN_THINKRATE;
 
 	Net_LinkEntity(this, false, 0, generator_send);
@@ -1112,7 +1112,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.bot_attack = true;
 	gen.event_damage = ons_GeneratorDamage;
 	gen.reset = ons_GeneratorReset;
-	gen.think = ons_GeneratorThink;
+	setthink(gen, ons_GeneratorThink);
 	gen.nextthink = time + GEN_THINKRATE;
 	gen.iscaptured = true;
 	gen.islinked = true;

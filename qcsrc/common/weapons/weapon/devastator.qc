@@ -385,7 +385,7 @@ void W_Devastator_Attack(Weapon thiswep)
 	missile.angles = vectoangles(missile.velocity);
 
 	settouch(missile, W_Devastator_Touch);
-	missile.think = W_Devastator_Think;
+	setthink(missile, W_Devastator_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(devastator, lifetime);
 	missile.flags = FL_PROJECTILE;

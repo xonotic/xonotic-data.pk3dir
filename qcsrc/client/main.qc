@@ -337,7 +337,7 @@ void TrueAim_Init();
 void PostInit()
 {
 	entity playerchecker = new_pure(playerchecker);
-	playerchecker.think = Playerchecker_Think;
+	setthink(playerchecker, Playerchecker_Think);
 	playerchecker.nextthink = time + 0.2;
 
 	TrueAim_Init();

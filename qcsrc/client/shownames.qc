@@ -176,8 +176,8 @@ void Draw_ShowNames_All()
 			continue;
 		}
 		make_impure(it);
-		assert(entcs.think, eprint(entcs));
-		WITHSELF(entcs, entcs.think());
+		assert(getthink(entcs), eprint(entcs));
+		WITHSELF(entcs, getthink(entcs)());
 		if (!entcs.has_origin) continue;
 		if (entcs.m_entcs_private)
 		{

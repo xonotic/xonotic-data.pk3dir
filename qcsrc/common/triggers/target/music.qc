@@ -320,7 +320,7 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 	setorigin(this, this.origin);
 	setsize(this, this.mins, this.maxs);
 	this.cnt = 1;
-	this.think = Ent_TriggerMusic_Think;
+	setthink(this, Ent_TriggerMusic_Think);
 	this.nextthink = time;
 	return true;
 }

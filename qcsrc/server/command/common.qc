@@ -740,7 +740,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 					timeout_leadtime = autocvar_sv_timeout_leadtime;
 
 					timeout_handler = spawn();
-					timeout_handler.think = timeout_handler_think;
+					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 
 					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_TIMEOUT);

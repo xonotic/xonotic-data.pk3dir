@@ -98,7 +98,7 @@ void marker_think()
 	if(self.cnt)
 	if(self.cnt < time)
 	{
-		self.think = SUB_Remove;
+		setthink(self, SUB_Remove);
 		self.nextthink = time;
 		return;
 	}
@@ -116,7 +116,7 @@ void mark_error(vector where,float lifetime)
 	setmodel(err, MDL_MARKER);
 	setorigin(err,where);
 	err.movetype = MOVETYPE_NONE;
-	err.think = marker_think;
+	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 0;
 	if(lifetime)
@@ -129,7 +129,7 @@ void mark_info(vector where,float lifetime)
 	setmodel(err, MDL_MARKER);
 	setorigin(err,where);
 	err.movetype = MOVETYPE_NONE;
-	err.think = marker_think;
+	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 1;
 	if(lifetime)
@@ -142,7 +142,7 @@ entity mark_misc(vector where,float lifetime)
 	setmodel(err, MDL_MARKER);
 	setorigin(err,where);
 	err.movetype = MOVETYPE_NONE;
-	err.think = marker_think;
+	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 3;
 	if(lifetime)

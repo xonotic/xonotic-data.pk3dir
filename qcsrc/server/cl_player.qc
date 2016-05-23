@@ -45,8 +45,8 @@ void CopyBody_Think()
 		if(wasfreed(this))
 			return;
 		this.CopyBody_nextthink = this.nextthink;
-		this.CopyBody_think = this.think;
-		this.think = CopyBody_Think;
+		this.CopyBody_think = getthink(this);
+		setthink(this, CopyBody_Think);
 	}
 	CSQCMODEL_AUTOUPDATE(this);
 	this.nextthink = time;
@@ -118,9 +118,9 @@ void CopyBody(entity this, float keepvelocity)
 
 	CSQCMODEL_AUTOINIT(clone);
 	clone.CopyBody_nextthink = this.nextthink;
-	clone.CopyBody_think = this.think;
+	clone.CopyBody_think = getthink(this);
 	clone.nextthink = time;
-	clone.think = CopyBody_Think;
+	setthink(clone, CopyBody_Think);
 	// "bake" the current animation frame for clones (they don't get clientside animation)
 	animdecide_load_if_needed(clone);
 	animdecide_setframes(clone, false, frame, frame1time, frame2, frame2time);
@@ -622,10 +622,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// set up to fade out later
 		SUB_SetFade (this, time + 6 + random (), 1);
 		// reset body think wrapper broken by SUB_SetFade
-		if(this.classname == "body" && this.think != CopyBody_Think) {
-			this.CopyBody_think = this.think;
+		if(this.classname == "body" && getthink(this) != CopyBody_Think) {
+			this.CopyBody_think = getthink(this);
 			this.CopyBody_nextthink = this.nextthink;
-			this.think = CopyBody_Think;
+			setthink(this, CopyBody_Think);
 			this.nextthink = time;
 		}
 

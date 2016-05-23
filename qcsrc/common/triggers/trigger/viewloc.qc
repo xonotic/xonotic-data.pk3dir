@@ -78,7 +78,7 @@ void viewloc_init(entity this)
 
 	Net_LinkEntity(this, false, 0, trigger_viewloc_send);
 
-	this.think = viewloc_think;
+	setthink(this, viewloc_think);
 	this.nextthink = time;
 }
 
@@ -159,7 +159,7 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
 	this.cnt = point1;
 	this.count = point2;
 
-	this.think = trigger_viewloc_updatelink;
+	setthink(this, trigger_viewloc_updatelink);
 	this.nextthink = time + 1; // we need to delay this or else
 
 	this.classname = "trigger_viewlocation";

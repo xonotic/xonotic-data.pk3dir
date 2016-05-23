@@ -18,7 +18,7 @@ spawnfunc(trigger_gamestart)
 
 	if(this.wait)
 	{
-		this.think = adaptor_think2use;
+		setthink(this, adaptor_think2use);
 		this.nextthink = game_starttime + this.wait;
 	}
 	else

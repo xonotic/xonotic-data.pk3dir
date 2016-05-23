@@ -105,7 +105,7 @@ void W_Hook_Explode2()
 	settouch(self, func_null);
 	self.effects |= EF_NODRAW;
 
-	self.think = W_Hook_ExplodeThink;
+	setthink(self, W_Hook_ExplodeThink);
 	self.nextthink = time;
 	self.dmg = WEP_CVAR_SEC(hook, damage);
 	self.dmg_edge = WEP_CVAR_SEC(hook, edgedamage);
@@ -159,7 +159,7 @@ void W_Hook_Attack2(Weapon thiswep, entity actor)
 	setsize(gren, '0 0 0', '0 0 0');
 
 	gren.nextthink = time + WEP_CVAR_SEC(hook, lifetime);
-	gren.think = adaptor_think2use_hittype_splash;
+	setthink(gren, adaptor_think2use_hittype_splash);
 	gren.use = W_Hook_Explode2_use;
 	settouch(gren, W_Hook_Touch2);
 

@@ -102,7 +102,7 @@ void Announcer_Gamestart()
 			if (!announcer_countdown)
 			{
 				announcer_countdown = new(announcer_countdown);
-				announcer_countdown.think = Announcer_Countdown;
+				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle

@@ -220,7 +220,7 @@ void kh_Controller_Think()  // called a lot
 	if(intermission_running)
 		return;
 	if(self.cnt > 0)
-	{ if(self.think != kh_WaitForPlayers) { self.cnt -= 1; } }
+	{ if(getthink(self) != kh_WaitForPlayers) { self.cnt -= 1; } }
 	else if(self.cnt == 0)
 	{
 		self.cnt -= 1;
@@ -793,7 +793,7 @@ void kh_Key_Spawn(entity initial_owner, float _angle, float i)  // runs every ti
 	key.count = i;
 	key.classname = STR_ITEM_KH_KEY;
 	settouch(key, kh_Key_Touch);
-	key.think = kh_Key_Think;
+	setthink(key, kh_Key_Think);
 	key.nextthink = time;
 	key.items = IT_KEY1 | IT_KEY2;
 	key.cnt = _angle;
@@ -1058,7 +1058,7 @@ void kh_Initialize()  // sets up th KH environment
 
 	// make a KH entity for controlling the game
 	kh_controller = spawn();
-	kh_controller.think = kh_Controller_Think;
+	setthink(kh_controller, kh_Controller_Think);
 	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
 	setmodel(kh_controller, MDL_KH_KEY);

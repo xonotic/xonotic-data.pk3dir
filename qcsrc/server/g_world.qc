@@ -82,7 +82,7 @@ void PingPLReport_Think()
 void PingPLReport_Spawn()
 {
 	pingplreport = new_pure(pingplreport);
-	pingplreport.think = PingPLReport_Think;
+	setthink(pingplreport, PingPLReport_Think);
 	pingplreport.nextthink = time;
 }
 
@@ -525,10 +525,10 @@ void RandomSeed_Think()
 void RandomSeed_Spawn()
 {
 	randomseed = new_pure(randomseed);
-	randomseed.think = RandomSeed_Think;
+	setthink(randomseed, RandomSeed_Think);
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITHSELF(randomseed, randomseed.think()); // sets random seed and nextthink
+	WITHSELF(randomseed, getthink(randomseed)()); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -543,7 +543,7 @@ spawnfunc(__init_dedicated_server)
 	remove = remove_unsafely;
 
 	entity e = spawn();
-	e.think = GotoFirstMap;
+	setthink(e, GotoFirstMap);
 	e.nextthink = time; // this is usually 1 at this point
 
 	e = new(info_player_deathmatch);  // safeguard against player joining

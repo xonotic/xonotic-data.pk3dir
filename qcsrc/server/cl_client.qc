@@ -294,7 +294,7 @@ void PutObserverInServer()
 	this.superweapons_finished = 0;
 	this.pushltime = 0;
 	this.istypefrag = 0;
-	this.think = func_null;
+	setthink(this, func_null);
 	this.nextthink = 0;
 	this.hook_time = 0;
 	this.deadflag = DEAD_NO;
@@ -547,7 +547,7 @@ void PutClientInServer()
 		this.pain_frame = 0;
 		this.pain_finished = 0;
 		this.pushltime = 0;
-		this.think = func_null; // players have no think function
+		setthink(this, func_null); // players have no think function
 		this.nextthink = 0;
 		this.dmg_team = 0;
 		this.ballistics_density = autocvar_g_ballistics_density_player;
@@ -709,7 +709,7 @@ void ClientInit_CheckUpdate()
 void ClientInit_Spawn()
 {
 	entity e = new_pure(clientinit);
-	e.think = ClientInit_CheckUpdate;
+	setthink(e, ClientInit_CheckUpdate);
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
 	WITHSELF(e, ClientInit_CheckUpdate());
@@ -891,7 +891,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			this.killindicator.scale = 0.5;
 			setattachment(this.killindicator, this, "");
 			setorigin(this.killindicator, '0 0 52');
-			this.killindicator.think = KillIndicator_Think;
+			setthink(this.killindicator, KillIndicator_Think);
 			this.killindicator.nextthink = starttime + (this.lip) * 0.05;
 			clientkilltime = max(clientkilltime, this.killindicator.nextthink + 0.05);
 			this.killindicator.cnt = ceil(killtime);
@@ -907,7 +907,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 				e.killindicator.scale = 0.5;
 				setattachment(e.killindicator, e, "");
 				setorigin(e.killindicator, '0 0 52');
-				e.killindicator.think = KillIndicator_Think;
+				setthink(e.killindicator, KillIndicator_Think);
 				e.killindicator.nextthink = starttime + (e.lip) * 0.05;
 				clientkilltime = max(clientkilltime, e.killindicator.nextthink + 0.05);
 				e.killindicator.cnt = ceil(killtime);
@@ -1258,7 +1258,7 @@ void UpdateChatBubble()
 		this.chatbubbleentity = new(chatbubbleentity);
 		this.chatbubbleentity.owner = this;
 		this.chatbubbleentity.exteriormodeltoclient = this;
-		this.chatbubbleentity.think = ChatBubbleThink;
+		setthink(this.chatbubbleentity, ChatBubbleThink);
 		this.chatbubbleentity.nextthink = time;
 		setmodel(this.chatbubbleentity, MDL_CHAT); // precision set below
 		//setorigin(this.chatbubbleentity, this.origin + '0 0 15' + this.maxs_z * '0 0 1');

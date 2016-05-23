@@ -33,7 +33,7 @@ void spiderbot_rocket_guided()
     self.nextthink  = time;
 
     if(!self.realowner.vehicle)
-        self.think = spiderbot_rocket_unguided;
+        setthink(self, spiderbot_rocket_unguided);
 
     crosshair_trace(self.realowner);
     olddir = normalize(self.velocity);
@@ -56,10 +56,10 @@ void spiderbot_guide_release(entity this)
     crosshair_trace(this.owner);
     while(rkt)
     {
-        if(rkt.think == spiderbot_rocket_guided)
+        if(getthink(rkt) == spiderbot_rocket_guided)
         {
             rkt.pos1 = trace_endpos;
-            rkt.think = spiderbot_rocket_unguided;
+            setthink(rkt, spiderbot_rocket_unguided);
         }
         rkt = rkt.chain;
     }
@@ -196,7 +196,7 @@ void spiderbot_rocket_do(entity this)
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
             rocket.nextthink  = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
-            rocket.think	 = vehicles_projectile_explode;
+            setthink(rocket, vehicles_projectile_explode);
 
             if(PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.tur_head.frame == 1)
                 this.wait = -10;
@@ -209,7 +209,7 @@ void spiderbot_rocket_do(entity this)
             crosshair_trace(this.owner);
             rocket.pos1	   = trace_endpos;
             rocket.nextthink  = time;
-            rocket.think	  = spiderbot_rocket_guided;
+            setthink(rocket, spiderbot_rocket_guided);
 
 
         break;

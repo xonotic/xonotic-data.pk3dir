@@ -35,6 +35,6 @@ bool cpicon_send(entity this, entity to, int sf)
 void onslaught_controlpoint_icon_link(entity e, void() spawnproc)
 {
 	Net_LinkEntity(e, true, 0, cpicon_send);
-	e.think		= spawnproc;
+	setthink(e, spawnproc);
 	e.nextthink	= time * sys_frametime;
 }

@@ -45,7 +45,7 @@ void multi_trigger(entity this)
 
 	if (this.wait > 0)
 	{
-		this.think = multi_wait;
+		setthink(this, multi_wait);
 		this.nextthink = time + this.wait;
 	}
 	else if (this.wait == 0)
@@ -123,7 +123,7 @@ void multi_reset(entity this)
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
 	}
-	this.think = func_null;
+	setthink(this, func_null);
 	this.nextthink = 0;
 	this.team = this.team_saved;
 }

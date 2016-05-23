@@ -416,7 +416,7 @@ void W_Crylink_Attack(Weapon thiswep)
 		W_SetupProjVelocity_Explicit(proj, w_shotdir + right * s.y + up * s.z, v_up, WEP_CVAR_PRI(crylink, speed), 0, 0, 0, false);
 		settouch(proj, W_Crylink_Touch);
 
-		proj.think = W_Crylink_Fadethink;
+		setthink(proj, W_Crylink_Fadethink);
 		if(counter == 0)
 		{
 			proj.fade_time = time + WEP_CVAR_PRI(crylink, middle_lifetime);
@@ -531,7 +531,7 @@ void W_Crylink_Attack2(Weapon thiswep)
 
 		W_SetupProjVelocity_Explicit(proj, s, v_up, WEP_CVAR_SEC(crylink, speed), 0, 0, 0, false);
 		settouch(proj, W_Crylink_Touch);
-		proj.think = W_Crylink_Fadethink;
+		setthink(proj, W_Crylink_Fadethink);
 		if(counter == (shots - 1) / 2)
 		{
 			proj.fade_time = time + WEP_CVAR_SEC(crylink, middle_lifetime);
@@ -615,7 +615,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                 pos = W_Crylink_LinkJoin(actor.crylink_lastgroup, WEP_CVAR_BOTH(crylink, isprimary, joinspread) * WEP_CVAR_BOTH(crylink, isprimary, speed));
 
                 linkjoineffect = new(linkjoineffect);
-                linkjoineffect.think = W_Crylink_LinkJoinEffect_Think;
+                setthink(linkjoineffect, W_Crylink_LinkJoinEffect_Think);
                 linkjoineffect.nextthink = time + w_crylink_linkjoin_time;
                 linkjoineffect.owner = actor;
                 setorigin(linkjoineffect, pos);

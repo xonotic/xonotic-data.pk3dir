@@ -114,7 +114,7 @@ void W_PROP_think()
 STATIC_INIT_LATE(W_PROP_reloader)
 {
     entity e = W_PROP_reloader = new_pure(W_PROP_reloader);
-    WITHSELF(e, (e.think = W_PROP_think)());
+    WITHSELF(e, (setthink(e, W_PROP_think))());
 }
 #endif
 

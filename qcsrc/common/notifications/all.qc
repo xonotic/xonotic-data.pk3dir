@@ -1697,7 +1697,7 @@ void Send_Notification(
 			net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float);
 		}
 
-		net_notif.think = Net_Notification_Remove;
+		setthink(net_notif, Net_Notification_Remove);
 		net_notif.nextthink = (time > autocvar_notification_lifetime_mapload)
 			? (time + autocvar_notification_lifetime_runtime)
 			: autocvar_notification_lifetime_mapload;

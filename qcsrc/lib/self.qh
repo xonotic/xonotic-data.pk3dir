@@ -62,7 +62,8 @@ noref entity _selftemp;
     (0, (e).__##T)
 
 SELFWRAP(think, void, (entity this), (this))
-#define setthink(e, f) SELFWRAP_SET(think, e, f)
+#define setthink(e, f) _SELFWRAP_SET(think, e, f)
+#define getthink(e) _SELFWRAP_GET(think, e)
 
 SELFWRAP(touch, void, (entity this), (this))
 #define settouch(e, f) _SELFWRAP_SET(touch, e, f)

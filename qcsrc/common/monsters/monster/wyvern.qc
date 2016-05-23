@@ -72,7 +72,7 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		missile.velocity = w_shotdir * (autocvar_g_monster_wyvern_attack_fireball_speed);
 		missile.avelocity = '300 300 300';
 		missile.nextthink = time + 5;
-		missile.think = M_Wyvern_Attack_Fireball_Explode;
+		setthink(missile, M_Wyvern_Attack_Fireball_Explode);
 		settouch(missile, M_Wyvern_Attack_Fireball_Touch);
 		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 

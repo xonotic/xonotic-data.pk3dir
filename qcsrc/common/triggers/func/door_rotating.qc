@@ -32,7 +32,7 @@ void door_rotating_reset(entity this)
 	this.angles = this.pos1;
 	this.avelocity = '0 0 0';
 	this.state = STATE_BOTTOM;
-	this.think = func_null;
+	setthink(this, func_null);
 	this.nextthink = 0;
 }
 

@@ -102,7 +102,7 @@ void raptor_land()
 	if(hgt < 16)
 	{
 		self.movetype = MOVETYPE_TOSS;
-		self.think	= vehicles_think;
+		setthink(self, vehicles_think);
 		self.frame	= 0;
 	}
 
@@ -118,7 +118,7 @@ void raptor_exit(float eject)
 
 	if(!IS_DEAD(self))
 	{
-		self.think	  = raptor_land;
+		setthink(self, raptor_land);
 		self.nextthink  = time;
 	}
 
@@ -541,7 +541,7 @@ void raptor_blowup()
 void raptor_diethink()
 {SELFPARAM();
 	if(time >= self.wait)
-		self.think = raptor_blowup;
+		setthink(self, raptor_blowup);
 
 	if(random() < 0.05)
 	{
@@ -644,7 +644,7 @@ METHOD(Raptor, vr_death, void(Raptor thisveh, entity instance))
     instance.takedamage			= DAMAGE_NO;
     instance.deadflag			= DEAD_DYING;
     instance.movetype			= MOVETYPE_BOUNCE;
-    instance.think				= raptor_diethink;
+    setthink(instance, raptor_diethink);
     instance.nextthink			= time;
     instance.wait				= time + 5 + (random() * 5);
 
@@ -724,7 +724,7 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
         self.bomb1.gun2 = spinner;
 
         // Sigh.
-        self.bomb1.think = raptor_rotor_anglefix;
+        setthink(self.bomb1, raptor_rotor_anglefix);
         self.bomb1.nextthink = time;
 
         self.mass			   = 1 ;

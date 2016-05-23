@@ -289,7 +289,7 @@ void waypoint_schedulerelink(entity wp)
 	if (!(wp.wpflags & WAYPOINTFLAG_NORELINK))
 		waypoint_clearlinks(wp);
 	// schedule an actual relink on next frame
-	wp.think = waypoint_think;
+	setthink(wp, waypoint_think);
 	wp.nextthink = time;
 	wp.effects = EF_LOWPRECISION;
 }

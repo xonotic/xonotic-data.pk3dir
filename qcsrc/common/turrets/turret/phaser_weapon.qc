@@ -26,7 +26,7 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
         setmodel(beam, MDL_TUR_PHASER_BEAM);
         beam.effects = EF_LOWPRECISION;
         beam.solid = SOLID_NOT;
-        beam.think = beam_think;
+        setthink(beam, beam_think);
         beam.cnt = time + actor.shot_speed;
         beam.shot_spread = time + 2;
         beam.nextthink = time;

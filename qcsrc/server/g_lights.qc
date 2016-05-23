@@ -55,7 +55,7 @@ void dynlight_find_aiment(entity this)
 	self.punchangle = targ.angles;
 	self.view_ofs = self.origin - targ.origin;
 	self.v_angle = self.angles - targ.angles;
-	self.think = dynlight_think;
+	setthink(self, dynlight_think);
 	self.nextthink = time + 0.1;
 }
 void dynlight_find_path(entity this)
@@ -67,7 +67,7 @@ void dynlight_find_path(entity this)
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
 	setorigin (self, targ.origin);
-	self.think = train_next;
+	setthink(self, train_next);
 	self.nextthink = time + 0.1;
 }
 void dynlight_find_target(entity this)
@@ -79,7 +79,7 @@ void dynlight_find_target(entity this)
 	targ = find(world, targetname, self.target);
 	setattachment(self, targ, self.dtagname);
 	self.owner = targ;
-	self.think = dynlight_think;
+	setthink(self, dynlight_think);
 	self.nextthink = time + 0.1;
 }
 void dynlight_use(entity this, entity actor, entity trigger)

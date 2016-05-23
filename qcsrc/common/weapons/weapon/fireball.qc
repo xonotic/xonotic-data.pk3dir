@@ -202,7 +202,7 @@ void W_Fireball_Attack1()
 	proj.bot_dodgerating = WEP_CVAR_PRI(fireball, damage);
 	proj.pushltime = time + WEP_CVAR_PRI(fireball, lifetime);
 	proj.use = W_Fireball_Explode_use;
-	proj.think = W_Fireball_Think;
+	setthink(proj, W_Fireball_Think);
 	proj.nextthink = time;
 	proj.health = WEP_CVAR_PRI(fireball, health);
 	proj.team = self.team;
@@ -341,7 +341,7 @@ void W_Fireball_Attack2()
 	PROJECTILE_MAKETRIGGER(proj);
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, w_shotorg);
-	proj.think = W_Fireball_Firemine_Think;
+	setthink(proj, W_Fireball_Firemine_Think);
 	proj.nextthink = time;
 	proj.damageforcescale = WEP_CVAR_SEC(fireball, damageforcescale);
 	proj.pushltime = time + WEP_CVAR_SEC(fireball, lifetime);

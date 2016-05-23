@@ -72,7 +72,7 @@ spawnfunc(func_bobbing)
 	controller = new(func_bobbing_controller);
 	controller.owner = this;
 	controller.nextthink = time + 1;
-	controller.think = func_bobbing_controller_think;
+	setthink(controller, func_bobbing_controller_think);
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
 	this.SUB_THINK = SUB_NullThink;
 

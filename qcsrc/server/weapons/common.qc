@@ -89,5 +89,5 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void() explode)
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
 	this.nextthink = time;
-	this.think = explode;
+	setthink(this, explode);
 }

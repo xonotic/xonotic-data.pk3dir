@@ -188,7 +188,7 @@ entity sandbox_ObjectSpawn(float database)
 	e.skin = 0;
 	e.material = string_null;
 	settouch(e, sandbox_ObjectFunction_Touch);
-	e.think = sandbox_ObjectFunction_Think;
+	setthink(e, sandbox_ObjectFunction_Think);
 	e.nextthink = time;
 	//e.effects |= EF_SELECTABLE; // don't do this all the time, maybe just when editing objects?
 

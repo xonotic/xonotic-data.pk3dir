@@ -173,7 +173,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		ts.SendEntity3 = WarpZone_Teleported_Send;
 		ts.SendFlags = 0xFFFFFF;
 		ts.drawonlytoclient = player;
-		ts.think = SUB_Remove_self;
+		setthink(ts, SUB_Remove_self);
 		ts.nextthink = time + 1;
 		ts.owner = player;
 		ts.enemy = wz;
@@ -582,7 +582,7 @@ void WarpZoneCamera_InitStep_FindTarget(entity this)
 	this.SendFlags = 0xFFFFFF;
 	if(this.spawnflags & 1)
 	{
-		this.think = WarpZoneCamera_Think;
+		setthink(this, WarpZoneCamera_Think);
 		this.nextthink = time;
 	}
 	else
@@ -723,7 +723,7 @@ void WarpZone_InitStep_FinalizeTransform(entity this)
 	this.SendFlags = 0xFFFFFF;
 	if(this.spawnflags & 1)
 	{
-		this.think = WarpZone_Think;
+		setthink(this, WarpZone_Think);
 		this.nextthink = time;
 	}
 	else

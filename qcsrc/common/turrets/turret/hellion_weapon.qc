@@ -31,7 +31,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
 
         entity missile = turret_projectile(SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
-        missile.think		= turret_hellion_missile_think;
+        setthink(missile, turret_hellion_missile_think);
         missile.nextthink	= time;
         missile.flags		= FL_PROJECTILE;
         missile.max_health   = time + 9;
@@ -98,7 +98,7 @@ void turret_hellion_missile_think()
     self.velocity = newdir * min(vlen(self.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
 
     if (itime < 0.05)
-        self.think = turret_projectile_explode;
+        setthink(self, turret_projectile_explode);
 
     UpdateCSQCProjectile(self);
 }

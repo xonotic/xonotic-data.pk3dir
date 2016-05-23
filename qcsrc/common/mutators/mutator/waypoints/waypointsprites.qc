@@ -1019,7 +1019,7 @@ entity WaypointSprite_Spawn(
         wp.owned_by_field = ownfield;
     }
     wp.fade_rate = maxdistance;
-    wp.think = WaypointSprite_Think;
+    setthink(wp, WaypointSprite_Think);
     wp.nextthink = time;
     wp.model1 = spr.netname;
     wp.customizeentityforclient = WaypointSprite_Customize;

@@ -350,7 +350,7 @@ void dom_controlpoint_setup(entity this)
 	if(!self.t_length)
 		self.t_length = 239; // maximum frame
 
-	self.think = dompointthink;
+	setthink(self, dompointthink);
 	self.nextthink = time;
 	settouch(self, dompointtouch);
 	self.solid = SOLID_TRIGGER;
@@ -540,7 +540,7 @@ spawnfunc(dom_controlpoint)
 		remove(this);
 		return;
 	}
-	this.think = dom_controlpoint_setup_self;
+	setthink(this, dom_controlpoint_setup_self);
 	this.nextthink = time + 0.1;
 	this.reset = dom_controlpoint_setup;
 
@@ -657,7 +657,7 @@ void dom_spawnpoint(vector org)
 {
 	entity e = spawn();
 	e.classname = "dom_controlpoint";
-	e.think = self_spawnfunc_dom_controlpoint;
+	setthink(e, self_spawnfunc_dom_controlpoint);
 	e.nextthink = time;
 	setorigin(e, org);
 	spawnfunc_dom_controlpoint(e);

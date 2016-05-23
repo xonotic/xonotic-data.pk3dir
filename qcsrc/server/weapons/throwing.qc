@@ -80,7 +80,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	if(startitem_failed)
 		return string_null;
 	wep.glowmod = weaponentity_glowmod(info, own.clientcolors);
-	wep.think = thrown_wep_think;
+	setthink(wep, thrown_wep_think);
 	wep.savenextthink = wep.nextthink;
 	wep.nextthink = min(wep.nextthink, time + 0.5);
 	wep.pickup_anyway = true; // these are ALWAYS pickable

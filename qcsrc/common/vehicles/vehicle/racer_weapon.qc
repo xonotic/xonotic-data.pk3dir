@@ -59,9 +59,9 @@ void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
     rocket.cnt			  = time + 15;
 
     if(trg)
-        rocket.think			= racer_rocket_tracker;
+        setthink(rocket, racer_rocket_tracker);
     else
-        rocket.think			= racer_rocket_groundhugger;
+        setthink(rocket, racer_rocket_groundhugger);
 }
 
 void racer_rocket_tracker()
@@ -101,7 +101,7 @@ void racer_rocket_tracker()
     {
         //bprint("Target lost!\n");
         //dprint("OF:", ftos(vlen(newdir - v_forward)), "\n");
-        self.think = racer_rocket_groundhugger;
+        setthink(self, racer_rocket_groundhugger);
         return;
     }
 

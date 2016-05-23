@@ -105,7 +105,7 @@
 	{
 		entity e = player.entcs = new(entcs_sender);
 		e.owner = player;
-		e.think = entcs_think;
+		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
 		if (!IS_REAL_CLIENT(player)) return;
@@ -169,7 +169,7 @@
 				make_pure(e);
 			}
 			e.sv_entnum = n;
-			e.think = entcs_think;
+			setthink(e, entcs_think);
 			entcs_receiver(n, e);
 		}
 		else if (this && e != this)
@@ -189,7 +189,7 @@
 	#undef X
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
-		WITHSELF(this, this.think());
+		WITHSELF(this, getthink(this)());
 		return true;
 	}
 

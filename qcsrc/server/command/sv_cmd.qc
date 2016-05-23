@@ -50,7 +50,7 @@ void make_mapinfo_Think()
 	}
 	else
 	{
-		self.think = make_mapinfo_Think;
+		setthink(self, make_mapinfo_Think);
 		self.nextthink = time;
 	}
 }
@@ -969,7 +969,7 @@ void GameCommand_make_mapinfo(float request)
 			entity tmp_entity;
 
 			tmp_entity = new(make_mapinfo);
-			tmp_entity.think = make_mapinfo_Think;
+			setthink(tmp_entity, make_mapinfo_Think);
 			tmp_entity.nextthink = time;
 			MapInfo_Enumerate();
 			return;

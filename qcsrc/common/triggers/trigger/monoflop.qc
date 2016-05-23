@@ -41,7 +41,7 @@ spawnfunc(trigger_monoflop)
 		this.use = monoflop_fixed_use;
 	else
 		this.use = monoflop_use;
-	this.think = monoflop_think;
+	setthink(this, monoflop_think);
 	this.state = 0;
 	this.reset = monoflop_reset;
 }

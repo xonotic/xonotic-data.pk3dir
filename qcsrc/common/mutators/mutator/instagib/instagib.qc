@@ -457,11 +457,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 
 	float r = random();
 	if (r < 0.3)
-		e.think = instagib_invisibility;
+		setthink(e, instagib_invisibility);
 	else if (r < 0.6)
-		e.think = instagib_extralife;
+		setthink(e, instagib_extralife);
 	else
-		e.think = instagib_speed;
+		setthink(e, instagib_speed);
 
 	e.nextthink = time + 0.1;
 	e.spawnflags = self.spawnflags;

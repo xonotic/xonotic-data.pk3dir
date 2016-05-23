@@ -167,7 +167,7 @@ void nade_spawn(entity _nade)
 	setattachment(timer, _nade, "");
 	timer.colormap = _nade.colormap;
 	timer.glowmod = _nade.glowmod;
-	timer.think = nade_timer_think;
+	setthink(timer, nade_timer_think);
 	timer.nextthink = time;
 	timer.wait = _nade.wait;
 	timer.owner = _nade;
@@ -269,7 +269,7 @@ void nade_napalm_ball(entity this)
 	proj.scale = 1;//0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, this.origin);
-	proj.think = napalm_ball_think;
+	setthink(proj, napalm_ball_think);
 	proj.nextthink = time;
 	proj.damageforcescale = autocvar_g_nades_napalm_ball_damageforcescale;
 	proj.effects = EF_LOWPRECISION | EF_FLAME;
@@ -340,7 +340,7 @@ void nade_napalm_boom(entity this)
 	fountain.realowner = self.realowner;
 	fountain.origin = self.origin;
 	setorigin(fountain, fountain.origin);
-	fountain.think = napalm_fountain_think;
+	setthink(fountain, napalm_fountain_think);
 	fountain.nextthink = time;
 	fountain.ltime = time + autocvar_g_nades_napalm_fountain_lifetime;
 	fountain.pushltime = fountain.ltime;
@@ -436,7 +436,7 @@ void nade_ice_boom(entity this)
 	fountain.realowner = this.realowner;
 	fountain.origin = this.origin;
 	setorigin(fountain, fountain.origin);
-	fountain.think = nade_ice_think;
+	setthink(fountain, nade_ice_think);
 	fountain.nextthink = time;
 	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
 	fountain.pushltime = fountain.wait = fountain.ltime;
@@ -456,7 +456,7 @@ void nade_ice_boom(entity this)
 		setattachment(timer, fountain, "");
 		timer.colormap = this.colormap;
 		timer.glowmod = this.glowmod;
-		timer.think = nade_timer_think;
+		setthink(timer, nade_timer_think);
 		timer.nextthink = time;
 		timer.wait = fountain.ltime;
 		timer.owner = fountain;
@@ -584,7 +584,7 @@ void nade_heal_boom(entity this)
 
 	Net_LinkEntity(healer, true, 0, healer_send);
 
-	healer.think = nade_heal_think;
+	setthink(healer, nade_heal_think);
 	healer.nextthink = time;
 	healer.SendFlags |= 1;
 }
@@ -741,7 +741,7 @@ void nade_touch()
 void nade_beep()
 {SELFPARAM();
 	sound(this, CH_SHOTS_SINGLE, SND_NADE_BEEP, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
-	this.think = nade_boom;
+	setthink(this, nade_boom);
 	this.nextthink = max(this.wait, time);
 }
 
@@ -796,7 +796,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	{
 		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
 		this.nextthink = max(time + autocvar_g_nades_nade_lifetime, time);
-		this.think = nade_beep;
+		setthink(this, nade_beep);
 	}
 
 	this.health -= damage;
@@ -888,7 +888,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	if(_time)
 	{
-		_nade.think = nade_boom;
+		setthink(_nade, nade_boom);
 		_nade.nextthink = _time;
 	}
 
@@ -970,7 +970,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	n.glowmod = player.glowmod;
 	n.wait = time + max(0, ntime);
 	n.nade_time_primed = time;
-	n.think = nade_beep;
+	setthink(n, nade_beep);
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE.m_id;
 
@@ -981,7 +981,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	fn.colormod = Nades_from(n.nade_type).m_color;
 	fn.colormap = player.colormap;
 	fn.glowmod = player.glowmod;
-	fn.think = SUB_Remove_self;
+	setthink(fn, SUB_Remove_self);
 	fn.nextthink = n.wait;
 
 	player.nade = n;

@@ -70,7 +70,7 @@ void turret_checkpoint_init()
 spawnfunc(turret_checkpoint)
 {
     setorigin(this,this.origin);
-    this.think = turret_checkpoint_init;
+    setthink(this, turret_checkpoint_init);
     this.nextthink = time + 0.2;
 }
 

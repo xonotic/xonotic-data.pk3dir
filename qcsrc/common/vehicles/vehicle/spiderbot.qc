@@ -351,7 +351,7 @@ void spiderbot_exit(float eject)
 		e = e.chain;
 	}
 
-	self.think = vehicles_think;
+	setthink(self, vehicles_think);
 	self.nextthink = time;
 	self.frame = 5;
 	self.movetype = MOVETYPE_WALK;
@@ -394,7 +394,7 @@ void spiderbot_exit(float eject)
 
 void spiderbot_headfade()
 {SELFPARAM();
-	self.think = spiderbot_headfade;
+	setthink(self, spiderbot_headfade);
 	self.nextthink = self.fade_time;
 	self.alpha = 1 - (time - self.fade_time) * self.fade_rate;
 
@@ -451,7 +451,7 @@ void spiderbot_blowup()
 	h.cnt = time + (3.5 * random());
 	h.fade_rate = 1 / min(self.respawntime, 10);
 	h.fade_time = time;
-	h.think = spiderbot_headfade;
+	setthink(h, spiderbot_headfade);
 	h.nextthink = time;
 
 	org = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint01"));
@@ -573,7 +573,7 @@ METHOD(Spiderbot, vr_death, void(Spiderbot thisveh, entity instance))
     instance.takedamage			= DAMAGE_NO;
     settouch(instance, func_null);
     instance.cnt				= 3.4 + time + random() * 2;
-    instance.think				= spiderbot_blowup;
+    setthink(instance, spiderbot_blowup);
     instance.nextthink			= time;
     instance.deadflag			= DEAD_DYING;
     instance.frame				= 5;

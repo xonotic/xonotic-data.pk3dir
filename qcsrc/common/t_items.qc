@@ -503,7 +503,7 @@ void Item_Respawn ()
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 
-	self.think = Item_Think;
+	setthink(self, Item_Think);
 	self.nextthink = time;
 
 	//Send_Effect(EFFECT_ITEM_RESPAWN, self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -583,7 +583,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
 	if ((Item_ItemsTime_Allow(e.itemdef) || e.weapons & WEPSET_SUPERWEAPONS) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
-		e.think = Item_RespawnCountdown;
+		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.count = 0;
@@ -593,7 +593,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	}
 	else
 	{
-		e.think = Item_RespawnThink;
+		setthink(e, Item_RespawnThink);
 		e.nextthink = time;
 		e.scheduledrespawntime = time + t;
 		e.wait = time + t;
@@ -849,7 +849,7 @@ void Item_Reset(entity this)
 
 	if (this.classname != "droppedweapon")
 	{
-		this.think = Item_Think;
+		setthink(this, Item_Think);
 		this.nextthink = time;
 
 		if (this.waypointsprite_attached)
@@ -1082,7 +1082,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.movetype = MOVETYPE_TOSS;
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
-		this.think = RemoveItem;
+		setthink(this, RemoveItem);
 		this.nextthink = time + 20;
 
 		this.takedamage = DAMAGE_YES;

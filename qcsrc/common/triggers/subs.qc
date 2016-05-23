@@ -228,7 +228,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	controller.finaldest = (tdest + '0 0 0.125'); // where do we want to end? Offset to overshoot a bit.
 	controller.animstate_starttime = time;
 	controller.animstate_endtime = time + traveltime;
-	controller.think = SUB_CalcMove_controller_think;
+	setthink(controller, SUB_CalcMove_controller_think);
 	controller.think1 = self.SUB_THINK;
 
 	// the thinking is now done by the controller
@@ -236,7 +236,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	self.SUB_NEXTTHINK = self.SUB_LTIME + traveltime;
 
 	// invoke controller
-	WITHSELF(controller, controller.think());
+	WITHSELF(controller, getthink(controller)());
 }
 
 void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)

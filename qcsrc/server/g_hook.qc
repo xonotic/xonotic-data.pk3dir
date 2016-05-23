@@ -97,7 +97,7 @@ void GrapplingHook_Stop()
 	sound (self, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
-	self.think = GrapplingHookThink;
+	setthink(self, GrapplingHookThink);
 	self.nextthink = time;
 	settouch(self, func_null);
 	self.velocity = '0 0 0';
@@ -386,7 +386,7 @@ void FireGrapplingHook ()
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 	settouch(missile, GrapplingHookTouch);
-	missile.think = GrapplingHookThink;
+	setthink(missile, GrapplingHookThink);
 	missile.nextthink = time;
 
 	missile.effects = /*EF_FULLBRIGHT | EF_ADDITIVE |*/ EF_LOWPRECISION;

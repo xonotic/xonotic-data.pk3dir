@@ -422,7 +422,7 @@ void buff_Init(entity this)
 	this.classname = "item_buff";
 	this.solid = SOLID_TRIGGER;
 	this.flags = FL_ITEM;
-	this.think = buff_Think;
+	setthink(this, buff_Think);
 	settouch(this, buff_Touch);
 	this.reset = buff_Reset;
 	this.nextthink = time + 0.1;
@@ -546,7 +546,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 		dmgent.dmg = frag_damage * autocvar_g_buffs_vengeance_damage_multiplier;
 		dmgent.enemy = frag_attacker;
 		dmgent.owner = frag_target;
-		dmgent.think = buff_Vengeance_DelayedDamage;
+		setthink(dmgent, buff_Vengeance_DelayedDamage);
 		dmgent.nextthink = time + 0.1;
 	}
 

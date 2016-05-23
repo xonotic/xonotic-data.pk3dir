@@ -11,7 +11,7 @@ void pathlib_deletepath(entity start)
     e = findchainentity(owner, start);
     while(e)
     {
-        e.think = SUB_Remove_self;
+        setthink(e, SUB_Remove_self);
         e.nextthink = time;
         e = e.chain;
     }
@@ -23,7 +23,7 @@ const float PATHLIB_NODEEXPIRE = 20;
 void dumpnode(entity n)
 {
     n.is_path_node = false;
-    n.think        = SUB_Remove_self;
+    setthink(n, SUB_Remove_self);
     n.nextthink    = time;
 }
 
@@ -49,7 +49,7 @@ entity pathlib_mknode(vector where,entity parent)
 
     node = spawn();
 
-    node.think        = SUB_Remove_self;
+    setthink(node, SUB_Remove_self);
     node.nextthink    = time + PATHLIB_NODEEXPIRE;
     node.is_path_node = true;
     node.owner        = openlist;
