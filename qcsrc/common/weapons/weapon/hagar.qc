@@ -113,14 +113,14 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
-void W_Hagar_Touch()
-{SELFPARAM();
+void W_Hagar_Touch(entity this)
+{
 	PROJECTILE_TOUCH;
 	this.use(this, NULL, NULL);
 }
 
-void W_Hagar_Touch2()
-{SELFPARAM();
+void W_Hagar_Touch2(entity this)
+{
 	PROJECTILE_TOUCH;
 
 	if(self.cnt > 0 || other.takedamage == DAMAGE_AIM) {

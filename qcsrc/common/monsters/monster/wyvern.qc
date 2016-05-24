@@ -45,8 +45,8 @@ float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
 
-void M_Wyvern_Attack_Fireball_Explode();
-void M_Wyvern_Attack_Fireball_Touch();
+void M_Wyvern_Attack_Fireball_Explode(entity this);
+void M_Wyvern_Attack_Fireball_Touch(entity this);
 
 SOUND(WyvernAttack_FIRE, W_Sound("electro_fire"));
 METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity weaponentity, int fire))
@@ -99,9 +99,8 @@ const float wyvern_anim_pain	= 3;
 const float wyvern_anim_death	= 4;
 */
 
-void M_Wyvern_Attack_Fireball_Explode()
+void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
-	SELFPARAM();
 	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
 
 	entity own = this.realowner;
@@ -117,11 +116,11 @@ void M_Wyvern_Attack_Fireball_Explode()
 	remove(this);
 }
 
-void M_Wyvern_Attack_Fireball_Touch()
+void M_Wyvern_Attack_Fireball_Touch(entity this)
 {
 	PROJECTILE_TOUCH;
 
-	M_Wyvern_Attack_Fireball_Explode();
+	M_Wyvern_Attack_Fireball_Explode(this);
 }
 
 bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)

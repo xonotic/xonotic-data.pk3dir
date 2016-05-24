@@ -313,8 +313,8 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 	return gib;
 }
 
-void turret_die()
-{SELFPARAM();
+void turret_die(entity this)
+{
 	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	pointparticles(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 	if (!autocvar_cl_nogibs)
@@ -432,7 +432,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 		_tmp = ReadByte();
 		if(_tmp == 0 && this.health != 0)
-			turret_die();
+			turret_die(this);
 		else if(this.health && this.health != _tmp)
 			this.helpme = servertime + 10;
 

@@ -1,7 +1,7 @@
 #ifdef SVQC
 .float freq;
-void func_pendulum_controller_think()
-{SELFPARAM();
+void func_pendulum_controller_think(entity this)
+{
 	float v;
 	self.nextthink = time + 0.1;
 
@@ -67,7 +67,7 @@ spawnfunc(func_pendulum)
 	controller.nextthink = time + 1;
 	setthink(controller, func_pendulum_controller_think);
 	this.nextthink = this.SUB_LTIME + 999999999;
-	this.SUB_THINK = SUB_NullThink; // for PushMove
+	SUB_THINK(this, SUB_NullThink); // for PushMove
 
 	//this.effects |= EF_LOWPRECISION;
 

@@ -12,8 +12,8 @@ void trigger_gravity_remove(entity own)
 		backtrace("Removing a trigger_gravity_check with no valid owner");
 	own.trigger_gravity_check = world;
 }
-void trigger_gravity_check_think()
-{SELFPARAM();
+void trigger_gravity_check_think(entity this)
+{
 	// This spawns when a player enters the gravity zone and checks if he left.
 	// Each frame, self.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
@@ -37,8 +37,8 @@ void trigger_gravity_use(entity this, entity actor, entity trigger)
 	this.state = !this.state;
 }
 
-void trigger_gravity_touch()
-{SELFPARAM();
+void trigger_gravity_touch(entity this)
+{
 	float g;
 
 	if(self.state != true)

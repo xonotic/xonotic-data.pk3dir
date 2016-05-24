@@ -18,8 +18,8 @@ void multivibrator_send(entity this)
 		this.nextthink = cyclestart + this.wait + this.respawntime + 0.01;
 }
 
-void multivibrator_send_think()
-{SELFPARAM();
+void multivibrator_send_think(entity this)
+{
 	multivibrator_send(this);
 }
 

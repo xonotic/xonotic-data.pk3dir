@@ -392,8 +392,8 @@ void spiderbot_exit(float eject)
 	self.owner = world;
 }
 
-void spiderbot_headfade()
-{SELFPARAM();
+void spiderbot_headfade(entity this)
+{
 	setthink(self, spiderbot_headfade);
 	self.nextthink = self.fade_time;
 	self.alpha = 1 - (time - self.fade_time) * self.fade_rate;
@@ -409,8 +409,8 @@ void spiderbot_headfade()
 	}
 }
 
-void spiderbot_blowup()
-{SELFPARAM();
+void spiderbot_blowup(entity this)
+{
 	if(self.cnt > time)
 	{
 		if(random() < 0.1)

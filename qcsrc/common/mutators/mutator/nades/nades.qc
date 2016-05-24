@@ -147,8 +147,8 @@ REGISTER_MUTATOR(nades, cvar("g_nades"));
 
 .entity nade_spawnloc;
 
-void nade_timer_think()
-{SELFPARAM();
+void nade_timer_think(entity this)
+{
 	this.skin = 8 - (this.owner.wait - time) / (autocvar_g_nades_nade_lifetime / 10);
 	this.nextthink = time;
 	if(!this.owner || wasfreed(this.owner))
@@ -216,8 +216,8 @@ void napalm_damage(entity this, float dist, float damage, float edgedamage, floa
 }
 
 
-void napalm_ball_think()
-{SELFPARAM();
+void napalm_ball_think(entity this)
+{
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
@@ -289,8 +289,8 @@ void nade_napalm_ball(entity this)
 }
 
 
-void napalm_fountain_think()
-{SELFPARAM();
+void napalm_fountain_think(entity this)
+{
 
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
@@ -363,8 +363,8 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 	Drop_Special_Items(frost_target);
 }
 
-void nade_ice_think()
-{SELFPARAM();
+void nade_ice_think(entity this)
+{
 
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
@@ -502,8 +502,8 @@ void nade_spawn_boom(entity this)
 	this.realowner.nade_spawnloc = spawnloc;
 }
 
-void nade_heal_think()
-{SELFPARAM();
+void nade_heal_think(entity this)
+{
 	if(time >= self.ltime)
 	{
 		remove(self);
@@ -521,8 +521,8 @@ void nade_heal_think()
 		self.nade_show_particles = 0;
 }
 
-void nade_heal_touch()
-{SELFPARAM();
+void nade_heal_touch(entity this)
+{
 	float maxhealth;
 	float health_factor;
 	if(IS_PLAYER(other) || IS_MONSTER(other))
@@ -598,8 +598,8 @@ void nade_monster_boom(entity this)
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
 
-void nade_boom()
-{SELFPARAM();
+void nade_boom(entity this)
+{
 	entity expef = NULL;
 	bool nade_blast = true;
 
@@ -688,8 +688,8 @@ void nade_pickup(entity this, entity thenade)
 }
 
 bool CanThrowNade(entity this);
-void nade_touch()
-{SELFPARAM();
+void nade_touch(entity this)
+{
 	if(other)
 		UpdateCSQCProjectile(self);
 
@@ -735,11 +735,11 @@ void nade_touch()
 	}
 
 	self.enemy = other;
-	nade_boom();
+	nade_boom(self);
 }
 
-void nade_beep()
-{SELFPARAM();
+void nade_beep(entity this)
+{
 	sound(this, CH_SHOTS_SINGLE, SND_NADE_BEEP, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
 	setthink(this, nade_boom);
 	this.nextthink = max(this.wait, time);
@@ -750,7 +750,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		this.takedamage = DAMAGE_NO;
-		WITHSELF(this, nade_boom());
+		WITHSELF(this, nade_boom(this));
 		return;
 	}
 
@@ -981,7 +981,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	fn.colormod = Nades_from(n.nade_type).m_color;
 	fn.colormap = player.colormap;
 	fn.glowmod = player.glowmod;
-	setthink(fn, SUB_Remove_self);
+	setthink(fn, SUB_Remove);
 	fn.nextthink = n.wait;
 
 	player.nade = n;

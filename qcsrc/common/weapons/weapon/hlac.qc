@@ -54,8 +54,8 @@ REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
 #ifdef SVQC
 spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
-void W_HLAC_Touch()
-{SELFPARAM();
+void W_HLAC_Touch(entity this)
+{
 	float isprimary;
 
 	PROJECTILE_TOUCH;
@@ -105,7 +105,7 @@ void W_HLAC_Attack(Weapon thiswep)
 	//missile.angles = vectoangles(missile.velocity); // csqc
 
 	settouch(missile, W_HLAC_Touch);
-	setthink(missile, SUB_Remove_self);
+	setthink(missile, SUB_Remove);
 
     missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
@@ -147,7 +147,7 @@ void W_HLAC_Attack2()
 	//missile.angles = vectoangles(missile.velocity); // csqc
 
 	settouch(missile, W_HLAC_Touch);
-	setthink(missile, SUB_Remove_self);
+	setthink(missile, SUB_Remove);
 
     missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 

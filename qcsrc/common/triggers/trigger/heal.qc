@@ -1,7 +1,7 @@
 #ifdef SVQC
 .float triggerhealtime;
-void trigger_heal_touch()
-{SELFPARAM();
+void trigger_heal_touch(entity this)
+{
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 

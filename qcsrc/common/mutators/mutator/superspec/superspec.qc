@@ -377,8 +377,8 @@ MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsPrettyString)
 	return 0;
 }
 
-void superspec_hello()
-{SELFPARAM();
+void superspec_hello(entity this)
+{
 	if(self.enemy.crypto_idfp == "")
 		Send_Notification(NOTIF_ONE_ONLY, self.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 

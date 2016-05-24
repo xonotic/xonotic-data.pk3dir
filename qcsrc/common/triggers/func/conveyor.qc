@@ -1,7 +1,7 @@
 REGISTER_NET_LINKED(ENT_CLIENT_CONVEYOR)
 
-void conveyor_think()
-{SELFPARAM();
+void conveyor_think(entity this)
+{
 #ifdef CSQC
 	// TODO: check if this is what is causing the glitchiness when switching between them
 	float dt = time - self.move_time;
@@ -147,7 +147,7 @@ spawnfunc(func_conveyor)
 
 #elif defined(CSQC)
 
-void conveyor_draw(entity this) { WITHSELF(this, conveyor_think()); }
+void conveyor_draw(entity this) { WITHSELF(this, conveyor_think(this)); }
 
 void conveyor_init(entity this)
 {

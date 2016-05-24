@@ -22,8 +22,8 @@
 #ifdef SVQC
 spawnfunc(trigger_swamp);
 #endif
-void swamp_touch();
-void swampslug_think();
+void swamp_touch(entity this);
+void swampslug_think(entity this);
 
 
 /*
@@ -36,8 +36,8 @@ void swampslug_think();
 *
 * I do it this way becuz there is no "untouch" event.
 */
-void swampslug_think()
-{SELFPARAM();
+void swampslug_think(entity this)
+{
 	//Slowly kill the slug
 	self.health = self.health - 1;
 
@@ -60,8 +60,8 @@ void swampslug_think()
 	self.nextthink = time + self.swamp_interval;
 }
 
-void swamp_touch()
-{SELFPARAM();
+void swamp_touch(entity this)
+{
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
 	if(!IS_PLAYER(other) || IS_DEAD(other))

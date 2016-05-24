@@ -471,8 +471,8 @@ void Item_Show (entity e, float mode)
 	e.SendFlags |= ISF_STATUS;
 }
 
-void Item_Think()
-{SELFPARAM();
+void Item_Think(entity this)
+{
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
 		ItemUpdate(self);
@@ -510,8 +510,8 @@ void Item_Respawn ()
 	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 }
 
-void Item_RespawnCountdown ()
-{SELFPARAM();
+void Item_RespawnCountdown (entity this)
+{
 	if(self.count >= ITEM_RESPAWN_TICKS)
 	{
 		if(self.waypointsprite_attached)
@@ -568,8 +568,8 @@ void Item_RespawnCountdown ()
 	}
 }
 
-void Item_RespawnThink()
-{SELFPARAM();
+void Item_RespawnThink(entity this)
+{
 	self.nextthink = time;
 	if(self.origin != self.oldorigin)
 		ItemUpdate(self);
@@ -761,9 +761,8 @@ LABEL(skip)
 	return 1;
 }
 
-void Item_Touch()
+void Item_Touch(entity this)
 {
-	SELFPARAM();
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
 	if (this.classname == "droppedweapon")
@@ -901,8 +900,8 @@ void Item_FindTeam(entity this)
 }
 
 // Savage: used for item garbage-collection
-void RemoveItem()
-{SELFPARAM();
+void RemoveItem(entity this)
+{
 	if(wasfreed(self) || !self) { return; }
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
@@ -1028,7 +1027,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		WITHSELF(this, RemoveItem());
+		WITHSELF(this, RemoveItem(this));
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)

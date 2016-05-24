@@ -286,8 +286,8 @@ bool ctf_CaptureShield_Customize()
 	return true;
 }
 
-void ctf_CaptureShield_Touch()
-{SELFPARAM();
+void ctf_CaptureShield_Touch(entity this)
+{
 	if(!other.ctf_captureshielded) { return; }
 	if(CTF_SAMETEAM(self, other)) { return; }
 
@@ -851,8 +851,8 @@ void ctf_FlagDamage(entity this, entity inflictor, entity attacker, float damage
 	}
 }
 
-void ctf_FlagThink()
-{SELFPARAM();
+void ctf_FlagThink(entity this)
+{
 	// declarations
 	entity tmp_entity;
 

@@ -252,8 +252,8 @@ void Net_TargetMusic()
 	}
 }
 
-void Ent_TriggerMusic_Think()
-{SELFPARAM();
+void Ent_TriggerMusic_Think(entity this)
+{
 	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, self, world))
 	{
 		music_trigger = self;

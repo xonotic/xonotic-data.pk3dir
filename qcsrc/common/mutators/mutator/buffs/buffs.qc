@@ -222,8 +222,8 @@ void buff_Respawn(entity this)
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
-void buff_Touch()
-{SELFPARAM();
+void buff_Touch(entity this)
+{
 	if(gameover) { return; }
 
 	if(ITEM_TOUCH_NEEDKILL())
@@ -298,8 +298,8 @@ void buff_NewType(entity ent, float cb)
 	ent.buffs = RandomSelection_chosen_float;
 }
 
-void buff_Think()
-{SELFPARAM();
+void buff_Think(entity this)
+{
 	if(this.buffs != this.oldbuffs)
 	{
 		entity buff = buff_FirstFromFlags(this.buffs);
@@ -474,8 +474,8 @@ void buff_SpawnReplacement(entity ent, entity old)
 	buff_Init(ent);
 }
 
-void buff_Vengeance_DelayedDamage()
-{SELFPARAM();
+void buff_Vengeance_DelayedDamage(entity this)
+{
 	if(this.enemy)
 		Damage(this.enemy, this.owner, this.owner, this.dmg, DEATH_BUFF.m_id, this.enemy.origin, '0 0 0');
 
@@ -889,7 +889,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 				{
 					entity oldother = other;
 					other = self;
-					WITHSELF(it, gettouch(it)());
+					WITHSELF(it, gettouch(it)(it));
 					other = oldother;
 				}
 			}

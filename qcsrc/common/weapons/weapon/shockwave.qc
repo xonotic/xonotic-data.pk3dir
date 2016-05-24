@@ -112,8 +112,8 @@ float shockwave_hit_damage[MAX_SHOCKWAVE_HITS];
 vector shockwave_hit_force[MAX_SHOCKWAVE_HITS];
 
 // MELEE ATTACK MODE
-void W_Shockwave_Melee_Think()
-{SELFPARAM();
+void W_Shockwave_Melee_Think(entity this)
+{
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;

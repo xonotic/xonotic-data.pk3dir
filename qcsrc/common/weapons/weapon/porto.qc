@@ -109,8 +109,8 @@ void W_Porto_Remove(entity p)
 	}
 }
 
-void W_Porto_Think()
-{SELFPARAM();
+void W_Porto_Think(entity this)
+{
 	trace_plane_normal = '0 0 0';
 	if(self.realowner.playerid != self.playerid)
 		remove(self);
@@ -118,8 +118,8 @@ void W_Porto_Think()
 		W_Porto_Fail(0);
 }
 
-void W_Porto_Touch()
-{SELFPARAM();
+void W_Porto_Touch(entity this)
+{
 	vector norm;
 
 	// do not use PROJECTILE_TOUCH here

@@ -6,7 +6,7 @@
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
 
 .float move_ltime;
-.void()move_think;
+.void(entity this) move_think;
 .float move_nextthink;
 .void()move_blocked;
 

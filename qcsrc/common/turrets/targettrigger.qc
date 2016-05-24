@@ -1,8 +1,8 @@
 spawnfunc(turret_targettrigger);
-void turret_targettrigger_touch();
+void turret_targettrigger_touch(entity this);
 
-void turret_targettrigger_touch()
-{SELFPARAM();
+void turret_targettrigger_touch(entity this)
+{
     if (this.cnt > time) return;
     FOREACH_ENTITY_STRING_ORDERED(targetname, this.target, {
         if (!(it.turret_flags & TUR_FLAG_RECIEVETARGETS)) continue;

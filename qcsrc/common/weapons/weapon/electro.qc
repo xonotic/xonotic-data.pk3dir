@@ -68,7 +68,7 @@ REGISTER_WEAPON(ELECTRO, electro, NEW(Electro));
 #ifdef SVQC
 .float electro_count;
 .float electro_secondarytime;
-void W_Electro_ExplodeCombo();
+void W_Electro_ExplodeCombo(entity this);
 #endif
 #endif
 #ifdef IMPLEMENTATION
@@ -122,8 +122,8 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 	}
 }
 
-void W_Electro_ExplodeCombo()
-{SELFPARAM();
+void W_Electro_ExplodeCombo(entity this)
+{
 	W_Electro_TriggerCombo(self.origin, WEP_CVAR(electro, combo_comboradius), self.realowner);
 
 	self.event_damage = func_null;
@@ -196,14 +196,14 @@ void W_Electro_Explode_use(entity this, entity actor, entity trigger)
 	WITHSELF(this, W_Electro_Explode());
 }
 
-void W_Electro_TouchExplode()
+void W_Electro_TouchExplode(entity this)
 {
 	PROJECTILE_TOUCH;
 	W_Electro_Explode();
 }
 
-void W_Electro_Bolt_Think()
-{SELFPARAM();
+void W_Electro_Bolt_Think(entity this)
+{
 	if(time >= self.ltime)
 	{
 		this.use(this, NULL, NULL);
@@ -298,8 +298,8 @@ void W_Electro_Attack_Bolt(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, proj);
 }
 
-void W_Electro_Orb_Touch()
-{SELFPARAM();
+void W_Electro_Orb_Touch(entity this)
+{
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM)
 		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(); } }

@@ -17,9 +17,8 @@ string AnnouncerOption()
 
 entity announcer_countdown;
 
-void Announcer_Countdown()
+void Announcer_Countdown(entity this)
 {
-	SELFPARAM();
 	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime == -1)

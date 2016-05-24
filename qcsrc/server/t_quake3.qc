@@ -129,7 +129,7 @@ void target_give_init(entity this)
 		else if (targ.classname == "item_health_mega")
 			this.health = 200;
 		//remove(targ); // removing ents in init functions causes havoc, workaround:
-        setthink(targ, SUB_Remove_self);
+        setthink(targ, SUB_Remove);
         targ.nextthink = time;
 	}
 	this.spawnflags = 2;

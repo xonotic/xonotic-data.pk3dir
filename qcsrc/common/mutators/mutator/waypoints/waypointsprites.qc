@@ -903,8 +903,8 @@ void WaypointSprite_Disown(entity wp, float fadetime)
     }
 }
 
-void WaypointSprite_Think()
-{SELFPARAM();
+void WaypointSprite_Think(entity this)
+{
     bool doremove = false;
 
     if (self.fade_time && time >= self.teleport_time)

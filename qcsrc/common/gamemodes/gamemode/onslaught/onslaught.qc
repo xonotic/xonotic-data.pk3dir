@@ -172,8 +172,8 @@ bool ons_CaptureShield_Customize()
 	return true;
 }
 
-void ons_CaptureShield_Touch()
-{SELFPARAM();
+void ons_CaptureShield_Touch(entity this)
+{
 	if(!self.enemy.isshielded && (ons_ControlPoint_Attackable(self.enemy, other.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return; }
 	if(!IS_PLAYER(other)) { return; }
 	if(SAME_TEAM(other, self)) { return; }
@@ -395,8 +395,8 @@ bool ons_Link_Send(entity this, entity to, int sendflags)
 	return true;
 }
 
-void ons_Link_CheckUpdate()
-{SELFPARAM();
+void ons_Link_CheckUpdate(entity this)
+{
 	// TODO check if the two sides have moved (currently they won't move anyway)
 	float cc = 0, cc1 = 0, cc2 = 0;
 
@@ -559,8 +559,8 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	this.SendFlags |= CPSF_STATUS;
 }
 
-void ons_ControlPoint_Icon_Think()
-{SELFPARAM();
+void ons_ControlPoint_Icon_Think(entity this)
+{
 	this.nextthink = time + ONS_CP_THINKRATE;
 
 	if(autocvar_g_onslaught_cp_proxydecap)
@@ -627,8 +627,8 @@ void ons_ControlPoint_Icon_Think()
 	}
 }
 
-void ons_ControlPoint_Icon_BuildThink()
-{SELFPARAM();
+void ons_ControlPoint_Icon_BuildThink(entity this)
+{
 	int a;
 
 	this.nextthink = time + ONS_CP_THINKRATE;
@@ -681,7 +681,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		Send_Effect(EFFECT_RAGE, this.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
-void onslaught_controlpoint_icon_link(entity e, void() spawnproc);
+void onslaught_controlpoint_icon_link(entity e, void(entity this) spawnproc);
 
 void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 {
@@ -776,8 +776,8 @@ void ons_ControlPoint_UpdateSprite(entity e)
 	}
 }
 
-void ons_ControlPoint_Touch()
-{SELFPARAM();
+void ons_ControlPoint_Touch(entity this)
+{
 	entity toucher = other;
 	int attackable;
 
@@ -813,8 +813,8 @@ void ons_ControlPoint_Touch()
 	onslaught_updatelinks();
 }
 
-void ons_ControlPoint_Think()
-{SELFPARAM();
+void ons_ControlPoint_Think(entity this)
+{
 	self.nextthink = time + ONS_CP_THINKRATE;
 	CSQCMODEL_AUTOUPDATE(self);
 }
@@ -1021,8 +1021,8 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 	this.SendFlags |= GSF_STATUS;
 }
 
-void ons_GeneratorThink()
-{SELFPARAM();
+void ons_GeneratorThink(entity this)
+{
 	this.nextthink = time + GEN_THINKRATE;
 	if (!gameover)
 	{
@@ -1083,8 +1083,8 @@ void ons_DelayedGeneratorSetup(entity this)
 }
 
 
-void onslaught_generator_touch()
-{SELFPARAM();
+void onslaught_generator_touch(entity this)
+{
 	if ( IS_PLAYER(other) )
 	if ( SAME_TEAM(self,other) )
 	if ( self.iscaptured )
@@ -2156,7 +2156,7 @@ MUTATOR_HOOKFUNCTION(ons, TurretThink)
 	}
 
 	if(self.team != self.tur_head.team)
-		turret_respawn();
+		turret_respawn(self);
 
 	return false;
 }

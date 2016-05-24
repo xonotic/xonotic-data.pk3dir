@@ -2,8 +2,8 @@ void SUB_DontUseTargets(entity this, entity actor, entity trigger) { }
 
 void SUB_UseTargets(entity this, entity actor, entity trigger);
 
-void DelayThink()
-{SELFPARAM();
+void DelayThink(entity this)
+{
 	SUB_UseTargets (this, this.enemy, NULL);
 	remove(this);
 }
@@ -276,7 +276,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 		RandomSelection_chosen_ent.use(RandomSelection_chosen_ent, actor, this);
 }
 
-void SUB_UseTargets_self()
-{SELFPARAM();
+void SUB_UseTargets_self(entity this)
+{
 	SUB_UseTargets(this, NULL, NULL);
 }

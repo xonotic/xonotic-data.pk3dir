@@ -51,8 +51,8 @@ If a loop is of targets are formed, any unit entering this loop will patrol it i
 If the checkpoint chain in not looped, the unit will go "Roaming" when the last point is reached.
 */
 //float tc_acum;
-void turret_checkpoint_init()
-{SELFPARAM();
+void turret_checkpoint_init(entity this)
+{
     traceline(self.origin + '0 0 16', self.origin - '0 0 1024', MOVE_WORLDONLY, self);
     setorigin(self, trace_endpos + '0 0 32');
 

@@ -207,8 +207,8 @@ void AnimateDomPoint()
 		self.frame = 0;
 }
 
-void dompointthink()
-{SELFPARAM();
+void dompointthink(entity this)
+{
 	float fragamt;
 
 	self.nextthink = time + 0.1;
@@ -251,8 +251,8 @@ void dompointthink()
 	}
 }
 
-void dompointtouch()
-{SELFPARAM();
+void dompointtouch(entity this)
+{
 	entity head;
 	if (!IS_PLAYER(other))
 		return;
@@ -306,8 +306,6 @@ void dompointtouch()
 	dompoint_captured();
 }
 
-void dom_controlpoint_setup(entity this);
-void dom_controlpoint_setup_self() { SELFPARAM(); dom_controlpoint_setup(this); }
 void dom_controlpoint_setup(entity this)
 {
 	entity head;
@@ -540,7 +538,7 @@ spawnfunc(dom_controlpoint)
 		remove(this);
 		return;
 	}
-	setthink(this, dom_controlpoint_setup_self);
+	setthink(this, dom_controlpoint_setup);
 	this.nextthink = time + 0.1;
 	this.reset = dom_controlpoint_setup;
 
@@ -652,12 +650,11 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	//eprint(e);
 }
 
-void self_spawnfunc_dom_controlpoint() { SELFPARAM(); spawnfunc_dom_controlpoint(self); }
 void dom_spawnpoint(vector org)
 {
 	entity e = spawn();
 	e.classname = "dom_controlpoint";
-	setthink(e, self_spawnfunc_dom_controlpoint);
+	setthink(e, spawnfunc_dom_controlpoint);
 	e.nextthink = time;
 	setorigin(e, org);
 	spawnfunc_dom_controlpoint(e);

@@ -81,8 +81,8 @@ void W_Devastator_Unregister()
 	}
 }
 
-void W_Devastator_Explode()
-{SELFPARAM();
+void W_Devastator_Explode(entity this)
+{
 	W_Devastator_Unregister();
 
 	if(other.takedamage == DAMAGE_AIM)
@@ -252,8 +252,8 @@ vector W_Devastator_SteerTo(vector thisdir, vector goaldir, float maxturn_cos)
 //   normalize(thisdir + goaldir)
 //   normalize(0)
 
-void W_Devastator_Think()
-{SELFPARAM();
+void W_Devastator_Think(entity this)
+{
 	vector desireddir, olddir, newdir, desiredorigin, goal;
 	float velspeed, f;
 	self.nextthink = time;
@@ -261,7 +261,7 @@ void W_Devastator_Think()
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Devastator_Explode();
+		W_Devastator_Explode(self);
 		return;
 	}
 
@@ -320,8 +320,8 @@ void W_Devastator_Think()
 		UpdateCSQCProjectile(self);
 }
 
-void W_Devastator_Touch()
-{SELFPARAM();
+void W_Devastator_Touch(entity this)
+{
 	if(WarpZone_Projectile_Touch())
 	{
 		if(wasfreed(self))
@@ -329,7 +329,7 @@ void W_Devastator_Touch()
 		return;
 	}
 	W_Devastator_Unregister();
-	W_Devastator_Explode();
+	W_Devastator_Explode(this);
 }
 
 void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

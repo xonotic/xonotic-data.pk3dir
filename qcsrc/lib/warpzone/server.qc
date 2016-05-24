@@ -173,7 +173,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		ts.SendEntity3 = WarpZone_Teleported_Send;
 		ts.SendFlags = 0xFFFFFF;
 		ts.drawonlytoclient = player;
-		setthink(ts, SUB_Remove_self);
+		setthink(ts, SUB_Remove);
 		ts.nextthink = time + 1;
 		ts.owner = player;
 		ts.enemy = wz;
@@ -190,8 +190,8 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	return 1;
 }
 
-void WarpZone_Touch ()
-{SELFPARAM();
+void WarpZone_Touch (entity this)
+{
 	if(other.classname == "trigger_warpzone")
 		return;
 
@@ -543,8 +543,8 @@ void WarpZonePosition_InitStep_FindTarget(entity this)
 	this.enemy.aiment = this;
 }
 
-void WarpZoneCamera_Think()
-{SELFPARAM();
+void WarpZoneCamera_Think(entity this)
+{
 	if(this.warpzone_save_origin != this.origin
 	|| this.warpzone_save_angles != this.angles
 	|| this.warpzone_save_eorigin != this.enemy.origin
@@ -708,7 +708,7 @@ void WarpZone_InitStep_FindTarget(entity this)
 	}
 }
 
-void WarpZone_Think();
+void WarpZone_Think(entity this);
 void WarpZone_InitStep_FinalizeTransform(entity this)
 {
 	if(!this.enemy || this.enemy.enemy != this)
@@ -817,8 +817,8 @@ void WarpZones_Reconnect()
 		WarpZone_InitStep_FinalizeTransform(e);
 }
 
-void WarpZone_Think()
-{SELFPARAM();
+void WarpZone_Think(entity this)
+{
 	if(this.warpzone_save_origin != this.origin
 	|| this.warpzone_save_angles != this.angles
 	|| this.warpzone_save_eorigin != this.enemy.origin

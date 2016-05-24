@@ -1,6 +1,6 @@
 #include "g_lights.qh"
 
-void train_next();
+void train_next(entity this);
 
 const float LOOP = 1;
 
@@ -34,9 +34,8 @@ flags:
 "NOSHADOW" will not cast shadows in realtime lighting mode
 "FOLLOW" will follow the entity which "targetname" matches "target"
 */
-void dynlight_think()
+void dynlight_think(entity this)
 {
-    SELFPARAM();
 	if(!self.owner)
 		remove(self);
 

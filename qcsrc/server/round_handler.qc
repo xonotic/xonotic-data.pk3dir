@@ -3,10 +3,8 @@
 #include "command/vote.qh"
 #include "../common/util.qh"
 
-void round_handler_Think()
+void round_handler_Think(entity this)
 {
-	SELFPARAM();
-
 	if (time < game_starttime)
 	{
 		round_handler_Reset(game_starttime);
@@ -76,9 +74,8 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 
 // NOTE: this is only needed because if round_handler spawns at time 1
 // gamestarttime isn't initialized yet
-void round_handler_FirstThink()
+void round_handler_FirstThink(entity this)
 {
-	SELFPARAM();
 	round_starttime = max(time, game_starttime) + this.count;
 	setthink(this, round_handler_Think);
 	this.nextthink = max(time, game_starttime);

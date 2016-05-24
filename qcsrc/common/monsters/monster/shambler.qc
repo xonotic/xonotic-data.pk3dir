@@ -101,7 +101,7 @@ void M_Shambler_Attack_Lightning_Explode(entity this)
 		Damage(head, this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
 	}
 
-	setthink(this, SUB_Remove_self);
+	setthink(this, SUB_Remove);
 	this.nextthink = time + 0.2;
 }
 
@@ -124,15 +124,15 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void M_Shambler_Attack_Lightning_Touch()
-{SELFPARAM();
+void M_Shambler_Attack_Lightning_Touch(entity this)
+{
 	PROJECTILE_TOUCH;
 
 	self.use(this, NULL, NULL);
 }
 
-void M_Shambler_Attack_Lightning_Think()
-{SELFPARAM();
+void M_Shambler_Attack_Lightning_Think(entity this)
+{
 	this.nextthink = time;
 	if (time > this.cnt)
 	{

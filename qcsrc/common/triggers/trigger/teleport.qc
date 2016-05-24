@@ -11,8 +11,8 @@ void trigger_teleport_use(entity this, entity actor, entity trigger)
 }
 #endif
 
-void Teleport_Touch ()
-{SELFPARAM();
+void Teleport_Touch (entity this)
+{
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 

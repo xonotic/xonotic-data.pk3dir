@@ -10,8 +10,8 @@ void spiderbot_rocket_artillery()
     UpdateCSQCProjectile(self);
 }
 
-void spiderbot_rocket_unguided()
-{SELFPARAM();
+void spiderbot_rocket_unguided(entity this)
+{
     vector newdir, olddir;
 
     self.nextthink  = time;
@@ -26,8 +26,8 @@ void spiderbot_rocket_unguided()
         self.use(self, NULL, NULL);
 }
 
-void spiderbot_rocket_guided()
-{SELFPARAM();
+void spiderbot_rocket_guided(entity this)
+{
     vector newdir, olddir;
 
     self.nextthink  = time;

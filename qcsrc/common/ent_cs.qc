@@ -83,9 +83,8 @@
 		return _entcs_send(this, to, sf, MSG_ENTITY);
 	}
 
-	void entcs_think()
+	void entcs_think(entity this)
 	{
-		SELFPARAM();
 		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
 		entity o = this.owner;
 		int i = 1;
@@ -134,9 +133,8 @@
 		if (e != this) remove(e);
 	}
 
-	void entcs_think()
+	void entcs_think(entity this)
 	{
-		SELFPARAM();
 		entity e = CSQCModel_server2csqc(this.sv_entnum);
 		if (e == NULL)
 		{
@@ -189,7 +187,7 @@
 	#undef X
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
-		WITHSELF(this, getthink(this)());
+		WITHSELF(this, getthink(this)(this));
 		return true;
 	}
 

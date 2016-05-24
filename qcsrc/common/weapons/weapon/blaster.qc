@@ -56,8 +56,8 @@ REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
 spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
 spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
-void W_Blaster_Touch()
-{SELFPARAM();
+void W_Blaster_Touch(entity this)
+{
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
@@ -78,10 +78,10 @@ void W_Blaster_Touch()
 	remove(self);
 }
 
-void W_Blaster_Think()
-{SELFPARAM();
+void W_Blaster_Think(entity this)
+{
 	this.movetype = MOVETYPE_FLY;
-	setthink(this, SUB_Remove_self);
+	setthink(this, SUB_Remove);
 	this.nextthink = time + this.blaster_lifetime;
 	CSQCProjectile(this, true, PROJECTILE_BLASTER, true);
 }
@@ -146,7 +146,7 @@ void W_Blaster_Attack(
 
 	if (time >= missile.nextthink)
 	{
-		WITHSELF(missile, getthink(missile)());
+		WITHSELF(missile, getthink(missile)(missile));
 	}
 }
 

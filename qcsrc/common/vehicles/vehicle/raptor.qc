@@ -83,8 +83,8 @@ float raptor_altitude(float amax)
 	return vlen(self.origin - trace_endpos);
 }
 
-void raptor_land()
-{SELFPARAM();
+void raptor_land(entity this)
+{
 	float hgt;
 
 	hgt = raptor_altitude(512);
@@ -520,8 +520,8 @@ bool raptor_takeoff(entity this)
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }
 
-void raptor_blowup()
-{SELFPARAM();
+void raptor_blowup(entity this)
+{
 	self.deadflag	= DEAD_DEAD;
 	self.vehicle_exit(VHEF_NORMAL);
 	RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_RAPT_DEATH.m_id, world);
@@ -538,8 +538,8 @@ void raptor_blowup()
 	self.nextthink = 0;
 }
 
-void raptor_diethink()
-{SELFPARAM();
+void raptor_diethink(entity this)
+{
 	if(time >= self.wait)
 		setthink(self, raptor_blowup);
 
@@ -555,8 +555,8 @@ void raptor_diethink()
 
 // If we dont do this ever now and then, the raptors rotors
 // stop working, presumably due to angle overflow. cute.
-void raptor_rotor_anglefix()
-{SELFPARAM();
+void raptor_rotor_anglefix(entity this)
+{
 	self.gun1.angles_y = anglemods(self.gun1.angles_y);
 	self.gun2.angles_y = anglemods(self.gun2.angles_y);
 	self.nextthink = time + 15;

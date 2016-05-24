@@ -56,8 +56,8 @@ void misc_laser_init(entity this)
 }
 
 .entity pusher;
-void misc_laser_think()
-{SELFPARAM();
+void misc_laser_think(entity this)
+{
 	vector o;
 	entity hitent;
 	vector hitloc;

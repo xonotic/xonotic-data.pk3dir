@@ -249,8 +249,8 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 #endif
 }
 
-void Portal_Touch()
-{SELFPARAM();
+void Portal_Touch(entity this)
+{
 	vector g;
 
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -322,7 +322,7 @@ void Portal_Touch()
 				other.effects += EF_BLUE - EF_RED;
 }
 
-void Portal_Think();
+void Portal_Think(entity this);
 void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;
@@ -452,8 +452,8 @@ void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g)
 		Portal_TeleportPlayer(this, e);
 }
 
-void Portal_Think()
-{SELFPARAM();
+void Portal_Think(entity this)
+{
 	entity o;
 	vector g;
 
@@ -574,8 +574,8 @@ void Portal_ClearAll(entity own)
 	Portal_ClearAll_PortalsOnly(own);
 	W_Porto_Remove(own);
 }
-void Portal_RemoveLater_Think()
-{SELFPARAM();
+void Portal_RemoveLater_Think(entity this)
+{
 	Portal_Remove(this, this.cnt);
 }
 void Portal_RemoveLater(entity portal, float kill)

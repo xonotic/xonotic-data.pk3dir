@@ -10,8 +10,8 @@ REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC_TRIGGER)
 
 #ifdef SVQC
 
-void viewloc_think()
-{SELFPARAM();
+void viewloc_think(entity this)
+{
 	entity e;
 
 	// we abuse this method, rather than using normal .touch, because touch isn't reliable with multiple clients inside the same trigger, and can't "untouch" entities
@@ -134,8 +134,8 @@ spawnfunc(target_viewlocation) { spawnfunc_target_viewlocation_start(this); }
 
 #elif defined(CSQC)
 
-void trigger_viewloc_updatelink()
-{SELFPARAM();
+void trigger_viewloc_updatelink(entity this)
+{
 	self.enemy = findfloat(world, entnum, self.cnt);
 	self.goalentity = findfloat(world, entnum, self.count);
 }

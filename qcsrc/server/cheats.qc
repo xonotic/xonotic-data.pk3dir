@@ -284,7 +284,7 @@ float CheatImpulse(entity this, int imp)
 	END_CHEAT_FUNCTION();
 }
 
-void DragBox_Think();
+void DragBox_Think(entity this);
 float drag_lastcnt;
 float CheatCommand(entity this, int argc)
 {
@@ -1040,8 +1040,8 @@ void Drag_MoveDrag(entity from, entity to)
 	}
 }
 
-void DragBox_Think()
-{SELFPARAM();
+void DragBox_Think(entity this)
+{
 	if(this.aiment && this.enemy)
 	{
 		this.origin_x = (this.aiment.origin.x + this.enemy.origin.x) * 0.5;

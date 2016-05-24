@@ -68,8 +68,8 @@ item_key
 /**
  * Key touch handler.
  */
-void item_key_touch()
-{SELFPARAM();
+void item_key_touch(entity this)
+{
 	if (!IS_PLAYER(other))
 		return;
 

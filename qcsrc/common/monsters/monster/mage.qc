@@ -160,9 +160,8 @@ void M_Mage_Attack_Spike_Explode(entity this)
 	remove (this);
 }
 
-void M_Mage_Attack_Spike_Touch()
+void M_Mage_Attack_Spike_Touch(entity this)
 {
-    SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	M_Mage_Attack_Spike_Explode(self);
@@ -171,8 +170,8 @@ void M_Mage_Attack_Spike_Touch()
 .float wait;
 
 // copied from W_Seeker_Think
-void M_Mage_Attack_Spike_Think()
-{SELFPARAM();
+void M_Mage_Attack_Spike_Think(entity this)
+{
 	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Mage_Attack_Spike_Explode(this);

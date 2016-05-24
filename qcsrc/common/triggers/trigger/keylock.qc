@@ -18,8 +18,8 @@ void trigger_keylock_kill(string s)
 		remove(t);
 }
 
-void trigger_keylock_touch()
-{SELFPARAM();
+void trigger_keylock_touch(entity this)
+{
 	bool key_used = false;
 	bool started_delay = false;
 

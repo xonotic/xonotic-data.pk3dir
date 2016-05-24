@@ -7,7 +7,7 @@
 float autocvar_g_turrets_unit_hellion_shot_speed_gain;
 float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
-void turret_hellion_missile_think();
+void turret_hellion_missile_think(entity this);
 SOUND(HellionAttack_FIRE, W_Sound("electro_fire"));
 METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -41,8 +41,8 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
     }
 }
 
-void turret_hellion_missile_think()
-{SELFPARAM();
+void turret_hellion_missile_think(entity this)
+{
     vector olddir,newdir;
     vector pre_pos;
     float itime;
@@ -52,7 +52,7 @@ void turret_hellion_missile_think()
     olddir = normalize(self.velocity);
 
     if(self.max_health < time)
-        turret_projectile_explode();
+        turret_projectile_explode(self);
 
     // Enemy dead? just keep on the current heading then.
     if ((self.enemy == world) || (IS_DEAD(self.enemy)))
@@ -65,7 +65,7 @@ void turret_hellion_missile_think()
         self.angles = vectoangles(self.velocity);
 
         if(vdist(self.origin - self.owner.origin, >, (self.owner.shot_radius * 5)))
-            turret_projectile_explode();
+            turret_projectile_explode(self);
 
         // Accelerate
         self.velocity = olddir * min(vlen(self.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
@@ -77,7 +77,7 @@ void turret_hellion_missile_think()
 
     // Enemy in range?
     if(vdist(self.origin - self.enemy.origin, <, self.owner.shot_radius * 0.2))
-        turret_projectile_explode();
+        turret_projectile_explode(self);
 
     // Predict enemy position
     itime = vlen(self.enemy.origin - self.origin) / vlen(self.velocity);

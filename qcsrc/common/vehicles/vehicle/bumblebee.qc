@@ -369,13 +369,13 @@ bool vehicles_valid_pilot()
 	return true;
 }
 
-void bumblebee_touch()
-{SELFPARAM();
+void bumblebee_touch(entity this)
+{
 	if(autocvar_g_vehicles_enter) { return; }
 
 	if(self.gunner1 != world && self.gunner2 != world)
 	{
-		vehicles_touch();
+		vehicles_touch(self);
 		return;
 	}
 
@@ -388,7 +388,7 @@ void bumblebee_touch()
 			return;
 	}
 
-	vehicles_touch();
+	vehicles_touch(self);
 }
 
 void bumblebee_regen(entity this)
@@ -625,8 +625,8 @@ bool bumblebee_pilot_frame(entity this)
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }
 
-void bumblebee_land()
-{SELFPARAM();
+void bumblebee_land(entity this)
+{
 	float hgt;
 
 	hgt = raptor_altitude(512);
@@ -685,8 +685,8 @@ void bumblebee_exit(float eject)
 	self.owner = world;
 }
 
-void bumblebee_blowup()
-{SELFPARAM();
+void bumblebee_blowup(entity this)
+{
 	RadiusDamage(self, self.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
 				 autocvar_g_vehicle_bumblebee_blowup_radius, self, world,
@@ -702,8 +702,8 @@ void bumblebee_blowup()
 	remove(self);
 }
 
-void bumblebee_diethink()
-{SELFPARAM();
+void bumblebee_diethink(entity this)
+{
 	if(time >= self.wait)
 		setthink(self, bumblebee_blowup);
 
@@ -751,7 +751,7 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         	entity oldother = other;
         	other = e;
         	self.phase = 0;
-        	gettouch(self)();
+        	gettouch(self)(self);
         	other = oldother;
         	return;
         }
@@ -763,7 +763,7 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         	entity oldother = other;
         	other = e;
         	self.phase = 0;
-        	gettouch(self)();
+        	gettouch(self)(self);
         	other = oldother;
             return;
         }

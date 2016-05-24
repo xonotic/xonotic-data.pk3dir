@@ -36,7 +36,7 @@ float autocvar_sv_minigames_pong_ball_number;
 float autocvar_sv_minigames_pong_ai_thinkspeed;
 float autocvar_sv_minigames_pong_ai_tolerance;
 
-void pong_ball_think();
+void pong_ball_think(entity this);
 
 // Throws a ball in a random direction and sets the think function
 void pong_ball_throw(entity ball)
@@ -54,8 +54,8 @@ void pong_ball_throw(entity ball)
 }
 
 // Think equivalent of pong_ball_throw, used to delay throws
-void pong_ball_throwthink()
-{SELFPARAM();
+void pong_ball_throwthink(entity this)
+{
 	pong_ball_throw(self);
 }
 
@@ -145,8 +145,8 @@ bool pong_goal(entity ball, int pteam)
 }
 
 // Moves the ball around
-void pong_ball_think()
-{SELFPARAM();
+void pong_ball_think(entity this)
+{
 	float think_speed = autocvar_sys_ticrate;
 	this.nextthink = time + think_speed;
 
@@ -201,8 +201,8 @@ void pong_ball_think()
 }
 
 // AI action
-void pong_ai_think()
-{SELFPARAM();
+void pong_ai_think(entity this)
+{
 	float think_speed = autocvar_sv_minigames_pong_ai_thinkspeed;
 	this.nextthink = time + think_speed;
 
@@ -266,8 +266,8 @@ entity pong_ai_spawn(entity paddle)
 }
 
 // Moves the paddle
-void pong_paddle_think()
-{SELFPARAM();
+void pong_paddle_think(entity this)
+{
 	float think_speed = autocvar_sys_ticrate;
 	this.nextthink = time + think_speed;
 

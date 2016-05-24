@@ -141,7 +141,7 @@ void invasion_SpawnChosenMonster(float mon)
 			monster = spawnmonster("", mon, world, world, e.origin, false, false, 2);
 		else return;
 
-		setthink(e, SUB_Remove_self);
+		setthink(e, SUB_Remove);
 		e.nextthink = time + 0.1;
 	}
 	else

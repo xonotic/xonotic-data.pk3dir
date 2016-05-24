@@ -22,12 +22,6 @@ void SUB_Stop(entity this)
 	this.move_movetype = MOVETYPE_NONE;
 }
 
-void SUB_Stop_self()
-{
-	SELFPARAM();
-	SUB_Stop(this);
-}
-
 void Projectile_ResetTrail(entity this, vector to)
 {
 	this.trail_oldorigin = to;
@@ -337,7 +331,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		this.mins = '0 0 0';
 		this.maxs = '0 0 0';
 		this.colormod = '0 0 0';
-		settouch(this, SUB_Stop_self);
+		settouch(this, SUB_Stop);
 		this.move_movetype = MOVETYPE_TOSS;
 		this.alphamod = 1;
 

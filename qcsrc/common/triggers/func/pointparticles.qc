@@ -93,8 +93,8 @@ void pointparticles_use(entity this, entity actor, entity trigger)
 	this.SendFlags |= 2;
 }
 
-void pointparticles_think()
-{SELFPARAM();
+void pointparticles_think(entity this)
+{
 	if(self.origin != self.oldorigin)
 	{
 		self.SendFlags |= 4;

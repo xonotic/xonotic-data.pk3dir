@@ -69,7 +69,7 @@ spawnfunc(func_rotating)
 
 	// wait for targets to spawn
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
-	this.SUB_THINK = SUB_NullThink; // for PushMove
+	SUB_THINK(this, SUB_NullThink); // for PushMove
 
 	// TODO make a reset function for this one
 }

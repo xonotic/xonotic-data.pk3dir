@@ -42,8 +42,8 @@ METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep, entity actor))
     return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost;
 }
 
-void racer_rocket_tracker();
-void racer_rocket_groundhugger();
+void racer_rocket_tracker(entity this);
+void racer_rocket_groundhugger(entity this);
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
 {
@@ -64,8 +64,8 @@ void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
         setthink(rocket, racer_rocket_groundhugger);
 }
 
-void racer_rocket_tracker()
-{SELFPARAM();
+void racer_rocket_tracker(entity this)
+{
     vector olddir, newdir;
     float oldvel, newvel;
 
@@ -116,8 +116,8 @@ void racer_rocket_tracker()
     return;
 }
 
-void racer_rocket_groundhugger()
-{SELFPARAM();
+void racer_rocket_groundhugger(entity this)
+{
     vector olddir, newdir;
     float oldvel, newvel;
 

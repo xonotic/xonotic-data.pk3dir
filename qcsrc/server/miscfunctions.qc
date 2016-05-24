@@ -960,11 +960,11 @@ void EliminatedPlayers_Init(float(entity) isEliminated_func)
 
 
 
-void adaptor_think2use_hittype_splash() // for timed projectile detonation
-{SELFPARAM();
+void adaptor_think2use_hittype_splash(entity this) // for timed projectile detonation
+{
 	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		this.projectiledeathtype |= HITTYPE_SPLASH;
-	WITHSELF(this, adaptor_think2use());
+	WITHSELF(this, adaptor_think2use(this));
 }
 
 // deferred dropping

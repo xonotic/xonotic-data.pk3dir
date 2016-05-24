@@ -696,8 +696,8 @@ void ClientInit_misc(entity this)
 	WriteCoord(channel, autocvar_g_trueaim_minrange);
 }
 
-void ClientInit_CheckUpdate()
-{SELFPARAM();
+void ClientInit_CheckUpdate(entity this)
+{
 	this.nextthink = time;
 	if(this.count != autocvar_g_balance_armor_blockpercent)
 	{
@@ -712,7 +712,7 @@ void ClientInit_Spawn()
 	setthink(e, ClientInit_CheckUpdate);
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
-	WITHSELF(e, ClientInit_CheckUpdate());
+	WITHSELF(e, ClientInit_CheckUpdate(e));
 }
 
 /*
@@ -810,8 +810,8 @@ void ClientKill_Now()
 
 	// now I am sure the player IS dead
 }
-void KillIndicator_Think()
-{SELFPARAM();
+void KillIndicator_Think(entity this)
+{
 	if (gameover)
 	{
 		this.owner.killindicator = world;
@@ -1222,8 +1222,8 @@ void ClientDisconnect()
 	if (vote_called && IS_REAL_CLIENT(this)) VoteCount(false);
 }
 
-void ChatBubbleThink()
-{SELFPARAM();
+void ChatBubbleThink(entity this)
+{
 	this.nextthink = time;
 	if ((this.owner.alpha < 0) || this.owner.chatbubbleentity != this)
 	{

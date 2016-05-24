@@ -73,8 +73,8 @@ vector pathlib_flynode(entity this, vector start, vector end, float doedge)
     return end;
 }
 
-void a_think()
-{SELFPARAM();
+void a_think(entity this)
+{
     te_lightning1(this,this.origin, this.pos1);
     if(this.cnt < time)
         remove(this);

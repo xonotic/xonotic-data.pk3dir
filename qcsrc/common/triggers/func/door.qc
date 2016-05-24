@@ -20,9 +20,9 @@ THINK FUNCTIONS
 =============================================================================
 */
 
-void() door_go_down;
+void door_go_down(entity this);
 void() door_go_up;
-void() door_rotating_go_down;
+void door_rotating_go_down(entity this);
 void() door_rotating_go_up;
 
 void door_blocked()
@@ -66,10 +66,10 @@ void door_blocked()
 				else
 			if (self.classname == "door")
 			{
-				door_go_down ();
+				door_go_down (self);
 			} else
 			{
-				door_rotating_go_down ();
+				door_rotating_go_down (self);
 			}
 			}
 		}
@@ -84,8 +84,8 @@ void door_blocked()
 	}
 }
 
-void door_hit_top()
-{SELFPARAM();
+void door_hit_top(entity this)
+{
 	if (self.noise1 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
@@ -93,23 +93,23 @@ void door_hit_top()
 		return;		// don't come down automatically
 	if (self.classname == "door")
 	{
-		self.SUB_THINK = door_go_down;
+		SUB_THINK(self, door_go_down);
 	} else
 	{
-		self.SUB_THINK = door_rotating_go_down;
+		SUB_THINK(self, door_rotating_go_down);
 	}
 	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 }
 
-void door_hit_bottom()
-{SELFPARAM();
+void door_hit_bottom(entity this)
+{
 	if (self.noise1 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_BOTTOM;
 }
 
-void door_go_down()
-{SELFPARAM();
+void door_go_down(entity this)
+{
 	if (self.noise2 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
@@ -218,9 +218,9 @@ void door_fire(entity this, entity actor, entity trigger)
 			entity e = this;
 			do {
 				if (e.classname == "door") {
-					WITHSELF(e, door_go_down());
+					WITHSELF(e, door_go_down(e));
 				} else {
-					WITHSELF(e, door_rotating_go_down());
+					WITHSELF(e, door_rotating_go_down(e));
 				}
 				e = e.enemy;
 			} while ((e != this) && (e != NULL));
@@ -289,8 +289,8 @@ Prints messages
 ================
 */
 
-void door_touch()
-{SELFPARAM();
+void door_touch(entity this)
+{
 	if (!IS_PLAYER(other))
 		return;
 	if (self.owner.door_finished > time)
@@ -332,7 +332,7 @@ void door_generic_plat_blocked()
 				if (self.state == STATE_DOWN)
 					door_rotating_go_up ();
 				else
-					door_rotating_go_down ();
+					door_rotating_go_down (self);
 			}
 		}
 #ifdef SVQC
@@ -346,19 +346,19 @@ void door_generic_plat_blocked()
 	}
 }
 
-void door_rotating_hit_top()
-{SELFPARAM();
+void door_rotating_hit_top(entity this)
+{
 	if (self.noise1 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
-	self.SUB_THINK = door_rotating_go_down;
+	SUB_THINK(self, door_rotating_go_down);
 	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 }
 
-void door_rotating_hit_bottom()
-{SELFPARAM();
+void door_rotating_hit_bottom(entity this)
+{
 	if (self.noise1 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	if (self.lip==666) // self.lip is used to remember reverse opening direction for door_rotating
@@ -369,8 +369,8 @@ void door_rotating_hit_bottom()
 	self.state = STATE_BOTTOM;
 }
 
-void door_rotating_go_down()
-{SELFPARAM();
+void door_rotating_go_down(entity this)
+{
 	if (self.noise2 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	if (self.max_health)
@@ -414,8 +414,8 @@ Spawned if a door lacks a real activator
 =========================================
 */
 
-void door_trigger_touch()
-{SELFPARAM();
+void door_trigger_touch(entity this)
+{
 	if (other.health < 1)
 #ifdef SVQC
 		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !IS_DEAD(other)))
@@ -688,7 +688,7 @@ void door_reset(entity this)
 	SUB_SETORIGIN(this, this.pos1);
 	this.SUB_VELOCITY = '0 0 0';
 	this.state = STATE_BOTTOM;
-	this.SUB_THINK = func_null;
+	SUB_THINK(this, func_null);
 	this.SUB_NEXTTHINK = 0;
 
 #ifdef SVQC
