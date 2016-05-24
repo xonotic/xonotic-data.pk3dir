@@ -1188,16 +1188,21 @@ string getcommandkey(string text, string command)
 	keys = db_get(binddb, command);
 	if (keys == "")
 	{
+		bool joy_detected = cvar("joy_detected");
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));
 			if(k != -1)
 			{
-				if ("" == keys)
-					keys = keynumtostring(k);
+				string key = keynumtostring(k);
+				if(!joy_detected && substring(key, 0, 3) == "JOY")
+					continue;
+
+				if (keys == "")
+					keys = key;
 				else
-					keys = strcat(keys, ", ", keynumtostring(k));
+					keys = strcat(keys, ", ", key);
 
 				++l;
 				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)
