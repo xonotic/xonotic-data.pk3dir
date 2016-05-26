@@ -81,9 +81,8 @@ void ka_EventLog(string mode, entity actor) // use an alias for easy changing an
 		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-void ka_TouchEvent();
+void ka_TouchEvent(entity this);
 void ka_RespawnBall(entity this);
-void ka_RespawnBall_self() { SELFPARAM(); ka_RespawnBall(this); }
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
 	if(gameover) { return; }
@@ -102,7 +101,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	self.angles = '0 0 0';
 	self.effects = autocvar_g_keepawayball_effects;
 	settouch(self, ka_TouchEvent);
-	setthink(self, ka_RespawnBall_self);
+	setthink(self, ka_RespawnBall);
 	self.nextthink = time + autocvar_g_keepawayball_respawntime;
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
@@ -114,8 +113,8 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	sound(self, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
-void ka_TimeScoring()
-{SELFPARAM();
+void ka_TimeScoring(entity this)
+{
 	if(self.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
 		if(autocvar_g_keepaway_score_timepoints)
@@ -126,8 +125,8 @@ void ka_TimeScoring()
 	}
 }
 
-void ka_TouchEvent() // runs any time that the ball comes in contact with something
-{SELFPARAM();
+void ka_TouchEvent(entity this) // runs any time that the ball comes in contact with something
+{
 	if(gameover) { return; }
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -195,7 +194,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.movetype = MOVETYPE_BOUNCE;
 	ball.wait = time + 1;
 	settouch(ball, ka_TouchEvent);
-	setthink(ball, ka_RespawnBall_self);
+	setthink(ball, ka_RespawnBall);
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
 	ball.effects &= ~EF_NODRAW;
@@ -232,7 +231,7 @@ void ka_Reset(entity this)
 
 	if(time < game_starttime)
 	{
-		setthink(this, ka_RespawnBall_self);
+		setthink(this, ka_RespawnBall);
 		settouch(this, func_null);
 		this.nextthink = game_starttime;
 	}

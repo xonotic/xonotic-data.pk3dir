@@ -41,8 +41,8 @@ const float LATENCY_THINKRATE = 10;
 .float latency_cnt;
 .float latency_time;
 entity pingplreport;
-void PingPLReport_Think()
-{SELFPARAM();
+void PingPLReport_Think(entity this)
+{
 	float delta;
 	entity e;
 
@@ -104,8 +104,8 @@ void SetDefaultAlpha()
 	}
 }
 
-void GotoFirstMap()
-{SELFPARAM();
+void GotoFirstMap(entity this)
+{
 	float n;
 	if(autocvar__sv_init)
 	{
@@ -515,8 +515,8 @@ bool RandomSeed_Send(entity this, entity to, int sf)
 	WriteShort(MSG_ENTITY, this.cnt);
 	return true;
 }
-void RandomSeed_Think()
-{SELFPARAM();
+void RandomSeed_Think(entity this)
+{
 	this.cnt = bound(0, floor(random() * 65536), 65535);
 	this.nextthink = time + 5;
 
@@ -528,7 +528,7 @@ void RandomSeed_Spawn()
 	setthink(randomseed, RandomSeed_Think);
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITHSELF(randomseed, getthink(randomseed)()); // sets random seed and nextthink
+	WITHSELF(randomseed, getthink(randomseed)(randomseed)); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)

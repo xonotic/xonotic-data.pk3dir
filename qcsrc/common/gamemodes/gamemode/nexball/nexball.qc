@@ -40,9 +40,9 @@ float autocvar_g_balance_nexball_secondary_lifetime;
 float autocvar_g_balance_nexball_secondary_refire;
 float autocvar_g_balance_nexball_secondary_speed;
 
-void basketball_touch();
-void football_touch();
-void ResetBall();
+void basketball_touch(entity this);
+void football_touch(entity this);
+void ResetBall(entity this);
 const int NBM_NONE = 0;
 const int NBM_FOOTBALL = 2;
 const int NBM_BASKETBALL = 4;
@@ -84,7 +84,7 @@ void ball_restart(entity this)
 {
 	if(this.owner)
 		DropBall(this, this.owner.origin, '0 0 0');
-	ResetBall();
+	ResetBall(this);
 }
 
 void nexball_setstatus()
@@ -96,7 +96,8 @@ void nexball_setstatus()
 		{
 			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
 			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
-			WITHSELF(this.ballcarried, ResetBall());
+			entity e = this.ballcarried;
+			WITHSELF(e, ResetBall(e));
 		}
 		else
 			this.items |= IT_KEY1;
@@ -120,8 +121,8 @@ void relocate_nexball(entity this)
 	}
 }
 
-void DropOwner()
-{SELFPARAM();
+void DropOwner(entity this)
+{
 	entity ownr;
 	ownr = this.owner;
 	DropBall(this, ownr.origin, ownr.velocity);
@@ -220,8 +221,8 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.owner = world;
 }
 
-void InitBall()
-{SELFPARAM();
+void InitBall(entity this)
+{
 	if(gameover) return;
 	UNSET_ONGROUND(this);
 	this.movetype = MOVETYPE_BOUNCE;
@@ -240,8 +241,8 @@ void InitBall()
 	LogNB("init", world);
 }
 
-void ResetBall()
-{SELFPARAM();
+void ResetBall(entity this)
+{
 	if(this.cnt < 2)	// step 1
 	{
 		if(time == this.teamtime)
@@ -276,8 +277,8 @@ void ResetBall()
 	}
 }
 
-void football_touch()
-{SELFPARAM();
+void football_touch(entity this)
+{
 	if(other.solid == SOLID_BSP)
 	{
 		if(time > self.lastground + 0.1)
@@ -322,11 +323,11 @@ void football_touch()
 	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
 
-void basketball_touch()
-{SELFPARAM();
+void basketball_touch(entity this)
+{
 	if(other.ballcarried)
 	{
-		football_touch();
+		football_touch(this);
 		return;
 	}
 	if(!self.cnt && IS_PLAYER(other) && !STAT(FROZEN, other) && !IS_DEAD(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
@@ -344,8 +345,8 @@ void basketball_touch()
 	}
 }
 
-void GoalTouch()
-{SELFPARAM();
+void GoalTouch(entity this)
+{
 	entity ball;
 	float isclient, pscore, otherteam;
 	string pname;
@@ -702,8 +703,8 @@ spawnfunc(ball_bound)
 //=======================//
 
 
-void W_Nexball_Think()
-{SELFPARAM();
+void W_Nexball_Think(entity this)
+{
 	//dprint("W_Nexball_Think\n");
 	//vector new_dir = steerlib_arrive(this.enemy.origin, 2500);
 	vector new_dir = normalize(this.enemy.origin + '0 0 50' - this.origin);
@@ -717,8 +718,8 @@ void W_Nexball_Think()
 	this.nextthink = time;
 }
 
-void W_Nexball_Touch()
-{SELFPARAM();
+void W_Nexball_Touch(entity this)
+{
 	entity ball, attacker;
 	attacker = self.owner;
 	//self.think = func_null;
@@ -816,7 +817,7 @@ void W_Nexball_Attack2()
 	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	settouch(missile, W_Nexball_Touch);
-	setthink(missile, SUB_Remove_self);
+	setthink(missile, SUB_Remove);
 	missile.nextthink = time + autocvar_g_balance_nexball_secondary_lifetime; //FIXME: use a distance instead?
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;

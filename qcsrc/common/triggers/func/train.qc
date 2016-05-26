@@ -1,10 +1,10 @@
 .float train_wait_turning;
-void() train_next;
+void train_next(entity this);
 #ifdef SVQC
 void train_use(entity this, entity actor, entity trigger);
 #endif
-void train_wait()
-{SELFPARAM();
+void train_wait(entity this)
+{
 	SUB_UseTargets(this.enemy, NULL, NULL);
 	self.enemy = world;
 
@@ -44,7 +44,7 @@ void train_wait()
 	if(tg.spawnflags & 4)
 	{
 		self.use = train_use;
-		self.SUB_THINK = func_null;
+		SUB_THINK(self, func_null);
 		self.SUB_NEXTTHINK = 0;
 	}
 	else
@@ -52,17 +52,17 @@ void train_wait()
 	     if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
 		self.train_wait_turning = false;
-		train_next();
+		train_next(self);
 	}
 	else
 	{
-		self.SUB_THINK = train_next;
+		SUB_THINK(self, train_next);
 		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
 	}
 }
 
-void train_next()
-{SELFPARAM();
+void train_next(entity this)
+{
 	entity targ, cp = world;
 	vector cp_org = '0 0 0';
 
@@ -179,7 +179,7 @@ void train_link()
 void train_use(entity this, entity actor, entity trigger)
 {
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 1;
-	this.SUB_THINK = train_next;
+	SUB_THINK(this, train_next);
 	this.use = func_null; // not again
 }
 
@@ -195,7 +195,7 @@ void func_train_find(entity this)
 	if(!(self.spawnflags & 4))
 	{
 		self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
-		self.SUB_THINK = train_next;
+		SUB_THINK(self, train_next);
 	}
 
 	train_link();
@@ -324,7 +324,7 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		// but we will need these
 		//this.move_nextthink = this.move_ltime + 0.1;
 		//this.move_think = train_next;
-		WITHSELF(this, train_next());
+		WITHSELF(this, train_next(this));
 
 		this.move_movetype = MOVETYPE_PUSH;
 		this.move_origin = this.origin;

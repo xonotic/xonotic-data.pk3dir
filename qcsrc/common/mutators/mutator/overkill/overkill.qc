@@ -267,8 +267,8 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 	return false;
 }
 
-void self_spawnfunc_weapon_hmg() { SELFPARAM(); spawnfunc_weapon_hmg(this); }
-void self_spawnfunc_weapon_rpc() { SELFPARAM(); spawnfunc_weapon_rpc(this); }
+void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
+void self_spawnfunc_weapon_rpc(entity this) { spawnfunc_weapon_rpc(this); }
 
 MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 {SELFPARAM();

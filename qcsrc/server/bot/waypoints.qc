@@ -163,8 +163,8 @@ void waypoint_addlink(entity from, entity to)
 // relink this spawnfunc_waypoint
 // (precompile a list of all reachable waypoints from this spawnfunc_waypoint)
 // (SLOW!)
-void waypoint_think()
-{SELFPARAM();
+void waypoint_think(entity this)
+{
 	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
 

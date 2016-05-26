@@ -37,11 +37,11 @@ void Drop_Special_Items(entity player)
 	MUTATOR_CALLHOOK(DropSpecialItems, player);
 }
 
-void CopyBody_Think()
-{SELFPARAM();
+void CopyBody_Think(entity this)
+{
 	if(this.CopyBody_nextthink && time > this.CopyBody_nextthink)
 	{
-		this.CopyBody_think();
+		this.CopyBody_think(this);
 		if(wasfreed(this))
 			return;
 		this.CopyBody_nextthink = this.nextthink;

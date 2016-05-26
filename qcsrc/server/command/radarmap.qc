@@ -210,9 +210,8 @@ void RadarMap_Next()
 	remove(radarmapper);
 	radarmapper = world;
 }
-void RadarMap_Think()
+void RadarMap_Think(entity this)
 {
-	SELFPARAM();
 	// rough map entity
 	//   cnt: current line
 	//   size: pixel width/height

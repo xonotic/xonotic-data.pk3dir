@@ -83,8 +83,8 @@ Sound SND_CASINGS_RANDOM() {
     return Sounds_from(SND_CASINGS1.m_id + floor(prandom() * 3));
 }
 
-void Casing_Touch()
-{SELFPARAM();
+void Casing_Touch(entity this)
+{
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
         Casing_Delete(self);

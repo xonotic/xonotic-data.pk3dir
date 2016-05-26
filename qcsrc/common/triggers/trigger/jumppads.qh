@@ -35,7 +35,7 @@ void trigger_push_use(entity this, entity actor, entity trigger);
 
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
 
-void trigger_push_touch();
+void trigger_push_touch(entity this);
 
 .vector dest;
 void trigger_push_findtarget(entity this);

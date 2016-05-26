@@ -191,7 +191,6 @@ void monster_changeteam(entity ent, float newteam)
 }
 
 .void(entity) monster_delayedfunc;
-void Monster_Delay_Action_self();
 void Monster_Delay_Action(entity this)
 {
 	if(Monster_ValidTarget(this.owner, this.owner.enemy)) { this.monster_delayedfunc(this.owner); }
@@ -199,20 +198,14 @@ void Monster_Delay_Action(entity this)
 	if(this.cnt > 1)
 	{
 		this.cnt -= 1;
-		setthink(this, Monster_Delay_Action_self);
+		setthink(this, Monster_Delay_Action);
 		this.nextthink = time + this.count;
 	}
 	else
 	{
-		setthink(this, SUB_Remove_self);
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 	}
-}
-
-void Monster_Delay_Action_self()
-{
-    SELFPARAM();
-	Monster_Delay_Action(this);
 }
 
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)
@@ -220,7 +213,7 @@ void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity)
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
 	entity e = spawn();
 
-	setthink(e, Monster_Delay_Action_self);
+	setthink(e, Monster_Delay_Action);
 	e.nextthink = time + defer_amnt;
 	e.count = defer_amnt;
 	e.owner = this;
@@ -401,7 +394,7 @@ bool Monster_Attack_Leap_Check(entity this, vector vel)
 	return true;
 }
 
-bool Monster_Attack_Leap(entity this, vector anm, void() touchfunc, vector vel, float animtime)
+bool Monster_Attack_Leap(entity this, vector anm, void(entity this) touchfunc, vector vel, float animtime)
 {
 	if(!Monster_Attack_Leap_Check(this, vel))
 		return false;
@@ -473,8 +466,8 @@ void Monster_UpdateModel(entity this)
 	mon.mr_anim(mon, this);
 }
 
-void Monster_Touch()
-{SELFPARAM();
+void Monster_Touch(entity this)
+{
 	if(other == world) { return; }
 
 	if(other.monster_attack)
@@ -516,7 +509,7 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn() { SELFPARAM(); Monster_Spawn(this, this.monsterid); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, this.monsterid); }
 
 void Monster_Dead_Fade(entity this)
 {
@@ -919,8 +912,8 @@ void Monster_Remove(entity this)
 	remove(this);
 }
 
-void Monster_Dead_Think()
-{SELFPARAM();
+void Monster_Dead_Think(entity this)
+{
 	this.nextthink = time + this.ticrate;
 
 	if(this.monster_lifetime != 0)
@@ -980,7 +973,7 @@ void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float d
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		setthink(this, SUB_Remove_self);
+		setthink(this, SUB_Remove);
 		this.nextthink = time + 0.1;
 		this.event_damage = func_null;
 	}
@@ -1115,7 +1108,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 		{
 			Violence_GibSplash(this, 1, 0.5, attacker);
 
-			setthink(this, SUB_Remove_self);
+			setthink(this, SUB_Remove);
 			this.nextthink = time + 0.1;
 		}
 	}
@@ -1214,8 +1207,8 @@ void Monster_Anim(entity this)
 	*/
 }
 
-void Monster_Think()
-{SELFPARAM();
+void Monster_Think(entity this)
+{
 	setthink(this, Monster_Think);
 	this.nextthink = this.ticrate;
 

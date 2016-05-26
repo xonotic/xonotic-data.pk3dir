@@ -57,8 +57,8 @@ vector func_vectormamamam_origin(entity o, float t)
 	return v;
 }
 
-void func_vectormamamam_controller_think()
-{SELFPARAM();
+void func_vectormamamam_controller_think(entity this)
+{
 	self.nextthink = time + 0.1;
 
 	if(self.owner.active != ACTIVE_ACTIVE)
@@ -146,7 +146,7 @@ spawnfunc(func_vectormamamam)
 
 	// wait for targets to spawn
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
-	this.SUB_THINK = SUB_NullThink; // for PushMove
+	SUB_THINK(this, SUB_NullThink); // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	this.effects |= EF_LOWPRECISION;

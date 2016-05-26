@@ -1,7 +1,7 @@
 #ifdef SVQC
 .float height;
-void func_bobbing_controller_think()
-{SELFPARAM();
+void func_bobbing_controller_think(entity this)
+{
 	vector v;
 	self.nextthink = time + 0.1;
 
@@ -74,7 +74,7 @@ spawnfunc(func_bobbing)
 	controller.nextthink = time + 1;
 	setthink(controller, func_bobbing_controller_think);
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
-	this.SUB_THINK = SUB_NullThink;
+	SUB_THINK(this, SUB_NullThink);
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	this.effects |= EF_LOWPRECISION;

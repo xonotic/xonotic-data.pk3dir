@@ -11,7 +11,7 @@ float autocvar_g_turrets_unit_hk_shot_speed_decel;
 float autocvar_g_turrets_unit_hk_shot_speed_max;
 float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
-void turret_hk_missile_think();
+void turret_hk_missile_think(entity this);
 SOUND(HunterKillerAttack_FIRE, W_Sound("electro_fire"));
 METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -45,8 +45,8 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 }
 
 bool hk_is_valid_target(entity e_target);
-void turret_hk_missile_think()
-{SELFPARAM();
+void turret_hk_missile_think(entity this)
+{
     vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
     float  fu, fd, ff, fl, fr, fe;  // Fraction to solid
     vector olddir,wishdir,newdir;   // Final direction
@@ -95,7 +95,7 @@ void turret_hk_missile_think()
         // Close enougth to do decent damage?
         if ( edist <= (self.owner.shot_radius * 0.25) )
         {
-            turret_projectile_explode();
+            turret_projectile_explode(self);
             return;
         }
 

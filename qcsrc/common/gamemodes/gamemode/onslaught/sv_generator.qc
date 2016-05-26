@@ -29,7 +29,7 @@ bool generator_send(entity this, entity to, int sf)
 	return true;
 }
 
-void generator_link(void() spawnproc)
+void generator_link(void(entity this) spawnproc)
 {SELFPARAM();
 	Net_LinkEntity(self, true, 0, generator_send);
 	setthink(self, spawnproc);

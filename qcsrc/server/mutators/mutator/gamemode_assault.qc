@@ -225,7 +225,7 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 			it.team = NUM_TEAM_1;
 
 		// Dubbles as teamchange
-		WITHSELF(it, turret_respawn());
+		WITHSELF(it, turret_respawn(it));
 	));
 }
 void assault_roundstart_use_this(entity this)
@@ -238,8 +238,8 @@ void assault_roundstart_use_self()
     assault_roundstart_use(this, NULL, NULL);
 }
 
-void assault_wall_think()
-{SELFPARAM();
+void assault_wall_think(entity this)
+{
 	if(self.enemy.health < 0)
 	{
 		self.model = "";
@@ -257,7 +257,7 @@ void assault_wall_think()
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
 void vehicles_clearreturn(entity veh);
-void vehicles_spawn();
+void vehicles_spawn(entity this);
 void assault_new_round()
 {SELFPARAM();
 	//bprint("ASSAULT: new round\n");
@@ -267,7 +267,7 @@ void assault_new_round()
 
     FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
         vehicles_clearreturn(it);
-        WITHSELF(it, vehicles_spawn());
+        WITHSELF(it, vehicles_spawn(it));
     ));
 
 	// up round counter

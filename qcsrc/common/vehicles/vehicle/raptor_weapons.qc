@@ -51,9 +51,9 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
     }
 }
 
-void raptor_flare_think();
+void raptor_flare_think(entity this);
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
-void raptor_flare_touch();
+void raptor_flare_touch(entity this);
 
 METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -85,8 +85,8 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
 }
 
 
-void raptor_bomblet_boom()
-{SELFPARAM();
+void raptor_bomblet_boom(entity this)
+{
     RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
                                     autocvar_g_vehicle_raptor_bomblet_radius, world, world,
@@ -94,8 +94,8 @@ void raptor_bomblet_boom()
     remove(self);
 }
 
-void raptor_bomblet_touch()
-{SELFPARAM();
+void raptor_bomblet_touch(entity this)
+{
     if(other == self.owner)
         return;
 
@@ -104,8 +104,8 @@ void raptor_bomblet_touch()
     self.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
 }
 
-void raptor_bomb_burst()
-{SELFPARAM();
+void raptor_bomb_burst(entity this)
+{
     if(self.cnt > time)
     if(autocvar_g_vehicle_raptor_bomblet_alt)
     {
@@ -180,8 +180,8 @@ void raptor_bombdrop()
     CSQCProjectile(bomb_2, true, PROJECTILE_RAPTORBOMB, true);
 }
 
-void raptor_flare_touch()
-{SELFPARAM();
+void raptor_flare_touch(entity this)
+{
     remove(self);
 }
 
@@ -192,8 +192,8 @@ void raptor_flare_damage(entity this, entity inflictor, entity attacker, float d
         remove(this);
 }
 
-void raptor_flare_think()
-{SELFPARAM();
+void raptor_flare_think(entity this)
+{
     self.nextthink = time + 0.1;
     entity _missile = findchainentity(enemy, self.owner);
     while(_missile)

@@ -274,8 +274,8 @@ bool W_Tuba_NoteSendEntity(entity this, entity to, int sf)
 	return true;
 }
 
-void W_Tuba_NoteThink()
-{SELFPARAM();
+void W_Tuba_NoteThink(entity this)
+{
 	float dist_mult;
 	float vol0, vol1;
 	vector dir0, dir1;
@@ -552,8 +552,8 @@ void tubasound(entity e, bool restart)
 	}
 }
 
-void Ent_TubaNote_Think()
-{SELFPARAM();
+void Ent_TubaNote_Think(entity this)
+{
 	float f = autocvar_g_balance_tuba_fadetime;
 	if (f > 0) {
 		this.tuba_volume -= frametime * this.tuba_volume_initial / f;
@@ -587,8 +587,6 @@ void Ent_TubaNote_StopSound(entity this)
 	this.enemy.nextthink = time;
 	this.enemy = NULL;
 }
-
-void Ent_TubaNote_StopSound_self() { SELFPARAM(); Ent_TubaNote_StopSound(self); }
 
 NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 {
@@ -631,7 +629,7 @@ NET_HANDLE(ENT_CLIENT_TUBANOTE, bool isNew)
 		}
 	}
 
-	setthink(this, Ent_TubaNote_StopSound_self);
+	setthink(this, Ent_TubaNote_StopSound);
 	this.entremove = Ent_TubaNote_StopSound;
 	setthink(this.enemy, Ent_TubaNote_Think);
 	this.enemy.nextthink = time + 10;

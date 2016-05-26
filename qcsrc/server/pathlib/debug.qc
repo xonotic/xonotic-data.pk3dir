@@ -29,8 +29,8 @@ void path_dbg_think()
     self.nextthink = time + 1;
 }
 
-void __showpath2_think()
-{SELFPARAM();
+void __showpath2_think(entity this)
+{
     #ifdef TURRET_DEBUG
 	mark_info(self.origin,1);
 	#endif
@@ -82,7 +82,7 @@ void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 
     s           = spawn();
     s.alpha     = 0.25;
-    setthink(s, SUB_Remove_self);
+    setthink(s, SUB_Remove);
     s.nextthink = _lifetime;
     s.scale     = pathlib_gridsize / 512.001;
     s.solid     = SOLID_NOT;
@@ -107,7 +107,7 @@ void pathlib_showedge(vector where,float _lifetime,float rot)
 
     e           = spawn();
     e.alpha     = 0.25;
-    setthink(e, SUB_Remove_self);
+    setthink(e, SUB_Remove);
     e.nextthink = _lifetime;
     e.scale     = pathlib_gridsize / 512;
     e.solid     = SOLID_NOT;

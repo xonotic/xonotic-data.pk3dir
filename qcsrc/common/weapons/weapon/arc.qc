@@ -259,8 +259,8 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
-void W_Arc_Bolt_Touch()
-{SELFPARAM();
+void W_Arc_Bolt_Touch(entity this)
+{
 	PROJECTILE_TOUCH;
 	self.use(this, NULL, NULL);
 }
@@ -307,8 +307,8 @@ void W_Arc_Attack_Bolt(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-void W_Arc_Beam_Think()
-{SELFPARAM();
+void W_Arc_Beam_Think(entity this)
+{
 	if(self != self.owner.arc_beam)
 	{
 		remove(self);
@@ -691,7 +691,7 @@ void W_Arc_Beam(float burst)
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
-	WITHSELF(beam, getthink(beam)());
+	WITHSELF(beam, getthink(beam)(beam));
 }
 
 void Arc_Smoke()

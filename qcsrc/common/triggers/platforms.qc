@@ -58,23 +58,23 @@ void plat_spawn_inside_trigger()
 	objerror("plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
 
-void plat_hit_top()
-{SELFPARAM();
+void plat_hit_top(entity this)
+{
 	_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 1;
 
-	self.SUB_THINK = plat_go_down;
+	SUB_THINK(self, plat_go_down);
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 3;
 }
 
-void plat_hit_bottom()
-{SELFPARAM();
+void plat_hit_bottom(entity this)
+{
 	_sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
 	self.state = 2;
 }
 
-void plat_go_down()
-{SELFPARAM();
+void plat_go_down(entity this)
+{
 	_sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 3;
 	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, plat_hit_bottom);
@@ -87,8 +87,8 @@ void plat_go_up()
 	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, plat_hit_top);
 }
 
-void plat_center_touch()
-{SELFPARAM();
+void plat_center_touch(entity this)
+{
 #ifdef SVQC
 	if (!other.iscreature)
 		return;
@@ -108,8 +108,8 @@ void plat_center_touch()
 		self.enemy.SUB_NEXTTHINK = self.enemy.SUB_LTIME + 1;
 }
 
-void plat_outside_touch()
-{SELFPARAM();
+void plat_outside_touch(entity this)
+{
 #ifdef SVQC
 	if (!other.iscreature)
 		return;
@@ -121,8 +121,10 @@ void plat_outside_touch()
 		return;
 #endif
 
-	if (self.enemy.state == 1)
-		WITHSELF(self.enemy, plat_go_down());
+	if (self.enemy.state == 1) {
+	    entity e = self.enemy;
+		WITHSELF(e, plat_go_down(e));
+    }
 }
 
 void plat_trigger_use(entity this, entity actor, entity trigger)
@@ -134,7 +136,7 @@ void plat_trigger_use(entity this, entity actor, entity trigger)
 	if(this.move_think)
 		return;
 #endif
-	WITHSELF(this, plat_go_down());
+	WITHSELF(this, plat_go_down(this));
 }
 
 
@@ -159,7 +161,7 @@ void plat_crush()
 #endif
 
 		if (self.state == 4)
-			plat_go_down ();
+			plat_go_down (self);
 		else if (self.state == 3)
 			plat_go_up ();
 	// when in other states, then the plat_crush event came delayed after
@@ -173,7 +175,7 @@ void plat_use(entity this, entity actor, entity trigger)
 	this.use = func_null;
 	if (this.state != 4)
 		objerror ("plat_use: not in up state");
-	WITHSELF(this, plat_go_down());
+	WITHSELF(this, plat_go_down(this));
 }
 
 .string sound1, sound2;

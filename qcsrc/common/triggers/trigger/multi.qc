@@ -2,8 +2,8 @@
 
 #ifdef SVQC
 // the wait time has passed, so set back up for another activation
-void multi_wait()
-{SELFPARAM();
+void multi_wait(entity this)
+{
 	if (this.max_health)
 	{
 		this.health = this.max_health;
@@ -50,7 +50,7 @@ void multi_trigger(entity this)
 	}
 	else if (this.wait == 0)
 	{
-		WITHSELF(this, multi_wait()); // waiting finished
+		WITHSELF(this, multi_wait(this)); // waiting finished
 	}
 	else
 	{	// we can't just remove (this) here, because this is a touch function
@@ -66,8 +66,8 @@ void multi_use(entity this, entity actor, entity trigger)
 	multi_trigger(this);
 }
 
-void multi_touch()
-{SELFPARAM();
+void multi_touch(entity this)
+{
 	if(!(self.spawnflags & 2))
 	if(!other.iscreature)
 			return;

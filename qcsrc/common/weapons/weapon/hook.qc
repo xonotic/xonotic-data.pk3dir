@@ -79,8 +79,8 @@ OffhandHook OFFHAND_HOOK; STATIC_INIT(OFFHAND_HOOK) { OFFHAND_HOOK = NEW(Offhand
 
 spawnfunc(weapon_hook) { weapon_defaultspawnfunc(this, WEP_HOOK); }
 
-void W_Hook_ExplodeThink()
-{SELFPARAM();
+void W_Hook_ExplodeThink(entity this)
+{
 	float dt, dmg_remaining_next, f;
 
 	dt = time - self.teleport_time;
@@ -99,8 +99,8 @@ void W_Hook_ExplodeThink()
 		remove(self);
 }
 
-void W_Hook_Explode2()
-{SELFPARAM();
+void W_Hook_Explode2(entity this)
+{
 	self.event_damage = func_null;
 	settouch(self, func_null);
 	self.effects |= EF_NODRAW;
@@ -120,7 +120,7 @@ void W_Hook_Explode2()
 
 void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Hook_Explode2());
+	WITHSELF(this, W_Hook_Explode2(this));
 }
 
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -137,8 +137,8 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
-void W_Hook_Touch2()
-{SELFPARAM();
+void W_Hook_Touch2(entity this)
+{
 	PROJECTILE_TOUCH;
 	this.use(this, NULL, NULL);
 }

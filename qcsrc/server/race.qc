@@ -698,8 +698,8 @@ void checkpoint_passed(entity this, entity player)
 	}
 }
 
-void checkpoint_touch()
-{SELFPARAM();
+void checkpoint_touch(entity this)
+{
 	EXACTTRIGGER_TOUCH;
 	checkpoint_passed(this, other);
 }
@@ -1093,8 +1093,8 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 	}
 }
 
-void penalty_touch()
-{SELFPARAM();
+void penalty_touch(entity this)
+{
 	EXACTTRIGGER_TOUCH;
 	if(other.race_lastpenalty != this)
 	{

@@ -29,19 +29,19 @@ spawnfunc(item_minst_cells)
 	StartItem(this, ITEM_VaporizerCells);
 }
 
-void instagib_invisibility()
-{SELFPARAM();
+void instagib_invisibility(entity this)
+{
 	this.strength_finished = autocvar_g_balance_powerup_strength_time;
 	StartItem(this, ITEM_Invisibility);
 }
 
-void instagib_extralife()
-{SELFPARAM();
+void instagib_extralife(entity this)
+{
 	StartItem(this, ITEM_ExtraLife);
 }
 
-void instagib_speed()
-{SELFPARAM();
+void instagib_speed(entity this)
+{
 	this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	StartItem(this, ITEM_Speed);
 }

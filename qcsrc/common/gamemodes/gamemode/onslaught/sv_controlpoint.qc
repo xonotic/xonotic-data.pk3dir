@@ -32,7 +32,7 @@ bool cpicon_send(entity this, entity to, int sf)
 	return true;
 }
 
-void onslaught_controlpoint_icon_link(entity e, void() spawnproc)
+void onslaught_controlpoint_icon_link(entity e, void(entity this) spawnproc)
 {
 	Net_LinkEntity(e, true, 0, cpicon_send);
 	setthink(e, spawnproc);

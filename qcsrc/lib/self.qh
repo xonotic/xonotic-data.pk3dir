@@ -62,17 +62,17 @@ noref entity _selftemp;
     (0, (e).__##T)
 
 SELFWRAP(think, void, (entity this), (this))
-#define setthink(e, f) _SELFWRAP_SET(think, e, f)
-#define getthink(e) _SELFWRAP_GET(think, e)
+#define setthink(e, f) SELFWRAP_SET(think, e, f)
+#define getthink(e) SELFWRAP_GET(think, e)
 
 SELFWRAP(touch, void, (entity this), (this))
-#define settouch(e, f) _SELFWRAP_SET(touch, e, f)
-#define gettouch(e) _SELFWRAP_GET(touch, e)
+#define settouch(e, f) SELFWRAP_SET(touch, e, f)
+#define gettouch(e) SELFWRAP_GET(touch, e)
 
 SELFWRAP(predraw, void, (entity this), (this))
 #define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
 
 #ifndef MENUQC
-void adaptor_think2touch() { SELFPARAM(); WITH(entity, other, NULL, gettouch(this)()); }
-void adaptor_think2use() { SELFPARAM(); if (this.use) this.use(this, NULL, NULL); }
+void adaptor_think2touch(entity this) { WITH(entity, other, NULL, gettouch(this)(this)); }
+void adaptor_think2use(entity this) { if (this.use) this.use(this, NULL, NULL); }
 #endif

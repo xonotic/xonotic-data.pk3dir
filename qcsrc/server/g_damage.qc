@@ -501,8 +501,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	if(targ.killcount) { targ.killcount = 0; }
 }
 
-void Ice_Think()
-{SELFPARAM();
+void Ice_Think(entity this)
+{
 	if(!STAT(FROZEN, self.owner) || self.owner.iceblock != self)
 	{
 		remove(self);
@@ -541,7 +541,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	WITHSELF(ice, Ice_Think());
+	WITHSELF(ice, Ice_Think(ice));
 
 	RemoveGrapplingHook(targ);
 
@@ -850,7 +850,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 			farcent.origin = hitloc;
 			farcent.forcetype = FORCETYPE_FORCEATPOS;
 			farcent.nextthink = time + 0.1;
-			setthink(farcent, SUB_Remove_self);
+			setthink(farcent, SUB_Remove);
 		}
 		else
 		{
@@ -1251,8 +1251,8 @@ void Fire_ApplyEffect(entity e)
 		e.effects &= ~EF_FLAME;
 }
 
-void fireburner_think()
-{SELFPARAM();
+void fireburner_think(entity this)
+{
 	// for players, this is done in the regular loop
 	if(wasfreed(self.owner))
 	{

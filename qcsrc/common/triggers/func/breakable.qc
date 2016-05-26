@@ -189,8 +189,8 @@ void func_breakable_restore(entity this, entity actor, entity trigger)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void func_breakable_restore_self()
-{SELFPARAM();
+void func_breakable_restore_self(entity this)
+{
 	func_breakable_restore(this, NULL, NULL);
 }
 
@@ -231,8 +231,8 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 	this.message = oldmsg;
 }
 
-void func_breakable_destroy_self()
-{SELFPARAM();
+void func_breakable_destroy_self(entity this)
+{
 	func_breakable_destroy(this, NULL, NULL);
 }
 

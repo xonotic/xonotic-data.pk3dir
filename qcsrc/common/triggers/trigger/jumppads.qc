@@ -129,8 +129,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	return sdir * vs + '0 0 1' * vz;
 }
 
-void trigger_push_touch()
-{SELFPARAM();
+void trigger_push_touch(entity this)
+{
 	if (this.active == ACTIVE_NOT)
 		return;
 
@@ -263,7 +263,7 @@ void trigger_push_touch()
 	if (this.spawnflags & PUSH_ONCE)
 	{
 		settouch(this, func_null);
-		setthink(this, SUB_Remove_self);
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 	}
 #endif

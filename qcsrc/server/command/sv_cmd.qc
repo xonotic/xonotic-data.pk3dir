@@ -39,9 +39,8 @@ void PutObserverInServer();
 // =====================================================
 
 //  used by GameCommand_make_mapinfo()
-void make_mapinfo_Think()
+void make_mapinfo_Think(entity this)
 {
-	SELFPARAM();
 	if (MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		LOG_INFO("Done rebuiling mapinfos.\n");

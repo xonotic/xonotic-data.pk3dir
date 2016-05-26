@@ -667,8 +667,8 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 }
 
 .entity WarpZone_refsys;
-void WarpZone_RefSys_GC()
-{SELFPARAM();
+void WarpZone_RefSys_GC(entity this)
+{
 	// garbage collect unused reference systems
 	this.nextthink = time + 1;
 	if(this.owner.WarpZone_refsys != this)

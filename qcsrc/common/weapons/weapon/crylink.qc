@@ -228,8 +228,8 @@ vector W_Crylink_LinkJoin(entity e, float jspeed)
 	return targ_origin;
 }
 
-void W_Crylink_LinkJoinEffect_Think()
-{SELFPARAM();
+void W_Crylink_LinkJoinEffect_Think(entity this)
+{
 	// is there at least 2 projectiles very close?
 	entity e, p;
 	float n;
@@ -293,8 +293,8 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 }
 
 // NO bounce protection, as bounces are limited!
-void W_Crylink_Touch()
-{SELFPARAM();
+void W_Crylink_Touch(entity this)
+{
 	float finalhit;
 	float f;
 	float isprimary = !(self.projectiledeathtype & HITTYPE_SECONDARY);
@@ -338,8 +338,8 @@ void W_Crylink_Touch()
 	//	CSQCProjectile(proj, true, PROJECTILE_CRYLINK, true);
 }
 
-void W_Crylink_Fadethink()
-{SELFPARAM();
+void W_Crylink_Fadethink(entity this)
+{
 	W_Crylink_Dequeue(self);
 	remove(self);
 }

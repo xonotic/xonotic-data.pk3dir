@@ -46,8 +46,8 @@ float object_count;
 .string material;
 
 .float touch_timer;
-void sandbox_ObjectFunction_Touch()
-{SELFPARAM();
+void sandbox_ObjectFunction_Touch(entity this)
+{
 	// apply material impact effects
 
 	if(!self.material)
@@ -71,8 +71,8 @@ void sandbox_ObjectFunction_Touch()
 	Send_Effect_(strcat("impact_", self.material), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
-void sandbox_ObjectFunction_Think()
-{SELFPARAM();
+void sandbox_ObjectFunction_Think(entity this)
+{
 	// decide if and how this object can be grabbed
 	if(autocvar_g_sandbox_readonly)
 		self.grab = 0; // no grabbing

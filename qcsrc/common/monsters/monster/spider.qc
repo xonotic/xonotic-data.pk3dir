@@ -156,14 +156,14 @@ void M_Spider_Attack_Web_Explode_use(entity this, entity actor, entity trigger)
 	WITHSELF(this, M_Spider_Attack_Web_Explode());
 }
 
-void M_Spider_Attack_Web_Touch()
+void M_Spider_Attack_Web_Touch(entity this)
 {
 	PROJECTILE_TOUCH;
 
 	M_Spider_Attack_Web_Explode();
 }
 
-void adaptor_think2use_hittype_splash();
+void adaptor_think2use_hittype_splash(entity this);
 
 void M_Spider_Attack_Web(entity this)
 {

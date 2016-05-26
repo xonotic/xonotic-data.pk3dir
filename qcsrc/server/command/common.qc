@@ -193,9 +193,8 @@ void timeout_handler_reset()
 	remove(self);
 }
 
-void timeout_handler_think()
+void timeout_handler_think(entity this)
 {
-	SELFPARAM();
 	switch (timeout_status)
 	{
 		case TIMEOUT_ACTIVE:

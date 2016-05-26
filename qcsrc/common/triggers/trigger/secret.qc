@@ -17,8 +17,8 @@ void secrets_setstatus()
 /**
  * A secret has been found (maybe :P)
  */
-void trigger_secret_touch()
-{SELFPARAM();
+void trigger_secret_touch(entity this)
+{
 	// only a player can trigger this
 	if (!IS_PLAYER(other))
 		return;
@@ -33,7 +33,7 @@ void trigger_secret_touch()
 	self.message = "";
 
 	// handle normal trigger features
-	multi_touch();
+	multi_touch(self);
 	remove(self);
 }
 

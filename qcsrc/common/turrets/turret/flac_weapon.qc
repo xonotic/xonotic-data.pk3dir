@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 
-void turret_flac_projectile_think_explode();
+void turret_flac_projectile_think_explode(entity this);
 SOUND(FlacAttack_FIRE, W_Sound("electro_fire"));
 METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -36,9 +36,8 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
     }
 }
 
-void turret_flac_projectile_think_explode()
+void turret_flac_projectile_think_explode(entity this)
 {
-    SELFPARAM();
     if(self.enemy != world)
     if(vdist(self.origin - self.enemy.origin, <, self.owner.shot_radius * 3))
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);

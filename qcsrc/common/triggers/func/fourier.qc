@@ -10,8 +10,8 @@ dmg: Do this mutch dmg every .dmgtime intervall when blocked
 dmgtime: See above.
 */
 
-void func_fourier_controller_think()
-{SELFPARAM();
+void func_fourier_controller_think(entity this)
+{
 	vector v;
 	float n, i, t;
 
@@ -78,7 +78,7 @@ spawnfunc(func_fourier)
 	controller.nextthink = time + 1;
 	setthink(controller, func_fourier_controller_think);
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
-	this.SUB_THINK = SUB_NullThink; // for PushMove
+	SUB_THINK(this, SUB_NullThink); // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	this.effects |= EF_LOWPRECISION;

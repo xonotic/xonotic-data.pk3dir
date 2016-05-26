@@ -298,8 +298,8 @@ MUTATOR_HOOKFUNCTION(lms, FilterItem)
 	return true;
 }
 
-void lms_extralife()
-{SELFPARAM();
+void lms_extralife(entity this)
+{
 	StartItem(this, ITEM_ExtraLife);
 }
 

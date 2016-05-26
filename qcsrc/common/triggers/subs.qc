@@ -1,7 +1,7 @@
-void SUB_NullThink() { }
+void SUB_NullThink(entity this) { }
 
-void()  SUB_CalcMoveDone;
-void() SUB_CalcAngleMoveDone;
+void SUB_CalcMoveDone(entity this);
+void SUB_CalcAngleMoveDone(entity this);
 
 /*
 ==================
@@ -44,11 +44,11 @@ void SUB_VanishOrRemove (entity ent)
 	}
 }
 
-void SUB_SetFade_Think ()
-{SELFPARAM();
+void SUB_SetFade_Think (entity this)
+{
 	if(this.alpha == 0)
 		this.alpha = 1;
-	this.SUB_THINK = SUB_SetFade_Think;
+	SUB_THINK(this, SUB_SetFade_Think);
 	this.SUB_NEXTTHINK = time;
 	this.alpha -= frametime * this.fade_rate;
 	if (this.alpha < 0.01)
@@ -67,7 +67,7 @@ Fade 'ent' out when time >= 'when'
 void SUB_SetFade (entity ent, float when, float fading_time)
 {
 	ent.fade_rate = 1/fading_time;
-	ent.SUB_THINK = SUB_SetFade_Think;
+	SUB_THINK(ent, SUB_SetFade_Think);
 	ent.SUB_NEXTTHINK = when;
 }
 
@@ -79,20 +79,20 @@ calculate self.SUB_VELOCITY and self.SUB_NEXTTHINK to reach dest from
 self.SUB_ORIGIN traveling at speed
 ===============
 */
-void SUB_CalcMoveDone ()
-{SELFPARAM();
+void SUB_CalcMoveDone(entity this)
+{
 	// After moving, set origin to exact final destination
 
 	SUB_SETORIGIN (self, self.finaldest);
 	self.SUB_VELOCITY = '0 0 0';
 	self.SUB_NEXTTHINK = -1;
 	if (self.think1)
-		self.think1 ();
+		self.think1 (self);
 }
 
 .float platmovetype_turn;
-void SUB_CalcMove_controller_think ()
-{SELFPARAM();
+void SUB_CalcMove_controller_think (entity this)
+{
 	float traveltime;
 	float phasepos;
 	float nexttick;
@@ -143,9 +143,9 @@ void SUB_CalcMove_controller_think ()
 	{
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		entity own = self.owner;
-		own.SUB_THINK = self.think1;
+		SUB_THINK(own, self.think1);
 		remove(self);
-		WITHSELF(own, own.SUB_THINK());
+		WITHSELF(own, SUB_THUNK(own)(own));
 	}
 }
 
@@ -183,7 +183,7 @@ float TSPEED_START = 1;
 float TSPEED_END = 2;
 // TODO average too?
 
-void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
+void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {SELFPARAM();
 	float	traveltime;
 	entity controller;
@@ -193,7 +193,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 
 	self.think1 = func;
 	self.finaldest = tdest;
-	self.SUB_THINK = SUB_CalcMoveDone;
+	SUB_THINK(self, SUB_CalcMoveDone);
 
 	switch(tspeedtype)
 	{
@@ -229,17 +229,17 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	controller.animstate_starttime = time;
 	controller.animstate_endtime = time + traveltime;
 	setthink(controller, SUB_CalcMove_controller_think);
-	controller.think1 = self.SUB_THINK;
+	controller.think1 = SUB_THUNK(self);
 
 	// the thinking is now done by the controller
-	self.SUB_THINK = SUB_NullThink; // for PushMove
+	SUB_THINK(self, SUB_NullThink); // for PushMove
 	self.SUB_NEXTTHINK = self.SUB_LTIME + traveltime;
 
 	// invoke controller
-	WITHSELF(controller, getthink(controller)());
+	WITHSELF(controller, getthink(controller)(controller));
 }
 
-void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
+void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {SELFPARAM();
 	vector	delta;
 	float	traveltime;
@@ -249,7 +249,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 
 	self.think1 = func;
 	self.finaldest = tdest;
-	self.SUB_THINK = SUB_CalcMoveDone;
+	SUB_THINK(self, SUB_CalcMoveDone);
 
 	if (tdest == self.SUB_ORIGIN)
 	{
@@ -288,7 +288,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 	SUB_CalcMove_Bezier((self.SUB_ORIGIN + tdest) * 0.5, tdest, tspeedtype, tspeed, func);
 }
 
-void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
+void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {
 	WITHSELF(ent, SUB_CalcMove(tdest, tspeedtype, tspeed, func));
 }
@@ -303,18 +303,18 @@ self.angles rotating
 The calling function should make sure self.SUB_THINK is valid
 ===============
 */
-void SUB_CalcAngleMoveDone ()
-{SELFPARAM();
+void SUB_CalcAngleMoveDone(entity this)
+{
 	// After rotating, set angle to exact final angle
 	self.angles = self.finalangle;
 	self.SUB_AVELOCITY = '0 0 0';
 	self.SUB_NEXTTHINK = -1;
 	if (self.think1)
-		self.think1 ();
+		self.think1 (self);
 }
 
 // FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func)
+void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void(entity this) func)
 {SELFPARAM();
 	vector	delta;
 	float	traveltime;
@@ -343,7 +343,7 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 
 	self.think1 = func;
 	self.finalangle = destangle;
-	self.SUB_THINK = SUB_CalcAngleMoveDone;
+	SUB_THINK(self, SUB_CalcAngleMoveDone);
 
 	if (traveltime < 0.1)
 	{
@@ -356,7 +356,7 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void()
 	self.SUB_NEXTTHINK = self.SUB_LTIME + traveltime;
 }
 
-void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
+void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
 {
 	WITHSELF(ent, SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func));
 }

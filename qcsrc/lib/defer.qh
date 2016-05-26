@@ -15,17 +15,9 @@
 		remove(this);
 	}
 
-	/** Remove self */
-	void SUB_Remove_self()
+	void defer_think(entity this)
 	{
-		SELFPARAM();
-		remove(this);
-	}
-
-	void defer_think()
-	{
-		SELFPARAM();
-		setthink(this, SUB_Remove_self);
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 		this.defer_func(this.owner);
 	}

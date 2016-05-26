@@ -160,7 +160,7 @@ void WaypointSprite_Kill(entity wp);
 
 void WaypointSprite_Disown(entity wp, float fadetime);
 
-void WaypointSprite_Think();
+void WaypointSprite_Think(entity this);
 
 bool WaypointSprite_visible_for_player(entity this, entity player, entity view);
 

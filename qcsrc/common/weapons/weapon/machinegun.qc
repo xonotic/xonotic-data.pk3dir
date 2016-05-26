@@ -71,8 +71,8 @@ spawnfunc(weapon_machinegun)
 }
 spawnfunc(weapon_uzi) { spawnfunc_weapon_machinegun(this); }
 
-void W_MachineGun_MuzzleFlash_Think()
-{SELFPARAM();
+void W_MachineGun_MuzzleFlash_Think(entity this)
+{
 	this.frame += 2;
 	this.scale *= 0.5;
 	this.alpha -= 0.25;
@@ -80,7 +80,7 @@ void W_MachineGun_MuzzleFlash_Think()
 
 	if(this.alpha <= 0)
 	{
-		setthink(this, SUB_Remove_self);
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 		this.realowner.muzzle_flash = world;
 		return;

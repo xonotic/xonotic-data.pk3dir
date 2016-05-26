@@ -90,7 +90,7 @@ void GrapplingHookReset(entity this)
 		remove(this);
 }
 
-void GrapplingHookThink();
+void GrapplingHookThink(entity this);
 void GrapplingHook_Stop()
 {SELFPARAM();
 	Send_Effect(EFFECT_HOOK_IMPACT, self.origin, '0 0 0', 1);
@@ -134,8 +134,8 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 
 int autocvar_g_grappling_hook_tarzan;
 
-void GrapplingHookThink()
-{SELFPARAM();
+void GrapplingHookThink(entity this)
+{
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
@@ -301,8 +301,8 @@ void GrapplingHookThink()
 	}
 }
 
-void GrapplingHookTouch ()
-{SELFPARAM();
+void GrapplingHookTouch (entity this)
+{
 	if(other.movetype == MOVETYPE_FOLLOW)
 		return;
 	PROJECTILE_TOUCH;

@@ -62,9 +62,8 @@ vector CL_Weapon_GetShotOrg(int wpn)
 ..entity weaponentity_fld;
 .float m_alpha;
 
-void CL_Weaponentity_Think()
+void CL_Weaponentity_Think(entity this)
 {
-	SELFPARAM();
 	this.nextthink = time;
 	if (intermission_running) this.frame = this.anim_idle.x;
 	.entity weaponentity = this.weaponentity_fld;
@@ -107,9 +106,8 @@ void CL_Weaponentity_Think()
 	}
 }
 
-void CL_ExteriorWeaponentity_Think()
+void CL_ExteriorWeaponentity_Think(entity this)
 {
-	SELFPARAM();
 	this.nextthink = time;
 	if (this.owner.exteriorweaponentity != this)
 	{

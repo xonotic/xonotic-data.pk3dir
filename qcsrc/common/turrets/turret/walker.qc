@@ -97,8 +97,8 @@ void walker_setnoanim(entity this)
     turrets_setframe(ANIM_NO, false);
     self.animflag = self.frame;
 }
-void walker_rocket_explode()
-{SELFPARAM();
+void walker_rocket_explode(entity this)
+{
     RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, world, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, world);
     remove (self);
 }
@@ -113,9 +113,9 @@ void walker_rocket_damage(entity this, entity inflictor, entity attacker, float 
 }
 
 #define WALKER_ROCKET_MOVE movelib_move_simple(self, newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)
-void walker_rocket_loop();
-void walker_rocket_think()
-{SELFPARAM();
+void walker_rocket_loop(entity this);
+void walker_rocket_think(entity this)
+{
     vector newdir;
     float edist;
     float itime;
@@ -148,7 +148,7 @@ void walker_rocket_think()
 
     if (self.shot_dmg != 1337 && random() < 0.01)
     {
-        walker_rocket_loop();
+        walker_rocket_loop(self);
         return;
     }
 
@@ -169,8 +169,8 @@ void walker_rocket_think()
     WALKER_ROCKET_MOVE;
 }
 
-void walker_rocket_loop3()
-{SELFPARAM();
+void walker_rocket_loop3(entity this)
+{
     vector newdir;
     self.nextthink = time;
 
@@ -192,8 +192,8 @@ void walker_rocket_loop3()
     self.angles = vectoangles(self.velocity);
 }
 
-void walker_rocket_loop2()
-{SELFPARAM();
+void walker_rocket_loop2(entity this)
+{
     vector newdir;
 
     self.nextthink = time;
@@ -215,8 +215,8 @@ void walker_rocket_loop2()
     WALKER_ROCKET_MOVE;
 }
 
-void walker_rocket_loop()
-{SELFPARAM();
+void walker_rocket_loop(entity this)
+{
     self.nextthink = time;
     self.tur_shotorg = self.origin + '0 0 300';
     setthink(self, walker_rocket_loop2);

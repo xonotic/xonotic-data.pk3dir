@@ -1,11 +1,11 @@
 #ifdef SVQC
-void() fd_secret_move1;
-void() fd_secret_move2;
-void() fd_secret_move3;
-void() fd_secret_move4;
-void() fd_secret_move5;
-void() fd_secret_move6;
-void() fd_secret_done;
+void fd_secret_move1(entity this);
+void fd_secret_move2(entity this);
+void fd_secret_move3(entity this);
+void fd_secret_move4(entity this);
+void fd_secret_move5(entity this);
+void fd_secret_move6(entity this);
+void fd_secret_done(entity this);
 
 const float SECRET_OPEN_ONCE = 1;		// stays open
 const float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
@@ -69,8 +69,8 @@ void fd_secret_damage(entity this, entity inflictor, entity attacker, float dama
 }
 
 // Wait after first movement...
-void fd_secret_move1()
-{SELFPARAM();
+void fd_secret_move1(entity this)
+{
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
 	setthink(self, fd_secret_move2);
 	if (self.noise3 != "")
@@ -78,16 +78,16 @@ void fd_secret_move1()
 }
 
 // Start moving sideways w/sound...
-void fd_secret_move2()
-{SELFPARAM();
+void fd_secret_move2(entity this)
+{
 	if (self.noise2 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.dest2, TSPEED_LINEAR, self.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
-void fd_secret_move3()
-{SELFPARAM();
+void fd_secret_move3(entity this)
+{
 	if (self.noise3 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 	if (!(self.spawnflags & SECRET_OPEN_ONCE))
@@ -98,31 +98,31 @@ void fd_secret_move3()
 }
 
 // Move backward...
-void fd_secret_move4()
-{SELFPARAM();
+void fd_secret_move4(entity this)
+{
 	if (self.noise2 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move5);
 }
 
 // Wait 1 second...
-void fd_secret_move5()
-{SELFPARAM();
+void fd_secret_move5(entity this)
+{
 	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
 	setthink(self, fd_secret_move6);
 	if (self.noise3 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
 }
 
-void fd_secret_move6()
-{SELFPARAM();
+void fd_secret_move6(entity this)
+{
 	if (self.noise2 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	SUB_CalcMove(self.oldorigin, TSPEED_LINEAR, self.speed, fd_secret_done);
 }
 
-void fd_secret_done()
-{SELFPARAM();
+void fd_secret_done(entity this)
+{
 	if (self.spawnflags&SECRET_YES_SHOOT)
 	{
 		self.health = 10000;
@@ -150,8 +150,8 @@ secret_touch
 Prints messages
 ================
 */
-void secret_touch()
-{SELFPARAM();
+void secret_touch(entity this)
+{
 	if (!other.iscreature)
 		return;
 	if (self.door_finished > time)

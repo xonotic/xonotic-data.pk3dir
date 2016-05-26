@@ -69,8 +69,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 .int state;
 .bool isplayermodel;
 
-void DamageEffect_Think()
-{SELFPARAM();
+void DamageEffect_Think(entity this)
+{
 	// if particle distribution is enabled, slow ticrate by total number of damages
 	if(autocvar_cl_damageeffect_distribute)
 		this.nextthink = time + autocvar_cl_damageeffect_ticrate * this.owner.total_damages;

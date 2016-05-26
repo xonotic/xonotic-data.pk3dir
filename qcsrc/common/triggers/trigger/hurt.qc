@@ -8,8 +8,8 @@ void trigger_hurt_use(entity this, entity actor, entity trigger)
 }
 
 .float triggerhurttime;
-void trigger_hurt_touch()
-{SELFPARAM();
+void trigger_hurt_touch(entity this)
+{
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 

@@ -213,8 +213,8 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	}
 }
 
-void vehicles_projectile_explode()
-{SELFPARAM();
+void vehicles_projectile_explode(entity this)
+{
 	if(self.owner && other != world)
 	{
 		if(other == self.owner.vehicle)
@@ -234,7 +234,7 @@ void vehicles_projectile_explode()
 
 void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, vehicles_projectile_explode());
+	WITHSELF(this, vehicles_projectile_explode(this));
 }
 
 entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
@@ -265,7 +265,7 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	proj.use			  = vehicles_projectile_explode_use;
 	proj.owner			= this;
 	proj.realowner		= _owner;
-	setthink(proj, SUB_Remove_self);
+	setthink(proj, SUB_Remove);
 	proj.nextthink		= time + 30;
 
 	if(_health)
@@ -290,16 +290,16 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 	return proj;
 }
 
-void vehicles_gib_explode()
-{SELFPARAM();
+void vehicles_gib_explode(entity this)
+{
 	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, self.wp00.origin + '0 0 64', '0 0 0', 1);
 	remove(self);
 }
 
-void vehicles_gib_think()
-{SELFPARAM();
+void vehicles_gib_think(entity this)
+{
 	self.alpha -= 0.1;
 	if(self.cnt >= time)
 		remove(self);
@@ -442,7 +442,7 @@ void vehicles_clearreturn(entity veh)
 		if(ret.wp00 == veh)
 		{
 			ret.classname   = "";
-			setthink(ret, SUB_Remove_self);
+			setthink(ret, SUB_Remove);
 			ret.nextthink   = time + 0.1;
 
 			if(ret.waypointsprite_attached)
@@ -453,9 +453,9 @@ void vehicles_clearreturn(entity veh)
 	}
 }
 
-void vehicles_spawn();
-void vehicles_return()
-{SELFPARAM();
+void vehicles_spawn(entity this);
+void vehicles_return(entity this)
+{
 	Send_Effect(EFFECT_TELEPORT, self.wp00.origin + '0 0 64', '0 0 0', 1);
 
 	setthink(self.wp00, vehicles_spawn);
@@ -467,8 +467,8 @@ void vehicles_return()
 	remove(self);
 }
 
-void vehicles_showwp_goaway()
-{SELFPARAM();
+void vehicles_showwp_goaway(entity this)
+{
 	if(self.waypointsprite_attached)
 		WaypointSprite_Kill(self.waypointsprite_attached);
 
@@ -476,8 +476,8 @@ void vehicles_showwp_goaway()
 
 }
 
-void vehicles_showwp()
-{SELFPARAM();
+void vehicles_showwp(entity this)
+{
 	vector rgb;
 
 	entity ent = this;
@@ -585,8 +585,8 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 	}
 }
 
-void shieldhit_think()
-{SELFPARAM();
+void shieldhit_think(entity this)
+{
 	self.alpha -= 0.1;
 	if (self.alpha <= 0)
 	{
@@ -901,8 +901,8 @@ void vehicles_exit(bool eject)
 	vehicles_exit_running = false;
 }
 
-void vehicles_touch()
-{SELFPARAM();
+void vehicles_touch(entity this)
+{
 	if(MUTATOR_CALLHOOK(VehicleTouch, self, other))
 		return;
 
@@ -1089,8 +1089,8 @@ void vehicles_enter(entity pl, entity veh)
 	antilag_clear(pl, CS(pl));
 }
 
-void vehicles_think()
-{SELFPARAM();
+void vehicles_think(entity this)
+{
 	self.nextthink = time;
 
 	if(self.owner)
@@ -1105,8 +1105,8 @@ void vehicles_think()
 }
 
 // initialization
-void vehicles_spawn()
-{SELFPARAM();
+void vehicles_spawn(entity this)
+{
 	LOG_TRACE("Spawning vehicle: ", self.classname, "\n");
 
 	// disown & reset

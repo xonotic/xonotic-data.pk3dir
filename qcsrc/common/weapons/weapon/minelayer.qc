@@ -53,7 +53,7 @@ ENDCLASS(MineLayer)
 REGISTER_WEAPON(MINE_LAYER, minelayer, NEW(MineLayer));
 
 #ifdef SVQC
-void W_MineLayer_Think();
+void W_MineLayer_Think(entity this);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 .vector mine_orientation;
@@ -108,8 +108,8 @@ void W_MineLayer_Stick(entity to)
 		SetMovetypeFollow(newmine, to);
 }
 
-void W_MineLayer_Explode()
-{SELFPARAM();
+void W_MineLayer_Explode(entity this)
+{
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -192,7 +192,7 @@ void W_MineLayer_ProximityExplode()
 	}
 
 	self.mine_time = 0;
-	W_MineLayer_Explode();
+	W_MineLayer_Explode(self);
 }
 
 int W_MineLayer_Count(entity e)
@@ -205,8 +205,8 @@ int W_MineLayer_Count(entity e)
 	return minecount;
 }
 
-void W_MineLayer_Think()
-{SELFPARAM();
+void W_MineLayer_Think(entity this)
+{
 	entity head;
 
 	self.nextthink = time;
@@ -236,7 +236,7 @@ void W_MineLayer_Think()
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_MineLayer_Explode();
+		W_MineLayer_Explode(self);
 		return;
 	}
 
@@ -268,8 +268,8 @@ void W_MineLayer_Think()
 		W_MineLayer_RemoteExplode();
 }
 
-void W_MineLayer_Touch()
-{SELFPARAM();
+void W_MineLayer_Touch(entity this)
+{
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 

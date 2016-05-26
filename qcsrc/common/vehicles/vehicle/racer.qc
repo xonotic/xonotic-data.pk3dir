@@ -403,8 +403,8 @@ bool racer_frame(entity this)
 	this.velocity = vehic.velocity;
 }
 
-void racer_think()
-{SELFPARAM();
+void racer_think(entity this)
+{
 	this.nextthink = time + autocvar_g_vehicle_racer_thinkrate;
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NOMONSTERS, this);
@@ -501,8 +501,8 @@ void racer_blowup()
 	setorigin(self, self.pos1);
 }
 
-void racer_blowup_think()
-{SELFPARAM();
+void racer_blowup_think(entity this)
+{
 	self.nextthink = time;
 
 	if(time >= self.delay)
@@ -511,8 +511,8 @@ void racer_blowup_think()
 	CSQCMODEL_AUTOUPDATE(self);
 }
 
-void racer_deadtouch()
-{SELFPARAM();
+void racer_deadtouch(entity this)
+{
 	self.avelocity_x *= 0.7;
 	self.cnt -= 1;
 	if(self.cnt <= 0)

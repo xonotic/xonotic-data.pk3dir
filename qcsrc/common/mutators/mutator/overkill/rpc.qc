@@ -50,8 +50,8 @@ REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
 #ifdef SVQC
 spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(this, WEP_RPC); }
 
-void W_RocketPropelledChainsaw_Explode()
-{SELFPARAM();
+void W_RocketPropelledChainsaw_Explode(entity this)
+{
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
@@ -60,13 +60,13 @@ void W_RocketPropelledChainsaw_Explode()
 	remove (self);
 }
 
-void W_RocketPropelledChainsaw_Touch ()
-{SELFPARAM();
+void W_RocketPropelledChainsaw_Touch (entity this)
+{
 	if(WarpZone_Projectile_Touch())
 		if(wasfreed(self))
 			return;
 
-	W_RocketPropelledChainsaw_Explode();
+	W_RocketPropelledChainsaw_Explode(this);
 }
 
 void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -83,8 +83,8 @@ void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity atta
 		W_PrepareExplosionByDamage(this, attacker, W_RocketPropelledChainsaw_Explode);
 }
 
-void W_RocketPropelledChainsaw_Think()
-{SELFPARAM();
+void W_RocketPropelledChainsaw_Think(entity this)
+{
 	if(self.cnt <= time)
 	{
 		remove(self);

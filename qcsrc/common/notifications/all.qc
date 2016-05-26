@@ -1478,9 +1478,8 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 #endif
 
 #ifdef SVQC
-void Net_Notification_Remove()
+void Net_Notification_Remove(entity this)
 {
-	SELFPARAM();
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
 		"Net_Notification_Remove() at %f: %s '%s - %s' notification\n",

@@ -1,6 +1,6 @@
 // targeted (directional) mode
-void trigger_impulse_touch1()
-{SELFPARAM();
+void trigger_impulse_touch1(entity this)
+{
 	entity targ;
 	float pushdeltatime;
 	float str;
@@ -74,8 +74,8 @@ void trigger_impulse_touch1()
 }
 
 // Directionless (accelerator/decelerator) mode
-void trigger_impulse_touch2()
-{SELFPARAM();
+void trigger_impulse_touch2(entity this)
+{
 	float pushdeltatime;
 
 	if (self.active != ACTIVE_ACTIVE)
@@ -102,8 +102,8 @@ void trigger_impulse_touch2()
 }
 
 // Spherical (gravity/repulsor) mode
-void trigger_impulse_touch3()
-{SELFPARAM();
+void trigger_impulse_touch3(entity this)
+{
 	float pushdeltatime;
 	float str;
 

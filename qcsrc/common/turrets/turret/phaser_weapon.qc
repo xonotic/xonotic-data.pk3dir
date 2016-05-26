@@ -3,7 +3,7 @@
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-void beam_think();
+void beam_think(entity this);
 
 .int fireflag;
 SOUND(PhaserTurretAttack_FIRE, W_Sound("electro_fire"));
@@ -52,8 +52,8 @@ METHOD(PhaserTurretAttack, wr_think, void(entity thiswep, entity actor, .entity 
     }
 }
 
-void beam_think()
-{SELFPARAM();
+void beam_think(entity this)
+{
     if ((time > self.cnt) || (IS_DEAD(self.owner)))
     {
         self.owner.attack_finished_single[0] = time + self.owner.shot_refire;

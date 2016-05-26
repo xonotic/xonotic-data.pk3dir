@@ -164,15 +164,15 @@ float turret_targetscore_generic(entity _turret, entity _target)
 }
 
 // Generic damage handling
-void turret_hide()
-{SELFPARAM();
+void turret_hide(entity this)
+{
 	self.effects   |= EF_NODRAW;
 	self.nextthink = time + self.respawntime - 0.2;
 	setthink(self, turret_respawn);
 }
 
-void turret_die()
-{SELFPARAM();
+void turret_die(entity this)
+{
 	self.deadflag		  = DEAD_DEAD;
 	self.tur_head.deadflag = self.deadflag;
 
@@ -251,9 +251,9 @@ void turret_damage(entity this, entity inflictor, entity attacker, float damage,
 	this.SendFlags  |= TNSF_STATUS;
 }
 
-void() turret_think;
-void turret_respawn()
-{SELFPARAM();
+void turret_think(entity this);
+void turret_respawn(entity this)
+{
 	// Make sure all parts belong to the same team since
 	// this function doubles as "teamchange" function.
 	self.tur_head.team 	= self.team;
@@ -427,8 +427,8 @@ void load_unit_settings(entity ent, bool is_reload)
 	}
 }
 
-void turret_projectile_explode()
-{SELFPARAM();
+void turret_projectile_explode(entity this)
+{
 
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
@@ -443,10 +443,10 @@ void turret_projectile_explode()
 	remove(self);
 }
 
-void turret_projectile_touch()
+void turret_projectile_touch(entity this)
 {
 	PROJECTILE_TOUCH;
-	turret_projectile_explode();
+	turret_projectile_explode(this);
 }
 
 void turret_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector vforce)
@@ -1011,8 +1011,8 @@ void turret_fire()
 #endif
 }
 
-void turret_think()
-{SELFPARAM();
+void turret_think(entity this)
+{
 	self.nextthink = time + self.ticrate;
 
 	MUTATOR_CALLHOOK(TurretThink, self);
@@ -1194,9 +1194,8 @@ void turret_link()
 	self.tur_head.effects = EF_NODRAW;
 }
 
-void turrets_manager_think()
+void turrets_manager_think(entity this)
 {
-	SELFPARAM();
 	this.nextthink = time + 1;
 
 	if (autocvar_g_turrets_reloadcvars == 1)
@@ -1380,7 +1379,7 @@ float turret_initialize(Turret tur)
 #endif
 
 	turret_link();
-	turret_respawn();
+	turret_respawn(self);
 	turret_tag_fire_update();
 
 	tur.tr_setup(tur, self);

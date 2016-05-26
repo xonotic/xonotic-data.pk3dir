@@ -196,8 +196,8 @@ LABEL(skip)
 	}
 }
 
-void OnlineBanList_Think()
-{SELFPARAM();
+void OnlineBanList_Think(entity this)
+{
 	float argc;
 	string uri;
 	float i, n;

@@ -1,25 +1,25 @@
 #ifdef SVQC
 // button and multiple button
 
-void() button_wait;
-void() button_return;
+void button_wait(entity this);
+void button_return(entity this);
 
-void button_wait()
-{SELFPARAM();
+void button_wait(entity this)
+{
 	self.state = STATE_TOP;
 	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
-	self.SUB_THINK = button_return;
+	SUB_THINK(self, button_return);
 	SUB_UseTargets(self, self.enemy, NULL);
 	self.frame = 1;			// use alternate textures
 }
 
-void button_done()
-{SELFPARAM();
+void button_done(entity this)
+{
 	self.state = STATE_BOTTOM;
 }
 
-void button_return()
-{SELFPARAM();
+void button_return(entity this)
+{
 	self.state = STATE_DOWN;
 	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, button_done);
 	self.frame = 0;			// use normal textures
@@ -68,8 +68,8 @@ void button_use(entity this, entity actor, entity trigger)
 	WITHSELF(this, button_fire());
 }
 
-void button_touch()
-{SELFPARAM();
+void button_touch(entity this)
+{
 	if (!other)
 		return;
 	if (!other.iscreature)

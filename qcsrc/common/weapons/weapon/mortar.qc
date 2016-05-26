@@ -128,8 +128,8 @@ void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, flo
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void W_Mortar_Grenade_Think1()
-{SELFPARAM();
+void W_Mortar_Grenade_Think1(entity this)
+{
 	self.nextthink = time;
 	if(time > self.cnt)
 	{
@@ -142,8 +142,8 @@ void W_Mortar_Grenade_Think1()
 		W_Mortar_Grenade_Explode();
 }
 
-void W_Mortar_Grenade_Touch1()
-{SELFPARAM();
+void W_Mortar_Grenade_Touch1(entity this)
+{
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
@@ -174,8 +174,8 @@ void W_Mortar_Grenade_Touch1()
 	}
 }
 
-void W_Mortar_Grenade_Touch2()
-{SELFPARAM();
+void W_Mortar_Grenade_Touch2(entity this)
+{
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{

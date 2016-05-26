@@ -137,7 +137,7 @@ void VaporizerBeam_Draw(entity this)
 NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 {
 	Net_Accept(vortex_beam);
-	setthink(this, SUB_Remove_self);
+	setthink(this, SUB_Remove);
 	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = VaporizerBeam_Draw;
 	this.drawmask = MASK_NORMAL;
@@ -232,8 +232,8 @@ void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
 	WITHSELF(this, W_RocketMinsta_Laser_Explode());
 }
 
-void W_RocketMinsta_Laser_Touch ()
-{SELFPARAM();
+void W_RocketMinsta_Laser_Touch (entity this)
+{
 	PROJECTILE_TOUCH;
 	//W_RocketMinsta_Laser_Explode ();
 	RadiusDamage (self, self.realowner, self.rm_damage, self.rm_edmg, autocvar_g_rm_laser_radius, world, world, self.rm_force, self.projectiledeathtype, other);

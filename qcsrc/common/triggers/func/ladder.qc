@@ -1,7 +1,7 @@
 REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
 
-void func_ladder_touch()
-{SELFPARAM();
+void func_ladder_touch(entity this)
+{
 #ifdef SVQC
 	if (!other.iscreature)
 		return;

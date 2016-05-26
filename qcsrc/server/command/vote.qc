@@ -387,9 +387,8 @@ void reset_map(bool dorespawn)
 }
 
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
-void ReadyRestart_think()
+void ReadyRestart_think(entity this)
 {
-	SELFPARAM();
 	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();

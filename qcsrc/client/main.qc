@@ -290,9 +290,8 @@ float SetTeam(entity o, int Team)
 	return false;
 }
 
-void Playerchecker_Think()
+void Playerchecker_Think(entity this)
 {
-	SELFPARAM();
     int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)

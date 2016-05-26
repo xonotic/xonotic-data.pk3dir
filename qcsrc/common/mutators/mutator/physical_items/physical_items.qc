@@ -31,8 +31,8 @@ REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
 
 .vector spawn_origin, spawn_angles;
 
-void physical_item_think()
-{SELFPARAM();
+void physical_item_think(entity this)
+{
 	self.nextthink = time;
 
 	self.alpha = self.owner.alpha; // apply fading and ghosting
@@ -68,8 +68,8 @@ void physical_item_think()
 		remove(self); // the real item is gone, remove this
 }
 
-void physical_item_touch()
-{SELFPARAM();
+void physical_item_touch(entity this)
+{
 	if(!self.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())
 	{

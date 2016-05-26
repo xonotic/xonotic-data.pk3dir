@@ -12,8 +12,8 @@
 #include <common/weapons/all.qh>
 #include <common/state.qh>
 
-void thrown_wep_think()
-{SELFPARAM();
+void thrown_wep_think(entity this)
+{
 	this.nextthink = time;
 	if(this.oldorigin != this.origin)
 	{
