@@ -53,8 +53,8 @@ MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
 	FOREACH_CLIENT(IS_PLAYER(it), it.porto_forbidden = max(0, it.porto_forbidden - 1));
 }
 
-void W_Porto_Success()
-{SELFPARAM();
+void W_Porto_Success(entity this)
+{
 	if(self.realowner == world)
 	{
 		objerror("Cannot succeed successfully: no owner\n");
@@ -66,8 +66,8 @@ void W_Porto_Success()
 }
 
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
-void W_Porto_Fail(float failhard)
-{SELFPARAM();
+void W_Porto_Fail(entity this, float failhard)
+{
 	if(self.realowner == world)
 	{
 		objerror("Cannot fail successfully: no owner\n");
@@ -105,7 +105,7 @@ void W_Porto_Remove(entity p)
 {
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
-		WITHSELF(p.porto_current, W_Porto_Fail(1));
+		WITHSELF(p.porto_current, W_Porto_Fail(p.porto_current, 1));
 	}
 }
 
@@ -115,7 +115,7 @@ void W_Porto_Think(entity this)
 	if(self.realowner.playerid != self.playerid)
 		remove(self);
 	else
-		W_Porto_Fail(0);
+		W_Porto_Fail(self, 0);
 }
 
 void W_Porto_Touch(entity this)
@@ -155,7 +155,7 @@ void W_Porto_Touch(entity this)
 	else if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
 		sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
-		W_Porto_Fail(0);
+		W_Porto_Fail(self, 0);
 		if(self.cnt < 0)
 			Portal_ClearAll_PortalsOnly(self.realowner);
 	}
@@ -167,13 +167,13 @@ void W_Porto_Touch(entity this)
 			sound(self, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_IN);
-			W_Porto_Success();
+			W_Porto_Success(self);
 		}
 		else
 		{
 			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
-			W_Porto_Fail(0);
+			W_Porto_Fail(self, 0);
 		}
 	}
 	else if(self.cnt == 1)
@@ -184,13 +184,13 @@ void W_Porto_Touch(entity this)
 			sound(self, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_OUT);
-			W_Porto_Success();
+			W_Porto_Success(self);
 		}
 		else
 		{
 			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
-			W_Porto_Fail(0);
+			W_Porto_Fail(self, 0);
 		}
 	}
 	else if(self.effects & EF_RED)
@@ -210,7 +210,7 @@ void W_Porto_Touch(entity this)
 			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			trace_plane_normal = norm;
 			Portal_ClearAll_PortalsOnly(self.realowner);
-			W_Porto_Fail(0);
+			W_Porto_Fail(self, 0);
 		}
 	}
 	else
@@ -222,26 +222,26 @@ void W_Porto_Touch(entity this)
 				sound(self, CH_SHOTS, SND_PORTO_CREATE, VOL_BASE, ATTEN_NORM);
 				trace_plane_normal = norm;
 				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_CREATED_OUT);
-				W_Porto_Success();
+				W_Porto_Success(self);
 			}
 			else
 			{
 				sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 				Portal_ClearAll_PortalsOnly(self.realowner);
-				W_Porto_Fail(0);
+				W_Porto_Fail(self, 0);
 			}
 		}
 		else
 		{
 			sound(self, CH_SHOTS, SND_PORTO_UNSUPPORTED, VOL_BASE, ATTEN_NORM);
 			Portal_ClearAll_PortalsOnly(self.realowner);
-			W_Porto_Fail(0);
+			W_Porto_Fail(self, 0);
 		}
 	}
 }
 
-void W_Porto_Attack(float type)
-{SELFPARAM();
+void W_Porto_Attack(entity actor, float type)
+{entity this = actor;
 	entity gren;
 
 	W_SetupShot(self, false, 4, SND_PORTO_FIRE, CH_WEAPON_A, 0);
@@ -292,9 +292,9 @@ void W_Porto_Attack(float type)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-METHOD(PortoLaunch, wr_aim, void(entity thiswep))
+METHOD(PortoLaunch, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(!WEP_CVAR(porto, secondary))
@@ -310,7 +310,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(0);
+            W_Porto_Attack(actor, 0);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
 
@@ -319,7 +319,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(porto, refire)))
         {
-            W_Porto_Attack(1);
+            W_Porto_Attack(actor, 1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(porto, animtime), w_ready);
         }
     }
@@ -352,7 +352,7 @@ METHOD(PortoLaunch, wr_think, void(entity thiswep, entity actor, .entity weapone
         if(!actor.porto_forbidden)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(porto, refire)))
         {
-            W_Porto_Attack(-1);
+            W_Porto_Attack(actor, -1);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(porto, animtime), w_ready);
         }
     }
@@ -367,19 +367,19 @@ METHOD(PortoLaunch, wr_checkammo2, bool(entity thiswep, entity this))
     // always allow infinite ammo
     return true;
 }
-METHOD(PortoLaunch, wr_setup, void(entity thiswep))
+METHOD(PortoLaunch, wr_setup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.ammo_field = ammo_none;
 }
-METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep))
+METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.porto_current = world;
 }
 #endif
 #ifdef CSQC
-METHOD(PortoLaunch, wr_impacteffect, void(entity this)) {
+METHOD(PortoLaunch, wr_impacteffect, void(entity this, entity actor)) {
     LOG_WARNING("Since when does Porto send DamageInfo?\n");
 }
 #endif

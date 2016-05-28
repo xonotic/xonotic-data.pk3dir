@@ -309,8 +309,8 @@ void W_Tuba_NoteThink(entity this)
 	});
 }
 
-void W_Tuba_NoteOn(float hittype)
-{SELFPARAM();
+void W_Tuba_NoteOn(entity actor, float hittype)
+{entity this = actor;
 	vector o;
 	float n;
 
@@ -359,9 +359,8 @@ void W_Tuba_NoteOn(float hittype)
 #endif
 
 #ifdef SVQC
-METHOD(Tuba, wr_aim, void(Tuba this))
+METHOD(Tuba, wr_aim, void(Tuba this, entity actor))
 {
-	entity actor = self;
 	// bots cannot play the Tuba well yet
 	// I think they should start with the recorder first
 	if (vdist((actor.origin - actor.enemy.origin), <, WEP_CVAR(tuba, radius)))
@@ -378,13 +377,13 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 	if (fire & 1)
 	if (weapon_prepareattack(this, actor, weaponentity, false, WEP_CVAR(tuba, refire)))
 	{
-		W_Tuba_NoteOn(0);
+		W_Tuba_NoteOn(actor, 0);
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 	}
 	if (fire & 2)
 	if (weapon_prepareattack(this, actor, weaponentity, true, WEP_CVAR(tuba, refire)))
 	{
-		W_Tuba_NoteOn(HITTYPE_SECONDARY);
+		W_Tuba_NoteOn(actor, HITTYPE_SECONDARY);
 		weapon_thinkf(actor, weaponentity, WFRAME_IDLE, WEP_CVAR(tuba, animtime), w_ready);
 	}
 	if (actor.tuba_note)
@@ -396,9 +395,8 @@ METHOD(Tuba, wr_think, void(Tuba this, entity actor, .entity weaponentity, int f
 	}
 }
 
-METHOD(Tuba, wr_setup, void(Tuba this))
+METHOD(Tuba, wr_setup, void(Tuba this, entity actor))
 {
-	entity actor = self;
 	actor.ammo_field = ammo_none;
 	actor.tuba_instrument = 0;
 }

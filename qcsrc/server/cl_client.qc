@@ -619,7 +619,7 @@ void PutClientInServer()
 
 		// reset fields the weapons may use
 		FOREACH(Weapons, true, LAMBDA(
-			it.wr_resetplayer(it);
+			it.wr_resetplayer(it, this);
 			// reload all reloadable weapons
 			if (it.spawnflags & WEP_FLAG_RELOADABLE) {
 				this.weapon_load[it.m_id] = it.reloading_ammo;

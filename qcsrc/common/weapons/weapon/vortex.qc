@@ -155,8 +155,8 @@ MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 	}
 }
 
-void W_Vortex_Attack(Weapon thiswep, float issecondary)
-{SELFPARAM();
+void W_Vortex_Attack(Weapon thiswep, entity actor, float issecondary)
+{entity this = actor;
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
 
 	mydmg = WEP_CVAR_BOTH(vortex, !issecondary, damage);
@@ -210,9 +210,9 @@ void W_Vortex_Attack(Weapon thiswep, float issecondary)
 
 .float vortex_chargepool_pauseregen_finished;
 
-METHOD(Vortex, wr_aim, void(entity thiswep))
+METHOD(Vortex, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(bot_aim(self, 1000000, 0, 1, false))
         PHYS_INPUT_BUTTON_ATCK(self) = true;
     else
@@ -242,7 +242,7 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(vortex, refire)))
             {
-                W_Vortex_Attack(thiswep, 0);
+                W_Vortex_Attack(thiswep, actor, 0);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(vortex, animtime), w_ready);
             }
         }
@@ -314,17 +314,16 @@ METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(vortex, refire)))
                 {
-                    W_Vortex_Attack(thiswep, 1);
+                    W_Vortex_Attack(thiswep, actor, 1);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(vortex, animtime), w_ready);
                 }
             }
         }
     }
 }
-METHOD(Vortex, wr_setup, void(entity thiswep))
+METHOD(Vortex, wr_setup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    self.vortex_lasthit = 0;
+    actor.vortex_lasthit = 0;
 }
 METHOD(Vortex, wr_checkammo1, bool(entity thiswep, entity actor))
 {
@@ -346,9 +345,9 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor))
         return false; // zoom is not a fire mode
     }
 }
-METHOD(Vortex, wr_resetplayer, void(entity thiswep))
+METHOD(Vortex, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if (WEP_CVAR(vortex, charge)) {
         if (WEP_CVAR_SEC(vortex, chargepool)) {
             self.vortex_chargepool_ammo = 1;
@@ -359,8 +358,7 @@ METHOD(Vortex, wr_resetplayer, void(entity thiswep))
 }
 METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND_RELOAD);
+    W_Reload(actor, min(WEP_CVAR_PRI(vortex, ammo), WEP_CVAR_SEC(vortex, ammo)), SND_RELOAD);
 }
 METHOD(Vortex, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -374,9 +372,9 @@ METHOD(Vortex, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Vortex, wr_impacteffect, void(entity thiswep))
+METHOD(Vortex, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
     if(!w_issilent)

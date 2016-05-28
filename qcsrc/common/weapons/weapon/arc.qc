@@ -231,8 +231,8 @@ void Arc_Player_SetHeat(entity player)
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
-void W_Arc_Bolt_Explode()
-{SELFPARAM();
+void W_Arc_Bolt_Explode(entity this)
+{
 	self.event_damage = func_null;
 	RadiusDamage(self, self.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), world, world, WEP_CVAR(arc, bolt_force), self.projectiledeathtype, other);
 
@@ -241,7 +241,7 @@ void W_Arc_Bolt_Explode()
 
 void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Arc_Bolt_Explode());
+	WITHSELF(this, W_Arc_Bolt_Explode(this));
 }
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -265,8 +265,9 @@ void W_Arc_Bolt_Touch(entity this)
 	self.use(this, NULL, NULL);
 }
 
-void W_Arc_Attack_Bolt(Weapon thiswep)
-{SELFPARAM();
+void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
+{
+    entity this = actor;
 	entity missile;
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(arc, bolt_ammo));
@@ -674,8 +675,8 @@ void W_Arc_Beam_Think(entity this)
 	self.nextthink = time;
 }
 
-void W_Arc_Beam(float burst)
-{SELFPARAM();
+void W_Arc_Beam(float burst, entity actor)
+{entity this = actor;
 
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
@@ -693,9 +694,8 @@ void W_Arc_Beam(float burst)
 
 	WITHSELF(beam, getthink(beam)(beam));
 }
-
-void Arc_Smoke()
-{SELFPARAM();
+void Arc_Smoke(entity actor)
+{entity this = actor;
 	makevectors(self.v_angle);
 	W_SetupShot_Range(self,true,0,SND_Null,0,0,0);
 
@@ -730,9 +730,9 @@ void Arc_Smoke()
 	}
 }
 
-METHOD(Arc, wr_aim, void(entity thiswep))
+METHOD(Arc, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(WEP_CVAR(arc, beam_botaimspeed))
     {
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(
@@ -757,7 +757,7 @@ METHOD(Arc, wr_aim, void(entity thiswep))
 METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
     Arc_Player_SetHeat(actor);
-    Arc_Smoke();
+    Arc_Smoke(actor);
 
     bool beam_fire2 = ((fire & 2) && !WEP_CVAR(arc, bolt));
 
@@ -779,7 +779,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, boolean(beam_fire2), 0))
             {
-                W_Arc_Beam(boolean(beam_fire2));
+                W_Arc_Beam(boolean(beam_fire2), actor);
 
                 if(!actor.arc_BUTTON_ATCK_prev)
                 {
@@ -795,7 +795,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(arc, bolt_refire)))
         {
-            W_Arc_Attack_Bolt(thiswep);
+            W_Arc_Attack_Bolt(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
         }
     }
@@ -853,17 +853,17 @@ METHOD(Arc, wr_killmessage, Notification(entity thiswep))
     else
         return WEAPON_ARC_MURDER;
 }
-METHOD(Arc, wr_drop, void(entity thiswep))
+METHOD(Arc, wr_drop, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     weapon_dropevent_item.arc_overheat = self.arc_overheat;
     weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
     self.arc_overheat = 0;
     self.arc_cooldown = 0;
 }
-METHOD(Arc, wr_pickup, void(entity thiswep))
+METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if ( !client_hasweapon(self, thiswep, false, false) &&
         weapon_dropevent_item.arc_overheat > time )
     {
@@ -875,9 +875,9 @@ METHOD(Arc, wr_pickup, void(entity thiswep))
 #ifdef CSQC
 bool autocvar_cl_arcbeam_teamcolor = true;
 
-METHOD(Arc, wr_impacteffect, void(entity thiswep))
+METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         vector org2;

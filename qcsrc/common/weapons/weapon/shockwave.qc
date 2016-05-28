@@ -276,11 +276,12 @@ float W_Shockwave_Attack_CheckSpread(
 }
 
 float W_Shockwave_Attack_IsVisible(
+	entity actor,
 	entity head,
 	vector nearest_on_line,
 	vector sw_shotorg,
 	vector attack_endpos)
-{SELFPARAM();
+{entity this = actor;
 	vector nearest_to_attacker = head.WarpZone_findradius_nearest;
 	vector center = (head.origin + (head.mins + head.maxs) * 0.5);
 	vector corner;
@@ -339,8 +340,8 @@ float W_Shockwave_Attack_CheckHit(
 	return true;
 }
 
-void W_Shockwave_Send()
-{SELFPARAM();
+void W_Shockwave_Send(entity actor)
+{
 	WriteHeader(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg.x);
 	WriteCoord(MSG_BROADCAST, w_shotorg.y);
@@ -351,11 +352,11 @@ void W_Shockwave_Send()
 	WriteShort(MSG_BROADCAST, WEP_CVAR(shockwave, blast_distance));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_max), 255));
 	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(shockwave, blast_spread_min), 255));
-	WriteByte(MSG_BROADCAST, etof(self));
+	WriteByte(MSG_BROADCAST, etof(actor));
 }
 
-void W_Shockwave_Attack()
-{SELFPARAM();
+void W_Shockwave_Attack(entity actor)
+{entity this = actor;
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
 	float final_damage;
@@ -374,7 +375,7 @@ void W_Shockwave_Attack()
 	//entity transform = WarpZone_trace_transform;
 
 	// do the firing effect now
-	W_Shockwave_Send();
+	W_Shockwave_Send(self);
 	Damage_DamageInfo(
 		attack_hitpos,
 		WEP_CVAR(shockwave, blast_splash_damage),
@@ -570,7 +571,7 @@ void W_Shockwave_Attack()
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 
 			if((vlen(head.WarpZone_findradius_dist) <= WEP_CVAR(shockwave, blast_distance))
-				&& (W_Shockwave_Attack_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos)))
+				&& (W_Shockwave_Attack_IsVisible(self, head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
 				// calculate importance of distance and accuracy for this attack
 				multiplier_from_accuracy = (1 -
@@ -671,9 +672,9 @@ void W_Shockwave_Attack()
 	}
 }
 
-METHOD(Shockwave, wr_aim, void(entity thiswep))
+METHOD(Shockwave, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(vlen(self.origin - self.enemy.origin) <= WEP_CVAR(shockwave, melee_range))
         { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false); }
     else
@@ -687,7 +688,7 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
         {
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
             {
-                W_Shockwave_Attack();
+                W_Shockwave_Attack(actor);
                 actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
             }
@@ -853,7 +854,7 @@ void Net_ReadShockwaveParticle()
 	shockwave.sw_time = time;
 }
 
-METHOD(Shockwave, wr_impacteffect, void(entity thiswep))
+METHOD(Shockwave, wr_impacteffect, void(entity thiswep, entity actor))
 {
     // handled by Net_ReadShockwaveParticle
     //vector org2;

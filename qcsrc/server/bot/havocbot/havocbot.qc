@@ -107,7 +107,7 @@ void havocbot_ai(entity this)
 		if(this.weapons)
 		{
 			Weapon w = PS(this).m_weapon;
-			w.wr_aim(w);
+			w.wr_aim(w, this);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
 			{
 				PHYS_INPUT_BUTTON_ATCK(this) = false;

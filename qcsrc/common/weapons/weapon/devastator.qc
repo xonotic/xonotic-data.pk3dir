@@ -72,8 +72,8 @@ spawnfunc(weapon_rocketlauncher) { spawnfunc_weapon_devastator(this); }
 
 .entity lastrocket;
 
-void W_Devastator_Unregister()
-{SELFPARAM();
+void W_Devastator_Unregister(entity this)
+{
 	if(self.realowner && self.realowner.lastrocket == self)
 	{
 		self.realowner.lastrocket = world;
@@ -83,7 +83,7 @@ void W_Devastator_Unregister()
 
 void W_Devastator_Explode(entity this)
 {
-	W_Devastator_Unregister();
+	W_Devastator_Unregister(self);
 
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
@@ -123,9 +123,9 @@ void W_Devastator_Explode(entity this)
 	remove(self);
 }
 
-void W_Devastator_DoRemoteExplode(.entity weaponentity)
-{SELFPARAM();
-	W_Devastator_Unregister();
+void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
+{
+	W_Devastator_Unregister(self);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -204,8 +204,8 @@ void W_Devastator_DoRemoteExplode(.entity weaponentity)
 	remove(self);
 }
 
-void W_Devastator_RemoteExplode(.entity weaponentity)
-{SELFPARAM();
+void W_Devastator_RemoteExplode(entity this, .entity weaponentity)
+{
 	if(!IS_DEAD(self.realowner))
 	if(self.realowner.lastrocket)
 	{
@@ -214,7 +214,7 @@ void W_Devastator_RemoteExplode(.entity weaponentity)
 			: (vdist(NearestPointOnBox(self.realowner, self.origin) - self.origin, >, WEP_CVAR(devastator, remote_radius))) // safety device
 		)
 		{
-			W_Devastator_DoRemoteExplode(weaponentity);
+			W_Devastator_DoRemoteExplode(self, weaponentity);
 		}
 	}
 }
@@ -313,7 +313,7 @@ void W_Devastator_Think(entity this)
 
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 		if(self.rl_detonate_later)
-			W_Devastator_RemoteExplode(weaponentity);
+			W_Devastator_RemoteExplode(self, weaponentity);
 	}
 
 	if(self.csqcprojectile_clientanimate == 0)
@@ -325,10 +325,10 @@ void W_Devastator_Touch(entity this)
 	if(WarpZone_Projectile_Touch())
 	{
 		if(wasfreed(self))
-			W_Devastator_Unregister();
+			W_Devastator_Unregister(self);
 		return;
 	}
-	W_Devastator_Unregister();
+	W_Devastator_Unregister(self);
 	W_Devastator_Explode(this);
 }
 
@@ -347,8 +347,8 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode);
 }
 
-void W_Devastator_Attack(Weapon thiswep)
-{SELFPARAM();
+void W_Devastator_Attack(Weapon thiswep, entity actor)
+{entity this = actor;
 	entity missile;
 	entity flash;
 
@@ -405,8 +405,9 @@ void W_Devastator_Attack(Weapon thiswep)
 }
 
 #if 0
-METHOD(Devastator, wr_aim, void(entity thiswep))
+METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
 {
+    entity this = actor;
     // aim and decide to fire if appropriate
     PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
@@ -432,9 +433,9 @@ METHOD(Devastator, wr_aim, void(entity thiswep))
     }
 }
 #else
-METHOD(Devastator, wr_aim, void(entity thiswep))
+METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     // aim and decide to fire if appropriate
     PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), false);
     if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
@@ -530,7 +531,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
             if(actor.rl_release || WEP_CVAR(devastator, guidestop))
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(devastator, refire)))
             {
-                W_Devastator_Attack(thiswep);
+                W_Devastator_Attack(thiswep, actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(devastator, animtime), w_ready);
                 actor.rl_release = 0;
             }
@@ -556,9 +557,9 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
         }
     }
 }
-METHOD(Devastator, wr_setup, void(entity thiswep))
+METHOD(Devastator, wr_setup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.rl_release = 1;
 }
 METHOD(Devastator, wr_checkammo1, bool(entity thiswep, entity actor))
@@ -601,16 +602,15 @@ METHOD(Devastator, wr_checkammo2, bool(entity thiswep, entity actor))
 {
     return false;
 }
-METHOD(Devastator, wr_resetplayer, void(entity thiswep))
+METHOD(Devastator, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.lastrocket = NULL; // stop rocket guiding, no revenge from the grave!
     self.rl_release = 0;
 }
 METHOD(Devastator, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, WEP_CVAR(devastator, ammo), SND_RELOAD);
+    W_Reload(actor, WEP_CVAR(devastator, ammo), SND_RELOAD);
 }
 METHOD(Devastator, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -627,9 +627,9 @@ METHOD(Devastator, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Devastator, wr_impacteffect, void(entity thiswep))
+METHOD(Devastator, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

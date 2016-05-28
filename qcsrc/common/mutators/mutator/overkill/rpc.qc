@@ -150,9 +150,9 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep))
+METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 }
 
@@ -218,9 +218,9 @@ METHOD(RocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 
 #ifdef CSQC
 
-METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep))
+METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

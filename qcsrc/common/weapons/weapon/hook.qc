@@ -277,9 +277,9 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         actor.hook_state &= ~HOOK_REMOVING;
     }
 }
-METHOD(Hook, wr_setup, void(entity thiswep))
+METHOD(Hook, wr_setup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 }
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor))
@@ -295,9 +295,9 @@ METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor))
     // infinite ammo for now
     return true; // actor.ammo_cells >= WEP_CVAR_SEC(hook, ammo); // WEAPONTODO: see above
 }
-METHOD(Hook, wr_resetplayer, void(entity thiswep))
+METHOD(Hook, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     RemoveGrapplingHook(self);
     self.hook_time = 0;
     self.hook_refire = time;
@@ -310,9 +310,9 @@ METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Hook, wr_impacteffect, void(entity thiswep))
+METHOD(Hook, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);

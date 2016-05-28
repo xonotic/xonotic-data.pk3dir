@@ -144,8 +144,8 @@ void W_Electro_ExplodeCombo(entity this)
 	remove(self);
 }
 
-void W_Electro_Explode()
-{SELFPARAM();
+void W_Electro_Explode(entity this)
+{
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -193,13 +193,13 @@ void W_Electro_Explode()
 
 void W_Electro_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Electro_Explode());
+	WITHSELF(this, W_Electro_Explode(this));
 }
 
 void W_Electro_TouchExplode(entity this)
 {
 	PROJECTILE_TOUCH;
-	W_Electro_Explode();
+	W_Electro_Explode(this);
 }
 
 void W_Electro_Bolt_Think(entity this)
@@ -254,8 +254,8 @@ void W_Electro_Bolt_Think(entity this)
 	else { self.nextthink = self.ltime; }
 }
 
-void W_Electro_Attack_Bolt(Weapon thiswep)
-{SELFPARAM();
+void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
+{entity this = actor;
 	entity proj;
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(electro, ammo));
@@ -302,7 +302,7 @@ void W_Electro_Orb_Touch(entity this)
 {
 	PROJECTILE_TOUCH;
 	if(other.takedamage == DAMAGE_AIM)
-		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(); } }
+		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(self); } }
 	else
 	{
 		//UpdateCSQCProjectile(self);
@@ -353,8 +353,8 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 	}
 }
 
-void W_Electro_Attack_Orb(Weapon thiswep)
-{SELFPARAM();
+void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
+{entity this = actor;
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
@@ -414,12 +414,12 @@ void W_Electro_Attack_Orb(Weapon thiswep)
 }
 
 void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
-{SELFPARAM();
+{entity this = actor;
 	if(self.electro_count > 1)
 	if(PHYS_INPUT_BUTTON_ATCK2(self))
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
-		W_Electro_Attack_Orb(WEP_ELECTRO);
+		W_Electro_Attack_Orb(WEP_ELECTRO, actor);
 		self.electro_count -= 1;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
@@ -430,9 +430,9 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 .float bot_secondary_electromooth;
 
-METHOD(Electro, wr_aim, void(entity thiswep))
+METHOD(Electro, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     PHYS_INPUT_BUTTON_ATCK(self) = PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
     if(self.bot_secondary_electromooth == 0)
@@ -480,7 +480,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(electro, refire)))
         {
-                W_Electro_Attack_Bolt(thiswep);
+                W_Electro_Attack_Bolt(thiswep, actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
     }
@@ -489,7 +489,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         if(time >= actor.electro_secondarytime)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(electro, refire)))
         {
-            W_Electro_Attack_Orb(thiswep);
+            W_Electro_Attack_Orb(thiswep, actor);
             actor.electro_count = WEP_CVAR_SEC(electro, count);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
             actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
@@ -517,15 +517,14 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor))
     }
     return ammo_amount;
 }
-METHOD(Electro, wr_resetplayer, void(entity thiswep))
+METHOD(Electro, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.electro_secondarytime = time;
 }
 METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND_RELOAD);
+    W_Reload(actor, min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), SND_RELOAD);
 }
 METHOD(Electro, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -552,9 +551,9 @@ METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Electro, wr_impacteffect, void(entity thiswep))
+METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 6;
     if(w_deathtype & HITTYPE_SECONDARY)

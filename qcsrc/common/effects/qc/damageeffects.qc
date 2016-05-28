@@ -418,7 +418,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 		{
 			if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep))
-				hitwep.wr_impacteffect(hitwep);
+				hitwep.wr_impacteffect(hitwep, this);
 		}
 	}
 }

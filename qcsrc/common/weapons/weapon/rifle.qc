@@ -56,8 +56,8 @@ spawnfunc(weapon_rifle) { weapon_defaultspawnfunc(this, WEP_RIFLE); }
 spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
 spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
-void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound)
-{SELFPARAM();
+void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
+{entity this = actor;
 	float i;
 
 	W_DecreaseAmmo(thiswep, self, pAmmo);
@@ -79,17 +79,17 @@ void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pFor
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
 }
 
-void W_Rifle_Attack()
+void W_Rifle_Attack(entity actor)
 {
-	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_CAMPINGRIFLE_FIRE);
+	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_PRI(rifle, spread), WEP_CVAR_PRI(rifle, damage), WEP_CVAR_PRI(rifle, force), WEP_CVAR_PRI(rifle, solidpenetration), WEP_CVAR_PRI(rifle, ammo), WEP_RIFLE.m_id, WEP_CVAR_PRI(rifle, tracer), WEP_CVAR_PRI(rifle, shots), SND_CAMPINGRIFLE_FIRE, actor);
 }
 
-void W_Rifle_Attack2()
+void W_Rifle_Attack2(entity actor)
 {
-	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_CAMPINGRIFLE_FIRE2);
+	W_Rifle_FireBullet(WEP_RIFLE, WEP_CVAR_SEC(rifle, spread), WEP_CVAR_SEC(rifle, damage), WEP_CVAR_SEC(rifle, force), WEP_CVAR_SEC(rifle, solidpenetration), WEP_CVAR_SEC(rifle, ammo), WEP_RIFLE.m_id | HITTYPE_SECONDARY, WEP_CVAR_SEC(rifle, tracer), WEP_CVAR_SEC(rifle, shots), SND_CAMPINGRIFLE_FIRE2, actor);
 }
 
-.void() rifle_bullethail_attackfunc;
+.void(entity actor) rifle_bullethail_attackfunc;
 .WFRAME rifle_bullethail_frame;
 .float rifle_bullethail_animtime;
 .float rifle_bullethail_refire;
@@ -107,7 +107,7 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 		PS(actor).m_switchweapon = sw;
 	if(r)
 	{
-		actor.rifle_bullethail_attackfunc();
+		actor.rifle_bullethail_attackfunc(actor);
 		weapon_thinkf(actor, weaponentity, actor.rifle_bullethail_frame, actor.rifle_bullethail_animtime, W_Rifle_BulletHail_Continue);
 	}
 	else
@@ -116,10 +116,10 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 	}
 }
 
-void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFRAME fr, float animtime, float refire)
-{SELFPARAM();
+void W_Rifle_BulletHail(entity actor, .entity weaponentity, float mode, void(entity actor) AttackFunc, WFRAME fr, float animtime, float refire)
+{entity this = actor;
 	// if we get here, we have at least one bullet to fire
-	AttackFunc();
+	AttackFunc(actor);
 	if(mode)
 	{
 		// continue hail
@@ -138,9 +138,9 @@ void W_Rifle_BulletHail(.entity weaponentity, float mode, void() AttackFunc, WFR
 
 .float bot_secondary_riflemooth;
 
-METHOD(Rifle, wr_aim, void(entity thiswep))
+METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(vdist(self.origin - self.enemy.origin, >, 1000))
@@ -174,7 +174,7 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
         if(time >= actor.rifle_accumulator + WEP_CVAR_PRI(rifle, burstcost))
         {
             weapon_prepareattack_do(actor, weaponentity, false, WEP_CVAR_PRI(rifle, refire));
-            W_Rifle_BulletHail(weaponentity, WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
+            W_Rifle_BulletHail(actor, weaponentity, WEP_CVAR_PRI(rifle, bullethail), W_Rifle_Attack, WFRAME_FIRE1, WEP_CVAR_PRI(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
             actor.rifle_accumulator += WEP_CVAR_PRI(rifle, burstcost);
         }
         if(fire & 2)
@@ -189,7 +189,7 @@ METHOD(Rifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity,
                     if(time >= actor.rifle_accumulator + WEP_CVAR_SEC(rifle, burstcost))
                     {
                         weapon_prepareattack_do(actor, weaponentity, true, WEP_CVAR_SEC(rifle, refire));
-                        W_Rifle_BulletHail(weaponentity, WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
+                        W_Rifle_BulletHail(actor, weaponentity, WEP_CVAR_SEC(rifle, bullethail), W_Rifle_Attack2, WFRAME_FIRE2, WEP_CVAR_SEC(rifle, animtime), WEP_CVAR_PRI(rifle, refire));
                         actor.rifle_accumulator += WEP_CVAR_SEC(rifle, burstcost);
                     }
                 }
@@ -209,15 +209,14 @@ METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor))
     ammo_amount += actor.(weapon_load[WEP_RIFLE.m_id]) >= WEP_CVAR_SEC(rifle, ammo);
     return ammo_amount;
 }
-METHOD(Rifle, wr_resetplayer, void(entity thiswep))
+METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
 }
 METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND_RELOAD);
+    W_Reload(actor, min(WEP_CVAR_PRI(rifle, ammo), WEP_CVAR_SEC(rifle, ammo)), SND_RELOAD);
 }
 METHOD(Rifle, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -244,9 +243,9 @@ METHOD(Rifle, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Rifle, wr_impacteffect, void(entity thiswep))
+METHOD(Rifle, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_RIFLE_IMPACT, org2, w_backoff * 1000, 1);

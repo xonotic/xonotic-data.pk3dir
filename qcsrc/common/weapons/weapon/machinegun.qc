@@ -88,8 +88,8 @@ void W_MachineGun_MuzzleFlash_Think(entity this)
 
 }
 
-void W_MachineGun_MuzzleFlash()
-{SELFPARAM();
+void W_MachineGun_MuzzleFlash(entity actor)
+{entity this = actor;
 	if(self.muzzle_flash == world)
 		self.muzzle_flash = spawn();
 
@@ -106,8 +106,8 @@ void W_MachineGun_MuzzleFlash()
 	self.muzzle_flash.owner = self.muzzle_flash.realowner = self;
 }
 
-void W_MachineGun_Attack(Weapon thiswep, int deathtype, .entity weaponentity)
-{SELFPARAM();
+void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
+{entity this = actor;
 	W_SetupShot(self, true, 0, SND_UZI_FIRE, CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
 	if(!autocvar_g_norecoil)
 	{
@@ -125,7 +125,7 @@ void W_MachineGun_Attack(Weapon thiswep, int deathtype, .entity weaponentity)
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_MachineGun_MuzzleFlash();
+	W_MachineGun_MuzzleFlash(self);
 	W_AttachToShotorg(self, self.muzzle_flash, '5 0 0');
 
 	// casing code
@@ -156,7 +156,7 @@ void W_MachineGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentit
 			return;
 		}
 		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
-		W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id, weaponentity);
+		W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id, actor, weaponentity);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), W_MachineGun_Attack_Frame);
 	}
 	else
@@ -198,7 +198,7 @@ void W_MachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_MachineGun_MuzzleFlash();
+	W_MachineGun_MuzzleFlash(actor);
 	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if(autocvar_g_casings >= 2) // casing code
@@ -222,7 +222,7 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_MachineGun_MuzzleFlash();
+	W_MachineGun_MuzzleFlash(actor);
 	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if(autocvar_g_casings >= 2) // casing code
@@ -242,9 +242,9 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 }
 
-METHOD(MachineGun, wr_aim, void(entity thiswep))
+METHOD(MachineGun, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
     else
@@ -288,7 +288,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
         {
             actor.misc_bulletcounter = 1;
-            W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id, weaponentity); // sets attack_finished
+            W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id, actor, weaponentity); // sets attack_finished
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(machinegun, sustained_refire), W_MachineGun_Attack_Frame);
         }
 
@@ -296,7 +296,7 @@ METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponen
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
             actor.misc_bulletcounter = 1;
-            W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id | HITTYPE_SECONDARY, weaponentity); // sets attack_finished
+            W_MachineGun_Attack(WEP_MACHINEGUN, WEP_MACHINEGUN.m_id | HITTYPE_SECONDARY, actor, weaponentity); // sets attack_finished
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(machinegun, first_refire), w_ready);
         }
     }
@@ -337,8 +337,7 @@ METHOD(MachineGun, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(MachineGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND_RELOAD);
+    W_Reload(actor, min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), SND_RELOAD);
 }
 METHOD(MachineGun, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -355,9 +354,9 @@ METHOD(MachineGun, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(MachineGun, wr_impacteffect, void(entity thiswep))
+METHOD(MachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);

@@ -64,8 +64,8 @@ REGISTER_WEAPON(MORTAR, mortar, NEW(Mortar));
 spawnfunc(weapon_mortar) { weapon_defaultspawnfunc(this, WEP_MORTAR); }
 spawnfunc(weapon_grenadelauncher) { spawnfunc_weapon_mortar(this); }
 
-void W_Mortar_Grenade_Explode()
-{SELFPARAM();
+void W_Mortar_Grenade_Explode(entity this)
+{
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -86,11 +86,11 @@ void W_Mortar_Grenade_Explode()
 
 void W_Mortar_Grenade_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Mortar_Grenade_Explode());
+	WITHSELF(this, W_Mortar_Grenade_Explode(this));
 }
 
-void W_Mortar_Grenade_Explode2()
-{SELFPARAM();
+void W_Mortar_Grenade_Explode2(entity this)
+{
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
 			if(DIFF_TEAM(self.realowner, other))
@@ -111,7 +111,7 @@ void W_Mortar_Grenade_Explode2()
 
 void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Mortar_Grenade_Explode2());
+	WITHSELF(this, W_Mortar_Grenade_Explode2(this));
 }
 
 void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -135,11 +135,11 @@ void W_Mortar_Grenade_Think1(entity this)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Mortar_Grenade_Explode();
+		W_Mortar_Grenade_Explode(self);
 		return;
 	}
 	if(self.gl_detonate_later && self.gl_bouncecnt >= WEP_CVAR_PRI(mortar, remote_minbouncecnt))
-		W_Mortar_Grenade_Explode();
+		W_Mortar_Grenade_Explode(self);
 }
 
 void W_Mortar_Grenade_Touch1(entity this)
@@ -210,8 +210,8 @@ void W_Mortar_Grenade_Touch2(entity this)
 	}
 }
 
-void W_Mortar_Attack(Weapon thiswep)
-{SELFPARAM();
+void W_Mortar_Attack(Weapon thiswep, entity actor)
+{entity this = actor;
 	entity gren;
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(mortar, ammo));
@@ -258,8 +258,8 @@ void W_Mortar_Attack(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 }
 
-void W_Mortar_Attack2(Weapon thiswep)
-{SELFPARAM();
+void W_Mortar_Attack2(Weapon thiswep, entity actor)
+{entity this = actor;
 	entity gren;
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(mortar, ammo));
@@ -307,9 +307,9 @@ void W_Mortar_Attack2(Weapon thiswep)
 
 .float bot_secondary_grenademooth;
 
-METHOD(Mortar, wr_aim, void(entity thiswep))
+METHOD(Mortar, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     PHYS_INPUT_BUTTON_ATCK(self) = false;
     PHYS_INPUT_BUTTON_ATCK2(self) = false;
     if(self.bot_secondary_grenademooth == 0) // WEAPONTODO: merge this into using WEP_CVAR_BOTH
@@ -353,7 +353,7 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(mortar, refire)))
         {
-            W_Mortar_Attack(thiswep);
+            W_Mortar_Attack(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(mortar, animtime), w_ready);
         }
     }
@@ -376,7 +376,7 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         }
         else if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(mortar, refire)))
         {
-            W_Mortar_Attack2(thiswep);
+            W_Mortar_Attack2(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(mortar, animtime), w_ready);
         }
     }
@@ -395,8 +395,7 @@ METHOD(Mortar, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Mortar, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND_RELOAD); // WEAPONTODO
+    W_Reload(actor, min(WEP_CVAR_PRI(mortar, ammo), WEP_CVAR_SEC(mortar, ammo)), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Mortar, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -416,9 +415,9 @@ METHOD(Mortar, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Mortar, wr_impacteffect, void(entity thiswep))
+METHOD(Mortar, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);

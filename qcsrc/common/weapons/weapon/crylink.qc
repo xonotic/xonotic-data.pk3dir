@@ -344,8 +344,8 @@ void W_Crylink_Fadethink(entity this)
 	remove(self);
 }
 
-void W_Crylink_Attack(Weapon thiswep)
-{SELFPARAM();
+void W_Crylink_Attack(Weapon thiswep, entity actor)
+{entity this = actor;
 	float counter, shots;
 	entity proj, prevproj, firstproj;
 	vector s;
@@ -452,8 +452,8 @@ void W_Crylink_Attack(Weapon thiswep)
 	}
 }
 
-void W_Crylink_Attack2(Weapon thiswep)
-{SELFPARAM();
+void W_Crylink_Attack2(Weapon thiswep, entity actor)
+{entity this = actor;
 	float counter, shots;
 	entity proj, prevproj, firstproj;
 	vector s;
@@ -567,9 +567,9 @@ void W_Crylink_Attack2(Weapon thiswep)
 	}
 }
 
-METHOD(Crylink, wr_aim, void(entity thiswep))
+METHOD(Crylink, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(random() < 0.10)
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(crylink, speed), 0, WEP_CVAR_PRI(crylink, middle_lifetime), false);
     else
@@ -586,7 +586,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         if(actor.crylink_waitrelease != 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(crylink, refire)))
         {
-            W_Crylink_Attack(thiswep);
+            W_Crylink_Attack(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(crylink, animtime), w_ready);
         }
     }
@@ -596,7 +596,7 @@ METHOD(Crylink, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         if(actor.crylink_waitrelease != 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(crylink, refire)))
         {
-            W_Crylink_Attack2(thiswep);
+            W_Crylink_Attack2(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(crylink, animtime), w_ready);
         }
     }
@@ -653,8 +653,7 @@ METHOD(Crylink, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Crylink, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND_RELOAD);
+    W_Reload(actor, min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), SND_RELOAD);
 }
 METHOD(Crylink, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -666,9 +665,9 @@ METHOD(Crylink, wr_killmessage, Notification(entity thiswep))
 }
 #endif
 #ifdef CSQC
-METHOD(Crylink, wr_impacteffect, void(entity thiswep))
+METHOD(Crylink, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     if(w_deathtype & HITTYPE_SECONDARY)

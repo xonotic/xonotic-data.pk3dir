@@ -63,8 +63,8 @@ void W_MineLayer_Think(entity this);
 #ifdef SVQC
 spawnfunc(weapon_minelayer) { weapon_defaultspawnfunc(this, WEP_MINE_LAYER); }
 
-void W_MineLayer_Stick(entity to)
-{SELFPARAM();
+void W_MineLayer_Stick(entity this, entity to)
+{
 	spamsound(self, CH_SHOTS, SND(MINE_STICK), VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
@@ -138,8 +138,8 @@ void W_MineLayer_Explode(entity this)
 	remove(self);
 }
 
-void W_MineLayer_DoRemoteExplode()
-{SELFPARAM();
+void W_MineLayer_DoRemoteExplode(entity this)
+{
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
@@ -164,20 +164,20 @@ void W_MineLayer_DoRemoteExplode()
 	remove(self);
 }
 
-void W_MineLayer_RemoteExplode()
-{SELFPARAM();
+void W_MineLayer_RemoteExplode(entity this)
+{
 	if(!IS_DEAD(self.realowner))
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
 			: (vdist(NearestPointOnBox(self.realowner, self.origin) - self.origin, >, WEP_CVAR(minelayer, remote_radius))) // safety device
 		)
 		{
-			W_MineLayer_DoRemoteExplode();
+			W_MineLayer_DoRemoteExplode(self);
 		}
 }
 
-void W_MineLayer_ProximityExplode()
-{SELFPARAM();
+void W_MineLayer_ProximityExplode(entity this)
+{
 	// make sure no friend is in the mine's radius. If there is any, explosion is delayed until he's at a safe distance
 	if(WEP_CVAR(minelayer, protection) && self.mine_explodeanyway == 0)
 	{
@@ -257,7 +257,7 @@ void W_MineLayer_Think(entity this)
 	// explode if it's time to
 	if(self.mine_time && time >= self.mine_time)
 	{
-		W_MineLayer_ProximityExplode();
+		W_MineLayer_ProximityExplode(self);
 		return;
 	}
 
@@ -265,7 +265,7 @@ void W_MineLayer_Think(entity this)
 	if(PS(self.realowner).m_weapon == WEP_MINE_LAYER)
 	if(!IS_DEAD(self.realowner))
 	if(self.minelayer_detonate)
-		W_MineLayer_RemoteExplode();
+		W_MineLayer_RemoteExplode(self);
 }
 
 void W_MineLayer_Touch(entity this)
@@ -287,7 +287,7 @@ void W_MineLayer_Touch(entity this)
 	}
 	else
 	{
-		W_MineLayer_Stick(other);
+		W_MineLayer_Stick(self, other);
 	}
 }
 
@@ -308,8 +308,8 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 		W_PrepareExplosionByDamage(this, attacker, W_MineLayer_Explode);
 }
 
-void W_MineLayer_Attack(Weapon thiswep)
-{SELFPARAM();
+void W_MineLayer_Attack(Weapon thiswep, entity actor)
+{entity this = actor;
 	entity mine;
 	entity flash;
 
@@ -401,9 +401,9 @@ float W_MineLayer_PlacedMines(entity this, float detonate)
 	return minfound;
 }
 
-METHOD(MineLayer, wr_aim, void(entity thiswep))
+METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     // aim and decide to fire if appropriate
     if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
         PHYS_INPUT_BUTTON_ATCK(self) = false;
@@ -513,7 +513,7 @@ METHOD(MineLayer, wr_think, void(entity thiswep, entity actor, .entity weaponent
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(minelayer, refire)))
         {
-            W_MineLayer_Attack(thiswep);
+            W_MineLayer_Attack(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(minelayer, animtime), w_ready);
         }
     }
@@ -543,15 +543,13 @@ METHOD(MineLayer, wr_checkammo2, bool(entity thiswep, entity actor))
     else
         return false;
 }
-METHOD(MineLayer, wr_resetplayers, void(entity thiswep))
+METHOD(MineLayer, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    self.minelayer_mines = 0;
+    actor.minelayer_mines = 0;
 }
 METHOD(MineLayer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, WEP_CVAR(minelayer, ammo), SND_RELOAD);
+    W_Reload(actor, WEP_CVAR(minelayer, ammo), SND_RELOAD);
 }
 METHOD(MineLayer, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -565,9 +563,9 @@ METHOD(MineLayer, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(MineLayer, wr_impacteffect, void(entity thiswep))
+METHOD(MineLayer, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);

@@ -58,8 +58,8 @@ REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
 #ifdef SVQC
 spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
-void W_Shotgun_Attack(Weapon thiswep, float isprimary)
-{SELFPARAM();
+void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
+{entity this = actor;
 	float	sc;
 	entity flash;
 
@@ -207,7 +207,7 @@ void W_Shotgun_Attack3_Frame2(Weapon thiswep, entity actor, .entity weaponentity
 	}
 
 	sound(actor, CH_WEAPON_SINGLE, SND_Null, VOL_BASE, ATTN_NORM); // kill previous sound
-	W_Shotgun_Attack(WEP_SHOTGUN, true); // actually is secondary, but we trick the last shot into playing full reload sound
+	W_Shotgun_Attack(WEP_SHOTGUN, actor, true); // actually is secondary, but we trick the last shot into playing full reload sound
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
 }
 void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
@@ -220,15 +220,15 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 		return;
 	}
 
-	W_Shotgun_Attack(WEP_SHOTGUN, false);
+	W_Shotgun_Attack(WEP_SHOTGUN, actor, false);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
 }
 
 .float shotgun_primarytime;
 
-METHOD(Shotgun, wr_aim, void(entity thiswep))
+METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
         PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
     else
@@ -251,7 +251,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
                 {
-                    W_Shotgun_Attack(thiswep, true);
+                    W_Shotgun_Attack(thiswep, actor, true);
                     actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
@@ -263,7 +263,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             {
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
                 {
-                    W_Shotgun_Attack(thiswep, false);
+                    W_Shotgun_Attack(thiswep, actor, false);
                     actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }
@@ -280,9 +280,9 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Shotgun_Attack2);
     }
 }
-METHOD(Shotgun, wr_setup, void(entity thiswep))
+METHOD(Shotgun, wr_setup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.ammo_field = ammo_none;
 }
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
@@ -310,8 +310,7 @@ METHOD(Shotgun, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Shotgun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, WEP_CVAR_PRI(shotgun, ammo), SND_RELOAD); // WEAPONTODO
+    W_Reload(actor, WEP_CVAR_PRI(shotgun, ammo), SND_RELOAD); // WEAPONTODO
 }
 METHOD(Shotgun, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -329,9 +328,9 @@ METHOD(Shotgun, wr_killmessage, Notification(entity thiswep))
 #ifdef CSQC
 .float prevric;
 
-METHOD(Shotgun, wr_impacteffect, void(entity thiswep))
+METHOD(Shotgun, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
     if(!w_issilent && time - self.prevric > 0.25)

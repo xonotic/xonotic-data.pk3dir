@@ -22,7 +22,7 @@ void race_InitSpectator()
 			race_SendNextCheckpoint(msg_entity.enemy, 1);
 }
 
-void W_Porto_Fail(float failhard);
+void W_Porto_Fail(entity this, float failhard);
 
 float race_readTime(string map, float pos)
 {
@@ -570,7 +570,7 @@ void checkpoint_passed(entity this, entity player)
 	{
 		// do not allow portalling through checkpoints
 		trace_plane_normal = normalize(-1 * player.velocity);
-		WITHSELF(player, W_Porto_Fail(0));
+		WITHSELF(player, W_Porto_Fail(player, 0));
 		return;
 	}
 

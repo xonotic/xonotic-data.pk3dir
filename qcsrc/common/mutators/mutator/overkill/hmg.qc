@@ -89,7 +89,7 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_MachineGun_MuzzleFlash();
+	W_MachineGun_MuzzleFlash(actor);
 	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if (autocvar_g_casings >= 2) // casing code
@@ -100,9 +100,9 @@ void W_HeavyMachineGun_Attack_Auto(Weapon thiswep, entity actor, .entity weapone
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(hmg, refire), W_HeavyMachineGun_Attack_Auto);
 }
 
-METHOD(HeavyMachineGun, wr_aim, void(entity thiswep))
+METHOD(HeavyMachineGun, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
         PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
     else
@@ -166,9 +166,9 @@ METHOD(HeavyMachineGun, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(HeavyMachineGun, wr_impacteffect, void(entity thiswep))
+METHOD(HeavyMachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);

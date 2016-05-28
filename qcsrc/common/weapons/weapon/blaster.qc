@@ -150,9 +150,9 @@ void W_Blaster_Attack(
 	}
 }
 
-METHOD(Blaster, wr_aim, void(entity thiswep))
+METHOD(Blaster, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     if(WEP_CVAR(blaster, secondary))
     {
         if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
@@ -223,9 +223,9 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
     }
 }
 
-METHOD(Blaster, wr_setup, void(entity thiswep))
+METHOD(Blaster, wr_setup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     self.ammo_field = ammo_none;
 }
 
@@ -252,9 +252,9 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Blaster, wr_impacteffect, void(entity thiswep))
+METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);

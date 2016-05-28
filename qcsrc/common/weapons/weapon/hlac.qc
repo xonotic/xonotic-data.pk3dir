@@ -69,8 +69,8 @@ void W_HLAC_Touch(entity this)
 	remove(self);
 }
 
-void W_HLAC_Attack(Weapon thiswep)
-{SELFPARAM();
+void W_HLAC_Attack(Weapon thiswep, entity actor)
+{entity this = actor;
 	entity missile;
     float spread;
 
@@ -117,8 +117,8 @@ void W_HLAC_Attack(Weapon thiswep)
 	MUTATOR_CALLHOOK(EditProjectile, self, missile);
 }
 
-void W_HLAC_Attack2()
-{SELFPARAM();
+void W_HLAC_Attack2(entity actor)
+{entity this = actor;
 	entity missile;
     float spread;
 
@@ -181,7 +181,7 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 
 		int slot = weaponslot(weaponentity);
 		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
-		W_HLAC_Attack(WEP_HLAC);
+		W_HLAC_Attack(WEP_HLAC, actor);
 		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
@@ -191,14 +191,14 @@ void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int
 	}
 }
 
-void W_HLAC_Attack2_Frame(Weapon thiswep)
-{SELFPARAM();
+void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor)
+{entity this = actor;
     float i;
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(hlac, ammo));
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
-        W_HLAC_Attack2();
+        W_HLAC_Attack2(actor);
 
 	if(!autocvar_g_norecoil)
 	{
@@ -207,9 +207,9 @@ void W_HLAC_Attack2_Frame(Weapon thiswep)
 	}
 }
 
-METHOD(HLAC, wr_aim, void(entity thiswep))
+METHOD(HLAC, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 }
 METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -221,7 +221,7 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hlac, refire)))
         {
             actor.misc_bulletcounter = 0;
-            W_HLAC_Attack(thiswep);
+            W_HLAC_Attack(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
         }
     }
@@ -230,7 +230,7 @@ METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hlac, refire)))
         {
-            W_HLAC_Attack2_Frame(thiswep);
+            W_HLAC_Attack2_Frame(thiswep, actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
         }
     }
@@ -249,8 +249,7 @@ METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    SELFPARAM();
-    W_Reload(self, min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND_RELOAD);
+    W_Reload(actor, min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND_RELOAD);
 }
 METHOD(HLAC, wr_suicidemessage, Notification(entity thiswep))
 {
@@ -264,9 +263,9 @@ METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(HLAC, wr_impacteffect, void(entity thiswep))
+METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
+    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);

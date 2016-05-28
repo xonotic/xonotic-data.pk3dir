@@ -469,7 +469,7 @@ void W_WeaponFrame(Player actor)
 				actor.weaponname = newwep.mdl;
 				actor.bulletcounter = 0;
 				actor.ammo_field = newwep.ammo_field;
-				newwep.wr_setup(newwep);
+				newwep.wr_setup(newwep, actor);
 				this.state = WS_RAISE;
 
 				// set our clip load to the load of the weapon we switched to, if it's reloadable
@@ -564,7 +564,7 @@ void W_WeaponFrame(Player actor)
 			}
 			else if (e)
 			{
-				e.wr_gonethink(e);
+				e.wr_gonethink(e, actor);
 			}
 		}
 
@@ -764,9 +764,9 @@ void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 	actor.clip_load = actor.(weapon_load[PS(actor).m_weapon.m_id]) = -1;
 }
 
-void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item)
+void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_type, entity weapon_item)
 {
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
-	WITHSELF(player, w.event(w));
+	WITHSELF(player, w.event(w, player));
 }
