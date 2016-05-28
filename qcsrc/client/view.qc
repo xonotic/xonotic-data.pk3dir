@@ -922,9 +922,8 @@ LABEL(normalcolor)
 	return wcross_color;
 }
 
-void HUD_Crosshair()
-{SELFPARAM();
-	entity e = this;
+void HUD_Crosshair(entity this)
+{
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 &&
@@ -981,6 +980,7 @@ void HUD_Crosshair()
 		string wcross_name = "";
 		float wcross_scale, wcross_blur;
 
+        entity e = this; // wtf?
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
 			e = switchingweapon;
@@ -1307,7 +1307,7 @@ void HUD_Crosshair()
 	}
 }
 
-void HUD_Draw()
+void HUD_Draw(entity this)
 {
 	if(!intermission)
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
@@ -1342,7 +1342,7 @@ void HUD_Draw()
 
 	// crosshair goes VERY LAST
 	UpdateDamage();
-	HUD_Crosshair();
+	HUD_Crosshair(this);
 	HitSound();
 }
 
@@ -2171,7 +2171,7 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	HUD_Draw();
+	HUD_Draw(this);
 
 	if(NextFrameCommand)
 	{
