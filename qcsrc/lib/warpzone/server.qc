@@ -363,7 +363,7 @@ bool WarpZone_Camera_Send(entity this, entity to, int sendflags)
 
 #ifdef WARPZONELIB_KEEPDEBUG
 float WarpZone_CheckProjectileImpact(entity player)
-{SELFPARAM();
+{
 	vector o0, v0;
 
 	.vector orgvec, velvec;
@@ -435,8 +435,8 @@ float WarpZone_CheckProjectileImpact(entity player)
 #endif
 #endif
 
-float WarpZone_Projectile_Touch()
-{SELFPARAM();
+float WarpZone_Projectile_Touch(entity this)
+{
 	if(other.classname == "trigger_warpzone")
 		return true;
 
@@ -479,9 +479,8 @@ float WarpZone_Projectile_Touch()
 		save_ent = trace_ent;
 		save_inopen = trace_inopen;
 		save_inwater = trace_inwater;
-		float f;
-		if((f = WarpZone_CheckProjectileImpact(this)) != 0)
-			return (f > 0);
+		float f = WarpZone_CheckProjectileImpact(this);
+		if (f) return (f > 0);
 		trace_dpstartcontents = save_dpstartcontents;
 		trace_dphitcontents = save_dphitcontents;
 		trace_dphitq3surfaceflags = save_dphitq3surfaceflags;

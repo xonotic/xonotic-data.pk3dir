@@ -58,7 +58,7 @@ spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
 void W_Blaster_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	self.event_damage = func_null;
 

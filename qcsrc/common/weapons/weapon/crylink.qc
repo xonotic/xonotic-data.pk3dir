@@ -298,7 +298,7 @@ void W_Crylink_Touch(entity this)
 	float finalhit;
 	float f;
 	float isprimary = !(self.projectiledeathtype & HITTYPE_SECONDARY);
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	float a;
 	a = bound(0, 1 - (time - self.fade_time) * self.fade_rate, 1);

@@ -183,14 +183,13 @@ void print_to(entity to, string input)
 // ==========================================
 
 // used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
-void timeout_handler_reset()
+void timeout_handler_reset(entity this)
 {
-	SELFPARAM();
-	timeout_caller = world;
+	timeout_caller = NULL;
 	timeout_time = 0;
 	timeout_leadtime = 0;
 
-	remove(self);
+	remove(this);
 }
 
 void timeout_handler_think(entity this)
@@ -221,7 +220,7 @@ void timeout_handler_think(entity this)
 					it.fixangle = false;
 				));
 
-				timeout_handler_reset();
+				timeout_handler_reset(this);
 			}
 
 			return;
@@ -265,7 +264,7 @@ void timeout_handler_think(entity this)
 		case TIMEOUT_INACTIVE:
 		default:
 		{
-			timeout_handler_reset();
+			timeout_handler_reset(this);
 			return;
 		}
 	}
@@ -472,7 +471,7 @@ void CommonCommand_info(float request, entity caller, float argc)
 		{
 			string command = builtin_cvar_string(strcat("sv_info_", argv(1)));
 
-			if (command) wordwrap_sprint(command, 1000);
+			if (command) wordwrap_sprint(caller, command, 1000);
 			else print_to(caller, "ERROR: unsupported info command");
 
 			return;  // never fall through to usage

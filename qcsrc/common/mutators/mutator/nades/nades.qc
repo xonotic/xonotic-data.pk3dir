@@ -724,7 +724,7 @@ void nade_touch(entity this)
 		return;
 	}
 
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	//setsize(self, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(self);

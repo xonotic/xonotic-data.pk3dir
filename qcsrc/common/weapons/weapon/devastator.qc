@@ -322,13 +322,13 @@ void W_Devastator_Think(entity this)
 
 void W_Devastator_Touch(entity this)
 {
-	if(WarpZone_Projectile_Touch())
+	if(WarpZone_Projectile_Touch(this))
 	{
-		if(wasfreed(self))
-			W_Devastator_Unregister(self);
+		if(wasfreed(this))
+			W_Devastator_Unregister(this);
 		return;
 	}
-	W_Devastator_Unregister(self);
+	W_Devastator_Unregister(this);
 	W_Devastator_Explode(this);
 }
 

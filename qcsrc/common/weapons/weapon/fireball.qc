@@ -119,7 +119,7 @@ void W_Fireball_Explode_use(entity this, entity actor, entity trigger)
 
 void W_Fireball_TouchExplode(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	W_Fireball_Explode(this);
 }
 
@@ -292,7 +292,7 @@ void W_Fireball_Firemine_Think(entity this)
 
 void W_Fireball_Firemine_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	if(other.takedamage == DAMAGE_AIM)
 	if(Fire_AddDamage(other, self.realowner, WEP_CVAR_SEC(fireball, damage), WEP_CVAR_SEC(fireball, damagetime), self.projectiledeathtype) >= 0)
 	{

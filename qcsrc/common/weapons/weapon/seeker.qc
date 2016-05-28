@@ -104,7 +104,7 @@ void W_Seeker_Missile_Explode(entity this)
 
 void W_Seeker_Missile_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	W_Seeker_Missile_Explode(this);
 }
@@ -498,7 +498,7 @@ void W_Seeker_Tag_Touch(entity this)
 	vector org2;
 	entity e;
 
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	dir     = normalize(self.realowner.origin - self.origin);
 	org2    = findbetterlocation(self.origin, 8);

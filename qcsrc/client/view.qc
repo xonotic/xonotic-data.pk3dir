@@ -1360,7 +1360,8 @@ int lasthud;
 float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
-{SELFPARAM();
+{
+    SELFPARAM();
     TC(int, w); TC(int, h);
 	entity e;
 	float fov;

@@ -63,7 +63,7 @@ const int ANIM_ROAM       = 11;
 .float animflag;
 .float idletime;
 
-#define WALKER_PATH(s,e) pathlib_astar(s,e)
+#define WALKER_PATH(this, s, e) pathlib_astar(this, s, e)
 
 float walker_firecheck()
 {SELFPARAM();
@@ -317,7 +317,7 @@ void walker_move_path()
 
                 if (self.pathgoal.enemy)
                 {
-                    self.pathcurrent = WALKER_PATH(self.pathgoal.origin,self.pathgoal.enemy.origin);
+                    self.pathcurrent = WALKER_PATH(self, self.pathgoal.origin, self.pathgoal.enemy.origin);
                     self.pathgoal = self.pathgoal.enemy;
                 }
             }
@@ -617,7 +617,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
         else
         {
 #ifdef WALKER_FANCYPATHING
-            it.pathcurrent = WALKER_PATH(it.origin, e.origin);
+            it.pathcurrent = WALKER_PATH(it, it.origin, e.origin);
             it.pathgoal = e;
 #else
             it.pathcurrent = e;

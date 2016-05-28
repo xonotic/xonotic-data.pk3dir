@@ -54,7 +54,7 @@ void ewheel_move_path()
 
                 if (self.pathgoal.enemy)
                 {
-                    self.pathcurrent = pathlib_astar(self.pathgoal.origin,self.pathgoal.enemy.origin);
+                    self.pathcurrent = pathlib_astar(self, self.pathgoal.origin,self.pathgoal.enemy.origin);
                     self.pathgoal = self.pathgoal.enemy;
                 }
             }
@@ -207,7 +207,7 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
             {
 
 #ifdef EWHEEL_FANCYPATH
-                it.pathcurrent = WALKER_PATH(it.origin,e.origin);
+                it.pathcurrent = WALKER_PATH(it, it.origin, e.origin);
                 it.pathgoal = e;
 #else
                 it.pathcurrent  = e;

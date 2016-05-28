@@ -72,7 +72,7 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 void Item_Show (entity e, float mode);
 
-void Item_Respawn ();
+void Item_Respawn (entity this);
 
 void Item_RespawnCountdown(entity this);
 void Item_ScheduleRespawnIn(entity e, float t);

@@ -198,7 +198,7 @@ void W_Electro_Explode_use(entity this, entity actor, entity trigger)
 
 void W_Electro_TouchExplode(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	W_Electro_Explode(this);
 }
 
@@ -300,7 +300,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 
 void W_Electro_Orb_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	if(other.takedamage == DAMAGE_AIM)
 		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(self); } }
 	else

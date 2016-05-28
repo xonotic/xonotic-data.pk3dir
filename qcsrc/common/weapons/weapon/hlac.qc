@@ -58,7 +58,7 @@ void W_HLAC_Touch(entity this)
 {
 	float isprimary;
 
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	self.event_damage = func_null;
 

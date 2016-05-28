@@ -3,7 +3,7 @@
 
 #ifdef SVQC
 void WarpZone_StartFrame();
-float WarpZone_Projectile_Touch();
+float WarpZone_Projectile_Touch(entity this);
 
 // THESE must be defined by calling QC code:
 void WarpZone_PostTeleportPlayer_Callback(entity pl);

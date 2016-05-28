@@ -30,9 +30,8 @@
 
 // generic CSQC model code
 
-bool CSQCModel_Send(entity to, int sf)
+bool CSQCModel_Send(entity this, entity to, int sf)
 {
-    SELFPARAM();
 	// some nice flags for CSQCMODEL_IF
 	noref bool isplayer = IS_CLIENT(this);
 	noref bool islocalplayer = (this == to);
@@ -122,7 +121,8 @@ void CSQCModel_CheckUpdate(entity e)
 
 void CSQCModel_LinkEntity(entity e)
 {
-	e.SendEntity = CSQCModel_Send;
+	e.SendEntity = SendEntity_self;
+	e.SendEntity3 = CSQCModel_Send;
 	e.SendFlags = 0xFFFFFF;
 	CSQCModel_CheckUpdate(e);
 }
@@ -130,4 +130,5 @@ void CSQCModel_LinkEntity(entity e)
 void CSQCModel_UnlinkEntity(entity e)
 {
 	e.SendEntity = func_null;
+	e.SendEntity3 = func_null;
 }

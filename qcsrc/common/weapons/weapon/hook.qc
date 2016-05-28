@@ -139,7 +139,7 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 
 void W_Hook_Touch2(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	this.use(this, NULL, NULL);
 }
 

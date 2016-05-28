@@ -118,7 +118,7 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 
 void M_Wyvern_Attack_Fireball_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	M_Wyvern_Attack_Fireball_Explode(this);
 }

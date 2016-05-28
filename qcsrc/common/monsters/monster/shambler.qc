@@ -126,7 +126,7 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 
 void M_Shambler_Attack_Lightning_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	self.use(this, NULL, NULL);
 }

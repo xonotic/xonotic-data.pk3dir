@@ -99,7 +99,7 @@ void raptor_bomblet_touch(entity this)
     if(other == self.owner)
         return;
 
-    PROJECTILE_TOUCH;
+    PROJECTILE_TOUCH(this);
     setthink(self, raptor_bomblet_boom);
     self.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
 }

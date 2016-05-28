@@ -725,7 +725,7 @@ void W_Nexball_Touch(entity this)
 	//self.think = func_null;
 	//self.enemy = world;
 
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
 		if((ball = other.ballcarried) && !STAT(FROZEN, other) && !IS_DEAD(other) && (IS_PLAYER(attacker)))
 		{

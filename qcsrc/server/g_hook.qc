@@ -305,7 +305,7 @@ void GrapplingHookTouch (entity this)
 {
 	if(other.movetype == MOVETYPE_FOLLOW)
 		return;
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	GrapplingHook_Stop();
 

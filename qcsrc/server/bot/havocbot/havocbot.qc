@@ -807,7 +807,7 @@ void havocbot_movetogoal(entity this)
 				this.aistatus |= AI_STATUS_DANGER_AHEAD;
 		}
 
-		dodge = havocbot_dodge();
+		dodge = havocbot_dodge(this);
 		dodge = dodge * bound(0,0.5+(skill+this.bot_dodgeskill)*0.1,1);
 		evadelava = evadelava * bound(1,3-(skill+this.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
 		traceline(this.origin, ( ( this.enemy.absmin + this.enemy.absmax ) * 0.5 ), true, world);
@@ -1268,12 +1268,11 @@ void havocbot_setupbot(entity this)
 	havocbot_chooserole(this);
 }
 
-vector havocbot_dodge()
+vector havocbot_dodge(entity this)
 {
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
 #if 0
-SELFPARAM();
 	entity head;
 	vector dodge, v, n;
 	float danger, bestdanger, vl, d;

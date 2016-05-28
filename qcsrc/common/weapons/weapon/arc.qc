@@ -261,7 +261,7 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 
 void W_Arc_Bolt_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	self.use(this, NULL, NULL);
 }
 

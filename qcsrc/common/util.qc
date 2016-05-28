@@ -57,22 +57,25 @@ string wordwrap(string s, float l)
 
 #ifndef MENUQC
 #ifndef CSQC
+entity _wordwrap_buffer_sprint_ent;
 void wordwrap_buffer_sprint(string s)
-{SELFPARAM();
+{
 	wordwrap_buffer = strcat(wordwrap_buffer, s);
 	if(s == "\n")
 	{
-		sprint(self, wordwrap_buffer);
+		sprint(_wordwrap_buffer_sprint_ent, wordwrap_buffer);
 		wordwrap_buffer = "";
 	}
 }
 
-void wordwrap_sprint(string s, float l)
-{SELFPARAM();
+void wordwrap_sprint(entity to, string s, float l)
+{
 	wordwrap_buffer = "";
+	_wordwrap_buffer_sprint_ent = to;
 	wordwrap_cb(s, l, wordwrap_buffer_sprint);
+	_wordwrap_buffer_sprint_ent = NULL;
 	if(wordwrap_buffer != "")
-		sprint(self, strcat(wordwrap_buffer, "\n"));
+		sprint(to, strcat(wordwrap_buffer, "\n"));
 	wordwrap_buffer = "";
 	return;
 }

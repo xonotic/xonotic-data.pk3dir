@@ -484,8 +484,8 @@ float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
 
-void Item_Respawn ()
-{SELFPARAM();
+void Item_Respawn (entity this)
+{
 	Item_Show(self, 1);
 	// this is ugly...
 	if(self.items == ITEM_Strength.m_itemid)
@@ -516,7 +516,7 @@ void Item_RespawnCountdown (entity this)
 	{
 		if(self.waypointsprite_attached)
 			WaypointSprite_Kill(self.waypointsprite_attached);
-		Item_Respawn();
+		Item_Respawn(self);
 	}
 	else
 	{
@@ -575,7 +575,7 @@ void Item_RespawnThink(entity this)
 		ItemUpdate(self);
 
 	if(time >= self.wait)
-		Item_Respawn();
+		Item_Respawn(self);
 }
 
 void Item_ScheduleRespawnIn(entity e, float t)
@@ -858,7 +858,6 @@ void Item_Reset(entity this)
 			Item_ScheduleInitialRespawn(this);
 	}
 }
-void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
 void Item_FindTeam(entity this)
 {
@@ -1634,7 +1633,7 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
 float GiveItems(entity e, float beginarg, float endarg)
-{SELFPARAM();
+{
 	float got, i, val, op;
 	float _switchweapon;
 	string cmd;
@@ -1796,7 +1795,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
-		if(self.weapons & WEPSET_SUPERWEAPONS)
+		if(e.weapons & WEPSET_SUPERWEAPONS)
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)

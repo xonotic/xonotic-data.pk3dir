@@ -23,10 +23,10 @@ void pathlib_showpath(entity start)
     }
 }
 
-void path_dbg_think()
-{SELFPARAM();
-    pathlib_showpath(self);
-    self.nextthink = time + 1;
+void path_dbg_think(entity this)
+{
+    pathlib_showpath(this);
+    this.nextthink = time + 1;
 }
 
 void __showpath2_think(entity this)

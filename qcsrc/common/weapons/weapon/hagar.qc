@@ -115,13 +115,13 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 
 void W_Hagar_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	this.use(this, NULL, NULL);
 }
 
 void W_Hagar_Touch2(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	if(self.cnt > 0 || other.takedamage == DAMAGE_AIM) {
 		this.use(this, NULL, NULL);

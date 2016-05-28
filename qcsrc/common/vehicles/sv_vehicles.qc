@@ -224,7 +224,7 @@ void vehicles_projectile_explode(entity this)
 			return;
 	}
 
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	self.event_damage = func_null;
 	RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);

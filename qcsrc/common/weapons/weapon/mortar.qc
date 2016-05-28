@@ -144,7 +144,7 @@ void W_Mortar_Grenade_Think1(entity this)
 
 void W_Mortar_Grenade_Touch1(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
 		this.use(this, NULL, NULL);
@@ -176,7 +176,7 @@ void W_Mortar_Grenade_Touch1(entity this)
 
 void W_Mortar_Grenade_Touch2(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
 		this.use(this, NULL, NULL);

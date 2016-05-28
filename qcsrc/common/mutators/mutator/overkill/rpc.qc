@@ -62,8 +62,8 @@ void W_RocketPropelledChainsaw_Explode(entity this)
 
 void W_RocketPropelledChainsaw_Touch (entity this)
 {
-	if(WarpZone_Projectile_Touch())
-		if(wasfreed(self))
+	if(WarpZone_Projectile_Touch(this))
+		if(wasfreed(this))
 			return;
 
 	W_RocketPropelledChainsaw_Explode(this);

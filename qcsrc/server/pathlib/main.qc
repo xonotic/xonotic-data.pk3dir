@@ -379,8 +379,8 @@ entity path_build(entity next, vector where, entity prev, entity start)
     return path;
 }
 
-entity pathlib_astar(vector from,vector to)
-{SELFPARAM();
+entity pathlib_astar(entity this, vector from,vector to)
+{
     entity path, start, end, open, n, ln;
     float ptime, ftime, ctime;
 
@@ -442,8 +442,8 @@ entity pathlib_astar(vector from,vector to)
     pathlib_movecost_waterfactor = 25000000;
     pathlib_foundgoal      = 0;
 
-    movenode_boxmax   = self.maxs * 1.1;
-    movenode_boxmin   = self.mins * 1.1;
+    movenode_boxmax   = this.maxs * 1.1;
+    movenode_boxmin   = this.mins * 1.1;
 
     movenode_stepsize = pathlib_gridsize * 0.25;
 

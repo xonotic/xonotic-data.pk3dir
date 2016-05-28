@@ -158,7 +158,7 @@ void M_Spider_Attack_Web_Explode_use(entity this, entity actor, entity trigger)
 
 void M_Spider_Attack_Web_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
 	M_Spider_Attack_Web_Explode();
 }
