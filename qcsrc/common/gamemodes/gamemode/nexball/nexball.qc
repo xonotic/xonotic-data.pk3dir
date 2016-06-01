@@ -1,6 +1,18 @@
 #include "nexball.qh"
 
 #ifdef IMPLEMENTATION
+#ifdef CSQC
+int autocvar_cl_eventchase_nexball = 1;
+
+REGISTER_MUTATOR(cl_nb, true);
+
+MUTATOR_HOOKFUNCTION(cl_nb, WantEventchase)
+{
+	if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
+		return true;
+	return false;
+}
+#endif
 #ifdef SVQC
 .float metertime = _STAT(NB_METERSTART);
 

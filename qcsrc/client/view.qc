@@ -741,8 +741,6 @@ bool WantEventchase(entity this)
 			return true;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return true;
-		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
-			return true;
 		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
 			if(autocvar_cl_eventchase_death == 2)
