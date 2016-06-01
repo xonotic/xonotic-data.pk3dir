@@ -87,8 +87,8 @@ void ball_restart(entity this)
 	ResetBall(this);
 }
 
-void nexball_setstatus()
-{SELFPARAM();
+void nexball_setstatus(entity this)
+{
 	this.items &= ~IT_KEY1;
 	if(this.ballcarried)
 	{
@@ -721,15 +721,15 @@ void W_Nexball_Think(entity this)
 void W_Nexball_Touch(entity this)
 {
 	entity ball, attacker;
-	attacker = self.owner;
-	//self.think = func_null;
-	//self.enemy = world;
+	attacker = this.owner;
+	//this.think = func_null;
+	//this.enemy = world;
 
 	PROJECTILE_TOUCH(this);
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
 		if((ball = other.ballcarried) && !STAT(FROZEN, other) && !IS_DEAD(other) && (IS_PLAYER(attacker)))
 		{
-			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
+			other.velocity = other.velocity + normalize(this.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			UNSET_ONGROUND(other);
 			if(!attacker.ballcarried)
 			{
@@ -746,22 +746,22 @@ void W_Nexball_Touch(entity this)
 				GiveBall(attacker, other.ballcarried);
 			}
 		}
-	remove(self);
+	remove(this);
 }
 
-void W_Nexball_Attack(float t)
-{SELFPARAM();
+void W_Nexball_Attack(entity actor, float t)
+{
 	entity ball;
 	float mul, mi, ma;
-	if(!(ball = self.ballcarried))
+	if(!(ball = actor.ballcarried))
 		return;
 
-	W_SetupShot(self, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
+	W_SetupShot(actor, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
-		if(self.metertime)
-			self.metertime = 0; // Shot failed, hide the power meter
+		if(actor.metertime)
+			actor.metertime = 0; // Shot failed, hide the power meter
 		return;
 	}
 
@@ -779,7 +779,7 @@ void W_Nexball_Attack(float t)
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
 
-	DropBall(ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * autocvar_g_balance_nexball_primary_speed * mul, false));
+	DropBall(ball, w_shotorg, W_CalculateProjectileVelocity(actor.velocity, w_shotdir * autocvar_g_balance_nexball_primary_speed * mul, false));
 
 
 	//TODO: use the speed_up cvar too ??
@@ -787,12 +787,12 @@ void W_Nexball_Attack(float t)
 
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht);
 
-void W_Nexball_Attack2()
-{SELFPARAM();
-	if(self.ballcarried.enemy)
+void W_Nexball_Attack2(entity actor)
+{
+	if(actor.ballcarried.enemy)
 	{
-		entity _ball = self.ballcarried;
-		W_SetupShot(self, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
+		entity _ball = actor.ballcarried;
+		W_SetupShot(actor, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
 		setthink(_ball, W_Nexball_Think);
 		_ball.nextthink = time;
@@ -802,10 +802,10 @@ void W_Nexball_Attack2()
 	if(!autocvar_g_nexball_tackling)
 		return;
 
-	W_SetupShot(self, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0);
+	W_SetupShot(actor, false, 2, SND_NB_SHOOT2, CH_WEAPON_A, 0);
 	entity missile = new(ballstealer);
 
-	missile.owner = self;
+	missile.owner = actor;
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -855,32 +855,31 @@ float ball_customize()
 
 METHOD(BallStealer, wr_think, void(BallStealer thiswep, entity actor, .entity weaponentity, int fire))
 {
-    SELFPARAM();
     TC(BallStealer, thiswep);
     if(fire & 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, autocvar_g_balance_nexball_primary_refire))
             if(autocvar_g_nexball_basketball_meter)
             {
-                if(self.ballcarried && !self.metertime)
-                    self.metertime = time;
+                if(actor.ballcarried && !actor.metertime)
+                    actor.metertime = time;
                 else
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
             }
             else
             {
-                W_Nexball_Attack(-1);
+                W_Nexball_Attack(actor, -1);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
             }
     if(fire & 2)
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_nexball_secondary_refire))
         {
-            W_Nexball_Attack2();
+            W_Nexball_Attack2(actor);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_nexball_secondary_animtime, w_ready);
         }
 
-    if(!(fire & 1) && self.metertime && self.ballcarried)
+    if(!(fire & 1) && actor.metertime && actor.ballcarried)
     {
-        W_Nexball_Attack(time - self.metertime);
+        W_Nexball_Attack(actor, time - actor.metertime);
         // DropBall or stealing will set metertime back to 0
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
     }
@@ -990,7 +989,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 
 	}
 
-	nexball_setstatus();
+	nexball_setstatus(self);
 
 	return false;
 }

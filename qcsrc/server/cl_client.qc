@@ -2064,7 +2064,6 @@ Called every frame for each client before the physics are run
 =============
 */
 .float usekeypressed;
-void() nexball_setstatus;
 .float last_vehiclecheck;
 .int items_added;
 void PlayerPreThink ()
