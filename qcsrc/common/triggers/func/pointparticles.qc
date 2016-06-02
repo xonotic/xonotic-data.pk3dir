@@ -194,20 +194,20 @@ void Draw_PointParticles(entity this)
 	vector p;
 	vector sz;
 	vector o;
-	o = self.origin;
-	sz = self.maxs - self.mins;
-	n = doBGMScript(self);
-	if(self.absolute == 2)
+	o = this.origin;
+	sz = this.maxs - this.mins;
+	n = doBGMScript(this);
+	if(this.absolute == 2)
 	{
 		if(n >= 0)
-			n = self.just_toggled ? self.impulse : 0;
+			n = this.just_toggled ? this.impulse : 0;
 		else
-			n = self.impulse * drawframetime;
+			n = this.impulse * drawframetime;
 	}
 	else
 	{
-		n *= self.impulse * drawframetime;
-		if(self.just_toggled)
+		n *= this.impulse * drawframetime;
+		if(this.just_toggled)
 			if(n < 1)
 				n = 1;
 	}
@@ -216,46 +216,46 @@ void Draw_PointParticles(entity this)
 	fail = 0;
 	for(i = random(); i <= n && fail <= 64*n; ++i)
 	{
-		p = o + self.mins;
+		p = o + this.mins;
 		p.x += random() * sz.x;
 		p.y += random() * sz.y;
 		p.z += random() * sz.z;
-		if(WarpZoneLib_BoxTouchesBrush(p, p, self, world))
+		if(WarpZoneLib_BoxTouchesBrush(p, p, this, world))
 		{
-			if(self.movedir != '0 0 0')
+			if(this.movedir != '0 0 0')
 			{
-				traceline(p, p + normalize(self.movedir) * 4096, 0, world);
+				traceline(p, p + normalize(this.movedir) * 4096, 0, world);
 				p = trace_endpos;
 				int eff_num;
-				if(self.cnt)
-					eff_num = self.cnt;
+				if(this.cnt)
+					eff_num = this.cnt;
 				else
-					eff_num = _particleeffectnum(self.mdl);
-				__pointparticles(eff_num, p, trace_plane_normal * vlen(self.movedir) + self.velocity + randomvec() * self.waterlevel, self.count);
+					eff_num = _particleeffectnum(this.mdl);
+				__pointparticles(eff_num, p, trace_plane_normal * vlen(this.movedir) + this.velocity + randomvec() * this.waterlevel, this.count);
 			}
 			else
 			{
 				int eff_num;
-				if(self.cnt)
-					eff_num = self.cnt;
+				if(this.cnt)
+					eff_num = this.cnt;
 				else
-					eff_num = _particleeffectnum(self.mdl);
-				__pointparticles(eff_num, p, self.velocity + randomvec() * self.waterlevel, self.count);
+					eff_num = _particleeffectnum(this.mdl);
+				__pointparticles(eff_num, p, this.velocity + randomvec() * this.waterlevel, this.count);
 			}
-			if(self.noise != "")
+			if(this.noise != "")
 			{
-				setorigin(self, p);
-				_sound(self, CH_AMBIENT, self.noise, VOL_BASE * self.volume, self.atten);
+				setorigin(this, p);
+				_sound(this, CH_AMBIENT, this.noise, VOL_BASE * this.volume, this.atten);
 			}
-			self.just_toggled = 0;
+			this.just_toggled = 0;
 		}
-		else if(self.absolute)
+		else if(this.absolute)
 		{
 			++fail;
 			--i;
 		}
 	}
-	setorigin(self, o);
+	setorigin(this, o);
 }
 
 void Ent_PointParticles_Remove(entity this)
