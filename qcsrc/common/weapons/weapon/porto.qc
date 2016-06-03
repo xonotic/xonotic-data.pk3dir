@@ -68,37 +68,37 @@ void W_Porto_Success(entity this)
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
 void W_Porto_Fail(entity this, float failhard)
 {
-	if(self.realowner == world)
+	if(this.realowner == world)
 	{
 		objerror("Cannot fail successfully: no owner\n");
 		return;
 	}
 
 	// no portals here!
-	if(self.cnt < 0)
+	if(this.cnt < 0)
 	{
-		Portal_ClearWithID(self.realowner, self.portal_id);
+		Portal_ClearWithID(this.realowner, this.portal_id);
 	}
 
-	self.realowner.porto_current = world;
+	this.realowner.porto_current = world;
 
-	if(self.cnt < 0 && !failhard && self.realowner.playerid == self.playerid && !IS_DEAD(self.realowner) && !(self.realowner.weapons & WEPSET(PORTO)))
+	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(this.realowner.weapons & WEPSET(PORTO)))
 	{
-		setsize(self, '-16 -16 0', '16 16 32');
-		setorigin(self, self.origin + trace_plane_normal);
-		if(move_out_of_solid(self))
+		setsize(this, '-16 -16 0', '16 16 32');
+		setorigin(this, this.origin + trace_plane_normal);
+		if(move_out_of_solid(this))
 		{
-			self.flags = FL_ITEM;
-			self.velocity = trigger_push_calculatevelocity(self.origin, self.realowner, 128);
-			tracetoss(self, self);
-			if(vdist(trace_endpos - self.realowner.origin, <, 128))
+			this.flags = FL_ITEM;
+			this.velocity = trigger_push_calculatevelocity(this.origin, this.realowner, 128);
+			tracetoss(this, this);
+			if(vdist(trace_endpos - this.realowner.origin, <, 128))
 			{
-				W_ThrowNewWeapon(self.realowner, WEP_PORTO.m_id, 0, self.origin, self.velocity);
-				Send_Notification(NOTIF_ONE, self.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
+				W_ThrowNewWeapon(this.realowner, WEP_PORTO.m_id, 0, this.origin, this.velocity);
+				Send_Notification(NOTIF_ONE, this.realowner, MSG_CENTER, CENTER_PORTO_FAILED);
 			}
 		}
 	}
-	remove(self);
+	remove(this);
 }
 
 void W_Porto_Remove(entity p)

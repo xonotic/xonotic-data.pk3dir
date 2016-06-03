@@ -570,7 +570,7 @@ void checkpoint_passed(entity this, entity player)
 	{
 		// do not allow portalling through checkpoints
 		trace_plane_normal = normalize(-1 * player.velocity);
-		WITHSELF(player, W_Porto_Fail(player, 0));
+		W_Porto_Fail(player, 0);
 		return;
 	}
 
@@ -581,7 +581,7 @@ void checkpoint_passed(entity this, entity player)
 	{
 		oldmsg = this.message;
 		this.message = "";
-		SUB_UseTargets(this, player, player); // TODO: should we be using other for the trigger here?
+		SUB_UseTargets(this, player, player);
 		this.message = oldmsg;
 	}
 
@@ -709,8 +709,7 @@ void checkpoint_use(entity this, entity actor, entity trigger)
 	if(trigger.classname == "info_player_deathmatch") // a spawn, a spawn
 		return;
 
-	other = actor;
-	checkpoint_passed(this, other);
+	checkpoint_passed(this, actor);
 }
 
 bool race_waypointsprite_visible_for_player(entity this, entity player, entity view)
