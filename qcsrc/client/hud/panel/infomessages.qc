@@ -5,12 +5,25 @@
 
 // Info messages panel (#14)
 
-#define drawInfoMessage(s) MACRO_BEGIN {																			\
-	if(autocvar_hud_panel_infomessages_flip)																		\
-		o.x = pos.x + mySize.x - stringwidth(s, true, fontsize);													\
-	drawcolorcodedstring(o, s, fontsize, a, DRAWFLAG_NORMAL);														\
-	o.y += fontsize.y;																								\
-} MACRO_END
+float stringwidth_colors(string s, vector theSize);
+vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
+{
+	getWrappedLine_remaining = s;
+	float offset = 0;
+	while(getWrappedLine_remaining)
+	{
+		s = getWrappedLine(sz.x - offset, fontsize, stringwidth_colors);
+		if(autocvar_hud_panel_infomessages_flip)
+			offset = sz.x - stringwidth_colors(s, fontsize) - offset;
+		drawcolorcodedstring(pos + eX * offset, s, fontsize, a, DRAWFLAG_NORMAL);
+		pos.y += fontsize.y;
+		offset = fontsize.x;
+	}
+	return pos;
+}
+
+#define InfoMessage(s, a) pos = InfoMessages_drawstring(s, pos, mySize, a, fontsize)
+
 void HUD_InfoMessages()
 {
 	if(!autocvar__hud_configure)
@@ -34,60 +47,32 @@ void HUD_InfoMessages()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	// always force 5:1 aspect
-	vector newSize = '0 0 0';
-	if(mySize.x/mySize.y > 5)
-	{
-		newSize.x = 5 * mySize.y;
-		newSize.y = mySize.y;
-
-		pos.x = pos.x + (mySize.x - newSize.x) / 2;
-	}
-	else
-	{
-		newSize.y = 1/5 * mySize.x;
-		newSize.x = mySize.x;
-
-		pos.y = pos.y + (mySize.y - newSize.y) / 2;
-	}
-
-	mySize = newSize;
-	entity tm;
-	vector o;
-	o = pos;
-
-	vector fontsize;
-	fontsize = '0.20 0.20 0' * mySize.y;
-
-	float a;
-	a = panel_fg_alpha;
-
+	vector fontsize = '0.2 0.2 0' * mySize.y;
 	string s;
 	if(!autocvar__hud_configure)
 	{
 		if(spectatee_status)
 		{
-			a = 1;
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
 				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
 			else
 				s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
 			else
 				s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey("secondary fire", "+fire2"));
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 
 			if(gametype == MAPINFO_TYPE_LMS)
 			{
@@ -102,7 +87,7 @@ void HUD_InfoMessages()
 			}
 			else
 				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 		}
 
 		if (time < STAT(GAMESTARTTIME))
@@ -110,13 +95,13 @@ void HUD_InfoMessages()
 			//we need to ceil, otherwise the countdown would be off by .5 when using round()
 			float countdown = ceil(STAT(GAMESTARTTIME) - time);
 			s = sprintf(_("^1Game starts in ^3%d^1 seconds"), countdown);
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 		}
 
 		if(warmup_stage)
 		{
 			s = _("^2Currently in ^1warmup^2 stage!");
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 		}
 
 		string blinkcolor;
@@ -141,18 +126,18 @@ void HUD_InfoMessages()
 				else
 					s = _("^2Waiting for others to ready up...");
 			}
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 		}
 		else if(warmup_stage && !spectatee_status)
 		{
 			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
-			drawInfoMessage(s);
+			InfoMessage(s, panel_fg_alpha);
 		}
 
 		if(teamplay && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
 		{
 			float ts_min = 0, ts_max = 0;
-			tm = teams.sort_next;
+			entity tm = teams.sort_next;
 			if (tm)
 			{
 				for (; tm.sort_next; tm = tm.sort_next)
@@ -168,24 +153,18 @@ void HUD_InfoMessages()
 				{
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
-					if (tm)
-					if (tm.team != NUM_SPECTATOR)
-					if (tm.team_size == ts_max)
+					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
-					drawInfoMessage(s);
+					InfoMessage(s, panel_fg_alpha);
 				}
 			}
 		}
 	}
 	else
 	{
-		s = _("^7Press ^3ESC ^7to show HUD options.");
-		drawInfoMessage(s);
-		s = _("^3Doubleclick ^7a panel for panel-specific options.");
-		drawInfoMessage(s);
-		s = _("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and");
-		drawInfoMessage(s);
-		s = _("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments.");
-		drawInfoMessage(s);
+		InfoMessage(_("^7Press ^3ESC ^7to show HUD options."), panel_fg_alpha);
+		InfoMessage(_("^3Doubleclick ^7a panel for panel-specific options."), panel_fg_alpha);
+		InfoMessage(_("^3CTRL ^7to disable collision testing, ^3SHIFT ^7and"), panel_fg_alpha);
+		InfoMessage(_("^3ALT ^7+ ^3ARROW KEYS ^7for fine adjustments."), panel_fg_alpha);
 	}
 }
