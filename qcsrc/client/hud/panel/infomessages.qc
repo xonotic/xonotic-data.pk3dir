@@ -5,6 +5,30 @@
 
 // Info messages panel (#14)
 
+float autocvar_hud_panel_infomessages_group_fadetime = 0.4;
+float autocvar_hud_panel_infomessages_group_time = 6;
+const int IMG_COUNT = 1; // number of InfoMessage Groups
+float img_fade[IMG_COUNT];
+int img_id[IMG_COUNT];
+float img_time[IMG_COUNT];
+
+int img_select(int group_id, int msg_cnt)
+{
+	float fadetime = max(0.001, autocvar_hud_panel_infomessages_group_fadetime);
+	if(time > img_time[group_id])
+	{
+		img_fade[group_id] = max(0, img_fade[group_id] - frametime / fadetime);
+		if(!img_fade[group_id])
+		{
+			++img_id[group_id];
+			img_time[group_id] = floor(time) + autocvar_hud_panel_infomessages_group_time;
+		}
+	}
+	else
+		img_fade[group_id] = min(1, img_fade[group_id] + frametime / fadetime);
+	return img_id[group_id] % msg_cnt;
+}
+
 float stringwidth_colors(string s, vector theSize);
 vector InfoMessages_drawstring(string s, vector pos, vector sz, float a, vector fontsize)
 {
@@ -51,6 +75,7 @@ void HUD_InfoMessages()
 	string s;
 	if(!autocvar__hud_configure)
 	{
+		float img_group;
 		if(spectatee_status)
 		{
 			if(spectatee_status == -1)
@@ -59,20 +84,27 @@ void HUD_InfoMessages()
 				s = sprintf(_("^1Spectating: ^7%s"), entcs_GetName(current_player));
 			InfoMessage(s, panel_fg_alpha);
 
-			if(spectatee_status == -1)
-				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
-			else
-				s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
-			InfoMessage(s, panel_fg_alpha);
-
-			if(spectatee_status == -1)
-				s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
-			else
-				s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey("secondary fire", "+fire2"));
-			InfoMessage(s, panel_fg_alpha);
-
-			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
-			InfoMessage(s, panel_fg_alpha);
+			img_group = 0;
+			switch(img_select(img_group, 3))
+			{
+				default:
+				case 0:
+					if(spectatee_status == -1)
+						s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
+					else
+						s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
+					break;
+				case 1:
+					if(spectatee_status == -1)
+						s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
+					else
+						s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey("secondary fire", "+fire2"));
+					break;
+				case 2:
+					s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
+					break;
+			}
+			InfoMessage(s, img_fade[img_group] * panel_fg_alpha);
 
 			if(gametype == MAPINFO_TYPE_LMS)
 			{
