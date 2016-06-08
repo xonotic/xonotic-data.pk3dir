@@ -150,6 +150,8 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 	this.sv_entnum = myowner;
 	this.team = ReadByte() - 1;
 
+	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
+
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
 		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
@@ -158,7 +160,6 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 		remove(this);
 	}
 
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
 	return true;
 }
 #endif
