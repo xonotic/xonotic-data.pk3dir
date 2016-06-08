@@ -2219,7 +2219,7 @@ void PlayerPreThink ()
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
 				if (this.deadflag == DEAD_DYING) {
-					if ((this.respawn_flags & RESPAWN_FORCE) && !autocvar_g_respawn_delay_max) {
+					if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max)) {
 						this.deadflag = DEAD_RESPAWNING;
 					} else if (!button_pressed) {
 						this.deadflag = DEAD_DEAD;
@@ -2246,8 +2246,13 @@ void PlayerPreThink ()
 
 				if (this.respawn_flags & RESPAWN_SILENT)
 					STAT(RESPAWN_TIME, this) = 0;
-				else if ((this.respawn_flags & RESPAWN_FORCE) && autocvar_g_respawn_delay_max)
-					STAT(RESPAWN_TIME, this) = this.respawn_time_max;
+				else if ((this.respawn_flags & RESPAWN_FORCE) && this.respawn_time < this.respawn_time_max)
+				{
+					if (time < this.respawn_time)
+						STAT(RESPAWN_TIME, this) = this.respawn_time;
+					else if (this.deadflag != DEAD_RESPAWNING)
+						STAT(RESPAWN_TIME, this) = -this.respawn_time_max;
+				}
 				else
 					STAT(RESPAWN_TIME, this) = this.respawn_time;
 			}
