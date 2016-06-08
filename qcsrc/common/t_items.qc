@@ -1432,7 +1432,10 @@ void target_items_use(entity this, entity actor, entity trigger)
 		return;
 	if(IS_DEAD(actor))
 		return;
-	EXACTTRIGGER_TOUCH;
+	if(trigger.solid == SOLID_TRIGGER)
+	{
+		EXACTTRIGGER_TOUCH;
+	}
 
 	FOREACH_ENTITY_ENT(enemy, actor,
 	{
