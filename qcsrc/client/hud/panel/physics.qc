@@ -21,6 +21,10 @@ void HUD_Physics()
 
 	draw_beginBoldFont();
 
+	if (autocvar_hud_panel_physics_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{

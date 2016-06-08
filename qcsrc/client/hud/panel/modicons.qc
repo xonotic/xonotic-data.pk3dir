@@ -769,6 +769,10 @@ void HUD_ModIcons()
 	else
 		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
 
+	if (autocvar_hud_panel_modicons_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	if(mod_alpha)
 		HUD_Panel_DrawBg(mod_alpha);
 

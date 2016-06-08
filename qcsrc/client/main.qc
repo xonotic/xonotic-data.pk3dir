@@ -523,6 +523,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;
+		hud_dynamic_shake_factor = -1;
 	}
 	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 	{

@@ -357,6 +357,7 @@ void HUD_ItemsTime()
         }
     }
 
+    HUD_Scale_Enable();
     HUD_Panel_DrawBg(1);
 
     float row = 0, column = 0;

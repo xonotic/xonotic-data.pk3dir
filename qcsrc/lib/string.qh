@@ -4,7 +4,18 @@
 #include "sort.qh"
 #include "oo.qh"
 
-#ifndef SVQC
+#ifdef CSQC
+	float stringwidth_colors(string s, vector theSize)
+	{
+		return stringwidth_builtin(s, true, theSize);
+	}
+
+	float stringwidth_nocolors(string s, vector theSize)
+	{
+		return stringwidth_builtin(s, false, theSize);
+	}
+#endif
+#ifdef MENUQC
 	float stringwidth_colors(string s, vector theSize)
 	{
 		return stringwidth(s, true, theSize);
