@@ -160,14 +160,14 @@ string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define MSLE(Name,Fields) \
 	else if ( this.classname == #Name ) { \
 		if ( sf & MINIG_SF_CREATE ) { \
-			minigame_read_owner(); \
+			minigame_read_owner(this); \
 			this.entremove = msle_entremove_##Name; \
 		} \
 		minigame_ent = this.owner; \
 		Fields \
 	}
-void minigame_read_owner()
-{SELFPARAM();
+void minigame_read_owner(entity this)
+{
 	string owner_name = ReadString_Raw();
 	this.owner = world;
 	do
@@ -209,7 +209,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 		if ( sf & MINIG_SF_CREATE )
 		{
 			this.entremove = minigame_player_entremove;
-			minigame_read_owner();
+			minigame_read_owner(this);
 			float ent = ReadLong();
 			this.minigame_playerslot = ent;
 			LOG_DEBUG("Player: ",entcs_GetName(ent-1),"\n");

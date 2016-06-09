@@ -618,7 +618,7 @@ string nmm_turn_to_string(int turnflags)
 
 // Required function, handle client events
 int nmm_client_event(entity minigame, string event, ...)
-{SELFPARAM();
+{
 	if ( event == "activate" )
 	{
 		nmm_fromtile = world;
@@ -729,27 +729,29 @@ int nmm_client_event(entity minigame, string event, ...)
 	}
 	else if ( event == "network_receive" )
 	{
-		if ( self.classname == "minigame_board_piece" && ( ...(1,int) & MINIG_SF_UPDATE ) )
+		entity sent = ...(0,entity);
+
+		if ( sent.classname == "minigame_board_piece" && ( ...(1,int) & MINIG_SF_UPDATE ) )
 		{
 			entity e;
 			string tileid = "";
-			if ( self.minigame_flags & NMM_PIECE_BOARD )
-				tileid = minigame_tile_name(self.origin,7,7);
+			if ( sent.minigame_flags & NMM_PIECE_BOARD )
+				tileid = minigame_tile_name(sent.origin,7,7);
 			FOREACH_MINIGAME_ENTITY(e)
 			{
 				if ( e.classname == "minigame_nmm_tile" )
 				{
-					if ( e.nmm_tile_piece == self )
+					if ( e.nmm_tile_piece == sent )
 						e.nmm_tile_piece = world;
 					if ( e.netname == tileid )
-						e.nmm_tile_piece = self;
+						e.nmm_tile_piece = sent;
 				}
 			}
 		}
-		else if ( self.classname == "minigame" && ( ...(1,int) & MINIG_SF_UPDATE ) )
+		else if ( sent.classname == "minigame" && ( ...(1,int) & MINIG_SF_UPDATE ) )
 		{
-			self.message = nmm_turn_to_string(self.minigame_flags);
-			if ( self.minigame_flags & minigame_self.team )
+			sent.message = nmm_turn_to_string(sent.minigame_flags);
+			if ( sent.minigame_flags & minigame_self.team )
 				minigame_prompt();
 		}
 	}
