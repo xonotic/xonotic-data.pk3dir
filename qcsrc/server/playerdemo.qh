@@ -2,7 +2,7 @@
 
 void playerdemo_init(entity this);
 void playerdemo_shutdown(entity this);
-void playerdemo_write();
+void playerdemo_write(entity this);
 float playerdemo_read(entity this);
 
 void playerdemo_open_read(entity this, string f);

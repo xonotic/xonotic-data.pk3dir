@@ -2470,7 +2470,7 @@ void PlayerPostThink ()
 		WaypointSprite_UpdateHealth(this.waypointsprite_attachedforcarrier, '1 0 0' * v);
     }
 
-	playerdemo_write();
+	playerdemo_write(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

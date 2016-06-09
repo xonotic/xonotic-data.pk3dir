@@ -46,93 +46,93 @@ void playerdemo_open_write(entity this, string f)
 	LOG_INFO("playerdemo: ", this.netname, " writing to ", f, "\n");
 	LOG_INFO("WARNING: playerdemo file format is incomplete and not stable yet. DO NOT RELY ON IT!\n");
 }
-#define PLAYERDEMO_FIELD(func,t,f) func##t(f,#f);
-#define PLAYERDEMO_FIELDS(func) \
-	PLAYERDEMO_FIELD(func,originvector,origin) \
-	PLAYERDEMO_FIELD(func,vector,angles) \
-	PLAYERDEMO_FIELD(func,sizevector,mins) \
-	PLAYERDEMO_FIELD(func,sizevector,maxs) \
-	PLAYERDEMO_FIELD(func,vector,v_angle) \
-	PLAYERDEMO_FIELD(func,modelstring,model) \
-	PLAYERDEMO_FIELD(func,string,playermodel) \
-	PLAYERDEMO_FIELD(func,float,skin) \
-	PLAYERDEMO_FIELD(func,string,playerskin) \
-	PLAYERDEMO_FIELD(func,float,frame) \
-	PLAYERDEMO_FIELD(func,float,effects) \
-	/* PLAYERDEMO_FIELD(func,float,switchweapon) */ \
-	PLAYERDEMO_FIELD(func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
-	PLAYERDEMO_FIELD(func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
-	PLAYERDEMO_FIELD(func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
-	PLAYERDEMO_FIELD(func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
-	PLAYERDEMO_FIELD(func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
-	PLAYERDEMO_FIELD(func,float,flags) \
+#define PLAYERDEMO_FIELD(ent,func,t,f) func##t(ent,f,#f);
+#define PLAYERDEMO_FIELDS(ent,func) \
+	PLAYERDEMO_FIELD(ent,func,originvector,origin) \
+	PLAYERDEMO_FIELD(ent,func,vector,angles) \
+	PLAYERDEMO_FIELD(ent,func,sizevector,mins) \
+	PLAYERDEMO_FIELD(ent,func,sizevector,maxs) \
+	PLAYERDEMO_FIELD(ent,func,vector,v_angle) \
+	PLAYERDEMO_FIELD(ent,func,modelstring,model) \
+	PLAYERDEMO_FIELD(ent,func,string,playermodel) \
+	PLAYERDEMO_FIELD(ent,func,float,skin) \
+	PLAYERDEMO_FIELD(ent,func,string,playerskin) \
+	PLAYERDEMO_FIELD(ent,func,float,frame) \
+	PLAYERDEMO_FIELD(ent,func,float,effects) \
+	/* PLAYERDEMO_FIELD(ent,func,float,switchweapon) */ \
+	PLAYERDEMO_FIELD(ent,func,float,button0) /* TODO: PHYS_INPUT_BUTTON_ATCK */ \
+	PLAYERDEMO_FIELD(ent,func,float,button3) /* TODO: PHYS_INPUT_BUTTON_ATCK2 */ \
+	PLAYERDEMO_FIELD(ent,func,float,button5) /* TODO: PHYS_INPUT_BUTTON_CROUCH */ \
+	PLAYERDEMO_FIELD(ent,func,float,button6) /* TODO: PHYS_INPUT_BUTTON_HOOK */ \
+	PLAYERDEMO_FIELD(ent,func,float,buttonuse) /* TODO: PHYS_INPUT_BUTTON_USE */ \
+	PLAYERDEMO_FIELD(ent,func,float,flags) \
 	// end of list
 
-void playerdemo_write_originvector(.vector f, string name)
-{SELFPARAM();
-	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
+void playerdemo_write_originvector(entity this, .vector f, string name)
+{
+	fputs(this.playerdemo_fh, strcat(vtos(this.(f)), "\n"));
 }
-void playerdemo_write_sizevector(.vector f, string name)
-{SELFPARAM();
-	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
+void playerdemo_write_sizevector(entity this, .vector f, string name)
+{
+	fputs(this.playerdemo_fh, strcat(vtos(this.(f)), "\n"));
 }
-void playerdemo_write_vector(.vector f, string name)
-{SELFPARAM();
-	fputs(self.playerdemo_fh, strcat(vtos(self.(f)), "\n"));
+void playerdemo_write_vector(entity this, .vector f, string name)
+{
+	fputs(this.playerdemo_fh, strcat(vtos(this.(f)), "\n"));
 }
-void playerdemo_write_string(.string f, string name)
-{SELFPARAM();
-	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
+void playerdemo_write_string(entity this, .string f, string name)
+{
+	fputs(this.playerdemo_fh, strcat(this.(f), "\n"));
 }
-void playerdemo_write_modelstring(.string f, string name)
-{SELFPARAM();
-	fputs(self.playerdemo_fh, strcat(self.(f), "\n"));
+void playerdemo_write_modelstring(entity this, .string f, string name)
+{
+	fputs(this.playerdemo_fh, strcat(this.(f), "\n"));
 }
-void playerdemo_write_float(.float f, string name)
-{SELFPARAM();
-	fputs(self.playerdemo_fh, strcat(ftos(self.(f)), "\n"));
+void playerdemo_write_float(entity this, .float f, string name)
+{
+	fputs(this.playerdemo_fh, strcat(ftos(this.(f)), "\n"));
 }
-void playerdemo_write()
-{SELFPARAM();
+void playerdemo_write(entity this)
+{
 	if(this.playerdemo_mode != PLAYERDEMO_MODE_WRITING)
 		return;
 	fputs(this.playerdemo_fh, strcat(ftos(time - this.playerdemo_starttime), "\n"));
-	PLAYERDEMO_FIELDS(playerdemo_write_)
+	PLAYERDEMO_FIELDS(this, playerdemo_write_)
 }
-void playerdemo_read_originvector(.vector f, string name)
-{SELFPARAM();
-	setorigin(self, stov(fgets(self.playerdemo_fh)));
+void playerdemo_read_originvector(entity this, .vector f, string name)
+{
+	setorigin(this, stov(fgets(this.playerdemo_fh)));
 }
-void playerdemo_read_sizevector(.vector f, string name)
-{SELFPARAM();
-	self.(f) = stov(fgets(self.playerdemo_fh));
-	setsize(self, self.mins, self.maxs);
+void playerdemo_read_sizevector(entity this, .vector f, string name)
+{
+	this.(f) = stov(fgets(this.playerdemo_fh));
+	setsize(this, this.mins, this.maxs);
 }
-void playerdemo_read_vector(.vector f, string name)
-{SELFPARAM();
-	self.(f) = stov(fgets(self.playerdemo_fh));
+void playerdemo_read_vector(entity this, .vector f, string name)
+{
+	this.(f) = stov(fgets(this.playerdemo_fh));
 }
-void playerdemo_read_string(.string f, string name)
-{SELFPARAM();
-	string s = fgets(self.playerdemo_fh);
-	if (s != self.(f))
+void playerdemo_read_string(entity this, .string f, string name)
+{
+	string s = fgets(this.playerdemo_fh);
+	if (s != this.(f))
 	{
 		/*
-		if(self.f)
-			strunzone(self.f);
+		if(this.f)
+			strunzone(this.f);
 		*/
-		self.(f) = strzone(s);
+		this.(f) = strzone(s);
 	}
 }
-void playerdemo_read_modelstring(.string f, string name)
-{SELFPARAM();
-	string s = fgets(self.playerdemo_fh);
-	if (s != self.(f))
-		_setmodel(self, s);
+void playerdemo_read_modelstring(entity this, .string f, string name)
+{
+	string s = fgets(this.playerdemo_fh);
+	if (s != this.(f))
+		_setmodel(this, s);
 }
-void playerdemo_read_float(.float f, string name)
-{SELFPARAM();
-	self.(f) = stof(fgets(self.playerdemo_fh));
+void playerdemo_read_float(entity this, .float f, string name)
+{
+	this.(f) = stof(fgets(this.playerdemo_fh));
 }
 float playerdemo_read(entity this)
 {
@@ -144,7 +144,7 @@ float playerdemo_read(entity this)
 	t = time;
 	while(time >= this.playerdemo_time)
 	{
-		PLAYERDEMO_FIELDS(playerdemo_read_)
+		PLAYERDEMO_FIELDS(this, playerdemo_read_)
 		{
 			time = this.playerdemo_time;
 			WITHSELF(this, PlayerPreThink());
