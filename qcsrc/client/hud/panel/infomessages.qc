@@ -90,18 +90,18 @@ void HUD_InfoMessages()
 				default:
 				case 0:
 					if(spectatee_status == -1)
-						s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
+						s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey(_("primary fire"), "+fire"));
 					else
-						s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
+						s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
 					break;
 				case 1:
 					if(spectatee_status == -1)
-						s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
+						s = sprintf(_("^1Use ^3%s^1 or ^3%s^1 to change the speed"), getcommandkey(_("next weapon"), "weapnext"), getcommandkey(_("previous weapon"), "weapprev"));
 					else
-						s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey("secondary fire", "+fire2"));
+						s = sprintf(_("^1Press ^3%s^1 to observe"), getcommandkey(_("secondary fire"), "+fire2"));
 					break;
 				case 2:
-					s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
+					s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey(_("server info"), "+show_info"));
 					break;
 			}
 			InfoMessage(s, img_fade[img_group] * panel_fg_alpha);
@@ -115,10 +115,10 @@ void HUD_InfoMessages()
 				else if(sk.(scores[ps_primary]) > 0)
 					s = _("^1You have no more lives left");
 				else
-					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
+					s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
 			}
 			else
-				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey("jump", "+jump"));
+				s = sprintf(_("^1Press ^3%s^1 to join"), getcommandkey(_("jump"), "+jump"));
 			InfoMessage(s, panel_fg_alpha);
 		}
 
@@ -147,9 +147,9 @@ void HUD_InfoMessages()
 			if(ready_waiting_for_me)
 			{
 				if(warmup_stage)
-					s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey("ready", "ready"), blinkcolor);
+					s = sprintf(_("%sPress ^3%s%s to end warmup"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
 				else
-					s = sprintf(_("%sPress ^3%s%s once you are ready"), blinkcolor, getcommandkey("ready", "ready"), blinkcolor);
+					s = sprintf(_("%sPress ^3%s%s once you are ready"), blinkcolor, getcommandkey(_("ready"), "ready"), blinkcolor);
 			}
 			else
 			{
@@ -162,7 +162,7 @@ void HUD_InfoMessages()
 		}
 		else if(warmup_stage && !spectatee_status)
 		{
-			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey("ready", "ready"));
+			s = sprintf(_("^2Press ^3%s^2 to end warmup"), getcommandkey(_("ready"), "ready"));
 			InfoMessage(s, panel_fg_alpha);
 		}
 
@@ -186,7 +186,7 @@ void HUD_InfoMessages()
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm && tm.team != NUM_SPECTATOR && tm.team_size == ts_max)
-						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
+						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey(_("team menu"), "menu_showteamselect"), blinkcolor));
 					InfoMessage(s, panel_fg_alpha);
 				}
 			}
