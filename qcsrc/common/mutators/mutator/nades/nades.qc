@@ -865,7 +865,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
-	_nade.customizeentityforclient = func_null;
+	setcefc(_nade, func_null);
 	_nade.exteriormodeltoclient = world;
 	_nade.traileffectnum = 0;
 	_nade.teleportable = true;
@@ -930,8 +930,8 @@ MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 	nades_RemoveBonus(self);
 }
 
-float nade_customize()
-{SELFPARAM();
+float nade_customize(entity this)
+{
 	//if(IS_SPEC(other)) { return false; }
 	if(other == self.exteriormodeltoclient || (IS_SPEC(other) && other.enemy == self.exteriormodeltoclient))
 	{
@@ -962,7 +962,7 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	setmodel(n, MDL_PROJECTILE_NADE);
 	//setattachment(n, player, "bip01 l hand");
 	n.exteriormodeltoclient = player;
-	n.customizeentityforclient = nade_customize;
+	setcefc(n, nade_customize);
 	n.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(n.nade_type).m_projectile[false], player.team).eent_eff_name);
 	n.colormod = Nades_from(n.nade_type).m_color;
 	n.realowner = nowner;

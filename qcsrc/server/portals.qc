@@ -494,8 +494,8 @@ void Portal_Think(entity this)
 		Portal_Remove(this, 0);
 }
 
-float Portal_Customize()
-{SELFPARAM();
+float Portal_Customize(entity this)
+{
 	if(IS_SPEC(other))
 		other = other.enemy;
 	if(other == this.aiment)
@@ -638,7 +638,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.health = autocvar_g_balance_portal_health;
 	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
-	portal.customizeentityforclient = Portal_Customize;
+	setcefc(portal, Portal_Customize);
 
 	if(!Portal_FindSafeOrigin(portal))
 	{

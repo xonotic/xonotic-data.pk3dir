@@ -92,8 +92,8 @@ REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 	}
 }
 
-bool buffs_BuffModel_Customize()
-{SELFPARAM();
+bool buffs_BuffModel_Customize(entity this)
+{
 	entity player, myowner;
 	bool same_team;
 
@@ -132,7 +132,7 @@ void buffs_BuffModel_Spawn(entity player)
 	player.buff_model.scale = 0.7;
 	player.buff_model.pflags = PFLAGS_FULLDYNAMIC;
 	player.buff_model.light_lev = 200;
-	player.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
+	setcefc(player.buff_model, buffs_BuffModel_Customize);
 }
 
 vector buff_GlowColor(entity buff)
@@ -389,8 +389,8 @@ void buff_Reset(entity this)
 		buff_Respawn(this);
 }
 
-float buff_Customize()
-{SELFPARAM();
+float buff_Customize(entity this)
+{
 	entity player = WaypointSprite_getviewentity(other);
 	if(!this.buff_active || (this.team && DIFF_TEAM(player, this)))
 	{
@@ -432,7 +432,7 @@ void buff_Init(entity this)
 	this.skin = buff.m_skin;
 	this.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
-	this.customizeentityforclient = buff_Customize;
+	setcefc(this, buff_Customize);
 	//this.gravity = 100;
 	this.color = buff.m_color;
 	this.glowmod = buff_GlowColor(this);

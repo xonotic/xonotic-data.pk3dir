@@ -162,8 +162,8 @@ void FixSize(entity e);
 // CaptureShield Functions
 // =======================
 
-bool ons_CaptureShield_Customize()
-{SELFPARAM();
+bool ons_CaptureShield_Customize(entity this)
+{
 	entity e = WaypointSprite_getviewentity(other);
 
 	if(!self.enemy.isshielded && (ons_ControlPoint_Attackable(self.enemy, e.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return false; }
@@ -209,7 +209,7 @@ void ons_CaptureShield_Spawn(entity generator, bool is_generator)
 	shield.colormap = generator.colormap;
 	shield.reset = ons_CaptureShield_Reset;
 	settouch(shield, ons_CaptureShield_Touch);
-	shield.customizeentityforclient = ons_CaptureShield_Customize;
+	setcefc(shield, ons_CaptureShield_Customize);
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
 	shield.solid = SOLID_TRIGGER;

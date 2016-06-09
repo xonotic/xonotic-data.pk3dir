@@ -609,8 +609,8 @@ spawnfunc(nexball_football)
 	SpawnBall(this);
 }
 
-float nb_Goal_Customize()
-{SELFPARAM();
+float nb_Goal_Customize(entity this)
+{
 	entity e, wp_owner;
 	e = WaypointSprite_getviewentity(other);
 	wp_owner = self.owner;
@@ -629,7 +629,7 @@ void SpawnGoal(entity this)
 	{
 		entity wp = WaypointSprite_SpawnFixed(WP_NbGoal, (this.absmin + this.absmax) * 0.5, this, sprite, RADARICON_NONE);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0.5 0');
-		this.sprite.customizeentityforclient = nb_Goal_Customize;
+		setcefc(this.sprite, nb_Goal_Customize);
 	}
 
 	this.classname = "nexball_goal";
@@ -838,13 +838,13 @@ void W_Nexball_Attack2(entity actor)
 	CSQCProjectile(missile, true, PROJECTILE_ELECTRO, true);
 }
 
-float ball_customize()
-{SELFPARAM();
+float ball_customize(entity this)
+{
 	if(!self.owner)
 	{
 		self.effects &= ~EF_FLAME;
 		self.scale = 1;
-		self.customizeentityforclient = func_null;
+		setcefc(self, func_null);
 		return true;
 	}
 
@@ -948,7 +948,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 		{
 			// 'view ball'
 			self.ballcarried.velocity = self.velocity;
-			self.ballcarried.customizeentityforclient = ball_customize;
+			setcefc(self.ballcarried, ball_customize);
 
 			vector org = self.origin + self.view_ofs +
 					  v_forward * autocvar_g_nexball_viewmodel_offset.x +

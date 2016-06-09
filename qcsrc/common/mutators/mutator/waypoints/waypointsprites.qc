@@ -963,8 +963,8 @@ float WaypointSprite_isteammate(entity e, entity e2)
     return e2 == e;
 }
 
-float WaypointSprite_Customize()
-{SELFPARAM();
+float WaypointSprite_Customize(entity this)
+{
     // this is not in SendEntity because it shall run every frame, not just every update
 
     // make spectators see what the player would see
@@ -1022,7 +1022,7 @@ entity WaypointSprite_Spawn(
     setthink(wp, WaypointSprite_Think);
     wp.nextthink = time;
     wp.model1 = spr.netname;
-    wp.customizeentityforclient = WaypointSprite_Customize;
+    setcefc(wp, WaypointSprite_Customize);
     wp.waypointsprite_visible_for_player = WaypointSprite_visible_for_player;
     wp.reset2 = WaypointSprite_Reset;
     wp.cnt = icon.m_id;

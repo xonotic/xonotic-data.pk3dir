@@ -366,4 +366,3 @@ entity initialize_entity_first;
 
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(entity this) func, float order);
-void SetCustomizer(entity e, float() customizer, void() uncustomizer);

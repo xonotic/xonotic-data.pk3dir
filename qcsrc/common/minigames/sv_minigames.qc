@@ -112,8 +112,8 @@ void minigame_resend(entity minigame)
 	}
 }
 
-bool minigame_CheckSend()
-{SELFPARAM();
+bool minigame_CheckSend(entity this)
+{
 	entity e;
 	for ( e = self.owner.minigame_players; e != world; e = e.list_next )
 		if ( e.minigame_players == other )
@@ -141,7 +141,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
 		player.minigame_players = player_pointer;
-		player_pointer.customizeentityforclient = minigame_CheckSend;
+		setcefc(player_pointer, minigame_CheckSend);
 		Net_LinkEntity(player_pointer, false, 0, minigame_SendEntity);
 
 		if ( !IS_OBSERVER(player) && autocvar_sv_minigames_observer )

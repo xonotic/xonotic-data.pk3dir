@@ -40,9 +40,8 @@ float W_WeaponSpeedFactor()
 }
 
 
-bool CL_Weaponentity_CustomizeEntityForClient()
+bool CL_Weaponentity_CustomizeEntityForClient(entity this)
 {
-	SELFPARAM();
 	this.viewmodelforclient = this.owner;
 	if (IS_SPEC(other) && other.enemy == this.owner) this.viewmodelforclient = other;
 	return true;
@@ -169,7 +168,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	setthink(view, CL_Weaponentity_Think);
 	view.nextthink = time;
 	view.viewmodelforclient = actor;
-	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	setcefc(view, CL_Weaponentity_CustomizeEntityForClient);
 
 	if (weaponentity == weaponentities[0])
 	{

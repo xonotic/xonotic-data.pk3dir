@@ -95,7 +95,7 @@ void CopyBody(entity this, float keepvelocity)
 	clone.solid = this.solid;
 	clone.ballistics_density = this.ballistics_density;
 	clone.takedamage = this.takedamage;
-	clone.customizeentityforclient = this.customizeentityforclient;
+	setcefc(clone, getcefc(this));
 	clone.uncustomizeentityforclient = this.uncustomizeentityforclient;
 	clone.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
 	if (keepvelocity == 1)

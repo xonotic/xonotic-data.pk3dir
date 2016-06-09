@@ -278,8 +278,8 @@ void ctf_CaptureShield_Update(entity player, bool wanted_status)
 	}
 }
 
-bool ctf_CaptureShield_Customize()
-{SELFPARAM();
+bool ctf_CaptureShield_Customize(entity this)
+{
 	if(!other.ctf_captureshielded) { return false; }
 	if(CTF_SAMETEAM(self, other)) { return false; }
 
@@ -305,7 +305,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 	shield.enemy = self;
 	shield.team = self.team;
 	settouch(shield, ctf_CaptureShield_Touch);
-	shield.customizeentityforclient = ctf_CaptureShield_Customize;
+	setcefc(shield, ctf_CaptureShield_Customize);
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
 	shield.solid = SOLID_TRIGGER;
@@ -747,8 +747,8 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 	}
 }
 
-bool ctf_Stalemate_Customize()
-{SELFPARAM();
+bool ctf_Stalemate_Customize(entity this)
+{
 	// make spectators see what the player would see
 	entity e, wp_owner;
 	e = WaypointSprite_getviewentity(other);
@@ -814,7 +814,7 @@ void ctf_CheckStalemate()
 			{
 				entity wp = WaypointSprite_Spawn(((ctf_oneflag) ? WP_FlagCarrier : WP_FlagCarrierEnemy), 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, true, RADARICON_FLAG);
 				wp.colormod = WPCOLOR_ENEMYFC(tmp_entity.owner.team);
-				tmp_entity.owner.wps_enemyflagcarrier.customizeentityforclient = ctf_Stalemate_Customize;
+				setcefc(tmp_entity.owner.wps_enemyflagcarrier, ctf_Stalemate_Customize);
 			}
 		}
 

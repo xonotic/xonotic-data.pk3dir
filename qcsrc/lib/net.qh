@@ -136,9 +136,9 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	.void() uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
-	void SetCustomizer(entity e, float() customizer, void() uncustomizer)
+	void SetCustomizer(entity e, bool(entity this) customizer, void() uncustomizer)
 	{
-		e.customizeentityforclient = customizer;
+		setcefc(e, customizer);
 		e.uncustomizeentityforclient = uncustomizer;
 		e.uncustomizeentityforclient_set = !!uncustomizer;
 	}

@@ -72,6 +72,10 @@ SELFWRAP(touch, void, (entity this), (this))
 SELFWRAP(predraw, void, (entity this), (this))
 #define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
 
+SELFWRAP(customizeentityforclient, bool, (entity this), (this))
+#define setcefc(e, f) SELFWRAP_SET(customizeentityforclient, e, f)
+#define getcefc(e) SELFWRAP_GET(customizeentityforclient, e)
+
 #ifndef MENUQC
 void adaptor_think2touch(entity this) { WITH(entity, other, NULL, gettouch(this)(this)); }
 void adaptor_think2use(entity this) { if (this.use) this.use(this, NULL, NULL); }

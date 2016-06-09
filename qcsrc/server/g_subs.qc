@@ -234,8 +234,8 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-float LOD_customize()
-{SELFPARAM();
+float LOD_customize(entity this)
+{
 	if(autocvar_loddebug)
 	{
 		int d = autocvar_loddebug;
