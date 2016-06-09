@@ -355,7 +355,7 @@ void dom_controlpoint_setup(entity this)
 	self.flags = FL_ITEM;
 	setsize(self, '-32 -32 -32', '32 32 32');
 	setorigin(self, self.origin + '0 0 20');
-	droptofloor();
+	droptofloor(self);
 
 	waypoint_spawnforitem(self);
 	WaypointSprite_SpawnFixed(WP_DomNeut, self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT);

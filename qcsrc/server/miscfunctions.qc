@@ -210,8 +210,8 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string formatmessage(string msg)
-{SELFPARAM();
+string formatmessage(entity this, string msg)
+{
 	float p, p1, p2;
 	float n;
 	vector cursor;
@@ -223,12 +223,12 @@ string formatmessage(string msg)
 	n = 7;
 
 	ammoitems = "batteries";
-	if(self.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
-	if(self.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
-	if(self.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
-	if(self.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
+	if(this.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
+	if(this.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
+	if(this.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
+	if(this.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
 
-	WarpZone_crosshair_trace(self);
+	WarpZone_crosshair_trace(this);
 	cursor = trace_endpos;
 	cursor_ent = trace_ent;
 
@@ -259,21 +259,21 @@ string formatmessage(string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(self.armorvalue)); break;
-			case "h": replacement = ftos(floor(self.health)); break;
-			case "l": replacement = NearestLocation(self.origin); break;
+			case "a": replacement = ftos(floor(this.armorvalue)); break;
+			case "h": replacement = ftos(floor(this.health)); break;
+			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
-			case "d": replacement = NearestLocation(self.death_origin); break;
-			case "w": replacement = ((PS(self).m_weapon == WEP_Null) ? ((PS(self).m_switchweapon == WEP_Null) ? Weapons_from(self.cnt) : PS(self).m_switchweapon) : PS(self).m_weapon).m_name; break;
+			case "d": replacement = NearestLocation(this.death_origin); break;
+			case "w": replacement = ((PS(this).m_weapon == WEP_Null) ? ((PS(this).m_switchweapon == WEP_Null) ? Weapons_from(this.cnt) : PS(this).m_switchweapon) : PS(this).m_weapon).m_name; break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
-			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
-			case "S": replacement = ftos(vlen(self.velocity)); break;
+			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(this.velocity)); break;
 			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
 			case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
 			default:
 			{
-				MUTATOR_CALLHOOK(FormatMessage, escape, replacement, msg);
+				MUTATOR_CALLHOOK(FormatMessage, this, escape, replacement, msg);
 				escape = format_escape;
 				replacement = format_replacement;
 				break;
@@ -970,13 +970,13 @@ void adaptor_think2use_hittype_splash(entity this) // for timed projectile deton
 // deferred dropping
 void DropToFloor_Handler(entity this)
 {
-    builtin_droptofloor();
-    self.dropped_origin = self.origin;
+    WITHSELF(this, builtin_droptofloor());
+    this.dropped_origin = this.origin;
 }
 
-void droptofloor()
-{SELFPARAM();
-    InitializeEntity(self, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
+void droptofloor(entity this)
+{
+    InitializeEntity(this, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
 }
 
 
@@ -1030,8 +1030,8 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
     return trace_hits_box(start, end, thmi - ma, thma - mi);
 }
 
-float SUB_NoImpactCheck()
-{SELFPARAM();
+bool SUB_NoImpactCheck(entity this, entity toucher)
+{
 	// zero hitcontents = this is not the real impact, but either the
 	// mirror-impact of something hitting the projectile instead of the
 	// projectile hitting the something, or a touchareagrid one. Neither of
@@ -1039,17 +1039,17 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(self), self.classname, vtos(self.origin));
-		checkclient();
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
+		WITHSELF(this, checkclient());
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        return 1;
-    if (other == world && self.size != '0 0 0')
+        return true;
+    if (toucher == world && this.size != '0 0 0')
     {
         vector tic;
-        tic = self.velocity * sys_frametime;
-        tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
-        traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
+        tic = this.velocity * sys_frametime;
+        tic = tic + normalize(tic) * vlen(this.maxs - this.mins);
+        traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
         if (trace_fraction >= 1)
         {
             LOG_TRACE("Odd... did not hit...?\n");
@@ -1057,37 +1057,37 @@ float SUB_NoImpactCheck()
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         {
             LOG_TRACE("Detected and prevented the sky-grapple bug.\n");
-            return 1;
+            return true;
         }
     }
 
-    return 0;
+    return false;
 }
 
-#define SUB_OwnerCheck() (other && (other == self.owner))
+#define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
 void W_Crylink_Dequeue(entity e);
-float WarpZone_Projectile_Touch_ImpactFilter_Callback()
-{SELFPARAM();
-	if(SUB_OwnerCheck())
+bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
+{
+	if(SUB_OwnerCheck(this, toucher))
 		return true;
-	if(SUB_NoImpactCheck())
+	if(SUB_NoImpactCheck(this, toucher))
 	{
-		if(self.classname == "nade")
+		if(this.classname == "nade")
 			return false; // no checks here
-		else if(self.classname == "grapplinghook")
-			RemoveGrapplingHook(self.realowner);
-		else if(self.classname == "spike")
+		else if(this.classname == "grapplinghook")
+			RemoveGrapplingHook(this.realowner);
+		else if(this.classname == "spike")
 		{
-			W_Crylink_Dequeue(self);
-			remove(self);
+			W_Crylink_Dequeue(this);
+			remove(this);
 		}
 		else
-			remove(self);
+			remove(this);
 		return true;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
-		UpdateCSQCProjectile(self);
+		UpdateCSQCProjectile(this);
 	return false;
 }
 

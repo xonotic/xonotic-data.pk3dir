@@ -497,7 +497,7 @@ float WarpZone_Projectile_Touch(entity this)
 	}
 #endif
 
-	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
+	if(WarpZone_Projectile_Touch_ImpactFilter_Callback(this, other))
 		return true;
 #endif
 

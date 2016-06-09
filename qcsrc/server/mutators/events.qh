@@ -115,6 +115,7 @@ MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
 
 /** called when formatting a chat message to replace fancy functions */
 #define EV_FormatMessage(i, o) \
+    /**/ i(entity, __self) \
     /**/ i(string, format_escape) \
     /**/ i(string, format_replacement) \
     /**/ o(string, format_replacement) \

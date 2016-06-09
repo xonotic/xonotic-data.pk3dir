@@ -1131,7 +1131,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				WITHSELF(this, droptofloor());
+				droptofloor(this);
 			waypoint_spawnforitem(this);
 		}
 

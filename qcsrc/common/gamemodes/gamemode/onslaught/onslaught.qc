@@ -889,7 +889,7 @@ void ons_ControlPoint_Setup(entity cp)
 	{
 		setorigin(cp, cp.origin + '0 0 20');
 		cp.noalign = false;
-		WITHSELF(cp, droptofloor());
+		droptofloor(cp);
 		cp.movetype = MOVETYPE_TOSS;
 	}
 
@@ -1126,7 +1126,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.colormap = 1024 + (teamnumber - 1) * 17;
 
 	// generator placement
-	WITHSELF(gen, droptofloor());
+	droptofloor(gen);
 
 	// waypointsprites
 	WaypointSprite_SpawnFixed(WP_Null, gen.origin + CPGEN_WAYPOINT_OFFSET, gen, sprite, RADARICON_NONE);

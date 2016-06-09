@@ -56,7 +56,7 @@ void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
 
 void objerror(string s);
-void droptofloor();
+void droptofloor(entity this);
 
 void attach_sameorigin(entity e, entity to, string tag);
 
@@ -68,7 +68,7 @@ void detach_sameorigin(entity e);
 
 void follow_sameorigin(entity e, entity to);
 
-string formatmessage(string msg);
+string formatmessage(entity this, string msg);
 
 void GameLogEcho(string s);
 

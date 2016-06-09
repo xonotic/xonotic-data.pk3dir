@@ -119,7 +119,7 @@ void spawn_item_key(entity this)
 		// first nudge it off the floor a little bit to avoid math errors
 		setorigin(this, this.origin + '0 0 1');
 		// note droptofloor returns false if stuck/or would fall too far
-		WITHSELF(this, droptofloor());
+		droptofloor(this);
 	}
 
 	settouch(this, item_key_touch);
