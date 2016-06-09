@@ -4,6 +4,7 @@ float autocvar_g_infection_round_timelimit;
 float autocvar_g_infection_warmup;
 int autocvar_g_infection_teams;
 bool autocvar_g_infection_conversions;
+bool autocvar_g_infection_mutany;
 
 int infection_players_count;
 
@@ -184,8 +185,29 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	frag_score = 0;
 	infection_GetColorOwner(frag_attacker);
+	// Check whether this was an act of mutany
+	if (autocvar_g_infection_mutany
+	    && infection_IsAlpha(frag_target)
+	    && INF_SAMETEAM(frag_attacker, frag_target))
+    {
+        // Mutany! Tell others about this act of shame!
+        FOREACH_CLIENT(IS_PLAYER(it) && INF_SAMETEAM(it, frag_target), {
+            centerprint(it, sprintf("^1MUTANY! Your alpha ^7%s^1 was killed by his own follower ^7%s^1!\n^7%s^1 is now your new alpha!",
+                frag_target.netname, frag_attacker.netname, frag_attacker.netname));
+        });
+
+        centerprint(frag_attacker, sprintf("^2You became alpha of your team!"));
+        centerprint(frag_target, sprintf("^7%s^1 mutanied against you!", frag_attacker.netname));
+
+        frag_attacker.infectioncolor_original = frag_target.infectioncolor_original;
+        frag_target.infectioncolor_original = INFECTIONTEAM_NONE;
+
+        frag_score = -2;
+        return true;
+	}
+
 	// If this is the first time we die... (our infectioncolor remained unchanged)
-	if (autocvar_g_infection_conversions && frag_target.infectioncolor == frag_target.infectioncolor_original)
+	if (autocvar_g_infection_conversions && infection_IsAlpha(frag_target))
 	{
 	    // check other players and see if they have our original infection color
 		FOREACH_CLIENT(IS_PLAYER(it) && INF_SAMETEAM(it, frag_target), {
@@ -196,6 +218,8 @@ MUTATOR_HOOKFUNCTION(inf, GiveFragsForKill, CBC_ORDER_FIRST)
             infection_SetColor(it, frag_attacker.infectioncolor);
             frag_score++;
 		});
+
+		frag_target.infectioncolor_original = INFECTIONTEAM_NONE;
 	}
 	else
 	{
@@ -234,8 +258,10 @@ MUTATOR_HOOKFUNCTION(inf, PlayerDamage_Calculate)
 	    && INF_SAMETEAM(frag_attacker, frag_target) // Block friendly fire
 	   )
 	{
-		frag_damage = 0;
-		frag_force = '0 0 0';
+	    if(!infection_IsAlpha(frag_target) || (infection_IsAlpha(frag_target) && !autocvar_g_infection_mutany) ){
+		    frag_damage = 0;
+		    frag_force = '0 0 0';
+		}
 	}
 	return false;
 }
