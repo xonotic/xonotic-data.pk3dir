@@ -294,55 +294,55 @@ Called with:
   0:  sends the request
   >0: receives a cvar from name=argv(f) value=argv(f+1)
 */
-void GetCvars_handleString(string thisname, float f, .string field, string name)
-{SELFPARAM();
+void GetCvars_handleString(entity this, string thisname, float f, .string field, string name)
+{
 	if (f < 0)
 	{
-		if (self.(field))
-			strunzone(self.(field));
-		self.(field) = string_null;
+		if (this.(field))
+			strunzone(this.(field));
+		this.(field) = string_null;
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (self.(field))
-				strunzone(self.(field));
-			self.(field) = strzone(argv(f + 1));
+			if (this.(field))
+				strunzone(this.(field));
+			this.(field) = strzone(argv(f + 1));
 		}
 	}
 	else
-		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
+		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleString_Fixup(string thisname, float f, .string field, string name, string(string) func)
-{SELFPARAM();
-	GetCvars_handleString(thisname, f, field, name);
+void GetCvars_handleString_Fixup(entity this, string thisname, float f, .string field, string name, string(entity, string) func)
+{
+	GetCvars_handleString(this, thisname, f, field, name);
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s = func(strcat1(self.(field)));
-			if (s != self.(field))
+			string s = func(this, strcat1(this.(field)));
+			if (s != this.(field))
 			{
-				strunzone(self.(field));
-				self.(field) = strzone(s);
+				strunzone(this.(field));
+				this.(field) = strzone(s);
 			}
 		}
 }
-void GetCvars_handleFloat(string thisname, float f, .float field, string name)
-{SELFPARAM();
+void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name)
+{
 	if (f < 0)
 	{
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
-			self.(field) = stof(argv(f + 1));
+			this.(field) = stof(argv(f + 1));
 	}
 	else
-		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
+		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleFloatOnce(string thisname, float f, .float field, string name)
-{SELFPARAM();
+void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float field, string name)
+{
 	if (f < 0)
 	{
 	}
@@ -350,30 +350,30 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	{
 		if (thisname == name)
 		{
-			if (!self.(field))
+			if (!this.(field))
 			{
-				self.(field) = stof(argv(f + 1));
-				if (!self.(field))
-					self.(field) = -1;
+				this.(field) = stof(argv(f + 1));
+				if (!this.(field))
+					this.(field) = -1;
 			}
 		}
 	}
 	else
 	{
-		if (!self.(field))
-			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
+		if (!this.(field))
+			stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
-{SELFPARAM();
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
+{
 	string o;
 	o = W_FixWeaponOrder_ForceComplete(wo);
-	if(self.weaponorder_byimpulse)
+	if(this.weaponorder_byimpulse)
 	{
-		strunzone(self.weaponorder_byimpulse);
-		self.weaponorder_byimpulse = string_null;
+		strunzone(this.weaponorder_byimpulse);
+		this.weaponorder_byimpulse = string_null;
 	}
-	self.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
+	this.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 
@@ -421,23 +421,23 @@ void GetCvars(entity this, int f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 
-	Notification_GetCvars();
+	Notification_GetCvars(this);
 
 	ReplicateVars(this, s, f);
 
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 
-	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
