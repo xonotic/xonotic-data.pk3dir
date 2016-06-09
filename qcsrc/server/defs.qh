@@ -440,5 +440,5 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .string cvar_cl_physics;
 
-.float init_for_player_needed;
-.void(entity) init_for_player;
+.bool init_for_player_needed;
+.void(entity this, entity player) init_for_player;

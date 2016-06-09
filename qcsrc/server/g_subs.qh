@@ -15,7 +15,7 @@ Applies some friction to self
 ==================
 */
 .float friction;
-void SUB_Friction ();
+void SUB_Friction (entity this);
 
 /*
 ==================
@@ -54,9 +54,9 @@ void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector co
 
 void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest);
 
-void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
 
-void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void(entity this) func);
+void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
 
@@ -73,7 +73,7 @@ The calling function should make sure self.think is valid
 void SUB_CalcAngleMoveDone (entity this);
 
 // FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void(entity this) func);
+void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
 

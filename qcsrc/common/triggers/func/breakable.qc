@@ -164,12 +164,12 @@ void func_breakable_behave_restore(entity this)
 		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 }
 
-void func_breakable_init_for_player(entity player)
-{SELFPARAM();
-	if (self.noise1 && self.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
+void func_breakable_init_for_player(entity this, entity player)
+{
+	if (this.noise1 && this.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	}
 }
 

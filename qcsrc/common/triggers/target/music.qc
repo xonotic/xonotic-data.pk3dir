@@ -261,8 +261,8 @@ void Ent_TriggerMusic_Think(entity this)
 	self.nextthink = time;
 }
 
-void Ent_TriggerMusic_Remove()
-{SELFPARAM();
+void Ent_TriggerMusic_Remove(entity this)
+{
 	if(self.noise)
 		strunzone(self.noise);
 	self.noise = string_null;

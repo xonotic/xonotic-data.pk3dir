@@ -21,13 +21,13 @@ float target_spawn_spawnfunc_field;
 .float target_spawn_id;
 float target_spawn_count;
 
-void target_spawn_helper_setmodel()
-{SELFPARAM();
+void target_spawn_helper_setmodel(entity this)
+{
 	_setmodel(self, self.model);
 }
 
-void target_spawn_helper_setsize()
-{SELFPARAM();
+void target_spawn_helper_setsize(entity this)
+{
 	setsize(self, self.mins, self.maxs);
 }
 

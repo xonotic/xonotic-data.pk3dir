@@ -8,8 +8,8 @@
 
 #ifdef SVQC
 
-void secrets_setstatus()
-{SELFPARAM();
+void secrets_setstatus(entity this)
+{
 	this.stat_secrets_total = secrets_total;
 	this.stat_secrets_found = secrets_found;
 }

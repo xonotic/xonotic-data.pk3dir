@@ -8,7 +8,7 @@
 .float move_ltime;
 .void(entity this) move_think;
 .float move_nextthink;
-.void()move_blocked;
+.void() move_blocked;
 
 .float move_movetype;
 .float move_time;

@@ -80,10 +80,9 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	makevectors (to_angles);
 
 #ifdef SVQC
-    SELFPARAM();
 	if(player.teleportable == TELEPORT_NORMAL) // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
 	{
-		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
+		if(teleporter.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
 			{
@@ -104,7 +103,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
 				Send_Effect(EFFECT_TELEPORT, to + v_forward * 32, '0 0 0', 1);
 			}
-			self.pushltime = time + 0.2;
+			teleporter.pushltime = time + 0.2;
 		}
 	}
 #endif

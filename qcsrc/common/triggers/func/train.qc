@@ -27,9 +27,9 @@ void train_wait(entity this)
 		ang_x = -ang_x; // flip up / down orientation
 
 		if(self.wait > 0) // slow turning
-			SUB_CalcAngleMove(ang, TSPEED_TIME, self.SUB_LTIME - time + self.wait, train_wait);
+			SUB_CalcAngleMove(self, ang, TSPEED_TIME, self.SUB_LTIME - time + self.wait, train_wait);
 		else // instant turning
-			SUB_CalcAngleMove(ang, TSPEED_TIME, 0.0000001, train_wait);
+			SUB_CalcAngleMove(self, ang, TSPEED_TIME, 0.0000001, train_wait);
 		self.train_wait_turning = true;
 		return;
 	}
@@ -98,16 +98,16 @@ void train_next(entity this)
 	if (targ.speed)
 	{
 		if (cp)
-			SUB_CalcMove_Bezier(cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
+			SUB_CalcMove_Bezier(self, cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
 		else
-			SUB_CalcMove(targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
+			SUB_CalcMove(self, targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
 	}
 	else
 	{
 		if (cp)
-			SUB_CalcMove_Bezier(cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
+			SUB_CalcMove_Bezier(self, cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
 		else
-			SUB_CalcMove(targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
+			SUB_CalcMove(self, targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
 	}
 
 	if(self.noise != "")
@@ -117,8 +117,8 @@ void train_next(entity this)
 REGISTER_NET_LINKED(ENT_CLIENT_TRAIN)
 
 #ifdef SVQC
-float train_send(entity to, float sf)
-{SELFPARAM();
+float train_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRAIN);
 	WriteByte(MSG_ENTITY, sf);
 

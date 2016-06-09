@@ -270,7 +270,7 @@ void trigger_push_touch(entity this)
 }
 
 #ifdef SVQC
-void trigger_push_link();
+void trigger_push_link(entity this);
 void trigger_push_updatelink(entity this);
 #endif
 void trigger_push_findtarget(entity this)
@@ -331,7 +331,7 @@ void trigger_push_findtarget(entity this)
 		remove(e);
 	}
 
-	trigger_push_link();
+	trigger_push_link(this);
 	defer(this, 0.1, trigger_push_updatelink);
 #endif
 }
@@ -356,9 +356,8 @@ void trigger_push_updatelink(entity this)
 	this.SendFlags |= 1;
 }
 
-void trigger_push_link()
+void trigger_push_link(entity this)
 {
-    SELFPARAM();
 	trigger_link(this, trigger_push_send);
 }
 

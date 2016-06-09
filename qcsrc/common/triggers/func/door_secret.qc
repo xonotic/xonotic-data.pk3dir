@@ -58,7 +58,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		this.dest1 = this.origin + v_right * (this.t_width * temp);
 
 	this.dest2 = this.dest1 + v_forward * this.t_length;
-	WITHSELF(this, SUB_CalcMove(this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1));
+	WITHSELF(this, SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1));
 	if (this.noise2 != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
 }
@@ -82,7 +82,7 @@ void fd_secret_move2(entity this)
 {
 	if (self.noise2 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.dest2, TSPEED_LINEAR, self.speed, fd_secret_move3);
+	SUB_CalcMove(self, self.dest2, TSPEED_LINEAR, self.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
@@ -102,7 +102,7 @@ void fd_secret_move4(entity this)
 {
 	if (self.noise2 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move5);
+	SUB_CalcMove(self, self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move5);
 }
 
 // Wait 1 second...
@@ -118,7 +118,7 @@ void fd_secret_move6(entity this)
 {
 	if (self.noise2 != "")
 		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.oldorigin, TSPEED_LINEAR, self.speed, fd_secret_done);
+	SUB_CalcMove(self, self.oldorigin, TSPEED_LINEAR, self.speed, fd_secret_done);
 }
 
 void fd_secret_done(entity this)

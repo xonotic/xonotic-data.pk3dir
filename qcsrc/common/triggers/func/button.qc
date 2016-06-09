@@ -21,7 +21,7 @@ void button_done(entity this)
 void button_return(entity this)
 {
 	self.state = STATE_DOWN;
-	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, button_done);
+	SUB_CalcMove (self, self.pos1, TSPEED_LINEAR, self.speed, button_done);
 	self.frame = 0;			// use normal textures
 	if (self.health)
 		self.takedamage = DAMAGE_YES;	// can be shot again
@@ -34,8 +34,8 @@ void button_blocked()
 }
 
 
-void button_fire()
-{SELFPARAM();
+void button_fire(entity this)
+{
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;    // will be reset upon return
 
@@ -46,7 +46,7 @@ void button_fire()
 		_sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 	self.state = STATE_UP;
-	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, button_wait);
+	SUB_CalcMove (self, self.pos2, TSPEED_LINEAR, self.speed, button_wait);
 }
 
 void button_reset(entity this)
@@ -65,7 +65,7 @@ void button_use(entity this, entity actor, entity trigger)
 		return;
 
 	this.enemy = actor;
-	WITHSELF(this, button_fire());
+	WITHSELF(this, button_fire(this));
 }
 
 void button_touch(entity this)
@@ -79,7 +79,7 @@ void button_touch(entity this)
 	self.enemy = other;
 	if (other.owner)
 		self.enemy = other.owner;
-	button_fire ();
+	button_fire (self);
 }
 
 void button_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -91,7 +91,7 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (this.health <= 0)
 	{
 		this.enemy = damage_attacker;
-		WITHSELF(this, button_fire());
+		WITHSELF(this, button_fire(this));
 	}
 }
 

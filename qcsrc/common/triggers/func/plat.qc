@@ -6,11 +6,11 @@ void plat_link();
 void plat_delayedinit(entity this)
 {
 	plat_link();
-	plat_spawn_inside_trigger(); // the "start moving" trigger
+	plat_spawn_inside_trigger(this); // the "start moving" trigger
 }
 
-float plat_send(entity to, float sf)
-{SELFPARAM();
+float plat_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_PLAT);
 	WriteByte(MSG_ENTITY, sf);
 
@@ -181,7 +181,7 @@ NET_HANDLE(ENT_CLIENT_PLAT, bool isnew)
 		this.move_angles = this.angles;
 		this.move_time = time;
 
-		plat_spawn_inside_trigger();
+		plat_spawn_inside_trigger(this);
 	}
 
 	if(sf & SF_TRIGGER_RESET)

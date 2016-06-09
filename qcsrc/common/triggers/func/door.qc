@@ -21,9 +21,9 @@ THINK FUNCTIONS
 */
 
 void door_go_down(entity this);
-void() door_go_up;
+void door_go_up(entity this);
 void door_rotating_go_down(entity this);
-void() door_rotating_go_up;
+void door_rotating_go_up(entity this);
 
 void door_blocked()
 {SELFPARAM();
@@ -58,10 +58,10 @@ void door_blocked()
 				if (self.state == STATE_DOWN)
 			if (self.classname == "door")
 			{
-				door_go_up ();
+				door_go_up (self);
 			} else
 			{
-				door_rotating_go_up ();
+				door_rotating_go_up (self);
 			}
 				else
 			if (self.classname == "door")
@@ -119,11 +119,11 @@ void door_go_down(entity this)
 	}
 
 	self.state = STATE_DOWN;
-	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, door_hit_bottom);
+	SUB_CalcMove (self, self.pos1, TSPEED_LINEAR, self.speed, door_hit_bottom);
 }
 
-void door_go_up()
-{SELFPARAM();
+void door_go_up(entity this)
+{
 	if (self.state == STATE_UP)
 		return;		// already going up
 
@@ -136,7 +136,7 @@ void door_go_up()
 	if (self.noise2 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_UP;
-	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, door_hit_top);
+	SUB_CalcMove (self, self.pos2, TSPEED_LINEAR, self.speed, door_hit_top);
 
 	string oldmessage;
 	oldmessage = self.message;
@@ -232,7 +232,7 @@ void door_fire(entity this, entity actor, entity trigger)
 	entity e = this;
 	do {
 		if (e.classname == "door") {
-			WITHSELF(e, door_go_up());
+			WITHSELF(e, door_go_up(e));
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
 			if ((e.spawnflags & 2) && other.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
@@ -243,7 +243,7 @@ void door_fire(entity this, entity actor, entity trigger)
 			if (!((e.spawnflags & 2) &&  (e.spawnflags & 8) && e.state == STATE_DOWN
 				&& (((e.lip == 666) && (other.trigger_reverse == 0)) || ((e.lip != 666) && (other.trigger_reverse != 0)))))
 			{
-				WITHSELF(e, door_rotating_go_up());
+				WITHSELF(e, door_rotating_go_up(e));
 			}
 		}
 		e = e.enemy;
@@ -308,8 +308,8 @@ void door_touch(entity this)
 #endif
 }
 
-void door_generic_plat_blocked()
-{SELFPARAM();
+void door_generic_plat_blocked(entity this)
+{
 
 	if((self.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
 #ifdef SVQC
@@ -330,7 +330,7 @@ void door_generic_plat_blocked()
 			if (self.wait >= 0)
 			{
 				if (self.state == STATE_DOWN)
-					door_rotating_go_up ();
+					door_rotating_go_up (self);
 				else
 					door_rotating_go_down (self);
 			}
@@ -380,11 +380,11 @@ void door_rotating_go_down(entity this)
 	}
 
 	self.state = STATE_DOWN;
-	SUB_CalcAngleMove (self.pos1, TSPEED_LINEAR, self.speed, door_rotating_hit_bottom);
+	SUB_CalcAngleMove (self, self.pos1, TSPEED_LINEAR, self.speed, door_rotating_hit_bottom);
 }
 
-void door_rotating_go_up()
-{SELFPARAM();
+void door_rotating_go_up(entity this)
+{
 	if (self.state == STATE_UP)
 		return;		// already going up
 
@@ -396,7 +396,7 @@ void door_rotating_go_up()
 	if (self.noise2 != "")
 		_sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
 	self.state = STATE_UP;
-	SUB_CalcAngleMove (self.pos2, TSPEED_LINEAR, self.speed, door_rotating_hit_top);
+	SUB_CalcAngleMove (self, self.pos2, TSPEED_LINEAR, self.speed, door_rotating_hit_top);
 
 	string oldmessage;
 	oldmessage = self.message;
@@ -436,8 +436,8 @@ void door_trigger_touch(entity this)
 	door_use(this.owner, other, NULL);
 }
 
-void door_spawnfield(vector fmins, vector fmaxs)
-{SELFPARAM();
+void door_spawnfield(entity this, vector fmins, vector fmaxs)
+{
 	entity	trigger;
 	vector	t1 = fmins, t2 = fmaxs;
 
@@ -462,8 +462,8 @@ LinkDoors
 */
 
 entity LinkDoors_nextent(entity cur, entity near, entity pass)
-{SELFPARAM();
-	while((cur = find(cur, classname, self.classname)) && ((cur.spawnflags & 4) || cur.enemy))
+{
+	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & 4) || cur.enemy))
 	{
 	}
 	return cur;
@@ -507,12 +507,12 @@ void LinkDoors(entity this)
 		if (self.items)
 			return;
 
-		door_spawnfield(self.absmin, self.absmax);
+		door_spawnfield(self, self.absmin, self.absmax);
 
 		return;		// don't want to link this door
 	}
 
-	FindConnectedComponent(self, enemy, LinkDoors_nextent, LinkDoors_isconnected, world);
+	FindConnectedComponent(self, enemy, LinkDoors_nextent, LinkDoors_isconnected, self);
 
 	// set owner, and make a loop of the chain
 	LOG_TRACE("LinkDoors: linking doors:");
@@ -575,7 +575,7 @@ void LinkDoors(entity this)
 	if (self.items)
 		return;
 
-	door_spawnfield(cmins, cmaxs);
+	door_spawnfield(self, cmins, cmaxs);
 }
 
 REGISTER_NET_LINKED(ENT_CLIENT_DOOR)
@@ -610,8 +610,8 @@ FIXME: only one sound set available at the time being
 
 */
 
-float door_send(entity to, float sf)
-{SELFPARAM();
+float door_send(entity this, entity to, float sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DOOR);
 	WriteByte(MSG_ENTITY, sf);
 

@@ -17,8 +17,8 @@ void generic_plat_blocked()
 #endif
 }
 
-void plat_spawn_inside_trigger()
-{SELFPARAM();
+void plat_spawn_inside_trigger(entity this)
+{
 	entity trigger;
 	vector tmin, tmax;
 
@@ -77,14 +77,14 @@ void plat_go_down(entity this)
 {
 	_sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 3;
-	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, plat_hit_bottom);
+	SUB_CalcMove (self, self.pos2, TSPEED_LINEAR, self.speed, plat_hit_bottom);
 }
 
-void plat_go_up()
-{SELFPARAM();
+void plat_go_up(entity this)
+{
 	_sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
 	self.state = 4;
-	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, plat_hit_top);
+	SUB_CalcMove (self, self.pos1, TSPEED_LINEAR, self.speed, plat_hit_top);
 }
 
 void plat_center_touch(entity this)
@@ -102,9 +102,10 @@ void plat_center_touch(entity this)
 		return;
 #endif
 
-	if (self.enemy.state == 2)
-		WITHSELF(self.enemy, plat_go_up());
-	else if (self.enemy.state == 1)
+	if (self.enemy.state == 2) {
+		entity e = self.enemy;
+		WITHSELF(e, plat_go_up(e));
+	} else if (self.enemy.state == 1)
 		self.enemy.SUB_NEXTTHINK = self.enemy.SUB_LTIME + 1;
 }
 
@@ -163,7 +164,7 @@ void plat_crush()
 		if (self.state == 4)
 			plat_go_down (self);
 		else if (self.state == 3)
-			plat_go_up ();
+			plat_go_up (self);
 	// when in other states, then the plat_crush event came delayed after
 	// plat state already had changed
 	// this isn't a bug per se!

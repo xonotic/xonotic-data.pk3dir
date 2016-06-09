@@ -19,8 +19,8 @@ void func_ladder_touch(entity this)
 }
 
 #ifdef SVQC
-bool func_ladder_send(entity to, int sf)
-{SELFPARAM();
+bool func_ladder_send(entity this, entity to, int sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER);
 
 	WriteString(MSG_ENTITY, self.classname);
@@ -34,8 +34,7 @@ bool func_ladder_send(entity to, int sf)
 
 void func_ladder_link(entity this)
 {
-	this.SendEntity = func_ladder_send;
-	this.SendFlags = 0xFFFFFF;
+	trigger_link(this, func_ladder_send);
 	//this.model = "null";
 }
 

@@ -11,8 +11,8 @@ Applies some friction to self
 ==================
 */
 .float friction;
-void SUB_Friction ()
-{SELFPARAM();
+void SUB_Friction (entity this)
+{
 	self.SUB_NEXTTHINK = time;
 	if(self.SUB_FLAGS & FL_ONGROUND)
 		self.SUB_VELOCITY = self.SUB_VELOCITY * (1 - frametime * self.friction);
@@ -183,8 +183,8 @@ float TSPEED_START = 1;
 float TSPEED_END = 2;
 // TODO average too?
 
-void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
-{SELFPARAM();
+void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
+{
 	float	traveltime;
 	entity controller;
 
@@ -239,8 +239,8 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	WITHSELF(controller, getthink(controller)(controller));
 }
 
-void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void(entity this) func)
-{SELFPARAM();
+void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
+{
 	vector	delta;
 	float	traveltime;
 
@@ -285,12 +285,12 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void(entity thi
 	}
 
 	// now just run like a bezier curve...
-	SUB_CalcMove_Bezier((self.SUB_ORIGIN + tdest) * 0.5, tdest, tspeedtype, tspeed, func);
+	SUB_CalcMove_Bezier(self, (self.SUB_ORIGIN + tdest) * 0.5, tdest, tspeedtype, tspeed, func);
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {
-	WITHSELF(ent, SUB_CalcMove(tdest, tspeedtype, tspeed, func));
+	WITHSELF(ent, SUB_CalcMove(ent, tdest, tspeedtype, tspeed, func));
 }
 
 /*
@@ -314,8 +314,8 @@ void SUB_CalcAngleMoveDone(entity this)
 }
 
 // FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void(entity this) func)
-{SELFPARAM();
+void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
+{
 	vector	delta;
 	float	traveltime;
 
@@ -358,5 +358,5 @@ void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void(e
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
 {
-	WITHSELF(ent, SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func));
+	WITHSELF(ent, SUB_CalcAngleMove (ent, destangle, tspeedtype, tspeed, func));
 }

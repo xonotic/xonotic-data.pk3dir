@@ -1162,7 +1162,7 @@ void ClientConnect()
 		sv_notice_join(this);
 
 	FOREACH_ENTITY_FLOAT(init_for_player_needed, true, {
-		WITHSELF(it, it.init_for_player(it));
+		it.init_for_player(it, this);
 	});
 
 	MUTATOR_CALLHOOK(ClientConnect, this);
@@ -2321,7 +2321,7 @@ void PlayerPreThink ()
 		if (frametime) player_anim();
 
 		// secret status
-		secrets_setstatus();
+		secrets_setstatus(this);
 
 		// monsters status
 		monsters_setstatus(this);

@@ -6,9 +6,9 @@
 void plat_center_touch(entity this);
 void plat_outside_touch(entity this);
 void plat_trigger_use(entity this, entity actor, entity trigger);
-void() plat_go_up;
+void plat_go_up(entity this);
 void plat_go_down(entity this);
-void() plat_crush;
+void plat_crush();
 const float PLAT_LOW_TRIGGER = 1;
 
 .float dmg;
