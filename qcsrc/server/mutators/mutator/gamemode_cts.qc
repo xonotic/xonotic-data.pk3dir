@@ -354,9 +354,17 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 
 MUTATOR_HOOKFUNCTION(cts, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+
 	if(frag_target == frag_attacker || frag_deathtype == DEATH_FALL.m_id)
 	if(!autocvar_g_cts_selfdamage)
+	{
 		frag_damage = 0;
+		M_ARGV(4, float) = frag_damage;
+	}
 
 	return false;
 }

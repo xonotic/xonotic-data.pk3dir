@@ -403,10 +403,18 @@ MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker != frag_target)
 	{
 		frag_damage = 0;
 		frag_force = '0 0 0';
+
+		M_ARGV(4, float) = frag_damage;
+		M_ARGV(6, vector) = frag_force;
 	}
 
 	return false;

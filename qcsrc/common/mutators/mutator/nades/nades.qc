@@ -1299,6 +1299,12 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 
 MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(STAT(FROZEN, frag_target))
 	if(autocvar_g_freezetag_revive_nade)
 	if(frag_attacker == frag_target)
@@ -1312,6 +1318,9 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 		frag_force = '0 0 0';
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
+
+		M_ARGV(4, float) = frag_damage;
+		M_ARGV(6, vector) = frag_force;
 	}
 
 	return false;

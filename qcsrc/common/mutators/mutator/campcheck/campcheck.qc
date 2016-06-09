@@ -16,6 +16,9 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	if(IS_PLAYER(frag_target))
 	if(IS_PLAYER(frag_attacker))
 	if(frag_attacker != frag_target)

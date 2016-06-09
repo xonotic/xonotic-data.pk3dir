@@ -2029,6 +2029,11 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(frag_attacker.flagcarried) // if the attacker is a flagcarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
@@ -2041,6 +2046,9 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and for
 			frag_damage *= autocvar_g_ctf_flagcarrier_damagefactor;
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
+
+		M_ARGV(4, float) = frag_damage;
+		M_ARGV(6, vector) = frag_force;
 	}
 	else if(frag_target.flagcarried && !IS_DEAD(frag_target) && CTF_DIFFTEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{

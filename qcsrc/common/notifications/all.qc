@@ -758,10 +758,11 @@ void Create_Notification_Entity_Choice(entity notif,
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars()
+void Notification_GetCvars(entity this)
 {
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
 		GetCvars_handleFloat(
+			this,
 			get_cvars_s,
 			get_cvars_f,
 			msg_choice_choices[it.nent_choice_idx],

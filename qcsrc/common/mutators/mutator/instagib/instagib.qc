@@ -267,6 +267,13 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	float frag_mirrordamage = M_ARGV(5, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(autocvar_g_friendlyfire == 0 && SAME_TEAM(frag_target, frag_attacker) && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
 
@@ -339,6 +346,10 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 	if(frag_target.alpha && frag_target.alpha < 1)
 	if(IS_PLAYER(frag_target))
 		yoda = 1;
+
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(5, float) = frag_mirrordamage;
+	M_ARGV(6, vector) = frag_force;
 
 	return false;
 }

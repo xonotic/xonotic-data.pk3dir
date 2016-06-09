@@ -519,6 +519,12 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
 
 	if(frag_target.buffs & BUFF_SPEED.m_itemid)
@@ -607,6 +613,9 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 		if(frag_target.armorvalue)
 			frag_attacker.armorvalue = bound(0, frag_attacker.armorvalue + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.armorvalue), g_pickup_armorsmall_max);
 	}
+
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(6, vector) = frag_force;
 
 	return false;
 }

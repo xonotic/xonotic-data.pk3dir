@@ -26,7 +26,7 @@ REGISTER_MUTATOR(ka, false)
 		return -1;
 	}
 
-	return 0;
+	return false;
 }
 
 
@@ -332,7 +332,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 	}
 
 	if(frag_target.ballcarried) { ka_DropEvent(frag_target); } // a player with the ball has died, drop it
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
@@ -350,7 +350,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
 	if(self.ballcarried)
 		self.items |= IT_KEY1;
 
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
@@ -361,11 +361,16 @@ MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
 		ka_DropEvent(self);
 		return 1;
 	}
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(frag_attacker.ballcarried) // if the attacker is a ballcarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
@@ -392,19 +397,23 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and forc
 			frag_force *= autocvar_g_keepaway_noncarrier_force;
 		}
 	}
-	return 0;
+
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(6, vector) = frag_force;
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, ClientDisconnect)
 {SELFPARAM();
 	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, MakePlayerObserver)
 {SELFPARAM();
 	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
@@ -417,7 +426,7 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
 	if(self.ballcarried)
 		self.effects |= autocvar_g_keepaway_ballcarrier_effects;
 
-	return 0;
+	return false;
 }
 
 .float stat_sv_airspeedlimit_nonqw;

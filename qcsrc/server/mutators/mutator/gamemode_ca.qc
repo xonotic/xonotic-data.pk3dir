@@ -369,12 +369,21 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	float frag_mirrordamage = M_ARGV(5, float);
+
 	if (IS_PLAYER(frag_target))
 	if (!IS_DEAD(frag_target))
 	if (frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
 		frag_damage = 0;
 
 	frag_mirrordamage = 0;
+
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(5, float) = frag_mirrordamage;
 
 	return false;
 }
