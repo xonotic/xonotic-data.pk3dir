@@ -39,8 +39,8 @@ REGISTER_MUTATOR(cl_nades, true);
 MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 {
 	if (STAT(HEALING_ORB) <= time) return false;
-	MUTATOR_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
-	MUTATOR_ARGV(0, float) = STAT(HEALING_ORB_ALPHA);
+	M_ARGV(0, vector) = NADE_TYPE_HEAL.m_color;
+	M_ARGV(1, float) = STAT(HEALING_ORB_ALPHA);
 	return true;
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)

@@ -235,7 +235,7 @@ vector spritelookupcolor(entity this, string s, vector def)
     if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items_from(this.wp_extra).m_color;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
-        return MUTATOR_ARGV(0, vector);
+        return M_ARGV(2, vector);
     }
     return def;
 }
@@ -248,7 +248,7 @@ string spritelookuptext(entity this, string s)
     if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
-        return MUTATOR_ARGV(0, string);
+        return M_ARGV(3, string);
     }
 
     // need to loop, as our netname could be one of three

@@ -41,7 +41,7 @@ REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && 
 
 MUTATOR_HOOKFUNCTION(ok, W_DecreaseAmmo)
 {
-	entity actor = MUTATOR_ARGV(0, entity);
+	entity actor = M_ARGV(0, entity);
 	if (actor.ok_use_ammocharge)
 	{
 		ok_DecreaseCharge(actor, PS(actor).m_weapon.m_id);
@@ -51,7 +51,7 @@ MUTATOR_HOOKFUNCTION(ok, W_DecreaseAmmo)
 
 MUTATOR_HOOKFUNCTION(ok, W_Reload)
 {
-	entity actor = MUTATOR_ARGV(0, entity);
+	entity actor = M_ARGV(0, entity);
 	return actor.ok_use_ammocharge;
 }
 

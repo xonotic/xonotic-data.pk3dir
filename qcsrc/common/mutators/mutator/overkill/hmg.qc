@@ -48,9 +48,9 @@ REGISTER_MUTATOR(hmg_nadesupport, true);
 MUTATOR_HOOKFUNCTION(hmg_nadesupport, Nade_Damage)
 {
     SELFPARAM();
-	if (MUTATOR_ARGV(0, entity) != WEP_HMG) return;
+	if (M_ARGV(0, entity) != WEP_HMG) return;
 	return = true;
-	MUTATOR_ARGV(0, float) /* damage */ = self.max_health * 0.1;
+	M_ARGV(2, float) /* damage */ = self.max_health * 0.1;
 }
 
 spawnfunc(weapon_hmg) { weapon_defaultspawnfunc(this, WEP_HMG); }

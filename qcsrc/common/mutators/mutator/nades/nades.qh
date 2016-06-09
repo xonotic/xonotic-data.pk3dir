@@ -91,10 +91,10 @@ void(entity player, float score) nades_GiveBonus;
  */
 #define EV_Nade_Damage(i, o) \
  	/** weapon */ i(entity, MUTATOR_ARGV_0_entity) \
-    /** force */  i(vector, MUTATOR_ARGV_0_vector) \
-    /**/          o(vector, MUTATOR_ARGV_0_vector) \
- 	/** damage */ i(float,  MUTATOR_ARGV_0_float) \
-    /**/          o(float,  MUTATOR_ARGV_0_float) \
+    /** force */  i(vector, MUTATOR_ARGV_1_vector) \
+    /**/          o(vector, MUTATOR_ARGV_1_vector) \
+ 	/** damage */ i(float,  MUTATOR_ARGV_2_float) \
+    /**/          o(float,  MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(Nade_Damage, EV_Nade_Damage);
 

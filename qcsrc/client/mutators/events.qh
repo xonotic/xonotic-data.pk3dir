@@ -103,7 +103,7 @@ MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
 
 #define EV_HUD_Draw_overlay(i, o) \
 	/**/ o(vector, MUTATOR_ARGV_0_vector) \
-	/**/ o(float, MUTATOR_ARGV_0_float) \
+	/**/ o(float, MUTATOR_ARGV_1_float) \
 	/**/
 MUTATOR_HOOKABLE(HUD_Draw_overlay, EV_HUD_Draw_overlay);
 
