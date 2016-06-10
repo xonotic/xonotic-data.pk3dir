@@ -10,7 +10,7 @@
 bool monsters_animoverride(entity this)
 {
 	Monster monster_id = NULL;
-	FOREACH(Monsters, it != MON_Null && it.model == this.model, {
+	FOREACH(Monsters, it != MON_Null && it.m_model == this.model, {
         monster_id = it;
         break;
 	});
