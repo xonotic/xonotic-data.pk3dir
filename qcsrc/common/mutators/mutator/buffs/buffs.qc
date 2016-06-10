@@ -1036,16 +1036,18 @@ MUTATOR_HOOKFUNCTION(buffs, VehicleExit)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
-{SELFPARAM();
-	if(this.buffs & BUFF_MEDIC.m_itemid)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.buffs & BUFF_MEDIC.m_itemid)
 	{
-		regen_mod_rot = autocvar_g_buffs_medic_rot;
-		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
-		regen_mod_regen = autocvar_g_buffs_medic_regen;
+		M_ARGV(2, float) = autocvar_g_buffs_medic_rot; // rot_mod
+		M_ARGV(4, float) = M_ARGV(1, float) = autocvar_g_buffs_medic_max; // limit_mod = max_mod
+		M_ARGV(2, float) = autocvar_g_buffs_medic_regen; // regen_mod
 	}
 
-	if(this.buffs & BUFF_SPEED.m_itemid)
-		regen_mod_regen = autocvar_g_buffs_speed_regen;
+	if(player.buffs & BUFF_SPEED.m_itemid)
+		M_ARGV(2, float) = autocvar_g_buffs_speed_regen; // regen_mod
 }
 
 REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");

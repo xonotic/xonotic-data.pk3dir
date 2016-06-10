@@ -1483,18 +1483,28 @@ void player_regen(entity this)
 {
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
-	regen_mod_max = max_mod;
-	regen_mod_regen = regen_mod;
-	regen_mod_rot = rot_mod;
-	regen_mod_limit = limit_mod;
 
-	regen_health = autocvar_g_balance_health_regen;
-	regen_health_linear = autocvar_g_balance_health_regenlinear;
-	regen_health_rot = autocvar_g_balance_health_rot;
-	regen_health_rotlinear = autocvar_g_balance_health_rotlinear;
-	regen_health_stable = autocvar_g_balance_health_regenstable;
-	regen_health_rotstable = autocvar_g_balance_health_rotstable;
-	if(!MUTATOR_CALLHOOK(PlayerRegen))
+	float regen_health = autocvar_g_balance_health_regen;
+	float regen_health_linear = autocvar_g_balance_health_regenlinear;
+	float regen_health_rot = autocvar_g_balance_health_rot;
+	float regen_health_rotlinear = autocvar_g_balance_health_rotlinear;
+	float regen_health_stable = autocvar_g_balance_health_regenstable;
+	float regen_health_rotstable = autocvar_g_balance_health_rotstable;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(PlayerRegen, this, max_mod, regen_mod, rot_mod, limit_mod, regen_health, regen_health_linear, regen_health_rot,
+		regen_health_rotlinear, regen_health_stable, regen_health_rotstable);
+	max_mod = M_ARGV(1, float);
+	regen_mod = M_ARGV(2, float);
+	rot_mod = M_ARGV(3, float);
+	limit_mod = M_ARGV(4, float);
+	regen_health = M_ARGV(5, float);
+	regen_health_linear = M_ARGV(6, float);
+	regen_health_rot = M_ARGV(7, float);
+	regen_health_rotlinear = M_ARGV(8, float);
+	regen_health_stable = M_ARGV(9, float);
+	regen_health_rotstable = M_ARGV(10, float);
+
+
+	if(!mutator_returnvalue)
 	if(!STAT(FROZEN, this))
 	{
 		float mina, maxa, limith, limita;
@@ -1502,11 +1512,6 @@ void player_regen(entity this)
 		mina = autocvar_g_balance_armor_regenstable;
 		limith = autocvar_g_balance_health_limit;
 		limita = autocvar_g_balance_armor_limit;
-
-		max_mod = regen_mod_max;
-		regen_mod = regen_mod_regen;
-		rot_mod = regen_mod_rot;
-		limit_mod = regen_mod_limit;
 
 		regen_health_rotstable = regen_health_rotstable * max_mod;
 		regen_health_stable = regen_health_stable * max_mod;

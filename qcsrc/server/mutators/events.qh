@@ -361,17 +361,30 @@ MUTATOR_HOOKABLE(PlayerPowerups, EV_PlayerPowerups);
  * called every player think frame
  * return 1 to disable regen
  */
-float regen_mod_max;
-float regen_mod_regen;
-float regen_mod_rot;
-float regen_mod_limit;
-float regen_health;
-float regen_health_linear;
-float regen_health_rot;
-float regen_health_rotlinear;
-float regen_health_stable;
-float regen_health_rotstable;
-MUTATOR_HOOKABLE(PlayerRegen, EV_NO_ARGS);
+ #define EV_PlayerRegen(i, o) \
+    /** player */               i(entity, MUTATOR_ARGV_0_entity) \
+    /** max_mod */              i(float, MUTATOR_ARGV_1_float) \
+    /**/                        o(float, MUTATOR_ARGV_1_float) \
+    /** regen_mod */            i(float, MUTATOR_ARGV_2_float) \
+    /**/                        o(float, MUTATOR_ARGV_2_float) \
+    /** rot_mod */              i(float, MUTATOR_ARGV_3_float) \
+    /**/                        o(float, MUTATOR_ARGV_3_float) \
+    /** limit_mod */            i(float, MUTATOR_ARGV_4_float) \
+    /**/                        o(float, MUTATOR_ARGV_4_float) \
+    /** health_regen */         i(float, MUTATOR_ARGV_5_float) \
+    /**/                        o(float, MUTATOR_ARGV_5_float) \
+    /** health_regenlinear */   i(float, MUTATOR_ARGV_6_float) \
+    /**/                        o(float, MUTATOR_ARGV_6_float) \
+    /** health_rot */           i(float, MUTATOR_ARGV_7_float) \
+    /**/                        o(float, MUTATOR_ARGV_7_float) \
+    /** health_rotlinear */     i(float, MUTATOR_ARGV_8_float) \
+    /**/                        o(float, MUTATOR_ARGV_8_float) \
+    /** health_stable */        i(float, MUTATOR_ARGV_9_float) \
+    /**/                        o(float, MUTATOR_ARGV_9_float) \
+    /** health_rotstable */     i(float, MUTATOR_ARGV_10_float) \
+    /**/                        o(float, MUTATOR_ARGV_10_float) \
+    /**/
+MUTATOR_HOOKABLE(PlayerRegen, EV_PlayerRegen);
 
 /**
  * called when the use key is pressed
