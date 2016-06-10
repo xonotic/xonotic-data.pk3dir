@@ -411,7 +411,7 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 	M_ARGV(1, string) = ret_string;
 }
 
-void ClientKill_Now();
+void ClientKill_Now(entity this);
 MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
     entity player = M_ARGV(0, entity);
@@ -423,7 +423,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 		remove(player.killindicator);
 		player.killindicator = world;
 
-		WITHSELF(player, ClientKill_Now()); // allow instant kill in this case
+		ClientKill_Now(player); // allow instant kill in this case
 		return;
 	}
 }

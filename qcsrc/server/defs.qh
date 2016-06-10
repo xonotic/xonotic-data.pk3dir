@@ -155,7 +155,7 @@ float alreadychangedlevel;
 
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; //point in time since the client is spectating or observing
-void checkSpectatorBlock();
+void checkSpectatorBlock(entity this);
 
 float game_completion_ratio; // 0 at start, 1 near end
 .float winning;
@@ -405,7 +405,7 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
 
-void PlayerUseKey();
+void PlayerUseKey(entity this);
 
 USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
 .spawn_evalfunc_t spawn_evalfunc;

@@ -209,7 +209,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(player.strength_finished, SND_POWEROFF);
+		play_countdown(player, player.strength_finished, SND_POWEROFF);
 		if (time > player.strength_finished)
 		{
 			player.alpha = default_player_alpha;
@@ -232,7 +232,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 
 	if (player.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(player.invincible_finished, SND_POWEROFF);
+		play_countdown(player, player.invincible_finished, SND_POWEROFF);
 		if (time > player.invincible_finished)
 		{
 			player.items &= ~ITEM_Speed.m_itemid;

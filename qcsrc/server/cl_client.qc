@@ -2236,7 +2236,7 @@ void PlayerPreThink ()
 					if (time > this.respawn_time) {
 						this.respawn_time = time + 1; // only retry once a second
 						this.respawn_time_max = this.respawn_time;
-						respawn();
+						respawn(this);
 					}
 				}
 
