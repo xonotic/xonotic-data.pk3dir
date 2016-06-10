@@ -271,27 +271,25 @@ void RaceCarPhysics(entity this)
 #endif
 MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 {
-    SELFPARAM();
-	if(!PHYS_BUGRIGS(self) || !IS_PLAYER(self)) { return false; }
+    entity player = M_ARGV(0, entity);
+
+	if(!PHYS_BUGRIGS(player) || !IS_PLAYER(player)) { return false; }
 
 #ifdef SVQC
-	self.angles = self.bugrigs_prevangles;
+	player.angles = player.bugrigs_prevangles;
 #endif
 
-	RaceCarPhysics(self);
+	RaceCarPhysics(player);
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 {
+	if(!PHYS_BUGRIGS(M_ARGV(0, entity))) { return false; }
 #ifdef SVQC
-    SELFPARAM();
+	entity player = M_ARGV(0, entity);
+	player.bugrigs_prevangles = player.angles;
 #endif
-	if(!PHYS_BUGRIGS(self)) { return false; }
-#ifdef SVQC
-	self.bugrigs_prevangles = self.angles;
-#endif
-	return false;
 }
 
 #ifdef SVQC

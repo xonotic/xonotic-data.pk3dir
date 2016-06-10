@@ -109,24 +109,26 @@ void CTS_ClientKill(entity e) // silent version of ClientKill, used when player 
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
-{SELFPARAM();
-	self.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
-	float f = floor(self.race_movetime_frac);
-	self.race_movetime_frac -= f;
-	self.race_movetime_count += f;
-	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	float f = floor(player.race_movetime_frac);
+	player.race_movetime_frac -= f;
+	player.race_movetime_count += f;
+	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
 
 #ifdef SVQC
-	if(IS_PLAYER(self))
+	if(IS_PLAYER(player))
 	{
-		if (self.race_penalty)
-			if (time > self.race_penalty)
-				self.race_penalty = 0;
-		if(self.race_penalty)
+		if (player.race_penalty)
+			if (time > player.race_penalty)
+				player.race_penalty = 0;
+		if(player.race_penalty)
 		{
-			self.velocity = '0 0 0';
-			self.movetype = MOVETYPE_NONE;
-			self.disableclientprediction = 2;
+			player.velocity = '0 0 0';
+			player.movetype = MOVETYPE_NONE;
+			player.disableclientprediction = 2;
 		}
 	}
 #endif
@@ -139,8 +141,8 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel.x = fabs(self.movement.x);
-	wishvel.y = fabs(self.movement.y);
+	wishvel.x = fabs(player.movement.x);
+	wishvel.y = fabs(player.movement.y);
 	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
 		wishvel.z = 0;
@@ -148,36 +150,34 @@ MUTATOR_HOOKFUNCTION(cts, PlayerPhysics)
 		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(self.movement.x > 0)
-				self.movement_x = wishspeed;
+			if(player.movement.x > 0)
+				player.movement_x = wishspeed;
 			else
-				self.movement_x = -wishspeed;
-			self.movement_y = 0;
+				player.movement_x = -wishspeed;
+			player.movement_y = 0;
 		}
 		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
-			self.movement_x = 0;
-			if(self.movement.y > 0)
-				self.movement_y = wishspeed;
+			player.movement_x = 0;
+			if(player.movement.y > 0)
+				player.movement_y = wishspeed;
 			else
-				self.movement_y = -wishspeed;
+				player.movement_y = -wishspeed;
 		}
 		else
 		{
 			// diagonal
-			if(self.movement.x > 0)
-				self.movement_x = M_SQRT1_2 * wishspeed;
+			if(player.movement.x > 0)
+				player.movement_x = M_SQRT1_2 * wishspeed;
 			else
-				self.movement_x = -M_SQRT1_2 * wishspeed;
-			if(self.movement.y > 0)
-				self.movement_y = M_SQRT1_2 * wishspeed;
+				player.movement_x = -M_SQRT1_2 * wishspeed;
+			if(player.movement.y > 0)
+				player.movement_y = M_SQRT1_2 * wishspeed;
 			else
-				self.movement_y = -M_SQRT1_2 * wishspeed;
+				player.movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, reset_map_global)

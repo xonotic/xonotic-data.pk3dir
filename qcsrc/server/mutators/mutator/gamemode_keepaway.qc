@@ -439,13 +439,14 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
 .float stat_sv_maxspeed;
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPhysics)
-{SELFPARAM();
-	if(self.ballcarried)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.ballcarried)
 	{
-		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
-		self.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
+		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
+		player.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)

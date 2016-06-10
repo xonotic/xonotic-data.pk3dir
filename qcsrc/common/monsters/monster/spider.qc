@@ -56,14 +56,14 @@ REGISTER_MUTATOR(spiderweb, true);
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
 {
-    SELFPARAM();
-	if (time >= this.spider_slowness)
+    entity player = M_ARGV(0, entity);
+
+	if (time >= player.spider_slowness)
 		return false;
-	PHYS_MAXSPEED(this) *= 0.5; // half speed while slow from spider
-	PHYS_MAXAIRSPEED(this) *= 0.5;
-	PHYS_AIRSPEEDLIMIT_NONQW(this) *= 0.5;
-	PHYS_AIRSTRAFEACCELERATE(this) *= 0.5;
-	return false;
+	PHYS_MAXSPEED(player) *= 0.5; // half speed while slow from spider
+	PHYS_MAXAIRSPEED(player) *= 0.5;
+	PHYS_AIRSPEEDLIMIT_NONQW(player) *= 0.5;
+	PHYS_AIRSTRAFEACCELERATE(player) *= 0.5;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)

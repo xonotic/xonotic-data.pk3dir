@@ -24,8 +24,10 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
-{SELFPARAM();
-	if(self.health <= autocvar_g_bloodloss)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.health <= autocvar_g_bloodloss)
 		return true;
 
 	return false;

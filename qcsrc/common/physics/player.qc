@@ -452,11 +452,11 @@ bool PlayerJump(entity this)
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY(this);
 
-	if (MUTATOR_CALLHOOK(PlayerJump, this, doublejump, mjumpheight))
+	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
 		return true;
 
-	doublejump = player_multijump;
-	mjumpheight = player_jumpheight;
+	mjumpheight = M_ARGV(1, float);
+	doublejump = M_ARGV(2, bool);
 
 	if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
@@ -587,16 +587,18 @@ void CheckWaterJump(entity this)
 void CheckPlayerJump(entity this)
 {
 #ifdef SVQC
-	float was_flying = ITEMS_STAT(this) & IT_USING_JETPACK;
+	bool was_flying = boolean(ITEMS_STAT(this) & IT_USING_JETPACK);
 #endif
 	if (JETPACK_JUMP(this) < 2)
 		ITEMS_STAT(this) &= ~IT_USING_JETPACK;
 
 	if(PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this))
 	{
-		float air_jump = !PlayerJump(this) || player_multijump; // PlayerJump() has important side effects
-		float activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
-		float has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO);
+		bool playerjump = PlayerJump(this); // required
+
+		bool air_jump = !playerjump || M_ARGV(2, bool);
+		bool activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
+		bool has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO);
 
 		if (!(ITEMS_STAT(this) & ITEM_Jetpack.m_itemid)) { }
 		else if (this.jetpack_stopped) { }

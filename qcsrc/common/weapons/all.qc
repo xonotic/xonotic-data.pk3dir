@@ -272,7 +272,7 @@ string W_Model(string w_mdl)
 {
 	string output = strcat("models/weapons/", w_mdl);
 	MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
-	return weapon_model_output;
+	return M_ARGV(1, string);
 }
 
 #ifndef MENUQC
