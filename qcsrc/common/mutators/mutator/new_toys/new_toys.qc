@@ -111,7 +111,6 @@ const float NT_AUTOREPLACE_RANDOM = 2;
 MUTATOR_HOOKFUNCTION(nt, SetModname)
 {
 	M_ARGV(0, string) = "NewToys";
-	return false;
 }
 
 bool nt_IsNewToy(int w)
@@ -191,8 +190,6 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 	warmup_newdefault &= warmup_start_weapons_defaultmask;
 	warmup_start_weapons &= ~warmup_start_weapons_defaultmask;
 	warmup_start_weapons |= warmup_newdefault;
-
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
@@ -227,6 +224,5 @@ MUTATOR_HOOKFUNCTION(nt, FilterItem)
 		item.item_pickupsound = string_null;
 		item.item_pickupsound_ent = SND_WEAPONPICKUP_NEW_TOYS;
 	}
-	return false;
 }
 #endif

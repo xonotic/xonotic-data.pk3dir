@@ -509,7 +509,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 	float frag_deathtype = M_ARGV(6, float);
 	float frag_damage = M_ARGV(7, float);
 
-	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
+	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
 
 	if(frag_target.buffs & BUFF_RESISTANCE.m_itemid)
 	{
@@ -517,8 +517,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_SplitHealthArmor)
 		M_ARGV(4, float) = v.x; // take
 		M_ARGV(5, float) = v.y; // save
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
@@ -529,7 +527,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if(frag_deathtype == DEATH_BUFF.m_id) { return false; }
+	if(frag_deathtype == DEATH_BUFF.m_id) { return; }
 
 	if(frag_target.buffs & BUFF_SPEED.m_itemid)
 	if(frag_target != frag_attacker)
@@ -620,8 +618,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(6, vector) = frag_force;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
@@ -632,7 +628,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
-	return false;
 }
 
 .float stat_sv_maxspeed;
@@ -697,7 +692,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 			frag_target.buff_model = world;
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
@@ -720,7 +714,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+	if(MUTATOR_RETURNVALUE || gameover) { return; }
 	entity player = M_ARGV(0, entity);
 
 	if(player.buffs & BUFF_SWAPPER.m_itemid)
@@ -785,7 +779,6 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 			return true;
 		}
 	}
-	return false;
 }
 
 bool buffs_RemovePlayer(entity player)
@@ -817,8 +810,6 @@ MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 	if((wp.owner.flags & FL_CLIENT) && (wp.owner.buffs & BUFF_INVISIBLE.m_itemid) && (e == player))
 	if(DIFF_TEAM(wp.owner, e))
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
@@ -836,7 +827,6 @@ MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 			return true;
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
@@ -865,7 +855,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(gameover || IS_DEAD(player)) { return false; }
+	if(gameover || IS_DEAD(player)) { return; }
 
 	if(time < player.buff_disability_time)
 	if(time >= player.buff_disability_effect_time)
@@ -1055,8 +1045,6 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 
 	if(self.buffs & BUFF_SPEED.m_itemid)
 		regen_mod_regen = autocvar_g_buffs_speed_regen;
-
-	return false;
 }
 
 REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");

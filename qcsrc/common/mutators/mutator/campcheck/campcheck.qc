@@ -13,7 +13,6 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerDies)
 	entity frag_target = M_ARGV(2, entity);
 	
 	Kill_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CPID_CAMPCHECK);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerDamage_Calculate)
@@ -28,8 +27,6 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerDamage_Calculate)
 		frag_target.campcheck_traveled_distance = autocvar_g_campcheck_distance;
 		frag_attacker.campcheck_traveled_distance = autocvar_g_campcheck_distance;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)

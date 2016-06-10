@@ -23,10 +23,8 @@ MUTATOR_HOOKFUNCTION(breakablehook, PlayerDamage_Calculate)
 		{
 			Damage (frag_target.realowner, frag_attacker, frag_attacker, 5, WEP_HOOK.m_id | HITTYPE_SPLASH, frag_target.realowner.origin, '0 0 0');
 			RemoveGrapplingHook(frag_target.realowner);
-			return false; // dead
+			return; // dead
 		}
 	}
-
-	return false;
 }
 #endif

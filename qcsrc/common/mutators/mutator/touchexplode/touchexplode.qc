@@ -43,7 +43,5 @@ MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
 				player.touchexplode_time = it.touchexplode_time = time + 0.2;
 			}
 		));
-
-	return false;
 }
 #endif

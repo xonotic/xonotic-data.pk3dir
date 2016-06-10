@@ -35,8 +35,6 @@ REGISTER_MUTATOR(sandbox, cvar("g_sandbox"))
 	{
 		// nothing to remove
 	}
-
-	return false;
 }
 
 const float MAX_STORAGE_ATTACHMENTS = 16;
@@ -452,7 +450,7 @@ void sandbox_Database_Load()
 MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
 
 	entity player = M_ARGV(0, entity);
 	string cmd_name = M_ARGV(1, string);
@@ -823,15 +821,14 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				return true;
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(sandbox, SV_StartFrame)
 {
 	if(!autocvar_g_sandbox_storage_autosave)
-		return false;
+		return;
 	if(time < autosave_time)
-		return false;
+		return;
 	autosave_time = time + autocvar_g_sandbox_storage_autosave;
 
 	sandbox_Database_Save();

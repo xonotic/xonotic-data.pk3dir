@@ -2059,7 +2059,6 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and for
 		}
 		// todo: add notification for when flag carrier needs help?
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
@@ -2079,8 +2078,6 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 		ctf_Handle_Throw(frag_target, world, DROP_NORMAL);
 		tmp_entity.ctf_dropper = world;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, GiveFragsForKill)
@@ -2107,7 +2104,6 @@ MUTATOR_HOOKFUNCTION(ctf, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	ctf_RemovePlayer(player);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, ClientDisconnect)
@@ -2128,7 +2124,7 @@ MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+	if(MUTATOR_RETURNVALUE || gameover) { return; }
 
 	entity player = M_ARGV(0, entity);
 
@@ -2257,8 +2253,6 @@ MUTATOR_HOOKFUNCTION(ctf, VehicleEnter)
 		}
 		return true;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, VehicleExit)
@@ -2274,8 +2268,6 @@ MUTATOR_HOOKFUNCTION(ctf, VehicleExit)
 		player.flagcarried.nodrawtoclient = world;
 		return true;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, AbortSpeedrun)
@@ -2288,8 +2280,6 @@ MUTATOR_HOOKFUNCTION(ctf, AbortSpeedrun)
 		ctf_RespawnFlag(player.flagcarried);
 		return true;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, MatchEnd)
@@ -2322,8 +2312,6 @@ MUTATOR_HOOKFUNCTION(ctf, MatchEnd)
 			}
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
@@ -2415,8 +2403,6 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 			superspec_msg("", "", player, "No active flag carrier\n", 1);
 		return true;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, DropSpecialItems)
@@ -2425,8 +2411,6 @@ MUTATOR_HOOKFUNCTION(ctf, DropSpecialItems)
 	
 	if(frag_target.flagcarried)
 		ctf_Handle_Throw(frag_target, world, DROP_THROW);
-
-	return false;
 }
 
 

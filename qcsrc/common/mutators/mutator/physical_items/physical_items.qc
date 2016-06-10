@@ -93,9 +93,9 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	entity item = M_ARGV(0, entity);
 
 	if(item.owner == world && autocvar_g_physical_items <= 1)
-		return false;
+		return;
 	if (item.spawnflags & 1) // floating item
-		return false;
+		return;
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
@@ -137,7 +137,5 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	item.movetype = MOVETYPE_FOLLOW;
 	item.aiment = wep; // attach the original weapon
 	item.SendEntity3 = func_null;
-
-	return false;
 }
 #endif

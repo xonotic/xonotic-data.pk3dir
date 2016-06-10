@@ -1144,14 +1144,13 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 		nades_CheckThrow(player);
 		return true;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (!IS_PLAYER(player)) { return false; }
+	if (!IS_PLAYER(player)) { return; }
 
 	if (player.nade && (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
 
@@ -1264,8 +1263,6 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 			player.nade_spawnloc = world;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
@@ -1324,8 +1321,6 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nades, MonsterDies)
@@ -1337,8 +1332,6 @@ MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	if(!(frag_target.spawnflags & MONSTERFLAG_SPAWNED))
 		nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
@@ -1347,8 +1340,6 @@ MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
 	
 	if(frag_target.nade)
 		toss_nade(frag_target, true, '0 0 0', time + 0.05);
-
-	return false;
 }
 
 void nades_RemovePlayer(entity this)

@@ -10,7 +10,6 @@ MUTATOR_HOOKFUNCTION(invincibleprojectiles, EditProjectile)
 		// disable health which in effect disables damage calculations
 		proj.health = 0;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(invincibleprojectiles, BuildMutatorsString)

@@ -103,9 +103,7 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 
 	// FIXME fix the mess this is (we have REAL points now!)
 	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
-	{
 		f = M_ARGV(2, float);
-	}
 
 	attacker.totalfrags += f;
 

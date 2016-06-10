@@ -35,8 +35,6 @@ REGISTER_MUTATOR(ok, cvar("g_overkill") && !cvar("g_instagib") && !g_nexball && 
 		WEP_RPC.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 		WEP_HMG.spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok, W_DecreaseAmmo)
@@ -87,7 +85,7 @@ float ok_CheckWeaponCharge(entity ent, int wep)
 
 	entity wepent = Weapons_from(wep);
 
-	if(wepent == WEP_Null) return 0;  // dummy
+	if(wepent == WEP_Null) return false;  // dummy
 
 	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
@@ -112,8 +110,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 
 		M_ARGV(4, float) = 0;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
@@ -195,12 +191,12 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 {
 	if(intermission_running || gameover)
-		return false;
+		return;
 
 	entity player = M_ARGV(0, entity);
 
 	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
-		return false;
+		return;
 
 	if(player.ok_lastwep)
 	{
@@ -283,8 +279,6 @@ MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
 		player.ok_lastwep = 0;
 
 	player.ok_pauseregen_finished = time + 2;
-
-	return false;
 }
 
 void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
@@ -331,8 +325,6 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			return true;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok, FilterItem)
@@ -340,7 +332,7 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if(item.ok_item)
-		return false;
+		return;
 
 	switch(item.items)
 	{
@@ -369,8 +361,6 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems)
 
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsString)

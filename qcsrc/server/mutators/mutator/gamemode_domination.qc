@@ -501,7 +501,7 @@ MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 		if(IS_REAL_CLIENT(it))
 			set_dom_state(it);
 	));
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
@@ -513,7 +513,6 @@ MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
 		player.player_blocked = 1;
 	else
 		player.player_blocked = 0;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(dom, ClientConnect)

@@ -615,8 +615,6 @@ MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(as, TurretSpawn)
@@ -625,8 +623,6 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 
 	if(!turret.team || turret.team == MAX_SHOT_DISTANCE)
 		turret.team = 5; // this gets reversed when match starts?
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(as, VehicleSpawn)
@@ -668,7 +664,6 @@ MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 {
 	// no assault warmups
 	warmup_stage = 0;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
@@ -683,8 +678,6 @@ MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 		case "info_player_team4":
 			return true;
 	}
-
-	return false;
 }
 
 // scoreboard setup

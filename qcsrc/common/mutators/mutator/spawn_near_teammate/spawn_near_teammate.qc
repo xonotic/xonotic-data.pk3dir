@@ -23,12 +23,12 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	vector spawn_score = M_ARGV(2, vector);
 
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
-		return false;
+		return;
 
 	spawn_spot.msnt_lookat = world;
 
 	if(!teamplay)
-		return false;
+		return;
 
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), LAMBDA(
@@ -50,13 +50,11 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		spawn_score.x += SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM; // prefer same team, if we can't find a spawn near teammate
 
 	M_ARGV(2, vector) = spawn_score;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 {
-	if(!teamplay) { return false; }
+	if(!teamplay) { return; }
 	entity player = M_ARGV(0, entity);
 	entity spawn_spot = M_ARGV(1, entity);
 
@@ -73,7 +71,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 	});
 
 	if(num_red == 1 || num_blue == 1 || num_yellow == 1 || num_pink == 1)
-		return false; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
+		return; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
 
 	// Note: when entering this, fixangle is already set.
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
@@ -147,7 +145,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 										player.angles = it.angles;
 										player.angles_z = 0; // never spawn tilted even if the spot says to
 										it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
-										return false;
+										return;
 									}
 								}
 							}
@@ -177,8 +175,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		sprint(player, "angles: ", vtos(player.angles), "\n");
 		*/
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
@@ -186,7 +182,6 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
 	entity frag_target = M_ARGV(0, entity);
 
 	frag_target.msnt_deathloc = frag_target.origin;
-	return false;
 }
 
 REPLICATE(cvar_cl_spawn_near_teammate, bool, "cl_spawn_near_teammate");

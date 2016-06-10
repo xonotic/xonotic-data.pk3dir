@@ -29,8 +29,6 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
 
 	if(player.health <= autocvar_g_bloodloss)
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsString)

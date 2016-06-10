@@ -273,7 +273,7 @@ MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 {
     entity player = M_ARGV(0, entity);
 
-	if(!PHYS_BUGRIGS(player) || !IS_PLAYER(player)) { return false; }
+	if(!PHYS_BUGRIGS(player) || !IS_PLAYER(player)) { return; }
 
 #ifdef SVQC
 	player.angles = player.bugrigs_prevangles;
@@ -285,7 +285,7 @@ MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 
 MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 {
-	if(!PHYS_BUGRIGS(M_ARGV(0, entity))) { return false; }
+	if(!PHYS_BUGRIGS(M_ARGV(0, entity))) { return; }
 #ifdef SVQC
 	entity player = M_ARGV(0, entity);
 	player.bugrigs_prevangles = player.angles;

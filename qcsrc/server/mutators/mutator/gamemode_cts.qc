@@ -208,8 +208,6 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 		cvar_set("timelimit", ftos(race_timelimit));
 		cts_ScoreRules();
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, ClientConnect)
@@ -237,8 +235,6 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
@@ -252,8 +248,6 @@ MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
 
 	race_PreparePlayer(player);
 	player.race_checkpoint = -1;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
@@ -270,8 +264,6 @@ MUTATOR_HOOKFUNCTION(cts, PlayerSpawn)
 	player.race_respawn_spotref = spawn_spot;
 
 	player.race_place = 0;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
@@ -288,7 +280,6 @@ MUTATOR_HOOKFUNCTION(cts, PutClientInServer)
 
 		race_AbandonRaceCheck(player);
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerDies)
@@ -297,7 +288,6 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 	
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)
@@ -363,8 +353,6 @@ MUTATOR_HOOKFUNCTION(cts, FilterItem)
 
 	if(item.classname == "droppedweapon")
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, PlayerDamage_Calculate)
@@ -380,8 +368,6 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDamage_Calculate)
 		frag_damage = 0;
 		M_ARGV(4, float) = frag_damage;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)

@@ -17,8 +17,6 @@ REGISTER_MUTATOR(random_gravity, cvar("g_random_gravity"))
 	{
 		cvar_settemp("sv_gravity", cvar_string("sv_gravity")); // settemp current gravity so it's restored on match end
 	}
-
-	return false;
 }
 
 float gravity_delay;
@@ -38,8 +36,6 @@ MUTATOR_HOOKFUNCTION(random_gravity, SV_StartFrame)
 	gravity_delay = time + autocvar_g_random_gravity_delay;
 
 	LOG_TRACE("Gravity is now: ", ftos(autocvar_sv_gravity), "\n");
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(random_gravity, BuildMutatorsString)

@@ -240,8 +240,6 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 		cvar_set("timelimit", ftos(race_timelimit));
 		race_ScoreRules();
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, ClientConnect)
@@ -269,8 +267,6 @@ MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
@@ -301,8 +297,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
 	player.race_respawn_spotref = spawn_spot;
 
 	player.race_place = 0;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
@@ -319,7 +313,6 @@ MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
 
 		race_AbandonRaceCheck(player);
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
@@ -328,7 +321,6 @@ MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 	
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, HavocBot_ChooseRole)
@@ -386,8 +378,6 @@ MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
 {
 	if(g_race_qualifying)
 		return true; // in qualifying, you don't lose score by observing
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, GetTeamCount, CBC_ORDER_EXCLUSIVE)
@@ -400,8 +390,6 @@ MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
 	// announce remaining frags if not in qualifying mode
 	if(!g_race_qualifying)
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, GetRecords)
@@ -451,15 +439,12 @@ MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
 			return true;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, ReadLevelCvars)
 {
 	if(g_race_qualifying == 2)
 		warmup_stage = 0;
-	return false;
 }
 
 void race_Initialize()

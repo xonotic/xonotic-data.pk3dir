@@ -154,14 +154,14 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
     var = strcat(var, text," ^7(^3 ", long, "^7 | ^3", short, " ^7)\n")
 
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
 
 	entity player = M_ARGV(0, entity);
 	string cmd_name = M_ARGV(1, string);
 	int cmd_argc = M_ARGV(2, int);
 
 	if(IS_PLAYER(player))
-		return false;
+		return;
 
 	if(cmd_name == "superspec_itemfilter")
 	{
@@ -365,8 +365,6 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 		superspec_msg("", "", player, "No active Shield\n", 1);
 		return true;
 	}
-
-	return false;
 #undef OPTIONINFO
 }
 
@@ -393,7 +391,7 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 	entity player = M_ARGV(0, entity);
 
 	if(!IS_REAL_CLIENT(player))
-		return false;
+		return;
 
 	string fn = "superspec-local.options";
 	float fh;
@@ -409,7 +407,7 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 	if (!_ISLOCAL(player))
 	{
 		if(player.crypto_idfp == "")
-			return false;
+			return;
 
 		fn = sprintf("superspec-%s.options", uri_escape(player.crypto_idfp));
 	}
@@ -434,8 +432,6 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 		}
 		fclose(fh);
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
@@ -452,8 +448,6 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 			superspec_Spectate(it, frag_attacker);
 		}
 	));
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientDisconnect)

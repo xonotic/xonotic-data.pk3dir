@@ -313,7 +313,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
@@ -327,7 +327,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 
 MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
 {
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
@@ -367,8 +367,6 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
-
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
@@ -388,8 +386,6 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
 
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(5, float) = frag_mirrordamage;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, FilterItem)
@@ -402,8 +398,6 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 
 	if (autocvar_g_pickup_items <= 0)
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
@@ -440,8 +434,6 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	if (DIFF_TEAM(targ, client))
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SpectateNext)
@@ -454,7 +446,6 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 		targ = CA_SpectateNext(client, targ);
 		return true;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SpectatePrev)

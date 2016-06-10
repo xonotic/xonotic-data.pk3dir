@@ -66,8 +66,6 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 				PS(it).m_switchweapon = w_getbestweapon(it);
 		});
 	}
-
-	return false;
 }
 
 bool NIX_CanChooseWeapon(int wpn)
@@ -260,7 +258,6 @@ MUTATOR_HOOKFUNCTION(nix, OnEntityPreSpawn)
 
 	if(ent.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
 		return true;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
@@ -280,12 +277,10 @@ MUTATOR_HOOKFUNCTION(nix, PlayerSpawn)
 	player.nix_lastchange_id = -1;
 	NIX_GiveCurrentWeapon(player); // overrides the weapons you got when spawning
 	player.items |= IT_UNLIMITED_SUPERWEAPONS;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nix, SetModname, CBC_ORDER_LAST)
 {
 	M_ARGV(0, string) = "NIX";
-	return false;
 }
 #endif

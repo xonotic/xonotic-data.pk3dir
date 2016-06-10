@@ -10,7 +10,6 @@ MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 		// kill detonate delay of rockets
 		proj.spawnshieldtime = time;
 	}
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(rocketflying, BuildMutatorsString)

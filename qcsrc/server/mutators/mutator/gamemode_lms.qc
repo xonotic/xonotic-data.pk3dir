@@ -156,15 +156,12 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 {
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 {
 	if(restart_mapalreadyrestarted || (time < game_starttime))
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives())));
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
@@ -185,7 +182,6 @@ MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 	entity frag_target = M_ARGV(2, entity);
 	
 	frag_target.respawn_flags |= RESPAWN_FORCE;
-	return false;
 }
 
 void lms_RemovePlayer(entity player)
@@ -287,8 +283,6 @@ MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
@@ -400,7 +394,6 @@ MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 	if(gameover)
 	if(M_ARGV(0, int) == SP_LMS_RANK) // score field
 		return true; // allow writing to this field in intermission as it is needed for newly joining players
-	return false;
 }
 
 // scoreboard stuff

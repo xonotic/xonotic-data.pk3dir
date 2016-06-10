@@ -335,7 +335,6 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 	}
 
 	if(frag_target.ballcarried) { ka_DropEvent(frag_target); } // a player with the ball has died, drop it
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
@@ -404,8 +403,6 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and forc
 
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(6, vector) = frag_force;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, ClientDisconnect)
@@ -420,7 +417,6 @@ MUTATOR_HOOKFUNCTION(ka, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	if(player.ballcarried) { ka_DropEvent(player); } // a player with the ball has left the match, drop it
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
@@ -458,7 +454,6 @@ MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)
 	// if neither player has ball then don't attack unless the ball is on the ground
 	if(!targ.ballcarried && !bot.ballcarried && ka_ball.owner)
 		return true;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
@@ -478,8 +473,6 @@ MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 	
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
-
-	return false;
 }
 
 

@@ -5,8 +5,6 @@ MUTATOR_HOOKFUNCTION(melee_only, SetStartItems)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;
 	start_weapons = warmup_start_weapons = WEPSET(SHOTGUN);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)

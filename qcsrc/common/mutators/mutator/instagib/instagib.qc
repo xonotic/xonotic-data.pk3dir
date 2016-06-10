@@ -140,7 +140,6 @@ void instagib_ammocheck(entity this)
 MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(instagib_stop_countdown(it)));
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
@@ -148,8 +147,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 	entity item = M_ARGV(1, entity);
 
 	item.monster_loot = spawnfunc_item_minst_cells;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
@@ -159,8 +156,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 	// always refill ammo
 	if(mon.monsterid == MON_MAGE.monsterid)
 		mon.skin = 1;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BotShouldAttack)
@@ -169,8 +164,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, BotShouldAttack)
 
 	if (targ.items & ITEM_Invisibility.m_itemid)
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
@@ -269,7 +262,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
 MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
 {
 	// weapon dropping on death handled by FilterItem
-
 	return true;
 }
 
@@ -358,8 +350,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_Calculate)
 	M_ARGV(4, float) = frag_damage;
 	M_ARGV(5, float) = frag_mirrordamage;
 	M_ARGV(6, vector) = frag_force;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
@@ -376,8 +366,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 
 	start_weapons = warmup_start_weapons = WEPSET(VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
@@ -429,8 +417,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
 	if((wp.owner.flags & FL_CLIENT) && (wp.owner.items & ITEM_Invisibility.m_itemid) && (e == player))
 	if(DIFF_TEAM(wp.owner, e))
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
@@ -439,8 +425,6 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		M_ARGV(4, float) = 1000; // always gib if it was a vaporizer death
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
@@ -477,11 +461,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 {
-	if (!autocvar_g_powerups) { return false; }
+	if (!autocvar_g_powerups) { return; }
 	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
 	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
-		return false;
+		return;
 
 	entity e = spawn();
 

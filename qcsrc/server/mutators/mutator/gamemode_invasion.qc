@@ -350,8 +350,6 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
@@ -373,8 +371,6 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
 
 	mon.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
@@ -384,16 +380,12 @@ MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
 	if(startsWith(ent.classname, "monster_"))
 	if(!(ent.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)
 {
 	monsters_total = inv_maxspawned; // TODO: make sure numspawned never exceeds maxspawned
 	monsters_killed = inv_numkilled;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, PlayerRegen)
@@ -407,7 +399,6 @@ MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.bot_attack = false;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
@@ -425,14 +416,12 @@ MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
 		M_ARGV(4, float) = frag_damage;
 		M_ARGV(6, vector) = frag_force;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_ParseClientCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
 
 	entity player = M_ARGV(0, entity);
 	string cmd_name = M_ARGV(1, string);
@@ -449,8 +438,6 @@ MUTATOR_HOOKFUNCTION(inv, SV_ParseClientCommand)
 
 		return true;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
@@ -459,15 +446,12 @@ MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
 
 	if(!IS_MONSTER(targ))
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, SetStartItems)
 {
 	start_health = 200;
 	start_armorvalue = 200;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, AccuracyTargetValid)

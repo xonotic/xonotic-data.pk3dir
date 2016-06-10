@@ -15,8 +15,6 @@ MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
 	if(IS_PLAYER(frag_target))
 	if(time < frag_target.midair_shieldtime)
 		M_ARGV(4, float) = 0;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(midair, PlayerPowerups)
@@ -29,8 +27,6 @@ MUTATOR_HOOKFUNCTION(midair, PlayerPowerups)
 		player.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
 		player.midair_shieldtime = max(player.midair_shieldtime, time + autocvar_g_midair_shieldtime);
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(midair, PlayerSpawn)
@@ -39,8 +35,6 @@ MUTATOR_HOOKFUNCTION(midair, PlayerSpawn)
 
 	if(IS_BOT_CLIENT(player))
 		player.bot_moveskill = 0; // disable bunnyhopping
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(midair, BuildMutatorsString)

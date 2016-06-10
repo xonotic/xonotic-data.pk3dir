@@ -1314,7 +1314,6 @@ MUTATOR_HOOKFUNCTION(kh, PlayerDies)
 		kh_Key_DropAll(frag_target, false);
 	else
 		kh_Key_DropAll(frag_target, true);
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(kh, GiveFragsForKill, CBC_ORDER_FIRST)
@@ -1323,13 +1322,11 @@ MUTATOR_HOOKFUNCTION(kh, GiveFragsForKill, CBC_ORDER_FIRST)
 	entity frag_target = M_ARGV(1, entity);
 	float frag_score = M_ARGV(2, float);
 	M_ARGV(2, float) = kh_HandleFrags(frag_attacker, frag_target, frag_score);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh, MatchEnd)
 {
 	kh_finalize();
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(kh, GetTeamCount, CBC_ORDER_EXCLUSIVE)
@@ -1358,7 +1355,6 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 			return true;
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
@@ -1384,13 +1380,11 @@ MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 	entity frag_target = M_ARGV(0, entity);
 	
 	kh_Key_DropAll(frag_target, false);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh, reset_map_global)
 {
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
-	return false;
 }
 
 #endif

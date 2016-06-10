@@ -47,11 +47,11 @@ MUTATOR_HOOKFUNCTION(multijump, PlayerJump)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(!PHYS_MULTIJUMP(player)) { return false; }
+	if(!PHYS_MULTIJUMP(player)) { return; }
 
 	int client_multijump = PHYS_MULTIJUMP_CLIENT(player);
 	if(client_multijump > 1)
-		return false; // nope
+		return; // nope
 
 	if (!IS_JUMP_HELD(player) && !IS_ONGROUND(player) && client_multijump) // jump button pressed this frame and we are in midair
 		player.multijump_ready = true;  // this is necessary to check that we released the jump button and pressed it again

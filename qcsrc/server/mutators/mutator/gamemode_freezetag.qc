@@ -374,7 +374,6 @@ MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 	entity player = M_ARGV(0, entity);
 
 	ft_RemovePlayer(player);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
@@ -389,7 +388,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		if(STAT(FROZEN, frag_target))
 			freezetag_Unfreeze(frag_target);
 		freezetag_count_alive_players();
-		return 1; // let the player die so that he can respawn whenever he wants
+		return true; // let the player die so that he can respawn whenever he wants
 	}
 
 	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
@@ -408,11 +407,11 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			freezetag_Unfreeze(frag_target); // remove ice
 		frag_target.health = 0; // Unfreeze resets health
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
-		return 1;
+		return true;
 	}
 
 	if(STAT(FROZEN, frag_target))
-		return 1;
+		return true;
 
 	freezetag_Freeze(frag_target, frag_attacker);
 	freezetag_LastPlayerForTeam_Notify(frag_target);
@@ -432,7 +431,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}
 
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
@@ -440,12 +439,12 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
-		return 1; // do nothing, round is starting right now
+		return true; // do nothing, round is starting right now
 
 	if(player.freezetag_frozen_timeout == -2) // player was dead
 	{
 		freezetag_Freeze(player, world);
-		return 1;
+		return true;
 	}
 
 	freezetag_count_alive_players();
@@ -457,7 +456,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 		freezetag_Freeze(player, world);
 	}
 
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, reset_map_players)
@@ -469,13 +468,13 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 		it.freezetag_frozen_timeout = 0;
 	));
 	freezetag_count_alive_players();
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 {
 	M_ARGV(2, float) = 0; // no frags counted in Freeze Tag
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
@@ -583,8 +582,6 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
-
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
