@@ -851,8 +851,8 @@ void KillIndicator_Think(entity this)
 }
 
 float clientkilltime;
-void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
-{SELFPARAM();
+void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, -1 = auto, -2 = spec
+{
 	float killtime;
 	float starttime;
 	entity e;
@@ -880,7 +880,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 		if(killtime <= 0 || !IS_PLAYER(this) || IS_DEAD(this))
 		{
-			ClientKill_Now();
+			WITHSELF(this, ClientKill_Now());
 		}
 		else
 		{
@@ -955,7 +955,7 @@ void ClientKill ()
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
 
-	ClientKill_TeamChange(0);
+	ClientKill_TeamChange(this, 0);
 }
 
 void FixClientCvars(entity e)

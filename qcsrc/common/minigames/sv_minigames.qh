@@ -30,7 +30,7 @@ bool minigame_CheckSend(entity this);
 bool MinigameImpulse(entity this, int imp);
 
 // Parse a client command ( cmd minigame ... )
-void ClientCommand_minigame(int request, int argc, string command);
+void ClientCommand_minigame(entity caller, int request, int argc, string command);
 
 // Find the minigame_player entity for the given client entity
 entity minigame_find_player(entity client);

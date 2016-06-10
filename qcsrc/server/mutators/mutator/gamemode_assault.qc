@@ -258,8 +258,8 @@ void assault_wall_think(entity this)
 // reset objectives, toggle spawnpoints, reset triggers, ...
 void vehicles_clearreturn(entity veh);
 void vehicles_spawn(entity this);
-void assault_new_round()
-{SELFPARAM();
+void assault_new_round(entity this)
+{
 	//bprint("ASSAULT: new round\n");
 
 	// Eject players from vehicles
@@ -271,7 +271,7 @@ void assault_new_round()
     ));
 
 	// up round counter
-	self.winning = self.winning + 1;
+	this.winning = this.winning + 1;
 
 	// swap attacker/defender roles
 	if(assault_attacker_team == NUM_TEAM_1)
@@ -323,7 +323,7 @@ int WinningCondition_Assault()
 			}
 			else
 			{
-				WITHSELF(ent, assault_new_round());
+				assault_new_round(ent);
 			}
 		}
 	}

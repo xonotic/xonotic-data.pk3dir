@@ -279,9 +279,8 @@ MUTATOR_HOOKFUNCTION(ca, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 	M_ARGV(0, float) = ca_teams;
 }
 
-entity ca_LastPlayerForTeam()
+entity ca_LastPlayerForTeam(entity this)
 {
-    SELFPARAM();
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 		if (!IS_DEAD(it))
@@ -294,12 +293,12 @@ entity ca_LastPlayerForTeam()
 	return last_pl;
 }
 
-void ca_LastPlayerForTeam_Notify()
+void ca_LastPlayerForTeam_Notify(entity this)
 {
 	if (round_handler_IsActive())
 	if (round_handler_IsRoundStarted())
 	{
-		entity pl = ca_LastPlayerForTeam();
+		entity pl = ca_LastPlayerForTeam(this);
 		if (pl)
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
 	}
@@ -309,7 +308,7 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 	
-	ca_LastPlayerForTeam_Notify();
+	ca_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
 	if (!warmup_stage)
@@ -322,7 +321,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
     entity player = M_ARGV(0, entity);
 
 	if (player.caplayer == 1)
-		ca_LastPlayerForTeam_Notify();
+		ca_LastPlayerForTeam_Notify(player);
 	return true;
 }
 
@@ -336,7 +335,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
     entity player = M_ARGV(0, entity);
 
 	if (!IS_DEAD(player))
-		ca_LastPlayerForTeam_Notify();
+		ca_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2)
 		player.caplayer = 0;
 	if (player.caplayer)

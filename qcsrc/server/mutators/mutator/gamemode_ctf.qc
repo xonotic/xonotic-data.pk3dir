@@ -299,11 +299,11 @@ void ctf_CaptureShield_Touch(entity this)
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
-{SELFPARAM();
+{
 	entity shield = new(ctf_captureshield);
 
-	shield.enemy = self;
-	shield.team = self.team;
+	shield.enemy = flag;
+	shield.team = flag.team;
 	settouch(shield, ctf_CaptureShield_Touch);
 	setcefc(shield, ctf_CaptureShield_Customize);
 	shield.effects = EF_ADDITIVE;
@@ -312,7 +312,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 	shield.avelocity = '7 0 11';
 	shield.scale = 0.5;
 
-	setorigin(shield, self.origin);
+	setorigin(shield, flag.origin);
 	setmodel(shield, MDL_CTF_SHIELD);
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
@@ -1159,13 +1159,13 @@ void ctf_Reset(entity this)
 void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map by ctf_FlagSetup()
 {
 	// bot waypoints
-	waypoint_spawnforitem_force(self, self.origin);
-	self.nearestwaypointtimeout = 0; // activate waypointing again
-	self.bot_basewaypoint = self.nearestwaypoint;
+	waypoint_spawnforitem_force(this, this.origin);
+	this.nearestwaypointtimeout = 0; // activate waypointing again
+	this.bot_basewaypoint = this.nearestwaypoint;
 
 	// waypointsprites
 	entity basename;
-	switch (self.team)
+	switch (this.team)
 	{
 		case NUM_TEAM_1: basename = WP_FlagBaseRed; break;
 		case NUM_TEAM_2: basename = WP_FlagBaseBlue; break;
@@ -1174,12 +1174,12 @@ void ctf_DelayedFlagSetup(entity this) // called after a flag is placed on a map
 		default: basename = WP_FlagBaseNeutral; break;
 	}
 
-	entity wp = WaypointSprite_SpawnFixed(basename, self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG);
-	wp.colormod = ((self.team) ? Team_ColorRGB(self.team) : '1 1 1');
-	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, ((self.team) ? colormapPaletteColor(self.team - 1, false) : '1 1 1'));
+	entity wp = WaypointSprite_SpawnFixed(basename, this.origin + FLAG_WAYPOINT_OFFSET, this, wps_flagbase, RADARICON_FLAG);
+	wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
+	WaypointSprite_UpdateTeamRadar(this.wps_flagbase, RADARICON_FLAG, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
 
 	// captureshield setup
-	ctf_CaptureShield_Spawn(self);
+	ctf_CaptureShield_Spawn(this);
 }
 
 .bool pushable;

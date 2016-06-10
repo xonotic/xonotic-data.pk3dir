@@ -120,8 +120,8 @@ void MapVote_UnzoneStrings()
 	}
 }
 
-string MapVote_Suggest(string m)
-{SELFPARAM();
+string MapVote_Suggest(entity this, string m)
+{
 	float i;
 	if(m == "")
 		return "That's not how to use this command.";
@@ -156,7 +156,7 @@ string MapVote_Suggest(string m)
 		strunzone(mapvote_suggestions[i]);
 	mapvote_suggestions[i] = strzone(m);
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(self.playerid)));
+		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(this.playerid)));
 	return strcat("Suggestion of ", m, " accepted.");
 }
 
@@ -260,9 +260,9 @@ void MapVote_Init()
 	MapVote_Spawn();
 }
 
-void MapVote_SendPicture(float id)
-{SELFPARAM();
-	msg_entity = self;
+void MapVote_SendPicture(entity to, int id)
+{
+	msg_entity = to;
 	WriteHeader(MSG_ONE, TE_CSQC_PICTURE);
 	WriteByte(MSG_ONE, id);
 	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dirs[mapvote_maps_screenshot_dir[id]], "/", mapvote_maps[id]), 3072);
