@@ -481,8 +481,7 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobSpawning)
 
 MUTATOR_HOOKFUNCTION(inv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = invasion_teams;
-	return false;
+	M_ARGV(0, float) = invasion_teams;
 }
 
 MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)

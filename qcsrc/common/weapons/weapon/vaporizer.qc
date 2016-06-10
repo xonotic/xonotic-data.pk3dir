@@ -281,7 +281,7 @@ void W_RocketMinsta_Attack2(entity actor)
         //W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
 		proj.velocity = (w_shotdir + (((counter + 0.5) / total) * 2 - 1) * v_right * (spread * (rndspread ? random() : 1))) * cvar("g_rm_laser_speed");
 		proj.velocity_z = proj.velocity_z + cvar("g_rm_laser_zspread") * (random() - 0.5);
-		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, true);
+		proj.velocity = W_CalculateProjectileVelocity(actor, actor.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);
         settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
@@ -331,7 +331,7 @@ void W_RocketMinsta_Attack3 (entity actor)
 
         proj.movetype = MOVETYPE_BOUNCEMISSILE;
 		proj.velocity = w_shotdir * autocvar_g_rm_laser_speed;
-		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, true);
+		proj.velocity = W_CalculateProjectileVelocity(actor, actor.velocity, proj.velocity, true);
         proj.angles = vectoangles(proj.velocity);
         settouch(proj, W_RocketMinsta_Laser_Touch);
         setsize(proj, '0 0 -3', '0 0 -3');
@@ -395,7 +395,7 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
         else if (actor.jump_interval <= time)
         {
             // handle refire manually, so that primary and secondary can be fired without conflictions (important for instagib)
-            actor.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor();
+            actor.jump_interval = time + WEP_CVAR_SEC(vaporizer, refire) * W_WeaponRateFactor(actor);
 
             // decrease ammo for the laser?
             if(WEP_CVAR_SEC(vaporizer, ammo))

@@ -472,9 +472,9 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 		return 0;
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
-	d = ret_float;
-	allguns = want_allguns;
-	allow_mutatorblocked = false;
+	d = M_ARGV(1, float);
+	allguns = M_ARGV(2, bool);
+	allow_mutatorblocked = M_ARGV(3, bool);
 
 	if(allguns)
 	{

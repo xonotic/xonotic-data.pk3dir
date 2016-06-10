@@ -813,7 +813,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 }
 
 void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
-{SELFPARAM();
+{
 	if(e.nade == world)
 		return;
 
@@ -849,14 +849,14 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 
-	if(self.v_angle.x >= 70 && self.v_angle.x <= 110 && PHYS_INPUT_BUTTON_CROUCH(self))
+	if(e.v_angle.x >= 70 && e.v_angle.x <= 110 && PHYS_INPUT_BUTTON_CROUCH(e))
 		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
 		_nade.velocity = e.velocity + _velocity;
 	else if(autocvar_g_nades_nade_newton_style == 2)
 		_nade.velocity = _velocity;
 	else
-		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, true);
+		_nade.velocity = W_CalculateProjectileVelocity(e, e.velocity, _velocity, true);
 
 	if(set_owner)
 		_nade.realowner = e;
@@ -1351,27 +1351,34 @@ MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
 	return false;
 }
 
-bool nades_RemovePlayer()
-{SELFPARAM();
-	nades_Clear(self);
-	nades_RemoveBonus(self);
-	return false;
+void nades_RemovePlayer(entity this)
+{
+	nades_Clear(this);
+	nades_RemoveBonus(this);
 }
 
-MUTATOR_HOOKFUNCTION(nades, MakePlayerObserver) { nades_RemovePlayer(); }
-MUTATOR_HOOKFUNCTION(nades, ClientDisconnect) { nades_RemovePlayer(); }
-MUTATOR_HOOKFUNCTION(nades, reset_map_global) { nades_RemovePlayer(); }
+MUTATOR_HOOKFUNCTION(nades, MakePlayerObserver) { entity player = M_ARGV(0, entity); nades_RemovePlayer(player); }
+MUTATOR_HOOKFUNCTION(nades, ClientDisconnect) { entity player = M_ARGV(0, entity); nades_RemovePlayer(player); }
+MUTATOR_HOOKFUNCTION(nades, reset_map_global)
+{
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		nades_RemovePlayer(it);
+	});
+}
 
 MUTATOR_HOOKFUNCTION(nades, SpectateCopy)
-{SELFPARAM();
-	self.nade_timer = other.nade_timer;
-	self.nade_type = other.nade_type;
-	self.pokenade_type = other.pokenade_type;
-	self.bonus_nades = other.bonus_nades;
-	self.bonus_nade_score = other.bonus_nade_score;
-	self.stat_healing_orb = other.stat_healing_orb;
-	self.stat_healing_orb_alpha = other.stat_healing_orb_alpha;
-	return false;
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	client.nade_timer = spectatee.nade_timer;
+	client.nade_type = spectatee.nade_type;
+	client.pokenade_type = spectatee.pokenade_type;
+	client.bonus_nades = spectatee.bonus_nades;
+	client.bonus_nade_score = spectatee.bonus_nade_score;
+	client.stat_healing_orb = spectatee.stat_healing_orb;
+	client.stat_healing_orb_alpha = spectatee.stat_healing_orb_alpha;
 }
 
 REPLICATE(cvar_cl_nade_type, int, "cl_nade_type");

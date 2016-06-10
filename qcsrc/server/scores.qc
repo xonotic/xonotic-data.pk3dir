@@ -333,8 +333,8 @@ void PlayerScore_Detach(entity player)
 
 float PlayerScore_Add(entity player, float scorefield, float score)
 {
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score);
-	score = ret_float;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score, player);
+	score = M_ARGV(1, float);
 
 	if(gameover)
 	if(!mutator_returnvalue)

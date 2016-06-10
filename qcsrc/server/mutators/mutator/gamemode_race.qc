@@ -272,17 +272,17 @@ MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(g_race_qualifying)
-	if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
-		self.frags = FRAGS_LMS_LOSER;
+	if(PlayerScore_Add(player, SP_RACE_FASTEST, 0))
+		player.frags = FRAGS_LMS_LOSER;
 	else
-		self.frags = FRAGS_SPECTATOR;
+		player.frags = FRAGS_SPECTATOR;
 
-	race_PreparePlayer(this);
-	self.race_checkpoint = -1;
-
-	return false;
+	race_PreparePlayer(player);
+	player.race_checkpoint = -1;
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
@@ -387,8 +387,7 @@ MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(rc, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = race_teams;
-	return false;
+	M_ARGV(0, float) = race_teams;
 }
 
 MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
@@ -421,22 +420,26 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 
 MUTATOR_HOOKFUNCTION(rc, FixClientCvars)
 {
-	stuffcmd(fix_client, "cl_cmd settemp cl_movecliptokeyboard 2\n");
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	stuffcmd(player, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 }
 
 MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
 {
+	float checkrules_timelimit = M_ARGV(1, float);
+	float checkrules_fraglimit = M_ARGV(2, float);
+
 	if(checkrules_timelimit >= 0)
 	{
 		if(!g_race_qualifying)
 		{
-			ret_float = WinningCondition_Race(checkrules_fraglimit);
+			M_ARGV(0, float) = WinningCondition_Race(checkrules_fraglimit);
 			return true;
 		}
 		else if(g_race_qualifying == 2)
 		{
-			ret_float = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
+			M_ARGV(0, float) = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
 			return true;
 		}
 	}

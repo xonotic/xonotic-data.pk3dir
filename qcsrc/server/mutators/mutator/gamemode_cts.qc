@@ -240,14 +240,16 @@ MUTATOR_HOOKFUNCTION(cts, ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(cts, MakePlayerObserver)
-{SELFPARAM();
-	if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
-		self.frags = FRAGS_LMS_LOSER;
-	else
-		self.frags = FRAGS_SPECTATOR;
+{
+	entity player = M_ARGV(0, entity);
 
-	race_PreparePlayer(this);
-	self.race_checkpoint = -1;
+	if(PlayerScore_Add(player, SP_RACE_FASTEST, 0))
+		player.frags = FRAGS_LMS_LOSER;
+	else
+		player.frags = FRAGS_SPECTATOR;
+
+	race_PreparePlayer(player);
+	player.race_checkpoint = -1;
 
 	return false;
 }
@@ -403,18 +405,18 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 void ClientKill_Now();
 MUTATOR_HOOKFUNCTION(cts, ClientKill)
 {
-    SELFPARAM();
-	ret_float = 0;
+    entity player = M_ARGV(0, entity);
 
-	if(self.killindicator && self.killindicator.health == 1) // self.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
+	M_ARGV(1, float) = 0; // kill delay
+
+	if(player.killindicator && player.killindicator.health == 1) // player.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
 	{
-		remove(self.killindicator);
-		self.killindicator = world;
+		remove(player.killindicator);
+		player.killindicator = world;
 
-		ClientKill_Now(); // allow instant kill in this case
+		WITHSELF(player, ClientKill_Now()); // allow instant kill in this case
 		return;
 	}
-
 }
 
 MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
@@ -427,14 +429,15 @@ MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 
 MUTATOR_HOOKFUNCTION(cts, FixClientCvars)
 {
-	stuffcmd(fix_client, "cl_cmd settemp cl_movecliptokeyboard 2\n");
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	stuffcmd(player, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 }
 
 MUTATOR_HOOKFUNCTION(cts, WantWeapon)
 {
-	ret_float = (want_weaponinfo == WEP_SHOTGUN);
-	want_mutatorblocked = true;
+	M_ARGV(1, float) = (M_ARGV(0, entity) == WEP_SHOTGUN); // want weapon = weapon info
+	M_ARGV(3, bool) = true; // want mutator blocked
 	return true;
 }
 

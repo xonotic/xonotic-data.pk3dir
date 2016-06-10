@@ -337,8 +337,8 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= W_WeaponSpeedFactor();
-	shotspeedupward *= W_WeaponSpeedFactor();
+	shotspeed *= W_WeaponSpeedFactor(this);
+	shotspeedupward *= W_WeaponSpeedFactor(this);
 	if (!shotspeed)
 	{
 		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!\n");

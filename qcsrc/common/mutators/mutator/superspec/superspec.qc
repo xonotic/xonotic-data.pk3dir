@@ -457,7 +457,8 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(superspec, ClientDisconnect)
 {
-	superspec_save_client_conf();
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	WITHSELF(player, superspec_save_client_conf());
 }
 #endif

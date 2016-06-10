@@ -1928,7 +1928,7 @@ void CheckRules_World()
 	if(checkrules_status == WINNING_YES)
 		bprint("Hey! Someone ran out of spawns!\n");
 	else if(MUTATOR_CALLHOOK(CheckRules_World, checkrules_status, timelimit, fraglimit))
-		checkrules_status = ret_float;
+		checkrules_status = M_ARGV(0, float);
 	else
 		checkrules_status = WinningCondition_Scores(fraglimit, leadlimit);
 

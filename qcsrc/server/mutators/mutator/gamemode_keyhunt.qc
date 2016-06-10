@@ -878,7 +878,7 @@ void kh_Key_DropOne(entity key)
 
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
-	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, false);
+	key.velocity = W_CalculateProjectileVelocity(player, player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, false);
 	key.pusher = world;
 	key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 	key.kh_dropperteam = key.team;
@@ -903,7 +903,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(key, INFO_KEYHUNT_LOST), player.netname);
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
-			key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, false);
+			key.velocity = W_CalculateProjectileVelocity(player, player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, false);
 			key.pusher = mypusher;
 			key.pushltime = time + autocvar_g_balance_keyhunt_protecttime;
 			if(suicide)
@@ -1290,15 +1290,17 @@ void havocbot_role_kh_freelancer(entity this)
 // register this as a mutator
 
 MUTATOR_HOOKFUNCTION(kh, ClientDisconnect)
-{SELFPARAM();
-	kh_Key_DropAll(self, true);
-	return 0;
+{
+	entity player = M_ARGV(0, entity);
+
+	kh_Key_DropAll(player, true);
 }
 
 MUTATOR_HOOKFUNCTION(kh, MakePlayerObserver)
-{SELFPARAM();
-	kh_Key_DropAll(self, true);
-	return 0;
+{
+	entity player = M_ARGV(0, entity);
+
+	kh_Key_DropAll(player, true);
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerDies)
@@ -1332,14 +1334,15 @@ MUTATOR_HOOKFUNCTION(kh, MatchEnd)
 
 MUTATOR_HOOKFUNCTION(kh, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = kh_teams;
-	return false;
+	M_ARGV(0, float) = kh_teams;
 }
 
 MUTATOR_HOOKFUNCTION(kh, SpectateCopy)
-{SELFPARAM();
-	self.kh_state = other.kh_state;
-	return 0;
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	client.kh_state = spectatee.kh_state;
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)

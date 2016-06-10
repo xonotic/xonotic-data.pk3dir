@@ -103,7 +103,7 @@ void W_Shotgun_Melee_Think(entity this)
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
-	meleetime = WEP_CVAR_SEC(shotgun, melee_time) * W_WeaponRateFactor();
+	meleetime = WEP_CVAR_SEC(shotgun, melee_time) * W_WeaponRateFactor(this.realowner);
 	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * WEP_CVAR_SEC(shotgun, melee_traces));
 
@@ -191,7 +191,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shotgun_Melee_Think);
-	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
+	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 
@@ -252,7 +252,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, true);
-                    actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
+                    actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
             }
@@ -264,7 +264,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, false);
-                    actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
+                    actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }
             }

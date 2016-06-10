@@ -187,7 +187,7 @@ void FixPlayermodel(entity player);
 void PutObserverInServer()
 {
 	SELFPARAM();
-    bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver);
+    bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
 	if (IS_PLAYER(this) && this.health >= 1) {
@@ -1191,7 +1191,7 @@ void ClientDisconnect()
 
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
-    MUTATOR_CALLHOOK(ClientDisconnect);
+    MUTATOR_CALLHOOK(ClientDisconnect, this);
 
 	ClientState_detach(this);
 

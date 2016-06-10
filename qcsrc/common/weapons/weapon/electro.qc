@@ -492,7 +492,7 @@ METHOD(Electro, wr_think, void(entity thiswep, entity actor, .entity weaponentit
             W_Electro_Attack_Orb(thiswep, actor);
             actor.electro_count = WEP_CVAR_SEC(electro, count);
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
-            actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor();
+            actor.electro_secondarytime = time + WEP_CVAR_SEC(electro, refire2) * W_WeaponRateFactor(actor);
         }
     }
 }

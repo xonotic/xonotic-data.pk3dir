@@ -262,7 +262,7 @@ string W_Sound(string w_snd)
 	string output = strcat("weapons/", w_snd);
 #ifdef SVQC
 		MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
-		return weapon_sound_output;
+		return M_ARGV(1, string);
 #else
 		return output;
 #endif

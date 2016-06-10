@@ -222,7 +222,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 	if(!forbidWeaponUse(self) || self.weapon_blocked) // allow if weapon is blocked
 	if(time >= self.jump_interval)
 	{
-		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
+		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(this);
 		makevectors(self.v_angle);
 
 		Weapon oldwep = PS(self).m_weapon;
@@ -353,11 +353,12 @@ MUTATOR_HOOKFUNCTION(ok, FilterItem)
 }
 
 MUTATOR_HOOKFUNCTION(ok, SpectateCopy)
-{SELFPARAM();
-	self.ammo_charge[PS(self).m_weapon.m_id] = other.ammo_charge[PS(other).m_weapon.m_id];
-	self.ok_use_ammocharge = other.ok_use_ammocharge;
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
 
-	return false;
+	client.ammo_charge[PS(client).m_weapon.m_id] = spectatee.ammo_charge[PS(spectatee).m_weapon.m_id];
+	client.ok_use_ammocharge = spectatee.ok_use_ammocharge;
 }
 
 MUTATOR_HOOKFUNCTION(ok, SetStartItems)

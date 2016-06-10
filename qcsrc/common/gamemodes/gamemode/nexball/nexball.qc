@@ -791,7 +791,7 @@ void W_Nexball_Attack(entity actor, float t)
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
 
-	DropBall(ball, w_shotorg, W_CalculateProjectileVelocity(actor.velocity, w_shotdir * autocvar_g_balance_nexball_primary_speed * mul, false));
+	DropBall(ball, w_shotorg, W_CalculateProjectileVelocity(actor, actor.velocity, w_shotdir * autocvar_g_balance_nexball_primary_speed * mul, false));
 
 
 	//TODO: use the speed_up cvar too ??
@@ -922,9 +922,10 @@ void nb_DropBall(entity player)
 }
 
 MUTATOR_HOOKFUNCTION(nb, ClientDisconnect)
-{SELFPARAM();
-	nb_DropBall(self);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	nb_DropBall(player);
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerDies)
@@ -935,8 +936,10 @@ MUTATOR_HOOKFUNCTION(nb, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(nb, MakePlayerObserver)
-{SELFPARAM();
-	nb_DropBall(self);
+{
+	entity player = M_ARGV(0, entity);
+
+	nb_DropBall(player);
 	return false;
 }
 
@@ -1009,8 +1012,10 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(nb, SpectateCopy)
 {
-	SELFPARAM();
-	this.metertime = other.metertime;
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	client.metertime = spectatee.metertime;
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
@@ -1063,13 +1068,13 @@ MUTATOR_HOOKFUNCTION(nb, FilterItem)
 
 MUTATOR_HOOKFUNCTION(nb, GetTeamCount)
 {
-	ret_string = "nexball_team";
+	M_ARGV(1, string) = "nexball_team";
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(nb, WantWeapon)
 {
-	ret_float = 0; // weapon is set a few lines later, apparently
+	M_ARGV(1, float) = 0; // weapon is set a few lines later, apparently
 	return true;
 }
 

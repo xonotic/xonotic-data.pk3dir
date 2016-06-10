@@ -146,13 +146,13 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	//if(w_shotdir != prevdir) { printf("SERVER: shotDIR differs: %s - %s\n", vtos(w_shotdir), vtos(prevdir)); }
 }
 
-vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
+vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvelocity, float forceAbsolute)
 {
 	vector mdirection;
 	float mspeed;
 	vector outvelocity;
 
-	mvelocity = mvelocity * W_WeaponSpeedFactor();
+	mvelocity = mvelocity * W_WeaponSpeedFactor(actor);
 
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
@@ -189,7 +189,7 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	LOG_INFO("avg: ", ftos(mspercallcount / mspercallsum), " per sec\n");
 	#endif
 
-	proj.velocity = W_CalculateProjectileVelocity(proj.owner.velocity, pSpeed * dir, forceAbsolute);
+	proj.velocity = W_CalculateProjectileVelocity(proj.owner, proj.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
 

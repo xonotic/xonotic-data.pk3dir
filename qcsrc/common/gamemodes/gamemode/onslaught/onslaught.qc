@@ -1765,15 +1765,17 @@ MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 }
 
 MUTATOR_HOOKFUNCTION(ons, ClientDisconnect)
-{SELFPARAM();
-	self.ons_deathloc = '0 0 0';
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.ons_deathloc = '0 0 0';
 }
 
 MUTATOR_HOOKFUNCTION(ons, MakePlayerObserver)
-{SELFPARAM();
-	self.ons_deathloc = '0 0 0';
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.ons_deathloc = '0 0 0';
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
@@ -2022,9 +2024,11 @@ MUTATOR_HOOKFUNCTION(ons, GetTeamCount)
 }
 
 MUTATOR_HOOKFUNCTION(ons, SpectateCopy)
-{SELFPARAM();
-	self.ons_roundlost = other.ons_roundlost; // make spectators see it too
-	return false;
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	client.ons_roundlost = spectatee.ons_roundlost; // make spectators see it too
 }
 
 MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
@@ -2114,6 +2118,8 @@ MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(ons, PlayHitsound)
 {
+	entity frag_victim = M_ARGV(0, entity);
+
 	return (frag_victim.classname == "onslaught_generator" && !frag_victim.isshielded)
 		|| (frag_victim.classname == "onslaught_controlpoint_icon" && !frag_victim.owner.isshielded);
 }
@@ -2143,9 +2149,11 @@ MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 
 MUTATOR_HOOKFUNCTION(ons, TurretValidateTarget)
 {
+	entity turret_target = M_ARGV(1, entity);
+
 	if(substring(turret_target.classname, 0, 10) == "onslaught_") // don't attack onslaught targets, that's the player's job!
 	{
-		ret_float = -3;
+		M_ARGV(3, float) = -3;
 		return true;
 	}
 

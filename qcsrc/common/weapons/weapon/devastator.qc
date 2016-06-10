@@ -267,9 +267,9 @@ void W_Devastator_Think(entity this)
 
 	// accelerate
 	makevectors(self.angles.x * '-1 0 0' + self.angles.y * '0 1 0');
-	velspeed = WEP_CVAR(devastator, speed) * W_WeaponSpeedFactor() - (self.velocity * v_forward);
+	velspeed = WEP_CVAR(devastator, speed) * W_WeaponSpeedFactor(self.realowner) - (self.velocity * v_forward);
 	if(velspeed > 0)
-		self.velocity = self.velocity + v_forward * min(WEP_CVAR(devastator, speedaccel) * W_WeaponSpeedFactor() * frametime, velspeed);
+		self.velocity = self.velocity + v_forward * min(WEP_CVAR(devastator, speedaccel) * W_WeaponSpeedFactor(self.realowner) * frametime, velspeed);
 
 	// laser guided, or remote detonation
 	if(PS(self.realowner).m_weapon == WEP_DEVASTATOR)

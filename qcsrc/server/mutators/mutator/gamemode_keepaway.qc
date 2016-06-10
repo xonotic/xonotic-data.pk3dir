@@ -408,14 +408,17 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and forc
 }
 
 MUTATOR_HOOKFUNCTION(ka, ClientDisconnect)
-{SELFPARAM();
-	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.ballcarried) { ka_DropEvent(player); } // a player with the ball has left the match, drop it
 }
 
 MUTATOR_HOOKFUNCTION(ka, MakePlayerObserver)
-{SELFPARAM();
-	if(self.ballcarried) { ka_DropEvent(self); } // a player with the ball has left the match, drop it
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.ballcarried) { ka_DropEvent(player); } // a player with the ball has left the match, drop it
 	return false;
 }
 

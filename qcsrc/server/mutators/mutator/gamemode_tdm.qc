@@ -87,7 +87,7 @@ void tdm_DelayedInit(entity this)
 
 MUTATOR_HOOKFUNCTION(tdm, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_string = "tdm_team";
+	M_ARGV(1, string) = "tdm_team";
 	return true;
 }
 

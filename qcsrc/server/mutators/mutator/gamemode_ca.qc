@@ -35,7 +35,6 @@ REGISTER_MUTATOR(ca, false)
 		ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2) ca_teams = autocvar_g_ca_teams;
 		ca_teams = bound(2, ca_teams, 4);
-		ret_float = ca_teams;
 
         ScoreRules_basics(ca_teams, SFL_SORT_PRIO_PRIMARY, 0, true);
         ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
@@ -276,8 +275,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(ca, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = ca_teams;
-	return false;
+	M_ARGV(0, float) = ca_teams;
 }
 
 entity ca_LastPlayerForTeam()
@@ -320,10 +318,11 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
-    SELFPARAM();
-	if (this.caplayer == 1)
+    entity player = M_ARGV(0, entity);
+
+	if (player.caplayer == 1)
 		ca_LastPlayerForTeam_Notify();
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
@@ -333,13 +332,14 @@ MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
-    SELFPARAM();
-	if (!IS_DEAD(this))
+    entity player = M_ARGV(0, entity);
+
+	if (!IS_DEAD(player))
 		ca_LastPlayerForTeam_Notify();
-	if (this.killindicator_teamchange == -2)
-		this.caplayer = 0;
-	if (this.caplayer)
-		this.frags = FRAGS_LMS_LOSER;
+	if (player.killindicator_teamchange == -2)
+		player.caplayer = 0;
+	if (player.caplayer)
+		player.frags = FRAGS_LMS_LOSER;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	return true;  // prevent team reset
@@ -497,8 +497,7 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 
 MUTATOR_HOOKFUNCTION(ca, WantWeapon)
 {
-	want_allguns = true;
-	return false;
+	M_ARGV(2, bool) = true; // all weapons
 }
 
 MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)

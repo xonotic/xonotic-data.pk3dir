@@ -19,22 +19,22 @@
 
 .float weapon_frametime;
 
-float W_WeaponRateFactor()
+float W_WeaponRateFactor(entity this)
 {
 	float t = 1.0 / g_weaponratefactor;
 
-	MUTATOR_CALLHOOK(WeaponRateFactor, t);
-	t = weapon_rate;
+	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
+	t = M_ARGV(0, float);
 
 	return t;
 }
 
-float W_WeaponSpeedFactor()
+float W_WeaponSpeedFactor(entity this)
 {
 	float t = 1.0 * g_weaponspeedfactor;
 
-	MUTATOR_CALLHOOK(WeaponSpeedFactor, t);
-	t = ret_float;
+	MUTATOR_CALLHOOK(WeaponSpeedFactor, t, this);
+	t = M_ARGV(0, float);
 
 	return t;
 }
@@ -299,7 +299,7 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 			ATTACK_FINISHED(actor, slot) = time;
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
-		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
 	}
 	actor.bulletcounter += 1;
 	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
@@ -357,7 +357,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
 
-	t *= W_WeaponRateFactor();
+	t *= W_WeaponRateFactor(actor);
 
 	// VorteX: haste can be added here
 	if (this.weapon_think == w_ready)

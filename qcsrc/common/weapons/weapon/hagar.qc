@@ -295,7 +295,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 	}
 
 	weapon_thinkf(self, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hagar, load_animtime), w_ready);
-	self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, refire) * W_WeaponRateFactor();
+	self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, refire) * W_WeaponRateFactor(actor);
 	self.hagar_load = 0;
 }
 
@@ -332,7 +332,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 				sound(self, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
-				self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_speed) * W_WeaponRateFactor();
+				self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_speed) * W_WeaponRateFactor(actor);
 
 				// require letting go of the alt fire button before we can load again
 				self.hagar_loadblock = true;
@@ -353,7 +353,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 					if(self.hagar_load >= WEP_CVAR_SEC(hagar, load_max))
 						stopped = true;
 					else
-						self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_speed) * W_WeaponRateFactor();
+						self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_speed) * W_WeaponRateFactor(actor);
 				}
 			}
 			if(stopped && !self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
@@ -361,7 +361,7 @@ void W_Hagar_Attack2_Load(Weapon thiswep, entity actor, .entity weaponentity)
 				// if this is the last rocket we can load, play a beep sound to notify the player
 				sound(self, CH_WEAPON_A, SND_HAGAR_BEEP, VOL_BASE, ATTN_NORM);
 				self.hagar_loadbeep = true;
-				self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_hold) * W_WeaponRateFactor();
+				self.hagar_loadstep = time + WEP_CVAR_SEC(hagar, load_hold) * W_WeaponRateFactor(actor);
 			}
 		}
 	}
@@ -426,7 +426,7 @@ void W_Hagar_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int
 	W_Hagar_Attack(thiswep, actor);
 
 	int slot = weaponslot(weaponentity);
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hagar, refire) * W_WeaponRateFactor();
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hagar, refire) * W_WeaponRateFactor(actor);
 	int theframe = WFRAME_FIRE1;
 	entity this = actor.(weaponentity);
 	if(this)

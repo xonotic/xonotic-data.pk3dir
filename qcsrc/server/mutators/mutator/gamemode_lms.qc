@@ -204,15 +204,17 @@ void lms_RemovePlayer(entity player)
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
-{SELFPARAM();
-	lms_RemovePlayer(self);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	lms_RemovePlayer(player);
 }
 
 MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 {
-    SELFPARAM();
-	lms_RemovePlayer(this);
+    entity player = M_ARGV(0, entity);
+
+	lms_RemovePlayer(player);
 	return true;  // prevent team reset
 }
 
@@ -371,14 +373,13 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 
 MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 {
-	ret_float = WinningCondition_LMS();
+	M_ARGV(0, float) = WinningCondition_LMS();
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, WantWeapon)
 {
-	want_allguns = true;
-	return false;
+	M_ARGV(2, bool) = true; // all weapons
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
@@ -389,7 +390,7 @@ MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 {
 	if(gameover)
-	if(score_field == SP_LMS_RANK)
+	if(M_ARGV(0, int) == SP_LMS_RANK) // score field
 		return true; // allow writing to this field in intermission as it is needed for newly joining players
 	return false;
 }

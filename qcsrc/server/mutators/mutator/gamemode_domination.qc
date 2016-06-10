@@ -468,8 +468,8 @@ void havocbot_role_dom(entity this)
 MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 {
 	// fallback?
-	ret_float = domination_teams;
-	ret_string = "dom_team";
+	M_ARGV(0, float) = domination_teams;
+	string ret_string = "dom_team";
 
 	entity head = find(world, classname, ret_string);
 	while(head)
@@ -488,7 +488,7 @@ MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 		head = find(head, classname, ret_string);
 	}
 
-	ret_string = string_null;
+	M_ARGV(1, string) = string_null;
 
 	return true;
 }

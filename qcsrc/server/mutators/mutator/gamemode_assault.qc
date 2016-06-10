@@ -647,6 +647,8 @@ MUTATOR_HOOKFUNCTION(as, HavocBot_ChooseRole)
 
 MUTATOR_HOOKFUNCTION(as, PlayHitsound)
 {
+	entity frag_victim = M_ARGV(0, entity);
+
 	return (frag_victim.classname == "func_assault_destructible");
 }
 
@@ -659,7 +661,7 @@ MUTATOR_HOOKFUNCTION(as, GetTeamCount)
 
 MUTATOR_HOOKFUNCTION(as, CheckRules_World)
 {
-	ret_float = WinningCondition_Assault();
+	M_ARGV(0, float) = WinningCondition_Assault();
 	return true;
 }
 

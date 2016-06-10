@@ -805,7 +805,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
         sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
         int slot = weaponslot(weaponentity);
-        ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
+        ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor(actor);
     }
     actor.arc_BUTTON_ATCK_prev = false;
 
@@ -816,7 +816,7 @@ METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
         W_Arc_Attack2();
         actor.arc_count = autocvar_g_balance_arc_secondary_count;
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
-        actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor();
+        actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor(actor);
     }
     #endif
 }

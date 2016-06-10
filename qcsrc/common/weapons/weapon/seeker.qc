@@ -425,7 +425,7 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 		return;
 	}
 
-	this.nextthink = time + WEP_CVAR(seeker, missile_delay) * W_WeaponRateFactor();
+	this.nextthink = time + WEP_CVAR(seeker, missile_delay) * W_WeaponRateFactor(this.realowner);
 
 	entity own = this.realowner;
 

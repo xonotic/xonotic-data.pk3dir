@@ -799,8 +799,8 @@ bool buffs_RemovePlayer(entity player)
 
 	return false;
 }
-MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { SELFPARAM(); return buffs_RemovePlayer(self); }
-MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { SELFPARAM(); return buffs_RemovePlayer(self); }
+MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { entity player = M_ARGV(0, entity); return buffs_RemovePlayer(player); }
+MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { entity player = M_ARGV(0, entity); return buffs_RemovePlayer(player); }
 
 MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
 {SELFPARAM();
@@ -832,25 +832,25 @@ MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, WeaponRateFactor)
-{SELFPARAM();
-	if(self.buffs & BUFF_SPEED.m_itemid)
-		weapon_rate *= autocvar_g_buffs_speed_rate;
+{
+	entity player = M_ARGV(1, entity);
 
-	if(time < self.buff_disability_time)
-		weapon_rate *= autocvar_g_buffs_disability_rate;
+	if(player.buffs & BUFF_SPEED.m_itemid)
+		M_ARGV(0, float) *= autocvar_g_buffs_speed_rate;
 
-	return false;
+	if(time < player.buff_disability_time)
+		M_ARGV(0, float) *= autocvar_g_buffs_disability_rate;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
-{SELFPARAM();
-	if(self.buffs & BUFF_SPEED.m_itemid)
-		ret_float *= autocvar_g_buffs_speed_weaponspeed;
+{
+	entity player = M_ARGV(1, entity);
 
-	if(time < self.buff_disability_time)
-		ret_float *= autocvar_g_buffs_disability_weaponspeed;
+	if(player.buffs & BUFF_SPEED.m_itemid)
+		M_ARGV(0, float) *= autocvar_g_buffs_speed_weaponspeed;
 
-	return false;
+	if(time < player.buff_disability_time)
+		M_ARGV(0, float) *= autocvar_g_buffs_disability_weaponspeed;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
@@ -1006,9 +1006,11 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
-{SELFPARAM();
-	self.buffs = other.buffs;
-	return false;
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	client.buffs = spectatee.buffs;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)

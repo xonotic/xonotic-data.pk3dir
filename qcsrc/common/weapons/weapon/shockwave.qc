@@ -137,7 +137,7 @@ void W_Shockwave_Melee_Think(entity this)
 	makevectors(self.realowner.v_angle);
 
 	// calculate swing percentage based on time
-	meleetime = WEP_CVAR(shockwave, melee_time) * W_WeaponRateFactor();
+	meleetime = WEP_CVAR(shockwave, melee_time) * W_WeaponRateFactor(this.realowner);
 	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * WEP_CVAR(shockwave, melee_traces));
 
@@ -242,7 +242,7 @@ void W_Shockwave_Melee(Weapon thiswep, entity actor, .entity weaponentity, int f
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shockwave_Melee_Think);
-	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor();
+	meleetemp.nextthink = time + WEP_CVAR(shockwave, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(shockwave, melee_damage), WEP_CVAR(shockwave, melee_range));
 }
 
@@ -689,7 +689,7 @@ METHOD(Shockwave, wr_think, void(entity thiswep, entity actor, .entity weaponent
             if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(shockwave, blast_animtime)))
             {
                 W_Shockwave_Attack(actor);
-                actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor();
+                actor.shockwave_blasttime = time + WEP_CVAR(shockwave, blast_refire) * W_WeaponRateFactor(actor);
                 weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(shockwave, blast_animtime), w_ready);
             }
         }

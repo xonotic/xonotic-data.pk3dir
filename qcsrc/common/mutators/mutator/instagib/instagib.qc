@@ -170,9 +170,10 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, BotShouldAttack)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
-{SELFPARAM();
-	instagib_stop_countdown(self);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	instagib_stop_countdown(player);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)

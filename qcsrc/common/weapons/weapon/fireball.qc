@@ -386,7 +386,7 @@ METHOD(Fireball, wr_think, void(entity thiswep, entity actor, .entity weaponenti
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(fireball, refire)))
         {
             W_Fireball_Attack1_Frame0(thiswep, actor, weaponentity, fire);
-            actor.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor();
+            actor.fireball_primarytime = time + WEP_CVAR_PRI(fireball, refire2) * W_WeaponRateFactor(actor);
         }
     }
     else if(fire & 2)

@@ -160,8 +160,10 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver)
-{SELFPARAM();
-    Item_ItemsTime_SetTimesForPlayer(self);
+{
+    entity player = M_ARGV(0, entity);
+
+    Item_ItemsTime_SetTimesForPlayer(player);
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)

@@ -352,24 +352,28 @@ void havocbot_role_ft_freeing(entity this)
 // Hook Functions
 // ==============
 
-void ft_RemovePlayer()
-{SELFPARAM();
-	self.health = 0; // neccessary to update correctly alive stats
-	if(!STAT(FROZEN, self))
+void ft_RemovePlayer(entity this)
+{
+	this.health = 0; // neccessary to update correctly alive stats
+	if(!STAT(FROZEN, this))
 		freezetag_LastPlayerForTeam_Notify();
-	freezetag_Unfreeze(world);
+	WITHSELF(this, freezetag_Unfreeze(world));
 	freezetag_count_alive_players();
 }
 
 MUTATOR_HOOKFUNCTION(ft, ClientDisconnect)
 {
-	ft_RemovePlayer();
-	return 1;
+	entity player = M_ARGV(0, entity);
+
+	ft_RemovePlayer(player);
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 {
-	ft_RemovePlayer();
+	entity player = M_ARGV(0, entity);
+
+	ft_RemovePlayer(player);
 	return false;
 }
 
@@ -596,8 +600,7 @@ MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
 
 MUTATOR_HOOKFUNCTION(ft, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = freezetag_teams;
-	return false;
+	M_ARGV(0, float) = freezetag_teams;
 }
 
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)

@@ -214,8 +214,8 @@ void CheckAllowedTeams (entity for_whom)
 	string teament_name = string_null;
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(GetTeamCount, dm, teament_name);
-	teament_name = ret_string;
-	dm = ret_float;
+	dm = M_ARGV(0, float);
+	teament_name = M_ARGV(1, string);
 
 	if(!mutator_returnvalue)
 	{

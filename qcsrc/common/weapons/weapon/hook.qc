@@ -215,7 +215,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     if(actor.hook)
     {
         // if hooked, no bombs, and increase the timer
-        actor.hook_refire = max(actor.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor());
+        actor.hook_refire = max(actor.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor(actor));
 
         // hook also inhibits health regeneration, but only for 1 second
         if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -268,7 +268,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
             RemoveGrapplingHook(actor);
         WITHSELF(actor, FireGrapplingHook());
         actor.hook_state &= ~HOOK_FIRING;
-        actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
+        actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor(actor));
     }
     else if (actor.hook_state & HOOK_REMOVING)
     {

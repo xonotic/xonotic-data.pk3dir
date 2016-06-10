@@ -704,7 +704,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 		return -1;
 
 	if(MUTATOR_CALLHOOK(TurretValidateTarget, e_turret, e_target, validate_flags))
-		return ret_float;
+		return M_ARGV(3, float);
 
 	if (validate_flags & TFL_TARGETSELECT_NO)
 		return -4;
