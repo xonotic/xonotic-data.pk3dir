@@ -383,7 +383,7 @@ void FixPlayermodel(entity player)
 			defaultskin = autocvar_sv_defaultplayerskin;
 	}
 
-	MUTATOR_CALLHOOK(FixPlayermodel, defaultmodel, defaultskin);
+	MUTATOR_CALLHOOK(FixPlayermodel, defaultmodel, defaultskin, player);
 	defaultmodel = M_ARGV(0, string);
 	defaultskin = M_ARGV(1, int);
 

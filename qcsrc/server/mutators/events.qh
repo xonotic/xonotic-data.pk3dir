@@ -545,6 +545,7 @@ MUTATOR_HOOKABLE(AbortSpeedrun, EV_AbortSpeedrun);
 #define EV_ItemTouch(i, o) \
     /** item */    i(entity, MUTATOR_ARGV_0_entity) \
     /** toucher */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/           o(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(ItemTouch, EV_ItemTouch);
 
@@ -631,6 +632,7 @@ MUTATOR_HOOKABLE(BuffModel_Customize, EV_BuffModel_Customize);
 #define EV_BuffTouch(i, o) \
     /** buff */    i(entity, MUTATOR_ARGV_0_entity) \
     /** player */  i(entity, MUTATOR_ARGV_1_entity) \
+    /**/           o(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(BuffTouch, EV_BuffTouch);
 

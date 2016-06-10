@@ -785,8 +785,10 @@ void Item_Touch(entity this)
 	switch (MUTATOR_CALLHOOK(ItemTouch, this, other))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
-		case MUT_ITEMTOUCH_PICKUP: { goto pickup; }
+		case MUT_ITEMTOUCH_PICKUP: { other = M_ARGV(1, entity); goto pickup; }
 	}
+
+	other = M_ARGV(1, entity);
 
 	if (this.classname == "droppedweapon")
 	{

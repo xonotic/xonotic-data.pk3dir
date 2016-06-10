@@ -244,6 +244,7 @@ void buff_Touch(entity this)
 
 	if(MUTATOR_CALLHOOK(BuffTouch, this, other))
 		return;
+	other = M_ARGV(1, entity);
 
 	if(!IS_PLAYER(other))
 		return; // incase mutator changed other
