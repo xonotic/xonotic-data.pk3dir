@@ -31,7 +31,7 @@
 #include <common/monsters/sv_monsters.qh>
 
 
-void PutObserverInServer();
+void PutObserverInServer(entity this);
 
 // =====================================================
 //  Server side game commands code, reworked by Samual
@@ -197,7 +197,7 @@ void GameCommand_allspec(float request, float argc)
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
 				if (it.caplayer) it.caplayer = 0;
-				WITHSELF(it, PutObserverInServer());
+				PutObserverInServer(it);
 				++n;
 			));
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -1025,7 +1025,7 @@ void GameCommand_moveplayer(float request, float argc)
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							if (client.caplayer) client.caplayer = 0;
-							WITHSELF(client, PutObserverInServer());
+							PutObserverInServer(client);
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
 						}

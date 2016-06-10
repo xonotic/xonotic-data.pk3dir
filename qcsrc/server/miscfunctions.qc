@@ -824,7 +824,7 @@ void make_safe_for_remove(entity e)
 }
 
 void objerror(string s)
-{SELFPARAM();
+{SELFPARAM(); // needed for engine functions
     make_safe_for_remove(self);
     builtin_objerror(s);
 }

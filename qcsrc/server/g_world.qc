@@ -1296,18 +1296,18 @@ When the player presses attack or jump, change to the next level
 ============
 */
 .float autoscreenshot;
-void IntermissionThink()
-{SELFPARAM();
-	FixIntermissionClient(self);
+void IntermissionThink(entity this)
+{
+	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
-	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
+	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
-		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
+		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
 	{
-		self.autoscreenshot = -1;
-		if(IS_REAL_CLIENT(self)) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
+		this.autoscreenshot = -1;
+		if(IS_REAL_CLIENT(this)) { stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
 		return;
 	}
 
@@ -1315,7 +1315,7 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self)))
+		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this)))
 			return;
 
 	MapVote_Start();
@@ -1579,8 +1579,8 @@ CheckRules_Player
 Exit deathmatch games upon conditions
 ============
 */
-void CheckRules_Player()
-{SELFPARAM();
+void CheckRules_Player(entity this)
+{
 	if (gameover)	// someone else quit the game already
 		return;
 

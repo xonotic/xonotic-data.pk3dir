@@ -560,7 +560,7 @@ int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
 
 //void() ctf_playerchanged;
 void SV_ChangeTeam(float _color)
-{SELFPARAM();
+{SELFPARAM(); // needed for engine functions
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done

@@ -2549,8 +2549,8 @@ spawnfunc(info_player_team2);
 spawnfunc(team_CTF_blueplayer) { spawnfunc_info_player_team2(this);  }
 spawnfunc(team_CTF_bluespawn)  { spawnfunc_info_player_team2(this);  }
 
-void team_CTF_neutralflag()			 { SELFPARAM(); spawnfunc_item_flag_neutral(self);  }
-void team_neutralobelisk()			 { SELFPARAM(); spawnfunc_item_flag_neutral(self);  }
+spawnfunc(team_CTF_neutralflag)	{ spawnfunc_item_flag_neutral(this);  }
+spawnfunc(team_neutralobelisk)	{ spawnfunc_item_flag_neutral(this);  }
 
 
 // ==============

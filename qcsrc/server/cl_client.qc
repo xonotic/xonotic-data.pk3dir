@@ -62,7 +62,7 @@ STATIC_METHOD(Client, Add, void(Client this, int _team))
     WITHSELF(this, PutClientInServer());
 }
 
-void PutObserverInServer();
+void PutObserverInServer(entity this);
 void ClientDisconnect();
 
 STATIC_METHOD(Client, Remove, void(Client this))
@@ -184,9 +184,8 @@ void setplayermodel(entity e, string modelname)
 
 void FixPlayermodel(entity player);
 /** putting a client as observer in the server */
-void PutObserverInServer()
+void PutObserverInServer(entity this)
 {
-	SELFPARAM();
     bool mutator_returnvalue = MUTATOR_CALLHOOK(MakePlayerObserver, this);
 	PlayerState_detach(this);
 
@@ -463,7 +462,7 @@ void PutClientInServer()
 	MUTATOR_CALLHOOK(PutClientInServer, this);
 
 	if (IS_OBSERVER(this)) {
-		PutObserverInServer();
+		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
 		PlayerState_attach(this);
 		accuracy_resend(this);
@@ -778,7 +777,7 @@ void ClientKill_Now_TeamChange(entity this)
 	{
 		if(blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
-		WITHSELF(this, PutObserverInServer());
+		PutObserverInServer(this);
 	}
 	else
 		WITHSELF(this, SV_ChangeTeam(this.killindicator_teamchange - 1));
@@ -1648,8 +1647,8 @@ void SpectateCopy(entity this, entity spectatee)
     }
 }
 
-bool SpectateUpdate()
-{SELFPARAM();
+bool SpectateUpdate(entity this)
+{
 	if(!this.enemy)
 	    return false;
 
@@ -1664,8 +1663,8 @@ bool SpectateUpdate()
 	return true;
 }
 
-bool SpectateSet()
-{SELFPARAM();
+bool SpectateSet(entity this)
+{
 	if(!IS_PLAYER(this.enemy))
 		return false;
 
@@ -1675,36 +1674,36 @@ bool SpectateSet()
 	this.movetype = MOVETYPE_NONE;
 	accuracy_resend(this);
 
-	if(!SpectateUpdate())
-		PutObserverInServer();
+	if(!SpectateUpdate(this))
+		PutObserverInServer(this);
 
 	return true;
 }
 
-void SetSpectatee(entity player, entity spectatee)
+void SetSpectatee(entity this, entity spectatee)
 {
-	entity old_spectatee = player.enemy;
+	entity old_spectatee = this.enemy;
 
-	player.enemy = spectatee;
+	this.enemy = spectatee;
 
 	// WEAPONTODO
 	// these are required to fix the spectator bug with arc
 	if(old_spectatee && old_spectatee.arc_beam) { old_spectatee.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-	if(player.enemy && player.enemy.arc_beam) { player.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	if(this.enemy && this.enemy.arc_beam) { this.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 }
 
-bool Spectate(entity pl)
-{SELFPARAM();
+bool Spectate(entity this, entity pl)
+{
 	if(MUTATOR_CALLHOOK(SpectateSet, this, pl))
 		return false;
 	pl = M_ARGV(1, entity);
 
 	SetSpectatee(this, pl);
-	return SpectateSet();
+	return SpectateSet(this);
 }
 
-bool SpectateNext()
-{SELFPARAM();
+bool SpectateNext(entity this)
+{
 	other = find(this.enemy, classname, STR_PLAYER);
 
 	if (MUTATOR_CALLHOOK(SpectateNext, this, other))
@@ -1714,11 +1713,11 @@ bool SpectateNext()
 
 	if(other) { SetSpectatee(this, other); }
 
-	return SpectateSet();
+	return SpectateSet(this);
 }
 
-bool SpectatePrev()
-{SELFPARAM();
+bool SpectatePrev(entity this)
+{
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, STR_PLAYER);
 	if (!other) // no player
@@ -1750,7 +1749,7 @@ bool SpectatePrev()
 	}
 
 	SetSpectatee(this, other);
-	return SpectateSet();
+	return SpectateSet(this);
 }
 
 /*
@@ -1779,8 +1778,8 @@ void ShowRespawnCountdown()
 	}
 }
 
-void LeaveSpectatorMode()
-{SELFPARAM();
+void LeaveSpectatorMode(entity this)
+{
 	if(this.caplayer)
 		return;
 	if(nJoinAllowed(this, this))
@@ -1797,7 +1796,7 @@ void LeaveSpectatorMode()
 
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
-			PutClientInServer();
+			WITHSELF(this, PutClientInServer());
 
 			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
 		}
@@ -1916,8 +1915,8 @@ void PrintWelcomeMessage(entity this)
 	}
 }
 
-void ObserverThink()
-{SELFPARAM();
+void ObserverThink(entity this)
+{
 	if ( this.impulse )
 	{
 		MinigameImpulse(this, this.impulse);
@@ -1930,7 +1929,7 @@ void ObserverThink()
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) && !this.version_mismatch) {
 			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectateNext()) {
+			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
 			}
 		} else {
@@ -1944,15 +1943,15 @@ void ObserverThink()
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode();
+				LeaveSpectatorMode(this);
 				return;
 			}
 		}
 	}
 }
 
-void SpectatorThink()
-{SELFPARAM();
+void SpectatorThink(entity this)
+{
 	if ( this.impulse )
 	{
 		if(MinigameImpulse(this, this.impulse))
@@ -1964,29 +1963,29 @@ void SpectatorThink()
 			this.flags |= FL_SPAWNING;
 		} else if(PHYS_INPUT_BUTTON_ATCK(this) || this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209)) {
 			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectateNext()) {
+			if(SpectateNext(this)) {
 				TRANSMUTE(Spectator, this);
 			} else {
 				TRANSMUTE(Observer, this);
-				PutClientInServer();
+				WITHSELF(this, PutClientInServer());
 			}
 			this.impulse = 0;
 		} else if(this.impulse == 12 || this.impulse == 16  || this.impulse == 19 || (this.impulse >= 220 && this.impulse <= 229)) {
 			this.flags &= ~FL_JUMPRELEASED;
-			if(SpectatePrev()) {
+			if(SpectatePrev(this)) {
 				TRANSMUTE(Spectator, this);
 			} else {
 				TRANSMUTE(Observer, this);
-				PutClientInServer();
+				WITHSELF(this, PutClientInServer());
 			}
 			this.impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			TRANSMUTE(Observer, this);
-			PutClientInServer();
+			WITHSELF(this, PutClientInServer());
 		} else {
-			if(!SpectateUpdate())
-				PutObserverInServer();
+			if(!SpectateUpdate(this))
+				PutObserverInServer(this);
 		}
 	} else {
 		if (!(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_ATCK2(this))) {
@@ -1994,12 +1993,12 @@ void SpectatorThink()
 			if(this.flags & FL_SPAWNING)
 			{
 				this.flags &= ~FL_SPAWNING;
-				LeaveSpectatorMode();
+				LeaveSpectatorMode(this);
 				return;
 			}
 		}
-		if(!SpectateUpdate())
-			PutObserverInServer();
+		if(!SpectateUpdate(this))
+			PutObserverInServer(this);
 	}
 
 	this.flags |= FL_CLIENT | FL_NOTARGET;
@@ -2189,10 +2188,10 @@ void PlayerPreThink ()
 		PrintWelcomeMessage(this);
 
 	if (IS_PLAYER(this)) {
-		CheckRules_Player();
+		CheckRules_Player(this);
 
 		if (intermission_running) {
-			IntermissionThink();
+			IntermissionThink(this);
 			return;
 		}
 
@@ -2328,14 +2327,14 @@ void PlayerPreThink ()
 		this.dmg_team = max(0, this.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 	}
 	else if (gameover) {
-		if (intermission_running) IntermissionThink();
+		if (intermission_running) IntermissionThink(this);
 		return;
 	}
 	else if (IS_OBSERVER(this)) {
-		ObserverThink();
+		ObserverThink(this);
 	}
 	else if (IS_SPEC(this)) {
-		SpectatorThink();
+		SpectatorThink(this);
 	}
 
 	// WEAPONTODO: Add weapon request for this
@@ -2457,7 +2456,7 @@ void PlayerPostThink ()
 
 	if (IS_PLAYER(this)) {
 		DrownPlayer(this);
-		CheckRules_Player();
+		CheckRules_Player(this);
 		UpdateChatBubble();
 		if (this.impulse) ImpulseCommands(this);
 		if (intermission_running) return; // intermission or finale

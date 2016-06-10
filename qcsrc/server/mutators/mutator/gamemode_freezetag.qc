@@ -184,13 +184,13 @@ float freezetag_CheckWinner()
 	return 1;
 }
 
-entity freezetag_LastPlayerForTeam()
-{SELFPARAM();
+entity freezetag_LastPlayerForTeam(entity this)
+{
 	entity last_pl = world;
-	FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
 		if(it.health >= 1)
 		if(!STAT(FROZEN, it))
-		if(SAME_TEAM(it, self))
+		if(SAME_TEAM(it, this))
 		if(!last_pl)
 			last_pl = it;
 		else
@@ -199,56 +199,56 @@ entity freezetag_LastPlayerForTeam()
 	return last_pl;
 }
 
-void freezetag_LastPlayerForTeam_Notify()
+void freezetag_LastPlayerForTeam_Notify(entity this)
 {
 	if(round_handler_IsActive())
 	if(round_handler_IsRoundStarted())
 	{
-		entity pl = freezetag_LastPlayerForTeam();
+		entity pl = freezetag_LastPlayerForTeam(this);
 		if(pl)
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
 	}
 }
 
-void freezetag_Add_Score(entity attacker)
-{SELFPARAM();
-	if(attacker == self)
+void freezetag_Add_Score(entity targ, entity attacker)
+{
+	if(attacker == targ)
 	{
-		// you froze your own dumb self
+		// you froze your own dumb targ
 		// counted as "suicide" already
-		PlayerScore_Add(self, SP_SCORE, -1);
+		PlayerScore_Add(targ, SP_SCORE, -1);
 	}
 	else if(IS_PLAYER(attacker))
 	{
 		// got frozen by an enemy
 		// counted as "kill" and "death" already
-		PlayerScore_Add(self, SP_SCORE, -1);
+		PlayerScore_Add(targ, SP_SCORE, -1);
 		PlayerScore_Add(attacker, SP_SCORE, +1);
 	}
 	// else nothing - got frozen by the game type rules themselves
 }
 
-void freezetag_Freeze(entity attacker)
-{SELFPARAM();
-	if(STAT(FROZEN, self))
+void freezetag_Freeze(entity targ, entity attacker)
+{
+	if(STAT(FROZEN, targ))
 		return;
 
 	if(autocvar_g_freezetag_frozen_maxtime > 0)
-		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
+		targ.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
-	Freeze(self, 0, 1, true);
+	Freeze(targ, 0, 1, true);
 
 	freezetag_count_alive_players();
 
-	freezetag_Add_Score(attacker);
+	freezetag_Add_Score(targ, attacker);
 }
 
-void freezetag_Unfreeze(entity attacker)
-{SELFPARAM();
-	self.freezetag_frozen_time = 0;
-	self.freezetag_frozen_timeout = 0;
+void freezetag_Unfreeze(entity this)
+{
+	this.freezetag_frozen_time = 0;
+	this.freezetag_frozen_timeout = 0;
 
-	Unfreeze(self);
+	Unfreeze(this);
 }
 
 float freezetag_isEliminated(entity e)
@@ -356,8 +356,8 @@ void ft_RemovePlayer(entity this)
 {
 	this.health = 0; // neccessary to update correctly alive stats
 	if(!STAT(FROZEN, this))
-		freezetag_LastPlayerForTeam_Notify();
-	WITHSELF(this, freezetag_Unfreeze(world));
+		freezetag_LastPlayerForTeam_Notify(this);
+	freezetag_Unfreeze(this);
 	freezetag_count_alive_players();
 }
 
@@ -387,7 +387,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(round_handler_CountdownRunning())
 	{
 		if(STAT(FROZEN, frag_target))
-			WITHSELF(frag_target, freezetag_Unfreeze(world));
+			freezetag_Unfreeze(frag_target);
 		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
@@ -400,12 +400,12 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 		// let the player die, he will be automatically frozen when he respawns
 		if(STAT(FROZEN, frag_target) != 1)
 		{
-			freezetag_Add_Score(frag_attacker);
+			freezetag_Add_Score(frag_target, frag_attacker);
 			freezetag_count_alive_players();
-			freezetag_LastPlayerForTeam_Notify();
+			freezetag_LastPlayerForTeam_Notify(frag_target);
 		}
 		else
-			WITHSELF(frag_target, freezetag_Unfreeze(world)); // remove ice
+			freezetag_Unfreeze(frag_target); // remove ice
 		frag_target.health = 0; // Unfreeze resets health
 		frag_target.freezetag_frozen_timeout = -2; // freeze on respawn
 		return 1;
@@ -414,8 +414,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	if(STAT(FROZEN, frag_target))
 		return 1;
 
-	WITHSELF(frag_target, freezetag_Freeze(frag_attacker));
-	freezetag_LastPlayerForTeam_Notify();
+	freezetag_Freeze(frag_target, frag_attacker);
+	freezetag_LastPlayerForTeam_Notify(frag_target);
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
@@ -444,7 +444,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 	if(player.freezetag_frozen_timeout == -2) // player was dead
 	{
-		WITHSELF(player, freezetag_Freeze(world));
+		freezetag_Freeze(player, world);
 		return 1;
 	}
 
@@ -454,7 +454,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	if(round_handler_IsRoundStarted())
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
-		WITHSELF(player, freezetag_Freeze(world));
+		freezetag_Freeze(player, world);
 	}
 
 	return 1;
