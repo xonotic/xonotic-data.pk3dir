@@ -784,7 +784,7 @@ void SV_ParseClientCommand(string command)
 			return;
 		}
 	}
-	else if (MUTATOR_CALLHOOK(SV_ParseClientCommand, strtolower(argv(0)), argc, command))
+	else if (MUTATOR_CALLHOOK(SV_ParseClientCommand, this, strtolower(argv(0)), argc, command))
 	{
 		return;  // handled by a mutator
 	}

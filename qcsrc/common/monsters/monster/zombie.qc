@@ -163,12 +163,12 @@ METHOD(Zombie, mr_think, bool(Zombie this, entity actor))
     return true;
 }
 
-METHOD(Zombie, mr_pain, bool(Zombie this, entity actor))
+METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Zombie, this);
     actor.pain_finished = time + 0.34;
     setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
-    return true;
+    return damage_take;
 }
 
 METHOD(Zombie, mr_death, bool(Zombie this, entity actor))

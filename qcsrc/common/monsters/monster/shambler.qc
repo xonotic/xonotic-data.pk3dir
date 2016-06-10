@@ -236,12 +236,12 @@ METHOD(Shambler, mr_think, bool(Shambler this, entity actor))
     return true;
 }
 
-METHOD(Shambler, mr_pain, bool(Shambler this, entity actor))
+METHOD(Shambler, mr_pain, float(Shambler this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Shambler, this);
     actor.pain_finished = time + 0.5;
     setanim(actor, actor.anim_pain1, true, true, false);
-    return true;
+    return damage_take;
 }
 
 METHOD(Shambler, mr_death, bool(Shambler this, entity actor))

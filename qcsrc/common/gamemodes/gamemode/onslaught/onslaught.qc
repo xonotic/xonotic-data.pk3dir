@@ -1596,13 +1596,13 @@ void havocbot_ons_reset_role(entity this)
  * Find control point or generator owned by the same team self which is nearest to pos
  * if max_dist is positive, only control points within this range will be considered
  */
-entity ons_Nearest_ControlPoint(vector pos, float max_dist)
-{SELFPARAM();
+entity ons_Nearest_ControlPoint(entity this, vector pos, float max_dist)
+{
 	entity tmp_entity, closest_target = world;
 	tmp_entity = findchain(classname, "onslaught_controlpoint");
 	while(tmp_entity)
 	{
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.iscaptured)
 		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <=, max_dist))
 		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
@@ -1612,7 +1612,7 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
 	tmp_entity = findchain(classname, "onslaught_generator");
 	while(tmp_entity)
 	{
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <, max_dist))
 		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
 			closest_target = tmp_entity;
@@ -1627,8 +1627,8 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
  * if max_dist is positive, only control points within this range will be considered
  * This function only check distances on the XY plane, disregarding Z
  */
-entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
-{SELFPARAM();
+entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
+{
 	entity tmp_entity, closest_target = world;
 	vector delta;
 	float smallest_distance = 0, distance;
@@ -1640,7 +1640,7 @@ entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
 		delta_z = 0;
 		distance = vlen(delta);
 
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.iscaptured)
 		if(max_dist <= 0 || distance <= max_dist)
 		if(closest_target == world || distance <= smallest_distance )
@@ -1658,7 +1658,7 @@ entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
 		delta_z = 0;
 		distance = vlen(delta);
 
-		if(SAME_TEAM(tmp_entity, self))
+		if(SAME_TEAM(tmp_entity, this))
 		if(max_dist <= 0 || distance <= max_dist)
 		if(closest_target == world || distance <= smallest_distance )
 		{
@@ -1910,6 +1910,8 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ons, PlayerDies)
 {
+	entity frag_target = M_ARGV(2, entity);
+
 	frag_target.ons_deathloc = frag_target.origin;
 	entity l;
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
@@ -2026,13 +2028,17 @@ MUTATOR_HOOKFUNCTION(ons, SpectateCopy)
 }
 
 MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+	int cmd_argc = M_ARGV(2, int);
+
 	if ( cmd_name == "ons_spawn" )
 	{
-		vector pos = self.origin;
+		vector pos = player.origin;
 		if(cmd_argc > 1)
 			pos_x = stof(argv(1));
 		if(cmd_argc > 2)
@@ -2040,53 +2046,53 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 		if(cmd_argc > 3)
 			pos_z = stof(argv(3));
 
-		if ( IS_PLAYER(self) )
+		if ( IS_PLAYER(player) )
 		{
-			if ( !STAT(FROZEN, self) )
+			if ( !STAT(FROZEN, player) )
 			{
-				entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+				entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
 
-				if ( !source_point && self.health > 0 )
+				if ( !source_point && player.health > 0 )
 				{
-					sprint(self, "\nYou need to be next to a control point\n");
-					return 1;
+					sprint(player, "\nYou need to be next to a control point\n");
+					return true;
 				}
 
 
-				entity closest_target = ons_Nearest_ControlPoint_2D(pos, autocvar_g_onslaught_click_radius);
+				entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
 
 				if ( closest_target == world )
 				{
-					sprint(self, "\nNo control point found\n");
-					return 1;
+					sprint(player, "\nNo control point found\n");
+					return true;
 				}
 
-				if ( self.health <= 0 )
+				if ( player.health <= 0 )
 				{
-					self.ons_spawn_by = closest_target;
-					self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+					player.ons_spawn_by = closest_target;
+					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
 				}
 				else
 				{
 					if ( source_point == closest_target )
 					{
-						sprint(self, "\nTeleporting to the same point\n");
-						return 1;
+						sprint(player, "\nTeleporting to the same point\n");
+						return true;
 					}
 
-					if ( !ons_Teleport(self,closest_target,autocvar_g_onslaught_teleport_radius,true) )
-						sprint(self, "\nUnable to teleport there\n");
+					if ( !ons_Teleport(player,closest_target,autocvar_g_onslaught_teleport_radius,true) )
+						sprint(player, "\nUnable to teleport there\n");
 				}
 
-				return 1;
+				return true;
 			}
 
-			sprint(self, "\nNo teleportation for you\n");
+			sprint(player, "\nNo teleportation for you\n");
 		}
 
-		return 1;
+		return true;
 	}
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
@@ -2095,7 +2101,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
 
 	if((time > self.teleport_antispam) && (!IS_DEAD(self)) && !self.vehicle)
 	{
-		entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+		entity source_point = ons_Nearest_ControlPoint(self, self.origin, autocvar_g_onslaught_teleport_radius);
 		if ( source_point )
 		{
 			stuffcmd(self, "qc_cmd_cl hud clickradar\n");

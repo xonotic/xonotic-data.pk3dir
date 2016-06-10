@@ -1270,6 +1270,9 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	if(frag_target.nade)
 	if(!STAT(FROZEN, frag_target) || !autocvar_g_freezetag_revive_nade)
 		toss_nade(frag_target, true, '0 0 100', max(frag_target.nade.wait, time + 0.05));
@@ -1298,17 +1301,14 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDies, CBC_ORDER_LAST)
 	}
 
 	nades_RemoveBonus(frag_target);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 {
+	entity frag_inflictor = M_ARGV(0, entity);
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
-	float frag_damage = M_ARGV(4, float);
-	vector frag_force = M_ARGV(6, vector);
 
 	if(STAT(FROZEN, frag_target))
 	if(autocvar_g_freezetag_revive_nade)
@@ -1319,13 +1319,10 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 		Unfreeze(frag_target);
 		frag_target.health = autocvar_g_freezetag_revive_nade_health;
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
-		frag_damage = 0;
-		frag_force = '0 0 0';
+		M_ARGV(4, float) = 0;
+		M_ARGV(6, vector) = '0 0 0';
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
-
-		M_ARGV(4, float) = frag_damage;
-		M_ARGV(6, vector) = frag_force;
 	}
 
 	return false;
@@ -1333,6 +1330,9 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 
 MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 {
+	entity frag_target = M_ARGV(0, entity);
+	entity frag_attacker = M_ARGV(1, entity);
+
 	if(IS_PLAYER(frag_attacker))
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	if(!(frag_target.spawnflags & MONSTERFLAG_SPAWNED))
@@ -1343,6 +1343,8 @@ MUTATOR_HOOKFUNCTION(nades, MonsterDies)
 
 MUTATOR_HOOKFUNCTION(nades, DropSpecialItems)
 {
+	entity frag_target = M_ARGV(0, entity);
+	
 	if(frag_target.nade)
 		toss_nade(frag_target, true, '0 0 0', time + 0.05);
 

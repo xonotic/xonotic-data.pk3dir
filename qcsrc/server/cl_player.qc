@@ -384,10 +384,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		save = v.y;
 	}
 
-	frag_damage = damage;
-	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save);
-	take = bound(0, damage_take, this.health);
-	save = bound(0, damage_save, this.armorvalue);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
+	take = bound(0, M_ARGV(4, float), this.health);
+	save = bound(0, M_ARGV(5, float), this.armorvalue);
 	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
@@ -552,8 +551,8 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(accuracy_isgooddamage(attacker, this))
         attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
-		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype);
-		excess = frag_damage;
+		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, excess);
+		excess = M_ARGV(4, float);
 
 		Weapon wep = PS(this).m_weapon;
 		WITHSELF(this, wep.wr_playerdeath(wep, this));

@@ -234,10 +234,10 @@ METHOD(Spider, mr_think, bool(Spider this, entity actor))
     return true;
 }
 
-METHOD(Spider, mr_pain, bool(Spider this, entity actor))
+METHOD(Spider, mr_pain, float(Spider this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Spider, this);
-    return true;
+    return damage_take;
 }
 
 METHOD(Spider, mr_death, bool(Spider this, entity actor))

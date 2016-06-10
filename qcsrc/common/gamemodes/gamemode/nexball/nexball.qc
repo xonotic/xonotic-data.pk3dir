@@ -929,8 +929,9 @@ MUTATOR_HOOKFUNCTION(nb, ClientDisconnect)
 
 MUTATOR_HOOKFUNCTION(nb, PlayerDies)
 {
+	entity frag_target = M_ARGV(2, entity);
+
 	nb_DropBall(frag_target);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nb, MakePlayerObserver)
@@ -1074,6 +1075,8 @@ MUTATOR_HOOKFUNCTION(nb, WantWeapon)
 
 MUTATOR_HOOKFUNCTION(nb, DropSpecialItems)
 {
+	entity frag_target = M_ARGV(0, entity);
+
 	if(frag_target.ballcarried)
 		DropBall(frag_target.ballcarried, frag_target.origin, frag_target.velocity);
 

@@ -31,7 +31,7 @@ void UpdateFrags(entity player, float f)
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
-{SELFPARAM();
+{
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 
@@ -102,9 +102,9 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, self, attacker, targ, f))
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
 	{
-		f = frag_score;
+		f = M_ARGV(2, float);
 	}
 
 	attacker.totalfrags += f;

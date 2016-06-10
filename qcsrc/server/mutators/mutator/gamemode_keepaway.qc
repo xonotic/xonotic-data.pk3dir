@@ -316,6 +316,9 @@ void havocbot_role_ka_collector(entity this)
 
 MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)))
 	{
 		if(frag_target.ballcarried) { // add to amount of times killing carrier
@@ -337,8 +340,8 @@ MUTATOR_HOOKFUNCTION(ka, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
 {
-	frag_score = 0; // no frags counted in keepaway
-	return 1; // you deceptive little bugger ;3 This needs to be true in order for this function to even count.
+	M_ARGV(2, float) = 0; // no frags counted in keepaway
+	return true; // you deceptive little bugger ;3 This needs to be true in order for this function to even count.
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
@@ -461,6 +464,8 @@ MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
 
 MUTATOR_HOOKFUNCTION(ka, DropSpecialItems)
 {
+	entity frag_target = M_ARGV(0, entity);
+	
 	if(frag_target.ballcarried)
 		ka_DropEvent(frag_target);
 

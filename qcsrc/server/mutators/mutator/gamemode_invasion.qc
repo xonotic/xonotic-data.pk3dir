@@ -331,6 +331,9 @@ void Invasion_RoundStart()
 
 MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 {
+	entity frag_target = M_ARGV(0, entity);
+	entity frag_attacker = M_ARGV(1, entity);
+
 	if(!(frag_target.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		inv_numkilled += 1;
@@ -423,19 +426,22 @@ MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_ParseClientCommand)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+
 	if(cmd_name == "debuginvasion")
 	{
-		sprint(self, strcat("inv_maxspawned = ", ftos(inv_maxspawned), "\n"));
-		sprint(self, strcat("inv_numspawned = ", ftos(inv_numspawned), "\n"));
-		sprint(self, strcat("inv_numkilled = ", ftos(inv_numkilled), "\n"));
-		sprint(self, strcat("inv_roundcnt = ", ftos(inv_roundcnt), "\n"));
-		sprint(self, strcat("monsters_total = ", ftos(monsters_total), "\n"));
-		sprint(self, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
-		sprint(self, strcat("inv_monsterskill = ", ftos(inv_monsterskill), "\n"));
+		sprint(player, strcat("inv_maxspawned = ", ftos(inv_maxspawned), "\n"));
+		sprint(player, strcat("inv_numspawned = ", ftos(inv_numspawned), "\n"));
+		sprint(player, strcat("inv_numkilled = ", ftos(inv_numkilled), "\n"));
+		sprint(player, strcat("inv_roundcnt = ", ftos(inv_roundcnt), "\n"));
+		sprint(player, strcat("monsters_total = ", ftos(monsters_total), "\n"));
+		sprint(player, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
+		sprint(player, strcat("inv_monsterskill = ", ftos(inv_monsterskill), "\n"));
 
 		return true;
 	}
@@ -460,6 +466,8 @@ MUTATOR_HOOKFUNCTION(inv, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(inv, AccuracyTargetValid)
 {
+	entity frag_target = M_ARGV(1, entity);
+
 	if(IS_MONSTER(frag_target))
 		return MUT_ACCADD_INVALID;
 	return MUT_ACCADD_INDIFFERENT;

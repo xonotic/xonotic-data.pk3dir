@@ -308,6 +308,8 @@ void ca_LastPlayerForTeam_Notify()
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 {
+	entity frag_target = M_ARGV(2, entity);
+	
 	ca_LastPlayerForTeam_Notify();
 	if (!allowed_to_spawn)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
@@ -350,8 +352,8 @@ MUTATOR_HOOKFUNCTION(ca, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	frag_score = 0; // score will be given to the winner team when the round ends
-	return 1;
+	M_ARGV(2, float) = 0; // score will be given to the winner team when the round ends
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
@@ -405,12 +407,16 @@ MUTATOR_HOOKFUNCTION(ca, FilterItem)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(7, float);
+	float damage_take = M_ARGV(4, float);
+	float damage_save = M_ARGV(5, float);
+
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
 		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)

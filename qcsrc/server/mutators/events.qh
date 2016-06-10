@@ -44,15 +44,13 @@ MUTATOR_HOOKABLE(ClientDisconnect, EV_ClientDisconnect);
 
 /** called when a player dies to e.g. remove stuff he was carrying. */
 #define EV_PlayerDies(i, o) \
-    /**/ i(entity, frag_inflictor) \
-    /**/ i(entity, frag_attacker) \
-    /** same as self */ i(entity, frag_target) \
-    /**/ i(int, frag_deathtype) \
+	/** inflictor  		*/ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker    	*/ i(entity, MUTATOR_ARGV_1_entity) \
+    /** target    		*/ i(entity, MUTATOR_ARGV_2_entity) \
+    /** deathtype     	*/ i(float,  MUTATOR_ARGV_3_float) \
+    /** damage          */ i(float,  MUTATOR_ARGV_4_float) \
+    /** damage  		*/ o(float,  MUTATOR_ARGV_4_float) \
     /**/
-entity frag_inflictor;
-entity frag_attacker;
-entity frag_target;
-int frag_deathtype;
 MUTATOR_HOOKABLE(PlayerDies, EV_PlayerDies);
 
 /** called when a player dies to e.g. remove stuff he was carrying */
@@ -84,13 +82,11 @@ MUTATOR_HOOKABLE(ItemModel, EV_ItemModel);
 
 /** called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill */
 #define EV_GiveFragsForKill(i, o) \
-    /**/ i(entity, __self) \
-    /** same as self */ i(entity, frag_attacker) \
-    /**/ i(entity, frag_target) \
-    /**/ i(float, frag_score) \
-    /**/ o(float, frag_score) \
+    /** attacker   */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** target     */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** frag score */ i(float, MUTATOR_ARGV_2_float) \
+    /**            */ o(float, MUTATOR_ARGV_2_float) \
     /**/
-float frag_score;
 MUTATOR_HOOKABLE(GiveFragsForKill, EV_GiveFragsForKill);
 
 /** called when the match ends */
@@ -231,8 +227,9 @@ MUTATOR_HOOKABLE(MonsterSpawn, EV_MonsterSpawn);
 
 /** called when a monster dies */
 #define EV_MonsterDies(i, o) \
-    /**/ i(entity, frag_target) \
-    /**/ i(entity, frag_attacker) \
+    /** target       */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker     */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** deathtype    */ i(float, MUTATOR_ARGV_2_float) \
     /**/
 MUTATOR_HOOKABLE(MonsterDies, EV_MonsterDies);
 
@@ -251,8 +248,10 @@ MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
 
 /** called when a monster is dropping loot */
 #define EV_MonsterDropItem(i, o) \
-    /**/ i(entity, other) \
-    /**/ o(entity, other) \
+    /* monster */ i(entity, MUTATOR_ARGV_0_entity) \
+    /* item (can be removed or changed) */ i(entity, MUTATOR_ARGV_1_entity) \
+    /**/ o(entity, MUTATOR_ARGV_1_entity) \
+    /* attacker */ i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 .void(entity this) monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
@@ -291,18 +290,17 @@ MUTATOR_HOOKABLE(AllowMobSpawning, EV_NO_ARGS);
 
 /** called when a player gets damaged to e.g. remove stuff he was carrying. */
 #define EV_PlayerDamage_SplitHealthArmor(i, o) \
-    /**/ i(entity, frag_inflictor) \
-    /**/ i(entity, frag_attacker) \
-    /** same as self */ i(entity, frag_target) \
-    /** NOTE: this force already HAS been applied */ i(vector, damage_force) \
-    /**/ i(float, damage_take) \
-    /**/ o(float, damage_take) \
-	/**/ i(float, damage_save) \
-    /**/ o(float, damage_save) \
+	/** inflictor  		*/ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker    	*/ i(entity, MUTATOR_ARGV_1_entity) \
+    /** target    		*/ i(entity, MUTATOR_ARGV_2_entity) \
+    /** force (no out)  */ i(vector, MUTATOR_ARGV_3_vector) \
+    /** damage take     */ i(float,  MUTATOR_ARGV_4_float) \
+    /** damage take  	*/ o(float,  MUTATOR_ARGV_4_float) \
+    /** damage save     */ i(float,  MUTATOR_ARGV_5_float) \
+    /** damage save 	*/ o(float,  MUTATOR_ARGV_5_float) \
+    /** deathtype 		*/ i(float,  MUTATOR_ARGV_6_float) \
+    /** damage 		    */ i(float,  MUTATOR_ARGV_7_float) \
     /**/
-vector damage_force;
-float damage_take;
-float damage_save;
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor, EV_PlayerDamage_SplitHealthArmor);
 
 /**
@@ -407,24 +405,19 @@ MUTATOR_HOOKABLE(PlayerUseKey, EV_NO_ARGS);
  * }
  */
 #define EV_SV_ParseClientCommand(i, o) \
-    /** command name */ i(string, cmd_name) \
-    /** also, argv() can be used */ i(int, cmd_argc) \
-    /** whole command, use only if you really have to */ i(string, cmd_string) \
+ 	/** client sending the command */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** command name */ i(string, MUTATOR_ARGV_1_string) \
+ 	/** argc (also, argv() can be used) */ i(int, MUTATOR_ARGV_2_int) \
+ 	/** whole command, use only if you really have to */ i(string, MUTATOR_ARGV_3_string) \
     /**/
-string cmd_name;
-int cmd_argc;
-string cmd_string;
 MUTATOR_HOOKABLE(SV_ParseClientCommand, EV_SV_ParseClientCommand);
 
 /** please read EV_SV_ParseClientCommand description before using */
 #define EV_SV_ParseServerCommand(i, o) \
-    /** command name */ i(string, cmd_name) \
-    /** also, argv() can be used */ i(int, cmd_argc) \
-    /** whole command, use only if you really have to */ i(string, cmd_string) \
+   /** command name */ i(string, MUTATOR_ARGV_0_string) \
+ 	/** argc (also, argv() can be used) */ i(int, MUTATOR_ARGV_1_int) \
+ 	/** whole command, use only if you really have to */ i(string, MUTATOR_ARGV_2_string) \
     /**/
-//string cmd_name;
-//int cmd_argc;
-//string cmd_string;
 MUTATOR_HOOKABLE(SV_ParseServerCommand, EV_SV_ParseServerCommand);
 
 /**
@@ -432,13 +425,11 @@ MUTATOR_HOOKABLE(SV_ParseServerCommand, EV_SV_ParseServerCommand);
  * return 1 to make the spawnpoint unusable
  */
 #define EV_Spawn_Score(i, o) \
-    /** player wanting to spawn */ i(entity, __self) \
-    /** spot to be evaluated */ i(entity, spawn_spot) \
-    /** _x is priority, _y is "distance" */ i(vector, spawn_score) \
-    /**/ o(vector, spawn_score) \
+    /** player wanting to spawn */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** spot to be evaluated */ i(entity, MUTATOR_ARGV_1_entity) \
+    /** spot score, _x is priority, _y is "distance" */ i(vector, MUTATOR_ARGV_0_vector) \
+    /**/ o(vector, MUTATOR_ARGV_0_vector) \
     /**/
-entity spawn_spot;
-vector spawn_score;
 MUTATOR_HOOKABLE(Spawn_Score, EV_Spawn_Score);
 
 /** runs globally each server frame */
@@ -579,8 +570,8 @@ MUTATOR_HOOKABLE(HavocBot_ChooseRole, EV_HavocBot_ChooseRole);
 
 /** called when a target is checked for accuracy */
 #define EV_AccuracyTargetValid(i, o) \
-    /** attacker */ i(entity, frag_attacker) \
-    /** target */ i(entity, frag_target) \
+    /** attacker */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** target */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(AccuracyTargetValid, EV_AccuracyTargetValid);
 enum {
@@ -789,7 +780,7 @@ MUTATOR_HOOKABLE(GetPlayerStatus, EV_GetPlayerStatus);
 MUTATOR_HOOKABLE(SetWeaponArena, EV_SetWeaponArena);
 
 #define EV_DropSpecialItems(i, o) \
-    /**/ i(entity, frag_target) \
+    /** target */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(DropSpecialItems, EV_DropSpecialItems);
 
@@ -833,8 +824,8 @@ MUTATOR_HOOKABLE(Ent_Init, EV_NO_ARGS);
 
 /** */
 #define EV_PrepareExplosionByDamage(i, o) \
-    /**/ i(entity, __self) \
-    /**/ i(entity, frag_attacker) \
+    /** projectile */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** attacker */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(PrepareExplosionByDamage, EV_PrepareExplosionByDamage);
 

@@ -375,6 +375,10 @@ MUTATOR_HOOKFUNCTION(ft, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(2, float);
+
 	if(round_handler_IsActive())
 	if(round_handler_CountdownRunning())
 	{
@@ -466,7 +470,7 @@ MUTATOR_HOOKFUNCTION(ft, reset_map_players)
 
 MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	frag_score = 0; // no frags counted in Freeze Tag
+	M_ARGV(2, float) = 0; // no frags counted in Freeze Tag
 	return 1;
 }
 

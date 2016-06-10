@@ -2065,6 +2065,9 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and for
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
 		PlayerTeamScore_AddScore(frag_attacker, ((SAME_TEAM(frag_attacker, frag_target)) ? -autocvar_g_ctf_score_kill : autocvar_g_ctf_score_kill));
@@ -2083,7 +2086,7 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(ctf, GiveFragsForKill)
 {
-	frag_score = 0;
+	M_ARGV(2, float) = 0; // frag score
 	return (autocvar_g_ctf_ignore_frags); // no frags counted in ctf if this is true
 }
 
@@ -2357,8 +2360,11 @@ bool superspec_Spectate(entity _player); // TODO
 void superspec_msg(string _center_title, string _con_title, entity _to, string _msg, float _spamlevel); // TODO
 MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 {
-    SELFPARAM();
-	if(IS_PLAYER(self) || MUTATOR_RETURNVALUE || !cvar("g_superspectate")) { return false; }
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+	int cmd_argc = M_ARGV(2, int);
+
+	if(IS_PLAYER(player) || MUTATOR_RETURNVALUE || !cvar("g_superspectate")) { return false; }
 
 	if(cmd_name == "followfc")
 	{
@@ -2383,14 +2389,14 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 			if(it.flagcarried && (it.team == _team || _team == 0))
 			{
 				found = true;
-				if(_team == 0 && IS_SPEC(self) && self.enemy == it)
+				if(_team == 0 && IS_SPEC(player) && player.enemy == it)
 					continue; // already spectating this fc, try another
 				return superspec_Spectate(it);
 			}
 		));
 
 		if(!found)
-			superspec_msg("", "", self, "No active flag carrier\n", 1);
+			superspec_msg("", "", player, "No active flag carrier\n", 1);
 		return true;
 	}
 
@@ -2399,6 +2405,8 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(ctf, DropSpecialItems)
 {
+	entity frag_target = M_ARGV(0, entity);
+	
 	if(frag_target.flagcarried)
 		ctf_Handle_Throw(frag_target, world, DROP_THROW);
 

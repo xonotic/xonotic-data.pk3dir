@@ -246,8 +246,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
-	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
-	spawn_spot = spot;
+	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
 	if(spot.target != "") {
@@ -273,7 +272,8 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 		}
 	}
 
-	MUTATOR_CALLHOOK(Spawn_Score, this, spawn_spot, spawn_score);
+	MUTATOR_CALLHOOK(Spawn_Score, this, spot, spawn_score);
+	spawn_score = M_ARGV(2, vector);
 	return spawn_score;
 }
 

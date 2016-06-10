@@ -445,10 +445,10 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     return true;
 }
 
-METHOD(Mage, mr_pain, bool(Mage this, entity actor))
+METHOD(Mage, mr_pain, float(Mage this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Mage, this);
-    return true;
+    return damage_take;
 }
 
 METHOD(Mage, mr_death, bool(Mage this, entity actor))

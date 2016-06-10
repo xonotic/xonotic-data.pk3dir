@@ -33,6 +33,9 @@ MUTATOR_HOOKFUNCTION(rm, PlayerDies)
 	// we do it this way, so rm can be toggled during the match
 	if(!autocvar_g_rm) { return false; }
 
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO))
 		frag_damage = 1000; // always gib if it was a vaporizer death
 

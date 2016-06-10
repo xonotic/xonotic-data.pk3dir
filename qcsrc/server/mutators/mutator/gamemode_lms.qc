@@ -182,6 +182,8 @@ MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
 
 MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {
+	entity frag_target = M_ARGV(2, entity);
+	
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	return false;
 }
@@ -251,6 +253,8 @@ MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 {
+	entity frag_target = M_ARGV(1, entity);
+
 	// remove a life
 	float tl;
 	tl = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
@@ -265,7 +269,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		PlayerScore_Add(frag_target, SP_LMS_RANK, lms_next_place); // won't ever spawn again
 		--lms_next_place;
 	}
-	frag_score = 0;
+	M_ARGV(2, float) = 0;
 
 	return true;
 }

@@ -1303,9 +1303,12 @@ MUTATOR_HOOKFUNCTION(kh, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(kh, PlayerDies)
 {
-	if(frag_target == other)
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
+	if(frag_target == frag_attacker)
 		kh_Key_DropAll(frag_target, true);
-	else if(IS_PLAYER(other))
+	else if(IS_PLAYER(frag_attacker))
 		kh_Key_DropAll(frag_target, false);
 	else
 		kh_Key_DropAll(frag_target, true);
@@ -1314,8 +1317,11 @@ MUTATOR_HOOKFUNCTION(kh, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(kh, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	frag_score = kh_HandleFrags(frag_attacker, frag_target, frag_score);
-	return 0;
+	entity frag_attacker = M_ARGV(0, entity);
+	entity frag_target = M_ARGV(1, entity);
+	float frag_score = M_ARGV(2, float);
+	M_ARGV(2, float) = kh_HandleFrags(frag_attacker, frag_target, frag_score);
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh, MatchEnd)
@@ -1370,6 +1376,8 @@ MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 
 MUTATOR_HOOKFUNCTION(kh, DropSpecialItems)
 {
+	entity frag_target = M_ARGV(0, entity);
+	
 	kh_Key_DropAll(frag_target, false);
 	return false;
 }

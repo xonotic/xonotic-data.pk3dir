@@ -151,12 +151,12 @@ METHOD(Wyvern, mr_think, bool(Wyvern this, entity actor))
     return true;
 }
 
-METHOD(Wyvern, mr_pain, bool(Wyvern this, entity actor))
+METHOD(Wyvern, mr_pain, float(Wyvern this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Wyvern, this);
     actor.pain_finished = time + 0.5;
     setanim(actor, actor.anim_pain1, true, true, false);
-    return true;
+    return damage_take;
 }
 
 METHOD(Wyvern, mr_death, bool(Wyvern this, entity actor))

@@ -123,41 +123,55 @@ MUTATOR_HOOKFUNCTION(ok, PlayerDamage_Calculate, CBC_ORDER_LAST)
 
 MUTATOR_HOOKFUNCTION(ok, PlayerDamage_SplitHealthArmor)
 {
+	entity frag_target = M_ARGV(2, entity);
+	float damage_take = M_ARGV(4, float);
+
 	if(damage_take)
 		frag_target.ok_pauseregen_finished = max(frag_target.ok_pauseregen_finished, time + 2);
-	return false;
 }
 
-MUTATOR_HOOKFUNCTION(ok, PlayerDies)
+void ok_DropItem(entity this, entity targ)
 {
-	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
-
-	if(IS_MONSTER(frag_target))
-	{
-		remove(other); // remove default item
-		other = NULL;
-	}
-
 	entity e = new(droppedweapon); // hax
 	e.ok_item = true;
 	e.noalign = true;
 	e.pickup_anyway = true;
 	e.spawnfunc_checked = true;
-	spawnfunc_item_armor_small(e);
+	WITHSELF(e, spawnfunc_item_armor_small(e));
 	if (!wasfreed(e)) { // might have been blocked by a mutator
         e.movetype = MOVETYPE_TOSS;
         e.gravity = 1;
         e.reset = SUB_Remove;
-        setorigin(e, frag_target.origin + '0 0 32');
-        e.velocity = '0 0 200' + normalize(targ.origin - frag_target.origin) * 500;
+        setorigin(e, this.origin + '0 0 32');
+        e.velocity = '0 0 200' + normalize(targ.origin - this.origin) * 500;
         SUB_SetFade(e, time + 5, 1);
 	}
+}
+
+MUTATOR_HOOKFUNCTION(ok, PlayerDies)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
+	entity targ = ((frag_attacker) ? frag_attacker : frag_target);
+
+	ok_DropItem(frag_target, targ);
 
 	frag_target.ok_lastwep = PS(frag_target).m_switchweapon.m_id;
-
-	return false;
 }
-MUTATOR_HOOKFUNCTION(ok, MonsterDropItem) { ok_PlayerDies(); }
+
+MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
+{
+	entity mon = M_ARGV(0, entity);
+	entity olditem = M_ARGV(1, entity);
+	entity frag_attacker = M_ARGV(2, entity);
+
+	remove(olditem);
+
+	M_ARGV(1, entity) = NULL;
+
+	ok_DropItem(mon, frag_attacker);
+}
 
 MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
 {SELFPARAM();

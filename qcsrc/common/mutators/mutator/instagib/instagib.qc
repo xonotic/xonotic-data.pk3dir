@@ -145,7 +145,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MatchEnd)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 {
-	other.monster_loot = spawnfunc_item_minst_cells;
+	entity item = M_ARGV(1, entity);
+
+	item.monster_loot = spawnfunc_item_minst_cells;
 
 	return false;
 }
@@ -253,10 +255,8 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDamage_SplitHealthArmor)
 {
-	damage_save = 0;
-	damage_take = frag_damage;
-
-	return false;
+	M_ARGV(4, float) = M_ARGV(7, float); // take = damage
+	M_ARGV(5, float) = 0; // save
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ForbidThrowCurrentWeapon)
@@ -423,6 +423,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 {
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 		frag_damage = 1000; // always gib if it was a vaporizer death
 

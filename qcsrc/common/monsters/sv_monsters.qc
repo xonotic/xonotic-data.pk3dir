@@ -31,7 +31,7 @@ void monsters_setstatus(entity this)
 	this.stat_monsters_killed = monsters_killed;
 }
 
-void monster_dropitem(entity this)
+void monster_dropitem(entity this, entity attacker)
 {
 	if(!this.candrop || !this.monster_loot)
 		return;
@@ -42,8 +42,8 @@ void monster_dropitem(entity this)
 
 	e.monster_loot = this.monster_loot;
 
-	MUTATOR_CALLHOOK(MonsterDropItem, e);
-	e = other;
+	MUTATOR_CALLHOOK(MonsterDropItem, this, e, attacker);
+	e = M_ARGV(1, entity);
 
 	if(e && e.monster_loot)
 	{
@@ -991,7 +991,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		this.health = 0; // reset by Unfreeze
 	}
 
-	monster_dropitem(this);
+	monster_dropitem(this, attacker);
 
 	Monster_Sound(this, monstersound_death, 0, false, CH_VOICE);
 
@@ -1057,12 +1057,8 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	take = v_x;
 	save = v_y;
 
-	damage_take = take;
-	frag_attacker = attacker;
-	frag_deathtype = deathtype;
 	Monster mon = get_monsterinfo(this.monsterid);
-	mon.mr_pain(mon, this);
-	take = damage_take;
+	take = mon.mr_pain(mon, this, take, attacker, deathtype);
 
 	if(take)
 	{
@@ -1102,7 +1098,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 		WaypointSprite_Kill(this.sprite);
 
-		MUTATOR_CALLHOOK(MonsterDies, this, attacker);
+		MUTATOR_CALLHOOK(MonsterDies, this, attacker, deathtype);
 
 		if(this.health <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
 		{
