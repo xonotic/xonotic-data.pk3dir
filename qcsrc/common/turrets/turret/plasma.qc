@@ -28,21 +28,21 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
     if(g_instagib)
     {
-        FireRailgunBullet (self, self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+        FireRailgunBullet (it, it.tur_shotorg, it.tur_shotorg + it.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
                            800, 0, 0, 0, 0, DEATH_TURRET_PLASMA.m_id);
 
-        Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+        Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, it.tur_shotorg, it.tur_shotdir_updated * 1000, 1);
 
         // teamcolor / hit beam effect
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-        WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(self.team)), self.tur_shotorg, v);
+        WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(it.team)), it.tur_shotorg, v);
     }
     else
     {
         SUPER(PlasmaTurret).tr_attack(this, it);
     }
-    if (self.tur_head.frame == 0)
-        self.tur_head.frame = 1;
+    if (it.tur_head.frame == 0)
+        it.tur_head.frame = 1;
 }
 METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {

@@ -979,130 +979,130 @@ bool turret_checkfire(entity this)
 	return this.turret_firecheckfunc(this);
 }
 
-void turret_fire()
-{SELFPARAM();
+void turret_fire(entity this)
+{
 	if (autocvar_g_turrets_nofire != 0)
 		return;
 
-	if(MUTATOR_CALLHOOK(TurretFire, self))
+	if(MUTATOR_CALLHOOK(TurretFire, this))
 		return;
 
-	Turret info = get_turretinfo(self.m_id);
-	info.tr_attack(info, self);
+	Turret info = get_turretinfo(this.m_id);
+	info.tr_attack(info, this);
 
-	self.attack_finished_single[0] = time + self.shot_refire;
-	self.ammo -= self.shot_dmg;
-	self.volly_counter = self.volly_counter - 1;
+	this.attack_finished_single[0] = time + this.shot_refire;
+	this.ammo -= this.shot_dmg;
+	this.volly_counter = this.volly_counter - 1;
 
-	if (self.volly_counter <= 0)
+	if (this.volly_counter <= 0)
 	{
-		self.volly_counter = self.shot_volly;
+		this.volly_counter = this.shot_volly;
 
-		if (self.shoot_flags & TFL_SHOOT_CLEARTARGET)
-			self.enemy = world;
+		if (this.shoot_flags & TFL_SHOOT_CLEARTARGET)
+			this.enemy = world;
 
-		if (self.shot_volly > 1)
-			self.attack_finished_single[0] = time + self.shot_volly_refire;
+		if (this.shot_volly > 1)
+			this.attack_finished_single[0] = time + this.shot_volly_refire;
 	}
 
 #ifdef TURRET_DEBUG
-	if (self.enemy) paint_target3(self.tur_aimpos, 64, self.tur_debug_rvec, self.tur_impacttime + 0.25);
+	if (this.enemy) paint_target3(this.tur_aimpos, 64, this.tur_debug_rvec, this.tur_impacttime + 0.25);
 #endif
 }
 
 void turret_think(entity this)
 {
-	self.nextthink = time + self.ticrate;
+	this.nextthink = time + this.ticrate;
 
-	MUTATOR_CALLHOOK(TurretThink, self);
+	MUTATOR_CALLHOOK(TurretThink, this);
 
 #ifdef TURRET_DEBUG
-	if (self.tur_debug_tmr1 < time)
+	if (this.tur_debug_tmr1 < time)
 	{
-		if (self.enemy) paint_target (self.enemy,128,self.tur_debug_rvec,0.9);
-		paint_target(self,256,self.tur_debug_rvec,0.9);
-		self.tur_debug_tmr1 = time + 1;
+		if (this.enemy) paint_target (this.enemy,128,this.tur_debug_rvec,0.9);
+		paint_target(this,256,this.tur_debug_rvec,0.9);
+		this.tur_debug_tmr1 = time + 1;
 	}
 #endif
 
 	// Handle ammo
-	if (!(self.spawnflags & TSF_NO_AMMO_REGEN))
-	if (self.ammo < self.ammo_max)
-		self.ammo = min(self.ammo + self.ammo_recharge, self.ammo_max);
+	if (!(this.spawnflags & TSF_NO_AMMO_REGEN))
+	if (this.ammo < this.ammo_max)
+		this.ammo = min(this.ammo + this.ammo_recharge, this.ammo_max);
 
 	// Inactive turrets needs to run the think loop,
 	// So they can handle animation and wake up if need be.
-	if(!self.active)
+	if(!this.active)
 	{
-		turret_track(self);
+		turret_track(this);
 		return;
 	}
 
 	// This is typicaly used for zaping every target in range
 	// turret_fusionreactor uses this to recharge friendlys.
-	if (self.shoot_flags & TFL_SHOOT_HITALLVALID)
+	if (this.shoot_flags & TFL_SHOOT_HITALLVALID)
 	{
-		// Do a self.turret_fire for every valid target.
-		entity e = findradius(self.origin,self.target_range);
+		// Do a this.turret_fire for every valid target.
+		entity e = findradius(this.origin,this.target_range);
 		while (e)
 		{
 			if(e.takedamage)
 			{
-				if (turret_validate_target(self,e,self.target_validate_flags))
+				if (turret_validate_target(this,e,this.target_validate_flags))
 				{
-					self.enemy = e;
+					this.enemy = e;
 
-					turret_do_updates(self);
+					turret_do_updates(this);
 
-					if (turret_checkfire(self))
-						turret_fire();
+					if (turret_checkfire(this))
+						turret_fire(this);
 				}
 			}
 
 			e = e.chain;
 		}
-		self.enemy = world;
+		this.enemy = world;
 	}
-	else if(self.shoot_flags & TFL_SHOOT_CUSTOM)
+	else if(this.shoot_flags & TFL_SHOOT_CUSTOM)
 	{
 		// This one is doing something.. oddball. assume its handles what needs to be handled.
 
 		// Predict?
-		if(!(self.aim_flags & TFL_AIM_NO))
-			self.tur_aimpos = turret_aim_generic(self);
+		if(!(this.aim_flags & TFL_AIM_NO))
+			this.tur_aimpos = turret_aim_generic(this);
 
 		// Turn & pitch?
-		if(!(self.track_flags & TFL_TRACK_NO))
-			turret_track(self);
+		if(!(this.track_flags & TFL_TRACK_NO))
+			turret_track(this);
 
-		turret_do_updates(self);
+		turret_do_updates(this);
 
 		// Fire?
-		if (turret_checkfire(self))
-			turret_fire();
+		if (turret_checkfire(this))
+			turret_fire(this);
 	}
 	else
 	{
 		// Special case for volly always. if it fired once it must compleate the volly.
-		if(self.shoot_flags & TFL_SHOOT_VOLLYALWAYS)
-			if(self.volly_counter != self.shot_volly)
+		if(this.shoot_flags & TFL_SHOOT_VOLLYALWAYS)
+			if(this.volly_counter != this.shot_volly)
 			{
 				// Predict or whatnot
-				if(!(self.aim_flags & TFL_AIM_NO))
-					self.tur_aimpos = turret_aim_generic(self);
+				if(!(this.aim_flags & TFL_AIM_NO))
+					this.tur_aimpos = turret_aim_generic(this);
 
 				// Turn & pitch
-				if(!(self.track_flags & TFL_TRACK_NO))
-					turret_track(self);
+				if(!(this.track_flags & TFL_TRACK_NO))
+					turret_track(this);
 
-				turret_do_updates(self);
+				turret_do_updates(this);
 
 				// Fire!
-				if (turret_checkfire(self))
-					turret_fire();
+				if (turret_checkfire(this))
+					turret_fire(this);
 
-				Turret tur = get_turretinfo(self.m_id);
-				tur.tr_think(tur, self);
+				Turret tur = get_turretinfo(this.m_id);
+				tur.tr_think(tur, this);
 
 				return;
 			}
@@ -1111,61 +1111,61 @@ void turret_think(entity this)
 
 		// g_turrets_targetscan_maxdelay forces a target re-scan at least this often
 		float do_target_scan = 0;
-		if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
+		if((this.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
 			do_target_scan = 1;
 
 		// Old target (if any) invalid?
-		if(self.target_validate_time < time)
-		if (turret_validate_target(self, self.enemy, self.target_validate_flags) <= 0)
+		if(this.target_validate_time < time)
+		if (turret_validate_target(this, this.enemy, this.target_validate_flags) <= 0)
 		{
-			self.enemy = world;
-			self.target_validate_time = time + 0.5;
+			this.enemy = world;
+			this.target_validate_time = time + 0.5;
 			do_target_scan = 1;
 		}
 
 		// But never more often then g_turrets_targetscan_mindelay!
-		if (self.target_select_time + autocvar_g_turrets_targetscan_mindelay > time)
+		if (this.target_select_time + autocvar_g_turrets_targetscan_mindelay > time)
 			do_target_scan = 0;
 
 		if(do_target_scan)
 		{
-			self.enemy = turret_select_target(self);
-			self.target_select_time = time;
+			this.enemy = turret_select_target(this);
+			this.target_select_time = time;
 		}
 
 		// No target, just go to idle, do any custom stuff and bail.
-		if (self.enemy == world)
+		if (this.enemy == world)
 		{
 			// Turn & pitch
-			if(!(self.track_flags & TFL_TRACK_NO))
-				turret_track(self);
+			if(!(this.track_flags & TFL_TRACK_NO))
+				turret_track(this);
 
-			Turret tur = get_turretinfo(self.m_id);
-			tur.tr_think(tur, self);
+			Turret tur = get_turretinfo(this.m_id);
+			tur.tr_think(tur, this);
 
 			// And bail.
 			return;
 		}
 		else
-			self.lip = time + autocvar_g_turrets_aimidle_delay; // Keep track of the last time we had a target.
+			this.lip = time + autocvar_g_turrets_aimidle_delay; // Keep track of the last time we had a target.
 
 		// Predict?
-		if(!(self.aim_flags & TFL_AIM_NO))
-			self.tur_aimpos = turret_aim_generic(self);
+		if(!(this.aim_flags & TFL_AIM_NO))
+			this.tur_aimpos = turret_aim_generic(this);
 
 		// Turn & pitch?
-		if(!(self.track_flags & TFL_TRACK_NO))
-			turret_track(self);
+		if(!(this.track_flags & TFL_TRACK_NO))
+			turret_track(this);
 
-		turret_do_updates(self);
+		turret_do_updates(this);
 
 		// Fire?
-		if (turret_checkfire(self))
-			turret_fire();
+		if (turret_checkfire(this))
+			turret_fire(this);
 	}
 
-	Turret tur = get_turretinfo(self.m_id);
-	tur.tr_think(tur, self);
+	Turret tur = get_turretinfo(this.m_id);
+	tur.tr_think(tur, this);
 }
 
 /*
