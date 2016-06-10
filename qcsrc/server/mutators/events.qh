@@ -603,6 +603,7 @@ MUTATOR_HOOKABLE(FireBullet_Hit, EV_FireBullet_Hit);
     /**/            o(string, MUTATOR_ARGV_0_string) \
     /** skin */     i(int, MUTATOR_ARGV_1_int) \
     /**/            o(int, MUTATOR_ARGV_1_int) \
+    /** player */   i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 MUTATOR_HOOKABLE(FixPlayermodel, EV_FixPlayermodel);
 
