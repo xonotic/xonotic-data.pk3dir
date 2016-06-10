@@ -436,10 +436,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 {
 	float frag_deathtype = M_ARGV(3, float);
-	float frag_damage = M_ARGV(4, float);
 
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
-		frag_damage = 1000; // always gib if it was a vaporizer death
+		M_ARGV(4, float) = 1000; // always gib if it was a vaporizer death
 
 	return false;
 }

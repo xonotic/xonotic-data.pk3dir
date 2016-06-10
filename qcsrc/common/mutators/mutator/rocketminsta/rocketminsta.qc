@@ -34,10 +34,9 @@ MUTATOR_HOOKFUNCTION(rm, PlayerDies)
 	if(!autocvar_g_rm) { return false; }
 
 	float frag_deathtype = M_ARGV(3, float);
-	float frag_damage = M_ARGV(4, float);
 
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO))
-		frag_damage = 1000; // always gib if it was a vaporizer death
+		M_ARGV(4, float) = 1000; // always gib if it was a vaporizer death
 
 	return false;
 }
