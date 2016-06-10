@@ -22,17 +22,16 @@ REGISTER_TURRET(MLRS, NEW(MLRSTurret));
 
 #ifdef SVQC
 
-spawnfunc(turret_mlrs) { if (!turret_initialize(TUR_MLRS)) remove(this); }
+spawnfunc(turret_mlrs) { if (!turret_initialize(this, TUR_MLRS)) remove(this); }
 
 METHOD(MLRSTurret, tr_think, void(MLRSTurret thistur, entity it))
 {
-    SELFPARAM();
     // 0 = full, 6 = empty
-    self.tur_head.frame = bound(0, 6 - floor(0.1 + self.ammo / self.shot_dmg), 6);
-    if(self.tur_head.frame < 0)
+    it.tur_head.frame = bound(0, 6 - floor(0.1 + it.ammo / it.shot_dmg), 6);
+    if(it.tur_head.frame < 0)
     {
-        LOG_TRACE("ammo:",ftos(self.ammo),"\n");
-        LOG_TRACE("shot_dmg:",ftos(self.shot_dmg),"\n");
+        LOG_TRACE("ammo:",ftos(it.ammo),"\n");
+        LOG_TRACE("shot_dmg:",ftos(it.shot_dmg),"\n");
     }
 }
 METHOD(MLRSTurret, tr_setup, void(MLRSTurret this, entity it))

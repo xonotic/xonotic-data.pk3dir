@@ -22,7 +22,7 @@ REGISTER_TURRET(PLASMA, NEW(PlasmaTurret));
 
 #ifdef SVQC
 
-spawnfunc(turret_plasma) { if (!turret_initialize(TUR_PLASMA)) remove(this); }
+spawnfunc(turret_plasma) { if (!turret_initialize(this, TUR_PLASMA)) remove(this); }
 
 METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 {
@@ -46,12 +46,11 @@ METHOD(PlasmaTurret, tr_attack, void(PlasmaTurret this, entity it))
 }
 METHOD(PlasmaTurret, tr_think, void(PlasmaTurret thistur, entity it))
 {
-    SELFPARAM();
-    if (self.tur_head.frame != 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
+    if (it.tur_head.frame != 0)
+        it.tur_head.frame = it.tur_head.frame + 1;
 
-    if (self.tur_head.frame > 5)
-        self.tur_head.frame = 0;
+    if (it.tur_head.frame > 5)
+        it.tur_head.frame = 0;
 }
 METHOD(PlasmaTurret, tr_setup, void(PlasmaTurret this, entity it))
 {

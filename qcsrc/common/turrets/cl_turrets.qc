@@ -19,9 +19,10 @@ void turret_changeteam(entity this)
 
 }
 
-void turret_head_draw()
-{SELFPARAM();
-	self.drawmask = MASK_NORMAL;
+// unused?
+void turret_head_draw(entity this)
+{
+	this.drawmask = MASK_NORMAL;
 }
 
 void turret_draw(entity this)
@@ -201,47 +202,47 @@ void turret_draw2d(entity this)
 			);
 }
 
-void turret_construct()
-{SELFPARAM();
-	entity tur = get_turretinfo(self.m_id);
+void turret_construct(entity this)
+{
+	entity tur = get_turretinfo(this.m_id);
 
-	if(self.tur_head == world)
-		self.tur_head = spawn();
+	if(this.tur_head == world)
+		this.tur_head = spawn();
 
-	self.netname = tur.turret_name;
+	this.netname = tur.turret_name;
 
-	setorigin(self, self.origin);
-	_setmodel(self, tur.model);
-	_setmodel(self.tur_head, tur.head_model);
-	setsize(self, tur.mins, tur.maxs);
-	setsize(self.tur_head, '0 0 0', '0 0 0');
+	setorigin(this, this.origin);
+	_setmodel(this, tur.model);
+	_setmodel(this.tur_head, tur.head_model);
+	setsize(this, tur.mins, tur.maxs);
+	setsize(this.tur_head, '0 0 0', '0 0 0');
 
-	if(self.m_id == TUR_EWHEEL.m_id)
-		setattachment(self.tur_head, self, "");
+	if(this.m_id == TUR_EWHEEL.m_id)
+		setattachment(this.tur_head, this, "");
 	else
-		setattachment(self.tur_head, self, "tag_head");
+		setattachment(this.tur_head, this, "tag_head");
 
-	self.tur_head.classname			= "turret_head";
-	self.tur_head.owner				= self;
-	self.tur_head.move_movetype		= MOVETYPE_NOCLIP;
-	self.move_movetype				= MOVETYPE_NOCLIP;
-	self.tur_head.angles			= self.angles;
-	self.health						= 255;
-	self.solid						= SOLID_BBOX;
-	self.tur_head.solid				= SOLID_NOT;
-	self.movetype					= MOVETYPE_NOCLIP;
-	self.tur_head.movetype			= MOVETYPE_NOCLIP;
-	self.draw						= turret_draw;
-	self.entremove					= turret_remove;
-	self.drawmask					= MASK_NORMAL;
-	self.tur_head.drawmask			= MASK_NORMAL;
-	self.anim_start_time			= 0;
-	self.draw2d = turret_draw2d;
-	self.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
-	self.teamradar_color = '1 0 0';
-	self.alpha = 1;
+	this.tur_head.classname			= "turret_head";
+	this.tur_head.owner				= this;
+	this.tur_head.move_movetype		= MOVETYPE_NOCLIP;
+	this.move_movetype				= MOVETYPE_NOCLIP;
+	this.tur_head.angles			= this.angles;
+	this.health						= 255;
+	this.solid						= SOLID_BBOX;
+	this.tur_head.solid				= SOLID_NOT;
+	this.movetype					= MOVETYPE_NOCLIP;
+	this.tur_head.movetype			= MOVETYPE_NOCLIP;
+	this.draw						= turret_draw;
+	this.entremove					= turret_remove;
+	this.drawmask					= MASK_NORMAL;
+	this.tur_head.drawmask			= MASK_NORMAL;
+	this.anim_start_time			= 0;
+	this.draw2d = turret_draw2d;
+	this.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
+	this.teamradar_color = '1 0 0';
+	this.alpha = 1;
 
-	tur.tr_setup(tur, self);
+	tur.tr_setup(tur, this);
 }
 
 entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, float _explode);
@@ -369,7 +370,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 		this.angles_x = ReadAngle();
 		this.angles_y = ReadAngle();
 
-		turret_construct();
+		turret_construct(this);
 		this.colormap = 1024;
 		this.glowmod = '0 1 1';
 		this.tur_head.colormap = this.colormap;

@@ -28,16 +28,15 @@ REGISTER_TURRET(HK, NEW(HunterKiller));
 .float atime;
 #endif
 
-spawnfunc(turret_hk) { if(!turret_initialize(TUR_HK)) remove(this); }
+spawnfunc(turret_hk) { if(!turret_initialize(this, TUR_HK)) remove(this); }
 
 METHOD(HunterKiller, tr_think, void(HunterKiller thistur, entity it))
 {
-    SELFPARAM();
-    if (self.tur_head.frame != 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
+    if (it.tur_head.frame != 0)
+        it.tur_head.frame = it.tur_head.frame + 1;
 
-    if (self.tur_head.frame > 5)
-        self.tur_head.frame = 0;
+    if (it.tur_head.frame > 5)
+        it.tur_head.frame = 0;
 }
 
 float turret_hk_addtarget(entity e_target,entity e_sender);

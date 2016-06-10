@@ -2,16 +2,16 @@
 * Update self.tur_shotorg by getting up2date bone info
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
 */
-float turret_tag_fire_update()
-{SELFPARAM();
-	if(!self.tur_head)
+float turret_tag_fire_update(entity this)
+{
+	if(!this.tur_head)
 	{
-		error("Call to turret_tag_fire_update with self.tur_head missing!\n");
-		self.tur_shotorg = '0 0 0';
+		LOG_DEBUG("Call to turret_tag_fire_update with this.tur_head missing!\n");
+		this.tur_shotorg = '0 0 0';
 		return false;
 	}
 
-	self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
+	this.tur_shotorg = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_fire"));
 	v_forward = normalize(v_forward);
 
 	return true;

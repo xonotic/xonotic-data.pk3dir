@@ -36,138 +36,137 @@ const float ewheel_anim_fwd_fast = 2;
 const float ewheel_anim_bck_slow = 3;
 const float ewheel_anim_bck_fast = 4;
 
-void ewheel_move_path()
-{SELFPARAM();
+void ewheel_move_path(entity this)
+{
 #ifdef EWHEEL_FANCYPATH
     // Are we close enougth to a path node to switch to the next?
-    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
-        if (self.pathcurrent.path_next == world)
+    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+        if (this.pathcurrent.path_next == world)
         {
             // Path endpoint reached
-            pathlib_deletepath(self.pathcurrent.owner);
-            self.pathcurrent = world;
+            pathlib_deletepath(this.pathcurrent.owner);
+            this.pathcurrent = world;
 
-            if (self.pathgoal)
+            if (this.pathgoal)
             {
-                if (self.pathgoal.use)
-                    self.pathgoal.use(self.pathgoal, NULL, NULL);
+                if (this.pathgoal.use)
+                    this.pathgoal.use(this.pathgoal, NULL, NULL);
 
-                if (self.pathgoal.enemy)
+                if (this.pathgoal.enemy)
                 {
-                    self.pathcurrent = pathlib_astar(self, self.pathgoal.origin,self.pathgoal.enemy.origin);
-                    self.pathgoal = self.pathgoal.enemy;
+                    this.pathcurrent = pathlib_astar(this, this.pathgoal.origin,this.pathgoal.enemy.origin);
+                    this.pathgoal = this.pathgoal.enemy;
                 }
             }
             else
-                self.pathgoal = world;
+                this.pathgoal = world;
         }
         else
-            self.pathcurrent = self.pathcurrent.path_next;
+            this.pathcurrent = this.pathcurrent.path_next;
 
 #else
-    if(vdist(self.origin - self.pathcurrent.origin, <, 64))
-        self.pathcurrent = self.pathcurrent.enemy;
+    if(vdist(this.origin - this.pathcurrent.origin, <, 64))
+        this.pathcurrent = this.pathcurrent.enemy;
 #endif
 
-    if (self.pathcurrent)
+    if (this.pathcurrent)
     {
 
-        self.moveto = self.pathcurrent.origin;
-        self.steerto = steerlib_attract2(self, self.moveto, 0.5, 500, 0.95);
+        this.moveto = this.pathcurrent.origin;
+        this.steerto = steerlib_attract2(this, this.moveto, 0.5, 500, 0.95);
 
-        movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+        movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
     }
 }
 
-void ewheel_move_enemy()
-{SELFPARAM();
+void ewheel_move_enemy(entity this)
+{
     float newframe;
 
-    self.steerto = steerlib_arrive(self, self.enemy.origin,self.target_range_optimal);
+    this.steerto = steerlib_arrive(this, this.enemy.origin,this.target_range_optimal);
 
-    self.moveto  = self.origin + self.steerto * 128;
+    this.moveto  = this.origin + this.steerto * 128;
 
-    if (self.tur_dist_enemy > self.target_range_optimal)
+    if (this.tur_dist_enemy > this.target_range_optimal)
     {
-        if ( self.tur_head.spawnshieldtime < 1 )
+        if ( this.tur_head.spawnshieldtime < 1 )
         {
             newframe = ewheel_anim_fwd_fast;
-            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
+            movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
         }
-        else if (self.tur_head.spawnshieldtime < 2)
+        else if (this.tur_head.spawnshieldtime < 2)
         {
 
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+            movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
        }
         else
         {
             newframe = ewheel_anim_fwd_slow;
-            movelib_move_simple(self, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
+            movelib_move_simple(this, v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
         }
     }
-    else if (self.tur_dist_enemy < self.target_range_optimal * 0.5)
+    else if (this.tur_dist_enemy < this.target_range_optimal * 0.5)
     {
         newframe = ewheel_anim_bck_slow;
-        movelib_move_simple(self, v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
+        movelib_move_simple(this, v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
     }
     else
     {
         newframe = ewheel_anim_stop;
-        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
+        movelib_brake_simple(this, (autocvar_g_turrets_unit_ewheel_speed_stop));
     }
 
-    turrets_setframe(newframe, false);
+    turrets_setframe(this, newframe, false);
 }
 
-void ewheel_move_idle()
-{SELFPARAM();
-    if(self.frame != 0)
+void ewheel_move_idle(entity this)
+{
+    if(this.frame != 0)
     {
-        self.SendFlags |= TNSF_ANIM;
-        self.anim_start_time = time;
+        this.SendFlags |= TNSF_ANIM;
+        this.anim_start_time = time;
     }
 
-    self.frame = 0;
-    if(self.velocity)
-        movelib_brake_simple(self, (autocvar_g_turrets_unit_ewheel_speed_stop));
+    this.frame = 0;
+    if(this.velocity)
+        movelib_brake_simple(this, (autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-spawnfunc(turret_ewheel) { if(!turret_initialize(TUR_EWHEEL)) remove(this); }
+spawnfunc(turret_ewheel) { if(!turret_initialize(this, TUR_EWHEEL)) remove(this); }
 
 METHOD(EWheel, tr_think, void(EWheel thistur, entity it))
 {
-    SELFPARAM();
     float vz;
     vector wish_angle, real_angle;
 
-    vz = self.velocity_z;
+    vz = it.velocity_z;
 
-    self.angles_x = anglemods(self.angles_x);
-    self.angles_y = anglemods(self.angles_y);
+    it.angles_x = anglemods(it.angles_x);
+    it.angles_y = anglemods(it.angles_y);
 
-    fixedmakevectors(self.angles);
+    fixedmakevectors(it.angles);
 
-    wish_angle = normalize(self.steerto);
+    wish_angle = normalize(it.steerto);
     wish_angle = vectoangles(wish_angle);
-    real_angle = wish_angle - self.angles;
-    real_angle = shortangle_vxy(real_angle, self.tur_head.angles);
+    real_angle = wish_angle - it.angles;
+    real_angle = shortangle_vxy(real_angle, it.tur_head.angles);
 
-    self.tur_head.spawnshieldtime = fabs(real_angle_y);
-    real_angle_y  = bound(-self.tur_head.aim_speed, real_angle_y, self.tur_head.aim_speed);
-    self.angles_y = (self.angles_y + real_angle_y);
+    it.tur_head.spawnshieldtime = fabs(real_angle_y);
+    real_angle_y  = bound(-it.tur_head.aim_speed, real_angle_y, it.tur_head.aim_speed);
+    it.angles_y = (it.angles_y + real_angle_y);
 
-    if(self.enemy)
-        ewheel_move_enemy();
-    else if(self.pathcurrent)
-        ewheel_move_path();
+    if(it.enemy)
+        ewheel_move_enemy(it);
+    else if(it.pathcurrent)
+        ewheel_move_path(it);
     else
-        ewheel_move_idle();
+        ewheel_move_idle(it);
 
-    self.velocity_z = vz;
+    it.velocity_z = vz;
 
-    if(self.velocity)
-        self.SendFlags |= TNSF_MOVE;
+    if(it.velocity)
+        it.SendFlags |= TNSF_MOVE;
 }
 
 METHOD(EWheel, tr_death, void(EWheel this, entity it))

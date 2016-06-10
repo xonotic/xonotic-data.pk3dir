@@ -22,38 +22,37 @@ REGISTER_TURRET(TESLA, NEW(TeslaCoil));
 
 #ifdef SVQC
 
-spawnfunc(turret_tesla) { if (!turret_initialize(TUR_TESLA)) remove(this); }
+spawnfunc(turret_tesla) { if (!turret_initialize(this, TUR_TESLA)) remove(this); }
 
 METHOD(TeslaCoil, tr_think, void(TeslaCoil thistur, entity it))
 {
-    SELFPARAM();
-    if(!self.active)
+    if(!it.active)
     {
-        self.tur_head.avelocity = '0 0 0';
+        it.tur_head.avelocity = '0 0 0';
         return;
     }
 
-    if(self.ammo < self.shot_dmg)
+    if(it.ammo < it.shot_dmg)
     {
-        self.tur_head.avelocity = '0 45 0' * (self.ammo / self.shot_dmg);
+        it.tur_head.avelocity = '0 45 0' * (it.ammo / it.shot_dmg);
     }
     else
     {
-        self.tur_head.avelocity = '0 180 0' * (self.ammo / self.shot_dmg);
+        it.tur_head.avelocity = '0 180 0' * (it.ammo / it.shot_dmg);
 
-        if(self.attack_finished_single[0] > time)
+        if(it.attack_finished_single[0] > time)
             return;
 
         float f;
-        f = (self.ammo / self.ammo_max);
+        f = (it.ammo / it.ammo_max);
         f = f * f;
         if(f > random())
             if(random() < 0.1)
-                te_csqc_lightningarc(self.tur_shotorg,self.tur_shotorg + (randomvec() * 350));
+                te_csqc_lightningarc(it.tur_shotorg,it.tur_shotorg + (randomvec() * 350));
     }
 }
 
-float turret_tesla_firecheck();
+bool turret_tesla_firecheck(entity this);
 METHOD(TeslaCoil, tr_setup, void(TeslaCoil this, entity it))
 {
     it.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES |
@@ -70,40 +69,40 @@ METHOD(TeslaCoil, tr_setup, void(TeslaCoil this, entity it))
     it.track_flags		= TFL_TRACK_NO;
 }
 
-float turret_tesla_firecheck()
-{SELFPARAM();
+bool turret_tesla_firecheck(entity this)
+{
     // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
     float do_target_scan = 0;
 
-    if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
+    if((this.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
         do_target_scan = 1;
 
     // Old target (if any) invalid?
-    if(self.target_validate_time < time)
-    if (turret_validate_target(self, self.enemy, self.target_validate_flags) <= 0)
+    if(this.target_validate_time < time)
+    if (turret_validate_target(this, this.enemy, this.target_validate_flags) <= 0)
     {
-        self.enemy = world;
-        self.target_validate_time = time + 0.5;
+        this.enemy = world;
+        this.target_validate_time = time + 0.5;
         do_target_scan = 1;
     }
 
     // But never more often then g_turrets_targetscan_mindelay!
-    if (self.target_select_time + autocvar_g_turrets_targetscan_mindelay > time)
+    if (this.target_select_time + autocvar_g_turrets_targetscan_mindelay > time)
         do_target_scan = 0;
 
     if(do_target_scan)
     {
-        self.enemy = turret_select_target();
-        self.target_select_time = time;
+        this.enemy = turret_select_target(this);
+        this.target_select_time = time;
     }
 
-    if(!turret_firecheck())
-        return 0;
+    if(!turret_firecheck(this))
+        return false;
 
-    if(self.enemy)
-        return 1;
+    if(this.enemy)
+        return true;
 
-    return 0;
+    return false;
 }
 
 #endif
