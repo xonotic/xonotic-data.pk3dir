@@ -385,15 +385,13 @@ bool raptor_frame(entity this)
 	UpdateAuxiliaryXhair(this, trace_endpos, '0 1 0', 0);
 	*/
 
-	setself(vehic);
-
 	Weapon wep1 = WEP_RAPTOR;
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK(this))
 	if (wep1.wr_checkammo1(wep1, vehic))
 	{
 	    .entity weaponentity = weaponentities[0];
-		wep1.wr_think(wep1, vehic, weaponentity, 1);
+		WITHSELF(vehic, wep1.wr_think(wep1, vehic, weaponentity, 1));
 	}
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
@@ -413,7 +411,7 @@ bool raptor_frame(entity this)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
 		    .entity weaponentity = weaponentities[1];
-			wep2a.wr_think(wep2a, vehic, weaponentity, 2);
+			WITHSELF(vehic, wep2a.wr_think(wep2a, vehic, weaponentity, 2));
 			vehic.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			vehic.lip   = time;
 		}
@@ -425,13 +423,11 @@ bool raptor_frame(entity this)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
 		    .entity weaponentity = weaponentities[1];
-			wep2b.wr_think(wep2b, vehic, weaponentity, 2);
+			WITHSELF(vehic, wep2b.wr_think(wep2b, vehic, weaponentity, 2));
 			vehic.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			vehic.lip   = time;
 		}
 	}
-
-	setself(this);
 
 	vehic.bomb1.alpha = vehic.bomb2.alpha = (time - vehic.lip) / (vehic.delay - vehic.lip);
 	this.vehicle_reload2 = bound(0, vehic.bomb1.alpha * 100, 100);
