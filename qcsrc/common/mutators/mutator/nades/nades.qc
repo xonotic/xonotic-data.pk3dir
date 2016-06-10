@@ -45,53 +45,55 @@ MUTATOR_HOOKFUNCTION(cl_nades, HUD_Draw_overlay)
 }
 MUTATOR_HOOKFUNCTION(cl_nades, Ent_Projectile)
 {
-    SELFPARAM();
-	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
+	entity proj = M_ARGV(0, entity);
+
+	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
-		self.modelindex = 0;
-		self.traileffect = EFFECT_FIREBALL.m_id;
+		proj.modelindex = 0;
+		proj.traileffect = EFFECT_FIREBALL.m_id;
 		return true;
 	}
-	if (Nade_FromProjectile(self.cnt) != NADE_TYPE_Null)
+	if (Nade_FromProjectile(proj.cnt) != NADE_TYPE_Null)
 	{
-		setmodel(self, MDL_PROJECTILE_NADE);
-		entity trail = Nade_TrailEffect(self.cnt, self.team);
-		if (trail.eent_eff_name) self.traileffect = trail.m_id;
+		setmodel(proj, MDL_PROJECTILE_NADE);
+		entity trail = Nade_TrailEffect(proj.cnt, proj.team);
+		if (trail.eent_eff_name) proj.traileffect = trail.m_id;
 		return true;
 	}
 }
 MUTATOR_HOOKFUNCTION(cl_nades, EditProjectile)
 {
-    SELFPARAM();
-	if (self.cnt == PROJECTILE_NAPALM_FOUNTAIN)
+	entity proj = M_ARGV(0, entity);
+
+	if (proj.cnt == PROJECTILE_NAPALM_FOUNTAIN)
 	{
-		loopsound(self, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
-		self.mins = '-16 -16 -16';
-		self.maxs = '16 16 16';
+		loopsound(proj, CH_SHOTS_SINGLE, SND(FIREBALL_FLY2), VOL_BASE, ATTEN_NORM);
+		proj.mins = '-16 -16 -16';
+		proj.maxs = '16 16 16';
 	}
 
-	entity nade_type = Nade_FromProjectile(self.cnt);
+	entity nade_type = Nade_FromProjectile(proj.cnt);
 	if (nade_type == NADE_TYPE_Null) return;
 	if(STAT(NADES_SMALL, NULL))
 	{
-		self.mins = '-8 -8 -8';
-		self.maxs = '8 8 8';
+		proj.mins = '-8 -8 -8';
+		proj.maxs = '8 8 8';
 	}
 	else
 	{
-		self.mins = '-16 -16 -16';
-		self.maxs = '16 16 16';
+		proj.mins = '-16 -16 -16';
+		proj.maxs = '16 16 16';
 	}
-	self.colormod = nade_type.m_color;
-	self.move_movetype = MOVETYPE_BOUNCE;
-	settouch(self, func_null);
-	self.scale = 1.5;
-	self.avelocity = randomvec() * 720;
+	proj.colormod = nade_type.m_color;
+	proj.move_movetype = MOVETYPE_BOUNCE;
+	settouch(proj, func_null);
+	proj.scale = 1.5;
+	proj.avelocity = randomvec() * 720;
 
 	if (nade_type == NADE_TYPE_TRANSLOCATE || nade_type == NADE_TYPE_SPAWN)
-		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
+		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	else
-		self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+		proj.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 }
 bool Projectile_isnade(int p)
 {

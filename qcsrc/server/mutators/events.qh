@@ -218,8 +218,8 @@ MUTATOR_HOOKABLE(GetCvars, EV_NO_ARGS); // NOTE: Can't use EV_GetCvars because o
 
 /** can edit any "just fired" projectile */
 #define EV_EditProjectile(i, o) \
-    /**/ i(entity, __self) \
-    /**/ i(entity, other) \
+    /** projectile owner */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** projectile */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 

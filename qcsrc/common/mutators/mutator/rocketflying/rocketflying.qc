@@ -3,10 +3,12 @@ REGISTER_MUTATOR(rocketflying, cvar("g_rocket_flying"));
 
 MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 {
-	if(other.classname == "rocket" || other.classname == "mine")
+	entity proj = M_ARGV(1, entity);
+
+	if(proj.classname == "rocket" || proj.classname == "mine")
 	{
 		// kill detonate delay of rockets
-		other.spawnshieldtime = time;
+		proj.spawnshieldtime = time;
 	}
 	return 0;
 }
