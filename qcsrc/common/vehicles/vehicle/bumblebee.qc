@@ -233,9 +233,9 @@ vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity p
 	return prefer_spot; // this should be considered a fallback?!
 }
 
-void bumblebee_gunner_exit(int _exitflag)
-{SELFPARAM();
-	entity player = self;
+void bumblebee_gunner_exit(entity this, int _exitflag)
+{
+	entity player = this;
 	entity gunner = player.vehicle;
 	entity vehic = gunner.owner;
 
@@ -355,15 +355,15 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	return true;
 }
 
-bool vehicles_valid_pilot()
-{SELFPARAM();
-	if(IS_BOT_CLIENT(other) && !autocvar_g_vehicles_allow_bots)
+bool vehicles_valid_pilot(entity this, entity toucher)
+{
+	if(IS_BOT_CLIENT(toucher) && !autocvar_g_vehicles_allow_bots)
 		return false;
 
-	if((!IS_PLAYER(other))
-	|| (IS_DEAD(other))
-	|| (other.vehicle)
-	|| (DIFF_TEAM(other, self))
+	if((!IS_PLAYER(toucher))
+	|| (IS_DEAD(toucher))
+	|| (toucher.vehicle)
+	|| (DIFF_TEAM(toucher, this))
 	) { return false; }
 
 	return true;
@@ -373,22 +373,22 @@ void bumblebee_touch(entity this)
 {
 	if(autocvar_g_vehicles_enter) { return; }
 
-	if(self.gunner1 != world && self.gunner2 != world)
+	if(this.gunner1 != world && this.gunner2 != world)
 	{
-		vehicles_touch(self);
+		vehicles_touch(this);
 		return;
 	}
 
-	if(vehicles_valid_pilot())
+	if(vehicles_valid_pilot(this, other))
 	{
-		float phase_time = (time >= self.gun1.phase) + (time >= self.gun2.phase);
+		float phase_time = (time >= this.gun1.phase) + (time >= this.gun2.phase);
 
 		if(time >= other.vehicle_enter_delay && phase_time)
-		if(bumblebee_gunner_enter(self, other))
+		if(bumblebee_gunner_enter(this, other))
 			return;
 	}
 
-	vehicles_touch(self);
+	vehicles_touch(this);
 }
 
 void bumblebee_regen(entity this)
@@ -629,7 +629,7 @@ void bumblebee_land(entity this)
 {
 	float hgt;
 
-	hgt = raptor_altitude(512);
+	hgt = raptor_altitude(this, 512);
 	self.velocity = (self.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
 	self.angles_x *= 0.95;
 	self.angles_z *= 0.95;
@@ -642,47 +642,46 @@ void bumblebee_land(entity this)
 	CSQCMODEL_AUTOUPDATE(self);
 }
 
-void bumblebee_exit(float eject)
-{SELFPARAM();
-	if(self.owner.vehicleid == VEH_BUMBLEBEE.vehicleid)
+void bumblebee_exit(entity this, int eject)
+{
+	if(this.owner.vehicleid == VEH_BUMBLEBEE.vehicleid)
 	{
-		bumblebee_gunner_exit(eject);
+		bumblebee_gunner_exit(this, eject);
 		return;
 	}
 
-	settouch(self, vehicles_touch);
+	settouch(this, vehicles_touch);
 
-	if(!IS_DEAD(self))
+	if(!IS_DEAD(this))
 	{
-		setthink(self, bumblebee_land);
-		self.nextthink  = time;
+		setthink(this, bumblebee_land);
+		this.nextthink  = time;
 	}
 
-	self.movetype = MOVETYPE_TOSS;
+	this.movetype = MOVETYPE_TOSS;
 
-	if(!self.owner)
+	if(!this.owner)
 		return;
 
-	fixedmakevectors(self.angles);
+	fixedmakevectors(this.angles);
 	vector spot;
-	if(vdist(self.velocity, >, autocvar_g_vehicle_bumblebee_speed_forward * 0.5))
-		spot = self.origin + v_up * 128 + v_forward * 300;
+	if(vdist(this.velocity, >, autocvar_g_vehicle_bumblebee_speed_forward * 0.5))
+		spot = this.origin + v_up * 128 + v_forward * 300;
 	else
-		spot = self.origin + v_up * 128 - v_forward * 300;
+		spot = this.origin + v_up * 128 - v_forward * 300;
 
-	spot = vehicles_findgoodexit(spot);
+	spot = vehicles_findgoodexit(this, spot);
 
 	// Hide beam
-	if(self.gun3.enemy || !wasfreed(self.gun3.enemy)) {
-		self.gun3.enemy.effects |= EF_NODRAW;
-	}
+	if(this.gun3.enemy || !wasfreed(this.gun3.enemy))
+		this.gun3.enemy.effects |= EF_NODRAW;
 
-	self.owner.velocity = 0.75 * self.vehicle.velocity + normalize(spot - self.vehicle.origin) * 200;
-	self.owner.velocity_z += 10;
-	setorigin(self.owner, spot);
+	this.owner.velocity = 0.75 * this.vehicle.velocity + normalize(spot - this.vehicle.origin) * 200;
+	this.owner.velocity_z += 10;
+	setorigin(this.owner, spot);
 
-	antilag_clear(self.owner, CS(self.owner));
-	self.owner = world;
+	antilag_clear(this.owner, CS(this.owner));
+	this.owner = world;
 }
 
 void bumblebee_blowup(entity this)
@@ -729,41 +728,39 @@ METHOD(Bumblebee, vr_impact, void(Bumblebee thisveh, entity instance))
 }
 METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
 {
-    SELFPARAM();
-    settouch(self, bumblebee_touch);
-    self.nextthink = 0;
-    self.movetype = MOVETYPE_BOUNCEMISSILE;
+    settouch(instance, bumblebee_touch);
+    instance.nextthink = 0;
+    instance.movetype = MOVETYPE_BOUNCEMISSILE;
 }
 METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 {
-    SELFPARAM();
-    self.angles_z *= 0.8;
-    self.angles_x *= 0.8;
+    instance.angles_z *= 0.8;
+    instance.angles_x *= 0.8;
 
-    self.nextthink = time;
+    instance.nextthink = time;
 
-    if(!self.owner)
+    if(!instance.owner)
     {
-        if(self.gunner1)
+        if(instance.gunner1)
         {
-        	entity e = self.gunner1;
-        	WITHSELF(e, self.gun1.vehicle_exit(VHEF_EJECT));
+        	entity e = instance.gunner1;
+        	instance.gun1.vehicle_exit(e, VHEF_EJECT);
         	entity oldother = other;
         	other = e;
-        	self.phase = 0;
-        	gettouch(self)(self);
+        	instance.phase = 0;
+        	gettouch(instance)(instance);
         	other = oldother;
         	return;
         }
 
-        if(self.gunner2)
+        if(instance.gunner2)
         {
-        	entity e = self.gunner2;
-        	WITHSELF(e, self.gun2.vehicle_exit(VHEF_EJECT));
+        	entity e = instance.gunner2;
+        	instance.gun2.vehicle_exit(e, VHEF_EJECT);
         	entity oldother = other;
         	other = e;
-        	self.phase = 0;
-        	gettouch(self)(self);
+        	instance.phase = 0;
+        	gettouch(instance)(instance);
         	other = oldother;
             return;
         }
@@ -778,12 +775,12 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 		instance.gun3.enemy.effects |= EF_NODRAW;
 
 	if(instance.gunner1)
-		WITHSELF(instance.gunner1, instance.gun1.vehicle_exit(VHEF_EJECT));
+		instance.gun1.vehicle_exit(instance.gunner1, VHEF_EJECT);
 
 	if(instance.gunner2)
-		WITHSELF(instance.gunner2, instance.gun2.vehicle_exit(VHEF_EJECT));
+		instance.gun2.vehicle_exit(instance.gunner2, VHEF_EJECT);
 
-	WITHSELF(instance, instance.vehicle_exit(VHEF_EJECT));
+	instance.vehicle_exit(instance, VHEF_EJECT);
 
     fixedmakevectors(instance.angles);
     vehicle_tossgib(instance, instance.gun1, instance.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
@@ -824,81 +821,80 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 }
 METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
 {
-    SELFPARAM();
-    if(!self.gun1)
+    if(!instance.gun1)
     {
         // for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
-        self.vehicle_shieldent = spawn();
-        self.vehicle_shieldent.effects = EF_LOWPRECISION;
-        setmodel(self.vehicle_shieldent, MDL_VEH_BUMBLEBEE_SHIELD);
-        setattachment(self.vehicle_shieldent, self, "");
-        setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
-        self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
-        setthink(self.vehicle_shieldent, shieldhit_think);
-        self.vehicle_shieldent.alpha = -1;
-        self.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
+        instance.vehicle_shieldent = spawn();
+        instance.vehicle_shieldent.effects = EF_LOWPRECISION;
+        setmodel(instance.vehicle_shieldent, MDL_VEH_BUMBLEBEE_SHIELD);
+        setattachment(instance.vehicle_shieldent, instance, "");
+        setorigin(instance.vehicle_shieldent, real_origin(instance) - instance.origin);
+        instance.vehicle_shieldent.scale       = 512 / vlen(instance.maxs - instance.mins);
+        setthink(instance.vehicle_shieldent, shieldhit_think);
+        instance.vehicle_shieldent.alpha = -1;
+        instance.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
 
-        self.gun1 = new(vehicle_playerslot);
-        self.gun2 = new(vehicle_playerslot);
-        self.gun3 = new(bumblebee_raygun);
+        instance.gun1 = new(vehicle_playerslot);
+        instance.gun2 = new(vehicle_playerslot);
+        instance.gun3 = new(bumblebee_raygun);
 
-        self.vehicle_flags |= VHF_MULTISLOT;
+        instance.vehicle_flags |= VHF_MULTISLOT;
 
-        self.gun1.owner = self;
-        self.gun2.owner = self;
-        self.gun3.owner = self;
+        instance.gun1.owner = instance;
+        instance.gun2.owner = instance;
+        instance.gun3.owner = instance;
 
-        setmodel(self.gun1, MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
-        setmodel(self.gun2, MDL_VEH_BUMBLEBEE_CANNON_LEFT);
-        setmodel(self.gun3, MDL_VEH_BUMBLEBEE_CANNON_CENTER);
+        setmodel(instance.gun1, MDL_VEH_BUMBLEBEE_CANNON_RIGHT);
+        setmodel(instance.gun2, MDL_VEH_BUMBLEBEE_CANNON_LEFT);
+        setmodel(instance.gun3, MDL_VEH_BUMBLEBEE_CANNON_CENTER);
 
-        setattachment(self.gun1, self, "cannon_right");
-        setattachment(self.gun2, self, "cannon_left");
+        setattachment(instance.gun1, instance, "cannon_right");
+        setattachment(instance.gun2, instance, "cannon_left");
 
         // Angled bones are no fun, messes up gun-aim; so work arround it.
-        self.gun3.pos1 = self.angles;
-        self.angles = '0 0 0';
-        vector ofs = gettaginfo(self, gettagindex(self, "raygun"));
-        ofs -= self.origin;
-        setattachment(self.gun3, self, "");
-        setorigin(self.gun3, ofs);
-        self.angles = self.gun3.pos1;
+        instance.gun3.pos1 = instance.angles;
+        instance.angles = '0 0 0';
+        vector ofs = gettaginfo(instance, gettagindex(instance, "raygun"));
+        ofs -= instance.origin;
+        setattachment(instance.gun3, instance, "");
+        setorigin(instance.gun3, ofs);
+        instance.angles = instance.gun3.pos1;
 
-        vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
-        vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+        vehicle_addplayerslot(instance, instance.gun1, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+        vehicle_addplayerslot(instance, instance.gun2, HUD_BUMBLEBEE_GUN, MDL_VEH_BUMBLEBEE_GUNCOCKPIT, bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
 
-        setorigin(self.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
-        setorigin(self.vehicle_viewport, '5 0 2');    // Move camera forward up
+        setorigin(instance.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
+        setorigin(instance.vehicle_viewport, '5 0 2');    // Move camera forward up
 
         //fixme-model-bones
-        setorigin(self.gun1.vehicle_hudmodel, '90 -27 -23');
-        setorigin(self.gun1.vehicle_viewport, '-85 0 50');
+        setorigin(instance.gun1.vehicle_hudmodel, '90 -27 -23');
+        setorigin(instance.gun1.vehicle_viewport, '-85 0 50');
         //fixme-model-bones
-        setorigin(self.gun2.vehicle_hudmodel, '90 27 -23');
-        setorigin(self.gun2.vehicle_viewport, '-85 0 50');
+        setorigin(instance.gun2.vehicle_hudmodel, '90 27 -23');
+        setorigin(instance.gun2.vehicle_viewport, '-85 0 50');
 
-        self.scale = 1.5;
+        instance.scale = 1.5;
 
         // Raygun beam
-        if(self.gun3.enemy == world)
+        if(instance.gun3.enemy == world)
         {
-            self.gun3.enemy = spawn();
-            Net_LinkEntity(self.gun3.enemy, true, 0, bumble_raygun_send);
-            self.gun3.enemy.SendFlags = BRG_SETUP;
-            self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
-            self.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
+            instance.gun3.enemy = spawn();
+            Net_LinkEntity(instance.gun3.enemy, true, 0, bumble_raygun_send);
+            instance.gun3.enemy.SendFlags = BRG_SETUP;
+            instance.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
+            instance.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
         }
     }
 
-    self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
-    self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
-    self.solid = SOLID_BBOX;
-    self.movetype = MOVETYPE_TOSS;
-    self.damageforcescale = 0.025;
+    instance.vehicle_health = autocvar_g_vehicle_bumblebee_health;
+    instance.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
+    instance.solid = SOLID_BBOX;
+    instance.movetype = MOVETYPE_TOSS;
+    instance.damageforcescale = 0.025;
 
-    self.PlayerPhysplug = bumblebee_pilot_frame;
+    instance.PlayerPhysplug = bumblebee_pilot_frame;
 
-    setorigin(self, self.origin + '0 0 25');
+    setorigin(instance, instance.origin + '0 0 25');
 }
 METHOD(Bumblebee, vr_setup, void(Bumblebee thisveh, entity instance))
 {
@@ -956,7 +952,7 @@ METHOD(Bumblebee, vr_hud, void(Bumblebee thisveh))
         drawstring(tmpPos, _("No left gunner!"), tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
     }
 }
-METHOD(Bumblebee, vr_crosshair, void(Bumblebee thisveh))
+METHOD(Bumblebee, vr_crosshair, void(Bumblebee thisveh, entity player))
 {
     Vehicles_drawCrosshair(vCROSS_HEAL);
 }

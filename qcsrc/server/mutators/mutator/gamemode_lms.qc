@@ -139,7 +139,7 @@ int WinningCondition_LMS()
 
 	// When we get here, we have at least two players who are actually LIVING,
 	// now check if the top two players have equal score.
-	WinningConditionHelper();
+	WinningConditionHelper(NULL);
 
 	ClearWinners();
 	if(WinningConditionHelper_winner)

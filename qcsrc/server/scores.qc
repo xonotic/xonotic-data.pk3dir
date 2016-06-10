@@ -385,9 +385,8 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	return result.x;
 }
 
-void WinningConditionHelper()
+void WinningConditionHelper(entity this)
 {
-    SELFPARAM();
 	float c;
 	string s;
 	float fullstatus;
@@ -406,7 +405,7 @@ void WinningConditionHelper()
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
-	s = strcat(s, ":S", ftos(nJoinAllowed(this, world))); // note: self/this is most likely world in this case
+	s = strcat(s, ":S", ftos(nJoinAllowed(this, world)));
 	s = strcat(s, ":F", ftos(serverflags));
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(world, (fullstatus ? 1 : 2)));

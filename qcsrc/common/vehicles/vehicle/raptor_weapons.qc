@@ -38,7 +38,7 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep, entity actor)) {
 }
 
 
-void raptor_bombdrop();
+void raptor_bombdrop(entity this);
 METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
@@ -46,7 +46,7 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
     if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, player, weaponentity, true, autocvar_g_vehicle_raptor_bombs_refire)) {
         entity e = (veh) ? veh : player;
-        WITHSELF(e, raptor_bombdrop());
+        raptor_bombdrop(e);
         weapon_thinkf(player, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
@@ -143,20 +143,20 @@ void raptor_bomb_burst(entity this)
     remove(self);
 }
 
-void raptor_bombdrop()
-{SELFPARAM();
+void raptor_bombdrop(entity this)
+{
     entity bomb_1, bomb_2;
 
     bomb_1 = spawn();
     bomb_2 = spawn();
 
-    vector org = gettaginfo(self, gettagindex(self, "bombmount_left"));
+    vector org = gettaginfo(this, gettagindex(this, "bombmount_left"));
     setorigin(bomb_1, org);
-    org = gettaginfo(self, gettagindex(self, "bombmount_right"));
+    org = gettaginfo(this, gettagindex(this, "bombmount_right"));
     setorigin(bomb_2, org);
 
     bomb_1.movetype	 = bomb_2.movetype   = MOVETYPE_BOUNCE;
-    bomb_1.velocity	 = bomb_2.velocity   = self.velocity;
+    bomb_1.velocity	 = bomb_2.velocity   = this.velocity;
     settouch(bomb_1, raptor_bomb_burst);
     settouch(bomb_2, raptor_bomb_burst);
     setthink(bomb_1, raptor_bomb_burst);
@@ -168,8 +168,8 @@ void raptor_bombdrop()
     else
         bomb_1.nextthink = bomb_2.nextthink  = time + autocvar_g_vehicle_raptor_bomblet_time;
 
-    bomb_1.owner	 = bomb_2.owner	  = self;
-    bomb_1.realowner = bomb_2.realowner  = self.owner;
+    bomb_1.owner	 = bomb_2.owner	  = this;
+    bomb_1.realowner = bomb_2.realowner  = this.owner;
     bomb_1.solid	 = bomb_2.solid	  = SOLID_BBOX;
     bomb_1.gravity   = bomb_2.gravity	= 1;
 
@@ -182,7 +182,7 @@ void raptor_bombdrop()
 
 void raptor_flare_touch(entity this)
 {
-    remove(self);
+    remove(this);
 }
 
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -230,10 +230,8 @@ void RaptorCBShellfragDraw(entity this)
 }
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
-{SELFPARAM();
-    entity sfrag;
-
-    sfrag = spawn();
+{
+    entity sfrag = spawn();
     setmodel(sfrag, MDL_VEH_RAPTOR_CB_FRAGMENT);
     setorigin(sfrag, _org);
 
@@ -246,7 +244,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
     sfrag.move_origin = sfrag.origin = _org;
     sfrag.move_velocity = _vel;
     sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
-    sfrag.angles = self.move_angles = _ang;
+    sfrag.angles = sfrag.move_angles = _ang;
 
     sfrag.move_time = time;
     sfrag.damageforcescale = 4;

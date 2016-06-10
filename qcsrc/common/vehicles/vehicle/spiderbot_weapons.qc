@@ -4,10 +4,10 @@
 
 #ifdef SVQC
 
-void spiderbot_rocket_artillery()
-{SELFPARAM();
-    self.nextthink = time;
-    UpdateCSQCProjectile(self);
+void spiderbot_rocket_artillery(entity this)
+{
+    this.nextthink = time;
+    UpdateCSQCProjectile(this);
 }
 
 void spiderbot_rocket_unguided(entity this)
@@ -234,7 +234,7 @@ void spiderbot_rocket_do(entity this)
             rocket.velocity  = spiberbot_calcartillery(v, rocket.pos1, ((h1 < h2) ? h1 : h2));
             rocket.movetype  = MOVETYPE_TOSS;
             rocket.gravity   = 1;
-            //rocket.think	 = spiderbot_rocket_artillery;
+            //setthink(rocket, spiderbot_rocket_artillery);
         break;
     }
     rocket.classname  = "spiderbot_rocket";

@@ -234,7 +234,7 @@ void PutObserverInServer()
 		this.alivetime = 0;
 	}
 
-	if (this.vehicle) vehicles_exit(VHEF_RELEASE);
+	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 
 	WaypointSprite_PlayerDead(this);
 
@@ -789,7 +789,7 @@ void ClientKill_Now()
 {SELFPARAM();
 	if(this.vehicle)
 	{
-	    vehicles_exit(VHEF_RELEASE);
+	    vehicles_exit(this.vehicle, VHEF_RELEASE);
 	    if(!this.killindicator_teamchange)
 	    {
             this.vehicle_health = -1;
@@ -1182,7 +1182,7 @@ void ClientDisconnect()
 	assert(IS_CLIENT(this), return);
 
 	PlayerStats_GameReport_FinalizePlayer(this);
-	if (this.vehicle) vehicles_exit(VHEF_RELEASE);
+	if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
 	if (this.active_minigame) part_minigame(this);
 	if (IS_PLAYER(this)) Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
 
@@ -1523,7 +1523,7 @@ void player_regen ()
 	if(this.health < 1)
 	{
 		if(this.vehicle)
-			vehicles_exit(VHEF_RELEASE);
+			vehicles_exit(this.vehicle, VHEF_RELEASE);
 		if(this.event_damage)
 			this.event_damage(this, this, this, 1, DEATH_ROT.m_id, this.origin, '0 0 0');
 	}
@@ -2015,7 +2015,7 @@ void PlayerUseKey()
 	{
 		if(!gameover)
 		{
-			vehicles_exit(VHEF_NORMAL);
+			vehicles_exit(this.vehicle, VHEF_NORMAL);
 			return;
 		}
 	}
@@ -2145,7 +2145,7 @@ void PlayerPreThink ()
 		if (this.health < 1)
 		{
 			if (this.vehicle)
-				vehicles_exit(VHEF_RELEASE);
+				vehicles_exit(this.vehicle, VHEF_RELEASE);
 			this.event_damage(this, this, this.frozen_by, 1, DEATH_NADE_ICE_FREEZE.m_id, this.origin, '0 0 0');
 		}
 		else if (this.revive_progress <= 0)

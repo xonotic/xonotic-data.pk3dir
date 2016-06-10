@@ -612,7 +612,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			WITHSELF(targ, vehicles_exit(VHEF_RELEASE));
+			vehicles_exit(targ.vehicle, VHEF_RELEASE);
 
 		// These are ALWAYS lethal
 		// No damage modification here

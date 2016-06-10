@@ -258,7 +258,7 @@ void assault_new_round(entity this)
 	//bprint("ASSAULT: new round\n");
 
 	// Eject players from vehicles
-    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, WITHSELF(it, vehicles_exit(VHEF_RELEASE)));
+    FOREACH_CLIENT(IS_PLAYER(it) && it.vehicle, vehicles_exit(it.vehicle, VHEF_RELEASE));
 
     FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
         vehicles_clearreturn(it);
@@ -288,7 +288,7 @@ void assault_new_round(entity this)
 // they win. Otherwise the defending team wins once the timelimit passes.
 int WinningCondition_Assault()
 {
-	WinningConditionHelper(); // set worldstatus
+	WinningConditionHelper(NULL); // set worldstatus
 
 	int status = WINNING_NO;
 	// as the timelimit has not yet passed just assume the defending team will win

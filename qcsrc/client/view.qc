@@ -766,12 +766,12 @@ bool WantEventchase(entity this)
 	return false;
 }
 
-void HUD_Crosshair_Vehicle()
+void HUD_Crosshair_Vehicle(entity this)
 {
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
 		Vehicle info = Vehicles_from(hud);
-		info.vr_crosshair(info);
+		info.vr_crosshair(info, this);
 	}
 }
 
@@ -860,7 +860,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			if(this)
+			if(this != WEP_Null)
 			{
 				wcross_color = this.wpcolor;
 				break;
@@ -944,7 +944,7 @@ void HUD_Crosshair(entity this)
 
 		if (hud != HUD_NORMAL)
 		{
-			HUD_Crosshair_Vehicle();
+			HUD_Crosshair_Vehicle(this);
 			return;
 		}
 
@@ -989,7 +989,7 @@ void HUD_Crosshair(entity this)
 		string wcross_name = "";
 		float wcross_scale, wcross_blur;
 
-        entity e = this; // wtf?
+        entity e = WEP_Null;
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
 			e = switchingweapon;
@@ -2184,7 +2184,7 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	HUD_Draw(this);
+	HUD_Draw(this); // this parameter for deep vehicle function
 
 	if(NextFrameCommand)
 	{

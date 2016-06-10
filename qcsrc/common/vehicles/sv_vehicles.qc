@@ -344,7 +344,7 @@ bool vehicle_addplayerslot(	entity _owner,
 								int _hud,
 								Model _hud_model,
 								bool(entity) _framefunc,
-								void(bool) _exitfunc, float(entity, entity) _enterfunc)
+								void(entity,bool) _exitfunc, float(entity, entity) _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
 		_owner.vehicle_flags |= VHF_MULTISLOT;
@@ -708,9 +708,9 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	{
 		if(this.owner)
 			if(this.vehicle_flags & VHF_DEATHEJECT)
-				WITHSELF(this, vehicles_exit(VHEF_EJECT));
+				vehicles_exit(this, VHEF_EJECT);
 			else
-				WITHSELF(this, vehicles_exit(VHEF_RELEASE));
+				vehicles_exit(this, VHEF_RELEASE);
 
 
 		antilag_clear(this, this);
@@ -755,149 +755,139 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 }
 
 // vehicle enter/exit handling
-vector vehicles_findgoodexit(vector prefer_spot)
-{SELFPARAM();
+vector vehicles_findgoodexit(entity this, vector prefer_spot)
+{
 	//vector exitspot;
 	float mysize;
 
-	tracebox(self.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, self.owner);
+	tracebox(this.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, this.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
-	mysize = 1.5 * vlen(self.maxs - self.mins);
+	mysize = 1.5 * vlen(this.maxs - this.mins);
 	float i;
 	vector v, v2;
-	v2 = 0.5 * (self.absmin + self.absmax);
+	v2 = 0.5 * (this.absmin + this.absmax);
 	for(i = 0; i < 100; ++i)
 	{
 		v = randomvec();
 		v_z = 0;
 		v = v2 + normalize(v) * mysize;
-		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, self.owner);
+		tracebox(v2, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v, MOVE_NORMAL, this.owner);
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
 
 	/*
-	exitspot = (self.origin + '0 0 48') + v_forward * mysize;
-	tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+	exitspot = (this.origin + '0 0 48') + v_forward * mysize;
+	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return exitspot;
 
-	exitspot = (self.origin + '0 0 48') - v_forward * mysize;
-	tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+	exitspot = (this.origin + '0 0 48') - v_forward * mysize;
+	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return exitspot;
 
-	exitspot = (self.origin + '0 0 48') + v_right * mysize;
-	tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+	exitspot = (this.origin + '0 0 48') + v_right * mysize;
+	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return exitspot;
 
-	exitspot = (self.origin + '0 0 48') - v_right * mysize;
-	tracebox(self.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, self.owner);
+	exitspot = (this.origin + '0 0 48') - v_right * mysize;
+	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return exitspot;
 	*/
 
-	return self.origin;
+	return this.origin;
 }
 
-void vehicles_exit(bool eject)
-{SELFPARAM();
-	entity _vehicle;
-	entity _player;
+void vehicles_exit(entity vehic, bool eject)
+{
+	entity player = vehic.owner;
 
 	if(vehicles_exit_running)
 	{
-		LOG_TRACE("^1vehicles_exit allready running! this is not good..\n");
+		LOG_TRACE("^1vehicles_exit already running! this is not good...\n");
 		return;
 	}
 
 	vehicles_exit_running = true;
-	if(IS_CLIENT(self))
-	{
-		_vehicle = self.vehicle;
 
-		if (_vehicle.vehicle_flags & VHF_PLAYERSLOT)
-		{
-			_vehicle.vehicle_exit(eject);
-			vehicles_exit_running = false;
-			return;
-		}
+	// TODO: this was in an IS_CLIENT check, make sure it isn't actually needed!
+	if(vehic.vehicle_flags & VHF_PLAYERSLOT)
+	{
+		vehic.vehicle_exit(vehic, eject);
+		vehicles_exit_running = false;
+		return;
 	}
-	else
-		_vehicle = self;
 
-	_player = _vehicle.owner;
-
-	setself(_vehicle);
-
-	if (_player)
+	if (player)
 	{
-		if (IS_REAL_CLIENT(_player))
+		if (IS_REAL_CLIENT(player))
 		{
-			msg_entity = _player;
+			msg_entity = player;
 			WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-			WriteEntity( MSG_ONE, _player);
+			WriteEntity( MSG_ONE, player);
 
 			WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 			WriteAngle(MSG_ONE, 0);
-			WriteAngle(MSG_ONE, _vehicle.angles_y);
+			WriteAngle(MSG_ONE, vehic.angles_y);
 			WriteAngle(MSG_ONE, 0);
 		}
 
-		setsize(_player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+		setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 
-		_player.takedamage		= DAMAGE_AIM;
-		_player.solid			= SOLID_SLIDEBOX;
-		_player.movetype		= MOVETYPE_WALK;
-		_player.effects		   &= ~EF_NODRAW;
-		_player.teleportable	= TELEPORT_NORMAL;
-		_player.alpha			= 1;
-		_player.PlayerPhysplug	= func_null;
-		_player.vehicle			= world;
-		_player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
-		_player.event_damage	= PlayerDamage;
-		_player.hud				= HUD_NORMAL;
-		PS(_player).m_switchweapon = _vehicle.m_switchweapon;
-		_player.last_vehiclecheck = time + 3;
-		_player.vehicle_enter_delay = time + 2;
+		player.takedamage		= DAMAGE_AIM;
+		player.solid			= SOLID_SLIDEBOX;
+		player.movetype		= MOVETYPE_WALK;
+		player.effects		   &= ~EF_NODRAW;
+		player.teleportable	= TELEPORT_NORMAL;
+		player.alpha			= 1;
+		player.PlayerPhysplug	= func_null;
+		player.vehicle			= world;
+		player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
+		player.event_damage	= PlayerDamage;
+		player.hud				= HUD_NORMAL;
+		PS(player).m_switchweapon = vehic.m_switchweapon;
+		player.last_vehiclecheck = time + 3;
+		player.vehicle_enter_delay = time + 2;
 
-		CSQCVehicleSetup(_player, HUD_NORMAL);
+		CSQCVehicleSetup(player, HUD_NORMAL);
+
+		Kill_Notification(NOTIF_ONE, player, MSG_CENTER, CPID_VEHICLES);
+		Kill_Notification(NOTIF_ONE, player, MSG_CENTER, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
 	}
-	_vehicle.flags |= FL_NOTARGET;
 
-	if(!IS_DEAD(_vehicle))
-		_vehicle.avelocity = '0 0 0';
+	vehic.flags |= FL_NOTARGET;
 
-	_vehicle.tur_head.nodrawtoclient = world;
+	if(!IS_DEAD(vehic))
+		vehic.avelocity = '0 0 0';
+
+	vehic.tur_head.nodrawtoclient = world;
 
 	if(!teamplay)
-		_vehicle.team = 0;
+		vehic.team = 0;
 
-	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES);
-	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER, CPID_VEHICLES_OTHER); // kill all vehicle notifications when exiting a vehicle?
+	WaypointSprite_Kill(vehic.wps_intruder);
 
-	WaypointSprite_Kill(_vehicle.wps_intruder);
+	MUTATOR_CALLHOOK(VehicleExit, player, vehic);
 
-	MUTATOR_CALLHOOK(VehicleExit, _player, _vehicle);
+	vehic.team = vehic.tur_head.team;
 
-	_vehicle.team = _vehicle.tur_head.team;
+	sound (vehic, CH_TRIGGER_SINGLE, SND_Null, 1, ATTEN_NORM);
+	vehic.vehicle_hudmodel.viewmodelforclient = vehic;
+	vehic.phase = time + 1;
 
-	sound (_vehicle, CH_TRIGGER_SINGLE, SND_Null, 1, ATTEN_NORM);
-	_vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;
-	_vehicle.phase = time + 1;
+	vehic.vehicle_exit(vehic, eject);
 
-	_vehicle.vehicle_exit(eject);
+	vehicles_setreturn(vehic);
+	vehicles_reset_colors(vehic);
+	vehic.owner = world;
 
-	vehicles_setreturn(_vehicle);
-	vehicles_reset_colors(_vehicle);
-	_vehicle.owner = world;
+	CSQCMODEL_AUTOINIT(vehic);
 
-	CSQCMODEL_AUTOINIT(self);
-
-	setself(this);
 	vehicles_exit_running = false;
 }
 
@@ -939,8 +929,8 @@ bool vehicle_impulse(entity this, int imp)
 	entity v = this.vehicle;
 	if (!v) return false;
 	if (IS_DEAD(v)) return false;
-	bool(int) f = v.vehicles_impulse;
-	if (f && f(imp)) return true;
+	bool(entity,int) f = v.vehicles_impulse;
+	if (f && f(this,imp)) return true;
 	switch (imp)
 	{
 		case IMP_weapon_drop.impulse:

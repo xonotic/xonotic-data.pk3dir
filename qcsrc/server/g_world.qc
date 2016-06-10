@@ -915,7 +915,7 @@ spawnfunc(worldspawn)
 	// save it for later
 	modname = strzone(modname);
 
-	WinningConditionHelper(); // set worldstatus
+	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
 }
@@ -1682,7 +1682,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	float limitreached;
 
 	// TODO make everything use THIS winning condition (except LMS)
-	WinningConditionHelper();
+	WinningConditionHelper(NULL);
 
 	if(teamplay)
 	{
