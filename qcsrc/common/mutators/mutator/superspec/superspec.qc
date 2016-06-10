@@ -23,25 +23,25 @@ const float SSF_ITEMMSG = 4;
 
 .string superspec_itemfilter; //"classname1 classname2 ..."
 
-bool superspec_Spectate(entity _player)
-{SELFPARAM();
-	if(Spectate(_player) == 1)
-	    TRANSMUTE(Spectator, self);
+bool superspec_Spectate(entity this, entity targ)
+{
+	if(Spectate(targ) == 1)
+	    TRANSMUTE(Spectator, this);
 
 	return true;
 }
 
-void superspec_save_client_conf()
-{SELFPARAM();
+void superspec_save_client_conf(entity this)
+{
 	string fn = "superspec-local.options";
 	float fh;
 
-	if (!_ISLOCAL(self))
+	if (!_ISLOCAL(this))
 	{
-		if(self.crypto_idfp == "")
+		if(this.crypto_idfp == "")
 			return;
 
-		fn = sprintf("superspec-%s.options", uri_escape(self.crypto_idfp));
+		fn = sprintf("superspec-%s.options", uri_escape(this.crypto_idfp));
 	}
 
 	fh = fopen(fn, FILE_WRITE);
@@ -53,11 +53,11 @@ void superspec_save_client_conf()
 	{
 		fputs(fh, _SSMAGIX);
 		fputs(fh, "\n");
-		fputs(fh, ftos(self.autospec_flags));
+		fputs(fh, ftos(this.autospec_flags));
 		fputs(fh, "\n");
-		fputs(fh, ftos(self.superspec_flags));
+		fputs(fh, ftos(this.superspec_flags));
 		fputs(fh, "\n");
-		fputs(fh, self.superspec_itemfilter);
+		fputs(fh, this.superspec_itemfilter);
 		fputs(fh, "\n");
 		fclose(fh);
 	}
@@ -114,7 +114,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", toucher.netname, item.netname, item.classname), 1);
 				if((it.autospec_flags & ASF_SSIM) && it.enemy != toucher)
 				{
-					WITHSELF(it, superspec_Spectate(toucher));
+					superspec_Spectate(it, toucher);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
@@ -138,7 +138,7 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 					if(it.autospec_flags & ASF_SHOWWHAT)
 						superspec_msg("", "", it, sprintf("^7Following %s^7 due to picking up %s\n", toucher.netname, item.netname), 2);
 
-					WITHSELF(it, superspec_Spectate(toucher));
+					superspec_Spectate(it, toucher);
 				}
 			}
 		}
@@ -344,7 +344,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followpowerup")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && (it.strength_finished > time || it.invincible_finished > time), LAMBDA(return superspec_Spectate(it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && (it.strength_finished > time || it.invincible_finished > time), LAMBDA(return superspec_Spectate(player, it)));
 
 		superspec_msg("", "", player, "No active powerup\n", 1);
 		return true;
@@ -352,7 +352,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followstrength")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it.strength_finished > time, LAMBDA(return superspec_Spectate(it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.strength_finished > time, LAMBDA(return superspec_Spectate(player, it)));
 
 		superspec_msg("", "", player, "No active Strength\n", 1);
 		return true;
@@ -360,7 +360,7 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 	if(cmd_name == "followshield")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it.invincible_finished > time, LAMBDA(return superspec_Spectate(it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.invincible_finished > time, LAMBDA(return superspec_Spectate(player, it)));
 
 		superspec_msg("", "", player, "No active Shield\n", 1);
 		return true;
@@ -382,10 +382,10 @@ MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsPrettyString)
 
 void superspec_hello(entity this)
 {
-	if(self.enemy.crypto_idfp == "")
-		Send_Notification(NOTIF_ONE_ONLY, self.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
+	if(this.enemy.crypto_idfp == "")
+		Send_Notification(NOTIF_ONE_ONLY, this.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
-	remove(self);
+	remove(this);
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
@@ -449,7 +449,7 @@ MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 			if(it.autospec_flags & ASF_SHOWWHAT)
 				superspec_msg("", "", it, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
 
-			WITHSELF(it, superspec_Spectate(frag_attacker));
+			superspec_Spectate(it, frag_attacker);
 		}
 	));
 
@@ -460,6 +460,6 @@ MUTATOR_HOOKFUNCTION(superspec, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	WITHSELF(player, superspec_save_client_conf());
+	superspec_save_client_conf(player);
 }
 #endif

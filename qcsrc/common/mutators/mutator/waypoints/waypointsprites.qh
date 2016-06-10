@@ -172,7 +172,7 @@ float WaypointSprite_Customize(entity this);
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
-void WaypointSprite_Reset();
+void WaypointSprite_Reset(entity this);
 
 entity WaypointSprite_Spawn(
     entity spr, // sprite

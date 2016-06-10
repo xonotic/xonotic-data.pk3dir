@@ -349,7 +349,7 @@ void reset_map(bool dorespawn)
 
 	// Waypoints and assault start come LAST
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
-		if (it.reset2) WITHSELF(it, it.reset2());
+		if (it.reset2) it.reset2(it);
 	});
 
 	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITHSELF(it, Unfreeze(it))));

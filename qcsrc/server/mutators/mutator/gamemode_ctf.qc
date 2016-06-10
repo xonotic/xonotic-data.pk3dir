@@ -2372,7 +2372,7 @@ MUTATOR_HOOKFUNCTION(ctf, GetRecords)
 	M_ARGV(1, string) = ret_string;
 }
 
-bool superspec_Spectate(entity _player); // TODO
+bool superspec_Spectate(entity this, entity targ); // TODO
 void superspec_msg(string _center_title, string _con_title, entity _to, string _msg, float _spamlevel); // TODO
 MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 {
@@ -2407,7 +2407,7 @@ MUTATOR_HOOKFUNCTION(ctf, SV_ParseClientCommand)
 				found = true;
 				if(_team == 0 && IS_SPEC(player) && player.enemy == it)
 					continue; // already spectating this fc, try another
-				return superspec_Spectate(it);
+				return superspec_Spectate(player, it);
 			}
 		));
 

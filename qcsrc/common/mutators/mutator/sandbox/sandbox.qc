@@ -75,11 +75,11 @@ void sandbox_ObjectFunction_Think(entity this)
 {
 	// decide if and how this object can be grabbed
 	if(autocvar_g_sandbox_readonly)
-		self.grab = 0; // no grabbing
-	else if(autocvar_g_sandbox_editor_free < 2 && self.crypto_idfp)
-		self.grab = 1; // owner only
+		this.grab = 0; // no grabbing
+	else if(autocvar_g_sandbox_editor_free < 2 && this.crypto_idfp)
+		this.grab = 1; // owner only
 	else
-		self.grab = 3; // anyone
+		this.grab = 3; // anyone
 
 	// Object owner is stored via player UID, but we also need the owner as an entity (if the player is available on the server).
 	// Therefore, scan for all players, and update the owner as long as the player is present. We must always do this,
@@ -87,28 +87,28 @@ void sandbox_ObjectFunction_Think(entity this)
 
 	// bots can't have objects
 	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
-		if(self.crypto_idfp == it.crypto_idfp)
+		if(this.crypto_idfp == it.crypto_idfp)
 		{
-			self.realowner = it;
+			this.realowner = it;
 			break;
 		}
-		self.realowner = world;
+		this.realowner = world;
 	));
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 .float old_solid, old_movetype;
-entity sandbox_ObjectEdit_Get(float permissions)
-{SELFPARAM();
+entity sandbox_ObjectEdit_Get(entity this, float permissions)
+{
 	// Returns the traced entity if the player can edit it, and world if not.
 	// If permissions if false, the object is returned regardless of editing rights.
 	// Attached objects are SOLID_NOT and do not get traced.
 
-	crosshair_trace_plusvisibletriggers(self);
-	if(vdist(self.origin - trace_ent.origin, >, autocvar_g_sandbox_editor_distance_edit))
+	crosshair_trace_plusvisibletriggers(this);
+	if(vdist(this.origin - trace_ent.origin, >, autocvar_g_sandbox_editor_distance_edit))
 		return world; // out of trace range
 	if(trace_ent.classname != "object")
 		return world; // entity is not an object
@@ -116,7 +116,7 @@ entity sandbox_ObjectEdit_Get(float permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
 	if(trace_ent.crypto_idfp == "")
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
-	if (!(trace_ent.realowner != self && autocvar_g_sandbox_editor_free < 2))
+	if (!(trace_ent.realowner != this && autocvar_g_sandbox_editor_free < 2))
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
 	return world;
 }
@@ -175,8 +175,8 @@ void sandbox_ObjectAttach_Remove(entity e)
 	}
 }
 
-entity sandbox_ObjectSpawn(float database)
-{SELFPARAM();
+entity sandbox_ObjectSpawn(entity this, float database)
+{
 	// spawn a new object with default properties
 
 	entity e = new(object);
@@ -196,21 +196,21 @@ entity sandbox_ObjectSpawn(float database)
 	{
 		// set the object's owner via player UID
 		// if the player does not have an UID, the owner cannot be stored and his objects may be edited by anyone
-		if(self.crypto_idfp != "")
-			e.crypto_idfp = strzone(self.crypto_idfp);
+		if(this.crypto_idfp != "")
+			e.crypto_idfp = strzone(this.crypto_idfp);
 		else
-			print_to(self, "^1SANDBOX - WARNING: ^7You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
+			print_to(this, "^1SANDBOX - WARNING: ^7You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
 
 		// set public object information
-		e.netname = strzone(self.netname); // name of the owner
+		e.netname = strzone(this.netname); // name of the owner
 		e.message = strzone(strftime(true, "%d-%m-%Y %H:%M:%S")); // creation time
 		e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S")); // last editing time
 
 		// set origin and direction based on player position and view angle
-		makevectors(self.v_angle);
-		WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
+		makevectors(this.v_angle);
+		WarpZone_TraceLine(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, this);
 		setorigin(e, trace_endpos);
-		e.angles_y = self.v_angle.y;
+		e.angles_y = this.v_angle.y;
 	}
 
 	CSQCMODEL_AUTOINIT(e);
@@ -316,7 +316,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	return s;
 }
 
-entity sandbox_ObjectPort_Load(string s, float database)
+entity sandbox_ObjectPort_Load(entity this, string s, float database)
 {
 	// load object properties, and spawn a new object with them
 	float n, i;
@@ -334,7 +334,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		string tagname = string_null;
 		argv_num = 0;
 		tokenize_console(port_string[i]);
-		e = sandbox_ObjectSpawn(database);
+		e = sandbox_ObjectSpawn(this, database);
 
 		// ---------------- OBJECT PROPERTY STORAGE: LOAD ----------------
 		if(i)
@@ -434,7 +434,7 @@ void sandbox_Database_Load()
 				continue;
 
 			entity e;
-			e = sandbox_ObjectPort_Load(file_read, true);
+			e = sandbox_ObjectPort_Load(NULL, file_read, true);
 
 			if(e.material)
 			{
@@ -532,7 +532,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					return true;
 				}
 
-				e = sandbox_ObjectSpawn(false);
+				e = sandbox_ObjectSpawn(player, false);
 				_setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
@@ -541,7 +541,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 			// ---------------- COMMAND: OBJECT, REMOVE ----------------
 			case "object_remove":
-				e = sandbox_ObjectEdit_Get(true);
+				e = sandbox_ObjectEdit_Get(player, true);
 				if(e != world)
 				{
 					if(autocvar_g_sandbox_info > 0)
@@ -559,7 +559,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				{
 					case "copy":
 						// copies customizable properties of the selected object to the clipboard cvar
-						e = sandbox_ObjectEdit_Get(autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
+						e = sandbox_ObjectEdit_Get(player, autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
 						if(e != world)
 						{
 							s = sandbox_ObjectPort_Save(e, false);
@@ -590,7 +590,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							print_to(player, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 							return true;
 						}
-						e = sandbox_ObjectPort_Load(argv(3), false);
+						e = sandbox_ObjectPort_Load(player, argv(3), false);
 
 						print_to(player, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
@@ -605,7 +605,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				{
 					case "get":
 						// select e as the object as meant to be attached
-						e = sandbox_ObjectEdit_Get(true);
+						e = sandbox_ObjectEdit_Get(player, true);
 						if(e != world)
 						{
 							player.object_attach = e;
@@ -622,7 +622,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 						}
 
 						// attaches the previously selected object to e
-						e = sandbox_ObjectEdit_Get(true);
+						e = sandbox_ObjectEdit_Get(player, true);
 						if(e != world)
 						{
 							sandbox_ObjectAttach_Set(player.object_attach, e, argv(3));
@@ -636,7 +636,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 						return true;
 					case "remove":
 						// removes e if it was attached
-						e = sandbox_ObjectEdit_Get(true);
+						e = sandbox_ObjectEdit_Get(player, true);
 						if(e != world)
 						{
 							sandbox_ObjectAttach_Remove(e);
@@ -658,7 +658,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					return true;
 				}
 
-				e = sandbox_ObjectEdit_Get(true);
+				e = sandbox_ObjectEdit_Get(player, true);
 				if(e != world)
 				{
 					switch(argv(2))
@@ -748,7 +748,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					print_to(player, "^1SANDBOX - WARNING: ^7You do not have a player UID, and cannot claim objects");
 					return true;
 				}
-				e = sandbox_ObjectEdit_Get(true);
+				e = sandbox_ObjectEdit_Get(player, true);
 				if(e != world)
 				{
 					// update the owner's name
@@ -778,7 +778,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 			// ---------------- COMMAND: OBJECT, INFO ----------------
 			case "object_info":
 				// prints public information about the object to the player
-				e = sandbox_ObjectEdit_Get(false);
+				e = sandbox_ObjectEdit_Get(player, false);
 				if(e != world)
 				{
 					switch(argv(2))

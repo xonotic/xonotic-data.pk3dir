@@ -978,12 +978,12 @@ float WaypointSprite_Customize(entity this)
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
-void WaypointSprite_Reset()
-{SELFPARAM();
+void WaypointSprite_Reset(entity this)
+{
     // if a WP wants to time out, let it time out immediately; other WPs ought to be reset/killed by their owners
 
-    if (self.fade_time)
-        WaypointSprite_Kill(self);
+    if (this.fade_time)
+        WaypointSprite_Kill(this);
 }
 
 entity WaypointSprite_Spawn(

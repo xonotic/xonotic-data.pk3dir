@@ -10,7 +10,7 @@ void gamestart_use_this(entity this)
 	gamestart_use(this, NULL, NULL);
 }
 
-void self_spawnfunc_trigger_gamestart();
+void self_spawnfunc_trigger_gamestart(entity this);
 spawnfunc(trigger_gamestart)
 {
 	this.use = gamestart_use;
@@ -24,6 +24,6 @@ spawnfunc(trigger_gamestart)
 	else
 		InitializeEntity(this, gamestart_use_this, INITPRIO_FINDTARGET);
 }
-void self_spawnfunc_trigger_gamestart() { SELFPARAM(); spawnfunc_trigger_gamestart(this); }
+void self_spawnfunc_trigger_gamestart(entity this) { WITHSELF(this, spawnfunc_trigger_gamestart(this)); }
 
 #endif

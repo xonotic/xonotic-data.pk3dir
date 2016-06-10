@@ -232,11 +232,6 @@ void assault_roundstart_use_this(entity this)
 {
 	assault_roundstart_use(this, NULL, NULL);
 }
-void assault_roundstart_use_self()
-{
-    SELFPARAM();
-    assault_roundstart_use(this, NULL, NULL);
-}
 
 void assault_wall_think(entity this)
 {
@@ -424,7 +419,7 @@ spawnfunc(target_assault_roundstart)
 	assault_attacker_team = NUM_TEAM_1;
 	this.classname = "target_assault_roundstart";
 	this.use = assault_roundstart_use;
-	this.reset2 = assault_roundstart_use_self;
+	this.reset2 = assault_roundstart_use_this;
 	InitializeEntity(this, assault_roundstart_use_this, INITPRIO_FINDTARGET);
 }
 
