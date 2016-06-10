@@ -636,7 +636,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// reset fields the weapons may use just in case
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			WITHSELF(this, it.wr_resetplayer(it, this));
+			it.wr_resetplayer(it, this);
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;

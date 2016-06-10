@@ -157,7 +157,7 @@ void NIX_GiveCurrentWeapon(entity this)
 		else
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		WITHSELF(this, e.wr_resetplayer(e, this));
+		e.wr_resetplayer(e, this);
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
