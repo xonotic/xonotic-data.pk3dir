@@ -214,7 +214,7 @@ MUTATOR_HOOKABLE(EditProjectile, EV_EditProjectile);
 
 /** called when a monster spawns */
 #define EV_MonsterSpawn(i, o) \
-    /**/ i(entity, __self) \
+    /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(MonsterSpawn, EV_MonsterSpawn);
 
@@ -228,23 +228,22 @@ MUTATOR_HOOKABLE(MonsterDies, EV_MonsterDies);
 
 /** called when a monster dies */
 #define EV_MonsterRemove(i, o) \
-    /**/ i(entity, rem_mon) \
+    /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
-entity rem_mon; // avoiding ovewriting self & other
 MUTATOR_HOOKABLE(MonsterRemove, EV_MonsterRemove);
 
 /** called when a monster wants to respawn */
 #define EV_MonsterRespawn(i, o) \
-    /**/ i(entity, other) \
+    /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(MonsterRespawn, EV_MonsterRespawn);
 
 /** called when a monster is dropping loot */
 #define EV_MonsterDropItem(i, o) \
-    /* monster */ i(entity, MUTATOR_ARGV_0_entity) \
+    /* monster */                          i(entity, MUTATOR_ARGV_0_entity) \
     /* item (can be removed or changed) */ i(entity, MUTATOR_ARGV_1_entity) \
-    /**/ o(entity, MUTATOR_ARGV_1_entity) \
-    /* attacker */ i(entity, MUTATOR_ARGV_2_entity) \
+    /**/                                   o(entity, MUTATOR_ARGV_1_entity) \
+    /* attacker */                         i(entity, MUTATOR_ARGV_2_entity) \
     /**/
 .void(entity this) monster_loot;
 MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
@@ -254,16 +253,13 @@ MUTATOR_HOOKABLE(MonsterDropItem, EV_MonsterDropItem);
  * returning true makes the monster stop
  */
 #define EV_MonsterMove(i, o) \
-    /**/ i(entity, __self) \
-    /**/ i(float, monster_speed_run) \
-    /**/ o(float, monster_speed_run) \
-    /**/ i(float, monster_speed_walk) \
-    /**/ o(float, monster_speed_walk) \
-    /**/ i(entity, monster_target) \
+    /** monster */       i(entity, MUTATOR_ARGV_0_entity) \
+    /** run speed */     i(float, MUTATOR_ARGV_1_float) \
+    /**/                 o(float, MUTATOR_ARGV_1_float) \
+    /** walk speed */    i(float, MUTATOR_ARGV_2_float) \
+    /**/                 o(float, MUTATOR_ARGV_2_float) \
+    /** move target */   i(entity, MUTATOR_ARGV_3_entity) \
     /**/
-float monster_speed_run;
-float monster_speed_walk;
-entity monster_target;
 MUTATOR_HOOKABLE(MonsterMove, EV_MonsterMove);
 
 /** called when a monster looks for another target */
@@ -271,7 +267,7 @@ MUTATOR_HOOKABLE(MonsterFindTarget, EV_NO_ARGS);
 
 /** called to change a random monster to a miniboss */
 #define EV_MonsterCheckBossFlag(i, o) \
-    /**/ i(entity, __self) \
+    /** monster */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(MonsterCheckBossFlag, EV_MonsterCheckBossFlag);
 
@@ -345,10 +341,9 @@ MUTATOR_HOOKABLE(W_Reload, EV_W_Reload);
 
 /** called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items. */
 #define EV_PlayerPowerups(i, o) \
-    /**/ i(entity, __self) \
-    /**/ i(int, olditems) \
+    /** player */    i(entity, MUTATOR_ARGV_0_entity) \
+    /** old items */ i(int, MUTATOR_ARGV_1_int) \
     /**/
-int olditems;
 MUTATOR_HOOKABLE(PlayerPowerups, EV_PlayerPowerups);
 
 /**

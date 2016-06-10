@@ -423,16 +423,16 @@ MUTATOR_HOOKFUNCTION(ka, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPowerups)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
 	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player()
 
-	self.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
+	player.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
 
-	if(self.ballcarried)
-		self.effects |= autocvar_g_keepaway_ballcarrier_effects;
-
-	return false;
+	if(player.ballcarried)
+		player.effects |= autocvar_g_keepaway_ballcarrier_effects;
 }
 
 .float stat_sv_airspeedlimit_nonqw;

@@ -153,10 +153,12 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterDropItem)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
-{SELFPARAM();
+{
+	entity mon = M_ARGV(0, entity);
+
 	// always refill ammo
-	if(self.monsterid == MON_MAGE.monsterid)
-		self.skin = 1;
+	if(mon.monsterid == MON_MAGE.monsterid)
+		mon.skin = 1;
 
 	return false;
 }
@@ -196,52 +198,53 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerRegen)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
-{SELFPARAM();
-	if (!(self.effects & EF_FULLBRIGHT))
-		self.effects |= EF_FULLBRIGHT;
+{
+	entity player = M_ARGV(0, entity);
 
-	if (self.items & ITEM_Invisibility.m_itemid)
+	if (!(player.effects & EF_FULLBRIGHT))
+		player.effects |= EF_FULLBRIGHT;
+
+	if (player.items & ITEM_Invisibility.m_itemid)
 	{
-		play_countdown(self.strength_finished, SND_POWEROFF);
-		if (time > self.strength_finished)
+		play_countdown(player.strength_finished, SND_POWEROFF);
+		if (time > player.strength_finished)
 		{
-			self.alpha = default_player_alpha;
-			self.exteriorweaponentity.alpha = default_weapon_alpha;
-			self.items &= ~ITEM_Invisibility.m_itemid;
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
+			player.alpha = default_player_alpha;
+			player.exteriorweaponentity.alpha = default_weapon_alpha;
+			player.items &= ~ITEM_Invisibility.m_itemid;
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
 	else
 	{
-		if (time < self.strength_finished)
+		if (time < player.strength_finished)
 		{
-			self.alpha = autocvar_g_instagib_invis_alpha;
-			self.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
-			self.items |= ITEM_Invisibility.m_itemid;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
+			player.alpha = autocvar_g_instagib_invis_alpha;
+			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
+			player.items |= ITEM_Invisibility.m_itemid;
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
 		}
 	}
 
-	if (self.items & ITEM_Speed.m_itemid)
+	if (player.items & ITEM_Speed.m_itemid)
 	{
-		play_countdown(self.invincible_finished, SND_POWEROFF);
-		if (time > self.invincible_finished)
+		play_countdown(player.invincible_finished, SND_POWEROFF);
+		if (time > player.invincible_finished)
 		{
-			self.items &= ~ITEM_Speed.m_itemid;
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
+			player.items &= ~ITEM_Speed.m_itemid;
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 		}
 	}
 	else
 	{
-		if (time < self.invincible_finished)
+		if (time < player.invincible_finished)
 		{
-			self.items |= ITEM_Speed.m_itemid;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
+			player.items |= ITEM_Speed.m_itemid;
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_SPEED);
 		}
 	}
-	return false;
 }
 
 .float stat_sv_maxspeed;

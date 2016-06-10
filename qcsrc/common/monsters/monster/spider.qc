@@ -68,13 +68,13 @@ MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 {
-    SELFPARAM();
-	if(time < self.spider_slowness)
+    entity mon = M_ARGV(0, entity);
+
+	if(time < mon.spider_slowness)
 	{
-		monster_speed_run *= 0.5;
-		monster_speed_walk *= 0.5;
+		M_ARGV(1, float) *= 0.5; // run speed
+		M_ARGV(2, float) *= 0.5; // walk speed
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
@@ -87,9 +87,9 @@ MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
 {
-    SELFPARAM();
-	self.spider_slowness = 0;
-	return false;
+    entity mon = M_ARGV(0, entity);
+
+	mon.spider_slowness = 0;
 }
 
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));

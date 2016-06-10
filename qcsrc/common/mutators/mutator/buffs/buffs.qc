@@ -671,14 +671,14 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerJump)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, MonsterMove)
-{SELFPARAM();
-	if(time < self.buff_disability_time)
-	{
-		monster_speed_walk *= autocvar_g_buffs_disability_speed;
-		monster_speed_run *= autocvar_g_buffs_disability_speed;
-	}
+{
+	entity mon = M_ARGV(0, entity);
 
-	return false;
+	if(time < mon.buff_disability_time)
+	{
+		M_ARGV(1, float) *= autocvar_g_buffs_disability_speed; // run speed
+		M_ARGV(2, float) *= autocvar_g_buffs_disability_speed; // walk speed
+	}
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerDies)

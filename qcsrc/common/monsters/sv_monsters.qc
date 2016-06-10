@@ -795,9 +795,9 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		return;
 	}
 
-	targ = monster_target;
-	runspeed = bound(0, monster_speed_run * MONSTER_SKILLMOD(this), runspeed * 2.5); // limit maxspeed to prevent craziness
-	walkspeed = bound(0, monster_speed_walk * MONSTER_SKILLMOD(this), walkspeed * 2.5); // limit maxspeed to prevent craziness
+	targ = M_ARGV(3, entity);
+	runspeed = bound(0, M_ARGV(1, float) * MONSTER_SKILLMOD(this), runspeed * 2.5); // limit maxspeed to prevent craziness
+	walkspeed = bound(0, M_ARGV(2, float) * MONSTER_SKILLMOD(this), walkspeed * 2.5); // limit maxspeed to prevent craziness
 
 	if(teamplay)
 	if(autocvar_g_monsters_teams)

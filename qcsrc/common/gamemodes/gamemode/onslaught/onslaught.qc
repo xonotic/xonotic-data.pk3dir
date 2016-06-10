@@ -1933,17 +1933,17 @@ MUTATOR_HOOKFUNCTION(ons, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(ons, MonsterMove)
-{SELFPARAM();
-	entity e = find(world, targetname, self.target);
-	if (e != world)
-		self.team = e.team;
+{
+	entity mon = M_ARGV(0, entity);
 
-	return false;
+	entity e = find(world, targetname, mon.target);
+	if (e != world)
+		mon.team = e.team;
 }
 
 void ons_MonsterSpawn_Delayed(entity this)
 {
-	entity own = self.owner;
+	entity own = this.owner;
 
 	if(!own) { remove(this); return; }
 
@@ -1962,12 +1962,12 @@ void ons_MonsterSpawn_Delayed(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
-{SELFPARAM();
-	entity e = spawn();
-	e.owner = self;
-	InitializeEntity(e, ons_MonsterSpawn_Delayed, INITPRIO_FINDTARGET);
+{
+	entity mon = M_ARGV(0, entity);
 
-	return false;
+	entity e = spawn();
+	e.owner = mon;
+	InitializeEntity(e, ons_MonsterSpawn_Delayed, INITPRIO_FINDTARGET);
 }
 
 void ons_TurretSpawn_Delayed(entity this)

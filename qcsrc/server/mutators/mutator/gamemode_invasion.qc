@@ -355,22 +355,24 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 }
 
 MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
-{SELFPARAM();
-	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
+{
+	entity mon = M_ARGV(0, entity);
+
+	if(!(mon.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
 
-	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(mon.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		inv_numspawned += 1;
 		inv_maxcurrent += 1;
 	}
 
-	self.monster_skill = inv_monsterskill;
+	mon.monster_skill = inv_monsterskill;
 
-	if((get_monsterinfo(self.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, self.monster_name);
+	if((get_monsterinfo(mon.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
 
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+	mon.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
 	return false;
 }
