@@ -504,8 +504,8 @@ void flocker_die(entity this)
 }
 
 
-void flocker_think()
-{SELFPARAM();
+void flocker_think(entity this)
+{
     vector dodgemove,swarmmove;
     vector reprellmove,wandermove,newmove;
 
@@ -567,8 +567,8 @@ void spawn_flocker(entity this)
 
 }
 
-void flockerspawn_think()
-{SELFPARAM();
+void flockerspawn_think(entity this)
+{
     if(this.cnt > 0)
         spawn_flocker(this);
 
@@ -576,8 +576,8 @@ void flockerspawn_think()
 
 }
 
-void flocker_hunter_think()
-{SELFPARAM();
+void flocker_hunter_think(entity this)
+{
     vector dodgemove,attractmove,newmove;
     entity e,ee;
     float d,bd;
