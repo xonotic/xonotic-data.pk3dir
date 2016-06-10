@@ -177,7 +177,7 @@ void setplayermodel(entity e, string modelname)
 {
 	precache_model(modelname);
 	_setmodel(e, modelname);
-	player_setupanimsformodel();
+	player_setupanimsformodel(e);
 	if(!autocvar_g_debug_globalsounds)
 		UpdatePlayerSounds(e);
 }
@@ -442,7 +442,7 @@ void FixPlayermodel(entity player)
 /** Called when a client spawns in the server */
 void PutClientInServer()
 {
-	SELFPARAM();
+	SELFPARAM(); // needed for engine functions
 	if (IS_BOT_CLIENT(this)) {
 		TRANSMUTE(Player, this);
 	} else if (IS_REAL_CLIENT(this)) {
@@ -733,7 +733,7 @@ SetChangeParms
 =============
 */
 void SetChangeParms ()
-{SELFPARAM();
+{SELFPARAM(); // needed for engine functions
 	// save parms for level change
 	parm1 = this.parm_idlesince - time;
 
@@ -784,8 +784,8 @@ void ClientKill_Now_TeamChange(entity this)
 	this.killindicator_teamchange = 0;
 }
 
-void ClientKill_Now()
-{SELFPARAM();
+void ClientKill_Now(entity this)
+{
 	if(this.vehicle)
 	{
 	    vehicles_exit(this.vehicle, VHEF_RELEASE);
@@ -827,7 +827,7 @@ void KillIndicator_Think(entity this)
 
 	if(this.cnt <= 0)
 	{
-		WITHSELF(this.owner, ClientKill_Now());
+		ClientKill_Now(this.owner);
 		return;
 	}
     else if(g_cts && this.health == 1) // health == 1 means that it's silent
@@ -879,7 +879,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 		if(killtime <= 0 || !IS_PLAYER(this) || IS_DEAD(this))
 		{
-			WITHSELF(this, ClientKill_Now());
+			ClientKill_Now(this);
 		}
 		else
 		{
@@ -949,7 +949,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 }
 
 void ClientKill ()
-{SELFPARAM();
+{SELFPARAM(); // needed for engine functions
 	if(gameover) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
@@ -999,7 +999,7 @@ Called once (not at each match start) when a client begins a connection to the s
 =============
 */
 void ClientPreConnect ()
-{SELFPARAM();
+{SELFPARAM(); // needed for engine functions
 	if(autocvar_sv_eventlog)
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
@@ -1020,7 +1020,7 @@ Called when a client connects to the server
 */
 void ClientConnect()
 {
-	SELFPARAM();
+	SELFPARAM(); // needed for engine functions
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
 	this.flags |= FL_CLIENT;
@@ -1177,7 +1177,7 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect()
 {
-	SELFPARAM();
+	SELFPARAM(); // needed for engine functions
 	assert(IS_CLIENT(this), return);
 
 	PlayerStats_GameReport_FinalizePlayer(this);
@@ -1247,8 +1247,8 @@ void ChatBubbleThink(entity this)
 
 }
 
-void UpdateChatBubble()
-{SELFPARAM();
+void UpdateChatBubble(entity this)
+{
 	if (this.alpha < 0)
 		return;
 	// spawn a chatbubble entity if needed
@@ -1286,8 +1286,8 @@ void UpdateChatBubble()
 	else this.colormod = '1 1 1';
 }*/
 
-void respawn()
-{SELFPARAM();
+void respawn(entity this)
+{
 	if(this.alpha >= 0 && autocvar_g_respawn_ghosts)
 	{
 		this.solid = SOLID_NOT;
@@ -1307,8 +1307,8 @@ void respawn()
 	PutClientInServer();
 }
 
-void play_countdown(float finished, Sound samp)
-{SELFPARAM();
+void play_countdown(entity this, float finished, Sound samp)
+{
     TC(Sound, samp);
 	if(IS_REAL_CLIENT(this))
 		if(floor(finished - time - frametime) != floor(finished - time))
@@ -1316,8 +1316,8 @@ void play_countdown(float finished, Sound samp)
 				sound (this, CH_INFO, samp, VOL_BASE, ATTEN_NORM);
 }
 
-void player_powerups ()
-{SELFPARAM();
+void player_powerups(entity this)
+{
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	int items_prev = this.items;
 
@@ -1338,7 +1338,7 @@ void player_powerups ()
 	{
 		if (this.items & ITEM_Strength.m_itemid)
 		{
-			play_countdown(this.strength_finished, SND_POWEROFF);
+			play_countdown(this, this.strength_finished, SND_POWEROFF);
 			this.effects = this.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > this.strength_finished)
 			{
@@ -1358,7 +1358,7 @@ void player_powerups ()
 		}
 		if (this.items & ITEM_Shield.m_itemid)
 		{
-			play_countdown(this.invincible_finished, SND_POWEROFF);
+			play_countdown(this, this.invincible_finished, SND_POWEROFF);
 			this.effects = this.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
 			if (time > this.invincible_finished)
 			{
@@ -1391,7 +1391,7 @@ void player_powerups ()
 			}
 			else
 			{
-				play_countdown(this.superweapons_finished, SND_POWEROFF);
+				play_countdown(this, this.superweapons_finished, SND_POWEROFF);
 				if (time > this.superweapons_finished)
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
@@ -1479,8 +1479,8 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 	return current;
 }
 
-void player_regen ()
-{SELFPARAM();
+void player_regen(entity this)
+{
 	float max_mod, regen_mod, rot_mod, limit_mod;
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
 	regen_mod_max = max_mod;
@@ -1540,8 +1540,8 @@ void player_regen ()
 }
 
 bool zoomstate_set;
-void SetZoomState(float z)
-{SELFPARAM();
+void SetZoomState(entity this, float z)
+{
 	if(z != this.zoomstate)
 	{
 		this.zoomstate = z;
@@ -1617,7 +1617,7 @@ void SpectateCopy(entity this, entity spectatee)
 		this.fixangle = true;
 	setorigin(this, spectatee.origin);
 	setsize(this, spectatee.mins, spectatee.maxs);
-	SetZoomState(spectatee.zoomstate);
+	SetZoomState(this, spectatee.zoomstate);
 
     anticheat_spectatecopy(this, spectatee);
 	this.hud = spectatee.hud;
@@ -1759,8 +1759,8 @@ ShowRespawnCountdown()
 Update a respawn countdown display.
 =============
 */
-void ShowRespawnCountdown()
-{SELFPARAM();
+void ShowRespawnCountdown(entity this)
+{
 	float number;
 	if(!IS_DEAD(this)) // just respawned?
 		return;
@@ -1855,8 +1855,8 @@ bool nJoinAllowed(entity this, entity ignore)
  * Checks whether the client is an observer or spectator, if so, he will get kicked after
  * g_maxplayers_spectator_blocktime seconds
  */
-void checkSpectatorBlock()
-{SELFPARAM();
+void checkSpectatorBlock(entity this)
+{
 	if(IS_SPEC(this) || IS_OBSERVER(this))
 	if(!this.caplayer)
 	if(IS_REAL_CLIENT(this))
@@ -2005,8 +2005,8 @@ void SpectatorThink(entity this)
 }
 
 void vehicles_enter (entity pl, entity veh);
-void PlayerUseKey()
-{SELFPARAM();
+void PlayerUseKey(entity this)
+{
 	if (!IS_PLAYER(this))
 		return;
 
@@ -2066,7 +2066,7 @@ Called every frame for each client before the physics are run
 .int items_added;
 void PlayerPreThink ()
 {
-    SELFPARAM();
+    SELFPARAM(); // needed for engine functions
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
     STAT(GAMESTARTTIME, this) = game_starttime;
@@ -2084,7 +2084,7 @@ void PlayerPreThink ()
 	if (blockSpectators && frametime) {
 		// WORKAROUND: only use dropclient in server frames (frametime set).
 		// Never use it in cl_movement frames (frametime zero).
-		checkSpectatorBlock();
+		checkSpectatorBlock(this);
     }
 
 	zoomstate_set = false;
@@ -2180,7 +2180,7 @@ void PlayerPreThink ()
 	if(!this.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(PHYS_INPUT_BUTTON_USE(this) && !this.usekeypressed)
-			PlayerUseKey();
+			PlayerUseKey(this);
 		this.usekeypressed = PHYS_INPUT_BUTTON_USE(this);
 	}
 
@@ -2203,17 +2203,17 @@ void PlayerPreThink ()
 			this.fixangle = true;
 		}
 
-		if (frametime) player_powerups();
+		if (frametime) player_powerups(this);
 
 		if (IS_DEAD(this)) {
 			if (this.personal && g_race_qualifying) {
 				if (time > this.respawn_time) {
 					STAT(RESPAWN_TIME, this) = this.respawn_time = time + 1; // only retry once a second
-					respawn();
+					respawn(this);
 					this.impulse = CHIMPULSE_SPEEDRUN.impulse;
 				}
 			} else {
-				if (frametime) player_anim();
+				if (frametime) player_anim(this);
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
 				if (this.deadflag == DEAD_DYING) {
@@ -2240,7 +2240,7 @@ void PlayerPreThink ()
 					}
 				}
 
-				ShowRespawnCountdown();
+				ShowRespawnCountdown(this);
 
 				if (this.respawn_flags & RESPAWN_SILENT)
 					STAT(RESPAWN_TIME, this) = 0;
@@ -2309,14 +2309,14 @@ void PlayerPreThink ()
 			this.items |= this.items_added;
 		}
 
-		player_regen();
+		player_regen(this);
 
 		// WEAPONTODO: Add a weapon request for this
 		// rot vortex charge to the charge limit
 		if (WEP_CVAR(vortex, charge_rot_rate) && this.vortex_charge > WEP_CVAR(vortex, charge_limit) && this.vortex_charge_rottime < time)
 			this.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), this.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 
-		if (frametime) player_anim();
+		if (frametime) player_anim(this);
 
 		// secret status
 		secrets_setstatus(this);
@@ -2339,7 +2339,7 @@ void PlayerPreThink ()
 
 	// WEAPONTODO: Add weapon request for this
 	if (!zoomstate_set) {
-		SetZoomState(
+		SetZoomState(this,
 			PHYS_INPUT_BUTTON_ZOOM(this) || PHYS_INPUT_BUTTON_ZOOMSCRIPT(this)
 			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_VORTEX)
 			|| (PHYS_INPUT_BUTTON_ATCK2(this) && PS(this).m_weapon == WEP_RIFLE && WEP_CVAR(rifle, secondary) == 0)
@@ -2415,7 +2415,7 @@ Called every frame for each client after the physics are run
 .float idlekick_lasttimeleft;
 void PlayerPostThink ()
 {
-    SELFPARAM();
+    SELFPARAM(); // needed for engine functions
 	if (sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
@@ -2450,14 +2450,14 @@ void PlayerPostThink ()
 		}
 	}
 
-	CheatFrame();
+	CheatFrame(this);
 
 	//CheckPlayerJump();
 
 	if (IS_PLAYER(this)) {
 		DrownPlayer(this);
 		CheckRules_Player(this);
-		UpdateChatBubble();
+		UpdateChatBubble(this);
 		if (this.impulse) ImpulseCommands(this);
 		if (intermission_running) return; // intermission or finale
 		GetPressedKeys(this);

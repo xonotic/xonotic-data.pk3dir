@@ -503,17 +503,17 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 void Ice_Think(entity this)
 {
-	if(!STAT(FROZEN, self.owner) || self.owner.iceblock != self)
+	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	setorigin(self, self.owner.origin - '0 0 16');
-	self.nextthink = time;
+	setorigin(this, this.owner.origin - '0 0 16');
+	this.nextthink = time;
 }
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
-{SELFPARAM();
+{
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
@@ -526,7 +526,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
-	self.bot_attack = false;
+	targ.bot_attack = false;
 
 	entity ice = new(ice);
 	ice.owner = targ;
@@ -554,7 +554,6 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
-    SELFPARAM();
 	if(!STAT(FROZEN, targ))
 		return;
 
@@ -564,7 +563,7 @@ void Unfreeze (entity targ)
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
-	self.bot_attack = true;
+	targ.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 

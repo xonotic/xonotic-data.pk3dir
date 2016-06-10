@@ -33,7 +33,7 @@ void CopyBody(entity this, float keepvelocity);
 
 float CheatImpulse(entity this, int imp) { return 0; }
 float CheatCommand(entity this, int argc) { return 0; }
-float CheatFrame() { return 0; }
+float CheatFrame(entity this) { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
 void CheatShutdown() { }
 void Drag_MoveDrag(entity from, entity to) { }
@@ -719,8 +719,8 @@ float Drag_IsDragging(entity dragger);
 void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
-float CheatFrame()
-{SELFPARAM();
+float CheatFrame(entity this)
+{
 	BEGIN_CHEAT_FUNCTION();
 
 	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,

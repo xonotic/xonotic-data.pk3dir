@@ -77,7 +77,7 @@ float server_is_dedicated;
 .float fade_time;
 .float fade_rate;
 
-void() player_setupanimsformodel;
+void player_setupanimsformodel(entity this);
 
 .string mdl;
 

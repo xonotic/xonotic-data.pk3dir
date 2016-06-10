@@ -126,15 +126,15 @@ void CopyBody(entity this, float keepvelocity)
 	animdecide_setframes(clone, false, frame, frame1time, frame2, frame2time);
 }
 
-void player_setupanimsformodel()
-{SELFPARAM();
+void player_setupanimsformodel(entity this)
+{
 	// load animation info
-	animdecide_load_if_needed(self);
-	animdecide_setstate(self, 0, false);
+	animdecide_load_if_needed(this);
+	animdecide_setstate(this, 0, false);
 }
 
-void player_anim ()
-{SELFPARAM();
+void player_anim(entity this)
+{
 	int deadbits = (this.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(IS_DEAD(this)) {
 		if (!deadbits) {

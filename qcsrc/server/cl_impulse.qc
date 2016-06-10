@@ -373,7 +373,7 @@ void ImpulseCommands(entity this)
 
 IMPULSE(use)
 {
-	PlayerUseKey();
+	PlayerUseKey(this);
 }
 
 IMPULSE(waypoint_personal_here)

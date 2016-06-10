@@ -91,18 +91,18 @@ void GrapplingHookReset(entity this)
 }
 
 void GrapplingHookThink(entity this);
-void GrapplingHook_Stop()
-{SELFPARAM();
-	Send_Effect(EFFECT_HOOK_IMPACT, self.origin, '0 0 0', 1);
-	sound (self, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
+void GrapplingHook_Stop(entity this)
+{
+	Send_Effect(EFFECT_HOOK_IMPACT, this.origin, '0 0 0', 1);
+	sound (this, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	self.state = 1;
-	setthink(self, GrapplingHookThink);
-	self.nextthink = time;
-	settouch(self, func_null);
-	self.velocity = '0 0 0';
-	self.movetype = MOVETYPE_NONE;
-	self.hook_length = -1;
+	this.state = 1;
+	setthink(this, GrapplingHookThink);
+	this.nextthink = time;
+	settouch(this, func_null);
+	this.velocity = '0 0 0';
+	this.movetype = MOVETYPE_NONE;
+	this.hook_length = -1;
 }
 
 .vector hook_start, hook_end;
@@ -110,24 +110,24 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;
-	if(sound_allowed(MSG_BROADCAST, self.realowner))
+	if(sound_allowed(MSG_BROADCAST, this.realowner))
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, etof(self.realowner));
+		WriteByte(MSG_ENTITY, etof(this.realowner));
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_start.x);
-		WriteCoord(MSG_ENTITY, self.hook_start.y);
-		WriteCoord(MSG_ENTITY, self.hook_start.z);
+		WriteCoord(MSG_ENTITY, this.hook_start.x);
+		WriteCoord(MSG_ENTITY, this.hook_start.y);
+		WriteCoord(MSG_ENTITY, this.hook_start.z);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_end.x);
-		WriteCoord(MSG_ENTITY, self.hook_end.y);
-		WriteCoord(MSG_ENTITY, self.hook_end.z);
+		WriteCoord(MSG_ENTITY, this.hook_end.x);
+		WriteCoord(MSG_ENTITY, this.hook_end.y);
+		WriteCoord(MSG_ENTITY, this.hook_end.z);
 	}
 	return true;
 }
@@ -307,7 +307,7 @@ void GrapplingHookTouch (entity this)
 		return;
 	PROJECTILE_TOUCH(this);
 
-	GrapplingHook_Stop();
+	GrapplingHook_Stop(this);
 
 	if(other)
 		if(other.movetype != MOVETYPE_NONE)
@@ -341,32 +341,32 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 	}
 }
 
-void FireGrapplingHook ()
-{SELFPARAM();
+void FireGrapplingHook(entity actor)
+{
 	entity missile;
 	vector org;
 	vector vs;
 
-	if(forbidWeaponUse(self)) return;
-	if(self.vehicle) return;
+	if(forbidWeaponUse(actor)) return;
+	if(actor.vehicle) return;
 
-	makevectors(self.v_angle);
+	makevectors(actor.v_angle);
 
-	int s = W_GetGunAlignment(self);
+	int s = W_GetGunAlignment(actor);
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (self, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
-	org = self.origin + self.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+	sound (actor, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
+	org = actor.origin + actor.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
-	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
+	tracebox(actor.origin + actor.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, actor);
 	org = trace_endpos;
 
 	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, org, '0 0 0', 1);
 
-	missile = WarpZone_RefSys_SpawnSameRefSys(self);
-	missile.owner = missile.realowner = self;
-	self.hook = missile;
+	missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	missile.owner = missile.realowner = actor;
+	actor.hook = missile;
 	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;

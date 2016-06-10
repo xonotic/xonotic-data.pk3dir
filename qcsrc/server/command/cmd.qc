@@ -706,7 +706,7 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
-	SELFPARAM();
+	SELFPARAM(); // needed for engine functions
 	// If invalid UTF-8, don't even parse it
 	string command2 = "";
 	float len = strlen(command);

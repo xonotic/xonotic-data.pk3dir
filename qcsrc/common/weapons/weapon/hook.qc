@@ -266,7 +266,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if (actor.hook)
             RemoveGrapplingHook(actor);
-        WITHSELF(actor, FireGrapplingHook());
+        FireGrapplingHook(actor);
         actor.hook_state &= ~HOOK_FIRING;
         actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor(actor));
     }

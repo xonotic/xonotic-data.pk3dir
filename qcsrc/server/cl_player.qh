@@ -9,9 +9,9 @@
 void CopyBody_Think(entity this);
 void CopyBody(entity this, float keepvelocity);
 
-void player_setupanimsformodel();
+void player_setupanimsformodel(entity this);
 
-void player_anim();
+void player_anim(entity this);
 
 void PlayerCorpseDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
 
