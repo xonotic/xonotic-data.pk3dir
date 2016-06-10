@@ -24,7 +24,7 @@
 #endif
 
 // Step 4: kill unstructured setself
-#if 0
+#if 1
     #undef setself
 #endif
 
