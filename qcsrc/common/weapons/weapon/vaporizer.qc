@@ -230,7 +230,7 @@ void W_RocketMinsta_Laser_Explode (entity this)
 
 void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_RocketMinsta_Laser_Explode(this));
+	W_RocketMinsta_Laser_Explode(this);
 }
 
 void W_RocketMinsta_Laser_Touch (entity this)

@@ -65,7 +65,7 @@ void button_use(entity this, entity actor, entity trigger)
 		return;
 
 	this.enemy = actor;
-	WITHSELF(this, button_fire(this));
+	button_fire(this);
 }
 
 void button_touch(entity this)
@@ -91,7 +91,7 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (this.health <= 0)
 	{
 		this.enemy = damage_attacker;
-		WITHSELF(this, button_fire(this));
+		button_fire(this);
 	}
 }
 

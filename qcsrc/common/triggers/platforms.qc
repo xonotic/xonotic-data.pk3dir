@@ -103,8 +103,7 @@ void plat_center_touch(entity this)
 #endif
 
 	if (this.enemy.state == 2) {
-		entity e = this.enemy;
-		WITHSELF(e, plat_go_up(e));
+		plat_go_up(this.enemy);
 	} else if (this.enemy.state == 1)
 		this.enemy.SUB_NEXTTHINK = this.enemy.SUB_LTIME + 1;
 }
@@ -124,7 +123,7 @@ void plat_outside_touch(entity this)
 
 	if (this.enemy.state == 1) {
 	    entity e = this.enemy;
-		WITHSELF(e, plat_go_down(e));
+		plat_go_down(e);
     }
 }
 
@@ -137,7 +136,7 @@ void plat_trigger_use(entity this, entity actor, entity trigger)
 	if(this.move_think)
 		return;
 #endif
-	WITHSELF(this, plat_go_down(this));
+	plat_go_down(this);
 }
 
 
@@ -176,7 +175,7 @@ void plat_use(entity this, entity actor, entity trigger)
 	this.use = func_null;
 	if (this.state != 4)
 		objerror ("plat_use: not in up state");
-	WITHSELF(this, plat_go_down(this));
+	plat_go_down(this);
 }
 
 .string sound1, sound2;

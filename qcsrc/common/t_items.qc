@@ -1026,7 +1026,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		WITHSELF(this, RemoveItem(this));
+		RemoveItem(this);
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)

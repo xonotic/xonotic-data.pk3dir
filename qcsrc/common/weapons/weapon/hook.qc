@@ -120,7 +120,7 @@ void W_Hook_Explode2(entity this)
 
 void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Hook_Explode2(this));
+	W_Hook_Explode2(this);
 }
 
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

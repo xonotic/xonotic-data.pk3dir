@@ -241,7 +241,7 @@ void W_Arc_Bolt_Explode(entity this)
 
 void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Arc_Bolt_Explode(this));
+	W_Arc_Bolt_Explode(this);
 }
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

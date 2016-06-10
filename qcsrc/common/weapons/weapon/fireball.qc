@@ -114,7 +114,7 @@ void W_Fireball_Explode(entity this)
 
 void W_Fireball_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Fireball_Explode(this));
+	W_Fireball_Explode(this);
 }
 
 void W_Fireball_TouchExplode(entity this)

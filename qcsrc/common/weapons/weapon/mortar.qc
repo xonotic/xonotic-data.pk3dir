@@ -86,7 +86,7 @@ void W_Mortar_Grenade_Explode(entity this)
 
 void W_Mortar_Grenade_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Mortar_Grenade_Explode(this));
+	W_Mortar_Grenade_Explode(this);
 }
 
 void W_Mortar_Grenade_Explode2(entity this)
@@ -111,7 +111,7 @@ void W_Mortar_Grenade_Explode2(entity this)
 
 void W_Mortar_Grenade_Explode2_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Mortar_Grenade_Explode2(this));
+	W_Mortar_Grenade_Explode2(this);
 }
 
 void W_Mortar_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

@@ -290,7 +290,7 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func)
 {
-	WITHSELF(ent, SUB_CalcMove(ent, tdest, tspeedtype, tspeed, func));
+	SUB_CalcMove(ent, tdest, tspeedtype, tspeed, func);
 }
 
 /*
@@ -358,5 +358,5 @@ void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float t
 
 void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func)
 {
-	WITHSELF(ent, SUB_CalcAngleMove (ent, destangle, tspeedtype, tspeed, func));
+	SUB_CalcAngleMove (ent, destangle, tspeedtype, tspeed, func);
 }

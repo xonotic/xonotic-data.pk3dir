@@ -193,7 +193,7 @@ void W_Electro_Explode(entity this)
 
 void W_Electro_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Electro_Explode(this));
+	W_Electro_Explode(this);
 }
 
 void W_Electro_TouchExplode(entity this)

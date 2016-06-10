@@ -105,7 +105,7 @@ void W_Porto_Remove(entity p)
 {
 	if(p.porto_current.realowner == p && p.porto_current.classname == "porto")
 	{
-		WITHSELF(p.porto_current, W_Porto_Fail(p.porto_current, 1));
+		W_Porto_Fail(p.porto_current, 1);
 	}
 }
 

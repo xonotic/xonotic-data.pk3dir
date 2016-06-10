@@ -58,7 +58,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		this.dest1 = this.origin + v_right * (this.t_width * temp);
 
 	this.dest2 = this.dest1 + v_forward * this.t_length;
-	WITHSELF(this, SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1));
+	SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1);
 	if (this.noise2 != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
 }

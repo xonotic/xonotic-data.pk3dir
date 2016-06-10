@@ -234,7 +234,7 @@ void vehicles_projectile_explode(entity this)
 
 void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, vehicles_projectile_explode(this));
+	vehicles_projectile_explode(this);
 }
 
 entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,

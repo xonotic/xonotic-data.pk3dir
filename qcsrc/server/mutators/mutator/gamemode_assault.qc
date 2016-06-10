@@ -262,7 +262,7 @@ void assault_new_round(entity this)
 
     FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
         vehicles_clearreturn(it);
-        WITHSELF(it, vehicles_spawn(it));
+        vehicles_spawn(it);
     ));
 
 	// up round counter

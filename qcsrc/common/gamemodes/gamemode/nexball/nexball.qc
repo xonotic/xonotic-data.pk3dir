@@ -198,7 +198,7 @@ void GiveBall(entity plyr, entity ball)
 	Weapon w = WEP_NEXBALL;
 	w.wr_resetplayer(w, plyr);
 	PS(plyr).m_switchweapon = WEP_NEXBALL;
-	WITHSELF(plyr, W_SwitchWeapon(plyr, WEP_NEXBALL));
+	W_SwitchWeapon(plyr, WEP_NEXBALL);
 }
 
 void DropBall(entity ball, vector org, vector vel)

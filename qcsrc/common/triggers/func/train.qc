@@ -324,7 +324,7 @@ NET_HANDLE(ENT_CLIENT_TRAIN, bool isnew)
 		// but we will need these
 		//this.move_nextthink = this.move_ltime + 0.1;
 		//this.move_think = train_next;
-		WITHSELF(this, train_next(this));
+		train_next(this);
 
 		this.move_movetype = MOVETYPE_PUSH;
 		this.move_origin = this.origin;

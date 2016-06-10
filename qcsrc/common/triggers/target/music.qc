@@ -39,9 +39,9 @@ void target_music_kill()
 	FOREACH_ENTITY_CLASS("target_music", true, {
 		it.volume = 0;
         if (it.targetname == "")
-            WITHSELF(it, target_music_sendto(it, MSG_ALL, 1));
+            target_music_sendto(it, MSG_ALL, 1);
         else
-            WITHSELF(it, target_music_sendto(it, MSG_ALL, 0));
+            target_music_sendto(it, MSG_ALL, 0);
 	});
 }
 void target_music_use(entity this, entity actor, entity trigger)

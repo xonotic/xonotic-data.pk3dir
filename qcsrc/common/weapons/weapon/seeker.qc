@@ -315,7 +315,7 @@ void W_Seeker_Flac_Explode(entity this)
 
 void W_Seeker_Flac_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Seeker_Flac_Explode(this));
+	W_Seeker_Flac_Explode(this);
 }
 
 void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
@@ -436,17 +436,17 @@ void W_Seeker_Vollycontroller_Think(entity this) // TODO: Merge this with W_Seek
 	switch(c)
 	{
 		case 0:
-			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, own, '-1.25 -3.75 0', own.enemy));
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, '-1.25 -3.75 0', own.enemy);
 			break;
 		case 1:
-			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, own, '+1.25 -3.75 0', own.enemy));
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, '+1.25 -3.75 0', own.enemy);
 			break;
 		case 2:
-			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, own, '-1.25 +3.75 0', own.enemy));
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, '-1.25 +3.75 0', own.enemy);
 			break;
 		case 3:
 		default:
-			WITHSELF(own, W_Seeker_Fire_Missile(WEP_SEEKER, own, '+1.25 +3.75 0', own.enemy));
+			W_Seeker_Fire_Missile(WEP_SEEKER, own, '+1.25 +3.75 0', own.enemy);
 			break;
 	}
 

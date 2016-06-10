@@ -48,7 +48,7 @@ CLASS(Turret, Object)
     METHOD(Turret, tr_attack, void(Turret this, entity it)) {
         Weapon w = this.m_weapon;
         .entity weaponentity = weaponentities[0];
-        w.wr_think(w, this, weaponentity, 1);
+        w.wr_think(w, it, weaponentity, 1);
     }
 #endif
     /** (ALL) */

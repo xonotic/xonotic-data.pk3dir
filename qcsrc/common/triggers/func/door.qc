@@ -218,9 +218,9 @@ void door_fire(entity this, entity actor, entity trigger)
 			entity e = this;
 			do {
 				if (e.classname == "door") {
-					WITHSELF(e, door_go_down(e));
+					door_go_down(e);
 				} else {
-					WITHSELF(e, door_rotating_go_down(e));
+					door_rotating_go_down(e);
 				}
 				e = e.enemy;
 			} while ((e != this) && (e != NULL));

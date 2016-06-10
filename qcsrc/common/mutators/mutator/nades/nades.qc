@@ -751,7 +751,7 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		this.takedamage = DAMAGE_NO;
-		WITHSELF(this, nade_boom(this));
+		nade_boom(this);
 		return;
 	}
 

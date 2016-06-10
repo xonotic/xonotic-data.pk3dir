@@ -50,7 +50,7 @@ void multi_trigger(entity this)
 	}
 	else if (this.wait == 0)
 	{
-		WITHSELF(this, multi_wait(this)); // waiting finished
+		multi_wait(this); // waiting finished
 	}
 	else
 	{	// we can't just remove (this) here, because this is a touch function

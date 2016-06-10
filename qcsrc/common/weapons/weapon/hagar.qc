@@ -73,7 +73,7 @@ void W_Hagar_Explode(entity this)
 
 void W_Hagar_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Hagar_Explode(this));
+	W_Hagar_Explode(this);
 }
 
 void W_Hagar_Explode2(entity this)
@@ -86,7 +86,7 @@ void W_Hagar_Explode2(entity this)
 
 void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Hagar_Explode2(this));
+	W_Hagar_Explode2(this);
 }
 
 void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
