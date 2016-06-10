@@ -613,11 +613,13 @@ void havocbot_ast_reset_role(entity this)
 
 // mutator hooks
 MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
-{SELFPARAM();
-	if(self.team == assault_attacker_team)
-		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.team == assault_attacker_team)
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
-		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
 
 	return false;
 }

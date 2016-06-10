@@ -620,12 +620,14 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDamage_Calculate)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(buffs,PlayerSpawn)
-{SELFPARAM();
-	self.buffs = 0;
+MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+
+	player.buffs = 0;
 	// reset timers here to prevent them continuing after re-spawn
-	self.buff_disability_time = 0;
-	self.buff_disability_effect_time = 0;
+	player.buff_disability_time = 0;
+	player.buff_disability_effect_time = 0;
 	return false;
 }
 

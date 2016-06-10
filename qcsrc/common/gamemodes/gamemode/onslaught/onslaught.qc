@@ -1777,10 +1777,12 @@ MUTATOR_HOOKFUNCTION(ons, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(!round_handler_IsRoundStarted())
 	{
-		self.player_blocked = true;
+		player.player_blocked = true;
 		return false;
 	}
 
@@ -1794,13 +1796,13 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 		l.sprite.SendFlags |= 16;
 	}
 
-	if(ons_stalemate) { Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT); }
+	if(ons_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT); }
 
 	if ( autocvar_g_onslaught_spawn_choose )
-	if ( self.ons_spawn_by )
-	if ( ons_Teleport(self,self.ons_spawn_by,autocvar_g_onslaught_teleport_radius,false) )
+	if ( player.ons_spawn_by )
+	if ( ons_Teleport(player,player.ons_spawn_by,autocvar_g_onslaught_teleport_radius,false) )
 	{
-		self.ons_spawn_by = world;
+		player.ons_spawn_by = world;
 		return false;
 	}
 
@@ -1809,7 +1811,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 	{
 		float random_target = autocvar_g_onslaught_spawn_at_controlpoints_random;
 		entity tmp_entity, closest_target = world;
-		vector spawn_loc = self.ons_deathloc;
+		vector spawn_loc = player.ons_deathloc;
 
 		// new joining player or round reset, don't bother checking
 		if(spawn_loc == '0 0 0') { return false; }
@@ -1818,7 +1820,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 
 		for(tmp_entity = ons_worldcplist; tmp_entity; tmp_entity = tmp_entity.ons_worldcpnext)
 		{
-			if(SAME_TEAM(tmp_entity, self))
+			if(SAME_TEAM(tmp_entity, player))
 			if(random_target)
 				RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
 			else if(vlen(tmp_entity.origin - spawn_loc) <= vlen(closest_target.origin - spawn_loc) || closest_target == world)
@@ -1837,14 +1839,14 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				iteration_scale -= i / 10;
 				loc = closest_target.origin + '0 0 96' * iteration_scale;
 				loc += ('0 1 0' * random()) * 128 * iteration_scale;
-				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, self);
+				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, player);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
 					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
 					if(trace_fraction == 1.0 && !trace_startsolid)
 					{
-						setorigin(self, loc);
-						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
+						setorigin(player, loc);
+						player.angles = normalize(loc - closest_target.origin) * RAD2DEG;
 						return false;
 					}
 				}
@@ -1857,7 +1859,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 	{
 		float random_target = autocvar_g_onslaught_spawn_at_generator_random;
 		entity tmp_entity, closest_target = world;
-		vector spawn_loc = self.ons_deathloc;
+		vector spawn_loc = player.ons_deathloc;
 
 		// new joining player or round reset, don't bother checking
 		if(spawn_loc == '0 0 0') { return false; }
@@ -1870,7 +1872,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
 			else
 			{
-				if(SAME_TEAM(tmp_entity, self))
+				if(SAME_TEAM(tmp_entity, player))
 				if(vlen(tmp_entity.origin - spawn_loc) <= vlen(closest_target.origin - spawn_loc) || closest_target == world)
 					closest_target = tmp_entity;
 			}
@@ -1888,14 +1890,14 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				iteration_scale -= i / 10;
 				loc = closest_target.origin + '0 0 128' * iteration_scale;
 				loc += ('0 1 0' * random()) * 256 * iteration_scale;
-				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, self);
+				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, player);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
 					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
 					if(trace_fraction == 1.0 && !trace_startsolid)
 					{
-						setorigin(self, loc);
-						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
+						setorigin(player, loc);
+						player.angles = normalize(loc - closest_target.origin) * RAD2DEG;
 						return false;
 					}
 				}

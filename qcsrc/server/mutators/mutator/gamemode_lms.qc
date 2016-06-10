@@ -168,13 +168,15 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 }
 
 MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
-	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+	if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0)
 	{
-		TRANSMUTE(Observer, self);
-		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
+		TRANSMUTE(Observer, player);
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
 	}
 }
 

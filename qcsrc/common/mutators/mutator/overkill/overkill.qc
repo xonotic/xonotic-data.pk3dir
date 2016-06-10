@@ -256,22 +256,24 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(autocvar_g_overkill_ammo_charge)
 	{
-		FOREACH(Weapons, it != WEP_Null, LAMBDA(self.ammo_charge[it.m_id] = autocvar_g_overkill_ammo_charge_limit));
+		FOREACH(Weapons, it != WEP_Null, LAMBDA(player.ammo_charge[it.m_id] = autocvar_g_overkill_ammo_charge_limit));
 
-		self.ok_use_ammocharge = 1;
-		self.ok_notice_time = time;
+		player.ok_use_ammocharge = 1;
+		player.ok_notice_time = time;
 	}
 	else
-		self.ok_use_ammocharge = 0;
+		player.ok_use_ammocharge = 0;
 
 	// if player changed their weapon while dead, don't switch to their death weapon
-	if(self.impulse)
-		self.ok_lastwep = 0;
+	if(player.impulse)
+		player.ok_lastwep = 0;
 
-	self.ok_pauseregen_finished = time + 2;
+	player.ok_pauseregen_finished = time + 2;
 
 	return false;
 }

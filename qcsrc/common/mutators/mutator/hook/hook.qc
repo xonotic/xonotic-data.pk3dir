@@ -29,8 +29,9 @@ MUTATOR_HOOKFUNCTION(hook, BuildGameplayTipsString)
 
 MUTATOR_HOOKFUNCTION(hook, PlayerSpawn)
 {
-    SELFPARAM();
-    self.offhand = OFFHAND_HOOK;
+    entity player = M_ARGV(0, entity);
+
+    player.offhand = OFFHAND_HOOK;
 }
 
 MUTATOR_HOOKFUNCTION(hook, FilterItem)

@@ -32,9 +32,11 @@ MUTATOR_HOOKFUNCTION(midair, PlayerPowerups)
 }
 
 MUTATOR_HOOKFUNCTION(midair, PlayerSpawn)
-{SELFPARAM();
-	if(IS_BOT_CLIENT(self))
-		self.bot_moveskill = 0; // disable bunnyhopping
+{
+	entity player = M_ARGV(0, entity);
+
+	if(IS_BOT_CLIENT(player))
+		player.bot_moveskill = 0; // disable bunnyhopping
 
 	return false;
 }

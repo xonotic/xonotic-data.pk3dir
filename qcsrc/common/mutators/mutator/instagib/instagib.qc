@@ -174,9 +174,10 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
-{SELFPARAM();
-	self.effects |= EF_FULLBRIGHT;
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.effects |= EF_FULLBRIGHT;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPreThink)

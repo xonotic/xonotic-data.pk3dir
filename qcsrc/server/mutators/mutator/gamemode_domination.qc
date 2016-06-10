@@ -507,12 +507,14 @@ MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 }
 
 MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(domination_roundbased)
 	if(!round_handler_IsRoundStarted())
-		self.player_blocked = 1;
+		player.player_blocked = 1;
 	else
-		self.player_blocked = 0;
+		player.player_blocked = 0;
 	return false;
 }
 

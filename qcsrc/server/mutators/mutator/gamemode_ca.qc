@@ -220,22 +220,24 @@ entity CA_SpectateNext(entity player, entity start)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
-    SELFPARAM();
-	this.caplayer = 1;
+    entity player = M_ARGV(0, entity);
+
+	player.caplayer = 1;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 {
-    SELFPARAM();
-	if (!allowed_to_spawn && IS_PLAYER(this)) // this is true even when player is trying to join
+	entity player = M_ARGV(0, entity);
+
+	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
-		TRANSMUTE(Observer, this);
-		if (this.jointime != time && !this.caplayer) // not when connecting
+		TRANSMUTE(Observer, player);
+		if (player.jointime != time && !player.caplayer) // not when connecting
 		{
-			this.caplayer = 0.5;
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CA_JOIN_LATE);
+			player.caplayer = 0.5;
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
 }

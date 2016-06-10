@@ -176,9 +176,11 @@ MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
-{SELFPARAM();
+{
     if (warmup_stage) return;
-    Item_ItemsTime_ResetTimesForPlayer(self);
+    entity player = M_ARGV(0, entity);
+
+    Item_ItemsTime_ResetTimesForPlayer(player);
 }
 
 #endif

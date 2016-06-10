@@ -928,8 +928,9 @@ void nades_RemoveBonus(entity player)
 
 MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 {
-    SELFPARAM();
-	nades_RemoveBonus(self);
+    entity player = M_ARGV(0, entity);
+
+	nades_RemoveBonus(player);
 }
 
 float nade_customize(entity this)
@@ -1237,28 +1238,30 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(autocvar_g_nades_spawn)
-		self.nade_refire = time + autocvar_g_spawnshieldtime;
+		player.nade_refire = time + autocvar_g_spawnshieldtime;
 	else
-		self.nade_refire  = time + autocvar_g_nades_nade_refire;
+		player.nade_refire  = time + autocvar_g_nades_nade_refire;
 
 	if(autocvar_g_nades_bonus_client_select)
-		self.nade_type = self.cvar_cl_nade_type;
+		player.nade_type = player.cvar_cl_nade_type;
 
-	self.nade_timer = 0;
+	player.nade_timer = 0;
 
-	if (!self.offhand) self.offhand = OFFHAND_NADE;
+	if (!player.offhand) player.offhand = OFFHAND_NADE;
 
-	if(self.nade_spawnloc)
+	if(player.nade_spawnloc)
 	{
-		setorigin(self, self.nade_spawnloc.origin);
-		self.nade_spawnloc.cnt -= 1;
+		setorigin(player, player.nade_spawnloc.origin);
+		player.nade_spawnloc.cnt -= 1;
 
-		if(self.nade_spawnloc.cnt <= 0)
+		if(player.nade_spawnloc.cnt <= 0)
 		{
-			remove(self.nade_spawnloc);
-			self.nade_spawnloc = world;
+			remove(player.nade_spawnloc);
+			player.nade_spawnloc = world;
 		}
 	}
 

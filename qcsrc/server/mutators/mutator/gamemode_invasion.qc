@@ -396,8 +396,10 @@ MUTATOR_HOOKFUNCTION(inv, PlayerRegen)
 }
 
 MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
-{SELFPARAM();
-	self.bot_attack = false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.bot_attack = false;
 	return false;
 }
 

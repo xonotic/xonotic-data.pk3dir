@@ -1014,15 +1014,16 @@ MUTATOR_HOOKFUNCTION(nb, SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(nb, PlayerSpawn)
 {
-	SELFPARAM();
-	this.metertime = 0;
+	entity player = M_ARGV(0, entity);
+
+	player.metertime = 0;
 	.entity weaponentity = weaponentities[0];
-	this.(weaponentity).weapons = '0 0 0';
+	player.(weaponentity).weapons = '0 0 0';
 
 	if (nexball_mode & NBM_BASKETBALL)
-		this.weapons |= WEPSET(NEXBALL);
+		player.weapons |= WEPSET(NEXBALL);
 	else
-		this.weapons = '0 0 0';
+		player.weapons = '0 0 0';
 
 	return false;
 }

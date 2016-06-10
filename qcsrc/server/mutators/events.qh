@@ -11,15 +11,15 @@ MUTATOR_HOOKABLE(MakePlayerObserver, EV_MakePlayerObserver)
 
 /** */
 #define EV_PutClientInServer(i, o) \
-    /** client wanting to spawn */ i(entity, __self) \
+	/** client wanting to spawn */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(PutClientInServer, EV_PutClientInServer);
 
 /** called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here) */
 #define EV_PlayerSpawn(i, o) \
-    /** spot that was used, or world */ i(entity, spawn_spot) \
+	/** player spawning */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** spot that was used, or world */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
-entity spawn_spot;
 MUTATOR_HOOKABLE(PlayerSpawn, EV_PlayerSpawn);
 
 /** called in reset_map */
@@ -437,6 +437,7 @@ MUTATOR_HOOKABLE(SV_ParseServerCommand, EV_SV_ParseServerCommand);
     /** _x is priority, _y is "distance" */ i(vector, spawn_score) \
     /**/ o(vector, spawn_score) \
     /**/
+entity spawn_spot;
 vector spawn_score;
 MUTATOR_HOOKABLE(Spawn_Score, EV_Spawn_Score);
 

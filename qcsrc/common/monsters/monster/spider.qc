@@ -79,8 +79,9 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
 {
-    SELFPARAM();
-	self.spider_slowness = 0;
+	entity player = M_ARGV(0, entity);
+
+	player.spider_slowness = 0;
 	return false;
 }
 

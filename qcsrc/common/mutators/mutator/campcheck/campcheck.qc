@@ -77,11 +77,11 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(campcheck, PlayerSpawn)
-{SELFPARAM();
-	self.campcheck_nextcheck = time + autocvar_g_campcheck_interval * 2;
-	self.campcheck_traveled_distance = 0;
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	player.campcheck_nextcheck = time + autocvar_g_campcheck_interval * 2;
+	player.campcheck_traveled_distance = 0;
 }
 
 MUTATOR_HOOKFUNCTION(campcheck, BuildMutatorsString)

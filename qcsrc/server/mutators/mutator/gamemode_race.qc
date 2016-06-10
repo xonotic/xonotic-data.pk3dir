@@ -286,31 +286,36 @@ MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+	entity spawn_spot = M_ARGV(1, entity);
+
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
-		race_PreparePlayer(this);
+		race_PreparePlayer(player);
 
 	// if we need to respawn, do it right
-	self.race_respawn_checkpoint = self.race_checkpoint;
-	self.race_respawn_spotref = spawn_spot;
+	player.race_respawn_checkpoint = player.race_checkpoint;
+	player.race_respawn_spotref = spawn_spot;
 
-	self.race_place = 0;
+	player.race_place = 0;
 
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
-{SELFPARAM();
-	if(IS_PLAYER(self))
+{
+	entity player = M_ARGV(0, entity);
+
+	if(IS_PLAYER(player))
 	if(!gameover)
 	{
-		if(self.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
-			race_PreparePlayer(this);
+		if(player.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
+			race_PreparePlayer(player);
 		else // respawn
-			race_RetractPlayer(this);
+			race_RetractPlayer(player);
 
-		race_AbandonRaceCheck(self);
+		race_AbandonRaceCheck(player);
 	}
 	return false;
 }

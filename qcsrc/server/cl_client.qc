@@ -635,7 +635,7 @@ void PutClientInServer()
 
 		Unfreeze(this);
 
-		MUTATOR_CALLHOOK(PlayerSpawn, spot);
+		MUTATOR_CALLHOOK(PlayerSpawn, this, spot);
 
 		if (autocvar_spawn_debug)
 		{

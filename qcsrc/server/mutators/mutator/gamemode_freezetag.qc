@@ -428,13 +428,15 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
-{SELFPARAM();
-	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return 1; // do nothing, round is starting right now
 
-	if(self.freezetag_frozen_timeout == -2) // player was dead
+	if(player.freezetag_frozen_timeout == -2) // player was dead
 	{
-		freezetag_Freeze(world);
+		WITHSELF(player, freezetag_Freeze(world));
 		return 1;
 	}
 
@@ -443,8 +445,8 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	if(round_handler_IsActive())
 	if(round_handler_IsRoundStarted())
 	{
-		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
-		freezetag_Freeze(world);
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
+		WITHSELF(player, freezetag_Freeze(world));
 	}
 
 	return 1;
