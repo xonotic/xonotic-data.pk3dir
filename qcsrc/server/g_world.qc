@@ -760,7 +760,7 @@ spawnfunc(worldspawn)
 		s = ":gameinfo:mutators:LIST";
 
 		MUTATOR_CALLHOOK(BuildMutatorsString, s);
-		s = ret_string;
+		s = M_ARGV(0, string);
 
 		// initialiation stuff, not good in the mutator system
 		if(!autocvar_g_use_ammunition)
@@ -1432,7 +1432,7 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - it.jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");

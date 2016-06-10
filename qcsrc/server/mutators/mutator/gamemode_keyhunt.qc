@@ -1362,17 +1362,18 @@ MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)
 {
-    SELFPARAM();
-	if(IS_DEAD(self))
+    entity bot = M_ARGV(0, entity);
+
+	if(IS_DEAD(bot))
 		return true;
 
 	float r = random() * 3;
 	if (r < 1)
-		self.havocbot_role = havocbot_role_kh_offense;
+		bot.havocbot_role = havocbot_role_kh_offense;
 	else if (r < 2)
-		self.havocbot_role = havocbot_role_kh_defense;
+		bot.havocbot_role = havocbot_role_kh_defense;
 	else
-		self.havocbot_role = havocbot_role_kh_freelancer;
+		bot.havocbot_role = havocbot_role_kh_freelancer;
 
 	return true;
 }

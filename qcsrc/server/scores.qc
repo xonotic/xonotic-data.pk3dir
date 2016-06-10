@@ -531,19 +531,15 @@ void WinningConditionHelper()
 		{
 			s = GetPlayerScoreString(it, 1);
 			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
-			ret_string = string_null;
-			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it))
 				s = strcat(s, ":spectator");
-			if (ret_string) s = strcat(s, ret_string);
 		}
 		else
 		{
-			ret_string = string_null;
-			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";
-			if (ret_string) s = strcat(s, ret_string);
 		}
 
 		if(it.clientstatus)

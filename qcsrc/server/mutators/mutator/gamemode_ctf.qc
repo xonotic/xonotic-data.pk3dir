@@ -2119,12 +2119,12 @@ MUTATOR_HOOKFUNCTION(ctf, ClientDisconnect)
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
-{SELFPARAM();
-	if(self.flagcarried)
-	if(!autocvar_g_ctf_portalteleport)
-		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(player.flagcarried)
+	if(!autocvar_g_ctf_portalteleport)
+		{ ctf_Handle_Throw(player, world, DROP_NORMAL); }
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
@@ -2221,16 +2221,18 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 }
 
 MUTATOR_HOOKFUNCTION(ctf, HelpMePing)
-{SELFPARAM();
-	if(self.wps_flagcarrier) // update the flagcarrier waypointsprite with "NEEDING HELP" notification
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.wps_flagcarrier) // update the flagcarrier waypointsprite with "NEEDING HELP" notification
 	{
-		self.wps_helpme_time = time;
-		WaypointSprite_HelpMePing(self.wps_flagcarrier);
+		player.wps_helpme_time = time;
+		WaypointSprite_HelpMePing(player.wps_flagcarrier);
 	}
 	else // create a normal help me waypointsprite
 	{
-		WaypointSprite_Spawn(WP_Helpme, waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, false, RADARICON_HELPME);
-		WaypointSprite_Ping(self.wps_helpme);
+		WaypointSprite_Spawn(WP_Helpme, waypointsprite_deployed_lifetime, waypointsprite_limitedrange, player, FLAG_WAYPOINT_OFFSET, world, player.team, player, wps_helpme, false, RADARICON_HELPME);
+		WaypointSprite_Ping(player.wps_helpme);
 	}
 
 	return true;
@@ -2238,20 +2240,23 @@ MUTATOR_HOOKFUNCTION(ctf, HelpMePing)
 
 MUTATOR_HOOKFUNCTION(ctf, VehicleEnter)
 {
-	if(vh_player.flagcarried)
+	entity player = M_ARGV(0, entity);
+	entity veh = M_ARGV(1, entity);
+
+	if(player.flagcarried)
 	{
-		vh_player.flagcarried.nodrawtoclient = vh_player; // hide the flag from the driver
+		player.flagcarried.nodrawtoclient = player; // hide the flag from the driver
 
 		if(!autocvar_g_ctf_allow_vehicle_carry && !autocvar_g_ctf_allow_vehicle_touch)
 		{
-			ctf_Handle_Throw(vh_player, world, DROP_NORMAL);
+			ctf_Handle_Throw(player, world, DROP_NORMAL);
 		}
 		else
 		{
-			setattachment(vh_player.flagcarried, vh_vehicle, "");
-			setorigin(vh_player.flagcarried, VEHICLE_FLAG_OFFSET);
-			vh_player.flagcarried.scale = VEHICLE_FLAG_SCALE;
-			//vh_player.flagcarried.angles = '0 0 0';
+			setattachment(player.flagcarried, veh, "");
+			setorigin(player.flagcarried, VEHICLE_FLAG_OFFSET);
+			player.flagcarried.scale = VEHICLE_FLAG_SCALE;
+			//player.flagcarried.angles = '0 0 0';
 		}
 		return true;
 	}
@@ -2261,13 +2266,15 @@ MUTATOR_HOOKFUNCTION(ctf, VehicleEnter)
 
 MUTATOR_HOOKFUNCTION(ctf, VehicleExit)
 {
-	if(vh_player.flagcarried)
+	entity player = M_ARGV(0, entity);
+
+	if(player.flagcarried)
 	{
-		setattachment(vh_player.flagcarried, vh_player, "");
-		setorigin(vh_player.flagcarried, FLAG_CARRY_OFFSET);
-		vh_player.flagcarried.scale = FLAG_SCALE;
-		vh_player.flagcarried.angles = '0 0 0';
-		vh_player.flagcarried.nodrawtoclient = world;
+		setattachment(player.flagcarried, player, "");
+		setorigin(player.flagcarried, FLAG_CARRY_OFFSET);
+		player.flagcarried.scale = FLAG_SCALE;
+		player.flagcarried.angles = '0 0 0';
+		player.flagcarried.nodrawtoclient = world;
 		return true;
 	}
 
@@ -2275,11 +2282,13 @@ MUTATOR_HOOKFUNCTION(ctf, VehicleExit)
 }
 
 MUTATOR_HOOKFUNCTION(ctf, AbortSpeedrun)
-{SELFPARAM();
-	if(self.flagcarried)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.flagcarried)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, ((self.flagcarried.team) ? APP_TEAM_ENT(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN) : INFO_CTF_FLAGRETURN_ABORTRUN_NEUTRAL));
-		ctf_RespawnFlag(self.flagcarried);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, ((player.flagcarried.team) ? APP_TEAM_ENT(player.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN) : INFO_CTF_FLAGRETURN_ABORTRUN_NEUTRAL));
+		ctf_RespawnFlag(player.flagcarried);
 		return true;
 	}
 
@@ -2321,8 +2330,10 @@ MUTATOR_HOOKFUNCTION(ctf, MatchEnd)
 }
 
 MUTATOR_HOOKFUNCTION(ctf, HavocBot_ChooseRole)
-{SELFPARAM();
-	havocbot_ctf_reset_role(self);
+{
+	entity bot = M_ARGV(0, entity);
+
+	havocbot_ctf_reset_role(bot);
 	return true;
 }
 
@@ -2343,6 +2354,9 @@ MUTATOR_HOOKFUNCTION(ctf, SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(ctf, GetRecords)
 {
+	int record_page = M_ARGV(0, int);
+	string ret_string = M_ARGV(1, string);
+
 	for(int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
 	{
 		if (MapInfo_Get_ByID(i))
@@ -2358,7 +2372,7 @@ MUTATOR_HOOKFUNCTION(ctf, GetRecords)
 		}
 	}
 
-	return false;
+	M_ARGV(1, string) = ret_string;
 }
 
 bool superspec_Spectate(entity _player); // TODO

@@ -449,19 +449,24 @@ MUTATOR_HOOKFUNCTION(ka, PlayerPhysics)
 }
 
 MUTATOR_HOOKFUNCTION(ka, BotShouldAttack)
-{SELFPARAM();
+{
+	entity bot = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+
 	// if neither player has ball then don't attack unless the ball is on the ground
-	if(!checkentity.ballcarried && !self.ballcarried && ka_ball.owner)
+	if(!targ.ballcarried && !bot.ballcarried && ka_ball.owner)
 		return true;
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, HavocBot_ChooseRole)
-{SELFPARAM();
-	if (self.ballcarried)
-		self.havocbot_role = havocbot_role_ka_carrier;
+{
+	entity bot = M_ARGV(0, entity);
+
+	if (bot.ballcarried)
+		bot.havocbot_role = havocbot_role_ka_carrier;
 	else
-		self.havocbot_role = havocbot_role_ka_collector;
+		bot.havocbot_role = havocbot_role_ka_collector;
 	return true;
 }
 

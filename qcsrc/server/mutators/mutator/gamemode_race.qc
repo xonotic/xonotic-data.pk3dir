@@ -245,15 +245,17 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 }
 
 MUTATOR_HOOKFUNCTION(rc, ClientConnect)
-{SELFPARAM();
-	race_PreparePlayer(this);
-	self.race_checkpoint = -1;
+{
+	entity player = M_ARGV(0, entity);
+
+	race_PreparePlayer(player);
+	player.race_checkpoint = -1;
 
 	string rr = RACE_RECORD;
 
-	if(IS_REAL_CLIENT(self))
+	if(IS_REAL_CLIENT(player))
 	{
-		msg_entity = self;
+		msg_entity = player;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
 
@@ -330,8 +332,10 @@ MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(rc, HavocBot_ChooseRole)
-{SELFPARAM();
-	self.havocbot_role = havocbot_role_race;
+{
+	entity bot = M_ARGV(0, entity);
+
+	bot.havocbot_role = havocbot_role_race;
 	return true;
 }
 
@@ -401,6 +405,9 @@ MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(rc, GetRecords)
 {
+	int record_page = M_ARGV(0, int);
+	string ret_string = M_ARGV(1, string);
+
 	for(int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
 	{
 		if(MapInfo_Get_ByID(i))
@@ -415,7 +422,7 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 		}
 	}
 
-	return false;
+	M_ARGV(1, string) = ret_string;
 }
 
 MUTATOR_HOOKFUNCTION(rc, FixClientCvars)

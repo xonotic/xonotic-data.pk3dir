@@ -100,7 +100,7 @@ string getwelcomemessage(entity this)
 	string s, modifications, motd;
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
-	modifications = ret_string;
+	modifications = M_ARGV(0, string);
 
 	if(g_weaponarena)
 	{
@@ -147,7 +147,7 @@ string getwelcomemessage(entity this)
 
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
-	mutator_msg = ret_string;
+	mutator_msg = M_ARGV(0, string);
 
 	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
 

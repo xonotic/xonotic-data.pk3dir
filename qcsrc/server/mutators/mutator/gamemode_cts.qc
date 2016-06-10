@@ -213,15 +213,17 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 }
 
 MUTATOR_HOOKFUNCTION(cts, ClientConnect)
-{SELFPARAM();
-	race_PreparePlayer(this);
-	self.race_checkpoint = -1;
+{
+	entity player = M_ARGV(0, entity);
 
-	if(IS_REAL_CLIENT(self))
+	race_PreparePlayer(player);
+	player.race_checkpoint = -1;
+
+	if(IS_REAL_CLIENT(player))
 	{
 		string rr = CTS_RECORD;
 
-		msg_entity = self;
+		msg_entity = player;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
 
@@ -299,8 +301,10 @@ MUTATOR_HOOKFUNCTION(cts, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(cts, HavocBot_ChooseRole)
-{SELFPARAM();
-	self.havocbot_role = havocbot_role_cts;
+{
+	entity bot = M_ARGV(0, entity);
+
+	bot.havocbot_role = havocbot_role_cts;
 	return true;
 }
 
@@ -387,6 +391,9 @@ MUTATOR_HOOKFUNCTION(cts, ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(cts, GetRecords)
 {
+	int record_page = M_ARGV(0, int);
+	string ret_string = M_ARGV(1, string);
+
 	for(int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
 	{
 		if(MapInfo_Get_ByID(i))
@@ -401,7 +408,7 @@ MUTATOR_HOOKFUNCTION(cts, GetRecords)
 		}
 	}
 
-	return false;
+	M_ARGV(1, string) = ret_string;
 }
 
 void ClientKill_Now();
@@ -423,10 +430,10 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 
 MUTATOR_HOOKFUNCTION(cts, Race_FinalCheckpoint)
 {
-	if(autocvar_g_cts_finish_kill_delay)
-		CTS_ClientKill(race_player);
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(autocvar_g_cts_finish_kill_delay)
+		CTS_ClientKill(player);
 }
 
 MUTATOR_HOOKFUNCTION(cts, FixClientCvars)

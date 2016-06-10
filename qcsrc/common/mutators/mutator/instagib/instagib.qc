@@ -165,7 +165,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, MonsterSpawn)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BotShouldAttack)
 {
-	if (checkentity.items & ITEM_Invisibility.m_itemid)
+	entity targ = M_ARGV(1, entity);
+
+	if (targ.items & ITEM_Invisibility.m_itemid)
 		return true;
 
 	return false;
@@ -442,28 +444,31 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
-{SELFPARAM();
-	if(self.ammo_cells)
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
+
+	if(item.ammo_cells)
 	{
 		// play some cool sounds ;)
-		if (IS_CLIENT(other))
+		if (IS_CLIENT(toucher))
 		{
-			if(other.health <= 5)
-				Send_Notification(NOTIF_ONE, other, MSG_ANNCE, ANNCE_INSTAGIB_LASTSECOND);
-			else if(other.health < 50)
-				Send_Notification(NOTIF_ONE, other, MSG_ANNCE, ANNCE_INSTAGIB_NARROWLY);
+			if(toucher.health <= 5)
+				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_LASTSECOND);
+			else if(toucher.health < 50)
+				Send_Notification(NOTIF_ONE, toucher, MSG_ANNCE, ANNCE_INSTAGIB_NARROWLY);
 		}
 
-		if(other.health < 100)
-			other.health = 100;
+		if(toucher.health < 100)
+			toucher.health = 100;
 
 		return MUT_ITEMTOUCH_CONTINUE;
 	}
 
-	if(self.itemdef == ITEM_ExtraLife)
+	if(item.itemdef == ITEM_ExtraLife)
 	{
-		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_instagib_extralives);
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
+		toucher.armorvalue = bound(toucher.armorvalue, 999, toucher.armorvalue + autocvar_g_instagib_extralives);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
@@ -498,19 +503,17 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":instagib");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":instagib");
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", instagib");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", instagib");
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, SetModname)
 {
-	modname = "InstaGib";
+	M_ARGV(0, string) = "InstaGib";
 	return true;
 }
 

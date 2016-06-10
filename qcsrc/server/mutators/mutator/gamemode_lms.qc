@@ -219,17 +219,17 @@ MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
-{SELFPARAM();
-	TRANSMUTE(Player, self);
+{
+	entity player = M_ARGV(0, entity);
+
+	TRANSMUTE(Player, player);
 	campaign_bots_may_start = true;
 
-	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
+	if(PlayerScore_Add(player, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
-		PlayerScore_Add(self, SP_LMS_RANK, 666);
-		self.frags = FRAGS_SPECTATOR;
+		PlayerScore_Add(player, SP_LMS_RANK, 666);
+		player.frags = FRAGS_SPECTATOR;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
@@ -335,11 +335,14 @@ MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
-{SELFPARAM();
-	if(self.itemdef == ITEM_ExtraLife)
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
+
+	if(item.itemdef == ITEM_ExtraLife)
 	{
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
-		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		PlayerScore_Add(toucher, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 

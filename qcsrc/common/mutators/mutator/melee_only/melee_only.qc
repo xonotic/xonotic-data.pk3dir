@@ -30,13 +30,11 @@ MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
 
 MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":MeleeOnly");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":MeleeOnly");
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Melee Only Arena");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Melee Only Arena");
 }
 #endif

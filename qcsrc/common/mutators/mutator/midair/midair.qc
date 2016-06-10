@@ -14,7 +14,7 @@ MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	if(time < frag_target.midair_shieldtime)
-		frag_damage = false;
+		M_ARGV(4, float) = 0;
 
 	return false;
 }
@@ -45,13 +45,11 @@ MUTATOR_HOOKFUNCTION(midair, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(midair, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":midair");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":midair");
 }
 
 MUTATOR_HOOKFUNCTION(midair, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Midair");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Midair");
 }
 #endif

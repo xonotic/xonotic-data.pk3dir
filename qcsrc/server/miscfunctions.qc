@@ -528,7 +528,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 
 	MUTATOR_CALLHOOK(SetWeaponArena, s);
-	s = ret_string;
+	s = M_ARGV(0, string);
 
 	if (s == "0" || s == "")
 	{

@@ -2003,8 +2003,10 @@ MUTATOR_HOOKFUNCTION(ons, TurretSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ons, HavocBot_ChooseRole)
-{SELFPARAM();
-	havocbot_ons_reset_role(self);
+{
+	entity bot = M_ARGV(0, entity);
+
+	havocbot_ons_reset_role(bot);
 	return true;
 }
 

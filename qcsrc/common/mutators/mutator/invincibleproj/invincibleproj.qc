@@ -15,13 +15,11 @@ MUTATOR_HOOKFUNCTION(invincibleprojectiles, EditProjectile)
 
 MUTATOR_HOOKFUNCTION(invincibleprojectiles, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":InvincibleProjectiles");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":InvincibleProjectiles");
 }
 
 MUTATOR_HOOKFUNCTION(invincibleprojectiles, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Invincible Projectiles");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Invincible Projectiles");
 }
 #endif

@@ -2,7 +2,7 @@
 REGISTER_MUTATOR(superspec, cvar("g_superspectate"));
 
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
-#define _ISLOCAL ((edict_num(1) == self) ? true : false)
+#define _ISLOCAL(ent) ((edict_num(1) == (ent)) ? true : false)
 
 const float ASF_STRENGTH 		= BIT(0);
 const float ASF_SHIELD 			= BIT(1);
@@ -36,7 +36,7 @@ void superspec_save_client_conf()
 	string fn = "superspec-local.options";
 	float fh;
 
-	if (!_ISLOCAL)
+	if (!_ISLOCAL(self))
 	{
 		if(self.crypto_idfp == "")
 			return;
@@ -98,46 +98,47 @@ float superspec_filteritem(entity _for, entity _item)
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
-{SELFPARAM();
-	entity _item = self;
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
 
 	FOREACH_CLIENT(true, LAMBDA(
 		if(!IS_SPEC(it) && !IS_OBSERVER(it))
 			continue;
 		if(it.superspec_flags & SSF_ITEMMSG)
-			if(superspec_filteritem(it, _item))
+			if(superspec_filteritem(it, item))
 			{
 				if(it.superspec_flags & SSF_VERBOSE)
-					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n", other.netname, _item.netname), 1);
+					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n", toucher.netname, item.netname), 1);
 				else
-					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", other.netname, _item.netname, _item.classname), 1);
-				if((it.autospec_flags & ASF_SSIM) && it.enemy != other)
+					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", toucher.netname, item.netname, item.classname), 1);
+				if((it.autospec_flags & ASF_SSIM) && it.enemy != toucher)
 				{
-					WITHSELF(it, superspec_Spectate(other));
+					WITHSELF(it, superspec_Spectate(toucher));
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
 
-		if((it.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
-			(it.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
-			(it.autospec_flags & ASF_MEGA_AR && _item.itemdef == ITEM_ArmorMega) ||
-			(it.autospec_flags & ASF_MEGA_HP && _item.itemdef == ITEM_HealthMega) ||
-			(it.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
+		if((it.autospec_flags & ASF_SHIELD && item.invincible_finished) ||
+			(it.autospec_flags & ASF_STRENGTH && item.strength_finished) ||
+			(it.autospec_flags & ASF_MEGA_AR && item.itemdef == ITEM_ArmorMega) ||
+			(it.autospec_flags & ASF_MEGA_HP && item.itemdef == ITEM_HealthMega) ||
+			(it.autospec_flags & ASF_FLAG_GRAB && item.classname == "item_flag_team"))
 		{
 
-			if((it.enemy != other) || IS_OBSERVER(it))
+			if((it.enemy != toucher) || IS_OBSERVER(it))
 			{
 				if(it.autospec_flags & ASF_OBSERVER_ONLY && !IS_OBSERVER(it))
 				{
 					if(it.superspec_flags & SSF_VERBOSE)
-						superspec_msg("", "", it, sprintf("^8Ignored that ^7%s^8 grabbed %s^8 since the observer_only option is ON\n", other.netname, _item.netname), 2);
+						superspec_msg("", "", it, sprintf("^8Ignored that ^7%s^8 grabbed %s^8 since the observer_only option is ON\n", toucher.netname, item.netname), 2);
 				}
 				else
 				{
 					if(it.autospec_flags & ASF_SHOWWHAT)
-						superspec_msg("", "", it, sprintf("^7Following %s^7 due to picking up %s\n", other.netname, _item.netname), 2);
+						superspec_msg("", "", it, sprintf("^7Following %s^7 due to picking up %s\n", toucher.netname, item.netname), 2);
 
-					WITHSELF(it, superspec_Spectate(other));
+					WITHSELF(it, superspec_Spectate(toucher));
 				}
 			}
 		}
@@ -371,14 +372,12 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":SS");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":SS");
 }
 
 MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Super Spectators");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Super Spectators");
 }
 
 void superspec_hello(entity this)
@@ -390,27 +389,29 @@ void superspec_hello(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
-{SELFPARAM();
-	if(!IS_REAL_CLIENT(self))
+{
+	entity player = M_ARGV(0, entity);
+
+	if(!IS_REAL_CLIENT(player))
 		return false;
 
 	string fn = "superspec-local.options";
 	float fh;
 
-	self.superspec_flags = SSF_VERBOSE;
-	self.superspec_itemfilter = "";
+	player.superspec_flags = SSF_VERBOSE;
+	player.superspec_itemfilter = "";
 
 	entity _hello = spawn();
-	_hello.enemy = self;
+	_hello.enemy = player;
 	setthink(_hello, superspec_hello);
 	_hello.nextthink = time + 5;
 
-	if (!_ISLOCAL)
+	if (!_ISLOCAL(player))
 	{
-		if(self.crypto_idfp == "")
+		if(player.crypto_idfp == "")
 			return false;
 
-		fn = sprintf("superspec-%s.options", uri_escape(self.crypto_idfp));
+		fn = sprintf("superspec-%s.options", uri_escape(player.crypto_idfp));
 	}
 
 	fh = fopen(fn, FILE_READ);
@@ -427,9 +428,9 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 		}
 		else
 		{
-			self.autospec_flags = stof(fgets(fh));
-			self.superspec_flags = stof(fgets(fh));
-			self.superspec_itemfilter = strzone(fgets(fh));
+			player.autospec_flags = stof(fgets(fh));
+			player.superspec_flags = stof(fgets(fh));
+			player.superspec_itemfilter = strzone(fgets(fh));
 		}
 		fclose(fh);
 	}

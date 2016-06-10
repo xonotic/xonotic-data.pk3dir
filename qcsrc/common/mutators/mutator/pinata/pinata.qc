@@ -17,14 +17,12 @@ MUTATOR_HOOKFUNCTION(pinata, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(pinata, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":Pinata");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Pinata");
 }
 
 MUTATOR_HOOKFUNCTION(pinata, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Piñata");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Piñata");
 }
 
 #endif

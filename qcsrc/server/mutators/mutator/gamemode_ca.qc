@@ -262,8 +262,9 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {
-    SELFPARAM();
-	TRANSMUTE(Observer, this);
+    entity player = M_ARGV(0, entity);
+
+	TRANSMUTE(Observer, player);
 	return true;
 }
 
@@ -503,13 +504,15 @@ MUTATOR_HOOKFUNCTION(ca, WantWeapon)
 
 MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 {
-	return set_player.caplayer == 1;
+	entity player = M_ARGV(0, entity);
+
+	return player.caplayer == 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 {
 	// most weapons arena
-	if (ret_string == "0" || ret_string == "") ret_string = "most";
+	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
 }
 
 #endif

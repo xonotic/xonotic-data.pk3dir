@@ -14,17 +14,17 @@ REGISTER_MUTATOR(hook, autocvar_g_grappling_hook) {
 
 MUTATOR_HOOKFUNCTION(hook, BuildMutatorsString)
 {
-    ret_string = strcat(ret_string, ":grappling_hook");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), ":grappling_hook");
 }
 
 MUTATOR_HOOKFUNCTION(hook, BuildMutatorsPrettyString)
 {
-    ret_string = strcat(ret_string, ", Hook");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Hook");
 }
 
 MUTATOR_HOOKFUNCTION(hook, BuildGameplayTipsString)
 {
-    ret_string = strcat(ret_string, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
 }
 
 MUTATOR_HOOKFUNCTION(hook, PlayerSpawn)

@@ -298,21 +298,19 @@ MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(bugrigs, ClientConnect)
 {
-    SELFPARAM();
-	stuffcmd(self, "cl_cmd settemp chase_active 1\n");
-	return false;
+    entity player = M_ARGV(0, entity);
+
+	stuffcmd(player, "cl_cmd settemp chase_active 1\n");
 }
 
 MUTATOR_HOOKFUNCTION(bugrigs, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":bugrigs");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":bugrigs");
 }
 
 MUTATOR_HOOKFUNCTION(bugrigs, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Bug rigs");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Bug rigs");
 }
 
 #endif

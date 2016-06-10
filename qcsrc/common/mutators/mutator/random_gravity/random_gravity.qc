@@ -44,13 +44,11 @@ MUTATOR_HOOKFUNCTION(random_gravity, SV_StartFrame)
 
 MUTATOR_HOOKFUNCTION(random_gravity, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":RandomGravity");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":RandomGravity");
 }
 
 MUTATOR_HOOKFUNCTION(random_gravity, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Random gravity");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Random gravity");
 }
 #endif

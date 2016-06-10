@@ -385,8 +385,8 @@ void FixPlayermodel(entity player)
 	}
 
 	MUTATOR_CALLHOOK(FixPlayermodel, defaultmodel, defaultskin);
-	defaultmodel = ret_string;
-	defaultskin = ret_int;
+	defaultmodel = M_ARGV(0, string);
+	defaultskin = M_ARGV(1, int);
 
 	bool chmdl = false;
 	int oldskin;

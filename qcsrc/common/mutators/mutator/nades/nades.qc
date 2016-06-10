@@ -1092,10 +1092,10 @@ void nades_Clear(entity player)
 
 MUTATOR_HOOKFUNCTION(nades, VehicleEnter)
 {
-	if(vh_player.nade)
-		toss_nade(vh_player, true, '0 0 100', max(vh_player.nade.wait, time + 0.05));
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(player.nade)
+		toss_nade(player, true, '0 0 100', max(player.nade.wait, time + 0.05));
 }
 
 CLASS(NadeOffhand, OffhandWeapon)
@@ -1387,20 +1387,17 @@ REPLICATE(cvar_cl_pokenade_type, string, "cl_pokenade_type");
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":Nades");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Nades");
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Nades");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Nades");
 }
 
 MUTATOR_HOOKFUNCTION(nades, BuildGameplayTipsString)
 {
-	ret_string = strcat(ret_string, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 }
 
 #endif

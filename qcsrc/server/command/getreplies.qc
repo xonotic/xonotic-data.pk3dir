@@ -27,7 +27,7 @@ string getrecords(int page)  // 50 records per page
 	string s = "";
 
 	MUTATOR_CALLHOOK(GetRecords, page, s);
-	s = ret_string;
+	s = M_ARGV(1, string);
 
 	MapInfo_ClearTemps();
 

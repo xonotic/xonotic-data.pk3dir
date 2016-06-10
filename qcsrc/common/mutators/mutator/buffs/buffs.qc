@@ -1021,20 +1021,24 @@ MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(buffs, VehicleEnter)
 {
-	vh_vehicle.buffs = vh_player.buffs;
-	vh_player.buffs = 0;
-	vh_vehicle.buff_time = max(0, vh_player.buff_time - time);
-	vh_player.buff_time = 0;
-	return false;
+	entity player = M_ARGV(0, entity);
+	entity veh = M_ARGV(1, entity);
+
+	veh.buffs = player.buffs;
+	player.buffs = 0;
+	veh.buff_time = max(0, player.buff_time - time);
+	player.buff_time = 0;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, VehicleExit)
 {
-	vh_player.buffs = vh_player.oldbuffs = vh_vehicle.buffs;
-	vh_vehicle.buffs = 0;
-	vh_player.buff_time = time + vh_vehicle.buff_time;
-	vh_vehicle.buff_time = 0;
-	return false;
+	entity player = M_ARGV(0, entity);
+	entity veh = M_ARGV(1, entity);
+
+	player.buffs = player.oldbuffs = veh.buffs;
+	veh.buffs = 0;
+	player.buff_time = time + veh.buff_time;
+	veh.buff_time = 0;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
@@ -1056,14 +1060,12 @@ REPLICATE(cvar_cl_buffs_autoreplace, bool, "cl_buffs_autoreplace");
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":Buffs");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Buffs");
 }
 
 MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Buffs");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Buffs");
 }
 
 void buffs_DelayedInit(entity this)

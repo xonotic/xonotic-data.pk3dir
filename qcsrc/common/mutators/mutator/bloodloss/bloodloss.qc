@@ -33,13 +33,11 @@ MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
 
 MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":bloodloss");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":bloodloss");
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Blood loss");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Blood loss");
 }
 #endif

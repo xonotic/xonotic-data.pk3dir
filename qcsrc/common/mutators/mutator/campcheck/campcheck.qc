@@ -88,7 +88,6 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(campcheck, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":CampCheck");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":CampCheck");;
 }
 #endif

@@ -20,13 +20,11 @@ MUTATOR_HOOKFUNCTION(vampire, PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(vampire, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":Vampire");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Vampire");
 }
 
 MUTATOR_HOOKFUNCTION(vampire, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Vampire");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Vampire");
 }
 #endif

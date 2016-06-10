@@ -380,19 +380,17 @@ MUTATOR_HOOKFUNCTION(ok, SetStartItems)
 
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":OK");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":OK");
 }
 
 MUTATOR_HOOKFUNCTION(ok, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Overkill");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Overkill");
 }
 
 MUTATOR_HOOKFUNCTION(ok, SetModname)
 {
-	modname = "Overkill";
+	M_ARGV(0, string) = "Overkill";
 	return true;
 }
 

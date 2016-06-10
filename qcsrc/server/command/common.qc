@@ -361,7 +361,6 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					int moveflag, tmp_moncount = 0;
 					string arg_lower = strtolower(argument);
 					moveflag = (argv(3)) ? stof(argv(3)) : 1;  // follow owner if not defined
-					ret_string = "Monster spawning is currently disabled by a mutator";
 
 					if (arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
 
@@ -373,7 +372,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!autocvar_g_monsters) { print_to(caller, "Monsters are disabled"); return; }
 					if (autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { print_to(caller, "Monster spawning is disabled"); return; }
 					if (!IS_PLAYER(caller)) { print_to(caller, "You must be playing to spawn a monster"); return; }
-					if (MUTATOR_CALLHOOK(AllowMobSpawning)) { print_to(caller, ret_string); return; }
+					if (MUTATOR_CALLHOOK(AllowMobSpawning, caller)) { print_to(caller, M_ARGV(1, string)); return; }
 					if (caller.vehicle) { print_to(caller, "You can't spawn monsters while driving a vehicle"); return; }
 					if (STAT(FROZEN, caller)) { print_to(caller, "You can't spawn monsters while frozen"); return; }
 					if (IS_DEAD(caller)) { print_to(caller, "You can't spawn monsters while dead"); return; }
@@ -433,7 +432,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "butcher":
 				{
 					if (caller) { print_to(caller, "This command is not available to players"); return; }
-					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(ret_string, "\n"); return; }
+					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(M_ARGV(0, string), "\n"); return; }
 
 					int tmp_remcount = 0;
 

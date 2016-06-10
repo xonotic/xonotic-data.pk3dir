@@ -110,8 +110,8 @@ const float NT_AUTOREPLACE_RANDOM = 2;
 
 MUTATOR_HOOKFUNCTION(nt, SetModname)
 {
-	modname = "NewToys";
-	return 0;
+	M_ARGV(0, string) = "NewToys";
+	return false;
 }
 
 bool nt_IsNewToy(int w)
@@ -196,23 +196,27 @@ MUTATOR_HOOKFUNCTION(nt, SetStartItems)
 }
 
 MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
-{SELFPARAM();
+{
+	entity wep = M_ARGV(0, entity);
+	entity wepinfo = M_ARGV(1, entity);
+	string ret_string = M_ARGV(2, string);
+
 	// otherwise, we do replace
-	if(self.new_toys)
+	if(wep.new_toys)
 	{
 		// map defined replacement:
-		ret_string = self.new_toys;
+		ret_string = wep.new_toys;
 	}
 	else
 	{
 		// auto replacement:
-		ret_string = nt_GetReplacement(other.netname, autocvar_g_new_toys_autoreplace);
+		ret_string = nt_GetReplacement(wepinfo.netname, autocvar_g_new_toys_autoreplace);
 	}
 
 	// apply regular weaponreplace
 	ret_string = W_Apply_Weaponreplace(ret_string);
 
-	return 0;
+	M_ARGV(2, string) = ret_string;
 }
 
 MUTATOR_HOOKFUNCTION(nt, FilterItem)

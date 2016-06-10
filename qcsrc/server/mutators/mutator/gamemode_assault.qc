@@ -635,15 +635,17 @@ MUTATOR_HOOKFUNCTION(as, TurretSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(as, VehicleSpawn)
-{SELFPARAM();
-	self.nextthink = time + 0.5;
+{
+	entity veh = M_ARGV(0, entity);
 
-	return false;
+	veh.nextthink = time + 0.5;
 }
 
 MUTATOR_HOOKFUNCTION(as, HavocBot_ChooseRole)
-{SELFPARAM();
-	havocbot_ast_reset_role(self);
+{
+	entity bot = M_ARGV(0, entity);
+
+	havocbot_ast_reset_role(bot);
 	return true;
 }
 

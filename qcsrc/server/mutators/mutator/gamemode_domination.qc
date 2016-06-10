@@ -519,14 +519,17 @@ MUTATOR_HOOKFUNCTION(dom, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(dom, ClientConnect)
-{SELFPARAM();
-	set_dom_state(self);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	set_dom_state(player);
 }
 
 MUTATOR_HOOKFUNCTION(dom, HavocBot_ChooseRole)
-{SELFPARAM();
-	self.havocbot_role = havocbot_role_dom;
+{
+	entity bot = M_ARGV(0, entity);
+
+	bot.havocbot_role = havocbot_role_dom;
 	return true;
 }
 

@@ -167,9 +167,9 @@ void GrapplingHookThink(entity this)
 	entity pull_entity = self.realowner;
 	float velocity_multiplier = 1;
 	MUTATOR_CALLHOOK(GrappleHookThink, self, tarzan, pull_entity, velocity_multiplier);
-	tarzan = hook_tarzan;
-	pull_entity = hook_pullentity;
-	velocity_multiplier = hook_velmultiplier;
+	tarzan = M_ARGV(1, int);
+	pull_entity = M_ARGV(2, entity);
+	velocity_multiplier = M_ARGV(3, float);
 
 	if(self.state == 1)
 	{

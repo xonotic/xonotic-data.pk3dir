@@ -455,7 +455,9 @@ MUTATOR_HOOKFUNCTION(inv, SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
 {
-	if(!IS_MONSTER(checkentity))
+	entity targ = M_ARGV(1, entity);
+
+	if(!IS_MONSTER(targ))
 		return true;
 
 	return false;
@@ -480,6 +482,7 @@ MUTATOR_HOOKFUNCTION(inv, AccuracyTargetValid)
 MUTATOR_HOOKFUNCTION(inv, AllowMobSpawning)
 {
 	// monster spawning disabled during an invasion
+	M_ARGV(1, string) = "You cannot spawn monsters during an invasion!";
 	return true;
 }
 
@@ -490,7 +493,7 @@ MUTATOR_HOOKFUNCTION(inv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 {
-	ret_string = "This command does not work during an invasion!";
+	M_ARGV(0, string) = "This command does not work during an invasion!";
 	return true;
 }
 

@@ -586,13 +586,15 @@ MUTATOR_HOOKFUNCTION(ft, SetStartItems)
 }
 
 MUTATOR_HOOKFUNCTION(ft, HavocBot_ChooseRole)
-{SELFPARAM();
-	if (!IS_DEAD(self))
+{
+	entity bot = M_ARGV(0, entity);
+
+	if (!IS_DEAD(bot))
 	{
 		if (random() < 0.5)
-			self.havocbot_role = havocbot_role_ft_freeing;
+			bot.havocbot_role = havocbot_role_ft_freeing;
 		else
-			self.havocbot_role = havocbot_role_ft_offense;
+			bot.havocbot_role = havocbot_role_ft_offense;
 	}
 
 	return true;
@@ -606,9 +608,8 @@ MUTATOR_HOOKFUNCTION(ft, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 MUTATOR_HOOKFUNCTION(ft, SetWeaponArena)
 {
 	// most weapons arena
-	if(ret_string == "0" || ret_string == "")
-		ret_string = "most";
-	return false;
+	if(M_ARGV(0, string) == "0" || M_ARGV(0, string) == "")
+		M_ARGV(0, string) = "most";
 }
 
 void freezetag_Initialize()

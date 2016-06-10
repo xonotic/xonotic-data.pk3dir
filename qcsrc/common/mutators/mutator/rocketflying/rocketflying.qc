@@ -15,13 +15,11 @@ MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 
 MUTATOR_HOOKFUNCTION(rocketflying, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":RocketFlying");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":RocketFlying");
 }
 
 MUTATOR_HOOKFUNCTION(rocketflying, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Rocket Flying");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Rocket Flying");
 }
 #endif

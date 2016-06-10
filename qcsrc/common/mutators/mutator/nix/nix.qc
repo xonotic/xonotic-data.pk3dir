@@ -220,14 +220,12 @@ MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(nix, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":NIX");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":NIX");
 }
 
 MUTATOR_HOOKFUNCTION(nix, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", NIX");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", NIX");
 }
 
 MUTATOR_HOOKFUNCTION(nix, FilterItem)
@@ -287,7 +285,7 @@ MUTATOR_HOOKFUNCTION(nix, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(nix, SetModname, CBC_ORDER_LAST)
 {
-	modname = "NIX";
+	M_ARGV(0, string) = "NIX";
 	return false;
 }
 #endif

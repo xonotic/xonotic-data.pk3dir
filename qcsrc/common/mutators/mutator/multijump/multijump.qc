@@ -122,14 +122,12 @@ REPLICATE(cvar_cl_multijump, bool, "cl_multijump");
 
 MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":multijump");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":multijump");
 }
 
 MUTATOR_HOOKFUNCTION(multijump, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Multi jump");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Multi jump");
 }
 
 #endif
