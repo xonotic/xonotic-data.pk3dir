@@ -133,10 +133,10 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		e.SendEntity = func_null;
 	}
 
-	.void() uncustomizeentityforclient;
+	.void(entity this) uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
-	void SetCustomizer(entity e, bool(entity this) customizer, void() uncustomizer)
+	void SetCustomizer(entity e, bool(entity this) customizer, void(entity this) uncustomizer)
 	{
 		setcefc(e, customizer);
 		e.uncustomizeentityforclient = uncustomizer;
@@ -145,7 +145,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void UncustomizeEntitiesRun()
 	{
-		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, WITHSELF(it, it.uncustomizeentityforclient()));
+		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, it.uncustomizeentityforclient(it));
 	}
 
 	STRING_ITERATOR(g_buf, string_null, 0);

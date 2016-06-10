@@ -260,8 +260,8 @@ float LOD_customize(entity this)
 	return true;
 }
 
-void LOD_uncustomize()
-{SELFPARAM();
+void LOD_uncustomize(entity this)
+{
 	this.modelindex = this.lodmodelindex0;
 }
 
@@ -352,43 +352,43 @@ void ApplyMinMaxScaleAngles(entity e)
 		setsize(e, e.mins, e.maxs);
 }
 
-void SetBrushEntityModel()
-{SELFPARAM();
- 	if(self.model != "")
+void SetBrushEntityModel(entity this)
+{
+ 	if(this.model != "")
  	{
- 		precache_model(self.model);
-		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
-			vector mi = self.mins;
-			vector ma = self.maxs;
-			_setmodel(self, self.model); // no precision needed
-			setsize(self, mi, ma);
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
 		}
 		else
-			_setmodel(self, self.model); // no precision needed
-		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
+			_setmodel(this, this.model); // no precision needed
+		InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
-	setorigin(self, self.origin);
-	ApplyMinMaxScaleAngles(self);
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
 }
 
-void SetBrushEntityModelNoLOD()
-{SELFPARAM();
- 	if(self.model != "")
+void SetBrushEntityModelNoLOD(entity this)
+{
+ 	if(this.model != "")
  	{
- 		precache_model(self.model);
-		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
-			vector mi = self.mins;
-			vector ma = self.maxs;
-			_setmodel(self, self.model); // no precision needed
-			setsize(self, mi, ma);
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
 		}
 		else
-			_setmodel(self, self.model); // no precision needed
+			_setmodel(this, this.model); // no precision needed
  	}
-	setorigin(self, self.origin);
-	ApplyMinMaxScaleAngles(self);
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
 }
 
 /*
@@ -410,28 +410,28 @@ void SetMovedir(entity this)
 	this.angles = '0 0 0';
 }
 
-void InitTrigger()
-{SELFPARAM();
+void InitTrigger(entity this)
+{
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	SetMovedir(self);
 	self.solid = SOLID_TRIGGER;
-	SetBrushEntityModel();
+	SetBrushEntityModel(this);
 	self.movetype = MOVETYPE_NONE;
 	self.modelindex = 0;
 	self.model = "";
 }
 
-void InitSolidBSPTrigger()
-{SELFPARAM();
+void InitSolidBSPTrigger(entity this)
+{
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir(self);
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
-//	self.modelindex = 0;
-	self.model = "";
+	SetMovedir(this);
+	this.solid = SOLID_BSP;
+	SetBrushEntityModel(this);
+	this.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
+//	this.modelindex = 0;
+	this.model = "";
 }
 
 bool InitMovingBrushTrigger(entity this)
@@ -439,7 +439,7 @@ bool InitMovingBrushTrigger(entity this)
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
 	this.solid = SOLID_BSP;
-	WITHSELF(this, SetBrushEntityModel());
+	SetBrushEntityModel(this);
 	this.movetype = MOVETYPE_PUSH;
 	if(this.modelindex == 0)
 	{

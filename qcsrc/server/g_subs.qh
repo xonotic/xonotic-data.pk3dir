@@ -140,15 +140,15 @@ float angc (float a1, float a2);
 
 float LOD_customize(entity this);
 
-void LOD_uncustomize();
+void LOD_uncustomize(entity this);
 
 void LODmodel_attach(entity this);
 
 void ApplyMinMaxScaleAngles(entity e);
 
-void SetBrushEntityModel();
+void SetBrushEntityModel(entity this);
 
-void SetBrushEntityModelNoLOD();
+void SetBrushEntityModelNoLOD(entity this);
 
 /*
 ================
@@ -158,8 +158,8 @@ InitTrigger
 
 void SetMovedir(entity this);
 
-void InitTrigger();
+void InitTrigger(entity this);
 
-void InitSolidBSPTrigger();
+void InitSolidBSPTrigger(entity this);
 
 bool InitMovingBrushTrigger(entity this);

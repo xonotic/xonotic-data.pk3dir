@@ -18,7 +18,7 @@ spawnfunc(turret_targettrigger)
 {
     if(!autocvar_g_turrets) { remove(this); return; }
 
-    WITHSELF(this, InitTrigger());
+    InitTrigger(this);
 
     settouch(this, turret_targettrigger_touch);
 }

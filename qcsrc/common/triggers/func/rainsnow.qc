@@ -37,7 +37,7 @@ spawnfunc(func_rain)
 	this.angles = '0 0 0';
 	this.movetype = MOVETYPE_NONE;
 	this.solid = SOLID_NOT;
-	SetBrushEntityModel();
+	SetBrushEntityModel(this);
 	if (!this.cnt)
 		this.cnt = 12;
 	if (!this.count)
@@ -75,7 +75,7 @@ spawnfunc(func_snow)
 	this.angles = '0 0 0';
 	this.movetype = MOVETYPE_NONE;
 	this.solid = SOLID_NOT;
-	SetBrushEntityModel();
+	SetBrushEntityModel(this);
 	if (!this.cnt)
 		this.cnt = 12;
 	if (!this.count)
