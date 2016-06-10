@@ -232,7 +232,7 @@ void door_fire(entity this, entity actor, entity trigger)
 	entity e = this;
 	do {
 		if (e.classname == "door") {
-			WITHSELF(e, door_go_up(e));
+			door_go_up(e);
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
 			if ((e.spawnflags & 2) && other.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
@@ -243,7 +243,7 @@ void door_fire(entity this, entity actor, entity trigger)
 			if (!((e.spawnflags & 2) &&  (e.spawnflags & 8) && e.state == STATE_DOWN
 				&& (((e.lip == 666) && (other.trigger_reverse == 0)) || ((e.lip != 666) && (other.trigger_reverse != 0)))))
 			{
-				WITHSELF(e, door_rotating_go_up(e));
+				door_rotating_go_up(e);
 			}
 		}
 		e = e.enemy;
@@ -255,7 +255,7 @@ void door_use(entity this, entity actor, entity trigger)
 	//dprint("door_use (model: ");dprint(this.model);dprint(")\n");
 
 	if (this.owner)
-		WITHSELF(this.owner, door_fire(this.owner, actor, trigger));
+		door_fire(this.owner, actor, trigger);
 }
 
 void door_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
