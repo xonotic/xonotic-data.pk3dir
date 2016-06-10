@@ -338,15 +338,15 @@ void nade_napalm_boom(entity this)
 
 
 	fountain = spawn();
-	fountain.owner = self.owner;
-	fountain.realowner = self.realowner;
-	fountain.origin = self.origin;
+	fountain.owner = this.owner;
+	fountain.realowner = this.realowner;
+	fountain.origin = this.origin;
 	setorigin(fountain, fountain.origin);
 	setthink(fountain, napalm_fountain_think);
 	fountain.nextthink = time;
 	fountain.ltime = time + autocvar_g_nades_napalm_fountain_lifetime;
 	fountain.pushltime = fountain.ltime;
-	fountain.team = self.team;
+	fountain.team = this.team;
 	fountain.movetype = MOVETYPE_TOSS;
 	fountain.projectiledeathtype = DEATH_NADE_NAPALM.m_id;
 	fountain.bot_dodge = true;
@@ -367,33 +367,32 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 
 void nade_ice_think(entity this)
 {
-
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
-	if(time >= self.ltime)
+	if(time >= this.ltime)
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			entity expef = EFFECT_NADE_EXPLODE(self.realowner.team);
-			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
-			sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+			entity expef = EFFECT_NADE_EXPLODE(this.realowner.team);
+			Send_Effect(expef, this.origin + '0 0 1', '0 0 0', 1);
+			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
-			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				autocvar_g_nades_nade_radius, self, world, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
-			Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
+			RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+				autocvar_g_nades_nade_radius, this, world, autocvar_g_nades_nade_force, this.projectiledeathtype, this.enemy);
+			Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 		}
-		remove(self);
+		remove(this);
 		return;
 	}
 
 
-	self.nextthink = time+0.1;
+	this.nextthink = time+0.1;
 
 	// gaussian
 	float randomr;
@@ -405,29 +404,29 @@ void nade_ice_think(entity this)
 	randomp.x = randomr*cos(randomw);
 	randomp.y = randomr*sin(randomw);
 	randomp.z = 1;
-	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, self.origin + randomp, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, this.origin + randomp, '0 0 0', 1);
 
-	if(time >= self.nade_special_time)
+	if(time >= this.nade_special_time)
 	{
-		self.nade_special_time = time+0.7;
+		this.nade_special_time = time+0.7;
 
-		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
-		Send_Effect(EFFECT_ICEFIELD, self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_ICEFIELD, this.origin, '0 0 0', 1);
 	}
 
 
-	float current_freeze_time = self.ltime - time - 0.1;
+	float current_freeze_time = this.ltime - time - 0.1;
 
 	entity e;
-	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
-	if(e != self)
-	if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(e, self.realowner) || e == self.realowner))
+	for(e = findradius(this.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
+	if(e != this)
+	if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(e, this.realowner) || e == this.realowner))
 	if(e.takedamage && !IS_DEAD(e))
 	if(e.health > 0)
 	if(!e.revival_time || ((time - e.revival_time) >= 1.5))
 	if(!STAT(FROZEN, e))
 	if(current_freeze_time > 0)
-		nade_ice_freeze(self, e, current_freeze_time);
+		nade_ice_freeze(this, e, current_freeze_time);
 }
 
 void nade_ice_boom(entity this)
@@ -506,21 +505,21 @@ void nade_spawn_boom(entity this)
 
 void nade_heal_think(entity this)
 {
-	if(time >= self.ltime)
+	if(time >= this.ltime)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	if(time >= self.nade_special_time)
+	if(time >= this.nade_special_time)
 	{
-		self.nade_special_time = time+0.25;
-		self.nade_show_particles = 1;
+		this.nade_special_time = time+0.25;
+		this.nade_show_particles = 1;
 	}
 	else
-		self.nade_show_particles = 0;
+		this.nade_show_particles = 0;
 }
 
 void nade_heal_touch(entity this)
@@ -532,9 +531,9 @@ void nade_heal_touch(entity this)
 	if(!STAT(FROZEN, other))
 	{
 		health_factor = autocvar_g_nades_heal_rate*frametime/2;
-		if ( other != self.realowner )
+		if ( other != this.realowner )
 		{
-			if ( SAME_TEAM(other,self) )
+			if ( SAME_TEAM(other,this) )
 				health_factor *= autocvar_g_nades_heal_friend;
 			else
 				health_factor *= autocvar_g_nades_heal_foe;
@@ -544,7 +543,7 @@ void nade_heal_touch(entity this)
 			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
 			if ( other.health < maxhealth )
 			{
-				if ( self.nade_show_particles )
+				if ( this.nade_show_particles )
 					Send_Effect(EFFECT_HEALING, other.origin, '0 0 0', 1);
 				other.health = min(other.health+health_factor, maxhealth);
 			}
@@ -552,7 +551,7 @@ void nade_heal_touch(entity this)
 		}
 		else if ( health_factor < 0 )
 		{
-			Damage(other,self,self.realowner,-health_factor,DEATH_NADE_HEAL.m_id,other.origin,'0 0 0');
+			Damage(other,this,this.realowner,-health_factor,DEATH_NADE_HEAL.m_id,other.origin,'0 0 0');
 		}
 
 	}
@@ -561,7 +560,7 @@ void nade_heal_touch(entity this)
 	{
 		entity show_red = (IS_VEHICLE(other)) ? other.owner : other;
 		show_red.stat_healing_orb = time+0.1;
-		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
+		show_red.stat_healing_orb_alpha = 0.75 * (this.ltime - time) / this.healer_lifetime;
 	}
 }
 
@@ -693,21 +692,21 @@ bool CanThrowNade(entity this);
 void nade_touch(entity this)
 {
 	if(other)
-		UpdateCSQCProjectile(self);
+		UpdateCSQCProjectile(this);
 
-	if(other == self.realowner)
-		return; // no self impacts
+	if(other == this.realowner)
+		return; // no this impacts
 
 	if(autocvar_g_nades_pickup)
-	if(time >= self.spawnshieldtime)
-	if(!other.nade && self.health == self.max_health) // no boosted shot pickups, thank you very much
+	if(time >= this.spawnshieldtime)
+	if(!other.nade && this.health == this.max_health) // no boosted shot pickups, thank you very much
 	if(!other.frozen)
 	if(CanThrowNade(other)) // prevent some obvious things, like dead players
 	if(IS_REAL_CLIENT(other)) // above checks for IS_PLAYER, don't need to do it here
 	{
-		nade_pickup(other, self);
-		sound(self, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
-		remove(self);
+		nade_pickup(other, this);
+		sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, 0.5 *(ATTEN_LARGE + ATTEN_MAX));
+		remove(this);
 		return;
 	}
 	/*float is_weapclip = 0;
@@ -717,27 +716,27 @@ void nade_touch(entity this)
 		is_weapclip = 1;*/
 	if(ITEM_TOUCH_NEEDKILL()) // || is_weapclip)
 	{
-		FOREACH_ENTITY_ENT(aiment, self,
+		FOREACH_ENTITY_ENT(aiment, this,
 		{
 			if(it.classname == "grapplinghook")
 				RemoveGrapplingHook(it.realowner);
 		});
-		remove(self);
+		remove(this);
 		return;
 	}
 
 	PROJECTILE_TOUCH(this);
 
-	//setsize(self, '-2 -2 -2', '2 2 2');
-	//UpdateCSQCProjectile(self);
-	if(self.health == self.max_health)
+	//setsize(this, '-2 -2 -2', '2 2 2');
+	//UpdateCSQCProjectile(this);
+	if(this.health == this.max_health)
 	{
-		spamsound(self, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
+		spamsound(this, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
 		return;
 	}
 
-	self.enemy = other;
-	nade_boom(self);
+	this.enemy = other;
+	nade_boom(this);
 }
 
 void nade_beep(entity this)
@@ -936,20 +935,20 @@ MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 float nade_customize(entity this)
 {
 	//if(IS_SPEC(other)) { return false; }
-	if(other == self.exteriormodeltoclient || (IS_SPEC(other) && other.enemy == self.exteriormodeltoclient))
+	if(other == this.exteriormodeltoclient || (IS_SPEC(other) && other.enemy == this.exteriormodeltoclient))
 	{
 		// somewhat hide the model, but keep the glow
-		//self.effects = 0;
-		if(self.traileffectnum)
-			self.traileffectnum = 0;
-		self.alpha = -1;
+		//this.effects = 0;
+		if(this.traileffectnum)
+			this.traileffectnum = 0;
+		this.alpha = -1;
 	}
 	else
 	{
-		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-		if(!self.traileffectnum)
-			self.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(self.nade_type).m_projectile[false], self.team).eent_eff_name);
-		self.alpha = 1;
+		//this.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		if(!this.traileffectnum)
+			this.traileffectnum = _particleeffectnum(Nade_TrailEffect(Nades_from(this.nade_type).m_projectile[false], this.team).eent_eff_name);
+		this.alpha = 1;
 	}
 
 	return true;
@@ -991,36 +990,36 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 	player.fake_nade = fn;
 }
 
-void nade_prime()
-{SELFPARAM();
+void nade_prime(entity this)
+{
 	if(autocvar_g_nades_bonus_only)
-	if(!self.bonus_nades)
+	if(!this.bonus_nades)
 		return; // only allow bonus nades
 
-	if(self.nade)
-		remove(self.nade);
+	if(this.nade)
+		remove(this.nade);
 
-	if(self.fake_nade)
-		remove(self.fake_nade);
+	if(this.fake_nade)
+		remove(this.fake_nade);
 
 	int ntype;
-	string pntype = self.pokenade_type;
+	string pntype = this.pokenade_type;
 
-	if(self.items & ITEM_Strength.m_itemid && autocvar_g_nades_bonus_onstrength)
-		ntype = self.nade_type;
-	else if (self.bonus_nades >= 1)
+	if(this.items & ITEM_Strength.m_itemid && autocvar_g_nades_bonus_onstrength)
+		ntype = this.nade_type;
+	else if (this.bonus_nades >= 1)
 	{
-		ntype = self.nade_type;
-		pntype = self.pokenade_type;
-		self.bonus_nades -= 1;
+		ntype = this.nade_type;
+		pntype = this.pokenade_type;
+		this.bonus_nades -= 1;
 	}
 	else
 	{
-		ntype = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		pntype = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+		ntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		pntype = ((autocvar_g_nades_client_select) ? this.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
 	}
 
-	spawn_held_nade(self, self, autocvar_g_nades_nade_lifetime, ntype, pntype);
+	spawn_held_nade(this, this, autocvar_g_nades_nade_lifetime, ntype, pntype);
 }
 
 bool CanThrowNade(entity this)
@@ -1048,33 +1047,33 @@ bool CanThrowNade(entity this)
 
 .bool nade_altbutton;
 
-void nades_CheckThrow()
-{SELFPARAM();
-	if(!CanThrowNade(self))
+void nades_CheckThrow(entity this)
+{
+	if(!CanThrowNade(this))
 		return;
 
-	entity held_nade = self.nade;
+	entity held_nade = this.nade;
 	if (!held_nade)
 	{
-		self.nade_altbutton = true;
-		if(time > self.nade_refire)
+		this.nade_altbutton = true;
+		if(time > this.nade_refire)
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_NADE_THROW);
-			nade_prime();
-			self.nade_refire = time + autocvar_g_nades_nade_refire;
+			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_NADE_THROW);
+			nade_prime(this);
+			this.nade_refire = time + autocvar_g_nades_nade_refire;
 		}
 	}
 	else
 	{
-		self.nade_altbutton = false;
+		this.nade_altbutton = false;
 		if (time >= held_nade.nade_time_primed + 1) {
-			makevectors(self.v_angle);
+			makevectors(this.v_angle);
 			float _force = time - held_nade.nade_time_primed;
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 			vector dir = (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05);
 			dir = W_CalculateSpread(dir, autocvar_g_nades_spread, g_weaponspreadfactor, autocvar_g_projectiles_spread_style);
-			toss_nade(self, true, dir * _force, 0);
+			toss_nade(this, true, dir * _force, 0);
 		}
 	}
 }
@@ -1119,7 +1118,7 @@ CLASS(NadeOffhand, OffhandWeapon)
         if (!(time > player.nade_refire)) return;
 		if (key_pressed) {
 			if (!held_nade) {
-				nade_prime();
+				nade_prime(player);
 				held_nade = player.nade;
 			}
 		} else if (time >= held_nade.nade_time_primed + 1) {
@@ -1142,7 +1141,7 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
     entity player = M_ARGV(0, entity);
 
 	if (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
-		WITHSELF(player, nades_CheckThrow());
+		nades_CheckThrow(player);
 		return true;
 	}
 	return false;

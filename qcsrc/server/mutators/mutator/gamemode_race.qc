@@ -340,26 +340,28 @@ MUTATOR_HOOKFUNCTION(rc, HavocBot_ChooseRole)
 }
 
 MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
-{SELFPARAM();
-	if(self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
 	{
-		if (!self.stored_netname)
-			self.stored_netname = strzone(uid2name(self.crypto_idfp));
-		if(self.stored_netname != self.netname)
+		if (!player.stored_netname)
+			player.stored_netname = strzone(uid2name(player.crypto_idfp));
+		if(player.stored_netname != player.netname)
 		{
-			db_put(ServerProgsDB, strcat("/uid2name/", self.crypto_idfp), self.netname);
-			strunzone(self.stored_netname);
-			self.stored_netname = strzone(self.netname);
+			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
+			strunzone(player.stored_netname);
+			player.stored_netname = strzone(player.netname);
 		}
 	}
 
-	if (!IS_OBSERVER(self))
+	if (!IS_OBSERVER(player))
 	{
-		if (vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed)
+		if(vdist(player.velocity - player.velocity_z * '0 0 1', >, speedaward_speed))
 		{
-			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
-			speedaward_holder = self.netname;
-			speedaward_uid = self.crypto_idfp;
+			speedaward_speed = vlen(player.velocity - player.velocity_z * '0 0 1');
+			speedaward_holder = player.netname;
+			speedaward_uid = player.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
 		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
@@ -378,7 +380,6 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 			}
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)

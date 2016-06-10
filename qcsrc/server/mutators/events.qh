@@ -197,7 +197,10 @@ MUTATOR_HOOKABLE(OnEntityPreSpawn, EV_OnEntityPreSpawn);
 MUTATOR_HOOKABLE(PlayerPreThink, EV_PlayerPreThink);
 
 /** TODO change this into a general PlayerPostThink hook? */
-MUTATOR_HOOKABLE(GetPressedKeys, EV_NO_ARGS);
+#define EV_GetPressedKeys(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(GetPressedKeys, EV_GetPressedKeys);
 
 /** is meant to call GetCvars_handle*(get_cvars_s, get_cvars_f, cvarfield, "cvarname") for cvars this mutator needs from the client */
 #define EV_GetCvars(i, o) \

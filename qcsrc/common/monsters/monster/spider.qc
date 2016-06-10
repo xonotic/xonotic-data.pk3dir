@@ -95,7 +95,6 @@ MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
 {
-    SELFPARAM();
     TC(SpiderAttack, thiswep);
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
@@ -119,7 +118,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
     		actor.enemy = Monster_FindTarget(actor);
     		actor.attack_range = 60;
     	}
-    	Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
+    	Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? actor.anim_melee : actor.anim_shoot), actor.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
@@ -137,31 +136,30 @@ const float spider_anim_attack		= 2;
 const float spider_anim_attack2		= 3;
 */
 
-void M_Spider_Attack_Web_Explode()
-{SELFPARAM();
-	entity e;
-	if(self)
+void M_Spider_Attack_Web_Explode(entity this)
+{
+	if(this)
 	{
-		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
-		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
+		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
+		RadiusDamage(this, this.realowner, 0, 0, 25, world, world, 25, this.projectiledeathtype, world);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && !IS_DEAD(e)) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
+		for(entity e = findradius(this.origin, 25); e; e = e.chain) if(e != this) if(e.takedamage && !IS_DEAD(e)) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 
-		remove(self);
+		remove(this);
 	}
 }
 
 void M_Spider_Attack_Web_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, M_Spider_Attack_Web_Explode());
+	M_Spider_Attack_Web_Explode(this);
 }
 
 void M_Spider_Attack_Web_Touch(entity this)
 {
 	PROJECTILE_TOUCH(this);
 
-	M_Spider_Attack_Web_Explode();
+	M_Spider_Attack_Web_Explode(this);
 }
 
 void adaptor_think2use_hittype_splash(entity this);

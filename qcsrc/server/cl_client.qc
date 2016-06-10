@@ -1551,10 +1551,9 @@ void SetZoomState(float z)
 	zoomstate_set = true;
 }
 
-void GetPressedKeys()
+void GetPressedKeys(entity this)
 {
-	SELFPARAM();
-	MUTATOR_CALLHOOK(GetPressedKeys);
+	MUTATOR_CALLHOOK(GetPressedKeys, this);
 	int keys = this.pressedkeys;
 	keys = BITSET(keys, KEY_FORWARD, 	this.movement.x > 0);
 	keys = BITSET(keys, KEY_BACKWARD, 	this.movement.x < 0);
@@ -2462,7 +2461,7 @@ void PlayerPostThink ()
 		UpdateChatBubble();
 		if (this.impulse) ImpulseCommands(this);
 		if (intermission_running) return; // intermission or finale
-		GetPressedKeys();
+		GetPressedKeys(this);
 	}
 
 	if (this.waypointsprite_attachedforcarrier) {

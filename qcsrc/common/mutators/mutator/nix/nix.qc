@@ -36,7 +36,6 @@ bool NIX_CanChooseWeapon(int wpn);
 
 REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"))
 {
-    SELFPARAM();
 	MUTATOR_ONADD
 	{
 		g_nix_with_blaster = autocvar_g_nix_with_blaster;
@@ -64,7 +63,7 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			it.ammo_fuel = start_ammo_fuel;
 			it.weapons = start_weapons;
 			if(!client_hasweapon(it, PS(it).m_weapon, true, false))
-				PS(it).m_switchweapon = w_getbestweapon(self);
+				PS(it).m_switchweapon = w_getbestweapon(it);
 		});
 	}
 

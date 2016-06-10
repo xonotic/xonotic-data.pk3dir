@@ -280,9 +280,9 @@ REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
-    SELFPARAM();
-	PM_dodging_checkpressedkeys(self);
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	PM_dodging_checkpressedkeys(player);
 }
 
 #endif

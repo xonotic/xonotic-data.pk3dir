@@ -142,16 +142,18 @@ spawnfunc(weapon_nex) { spawnfunc_weapon_vortex(this); }
 REGISTER_MUTATOR(vortex_charge, true);
 
 MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
-{SELFPARAM();
+{
+    entity player = M_ARGV(0, entity);
+
 	// WEAPONTODO
-	float xyspeed = vlen(vec2(this.velocity));
-	if (PS(this).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
+	float xyspeed = vlen(vec2(player.velocity));
+	if (PS(player).m_weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
 	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
 		float f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
 		// add the extra charge
-		this.vortex_charge = min(1, this.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
+		player.vortex_charge = min(1, player.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * PHYS_INPUT_TIMELENGTH);
 	}
 }
 

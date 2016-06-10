@@ -142,13 +142,13 @@ vector buff_GlowColor(entity buff)
 }
 
 void buff_Effect(entity player, string eff)
-{SELFPARAM();
+{
 	if(!autocvar_g_buffs_effects) { return; }
 
-	if(time >= self.buff_effect_delay)
+	if(time >= player.buff_effect_delay)
 	{
 		Send_Effect_(eff, player.origin + ((player.mins + player.maxs) * 0.5), '0 0 0', 1);
-		self.buff_effect_delay = time + 0.05; // prevent spam
+		player.buff_effect_delay = time + 0.05; // prevent spam
 	}
 }
 
