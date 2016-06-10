@@ -298,9 +298,11 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 }
 
 MUTATOR_HOOKFUNCTION(lms, FilterItem)
-{SELFPARAM();
+{
+	entity item = M_ARGV(0, entity);
+
 	if(autocvar_g_lms_extra_lives)
-	if(self.itemdef == ITEM_ExtraLife)
+	if(item.itemdef == ITEM_ExtraLife)
 		return false;
 
 	return true;
@@ -312,20 +314,22 @@ void lms_extralife(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
-{SELFPARAM();
+{
 	if (!autocvar_g_powerups) return false;
 	if (!autocvar_g_lms_extra_lives) return false;
 
+	entity ent = M_ARGV(0, entity);
+
 	// Can't use .itemdef here
-	if (self.classname != "item_health_mega") return false;
+	if (ent.classname != "item_health_mega") return false;
 
 	entity e = spawn();
 	setthink(e, lms_extralife);
 
 	e.nextthink = time + 0.1;
-	e.spawnflags = self.spawnflags;
-	e.noalign = self.noalign;
-	setorigin(e, self.origin);
+	e.spawnflags = ent.spawnflags;
+	e.noalign = ent.noalign;
+	setorigin(e, ent.origin);
 
 	return true;
 }

@@ -231,8 +231,10 @@ MUTATOR_HOOKFUNCTION(nix, BuildMutatorsPrettyString)
 }
 
 MUTATOR_HOOKFUNCTION(nix, FilterItem)
-{SELFPARAM();
-	switch (self.items)
+{
+	entity item = M_ARGV(0, entity);
+
+	switch (item.items)
 	{
 		case ITEM_HealthSmall.m_itemid:
 		case ITEM_HealthMedium.m_itemid:
@@ -256,8 +258,10 @@ MUTATOR_HOOKFUNCTION(nix, FilterItem)
 }
 
 MUTATOR_HOOKFUNCTION(nix, OnEntityPreSpawn)
-{SELFPARAM();
-	if(self.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
+{
+	entity ent = M_ARGV(0, entity);
+
+	if(ent.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
 		return true;
 	return false;
 }

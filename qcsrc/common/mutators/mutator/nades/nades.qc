@@ -1139,9 +1139,10 @@ NadeOffhand OFFHAND_NADE; STATIC_INIT(OFFHAND_NADE) { OFFHAND_NADE = NEW(NadeOff
 
 MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 {
-    SELFPARAM();
-	if (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
-		nades_CheckThrow();
+    entity player = M_ARGV(0, entity);
+
+	if (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)) || autocvar_g_nades_override_dropweapon) {
+		WITHSELF(player, nades_CheckThrow());
 		return true;
 	}
 	return false;

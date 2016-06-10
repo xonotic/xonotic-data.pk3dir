@@ -107,26 +107,23 @@ MUTATOR_HOOKABLE(SpectateCopy, EV_SpectateCopy);
 
 /** called when formatting a chat message to replace fancy functions */
 #define EV_FormatMessage(i, o) \
-    /**/ i(entity, __self) \
-    /**/ i(string, format_escape) \
-    /**/ i(string, format_replacement) \
-    /**/ o(string, format_replacement) \
-    /**/ i(string, format_message) \
+    /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** escape        */ i(string, MUTATOR_ARGV_1_string) \
+    /** replacement   */ i(string, MUTATOR_ARGV_2_string) \
+    /**/                 o(string, MUTATOR_ARGV_2_string) \
+    /** message       */ i(string, MUTATOR_ARGV_3_string) \
     /**/
-string format_escape;
-string format_replacement;
-string format_message;
 MUTATOR_HOOKABLE(FormatMessage, EV_FormatMessage);
 
 /** returns true if throwing the current weapon shall not be allowed */
 #define EV_ForbidThrowCurrentWeapon(i, o) \
-    /**/ i(entity, __self) \
+    /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon, EV_ForbidThrowCurrentWeapon);
 
 /** returns true if dropping the current weapon shall not be allowed at any time including death */
 #define EV_ForbidDropCurrentWeapon(i, o) \
-    /**/ i(entity, __self) \
+    /** player        */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(ForbidDropCurrentWeapon, EV_ForbidDropCurrentWeapon);
 
@@ -154,8 +151,8 @@ MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
 
 /** called every frame. customizes the waypoint for spectators */
 #define EV_CustomizeWaypoint(i, o) \
-    /** waypoint */ i(entity, __self) \
-    /** player; other.enemy = spectator */ i(entity, other) \
+    /** waypoint                        */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** player; other.enemy = spectator */ i(entity, MUTATOR_ARGV_1_entity) \
     /**/
 MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 
@@ -164,33 +161,32 @@ MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
  * return error to request removal
  */
 #define EV_FilterItem(i, o) \
-    /** the current item */ i(entity, __self) \
+    /** item        */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(FilterItem, EV_FilterItem);
 
 /** return error to request removal */
 #define EV_TurretSpawn(i, o) \
-    /** turret */ i(entity, __self) \
+    /** turret        */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(TurretSpawn, EV_TurretSpawn);
 
 /** return error to not attack */
 #define EV_TurretFire(i, o) \
-    /** turret */ i(entity, __self) \
+    /** turret        */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(TurretFire, EV_TurretFire);
 
 /** return error to not attack */
 #define EV_Turret_CheckFire(i, o) \
-    /**/ i(bool, ret_bool) \
-    /**/ o(bool, ret_bool) \
+    /** turret                      */ i(entity, MUTATOR_ARGV_0_entity) \
+    /** to fire or not to fire      */ o(bool, MUTATOR_ARGV_1_bool) \
     /**/
-bool ret_bool;
 MUTATOR_HOOKABLE(Turret_CheckFire, EV_Turret_CheckFire);
 
 /** return error to prevent entity spawn, or modify the entity */
 #define EV_OnEntityPreSpawn(i, o) \
-    /** turret */ i(entity, __self) \
+   /** entity  */ i(entity, MUTATOR_ARGV_0_entity) \
     /**/
 MUTATOR_HOOKABLE(OnEntityPreSpawn, EV_OnEntityPreSpawn);
 

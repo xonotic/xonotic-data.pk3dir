@@ -971,13 +971,15 @@ float turret_firecheck()
 	return 1;
 }
 
-bool turret_checkfire()
-{SELFPARAM();
-	bool ret = false; // dummy
-	if(MUTATOR_CALLHOOK(Turret_CheckFire, ret))
-		return ret_bool;
+bool turret_checkfire(entity this)
+{
+	if(MUTATOR_CALLHOOK(Turret_CheckFire, this))
+		return M_ARGV(1, bool);
 
-	return self.turret_firecheckfunc();
+	bool ret = false;
+	WITHSELF(this, ret = this.turret_firecheckfunc());
+
+	return ret;
 }
 
 void turret_fire()
@@ -1055,7 +1057,7 @@ void turret_think(entity this)
 
 					turret_do_updates(self);
 
-					if (turret_checkfire())
+					if (turret_checkfire(self))
 						turret_fire();
 				}
 			}
@@ -1079,7 +1081,7 @@ void turret_think(entity this)
 		turret_do_updates(self);
 
 		// Fire?
-		if (turret_checkfire())
+		if (turret_checkfire(self))
 			turret_fire();
 	}
 	else
@@ -1099,7 +1101,7 @@ void turret_think(entity this)
 				turret_do_updates(self);
 
 				// Fire!
-				if (turret_checkfire())
+				if (turret_checkfire(self))
 					turret_fire();
 
 				Turret tur = get_turretinfo(self.m_id);
@@ -1161,7 +1163,7 @@ void turret_think(entity this)
 		turret_do_updates(self);
 
 		// Fire?
-		if (turret_checkfire())
+		if (turret_checkfire(self))
 			turret_fire();
 	}
 

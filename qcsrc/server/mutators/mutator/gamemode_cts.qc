@@ -354,8 +354,10 @@ MUTATOR_HOOKFUNCTION(cts, ForbidThrowCurrentWeapon)
 }
 
 MUTATOR_HOOKFUNCTION(cts, FilterItem)
-{SELFPARAM();
-	if(self.classname == "droppedweapon")
+{
+	entity item = M_ARGV(0, entity);
+
+	if(item.classname == "droppedweapon")
 		return true;
 
 	return false;

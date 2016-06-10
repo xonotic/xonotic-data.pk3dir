@@ -1972,9 +1972,9 @@ MUTATOR_HOOKFUNCTION(ons, MonsterSpawn)
 
 void ons_TurretSpawn_Delayed(entity this)
 {
-	entity own = self.owner;
+	entity own = this.owner;
 
-	if(!own) { remove(self); return; }
+	if(!own) { remove(this); return; }
 
 	if(own.targetname)
 	{
@@ -1988,13 +1988,15 @@ void ons_TurretSpawn_Delayed(entity this)
 		}
 	}
 
-	remove(self);
+	remove(this);
 }
 
 MUTATOR_HOOKFUNCTION(ons, TurretSpawn)
-{SELFPARAM();
+{
+	entity turret = M_ARGV(0, entity);
+
 	entity e = spawn();
-	e.owner = self;
+	e.owner = turret;
 	InitializeEntity(e, ons_TurretSpawn_Delayed, INITPRIO_FINDTARGET);
 
 	return false;

@@ -625,9 +625,11 @@ MUTATOR_HOOKFUNCTION(as, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(as, TurretSpawn)
-{SELFPARAM();
-	if(!self.team || self.team == MAX_SHOT_DISTANCE)
-		self.team = 5; // this gets reversed when match starts?
+{
+	entity turret = M_ARGV(0, entity);
+
+	if(!turret.team || turret.team == MAX_SHOT_DISTANCE)
+		turret.team = 5; // this gets reversed when match starts?
 
 	return false;
 }
@@ -674,8 +676,9 @@ MUTATOR_HOOKFUNCTION(as, ReadLevelCvars)
 
 MUTATOR_HOOKFUNCTION(as, OnEntityPreSpawn)
 {
-    SELFPARAM();
-	switch(self.classname)
+    entity ent = M_ARGV(0, entity);
+
+	switch(ent.classname)
 	{
 		case "info_player_team1":
 		case "info_player_team2":

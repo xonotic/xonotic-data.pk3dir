@@ -375,48 +375,53 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, SetStartItems)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
-{SELFPARAM();
-	if(self.classname == "item_cells")
+{
+	entity item = M_ARGV(0, entity);
+
+	if(item.classname == "item_cells")
 		return true; // no normal cells?
 
-	if(self.weapon == WEP_VAPORIZER.m_id && self.classname == "droppedweapon")
+	if(item.weapon == WEP_VAPORIZER.m_id && item.classname == "droppedweapon")
 	{
-		self.ammo_cells = autocvar_g_instagib_ammo_drop;
+		item.ammo_cells = autocvar_g_instagib_ammo_drop;
 		return false;
 	}
 
-	if(self.weapon == WEP_DEVASTATOR.m_id || self.weapon == WEP_VORTEX.m_id)
+	if(item.weapon == WEP_DEVASTATOR.m_id || item.weapon == WEP_VORTEX.m_id)
 	{
 		entity e = spawn();
-		setorigin(e, self.origin);
-		e.noalign = self.noalign;
-        e.cnt = self.cnt;
-        e.team = self.team;
+		setorigin(e, item.origin);
+		e.noalign = item.noalign;
+        e.cnt = item.cnt;
+        e.team = item.team;
         e.spawnfunc_checked = true;
 		WITHSELF(e, spawnfunc_item_minst_cells(e));
 		return true;
 	}
 
-	if(self.flags & FL_POWERUP)
+	if(item.flags & FL_POWERUP)
 		return false;
 
-	if(self.ammo_cells > autocvar_g_instagib_ammo_drop && self.classname != "item_minst_cells")
-		self.ammo_cells = autocvar_g_instagib_ammo_drop;
+	if(item.ammo_cells > autocvar_g_instagib_ammo_drop && item.classname != "item_minst_cells")
+		item.ammo_cells = autocvar_g_instagib_ammo_drop;
 
-	if(self.ammo_cells && !self.weapon)
+	if(item.ammo_cells && !item.weapon)
 		return false;
 
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, CustomizeWaypoint)
-{SELFPARAM();
-	entity e = WaypointSprite_getviewentity(other);
+{
+	entity wp = M_ARGV(0, entity);
+	entity player = M_ARGV(1, entity);
+
+	entity e = WaypointSprite_getviewentity(player);
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
-	if((self.owner.flags & FL_CLIENT) && (self.owner.items & ITEM_Invisibility.m_itemid) && (e == other))
-	if(DIFF_TEAM(self.owner, e))
+	if((wp.owner.flags & FL_CLIENT) && (wp.owner.items & ITEM_Invisibility.m_itemid) && (e == player))
+	if(DIFF_TEAM(wp.owner, e))
 		return true;
 
 	return false;
@@ -463,10 +468,11 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, ItemTouch)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
-{SELFPARAM();
+{
 	if (!autocvar_g_powerups) { return false; }
+	entity ent = M_ARGV(0, entity);
 	// Can't use .itemdef here
-	if (!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
+	if (!(ent.classname == "item_strength" || ent.classname == "item_invincible" || ent.classname == "item_health_mega"))
 		return false;
 
 	entity e = spawn();
@@ -480,9 +486,9 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, OnEntityPreSpawn)
 		setthink(e, instagib_speed);
 
 	e.nextthink = time + 0.1;
-	e.spawnflags = self.spawnflags;
-	e.noalign = self.noalign;
-	setorigin(e, self.origin);
+	e.spawnflags = ent.spawnflags;
+	e.noalign = ent.noalign;
+	setorigin(e, ent.origin);
 
 	return true;
 }

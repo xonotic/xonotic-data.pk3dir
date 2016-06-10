@@ -1048,19 +1048,25 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPhysics)
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidThrowCurrentWeapon)
-{SELFPARAM();
-	return PS(self).m_weapon == WEP_NEXBALL;
+{
+	entity player = M_ARGV(0, entity);
+
+	return PS(player).m_weapon == WEP_NEXBALL;
 }
 
 MUTATOR_HOOKFUNCTION(nb, ForbidDropCurrentWeapon)
-{SELFPARAM();
-	return PS(self).m_weapon == WEP_MORTAR; // TODO: what is this for?
+{
+	entity player = M_ARGV(0, entity);
+
+	return PS(player).m_weapon == WEP_MORTAR; // TODO: what is this for?
 }
 
 MUTATOR_HOOKFUNCTION(nb, FilterItem)
-{SELFPARAM();
-	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_NEXBALL.m_id)
+{
+	entity item = M_ARGV(0, entity);
+
+	if(item.classname == "droppedweapon")
+	if(item.weapon == WEP_NEXBALL.m_id)
 		return true;
 
 	return false;

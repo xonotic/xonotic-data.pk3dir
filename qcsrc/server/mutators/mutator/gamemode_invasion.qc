@@ -376,9 +376,11 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
-{SELFPARAM();
-	if(startsWith(self.classname, "monster_"))
-	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
+{
+	entity ent = M_ARGV(0, entity);
+
+	if(startsWith(ent.classname, "monster_"))
+	if(!(ent.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
 
 	return false;

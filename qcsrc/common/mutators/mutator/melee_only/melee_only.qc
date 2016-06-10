@@ -15,8 +15,10 @@ MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
-{SELFPARAM();
-	switch (self.items)
+{
+	entity item = M_ARGV(0, entity);
+
+	switch (item.items)
 	{
 		case ITEM_HealthSmall.m_itemid:
 		case ITEM_ArmorSmall.m_itemid:

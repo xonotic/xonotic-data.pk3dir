@@ -274,8 +274,7 @@ string formatmessage(entity this, string msg)
 			default:
 			{
 				MUTATOR_CALLHOOK(FormatMessage, this, escape, replacement, msg);
-				escape = format_escape;
-				replacement = format_replacement;
+				replacement = M_ARGV(2, string);
 				break;
 			}
 		}

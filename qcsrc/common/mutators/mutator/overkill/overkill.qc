@@ -296,19 +296,21 @@ void self_spawnfunc_weapon_hmg(entity this) { spawnfunc_weapon_hmg(this); }
 void self_spawnfunc_weapon_rpc(entity this) { spawnfunc_weapon_rpc(this); }
 
 MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
-{SELFPARAM();
+{
+	entity ent = M_ARGV(0, entity);
+
 	if(autocvar_g_powerups)
 	if(autocvar_g_overkill_powerups_replace)
 	{
-		if(self.classname == "item_strength")
+		if(ent.classname == "item_strength")
 		{
 			entity wep = new(weapon_hmg);
-			setorigin(wep, self.origin);
+			setorigin(wep, ent.origin);
 			setmodel(wep, MDL_OK_HMG);
 			wep.ok_item = true;
-			wep.noalign = self.noalign;
-			wep.cnt = self.cnt;
-			wep.team = self.team;
+			wep.noalign = ent.noalign;
+			wep.cnt = ent.cnt;
+			wep.team = ent.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
@@ -317,15 +319,15 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 			return true;
 		}
 
-		if(self.classname == "item_invincible")
+		if(ent.classname == "item_invincible")
 		{
 			entity wep = new(weapon_rpc);
-			setorigin(wep, self.origin);
+			setorigin(wep, ent.origin);
 			setmodel(wep, MDL_OK_RPC);
 			wep.ok_item = true;
-			wep.noalign = self.noalign;
-			wep.cnt = self.cnt;
-			wep.team = self.team;
+			wep.noalign = ent.noalign;
+			wep.cnt = ent.cnt;
+			wep.team = ent.team;
 			wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
 			wep.pickup_anyway = true;
 			wep.spawnfunc_checked = true;
@@ -339,11 +341,13 @@ MUTATOR_HOOKFUNCTION(ok, OnEntityPreSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(ok, FilterItem)
-{SELFPARAM();
-	if(self.ok_item)
+{
+	entity item = M_ARGV(0, entity);
+
+	if(item.ok_item)
 		return false;
 
-	switch(self.items)
+	switch(item.items)
 	{
 		case ITEM_HealthMega.m_itemid: return !(autocvar_g_overkill_100h_anyway);
 		case ITEM_ArmorMega.m_itemid: return !(autocvar_g_overkill_100a_anyway);

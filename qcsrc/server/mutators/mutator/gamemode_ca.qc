@@ -347,7 +347,7 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(ca, ForbidThrowCurrentWeapon)
 {
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
@@ -394,9 +394,10 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
 
 MUTATOR_HOOKFUNCTION(ca, FilterItem)
 {
-    SELFPARAM();
+    entity item = M_ARGV(0, entity);
+
 	if (autocvar_g_powerups <= 0)
-	if (this.flags & FL_POWERUP)
+	if (item.flags & FL_POWERUP)
 		return true;
 
 	if (autocvar_g_pickup_items <= 0)

@@ -717,18 +717,19 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+	entity player = M_ARGV(0, entity);
 
-	if(self.buffs & BUFF_SWAPPER.m_itemid)
+	if(player.buffs & BUFF_SWAPPER.m_itemid)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
 		entity closest = world;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
-			if(DIFF_TEAM(it, self))
+			if(DIFF_TEAM(it, player))
 			{
-				float test = vlen2(self.origin - it.origin);
+				float test = vlen2(player.origin - it.origin);
 				if(test <= best_distance * best_distance)
 				{
 					best_distance = sqrt(test);
@@ -741,18 +742,18 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 		{
 			vector my_org, my_vel, my_ang, their_org, their_vel, their_ang;
 
-			my_org = self.origin;
-			my_vel = self.velocity;
-			my_ang = self.angles;
+			my_org = player.origin;
+			my_vel = player.velocity;
+			my_ang = player.angles;
 			their_org = closest.origin;
 			their_vel = closest.velocity;
 			their_ang = closest.angles;
 
 			Drop_Special_Items(closest);
 
-			MUTATOR_CALLHOOK(PortalTeleport, self); // initiate flag dropper
+			MUTATOR_CALLHOOK(PortalTeleport, player); // initiate flag dropper
 
-			setorigin(self, their_org);
+			setorigin(player, their_org);
 			setorigin(closest, my_org);
 
 			closest.velocity = my_vel;
@@ -760,25 +761,25 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 			closest.fixangle = true;
 			closest.oldorigin = my_org;
 			closest.oldvelocity = my_vel;
-			self.velocity = their_vel;
-			self.angles = their_ang;
-			self.fixangle = true;
-			self.oldorigin = their_org;
-			self.oldvelocity = their_vel;
+			player.velocity = their_vel;
+			player.angles = their_ang;
+			player.fixangle = true;
+			player.oldorigin = their_org;
+			player.oldvelocity = their_vel;
 
-			// set pusher so self gets the kill if they fall into void
-			closest.pusher = self;
+			// set pusher so player gets the kill if they fall into void
+			closest.pusher = player;
 			closest.pushltime = time + autocvar_g_maxpushtime;
 			closest.istypefrag = PHYS_INPUT_BUTTON_CHAT(closest);
 
 			Send_Effect(EFFECT_ELECTRO_COMBO, their_org, '0 0 0', 1);
 			Send_Effect(EFFECT_ELECTRO_COMBO, my_org, '0 0 0', 1);
 
-			sound(self, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
+			sound(player, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
 			sound(closest, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NORM);
 
 			// TODO: add a counter to handle how many times one can teleport, and a delay to prevent spam
-			self.buffs = 0;
+			player.buffs = 0;
 			return true;
 		}
 	}
@@ -803,28 +804,33 @@ MUTATOR_HOOKFUNCTION(buffs, MakePlayerObserver) { entity player = M_ARGV(0, enti
 MUTATOR_HOOKFUNCTION(buffs, ClientDisconnect) { entity player = M_ARGV(0, entity); return buffs_RemovePlayer(player); }
 
 MUTATOR_HOOKFUNCTION(buffs, CustomizeWaypoint)
-{SELFPARAM();
-	entity e = WaypointSprite_getviewentity(other);
+{
+	entity wp = M_ARGV(0, entity);
+	entity player = M_ARGV(1, entity);
+
+	entity e = WaypointSprite_getviewentity(player);
 
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
-	if((self.owner.flags & FL_CLIENT) && (self.owner.buffs & BUFF_INVISIBLE.m_itemid) && (e == other))
-	if(DIFF_TEAM(self.owner, e))
+	if((wp.owner.flags & FL_CLIENT) && (wp.owner.buffs & BUFF_INVISIBLE.m_itemid) && (e == player))
+	if(DIFF_TEAM(wp.owner, e))
 		return true;
 
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, OnEntityPreSpawn, CBC_ORDER_LAST)
-{SELFPARAM();
+{
+	entity ent = M_ARGV(0, entity);
+
 	if(autocvar_g_buffs_replace_powerups)
-	switch(self.classname)
+	switch(ent.classname)
 	{
 		case "item_strength":
 		case "item_invincible":
 		{
 			entity e = spawn();
-			buff_SpawnReplacement(e, self);
+			buff_SpawnReplacement(e, ent);
 			return true;
 		}
 	}

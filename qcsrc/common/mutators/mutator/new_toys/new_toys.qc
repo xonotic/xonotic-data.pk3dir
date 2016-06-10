@@ -216,11 +216,13 @@ MUTATOR_HOOKFUNCTION(nt, SetWeaponreplace)
 }
 
 MUTATOR_HOOKFUNCTION(nt, FilterItem)
-{SELFPARAM();
-	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound) {
-		self.item_pickupsound = string_null;
-		self.item_pickupsound_ent = SND_WEAPONPICKUP_NEW_TOYS;
+{
+	entity item = M_ARGV(0, entity);
+
+	if(nt_IsNewToy(item.weapon) && autocvar_g_new_toys_use_pickupsound) {
+		item.item_pickupsound = string_null;
+		item.item_pickupsound_ent = SND_WEAPONPICKUP_NEW_TOYS;
 	}
-	return 0;
+	return false;
 }
 #endif
