@@ -345,26 +345,27 @@ MUTATOR_HOOKFUNCTION(ka, GiveFragsForKill)
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerPreThink)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	// clear the item used for the ball in keepaway
-	self.items &= ~IT_KEY1;
+	player.items &= ~IT_KEY1;
 
 	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
-	if(self.ballcarried)
-		self.items |= IT_KEY1;
-
-	return false;
+	if(player.ballcarried)
+		player.items |= IT_KEY1;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerUseKey)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(MUTATOR_RETURNVALUE == 0)
-	if(self.ballcarried)
+	if(player.ballcarried)
 	{
-		ka_DropEvent(self);
-		return 1;
+		ka_DropEvent(player);
+		return true;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ka, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc

@@ -479,43 +479,45 @@ MUTATOR_HOOKFUNCTION(ft, GiveFragsForKill, CBC_ORDER_FIRST)
 }
 
 MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
-{SELFPARAM();
+{
 	if(gameover)
-		return 1;
+		return true;
 
-	if(STAT(FROZEN, self) == 1)
+	entity player = M_ARGV(0, entity);
+
+	if(STAT(FROZEN, player) == 1)
 	{
 		// keep health = 1
-		self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+		player.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 	}
 
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
-		return 1;
+		return true;
 
 	int n;
 
 	entity o;
 	o = world;
-	//if(STAT(FROZEN, self))
-	//if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
-		//self.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
+	//if(STAT(FROZEN, player))
+	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
+		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
-	if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
 			if(STAT(FROZEN, it) == 0)
 			if(!IS_DEAD(it))
-			if(SAME_TEAM(it, self))
-			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
+			if(SAME_TEAM(it, player))
+			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
 					o = it;
-				if(STAT(FROZEN, self) == 1)
+				if(STAT(FROZEN, player) == 1)
 					it.reviving = true;
 				++n;
 			}
@@ -523,21 +525,21 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 	}
 
-	if(n && STAT(FROZEN, self) == 1) // OK, there is at least one teammate reviving us
+	if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
 	{
-		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+		player.health = max(1, player.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
 
-		if(self.revive_progress >= 1)
+		if(player.revive_progress >= 1)
 		{
-			freezetag_Unfreeze(self);
+			freezetag_Unfreeze(player);
 			freezetag_count_alive_players();
 
 			if(n == -1)
 			{
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freezetag_frozen_maxtime);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, self.netname, autocvar_g_freezetag_frozen_maxtime);
-				return 1;
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freezetag_frozen_maxtime);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freezetag_frozen_maxtime);
+				return true;
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
@@ -547,27 +549,27 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 				nades_GiveBonus(it,autocvar_g_nades_bonus_score_low);
 			));
 
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, self.netname, o.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 		}
 
 		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
-			it.revive_progress = self.revive_progress;
+			it.revive_progress = player.revive_progress;
 			it.reviving = false;
 		));
 	}
-	else if(!n && STAT(FROZEN, self) == 1) // only if no teammate is nearby will we reset
+	else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 	{
-		self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		player.revive_progress = bound(0, player.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+		player.health = max(1, player.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
 	}
-	else if(!n && !STAT(FROZEN, self))
+	else if(!n && !STAT(FROZEN, player))
 	{
-		self.revive_progress = 0; // thawing nobody
+		player.revive_progress = 0; // thawing nobody
 	}
 
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ft, SetStartItems)

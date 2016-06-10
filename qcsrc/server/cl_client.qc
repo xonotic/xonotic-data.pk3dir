@@ -2052,7 +2052,7 @@ void PlayerUseKey()
 	}
 
 	// a use key was pressed; call handlers
-	MUTATOR_CALLHOOK(PlayerUseKey);
+	MUTATOR_CALLHOOK(PlayerUseKey, this);
 }
 
 
@@ -2153,7 +2153,7 @@ void PlayerPreThink ()
 			Unfreeze(this);
 	}
 
-	MUTATOR_CALLHOOK(PlayerPreThink);
+	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
 	if(autocvar_g_vehicles_enter)
 	if(time > this.last_vehiclecheck)

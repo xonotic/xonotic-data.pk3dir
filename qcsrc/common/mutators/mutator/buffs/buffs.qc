@@ -701,19 +701,21 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
-{SELFPARAM();
-	if(MUTATOR_RETURNVALUE || gameover) { return false; }
-	if(self.buffs)
-	{
-		int buffid = buff_FirstFromFlags(self.buffs).m_id;
-		Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, buffid);
-		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
+{
+	if(MUTATOR_RETURNVALUE || gameover) { return; }
 
-		self.buffs = 0;
-		sound(self, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+	entity player = M_ARGV(0, entity);
+
+	if(player.buffs)
+	{
+		int buffid = buff_FirstFromFlags(player.buffs).m_id;
+		Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid);
+		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
+
+		player.buffs = 0;
+		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
@@ -860,14 +862,16 @@ MUTATOR_HOOKFUNCTION(buffs, WeaponSpeedFactor)
 }
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
-{SELFPARAM();
-	if(gameover || IS_DEAD(self)) { return false; }
+{
+	entity player = M_ARGV(0, entity);
 
-	if(time < self.buff_disability_time)
-	if(time >= self.buff_disability_effect_time)
+	if(gameover || IS_DEAD(player)) { return false; }
+
+	if(time < player.buff_disability_time)
+	if(time >= player.buff_disability_effect_time)
 	{
-		Send_Effect(EFFECT_SMOKING, self.origin + ((self.mins + self.maxs) * 0.5), '0 0 0', 1);
-		self.buff_disability_effect_time = time + 0.5;
+		Send_Effect(EFFECT_SMOKING, player.origin + ((player.mins + player.maxs) * 0.5), '0 0 0', 1);
+		player.buff_disability_effect_time = time + 0.5;
 	}
 
 	// handle buff lost status
@@ -875,28 +879,28 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	// 2: notify carrier as well
 	int buff_lost = 0;
 
-	if(self.buff_time)
-	if(time >= self.buff_time)
+	if(player.buff_time)
+	if(time >= player.buff_time)
 		buff_lost = 2;
 
-	if(STAT(FROZEN, self)) { buff_lost = 1; }
+	if(STAT(FROZEN, player)) { buff_lost = 1; }
 
 	if(buff_lost)
 	{
-		if(self.buffs)
+		if(player.buffs)
 		{
-			int buffid = buff_FirstFromFlags(self.buffs).m_id;
-			Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, buffid);
+			int buffid = buff_FirstFromFlags(player.buffs).m_id;
+			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			if(buff_lost >= 2)
 			{
-				Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
-				sound(self, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+				Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
+				sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 			}
-			self.buffs = 0;
+			player.buffs = 0;
 		}
 	}
 
-	if(self.buffs & BUFF_MAGNET.m_itemid)
+	if(player.buffs & BUFF_MAGNET.m_itemid)
 	{
 		vector pickup_size;
 		FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
@@ -906,12 +910,12 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 			else
 				pickup_size = '1 1 1' * autocvar_g_buffs_magnet_range_item;
 
-			if(boxesoverlap(self.absmin - pickup_size, self.absmax + pickup_size, it.absmin, it.absmax))
+			if(boxesoverlap(player.absmin - pickup_size, player.absmax + pickup_size, it.absmin, it.absmax))
 			{
 				if(gettouch(it))
 				{
 					entity oldother = other;
-					other = self;
+					other = player;
 					WITHSELF(it, gettouch(it)(it));
 					other = oldother;
 				}
@@ -919,96 +923,95 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		});
 	}
 
-	if(self.buffs & BUFF_AMMO.m_itemid)
-	if(self.clip_size)
-		self.clip_load = self.(weapon_load[PS(self).m_switchweapon.m_id]) = self.clip_size;
+	if(player.buffs & BUFF_AMMO.m_itemid)
+	if(player.clip_size)
+		player.clip_load = player.(weapon_load[PS(player).m_switchweapon.m_id]) = player.clip_size;
 
-	if((self.buffs & BUFF_INVISIBLE.m_itemid) && (self.oldbuffs & BUFF_INVISIBLE.m_itemid))
-	if(self.alpha != autocvar_g_buffs_invisible_alpha)
-		self.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
+	if((player.buffs & BUFF_INVISIBLE.m_itemid) && (player.oldbuffs & BUFF_INVISIBLE.m_itemid))
+	if(player.alpha != autocvar_g_buffs_invisible_alpha)
+		player.alpha = autocvar_g_buffs_invisible_alpha; // powerups reset alpha, so we must enforce this (TODO)
 
-	if(self.buffs & BUFF_MEDIC.m_itemid)
-	if(time >= self.buff_medic_healtime)
+	if(player.buffs & BUFF_MEDIC.m_itemid)
+	if(time >= player.buff_medic_healtime)
 	{
-		buff_Medic_Heal(self);
-		self.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;
+		buff_Medic_Heal(player);
+		player.buff_medic_healtime = time + autocvar_g_buffs_medic_heal_delay;
 	}
 
-#define BUFF_ONADD(b) if ( (self.buffs & (b).m_itemid) && !(self.oldbuffs & (b).m_itemid))
-#define BUFF_ONREM(b) if (!(self.buffs & (b).m_itemid) &&  (self.oldbuffs & (b).m_itemid))
+#define BUFF_ONADD(b) if ( (player.buffs & (b).m_itemid) && !(player.oldbuffs & (b).m_itemid))
+#define BUFF_ONREM(b) if (!(player.buffs & (b).m_itemid) &&  (player.oldbuffs & (b).m_itemid))
 
-	if(self.buffs != self.oldbuffs)
+	if(player.buffs != player.oldbuffs)
 	{
-		entity buff = buff_FirstFromFlags(self.buffs);
+		entity buff = buff_FirstFromFlags(player.buffs);
 		float bufftime = buff != BUFF_Null ? buff.m_time(buff) : 0;
-		self.buff_time = (bufftime) ? time + bufftime : 0;
+		player.buff_time = (bufftime) ? time + bufftime : 0;
 
 		BUFF_ONADD(BUFF_AMMO)
 		{
-			self.buff_ammo_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
-			self.items |= IT_UNLIMITED_WEAPON_AMMO;
+			player.buff_ammo_prev_infitems = (player.items & IT_UNLIMITED_WEAPON_AMMO);
+			player.items |= IT_UNLIMITED_WEAPON_AMMO;
 
-			if(self.clip_load)
-				self.buff_ammo_prev_clipload = self.clip_load;
-			self.clip_load = self.(weapon_load[PS(self).m_switchweapon.m_id]) = self.clip_size;
+			if(player.clip_load)
+				player.buff_ammo_prev_clipload = player.clip_load;
+			player.clip_load = player.(weapon_load[PS(player).m_switchweapon.m_id]) = player.clip_size;
 		}
 
 		BUFF_ONREM(BUFF_AMMO)
 		{
-			if(self.buff_ammo_prev_infitems)
-				self.items |= IT_UNLIMITED_WEAPON_AMMO;
+			if(player.buff_ammo_prev_infitems)
+				player.items |= IT_UNLIMITED_WEAPON_AMMO;
 			else
-				self.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+				player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
 
-			if(self.buff_ammo_prev_clipload)
-				self.clip_load = self.buff_ammo_prev_clipload;
+			if(player.buff_ammo_prev_clipload)
+				player.clip_load = player.buff_ammo_prev_clipload;
 		}
 
 		BUFF_ONADD(BUFF_INVISIBLE)
 		{
-			if(time < self.strength_finished && g_instagib)
-				self.alpha = autocvar_g_instagib_invis_alpha;
+			if(time < player.strength_finished && g_instagib)
+				player.alpha = autocvar_g_instagib_invis_alpha;
 			else
-				self.alpha = self.buff_invisible_prev_alpha;
-			self.alpha = autocvar_g_buffs_invisible_alpha;
+				player.alpha = player.buff_invisible_prev_alpha;
+			player.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 
 		BUFF_ONREM(BUFF_INVISIBLE)
-			self.alpha = self.buff_invisible_prev_alpha;
+			player.alpha = player.buff_invisible_prev_alpha;
 
-		self.oldbuffs = self.buffs;
-		if(self.buffs)
+		player.oldbuffs = player.buffs;
+		if(player.buffs)
 		{
-			if(!self.buff_model)
-				buffs_BuffModel_Spawn(self);
+			if(!player.buff_model)
+				buffs_BuffModel_Spawn(player);
 
-			self.buff_model.color = buff.m_color;
-			self.buff_model.glowmod = buff_GlowColor(self.buff_model);
-			self.buff_model.skin = buff.m_skin;
+			player.buff_model.color = buff.m_color;
+			player.buff_model.glowmod = buff_GlowColor(player.buff_model);
+			player.buff_model.skin = buff.m_skin;
 
-			self.effects |= EF_NOSHADOW;
+			player.effects |= EF_NOSHADOW;
 		}
 		else
 		{
-			remove(self.buff_model);
-			self.buff_model = world;
+			remove(player.buff_model);
+			player.buff_model = world;
 
-			self.effects &= ~(EF_NOSHADOW);
+			player.effects &= ~(EF_NOSHADOW);
 		}
 	}
 
-	if(self.buff_model)
+	if(player.buff_model)
 	{
-		self.buff_model.effects = self.effects;
-		self.buff_model.effects |= EF_LOWPRECISION;
-		self.buff_model.effects = self.buff_model.effects & EFMASK_CHEAP; // eat performance
+		player.buff_model.effects = player.effects;
+		player.buff_model.effects |= EF_LOWPRECISION;
+		player.buff_model.effects = player.buff_model.effects & EFMASK_CHEAP; // eat performance
 
-		self.buff_model.alpha = self.alpha;
+		player.buff_model.alpha = player.alpha;
 	}
 
 #undef BUFF_ONADD
 #undef BUFF_ONREM
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(buffs, SpectateCopy)

@@ -265,12 +265,13 @@ MUTATOR_HOOKFUNCTION(nix, OnEntityPreSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(!intermission_running)
-	if(!IS_DEAD(self))
-	if(IS_PLAYER(self))
-		NIX_GiveCurrentWeapon(this);
-	return false;
+	if(!IS_DEAD(player))
+	if(IS_PLAYER(player))
+		NIX_GiveCurrentWeapon(player);
 }
 
 MUTATOR_HOOKFUNCTION(nix, PlayerSpawn)

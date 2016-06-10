@@ -233,11 +233,11 @@ MUTATOR_HOOKFUNCTION(lms, ClientConnect)
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
-{SELFPARAM();
-	if(this.deadflag == DEAD_DYING)
-		this.deadflag = DEAD_RESPAWNING;
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(player.deadflag == DEAD_DYING)
+		player.deadflag = DEAD_RESPAWNING;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerRegen)

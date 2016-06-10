@@ -1976,12 +1976,13 @@ void havocbot_role_ctf_setrole(entity bot, int role)
 // ==============
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
-{SELFPARAM();
-	entity flag;
+{
+	entity player = M_ARGV(0, entity);
+
 	int t = 0, t2 = 0, t3 = 0;
 
 	// initially clear items so they can be set as necessary later.
-	self.ctf_flagstatus &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
+	player.ctf_flagstatus &= ~(CTF_RED_FLAG_CARRYING		| CTF_RED_FLAG_TAKEN		| CTF_RED_FLAG_LOST
 						   | CTF_BLUE_FLAG_CARRYING		| CTF_BLUE_FLAG_TAKEN		| CTF_BLUE_FLAG_LOST
 						   | CTF_YELLOW_FLAG_CARRYING	| CTF_YELLOW_FLAG_TAKEN 	| CTF_YELLOW_FLAG_LOST
 						   | CTF_PINK_FLAG_CARRYING 	| CTF_PINK_FLAG_TAKEN		| CTF_PINK_FLAG_LOST
@@ -1989,42 +1990,40 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerPreThink)
 						   | CTF_FLAG_NEUTRAL | CTF_SHIELDED);
 
 	// scan through all the flags and notify the client about them
-	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	for(entity flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
 		if(flag.team == NUM_TEAM_1) { t = CTF_RED_FLAG_CARRYING;		t2 = CTF_RED_FLAG_TAKEN;		t3 = CTF_RED_FLAG_LOST; }
 		if(flag.team == NUM_TEAM_2) { t = CTF_BLUE_FLAG_CARRYING;		t2 = CTF_BLUE_FLAG_TAKEN;		t3 = CTF_BLUE_FLAG_LOST; }
 		if(flag.team == NUM_TEAM_3) { t = CTF_YELLOW_FLAG_CARRYING; 	t2 = CTF_YELLOW_FLAG_TAKEN;		t3 = CTF_YELLOW_FLAG_LOST; }
 		if(flag.team == NUM_TEAM_4) { t = CTF_PINK_FLAG_CARRYING;		t2 = CTF_PINK_FLAG_TAKEN;		t3 = CTF_PINK_FLAG_LOST; }
-		if(flag.team == 0) 			{ t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; self.ctf_flagstatus |= CTF_FLAG_NEUTRAL; }
+		if(flag.team == 0) 			{ t = CTF_NEUTRAL_FLAG_CARRYING;	t2 = CTF_NEUTRAL_FLAG_TAKEN;	t3 = CTF_NEUTRAL_FLAG_LOST; player.ctf_flagstatus |= CTF_FLAG_NEUTRAL; }
 
 		switch(flag.ctf_status)
 		{
 			case FLAG_PASSING:
 			case FLAG_CARRY:
 			{
-				if((flag.owner == self) || (flag.pass_sender == self))
-					self.ctf_flagstatus |= t; // carrying: self is currently carrying the flag
+				if((flag.owner == player) || (flag.pass_sender == player))
+					player.ctf_flagstatus |= t; // carrying: player is currently carrying the flag
 				else
-					self.ctf_flagstatus |= t2; // taken: someone else is carrying the flag
+					player.ctf_flagstatus |= t2; // taken: someone else is carrying the flag
 				break;
 			}
 			case FLAG_DROPPED:
 			{
-				self.ctf_flagstatus |= t3; // lost: the flag is dropped somewhere on the map
+				player.ctf_flagstatus |= t3; // lost: the flag is dropped somewhere on the map
 				break;
 			}
 		}
 	}
 
 	// item for stopping players from capturing the flag too often
-	if(self.ctf_captureshielded)
-		self.ctf_flagstatus |= CTF_SHIELDED;
+	if(player.ctf_captureshielded)
+		player.ctf_flagstatus |= CTF_SHIELDED;
 
 	// update the health of the flag carrier waypointsprite
-	if(self.wps_flagcarrier)
-		WaypointSprite_UpdateHealth(self.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
-
-	return false;
+	if(player.wps_flagcarrier)
+		WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerDamage_Calculate) // for changing damage and force values that are applied to players in g_damage.qc
@@ -2128,10 +2127,10 @@ MUTATOR_HOOKFUNCTION(ctf, PortalTeleport)
 }
 
 MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
-	entity player = self;
+	entity player = M_ARGV(0, entity);
 
 	if((time > player.throw_antispam) && !IS_DEAD(player) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 	{
@@ -2216,8 +2215,6 @@ MUTATOR_HOOKFUNCTION(ctf, PlayerUseKey)
 			}
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ctf, HelpMePing)

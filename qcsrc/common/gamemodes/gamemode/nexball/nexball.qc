@@ -944,45 +944,47 @@ MUTATOR_HOOKFUNCTION(nb, MakePlayerObserver)
 }
 
 MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
-{SELFPARAM();
-	makevectors(self.v_angle);
+{
+	entity player = M_ARGV(0, entity);
+
+	makevectors(player.v_angle);
 	if(nexball_mode & NBM_BASKETBALL)
 	{
-		if(self.ballcarried)
+		if(player.ballcarried)
 		{
 			// 'view ball'
-			self.ballcarried.velocity = self.velocity;
-			setcefc(self.ballcarried, ball_customize);
+			player.ballcarried.velocity = player.velocity;
+			setcefc(player.ballcarried, ball_customize);
 
-			vector org = self.origin + self.view_ofs +
+			vector org = player.origin + player.view_ofs +
 					  v_forward * autocvar_g_nexball_viewmodel_offset.x +
 					  v_right * autocvar_g_nexball_viewmodel_offset.y +
 					  v_up * autocvar_g_nexball_viewmodel_offset.z;
-			setorigin(self.ballcarried, org);
+			setorigin(player.ballcarried, org);
 
 			// 'safe passing'
 			if(autocvar_g_nexball_safepass_maxdist)
 			{
-				if(self.ballcarried.wait < time && self.ballcarried.enemy)
+				if(player.ballcarried.wait < time && player.ballcarried.enemy)
 				{
-					//centerprint(self, sprintf("Lost lock on %s", self.ballcarried.enemy.netname));
-					self.ballcarried.enemy = world;
+					//centerprint(player, sprintf("Lost lock on %s", player.ballcarried.enemy.netname));
+					player.ballcarried.enemy = world;
 				}
 
 
-				//tracebox(self.origin + self.view_ofs, '-2 -2 -2', '2 2 2', self.origin + self.view_ofs + v_forward * autocvar_g_nexball_safepass_maxdist);
-				crosshair_trace(self);
+				//tracebox(player.origin + player.view_ofs, '-2 -2 -2', '2 2 2', player.origin + player.view_ofs + v_forward * autocvar_g_nexball_safepass_maxdist);
+				crosshair_trace(player);
 				if( trace_ent &&
 					IS_CLIENT(trace_ent) &&
 					!IS_DEAD(trace_ent) &&
-					trace_ent.team == self.team &&
-					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )
+					trace_ent.team == player.team &&
+					vdist(trace_ent.origin - player.origin, <=, autocvar_g_nexball_safepass_maxdist) )
 				{
 
-					//if(self.ballcarried.enemy != trace_ent)
-					//	centerprint(self, sprintf("Locked to %s", trace_ent.netname));
-					self.ballcarried.enemy = trace_ent;
-					self.ballcarried.wait = time + autocvar_g_nexball_safepass_holdtime;
+					//if(player.ballcarried.enemy != trace_ent)
+					//	centerprint(player, sprintf("Locked to %s", trace_ent.netname));
+					player.ballcarried.enemy = trace_ent;
+					player.ballcarried.wait = time + autocvar_g_nexball_safepass_holdtime;
 
 
 				}
@@ -991,23 +993,21 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 		else
 		{
 			.entity weaponentity = weaponentities[0]; // TODO
-			if(self.(weaponentity).weapons)
+			if(player.(weaponentity).weapons)
 			{
-				self.weapons = self.(weaponentity).weapons;
+				player.weapons = player.(weaponentity).weapons;
 				Weapon w = WEP_NEXBALL;
-				w.wr_resetplayer(w, self);
-				PS(self).m_switchweapon = self.(weaponentity).m_switchweapon;
-				W_SwitchWeapon(self, PS(self).m_switchweapon);
+				WITHSELF(player, w.wr_resetplayer(w, player));
+				PS(player).m_switchweapon = player.(weaponentity).m_switchweapon;
+				W_SwitchWeapon(player, PS(player).m_switchweapon);
 
-				self.(weaponentity).weapons = '0 0 0';
+				player.(weaponentity).weapons = '0 0 0';
 			}
 		}
 
 	}
 
-	nexball_setstatus(self);
-
-	return false;
+	nexball_setstatus(player);
 }
 
 MUTATOR_HOOKFUNCTION(nb, SpectateCopy)

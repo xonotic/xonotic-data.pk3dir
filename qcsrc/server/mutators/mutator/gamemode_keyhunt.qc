@@ -1346,18 +1346,19 @@ MUTATOR_HOOKFUNCTION(kh, SpectateCopy)
 }
 
 MUTATOR_HOOKFUNCTION(kh, PlayerUseKey)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(MUTATOR_RETURNVALUE == 0)
 	{
-		entity k;
-		k = self.kh_next;
+		entity k = player.kh_next;
 		if(k)
 		{
 			kh_Key_DropOne(k);
-			return 1;
+			return true;
 		}
 	}
-	return 0;
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(kh, HavocBot_ChooseRole)

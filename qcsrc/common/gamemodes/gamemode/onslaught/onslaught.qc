@@ -2104,20 +2104,20 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayerUseKey)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 
-	if((time > self.teleport_antispam) && (!IS_DEAD(self)) && !self.vehicle)
+	entity player = M_ARGV(0, entity);
+
+	if((time > player.teleport_antispam) && (!IS_DEAD(player)) && !player.vehicle)
 	{
-		entity source_point = ons_Nearest_ControlPoint(self, self.origin, autocvar_g_onslaught_teleport_radius);
+		entity source_point = ons_Nearest_ControlPoint(player, player.origin, autocvar_g_onslaught_teleport_radius);
 		if ( source_point )
 		{
-			stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+			stuffcmd(player, "qc_cmd_cl hud clickradar\n");
 			return true;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ons, PlayHitsound)

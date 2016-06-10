@@ -1149,21 +1149,23 @@ MUTATOR_HOOKFUNCTION(nades, ForbidThrowCurrentWeapon, CBC_ORDER_LAST)
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
-{SELFPARAM();
-	if (!IS_PLAYER(self)) { return false; }
+{
+	entity player = M_ARGV(0, entity);
 
-	if (self.nade && (self.offhand != OFFHAND_NADE || (self.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, self, self.nade_altbutton);
+	if (!IS_PLAYER(player)) { return false; }
 
-	if(IS_PLAYER(self))
+	if (player.nade && (player.offhand != OFFHAND_NADE || (player.weapons & WEPSET(HOOK)))) OFFHAND_NADE.offhand_think(OFFHAND_NADE, player, player.nade_altbutton);
+
+	if(IS_PLAYER(player))
 	{
 		if ( autocvar_g_nades_bonus && autocvar_g_nades )
 		{
 			entity key;
 			float key_count = 0;
-			FOR_EACH_KH_KEY(key) if(key.owner == self) { ++key_count; }
+			FOR_EACH_KH_KEY(key) if(key.owner == player) { ++key_count; }
 
 			float time_score;
-			if(self.flagcarried || self.ballcarried) // this player is important
+			if(player.flagcarried || player.ballcarried) // this player is important
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
 				time_score = autocvar_g_nades_bonus_score_time;
@@ -1173,69 +1175,67 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 
 			if(autocvar_g_nades_bonus_client_select)
 			{
-				self.nade_type = self.cvar_cl_nade_type;
-				self.pokenade_type = self.cvar_cl_pokenade_type;
+				player.nade_type = player.cvar_cl_nade_type;
+				player.pokenade_type = player.cvar_cl_pokenade_type;
 			}
 			else
 			{
-				self.nade_type = autocvar_g_nades_bonus_type;
-				self.pokenade_type = autocvar_g_nades_pokenade_monster_type;
+				player.nade_type = autocvar_g_nades_bonus_type;
+				player.pokenade_type = autocvar_g_nades_pokenade_monster_type;
 			}
 
-			self.nade_type = bound(1, self.nade_type, Nades_COUNT);
+			player.nade_type = bound(1, player.nade_type, Nades_COUNT);
 
-			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
-				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);
+			if(player.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
+				nades_GiveBonus(player, time_score / autocvar_g_nades_bonus_score_max);
 		}
 		else
 		{
-			self.bonus_nades = self.bonus_nade_score = 0;
+			player.bonus_nades = player.bonus_nade_score = 0;
 		}
 	}
 
 	float n = 0;
 	entity o = world;
-	if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
 			if(!IS_DEAD(it))
 			if(STAT(FROZEN, it) == 0)
-			if(SAME_TEAM(it, self))
-			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
+			if(SAME_TEAM(it, player))
+			if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 			{
 				if(!o)
 					o = it;
-				if(STAT(FROZEN, self) == 1)
+				if(STAT(FROZEN, player) == 1)
 					it.reviving = true;
 				++n;
 			}
 		));
 	}
 
-	if(n && STAT(FROZEN, self) == 3) // OK, there is at least one teammate reviving us
+	if(n && STAT(FROZEN, player) == 3) // OK, there is at least one teammate reviving us
 	{
-		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.revive_progress * start_health);
+		player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+		player.health = max(1, player.revive_progress * start_health);
 
-		if(self.revive_progress >= 1)
+		if(player.revive_progress >= 1)
 		{
-			Unfreeze(self);
+			Unfreeze(player);
 
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 		}
 
 		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
-			other.revive_progress = self.revive_progress;
-			other.reviving = false;
+			it.revive_progress = player.revive_progress;
+			it.reviving = false;
 		));
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)

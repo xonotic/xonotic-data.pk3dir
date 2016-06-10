@@ -198,37 +198,39 @@ MUTATOR_HOOKFUNCTION(ok, ForbidThrowCurrentWeapon)
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
-{SELFPARAM();
+{
 	if(intermission_running || gameover)
 		return false;
 
-	if(IS_DEAD(self) || !IS_PLAYER(self) || STAT(FROZEN, self))
+	entity player = M_ARGV(0, entity);
+
+	if(IS_DEAD(player) || !IS_PLAYER(player) || STAT(FROZEN, player))
 		return false;
 
-	if(self.ok_lastwep)
+	if(player.ok_lastwep)
 	{
-		Weapon newwep = Weapons_from(self.ok_lastwep);
-		if(self.ok_lastwep == WEP_HMG.m_id)
+		Weapon newwep = Weapons_from(player.ok_lastwep);
+		if(player.ok_lastwep == WEP_HMG.m_id)
 			newwep = WEP_MACHINEGUN;
-		if(self.ok_lastwep == WEP_RPC.m_id)
+		if(player.ok_lastwep == WEP_RPC.m_id)
 			newwep = WEP_VORTEX;
-		PS(self).m_switchweapon = newwep;
-		self.ok_lastwep = 0;
+		PS(player).m_switchweapon = newwep;
+		player.ok_lastwep = 0;
 	}
 
-	ok_IncreaseCharge(self, PS(self).m_weapon.m_id);
+	ok_IncreaseCharge(player, PS(player).m_weapon.m_id);
 
-	if(PHYS_INPUT_BUTTON_ATCK2(self))
-	if(!forbidWeaponUse(self) || self.weapon_blocked) // allow if weapon is blocked
-	if(time >= self.jump_interval)
+	if(PHYS_INPUT_BUTTON_ATCK2(player))
+	if(!forbidWeaponUse(player) || player.weapon_blocked) // allow if weapon is blocked
+	if(time >= player.jump_interval)
 	{
-		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(this);
-		makevectors(self.v_angle);
+		player.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor(player);
+		makevectors(player.v_angle);
 
-		Weapon oldwep = PS(self).m_weapon;
-		PS(self).m_weapon = WEP_BLASTER;
+		Weapon oldwep = PS(player).m_weapon;
+		PS(player).m_weapon = WEP_BLASTER;
 		W_Blaster_Attack(
-			self,
+			player,
 			WEP_BLASTER.m_id | HITTYPE_SECONDARY,
 			WEP_CVAR_SEC(vaporizer, shotangle),
 			WEP_CVAR_SEC(vaporizer, damage),
@@ -240,33 +242,31 @@ MUTATOR_HOOKFUNCTION(ok, PlayerPreThink)
 			WEP_CVAR_SEC(vaporizer, delay),
 			WEP_CVAR_SEC(vaporizer, lifetime)
 		);
-		PS(self).m_weapon = oldwep;
+		PS(player).m_weapon = oldwep;
 	}
 
-	self.weapon_blocked = false;
+	player.weapon_blocked = false;
 
-	self.ok_ammo_charge = self.ammo_charge[PS(self).m_weapon.m_id];
+	player.ok_ammo_charge = player.ammo_charge[PS(player).m_weapon.m_id];
 
-	if(self.ok_use_ammocharge)
-	if(!ok_CheckWeaponCharge(self, PS(self).m_weapon.m_id))
+	if(player.ok_use_ammocharge)
+	if(!ok_CheckWeaponCharge(player, PS(player).m_weapon.m_id))
 	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && PHYS_INPUT_BUTTON_ATCK(self) && IS_REAL_CLIENT(self) && PS(self).m_weapon == PS(self).m_switchweapon)
+		if(autocvar_g_overkill_ammo_charge_notice && time > player.ok_notice_time && PHYS_INPUT_BUTTON_ATCK(player) && IS_REAL_CLIENT(player) && PS(player).m_weapon == PS(player).m_switchweapon)
 		{
-			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
-			self.ok_notice_time = time + 2;
-			play2(self, SND(DRYFIRE));
+			//Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_OVERKILL_CHARGE);
+			player.ok_notice_time = time + 2;
+			play2(player, SND(DRYFIRE));
 		}
-		Weapon wpn = PS(self).m_weapon;
+		Weapon wpn = PS(player).m_weapon;
 		.entity weaponentity = weaponentities[0]; // TODO: unhardcode
-		if(self.(weaponentity).state != WS_CLEAR)
-			w_ready(wpn, self, weaponentity, PHYS_INPUT_BUTTON_ATCK(self) | (PHYS_INPUT_BUTTON_ATCK2(self) << 1));
+		if(player.(weaponentity).state != WS_CLEAR)
+			w_ready(wpn, player, weaponentity, PHYS_INPUT_BUTTON_ATCK(player) | (PHYS_INPUT_BUTTON_ATCK2(player) << 1));
 
-		self.weapon_blocked = true;
+		player.weapon_blocked = true;
 	}
 
-	PHYS_INPUT_BUTTON_ATCK2(self) = false;
-
-	return false;
+	PHYS_INPUT_BUTTON_ATCK2(player) = false;
 }
 
 MUTATOR_HOOKFUNCTION(ok, PlayerSpawn)

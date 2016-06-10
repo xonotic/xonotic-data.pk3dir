@@ -191,7 +191,10 @@ MUTATOR_HOOKABLE(Turret_CheckFire, EV_Turret_CheckFire);
 MUTATOR_HOOKABLE(OnEntityPreSpawn, EV_OnEntityPreSpawn);
 
 /** runs in the event loop for players; is called for ALL player entities, also bots, also the dead, or spectators */
-MUTATOR_HOOKABLE(PlayerPreThink, EV_NO_ARGS);
+#define EV_PlayerPreThink(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerPreThink, EV_PlayerPreThink);
 
 /** TODO change this into a general PlayerPostThink hook? */
 MUTATOR_HOOKABLE(GetPressedKeys, EV_NO_ARGS);
@@ -372,7 +375,10 @@ MUTATOR_HOOKABLE(PlayerRegen, EV_NO_ARGS);
  * if MUTATOR_RETURNVALUE is 1, don't do anything
  * return 1 if the use key actually did something
  */
-MUTATOR_HOOKABLE(PlayerUseKey, EV_NO_ARGS);
+ #define EV_PlayerUseKey(i, o) \
+    /** player */ i(entity, MUTATOR_ARGV_0_entity) \
+    /**/
+MUTATOR_HOOKABLE(PlayerUseKey, EV_PlayerUseKey);
 
 /**
  * called when a client command is parsed

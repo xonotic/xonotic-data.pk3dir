@@ -188,9 +188,10 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPreThink)
-{SELFPARAM();
-	instagib_ammocheck(self);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	instagib_ammocheck(player);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerRegen)
