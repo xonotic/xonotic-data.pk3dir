@@ -17,27 +17,27 @@ void viewloc_think(entity this)
 	// we abuse this method, rather than using normal .touch, because touch isn't reliable with multiple clients inside the same trigger, and can't "untouch" entities
 
 	// set myself as current viewloc where possible
-	for(e = world; (e = findentity(e, viewloc, self)); )
+	for(e = world; (e = findentity(e, viewloc, this)); )
 		e.viewloc = world;
 
-		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+		for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.viewloc)
 				if(IS_PLAYER(e)) // should we support non-player entities with this?
 				//if(!IS_DEAD(e)) // death view is handled separately, we can't override this just yet
 				{
 					vector emin = e.absmin;
 					vector emax = e.absmax;
-					if(self.solid == SOLID_BSP)
+					if(this.solid == SOLID_BSP)
 					{
 						emin -= '1 1 1';
 						emax += '1 1 1';
 					}
-					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
-							e.viewloc = self;
+					if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
+							e.viewloc = this;
 				}
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 bool trigger_viewloc_send(entity this, entity to, int sf)
@@ -136,8 +136,8 @@ spawnfunc(target_viewlocation) { spawnfunc_target_viewlocation_start(this); }
 
 void trigger_viewloc_updatelink(entity this)
 {
-	self.enemy = findfloat(world, entnum, self.cnt);
-	self.goalentity = findfloat(world, entnum, self.count);
+	this.enemy = findfloat(world, entnum, this.cnt);
+	this.goalentity = findfloat(world, entnum, this.count);
 }
 
 NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)

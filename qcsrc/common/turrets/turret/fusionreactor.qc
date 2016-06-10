@@ -50,8 +50,8 @@ spawnfunc(turret_fusionreactor) { if (!turret_initialize(this, TUR_FUSIONREACTOR
 
 METHOD(FusionReactor, tr_attack, void(FusionReactor this, entity it))
 {
-    self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
-    vector fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
+    it.enemy.ammo = min(it.enemy.ammo + it.shot_dmg,it.enemy.ammo_max);
+    vector fl_org = 0.5 * (it.enemy.absmin + it.enemy.absmax);
     te_smallflash(fl_org);
 }
 METHOD(FusionReactor, tr_think, void(FusionReactor thistur, entity it))

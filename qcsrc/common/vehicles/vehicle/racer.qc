@@ -414,7 +414,7 @@ void racer_think(entity this)
 
 	float forced = autocvar_g_vehicle_racer_upforcedamper;
 
-	//int cont = pointcontents(self.origin - '0 0 64');
+	//int cont = pointcontents(this.origin - '0 0 64');
 	traceline(this.origin - '0 0 64', this.origin - '0 0 64', MOVE_NOMONSTERS, this);
 	//if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
 	if(trace_dpstartcontents & DPCONTENTS_LIQUIDSMASK)

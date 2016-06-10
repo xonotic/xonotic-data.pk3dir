@@ -55,7 +55,7 @@ float server_is_dedicated;
 .float inactive; // Clientwall disappears when inactive
 .float alpha_max, alpha_min;
 .float fade_start, fade_end, fade_vertical_offset;
-.float default_solid; // Variable to store default self.solid for clientwalls
+.float default_solid; // Variable to store default .solid for clientwalls
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"

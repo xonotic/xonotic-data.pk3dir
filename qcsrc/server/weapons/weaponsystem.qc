@@ -68,7 +68,7 @@ void CL_Weaponentity_Think(entity this)
 	.entity weaponentity = this.weaponentity_fld;
 	if (this.owner.(weaponentity) != this)
 	{
-		// owner has new gun; remove self
+		// owner has new gun; remove old one
 		if (this.weaponchild) remove(this.weaponchild);
 		remove(this);
 		return;

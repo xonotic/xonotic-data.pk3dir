@@ -6,20 +6,20 @@
 
 /**
     Simulate drag
-    self.velocity = movelib_dragvec(self.velocity,0.02,0.5);
+    this.velocity = movelib_dragvec(this.velocity,0.02,0.5);
 **/
 vector movelib_dragvec(entity this, float drag, float exp_);
 
 /**
     Simulate drag
-    self.velocity *= movelib_dragflt(somespeed,0.01,0.7);
+    this.velocity *= movelib_dragflt(somespeed,0.01,0.7);
 **/
 float movelib_dragflt(float fspeed,float drag,float exp_);
 
 /**
     Do a inertia simulation based on velocity.
     Basicaly, this allows you to simulate loss of steering with higher speed.
-    self.velocity = movelib_inertmove_byspeed(self.velocity,newvel,1000,0.1,0.9);
+    this.velocity = movelib_inertmove_byspeed(this.velocity,newvel,1000,0.1,0.9);
 **/
 vector movelib_inertmove_byspeed(entity this, vector vel_new, float vel_max, float newmin, float oldmax);
 
@@ -31,7 +31,7 @@ void movelib_move(entity this, vector force, float max_velocity, float drag, flo
 /*
 void movelib_move_simple(vector newdir,float velo,float blendrate)
 {
-    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
+    this.velocity = this.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
 }
 */
 #define movelib_move_simple(e,newdir,velo,blendrate) \

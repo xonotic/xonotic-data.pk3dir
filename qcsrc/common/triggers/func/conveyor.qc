@@ -4,47 +4,47 @@ void conveyor_think(entity this)
 {
 #ifdef CSQC
 	// TODO: check if this is what is causing the glitchiness when switching between them
-	float dt = time - self.move_time;
-	self.move_time = time;
+	float dt = time - this.move_time;
+	this.move_time = time;
 	if(dt <= 0) { return; }
 #endif
 	entity e;
 
-	// set myself as current conveyor where possible
-	for(e = world; (e = findentity(e, conveyor, self)); )
+	// set mythis as current conveyor where possible
+	for(e = world; (e = findentity(e, conveyor, this)); )
 		e.conveyor = world;
 
-	if(self.state)
+	if(this.state)
 	{
-		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+		for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.conveyor.state)
 				if(isPushable(e))
 				{
 					vector emin = e.absmin;
 					vector emax = e.absmax;
-					if(self.solid == SOLID_BSP)
+					if(this.solid == SOLID_BSP)
 					{
 						emin -= '1 1 1';
 						emax += '1 1 1';
 					}
-					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
-							e.conveyor = self;
+					if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
+							e.conveyor = this;
 				}
 
-		for(e = world; (e = findentity(e, conveyor, self)); )
+		for(e = world; (e = findentity(e, conveyor, this)); )
 		{
 			if(IS_CLIENT(e)) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics	continue;
 
-			setorigin(e, e.origin + self.movedir * PHYS_INPUT_FRAMETIME);
+			setorigin(e, e.origin + this.movedir * PHYS_INPUT_FRAMETIME);
 			move_out_of_solid(e);
 #ifdef SVQC
 			UpdateCSQCProjectile(e);
 #endif
 			/*
 			// stupid conveyor code
-			tracebox(e.origin, e.mins, e.maxs, e.origin + self.movedir * sys_frametime, MOVE_NORMAL, e);
+			tracebox(e.origin, e.mins, e.maxs, e.origin + this.movedir * sys_frametime, MOVE_NORMAL, e);
 			if(trace_fraction > 0)
 				setorigin(e, trace_endpos);
 			*/
@@ -52,7 +52,7 @@ void conveyor_think(entity this)
 	}
 
 #ifdef SVQC
-	self.nextthink = time;
+	this.nextthink = time;
 #endif
 }
 
@@ -79,31 +79,31 @@ bool conveyor_send(entity this, entity to, int sf)
 
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, self.warpzone_isboxy);
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteByte(MSG_ENTITY, this.warpzone_isboxy);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
+		WriteCoord(MSG_ENTITY, this.mins_x);
+		WriteCoord(MSG_ENTITY, this.mins_y);
+		WriteCoord(MSG_ENTITY, this.mins_z);
+		WriteCoord(MSG_ENTITY, this.maxs_x);
+		WriteCoord(MSG_ENTITY, this.maxs_y);
+		WriteCoord(MSG_ENTITY, this.maxs_z);
 
-		WriteCoord(MSG_ENTITY, self.movedir_x);
-		WriteCoord(MSG_ENTITY, self.movedir_y);
-		WriteCoord(MSG_ENTITY, self.movedir_z);
+		WriteCoord(MSG_ENTITY, this.movedir_x);
+		WriteCoord(MSG_ENTITY, this.movedir_y);
+		WriteCoord(MSG_ENTITY, this.movedir_z);
 
-		WriteByte(MSG_ENTITY, self.speed);
-		WriteByte(MSG_ENTITY, self.state);
+		WriteByte(MSG_ENTITY, this.speed);
+		WriteByte(MSG_ENTITY, this.state);
 
-		WriteString(MSG_ENTITY, self.targetname);
-		WriteString(MSG_ENTITY, self.target);
+		WriteString(MSG_ENTITY, this.targetname);
+		WriteString(MSG_ENTITY, this.target);
 	}
 
 	if(sf & 2)
-		WriteByte(MSG_ENTITY, self.state);
+		WriteByte(MSG_ENTITY, this.state);
 
 	return true;
 }

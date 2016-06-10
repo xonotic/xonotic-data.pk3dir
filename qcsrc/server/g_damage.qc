@@ -1251,18 +1251,18 @@ void Fire_ApplyEffect(entity e)
 void fireburner_think(entity this)
 {
 	// for players, this is done in the regular loop
-	if(wasfreed(self.owner))
+	if(wasfreed(this.owner))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	Fire_ApplyEffect(self.owner);
-	if(!Fire_IsBurning(self.owner))
+	Fire_ApplyEffect(this.owner);
+	if(!Fire_IsBurning(this.owner))
 	{
-		self.owner.fire_burner = world;
-		remove(self);
+		this.owner.fire_burner = world;
+		remove(this);
 		return;
 	}
-	Fire_ApplyDamage(self.owner);
-	self.nextthink = time;
+	Fire_ApplyDamage(this.owner);
+	this.nextthink = time;
 }

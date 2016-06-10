@@ -169,63 +169,63 @@ spawnfunc(weapon_vaporizer) { weapon_defaultspawnfunc(this, WEP_VAPORIZER); }
 spawnfunc(weapon_minstanex) { spawnfunc_weapon_vaporizer(this); }
 
 void W_RocketMinsta_Explosion(entity actor, vector loc)
-{entity this = actor;
-	if(accuracy_canbegooddamage(self))
-		accuracy_add(self, WEP_DEVASTATOR.m_id, autocvar_g_rm_damage, 0);
+{
+	if(accuracy_canbegooddamage(actor))
+		accuracy_add(actor, WEP_DEVASTATOR.m_id, autocvar_g_rm_damage, 0);
 	entity dmgent = spawn();
-	dmgent.owner = dmgent.realowner = self;
+	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
-	RadiusDamage (dmgent, self, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, world, world, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, other);
+	RadiusDamage (dmgent, actor, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, world, world, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, other);
 	remove(dmgent);
 }
 
 void W_Vaporizer_Attack(Weapon thiswep, entity actor)
-{entity this = actor;
-	bool flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
+{
+	bool flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(self, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage);
+	W_SetupShot(actor, true, 0, SND_Null, CH_WEAPON_A, vaporizer_damage);
 	// handle sound separately so we can change the volume
 	// added bonus: no longer plays the strength sound (strength gives no bonus to instakill anyway)
-	sound (self, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
+	sound (actor, CH_WEAPON_A, SND_MINSTANEXFIRE, VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(self, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
+	FireRailgunBullet(actor, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, vaporizer_damage, 800, 0, 0, 0, 0, WEP_VAPORIZER.m_id);
 
 	// do this now, as goodhits is disabled below
-	SendCSQCVaporizerBeamParticle(self, damage_goodhits);
+	SendCSQCVaporizerBeamParticle(actor, damage_goodhits);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	if(damage_goodhits && self.vaporizer_lasthit)
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && actor.vaporizer_lasthit)
 	{
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
 		damage_goodhits = 0; // only every second time
 	}
 
-	self.vaporizer_lasthit = damage_goodhits;
+	actor.vaporizer_lasthit = damage_goodhits;
 
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
-		W_RocketMinsta_Explosion(self, trace_endpos);
+		W_RocketMinsta_Explosion(actor, trace_endpos);
 
-	W_DecreaseAmmo(thiswep, self, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
+	W_DecreaseAmmo(thiswep, actor, ((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
 
 void W_RocketMinsta_Laser_Explode (entity this)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
-			if(DIFF_TEAM(self.realowner, other))
+			if(DIFF_TEAM(this.realowner, other))
 				if(!IS_DEAD(other))
 					if(IsFlying(other))
-						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.realowner, self.rm_damage, self.rm_edmg, autocvar_g_rm_laser_radius, world, world, self.rm_force, self.projectiledeathtype, other);
-	remove(self);
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
+	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, world, world, this.rm_force, this.projectiledeathtype, other);
+	remove(this);
 }
 
 void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
@@ -237,13 +237,13 @@ void W_RocketMinsta_Laser_Touch (entity this)
 {
 	PROJECTILE_TOUCH(this);
 	//W_RocketMinsta_Laser_Explode ();
-	RadiusDamage (self, self.realowner, self.rm_damage, self.rm_edmg, autocvar_g_rm_laser_radius, world, world, self.rm_force, self.projectiledeathtype, other);
-	remove(self);
+	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, world, world, this.rm_force, this.projectiledeathtype, other);
+	remove(this);
 }
 
 void W_RocketMinsta_Attack2(entity actor)
-{entity this = actor;
-	makevectors(self.v_angle);
+{
+	makevectors(actor.v_angle);
 
 	entity proj;
 	float counter = 0;
@@ -251,17 +251,17 @@ void W_RocketMinsta_Attack2(entity actor)
 	float spread = autocvar_g_rm_laser_spread;
 	float rndspread = autocvar_g_rm_laser_spread_random;
 
-	Weapon w = PS(self).m_weapon;
-	PS(self).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage);
-	PS(self).m_weapon = w;
+	Weapon w = PS(actor).m_weapon;
+	PS(actor).m_weapon = WEP_ELECTRO;
+	W_SetupShot_ProjectileSize (actor, '0 0 -3', '0 0 -3', false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	PS(actor).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
     while(counter < total)
 	{
         proj = new(plasma_prim);
-        proj.owner = proj.realowner = self;
+        proj.owner = proj.realowner = actor;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
         proj.use = W_RocketMinsta_Laser_Explode_use;
@@ -290,30 +290,30 @@ void W_RocketMinsta_Attack2(entity actor)
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
 
-        MUTATOR_CALLHOOK(EditProjectile, self, proj);
+        MUTATOR_CALLHOOK(EditProjectile, actor, proj);
         counter++;
     }
 }
 
 void W_RocketMinsta_Attack3 (entity actor)
-{entity this = actor;
-	makevectors(self.v_angle);
+{
+	makevectors(actor.v_angle);
 
 	entity proj;
 	float counter = 0;
 	float total = 1;
 
-	Weapon w = PS(self).m_weapon;
-	PS(self).m_weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage);
-	PS(self).m_weapon = w;
+	Weapon w = PS(actor).m_weapon;
+	PS(actor).m_weapon = WEP_ELECTRO;
+	W_SetupShot_ProjectileSize (actor, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE2, CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	PS(actor).m_weapon = w;
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
     while(counter < total)
 	{
         proj = new(plasma_prim);
-        proj.owner = proj.realowner = self;
+        proj.owner = proj.realowner = actor;
         proj.bot_dodge = true;
         proj.bot_dodgerating = autocvar_g_rm_laser_damage;
         proj.use = W_RocketMinsta_Laser_Explode_use;
@@ -340,18 +340,17 @@ void W_RocketMinsta_Attack3 (entity actor)
 
         CSQCProjectile(proj, true, PROJECTILE_ROCKETMINSTA_LASER, true);
 
-        MUTATOR_CALLHOOK(EditProjectile, self, proj);
+        MUTATOR_CALLHOOK(EditProjectile, actor, proj);
         counter++;
     }
 }
 
 METHOD(Vaporizer, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    if(self.(thiswep.ammo_field) > 0)
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 1, false);
+    if(actor.(thiswep.ammo_field) > 0)
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 1, false);
     else
-        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR_SEC(vaporizer, speed), 0, WEP_CVAR_SEC(vaporizer, lifetime), false); // WEAPONTODO: replace with proper vaporizer cvars
 }
 METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -429,9 +428,8 @@ METHOD(Vaporizer, wr_think, void(entity thiswep, entity actor, .entity weaponent
 }
 METHOD(Vaporizer, wr_setup, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    self.ammo_field = (thiswep.ammo_field);
-    self.vaporizer_lasthit = 0;
+    actor.ammo_field = (thiswep.ammo_field);
+    actor.vaporizer_lasthit = 0;
 }
 METHOD(Vaporizer, wr_checkammo1, bool(entity thiswep, entity actor))
 {
@@ -450,8 +448,7 @@ METHOD(Vaporizer, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Vaporizer, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    self.vaporizer_lasthit = 0;
+    actor.vaporizer_lasthit = 0;
 }
 METHOD(Vaporizer, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -478,17 +475,16 @@ METHOD(Vaporizer, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Vaporizer, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2 = w_org + w_backoff * 6;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-        if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+        if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
     }
     else
     {
         pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
-        if(!w_issilent) { sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
+        if(!w_issilent) { sound(actor, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM); }
     }
 }
 METHOD(Vaporizer, wr_init, void(entity thiswep))

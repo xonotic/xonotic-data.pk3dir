@@ -33,48 +33,48 @@ REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
 
 void physical_item_think(entity this)
 {
-	self.nextthink = time;
+	this.nextthink = time;
 
-	self.alpha = self.owner.alpha; // apply fading and ghosting
+	this.alpha = this.owner.alpha; // apply fading and ghosting
 
-	if(!self.cnt) // map item, not dropped
+	if(!this.cnt) // map item, not dropped
 	{
 		// copy ghost item properties
-		self.colormap = self.owner.colormap;
-		self.colormod = self.owner.colormod;
-		self.glowmod = self.owner.glowmod;
+		this.colormap = this.owner.colormap;
+		this.colormod = this.owner.colormod;
+		this.glowmod = this.owner.glowmod;
 
 		// if the item is not spawned, make sure the invisible / ghost item returns to its origin and stays there
 		if(autocvar_g_physical_items_reset)
 		{
-			if(self.owner.wait > time) // awaiting respawn
+			if(this.owner.wait > time) // awaiting respawn
 			{
-				setorigin(self, self.spawn_origin);
-				self.angles = self.spawn_angles;
-				self.solid = SOLID_NOT;
-				self.alpha = -1;
-				self.movetype = MOVETYPE_NONE;
+				setorigin(this, this.spawn_origin);
+				this.angles = this.spawn_angles;
+				this.solid = SOLID_NOT;
+				this.alpha = -1;
+				this.movetype = MOVETYPE_NONE;
 			}
 			else
 			{
-				self.alpha = 1;
-				self.solid = SOLID_CORPSE;
-				self.movetype = MOVETYPE_PHYSICS;
+				this.alpha = 1;
+				this.solid = SOLID_CORPSE;
+				this.movetype = MOVETYPE_PHYSICS;
 			}
 		}
 	}
 
-	if(!self.owner.modelindex)
-		remove(self); // the real item is gone, remove this
+	if(!this.owner.modelindex)
+		remove(this); // the real item is gone, remove this
 }
 
 void physical_item_touch(entity this)
 {
-	if(!self.cnt) // not for dropped items
+	if(!this.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())
 	{
-		setorigin(self, self.spawn_origin);
-		self.angles = self.spawn_angles;
+		setorigin(this, this.spawn_origin);
+		this.angles = this.spawn_angles;
 	}
 }
 

@@ -206,7 +206,7 @@ void WarpZone_Touch (entity this)
 #endif
 		return;
 
-	if(WarpZoneLib_ExactTrigger_Touch(self, other))
+	if(WarpZoneLib_ExactTrigger_Touch(this, other))
 		return;
 
 #ifdef SVQC

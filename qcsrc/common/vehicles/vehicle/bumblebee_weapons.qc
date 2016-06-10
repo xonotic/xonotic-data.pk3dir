@@ -22,23 +22,23 @@ bool bumble_raygun_send(entity this, entity to, float sf)
     WriteByte(MSG_ENTITY, sf);
     if(sf & BRG_SETUP)
     {
-        WriteByte(MSG_ENTITY, etof(self.realowner));
-        WriteByte(MSG_ENTITY, self.realowner.team);
-        WriteByte(MSG_ENTITY, self.cnt);
+        WriteByte(MSG_ENTITY, etof(this.realowner));
+        WriteByte(MSG_ENTITY, this.realowner.team);
+        WriteByte(MSG_ENTITY, this.cnt);
     }
 
     if(sf & BRG_START)
     {
-        WriteCoord(MSG_ENTITY, self.hook_start_x);
-        WriteCoord(MSG_ENTITY, self.hook_start_y);
-        WriteCoord(MSG_ENTITY, self.hook_start_z);
+        WriteCoord(MSG_ENTITY, this.hook_start_x);
+        WriteCoord(MSG_ENTITY, this.hook_start_y);
+        WriteCoord(MSG_ENTITY, this.hook_start_z);
     }
 
     if(sf & BRG_END)
     {
-        WriteCoord(MSG_ENTITY, self.hook_end_x);
-        WriteCoord(MSG_ENTITY, self.hook_end_y);
-        WriteCoord(MSG_ENTITY, self.hook_end_z);
+        WriteCoord(MSG_ENTITY, this.hook_end_x);
+        WriteCoord(MSG_ENTITY, this.hook_end_y);
+        WriteCoord(MSG_ENTITY, this.hook_end_z);
     }
 
     return true;

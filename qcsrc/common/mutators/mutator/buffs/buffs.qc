@@ -98,25 +98,25 @@ bool buffs_BuffModel_Customize(entity this)
 	bool same_team;
 
 	player = WaypointSprite_getviewentity(other);
-	myowner = self.owner;
+	myowner = this.owner;
 	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
 
 	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
 		return false;
 
-	if(MUTATOR_CALLHOOK(BuffModel_Customize, self, player))
+	if(MUTATOR_CALLHOOK(BuffModel_Customize, this, player))
 		return false;
 
 	if(player == myowner || (IS_SPEC(other) && other.enemy == myowner))
 	{
 		// somewhat hide the model, but keep the glow
-		self.effects = 0;
-		self.alpha = -1;
+		this.effects = 0;
+		this.alpha = -1;
 	}
 	else
 	{
-		self.effects = EF_FULLBRIGHT | EF_LOWPRECISION;
-		self.alpha = 1;
+		this.effects = EF_FULLBRIGHT | EF_LOWPRECISION;
+		this.alpha = 1;
 	}
 	return true;
 }
@@ -228,21 +228,21 @@ void buff_Touch(entity this)
 
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		buff_Respawn(self);
+		buff_Respawn(this);
 		return;
 	}
 
-	if((self.team && DIFF_TEAM(other, self))
+	if((this.team && DIFF_TEAM(other, this))
 	|| (STAT(FROZEN, other))
 	|| (other.vehicle)
-	|| (!self.buff_active)
+	|| (!this.buff_active)
 	)
 	{
 		// can't touch this
 		return;
 	}
 
-	if(MUTATOR_CALLHOOK(BuffTouch, self, other))
+	if(MUTATOR_CALLHOOK(BuffTouch, this, other))
 		return;
 
 	if(!IS_PLAYER(other))
@@ -250,7 +250,7 @@ void buff_Touch(entity this)
 
 	if (other.buffs)
 	{
-		if (other.cvar_cl_buffs_autoreplace && other.buffs != self.buffs)
+		if (other.cvar_cl_buffs_autoreplace && other.buffs != this.buffs)
 		{
 			int buffid = buff_FirstFromFlags(other.buffs).m_id;
 			//Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_DROP, other.buffs);
@@ -262,16 +262,16 @@ void buff_Touch(entity this)
 		else { return; } // do nothing
 	}
 
-	self.owner = other;
-	self.buff_active = false;
-	self.lifetime = 0;
-	int buffid = buff_FirstFromFlags(self.buffs).m_id;
+	this.owner = other;
+	this.buff_active = false;
+	this.lifetime = 0;
+	int buffid = buff_FirstFromFlags(this.buffs).m_id;
 	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, buffid);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, buffid);
 
-	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 	sound(other, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
-	other.buffs |= (self.buffs);
+	other.buffs |= (this.buffs);
 }
 
 float buff_Available(entity buff)
@@ -1036,14 +1036,14 @@ MUTATOR_HOOKFUNCTION(buffs, VehicleExit)
 
 MUTATOR_HOOKFUNCTION(buffs, PlayerRegen)
 {SELFPARAM();
-	if(self.buffs & BUFF_MEDIC.m_itemid)
+	if(this.buffs & BUFF_MEDIC.m_itemid)
 	{
 		regen_mod_rot = autocvar_g_buffs_medic_rot;
 		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
 		regen_mod_regen = autocvar_g_buffs_medic_regen;
 	}
 
-	if(self.buffs & BUFF_SPEED.m_itemid)
+	if(this.buffs & BUFF_SPEED.m_itemid)
 		regen_mod_regen = autocvar_g_buffs_speed_regen;
 }
 

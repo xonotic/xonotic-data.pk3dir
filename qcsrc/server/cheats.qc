@@ -295,7 +295,6 @@ float CheatCommand(entity this, int argc)
 	{
 		float effectnum, f;
 		vector start, end;
-		entity oldself;
 
 		case "pointparticles":
 			IS_CHEAT(this, 0, argc, 0);
@@ -552,11 +551,11 @@ float CheatCommand(entity this, int argc)
 				{
 					start = '0 0 0';
 					effectnum = 0;
-					for(oldself = world; (oldself = find(oldself, classname, "dragbox_box")); )
+					for(entity ent = world; (ent = find(ent, classname, "dragbox_box")); )
 					{
-						if(e.cnt <= 0 && oldself.cnt == 0 || e.cnt == oldself.cnt)
+						if(e.cnt <= 0 && ent.cnt == 0 || e.cnt == ent.cnt)
 						{
-							start = start + oldself.origin;
+							start = start + ent.origin;
 							++effectnum;
 						}
 					}
@@ -583,12 +582,12 @@ float CheatCommand(entity this, int argc)
 							// these need race_place
 							// counting...
 							effectnum = 1;
-							for(oldself = world; (oldself = find(oldself, classname, "dragpoint")); )
-							if(oldself.cnt == 0)
+							for(entity ent = world; (ent = find(ent, classname, "dragpoint")); )
+							if(ent.cnt == 0)
 							{
-								if(vlen(oldself.origin - start) < vlen(e.origin - start))
+								if(vlen2(ent.origin - start) < vlen2(e.origin - start))
 									++effectnum;
-								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && etof(oldself) < etof(e))
+								else if(vlen2(ent.origin - start) == vlen2(e.origin - start) && etof(ent) < etof(e))
 									++effectnum;
 							}
 							fputs(f, strcat("\"race_place\" \"", ftos(effectnum), "\"\n"));

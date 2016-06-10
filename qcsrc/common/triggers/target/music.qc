@@ -254,18 +254,18 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think(entity this)
 {
-	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, self, world))
+	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, this, world))
 	{
-		music_trigger = self;
+		music_trigger = this;
 	}
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 void Ent_TriggerMusic_Remove(entity this)
 {
-	if(self.noise)
-		strunzone(self.noise);
-	self.noise = string_null;
+	if(this.noise)
+		strunzone(this.noise);
+	this.noise = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)

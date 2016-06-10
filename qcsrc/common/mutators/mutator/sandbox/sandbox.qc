@@ -48,15 +48,15 @@ void sandbox_ObjectFunction_Touch(entity this)
 {
 	// apply material impact effects
 
-	if(!self.material)
+	if(!this.material)
 		return;
-	if(self.touch_timer > time)
+	if(this.touch_timer > time)
 		return; // don't execute each frame
-	self.touch_timer = time + 0.1;
+	this.touch_timer = time + 0.1;
 
 	// make particle count and sound volume depend on impact speed
 	float intensity;
-	intensity = vlen(self.velocity) + vlen(other.velocity);
+	intensity = vlen(this.velocity) + vlen(other.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
 	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
@@ -65,8 +65,8 @@ void sandbox_ObjectFunction_Touch(entity this)
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
-	_sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
-	Send_Effect_(strcat("impact_", self.material), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
+	_sound(this, CH_TRIGGER, strcat("object/impact_", this.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTEN_NORM);
+	Send_Effect_(strcat("impact_", this.material), this.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
 void sandbox_ObjectFunction_Think(entity this)

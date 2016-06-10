@@ -158,7 +158,7 @@ MUTATOR_HOOKFUNCTION(vortex_charge, GetPressedKeys)
 }
 
 void W_Vortex_Attack(Weapon thiswep, entity actor, float issecondary)
-{entity this = actor;
+{
 	float mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, myammo, charge;
 
 	mydmg = WEP_CVAR_BOTH(vortex, !issecondary, damage);
@@ -170,12 +170,12 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, float issecondary)
 	myammo = WEP_CVAR_BOTH(vortex, !issecondary, ammo);
 
 	float flying;
-	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
+	flying = IsFlying(actor); // do this BEFORE to make the trace values from FireRailgunBullet last
 
 	if(WEP_CVAR(vortex, charge))
 	{
-		charge = WEP_CVAR(vortex, charge_mindmg) / mydmg + (1 - WEP_CVAR(vortex, charge_mindmg) / mydmg) * self.vortex_charge;
-		self.vortex_charge *= WEP_CVAR(vortex, charge_shot_multiplier); // do this AFTER setting mydmg/myforce
+		charge = WEP_CVAR(vortex, charge_mindmg) / mydmg + (1 - WEP_CVAR(vortex, charge_mindmg) / mydmg) * actor.vortex_charge;
+		actor.vortex_charge *= WEP_CVAR(vortex, charge_shot_multiplier); // do this AFTER setting mydmg/myforce
 		// O RLY? -- divVerent
 		// YA RLY -- FruitieX
 	}
@@ -184,43 +184,42 @@ void W_Vortex_Attack(Weapon thiswep, entity actor, float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot(self, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
+	W_SetupShot(actor, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
 	if(charge > WEP_CVAR(vortex, charge_animlimit) && WEP_CVAR(vortex, charge_animlimit)) // if the Vortex is overcharged, we play an extra sound
 	{
-		sound(self, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
+		sound(actor, CH_WEAPON_B, SND_NEXCHARGE, VOL_BASE * (charge - 0.5 * WEP_CVAR(vortex, charge_animlimit)) / (1 - 0.5 * WEP_CVAR(vortex, charge_animlimit)), ATTN_NORM);
 	}
 
 	yoda = 0;
 	damage_goodhits = 0;
-	FireRailgunBullet(self, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
+	FireRailgunBullet(actor, w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_VORTEX.m_id);
 
 	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	if(damage_goodhits && self.vortex_lasthit)
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && actor.vortex_lasthit)
 	{
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		Send_Notification(NOTIF_ONE, actor, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
 		damage_goodhits = 0; // only every second time
 	}
 
-	self.vortex_lasthit = damage_goodhits;
+	actor.vortex_lasthit = damage_goodhits;
 
 	//beam and muzzle flash done on client
 	SendCSQCVortexBeamParticle(charge);
 
-	W_DecreaseAmmo(thiswep, self, myammo);
+	W_DecreaseAmmo(thiswep, actor, myammo);
 }
 
 .float vortex_chargepool_pauseregen_finished;
 
 METHOD(Vortex, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    if(bot_aim(self, 1000000, 0, 1, false))
-        PHYS_INPUT_BUTTON_ATCK(self) = true;
+    if(bot_aim(actor, 1000000, 0, 1, false))
+        PHYS_INPUT_BUTTON_ATCK(actor) = true;
     else
     {
         if(WEP_CVAR(vortex, charge))
-            PHYS_INPUT_BUTTON_ATCK2(self) = true;
+            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
     }
 }
 METHOD(Vortex, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -349,14 +348,13 @@ METHOD(Vortex, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Vortex, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     if (WEP_CVAR(vortex, charge)) {
         if (WEP_CVAR_SEC(vortex, chargepool)) {
-            self.vortex_chargepool_ammo = 1;
+            actor.vortex_chargepool_ammo = 1;
         }
-        self.vortex_charge = WEP_CVAR(vortex, charge_start);
+        actor.vortex_charge = WEP_CVAR(vortex, charge_start);
     }
-    self.vortex_lasthit = 0;
+    actor.vortex_lasthit = 0;
 }
 METHOD(Vortex, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {

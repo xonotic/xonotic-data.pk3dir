@@ -11,7 +11,7 @@ spawnfunc(info_null);
 ==================
 SUB_Friction
 
-Applies some friction to self
+Applies some friction to this
 ==================
 */
 .float friction;
@@ -41,8 +41,8 @@ void SUB_SetFade (entity ent, float when, float fadetime);
 =============
 SUB_CalcMove
 
-calculate self.velocity and self.nextthink to reach dest from
-self.origin traveling at speed
+calculate this.velocity and this.nextthink to reach dest from
+this.origin traveling at speed
 ===============
 */
 void SUB_CalcMoveDone(entity this);
@@ -64,10 +64,10 @@ void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, 
 =============
 SUB_CalcAngleMove
 
-calculate self.avelocity and self.nextthink to reach destangle from
-self.angles rotating
+calculate this.avelocity and this.nextthink to reach destangle from
+this.angles rotating
 
-The calling function should make sure self.think is valid
+The calling function should make sure this.think is valid
 ===============
 */
 void SUB_CalcAngleMoveDone (entity this);

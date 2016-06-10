@@ -74,18 +74,18 @@ void item_key_touch(entity this)
 		return;
 
 	// player already picked up this key
-	if (other.itemkeys & self.itemkeys)
+	if (other.itemkeys & this.itemkeys)
 		return;
 
-	other.itemkeys |= self.itemkeys;
-	play2(other, self.noise);
+	other.itemkeys |= this.itemkeys;
+	play2(other, this.noise);
 
-	centerprint(other, self.message);
+	centerprint(other, this.message);
 
-	string oldmsg = self.message;
-	self.message = "";
-	SUB_UseTargets(self, other, other); // TODO: should we be using other for the trigger here?
-	self.message = oldmsg;
+	string oldmsg = this.message;
+	this.message = "";
+	SUB_UseTargets(this, other, other); // TODO: should we be using other for the trigger here?
+	this.message = oldmsg;
 };
 
 /**

@@ -170,16 +170,16 @@ SUB_UseTargets
 
 the global "activator" should be set to the entity that initiated the firing.
 
-If self.delay is set, a DelayedUse entity will be created that will actually
+If this.delay is set, a DelayedUse entity will be created that will actually
 do the SUB_UseTargets after that many seconds have passed.
 
-Centerprints any self.message to the activator.
+Centerprints any this.message to the activator.
 
-Removes all entities with a targetname that match self.killtarget,
+Removes all entities with a targetname that match this.killtarget,
 and removes them, so some events can remove other triggers.
 
 Search for (string)targetname in all entities that
-match (string)self.target and call their .use function
+match (string)this.target and call their .use function
 
 ==============================
 */

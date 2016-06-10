@@ -51,8 +51,8 @@ void misc_laser_aim(entity this)
 
 void misc_laser_init(entity this)
 {
-	if(self.target != "")
-		self.enemy = find(world, targetname, self.target);
+	if(this.target != "")
+		this.enemy = find(world, targetname, this.target);
 }
 
 .entity pusher;
@@ -62,62 +62,62 @@ void misc_laser_think(entity this)
 	entity hitent;
 	vector hitloc;
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	if(!self.state)
+	if(!this.state)
 		return;
 
 	misc_laser_aim(this);
 
-	if(self.enemy)
+	if(this.enemy)
 	{
-		o = self.enemy.origin;
-		if (!(self.spawnflags & 2))
-			o = self.origin + normalize(o - self.origin) * 32768;
+		o = this.enemy.origin;
+		if (!(this.spawnflags & 2))
+			o = this.origin + normalize(o - this.origin) * 32768;
 	}
 	else
 	{
-		makevectors(self.mangle);
-		o = self.origin + v_forward * 32768;
+		makevectors(this.mangle);
+		o = this.origin + v_forward * 32768;
 	}
 
-	if(self.dmg || self.enemy.target != "")
+	if(this.dmg || this.enemy.target != "")
 	{
-		traceline(self.origin, o, MOVE_NORMAL, self);
+		traceline(this.origin, o, MOVE_NORMAL, this);
 	}
 	hitent = trace_ent;
 	hitloc = trace_endpos;
 
-	if(self.enemy.target != "") // DETECTOR laser
+	if(this.enemy.target != "") // DETECTOR laser
 	{
 		if(trace_ent.iscreature)
 		{
-			self.pusher = hitent;
-			if(!self.count)
+			this.pusher = hitent;
+			if(!this.count)
 			{
-				self.count = 1;
+				this.count = 1;
 
-				SUB_UseTargets(self.enemy, self.enemy.pusher, NULL);
+				SUB_UseTargets(this.enemy, this.enemy.pusher, NULL);
 			}
 		}
 		else
 		{
-			if(self.count)
+			if(this.count)
 			{
-				self.count = 0;
+				this.count = 0;
 
-				SUB_UseTargets(self.enemy, self.enemy.pusher, NULL);
+				SUB_UseTargets(this.enemy, this.enemy.pusher, NULL);
 			}
 		}
 	}
 
-	if(self.dmg)
+	if(this.dmg)
 	{
-		if(self.team)
-			if(((self.spawnflags & 8) == 0) == (self.team != hitent.team))
+		if(this.team)
+			if(((this.spawnflags & 8) == 0) == (this.team != hitent.team))
 				return;
 		if(hitent.takedamage)
-			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER.m_id, hitloc, '0 0 0');
+			Damage(hitent, this, this, ((this.dmg < 0) ? 100000 : (this.dmg * frametime)), DEATH_HURTTRIGGER.m_id, hitloc, '0 0 0');
 	}
 }
 
@@ -125,52 +125,52 @@ bool laser_SendEntity(entity this, entity to, float fl)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_LASER);
 	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
-	if(self.spawnflags & 2)
+	if(this.spawnflags & 2)
 		fl |= 0x80;
-	if(self.alpha)
+	if(this.alpha)
 		fl |= 0x40;
-	if(self.scale != 1 || self.modelscale != 1)
+	if(this.scale != 1 || this.modelscale != 1)
 		fl |= 0x20;
-	if(self.spawnflags & 4)
+	if(this.spawnflags & 4)
 		fl |= 0x10;
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 	}
 	if(fl & 8)
 	{
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		WriteByte(MSG_ENTITY, this.colormod_x * 255.0);
+		WriteByte(MSG_ENTITY, this.colormod_y * 255.0);
+		WriteByte(MSG_ENTITY, this.colormod_z * 255.0);
 		if(fl & 0x40)
-			WriteByte(MSG_ENTITY, self.alpha * 255.0);
+			WriteByte(MSG_ENTITY, this.alpha * 255.0);
 		if(fl & 0x20)
 		{
-			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
-			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
+			WriteByte(MSG_ENTITY, bound(0, this.scale * 16.0, 255));
+			WriteByte(MSG_ENTITY, bound(0, this.modelscale * 16.0, 255));
 		}
 		if((fl & 0x80) || !(fl & 0x10)) // effect doesn't need sending if the laser is infinite and has collision testing turned off
-			WriteShort(MSG_ENTITY, self.cnt + 1);
+			WriteShort(MSG_ENTITY, this.cnt + 1);
 	}
 	if(fl & 2)
 	{
 		if(fl & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+			WriteCoord(MSG_ENTITY, this.enemy.origin_x);
+			WriteCoord(MSG_ENTITY, this.enemy.origin_y);
+			WriteCoord(MSG_ENTITY, this.enemy.origin_z);
 		}
 		else
 		{
-			WriteAngle(MSG_ENTITY, self.mangle_x);
-			WriteAngle(MSG_ENTITY, self.mangle_y);
+			WriteAngle(MSG_ENTITY, this.mangle_x);
+			WriteAngle(MSG_ENTITY, this.mangle_y);
 		}
 	}
 	if(fl & 4)
-		WriteByte(MSG_ENTITY, self.state);
+		WriteByte(MSG_ENTITY, this.state);
 	return 1;
 }
 

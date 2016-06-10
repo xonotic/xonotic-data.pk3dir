@@ -52,12 +52,12 @@ spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(this, WEP_RPC); }
 
 void W_RocketPropelledChainsaw_Explode(entity this)
 {
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), world, world, WEP_CVAR(rpc, force), self.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), world, world, WEP_CVAR(rpc, force), this.projectiledeathtype, other);
 
-	remove (self);
+	remove (this);
 }
 
 void W_RocketPropelledChainsaw_Touch (entity this)
@@ -85,29 +85,29 @@ void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity atta
 
 void W_RocketPropelledChainsaw_Think(entity this)
 {
-	if(self.cnt <= time)
+	if(this.cnt <= time)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
-	self.cnt = vlen(self.velocity);
-	self.wait = self.cnt * sys_frametime;
-	self.pos1 = normalize(self.velocity);
+	this.cnt = vlen(this.velocity);
+	this.wait = this.cnt * sys_frametime;
+	this.pos1 = normalize(this.velocity);
 
-	tracebox(self.origin, self.mins, self.maxs, self.origin + self.pos1 * (2 * self.wait), MOVE_NORMAL, self);
+	tracebox(this.origin, this.mins, this.maxs, this.origin + this.pos1 * (2 * this.wait), MOVE_NORMAL, this);
 	if(IS_PLAYER(trace_ent))
-		Damage (trace_ent, self, self.realowner, WEP_CVAR(rpc, damage2), self.projectiledeathtype, self.origin, normalize(self.origin - other.origin) * WEP_CVAR(rpc, force));
+		Damage (trace_ent, this, this.realowner, WEP_CVAR(rpc, damage2), this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * WEP_CVAR(rpc, force));
 
-	self.velocity = self.pos1 * (self.cnt + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
+	this.velocity = this.pos1 * (this.cnt + (WEP_CVAR(rpc, speedaccel) * sys_frametime));
 
-	UpdateCSQCProjectile(self);
-	self.nextthink = time;
+	UpdateCSQCProjectile(this);
+	this.nextthink = time;
 }
 
 void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 {
-	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(self);
+	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(actor);
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpc, ammo));
@@ -152,8 +152,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 
 METHOD(RocketPropelledChainsaw, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(rpc, speed), 0, WEP_CVAR(rpc, lifetime), false);
 }
 
 METHOD(RocketPropelledChainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
@@ -219,12 +218,11 @@ METHOD(RocketPropelledChainsaw, wr_killmessage, Notification(entity thiswep))
 
 METHOD(RocketPropelledChainsaw, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 12;
     pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
     if(!w_issilent)
-        sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+        sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 }
 
 #endif

@@ -128,7 +128,7 @@ void M_Shambler_Attack_Lightning_Touch(entity this)
 {
 	PROJECTILE_TOUCH(this);
 
-	self.use(this, NULL, NULL);
+	this.use(this, NULL, NULL);
 }
 
 void M_Shambler_Attack_Lightning_Think(entity this)

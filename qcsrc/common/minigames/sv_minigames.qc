@@ -50,10 +50,10 @@ void minigame_rmplayer(entity minigame_session, entity player)
 }
 
 
-#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) Write##Type(MSG_ENTITY, self.Name);
+#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) Write##Type(MSG_ENTITY, this.Name);
 #define MSLE(Name,Fields) \
-	else if ( self.classname == #Name ) { \
-		if ( sf & MINIG_SF_CREATE ) WriteString(MSG_ENTITY,self.owner.netname); \
+	else if ( this.classname == #Name ) { \
+		if ( sf & MINIG_SF_CREATE ) WriteString(MSG_ENTITY,this.owner.netname); \
 		Fields }
 
 // Send an entity to a client
@@ -115,7 +115,7 @@ void minigame_resend(entity minigame)
 bool minigame_CheckSend(entity this)
 {
 	entity e;
-	for ( e = self.owner.minigame_players; e != world; e = e.list_next )
+	for ( e = this.owner.minigame_players; e != world; e = e.list_next )
 		if ( e.minigame_players == other )
 			return true;
 	return false;

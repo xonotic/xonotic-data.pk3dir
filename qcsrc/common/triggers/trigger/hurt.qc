@@ -10,11 +10,11 @@ void trigger_hurt_use(entity this, entity actor, entity trigger)
 .float triggerhurttime;
 void trigger_hurt_touch(entity this)
 {
-	if (self.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (this.team != other.team))
 			return;
 
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
@@ -27,14 +27,14 @@ void trigger_hurt_touch(entity this)
 			other.triggerhurttime = time + 1;
 
 			entity own;
-			own = self.enemy;
+			own = this.enemy;
 			if (!IS_PLAYER(own))
 			{
-				own = self;
-				self.enemy = world; // I still hate you all
+				own = this;
+				this.enemy = world; // I still hate you all
 			}
 
-			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			Damage (other, this, own, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 	}
 	else if(other.damagedbytriggers)
@@ -42,7 +42,7 @@ void trigger_hurt_touch(entity this)
 		if(other.takedamage)
 		{
 			EXACTTRIGGER_TOUCH;
-			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			Damage(other, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 		}
 	}
 

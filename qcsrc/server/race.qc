@@ -457,17 +457,17 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 	}
 	else // RACE! Not Qualifying
 	{
-		float lself, lother, othtime;
+		float mylaps, lother, othtime;
 		entity oth;
 		oth = race_checkpoint_lastplayers[cp];
 		if(oth)
 		{
-			lself = PlayerScore_Add(e, SP_RACE_LAPS, 0);
+			mylaps = PlayerScore_Add(e, SP_RACE_LAPS, 0);
 			lother = race_checkpoint_lastlaps[cp];
 			othtime = race_checkpoint_lasttimes[cp];
 		}
 		else
-			lself = lother = othtime = 0;
+			mylaps = lother = othtime = 0;
 
 		if(IS_REAL_CLIENT(e))
 		{
@@ -485,7 +485,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				else
 				{
 					WriteInt24_t(MSG_ONE, TIME_ENCODE(time - race_checkpoint_lasttimes[cp]));
-					WriteByte(MSG_ONE, lself - lother);
+					WriteByte(MSG_ONE, mylaps - lother);
 					WriteString(MSG_ONE, oth.netname); // record holder
 				}
 			});
@@ -493,7 +493,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 		race_checkpoint_lastplayers[cp] = e;
 		race_checkpoint_lasttimes[cp] = time;
-		race_checkpoint_lastlaps[cp] = lself;
+		race_checkpoint_lastlaps[cp] = mylaps;
 
 		if(IS_REAL_CLIENT(oth))
 		{
@@ -511,7 +511,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 				else
 				{
 					WriteInt24_t(MSG_ONE, TIME_ENCODE(time - othtime));
-					WriteByte(MSG_ONE, lother - lself);
+					WriteByte(MSG_ONE, lother - mylaps);
 					WriteString(MSG_ONE, e.netname); // record holder
 				}
 			});

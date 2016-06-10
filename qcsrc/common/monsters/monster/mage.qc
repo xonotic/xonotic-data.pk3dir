@@ -164,7 +164,7 @@ void M_Mage_Attack_Spike_Touch(entity this)
 {
 	PROJECTILE_TOUCH(this);
 
-	M_Mage_Attack_Spike_Explode(self);
+	M_Mage_Attack_Spike_Explode(this);
 }
 
 .float wait;

@@ -536,26 +536,26 @@ void raptor_blowup(entity this)
 
 void raptor_diethink(entity this)
 {
-	if(time >= self.wait)
-		setthink(self, raptor_blowup);
+	if(time >= this.wait)
+		setthink(this, raptor_blowup);
 
 	if(random() < 0.05)
 	{
-		sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (this.origin + '0 0 100'), '0 0 0', 1);
 	}
-	self.nextthink = time;
+	this.nextthink = time;
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 // If we dont do this ever now and then, the raptors rotors
 // stop working, presumably due to angle overflow. cute.
 void raptor_rotor_anglefix(entity this)
 {
-	self.gun1.angles_y = anglemods(self.gun1.angles_y);
-	self.gun2.angles_y = anglemods(self.gun2.angles_y);
-	self.nextthink = time + 15;
+	this.gun1.angles_y = anglemods(this.gun1.angles_y);
+	this.gun2.angles_y = anglemods(this.gun2.angles_y);
+	this.nextthink = time + 15;
 }
 
 bool raptor_impulse(entity this, int _imp)

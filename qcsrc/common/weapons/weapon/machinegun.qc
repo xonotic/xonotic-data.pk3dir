@@ -89,53 +89,53 @@ void W_MachineGun_MuzzleFlash_Think(entity this)
 }
 
 void W_MachineGun_MuzzleFlash(entity actor)
-{entity this = actor;
-	if(self.muzzle_flash == world)
-		self.muzzle_flash = spawn();
+{
+	if(actor.muzzle_flash == world)
+		actor.muzzle_flash = spawn();
 
 	// muzzle flash for 1st person view
-	setmodel(self.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
+	setmodel(actor.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
 
-	self.muzzle_flash.scale = 0.75;
-	setthink(self.muzzle_flash, W_MachineGun_MuzzleFlash_Think);
-	self.muzzle_flash.nextthink = time + 0.02;
-	self.muzzle_flash.frame = 2;
-	self.muzzle_flash.alpha = 0.75;
-	self.muzzle_flash.angles_z = random() * 180;
-	self.muzzle_flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	self.muzzle_flash.owner = self.muzzle_flash.realowner = self;
+	actor.muzzle_flash.scale = 0.75;
+	setthink(actor.muzzle_flash, W_MachineGun_MuzzleFlash_Think);
+	actor.muzzle_flash.nextthink = time + 0.02;
+	actor.muzzle_flash.frame = 2;
+	actor.muzzle_flash.alpha = 0.75;
+	actor.muzzle_flash.angles_z = random() * 180;
+	actor.muzzle_flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	actor.muzzle_flash.owner = actor.muzzle_flash.realowner = actor;
 }
 
 void W_MachineGun_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
-{entity this = actor;
-	W_SetupShot(self, true, 0, SND_UZI_FIRE, CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
+{
+	W_SetupShot(actor, true, 0, SND_UZI_FIRE, CH_WEAPON_A, ((actor.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
 	if(!autocvar_g_norecoil)
 	{
-		self.punchangle_x = random() - 0.5;
-		self.punchangle_y = random() - 0.5;
+		actor.punchangle_x = random() - 0.5;
+		actor.punchangle_y = random() - 0.5;
 	}
 	int slot = weaponslot(weaponentity);
 	// this attack_finished just enforces a cooldown at the end of a burst
-	ATTACK_FINISHED(self, slot) = time + WEP_CVAR(machinegun, first_refire) * W_WeaponRateFactor(actor);
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(machinegun, first_refire) * W_WeaponRateFactor(actor);
 
-	if(self.misc_bulletcounter == 1)
-		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR(machinegun, first_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, first_damage), WEP_CVAR(machinegun, first_force), deathtype, 0);
+	if(actor.misc_bulletcounter == 1)
+		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR(machinegun, first_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, first_damage), WEP_CVAR(machinegun, first_force), deathtype, 0);
 	else
-		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, 0);
+		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_MachineGun_MuzzleFlash(self);
-	W_AttachToShotorg(self, self.muzzle_flash, '5 0 0');
+	W_MachineGun_MuzzleFlash(actor);
+	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	// casing code
 	if(autocvar_g_casings >= 2)
-		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	if(self.misc_bulletcounter == 1)
-		W_DecreaseAmmo(thiswep, self, WEP_CVAR(machinegun, first_ammo));
+	if(actor.misc_bulletcounter == 1)
+		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(machinegun, first_ammo));
 	else
-		W_DecreaseAmmo(thiswep, self, WEP_CVAR(machinegun, sustained_ammo));
+		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(machinegun, sustained_ammo));
 }
 
 // weapon frames
@@ -244,11 +244,10 @@ void W_MachineGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentit
 
 METHOD(MachineGun, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    if(vdist(self.origin - self.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
+    if(vdist(actor.origin - actor.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
     else
-        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
 }
 METHOD(MachineGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -356,12 +355,11 @@ METHOD(MachineGun, wr_killmessage, Notification(entity thiswep))
 
 METHOD(MachineGun, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_MACHINEGUN_IMPACT, org2, w_backoff * 1000, 1);
     if(!w_issilent)
-        sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
+        sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 }
 
 #endif

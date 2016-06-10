@@ -15,7 +15,7 @@ void func_ladder_touch(entity this)
 	EXACTTRIGGER_TOUCH;
 
 	other.ladder_time = time + 0.1;
-	other.ladder_entity = self;
+	other.ladder_entity = this;
 }
 
 #ifdef SVQC
@@ -23,11 +23,11 @@ bool func_ladder_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER);
 
-	WriteString(MSG_ENTITY, self.classname);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteCoord(MSG_ENTITY, self.speed);
+	WriteString(MSG_ENTITY, this.classname);
+	WriteByte(MSG_ENTITY, this.skin);
+	WriteCoord(MSG_ENTITY, this.speed);
 
-	trigger_common_write(self, false);
+	trigger_common_write(this, false);
 
 	return true;
 }

@@ -56,7 +56,7 @@ void pong_ball_throw(entity ball)
 // Think equivalent of pong_ball_throw, used to delay throws
 void pong_ball_throwthink(entity this)
 {
-	pong_ball_throw(self);
+	pong_ball_throw(this);
 }
 
 // Moves ball to the center and stops its motion

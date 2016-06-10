@@ -98,7 +98,7 @@ MUTATOR_HOOKABLE(MatchEnd, EV_NO_ARGS);
     /**/
 MUTATOR_HOOKABLE(GetTeamCount, EV_GetTeamCount);
 
-/** copies variables for spectating "other" to "self" */
+/** copies variables for spectating "spectatee" to "this" */
 #define EV_SpectateCopy(i, o) \
     /** spectatee   */ i(entity, MUTATOR_ARGV_0_entity) \
     /** client      */ i(entity, MUTATOR_ARGV_1_entity) \
@@ -157,7 +157,7 @@ MUTATOR_HOOKABLE(SetStartItems, EV_NO_ARGS);
 MUTATOR_HOOKABLE(CustomizeWaypoint, EV_CustomizeWaypoint);
 
 /**
- * checks if the current item may be spawned (self.items and self.weapons may be read and written to, as well as the ammo_ fields)
+ * checks if the current item may be spawned (.items and .weapons may be read and written to, as well as the ammo_ fields)
  * return error to request removal
  */
 #define EV_FilterItem(i, o) \
@@ -487,7 +487,7 @@ MUTATOR_HOOKABLE(PortalTeleport, EV_PortalTeleport);
 
 /**
  * called whenever a player uses impulse 33 (help me) in cl_impulse.qc
- * normally help me ping uses self.waypointsprite_attachedforcarrier,
+ * normally help me ping uses .waypointsprite_attachedforcarrier,
  * but if your mutator uses something different then you can handle it
  * in a special manner using this hook
  */

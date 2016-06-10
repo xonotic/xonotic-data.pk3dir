@@ -907,18 +907,18 @@ void WaypointSprite_Think(entity this)
 {
     bool doremove = false;
 
-    if (self.fade_time && time >= self.teleport_time)
+    if (this.fade_time && time >= this.teleport_time)
     {
         doremove = true;
     }
 
-    if (self.exteriormodeltoclient)
-        WaypointSprite_UpdateOrigin(self, self.exteriormodeltoclient.origin + self.view_ofs);
+    if (this.exteriormodeltoclient)
+        WaypointSprite_UpdateOrigin(this, this.exteriormodeltoclient.origin + this.view_ofs);
 
     if (doremove)
-        WaypointSprite_Kill(self);
+        WaypointSprite_Kill(this);
     else
-        self.nextthink = time; // WHY?!?
+        this.nextthink = time; // WHY?!?
 }
 
 bool WaypointSprite_visible_for_player(entity this, entity player, entity view)
@@ -970,10 +970,10 @@ float WaypointSprite_Customize(entity this)
     // make spectators see what the player would see
     entity e = WaypointSprite_getviewentity(other);
 
-    if (MUTATOR_CALLHOOK(CustomizeWaypoint, self, other))
+    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, other))
         return false;
 
-    return self.waypointsprite_visible_for_player(self, other, e);
+    return this.waypointsprite_visible_for_player(this, other, e);
 }
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);

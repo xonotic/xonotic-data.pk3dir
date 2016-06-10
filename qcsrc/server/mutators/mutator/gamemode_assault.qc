@@ -235,18 +235,18 @@ void assault_roundstart_use_this(entity this)
 
 void assault_wall_think(entity this)
 {
-	if(self.enemy.health < 0)
+	if(this.enemy.health < 0)
 	{
-		self.model = "";
-		self.solid = SOLID_NOT;
+		this.model = "";
+		this.solid = SOLID_NOT;
 	}
 	else
 	{
-		self.model = self.mdl;
-		self.solid = SOLID_BSP;
+		this.model = this.mdl;
+		this.solid = SOLID_BSP;
 	}
 
-	self.nextthink = time + 0.2;
+	this.nextthink = time + 0.2;
 }
 
 // trigger new round

@@ -77,24 +77,24 @@ const float zombie_anim_spawn				= 30;
 
 void M_Zombie_Attack_Leap_Touch(entity this)
 {
-	if (self.health <= 0)
+	if (this.health <= 0)
 		return;
 
 	vector angles_face;
 
 	if(other.takedamage)
 	{
-		angles_face = vectoangles(self.moveto - self.origin);
+		angles_face = vectoangles(this.moveto - this.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP.m_id, other.origin, angles_face);
-		settouch(self, Monster_Touch); // instantly turn it off to stop damage spam
-		self.state = 0;
+		Damage(other, this, this, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_ZOMBIE_JUMP.m_id, other.origin, angles_face);
+		settouch(this, Monster_Touch); // instantly turn it off to stop damage spam
+		this.state = 0;
 	}
 
 	if (trace_dphitcontents)
 	{
-		self.state = 0;
-		settouch(self, Monster_Touch);
+		this.state = 0;
+		settouch(this, Monster_Touch);
 	}
 }
 

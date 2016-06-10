@@ -1,11 +1,11 @@
 REGISTER_NET_LINKED(ENT_CLIENT_PLAT)
 
 #ifdef SVQC
-void plat_link();
+void plat_link(entity this);
 
 void plat_delayedinit(entity this)
 {
-	plat_link();
+	plat_link(this);
 	plat_spawn_inside_trigger(this); // the "start moving" trigger
 }
 
@@ -16,36 +16,36 @@ float plat_send(entity this, entity to, float sf)
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		WriteByte(MSG_ENTITY, self.platmovetype_start);
-		WriteByte(MSG_ENTITY, self.platmovetype_turn);
-		WriteByte(MSG_ENTITY, self.platmovetype_end);
-		WriteByte(MSG_ENTITY, self.spawnflags);
+		WriteByte(MSG_ENTITY, this.platmovetype_start);
+		WriteByte(MSG_ENTITY, this.platmovetype_turn);
+		WriteByte(MSG_ENTITY, this.platmovetype_end);
+		WriteByte(MSG_ENTITY, this.spawnflags);
 
-		WriteString(MSG_ENTITY, self.model);
+		WriteString(MSG_ENTITY, this.model);
 
-		trigger_common_write(self, true);
+		trigger_common_write(this, true);
 
-		WriteCoord(MSG_ENTITY, self.pos1_x);
-		WriteCoord(MSG_ENTITY, self.pos1_y);
-		WriteCoord(MSG_ENTITY, self.pos1_z);
-		WriteCoord(MSG_ENTITY, self.pos2_x);
-		WriteCoord(MSG_ENTITY, self.pos2_y);
-		WriteCoord(MSG_ENTITY, self.pos2_z);
+		WriteCoord(MSG_ENTITY, this.pos1_x);
+		WriteCoord(MSG_ENTITY, this.pos1_y);
+		WriteCoord(MSG_ENTITY, this.pos1_z);
+		WriteCoord(MSG_ENTITY, this.pos2_x);
+		WriteCoord(MSG_ENTITY, this.pos2_y);
+		WriteCoord(MSG_ENTITY, this.pos2_z);
 
-		WriteCoord(MSG_ENTITY, self.size_x);
-		WriteCoord(MSG_ENTITY, self.size_y);
-		WriteCoord(MSG_ENTITY, self.size_z);
+		WriteCoord(MSG_ENTITY, this.size_x);
+		WriteCoord(MSG_ENTITY, this.size_y);
+		WriteCoord(MSG_ENTITY, this.size_z);
 
-		WriteAngle(MSG_ENTITY, self.mangle_x);
-		WriteAngle(MSG_ENTITY, self.mangle_y);
-		WriteAngle(MSG_ENTITY, self.mangle_z);
+		WriteAngle(MSG_ENTITY, this.mangle_x);
+		WriteAngle(MSG_ENTITY, this.mangle_y);
+		WriteAngle(MSG_ENTITY, this.mangle_z);
 
-		WriteShort(MSG_ENTITY, self.speed);
-		WriteShort(MSG_ENTITY, self.height);
-		WriteByte(MSG_ENTITY, self.lip);
-		WriteByte(MSG_ENTITY, self.state);
+		WriteShort(MSG_ENTITY, this.speed);
+		WriteShort(MSG_ENTITY, this.height);
+		WriteByte(MSG_ENTITY, this.lip);
+		WriteByte(MSG_ENTITY, this.state);
 
-		WriteShort(MSG_ENTITY, self.dmg);
+		WriteShort(MSG_ENTITY, this.dmg);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -56,9 +56,9 @@ float plat_send(entity this, entity to, float sf)
 	return true;
 }
 
-void plat_link()
+void plat_link(entity this)
 {
-	//Net_LinkEntity(self, 0, false, plat_send);
+	//Net_LinkEntity(this, 0, false, plat_send);
 }
 
 spawnfunc(func_plat)

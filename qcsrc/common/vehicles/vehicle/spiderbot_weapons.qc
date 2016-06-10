@@ -14,36 +14,36 @@ void spiderbot_rocket_unguided(entity this)
 {
     vector newdir, olddir;
 
-    self.nextthink  = time;
+    this.nextthink  = time;
 
-    olddir = normalize(self.velocity);
-    newdir = normalize(self.pos1 - self.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
-    self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
+    olddir = normalize(this.velocity);
+    newdir = normalize(this.pos1 - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
+    this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
 
-    UpdateCSQCProjectile(self);
+    UpdateCSQCProjectile(this);
 
-    if (IS_DEAD(self.owner) || self.cnt < time || vdist(self.pos1 - self.origin, <, 16))
-        self.use(self, NULL, NULL);
+    if (IS_DEAD(this.owner) || this.cnt < time || vdist(this.pos1 - this.origin, <, 16))
+        this.use(this, NULL, NULL);
 }
 
 void spiderbot_rocket_guided(entity this)
 {
     vector newdir, olddir;
 
-    self.nextthink  = time;
+    this.nextthink  = time;
 
-    if(!self.realowner.vehicle)
-        setthink(self, spiderbot_rocket_unguided);
+    if(!this.realowner.vehicle)
+        setthink(this, spiderbot_rocket_unguided);
 
-    crosshair_trace(self.realowner);
-    olddir = normalize(self.velocity);
-    newdir = normalize(trace_endpos - self.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
-    self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
+    crosshair_trace(this.realowner);
+    olddir = normalize(this.velocity);
+    newdir = normalize(trace_endpos - this.origin) + randomvec() * autocvar_g_vehicle_spiderbot_rocket_noise;
+    this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_spiderbot_rocket_turnrate) * autocvar_g_vehicle_spiderbot_rocket_speed;
 
-    UpdateCSQCProjectile(self);
+    UpdateCSQCProjectile(this);
 
-    if (IS_DEAD(self.owner) || self.cnt < time)
-        self.use(self, NULL, NULL);
+    if (IS_DEAD(this.owner) || this.cnt < time)
+        this.use(this, NULL, NULL);
 }
 
 void spiderbot_guide_release(entity this)

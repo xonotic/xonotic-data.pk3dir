@@ -414,12 +414,12 @@ void InitTrigger(entity this)
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir(self);
-	self.solid = SOLID_TRIGGER;
+	SetMovedir(this);
+	this.solid = SOLID_TRIGGER;
 	SetBrushEntityModel(this);
-	self.movetype = MOVETYPE_NONE;
-	self.modelindex = 0;
-	self.model = "";
+	this.movetype = MOVETYPE_NONE;
+	this.modelindex = 0;
+	this.model = "";
 }
 
 void InitSolidBSPTrigger(entity this)

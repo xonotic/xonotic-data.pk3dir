@@ -15,20 +15,20 @@ void trigger_gravity_remove(entity own)
 void trigger_gravity_check_think(entity this)
 {
 	// This spawns when a player enters the gravity zone and checks if he left.
-	// Each frame, self.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
+	// Each frame, this.count is set to 2 by trigger_gravity_touch() and decreased by 1 here.
 	// It the player has left the gravity trigger, this will be allowed to reach 0 and indicate that.
-	if(self.count <= 0)
+	if(this.count <= 0)
 	{
-		if(self.owner.trigger_gravity_check == self)
-			trigger_gravity_remove(self.owner);
+		if(this.owner.trigger_gravity_check == this)
+			trigger_gravity_remove(this.owner);
 		else
-			remove(self);
+			remove(this);
 		return;
 	}
 	else
 	{
-		self.count -= 1;
-		self.nextthink = time;
+		this.count -= 1;
+		this.nextthink = time;
 	}
 }
 
@@ -41,18 +41,18 @@ void trigger_gravity_touch(entity this)
 {
 	float g;
 
-	if(self.state != true)
+	if(this.state != true)
 		return;
 
 	EXACTTRIGGER_TOUCH;
 
-	g = self.gravity;
+	g = this.gravity;
 
-	if (!(self.spawnflags & 1))
+	if (!(this.spawnflags & 1))
 	{
 		if(other.trigger_gravity_check)
 		{
-			if(self == other.trigger_gravity_check.enemy)
+			if(this == other.trigger_gravity_check.enemy)
 			{
 				// same?
 				other.trigger_gravity_check.count = 2; // gravity one more frame...
@@ -60,13 +60,13 @@ void trigger_gravity_touch(entity this)
 			}
 
 			// compare prio
-			if(self.cnt > other.trigger_gravity_check.enemy.cnt)
+			if(this.cnt > other.trigger_gravity_check.enemy.cnt)
 				trigger_gravity_remove(other);
 			else
 				return;
 		}
 		other.trigger_gravity_check = spawn();
-		other.trigger_gravity_check.enemy = self;
+		other.trigger_gravity_check.enemy = this;
 		other.trigger_gravity_check.owner = other;
 		other.trigger_gravity_check.gravity = other.gravity;
 		setthink(other.trigger_gravity_check, trigger_gravity_check_think);
@@ -79,9 +79,9 @@ void trigger_gravity_touch(entity this)
 	if (other.gravity != g)
 	{
 		other.gravity = g;
-		if(self.noise != "")
-			_sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
-		UpdateCSQCProjectile(self.owner);
+		if(this.noise != "")
+			_sound (other, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+		UpdateCSQCProjectile(this.owner);
 	}
 }
 

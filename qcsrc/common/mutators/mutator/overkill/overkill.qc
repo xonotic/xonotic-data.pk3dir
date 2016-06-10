@@ -167,10 +167,10 @@ MUTATOR_HOOKFUNCTION(ok, MonsterDropItem)
 MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
 {SELFPARAM();
 	// overkill's values are different, so use custom regen
-	if(!STAT(FROZEN, self))
+	if(!STAT(FROZEN, this))
 	{
-		self.armorvalue = CalcRotRegen(self.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > self.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > self.pauserotarmor_finished), autocvar_g_balance_armor_limit);
-		self.health = CalcRotRegen(self.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > self.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > self.pauserothealth_finished), autocvar_g_balance_health_limit);
+		this.armorvalue = CalcRotRegen(this.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > this.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > this.pauserotarmor_finished), autocvar_g_balance_armor_limit);
+		this.health = CalcRotRegen(this.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > this.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > this.pauserothealth_finished), autocvar_g_balance_health_limit);
 
 		float minf, maxf, limitf;
 
@@ -178,7 +178,7 @@ MUTATOR_HOOKFUNCTION(ok, PlayerRegen)
 		minf = autocvar_g_balance_fuel_regenstable;
 		limitf = autocvar_g_balance_fuel_limit;
 
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+		this.ammo_fuel = CalcRotRegen(this.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > this.pauseregen_finished) * ((this.items & ITEM_JetpackRegen.m_itemid) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > this.pauserotfuel_finished), limitf);
 	}
 	return true; // return true anyway, as frozen uses no regen
 }

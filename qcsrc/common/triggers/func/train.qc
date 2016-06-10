@@ -6,58 +6,58 @@ void train_use(entity this, entity actor, entity trigger);
 void train_wait(entity this)
 {
 	SUB_UseTargets(this.enemy, NULL, NULL);
-	self.enemy = world;
+	this.enemy = world;
 
 	// if turning is enabled, the train will turn toward the next point while waiting
-	if(self.platmovetype_turn && !self.train_wait_turning)
+	if(this.platmovetype_turn && !this.train_wait_turning)
 	{
 		entity targ, cp;
 		vector ang;
-		targ = find(world, targetname, self.target);
-		if((self.spawnflags & 1) && targ.curvetarget)
+		targ = find(world, targetname, this.target);
+		if((this.spawnflags & 1) && targ.curvetarget)
 			cp = find(world, targetname, targ.curvetarget);
 		else
 			cp = world;
 
 		if(cp) // bezier curves movement
-			ang = cp.origin - (self.origin - self.view_ofs); // use the origin of the control point of the next path_corner
+			ang = cp.origin - (this.origin - this.view_ofs); // use the origin of the control point of the next path_corner
 		else // linear movement
-			ang = targ.origin - (self.origin - self.view_ofs); // use the origin of the next path_corner
+			ang = targ.origin - (this.origin - this.view_ofs); // use the origin of the next path_corner
 		ang = vectoangles(ang);
 		ang_x = -ang_x; // flip up / down orientation
 
-		if(self.wait > 0) // slow turning
-			SUB_CalcAngleMove(self, ang, TSPEED_TIME, self.SUB_LTIME - time + self.wait, train_wait);
+		if(this.wait > 0) // slow turning
+			SUB_CalcAngleMove(this, ang, TSPEED_TIME, this.SUB_LTIME - time + this.wait, train_wait);
 		else // instant turning
-			SUB_CalcAngleMove(self, ang, TSPEED_TIME, 0.0000001, train_wait);
-		self.train_wait_turning = true;
+			SUB_CalcAngleMove(this, ang, TSPEED_TIME, 0.0000001, train_wait);
+		this.train_wait_turning = true;
 		return;
 	}
 
 #ifdef SVQC
-	if(self.noise != "")
-		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
+	if(this.noise != "")
+		stopsoundto(MSG_BROADCAST, this, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
 #endif
 
 #ifdef SVQC
-	entity tg = find(world, targetname, self.target);
+	entity tg = find(world, targetname, this.target);
 	if(tg.spawnflags & 4)
 	{
-		self.use = train_use;
-		SUB_THINK(self, func_null);
-		self.SUB_NEXTTHINK = 0;
+		this.use = train_use;
+		SUB_THINK(this, func_null);
+		this.SUB_NEXTTHINK = 0;
 	}
 	else
 #endif
-	     if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
+	     if(this.wait < 0 || this.train_wait_turning) // no waiting or we already waited while turning
 	{
-		self.train_wait_turning = false;
-		train_next(self);
+		this.train_wait_turning = false;
+		train_next(this);
 	}
 	else
 	{
-		SUB_THINK(self, train_next);
-		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
+		SUB_THINK(this, train_next);
+		this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
 	}
 }
 
@@ -66,52 +66,52 @@ void train_next(entity this)
 	entity targ, cp = world;
 	vector cp_org = '0 0 0';
 
-	targ = find(world, targetname, self.target);
-	self.target = targ.target;
-	if (self.spawnflags & 1)
+	targ = find(world, targetname, this.target);
+	this.target = targ.target;
+	if (this.spawnflags & 1)
 	{
 		if(targ.curvetarget)
 		{
 			cp = find(world, targetname, targ.curvetarget); // get its second target (the control point)
-			cp_org = cp.origin - self.view_ofs; // no control point found, assume a straight line to the destination
+			cp_org = cp.origin - this.view_ofs; // no control point found, assume a straight line to the destination
 		}
 	}
-	if (self.target == "")
+	if (this.target == "")
 		objerror("train_next: no next target");
-	self.wait = targ.wait;
-	if (!self.wait)
-		self.wait = 0.1;
+	this.wait = targ.wait;
+	if (!this.wait)
+		this.wait = 0.1;
 
 	if(targ.platmovetype)
 	{
 		// this path_corner contains a movetype overrider, apply it
-		self.platmovetype_start = targ.platmovetype_start;
-		self.platmovetype_end = targ.platmovetype_end;
+		this.platmovetype_start = targ.platmovetype_start;
+		this.platmovetype_end = targ.platmovetype_end;
 	}
 	else
 	{
 		// this path_corner doesn't contain a movetype overrider, use the train's defaults
-		self.platmovetype_start = self.platmovetype_start_default;
-		self.platmovetype_end = self.platmovetype_end_default;
+		this.platmovetype_start = this.platmovetype_start_default;
+		this.platmovetype_end = this.platmovetype_end_default;
 	}
 
 	if (targ.speed)
 	{
 		if (cp)
-			SUB_CalcMove_Bezier(self, cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
+			SUB_CalcMove_Bezier(this, cp_org, targ.origin - this.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
 		else
-			SUB_CalcMove(self, targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
+			SUB_CalcMove(this, targ.origin - this.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
 	}
 	else
 	{
 		if (cp)
-			SUB_CalcMove_Bezier(self, cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
+			SUB_CalcMove_Bezier(this, cp_org, targ.origin - this.view_ofs, TSPEED_LINEAR, this.speed, train_wait);
 		else
-			SUB_CalcMove(self, targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
+			SUB_CalcMove(this, targ.origin - this.view_ofs, TSPEED_LINEAR, this.speed, train_wait);
 	}
 
-	if(self.noise != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
+	if(this.noise != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 }
 
 REGISTER_NET_LINKED(ENT_CLIENT_TRAIN)
@@ -124,43 +124,43 @@ float train_send(entity this, entity to, float sf)
 
 	if(sf & SF_TRIGGER_INIT)
 	{
-		WriteString(MSG_ENTITY, self.platmovetype);
-		WriteByte(MSG_ENTITY, self.platmovetype_turn);
-		WriteByte(MSG_ENTITY, self.spawnflags);
+		WriteString(MSG_ENTITY, this.platmovetype);
+		WriteByte(MSG_ENTITY, this.platmovetype_turn);
+		WriteByte(MSG_ENTITY, this.spawnflags);
 
-		WriteString(MSG_ENTITY, self.model);
+		WriteString(MSG_ENTITY, this.model);
 
-		trigger_common_write(self, true);
+		trigger_common_write(this, true);
 
-		WriteString(MSG_ENTITY, self.curvetarget);
+		WriteString(MSG_ENTITY, this.curvetarget);
 
-		WriteCoord(MSG_ENTITY, self.pos1_x);
-		WriteCoord(MSG_ENTITY, self.pos1_y);
-		WriteCoord(MSG_ENTITY, self.pos1_z);
-		WriteCoord(MSG_ENTITY, self.pos2_x);
-		WriteCoord(MSG_ENTITY, self.pos2_y);
-		WriteCoord(MSG_ENTITY, self.pos2_z);
+		WriteCoord(MSG_ENTITY, this.pos1_x);
+		WriteCoord(MSG_ENTITY, this.pos1_y);
+		WriteCoord(MSG_ENTITY, this.pos1_z);
+		WriteCoord(MSG_ENTITY, this.pos2_x);
+		WriteCoord(MSG_ENTITY, this.pos2_y);
+		WriteCoord(MSG_ENTITY, this.pos2_z);
 
-		WriteCoord(MSG_ENTITY, self.size_x);
-		WriteCoord(MSG_ENTITY, self.size_y);
-		WriteCoord(MSG_ENTITY, self.size_z);
+		WriteCoord(MSG_ENTITY, this.size_x);
+		WriteCoord(MSG_ENTITY, this.size_y);
+		WriteCoord(MSG_ENTITY, this.size_z);
 
-		WriteCoord(MSG_ENTITY, self.view_ofs_x);
-		WriteCoord(MSG_ENTITY, self.view_ofs_y);
-		WriteCoord(MSG_ENTITY, self.view_ofs_z);
+		WriteCoord(MSG_ENTITY, this.view_ofs_x);
+		WriteCoord(MSG_ENTITY, this.view_ofs_y);
+		WriteCoord(MSG_ENTITY, this.view_ofs_z);
 
-		WriteAngle(MSG_ENTITY, self.mangle_x);
-		WriteAngle(MSG_ENTITY, self.mangle_y);
-		WriteAngle(MSG_ENTITY, self.mangle_z);
+		WriteAngle(MSG_ENTITY, this.mangle_x);
+		WriteAngle(MSG_ENTITY, this.mangle_y);
+		WriteAngle(MSG_ENTITY, this.mangle_z);
 
-		WriteShort(MSG_ENTITY, self.speed);
-		WriteShort(MSG_ENTITY, self.height);
-		WriteByte(MSG_ENTITY, self.lip);
-		WriteByte(MSG_ENTITY, self.state);
-		WriteByte(MSG_ENTITY, self.wait);
+		WriteShort(MSG_ENTITY, this.speed);
+		WriteShort(MSG_ENTITY, this.height);
+		WriteByte(MSG_ENTITY, this.lip);
+		WriteByte(MSG_ENTITY, this.state);
+		WriteByte(MSG_ENTITY, this.wait);
 
-		WriteShort(MSG_ENTITY, self.dmg);
-		WriteByte(MSG_ENTITY, self.dmgtime);
+		WriteShort(MSG_ENTITY, this.dmg);
+		WriteByte(MSG_ENTITY, this.dmgtime);
 	}
 
 	if(sf & SF_TRIGGER_RESET)
@@ -171,9 +171,9 @@ float train_send(entity this, entity to, float sf)
 	return true;
 }
 
-void train_link()
+void train_link(entity this)
 {
-	//Net_LinkEntity(self, 0, false, train_send);
+	//Net_LinkEntity(this, 0, false, train_send);
 }
 
 void train_use(entity this, entity actor, entity trigger)
@@ -186,19 +186,19 @@ void train_use(entity this, entity actor, entity trigger)
 void func_train_find(entity this)
 {
 	entity targ;
-	targ = find(world, targetname, self.target);
-	self.target = targ.target;
-	if (self.target == "")
+	targ = find(world, targetname, this.target);
+	this.target = targ.target;
+	if (this.target == "")
 		objerror("func_train_find: no next target");
-	SUB_SETORIGIN(self, targ.origin - self.view_ofs);
+	SUB_SETORIGIN(this, targ.origin - this.view_ofs);
 
-	if(!(self.spawnflags & 4))
+	if(!(this.spawnflags & 4))
 	{
-		self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
-		SUB_THINK(self, train_next);
+		this.SUB_NEXTTHINK = this.SUB_LTIME + 1;
+		SUB_THINK(this, train_next);
 	}
 
-	train_link();
+	train_link(this);
 }
 
 #endif

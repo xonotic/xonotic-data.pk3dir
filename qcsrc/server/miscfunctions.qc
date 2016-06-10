@@ -442,9 +442,9 @@ void GetCvars(entity this, int f)
 	if (f > 0)
 	{
 		if (s == "cl_weaponpriority")
-			if (PS(self)) PS(self).m_switchweapon = w_getbestweapon(self);
+			if (PS(this)) PS(this).m_switchweapon = w_getbestweapon(this);
 		if (s == "cl_allow_uidtracking")
-			PlayerStats_GameReport_AddPlayer(self);
+			PlayerStats_GameReport_AddPlayer(this);
 	}
 }
 
@@ -779,14 +779,14 @@ void precache()
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
 
-    if (!self.noise && self.music) // quake 3 uses the music field
-        self.noise = self.music;
+    if (!this.noise && this.music) // quake 3 uses the music field
+        this.noise = this.music;
 
     // plays music for the level if there is any
-    if (self.noise)
+    if (this.noise)
     {
-        precache_sound (self.noise);
-        ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
+        precache_sound (this.noise);
+        ambientsound ('0 0 0', this.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
 }
@@ -825,7 +825,7 @@ void make_safe_for_remove(entity e)
 
 void objerror(string s)
 {SELFPARAM(); // needed for engine functions
-    make_safe_for_remove(self);
+    make_safe_for_remove(this);
     builtin_objerror(s);
 }
 

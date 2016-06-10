@@ -8,7 +8,7 @@ bool vehicle_send(entity to, int sf)
 
 	if(sf & VSF_SPAWN)
 	{
-		WriteByte(MSG_ENTITY, self.vehicleid);
+		WriteByte(MSG_ENTITY, this.vehicleid);
 	}
 
 	if(sf & VSF_SETUP)
@@ -215,21 +215,21 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 
 void vehicles_projectile_explode(entity this)
 {
-	if(self.owner && other != world)
+	if(this.owner && other != world)
 	{
-		if(other == self.owner.vehicle)
+		if(other == this.owner.vehicle)
 			return;
 
-		if(other == self.owner.vehicle.tur_head)
+		if(other == this.owner.vehicle.tur_head)
 			return;
 	}
 
 	PROJECTILE_TOUCH(this);
 
-	self.event_damage = func_null;
-	RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);
+	this.event_damage = func_null;
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, world, this.shot_force, this.totalfrags, other);
 
-	remove (self);
+	remove (this);
 }
 
 void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
@@ -292,19 +292,19 @@ entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
 
 void vehicles_gib_explode(entity this)
 {
-	sound (self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
-	Send_Effect(EFFECT_EXPLOSION_SMALL, self.wp00.origin + '0 0 64', '0 0 0', 1);
-	remove(self);
+	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (this.origin + '0 0 100'), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, this.wp00.origin + '0 0 64', '0 0 0', 1);
+	remove(this);
 }
 
 void vehicles_gib_think(entity this)
 {
-	self.alpha -= 0.1;
-	if(self.cnt >= time)
-		remove(self);
+	this.alpha -= 0.1;
+	if(this.cnt >= time)
+		remove(this);
 	else
-		self.nextthink = time + 0.1;
+		this.nextthink = time + 0.1;
 }
 
 entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, bool _burn, bool _explode, float _maxtime, vector _rot)
@@ -456,23 +456,23 @@ void vehicles_clearreturn(entity veh)
 void vehicles_spawn(entity this);
 void vehicles_return(entity this)
 {
-	Send_Effect(EFFECT_TELEPORT, self.wp00.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_TELEPORT, this.wp00.origin + '0 0 64', '0 0 0', 1);
 
-	setthink(self.wp00, vehicles_spawn);
-	self.wp00.nextthink = time;
+	setthink(this.wp00, vehicles_spawn);
+	this.wp00.nextthink = time;
 
-	if(self.waypointsprite_attached)
-		WaypointSprite_Kill(self.waypointsprite_attached);
+	if(this.waypointsprite_attached)
+		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(self);
+	remove(this);
 }
 
 void vehicles_showwp_goaway(entity this)
 {
-	if(self.waypointsprite_attached)
-		WaypointSprite_Kill(self.waypointsprite_attached);
+	if(this.waypointsprite_attached)
+		WaypointSprite_Kill(this.waypointsprite_attached);
 
-	remove(self);
+	remove(this);
 
 }
 
@@ -587,16 +587,16 @@ void vehicles_regen(entity this, float timer, .float regen_field, float field_ma
 
 void shieldhit_think(entity this)
 {
-	self.alpha -= 0.1;
-	if (self.alpha <= 0)
+	this.alpha -= 0.1;
+	if (this.alpha <= 0)
 	{
-		// setmodel(self, MDL_Null);
-		self.alpha = -1;
-		self.effects |= EF_NODRAW;
+		// setmodel(this, MDL_Null);
+		this.alpha = -1;
+		this.effects |= EF_NODRAW;
 	}
 	else
 	{
-		self.nextthink = time + 0.1;
+		this.nextthink = time + 0.1;
 	}
 }
 
@@ -893,26 +893,26 @@ void vehicles_exit(entity vehic, bool eject)
 
 void vehicles_touch(entity this)
 {
-	if(MUTATOR_CALLHOOK(VehicleTouch, self, other))
+	if(MUTATOR_CALLHOOK(VehicleTouch, this, other))
 		return;
 
 	// Vehicle currently in use
-	if(self.owner)
+	if(this.owner)
 	{
-		if(!forbidWeaponUse(self.owner))
+		if(!forbidWeaponUse(this.owner))
 		if(other != world)
-		if((self.origin_z + self.maxs_z) > (other.origin_z))
+		if((this.origin_z + this.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
-			if(vdist(self.velocity, >=, 30))
-				Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+			if(vdist(this.velocity, >=, 30))
+				Damage(other, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(other.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
 
-		if(self.play_time < time) {
-			Vehicle info = Vehicles_from(self.vehicleid);
-			info.vr_impact(info, self);
+		if(this.play_time < time) {
+			Vehicle info = Vehicles_from(this.vehicleid);
+			info.vr_impact(info, this);
 		}
 
 		return;
@@ -921,7 +921,7 @@ void vehicles_touch(entity this)
 	if(autocvar_g_vehicles_enter)
 		return;
 
-	vehicles_enter(other, self);
+	vehicles_enter(other, this);
 }
 
 bool vehicle_impulse(entity this, int imp)
@@ -935,7 +935,7 @@ bool vehicle_impulse(entity this, int imp)
 	{
 		case IMP_weapon_drop.impulse:
 		{
-			stuffcmd(self, "\ntoggle cl_eventchase_vehicle\nset _vehicles_shownchasemessage 1\n");
+			stuffcmd(this, "\ntoggle cl_eventchase_vehicle\nset _vehicles_shownchasemessage 1\n");
 			return true;
 		}
 	}
@@ -1081,66 +1081,66 @@ void vehicles_enter(entity pl, entity veh)
 
 void vehicles_think(entity this)
 {
-	self.nextthink = time;
+	this.nextthink = time;
 
-	if(self.owner)
-		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
+	if(this.owner)
+		this.owner.vehicle_weapon2mode = this.vehicle_weapon2mode;
 
-	Vehicle info = Vehicles_from(self.vehicleid);
-	info.vr_think(info, self);
+	Vehicle info = Vehicles_from(this.vehicleid);
+	info.vr_think(info, this);
 
-	vehicles_painframe(self);
+	vehicles_painframe(this);
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 // initialization
 void vehicles_spawn(entity this)
 {
-	LOG_TRACE("Spawning vehicle: ", self.classname, "\n");
+	LOG_TRACE("Spawning vehicle: ", this.classname, "\n");
 
 	// disown & reset
-	self.vehicle_hudmodel.viewmodelforclient = self;
+	this.vehicle_hudmodel.viewmodelforclient = this;
 
-	self.owner				= world;
-	settouch(self, vehicles_touch);
-	self.event_damage		= vehicles_damage;
-	self.iscreature			= true;
-	self.teleportable		= false; // no teleporting for vehicles, too buggy
-	self.damagedbycontents	= true;
-	self.movetype			= MOVETYPE_WALK;
-	self.solid				= SOLID_SLIDEBOX;
-	self.takedamage			= DAMAGE_AIM;
-	self.deadflag			= DEAD_NO;
-	self.bot_attack			= true;
-	self.flags				= FL_NOTARGET;
-	self.avelocity			= '0 0 0';
-	self.velocity			= '0 0 0';
-	setthink(self, vehicles_think);
-	self.nextthink			= time;
+	this.owner				= world;
+	settouch(this, vehicles_touch);
+	this.event_damage		= vehicles_damage;
+	this.iscreature			= true;
+	this.teleportable		= false; // no teleporting for vehicles, too buggy
+	this.damagedbycontents	= true;
+	this.movetype			= MOVETYPE_WALK;
+	this.solid				= SOLID_SLIDEBOX;
+	this.takedamage			= DAMAGE_AIM;
+	this.deadflag			= DEAD_NO;
+	this.bot_attack			= true;
+	this.flags				= FL_NOTARGET;
+	this.avelocity			= '0 0 0';
+	this.velocity			= '0 0 0';
+	setthink(this, vehicles_think);
+	this.nextthink			= time;
 
 	// Reset locking
-	self.lock_strength = 0;
-	self.lock_target = world;
-	self.misc_bulletcounter = 0;
+	this.lock_strength = 0;
+	this.lock_target = world;
+	this.misc_bulletcounter = 0;
 
 	// Return to spawn
-	self.angles = self.pos2;
-	setorigin(self, self.pos1);
+	this.angles = this.pos2;
+	setorigin(this, this.pos1);
 	// Show it
-	Send_Effect(EFFECT_TELEPORT, self.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_TELEPORT, this.origin + '0 0 64', '0 0 0', 1);
 
-	if(self.vehicle_controller)
-		self.team = self.vehicle_controller.team;
+	if(this.vehicle_controller)
+		this.team = this.vehicle_controller.team;
 
-	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == self, RemoveGrapplingHook(it));
+	FOREACH_CLIENT(IS_PLAYER(it) && it.hook.aiment == this, RemoveGrapplingHook(it));
 
-	vehicles_reset_colors(self);
+	vehicles_reset_colors(this);
 
-	Vehicle info = Vehicles_from(self.vehicleid);
-	info.vr_spawn(info, self);
+	Vehicle info = Vehicles_from(this.vehicleid);
+	info.vr_spawn(info, this);
 
-	CSQCMODEL_AUTOINIT(self);
+	CSQCMODEL_AUTOINIT(this);
 }
 
 bool vehicle_initialize(entity this, Vehicle info, bool nodrop)

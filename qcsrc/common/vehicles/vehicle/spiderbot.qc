@@ -288,7 +288,7 @@ bool spiderbot_frame(entity this)
 				autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 
 			sound (gun, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
-			//trailparticles(self, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
+			//trailparticles(this, _particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
 			Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward * 2500, 1);
 
 			vehic.vehicle_ammo1 -= autocvar_g_vehicle_spiderbot_minigun_ammo_cost;

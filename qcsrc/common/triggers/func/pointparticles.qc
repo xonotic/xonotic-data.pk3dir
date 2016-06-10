@@ -9,42 +9,42 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 
 	// optional features to save space
 	fl = fl & 0x0F;
-	if(self.spawnflags & 2)
+	if(this.spawnflags & 2)
 		fl |= 0x10; // absolute count on toggle-on
-	if(self.movedir != '0 0 0' || self.velocity != '0 0 0')
+	if(this.movedir != '0 0 0' || this.velocity != '0 0 0')
 		fl |= 0x20; // 4 bytes - saves CPU
-	if(self.waterlevel || self.count != 1)
+	if(this.waterlevel || this.count != 1)
 		fl |= 0x40; // 4 bytes - obscure features almost never used
-	if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+	if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		fl |= 0x80; // 14 bytes - saves lots of space
 
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 2)
 	{
-		if(self.state)
-			WriteCoord(MSG_ENTITY, self.impulse);
+		if(this.state)
+			WriteCoord(MSG_ENTITY, this.impulse);
 		else
 			WriteCoord(MSG_ENTITY, 0); // off
 	}
 	if(fl & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 	}
 	if(fl & 1)
 	{
-		if(self.model != "null")
+		if(this.model != "null")
 		{
-			WriteShort(MSG_ENTITY, self.modelindex);
+			WriteShort(MSG_ENTITY, this.modelindex);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.mins_x);
-				WriteCoord(MSG_ENTITY, self.mins_y);
-				WriteCoord(MSG_ENTITY, self.mins_z);
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, this.mins_x);
+				WriteCoord(MSG_ENTITY, this.mins_y);
+				WriteCoord(MSG_ENTITY, this.mins_z);
+				WriteCoord(MSG_ENTITY, this.maxs_x);
+				WriteCoord(MSG_ENTITY, this.maxs_y);
+				WriteCoord(MSG_ENTITY, this.maxs_z);
 			}
 		}
 		else
@@ -52,36 +52,36 @@ bool pointparticles_SendEntity(entity this, entity to, float fl)
 			WriteShort(MSG_ENTITY, 0);
 			if(fl & 0x80)
 			{
-				WriteCoord(MSG_ENTITY, self.maxs_x);
-				WriteCoord(MSG_ENTITY, self.maxs_y);
-				WriteCoord(MSG_ENTITY, self.maxs_z);
+				WriteCoord(MSG_ENTITY, this.maxs_x);
+				WriteCoord(MSG_ENTITY, this.maxs_y);
+				WriteCoord(MSG_ENTITY, this.maxs_z);
 			}
 		}
-		WriteShort(MSG_ENTITY, self.cnt);
-		WriteString(MSG_ENTITY, self.mdl);
+		WriteShort(MSG_ENTITY, this.cnt);
+		WriteString(MSG_ENTITY, this.mdl);
 		if(fl & 0x20)
 		{
-			WriteShort(MSG_ENTITY, compressShortVector(self.velocity));
-			WriteShort(MSG_ENTITY, compressShortVector(self.movedir));
+			WriteShort(MSG_ENTITY, compressShortVector(this.velocity));
+			WriteShort(MSG_ENTITY, compressShortVector(this.movedir));
 		}
 		if(fl & 0x40)
 		{
-			WriteShort(MSG_ENTITY, self.waterlevel * 16.0);
-			WriteByte(MSG_ENTITY, self.count * 16.0);
+			WriteShort(MSG_ENTITY, this.waterlevel * 16.0);
+			WriteByte(MSG_ENTITY, this.count * 16.0);
 		}
-		WriteString(MSG_ENTITY, self.noise);
-		if(self.noise != "")
+		WriteString(MSG_ENTITY, this.noise);
+		if(this.noise != "")
 		{
-			WriteByte(MSG_ENTITY, floor(self.atten * 64));
-			WriteByte(MSG_ENTITY, floor(self.volume * 255));
+			WriteByte(MSG_ENTITY, floor(this.atten * 64));
+			WriteByte(MSG_ENTITY, floor(this.volume * 255));
 		}
-		WriteString(MSG_ENTITY, self.bgmscript);
-		if(self.bgmscript != "")
+		WriteString(MSG_ENTITY, this.bgmscript);
+		if(this.bgmscript != "")
 		{
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptattack * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptdecay * 64));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptsustain * 255));
-			WriteByte(MSG_ENTITY, floor(self.bgmscriptrelease * 64));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptattack * 64));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptdecay * 64));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptsustain * 255));
+			WriteByte(MSG_ENTITY, floor(this.bgmscriptrelease * 64));
 		}
 	}
 	return 1;
@@ -95,12 +95,12 @@ void pointparticles_use(entity this, entity actor, entity trigger)
 
 void pointparticles_think(entity this)
 {
-	if(self.origin != self.oldorigin)
+	if(this.origin != this.oldorigin)
 	{
-		self.SendFlags |= 4;
-		self.oldorigin = self.origin;
+		this.SendFlags |= 4;
+		this.oldorigin = this.origin;
 	}
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 void pointparticles_reset(entity this)
@@ -149,25 +149,25 @@ spawnfunc(func_pointparticles)
 
 spawnfunc(func_sparks)
 {
-	// self.cnt is the amount of sparks that one burst will spawn
-	if(self.cnt < 1) {
-		self.cnt = 25.0; // nice default value
+	// this.cnt is the amount of sparks that one burst will spawn
+	if(this.cnt < 1) {
+		this.cnt = 25.0; // nice default value
 	}
 
-	// self.wait is the probability that a sparkthink will spawn a spark shower
+	// this.wait is the probability that a sparkthink will spawn a spark shower
 	// range: 0 - 1, but 0 makes little sense, so...
-	if(self.wait < 0.05) {
-		self.wait = 0.25; // nice default value
+	if(this.wait < 0.05) {
+		this.wait = 0.25; // nice default value
 	}
 
-	self.count = self.cnt;
-	self.mins = '0 0 0';
-	self.maxs = '0 0 0';
-	self.velocity = '0 0 -1';
-	self.mdl = "TE_SPARK";
-	self.impulse = 10 * self.wait; // by default 2.5/sec
-	self.wait = 0;
-	self.cnt = 0; // use mdl
+	this.count = this.cnt;
+	this.mins = '0 0 0';
+	this.maxs = '0 0 0';
+	this.velocity = '0 0 -1';
+	this.mdl = "TE_SPARK";
+	this.impulse = 10 * this.wait; // by default 2.5/sec
+	this.wait = 0;
+	this.cnt = 0; // use mdl
 
 	spawnfunc_func_pointparticles(this);
 }

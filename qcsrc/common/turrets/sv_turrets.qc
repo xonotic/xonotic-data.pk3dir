@@ -166,44 +166,44 @@ float turret_targetscore_generic(entity _turret, entity _target)
 // Generic damage handling
 void turret_hide(entity this)
 {
-	self.effects   |= EF_NODRAW;
-	self.nextthink = time + self.respawntime - 0.2;
-	setthink(self, turret_respawn);
+	this.effects   |= EF_NODRAW;
+	this.nextthink = time + this.respawntime - 0.2;
+	setthink(this, turret_respawn);
 }
 
 void turret_die(entity this)
 {
-	self.deadflag		  = DEAD_DEAD;
-	self.tur_head.deadflag = self.deadflag;
+	this.deadflag		  = DEAD_DEAD;
+	this.tur_head.deadflag = this.deadflag;
 
 // Unsolidify and hide real parts
-	self.solid			 = SOLID_NOT;
-	self.tur_head.solid	 = self.solid;
+	this.solid			 = SOLID_NOT;
+	this.tur_head.solid	 = this.solid;
 
-	self.event_damage		  = func_null;
-	self.takedamage			 = DAMAGE_NO;
+	this.event_damage		  = func_null;
+	this.takedamage			 = DAMAGE_NO;
 
-	self.health			 = 0;
+	this.health			 = 0;
 
 // Go boom
-	//RadiusDamage (self,self, min(self.ammo,50),min(self.ammo,50) * 0.25,250,world,min(self.ammo,50)*5,DEATH_TURRET,world);
+	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,world,min(this.ammo,50)*5,DEATH_TURRET,world);
 
-	Turret tur = get_turretinfo(self.m_id);
-	if(self.damage_flags & TFL_DMG_DEATH_NORESPAWN)
+	Turret tur = get_turretinfo(this.m_id);
+	if(this.damage_flags & TFL_DMG_DEATH_NORESPAWN)
 	{
-		tur.tr_death(tur, self);
+		tur.tr_death(tur, this);
 
-		remove(self.tur_head);
-		remove(self);
+		remove(this.tur_head);
+		remove(this);
 	}
 	else
 	{
 		// Setup respawn
-		self.SendFlags	  |= TNSF_STATUS;
-		self.nextthink	 = time + 0.2;
-		setthink(self, turret_hide);
+		this.SendFlags	  |= TNSF_STATUS;
+		this.nextthink	 = time + 0.2;
+		setthink(this, turret_hide);
 
-		tur.tr_death(tur, self);
+		tur.tr_death(tur, this);
 	}
 }
 
@@ -256,28 +256,28 @@ void turret_respawn(entity this)
 {
 	// Make sure all parts belong to the same team since
 	// this function doubles as "teamchange" function.
-	self.tur_head.team 	= self.team;
-	self.effects			   &= ~EF_NODRAW;
-	self.deadflag				= DEAD_NO;
-	self.effects				= EF_LOWPRECISION;
-	self.solid					= SOLID_BBOX;
-	self.takedamage 			= DAMAGE_AIM;
-	self.event_damage			= turret_damage;
-	self.avelocity				= '0 0 0';
-	self.tur_head.avelocity		= self.avelocity;
-	self.tur_head.angles		= self.idle_aim;
-	self.health					= self.max_health;
-	self.enemy					= world;
-	self.volly_counter			= self.shot_volly;
-	self.ammo					= self.ammo_max;
+	this.tur_head.team 	= this.team;
+	this.effects			   &= ~EF_NODRAW;
+	this.deadflag				= DEAD_NO;
+	this.effects				= EF_LOWPRECISION;
+	this.solid					= SOLID_BBOX;
+	this.takedamage 			= DAMAGE_AIM;
+	this.event_damage			= turret_damage;
+	this.avelocity				= '0 0 0';
+	this.tur_head.avelocity		= this.avelocity;
+	this.tur_head.angles		= this.idle_aim;
+	this.health					= this.max_health;
+	this.enemy					= world;
+	this.volly_counter			= this.shot_volly;
+	this.ammo					= this.ammo_max;
 
-	self.nextthink = time + self.ticrate;
-	setthink(self, turret_think);
+	this.nextthink = time + this.ticrate;
+	setthink(this, turret_think);
 
-	self.SendFlags = TNSF_FULL_UPDATE;
+	this.SendFlags = TNSF_FULL_UPDATE;
 
-	Turret tur = get_turretinfo(self.m_id);
-	tur.tr_setup(tur, self);
+	Turret tur = get_turretinfo(this.m_id);
+	tur.tr_setup(tur, this);
 }
 
 
@@ -306,55 +306,55 @@ bool turret_send(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & TNSF_SETUP)
 	{
-		WriteByte(MSG_ENTITY, self.m_id);
+		WriteByte(MSG_ENTITY, this.m_id);
 
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 
-		WriteAngle(MSG_ENTITY, self.angles_x);
-		WriteAngle(MSG_ENTITY, self.angles_y);
+		WriteAngle(MSG_ENTITY, this.angles_x);
+		WriteAngle(MSG_ENTITY, this.angles_y);
 	}
 
 	if(sf & TNSF_ANG)
 	{
-		WriteShort(MSG_ENTITY, rint(self.tur_head.angles_x));
-		WriteShort(MSG_ENTITY, rint(self.tur_head.angles_y));
+		WriteShort(MSG_ENTITY, rint(this.tur_head.angles_x));
+		WriteShort(MSG_ENTITY, rint(this.tur_head.angles_y));
 	}
 
 	if(sf & TNSF_AVEL)
 	{
-		WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_x));
-		WriteShort(MSG_ENTITY, rint(self.tur_head.avelocity_y));
+		WriteShort(MSG_ENTITY, rint(this.tur_head.avelocity_x));
+		WriteShort(MSG_ENTITY, rint(this.tur_head.avelocity_y));
 	}
 
 	if(sf & TNSF_MOVE)
 	{
-		WriteShort(MSG_ENTITY, rint(self.origin_x));
-		WriteShort(MSG_ENTITY, rint(self.origin_y));
-		WriteShort(MSG_ENTITY, rint(self.origin_z));
+		WriteShort(MSG_ENTITY, rint(this.origin_x));
+		WriteShort(MSG_ENTITY, rint(this.origin_y));
+		WriteShort(MSG_ENTITY, rint(this.origin_z));
 
-		WriteShort(MSG_ENTITY, rint(self.velocity_x));
-		WriteShort(MSG_ENTITY, rint(self.velocity_y));
-		WriteShort(MSG_ENTITY, rint(self.velocity_z));
+		WriteShort(MSG_ENTITY, rint(this.velocity_x));
+		WriteShort(MSG_ENTITY, rint(this.velocity_y));
+		WriteShort(MSG_ENTITY, rint(this.velocity_z));
 
-		WriteShort(MSG_ENTITY, rint(self.angles_y));
+		WriteShort(MSG_ENTITY, rint(this.angles_y));
 	}
 
 	if(sf & TNSF_ANIM)
 	{
-		WriteCoord(MSG_ENTITY, self.anim_start_time);
-		WriteByte(MSG_ENTITY, self.frame);
+		WriteCoord(MSG_ENTITY, this.anim_start_time);
+		WriteByte(MSG_ENTITY, this.frame);
 	}
 
 	if(sf & TNSF_STATUS)
 	{
-		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, this.team);
 
-		if(self.health <= 0)
+		if(this.health <= 0)
 			WriteByte(MSG_ENTITY, 0);
 		else
-			WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
+			WriteByte(MSG_ENTITY, ceil((this.health / this.max_health) * 255));
 	}
 
 	return true;
@@ -430,17 +430,17 @@ void load_unit_settings(entity ent, bool is_reload)
 void turret_projectile_explode(entity this)
 {
 
-	self.takedamage = DAMAGE_NO;
-	self.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
-	self.owner.tur_debug_dmg_t_h = self.owner.tur_debug_dmg_t_h + d;
-	self.owner.tur_debug_dmg_t_f = self.owner.tur_debug_dmg_t_f + self.owner.shot_dmg;
+	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
+	this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
+	this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
 #else
-	RadiusDamage (self, self.realowner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
+	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
 #endif
-	remove(self);
+	remove(this);
 }
 
 void turret_projectile_touch(entity this)

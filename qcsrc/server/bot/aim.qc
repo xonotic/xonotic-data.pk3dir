@@ -156,8 +156,8 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 	}
 	this.bot_aimtarg = e1;
 	this.bot_aimlatency = this.ping; // FIXME?  Shouldn't this be in the lag item?
-	//this.bot_aimselforigin = v1;
-	//this.bot_aimselfvelocity = v2;
+	//this.bot_aimorigin = v1;
+	//this.bot_aimvelocity = v2;
 	this.bot_aimtargorigin = v3;
 	this.bot_aimtargvelocity = v4;
 	if(skill <= 0)

@@ -129,11 +129,11 @@ void GotoFirstMap(entity this)
 
 	if(time < 5)
 	{
-		self.nextthink = time;
+		this.nextthink = time;
 	}
 	else
 	{
-		self.nextthink = time + 1;
+		this.nextthink = time + 1;
 		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...\n");
 	}
 }
@@ -548,7 +548,7 @@ spawnfunc(__init_dedicated_server)
 
 	e = new(info_player_deathmatch);  // safeguard against player joining
 
-	self.classname = "worldspawn"; // safeguard against various stuff ;)
+	this.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -739,7 +739,7 @@ spawnfunc(worldspawn)
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
 	if(bot_waypoints_for_items == 1)
-		if(self.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
+		if(this.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
 	precache();
@@ -922,7 +922,7 @@ spawnfunc(worldspawn)
 
 spawnfunc(light)
 {
-	//makestatic (self); // Who the f___ did that?
+	//makestatic (this); // Who the f___ did that?
 	remove(this);
 }
 

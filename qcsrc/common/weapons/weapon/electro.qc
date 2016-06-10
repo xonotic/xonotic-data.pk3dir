@@ -124,13 +124,13 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 
 void W_Electro_ExplodeCombo(entity this)
 {
-	W_Electro_TriggerCombo(self.origin, WEP_CVAR(electro, combo_comboradius), self.realowner);
+	W_Electro_TriggerCombo(this.origin, WEP_CVAR(electro, combo_comboradius), this.realowner);
 
-	self.event_damage = func_null;
+	this.event_damage = func_null;
 
 	RadiusDamage(
-		self,
-		self.realowner,
+		this,
+		this.realowner,
 		WEP_CVAR(electro, combo_damage),
 		WEP_CVAR(electro, combo_edgedamage),
 		WEP_CVAR(electro, combo_radius),
@@ -141,54 +141,54 @@ void W_Electro_ExplodeCombo(entity this)
 		world
 	);
 
-	remove(self);
+	remove(this);
 }
 
 void W_Electro_Explode(entity this)
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
-			if(DIFF_TEAM(self.realowner, other))
+			if(DIFF_TEAM(this.realowner, other))
 				if(!IS_DEAD(other))
 					if(IsFlying(other))
-						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
+						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
-	if(self.movetype == MOVETYPE_BOUNCE)
+	if(this.movetype == MOVETYPE_BOUNCE)
 	{
 		RadiusDamage(
-			self,
-			self.realowner,
+			this,
+			this.realowner,
 			WEP_CVAR_SEC(electro, damage),
 			WEP_CVAR_SEC(electro, edgedamage),
 			WEP_CVAR_SEC(electro, radius),
 			world,
 			world,
 			WEP_CVAR_SEC(electro, force),
-			self.projectiledeathtype,
+			this.projectiledeathtype,
 			other
 		);
 	}
 	else
 	{
-		W_Electro_TriggerCombo(self.origin, WEP_CVAR_PRI(electro, comboradius), self.realowner);
+		W_Electro_TriggerCombo(this.origin, WEP_CVAR_PRI(electro, comboradius), this.realowner);
 		RadiusDamage(
-			self,
-			self.realowner,
+			this,
+			this.realowner,
 			WEP_CVAR_PRI(electro, damage),
 			WEP_CVAR_PRI(electro, edgedamage),
 			WEP_CVAR_PRI(electro, radius),
 			world,
 			world,
 			WEP_CVAR_PRI(electro, force),
-			self.projectiledeathtype,
+			this.projectiledeathtype,
 			other
 		);
 	}
 
-	remove(self);
+	remove(this);
 }
 
 void W_Electro_Explode_use(entity this, entity actor, entity trigger)
@@ -204,7 +204,7 @@ void W_Electro_TouchExplode(entity this)
 
 void W_Electro_Bolt_Think(entity this)
 {
-	if(time >= self.ltime)
+	if(time >= this.ltime)
 	{
 		this.use(this, NULL, NULL);
 		return;
@@ -213,7 +213,7 @@ void W_Electro_Bolt_Think(entity this)
 	if(WEP_CVAR_PRI(electro, midaircombo_radius))
 	{
 		float found = 0;
-		entity e = WarpZone_FindRadius(self.origin, WEP_CVAR_PRI(electro, midaircombo_radius), true);
+		entity e = WarpZone_FindRadius(this.origin, WEP_CVAR_PRI(electro, midaircombo_radius), true);
 
 		// loop through nearby orbs and trigger them
 		while(e)
@@ -221,7 +221,7 @@ void W_Electro_Bolt_Think(entity this)
 			if(e.classname == "electro_orb")
 			{
 				// change owner to whoever caused the combo explosion
-				e.realowner = self.realowner;
+				e.realowner = this.realowner;
 				e.takedamage = DAMAGE_NO;
 				e.classname = "electro_orb_chain";
 
@@ -249,19 +249,19 @@ void W_Electro_Bolt_Think(entity this)
 		if(found && WEP_CVAR_PRI(electro, midaircombo_explode))
 			{ this.use(this, NULL, NULL); }
 		else
-			{ self.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), self.ltime); }
+			{ this.nextthink = min(time + WEP_CVAR_PRI(electro, midaircombo_interval), this.ltime); }
 	}
-	else { self.nextthink = self.ltime; }
+	else { this.nextthink = this.ltime; }
 }
 
 void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
-{entity this = actor;
+{
 	entity proj;
 
-	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(electro, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
-		self,
+		actor,
 		'0 0 -3',
 		'0 0 -3',
 		false,
@@ -274,7 +274,7 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = new(electro_bolt);
-	proj.owner = proj.realowner = self;
+	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = WEP_CVAR_PRI(electro, damage);
 	proj.use = W_Electro_Explode_use;
@@ -295,19 +295,19 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, proj);
+	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
 void W_Electro_Orb_Touch(entity this)
 {
 	PROJECTILE_TOUCH(this);
 	if(other.takedamage == DAMAGE_AIM)
-		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(self); } }
+		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this); } }
 	else
 	{
-		//UpdateCSQCProjectile(self);
-		spamsound(self, CH_SHOTS, SND(ELECTRO_BOUNCE), VOL_BASE, ATTEN_NORM);
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		//UpdateCSQCProjectile(this);
+		spamsound(this, CH_SHOTS, SND(ELECTRO_BOUNCE), VOL_BASE, ATTEN_NORM);
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
 
@@ -354,11 +354,11 @@ void W_Electro_Orb_Damage(entity this, entity inflictor, entity attacker, float 
 }
 
 void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
-{entity this = actor;
-	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(electro, ammo));
+{
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(electro, ammo));
 
 	W_SetupShot_ProjectileSize(
-		self,
+		actor,
 		'0 0 -4',
 		'0 0 -4',
 		false,
@@ -373,7 +373,7 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity proj = new(electro_orb);
-	proj.owner = proj.realowner = self;
+	proj.owner = proj.realowner = actor;
 	proj.use = W_Electro_Explode_use;
 	setthink(proj, adaptor_think2use_hittype_splash);
 	proj.bot_dodge = true;
@@ -410,17 +410,17 @@ void W_Electro_Attack_Orb(Weapon thiswep, entity actor)
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO, false); // no culling, it has sound
 
-	MUTATOR_CALLHOOK(EditProjectile, self, proj);
+	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
 void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
-{entity this = actor;
-	if(self.electro_count > 1)
-	if(PHYS_INPUT_BUTTON_ATCK2(self))
+{
+	if(actor.electro_count > 1)
+	if(PHYS_INPUT_BUTTON_ATCK2(actor))
 	if(weapon_prepareattack(thiswep, actor, weaponentity, true, -1))
 	{
 		W_Electro_Attack_Orb(WEP_ELECTRO, actor);
-		self.electro_count -= 1;
+		actor.electro_count -= 1;
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(electro, animtime), W_Electro_CheckAttack);
 		return;
 	}
@@ -432,30 +432,29 @@ void W_Electro_CheckAttack(Weapon thiswep, entity actor, .entity weaponentity, i
 
 METHOD(Electro, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    PHYS_INPUT_BUTTON_ATCK(self) = PHYS_INPUT_BUTTON_ATCK2(self) = false;
-    if(vdist(self.origin - self.enemy.origin, >, 1000)) { self.bot_secondary_electromooth = 0; }
-    if(self.bot_secondary_electromooth == 0)
+    PHYS_INPUT_BUTTON_ATCK(actor) = PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+    if(vdist(actor.origin - actor.enemy.origin, >, 1000)) { actor.bot_secondary_electromooth = 0; }
+    if(actor.bot_secondary_electromooth == 0)
     {
         float shoot;
 
         if(WEP_CVAR_PRI(electro, speed))
-            shoot = bot_aim(self, WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
+            shoot = bot_aim(actor, WEP_CVAR_PRI(electro, speed), 0, WEP_CVAR_PRI(electro, lifetime), false);
         else
-            shoot = bot_aim(self, 1000000, 0, 0.001, false);
+            shoot = bot_aim(actor, 1000000, 0, 0.001, false);
 
         if(shoot)
         {
-            PHYS_INPUT_BUTTON_ATCK(self) = true;
-            if(random() < 0.01) self.bot_secondary_electromooth = 1;
+            PHYS_INPUT_BUTTON_ATCK(actor) = true;
+            if(random() < 0.01) actor.bot_secondary_electromooth = 1;
         }
     }
     else
     {
-        if(bot_aim(self, WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
+        if(bot_aim(actor, WEP_CVAR_SEC(electro, speed), WEP_CVAR_SEC(electro, speed_up), WEP_CVAR_SEC(electro, lifetime), true))
         {
-            PHYS_INPUT_BUTTON_ATCK2(self) = true;
-            if(random() < 0.03) self.bot_secondary_electromooth = 0;
+            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+            if(random() < 0.03) actor.bot_secondary_electromooth = 0;
         }
     }
 }
@@ -519,8 +518,7 @@ METHOD(Electro, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Electro, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    self.electro_secondarytime = time;
+    actor.electro_secondarytime = time;
 }
 METHOD(Electro, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -553,14 +551,13 @@ METHOD(Electro, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 6;
     if(w_deathtype & HITTYPE_SECONDARY)
     {
         pointparticles(EFFECT_ELECTRO_BALLEXPLODE, org2, '0 0 0', 1);
         if(!w_issilent)
-            sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+            sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
     }
     else
     {
@@ -569,13 +566,13 @@ METHOD(Electro, wr_impacteffect, void(entity thiswep, entity actor))
             // this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
             pointparticles(EFFECT_ELECTRO_COMBO, org2, '0 0 0', 1);
             if(!w_issilent)
-                sound(self, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
+                sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT_COMBO, VOL_BASE, ATTEN_NORM);
         }
         else
         {
             pointparticles(EFFECT_ELECTRO_IMPACT, org2, '0 0 0', 1);
             if(!w_issilent)
-                sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+                sound(actor, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
         }
     }
 }

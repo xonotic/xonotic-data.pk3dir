@@ -174,7 +174,7 @@ METHOD(EWheel, tr_death, void(EWheel this, entity it))
     it.velocity = '0 0 0';
 
 #ifdef EWHEEL_FANCYPATH
-    if (self.pathcurrent)
+    if (it.pathcurrent)
         pathlib_deletepath(it.pathcurrent.owner);
 #endif
     it.pathcurrent = NULL;

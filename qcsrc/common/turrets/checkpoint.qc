@@ -16,14 +16,10 @@
 /*
 entity path_makeorcache(entity forwho,entity start, entity end)
 {
-    entity oldself;
     entity pth;
-    oldself = self;
-    self = forwho;
 
-    //pth = pathlib_makepath(start.origin,end.origin,PFL_GROUNDSNAP,500,1.5,PT_QUICKSTAR);
+    //pth = pathlib_makepath(forwho, start.origin,end.origin,PFL_GROUNDSNAP,500,1.5,PT_QUICKSTAR);
 
-    self = oldself;
     return pth;
 }
 */

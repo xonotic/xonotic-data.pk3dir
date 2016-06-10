@@ -166,28 +166,28 @@ bool ons_CaptureShield_Customize(entity this)
 {
 	entity e = WaypointSprite_getviewentity(other);
 
-	if(!self.enemy.isshielded && (ons_ControlPoint_Attackable(self.enemy, e.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return false; }
-	if(SAME_TEAM(self, e)) { return false; }
+	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, e.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return false; }
+	if(SAME_TEAM(this, e)) { return false; }
 
 	return true;
 }
 
 void ons_CaptureShield_Touch(entity this)
 {
-	if(!self.enemy.isshielded && (ons_ControlPoint_Attackable(self.enemy, other.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return; }
+	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, other.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return; }
 	if(!IS_PLAYER(other)) { return; }
-	if(SAME_TEAM(other, self)) { return; }
+	if(SAME_TEAM(other, this)) { return; }
 
-	vector mymid = (self.absmin + self.absmax) * 0.5;
+	vector mymid = (this.absmin + this.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
-	Damage(other, self, self, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ons_captureshield_force);
+	Damage(other, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ons_captureshield_force);
 
 	if(IS_REAL_CLIENT(other))
 	{
 		play2(other, SND(ONS_DAMAGEBLOCKEDBYSHIELD));
 
-		if(self.enemy.classname == "onslaught_generator")
+		if(this.enemy.classname == "onslaught_generator")
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
 		else
 			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
@@ -378,19 +378,19 @@ bool ons_Link_Send(entity this, entity to, int sendflags)
 	WriteByte(MSG_ENTITY, sendflags);
 	if(sendflags & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.goalentity.origin_x);
-		WriteCoord(MSG_ENTITY, self.goalentity.origin_y);
-		WriteCoord(MSG_ENTITY, self.goalentity.origin_z);
+		WriteCoord(MSG_ENTITY, this.goalentity.origin_x);
+		WriteCoord(MSG_ENTITY, this.goalentity.origin_y);
+		WriteCoord(MSG_ENTITY, this.goalentity.origin_z);
 	}
 	if(sendflags & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-		WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-		WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+		WriteCoord(MSG_ENTITY, this.enemy.origin_x);
+		WriteCoord(MSG_ENTITY, this.enemy.origin_y);
+		WriteCoord(MSG_ENTITY, this.enemy.origin_z);
 	}
 	if(sendflags & 4)
 	{
-		WriteByte(MSG_ENTITY, self.clientcolors); // which is goalentity's color + enemy's color * 16
+		WriteByte(MSG_ENTITY, this.clientcolors); // which is goalentity's color + enemy's color * 16
 	}
 	return true;
 }
@@ -791,8 +791,8 @@ void ons_ControlPoint_Touch(entity this)
 	if(STAT(FROZEN, toucher)) { return; }
 	if(IS_DEAD(toucher)) { return; }
 
-	if ( SAME_TEAM(self,toucher) )
-	if ( self.iscaptured )
+	if ( SAME_TEAM(this,toucher) )
+	if ( this.iscaptured )
 	{
 		if(time <= toucher.teleport_antispam)
 			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_TELEPORT_ANTISPAM, rint(toucher.teleport_antispam - time));
@@ -800,23 +800,23 @@ void ons_ControlPoint_Touch(entity this)
 			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_TELEPORT);
 	}
 
-	attackable = ons_ControlPoint_Attackable(self, toucher.team);
+	attackable = ons_ControlPoint_Attackable(this, toucher.team);
 	if(attackable != 2 && attackable != 4)
 		return;
 	// we've verified that this player has a legitimate claim to this point,
 	// so start building the captured point icon (which only captures this
 	// point if it successfully builds without being destroyed first)
-	ons_ControlPoint_Icon_Spawn(self, toucher);
+	ons_ControlPoint_Icon_Spawn(this, toucher);
 
-	self.ons_toucher = toucher;
+	this.ons_toucher = toucher;
 
 	onslaught_updatelinks();
 }
 
 void ons_ControlPoint_Think(entity this)
 {
-	self.nextthink = time + ONS_CP_THINKRATE;
-	CSQCMODEL_AUTOUPDATE(self);
+	this.nextthink = time + ONS_CP_THINKRATE;
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void ons_ControlPoint_Reset(entity this)
@@ -1070,24 +1070,24 @@ void ons_GeneratorReset(entity this)
 void ons_DelayedGeneratorSetup(entity this)
 {
 	// bot waypoints
-	waypoint_spawnforitem_force(self, self.origin);
-	self.nearestwaypointtimeout = 0; // activate waypointing again
-	self.bot_basewaypoint = self.nearestwaypoint;
+	waypoint_spawnforitem_force(this, this.origin);
+	this.nearestwaypointtimeout = 0; // activate waypointing again
+	this.bot_basewaypoint = this.nearestwaypoint;
 
 	// captureshield setup
-	ons_CaptureShield_Spawn(self, true);
+	ons_CaptureShield_Spawn(this, true);
 
 	onslaught_updatelinks();
 
-	Net_LinkEntity(self, false, 0, generator_send);
+	Net_LinkEntity(this, false, 0, generator_send);
 }
 
 
 void onslaught_generator_touch(entity this)
 {
 	if ( IS_PLAYER(other) )
-	if ( SAME_TEAM(self,other) )
-	if ( self.iscaptured )
+	if ( SAME_TEAM(this,other) )
+	if ( this.iscaptured )
 	{
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
 	}

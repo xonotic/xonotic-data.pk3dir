@@ -39,14 +39,14 @@ void swampslug_think(entity this);
 void swampslug_think(entity this)
 {
 	//Slowly kill the slug
-	self.health = self.health - 1;
+	this.health = this.health - 1;
 
 	//Slug dead? then remove curses.
-	if(self.health <= 0)
+	if(this.health <= 0)
 	{
-		self.owner.in_swamp = 0;
-		remove(self);
-		//centerprint(self.owner,"Killing slug...\n");
+		this.owner.in_swamp = 0;
+		remove(this);
+		//centerprint(this.owner,"Killing slug...\n");
 		return;
 	}
 
@@ -54,10 +54,10 @@ void swampslug_think(entity this)
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
 #ifdef SVQC
-	Damage (self.owner, self, self, self.dmg, DEATH_SWAMP.m_id, other.origin, '0 0 0');
+	Damage (this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, other.origin, '0 0 0');
 #endif
 
-	self.nextthink = time + self.swamp_interval;
+	this.nextthink = time + this.swamp_interval;
 }
 
 void swamp_touch(entity this)
@@ -79,9 +79,9 @@ void swamp_touch(entity this)
 		setthink(other.swampslug, swampslug_think);
 		other.swampslug.nextthink = time;
 		other.swampslug.owner = other;
-		other.swampslug.dmg = self.dmg;
-		other.swampslug.swamp_interval = self.swamp_interval;
-		other.swamp_slowdown = self.swamp_slowdown;
+		other.swampslug.dmg = this.dmg;
+		other.swampslug.swamp_interval = this.swamp_interval;
+		other.swamp_slowdown = this.swamp_slowdown;
 		other.in_swamp = 1;
 		return;
 	}

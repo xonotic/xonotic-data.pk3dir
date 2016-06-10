@@ -122,7 +122,7 @@ void NIX_GiveCurrentWeapon(entity this)
 	// get weapon info
 	entity e = Weapons_from(nix_weapon);
 
-	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
+	if(nix_nextchange != this.nix_lastchange_id) // this shall only be called once per round!
 	{
 		this.ammo_shells = this.ammo_nails = this.ammo_rockets = this.ammo_cells = this.ammo_plasma = this.ammo_fuel = 0;
 

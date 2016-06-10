@@ -23,12 +23,12 @@ float target_spawn_count;
 
 void target_spawn_helper_setmodel(entity this)
 {
-	_setmodel(self, self.model);
+	_setmodel(this, this.model);
 }
 
 void target_spawn_helper_setsize(entity this)
 {
-	setsize(self, self.mins, self.maxs);
+	setsize(this, this.mins, this.maxs);
 }
 
 void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act, entity trigger)

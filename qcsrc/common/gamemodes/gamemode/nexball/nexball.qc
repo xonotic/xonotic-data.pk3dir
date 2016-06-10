@@ -293,46 +293,46 @@ void football_touch(entity this)
 {
 	if(other.solid == SOLID_BSP)
 	{
-		if(time > self.lastground + 0.1)
+		if(time > this.lastground + 0.1)
 		{
-			_sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
-			self.lastground = time;
+			_sound(this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+			this.lastground = time;
 		}
-		if(vlen(self.velocity) && !self.cnt)
-			self.nextthink = time + autocvar_g_nexball_delay_idle;
+		if(this.velocity && !this.cnt)
+			this.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
 	if (!IS_PLAYER(other))
 		return;
 	if(other.health < 1)
 		return;
-	if(!self.cnt)
-		self.nextthink = time + autocvar_g_nexball_delay_idle;
+	if(!this.cnt)
+		this.nextthink = time + autocvar_g_nexball_delay_idle;
 
-	self.pusher = other;
-	self.team = other.team;
+	this.pusher = other;
+	this.team = other.team;
 
 	if(autocvar_g_nexball_football_physics == -1)	// MrBougo try 1, before decompiling Rev's original
 	{
 		if(vlen(other.velocity))
-			self.velocity = other.velocity * 1.5 + '0 0 1' * autocvar_g_nexball_football_boost_up;
+			this.velocity = other.velocity * 1.5 + '0 0 1' * autocvar_g_nexball_football_boost_up;
 	}
 	else if(autocvar_g_nexball_football_physics == 1)	  // MrBougo's modded Rev style: partially independant of the height of the aiming point
 	{
 		makevectors(other.v_angle);
-		self.velocity = other.velocity + v_forward * autocvar_g_nexball_football_boost_forward + '0 0 1' * autocvar_g_nexball_football_boost_up;
+		this.velocity = other.velocity + v_forward * autocvar_g_nexball_football_boost_forward + '0 0 1' * autocvar_g_nexball_football_boost_up;
 	}
 	else if(autocvar_g_nexball_football_physics == 2)	  // 2nd mod try: totally independant. Really playable!
 	{
 		makevectors(other.v_angle.y * '0 1 0');
-		self.velocity = other.velocity + v_forward * autocvar_g_nexball_football_boost_forward + v_up * autocvar_g_nexball_football_boost_up;
+		this.velocity = other.velocity + v_forward * autocvar_g_nexball_football_boost_forward + v_up * autocvar_g_nexball_football_boost_up;
 	}
 	else	 // Revenant's original style (from the original mod's disassembly, acknowledged by Revenant)
 	{
 		makevectors(other.v_angle);
-		self.velocity = other.velocity + v_forward * autocvar_g_nexball_football_boost_forward + v_up * autocvar_g_nexball_football_boost_up;
+		this.velocity = other.velocity + v_forward * autocvar_g_nexball_football_boost_forward + v_up * autocvar_g_nexball_football_boost_up;
 	}
-	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
+	this.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
 }
 
 void basketball_touch(entity this)
@@ -342,18 +342,18 @@ void basketball_touch(entity this)
 		football_touch(this);
 		return;
 	}
-	if(!self.cnt && IS_PLAYER(other) && !STAT(FROZEN, other) && !IS_DEAD(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!this.cnt && IS_PLAYER(other) && !STAT(FROZEN, other) && !IS_DEAD(other) && (other != this.nb_dropper || time > this.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
 		LogNB("caught", other);
-		GiveBall(other, self);
+		GiveBall(other, this);
 	}
 	else if(other.solid == SOLID_BSP)
 	{
-		_sound(self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
-		if(vlen(self.velocity) && !self.cnt)
-			self.nextthink = min(time + autocvar_g_nexball_delay_idle, self.teamtime);
+		_sound(this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+		if(vlen(this.velocity) && !this.cnt)
+			this.nextthink = min(time + autocvar_g_nexball_delay_idle, this.teamtime);
 	}
 }
 
@@ -364,14 +364,14 @@ void GoalTouch(entity this)
 	string pname;
 
 	if(gameover) return;
-	if((self.spawnflags & GOAL_TOUCHPLAYER) && other.ballcarried)
+	if((this.spawnflags & GOAL_TOUCHPLAYER) && other.ballcarried)
 		ball = other.ballcarried;
 	else
 		ball = other;
 	if(ball.classname != "nexball_basketball")
 		if(ball.classname != "nexball_football")
 			return;
-	if((!ball.pusher && self.team != GOAL_OUT) || ball.cnt)
+	if((!ball.pusher && this.team != GOAL_OUT) || ball.cnt)
 		return;
 	EXACTTRIGGER_TOUCH;
 
@@ -386,13 +386,13 @@ void GoalTouch(entity this)
 	else
 		pname = "Someone (?)";
 
-	if(ball.team == self.team)		 //owngoal (regular goals)
+	if(ball.team == this.team)		 //owngoal (regular goals)
 	{
 		LogNB("owngoal", ball.pusher);
 		bprint("Boo! ", pname, "^7 scored a goal against their own team!\n");
 		pscore = -1;
 	}
-	else if(self.team == GOAL_FAULT)
+	else if(this.team == GOAL_FAULT)
 	{
 		LogNB("fault", ball.pusher);
 		if(nb_teams == 2)
@@ -401,10 +401,10 @@ void GoalTouch(entity this)
 			bprint(Team_ColoredFullName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
 		pscore = -1;
 	}
-	else if(self.team == GOAL_OUT)
+	else if(this.team == GOAL_OUT)
 	{
 		LogNB("out", ball.pusher);
-		if((self.spawnflags & GOAL_TOUCHPLAYER) && ball.owner)
+		if((this.spawnflags & GOAL_TOUCHPLAYER) && ball.owner)
 			bprint(pname, "^7 went out of bounds.\n");
 		else
 			bprint("The ball was returned.\n");
@@ -412,12 +412,12 @@ void GoalTouch(entity this)
 	}
 	else							   //score
 	{
-		LogNB(strcat("goal:", ftos(self.team)), ball.pusher);
+		LogNB(strcat("goal:", ftos(this.team)), ball.pusher);
 		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", Team_ColoredFullName(ball.team), ".\n");
 		pscore = 1;
 	}
 
-	_sound(ball, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NONE);
+	_sound(ball, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NONE);
 
 	if(ball.team && pscore)
 	{
@@ -443,7 +443,7 @@ void GoalTouch(entity this)
 	setthink(ball, ResetBall);
 	if(ball.classname == "nexball_basketball")
 		settouch(ball, football_touch); // better than func_null: football control until the ball gets reset
-	ball.nextthink = time + autocvar_g_nexball_delay_goal * (self.team != GOAL_OUT);
+	ball.nextthink = time + autocvar_g_nexball_delay_goal * (this.team != GOAL_OUT);
 }
 
 //=======================//
@@ -613,7 +613,7 @@ float nb_Goal_Customize(entity this)
 {
 	entity e, wp_owner;
 	e = WaypointSprite_getviewentity(other);
-	wp_owner = self.owner;
+	wp_owner = this.owner;
 	if(SAME_TEAM(e, wp_owner)) { return false; }
 
 	return true;
@@ -840,26 +840,26 @@ void W_Nexball_Attack2(entity actor)
 
 float ball_customize(entity this)
 {
-	if(!self.owner)
+	if(!this.owner)
 	{
-		self.effects &= ~EF_FLAME;
-		self.scale = 1;
-		setcefc(self, func_null);
+		this.effects &= ~EF_FLAME;
+		this.scale = 1;
+		setcefc(this, func_null);
 		return true;
 	}
 
-	if(other == self.owner)
+	if(other == this.owner)
 	{
-		self.scale = autocvar_g_nexball_viewmodel_scale;
-		if(self.enemy)
-			self.effects |= EF_FLAME;
+		this.scale = autocvar_g_nexball_viewmodel_scale;
+		if(this.enemy)
+			this.effects |= EF_FLAME;
 		else
-			self.effects &= ~EF_FLAME;
+			this.effects &= ~EF_FLAME;
 	}
 	else
 	{
-		self.effects &= ~EF_FLAME;
-		self.scale = 1;
+		this.effects &= ~EF_FLAME;
+		this.scale = 1;
 	}
 
 	return true;

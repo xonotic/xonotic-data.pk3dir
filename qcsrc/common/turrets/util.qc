@@ -1,5 +1,5 @@
 /*
-* Update self.tur_shotorg by getting up2date bone info
+* Update this.tur_shotorg by getting up2date bone info
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
 */
 float turret_tag_fire_update(entity this)

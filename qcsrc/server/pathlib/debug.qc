@@ -32,17 +32,17 @@ void path_dbg_think(entity this)
 void __showpath2_think(entity this)
 {
     #ifdef TURRET_DEBUG
-	mark_info(self.origin,1);
+	mark_info(this.origin,1);
 	#endif
-    if(self.path_next)
+    if(this.path_next)
     {
-        setthink(self.path_next, __showpath2_think);
-        self.path_next.nextthink = time + 0.15;
+        setthink(this.path_next, __showpath2_think);
+        this.path_next.nextthink = time + 0.15;
     }
     else
     {
-        setthink(self.owner, __showpath2_think);
-        self.owner.nextthink = time + 0.15;
+        setthink(this.owner, __showpath2_think);
+        this.owner.nextthink = time + 0.15;
     }
 }
 

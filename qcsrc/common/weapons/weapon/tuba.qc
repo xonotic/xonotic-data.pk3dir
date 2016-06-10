@@ -280,80 +280,80 @@ void W_Tuba_NoteThink(entity this)
 	float vol0, vol1;
 	vector dir0, dir1;
 	vector v;
-	if(time > self.teleport_time)
+	if(time > this.teleport_time)
 	{
 		W_Tuba_NoteOff(this);
 		return;
 	}
-	self.nextthink = time;
+	this.nextthink = time;
 	dist_mult = WEP_CVAR(tuba, attenuation) / autocvar_snd_soundradius;
-	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != self.realowner, {
-		v = self.origin - (it.origin + it.view_ofs);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it != this.realowner, {
+		v = this.origin - (it.origin + it.view_ofs);
 		vol0 = max(0, 1 - vlen(v) * dist_mult);
 		dir0 = normalize(v);
-		v = self.realowner.origin - (it.origin + it.view_ofs);
+		v = this.realowner.origin - (it.origin + it.view_ofs);
 		vol1 = max(0, 1 - vlen(v) * dist_mult);
 		dir1 = normalize(v);
 		if(fabs(vol0 - vol1) > 0.005) // 0.5 percent change in volume
 		{
-			setorigin(self, self.realowner.origin);
-			self.SendFlags |= 2;
+			setorigin(this, this.realowner.origin);
+			this.SendFlags |= 2;
 			break;
 		}
 		if(dir0 * dir1 < 0.9994) // 2 degrees change in angle
 		{
-			setorigin(self, self.realowner.origin);
-			self.SendFlags |= 2;
+			setorigin(this, this.realowner.origin);
+			this.SendFlags |= 2;
 			break;
 		}
 	});
 }
 
 void W_Tuba_NoteOn(entity actor, float hittype)
-{entity this = actor;
+{
 	vector o;
 	float n;
 
-	W_SetupShot(self, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
+	W_SetupShot(actor, false, 2, SND_Null, 0, WEP_CVAR(tuba, damage));
 
-	n = W_Tuba_GetNote(self, hittype);
+	n = W_Tuba_GetNote(actor, hittype);
 
 	hittype = 0;
-	if(self.tuba_instrument & 1)
+	if(actor.tuba_instrument & 1)
 		hittype |= HITTYPE_SECONDARY;
-	if(self.tuba_instrument & 2)
+	if(actor.tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
 
-	if(self.tuba_note)
+	if(actor.tuba_note)
 	{
-		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
+		if(actor.tuba_note.cnt != n || actor.tuba_note.tuba_instrument != actor.tuba_instrument)
 		{
-			W_Tuba_NoteOff(self.tuba_note);
+			W_Tuba_NoteOff(actor.tuba_note);
 		}
 	}
 
-	if(!self.tuba_note)
+	if(!actor.tuba_note)
 	{
-		self.tuba_note = new(tuba_note);
-		self.tuba_note.owner = self.tuba_note.realowner = self;
-		self.tuba_note.cnt = n;
-		self.tuba_note.tuba_instrument = self.tuba_instrument;
-		setthink(self.tuba_note, W_Tuba_NoteThink);
-		self.tuba_note.nextthink = time;
-		self.tuba_note.spawnshieldtime = time;
-		Net_LinkEntity(self.tuba_note, false, 0, W_Tuba_NoteSendEntity);
+		actor.tuba_note = new(tuba_note);
+		actor.tuba_note.owner = actor.tuba_note.realowner = actor;
+		actor.tuba_note.cnt = n;
+		actor.tuba_note.tuba_instrument = actor.tuba_instrument;
+		setthink(actor.tuba_note, W_Tuba_NoteThink);
+		actor.tuba_note.nextthink = time;
+		actor.tuba_note.spawnshieldtime = time;
+		Net_LinkEntity(actor.tuba_note, false, 0, W_Tuba_NoteSendEntity);
 	}
 
-	self.tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
+	actor.tuba_note.teleport_time = time + WEP_CVAR(tuba, refire) * 2 * W_WeaponRateFactor(actor); // so it can get prolonged safely
 
-	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
-	RadiusDamage(self, self, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, NULL);
+	//sound(actor, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
+	RadiusDamage(actor, actor, WEP_CVAR(tuba, damage), WEP_CVAR(tuba, edgedamage), WEP_CVAR(tuba, radius), NULL, NULL, WEP_CVAR(tuba, force), hittype | WEP_TUBA.m_id, NULL);
 
-	o = gettaginfo(self.exteriorweaponentity, 0);
-	if(time > self.tuba_smoketime)
+	o = gettaginfo(actor.exteriorweaponentity, 0);
+	if(time > actor.tuba_smoketime)
 	{
 		Send_Effect(EFFECT_SMOKE_RING, o + v_up * 45 + v_right * -6 + v_forward * 8, v_up * 100, 1);
-		self.tuba_smoketime = time + 0.25;
+		actor.tuba_smoketime = time + 0.25;
 	}
 }
 #endif

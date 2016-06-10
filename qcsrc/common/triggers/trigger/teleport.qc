@@ -13,7 +13,7 @@ void trigger_teleport_use(entity this, entity actor, entity trigger)
 
 void Teleport_Touch (entity this)
 {
-	if (self.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
 #ifdef SVQC
@@ -34,8 +34,8 @@ void Teleport_Touch (entity this)
 	if(IS_DEAD(other))
 		return;
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
 			return;
 
 	EXACTTRIGGER_TOUCH;
@@ -46,12 +46,12 @@ void Teleport_Touch (entity this)
 #endif
 
 	entity e;
-	e = Simple_TeleportPlayer(self, other);
+	e = Simple_TeleportPlayer(this, other);
 
 #ifdef SVQC
-	string s = self.target; self.target = string_null;
-	SUB_UseTargets(self, other, other); // TODO: should we be using other for trigger too?
-	if (!self.target) self.target = s;
+	string s = this.target; this.target = string_null;
+	SUB_UseTargets(this, other, other); // TODO: should we be using other for trigger too?
+	if (!this.target) this.target = s;
 
 	SUB_UseTargets(e, other, other);
 #endif

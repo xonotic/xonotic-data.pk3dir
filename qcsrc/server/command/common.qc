@@ -205,7 +205,7 @@ void timeout_handler_think(entity this)
 				if (timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 
-				self.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
+				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
 				timeout_time -= 1;                                  // decrease the time counter
 			}
 			else  // time to end the timeout
@@ -232,7 +232,7 @@ void timeout_handler_think(entity this)
 			{
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 
-				self.nextthink = time + 1; // think again in one second
+				this.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1;     // decrease the time counter
 			}
 			else  // time to begin the timeout
@@ -254,7 +254,7 @@ void timeout_handler_think(entity this)
 					it.lastV_angle = it.v_angle;
 				));
 
-				self.nextthink = time;  // think again next frame to handle it under TIMEOUT_ACTIVE code
+				this.nextthink = time;  // think again next frame to handle it under TIMEOUT_ACTIVE code
 			}
 
 			return;

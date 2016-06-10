@@ -87,33 +87,33 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
 
 void raptor_bomblet_boom(entity this)
 {
-    RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
+    RadiusDamage (this, this.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
                                     autocvar_g_vehicle_raptor_bomblet_radius, world, world,
                                     autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, world);
-    remove(self);
+    remove(this);
 }
 
 void raptor_bomblet_touch(entity this)
 {
-    if(other == self.owner)
+    if(other == this.owner)
         return;
 
     PROJECTILE_TOUCH(this);
-    setthink(self, raptor_bomblet_boom);
-    self.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
+    setthink(this, raptor_bomblet_boom);
+    this.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
 }
 
 void raptor_bomb_burst(entity this)
 {
-    if(self.cnt > time)
+    if(this.cnt > time)
     if(autocvar_g_vehicle_raptor_bomblet_alt)
     {
-        self.nextthink = time;
-        traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
-        if((trace_fraction == 1.0) || (vdist(self.origin - self.owner.origin, <, autocvar_g_vehicle_raptor_bomblet_radius)))
+        this.nextthink = time;
+        traceline(this.origin, this.origin + (normalize(this.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, this);
+        if((trace_fraction == 1.0) || (vdist(this.origin - this.owner.origin, <, autocvar_g_vehicle_raptor_bomblet_radius)))
         {
-            UpdateCSQCProjectile(self);
+            UpdateCSQCProjectile(this);
             return;
         }
     }
@@ -121,26 +121,26 @@ void raptor_bomb_burst(entity this)
     entity bomblet;
     float i;
 
-    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_VH_RAPT_FRAGMENT.m_id, 0, self);
+    Damage_DamageInfo(this.origin, 0, 0, 0, '0 0 0', DEATH_VH_RAPT_FRAGMENT.m_id, 0, this);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
         bomblet = spawn();
-        setorigin(bomblet, self.origin);
+        setorigin(bomblet, this.origin);
 
         bomblet.movetype	= MOVETYPE_TOSS;
         settouch(bomblet, raptor_bomblet_touch);
         setthink(bomblet, raptor_bomblet_boom);
         bomblet.nextthink   = time + 5;
-        bomblet.owner	   = self.owner;
-        bomblet.realowner   = self.realowner;
-        bomblet.velocity	= normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
+        bomblet.owner	   = this.owner;
+        bomblet.realowner   = this.realowner;
+        bomblet.velocity	= normalize(normalize(this.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(this.velocity);
 
         PROJECTILE_MAKETRIGGER(bomblet);
         CSQCProjectile(bomblet, true, PROJECTILE_RAPTORBOMBLET, true);
     }
 
-    remove(self);
+    remove(this);
 }
 
 void raptor_bombdrop(entity this)
@@ -194,19 +194,19 @@ void raptor_flare_damage(entity this, entity inflictor, entity attacker, float d
 
 void raptor_flare_think(entity this)
 {
-    self.nextthink = time + 0.1;
-    entity _missile = findchainentity(enemy, self.owner);
+    this.nextthink = time + 0.1;
+    entity _missile = findchainentity(enemy, this.owner);
     while(_missile)
     {
         if(_missile.flags & FL_PROJECTILE)
-        if(vdist(self.origin - _missile.origin, <, autocvar_g_vehicle_raptor_flare_range))
+        if(vdist(this.origin - _missile.origin, <, autocvar_g_vehicle_raptor_flare_range))
         if(random() > autocvar_g_vehicle_raptor_flare_chase)
-            _missile.enemy = self;
+            _missile.enemy = this;
         _missile = _missile.chain;
     }
 
-    if(self.tur_impacttime < time)
-        remove(self);
+    if(this.tur_impacttime < time)
+        remove(this);
 }
 
 #endif

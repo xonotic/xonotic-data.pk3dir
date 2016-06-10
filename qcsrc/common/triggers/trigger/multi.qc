@@ -68,33 +68,33 @@ void multi_use(entity this, entity actor, entity trigger)
 
 void multi_touch(entity this)
 {
-	if(!(self.spawnflags & 2))
+	if(!(this.spawnflags & 2))
 	if(!other.iscreature)
 			return;
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (this.team != other.team))
 			return;
 
 // if the trigger has an angles field, check player's facing direction
-	if (self.movedir != '0 0 0')
+	if (this.movedir != '0 0 0')
 	{
 		makevectors (other.angles);
-		if (v_forward * self.movedir < 0)
+		if (v_forward * this.movedir < 0)
 			return;		// not facing the right way
 	}
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(self.pressedkeys)
+	if(this.pressedkeys)
 	if(IS_PLAYER(other)) // only for players
-	if(!(other.pressedkeys & self.pressedkeys))
+	if(!(other.pressedkeys & this.pressedkeys))
 		return;
 
 	EXACTTRIGGER_TOUCH;
 
-	self.enemy = other;
-	self.goalentity = other;
-	multi_trigger(self);
+	this.enemy = other;
+	this.goalentity = other;
+	multi_trigger(this);
 }
 
 void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

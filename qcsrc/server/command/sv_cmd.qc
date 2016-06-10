@@ -45,12 +45,12 @@ void make_mapinfo_Think(entity this)
 	{
 		LOG_INFO("Done rebuiling mapinfos.\n");
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-		remove(self);
+		remove(this);
 	}
 	else
 	{
-		setthink(self, make_mapinfo_Think);
-		self.nextthink = time;
+		setthink(this, make_mapinfo_Think);
+		this.nextthink = time;
 	}
 }
 

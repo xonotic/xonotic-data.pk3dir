@@ -86,78 +86,78 @@ void ka_RespawnBall(entity this);
 void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 {
 	if(gameover) { return; }
-	vector oldballorigin = self.origin;
+	vector oldballorigin = this.origin;
 
-	if(!MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+	if(!MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(this, true);
-		setorigin(self, spot.origin);
-		self.angles = spot.angles;
+		setorigin(this, spot.origin);
+		this.angles = spot.angles;
 	}
 
-	makevectors(self.angles);
-	self.movetype = MOVETYPE_BOUNCE;
-	self.velocity = '0 0 200';
-	self.angles = '0 0 0';
-	self.effects = autocvar_g_keepawayball_effects;
-	settouch(self, ka_TouchEvent);
-	setthink(self, ka_RespawnBall);
-	self.nextthink = time + autocvar_g_keepawayball_respawntime;
+	makevectors(this.angles);
+	this.movetype = MOVETYPE_BOUNCE;
+	this.velocity = '0 0 200';
+	this.angles = '0 0 0';
+	this.effects = autocvar_g_keepawayball_effects;
+	settouch(this, ka_TouchEvent);
+	setthink(this, ka_RespawnBall);
+	this.nextthink = time + autocvar_g_keepawayball_respawntime;
 
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
-	Send_Effect(EFFECT_ELECTRO_COMBO, self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
 
-	WaypointSprite_Spawn(WP_KaBall, 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
-	WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
+	WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', world, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
+	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
 
-	sound(self, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
 void ka_TimeScoring(entity this)
 {
-	if(self.owner.ballcarried)
+	if(this.owner.ballcarried)
 	{ // add points for holding the ball after a certain amount of time
 		if(autocvar_g_keepaway_score_timepoints)
-			PlayerScore_Add(self.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
+			PlayerScore_Add(this.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
 
-		PlayerScore_Add(self.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
-		self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
+		PlayerScore_Add(this.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
+		this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
 }
 
 void ka_TouchEvent(entity this) // runs any time that the ball comes in contact with something
 {
 	if(gameover) { return; }
-	if(!self) { return; }
+	if(!this) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The ball fell off the map, respawn it since players can't get to it
-		ka_RespawnBall(self);
+		ka_RespawnBall(this);
 		return;
 	}
 	if(IS_DEAD(other)) { return; }
 	if(STAT(FROZEN, other)) { return; }
 	if (!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
-		Send_Effect(EFFECT_BALL_SPARKS, self.origin, '0 0 0', 1);
-		sound(self, CH_TRIGGER, SND_KA_TOUCH, VOL_BASE, ATTEN_NORM);
+		Send_Effect(EFFECT_BALL_SPARKS, this.origin, '0 0 0', 1);
+		sound(this, CH_TRIGGER, SND_KA_TOUCH, VOL_BASE, ATTEN_NORM);
 		return;
 	}
-	else if(self.wait > time) { return; }
+	else if(this.wait > time) { return; }
 
 	// attach the ball to the player
-	self.owner = other;
-	other.ballcarried = self;
-	setattachment(self, other, "");
-	setorigin(self, '0 0 0');
+	this.owner = other;
+	other.ballcarried = this;
+	setattachment(this, other, "");
+	setorigin(this, '0 0 0');
 
 	// make the ball invisible/unable to do anything/set up time scoring
-	self.velocity = '0 0 0';
-	self.movetype = MOVETYPE_NONE;
-	self.effects |= EF_NODRAW;
-	settouch(self, func_null);
-	setthink(self, ka_TimeScoring);
-	self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
-	self.takedamage = DAMAGE_NO;
+	this.velocity = '0 0 0';
+	this.movetype = MOVETYPE_NONE;
+	this.effects |= EF_NODRAW;
+	settouch(this, func_null);
+	setthink(this, ka_TimeScoring);
+	this.nextthink = time + autocvar_g_keepaway_score_timeinterval;
+	this.takedamage = DAMAGE_NO;
 
 	// apply effects to player
 	other.glow_color = autocvar_g_keepawayball_trail_color;
@@ -169,7 +169,7 @@ void ka_TouchEvent(entity this) // runs any time that the ball comes in contact 
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
-	sound(self.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
@@ -179,7 +179,7 @@ void ka_TouchEvent(entity this) // runs any time that the ball comes in contact 
 	other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
 	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);
-	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
+	WaypointSprite_Kill(this.waypointsprite_attachedforcarrier);
 }
 
 void ka_DropEvent(entity plyr) // runs any time that a player is supposed to lose the ball

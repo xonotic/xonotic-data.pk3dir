@@ -704,7 +704,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	// for now, just give "say" back and only handle say_team
 	if(!teamsay)
 	{
-		clientcommand(self, strcat("say ", msgin));
+		clientcommand(source, strcat("say ", msgin));
 		return;
 	}
 	*/

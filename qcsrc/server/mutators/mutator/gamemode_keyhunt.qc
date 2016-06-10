@@ -219,14 +219,14 @@ void kh_Controller_Think(entity this)  // called a lot
 {
 	if(intermission_running)
 		return;
-	if(self.cnt > 0)
-	{ if(getthink(self) != kh_WaitForPlayers) { self.cnt -= 1; } }
-	else if(self.cnt == 0)
+	if(this.cnt > 0)
+	{ if(getthink(this) != kh_WaitForPlayers) { this.cnt -= 1; } }
+	else if(this.cnt == 0)
 	{
-		self.cnt -= 1;
+		this.cnt -= 1;
 		kh_Controller_Thinkfunc();
 	}
-	self.nextthink = time + 1;
+	this.nextthink = time + 1;
 }
 
 // frags f: take from cvar * f
@@ -510,7 +510,7 @@ void kh_Key_Touch(entity this)  // runs many, many times when a key has been dro
 	if(intermission_running)
 		return;
 
-	if(self.owner) // already carried
+	if(this.owner) // already carried
 		return;
 
 	if(ITEM_TOUCH_NEEDKILL())
@@ -525,10 +525,10 @@ void kh_Key_Touch(entity this)  // runs many, many times when a key has been dro
 		return;
 	if(IS_DEAD(other))
 		return;
-	if(other == self.enemy)
-		if(time < self.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
+	if(other == this.enemy)
+		if(time < this.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!
-	kh_Key_Collect(self, other);
+	kh_Key_Collect(this, other);
 }
 
 void kh_Key_Remove(entity key)  // runs after when all the keys have been collected or when a key has been dropped for more than X seconds
@@ -731,35 +731,35 @@ void kh_Key_Think(entity this)  // runs all the time
 	if(intermission_running)
 		return;
 
-	if(self.owner)
+	if(this.owner)
 	{
 #ifndef KH_PLAYER_USE_ATTACHMENT
-		makevectors('0 1 0' * (self.cnt + (time % 360) * KH_KEY_XYSPEED));
-		setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin.z);
+		makevectors('0 1 0' * (this.cnt + (time % 360) * KH_KEY_XYSPEED));
+		setorigin(this, v_forward * KH_KEY_XYDIST + '0 0 1' * this.origin.z);
 #endif
 	}
 
 	// if in nodrop or time over, end the round
-	if(!self.owner)
-		if(time > self.pain_finished)
-			kh_LoserTeam(self.team, self);
+	if(!this.owner)
+		if(time > this.pain_finished)
+			kh_LoserTeam(this.team, this);
 
-	if(self.owner)
+	if(this.owner)
 	if(kh_Key_AllOwnedByWhichTeam() != -1)
 	{
-		if(self.siren_time < time)
+		if(this.siren_time < time)
 		{
-			sound(self.owner, CH_TRIGGER, SND_KH_ALARM, VOL_BASE, ATTEN_NORM);  // play a simple alarm
-			self.siren_time = time + 2.5;  // repeat every 2.5 seconds
+			sound(this.owner, CH_TRIGGER, SND_KH_ALARM, VOL_BASE, ATTEN_NORM);  // play a simple alarm
+			this.siren_time = time + 2.5;  // repeat every 2.5 seconds
 		}
 
 		entity key;
 		vector p;
-		p = self.owner.origin;
+		p = this.owner.origin;
 		FOR_EACH_KH_KEY(key)
-			if(vlen(key.owner.origin - p) > autocvar_g_balance_keyhunt_maxdist)
+			if(vdist(key.owner.origin - p, >, autocvar_g_balance_keyhunt_maxdist))
 				goto not_winning;
-		kh_WinnerTeam(self.team);
+		kh_WinnerTeam(this.team);
 LABEL(not_winning)
 	}
 
@@ -777,7 +777,7 @@ LABEL(not_winning)
 		));
 	}
 
-	self.nextthink = time + 0.05;
+	this.nextthink = time + 0.05;
 }
 
 void key_reset(entity this)

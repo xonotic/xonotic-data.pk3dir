@@ -59,16 +59,16 @@ vector func_vectormamamam_origin(entity o, float t)
 
 void func_vectormamamam_controller_think(entity this)
 {
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 
-	if(self.owner.active != ACTIVE_ACTIVE)
+	if(this.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';
+		this.owner.velocity = '0 0 0';
 		return;
 	}
 
-	if(self.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
-		self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
+	if(this.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
+		this.owner.velocity = (this.owner.destvec + func_vectormamamam_origin(this.owner, 0.1) - this.owner.origin) * 10;
 }
 
 void func_vectormamamam_findtarget(entity this)

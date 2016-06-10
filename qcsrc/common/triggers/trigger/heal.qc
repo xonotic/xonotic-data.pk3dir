@@ -2,7 +2,7 @@
 .float triggerhealtime;
 void trigger_heal_touch(entity this)
 {
-	if (self.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
@@ -15,11 +15,11 @@ void trigger_heal_touch(entity this)
 			EXACTTRIGGER_TOUCH;
 			other.triggerhealtime = time + 1;
 
-			if (other.health < self.max_health)
+			if (other.health < this.max_health)
 			{
-				other.health = min(other.health + self.health, self.max_health);
+				other.health = min(other.health + this.health, this.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				_sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+				_sound (other, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}

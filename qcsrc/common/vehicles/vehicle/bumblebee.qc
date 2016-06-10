@@ -630,16 +630,16 @@ void bumblebee_land(entity this)
 	float hgt;
 
 	hgt = raptor_altitude(this, 512);
-	self.velocity = (self.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
-	self.angles_x *= 0.95;
-	self.angles_z *= 0.95;
+	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
+	this.angles_x *= 0.95;
+	this.angles_z *= 0.95;
 
 	if(hgt < 16)
-		setthink(self, vehicles_think);
+		setthink(this, vehicles_think);
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void bumblebee_exit(entity this, int eject)
@@ -686,33 +686,33 @@ void bumblebee_exit(entity this, int eject)
 
 void bumblebee_blowup(entity this)
 {
-	RadiusDamage(self, self.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
+	RadiusDamage(this, this.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
-				 autocvar_g_vehicle_bumblebee_blowup_radius, self, world,
+				 autocvar_g_vehicle_bumblebee_blowup_radius, this, world,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH.m_id, world);
 
-	sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-	Send_Effect(EFFECT_EXPLOSION_BIG, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
+	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+	Send_Effect(EFFECT_EXPLOSION_BIG, (this.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 
-	if(self.owner.deadflag == DEAD_DYING)
-		self.owner.deadflag = DEAD_DEAD;
+	if(this.owner.deadflag == DEAD_DYING)
+		this.owner.deadflag = DEAD_DEAD;
 
-	remove(self);
+	remove(this);
 }
 
 void bumblebee_diethink(entity this)
 {
-	if(time >= self.wait)
-		setthink(self, bumblebee_blowup);
+	if(time >= this.wait)
+		setthink(this, bumblebee_blowup);
 
 	if(random() < 0.1)
 	{
-		sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
-		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (this.origin + '0 0 100'), '0 0 0', 1);
 	}
 
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 }
 
 spawnfunc(vehicle_bumblebee)
