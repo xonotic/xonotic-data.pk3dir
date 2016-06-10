@@ -113,7 +113,8 @@ MUTATOR_HOOKABLE(Particles_VortexBeam, EV_Particles_VortexBeam);
 
 /** Return true to not draw any impact effect */
 #define EV_Weapon_ImpactEffect(i, o) \
-	/** entity id */ i(entity, MUTATOR_ARGV_0_entity) \
+	/** weapon */ 			i(entity, MUTATOR_ARGV_0_entity) \
+	/** damage entity */ 	i(entity, MUTATOR_ARGV_1_entity) \
 	/**/
 MUTATOR_HOOKABLE(Weapon_ImpactEffect, EV_Weapon_ImpactEffect);
 
