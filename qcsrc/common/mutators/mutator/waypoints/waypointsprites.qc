@@ -1045,13 +1045,14 @@ entity WaypointSprite_SpawnFixed(
 entity WaypointSprite_DeployFixed(
     entity spr,
     float limited_range,
+    entity player,
     vector ofs,
     entity icon // initial icon
 )
-{SELFPARAM();
+{
     float t;
     if (teamplay)
-        t = self.team;
+        t = player.team;
     else
         t = 0;
     float maxdistance;
@@ -1059,29 +1060,31 @@ entity WaypointSprite_DeployFixed(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, false, icon);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, player, waypointsprite_deployed_fixed, false, icon);
 }
 
 entity WaypointSprite_DeployPersonal(
     entity spr,
+    entity player,
     vector ofs,
     entity icon // initial icon
 )
-{SELFPARAM();
-    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon);
+{
+    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, player, waypointsprite_deployed_personal, false, icon);
 }
 
 entity WaypointSprite_Attach(
     entity spr,
+    entity player,
     float limited_range,
     entity icon // initial icon
 )
-{SELFPARAM();
+{
     float t;
-    if (self.waypointsprite_attachedforcarrier)
+    if (player.waypointsprite_attachedforcarrier)
         return world; // can't attach to FC
     if (teamplay)
-        t = self.team;
+        t = player.team;
     else
         t = 0;
     float maxdistance;
@@ -1089,7 +1092,7 @@ entity WaypointSprite_Attach(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, false, icon);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, player, '0 0 64', world, t, player, waypointsprite_attached, false, icon);
 }
 
 entity WaypointSprite_AttachCarrier(
@@ -1113,16 +1116,16 @@ void WaypointSprite_DetachCarrier(entity carrier)
     WaypointSprite_Disown(carrier.waypointsprite_attachedforcarrier, waypointsprite_deadlifetime);
 }
 
-void WaypointSprite_ClearPersonal()
-{SELFPARAM();
-    WaypointSprite_Kill(self.waypointsprite_deployed_personal);
+void WaypointSprite_ClearPersonal(entity this)
+{
+    WaypointSprite_Kill(this.waypointsprite_deployed_personal);
 }
 
-void WaypointSprite_ClearOwned()
-{SELFPARAM();
-    WaypointSprite_Kill(self.waypointsprite_deployed_fixed);
-    WaypointSprite_Kill(self.waypointsprite_deployed_personal);
-    WaypointSprite_Kill(self.waypointsprite_attached);
+void WaypointSprite_ClearOwned(entity this)
+{
+    WaypointSprite_Kill(this.waypointsprite_deployed_fixed);
+    WaypointSprite_Kill(this.waypointsprite_deployed_personal);
+    WaypointSprite_Kill(this.waypointsprite_attached);
 }
 
 void WaypointSprite_PlayerDead(entity this)
@@ -1131,12 +1134,12 @@ void WaypointSprite_PlayerDead(entity this)
     WaypointSprite_DetachCarrier(this);
 }
 
-void WaypointSprite_PlayerGone()
-{SELFPARAM();
-    WaypointSprite_Disown(self.waypointsprite_deployed_fixed, waypointsprite_deadlifetime);
-    WaypointSprite_Kill(self.waypointsprite_deployed_personal);
-    WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
-    WaypointSprite_DetachCarrier(self);
+void WaypointSprite_PlayerGone(entity this)
+{
+    WaypointSprite_Disown(this.waypointsprite_deployed_fixed, waypointsprite_deadlifetime);
+    WaypointSprite_Kill(this.waypointsprite_deployed_personal);
+    WaypointSprite_Disown(this.waypointsprite_attached, waypointsprite_deadlifetime);
+    WaypointSprite_DetachCarrier(this);
 }
 #endif
 #endif

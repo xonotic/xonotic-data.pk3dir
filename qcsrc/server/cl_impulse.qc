@@ -378,7 +378,7 @@ IMPULSE(use)
 
 IMPULSE(waypoint_personal_here)
 {
-	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.origin, RADARICON_WAYPOINT);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, this.origin, RADARICON_WAYPOINT);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "personal waypoint spawned at location\n");
 }
@@ -386,7 +386,7 @@ IMPULSE(waypoint_personal_here)
 IMPULSE(waypoint_personal_crosshair)
 {
 	WarpZone_crosshair_trace(this);
-	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, trace_endpos, RADARICON_WAYPOINT);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, trace_endpos, RADARICON_WAYPOINT);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "personal waypoint spawned at crosshair\n");
 }
@@ -394,7 +394,7 @@ IMPULSE(waypoint_personal_crosshair)
 IMPULSE(waypoint_personal_death)
 {
 	if (!this.death_origin) return;
-	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.death_origin, RADARICON_WAYPOINT);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, this.death_origin, RADARICON_WAYPOINT);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "personal waypoint spawned at death location\n");
 }
@@ -405,7 +405,7 @@ IMPULSE(waypoint_here_follow)
 	if (IS_DEAD(this)) return;
 	if (!MUTATOR_CALLHOOK(HelpMePing, this))
 	{
-		entity wp = WaypointSprite_Attach(WP_Helpme, true, RADARICON_HELPME);
+		entity wp = WaypointSprite_Attach(WP_Helpme, this, true, RADARICON_HELPME);
 		if (!wp) WaypointSprite_HelpMePing(this.waypointsprite_attachedforcarrier);
 		else WaypointSprite_Ping(wp);
 	}
@@ -414,7 +414,7 @@ IMPULSE(waypoint_here_follow)
 
 IMPULSE(waypoint_here_here)
 {
-	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.origin, RADARICON_HERE);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, this.origin, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at location\n");
 }
@@ -422,7 +422,7 @@ IMPULSE(waypoint_here_here)
 IMPULSE(waypoint_here_crosshair)
 {
 	WarpZone_crosshair_trace(this);
-	entity wp = WaypointSprite_DeployFixed(WP_Here, false, trace_endpos, RADARICON_HERE);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, trace_endpos, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at crosshair\n");
 }
@@ -430,14 +430,14 @@ IMPULSE(waypoint_here_crosshair)
 IMPULSE(waypoint_here_death)
 {
 	if (!this.death_origin) return;
-	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.death_origin, RADARICON_HERE);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, this.death_origin, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at death location\n");
 }
 
 IMPULSE(waypoint_danger_here)
 {
-	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.origin, RADARICON_DANGER);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, this.origin, RADARICON_DANGER);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "DANGER spawned at location\n");
 }
@@ -445,7 +445,7 @@ IMPULSE(waypoint_danger_here)
 IMPULSE(waypoint_danger_crosshair)
 {
 	WarpZone_crosshair_trace(this);
-	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, trace_endpos, RADARICON_DANGER);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, trace_endpos, RADARICON_DANGER);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "DANGER spawned at crosshair\n");
 }
@@ -453,14 +453,14 @@ IMPULSE(waypoint_danger_crosshair)
 IMPULSE(waypoint_danger_death)
 {
 	if (!this.death_origin) return;
-	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.death_origin, RADARICON_DANGER);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, this.death_origin, RADARICON_DANGER);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "DANGER spawned at death location\n");
 }
 
 IMPULSE(waypoint_clear_personal)
 {
-	WaypointSprite_ClearPersonal();
+	WaypointSprite_ClearPersonal(this);
 	if (this.personal)
 	{
 		remove(this.personal);
@@ -471,7 +471,7 @@ IMPULSE(waypoint_clear_personal)
 
 IMPULSE(waypoint_clear)
 {
-	WaypointSprite_ClearOwned();
+	WaypointSprite_ClearOwned(this);
 	if (this.personal)
 	{
 		remove(this.personal);

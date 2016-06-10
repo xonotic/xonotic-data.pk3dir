@@ -196,6 +196,7 @@ entity WaypointSprite_SpawnFixed(
 entity WaypointSprite_DeployFixed(
     entity spr,
     float limited_range,
+    entity player,
     vector ofs,
     entity icon // initial icon
 );
@@ -203,6 +204,7 @@ entity WaypointSprite_DeployFixed(
 .entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
     entity spr,
+    entity player,
     vector ofs,
     entity icon // initial icon
 );
@@ -211,6 +213,7 @@ entity WaypointSprite_DeployPersonal(
 .entity waypointsprite_attachedforcarrier;
 entity WaypointSprite_Attach(
     entity spr,
+    entity player,
     float limited_range,
     entity icon // initial icon
 );
@@ -223,13 +226,13 @@ entity WaypointSprite_AttachCarrier(
 
 void WaypointSprite_DetachCarrier(entity carrier);
 
-void WaypointSprite_ClearPersonal();
+void WaypointSprite_ClearPersonal(entity this);
 
-void WaypointSprite_ClearOwned();
+void WaypointSprite_ClearOwned(entity this);
 
 void WaypointSprite_PlayerDead(entity this);
 
-void WaypointSprite_PlayerGone();
+void WaypointSprite_PlayerGone(entity this);
 #endif
 
 #endif

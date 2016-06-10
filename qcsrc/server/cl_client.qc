@@ -1208,7 +1208,7 @@ void ClientDisconnect()
 	if (this.chatbubbleentity) remove(this.chatbubbleentity);
 	if (this.killindicator) remove(this.killindicator);
 
-	WaypointSprite_PlayerGone();
+	WaypointSprite_PlayerGone(this);
 
 	bot_relinkplayerlist();
 
