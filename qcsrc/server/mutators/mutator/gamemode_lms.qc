@@ -352,8 +352,8 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
-		++bot_activerealplayers;
-		++bot_realplayers;
+		++M_ARGV(0, int);
+		++M_ARGV(1, int);
 	));
 
 	return true;
@@ -361,18 +361,19 @@ MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
-    SELFPARAM();
-	if(self.lms_spectate_warning)
+    entity player = M_ARGV(0, entity);
+
+	if(player.lms_spectate_warning)
 	{
 		// for the forfeit message...
-		self.lms_spectate_warning = 2;
+		player.lms_spectate_warning = 2;
 		// mark player as spectator
-		PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
+		PlayerScore_Add(player, SP_LMS_RANK, 666 - PlayerScore_Add(player, SP_LMS_RANK, 0));
 	}
 	else
 	{
-		self.lms_spectate_warning = 1;
-		sprint(self, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+		player.lms_spectate_warning = 1;
+		sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
 		return MUT_SPECCMD_RETURN;
 	}
 	return MUT_SPECCMD_CONTINUE;

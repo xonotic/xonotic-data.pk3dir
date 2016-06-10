@@ -1698,7 +1698,7 @@ bool Spectate(entity pl)
 {SELFPARAM();
 	if(MUTATOR_CALLHOOK(SpectateSet, this, pl))
 		return false;
-	pl = spec_player;
+	pl = M_ARGV(1, entity);
 
 	SetSpectatee(this, pl);
 	return SpectateSet();
@@ -1709,7 +1709,7 @@ bool SpectateNext()
 	other = find(this.enemy, classname, STR_PLAYER);
 
 	if (MUTATOR_CALLHOOK(SpectateNext, this, other))
-		other = spec_player;
+		other = M_ARGV(1, entity);
 	else if (!other)
 		other = find(other, classname, STR_PLAYER);
 
@@ -1734,10 +1734,10 @@ bool SpectatePrev()
 	switch (MUTATOR_CALLHOOK(SpectatePrev, this, other, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    other = spec_player;
+		    other = M_ARGV(1, entity);
 		    break;
 		case MUT_SPECPREV_RETURN:
-		    other = spec_player;
+		    other = M_ARGV(1, entity);
 		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:

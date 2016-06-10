@@ -2130,25 +2130,29 @@ MUTATOR_HOOKFUNCTION(ons, PlayHitsound)
 
 MUTATOR_HOOKFUNCTION(ons, SendWaypoint)
 {
-    SELFPARAM();
-	if(wp_sendflags & 16)
+    entity wp = M_ARGV(0, entity);
+    entity to = M_ARGV(1, entity);
+    int sf = M_ARGV(2, int);
+    int wp_flag = M_ARGV(3, int);
+
+	if(sf & 16)
 	{
-		if(self.owner.classname == "onslaught_controlpoint")
+		if(wp.owner.classname == "onslaught_controlpoint")
 		{
-			entity wp_owner = self.owner;
-			entity e = WaypointSprite_getviewentity(wp_sendto);
+			entity wp_owner = wp.owner;
+			entity e = WaypointSprite_getviewentity(to);
 			if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { wp_flag |= 2; }
 			if(!ons_ControlPoint_Attackable(wp_owner, e.team)) { wp_flag |= 2; }
 		}
-		if(self.owner.classname == "onslaught_generator")
+		if(wp.owner.classname == "onslaught_generator")
 		{
-			entity wp_owner = self.owner;
+			entity wp_owner = wp.owner;
 			if(wp_owner.isshielded && wp_owner.health >= wp_owner.max_health) { wp_flag |= 2; }
 			if(wp_owner.health <= 0) { wp_flag |= 2; }
 		}
 	}
 
-	return false;
+	M_ARGV(3, int) = wp_flag;
 }
 
 MUTATOR_HOOKFUNCTION(ons, TurretValidateTarget)
@@ -2166,19 +2170,18 @@ MUTATOR_HOOKFUNCTION(ons, TurretValidateTarget)
 
 MUTATOR_HOOKFUNCTION(ons, TurretThink)
 {
-    SELFPARAM();
+    entity turret = M_ARGV(0, entity);
+
 	// ONS uses somewhat backwards linking.
-	if(self.target)
+	if(turret.target)
 	{
-		entity e = find(world, targetname, self.target);
+		entity e = find(world, targetname, turret.target);
 		if (e != world)
-			self.team = e.team;
+			turret.team = e.team;
 	}
 
-	if(self.team != self.tur_head.team)
-		turret_respawn(self);
-
-	return false;
+	if(turret.team != turret.tur_head.team)
+		turret_respawn(turret);
 }
 
 

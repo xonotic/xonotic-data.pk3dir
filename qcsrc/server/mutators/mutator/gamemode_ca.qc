@@ -435,19 +435,24 @@ MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 {
-    SELFPARAM();
-	if (!autocvar_g_ca_spectate_enemies && this.caplayer)
-	if (DIFF_TEAM(spec_player, this))
+    entity client = M_ARGV(0, entity);
+    entity targ = M_ARGV(1, entity);
+
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (DIFF_TEAM(targ, client))
 		return true;
+
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
-    SELFPARAM();
-	if (!autocvar_g_ca_spectate_enemies && this.caplayer)
+    entity client = M_ARGV(0, entity);
+    entity targ = M_ARGV(1, entity);
+
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
-		spec_player = CA_SpectateNext(this, spec_player);
+		targ = CA_SpectateNext(client, targ);
 		return true;
 	}
 	return false;
@@ -455,17 +460,20 @@ MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 
 MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 {
-    SELFPARAM();
-	if (!autocvar_g_ca_spectate_enemies && this.caplayer)
+    entity client = M_ARGV(0, entity);
+    entity targ = M_ARGV(1, entity);
+    entity first = M_ARGV(2, entity);
+
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
-		do { spec_player = spec_player.chain; }
-		while(spec_player && DIFF_TEAM(spec_player, this));
+		do { targ = targ.chain; }
+		while(targ && DIFF_TEAM(targ, client));
 
-		if (!spec_player)
+		if (!targ)
 		{
-			for (spec_player = spec_first; spec_player && DIFF_TEAM(spec_player, this); spec_player = spec_player.chain);
+			for (targ = first; targ && DIFF_TEAM(targ, client); targ = targ.chain);
 
-			if (spec_player == this.enemy)
+			if (targ == client.enemy)
 				return MUT_SPECPREV_RETURN;
 		}
 	}
@@ -477,20 +485,21 @@ MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		if (IS_PLAYER(it) || it.caplayer == 1)
-			++bot_activerealplayers;
-		++bot_realplayers;
+			++M_ARGV(0, int);
+		++M_ARGV(1, int);
 	});
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 {
-    SELFPARAM();
-	if (this.caplayer)
+    entity player = M_ARGV(0, entity);
+
+	if (player.caplayer)
 	{
 		// they're going to spec, we can do other checks
-		if (autocvar_sv_spectate && (IS_SPEC(this) || IS_OBSERVER(this)))
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CA_LEAVE);
+		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_LEAVE);
 		return MUT_SPECCMD_FORCE;
 	}
 

@@ -1096,8 +1096,7 @@ MUTATOR_HOOKFUNCTION(nb, DropSpecialItems)
 
 MUTATOR_HOOKFUNCTION(nb, SendWaypoint)
 {
-	wp_sendflags &= ~0x80;
-	return false;
+	M_ARGV(2, int) &= ~0x80;
 }
 
 REGISTER_MUTATOR(nb, g_nexball)
