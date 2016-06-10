@@ -44,7 +44,7 @@ METHOD(HunterKillerAttack, wr_think, void(entity thiswep, entity actor, .entity 
 	}
 }
 
-bool hk_is_valid_target(entity e_target);
+bool hk_is_valid_target(entity this, entity e_target);
 void turret_hk_missile_think(entity this)
 {
     vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
@@ -72,7 +72,7 @@ void turret_hk_missile_think(entity this)
         e = findradius(self.origin, 5000);
         while (e)
         {
-            if (hk_is_valid_target(e))
+            if (hk_is_valid_target(this, e))
             {
                 if (!self.enemy)
                     self.enemy = e;
@@ -246,38 +246,38 @@ void turret_hk_missile_think(entity this)
     UpdateCSQCProjectile(self);
 }
 
-bool hk_is_valid_target(entity e_target)
-{SELFPARAM();
+bool hk_is_valid_target(entity this, entity e_target)
+{
     if (e_target == world)
-        return 0;
+        return false;
 
     // If only this was used more..
     if (e_target.flags & FL_NOTARGET)
-        return 0;
+        return false;
 
     // Cant touch this
     if ((e_target.takedamage == DAMAGE_NO) || (e_target.health < 0))
-        return 0;
+        return false;
 
     // player
     if (IS_CLIENT(e_target))
     {
-        if (self.owner.target_select_playerbias < 0)
-            return 0;
+        if (this.owner.target_select_playerbias < 0)
+            return false;
 
         if (IS_DEAD(e_target))
-            return 0;
+            return false;
     }
 
     // Missile
-    if ((e_target.flags & FL_PROJECTILE) && (self.owner.target_select_missilebias < 0))
-        return 0;
+    if ((e_target.flags & FL_PROJECTILE) && (this.owner.target_select_missilebias < 0))
+        return false;
 
     // Team check
-    if ((e_target.team == self.owner.team) || (self.owner.team == e_target.owner.team))
-        return 0;
+    if ((e_target.team == this.owner.team) || (this.owner.team == e_target.owner.team))
+        return false;
 
-    return 1;
+    return true;
 }
 
 #endif

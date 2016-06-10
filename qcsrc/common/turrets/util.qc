@@ -93,21 +93,21 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 }
 
 #ifdef TURRET_DEBUG
-void marker_think()
-{SELFPARAM();
-	if(self.cnt)
-	if(self.cnt < time)
+void marker_think(entity this, )
+{
+	if(this.cnt)
+	if(this.cnt < time)
 	{
-		setthink(self, SUB_Remove);
-		self.nextthink = time;
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
 		return;
 	}
 
-	self.frame += 1;
-	if(self.frame > 29)
-		self.frame = 0;
+	this.frame += 1;
+	if(this.frame > 29)
+		this.frame = 0;
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 void mark_error(vector where,float lifetime)

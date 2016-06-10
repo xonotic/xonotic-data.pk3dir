@@ -7,7 +7,7 @@ void turret_targettrigger_touch(entity this)
     FOREACH_ENTITY_STRING_ORDERED(targetname, this.target, {
         if (!(it.turret_flags & TUR_FLAG_RECIEVETARGETS)) continue;
         if (!it.turret_addtarget) continue;
-        WITHSELF(it, it.turret_addtarget(other, this));
+        it.turret_addtarget(it, other, this);
     });
     this.cnt = time + 0.5;
 }
