@@ -958,8 +958,11 @@ void spawn_held_nade(entity player, entity nowner, float ntime, int ntype, strin
 {
 	entity n = new(nade), fn = new(fake_nade);
 
-	n.nade_type = bound(1, ntype, Nades_COUNT);
+	n.nade_type = max(1, ntype);
 	n.pokenade_type = pntype;
+
+	if(Nades_from(n.nade_type) == NADE_TYPE_Null)
+		n.nade_type = NADE_TYPE_NORMAL.m_id;
 
 	setmodel(n, MDL_PROJECTILE_NADE);
 	//setattachment(n, player, "bip01 l hand");
