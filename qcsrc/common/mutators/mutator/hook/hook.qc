@@ -10,6 +10,8 @@ REGISTER_MUTATOR(hook, autocvar_g_grappling_hook) {
         g_grappling_hook = false;
         WEP_HOOK.ammo_factor = 1;
     }
+
+    return false;
 }
 
 MUTATOR_HOOKFUNCTION(hook, BuildMutatorsString)

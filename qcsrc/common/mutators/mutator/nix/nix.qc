@@ -66,6 +66,8 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 				PS(it).m_switchweapon = w_getbestweapon(it);
 		});
 	}
+
+	return false;
 }
 
 bool NIX_CanChooseWeapon(int wpn)
