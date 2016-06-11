@@ -555,7 +555,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		excess = M_ARGV(4, float);
 
 		Weapon wep = PS(this).m_weapon;
-		WITHSELF(this, wep.wr_playerdeath(wep, this));
+		wep.wr_playerdeath(wep, this);
 
 		RemoveGrapplingHook(this);
 
