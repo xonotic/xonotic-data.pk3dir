@@ -1304,7 +1304,7 @@ void respawn(entity this)
 	CopyBody(this, 1);
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
-	PutClientInServer();
+	WITHSELF(this, PutClientInServer());
 }
 
 void play_countdown(entity this, float finished, Sound samp)
