@@ -191,16 +191,26 @@ void bd_move(entity minigame, entity player, string dir)
 			int dx = bound(-1, dxs, 1);
 			int dy = bound(-1, dys, 1);
 
-			dozer.bd_dir_x = dx;
-			dozer.bd_dir_y = dy;
-			dozer.bd_dir_z = 0;
+			int moved = 0;
+			entity e = world;
+			while ( ( e = findentity(e,owner,minigame) ) )
+				if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
+				{
+					e.bd_dir_x = dx;
+					e.bd_dir_y = dy;
+					e.bd_dir_z = 0;
 
-			if(bd_move_dozer(minigame, dozer))
+					if(bd_move_dozer(minigame, e))
+						++moved;
+
+					minigame_server_sendflags(e,MINIG_SF_UPDATE); // update anyway
+				}
+
+			if(moved)
 				player.bd_moves++;
 
 			bd_check_winner(minigame);
 
-			minigame_server_sendflags(dozer,MINIG_SF_UPDATE); // update anyway
 			minigame_server_sendflags(player,BD_SF_PLAYERMOVES);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		}
@@ -237,9 +247,9 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 				return;
 			}
 
-			entity dozer = bd_find_dozer(minigame);
-			if(dozer && thetile == BD_TILE_DOZER && pos != dozer.netname)
-				return; // nice try
+			//entity dozer = bd_find_dozer(minigame);
+			//if(dozer && thetile == BD_TILE_DOZER && pos != dozer.netname)
+				//return; // nice try
 
 			if(found_piece || (targ && thetile != BD_TILE_BOULDER))
 			{
