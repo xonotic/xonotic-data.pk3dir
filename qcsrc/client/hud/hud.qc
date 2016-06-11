@@ -446,12 +446,15 @@ void Hud_Dynamic_Frame()
 
 	if(autocvar_hud_dynamic_shake > 0)
 	{
+		static float old_health = 0;
+		float health = max(-1, STAT(HEALTH));
 		if(hud_dynamic_shake_factor == -1) // don't allow the effect for this frame
+		{
 			hud_dynamic_shake_factor = 0;
+			old_health = health;
+		}
 		else
 		{
-			static float old_health = 0;
-			float health = max(-1, STAT(HEALTH));
 			float new_hud_dynamic_shake_factor = 0;
 			if (old_health - health >= autocvar_hud_dynamic_shake_damage_min
 				&& autocvar_hud_dynamic_shake_damage_max > autocvar_hud_dynamic_shake_damage_min
