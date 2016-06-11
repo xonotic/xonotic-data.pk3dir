@@ -711,7 +711,7 @@ void ClientInit_Spawn()
 	setthink(e, ClientInit_CheckUpdate);
 	Net_LinkEntity(e, false, 0, ClientInit_SendEntity);
 
-	WITHSELF(e, ClientInit_CheckUpdate(e));
+	ClientInit_CheckUpdate(e);
 }
 
 /*

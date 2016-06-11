@@ -1074,7 +1074,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	CSQCModel_UnlinkEntity(veh);
 	Vehicle info = Vehicles_from(veh.vehicleid);
-	WITHSELF(veh, info.vr_enter(info, veh));
+	info.vr_enter(info, veh);
 
 	antilag_clear(pl, CS(pl));
 }

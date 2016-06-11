@@ -332,7 +332,7 @@ bool racer_frame(entity this)
 		crosshair_trace(this);
 		w_shotdir.z = normalize(trace_endpos - org).z * 0.5;
 		.entity weaponentity = weaponentities[0];
-		WITHSELF(vehic, wep1.wr_think(wep1, vehic, weaponentity, 1));
+		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)

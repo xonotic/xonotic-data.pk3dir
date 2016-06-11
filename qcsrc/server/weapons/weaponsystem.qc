@@ -767,5 +767,5 @@ void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_
 {
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
-	WITHSELF(player, w.event(w, player));
+	w.event(w, player);
 }

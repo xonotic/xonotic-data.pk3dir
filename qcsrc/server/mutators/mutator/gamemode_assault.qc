@@ -224,8 +224,8 @@ void assault_roundstart_use(entity this, entity actor, entity trigger)
 		else
 			it.team = NUM_TEAM_1;
 
-		// Dubbles as teamchange
-		WITHSELF(it, turret_respawn(it));
+		// Doubles as teamchange
+		turret_respawn(it);
 	));
 }
 void assault_roundstart_use_this(entity this)

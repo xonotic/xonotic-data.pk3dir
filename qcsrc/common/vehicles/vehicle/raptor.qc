@@ -411,7 +411,7 @@ bool raptor_frame(entity this)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
 		    .entity weaponentity = weaponentities[1];
-			WITHSELF(vehic, wep2a.wr_think(wep2a, vehic, weaponentity, 2));
+			wep2a.wr_think(wep2a, vehic, weaponentity, 2);
 			vehic.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
 			vehic.lip   = time;
 		}
@@ -423,7 +423,7 @@ bool raptor_frame(entity this)
 		if(PHYS_INPUT_BUTTON_ATCK2(this))
 		{
 		    .entity weaponentity = weaponentities[1];
-			WITHSELF(vehic, wep2b.wr_think(wep2b, vehic, weaponentity, 2));
+			wep2b.wr_think(wep2b, vehic, weaponentity, 2);
 			vehic.delay = time + autocvar_g_vehicle_raptor_flare_refire;
 			vehic.lip   = time;
 		}
