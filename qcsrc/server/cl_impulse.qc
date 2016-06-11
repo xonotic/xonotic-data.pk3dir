@@ -61,7 +61,7 @@
 			this.impulse = IMP_weapon_group_##slot.impulse; \
 			return; \
 		} \
-		W_NextWeaponOnImpulse(slot); \
+		W_NextWeaponOnImpulse(this, slot); \
 	}
 X(1)
 X(2)
@@ -89,7 +89,7 @@ X(0)
 		noref int prev = -1; \
 		noref int best =  0; \
 		noref int next = +1; \
-		W_CycleWeapon(this.cvar_cl_weaponpriorities[slot], dir); \
+		W_CycleWeapon(this, this.cvar_cl_weaponpriorities[slot], dir); \
 	}
 X(0, prev)
 X(1, prev)
@@ -136,7 +136,7 @@ X(9, next)
 			this.impulse = IMP_weapon_byid_##i.impulse; \
 			return; \
 		} \
-		W_SwitchWeapon(Weapons_from(WEP_FIRST + i)); \
+		W_SwitchWeapon(this, Weapons_from(WEP_FIRST + i)); \
 	}
 X(0)
 X(1)
@@ -172,7 +172,7 @@ IMPULSE(weapon_next_byid)
 		this.impulse = IMP_weapon_next_byid.impulse;
 		return;
 	}
-	W_NextWeapon(0);
+	W_NextWeapon(this, 0);
 }
 
 IMPULSE(weapon_prev_byid)
@@ -183,7 +183,7 @@ IMPULSE(weapon_prev_byid)
 		this.impulse = IMP_weapon_prev_byid.impulse;
 		return;
 	}
-	W_PreviousWeapon(0);
+	W_PreviousWeapon(this, 0);
 }
 
 IMPULSE(weapon_next_bygroup)
@@ -194,7 +194,7 @@ IMPULSE(weapon_next_bygroup)
 		this.impulse = IMP_weapon_next_bygroup.impulse;
 		return;
 	}
-	W_NextWeapon(1);
+	W_NextWeapon(this, 1);
 }
 
 IMPULSE(weapon_prev_bygroup)
@@ -205,7 +205,7 @@ IMPULSE(weapon_prev_bygroup)
 		this.impulse = IMP_weapon_prev_bygroup.impulse;
 		return;
 	}
-	W_PreviousWeapon(1);
+	W_PreviousWeapon(this, 1);
 }
 
 IMPULSE(weapon_next_bypriority)
@@ -216,7 +216,7 @@ IMPULSE(weapon_next_bypriority)
 		this.impulse = IMP_weapon_next_bypriority.impulse;
 		return;
 	}
-	W_NextWeapon(2);
+	W_NextWeapon(this, 2);
 }
 
 IMPULSE(weapon_prev_bypriority)
@@ -227,7 +227,7 @@ IMPULSE(weapon_prev_bypriority)
 		this.impulse = IMP_weapon_prev_bypriority.impulse;
 		return;
 	}
-	W_PreviousWeapon(2);
+	W_PreviousWeapon(this, 2);
 }
 
 IMPULSE(weapon_last)
@@ -241,14 +241,14 @@ IMPULSE(weapon_best)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_SwitchWeapon(w_getbestweapon(this));
+	W_SwitchWeapon(this, w_getbestweapon(this));
 }
 
 IMPULSE(weapon_drop)
 {
 	if (this.vehicle) return;
 	if (IS_DEAD(this)) return;
-	W_ThrowWeapon(W_CalculateProjectileVelocity(this.velocity, v_forward * 750, false), '0 0 0', true);
+	W_ThrowWeapon(this, W_CalculateProjectileVelocity(this, this.velocity, v_forward * 750, false), '0 0 0', true);
 }
 
 IMPULSE(weapon_reload)
@@ -361,7 +361,7 @@ void ImpulseCommands(entity this)
 
 	if (vehicle_impulse(this, imp)) return;
 
-	if (CheatImpulse(imp)) return;
+	if (CheatImpulse(this, imp)) return;
 
 	FOREACH(IMPULSES, it.impulse == imp, {
 		void(entity) f = it.impulse_handle;
@@ -373,12 +373,12 @@ void ImpulseCommands(entity this)
 
 IMPULSE(use)
 {
-	PlayerUseKey();
+	PlayerUseKey(this);
 }
 
 IMPULSE(waypoint_personal_here)
 {
-	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.origin, RADARICON_WAYPOINT);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, this.origin, RADARICON_WAYPOINT);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "personal waypoint spawned at location\n");
 }
@@ -386,7 +386,7 @@ IMPULSE(waypoint_personal_here)
 IMPULSE(waypoint_personal_crosshair)
 {
 	WarpZone_crosshair_trace(this);
-	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, trace_endpos, RADARICON_WAYPOINT);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, trace_endpos, RADARICON_WAYPOINT);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "personal waypoint spawned at crosshair\n");
 }
@@ -394,7 +394,7 @@ IMPULSE(waypoint_personal_crosshair)
 IMPULSE(waypoint_personal_death)
 {
 	if (!this.death_origin) return;
-	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this.death_origin, RADARICON_WAYPOINT);
+	entity wp = WaypointSprite_DeployPersonal(WP_Waypoint, this, this.death_origin, RADARICON_WAYPOINT);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "personal waypoint spawned at death location\n");
 }
@@ -405,7 +405,7 @@ IMPULSE(waypoint_here_follow)
 	if (IS_DEAD(this)) return;
 	if (!MUTATOR_CALLHOOK(HelpMePing, this))
 	{
-		entity wp = WaypointSprite_Attach(WP_Helpme, true, RADARICON_HELPME);
+		entity wp = WaypointSprite_Attach(WP_Helpme, this, true, RADARICON_HELPME);
 		if (!wp) WaypointSprite_HelpMePing(this.waypointsprite_attachedforcarrier);
 		else WaypointSprite_Ping(wp);
 	}
@@ -414,7 +414,7 @@ IMPULSE(waypoint_here_follow)
 
 IMPULSE(waypoint_here_here)
 {
-	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.origin, RADARICON_HERE);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, this.origin, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at location\n");
 }
@@ -422,7 +422,7 @@ IMPULSE(waypoint_here_here)
 IMPULSE(waypoint_here_crosshair)
 {
 	WarpZone_crosshair_trace(this);
-	entity wp = WaypointSprite_DeployFixed(WP_Here, false, trace_endpos, RADARICON_HERE);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, trace_endpos, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at crosshair\n");
 }
@@ -430,14 +430,14 @@ IMPULSE(waypoint_here_crosshair)
 IMPULSE(waypoint_here_death)
 {
 	if (!this.death_origin) return;
-	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this.death_origin, RADARICON_HERE);
+	entity wp = WaypointSprite_DeployFixed(WP_Here, false, this, this.death_origin, RADARICON_HERE);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "HERE spawned at death location\n");
 }
 
 IMPULSE(waypoint_danger_here)
 {
-	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.origin, RADARICON_DANGER);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, this.origin, RADARICON_DANGER);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "DANGER spawned at location\n");
 }
@@ -445,7 +445,7 @@ IMPULSE(waypoint_danger_here)
 IMPULSE(waypoint_danger_crosshair)
 {
 	WarpZone_crosshair_trace(this);
-	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, trace_endpos, RADARICON_DANGER);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, trace_endpos, RADARICON_DANGER);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "DANGER spawned at crosshair\n");
 }
@@ -453,14 +453,14 @@ IMPULSE(waypoint_danger_crosshair)
 IMPULSE(waypoint_danger_death)
 {
 	if (!this.death_origin) return;
-	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this.death_origin, RADARICON_DANGER);
+	entity wp = WaypointSprite_DeployFixed(WP_Danger, false, this, this.death_origin, RADARICON_DANGER);
 	if (wp) WaypointSprite_Ping(wp);
 	sprint(this, "DANGER spawned at death location\n");
 }
 
 IMPULSE(waypoint_clear_personal)
 {
-	WaypointSprite_ClearPersonal();
+	WaypointSprite_ClearPersonal(this);
 	if (this.personal)
 	{
 		remove(this.personal);
@@ -471,7 +471,7 @@ IMPULSE(waypoint_clear_personal)
 
 IMPULSE(waypoint_clear)
 {
-	WaypointSprite_ClearOwned();
+	WaypointSprite_ClearOwned(this);
 	if (this.personal)
 	{
 		remove(this.personal);

@@ -73,7 +73,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype,
 	return true; // if none of these return, then allow damage anyway.
 }
 
-void W_PrepareExplosionByDamage(entity this, entity attacker, void() explode)
+void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode)
 {
 	this.takedamage = DAMAGE_NO;
 	this.event_damage = func_null;
@@ -89,5 +89,5 @@ void W_PrepareExplosionByDamage(entity this, entity attacker, void() explode)
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
 	this.nextthink = time;
-	this.think = explode;
+	setthink(this, explode);
 }

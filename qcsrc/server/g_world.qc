@@ -41,8 +41,8 @@ const float LATENCY_THINKRATE = 10;
 .float latency_cnt;
 .float latency_time;
 entity pingplreport;
-void PingPLReport_Think()
-{SELFPARAM();
+void PingPLReport_Think(entity this)
+{
 	float delta;
 	entity e;
 
@@ -82,7 +82,7 @@ void PingPLReport_Think()
 void PingPLReport_Spawn()
 {
 	pingplreport = new_pure(pingplreport);
-	pingplreport.think = PingPLReport_Think;
+	setthink(pingplreport, PingPLReport_Think);
 	pingplreport.nextthink = time;
 }
 
@@ -104,8 +104,8 @@ void SetDefaultAlpha()
 	}
 }
 
-void GotoFirstMap()
-{SELFPARAM();
+void GotoFirstMap(entity this)
+{
 	float n;
 	if(autocvar__sv_init)
 	{
@@ -129,11 +129,11 @@ void GotoFirstMap()
 
 	if(time < 5)
 	{
-		self.nextthink = time;
+		this.nextthink = time;
 	}
 	else
 	{
-		self.nextthink = time + 1;
+		this.nextthink = time + 1;
 		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...\n");
 	}
 }
@@ -515,20 +515,20 @@ bool RandomSeed_Send(entity this, entity to, int sf)
 	WriteShort(MSG_ENTITY, this.cnt);
 	return true;
 }
-void RandomSeed_Think()
-{SELFPARAM();
+void RandomSeed_Think(entity this)
+{
 	this.cnt = bound(0, floor(random() * 65536), 65535);
 	this.nextthink = time + 5;
 
 	this.SendFlags |= 1;
 }
 void RandomSeed_Spawn()
-{SELFPARAM();
+{
 	randomseed = new_pure(randomseed);
-	randomseed.think = RandomSeed_Think;
+	setthink(randomseed, RandomSeed_Think);
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITHSELF(randomseed, randomseed.think()); // sets random seed and nextthink
+	WITHSELF(randomseed, getthink(randomseed)(randomseed)); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -543,12 +543,12 @@ spawnfunc(__init_dedicated_server)
 	remove = remove_unsafely;
 
 	entity e = spawn();
-	e.think = GotoFirstMap;
+	setthink(e, GotoFirstMap);
 	e.nextthink = time; // this is usually 1 at this point
 
 	e = new(info_player_deathmatch);  // safeguard against player joining
 
-	self.classname = "worldspawn"; // safeguard against various stuff ;)
+	this.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -739,7 +739,7 @@ spawnfunc(worldspawn)
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
 	if(bot_waypoints_for_items == 1)
-		if(self.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
+		if(this.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
 	precache();
@@ -760,7 +760,7 @@ spawnfunc(worldspawn)
 		s = ":gameinfo:mutators:LIST";
 
 		MUTATOR_CALLHOOK(BuildMutatorsString, s);
-		s = ret_string;
+		s = M_ARGV(0, string);
 
 		// initialiation stuff, not good in the mutator system
 		if(!autocvar_g_use_ammunition)
@@ -915,15 +915,15 @@ spawnfunc(worldspawn)
 	// save it for later
 	modname = strzone(modname);
 
-	WinningConditionHelper(); // set worldstatus
+	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
 }
 
 spawnfunc(light)
 {
-	//makestatic (self); // Who the f___ did that?
-	remove(self);
+	//makestatic (this); // Who the f___ did that?
+	remove(this);
 }
 
 string GetGametype()
@@ -1296,18 +1296,18 @@ When the player presses attack or jump, change to the next level
 ============
 */
 .float autoscreenshot;
-void IntermissionThink()
-{SELFPARAM();
-	FixIntermissionClient(self);
+void IntermissionThink(entity this)
+{
+	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
-	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
+	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
-		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
+		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
 	{
-		self.autoscreenshot = -1;
-		if(IS_REAL_CLIENT(self)) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
+		this.autoscreenshot = -1;
+		if(IS_REAL_CLIENT(this)) { stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
 		return;
 	}
 
@@ -1315,7 +1315,7 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self)))
+		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this)))
 			return;
 
 	MapVote_Start();
@@ -1432,7 +1432,7 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - it.jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
@@ -1522,7 +1522,6 @@ only called if a time or frag limit has expired
 */
 void NextLevel()
 {
-    SELFPARAM();
 	gameover = true;
 
 	intermission_running = 1;
@@ -1580,8 +1579,8 @@ CheckRules_Player
 Exit deathmatch games upon conditions
 ============
 */
-void CheckRules_Player()
-{SELFPARAM();
+void CheckRules_Player(entity this)
+{
 	if (gameover)	// someone else quit the game already
 		return;
 
@@ -1683,7 +1682,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	float limitreached;
 
 	// TODO make everything use THIS winning condition (except LMS)
-	WinningConditionHelper();
+	WinningConditionHelper(NULL);
 
 	if(teamplay)
 	{
@@ -1929,7 +1928,7 @@ void CheckRules_World()
 	if(checkrules_status == WINNING_YES)
 		bprint("Hey! Someone ran out of spawns!\n");
 	else if(MUTATOR_CALLHOOK(CheckRules_World, checkrules_status, timelimit, fraglimit))
-		checkrules_status = ret_float;
+		checkrules_status = M_ARGV(0, float);
 	else
 		checkrules_status = WinningCondition_Scores(fraglimit, leadlimit);
 
@@ -2026,7 +2025,7 @@ void EndFrame()
 float redirection_timeout;
 float redirection_nextthink;
 float RedirectionThink()
-{SELFPARAM();
+{
 	float clients_found;
 
 	if(redirection_target == "")
@@ -2049,13 +2048,12 @@ float RedirectionThink()
 
 	clients_found = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
-		setself(it);
 		// TODO add timer
-		LOG_INFO("Redirecting: sending connect command to ", self.netname, "\n");
+		LOG_INFO("Redirecting: sending connect command to ", it.netname, "\n");
 		if(redirection_target == "self")
-			stuffcmd(self, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
+			stuffcmd(it, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
-			stuffcmd(self, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
+			stuffcmd(it, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
 	));
 

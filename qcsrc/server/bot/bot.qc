@@ -557,8 +557,8 @@ float bot_fixcount()
 	int activerealplayers = 0;
 	int realplayers = 0;
 	if (MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers)) {
-		activerealplayers = bot_activerealplayers;
-		realplayers = bot_realplayers;
+		activerealplayers = M_ARGV(0, int);
+		realplayers = M_ARGV(1, int);
 	} else {
 		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 			if(IS_PLAYER(it))

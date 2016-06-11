@@ -9,11 +9,11 @@ REGISTER_MUTATOR(touchexplode, cvar("g_touchexplode"));
 .float touchexplode_time;
 
 void PlayerTouchExplode(entity p1, entity p2)
-{SELFPARAM();
+{
 	vector org = (p1.origin + p2.origin) * 0.5;
 	org.z += (p1.mins.z + p2.mins.z) * 0.5;
 
-	sound(self, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(p1, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_SMALL, org, '0 0 0', 1);
 
 	entity e = spawn();
@@ -23,25 +23,25 @@ void PlayerTouchExplode(entity p1, entity p2)
 }
 
 MUTATOR_HOOKFUNCTION(touchexplode, PlayerPreThink)
-{SELFPARAM();
-	if(time > self.touchexplode_time)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(time > player.touchexplode_time)
 	if(!gameover)
-	if(!STAT(FROZEN, self))
-	if(IS_PLAYER(self))
-	if(!IS_DEAD(self))
-	if(!IS_INDEPENDENT_PLAYER(self))
-		FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+	if(!STAT(FROZEN, player))
+	if(IS_PLAYER(player))
+	if(!IS_DEAD(player))
+	if(!IS_INDEPENDENT_PLAYER(player))
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
 			if(time > it.touchexplode_time)
 			if(!STAT(FROZEN, it))
 			if(!IS_DEAD(it))
 			if (!IS_INDEPENDENT_PLAYER(it))
-			if(boxesoverlap(self.absmin, self.absmax, it.absmin, it.absmax))
+			if(boxesoverlap(player.absmin, player.absmax, it.absmin, it.absmax))
 			{
-				PlayerTouchExplode(self, it);
-				self.touchexplode_time = it.touchexplode_time = time + 0.2;
+				PlayerTouchExplode(player, it);
+				player.touchexplode_time = it.touchexplode_time = time + 0.2;
 			}
 		));
-
-	return false;
 }
 #endif

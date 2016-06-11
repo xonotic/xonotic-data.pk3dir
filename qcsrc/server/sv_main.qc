@@ -236,24 +236,24 @@ void StartFrame()
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
-float DoesQ3ARemoveThisEntity();
+bool DoesQ3ARemoveThisEntity(entity this);
 void SV_OnEntityPreSpawnFunction()
-{SELFPARAM();
+{ENGINE_EVENT();
 	__spawnfunc_expect = this;
-	if (self)
-	if (self.gametypefilter != "")
-	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
+	if (this)
+	if (this.gametypefilter != "")
+	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	if(self.cvarfilter != "")
+	if(this.cvarfilter != "")
 	{
 		float n, i, o, inv;
 		string s, k, v;
 		inv = 0;
 
-		s = self.cvarfilter;
+		s = this.cvarfilter;
 		if(substring(s, 0, 1) == "+")
 		{
 			s = substring(s, 1, -1);
@@ -352,41 +352,41 @@ LABEL(cvar_fail)
 		if (!inv)
 		{
 			//print("cvarfilter fail\n");
-			remove(self);
+			remove(this);
 			return;
 		}
 	}
 
-	if(DoesQ3ARemoveThisEntity())
+	if(DoesQ3ARemoveThisEntity(this))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
 	// support special -1 and -2 angle from radiant
-	if (self.angles == '0 -1 0')
-		self.angles = '-90 0 0';
-	else if (self.angles == '0 -2 0')
-		self.angles = '+90 0 0';
+	if (this.angles == '0 -1 0')
+		this.angles = '-90 0 0';
+	else if (this.angles == '0 -2 0')
+		this.angles = '+90 0 0';
 
-	if(self.originjitter.x != 0)
-		self.origin_x = self.origin.x + (random() * 2 - 1) * self.originjitter.x;
-	if(self.originjitter.y != 0)
-		self.origin_y = self.origin.y + (random() * 2 - 1) * self.originjitter.y;
-	if(self.originjitter.z != 0)
-		self.origin_z = self.origin.z + (random() * 2 - 1) * self.originjitter.z;
-	if(self.anglesjitter.x != 0)
-		self.angles_x = self.angles.x + (random() * 2 - 1) * self.anglesjitter.x;
-	if(self.anglesjitter.y != 0)
-		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglesjitter.y;
-	if(self.anglesjitter.z != 0)
-		self.angles_z = self.angles.z + (random() * 2 - 1) * self.anglesjitter.z;
-	if(self.anglejitter != 0)
-		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglejitter;
+	if(this.originjitter.x != 0)
+		this.origin_x = this.origin.x + (random() * 2 - 1) * this.originjitter.x;
+	if(this.originjitter.y != 0)
+		this.origin_y = this.origin.y + (random() * 2 - 1) * this.originjitter.y;
+	if(this.originjitter.z != 0)
+		this.origin_z = this.origin.z + (random() * 2 - 1) * this.originjitter.z;
+	if(this.anglesjitter.x != 0)
+		this.angles_x = this.angles.x + (random() * 2 - 1) * this.anglesjitter.x;
+	if(this.anglesjitter.y != 0)
+		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglesjitter.y;
+	if(this.anglesjitter.z != 0)
+		this.angles_z = this.angles.z + (random() * 2 - 1) * this.anglesjitter.z;
+	if(this.anglejitter != 0)
+		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglejitter;
 
-	if(MUTATOR_CALLHOOK(OnEntityPreSpawn))
+	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 }

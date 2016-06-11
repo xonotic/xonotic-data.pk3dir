@@ -63,10 +63,10 @@ entity best_open_node;
 vector tile_check_up;
 vector tile_check_down;
 float  tile_check_size;
-float     tile_check_cross(vector where);
-float     tile_check_plus(vector where);
-float     tile_check_star(vector where);
-var float tile_check(vector where);
+float     tile_check_cross(entity this, vector where);
+float     tile_check_plus(entity this, vector where);
+float     tile_check_star(entity this, vector where);
+var float tile_check(entity this, vector where);
 
 float  movenode_stepsize;
 vector movenode_stepup;
@@ -76,11 +76,11 @@ vector movenode_boxmax;
 vector movenode_boxmin;
 float  pathlib_movenode_goodnode;
 
-vector     pathlib_wateroutnode(vector start, vector end, float doedge);
-vector     pathlib_swimnode(vector start, vector end, float doedge);
-vector     pathlib_flynode(vector start, vector end, float doedge);
-vector     pathlib_walknode(vector start, vector end, float doedge);
-var vector pathlib_movenode(vector start, vector end, float doedge);
+vector     pathlib_wateroutnode(entity this, vector start, vector end, float doedge);
+vector     pathlib_swimnode(entity this, vector start, vector end, float doedge);
+vector     pathlib_flynode(entity this, vector start, vector end, float doedge);
+vector     pathlib_walknode(entity this, vector start, vector end, float doedge);
+var vector pathlib_movenode(entity this, vector start, vector end, float doedge);
 
 float      pathlib_expandnode_star(entity node, vector start, vector goal);
 float      pathlib_expandnode_box(entity node, vector start, vector goal);

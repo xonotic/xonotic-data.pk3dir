@@ -11,7 +11,7 @@ void pathlib_deletepath(entity start)
     e = findchainentity(owner, start);
     while(e)
     {
-        e.think = SUB_Remove_self;
+        setthink(e, SUB_Remove);
         e.nextthink = time;
         e = e.chain;
     }
@@ -23,7 +23,7 @@ const float PATHLIB_NODEEXPIRE = 20;
 void dumpnode(entity n)
 {
     n.is_path_node = false;
-    n.think        = SUB_Remove_self;
+    setthink(n, SUB_Remove);
     n.nextthink    = time;
 }
 
@@ -49,7 +49,7 @@ entity pathlib_mknode(vector where,entity parent)
 
     node = spawn();
 
-    node.think        = SUB_Remove_self;
+    setthink(node, SUB_Remove);
     node.nextthink    = time + PATHLIB_NODEEXPIRE;
     node.is_path_node = true;
     node.owner        = openlist;
@@ -133,7 +133,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         return 1;
     }
 
-    where = pathlib_movenode(parent.origin, to, 0);
+    where = pathlib_movenode(parent, parent.origin, to, 0);
 
     if (!pathlib_movenode_goodnode)
     {
@@ -155,7 +155,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
 
     if(doedge)
-        if (!tile_check(where))
+        if (!tile_check(parent, where))
         {
             LOG_TRACE("tile_check fail\n");
 #if DEBUGPATHING
@@ -180,7 +180,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
             {
                 if(node.pathlib_node_g > g)
                 {
-                    //pathlib_movenode(where,node.origin,0);
+                    //pathlib_movenode(node, where,node.origin,0);
                     //if(pathlib_movenode_goodnode)
                     //{
                         //mark_error(node.origin + '0 0 128',30);
@@ -263,11 +263,11 @@ void pathlib_close_node(entity node,vector goal)
 
     node.owner = closedlist;
 
-    if(vlen(node.origin - goal) <= pathlib_gridsize)
+    if(vdist(node.origin - goal, <=, pathlib_gridsize))
     {
         vector goalmove;
 
-        goalmove = pathlib_walknode(node.origin,goal,1);
+        goalmove = pathlib_walknode(node, node.origin, goal, 1);
         if(pathlib_movenode_goodnode)
         {
             goal_node         = node;
@@ -336,9 +336,9 @@ float buildpath_nodefilter_directional(vector n,vector c,vector p)
     return 0;
 }
 
-float buildpath_nodefilter_moveskip(vector n,vector c,vector p)
+float buildpath_nodefilter_moveskip(entity this, vector n,vector c,vector p)
 {
-    pathlib_walknode(p,n,1);
+    pathlib_walknode(this, p, n, 1);
     if(pathlib_movenode_goodnode)
         return 1;
 
@@ -379,8 +379,8 @@ entity path_build(entity next, vector where, entity prev, entity start)
     return path;
 }
 
-entity pathlib_astar(vector from,vector to)
-{SELFPARAM();
+entity pathlib_astar(entity this, vector from,vector to)
+{
     entity path, start, end, open, n, ln;
     float ptime, ftime, ctime;
 
@@ -442,8 +442,8 @@ entity pathlib_astar(vector from,vector to)
     pathlib_movecost_waterfactor = 25000000;
     pathlib_foundgoal      = 0;
 
-    movenode_boxmax   = self.maxs * 1.1;
-    movenode_boxmin   = self.mins * 1.1;
+    movenode_boxmax   = this.maxs * 1.1;
+    movenode_boxmin   = this.mins * 1.1;
 
     movenode_stepsize = pathlib_gridsize * 0.25;
 

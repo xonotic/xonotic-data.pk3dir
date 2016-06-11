@@ -1,6 +1,7 @@
 #include "cvarlist.qh"
 
 #include "inputbox.qh"
+#include "../item/checkbox.qh"
 #include "../item/container.qh"
 #include "../item/checkbox.qh"
 

@@ -74,6 +74,7 @@ void HUD_MinigameStatus ()
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
+	HUD_Scale_Disable();
 	hud_minigame.minigame_hud_status(pos,mySize);
 }
 
@@ -264,7 +265,7 @@ void HUD_MinigameMenu_ClickJoin(entity this, entity actor, entity trigger)
 /*// Temporary placeholder for un-implemented Click actions
 void HUD_MinigameMenu_ClickNoop()
 {
-	dprint("Placeholder for ",self.message,"\n");
+	dprint("Placeholder for ",this.message,"\n");
 }*/
 
 // Click action for Quit
@@ -286,7 +287,7 @@ void HUD_MinigameMenu_ClickInvite(entity this, entity actor, entity trigger)
 	if ( HUD_MinigameMenu_Click_ExpandCollapse(this) )
 	{
 		entity e;
-		entity prev = self;
+		entity prev = this;
 		for(int i = 0; i < maxclients; ++i)
 		{
 			if ( player_localnum != i && playerslots[i] && entcs_GetName(i) != "" &&
@@ -294,7 +295,7 @@ void HUD_MinigameMenu_ClickInvite(entity this, entity actor, entity trigger)
 			{
 				e = HUD_MinigameMenu_SpawnSubEntry(
 					strzone(entcs_GetName(i)), HUD_MinigameMenu_ClickInvite_Entry,
-					self );
+					this );
 				e.flags |= 1;
 				e.netname = strzone(ftos(i+1));
 				e.origin_x *= 2;
@@ -476,6 +477,7 @@ void HUD_MinigameMenu ()
 
 	HUD_Panel_UpdateCvars();
 
+	HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	if(panel_bg_padding)

@@ -77,13 +77,13 @@ float autocvar_g_invasion_spawn_delay;
 
 spawnfunc(invasion_spawnpoint)
 {
-	if(!g_invasion) { remove(self); return; }
+	if(!g_invasion) { remove(this); return; }
 
-	self.classname = "invasion_spawnpoint";
+	this.classname = "invasion_spawnpoint";
 
 	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
-	if(self.monsterid) {
-		Monster mon = get_monsterinfo(self.monsterid);
+	if(this.monsterid) {
+		Monster mon = get_monsterinfo(this.monsterid);
 		mon.mr_precache(mon);
 	}
 }
@@ -141,7 +141,7 @@ void invasion_SpawnChosenMonster(float mon)
 			monster = spawnmonster("", mon, world, world, e.origin, false, false, 2);
 		else return;
 
-		e.think = SUB_Remove_self;
+		setthink(e, SUB_Remove);
 		e.nextthink = time + 0.1;
 	}
 	else
@@ -331,6 +331,9 @@ void Invasion_RoundStart()
 
 MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 {
+	entity frag_target = M_ARGV(0, entity);
+	entity frag_attacker = M_ARGV(1, entity);
+
 	if(!(frag_target.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		inv_numkilled += 1;
@@ -347,46 +350,42 @@ MUTATOR_HOOKFUNCTION(inv, MonsterDies)
 				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
-{SELFPARAM();
-	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
+{
+	entity mon = M_ARGV(0, entity);
+
+	if(!(mon.spawnflags & MONSTERFLAG_SPAWNED))
 		return true;
 
-	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(mon.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		inv_numspawned += 1;
 		inv_maxcurrent += 1;
 	}
 
-	self.monster_skill = inv_monsterskill;
+	mon.monster_skill = inv_monsterskill;
 
-	if((get_monsterinfo(self.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, self.monster_name);
+	if((get_monsterinfo(mon.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
 
-	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
-
-	return false;
+	mon.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 }
 
 MUTATOR_HOOKFUNCTION(inv, OnEntityPreSpawn)
-{SELFPARAM();
-	if(startsWith(self.classname, "monster_"))
-	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
-		return true;
+{
+	entity ent = M_ARGV(0, entity);
 
-	return false;
+	if(startsWith(ent.classname, "monster_"))
+	if(!(ent.spawnflags & MONSTERFLAG_SPAWNED))
+		return true;
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_StartFrame)
 {
 	monsters_total = inv_maxspawned; // TODO: make sure numspawned never exceeds maxspawned
 	monsters_killed = inv_numkilled;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, PlayerRegen)
@@ -396,60 +395,69 @@ MUTATOR_HOOKFUNCTION(inv, PlayerRegen)
 }
 
 MUTATOR_HOOKFUNCTION(inv, PlayerSpawn)
-{SELFPARAM();
-	self.bot_attack = false;
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.bot_attack = false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker != frag_target)
 	{
 		frag_damage = 0;
 		frag_force = '0 0 0';
-	}
 
-	return false;
+		M_ARGV(4, float) = frag_damage;
+		M_ARGV(6, vector) = frag_force;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(inv, SV_ParseClientCommand)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
+
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
 
 	if(cmd_name == "debuginvasion")
 	{
-		sprint(self, strcat("inv_maxspawned = ", ftos(inv_maxspawned), "\n"));
-		sprint(self, strcat("inv_numspawned = ", ftos(inv_numspawned), "\n"));
-		sprint(self, strcat("inv_numkilled = ", ftos(inv_numkilled), "\n"));
-		sprint(self, strcat("inv_roundcnt = ", ftos(inv_roundcnt), "\n"));
-		sprint(self, strcat("monsters_total = ", ftos(monsters_total), "\n"));
-		sprint(self, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
-		sprint(self, strcat("inv_monsterskill = ", ftos(inv_monsterskill), "\n"));
+		sprint(player, strcat("inv_maxspawned = ", ftos(inv_maxspawned), "\n"));
+		sprint(player, strcat("inv_numspawned = ", ftos(inv_numspawned), "\n"));
+		sprint(player, strcat("inv_numkilled = ", ftos(inv_numkilled), "\n"));
+		sprint(player, strcat("inv_roundcnt = ", ftos(inv_roundcnt), "\n"));
+		sprint(player, strcat("monsters_total = ", ftos(monsters_total), "\n"));
+		sprint(player, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
+		sprint(player, strcat("inv_monsterskill = ", ftos(inv_monsterskill), "\n"));
 
 		return true;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, BotShouldAttack)
 {
-	if(!IS_MONSTER(checkentity))
-		return true;
+	entity targ = M_ARGV(1, entity);
 
-	return false;
+	if(!IS_MONSTER(targ))
+		return true;
 }
 
 MUTATOR_HOOKFUNCTION(inv, SetStartItems)
 {
 	start_health = 200;
 	start_armorvalue = 200;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(inv, AccuracyTargetValid)
 {
+	entity frag_target = M_ARGV(1, entity);
+
 	if(IS_MONSTER(frag_target))
 		return MUT_ACCADD_INVALID;
 	return MUT_ACCADD_INDIFFERENT;
@@ -458,18 +466,18 @@ MUTATOR_HOOKFUNCTION(inv, AccuracyTargetValid)
 MUTATOR_HOOKFUNCTION(inv, AllowMobSpawning)
 {
 	// monster spawning disabled during an invasion
+	M_ARGV(1, string) = "You cannot spawn monsters during an invasion!";
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(inv, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = invasion_teams;
-	return false;
+	M_ARGV(0, float) = invasion_teams;
 }
 
 MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 {
-	ret_string = "This command does not work during an invasion!";
+	M_ARGV(0, string) = "This command does not work during an invasion!";
 	return true;
 }
 

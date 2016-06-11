@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 
-void turret_flac_projectile_think_explode();
+void turret_flac_projectile_think_explode(entity this);
 SOUND(FlacAttack_FIRE, W_Sound("electro_fire"));
 METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -20,11 +20,11 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(electro, animtime), w_ready);
         }
 
-        turret_tag_fire_update();
+        turret_tag_fire_update(actor);
 
-        entity proj = turret_projectile(SND_HAGAR_FIRE, 5, 0, DEATH_TURRET_FLAC.m_id, PROJECTILE_HAGAR, true, true);
+        entity proj = turret_projectile(actor, SND_HAGAR_FIRE, 5, 0, DEATH_TURRET_FLAC.m_id, PROJECTILE_HAGAR, true, true);
         proj.missile_flags = MIF_SPLASH | MIF_PROXY;
-        proj.think	  = turret_flac_projectile_think_explode;
+        setthink(proj, turret_flac_projectile_think_explode);
         proj.nextthink  = time + actor.tur_impacttime + (random() * 0.01 - random() * 0.01);
         Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, actor.tur_shotorg, actor.tur_shotdir_updated * 1000, 1);
 
@@ -36,21 +36,20 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
     }
 }
 
-void turret_flac_projectile_think_explode()
+void turret_flac_projectile_think_explode(entity this)
 {
-    SELFPARAM();
-    if(self.enemy != world)
-    if(vdist(self.origin - self.enemy.origin, <, self.owner.shot_radius * 3))
-        setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
+    if(this.enemy != world)
+    if(vdist(this.origin - this.enemy.origin, <, this.owner.shot_radius * 3))
+        setorigin(this,this.enemy.origin + randomvec() * this.owner.shot_radius);
 
 #ifdef TURRET_DEBUG
-    float d = RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
+    float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
+    this.owner.tur_dbg_dmg_t_h = this.owner.tur_dbg_dmg_t_h + d;
+    this.owner.tur_dbg_dmg_t_f = this.owner.tur_dbg_dmg_t_f + this.owner.shot_dmg;
 #else
-    RadiusDamage (self, self.realowner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
+    RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
 #endif
-    remove(self);
+    remove(this);
 }
 
 #endif

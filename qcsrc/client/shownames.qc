@@ -167,7 +167,6 @@ void Draw_ShowNames(entity this)
 
 void Draw_ShowNames_All()
 {
-    SELFPARAM();
 	if (!autocvar_hud_shownames) return;
 	LL_EACH(shownames_ent, true, {
 		entity entcs = entcs_receiver(i);
@@ -177,8 +176,8 @@ void Draw_ShowNames_All()
 			continue;
 		}
 		make_impure(it);
-		assert(entcs.think, eprint(entcs));
-		WITHSELF(entcs, entcs.think());
+		assert(getthink(entcs), eprint(entcs));
+		WITHSELF(entcs, getthink(entcs)(entcs));
 		if (!entcs.has_origin) continue;
 		if (entcs.m_entcs_private)
 		{

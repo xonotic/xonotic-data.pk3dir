@@ -11,15 +11,14 @@ string AnnouncerOption()
 {
 	string ret = autocvar_cl_announcer;
 	MUTATOR_CALLHOOK(AnnouncerOption, ret);
-	ret = ret_string;
+	ret = M_ARGV(0, string);
 	return ret;
 }
 
 entity announcer_countdown;
 
-void Announcer_Countdown()
+void Announcer_Countdown(entity this)
 {
-	SELFPARAM();
 	float starttime = STAT(GAMESTARTTIME);
 	float roundstarttime = STAT(ROUNDSTARTTIME);
 	if(roundstarttime == -1)
@@ -102,7 +101,7 @@ void Announcer_Gamestart()
 			if (!announcer_countdown)
 			{
 				announcer_countdown = new(announcer_countdown);
-				announcer_countdown.think = Announcer_Countdown;
+				setthink(announcer_countdown, Announcer_Countdown);
 			}
 
 			if(time + 5.0 < startTime) // if connecting to server while restart was active don't always play prepareforbattle

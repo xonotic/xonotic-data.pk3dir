@@ -20,15 +20,15 @@ REGISTER_NET_LINKED(ENT_CLIENT_DAMAGEINFO)
 bool Damage_DamageInfo_SendEntity(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_DAMAGEINFO);
-	WriteShort(MSG_ENTITY, self.projectiledeathtype);
-	WriteCoord(MSG_ENTITY, floor(self.origin.x));
-	WriteCoord(MSG_ENTITY, floor(self.origin.y));
-	WriteCoord(MSG_ENTITY, floor(self.origin.z));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg, 255));
-	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
-	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
-	WriteShort(MSG_ENTITY, self.oldorigin.x);
-	WriteByte(MSG_ENTITY, self.species);
+	WriteShort(MSG_ENTITY, this.projectiledeathtype);
+	WriteCoord(MSG_ENTITY, floor(this.origin.x));
+	WriteCoord(MSG_ENTITY, floor(this.origin.y));
+	WriteCoord(MSG_ENTITY, floor(this.origin.z));
+	WriteByte(MSG_ENTITY, bound(1, this.dmg, 255));
+	WriteByte(MSG_ENTITY, bound(0, this.dmg_radius, 255));
+	WriteByte(MSG_ENTITY, bound(1, this.dmg_edge, 255));
+	WriteShort(MSG_ENTITY, this.oldorigin.x);
+	WriteByte(MSG_ENTITY, this.species);
 	return true;
 }
 
@@ -69,8 +69,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 .int state;
 .bool isplayermodel;
 
-void DamageEffect_Think()
-{SELFPARAM();
+void DamageEffect_Think(entity this)
+{
 	// if particle distribution is enabled, slow ticrate by total number of damages
 	if(autocvar_cl_damageeffect_distribute)
 		this.nextthink = time + autocvar_cl_damageeffect_ticrate * this.owner.total_damages;
@@ -183,7 +183,7 @@ void DamageEffect(entity this, vector hitorg, float thedamage, int type, int spe
 	e.owner = this;
 	e.cnt = time + life;
 	e.team = _particleeffectnum(effectname);
-	e.think = DamageEffect_Think;
+	setthink(e, DamageEffect_Think);
 	e.nextthink = time;
 	this.total_damages += 1;
 }
@@ -417,8 +417,8 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 		if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 		{
-			if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep))
-				hitwep.wr_impacteffect(hitwep);
+			if(!MUTATOR_CALLHOOK(Weapon_ImpactEffect, hitwep, this))
+				hitwep.wr_impacteffect(hitwep, this);
 		}
 	}
 }

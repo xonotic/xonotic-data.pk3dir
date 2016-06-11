@@ -101,8 +101,6 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	/** return false to remove from the client */
 	.bool(entity this, entity to, int sendflags) SendEntity3;
 
-	bool SendEntity_self(entity to, int sendflags) { SELFPARAM(); return this.SendEntity3(this, to, sendflags); }
-
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "") e.classname = "net_linked";
@@ -115,8 +113,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			setsize(e, mi, ma);
 		}
 
-		e.SendEntity = SendEntity_self;
-		e.SendEntity3 = sendfunc;
+		setSendEntity(e, sendfunc);
 		e.SendFlags = 0xFFFFFF;
 
 		if (!docull) e.effects |= EF_NODEPTHTEST;
@@ -124,7 +121,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		if (dt)
 		{
 			e.nextthink = time + dt;
-			e.think = SUB_Remove_self;
+			setthink(e, SUB_Remove);
 		}
 	}
 
@@ -133,19 +130,19 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 		e.SendEntity = func_null;
 	}
 
-	.void() uncustomizeentityforclient;
+	.void(entity this) uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
-	void SetCustomizer(entity e, float() customizer, void() uncustomizer)
+	void SetCustomizer(entity e, bool(entity this) customizer, void(entity this) uncustomizer)
 	{
-		e.customizeentityforclient = customizer;
+		setcefc(e, customizer);
 		e.uncustomizeentityforclient = uncustomizer;
 		e.uncustomizeentityforclient_set = !!uncustomizer;
 	}
 
 	void UncustomizeEntitiesRun()
 	{
-		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, WITHSELF(it, it.uncustomizeentityforclient()));
+		FOREACH_ENTITY_FLOAT(uncustomizeentityforclient_set, true, it.uncustomizeentityforclient(it));
 	}
 
 	STRING_ITERATOR(g_buf, string_null, 0);

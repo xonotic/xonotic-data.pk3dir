@@ -1,0 +1,3 @@
+#pragma once
+
+#define objerror builtin_objerror

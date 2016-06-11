@@ -317,20 +317,20 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 {
 	entity oldother = other;
 
-	if(this.move_touch)
+	if(gettouch(this))
 	{
 		other = oth;
 
-		WITHSELF(this, this.move_touch());
+		WITHSELF(this, gettouch(this)(this));
 
 		other = oldother;
 	}
 
-	if(oth.move_touch)
+	if(gettouch(oth))
 	{
 		other = this;
 
-		WITHSELF(oth, oth.move_touch());
+		WITHSELF(oth, gettouch(oth)(oth));
 
 		other = oldother;
 	}
@@ -346,7 +346,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
     FOREACH_ENTITY_RADIUS(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
 		if (it.solid == SOLID_TRIGGER && it != this)
 		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
-		if (it.move_touch && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
+		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
 		{
 			other = this;
 
@@ -360,7 +360,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_dist = 0;
 			trace_ent = this;
 
-			WITHSELF(it, it.move_touch());
+			WITHSELF(it, gettouch(it)(it));
 		}
     });
 

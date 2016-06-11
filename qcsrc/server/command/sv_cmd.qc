@@ -31,7 +31,7 @@
 #include <common/monsters/sv_monsters.qh>
 
 
-void PutObserverInServer();
+void PutObserverInServer(entity this);
 
 // =====================================================
 //  Server side game commands code, reworked by Samual
@@ -39,19 +39,18 @@ void PutObserverInServer();
 // =====================================================
 
 //  used by GameCommand_make_mapinfo()
-void make_mapinfo_Think()
+void make_mapinfo_Think(entity this)
 {
-	SELFPARAM();
 	if (MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
 	{
 		LOG_INFO("Done rebuiling mapinfos.\n");
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-		remove(self);
+		remove(this);
 	}
 	else
 	{
-		self.think = make_mapinfo_Think;
-		self.nextthink = time;
+		setthink(this, make_mapinfo_Think);
+		this.nextthink = time;
 	}
 }
 
@@ -190,7 +189,6 @@ void GameCommand_allready(float request)
 
 void GameCommand_allspec(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -199,7 +197,7 @@ void GameCommand_allspec(float request, float argc)
 			int n = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
 				if (it.caplayer) it.caplayer = 0;
-				WITHSELF(it, PutObserverInServer());
+				PutObserverInServer(it);
 				++n;
 			));
 			if (n)   bprint(strcat("Successfully forced all (", ftos(n), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n"));
@@ -970,7 +968,7 @@ void GameCommand_make_mapinfo(float request)
 			entity tmp_entity;
 
 			tmp_entity = new(make_mapinfo);
-			tmp_entity.think = make_mapinfo_Think;
+			setthink(tmp_entity, make_mapinfo_Think);
 			tmp_entity.nextthink = time;
 			MapInfo_Enumerate();
 			return;
@@ -989,7 +987,6 @@ void GameCommand_make_mapinfo(float request)
 
 void GameCommand_moveplayer(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1028,7 +1025,7 @@ void GameCommand_moveplayer(float request, float argc)
 						if (!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							if (client.caplayer) client.caplayer = 0;
-							WITHSELF(client, PutObserverInServer());
+							PutObserverInServer(client);
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
 						}
@@ -1155,7 +1152,6 @@ void GameCommand_nospectators(float request)
 
 void GameCommand_playerdemo(float request, float argc)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1178,7 +1174,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						WITHSELF(client, playerdemo_open_read(argv(next_token)));
+						playerdemo_open_read(client, argv(next_token));
 						return;
 					}
 
@@ -1193,7 +1189,7 @@ void GameCommand_playerdemo(float request, float argc)
 							return;
 						}
 
-						WITHSELF(client, playerdemo_open_write(argv(next_token)));
+						playerdemo_open_write(client, argv(next_token));
 						return;
 					}
 
@@ -1327,7 +1323,6 @@ void GameCommand_setbots(float request, float argc)
 
 void GameCommand_shuffleteams(float request)
 {
-	SELFPARAM();
 	switch (request)
 	{
 		case CMD_REQUEST_COMMAND:
@@ -1384,9 +1379,13 @@ void GameCommand_shuffleteams(float request)
 						{
 							if (!(shuffleteams_players[z])) continue;  // not a player, move on to next random slot
 
-							if (VerifyClientNumber(shuffleteams_players[z])) setself(edict_num(shuffleteams_players[z]));
+							entity e = NULL;
+							if(VerifyClientNumber(shuffleteams_players[z]))
+								e = edict_num(shuffleteams_players[z]);
 
-							if (self.team != team_color) MoveToTeam(self, team_color, 6);
+							if(!e) continue; // unverified
+
+							if (e.team != team_color) MoveToTeam(e, team_color, 6);
 
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;

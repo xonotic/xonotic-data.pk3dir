@@ -76,7 +76,7 @@ const float VOL_BASEVOICE = 1.0;
 			auto = true; \
 			__chan = fabs(__chan); \
 			entity tmp = __e = new(csqc_autochannel); \
-			tmp.think = SUB_Remove_self; \
+			setthink(tmp, SUB_Remove); \
 			tmp.nextthink = time + soundlength(__samp); \
 		} \
 		vector old_origin = __e.origin; \

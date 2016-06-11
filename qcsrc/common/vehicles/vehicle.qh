@@ -53,7 +53,7 @@ CLASS(Vehicle, Object)
     /** (CLIENT) logic to run every frame */
     METHOD(Vehicle, vr_hud, void(Vehicle this)) { }
     /** (CLIENT) logic to run every frame */
-    METHOD(Vehicle, vr_crosshair, void(Vehicle this)) { }
+    METHOD(Vehicle, vr_crosshair, void(Vehicle thisveh, entity player)) { }
 ENDCLASS(Vehicle)
 
 // vehicle spawn flags (need them here for common registrations)

@@ -8,43 +8,42 @@ REGISTER_MUTATOR(midair, cvar("g_midair"));
 
 MUTATOR_HOOKFUNCTION(midair, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	if(time < frag_target.midair_shieldtime)
-		frag_damage = false;
-
-	return false;
+		M_ARGV(4, float) = 0;
 }
 
 MUTATOR_HOOKFUNCTION(midair, PlayerPowerups)
-{SELFPARAM();
-	if(time >= game_starttime)
-	if(IS_ONGROUND(self))
-	{
-		self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
-		self.midair_shieldtime = max(self.midair_shieldtime, time + autocvar_g_midair_shieldtime);
-	}
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(time >= game_starttime)
+	if(IS_ONGROUND(player))
+	{
+		player.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+		player.midair_shieldtime = max(player.midair_shieldtime, time + autocvar_g_midair_shieldtime);
+	}
 }
 
 MUTATOR_HOOKFUNCTION(midair, PlayerSpawn)
-{SELFPARAM();
-	if(IS_BOT_CLIENT(self))
-		self.bot_moveskill = 0; // disable bunnyhopping
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(IS_BOT_CLIENT(player))
+		player.bot_moveskill = 0; // disable bunnyhopping
 }
 
 MUTATOR_HOOKFUNCTION(midair, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":midair");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":midair");
 }
 
 MUTATOR_HOOKFUNCTION(midair, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Midair");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Midair");
 }
 #endif

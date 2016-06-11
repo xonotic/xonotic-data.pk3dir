@@ -8,8 +8,6 @@ const float SF_TRIGGER_RESET = 4;
 const float	SPAWNFLAG_NOMESSAGE = 1;
 const float	SPAWNFLAG_NOTOUCH = 1;
 
-.void() trigger_touch;
-
 .bool pushable;
 
 .float antiwall_flag; // Variable to define what to do with func_clientwall
@@ -18,7 +16,7 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 .float height;
 
 .float nottargeted;
-#define IFTARGETED if(!self.nottargeted && self.targetname != "")
+#define IFTARGETED if(!this.nottargeted && this.targetname != "")
 
 .float lip;
 
@@ -39,7 +37,7 @@ void target_voicescript_clear(entity pl);
 void FixSize(entity e);
 
 #ifdef CSQC
-void trigger_common_read(bool withtarget);
+void trigger_common_read(entity this, bool withtarget);
 void trigger_remove_generic(entity this);
 
 .float active;

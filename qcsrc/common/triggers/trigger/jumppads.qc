@@ -129,8 +129,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	return sdir * vs + '0 0 1' * vz;
 }
 
-void trigger_push_touch()
-{SELFPARAM();
+void trigger_push_touch(entity this)
+{
 	if (this.active == ACTIVE_NOT)
 		return;
 
@@ -148,7 +148,7 @@ void trigger_push_touch()
 		other.velocity = trigger_push_calculatevelocity(other.origin, this.enemy, this.height);
 		other.move_velocity = other.velocity;
 	}
-	else if(this.target)
+	else if(this.target && this.target != "")
 	{
 		entity e;
 		RandomSelection_Init();
@@ -262,15 +262,15 @@ void trigger_push_touch()
 
 	if (this.spawnflags & PUSH_ONCE)
 	{
-		this.touch = func_null;
-		this.think = SUB_Remove_self;
+		settouch(this, func_null);
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 	}
 #endif
 }
 
 #ifdef SVQC
-void trigger_push_link();
+void trigger_push_link(entity this);
 void trigger_push_updatelink(entity this);
 #endif
 void trigger_push_findtarget(entity this)
@@ -304,7 +304,7 @@ void trigger_push_findtarget(entity this)
 		{
 			// no dest!
 #ifdef SVQC
-			objerror ("Jumppad with nonexistant target");
+			objerror (this, "Jumppad with nonexistant target");
 #endif
 			return;
 		}
@@ -331,7 +331,7 @@ void trigger_push_findtarget(entity this)
 		remove(e);
 	}
 
-	trigger_push_link();
+	trigger_push_link(this);
 	defer(this, 0.1, trigger_push_updatelink);
 #endif
 }
@@ -346,6 +346,10 @@ float trigger_push_send(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, this.active);
 	WriteCoord(MSG_ENTITY, this.height);
 
+	WriteCoord(MSG_ENTITY, this.movedir_x);
+	WriteCoord(MSG_ENTITY, this.movedir_y);
+	WriteCoord(MSG_ENTITY, this.movedir_z);
+
 	trigger_common_write(this, true);
 
 	return true;
@@ -356,9 +360,8 @@ void trigger_push_updatelink(entity this)
 	this.SendFlags |= 1;
 }
 
-void trigger_push_link()
+void trigger_push_link(entity this)
 {
-    SELFPARAM();
 	trigger_link(this, trigger_push_send);
 }
 
@@ -382,7 +385,7 @@ spawnfunc(trigger_push)
 
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;
-	this.touch = trigger_push_touch;
+	settouch(this, trigger_push_touch);
 
 	// normal push setup
 	if (!this.speed)
@@ -443,13 +446,15 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	this.active = ReadByte();
 	this.height = ReadCoord();
 
-	trigger_common_read(true);
+	this.movedir_x = ReadCoord();
+	this.movedir_y = ReadCoord();
+	this.movedir_z = ReadCoord();
+
+	trigger_common_read(this, true);
 
 	this.entremove = trigger_remove_generic;
 	this.solid = SOLID_TRIGGER;
-	//this.draw = trigger_draw_generic;
-	this.move_touch = trigger_push_touch;
-	this.drawmask = MASK_NORMAL;
+	settouch(this, trigger_push_touch);
 	this.move_time = time;
 	defer(this, 0.25, trigger_push_findtarget);
 

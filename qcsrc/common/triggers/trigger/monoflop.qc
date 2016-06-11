@@ -21,8 +21,8 @@ void monoflop_fixed_use(entity this, entity actor, entity trigger)
 	SUB_UseTargets(this, actor, trigger);
 }
 
-void monoflop_think()
-{SELFPARAM();
+void monoflop_think(entity this)
+{
 	this.state = 0;
 	SUB_UseTargets(this, this.enemy, NULL);
 }
@@ -41,7 +41,7 @@ spawnfunc(trigger_monoflop)
 		this.use = monoflop_fixed_use;
 	else
 		this.use = monoflop_use;
-	this.think = monoflop_think;
+	setthink(this, monoflop_think);
 	this.state = 0;
 	this.reset = monoflop_reset;
 }

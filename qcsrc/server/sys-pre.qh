@@ -1,6 +1,5 @@
 #pragma once
 
-#define objerror builtin_objerror
 #define droptofloor builtin_droptofloor
 #define remove builtin_remove
 #define cvar_set builtin_cvar_set

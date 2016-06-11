@@ -79,53 +79,53 @@ spawnfunc(target_speaker)
 {
 	// TODO: "*" prefix to sound file name
 	// TODO: wait and random (just, HOW? random is not a field)
-	if(self.noise)
-		precache_sound (self.noise);
+	if(this.noise)
+		precache_sound (this.noise);
 
-	if(!self.atten && !(self.spawnflags & 4))
+	if(!this.atten && !(this.spawnflags & 4))
 	{
 		IFTARGETED
-			self.atten = ATTEN_NORM;
+			this.atten = ATTEN_NORM;
 		else
-			self.atten = ATTEN_STATIC;
+			this.atten = ATTEN_STATIC;
 	}
-	else if(self.atten < 0)
-		self.atten = 0;
+	else if(this.atten < 0)
+		this.atten = 0;
 
-	if(!self.volume)
-		self.volume = 1;
+	if(!this.volume)
+		this.volume = 1;
 
 	IFTARGETED
 	{
-		if(self.spawnflags & 8) // ACTIVATOR
-			self.use = target_speaker_use_activator;
-		else if(self.spawnflags & 1) // LOOPED_ON
+		if(this.spawnflags & 8) // ACTIVATOR
+			this.use = target_speaker_use_activator;
+		else if(this.spawnflags & 1) // LOOPED_ON
 		{
-			target_speaker_use_on(self, NULL, NULL);
-			self.reset = target_speaker_reset;
+			target_speaker_use_on(this, NULL, NULL);
+			this.reset = target_speaker_reset;
 		}
-		else if(self.spawnflags & 2) // LOOPED_OFF
+		else if(this.spawnflags & 2) // LOOPED_OFF
 		{
-			self.use = target_speaker_use_on;
-			self.reset = target_speaker_reset;
+			this.use = target_speaker_use_on;
+			this.reset = target_speaker_reset;
 		}
 		else
-			self.use = target_speaker_use_on;
+			this.use = target_speaker_use_on;
 	}
-	else if(self.spawnflags & 1) // LOOPED_ON
+	else if(this.spawnflags & 1) // LOOPED_ON
 	{
-		ambientsound (self.origin, self.noise, VOL_BASE * self.volume, self.atten);
-		remove(self);
+		ambientsound (this.origin, this.noise, VOL_BASE * this.volume, this.atten);
+		remove(this);
 	}
-	else if(self.spawnflags & 2) // LOOPED_OFF
+	else if(this.spawnflags & 2) // LOOPED_OFF
 	{
-		objerror("This sound entity can never be activated");
+		objerror(this, "This sound entity can never be activated");
 	}
 	else
 	{
 		// Quake/Nexuiz fallback
-		ambientsound (self.origin, self.noise, VOL_BASE * self.volume, self.atten);
-		remove(self);
+		ambientsound (this.origin, this.noise, VOL_BASE * this.volume, this.atten);
+		remove(this);
 	}
 }
 #endif

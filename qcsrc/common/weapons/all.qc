@@ -181,7 +181,7 @@ string W_FixWeaponOrder_BuildImpulseList(string o)
 	return substring(o, 1, -1);
 }
 
-string W_FixWeaponOrder_AllowIncomplete(string order)
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order)
 {
 	return W_FixWeaponOrder(order, 0);
 }
@@ -262,7 +262,7 @@ string W_Sound(string w_snd)
 	string output = strcat("weapons/", w_snd);
 #ifdef SVQC
 		MUTATOR_CALLHOOK(WeaponSound, w_snd, output);
-		return weapon_sound_output;
+		return M_ARGV(1, string);
 #else
 		return output;
 #endif
@@ -272,7 +272,7 @@ string W_Model(string w_mdl)
 {
 	string output = strcat("models/weapons/", w_mdl);
 	MUTATOR_CALLHOOK(WeaponModel, w_mdl, output);
-	return weapon_model_output;
+	return M_ARGV(1, string);
 }
 
 #ifndef MENUQC

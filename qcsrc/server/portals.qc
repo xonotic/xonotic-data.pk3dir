@@ -249,13 +249,13 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 #endif
 }
 
-void Portal_Touch()
-{SELFPARAM();
+void Portal_Touch(entity this)
+{
 	vector g;
 
 #ifdef PORTALS_ARE_NOT_SOLID
 	// portal is being removed?
-	if(self.solid != SOLID_TRIGGER)
+	if(this.solid != SOLID_TRIGGER)
 		return; // possibly engine bug
 
 	if(IS_PLAYER(other))
@@ -272,7 +272,7 @@ void Portal_Touch()
 	if(other.vehicle_flags & VHF_ISVEHICLE)
 		return; // no teleporting vehicles?
 
-	if(!self.enemy)
+	if(!this.enemy)
 		error("Portal_Touch called for a broken portal\n");
 
 #ifdef PORTALS_ARE_NOT_SOLID
@@ -285,26 +285,26 @@ void Portal_Touch()
 
 	if(other.classname == "porto")
 	{
-		if(other.portal_id == self.portal_id)
+		if(other.portal_id == this.portal_id)
 			return;
 	}
-	if(time < self.portal_activatetime)
-		if(other == self.aiment)
+	if(time < this.portal_activatetime)
+		if(other == this.aiment)
 		{
-			self.portal_activatetime = time + 0.1;
+			this.portal_activatetime = time + 0.1;
 			return;
 		}
-	if(other != self.aiment)
+	if(other != this.aiment)
 		if(IS_PLAYER(other))
-			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
+			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
-	if(other.aiment != self.aiment)
+	if(other.aiment != this.aiment)
 		if(IS_PLAYER(other.aiment))
-			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(self.aiment))
+			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
-	fixedmakevectors(self.mangle);
+	fixedmakevectors(this.mangle);
 	g = frametime * '0 0 -1' * autocvar_sv_gravity;
-	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, self.origin, v_forward, self.maxs.x))
+	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
 
 	/*
@@ -316,19 +316,19 @@ void Portal_Touch()
 	}
 	*/
 
-	if(Portal_TeleportPlayer(self, other))
+	if(Portal_TeleportPlayer(this, other))
 		if(other.classname == "porto")
 			if(other.effects & EF_RED)
 				other.effects += EF_BLUE - EF_RED;
 }
 
-void Portal_Think();
+void Portal_Think(entity this);
 void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = func_null;
-	portal.think = func_null;
+	settouch(portal, func_null);
+	setthink(portal, func_null);
 	portal.effects = 0;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_NO;
@@ -338,8 +338,8 @@ void Portal_MakeWaitingPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = func_null;
-	portal.think = func_null;
+	settouch(portal, func_null);
+	setthink(portal, func_null);
 	portal.effects = EF_ADDITIVE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
@@ -349,8 +349,8 @@ void Portal_MakeInPortal(entity portal)
 {
 	portal.skin = 0;
 	portal.solid = SOLID_NOT; // this is done when connecting them!
-	portal.touch = Portal_Touch;
-	portal.think = Portal_Think;
+	settouch(portal, Portal_Touch);
+	setthink(portal, Portal_Think);
 	portal.effects = EF_RED;
 	portal.nextthink = time;
 	portal.takedamage = DAMAGE_NO;
@@ -360,8 +360,8 @@ void Portal_MakeOutPortal(entity portal)
 {
 	portal.skin = 1;
 	portal.solid = SOLID_NOT;
-	portal.touch = func_null;
-	portal.think = func_null;
+	settouch(portal, func_null);
+	setthink(portal, func_null);
 	portal.effects = EF_STARDUST | EF_BLUE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
@@ -440,75 +440,75 @@ void Portal_Damage(entity this, entity inflictor, entity attacker, float damage,
 		Portal_Remove(this, 1);
 }
 
-void Portal_Think_TryTeleportPlayer(entity e, vector g)
-{SELFPARAM();
-	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, self.origin, v_forward, self.maxs.x))
+void Portal_Think_TryTeleportPlayer(entity this, entity e, vector g)
+{
+	if(!Portal_WillHitPlane(e.origin, e.mins, e.maxs, e.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
 
 	// if e would hit the portal in a frame...
 	// already teleport him
 	tracebox(e.origin, e.mins, e.maxs, e.origin + e.velocity * 2 * frametime, MOVE_NORMAL, e);
-	if(trace_ent == self)
-		Portal_TeleportPlayer(self, e);
+	if(trace_ent == this)
+		Portal_TeleportPlayer(this, e);
 }
 
-void Portal_Think()
-{SELFPARAM();
+void Portal_Think(entity this)
+{
 	entity o;
 	vector g;
 
 #ifdef PORTALS_ARE_NOT_SOLID
 	// portal is being removed?
-	if(self.solid != SOLID_TRIGGER)
+	if(this.solid != SOLID_TRIGGER)
 		return; // possibly engine bug
 
-	if(!self.enemy)
+	if(!this.enemy)
 		error("Portal_Think called for a broken portal\n");
 
-	o = self.aiment;
-	self.solid = SOLID_BBOX;
-	self.aiment = world;
+	o = this.aiment;
+	this.solid = SOLID_BBOX;
+	this.aiment = world;
 
 	g = frametime * '0 0 -1' * autocvar_sv_gravity;
 
-	fixedmakevectors(self.mangle);
+	fixedmakevectors(this.mangle);
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 		if(it != o)
 			if(IS_INDEPENDENT_PLAYER(it) || IS_INDEPENDENT_PLAYER(o))
 				continue; // cannot go through someone else's portal
 
-		if(it != o || time >= self.portal_activatetime)
-			Portal_Think_TryTeleportPlayer(it, g);
+		if(it != o || time >= this.portal_activatetime)
+			Portal_Think_TryTeleportPlayer(this, it, g);
 
 		if(it.hook)
-			Portal_Think_TryTeleportPlayer(it.hook, g);
+			Portal_Think_TryTeleportPlayer(this, it.hook, g);
 	));
-	self.solid = SOLID_TRIGGER;
-	self.aiment = o;
+	this.solid = SOLID_TRIGGER;
+	this.aiment = o;
 #endif
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	if(time > self.fade_time)
-		Portal_Remove(self, 0);
+	if(time > this.fade_time)
+		Portal_Remove(this, 0);
 }
 
-float Portal_Customize()
-{SELFPARAM();
+float Portal_Customize(entity this)
+{
 	if(IS_SPEC(other))
 		other = other.enemy;
-	if(other == self.aiment)
+	if(other == this.aiment)
 	{
-		self.modelindex = self.savemodelindex;
+		this.modelindex = this.savemodelindex;
 	}
-	else if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
+	else if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(this.aiment))
 	{
-		self.modelindex = 0;
+		this.modelindex = 0;
 	}
 	else
 	{
-		self.modelindex = self.savemodelindex;
+		this.modelindex = this.savemodelindex;
 	}
 	return true;
 }
@@ -574,15 +574,15 @@ void Portal_ClearAll(entity own)
 	Portal_ClearAll_PortalsOnly(own);
 	W_Porto_Remove(own);
 }
-void Portal_RemoveLater_Think()
-{SELFPARAM();
-	Portal_Remove(self, self.cnt);
+void Portal_RemoveLater_Think(entity this)
+{
+	Portal_Remove(this, this.cnt);
 }
 void Portal_RemoveLater(entity portal, float kill)
 {
 	Portal_MakeBrokenPortal(portal);
 	portal.cnt = kill;
-	portal.think = Portal_RemoveLater_Think;
+	setthink(portal, Portal_RemoveLater_Think);
 	portal.nextthink = time;
 }
 void Portal_ClearAllLater_PortalsOnly(entity own)
@@ -629,7 +629,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.mangle = ang;
 	portal.angles = ang;
 	portal.angles_x = -portal.angles.x; // is a bmodel
-	portal.think = Portal_Think;
+	setthink(portal, Portal_Think);
 	portal.nextthink = 0;
 	portal.portal_activatetime = time + 0.1;
 	portal.takedamage = DAMAGE_AIM;
@@ -638,7 +638,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.health = autocvar_g_balance_portal_health;
 	setmodel(portal, MDL_PORTAL);
 	portal.savemodelindex = portal.modelindex;
-	portal.customizeentityforclient = Portal_Customize;
+	setcefc(portal, Portal_Customize);
 
 	if(!Portal_FindSafeOrigin(portal))
 	{

@@ -26,7 +26,7 @@ REGISTER_NET_TEMP(CLIENT_ENTCS)
 
 	bool entcs_send(entity this, entity to, int sf);
 
-	void entcs_think();
+	void entcs_think(entity this);
 
 	void entcs_attach(entity e);
 

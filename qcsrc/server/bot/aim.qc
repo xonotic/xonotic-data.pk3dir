@@ -156,8 +156,8 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 	}
 	this.bot_aimtarg = e1;
 	this.bot_aimlatency = this.ping; // FIXME?  Shouldn't this be in the lag item?
-	//this.bot_aimselforigin = v1;
-	//this.bot_aimselfvelocity = v2;
+	//this.bot_aimorigin = v1;
+	//this.bot_aimvelocity = v2;
 	this.bot_aimtargorigin = v3;
 	this.bot_aimtargvelocity = v4;
 	if(skill <= 0)
@@ -337,8 +337,8 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= W_WeaponSpeedFactor();
-	shotspeedupward *= W_WeaponSpeedFactor();
+	shotspeed *= W_WeaponSpeedFactor(this);
+	shotspeedupward *= W_WeaponSpeedFactor(this);
 	if (!shotspeed)
 	{
 		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!\n");

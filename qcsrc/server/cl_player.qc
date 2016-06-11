@@ -37,16 +37,16 @@ void Drop_Special_Items(entity player)
 	MUTATOR_CALLHOOK(DropSpecialItems, player);
 }
 
-void CopyBody_Think()
-{SELFPARAM();
+void CopyBody_Think(entity this)
+{
 	if(this.CopyBody_nextthink && time > this.CopyBody_nextthink)
 	{
-		this.CopyBody_think();
+		this.CopyBody_think(this);
 		if(wasfreed(this))
 			return;
 		this.CopyBody_nextthink = this.nextthink;
-		this.CopyBody_think = this.think;
-		this.think = CopyBody_Think;
+		this.CopyBody_think = getthink(this);
+		setthink(this, CopyBody_Think);
 	}
 	CSQCMODEL_AUTOUPDATE(this);
 	this.nextthink = time;
@@ -95,7 +95,7 @@ void CopyBody(entity this, float keepvelocity)
 	clone.solid = this.solid;
 	clone.ballistics_density = this.ballistics_density;
 	clone.takedamage = this.takedamage;
-	clone.customizeentityforclient = this.customizeentityforclient;
+	setcefc(clone, getcefc(this));
 	clone.uncustomizeentityforclient = this.uncustomizeentityforclient;
 	clone.uncustomizeentityforclient_set = this.uncustomizeentityforclient_set;
 	if (keepvelocity == 1)
@@ -118,23 +118,23 @@ void CopyBody(entity this, float keepvelocity)
 
 	CSQCMODEL_AUTOINIT(clone);
 	clone.CopyBody_nextthink = this.nextthink;
-	clone.CopyBody_think = this.think;
+	clone.CopyBody_think = getthink(this);
 	clone.nextthink = time;
-	clone.think = CopyBody_Think;
+	setthink(clone, CopyBody_Think);
 	// "bake" the current animation frame for clones (they don't get clientside animation)
 	animdecide_load_if_needed(clone);
 	animdecide_setframes(clone, false, frame, frame1time, frame2, frame2time);
 }
 
-void player_setupanimsformodel()
-{SELFPARAM();
+void player_setupanimsformodel(entity this)
+{
 	// load animation info
-	animdecide_load_if_needed(self);
-	animdecide_setstate(self, 0, false);
+	animdecide_load_if_needed(this);
+	animdecide_setstate(this, 0, false);
 }
 
-void player_anim ()
-{SELFPARAM();
+void player_anim(entity this)
+{
 	int deadbits = (this.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 	if(IS_DEAD(this)) {
 		if (!deadbits) {
@@ -384,10 +384,9 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		save = v.y;
 	}
 
-	frag_damage = damage;
-	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save);
-	take = bound(0, damage_take, this.health);
-	save = bound(0, damage_save, this.armorvalue);
+	MUTATOR_CALLHOOK(PlayerDamage_SplitHealthArmor, inflictor, attacker, this, force, take, save, deathtype, damage);
+	take = bound(0, M_ARGV(4, float), this.health);
+	save = bound(0, M_ARGV(5, float), this.armorvalue);
 	excess = max(0, damage - take - save);
 
 	if(sound_allowed(MSG_BROADCAST, attacker))
@@ -552,11 +551,11 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(accuracy_isgooddamage(attacker, this))
         attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
-		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype);
-		excess = frag_damage;
+		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
+		excess = M_ARGV(4, float);
 
 		Weapon wep = PS(this).m_weapon;
-		WITHSELF(this, wep.wr_playerdeath(wep));
+		wep.wr_playerdeath(wep, this);
 
 		RemoveGrapplingHook(this);
 
@@ -622,10 +621,10 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		// set up to fade out later
 		SUB_SetFade (this, time + 6 + random (), 1);
 		// reset body think wrapper broken by SUB_SetFade
-		if(this.classname == "body" && this.think != CopyBody_Think) {
-			this.CopyBody_think = this.think;
+		if(this.classname == "body" && getthink(this) != CopyBody_Think) {
+			this.CopyBody_think = getthink(this);
 			this.CopyBody_nextthink = this.nextthink;
-			this.think = CopyBody_Think;
+			setthink(this, CopyBody_Think);
 			this.nextthink = time;
 		}
 
@@ -637,7 +636,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 
 		// reset fields the weapons may use just in case
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			WITHSELF(this, it.wr_resetplayer(it));
+			it.wr_resetplayer(it, this);
 			for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 			{
 				ATTACK_FINISHED_FOR(this, it.m_id, slot) = 0;
@@ -675,7 +674,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	if (!teamsay && !privatesay) if (substring(msgin, 0, 1) == " ")
         msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
-	msgin = formatmessage(msgin);
+	msgin = formatmessage(source, msgin);
 
     string colorstr;
 	if (!IS_PLAYER(source))
@@ -705,7 +704,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 	// for now, just give "say" back and only handle say_team
 	if(!teamsay)
 	{
-		clientcommand(self, strcat("say ", msgin));
+		clientcommand(source, strcat("say ", msgin));
 		return;
 	}
 	*/

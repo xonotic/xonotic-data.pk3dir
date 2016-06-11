@@ -58,7 +58,7 @@ CLASS(DamageText, Object)
             s = strreplace("{health}", sprintf("%d", this.m_damage), s);
             s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
             s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
-            drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)
@@ -89,11 +89,11 @@ AUTOCVAR(sv_damagetext, int, 2, _("<= 0: disabled, >= 1: spectators, >= 2: playe
 #define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     if (SV_DAMAGETEXT_DISABLED()) return;
-    const entity attacker = MUTATOR_ARGV(0, entity);
-    const entity hit = MUTATOR_ARGV(1, entity); if (hit == attacker) return;
-    const int health = MUTATOR_ARGV(0, int);
-    const int armor = MUTATOR_ARGV(1, int);
-    const int deathtype = MUTATOR_ARGV(2, int);
+    const entity attacker = M_ARGV(0, entity);
+    const entity hit = M_ARGV(1, entity); if (hit == attacker) return;
+    const int health = M_ARGV(2, int);
+    const int armor = M_ARGV(3, int);
+    const int deathtype = M_ARGV(5, int);
     const vector location = hit.origin;
     FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
         if (

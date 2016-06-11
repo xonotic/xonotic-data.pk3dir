@@ -690,7 +690,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if(g_jetpack)
 	if(this.items & IT_JETPACK)
 	if(autocvar_bot_ai_navigation_jetpack)
-	if(vlen(this.origin - o) > autocvar_bot_ai_navigation_jetpack_mindistance)
+	if(vdist(this.origin - o, >, autocvar_bot_ai_navigation_jetpack_mindistance))
 	{
 		vector pointa, pointb;
 
@@ -953,7 +953,7 @@ void navigation_poptouchedgoals(entity this)
 	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(this.goalcurrent.classname=="waypoint")
 	{
-		if(vlen(this.origin - this.goalcurrent.origin)<150)
+		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
 		{
 			traceline(this.origin + this.view_ofs , this.goalcurrent.origin, true, world);
 			if(trace_fraction==1)

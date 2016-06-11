@@ -139,7 +139,7 @@ int WinningCondition_LMS()
 
 	// When we get here, we have at least two players who are actually LIVING,
 	// now check if the top two players have equal score.
-	WinningConditionHelper();
+	WinningConditionHelper(NULL);
 
 	ClearWinners();
 	if(WinningConditionHelper_winner)
@@ -156,32 +156,32 @@ MUTATOR_HOOKFUNCTION(lms, reset_map_global)
 {
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, reset_map_players)
 {
 	if(restart_mapalreadyrestarted || (time < game_starttime))
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(PlayerScore_Add(it, SP_LMS_LIVES, LMS_NewPlayerLives())));
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PutClientInServer)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
-	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+	if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0)
 	{
-		TRANSMUTE(Observer, self);
-		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
+		TRANSMUTE(Observer, player);
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_LMS_NOLIVES);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerDies)
 {
+	entity frag_target = M_ARGV(2, entity);
+	
 	frag_target.respawn_flags |= RESPAWN_FORCE;
-	return false;
 }
 
 void lms_RemovePlayer(entity player)
@@ -200,38 +200,40 @@ void lms_RemovePlayer(entity player)
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)
-{SELFPARAM();
-	lms_RemovePlayer(self);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	lms_RemovePlayer(player);
 }
 
 MUTATOR_HOOKFUNCTION(lms, MakePlayerObserver)
 {
-    SELFPARAM();
-	lms_RemovePlayer(this);
+    entity player = M_ARGV(0, entity);
+
+	lms_RemovePlayer(player);
 	return true;  // prevent team reset
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientConnect)
-{SELFPARAM();
-	TRANSMUTE(Player, self);
+{
+	entity player = M_ARGV(0, entity);
+
+	TRANSMUTE(Player, player);
 	campaign_bots_may_start = true;
 
-	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
+	if(PlayerScore_Add(player, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
-		PlayerScore_Add(self, SP_LMS_RANK, 666);
-		self.frags = FRAGS_SPECTATOR;
+		PlayerScore_Add(player, SP_LMS_RANK, 666);
+		player.frags = FRAGS_SPECTATOR;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerPreThink)
-{SELFPARAM();
-	if(this.deadflag == DEAD_DYING)
-		this.deadflag = DEAD_RESPAWNING;
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(player.deadflag == DEAD_DYING)
+		player.deadflag = DEAD_RESPAWNING;
 }
 
 MUTATOR_HOOKFUNCTION(lms, PlayerRegen)
@@ -249,6 +251,8 @@ MUTATOR_HOOKFUNCTION(lms, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 {
+	entity frag_target = M_ARGV(1, entity);
+
 	// remove a life
 	float tl;
 	tl = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
@@ -263,7 +267,7 @@ MUTATOR_HOOKFUNCTION(lms, GiveFragsForKill)
 		PlayerScore_Add(frag_target, SP_LMS_RANK, lms_next_place); // won't ever spawn again
 		--lms_next_place;
 	}
-	frag_score = 0;
+	M_ARGV(2, float) = 0;
 
 	return true;
 }
@@ -279,8 +283,6 @@ MUTATOR_HOOKFUNCTION(lms, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
@@ -290,44 +292,51 @@ MUTATOR_HOOKFUNCTION(lms, ForbidPlayerScore_Clear)
 }
 
 MUTATOR_HOOKFUNCTION(lms, FilterItem)
-{SELFPARAM();
+{
+	entity item = M_ARGV(0, entity);
+
 	if(autocvar_g_lms_extra_lives)
-	if(self.itemdef == ITEM_ExtraLife)
+	if(item.itemdef == ITEM_ExtraLife)
 		return false;
 
 	return true;
 }
 
-void lms_extralife()
-{SELFPARAM();
+void lms_extralife(entity this)
+{
 	StartItem(this, ITEM_ExtraLife);
 }
 
 MUTATOR_HOOKFUNCTION(lms, OnEntityPreSpawn)
-{SELFPARAM();
+{
 	if (!autocvar_g_powerups) return false;
 	if (!autocvar_g_lms_extra_lives) return false;
 
+	entity ent = M_ARGV(0, entity);
+
 	// Can't use .itemdef here
-	if (self.classname != "item_health_mega") return false;
+	if (ent.classname != "item_health_mega") return false;
 
 	entity e = spawn();
-	e.think = lms_extralife;
+	setthink(e, lms_extralife);
 
 	e.nextthink = time + 0.1;
-	e.spawnflags = self.spawnflags;
-	e.noalign = self.noalign;
-	setorigin(e, self.origin);
+	e.spawnflags = ent.spawnflags;
+	e.noalign = ent.noalign;
+	setorigin(e, ent.origin);
 
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, ItemTouch)
-{SELFPARAM();
-	if(self.itemdef == ITEM_ExtraLife)
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
+
+	if(item.itemdef == ITEM_ExtraLife)
 	{
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
-		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
+		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_EXTRALIVES);
+		PlayerScore_Add(toucher, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
@@ -337,8 +346,8 @@ MUTATOR_HOOKFUNCTION(lms, ItemTouch)
 MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
-		++bot_activerealplayers;
-		++bot_realplayers;
+		++M_ARGV(0, int);
+		++M_ARGV(1, int);
 	));
 
 	return true;
@@ -346,18 +355,19 @@ MUTATOR_HOOKFUNCTION(lms, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 
 MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 {
-    SELFPARAM();
-	if(self.lms_spectate_warning)
+    entity player = M_ARGV(0, entity);
+
+	if(player.lms_spectate_warning)
 	{
 		// for the forfeit message...
-		self.lms_spectate_warning = 2;
+		player.lms_spectate_warning = 2;
 		// mark player as spectator
-		PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
+		PlayerScore_Add(player, SP_LMS_RANK, 666 - PlayerScore_Add(player, SP_LMS_RANK, 0));
 	}
 	else
 	{
-		self.lms_spectate_warning = 1;
-		sprint(self, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
+		player.lms_spectate_warning = 1;
+		sprint(player, "WARNING: you won't be able to enter the game again after spectating in LMS. Use the same command again to spectate anyway.\n");
 		return MUT_SPECCMD_RETURN;
 	}
 	return MUT_SPECCMD_CONTINUE;
@@ -365,14 +375,13 @@ MUTATOR_HOOKFUNCTION(lms, ClientCommand_Spectate)
 
 MUTATOR_HOOKFUNCTION(lms, CheckRules_World)
 {
-	ret_float = WinningCondition_LMS();
+	M_ARGV(0, float) = WinningCondition_LMS();
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(lms, WantWeapon)
 {
-	want_allguns = true;
-	return false;
+	M_ARGV(2, bool) = true; // all weapons
 }
 
 MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
@@ -383,9 +392,8 @@ MUTATOR_HOOKFUNCTION(lms, GetPlayerStatus)
 MUTATOR_HOOKFUNCTION(lms, AddPlayerScore)
 {
 	if(gameover)
-	if(score_field == SP_LMS_RANK)
+	if(M_ARGV(0, int) == SP_LMS_RANK) // score field
 		return true; // allow writing to this field in intermission as it is needed for newly joining players
-	return false;
 }
 
 // scoreboard stuff

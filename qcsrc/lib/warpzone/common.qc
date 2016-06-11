@@ -37,10 +37,9 @@ void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
 	WarpZone_Accumulator_AddInverseTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
 }
 
-.vector(vector, vector) camera_transform;
 float autocvar_cl_warpzone_usetrace = 1;
-vector WarpZone_camera_transform(vector org, vector ang)
-{SELFPARAM();
+vector WarpZone_camera_transform(entity this, vector org, vector ang)
+{
 	vector vf, vr, vu;
 	if(this.warpzone_fadestart)
 		if(vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
@@ -74,11 +73,11 @@ void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, ve
 	e.warpzone_targetangles = other_ang;
 	fixedmakevectors(my_ang); e.warpzone_forward = v_forward;
 	fixedmakevectors(other_ang); e.warpzone_targetforward = v_forward;
-	e.camera_transform = WarpZone_camera_transform;
+	setcamera_transform(e, WarpZone_camera_transform);
 }
 
-vector WarpZone_Camera_camera_transform(vector org, vector ang)
-{SELFPARAM();
+vector WarpZone_Camera_camera_transform(entity this, vector org, vector ang)
+{
 	// a fixed camera view
 	if(this.warpzone_fadestart)
 		if(vdist(org - this.origin - 0.5 * (this.mins + this.maxs), >, this.warpzone_fadeend + 400))
@@ -94,7 +93,7 @@ void WarpZone_Camera_SetUp(entity e, vector my_org, vector my_ang) // we assume 
 {
 	e.warpzone_origin = my_org;
 	e.warpzone_angles = my_ang;
-	e.camera_transform = WarpZone_Camera_camera_transform;
+	setcamera_transform(e, WarpZone_Camera_camera_transform);
 }
 
 .entity enemy;
@@ -667,8 +666,8 @@ entity WarpZone_FindRadius(vector org, float rad, bool needlineofsight)
 }
 
 .entity WarpZone_refsys;
-void WarpZone_RefSys_GC()
-{SELFPARAM();
+void WarpZone_RefSys_GC(entity this)
+{
 	// garbage collect unused reference systems
 	this.nextthink = time + 1;
 	if(this.owner.WarpZone_refsys != this)
@@ -680,7 +679,7 @@ void WarpZone_RefSys_CheckCreate(entity me)
 	{
 		me.WarpZone_refsys = new(warpzone_refsys);
 		me.WarpZone_refsys.owner = me;
-		me.WarpZone_refsys.think = WarpZone_RefSys_GC;
+		setthink(me.WarpZone_refsys, WarpZone_RefSys_GC);
 		me.WarpZone_refsys.nextthink = time + 1;
 		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
 	}
@@ -786,9 +785,9 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	return e;
 }
 
-float WarpZoneLib_ExactTrigger_Touch()
-{SELFPARAM();
-	return !WarpZoneLib_BoxTouchesBrush(other.absmin, other.absmax, this, other);
+float WarpZoneLib_ExactTrigger_Touch(entity this, entity toucher)
+{
+	return !WarpZoneLib_BoxTouchesBrush(toucher.absmin, toucher.absmax, this, toucher);
 }
 
 

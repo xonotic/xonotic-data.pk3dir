@@ -160,68 +160,67 @@ void M_Mage_Attack_Spike_Explode(entity this)
 	remove (this);
 }
 
-void M_Mage_Attack_Spike_Touch()
+void M_Mage_Attack_Spike_Touch(entity this)
 {
-    SELFPARAM();
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
-	M_Mage_Attack_Spike_Explode(self);
+	M_Mage_Attack_Spike_Explode(this);
 }
 
 .float wait;
 
 // copied from W_Seeker_Think
-void M_Mage_Attack_Spike_Think()
-{SELFPARAM();
-	if (time > self.ltime || (self.enemy && self.enemy.health <= 0) || self.owner.health <= 0) {
-		self.projectiledeathtype |= HITTYPE_SPLASH;
-		M_Mage_Attack_Spike_Explode(self);
+void M_Mage_Attack_Spike_Think(entity this)
+{
+	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
+		this.projectiledeathtype |= HITTYPE_SPLASH;
+		M_Mage_Attack_Spike_Explode(this);
 	}
 
-	float spd = vlen(self.velocity);
+	float spd = vlen(this.velocity);
 	spd = bound(
 		spd - (autocvar_g_monster_mage_attack_spike_decel) * frametime,
 		(autocvar_g_monster_mage_attack_spike_speed_max),
 		spd + (autocvar_g_monster_mage_attack_spike_accel) * frametime
 	);
 
-	if (self.enemy != world)
-		if (self.enemy.takedamage != DAMAGE_AIM || IS_DEAD(self.enemy))
-			self.enemy = world;
+	if (this.enemy != world)
+		if (this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
+			this.enemy = world;
 
-	if (self.enemy != world)
+	if (this.enemy != world)
 	{
-		entity e = self.enemy;
+		entity e = this.enemy;
 		vector eorg = 0.5 * (e.absmin + e.absmax);
 		float turnrate = (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
-		vector desireddir = normalize(eorg - self.origin);
-		vector olddir = normalize(self.velocity); // get my current direction
+		vector desireddir = normalize(eorg - this.origin);
+		vector olddir = normalize(this.velocity); // get my current direction
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
-		if ((autocvar_g_monster_mage_attack_spike_smart) && vdist(eorg - self.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
+		if ((autocvar_g_monster_mage_attack_spike_smart) && vdist(eorg - this.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
 		{
-			// Is it a better idea (shorter distance) to trace to the target itself?
-			if ( vlen2(self.origin + olddir * self.wait) < vlen2(eorg - self.origin))
-				traceline(self.origin, self.origin + olddir * self.wait, false, self);
+			// Is it a better idea (shorter distance) to trace to the target itthis?
+			if ( vlen2(this.origin + olddir * this.wait) < vlen2(eorg - this.origin))
+				traceline(this.origin, this.origin + olddir * this.wait, false, this);
 			else
-				traceline(self.origin, eorg, false, self);
+				traceline(this.origin, eorg, false, this);
 
 			// Setup adaptive tracelength
-			self.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
+			this.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(this.origin - trace_endpos), this.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
 
 			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
 			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
 		}
 
 		vector newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
-		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
+		this.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	}
 
 	///////////////
 
-	//self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
-	self.nextthink = time;// + 0.05; // csqc projectiles
-	UpdateCSQCProjectile(self);
+	//this.angles = vectoangles(this.velocity);			// turn model in the new flight direction
+	this.nextthink = time;// + 0.05; // csqc projectiles
+	UpdateCSQCProjectile(this);
 }
 
 void M_Mage_Attack_Spike(entity this, vector dir)
@@ -230,7 +229,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 
 	entity missile = spawn();
 	missile.owner = missile.realowner = this;
-	missile.think = M_Mage_Attack_Spike_Think;
+	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;
 	missile.nextthink = time;
 	missile.solid = SOLID_BBOX;
@@ -241,7 +240,7 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = this.enemy;
-	missile.touch = M_Mage_Attack_Spike_Touch;
+	settouch(missile, M_Mage_Attack_Spike_Touch);
 
 	this.mage_spike = missile;
 
@@ -446,10 +445,10 @@ METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
     return true;
 }
 
-METHOD(Mage, mr_pain, bool(Mage this, entity actor))
+METHOD(Mage, mr_pain, float(Mage this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Mage, this);
-    return true;
+    return damage_take;
 }
 
 METHOD(Mage, mr_death, bool(Mage this, entity actor))

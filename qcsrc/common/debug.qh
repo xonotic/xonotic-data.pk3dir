@@ -142,7 +142,7 @@ bool autocvar_debugdraw;
 				if (pos.z < 0) continue;
 				pos.z = 0;
 				pos.y += ofs * sz;
-				drawcolorcodedstring2(pos,
+				drawcolorcodedstring2_builtin(pos,
 					sprintf("%d: '%s'@%s", (it.debug ? it.sv_entnum : etof(it)),
 					it.classname, it.sourceLoc),
 					sz * '1 1 0', rgb, 0.5, DRAWFLAG_NORMAL);

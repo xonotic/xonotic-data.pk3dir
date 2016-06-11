@@ -191,16 +191,26 @@ void bd_move(entity minigame, entity player, string dir)
 			int dx = bound(-1, dxs, 1);
 			int dy = bound(-1, dys, 1);
 
-			dozer.bd_dir_x = dx;
-			dozer.bd_dir_y = dy;
-			dozer.bd_dir_z = 0;
+			int moved = 0;
+			entity e = world;
+			while ( ( e = findentity(e,owner,minigame) ) )
+				if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
+				{
+					e.bd_dir_x = dx;
+					e.bd_dir_y = dy;
+					e.bd_dir_z = 0;
 
-			if(bd_move_dozer(minigame, dozer))
+					if(bd_move_dozer(minigame, e))
+						++moved;
+
+					minigame_server_sendflags(e,MINIG_SF_UPDATE); // update anyway
+				}
+
+			if(moved)
 				player.bd_moves++;
 
 			bd_check_winner(minigame);
 
-			minigame_server_sendflags(dozer,MINIG_SF_UPDATE); // update anyway
 			minigame_server_sendflags(player,BD_SF_PLAYERMOVES);
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		}
@@ -237,9 +247,9 @@ void bd_editor_place(entity minigame, entity player, string pos, int thetile, st
 				return;
 			}
 
-			entity dozer = bd_find_dozer(minigame);
-			if(dozer && thetile == BD_TILE_DOZER && pos != dozer.netname)
-				return; // nice try
+			//entity dozer = bd_find_dozer(minigame);
+			//if(dozer && thetile == BD_TILE_DOZER && pos != dozer.netname)
+				//return; // nice try
 
 			if(found_piece || (targ && thetile != BD_TILE_BOULDER))
 			{
@@ -320,6 +330,14 @@ void bd_unfill_recurse(entity minigame, entity player, int thetype, int letter, 
 
 void bd_do_fill(entity minigame, entity player, string dir, string thetile)
 {
+#ifdef SVQC
+	if(!player.minigame_players.bd_canedit)
+	{
+		sprint(player.minigame_players, "You're not allowed to edit levels, sorry!\n");
+		return;
+	}
+#endif
+
 	if(minigame.minigame_flags & BD_TURN_EDIT)
 	{
 		int thetype = stof(thetile);
@@ -561,8 +579,16 @@ void bd_load_level(entity minigame)
 	fclose(file_get);
 }
 
-void bd_close_editor(entity minigame)
+void bd_close_editor(entity minigame, entity player)
 {
+#ifdef SVQC
+	if(!player.minigame_players.bd_canedit)
+	{
+		sprint(player.minigame_players, "You're not allowed to edit levels, sorry!\n");
+		return;
+	}
+#endif
+
 	entity dozer = bd_find_dozer(minigame);
 	if(!dozer)
 	{
@@ -637,7 +663,7 @@ int bd_server_event(entity minigame, string event, ...)
 					bd_activate_editor(minigame,...(0,entity));
 					return true;
 				case "save":
-					bd_close_editor(minigame);
+					bd_close_editor(minigame,...(0,entity));
 					return true;
 				case "fill":
 					bd_do_fill(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null));

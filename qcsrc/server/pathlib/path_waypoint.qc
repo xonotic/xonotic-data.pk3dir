@@ -234,18 +234,18 @@ entity pathlib_waypointpath_step()
 
     return world;
 }
-void plas_think()
-{SELFPARAM();
+void plas_think(entity this)
+{
     pathlib_waypointpath_step();
     if(pathlib_foundgoal)
         return;
-    self.nextthink = time + 0.1;
+    this.nextthink = time + 0.1;
 }
 
 void pathlib_waypointpath_autostep()
 {
     entity n;
     n = spawn();
-    n.think = plas_think;
+    setthink(n, plas_think);
     n.nextthink = time + 0.1;
 }

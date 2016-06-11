@@ -45,8 +45,8 @@ float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
 
-void M_Wyvern_Attack_Fireball_Explode();
-void M_Wyvern_Attack_Fireball_Touch();
+void M_Wyvern_Attack_Fireball_Explode(entity this);
+void M_Wyvern_Attack_Fireball_Touch(entity this);
 
 SOUND(WyvernAttack_FIRE, W_Sound("electro_fire"));
 METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity weaponentity, int fire))
@@ -72,15 +72,15 @@ METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity 
 		missile.velocity = w_shotdir * (autocvar_g_monster_wyvern_attack_fireball_speed);
 		missile.avelocity = '300 300 300';
 		missile.nextthink = time + 5;
-		missile.think = M_Wyvern_Attack_Fireball_Explode;
-		missile.touch = M_Wyvern_Attack_Fireball_Touch;
+		setthink(missile, M_Wyvern_Attack_Fireball_Explode);
+		settouch(missile, M_Wyvern_Attack_Fireball_Touch);
 		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
 }
 
-METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this)) {
+METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor)) {
     TC(WyvernAttack, this);
 	return true;
 }
@@ -99,29 +99,28 @@ const float wyvern_anim_pain	= 3;
 const float wyvern_anim_death	= 4;
 */
 
-void M_Wyvern_Attack_Fireball_Explode()
+void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
-	SELFPARAM();
-	Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
 
-	entity own = self.realowner;
+	entity own = this.realowner;
 
-	RadiusDamage(self, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, world, world, autocvar_g_monster_wyvern_attack_fireball_radius, self.projectiledeathtype, world);
+	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, world, world, autocvar_g_monster_wyvern_attack_fireball_radius, this.projectiledeathtype, world);
 
 	FOREACH_ENTITY_FLOAT(takedamage, DAMAGE_AIM,
 	{
-		if(vdist(it.origin - self.origin, <=, autocvar_g_monster_wyvern_attack_fireball_radius))
-			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, self.projectiledeathtype);
+		if(vdist(it.origin - this.origin, <=, autocvar_g_monster_wyvern_attack_fireball_radius))
+			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
 	});
 
-	remove(self);
+	remove(this);
 }
 
-void M_Wyvern_Attack_Fireball_Touch()
+void M_Wyvern_Attack_Fireball_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
-	M_Wyvern_Attack_Fireball_Explode();
+	M_Wyvern_Attack_Fireball_Explode(this);
 }
 
 bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)
@@ -152,12 +151,12 @@ METHOD(Wyvern, mr_think, bool(Wyvern this, entity actor))
     return true;
 }
 
-METHOD(Wyvern, mr_pain, bool(Wyvern this, entity actor))
+METHOD(Wyvern, mr_pain, float(Wyvern this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Wyvern, this);
     actor.pain_finished = time + 0.5;
     setanim(actor, actor.anim_pain1, true, true, false);
-    return true;
+    return damage_take;
 }
 
 METHOD(Wyvern, mr_death, bool(Wyvern this, entity actor))

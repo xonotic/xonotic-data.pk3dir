@@ -164,12 +164,12 @@ void func_breakable_behave_restore(entity this)
 		_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 }
 
-void func_breakable_init_for_player(entity player)
-{SELFPARAM();
-	if (self.noise1 && self.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
+void func_breakable_init_for_player(entity this, entity player)
+{
+	if (this.noise1 && this.state == 0 && clienttype(player) == CLIENTTYPE_REAL)
 	{
 		msg_entity = player;
-		soundto (MSG_ONE, self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
+		soundto (MSG_ONE, this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -189,8 +189,8 @@ void func_breakable_restore(entity this, entity actor, entity trigger)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void func_breakable_restore_self()
-{SELFPARAM();
+void func_breakable_restore_self(entity this)
+{
 	func_breakable_restore(this, NULL, NULL);
 }
 
@@ -221,7 +221,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 
 	if(this.respawntime)
 	{
-		this.think = func_breakable_restore_self;
+		setthink(this, func_breakable_restore_self);
 		this.nextthink = time + this.respawntime + crandom() * this.respawntimejitter;
 	}
 
@@ -231,8 +231,8 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 	this.message = oldmsg;
 }
 
-void func_breakable_destroy_self()
-{SELFPARAM();
+void func_breakable_destroy_self(entity this)
+{
 	func_breakable_destroy(this, NULL, NULL);
 }
 
@@ -271,7 +271,7 @@ void func_breakable_damage(entity this, entity inflictor, entity attacker, float
 		// do not explode NOW but in the NEXT FRAME!
 		// because recursive calls to RadiusDamage are not allowed
 		this.nextthink = time;
-		this.think = func_breakable_destroy_self;
+		setthink(this, func_breakable_destroy_self);
 	}
 }
 
@@ -319,7 +319,7 @@ spawnfunc(func_breakable)
 		this.dmg_force = 200;
 
 	this.mdl = this.model;
-	SetBrushEntityModel();
+	SetBrushEntityModel(this);
 
 	if(this.spawnflags & 4)
 		this.use = func_breakable_destroy;

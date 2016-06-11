@@ -21,14 +21,14 @@ float target_spawn_spawnfunc_field;
 .float target_spawn_id;
 float target_spawn_count;
 
-void target_spawn_helper_setmodel()
-{SELFPARAM();
-	_setmodel(self, self.model);
+void target_spawn_helper_setmodel(entity this)
+{
+	_setmodel(this, this.model);
 }
 
-void target_spawn_helper_setsize()
-{SELFPARAM();
-	setsize(self, self.mins, self.maxs);
+void target_spawn_helper_setsize(entity this)
+{
+	setsize(this, this.mins, this.maxs);
 }
 
 void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act, entity trigger)
@@ -330,9 +330,9 @@ void initialize_field_db()
 spawnfunc(target_spawn)
 {
 	initialize_field_db();
-	self.use = target_spawn_use;
-	self.message = strzone(strreplace("'", "\"", self.message));
-	self.target_spawn_id = ++target_spawn_count;
-	InitializeEntity(self, target_spawn_spawnfirst, INITPRIO_LAST);
+	this.use = target_spawn_use;
+	this.message = strzone(strreplace("'", "\"", this.message));
+	this.target_spawn_id = ++target_spawn_count;
+	InitializeEntity(this, target_spawn_spawnfirst, INITPRIO_LAST);
 }
 #endif

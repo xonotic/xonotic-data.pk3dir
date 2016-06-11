@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 
-void W_MachineGun_MuzzleFlash();
+void W_MachineGun_MuzzleFlash(entity actor);
 SOUND(MachineGunTurretAttack_FIRE, W_Sound("electro_fire"));
 METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -20,7 +20,7 @@ METHOD(MachineGunTurretAttack, wr_think, void(entity thiswep, entity actor, .ent
             weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
         }
         fireBullet (actor, actor.tur_shotorg, actor.tur_shotdir_updated, actor.shot_spread, 0, actor.shot_dmg, actor.shot_force, DEATH_TURRET_MACHINEGUN.m_id, 0);
-        W_MachineGun_MuzzleFlash();
+        W_MachineGun_MuzzleFlash(actor);
         setattachment(actor.muzzle_flash, actor.tur_head, "tag_fire");
     }
 }

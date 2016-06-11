@@ -71,8 +71,8 @@ entity pathlib_nodeatpoint(vector where)
     return world;
 }
 
-float tile_check_cross(vector where)
-{SELFPARAM();
+float tile_check_cross(entity this, vector where)
+{
     vector p,f,r;
 
     f = PLIB_FORWARD * tile_check_size;
@@ -81,33 +81,33 @@ float tile_check_cross(vector where)
 
     // forward-right
     p = where + f + r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Forward-left
     p = where + f - r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Back-right
     p = where - f + r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1 ,0))
         return 0;
 
     //Back-left
     p = where - f - r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     return 1;
 }
 
-float tile_check_plus(vector where)
-{SELFPARAM();
+float tile_check_plus(entity this, vector where)
+{
     vector p,f,r;
 
     f = PLIB_FORWARD * tile_check_size;
@@ -115,34 +115,34 @@ float tile_check_plus(vector where)
 
     // forward
     p = where + f;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
         return 0;
 
 
     //left
     p = where - r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
         return 0;
 
     // Right
     p = where + r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
         return 0;
 
     //Back
     p = where - f;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (!location_isok(trace_endpos,1,0))
         return 0;
 
     return 1;
 }
 
-float tile_check_plus2(vector where)
-{SELFPARAM();
+float tile_check_plus2(entity this, vector where)
+{
     vector p,f,r;
     float i = 0, e = 0;
 
@@ -156,7 +156,7 @@ float tile_check_plus2(vector where)
 
     // forward
     p = where + f;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
        ++i;
@@ -166,7 +166,7 @@ float tile_check_plus2(vector where)
 
     //left
     p = where - r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
        ++i;
@@ -176,7 +176,7 @@ float tile_check_plus2(vector where)
 
     // Right
     p = where + r;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
        ++i;
@@ -185,7 +185,7 @@ float tile_check_plus2(vector where)
 
     //Back
     p = where - f;
-    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
+    traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,this);
     if (location_isok(trace_endpos,1,0))
     {
        ++i;
@@ -194,7 +194,7 @@ float tile_check_plus2(vector where)
 
     // forward-right
     p = where + f + r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1, 0))
     {
        ++i;
@@ -203,7 +203,7 @@ float tile_check_plus2(vector where)
 
     // Forward-left
     p = where + f - r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1, 0))
     {
        ++i;
@@ -212,7 +212,7 @@ float tile_check_plus2(vector where)
 
     // Back-right
     p = where - f + r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1 ,0))
     {
        ++i;
@@ -221,7 +221,7 @@ float tile_check_plus2(vector where)
 
     //Back-left
     p = where - f - r;
-    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
+    traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, this);
     if (location_isok(trace_endpos, 1, 0))
     {
        ++i;
@@ -235,10 +235,10 @@ float tile_check_plus2(vector where)
     return e;
 }
 
-float tile_check_star(vector where)
+float tile_check_star(entity this, vector where)
 {
-    if(tile_check_plus(where))
-        return tile_check_cross(where);
+    if(tile_check_plus(this, where))
+        return tile_check_cross(this, where);
 
     return 0;
 }

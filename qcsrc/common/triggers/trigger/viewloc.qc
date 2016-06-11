@@ -10,34 +10,34 @@ REGISTER_NET_LINKED(ENT_CLIENT_VIEWLOC_TRIGGER)
 
 #ifdef SVQC
 
-void viewloc_think()
-{SELFPARAM();
+void viewloc_think(entity this)
+{
 	entity e;
 
 	// we abuse this method, rather than using normal .touch, because touch isn't reliable with multiple clients inside the same trigger, and can't "untouch" entities
 
 	// set myself as current viewloc where possible
-	for(e = world; (e = findentity(e, viewloc, self)); )
+	for(e = world; (e = findentity(e, viewloc, this)); )
 		e.viewloc = world;
 
-		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
+		for(e = findradius((this.absmin + this.absmax) * 0.5, vlen(this.absmax - this.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.viewloc)
 				if(IS_PLAYER(e)) // should we support non-player entities with this?
 				//if(!IS_DEAD(e)) // death view is handled separately, we can't override this just yet
 				{
 					vector emin = e.absmin;
 					vector emax = e.absmax;
-					if(self.solid == SOLID_BSP)
+					if(this.solid == SOLID_BSP)
 					{
 						emin -= '1 1 1';
 						emax += '1 1 1';
 					}
-					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
-							e.viewloc = self;
+					if(boxesoverlap(emin, emax, this.absmin, this.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, this, e)) // accurate
+							e.viewloc = this;
 				}
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 bool trigger_viewloc_send(entity this, entity to, int sf)
@@ -45,12 +45,12 @@ bool trigger_viewloc_send(entity this, entity to, int sf)
 	// CSQC doesn't need to know our origin (yet), as we're only available for referencing
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_VIEWLOC_TRIGGER);
 
-	WriteEntity(MSG_ENTITY, self.enemy);
-	WriteEntity(MSG_ENTITY, self.goalentity);
+	WriteEntity(MSG_ENTITY, this.enemy);
+	WriteEntity(MSG_ENTITY, this.goalentity);
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
 
 	return true;
 }
@@ -58,75 +58,75 @@ bool trigger_viewloc_send(entity this, entity to, int sf)
 void viewloc_init(entity this)
 {
 	entity e;
-	for(e = world; (e = find(e, targetname, self.target)); )
+	for(e = world; (e = find(e, targetname, this.target)); )
 		if(e.classname == "target_viewlocation_start")
 		{
-			self.enemy = e;
+			this.enemy = e;
 			break;
 		}
-	for(e = world; (e = find(e, targetname, self.target2)); )
+	for(e = world; (e = find(e, targetname, this.target2)); )
 		if(e.classname == "target_viewlocation_end")
 		{
-			self.goalentity = e;
+			this.goalentity = e;
 			break;
 		}
 
-	if(!self.enemy) { LOG_INFO("^1FAIL!\n"); remove(self); return; }
+	if(!this.enemy) { LOG_INFO("^1FAIL!\n"); remove(this); return; }
 
-	if(!self.goalentity)
-		self.goalentity = self.enemy; // make them match so CSQC knows what to do
+	if(!this.goalentity)
+		this.goalentity = this.enemy; // make them match so CSQC knows what to do
 
-	Net_LinkEntity(self, false, 0, trigger_viewloc_send);
+	Net_LinkEntity(this, false, 0, trigger_viewloc_send);
 
-	self.think = viewloc_think;
-	self.nextthink = time;
+	setthink(this, viewloc_think);
+	this.nextthink = time;
 }
 
 spawnfunc(trigger_viewlocation)
 {
 	// we won't check target2 here yet, as it may not even need to exist
-	if(self.target == "") { LOG_INFO("^1FAIL!\n"); remove(self); return; }
+	if(this.target == "") { LOG_INFO("^1FAIL!\n"); remove(this); return; }
 
 	EXACTTRIGGER_INIT;
-	InitializeEntity(self, viewloc_init, INITPRIO_FINDTARGET);
+	InitializeEntity(this, viewloc_init, INITPRIO_FINDTARGET);
 }
 
 bool viewloc_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_VIEWLOC);
 
-	WriteByte(MSG_ENTITY, self.cnt);
+	WriteByte(MSG_ENTITY, this.cnt);
 
-	WriteCoord(MSG_ENTITY, self.origin_x);
-	WriteCoord(MSG_ENTITY, self.origin_y);
-	WriteCoord(MSG_ENTITY, self.origin_z);
+	WriteCoord(MSG_ENTITY, this.origin_x);
+	WriteCoord(MSG_ENTITY, this.origin_y);
+	WriteCoord(MSG_ENTITY, this.origin_z);
 
-	WriteCoord(MSG_ENTITY, self.angles_x);
-	WriteCoord(MSG_ENTITY, self.angles_y);
-	WriteCoord(MSG_ENTITY, self.angles_z);
+	WriteCoord(MSG_ENTITY, this.angles_x);
+	WriteCoord(MSG_ENTITY, this.angles_y);
+	WriteCoord(MSG_ENTITY, this.angles_z);
 
 	return true;
 }
 
 .float angle;
-void viewloc_link()
-{SELFPARAM();
-	if(self.angle)
-		self.angles_y = self.angle;
-	Net_LinkEntity(self, false, 0, viewloc_send);
+void viewloc_link(entity this)
+{
+	if(this.angle)
+		this.angles_y = this.angle;
+	Net_LinkEntity(this, false, 0, viewloc_send);
 }
 
 spawnfunc(target_viewlocation_start)
 {
-	self.classname = "target_viewlocation_start";
-	self.cnt = 1;
-	viewloc_link();
+	this.classname = "target_viewlocation_start";
+	this.cnt = 1;
+	viewloc_link(this);
 }
 spawnfunc(target_viewlocation_end)
 {
-	self.classname = "target_viewlocation_end";
-	self.cnt = 2;
-	viewloc_link();
+	this.classname = "target_viewlocation_end";
+	this.cnt = 2;
+	viewloc_link(this);
 }
 
 // compatibility
@@ -134,10 +134,10 @@ spawnfunc(target_viewlocation) { spawnfunc_target_viewlocation_start(this); }
 
 #elif defined(CSQC)
 
-void trigger_viewloc_updatelink()
-{SELFPARAM();
-	self.enemy = findfloat(world, entnum, self.cnt);
-	self.goalentity = findfloat(world, entnum, self.count);
+void trigger_viewloc_updatelink(entity this)
+{
+	this.enemy = findfloat(world, entnum, this.cnt);
+	this.goalentity = findfloat(world, entnum, this.count);
 }
 
 NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
@@ -145,44 +145,44 @@ NET_HANDLE(ENT_CLIENT_VIEWLOC_TRIGGER, bool isnew)
 	float point1 = ReadShort();
 	float point2 = ReadShort();
 
-	self.enemy = findfloat(world, entnum, point1);
-	self.goalentity = findfloat(world, entnum, point2);
+	this.enemy = findfloat(world, entnum, point1);
+	this.goalentity = findfloat(world, entnum, point2);
 
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
+	this.origin_x = ReadCoord();
+	this.origin_y = ReadCoord();
+	this.origin_z = ReadCoord();
 
 	return = true;
 
-	setorigin(self, self.origin);
+	setorigin(this, this.origin);
 
-	self.cnt = point1;
-	self.count = point2;
+	this.cnt = point1;
+	this.count = point2;
 
-	self.think = trigger_viewloc_updatelink;
-	self.nextthink = time + 1; // we need to delay this or else
+	setthink(this, trigger_viewloc_updatelink);
+	this.nextthink = time + 1; // we need to delay this or else
 
-	self.classname = "trigger_viewlocation";
-	self.drawmask = MASK_NORMAL; // not so concerned, but better keep it alive
+	this.classname = "trigger_viewlocation";
+	this.drawmask = MASK_NORMAL; // not so concerned, but better keep it alive
 }
 
 NET_HANDLE(ENT_CLIENT_VIEWLOC, bool isnew)
 {
-	self.cnt = ReadByte();
+	this.cnt = ReadByte();
 
-	self.origin_x = ReadCoord();
-	self.origin_y = ReadCoord();
-	self.origin_z = ReadCoord();
-	setorigin(self, self.origin);
+	this.origin_x = ReadCoord();
+	this.origin_y = ReadCoord();
+	this.origin_z = ReadCoord();
+	setorigin(this, this.origin);
 
-	self.movedir_x = ReadCoord();
-	self.movedir_y = ReadCoord();
-	self.movedir_z = ReadCoord();
+	this.movedir_x = ReadCoord();
+	this.movedir_y = ReadCoord();
+	this.movedir_z = ReadCoord();
 
 	return = true;
 
-	self.classname = ((self.cnt == 2) ? "target_viewlocation_end" : "target_viewlocation_start");
-	self.drawmask = MASK_NORMAL; // don't cull it
+	this.classname = ((this.cnt == 2) ? "target_viewlocation_end" : "target_viewlocation_start");
+	this.drawmask = MASK_NORMAL; // don't cull it
 }
 
 #endif

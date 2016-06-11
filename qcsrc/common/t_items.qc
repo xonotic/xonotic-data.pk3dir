@@ -152,134 +152,134 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 
     if(sf & ISF_LOCATION)
     {
-        self.origin_x = ReadCoord();
-        self.origin_y = ReadCoord();
-        self.origin_z = ReadCoord();
-        setorigin(self, self.origin);
-        self.oldorigin = self.origin;
+        this.origin_x = ReadCoord();
+        this.origin_y = ReadCoord();
+        this.origin_z = ReadCoord();
+        setorigin(this, this.origin);
+        this.oldorigin = this.origin;
     }
 
     if(sf & ISF_ANGLES)
     {
-        self.angles_x = ReadAngle();
-        self.angles_y = ReadAngle();
-        self.angles_z = ReadAngle();
-        self.move_angles = self.angles;
+        this.angles_x = ReadAngle();
+        this.angles_y = ReadAngle();
+        this.angles_z = ReadAngle();
+        this.move_angles = this.angles;
     }
 
     if(sf & ISF_SIZE)
     {
         float use_bigsize = ReadByte();
-        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
     {
-        self.ItemStatus = ReadByte();
+        this.ItemStatus = ReadByte();
 
-        Item_SetAlpha(self);
+        Item_SetAlpha(this);
 
         if(autocvar_cl_fullbright_items)
-            if(self.ItemStatus & ITS_ALLOWFB)
-                self.effects |= EF_FULLBRIGHT;
+            if(this.ItemStatus & ITS_ALLOWFB)
+                this.effects |= EF_FULLBRIGHT;
 
-        if(self.ItemStatus & ITS_POWERUP)
+        if(this.ItemStatus & ITS_POWERUP)
         {
-            if(self.ItemStatus & ITS_AVAILABLE)
-                self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+            if(this.ItemStatus & ITS_AVAILABLE)
+                this.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
             else
-                 self.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
+                 this.effects &= ~(EF_ADDITIVE | EF_FULLBRIGHT);
         }
     }
 
     if(sf & ISF_MODEL)
     {
-        self.drawmask  = MASK_NORMAL;
-		self.move_movetype = MOVETYPE_TOSS;
-        self.draw       = ItemDraw;
-        self.solid = SOLID_TRIGGER;
-        //self.move_flags |= FL_ITEM;
+        this.drawmask  = MASK_NORMAL;
+		this.move_movetype = MOVETYPE_TOSS;
+        this.draw       = ItemDraw;
+        this.solid = SOLID_TRIGGER;
+        //this.move_flags |= FL_ITEM;
 
         bool use_bigsize = ReadByte();
 
-        self.fade_end = ReadShort();
-        self.fade_start = ReadShort();
-        if(self.fade_start && !autocvar_cl_items_nofade)
-        	setpredraw(self, Item_PreDraw);
+        this.fade_end = ReadShort();
+        this.fade_start = ReadShort();
+        if(this.fade_start && !autocvar_cl_items_nofade)
+        	setpredraw(this, Item_PreDraw);
 
-        if(self.mdl)
-            strunzone(self.mdl);
+        if(this.mdl)
+            strunzone(this.mdl);
 
-        self.mdl = "";
+        this.mdl = "";
         string _fn = ReadString();
 
-        if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
+        if(autocvar_cl_simple_items && (this.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-            self.draw = ItemDrawSimple;
+            this.draw = ItemDrawSimple;
 
             if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
+                this.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
             else
             {
-                self.draw = ItemDraw;
+                this.draw = ItemDraw;
                 LOG_TRACE("Simple item requested for ", _fn, " but no model exists for it\n");
             }
         }
 
-        if(self.draw != ItemDrawSimple)
-            self.mdl = strzone(_fn);
+        if(this.draw != ItemDrawSimple)
+            this.mdl = strzone(_fn);
 
 
-        if(self.mdl == "")
-            LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, ", tell tZork about this!\n");
+        if(this.mdl == "")
+            LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, ", tell tZork about this!\n");
 
-        precache_model(self.mdl);
-        _setmodel(self, self.mdl);
+        precache_model(this.mdl);
+        _setmodel(this, this.mdl);
 
-        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
+        setsize(this, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_COLORMAP)
-        self.colormap = ReadShort();
+        this.colormap = ReadShort();
 
     if(sf & ISF_DROP)
     {
-        self.gravity = 1;
-        self.pushable = true;
-        //self.move_angles = '0 0 0';
-        self.move_movetype = MOVETYPE_TOSS;
-        self.move_velocity_x = ReadCoord();
-        self.move_velocity_y = ReadCoord();
-        self.move_velocity_z = ReadCoord();
-        self.velocity = self.move_velocity;
-        self.move_origin = self.oldorigin;
+        this.gravity = 1;
+        this.pushable = true;
+        //this.move_angles = '0 0 0';
+        this.move_movetype = MOVETYPE_TOSS;
+        this.move_velocity_x = ReadCoord();
+        this.move_velocity_y = ReadCoord();
+        this.move_velocity_z = ReadCoord();
+        this.velocity = this.move_velocity;
+        this.move_origin = this.oldorigin;
 
-        if(!self.move_time)
+        if(!this.move_time)
         {
-            self.move_time = time;
-            self.spawntime = time;
+            this.move_time = time;
+            this.spawntime = time;
         }
         else
-            self.move_time = max(self.move_time, time);
+            this.move_time = max(this.move_time, time);
     }
 
     if(autocvar_cl_animate_items)
     {
-        if(self.ItemStatus & ITS_ANIMATE1)
-            self.move_avelocity = '0 180 0';
+        if(this.ItemStatus & ITS_ANIMATE1)
+            this.move_avelocity = '0 180 0';
 
-        if(self.ItemStatus & ITS_ANIMATE2)
-            self.move_avelocity = '0 -90 0';
+        if(this.ItemStatus & ITS_ANIMATE2)
+            this.move_avelocity = '0 -90 0';
     }
 
-    self.entremove = ItemRemove;
+    this.entremove = ItemRemove;
 
     return true;
 }
@@ -289,7 +289,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 #ifdef SVQC
 bool ItemSend(entity this, entity to, int sf)
 {
-	if(self.gravity)
+	if(this.gravity)
 		sf |= ISF_DROP;
 	else
 		sf &= ~ISF_DROP;
@@ -297,19 +297,19 @@ bool ItemSend(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
-	//WriteByte(MSG_ENTITY, self.cnt);
+	//WriteByte(MSG_ENTITY, this.cnt);
 	if(sf & ISF_LOCATION)
 	{
-		WriteCoord(MSG_ENTITY, self.origin.x);
-		WriteCoord(MSG_ENTITY, self.origin.y);
-		WriteCoord(MSG_ENTITY, self.origin.z);
+		WriteCoord(MSG_ENTITY, this.origin.x);
+		WriteCoord(MSG_ENTITY, this.origin.y);
+		WriteCoord(MSG_ENTITY, this.origin.z);
 	}
 
 	if(sf & ISF_ANGLES)
 	{
-		WriteAngle(MSG_ENTITY, self.angles_x);
-		WriteAngle(MSG_ENTITY, self.angles_y);
-		WriteAngle(MSG_ENTITY, self.angles_z);
+		WriteAngle(MSG_ENTITY, this.angles_x);
+		WriteAngle(MSG_ENTITY, this.angles_y);
+		WriteAngle(MSG_ENTITY, this.angles_z);
 	}
 
 	if(sf & ISF_SIZE)
@@ -319,30 +319,30 @@ bool ItemSend(entity this, entity to, int sf)
 	}
 
 	if(sf & ISF_STATUS)
-		WriteByte(MSG_ENTITY, self.ItemStatus);
+		WriteByte(MSG_ENTITY, this.ItemStatus);
 
 	if(sf & ISF_MODEL)
 	{
 		Pickup p = this.itemdef;
 		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
-		WriteShort(MSG_ENTITY, self.fade_end);
-		WriteShort(MSG_ENTITY, self.fade_start);
+		WriteShort(MSG_ENTITY, this.fade_end);
+		WriteShort(MSG_ENTITY, this.fade_start);
 
-		if(self.mdl == "")
-			LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+		if(this.mdl == "")
+			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "exspect a crash just aboute now\n");
 
-		WriteString(MSG_ENTITY, self.mdl);
+		WriteString(MSG_ENTITY, this.mdl);
 	}
 
 
 	if(sf & ISF_COLORMAP)
-		WriteShort(MSG_ENTITY, self.colormap);
+		WriteShort(MSG_ENTITY, this.colormap);
 
 	if(sf & ISF_DROP)
 	{
-		WriteCoord(MSG_ENTITY, self.velocity.x);
-		WriteCoord(MSG_ENTITY, self.velocity.y);
-		WriteCoord(MSG_ENTITY, self.velocity.z);
+		WriteCoord(MSG_ENTITY, this.velocity.x);
+		WriteCoord(MSG_ENTITY, this.velocity.y);
+		WriteCoord(MSG_ENTITY, this.velocity.z);
 	}
 
 	return true;
@@ -385,22 +385,22 @@ bool have_pickup_item(entity this)
 /*
 float Item_Customize()
 {
-	if(self.spawnshieldtime)
+	if(this.spawnshieldtime)
 		return true;
-	if(self.weapons & ~other.weapons)
+	if(this.weapons & ~other.weapons)
 	{
-		self.colormod = '0 0 0';
-		self.glowmod = self.colormod;
-		self.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
+		this.colormod = '0 0 0';
+		this.glowmod = this.colormod;
+		this.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
 		return true;
 	}
 	else
 	{
 		if(g_ghost_items)
 		{
-			self.colormod = stov(autocvar_g_ghost_items_color);
-			self.glowmod = self.colormod;
-			self.alpha = g_ghost_items;
+			this.colormod = stov(autocvar_g_ghost_items_color);
+			this.glowmod = this.colormod;
+			this.alpha = g_ghost_items;
 			return true;
 		}
 		else
@@ -471,11 +471,11 @@ void Item_Show (entity e, float mode)
 	e.SendFlags |= ISF_STATUS;
 }
 
-void Item_Think()
-{SELFPARAM();
-	self.nextthink = time;
-	if(self.origin != self.oldorigin)
-		ItemUpdate(self);
+void Item_Think(entity this)
+{
+	this.nextthink = time;
+	if(this.origin != this.oldorigin)
+		ItemUpdate(this);
 }
 
 bool Item_ItemsTime_SpectatorOnly(GameItem it);
@@ -484,100 +484,98 @@ float Item_ItemsTime_UpdateTime(entity e, float t);
 void Item_ItemsTime_SetTime(entity e, float t);
 void Item_ItemsTime_SetTimesForAllPlayers();
 
-void Item_Respawn ()
-{SELFPARAM();
-	Item_Show(self, 1);
+void Item_Respawn (entity this)
+{
+	Item_Show(this, 1);
 	// this is ugly...
-	if(self.items == ITEM_Strength.m_itemid)
-		sound (self, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	else if(self.items == ITEM_Shield.m_itemid)
-		sound (self, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	if(this.items == ITEM_Strength.m_itemid)
+		sound (this, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	else if(this.items == ITEM_Shield.m_itemid)
+		sound (this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
-		sound (self, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	setorigin (self, self.origin);
+		sound (this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	setorigin (this, this.origin);
 
-    if (Item_ItemsTime_Allow(self.itemdef) || self.weapons & WEPSET_SUPERWEAPONS)
+    if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)
 	{
-		float t = Item_ItemsTime_UpdateTime(self, 0);
-		Item_ItemsTime_SetTime(self, t);
+		float t = Item_ItemsTime_UpdateTime(this, 0);
+		Item_ItemsTime_SetTime(this, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 
-	self.think = Item_Think;
-	self.nextthink = time;
+	setthink(this, Item_Think);
+	this.nextthink = time;
 
-	//Send_Effect(EFFECT_ITEM_RESPAWN, self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	//Send_Effect(EFFECT_ITEM_RESPAWN, this.origin + this.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 }
 
-void Item_RespawnCountdown ()
-{SELFPARAM();
-	if(self.count >= ITEM_RESPAWN_TICKS)
+void Item_RespawnCountdown (entity this)
+{
+	if(this.count >= ITEM_RESPAWN_TICKS)
 	{
-		if(self.waypointsprite_attached)
-			WaypointSprite_Kill(self.waypointsprite_attached);
-		Item_Respawn();
+		if(this.waypointsprite_attached)
+			WaypointSprite_Kill(this.waypointsprite_attached);
+		Item_Respawn(this);
 	}
 	else
 	{
-		self.nextthink = time + 1;
-		self.count += 1;
-		if(self.count == 1)
+		this.nextthink = time + 1;
+		this.count += 1;
+		if(this.count == 1)
 		{
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
 			do {
 				{
-					entity wi = Weapons_from(self.weapon);
+					entity wi = Weapons_from(this.weapon);
 					if (wi != WEP_Null) {
-						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Weapon);
+						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, this, '0 0 64', world, 0, this, waypointsprite_attached, true, RADARICON_Weapon);
 						wp.wp_extra = wi.m_id;
 						break;
 					}
 				}
 				{
-					entity ii = self.itemdef;
+					entity ii = this.itemdef;
 					if (ii != NULL) {
-						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Item);
+						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, this, '0 0 64', world, 0, this, waypointsprite_attached, true, RADARICON_Item);
 						wp.wp_extra = ii.m_id;
 						break;
 					}
 				}
 			} while (0);
-            if(self.waypointsprite_attached)
+            if(this.waypointsprite_attached)
             {
-                GameItem def = self.itemdef;
+                GameItem def = this.itemdef;
                 if (Item_ItemsTime_SpectatorOnly(def))
-                    WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-                WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+                    WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+                WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
             }
 		}
 
-		if(self.waypointsprite_attached)
+		if(this.waypointsprite_attached)
 		{
-			setself(self.waypointsprite_attached);
 			FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-				if(self.waypointsprite_visible_for_player(it))
+				if(this.waypointsprite_attached.waypointsprite_visible_for_player(this.waypointsprite_attached, it, it))
 				{
 					msg_entity = it;
 					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM);	// play respawn sound
 				}
 			});
-			setself(this);
 
-			WaypointSprite_Ping(self.waypointsprite_attached);
-			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
+			WaypointSprite_Ping(this.waypointsprite_attached);
+			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.count);
 		}
 	}
 }
 
-void Item_RespawnThink()
-{SELFPARAM();
-	self.nextthink = time;
-	if(self.origin != self.oldorigin)
-		ItemUpdate(self);
+void Item_RespawnThink(entity this)
+{
+	this.nextthink = time;
+	if(this.origin != this.oldorigin)
+		ItemUpdate(this);
 
-	if(time >= self.wait)
-		Item_Respawn();
+	if(time >= this.wait)
+		Item_Respawn(this);
 }
 
 void Item_ScheduleRespawnIn(entity e, float t)
@@ -585,7 +583,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	// if the respawn time is longer than 10 seconds, show a waypoint, otherwise, just respawn normally
 	if ((Item_ItemsTime_Allow(e.itemdef) || e.weapons & WEPSET_SUPERWEAPONS) && (t - ITEM_RESPAWN_TICKS) > 0)
 	{
-		e.think = Item_RespawnCountdown;
+		setthink(e, Item_RespawnCountdown);
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.count = 0;
@@ -595,7 +593,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	}
 	else
 	{
-		e.think = Item_RespawnThink;
+		setthink(e, Item_RespawnThink);
 		e.nextthink = time;
 		e.scheduledrespawntime = time + t;
 		e.wait = time + t;
@@ -763,9 +761,8 @@ LABEL(skip)
 	return 1;
 }
 
-void Item_Touch()
+void Item_Touch(entity this)
 {
-	SELFPARAM();
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
 	if (this.classname == "droppedweapon")
@@ -788,8 +785,10 @@ void Item_Touch()
 	switch (MUTATOR_CALLHOOK(ItemTouch, this, other))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
-		case MUT_ITEMTOUCH_PICKUP: { goto pickup; }
+		case MUT_ITEMTOUCH_PICKUP: { other = M_ARGV(1, entity); goto pickup; }
 	}
+
+	other = M_ARGV(1, entity);
 
 	if (this.classname == "droppedweapon")
 	{
@@ -851,7 +850,7 @@ void Item_Reset(entity this)
 
 	if (this.classname != "droppedweapon")
 	{
-		this.think = Item_Think;
+		setthink(this, Item_Think);
 		this.nextthink = time;
 
 		if (this.waypointsprite_attached)
@@ -861,18 +860,17 @@ void Item_Reset(entity this)
 			Item_ScheduleInitialRespawn(this);
 	}
 }
-void Item_Reset_self() { SELFPARAM(); Item_Reset(this); }
 
 void Item_FindTeam(entity this)
 {
 	entity e;
 
-	if(self.effects & EF_NODRAW)
+	if(this.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
+		LOG_TRACE("Initializing item team ", ftos(this.team), "\n");
 		RandomSelection_Init();
-		FOREACH_ENTITY_FLOAT(team, self.team,
+		FOREACH_ENTITY_FLOAT(team, this.team,
 		{
 			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
@@ -883,7 +881,7 @@ void Item_FindTeam(entity this)
 		e.state = 0;
 		Item_Show(e, 1);
 
-		FOREACH_ENTITY_FLOAT(team, self.team,
+		FOREACH_ENTITY_FLOAT(team, this.team,
 		{
 			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
@@ -898,16 +896,16 @@ void Item_FindTeam(entity this)
 			}
 		});
 
-		Item_Reset(self);
+		Item_Reset(this);
 	}
 }
 
 // Savage: used for item garbage-collection
-void RemoveItem()
-{SELFPARAM();
-	if(wasfreed(self) || !self) { return; }
-	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
-	remove(self);
+void RemoveItem(entity this)
+{
+	if(wasfreed(this) || !this) { return; }
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
+	remove(this);
 }
 
 // pickup evaluation functions
@@ -1030,7 +1028,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		WITHSELF(this, RemoveItem());
+		RemoveItem(this);
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
@@ -1084,7 +1082,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 		this.movetype = MOVETYPE_TOSS;
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
-		this.think = RemoveItem;
+		setthink(this, RemoveItem);
 		this.nextthink = time + 20;
 
 		this.takedamage = DAMAGE_YES;
@@ -1135,7 +1133,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				WITHSELF(this, droptofloor());
+				droptofloor(this);
 			waypoint_spawnforitem(this);
 		}
 
@@ -1184,7 +1182,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 	this.bot_pickupbasevalue = pickupbasevalue;
 	this.mdl = this.model ? this.model : strzone(this.item_model_ent.model_str());
 	this.netname = itemname;
-	this.touch = Item_Touch;
+	settouch(this, Item_Touch);
 	setmodel(this, MDL_Null); // precision set below
 	//this.effects |= EF_LOWPRECISION;
 
@@ -1436,7 +1434,10 @@ void target_items_use(entity this, entity actor, entity trigger)
 		return;
 	if(IS_DEAD(actor))
 		return;
-	EXACTTRIGGER_TOUCH;
+	if(trigger.solid == SOLID_TRIGGER)
+	{
+		EXACTTRIGGER_TOUCH;
+	}
 
 	FOREACH_ENTITY_ENT(enemy, actor,
 	{
@@ -1453,39 +1454,39 @@ spawnfunc(target_items)
 	float n, i;
 	string s;
 
-	self.use = target_items_use;
-	if(!self.strength_finished)
-		self.strength_finished = autocvar_g_balance_powerup_strength_time;
-	if(!self.invincible_finished)
-		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-	if(!self.superweapons_finished)
-		self.superweapons_finished = autocvar_g_balance_superweapons_time;
+	this.use = target_items_use;
+	if(!this.strength_finished)
+		this.strength_finished = autocvar_g_balance_powerup_strength_time;
+	if(!this.invincible_finished)
+		this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	if(!this.superweapons_finished)
+		this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
-	n = tokenize_console(self.netname);
+	n = tokenize_console(this.netname);
 	if(argv(0) == "give")
 	{
-		self.netname = substring(self.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
+		this.netname = substring(this.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
 	}
 	else
 	{
 		for(i = 0; i < n; ++i)
 		{
-			if     (argv(i) == "unlimited_ammo")         self.items |= IT_UNLIMITED_AMMO;
-			else if(argv(i) == "unlimited_weapon_ammo")  self.items |= IT_UNLIMITED_WEAPON_AMMO;
-			else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
-			else if(argv(i) == "strength")               self.items |= ITEM_Strength.m_itemid;
-			else if(argv(i) == "invincible")             self.items |= ITEM_Shield.m_itemid;
-			else if(argv(i) == "superweapons")           self.items |= IT_SUPERWEAPON;
-			else if(argv(i) == "jetpack")                self.items |= ITEM_Jetpack.m_itemid;
-			else if(argv(i) == "fuel_regen")             self.items |= ITEM_JetpackRegen.m_itemid;
+			if     (argv(i) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
+			else if(argv(i) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
+			else if(argv(i) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
+			else if(argv(i) == "strength")               this.items |= ITEM_Strength.m_itemid;
+			else if(argv(i) == "invincible")             this.items |= ITEM_Shield.m_itemid;
+			else if(argv(i) == "superweapons")           this.items |= IT_SUPERWEAPON;
+			else if(argv(i) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
+			else if(argv(i) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
 				FOREACH(Weapons, it != WEP_Null, {
 					s = W_UndeprecateName(argv(i));
 					if(s == it.netname)
 					{
-						self.weapons |= (it.m_wepset);
-						if(self.spawnflags == 0 || self.spawnflags == 2)
+						this.weapons |= (it.m_wepset);
+						if(this.spawnflags == 0 || this.spawnflags == 2)
 							it.wr_init(it);
 						break;
 					}
@@ -1494,22 +1495,22 @@ spawnfunc(target_items)
 		}
 
 		string itemprefix, valueprefix;
-		if(self.spawnflags == 0)
+		if(this.spawnflags == 0)
 		{
 			itemprefix = "";
 			valueprefix = "";
 		}
-		else if(self.spawnflags == 1)
+		else if(this.spawnflags == 1)
 		{
 			itemprefix = "max ";
 			valueprefix = "max ";
 		}
-		else if(self.spawnflags == 2)
+		else if(this.spawnflags == 2)
 		{
 			itemprefix = "min ";
 			valueprefix = "min ";
 		}
-		else if(self.spawnflags == 4)
+		else if(this.spawnflags == 4)
 		{
 			itemprefix = "minus ";
 			valueprefix = "max ";
@@ -1520,28 +1521,28 @@ spawnfunc(target_items)
 			itemprefix = valueprefix = string_null;
 		}
 
-		self.netname = "";
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * boolean(self.items & ITEM_Strength.m_itemid), "strength");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * boolean(self.items & ITEM_Shield.m_itemid), "invincible");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * boolean(self.items & IT_SUPERWEAPON), "superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & ITEM_Jetpack.m_itemid), "jetpack");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
-		if(self.ammo_shells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_shells), "shells");
-		if(self.ammo_nails != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_nails), "nails");
-		if(self.ammo_rockets != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_rockets), "rockets");
-		if(self.ammo_cells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_cells), "cells");
-		if(self.ammo_plasma != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_plasma), "plasma");
-		if(self.ammo_fuel != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_fuel), "fuel");
-		if(self.health != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "health");
-		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.armorvalue), "armor");
-		FOREACH(Weapons, it != WEP_Null, self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (it.m_wepset)), it.netname));
+		this.netname = "";
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
+		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.strength_finished * boolean(this.items & ITEM_Strength.m_itemid), "strength");
+		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.invincible_finished * boolean(this.items & ITEM_Shield.m_itemid), "invincible");
+		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
+		if(this.ammo_shells != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_shells), "shells");
+		if(this.ammo_nails != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_nails), "nails");
+		if(this.ammo_rockets != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_rockets), "rockets");
+		if(this.ammo_cells != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_cells), "cells");
+		if(this.ammo_plasma != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_plasma), "plasma");
+		if(this.ammo_fuel != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_fuel), "fuel");
+		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
+		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
+		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.weapons & (it.m_wepset)), it.netname));
 	}
-	self.netname = strzone(self.netname);
-	//print(self.netname, "\n");
+	this.netname = strzone(this.netname);
+	//print(this.netname, "\n");
 
-	n = tokenize_console(self.netname);
+	n = tokenize_console(this.netname);
 	for(i = 0; i < n; ++i)
 	{
 		FOREACH(Weapons, it != WEP_Null && argv(i) == it.netname, {
@@ -1637,7 +1638,7 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 		e.(regenfield) = max(e.(regenfield), time + regentime);
 }
 float GiveItems(entity e, float beginarg, float endarg)
-{SELFPARAM();
+{
 	float got, i, val, op;
 	float _switchweapon;
 	string cmd;
@@ -1799,7 +1800,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, SND_MEGAHEALTH, SND_Null);
 
 	if(e.superweapons_finished <= 0)
-		if(self.weapons & WEPSET_SUPERWEAPONS)
+		if(e.weapons & WEPSET_SUPERWEAPONS)
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.strength_finished <= 0)

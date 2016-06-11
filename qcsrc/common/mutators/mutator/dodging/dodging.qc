@@ -267,11 +267,11 @@ void PM_dodging_GetPressedKeys(entity this)
 
 MUTATOR_HOOKFUNCTION(dodging, PlayerPhysics)
 {
-    SELFPARAM();
+    entity player = M_ARGV(0, entity);
+
 	// print("dodging_PlayerPhysics\n");
-	PM_dodging_GetPressedKeys(self);
-	PM_dodging(self);
-	return false;
+	PM_dodging_GetPressedKeys(player);
+	PM_dodging(player);
 }
 
 #ifdef SVQC
@@ -280,9 +280,9 @@ REPLICATE(cvar_cl_dodging_timeout, float, "cl_dodging_timeout");
 
 MUTATOR_HOOKFUNCTION(dodging, GetPressedKeys)
 {
-    SELFPARAM();
-	PM_dodging_checkpressedkeys(self);
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	PM_dodging_checkpressedkeys(player);
 }
 
 #endif

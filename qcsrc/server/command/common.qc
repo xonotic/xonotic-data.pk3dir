@@ -183,19 +183,17 @@ void print_to(entity to, string input)
 // ==========================================
 
 // used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
-void timeout_handler_reset()
+void timeout_handler_reset(entity this)
 {
-	SELFPARAM();
-	timeout_caller = world;
+	timeout_caller = NULL;
 	timeout_time = 0;
 	timeout_leadtime = 0;
 
-	remove(self);
+	remove(this);
 }
 
-void timeout_handler_think()
+void timeout_handler_think(entity this)
 {
-	SELFPARAM();
 	switch (timeout_status)
 	{
 		case TIMEOUT_ACTIVE:
@@ -207,7 +205,7 @@ void timeout_handler_think()
 				if (timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 
-				self.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
+				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
 				timeout_time -= 1;                                  // decrease the time counter
 			}
 			else  // time to end the timeout
@@ -222,7 +220,7 @@ void timeout_handler_think()
 					it.fixangle = false;
 				));
 
-				timeout_handler_reset();
+				timeout_handler_reset(this);
 			}
 
 			return;
@@ -234,7 +232,7 @@ void timeout_handler_think()
 			{
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 
-				self.nextthink = time + 1; // think again in one second
+				this.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1;     // decrease the time counter
 			}
 			else  // time to begin the timeout
@@ -256,7 +254,7 @@ void timeout_handler_think()
 					it.lastV_angle = it.v_angle;
 				));
 
-				self.nextthink = time;  // think again next frame to handle it under TIMEOUT_ACTIVE code
+				this.nextthink = time;  // think again next frame to handle it under TIMEOUT_ACTIVE code
 			}
 
 			return;
@@ -266,7 +264,7 @@ void timeout_handler_think()
 		case TIMEOUT_INACTIVE:
 		default:
 		{
-			timeout_handler_reset();
+			timeout_handler_reset(this);
 			return;
 		}
 	}
@@ -363,7 +361,6 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					int moveflag, tmp_moncount = 0;
 					string arg_lower = strtolower(argument);
 					moveflag = (argv(3)) ? stof(argv(3)) : 1;  // follow owner if not defined
-					ret_string = "Monster spawning is currently disabled by a mutator";
 
 					if (arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
 
@@ -375,7 +372,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (!autocvar_g_monsters) { print_to(caller, "Monsters are disabled"); return; }
 					if (autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { print_to(caller, "Monster spawning is disabled"); return; }
 					if (!IS_PLAYER(caller)) { print_to(caller, "You must be playing to spawn a monster"); return; }
-					if (MUTATOR_CALLHOOK(AllowMobSpawning)) { print_to(caller, ret_string); return; }
+					if (MUTATOR_CALLHOOK(AllowMobSpawning, caller)) { print_to(caller, M_ARGV(1, string)); return; }
 					if (caller.vehicle) { print_to(caller, "You can't spawn monsters while driving a vehicle"); return; }
 					if (STAT(FROZEN, caller)) { print_to(caller, "You can't spawn monsters while frozen"); return; }
 					if (IS_DEAD(caller)) { print_to(caller, "You can't spawn monsters while dead"); return; }
@@ -435,7 +432,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 				case "butcher":
 				{
 					if (caller) { print_to(caller, "This command is not available to players"); return; }
-					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(ret_string, "\n"); return; }
+					if (MUTATOR_CALLHOOK(AllowMobButcher)) { LOG_INFO(M_ARGV(0, string), "\n"); return; }
 
 					int tmp_remcount = 0;
 
@@ -473,7 +470,7 @@ void CommonCommand_info(float request, entity caller, float argc)
 		{
 			string command = builtin_cvar_string(strcat("sv_info_", argv(1)));
 
-			if (command) wordwrap_sprint(command, 1000);
+			if (command) wordwrap_sprint(caller, command, 1000);
 			else print_to(caller, "ERROR: unsupported info command");
 
 			return;  // never fall through to usage
@@ -740,7 +737,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 					timeout_leadtime = autocvar_sv_timeout_leadtime;
 
 					timeout_handler = spawn();
-					timeout_handler.think = timeout_handler_think;
+					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 
 					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_TIMEOUT);
