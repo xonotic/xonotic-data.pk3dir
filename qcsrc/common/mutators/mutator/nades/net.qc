@@ -13,6 +13,7 @@ void orb_draw(entity this)
 
 	this.alpha = (this.ltime - time) / this.orb_lifetime;
 	this.scale = min((1 - this.alpha)*this.orb_lifetime*4,1)*this.orb_radius;
+	this.angles = this.angles + dt * this.avelocity;
 }
 
 void orb_setup(entity e)
