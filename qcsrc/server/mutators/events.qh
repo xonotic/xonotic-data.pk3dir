@@ -442,8 +442,8 @@ MUTATOR_HOOKABLE(SV_ParseServerCommand, EV_SV_ParseServerCommand);
 #define EV_Spawn_Score(i, o) \
     /** player wanting to spawn */ i(entity, MUTATOR_ARGV_0_entity) \
     /** spot to be evaluated */ i(entity, MUTATOR_ARGV_1_entity) \
-    /** spot score, _x is priority, _y is "distance" */ i(vector, MUTATOR_ARGV_0_vector) \
-    /**/ o(vector, MUTATOR_ARGV_0_vector) \
+    /** spot score, _x is priority, _y is "distance" */ i(vector, MUTATOR_ARGV_2_vector) \
+    /**/ o(vector, MUTATOR_ARGV_2_vector) \
     /**/
 MUTATOR_HOOKABLE(Spawn_Score, EV_Spawn_Score);
 
