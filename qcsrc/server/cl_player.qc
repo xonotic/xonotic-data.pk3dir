@@ -551,7 +551,7 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 	if(accuracy_isgooddamage(attacker, this))
         attacker.accuracy.(accuracy_frags[w.m_id-1]) += 1;
 
-		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, excess);
+		MUTATOR_CALLHOOK(PlayerDies, inflictor, attacker, this, deathtype, damage);
 		excess = M_ARGV(4, float);
 
 		Weapon wep = PS(this).m_weapon;
