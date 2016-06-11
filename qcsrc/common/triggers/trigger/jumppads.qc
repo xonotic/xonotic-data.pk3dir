@@ -148,7 +148,7 @@ void trigger_push_touch(entity this)
 		other.velocity = trigger_push_calculatevelocity(other.origin, this.enemy, this.height);
 		other.move_velocity = other.velocity;
 	}
-	else if(this.target)
+	else if(this.target && this.target != "")
 	{
 		entity e;
 		RandomSelection_Init();
