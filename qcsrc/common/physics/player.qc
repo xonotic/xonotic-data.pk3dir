@@ -1552,7 +1552,7 @@ void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
 #ifdef SVQC
-	SELFPARAM(); // needed for engine functions
+	ENGINE_EVENT();
 #endif
 	PM_Main(this);
 }

@@ -135,8 +135,8 @@ void fd_secret_done(entity this)
 
 .float door_finished;
 
-void secret_blocked()
-{SELFPARAM();
+void secret_blocked(entity this)
+{
 	if (time < this.door_finished)
 		return;
 	this.door_finished = time + 0.5;
@@ -214,7 +214,7 @@ spawnfunc(func_door_secret)
 	precache_sound(this.noise);
 
 	settouch(this, secret_touch);
-	this.blocked = secret_blocked;
+	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
 	IFTARGETED

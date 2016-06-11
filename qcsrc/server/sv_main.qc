@@ -238,7 +238,7 @@ void StartFrame()
 .string cvarfilter;
 bool DoesQ3ARemoveThisEntity(entity this);
 void SV_OnEntityPreSpawnFunction()
-{SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")

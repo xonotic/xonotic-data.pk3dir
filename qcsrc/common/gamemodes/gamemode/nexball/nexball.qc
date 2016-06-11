@@ -124,7 +124,7 @@ void relocate_nexball(entity this)
 		vector o;
 		o = this.origin;
 		if(!move_out_of_solid(this))
-			objerror("could not get out of solid at all!");
+			objerror(this, "could not get out of solid at all!");
 		LOG_INFO("^1NOTE: this map needs FIXING. ", this.classname, " at ", vtos(o - '0 0 1'));
 		LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(this.origin.x - o.x));
 		LOG_INFO(" ", ftos(this.origin.y - o.y));

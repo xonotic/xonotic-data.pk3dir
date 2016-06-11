@@ -57,7 +57,7 @@ void W_Porto_Success(entity this)
 {
 	if(this.realowner == world)
 	{
-		objerror("Cannot succeed successfully: no owner\n");
+		objerror(this, "Cannot succeed successfully: no owner\n");
 		return;
 	}
 
@@ -70,7 +70,7 @@ void W_Porto_Fail(entity this, float failhard)
 {
 	if(this.realowner == world)
 	{
-		objerror("Cannot fail successfully: no owner\n");
+		objerror(this, "Cannot fail successfully: no owner\n");
 		return;
 	}
 

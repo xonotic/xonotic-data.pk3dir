@@ -71,7 +71,7 @@ spawnfunc(func_door_rotating)
 	//this.effects |= EF_LOWPRECISION;
 	this.classname = "door_rotating";
 
-	this.blocked = door_blocked;
+	setblocked(this, door_blocked);
 	this.use = door_use;
 
     if(this.spawnflags & 8)

@@ -110,7 +110,7 @@ void info_autoscreenshot_findtarget(entity this)
 	e = find(world, targetname, this.target);
 	if(!e)
 	{
-		objerror("Missing target. FAIL!");
+		objerror(this, "Missing target. FAIL!");
 		return;
 	}
 	vector a = vectoangles(e.origin - this.origin);
@@ -123,7 +123,7 @@ spawnfunc(info_autoscreenshot)
 {
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
 	{
-		objerror("Too many info_autoscreenshot entitites. FAIL!");
+		objerror(this, "Too many info_autoscreenshot entitites. FAIL!");
 		return;
 	}
 	if(this.target != "")

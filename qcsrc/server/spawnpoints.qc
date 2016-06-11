@@ -81,7 +81,7 @@ void relocate_spawnpoint(entity this)
         this.mins = PL_MIN_CONST;
         this.maxs = PL_MAX_CONST;
         if (!move_out_of_solid(this))
-            objerror("could not get out of solid at all!");
+            objerror(this, "could not get out of solid at all!");
         LOG_INFO("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
         LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(this.origin.x - o.x));
         LOG_INFO(" ", ftos(this.origin.y - o.y));
@@ -96,7 +96,7 @@ void relocate_spawnpoint(entity this)
         {
             setorigin(this, o);
             this.mins = this.maxs = '0 0 0';
-            objerror("player spawn point in solid, mapper sucks!\n");
+            objerror(this, "player spawn point in solid, mapper sucks!\n");
             return;
         }
     }

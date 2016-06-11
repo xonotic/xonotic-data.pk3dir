@@ -46,7 +46,7 @@ spawnfunc(func_pendulum)
 		this.dmgtime = 0.25;
 	this.dmgtime2 = time;
 
-	this.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 
 	this.avelocity_z = 0.0000001;
 	if (!InitMovingBrushTrigger(this))

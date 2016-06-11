@@ -12,6 +12,8 @@
 	#define bool float
 #endif
 
+#include <dpdefs/pre.qh>
+
 #if defined(CSQC)
 	#include <dpdefs/csprogsdefs.qh>
 	#include <dpdefs/keycodes.qh>
@@ -24,6 +26,8 @@
 	#include <dpdefs/menudefs.qh>
 	#include <dpdefs/keycodes.qh>
 #endif
+
+#include <dpdefs/post.qh>
 
 #define USING(name, T) typedef T name
 

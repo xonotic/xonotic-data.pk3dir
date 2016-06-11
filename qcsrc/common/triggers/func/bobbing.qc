@@ -48,7 +48,7 @@ spawnfunc(func_bobbing)
 	this.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
-	this.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
     if(this.dmg && (this.message2 == ""))

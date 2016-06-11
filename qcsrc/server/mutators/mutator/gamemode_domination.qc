@@ -312,7 +312,7 @@ void dom_controlpoint_setup(entity this)
 	while(head && head.netname != "")
 		head = find(head, classname, "dom_team");
 	if (!head)
-		objerror("no spawnfunc_dom_team with netname \"\" found\n");
+		objerror(this, "no spawnfunc_dom_team with netname \"\" found\n");
 
 	// copy important properties from spawnfunc_dom_team entity
 	this.goalentity = head;

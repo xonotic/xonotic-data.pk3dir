@@ -441,8 +441,7 @@ void FixPlayermodel(entity player)
 
 /** Called when a client spawns in the server */
 void PutClientInServer()
-{
-	SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	if (IS_BOT_CLIENT(this)) {
 		TRANSMUTE(Player, this);
 	} else if (IS_REAL_CLIENT(this)) {
@@ -733,7 +732,7 @@ SetChangeParms
 =============
 */
 void SetChangeParms ()
-{SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	// save parms for level change
 	parm1 = this.parm_idlesince - time;
 
@@ -949,7 +948,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 }
 
 void ClientKill ()
-{SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	if(gameover) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
@@ -999,7 +998,7 @@ Called once (not at each match start) when a client begins a connection to the s
 =============
 */
 void ClientPreConnect ()
-{SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	if(autocvar_sv_eventlog)
 	{
 		GameLogEcho(sprintf(":connect:%d:%d:%s",
@@ -1019,8 +1018,7 @@ Called when a client connects to the server
 =============
 */
 void ClientConnect()
-{
-	SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
 	this.flags |= FL_CLIENT;
@@ -1176,8 +1174,7 @@ Called when a client disconnects from the server
 .entity chatbubbleentity;
 void ReadyCount();
 void ClientDisconnect()
-{
-	SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	assert(IS_CLIENT(this), return);
 
 	PlayerStats_GameReport_FinalizePlayer(this);
@@ -2070,8 +2067,7 @@ Called every frame for each client before the physics are run
 .float last_vehiclecheck;
 .int items_added;
 void PlayerPreThink ()
-{
-    SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
     STAT(GAMESTARTTIME, this) = game_starttime;
@@ -2420,8 +2416,7 @@ Called every frame for each client after the physics are run
 */
 .float idlekick_lasttimeleft;
 void PlayerPostThink ()
-{
-    SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	if (sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))

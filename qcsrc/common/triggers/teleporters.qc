@@ -264,7 +264,7 @@ void teleport_findtarget(entity this)
 	if(n == 0)
 	{
 		// no dest!
-		objerror ("Teleporter with nonexistant target");
+		objerror (this, "Teleporter with nonexistant target");
 		return;
 	}
 	else if(n == 1)

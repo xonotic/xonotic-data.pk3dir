@@ -705,8 +705,7 @@ void ClientCommand_macro_write_aliases(float fh)
 // If this function exists, server game code parses clientcommand before the engine code gets it.
 
 void SV_ParseClientCommand(string command)
-{
-	SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	// If invalid UTF-8, don't even parse it
 	string command2 = "";
 	float len = strlen(command);

@@ -148,13 +148,13 @@ void assault_setenemytoobjective(entity this)
 			if(this.enemy == world)
 				this.enemy = objective;
 			else
-				objerror("more than one objective as target - fix the map!");
+				objerror(this, "more than one objective as target - fix the map!");
 			break;
 		}
 	}
 
 	if(this.enemy == world)
-		objerror("no objective as target - fix the map!");
+		objerror(this, "no objective as target - fix the map!");
 }
 
 bool assault_decreaser_sprite_visible(entity this, entity player, entity view)

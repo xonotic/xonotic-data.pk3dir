@@ -169,8 +169,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 		entity ts = new(warpzone_teleported);
 		setmodel(ts, MDL_Null);
-		ts.SendEntity = SendEntity_self;
-		ts.SendEntity3 = WarpZone_Teleported_Send;
+		setSendEntity(ts, WarpZone_Teleported_Send);
 		ts.SendFlags = 0xFFFFFF;
 		ts.drawonlytoclient = player;
 		setthink(ts, SUB_Remove);
@@ -771,8 +770,7 @@ spawnfunc(trigger_warpzone)
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
 	else
 		setsize(this, this.mins, this.maxs);
-	this.SendEntity = SendEntity_self;
-	this.SendEntity3 = WarpZone_Send;
+	setSendEntity(this, WarpZone_Send);
 	this.SendFlags = 0xFFFFFF;
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.warpzone_next = warpzone_first;
@@ -798,8 +796,7 @@ spawnfunc(func_camera)
 		this.solid = SOLID_BSP;
 	else if(this.solid < 0)
 		this.solid = SOLID_NOT;
-	this.SendEntity = SendEntity_self;
-	this.SendEntity3 = WarpZone_Camera_Send;
+	setSendEntity(this, WarpZone_Camera_Send);
 	this.SendFlags = 0xFFFFFF;
 	this.warpzone_next = warpzone_camera_first;
 	warpzone_camera_first = this;

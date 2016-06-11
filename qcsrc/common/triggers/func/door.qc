@@ -25,8 +25,8 @@ void door_go_up(entity this);
 void door_rotating_go_down(entity this);
 void door_rotating_go_up(entity this);
 
-void door_blocked()
-{SELFPARAM();
+void door_blocked(entity this)
+{
 	if((this.spawnflags & 8)
 #ifdef SVQC
 		&& (other.takedamage != DAMAGE_NO)
@@ -209,7 +209,7 @@ bool door_check_keys(entity door, entity player)
 void door_fire(entity this, entity actor, entity trigger)
 {
 	if (this.owner != this)
-		objerror ("door_fire: this.owner != this");
+		objerror (this, "door_fire: this.owner != this");
 
 	if (this.spawnflags & DOOR_TOGGLE)
 	{
@@ -722,7 +722,7 @@ spawnfunc(func_door)
 	precache_sound(this.noise);
 	precache_sound(this.noise3);
 
-	this.blocked = door_blocked;
+	setblocked(this, door_blocked);
 	this.use = door_use;
 
 	if(this.dmg && (this.message == ""))

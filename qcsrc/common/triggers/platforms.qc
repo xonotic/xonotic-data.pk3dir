@@ -1,7 +1,6 @@
-void generic_plat_blocked()
+void generic_plat_blocked(entity this)
 {
 #ifdef SVQC
-    SELFPARAM();
 	if(this.dmg && other.takedamage != DAMAGE_NO)
 	{
 		if(this.dmgtime2 < time)
@@ -55,7 +54,7 @@ void plat_spawn_inside_trigger(entity this)
 
 	// otherwise, something is fishy...
 	remove(trigger);
-	objerror("plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
+	objerror(this, "plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
 
 void plat_hit_top(entity this)
@@ -140,8 +139,8 @@ void plat_trigger_use(entity this, entity actor, entity trigger)
 }
 
 
-void plat_crush()
-{SELFPARAM();
+void plat_crush(entity this)
+{
 	if((this.spawnflags & 4) && (other.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
@@ -174,7 +173,7 @@ void plat_use(entity this, entity actor, entity trigger)
 {
 	this.use = func_null;
 	if (this.state != 4)
-		objerror ("plat_use: not in up state");
+		objerror (this, "plat_use: not in up state");
 	plat_go_down(this);
 }
 
@@ -222,7 +221,7 @@ bool set_platmovetype(entity e, string s)
 
 	if(!cubic_speedfunc_is_sane(e.platmovetype_start, e.platmovetype_end))
 	{
-		objerror("Invalid platform move type; platform would go in reverse, which is not allowed.");
+		objerror(e, "Invalid platform move type; platform would go in reverse, which is not allowed.");
 		return false;
 	}
 

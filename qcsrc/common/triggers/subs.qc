@@ -189,7 +189,7 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 	entity controller;
 
 	if (!tspeed)
-		objerror ("No speed is defined!");
+		objerror (this, "No speed is defined!");
 
 	this.think1 = func;
 	this.finaldest = tdest;
@@ -245,7 +245,7 @@ void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, vo
 	float	traveltime;
 
 	if (!tspeed)
-		objerror ("No speed is defined!");
+		objerror (this, "No speed is defined!");
 
 	this.think1 = func;
 	this.finaldest = tdest;
@@ -320,7 +320,7 @@ void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float t
 	float	traveltime;
 
 	if (!tspeed)
-		objerror ("No speed is defined!");
+		objerror (this, "No speed is defined!");
 
 	// take the shortest distance for the angles
 	this.angles_x -= 360 * floor((this.angles_x - destangle_x) / 360 + 0.5);

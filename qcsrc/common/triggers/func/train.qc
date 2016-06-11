@@ -77,7 +77,7 @@ void train_next(entity this)
 		}
 	}
 	if (this.target == "")
-		objerror("train_next: no next target");
+		objerror(this, "train_next: no next target");
 	this.wait = targ.wait;
 	if (!this.wait)
 		this.wait = 0.1;
@@ -189,7 +189,7 @@ void func_train_find(entity this)
 	targ = find(world, targetname, this.target);
 	this.target = targ.target;
 	if (this.target == "")
-		objerror("func_train_find: no next target");
+		objerror(this, "func_train_find: no next target");
 	SUB_SETORIGIN(this, targ.origin - this.view_ofs);
 
 	if(!(this.spawnflags & 4))
@@ -215,7 +215,7 @@ spawnfunc(func_train)
 		precache_sound(this.noise);
 
 	if (this.target == "")
-		objerror("func_train without a target");
+		objerror(this, "func_train without a target");
 	if (!this.speed)
 		this.speed = 100;
 
@@ -237,7 +237,7 @@ spawnfunc(func_train)
 	// wait for targets to spawn
 	InitializeEntity(this, func_train_find, INITPRIO_FINDTARGET);
 
-	this.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
     if(this.dmg && (this.message2 == ""))

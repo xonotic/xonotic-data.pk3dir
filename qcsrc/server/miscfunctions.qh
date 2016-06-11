@@ -55,7 +55,6 @@ void InitializeEntitiesRun();
 void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
 
-void objerror(string s);
 void droptofloor(entity this);
 
 void attach_sameorigin(entity e, entity to, string tag);

@@ -28,7 +28,7 @@ void button_return(entity this)
 }
 
 
-void button_blocked()
+void button_blocked(entity this)
 {
 	// do nothing, just don't come all the way back out
 }
@@ -119,7 +119,7 @@ spawnfunc(func_button)
 		return;
 	this.effects |= EF_LOWPRECISION;
 
-	this.blocked = button_blocked;
+	setblocked(this, button_blocked);
 	this.use = button_use;
 
 //	if (this.health == 0) // all buttons are now shootable

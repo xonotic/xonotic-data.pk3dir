@@ -45,7 +45,7 @@ void dynlight_find_aiment(entity this)
 {
 	entity targ;
 	if (!this.target)
-		objerror ("dynlight: no target to follow");
+		objerror (this, "dynlight: no target to follow");
 
 	targ = find(world, targetname, this.target);
 	this.movetype = MOVETYPE_FOLLOW;
@@ -61,7 +61,7 @@ void dynlight_find_path(entity this)
 {
 	entity targ;
 	if (!this.target)
-		objerror ("dynlight: no target to follow");
+		objerror (this, "dynlight: no target to follow");
 
 	targ = find(world, targetname, this.target);
 	this.target = targ.target;
@@ -73,7 +73,7 @@ void dynlight_find_target(entity this)
 {
 	entity targ;
 	if (!this.target)
-		objerror ("dynlight: no target to follow");
+		objerror (this, "dynlight: no target to follow");
 
 	targ = find(world, targetname, this.target);
 	setattachment(this, targ, this.dtagname);

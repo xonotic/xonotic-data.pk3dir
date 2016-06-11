@@ -106,7 +106,7 @@ spawnfunc(func_plat)
 	this.effects |= EF_LOWPRECISION;
 	setsize (this, this.mins , this.maxs);
 
-	this.blocked = plat_crush;
+	setblocked(this, plat_crush);
 
 	if (!this.speed) this.speed = 150;
 	if (!this.lip) this.lip = 16;

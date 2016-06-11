@@ -13,7 +13,7 @@ void follow_init(entity this)
 
 	if(!src && !dst)
 	{
-		objerror("follow: could not find target/killtarget");
+		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
 
@@ -25,7 +25,7 @@ void follow_init(entity this)
 	}
 	else if(!src || !dst)
 	{
-		objerror("follow: could not find target/killtarget");
+		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
 	else if(this.spawnflags & 1)

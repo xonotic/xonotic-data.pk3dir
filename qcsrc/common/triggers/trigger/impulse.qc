@@ -16,7 +16,7 @@ void trigger_impulse_touch1(entity this)
 	targ = find(world, targetname, this.target);
 	if(!targ)
 	{
-		objerror("trigger_force without a (valid) .target!\n");
+		objerror(this, "trigger_force without a (valid) .target!\n");
 		remove(this);
 		return;
 	}

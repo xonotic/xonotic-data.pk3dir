@@ -41,8 +41,7 @@ void trigger_init(entity this)
 
 void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)
 {
-	this.SendEntity = SendEntity_self;
-	this.SendEntity3 = sendfunc;
+	setSendEntity(this, sendfunc);
 	this.SendFlags = 0xFFFFFF;
 }
 

@@ -121,8 +121,7 @@ void CSQCModel_CheckUpdate(entity e)
 
 void CSQCModel_LinkEntity(entity e)
 {
-	e.SendEntity = SendEntity_self;
-	e.SendEntity3 = CSQCModel_Send;
+	setSendEntity(e, CSQCModel_Send);
 	e.SendFlags = 0xFFFFFF;
 	CSQCModel_CheckUpdate(e);
 }

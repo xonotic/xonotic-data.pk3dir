@@ -44,7 +44,7 @@ spawnfunc(info_teleport_destination)
 	{
 	}
 	else
-		objerror ("^3Teleport destination without a targetname");
+		objerror (this, "^3Teleport destination without a targetname");
 
 	teleport_dest_link(this);
 }

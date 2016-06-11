@@ -119,7 +119,7 @@ spawnfunc(target_speaker)
 	}
 	else if(this.spawnflags & 2) // LOOPED_OFF
 	{
-		objerror("This sound entity can never be activated");
+		objerror(this, "This sound entity can never be activated");
 	}
 	else
 	{

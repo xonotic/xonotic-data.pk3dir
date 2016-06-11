@@ -443,7 +443,7 @@ bool InitMovingBrushTrigger(entity this)
 	this.movetype = MOVETYPE_PUSH;
 	if(this.modelindex == 0)
 	{
-		objerror("InitMovingBrushTrigger: no brushes found!");
+		objerror(this, "InitMovingBrushTrigger: no brushes found!");
 		return false;
 	}
 	return true;

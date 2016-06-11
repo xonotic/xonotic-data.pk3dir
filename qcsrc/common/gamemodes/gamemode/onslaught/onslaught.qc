@@ -418,8 +418,8 @@ void ons_DelayedLinkSetup(entity this)
 {
 	this.goalentity = find(world, targetname, this.target);
 	this.enemy = find(world, targetname, this.target2);
-	if(!this.goalentity) { objerror("can not find target\n"); }
-	if(!this.enemy) { objerror("can not find target2\n"); }
+	if(!this.goalentity) { objerror(this, "can not find target\n"); }
+	if(!this.enemy) { objerror(this, "can not find target2\n"); }
 
 	LOG_DEBUG(strcat(etos(this.goalentity), " linked with ", etos(this.enemy), "\n"));
 	this.SendFlags |= 3;
@@ -2203,7 +2203,7 @@ spawnfunc(onslaught_link)
 	if(!g_onslaught) { remove(this); return; }
 
 	if (this.target == "" || this.target2 == "")
-		objerror("target and target2 must be set\n");
+		objerror(this, "target and target2 must be set\n");
 
 	this.ons_worldlinknext = ons_worldlinklist; // link into ons_worldlinklist
 	ons_worldlinklist = this;
@@ -2242,7 +2242,7 @@ keys:
 spawnfunc(onslaught_generator)
 {
 	if(!g_onslaught) { remove(this); return; }
-	if(!this.team) { objerror("team must be set"); }
+	if(!this.team) { objerror(this, "team must be set"); }
 
 	ons_GeneratorSetup(this);
 }

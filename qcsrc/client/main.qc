@@ -781,8 +781,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(bool isnew)
-{
-	SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
@@ -862,8 +861,7 @@ void Ent_Remove(entity this)
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove()
-{
-	SELFPARAM(); // needed for engine functions
+{ENGINE_EVENT();
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{

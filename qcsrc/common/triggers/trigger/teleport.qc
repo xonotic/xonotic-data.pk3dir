@@ -94,7 +94,7 @@ spawnfunc(trigger_teleport)
 
 	if (this.target == "")
 	{
-		objerror ("Teleporter with no target");
+		objerror (this, "Teleporter with no target");
 		return;
 	}
 

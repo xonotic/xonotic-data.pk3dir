@@ -159,7 +159,7 @@ spawnfunc(item_key)
 
 	// reject this entity if more than one key was set!
 	if (this.itemkeys>0 && (this.itemkeys & (this.itemkeys-1)) != 0) {
-		objerror("item_key.itemkeys must contain only 1 bit set specifying the key it represents!");
+		objerror(this, "item_key.itemkeys must contain only 1 bit set specifying the key it represents!");
 		remove(this);
 		return;
 	}
@@ -201,7 +201,7 @@ spawnfunc(item_key)
 		_colormod = '1 1 1';
 
 		if (this.netname == "") {
-			objerror("item_key doesn't have a default name for this key and a custom one was not specified!");
+			objerror(this, "item_key doesn't have a default name for this key and a custom one was not specified!");
 			remove(this);
 			return;
 		}
@@ -216,7 +216,7 @@ spawnfunc(item_key)
 	} else if (this.itemkeys >= ITEM_KEY_BIT(3) && this.itemkeys <= ITEM_KEY_BIT(5)) {
 		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
 	} else if (this.model == "") {
-		objerror("item_key doesn't have a default model for this key and a custom one was not specified!");
+		objerror(this, "item_key doesn't have a default model for this key and a custom one was not specified!");
 		remove(this);
 		return;
 	}

@@ -823,12 +823,6 @@ void make_safe_for_remove(entity e)
     }
 }
 
-void objerror(string s)
-{SELFPARAM(); // needed for engine functions
-    make_safe_for_remove(this);
-    builtin_objerror(s);
-}
-
 .float remove_except_protected_forbidden;
 void remove_except_protected(entity e)
 {

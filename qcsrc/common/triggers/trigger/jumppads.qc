@@ -304,7 +304,7 @@ void trigger_push_findtarget(entity this)
 		{
 			// no dest!
 #ifdef SVQC
-			objerror ("Jumppad with nonexistant target");
+			objerror (this, "Jumppad with nonexistant target");
 #endif
 			return;
 		}

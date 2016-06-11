@@ -101,8 +101,6 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	/** return false to remove from the client */
 	.bool(entity this, entity to, int sendflags) SendEntity3;
 
-	bool SendEntity_self(entity to, int sendflags) { SELFPARAM(); return this.SendEntity3(this, to, sendflags); }
-
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
 		if (e.classname == "") e.classname = "net_linked";
@@ -115,8 +113,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			setsize(e, mi, ma);
 		}
 
-		e.SendEntity = SendEntity_self;
-		e.SendEntity3 = sendfunc;
+		setSendEntity(e, sendfunc);
 		e.SendFlags = 0xFFFFFF;
 
 		if (!docull) e.effects |= EF_NODEPTHTEST;

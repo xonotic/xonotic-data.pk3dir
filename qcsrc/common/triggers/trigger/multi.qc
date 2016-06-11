@@ -167,7 +167,7 @@ spawnfunc(trigger_multiple)
 	if (this.health)
 	{
 		if (this.spawnflags & SPAWNFLAG_NOTOUCH)
-			objerror ("health and notouch don't make sense\n");
+			objerror (this, "health and notouch don't make sense\n");
 		this.max_health = this.health;
 		this.event_damage = multi_eventdamage;
 		this.takedamage = DAMAGE_YES;

@@ -86,7 +86,7 @@ void func_vectormamamam_findtarget(entity this)
 		this.wp03 = find(world, targetname, this.target4);
 
 	if(!this.wp00 && !this.wp01 && !this.wp02 && !this.wp03)
-		objerror("No reference entity found, so there is nothing to move. Aborting.");
+		objerror(this, "No reference entity found, so there is nothing to move. Aborting.");
 
 	this.destvec = this.origin - func_vectormamamam_origin(this, 0);
 
@@ -129,7 +129,7 @@ spawnfunc(func_vectormamamam)
 	if(vlen(this.target4normal))
 		this.target4normal = normalize(this.target4normal);
 
-	this.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
     if(this.dmg && (this.message == ""))
