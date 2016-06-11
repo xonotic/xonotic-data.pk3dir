@@ -320,6 +320,14 @@ void bd_unfill_recurse(entity minigame, entity player, int thetype, int letter, 
 
 void bd_do_fill(entity minigame, entity player, string dir, string thetile)
 {
+#ifdef SVQC
+	if(!player.minigame_players.bd_canedit)
+	{
+		sprint(player.minigame_players, "You're not allowed to edit levels, sorry!\n");
+		return;
+	}
+#endif
+
 	if(minigame.minigame_flags & BD_TURN_EDIT)
 	{
 		int thetype = stof(thetile);
@@ -561,8 +569,16 @@ void bd_load_level(entity minigame)
 	fclose(file_get);
 }
 
-void bd_close_editor(entity minigame)
+void bd_close_editor(entity minigame, entity player)
 {
+#ifdef SVQC
+	if(!player.minigame_players.bd_canedit)
+	{
+		sprint(player.minigame_players, "You're not allowed to edit levels, sorry!\n");
+		return;
+	}
+#endif
+
 	entity dozer = bd_find_dozer(minigame);
 	if(!dozer)
 	{
@@ -637,7 +653,7 @@ int bd_server_event(entity minigame, string event, ...)
 					bd_activate_editor(minigame,...(0,entity));
 					return true;
 				case "save":
-					bd_close_editor(minigame);
+					bd_close_editor(minigame,...(0,entity));
 					return true;
 				case "fill":
 					bd_do_fill(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) >= 3 ? argv(2) : string_null));
