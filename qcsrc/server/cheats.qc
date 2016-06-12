@@ -357,7 +357,7 @@ float CheatCommand(entity this, int argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					WITHSELF(e, spawnfunc_func_breakable(e));
+					spawnfunc_func_breakable(e);
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -819,7 +819,7 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 							// it goes out of range while slinging it around.
 
-							if(vlen(this.origin - e.origin) <= autocvar_g_grab_range)
+							if(vdist(this.origin - e.origin, <=, autocvar_g_grab_range))
 							{
 								switch(e.grab)
 								{

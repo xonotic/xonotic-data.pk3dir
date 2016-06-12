@@ -327,7 +327,7 @@ float buildpath_nodefilter_directional(vector n,vector c,vector p)
     d2 = normalize(p - c);
     d1 = normalize(c - n);
 
-    if(vlen(d1-d2) < 0.25)
+    if(vdist(d1 - d2, <, 0.25))
     {
         //mark_error(c,30);
         return 1;
@@ -364,7 +364,7 @@ entity path_build(entity next, vector where, entity prev, entity start)
     path.owner     = start;
     path.path_next = next;
 
-    setorigin(path,where);
+    setorigin(path, where);
 
     if(!next)
         path.classname = "path_end";
@@ -476,7 +476,7 @@ entity pathlib_astar(entity this, vector from,vector to)
 
         open           = new(path_end);
         open.owner     = open;
-        setorigin(open,path.origin);
+        setorigin(open, path.origin);
 
         pathlib_cleanup();
 

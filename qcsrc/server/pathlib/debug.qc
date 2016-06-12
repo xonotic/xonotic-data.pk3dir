@@ -60,7 +60,7 @@ void pathlib_showsquare2(entity node ,vector ncolor,float align)
     node.solid     = SOLID_NOT;
 
     setmodel(node, MDL_SQUARE);
-    setorigin(node,node.origin);
+    setorigin(node, node.origin);
     node.colormod = ncolor;
 
     if(align)
@@ -93,7 +93,7 @@ void pathlib_showsquare(vector where,float goodsquare,float _lifetime)
 
     s.angles = vectoangles(trace_plane_normal);
     s.angles_x -= 90;
-    setorigin(s,where);
+    setorigin(s, where);
 }
 
 void pathlib_showedge(vector where,float _lifetime,float rot)
@@ -111,7 +111,7 @@ void pathlib_showedge(vector where,float _lifetime,float rot)
     e.nextthink = _lifetime;
     e.scale     = pathlib_gridsize / 512;
     e.solid     = SOLID_NOT;
-    setorigin(e,where);
+    setorigin(e, where);
     setmodel(e, MDL_EDGE);
     //traceline(where + '0 0 32',where - '0 0 128',MOVE_WORLDONLY,e);
     //e.angles = vectoangles(trace_plane_normal);

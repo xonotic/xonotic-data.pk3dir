@@ -117,16 +117,16 @@ spawnfunc(func_vectormamamam)
 	if(!this.target4factor)
 		this.target4factor = 1;
 
-	if(vlen(this.targetnormal))
+	if(this.targetnormal)
 		this.targetnormal = normalize(this.targetnormal);
 
-	if(vlen(this.target2normal))
+	if(this.target2normal)
 		this.target2normal = normalize(this.target2normal);
 
-	if(vlen(this.target3normal))
+	if(this.target3normal)
 		this.target3normal = normalize(this.target3normal);
 
-	if(vlen(this.target4normal))
+	if(this.target4normal)
 		this.target4normal = normalize(this.target4normal);
 
 	setblocked(this, generic_plat_blocked);

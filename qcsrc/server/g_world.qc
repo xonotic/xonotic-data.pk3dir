@@ -528,7 +528,7 @@ void RandomSeed_Spawn()
 	setthink(randomseed, RandomSeed_Think);
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITHSELF(randomseed, getthink(randomseed)(randomseed)); // sets random seed and nextthink
+	getthink(randomseed)(randomseed); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -1562,7 +1562,7 @@ void NextLevel()
 			bprint(it.netname, " ^7wins.\n");
 	));
 
-	WITHSELF(NULL, target_music_kill());
+	target_music_kill();
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();

@@ -321,7 +321,7 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 			Damage (ent, this, this, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
-		//setorigin (explosion, hitloc);
+		//setorigin(explosion, hitloc);
 		//RadiusDamage (explosion, this, 10, 0, 50, world, world, 300, deathtype);
 
 		ent.railgunhitloc = '0 0 0';

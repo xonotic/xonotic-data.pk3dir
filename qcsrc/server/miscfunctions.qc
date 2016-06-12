@@ -903,7 +903,7 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", e.classname, "\n");
         if (func)
         {
-        	WITHSELF(e, func(e));
+        	func(e);
         }
         else
         {
@@ -957,7 +957,7 @@ void adaptor_think2use_hittype_splash(entity this) // for timed projectile deton
 {
 	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		this.projectiledeathtype |= HITTYPE_SPLASH;
-	WITHSELF(this, adaptor_think2use(this));
+	adaptor_think2use(this);
 }
 
 // deferred dropping
@@ -1032,8 +1032,8 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
-		WITHSELF(this, checkclient());
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
+		checkclient(this);
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return true;

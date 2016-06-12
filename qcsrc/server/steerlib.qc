@@ -645,7 +645,7 @@ spawnfunc(flockerspawn)
     this.enemy = new(FLock Hunter);
 
     setmodel(this.enemy, MDL_FLOCKER);
-    setorigin(this.enemy,this.origin + '0 0 768' + (randomvec() * 128));
+    setorigin(this.enemy, this.origin + '0 0 768' + (randomvec() * 128));
 
     this.enemy.scale     = 3;
     this.enemy.effects   = EF_LOWPRECISION;

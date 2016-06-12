@@ -112,7 +112,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	// assuming to allows PL_MIN to PL_MAX box and some more
 #ifdef SVQC
 	from = player.origin;
-	setorigin (player, to);
+	setorigin(player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
 	player.fixangle = true;

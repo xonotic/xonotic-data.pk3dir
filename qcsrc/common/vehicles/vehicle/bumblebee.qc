@@ -235,8 +235,8 @@ vector bumblebee_gunner_findgoodexit(vector prefer_spot, entity gunner, entity p
 
 void bumblebee_gunner_exit(entity this, int _exitflag)
 {
-	entity player = this;
-	entity gunner = player.vehicle;
+	entity player = ((this.owner.gun1 == this) ? this.owner.gunner1 : this.owner.gunner2);
+	entity gunner = this;
 	entity vehic = gunner.owner;
 
 	if(IS_REAL_CLIENT(player))
@@ -744,7 +744,7 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         if(instance.gunner1)
         {
         	entity e = instance.gunner1;
-        	instance.gun1.vehicle_exit(e, VHEF_EJECT);
+        	instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
         	entity oldother = other;
         	other = e;
         	instance.phase = 0;
@@ -756,7 +756,7 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         if(instance.gunner2)
         {
         	entity e = instance.gunner2;
-        	instance.gun2.vehicle_exit(e, VHEF_EJECT);
+        	instance.gun2.vehicle_exit(instance.gun2, VHEF_EJECT);
         	entity oldother = other;
         	other = e;
         	instance.phase = 0;
@@ -775,10 +775,10 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
 		instance.gun3.enemy.effects |= EF_NODRAW;
 
 	if(instance.gunner1)
-		instance.gun1.vehicle_exit(instance.gunner1, VHEF_EJECT);
+		instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
 
 	if(instance.gunner2)
-		instance.gun2.vehicle_exit(instance.gunner2, VHEF_EJECT);
+		instance.gun2.vehicle_exit(instance.gun2, VHEF_EJECT);
 
 	instance.vehicle_exit(instance, VHEF_EJECT);
 

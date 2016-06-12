@@ -391,7 +391,7 @@ bool raptor_frame(entity this)
 	if (wep1.wr_checkammo1(wep1, vehic))
 	{
 	    .entity weaponentity = weaponentities[0];
-		WITHSELF(vehic, wep1.wr_think(wep1, vehic, weaponentity, 1));
+		wep1.wr_think(wep1, vehic, weaponentity, 1);
 	}
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)

@@ -239,12 +239,14 @@ void StartFrame()
 bool DoesQ3ARemoveThisEntity(entity this);
 void SV_OnEntityPreSpawnFunction()
 {ENGINE_EVENT();
+	__spawnfunc_expecting = true;
 	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
 		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 	if(this.cvarfilter != "")
@@ -353,6 +355,7 @@ LABEL(cvar_fail)
 		{
 			//print("cvarfilter fail\n");
 			remove(this);
+			__spawnfunc_expecting = false;
 			return;
 		}
 	}
@@ -360,6 +363,7 @@ LABEL(cvar_fail)
 	if(DoesQ3ARemoveThisEntity(this))
 	{
 		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 
@@ -387,6 +391,7 @@ LABEL(cvar_fail)
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
 		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 }

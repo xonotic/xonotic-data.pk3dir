@@ -356,7 +356,7 @@ void ItemUpdate(entity this)
 
 void UpdateItemAfterTeleport(entity this)
 {
-	if(this.SendEntity3 == ItemSend)
+	if(getSendEntity(this) == ItemSend)
 		ItemUpdate(this);
 }
 
@@ -494,7 +494,7 @@ void Item_Respawn (entity this)
 		sound (this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
 		sound (this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	setorigin (this, this.origin);
+	setorigin(this, this.origin);
 
     if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)
 	{

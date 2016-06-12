@@ -84,22 +84,26 @@ SELFWRAP(customizeentityforclient, bool, (), (entity this), (this))
 SELFWRAP(camera_transform, vector, (vector org, vector ang), (entity this, vector org, vector ang), (this, org, ang))
 #define setcamera_transform(e, f) SELFWRAP_SET(camera_transform, e, f)
 
+/** return false to remove from the client */
 SELFWRAP(SendEntity, bool, (entity to, int sendflags), (entity this, entity to, int sendflags), (this, to, sendflags))
 #define setSendEntity(e, f) SELFWRAP_SET(SendEntity, e, f)
+#define getSendEntity(e) SELFWRAP_GET(SendEntity, e)
 
-#ifdef SVQC
-void make_safe_for_remove(entity this);
+#define ChangeYaw(e, ...) (__self = (e), builtin_ChangeYaw(__VA_ARGS__))
+#define checkclient(e, ...) (__self = (e), builtin_checkclient(__VA_ARGS__))
+#ifndef SVQC
+    #define droptofloor(e, ...) (__self = (e), builtin_droptofloor(__VA_ARGS__))
 #endif
-
-void objerror(entity this, string s)
-{
-#ifdef SVQC
-    make_safe_for_remove(this);
+#define error(...) (__self = (NULL), builtin_error(__VA_ARGS__))
+#define movetogoal(e, ...) (__self = (e), builtin_movetogoal(__VA_ARGS__))
+#ifndef SVQC
+    #define objerror(e, ...) (__self = (e), builtin_objerror(__VA_ARGS__))
+#else
+    void make_safe_for_remove(entity this);
+    #define objerror(e, ...) (__self = (e), make_safe_for_remove(__self), builtin_objerror(__VA_ARGS__))
 #endif
-    WITHSELF(this, builtin_objerror(s));
-}
+#define walkmove(e, ...) (__self = (e), builtin_walkmove(__VA_ARGS__))
 
 #ifndef MENUQC
-void adaptor_think2touch(entity this) { WITH(entity, other, NULL, gettouch(this)(this)); }
 void adaptor_think2use(entity this) { if (this.use) this.use(this, NULL, NULL); }
 #endif

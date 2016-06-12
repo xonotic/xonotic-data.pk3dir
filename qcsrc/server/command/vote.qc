@@ -340,7 +340,7 @@ void reset_map(bool dorespawn)
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
 		if (it.reset)
 		{
-			WITHSELF(it, it.reset(it)); // needs WITHSELF, as some spawnfuncs are set to .reset
+			it.reset(it);
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;

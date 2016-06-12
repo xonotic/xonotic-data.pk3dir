@@ -97,9 +97,6 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	.int Version;  // deprecated, use SendFlags
 	.int SendFlags;
-	.bool(entity to, int sendflags) SendEntity;
-	/** return false to remove from the client */
-	.bool(entity this, entity to, int sendflags) SendEntity3;
 
 	void Net_LinkEntity(entity e, bool docull, float dt, bool(entity this, entity to, int sendflags) sendfunc)
 	{
@@ -127,7 +124,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 
 	void Net_UnlinkEntity(entity e)
 	{
-		e.SendEntity = func_null;
+		setSendEntity(e, func_null);
 	}
 
 	.void(entity this) uncustomizeentityforclient;

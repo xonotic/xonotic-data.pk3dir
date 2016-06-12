@@ -145,7 +145,7 @@ void SUB_CalcMove_controller_think (entity this)
 		entity own = this.owner;
 		SUB_THINK(own, this.think1);
 		remove(this);
-		WITHSELF(own, SUB_THUNK(own)(own));
+		SUB_THUNK(own)(own);
 	}
 }
 
@@ -236,7 +236,7 @@ void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspe
 	this.SUB_NEXTTHINK = this.SUB_LTIME + traveltime;
 
 	// invoke controller
-	WITHSELF(controller, getthink(controller)(controller));
+	getthink(controller)(controller);
 }
 
 void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func)

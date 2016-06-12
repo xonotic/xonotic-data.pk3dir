@@ -328,7 +328,7 @@ float W_Shockwave_Attack_CheckHit(
 	{
 		if(shockwave_hit[i] == head)
 		{
-			if(vlen(final_force) > vlen(shockwave_hit_force[i])) { shockwave_hit_force[i] = final_force; }
+			if(vlen2(final_force) > vlen2(shockwave_hit_force[i])) { shockwave_hit_force[i] = final_force; }
 			if(final_damage > shockwave_hit_damage[i]) { shockwave_hit_damage[i] = final_damage; }
 			return false;
 		}

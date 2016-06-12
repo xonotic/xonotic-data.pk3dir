@@ -741,7 +741,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				targ.oldvelocity = targ.velocity;
 
 				targ.spawnorigin = spot.origin;
-				setorigin (targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
+				setorigin(targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
 				targ.oldorigin = targ.origin;
 				targ.prevorigin = targ.origin;
@@ -903,7 +903,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
-			if(vlen(force) == 0)
+			if(force == '0 0 0')
 				force = '0 0 -1';
 			else
 				force = normalize(force);

@@ -128,7 +128,7 @@ void ok_DropItem(entity this, entity targ)
 	e.noalign = true;
 	e.pickup_anyway = true;
 	e.spawnfunc_checked = true;
-	WITHSELF(e, spawnfunc_item_armor_small(e));
+	spawnfunc_item_armor_small(e);
 	if (!wasfreed(e)) { // might have been blocked by a mutator
         e.movetype = MOVETYPE_TOSS;
         e.gravity = 1;

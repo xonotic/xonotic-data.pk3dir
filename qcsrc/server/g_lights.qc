@@ -65,7 +65,7 @@ void dynlight_find_path(entity this)
 
 	targ = find(world, targetname, this.target);
 	this.target = targ.target;
-	setorigin (this, targ.origin);
+	setorigin(this, targ.origin);
 	setthink(this, train_next);
 	this.nextthink = time + 0.1;
 }
@@ -97,7 +97,7 @@ spawnfunc(dynlight)
 	this.lefty = this.light_lev;
 	this.use = dynlight_use;
 	setsize (this, '0 0 0', '0 0 0');
-	setorigin (this, this.origin);
+	setorigin(this, this.origin);
 	//this.pflags = PFLAGS_FULLDYNAMIC;
 	this.solid = SOLID_NOT;
 	//this.blocked = func_null;
