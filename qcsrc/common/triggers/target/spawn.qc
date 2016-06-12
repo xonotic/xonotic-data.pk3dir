@@ -217,7 +217,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 				value = strcat("target_spawn_helper", value);
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
-			WITHSELF(e, e.target_spawn_spawnfunc(e));
+			e.target_spawn_spawnfunc(e);
 
 			// We called an external function, so we have to re-tokenize msg.
 			n = tokenize_console(msg);

@@ -64,7 +64,7 @@ void tdm_SpawnTeam (string teamname, float teamcolor)
 	this.netname = teamname;
 	this.cnt = teamcolor;
 	this.spawnfunc_checked = true;
-	WITHSELF(this, spawnfunc_tdm_team(this));
+	spawnfunc_tdm_team(this);
 }
 
 void tdm_DelayedInit(entity this)

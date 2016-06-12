@@ -147,7 +147,7 @@ spawnfunc(func_conveyor)
 
 #elif defined(CSQC)
 
-void conveyor_draw(entity this) { WITHSELF(this, conveyor_think(this)); }
+void conveyor_draw(entity this) { conveyor_think(this); }
 
 void conveyor_init(entity this)
 {

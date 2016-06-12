@@ -109,7 +109,7 @@ void nexball_setstatus(entity this)
 			bprint("The ", Team_ColoredFullName(this.team), " held the ball for too long.\n");
 			DropBall(this.ballcarried, this.ballcarried.owner.origin, '0 0 0');
 			entity e = this.ballcarried;
-			WITHSELF(e, ResetBall(e));
+			ResetBall(e);
 		}
 		else
 			this.items |= IT_KEY1;

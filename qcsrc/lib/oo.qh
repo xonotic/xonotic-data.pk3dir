@@ -4,13 +4,6 @@
 #include "nil.qh"
 #include "static.qh"
 
-#ifdef MENUQC
-	#define NULL (0, null_entity)
-	#define world NULL
-#else
-	#define NULL (0, world)
-#endif
-
 .vector origin;
 .bool pure_data;
 /** @deprecated use new_pure or NEW(class) */

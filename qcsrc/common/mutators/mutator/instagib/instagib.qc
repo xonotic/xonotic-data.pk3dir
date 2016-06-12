@@ -389,7 +389,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, FilterItem)
         e.cnt = item.cnt;
         e.team = item.team;
         e.spawnfunc_checked = true;
-		WITHSELF(e, spawnfunc_item_minst_cells(e));
+		spawnfunc_item_minst_cells(e);
 		return true;
 	}
 
