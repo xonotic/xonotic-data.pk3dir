@@ -1,0 +1,6 @@
+#pragma once
+
+#ifdef SVQC
+void Violence_GibSplash_At(vector org, vector dir, float type, float amount, entity gibowner, entity attacker);
+void Violence_GibSplash(entity source, float type, float amount, entity attacker);
+#endif

@@ -1,27 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticListBox) EXTENDS(ListBox)
-	METHOD(XonoticListBox, configureXonoticListBox, void(entity))
-	ATTRIB(XonoticListBox, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticListBox, scrollbarWidth, float, SKINWIDTH_SCROLLBAR)
-	ATTRIB(XonoticListBox, src, string, SKINGFX_SCROLLBAR)
-	ATTRIB(XonoticListBox, tolerance, vector, SKINTOLERANCE_SLIDER)
-	ATTRIB(XonoticListBox, rowsPerItem, float, 1)
-	METHOD(XonoticListBox, resizeNotify, void(entity, vector, vector, vector, vector))
-	ATTRIB(XonoticListBox, color, vector, SKINCOLOR_SCROLLBAR_N)
-	ATTRIB(XonoticListBox, colorF, vector, SKINCOLOR_SCROLLBAR_F)
-	ATTRIB(XonoticListBox, color2, vector, SKINCOLOR_SCROLLBAR_S)
-	ATTRIB(XonoticListBox, colorC, vector, SKINCOLOR_SCROLLBAR_C)
-	ATTRIB(XonoticListBox, colorBG, vector, SKINCOLOR_LISTBOX_BACKGROUND)
-	ATTRIB(XonoticListBox, alphaBG, float, SKINALPHA_LISTBOX_BACKGROUND)
-ENDCLASS(XonoticListBox)
-entity makeXonoticListBox();
-#endif
+#include "listbox.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticListBox()
 {
 	entity me;
-	me = spawnXonoticListBox();
+	me = NEW(XonoticListBox);
 	me.configureXonoticListBox(me);
 	return me;
 }
@@ -34,4 +16,3 @@ void XonoticListBox_resizeNotify(entity me, vector relOrigin, vector relSize, ve
 	me.itemHeight = me.rowsPerItem * me.fontSize / absSize.y;
 	SUPER(XonoticListBox).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 }
-#endif

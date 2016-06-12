@@ -1,5 +1,10 @@
 #include "scores.qh"
 
+#include "command/common.qh"
+#include "mutators/all.qh"
+#include "../common/playerstats.qh"
+#include "../common/teams.qh"
+
 .entity scorekeeper;
 entity teamscorekeepers[16];
 string scores_label[MAX_SCORE];
@@ -18,29 +23,29 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
 		return previous;
 	if((fieldflags & SFL_SORT_PRIO_MASK) < previous.y)
 		return previous;
-	if(t1.field == t2.field)
+	if (t1.(field) == t2.(field))
 		return previous;
 
 	previous.y = fieldflags & SFL_SORT_PRIO_MASK;
 
 	if(fieldflags & SFL_ZERO_IS_WORST)
 	{
-		if(t1.field == 0)
+		if (t1.(field) == 0)
 		{
 			previous.x = -1;
 			return previous;
 		}
-		else if(t2.field == 0)
+		else if (t2.(field) == 0)
 		{
 			previous.x = +1;
 			return previous;
 		}
 	}
 
-	if(fieldflags & SFL_LOWER_IS_BETTER)
-		previous.x = (t2.field - t1.field);
+	if (fieldflags & SFL_LOWER_IS_BETTER)
+		previous.x = (t2.(field) - t1.(field));
 	else
-		previous.x = (t1.field - t2.field);
+		previous.x = (t1.(field) - t2.(field));
 
 	return previous;
 }
@@ -49,16 +54,18 @@ vector ScoreField_Compare(entity t1, entity t2, .float field, float fieldflags, 
  * teamscore entities
  */
 
-float TeamScore_SendEntity(entity to, float sendflags)
+bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
-	WriteByte(MSG_ENTITY, self.team - 1);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TEAMSCORES);
+	int t = this.team - 1;
+	assert(t, eprint(this));
+	WriteByte(MSG_ENTITY, t);
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(self.(teamscores[i]) > 127 || self.(teamscores[i]) <= -128)
+		if(this.(teamscores[i]) > 127 || this.(teamscores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_TEAMSCORE <= 8
@@ -72,9 +79,9 @@ float TeamScore_SendEntity(entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.(teamscores[i]));
+				WriteInt24_t(MSG_ENTITY, this.(teamscores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.(teamscores[i]));
+				WriteChar(MSG_ENTITY, this.(teamscores[i]));
 		}
 
 	return true;
@@ -82,9 +89,7 @@ float TeamScore_SendEntity(entity to, float sendflags)
 
 void TeamScore_Spawn(float t, string name)
 {
-	entity ts;
-	ts = spawn();
-	ts.classname = "csqc_score_team";
+	entity ts = new_pure(csqc_score_team);
 	ts.netname = name; // not used yet, FIXME
 	ts.team = t;
 	Net_LinkEntity(ts, false, 0, TeamScore_SendEntity);
@@ -180,10 +185,10 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 }
 
-float ScoreInfo_SendEntity(entity to, float sf)
+bool ScoreInfo_SendEntity(entity this, entity to, int sf)
 {
 	float i;
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
 	WriteInt24_t(MSG_ENTITY, MapInfo_LoadedGametype);
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
@@ -206,8 +211,7 @@ void ScoreInfo_Init(float teams)
 	}
 	else
 	{
-		scores_initialized = spawn();
-		scores_initialized.classname = "ent_client_scoreinfo";
+		scores_initialized = new_pure(ent_client_scoreinfo);
 		Net_LinkEntity(scores_initialized, false, 0, ScoreInfo_SendEntity);
 	}
 	if(teams >= 1)
@@ -224,16 +228,16 @@ void ScoreInfo_Init(float teams)
  * per-player score entities
  */
 
-float PlayerScore_SendEntity(entity to, float sendflags)
+bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 {
 	float i, p, longflags;
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES);
-	WriteByte(MSG_ENTITY, num_for_edict(self.owner));
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES);
+	WriteByte(MSG_ENTITY, etof(this.owner));
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(self.(scores[i]) > 127 || self.(scores[i]) <= -128)
+		if(this.(scores[i]) > 127 || this.(scores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_SCORE <= 8
@@ -247,9 +251,9 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.(scores[i]));
+				WriteInt24_t(MSG_ENTITY, this.(scores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.(scores[i]));
+				WriteChar(MSG_ENTITY, this.(scores[i]));
 		}
 
 	return true;
@@ -279,42 +283,41 @@ float PlayerScore_Clear(entity player)
 
 void Score_ClearAll()
 {
-	entity p, sk;
-	float i, t;
-	FOR_EACH_CLIENTSLOT(p)
+	entity sk;
+	float t;
+	FOREACH_CLIENTSLOT(true,
 	{
-		sk = p.scorekeeper;
+		sk = it.scorekeeper;
 		if(!sk)
 			continue;
-		for(i = 0; i < MAX_SCORE; ++i)
+		for(int j = 0; j < MAX_SCORE; ++j)
 		{
-			if(sk.(scores[i]) != 0)
-				if(scores_label[i] != "")
-					sk.SendFlags |= pow(2, i);
-			sk.(scores[i]) = 0;
+			if(sk.(scores[j]) != 0)
+				if(scores_label[j] != "")
+					sk.SendFlags |= pow(2, j);
+			sk.(scores[j]) = 0;
 		}
-	}
+	});
 	for(t = 0; t < 16; ++t)
 	{
 		sk = teamscorekeepers[t];
 		if(!sk)
 			continue;
-		for(i = 0; i < MAX_TEAMSCORE; ++i)
+		for(int j = 0; j < MAX_TEAMSCORE; ++j)
 		{
-			if(sk.(teamscores[i]) != 0)
-				if(teamscores_label[i] != "")
-					sk.SendFlags |= pow(2, i);
-			sk.(teamscores[i]) = 0;
+			if(sk.(teamscores[j]) != 0)
+				if(teamscores_label[j] != "")
+					sk.SendFlags |= pow(2, j);
+			sk.(teamscores[j]) = 0;
 		}
 	}
 }
 
 void PlayerScore_Attach(entity player)
 {
-	entity sk;
 	if(player.scorekeeper)
 		error("player already has a scorekeeper");
-	sk = spawn();
+	entity sk = new_pure(scorekeeper);
 	sk.owner = player;
 	Net_LinkEntity(sk, false, 0, PlayerScore_SendEntity);
 	player.scorekeeper = sk;
@@ -330,19 +333,20 @@ void PlayerScore_Detach(entity player)
 
 float PlayerScore_Add(entity player, float scorefield, float score)
 {
-	entity s;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score, player);
+	score = M_ARGV(1, float);
 
 	if(gameover)
-	if(!(g_lms && scorefield == SP_LMS_RANK)) // allow writing to this field in intermission as it is needed for newly joining players
+	if(!mutator_returnvalue)
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
-	s = player.scorekeeper;
+	entity s = player.scorekeeper;
 	if(!s)
 	{
 		if(gameover)
 			return 0;
-		backtrace("Adding score to unknown player!");
+		LOG_WARNING("Adding score to unknown player!");
 		return 0;
 	}
 	if(score)
@@ -376,16 +380,15 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	}
 
 	if (result.x == 0 && strict)
-		result.x = num_for_edict(t1.owner) - num_for_edict(t2.owner);
+		result.x = etof(t1.owner) - etof(t2.owner);
 
 	return result.x;
 }
 
-void WinningConditionHelper()
+void WinningConditionHelper(entity this)
 {
 	float c;
 	string s;
-	entity p;
 	float fullstatus;
 	entity winnerscorekeeper;
 	entity secondscorekeeper;
@@ -402,7 +405,7 @@ void WinningConditionHelper()
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
-	s = strcat(s, ":S", ftos(nJoinAllowed(world)));
+	s = strcat(s, ":S", ftos(nJoinAllowed(this, world)));
 	s = strcat(s, ":F", ftos(serverflags));
 	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(world, (fullstatus ? 1 : 2)));
@@ -460,14 +463,13 @@ void WinningConditionHelper()
 		WinningConditionHelper_second = world;
 		winnerscorekeeper = world;
 		secondscorekeeper = world;
-		FOR_EACH_PLAYER(p)
-		{
-			sk = p.scorekeeper;
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			sk = it.scorekeeper;
 			c = PlayerScore_Compare(winnerscorekeeper, sk, 1);
 			if(c < 0)
 			{
 				WinningConditionHelper_second = WinningConditionHelper_winner;
-				WinningConditionHelper_winner = p;
+				WinningConditionHelper_winner = it;
 				secondscorekeeper = winnerscorekeeper;
 				winnerscorekeeper = sk;
 			}
@@ -476,11 +478,11 @@ void WinningConditionHelper()
 				c = PlayerScore_Compare(secondscorekeeper, sk, 1);
 				if(c < 0)
 				{
-					WinningConditionHelper_second = p;
+					WinningConditionHelper_second = it;
 					secondscorekeeper = sk;
 				}
 			}
-		}
+		));
 
 		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, 0) == 0);
 		if(WinningConditionHelper_equality)
@@ -522,30 +524,27 @@ void WinningConditionHelper()
 		strunzone(worldstatus);
 	worldstatus = strzone(s);
 
-	FOR_EACH_CLIENT(p)
-	{
+	FOREACH_CLIENT(true, LAMBDA(
+		string s = "";
 		if(fullstatus)
 		{
-			s = GetPlayerScoreString(p, 1);
-			if(IS_REAL_CLIENT(p))
-				s = strcat(s, ":human");
-			else
-				s = strcat(s, ":bot");
-			if(!IS_PLAYER(p) && p.caplayer != 1 && !g_lms)
+			s = GetPlayerScoreString(it, 1);
+			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
+			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it))
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(IS_PLAYER(p) || p.caplayer == 1 || g_lms)
-				s = GetPlayerScoreString(p, 2);
+			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
+				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";
 		}
 
-		if(p.clientstatus)
-			strunzone(p.clientstatus);
-		p.clientstatus = strzone(s);
-	}
+		if(it.clientstatus)
+			strunzone(it.clientstatus);
+		it.clientstatus = strzone(s);
+	));
 }
 
 string GetScoreLogLabel(string label, float fl)
@@ -698,18 +697,17 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 
 	plist = world;
 
-	FOR_EACH_CLIENT(p)
-		p.field = 0;
+	FOREACH_CLIENT(true, LAMBDA(it.(field) = 0));
 
-	FOR_EACH_CLIENT(p) if(p.scorekeeper)
+	FOREACH_CLIENT(it.scorekeeper,
 	{
 		if(nospectators)
-			if(p.frags == FRAGS_SPECTATOR)
+			if(it.frags == FRAGS_SPECTATOR)
 				continue;
 
-		p.chain = plist;
-		plist = p;
-	}
+		it.chain = plist;
+		plist = it;
+	});
 	// Now plist points to the whole list.
 
 	pfirst = plast = world;
@@ -739,7 +737,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, 0))
 			j = i;
 
-		pbest.field = j;
+		pbest.(field) = j;
 
 		if (!pfirst)
 			pfirst = pbest;
@@ -872,10 +870,10 @@ void Score_NicePrint_Spectator(entity to, entity p)
 void Score_NicePrint(entity to)
 {
 	entity p;
-	float t, i;
+	float i;
 	float w;
 
-	t = 0;
+	int t = 0;
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 			++t;
@@ -897,14 +895,12 @@ void Score_NicePrint(entity to)
 	}
 
 	t = 0;
-	FOR_EACH_CLIENT(p)
-	if (!IS_PLAYER(p))
-	{
+	FOREACH_CLIENT(!IS_PLAYER(it), LAMBDA(
 		if (!t)
 			Score_NicePrint_Spectators(to);
-		Score_NicePrint_Spectator(to, p);
+		Score_NicePrint_Spectator(to, it);
 		t = 1;
-	}
+	));
 }
 
 void PlayerScore_PlayerStats(entity p)
@@ -919,7 +915,7 @@ void PlayerScore_PlayerStats(entity p)
 				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
 }
 
-void PlayerScore_TeamStats(void)
+void PlayerScore_TeamStats()
 {
 	entity sk;
 	float t, i;

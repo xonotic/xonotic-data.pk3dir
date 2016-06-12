@@ -1,17 +1,82 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
-/* MON_##id   */ MAGE,
-/* function   */ m_mage,
-/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
-/* mins,maxs  */ '-36 -36 -24', '36 36 50',
-/* model      */ "mage.dpm",
-/* netname    */ "mage",
-/* fullname   */ _("Mage")
-);
+#ifndef MAGE_H
+#define MAGE_H
 
-#else
+#ifndef MENUQC
+MODEL(MON_MAGE, M_Model("mage.dpm"));
+#endif
+
+CLASS(Mage, Monster)
+    ATTRIB(Mage, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Mage, mins, vector, '-36 -36 -24');
+    ATTRIB(Mage, maxs, vector, '36 36 50');
+#ifndef MENUQC
+    ATTRIB(Mage, m_model, Model, MDL_MON_MAGE);
+#endif
+    ATTRIB(Mage, netname, string, "mage");
+    ATTRIB(Mage, monster_name, string, _("Mage"));
+ENDCLASS(Mage)
+
+REGISTER_MONSTER(MAGE, NEW(Mage)) {
+#ifndef MENUQC
+    this.mr_precache(this);
+#endif
+}
+
+#include <common/weapons/all.qh>
+#include <common/items/all.qc>
+
+CLASS(MageSpike, PortoLaunch)
+/* flags     */ ATTRIB(MageSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(MageSpike, impulse, int, 9);
+/* refname   */ ATTRIB(MageSpike, netname, string, "magespike");
+/* wepname   */ ATTRIB(MageSpike, m_name, string, _("Mage spike"));
+ENDCLASS(MageSpike)
+REGISTER_WEAPON(MAGE_SPIKE, NEW(MageSpike));
+
+#endif
+
+#ifdef IMPLEMENTATION
+
 #ifdef SVQC
+
+SOUND(MageSpike_FIRE, W_Sound("electro_fire"));
+void M_Mage_Attack_Spike(entity this, vector dir);
+void M_Mage_Attack_Push(entity this);
+METHOD(MageSpike, wr_think, void(MageSpike thiswep, entity actor, .entity weaponentity, int fire))
+{
+    TC(MageSpike, thiswep);
+    if (fire & 1)
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
+        if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
+        actor.enemy = Monster_FindTarget(actor);
+        W_SetupShot_Dir(actor, v_forward, false, 0, SND_MageSpike_FIRE, CH_WEAPON_B, 0);
+    	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
+        M_Mage_Attack_Spike(actor, w_shotdir);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
+    }
+    if (fire & 2)
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, true, 0.5)) {
+        M_Mage_Attack_Push(actor);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
+    }
+}
+
+void M_Mage_Attack_Teleport(entity this, entity targ);
+
+CLASS(OffhandMageTeleport, OffhandWeapon)
+    .bool OffhandMageTeleport_key_pressed;
+    METHOD(OffhandMageTeleport, offhand_think, void(OffhandMageTeleport this, entity player, bool key_pressed))
+    {
+        TC(OffhandMageTeleport, this);
+        if (key_pressed && !player.OffhandMageTeleport_key_pressed)
+        	M_Mage_Attack_Teleport(player, player.enemy);
+        player.OffhandMageTeleport_key_pressed = key_pressed;
+    }
+ENDCLASS(OffhandMageTeleport)
+OffhandMageTeleport OFFHAND_MAGE_TELEPORT; STATIC_INIT(OFFHAND_MAGE_TELEPORT) { OFFHAND_MAGE_TELEPORT = NEW(OffhandMageTeleport); }
+
 float autocvar_g_monster_mage_health;
+float autocvar_g_monster_mage_damageforcescale = 0.5;
 float autocvar_g_monster_mage_attack_spike_damage;
 float autocvar_g_monster_mage_attack_spike_radius;
 float autocvar_g_monster_mage_attack_spike_delay;
@@ -39,173 +104,165 @@ float autocvar_g_monster_mage_speed_stop;
 float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
 
+/*
 const float mage_anim_idle		= 0;
 const float mage_anim_walk		= 1;
 const float mage_anim_attack	= 2;
 const float mage_anim_pain		= 3;
 const float mage_anim_death		= 4;
 const float mage_anim_run		= 5;
+*/
 
-void() mage_heal;
-void() mage_shield;
+void M_Mage_Defend_Heal(entity this);
+void M_Mage_Defend_Shield(entity this);
 
 .entity mage_spike;
-.float shield_ltime;
+.float mage_shield_delay;
+.float mage_shield_time;
 
-float friend_needshelp(entity e)
+bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
-	if(e == world)
+	if(targ == world)
 		return false;
-	if(e.health <= 0)
+	if(targ.health <= 0)
 		return false;
-	if(DIFF_TEAM(e, self) && e != self.monster_owner)
+	if(DIFF_TEAM(targ, this) && targ != this.monster_follow)
 		return false;
-	if(e.frozen)
+	if(STAT(FROZEN, targ))
 		return false;
-	if(!IS_PLAYER(e))
-		return ((e.flags & FL_MONSTER) && e.health < e.max_health);
-	if(e.items & IT_INVINCIBLE)
+	if(!IS_PLAYER(targ))
+		return (IS_MONSTER(targ) && targ.health < targ.max_health);
+	if(targ.items & ITEM_Shield.m_itemid)
 		return false;
 
-	switch(self.skin)
+	switch(this.skin)
 	{
-		case 0: return (e.health < autocvar_g_balance_health_regenstable);
-		case 1: return ((e.ammo_cells && e.ammo_cells < g_pickup_cells_max) || (e.ammo_plasma && e.ammo_plasma < g_pickup_plasma_max) || (e.ammo_rockets && e.ammo_rockets < g_pickup_rockets_max) || (e.ammo_nails && e.ammo_nails < g_pickup_nails_max) || (e.ammo_shells && e.ammo_shells < g_pickup_shells_max));
-		case 2: return (e.armorvalue < autocvar_g_balance_armor_regenstable);
-		case 3: return (e.health > 0);
+		case 0: return (targ.health < autocvar_g_balance_health_regenstable);
+		case 1: return ((targ.ammo_cells && targ.ammo_cells < g_pickup_cells_max) || (targ.ammo_plasma && targ.ammo_plasma < g_pickup_plasma_max) || (targ.ammo_rockets && targ.ammo_rockets < g_pickup_rockets_max) || (targ.ammo_nails && targ.ammo_nails < g_pickup_nails_max) || (targ.ammo_shells && targ.ammo_shells < g_pickup_shells_max));
+		case 2: return (targ.armorvalue < autocvar_g_balance_armor_regenstable);
+		case 3: return (targ.health > 0);
 	}
 
 	return false;
 }
 
-void mage_spike_explode()
+void M_Mage_Attack_Spike_Explode(entity this)
 {
-	self.event_damage = func_null;
+	this.event_damage = func_null;
 
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	self.realowner.mage_spike = world;
+	this.realowner.mage_spike = world;
 
-	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE, other);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, other);
 
-	remove (self);
+	remove (this);
 }
 
-void mage_spike_touch()
+void M_Mage_Attack_Spike_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
-	mage_spike_explode();
+	M_Mage_Attack_Spike_Explode(this);
 }
+
+.float wait;
 
 // copied from W_Seeker_Think
-void mage_spike_think()
+void M_Mage_Attack_Spike_Think(entity this)
 {
-	entity e;
-	vector desireddir, olddir, newdir, eorg;
-	float turnrate;
-	float dist;
-	float spd;
-
-	if (time > self.ltime || self.enemy.health <= 0 || self.owner.health <= 0)
-	{
-		self.projectiledeathtype |= HITTYPE_SPLASH;
-		mage_spike_explode();
+	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
+		this.projectiledeathtype |= HITTYPE_SPLASH;
+		M_Mage_Attack_Spike_Explode(this);
 	}
 
-	spd = vlen(self.velocity);
+	float spd = vlen(this.velocity);
 	spd = bound(
 		spd - (autocvar_g_monster_mage_attack_spike_decel) * frametime,
 		(autocvar_g_monster_mage_attack_spike_speed_max),
 		spd + (autocvar_g_monster_mage_attack_spike_accel) * frametime
 	);
 
-	if (self.enemy != world)
-		if (self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
-			self.enemy = world;
+	if (this.enemy != world)
+		if (this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
+			this.enemy = world;
 
-	if (self.enemy != world)
+	if (this.enemy != world)
 	{
-		e				= self.enemy;
-		eorg			= 0.5 * (e.absmin + e.absmax);
-		turnrate		= (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
-		desireddir		= normalize(eorg - self.origin);
-		olddir			= normalize(self.velocity); // get my current direction
-		dist			= vlen(eorg - self.origin);
+		entity e = this.enemy;
+		vector eorg = 0.5 * (e.absmin + e.absmax);
+		float turnrate = (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
+		vector desireddir = normalize(eorg - this.origin);
+		vector olddir = normalize(this.velocity); // get my current direction
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
-		if ((autocvar_g_monster_mage_attack_spike_smart) && (dist > (autocvar_g_monster_mage_attack_spike_smart_mindist)))
+		if ((autocvar_g_monster_mage_attack_spike_smart) && vdist(eorg - this.origin, >, autocvar_g_monster_mage_attack_spike_smart_mindist))
 		{
-			// Is it a better idea (shorter distance) to trace to the target itself?
-			if ( vlen(self.origin + olddir * self.wait) < dist)
-				traceline(self.origin, self.origin + olddir * self.wait, false, self);
+			// Is it a better idea (shorter distance) to trace to the target itthis?
+			if ( vlen2(this.origin + olddir * this.wait) < vlen2(eorg - this.origin))
+				traceline(this.origin, this.origin + olddir * this.wait, false, this);
 			else
-				traceline(self.origin, eorg, false, self);
+				traceline(this.origin, eorg, false, this);
 
 			// Setup adaptive tracelength
-			self.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
+			this.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(this.origin - trace_endpos), this.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
 
 			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
 			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
 		}
 
-		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
-		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
+		vector newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
+		this.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	}
-	else
-		dist = 0;
 
 	///////////////
 
-	//self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
-	self.nextthink = time;// + 0.05; // csqc projectiles
-	UpdateCSQCProjectile(self);
+	//this.angles = vectoangles(this.velocity);			// turn model in the new flight direction
+	this.nextthink = time;// + 0.05; // csqc projectiles
+	UpdateCSQCProjectile(this);
 }
 
-void mage_attack_spike()
+void M_Mage_Attack_Spike(entity this, vector dir)
 {
-	entity missile;
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+	makevectors(this.angles);
 
-	makevectors(self.angles);
-
-	missile = spawn ();
-	missile.owner = missile.realowner = self;
-	missile.think = mage_spike_think;
+	entity missile = spawn();
+	missile.owner = missile.realowner = this;
+	setthink(missile, M_Mage_Attack_Spike_Think);
 	missile.ltime = time + 7;
 	missile.nextthink = time;
 	missile.solid = SOLID_BBOX;
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.flags = FL_PROJECTILE;
-	setorigin(missile, self.origin + v_forward * 14 + '0 0 30' + v_right * -14);
-	setsize (missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin + v_forward * 14 + '0 0 30' + v_right * -14);
+	setsize(missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
-	missile.enemy = self.enemy;
-	missile.touch = mage_spike_touch;
+	missile.enemy = this.enemy;
+	settouch(missile, M_Mage_Attack_Spike_Touch);
 
-	self.mage_spike = missile;
+	this.mage_spike = missile;
 
 	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
-void mage_heal()
+void M_Mage_Defend_Heal(entity this)
 {
 	entity head;
 	float washealed = false;
 
-	for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(friend_needshelp(head))
+	for(head = findradius(this.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(M_Mage_Defend_Heal_Check(this, head))
 	{
 		washealed = true;
 		string fx = "";
 		if(IS_PLAYER(head))
 		{
-			switch(self.skin)
+			switch(this.skin)
 			{
 				case 0:
 					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
-					fx = "healing_fx";
+					fx = EFFECT_HEALING.eent_eff_name;
 					break;
 				case 1:
 					if(head.ammo_cells) head.ammo_cells = bound(head.ammo_cells, head.ammo_cells + 1, g_pickup_cells_max);
@@ -223,83 +280,97 @@ void mage_heal()
 					}
 					break;
 				case 3:
-					head.health = bound(0, head.health - ((head == self)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
-					fx = "rage";
+					head.health = bound(0, head.health - ((head == this)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
+					fx = EFFECT_RAGE.eent_eff_name;
 					break;
 			}
 
-			pointparticles(particleeffectnum(fx), head.origin, '0 0 0', 1);
+			Send_Effect_(fx, head.origin, '0 0 0', 1);
 		}
 		else
 		{
-			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_HEALING, head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
-			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE))
+			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE) && head.sprite)
 				WaypointSprite_UpdateHealth(head.sprite, head.health);
 		}
 	}
 
 	if(washealed)
 	{
-		self.frame = mage_anim_attack;
-		self.attack_finished_single = time + (autocvar_g_monster_mage_heal_delay);
+		setanim(this, this.anim_shoot, true, true, true);
+		this.attack_finished_single[0] = time + (autocvar_g_monster_mage_heal_delay);
+		this.anim_finished = time + 1.5;
 	}
 }
 
-void mage_push()
+void M_Mage_Attack_Push(entity this)
 {
-	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
-	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
-	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
+	sound(this, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
+	RadiusDamage (this, this, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, this.enemy);
+	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
 
-	self.frame = mage_anim_attack;
-	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
+	setanim(this, this.anim_shoot, true, true, true);
+	this.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_push_delay);
 }
 
-void mage_teleport()
+void M_Mage_Attack_Teleport(entity this, entity targ)
 {
-	if(vlen(self.enemy.origin - self.origin) >= 500)
-		return;
+	if(!targ) return;
+	if(vdist(targ.origin - this.origin, >, 1500)) return;
 
-	makevectors(self.enemy.angles);
-	tracebox(self.enemy.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
+	makevectors(targ.angles);
+	tracebox(targ.origin + ((v_forward * -1) * 200), this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
 
 	if(trace_fraction < 1)
 		return;
 
-	pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
-	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
+	vector newpos = targ.origin + ((v_forward * -1) * 200);
 
-	self.attack_finished_single = time + 0.2;
+	Send_Effect(EFFECT_SPAWN_NEUTRAL, this.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_SPAWN_NEUTRAL, newpos, '0 0 0', 1);
+
+	setorigin(this, newpos);
+
+	vector a = vectoangles(targ.origin - this.origin);
+	a.x = -a.x;
+	this.angles_x = a.x;
+	this.angles_y = a.y;
+	this.fixangle = true;
+	this.velocity *= 0.5;
+
+	this.attack_finished_single[0] = time + 0.2;
 }
 
-void mage_shield_remove()
+void M_Mage_Defend_Shield_Remove(entity this)
 {
-	self.effects &= ~(EF_ADDITIVE | EF_BLUE);
-	self.armorvalue = 0;
-	self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
+	this.effects &= ~(EF_ADDITIVE | EF_BLUE);
+	this.armorvalue = autocvar_g_monsters_armor_blockpercent;
 }
 
-void mage_shield()
+void M_Mage_Defend_Shield(entity this)
 {
-	self.effects |= (EF_ADDITIVE | EF_BLUE);
-	self.lastshielded = time + (autocvar_g_monster_mage_shield_delay);
-	self.m_armor_blockpercent = (autocvar_g_monster_mage_shield_blockpercent);
-	self.armorvalue = self.health;
-	self.shield_ltime = time + (autocvar_g_monster_mage_shield_time);
-	self.frame = mage_anim_attack;
-	self.attack_finished_single = time + 1;
+	this.effects |= (EF_ADDITIVE | EF_BLUE);
+	this.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
+	this.armorvalue = (autocvar_g_monster_mage_shield_blockpercent);
+	this.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
+	setanim(this, this.anim_shoot, true, true, true);
+	this.attack_finished_single[0] = time + 1;
+	this.anim_finished = time + 1;
 }
 
-float mage_attack(float attack_type)
+bool M_Mage_Attack(int attack_type, entity actor, entity targ)
 {
+    .entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
 			if(random() <= 0.7)
 			{
-				mage_push();
+				Weapon wep = WEP_MAGE_SPIKE;
+
+				wep.wr_think(wep, actor, weaponentity, 2);
 				return true;
 			}
 
@@ -307,23 +378,26 @@ float mage_attack(float attack_type)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(!self.mage_spike)
+			if(!actor.mage_spike)
 			{
 				if(random() <= 0.4)
 				{
-					mage_teleport();
+					OffhandWeapon off = OFFHAND_MAGE_TELEPORT;
+					off.offhand_think(off, actor, true);
 					return true;
 				}
 				else
 				{
-					self.frame = mage_anim_attack;
-					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
-					defer(0.2, mage_attack_spike);
+					setanim(actor, actor.anim_shoot, true, true, true);
+					actor.attack_finished_single[0] = time + (autocvar_g_monster_mage_attack_spike_delay);
+					actor.anim_finished = time + 1;
+					Weapon wep = WEP_MAGE_SPIKE;
+					wep.wr_think(wep, actor, weaponentity, 1);
 					return true;
 				}
 			}
 
-			if(self.mage_spike)
+			if(actor.mage_spike)
 				return true;
 			else
 				return false;
@@ -333,91 +407,95 @@ float mage_attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_mage()
-{
-	self.classname = "monster_mage";
-
-	if(!monster_initialize(MON_MAGE)) { remove(self); return; }
-}
-
-// compatibility with old spawns
-void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
-
-float m_mage(float req)
-{
-	switch(req)
-	{
-		case MR_THINK:
-		{
-			entity head;
-			float need_help = false;
-
-			for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain)
-			if(head != self)
-			if(friend_needshelp(head))
-			{
-				need_help = true;
-				break;
-			}
-
-			if(self.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
-			if(time >= self.attack_finished_single)
-			if(random() < 0.5)
-				mage_heal();
-
-			if(time >= self.shield_ltime && self.armorvalue)
-				mage_shield_remove();
-
-			if(self.enemy)
-			if(self.health < self.max_health)
-			if(time >= self.lastshielded)
-			if(random() < 0.5)
-				mage_shield();
-
-			monster_move((autocvar_g_monster_mage_speed_run), (autocvar_g_monster_mage_speed_walk), (autocvar_g_monster_mage_speed_stop), mage_anim_walk, mage_anim_run, mage_anim_idle);
-			return true;
-		}
-		case MR_DEATH:
-		{
-			self.frame = mage_anim_death;
-			return true;
-		}
-		case MR_SETUP:
-		{
-			if(!self.health) self.health = (autocvar_g_monster_mage_health);
-
-			self.monster_loot = spawnfunc_item_health_large;
-			self.monster_attackfunc	= mage_attack;
-			self.frame = mage_anim_walk;
-
-			return true;
-		}
-		case MR_PRECACHE:
-		{
-			precache_model("models/monsters/mage.dpm");
-			precache_sound ("weapons/grenade_impact.wav");
-			precache_sound ("weapons/tagexp1.wav");
-			return true;
-		}
-	}
-
-	return true;
-}
+spawnfunc(monster_mage) { Monster_Spawn(this, MON_MAGE.monsterid); }
 
 #endif // SVQC
-#ifdef CSQC
-float m_mage(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return true;
-		}
-	}
 
-	return true;
+#ifdef SVQC
+METHOD(Mage, mr_think, bool(Mage thismon, entity actor))
+{
+    TC(Mage, thismon);
+    bool need_help = false;
+
+    FOREACH_ENTITY_FLOAT(iscreature, true,
+    {
+        if(it != actor)
+        if(vdist(it.origin - actor.origin, <=, autocvar_g_monster_mage_heal_range))
+        if(M_Mage_Defend_Heal_Check(actor, it))
+        {
+            need_help = true;
+            break;
+        }
+    });
+
+    if(actor.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
+    if(time >= actor.attack_finished_single[0])
+    if(random() < 0.5)
+        M_Mage_Defend_Heal(actor);
+
+    if(time >= actor.mage_shield_time && actor.armorvalue)
+        M_Mage_Defend_Shield_Remove(actor);
+
+    if(actor.enemy)
+    if(actor.health < actor.max_health)
+    if(time >= actor.mage_shield_delay)
+    if(random() < 0.5)
+        M_Mage_Defend_Shield(actor);
+
+    return true;
 }
 
-#endif // CSQC
-#endif // REGISTER_MONSTER
+METHOD(Mage, mr_pain, float(Mage this, entity actor, float damage_take, entity attacker, float deathtype))
+{
+    TC(Mage, this);
+    return damage_take;
+}
+
+METHOD(Mage, mr_death, bool(Mage this, entity actor))
+{
+    TC(Mage, this);
+    setanim(actor, actor.anim_die1, false, true, true);
+    return true;
+}
+
+#endif
+#ifndef MENUQC
+METHOD(Mage, mr_anim, bool(Mage this, entity actor))
+{
+    TC(Mage, this);
+    vector none = '0 0 0';
+    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_idle = animfixfps(actor, '0 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '5 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+.float speed;
+spawnfunc(item_health_large);
+METHOD(Mage, mr_setup, bool(Mage this, entity actor))
+{
+    TC(Mage, this);
+    if(!actor.health) actor.health = (autocvar_g_monster_mage_health);
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_mage_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_mage_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_mage_speed_stop); }
+    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_mage_damageforcescale); }
+
+    actor.monster_loot = spawnfunc_item_health_large;
+    actor.monster_attackfunc = M_Mage_Attack;
+
+    return true;
+}
+
+METHOD(Mage, mr_precache, bool(Mage this))
+{
+    TC(Mage, this);
+    return true;
+}
+#endif
+
+#endif

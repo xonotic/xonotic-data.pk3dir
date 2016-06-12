@@ -1,171 +1,145 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../warpzonelib/common.qh"
-    #include "../warpzonelib/server.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "../common/weapons/weapons.qh"
-    #include "weapons/csqcprojectile.qh"
-    #include "autocvars.qh"
-    #include "constants.qh"
-    #include "defs.qh"
-    #include "../common/deathtypes.qh"
-    #include "mutators/mutators_include.qh"
-    #include "vehicles/vehicles_def.qh"
-    #include "../common/mapinfo.qh"
-    #include "command/common.qh"
-    #include "../csqcmodellib/sv_model.qh"
-    #include "anticheat.qh"
-    #include "g_hook.qh"
-#endif
+#include "sv_main.qh"
 
-void CreatureFrame (void)
+#include "anticheat.qh"
+#include "g_hook.qh"
+#include "g_world.qh"
+
+#include "bot/bot.qh"
+#include "bot/waypoints.qh"
+
+#include "command/common.qh"
+
+#include "mutators/all.qh"
+#include "weapons/csqcprojectile.qh"
+
+#include "../common/constants.qh"
+#include "../common/deathtypes/all.qh"
+#include "../common/debug.qh"
+#include "../common/mapinfo.qh"
+#include "../common/util.qh"
+
+#include "../common/vehicles/all.qh"
+#include "../common/weapons/all.qh"
+
+#include "../lib/csqcmodel/sv_model.qh"
+
+#include "../lib/warpzone/common.qh"
+#include "../lib/warpzone/server.qh"
+
+.float lastground;
+.int state;
+
+void CreatureFrame_hotliquids(entity this)
 {
-	entity oldself;
-	float dm;
-
-	oldself = self;
-	for(self = world; (self = findfloat(self, damagedbycontents, true)); )
+	if (this.dmgtime < time)
 	{
-		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
+		this.dmgtime = time + autocvar_g_balance_contents_damagerate;
 
-		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
-		float projectile = (self.flags & FL_PROJECTILE);
-		float monster = (self.flags & FL_MONSTER);
-
-		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
+		if (this.flags & FL_PROJECTILE)
 		{
-			if (!(self.flags & FL_INWATER))
-			{
-				self.flags |= FL_INWATER;
-				self.dmgtime = 0;
-			}
-
-			if(!vehic && !projectile && !monster) // vehicles, monsters and projectiles don't drown
-			{
-				if (self.waterlevel != WATERLEVEL_SUBMERGED)
-				{
-					if(self.air_finished < time)
-						PlayerSound(playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-					self.air_finished = time + autocvar_g_balance_contents_drowndelay;
-					self.dmg = 2;
-				}
-				else if (self.air_finished < time)
-				{	// drown!
-					if (!self.deadflag)
-					if (self.pain_finished < time)
-					{
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN, self.origin, '0 0 0');
-						self.pain_finished = time + 0.5;
-					}
-				}
-			}
-
-			if (self.dmgtime < time)
-			{
-				self.dmgtime = time + autocvar_g_balance_contents_damagerate;
-
-				if (projectile)
-				{
-					if (self.watertype == CONTENT_LAVA)
-					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
-					}
-					else if (self.watertype == CONTENT_SLIME)
-					{
-						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
-					}
-				}
-				else
-				{
-					if (self.watertype == CONTENT_LAVA)
-					{
-						if (self.watersound_finished < time)
-						{
-							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER_SINGLE, "player/lava.wav", VOL_BASE, ATTEN_NORM);
-						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
-					}
-					else if (self.watertype == CONTENT_SLIME)
-					{
-						if (self.watersound_finished < time)
-						{
-							self.watersound_finished = time + 0.5;
-							sound (self, CH_PLAYER_SINGLE, "player/slime.wav", VOL_BASE, ATTEN_NORM);
-						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
-					}
-				}
-			}
+			if (this.watertype == CONTENT_LAVA)
+				Damage (this, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+			else if (this.watertype == CONTENT_SLIME)
+				Damage (this, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
 		}
 		else
 		{
-			if (self.flags & FL_INWATER)
+			if (this.watertype == CONTENT_LAVA)
 			{
-				// play leave water sound
-				self.flags &= ~FL_INWATER;
-				self.dmgtime = 0;
-			}
-			self.air_finished = time + 12;
-			self.dmg = 2;
-		}
-
-		if(!vehic && !projectile) // vehicles don't get falling damage
-		{
-			// check for falling damage
-			float velocity_len = vlen(self.velocity);
-			if(!self.hook.state)
-			{
-				dm = vlen(self.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
-				if (self.deadflag)
-					dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
-				else
-					dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
-				if (dm > 0)
-					Damage (self, world, world, dm, DEATH_FALL, self.origin, '0 0 0');
-			}
-
-			if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
-			// play stupid sounds
-			if (g_footsteps)
-			if (!gameover)
-			if (self.flags & FL_ONGROUND)
-			if (velocity_len > autocvar_sv_maxspeed * 0.6)
-			if (!self.deadflag)
-			if (time < self.lastground + 0.2)
-			{
-				if((time > self.nextstep) || (time < (self.nextstep - 10.0)))
+				if (this.watersound_finished < time)
 				{
-					self.nextstep = time + 0.3 + random() * 0.1;
-					trace_dphitq3surfaceflags = 0;
-					tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-					/*
-					if(trace_fraction == 1)
-						dprint("nohit\n");
-					else
-						dprint(ftos(trace_dphitq3surfaceflags), "\n");
-					*/
-					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
-					{
-						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-						else
-							GlobalSound(globalsound_step, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-					}
+					this.watersound_finished = time + 0.5;
+					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 				}
+				Damage (this, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				if(autocvar_g_balance_contents_playerdamage_lava_burn)
+					Fire_AddDamage(this, world, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
+			}
+			else if (this.watertype == CONTENT_SLIME)
+			{
+				if (this.watersound_finished < time)
+				{
+					this.watersound_finished = time + 0.5;
+					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
+				}
+				Damage (this, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
 			}
 		}
-
-        self.oldvelocity = self.velocity;
 	}
-	self = oldself;
 }
 
+void CreatureFrame_Liquids(entity this)
+{
+	if (this.watertype <= CONTENT_WATER && this.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
+	{
+		if (!(this.flags & FL_INWATER))
+		{
+			this.flags |= FL_INWATER;
+			this.dmgtime = 0;
+		}
+
+		CreatureFrame_hotliquids(this);
+	}
+	else
+	{
+		if (this.flags & FL_INWATER)
+		{
+			// play leave water sound
+			this.flags &= ~FL_INWATER;
+			this.dmgtime = 0;
+		}
+		this.air_finished = time + 12;
+		this.dmg = 2;
+	}
+}
+
+void CreatureFrame_FallDamage(entity this)
+{
+	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
+	{
+		// check for falling damage
+		float velocity_len = vlen(this.velocity);
+		if(!this.hook.state)
+		{
+			float dm = vlen(this.oldvelocity) - velocity_len; // dm is now the velocity DECREASE. Velocity INCREASE should never cause a sound or any damage.
+			if (IS_DEAD(this))
+				dm = (dm - autocvar_g_balance_falldamage_deadminspeed) * autocvar_g_balance_falldamage_factor;
+			else
+				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
+			if (dm > 0)
+				Damage (this, world, world, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
+		}
+
+		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
+			Damage (this, world, world, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
+	}
+}
+
+void CreatureFrame_All()
+{
+	FOREACH_ENTITY_FLOAT(damagedbycontents, true, {
+		if (it.movetype == MOVETYPE_NOCLIP) continue;
+		CreatureFrame_Liquids(it);
+		CreatureFrame_FallDamage(it);
+		it.oldvelocity = it.velocity;
+	});
+}
+
+void Pause_TryPause(bool ispaused)
+{
+	int n = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+		if (PHYS_INPUT_BUTTON_CHAT(it) != ispaused) return;
+		++n;
+	));
+	if (!n) return;
+	setpause(ispaused);
+}
+
+void SV_PausedTic(float elapsedtime)
+{
+	if (!server_is_dedicated) Pause_TryPause(false);
+}
 
 /*
 =============
@@ -178,10 +152,17 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
+bool autocvar_sv_autopause = true;
 float RedirectionThink();
-void StartFrame (void)
+void PM_Main(Client this);
+void StartFrame()
 {
+    // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPreThink()));
+
 	execute_next_frame();
+	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
 
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
@@ -191,33 +172,27 @@ void StartFrame (void)
 #ifdef PROFILING
 	if(time > client_cefc_accumulatortime + 1)
 	{
-		float t, pp, c_seeing, c_seen;
-		entity cl;
-		t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
-		print("CEFC time: ", ftos(t * 1000), "ms; ");
-		c_seeing = 0;
-		c_seen = 0;
-		FOR_EACH_CLIENT(cl)
-		{
-			if(IS_REAL_CLIENT(cl))
+		float t = client_cefc_accumulator / (time - client_cefc_accumulatortime);
+		LOG_INFO("CEFC time: ", ftos(t * 1000), "ms; ");
+		int c_seeing = 0;
+		int c_seen = 0;
+		FOREACH_CLIENT(true, LAMBDA(
+			if(IS_REAL_CLIENT(it))
 				++c_seeing;
-			if(IS_PLAYER(cl))
+			if(IS_PLAYER(it))
 				++c_seen;
-		}
-		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
-		print("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
+		));
+		LOG_INFO("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");
+		LOG_INFO("CEFC 100% load at: ", ftos(solve_quadratic(t, -t, -1) * '0 1 0'), "\n");
 
 		client_cefc_accumulatortime = time;
 		client_cefc_accumulator = 0;
 	}
 #endif
 
-	entity e;
-	for(e = world; (e = findfloat(e, csqcprojectile_clientanimate, 1)); )
-		CSQCProjectile_Check(e);
+	FOREACH_ENTITY_FLOAT(csqcprojectile_clientanimate, true, CSQCProjectile_Check(it));
 
-	if(RedirectionThink())
-		return;
+	if (RedirectionThink()) return;
 
 	UncustomizeEntitiesRun();
 	InitializeEntitiesRun();
@@ -225,8 +200,7 @@ void StartFrame (void)
 	WarpZone_StartFrame();
 
 	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
-	if(sys_frametime <= 0)
-		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
+	if (sys_frametime <= 0) sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 
 	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
@@ -234,36 +208,27 @@ void StartFrame (void)
 	skill = autocvar_skill;
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
-	game_delay = (time < game_starttime) ? true : false;
+	game_delay = (time < game_starttime);
 
-	if(game_delay_last == true)
-	if(game_delay == false)
-	if(autocvar_sv_eventlog)
+	if (autocvar_sv_eventlog && game_delay_last && !game_delay)
 		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
 
-	CreatureFrame ();
-	CheckRules_World ();
+	CreatureFrame_All();
+	CheckRules_World();
 
-	// if in warmup stage and limit for warmup is hit start match
-	if(warmup_stage)
-	if(!gameover)
-	if((g_warmup_limit > 0 && time >= g_warmup_limit)
-	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
-	{
+	if (warmup_stage && !gameover && warmup_limit > 0 && time >= warmup_limit) {
 		ReadyRestart();
 		return;
 	}
 
 	bot_serverframe();
-
-	FOR_EACH_PLAYER(self)
-		self.porto_forbidden = max(0, self.porto_forbidden - 1);
-
 	anticheat_startframe();
-
 	MUTATOR_CALLHOOK(SV_StartFrame);
+
+    FOREACH_CLIENT(true, GlobalStats_update(it));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPostThink()));
 }
 
 .vector originjitter;
@@ -271,23 +236,26 @@ void StartFrame (void)
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
-float DoesQ3ARemoveThisEntity();
+bool DoesQ3ARemoveThisEntity(entity this);
 void SV_OnEntityPreSpawnFunction()
-{
-	if (self)
-	if (self.gametypefilter != "")
-	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
+{ENGINE_EVENT();
+	__spawnfunc_expecting = true;
+	__spawnfunc_expect = this;
+	if (this)
+	if (this.gametypefilter != "")
+	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		remove(self);
+		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
-	if(self.cvarfilter != "")
+	if(this.cvarfilter != "")
 	{
 		float n, i, o, inv;
 		string s, k, v;
 		inv = 0;
 
-		s = self.cvarfilter;
+		s = this.cvarfilter;
 		if(substring(s, 0, 1) == "+")
 		{
 			s = substring(s, 1, -1);
@@ -381,51 +349,54 @@ void SV_OnEntityPreSpawnFunction()
 			}
 		}
 		inv = !inv;
-:cvar_fail
+LABEL(cvar_fail)
 		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
 		if (!inv)
 		{
 			//print("cvarfilter fail\n");
-			remove(self);
+			remove(this);
+			__spawnfunc_expecting = false;
 			return;
 		}
 	}
 
-	if(DoesQ3ARemoveThisEntity())
+	if(DoesQ3ARemoveThisEntity(this))
 	{
-		remove(self);
+		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 
 	// support special -1 and -2 angle from radiant
-	if (self.angles == '0 -1 0')
-		self.angles = '-90 0 0';
-	else if (self.angles == '0 -2 0')
-		self.angles = '+90 0 0';
+	if (this.angles == '0 -1 0')
+		this.angles = '-90 0 0';
+	else if (this.angles == '0 -2 0')
+		this.angles = '+90 0 0';
 
-	if(self.originjitter.x != 0)
-		self.origin_x = self.origin.x + (random() * 2 - 1) * self.originjitter.x;
-	if(self.originjitter.y != 0)
-		self.origin_y = self.origin.y + (random() * 2 - 1) * self.originjitter.y;
-	if(self.originjitter.z != 0)
-		self.origin_z = self.origin.z + (random() * 2 - 1) * self.originjitter.z;
-	if(self.anglesjitter.x != 0)
-		self.angles_x = self.angles.x + (random() * 2 - 1) * self.anglesjitter.x;
-	if(self.anglesjitter.y != 0)
-		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglesjitter.y;
-	if(self.anglesjitter.z != 0)
-		self.angles_z = self.angles.z + (random() * 2 - 1) * self.anglesjitter.z;
-	if(self.anglejitter != 0)
-		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglejitter;
+	if(this.originjitter.x != 0)
+		this.origin_x = this.origin.x + (random() * 2 - 1) * this.originjitter.x;
+	if(this.originjitter.y != 0)
+		this.origin_y = this.origin.y + (random() * 2 - 1) * this.originjitter.y;
+	if(this.originjitter.z != 0)
+		this.origin_z = this.origin.z + (random() * 2 - 1) * this.originjitter.z;
+	if(this.anglesjitter.x != 0)
+		this.angles_x = this.angles.x + (random() * 2 - 1) * this.anglesjitter.x;
+	if(this.anglesjitter.y != 0)
+		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglesjitter.y;
+	if(this.anglesjitter.z != 0)
+		this.angles_z = this.angles.z + (random() * 2 - 1) * this.anglesjitter.z;
+	if(this.anglejitter != 0)
+		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglejitter;
 
-	if(MUTATOR_CALLHOOK(OnEntityPreSpawn))
+	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
-		remove(self);
+		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 }
 
-void WarpZone_PostInitialize_Callback(void)
+void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
 	entity e;

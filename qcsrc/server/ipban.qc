@@ -1,15 +1,10 @@
-#if defined(CSQC)
-#elif defined(MENUQC)
-#elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
-    #include "../common/constants.qh"
-    #include "../common/util.qh"
-    #include "autocvars.qh"
-    #include "defs.qh"
-    #include "command/banning.qh"
-    #include "ipban.qh"
-#endif
+#include "ipban.qh"
+
+#include "autocvars.qh"
+#include "command/banning.qh"
+#include "defs.qh"
+#include "../common/constants.qh"
+#include "../common/util.qh"
 
 /*
  * Protocol of online ban list:
@@ -96,18 +91,18 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(id >= MAX_IPBAN_URIS)
 	{
-		print("Received ban list for invalid ID\n");
+		LOG_INFO("Received ban list for invalid ID\n");
 		return;
 	}
 
 	tokenize_console(autocvar_g_ban_sync_uri);
 	uri = argv(id);
 
-	print("Received ban list from ", uri, ": ");
+	LOG_INFO("Received ban list from ", uri, ": ");
 
 	if(OnlineBanList_RequestWaiting[id] == 0)
 	{
-		print("rejected (unexpected)\n");
+		LOG_INFO("rejected (unexpected)\n");
 		return;
 	}
 
@@ -115,14 +110,14 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(time > OnlineBanList_Timeout)
 	{
-		print("rejected (too late)\n");
+		LOG_INFO("rejected (too late)\n");
 		return;
 	}
 
 	syncinterval = autocvar_g_ban_sync_interval;
 	if(syncinterval == 0)
 	{
-		print("rejected (syncing disabled)\n");
+		LOG_INFO("rejected (syncing disabled)\n");
 		return;
 	}
 	if(syncinterval > 0)
@@ -130,19 +125,19 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if(status != 0)
 	{
-		print("error: status is ", ftos(status), "\n");
+		LOG_INFO("error: status is ", ftos(status), "\n");
 		return;
 	}
 
 	if(substring(data, 0, 1) == "<")
 	{
-		print("error: received HTML instead of a ban list\n");
+		LOG_INFO("error: received HTML instead of a ban list\n");
 		return;
 	}
 
 	if(strstrofs(data, "\r", 0) != -1)
 	{
-		print("error: received carriage returns\n");
+		LOG_INFO("error: received carriage returns\n");
 		return;
 	}
 
@@ -153,11 +148,11 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 
 	if((n % 4) != 0)
 	{
-		print("error: received invalid item count: ", ftos(n), "\n");
+		LOG_INFO("error: received invalid item count: ", ftos(n), "\n");
 		return;
 	}
 
-	print("OK, ", ftos(n / 4), " items\n");
+	LOG_INFO("OK, ", ftos(n / 4), " items\n");
 
 	for(i = 0; i < n; i += 4)
 	{
@@ -166,9 +161,9 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 		reason = argv(i + 2);
 		serverip = argv(i + 3);
 
-		dprint("received ban list item ", ftos(i / 4), ": ip=", ip);
-		dprint(" timeleft=", ftos(timeleft), " reason=", reason);
-		dprint(" serverip=", serverip, "\n");
+		LOG_TRACE("received ban list item ", ftos(i / 4), ": ip=", ip);
+		LOG_TRACE(" timeleft=", ftos(timeleft), " reason=", reason);
+		LOG_TRACE(" serverip=", serverip, "\n");
 
 		timeleft -= 1.5 * autocvar_g_ban_sync_timeout;
 		if(timeleft < 0)
@@ -180,7 +175,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 			for(j = 0; j < l; ++j)
 				if(strstrofs("0123456789.", substring(ip, j, 1), 0) == -1)
 				{
-					print("Invalid character ", substring(ip, j, 1), " in IP address ", ip, ". Skipping this ban.\n");
+					LOG_INFO("Invalid character ", substring(ip, j, 1), " in IP address ", ip, ". Skipping this ban.\n");
 					goto skip;
 				}
 		}
@@ -194,14 +189,14 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 			// the ban will be prolonged on the next sync
 			// or expire 5 seconds after the next timeout
 		Ban_Insert(ip, timeleft, strcat("ban synced from ", serverip, " at ", uri), 0);
-		print("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ");
-		print(reason, "\n");
+		LOG_INFO("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ");
+		LOG_INFO(reason, "\n");
 
-:skip
+LABEL(skip)
 	}
 }
 
-void OnlineBanList_Think()
+void OnlineBanList_Think(entity this)
 {
 	float argc;
 	string uri;
@@ -242,13 +237,13 @@ void OnlineBanList_Think()
 	}
 
 	if(autocvar_g_ban_sync_interval > 0)
-		self.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
+		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 	else
 		goto killme;
 	return;
 
-:killme
-	remove(self);
+LABEL(killme)
+	remove(this);
 }
 
 const float BAN_MAX = 256;
@@ -323,10 +318,8 @@ void Ban_LoadBans()
 		}
 	}
 
-	entity e;
-	e = spawn();
-	e.classname = "bansyncer";
-	e.think = OnlineBanList_Think;
+	entity e = new(bansyncer);
+	setthink(e, OnlineBanList_Think);
 	e.nextthink = time + 1;
 }
 
@@ -335,7 +328,7 @@ void Ban_View()
 	float i, n;
 	string msg;
 
-	print("^2Listing all existing active bans:\n");
+	LOG_INFO("^2Listing all existing active bans:\n");
 
 	n = 0;
 	for(i = 0; i < ban_count; ++i)
@@ -349,10 +342,10 @@ void Ban_View()
 		msg = strcat(msg, ban_ip[i], " is still banned for ");
 		msg = strcat(msg, ftos(ban_expire[i] - time), " seconds");
 
-		print("  ", msg, "\n");
+		LOG_INFO("  ", msg, "\n");
 	}
 
-	print("^2Done listing all active (", ftos(n), ") bans.\n");
+	LOG_INFO("^2Done listing all active (", ftos(n), ") bans.\n");
 }
 
 float Ban_GetClientIP(entity client)
@@ -387,7 +380,7 @@ float Ban_GetClientIP(entity client)
 	ban_ip4 = strcat1(s); // 32
 	return true;
 
-:ipv6
+LABEL(ipv6)
 	i1 = strstrofs(s, ":", 0);
 	if(i1 < 0)
 		return false;
@@ -453,12 +446,11 @@ float Ban_IsClientBanned(entity client, float idx)
 	return false;
 }
 
-float Ban_MaybeEnforceBan(entity client)
+bool Ban_MaybeEnforceBan(entity client)
 {
-	if(Ban_IsClientBanned(client, -1))
+	if (Ban_IsClientBanned(client, -1))
 	{
-		string s;
-		s = strcat("^1NOTE:^7 banned client ", client.netaddress, " just tried to enter\n");
+		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
 		dropclient(client);
 		bprint(s);
 		return true;
@@ -466,25 +458,23 @@ float Ban_MaybeEnforceBan(entity client)
 	return false;
 }
 
-.float ban_checked;
-float Ban_MaybeEnforceBanOnce(entity client)
+.bool ban_checked;
+bool Ban_MaybeEnforceBanOnce(entity client)
 {
-	if(client.ban_checked)
-		return false;
+	if (client.ban_checked) return false;
 	client.ban_checked = true;
 	return Ban_MaybeEnforceBan(client);
 }
 
-string Ban_Enforce(float i, string reason)
+string Ban_Enforce(float j, string reason)
 {
 	string s;
-	entity e;
 
 	// Enforce our new ban
 	s = "";
-	FOR_EACH_CLIENTSLOT(e)
-		if (IS_REAL_CLIENT(e))
-		if(Ban_IsClientBanned(e, i))
+	FOREACH_CLIENTSLOT(IS_REAL_CLIENT(it),
+	{
+		if(Ban_IsClientBanned(it, j))
 		{
 			if(reason != "")
 			{
@@ -492,11 +482,12 @@ string Ban_Enforce(float i, string reason)
 					reason = strcat(reason, ": affects ");
 				else
 					reason = strcat(reason, ", ");
-				reason = strcat(reason, e.netname);
+				reason = strcat(reason, it.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", e.netaddress, "^7 has to go\n");
-			dropclient(e);
+			s = strcat(s, "^1NOTE:^7 banned client ", it.netaddress, "^7 has to go\n");
+			dropclient(it);
 		}
+	});
 	bprint(s);
 
 	return reason;
@@ -516,10 +507,10 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 			if(time + bantime > ban_expire[i])
 			{
 				ban_expire[i] = time + bantime;
-				dprint(ip, "'s ban has been prolonged to ", ftos(bantime), " seconds from now\n");
+				LOG_TRACE(ip, "'s ban has been prolonged to ", ftos(bantime), " seconds from now\n");
 			}
 			else
-				dprint(ip, "'s ban is still active until ", ftos(ban_expire[i] - time), " seconds from now\n");
+				LOG_TRACE(ip, "'s ban is still active until ", ftos(ban_expire[i] - time), " seconds from now\n");
 
 			// and enforce
 			reason = Ban_Enforce(i, reason);
@@ -556,12 +547,12 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 	if(i < ban_count)
 	if(ban_expire[i] > time + bantime)
 	{
-		print(ip, " could not get banned due to no free ban slot\n");
+		LOG_INFO(ip, " could not get banned due to no free ban slot\n");
 		return false;
 	}
 	// okay, insert our new victim as i
 	Ban_Delete(i);
-	dprint(ip, " has been banned for ", ftos(bantime), " seconds\n");
+	LOG_TRACE(ip, " has been banned for ", ftos(bantime), " seconds\n");
 	ban_expire[i] = time + bantime;
 	ban_ip[i] = strzone(ip);
 	ban_count = max(ban_count, i + 1);

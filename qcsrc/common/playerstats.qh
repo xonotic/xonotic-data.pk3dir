@@ -112,8 +112,8 @@ const float PS_D_STATUS_RECEIVED = 1;
 float PlayerStats_PlayerDetail_Status = PS_D_STATUS_IDLE;
 string autocvar_g_playerstats_playerdetail_uri = "http://stats.xonotic.org/player/me";
 float autocvar_g_playerstats_playerdetail_autoupdatetime = 1800; // automatically update every 30 minutes anyway
-void PlayerStats_PlayerDetail(void);
-void PlayerStats_PlayerDetail_CheckUpdate(void);
+void PlayerStats_PlayerDetail();
+void PlayerStats_PlayerDetail_CheckUpdate();
 void PlayerStats_PlayerDetail_Handler(entity fh, entity p, float status);
 #endif
 #endif

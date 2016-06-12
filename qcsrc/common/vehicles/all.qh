@@ -1,0 +1,26 @@
+#ifndef VEHICLES_ALL_H
+#define VEHICLES_ALL_H
+
+#include "vehicle.qh"
+
+REGISTRY(Vehicles, BITS(4))
+#define Vehicles_from(i) _Vehicles_from(i, VEH_Null)
+REGISTER_REGISTRY(Vehicles)
+REGISTRY_CHECK(Vehicles)
+
+const int VEH_FIRST = 1;
+#define VEH_LAST (Vehicles_COUNT - 1)
+
+#define REGISTER_VEHICLE(id, inst) REGISTER(Vehicles, VEH, id, vehicleid, inst)
+
+#if defined(SVQC)
+	#include "sv_vehicles.qh"
+#elif defined(CSQC)
+	#include "cl_vehicles.qh"
+#endif
+
+REGISTER_VEHICLE(Null, NEW(Vehicle));
+
+#include "vehicle/_mod.inc"
+
+#endif

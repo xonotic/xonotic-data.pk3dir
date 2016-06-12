@@ -1,0 +1,19 @@
+#pragma once
+
+#ifndef QCC_SUPPORT_ACCUMULATE
+	#ifdef GMQCC
+		#define QCC_SUPPORT_ACCUMULATE
+	#endif
+#endif
+
+#ifndef QCC_SUPPORT_NIL
+	#ifdef GMQCC
+		#define QCC_SUPPORT_NIL
+	#endif
+#endif
+
+#ifdef GMQCC
+    #define LABEL(id) :id
+#else
+    #define LABEL(id) id:
+#endif

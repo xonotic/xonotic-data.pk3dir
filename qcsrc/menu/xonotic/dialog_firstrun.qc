@@ -1,20 +1,13 @@
-#ifdef INTERFACE
-CLASS(XonoticFirstRunDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticFirstRunDialog, fill, void(entity)) // to be overridden by user to fill the dialog with controls
-	ATTRIB(XonoticFirstRunDialog, title, string, _("Welcome"))
-	ATTRIB(XonoticFirstRunDialog, color, vector, SKINCOLOR_DIALOG_FIRSTRUN)
-	ATTRIB(XonoticFirstRunDialog, intendedWidth, float, 0.7)
-	ATTRIB(XonoticFirstRunDialog, rows, float, 16)
-	ATTRIB(XonoticFirstRunDialog, columns, float, 6)
-	ATTRIB(XonoticFirstRunDialog, name, string, "FirstRun")
-	ATTRIB(XonoticFirstRunDialog, playerNameLabel, entity, NULL)
-	ATTRIB(XonoticFirstRunDialog, playerNameLabelAlpha, float, 0)
+#include "dialog_firstrun.qh"
 
-	ATTRIB(XonoticFirstRunDialog, closable, float, 0)
-ENDCLASS(XonoticFirstRunDialog)
-#endif
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "languagelist.qh"
+#include "radiobutton.qh"
+#include "colorpicker.qh"
+#include "charmap.qh"
+#include "commandbutton.qh"
 
-#ifdef IMPLEMENTATION
 float CheckFirstRunButton(entity me)
 {
 	if(cvar_string("_cl_name") != cvar_defstring("_cl_name"))
@@ -56,7 +49,8 @@ void XonoticFirstRunDialog_fill(entity me)
 			label.allowColors = 1;
 			label.alpha = 1;
 	me.TR(me);
-		me.TD(me, 1, 3.75, box = makeXonoticInputBox(1, "_cl_name"));
+		me.TD(me, 1, 3.75, box = makeXonoticInputBox_T(1, "_cl_name",
+			_("Name under which you will appear in the game")));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 0;  // Sorry, can't do this, it spams "name" commands.
@@ -94,4 +88,3 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Save settings"), '0 0 0', "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart", COMMANDBUTTON_APPLY));
 		setDependentWeird(e, CheckFirstRunButton);
 }
-#endif
