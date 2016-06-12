@@ -548,6 +548,7 @@ entity nades_spawn_orb(entity own, entity realown, vector org, float orb_ltime, 
 	orb.solid = SOLID_TRIGGER;
 
 	setmodel(orb, MDL_NADE_ORB);
+	orb.skin = 1;
 	orb.orb_radius = orb_rad; // required for fading
 	vector size = '1 1 1' * orb.orb_radius / 2;
 	setsize(orb, -size, size);

@@ -19,6 +19,7 @@ void orb_draw(entity this)
 void orb_setup(entity e)
 {
 	setmodel(e, MDL_NADE_ORB);
+	e.skin = 1;
 
 	setorigin(e, e.origin);
 
