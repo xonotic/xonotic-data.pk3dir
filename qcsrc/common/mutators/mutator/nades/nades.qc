@@ -581,13 +581,17 @@ void nade_entrap_touch(entity this)
 #elif defined(CSQC)
 		other.move_velocity = other.move_velocity * pow(autocvar_g_nades_entrap_strength, pushdeltatime);
 #endif
+	}
 
-		if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
-		{
-			entity show_tint = (IS_VEHICLE(other)) ? other.owner : other;
-			STAT(ENTRAP_ORB, show_tint) = time + 0.1;
-			STAT(ENTRAP_ORB_ALPHA, show_tint) = 0.75 * (this.ltime - time) / this.orb_lifetime;
-		}
+	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
+	{
+		entity show_tint = (IS_VEHICLE(other)) ? other.owner : other;
+		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
+
+		float tint_alpha = 0.75;
+		if(SAME_TEAM(other, this.realowner))
+			tint_alpha = 0.45;
+		STAT(ENTRAP_ORB_ALPHA, show_tint) = tint_alpha * (this.ltime - time) / this.orb_lifetime;
 	}
 }
 

@@ -1,5 +1,6 @@
 nade_orb
 {
+	cull none
 	dpnoshadow
 	surfaceparm nolightmap
 
