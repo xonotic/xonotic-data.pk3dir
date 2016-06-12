@@ -6,7 +6,7 @@ nade_orb
  {
 	map textures/nade_orb
 	blendfunc add
-	tcMod stretch 0.5 0.5
+	tcMod stretch 0 0.25
 	rgbGen lightingDiffuse
  }
 }
