@@ -237,11 +237,11 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 	n = 0;
 	if(e)
 	{
-		if(vlen(e.origin - this.origin) < vlen(e.velocity) * frametime)
+		if(vlen2(e.origin - this.origin) < vlen2(e.velocity) * frametime)
 			++n;
 		for(p = e; (p = p.queuenext) != e; )
 		{
-			if(vlen(p.origin - this.origin) < vlen(p.velocity) * frametime)
+			if(vlen2(p.origin - this.origin) < vlen2(p.velocity) * frametime)
 				++n;
 		}
 		if(n >= 2)

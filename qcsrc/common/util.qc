@@ -297,7 +297,7 @@ float compressShortVector(vector vec)
 {
 	vector ang;
 	float p, y, len;
-	if(vlen(vec) == 0)
+	if(vec == '0 0 0')
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
 	ang = vectoangles(vec);

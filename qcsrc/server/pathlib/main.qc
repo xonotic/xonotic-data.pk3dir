@@ -327,7 +327,7 @@ float buildpath_nodefilter_directional(vector n,vector c,vector p)
     d2 = normalize(p - c);
     d1 = normalize(c - n);
 
-    if(vlen(d1-d2) < 0.25)
+    if(vdist(d1 - d2, <, 0.25))
     {
         //mark_error(c,30);
         return 1;

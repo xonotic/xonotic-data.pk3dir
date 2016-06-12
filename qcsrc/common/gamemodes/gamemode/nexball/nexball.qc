@@ -278,7 +278,7 @@ void ResetBall(entity this)
 	else	 // step 4
 	{
 //		dprint("Step 4: time: ", ftos(time), "\n");
-		if(vlen(this.origin - this.spawnorigin) > 10)  // should not happen anymore
+		if(vdist(this.origin - this.spawnorigin, >, 10)) // should not happen anymore
 			LOG_TRACE("The ball moved too far away from its spawn origin.\nOffset: ",
 				   vtos(this.origin - this.spawnorigin), " Velocity: ", vtos(this.velocity), "\n");
 		this.velocity = '0 0 0';
@@ -314,7 +314,7 @@ void football_touch(entity this)
 
 	if(autocvar_g_nexball_football_physics == -1)	// MrBougo try 1, before decompiling Rev's original
 	{
-		if(vlen(other.velocity))
+		if(other.velocity)
 			this.velocity = other.velocity * 1.5 + '0 0 1' * autocvar_g_nexball_football_boost_up;
 	}
 	else if(autocvar_g_nexball_football_physics == 1)	  // MrBougo's modded Rev style: partially independant of the height of the aiming point
@@ -352,7 +352,7 @@ void basketball_touch(entity this)
 	else if(other.solid == SOLID_BSP)
 	{
 		_sound(this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
-		if(vlen(this.velocity) && !this.cnt)
+		if(this.velocity && !this.cnt)
 			this.nextthink = min(time + autocvar_g_nexball_delay_idle, this.teamtime);
 	}
 }

@@ -819,7 +819,7 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 							// it goes out of range while slinging it around.
 
-							if(vlen(this.origin - e.origin) <= autocvar_g_grab_range)
+							if(vdist(this.origin - e.origin, <=, autocvar_g_grab_range))
 							{
 								switch(e.grab)
 								{

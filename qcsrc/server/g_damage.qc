@@ -903,7 +903,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
-			if(vlen(force) == 0)
+			if(force == '0 0 0')
 				force = '0 0 -1';
 			else
 				force = normalize(force);

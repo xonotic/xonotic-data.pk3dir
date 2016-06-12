@@ -737,7 +737,7 @@ void havocbot_movetogoal(entity this)
 			traceline(this.origin + this.view_ofs, dst_ahead, true, world);
 
 			// Check head-banging against walls
-			if(vlen(this.origin + this.view_ofs - trace_endpos) < 25 && !(this.aistatus & AI_STATUS_OUT_WATER))
+			if(vdist(this.origin + this.view_ofs - trace_endpos, <, 25) && !(this.aistatus & AI_STATUS_OUT_WATER))
 			{
 				PHYS_INPUT_BUTTON_JUMP(this) = true;
 				if(this.facingwalltime && time > this.facingwalltime)

@@ -2038,7 +2038,7 @@ void PlayerUseKey(entity this)
 				{
 					if(closest_target)
 					{
-						if(vlen(this.origin - head.origin) < vlen(this.origin - closest_target.origin))
+						if(vlen2(this.origin - head.origin) < vlen2(this.origin - closest_target.origin))
 						{ closest_target = head; }
 					}
 					else { closest_target = head; }
@@ -2165,7 +2165,7 @@ void PlayerPreThink ()
 	{
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
-		if(vlen(veh.origin - this.origin) < autocvar_g_vehicles_enter_radius)
+		if(vdist(veh.origin - this.origin, <, autocvar_g_vehicles_enter_radius))
 		if(!IS_DEAD(veh))
 		if(veh.takedamage != DAMAGE_NO)
 		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, this))

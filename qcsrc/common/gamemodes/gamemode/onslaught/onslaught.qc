@@ -1322,7 +1322,7 @@ void havocbot_goalrating_ons_offenseitems(entity this, float ratingscale, vector
 		// gather health and armor only
 		if (head.solid)
 		if ( ((head.health || head.armorvalue) && needarmor) || (head.weapons && needweapons ) )
-		if (vlen(head.origin - org) < sradius)
+		if (vdist(head.origin - org, <, sradius))
 		{
 			t = head.bot_pickupevalfunc(this, head);
 			if (t > 0)
@@ -1825,7 +1825,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 			if(SAME_TEAM(tmp_entity, player))
 			if(random_target)
 				RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
-			else if(vlen(tmp_entity.origin - spawn_loc) <= vlen(closest_target.origin - spawn_loc) || closest_target == world)
+			else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == world)
 				closest_target = tmp_entity;
 		}
 
@@ -1875,7 +1875,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 			else
 			{
 				if(SAME_TEAM(tmp_entity, player))
-				if(vlen(tmp_entity.origin - spawn_loc) <= vlen(closest_target.origin - spawn_loc) || closest_target == world)
+				if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == world)
 					closest_target = tmp_entity;
 			}
 		}

@@ -410,7 +410,7 @@ float waypoint_load_links()
 			found = false;
 			while(wp_from)
 			{
-				if(vlen(wp_from.origin-wp_from_pos)<1)
+				if(vdist(wp_from.origin - wp_from_pos, <, 1))
 				if(wp_from.classname == "waypoint")
 				{
 					found = true;
@@ -432,7 +432,7 @@ float waypoint_load_links()
 		found = false;
 		while(wp_to)
 		{
-			if(vlen(wp_to.origin-wp_to_pos)<1)
+			if(vdist(wp_to.origin - wp_to_pos, <, 1))
 			if(wp_to.classname == "waypoint")
 			{
 				found = true;
@@ -500,7 +500,7 @@ void waypoint_load_links_hardwired()
 			found = false;
 			while(wp_from)
 			{
-				if(vlen(wp_from.origin-wp_from_pos)<5)
+				if(vdist(wp_from.origin - wp_from_pos, <, 5))
 				if(wp_from.classname == "waypoint")
 				{
 					found = true;
@@ -521,7 +521,7 @@ void waypoint_load_links_hardwired()
 		found = false;
 		while(wp_to)
 		{
-			if(vlen(wp_to.origin-wp_to_pos)<5)
+			if(vdist(wp_to.origin - wp_to_pos, <, 5))
 			if(wp_to.classname == "waypoint")
 			{
 				found = true;
