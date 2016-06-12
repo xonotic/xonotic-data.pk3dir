@@ -356,7 +356,7 @@ void ItemUpdate(entity this)
 
 void UpdateItemAfterTeleport(entity this)
 {
-	if(this.SendEntity3 == ItemSend)
+	if(getSendEntity(this) == ItemSend)
 		ItemUpdate(this);
 }
 

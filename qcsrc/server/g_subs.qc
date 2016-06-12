@@ -321,7 +321,7 @@ void LODmodel_attach(entity this)
 	}
 
 	if(this.lodmodelindex1)
-		if (!this.SendEntity)
+		if (!getSendEntity(this))
 			SetCustomizer(this, LOD_customize, LOD_uncustomize);
 }
 

@@ -625,7 +625,7 @@ METHOD(Racer, vr_spawn, void(Racer thisveh, entity instance))
 METHOD(Racer, vr_death, void(Racer thisveh, entity instance))
 {
 #ifdef SVQC
-    instance.SendEntity		= func_null; // stop networking this racer (for now)
+    setSendEntity(instance, func_null); // stop networking this racer (for now)
     instance.health			= 0;
     instance.event_damage	= func_null;
     instance.solid			= SOLID_CORPSE;

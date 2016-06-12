@@ -128,6 +128,5 @@ void CSQCModel_LinkEntity(entity e)
 
 void CSQCModel_UnlinkEntity(entity e)
 {
-	e.SendEntity = func_null;
-	e.SendEntity3 = func_null;
+	setSendEntity(e, func_null);
 }
