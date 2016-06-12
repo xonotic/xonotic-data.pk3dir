@@ -584,7 +584,7 @@ void nade_entrap_touch(entity this)
 #endif
 	}
 
-	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
+	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) || IS_MONSTER(other) )
 	{
 		entity show_tint = (IS_VEHICLE(other)) ? other.owner : other;
 		STAT(ENTRAP_ORB, show_tint) = time + 0.1;
@@ -1317,6 +1317,17 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPhysics)
 	{
 		player.stat_sv_maxspeed *= autocvar_g_nades_entrap_speed;
 		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_nades_entrap_speed;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(nades, MonsterMove)
+{
+    entity mon = M_ARGV(0, entity);
+
+	if (STAT(ENTRAP_ORB, mon) > time)
+	{
+		M_ARGV(1, float) *= autocvar_g_nades_entrap_speed; // run speed
+		M_ARGV(2, float) *= autocvar_g_nades_entrap_speed; // walk speed
 	}
 }
 
