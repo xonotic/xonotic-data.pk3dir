@@ -364,7 +364,7 @@ entity path_build(entity next, vector where, entity prev, entity start)
     path.owner     = start;
     path.path_next = next;
 
-    setorigin(path,where);
+    setorigin(path, where);
 
     if(!next)
         path.classname = "path_end";
@@ -476,7 +476,7 @@ entity pathlib_astar(entity this, vector from,vector to)
 
         open           = new(path_end);
         open.owner     = open;
-        setorigin(open,path.origin);
+        setorigin(open, path.origin);
 
         pathlib_cleanup();
 

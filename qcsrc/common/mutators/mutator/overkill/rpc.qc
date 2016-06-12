@@ -129,7 +129,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 	missile.projectiledeathtype = WEP_RPC.m_id;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
-	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR(rpc, speed), 0);
 
 	settouch(missile, W_RocketPropelledChainsaw_Touch);

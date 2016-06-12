@@ -37,8 +37,8 @@ spawnfunc(info_teleport_destination)
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 
-	//setorigin (this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
-	setorigin (this, this.origin);
+	//setorigin(this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
+	setorigin(this, this.origin);
 
 	IFTARGETED
 	{

@@ -22,7 +22,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
         float d = actor.shot_dmg;
         float r = actor.target_range;
         entity e = spawn();
-        setorigin(e,actor.tur_shotorg);
+        setorigin(e, actor.tur_shotorg);
 
         actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 

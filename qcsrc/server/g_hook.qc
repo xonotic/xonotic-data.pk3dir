@@ -376,7 +376,7 @@ void FireGrapplingHook(entity actor)
 
 	//setmodel (missile, MDL_HOOK); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
-	setorigin (missile, org);
+	setorigin(missile, org);
 
 	missile.state = 0; // not latched onto anything
 

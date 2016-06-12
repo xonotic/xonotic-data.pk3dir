@@ -104,7 +104,7 @@ void func_breakable_look_destroyed(entity this)
 	else {
 		if (this.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
 			floorZ = this.absmin.z;
-			setorigin(this,((this.absmax+this.absmin)*.5));
+			setorigin(this, ((this.absmax + this.absmin) * 0.5));
 			this.origin_z = floorZ;
 		}
 		_setmodel(this, this.mdl_dead);

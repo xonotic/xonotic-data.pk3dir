@@ -741,7 +741,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				targ.oldvelocity = targ.velocity;
 
 				targ.spawnorigin = spot.origin;
-				setorigin (targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
+				setorigin(targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
 				targ.oldorigin = targ.origin;
 				targ.prevorigin = targ.origin;

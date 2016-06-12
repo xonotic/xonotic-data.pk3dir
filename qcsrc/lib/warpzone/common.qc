@@ -801,7 +801,7 @@ void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
 	{
 		// hit something
 		// adjust origin in the other direction...
-		setorigin(e,e.origin - by * (1 - trace_fraction));
+		setorigin(e, e.origin - by * (1 - trace_fraction));
 	}
 }
 
