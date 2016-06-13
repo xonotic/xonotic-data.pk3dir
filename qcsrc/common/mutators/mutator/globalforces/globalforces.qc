@@ -1,6 +1,7 @@
 #ifdef IMPLEMENTATION
 
 AUTOCVAR(g_globalforces, float, false, "Global forces: knockback affects everyone");
+AUTOCVAR(g_globalforces_noself, bool, false, "Global forces: ignore self damage");
 REGISTER_MUTATOR(mutator_globalforces, autocvar_g_globalforces);
 
 MUTATOR_HOOKFUNCTION(mutator_globalforces, BuildMutatorsString) {
@@ -12,7 +13,9 @@ MUTATOR_HOOKFUNCTION(mutator_globalforces, BuildMutatorsPrettyString) {
 }
 
 MUTATOR_HOOKFUNCTION(mutator_globalforces, PlayerDamage_SplitHealthArmor) {
+    entity frag_attacker = M_ARGV(1, entity);
     entity frag_target = M_ARGV(2, entity);
+    if (autocvar_g_globalforces_noself && frag_target == frag_attacker) return;
     vector damage_force = M_ARGV(3, vector) * autocvar_g_globalforces;
     FOREACH_CLIENT(IS_PLAYER(it) && it != frag_target, {
         it.velocity += damage_explosion_calcpush(it.damageforcescale * damage_force, it.velocity, autocvar_g_balance_damagepush_speedfactor);
