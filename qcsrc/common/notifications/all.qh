@@ -423,8 +423,8 @@ string BUFF_NAME(int i);
 	ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
 	ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1)) \
-	ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(world,netname,s1).descriptor.message) \
-	ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(world,netname,s1).descriptor.netname)
+	ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(NULL,netname,s1).descriptor.message) \
+	ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(NULL,netname,s1).descriptor.netname)
 
 #define NOTIF_HIT_MAX(count,funcname) MACRO_BEGIN { \
 	if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; } \

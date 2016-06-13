@@ -92,7 +92,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.owner == world && autocvar_g_physical_items <= 1)
+	if(item.owner == NULL && autocvar_g_physical_items <= 1)
 		return;
 	if (item.spawnflags & 1) // floating item
 		return;
@@ -116,7 +116,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	wep.glowmod = item.owner.glowmod;
 	wep.damageforcescale = autocvar_g_physical_items_damageforcescale;
 	wep.dphitcontentsmask = item.dphitcontentsmask;
-	wep.cnt = (item.owner != world);
+	wep.cnt = (item.owner != NULL);
 
 	setthink(wep, physical_item_think);
 	wep.nextthink = time;

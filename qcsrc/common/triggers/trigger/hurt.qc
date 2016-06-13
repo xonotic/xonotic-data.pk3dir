@@ -4,7 +4,7 @@ void trigger_hurt_use(entity this, entity actor, entity trigger)
 	if(IS_PLAYER(actor))
 		this.enemy = actor;
 	else
-		this.enemy = world; // let's just destroy it, if taking over is too much work
+		this.enemy = NULL; // let's just destroy it, if taking over is too much work
 }
 
 .float triggerhurttime;
@@ -31,7 +31,7 @@ void trigger_hurt_touch(entity this)
 			if (!IS_PLAYER(own))
 			{
 				own = this;
-				this.enemy = world; // I still hate you all
+				this.enemy = NULL; // I still hate you all
 			}
 
 			Damage (other, this, own, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');

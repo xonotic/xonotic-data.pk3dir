@@ -55,7 +55,7 @@ void W_RocketPropelledChainsaw_Explode(entity this)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), world, world, WEP_CVAR(rpc, force), this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, other);
 
 	remove (this);
 }

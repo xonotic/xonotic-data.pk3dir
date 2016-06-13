@@ -122,7 +122,7 @@ void M_Mage_Defend_Shield(entity this);
 
 bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 {
-	if(targ == world)
+	if(targ == NULL)
 		return false;
 	if(targ.health <= 0)
 		return false;
@@ -152,10 +152,10 @@ void M_Mage_Attack_Spike_Explode(entity this)
 
 	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	this.realowner.mage_spike = world;
+	this.realowner.mage_spike = NULL;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, other);
 
 	remove (this);
 }
@@ -184,11 +184,11 @@ void M_Mage_Attack_Spike_Think(entity this)
 		spd + (autocvar_g_monster_mage_attack_spike_accel) * frametime
 	);
 
-	if (this.enemy != world)
+	if (this.enemy != NULL)
 		if (this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
-			this.enemy = world;
+			this.enemy = NULL;
 
-	if (this.enemy != world)
+	if (this.enemy != NULL)
 	{
 		entity e = this.enemy;
 		vector eorg = 0.5 * (e.absmin + e.absmax);
@@ -307,7 +307,7 @@ void M_Mage_Defend_Heal(entity this)
 void M_Mage_Attack_Push(entity this)
 {
 	sound(this, CH_SHOTS, SND_TAGEXP1, 1, ATTEN_NORM);
-	RadiusDamage (this, this, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, this.enemy);
+	RadiusDamage (this, this, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), NULL, NULL, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE.m_id, this.enemy);
 	Send_Effect(EFFECT_TE_EXPLOSION, this.origin, '0 0 0', 1);
 
 	setanim(this, this.anim_shoot, true, true, true);

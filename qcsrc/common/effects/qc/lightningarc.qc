@@ -59,7 +59,7 @@ void b_make(vector s,vector e, string t,float l,float z)
 		int steps = min(16, floor(length / seglength));
 		if (steps < 1)
 		{
-			te_lightning1(world, from, to);
+			te_lightning1(NULL, from, to);
 			return;
 		}
 
@@ -73,18 +73,18 @@ void b_make(vector s,vector e, string t,float l,float z)
 				float drift = drifts * (1 - (i / steps)) + drifte * (i / steps);
 				vector dirnew = normalize(direction * (1 - drift) + randomvec() * drift);
 				vector pos = pos_l +  dirnew * steplength;
-				te_lightning1(world, pos_l, pos);
+				te_lightning1(NULL, pos_l, pos);
 				// WTF endless recursion if branchfactor is 1.0 (possibly due to adding branchfactor_add). FIXME
 				// if(random() < branchfactor)
 				//     cl_effects_lightningarc(pos, pos + (dirnew * length * 0.25),seglength,drifts,drifte,min(branchfactor + branchfactor_add,1),branchfactor_add);
 
 				pos_l = pos;
 			}
-			te_lightning1(world, pos_l, to);
+			te_lightning1(NULL, pos_l, to);
 		}
 		else
 		{
-			te_lightning1(world, from, to);
+			te_lightning1(NULL, from, to);
 		}
 	}
 
@@ -102,7 +102,7 @@ void b_make(vector s,vector e, string t,float l,float z)
 
 		if (autocvar_cl_effects_lightningarc_simple)
 		{
-			te_lightning1(world, from, to);
+			te_lightning1(NULL, from, to);
 		}
 		else
 		{

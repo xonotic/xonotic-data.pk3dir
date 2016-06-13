@@ -224,7 +224,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	s = this.killtarget;
 	if (s != "")
 	{
-		for(entity t = world; (t = find(t, targetname, s)); )
+		for(entity t = NULL; (t = find(t, targetname, s)); )
 			remove(t);
 	}
 #endif
@@ -251,7 +251,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 			// Flag to set func_clientwall state
 			// 1 == deactivate, 2 == activate, 0 == do nothing
 			int aw_flag = this.antiwall_flag;
-			for(entity t = world; (t = find(t, targetname, s)); )
+			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
 				if(t.use)
 				{

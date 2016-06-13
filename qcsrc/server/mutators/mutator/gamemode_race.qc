@@ -57,7 +57,7 @@ void havocbot_role_race(entity this)
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
-		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
+		for(e = NULL; (e = find(e, classname, "trigger_race_checkpoint")) != NULL; )
 		{
 			if(e.cnt == this.race_checkpoint)
 			{
@@ -99,7 +99,7 @@ void race_ScoreRules()
 void race_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":race:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(strcat(":race:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 float WinningCondition_Race(float fraglimit)
@@ -216,7 +216,7 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 {
 	float s;
 
-	Score_NicePrint(world);
+	Score_NicePrint(NULL);
 
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);

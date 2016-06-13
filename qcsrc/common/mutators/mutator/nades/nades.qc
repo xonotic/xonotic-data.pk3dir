@@ -383,7 +383,7 @@ void nade_ice_think(entity this)
 			sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				autocvar_g_nades_nade_radius, this, world, autocvar_g_nades_nade_force, this.projectiledeathtype, this.enemy);
+				autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, this.enemy);
 			Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 		}
@@ -497,7 +497,7 @@ void nade_spawn_boom(entity this)
 	if(this.realowner.nade_spawnloc)
 	{
 		remove(this.realowner.nade_spawnloc);
-		this.realowner.nade_spawnloc = world;
+		this.realowner.nade_spawnloc = NULL;
 	}
 
 	this.realowner.nade_spawnloc = spawnloc;
@@ -651,7 +651,7 @@ void nade_boom(entity this)
 	if(nade_blast)
 	{
 		RadiusDamage(this, this.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				 autocvar_g_nades_nade_radius, this, world, autocvar_g_nades_nade_force, this.projectiledeathtype, this.enemy);
+				 autocvar_g_nades_nade_radius, this, NULL, autocvar_g_nades_nade_force, this.projectiledeathtype, this.enemy);
 		Damage_DamageInfo(this.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, this.projectiledeathtype, 0, this);
 	}
 
@@ -813,14 +813,14 @@ void nade_damage(entity this, entity inflictor, entity attacker, float damage, i
 
 void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 {
-	if(e.nade == world)
+	if(e.nade == NULL)
 		return;
 
 	entity _nade = e.nade;
-	e.nade = world;
+	e.nade = NULL;
 
 	remove(e.fake_nade);
-	e.fake_nade = world;
+	e.fake_nade = NULL;
 
 	makevectors(e.v_angle);
 
@@ -836,7 +836,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 
 	setorigin(_nade, w_shotorg + offset + (v_right * 25) * -1);
 	//setmodel(_nade, MDL_PROJECTILE_NADE);
-	//setattachment(_nade, world, "");
+	//setattachment(_nade, NULL, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	if(STAT(NADES_SMALL, e))
 		setsize(_nade, '-8 -8 -8', '8 8 8');
@@ -867,7 +867,7 @@ void toss_nade(entity e, bool set_owner, vector _velocity, float _time)
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	setcefc(_nade, func_null);
-	_nade.exteriormodeltoclient = world;
+	_nade.exteriormodeltoclient = NULL;
 	_nade.traileffectnum = 0;
 	_nade.teleportable = true;
 	_nade.pushable = true;
@@ -1088,7 +1088,7 @@ void nades_Clear(entity player)
 	if(player.fake_nade)
 		remove(player.fake_nade);
 
-	player.nade = player.fake_nade = world;
+	player.nade = player.fake_nade = NULL;
 	player.nade_timer = 0;
 }
 
@@ -1197,7 +1197,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerPreThink)
 	}
 
 	float n = 0;
-	entity o = world;
+	entity o = NULL;
 	if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 		n = -1;
 	else
@@ -1263,7 +1263,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerSpawn)
 		if(player.nade_spawnloc.cnt <= 0)
 		{
 			remove(player.nade_spawnloc);
-			player.nade_spawnloc = world;
+			player.nade_spawnloc = NULL;
 		}
 	}
 }
@@ -1321,7 +1321,7 @@ MUTATOR_HOOKFUNCTION(nades, PlayerDamage_Calculate)
 		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		M_ARGV(4, float) = 0;
 		M_ARGV(6, vector) = '0 0 0';
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 	}
 }

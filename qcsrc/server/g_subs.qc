@@ -212,12 +212,12 @@ vector findbetterlocation (vector org, float mindist)
 	c = 0;
 	while (c < 6)
 	{
-		traceline (org, org + vec, true, world);
+		traceline (org, org + vec, true, NULL);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
 			loc = trace_endpos;
-			traceline (loc, loc + vec, true, world);
+			traceline (loc, loc + vec, true, NULL);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
@@ -277,7 +277,7 @@ void LODmodel_attach(entity this)
 
 	if(this.lodtarget1 != "")
 	{
-		e = find(world, targetname, this.lodtarget1);
+		e = find(NULL, targetname, this.lodtarget1);
 		if(e)
 		{
 			this.lodmodel1 = e.model;
@@ -286,7 +286,7 @@ void LODmodel_attach(entity this)
 	}
 	if(this.lodtarget2 != "")
 	{
-		e = find(world, targetname, this.lodtarget2);
+		e = find(NULL, targetname, this.lodtarget2);
 		if(e)
 		{
 			this.lodmodel2 = e.model;

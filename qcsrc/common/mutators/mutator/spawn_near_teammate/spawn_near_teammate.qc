@@ -25,7 +25,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
 		return;
 
-	spawn_spot.msnt_lookat = world;
+	spawn_spot.msnt_lookat = NULL;
 
 	if(!teamplay)
 		return;
@@ -79,7 +79,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			player.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 
-		entity best_mate = world;
+		entity best_mate = NULL;
 		vector best_spot = '0 0 0';
 		float pc = 0, best_dist = 0, dist = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(

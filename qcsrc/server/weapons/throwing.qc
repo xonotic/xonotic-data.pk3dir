@@ -20,7 +20,7 @@ void thrown_wep_think(entity this)
 		this.SendFlags |= ISF_LOCATION;
 		this.oldorigin = this.origin;
 	}
-	this.owner = world;
+	this.owner = NULL;
 	float timeleft = this.savenextthink - time;
 	if(timeleft > 1)
 		SUB_SetFade(this, this.savenextthink - 1, 1);

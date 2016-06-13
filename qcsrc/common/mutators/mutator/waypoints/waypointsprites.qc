@@ -880,7 +880,7 @@ void WaypointSprite_Init()
 void WaypointSprite_Kill(entity wp)
 {
     if (!wp) return;
-    if (wp.owner) wp.owner.(wp.owned_by_field) = world;
+    if (wp.owner) wp.owner.(wp.owned_by_field) = NULL;
     remove(wp);
 }
 
@@ -895,9 +895,9 @@ void WaypointSprite_Disown(entity wp, float fadetime)
     if (wp.owner)
     {
         if (wp.exteriormodeltoclient == wp.owner)
-            wp.exteriormodeltoclient = world;
-        wp.owner.(wp.owned_by_field) = world;
-        wp.owner = world;
+            wp.exteriormodeltoclient = NULL;
+        wp.owner.(wp.owned_by_field) = NULL;
+        wp.owner = NULL;
 
         WaypointSprite_FadeOutIn(wp, fadetime);
     }
@@ -951,7 +951,7 @@ entity WaypointSprite_getviewentity(entity e)
     if (IS_SPEC(e)) e = e.enemy;
     /* TODO idea (check this breaks nothing)
     else if (e.classname == "observer")
-        e = world;
+        e = NULL;
     */
     return e;
 }
@@ -1039,7 +1039,7 @@ entity WaypointSprite_SpawnFixed(
     entity icon // initial icon
 )
 {
-    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, true, icon);
+    return WaypointSprite_Spawn(spr, 0, 0, NULL, ofs, NULL, 0, own, ownfield, true, icon);
 }
 
 entity WaypointSprite_DeployFixed(
@@ -1060,7 +1060,7 @@ entity WaypointSprite_DeployFixed(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, player, waypointsprite_deployed_fixed, false, icon);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, NULL, ofs, NULL, t, player, waypointsprite_deployed_fixed, false, icon);
 }
 
 entity WaypointSprite_DeployPersonal(
@@ -1070,7 +1070,7 @@ entity WaypointSprite_DeployPersonal(
     entity icon // initial icon
 )
 {
-    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, player, waypointsprite_deployed_personal, false, icon);
+    return WaypointSprite_Spawn(spr, 0, 0, NULL, ofs, NULL, 0, player, waypointsprite_deployed_personal, false, icon);
 }
 
 entity WaypointSprite_Attach(
@@ -1082,7 +1082,7 @@ entity WaypointSprite_Attach(
 {
     float t;
     if (player.waypointsprite_attachedforcarrier)
-        return world; // can't attach to FC
+        return NULL; // can't attach to FC
     if (teamplay)
         t = player.team;
     else
@@ -1092,7 +1092,7 @@ entity WaypointSprite_Attach(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, player, '0 0 64', world, t, player, waypointsprite_attached, false, icon);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, player, '0 0 64', NULL, t, player, waypointsprite_attached, false, icon);
 }
 
 entity WaypointSprite_AttachCarrier(
@@ -1102,7 +1102,7 @@ entity WaypointSprite_AttachCarrier(
 )
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
+    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', NULL, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
     if (carrier.health)
     {
         WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);

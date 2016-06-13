@@ -152,7 +152,7 @@ void trigger_push_touch(entity this)
 	{
 		entity e;
 		RandomSelection_Init();
-		for(e = world; (e = find(e, targetname, this.target)); )
+		for(e = NULL; (e = find(e, targetname, this.target)); )
 		{
 			if(e.cnt)
 				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
@@ -285,7 +285,7 @@ void trigger_push_findtarget(entity this)
 	if (this.target)
 	{
 		float n = 0;
-		for(t = world; (t = find(t, targetname, this.target)); )
+		for(t = NULL; (t = find(t, targetname, this.target)); )
 		{
 			++n;
 #ifdef SVQC
@@ -311,12 +311,12 @@ void trigger_push_findtarget(entity this)
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			this.enemy = find(world, targetname, this.target);
+			this.enemy = find(NULL, targetname, this.target);
 		}
 		else
 		{
 			// have to use random selection every single time
-			this.enemy = world;
+			this.enemy = NULL;
 		}
 	}
 #ifdef SVQC

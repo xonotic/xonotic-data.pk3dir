@@ -2,8 +2,8 @@
 
 void player_clear_minigame(entity player)
 {
-	player.active_minigame = world;
-	player.minigame_players = world;
+	player.active_minigame = NULL;
+	player.minigame_players = NULL;
 	if ( IS_PLAYER(player) )
 		player.movetype = MOVETYPE_WALK;
 	else
@@ -18,7 +18,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 
 	if ( p.minigame_players == player )
 	{
-		if ( p.list_next == world )
+		if ( p.list_next == NULL )
 		{
 			end_minigame(minigame_session);
 			return;
@@ -32,7 +32,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 	}
 	else
 	{
-		for ( e = p.list_next; e != world; e = e.list_next )
+		for ( e = p.list_next; e != NULL; e = e.list_next )
 		{
 			if ( e.minigame_players == player )
 			{
@@ -105,7 +105,7 @@ bool minigame_SendEntity(entity this, entity to, int sf)
 void minigame_resend(entity minigame)
 {
 	minigame.SendFlags = MINIG_SF_ALL;
-	entity e = world;
+	entity e = NULL;
 	while (( e = findentity(e,owner,minigame) ))
 	{
 		e.SendFlags = MINIG_SF_ALL;
@@ -115,7 +115,7 @@ void minigame_resend(entity minigame)
 bool minigame_CheckSend(entity this)
 {
 	entity e;
-	for ( e = this.owner.minigame_players; e != world; e = e.list_next )
+	for ( e = this.owner.minigame_players; e != NULL; e = e.list_next )
 		if ( e.minigame_players == other )
 			return true;
 	return false;
@@ -163,7 +163,7 @@ int minigame_addplayer(entity minigame_session, entity player)
 entity start_minigame(entity player, string minigame )
 {
 	if ( !autocvar_sv_minigames || !IS_REAL_CLIENT(player) )
-		return world;
+		return NULL;
 
 	entity e = minigame_get_descriptor(minigame);
 	if ( e )
@@ -178,7 +178,7 @@ entity start_minigame(entity player, string minigame )
 		{
 			LOG_TRACE("Minigame ",minig.netname," rejected the first player join!\n");
 			end_minigame(minig);
-			return world;
+			return NULL;
 		}
 		Net_LinkEntity(minig, false, 0, minigame_SendEntity);
 
@@ -193,23 +193,23 @@ entity start_minigame(entity player, string minigame )
 		return minig;
 	}
 
-	return world;
+	return NULL;
 }
 
 entity join_minigame(entity player, string game_id )
 {
 	if ( !autocvar_sv_minigames || !IS_REAL_CLIENT(player) )
-		return world;
+		return NULL;
 
 	entity minig;
-	for ( minig = minigame_sessions; minig != world; minig = minig.list_next )
+	for ( minig = minigame_sessions; minig != NULL; minig = minig.list_next )
 	{
 		if ( minig.netname == game_id )
 		if ( minigame_addplayer(minig,player) )
 			return minig;
 	}
 
-	return world;
+	return NULL;
 }
 
 void part_minigame(entity player )
@@ -231,7 +231,7 @@ void end_minigame(entity minigame_session)
 	GameLogEcho(strcat(":minigame:end:",minigame_session.netname));
 
 
-	entity e = world;
+	entity e = NULL;
 	while( (e = findentity(e, owner, minigame_session)) )
 		if ( e.minigame_autoclean )
 		{
@@ -240,7 +240,7 @@ void end_minigame(entity minigame_session)
 		}
 
 	entity p;
-	for ( e = minigame_session.minigame_players; e != world; e = p )
+	for ( e = minigame_session.minigame_players; e != NULL; e = p )
 	{
 		p = e.list_next;
 		player_clear_minigame(e.minigame_players);
@@ -282,12 +282,12 @@ string invite_minigame(entity inviter, entity player)
 entity minigame_find_player(entity client)
 {
 	if ( ! client.active_minigame )
-		return world;
+		return NULL;
 	entity e;
 	for ( e = client.active_minigame.minigame_players; e; e = e.list_next )
 		if ( e.minigame_players == client )
 			return e;
-	return world;
+	return NULL;
 }
 
 bool MinigameImpulse(entity this, int imp)
@@ -343,7 +343,7 @@ void ClientCommand_minigame(entity caller, int request, int argc, string command
 		else if ( minig_cmd == "list-sessions" )
 		{
 			entity e;
-			for ( e = minigame_sessions; e != world; e = e.list_next )
+			for ( e = minigame_sessions; e != NULL; e = e.list_next )
 				sprint(caller,e.netname,"\n");
 			return;
 		}

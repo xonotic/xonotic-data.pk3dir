@@ -264,7 +264,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	{
 		oldrec = race_readTime(GetMapname(), player_prevpos);
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
 		return;
 	}
 	else if (!newpos)
@@ -272,7 +272,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 		// no ranking, time worse than the worst ranked
 		oldrec = race_readTime(GetMapname(), RANKINGS_CNT);
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
 		return;
 	}
 
@@ -281,7 +281,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	// if the player does not have a UID we can unfortunately not store the record, as the rankings system relies on UIDs
 	if(myuid == "")
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_MISSING_UID, mynetname, t);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_MISSING_UID, mynetname, t);
 		return;
 	}
 
@@ -304,19 +304,19 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 
 	if(newpos == player_prevpos)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_IMPROVED, mynetname, newpos, t, oldrec);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_IMPROVED, mynetname, newpos, t, oldrec);
 		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
 		else { race_SendStatus(1, e); } // "new time"
 	}
 	else if(oldrec == 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_SET, mynetname, newpos, t);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_SET, mynetname, newpos, t);
 		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
 		else { race_SendStatus(2, e); } // "new rank"
 	}
 	else
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_BROKEN, mynetname, oldrec_holder, newpos, t, oldrec);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_NEW_BROKEN, mynetname, oldrec_holder, newpos, t, oldrec);
 		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
 		else { race_SendStatus(2, e); } // "new rank"
 	}
@@ -394,7 +394,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			{
 				e.race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FINISHED, e.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_FINISHED, e.netname);
 				ClientData_Touch(e);
 			}
 		}
@@ -525,7 +525,7 @@ void race_ClearTime(entity e)
 	e.race_laptime = 0;
 	e.race_movetime = e.race_movetime_frac = e.race_movetime_count = 0;
 	e.race_penalty_accumulator = 0;
-	e.race_lastpenalty = world;
+	e.race_lastpenalty = NULL;
 
 	if(!IS_REAL_CLIENT(e))
 		return;
@@ -604,18 +604,18 @@ void checkpoint_passed(entity this, entity player)
 
 		float largest_cp_id = 0;
 		float cp_amount = 0;
-		for(cp = world; (cp = find(cp, classname, "target_checkpoint"));)
+		for(cp = NULL; (cp = find(cp, classname, "target_checkpoint"));)
 		{
 			cp_amount += 1;
 			if(cp.race_checkpoint > largest_cp_id) // update the finish id if someone hit a new checkpoint
 			{
 				largest_cp_id = cp.race_checkpoint;
-				for(cp = world; (cp = find(cp, classname, "target_stopTimer"));)
+				for(cp = NULL; (cp = find(cp, classname, "target_stopTimer"));)
 					cp.race_checkpoint = largest_cp_id + 1; // finish line
 				race_highest_checkpoint = largest_cp_id + 1;
 				race_timed_checkpoint = largest_cp_id + 1;
 
-				for(cp = world; (cp = find(cp, classname, "target_checkpoint"));)
+				for(cp = NULL; (cp = find(cp, classname, "target_checkpoint"));)
 				{
 					if(cp.race_checkpoint == -2) // set defragcpexists to -1 so that the cp id file will be rewritten when someone finishes
 						defragcpexists = -1;
@@ -624,7 +624,7 @@ void checkpoint_passed(entity this, entity player)
 		}
 		if(cp_amount == 0)
 		{
-			for(cp = world; (cp = find(cp, classname, "target_stopTimer"));)
+			for(cp = NULL; (cp = find(cp, classname, "target_stopTimer"));)
 				cp.race_checkpoint = 1;
 			race_highest_checkpoint = 1;
 			race_timed_checkpoint = 1;
@@ -669,7 +669,7 @@ void checkpoint_passed(entity this, entity player)
 			player.race_laptime = time;
 			player.race_movetime = player.race_movetime_frac = player.race_movetime_count = 0;
 			player.race_penalty_accumulator = 0;
-			player.race_lastpenalty = world;
+			player.race_lastpenalty = NULL;
 		}
 
 		if(g_race_qualifying)
@@ -681,7 +681,7 @@ void checkpoint_passed(entity this, entity player)
 			defragcpexists = fh = fopen(strcat("maps/", GetMapname(), ".defragcp"), FILE_WRITE);
 			if(fh >= 0)
 			{
-				for(cp = world; (cp = find(cp, classname, "target_checkpoint"));)
+				for(cp = NULL; (cp = find(cp, classname, "target_checkpoint"));)
 				fputs(fh, strcat(cp.targetname, " ", ftos(cp.race_checkpoint), "\n"));
 			}
 			fclose(fh);
@@ -788,7 +788,7 @@ void trigger_race_checkpoint_verify(entity this)
 					defragcpexists = -1; // something's wrong in the defrag cp file, set defragcpexists to -1 so that it will be rewritten when someone finishes
 					continue;
 				}
-				for (entity cp = world; (cp = find(cp, classname, "target_checkpoint"));) {
+				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
 					if (argv(0) == cp.targetname) {
 						cp.race_checkpoint = stof(argv(1));
                     }
@@ -802,38 +802,38 @@ void trigger_race_checkpoint_verify(entity this)
 
 	if (race_timed_checkpoint) {
 		if (defrag_ents) {
-			for (entity cp = world; (cp = find(cp, classname, "target_startTimer"));) {
+			for (entity cp = NULL; (cp = find(cp, classname, "target_startTimer"));) {
 				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
             }
-			for (entity cp = world; (cp = find(cp, classname, "target_stopTimer"));) {
+			for (entity cp = NULL; (cp = find(cp, classname, "target_stopTimer"));) {
 				WaypointSprite_UpdateSprites(cp.sprite, WP_RaceFinish, WP_Null, WP_Null);
             }
-			for (entity cp = world; (cp = find(cp, classname, "target_checkpoint"));) {
+			for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
 				if (cp.race_checkpoint == -2) { // something's wrong with the defrag cp file or it has not been written yet, set defragcpexists to -1 so that it will be rewritten when someone finishes
 					defragcpexists = -1;
                 }
 			}
 			if (defragcpexists != -1) {
 				float largest_cp_id = 0;
-				for (entity cp = world; (cp = find(cp, classname, "target_checkpoint"));) {
+				for (entity cp = NULL; (cp = find(cp, classname, "target_checkpoint"));) {
 					if (cp.race_checkpoint > largest_cp_id) {
 						largest_cp_id = cp.race_checkpoint;
                     }
                 }
-				for (entity cp = world; (cp = find(cp, classname, "target_stopTimer"));) {
+				for (entity cp = NULL; (cp = find(cp, classname, "target_stopTimer"));) {
 					cp.race_checkpoint = largest_cp_id + 1; // finish line
                 }
 				race_highest_checkpoint = largest_cp_id + 1;
 				race_timed_checkpoint = largest_cp_id + 1;
 			} else {
-				for (entity cp = world; (cp = find(cp, classname, "target_stopTimer"));) {
+				for (entity cp = NULL; (cp = find(cp, classname, "target_stopTimer"));) {
 					cp.race_checkpoint = 255; // finish line
                 }
 				race_highest_checkpoint = 255;
 				race_timed_checkpoint = 255;
 			}
 		} else {
-			for (entity cp = world; (cp = find(cp, classname, "trigger_race_checkpoint")); ) {
+			for (entity cp = NULL; (cp = find(cp, classname, "trigger_race_checkpoint")); ) {
 				if (cp.sprite) {
 					if (cp.race_checkpoint == 0) {
 						WaypointSprite_UpdateSprites(cp.sprite, WP_RaceStart, WP_Null, WP_Null);
@@ -846,8 +846,8 @@ void trigger_race_checkpoint_verify(entity this)
 	}
 
 	if (defrag_ents) {
-		for (entity trigger = world; (trigger = find(trigger, classname, "trigger_multiple")); ) {
-			for (entity targ = world; (targ = find(targ, targetname, trigger.target)); ) {
+		for (entity trigger = NULL; (trigger = find(trigger, classname, "trigger_multiple")); ) {
+			for (entity targ = NULL; (targ = find(targ, targetname, trigger.target)); ) {
 				if (targ.classname == "target_checkpoint" || targ.classname == "target_startTimer" || targ.classname == "target_stopTimer") {
 					trigger.wait = 0;
 					trigger.delay = 0;
@@ -1000,7 +1000,7 @@ void race_AbandonRaceCheck(entity p)
 	{
 		p.race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
 		ClientData_Touch(p);
 	}
 }
@@ -1017,7 +1017,7 @@ void race_PreparePlayer(entity this)
 	this.race_place = 0;
 	this.race_started = 0;
 	this.race_respawn_checkpoint = 0;
-	this.race_respawn_spotref = world;
+	this.race_respawn_spotref = NULL;
 }
 
 void race_RetractPlayer(entity this)
@@ -1154,7 +1154,7 @@ float race_GetFractionalLapCount(entity e)
 		return l; // finish
 
 	bestfraction = 1;
-	for(cp0 = world; (cp0 = find(cp0, classname, "trigger_race_checkpoint")); )
+	for(cp0 = NULL; (cp0 = find(cp0, classname, "trigger_race_checkpoint")); )
 	{
 		if(cp0.race_checkpoint != lastcpindex)
 			continue;
@@ -1162,7 +1162,7 @@ float race_GetFractionalLapCount(entity e)
 			if(cp0 != lastcp)
 				continue;
 		o0 = (cp0.absmin + cp0.absmax) * 0.5;
-		for(cp1 = world; (cp1 = find(cp1, classname, "trigger_race_checkpoint")); )
+		for(cp1 = NULL; (cp1 = find(cp1, classname, "trigger_race_checkpoint")); )
 		{
 			if(cp1.race_checkpoint != nextcpindex)
 				continue;

@@ -148,7 +148,7 @@ void _Movetype_Physics_Pusher(entity this, float dt)  // SV_Physics_Pusher
 	{
 		this.move_nextthink = 0;
 		this.move_time = time;
-		other = world;
+		other = NULL;
 		this.move_think(this);
 	}
 }

@@ -18,7 +18,7 @@
 entity waypoint_spawn(vector m1, vector m2, float f)
 {
 	entity w;
-	w = find(world, classname, "waypoint");
+	w = find(NULL, classname, "waypoint");
 
 	if (!(f & WAYPOINTFLAG_PERSONAL))
 	while (w)
@@ -47,7 +47,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 			{
 				LOG_TRACE("Killed a waypoint that was stuck in solid at ", vtos(w.origin), "\n");
 				remove(w);
-				return world;
+				return NULL;
 			}
 			else
 			{
@@ -175,7 +175,7 @@ void waypoint_think(entity this)
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
 	sm1 = this.origin + this.mins;
 	sm2 = this.origin + this.maxs;
-	for(e = world; (e = find(e, classname, "waypoint")); )
+	for(e = NULL; (e = find(e, classname, "waypoint")); )
 	{
 		if (boxesoverlap(this.absmin, this.absmax, e.absmin, e.absmax))
 		{
@@ -226,7 +226,7 @@ void waypoint_think(entity this)
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			//traceline(this.origin, e.origin, false, world);
+			//traceline(this.origin, e.origin, false, NULL);
 			//if (trace_fraction == 1)
 			if (!this.wpisbox && tracewalk(this, sv, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, MOVE_NOMONSTERS))
 				waypoint_addlink(this, e);
@@ -247,10 +247,10 @@ void waypoint_clearlinks(entity wp)
 	// clear links to other waypoints
 	float f;
 	f = 10000000;
-	wp.wp00 = wp.wp01 = wp.wp02 = wp.wp03 = wp.wp04 = wp.wp05 = wp.wp06 = wp.wp07 = world;
-	wp.wp08 = wp.wp09 = wp.wp10 = wp.wp11 = wp.wp12 = wp.wp13 = wp.wp14 = wp.wp15 = world;
-	wp.wp16 = wp.wp17 = wp.wp18 = wp.wp19 = wp.wp20 = wp.wp21 = wp.wp22 = wp.wp23 = world;
-	wp.wp24 = wp.wp25 = wp.wp26 = wp.wp27 = wp.wp28 = wp.wp29 = wp.wp30 = wp.wp31 = world;
+	wp.wp00 = wp.wp01 = wp.wp02 = wp.wp03 = wp.wp04 = wp.wp05 = wp.wp06 = wp.wp07 = NULL;
+	wp.wp08 = wp.wp09 = wp.wp10 = wp.wp11 = wp.wp12 = wp.wp13 = wp.wp14 = wp.wp15 = NULL;
+	wp.wp16 = wp.wp17 = wp.wp18 = wp.wp19 = wp.wp20 = wp.wp21 = wp.wp22 = wp.wp23 = NULL;
+	wp.wp24 = wp.wp25 = wp.wp26 = wp.wp27 = wp.wp28 = wp.wp29 = wp.wp30 = wp.wp31 = NULL;
 
 	wp.wp00mincost = wp.wp01mincost = wp.wp02mincost = wp.wp03mincost = wp.wp04mincost = wp.wp05mincost = wp.wp06mincost = wp.wp07mincost = f;
 	wp.wp08mincost = wp.wp09mincost = wp.wp10mincost = wp.wp11mincost = wp.wp12mincost = wp.wp13mincost = wp.wp14mincost = wp.wp15mincost = f;
@@ -263,7 +263,7 @@ void waypoint_clearlinks(entity wp)
 // tell a spawnfunc_waypoint to relink
 void waypoint_schedulerelink(entity wp)
 {
-	if (wp == world)
+	if (wp == NULL)
 		return;
 	// TODO: add some sort of visible box in edit mode for box waypoints
 	if (autocvar_g_waypointeditor)
@@ -283,9 +283,9 @@ void waypoint_schedulerelink(entity wp)
 	else
 		wp.model = "";
 	wp.wpisbox = vlen(wp.size) > 0;
-	wp.enemy = world;
+	wp.enemy = NULL;
 	if (!(wp.wpflags & WAYPOINTFLAG_PERSONAL))
-		wp.owner = world;
+		wp.owner = NULL;
 	if (!(wp.wpflags & WAYPOINTFLAG_NORELINK))
 		waypoint_clearlinks(wp);
 	// schedule an actual relink on next frame
@@ -375,7 +375,7 @@ float waypoint_load_links()
 {
 	string filename, s;
 	float file, tokens, c = 0, found;
-	entity wp_from = world, wp_to;
+	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.cache");
@@ -463,7 +463,7 @@ void waypoint_load_links_hardwired()
 {
 	string filename, s;
 	float file, tokens, c = 0, found;
-	entity wp_from = world, wp_to;
+	entity wp_from = NULL, wp_to;
 	vector wp_to_pos, wp_from_pos;
 	filename = strcat("maps/", mapname);
 	filename = strcat(filename, ".waypoints.hardwired");
@@ -583,7 +583,7 @@ entity waypoint_get_link(entity w, float i)
 		case 29:return w.wp29;
 		case 30:return w.wp30;
 		case 31:return w.wp31;
-		default:return world;
+		default:return NULL;
 	}
 }
 
@@ -610,7 +610,7 @@ void waypoint_save_links()
 		{
 			// :S
 			link = waypoint_get_link(w, i);
-			if(link==world)
+			if(link==NULL)
 				continue;
 
 			s = strcat(vtos(w.origin), "*", vtos(link.origin), "\n");
@@ -715,10 +715,10 @@ float waypoint_loadall()
 
 vector waypoint_fixorigin(vector position)
 {
-	tracebox(position + '0 0 1' * (1 - STAT(PL_MIN, NULL).z), STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), position + '0 0 -512', MOVE_NOMONSTERS, world);
+	tracebox(position + '0 0 1' * (1 - STAT(PL_MIN, NULL).z), STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), position + '0 0 -512', MOVE_NOMONSTERS, NULL);
 	if(trace_fraction < 1)
 		position = trace_endpos;
-	//traceline(position, position + '0 0 -512', MOVE_NOMONSTERS, world);
+	//traceline(position, position + '0 0 -512', MOVE_NOMONSTERS, NULL);
 	//print("position is ", ftos(trace_endpos_z - position_z), " above solid\n");
 	return position;
 }
@@ -801,7 +801,7 @@ entity waypoint_spawnpersonal(entity this, vector position)
 	position = waypoint_fixorigin(position);
 
 	w = waypoint_spawn(position, position, WAYPOINTFLAG_GENERATED | WAYPOINTFLAG_PERSONAL);
-	w.nearestwaypoint = world;
+	w.nearestwaypoint = NULL;
 	w.nearestwaypointtimeout = 0;
 	w.owner = this;
 
@@ -825,39 +825,39 @@ void botframe_showwaypointlinks()
 			//navigation_testtracewalk = false;
 			if (head)
 			{
-				w = head     ;if (w) te_lightning2(world, w.origin, it.origin);
-				w = head.wp00;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp01;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp02;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp03;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp04;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp05;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp06;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp07;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp08;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp09;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp10;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp11;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp12;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp13;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp14;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp15;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp16;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp17;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp18;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp19;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp20;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp21;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp22;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp23;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp24;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp25;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp26;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp27;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp28;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp29;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp30;if (w) te_lightning2(world, w.origin, head.origin);
-				w = head.wp31;if (w) te_lightning2(world, w.origin, head.origin);
+				w = head     ;if (w) te_lightning2(NULL, w.origin, it.origin);
+				w = head.wp00;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp01;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp02;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp03;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp04;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp05;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp06;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp07;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp08;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp09;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp10;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp11;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp12;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp13;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp14;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp15;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp16;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp17;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp18;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp19;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp20;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp21;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp22;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp23;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp24;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp25;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp26;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp27;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp28;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp29;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp30;if (w) te_lightning2(NULL, w.origin, head.origin);
+				w = head.wp31;if (w) te_lightning2(NULL, w.origin, head.origin);
 			}
 		}
 	));
@@ -865,7 +865,7 @@ void botframe_showwaypointlinks()
 
 float botframe_autowaypoints_fixdown(vector v)
 {
-	tracebox(v, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v + '0 0 -64', MOVE_NOMONSTERS, world);
+	tracebox(v, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), v + '0 0 -64', MOVE_NOMONSTERS, NULL);
 	if(trace_fraction >= 1)
 		return 0;
 	return 1;
@@ -875,7 +875,7 @@ float botframe_autowaypoints_createwp(vector v, entity p, .entity fld, float f)
 {
 	entity w;
 
-	w = find(world, classname, "waypoint");
+	w = find(NULL, classname, "waypoint");
 	while (w)
 	{
 		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
@@ -897,7 +897,7 @@ float botframe_autowaypoints_createwp(vector v, entity p, .entity fld, float f)
 float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .entity fld)
 {
 	// make it possible to go from p to wp, if we can
-	// if wp is world, nearest is chosen
+	// if wp is NULL, nearest is chosen
 
 	entity w;
 	vector porg;
@@ -928,7 +928,7 @@ float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .en
 
 		float bestdist;
 		bestdist = maxdist;
-		w = find(world, classname, "waypoint");
+		w = find(NULL, classname, "waypoint");
 		while (w)
 		{
 			if(w != wp && !(w.wpflags & WAYPOINTFLAG_NORELINK))
@@ -1038,7 +1038,7 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 	float r = botframe_autowaypoints_fix_from(p, walkfromwp, p.(fld), fld);
 	if(r != -1)
 		return;
-	r = botframe_autowaypoints_fix_from(p, walkfromwp, world, fld);
+	r = botframe_autowaypoints_fix_from(p, walkfromwp, NULL, fld);
 	if(r != -1)
 		return;
 
@@ -1052,14 +1052,14 @@ void botframe_deleteuselesswaypoints()
 {
 	entity w, w1, w2;
 	float i, j, k;
-	for (w = world; (w = findfloat(w, bot_pickup, true)); )
+	for (w = NULL; (w = findfloat(w, bot_pickup, true)); )
 	{
 		// NOTE: this protects waypoints if they're the ONLY nearest
 		// waypoint. That's the intention.
 		navigation_findnearestwaypoint(w, false);  // Walk TO item.
 		navigation_findnearestwaypoint(w, true);  // Walk FROM item.
 	}
-	for (w = world; (w = find(w, classname, "waypoint")); )
+	for (w = NULL; (w = find(w, classname, "waypoint")); )
 	{
 		w.wpflags |= WAYPOINTFLAG_DEAD_END;
 		w.wpflags &= ~WAYPOINTFLAG_USEFUL;
@@ -1074,7 +1074,7 @@ void botframe_deleteuselesswaypoints()
 		//    This has been done above by protecting these WPs.
 	}
 	// c) There are w1, w, w2 so that w1 -> w, w -> w2 and not w1 -> w2.
-	for (w1 = world; (w1 = find(w1, classname, "waypoint")); )
+	for (w1 = NULL; (w1 = find(w1, classname, "waypoint")); )
 	{
 		if (w1.wpflags & WAYPOINTFLAG_PERSONAL)
 			continue;
@@ -1116,7 +1116,7 @@ LABEL(next)
 	// d) The waypoint is a dead end. Dead end waypoints must be kept as
 	//     they are needed to complete routes while autowaypointing.
 
-	for (w = world; (w = find(w, classname, "waypoint")); )
+	for (w = NULL; (w = find(w, classname, "waypoint")); )
 	{
 		if (!(w.wpflags & (WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END)))
 		{
@@ -1126,7 +1126,7 @@ LABEL(next)
 			break;
 		}
 	}
-	for (w = world; (w = find(w, classname, "waypoint")); )
+	for (w = NULL; (w = find(w, classname, "waypoint")); )
 		w.wpflags &= ~(WAYPOINTFLAG_USEFUL | WAYPOINTFLAG_DEAD_END); // temp flag
 }
 

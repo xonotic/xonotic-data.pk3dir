@@ -369,8 +369,8 @@ void Portal_MakeOutPortal(entity portal)
 
 void Portal_Disconnect(entity teleporter, entity destination)
 {
-	teleporter.enemy = world;
-	destination.enemy = world;
+	teleporter.enemy = NULL;
+	destination.enemy = NULL;
 	Portal_MakeBrokenPortal(teleporter);
 	Portal_MakeBrokenPortal(destination);
 }
@@ -407,10 +407,10 @@ void Portal_Remove(entity portal, float killed)
 	}
 
 	if(portal == portal.aiment.portal_in)
-		portal.aiment.portal_in = world;
+		portal.aiment.portal_in = NULL;
 	if(portal == portal.aiment.portal_out)
-		portal.aiment.portal_out = world;
-	//portal.aiment = world;
+		portal.aiment.portal_out = NULL;
+	//portal.aiment = NULL;
 
 	// makes the portal vanish
 	if(killed)
@@ -467,7 +467,7 @@ void Portal_Think(entity this)
 
 	o = this.aiment;
 	this.solid = SOLID_BBOX;
-	this.aiment = world;
+	this.aiment = NULL;
 
 	g = frametime * '0 0 -1' * autocvar_sv_gravity;
 
@@ -621,7 +621,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 
 	fixedmakevectors(ang);
 	if(!CheckWireframeBox(own, org - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
-		return world;
+		return NULL;
 
 	portal = new(portal);
 	portal.aiment = own;
@@ -643,7 +643,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	if(!Portal_FindSafeOrigin(portal))
 	{
 		remove(portal);
-		return world;
+		return NULL;
 	}
 
 	setsize(portal, '-48 -48 -48', '48 48 48');

@@ -96,7 +96,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 				if(!trace_ent)
 				{
 					//dprint("_Movetype_FlyMove: !trace_ent\n");
-					trace_ent = world;
+					trace_ent = NULL;
 				}
 
 				this.move_flags |= FL_ONGROUND;

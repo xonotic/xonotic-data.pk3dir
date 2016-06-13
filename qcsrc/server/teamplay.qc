@@ -77,7 +77,7 @@ void InitGameplayMode()
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
 
-	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
+	InitializeEntity(NULL, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
 
 string GetClientVersionMessage(entity this)
@@ -230,7 +230,7 @@ void CheckAllowedTeams (entity for_whom)
 	// find out what teams are allowed if necessary
 	if(teament_name)
 	{
-		entity head = find(world, classname, teament_name);
+		entity head = find(NULL, classname, teament_name);
 		while(head)
 		{
 			switch(head.team)
@@ -457,7 +457,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(ignore_pl)
 		GetTeamCounts(pl);
 	else
-		GetTeamCounts(world);
+		GetTeamCounts(NULL);
 
 	RandomSelection_Init();
 
@@ -471,13 +471,13 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	// now t is the minimum, or A minimum!
 	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
-		RandomSelection_Add(world, 1, string_null, 1, 1);
+		RandomSelection_Add(NULL, 1, string_null, 1, 1);
 	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
-		RandomSelection_Add(world, 2, string_null, 1, 1);
+		RandomSelection_Add(NULL, 2, string_null, 1, 1);
 	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
-		RandomSelection_Add(world, 3, string_null, 1, 1);
+		RandomSelection_Add(NULL, 3, string_null, 1, 1);
 	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
-		RandomSelection_Add(world, 4, string_null, 1, 1);
+		RandomSelection_Add(NULL, 4, string_null, 1, 1);
 
 	return RandomSelection_chosen_float;
 }
@@ -570,7 +570,7 @@ void SV_ChangeTeam(float _color)
 	if(!IS_CLIENT(this))
 	{
 		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, this.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
 		return;
 	}
 
@@ -693,9 +693,9 @@ void ShufflePlayerOutOfTeam (float source_team)
 	else // if(source_team == 4)
 		steam = NUM_TEAM_4;
 
-	lowest_bot = world;
+	lowest_bot = NULL;
 	lowest_bot_score = 999999999;
-	lowest_player = world;
+	lowest_player = NULL;
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
@@ -719,7 +719,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	));
 
 	// prefers to move a bot...
-	if(lowest_bot != world)
+	if(lowest_bot != NULL)
 		selected = lowest_bot;
 	// but it will move a player if it has to
 	else

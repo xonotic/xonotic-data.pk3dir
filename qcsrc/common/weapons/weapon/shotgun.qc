@@ -127,7 +127,7 @@ void W_Shotgun_Melee_Think(entity this)
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));

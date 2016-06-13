@@ -11,8 +11,8 @@ void conveyor_think(entity this)
 	entity e;
 
 	// set mythis as current conveyor where possible
-	for(e = world; (e = findentity(e, conveyor, this)); )
-		e.conveyor = world;
+	for(e = NULL; (e = findentity(e, conveyor, this)); )
+		e.conveyor = NULL;
 
 	if(this.state)
 	{
@@ -32,7 +32,7 @@ void conveyor_think(entity this)
 							e.conveyor = this;
 				}
 
-		for(e = world; (e = findentity(e, conveyor, this)); )
+		for(e = NULL; (e = findentity(e, conveyor, this)); )
 		{
 			if(IS_CLIENT(e)) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics	continue;
