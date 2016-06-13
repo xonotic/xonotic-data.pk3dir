@@ -1,8 +1,9 @@
 #ifdef IMPLEMENTATION
 
 AUTOCVAR(g_globalforces, float, false, "Global forces: knockback affects everyone");
-AUTOCVAR(g_globalforces_noself, bool, false, "Global forces: ignore self damage");
-AUTOCVAR(g_globalforces_range, float, 0, "Global forces: max range of effect");
+AUTOCVAR(g_globalforces_noself, bool, true, "Global forces: ignore self damage");
+AUTOCVAR(g_globalforces_self, float, 1, "Global forces: knockback self scale");
+AUTOCVAR(g_globalforces_range, float, 1000, "Global forces: max range of effect");
 REGISTER_MUTATOR(mutator_globalforces, autocvar_g_globalforces);
 
 MUTATOR_HOOKFUNCTION(mutator_globalforces, BuildMutatorsString) {
@@ -24,7 +25,8 @@ MUTATOR_HOOKFUNCTION(mutator_globalforces, PlayerDamage_SplitHealthArmor) {
                 continue;
             }
         }
-        it.velocity += damage_explosion_calcpush(it.damageforcescale * damage_force, it.velocity, autocvar_g_balance_damagepush_speedfactor);
+        float f = (it == frag_attacker) ? autocvar_g_globalforces_self : 1;
+        it.velocity += damage_explosion_calcpush(f * it.damageforcescale * damage_force, it.velocity, autocvar_g_balance_damagepush_speedfactor);
     });
 }
 
