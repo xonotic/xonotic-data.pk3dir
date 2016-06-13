@@ -72,9 +72,9 @@ const float ITEM_RESPAWN_TICKS = 10;
 
 void Item_Show (entity e, float mode);
 
-void Item_Respawn ();
+void Item_Respawn (entity this);
 
-void Item_RespawnCountdown ();
+void Item_RespawnCountdown(entity this);
 void Item_ScheduleRespawnIn(entity e, float t);
 
 void Item_ScheduleRespawn(entity e);
@@ -88,7 +88,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 float Item_GiveTo(entity item, entity player);
 
-void Item_Touch();
+void Item_Touch(entity this);
 
 void Item_Reset(entity this);
 
@@ -113,8 +113,6 @@ float commodity_pickupevalfunc(entity player, entity item);
 .entity itemdef;
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter);
 
-
-void target_items_use ();
 
 float GiveWeapon(entity e, float wpn, float op, float val);
 

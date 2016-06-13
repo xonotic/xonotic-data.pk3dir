@@ -132,7 +132,7 @@ entity GetVoiceMessage(string type);
 			entity VM = def; \
 			int voicetype = VM.m_playersoundvt; \
 			bool ownteam = (voicetype == VOICETYPE_TEAMRADIO); \
-			int flood = Say(this, ownteam, world, msg, true); \
+			int flood = Say(this, ownteam, NULL, msg, true); \
 			bool fake; \
 			if (IS_SPEC(this) || IS_OBSERVER(this) || flood < 0) fake = true; \
 			else if (flood > 0) fake = false; \

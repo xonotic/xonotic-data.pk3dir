@@ -120,8 +120,8 @@ void MapVote_UnzoneStrings()
 	}
 }
 
-string MapVote_Suggest(string m)
-{SELFPARAM();
+string MapVote_Suggest(entity this, string m)
+{
 	float i;
 	if(m == "")
 		return "That's not how to use this command.";
@@ -156,7 +156,7 @@ string MapVote_Suggest(string m)
 		strunzone(mapvote_suggestions[i]);
 	mapvote_suggestions[i] = strzone(m);
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(self.playerid)));
+		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(this.playerid)));
 	return strcat("Suggestion of ", m, " accepted.");
 }
 
@@ -260,9 +260,9 @@ void MapVote_Init()
 	MapVote_Spawn();
 }
 
-void MapVote_SendPicture(float id)
-{SELFPARAM();
-	msg_entity = self;
+void MapVote_SendPicture(entity to, int id)
+{
+	msg_entity = to;
 	WriteHeader(MSG_ONE, TE_CSQC_PICTURE);
 	WriteByte(MSG_ONE, id);
 	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dirs[mapvote_maps_screenshot_dir[id]], "/", mapvote_maps[id]), 3072);
@@ -522,7 +522,7 @@ float MapVote_CheckRules_2()
 	for(i = 0; i < mapvote_count_real; ++i)
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 		{
-			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
+			RandomSelection_Add(NULL, i, string_null, 1, mapvote_selections[i]);
 			if ( gametypevote &&  mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
 			{
 				currentVotes = mapvote_selections[i];
@@ -542,7 +542,7 @@ float MapVote_CheckRules_2()
 	for(i = 0; i < mapvote_count_real; ++i)
 		if(i != firstPlace)
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
-			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
+			RandomSelection_Add(NULL, i, string_null, 1, mapvote_selections[i]);
 	secondPlace = RandomSelection_chosen_float;
 	secondPlaceVotes = RandomSelection_best_priority;
 	//dprint("Second place: ", ftos(secondPlace), "\n");

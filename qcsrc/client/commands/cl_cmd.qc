@@ -92,7 +92,7 @@ void LocalCommand_boxparticles(int request, int argc)
 					if (index <= 0)
 						own = entitybyindex(-index);
 					else
-						own = findfloat(world, entnum, index);
+						own = findfloat(NULL, entnum, index);
 					vector org_from = stov(argv(3));
 					vector org_to = stov(argv(4));
 					vector dir_from = stov(argv(5));
@@ -252,7 +252,7 @@ void QuickMenu_Close();
 bool QuickMenu_Open(string mode, string submenu);
 
 bool HUD_MinigameMenu_IsOpened();
-void HUD_MinigameMenu_Close();
+void HUD_MinigameMenu_Close(entity this, entity actor, entity trigger);
 void HUD_MinigameMenu_Open();
 
 void HUD_Radar_Show_Maximized(bool doshow, bool clickable);

@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "bugrigs.qc"
+#include <common/mutators/mutator/bugrigs/bugrigs.qc>

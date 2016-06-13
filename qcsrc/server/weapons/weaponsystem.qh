@@ -14,15 +14,15 @@ void W_AttachToShotorg(entity actor, entity flash, vector offset);
 
 void W_DecreaseAmmo(Weapon wep, entity actor, float ammo_use);
 
-void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item);
+void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_type, entity weapon_item);
 
 void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound);
 
 void W_WeaponFrame(Player actor);
 
-float W_WeaponRateFactor();
+float W_WeaponRateFactor(entity this);
 
-float W_WeaponSpeedFactor();
+float W_WeaponSpeedFactor(entity this);
 
 bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime);
 

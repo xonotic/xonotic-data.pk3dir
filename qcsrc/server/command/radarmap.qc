@@ -30,7 +30,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 	{
 		++m;
 
-		tracebox(c, mi, ma, b, MOVE_WORLDONLY, world);
+		tracebox(c, mi, ma, b, MOVE_WORLDONLY, NULL);
 		++n;
 
 		if (!trace_startsolid)
@@ -39,7 +39,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 			c = trace_endpos;
 		}
 
-		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, world, false, world);
+		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, NULL, false, NULL);
 
 		white += vlen(trace_endpos - c);
 		c = trace_endpos;
@@ -90,7 +90,7 @@ float RadarMapAtPoint_LineBlock(float x, float y, float w, float h, float zmin, 
 		v2_x += random() * (ma.x - mi.x);
 		v2_y += random() * (ma.y - mi.y);
 		v2_z += random() * (ma.z - mi.z);
-		traceline(v1, v2, MOVE_WORLDONLY, world);
+		traceline(v1, v2, MOVE_WORLDONLY, NULL);
 		if (trace_startsolid || trace_fraction < 1) ++r;
 	}
 	return r / q;
@@ -117,7 +117,7 @@ float RadarMapAtPoint_Block(float x, float y, float w, float h, float zmin, floa
 	r = 0;
 	for (i = 0; i < q; ++i)
 	{
-		tracebox(o + dz * i, mi, ma, o + dz * i, MOVE_WORLDONLY, world);
+		tracebox(o + dz * i, mi, ma, o + dz * i, MOVE_WORLDONLY, NULL);
 		if (trace_startsolid) ++r;
 	}
 	return r / q;
@@ -145,7 +145,7 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 		v.x = a.x + random() * b.x;
 		v.y = a.y + random() * b.y;
 		v.z = a.z + random() * b.z;
-		traceline(v, v, MOVE_WORLDONLY, world);
+		traceline(v, v, MOVE_WORLDONLY, NULL);
 		if (trace_startsolid) ++c;
 	}
 
@@ -208,11 +208,10 @@ void RadarMap_Next()
 		GotoNextMap(0);
 	}
 	remove(radarmapper);
-	radarmapper = world;
+	radarmapper = NULL;
 }
-void RadarMap_Think()
+void RadarMap_Think(entity this)
 {
-	SELFPARAM();
 	// rough map entity
 	//   cnt: current line
 	//   size: pixel width/height
@@ -222,147 +221,147 @@ void RadarMap_Think()
 	float i, x, l;
 	string si;
 
-	if (self.frame == 0)
+	if (this.frame == 0)
 	{
 		// initialize
 		get_mi_min_max_texcoords(1);
-		self.mins = mi_picmin;
-		self.maxs_x = (mi_picmax.x - mi_picmin.x) / self.size.x;
-		self.maxs_y = (mi_picmax.y - mi_picmin.y) / self.size.y;
-		self.maxs_z = mi_max.z - mi_min.z;
-		LOG_INFO("Picture mins/maxs: ", ftos(self.maxs.x), " and ", ftos(self.maxs.y), " should match\n");
-		self.netname = strzone(strcat("gfx/", mi_shortname, "_radar.xpm"));
-		if (!(self.count & 1))
+		this.mins = mi_picmin;
+		this.maxs_x = (mi_picmax.x - mi_picmin.x) / this.size.x;
+		this.maxs_y = (mi_picmax.y - mi_picmin.y) / this.size.y;
+		this.maxs_z = mi_max.z - mi_min.z;
+		LOG_INFO("Picture mins/maxs: ", ftos(this.maxs.x), " and ", ftos(this.maxs.y), " should match\n");
+		this.netname = strzone(strcat("gfx/", mi_shortname, "_radar.xpm"));
+		if (!(this.count & 1))
 		{
-			self.cnt = fopen(self.netname, FILE_READ);
-			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.tga"), FILE_READ);
-			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.png"), FILE_READ);
-			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.jpg"), FILE_READ);
-			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.tga"), FILE_READ);
-			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.png"), FILE_READ);
-			if (self.cnt < 0) self.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.jpg"), FILE_READ);
-			if (self.cnt >= 0)
+			this.cnt = fopen(this.netname, FILE_READ);
+			if (this.cnt < 0) this.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.tga"), FILE_READ);
+			if (this.cnt < 0) this.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.png"), FILE_READ);
+			if (this.cnt < 0) this.cnt = fopen(strcat("gfx/", mi_shortname, "_radar.jpg"), FILE_READ);
+			if (this.cnt < 0) this.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.tga"), FILE_READ);
+			if (this.cnt < 0) this.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.png"), FILE_READ);
+			if (this.cnt < 0) this.cnt = fopen(strcat("gfx/", mi_shortname, "_mini.jpg"), FILE_READ);
+			if (this.cnt >= 0)
 			{
-				fclose(self.cnt);
+				fclose(this.cnt);
 
-				LOG_INFO(self.netname, " already exists, aborting (you may want to specify --force)\n");
+				LOG_INFO(this.netname, " already exists, aborting (you may want to specify --force)\n");
 				RadarMap_Next();
 				return;
 			}
 		}
-		self.cnt = fopen(self.netname, FILE_WRITE);
-		if (self.cnt < 0)
+		this.cnt = fopen(this.netname, FILE_WRITE);
+		if (this.cnt < 0)
 		{
-			LOG_INFO("Error writing ", self.netname, "\n");
-			remove(self);
-			radarmapper = world;
+			LOG_INFO("Error writing ", this.netname, "\n");
+			remove(this);
+			radarmapper = NULL;
 			return;
 		}
-		LOG_INFO("Writing to ", self.netname, "...\n");
-		fputs(self.cnt, "/* XPM */\n");
-		fputs(self.cnt, "static char *RadarMap[] = {\n");
-		fputs(self.cnt, "/* columns rows colors chars-per-pixel */\n");
-		fputs(self.cnt, strcat("\"", ftos(self.size.x), " ", ftos(self.size.y), " 256 2\",\n"));
+		LOG_INFO("Writing to ", this.netname, "...\n");
+		fputs(this.cnt, "/* XPM */\n");
+		fputs(this.cnt, "static char *RadarMap[] = {\n");
+		fputs(this.cnt, "/* columns rows colors chars-per-pixel */\n");
+		fputs(this.cnt, strcat("\"", ftos(this.size.x), " ", ftos(this.size.y), " 256 2\",\n"));
 		for (i = 0; i < 256; ++i)
 		{
 			si = substring(doublehex, i * 2, 2);
-			fputs(self.cnt, strcat("\"", si, " c #", si, si, si, "\",\n"));
+			fputs(this.cnt, strcat("\"", si, " c #", si, si, si, "\",\n"));
 		}
-		self.frame += 1;
-		self.nextthink = time;
-		sharpen_init(self.size.x);
+		this.frame += 1;
+		this.nextthink = time;
+		sharpen_init(this.size.x);
 	}
-	else if (self.frame <= self.size.y)
+	else if (this.frame <= this.size.y)
 	{
 		// fill the sharpen buffer with this line
-		sharpen_shift(self.size.x);
-		i = self.count & 24;
+		sharpen_shift(this.size.x);
+		i = this.count & 24;
 
 		switch (i)
 		{
 			case 0:
 			default:
-				for (x = 0; x < self.size.x; ++x)
+				for (x = 0; x < this.size.x; ++x)
 				{
-					l = RadarMapAtPoint_Block(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
+					l = RadarMapAtPoint_Block(this.mins.x + x * this.maxs.x, this.mins.y + (this.size.y - this.frame) * this.maxs.y, this.maxs.x, this.maxs.y, this.mins.z, this.maxs.z, this.size.z);
 					sharpen_set(x, l);
 				}
 				break;
 			case 8:
-				for (x = 0; x < self.size.x; ++x)
+				for (x = 0; x < this.size.x; ++x)
 				{
-					l = RadarMapAtPoint_Trace(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
+					l = RadarMapAtPoint_Trace(this.mins.x + x * this.maxs.x, this.mins.y + (this.size.y - this.frame) * this.maxs.y, this.maxs.x, this.maxs.y, this.mins.z, this.maxs.z, this.size.z);
 					sharpen_set(x, l);
 				}
 				break;
 			case 16:
-				for (x = 0; x < self.size.x; ++x)
+				for (x = 0; x < this.size.x; ++x)
 				{
-					l = RadarMapAtPoint_Sample(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
+					l = RadarMapAtPoint_Sample(this.mins.x + x * this.maxs.x, this.mins.y + (this.size.y - this.frame) * this.maxs.y, this.maxs.x, this.maxs.y, this.mins.z, this.maxs.z, this.size.z);
 					sharpen_set(x, l);
 				}
 				break;
 			case 24:
-				for (x = 0; x < self.size.x; ++x)
+				for (x = 0; x < this.size.x; ++x)
 				{
-					l = RadarMapAtPoint_LineBlock(self.mins.x + x * self.maxs.x, self.mins.y + (self.size.y - self.frame) * self.maxs.y, self.maxs.x, self.maxs.y, self.mins.z, self.maxs.z, self.size.z);
+					l = RadarMapAtPoint_LineBlock(this.mins.x + x * this.maxs.x, this.mins.y + (this.size.y - this.frame) * this.maxs.y, this.maxs.x, this.maxs.y, this.mins.z, this.maxs.z, this.size.z);
 					sharpen_set(x, l);
 				}
 				break;
 		}
 
 		// do we have enough lines?
-		if (self.frame >= 2)
+		if (this.frame >= 2)
 		{
 			// write a pixel line
-			fputs(self.cnt, "\"");
-			for (x = 0; x < self.size.x; ++x)
+			fputs(this.cnt, "\"");
+			for (x = 0; x < this.size.x; ++x)
 			{
-				l = sharpen_get(x, self.ltime);
-				fputs(self.cnt, substring(doublehex, 2 * floor(l * 256.0), 2));
+				l = sharpen_get(x, this.ltime);
+				fputs(this.cnt, substring(doublehex, 2 * floor(l * 256.0), 2));
 			}
-			if (self.frame == self.size.y)
+			if (this.frame == this.size.y)
 			{
-				fputs(self.cnt, "\"\n");
+				fputs(this.cnt, "\"\n");
 			}
 			else
 			{
-				fputs(self.cnt, "\",\n");
-				LOG_INFO(ftos(self.size.y - self.frame), " lines left\n");
+				fputs(this.cnt, "\",\n");
+				LOG_INFO(ftos(this.size.y - this.frame), " lines left\n");
 			}
 		}
 
 		// is this the last line? then write back the missing line
-		if (self.frame == self.size.y)
+		if (this.frame == this.size.y)
 		{
-			sharpen_shift(self.size.x);
+			sharpen_shift(this.size.x);
 			// write a pixel line
-			fputs(self.cnt, "\"");
-			for (x = 0; x < self.size.x; ++x)
+			fputs(this.cnt, "\"");
+			for (x = 0; x < this.size.x; ++x)
 			{
-				l = sharpen_get(x, self.ltime);
-				fputs(self.cnt, substring(doublehex, 2 * floor(l * 256.0), 2));
+				l = sharpen_get(x, this.ltime);
+				fputs(this.cnt, substring(doublehex, 2 * floor(l * 256.0), 2));
 			}
-			if (self.frame == self.size.y)
+			if (this.frame == this.size.y)
 			{
-				fputs(self.cnt, "\"\n");
+				fputs(this.cnt, "\"\n");
 			}
 			else
 			{
-				fputs(self.cnt, "\",\n");
-				LOG_INFO(ftos(self.size.y - self.frame), " lines left\n");
+				fputs(this.cnt, "\",\n");
+				LOG_INFO(ftos(this.size.y - this.frame), " lines left\n");
 			}
 		}
 
-		self.frame += 1;
-		self.nextthink = time;
+		this.frame += 1;
+		this.nextthink = time;
 	}
 	else
 	{
 		// close the file
-		fputs(self.cnt, "};\n");
-		fclose(self.cnt);
-		LOG_INFO("Finished. Please edit data/", self.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
+		fputs(this.cnt, "};\n");
+		fclose(this.cnt);
+		LOG_INFO("Finished. Please edit data/", this.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
 		RadarMap_Next();
 	}
 }
@@ -374,7 +373,7 @@ float RadarMap_Make(float argc)
 	if (!radarmapper)
 	{
 		radarmapper = new(radarmapper);
-		radarmapper.think = RadarMap_Think;
+		setthink(radarmapper, RadarMap_Think);
 		radarmapper.nextthink = time;
 		radarmapper.count = 8;  // default to the --trace method, as it is faster now
 		radarmapper.ltime = 1;
@@ -441,7 +440,7 @@ float RadarMap_Make(float argc)
 				default:
 					i = argc;
 					remove(radarmapper);
-					radarmapper = world;
+					radarmapper = NULL;
 					break;
 			}
 		}

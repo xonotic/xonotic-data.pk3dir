@@ -213,7 +213,7 @@ void Shutdown()
 	}
 
 	deactivate_minigame();
-	HUD_MinigameMenu_Close();
+	HUD_MinigameMenu_Close(NULL, NULL, NULL);
 }
 
 .float has_team;
@@ -233,7 +233,7 @@ float SetTeam(entity o, int Team)
 			case NUM_TEAM_4:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(Team, false) == NULL)
 				{
 					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
@@ -249,7 +249,7 @@ float SetTeam(entity o, int Team)
 			case 0:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(Team, false) == NULL)
 				{
 					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
@@ -290,9 +290,8 @@ float SetTeam(entity o, int Team)
 	return false;
 }
 
-void Playerchecker_Think()
+void Playerchecker_Think(entity this)
 {
-	SELFPARAM();
     int i;
 	entity e;
 	for(i = 0; i < maxclients; ++i)
@@ -305,7 +304,7 @@ void Playerchecker_Think()
 				// player disconnected
 				SetTeam(e, -1);
 				RemovePlayer(e);
-				e.sort_prev = world;
+				e.sort_prev = NULL;
 				//e.gotscores = 0;
 			}
 		}
@@ -337,7 +336,7 @@ void TrueAim_Init();
 void PostInit()
 {
 	entity playerchecker = new_pure(playerchecker);
-	playerchecker.think = Playerchecker_Think;
+	setthink(playerchecker, Playerchecker_Think);
 	playerchecker.nextthink = time + 0.2;
 
 	TrueAim_Init();
@@ -378,19 +377,6 @@ float CSQC_InputEvent(int bInputType, float nPrimary, float nSecondary)
 
 // --------------------------------------------------------------------------
 // BEGIN OPTIONAL CSQC FUNCTIONS
-
-.void(entity) predraw_qc;
-void PreDraw_self()
-{
-	SELFPARAM();
-	if (this.predraw_qc) this.predraw_qc(this);
-}
-
-void setpredraw(entity this, void(entity) pdfunc)
-{
-	this.predraw = PreDraw_self;
-	this.predraw_qc = pdfunc;
-}
 
 void Ent_Remove(entity this);
 
@@ -537,6 +523,7 @@ NET_HANDLE(ENT_CLIENT_CLIENTDATA, bool isnew)
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;
+		hud_dynamic_shake_factor = -1;
 	}
 	if (autocvar_hud_panel_healtharmor_progressbar_gfx)
 	{
@@ -794,8 +781,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void CSQC_Ent_Update(bool isnew)
-{
-	SELFPARAM();
+{ENGINE_EVENT();
 	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
@@ -875,8 +861,7 @@ void Ent_Remove(entity this)
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove()
-{
-	SELFPARAM();
+{ENGINE_EVENT();
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
@@ -1201,16 +1186,21 @@ string getcommandkey(string text, string command)
 	keys = db_get(binddb, command);
 	if (keys == "")
 	{
+		bool joy_detected = cvar("joy_detected");
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));
 			if(k != -1)
 			{
-				if ("" == keys)
-					keys = keynumtostring(k);
+				string key = keynumtostring(k);
+				if(!joy_detected && substring(key, 0, 3) == "JOY")
+					continue;
+
+				if (keys == "")
+					keys = key;
 				else
-					keys = strcat(keys, ", ", keynumtostring(k));
+					keys = strcat(keys, ", ", key);
 
 				++l;
 				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)

@@ -164,6 +164,11 @@ void CSQCPlayer_Physics(entity this)
 		if(autocvar_cl_movement == 1)
 			CSQCPlayer_CheckWater(this); // we apparently need to check water *before* physics so it can use this for water jump
 
+		vector oldv_angle = this.v_angle;
+		vector oldangles = this.angles; // we need to save these, as they're abused by other code
+		this.v_angle = PHYS_INPUT_ANGLES(this);
+		this.angles = PHYS_WORLD_ANGLES(this);
+
 		CSQC_ClientMovement_PlayerMove_Frame(this);
 
 		if(autocvar_cl_movement == 1)
@@ -179,6 +184,11 @@ void CSQCPlayer_Physics(entity this)
 			this.move_watertype = this.watertype;
 			Movetype_Physics_Spam(this);
 		}
+
+		view_angles = this.v_angle;
+		input_angles = this.angles;
+		this.v_angle = oldv_angle;
+		this.angles = oldangles;
 
 		this.pmove_flags =
 				((this.flags & FL_DUCKED) ? PMF_DUCKED : 0) |
@@ -323,7 +333,7 @@ void CSQCPlayer_SetCamera()
 		if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
 		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
 		// note: these two only work in WIP2, but are harmless in WIP1
-		if (STAT(HEALTH) <= 0) refdefflags |= REFDEFFLAG_DEAD;
+		if (STAT(HEALTH) <= 0 && STAT(HEALTH) != -666 && STAT(HEALTH) != -2342) refdefflags |= REFDEFFLAG_DEAD;
 		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
 		V_CalcRefdef(view, refdefflags);
 	}

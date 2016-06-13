@@ -3,23 +3,22 @@ REGISTER_MUTATOR(rocketflying, cvar("g_rocket_flying"));
 
 MUTATOR_HOOKFUNCTION(rocketflying, EditProjectile)
 {
-	if(other.classname == "rocket" || other.classname == "mine")
+	entity proj = M_ARGV(1, entity);
+
+	if(proj.classname == "rocket" || proj.classname == "mine")
 	{
 		// kill detonate delay of rockets
-		other.spawnshieldtime = time;
+		proj.spawnshieldtime = time;
 	}
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(rocketflying, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":RocketFlying");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":RocketFlying");
 }
 
 MUTATOR_HOOKFUNCTION(rocketflying, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Rocket Flying");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Rocket Flying");
 }
 #endif

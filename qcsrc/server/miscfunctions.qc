@@ -122,7 +122,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     float num_nearest;
     num_nearest = 0;
 
-    localhead = find(world, field, value);
+    localhead = find(NULL, field, value);
     while (localhead)
     {
         if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.target == "###item###")
@@ -160,7 +160,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     // now use the first one from our list that we can see
     for (i = 0; i < num_nearest; ++i)
     {
-        traceline(point, nearest_entity[i].origin, true, world);
+        traceline(point, nearest_entity[i].origin, true, NULL);
         if (trace_fraction == 1)
         {
             if (i != 0)
@@ -174,7 +174,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     }
 
     if (num_nearest == 0)
-        return world;
+        return NULL;
 
     LOG_TRACE("Not seeing any location point, using nearest as fallback.\n");
     /* DEBUGGING CODE:
@@ -210,8 +210,8 @@ string NearestLocation(vector p)
     return ret;
 }
 
-string formatmessage(string msg)
-{SELFPARAM();
+string formatmessage(entity this, string msg)
+{
 	float p, p1, p2;
 	float n;
 	vector cursor;
@@ -223,12 +223,12 @@ string formatmessage(string msg)
 	n = 7;
 
 	ammoitems = "batteries";
-	if(self.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
-	if(self.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
-	if(self.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
-	if(self.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
+	if(this.items & ITEM_Plasma.m_itemid) ammoitems = ITEM_Plasma.m_name;
+	if(this.items & ITEM_Cells.m_itemid) ammoitems = ITEM_Cells.m_name;
+	if(this.items & ITEM_Rockets.m_itemid) ammoitems = ITEM_Rockets.m_name;
+	if(this.items & ITEM_Shells.m_itemid) ammoitems = ITEM_Shells.m_name;
 
-	WarpZone_crosshair_trace(self);
+	WarpZone_crosshair_trace(this);
 	cursor = trace_endpos;
 	cursor_ent = trace_ent;
 
@@ -259,23 +259,22 @@ string formatmessage(string msg)
 			case "%": replacement = "%"; break;
 			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
-			case "a": replacement = ftos(floor(self.armorvalue)); break;
-			case "h": replacement = ftos(floor(self.health)); break;
-			case "l": replacement = NearestLocation(self.origin); break;
+			case "a": replacement = ftos(floor(this.armorvalue)); break;
+			case "h": replacement = ftos(floor(this.health)); break;
+			case "l": replacement = NearestLocation(this.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
-			case "d": replacement = NearestLocation(self.death_origin); break;
-			case "w": replacement = ((PS(self).m_weapon == WEP_Null) ? ((PS(self).m_switchweapon == WEP_Null) ? Weapons_from(self.cnt) : PS(self).m_switchweapon) : PS(self).m_weapon).m_name; break;
+			case "d": replacement = NearestLocation(this.death_origin); break;
+			case "w": replacement = ((PS(this).m_weapon == WEP_Null) ? ((PS(this).m_switchweapon == WEP_Null) ? Weapons_from(this.cnt) : PS(this).m_switchweapon) : PS(this).m_weapon).m_name; break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
-			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
-			case "S": replacement = ftos(vlen(self.velocity)); break;
+			case "s": replacement = ftos(vlen(this.velocity - this.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(this.velocity)); break;
 			case "t": replacement = seconds_tostring(ceil(max(0, autocvar_timelimit * 60 + game_starttime - time))); break;
 			case "T": replacement = seconds_tostring(floor(time - game_starttime)); break;
 			default:
 			{
-				MUTATOR_CALLHOOK(FormatMessage, escape, replacement, msg);
-				escape = format_escape;
-				replacement = format_replacement;
+				MUTATOR_CALLHOOK(FormatMessage, this, escape, replacement, msg);
+				replacement = M_ARGV(2, string);
 				break;
 			}
 		}
@@ -294,55 +293,55 @@ Called with:
   0:  sends the request
   >0: receives a cvar from name=argv(f) value=argv(f+1)
 */
-void GetCvars_handleString(string thisname, float f, .string field, string name)
-{SELFPARAM();
+void GetCvars_handleString(entity this, string thisname, float f, .string field, string name)
+{
 	if (f < 0)
 	{
-		if (self.(field))
-			strunzone(self.(field));
-		self.(field) = string_null;
+		if (this.(field))
+			strunzone(this.(field));
+		this.(field) = string_null;
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
 		{
-			if (self.(field))
-				strunzone(self.(field));
-			self.(field) = strzone(argv(f + 1));
+			if (this.(field))
+				strunzone(this.(field));
+			this.(field) = strzone(argv(f + 1));
 		}
 	}
 	else
-		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
+		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleString_Fixup(string thisname, float f, .string field, string name, string(string) func)
-{SELFPARAM();
-	GetCvars_handleString(thisname, f, field, name);
+void GetCvars_handleString_Fixup(entity this, string thisname, float f, .string field, string name, string(entity, string) func)
+{
+	GetCvars_handleString(this, thisname, f, field, name);
 	if (f >= 0) // also initialize to the fitting value for "" when sending cvars out
 		if (thisname == name)
 		{
-			string s = func(strcat1(self.(field)));
-			if (s != self.(field))
+			string s = func(this, strcat1(this.(field)));
+			if (s != this.(field))
 			{
-				strunzone(self.(field));
-				self.(field) = strzone(s);
+				strunzone(this.(field));
+				this.(field) = strzone(s);
 			}
 		}
 }
-void GetCvars_handleFloat(string thisname, float f, .float field, string name)
-{SELFPARAM();
+void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name)
+{
 	if (f < 0)
 	{
 	}
 	else if (f > 0)
 	{
 		if (thisname == name)
-			self.(field) = stof(argv(f + 1));
+			this.(field) = stof(argv(f + 1));
 	}
 	else
-		stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
+		stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 }
-void GetCvars_handleFloatOnce(string thisname, float f, .float field, string name)
-{SELFPARAM();
+void GetCvars_handleFloatOnce(entity this, string thisname, float f, .float field, string name)
+{
 	if (f < 0)
 	{
 	}
@@ -350,30 +349,30 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 	{
 		if (thisname == name)
 		{
-			if (!self.(field))
+			if (!this.(field))
 			{
-				self.(field) = stof(argv(f + 1));
-				if (!self.(field))
-					self.(field) = -1;
+				this.(field) = stof(argv(f + 1));
+				if (!this.(field))
+					this.(field) = -1;
 			}
 		}
 	}
 	else
 	{
-		if (!self.(field))
-			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
+		if (!this.(field))
+			stuffcmd(this, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
-{SELFPARAM();
+string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(entity this, string wo)
+{
 	string o;
 	o = W_FixWeaponOrder_ForceComplete(wo);
-	if(self.weaponorder_byimpulse)
+	if(this.weaponorder_byimpulse)
 	{
-		strunzone(self.weaponorder_byimpulse);
-		self.weaponorder_byimpulse = string_null;
+		strunzone(this.weaponorder_byimpulse);
+		this.weaponorder_byimpulse = string_null;
 	}
-	self.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
+	this.weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(o));
 	return o;
 }
 
@@ -421,31 +420,31 @@ void GetCvars(entity this, int f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 
-	Notification_GetCvars();
+	Notification_GetCvars(this);
 
 	ReplicateVars(this, s, f);
 
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
-	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[2], "cl_weaponpriority2", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[3], "cl_weaponpriority3", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[4], "cl_weaponpriority4", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[5], "cl_weaponpriority5", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[6], "cl_weaponpriority6", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[7], "cl_weaponpriority7", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[8], "cl_weaponpriority8", W_FixWeaponOrder_AllowIncomplete);
+	GetCvars_handleString_Fixup(this, s, f, cvar_cl_weaponpriorities[9], "cl_weaponpriority9", W_FixWeaponOrder_AllowIncomplete);
 
-	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(this, s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
 	{
 		if (s == "cl_weaponpriority")
-			if (PS(self)) PS(self).m_switchweapon = w_getbestweapon(self);
+			if (PS(this)) PS(this).m_switchweapon = w_getbestweapon(this);
 		if (s == "cl_allow_uidtracking")
-			PlayerStats_GameReport_AddPlayer(self);
+			PlayerStats_GameReport_AddPlayer(this);
 	}
 }
 
@@ -472,9 +471,9 @@ float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still ne
 		return 0;
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(WantWeapon, weaponinfo, d, allguns, allow_mutatorblocked);
-	d = ret_float;
-	allguns = want_allguns;
-	allow_mutatorblocked = false;
+	d = M_ARGV(1, float);
+	allguns = M_ARGV(2, bool);
+	allow_mutatorblocked = M_ARGV(3, bool);
 
 	if(allguns)
 	{
@@ -529,7 +528,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 
 	MUTATOR_CALLHOOK(SetWeaponArena, s);
-	s = ret_string;
+	s = M_ARGV(0, string);
 
 	if (s == "0" || s == "")
 	{
@@ -780,14 +779,14 @@ void precache()
 #if 0
     // Disabled this code because it simply does not work (e.g. ignores bgmvolume, overlaps with "cd loop" controlled tracks).
 
-    if (!self.noise && self.music) // quake 3 uses the music field
-        self.noise = self.music;
+    if (!this.noise && this.music) // quake 3 uses the music field
+        this.noise = this.music;
 
     // plays music for the level if there is any
-    if (self.noise)
+    if (this.noise)
     {
-        precache_sound (self.noise);
-        ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
+        precache_sound (this.noise);
+        ambientsound ('0 0 0', this.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
 }
@@ -797,7 +796,7 @@ void make_safe_for_remove(entity e)
 {
     if (e.initialize_entity)
     {
-        entity ent, prev = world;
+        entity ent, prev = NULL;
         for (ent = initialize_entity_first; ent; )
         {
             if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
@@ -822,12 +821,6 @@ void make_safe_for_remove(entity e)
             }
         }
     }
-}
-
-void objerror(string s)
-{SELFPARAM();
-    make_safe_for_remove(self);
-    builtin_objerror(s);
 }
 
 .float remove_except_protected_forbidden;
@@ -867,7 +860,7 @@ void InitializeEntity(entity e, void(entity this) func, float order)
     e.initialize_entity_order = order;
 
     cur = initialize_entity_first;
-    prev = world;
+    prev = NULL;
     for (;;)
     {
         if (!cur || cur.initialize_entity_order > order)
@@ -910,7 +903,7 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", e.classname, "\n");
         if (func)
         {
-        	WITHSELF(e, func(e));
+        	func(e);
         }
         else
         {
@@ -958,44 +951,25 @@ void EliminatedPlayers_Init(float(entity) isEliminated_func)
 }
 
 
-void adaptor_think2touch()
-{SELFPARAM();
-    entity o;
-    o = other;
-    other = world;
-    self.touch();
-    other = o;
-}
 
-void adaptor_think2use()
-{SELFPARAM();
-    entity o, a;
-    o = other;
-    a = activator;
-    activator = world;
-    other = world;
-    self.use();
-    other = o;
-    activator = a;
-}
 
-void adaptor_think2use_hittype_splash() // for timed projectile detonation
-{SELFPARAM();
-	if(!(IS_ONGROUND(self))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
-		self.projectiledeathtype |= HITTYPE_SPLASH;
-	adaptor_think2use();
+void adaptor_think2use_hittype_splash(entity this) // for timed projectile detonation
+{
+	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
+		this.projectiledeathtype |= HITTYPE_SPLASH;
+	adaptor_think2use(this);
 }
 
 // deferred dropping
 void DropToFloor_Handler(entity this)
 {
-    builtin_droptofloor();
-    self.dropped_origin = self.origin;
+    WITHSELF(this, builtin_droptofloor());
+    this.dropped_origin = this.origin;
 }
 
-void droptofloor()
-{SELFPARAM();
-    InitializeEntity(self, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
+void droptofloor(entity this)
+{
+    InitializeEntity(this, DropToFloor_Handler, INITPRIO_DROPTOFLOOR);
 }
 
 
@@ -1049,8 +1023,8 @@ float tracebox_hits_box(vector start, vector mi, vector ma, vector end, vector t
     return trace_hits_box(start, end, thmi - ma, thma - mi);
 }
 
-float SUB_NoImpactCheck()
-{SELFPARAM();
+bool SUB_NoImpactCheck(entity this, entity toucher)
+{
 	// zero hitcontents = this is not the real impact, but either the
 	// mirror-impact of something hitting the projectile instead of the
 	// projectile hitting the something, or a touchareagrid one. Neither of
@@ -1058,17 +1032,17 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(self), self.classname, vtos(self.origin));
-		checkclient();
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
+		checkclient(this);
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-        return 1;
-    if (other == world && self.size != '0 0 0')
+        return true;
+    if (toucher == NULL && this.size != '0 0 0')
     {
         vector tic;
-        tic = self.velocity * sys_frametime;
-        tic = tic + normalize(tic) * vlen(self.maxs - self.mins);
-        traceline(self.origin - tic, self.origin + tic, MOVE_NORMAL, self);
+        tic = this.velocity * sys_frametime;
+        tic = tic + normalize(tic) * vlen(this.maxs - this.mins);
+        traceline(this.origin - tic, this.origin + tic, MOVE_NORMAL, this);
         if (trace_fraction >= 1)
         {
             LOG_TRACE("Odd... did not hit...?\n");
@@ -1076,37 +1050,37 @@ float SUB_NoImpactCheck()
         else if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         {
             LOG_TRACE("Detected and prevented the sky-grapple bug.\n");
-            return 1;
+            return true;
         }
     }
 
-    return 0;
+    return false;
 }
 
-#define SUB_OwnerCheck() (other && (other == self.owner))
+#define SUB_OwnerCheck(ent,oth) ((oth) && ((oth) == (ent).owner))
 
 void W_Crylink_Dequeue(entity e);
-float WarpZone_Projectile_Touch_ImpactFilter_Callback()
-{SELFPARAM();
-	if(SUB_OwnerCheck())
+bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher)
+{
+	if(SUB_OwnerCheck(this, toucher))
 		return true;
-	if(SUB_NoImpactCheck())
+	if(SUB_NoImpactCheck(this, toucher))
 	{
-		if(self.classname == "nade")
+		if(this.classname == "nade")
 			return false; // no checks here
-		else if(self.classname == "grapplinghook")
-			RemoveGrapplingHook(self.realowner);
-		else if(self.classname == "spike")
+		else if(this.classname == "grapplinghook")
+			RemoveGrapplingHook(this.realowner);
+		else if(this.classname == "spike")
 		{
-			W_Crylink_Dequeue(self);
-			remove(self);
+			W_Crylink_Dequeue(this);
+			remove(this);
 		}
 		else
-			remove(self);
+			remove(this);
 		return true;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
-		UpdateCSQCProjectile(self);
+		UpdateCSQCProjectile(this);
 	return false;
 }
 
@@ -1222,13 +1196,13 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
             continue;
 
 	// rule 4: we must "see" some spawnpoint or item
-	for(sp = world; (sp = find(sp, classname, "info_player_deathmatch")); )
+	for(sp = NULL; (sp = find(sp, classname, "info_player_deathmatch")); )
 		if(checkpvs(mstart, sp))
 			if((traceline(mstart, sp.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
 				break;
 	if(!sp)
 	{
-		for(sp = world; (sp = findflags(sp, flags, FL_ITEM)); )
+		for(sp = NULL; (sp = findflags(sp, flags, FL_ITEM)); )
 			if(checkpvs(mstart, sp))
 				if((traceline(mstart, sp.origin + (sp.mins + sp.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
 					break;
@@ -1339,7 +1313,7 @@ void detach_sameorigin(entity e)
 	else
 		e.angles = AnglesTransform_ToAngles(e.angles);
     setorigin(e, org);
-    setattachment(e, world, "");
+    setattachment(e, NULL, "");
     setorigin(e, e.origin);
 }
 
@@ -1389,7 +1363,7 @@ void UnsetMovetypeFollow(entity ent)
 {
 	ent.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(ent);
-	ent.aiment = world;
+	ent.aiment = NULL;
 }
 float LostMovetypeFollow(entity ent)
 {
@@ -1421,9 +1395,6 @@ bool isPushable(entity e)
 	{
 		case "body":
 		case "droppedweapon":
-		case "keepawayball":
-		case "nexball_basketball":
-		case "nexball_football":
 			return true;
 		case "bullet": // antilagged bullets can't hit this either
 			return false;

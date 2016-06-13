@@ -83,9 +83,8 @@
 		return _entcs_send(this, to, sf, MSG_ENTITY);
 	}
 
-	void entcs_think()
+	void entcs_think(entity this)
 	{
-		SELFPARAM();
 		this.nextthink = time + 0.033333333333;  // TODO: increase this to like 0.15 once the client can do smoothing
 		entity o = this.owner;
 		int i = 1;
@@ -105,7 +104,7 @@
 	{
 		entity e = player.entcs = new(entcs_sender);
 		e.owner = player;
-		e.think = entcs_think;
+		setthink(e, entcs_think);
 		e.nextthink = time;
 		Net_LinkEntity(e, false, 0, entcs_send);
 		if (!IS_REAL_CLIENT(player)) return;
@@ -134,9 +133,8 @@
 		if (e != this) remove(e);
 	}
 
-	void entcs_think()
+	void entcs_think(entity this)
 	{
-		SELFPARAM();
 		entity e = CSQCModel_server2csqc(this.sv_entnum);
 		if (e == NULL)
 		{
@@ -169,7 +167,7 @@
 				make_pure(e);
 			}
 			e.sv_entnum = n;
-			e.think = entcs_think;
+			setthink(e, entcs_think);
 			entcs_receiver(n, e);
 		}
 		else if (this && e != this)
@@ -189,7 +187,7 @@
 	#undef X
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
-		WITHSELF(this, this.think());
+		getthink(this)(this);
 		return true;
 	}
 

@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "spawn_near_teammate.qc"
+#include <common/mutators/mutator/spawn_near_teammate/spawn_near_teammate.qc>

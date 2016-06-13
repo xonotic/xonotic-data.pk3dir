@@ -17,7 +17,7 @@ const float TELEPORT_SIMPLE = 2; // only do teleport, nothing special
 
 entity Simple_TeleportPlayer(entity teleporter, entity player);
 
-void Teleport_Touch ();
+void Teleport_Touch (entity this);
 
 void teleport_findtarget(entity this);
 
@@ -30,7 +30,7 @@ entity teleport_first;
 
 #ifdef SVQC
 
-void trigger_teleport_use();
+void trigger_teleport_use(entity this, entity actor, entity trigger);
 
 #define TDEATHLOOP(o) \
 	entity head; \

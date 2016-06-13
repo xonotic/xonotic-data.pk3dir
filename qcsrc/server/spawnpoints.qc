@@ -14,10 +14,10 @@ bool SpawnPoint_Send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
 
-	WriteByte(MSG_ENTITY, self.team);
-	WriteCoord(MSG_ENTITY, self.origin.x);
-	WriteCoord(MSG_ENTITY, self.origin.y);
-	WriteCoord(MSG_ENTITY, self.origin.z);
+	WriteByte(MSG_ENTITY, this.team);
+	WriteCoord(MSG_ENTITY, this.origin.x);
+	WriteCoord(MSG_ENTITY, this.origin.y);
+	WriteCoord(MSG_ENTITY, this.origin.z);
 
 	return true;
 }
@@ -47,9 +47,8 @@ bool SpawnEvent_Send(entity this, entity to, int sf)
 }
 
 .vector spawnpoint_prevorigin;
-void spawnpoint_think()
+void spawnpoint_think(entity this)
 {
-    SELFPARAM();
 	this.nextthink = time + 0.1;
 	if(this.origin != this.spawnpoint_prevorigin)
 	{
@@ -58,35 +57,35 @@ void spawnpoint_think()
 	}
 }
 
-void spawnpoint_use()
-{SELFPARAM();
+void spawnpoint_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
 	if(have_team_spawns > 0)
 	{
-		self.team = activator.team;
+		this.team = actor.team;
 		some_spawn_has_been_used = 1;
 	}
 	//LOG_INFO("spawnpoint was used!\n");
 }
 
-void relocate_spawnpoint()
-{SELFPARAM();
+void relocate_spawnpoint(entity this)
+{
     // nudge off the floor
-    setorigin(self, self.origin + '0 0 1');
+    setorigin(this, this.origin + '0 0 1');
 
-    tracebox(self.origin, PL_MIN_CONST, PL_MAX_CONST, self.origin, true, self);
+    tracebox(this.origin, PL_MIN_CONST, PL_MAX_CONST, this.origin, true, this);
     if (trace_startsolid)
     {
         vector o;
-        o = self.origin;
-        self.mins = PL_MIN_CONST;
-        self.maxs = PL_MAX_CONST;
-        if (!move_out_of_solid(self))
-            objerror("could not get out of solid at all!");
+        o = this.origin;
+        this.mins = PL_MIN_CONST;
+        this.maxs = PL_MAX_CONST;
+        if (!move_out_of_solid(this))
+            objerror(this, "could not get out of solid at all!");
         LOG_INFO("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
-        LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(self.origin.x - o.x));
-        LOG_INFO(" ", ftos(self.origin.y - o.y));
-        LOG_INFO(" ", ftos(self.origin.z - o.z), "'\n");
+        LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(this.origin.x - o.x));
+        LOG_INFO(" ", ftos(this.origin.y - o.y));
+        LOG_INFO(" ", ftos(this.origin.z - o.z), "'\n");
         if (autocvar_g_spawnpoints_auto_move_out_of_solid)
         {
             if (!spawnpoint_nag)
@@ -95,31 +94,31 @@ void relocate_spawnpoint()
         }
         else
         {
-            setorigin(self, o);
-            self.mins = self.maxs = '0 0 0';
-            objerror("player spawn point in solid, mapper sucks!\n");
+            setorigin(this, o);
+            this.mins = this.maxs = '0 0 0';
+            objerror(this, "player spawn point in solid, mapper sucks!\n");
             return;
         }
     }
 
-    self.use = spawnpoint_use;
-    self.think = spawnpoint_think;
-    self.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
-    self.team_saved = self.team;
-    if (!self.cnt)
-        self.cnt = 1;
+    this.use = spawnpoint_use;
+    setthink(this, spawnpoint_think);
+    this.nextthink = time + 0.5 + random() * 2; // shouldn't need it for a little second
+    this.team_saved = this.team;
+    if (!this.cnt)
+        this.cnt = 1;
 
     if (have_team_spawns != 0)
-        if (self.team)
+        if (this.team)
             have_team_spawns = 1;
-    have_team_spawns_forteam[self.team] = 1;
+    have_team_spawns_forteam[this.team] = 1;
 
     if (autocvar_r_showbboxes)
     {
         // show where spawnpoints point at too
-        makevectors(self.angles);
+        makevectors(this.angles);
         entity e = new(info_player_foo);
-        setorigin(e, self.origin + v_forward * 24);
+        setorigin(e, this.origin + v_forward * 24);
         setsize(e, '-8 -8 -8', '8 8 8');
         e.solid = SOLID_TRIGGER;
     }
@@ -131,27 +130,27 @@ void relocate_spawnpoint()
 		!(
 			( // if this passes, there is a DM spawn on a team match
 				teamplay
-				&& (self.team != NUM_TEAM_1)
-				&& (self.team != NUM_TEAM_2)
-				&& (self.team != NUM_TEAM_3)
-				&& (self.team != NUM_TEAM_4)
+				&& (this.team != NUM_TEAM_1)
+				&& (this.team != NUM_TEAM_2)
+				&& (this.team != NUM_TEAM_3)
+				&& (this.team != NUM_TEAM_4)
 			)
 			||
 			( // if this passes, there is a team spawn on a DM match
 				!teamplay
 				&&
 				(
-					(self.team == NUM_TEAM_1)
-					|| (self.team == NUM_TEAM_2)
-					|| (self.team == NUM_TEAM_3)
-					|| (self.team == NUM_TEAM_4)
+					(this.team == NUM_TEAM_1)
+					|| (this.team == NUM_TEAM_2)
+					|| (this.team == NUM_TEAM_3)
+					|| (this.team == NUM_TEAM_4)
 				)
 			)
 		)
 		||
 		autocvar_g_spawn_useallspawns
 	)
-	{ Net_LinkEntity(self, false, 0, SpawnPoint_Send); }
+	{ Net_LinkEntity(this, false, 0, SpawnPoint_Send); }
 }
 
 spawnfunc(info_player_survivor)
@@ -166,8 +165,8 @@ spawnfunc(info_player_start)
 
 spawnfunc(info_player_deathmatch)
 {
-	self.classname = "info_player_deathmatch";
-	relocate_spawnpoint();
+	this.classname = "info_player_deathmatch";
+	relocate_spawnpoint(this);
 }
 
 /*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
@@ -211,8 +210,8 @@ spawnfunc(info_player_team4)
 // Returns:
 //   _x: prio (-1 if unusable)
 //   _y: weight
-vector Spawn_Score(entity spot, float mindist, float teamcheck)
-{SELFPARAM();
+vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
+{
 	float shortest, thisdist;
 	float prio;
 
@@ -227,7 +226,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		if(spot.target == "")
 			return '-1 0 0';
 
-	if(IS_REAL_CLIENT(self))
+	if(IS_REAL_CLIENT(this))
 	{
 		if(spot.restriction == 1)
 			return '-1 0 0';
@@ -239,7 +238,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 	}
 
 	shortest = vlen(world.maxs - world.mins);
-	FOREACH_CLIENT(IS_PLAYER(it) && it != self, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
 		thisdist = vlen(it.origin - spot.origin);
 		if (thisdist < shortest)
 			shortest = thisdist;
@@ -247,8 +246,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
-	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
-	spawn_spot = spot;
+	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
 	if(spot.target != "") {
@@ -256,12 +254,12 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		float found;
 
 		found = 0;
-		for(ent = world; (ent = find(ent, targetname, spot.target)); )
+		for(ent = NULL; (ent = find(ent, targetname, spot.target)); )
 		{
 			++found;
 			if(ent.spawn_evalfunc)
 			{
-				WITHSELF(ent, spawn_score = ent.spawn_evalfunc(this, spot, spawn_score));
+				spawn_score = ent.spawn_evalfunc(ent, this, spot, spawn_score);
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}
@@ -274,25 +272,26 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		}
 	}
 
-	MUTATOR_CALLHOOK(Spawn_Score, self, spawn_spot, spawn_score);
+	MUTATOR_CALLHOOK(Spawn_Score, this, spot, spawn_score);
+	spawn_score = M_ARGV(2, vector);
 	return spawn_score;
 }
 
-void Spawn_ScoreAll(entity firstspot, float mindist, float teamcheck)
+void Spawn_ScoreAll(entity this, entity firstspot, float mindist, float teamcheck)
 {
 	entity spot;
 	for(spot = firstspot; spot; spot = spot.chain)
-		spot.spawnpoint_score = Spawn_Score(spot, mindist, teamcheck);
+		spot.spawnpoint_score = Spawn_Score(this, spot, mindist, teamcheck);
 }
 
-entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck)
+entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, float teamcheck)
 {
 	entity spot, spotlist, spotlistend;
 
-	spotlist = world;
-	spotlistend = world;
+	spotlist = NULL;
+	spotlistend = NULL;
 
-	Spawn_ScoreAll(firstspot, mindist, teamcheck);
+	Spawn_ScoreAll(this, firstspot, mindist, teamcheck);
 
 	for(spot = firstspot; spot; spot = spot.chain)
 	{
@@ -306,7 +305,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck)
 		}
 	}
 	if(spotlistend)
-		spotlistend.chain = world;
+		spotlistend.chain = NULL;
 
 	return spotlist;
 }
@@ -331,12 +330,12 @@ SelectSpawnPoint
 Finds a point to respawn
 =============
 */
-entity SelectSpawnPoint (float anypoint)
-{SELFPARAM();
+entity SelectSpawnPoint(entity this, bool anypoint)
+{
 	float teamcheck;
 	entity spot, firstspot;
 
-	spot = find (world, classname, "testplayerstart");
+	spot = find (NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
@@ -344,7 +343,7 @@ entity SelectSpawnPoint (float anypoint)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
 	{
-		if(have_team_spawns_forteam[self.team] == 0)
+		if(have_team_spawns_forteam[this.team] == 0)
 		{
 			// we request a spawn for a team, and we have team
 			// spawns, but that team has no spawns?
@@ -356,7 +355,7 @@ entity SelectSpawnPoint (float anypoint)
 				teamcheck = -1;
 		}
 		else
-			teamcheck = self.team; // MUST be team
+			teamcheck = this.team; // MUST be team
 	}
 	else if(have_team_spawns == 0 && have_team_spawns_forteam[0])
 		teamcheck = 0; // MUST be noteam
@@ -375,7 +374,7 @@ entity SelectSpawnPoint (float anypoint)
 	}
 	else
 	{
-		firstspot = Spawn_FilterOutBadSpots(firstspot, 100, teamcheck);
+		firstspot = Spawn_FilterOutBadSpots(this, firstspot, 100, teamcheck);
 
 		// there is 50/50 chance of choosing a random spot or the furthest spot
 		// (this means that roughly every other spawn will be furthest, so you
@@ -393,7 +392,7 @@ entity SelectSpawnPoint (float anypoint)
 		else
 		{
 			if(some_spawn_has_been_used)
-				return world; // team can't spawn any more, because of actions of other team
+				return NULL; // team can't spawn any more, because of actions of other team
 			else
 				error("Cannot find a spawn point - please fix the map!");
 		}

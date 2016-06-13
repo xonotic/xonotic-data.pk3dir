@@ -24,7 +24,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	{
 		RandomSelection_Init();
 		for(i = MON_FIRST; i <= MON_LAST; ++i)
-			RandomSelection_Add(world, i, string_null, 1, 1);
+			RandomSelection_Add(NULL, i, string_null, 1, 1);
 
            monster_id = RandomSelection_chosen_float;
 	}

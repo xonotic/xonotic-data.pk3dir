@@ -1,4 +1,4 @@
 // generated file; do not modify
-#include "all.qc"
-#include "spawn.qc"
-#include "sv_monsters.qc"
+#include <common/monsters/all.qc>
+#include <common/monsters/spawn.qc>
+#include <common/monsters/sv_monsters.qc>

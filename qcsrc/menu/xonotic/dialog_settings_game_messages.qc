@@ -53,7 +53,7 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.6, e = makeXonoticCheckBox_T(0, "notification_show_sprees_info_newline", _("Print on a seperate line"), "-"));
-			setDependent(e, "notification_show_sprees", 1, 1);
+			setDependentAND(e, "notification_show_sprees", 1, 1, "notification_show_sprees_info", 1, 3);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_FRAG", _("Add extra frag information to centerprint when available"), "-"));
 			makeMulti(e, "notification_CHOICE_FRAGGED notification_CHOICE_TYPEFRAG notification_CHOICE_TYPEFRAGGED");
@@ -65,17 +65,17 @@ void XonoticGameMessageSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Gamemode Settings")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_CAPTURE_TIME_RED", _("Display capture times in Capture The Flag"), "-"));
-			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_TIME_BLUE notification_CHOICE_CTF_CAPTURE_BROKEN_RED notification_CHOICE_CTF_CAPTURE_BROKEN_BLUE notification_CHOICE_CTF_CAPTURE_UNBROKEN_RED notification_CHOICE_CTF_CAPTURE_UNBROKEN_BLUE ");
+			makeMulti(e, "notification_CHOICE_CTF_CAPTURE_TIME_BLUE notification_CHOICE_CTF_CAPTURE_TIME_YELLOW notification_CHOICE_CTF_CAPTURE_TIME_PINK notification_CHOICE_CTF_CAPTURE_BROKEN_RED notification_CHOICE_CTF_CAPTURE_BROKEN_BLUE notification_CHOICE_CTF_CAPTURE_BROKEN_YELLOW notification_CHOICE_CTF_CAPTURE_BROKEN_PINK notification_CHOICE_CTF_CAPTURE_UNBROKEN_RED notification_CHOICE_CTF_CAPTURE_UNBROKEN_BLUE notification_CHOICE_CTF_CAPTURE_UNBROKEN_YELLOW notification_CHOICE_CTF_CAPTURE_UNBROKEN_PINK");
 			e.sendCvars = true;
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_CHOICE_CTF_PICKUP_ENEMY", _("Display name of flag stealer in Capture The Flag"), "-"));
-			makeMulti(e, "notification_CHOICE_CTF_PICKUP_TEAM");
+			makeMulti(e, "notification_CHOICE_CTF_PICKUP_ENEMY_TEAM notification_CHOICE_CTF_PICKUP_ENEMY_NEUTRAL");
 			e.sendCvars = true;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(4, 1, "con_notify", _("Display console messages in the top left corner"), "-"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(4, 0, "con_notify", _("Display console messages in the top left corner"), "-"));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx_T(2, 1, "notification_allow_chatboxprint", _("Display all info messages in the chatbox"), "-"));
 	me.TR(me);

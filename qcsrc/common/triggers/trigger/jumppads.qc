@@ -3,12 +3,12 @@
 #include "jumppads.qh"
 #include <common/physics/movetypes/movetypes.qh>
 
-void trigger_push_use()
-{SELFPARAM();
+void trigger_push_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
 	{
-		self.team = activator.team;
-		self.SendFlags |= 2;
+		this.team = actor.team;
+		this.SendFlags |= 2;
 	}
 }
 #endif
@@ -129,8 +129,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	return sdir * vs + '0 0 1' * vz;
 }
 
-void trigger_push_touch()
-{SELFPARAM();
+void trigger_push_touch(entity this)
+{
 	if (this.active == ACTIVE_NOT)
 		return;
 
@@ -148,11 +148,11 @@ void trigger_push_touch()
 		other.velocity = trigger_push_calculatevelocity(other.origin, this.enemy, this.height);
 		other.move_velocity = other.velocity;
 	}
-	else if(this.target)
+	else if(this.target && this.target != "")
 	{
 		entity e;
 		RandomSelection_Init();
-		for(e = world; (e = find(e, targetname, this.target)); )
+		for(e = NULL; (e = find(e, targetname, this.target)); )
 		{
 			if(e.cnt)
 				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
@@ -235,10 +235,7 @@ void trigger_push_touch()
 	}
 
 	if(this.enemy.target)
-	{
-		activator = other;
-		WITHSELF(this.enemy, SUB_UseTargets());
-	}
+		SUB_UseTargets(this.enemy, other, other); // TODO: do we need other as trigger too?
 
 	if (other.flags & FL_PROJECTILE)
 	{
@@ -265,15 +262,15 @@ void trigger_push_touch()
 
 	if (this.spawnflags & PUSH_ONCE)
 	{
-		this.touch = func_null;
-		this.think = SUB_Remove_self;
+		settouch(this, func_null);
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 	}
 #endif
 }
 
 #ifdef SVQC
-void trigger_push_link();
+void trigger_push_link(entity this);
 void trigger_push_updatelink(entity this);
 #endif
 void trigger_push_findtarget(entity this)
@@ -288,7 +285,7 @@ void trigger_push_findtarget(entity this)
 	if (this.target)
 	{
 		float n = 0;
-		for(t = world; (t = find(t, targetname, this.target)); )
+		for(t = NULL; (t = find(t, targetname, this.target)); )
 		{
 			++n;
 #ifdef SVQC
@@ -307,19 +304,19 @@ void trigger_push_findtarget(entity this)
 		{
 			// no dest!
 #ifdef SVQC
-			objerror ("Jumppad with nonexistant target");
+			objerror (this, "Jumppad with nonexistant target");
 #endif
 			return;
 		}
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			this.enemy = find(world, targetname, this.target);
+			this.enemy = find(NULL, targetname, this.target);
 		}
 		else
 		{
 			// have to use random selection every single time
-			this.enemy = world;
+			this.enemy = NULL;
 		}
 	}
 #ifdef SVQC
@@ -334,7 +331,7 @@ void trigger_push_findtarget(entity this)
 		remove(e);
 	}
 
-	trigger_push_link();
+	trigger_push_link(this);
 	defer(this, 0.1, trigger_push_updatelink);
 #endif
 }
@@ -349,6 +346,10 @@ float trigger_push_send(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, this.active);
 	WriteCoord(MSG_ENTITY, this.height);
 
+	WriteCoord(MSG_ENTITY, this.movedir_x);
+	WriteCoord(MSG_ENTITY, this.movedir_y);
+	WriteCoord(MSG_ENTITY, this.movedir_z);
+
 	trigger_common_write(this, true);
 
 	return true;
@@ -359,9 +360,8 @@ void trigger_push_updatelink(entity this)
 	this.SendFlags |= 1;
 }
 
-void trigger_push_link()
+void trigger_push_link(entity this)
 {
-    SELFPARAM();
 	trigger_link(this, trigger_push_send);
 }
 
@@ -385,7 +385,7 @@ spawnfunc(trigger_push)
 
 	this.active = ACTIVE_ACTIVE;
 	this.use = trigger_push_use;
-	this.touch = trigger_push_touch;
+	settouch(this, trigger_push_touch);
 
 	// normal push setup
 	if (!this.speed)
@@ -440,21 +440,21 @@ spawnfunc(target_position) { target_push_init(this); }
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 {
-	make_pure(this);
-
 	this.classname = "jumppad";
 	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.height = ReadCoord();
 
-	trigger_common_read(true);
+	this.movedir_x = ReadCoord();
+	this.movedir_y = ReadCoord();
+	this.movedir_z = ReadCoord();
+
+	trigger_common_read(this, true);
 
 	this.entremove = trigger_remove_generic;
 	this.solid = SOLID_TRIGGER;
-	//this.draw = trigger_draw_generic;
-	this.move_touch = trigger_push_touch;
-	this.drawmask = MASK_NORMAL;
+	settouch(this, trigger_push_touch);
 	this.move_time = time;
 	defer(this, 0.25, trigger_push_findtarget);
 

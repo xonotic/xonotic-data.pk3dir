@@ -55,7 +55,7 @@ float server_is_dedicated;
 .float inactive; // Clientwall disappears when inactive
 .float alpha_max, alpha_min;
 .float fade_start, fade_end, fade_vertical_offset;
-.float default_solid; // Variable to store default self.solid for clientwalls
+.float default_solid; // Variable to store default .solid for clientwalls
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
@@ -77,7 +77,7 @@ float server_is_dedicated;
 .float fade_time;
 .float fade_rate;
 
-void() player_setupanimsformodel;
+void player_setupanimsformodel(entity this);
 
 .string mdl;
 
@@ -130,7 +130,7 @@ const float MAX_DAMAGEEXTRARADIUS = 16;
 
 // WEAPONTODO
 .float autoswitch;
-bool client_hasweapon(entity cl, Weapon wpn, float andammo, bool complain);
+bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain);
 void w_clear(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire);
 // VorteX: standalone think for weapons, so normal think on weaponentity can be reserved by weaponflashes (which needs update even player dies)
@@ -155,7 +155,7 @@ float alreadychangedlevel;
 
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; //point in time since the client is spectating or observing
-void checkSpectatorBlock();
+void checkSpectatorBlock(entity this);
 
 float game_completion_ratio; // 0 at start, 1 near end
 .float winning;
@@ -179,7 +179,6 @@ bool nJoinAllowed(entity this, entity ignore);
 float default_player_alpha;
 float default_weapon_alpha;
 
-.float() customizeentityforclient;
 .float cvar_cl_handicap;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
@@ -299,11 +298,11 @@ void W_Porto_Remove (entity p);
 .entity ballcarried; // Also used for keepaway
 float g_nexball_meter_period;
 
-void SUB_DontUseTargets();
-void SUB_UseTargets();
+void SUB_DontUseTargets(entity this, entity actor, entity trigger);
+void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 .void(entity this) reset; // if set, an entity is reset using this
-.void() reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
+.void(entity this) reset2; // if set, an entity is reset using this (after calling ALL the reset functions for other entities)
 
 void ClientData_Touch(entity e);
 
@@ -384,7 +383,7 @@ const float ACTIVE_IDLE 	= 2;
 const float ACTIVE_BUSY 	= 2;
 const float ACTIVE_TOGGLE 	= 3;
 .float active;
-.void (float act_state) setactive;
+.void (entity this, int act_state) setactive;
 .entity realowner;
 
 //float serverflags;
@@ -406,9 +405,9 @@ const float ACTIVE_TOGGLE 	= 3;
 
 .float stat_respawn_time = _STAT(RESPAWN_TIME); // shows respawn time, and is negative when awaiting respawn
 
-void PlayerUseKey();
+void PlayerUseKey(entity this);
 
-USING(spawn_evalfunc_t, vector(entity player, entity spot, vector current));
+USING(spawn_evalfunc_t, vector(entity this, entity player, entity spot, vector current));
 .spawn_evalfunc_t spawn_evalfunc;
 
 string modname;
@@ -441,5 +440,5 @@ const int MIF_GUIDED_CONFUSABLE = MIF_GUIDED_HEAT | MIF_GUIDED_AI;
 
 .string cvar_cl_physics;
 
-.float init_for_player_needed;
-.void(entity) init_for_player;
+.bool init_for_player_needed;
+.void(entity this, entity player) init_for_player;

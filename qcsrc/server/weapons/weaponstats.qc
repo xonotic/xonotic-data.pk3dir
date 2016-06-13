@@ -74,7 +74,7 @@ void WeaponStats_Shutdown()
 		return;
 	if(autocvar_sv_weaponstats_file != "")
 	{
-		url_multi_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, world);
+		url_multi_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, NULL);
 	}
 	else
 	{

@@ -476,14 +476,14 @@ string(string name, ...) precache_pic = #317;
 string(string name) precache_cubemap = #317;
 vector(string picname) draw_getimagesize = #318;
 void(string name) freepic = #319;
-float(vector position, float character, vector scale, vector rgb, float alpha, float flag) drawcharacter = #320;
-float(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawstring = #321;
-float(vector position, string pic, vector size, vector rgb, float alpha, float flag) drawpic = #322;
-float(vector position, vector size, vector rgb, float alpha, float flag) drawfill = #323;
-void(float x, float y, float width, float height) drawsetcliparea = #324;
+float(vector position, float character, vector scale, vector rgb, float alpha, float flag) drawcharacter_builtin = #320;
+float(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawstring_builtin = #321;
+float(vector position, string pic, vector size, vector rgb, float alpha, float flag) drawpic_builtin = #322;
+float(vector position, vector size, vector rgb, float alpha, float flag) drawfill_builtin = #323;
+void(float x, float y, float width, float height) drawsetcliparea_builtin = #324;
 void(void) drawresetcliparea = #325;
-float(vector position, string text, vector scale, float alpha, float flag) drawcolorcodedstring = #326;
-vector(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawcolorcodedstring2 = #326;
+float(vector position, string text, vector scale, float alpha, float flag) drawcolorcodedstring_builtin = #326;
+vector(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawcolorcodedstring2_builtin = #326;
 
 float(float stnum) getstatf = #330;
 float(float stnum, ...) getstati = #331; // can optionally take first bit and count
@@ -846,7 +846,7 @@ float loadfont(string fontname, string fontmaps, string sizes, float slot, float
 // fix_* parms let you fix badly made fonts by applying some transformations to them
 // fix_scale : per-character center-oriented scale (doesn't change line height at all)
 // fix_voffset : vertical offset for each character, it's a multiplier to character height
-float stringwidth(string text, float allowColorCodes, vector size) = #327; // get a width of string with given font and char size
+float stringwidth_builtin(string text, float allowColorCodes, vector size) = #327; // get a width of string with given font and char size
 float stringwidth_menu(string text, float allowColorCodes, vector size) = #468; // in menu.dat it has different builtin #
 //description: engine support for custom fonts in console, hud, qc etc.
 // limits:

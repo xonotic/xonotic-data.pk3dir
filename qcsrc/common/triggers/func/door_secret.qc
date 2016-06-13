@@ -1,11 +1,11 @@
 #ifdef SVQC
-void() fd_secret_move1;
-void() fd_secret_move2;
-void() fd_secret_move3;
-void() fd_secret_move4;
-void() fd_secret_move5;
-void() fd_secret_move6;
-void() fd_secret_done;
+void fd_secret_move1(entity this);
+void fd_secret_move2(entity this);
+void fd_secret_move3(entity this);
+void fd_secret_move4(entity this);
+void fd_secret_move5(entity this);
+void fd_secret_move6(entity this);
+void fd_secret_done(entity this);
 
 const float SECRET_OPEN_ONCE = 1;		// stays open
 const float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
@@ -13,134 +13,134 @@ const float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
 const float SECRET_NO_SHOOT = 8;		// only opened by trigger
 const float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
-void fd_secret_use()
-{SELFPARAM();
+void fd_secret_use(entity this, entity actor, entity trigger)
+{
 	float temp;
 	string message_save;
 
-	self.health = 10000;
-	self.bot_attack = true;
+	this.health = 10000;
+	this.bot_attack = true;
 
 	// exit if still moving around...
-	if (self.origin != self.oldorigin)
+	if (this.origin != this.oldorigin)
 		return;
 
-	message_save = self.message;
-	self.message = ""; // no more message
-	SUB_UseTargets();				// fire all targets / killtargets
-	self.message = message_save;
+	message_save = this.message;
+	this.message = ""; // no more message
+	SUB_UseTargets(this, actor, trigger);				// fire all targets / killtargets
+	this.message = message_save;
 
-	self.velocity = '0 0 0';
+	this.velocity = '0 0 0';
 
 	// Make a sound, wait a little...
 
-	if (self.noise1 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 0.1;
+	if (this.noise1 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 0.1;
 
-	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
-	makevectors(self.mangle);
+	temp = 1 - (this.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
+	makevectors(this.mangle);
 
-	if (!self.t_width)
+	if (!this.t_width)
 	{
-		if (self.spawnflags & SECRET_1ST_DOWN)
-			self.t_width = fabs(v_up * self.size);
+		if (this.spawnflags & SECRET_1ST_DOWN)
+			this.t_width = fabs(v_up * this.size);
 		else
-			self.t_width = fabs(v_right * self.size);
+			this.t_width = fabs(v_right * this.size);
 	}
 
-	if (!self.t_length)
-		self.t_length = fabs(v_forward * self.size);
+	if (!this.t_length)
+		this.t_length = fabs(v_forward * this.size);
 
-	if (self.spawnflags & SECRET_1ST_DOWN)
-		self.dest1 = self.origin - v_up * self.t_width;
+	if (this.spawnflags & SECRET_1ST_DOWN)
+		this.dest1 = this.origin - v_up * this.t_width;
 	else
-		self.dest1 = self.origin + v_right * (self.t_width * temp);
+		this.dest1 = this.origin + v_right * (this.t_width * temp);
 
-	self.dest2 = self.dest1 + v_forward * self.t_length;
-	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move1);
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
+	this.dest2 = this.dest1 + v_forward * this.t_length;
+	SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1);
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
 }
 
 void fd_secret_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	WITHSELF(this, fd_secret_use());
+	fd_secret_use(this, NULL, NULL);
 }
 
 // Wait after first movement...
-void fd_secret_move1()
-{SELFPARAM();
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
-	self.think = fd_secret_move2;
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
+void fd_secret_move1(entity this)
+{
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 1.0;
+	setthink(this, fd_secret_move2);
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 // Start moving sideways w/sound...
-void fd_secret_move2()
-{SELFPARAM();
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.dest2, TSPEED_LINEAR, self.speed, fd_secret_move3);
+void fd_secret_move2(entity this)
+{
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	SUB_CalcMove(this, this.dest2, TSPEED_LINEAR, this.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
-void fd_secret_move3()
-{SELFPARAM();
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
-	if (!(self.spawnflags & SECRET_OPEN_ONCE))
+void fd_secret_move3(entity this)
+{
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
+	if (!(this.spawnflags & SECRET_OPEN_ONCE))
 	{
-		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
-		self.think = fd_secret_move4;
+		this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+		setthink(this, fd_secret_move4);
 	}
 }
 
 // Move backward...
-void fd_secret_move4()
-{SELFPARAM();
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move5);
+void fd_secret_move4(entity this)
+{
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move5);
 }
 
 // Wait 1 second...
-void fd_secret_move5()
-{SELFPARAM();
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
-	self.think = fd_secret_move6;
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
+void fd_secret_move5(entity this)
+{
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 1.0;
+	setthink(this, fd_secret_move6);
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
 }
 
-void fd_secret_move6()
-{SELFPARAM();
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.oldorigin, TSPEED_LINEAR, self.speed, fd_secret_done);
+void fd_secret_move6(entity this)
+{
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	SUB_CalcMove(this, this.oldorigin, TSPEED_LINEAR, this.speed, fd_secret_done);
 }
 
-void fd_secret_done()
-{SELFPARAM();
-	if (self.spawnflags&SECRET_YES_SHOOT)
+void fd_secret_done(entity this)
+{
+	if (this.spawnflags&SECRET_YES_SHOOT)
 	{
-		self.health = 10000;
-		self.takedamage = DAMAGE_YES;
-		//self.th_pain = fd_secret_use;
+		this.health = 10000;
+		this.takedamage = DAMAGE_YES;
+		//this.th_pain = fd_secret_use;
 	}
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 .float door_finished;
 
-void secret_blocked()
-{SELFPARAM();
-	if (time < self.door_finished)
+void secret_blocked(entity this)
+{
+	if (time < this.door_finished)
 		return;
-	self.door_finished = time + 0.5;
-	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
+	this.door_finished = time + 0.5;
+	//T_Damage (other, this, this, this.dmg, this.dmg, this.deathtype, DT_IMPACT, (this.absmin + this.absmax) * 0.5, '0 0 0', Obituary_Generic);
 }
 
 /*
@@ -150,20 +150,20 @@ secret_touch
 Prints messages
 ================
 */
-void secret_touch()
-{SELFPARAM();
+void secret_touch(entity this)
+{
 	if (!other.iscreature)
 		return;
-	if (self.door_finished > time)
+	if (this.door_finished > time)
 		return;
 
-	self.door_finished = time + 2;
+	this.door_finished = time + 2;
 
-	if (self.message)
+	if (this.message)
 	{
 		if (IS_CLIENT(other))
-			centerprint(other, self.message);
-		play2(other, self.noise);
+			centerprint(other, this.message);
+		play2(other, this.noise);
 	}
 }
 
@@ -175,7 +175,7 @@ void secret_reset(entity this)
 		this.takedamage = DAMAGE_YES;
 	}
 	setorigin(this, this.oldorigin);
-	this.think = func_null;
+	setthink(this, func_null);
 	this.SUB_NEXTTHINK = 0;
 }
 
@@ -207,14 +207,14 @@ spawnfunc(func_door_secret)
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 	this.classname = "door";
-	if (!InitMovingBrushTrigger()) return;
+	if (!InitMovingBrushTrigger(this)) return;
 	this.effects |= EF_LOWPRECISION;
 
 	if (this.noise == "") this.noise = "misc/talk.wav";
 	precache_sound(this.noise);
 
-	this.touch = secret_touch;
-	this.blocked = secret_blocked;
+	settouch(this, secret_touch);
+	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
 	IFTARGETED

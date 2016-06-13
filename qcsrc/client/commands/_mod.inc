@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "all.qc"
-#include "cl_cmd.qc"
+#include <client/commands/all.qc>
+#include <client/commands/cl_cmd.qc>

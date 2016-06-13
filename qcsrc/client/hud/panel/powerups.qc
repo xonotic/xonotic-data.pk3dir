@@ -109,6 +109,10 @@ void HUD_Powerups()
 
 	// Draw panel background
 	HUD_Panel_UpdateCvars();
+	if (autocvar_hud_panel_powerups_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 
 	// Set drawing area

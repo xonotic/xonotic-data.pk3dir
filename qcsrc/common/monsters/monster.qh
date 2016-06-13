@@ -69,7 +69,7 @@ CLASS(Monster, Object)
     /** (BOTH) precaches models/sounds used by this monster */
     METHOD(Monster, mr_precache, bool(Monster this)) { TC(Monster, this); return false; }
     /** (SERVER) called when monster is damaged */
-    METHOD(Monster, mr_pain, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
+    METHOD(Monster, mr_pain, float(Monster this, entity actor, float damage_take, entity attacker, float deathtype)) { TC(Monster, this); return damage_take; }
     /** (BOTH?) sets animations for monster */
     METHOD(Monster, mr_anim, bool(Monster this, entity actor)) { TC(Monster, this); return false; }
 

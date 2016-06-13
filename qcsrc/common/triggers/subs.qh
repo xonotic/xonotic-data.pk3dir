@@ -9,7 +9,8 @@
 	#define SUB_ORIGIN			origin
 	#define SUB_SETORIGIN(s,v)	setorigin((s), (v))
 	#define SUB_NEXTTHINK		nextthink
-	#define SUB_THINK			think
+	#define SUB_THINK(e, f)     setthink(e, f)
+	#define SUB_THUNK(e)        getthink(e)
 	#define SUB_LTIME			ltime
 	#define SUB_FLAGS			flags
 
@@ -22,7 +23,8 @@
 	#define SUB_AVELOCITY	move_avelocity
 	#define SUB_ORIGIN		move_origin
 	#define SUB_NEXTTHINK	move_nextthink
-	#define SUB_THINK		move_think
+	#define SUB_THINK(e, f) ((e).move_think = (f))
+	#define SUB_THUNK(e)    ((e).move_think)
 	#define SUB_LTIME		move_ltime
 	#define SUB_FLAGS		move_flags
 
@@ -36,11 +38,12 @@
 
 #endif
 
+
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
 
 .vector		finaldest, finalangle; 		//plat.qc stuff
-.void()		think1;
+.void(entity this) think1;
 .float state;
 .float		t_length, t_width;
 
@@ -55,7 +58,7 @@ void SUB_VanishOrRemove (entity ent);
 .string  platmovetype;
 .float platmovetype_start, platmovetype_end;
 
-entity activator;
+//entity activator;
 
 .string killtarget;
 

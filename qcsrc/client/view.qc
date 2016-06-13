@@ -114,17 +114,99 @@ float autocvar_cl_leanmodel_lowpass = 0.05;
 	highpass(value.z, frac, ref_store.z, ref_out.z); \
 } MACRO_END
 
-void viewmodel_animate(entity this)
+void calc_followmodel_ofs(entity view)
 {
-	static float prevtime;
-	float frametime = (time - prevtime);
-	prevtime = time;
+	if(cl_followmodel_time == time)
+		return; // cl_followmodel_ofs already calculated for this frame
 
-	if (autocvar_chase_active) return;
-	if (STAT(HEALTH) <= 0) return;
+	float frac;
+	vector gunorg = '0 0 0';
+	static vector vel_average;
+	static vector gunorg_prev = '0 0 0';
+	static vector gunorg_adjustment_highpass;
+	static vector gunorg_adjustment_lowpass;
 
-	entity view = CSQCModel_server2csqc(player_localentnum - 1);
+	vector vel;
+	if (autocvar_cl_followmodel_velocity_absolute)
+		vel = view.velocity;
+	else
+	{
+		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		vel.x = view.velocity * forward;
+		vel.y = view.velocity * right * -1;
+		vel.z = view.velocity * up;
+	}
 
+	vel.x = bound(vel_average.x - autocvar_cl_followmodel_limit, vel.x, vel_average.x + autocvar_cl_followmodel_limit);
+	vel.y = bound(vel_average.y - autocvar_cl_followmodel_limit, vel.y, vel_average.y + autocvar_cl_followmodel_limit);
+	vel.z = bound(vel_average.z - autocvar_cl_followmodel_limit, vel.z, vel_average.z + autocvar_cl_followmodel_limit);
+
+	frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
+	lowpass3(vel, frac, vel_average, gunorg);
+
+	gunorg *= -autocvar_cl_followmodel_speed * 0.042;
+
+	// perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
+	// trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
+	frac = avg_factor(autocvar_cl_followmodel_highpass);
+	highpass3(gunorg, frac, gunorg_adjustment_highpass, gunorg);
+	frac = avg_factor(autocvar_cl_followmodel_lowpass);
+	lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
+
+	if (autocvar_cl_followmodel_velocity_absolute)
+	{
+		vector fixed_gunorg;
+		vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
+		MAKEVECTORS(makevectors, view_angles, forward, right, up);
+		fixed_gunorg.x = gunorg * forward;
+		fixed_gunorg.y = gunorg * right * -1;
+		fixed_gunorg.z = gunorg * up;
+		gunorg = fixed_gunorg;
+	}
+
+	cl_followmodel_ofs = gunorg;
+	cl_followmodel_time = time;
+}
+
+vector leanmodel_ofs(entity view)
+{
+	float frac;
+	vector gunangles = '0 0 0';
+	static vector gunangles_prev = '0 0 0';
+	static vector gunangles_highpass = '0 0 0';
+	static vector gunangles_adjustment_highpass;
+	static vector gunangles_adjustment_lowpass;
+
+	if (view.csqcmodel_teleported)
+		gunangles_prev = view_angles;
+
+	// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
+	gunangles_highpass += gunangles_prev;
+	PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
+	YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
+	ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
+	frac = avg_factor(autocvar_cl_leanmodel_highpass1);
+	highpass2_limited(view_angles, frac, autocvar_cl_leanmodel_limit, gunangles_highpass, gunangles);
+	gunangles_prev = view_angles;
+	gunangles_highpass -= gunangles_prev;
+
+	PITCH(gunangles) *= -autocvar_cl_leanmodel_speed;
+	YAW(gunangles) *= -autocvar_cl_leanmodel_speed;
+
+	// we assume here: PITCH = 0, YAW = 1, ROLL = 2
+	frac = avg_factor(autocvar_cl_leanmodel_highpass);
+	highpass2(gunangles, frac, gunangles_adjustment_highpass, gunangles);
+	frac = avg_factor(autocvar_cl_leanmodel_lowpass);
+	lowpass2(gunangles, frac, gunangles_adjustment_lowpass, gunangles);
+
+	gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
+
+	return gunangles;
+}
+
+vector bobmodel_ofs(entity view)
+{
 	bool clonground = !(view.anim_implicit_state & ANIMIMPLICITSTATE_INAIR);
 	static bool oldonground;
 	static float hitgroundtime;
@@ -136,95 +218,48 @@ void viewmodel_animate(entity this)
 	}
 	oldonground = clonground;
 
-
-	bool teleported = view.csqcmodel_teleported;
-
-	float frac;
-	if(autocvar_cl_followmodel)
+	// calculate for swinging gun model
+	// the gun bobs when running on the ground, but doesn't bob when you're in the air.
+	vector gunorg = '0 0 0';
+	static float bobmodel_scale = 0;
+	static float time_ofs = 0; // makes the effect always restart in the same way
+	if (clonground)
 	{
-		vector gunorg = '0 0 0';
-		static vector vel_average;
-		static vector gunorg_prev = '0 0 0';
-		static vector gunorg_adjustment_highpass;
-		static vector gunorg_adjustment_lowpass;
-
-		vector vel;
-		if(autocvar_cl_followmodel_velocity_absolute)
-			vel = view.velocity;
-		else
-		{
-			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-			MAKEVECTORS(makevectors, view_angles, forward, right, up);
-			vel.x = view.velocity * forward;
-			vel.y = view.velocity * right * -1;
-			vel.z = view.velocity * up;
-		}
-
-		vel.x = bound(vel_average.x - autocvar_cl_followmodel_limit, vel.x, vel_average.x + autocvar_cl_followmodel_limit);
-		vel.y = bound(vel_average.y - autocvar_cl_followmodel_limit, vel.y, vel_average.y + autocvar_cl_followmodel_limit);
-		vel.z = bound(vel_average.z - autocvar_cl_followmodel_limit, vel.z, vel_average.z + autocvar_cl_followmodel_limit);
-
-		frac = avg_factor(autocvar_cl_followmodel_velocity_lowpass);
-		lowpass3(vel, frac, vel_average, gunorg);
-
-		gunorg *= -autocvar_cl_followmodel_speed * 0.042;
-
-		// perform highpass/lowpass on the adjustment vectors (turning velocity into acceleration!)
-		// trick: we must do the lowpass LAST, so the lowpass vector IS the final vector!
-		frac = avg_factor(autocvar_cl_followmodel_highpass);
-		highpass3(gunorg, frac, gunorg_adjustment_highpass, gunorg);
-		frac = avg_factor(autocvar_cl_followmodel_lowpass);
-		lowpass3(gunorg, frac, gunorg_adjustment_lowpass, gunorg);
-
-		if(autocvar_cl_followmodel_velocity_absolute)
-		{
-			vector fixed_gunorg;
-			vector forward = '0 0 0', right = '0 0 0', up = '0 0 0';
-			MAKEVECTORS(makevectors, view_angles, forward, right, up);
-			fixed_gunorg.x = gunorg * forward;
-			fixed_gunorg.y = gunorg * right * -1;
-			fixed_gunorg.z = gunorg * up;
-			gunorg = fixed_gunorg;
-		}
-
-		this.origin += gunorg;
+		if (time - hitgroundtime > 0.05)
+			bobmodel_scale = min(1, bobmodel_scale + frametime * 5);
 	}
-
-	if(autocvar_cl_leanmodel)
-	{
-		vector gunangles = '0 0 0';
-		static vector gunangles_prev = '0 0 0';
-		static vector gunangles_highpass = '0 0 0';
-		static vector gunangles_adjustment_highpass;
-		static vector gunangles_adjustment_lowpass;
-
-		if (teleported)
-			gunangles_prev = view_angles;
-
-		// in the highpass, we _store_ the DIFFERENCE to the actual view angles...
-		gunangles_highpass += gunangles_prev;
-		PITCH(gunangles_highpass) += 360 * floor((PITCH(view_angles) - PITCH(gunangles_highpass)) / 360 + 0.5);
-		YAW(gunangles_highpass) += 360 * floor((YAW(view_angles) - YAW(gunangles_highpass)) / 360 + 0.5);
-		ROLL(gunangles_highpass) += 360 * floor((ROLL(view_angles) - ROLL(gunangles_highpass)) / 360 + 0.5);
-		frac = avg_factor(autocvar_cl_leanmodel_highpass1);
-		highpass2_limited(view_angles, frac, autocvar_cl_leanmodel_limit, gunangles_highpass, gunangles);
-		gunangles_prev = view_angles;
-		gunangles_highpass -= gunangles_prev;
-
-		PITCH(gunangles) *= -autocvar_cl_leanmodel_speed;
-		YAW(gunangles) *= -autocvar_cl_leanmodel_speed;
-
-		// we assume here: PITCH = 0, YAW = 1, ROLL = 2
-		frac = avg_factor(autocvar_cl_leanmodel_highpass);
-		highpass2(gunangles, frac, gunangles_adjustment_highpass, gunangles);
-		frac = avg_factor(autocvar_cl_leanmodel_lowpass);
-		lowpass2(gunangles, frac, gunangles_adjustment_lowpass, gunangles);
-
-		gunangles.x = -gunangles.x; // pitch was inverted, now that actually matters
-		this.angles += gunangles;
-	}
+	else
+		bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
 
 	float xyspeed = bound(0, vlen(vec2(view.velocity)), 400);
+	if (bobmodel_scale && xyspeed)
+	{
+		float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
+		float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
+		gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
+		gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
+	}
+	else
+		time_ofs = time;
+
+	return gunorg;
+}
+
+void viewmodel_animate(entity this)
+{
+	if (autocvar_chase_active) return;
+	if (STAT(HEALTH) <= 0) return;
+
+	entity view = CSQCModel_server2csqc(player_localentnum - 1);
+
+	if (autocvar_cl_followmodel)
+	{
+		calc_followmodel_ofs(view);
+		this.origin += cl_followmodel_ofs;
+	}
+
+	if (autocvar_cl_leanmodel)
+		this.angles += leanmodel_ofs(view);
 
 	// vertical view bobbing code
 	// TODO: cl_bob
@@ -238,31 +273,7 @@ void viewmodel_animate(entity this)
 
 	// gun model bobbing code
 	if (autocvar_cl_bobmodel)
-	{
-		// calculate for swinging gun model
-		// the gun bobs when running on the ground, but doesn't bob when you're in the air.
-		static float bobmodel_scale = 0;
-		static float time_ofs = 0; // makes the effect always restart in the same way
-		if (clonground)
-		{
-			if (time - hitgroundtime > 0.05)
-				bobmodel_scale = min(1, bobmodel_scale + frametime * 5);
-		}
-		else
-			bobmodel_scale = max(0, bobmodel_scale - frametime * 5);
-		if(bobmodel_scale && xyspeed)
-		{
-			float bspeed = xyspeed * 0.01 * autocvar_cl_viewmodel_scale * bobmodel_scale;
-			float s = (time - time_ofs) * autocvar_cl_bobmodel_speed;
-			vector gunorg = '0 0 0';
-			gunorg.y = bspeed * autocvar_cl_bobmodel_side * sin(s);
-			gunorg.z = bspeed * autocvar_cl_bobmodel_up * cos(s * 2);
-
-			this.origin += gunorg;
-		}
-		else
-			time_ofs = time;
-	}
+		this.origin += bobmodel_ofs(view);
 }
 
 .vector viewmodel_origin, viewmodel_angles;
@@ -272,7 +283,7 @@ void viewmodel_animate(entity this)
 
 void viewmodel_draw(entity this)
 {
-	if(!activeweapon)
+	if(!activeweapon || !autocvar_r_drawviewmodel)
 		return;
 	int mask = (intermission || (STAT(HEALTH) <= 0) || autocvar_chase_active) ? 0 : MASK_NORMAL;
 	float a = this.alpha;
@@ -309,7 +320,7 @@ void viewmodel_draw(entity this)
 			this.viewmodel_angles = this.angles;
 		}
 		anim_update(this);
-		if (!this.animstate_override)
+		if (!this.animstate_override && !this.animstate_looping)
 			anim_set(this, this.anim_idle, true, false, false);
 	}
 	float f = 0; // 0..1; 0: fully active
@@ -741,8 +752,6 @@ bool WantEventchase(entity this)
 			return true;
 		if(MUTATOR_CALLHOOK(WantEventchase, this))
 			return true;
-		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WEPSET(NEXBALL)))
-			return true;
 		if(autocvar_cl_eventchase_death && (STAT(HEALTH) <= 0))
 		{
 			if(autocvar_cl_eventchase_death == 2)
@@ -757,12 +766,12 @@ bool WantEventchase(entity this)
 	return false;
 }
 
-void HUD_Crosshair_Vehicle()
+void HUD_Crosshair_Vehicle(entity this)
 {
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
 		Vehicle info = Vehicles_from(hud);
-		info.vr_crosshair(info);
+		info.vr_crosshair(info, this);
 	}
 }
 
@@ -827,7 +836,7 @@ void HitSound()
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
 
-			sound7(world, CH_INFO, SND(HIT), VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
+			sound7(NULL, CH_INFO, SND(HIT), VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
 		}
 		unaccounted_damage = 0;
 		hitsound_time_prev = time;
@@ -837,7 +846,7 @@ void HitSound()
 	float typehit_time = STAT(TYPEHIT_TIME);
 	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
-		sound(world, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
+		sound(NULL, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
 		typehit_time_prev = typehit_time;
 	}
 }
@@ -851,7 +860,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			if(this)
+			if(this != WEP_Null)
 			{
 				wcross_color = this.wpcolor;
 				break;
@@ -922,9 +931,8 @@ LABEL(normalcolor)
 	return wcross_color;
 }
 
-void HUD_Crosshair()
-{SELFPARAM();
-	entity e = this;
+void HUD_Crosshair(entity this)
+{
 	float f, i, j;
 	vector v;
 	if(!scoreboard_active && !camera_active && intermission != 2 &&
@@ -936,7 +944,7 @@ void HUD_Crosshair()
 
 		if (hud != HUD_NORMAL)
 		{
-			HUD_Crosshair_Vehicle();
+			HUD_Crosshair_Vehicle(this);
 			return;
 		}
 
@@ -981,6 +989,7 @@ void HUD_Crosshair()
 		string wcross_name = "";
 		float wcross_scale, wcross_blur;
 
+        entity e = WEP_Null;
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
 			e = switchingweapon;
@@ -1307,11 +1316,12 @@ void HUD_Crosshair()
 	}
 }
 
-void HUD_Draw()
+void HUD_Draw(entity this)
 {
+	if(!intermission)
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, MUTATOR_ARGV(0, vector), autocvar_hud_colorflash_alpha * MUTATOR_ARGV(0, float), DRAWFLAG_ADDITIVE);
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
 	}
 	else if(STAT(FROZEN))
 	{
@@ -1337,11 +1347,12 @@ void HUD_Draw()
 
 			HUD_Main();
 			HUD_DrawScoreboard();
+			HUD_Scale_Disable();
 		}
 
 	// crosshair goes VERY LAST
 	UpdateDamage();
-	HUD_Crosshair();
+	HUD_Crosshair(this);
 	HitSound();
 }
 
@@ -1359,7 +1370,7 @@ int lasthud;
 float vh_notice_time;
 void WaypointSprite_Load();
 void CSQC_UpdateView(float w, float h)
-{SELFPARAM();
+{ENGINE_EVENT();
     TC(int, w); TC(int, h);
 	entity e;
 	float fov;
@@ -1379,6 +1390,8 @@ void CSQC_UpdateView(float w, float h)
 
 	lasthud = hud;
 
+	HUD_Scale_Disable();
+
 	if(autocvar__hud_showbinds_reload) // menu can set this one
 	{
 		db_close(binddb);
@@ -1390,6 +1403,10 @@ void CSQC_UpdateView(float w, float h)
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
 		view_quality = 1;
+
+	// this needs to be updated manually now due to the destruction of engine physics stats
+	if(!isdemo() && autocvar_slowmo != STAT(MOVEVARS_TIMESCALE))
+		cvar_set("slowmo", ftos(STAT(MOVEVARS_TIMESCALE)));
 
 	button_attack2 = PHYS_INPUT_BUTTON_ATCK2(this);
 	button_zoom = PHYS_INPUT_BUTTON_ZOOM(this);
@@ -1444,7 +1461,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
-		entity gen = world;
+		entity gen = NULL;
 
 		float vehicle_viewdist = 0;
 		vector vehicle_viewofs = '0 0 0';
@@ -2166,7 +2183,7 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	HUD_Draw();
+	HUD_Draw(this); // this parameter for deep vehicle function
 
 	if(NextFrameCommand)
 	{

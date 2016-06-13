@@ -10,116 +10,114 @@ REGISTER_NET_LINKED(ENT_CLIENT_LASER)
 
 #ifdef SVQC
 .float modelscale;
-void misc_laser_aim()
-{SELFPARAM();
+void misc_laser_aim(entity this)
+{
 	vector a;
-	if(self.enemy)
+	if(this.enemy)
 	{
-		if(self.spawnflags & 2)
+		if(this.spawnflags & 2)
 		{
-			if(self.enemy.origin != self.mangle)
+			if(this.enemy.origin != this.mangle)
 			{
-				self.mangle = self.enemy.origin;
-				self.SendFlags |= 2;
+				this.mangle = this.enemy.origin;
+				this.SendFlags |= 2;
 			}
 		}
 		else
 		{
-			a = vectoangles(self.enemy.origin - self.origin);
+			a = vectoangles(this.enemy.origin - this.origin);
 			a_x = -a_x;
-			if(a != self.mangle)
+			if(a != this.mangle)
 			{
-				self.mangle = a;
-				self.SendFlags |= 2;
+				this.mangle = a;
+				this.SendFlags |= 2;
 			}
 		}
 	}
 	else
 	{
-		if(self.angles != self.mangle)
+		if(this.angles != this.mangle)
 		{
-			self.mangle = self.angles;
-			self.SendFlags |= 2;
+			this.mangle = this.angles;
+			this.SendFlags |= 2;
 		}
 	}
-	if(self.origin != self.oldorigin)
+	if(this.origin != this.oldorigin)
 	{
-		self.SendFlags |= 1;
-		self.oldorigin = self.origin;
+		this.SendFlags |= 1;
+		this.oldorigin = this.origin;
 	}
 }
 
 void misc_laser_init(entity this)
 {
-	if(self.target != "")
-		self.enemy = find(world, targetname, self.target);
+	if(this.target != "")
+		this.enemy = find(NULL, targetname, this.target);
 }
 
 .entity pusher;
-void misc_laser_think()
-{SELFPARAM();
+void misc_laser_think(entity this)
+{
 	vector o;
 	entity hitent;
 	vector hitloc;
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	if(!self.state)
+	if(!this.state)
 		return;
 
-	misc_laser_aim();
+	misc_laser_aim(this);
 
-	if(self.enemy)
+	if(this.enemy)
 	{
-		o = self.enemy.origin;
-		if (!(self.spawnflags & 2))
-			o = self.origin + normalize(o - self.origin) * 32768;
+		o = this.enemy.origin;
+		if (!(this.spawnflags & 2))
+			o = this.origin + normalize(o - this.origin) * 32768;
 	}
 	else
 	{
-		makevectors(self.mangle);
-		o = self.origin + v_forward * 32768;
+		makevectors(this.mangle);
+		o = this.origin + v_forward * 32768;
 	}
 
-	if(self.dmg || self.enemy.target != "")
+	if(this.dmg || this.enemy.target != "")
 	{
-		traceline(self.origin, o, MOVE_NORMAL, self);
+		traceline(this.origin, o, MOVE_NORMAL, this);
 	}
 	hitent = trace_ent;
 	hitloc = trace_endpos;
 
-	if(self.enemy.target != "") // DETECTOR laser
+	if(this.enemy.target != "") // DETECTOR laser
 	{
 		if(trace_ent.iscreature)
 		{
-			self.pusher = hitent;
-			if(!self.count)
+			this.pusher = hitent;
+			if(!this.count)
 			{
-				self.count = 1;
+				this.count = 1;
 
-				activator = self.enemy.pusher;
-				WITHSELF(self.enemy, SUB_UseTargets());
+				SUB_UseTargets(this.enemy, this.enemy.pusher, NULL);
 			}
 		}
 		else
 		{
-			if(self.count)
+			if(this.count)
 			{
-				self.count = 0;
+				this.count = 0;
 
-				activator = self.enemy.pusher;
-				WITHSELF(self.enemy, SUB_UseTargets());
+				SUB_UseTargets(this.enemy, this.enemy.pusher, NULL);
 			}
 		}
 	}
 
-	if(self.dmg)
+	if(this.dmg)
 	{
-		if(self.team)
-			if(((self.spawnflags & 8) == 0) == (self.team != hitent.team))
+		if(this.team)
+			if(((this.spawnflags & 8) == 0) == (this.team != hitent.team))
 				return;
 		if(hitent.takedamage)
-			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER.m_id, hitloc, '0 0 0');
+			Damage(hitent, this, this, ((this.dmg < 0) ? 100000 : (this.dmg * frametime)), DEATH_HURTTRIGGER.m_id, hitloc, '0 0 0');
 	}
 }
 
@@ -127,52 +125,52 @@ bool laser_SendEntity(entity this, entity to, float fl)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_LASER);
 	fl = fl - (fl & 0xF0); // use that bit to indicate finite length laser
-	if(self.spawnflags & 2)
+	if(this.spawnflags & 2)
 		fl |= 0x80;
-	if(self.alpha)
+	if(this.alpha)
 		fl |= 0x40;
-	if(self.scale != 1 || self.modelscale != 1)
+	if(this.scale != 1 || this.modelscale != 1)
 		fl |= 0x20;
-	if(self.spawnflags & 4)
+	if(this.spawnflags & 4)
 		fl |= 0x10;
 	WriteByte(MSG_ENTITY, fl);
 	if(fl & 1)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 	}
 	if(fl & 8)
 	{
-		WriteByte(MSG_ENTITY, self.colormod_x * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_y * 255.0);
-		WriteByte(MSG_ENTITY, self.colormod_z * 255.0);
+		WriteByte(MSG_ENTITY, this.colormod_x * 255.0);
+		WriteByte(MSG_ENTITY, this.colormod_y * 255.0);
+		WriteByte(MSG_ENTITY, this.colormod_z * 255.0);
 		if(fl & 0x40)
-			WriteByte(MSG_ENTITY, self.alpha * 255.0);
+			WriteByte(MSG_ENTITY, this.alpha * 255.0);
 		if(fl & 0x20)
 		{
-			WriteByte(MSG_ENTITY, bound(0, self.scale * 16.0, 255));
-			WriteByte(MSG_ENTITY, bound(0, self.modelscale * 16.0, 255));
+			WriteByte(MSG_ENTITY, bound(0, this.scale * 16.0, 255));
+			WriteByte(MSG_ENTITY, bound(0, this.modelscale * 16.0, 255));
 		}
 		if((fl & 0x80) || !(fl & 0x10)) // effect doesn't need sending if the laser is infinite and has collision testing turned off
-			WriteShort(MSG_ENTITY, self.cnt + 1);
+			WriteShort(MSG_ENTITY, this.cnt + 1);
 	}
 	if(fl & 2)
 	{
 		if(fl & 0x80)
 		{
-			WriteCoord(MSG_ENTITY, self.enemy.origin_x);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_y);
-			WriteCoord(MSG_ENTITY, self.enemy.origin_z);
+			WriteCoord(MSG_ENTITY, this.enemy.origin_x);
+			WriteCoord(MSG_ENTITY, this.enemy.origin_y);
+			WriteCoord(MSG_ENTITY, this.enemy.origin_z);
 		}
 		else
 		{
-			WriteAngle(MSG_ENTITY, self.mangle_x);
-			WriteAngle(MSG_ENTITY, self.mangle_y);
+			WriteAngle(MSG_ENTITY, this.mangle_x);
+			WriteAngle(MSG_ENTITY, this.mangle_y);
 		}
 	}
 	if(fl & 4)
-		WriteByte(MSG_ENTITY, self.state);
+		WriteByte(MSG_ENTITY, this.state);
 	return 1;
 }
 
@@ -188,11 +186,11 @@ Keys:
 "dmg"
  damage per second (-1 for a laser that kills immediately)
 */
-void laser_use()
-{SELFPARAM();
-	self.state = !self.state;
-	self.SendFlags |= 4;
-	misc_laser_aim();
+void laser_use(entity this, entity actor, entity trigger)
+{
+	this.state = !this.state;
+	this.SendFlags |= 4;
+	misc_laser_aim(this);
 }
 
 void laser_reset(entity this)
@@ -234,7 +232,7 @@ spawnfunc(misc_laser)
 	if(!this.scale) this.scale = 1;
 	if(!this.modelscale) this.modelscale = 1;
 	else if(this.modelscale < 0) this.modelscale = 0;
-	this.think = misc_laser_think;
+	setthink(this, misc_laser_think);
 	this.nextthink = time;
 	InitializeEntity(this, misc_laser_init, INITPRIO_FINDTARGET);
 
@@ -319,65 +317,65 @@ void Draw_Laser(entity this)
 
 NET_HANDLE(ENT_CLIENT_LASER, bool isnew)
 {
-	InterpolateOrigin_Undo(self);
+	InterpolateOrigin_Undo(this);
 
 	// 30 bytes, or 13 bytes for just moving
 	int f = ReadByte();
-	self.count = (f & 0xF0);
+	this.count = (f & 0xF0);
 
-	if(self.count & 0x80)
-		self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
+	if(this.count & 0x80)
+		this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 	else
-		self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
+		this.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
 
 	if(f & 1)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 	}
 	if(f & 8)
 	{
-		self.colormod_x = ReadByte() / 255.0;
-		self.colormod_y = ReadByte() / 255.0;
-		self.colormod_z = ReadByte() / 255.0;
+		this.colormod_x = ReadByte() / 255.0;
+		this.colormod_y = ReadByte() / 255.0;
+		this.colormod_z = ReadByte() / 255.0;
 		if(f & 0x40)
-			self.alpha = ReadByte() / 255.0;
+			this.alpha = ReadByte() / 255.0;
 		else
-			self.alpha = 0;
-		self.scale = 2;
-		self.modelscale = 50;
+			this.alpha = 0;
+		this.scale = 2;
+		this.modelscale = 50;
 		if(f & 0x20)
 		{
-			self.scale *= ReadByte() / 16.0; // beam radius
-			self.modelscale *= ReadByte() / 16.0; // dlight radius
+			this.scale *= ReadByte() / 16.0; // beam radius
+			this.modelscale *= ReadByte() / 16.0; // dlight radius
 		}
 		if((f & 0x80) || !(f & 0x10))
-			self.cnt = ReadShort() - 1; // effect number
+			this.cnt = ReadShort() - 1; // effect number
 		else
-			self.cnt = 0;
+			this.cnt = 0;
 	}
 	if(f & 2)
 	{
 		if(f & 0x80)
 		{
-			self.velocity_x = ReadCoord();
-			self.velocity_y = ReadCoord();
-			self.velocity_z = ReadCoord();
+			this.velocity_x = ReadCoord();
+			this.velocity_y = ReadCoord();
+			this.velocity_z = ReadCoord();
 		}
 		else
 		{
-			self.angles_x = ReadAngle();
-			self.angles_y = ReadAngle();
+			this.angles_x = ReadAngle();
+			this.angles_y = ReadAngle();
 		}
 	}
 	if(f & 4)
-		self.state = ReadByte();
+		this.state = ReadByte();
 
 	return = true;
 
 	InterpolateOrigin_Note(this);
-	self.draw = Draw_Laser;
+	this.draw = Draw_Laser;
 }
 #endif

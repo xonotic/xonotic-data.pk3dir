@@ -27,6 +27,7 @@ noref bool require_spawnfunc_prefix;
 	#define _spawnfunc_check(fld) \
 		if (fieldname == #fld) continue;
 
+	noref bool __spawnfunc_expecting;
 	noref entity __spawnfunc_expect;
 	bool __spawnfunc_unreachable_workaround = true;
 
@@ -35,11 +36,12 @@ noref bool require_spawnfunc_prefix;
 		void __spawnfunc_##id(entity this); \
 		[[accumulate]] void spawnfunc_##id(entity this) \
 		{ \
-			if (__self == __spawnfunc_expect) \
+			if (__spawnfunc_expecting) \
 			{ \
 				/* engine call */ \
+				__spawnfunc_expecting = false; \
+				this = __spawnfunc_expect; \
 				__spawnfunc_expect = NULL; \
-				this = __self; \
 			} \
 			else \
 			{ \

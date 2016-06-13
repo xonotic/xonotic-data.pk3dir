@@ -41,14 +41,14 @@ void havocbot_ai(entity this)
 		// TODO: tracewalk() should take care of this job (better path finding under water)
 		// if we don't have a goal and we're under water look for a waypoint near the "shore" and push it
 		if(IS_DEAD(this))
-		if(this.goalcurrent==world)
+		if(this.goalcurrent==NULL)
 		if(this.waterlevel==WATERLEVEL_SWIMMING || (this.aistatus & AI_STATUS_OUT_WATER))
 		{
 			// Look for the closest waypoint out of water
 			entity newgoal, head;
 			float bestdistance, distance;
 
-			newgoal = world;
+			newgoal = NULL;
 			bestdistance = 10000;
 			for (head = findchain(classname, "waypoint"); head; head = head.chain)
 			{
@@ -107,7 +107,7 @@ void havocbot_ai(entity this)
 		if(this.weapons)
 		{
 			Weapon w = PS(this).m_weapon;
-			w.wr_aim(w);
+			w.wr_aim(w, this);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
 			{
 				PHYS_INPUT_BUTTON_ATCK(this) = false;
@@ -137,7 +137,7 @@ void havocbot_ai(entity this)
 		//heading = this.velocity;
 		//dprint(this.goalstack01.classname,etos(this.goalstack01),"\n");
 		if(
-			this.goalstack01 != this && this.goalstack01 != world && ((this.aistatus & AI_STATUS_RUNNING) == 0) &&
+			this.goalstack01 != this && this.goalstack01 != NULL && ((this.aistatus & AI_STATUS_RUNNING) == 0) &&
 			!(this.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT)
 		)
 			next = ((this.goalstack01.absmin + this.goalstack01.absmax) * 0.5) - (this.origin + this.view_ofs);
@@ -155,7 +155,7 @@ void havocbot_ai(entity this)
 		if (this.waterlevel < WATERLEVEL_SWIMMING)
 			v.z = 0;
 		//dprint("walk at:", vtos(v), "\n");
-		//te_lightning2(world, this.origin, this.goalcurrent.origin);
+		//te_lightning2(NULL, this.origin, this.goalcurrent.origin);
 		bot_aimdir(this, v, -1);
 	}
 	havocbot_movetogoal(this);
@@ -328,7 +328,7 @@ void havocbot_bunnyhop(entity this, vector dir)
 					if(this.goalcurrent.classname=="waypoint")
 					if (!(this.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
 					if(fabs(gco.z - this.origin.z) < this.maxs.z - this.mins.z)
-					if(this.goalstack01!=world)
+					if(this.goalstack01!=NULL)
 					{
 						gno = (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5;
 						deviation = vectoangles(gno - this.origin) - vectoangles(gco - this.origin);
@@ -464,7 +464,7 @@ void havocbot_movetogoal(entity this)
 					return;
 				}
 				// Switch to normal mode
-				this.navigation_jetpack_goal = world;
+				this.navigation_jetpack_goal = NULL;
 				this.aistatus &= ~AI_STATUS_JETPACK_LANDING;
 				this.aistatus &= ~AI_STATUS_JETPACK_FLYING;
 				return;
@@ -496,7 +496,7 @@ void havocbot_movetogoal(entity this)
 		{
 			if(fabs(this.velocity.z)<50)
 			{
-				entity head, newgoal = world;
+				entity head, newgoal = NULL;
 				float distance, bestdistance = 0;
 
 				for (head = findchain(classname, "waypoint"); head; head = head.chain)
@@ -506,7 +506,7 @@ void havocbot_movetogoal(entity this)
 					if(distance>1000)
 						continue;
 
-					traceline(this.origin + this.view_ofs , ( ( head.absmin + head.absmax ) * 0.5 ), true, world);
+					traceline(this.origin + this.view_ofs , ( ( head.absmin + head.absmax ) * 0.5 ), true, NULL);
 
 					if(trace_fraction<1)
 						continue;
@@ -574,7 +574,7 @@ void havocbot_movetogoal(entity this)
 
 			// If there is no goal try to move forward
 
-			if(this.goalcurrent==world)
+			if(this.goalcurrent==NULL)
 				dir = v_forward;
 			else
 				dir = normalize(( ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5 ) - this.origin);
@@ -626,14 +626,14 @@ void havocbot_movetogoal(entity this)
 		else
 		{
 			// If there is no goal try to move forward
-			if(this.goalcurrent==world)
+			if(this.goalcurrent==NULL)
 				this.movement_x = maxspeed;
 		}
 	}
 
 	// If we are under water with no goals, swim up
 	if(this.waterlevel)
-	if(this.goalcurrent==world)
+	if(this.goalcurrent==NULL)
 	{
 		dir = '0 0 0';
 		if(this.waterlevel>WATERLEVEL_SWIMMING)
@@ -649,14 +649,14 @@ void havocbot_movetogoal(entity this)
 	}
 
 	// if there is nowhere to go, exit
-	if (this.goalcurrent == world)
+	if (this.goalcurrent == NULL)
 		return;
 
 	if (this.goalcurrent)
 		navigation_poptouchedgoals(this);
 
 	// if ran out of goals try to use an alternative goal or get a new strategy asap
-	if(this.goalcurrent == world)
+	if(this.goalcurrent == NULL)
 	{
 		this.bot_strategytime = 0;
 		return;
@@ -734,10 +734,10 @@ void havocbot_movetogoal(entity this)
 			dst_down = dst_ahead - '0 0 1500';
 
 			// Look ahead
-			traceline(this.origin + this.view_ofs, dst_ahead, true, world);
+			traceline(this.origin + this.view_ofs, dst_ahead, true, NULL);
 
 			// Check head-banging against walls
-			if(vlen(this.origin + this.view_ofs - trace_endpos) < 25 && !(this.aistatus & AI_STATUS_OUT_WATER))
+			if(vdist(this.origin + this.view_ofs - trace_endpos, <, 25) && !(this.aistatus & AI_STATUS_OUT_WATER))
 			{
 				PHYS_INPUT_BUTTON_JUMP(this) = true;
 				if(this.facingwalltime && time > this.facingwalltime)
@@ -756,9 +756,9 @@ void havocbot_movetogoal(entity this)
 			{
 				this.facingwalltime = 0;
 
-				if(this.ignoregoal != world && time > this.ignoregoaltime)
+				if(this.ignoregoal != NULL && time > this.ignoregoaltime)
 				{
-					this.ignoregoal = world;
+					this.ignoregoal = NULL;
 					this.ignoregoaltime = 0;
 				}
 			}
@@ -771,9 +771,9 @@ void havocbot_movetogoal(entity this)
 			if((IS_ONGROUND(this)) || (this.aistatus & AI_STATUS_RUNNING) || PHYS_INPUT_BUTTON_JUMP(this))
 			{
 				// Look downwards
-				traceline(dst_ahead , dst_down, true, world);
-			//	te_lightning2(world, this.origin, dst_ahead);	// Draw "ahead" look
-			//	te_lightning2(world, dst_ahead, dst_down);		// Draw "downwards" look
+				traceline(dst_ahead , dst_down, true, NULL);
+			//	te_lightning2(NULL, this.origin, dst_ahead);	// Draw "ahead" look
+			//	te_lightning2(NULL, dst_ahead, dst_down);		// Draw "downwards" look
 				if(trace_endpos.z < this.origin.z + this.mins.z)
 				{
 					s = pointcontents(trace_endpos + '0 0 1');
@@ -807,10 +807,10 @@ void havocbot_movetogoal(entity this)
 				this.aistatus |= AI_STATUS_DANGER_AHEAD;
 		}
 
-		dodge = havocbot_dodge();
+		dodge = havocbot_dodge(this);
 		dodge = dodge * bound(0,0.5+(skill+this.bot_dodgeskill)*0.1,1);
 		evadelava = evadelava * bound(1,3-(skill+this.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
-		traceline(this.origin, ( ( this.enemy.absmin + this.enemy.absmax ) * 0.5 ), true, world);
+		traceline(this.origin, ( ( this.enemy.absmin + this.enemy.absmax ) * 0.5 ), true, NULL);
 		if(IS_PLAYER(trace_ent))
 			dir = dir * bound(0,(skill+this.bot_dodgeskill)/7,1);
 
@@ -862,7 +862,7 @@ void havocbot_chooseenemy(entity this)
 	vector eye, v;
 	if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(this))
 	{
-		this.enemy = world;
+		this.enemy = NULL;
 		return;
 	}
 	if (this.enemy)
@@ -870,7 +870,7 @@ void havocbot_chooseenemy(entity this)
 		if (!bot_shouldattack(this, this.enemy))
 		{
 			// enemy died or something, find a new target
-			this.enemy = world;
+			this.enemy = NULL;
 			this.havocbot_chooseenemy_finished = time;
 		}
 		else if (this.havocbot_stickenemy)
@@ -880,7 +880,7 @@ void havocbot_chooseenemy(entity this)
 			// and not really really far away
 			// and we're not severely injured
 			// then keep tracking for a half second into the future
-			traceline(this.origin+this.view_ofs, ( this.enemy.absmin + this.enemy.absmax ) * 0.5,false,world);
+			traceline(this.origin+this.view_ofs, ( this.enemy.absmin + this.enemy.absmax ) * 0.5,false,NULL);
 			if (trace_ent == this.enemy || trace_fraction == 1)
 			if (vdist(((this.enemy.absmin + this.enemy.absmax) * 0.5) - this.origin, <, 1000))
 			if (this.health > 30)
@@ -899,7 +899,7 @@ void havocbot_chooseenemy(entity this)
 		return;
 	this.havocbot_chooseenemy_finished = time + autocvar_bot_ai_enemydetectioninterval;
 	eye = this.origin + this.view_ofs;
-	best = world;
+	best = NULL;
 	bestrating = 100000000;
 	head = head2 = findchainfloat(bot_attack, true);
 
@@ -993,7 +993,7 @@ float havocbot_chooseweapon_checkreload(entity this, int new_weapon)
 	{
 		bool other_weapon_available = false;
 		FOREACH(Weapons, it != WEP_Null, LAMBDA(
-			if(it.wr_checkammo1(it) + it.wr_checkammo2(it))
+			if(it.wr_checkammo1(it, this) + it.wr_checkammo2(it, this))
 				other_weapon_available = true;
 		));
 		if(other_weapon_available)
@@ -1015,7 +1015,7 @@ void havocbot_chooseweapon(entity this)
 	}
 
 	// TODO: clean this up by moving it to weapon code
-	if(this.enemy==world)
+	if(this.enemy==NULL)
 	{
 		// If no weapon was chosen get the first available weapon
 		if(PS(this).m_weapon==WEP_Null)
@@ -1106,24 +1106,24 @@ void havocbot_chooseweapon(entity this)
 
 void havocbot_aim(entity this)
 {
-	vector selfvel, enemyvel;
+	vector myvel, enemyvel;
 //	if(this.flags & FL_INWATER)
 //		return;
 	if (time < this.nextaim)
 		return;
 	this.nextaim = time + 0.1;
-	selfvel = this.velocity;
+	myvel = this.velocity;
 	if (!this.waterlevel)
-		selfvel.z = 0;
+		myvel.z = 0;
 	if (this.enemy)
 	{
 		enemyvel = this.enemy.velocity;
 		if (!this.enemy.waterlevel)
 			enemyvel.z = 0;
-		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, selfvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
+		lag_additem(this, time + this.ping, 0, 0, this.enemy, this.origin, myvel, (this.enemy.absmin + this.enemy.absmax) * 0.5, enemyvel);
 	}
 	else
-		lag_additem(this, time + this.ping, 0, 0, world, this.origin, selfvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
+		lag_additem(this, time + this.ping, 0, 0, NULL, this.origin, myvel, ( this.goalcurrent.absmin + this.goalcurrent.absmax ) * 0.5, '0 0 0');
 }
 
 bool havocbot_moveto_refresh_route(entity this)
@@ -1144,7 +1144,7 @@ float havocbot_moveto(entity this, vector pos)
 	if(this.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 	{
 		// Step 4: Move to waypoint
-		if(this.havocbot_personal_waypoint==world)
+		if(this.havocbot_personal_waypoint==NULL)
 		{
 			LOG_TRACE("Error: ", this.netname, " trying to walk to a non existent personal waypoint\n");
 			this.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
@@ -1222,7 +1222,7 @@ float havocbot_moveto(entity this, vector pos)
 
 	// Step 1: Spawning waypoint
 	wp = waypoint_spawnpersonal(this, pos);
-	if(wp==world)
+	if(wp==NULL)
 	{
 		LOG_TRACE("Error: Can't spawn personal waypoint at ",vtos(pos),"\n");
 		return CMD_STATUS_ERROR;
@@ -1234,9 +1234,9 @@ float havocbot_moveto(entity this, vector pos)
 
 	// if pos is inside a teleport, then let's mark it as teleport waypoint
 	entity head;
-	for(head = world; (head = find(head, classname, "trigger_teleport")); )
+	for(head = NULL; (head = find(head, classname, "trigger_teleport")); )
 	{
-		if(WarpZoneLib_BoxTouchesBrush(pos, pos, head, world))
+		if(WarpZoneLib_BoxTouchesBrush(pos, pos, head, NULL))
 		{
 			wp.wpflags |= WAYPOINTFLAG_TELEPORT;
 			this.lastteleporttime = 0;
@@ -1268,7 +1268,7 @@ void havocbot_setupbot(entity this)
 	havocbot_chooserole(this);
 }
 
-vector havocbot_dodge()
+vector havocbot_dodge(entity this)
 {
 	// LordHavoc: disabled because this is too expensive
 	return '0 0 0';
@@ -1282,13 +1282,13 @@ vector havocbot_dodge()
 	head = findchainfloat(bot_dodge, true);
 	while(head)
 	{
-		if (head.owner != self)
+		if (head.owner != this)
 		{
 			vl = vlen(head.velocity);
 			if (vl > autocvar_sv_maxspeed * 0.3)
 			{
 				n = normalize(head.velocity);
-				v = self.origin - head.origin;
+				v = this.origin - head.origin;
 				d = v * n;
 				if (d > (0 - head.bot_dodgerating))
 				if (d < (vl * 0.2 + head.bot_dodgerating))
@@ -1306,11 +1306,11 @@ vector havocbot_dodge()
 			}
 			else
 			{
-				danger = head.bot_dodgerating - vlen(head.origin - self.origin);
+				danger = head.bot_dodgerating - vlen(head.origin - this.origin);
 				if (bestdanger < danger)
 				{
 					bestdanger = danger;
-					dodge = normalize(self.origin - head.origin);
+					dodge = normalize(this.origin - head.origin);
 				}
 			}
 		}

@@ -62,6 +62,10 @@ void HUD_HealthArmor()
 	pos = panel_pos;
 	mySize = panel_size;
 
+	if (autocvar_hud_panel_healtharmor_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
@@ -74,7 +78,7 @@ void HUD_HealthArmor()
 
     int maxhealth = autocvar_hud_panel_healtharmor_maxhealth;
     int maxarmor = autocvar_hud_panel_healtharmor_maxarmor;
-	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
+	if(autocvar_hud_panel_healtharmor_combined) // combined health and armor display
 	{
 		vector v;
 		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON.m_id);

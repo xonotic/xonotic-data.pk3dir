@@ -85,15 +85,15 @@ CLASS(Weapon, Object)
     ATTRIB(Weapon, m_pickup, entity, NULL);
 
     /** (SERVER) setup weapon data */
-    METHOD(Weapon, wr_setup, void(Weapon this)) {}
+    METHOD(Weapon, wr_setup, void(Weapon this, entity actor)) {}
     /** (SERVER) logic to run every frame */
     METHOD(Weapon, wr_think, void(Weapon this, entity actor, .entity weaponentity, int fire)) {}
     /** (SERVER) checks ammo for weapon primary */
-    METHOD(Weapon, wr_checkammo1, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_checkammo1, bool(Weapon this, entity actor)) {return false;}
     /** (SERVER) checks ammo for weapon second */
-    METHOD(Weapon, wr_checkammo2, bool(Weapon this)) {return false;}
+    METHOD(Weapon, wr_checkammo2, bool(Weapon this, entity actor)) {return false;}
     /** (SERVER) runs bot aiming code for this weapon */
-    METHOD(Weapon, wr_aim, void(Weapon this)) {}
+    METHOD(Weapon, wr_aim, void(Weapon this, entity actor)) {}
     /** (BOTH)   precaches models/sounds used by this weapon, also sets up weapon properties */
     METHOD(Weapon, wr_init, void(Weapon this)) {}
     /** (SERVER) notification number for suicide message (may inspect w_deathtype for details) */
@@ -103,13 +103,13 @@ CLASS(Weapon, Object)
     /** (SERVER) handles reloading for weapon */
     METHOD(Weapon, wr_reload, void(Weapon this, entity actor, .entity weaponentity)) {}
     /** (SERVER) clears fields that the weapon may use */
-    METHOD(Weapon, wr_resetplayer, void(Weapon this)) {}
+    METHOD(Weapon, wr_resetplayer, void(Weapon this, entity actor)) {}
     /** (CLIENT) impact effect for weapon explosion */
-    METHOD(Weapon, wr_impacteffect, void(Weapon this)) {}
+    METHOD(Weapon, wr_impacteffect, void(Weapon this, entity actor)) {}
     /** (SERVER) called whenever a player dies */
-    METHOD(Weapon, wr_playerdeath, void(Weapon this)) {}
+    METHOD(Weapon, wr_playerdeath, void(Weapon this, entity actor)) {}
     /** (SERVER) logic to run when weapon is lost */
-    METHOD(Weapon, wr_gonethink, void(Weapon this)) {}
+    METHOD(Weapon, wr_gonethink, void(Weapon this, entity actor)) {}
     /** (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons) */
     METHOD(Weapon, wr_config, void(Weapon this)) {}
     /** (CLIENT) weapon specific zoom reticle */
@@ -120,9 +120,9 @@ CLASS(Weapon, Object)
     /** (CLIENT) weapon specific glow */
     METHOD(Weapon, wr_glow, vector(Weapon this)) { return '0 0 0'; }
     /** (SERVER) the weapon is dropped */
-    METHOD(Weapon, wr_drop, void(Weapon this)) {}
+    METHOD(Weapon, wr_drop, void(Weapon this, entity actor)) {}
     /** (SERVER) a weapon is picked up */
-    METHOD(Weapon, wr_pickup, void(Weapon this)) {}
+    METHOD(Weapon, wr_pickup, void(Weapon this, entity actor)) {}
     /** (SERVER) update cvar based properties */
     METHOD(Weapon, wr_update, void(Weapon this)) {}
 	METHOD(Weapon, display, void(entity this, void(string name, string icon) returns)) {
@@ -201,7 +201,7 @@ string W_UndeprecateName(string s);
 string W_NameWeaponOrder(string order);
 string W_NumberWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);
-string W_FixWeaponOrder_AllowIncomplete(string order);
+string W_FixWeaponOrder_AllowIncomplete(entity this, string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 void W_RandomWeapons(entity e, float n);
 

@@ -23,6 +23,10 @@ void HUD_EngineInfo()
 	pos = panel_pos;
 	mySize = panel_size;
 
+	if (autocvar_hud_panel_engineinfo_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{

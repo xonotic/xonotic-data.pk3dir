@@ -80,10 +80,9 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	makevectors (to_angles);
 
 #ifdef SVQC
-    SELFPARAM();
 	if(player.teleportable == TELEPORT_NORMAL) // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
 	{
-		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
+		if(teleporter.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
 			{
@@ -104,7 +103,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
 				Send_Effect(EFFECT_TELEPORT, to + v_forward * 32, '0 0 0', 1);
 			}
-			self.pushltime = time + 0.2;
+			teleporter.pushltime = time + 0.2;
 		}
 	}
 #endif
@@ -113,7 +112,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	// assuming to allows PL_MIN to PL_MAX box and some more
 #ifdef SVQC
 	from = player.origin;
-	setorigin (player, to);
+	setorigin(player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
 	player.fixangle = true;
@@ -188,7 +187,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	else
 	{
 		RandomSelection_Init();
-		for(e = world; (e = find(e, targetname, teleporter.target)); )
+		for(e = NULL; (e = find(e, targetname, teleporter.target)); )
 		{
 			p = 1;
 			if(STAT(TELEPORT_TELEFRAG_AVOID, player))
@@ -251,12 +250,12 @@ void teleport_findtarget(entity this)
 {
 	int n = 0;
 	entity e;
-	for(e = world; (e = find(e, targetname, self.target)); )
+	for(e = NULL; (e = find(e, targetname, this.target)); )
 	{
 		++n;
 #ifdef SVQC
 		if(e.movetype == MOVETYPE_NONE)
-			waypoint_spawnforteleporter(self, e.origin, 0);
+			waypoint_spawnforteleporter(this, e.origin, 0);
 		if(e.classname != "info_teleport_destination")
 			LOG_INFO("^3MAPPER ERROR: teleporter does target an invalid teleport destination entity. Angles will not work.\n");
 #endif
@@ -265,37 +264,34 @@ void teleport_findtarget(entity this)
 	if(n == 0)
 	{
 		// no dest!
-		objerror ("Teleporter with nonexistant target");
+		objerror (this, "Teleporter with nonexistant target");
 		return;
 	}
 	else if(n == 1)
 	{
 		// exactly one dest - bots love that
-		self.enemy = find(e, targetname, self.target);
+		this.enemy = find(e, targetname, this.target);
 	}
 	else
 	{
 		// have to use random selection every single time
-		self.enemy = world;
+		this.enemy = NULL;
 	}
 
 	// now enable touch
+	settouch(this, Teleport_Touch);
 #ifdef SVQC
-	self.touch = Teleport_Touch;
-
-	trigger_teleport_link(self);
-#elif defined(CSQC)
-	self.move_touch = Teleport_Touch;
+	trigger_teleport_link(this);
 #endif
 }
 
 entity Teleport_Find(vector mi, vector ma)
 {
 	entity e;
-	for(e = world; (e = find(e, classname, "trigger_teleport")); )
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, world))
+	for(e = NULL; (e = find(e, classname, "trigger_teleport")); )
+		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, NULL))
 			return e;
-	return world;
+	return NULL;
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
@@ -317,7 +313,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 		if(!(pl.move_flags & BIT(15))) // FL_PROJECTILE
 	#endif
 			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
-		pl.owner = world;
+		pl.owner = NULL;
 	}
 	if(IS_PLAYER(pl))
 	{

@@ -91,7 +91,7 @@ entity msle_spawn(entity minigame_session, string class_name)
 	e.owner = minigame_session;
 	e.minigame_autoclean = 1;
 	#ifdef SVQC
-		e.customizeentityforclient = minigame_CheckSend;
+		setcefc(e, minigame_CheckSend);
 		Net_LinkEntity(e, false, 0, minigame_SendEntity);
 	#endif
 	return e;
@@ -127,7 +127,7 @@ int minigame_count_players(entity minigame)
 #ifdef SVQC
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
-	e = world;
+	e = NULL;
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif

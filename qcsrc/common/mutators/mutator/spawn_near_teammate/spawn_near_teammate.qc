@@ -17,17 +17,21 @@ REGISTER_MUTATOR(spawn_near_teammate, cvar("g_spawn_near_teammate"));
 .float cvar_cl_spawn_near_teammate;
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
-{SELFPARAM();
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
-		return 0;
+{
+	entity player = M_ARGV(0, entity);
+	entity spawn_spot = M_ARGV(1, entity);
+	vector spawn_score = M_ARGV(2, vector);
 
-	spawn_spot.msnt_lookat = world;
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
+		return;
+
+	spawn_spot.msnt_lookat = NULL;
 
 	if(!teamplay)
-		return 0;
+		return;
 
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it != self && SAME_TEAM(it, self) && !IS_DEAD(it), LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != player && SAME_TEAM(it, player) && !IS_DEAD(it), LAMBDA(
 		if(vdist(spawn_spot.origin - it.origin, >, autocvar_g_spawn_near_teammate_distance))
 			continue;
 		if(vdist(spawn_spot.origin - it.origin, <, 48))
@@ -42,15 +46,17 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, Spawn_Score)
 		spawn_spot.msnt_lookat = RandomSelection_chosen_ent;
 		spawn_score.x += SPAWN_PRIO_NEAR_TEAMMATE_FOUND;
 	}
-	else if(self.team == spawn_spot.team)
+	else if(player.team == spawn_spot.team)
 		spawn_score.x += SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM; // prefer same team, if we can't find a spawn near teammate
 
-	return 0;
+	M_ARGV(2, vector) = spawn_score;
 }
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
-{SELFPARAM();
-	if(!teamplay) { return false; }
+{
+	if(!teamplay) { return; }
+	entity player = M_ARGV(0, entity);
+	entity spawn_spot = M_ARGV(1, entity);
 
 	int num_red = 0, num_blue = 0, num_yellow = 0, num_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it),
@@ -65,25 +71,25 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 	});
 
 	if(num_red == 1 || num_blue == 1 || num_yellow == 1 || num_pink == 1)
-		return false; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
+		return; // at least 1 team has only 1 player, let's not give the bigger team too much of an advantage!
 
 	// Note: when entering this, fixangle is already set.
-	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && self.cvar_cl_spawn_near_teammate))
+	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint == 1 || (autocvar_g_spawn_near_teammate_ignore_spawnpoint == 2 && player.cvar_cl_spawn_near_teammate))
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
-			self.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
+			player.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
 
-		entity best_mate = world;
+		entity best_mate = NULL;
 		vector best_spot = '0 0 0';
 		float pc = 0, best_dist = 0, dist = 0;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			if((autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && it.health >= autocvar_g_balance_health_regenstable) || autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health == 0)
 			if(!IS_DEAD(it))
 			if(it.msnt_timer < time)
-			if(SAME_TEAM(self, it))
+			if(SAME_TEAM(player, it))
 			if(time > it.spawnshieldtime) // spawn shielding
 			if(STAT(FROZEN, it) == 0)
-			if(it != self)
+			if(it != player)
 			{
 				tracebox(it.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), it.origin - '0 0 100', MOVE_NOMONSTERS, it);
 				if(trace_fraction != 1.0)
@@ -125,7 +131,7 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 								{
 									if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 									{
-										dist = vlen(trace_endpos - self.msnt_deathloc);
+										dist = vlen(trace_endpos - player.msnt_deathloc);
 										if(dist < best_dist || best_dist == 0)
 										{
 											best_dist = dist;
@@ -135,11 +141,11 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 									}
 									else
 									{
-										setorigin(self, trace_endpos);
-										self.angles = it.angles;
-										self.angles_z = 0; // never spawn tilted even if the spot says to
+										setorigin(player, trace_endpos);
+										player.angles = it.angles;
+										player.angles_z = 0; // never spawn tilted even if the spot says to
 										it.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
-										return 0;
+										return;
 									}
 								}
 							}
@@ -152,31 +158,30 @@ MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerSpawn)
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath)
 		if(best_dist)
 		{
-			setorigin(self, best_spot);
-			self.angles = best_mate.angles;
-			self.angles_z = 0; // never spawn tilted even if the spot says to
+			setorigin(player, best_spot);
+			player.angles = best_mate.angles;
+			player.angles_z = 0; // never spawn tilted even if the spot says to
 			best_mate.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 		}
 	}
 	else if(spawn_spot.msnt_lookat)
 	{
-		self.angles = vectoangles(spawn_spot.msnt_lookat.origin - self.origin);
-		self.angles_x = -self.angles.x;
-		self.angles_z = 0; // never spawn tilted even if the spot says to
+		player.angles = vectoangles(spawn_spot.msnt_lookat.origin - player.origin);
+		player.angles_x = -player.angles.x;
+		player.angles_z = 0; // never spawn tilted even if the spot says to
 		/*
-		sprint(self, "You should be looking at ", spawn_spot.msnt_lookat.netname, "^7.\n");
-		sprint(self, "distance: ", vtos(spawn_spot.msnt_lookat.origin - self.origin), "\n");
-		sprint(self, "angles: ", vtos(self.angles), "\n");
+		sprint(player, "You should be looking at ", spawn_spot.msnt_lookat.netname, "^7.\n");
+		sprint(player, "distance: ", vtos(spawn_spot.msnt_lookat.origin - player.origin), "\n");
+		sprint(player, "angles: ", vtos(player.angles), "\n");
 		*/
 	}
-
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(spawn_near_teammate, PlayerDies)
 {
+	entity frag_target = M_ARGV(0, entity);
+
 	frag_target.msnt_deathloc = frag_target.origin;
-	return 0;
 }
 
 REPLICATE(cvar_cl_spawn_near_teammate, bool, "cl_spawn_near_teammate");

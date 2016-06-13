@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "sandbox.qc"
+#include <common/mutators/mutator/sandbox/sandbox.qc>

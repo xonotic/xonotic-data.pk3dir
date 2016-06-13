@@ -58,7 +58,7 @@ CLASS(DamageText, Object)
             s = strreplace("{health}", sprintf("%d", this.m_damage), s);
             s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
             s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
-            drawcolorcodedstring2(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
+            drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)
@@ -89,11 +89,11 @@ AUTOCVAR(sv_damagetext, int, 2, _("<= 0: disabled, >= 1: spectators, >= 2: playe
 #define SV_DAMAGETEXT_ALL()             (autocvar_sv_damagetext >= 3 /* all players */)
 MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     if (SV_DAMAGETEXT_DISABLED()) return;
-    const entity attacker = MUTATOR_ARGV(0, entity);
-    const entity hit = MUTATOR_ARGV(1, entity); if (hit == attacker) return;
-    const int health = MUTATOR_ARGV(0, int);
-    const int armor = MUTATOR_ARGV(1, int);
-    const int deathtype = MUTATOR_ARGV(2, int);
+    const entity attacker = M_ARGV(0, entity);
+    const entity hit = M_ARGV(1, entity); if (hit == attacker) return;
+    const int health = M_ARGV(2, int);
+    const int armor = M_ARGV(3, int);
+    const int deathtype = M_ARGV(5, int);
     const vector location = hit.origin;
     FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
         if (
@@ -151,20 +151,29 @@ CLASS(XonoticDamageTextSettings, XonoticTab)
     METHOD(XonoticDamageTextSettings, showNotify, void(entity this)) { loadAllCvars(this); }
     METHOD(XonoticDamageTextSettings, fill, void(entity this))
     {
+    	entity e;
         this.gotoRC(this, 0, 1); this.setFirstColumn(this, this.currentColumn);
             this.TD(this, 1, 3, makeXonoticCheckBox(0, "cl_damagetext", _("Draw damage numbers")));
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Font size:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Font size:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 50, 1, "cl_damagetext_size"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Accumulate range:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Accumulate range:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 500, 1, "cl_damagetext_accumulate_range"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Lifetime:")));
-            this.TD(this, 1, 2, makeXonoticSlider(0, 10, 1, "cl_damagetext_alpha_lifetime"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Lifetime:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 1, 2, e = makeXonoticSlider(0, 10, 1, "cl_damagetext_alpha_lifetime"));
+                setDependent(e, "cl_damagetext", 1, 1);
         this.TR(this);
-            this.TD(this, 1, 1, makeXonoticTextLabel(0, _("Color:")));
-            this.TD(this, 2, 2, makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
+            this.TD(this, 1, 1, e = makeXonoticTextLabel(0, _("Color:")));
+                setDependent(e, "cl_damagetext", 1, 1);
+            this.TD(this, 2, 2, e = makeXonoticColorpickerString("cl_damagetext_color", "cl_damagetext_color"));
+                setDependent(e, "cl_damagetext", 1, 1);
     }
 ENDCLASS(XonoticDamageTextSettings)
 #endif

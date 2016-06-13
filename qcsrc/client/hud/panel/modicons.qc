@@ -129,7 +129,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 
 	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
 
-	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag);
+	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag || (stat_items & CTF_SHIELDED));
 
 	if (autocvar__hud_configure) {
 		redflag = 1;
@@ -200,9 +200,9 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	} MACRO_END
 	X(red, myteam != NUM_TEAM_1);
 	X(blue, myteam != NUM_TEAM_2);
-	X(yellow, myteam != NUM_TEAM_3);
-	X(pink, myteam != NUM_TEAM_4);
-	X(neutral, true);
+	X(yellow, myteam != NUM_TEAM_3 && team_count >= 3);
+	X(pink, myteam != NUM_TEAM_4 && team_count >= 4);
+	X(neutral, ctf_oneflag);
 	#undef X
 
 	if (ctf_oneflag) {
@@ -769,6 +769,10 @@ void HUD_ModIcons()
 	else
 		mod_alpha = bound(0, 1 - (time - mod_change) * 2, 1);
 
+	if (autocvar_hud_panel_modicons_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	if(mod_alpha)
 		HUD_Panel_DrawBg(mod_alpha);
 

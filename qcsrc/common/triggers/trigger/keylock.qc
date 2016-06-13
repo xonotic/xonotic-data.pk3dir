@@ -1,24 +1,11 @@
 /**
  * trigger given targets
  */
-void trigger_keylock_trigger(string s)
-{SELFPARAM();
-	entity otemp = other;
-	entity atemp = activator;
-
-	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
+void trigger_keylock_trigger(entity this, entity actor, string s)
+{
+	for(entity t = NULL; (t = find(t, targetname, s)); )
 		if(t.use)
-		{
-			setself(t);
-			other = this;
-			activator = atemp;
-			self.use();
-		}
-
-	setself(this);
-	other = otemp;
-	activator = atemp;
+			t.use(t, actor, this);
 }
 
 /**
@@ -27,12 +14,12 @@ void trigger_keylock_trigger(string s)
 void trigger_keylock_kill(string s)
 {
 	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
+	for(t = NULL; (t = find(t, targetname, s)); )
 		remove(t);
 }
 
-void trigger_keylock_touch()
-{SELFPARAM();
+void trigger_keylock_touch(entity this)
+{
 	bool key_used = false;
 	bool started_delay = false;
 
@@ -41,55 +28,53 @@ void trigger_keylock_touch()
 		return;
 
 	// check silver key
-	if(self.itemkeys)
-		key_used = item_keys_usekey(self, other);
+	if(this.itemkeys)
+		key_used = item_keys_usekey(this, other);
 
-	activator = other;
-
-	if(self.itemkeys)
+	if(this.itemkeys)
 	{
 #ifdef SVQC
 		// at least one of the keys is missing
 		if(key_used)
 		{
 			// one or more keys were given, but others are still missing!
-			play2(other, self.noise1);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(self.itemkeys));
+			play2(other, this.noise1);
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(this.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 		else if(other.key_door_messagetime <= time)
 		{
 			// no keys were given
-			play2(other, self.noise2);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(self.itemkeys));
+			play2(other, this.noise2);
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(this.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 #endif
 
 		// trigger target2
-		if(self.delay <= time || started_delay == true)
-		if(self.target2)
+		if(this.delay <= time || started_delay == true)
+		if(this.target2)
 		{
-			trigger_keylock_trigger(self.target2);
+			trigger_keylock_trigger(this, other, this.target2);
 			started_delay = true;
-			self.delay = time + self.wait;
+			this.delay = time + this.wait;
 		}
 	}
 	else
 	{
 #ifdef SVQC
 		// all keys were given!
-		play2(other, self.noise);
-		centerprint(other, self.message);
+		play2(other, this.noise);
+		centerprint(other, this.message);
 #endif
 
-		if(self.target)
-			trigger_keylock_trigger(self.target);
+		if(this.target)
+			trigger_keylock_trigger(this, other, this.target);
 
-		if(self.killtarget)
-			trigger_keylock_kill(self.killtarget);
+		if(this.killtarget)
+			trigger_keylock_kill(this.killtarget);
 
-		remove(self);
+		remove(this);
 	}
 
 }
@@ -97,22 +82,22 @@ void trigger_keylock_touch()
 REGISTER_NET_LINKED(ENT_CLIENT_KEYLOCK)
 
 #ifdef SVQC
-bool trigger_keylock_send(entity to, int sf)
-{SELFPARAM();
+bool trigger_keylock_send(entity this, entity to, int sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_KEYLOCK);
 
-	WriteInt24_t(MSG_ENTITY, self.itemkeys);
-	WriteByte(MSG_ENTITY, self.height);
+	WriteInt24_t(MSG_ENTITY, this.itemkeys);
+	WriteByte(MSG_ENTITY, this.height);
 
-	trigger_common_write(self, true);
+	trigger_common_write(this, true);
 
 	return true;
 }
 
-void trigger_keylock_link()
+void trigger_keylock_link(entity this)
 {
 	// uncomment to network keylocks
-	//Net_LinkEntity(self, false, 0, trigger_keylock_send);
+	//Net_LinkEntity(this, false, 0, trigger_keylock_send);
 }
 
 /*QUAKED trigger_keylock (.0 .5 .8) ?
@@ -136,44 +121,44 @@ message2 and noise2 will be resent to the player every 2 seconds while he is in 
 */
 spawnfunc(trigger_keylock)
 {
-	if(!self.itemkeys) { remove(self); return; }
+	if(!this.itemkeys) { remove(this); return; }
 
 	// set unlocked message
-	if(self.message == "")
-		self.message = "Unlocked!";
+	if(this.message == "")
+		this.message = "Unlocked!";
 
 	// set default unlock noise
-	if(self.noise == "")
+	if(this.noise == "")
 	{
-		if(self.sounds == 1)
-			self.noise = "misc/secret.wav";
-		else if(self.sounds == 2)
-			self.noise = strzone(SND(TALK));
-		else //if (self.sounds == 3) {
-			self.noise = "misc/trigger1.wav";
+		if(this.sounds == 1)
+			this.noise = "misc/secret.wav";
+		else if(this.sounds == 2)
+			this.noise = strzone(SND(TALK));
+		else //if (this.sounds == 3) {
+			this.noise = "misc/trigger1.wav";
 	}
 
 	// set default use key sound
-	if(self.noise1 == "")
-		self.noise1 = "misc/decreasevalue.wav";
+	if(this.noise1 == "")
+		this.noise1 = "misc/decreasevalue.wav";
 
 	// set closed sourd
-	if(self.noise2 == "")
-		self.noise2 = SND(TALK);
+	if(this.noise2 == "")
+		this.noise2 = SND(TALK);
 
 	// delay between triggering message2 and trigger2
-	if(!self.wait) { self.wait = 5; }
+	if(!this.wait) { this.wait = 5; }
 
 	// precache sounds
-	precache_sound(self.noise);
-	precache_sound(self.noise1);
-	precache_sound(self.noise2);
+	precache_sound(this.noise);
+	precache_sound(this.noise1);
+	precache_sound(this.noise2);
 
 	EXACTTRIGGER_INIT;
 
-	self.touch = trigger_keylock_touch;
+	settouch(this, trigger_keylock_touch);
 
-	trigger_keylock_link();
+	trigger_keylock_link(this);
 }
 #elif defined(CSQC)
 void keylock_remove(entity this)
@@ -199,17 +184,14 @@ void keylock_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_KEYLOCK, bool isnew)
 {
-	self.itemkeys = ReadInt24_t();
-	self.height = ReadByte();
+	this.itemkeys = ReadInt24_t();
+	this.height = ReadByte();
 
-	trigger_common_read(true);
+	trigger_common_read(this, true);
 
 	return = true;
 
-	self.classname = "trigger_keylock";
-	self.drawmask = MASK_NORMAL;
-	self.draw = trigger_draw_generic;
-	self.trigger_touch = trigger_keylock_touch;
-	self.entremove = keylock_remove;
+	this.classname = "trigger_keylock";
+	this.entremove = keylock_remove;
 }
 #endif

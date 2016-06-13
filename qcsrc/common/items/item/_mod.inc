@@ -1,7 +1,7 @@
 // generated file; do not modify
-#include "ammo.qc"
-#include "armor.qc"
-#include "health.qc"
-#include "jetpack.qc"
-#include "pickup.qc"
-#include "powerup.qc"
+#include <common/items/item/ammo.qc>
+#include <common/items/item/armor.qc>
+#include <common/items/item/health.qc>
+#include <common/items/item/jetpack.qc>
+#include <common/items/item/pickup.qc>
+#include <common/items/item/powerup.qc>

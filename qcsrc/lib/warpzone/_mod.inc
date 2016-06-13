@@ -1,7 +1,7 @@
 // generated file; do not modify
-#include "anglestransform.qc"
-#include "client.qc"
-#include "common.qc"
-#include "mathlib.qc"
-#include "server.qc"
-#include "util_server.qc"
+#include <lib/warpzone/anglestransform.qc>
+#include <lib/warpzone/client.qc>
+#include <lib/warpzone/common.qc>
+#include <lib/warpzone/mathlib.qc>
+#include <lib/warpzone/server.qc>
+#include <lib/warpzone/util_server.qc>
