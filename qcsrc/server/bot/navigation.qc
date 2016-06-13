@@ -15,8 +15,8 @@
 // rough simulation of walking from one point to another to test if a path
 // can be traveled, used for waypoint linking and havocbot
 
-float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode)
-{SELFPARAM();
+bool tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode)
+{
 	vector org;
 	vector move;
 	vector dir;
@@ -30,7 +30,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	if(autocvar_bot_debug_tracewalk)
 	{
 		debugresetnodes();
-		debugnode(self, start);
+		debugnode(e, start);
 	}
 
 	move = end - start;
@@ -81,7 +81,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			return true;
 		}
 		if(autocvar_bot_debug_tracewalk)
-			debugnode(self, org);
+			debugnode(e, org);
 
 		if (dist <= 0)
 			break;
@@ -107,16 +107,16 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
-				debugnode(self, trace_endpos);
+				debugnode(e, trace_endpos);
 
 			if (trace_fraction < 1)
 			{
 				swimming = true;
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
-				for (; org.z < end.z + self.maxs.z; org.z += stepdist)
+				for (; org.z < end.z + e.maxs.z; org.z += stepdist)
 				{
 						if(autocvar_bot_debug_tracewalk)
-							debugnode(self, org);
+							debugnode(e, org);
 
 				        if(pointcontents(org) == CONTENT_EMPTY)
 							break;
@@ -142,7 +142,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			tracebox(org, m1, m2, move, movemode, e);
 
 			if(autocvar_bot_debug_tracewalk)
-				debugnode(self, trace_endpos);
+				debugnode(e, trace_endpos);
 
 			// hit something
 			if (trace_fraction < 1)
@@ -229,38 +229,38 @@ void navigation_clearroute(entity this)
 {
 	//print("bot ", etos(this), " clear\n");
 	this.navigation_hasgoals = false;
-	this.goalcurrent = world;
-	this.goalstack01 = world;
-	this.goalstack02 = world;
-	this.goalstack03 = world;
-	this.goalstack04 = world;
-	this.goalstack05 = world;
-	this.goalstack06 = world;
-	this.goalstack07 = world;
-	this.goalstack08 = world;
-	this.goalstack09 = world;
-	this.goalstack10 = world;
-	this.goalstack11 = world;
-	this.goalstack12 = world;
-	this.goalstack13 = world;
-	this.goalstack14 = world;
-	this.goalstack15 = world;
-	this.goalstack16 = world;
-	this.goalstack17 = world;
-	this.goalstack18 = world;
-	this.goalstack19 = world;
-	this.goalstack20 = world;
-	this.goalstack21 = world;
-	this.goalstack22 = world;
-	this.goalstack23 = world;
-	this.goalstack24 = world;
-	this.goalstack25 = world;
-	this.goalstack26 = world;
-	this.goalstack27 = world;
-	this.goalstack28 = world;
-	this.goalstack29 = world;
-	this.goalstack30 = world;
-	this.goalstack31 = world;
+	this.goalcurrent = NULL;
+	this.goalstack01 = NULL;
+	this.goalstack02 = NULL;
+	this.goalstack03 = NULL;
+	this.goalstack04 = NULL;
+	this.goalstack05 = NULL;
+	this.goalstack06 = NULL;
+	this.goalstack07 = NULL;
+	this.goalstack08 = NULL;
+	this.goalstack09 = NULL;
+	this.goalstack10 = NULL;
+	this.goalstack11 = NULL;
+	this.goalstack12 = NULL;
+	this.goalstack13 = NULL;
+	this.goalstack14 = NULL;
+	this.goalstack15 = NULL;
+	this.goalstack16 = NULL;
+	this.goalstack17 = NULL;
+	this.goalstack18 = NULL;
+	this.goalstack19 = NULL;
+	this.goalstack20 = NULL;
+	this.goalstack21 = NULL;
+	this.goalstack22 = NULL;
+	this.goalstack23 = NULL;
+	this.goalstack24 = NULL;
+	this.goalstack25 = NULL;
+	this.goalstack26 = NULL;
+	this.goalstack27 = NULL;
+	this.goalstack28 = NULL;
+	this.goalstack29 = NULL;
+	this.goalstack30 = NULL;
+	this.goalstack31 = NULL;
 }
 
 // add a new goal at the beginning of the stack
@@ -343,7 +343,7 @@ void navigation_poproute(entity this)
 	this.goalstack28 = this.goalstack29;
 	this.goalstack29 = this.goalstack30;
 	this.goalstack30 = this.goalstack31;
-	this.goalstack31 = world;
+	this.goalstack31 = NULL;
 }
 
 float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist)
@@ -399,7 +399,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 	if (navigation_testtracewalk)
 		te_plasmaburn(org);
 
-	best = world;
+	best = NULL;
 
 	// box check failed, try walk
 	w = waylist;
@@ -431,7 +431,7 @@ entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfrom
 }
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 {
-	entity wp = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, world);
+	entity wp = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, NULL);
 	if (autocvar_g_waypointeditor_auto)
 	{
 		entity wp2 = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, wp);
@@ -470,17 +470,14 @@ float navigation_markroutes_nearestwaypoints(entity this, entity waylist, float 
 			if(vdist(diff, <, maxdist))
 			{
 				head.wpconsidered = true;
-				entity oldself = self;
-				setself(this);
 				if (tracewalk(this, this.origin, this.mins, this.maxs, v, bot_navigation_movemode))
 				{
 					head.wpnearestpoint = v;
 					head.wpcost = vlen(v - this.origin) + head.dmg;
 					head.wpfire = 1;
-					head.enemy = world;
+					head.enemy = NULL;
 					c = c + 1;
 				}
-				setself(oldself);
 			}
 		}
 		head = head.chain;
@@ -528,7 +525,7 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint)
 		w.wpnearestpoint = '0 0 0';
 		w.wpcost = 10000000;
 		w.wpfire = 0;
-		w.enemy = world;
+		w.enemy = NULL;
 		w = w.chain;
 	}
 
@@ -538,7 +535,7 @@ void navigation_markroutes(entity this, entity fixed_source_waypoint)
 		fixed_source_waypoint.wpnearestpoint = fixed_source_waypoint.origin + 0.5 * (fixed_source_waypoint.mins + fixed_source_waypoint.maxs);
 		fixed_source_waypoint.wpcost = fixed_source_waypoint.dmg;
 		fixed_source_waypoint.wpfire = 1;
-		fixed_source_waypoint.enemy = world;
+		fixed_source_waypoint.enemy = NULL;
 	}
 	else
 	{
@@ -624,7 +621,7 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 		w.wpnearestpoint = '0 0 0';
 		w.wpcost = 10000000;
 		w.wpfire = 0;
-		w.enemy = world;
+		w.enemy = NULL;
 		w = w.chain;
 	}
 
@@ -634,7 +631,7 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 		fixed_source_waypoint.wpnearestpoint = fixed_source_waypoint.origin + 0.5 * (fixed_source_waypoint.mins + fixed_source_waypoint.maxs);
 		fixed_source_waypoint.wpcost = fixed_source_waypoint.dmg; // the cost to get from X to fixed_source_waypoint
 		fixed_source_waypoint.wpfire = 1;
-		fixed_source_waypoint.enemy = world;
+		fixed_source_waypoint.enemy = NULL;
 	}
 	else
 	{
@@ -693,7 +690,7 @@ void navigation_routerating(entity this, entity e, float f, float rangebias)
 	if(g_jetpack)
 	if(this.items & IT_JETPACK)
 	if(autocvar_bot_ai_navigation_jetpack)
-	if(vlen(this.origin - o) > autocvar_bot_ai_navigation_jetpack_mindistance)
+	if(vdist(this.origin - o, >, autocvar_bot_ai_navigation_jetpack_mindistance))
 	{
 		vector pointa, pointb;
 
@@ -885,7 +882,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 	else
 		e = e.enemy; // we already have added it, so...
 
-	if(e == world)
+	if(e == NULL)
 		return false;
 
 	for (;;)
@@ -894,7 +891,7 @@ bool navigation_routetogoal(entity this, entity e, vector startposition)
 		navigation_pushroute(this, e);
 		e = e.enemy;
 
-		if(e==world)
+		if(e==NULL)
 			break;
 	}
 
@@ -928,7 +925,7 @@ void navigation_poptouchedgoals(entity this)
 
 	// If for some reason the bot is closer to the next goal, pop the current one
 	if(this.goalstack01)
-	if(vlen(this.goalcurrent.origin - this.origin) > vlen(this.goalstack01.origin - this.origin))
+	if(vlen2(this.goalcurrent.origin - this.origin) > vlen2(this.goalstack01.origin - this.origin))
 	if(checkpvs(this.origin + this.view_ofs, this.goalstack01))
 	if(tracewalk(this, this.origin, this.mins, this.maxs, (this.goalstack01.absmin + this.goalstack01.absmax) * 0.5, bot_navigation_movemode))
 	{
@@ -956,9 +953,9 @@ void navigation_poptouchedgoals(entity this)
 	if(this.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(this.goalcurrent.classname=="waypoint")
 	{
-		if(vlen(this.origin - this.goalcurrent.origin)<150)
+		if(vdist(this.origin - this.goalcurrent.origin, <, 150))
 		{
-			traceline(this.origin + this.view_ofs , this.goalcurrent.origin, true, world);
+			traceline(this.origin + this.view_ofs , this.goalcurrent.origin, true, NULL);
 			if(trace_fraction==1)
 			{
 				// Detect personal waypoints
@@ -994,12 +991,12 @@ void navigation_goalrating_start(entity this)
 	if(this.aistatus & AI_STATUS_STUCK)
 		return;
 
-	this.navigation_jetpack_goal = world;
+	this.navigation_jetpack_goal = NULL;
 	navigation_bestrating = -1;
 	this.navigation_hasgoals = false;
 	navigation_clearroute(this);
-	navigation_bestgoal = world;
-	navigation_markroutes(this, world);
+	navigation_bestgoal = NULL;
+	navigation_markroutes(this, NULL);
 }
 
 // ends a goal selection session (updates goal stack to the best goal)
@@ -1033,7 +1030,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 	c = 0;
 	bot_dodgelist = findchainfloat(bot_dodge, true);
 	botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
-	while (botframe_dangerwaypoint != world)
+	while (botframe_dangerwaypoint != NULL)
 	{
 		danger = 0;
 		m1 = botframe_dangerwaypoint.mins;
@@ -1049,7 +1046,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 			d = head.bot_dodgerating - vlen(o - v);
 			if (d > 0)
 			{
-				traceline(o, v, true, world);
+				traceline(o, v, true, NULL);
 				if (trace_fraction == 1)
 					danger = danger + d;
 			}
@@ -1074,7 +1071,7 @@ void navigation_unstuck(entity this)
 	{
 		LOG_DEBUG(strcat(this.netname, " sutck, taking over the waypoints queue\n"));
 		bot_waypoint_queue_owner = this;
-		bot_waypoint_queue_bestgoal = world;
+		bot_waypoint_queue_bestgoal = NULL;
 		bot_waypoint_queue_bestgoalrating = 0;
 	}
 
@@ -1086,8 +1083,6 @@ void navigation_unstuck(entity this)
 		// evaluate the next goal on the queue
 		float d = vlen(this.origin - bot_waypoint_queue_goal.origin);
 		LOG_DEBUG(strcat(this.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n"));
-		entity oldself = self;
-		setself(this); // tracewalk has questionable use of self
 		if(tracewalk(bot_waypoint_queue_goal, this.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), bot_waypoint_queue_goal.origin, bot_navigation_movemode))
 		{
 			if( d > bot_waypoint_queue_bestgoalrating)
@@ -1096,7 +1091,6 @@ void navigation_unstuck(entity this)
 				bot_waypoint_queue_bestgoal = bot_waypoint_queue_goal;
 			}
 		}
-		setself(oldself);
 		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
 
 		if (!bot_waypoint_queue_goal)
@@ -1113,7 +1107,7 @@ void navigation_unstuck(entity this)
 				LOG_DEBUG(strcat(this.netname, " stuck, cannot walk to any waypoint at all\n"));
 			}
 
-			bot_waypoint_queue_owner = world;
+			bot_waypoint_queue_owner = NULL;
 		}
 	}
 	else
@@ -1126,7 +1120,7 @@ void navigation_unstuck(entity this)
 
 		entity head, first;
 
-		first = world;
+		first = NULL;
 		head = findradius(this.origin, search_radius);
 
 		while(head)
@@ -1140,7 +1134,7 @@ void navigation_unstuck(entity this)
 					first = head;
 
 				bot_waypoint_queue_goal = head;
-				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = world;
+				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = NULL;
 			}
 
 			head = head.chain;
@@ -1151,7 +1145,7 @@ void navigation_unstuck(entity this)
 		else
 		{
 			LOG_DEBUG(strcat(this.netname, " stuck, cannot walk to any waypoint at all\n"));
-			bot_waypoint_queue_owner = world;
+			bot_waypoint_queue_owner = NULL;
 		}
 	}
 }
@@ -1174,7 +1168,7 @@ void debugnode(entity this, vector node)
 		return;
 	}
 
-	te_lightning2(world, node, debuglastnode);
+	te_lightning2(NULL, node, debuglastnode);
 	debuglastnode = node;
 }
 
@@ -1243,9 +1237,9 @@ void debuggoalstack(entity this)
 	else if(this.goalcounter==29)goal=this.goalstack29;
 	else if(this.goalcounter==30)goal=this.goalstack30;
 	else if(this.goalcounter==31)goal=this.goalstack31;
-	else goal=world;
+	else goal=NULL;
 
-	if(goal==world)
+	if(goal==NULL)
 	{
 		this.goalcounter = 0;
 		this.lastposition='0 0 0';
@@ -1259,7 +1253,7 @@ void debuggoalstack(entity this)
 
 
 	go = ( goal.absmin + goal.absmax ) * 0.5;
-	te_lightning2(world, org, go);
+	te_lightning2(NULL, org, go);
 	this.lastposition = go;
 
 	this.goalcounter++;

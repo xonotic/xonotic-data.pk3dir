@@ -1,8 +1,8 @@
 // generated file; do not modify
-#include "all.qc"
-#include "casings.qc"
-#include "damageeffects.qc"
-#include "gibs.qc"
-#include "globalsound.qc"
-#include "lightningarc.qc"
-#include "modeleffects.qc"
+#include <common/effects/qc/all.qc>
+#include <common/effects/qc/casings.qc>
+#include <common/effects/qc/damageeffects.qc>
+#include <common/effects/qc/gibs.qc>
+#include <common/effects/qc/globalsound.qc>
+#include <common/effects/qc/lightningarc.qc>
+#include <common/effects/qc/modeleffects.qc>

@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "nexball.qc"
-#include "weapon.qc"
+#include <common/gamemodes/gamemode/nexball/nexball.qc>
+#include <common/gamemodes/gamemode/nexball/weapon.qc>

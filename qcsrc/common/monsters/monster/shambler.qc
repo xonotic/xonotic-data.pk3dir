@@ -78,31 +78,36 @@ void M_Shambler_Attack_Swing(entity this)
 
 #include <common/effects/qc/all.qh>
 
-void M_Shambler_Attack_Lightning_Explode()
-{SELFPARAM();
+void M_Shambler_Attack_Lightning_Explode(entity this)
+{
 	entity head;
 
-	sound(self, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
-	Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
+	sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
+	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
-	self.movetype = MOVETYPE_NONE;
-	self.velocity = '0 0 0';
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
+	this.movetype = MOVETYPE_NONE;
+	this.velocity = '0 0 0';
 
-	if(self.movetype == MOVETYPE_NONE)
-		self.velocity = self.oldvelocity;
+	if(this.movetype == MOVETYPE_NONE)
+		this.velocity = this.oldvelocity;
 
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, world, (autocvar_g_monster_shambler_attack_lightning_force), self.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, other);
 
-	for(head = findradius(self.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
+	for(head = findradius(this.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != this.realowner) if(head.takedamage)
 	{
-		te_csqc_lightningarc(self.origin, head.origin);
-		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
+		te_csqc_lightningarc(this.origin, head.origin);
+		Damage(head, this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage_zap) * MONSTER_SKILLMOD(this), DEATH_MONSTER_SHAMBLER_ZAP.m_id, head.origin, '0 0 0');
 	}
 
-	self.think = SUB_Remove_self;
-	self.nextthink = time + 0.2;
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 0.2;
+}
+
+void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity trigger)
+{
+	M_Shambler_Attack_Lightning_Explode(this);
 }
 
 void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -116,23 +121,23 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.use));
+		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void M_Shambler_Attack_Lightning_Touch()
-{SELFPARAM();
-	PROJECTILE_TOUCH;
+void M_Shambler_Attack_Lightning_Touch(entity this)
+{
+	PROJECTILE_TOUCH(this);
 
-	self.use ();
+	this.use(this, NULL, NULL);
 }
 
-void M_Shambler_Attack_Lightning_Think()
-{SELFPARAM();
-	self.nextthink = time;
-	if (time > self.cnt)
+void M_Shambler_Attack_Lightning_Think(entity this)
+{
+	this.nextthink = time;
+	if (time > this.cnt)
 	{
-		other = world;
-		M_Shambler_Attack_Lightning_Explode();
+		other = NULL;
+		M_Shambler_Attack_Lightning_Explode(this);
 		return;
 	}
 }
@@ -156,9 +161,9 @@ void M_Shambler_Attack_Lightning(entity this)
 
 	gren.cnt = time + 5;
 	gren.nextthink = time;
-	gren.think = M_Shambler_Attack_Lightning_Think;
-	gren.use = M_Shambler_Attack_Lightning_Explode;
-	gren.touch = M_Shambler_Attack_Lightning_Touch;
+	setthink(gren, M_Shambler_Attack_Lightning_Think);
+	gren.use = M_Shambler_Attack_Lightning_Explode_use;
+	settouch(gren, M_Shambler_Attack_Lightning_Touch);
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = 50;
@@ -231,12 +236,12 @@ METHOD(Shambler, mr_think, bool(Shambler this, entity actor))
     return true;
 }
 
-METHOD(Shambler, mr_pain, bool(Shambler this, entity actor))
+METHOD(Shambler, mr_pain, float(Shambler this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Shambler, this);
     actor.pain_finished = time + 0.5;
     setanim(actor, actor.anim_pain1, true, true, false);
-    return true;
+    return damage_take;
 }
 
 METHOD(Shambler, mr_death, bool(Shambler this, entity actor))

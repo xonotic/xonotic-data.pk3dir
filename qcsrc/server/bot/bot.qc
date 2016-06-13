@@ -80,7 +80,7 @@ void bot_think(entity this)
 
 	this.dmg_take = 0;
 	this.dmg_save = 0;
-	this.dmg_inflictor = world;
+	this.dmg_inflictor = NULL;
 
 	// calculate an aiming latency based on the skill setting
 	// (simulated network latency + naturally delayed reflexes)
@@ -173,7 +173,7 @@ void bot_setnameandstuff(entity this)
 					break;
 				}
 			));
-			RandomSelection_Add(world, 0, readfile, 1, prio);
+			RandomSelection_Add(NULL, 0, readfile, 1, prio);
 		}
 		readfile = RandomSelection_chosen_string;
 		fclose(file);
@@ -250,7 +250,7 @@ void bot_setnameandstuff(entity this)
 	this.playermodel = this.playermodel_freeme = strzone(strcat("models/player/", bot_model));
 	this.playerskin = this.playerskin_freeme = strzone(bot_skin);
 
-	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
+	this.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the NULL
 	this.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
 }
 
@@ -351,8 +351,8 @@ void bot_relinkplayerlist()
 	player_count = 0;
 	currentbots = 0;
 	player_list = e = findchainflags(flags, FL_CLIENT);
-	bot_list = world;
-	prevbot = world;
+	bot_list = NULL;
+	prevbot = NULL;
 	while (e)
 	{
 		player_count = player_count + 1;
@@ -364,7 +364,7 @@ void bot_relinkplayerlist()
 			else
 			{
 				bot_list = e;
-				bot_list.nextbot = world;
+				bot_list.nextbot = NULL;
 			}
 			prevbot = e;
 			currentbots = currentbots + 1;
@@ -396,7 +396,7 @@ void bot_clientdisconnect(entity this)
 	if(this.bot_cmd_current)
 		remove(this.bot_cmd_current);
 	if(bot_waypoint_queue_owner==this)
-		bot_waypoint_queue_owner = world;
+		bot_waypoint_queue_owner = NULL;
 }
 
 void bot_clientconnect(entity this)
@@ -429,8 +429,8 @@ void bot_removefromlargestteam()
 {
 	float besttime, bestcount, thiscount;
 	entity best, head;
-	CheckAllowedTeams(world);
-	GetTeamCounts(world);
+	CheckAllowedTeams(NULL);
+	GetTeamCounts(NULL);
 	head = findchainfloat(isbot, true);
 	if (!head)
 		return;
@@ -557,8 +557,8 @@ float bot_fixcount()
 	int activerealplayers = 0;
 	int realplayers = 0;
 	if (MUTATOR_CALLHOOK(Bot_FixCount, activerealplayers, realplayers)) {
-		activerealplayers = bot_activerealplayers;
-		realplayers = bot_realplayers;
+		activerealplayers = M_ARGV(0, int);
+		realplayers = M_ARGV(1, int);
 	} else {
 		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 			if(IS_PLAYER(it))
@@ -601,7 +601,7 @@ float bot_fixcount()
 		//dprint(ftos(bots), " ? ", ftos(currentbots), "\n");
 		while (currentbots < bots)
 		{
-			if (bot_spawn() == world)
+			if (bot_spawn() == NULL)
 			{
 				bprint("Can not add bot, server full.\n");
 				return false;

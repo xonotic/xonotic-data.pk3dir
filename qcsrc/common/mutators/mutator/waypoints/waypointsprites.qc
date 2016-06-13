@@ -14,29 +14,29 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     sendflags = sendflags & 0x7F;
 
-    if (self.max_health || (self.pain_finished && (time < self.pain_finished + 0.25)))
+    if (this.max_health || (this.pain_finished && (time < this.pain_finished + 0.25)))
         sendflags |= 0x80;
 
     int f = 0;
-    if(self.currentammo)
+    if(this.currentammo)
         f |= 1; // hideable
-    if(self.exteriormodeltoclient == to)
+    if(this.exteriormodeltoclient == to)
         f |= 2; // my own
 
     MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
 
     WriteByte(MSG_ENTITY, sendflags);
-    WriteByte(MSG_ENTITY, self.wp_extra);
+    WriteByte(MSG_ENTITY, this.wp_extra);
 
     if (sendflags & 0x80)
     {
-        if (self.max_health)
+        if (this.max_health)
         {
-            WriteByte(MSG_ENTITY, (self.health / self.max_health) * 191.0);
+            WriteByte(MSG_ENTITY, (this.health / this.max_health) * 191.0);
         }
         else
         {
-            float dt = self.pain_finished - time;
+            float dt = this.pain_finished - time;
             dt = bound(0, dt * 32, 16383);
             WriteByte(MSG_ENTITY, (dt & 0xFF00) / 256 + 192);
             WriteByte(MSG_ENTITY, (dt & 0x00FF));
@@ -45,44 +45,44 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
 
     if (sendflags & 64)
     {
-        WriteCoord(MSG_ENTITY, self.origin.x);
-        WriteCoord(MSG_ENTITY, self.origin.y);
-        WriteCoord(MSG_ENTITY, self.origin.z);
+        WriteCoord(MSG_ENTITY, this.origin.x);
+        WriteCoord(MSG_ENTITY, this.origin.y);
+        WriteCoord(MSG_ENTITY, this.origin.z);
     }
 
     if (sendflags & 1)
     {
-        WriteByte(MSG_ENTITY, self.team);
-        WriteByte(MSG_ENTITY, self.rule);
+        WriteByte(MSG_ENTITY, this.team);
+        WriteByte(MSG_ENTITY, this.rule);
     }
 
     if (sendflags & 2)
-        WriteString(MSG_ENTITY, self.model1);
+        WriteString(MSG_ENTITY, this.model1);
 
     if (sendflags & 4)
-        WriteString(MSG_ENTITY, self.model2);
+        WriteString(MSG_ENTITY, this.model2);
 
     if (sendflags & 8)
-        WriteString(MSG_ENTITY, self.model3);
+        WriteString(MSG_ENTITY, this.model3);
 
     if (sendflags & 16)
     {
-        WriteCoord(MSG_ENTITY, self.fade_time);
-        WriteCoord(MSG_ENTITY, self.teleport_time);
-        WriteShort(MSG_ENTITY, self.fade_rate); // maxdist
+        WriteCoord(MSG_ENTITY, this.fade_time);
+        WriteCoord(MSG_ENTITY, this.teleport_time);
+        WriteShort(MSG_ENTITY, this.fade_rate); // maxdist
         WriteByte(MSG_ENTITY, f);
     }
 
     if (sendflags & 32)
     {
-        WriteByte(MSG_ENTITY, self.cnt); // icon on radar
-        WriteByte(MSG_ENTITY, self.colormod.x * 255.0);
-        WriteByte(MSG_ENTITY, self.colormod.y * 255.0);
-        WriteByte(MSG_ENTITY, self.colormod.z * 255.0);
+        WriteByte(MSG_ENTITY, this.cnt); // icon on radar
+        WriteByte(MSG_ENTITY, this.colormod.x * 255.0);
+        WriteByte(MSG_ENTITY, this.colormod.y * 255.0);
+        WriteByte(MSG_ENTITY, this.colormod.z * 255.0);
 
-        if (WaypointSprite_isteammate(self.owner, WaypointSprite_getviewentity(to)))
+        if (WaypointSprite_isteammate(this.owner, WaypointSprite_getviewentity(to)))
         {
-            float dt = (self.waypointsprite_helpmetime - time) / 0.1;
+            float dt = (this.waypointsprite_helpmetime - time) / 0.1;
             if (dt < 0)
                 dt = 0;
             if (dt > 255)
@@ -235,7 +235,7 @@ vector spritelookupcolor(entity this, string s, vector def)
     if (s == WP_Item.netname    || s == RADARICON_Item.netname) return Items_from(this.wp_extra).m_color;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
-        return MUTATOR_ARGV(0, vector);
+        return M_ARGV(2, vector);
     }
     return def;
 }
@@ -248,7 +248,7 @@ string spritelookuptext(entity this, string s)
     if (s == WP_Monster.netname) return get_monsterinfo(this.wp_extra).monster_name;
     if (MUTATOR_CALLHOOK(WP_Format, this, s))
     {
-        return MUTATOR_ARGV(0, string);
+        return M_ARGV(3, string);
     }
 
     // need to loop, as our netname could be one of three
@@ -880,7 +880,7 @@ void WaypointSprite_Init()
 void WaypointSprite_Kill(entity wp)
 {
     if (!wp) return;
-    if (wp.owner) wp.owner.(wp.owned_by_field) = world;
+    if (wp.owner) wp.owner.(wp.owned_by_field) = NULL;
     remove(wp);
 }
 
@@ -895,51 +895,51 @@ void WaypointSprite_Disown(entity wp, float fadetime)
     if (wp.owner)
     {
         if (wp.exteriormodeltoclient == wp.owner)
-            wp.exteriormodeltoclient = world;
-        wp.owner.(wp.owned_by_field) = world;
-        wp.owner = world;
+            wp.exteriormodeltoclient = NULL;
+        wp.owner.(wp.owned_by_field) = NULL;
+        wp.owner = NULL;
 
         WaypointSprite_FadeOutIn(wp, fadetime);
     }
 }
 
-void WaypointSprite_Think()
-{SELFPARAM();
+void WaypointSprite_Think(entity this)
+{
     bool doremove = false;
 
-    if (self.fade_time && time >= self.teleport_time)
+    if (this.fade_time && time >= this.teleport_time)
     {
         doremove = true;
     }
 
-    if (self.exteriormodeltoclient)
-        WaypointSprite_UpdateOrigin(self, self.exteriormodeltoclient.origin + self.view_ofs);
+    if (this.exteriormodeltoclient)
+        WaypointSprite_UpdateOrigin(this, this.exteriormodeltoclient.origin + this.view_ofs);
 
     if (doremove)
-        WaypointSprite_Kill(self);
+        WaypointSprite_Kill(this);
     else
-        self.nextthink = time; // WHY?!?
+        this.nextthink = time; // WHY?!?
 }
 
-float WaypointSprite_visible_for_player(entity e)
-{SELFPARAM();
+bool WaypointSprite_visible_for_player(entity this, entity player, entity view)
+{
     // personal waypoints
-    if (self.enemy && self.enemy != e)
+    if (this.enemy && this.enemy != view)
         return false;
 
     // team waypoints
-    if (self.rule == SPRITERULE_SPECTATOR)
+    if (this.rule == SPRITERULE_SPECTATOR)
     {
         if (!autocvar_sv_itemstime)
             return false;
-        if (!warmup_stage && IS_PLAYER(e))
+        if (!warmup_stage && IS_PLAYER(view))
             return false;
     }
-    else if (self.team && self.rule == SPRITERULE_DEFAULT)
+    else if (this.team && this.rule == SPRITERULE_DEFAULT)
     {
-        if (self.team != e.team)
+        if (this.team != view.team)
             return false;
-        if (!IS_PLAYER(e))
+        if (!IS_PLAYER(view))
             return false;
     }
 
@@ -951,7 +951,7 @@ entity WaypointSprite_getviewentity(entity e)
     if (IS_SPEC(e)) e = e.enemy;
     /* TODO idea (check this breaks nothing)
     else if (e.classname == "observer")
-        e = world;
+        e = NULL;
     */
     return e;
 }
@@ -963,27 +963,27 @@ float WaypointSprite_isteammate(entity e, entity e2)
     return e2 == e;
 }
 
-float WaypointSprite_Customize()
-{SELFPARAM();
+float WaypointSprite_Customize(entity this)
+{
     // this is not in SendEntity because it shall run every frame, not just every update
 
     // make spectators see what the player would see
     entity e = WaypointSprite_getviewentity(other);
 
-    if (MUTATOR_CALLHOOK(CustomizeWaypoint, self, other))
+    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, other))
         return false;
 
-    return self.waypointsprite_visible_for_player(e);
+    return this.waypointsprite_visible_for_player(this, other, e);
 }
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
-void WaypointSprite_Reset()
-{SELFPARAM();
+void WaypointSprite_Reset(entity this)
+{
     // if a WP wants to time out, let it time out immediately; other WPs ought to be reset/killed by their owners
 
-    if (self.fade_time)
-        WaypointSprite_Kill(self);
+    if (this.fade_time)
+        WaypointSprite_Kill(this);
 }
 
 entity WaypointSprite_Spawn(
@@ -1019,10 +1019,10 @@ entity WaypointSprite_Spawn(
         wp.owned_by_field = ownfield;
     }
     wp.fade_rate = maxdistance;
-    wp.think = WaypointSprite_Think;
+    setthink(wp, WaypointSprite_Think);
     wp.nextthink = time;
     wp.model1 = spr.netname;
-    wp.customizeentityforclient = WaypointSprite_Customize;
+    setcefc(wp, WaypointSprite_Customize);
     wp.waypointsprite_visible_for_player = WaypointSprite_visible_for_player;
     wp.reset2 = WaypointSprite_Reset;
     wp.cnt = icon.m_id;
@@ -1039,19 +1039,20 @@ entity WaypointSprite_SpawnFixed(
     entity icon // initial icon
 )
 {
-    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, own, ownfield, true, icon);
+    return WaypointSprite_Spawn(spr, 0, 0, NULL, ofs, NULL, 0, own, ownfield, true, icon);
 }
 
 entity WaypointSprite_DeployFixed(
     entity spr,
     float limited_range,
+    entity player,
     vector ofs,
     entity icon // initial icon
 )
-{SELFPARAM();
+{
     float t;
     if (teamplay)
-        t = self.team;
+        t = player.team;
     else
         t = 0;
     float maxdistance;
@@ -1059,29 +1060,31 @@ entity WaypointSprite_DeployFixed(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, world, ofs, world, t, self, waypointsprite_deployed_fixed, false, icon);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, NULL, ofs, NULL, t, player, waypointsprite_deployed_fixed, false, icon);
 }
 
 entity WaypointSprite_DeployPersonal(
     entity spr,
+    entity player,
     vector ofs,
     entity icon // initial icon
 )
-{SELFPARAM();
-    return WaypointSprite_Spawn(spr, 0, 0, world, ofs, world, 0, self, waypointsprite_deployed_personal, false, icon);
+{
+    return WaypointSprite_Spawn(spr, 0, 0, NULL, ofs, NULL, 0, player, waypointsprite_deployed_personal, false, icon);
 }
 
 entity WaypointSprite_Attach(
     entity spr,
+    entity player,
     float limited_range,
     entity icon // initial icon
 )
-{SELFPARAM();
+{
     float t;
-    if (self.waypointsprite_attachedforcarrier)
-        return world; // can't attach to FC
+    if (player.waypointsprite_attachedforcarrier)
+        return NULL; // can't attach to FC
     if (teamplay)
-        t = self.team;
+        t = player.team;
     else
         t = 0;
     float maxdistance;
@@ -1089,7 +1092,7 @@ entity WaypointSprite_Attach(
         maxdistance = waypointsprite_limitedrange;
     else
         maxdistance = 0;
-    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, self, '0 0 64', world, t, self, waypointsprite_attached, false, icon);
+    return WaypointSprite_Spawn(spr, waypointsprite_deployed_lifetime, maxdistance, player, '0 0 64', NULL, t, player, waypointsprite_attached, false, icon);
 }
 
 entity WaypointSprite_AttachCarrier(
@@ -1099,8 +1102,8 @@ entity WaypointSprite_AttachCarrier(
 )
 {
     WaypointSprite_Kill(carrier.waypointsprite_attached); // FC overrides attached
-    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', world, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
-    if (e)
+    entity e = WaypointSprite_Spawn(spr, 0, 0, carrier, '0 0 64', NULL, carrier.team, carrier, waypointsprite_attachedforcarrier, false, icon);
+    if (carrier.health)
     {
         WaypointSprite_UpdateMaxHealth(e, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2);
         WaypointSprite_UpdateHealth(e, '1 0 0' * healtharmor_maxdamage(carrier.health, carrier.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id));
@@ -1113,16 +1116,16 @@ void WaypointSprite_DetachCarrier(entity carrier)
     WaypointSprite_Disown(carrier.waypointsprite_attachedforcarrier, waypointsprite_deadlifetime);
 }
 
-void WaypointSprite_ClearPersonal()
-{SELFPARAM();
-    WaypointSprite_Kill(self.waypointsprite_deployed_personal);
+void WaypointSprite_ClearPersonal(entity this)
+{
+    WaypointSprite_Kill(this.waypointsprite_deployed_personal);
 }
 
-void WaypointSprite_ClearOwned()
-{SELFPARAM();
-    WaypointSprite_Kill(self.waypointsprite_deployed_fixed);
-    WaypointSprite_Kill(self.waypointsprite_deployed_personal);
-    WaypointSprite_Kill(self.waypointsprite_attached);
+void WaypointSprite_ClearOwned(entity this)
+{
+    WaypointSprite_Kill(this.waypointsprite_deployed_fixed);
+    WaypointSprite_Kill(this.waypointsprite_deployed_personal);
+    WaypointSprite_Kill(this.waypointsprite_attached);
 }
 
 void WaypointSprite_PlayerDead(entity this)
@@ -1131,12 +1134,12 @@ void WaypointSprite_PlayerDead(entity this)
     WaypointSprite_DetachCarrier(this);
 }
 
-void WaypointSprite_PlayerGone()
-{SELFPARAM();
-    WaypointSprite_Disown(self.waypointsprite_deployed_fixed, waypointsprite_deadlifetime);
-    WaypointSprite_Kill(self.waypointsprite_deployed_personal);
-    WaypointSprite_Disown(self.waypointsprite_attached, waypointsprite_deadlifetime);
-    WaypointSprite_DetachCarrier(self);
+void WaypointSprite_PlayerGone(entity this)
+{
+    WaypointSprite_Disown(this.waypointsprite_deployed_fixed, waypointsprite_deadlifetime);
+    WaypointSprite_Kill(this.waypointsprite_deployed_personal);
+    WaypointSprite_Disown(this.waypointsprite_attached, waypointsprite_deadlifetime);
+    WaypointSprite_DetachCarrier(this);
 }
 #endif
 #endif

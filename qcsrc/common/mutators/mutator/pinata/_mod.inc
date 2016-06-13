@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "pinata.qc"
+#include <common/mutators/mutator/pinata/pinata.qc>

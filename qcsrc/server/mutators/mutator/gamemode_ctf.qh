@@ -14,7 +14,7 @@ CLASS(Flag, Pickup)
     ATTRIB(Flag, m_maxs, vector, PL_MAX_CONST + '0 0 -13')
 ENDCLASS(Flag)
 Flag CTF_FLAG; STATIC_INIT(Flag) { CTF_FLAG = NEW(Flag); }
-void ctf_FlagTouch() { SELFPARAM(); ITEM_HANDLE(Pickup, CTF_FLAG, this, other); }
+void ctf_FlagTouch(entity this) { ITEM_HANDLE(Pickup, CTF_FLAG, this, other); }
 
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
 

@@ -157,104 +157,106 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 	float sigma;
 	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
-	float sstyle;
 	spread *= spreadfactor; //g_weaponspreadfactor;
 	if(spread <= 0)
 		return forward;
-	sstyle = spreadstyle; //autocvar_g_projectiles_spread_style;
 
-	if(sstyle == 0)
+	switch(spreadstyle)
 	{
-		// this is the baseline for the spread value!
-		// standard deviation: sqrt(2/5)
-		// density function: sqrt(1-r^2)
-		return forward + randomvec() * spread;
+		case 0:
+		{
+			// this is the baseline for the spread value!
+			// standard deviation: sqrt(2/5)
+			// density function: sqrt(1-r^2)
+			return forward + randomvec() * spread;
+		}
+		case 1:
+		{
+			// same thing, basically
+			return normalize(forward + cliptoplane(randomvec() * spread, forward));
+		}
+		case 2:
+		{
+			// circle spread... has at sigma=1 a standard deviation of sqrt(1/2)
+			sigma = spread * 0.89442719099991587855; // match baseline stddev
+			v1 = findperpendicular(forward);
+			v2 = cross(forward, v1);
+			// random point on unit circle
+			dx = random() * 2 * M_PI;
+			dy = sin(dx);
+			dx = cos(dx);
+			// radius in our dist function
+			r = random();
+			r = sqrt(r);
+			return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
+		}
+		case 3: // gauss 3d
+		{
+			sigma = spread * 0.44721359549996; // match baseline stddev
+			// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
+			v1 = forward;
+			v1_x += gsl_ran_gaussian(sigma);
+			v1_y += gsl_ran_gaussian(sigma);
+			v1_z += gsl_ran_gaussian(sigma);
+			return v1;
+		}
+		case 4: // gauss 2d
+		{
+			sigma = spread * 0.44721359549996; // match baseline stddev
+			// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
+			v1_x = gsl_ran_gaussian(sigma);
+			v1_y = gsl_ran_gaussian(sigma);
+			v1_z = gsl_ran_gaussian(sigma);
+			return normalize(forward + cliptoplane(v1, forward));
+		}
+		case 5: // 1-r
+		{
+			sigma = spread * 1.154700538379252; // match baseline stddev
+			v1 = findperpendicular(forward);
+			v2 = cross(forward, v1);
+			// random point on unit circle
+			dx = random() * 2 * M_PI;
+			dy = sin(dx);
+			dx = cos(dx);
+			// radius in our dist function
+			r = random();
+			r = solve_cubic_abcd(-2, 3, 0, -r) * '0 1 0';
+			return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
+		}
+		case 6: // 1-r^2
+		{
+			sigma = spread * 1.095445115010332; // match baseline stddev
+			v1 = findperpendicular(forward);
+			v2 = cross(forward, v1);
+			// random point on unit circle
+			dx = random() * 2 * M_PI;
+			dy = sin(dx);
+			dx = cos(dx);
+			// radius in our dist function
+			r = random();
+			r = sqrt(1 - r);
+			r = sqrt(1 - r);
+			return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
+		}
+		case 7: // (1-r) (2-r)
+		{
+			sigma = spread * 1.224744871391589; // match baseline stddev
+			v1 = findperpendicular(forward);
+			v2 = cross(forward, v1);
+			// random point on unit circle
+			dx = random() * 2 * M_PI;
+			dy = sin(dx);
+			dx = cos(dx);
+			// radius in our dist function
+			r = random();
+			r = 1 - sqrt(r);
+			r = 1 - sqrt(r);
+			return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
+		}
+		default:
+			error("g_projectiles_spread_style must be 0 (sphere), 1 (flattened sphere), 2 (circle), 3 (gauss 3D), 4 (gauss plane), 5 (linear falloff), 6 (quadratic falloff), 7 (stronger falloff)!");
 	}
-	else if(sstyle == 1)
-	{
-		// same thing, basically
-		return normalize(forward + cliptoplane(randomvec() * spread, forward));
-	}
-	else if(sstyle == 2)
-	{
-		// circle spread... has at sigma=1 a standard deviation of sqrt(1/2)
-		sigma = spread * 0.89442719099991587855; // match baseline stddev
-		v1 = findperpendicular(forward);
-		v2 = cross(forward, v1);
-		// random point on unit circle
-		dx = random() * 2 * M_PI;
-		dy = sin(dx);
-		dx = cos(dx);
-		// radius in our dist function
-		r = random();
-		r = sqrt(r);
-		return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
-	}
-	else if(sstyle == 3) // gauss 3d
-	{
-		sigma = spread * 0.44721359549996; // match baseline stddev
-		// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
-		v1 = forward;
-		v1_x += gsl_ran_gaussian(sigma);
-		v1_y += gsl_ran_gaussian(sigma);
-		v1_z += gsl_ran_gaussian(sigma);
-		return v1;
-	}
-	else if(sstyle == 4) // gauss 2d
-	{
-		sigma = spread * 0.44721359549996; // match baseline stddev
-		// note: 2D gaussian has sqrt(2) times the stddev of 1D, so this factor is right
-		v1_x = gsl_ran_gaussian(sigma);
-		v1_y = gsl_ran_gaussian(sigma);
-		v1_z = gsl_ran_gaussian(sigma);
-		return normalize(forward + cliptoplane(v1, forward));
-	}
-	else if(sstyle == 5) // 1-r
-	{
-		sigma = spread * 1.154700538379252; // match baseline stddev
-		v1 = findperpendicular(forward);
-		v2 = cross(forward, v1);
-		// random point on unit circle
-		dx = random() * 2 * M_PI;
-		dy = sin(dx);
-		dx = cos(dx);
-		// radius in our dist function
-		r = random();
-		r = solve_cubic_abcd(-2, 3, 0, -r) * '0 1 0';
-		return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
-	}
-	else if(sstyle == 6) // 1-r^2
-	{
-		sigma = spread * 1.095445115010332; // match baseline stddev
-		v1 = findperpendicular(forward);
-		v2 = cross(forward, v1);
-		// random point on unit circle
-		dx = random() * 2 * M_PI;
-		dy = sin(dx);
-		dx = cos(dx);
-		// radius in our dist function
-		r = random();
-		r = sqrt(1 - r);
-		r = sqrt(1 - r);
-		return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
-	}
-	else if(sstyle == 7) // (1-r) (2-r)
-	{
-		sigma = spread * 1.224744871391589; // match baseline stddev
-		v1 = findperpendicular(forward);
-		v2 = cross(forward, v1);
-		// random point on unit circle
-		dx = random() * 2 * M_PI;
-		dy = sin(dx);
-		dx = cos(dx);
-		// radius in our dist function
-		r = random();
-		r = 1 - sqrt(r);
-		r = 1 - sqrt(r);
-		return normalize(forward + (v1 * dx + v2 * dy) * r * sigma);
-	}
-	else
-		error("g_projectiles_spread_style must be 0 (sphere), 1 (flattened sphere), 2 (circle), 3 (gauss 3D), 4 (gauss plane), 5 (linear falloff), 6 (quadratic falloff), 7 (stronger falloff)!");
+		
 	return '0 0 0';
 	/*
 	 * how to derive falloff functions:

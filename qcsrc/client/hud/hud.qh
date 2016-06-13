@@ -22,9 +22,16 @@ REGISTER_REGISTRY(hud_panels)
 #define HUD_PANEL(NAME) HUD_PANEL_##NAME
 
 // draw the background/borders
-#define HUD_Panel_DrawBg(theAlpha) MACRO_BEGIN {																				\
-	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")												\
-		draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel.current_panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
+#define HUD_Panel_DrawBg(theAlpha) MACRO_BEGIN { \
+	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "") \
+		draw_BorderPicture( \
+			HUD_Shift(panel_pos - '1 1 0' * panel_bg_border), \
+			panel.current_panel_bg, \
+			HUD_Scale(panel_size + '1 1 0' * 2 * panel_bg_border), \
+			panel_bg_color, \
+			panel_bg_alpha * theAlpha, \
+			HUD_Scale('1 1 0' * (panel_bg_border/BORDER_MULTIPLIER)) \
+		); \
 } MACRO_END
 
 int panel_order[hud_panels_MAX];
@@ -154,6 +161,24 @@ float chat_posy;
 float chat_sizey;
 
 float current_player;
+
+float autocvar_hud_dynamic_follow;
+float autocvar_hud_dynamic_follow_scale;
+vector autocvar_hud_dynamic_follow_scale_xyz;
+
+vector hud_dynamic_shake_realofs;
+float hud_dynamic_shake_factor;
+float hud_dynamic_shake_time;
+
+// shared across viewmodel effects and dynamic hud code
+vector cl_followmodel_ofs;
+float cl_followmodel_time;
+
+vector hud_scale;
+vector hud_scale_current;
+vector hud_shift;
+vector hud_shift_current;
+vector hud_scale_center;
 
 float stringwidth_colors(string s, vector theSize);
 float stringwidth_nocolors(string s, vector theSize);

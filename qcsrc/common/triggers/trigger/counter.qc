@@ -1,25 +1,25 @@
 #ifdef SVQC
-void counter_use()
-{SELFPARAM();
-	self.count -= 1;
-	if (self.count < 0)
+void counter_use(entity this, entity actor, entity trigger)
+{
+	this.count -= 1;
+	if (this.count < 0)
 		return;
 
-	if (self.count == 0)
+	if (this.count == 0)
 	{
-		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
+		if(IS_PLAYER(actor) && (this.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
-		self.enemy = activator;
-		multi_trigger ();
+		this.enemy = actor;
+		multi_trigger(this);
 	}
 	else
 	{
-		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
-		if(self.count >= 4)
-			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
+		if(IS_PLAYER(actor) && (this.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+		if(this.count >= 4)
+			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER);
 		else
-			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, self.count);
+			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COUNTER_FEWMORE, this.count);
 	}
 }
 
@@ -38,12 +38,12 @@ After the counter has been triggered "count" times (default 2), it will fire all
 */
 spawnfunc(trigger_counter)
 {
-	self.wait = -1;
-	if (!self.count)
-		self.count = 2;
-	self.cnt = self.count;
+	this.wait = -1;
+	if (!this.count)
+		this.count = 2;
+	this.cnt = this.count;
 
-	self.use = counter_use;
-	self.reset = counter_reset;
+	this.use = counter_use;
+	this.reset = counter_reset;
 }
 #endif

@@ -251,11 +251,13 @@ void Cmd_HUD_Help()
 	LOG_INFO(_("^2scoreboard_columns_set default\n"));
 	LOG_INFO(_("^2scoreboard_columns_set ^7field1 field2 ...\n"));
 	LOG_INFO(_("The following field names are recognized (case insensitive):\n"));
-	LOG_INFO(_("You can use a ^3|^7 to start the right-aligned fields.\n\n"));
+	LOG_INFO(_("You can use a ^3|^7 to start the right-aligned fields.\n"));
+	LOG_INFO("\n");
 
 	LOG_INFO(_("^3name^7 or ^3nick^7             Name of a player\n"));
 	LOG_INFO(_("^3ping^7                     Ping time\n"));
 	LOG_INFO(_("^3pl^7                       Packet loss\n"));
+	LOG_INFO(_("^3elo^7                      Player ELO\n"));
 	LOG_INFO(_("^3kills^7                    Number of kills\n"));
 	LOG_INFO(_("^3deaths^7                   Number of deaths\n"));
 	LOG_INFO(_("^3suicides^7                 Number of suicides\n"));
@@ -283,7 +285,8 @@ void Cmd_HUD_Help()
 	LOG_INFO(_("^3takes^7                    Number of domination points taken (DOM)\n"));
 	LOG_INFO(_("^3bckills^7                  Number of ball carrier kills\n"));
 	LOG_INFO(_("^3bctime^7                   Total amount of time holding the ball in Keepaway\n"));
-	LOG_INFO(_("^3score^7                    Total score\n\n"));
+	LOG_INFO(_("^3score^7                    Total score\n"));
+	LOG_INFO("\n");
 
 	LOG_INFO(_("Before a field you can put a + or - sign, then a comma separated list\n"
 	        "of game types, then a slash, to make the field show up only in these\n"
@@ -1275,6 +1278,11 @@ void HUD_DrawScoreboard()
 
 	if (!scoreboard_fade_alpha)
 		return;
+
+	if (autocvar_scoreboard_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 
 	HUD_UpdatePlayerTeams();
 

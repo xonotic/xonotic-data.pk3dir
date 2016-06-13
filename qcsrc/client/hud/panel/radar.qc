@@ -275,6 +275,10 @@ void HUD_Radar()
 	pos = panel_pos;
 	mySize = panel_size;
 
+	if (autocvar_hud_panel_radar_dynamichud)
+		HUD_Scale_Enable();
+	else
+		HUD_Scale_Disable();
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
@@ -285,7 +289,7 @@ void HUD_Radar()
 	int color2;
 	float scale2d, normalsize, bigsize;
 
-	teamradar_origin2d = pos + 0.5 * mySize;
+	teamradar_origin2d = HUD_Shift(pos + 0.5 * mySize);
 	teamradar_size2d = mySize;
 
 	if(minimapname == "")
@@ -294,7 +298,7 @@ void HUD_Radar()
 	teamradar_loadcvars();
 
 	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
-	teamradar_size2d = mySize;
+	teamradar_size2d = HUD_Scale(mySize);
 
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 
@@ -364,11 +368,11 @@ void HUD_Radar()
 	});
 	AL_EACH(_entcs, e, it != NULL, {
 		if (!it.m_entcs_private) continue;
-		if (entcs_is_self(it)) continue;
+		if (it.sv_entnum == current_player) continue;
 		color2 = entcs_GetTeam(it.sv_entnum);
 		draw_teamradar_player(it.origin, it.angles, Team_ColorRGB(color2));
 	});
-	draw_teamradar_player(view_origin, view_angles, '1 1 1');
+	draw_teamradar_player(entcs_receiver(current_player).origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
 

@@ -1,19 +1,19 @@
 REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_TELEPORT)
 
 #ifdef SVQC
-void trigger_teleport_use()
-{SELFPARAM();
+void trigger_teleport_use(entity this, entity actor, entity trigger)
+{
 	if(teamplay)
-		self.team = activator.team;
+		this.team = actor.team;
 #ifdef SVQC
-	self.SendFlags |= SF_TRIGGER_UPDATE;
+	this.SendFlags |= SF_TRIGGER_UPDATE;
 #endif
 }
 #endif
 
-void Teleport_Touch ()
-{SELFPARAM();
-	if (self.active != ACTIVE_ACTIVE)
+void Teleport_Touch (entity this)
+{
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
 #ifdef SVQC
@@ -34,8 +34,8 @@ void Teleport_Touch ()
 	if(IS_DEAD(other))
 		return;
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (DIFF_TEAM(this, other)))
 			return;
 
 	EXACTTRIGGER_TOUCH;
@@ -46,15 +46,14 @@ void Teleport_Touch ()
 #endif
 
 	entity e;
-	e = Simple_TeleportPlayer(self, other);
+	e = Simple_TeleportPlayer(this, other);
 
 #ifdef SVQC
-	activator = other;
-	string s = self.target; self.target = string_null;
-	SUB_UseTargets();
-	if (!self.target) self.target = s;
+	string s = this.target; this.target = string_null;
+	SUB_UseTargets(this, other, other); // TODO: should we be using other for trigger too?
+	if (!this.target) this.target = s;
 
-	WITHSELF(e, SUB_UseTargets());
+	SUB_UseTargets(e, other, other);
 #endif
 }
 
@@ -80,49 +79,47 @@ void trigger_teleport_link(entity this)
 
 spawnfunc(trigger_teleport)
 {
-	self.angles = '0 0 0';
+	this.angles = '0 0 0';
 
-	self.active = ACTIVE_ACTIVE;
-	//trigger_init(self); // only for predicted triggers?
+	this.active = ACTIVE_ACTIVE;
+	//trigger_init(this); // only for predicted triggers?
 	EXACTTRIGGER_INIT;
-	self.use = trigger_teleport_use;
+	this.use = trigger_teleport_use;
 
-	if(self.noise != "")
-		FOREACH_WORD(self.noise, true, precache_sound(it));
+	if(this.noise != "")
+		FOREACH_WORD(this.noise, true, precache_sound(it));
 
 	// this must be called to spawn the teleport waypoints for bots
-	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
+	InitializeEntity(this, teleport_findtarget, INITPRIO_FINDTARGET);
 
-	if (self.target == "")
+	if (this.target == "")
 	{
-		objerror ("Teleporter with no target");
+		objerror (this, "Teleporter with no target");
 		return;
 	}
 
-	self.teleport_next = teleport_first;
-	teleport_first = self;
+	this.teleport_next = teleport_first;
+	teleport_first = this;
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_TELEPORT, bool isnew)
 {
-	self.classname = "trigger_teleport";
-	int mytm = ReadByte(); if(mytm) { self.team = mytm - 1; }
-	self.spawnflags = ReadInt24_t();
-	self.active = ReadByte();
-	self.speed = ReadCoord();
+	this.classname = "trigger_teleport";
+	int mytm = ReadByte(); if(mytm) { this.team = mytm - 1; }
+	this.spawnflags = ReadInt24_t();
+	this.active = ReadByte();
+	this.speed = ReadCoord();
 
-	trigger_common_read(true);
+	trigger_common_read(this, true);
 
-	self.entremove = trigger_remove_generic;
-	self.solid = SOLID_TRIGGER;
-	//self.draw = trigger_draw_generic;
-	//self.move_touch = trigger_push_touch;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-	defer(self, 0.25, teleport_findtarget);
+	this.entremove = trigger_remove_generic;
+	this.solid = SOLID_TRIGGER;
+	//this.move_touch = trigger_push_touch;
+	this.move_time = time;
+	defer(this, 0.25, teleport_findtarget);
 
-	self.teleport_next = teleport_first;
-	teleport_first = self;
+	this.teleport_next = teleport_first;
+	teleport_first = this;
 
 	return true;
 }

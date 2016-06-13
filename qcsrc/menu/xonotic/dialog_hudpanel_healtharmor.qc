@@ -12,6 +12,8 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 	DIALOG_HUDPANEL_COMMON();
 
 	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_combined", _("Combine health and armor")));
+	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_progressbar", _("Enable status bar")));
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextLabel(0, _("Status bar alignment:")));

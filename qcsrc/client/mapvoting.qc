@@ -134,7 +134,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 
 	string thelabel = mv_desc[id], ts;
 	entity last = title;
-	entity next = world;
+	entity next = NULL;
 	float nlines = 0;
 	if( thelabel != "")
 	{
@@ -341,7 +341,6 @@ void MapVote_Draw()
 		if ( mpos.x != mv_mousepos.x || mpos.y != mv_mousepos.y )
 			mv_selection_keyboard = 0;
 		mv_mousepos = mpos;
-
 	}
 
 	center = (vid_conwidth - 1)/2;
@@ -360,6 +359,7 @@ void MapVote_Draw()
 	pos.y = ymin;
 	pos.z = 0;
 
+	HUD_Scale_Disable();
 	draw_beginBoldFont();
 
 	map = ((gametypevote) ? _("Decide the gametype") : _("Vote for a map"));
@@ -373,10 +373,8 @@ void MapVote_Draw()
 		pos.x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize * 1.5) * 0.5;
 		drawstring(pos, mapvote_chosenmap, hud_fontsize * 1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
 		pos.y += hud_fontsize.y * 1.5;
-		pos.y += hud_fontsize.y * 0.5;
 	}
-	else
-		pos.y += hud_fontsize.y * 0.5;
+	pos.y += hud_fontsize.y * 0.5;
 
 	draw_endBoldFont();
 
@@ -680,8 +678,8 @@ void MapVote_Init()
 	for(i = 0; i < mv_num_maps; ++i )
 		mv_flags_start[i] = mv_flags[i];
 
-	// Assume mv_pk3list is world, there should only be 1 mapvote per round
-	mv_pk3list = world; // I'm still paranoid!
+	// Assume mv_pk3list is NULL, there should only be 1 mapvote per round
+	mv_pk3list = NULL; // I'm still paranoid!
 
 	for(i = 0; i < mv_num_maps; ++i)
 	{

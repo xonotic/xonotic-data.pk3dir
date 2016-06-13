@@ -56,32 +56,32 @@ REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
 spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
 spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
-void W_Blaster_Touch()
-{SELFPARAM();
-	PROJECTILE_TOUCH;
+void W_Blaster_Touch(entity this)
+{
+	PROJECTILE_TOUCH(this);
 
-	self.event_damage = func_null;
+	this.event_damage = func_null;
 
 	RadiusDamage(
-		self,
-		self.realowner,
-		self.blaster_damage,
-		self.blaster_edgedamage,
-		self.blaster_radius,
-		world,
-		world,
-		self.blaster_force,
-		self.projectiledeathtype,
+		this,
+		this.realowner,
+		this.blaster_damage,
+		this.blaster_edgedamage,
+		this.blaster_radius,
+		NULL,
+		NULL,
+		this.blaster_force,
+		this.projectiledeathtype,
 		other
 	);
 
-	remove(self);
+	remove(this);
 }
 
-void W_Blaster_Think()
-{SELFPARAM();
+void W_Blaster_Think(entity this)
+{
 	this.movetype = MOVETYPE_FLY;
-	this.think = SUB_Remove_self;
+	setthink(this, SUB_Remove);
 	this.nextthink = time + this.blaster_lifetime;
 	CSQCProjectile(this, true, PROJECTILE_BLASTER, true);
 }
@@ -98,7 +98,7 @@ void W_Blaster_Attack(
 	float atk_spread,
 	float atk_delay,
 	float atk_lifetime)
-{SELFPARAM();
+{
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
 	W_SetupShot_Dir(actor, s_forward, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_B, atk_damage);
@@ -135,33 +135,32 @@ void W_Blaster_Attack(
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 
-	missile.touch = W_Blaster_Touch;
+	settouch(missile, W_Blaster_Touch);
 	missile.flags = FL_PROJECTILE;
 	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = atk_deathtype;
-	missile.think = W_Blaster_Think;
+	setthink(missile, W_Blaster_Think);
 	missile.nextthink = time + atk_delay;
 
 	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 
 	if (time >= missile.nextthink)
 	{
-		WITHSELF(missile, missile.think());
+		getthink(missile)(missile);
 	}
 }
 
-METHOD(Blaster, wr_aim, void(entity thiswep))
+METHOD(Blaster, wr_aim, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
     if(WEP_CVAR(blaster, secondary))
     {
         if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
-            { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
         else
-            { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
     }
     else
-        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 }
 
 METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
@@ -223,18 +222,17 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
     }
 }
 
-METHOD(Blaster, wr_setup, void(entity thiswep))
+METHOD(Blaster, wr_setup, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
-    self.ammo_field = ammo_none;
+    actor.ammo_field = ammo_none;
 }
 
-METHOD(Blaster, wr_checkammo1, bool(entity thiswep))
+METHOD(Blaster, wr_checkammo1, bool(entity thiswep, entity actor))
 {
     return true; // infinite ammo
 }
 
-METHOD(Blaster, wr_checkammo2, bool(entity thiswep))
+METHOD(Blaster, wr_checkammo2, bool(entity thiswep, entity actor))
 {
     return true; // blaster has infinite ammo
 }
@@ -252,13 +250,12 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
 #endif
 #ifdef CSQC
 
-METHOD(Blaster, wr_impacteffect, void(entity thiswep))
+METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    SELFPARAM();
     vector org2;
     org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-    if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+    if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 }
 
 #endif

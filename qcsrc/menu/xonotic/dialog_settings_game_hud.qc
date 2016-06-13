@@ -159,6 +159,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
+			_("HUD moves around following player's movement")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
+	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));

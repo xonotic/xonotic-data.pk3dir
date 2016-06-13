@@ -2,6 +2,7 @@
 #define COMMON_UTIL_H
 
 #ifndef MENUQC
+
 vector real_origin(entity ent);
 #endif
 
@@ -10,7 +11,7 @@ vector real_origin(entity ent);
 string wordwrap(string s, float l);
 #ifndef MENUQC
 #ifndef CSQC
-void wordwrap_sprint(string s, float l);
+void wordwrap_sprint(entity to, string s, float l);
 #endif
 #endif
 void wordwrap_cb(string s, float l, void(string) callback);
@@ -27,8 +28,8 @@ void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(
 float median(float a, float b, float c);
 
 // converts a number to a string with the indicated number of decimals
-// works for up to 10 decimals!
 string ftos_decimals(float number, float decimals);
+string ftos_mindecimals(float number);
 
 bool fexists(string f);
 

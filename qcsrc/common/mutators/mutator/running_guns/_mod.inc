@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "running_guns.qc"
+#include <common/mutators/mutator/running_guns/running_guns.qc>

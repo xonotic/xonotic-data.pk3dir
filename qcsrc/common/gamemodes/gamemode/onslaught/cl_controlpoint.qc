@@ -111,7 +111,7 @@ void cpicon_construct(entity this)
 	setmodel(this, MDL_ONS_CP);
 	setsize(this, CPICON_MIN, CPICON_MAX);
 
-	if(this.icon_realmodel == world)
+	if(this.icon_realmodel == NULL)
 	{
 		this.icon_realmodel = spawn();
 		setmodel(this.icon_realmodel, MDL_Null);

@@ -28,7 +28,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
 
-	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
+	if((s == "") || find(NULL, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
 		if(IS_BOT_CLIENT(e))
 			{ s = sprintf("bot#%d", e.playerid); }
@@ -198,7 +198,7 @@ void PlayerStats_GameReport(float finished)
 			autocvar_g_playerstats_gamereport_uri,
 			FILE_APPEND,
 			PlayerStats_GameReport_Handler,
-			world
+			NULL
 		);
 	}
 	else
@@ -632,7 +632,7 @@ void PlayerStats_PlayerDetail()
 			autocvar_g_playerstats_playerdetail_uri,
 			FILE_APPEND,
 			PlayerStats_PlayerDetail_Handler,
-			world
+			NULL
 		);
 
 		PlayerStats_PlayerDetail_Status = PS_D_STATUS_WAITING;
@@ -1010,7 +1010,7 @@ void PlayerInfo_Details()
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
                 uri = strcat(uri, "/player/me");
 		print("Retrieving playerstats from URL: ", uri, "\n");
-		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, world);
+		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, NULL);
 	}
 }
 #endif

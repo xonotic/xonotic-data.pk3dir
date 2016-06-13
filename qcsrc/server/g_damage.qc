@@ -31,7 +31,7 @@ void UpdateFrags(entity player, int f)
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
-{SELFPARAM();
+{
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 
@@ -102,10 +102,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, self, attacker, targ, f))
-	{
-		f = frag_score;
-	}
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
+		f = M_ARGV(2, float);
 
 	attacker.totalfrags += f;
 
@@ -125,7 +123,7 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
 		s = strcat(s, "I");
-	if(player.flagcarried != world)
+	if(player.flagcarried != NULL)
 		s = strcat(s, "F");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
@@ -328,7 +326,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 			return;
 		}
 		LogDeath("suicide", deathtype, targ, targ);
-		GiveFrags(attacker, targ, -1, deathtype);
+		if(deathtype != DEATH_AUTOTEAMCHANGE.m_id) // special case: don't negate frags if auto switched
+			GiveFrags(attacker, targ, -1, deathtype);
 	}
 
 	// ======
@@ -345,7 +344,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -500,19 +499,19 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 	if(targ.killcount) { targ.killcount = 0; }
 }
 
-void Ice_Think()
-{SELFPARAM();
-	if(!STAT(FROZEN, self.owner) || self.owner.iceblock != self)
+void Ice_Think(entity this)
+{
+	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	setorigin(self, self.owner.origin - '0 0 16');
-	self.nextthink = time;
+	setorigin(this, this.owner.origin - '0 0 16');
+	this.nextthink = time;
 }
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
-{SELFPARAM();
+{
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
@@ -525,12 +524,12 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
-	self.bot_attack = false;
+	targ.bot_attack = false;
 
 	entity ice = new(ice);
 	ice.owner = targ;
 	ice.scale = targ.scale;
-	ice.think = Ice_Think;
+	setthink(ice, Ice_Think);
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	setmodel(ice, MDL_ICE);
@@ -540,7 +539,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	WITHSELF(ice, Ice_Think());
+	Ice_Think(ice);
 
 	RemoveGrapplingHook(targ);
 
@@ -548,12 +547,11 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	// add waypoint
 	if(show_waypoint)
-		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
+		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
 void Unfreeze (entity targ)
 {
-    SELFPARAM();
 	if(!STAT(FROZEN, targ))
 		return;
 
@@ -563,7 +561,7 @@ void Unfreeze (entity targ)
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
-	self.bot_attack = true;
+	targ.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
@@ -572,11 +570,11 @@ void Unfreeze (entity targ)
 	// remove the ice block
 	if(targ.iceblock)
 		remove(targ.iceblock);
-	targ.iceblock = world;
+	targ.iceblock = NULL;
 }
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
-{SELFPARAM();
+{
 	float mirrordamage;
 	float mirrorforce;
 	float complainteamdamage = 0;
@@ -587,11 +585,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	if (gameover || targ.killcount == FRAGS_SPECTATOR)
 		return;
 
-	setself(targ);
-        damage_targ = targ;
-        damage_inflictor = inflictor;
-        damage_attacker = attacker;
-		attacker_save = attacker;
+    damage_targ = targ;
+    damage_inflictor = inflictor;
+    damage_attacker = attacker;
+	attacker_save = attacker;
 
 	if(IS_PLAYER(targ))
 		if(targ.hook)
@@ -602,19 +599,17 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
-		if(IS_PLAYER(targ))
-			if(SAME_TEAM(targ, attacker))
-			{
-				setself(this);
-				return;
-			}
+		if(IS_PLAYER(targ) && SAME_TEAM(targ, attacker))
+		{
+			return;
+		}
 	}
 
 	if(deathtype == DEATH_KILL.m_id || deathtype == DEATH_TEAMCHANGE.m_id || deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			vehicles_exit(VHEF_RELEASE);
+			vehicles_exit(targ.vehicle, VHEF_RELEASE);
 
 		// These are ALWAYS lethal
 		// No damage modification here
@@ -699,9 +694,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 		// should this be changed at all? If so, in what way?
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
-		damage = frag_damage;
-		mirrordamage = frag_mirrordamage;
-		force = frag_force;
+		damage = M_ARGV(4, float);
+		mirrordamage = M_ARGV(5, float);
+		force = M_ARGV(6, vector);
 
 		if(STAT(FROZEN, targ))
 		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
@@ -713,7 +708,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				Unfreeze(targ);
 				targ.health = autocvar_g_frozen_revive_falldamage_health;
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
 
@@ -725,37 +720,34 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 		{
 			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 
-			setself(targ);
-			entity spot = SelectSpawnPoint (false);
+			entity spot = SelectSpawnPoint (targ, false);
 
 			if(spot)
 			{
 				damage = 0;
-				self.deadflag = DEAD_NO;
+				targ.deadflag = DEAD_NO;
 
-				self.angles = spot.angles;
+				targ.angles = spot.angles;
 
-				self.effects = 0;
-				self.effects |= EF_TELEPORT_BIT;
+				targ.effects = 0;
+				targ.effects |= EF_TELEPORT_BIT;
 
-				self.angles_z = 0; // never spawn tilted even if the spot says to
-				self.fixangle = true; // turn this way immediately
-				self.velocity = '0 0 0';
-				self.avelocity = '0 0 0';
-				self.punchangle = '0 0 0';
-				self.punchvector = '0 0 0';
-				self.oldvelocity = self.velocity;
+				targ.angles_z = 0; // never spawn tilted even if the spot says to
+				targ.fixangle = true; // turn this way immediately
+				targ.velocity = '0 0 0';
+				targ.avelocity = '0 0 0';
+				targ.punchangle = '0 0 0';
+				targ.punchvector = '0 0 0';
+				targ.oldvelocity = targ.velocity;
 
-				self.spawnorigin = spot.origin;
-				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins.z - 24));
+				targ.spawnorigin = spot.origin;
+				setorigin(targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
-				self.oldorigin = self.origin;
-				self.prevorigin = self.origin;
+				targ.oldorigin = targ.origin;
+				targ.prevorigin = targ.origin;
 
-				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 			}
-
-			setself(this);
 		}
 
 		if(!g_instagib)
@@ -840,39 +832,39 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	}
 
 	// apply push
-	if (self.damageforcescale)
+	if (targ.damageforcescale)
 	if (vlen(force))
-	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || self == attacker)
+	if (!IS_PLAYER(targ) || time >= targ.spawnshieldtime || targ == attacker)
 	{
-		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
-		if(self.movetype == MOVETYPE_PHYSICS)
+		vector farce = damage_explosion_calcpush(targ.damageforcescale * force, targ.velocity, autocvar_g_balance_damagepush_speedfactor);
+		if(targ.movetype == MOVETYPE_PHYSICS)
 		{
 			entity farcent = new(farce);
-			farcent.enemy = self;
+			farcent.enemy = targ;
 			farcent.movedir = farce * 10;
-			if(self.mass)
-				farcent.movedir = farcent.movedir * self.mass;
+			if(targ.mass)
+				farcent.movedir = farcent.movedir * targ.mass;
 			farcent.origin = hitloc;
 			farcent.forcetype = FORCETYPE_FORCEATPOS;
 			farcent.nextthink = time + 0.1;
-			farcent.think = SUB_Remove_self;
+			setthink(farcent, SUB_Remove);
 		}
 		else
 		{
-			self.velocity = self.velocity + farce;
-			self.move_velocity = self.velocity;
+			targ.velocity = targ.velocity + farce;
+			targ.move_velocity = targ.velocity;
 		}
-		UNSET_ONGROUND(self);
-		self.move_flags &= ~FL_ONGROUND;
-		UpdateCSQCProjectile(self);
+		UNSET_ONGROUND(targ);
+		targ.move_flags &= ~FL_ONGROUND;
+		UpdateCSQCProjectile(targ);
 	}
 	// apply damage
-	if (damage != 0 || (self.damageforcescale && vlen(force)))
-	if (self.event_damage)
-		self.event_damage (self, inflictor, attacker, damage, deathtype, hitloc, force);
-	setself(this);
+	if (damage != 0 || (targ.damageforcescale && vlen(force)))
+	if (targ.event_damage)
+		targ.event_damage (targ, inflictor, attacker, damage, deathtype, hitloc, force);
 
 	// apply mirror damage if any
+	if(!autocvar_g_mirrordamage_onlyweapons || DEATH_WEAPONOF(deathtype) != WEP_Null)
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;
@@ -911,7 +903,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
-			if(vlen(force) == 0)
+			if(force == '0 0 0')
 				force = '0 0 -1';
 			else
 				force = normalize(force);
@@ -1097,7 +1089,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		{
 			// print("adding a fire burner to ", e.classname, "\n");
 			e.fire_burner = new(fireburner);
-			e.fire_burner.think = fireburner_think;
+			setthink(e.fire_burner, fireburner_think);
 			e.fire_burner.nextthink = time;
 			e.fire_burner.owner = e;
 		}
@@ -1256,21 +1248,21 @@ void Fire_ApplyEffect(entity e)
 		e.effects &= ~EF_FLAME;
 }
 
-void fireburner_think()
-{SELFPARAM();
+void fireburner_think(entity this)
+{
 	// for players, this is done in the regular loop
-	if(wasfreed(self.owner))
+	if(wasfreed(this.owner))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	Fire_ApplyEffect(self.owner);
-	if(!Fire_IsBurning(self.owner))
+	Fire_ApplyEffect(this.owner);
+	if(!Fire_IsBurning(this.owner))
 	{
-		self.owner.fire_burner = world;
-		remove(self);
+		this.owner.fire_burner = NULL;
+		remove(this);
 		return;
 	}
-	Fire_ApplyDamage(self.owner);
-	self.nextthink = time;
+	Fire_ApplyDamage(this.owner);
+	this.nextthink = time;
 }

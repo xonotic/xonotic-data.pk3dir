@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "doublejump.qc"
+#include <common/mutators/mutator/doublejump/doublejump.qc>

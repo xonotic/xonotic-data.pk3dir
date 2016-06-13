@@ -43,7 +43,7 @@ string Notification_CheckArgs(
 		case NOTIF_ALL:
 		{
 			if (client) {
-				return "Entity provided when world was required!";
+				return "Entity provided when NULL was required!";
 			}
 			break;
 		}
@@ -758,14 +758,14 @@ void Create_Notification_Entity_Choice(entity notif,
 
 // used by MSG_CHOICE to build list of choices
 #ifdef SVQC
-void Notification_GetCvars()
+void Notification_GetCvars(entity this)
 {
-	int idx = 0;
 	FOREACH(Notifications, it.nent_type == MSG_CHOICE, {
 		GetCvars_handleFloat(
+			this,
 			get_cvars_s,
 			get_cvars_f,
-			msg_choice_choices[idx++],
+			msg_choice_choices[it.nent_choice_idx],
 			sprintf("notification_%s", it.nent_name)
 		);
 	});
@@ -1086,7 +1086,7 @@ void Local_Notification_sound(
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
 			(
-				"Local_Notification_sound(world, %f, '%s', %f, %f) "
+				"Local_Notification_sound(NULL, %f, '%s', %f, %f) "
 				"^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', timediff: %f, limit: %f\n"
 			 ),
 			soundchannel,
@@ -1479,9 +1479,8 @@ NET_HANDLE(ENT_CLIENT_NOTIFICATION, bool is_new)
 #endif
 
 #ifdef SVQC
-void Net_Notification_Remove()
+void Net_Notification_Remove(entity this)
 {
-	SELFPARAM();
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
 		"Net_Notification_Remove() at %f: %s '%s - %s' notification\n",
@@ -1698,7 +1697,7 @@ void Send_Notification(
 			net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float);
 		}
 
-		net_notif.think = Net_Notification_Remove;
+		setthink(net_notif, Net_Notification_Remove);
 		net_notif.nextthink = (time > autocvar_notification_lifetime_mapload)
 			? (time + autocvar_notification_lifetime_runtime)
 			: autocvar_notification_lifetime_mapload;

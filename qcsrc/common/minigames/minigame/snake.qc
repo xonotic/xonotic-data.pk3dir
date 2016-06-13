@@ -38,7 +38,7 @@ int autocvar_sv_minigames_snake_lives = 3;
 bool snake_alone(entity minig)
 {
 	int headcount = 0;
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt == 1 )
 			++headcount;
@@ -49,21 +49,21 @@ bool snake_alone(entity minig)
 // find same game piece given its tile name
 entity snake_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 // find same game piece given its cnt
 entity snake_find_cnt(entity minig, int steam, int tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt == tile && e.team == steam )
 			return e;
-	return world;
+	return NULL;
 }
 
 // check if the tile name is valid (15x15 grid)
@@ -78,11 +78,11 @@ bool snake_valid_tile(string tile)
 
 entity snake_find_head(entity minig, int steam)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt == 1 && e.team == steam )
 			return e;
-	return world;
+	return NULL;
 }
 
 void snake_new_mouse(entity minigame)
@@ -94,7 +94,7 @@ void snake_new_mouse(entity minigame)
 	{
 		string pos = minigame_tile_buildname(i, j);
 		if(!snake_find_piece(minigame, pos))
-			RandomSelection_Add(world, 0, pos, 1, 1);
+			RandomSelection_Add(NULL, 0, pos, 1, 1);
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");
@@ -153,17 +153,16 @@ void snake_check_winner(entity minigame)
 }
 
 void snake_move_head(entity minigame, entity head);
-void snake_head_think()
+void snake_head_think(entity this)
 {
-    SELFPARAM();
-	entity minigame = self.owner;
+	entity minigame = this.owner;
 
 	if(minigame.minigame_flags & SNAKE_TURN_MOVE)
-		snake_move_head(minigame, self);
+		snake_move_head(minigame, this);
 
 	snake_check_winner(minigame);
 
-	self.nextthink = time + self.snake_delay;
+	this.nextthink = time + this.snake_delay;
 }
 
 void minigame_setup_snake(entity minigame, int pteam)
@@ -175,17 +174,17 @@ void minigame_setup_snake(entity minigame, int pteam)
 	{
 		string pos = minigame_tile_buildname(i, j);
 		if(!snake_find_piece(minigame, pos))
-			RandomSelection_Add(world, 0, pos, 1, 1);
+			RandomSelection_Add(NULL, 0, pos, 1, 1);
 	}
 
 	entity piece = msle_spawn(minigame,"minigame_board_piece");
 	piece.team = pteam;
 	piece.netname = strzone(RandomSelection_chosen_string);
 	piece.cnt = 1;
-	piece.snake_next = world;
-	piece.snake_prev = world;
+	piece.snake_next = NULL;
+	piece.snake_prev = NULL;
 	piece.snake_last = piece;
-	piece.think = snake_head_think;
+	setthink(piece, snake_head_think);
 	piece.snake_delay = autocvar_sv_minigames_snake_delay_initial;
 	piece.nextthink = time + 0.1;
 	minigame_server_sendflags(piece,MINIG_SF_ALL);
@@ -204,13 +203,13 @@ entity snake_get_player(entity minigame, int pteam)
 #ifdef SVQC
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
-	e = world;
+	e = NULL;
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif
 	if(e.team == pteam)
 		return e;
-	return world;
+	return NULL;
 }
 
 void snake_add_score(entity minigame, int pteam, int thescore)
@@ -256,7 +255,7 @@ void snake_move_body(entity minigame, entity head, bool ate_mouse)
 		piece.team = head.team;
 		piece.snake_prev = tail;
 		piece.snake_dir = tail.snake_dir;
-		piece.snake_next = world;
+		piece.snake_next = NULL;
 		piece.snake_tail = true;
 		piece.netname = strzone(tail.netname);
 
@@ -283,7 +282,7 @@ void snake_eat_team(entity minigame, int pteam)
 
 	head.nextthink = time + 1; // make sure they don't to eat us somehow
 
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minigame) ) )
 		if ( e.classname == "minigame_board_piece" && e.cnt && e.team == pteam )
 		{
@@ -421,7 +420,7 @@ int snake_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{

@@ -1,4 +1,4 @@
 // generated file; do not modify
-#include "hmg.qc"
-#include "overkill.qc"
-#include "rpc.qc"
+#include <common/mutators/mutator/overkill/hmg.qc>
+#include <common/mutators/mutator/overkill/overkill.qc>
+#include <common/mutators/mutator/overkill/rpc.qc>

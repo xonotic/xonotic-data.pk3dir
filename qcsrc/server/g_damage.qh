@@ -80,7 +80,7 @@ float Obituary_WeaponDeath(
 
 void Obituary(entity attacker, entity inflictor, entity targ, int deathtype);
 
-void Ice_Think();
+void Ice_Think(entity this);
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint);
 
@@ -106,7 +106,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 .float fire_hitsound;
 .entity fire_burner;
 
-void fireburner_think();
+void fireburner_think(entity this);
 
 float Fire_IsBurning(entity e);
 
@@ -115,5 +115,3 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt);
 void Fire_ApplyDamage(entity e);
 
 void Fire_ApplyEffect(entity e);
-
-void fireburner_think();

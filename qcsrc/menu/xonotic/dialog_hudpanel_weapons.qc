@@ -56,6 +56,7 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Weapon ID scale:")));
+			setDependent(e, "hud_panel_weapons_label", 1, 2);
 			me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.05, "hud_panel_weapons_label_scale"));
 			setDependent(e, "hud_panel_weapons_label", 1, 2);
 	me.TR(me);
@@ -65,11 +66,13 @@ void XonoticHUDWeaponsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Ammo bar alpha:")));
+			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 			me.TD(me, 1, 2.4, e = makeXonoticSlider(0.1, 1, 0.1, "hud_panel_weapons_ammo_alpha"));
 			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Ammo bar color:")));
+			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 		me.TD(me, 2, 2.4, e = makeXonoticColorpickerString("hud_panel_weapons_ammo_color", "hud_panel_weapons_ammo_color"));
 			setDependent(e, "hud_panel_weapons_ammo", 1, 1);
 		me.TR(me);

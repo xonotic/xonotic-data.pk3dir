@@ -1,3 +1,3 @@
 // generated file; do not modify
-#include "all.qc"
-#include "effectinfo.qc"
+#include <common/effects/all.qc>
+#include <common/effects/effectinfo.qc>

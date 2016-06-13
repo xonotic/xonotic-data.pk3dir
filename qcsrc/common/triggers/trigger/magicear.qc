@@ -2,7 +2,7 @@
 float magicear_matched;
 float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
 string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
-{SELFPARAM();
+{
 	float domatch, dotrigger, matchstart, l;
 	string s, msg;
 	string savemessage;
@@ -28,13 +28,10 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 		if(dotrigger)
 		{
-			activator = source;
-			setself(ear);
-			savemessage = self.message;
-			self.message = string_null;
-			SUB_UseTargets();
-			self.message = savemessage;
-			setself(this);
+			savemessage = ear.message;
+			ear.message = string_null;
+			SUB_UseTargets(ear, source, NULL);
+			ear.message = savemessage;
 		}
 
 		if(ear.netname != "")
@@ -118,13 +115,10 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	if(dotrigger)
 	{
-		activator = source;
-		setself(ear);
-		savemessage = self.message;
-		self.message = string_null;
-		SUB_UseTargets();
-		self.message = savemessage;
-		setself(this);
+		savemessage = ear.message;
+		ear.message = string_null;
+		SUB_UseTargets(ear, source, NULL);
+		ear.message = savemessage;
 	}
 
 	if(ear.spawnflags & 16)
@@ -164,8 +158,8 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 
 spawnfunc(trigger_magicear)
 {
-	self.enemy = magicears;
-	magicears = self;
+	this.enemy = magicears;
+	magicears = this;
 
 	// actually handled in "say" processing
 	// spawnflags:
@@ -196,6 +190,6 @@ spawnfunc(trigger_magicear)
 	// movedir:
 	//   for spawnflags 256, defines 'instrument+1 mintempo maxtempo' (zero component doesn't matter)
 
-	self.movedir_x -= 1; // map to tuba instrument numbers
+	this.movedir_x -= 1; // map to tuba instrument numbers
 }
 #endif

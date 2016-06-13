@@ -136,6 +136,9 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 	else if(length_ratio < 0)
 		return;
 
+	theOrigin = HUD_Shift(theOrigin);
+	theSize = HUD_Scale(theSize);
+
 	vector square;
 	vector width, height;
 	if(vertical) {
@@ -230,6 +233,9 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theA
     TC(int, drawflag);
 	if(!theAlpha)
 		return;
+
+	pos = HUD_Shift(pos);
+	mySize = HUD_Scale(mySize);
 
 	string pic;
 	pic = strcat(hud_skin_path, "/num_leading");
@@ -381,6 +387,106 @@ void HUD_Reset()
 		HUD_Mod_CTF_Reset();
 }
 
+float autocvar_hud_dynamic_shake;
+float autocvar_hud_dynamic_shake_damage_max;
+float autocvar_hud_dynamic_shake_damage_min;
+float autocvar_hud_dynamic_shake_scale;
+float hud_dynamic_shake_x[10] = {0,    1, -0.7,  0.5, -0.3,  0.2, -0.1,  0.1,  0.0, 0};
+float hud_dynamic_shake_y[10] = {0,  0.4,  0.8, -0.2, -0.6,  0.0,  0.3,  0.1, -0.1, 0};
+bool Hud_Shake_Update()
+{
+	if(time - hud_dynamic_shake_time < 0)
+		return false;
+
+	float anim_speed = 17 + 9 * hud_dynamic_shake_factor;
+	float elapsed_time = (time - hud_dynamic_shake_time) * anim_speed;
+	int i = floor(elapsed_time);
+	if(i >= 9)
+		return false;
+
+	float f = elapsed_time - i;
+	hud_dynamic_shake_realofs.x = (1 - f) * hud_dynamic_shake_x[i] + f * hud_dynamic_shake_x[i+1];
+	hud_dynamic_shake_realofs.y = (1 - f) * hud_dynamic_shake_y[i] + f * hud_dynamic_shake_y[i+1];
+	hud_dynamic_shake_realofs.z = 0;
+	hud_dynamic_shake_realofs *= hud_dynamic_shake_factor * autocvar_hud_dynamic_shake_scale;
+	hud_dynamic_shake_realofs.x = bound(-0.1, hud_dynamic_shake_realofs.x, 0.1) * vid_conwidth;
+	hud_dynamic_shake_realofs.y = bound(-0.1, hud_dynamic_shake_realofs.y, 0.1) * vid_conheight;
+	return true;
+}
+
+void calc_followmodel_ofs(entity view);
+void Hud_Dynamic_Frame()
+{
+	vector ofs = '0 0 0';
+	hud_scale = '1 1 0';
+	hud_shift = '0 0 0';
+	if (autocvar_hud_dynamic_follow)
+	{
+		entity view = CSQCModel_server2csqc(player_localentnum - 1);
+		calc_followmodel_ofs(view);
+		ofs = -cl_followmodel_ofs * autocvar_hud_dynamic_follow_scale;
+		ofs.x *= autocvar_hud_dynamic_follow_scale_xyz.z;
+		ofs.y *= autocvar_hud_dynamic_follow_scale_xyz.x;
+		ofs.z *= autocvar_hud_dynamic_follow_scale_xyz.y;
+
+		if (fabs(ofs.x) < 0.001) ofs.x = 0;
+		if (fabs(ofs.y) < 0.001) ofs.y = 0;
+		if (fabs(ofs.z) < 0.001) ofs.z = 0;
+		ofs.x = bound(-0.1, ofs.x, 0.1);
+		ofs.y = bound(-0.1, ofs.y, 0.1);
+		ofs.z = bound(-0.1, ofs.z, 0.1);
+
+		hud_shift.x = ofs.y * vid_conwidth;
+		hud_shift.y = ofs.z * vid_conheight;
+		hud_shift.z = ofs.x;
+
+		hud_scale.x = (1 + hud_shift.z);
+		hud_scale.y = hud_scale.x;
+	}
+
+	if(autocvar_hud_dynamic_shake > 0)
+	{
+		if(hud_dynamic_shake_factor == -1) // don't allow the effect for this frame
+			hud_dynamic_shake_factor = 0;
+		else
+		{
+			static float old_health = 0;
+			float health = max(-1, STAT(HEALTH));
+			float new_hud_dynamic_shake_factor = 0;
+			if (old_health - health >= autocvar_hud_dynamic_shake_damage_min
+				&& autocvar_hud_dynamic_shake_damage_max > autocvar_hud_dynamic_shake_damage_min
+				&& old_health > 0 && !intermission)
+			{
+				float m = max(autocvar_hud_dynamic_shake_damage_min, 1);
+				new_hud_dynamic_shake_factor = (old_health - health - m) / (autocvar_hud_dynamic_shake_damage_max - m);
+				if(new_hud_dynamic_shake_factor >= 1)
+					new_hud_dynamic_shake_factor = 1;
+				if(new_hud_dynamic_shake_factor >= hud_dynamic_shake_factor)
+				{
+					hud_dynamic_shake_factor = new_hud_dynamic_shake_factor;
+					hud_dynamic_shake_time = time;
+				}
+			}
+			old_health = health;
+			if(hud_dynamic_shake_factor)
+				if(!Hud_Shake_Update())
+					hud_dynamic_shake_factor = 0;
+		}
+
+		if(hud_dynamic_shake_factor > 0)
+		{
+			hud_shift.x += hud_dynamic_shake_realofs.x;
+			hud_shift.y += hud_dynamic_shake_realofs.y;
+		}
+	}
+
+	hud_scale_center.x = 0.5 * vid_conwidth;
+	hud_scale_center.y = 0.5 * vid_conheight;
+
+	hud_scale_current = hud_scale;
+	hud_shift_current = hud_shift;
+}
+
 void HUD_Main()
 {
 	int i;
@@ -394,6 +500,8 @@ void HUD_Main()
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
 	HUD_Configure_Frame();
+
+	Hud_Dynamic_Frame();
 
 	// panels that we want to be active together with the scoreboard
 	// they must fade only when the menu does

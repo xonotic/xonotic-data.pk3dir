@@ -21,23 +21,22 @@ float target_spawn_spawnfunc_field;
 .float target_spawn_id;
 float target_spawn_count;
 
-void target_spawn_helper_setmodel()
-{SELFPARAM();
-	_setmodel(self, self.model);
+void target_spawn_helper_setmodel(entity this)
+{
+	_setmodel(this, this.model);
 }
 
-void target_spawn_helper_setsize()
-{SELFPARAM();
-	setsize(self, self.mins, self.maxs);
+void target_spawn_helper_setsize(entity this)
+{
+	setsize(this, this.mins, this.maxs);
 }
 
-void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act)
-{SELFPARAM();
+void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act, entity trigger)
+{
 	float i, n, valuefieldpos;
 	string key, value, valuefield, valueoffset, valueoffsetrandom;
 	entity valueent;
 	vector data, data2;
-	entity oldactivator;
 
 	n = tokenize_console(msg);
 
@@ -97,7 +96,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 
 				if(value == "self")
 				{
-					valueent = self;
+					valueent = this;
 					value = "";
 				}
 				else if(value == "activator")
@@ -107,7 +106,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				}
 				else if(value == "other")
 				{
-					valueent = other;
+					valueent = trigger;
 					value = "";
 				}
 				else if(value == "pusher")
@@ -115,7 +114,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 					if(time < act.pushltime)
 						valueent = act.pusher;
 					else
-						valueent = world;
+						valueent = NULL;
 					value = "";
 				}
 				else if(value == "target")
@@ -145,7 +144,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				}
 				else if(value == "time")
 				{
-					valueent = world;
+					valueent = NULL;
 					value = ftos(time);
 				}
 				else
@@ -218,11 +217,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 				value = strcat("target_spawn_helper", value);
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
-			oldactivator = activator;
-
-			activator = act;
-			WITHSELF(e, e.target_spawn_spawnfunc(e));
-			activator = oldactivator;
+			e.target_spawn_spawnfunc(e);
 
 			// We called an external function, so we have to re-tokenize msg.
 			n = tokenize_console(msg);
@@ -236,72 +231,72 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 	}
 }
 
-void target_spawn_useon(entity e)
-{SELFPARAM();
-	self.target_spawn_activator = activator;
+void target_spawn_useon(entity e, entity this, entity actor, entity trigger)
+{
+	this.target_spawn_activator = actor;
 	target_spawn_edit_entity(
+		this,
 		e,
-		self.message,
-		find(world, targetname, self.killtarget),
-		find(world, targetname, self.target2),
-		find(world, targetname, self.target3),
-		find(world, targetname, self.target4),
-		activator
+		this.message,
+		find(NULL, targetname, this.killtarget),
+		find(NULL, targetname, this.target2),
+		find(NULL, targetname, this.target3),
+		find(NULL, targetname, this.target4),
+		actor,
+		trigger
 	);
 }
 
-float target_spawn_cancreate()
-{SELFPARAM();
+bool target_spawn_cancreate(entity this)
+{
 	float c;
 	entity e;
 
-	c = self.count;
+	c = this.count;
 	if(c == 0) // no limit?
-		return 1;
+		return true;
 
 	++c; // increase count to not include MYSELF
-	for(e = world; (e = findfloat(e, target_spawn_id, self.target_spawn_id)); --c)
+	for(e = NULL; (e = findfloat(e, target_spawn_id, this.target_spawn_id)); --c)
 		;
 
 	// if c now is 0, we have AT LEAST the given count (maybe more), so don't spawn any more
 	if(c == 0)
-		return 0;
-	return 1;
+		return false;
+	return true;
 }
 
-void target_spawn_use()
-{SELFPARAM();
-	entity e;
-
-	if(self.target == "")
+void target_spawn_use(entity this, entity actor, entity trigger)
+{
+	if(this.target == "")
 	{
 		// spawn new entity
-		if(!target_spawn_cancreate())
+		if(!target_spawn_cancreate(this))
 			return;
-		e = spawn();
+		entity e = spawn();
 		e.spawnfunc_checked = true;
-		target_spawn_useon(e);
-		e.target_spawn_id = self.target_spawn_id;
+		target_spawn_useon(e, this, actor, trigger);
+		e.target_spawn_id = this.target_spawn_id;
 	}
-	else if(self.target == "*activator")
+	else if(this.target == "*activator")
 	{
 		// edit entity
-		if(activator)
-			target_spawn_useon(activator);
+		if(actor)
+			target_spawn_useon(actor, this, actor, trigger);
 	}
 	else
 	{
 		// edit entity
-		for(e = world; (e = find(e, targetname, self.target)); )
-			target_spawn_useon(e);
+		for(entity e = NULL; (e = find(e, targetname, this.target)); )
+			target_spawn_useon(e, this, actor, trigger);
 	}
 }
 
 void target_spawn_spawnfirst(entity this)
 {
-	activator = self.target_spawn_activator;
-	if(self.spawnflags & 2)
-		target_spawn_use();
+	entity act = this.target_spawn_activator;
+	if(this.spawnflags & 2)
+		target_spawn_use(this, act, NULL);
 }
 
 void initialize_field_db()
@@ -335,9 +330,9 @@ void initialize_field_db()
 spawnfunc(target_spawn)
 {
 	initialize_field_db();
-	self.use = target_spawn_use;
-	self.message = strzone(strreplace("'", "\"", self.message));
-	self.target_spawn_id = ++target_spawn_count;
-	InitializeEntity(self, target_spawn_spawnfirst, INITPRIO_LAST);
+	this.use = target_spawn_use;
+	this.message = strzone(strreplace("'", "\"", this.message));
+	this.target_spawn_id = ++target_spawn_count;
+	InitializeEntity(this, target_spawn_spawnfirst, INITPRIO_LAST);
 }
 #endif

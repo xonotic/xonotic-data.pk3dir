@@ -2,7 +2,7 @@
 
 #include <common/constants.qh>
 
-entity scores_initialized; // non-world when scores labels/rules have been set
+entity scores_initialized; // non-NULL when scores labels/rules have been set
 .float scoreboard_pos;
 
 /**
@@ -91,21 +91,21 @@ void Score_NicePrint(entity to);
 /**
  * Sets the following results for the current scores entities.
  */
-void WinningConditionHelper();
+void WinningConditionHelper(entity this);
 float WinningConditionHelper_topscore;      ///< highest score
 float WinningConditionHelper_secondscore;   ///< second highest score
 float WinningConditionHelper_winnerteam;    ///< the color of the winning team, or -1 if none
 float WinningConditionHelper_secondteam;    ///< the color of the second team, or -1 if none
 float WinningConditionHelper_equality;      ///< we have no winner
-entity WinningConditionHelper_winner;       ///< the winning player, or world if none
-entity WinningConditionHelper_second;       ///< the second player, or world if none
+entity WinningConditionHelper_winner;       ///< the winning player, or NULL if none
+entity WinningConditionHelper_second;       ///< the second player, or NULL if none
 float WinningConditionHelper_lowerisbetter; ///< lower is better, duh
 float WinningConditionHelper_zeroisworst;   ///< zero is worst, duh
 #define WINNINGCONDITIONHELPER_LOWERISBETTER_WORST 999999999
 
 /**
  * Returns score strings for eventlog etc.
- * When called with world, or 0, as argument, they return the labels in the
+ * When called with NULL, or 0, as argument, they return the labels in the
  * same order.
  * The strings are comma separated; labels that end with !! designate primary,
  * labels that end with ! designate high priority.

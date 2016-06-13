@@ -1,5 +1,5 @@
 // generated file; do not modify
-#include "all.qc"
-#include "generic.qc"
-#include "markup.qc"
-#include "rpn.qc"
+#include <common/command/all.qc>
+#include <common/command/generic.qc>
+#include <common/command/markup.qc>
+#include <common/command/rpn.qc>

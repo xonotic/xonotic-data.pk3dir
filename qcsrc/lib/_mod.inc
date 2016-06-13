@@ -1,8 +1,8 @@
 // generated file; do not modify
-#include "angle.qc"
-#include "json.qc"
-#include "p2mathlib.qc"
-#include "random.qc"
-#include "sortlist.qc"
-#include "test.qc"
-#include "urllib.qc"
+#include <lib/angle.qc>
+#include <lib/json.qc>
+#include <lib/p2mathlib.qc>
+#include <lib/random.qc>
+#include <lib/sortlist.qc>
+#include <lib/test.qc>
+#include <lib/urllib.qc>

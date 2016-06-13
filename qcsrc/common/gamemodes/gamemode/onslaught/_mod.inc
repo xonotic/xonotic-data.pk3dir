@@ -1,6 +1,6 @@
 // generated file; do not modify
-#include "cl_controlpoint.qc"
-#include "cl_generator.qc"
-#include "onslaught.qc"
-#include "sv_controlpoint.qc"
-#include "sv_generator.qc"
+#include <common/gamemodes/gamemode/onslaught/cl_controlpoint.qc>
+#include <common/gamemodes/gamemode/onslaught/cl_generator.qc>
+#include <common/gamemodes/gamemode/onslaught/onslaught.qc>
+#include <common/gamemodes/gamemode/onslaught/sv_controlpoint.qc>
+#include <common/gamemodes/gamemode/onslaught/sv_generator.qc>

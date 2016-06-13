@@ -13,10 +13,10 @@ REGISTER_MUTATOR(tdm, false)
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
+		InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
 
 		ActivateTeamplay();
-		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, -1, -1);
+		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
 		if (autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}
@@ -51,10 +51,10 @@ Keys:
 "cnt" Scoreboard color of the team (for example 4 is red and 13 is blue)... */
 spawnfunc(tdm_team)
 {
-	if(!g_tdm || !self.cnt) { remove(self); return; }
+	if(!g_tdm || !this.cnt) { remove(this); return; }
 
-	self.classname = "tdm_team";
-	self.team = self.cnt + 1;
+	this.classname = "tdm_team";
+	this.team = this.cnt + 1;
 }
 
 // code from here on is just to support maps that don't have team entities
@@ -64,13 +64,13 @@ void tdm_SpawnTeam (string teamname, float teamcolor)
 	this.netname = teamname;
 	this.cnt = teamcolor;
 	this.spawnfunc_checked = true;
-	WITHSELF(this, spawnfunc_tdm_team(this));
+	spawnfunc_tdm_team(this);
 }
 
 void tdm_DelayedInit(entity this)
 {
 	// if no teams are found, spawn defaults
-	if(find(world, classname, "tdm_team") == world)
+	if(find(NULL, classname, "tdm_team") == NULL)
 	{
 		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.\n");
 
@@ -87,7 +87,7 @@ void tdm_DelayedInit(entity this)
 
 MUTATOR_HOOKFUNCTION(tdm, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_string = "tdm_team";
+	M_ARGV(1, string) = "tdm_team";
 	return true;
 }
 

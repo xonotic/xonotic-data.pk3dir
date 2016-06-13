@@ -25,7 +25,7 @@ void WarpZone_Fade_PreDraw(entity this)
 		this.drawmask = MASK_NORMAL;
 }
 
-void WarpZone_Touch ();
+void WarpZone_Touch (entity this);
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
 	warpzone_warpzones_exist = 1;
@@ -241,7 +241,6 @@ void WarpZone_FixView()
 {
 	entity e;
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, o;
-	float f;
 
 	warpzone_save_view_origin = org = getpropertyvec(VF_ORIGIN);
 	warpzone_save_view_angles = ang = getpropertyvec(VF_ANGLES);
@@ -258,6 +257,7 @@ void WarpZone_FixView()
 
 #ifndef KEEP_ROLL
 	float rick;
+	float f;
 	if(autocvar_cl_rollkillspeed)
 		f = max(0, (1 - frametime * autocvar_cl_rollkillspeed));
 	else

@@ -22,23 +22,23 @@ bool bumble_raygun_send(entity this, entity to, float sf)
     WriteByte(MSG_ENTITY, sf);
     if(sf & BRG_SETUP)
     {
-        WriteByte(MSG_ENTITY, etof(self.realowner));
-        WriteByte(MSG_ENTITY, self.realowner.team);
-        WriteByte(MSG_ENTITY, self.cnt);
+        WriteByte(MSG_ENTITY, etof(this.realowner));
+        WriteByte(MSG_ENTITY, this.realowner.team);
+        WriteByte(MSG_ENTITY, this.cnt);
     }
 
     if(sf & BRG_START)
     {
-        WriteCoord(MSG_ENTITY, self.hook_start_x);
-        WriteCoord(MSG_ENTITY, self.hook_start_y);
-        WriteCoord(MSG_ENTITY, self.hook_start_z);
+        WriteCoord(MSG_ENTITY, this.hook_start_x);
+        WriteCoord(MSG_ENTITY, this.hook_start_y);
+        WriteCoord(MSG_ENTITY, this.hook_start_z);
     }
 
     if(sf & BRG_END)
     {
-        WriteCoord(MSG_ENTITY, self.hook_end_x);
-        WriteCoord(MSG_ENTITY, self.hook_end_y);
-        WriteCoord(MSG_ENTITY, self.hook_end_z);
+        WriteCoord(MSG_ENTITY, this.hook_end_x);
+        WriteCoord(MSG_ENTITY, this.hook_end_y);
+        WriteCoord(MSG_ENTITY, this.hook_end_z);
     }
 
     return true;
@@ -56,35 +56,35 @@ NET_HANDLE(ENT_CLIENT_BUMBLE_RAYGUN, bool isnew)
 
     if(sf & BRG_SETUP)
     {
-        self.cnt  = ReadByte();
-        self.team = ReadByte();
-        self.cnt  = ReadByte();
+        this.cnt  = ReadByte();
+        this.team = ReadByte();
+        this.cnt  = ReadByte();
 
-        if(self.cnt)
-            self.colormod = '1 0 0';
+        if(this.cnt)
+            this.colormod = '1 0 0';
         else
-            self.colormod = '0 1 0';
+            this.colormod = '0 1 0';
 
-        self.traileffect = EFFECT_BUMBLEBEE_HEAL_MUZZLEFLASH.m_id;
-        self.lip = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_IMPACT);
+        this.traileffect = EFFECT_BUMBLEBEE_HEAL_MUZZLEFLASH.m_id;
+        this.lip = particleeffectnum(EFFECT_BUMBLEBEE_HEAL_IMPACT);
 
-        self.draw = bumble_raygun_draw;
+        this.draw = bumble_raygun_draw;
     }
 
 
     if(sf & BRG_START)
     {
-        self.origin_x = ReadCoord();
-        self.origin_y = ReadCoord();
-        self.origin_z = ReadCoord();
-        setorigin(self, self.origin);
+        this.origin_x = ReadCoord();
+        this.origin_y = ReadCoord();
+        this.origin_z = ReadCoord();
+        setorigin(this, this.origin);
     }
 
     if(sf & BRG_END)
     {
-        self.move_origin_x = ReadCoord();
-        self.move_origin_y = ReadCoord();
-        self.move_origin_z = ReadCoord();
+        this.move_origin_x = ReadCoord();
+        this.move_origin_y = ReadCoord();
+        this.move_origin_z = ReadCoord();
     }
     return true;
 }

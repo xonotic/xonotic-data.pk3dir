@@ -1,2 +1,2 @@
 // generated file; do not modify
-#include "hook.qc"
+#include <common/mutators/mutator/hook/hook.qc>
