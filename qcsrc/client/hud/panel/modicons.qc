@@ -129,7 +129,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 
 	ctf_oneflag = (stat_items & CTF_FLAG_NEUTRAL);
 
-	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag);
+	mod_active = (redflag || blueflag || yellowflag || pinkflag || neutralflag || (stat_items & CTF_SHIELDED));
 
 	if (autocvar__hud_configure) {
 		redflag = 1;
