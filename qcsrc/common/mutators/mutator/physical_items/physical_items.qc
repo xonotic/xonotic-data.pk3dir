@@ -127,7 +127,7 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	{
 		// fix the spawn origin
 		setorigin(wep, wep.origin + '0 0 1');
-		WITHSELF(wep, builtin_droptofloor());
+		droptofloor(wep);
 	}
 
 	wep.spawn_origin = wep.origin;

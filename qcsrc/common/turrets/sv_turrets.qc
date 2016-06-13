@@ -1259,7 +1259,7 @@ bool turret_initialize(entity this, Turret tur)
 	}
 
 	if(!(this.spawnflags & TSF_SUSPENDED))
-		WITHSELF(this, builtin_droptofloor());
+		droptofloor(this);
 
 	this.netname = tur.netname;
 	load_unit_settings(this, 0);
