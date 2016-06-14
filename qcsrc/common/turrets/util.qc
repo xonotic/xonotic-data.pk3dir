@@ -39,8 +39,8 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 	{
 		tracebox(start, smin, smax, end, false, this);
 
-		// if it is world we can't hurt it so stop now
-		if (trace_ent == world || trace_fraction == 1)
+		// if it is NULL we can't hurt it so stop now
+		if (trace_ent == NULL || trace_fraction == 1)
 			break;
 
 		if (trace_ent.solid == SOLID_BSP)
@@ -60,7 +60,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 	endpoint = trace_endpos;
 
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// restore their solid type
@@ -69,7 +69,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 	}
 
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// get the details we need to call the damage function
@@ -114,7 +114,7 @@ void mark_error(vector where,float lifetime)
 {
 	entity err = new(error_marker);
 	setmodel(err, MDL_MARKER);
-	setorigin(err,where);
+	setorigin(err, where);
 	err.movetype = MOVETYPE_NONE;
 	setthink(err, marker_think);
 	err.nextthink = time;
@@ -127,7 +127,7 @@ void mark_info(vector where,float lifetime)
 {
 	entity err = spawn(info_marker);
 	setmodel(err, MDL_MARKER);
-	setorigin(err,where);
+	setorigin(err, where);
 	err.movetype = MOVETYPE_NONE;
 	setthink(err, marker_think);
 	err.nextthink = time;
@@ -140,7 +140,7 @@ entity mark_misc(vector where,float lifetime)
 {
 	entity err = spawn(mark_misc);
 	setmodel(err, MDL_MARKER);
-	setorigin(err,where);
+	setorigin(err, where);
 	err.movetype = MOVETYPE_NONE;
 	setthink(err, marker_think);
 	err.nextthink = time;
@@ -165,7 +165,7 @@ void paint_target(entity onwho, float f_size, vector v_color, float f_time)
 	e.scale = (f_size/512);
 	//setsize(e, '0 0 0', '0 0 0');
 	//setattachment(e,onwho,"");
-	setorigin(e,onwho.origin + '0 0 1');
+	setorigin(e, onwho.origin + '0 0 1');
 	e.alpha = 0.15;
 	e.movetype = MOVETYPE_FLY;
 
@@ -184,7 +184,7 @@ void paint_target2(entity onwho, float f_size, vector v_color, float f_time)
 	e.scale = (f_size/512);
 	setsize(e, '0 0 0', '0 0 0');
 
-	setorigin(e,onwho.origin + '0 0 1');
+	setorigin(e, onwho.origin + '0 0 1');
 	e.alpha = 0.15;
 	e.movetype = MOVETYPE_FLY;
 
@@ -202,7 +202,7 @@ void paint_target3(vector where, float f_size, vector v_color, float f_time)
 	setmodel(e, MDL_TUR_C512); // precision set above
 	e.scale = (f_size/512);
 	setsize(e, '0 0 0', '0 0 0');
-	setorigin(e,where+ '0 0 1');
+	setorigin(e, where + '0 0 1');
 	e.movetype = MOVETYPE_NONE;
 	e.velocity = '0 0 0';
 	e.colormod = v_color;

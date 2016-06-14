@@ -75,7 +75,7 @@ void W_Fireball_Explode(entity this)
 
 	// 1. dist damage
 	d = (this.realowner.health + this.realowner.armorvalue);
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), world, world, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(fireball, damage), WEP_CVAR_PRI(fireball, edgedamage), WEP_CVAR_PRI(fireball, radius), NULL, NULL, WEP_CVAR_PRI(fireball, force), this.projectiledeathtype, other);
 	if(this.realowner.health + this.realowner.armorvalue >= d)
 	if(!this.cnt)
 	{
@@ -279,7 +279,7 @@ void W_Fireball_Firemine_Think(entity this)
 		{
 			this.cnt += 1;
 			if(this.cnt == 3)
-				this.owner = world;
+				this.owner = NULL;
 		}
 		else
 			this.cnt = 0;

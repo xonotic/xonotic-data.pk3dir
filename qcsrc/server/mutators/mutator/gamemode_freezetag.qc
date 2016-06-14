@@ -99,14 +99,14 @@ float freezetag_CheckTeams()
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return 1;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return 0;
 	}
@@ -115,7 +115,7 @@ float freezetag_CheckTeams()
 	if(freezetag_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return 0;
@@ -150,8 +150,8 @@ float freezetag_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			it.freezetag_frozen_timeout = 0;
 			nades_Clear(it);
@@ -166,14 +166,14 @@ float freezetag_CheckWinner()
 	int winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
@@ -186,7 +186,7 @@ float freezetag_CheckWinner()
 
 entity freezetag_LastPlayerForTeam(entity this)
 {
-	entity last_pl = world;
+	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
 		if(it.health >= 1)
 		if(!STAT(FROZEN, it))
@@ -194,7 +194,7 @@ entity freezetag_LastPlayerForTeam(entity this)
 		if(!last_pl)
 			last_pl = it;
 		else
-			return world;
+			return NULL;
 	));
 	return last_pl;
 }
@@ -416,11 +416,11 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 	freezetag_Freeze(frag_target, frag_attacker);
 	freezetag_LastPlayerForTeam_Notify(frag_target);
 
-	if(frag_attacker == frag_target || frag_attacker == world)
+	if(frag_attacker == frag_target || frag_attacker == NULL)
 	{
 		if(IS_PLAYER(frag_target))
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
 	}
 	else
 	{
@@ -428,7 +428,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerDies)
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname);
 		if(IS_PLAYER(frag_attacker))
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}
 
 	return true;
@@ -443,7 +443,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 
 	if(player.freezetag_frozen_timeout == -2) // player was dead
 	{
-		freezetag_Freeze(player, world);
+		freezetag_Freeze(player, NULL);
 		return true;
 	}
 
@@ -453,7 +453,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerSpawn)
 	if(round_handler_IsRoundStarted())
 	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
-		freezetag_Freeze(player, world);
+		freezetag_Freeze(player, NULL);
 	}
 
 	return true;
@@ -497,7 +497,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 	int n;
 
 	entity o;
-	o = world;
+	o = NULL;
 	//if(STAT(FROZEN, player))
 	//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
@@ -537,7 +537,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 			if(n == -1)
 			{
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freezetag_frozen_maxtime);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freezetag_frozen_maxtime);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freezetag_frozen_maxtime);
 				return true;
 			}
 
@@ -550,7 +550,7 @@ MUTATOR_HOOKFUNCTION(ft, PlayerPreThink, CBC_ORDER_FIRST)
 
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 		}
 
 		FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(

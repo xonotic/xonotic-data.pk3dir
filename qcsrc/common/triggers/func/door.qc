@@ -520,7 +520,7 @@ void LinkDoors(entity this)
 	{
 		LOG_TRACE(" ", etos(t));
 		t.owner = this;
-		if(t.enemy == world)
+		if(t.enemy == NULL)
 		{
 			t.enemy = this;
 			break;

@@ -123,7 +123,7 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
 		s = strcat(s, "I");
-	if(player.flagcarried != world)
+	if(player.flagcarried != NULL)
 		s = strcat(s, "F");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
@@ -344,7 +344,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -547,7 +547,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	// add waypoint
 	if(show_waypoint)
-		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
+		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
 void Unfreeze (entity targ)
@@ -570,7 +570,7 @@ void Unfreeze (entity targ)
 	// remove the ice block
 	if(targ.iceblock)
 		remove(targ.iceblock);
-	targ.iceblock = world;
+	targ.iceblock = NULL;
 }
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -708,7 +708,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				Unfreeze(targ);
 				targ.health = autocvar_g_frozen_revive_falldamage_health;
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
 
@@ -741,7 +741,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				targ.oldvelocity = targ.velocity;
 
 				targ.spawnorigin = spot.origin;
-				setorigin (targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
+				setorigin(targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
 				targ.oldorigin = targ.origin;
 				targ.prevorigin = targ.origin;
@@ -1259,7 +1259,7 @@ void fireburner_think(entity this)
 	Fire_ApplyEffect(this.owner);
 	if(!Fire_IsBurning(this.owner))
 	{
-		this.owner.fire_burner = world;
+		this.owner.fire_burner = NULL;
 		remove(this);
 		return;
 	}

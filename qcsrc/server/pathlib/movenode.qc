@@ -104,7 +104,7 @@ vector pathlib_walknode(entity this, vector start, vector end, float doedge)
         a = spawn();
         setthink(a, a_think);
         a.nextthink = time;
-        setorigin(a,start + movenode_stepup);
+        setorigin(a, start + movenode_stepup);
         a.pos1 = trace_endpos;
         //start - movenode_maxdrop
         a.cnt = time + 10;

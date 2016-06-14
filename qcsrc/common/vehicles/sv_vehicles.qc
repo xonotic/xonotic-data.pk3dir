@@ -65,7 +65,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 	axh_id = bound(0, axh_id, MAX_AXH);
 	axh = own.(AuxiliaryXhair[axh_id]);
 
-	if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 	{
 		axh					 = spawn();
 		axh.cnt				 = axh_id;
@@ -95,7 +95,7 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 {
 	if(this.lock_target && IS_DEAD(this.lock_target))
 	{
-		this.lock_target	= world;
+		this.lock_target	= NULL;
 		this.lock_strength  = 0;
 		this.lock_time	  = 0;
 	}
@@ -112,22 +112,22 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 		return;
 	}
 
-	if(trace_ent != world)
+	if(trace_ent != NULL)
 	{
 		if(SAME_TEAM(trace_ent, this))
-			trace_ent = world;
+			trace_ent = NULL;
 
 		if(IS_DEAD(trace_ent))
-			trace_ent = world;
+			trace_ent = NULL;
 
 		if(!(IS_VEHICLE(trace_ent) || IS_TURRET(trace_ent)))
-			trace_ent = world;
+			trace_ent = NULL;
 
 		if(trace_ent.alpha <= 0.5 && trace_ent.alpha != 0)
-			trace_ent = world; // invisible
+			trace_ent = NULL; // invisible
 	}
 
-	if(this.lock_target == world && trace_ent != world)
+	if(this.lock_target == NULL && trace_ent != NULL)
 		this.lock_target = trace_ent;
 
 	if(this.lock_target && trace_ent == this.lock_target)
@@ -146,7 +146,7 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 
 	// Have a locking target
 	// Trace hit current target
-	if(trace_ent == this.lock_target && trace_ent != world)
+	if(trace_ent == this.lock_target && trace_ent != NULL)
 	{
 		this.lock_strength = min(this.lock_strength + incr, 1);
 		if(this.lock_strength == 1)
@@ -160,7 +160,7 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 			this.lock_strength = max(this.lock_strength - decr, 0);
 
 		if(this.lock_strength == 0)
-			this.lock_target = world;
+			this.lock_target = NULL;
 	}
 }
 
@@ -215,7 +215,7 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 
 void vehicles_projectile_explode(entity this)
 {
-	if(this.owner && other != world)
+	if(this.owner && other != NULL)
 	{
 		if(other == this.owner.vehicle)
 			return;
@@ -227,7 +227,7 @@ void vehicles_projectile_explode(entity this)
 	PROJECTILE_TOUCH(this);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, world, this.shot_force, this.totalfrags, other);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, other);
 
 	remove (this);
 }
@@ -506,7 +506,7 @@ void vehicles_showwp(entity this)
 		rgb = Team_ColorRGB(ent.team);
 	else
 		rgb = '1 1 1';
-	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, ent, '0 0 64', world, 0, ent, waypointsprite_attached, true, RADARICON_Vehicle);
+	entity wp = WaypointSprite_Spawn(WP_Vehicle, 0, 0, ent, '0 0 64', NULL, 0, ent, waypointsprite_attached, true, RADARICON_Vehicle);
 	wp.colormod = rgb;
 	if(ent.waypointsprite_attached)
 	{
@@ -656,7 +656,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 
 	if((this.vehicle_flags & VHF_HASSHIELD) && (this.vehicle_shield > 0))
 	{
-		if (wasfreed(this.vehicle_shieldent) || this.vehicle_shieldent == world)
+		if (wasfreed(this.vehicle_shieldent) || this.vehicle_shieldent == NULL)
 		{
 			this.vehicle_shieldent = spawn();
 			this.vehicle_shieldent.effects = EF_LOWPRECISION;
@@ -745,7 +745,7 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 		if(_minspeed < wc)
 		{
 			float take = min(_speedfac * wc, _maxpain);
-			Damage (this, world, world, take, DEATH_FALL.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, take, DEATH_FALL.m_id, this.origin, '0 0 0');
 			this.play_time = time + 0.25;
 
 			//dprint("wc: ", ftos(wc), "\n");
@@ -846,7 +846,7 @@ void vehicles_exit(entity vehic, bool eject)
 		player.teleportable	= TELEPORT_NORMAL;
 		player.alpha			= 1;
 		player.PlayerPhysplug	= func_null;
-		player.vehicle			= world;
+		player.vehicle			= NULL;
 		player.view_ofs		= STAT(PL_VIEW_OFS, NULL);
 		player.event_damage	= PlayerDamage;
 		player.hud				= HUD_NORMAL;
@@ -865,7 +865,7 @@ void vehicles_exit(entity vehic, bool eject)
 	if(!IS_DEAD(vehic))
 		vehic.avelocity = '0 0 0';
 
-	vehic.tur_head.nodrawtoclient = world;
+	vehic.tur_head.nodrawtoclient = NULL;
 
 	if(!teamplay)
 		vehic.team = 0;
@@ -884,7 +884,7 @@ void vehicles_exit(entity vehic, bool eject)
 
 	vehicles_setreturn(vehic);
 	vehicles_reset_colors(vehic);
-	vehic.owner = world;
+	vehic.owner = NULL;
 
 	CSQCMODEL_AUTOINIT(vehic);
 
@@ -900,7 +900,7 @@ void vehicles_touch(entity this)
 	if(this.owner)
 	{
 		if(!forbidWeaponUse(this.owner))
-		if(other != world)
+		if(other != NULL)
 		if((this.origin_z + this.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
@@ -983,7 +983,7 @@ void vehicles_enter(entity pl, entity veh)
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
 		if (autocvar_g_vehicles_steal_show_waypoint) {
-			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, true, RADARICON_DANGER);
+			entity wp = WaypointSprite_Spawn(WP_VehicleIntruder, 0, 0, pl, '0 0 68', NULL, veh.team, veh, wps_intruder, true, RADARICON_DANGER);
 			wp.colormod = Team_ColorRGB(pl.team);
 		}
 	}
@@ -1102,7 +1102,7 @@ void vehicles_spawn(entity this)
 	// disown & reset
 	this.vehicle_hudmodel.viewmodelforclient = this;
 
-	this.owner				= world;
+	this.owner				= NULL;
 	settouch(this, vehicles_touch);
 	this.event_damage		= vehicles_damage;
 	this.iscreature			= true;
@@ -1121,7 +1121,7 @@ void vehicles_spawn(entity this)
 
 	// Reset locking
 	this.lock_strength = 0;
-	this.lock_target = world;
+	this.lock_target = NULL;
 	this.misc_bulletcounter = 0;
 
 	// Return to spawn
@@ -1156,7 +1156,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	if(this.targetname && this.targetname != "")
 	{
-		this.vehicle_controller = find(world, target, this.targetname);
+		this.vehicle_controller = find(NULL, target, this.targetname);
 		if(!this.vehicle_controller)
 		{
 			bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");

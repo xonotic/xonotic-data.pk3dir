@@ -122,8 +122,8 @@ float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		allowed_to_spawn = false;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
@@ -137,14 +137,14 @@ float CA_CheckWinner()
 	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	allowed_to_spawn = false;
@@ -168,14 +168,14 @@ bool CA_CheckTeams()
 	if(CA_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return false;
 	}
@@ -184,7 +184,7 @@ bool CA_CheckTeams()
 	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return false;

@@ -220,11 +220,11 @@ void Draw_PointParticles(entity this)
 		p.x += random() * sz.x;
 		p.y += random() * sz.y;
 		p.z += random() * sz.z;
-		if(WarpZoneLib_BoxTouchesBrush(p, p, this, world))
+		if(WarpZoneLib_BoxTouchesBrush(p, p, this, NULL))
 		{
 			if(this.movedir != '0 0 0')
 			{
-				traceline(p, p + normalize(this.movedir) * 4096, 0, world);
+				traceline(p, p + normalize(this.movedir) * 4096, 0, NULL);
 				p = trace_endpos;
 				int eff_num;
 				if(this.cnt)

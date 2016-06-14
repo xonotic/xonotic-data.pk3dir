@@ -43,7 +43,7 @@ string Notification_CheckArgs(
 		case NOTIF_ALL:
 		{
 			if (client) {
-				return "Entity provided when world was required!";
+				return "Entity provided when NULL was required!";
 			}
 			break;
 		}
@@ -1086,7 +1086,7 @@ void Local_Notification_sound(
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
 			(
-				"Local_Notification_sound(world, %f, '%s', %f, %f) "
+				"Local_Notification_sound(NULL, %f, '%s', %f, %f) "
 				"^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', timediff: %f, limit: %f\n"
 			 ),
 			soundchannel,

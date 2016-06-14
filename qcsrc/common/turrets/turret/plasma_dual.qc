@@ -41,7 +41,7 @@ METHOD(DualPlasmaTurret, tr_attack, void(DualPlasmaTurret thistur, entity it))
 
         // teamcolor / hit beam effect
         vector v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-        WarpZone_TrailParticles(world, particleeffectnum(EFFECT_VAPORIZER(it.team)), it.tur_shotorg, v);
+        WarpZone_TrailParticles(NULL, particleeffectnum(EFFECT_VAPORIZER(it.team)), it.tur_shotorg, v);
     } else {
         SUPER(PlasmaTurret).tr_attack(thistur, it);
     }

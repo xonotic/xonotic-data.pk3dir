@@ -218,7 +218,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 			player.alpha = autocvar_g_instagib_invis_alpha;
 			player.exteriorweaponentity.alpha = autocvar_g_instagib_invis_alpha;
 			player.items |= ITEM_Invisibility.m_itemid;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_INVISIBILITY, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
 		}
 	}
@@ -237,7 +237,7 @@ MUTATOR_HOOKFUNCTION(mutator_instagib, PlayerPowerups)
 		if (time < player.invincible_finished)
 		{
 			player.items |= ITEM_Speed.m_itemid;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SPEED, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_SPEED);
 		}
 	}

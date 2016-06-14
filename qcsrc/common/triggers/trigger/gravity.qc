@@ -10,7 +10,7 @@ void trigger_gravity_remove(entity own)
 	}
 	else
 		backtrace("Removing a trigger_gravity_check with no valid owner");
-	own.trigger_gravity_check = world;
+	own.trigger_gravity_check = NULL;
 }
 void trigger_gravity_check_think(entity this)
 {

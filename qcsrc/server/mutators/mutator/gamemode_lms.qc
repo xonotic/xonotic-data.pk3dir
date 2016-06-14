@@ -86,7 +86,7 @@ int WinningCondition_LMS()
 
 	int l = LMS_NewPlayerLives();
 
-	head = find(world, classname, STR_PLAYER);
+	head = find(NULL, classname, STR_PLAYER);
 	if(head)
 		have_player = true;
 	head2 = find(head, classname, STR_PLAYER);
@@ -194,9 +194,9 @@ void lms_RemovePlayer(entity player)
 
 	if(player.killcount != FRAGS_SPECTATOR)
 		if(PlayerScore_Add(player, SP_LMS_RANK, 0) > 0 && player.lms_spectate_warning != 2)
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_NOLIVES, player.netname);
 		else
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_LMS_FORFEIT, player.netname);
 }
 
 MUTATOR_HOOKFUNCTION(lms, ClientDisconnect)

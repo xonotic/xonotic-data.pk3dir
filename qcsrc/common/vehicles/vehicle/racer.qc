@@ -362,14 +362,14 @@ bool racer_frame(entity this)
 
 		if(vehic.misc_bulletcounter == 1)
 		{
-			racer_fire_rocket_aim(this, "tag_rocket_r", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : world);
+			racer_fire_rocket_aim(this, "tag_rocket_r", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : NULL);
 			this.vehicle_ammo2 = 50;
 		}
 		else if(vehic.misc_bulletcounter == 2)
 		{
-			racer_fire_rocket_aim(this, "tag_rocket_l", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : world);
+			racer_fire_rocket_aim(this, "tag_rocket_l", (vehic.lock_strength == 1 && vehic.lock_target) ? vehic.lock_target : NULL);
 			vehic.lock_strength  = 0;
-			vehic.lock_target	= world;
+			vehic.lock_target	= NULL;
 			vehic.misc_bulletcounter = 0;
 			vehic.delay = time + autocvar_g_vehicle_racer_rocket_refire;
 			vehic.lip = time;
@@ -474,7 +474,7 @@ void racer_exit(entity this, int eject)
 		setorigin(this.owner , spot);
 	}
 	antilag_clear(this.owner, CS(this.owner));
-	this.owner = world;
+	this.owner = NULL;
 }
 
 void racer_blowup(entity this)
@@ -484,9 +484,9 @@ void racer_blowup(entity this)
 
 	RadiusDamage (this, this.enemy, autocvar_g_vehicle_racer_blowup_coredamage,
 					autocvar_g_vehicle_racer_blowup_edgedamage,
-					autocvar_g_vehicle_racer_blowup_radius, world, world,
+					autocvar_g_vehicle_racer_blowup_radius, NULL, NULL,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
-					DEATH_VH_WAKI_DEATH.m_id, world);
+					DEATH_VH_WAKI_DEATH.m_id, NULL);
 
 	this.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
 	setthink(this, vehicles_spawn);

@@ -41,11 +41,11 @@ void ewheel_move_path(entity this)
 #ifdef EWHEEL_FANCYPATH
     // Are we close enougth to a path node to switch to the next?
     if(vdist(this.origin - this.pathcurrent.origin, <, 64))
-        if (this.pathcurrent.path_next == world)
+        if (this.pathcurrent.path_next == NULL)
         {
             // Path endpoint reached
             pathlib_deletepath(this.pathcurrent.owner);
-            this.pathcurrent = world;
+            this.pathcurrent = NULL;
 
             if (this.pathgoal)
             {
@@ -59,7 +59,7 @@ void ewheel_move_path(entity this)
                 }
             }
             else
-                this.pathgoal = world;
+                this.pathgoal = NULL;
         }
         else
             this.pathcurrent = this.pathcurrent.path_next;
@@ -187,13 +187,13 @@ METHOD(EWheel, tr_setup, void(EWheel this, entity it))
     if(it.movetype == MOVETYPE_WALK)
     {
         it.velocity = '0 0 0';
-        it.enemy = world;
+        it.enemy = NULL;
 
         setorigin(it, it.pos1);
 
         if (it.target != "")
         {
-            e = find(world, targetname, it.target);
+            e = find(NULL, targetname, it.target);
             if (!e)
             {
                 LOG_TRACE("Initital waypoint for ewheel does NOT exsist, fix your map!\n");

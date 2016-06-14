@@ -104,7 +104,7 @@ void func_breakable_look_destroyed(entity this)
 	else {
 		if (this.origin == '0 0 0')	{	// probably no origin brush, so don't spawn in the middle of the map..
 			floorZ = this.absmin.z;
-			setorigin(this,((this.absmax+this.absmin)*.5));
+			setorigin(this, ((this.absmax + this.absmin) * 0.5));
 			this.origin_z = floorZ;
 		}
 		_setmodel(this, this.mdl_dead);
@@ -201,7 +201,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 	string oldmsg;
 
 	entity act = this.owner;
-	this.owner = world; // set by W_PrepareExplosionByDamage
+	this.owner = NULL; // set by W_PrepareExplosionByDamage
 
 	// now throw around the debris
 	n = tokenize_console(this.debris);
@@ -214,7 +214,7 @@ void func_breakable_destroy(entity this, entity actor, entity trigger)
 		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 	if(this.dmg)
-		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, world, this.dmg_force, DEATH_HURTTRIGGER.m_id, world);
+		RadiusDamage(this, act, this.dmg, this.dmg_edge, this.dmg_radius, this, NULL, this.dmg_force, DEATH_HURTTRIGGER.m_id, NULL);
 
 	if(this.cnt) // TODO
 		__pointparticles(this.cnt, this.absmin * 0.5 + this.absmax * 0.5, '0 0 0', this.count);

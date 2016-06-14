@@ -554,7 +554,7 @@ IMPULSE(navwaypoint_unreachable)
 	for (entity e = findchain(classname, "info_player_deathmatch"); e; e = e.chain)
 	{
 		vector org = e.origin;
-		tracebox(e.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), e.origin - '0 0 512', MOVE_NOMONSTERS, world);
+		tracebox(e.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), e.origin - '0 0 512', MOVE_NOMONSTERS, NULL);
 		setorigin(e, trace_endpos);
 		if (navigation_findnearestwaypoint(e, false))
 		{

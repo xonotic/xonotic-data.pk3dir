@@ -63,7 +63,7 @@ float nexball_mode;
 float OtherTeam(float t)  //works only if there are two teams on the map!
 {
 	entity e;
-	e = find(world, classname, "nexball_team");
+	e = find(NULL, classname, "nexball_team");
 	if(e.team == t)
 		e = find(e, classname, "nexball_team");
 	return e.team;
@@ -87,7 +87,7 @@ void LogNB(string mode, entity actor)
 	if(!autocvar_sv_eventlog)
 		return;
 	s = strcat(":nexball:", mode);
-	if(actor != world)
+	if(actor != NULL)
 		s = strcat(s, ":", ftos(actor.playerid));
 	GameLogEcho(s);
 }
@@ -150,7 +150,7 @@ void GiveBall(entity plyr, entity ball)
 	if(ownr)
 	{
 		ownr.effects &= ~autocvar_g_nexball_basketball_effects_default;
-		ownr.ballcarried = world;
+		ownr.ballcarried = NULL;
 		if(ownr.metertime)
 		{
 			ownr.metertime = 0;
@@ -207,7 +207,7 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.effects &= ~EF_NOSHADOW;
 	ball.owner.effects &= ~autocvar_g_nexball_basketball_effects_default;
 
-	setattachment(ball, world, "");
+	setattachment(ball, NULL, "");
 	setorigin(ball, org);
 	ball.movetype = MOVETYPE_BOUNCE;
 	UNSET_ONGROUND(ball);
@@ -226,11 +226,11 @@ void DropBall(entity ball, vector org, vector vel)
 	}
 
 	WaypointSprite_Kill(ball.owner.waypointsprite_attachedforcarrier);
-	WaypointSprite_Spawn(WP_NbBall, 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER); // no health bar please
+	WaypointSprite_Spawn(WP_NbBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER); // no health bar please
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 
-	ball.owner.ballcarried = world;
-	ball.owner = world;
+	ball.owner.ballcarried = NULL;
+	ball.owner = NULL;
 }
 
 void InitBall(entity this)
@@ -246,11 +246,11 @@ void InitBall(entity this)
 	setthink(this, ResetBall);
 	this.nextthink = time + autocvar_g_nexball_delay_idle + 3;
 	this.teamtime = 0;
-	this.pusher = world;
+	this.pusher = NULL;
 	this.team = false;
 	_sound(this, CH_TRIGGER, this.noise1, VOL_BASE, ATTEN_NORM);
 	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
-	LogNB("init", world);
+	LogNB("init", NULL);
 }
 
 void ResetBall(entity this)
@@ -264,7 +264,7 @@ void ResetBall(entity this)
 		this.movetype = MOVETYPE_NOCLIP;
 		this.velocity = '0 0 0'; // just in case?
 		if(!this.cnt)
-			LogNB("resetidle", world);
+			LogNB("resetidle", NULL);
 		this.cnt = 2;
 		this.nextthink = time;
 	}
@@ -473,7 +473,7 @@ void nb_spawnteams()
 {
 	bool t_red = false, t_blue = false, t_yellow = false, t_pink = false;
 	entity e;
-	for(e = world; (e = find(e, classname, "nexball_goal"));)
+	for(e = NULL; (e = find(e, classname, "nexball_goal"));)
 	{
 		switch(e.team)
 		{
@@ -511,7 +511,7 @@ void nb_spawnteams()
 
 void nb_delayedinit(entity this)
 {
-	if(find(world, classname, "nexball_team") == world)
+	if(find(NULL, classname, "nexball_team") == NULL)
 		nb_spawnteams();
 	nb_ScoreRules(nb_teams);
 }
@@ -735,7 +735,7 @@ void W_Nexball_Touch(entity this)
 	entity ball, attacker;
 	attacker = this.owner;
 	//this.think = func_null;
-	//this.enemy = world;
+	//this.enemy = NULL;
 
 	PROJECTILE_TOUCH(this);
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
@@ -769,7 +769,7 @@ void W_Nexball_Attack(entity actor, float t)
 		return;
 
 	W_SetupShot(actor, false, 4, SND_NB_SHOOT1, CH_WEAPON_A, 0);
-	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
+	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, NULL);
 	if(trace_startsolid)
 	{
 		if(actor.metertime)
@@ -968,7 +968,7 @@ MUTATOR_HOOKFUNCTION(nb, PlayerPreThink)
 				if(player.ballcarried.wait < time && player.ballcarried.enemy)
 				{
 					//centerprint(player, sprintf("Lost lock on %s", player.ballcarried.enemy.netname));
-					player.ballcarried.enemy = world;
+					player.ballcarried.enemy = NULL;
 				}
 
 
@@ -1118,7 +1118,7 @@ REGISTER_MUTATOR(nb, g_nexball)
 		*/
 		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
 
-		InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+		InitializeEntity(NULL, nb_delayedinit, INITPRIO_GAMETYPE);
 		WEP_NEXBALL.spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 		ActivateTeamplay();

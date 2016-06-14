@@ -29,11 +29,11 @@ const int PP_TILE_SIZE = 7;
 // find tic tac toe piece given its tile name
 entity pp_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 // check if the tile name is valid (3x3 grid)
@@ -164,7 +164,7 @@ void pp_setup_pieces(entity minigame)
 		}
 	}
 
-	minigame.pp_curr_piece = world;
+	minigame.pp_curr_piece = NULL;
 }
 
 // request a new match
@@ -183,7 +183,7 @@ void pp_next_match(entity minigame, entity player)
 	{
 		minigame.minigame_flags = PP_TURN_PLACE | minigame.pp_nexteam;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
-		entity e = world;
+		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 			if ( e.classname == "minigame_board_piece" )
 				remove(e);
@@ -210,7 +210,7 @@ int pp_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
@@ -285,7 +285,7 @@ void pp_hud_board(vector pos, vector mySize)
 	vector tile_size = minigame_hud_denormalize_size('1 1 0'/PP_TILE_SIZE,pos,mySize);
 	vector tile_pos;
 
-	active_minigame.pp_curr_piece = world;
+	active_minigame.pp_curr_piece = NULL;
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	if(e.classname == "minigame_board_piece")

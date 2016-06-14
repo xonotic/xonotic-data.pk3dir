@@ -281,7 +281,7 @@ void PutObserverInServer(entity this)
 
 	if (this.killcount != FRAGS_SPECTATOR)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_SPECTATE, this.netname);
 		if(!intermission_running)
 		if(autocvar_g_chat_nospectators == 1 || (!(warmup_stage || gameover) && autocvar_g_chat_nospectators == 2))
 			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CHAT_NOSPECTATORS);
@@ -832,7 +832,7 @@ void ClientKill_Now(entity this)
 	if(this.killindicator && !wasfreed(this.killindicator))
 		remove(this.killindicator);
 
-	this.killindicator = world;
+	this.killindicator = NULL;
 
 	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
@@ -846,14 +846,14 @@ void KillIndicator_Think(entity this)
 {
 	if (gameover)
 	{
-		this.owner.killindicator = world;
+		this.owner.killindicator = NULL;
 		remove(this);
 		return;
 	}
 
 	if (this.owner.alpha < 0 && !this.owner.vehicle)
 	{
-		this.owner.killindicator = world;
+		this.owner.killindicator = NULL;
 		remove(this);
 		return;
 	}
@@ -930,7 +930,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 			this.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(this, strcat("^1You'll be dead in ", ftos(this.killindicator.cnt), " seconds\n"));
 
-			for(e = world; (e = find(e, classname, "body")) != world; )
+			for(e = NULL; (e = find(e, classname, "body")) != NULL; )
 			{
 				if(e.enemy != this)
 					continue;
@@ -1219,7 +1219,7 @@ void ClientDisconnect()
 	if (autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_DISCONNECT, this.netname);
 
 	SetSpectatee(this, NULL);
 
@@ -1259,8 +1259,8 @@ void ChatBubbleThink(entity this)
 	this.nextthink = time;
 	if ((this.owner.alpha < 0) || this.owner.chatbubbleentity != this)
 	{
-		if(this.owner) // but why can that ever be world?
-			this.owner.chatbubbleentity = world;
+		if(this.owner) // but why can that ever be NULL?
+			this.owner.chatbubbleentity = NULL;
 		remove(this);
 		return;
 	}
@@ -1376,7 +1376,7 @@ void player_powerups(entity this)
 			if (time > this.strength_finished)
 			{
 				this.items = this.items - (this.items & ITEM_Strength.m_itemid);
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, this.netname);
+				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_STRENGTH, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
 			}
 		}
@@ -1385,7 +1385,7 @@ void player_powerups(entity this)
 			if (time < this.strength_finished)
 			{
 				this.items = this.items | ITEM_Strength.m_itemid;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STRENGTH, this.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_STRENGTH, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_STRENGTH);
 			}
 		}
@@ -1396,7 +1396,7 @@ void player_powerups(entity this)
 			if (time > this.invincible_finished)
 			{
 				this.items = this.items - (this.items & ITEM_Shield.m_itemid);
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SHIELD, this.netname);
+				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERDOWN_SHIELD, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
 			}
 		}
@@ -1405,7 +1405,7 @@ void player_powerups(entity this)
 			if (time < this.invincible_finished)
 			{
 				this.items = this.items | ITEM_Shield.m_itemid;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SHIELD, this.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_POWERUP_SHIELD, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_SHIELD);
 			}
 		}
@@ -1415,7 +1415,7 @@ void player_powerups(entity this)
 			{
 				this.superweapons_finished = 0;
 				this.items = this.items - (this.items & IT_SUPERWEAPON);
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_SUPERWEAPON_LOST, this.netname);
+				//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_LOST, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_LOST);
 			}
 			else if (this.items & IT_UNLIMITED_SUPERWEAPONS)
@@ -1429,7 +1429,7 @@ void player_powerups(entity this)
 				{
 					this.items = this.items - (this.items & IT_SUPERWEAPON);
 					this.weapons &= ~WEPSET_SUPERWEAPONS;
-					//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_SUPERWEAPON_BROKEN, this.netname);
+					//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_BROKEN, this.netname);
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_BROKEN);
 				}
 			}
@@ -1439,7 +1439,7 @@ void player_powerups(entity this)
 			if (time < this.superweapons_finished || (this.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				this.items = this.items | IT_SUPERWEAPON;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_SUPERWEAPON_PICKUP, this.netname);
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
 			}
 			else
@@ -1843,7 +1843,7 @@ void LeaveSpectatorMode(entity this)
 
 			WITHSELF(this, PutClientInServer());
 
-			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
+			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
 		}
 		else
 			stuffcmd(this, "menu_showteamselect\n");
@@ -2069,7 +2069,7 @@ void PlayerUseKey(entity this)
 		if(!IS_DEAD(this))
 		if(!gameover)
 		{
-			entity head, closest_target = world;
+			entity head, closest_target = NULL;
 			head = WarpZone_FindRadius(this.origin, autocvar_g_vehicles_enter_radius, true);
 
 			while(head) // find the closest acceptable target to enter
@@ -2207,7 +2207,7 @@ void PlayerPreThink ()
 	if(!IS_DEAD(this))
 	{
 		entity veh;
-		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
+		for(veh = NULL; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vdist(veh.origin - this.origin, <, autocvar_g_vehicles_enter_radius))
 		if(!IS_DEAD(veh))
 		if(veh.takedamage != DAMAGE_NO)
@@ -2444,7 +2444,7 @@ void DrownPlayer(entity this)
 	{	// drown!
 		if (this.pain_finished < time)
 		{
-			Damage (this, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN.m_id, this.origin, '0 0 0');
 			this.pain_finished = time + 0.5;
 		}
 	}
@@ -2481,7 +2481,7 @@ void PlayerPostThink ()
 					Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_DISCONNECT_IDLING, timeleft);
 			}
 			if (timeleft <= 0) {
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_QUIT_KICK_IDLING, this.netname);
 				dropclient(this);
 				return;
 			}

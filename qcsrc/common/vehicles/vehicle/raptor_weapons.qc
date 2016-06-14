@@ -89,8 +89,8 @@ void raptor_bomblet_boom(entity this)
 {
     RadiusDamage (this, this.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
-                                    autocvar_g_vehicle_raptor_bomblet_radius, world, world,
-                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, world);
+                                    autocvar_g_vehicle_raptor_bomblet_radius, NULL, NULL,
+                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, NULL);
     remove(this);
 }
 

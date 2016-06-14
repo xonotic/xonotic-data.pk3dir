@@ -93,7 +93,7 @@ void M_Shambler_Attack_Lightning_Explode(entity this)
 	if(this.movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, world, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, other);
 
 	for(head = findradius(this.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != this.realowner) if(head.takedamage)
 	{
@@ -136,7 +136,7 @@ void M_Shambler_Attack_Lightning_Think(entity this)
 	this.nextthink = time;
 	if (time > this.cnt)
 	{
-		other = world;
+		other = NULL;
 		M_Shambler_Attack_Lightning_Explode(this);
 		return;
 	}

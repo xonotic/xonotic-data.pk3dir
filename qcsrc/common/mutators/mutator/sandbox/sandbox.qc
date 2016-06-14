@@ -80,7 +80,7 @@ void sandbox_ObjectFunction_Think(entity this)
 			this.realowner = it;
 			break;
 		}
-		this.realowner = world;
+		this.realowner = NULL;
 	));
 
 	this.nextthink = time;
@@ -91,22 +91,22 @@ void sandbox_ObjectFunction_Think(entity this)
 .float old_solid, old_movetype;
 entity sandbox_ObjectEdit_Get(entity this, float permissions)
 {
-	// Returns the traced entity if the player can edit it, and world if not.
+	// Returns the traced entity if the player can edit it, and NULL if not.
 	// If permissions if false, the object is returned regardless of editing rights.
 	// Attached objects are SOLID_NOT and do not get traced.
 
 	crosshair_trace_plusvisibletriggers(this);
 	if(vdist(this.origin - trace_ent.origin, >, autocvar_g_sandbox_editor_distance_edit))
-		return world; // out of trace range
+		return NULL; // out of trace range
 	if(trace_ent.classname != "object")
-		return world; // entity is not an object
+		return NULL; // entity is not an object
 	if(!permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
 	if(trace_ent.crypto_idfp == "")
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
 	if (!(trace_ent.realowner != this && autocvar_g_sandbox_editor_free < 2))
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
-	return world;
+	return NULL;
 }
 
 void sandbox_ObjectEdit_Scale(entity e, float f)
@@ -143,14 +143,14 @@ void sandbox_ObjectAttach_Remove(entity e)
 	// detaches any object attached to e
 
 	entity head;
-	for(head = world; (head = find(head, classname, "object")); )
+	for(head = NULL; (head = find(head, classname, "object")); )
 	{
 		if(head.owner == e)
 		{
 			vector org;
 			org = gettaginfo(head, 0);
-			setattachment(head, world, "");
-			head.owner = world;
+			setattachment(head, NULL, "");
+			head.owner = NULL;
 
 			// objects change origin and angles when detached, so apply previous position
 			setorigin(head, org);
@@ -212,7 +212,7 @@ void sandbox_ObjectRemove(entity e)
 	sandbox_ObjectAttach_Remove(e); // detach child objects
 
 	// if the object being removed has been selected for attachment by a player, unset it
-	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, LAMBDA(it.object_attach = world));
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it) && it.object_attach == e, LAMBDA(it.object_attach = NULL));
 
 	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
 	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}
@@ -220,7 +220,7 @@ void sandbox_ObjectRemove(entity e)
 	if(e.message)	{	strunzone(e.message);	e.message = string_null;	}
 	if(e.message2)	{	strunzone(e.message2);	e.message2 = string_null;	}
 	remove(e);
-	e = world;
+	e = NULL;
 
 	object_count -= 1;
 }
@@ -234,7 +234,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	string s;
 	entity head;
 
-	for(head = world; (head = find(head, classname, "object")); )
+	for(head = NULL; (head = find(head, classname, "object")); )
 	{
 		// the main object needs to be first in the array [0] with attached objects following
 		float slot, physics, solidity;
@@ -308,7 +308,7 @@ entity sandbox_ObjectPort_Load(entity this, string s, float database)
 {
 	// load object properties, and spawn a new object with them
 	float n, i;
-	entity e = world, parent = world;
+	entity e = NULL, parent = NULL;
 
 	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
@@ -384,10 +384,10 @@ void sandbox_Database_Save()
 	fputs(file_get, strcat("// sandbox storage \"", autocvar_g_sandbox_storage_name, "\" for map \"", GetMapname(), "\" last updated ", strftime(true, "%d-%m-%Y %H:%M:%S")));
 	fputs(file_get, strcat(" containing ", ftos(object_count), " objects\n"));
 
-	for(head = world; (head = find(head, classname, "object")); )
+	for(head = NULL; (head = find(head, classname, "object")); )
 	{
 		// attached objects are persisted separately, ignore them here
-		if(head.owner != world)
+		if(head.owner != NULL)
 			continue;
 
 		// use a line of text for each object, listing all properties
@@ -530,7 +530,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 			// ---------------- COMMAND: OBJECT, REMOVE ----------------
 			case "object_remove":
 				e = sandbox_ObjectEdit_Get(player, true);
-				if(e != world)
+				if(e != NULL)
 				{
 					if(autocvar_g_sandbox_info > 0)
 						LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " removed an object at origin ^3", vtos(e.origin), "\n"));
@@ -548,7 +548,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					case "copy":
 						// copies customizable properties of the selected object to the clipboard cvar
 						e = sandbox_ObjectEdit_Get(player, autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
-						if(e != world)
+						if(e != NULL)
 						{
 							s = sandbox_ObjectPort_Save(e, false);
 							s = strreplace("\"", "\\\"", s);
@@ -594,7 +594,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					case "get":
 						// select e as the object as meant to be attached
 						e = sandbox_ObjectEdit_Get(player, true);
-						if(e != world)
+						if(e != NULL)
 						{
 							player.object_attach = e;
 							print_to(player, "^2SANDBOX - INFO: ^7Object selected for attachment");
@@ -603,7 +603,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 						print_to(player, "^1SANDBOX - WARNING: ^7Object could not be selected for attachment. Make sure you are facing an object that you have edit rights over");
 						return true;
 					case "set":
-						if(player.object_attach == world)
+						if(player.object_attach == NULL)
 						{
 							print_to(player, "^1SANDBOX - WARNING: ^7No object selected for attachment. Please select an object to be attached first.");
 							return true;
@@ -611,10 +611,10 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 
 						// attaches the previously selected object to e
 						e = sandbox_ObjectEdit_Get(player, true);
-						if(e != world)
+						if(e != NULL)
 						{
 							sandbox_ObjectAttach_Set(player.object_attach, e, argv(3));
-							player.object_attach = world; // object was attached, no longer keep it scheduled for attachment
+							player.object_attach = NULL; // object was attached, no longer keep it scheduled for attachment
 							print_to(player, "^2SANDBOX - INFO: ^7Object attached successfully");
 							if(autocvar_g_sandbox_info > 1)
 								LOG_INFO(strcat("^3SANDBOX - SERVER: ^7", player.netname, " attached objects at origin ^3", vtos(e.origin), "\n"));
@@ -625,7 +625,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					case "remove":
 						// removes e if it was attached
 						e = sandbox_ObjectEdit_Get(player, true);
-						if(e != world)
+						if(e != NULL)
 						{
 							sandbox_ObjectAttach_Remove(e);
 							print_to(player, "^2SANDBOX - INFO: ^7Child objects detached successfully");
@@ -647,7 +647,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 				}
 
 				e = sandbox_ObjectEdit_Get(player, true);
-				if(e != world)
+				if(e != NULL)
 				{
 					switch(argv(2))
 					{
@@ -737,7 +737,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 					return true;
 				}
 				e = sandbox_ObjectEdit_Get(player, true);
-				if(e != world)
+				if(e != NULL)
 				{
 					// update the owner's name
 					// Do this before checking if you're already the owner and skipping if such, so we
@@ -767,7 +767,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 			case "object_info":
 				// prints public information about the object to the player
 				e = sandbox_ObjectEdit_Get(player, false);
-				if(e != world)
+				if(e != NULL)
 				{
 					switch(argv(2))
 					{
@@ -785,7 +785,7 @@ MUTATOR_HOOKFUNCTION(sandbox, SV_ParseClientCommand)
 							s = "";
 							entity head;
 							i = 0;
-							for(head = world; (head = find(head, classname, "object")); )
+							for(head = NULL; (head = find(head, classname, "object")); )
 							{
 								if(head.owner == e)
 								{

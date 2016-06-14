@@ -68,8 +68,8 @@ void W_Blaster_Touch(entity this)
 		this.blaster_damage,
 		this.blaster_edgedamage,
 		this.blaster_radius,
-		world,
-		world,
+		NULL,
+		NULL,
 		this.blaster_force,
 		this.projectiledeathtype,
 		other

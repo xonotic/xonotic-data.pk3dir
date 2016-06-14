@@ -55,20 +55,20 @@ MUTATOR_HOOKFUNCTION(porto_ticker, SV_StartFrame) {
 
 void W_Porto_Success(entity this)
 {
-	if(this.realowner == world)
+	if(this.realowner == NULL)
 	{
 		objerror(this, "Cannot succeed successfully: no owner\n");
 		return;
 	}
 
-	this.realowner.porto_current = world;
+	this.realowner.porto_current = NULL;
 	remove(this);
 }
 
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
 void W_Porto_Fail(entity this, float failhard)
 {
-	if(this.realowner == world)
+	if(this.realowner == NULL)
 	{
 		objerror(this, "Cannot fail successfully: no owner\n");
 		return;
@@ -80,7 +80,7 @@ void W_Porto_Fail(entity this, float failhard)
 		Portal_ClearWithID(this.realowner, this.portal_id);
 	}
 
-	this.realowner.porto_current = world;
+	this.realowner.porto_current = NULL;
 
 	if(this.cnt < 0 && !failhard && this.realowner.playerid == this.playerid && !IS_DEAD(this.realowner) && !(this.realowner.weapons & WEPSET(PORTO)))
 	{
@@ -372,7 +372,7 @@ METHOD(PortoLaunch, wr_setup, void(entity thiswep, entity actor))
 }
 METHOD(PortoLaunch, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    actor.porto_current = world;
+    actor.porto_current = NULL;
 }
 #endif
 #ifdef CSQC

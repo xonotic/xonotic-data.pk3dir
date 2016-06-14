@@ -13,7 +13,7 @@ void trigger_impulse_touch1(entity this)
 
 	EXACTTRIGGER_TOUCH;
 
-	targ = find(world, targetname, this.target);
+	targ = find(NULL, targetname, this.target);
 	if(!targ)
 	{
 		objerror(this, "trigger_force without a (valid) .target!\n");

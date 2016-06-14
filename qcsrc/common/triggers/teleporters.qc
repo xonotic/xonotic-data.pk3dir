@@ -112,7 +112,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	// assuming to allows PL_MIN to PL_MAX box and some more
 #ifdef SVQC
 	from = player.origin;
-	setorigin (player, to);
+	setorigin(player, to);
 	player.oldorigin = to; // don't undo the teleport by unsticking
 	player.angles = to_angles;
 	player.fixangle = true;
@@ -187,7 +187,7 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	else
 	{
 		RandomSelection_Init();
-		for(e = world; (e = find(e, targetname, teleporter.target)); )
+		for(e = NULL; (e = find(e, targetname, teleporter.target)); )
 		{
 			p = 1;
 			if(STAT(TELEPORT_TELEFRAG_AVOID, player))
@@ -250,7 +250,7 @@ void teleport_findtarget(entity this)
 {
 	int n = 0;
 	entity e;
-	for(e = world; (e = find(e, targetname, this.target)); )
+	for(e = NULL; (e = find(e, targetname, this.target)); )
 	{
 		++n;
 #ifdef SVQC
@@ -275,7 +275,7 @@ void teleport_findtarget(entity this)
 	else
 	{
 		// have to use random selection every single time
-		this.enemy = world;
+		this.enemy = NULL;
 	}
 
 	// now enable touch
@@ -288,10 +288,10 @@ void teleport_findtarget(entity this)
 entity Teleport_Find(vector mi, vector ma)
 {
 	entity e;
-	for(e = world; (e = find(e, classname, "trigger_teleport")); )
-		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, world))
+	for(e = NULL; (e = find(e, classname, "trigger_teleport")); )
+		if(WarpZoneLib_BoxTouchesBrush(mi, ma, e, NULL))
 			return e;
-	return world;
+	return NULL;
 }
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
@@ -313,7 +313,7 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 		if(!(pl.move_flags & BIT(15))) // FL_PROJECTILE
 	#endif
 			LOG_INFO("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
-		pl.owner = world;
+		pl.owner = NULL;
 	}
 	if(IS_PLAYER(pl))
 	{

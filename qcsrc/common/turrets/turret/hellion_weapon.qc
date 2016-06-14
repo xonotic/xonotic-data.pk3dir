@@ -55,11 +55,11 @@ void turret_hellion_missile_think(entity this)
         turret_projectile_explode(this);
 
     // Enemy dead? just keep on the current heading then.
-    if ((this.enemy == world) || (IS_DEAD(this.enemy)))
+    if ((this.enemy == NULL) || (IS_DEAD(this.enemy)))
     {
 
         // Make sure we dont return to tracking a respawned player
-        this.enemy = world;
+        this.enemy = NULL;
 
         // Turn model
         this.angles = vectoangles(this.velocity);

@@ -10,7 +10,7 @@ void HUD_UpdatePlayerTeams();
 void HUD_Score_Rankings(vector pos, vector mySize, entity me)
 {
 	float score;
-	entity tm = world, pl;
+	entity tm = NULL, pl;
 	int SCOREPANEL_MAX_ENTRIES = 6;
 	float SCOREPANEL_ASPECTRATIO = 2;
 	int entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize.y/mySize.x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
@@ -170,7 +170,7 @@ void HUD_Score()
 			pl = pl.sort_next;
 		if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
 			if(pl.scores[ps_primary] == 0)
-				pl = world;
+				pl = NULL;
 
 		score = me.(scores[ps_primary]);
 		timer = TIME_ENCODED_TOSTRING(score);

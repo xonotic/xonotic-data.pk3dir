@@ -233,7 +233,7 @@ float SetTeam(entity o, int Team)
 			case NUM_TEAM_4:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(Team, false) == NULL)
 				{
 					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
@@ -249,7 +249,7 @@ float SetTeam(entity o, int Team)
 			case 0:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(Team, false) == NULL)
 				{
 					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
@@ -304,7 +304,7 @@ void Playerchecker_Think(entity this)
 				// player disconnected
 				SetTeam(e, -1);
 				RemovePlayer(e);
-				e.sort_prev = world;
+				e.sort_prev = NULL;
 				//e.gotscores = 0;
 			}
 		}

@@ -2,7 +2,7 @@ void turret_remove(entity this)
 {
 	remove(this.tur_head);
 	//remove(this.enemy);
-	this.tur_head = world;
+	this.tur_head = NULL;
 }
 
 .vector glowmod;
@@ -206,7 +206,7 @@ void turret_construct(entity this)
 {
 	entity tur = get_turretinfo(this.m_id);
 
-	if(this.tur_head == world)
+	if(this.tur_head == NULL)
 		this.tur_head = spawn();
 
 	this.netname = tur.turret_name;
@@ -282,9 +282,9 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 {
 	entity gib;
 
-	traceline(_from, _to, MOVE_NOMONSTERS, world);
+	traceline(_from, _to, MOVE_NOMONSTERS, NULL);
 	if(trace_startsolid)
-		return world;
+		return NULL;
 
 	gib = new(turret_gib);
 	setorigin(gib, _from);
@@ -379,7 +379,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_ANG)
 	{
-		if(this.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
+		if(this.tur_head == NULL) // aparenly this can happpen before TNSF_SETUP. great.
 			this.tur_head = spawn();
 
 		this.tur_head.move_angles_x = ReadShort();
@@ -390,7 +390,7 @@ NET_HANDLE(ENT_CLIENT_TURRET, bool isnew)
 
 	if(sf & TNSF_AVEL)
 	{
-		if(this.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
+		if(this.tur_head == NULL) // aparenly this can happpen before TNSF_SETUP. great.
 			this.tur_head = spawn();
 
 		this.tur_head.move_avelocity_x = ReadShort();

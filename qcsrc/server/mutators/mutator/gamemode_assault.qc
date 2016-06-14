@@ -76,7 +76,7 @@ void assault_objective_use(entity this, entity actor, entity trigger)
 	//print("^2Activated objective ", this.targetname, "=", etos(this), "\n");
 	//print("Activator is ", actor.classname, "\n");
 
-	for (entity e = world; (e = find(e, target, this.targetname)); )
+	for (entity e = NULL; (e = find(e, target, this.targetname)); )
 	{
 		if (e.classname == "target_objective_decrease")
 		{
@@ -112,7 +112,7 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 	{
 		WaypointSprite_Disown(trigger.assault_sprite, waypointsprite_deadlifetime);
 		if(trigger.classname == "func_assault_destructible")
-			trigger.sprite = world; // TODO: just unsetting it?!
+			trigger.sprite = NULL; // TODO: just unsetting it?!
 	}
 	else
 		return; // already activated! cannot activate again!
@@ -141,11 +141,11 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 void assault_setenemytoobjective(entity this)
 {
 	entity objective;
-	for(objective = world; (objective = find(objective, targetname, this.target)); )
+	for(objective = NULL; (objective = find(objective, targetname, this.target)); )
 	{
 		if(objective.classname == "target_objective")
 		{
-			if(this.enemy == world)
+			if(this.enemy == NULL)
 				this.enemy = objective;
 			else
 				objerror(this, "more than one objective as target - fix the map!");
@@ -153,7 +153,7 @@ void assault_setenemytoobjective(entity this)
 		}
 	}
 
-	if(this.enemy == world)
+	if(this.enemy == NULL)
 		objerror(this, "no objective as target - fix the map!");
 }
 
@@ -168,14 +168,14 @@ bool assault_decreaser_sprite_visible(entity this, entity player, entity view)
 void target_objective_decrease_activate(entity this)
 {
 	entity ent, spr;
-	this.owner = world;
-	for(ent = world; (ent = find(ent, target, this.targetname)); )
+	this.owner = NULL;
+	for(ent = NULL; (ent = find(ent, target, this.targetname)); )
 	{
-		if(ent.assault_sprite != world)
+		if(ent.assault_sprite != NULL)
 		{
 			WaypointSprite_Disown(ent.assault_sprite, waypointsprite_deadlifetime);
 			if(ent.classname == "func_assault_destructible")
-				ent.sprite = world; // TODO: just unsetting it?!
+				ent.sprite = NULL; // TODO: just unsetting it?!
 		}
 
 		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE);
@@ -302,7 +302,7 @@ int WinningCondition_Assault()
 	}
 
 	entity ent;
-	ent = find(world, classname, "target_assault_roundend");
+	ent = find(NULL, classname, "target_assault_roundend");
 	if(ent)
 	{
 		if(ent.winning)	// round end has been triggered by attacking team
@@ -366,7 +366,7 @@ spawnfunc(target_objective_decrease)
 	this.use = assault_objective_decrease_use;
 	this.health = ASSAULT_VALUE_INACTIVE;
 	this.max_health = ASSAULT_VALUE_INACTIVE;
-	this.enemy = world;
+	this.enemy = NULL;
 
 	InitializeEntity(this, target_objective_decrease_findtarget, INITPRIO_FINDTARGET);
 }
@@ -441,7 +441,7 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 			continue;
 
 		found = false;
-		for(tod = world; (tod = find(tod, targetname, ad.target)); )
+		for(tod = NULL; (tod = find(tod, targetname, ad.target)); )
 		{
 			if(tod.classname == "target_objective_decrease")
 			{
@@ -465,11 +465,11 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		p = 0.5 * (ad.absmin + ad.absmax);
 	//	dprint(vtos(ad.origin), " ", vtos(ad.absmin), " ", vtos(ad.absmax),"\n");
 	//	te_knightspike(p);
-	//	te_lightning2(world, '0 0 0', p);
+	//	te_lightning2(NULL, '0 0 0', p);
 
 		// Find and rate waypoints around it
 		found = false;
-		best = world;
+		best = NULL;
 		bestvalue = 99999999999;
 		for(radius=0; radius<1500 && !found; radius+=500)
 		{
@@ -492,7 +492,7 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 		if(best)
 		{
 		///	dprint("waypoints around target were found\n");
-		//	te_lightning2(world, '0 0 0', best.origin);
+		//	te_lightning2(NULL, '0 0 0', best.origin);
 		//	te_knightspike(best.origin);
 
 			navigation_routerating(this, best, ratingscale, 4000);

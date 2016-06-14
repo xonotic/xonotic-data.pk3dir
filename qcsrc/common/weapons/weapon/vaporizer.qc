@@ -124,14 +124,14 @@ void VaporizerBeam_Draw(entity this)
 	Draw_VaporizerBeam_trace_callback_rnd = 0;
 	Draw_VaporizerBeam_trace_callback_rgb = rgb;
 	Draw_VaporizerBeam_trace_callback_a = bound(0, fail, 1);
-	WarpZone_TraceBox_ThroughZone(this.vorg1, '0 0 0', '0 0 0', this.vorg2, MOVE_NOTHING, world, world, Draw_VaporizerBeam_trace_callback);
+	WarpZone_TraceBox_ThroughZone(this.vorg1, '0 0 0', '0 0 0', this.vorg2, MOVE_NOTHING, NULL, NULL, Draw_VaporizerBeam_trace_callback);
 	Draw_VaporizerBeam_trace_callback_tex = string_null;
 
 	/*if(!MUTATOR_CALLHOOK(Particles_VaporizerBeam, this.vorg1, this.vorg2))
 	if(autocvar_cl_particles_oldvortexbeam && (STAT(ALLOW_OLDVORTEXBEAM) || isdemo()))
-		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
-		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);*/
+		WarpZone_TrailParticles_WithMultiplier(NULL, particleeffectnum(EFFECT_VORTEX_BEAM), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);*/
 }
 
 NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
@@ -154,7 +154,7 @@ NET_HANDLE(TE_CSQC_VAPORBEAMPARTICLE, bool isNew)
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
+		WarpZone_TrailParticles(NULL, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
 		this.draw = func_null;
 		this.drawmask = MASK_NORMAL;
 		remove(this);
@@ -175,7 +175,7 @@ void W_RocketMinsta_Explosion(entity actor, vector loc)
 	entity dmgent = spawn();
 	dmgent.owner = dmgent.realowner = actor;
 	setorigin(dmgent, loc);
-	RadiusDamage (dmgent, actor, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, world, world, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, other);
+	RadiusDamage (dmgent, actor, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, NULL, NULL, autocvar_g_rm_force, WEP_DEVASTATOR.m_id | HITTYPE_SPLASH, other);
 	remove(dmgent);
 }
 
@@ -224,7 +224,7 @@ void W_RocketMinsta_Laser_Explode (entity this)
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
-	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, world, world, this.rm_force, this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, other);
 	remove(this);
 }
 
@@ -237,7 +237,7 @@ void W_RocketMinsta_Laser_Touch (entity this)
 {
 	PROJECTILE_TOUCH(this);
 	//W_RocketMinsta_Laser_Explode ();
-	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, world, world, this.rm_force, this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, other);
 	remove(this);
 }
 

@@ -416,8 +416,8 @@ void ons_Link_CheckUpdate(entity this)
 
 void ons_DelayedLinkSetup(entity this)
 {
-	this.goalentity = find(world, targetname, this.target);
-	this.enemy = find(world, targetname, this.target2);
+	this.goalentity = find(NULL, targetname, this.target);
+	this.enemy = find(NULL, targetname, this.target2);
 	if(!this.goalentity) { objerror(this, "can not find target\n"); }
 	if(!this.enemy) { objerror(this, "can not find target2\n"); }
 
@@ -530,12 +530,12 @@ void ons_ControlPoint_Icon_Damage(entity this, entity inflictor, entity attacker
 	{
 		sound(this, CH_TRIGGER, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 		pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_CPDESTROYED), this.owner.message, attacker.netname);
 
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
 		PlayerScore_Add(attacker, SP_SCORE, 10);
 
-		this.owner.goalentity = world;
+		this.owner.goalentity = NULL;
 		this.owner.islinked = false;
 		this.owner.iscaptured = false;
 		this.owner.team = 0;
@@ -658,14 +658,14 @@ void ons_ControlPoint_Icon_BuildThink(entity this)
 
 		if(IS_PLAYER(this.owner.ons_toucher))
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, this.owner.ons_toucher.netname, this.owner.message);
 			Send_Notification(NOTIF_ALL_EXCEPT, this.owner.ons_toucher, MSG_CENTER, APP_TEAM_NUM(this.owner.ons_toucher.team, CENTER_ONS_CAPTURE), this.owner.message);
 			Send_Notification(NOTIF_ONE, this.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, this.owner.message);
 			PlayerScore_Add(this.owner.ons_toucher, SP_ONS_CAPS, 1);
 			PlayerTeamScore_AddScore(this.owner.ons_toucher, 10);
 		}
 
-		this.owner.ons_toucher = world;
+		this.owner.ons_toucher = NULL;
 
 		onslaught_updatelinks();
 
@@ -824,14 +824,14 @@ void ons_ControlPoint_Reset(entity this)
 	if(this.goalentity)
 		remove(this.goalentity);
 
-	this.goalentity = world;
+	this.goalentity = NULL;
 	this.team = 0;
 	this.colormap = 1024;
 	this.iscaptured = false;
 	this.islinked = false;
 	this.isshielded = true;
 	setthink(this, ons_ControlPoint_Think);
-	this.ons_toucher = world;
+	this.ons_toucher = NULL;
 	this.nextthink = time + ONS_CP_THINKRATE;
 	setmodel_fixsize(this, MDL_ONS_CP_PAD1);
 
@@ -978,10 +978,10 @@ void ons_GeneratorDamage(entity this, entity inflictor, entity attacker, float d
 	else
 	{
 		if (attacker == this)
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME));
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME));
 		else
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED));
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_ONSLAUGHT_GENDESTROYED));
 			PlayerScore_Add(attacker, SP_SCORE, 100);
 		}
 		this.iscaptured = false;
@@ -1194,8 +1194,8 @@ bool Onslaught_CheckWinner()
 
 		if (!wpforenemy_announced)
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
-			sound(world, CH_INFO, SND_ONS_GENERATOR_DECAY, VOL_BASE, ATTEN_NONE);
+			Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
+			sound(NULL, CH_INFO, SND_ONS_GENERATOR_DECAY, VOL_BASE, ATTEN_NONE);
 
 			wpforenemy_announced = true;
 		}
@@ -1238,14 +1238,14 @@ bool Onslaught_CheckWinner()
 
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	ons_stalemate = false;
@@ -1395,7 +1395,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 
 	// We'll consider only the best case
 	bestvalue = 99999999999;
-	cp = world;
+	cp = NULL;
 	for(cp1 = ons_worldcplist; cp1; cp1 = cp1.ons_worldcpnext)
 	{
 		if (!cp1.wpconsidered)
@@ -1419,7 +1419,7 @@ void havocbot_goalrating_ons_controlpoints_attack(entity this, float ratingscale
 		// Should be attacked
 		// Rate waypoints near it
 		found = false;
-		best = world;
+		best = NULL;
 		bestvalue = 99999999999;
 		for(radius=0; radius<1000 && !found; radius+=500)
 		{
@@ -1492,7 +1492,7 @@ bool havocbot_goalrating_ons_generator_attack(entity this, float ratingscale)
 		// Should be attacked
 		// Rate waypoints near it
 		found = false;
-		bestwp = world;
+		bestwp = NULL;
 		best = 99999999999;
 
 		for(wp=findradius(g.origin,400); wp; wp=wp.chain)
@@ -1584,7 +1584,7 @@ void havocbot_ons_reset_role(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	this.havocbot_ons_target = world;
+	this.havocbot_ons_target = NULL;
 
 	// TODO: Defend control points or generator if necessary
 
@@ -1598,14 +1598,14 @@ void havocbot_ons_reset_role(entity this)
  */
 entity ons_Nearest_ControlPoint(entity this, vector pos, float max_dist)
 {
-	entity tmp_entity, closest_target = world;
+	entity tmp_entity, closest_target = NULL;
 	tmp_entity = findchain(classname, "onslaught_controlpoint");
 	while(tmp_entity)
 	{
 		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.iscaptured)
 		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <=, max_dist))
-		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
+		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
 			closest_target = tmp_entity;
 		tmp_entity = tmp_entity.chain;
 	}
@@ -1614,7 +1614,7 @@ entity ons_Nearest_ControlPoint(entity this, vector pos, float max_dist)
 	{
 		if(SAME_TEAM(tmp_entity, this))
 		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <, max_dist))
-		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
+		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
 			closest_target = tmp_entity;
 		tmp_entity = tmp_entity.chain;
 	}
@@ -1629,7 +1629,7 @@ entity ons_Nearest_ControlPoint(entity this, vector pos, float max_dist)
  */
 entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 {
-	entity tmp_entity, closest_target = world;
+	entity tmp_entity, closest_target = NULL;
 	vector delta;
 	float smallest_distance = 0, distance;
 
@@ -1643,7 +1643,7 @@ entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.iscaptured)
 		if(max_dist <= 0 || distance <= max_dist)
-		if(closest_target == world || distance <= smallest_distance )
+		if(closest_target == NULL || distance <= smallest_distance )
 		{
 			closest_target = tmp_entity;
 			smallest_distance = distance;
@@ -1660,7 +1660,7 @@ entity ons_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 
 		if(SAME_TEAM(tmp_entity, this))
 		if(max_dist <= 0 || distance <= max_dist)
-		if(closest_target == world || distance <= smallest_distance )
+		if(closest_target == NULL || distance <= smallest_distance )
 		{
 			closest_target = tmp_entity;
 			smallest_distance = distance;
@@ -1726,7 +1726,7 @@ bool ons_Teleport(entity player, entity tele_target, float range, bool tele_effe
 		tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid)
 		{
-			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the world
+			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the NULL
 			if(trace_fraction == 1.0 && !trace_startsolid)
 			{
 				if ( tele_effects )
@@ -1804,7 +1804,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 	if ( player.ons_spawn_by )
 	if ( ons_Teleport(player,player.ons_spawn_by,autocvar_g_onslaught_teleport_radius,false) )
 	{
-		player.ons_spawn_by = world;
+		player.ons_spawn_by = NULL;
 		return false;
 	}
 
@@ -1812,7 +1812,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 	if(random() <= autocvar_g_onslaught_spawn_at_controlpoints_chance)
 	{
 		float random_target = autocvar_g_onslaught_spawn_at_controlpoints_random;
-		entity tmp_entity, closest_target = world;
+		entity tmp_entity, closest_target = NULL;
 		vector spawn_loc = player.ons_deathloc;
 
 		// new joining player or round reset, don't bother checking
@@ -1825,7 +1825,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 			if(SAME_TEAM(tmp_entity, player))
 			if(random_target)
 				RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
-			else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == world)
+			else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
 				closest_target = tmp_entity;
 		}
 
@@ -1844,7 +1844,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, player);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
-					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
+					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the NULL
 					if(trace_fraction == 1.0 && !trace_startsolid)
 					{
 						setorigin(player, loc);
@@ -1860,7 +1860,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 	if(random() <= autocvar_g_onslaught_spawn_at_generator_chance)
 	{
 		float random_target = autocvar_g_onslaught_spawn_at_generator_random;
-		entity tmp_entity, closest_target = world;
+		entity tmp_entity, closest_target = NULL;
 		vector spawn_loc = player.ons_deathloc;
 
 		// new joining player or round reset, don't bother checking
@@ -1875,7 +1875,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 			else
 			{
 				if(SAME_TEAM(tmp_entity, player))
-				if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == world)
+				if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
 					closest_target = tmp_entity;
 			}
 		}
@@ -1895,7 +1895,7 @@ MUTATOR_HOOKFUNCTION(ons, PlayerSpawn)
 				tracebox(loc, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), loc, MOVE_NORMAL, player);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
-					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
+					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the NULL
 					if(trace_fraction == 1.0 && !trace_startsolid)
 					{
 						setorigin(player, loc);
@@ -1936,8 +1936,8 @@ MUTATOR_HOOKFUNCTION(ons, MonsterMove)
 {
 	entity mon = M_ARGV(0, entity);
 
-	entity e = find(world, targetname, mon.target);
-	if (e != world)
+	entity e = find(NULL, targetname, mon.target);
+	if (e != NULL)
 		mon.team = e.team;
 }
 
@@ -1949,8 +1949,8 @@ void ons_MonsterSpawn_Delayed(entity this)
 
 	if(own.targetname)
 	{
-		entity e = find(world, target, own.targetname);
-		if(e != world)
+		entity e = find(NULL, target, own.targetname);
+		if(e != NULL)
 		{
 			own.team = e.team;
 
@@ -1978,8 +1978,8 @@ void ons_TurretSpawn_Delayed(entity this)
 
 	if(own.targetname)
 	{
-		entity e = find(world, target, own.targetname);
-		if(e != world)
+		entity e = find(NULL, target, own.targetname);
+		if(e != NULL)
 		{
 			own.team = e.team;
 			own.active = ACTIVE_NOT;
@@ -2069,7 +2069,7 @@ MUTATOR_HOOKFUNCTION(ons, SV_ParseClientCommand)
 
 				entity closest_target = ons_Nearest_ControlPoint_2D(player, pos, autocvar_g_onslaught_click_radius);
 
-				if ( closest_target == world )
+				if ( closest_target == NULL )
 				{
 					sprint(player, "\nNo control point found\n");
 					return true;
@@ -2175,8 +2175,8 @@ MUTATOR_HOOKFUNCTION(ons, TurretThink)
 	// ONS uses somewhat backwards linking.
 	if(turret.target)
 	{
-		entity e = find(world, targetname, turret.target);
-		if (e != world)
+		entity e = find(NULL, targetname, turret.target);
+		if (e != NULL)
 			turret.team = e.team;
 	}
 
@@ -2250,7 +2250,7 @@ spawnfunc(onslaught_generator)
 // scoreboard setup
 void ons_ScoreRules()
 {
-	CheckAllowedTeams(world);
+	CheckAllowedTeams(NULL);
 	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
@@ -2271,7 +2271,7 @@ void ons_Initialize()
 	g_onslaught = true;
 	ons_captureshield_force = autocvar_g_onslaught_shield_force;
 
-	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
+	InitializeEntity(NULL, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 #endif

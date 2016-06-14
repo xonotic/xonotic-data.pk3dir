@@ -17,7 +17,7 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, v
 void round_handler_Reset(float next_think);
 void round_handler_Remove();
 
-#define round_handler_IsActive() (round_handler != world)
+#define round_handler_IsActive() (round_handler != NULL)
 #define round_handler_AwaitingNextRound() (round_handler.wait)
 #define round_handler_CountdownRunning() (!round_handler.wait && round_handler.cnt)
 #define round_handler_IsRoundStarted() (!round_handler.wait && !round_handler.cnt)

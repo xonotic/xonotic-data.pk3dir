@@ -81,7 +81,7 @@ bool turret_tesla_firecheck(entity this)
     if(this.target_validate_time < time)
     if (turret_validate_target(this, this.enemy, this.target_validate_flags) <= 0)
     {
-        this.enemy = world;
+        this.enemy = NULL;
         this.target_validate_time = time + 0.5;
         do_target_scan = 1;
     }

@@ -127,7 +127,7 @@ int minigame_count_players(entity minigame)
 #ifdef SVQC
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
-	e = world;
+	e = NULL;
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif

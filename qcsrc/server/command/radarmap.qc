@@ -30,7 +30,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 	{
 		++m;
 
-		tracebox(c, mi, ma, b, MOVE_WORLDONLY, world);
+		tracebox(c, mi, ma, b, MOVE_WORLDONLY, NULL);
 		++n;
 
 		if (!trace_startsolid)
@@ -39,7 +39,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 			c = trace_endpos;
 		}
 
-		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, world, false, world);
+		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, NULL, false, NULL);
 
 		white += vlen(trace_endpos - c);
 		c = trace_endpos;
@@ -90,7 +90,7 @@ float RadarMapAtPoint_LineBlock(float x, float y, float w, float h, float zmin, 
 		v2_x += random() * (ma.x - mi.x);
 		v2_y += random() * (ma.y - mi.y);
 		v2_z += random() * (ma.z - mi.z);
-		traceline(v1, v2, MOVE_WORLDONLY, world);
+		traceline(v1, v2, MOVE_WORLDONLY, NULL);
 		if (trace_startsolid || trace_fraction < 1) ++r;
 	}
 	return r / q;
@@ -117,7 +117,7 @@ float RadarMapAtPoint_Block(float x, float y, float w, float h, float zmin, floa
 	r = 0;
 	for (i = 0; i < q; ++i)
 	{
-		tracebox(o + dz * i, mi, ma, o + dz * i, MOVE_WORLDONLY, world);
+		tracebox(o + dz * i, mi, ma, o + dz * i, MOVE_WORLDONLY, NULL);
 		if (trace_startsolid) ++r;
 	}
 	return r / q;
@@ -145,7 +145,7 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 		v.x = a.x + random() * b.x;
 		v.y = a.y + random() * b.y;
 		v.z = a.z + random() * b.z;
-		traceline(v, v, MOVE_WORLDONLY, world);
+		traceline(v, v, MOVE_WORLDONLY, NULL);
 		if (trace_startsolid) ++c;
 	}
 
@@ -208,7 +208,7 @@ void RadarMap_Next()
 		GotoNextMap(0);
 	}
 	remove(radarmapper);
-	radarmapper = world;
+	radarmapper = NULL;
 }
 void RadarMap_Think(entity this)
 {
@@ -254,7 +254,7 @@ void RadarMap_Think(entity this)
 		{
 			LOG_INFO("Error writing ", this.netname, "\n");
 			remove(this);
-			radarmapper = world;
+			radarmapper = NULL;
 			return;
 		}
 		LOG_INFO("Writing to ", this.netname, "...\n");
@@ -440,7 +440,7 @@ float RadarMap_Make(float argc)
 				default:
 					i = argc;
 					remove(radarmapper);
-					radarmapper = world;
+					radarmapper = NULL;
 					break;
 			}
 		}

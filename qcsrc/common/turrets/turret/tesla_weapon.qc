@@ -22,7 +22,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
         float d = actor.shot_dmg;
         float r = actor.target_range;
         entity e = spawn();
-        setorigin(e,actor.tur_shotorg);
+        setorigin(e, actor.tur_shotorg);
 
         actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
@@ -38,7 +38,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
             d *= 0.75;
             r *= 0.85;
             t = toast(actor, t, r, d);
-            if (t == world) break;
+            if (t == NULL) break;
 
         }
 
@@ -54,7 +54,7 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
 entity toast(entity actor, entity from, float range, float damage)
 {
     entity e;
-    entity etarget = world;
+    entity etarget = NULL;
     float d,dd;
     float r;
 
