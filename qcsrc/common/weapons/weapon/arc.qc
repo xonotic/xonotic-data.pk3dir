@@ -1,0 +1,1629 @@
+#ifndef IMPLEMENTATION
+CLASS(Arc, Weapon)
+/* ammotype  */ ATTRIB(Arc, ammo_field, .int, ammo_cells)
+/* impulse   */ ATTRIB(Arc, impulse, int, 3)
+/* flags     */ ATTRIB(Arc, spawnflags, int, WEP_FLAG_NORMAL);
+/* rating    */ ATTRIB(Arc, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
+/* color     */ ATTRIB(Arc, wpcolor, vector, '1 1 1');
+/* modelname */ ATTRIB(Arc, mdl, string, "arc");
+#ifndef MENUQC
+/* model     */ ATTRIB(Arc, m_model, Model, MDL_ARC_ITEM);
+#endif
+/* crosshair */ ATTRIB(Arc, w_crosshair, string, "gfx/crosshairhlac");
+/* crosshair */ ATTRIB(Arc, w_crosshair_size, float, 0.7);
+/* wepimg    */ ATTRIB(Arc, model2, string, "weaponarc");
+/* refname   */ ATTRIB(Arc, netname, string, "arc");
+/* wepname   */ ATTRIB(Arc, m_name, string, _("Arc"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, bolt, float, NONE) \
+		P(class, prefix, bolt_ammo, float, NONE) \
+        P(class, prefix, bolt_damageforcescale, float, NONE) \
+        P(class, prefix, bolt_damage, float, NONE) \
+        P(class, prefix, bolt_edgedamage, float, NONE) \
+        P(class, prefix, bolt_force, float, NONE) \
+        P(class, prefix, bolt_health, float, NONE) \
+        P(class, prefix, bolt_lifetime, float, NONE) \
+        P(class, prefix, bolt_radius, float, NONE) \
+        P(class, prefix, bolt_refire, float, NONE) \
+        P(class, prefix, bolt_speed, float, NONE) \
+        P(class, prefix, bolt_spread, float, NONE) \
+		P(class, prefix, beam_ammo, float, NONE) \
+        P(class, prefix, beam_animtime, float, NONE) \
+        P(class, prefix, beam_botaimlifetime, float, NONE) \
+        P(class, prefix, beam_botaimspeed, float, NONE) \
+        P(class, prefix, beam_damage, float, NONE) \
+        P(class, prefix, beam_degreespersegment, float, NONE) \
+        P(class, prefix, beam_distancepersegment, float, NONE) \
+        P(class, prefix, beam_falloff_halflifedist, float, NONE) \
+        P(class, prefix, beam_falloff_maxdist, float, NONE) \
+        P(class, prefix, beam_falloff_mindist, float, NONE) \
+        P(class, prefix, beam_force, float, NONE) \
+        P(class, prefix, beam_healing_amax, float, NONE) \
+        P(class, prefix, beam_healing_aps, float, NONE) \
+        P(class, prefix, beam_healing_hmax, float, NONE) \
+        P(class, prefix, beam_healing_hps, float, NONE) \
+        P(class, prefix, beam_heat, float, NONE) /* heat increase per second (primary) */ \
+        P(class, prefix, beam_maxangle, float, NONE) \
+        P(class, prefix, beam_nonplayerdamage, float, NONE) \
+        P(class, prefix, beam_range, float, NONE) \
+        P(class, prefix, beam_refire, float, NONE) \
+        P(class, prefix, beam_returnspeed, float, NONE) \
+        P(class, prefix, beam_tightness, float, NONE) \
+        P(class, prefix, burst_ammo, float, NONE) \
+        P(class, prefix, burst_damage, float, NONE) \
+        P(class, prefix, burst_healing_aps, float, NONE) \
+        P(class, prefix, burst_healing_hps, float, NONE) \
+        P(class, prefix, burst_heat, float, NONE) /* heat increase per second (secondary) */ \
+        P(class, prefix, cooldown, float, NONE) /* heat decrease per second when resting */ \
+        P(class, prefix, cooldown_release, float, NONE) /* delay weapon re-use when releasing button */ \
+        P(class, prefix, overheat_max, float, NONE) /* maximum heat before jamming */ \
+        P(class, prefix, overheat_min, float, NONE) /* minimum heat to wait for cooldown */ \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+    END()
+    W_PROPS(X, Arc, arc)
+#undef X
+
+ENDCLASS(Arc)
+REGISTER_WEAPON(ARC, arc, NEW(Arc));
+
+
+#ifndef MENUQC
+const float ARC_MAX_SEGMENTS = 20;
+vector arc_shotorigin[4];
+.vector beam_start;
+.vector beam_dir;
+.vector beam_wantdir;
+.int beam_type;
+
+const int ARC_BT_MISS =        0x00;
+const int ARC_BT_WALL =        0x01;
+const int ARC_BT_HEAL =        0x02;
+const int ARC_BT_HIT =         0x03;
+const int ARC_BT_BURST_MISS =  0x10;
+const int ARC_BT_BURST_WALL =  0x11;
+const int ARC_BT_BURST_HEAL =  0x12;
+const int ARC_BT_BURST_HIT =   0x13;
+const int ARC_BT_BURSTMASK =   0x10;
+
+const int ARC_SF_SETTINGS =    BIT(0);
+const int ARC_SF_START =       BIT(1);
+const int ARC_SF_WANTDIR =     BIT(2);
+const int ARC_SF_BEAMDIR =     BIT(3);
+const int ARC_SF_BEAMTYPE =    BIT(4);
+const int ARC_SF_LOCALMASK =   ARC_SF_START | ARC_SF_WANTDIR | ARC_SF_BEAMDIR;
+#endif
+#ifdef SVQC
+.entity arc_beam;
+.bool arc_BUTTON_ATCK_prev; // for better animation control
+.float beam_prev;
+.float beam_initialized;
+.float beam_bursting;
+.float beam_teleporttime;
+.float beam_heat; // (beam) amount of heat produced
+.float arc_overheat; // (dropped arc/player) time during which it's too hot
+.float arc_cooldown; // (dropped arc/player) cooling speed
+.float arc_heat_percent = _STAT(ARC_HEAT);
+.float arc_smoke_sound;
+#endif
+#ifdef CSQC
+
+.vector beam_color;
+.float beam_alpha;
+.float beam_thickness;
+.entity beam_traileffect;
+.entity beam_hiteffect;
+.float beam_hitlight[4]; // 0: radius, 123: rgb
+.entity beam_muzzleeffect;
+.float beam_muzzlelight[4]; // 0: radius, 123: rgb
+.string beam_image;
+
+.entity beam_muzzleentity;
+
+.float beam_degreespersegment;
+.float beam_distancepersegment;
+.float beam_usevieworigin;
+.float beam_initialized;
+.float beam_maxangle;
+.float beam_range;
+.float beam_returnspeed;
+.float beam_tightness;
+.vector beam_shotorigin;
+
+entity Draw_ArcBeam_callback_entity;
+float Draw_ArcBeam_callback_last_thickness;
+vector Draw_ArcBeam_callback_last_top; // NOTE: in same coordinate system as player.
+vector Draw_ArcBeam_callback_last_bottom; // NOTE: in same coordinate system as player.
+#endif
+#endif
+#ifdef IMPLEMENTATION
+#ifdef SVQC
+spawnfunc(weapon_arc) { weapon_defaultspawnfunc(this, WEP_ARC); }
+
+bool W_Arc_Beam_Send(entity this, entity to, int sf)
+{
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_ARC_BEAM);
+
+	// Truncate information when this beam is displayed to the owner client
+	// - The owner client has no use for beam start position or directions,
+	//    it always figures this information out for itself with csqc code.
+	// - Spectating the owner also truncates this information.
+	float drawlocal = ((to == this.owner) || ((to.enemy == this.owner) && IS_SPEC(to)));
+	if(drawlocal) { sf &= ~ARC_SF_LOCALMASK; }
+
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & ARC_SF_SETTINGS) // settings information
+	{
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_degreespersegment));
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_distancepersegment));
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_maxangle));
+		WriteCoord(MSG_ENTITY, WEP_CVAR(arc, beam_range));
+		WriteShort(MSG_ENTITY, WEP_CVAR(arc, beam_returnspeed));
+		WriteByte(MSG_ENTITY, WEP_CVAR(arc, beam_tightness) * 10);
+
+		WriteByte(MSG_ENTITY, drawlocal);
+		WriteByte(MSG_ENTITY, etof(this.owner));
+	}
+	if(sf & ARC_SF_START) // starting location
+	{
+		WriteCoord(MSG_ENTITY, this.beam_start.x);
+		WriteCoord(MSG_ENTITY, this.beam_start.y);
+		WriteCoord(MSG_ENTITY, this.beam_start.z);
+	}
+	if(sf & ARC_SF_WANTDIR) // want/aim direction
+	{
+		WriteCoord(MSG_ENTITY, this.beam_wantdir.x);
+		WriteCoord(MSG_ENTITY, this.beam_wantdir.y);
+		WriteCoord(MSG_ENTITY, this.beam_wantdir.z);
+	}
+	if(sf & ARC_SF_BEAMDIR) // beam direction
+	{
+		WriteCoord(MSG_ENTITY, this.beam_dir.x);
+		WriteCoord(MSG_ENTITY, this.beam_dir.y);
+		WriteCoord(MSG_ENTITY, this.beam_dir.z);
+	}
+	if(sf & ARC_SF_BEAMTYPE) // beam type
+	{
+		WriteByte(MSG_ENTITY, this.beam_type);
+	}
+
+	return true;
+}
+
+void Reset_ArcBeam(entity player, vector forward)
+{
+	if (!player.arc_beam) {
+		return;
+	}
+	player.arc_beam.beam_dir = forward;
+	player.arc_beam.beam_teleporttime = time;
+}
+
+float Arc_GetHeat_Percent(entity player)
+{
+	if ( WEP_CVAR(arc, overheat_max) <= 0 ||  WEP_CVAR(arc, overheat_max) <= 0 )
+	{
+		player.arc_overheat = 0;
+		return 0;
+	}
+
+	if ( player.arc_beam )
+		return player.arc_beam.beam_heat/WEP_CVAR(arc, overheat_max);
+
+	if ( player.arc_overheat > time )
+	{
+		return (player.arc_overheat-time) / WEP_CVAR(arc, overheat_max)
+			* player.arc_cooldown;
+	}
+
+	return 0;
+}
+void Arc_Player_SetHeat(entity player)
+{
+	player.arc_heat_percent = Arc_GetHeat_Percent(player);
+	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
+}
+
+void W_Arc_Bolt_Explode(entity this)
+{
+	this.event_damage = func_null;
+	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, other);
+
+	remove(this);
+}
+
+void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
+{
+	W_Arc_Bolt_Explode(this);
+}
+
+void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+{
+	if(this.health <= 0)
+		return;
+
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1))
+		return; // g_projectiles_damage says to halt
+
+	this.health = this.health - damage;
+	this.angles = vectoangles(this.velocity);
+
+	if(this.health <= 0)
+		W_PrepareExplosionByDamage(this, attacker, getthink(this));
+}
+
+void W_Arc_Bolt_Touch(entity this)
+{
+	PROJECTILE_TOUCH(this);
+	this.use(this, NULL, NULL);
+}
+
+void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
+{
+	entity missile;
+
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(arc, bolt_ammo));
+
+	W_SetupShot(actor, false, 2, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR(arc, bolt_damage));
+
+	Send_Effect(EFFECT_ARC_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
+
+	missile = new(missile);
+	missile.owner = missile.realowner = actor;
+	missile.bot_dodge = true;
+	missile.bot_dodgerating = WEP_CVAR(arc, bolt_damage);
+
+	missile.takedamage = DAMAGE_YES;
+	missile.health = WEP_CVAR(arc, bolt_health);
+	missile.damageforcescale = WEP_CVAR(arc, bolt_damageforcescale);
+	missile.event_damage = W_Arc_Bolt_Damage;
+	missile.damagedbycontents = true;
+
+	settouch(missile, W_Arc_Bolt_Touch);
+	missile.use = W_Arc_Bolt_Explode_use;
+	setthink(missile, adaptor_think2use_hittype_splash);
+	missile.nextthink = time + WEP_CVAR(arc, bolt_lifetime);
+	PROJECTILE_MAKETRIGGER(missile);
+	missile.projectiledeathtype = WEP_ARC.m_id | HITTYPE_SECONDARY;
+	setorigin(missile, w_shotorg);
+	setsize(missile, '0 0 0', '0 0 0');
+
+	missile.movetype = MOVETYPE_FLY;
+	W_SetupProjVelocity_PRE(missile, arc, bolt_);
+
+	missile.angles = vectoangles(missile.velocity);
+	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH;
+
+	CSQCProjectile(missile, true, PROJECTILE_ARC_BOLT, true);
+
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
+}
+
+void W_Arc_Beam_Think(entity this)
+{
+	if(this != this.owner.arc_beam)
+	{
+		remove(this);
+		return;
+	}
+
+
+	float burst = 0;
+	if( (PHYS_INPUT_BUTTON_ATCK2(this.owner) && !WEP_CVAR(arc, bolt)) || this.beam_bursting)
+	{
+		if(!this.beam_bursting)
+			this.beam_bursting = true;
+		burst = ARC_BT_BURSTMASK;
+	}
+
+	Weapon thiswep = WEP_ARC;
+
+	if(
+		!IS_PLAYER(this.owner)
+		||
+		(this.owner.(thiswep.ammo_field) <= 0 && !(this.owner.items & IT_UNLIMITED_WEAPON_AMMO))
+		||
+		IS_DEAD(this.owner)
+		||
+		gameover
+		||
+		(!PHYS_INPUT_BUTTON_ATCK(this.owner) && !burst )
+		||
+		STAT(FROZEN, this.owner)
+		||
+		this.owner.vehicle
+		||
+		(WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max))
+	)
+	{
+		if ( WEP_CVAR(arc, cooldown) > 0 )
+		{
+			float cooldown_speed = 0;
+			if ( this.beam_heat > WEP_CVAR(arc, overheat_min) && WEP_CVAR(arc, cooldown) > 0 )
+			{
+				cooldown_speed = WEP_CVAR(arc, cooldown);
+			}
+			else if ( !burst )
+			{
+				cooldown_speed = this.beam_heat / WEP_CVAR(arc, beam_refire);
+			}
+
+			if ( cooldown_speed )
+			{
+				if ( WEP_CVAR(arc, cooldown_release) || (WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max)) )
+					this.owner.arc_overheat = time + this.beam_heat / cooldown_speed;
+				this.owner.arc_cooldown = cooldown_speed;
+			}
+
+			if ( WEP_CVAR(arc, overheat_max) > 0 && this.beam_heat >= WEP_CVAR(arc, overheat_max) )
+			{
+				Send_Effect(EFFECT_ARC_OVERHEAT,
+					this.beam_start, this.beam_wantdir, 1 );
+				sound(this, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
+			}
+		}
+
+		if(this == this.owner.arc_beam) { this.owner.arc_beam = NULL; }
+		entity own = this.owner;
+		Weapon w = WEP_ARC;
+		if(!w.wr_checkammo1(w, own) && !w.wr_checkammo2(w, own))
+		if(!(own.items & IT_UNLIMITED_WEAPON_AMMO))
+		{
+			// note: this doesn't force the switch
+			W_SwitchToOtherWeapon(own);
+		}
+		remove(this);
+		return;
+	}
+
+	// decrease ammo
+	float coefficient = frametime;
+	if(!(this.owner.items & IT_UNLIMITED_WEAPON_AMMO))
+	{
+		float rootammo;
+		if(burst)
+			{ rootammo = WEP_CVAR(arc, burst_ammo); }
+		else
+			{ rootammo = WEP_CVAR(arc, beam_ammo); }
+
+		if(rootammo)
+		{
+			coefficient = min(coefficient, this.owner.(thiswep.ammo_field) / rootammo);
+			this.owner.(thiswep.ammo_field) = max(0, this.owner.(thiswep.ammo_field) - (rootammo * frametime));
+		}
+	}
+	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
+	this.beam_heat = min( WEP_CVAR(arc, overheat_max), this.beam_heat + heat_speed*frametime );
+
+	makevectors(this.owner.v_angle);
+
+	W_SetupShot_Range(
+		this.owner,
+		true,
+		0,
+		SND_Null,
+		0,
+		WEP_CVAR(arc, beam_damage) * coefficient,
+		WEP_CVAR(arc, beam_range)
+	);
+
+	// After teleport, "lock" the beam until the teleport is confirmed.
+	if (time < this.beam_teleporttime + ANTILAG_LATENCY(this.owner)) {
+		w_shotdir = this.beam_dir;
+	}
+
+	// network information: shot origin and want/aim direction
+	if(this.beam_start != w_shotorg)
+	{
+		this.SendFlags |= ARC_SF_START;
+		this.beam_start = w_shotorg;
+	}
+	if(this.beam_wantdir != w_shotdir)
+	{
+		this.SendFlags |= ARC_SF_WANTDIR;
+		this.beam_wantdir = w_shotdir;
+	}
+
+	if(!this.beam_initialized)
+	{
+		this.beam_dir = w_shotdir;
+		this.beam_initialized = true;
+	}
+
+	// WEAPONTODO: Detect player velocity so that the beam curves when moving too
+	// idea: blend together this.beam_dir with the inverted direction the player is moving in
+	// might have to make some special accomodation so that it only uses view_right and view_up
+
+	// note that if we do this, it'll always be corrected to a maximum angle by beam_maxangle handling
+
+	float segments;
+	if(this.beam_dir != w_shotdir)
+	{
+		// calculate how much we're going to move the end of the beam to the want position
+		// WEAPONTODO (server and client):
+		// blendfactor never actually becomes 0 in this situation, which is a problem
+		// regarding precision... this means that this.beam_dir and w_shotdir approach
+		// eachother, however they never actually become the same value with this method.
+		// Perhaps we should do some form of rounding/snapping?
+		float angle = vlen(w_shotdir - this.beam_dir) * RAD2DEG;
+		if(angle && (angle > WEP_CVAR(arc, beam_maxangle)))
+		{
+			// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
+			float blendfactor = bound(
+				0,
+				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
+				min(WEP_CVAR(arc, beam_maxangle) / angle, 1)
+			);
+			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+		}
+		else
+		{
+			// the radius is not too far yet, no worries :D
+			float blendfactor = bound(
+				0,
+				(1 - (WEP_CVAR(arc, beam_returnspeed) * frametime)),
+				1
+			);
+			this.beam_dir = normalize((w_shotdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+		}
+
+		// network information: beam direction
+		this.SendFlags |= ARC_SF_BEAMDIR;
+
+		// calculate how many segments are needed
+		float max_allowed_segments;
+
+		if(WEP_CVAR(arc, beam_distancepersegment))
+		{
+			max_allowed_segments = min(
+				ARC_MAX_SEGMENTS,
+				1 + (vlen(w_shotdir / WEP_CVAR(arc, beam_distancepersegment)))
+			);
+		}
+		else { max_allowed_segments = ARC_MAX_SEGMENTS; }
+
+		if(WEP_CVAR(arc, beam_degreespersegment))
+		{
+			segments = bound(
+				1,
+				(
+					min(
+						angle,
+						WEP_CVAR(arc, beam_maxangle)
+					)
+					/
+					WEP_CVAR(arc, beam_degreespersegment)
+				),
+				max_allowed_segments
+			);
+		}
+		else { segments = 1; }
+	}
+	else { segments = 1; }
+
+	vector beam_endpos = (w_shotorg + (this.beam_dir * WEP_CVAR(arc, beam_range)));
+	vector beam_controlpoint = w_shotorg + w_shotdir * (WEP_CVAR(arc, beam_range) * (1 - WEP_CVAR(arc, beam_tightness)));
+
+	float i;
+	float new_beam_type = 0;
+	vector last_origin = w_shotorg;
+	for(i = 1; i <= segments; ++i)
+	{
+		// WEAPONTODO (client):
+		// In order to do nice fading and pointing on the starting segment, we must always
+		// have that drawn as a separate triangle... However, that is difficult to do when
+		// keeping in mind the above problems and also optimizing the amount of segments
+		// drawn on screen at any given time. (Automatic beam quality scaling, essentially)
+
+		vector new_origin = bezier_quadratic_getpoint(
+			w_shotorg,
+			beam_controlpoint,
+			beam_endpos,
+			i / segments);
+		vector new_dir = normalize(new_origin - last_origin);
+
+		WarpZone_traceline_antilag(
+			this.owner,
+			last_origin,
+			new_origin,
+			MOVE_NORMAL,
+			this.owner,
+			ANTILAG_LATENCY(this.owner)
+		);
+
+		// Do all the transforms for warpzones right now, as we already
+		// "are" in the post-trace system (if we hit a player, that's
+		// always BEHIND the last passed wz).
+		last_origin = trace_endpos;
+		w_shotorg = WarpZone_TransformOrigin(WarpZone_trace_transform, w_shotorg);
+		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
+		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
+		new_dir = WarpZone_TransformVelocity(WarpZone_trace_transform, new_dir);
+
+		float is_player = (
+			IS_PLAYER(trace_ent)
+			||
+			trace_ent.classname == "body"
+			||
+			IS_MONSTER(trace_ent)
+		);
+
+		if(trace_ent && trace_ent.takedamage && (is_player || WEP_CVAR(arc, beam_nonplayerdamage)))
+		{
+			// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+			// NO. trace_endpos should be just fine. If not,
+			// that's an engine bug that needs proper debugging.
+			vector hitorigin = trace_endpos;
+
+			float falloff = ExponentialFalloff(
+				WEP_CVAR(arc, beam_falloff_mindist),
+				WEP_CVAR(arc, beam_falloff_maxdist),
+				WEP_CVAR(arc, beam_falloff_halflifedist),
+				vlen(WarpZone_UnTransformOrigin(WarpZone_trace_transform, hitorigin) - w_shotorg)
+			);
+
+			if(is_player && SAME_TEAM(this.owner, trace_ent))
+			{
+				float roothealth, rootarmor;
+				if(burst)
+				{
+					roothealth = WEP_CVAR(arc, burst_healing_hps);
+					rootarmor = WEP_CVAR(arc, burst_healing_aps);
+				}
+				else
+				{
+					roothealth = WEP_CVAR(arc, beam_healing_hps);
+					rootarmor = WEP_CVAR(arc, beam_healing_aps);
+				}
+
+				if(trace_ent.health <= WEP_CVAR(arc, beam_healing_hmax) && roothealth)
+				{
+					trace_ent.health = min(
+						trace_ent.health + (roothealth * coefficient),
+						WEP_CVAR(arc, beam_healing_hmax)
+					);
+				}
+				if(trace_ent.armorvalue <= WEP_CVAR(arc, beam_healing_amax) && rootarmor)
+				{
+					trace_ent.armorvalue = min(
+						trace_ent.armorvalue + (rootarmor * coefficient),
+						WEP_CVAR(arc, beam_healing_amax)
+					);
+				}
+
+				// stop rot, set visual effect
+				if(roothealth || rootarmor)
+				{
+					trace_ent.pauserothealth_finished = max(
+						trace_ent.pauserothealth_finished,
+						time + autocvar_g_balance_pause_health_rot
+					);
+					trace_ent.pauserotarmor_finished = max(
+						trace_ent.pauserotarmor_finished,
+						time + autocvar_g_balance_pause_armor_rot
+					);
+					new_beam_type = ARC_BT_HEAL;
+				}
+			}
+			else
+			{
+				float rootdamage;
+				if(is_player)
+				{
+					if(burst)
+						{ rootdamage = WEP_CVAR(arc, burst_damage); }
+					else
+						{ rootdamage = WEP_CVAR(arc, beam_damage); }
+				}
+				else
+					{ rootdamage = WEP_CVAR(arc, beam_nonplayerdamage); }
+
+				if(accuracy_isgooddamage(this.owner, trace_ent))
+				{
+					accuracy_add(
+						this.owner,
+						WEP_ARC.m_id,
+						0,
+						rootdamage * coefficient * falloff
+					);
+				}
+
+				Damage(
+					trace_ent,
+					this.owner,
+					this.owner,
+					rootdamage * coefficient * falloff,
+					WEP_ARC.m_id,
+					hitorigin,
+					WEP_CVAR(arc, beam_force) * new_dir * coefficient * falloff
+				);
+
+				new_beam_type = ARC_BT_HIT;
+			}
+			break;
+		}
+		else if(trace_fraction != 1)
+		{
+			// we collided with geometry
+			new_beam_type = ARC_BT_WALL;
+			break;
+		}
+	}
+
+	// te_explosion(trace_endpos);
+
+	// if we're bursting, use burst visual effects
+	new_beam_type |= burst;
+
+	// network information: beam type
+	if(new_beam_type != this.beam_type)
+	{
+		this.SendFlags |= ARC_SF_BEAMTYPE;
+		this.beam_type = new_beam_type;
+	}
+
+	this.owner.beam_prev = time;
+	this.nextthink = time;
+}
+
+void W_Arc_Beam(float burst, entity actor)
+{
+
+	// only play fire sound if 1 sec has passed since player let go the fire button
+	if(time - actor.beam_prev > 1)
+		sound(actor, CH_WEAPON_A, SND_ARC_FIRE, VOL_BASE, ATTN_NORM);
+
+	entity beam = actor.arc_beam = new(W_Arc_Beam);
+	beam.solid = SOLID_NOT;
+	setthink(beam, W_Arc_Beam_Think);
+	beam.owner = actor;
+	beam.movetype = MOVETYPE_NONE;
+	beam.bot_dodge = true;
+	beam.bot_dodgerating = WEP_CVAR(arc, beam_damage);
+	beam.beam_bursting = burst;
+	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
+
+	getthink(beam)(beam);
+}
+void Arc_Smoke(entity actor)
+{
+	makevectors(actor.v_angle);
+	W_SetupShot_Range(actor,true,0,SND_Null,0,0,0);
+
+	vector smoke_origin = w_shotorg + actor.velocity*frametime;
+	if ( actor.arc_overheat > time )
+	{
+		if ( random() < actor.arc_heat_percent )
+			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
+		if ( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) )
+		{
+			Send_Effect(EFFECT_ARC_OVERHEAT_FIRE, smoke_origin, w_shotdir, 1 );
+			if ( !actor.arc_smoke_sound )
+			{
+				actor.arc_smoke_sound = 1;
+				sound(actor, CH_SHOTS_SINGLE, SND_ARC_LOOP_OVERHEAT, VOL_BASE, ATTN_NORM);
+			}
+		}
+	}
+	else if ( actor.arc_beam && WEP_CVAR(arc, overheat_max) > 0 &&
+			actor.arc_beam.beam_heat > WEP_CVAR(arc, overheat_min) )
+	{
+		if ( random() < (actor.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) /
+				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
+			Send_Effect(EFFECT_ARC_SMOKE, smoke_origin, '0 0 0', 1 );
+	}
+
+	if (  actor.arc_smoke_sound && ( actor.arc_overheat <= time ||
+		!( PHYS_INPUT_BUTTON_ATCK(actor) || PHYS_INPUT_BUTTON_ATCK2(actor) ) ) || PS(actor).m_switchweapon != WEP_ARC )
+	{
+		actor.arc_smoke_sound = 0;
+		sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+	}
+}
+
+METHOD(Arc, wr_aim, void(entity thiswep, entity actor))
+{
+    if(WEP_CVAR(arc, beam_botaimspeed))
+    {
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
+        	actor,
+            WEP_CVAR(arc, beam_botaimspeed),
+            0,
+            WEP_CVAR(arc, beam_botaimlifetime),
+            false
+        );
+    }
+    else
+    {
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(
+        	actor,
+            1000000,
+            0,
+            0.001,
+            false
+        );
+    }
+}
+METHOD(Arc, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    Arc_Player_SetHeat(actor);
+    Arc_Smoke(actor);
+
+    bool beam_fire2 = ((fire & 2) && !WEP_CVAR(arc, bolt));
+
+    if (time >= actor.arc_overheat)
+    if ((fire & 1) || beam_fire2 || actor.arc_beam.beam_bursting)
+    {
+
+        if(actor.arc_BUTTON_ATCK_prev)
+        {
+            #if 0
+            if(actor.animstate_startframe == actor.anim_shoot.x && actor.animstate_numframes == actor.anim_shoot.y)
+                weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, autocvar_g_balance_arc_primary_animtime, w_ready);
+            else
+            #endif
+                weapon_thinkf(actor, weaponentity, WFRAME_DONTCHANGE, WEP_CVAR(arc, beam_animtime), w_ready);
+        }
+
+        if((!actor.arc_beam) || wasfreed(actor.arc_beam))
+        {
+            if(weapon_prepareattack(thiswep, actor, weaponentity, boolean(beam_fire2), 0))
+            {
+                W_Arc_Beam(boolean(beam_fire2), actor);
+
+                if(!actor.arc_BUTTON_ATCK_prev)
+                {
+                    weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+                    actor.arc_BUTTON_ATCK_prev = true;
+                }
+            }
+        }
+
+        return;
+    }
+    else if(fire & 2)
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(arc, bolt_refire)))
+        {
+            W_Arc_Attack_Bolt(thiswep, actor);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, bolt_refire), w_ready);
+        }
+    }
+
+    if(actor.arc_BUTTON_ATCK_prev)
+    {
+        sound(actor, CH_WEAPON_A, SND_ARC_STOP, VOL_BASE, ATTN_NORM);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+        int slot = weaponslot(weaponentity);
+        ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor(actor);
+    }
+    actor.arc_BUTTON_ATCK_prev = false;
+
+    #if 0
+    if(fire & 2)
+    if(weapon_prepareattack(thiswep, actor, weaponentity, true, autocvar_g_balance_arc_secondary_refire))
+    {
+        W_Arc_Attack2();
+        actor.arc_count = autocvar_g_balance_arc_secondary_count;
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, autocvar_g_balance_arc_secondary_animtime, w_arc_checkattack);
+        actor.arc_secondarytime = time + autocvar_g_balance_arc_secondary_refire2 * W_WeaponRateFactor(actor);
+    }
+    #endif
+}
+METHOD(Arc, wr_init, void(entity thiswep))
+{
+    if(!arc_shotorigin[0])
+    {
+        arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 1);
+        arc_shotorigin[1] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 2);
+        arc_shotorigin[2] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 3);
+        arc_shotorigin[3] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC.m_id), false, false, 4);
+    }
+}
+METHOD(Arc, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+    return ((!WEP_CVAR(arc, beam_ammo)) || (actor.(thiswep.ammo_field) > 0));
+}
+METHOD(Arc, wr_checkammo2, bool(entity thiswep, entity actor))
+{
+    if(WEP_CVAR(arc, bolt))
+    {
+        float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(arc, bolt_ammo);
+        ammo_amount += actor.(weapon_load[WEP_ARC.m_id]) >= WEP_CVAR(arc, bolt_ammo);
+        return ammo_amount;
+    }
+    else
+        return WEP_CVAR(arc, overheat_max) > 0 &&
+            ((!WEP_CVAR(arc, burst_ammo)) || (actor.(thiswep.ammo_field) > 0));
+}
+METHOD(Arc, wr_killmessage, Notification(entity thiswep))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+        return WEAPON_ARC_MURDER_SPRAY;
+    else
+        return WEAPON_ARC_MURDER;
+}
+METHOD(Arc, wr_drop, void(entity thiswep, entity actor))
+{
+    weapon_dropevent_item.arc_overheat = actor.arc_overheat;
+    weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
+    actor.arc_overheat = 0;
+    actor.arc_cooldown = 0;
+}
+METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
+{
+    if ( !client_hasweapon(actor, thiswep, false, false) &&
+        weapon_dropevent_item.arc_overheat > time )
+    {
+        actor.arc_overheat = weapon_dropevent_item.arc_overheat;
+        actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
+    }
+}
+#endif
+#ifdef CSQC
+bool autocvar_cl_arcbeam_teamcolor = true;
+
+METHOD(Arc, wr_impacteffect, void(entity thiswep, entity actor))
+{
+    if(w_deathtype & HITTYPE_SECONDARY)
+    {
+        vector org2;
+        org2 = w_org + w_backoff * 6;
+        pointparticles(EFFECT_ARC_BOLT_EXPLODE, org2, w_backoff * 1000, 1);
+        if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+    }
+}
+
+void Draw_ArcBeam_callback(vector start, vector hit, vector end)
+{
+	entity beam = Draw_ArcBeam_callback_entity;
+	vector transformed_view_org;
+	transformed_view_org = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
+
+	// Thickdir shall be perpendicular to the beam and to the view-to-beam direction (WEAPONTODO: WHY)
+	// WEAPONTODO: Wouldn't it be better to be perpendicular to the beam and to the view FORWARD direction?
+	vector thickdir = normalize(cross(normalize(start - hit), transformed_view_org - start));
+
+	vector hitorigin;
+
+	// draw segment
+	#if 0
+	if(trace_fraction != 1)
+	{
+		// calculate our own hit origin as trace_endpos tends to jump around annoyingly (to player origin?)
+		hitorigin = start + (Draw_ArcBeam_callback_new_dir * Draw_ArcBeam_callback_segmentdist * trace_fraction);
+		hitorigin = WarpZone_TransformOrigin(WarpZone_trace_transform, hitorigin);
+	}
+	else
+	{
+		hitorigin = hit;
+	}
+	#else
+	hitorigin = hit;
+	#endif
+
+	// decide upon thickness
+	float thickness = beam.beam_thickness;
+
+	// draw primary beam render
+	vector top    = hitorigin + (thickdir * thickness);
+	vector bottom = hitorigin - (thickdir * thickness);
+
+	vector last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+	vector last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+
+	R_BeginPolygon(beam.beam_image, DRAWFLAG_NORMAL); // DRAWFLAG_ADDITIVE
+	R_PolygonVertex(
+		top,
+		'0 0.5 0' + ('0 0.5 0' * (thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_PolygonVertex(
+		last_top,
+		'0 0.5 0' + ('0 0.5 0' * (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_PolygonVertex(
+		last_bottom,
+		'0 0.5 0' * (1 - (Draw_ArcBeam_callback_last_thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_PolygonVertex(
+		bottom,
+		'0 0.5 0' * (1 - (thickness / beam.beam_thickness)),
+		beam.beam_color,
+		beam.beam_alpha
+	);
+	R_EndPolygon();
+
+	// draw trailing particles
+	// NOTES:
+	//  - Don't use spammy particle counts here, use a FEW small particles around the beam
+	//  - We're not using WarpZone_TrailParticles here because we will handle warpzones ourselves.
+	if(beam.beam_traileffect)
+	{
+		trailparticles(beam, beam.beam_traileffect, start, hitorigin);
+	}
+
+	// set up for the next
+	Draw_ArcBeam_callback_last_thickness = thickness;
+	Draw_ArcBeam_callback_last_top = WarpZone_UnTransformOrigin(WarpZone_trace_transform, top);
+	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
+}
+
+void Reset_ArcBeam()
+{
+	entity e;
+	for (e = NULL; (e = findfloat(e, beam_usevieworigin, 1)); ) {
+		e.beam_initialized = false;
+	}
+	for (e = NULL; (e = findfloat(e, beam_usevieworigin, 2)); ) {
+		e.beam_initialized = false;
+	}
+}
+
+void Draw_ArcBeam(entity this)
+{
+	float dt = time - this.move_time;
+	this.move_time = time;
+	if(dt <= 0) { return; }
+
+	if(!this.beam_usevieworigin)
+	{
+		InterpolateOrigin_Do(this);
+	}
+
+	// origin = beam starting origin
+	// v_angle = wanted/aim direction
+	// angles = current direction of beam
+
+	vector start_pos;
+	vector wantdir; //= view_forward;
+	vector beamdir; //= this.beam_dir;
+
+	float segments;
+	if(this.beam_usevieworigin)
+	{
+		// WEAPONTODO:
+		// Currently we have to replicate nearly the same method of figuring
+		// out the shotdir that the server does... Ideally in the future we
+		// should be able to acquire this from a generalized function built
+		// into a weapon system for client code.
+
+		// find where we are aiming
+		makevectors(warpzone_save_view_angles);
+		vector forward = v_forward;
+		vector right = v_right;
+		vector up = v_up;
+
+		// decide upon start position
+		if(this.beam_usevieworigin == 2)
+			{ start_pos = warpzone_save_view_origin; }
+		else
+			{ start_pos = this.origin; }
+
+		// trace forward with an estimation
+		WarpZone_TraceLine(
+			start_pos,
+			start_pos + forward * this.beam_range,
+			MOVE_NOMONSTERS,
+			this
+		);
+
+		// untransform in case our trace went through a warpzone
+		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+
+		// un-adjust trueaim if shotend is too close
+		if(vdist(end_pos - start_pos, <, g_trueaim_minrange))
+			end_pos = start_pos + (forward * g_trueaim_minrange);
+
+		// move shot origin to the actual gun muzzle origin
+		vector origin_offset =
+			  right * -this.beam_shotorigin.y
+			+ up * this.beam_shotorigin.z;
+
+		start_pos = start_pos + origin_offset;
+
+		// Move it also forward, but only as far as possible without hitting anything. Don't poke into walls!
+		traceline(start_pos, start_pos + forward * this.beam_shotorigin.x, MOVE_NORMAL, this);
+		start_pos = trace_endpos;
+
+		// calculate the aim direction now
+		wantdir = normalize(end_pos - start_pos);
+
+		if(!this.beam_initialized)
+		{
+			this.beam_dir = wantdir;
+			this.beam_initialized = true;
+		}
+
+		if(this.beam_dir != wantdir)
+		{
+			// calculate how much we're going to move the end of the beam to the want position
+			// WEAPONTODO (server and client):
+			// blendfactor never actually becomes 0 in this situation, which is a problem
+			// regarding precision... this means that this.beam_dir and w_shotdir approach
+			// eachother, however they never actually become the same value with this method.
+			// Perhaps we should do some form of rounding/snapping?
+			float angle = vlen(wantdir - this.beam_dir) * RAD2DEG;
+			if(angle && (angle > this.beam_maxangle))
+			{
+				// if the angle is greater than maxangle, force the blendfactor to make this the maximum factor
+				float blendfactor = bound(
+					0,
+					(1 - (this.beam_returnspeed * frametime)),
+					min(this.beam_maxangle / angle, 1)
+				);
+				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			}
+			else
+			{
+				// the radius is not too far yet, no worries :D
+				float blendfactor = bound(
+					0,
+					(1 - (this.beam_returnspeed * frametime)),
+					1
+				);
+				this.beam_dir = normalize((wantdir * (1 - blendfactor)) + (this.beam_dir * blendfactor));
+			}
+
+			// calculate how many segments are needed
+			float max_allowed_segments;
+
+			if(this.beam_distancepersegment)
+			{
+				max_allowed_segments = min(
+					ARC_MAX_SEGMENTS,
+					1 + (vlen(wantdir / this.beam_distancepersegment))
+				);
+			}
+			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
+
+			if(this.beam_degreespersegment)
+			{
+				segments = bound(
+					1,
+					(
+						min(
+							angle,
+							this.beam_maxangle
+						)
+						/
+						this.beam_degreespersegment
+					),
+					max_allowed_segments
+				);
+			}
+			else { segments = 1; }
+		}
+		else { segments = 1; }
+
+		// set the beam direction which the rest of the code will refer to
+		beamdir = this.beam_dir;
+
+		// finally, set this.angles to the proper direction so that muzzle attachment points in proper direction
+		this.angles = fixedvectoangles2(forward, up); // TODO(Samual): is this == warpzone_save_view_angles?
+	}
+	else
+	{
+		// set the values from the provided info from the networked entity
+		start_pos = this.origin;
+		wantdir = this.v_angle;
+		beamdir = this.angles;
+
+		if(beamdir != wantdir)
+		{
+			float angle = vlen(wantdir - beamdir) * RAD2DEG;
+
+			// calculate how many segments are needed
+			float max_allowed_segments;
+
+			if(this.beam_distancepersegment)
+			{
+				max_allowed_segments = min(
+					ARC_MAX_SEGMENTS,
+					1 + (vlen(wantdir / this.beam_distancepersegment))
+				);
+			}
+			else { max_allowed_segments = ARC_MAX_SEGMENTS; }
+
+			if(this.beam_degreespersegment)
+			{
+				segments = bound(
+					1,
+					(
+						min(
+							angle,
+							this.beam_maxangle
+						)
+						/
+						this.beam_degreespersegment
+					),
+					max_allowed_segments
+				);
+			}
+			else { segments = 1; }
+		}
+		else { segments = 1; }
+	}
+
+	setorigin(this, start_pos);
+	this.beam_muzzleentity.angles_z = random() * 360; // WEAPONTODO: use avelocity instead?
+
+	vector beam_endpos = (start_pos + (beamdir * this.beam_range));
+	vector beam_controlpoint = start_pos + wantdir * (this.beam_range * (1 - this.beam_tightness));
+
+	Draw_ArcBeam_callback_entity = this;
+	Draw_ArcBeam_callback_last_thickness = 0;
+	Draw_ArcBeam_callback_last_top = start_pos;
+	Draw_ArcBeam_callback_last_bottom = start_pos;
+
+	vector last_origin = start_pos;
+	vector original_start_pos = start_pos;
+
+	float i;
+	for(i = 1; i <= segments; ++i)
+	{
+		// WEAPONTODO (client):
+		// In order to do nice fading and pointing on the starting segment, we must always
+		// have that drawn as a separate triangle... However, that is difficult to do when
+		// keeping in mind the above problems and also optimizing the amount of segments
+		// drawn on screen at any given time. (Automatic beam quality scaling, essentially)
+
+		vector new_origin = bezier_quadratic_getpoint(
+			start_pos,
+			beam_controlpoint,
+			beam_endpos,
+			i / segments);
+
+		WarpZone_TraceBox_ThroughZone(
+			last_origin,
+			'0 0 0',
+			'0 0 0',
+			new_origin,
+			MOVE_NORMAL,
+			NULL,
+			NULL,
+			Draw_ArcBeam_callback
+		);
+
+		// Do all the transforms for warpzones right now, as we already "are" in the post-trace
+		// system (if we hit a player, that's always BEHIND the last passed wz).
+		last_origin = trace_endpos;
+		start_pos = WarpZone_TransformOrigin(WarpZone_trace_transform, start_pos);
+		beam_controlpoint = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_controlpoint);
+		beam_endpos = WarpZone_TransformOrigin(WarpZone_trace_transform, beam_endpos);
+		beamdir = WarpZone_TransformVelocity(WarpZone_trace_transform, beamdir);
+		Draw_ArcBeam_callback_last_top = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_top);
+		Draw_ArcBeam_callback_last_bottom = WarpZone_TransformOrigin(WarpZone_trace_transform, Draw_ArcBeam_callback_last_bottom);
+
+		if(trace_fraction < 1) { break; }
+	}
+
+	// visual effects for startpoint and endpoint
+	if(this.beam_hiteffect)
+	{
+		// FIXME we really should do this on the server so it actually
+		// matches gameplay. What this client side stuff is doing is no
+		// more than guesswork.
+		if((trace_ent || trace_fraction < 1) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+		pointparticles(
+			this.beam_hiteffect,
+			last_origin,
+			beamdir * -1,
+			frametime * 2
+		);
+	}
+	if(this.beam_hitlight[0])
+	{
+		adddynamiclight(
+			last_origin,
+			this.beam_hitlight[0],
+			vec3(
+				this.beam_hitlight[1],
+				this.beam_hitlight[2],
+				this.beam_hitlight[3]
+			)
+		);
+	}
+	if(this.beam_muzzleeffect)
+	{
+		pointparticles(
+			this.beam_muzzleeffect,
+			original_start_pos + wantdir * 20,
+			wantdir * 1000,
+			frametime * 0.1
+		);
+	}
+	if(this.beam_muzzlelight[0])
+	{
+		adddynamiclight(
+			original_start_pos + wantdir * 20,
+			this.beam_muzzlelight[0],
+			vec3(
+				this.beam_muzzlelight[1],
+				this.beam_muzzlelight[2],
+				this.beam_muzzlelight[3]
+			)
+		);
+	}
+
+	// cleanup
+	Draw_ArcBeam_callback_entity = NULL;
+	Draw_ArcBeam_callback_last_thickness = 0;
+	Draw_ArcBeam_callback_last_top = '0 0 0';
+	Draw_ArcBeam_callback_last_bottom = '0 0 0';
+}
+
+void Remove_ArcBeam(entity this)
+{
+	remove(this.beam_muzzleentity);
+	sound(this, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+}
+
+NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
+{
+	int sf = ReadByte();
+	entity flash;
+
+	if(isnew)
+	{
+		int gunalign = W_GetGunAlignment(NULL);
+
+		this.beam_shotorigin = arc_shotorigin[gunalign];
+
+		// set other main attributes of the beam
+		this.draw = Draw_ArcBeam;
+		this.entremove = Remove_ArcBeam;
+		this.move_time = time;
+		loopsound(this, CH_SHOTS_SINGLE, SND(ARC_LOOP), VOL_BASE, ATTEN_NORM);
+
+		flash = spawn();
+		flash.owner = this;
+		flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
+		flash.drawmask = MASK_NORMAL;
+		flash.solid = SOLID_NOT;
+		flash.avelocity_z = 5000;
+		setattachment(flash, this, "");
+		setorigin(flash, '0 0 0');
+
+		this.beam_muzzleentity = flash;
+	}
+	else
+	{
+		flash = this.beam_muzzleentity;
+	}
+
+	if(sf & ARC_SF_SETTINGS) // settings information
+	{
+		this.beam_degreespersegment = ReadShort();
+		this.beam_distancepersegment = ReadShort();
+		this.beam_maxangle = ReadShort();
+		this.beam_range = ReadCoord();
+		this.beam_returnspeed = ReadShort();
+		this.beam_tightness = (ReadByte() / 10);
+
+		if(ReadByte())
+		{
+			if(autocvar_chase_active)
+				{ this.beam_usevieworigin = 1; }
+			else // use view origin
+				{ this.beam_usevieworigin = 2; }
+		}
+		else
+		{
+			this.beam_usevieworigin = 0;
+		}
+
+		this.sv_entnum = ReadByte();
+	}
+
+	if(!this.beam_usevieworigin)
+	{
+		// this.iflags = IFLAG_ORIGIN | IFLAG_ANGLES | IFLAG_V_ANGLE; // why doesn't this work?
+		this.iflags = IFLAG_ORIGIN;
+
+		InterpolateOrigin_Undo(this);
+	}
+
+	if(sf & ARC_SF_START) // starting location
+	{
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+	}
+	else if(this.beam_usevieworigin) // infer the location from player location
+	{
+		if(this.beam_usevieworigin == 2)
+		{
+			// use view origin
+			this.origin = view_origin;
+		}
+		else
+		{
+			// use player origin so that third person display still works
+			this.origin = entcs_receiver(player_localnum).origin + ('0 0 1' * STAT(VIEWHEIGHT));
+		}
+	}
+
+	setorigin(this, this.origin);
+
+	if(sf & ARC_SF_WANTDIR) // want/aim direction
+	{
+		this.v_angle_x = ReadCoord();
+		this.v_angle_y = ReadCoord();
+		this.v_angle_z = ReadCoord();
+	}
+
+	if(sf & ARC_SF_BEAMDIR) // beam direction
+	{
+		this.angles_x = ReadCoord();
+		this.angles_y = ReadCoord();
+		this.angles_z = ReadCoord();
+	}
+
+	if(sf & ARC_SF_BEAMTYPE) // beam type
+	{
+		this.beam_type = ReadByte();
+
+		vector beamcolor = ((autocvar_cl_arcbeam_teamcolor) ? colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true) : '1 1 1');
+		switch(this.beam_type)
+		{
+			case ARC_BT_MISS:
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; // (EFFECT_GRENADE_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_HEAL:
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
+				this.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_HIT:
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 8;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 20;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 0;
+				this.beam_hitlight[3] = 0;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 50;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 0;
+				this.beam_muzzlelight[3] = 0;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_BURST_MISS:
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_BURST_WALL:
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_BURST_HEAL:
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM_HEAL);
+				this.beam_hiteffect = (EFFECT_ARC_BEAM_HEAL_IMPACT2);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_BURST_HIT:
+			{
+				this.beam_color = beamcolor;
+				this.beam_alpha = 0.5;
+				this.beam_thickness = 14;
+				this.beam_traileffect = (EFFECT_ARC_BEAM);
+				this.beam_hiteffect = (EFFECT_ARC_LIGHTNING);
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+
+			// shouldn't be possible, but lets make it colorful if it does :D
+			default:
+			{
+				this.beam_color = randomvec();
+				this.beam_alpha = 1;
+				this.beam_thickness = 8;
+				this.beam_traileffect = NULL;
+				this.beam_hiteffect = NULL;
+				this.beam_hitlight[0] = 0;
+				this.beam_hitlight[1] = 1;
+				this.beam_hitlight[2] = 1;
+				this.beam_hitlight[3] = 1;
+				this.beam_muzzleeffect = NULL; //(EFFECT_VORTEX_MUZZLEFLASH);
+				this.beam_muzzlelight[0] = 0;
+				this.beam_muzzlelight[1] = 1;
+				this.beam_muzzlelight[2] = 1;
+				this.beam_muzzlelight[3] = 1;
+				this.beam_image = "particles/lgbeam";
+				if(this.beam_muzzleeffect)
+				{
+					setmodel(flash, MDL_ARC_MUZZLEFLASH);
+					flash.alpha = this.beam_alpha;
+					flash.colormod = this.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+		}
+	}
+
+	if(!this.beam_usevieworigin)
+	{
+		InterpolateOrigin_Note(this);
+	}
+	return true;
+}
+
+#endif
+#endif

@@ -1,31 +1,12 @@
-#ifdef INTERFACE
-CLASS(XonoticGametypeList) EXTENDS(XonoticListBox)
-	METHOD(XonoticGametypeList, configureXonoticGametypeList, void(entity))
-	ATTRIB(XonoticGametypeList, rowsPerItem, float, 2)
-	METHOD(XonoticGametypeList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticGametypeList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticGametypeList, setSelected, void(entity, float))
-	METHOD(XonoticGametypeList, loadCvars, void(entity))
-	METHOD(XonoticGametypeList, saveCvars, void(entity))
-	METHOD(XonoticGametypeList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticGametypeList, clickListBoxItem, void(entity, float, vector))
+#include "gametypelist.qh"
 
-	ATTRIB(XonoticGametypeList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticGametypeList, realUpperMargin, float, 0)
-	ATTRIB(XonoticGametypeList, columnIconOrigin, float, 0)
-	ATTRIB(XonoticGametypeList, columnIconSize, float, 0)
-	ATTRIB(XonoticGametypeList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticGametypeList, columnNameSize, float, 0)
-ENDCLASS(XonoticGametypeList)
-entity makeXonoticGametypeList();
-#endif
+#include "dialog_multiplayer_create.qh"
+#include <common/mapinfo.qh>
 
-#ifdef IMPLEMENTATION
-
-entity makeXonoticGametypeList(void)
+entity makeXonoticGametypeList()
 {
 	entity me;
-	me = spawnXonoticGametypeList();
+	me = NEW(XonoticGametypeList);
 	me.configureXonoticGametypeList(me);
 	return me;
 }
@@ -34,9 +15,11 @@ void XonoticGametypeList_configureXonoticGametypeList(entity me)
 	me.configureXonoticListBox(me);
 	me.nItems = GameType_GetCount();
 
-	// we want the pics mipmapped
-	for(int i = 0; i < GameType_GetCount(); ++i)
-		draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
+	if(SKINBOOL_GAMETYPELIST_ICON_BLUR)
+	{
+		for(int i = 0; i < GameType_GetCount(); ++i)
+			draw_PreloadPictureWithFlags(GameType_GetIcon(i), PRECACHE_PIC_MIPMAP);
+	}
 
 	me.loadCvars(me);
 }
@@ -76,12 +59,17 @@ void XonoticGametypeList_saveCvars(entity me)
 		owner.gameTypeChangeNotify(owner);
 	}
 }
-void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticGametypeList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s1, s2;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	draw_Picture(me.columnIconOrigin * eX, GameType_GetIcon(i), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 	s1 = GameType_GetName(i);
@@ -103,7 +91,7 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.itemAbsSize = '0 0 0';
-	SUPER(XonoticServerList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
+	SUPER(XonoticGametypeList).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 
 	me.realFontSize_y = me.fontSize / (me.itemAbsSize_y = (absSize.y * me.itemHeight));
 	me.realFontSize_x = me.fontSize / (me.itemAbsSize_x = (absSize.x * (1 - me.controlWidth)));
@@ -128,4 +116,10 @@ void XonoticGametypeList_clickListBoxItem(entity me, float i, vector where)
 {
 	m_play_click_sound(MENU_SOUND_SELECT);
 }
-#endif
+void XonoticGametypeList_focusedItemChangeNotify(entity me)
+{
+	if(me.focusedItem >= 0)
+		setZonedTooltip(me, MapInfo_Type_Description(GameType_GetID(me.focusedItem)), string_null);
+	else
+		clearTooltip(me);
+}

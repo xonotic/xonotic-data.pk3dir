@@ -1,0 +1,3 @@
+#pragma once
+
+vector crosshair_getcolor(entity this, float health_stat);

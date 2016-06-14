@@ -1,24 +1,17 @@
-#ifdef INTERFACE
-CLASS(XonoticScreenshotBrowserTab) EXTENDS(XonoticTab)
-	METHOD(XonoticScreenshotBrowserTab, fill, void(entity))
-	ATTRIB(XonoticScreenshotBrowserTab, title, string, "Screenshot")
-	ATTRIB(XonoticScreenshotBrowserTab, intendedWidth, float, 1)
-	ATTRIB(XonoticScreenshotBrowserTab, rows, float, 21)
-	ATTRIB(XonoticScreenshotBrowserTab, columns, float, 6.5)
-	ATTRIB(XonoticScreenshotBrowserTab, name, string, "ScreenshotBrowser")
+#include "dialog_multiplayer_media_screenshot.qh"
 
-	METHOD(XonoticScreenshotBrowserTab, loadPreviewScreenshot, void(entity, string))
-	ATTRIB(XonoticScreenshotBrowserTab, screenshotImage, entity, NULL)
-	ATTRIB(XonoticScreenshotBrowserTab, currentScrPath, string, string_null)
-ENDCLASS(XonoticScreenshotBrowserTab)
-entity makeXonoticScreenshotBrowserTab();
-#endif
+#include "dialog_multiplayer_media_screenshot_viewer.qh"
+#include "screenshotlist.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "checkbox.qh"
+#include "button.qh"
+
 entity makeXonoticScreenshotBrowserTab()
 {
 	entity me;
-	me = spawnXonoticScreenshotBrowserTab();
+	me = NEW(XonoticScreenshotBrowserTab);
 	me.configureDialog(me);
 	return me;
 }
@@ -79,4 +72,3 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 			slist.screenshotBrowserDialog = me;
 */
 }
-#endif

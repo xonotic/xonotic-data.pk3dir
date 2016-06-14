@@ -1,0 +1,58 @@
+#pragma once
+
+/** is only ever called for i1 < i2 */
+USING(swapfunc_t, void (int i1, int i2, entity pass));
+/** <0 for <, ==0 for ==, >0 for > (like strcmp) */
+USING(comparefunc_t, int (int i1, int i2, entity pass));
+
+void heapsort(int n, swapfunc_t swap, comparefunc_t cmp, entity pass)
+{
+	#define heapify(_count) \
+		MACRO_BEGIN \
+		{ \
+			for (int start = floor(((_count) - 2) / 2); start >= 0; --start) \
+			{ \
+				siftdown(start, (_count) - 1); \
+			} \
+		} MACRO_END
+
+	#define siftdown(_start, _end) \
+		MACRO_BEGIN \
+		{ \
+			for (int root = (_start); root * 2 + 1 <= (_end); ) \
+			{ \
+				int child = root * 2 + 1; \
+				if (child < (_end) && cmp(child, child + 1, pass) < 0) child += 1; \
+				if (cmp(root, child, pass) >= 0) break; \
+				swap(root, child, pass); \
+				root = child; \
+			} \
+		} MACRO_END
+
+	heapify(n);
+	int end = n - 1;
+	while (end > 0)
+	{
+		swap(0, end, pass);
+		end -= 1;
+		siftdown(0, end);
+	}
+}
+
+void shuffle(float n, swapfunc_t swap, entity pass)
+{
+	for (int i = 1; i < n; ++i)
+	{
+		// swap i-th item at a random position from 0 to i
+		// proof for even distribution:
+		//   n = 1: obvious
+		//   n -> n+1:
+		//     item n+1 gets at any position with chance 1/(n+1)
+		//     all others will get their 1/n chance reduced by factor n/(n+1)
+		//     to be on place n+1, their chance will be 1/(n+1)
+		//     1/n * n/(n+1) = 1/(n+1)
+		//     q.e.d.
+		int j = floor(random() * (i + 1));
+		if (j != i) swap(j, i, pass);
+	}
+}

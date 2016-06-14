@@ -1,16 +1,8 @@
-#ifdef INTERFACE
-CLASS(XonoticWinnerDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticWinnerDialog, fill, void(entity))
-	METHOD(XonoticWinnerDialog, focusEnter, void(entity))
-	ATTRIB(XonoticWinnerDialog, title, string, _("Winner"))
-	ATTRIB(XonoticWinnerDialog, color, vector, SKINCOLOR_DIALOG_SINGLEPLAYER)
-	ATTRIB(XonoticWinnerDialog, intendedWidth, float, 0.32)
-	ATTRIB(XonoticWinnerDialog, rows, float, 12)
-	ATTRIB(XonoticWinnerDialog, columns, float, 3)
-ENDCLASS(XonoticWinnerDialog)
-#endif
+#include "dialog_singleplayer_winner.qh"
 
-#ifdef IMPLEMENTATION
+#include "image.qh"
+#include "button.qh"
+
 void XonoticWinnerDialog_fill(entity me)
 {
 	entity e;
@@ -27,4 +19,3 @@ void XonoticWinnerDialog_focusEnter(entity me)
 {
 	m_play_click_sound(MENU_SOUND_WINNER);
 }
-#endif
