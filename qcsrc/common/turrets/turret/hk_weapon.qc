@@ -64,7 +64,7 @@ void turret_hk_missile_think(entity this)
     //	turret_hk_missile_explode();
 
     if (IS_DEAD(this.enemy))
-        this.enemy = world;
+        this.enemy = NULL;
 
     // Pick the closest valid target.
     if (!this.enemy)
@@ -116,7 +116,7 @@ void turret_hk_missile_think(entity this)
         fe = 0;
     }
 
-    if ((fe != 1) || (this.enemy == world) || (edist > 1000))
+    if ((fe != 1) || (this.enemy == NULL) || (edist > 1000))
     {
         myspeed = vlen(this.velocity);
 
@@ -226,15 +226,15 @@ void turret_hk_missile_think(entity this)
     //if(this.atime < time) {
     if ((fe <= 0.99)||(edist > 1000))
     {
-        te_lightning2(world,this.origin, this.origin + vr * lt_seek);
-        te_lightning2(world,this.origin, this.origin + vl * lt_seek);
-        te_lightning2(world,this.origin, this.origin + vu * lt_seek);
-        te_lightning2(world,this.origin, this.origin + vd * lt_seek);
-        te_lightning2(world,this.origin, vf);
+        te_lightning2(NULL,this.origin, this.origin + vr * lt_seek);
+        te_lightning2(NULL,this.origin, this.origin + vl * lt_seek);
+        te_lightning2(NULL,this.origin, this.origin + vu * lt_seek);
+        te_lightning2(NULL,this.origin, this.origin + vd * lt_seek);
+        te_lightning2(NULL,this.origin, vf);
     }
     else
     {
-        te_lightning2(world,this.origin, this.enemy.origin);
+        te_lightning2(NULL,this.origin, this.enemy.origin);
     }
     bprint("Speed: ", ftos(rint(myspeed)), "\n");
     bprint("Trace to solid: ", ftos(rint(ff * 100)), "%\n");
@@ -248,7 +248,7 @@ void turret_hk_missile_think(entity this)
 
 bool hk_is_valid_target(entity this, entity e_target)
 {
-    if (e_target == world)
+    if (e_target == NULL)
         return false;
 
     // If only this was used more..

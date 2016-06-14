@@ -489,7 +489,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, world);
+		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, NULL);
 		if(trace_fraction == 1)
 			continue;
 
@@ -497,7 +497,7 @@ void detect_maptype()
 
 		for(i = 0; i < 64; i += 4)
 		{
-			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, world);
+			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
 	if(trace_fraction == 1)
 		continue;
 			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos), "\n");
@@ -664,7 +664,7 @@ spawnfunc(worldspawn)
 	compressShortVector_init();
 
 	maxclients = 0;
-	for (entity head = nextent(world); head; head = nextent(head))
+	for (entity head = nextent(NULL); head; head = nextent(head))
 	{
 		++maxclients;
 	}
@@ -1335,7 +1335,7 @@ entity FindIntermission()
 	local	float cyc;
 
 // look for info_intermission first
-	spot = find (world, classname, "info_intermission");
+	spot = find (NULL, classname, "info_intermission");
 	if (spot)
 	{	// pick a random one
 		cyc = random() * 4;
@@ -1350,22 +1350,22 @@ entity FindIntermission()
 	}
 
 // then look for the start position
-	spot = find (world, classname, "info_player_start");
+	spot = find (NULL, classname, "info_player_start");
 	if (spot)
 		return spot;
 
 // testinfo_player_start is only found in regioned levels
-	spot = find (world, classname, "testplayerstart");
+	spot = find (NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
 // then look for the start position
-	spot = find (world, classname, "info_player_deathmatch");
+	spot = find (NULL, classname, "info_player_deathmatch");
 	if (spot)
 		return spot;
 
 	//objerror ("FindIntermission: no spot");
-	return world;
+	return NULL;
 }
 */
 
@@ -1421,7 +1421,7 @@ void DumpStats(float final)
 			fputs(file, strcat(s, "\n"));
 	}
 
-	s = strcat(":labels:player:", GetPlayerScoreString(world, 0));
+	s = strcat(":labels:player:", GetPlayerScoreString(NULL, 0));
 	if(to_console)
 		LOG_INFO(s, "\n");
 	if(to_eventlog)
@@ -1549,7 +1549,7 @@ void NextLevel()
 	PlayerStats_GameReport(true);
 	WeaponStats_Shutdown();
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_Null); // kill all centerprints now
+	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_Null); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1626,7 +1626,7 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	tl += autocvar_timelimit_overtime;
 	cvar_set("timelimit", ftos(tl));
 
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
 }
 
 float GetWinningCode(float fraglimitreached, float equality)
@@ -1717,11 +1717,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 			if (limit)
 			if (leaderfrags == limit - 1)
-				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
 			else if (leaderfrags == limit - 2)
-				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
 			else if (leaderfrags == limit - 3)
-				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 		}
 	}
 
@@ -1798,7 +1798,7 @@ float WinningCondition_RanOutOfSpawns()
 			t = NUM_TEAM_3;
 		else // if(team4_score)
 			t = NUM_TEAM_4;
-		CheckAllowedTeams(world);
+		CheckAllowedTeams(NULL);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
 			if(t != NUM_TEAM_1) if(c1 >= 0) TeamScore_AddToTeam(NUM_TEAM_1, i, -1000);
@@ -1879,9 +1879,9 @@ void CheckRules_World()
 		{
 			checkrules_suddendeathwarning = true;
 			if(g_race && !g_race_qualifying)
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_RACE_FINISHLAP);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_FRAG);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_FRAG);
 		}
 	}
 	else

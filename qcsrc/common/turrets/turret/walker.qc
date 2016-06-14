@@ -99,7 +99,7 @@ void walker_setnoanim(entity this)
 }
 void walker_rocket_explode(entity this)
 {
-    RadiusDamage (this, this.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), this, world, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, world);
+    RadiusDamage (this, this.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), this, NULL, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET.m_id, NULL);
     remove (this);
 }
 
@@ -155,8 +155,8 @@ void walker_rocket_think(entity this)
     m_speed = vlen(this.velocity);
 
     // Enemy dead? just keep on the current heading then.
-    if (this.enemy == world || IS_DEAD(this.enemy))
-        this.enemy = world;
+    if (this.enemy == NULL || IS_DEAD(this.enemy))
+        this.enemy = NULL;
 
     if (this.enemy)
     {
@@ -299,11 +299,11 @@ void walker_move_path(entity this)
 #ifdef WALKER_FANCYPATHING
     // Are we close enougth to a path node to switch to the next?
     if(vdist(this.origin - this.pathcurrent.origin, <, 64))
-        if (this.pathcurrent.path_next == world)
+        if (this.pathcurrent.path_next == NULL)
         {
             // Path endpoint reached
             pathlib_deletepath(this.pathcurrent.owner);
-            this.pathcurrent = world;
+            this.pathcurrent = NULL;
 
             if (this.pathgoal)
             {
@@ -317,7 +317,7 @@ void walker_move_path(entity this)
                 }
             }
             else
-                this.pathgoal = world;
+                this.pathgoal = NULL;
         }
         else
             this.pathcurrent = this.pathcurrent.path_next;
@@ -347,7 +347,7 @@ METHOD(WalkerTurret, tr_think, void(WalkerTurret thistur, entity it))
 
     if (it.spawnflags & TSF_NO_PATHBREAK && it.pathcurrent)
         walker_move_path(it);
-    else if (it.enemy == world)
+    else if (it.enemy == NULL)
     {
         if(it.pathcurrent)
             walker_move_path(it);
@@ -599,7 +599,7 @@ METHOD(WalkerTurret, tr_setup, void(WalkerTurret this, entity it))
 
     if (it.target != "")
     {
-        e = find(world, targetname, it.target);
+        e = find(NULL, targetname, it.target);
         if (!e)
         {
             LOG_TRACE("Initital waypoint for walker does NOT exsist, fix your map!\n");

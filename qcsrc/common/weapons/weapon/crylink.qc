@@ -76,8 +76,8 @@ void W_Crylink_CheckLinks(entity e)
 	float i;
 	entity p;
 
-	if(e == world)
-		error("W_Crylink_CheckLinks: entity is world");
+	if(e == NULL)
+		error("W_Crylink_CheckLinks: entity is NULL");
 	if(e.classname != "spike" || wasfreed(e))
 		error(sprintf("W_Crylink_CheckLinks: entity is not a spike but a %s (freed: %d)", e.classname, wasfreed(e)));
 
@@ -98,7 +98,7 @@ void W_Crylink_Dequeue_Raw(entity own, entity prev, entity me, entity next)
 {
 	W_Crylink_CheckLinks(next);
 	if(me == own.crylink_lastgroup)
-		own.crylink_lastgroup = ((me == next) ? world : next);
+		own.crylink_lastgroup = ((me == next) ? NULL : next);
 	prev.queuenext = next;
 	next.queueprev = prev;
 	me.classname = "spike_oktoremove";
@@ -128,11 +128,11 @@ void W_Crylink_LinkExplode(entity e, entity e2)
 	a = bound(0, 1 - (time - e.fade_time) * e.fade_rate, 1);
 
 	if(e == e.realowner.crylink_lastgroup)
-		e.realowner.crylink_lastgroup = world;
+		e.realowner.crylink_lastgroup = NULL;
 
 	float isprimary = !(e.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius), world, world, WEP_CVAR_BOTH(crylink, isprimary, force) * a, e.projectiledeathtype, other);
+	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * a, e.projectiledeathtype, other);
 
 	W_Crylink_LinkExplode(e.queuenext, e2);
 
@@ -258,7 +258,7 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_edgedamage) * n,
 					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_radius) * n,
 					e.realowner,
-					world,
+					NULL,
 					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_force) * n,
 					e.projectiledeathtype,
 					other
@@ -311,12 +311,12 @@ void W_Crylink_Touch(entity this)
 	if(a)
 		f *= a;
 
-	float totaldamage = RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * f, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * f, WEP_CVAR_BOTH(crylink, isprimary, radius), world, world, WEP_CVAR_BOTH(crylink, isprimary, force) * f, this.projectiledeathtype, other);
+	float totaldamage = RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * f, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * f, WEP_CVAR_BOTH(crylink, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * f, this.projectiledeathtype, other);
 
 	if(totaldamage && ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 2) || ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 1) && !W_Crylink_Touch_WouldHitFriendly(this, WEP_CVAR_BOTH(crylink, isprimary, radius)))))
 	{
 		if(this == this.realowner.crylink_lastgroup)
-			this.realowner.crylink_lastgroup = world;
+			this.realowner.crylink_lastgroup = NULL;
 		W_Crylink_LinkExplode(this.queuenext, this);
 		this.classname = "spike_oktoremove";
 		remove(this);
@@ -331,7 +331,7 @@ void W_Crylink_Touch(entity this)
 	}
 	this.cnt = this.cnt - 1;
 	this.angles = vectoangles(this.velocity);
-	this.owner = world;
+	this.owner = NULL;
 	this.projectiledeathtype |= HITTYPE_BOUNCE;
 	// commented out as it causes a little hitch...
 	//if(proj.cnt == 0)
@@ -366,7 +366,7 @@ void W_Crylink_Attack(Weapon thiswep, entity actor)
 
 	shots = WEP_CVAR_PRI(crylink, shots);
 	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
-	proj = prevproj = firstproj = world;
+	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);
@@ -474,7 +474,7 @@ void W_Crylink_Attack2(Weapon thiswep, entity actor)
 
 	shots = WEP_CVAR_SEC(crylink, shots);
 	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
-	proj = prevproj = firstproj = world;
+	proj = prevproj = firstproj = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = new(spike);

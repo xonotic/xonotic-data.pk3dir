@@ -25,7 +25,7 @@ bool turret_fusionreactor_firecheck(entity this)
     if (IS_DEAD(this.enemy))
         return false;
 
-    if (this.enemy == world)
+    if (this.enemy == NULL)
         return false;
 
     if (this.ammo < this.shot_dmg)

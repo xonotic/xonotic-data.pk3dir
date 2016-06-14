@@ -104,7 +104,7 @@ float invasion_PickMonster(float supermonster_count)
 		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || ((mon.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue; // flying/swimming monsters not yet supported
 
-		RandomSelection_Add(world, i, string_null, 1, 1);
+		RandomSelection_Add(NULL, i, string_null, 1, 1);
 	}
 
 	return RandomSelection_chosen_float;
@@ -116,7 +116,7 @@ entity invasion_PickSpawn()
 
 	RandomSelection_Init();
 
-	for(e = world;(e = find(e, classname, "invasion_spawnpoint")); )
+	for(e = NULL;(e = find(e, classname, "invasion_spawnpoint")); )
 	{
 		RandomSelection_Add(e, 0, string_null, 1, ((time >= e.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
 		e.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
@@ -131,14 +131,14 @@ void invasion_SpawnChosenMonster(float mon)
 
 	spawn_point = invasion_PickSpawn();
 
-	if(spawn_point == world)
+	if(spawn_point == NULL)
 	{
 		LOG_TRACE("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations\n");
 		entity e = spawn();
 		setsize(e, (get_monsterinfo(mon)).mins, (get_monsterinfo(mon)).maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-			monster = spawnmonster("", mon, world, world, e.origin, false, false, 2);
+			monster = spawnmonster("", mon, NULL, NULL, e.origin, false, false, 2);
 		else return;
 
 		setthink(e, SUB_Remove);
@@ -157,10 +157,10 @@ void invasion_SpawnChosenMonster(float mon)
 	else
 	{
 		RandomSelection_Init();
-		if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_Add(world, NUM_TEAM_1, string_null, 1, 1);
-		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_Add(world, NUM_TEAM_2, string_null, 1, 1);
-		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(world, NUM_TEAM_3, string_null, 1, 1); }
-		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(world, NUM_TEAM_4, string_null, 1, 1); }
+		if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_Add(NULL, NUM_TEAM_1, string_null, 1, 1);
+		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_Add(NULL, NUM_TEAM_2, string_null, 1, 1);
+		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(NULL, NUM_TEAM_3, string_null, 1, 1); }
+		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(NULL, NUM_TEAM_4, string_null, 1, 1); }
 
 		monster.team = RandomSelection_chosen_float;
 	}
@@ -197,8 +197,8 @@ float Invasion_CheckWinner()
 	{
 		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(Monster_Remove(it)));
 
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 		return 1;
 	}
@@ -245,7 +245,7 @@ float Invasion_CheckWinner()
 	else if(inv_numkilled < inv_maxspawned)
 		return 0;
 
-	entity winner = world;
+	entity winner = NULL;
 	float winning_score = 0, winner_team = 0;
 
 
@@ -280,14 +280,14 @@ float Invasion_CheckWinner()
 	{
 		if(winner_team)
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+			Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		}
 	}
 	else if(winner)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, winner.netname);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, winner.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, winner.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_PLAYER_WIN, winner.netname);
 	}
 
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
@@ -368,7 +368,7 @@ MUTATOR_HOOKFUNCTION(inv, MonsterSpawn)
 	mon.monster_skill = inv_monsterskill;
 
 	if((get_monsterinfo(mon.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, mon.monster_name);
 
 	mon.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 }
@@ -483,7 +483,7 @@ MUTATOR_HOOKFUNCTION(inv, AllowMobButcher)
 
 void invasion_ScoreRules(float inv_teams)
 {
-	if(inv_teams) { CheckAllowedTeams(world); }
+	if(inv_teams) { CheckAllowedTeams(NULL); }
 	ScoreRules_basics(inv_teams, 0, 0, false);
 	if(inv_teams) ScoreInfo_SetLabel_TeamScore(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
@@ -529,7 +529,7 @@ void invasion_Initialize()
 		}
 	}
 
-	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
+	InitializeEntity(NULL, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 #endif

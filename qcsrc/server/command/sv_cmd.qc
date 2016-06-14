@@ -264,7 +264,7 @@ void GameCommand_bbox(float request)
 				'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
 				'1 0 0' * world.absmax.x,
 				MOVE_WORLDONLY,
-				world);
+				NULL);
 			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.x));
 			else LOG_INFO(" ", ftos(trace_endpos.x));
 
@@ -273,7 +273,7 @@ void GameCommand_bbox(float request)
 				'1 0 0' * world.absmax.x + '0 0 1' * world.absmax.z,
 				'0 1 0' * world.absmax.y,
 				MOVE_WORLDONLY,
-				world);
+				NULL);
 			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.y));
 			else LOG_INFO(" ", ftos(trace_endpos.y));
 
@@ -282,7 +282,7 @@ void GameCommand_bbox(float request)
 				'1 0 0' * world.absmax.x + '0 1 0' * world.absmax.y,
 				'0 0 1' * world.absmax.z,
 				MOVE_WORLDONLY,
-				world);
+				NULL);
 			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmin.z));
 			else LOG_INFO(" ", ftos(trace_endpos.z));
 
@@ -291,7 +291,7 @@ void GameCommand_bbox(float request)
 				'0 1 0' * world.absmax.y + '0 0 1' * world.absmax.z,
 				'1 0 0' * world.absmin.x,
 				MOVE_WORLDONLY,
-				world);
+				NULL);
 			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.x));
 			else LOG_INFO(" ", ftos(trace_endpos.x));
 
@@ -300,7 +300,7 @@ void GameCommand_bbox(float request)
 				'1 0 0' * world.absmax.x + '0 0 1' * world.absmax.z,
 				'0 1 0' * world.absmin.y,
 				MOVE_WORLDONLY,
-				world);
+				NULL);
 			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.y));
 			else LOG_INFO(" ", ftos(trace_endpos.y));
 
@@ -309,7 +309,7 @@ void GameCommand_bbox(float request)
 				'1 0 0' * world.absmax.x + '0 1 0' * world.absmax.y,
 				'0 0 1' * world.absmin.z,
 				MOVE_WORLDONLY,
-				world);
+				NULL);
 			if (trace_startsolid) LOG_INFO(" ", ftos(world.absmax.z));
 			else LOG_INFO(" ", ftos(trace_endpos.z));
 
@@ -386,7 +386,7 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 						{
 							// let's start at token 2 so we can skip sv_cmd bot_cmd
 							bot = find_bot_by_number(stof(argv(2)));
-							if (bot == world) bot = find_bot_by_name(argv(2));
+							if (bot == NULL) bot = find_bot_by_name(argv(2));
 							if (bot) bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
 						}
 					}
@@ -410,7 +410,7 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 			else if (argc >= 3)  // this comes last
 			{
 				bot = find_bot_by_number(stof(argv(1)));
-				if (bot == world) bot = find_bot_by_name(argv(1));
+				if (bot == NULL) bot = find_bot_by_name(argv(1));
 				if (bot)
 				{
 					LOG_INFO(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
@@ -448,7 +448,7 @@ void GameCommand_cointoss(float request, float argc)
 			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
 
-			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_COINTOSS, choice);
+			Send_Notification(NOTIF_ALL, NULL, MSG_MULTI, MULTI_COINTOSS, choice);
 			return;
 		}
 
@@ -799,7 +799,7 @@ void GameCommand_gettaginfo(float request, float argc)
 				if (argv(1) == "w")
 				{
 					.entity weaponentity = weaponentities[0];
-					_setmodel(tmp_entity, (nextent(world)).(weaponentity).model);
+					_setmodel(tmp_entity, (nextent(NULL)).(weaponentity).model);
 				}
 				else
 				{
@@ -860,7 +860,7 @@ void GameCommand_animbench(float request, float argc)
 				if (argv(1) == "w")
 				{
 					.entity weaponentity = weaponentities[0];
-					_setmodel(tmp_entity, (nextent(world)).(weaponentity).model);
+					_setmodel(tmp_entity, (nextent(NULL)).(weaponentity).model);
 				}
 				else
 				{
@@ -1507,15 +1507,15 @@ void GameCommand_trace(float request, float argc)
 						start = stov(vtos(start));
 						end = stov(vtos(end));
 
-						tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, world);
+						tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, NULL);
 						if (!trace_startsolid && trace_fraction < 1)
 						{
 							p = trace_endpos;
-							tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), p, MOVE_NOMONSTERS, world);
+							tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), p, MOVE_NOMONSTERS, NULL);
 							if (trace_startsolid)
 							{
 								rint(42);  // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
-								tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, world);
+								tracebox(start, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), end, MOVE_NOMONSTERS, NULL);
 
 								// how much do we need to back off?
 								safe = 1;
@@ -1523,7 +1523,7 @@ void GameCommand_trace(float request, float argc)
 								for ( ; ; )
 								{
 									pos = p * (1 - (safe + unsafe) * 0.5) + start * ((safe + unsafe) * 0.5);
-									tracebox(pos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pos, MOVE_NOMONSTERS, world);
+									tracebox(pos, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pos, MOVE_NOMONSTERS, NULL);
 									if (trace_startsolid)
 									{
 										if ((safe + unsafe) * 0.5 == unsafe) break;
@@ -1539,7 +1539,7 @@ void GameCommand_trace(float request, float argc)
 								LOG_INFO("safe distance to back off: ", ftos(safe * vlen(p - start)), "qu\n");
 								LOG_INFO("unsafe distance to back off: ", ftos(unsafe * vlen(p - start)), "qu\n");
 
-								tracebox(p, STAT(PL_MIN, NULL) + '0.1 0.1 0.1', STAT(PL_MAX, NULL) - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, world);
+								tracebox(p, STAT(PL_MIN, NULL) + '0.1 0.1 0.1', STAT(PL_MAX, NULL) - '0.1 0.1 0.1', p, MOVE_NOMONSTERS, NULL);
 								if (trace_startsolid) LOG_INFO("trace_endpos much in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								else LOG_INFO("trace_endpos just in solid when tracing from ", vtos(start), " to ", vtos(end), " endpos ", vtos(p), "\n");
 								if (++hitcount >= 10) break;
@@ -1553,7 +1553,7 @@ void GameCommand_trace(float request, float argc)
 								{
 									q = p + normalize(end - p) * (dq + dqf);
 									if (q == q0) break;
-									tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), q, MOVE_NOMONSTERS, world);
+									tracebox(p, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), q, MOVE_NOMONSTERS, NULL);
 									if (trace_startsolid) error("THIS ONE cannot happen");
 									if (trace_fraction > 0) dq += dqf * trace_fraction;
 									dqf *= 0.5;
@@ -1574,7 +1574,7 @@ void GameCommand_trace(float request, float argc)
 
 				case "debug2":
 				{
-					e = nextent(world);
+					e = nextent(NULL);
 					tracebox(e.origin + '0 0 32', e.mins, e.maxs, e.origin + '0 0 -1024', MOVE_NORMAL, e);
 					vv = trace_endpos;
 					if (trace_fraction == 1)
@@ -1607,7 +1607,7 @@ void GameCommand_trace(float request, float argc)
 				{
 					if (argc == 4)
 					{
-						e = nextent(world);
+						e = nextent(NULL);
 						if (tracewalk(e, stov(argv(2)), e.mins, e.maxs, stov(argv(3)), MOVE_NORMAL)) LOG_INFO("can walk\n");
 						else LOG_INFO("cannot walk\n");
 						return;
@@ -1620,9 +1620,9 @@ void GameCommand_trace(float request, float argc)
 					{
 						vv = stov(argv(2));
 						dv = stov(argv(3));
-						traceline(vv, dv, MOVE_NORMAL, world);
-						__trailparticles(world, particleeffectnum(EFFECT_TR_NEXUIZPLASMA), vv, trace_endpos);
-						__trailparticles(world, particleeffectnum(EFFECT_TR_CRYLINKPLASMA), trace_endpos, dv);
+						traceline(vv, dv, MOVE_NORMAL, NULL);
+						__trailparticles(NULL, particleeffectnum(EFFECT_TR_NEXUIZPLASMA), vv, trace_endpos);
+						__trailparticles(NULL, particleeffectnum(EFFECT_TR_CRYLINKPLASMA), trace_endpos, dv);
 						return;
 					}
 				}
@@ -1826,7 +1826,7 @@ void GameCommand(string command)
 			BanCommand_macro_help();
 
 			LOG_INFO("\nCommon networked commands:\n");
-			CommonCommand_macro_help(world);
+			CommonCommand_macro_help(NULL);
 
 			LOG_INFO("\nGeneric commands shared by all programs:\n");
 			GenericCommand_macro_help();
@@ -1840,7 +1840,7 @@ void GameCommand(string command)
 		{
 			return;
 		}
-		else if (CommonCommand_macro_usage(argc, world))  // same here, but for common commands instead
+		else if (CommonCommand_macro_usage(argc, NULL))  // same here, but for common commands instead
 		{
 			return;
 		}
@@ -1861,7 +1861,7 @@ void GameCommand(string command)
 	{
 		return;  // handled by server/command/ipban.qc
 	}
-	else if (CommonCommand_macro_command(argc, world, command))
+	else if (CommonCommand_macro_command(argc, NULL, command))
 	{
 		return;  // handled by server/command/common.qc
 	}

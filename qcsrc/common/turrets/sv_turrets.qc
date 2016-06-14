@@ -186,7 +186,7 @@ void turret_die(entity this)
 	this.health			 = 0;
 
 // Go boom
-	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,world,min(this.ammo,50)*5,DEATH_TURRET,world);
+	//RadiusDamage (this,this, min(this.ammo,50),min(this.ammo,50) * 0.25,250,NULL,min(this.ammo,50)*5,DEATH_TURRET,NULL);
 
 	Turret tur = get_turretinfo(this.m_id);
 	if(this.damage_flags & TFL_DMG_DEATH_NORESPAWN)
@@ -267,7 +267,7 @@ void turret_respawn(entity this)
 	this.tur_head.avelocity		= this.avelocity;
 	this.tur_head.angles		= this.idle_aim;
 	this.health					= this.max_health;
-	this.enemy					= world;
+	this.enemy					= NULL;
 	this.volly_counter			= this.shot_volly;
 	this.ammo					= this.ammo_max;
 
@@ -365,7 +365,7 @@ void load_unit_settings(entity ent, bool is_reload)
 	string unitname = ent.netname;
 	string sbase;
 
-	if (ent == world)
+	if (ent == NULL)
 		return;
 
 	if(!ent.turret_scale_damage)	ent.turret_scale_damage = 1;
@@ -379,7 +379,7 @@ void load_unit_settings(entity ent, bool is_reload)
 	sbase = strcat(cvar_base,unitname);
 	if (is_reload)
 	{
-		ent.enemy = world;
+		ent.enemy = NULL;
 		ent.tur_head.avelocity = '0 0 0';
 
 		ent.tur_head.angles = '0 0 0';
@@ -434,11 +434,11 @@ void turret_projectile_explode(entity this)
 	this.event_damage = func_null;
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
+	d = RadiusDamage (this, this.owner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
 	this.owner.tur_debug_dmg_t_h = this.owner.tur_debug_dmg_t_h + d;
 	this.owner.tur_debug_dmg_t_f = this.owner.tur_debug_dmg_t_f + this.owner.shot_dmg;
 #else
-	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
+	RadiusDamage (this, this.realowner, this.owner.shot_dmg, 0, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
 #endif
 	remove(this);
 }
@@ -547,7 +547,7 @@ void turret_track(entity this)
 
 	if(!this.active)
 		target_angle = this.idle_aim - ('1 0 0' * this.aim_maxpitch);
-	else if (this.enemy == world)
+	else if (this.enemy == NULL)
 	{
 		if(time > this.lip)
 			target_angle = this.idle_aim + this.angles;
@@ -844,13 +844,13 @@ entity turret_select_target(entity this)
 		m_score = this.turret_score_target(this,e_enemy) * this.target_select_samebias;
 	}
 	else
-		e_enemy = this.enemy = world;
+		e_enemy = this.enemy = NULL;
 
 	e = findradius(this.origin, this.target_range);
 
 	// Nothing to aim at?
 	if (!e)
-		return world;
+		return NULL;
 
 	while (e)
 	{
@@ -903,7 +903,7 @@ bool turret_firecheck(entity this)
 	if (this.firecheck_flags & TFL_FIRECHECK_NO)
 		return true;
 
-	if (this.enemy == world)
+	if (this.enemy == NULL)
 		return false;
 
 	// Ready?
@@ -999,7 +999,7 @@ void turret_fire(entity this)
 		this.volly_counter = this.shot_volly;
 
 		if (this.shoot_flags & TFL_SHOOT_CLEARTARGET)
-			this.enemy = world;
+			this.enemy = NULL;
 
 		if (this.shot_volly > 1)
 			this.attack_finished_single[0] = time + this.shot_volly_refire;
@@ -1061,7 +1061,7 @@ void turret_think(entity this)
 
 			e = e.chain;
 		}
-		this.enemy = world;
+		this.enemy = NULL;
 	}
 	else if(this.shoot_flags & TFL_SHOOT_CUSTOM)
 	{
@@ -1118,7 +1118,7 @@ void turret_think(entity this)
 		if(this.target_validate_time < time)
 		if (turret_validate_target(this, this.enemy, this.target_validate_flags) <= 0)
 		{
-			this.enemy = world;
+			this.enemy = NULL;
 			this.target_validate_time = time + 0.5;
 			do_target_scan = 1;
 		}
@@ -1134,7 +1134,7 @@ void turret_think(entity this)
 		}
 
 		// No target, just go to idle, do any custom stuff and bail.
-		if (this.enemy == world)
+		if (this.enemy == NULL)
 		{
 			// Turn & pitch
 			if(!(this.track_flags & TFL_TRACK_NO))
@@ -1170,7 +1170,7 @@ void turret_think(entity this)
 
 /*
 	When .used a turret switch team to activator.team.
-	If activator is world, the turret go inactive.
+	If activator is NULL, the turret go inactive.
 */
 void turret_use(entity this, entity actor, entity trigger)
 {
@@ -1250,7 +1250,7 @@ bool turret_initialize(entity this, Turret tur)
 		tur.tr_precache(tur);
 	}
 
-	entity e = find(world, classname, "turret_manager");
+	entity e = find(NULL, classname, "turret_manager");
 	if(!e)
 	{
 		e = new(turret_manager);
@@ -1259,7 +1259,7 @@ bool turret_initialize(entity this, Turret tur)
 	}
 
 	if(!(this.spawnflags & TSF_SUSPENDED))
-		WITHSELF(this, builtin_droptofloor());
+		droptofloor(this);
 
 	this.netname = tur.netname;
 	load_unit_settings(this, 0);
@@ -1354,8 +1354,8 @@ bool turret_initialize(entity this, Turret tur)
 	if(!this.tur_defend)
 	if(this.target != "")
 	{
-		this.tur_defend = find(world, targetname, this.target);
-		if (this.tur_defend == world)
+		this.tur_defend = find(NULL, targetname, this.target);
+		if (this.tur_defend == NULL)
 		{
 			this.target = "";
 			LOG_TRACE("Turret has invalid defendpoint!\n");

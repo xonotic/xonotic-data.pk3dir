@@ -89,9 +89,9 @@ void W_Hook_ExplodeThink(entity this)
 	f = this.dmg_last - dmg_remaining_next;
 	this.dmg_last = dmg_remaining_next;
 
-	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, world, this.dmg_force * f, this.projectiledeathtype, world);
+	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
 	this.projectiledeathtype |= HITTYPE_BOUNCE;
-	//RadiusDamage(this, world, this.dmg * f, this.dmg_edge * f, this.dmg_radius, world, world, this.dmg_force * f, this.projectiledeathtype, world);
+	//RadiusDamage(this, NULL, this.dmg * f, this.dmg_edge * f, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
 
 	if(dt < this.dmg_duration)
 		this.nextthink = time + 0.05; // soon
@@ -367,7 +367,7 @@ void Draw_GrapplingHook(entity this)
 
 	InterpolateOrigin_Do(this);
 
-	int s = W_GetGunAlignment(world);
+	int s = W_GetGunAlignment(NULL);
 
 	switch(this.HookType)
 	{
@@ -394,7 +394,7 @@ void Draw_GrapplingHook(entity this)
 					b = view_origin + view_forward * this.HookRange;
 				else
 					b = view_origin + view_forward * vlen(this.velocity - this.origin); // honor original length of beam!
-				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
+				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, NULL);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				break;
@@ -445,7 +445,7 @@ void Draw_GrapplingHook(entity this)
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;
 	Draw_GrapplingHook_trace_callback_a = intensity;
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((this.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((this.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), NULL, NULL, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
 	atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);

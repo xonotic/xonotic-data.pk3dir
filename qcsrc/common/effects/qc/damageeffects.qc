@@ -273,7 +273,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISVEHICLE(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
@@ -347,7 +347,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 
 	if(DEATH_ISTURRET(w_deathtype))
 	{
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_plane_normal != '0 0 0')
 			w_backoff = trace_plane_normal;
 		else
@@ -408,7 +408,7 @@ NET_HANDLE(ENT_CLIENT_DAMAGEINFO, bool isNew)
 		Weapon hitwep = DEATH_WEAPONOF(w_deathtype);
 		w_random = prandom();
 
-		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
+		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
 			w_backoff = trace_plane_normal;
 		else

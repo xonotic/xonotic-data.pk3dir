@@ -135,7 +135,7 @@ bool bumblebee_gunner_frame(entity this)
 	if(autocvar_g_vehicle_bumblebee_cannon_lock)
 	{
 		if(gun.lock_time < time)
-			gun.enemy = world;
+			gun.enemy = NULL;
 
 		if(trace_ent)
 			if(trace_ent.movetype)
@@ -269,8 +269,8 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 
 	fixedmakevectors(vehic.angles);
 
-	if(player == vehic.gunner1) { vehic.gunner1 = world; }
-	if(player == vehic.gunner2) { vehic.gunner2 = world; v_right *= -1; }
+	if(player == vehic.gunner1) { vehic.gunner1 = NULL; }
+	if(player == vehic.gunner2) { vehic.gunner2 = NULL; v_right *= -1; }
 
 	vector spot = real_origin(gunner);
 	spot = spot + v_up * 128 + v_forward * 300 + v_right * 150;
@@ -286,13 +286,13 @@ void bumblebee_gunner_exit(entity this, int _exitflag)
 
 	MUTATOR_CALLHOOK(VehicleExit, player, gunner);
 
-	player.vehicle = world;
+	player.vehicle = NULL;
 }
 
 bool bumblebee_gunner_enter(entity this, entity player)
 {
 	entity vehic = this;
-	entity gunner = world;
+	entity gunner = NULL;
 
 	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
 	{
@@ -373,7 +373,7 @@ void bumblebee_touch(entity this)
 {
 	if(autocvar_g_vehicles_enter) { return; }
 
-	if(this.gunner1 != world && this.gunner2 != world)
+	if(this.gunner1 != NULL && this.gunner2 != NULL)
 	{
 		vehicles_touch(this);
 		return;
@@ -505,7 +505,7 @@ bool bumblebee_pilot_frame(entity this)
 	if(autocvar_g_vehicle_bumblebee_healgun_locktime)
 	{
 		if(vehic.tur_head.lock_time < time || IS_DEAD(vehic.tur_head.enemy) || STAT(FROZEN, vehic.tur_head.enemy))
-			vehic.tur_head.enemy = world;
+			vehic.tur_head.enemy = NULL;
 
 		if(trace_ent)
 		if(trace_ent.movetype)
@@ -604,7 +604,7 @@ bool bumblebee_pilot_frame(entity this)
 		if(vehic.gun3.enemy)
 			remove(vehic.gun3.enemy);
 
-		vehic.gun3.enemy = world;
+		vehic.gun3.enemy = NULL;
 	}
 	*/
 
@@ -681,16 +681,16 @@ void bumblebee_exit(entity this, int eject)
 	setorigin(this.owner, spot);
 
 	antilag_clear(this.owner, CS(this.owner));
-	this.owner = world;
+	this.owner = NULL;
 }
 
 void bumblebee_blowup(entity this)
 {
 	RadiusDamage(this, this.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
-				 autocvar_g_vehicle_bumblebee_blowup_radius, this, world,
+				 autocvar_g_vehicle_bumblebee_blowup_radius, this, NULL,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
-				 DEATH_VH_BUMB_DEATH.m_id, world);
+				 DEATH_VH_BUMB_DEATH.m_id, NULL);
 
 	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_BIG, (this.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
@@ -876,7 +876,7 @@ METHOD(Bumblebee, vr_spawn, void(Bumblebee thisveh, entity instance))
         instance.scale = 1.5;
 
         // Raygun beam
-        if(instance.gun3.enemy == world)
+        if(instance.gun3.enemy == NULL)
         {
             instance.gun3.enemy = spawn();
             Net_LinkEntity(instance.gun3.enemy, true, 0, bumble_raygun_send);

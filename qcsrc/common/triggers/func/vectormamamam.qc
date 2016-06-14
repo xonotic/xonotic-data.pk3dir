@@ -74,16 +74,16 @@ void func_vectormamamam_controller_think(entity this)
 void func_vectormamamam_findtarget(entity this)
 {
 	if(this.target != "")
-		this.wp00 = find(world, targetname, this.target);
+		this.wp00 = find(NULL, targetname, this.target);
 
 	if(this.target2 != "")
-		this.wp01 = find(world, targetname, this.target2);
+		this.wp01 = find(NULL, targetname, this.target2);
 
 	if(this.target3 != "")
-		this.wp02 = find(world, targetname, this.target3);
+		this.wp02 = find(NULL, targetname, this.target3);
 
 	if(this.target4 != "")
-		this.wp03 = find(world, targetname, this.target4);
+		this.wp03 = find(NULL, targetname, this.target4);
 
 	if(!this.wp00 && !this.wp01 && !this.wp02 && !this.wp03)
 		objerror(this, "No reference entity found, so there is nothing to move. Aborting.");

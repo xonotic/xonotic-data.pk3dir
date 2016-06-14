@@ -173,7 +173,7 @@ string W_FixWeaponOrder_BuildImpulseList(string o)
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST] = i;
 	heapsort(WEP_LAST - WEP_FIRST + 1, W_FixWeaponOrder_BuildImpulseList_swap, W_FixWeaponOrder_BuildImpulseList_cmp,
-		world);
+		NULL);
 	o = "";
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		o = strcat(o, " ", ftos(W_FixWeaponOrder_BuildImpulseList_buf[i - WEP_FIRST]));

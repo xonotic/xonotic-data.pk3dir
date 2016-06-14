@@ -46,11 +46,11 @@ string autocvar_sv_minigames_bulldozer_startlevel = "level1";
 // find same game piece given its tile name
 entity bd_find_piece(entity minig, string tile, bool check_target)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile && ((check_target) ? e.bd_tiletype == BD_TILE_TARGET : e.bd_tiletype != BD_TILE_TARGET) )
 			return e;
-	return world;
+	return NULL;
 }
 
 // check if the tile name is valid (15x15 grid)
@@ -65,17 +65,17 @@ bool bd_valid_tile(string tile)
 
 entity bd_find_dozer(entity minig)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
 			return e;
-	return world;
+	return NULL;
 }
 
 void bd_check_winner(entity minig)
 {
 	int total = 0, valid = 0;
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_TARGET )
 		{
@@ -192,7 +192,7 @@ void bd_move(entity minigame, entity player, string dir)
 			int dy = bound(-1, dys, 1);
 
 			int moved = 0;
-			entity e = world;
+			entity e = NULL;
 			while ( ( e = findentity(e,owner,minigame) ) )
 				if ( e.classname == "minigame_board_piece" && e.bd_tiletype == BD_TILE_DOZER )
 				{
@@ -375,7 +375,7 @@ void bd_reset_moves(entity minigame)
 #ifdef SVQC
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
-	e = world;
+	e = NULL;
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif
@@ -388,7 +388,7 @@ void bd_reset_moves(entity minigame)
 void bd_load_level(entity minigame);
 void bd_setup_pieces(entity minigame)
 {
-	entity e = world;
+	entity e = NULL;
 	while( (e = findentity(e, owner, minigame)) )
 		if(e.classname == "minigame_board_piece")
 		{
@@ -503,7 +503,7 @@ bool bd_save_level(entity minigame)
 	if(minigame.bd_levelname && minigame.bd_levelname != "")
 	{
 		int target_count = 0, boulder_count = 0;
-		entity piece = world;
+		entity piece = NULL;
 		while((piece = findentity(piece,owner,minigame)))
 		if(piece.classname == "minigame_board_piece")
 			if(piece.bd_tiletype == BD_TILE_BOULDER)
@@ -528,7 +528,7 @@ bool bd_save_level(entity minigame)
 		if(minigame.bd_nextlevel && minigame.bd_nextlevel != "" && fexists(strcat("minigames/bulldozer/storage_", minigame.bd_nextlevel, ".txt")))
 			fputs(file_get, strcat("nextlevel = \"", minigame.bd_nextlevel, "\"\n"));
 
-		entity e = world;
+		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
@@ -626,7 +626,7 @@ int bd_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
@@ -753,13 +753,13 @@ void bd_hud_board(vector pos, vector mySize)
 		{
 			if(e.bd_tiletype == BD_TILE_TARGET)
 			{
-				e.bd_enemy = world;
+				e.bd_enemy = NULL;
 				e.bd_enemy = bd_find_piece(active_minigame, e.netname, false);
 			}
 			else if(e.bd_tiletype == BD_TILE_BOULDER)
 			{
 				e.bd_hide = false; // reset either way
-				e.bd_hide = ((bd_find_piece(active_minigame, e.netname, true)) != world);
+				e.bd_hide = ((bd_find_piece(active_minigame, e.netname, true)) != NULL);
 			}
 		}
 	}

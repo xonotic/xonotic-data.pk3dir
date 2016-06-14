@@ -114,7 +114,7 @@ void raptor_land(entity this)
 void raptor_exit(entity this, int eject)
 {
 	vector spot;
-	this.tur_head.exteriormodeltoclient = world;
+	this.tur_head.exteriormodeltoclient = NULL;
 
 	if(!IS_DEAD(this))
 	{
@@ -155,7 +155,7 @@ void raptor_exit(entity this, int eject)
 	}
 
 	antilag_clear(this.owner, CS(this.owner));
-	this.owner = world;
+	this.owner = NULL;
 }
 
 bool raptor_frame(entity this)
@@ -290,7 +290,7 @@ bool raptor_frame(entity this)
 	if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
 	{
 		if(vehic.gun1.lock_time < time || IS_DEAD(vehic.gun1.enemy) || STAT(FROZEN, vehic.gun1.enemy))
-			vehic.gun1.enemy = world;
+			vehic.gun1.enemy = NULL;
 
 		if(trace_ent)
 		if(trace_ent.movetype)
@@ -341,7 +341,7 @@ bool raptor_frame(entity this)
 							 (1 / autocvar_g_vehicle_raptor_cannon_locking_releasetime) * frametime,
 							 autocvar_g_vehicle_raptor_cannon_locked_time);
 
-		if(vehic.lock_target != world)
+		if(vehic.lock_target != NULL)
 		if(autocvar_g_vehicle_raptor_cannon_predicttarget)
 		if(vehic.lock_strength == 1)
 		{
@@ -520,7 +520,7 @@ void raptor_blowup(entity this)
 {
 	this.deadflag	= DEAD_DEAD;
 	this.vehicle_exit(this, VHEF_NORMAL);
-	RadiusDamage (this, this.enemy, 250, 15, 250, world, world, 250, DEATH_VH_RAPT_DEATH.m_id, world);
+	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_RAPT_DEATH.m_id, NULL);
 
 	this.alpha		  = -1;
 	this.movetype	   = MOVETYPE_NONE;

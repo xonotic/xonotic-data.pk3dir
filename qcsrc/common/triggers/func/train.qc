@@ -6,18 +6,18 @@ void train_use(entity this, entity actor, entity trigger);
 void train_wait(entity this)
 {
 	SUB_UseTargets(this.enemy, NULL, NULL);
-	this.enemy = world;
+	this.enemy = NULL;
 
 	// if turning is enabled, the train will turn toward the next point while waiting
 	if(this.platmovetype_turn && !this.train_wait_turning)
 	{
 		entity targ, cp;
 		vector ang;
-		targ = find(world, targetname, this.target);
+		targ = find(NULL, targetname, this.target);
 		if((this.spawnflags & 1) && targ.curvetarget)
-			cp = find(world, targetname, targ.curvetarget);
+			cp = find(NULL, targetname, targ.curvetarget);
 		else
-			cp = world;
+			cp = NULL;
 
 		if(cp) // bezier curves movement
 			ang = cp.origin - (this.origin - this.view_ofs); // use the origin of the control point of the next path_corner
@@ -40,7 +40,7 @@ void train_wait(entity this)
 #endif
 
 #ifdef SVQC
-	entity tg = find(world, targetname, this.target);
+	entity tg = find(NULL, targetname, this.target);
 	if(tg.spawnflags & 4)
 	{
 		this.use = train_use;
@@ -63,16 +63,16 @@ void train_wait(entity this)
 
 void train_next(entity this)
 {
-	entity targ, cp = world;
+	entity targ, cp = NULL;
 	vector cp_org = '0 0 0';
 
-	targ = find(world, targetname, this.target);
+	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
 	if (this.spawnflags & 1)
 	{
 		if(targ.curvetarget)
 		{
-			cp = find(world, targetname, targ.curvetarget); // get its second target (the control point)
+			cp = find(NULL, targetname, targ.curvetarget); // get its second target (the control point)
 			cp_org = cp.origin - this.view_ofs; // no control point found, assume a straight line to the destination
 		}
 	}
@@ -186,7 +186,7 @@ void train_use(entity this, entity actor, entity trigger)
 void func_train_find(entity this)
 {
 	entity targ;
-	targ = find(world, targetname, this.target);
+	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
 	if (this.target == "")
 		objerror(this, "func_train_find: no next target");

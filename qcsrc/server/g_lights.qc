@@ -47,7 +47,7 @@ void dynlight_find_aiment(entity this)
 	if (!this.target)
 		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, this.target);
+	targ = find(NULL, targetname, this.target);
 	this.movetype = MOVETYPE_FOLLOW;
 	this.aiment = targ;
 	this.owner = targ;
@@ -63,7 +63,7 @@ void dynlight_find_path(entity this)
 	if (!this.target)
 		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, this.target);
+	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
 	setorigin(this, targ.origin);
 	setthink(this, train_next);
@@ -75,7 +75,7 @@ void dynlight_find_target(entity this)
 	if (!this.target)
 		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, this.target);
+	targ = find(NULL, targetname, this.target);
 	setattachment(this, targ, this.dtagname);
 	this.owner = targ;
 	setthink(this, dynlight_think);

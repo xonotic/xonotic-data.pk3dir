@@ -82,7 +82,7 @@ void W_MachineGun_MuzzleFlash_Think(entity this)
 	{
 		setthink(this, SUB_Remove);
 		this.nextthink = time;
-		this.realowner.muzzle_flash = world;
+		this.realowner.muzzle_flash = NULL;
 		return;
 	}
 
@@ -90,7 +90,7 @@ void W_MachineGun_MuzzleFlash_Think(entity this)
 
 void W_MachineGun_MuzzleFlash(entity actor)
 {
-	if(actor.muzzle_flash == world)
+	if(actor.muzzle_flash == NULL)
 		actor.muzzle_flash = spawn();
 
 	// muzzle flash for 1st person view

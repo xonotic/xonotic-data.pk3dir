@@ -66,7 +66,7 @@ spawnfunc(weapon_hagar) { weapon_defaultspawnfunc(this, WEP_HAGAR); }
 void W_Hagar_Explode(entity this)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), world, world, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, other);
 
 	remove(this);
 }
@@ -79,7 +79,7 @@ void W_Hagar_Explode_use(entity this, entity actor, entity trigger)
 void W_Hagar_Explode2(entity this)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), world, world, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, other);
 
 	remove(this);
 }
@@ -94,7 +94,7 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(this.health <= 0)
 		return;
 
-	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == this.owner) : true)
+	float is_linkexplode = ( ((inflictor.owner != NULL) ? (inflictor.owner == this.owner) : true)
 		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY)
 		&& (this.projectiledeathtype & HITTYPE_SECONDARY));
 
@@ -129,7 +129,7 @@ void W_Hagar_Touch2(entity this)
 		this.cnt++;
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);
 		this.angles = vectoangles(this.velocity);
-		this.owner = world;
+		this.owner = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -242,7 +242,7 @@ void W_Hagar_Attack2_Load_Release(entity actor, .entity weaponentity)
 	up = v_up;
 
 	shots = actor.hagar_load;
-	missile = world;
+	missile = NULL;
 	for(counter = 0; counter < shots; ++counter)
 	{
 		missile = new(missile);

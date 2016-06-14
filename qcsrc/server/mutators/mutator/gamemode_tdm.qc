@@ -13,7 +13,7 @@ REGISTER_MUTATOR(tdm, false)
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
+		InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
 
 		ActivateTeamplay();
 		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
@@ -70,7 +70,7 @@ void tdm_SpawnTeam (string teamname, float teamcolor)
 void tdm_DelayedInit(entity this)
 {
 	// if no teams are found, spawn defaults
-	if(find(world, classname, "tdm_team") == world)
+	if(find(NULL, classname, "tdm_team") == NULL)
 	{
 		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.\n");
 

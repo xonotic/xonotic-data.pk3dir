@@ -78,7 +78,7 @@ bool ka_ballcarrier_waypointsprite_visible_for_player(entity this, entity player
 void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(strcat(":ka:", mode, ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 void ka_TouchEvent(entity this);
@@ -107,7 +107,7 @@ void ka_RespawnBall(entity this) // runs whenever the ball needs to be relocated
 	Send_Effect(EFFECT_ELECTRO_COMBO, oldballorigin, '0 0 0', 1);
 	Send_Effect(EFFECT_ELECTRO_COMBO, this.origin, '0 0 0', 1);
 
-	WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', world, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
+	WaypointSprite_Spawn(WP_KaBall, 0, 0, this, '0 0 64', NULL, this.team, this, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_Ping(this.waypointsprite_attachedforcarrier);
 
 	sound(this, CH_TRIGGER, SND_KA_RESPAWN, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
@@ -166,7 +166,7 @@ void ka_TouchEvent(entity this) // runs any time that the ball comes in contact 
 
 	// messages and sounds
 	ka_EventLog("pickup", other);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_KEEPAWAY_PICKUP_SELF);
 	sound(this.owner, CH_TRIGGER, SND_KA_PICKEDUP, VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
@@ -190,7 +190,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	if(!ball) { return; }
 
 	// reset the ball
-	setattachment(ball, world, "");
+	setattachment(ball, NULL, "");
 	ball.movetype = MOVETYPE_BOUNCE;
 	ball.wait = time + 1;
 	settouch(ball, ka_TouchEvent);
@@ -201,7 +201,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P
-	ball.owner = world;
+	ball.owner = NULL;
 
 	// reset the player effects
 	plyr.glow_trail = false;
@@ -209,15 +209,15 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 
 	// messages and sounds
 	ka_EventLog("dropped", plyr);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
 	sound(other, CH_TRIGGER, SND_KA_DROPPED, VOL_BASE, ATTEN_NONE);	// ATTEN_NONE (it's a sound intended to be heard anywhere)
 
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
 
 	// waypoints
-	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
+	WaypointSprite_Spawn(WP_KaBall, 0, 0, ball, '0 0 64', NULL, ball.team, ball, waypointsprite_attachedforcarrier, false, RADARICON_FLAGCARRIER);
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
 	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
@@ -497,7 +497,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.pushable = true;
 	e.reset = ka_Reset;
 	settouch(e, ka_TouchEvent);
-	e.owner = world;
+	e.owner = NULL;
 	ka_ball = e;
 
 	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.

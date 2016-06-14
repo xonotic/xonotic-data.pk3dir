@@ -3,7 +3,7 @@
  */
 void trigger_keylock_trigger(entity this, entity actor, string s)
 {
-	for(entity t = world; (t = find(t, targetname, s)); )
+	for(entity t = NULL; (t = find(t, targetname, s)); )
 		if(t.use)
 			t.use(t, actor, this);
 }
@@ -14,7 +14,7 @@ void trigger_keylock_trigger(entity this, entity actor, string s)
 void trigger_keylock_kill(string s)
 {
 	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
+	for(t = NULL; (t = find(t, targetname, s)); )
 		remove(t);
 }
 

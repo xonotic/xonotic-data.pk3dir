@@ -231,7 +231,7 @@ entity pathlib_getbestopen()
 
     node = findchainentity(owner,openlist);
     if(!node)
-        return world;
+        return NULL;
 
     bestnode = node;
     while(node)
@@ -256,7 +256,7 @@ void pathlib_close_node(entity node,vector goal)
     }
 
     if(node == best_open_node)
-        best_open_node = world;
+        best_open_node = NULL;
 
     ++pathlib_closed_cnt;
     --pathlib_open_cnt;
@@ -278,13 +278,13 @@ void pathlib_close_node(entity node,vector goal)
 
 void pathlib_cleanup()
 {
-    best_open_node = world;
+    best_open_node = NULL;
 
     //return;
 
     entity node;
 
-    node = findfloat(world,is_path_node, true);
+    node = findfloat(NULL,is_path_node, true);
     while(node)
     {
         /*
@@ -292,7 +292,7 @@ void pathlib_cleanup()
         node.pathlib_node_g = 0;
         node.pathlib_node_h = 0;
         node.pathlib_node_f = 0;
-        node.path_prev = world;
+        node.path_prev = NULL;
         */
 
         dumpnode(node);
@@ -305,8 +305,8 @@ void pathlib_cleanup()
     if(closedlist)
         remove(closedlist);
 
-    openlist       = world;
-    closedlist     = world;
+    openlist       = NULL;
+    closedlist     = NULL;
 
 }
 
@@ -468,7 +468,7 @@ entity pathlib_astar(entity this, vector from,vector to)
     //to_z += 32;
 
     LOG_TRACE("AStar init\n");
-    path = pathlib_mknode(from, world);
+    path = pathlib_mknode(from, NULL);
     pathlib_close_node(path, to);
     if(pathlib_foundgoal)
     {
@@ -488,7 +488,7 @@ entity pathlib_astar(entity this, vector from,vector to)
         LOG_TRACE("AStar path fail.\n");
         pathlib_cleanup();
 
-        return world;
+        return NULL;
     }
 
     best_open_node = pathlib_getbestopen();
@@ -510,7 +510,7 @@ entity pathlib_astar(entity this, vector from,vector to)
             LOG_TRACE("Nodes -  closed: ", ftos(pathlib_closed_cnt),"\n");
 
             pathlib_cleanup();
-            return world;
+            return NULL;
         }
 
         best_open_node = pathlib_getbestopen();
@@ -528,8 +528,8 @@ entity pathlib_astar(entity this, vector from,vector to)
             ftime = gettime(GETTIME_REALTIME);
             ptime = ftime - ptime;
 
-            start = path_build(world,path.origin,world,world);
-            end   = path_build(world,goal_node.origin,world,start);
+            start = path_build(NULL,path.origin,NULL,NULL);
+            end   = path_build(NULL,goal_node.origin,NULL,start);
             ln    = end;
 
             open = goal_node;
@@ -574,5 +574,5 @@ entity pathlib_astar(entity this, vector from,vector to)
 
     pathlib_cleanup();
 
-    return world;
+    return NULL;
 }

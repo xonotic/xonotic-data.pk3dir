@@ -95,7 +95,7 @@ void NIX_ChooseNextWeapon()
 	RandomSelection_Init();
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		if(NIX_CanChooseWeapon(it.m_id))
-			RandomSelection_Add(world, it.m_id, string_null, 1, (it.m_id != nix_weapon));
+			RandomSelection_Add(NULL, it.m_id, string_null, 1, (it.m_id != nix_weapon));
 	));
 	nix_nextweapon = RandomSelection_chosen_float;
 }

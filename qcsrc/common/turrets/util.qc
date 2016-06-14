@@ -39,8 +39,8 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 	{
 		tracebox(start, smin, smax, end, false, this);
 
-		// if it is world we can't hurt it so stop now
-		if (trace_ent == world || trace_fraction == 1)
+		// if it is NULL we can't hurt it so stop now
+		if (trace_ent == NULL || trace_fraction == 1)
 			break;
 
 		if (trace_ent.solid == SOLID_BSP)
@@ -60,7 +60,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 	endpoint = trace_endpos;
 
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// restore their solid type
@@ -69,7 +69,7 @@ void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax
 	}
 
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// get the details we need to call the damage function

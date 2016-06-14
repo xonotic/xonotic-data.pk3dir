@@ -111,7 +111,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		{
 			entity own;
 			own = player.owner;
-			player.owner = world;
+			player.owner = NULL;
 			tracebox(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
 			player.owner = own;
 		}
@@ -509,8 +509,8 @@ void WarpZone_InitStep_FindOriginTarget(entity this)
 {
 	if(this.killtarget != "")
 	{
-		this.aiment = find(world, targetname, this.killtarget);
-		if(this.aiment == world)
+		this.aiment = find(NULL, targetname, this.killtarget);
+		if(this.aiment == NULL)
 		{
 			error("Warp zone with nonexisting killtarget");
 			return;
@@ -526,8 +526,8 @@ void WarpZonePosition_InitStep_FindTarget(entity this)
 		error("Warp zone position with no target");
 		return;
 	}
-	this.enemy = find(world, targetname, this.target);
-	if(this.enemy == world)
+	this.enemy = find(NULL, targetname, this.target);
+	if(this.enemy == NULL)
 	{
 		error("Warp zone position with nonexisting target");
 		return;
@@ -566,11 +566,11 @@ void WarpZoneCamera_InitStep_FindTarget(entity this)
 		error("Camera with no target");
 		return;
 	}
-	this.enemy = world;
-	for(e = world, i = 0; (e = find(e, targetname, this.target)); )
+	this.enemy = NULL;
+	for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )
 		if(random() * ++i < 1)
 			this.enemy = e;
-	if(this.enemy == world)
+	if(this.enemy == NULL)
 	{
 		error("Camera with nonexisting target");
 		return;
@@ -671,8 +671,8 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 void WarpZone_InitStep_ClearTarget(entity this)
 {
 	if(this.enemy)
-		this.enemy.enemy = world;
-	this.enemy = world;
+		this.enemy.enemy = NULL;
+	this.enemy = NULL;
 }
 
 entity warpzone_first; .entity warpzone_next;
@@ -689,15 +689,15 @@ void WarpZone_InitStep_FindTarget(entity this)
 	{
 		this.enemy = this; // so the if(!e.enemy) check also skips this, saves one IF
 
-		e2 = world;
-		for(e = world, i = 0; (e = find(e, targetname, this.target)); )
+		e2 = NULL;
+		for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )
 			if(!e.enemy)
 				if(e.classname == this.classname) // possibly non-warpzones may use the same targetname!
 					if(random() * ++i < 1)
 						e2 = e;
 		if(!e2)
 		{
-			this.enemy = world;
+			this.enemy = NULL;
 			error("Warpzone with non-existing target");
 			return;
 		}
