@@ -256,7 +256,7 @@ bool _Movetype_CheckWater(entity this)  // SV_CheckWater
 	{
 		// dprintf("_Movetype_CheckWater(): Original: '%d', New: '%d'\n", this.move_watertype, nativecontents);
 		if(this.contentstransition)
-			this.contentstransition(this.move_watertype, nativecontents);
+			WITHSELF(this, this.contentstransition(this.move_watertype, nativecontents));
 	}
 
 	this.move_waterlevel = WATERLEVEL_NONE;
@@ -298,7 +298,7 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 	{
 		// dprintf("_Movetype_CheckWaterTransition(): Origin: %s, Direct: '%d', Original: '%d', New: '%d'\n", vtos(ent.move_origin), pointcontents(ent.move_origin), ent.move_watertype, contents);
 		if(ent.contentstransition)
-			ent.contentstransition(ent.move_watertype, contents);
+			WITHSELF(ent, ent.contentstransition(ent.move_watertype, contents));
 	}
 
 	if(contents <= CONTENT_WATER)

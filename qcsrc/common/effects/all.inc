@@ -239,6 +239,8 @@ EFFECT(1, TR_SLIGHTBLOOD,           "TR_SLIGHTBLOOD")
 EFFECT(1, TR_KNIGHTSPIKE,           "TR_KNIGHTSPIKE")
 EFFECT(1, TR_VORESPIKE,             "TR_VORESPIKE")
 EFFECT(0, TE_SPARK,                 "TE_SPARK")
+EFFECT(0, WATER_SPLASH_SMALL,       "water_splash_small")
+EFFECT(0, WATER_SPLASH_LARGE,       "water_splash_large")
 
 EFFECT(1, ROCKETMINSTA_LASER_RED,       "rocketminsta_laser_red")
 EFFECT(1, ROCKETMINSTA_LASER_BLUE,      "rocketminsta_laser_blue")

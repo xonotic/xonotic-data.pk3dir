@@ -22,6 +22,14 @@ void SUB_Stop(entity this)
 	this.move_movetype = MOVETYPE_NONE;
 }
 
+void Projectile_ContentsTransition(int prev, int current)
+{ENGINE_EVENT();
+	if(current == CONTENT_WATER)
+	{
+		pointparticles(EFFECT_WATER_SPLASH_SMALL, this.move_origin, this.move_velocity, 1);
+	}
+}
+
 void Projectile_ResetTrail(entity this, vector to)
 {
 	this.trail_oldorigin = to;
@@ -334,6 +342,7 @@ NET_HANDLE(ENT_CLIENT_PROJECTILE, bool isnew)
 		settouch(this, SUB_Stop);
 		this.move_movetype = MOVETYPE_TOSS;
 		this.alphamod = 1;
+		this.contentstransition = Projectile_ContentsTransition;
 
 		switch (this.cnt)
 		{
