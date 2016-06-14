@@ -387,10 +387,10 @@ void HUD_Reset()
 		HUD_Mod_CTF_Reset();
 }
 
-float autocvar_hud_dynamic_shake;
-float autocvar_hud_dynamic_shake_damage_max;
-float autocvar_hud_dynamic_shake_damage_min;
-float autocvar_hud_dynamic_shake_scale;
+float autocvar_hud_dynamic_shake = 1;
+float autocvar_hud_dynamic_shake_damage_max = 130;
+float autocvar_hud_dynamic_shake_damage_min = 10;
+float autocvar_hud_dynamic_shake_scale = 0.2;
 float hud_dynamic_shake_x[10] = {0,    1, -0.7,  0.5, -0.3,  0.2, -0.1,  0.1,  0.0, 0};
 float hud_dynamic_shake_y[10] = {0,  0.4,  0.8, -0.2, -0.6,  0.0,  0.3,  0.1, -0.1, 0};
 bool Hud_Shake_Update()
