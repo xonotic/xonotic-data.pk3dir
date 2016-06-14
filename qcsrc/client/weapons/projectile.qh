@@ -1,3 +1,31 @@
-.float traileffect;
-void Projectile_ResetTrail(vector to);
-void Projectile_DrawTrail(vector to);
+#pragma once
+
+entityclass(Projectile);
+class(Projectile).int traileffect;
+
+class(Projectile).vector iorigin1, iorigin2;
+class(Projectile).float spawntime;
+class(Projectile).vector trail_oldorigin;
+class(Projectile).float trail_oldtime;
+class(Projectile).float fade_time, fade_rate;
+
+class(Projectile).float alphamod;
+class(Projectile).int count; // set if clientside projectile
+class(Projectile).int cnt;   // sound index
+class(Projectile).float gravity;
+class(Projectile).int snd_looping;
+class(Projectile).bool silent;
+
+void SUB_Stop(entity this);
+
+void Projectile_ResetTrail(entity this, vector to);
+
+void Projectile_DrawTrail(entity this, vector to);
+
+void Projectile_Draw(entity this);
+
+void loopsound(entity e, int ch, string samp, float vol, float attn);
+
+void Ent_RemoveProjectile(entity this);
+
+const int FL_PROJECTILE = BIT(15);

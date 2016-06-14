@@ -1,14 +1,22 @@
-.float skeleton_info_modelindex;
-.float skeleton_info_skin;
-#define BONETYPE_LOWER 0
-#define BONETYPE_UPPER 1
-#define MAX_BONES 128
-.float skeleton_bonetype[MAX_BONES];
-.float skeleton_numbones;
+#include "player_skeleton.qh"
+
+#include "mutators/events.qh"
+#include "../lib/csqcmodel/cl_player.qh"
+#include "../lib/warpzone/anglestransform.qh"
+
+.vector v_angle;
+
+class(Skeleton) .float skeleton_info_modelindex;
+class(Skeleton) .float skeleton_info_skin;
+const int BONETYPE_LOWER = 0;
+const int BONETYPE_UPPER = 1;
+const int MAX_BONES = 128;
+class(Skeleton) .float skeleton_bonetype[MAX_BONES];
+class(Skeleton) .float skeleton_numbones;
 
 void skeleton_loadinfo(entity e)
 {
-	float i;
+	int i;
 	if(e.skeleton_info_modelindex == e.modelindex && e.skeleton_info_skin == e.skin)
 		return;
 	e.bone_upperbody = 0;
@@ -17,6 +25,7 @@ void skeleton_loadinfo(entity e)
 		e.bone_weapon = gettagindex(e, "tag_weapon");
 	if(!e.bone_weapon)
 		e.bone_weapon = gettagindex(e, "bip01 r hand");
+	MUTATOR_CALLHOOK(Skeleton_CheckBones, e);
 	for(i = 0; i < MAX_AIM_BONES; ++i)
 	{
 		e.(bone_aim[i]) = 0;
@@ -31,6 +40,7 @@ void skeleton_loadinfo(entity e)
 			e.fixbone = get_model_parameters_fixbone;
 		if(get_model_parameters_bone_weapon)
 			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
+		MUTATOR_CALLHOOK(Skeleton_CheckModel, e);
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(get_model_parameters_bone_aim[i])
@@ -40,8 +50,8 @@ void skeleton_loadinfo(entity e)
 		}
 	}
 	else
-		dprint("No model parameters for ", e.model, "\n");
-	dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
+		LOG_TRACE("No model parameters for ", e.model, "\n");
+	//dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
 	get_model_parameters(string_null, 0);
 	e.skeleton_info_modelindex = e.modelindex;
 	e.skeleton_info_skin = e.skin;
@@ -56,11 +66,11 @@ void skeleton_markbones(entity e)
 {
 	float s = e.skeletonindex;
 	float n = (e.skeleton_numbones = skel_get_numbones(s));
-	float i;
+	int i;
 	for(i = 1; i <= n; ++i)
 	{
 		float t = BONETYPE_LOWER;
-		float p = skel_get_boneparent(s, i);
+		int p = skel_get_boneparent(s, i);
 		if(p > 0)
 			t = e.(skeleton_bonetype[p-1]);
 		if(i == e.bone_upperbody)
@@ -69,8 +79,9 @@ void skeleton_markbones(entity e)
 	}
 }
 
-void skel_set_boneabs(float s, float bone, vector absorg)
+void skel_set_boneabs(float s, int bone, vector absorg)
 {
+    TC(int, bone);
 	vector absang = fixedvectoangles2(v_forward, v_up);
 
 	vector parentorg = skel_get_boneabs(s, skel_get_boneparent(s, bone));
@@ -98,9 +109,9 @@ void free_skeleton_from_frames(entity e)
 	}
 }
 
-void skeleton_from_frames(entity e, float is_dead)
+void skeleton_from_frames(entity e, bool is_dead)
 {
-	float i;
+    TC(bool, is_dead);
 	float m = e.modelindex;
 	if(!e.skeletonindex)
 	{
@@ -110,7 +121,6 @@ void skeleton_from_frames(entity e, float is_dead)
 	float s = e.skeletonindex;
 	if(!s)
 		return;
-	float bone;
 	float n = e.skeleton_numbones;
 	float savelerpfrac = e.lerpfrac;
 	float savelerpfrac3 = e.lerpfrac3;
@@ -129,7 +139,7 @@ void skeleton_from_frames(entity e, float is_dead)
 		skel_get_boneabs(s, e.bone_upperbody);
 		fixbone_oldangles = fixedvectoangles2(v_forward, v_up);
 	}
-
+	int bone;
 	for(bone = 0; bone < n; )
 	{
 		float firstbone = bone;
@@ -168,11 +178,14 @@ void skeleton_from_frames(entity e, float is_dead)
 
 	if(!is_dead)
 	{
+		if(e == csqcplayer)
+			e.v_angle_x = input_angles_x;
+		int i;
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(e.(bone_aim[i]))
 			{
-				vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.(bone_aimweight[i]);
+				vector aim = '1 0 0' * bound(-90, e.v_angle.x, 90) * e.(bone_aimweight[i]);
 				vector org = skel_get_boneabs(s, e.(bone_aim[i]));
 				vector ang_cur = fixedvectoangles2(v_forward, v_up);
 				vector ang = AnglesTransform_Multiply(aim, ang_cur);

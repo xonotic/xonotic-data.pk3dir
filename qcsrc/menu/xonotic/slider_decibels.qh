@@ -1,0 +1,10 @@
+#pragma once
+
+#include "slider.qh"
+CLASS(XonoticDecibelsSlider, XonoticSlider)
+	METHOD(XonoticDecibelsSlider, loadCvars, void(entity));
+	METHOD(XonoticDecibelsSlider, saveCvars, void(entity));
+	METHOD(XonoticDecibelsSlider, valueToText, string(entity, float));
+ENDCLASS(XonoticDecibelsSlider)
+entity makeXonoticDecibelsSlider_T(float, float, float, string, string);
+entity makeXonoticDecibelsSlider(float, float, float, string);

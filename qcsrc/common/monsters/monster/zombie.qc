@@ -1,17 +1,34 @@
-#ifdef REGISTER_MONSTER
-REGISTER_MONSTER(
-/* MON_##id   */ ZOMBIE,
-/* function   */ m_zombie,
-/* spawnflags */ MON_FLAG_MELEE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 47',
-/* model      */ "zombie.dpm",
-/* netname    */ "zombie",
-/* fullname   */ _("Zombie")
-);
+#ifndef ZOMBIE_H
+#define ZOMBIE_H
 
-#else
+#ifndef MENUQC
+MODEL(MON_ZOMBIE, M_Model("zombie.dpm"));
+#endif
+
+CLASS(Zombie, Monster)
+    ATTRIB(Zombie, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RIDE);
+    ATTRIB(Zombie, mins, vector, '-18 -18 -25');
+    ATTRIB(Zombie, maxs, vector, '18 18 47');
+#ifndef MENUQC
+    ATTRIB(Zombie, m_model, Model, MDL_MON_ZOMBIE);
+#endif
+    ATTRIB(Zombie, netname, string, "zombie");
+    ATTRIB(Zombie, monster_name, string, _("Zombie"));
+ENDCLASS(Zombie)
+
+REGISTER_MONSTER(ZOMBIE, NEW(Zombie)) {
+#ifndef MENUQC
+    this.mr_precache(this);
+#endif
+}
+
+#endif
+
+#ifdef IMPLEMENTATION
+
 #ifdef SVQC
 float autocvar_g_monster_zombie_health;
+float autocvar_g_monster_zombie_damageforcescale = 0.55;
 float autocvar_g_monster_zombie_attack_melee_damage;
 float autocvar_g_monster_zombie_attack_melee_delay;
 float autocvar_g_monster_zombie_attack_leap_damage;
@@ -22,6 +39,7 @@ float autocvar_g_monster_zombie_speed_stop;
 float autocvar_g_monster_zombie_speed_run;
 float autocvar_g_monster_zombie_speed_walk;
 
+/*
 const float zombie_anim_attackleap			= 0;
 const float zombie_anim_attackrun1			= 1;
 const float zombie_anim_attackrun2			= 2;
@@ -53,144 +71,168 @@ const float zombie_anim_runforward			= 27;
 const float zombie_anim_runforwardleft		= 28;
 const float zombie_anim_runforwardright		= 29;
 const float zombie_anim_spawn				= 30;
+*/
 
-void zombie_attack_leap_touch()
+.vector moveto;
+
+void M_Zombie_Attack_Leap_Touch(entity this)
 {
-	if (self.health <= 0)
+	if (this.health <= 0)
 		return;
 
 	vector angles_face;
 
 	if(other.takedamage)
 	{
-		angles_face = vectoangles(self.moveto - self.origin);
+		angles_face = vectoangles(this.moveto - this.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * Monster_SkillModifier(), DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
-		self.touch = MonsterTouch; // instantly turn it off to stop damage spam
+		Damage(other, this, this, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_ZOMBIE_JUMP.m_id, other.origin, angles_face);
+		settouch(this, Monster_Touch); // instantly turn it off to stop damage spam
+		this.state = 0;
 	}
 
 	if (trace_dphitcontents)
-		self.touch = MonsterTouch;
+	{
+		this.state = 0;
+		settouch(this, Monster_Touch);
+	}
 }
 
-void zombie_blockend()
+void M_Zombie_Defend_Block_End(entity this)
 {
-	if(self.health <= 0)
+	if(this.health <= 0)
 		return;
 
-	self.frame = zombie_anim_blockend;
-	self.armorvalue = 0;
-	self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
+	setanim(this, this.anim_blockend, false, true, true);
+	this.armorvalue = autocvar_g_monsters_armor_blockpercent;
 }
 
-float zombie_block()
+bool M_Zombie_Defend_Block(entity this)
 {
-	self.frame = zombie_anim_blockstart;
-	self.armorvalue = 100;
-	self.m_armor_blockpercent = 0.9;
-	self.state = MONSTER_STATE_ATTACK_MELEE; // freeze monster
-	self.attack_finished_single = time + 2.1;
+	this.armorvalue = 0.9;
+	this.state = MONSTER_ATTACK_MELEE; // freeze monster
+	this.attack_finished_single[0] = time + 2.1;
+	this.anim_finished = this.attack_finished_single[0];
+	setanim(this, this.anim_blockstart, false, true, true);
 
-	defer(2, zombie_blockend);
+	Monster_Delay(this, 1, 2, M_Zombie_Defend_Block_End);
 
-	return TRUE;
+	return true;
 }
 
-float zombie_attack(float attack_type)
+bool M_Zombie_Attack(int attack_type, entity actor, entity targ)
 {
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float rand = random(), chosen_anim;
+			if(random() < 0.3 && actor.health < 75 && actor.enemy.health > 10)
+				return M_Zombie_Defend_Block(actor);
 
-			if(rand < 0.33)
-				chosen_anim = zombie_anim_attackstanding1;
-			else if(rand < 0.66)
-				chosen_anim = zombie_anim_attackstanding2;
+			float anim_chance = random();
+			vector chosen_anim;
+
+			if(anim_chance < 0.33)
+				chosen_anim = actor.anim_melee1;
+			else if(anim_chance < 0.66)
+				chosen_anim = actor.anim_melee2;
 			else
-				chosen_anim = zombie_anim_attackstanding3;
+				chosen_anim = actor.anim_melee3;
 
-			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
-				return zombie_block();
-
-			return monster_melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
+			return Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, actor.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE.m_id, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			makevectors(self.angles);
-			return monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
+			makevectors(actor.angles);
+			return Monster_Attack_Leap(actor, actor.anim_shoot, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
-void spawnfunc_monster_zombie()
-{
-	self.classname = "monster_zombie";
-
-	if(!monster_initialize(MON_ZOMBIE)) { remove(self); return; }
-}
-
-float m_zombie(float req)
-{
-	switch(req)
-	{
-		case MR_THINK:
-		{
-			monster_move((autocvar_g_monster_zombie_speed_run), (autocvar_g_monster_zombie_speed_walk), (autocvar_g_monster_zombie_speed_stop), zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
-			return TRUE;
-		}
-		case MR_DEATH:
-		{
-			self.armorvalue = 0;
-			self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
-			self.frame = ((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
-			return TRUE;
-		}
-		case MR_SETUP:
-		{
-			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
-
-			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
-				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
-
-			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
-
-			self.monster_loot = spawnfunc_item_health_medium;
-			self.monster_attackfunc	= zombie_attack;
-			self.frame = zombie_anim_spawn;
-			self.spawn_time = time + 2.1;
-			self.spawnshieldtime = self.spawn_time;
-			self.respawntime = 0.2;
-
-			return TRUE;
-		}
-		case MR_PRECACHE:
-		{
-			precache_model("models/monsters/zombie.dpm");
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
+spawnfunc(monster_zombie) { Monster_Spawn(this, MON_ZOMBIE.monsterid); }
 #endif // SVQC
-#ifdef CSQC
-float m_zombie(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
 
-	return TRUE;
+#ifdef SVQC
+METHOD(Zombie, mr_think, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    if(time >= actor.spawn_time)
+        actor.damageforcescale = autocvar_g_monster_zombie_damageforcescale;
+    return true;
 }
 
-#endif // CSQC
-#endif // REGISTER_MONSTER
+METHOD(Zombie, mr_pain, float(Zombie this, entity actor, float damage_take, entity attacker, float deathtype))
+{
+    TC(Zombie, this);
+    actor.pain_finished = time + 0.34;
+    setanim(actor, ((random() > 0.5) ? actor.anim_pain1 : actor.anim_pain2), true, true, false);
+    return damage_take;
+}
+
+METHOD(Zombie, mr_death, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
+
+    setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
+    return true;
+}
+#endif
+#ifndef MENUQC
+METHOD(Zombie, mr_anim, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    vector none = '0 0 0';
+    actor.anim_die1 = animfixfps(actor, '9 1 0.5', none); // 2 seconds
+    actor.anim_die2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
+    actor.anim_spawn = animfixfps(actor, '30 1 3', none);
+    actor.anim_walk = animfixfps(actor, '27 1 1', none);
+    actor.anim_idle = animfixfps(actor, '19 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '20 1 2', none); // 0.5 seconds
+    actor.anim_pain2 = animfixfps(actor, '22 1 2', none); // 0.5 seconds
+    actor.anim_melee1 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_melee3 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+    actor.anim_shoot = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '27 1 1', none);
+    actor.anim_blockstart = animfixfps(actor, '8 1 1', none);
+    actor.anim_blockend = animfixfps(actor, '7 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+METHOD(Zombie, mr_setup, bool(Zombie this, entity actor))
+{
+    TC(Zombie, this);
+    if(!actor.health) actor.health = (autocvar_g_monster_zombie_health);
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_zombie_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_zombie_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
+
+    if(actor.spawnflags & MONSTERFLAG_NORESPAWN)
+        actor.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
+
+    actor.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
+
+    actor.monster_loot = spawnfunc_item_health_medium;
+    actor.monster_attackfunc = M_Zombie_Attack;
+    actor.spawnshieldtime = actor.spawn_time;
+    actor.respawntime = 0.2;
+    actor.damageforcescale = 0.0001; // no push while spawning
+
+    setanim(actor, actor.anim_spawn, false, true, true);
+    actor.spawn_time = actor.animstate_endtime;
+
+    return true;
+}
+
+METHOD(Zombie, mr_precache, bool(Zombie this))
+{
+    TC(Zombie, this);
+    return true;
+}
+#endif
+
+#endif

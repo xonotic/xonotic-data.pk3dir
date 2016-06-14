@@ -1,3 +1,7 @@
+#include "expandnode.qh"
+#include "pathlib.qh"
+#include "utility.qh"
+
 vector plib_points2[8];
 vector plib_points[8];
 float  plib_fvals[8];
@@ -5,7 +9,7 @@ float  plib_fvals[8];
 float pathlib_expandnode_starf(entity node, vector start, vector goal)
 {
     vector where,f,r,t;
-    float i,fc,fc2,c;
+    float fc,c;
     entity nap;
 
     where = node.origin;
@@ -37,7 +41,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
     // Back-left
     plib_points[7] = where - f - r;
 
-    for(i=0;i < 8; ++i)
+    for(int i=0;i < 8; ++i)
     {
         t = plib_points[i];
         fc  = pathlib_heuristic(t,goal) + pathlib_cost(node, t, pathlib_gridsize);
@@ -49,8 +53,8 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
     plib_points2[0] = plib_points[0];
     vector bp;
     bp = plib_points[0];
-    fc2 = 0;
-    for(i = 0; i < 8; ++i)
+    int fc2 = 0;
+    for(int i = 0; i < 8; ++i)
     {
         c = 0;
         nap = pathlib_nodeatpoint(plib_points[i]);
@@ -80,7 +84,7 @@ float pathlib_expandnode_starf(entity node, vector start, vector goal)
 
     pathlib_makenode(node, start, bp, goal, pathlib_gridsize);
 
-    for(i = 0; i < 3; ++i)
+    for(int i = 0; i < 3; ++i)
     {
         pathlib_makenode(node, start, plib_points2[i], goal, pathlib_gridsize);
     }
@@ -98,11 +102,11 @@ float pathlib_expandnode_star(entity node, vector start, vector goal)
     r = PLIB_RIGHT   * pathlib_gridsize;
 
     if (node.pathlib_node_edgeflags == pathlib_node_edgeflag_unknown)
-        node.pathlib_node_edgeflags = tile_check_plus2(node.origin);
+        node.pathlib_node_edgeflags = tile_check_plus2(node, node.origin);
 
     if(node.pathlib_node_edgeflags == pathlib_node_edgeflag_none)
     {
-        dprint("Node at ", vtos(node.origin), " not expanable");
+        LOG_TRACE("Node at ", vtos(node.origin), " not expanable");
         return pathlib_open_cnt;
     }
 
@@ -220,9 +224,9 @@ float pathlib_expandnode_box(entity node, vector start, vector goal)
 {
     vector v;
 
-    for(v_z = node.origin_z - pathlib_gridsize; v_z <= node.origin_z + pathlib_gridsize; v_z += pathlib_gridsize)
-    for(v_y = node.origin_y - pathlib_gridsize; v_y <= node.origin_y + pathlib_gridsize; v_y += pathlib_gridsize)
-    for(v_x = node.origin_x - pathlib_gridsize; v_x <= node.origin_x + pathlib_gridsize; v_x += pathlib_gridsize)
+    for(v.z = node.origin.z - pathlib_gridsize; v.z <= node.origin.z + pathlib_gridsize; v.z += pathlib_gridsize)
+    for(v.y = node.origin.y - pathlib_gridsize; v.y <= node.origin.y + pathlib_gridsize; v.y += pathlib_gridsize)
+    for(v.x = node.origin.x - pathlib_gridsize; v.x <= node.origin.x + pathlib_gridsize; v.x += pathlib_gridsize)
     {
         //if(vlen(v - node.origin))
             pathlib_makenode(node,start,v,goal,pathlib_movecost);

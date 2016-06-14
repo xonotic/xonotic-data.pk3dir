@@ -1,9 +1,16 @@
+#include "hitplot.qh"
+
+#include "../antilag.qh"
+#include "../g_subs.qh"
+#include <common/weapons/all.qh>
+#include <common/state.qh>
+
 vector W_HitPlotUnnormalizedUntransform(vector screenforward, vector screenright, vector screenup, vector v)
 {
 	vector ret;
-	ret_x = screenright * v;
-	ret_y = screenup * v;
-	ret_z = screenforward * v;
+	ret.x = screenright * v;
+	ret.y = screenup * v;
+	ret.z = screenforward * v;
 	return ret;
 }
 
@@ -20,14 +27,14 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 	for(i = 0; i < 2; ++i) for(j = 0; j < 2; ++j) for(k = 0; k < 2; ++k)
 	{
 		thisv = targ.origin;
-		if(i) thisv_x += targ.maxs_x; else thisv_x += targ.mins_x;
-		if(j) thisv_y += targ.maxs_y; else thisv_y += targ.mins_y;
-		if(k) thisv_z += targ.maxs_z; else thisv_z += targ.mins_z;
+		if(i) thisv.x += targ.maxs.x; else thisv.x += targ.mins.x;
+		if(j) thisv.y += targ.maxs.y; else thisv.y += targ.mins.y;
+		if(k) thisv.z += targ.maxs.z; else thisv.z += targ.mins.z;
 		thisv = W_HitPlotUnnormalizedUntransform(screenforward, screenright, screenup, thisv);
 		if(i || j || k)
 		{
-			if(mi_x > thisv_x) mi_x = thisv_x; if(ma_x < thisv_x) ma_x = thisv_x;
-			if(mi_y > thisv_y) mi_y = thisv_y; if(ma_y < thisv_y) ma_y = thisv_y;
+			if(mi.x > thisv.x) mi.x = thisv.x; if(ma.x < thisv.x) ma.x = thisv.x;
+			if(mi.y > thisv.y) mi.y = thisv.y; if(ma.y < thisv.y) ma.y = thisv.y;
 			//if(mi_z > thisv_z) mi_z = thisv_z; if(ma_z < thisv_z) ma_y = thisv_z;
 		}
 		else
@@ -38,9 +45,9 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 	}
 
 	thisv = W_HitPlotUnnormalizedUntransform(screenforward, screenright, screenup, v);
-	ret_x = (thisv_x - mi_x) / (ma_x - mi_x);
-	ret_y = (thisv_y - mi_y) / (ma_y - mi_y);
-	ret_z = thisv_z - myv_z;
+	ret.x = (thisv.x - mi.x) / (ma.x - mi.x);
+	ret.y = (thisv.y - mi.y) / (ma.y - mi.y);
+	ret.z = thisv.z - myv.z;
 	return ret;
 }
 
@@ -60,12 +67,13 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 
 		org = player.origin + player.view_ofs;
 		traceline_antilag_force(player, org, org + screenforward * MAX_SHOT_DISTANCE, MOVE_NORMAL, player, lag);
-		if(IS_CLIENT(trace_ent) || (trace_ent.flags & FL_MONSTER))
+		if(IS_CLIENT(trace_ent) || IS_MONSTER(trace_ent))
 		{
-			antilag_takeback(trace_ent, time - lag);
+		    entity store = IS_CLIENT(trace_ent) ? CS(trace_ent) : trace_ent;
+			antilag_takeback(trace_ent, store, time - lag);
 			hitplot = W_HitPlotNormalizedUntransform(org, trace_ent, screenforward, screenright, screenup, trace_endpos);
-			antilag_restore(trace_ent);
-			fputs(player.hitplotfh, strcat(ftos(hitplot_x), " ", ftos(hitplot_y), " ", ftos(hitplot_z), " ", ftos(player.switchweapon), "\n"));
+			antilag_restore(trace_ent, store);
+			fputs(player.hitplotfh, strcat(ftos(hitplot.x), " ", ftos(hitplot.y), " ", ftos(hitplot.z), " ", ftos(PS(player).m_switchweapon.m_id), "\n"));
 			//print(strcat(ftos(hitplot_x), " ", ftos(hitplot_y), " ", ftos(hitplot_z), "\n"));
 		}
 	}
@@ -73,7 +81,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 
 void W_HitPlotOpen(entity player)
 {
-	if(autocvar_g_hitplots || strstrofs(strcat(" ", autocvar_g_hitplots_individuals, " "), strcat(" ", player.netaddress, " "), 0) >= 0)
+	if(autocvar_g_hitplots || strhasword(autocvar_g_hitplots_individuals, player.netaddress))
 	{
 		player.hitplotfh = fopen(strcat("hits-", matchid, "-", player.netaddress, "-", ftos(player.playerid), ".plot"), FILE_WRITE);
 		fputs(player.hitplotfh, strcat("#name ", player.netname, "\n"));

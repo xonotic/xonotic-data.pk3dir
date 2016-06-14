@@ -1,29 +1,362 @@
-// ONLY EVER ADD NEW WEAPONS AT THE END. IF YOU REMOVE ONE, PUT THE LAST ONE ON
-// ITS PLACE. THIS IS TO AVOID UNNECESSARY RENUMBERING OF WEAPON IMPULSES.
-// IF YOU DISREGARD THIS NOTICE, I'LL KILL YOU WITH THE @!#%'N TUBA
+#ifndef WEAPONS_ALL_H
+#define WEAPONS_ALL_H
 
-// core weapons
-#include "w_blaster.qc"
-#include "w_shotgun.qc"
-#include "w_machinegun.qc"
-#include "w_mortar.qc"
-#include "w_minelayer.qc"
-#include "w_electro.qc"
-#include "w_crylink.qc"
-#include "w_vortex.qc"
-#include "w_hagar.qc"
-#include "w_devastator.qc"
+#include <common/command/all.qh>
+#include <common/stats.qh>
+#include "config.qh"
 
-// other weapons
-#include "w_porto.qc"
-#include "w_vaporizer.qc"
-#include "w_hook.qc"
-#include "w_hlac.qc"
-#include "w_tuba.qc"
-#include "w_rifle.qc"
-#include "w_fireball.qc"
-#include "w_seeker.qc"
-#include "w_shockwave.qc"
-#include "w_arc.qc"
-#include "w_hmg.qc"
-#include "w_rpc.qc"
+// weapon sets
+USING(WepSet, vector);
+#ifdef SVQC
+void WriteWepSet(float dest, WepSet w);
+#endif
+
+#ifdef CSQC
+WepSet WepSet_GetFromStat();
+WepSet WepSet_GetFromStat_InMap();
+WepSet ReadWepSet();
+#endif
+
+#include "weapon.qh"
+
+#ifndef MENUQC
+#include "calculations.qh"
+#include <common/models/all.qh>
+#endif
+
+#include <common/util.qh>
+
+#ifdef SVQC
+#include <server/bot/aim.qh>
+#endif
+
+REGISTRY(Weapons, 72) // Increase as needed. Can be up to 72.
+#define Weapons_from(i) _Weapons_from(i, WEP_Null)
+REGISTER_REGISTRY(Weapons)
+STATIC_INIT(WeaponPickup) { FOREACH(Weapons, true, it.m_pickup = NEW(WeaponPickup, it)); }
+
+.WepSet m_wepset;
+#define WEPSET(id) (WEP_##id.m_wepset)
+#define WepSet_FromWeapon(it) ((it).m_wepset)
+WepSet _WepSet_FromWeapon(int i);
+
+GENERIC_COMMAND(dumpweapons, "Dump all weapons into weapons_dump.txt") // WEAPONTODO: make this work with other progs than just server
+{
+    switch(request)
+    {
+        case CMD_REQUEST_COMMAND:
+        {
+            #ifdef SVQC
+            wep_config_file = -1;
+            wep_config_alsoprint = -1;
+            string filename = argv(1);
+
+            if(filename == "")
+            {
+                filename = "weapons_dump.cfg";
+                wep_config_alsoprint = false;
+            }
+            else if(filename == "-")
+            {
+                filename = "weapons_dump.cfg";
+                wep_config_alsoprint = true;
+            }
+            wep_config_file = fopen(filename, FILE_WRITE);
+
+            if(wep_config_file >= 0)
+            {
+                Dump_Weapon_Settings();
+                LOG_INFO(sprintf("Dumping weapons... File located in ^2data/data/%s^7.\n", filename));
+                fclose(wep_config_file);
+                wep_config_file = -1;
+                wep_config_alsoprint = -1;
+            }
+            else
+            {
+                LOG_INFO(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+            }
+            #else
+            LOG_INFO(_("Weapons dump command only works with sv_cmd.\n"));
+            #endif
+            return;
+        }
+
+        default:
+        case CMD_REQUEST_USAGE:
+        {
+            LOG_INFO(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpweapons [filename]"));
+            LOG_INFO("  Where 'filename' is the file to write (default is weapons_dump.cfg),\n");
+            LOG_INFO("  if supplied with '-' output to console as well as default,\n");
+            LOG_INFO("  if left blank, it will only write to default.\n");
+            return;
+        }
+    }
+}
+
+#ifdef SVQC
+entity W_PROP_reloader;
+float autocvar_w_prop_interval = 5;
+.void(Weapon this, int) wr_net;
+void W_PROP_reload(int chan, entity to)
+{
+    W_PROP_reloader.nextthink = time + autocvar_w_prop_interval;
+    msg_entity = to;
+    FOREACH(Weapons, true, {
+        it.wr_update(it);
+        void(Weapon, int) f = it.wr_net;
+        if (f) f(it, chan);
+    });
+}
+void W_PROP_think(entity this)
+{
+    W_PROP_reload(MSG_ALL, NULL);
+}
+STATIC_INIT_LATE(W_PROP_reloader)
+{
+    entity e = W_PROP_reloader = new_pure(W_PROP_reloader);
+    setthink(e, W_PROP_think);
+    W_PROP_think(e);
+}
+#endif
+
+#define REGISTER_WEAPON(...) EVAL_REGISTER_WEAPON(OVERLOAD(REGISTER_WEAPON, __VA_ARGS__))
+#define EVAL_REGISTER_WEAPON(...) __VA_ARGS__
+#define REGISTER_WEAPON_2(id, inst) REGISTER(Weapons, WEP, id, m_id, inst)
+/** TODO: deprecated - remove */
+#define REGISTER_WEAPON_3(id, sname, inst) \
+    REGISTER_WEAPON_2(id, inst); \
+    [[alias("WEP_" #id)]] Weapon _wep_##sname
+
+REGISTER_WEAPON(Null, NEW(Weapon));
+
+Weapon Weapons_fromstr(string s)
+{
+    FOREACH(Weapons, it != WEP_Null && it.netname == s, return it);
+    return NULL;
+}
+
+
+// legacy w_prop mappings
+#define X(fld, T) .T fld; .T wepvar_##fld = fld;
+X(switchdelay_drop, float)
+X(switchdelay_raise, float)
+X(weaponreplace, string)
+X(weaponstartoverride, float)
+X(weaponstart, float)
+X(weaponthrowable, float)
+X(reload_ammo, float)
+.float reloading_ammo = reload_ammo;
+X(reload_time, float)
+.float reloading_time = reload_time;
+#undef X
+
+
+
+#define W_PROPS(L, class, prefix) \
+    L(W_PROP_BEGIN, W_PROP, W_PROP_END, class, prefix) \
+    L(W_CONFIG_BEGIN, W_CONFIG, W_CONFIG_END, class, prefix) \
+    L(W_UPDATE_BEGIN, W_UPDATE, W_UPDATE_END, class, prefix) \
+    L(W_NET_BEGIN, W_NET, W_NET_END, class, prefix) \
+    /**/ \
+
+
+    #define W_PROP(class, wepname, fld, T, m)       W_PROP_##m(class, fld, T, wepname)
+    #define W_PROP_NONE(class, fld, T, wepname)     _W_PROP(class, fld, T, wepname)
+    #define W_PROP_PRI(class, fld, T, wepname)      _W_PROP(class, primary_##fld, T, wepname)
+    #define W_PROP_SEC(class, fld, T, wepname)      _W_PROP(class, secondary_##fld, T, wepname)
+    #define W_PROP_BOTH(class, fld, T, wepname) \
+            W_PROP_PRI(class, fld, T, wepname) \
+            W_PROP_SEC(class, fld, T, wepname)
+    #define W_PROP_BEGIN(class)
+        #define _W_PROP(class, fld, T, wepname) \
+            /* static */ T _W_PROP_CVAR(wepname, fld); \
+            ATTRIB(class, wepvar_##fld, T, _W_PROP_CVAR(wepname, fld));
+        #define _W_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
+    #define W_PROP_END()
+
+
+
+    #define W_CONFIG(class, wepname, fld, T, m)     W_CONFIG_##m(class, fld, T, wepname)
+    #define W_CONFIG_NONE(class, fld, T, wepname)   _W_CONFIG(class, fld, T, wepname)
+    #define W_CONFIG_PRI(class, fld, T, wepname)    _W_CONFIG(class, primary_##fld, T, wepname)
+    #define W_CONFIG_SEC(class, fld, T, wepname)    _W_CONFIG(class, secondary_##fld, T, wepname)
+    #define W_CONFIG_BOTH(class, fld, T, wepname) \
+            W_CONFIG_PRI(class, fld, T, wepname) \
+            W_CONFIG_SEC(class, fld, T, wepname)
+    #define W_CONFIG_BEGIN(class) METHOD(class, wr_config, void(class this)) {
+        #ifdef SVQC
+            #define _W_CONFIG(class, fld, T, wepname) if (#wepname == this.netname) WEP_CONFIG_WRITE_CVARS(wepname, fld, T);
+        #else
+            #define _W_CONFIG(class, fld, T, wepname)
+        #endif
+    #define W_CONFIG_END() }
+
+
+    #define W_UPDATE(class, wepname, fld, T, m)     W_UPDATE_##m(class, fld, T, wepname)
+    #define W_UPDATE_NONE(class, fld, T, wepname)   _W_UPDATE(class, fld, T, wepname)
+    #define W_UPDATE_PRI(class, fld, T, wepname)    _W_UPDATE(class, primary_##fld, T, wepname)
+    #define W_UPDATE_SEC(class, fld, T, wepname)    _W_UPDATE(class, secondary_##fld, T, wepname)
+    #define W_UPDATE_BOTH(class, fld, T, wepname) \
+            W_UPDATE_PRI(class, fld, T, wepname) \
+            W_UPDATE_SEC(class, fld, T, wepname)
+    .entity baseline, baseline_target;
+    #define W_UPDATE_BEGIN(class) \
+        METHOD(class, wr_update, void(class this)) \
+        { \
+            noref entity b = this.baseline; \
+            if (!b) \
+            { \
+                b = this.baseline = new_pure(baseline); \
+                b.baseline_target = this; \
+            }
+        #ifdef SVQC
+            #define _W_UPDATE(class, fld, T, wepname) \
+                { \
+                    T it = _W_PROP_CVAR(wepname, fld); \
+                    b.wepvar_##fld = this.wepvar_##fld; \
+                    this.wepvar_##fld = it; \
+                }
+        #else
+            #define _W_UPDATE(class, fld, T, wepname)
+        #endif
+    #define W_UPDATE_END() }
+
+
+    #define W_NET(class, wepname, fld, T, m)     W_NET_##m(class, fld, T, wepname)
+    #define W_NET_NONE(class, fld, T, wepname)   _W_NET(class, fld, T, wepname)
+    #define W_NET_PRI(class, fld, T, wepname)    _W_NET(class, primary_##fld, T, wepname)
+    #define W_NET_SEC(class, fld, T, wepname)    _W_NET(class, secondary_##fld, T, wepname)
+    #define W_NET_BOTH(class, fld, T, wepname) \
+            W_NET_PRI(class, fld, T, wepname) \
+            W_NET_SEC(class, fld, T, wepname)
+    REGISTER_NET_TEMP(WeaponUpdate)
+    #if defined(CSQC)
+        #define W_NET_BEGIN(class) METHOD(class, wr_net, void(class this, int i)) { int n = 0;
+            #define _W_NET(class, fld, T, wepname) \
+            { \
+                if (++n == i) this.wepvar_##fld = Read_##T(); \
+            }
+            .void(Weapon this, int i) wr_net;
+            NET_HANDLE(WeaponUpdate, bool isnew)
+            {
+                Weapon w = Weapons_from(ReadByte());
+                for (int i; (i = ReadByte()); )
+                {
+                    w.wr_net(w, i);
+                }
+                return true;
+            }
+        #define W_NET_END() }
+    #elif defined(SVQC)
+        #define W_NET_BEGIN(class) \
+            METHOD(class, wr_net, void(class this, int chan)) \
+            { \
+                bool commit = false; \
+                int i = 0;
+    #define _W_NET(class, fld, T, wepname) \
+                { \
+                    ++i; \
+                    T it = this.wepvar_##fld; \
+                    if (chan == MSG_ONE || it != this.baseline.wepvar_##fld) \
+                    { \
+                        if (!commit) { commit = true; WriteHeader(chan, WeaponUpdate); WriteByte(chan, this.m_id); } \
+                        WriteByte(chan, i); Write_##T(chan, it); \
+                    } \
+                }
+    #define W_NET_END() \
+                if (commit) WriteByte(chan, 0); \
+            }
+    #else
+        #define W_NET_BEGIN(class)
+            #define _W_NET(class, fld, T, wepname)
+        #define W_NET_END()
+    #endif
+
+
+
+// read cvars from weapon settings
+#define WEP_CVAR(wepname, name) (_wep_##wepname.wepvar_##name)
+#define WEP_CVAR_PRI(wepname, name) WEP_CVAR(wepname, primary_##name)
+#define WEP_CVAR_SEC(wepname, name) WEP_CVAR(wepname, secondary_##name)
+#define WEP_CVAR_BOTH(wepname, isprimary, name) ((isprimary) ? WEP_CVAR_PRI(wepname, name) : WEP_CVAR_SEC(wepname, name))
+
+const int WEP_FIRST = 1;
+#define WEP_LAST (Weapons_COUNT - 1)
+WepSet WEPSET_ALL;
+WepSet WEPSET_SUPERWEAPONS;
+
+#include "all.inc"
+
+// TODO: remove after 0.8.2. Retains impulse number compatibility because 0.8.1 clients don't reload the weapons.cfg
+#define WEP_HARDCODED_IMPULSES 20
+
+// TODO: invert after 0.8.2. Will require moving 'best weapon' impulses
+#define WEP_IMPULSE_BEGIN 230
+#define WEP_IMPULSE_END bound(WEP_IMPULSE_BEGIN, WEP_IMPULSE_BEGIN + (Weapons_COUNT - 1) - 1, 253)
+
+REGISTRY_SORT(Weapons, WEP_HARDCODED_IMPULSES + 1)
+REGISTRY_CHECK(Weapons)
+
+STATIC_INIT(register_weapons_done)
+{
+    FOREACH(Weapons, true, {
+        WepSet set = it.m_wepset = _WepSet_FromWeapon(it.m_id = i);
+        WEPSET_ALL |= set;
+        if ((it.spawnflags) & WEP_FLAG_SUPERWEAPON) WEPSET_SUPERWEAPONS |= set;
+        it.weapons = set;
+        if (it == WEP_Null) continue;
+        int imp = WEP_IMPULSE_BEGIN + it.m_id - 1;
+        if (imp <= WEP_IMPULSE_END)
+            localcmd(sprintf("alias weapon_%s \"impulse %d\"\n", it.netname, imp));
+        else
+            LOG_TRACEF("Impulse limit exceeded, weapon will not be directly accessible: %s\n", it.netname);
+    });
+    #ifdef CSQC
+    FOREACH(Weapons, true, it.wr_init(it));
+    #endif
+    weaponorder_byid = "";
+    for (int i = Weapons_MAX - 1; i >= 1; --i)
+        if (Weapons_from(i))
+            weaponorder_byid = strcat(weaponorder_byid, " ", ftos(i));
+    weaponorder_byid = strzone(substring(weaponorder_byid, 1, -1));
+}
+
+#ifndef MENUQC
+
+.entity weaponchild;
+.entity exteriorweaponentity;
+vector weaponentity_glowmod(Weapon wep, int c)
+{
+    vector g;
+    if (!(g = wep.wr_glow(wep))) g = colormapPaletteColor(c & 0x0F, true) * 2;
+    return g;
+}
+
+//.int weapon; // current weapon
+.string weaponname; // name of .weapon
+
+.vector spawnorigin; // for casings
+
+// weapon animation vectors:
+.vector anim_fire1;
+.vector anim_fire2;
+.vector anim_idle;
+.vector anim_reload;
+
+// static frame globals
+
+ENUMCLASS(WFRAME)
+CASE(WFRAME, DONTCHANGE)
+CASE(WFRAME, FIRE1)
+CASE(WFRAME, FIRE2)
+CASE(WFRAME, IDLE)
+CASE(WFRAME, RELOAD)
+ENUMCLASS_END(WFRAME)
+
+.WFRAME wframe;
+
+vector shotorg_adjust_values(vector vecs, bool y_is_right, bool visual, int algn);
+void CL_WeaponEntity_SetModel(entity this, string name, bool _anim);
+#endif
+
+#endif

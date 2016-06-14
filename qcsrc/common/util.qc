@@ -1,3 +1,43 @@
+#include "util.qh"
+
+#if defined(CSQC)
+    #include "../client/defs.qh"
+    #include "constants.qh"
+	#include "../client/mutators/events.qh"
+    #include "mapinfo.qh"
+    #include "notifications/all.qh"
+    #include <common/deathtypes/all.qh>
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "constants.qh"
+    #include "../server/autocvars.qh"
+    #include "../server/defs.qh"
+	#include "../server/mutators/events.qh"
+    #include "notifications/all.qh"
+    #include <common/deathtypes/all.qh>
+    #include "mapinfo.qh"
+#endif
+
+#ifndef MENUQC
+/*
+* Get "real" origin, in worldspace, even if ent is attached to something else.
+*/
+vector real_origin(entity ent)
+{
+	entity e;
+	vector v = ((ent.absmin + ent.absmax) * 0.5);
+
+	e = ent.tag_entity;
+	while(e)
+	{
+		v = v + ((e.absmin + e.absmax) * 0.5);
+		e = e.tag_entity;
+	}
+
+	return v;
+}
+#endif
+
 string wordwrap_buffer;
 
 void wordwrap_buffer_put(string s)
@@ -17,22 +57,25 @@ string wordwrap(string s, float l)
 
 #ifndef MENUQC
 #ifndef CSQC
+entity _wordwrap_buffer_sprint_ent;
 void wordwrap_buffer_sprint(string s)
 {
 	wordwrap_buffer = strcat(wordwrap_buffer, s);
 	if(s == "\n")
 	{
-		sprint(self, wordwrap_buffer);
+		sprint(_wordwrap_buffer_sprint_ent, wordwrap_buffer);
 		wordwrap_buffer = "";
 	}
 }
 
-void wordwrap_sprint(string s, float l)
+void wordwrap_sprint(entity to, string s, float l)
 {
 	wordwrap_buffer = "";
+	_wordwrap_buffer_sprint_ent = to;
 	wordwrap_cb(s, l, wordwrap_buffer_sprint);
+	_wordwrap_buffer_sprint_ent = NULL;
 	if(wordwrap_buffer != "")
-		sprint(self, strcat(wordwrap_buffer, "\n"));
+		sprint(to, strcat(wordwrap_buffer, "\n"));
 	wordwrap_buffer = "";
 	return;
 }
@@ -48,37 +91,6 @@ string draw_UseSkinFor(string pic)
 		return strcat(draw_currentSkin, "/", pic);
 }
 #endif
-
-string unescape(string in)
-{
-	float i, len;
-	string str, s;
-
-	// but it doesn't seem to be necessary in my tests at least
-	in = strzone(in);
-
-	len = strlen(in);
-	str = "";
-	for(i = 0; i < len; ++i)
-	{
-		s = substring(in, i, 1);
-		if(s == "\\")
-		{
-			s = substring(in, i+1, 1);
-			if(s == "n")
-				str = strcat(str, "\n");
-			else if(s == "\\")
-				str = strcat(str, "\\");
-			else
-				str = strcat(str, substring(in, i, 2));
-			++i;
-		} else
-			str = strcat(str, s);
-	}
-
-	strunzone(in);
-	return str;
-}
 
 void wordwrap_cb(string s, float l, void(string) callback)
 {
@@ -145,308 +157,36 @@ void wordwrap_cb(string s, float l, void(string) callback)
 	strunzone(s);
 }
 
-float dist_point_line(vector p, vector l0, vector ldir)
-{
-	ldir = normalize(ldir);
-
-	// remove the component in line direction
-	p = p - (p * ldir) * ldir;
-
-	// vlen of the remaining vector
-	return vlen(p);
-}
-
 void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass)
 {
 	entity e;
 	e = start;
 	funcPre(pass, e);
-	while(e.downleft)
+	while (e.(downleft))
 	{
-		e = e.downleft;
+		e = e.(downleft);
 		funcPre(pass, e);
 	}
 	funcPost(pass, e);
 	while(e != start)
 	{
-		if(e.right)
+		if (e.(right))
 		{
-			e = e.right;
+			e = e.(right);
 			funcPre(pass, e);
-			while(e.downleft)
+			while (e.(downleft))
 			{
-				e = e.downleft;
+				e = e.(downleft);
 				funcPre(pass, e);
 			}
 		}
 		else
-			e = e.up;
+			e = e.(up);
 		funcPost(pass, e);
 	}
 }
 
-float median(float a, float b, float c)
-{
-	if(a < c)
-		return bound(a, b, c);
-	return bound(c, b, a);
-}
-
-// converts a number to a string with the indicated number of decimals
-// works for up to 10 decimals!
-string ftos_decimals(float number, float decimals)
-{
-	// inhibit stupid negative zero
-	if(number == 0)
-		number = 0;
-	// we have sprintf...
-	return sprintf("%.*f", decimals, number);
-}
-
-vector colormapPaletteColor(float c, float isPants)
-{
-	switch(c)
-	{
-		case  0: return '1.000000 1.000000 1.000000';
-		case  1: return '1.000000 0.333333 0.000000';
-		case  2: return '0.000000 1.000000 0.501961';
-		case  3: return '0.000000 1.000000 0.000000';
-		case  4: return '1.000000 0.000000 0.000000';
-		case  5: return '0.000000 0.666667 1.000000';
-		case  6: return '0.000000 1.000000 1.000000';
-		case  7: return '0.501961 1.000000 0.000000';
-		case  8: return '0.501961 0.000000 1.000000';
-		case  9: return '1.000000 0.000000 1.000000';
-		case 10: return '1.000000 0.000000 0.501961';
-		case 11: return '0.000000 0.000000 1.000000';
-		case 12: return '1.000000 1.000000 0.000000';
-		case 13: return '0.000000 0.333333 1.000000';
-		case 14: return '1.000000 0.666667 0.000000';
-		case 15:
-			if(isPants)
-				return
-					  '1 0 0' * (0.502 + 0.498 * sin(time / 2.7182818285 + 0.0000000000))
-					+ '0 1 0' * (0.502 + 0.498 * sin(time / 2.7182818285 + 2.0943951024))
-					+ '0 0 1' * (0.502 + 0.498 * sin(time / 2.7182818285 + 4.1887902048));
-			else
-				return
-					  '1 0 0' * (0.502 + 0.498 * sin(time / 3.1415926536 + 5.2359877560))
-					+ '0 1 0' * (0.502 + 0.498 * sin(time / 3.1415926536 + 3.1415926536))
-					+ '0 0 1' * (0.502 + 0.498 * sin(time / 3.1415926536 + 1.0471975512));
-		default: return '0.000 0.000 0.000';
-	}
-}
-
-// unzone the string, and return it as tempstring. Safe to be called on string_null
-string fstrunzone(string s)
-{
-	string sc;
-	if (!s)
-		return s;
-	sc = strcat(s, "");
-	strunzone(s);
-	return sc;
-}
-
-float fexists(string f)
-{
-    float fh;
-    fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return FALSE;
-    fclose(fh);
-    return TRUE;
-}
-
-// Databases (hash tables)
-#define DB_BUCKETS 8192
-void db_save(float db, string pFilename)
-{
-	float fh, i, n;
-	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0)
-	{
-		print(strcat("^1Can't write DB to ", pFilename));
-		return;
-	}
-	n = buf_getsize(db);
-	fputs(fh, strcat(ftos(DB_BUCKETS), "\n"));
-	for(i = 0; i < n; ++i)
-		fputs(fh, strcat(bufstr_get(db, i), "\n"));
-	fclose(fh);
-}
-
-float db_create()
-{
-	return buf_create();
-}
-
-float db_load(string pFilename)
-{
-	float db, fh, i, j, n;
-	string l;
-	db = buf_create();
-	if(db < 0)
-		return -1;
-	fh = fopen(pFilename, FILE_READ);
-	if(fh < 0)
-		return db;
-	l = fgets(fh);
-	if(stof(l) == DB_BUCKETS)
-	{
-		i = 0;
-		while((l = fgets(fh)))
-		{
-			if(l != "")
-				bufstr_set(db, i, l);
-			++i;
-		}
-	}
-	else
-	{
-		// different count of buckets, or a dump?
-		// need to reorganize the database then (SLOW)
-		//
-		// note: we also parse the first line (l) in case the DB file is
-		// missing the bucket count
-		do
-		{
-			n = tokenizebyseparator(l, "\\");
-			for(j = 2; j < n; j += 2)
-				db_put(db, argv(j-1), uri_unescape(argv(j)));
-		}
-		while((l = fgets(fh)));
-	}
-	fclose(fh);
-	return db;
-}
-
-void db_dump(float db, string pFilename)
-{
-	float fh, i, j, n, m;
-	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0)
-		error(strcat("Can't dump DB to ", pFilename));
-	n = buf_getsize(db);
-	fputs(fh, "0\n");
-	for(i = 0; i < n; ++i)
-	{
-		m = tokenizebyseparator(bufstr_get(db, i), "\\");
-		for(j = 2; j < m; j += 2)
-			fputs(fh, strcat("\\", argv(j-1), "\\", argv(j), "\n"));
-	}
-	fclose(fh);
-}
-
-void db_close(float db)
-{
-	buf_del(db);
-}
-
-string db_get(float db, string pKey)
-{
-	float h;
-	h = crc16(FALSE, pKey) % DB_BUCKETS;
-	return uri_unescape(infoget(bufstr_get(db, h), pKey));
-}
-
-void db_put(float db, string pKey, string pValue)
-{
-	float h;
-	h = crc16(FALSE, pKey) % DB_BUCKETS;
-	bufstr_set(db, h, infoadd(bufstr_get(db, h), pKey, uri_escape(pValue)));
-}
-
-void db_test()
-{
-	float db, i;
-	print("LOAD...\n");
-	db = db_load("foo.db");
-	print("LOADED. FILL...\n");
-	for(i = 0; i < DB_BUCKETS; ++i)
-		db_put(db, ftos(random()), "X");
-	print("FILLED. SAVE...\n");
-	db_save(db, "foo.db");
-	print("SAVED. CLOSE...\n");
-	db_close(db);
-	print("CLOSED.\n");
-}
-
-// Multiline text file buffers
-float buf_load(string pFilename)
-{
-	float buf, fh, i;
-	string l;
-	buf = buf_create();
-	if(buf < 0)
-		return -1;
-	fh = fopen(pFilename, FILE_READ);
-	if(fh < 0)
-	{
-		buf_del(buf);
-		return -1;
-	}
-	i = 0;
-	while((l = fgets(fh)))
-	{
-		bufstr_set(buf, i, l);
-		++i;
-	}
-	fclose(fh);
-	return buf;
-}
-
-void buf_save(float buf, string pFilename)
-{
-	float fh, i, n;
-	fh = fopen(pFilename, FILE_WRITE);
-	if(fh < 0)
-		error(strcat("Can't write buf to ", pFilename));
-	n = buf_getsize(buf);
-	for(i = 0; i < n; ++i)
-		fputs(fh, strcat(bufstr_get(buf, i), "\n"));
-	fclose(fh);
-}
-
-string format_time(float seconds)
-{
-	float days, hours, minutes;
-	seconds = floor(seconds + 0.5);
-        days = floor(seconds / 864000);
-        seconds -= days * 864000;
-        hours = floor(seconds / 36000);
-        seconds -= hours * 36000;
-	minutes = floor(seconds / 600);
-	seconds -= minutes * 600;
-        if (days > 0)
-                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
-        else
-                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
-}
-
-string mmsss(float tenths)
-{
-	float minutes;
-	string s;
-	tenths = floor(tenths + 0.5);
-	minutes = floor(tenths / 600);
-	tenths -= minutes * 600;
-	s = ftos(1000 + tenths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 1));
-}
-
-string mmssss(float hundredths)
-{
-	float minutes;
-	string s;
-	hundredths = floor(hundredths + 0.5);
-	minutes = floor(hundredths / 6000);
-	hundredths -= minutes * 6000;
-	s = ftos(10000 + hundredths);
-	return strcat(ftos(minutes), ":", substring(s, 1, 2), ".", substring(s, 3, 2));
-}
-
-string ScoreString(float pFlags, float pValue)
+string ScoreString(int pFlags, float pValue)
 {
 	string valstr;
 	float l;
@@ -478,19 +218,6 @@ string ScoreString(float pFlags, float pValue)
 	return valstr;
 }
 
-float dotproduct(vector a, vector b)
-{
-	return a_x * b_x + a_y * b_y + a_z * b_z;
-}
-
-vector cross(vector a, vector b)
-{
-	return
-		'1 0 0' * (a_y * b_z - a_z * b_y)
-	+	'0 1 0' * (a_z * b_x - a_x * b_z)
-	+	'0 0 1' * (a_x * b_y - a_y * b_x);
-}
-
 // compressed vector format:
 // like MD3, just even shorter
 //   4 bit pitch (16 angles), 0 is -90, 8 is 0, 16 would be 90
@@ -505,7 +232,7 @@ float lengthLogTable[128];
 
 float invertLengthLog(float x)
 {
-	float l, r, m, lerr, rerr;
+	int l, r, m;
 
 	if(x >= lengthLogTable[127])
 		return 127;
@@ -525,41 +252,40 @@ float invertLengthLog(float x)
 	}
 
 	// now: r is >=, l is <
-	lerr = (x - lengthLogTable[l]);
-	rerr = (lengthLogTable[r] - x);
+	float lerr = (x - lengthLogTable[l]);
+	float rerr = (lengthLogTable[r] - x);
 	if(lerr < rerr)
 		return l;
 	return r;
 }
 
-vector decompressShortVector(float data)
+vector decompressShortVector(int data)
 {
 	vector out;
-	float p, y, len;
 	if(data == 0)
 		return '0 0 0';
-	p   = (data & 0xF000) / 0x1000;
-	y   = (data & 0x0F80) / 0x80;
-	len = (data & 0x007F);
+	float p	= (data & 0xF000) / 0x1000;
+	float y	= (data & 0x0F80) / 0x80;
+	int len = (data & 0x007F);
 
 	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
 	if(p == 0)
 	{
-		out_x = 0;
-		out_y = 0;
+		out.x = 0;
+		out.y = 0;
 		if(y == 31)
-			out_z = -1;
+			out.z = -1;
 		else
-			out_z = +1;
+			out.z = +1;
 	}
 	else
 	{
 		y   = .19634954084936207740 * y;
 		p = .19634954084936207740 * p - 1.57079632679489661922;
-		out_x = cos(y) *  cos(p);
-		out_y = sin(y) *  cos(p);
-		out_z =          -sin(p);
+		out.x = cos(y) *  cos(p);
+		out.y = sin(y) *  cos(p);
+		out.z =          -sin(p);
 	}
 
 	//print("decompressed: ", vtos(out), "\n");
@@ -571,27 +297,27 @@ float compressShortVector(vector vec)
 {
 	vector ang;
 	float p, y, len;
-	if(vlen(vec) == 0)
+	if(vec == '0 0 0')
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
 	ang = vectoangles(vec);
-	ang_x = -ang_x;
-	if(ang_x < -90)
-		ang_x += 360;
-	if(ang_x < -90 && ang_x > +90)
+	ang.x = -ang.x;
+	if(ang.x < -90)
+		ang.x += 360;
+	if(ang.x < -90 && ang.x > +90)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	p = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	p = floor(0.5 + (ang.x + 90) * 16 / 180) & 15; // -90..90 to 0..14
 	if(p == 0)
 	{
-		if(vec_z < 0)
+		if(vec.z < 0)
 			y = 31;
 		else
 			y = 30;
 	}
 	else
-		y = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang.y * 32 / 360)          & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
 	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
@@ -601,9 +327,9 @@ float compressShortVector(vector vec)
 
 void compressShortVector_init()
 {
-	float l, f, i;
-	l = 1;
-	f = pow(2, 1/8);
+	float l = 1;
+	float f = pow(2, 1/8);
+	int i;
 	for(i = 0; i < 128; ++i)
 	{
 		lengthLogTable[i] = l;
@@ -612,35 +338,35 @@ void compressShortVector_init()
 
 	if(cvar("developer"))
 	{
-		print("Verifying vector compression table...\n");
+		LOG_INFO("Verifying vector compression table...\n");
 		for(i = 0x0F00; i < 0xFFFF; ++i)
 			if(i != compressShortVector(decompressShortVector(i)))
 			{
-				print("BROKEN vector compression: ", ftos(i));
-				print(" -> ", vtos(decompressShortVector(i)));
-				print(" -> ", ftos(compressShortVector(decompressShortVector(i))));
-				print("\n");
+				LOG_INFO("BROKEN vector compression: ", ftos(i));
+				LOG_INFO(" -> ", vtos(decompressShortVector(i)));
+				LOG_INFO(" -> ", ftos(compressShortVector(decompressShortVector(i))));
+				LOG_INFO("\n");
 				error("b0rk");
 			}
-		print("Done.\n");
+		LOG_INFO("Done.\n");
 	}
 }
 
 #ifndef MENUQC
 float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz)
 {
-	traceline(v0, v0 + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0, v0 + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx, v0 + dvx + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy, v0 + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvx, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvz, v0 + dvz + dvy, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvy, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvx + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
-	traceline(v0 + dvy + dvz, v0 + dvx + dvy + dvz, TRUE, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvx, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvy, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0, v0 + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx, v0 + dvx + dvy, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx, v0 + dvx + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy, v0 + dvy + dvx, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy, v0 + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvz, v0 + dvz + dvx, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvz, v0 + dvz + dvy, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx + dvy, v0 + dvx + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvx + dvz, v0 + dvx + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
+	traceline(v0 + dvy + dvz, v0 + dvx + dvy + dvz, true, forent); if(trace_fraction < 1) return 0;
 	return 1;
 }
 #endif
@@ -722,23 +448,6 @@ string swapInPriorityList(string order, float i, float j)
 	return order;
 }
 
-float cvar_value_issafe(string s)
-{
-	if(strstrofs(s, "\"", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "\\", 0) >= 0)
-		return 0;
-	if(strstrofs(s, ";", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "$", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "\r", 0) >= 0)
-		return 0;
-	if(strstrofs(s, "\n", 0) >= 0)
-		return 0;
-	return 1;
-}
-
 #ifndef MENUQC
 void get_mi_min_max(float mode)
 {
@@ -764,7 +473,7 @@ void get_mi_min_max(float mode)
 	mi_min = mi;
 	mi_max = ma;
 	MapInfo_Get_ByName(mi_shortname, 0, 0);
-	if(MapInfo_Map_mins_x < MapInfo_Map_maxs_x)
+	if(MapInfo_Map_mins.x < MapInfo_Map_maxs.x)
 	{
 		mi_min = MapInfo_Map_mins;
 		mi_max = MapInfo_Map_maxs;
@@ -775,59 +484,59 @@ void get_mi_min_max(float mode)
 		if(mode)
 		{
 			// be clever
-			tracebox('1 0 0' * mi_x,
-					 '0 1 0' * mi_y + '0 0 1' * mi_z,
-					 '0 1 0' * ma_y + '0 0 1' * ma_z,
-					 '1 0 0' * ma_x,
+			tracebox('1 0 0' * mi.x,
+					 '0 1 0' * mi.y + '0 0 1' * mi.z,
+					 '0 1 0' * ma.y + '0 0 1' * ma.z,
+					 '1 0 0' * ma.x,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
-				mi_min_x = trace_endpos_x;
+				mi_min.x = trace_endpos.x;
 
-			tracebox('0 1 0' * mi_y,
-					 '1 0 0' * mi_x + '0 0 1' * mi_z,
-					 '1 0 0' * ma_x + '0 0 1' * ma_z,
-					 '0 1 0' * ma_y,
+			tracebox('0 1 0' * mi.y,
+					 '1 0 0' * mi.x + '0 0 1' * mi.z,
+					 '1 0 0' * ma.x + '0 0 1' * ma.z,
+					 '0 1 0' * ma.y,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
-				mi_min_y = trace_endpos_y;
+				mi_min.y = trace_endpos.y;
 
-			tracebox('0 0 1' * mi_z,
-					 '1 0 0' * mi_x + '0 1 0' * mi_y,
-					 '1 0 0' * ma_x + '0 1 0' * ma_y,
-					 '0 0 1' * ma_z,
+			tracebox('0 0 1' * mi.z,
+					 '1 0 0' * mi.x + '0 1 0' * mi.y,
+					 '1 0 0' * ma.x + '0 1 0' * ma.y,
+					 '0 0 1' * ma.z,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
-				mi_min_z = trace_endpos_z;
+				mi_min.z = trace_endpos.z;
 
-			tracebox('1 0 0' * ma_x,
-					 '0 1 0' * mi_y + '0 0 1' * mi_z,
-					 '0 1 0' * ma_y + '0 0 1' * ma_z,
-					 '1 0 0' * mi_x,
+			tracebox('1 0 0' * ma.x,
+					 '0 1 0' * mi.y + '0 0 1' * mi.z,
+					 '0 1 0' * ma.y + '0 0 1' * ma.z,
+					 '1 0 0' * mi.x,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
-				mi_max_x = trace_endpos_x;
+				mi_max.x = trace_endpos.x;
 
-			tracebox('0 1 0' * ma_y,
-					 '1 0 0' * mi_x + '0 0 1' * mi_z,
-					 '1 0 0' * ma_x + '0 0 1' * ma_z,
-					 '0 1 0' * mi_y,
+			tracebox('0 1 0' * ma.y,
+					 '1 0 0' * mi.x + '0 0 1' * mi.z,
+					 '1 0 0' * ma.x + '0 0 1' * ma.z,
+					 '0 1 0' * mi.y,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
-				mi_max_y = trace_endpos_y;
+				mi_max.y = trace_endpos.y;
 
-			tracebox('0 0 1' * ma_z,
-					 '1 0 0' * mi_x + '0 1 0' * mi_y,
-					 '1 0 0' * ma_x + '0 1 0' * ma_y,
-					 '0 0 1' * mi_z,
+			tracebox('0 0 1' * ma.z,
+					 '1 0 0' * mi.x + '0 1 0' * mi.y,
+					 '1 0 0' * ma.x + '0 1 0' * ma.y,
+					 '0 0 1' * mi.z,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
-				mi_max_z = trace_endpos_z;
+				mi_max.z = trace_endpos.z;
 		}
 	}
 }
@@ -844,15 +553,15 @@ void get_mi_min_max_texcoords(float mode)
 	// extend mi_picmax to get a square aspect ratio
 	// center the map in that area
 	extend = mi_picmax - mi_picmin;
-	if(extend_y > extend_x)
+	if(extend.y > extend.x)
 	{
-		mi_picmin_x -= (extend_y - extend_x) * 0.5;
-		mi_picmax_x += (extend_y - extend_x) * 0.5;
+		mi_picmin.x -= (extend.y - extend.x) * 0.5;
+		mi_picmax.x += (extend.y - extend.x) * 0.5;
 	}
 	else
 	{
-		mi_picmin_y -= (extend_x - extend_y) * 0.5;
-		mi_picmax_y += (extend_x - extend_y) * 0.5;
+		mi_picmin.y -= (extend.x - extend.y) * 0.5;
+		mi_picmax.y += (extend.x - extend.y) * 0.5;
 	}
 
 	// add another some percent
@@ -863,10 +572,10 @@ void get_mi_min_max_texcoords(float mode)
 	// calculate the texcoords
 	mi_pictexcoord0 = mi_pictexcoord1 = mi_pictexcoord2 = mi_pictexcoord3 = '0 0 0';
 	// first the two corners of the origin
-	mi_pictexcoord0_x = (mi_min_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord0_y = (mi_min_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
-	mi_pictexcoord2_x = (mi_max_x - mi_picmin_x) / (mi_picmax_x - mi_picmin_x);
-	mi_pictexcoord2_y = (mi_max_y - mi_picmin_y) / (mi_picmax_y - mi_picmin_y);
+	mi_pictexcoord0_x = (mi_min.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord0_y = (mi_min.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
+	mi_pictexcoord2_x = (mi_max.x - mi_picmin.x) / (mi_picmax.x - mi_picmin.x);
+	mi_pictexcoord2_y = (mi_max.y - mi_picmin.y) / (mi_picmax.y - mi_picmin.y);
 	// then the other corners
 	mi_pictexcoord1_x = mi_pictexcoord0_x;
 	mi_pictexcoord1_y = mi_pictexcoord2_y;
@@ -878,31 +587,31 @@ void get_mi_min_max_texcoords(float mode)
 float cvar_settemp(string tmp_cvar, string tmp_value)
 {
 	float created_saved_value;
-	entity e;
 
 	created_saved_value = 0;
 
 	if (!(tmp_cvar || tmp_value))
 	{
-		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		LOG_TRACE("Error: Invalid usage of cvar_settemp(string, string); !\n");
 		return 0;
 	}
 
 	if(!cvar_type(tmp_cvar))
 	{
-		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
+		LOG_INFOF("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == tmp_cvar)
-			created_saved_value = -1; // skip creation
+	FOREACH_ENTITY_CLASS("saved_cvar_value", it.netname == tmp_cvar,
+	{
+		created_saved_value = -1; // skip creation
+		break; // no need to continue
+	});
 
 	if(created_saved_value != -1)
 	{
 		// creating a new entity to keep track of this cvar
-		e = spawn();
-		e.classname = "saved_cvar_value";
+		entity e = new_pure(saved_cvar_value);
 		e.netname = strzone(tmp_cvar);
 		e.message = strzone(cvar_string(tmp_cvar));
 		created_saved_value = 1;
@@ -914,274 +623,42 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	return created_saved_value;
 }
 
-float cvar_settemp_restore()
+int cvar_settemp_restore()
 {
-	float i = 0;
-	entity e = world;
+	int j = 0;
+	// FIXME this new-style loop fails!
+#if 0
+	FOREACH_ENTITY_CLASS("saved_cvar_value", true,
+	{
+		if(cvar_type(it.netname))
+		{
+			cvar_set(it.netname, it.message);
+			strunzone(it.netname);
+			strunzone(it.message);
+			remove(it);
+			++j;
+		}
+		else
+			LOG_INFOF("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", it.netname);
+	});
+
+#else
+	entity e = NULL;
 	while((e = find(e, classname, "saved_cvar_value")))
 	{
 		if(cvar_type(e.netname))
 		{
 			cvar_set(e.netname, e.message);
 			remove(e);
-			++i;
+			++j;
 		}
 		else
-			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
 	}
-
-	return i;
-}
-
-float almost_equals(float a, float b)
-{
-	float eps;
-	eps = (max(a, -a) + max(b, -b)) * 0.001;
-	if(a - b < eps && b - a < eps)
-		return TRUE;
-	return FALSE;
-}
-
-float almost_in_bounds(float a, float b, float c)
-{
-	float eps;
-	eps = (max(a, -a) + max(c, -c)) * 0.001;
-	if(a > c)
-		eps = -eps;
-	return b == median(a - eps, b, c + eps);
-}
-
-float power2of(float e)
-{
-	return pow(2, e);
-}
-float log2of(float x)
-{
-	// NOTE: generated code
-	if(x > 2048)
-		if(x > 131072)
-			if(x > 1048576)
-				if(x > 4194304)
-					return 23;
-				else
-					if(x > 2097152)
-						return 22;
-					else
-						return 21;
-			else
-				if(x > 524288)
-					return 20;
-				else
-					if(x > 262144)
-						return 19;
-					else
-						return 18;
-		else
-			if(x > 16384)
-				if(x > 65536)
-					return 17;
-				else
-					if(x > 32768)
-						return 16;
-					else
-						return 15;
-			else
-				if(x > 8192)
-					return 14;
-				else
-					if(x > 4096)
-						return 13;
-					else
-						return 12;
-	else
-		if(x > 32)
-			if(x > 256)
-				if(x > 1024)
-					return 11;
-				else
-					if(x > 512)
-						return 10;
-					else
-						return 9;
-			else
-				if(x > 128)
-					return 8;
-				else
-					if(x > 64)
-						return 7;
-					else
-						return 6;
-		else
-			if(x > 4)
-				if(x > 16)
-					return 5;
-				else
-					if(x > 8)
-						return 4;
-					else
-						return 3;
-			else
-				if(x > 2)
-					return 2;
-				else
-					if(x > 1)
-						return 1;
-					else
-						return 0;
-}
-
-float rgb_mi_ma_to_hue(vector rgb, float mi, float ma)
-{
-	if(mi == ma)
-		return 0;
-	else if(ma == rgb_x)
-	{
-		if(rgb_y >= rgb_z)
-			return (rgb_y - rgb_z) / (ma - mi);
-		else
-			return (rgb_y - rgb_z) / (ma - mi) + 6;
-	}
-	else if(ma == rgb_y)
-		return (rgb_z - rgb_x) / (ma - mi) + 2;
-	else // if(ma == rgb_z)
-		return (rgb_x - rgb_y) / (ma - mi) + 4;
-}
-
-vector hue_mi_ma_to_rgb(float hue, float mi, float ma)
-{
-	vector rgb;
-
-	hue -= 6 * floor(hue / 6);
-
-	//else if(ma == rgb_x)
-	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
-	if(hue <= 1)
-	{
-		rgb_x = ma;
-		rgb_y = hue * (ma - mi) + mi;
-		rgb_z = mi;
-	}
-	//else if(ma == rgb_y)
-	//	hue = 60 * (rgb_z - rgb_x) / (ma - mi) + 120;
-	else if(hue <= 2)
-	{
-		rgb_x = (2 - hue) * (ma - mi) + mi;
-		rgb_y = ma;
-		rgb_z = mi;
-	}
-	else if(hue <= 3)
-	{
-		rgb_x = mi;
-		rgb_y = ma;
-		rgb_z = (hue - 2) * (ma - mi) + mi;
-	}
-	//else // if(ma == rgb_z)
-	//	hue = 60 * (rgb_x - rgb_y) / (ma - mi) + 240;
-	else if(hue <= 4)
-	{
-		rgb_x = mi;
-		rgb_y = (4 - hue) * (ma - mi) + mi;
-		rgb_z = ma;
-	}
-	else if(hue <= 5)
-	{
-		rgb_x = (hue - 4) * (ma - mi) + mi;
-		rgb_y = mi;
-		rgb_z = ma;
-	}
-	//else if(ma == rgb_x)
-	//	hue = 60 * (rgb_y - rgb_z) / (ma - mi);
-	else // if(hue <= 6)
-	{
-		rgb_x = ma;
-		rgb_y = mi;
-		rgb_z = (6 - hue) * (ma - mi) + mi;
-	}
-
-	return rgb;
-}
-
-vector rgb_to_hsv(vector rgb)
-{
-	float mi, ma;
-	vector hsv;
-
-	mi = min(rgb_x, rgb_y, rgb_z);
-	ma = max(rgb_x, rgb_y, rgb_z);
-
-	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-	hsv_z = ma;
-
-	if(ma == 0)
-		hsv_y = 0;
-	else
-		hsv_y = 1 - mi/ma;
-
-	return hsv;
-}
-
-vector hsv_to_rgb(vector hsv)
-{
-	return hue_mi_ma_to_rgb(hsv_x, hsv_z * (1 - hsv_y), hsv_z);
-}
-
-vector rgb_to_hsl(vector rgb)
-{
-	float mi, ma;
-	vector hsl;
-
-	mi = min(rgb_x, rgb_y, rgb_z);
-	ma = max(rgb_x, rgb_y, rgb_z);
-
-	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
-
-	hsl_z = 0.5 * (mi + ma);
-	if(mi == ma)
-		hsl_y = 0;
-	else if(hsl_z <= 0.5)
-		hsl_y = (ma - mi) / (2*hsl_z);
-	else // if(hsl_z > 0.5)
-		hsl_y = (ma - mi) / (2 - 2*hsl_z);
-
-	return hsl;
-}
-
-vector hsl_to_rgb(vector hsl)
-{
-	float mi, ma, maminusmi;
-
-	if(hsl_z <= 0.5)
-		maminusmi = hsl_y * 2 * hsl_z;
-	else
-		maminusmi = hsl_y * (2 - 2 * hsl_z);
-
-	// hsl_z     = 0.5 * mi + 0.5 * ma
-	// maminusmi =     - mi +       ma
-	mi = hsl_z - 0.5 * maminusmi;
-	ma = hsl_z + 0.5 * maminusmi;
-
-	return hue_mi_ma_to_rgb(hsl_x, mi, ma);
-}
-
-string rgb_to_hexcolor(vector rgb)
-{
-	return
-		strcat(
-			"^x",
-			DEC_TO_HEXDIGIT(floor(rgb_x * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_y * 15 + 0.5)),
-			DEC_TO_HEXDIGIT(floor(rgb_z * 15 + 0.5))
-		);
-}
-
-// requires that m2>m1 in all coordinates, and that m4>m3
-float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;}
-
-// requires the same, but is a stronger condition
-float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;}
-
-#ifndef MENUQC
 #endif
+
+	return j;
+}
 
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
@@ -1313,17 +790,17 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 
 string find_last_color_code(string s)
 {
-	float start, len, i, carets;
-	start = strstrofs(s, "^", 0);
+	int start = strstrofs(s, "^", 0);
 	if (start == -1) // no caret found
 		return "";
-	len = strlen(s)-1;
+	int len = strlen(s)-1;
+	int i;
 	for(i = len; i >= start; --i)
 	{
 		if(substring(s, i, 1) != "^")
 			continue;
 
-		carets = 1;
+		int carets = 1;
 		while (i-carets >= start && substring(s, i-carets, 1) == "^")
 			++carets;
 
@@ -1501,121 +978,6 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 	return 1;
 }
 
-void shuffle(float n, swapfunc_t swap, entity pass)
-{
-	float i, j;
-	for(i = 1; i < n; ++i)
-	{
-		// swap i-th item at a random position from 0 to i
-		// proof for even distribution:
-		//   n = 1: obvious
-		//   n -> n+1:
-		//     item n+1 gets at any position with chance 1/(n+1)
-		//     all others will get their 1/n chance reduced by factor n/(n+1)
-		//     to be on place n+1, their chance will be 1/(n+1)
-		//     1/n * n/(n+1) = 1/(n+1)
-		//     q.e.d.
-		j = floor(random() * (i + 1));
-		if(j != i)
-			swap(j, i, pass);
-	}
-}
-
-string substring_range(string s, float b, float e)
-{
-	return substring(s, b, e - b);
-}
-
-string swapwords(string str, float i, float j)
-{
-	float n;
-	string s1, s2, s3, s4, s5;
-	float si, ei, sj, ej, s0, en;
-	n = tokenizebyseparator(str, " "); // must match g_maplist processing in ShuffleMaplist and "shuffle"
-	si = argv_start_index(i);
-	sj = argv_start_index(j);
-	ei = argv_end_index(i);
-	ej = argv_end_index(j);
-	s0 = argv_start_index(0);
-	en = argv_end_index(n-1);
-	s1 = substring_range(str, s0, si);
-	s2 = substring_range(str, si, ei);
-	s3 = substring_range(str, ei, sj);
-	s4 = substring_range(str, sj, ej);
-	s5 = substring_range(str, ej, en);
-	return strcat(s1, s4, s3, s2, s5);
-}
-
-string _shufflewords_str;
-void _shufflewords_swapfunc(float i, float j, entity pass)
-{
-	_shufflewords_str = swapwords(_shufflewords_str, i, j);
-}
-string shufflewords(string str)
-{
-	float n;
-	_shufflewords_str = str;
-	n = tokenizebyseparator(str, " ");
-	shuffle(n, _shufflewords_swapfunc, world);
-	str = _shufflewords_str;
-	_shufflewords_str = string_null;
-	return str;
-}
-
-vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
-{
-	vector v;
-	float D;
-	v = '0 0 0';
-	if(a == 0)
-	{
-		if(b != 0)
-		{
-			v_x = v_y = -c / b;
-			v_z = 1;
-		}
-		else
-		{
-			if(c == 0)
-			{
-				// actually, every number solves the equation!
-				v_z = 1;
-			}
-		}
-	}
-	else
-	{
-		D = b*b - 4*a*c;
-		if(D >= 0)
-		{
-			D = sqrt(D);
-			if(a > 0) // put the smaller solution first
-			{
-				v_x = ((-b)-D) / (2*a);
-				v_y = ((-b)+D) / (2*a);
-			}
-			else
-			{
-				v_x = (-b+D) / (2*a);
-				v_y = (-b-D) / (2*a);
-			}
-			v_z = 1;
-		}
-		else
-		{
-			// complex solutions!
-			D = sqrt(-D);
-			v_x = -b / (2*a);
-			if(a > 0)
-				v_y =  D / (2*a);
-			else
-				v_y = -D / (2*a);
-			v_z = 0;
-		}
-	}
-	return v;
-}
-
 vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style)
 {
 	vector ret;
@@ -1634,7 +996,7 @@ vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel,
 	vector solution = solve_quadratic(evel * evel - spd * spd, 2 * (eorg * evel), eorg * eorg);
 	// p = 2 * (eorg * evel) / (evel * evel - spd * spd)
 	// q = (eorg * eorg) / (evel * evel - spd * spd)
-	if(!solution_z) // no real solution
+	if(!solution.z) // no real solution
 	{
 		// happens if D < 0
 		// (eorg * evel)^2 < (evel^2 - spd^2) * eorg^2
@@ -1645,17 +1007,17 @@ vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel,
 		// spd < |evel| * sin angle(evel, eorg)
 		return '0 0 0';
 	}
-	else if(solution_x > 0)
+	else if(solution.x > 0)
 	{
 		// both solutions > 0: take the smaller one
 		// happens if p < 0 and q > 0
-		ret = normalize(eorg + solution_x * evel);
+		ret = normalize(eorg + solution.x * evel);
 	}
-	else if(solution_y > 0)
+	else if(solution.y > 0)
 	{
 		// one solution > 0: take the larger one
 		// happens if q < 0 or q == 0 and p < 0
-		ret = normalize(eorg + solution_y * evel);
+		ret = normalize(eorg + solution.y * evel);
 	}
 	else
 	{
@@ -1702,12 +1064,12 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 		vector solution = solve_quadratic(1, -2 * (mydir * myvel), myvel * myvel - spd * spd);
 
 		float outspeed;
-		if(solution_z)
-			outspeed = solution_y; // the larger one
+		if(solution.z)
+			outspeed = solution.y; // the larger one
 		else
 		{
 			//outspeed = 0; // slowest possible shot
-			outspeed = solution_x; // the real part (that is, the average!)
+			outspeed = solution.x; // the real part (that is, the average!)
 			//dprint("impossible shot, adjusting\n");
 		}
 
@@ -1722,151 +1084,68 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 float compressShotOrigin(vector v)
 {
 	float x, y, z;
-	x = rint(v_x * 2);
-	y = rint(v_y * 4) + 128;
-	z = rint(v_z * 4) + 128;
+	x = rint(v.x * 2);
+	y = rint(v.y * 4) + 128;
+	z = rint(v.z * 4) + 128;
 	if(x > 255 || x < 0)
 	{
-		print("shot origin ", vtos(v), " x out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " x out of bounds\n");
 		x = bound(0, x, 255);
 	}
 	if(y > 255 || y < 0)
 	{
-		print("shot origin ", vtos(v), " y out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " y out of bounds\n");
 		y = bound(0, y, 255);
 	}
 	if(z > 255 || z < 0)
 	{
-		print("shot origin ", vtos(v), " z out of bounds\n");
+		LOG_INFO("shot origin ", vtos(v), " z out of bounds\n");
 		z = bound(0, z, 255);
 	}
 	return x * 0x10000 + y * 0x100 + z;
 }
-vector decompressShotOrigin(float f)
+vector decompressShotOrigin(int f)
 {
 	vector v;
-	v_x = ((f & 0xFF0000) / 0x10000) / 2;
-	v_y = ((f & 0xFF00) / 0x100 - 128) / 4;
-	v_z = ((f & 0xFF) - 128) / 4;
+	v.x = ((f & 0xFF0000) / 0x10000) / 2;
+	v.y = ((f & 0xFF00) / 0x100 - 128) / 4;
+	v.z = ((f & 0xFF) - 128) / 4;
 	return v;
 }
 
-void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass)
-{
-	float start, end, root, child;
-
-	// heapify
-	start = floor((n - 2) / 2);
-	while(start >= 0)
-	{
-		// siftdown(start, count-1);
-		root = start;
-		while(root * 2 + 1 <= n-1)
-		{
-			child = root * 2 + 1;
-			if(child < n-1)
-				if(cmp(child, child+1, pass) < 0)
-					++child;
-			if(cmp(root, child, pass) < 0)
-			{
-				swap(root, child, pass);
-				root = child;
-			}
-			else
-				break;
-		}
-		// end of siftdown
-		--start;
-	}
-
-	// extract
-	end = n - 1;
-	while(end > 0)
-	{
-		swap(0, end, pass);
-		--end;
-		// siftdown(0, end);
-		root = 0;
-		while(root * 2 + 1 <= end)
-		{
-			child = root * 2 + 1;
-			if(child < end && cmp(child, child+1, pass) < 0)
-				++child;
-			if(cmp(root, child, pass) < 0)
-			{
-				swap(root, child, pass);
-				root = child;
-			}
-			else
-				break;
-		}
-		// end of siftdown
-	}
-}
-
-void RandomSelection_Init()
-{
-	RandomSelection_totalweight = 0;
-	RandomSelection_chosen_ent = world;
-	RandomSelection_chosen_float = 0;
-	RandomSelection_chosen_string = string_null;
-	RandomSelection_best_priority = -1;
-}
-void RandomSelection_Add(entity e, float f, string s, float weight, float priority)
-{
-	if(priority > RandomSelection_best_priority)
-	{
-		RandomSelection_best_priority = priority;
-		RandomSelection_chosen_ent = e;
-		RandomSelection_chosen_float = f;
-		RandomSelection_chosen_string = s;
-		RandomSelection_totalweight = weight;
-	}
-	else if(priority == RandomSelection_best_priority)
-	{
-		RandomSelection_totalweight += weight;
-		if(random() * RandomSelection_totalweight <= weight)
-		{
-			RandomSelection_chosen_ent = e;
-			RandomSelection_chosen_float = f;
-			RandomSelection_chosen_string = s;
-		}
-	}
-}
-
 #ifndef MENUQC
-vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
+vector healtharmor_maxdamage(float h, float a, float armorblock, int deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
-	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
 		armorblock = 0;
 	vector v;
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
 	armordamage = a + (h - 1); // damage we can take if we could use more armor
 	armorideal = healthdamage * armorblock;
-	v_y = armorideal;
+	v.y = armorideal;
 	if(armordamage < healthdamage)
 	{
-		v_x = armordamage;
-		v_z = 1;
+		v.x = armordamage;
+		v.z = 1;
 	}
 	else
 	{
-		v_x = healthdamage;
-		v_z = 0;
+		v.x = healthdamage;
+		v.z = 0;
 	}
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
+vector healtharmor_applydamage(float a, float armorblock, int deathtype, float damage)
 {
 	vector v;
-	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+	if (DEATH_IS(deathtype, DEATH_DROWN))  // Why should armor help here...
 		armorblock = 0;
-	v_y = bound(0, damage * armorblock, a); // save
-	v_x = bound(0, damage - v_y, damage); // take
-	v_z = 0;
+	v.y = bound(0, damage * armorblock, a); // save
+	v.x = bound(0, damage - v.y, damage); // take
+	v.z = 0;
 	return v;
 }
 #endif
@@ -1883,101 +1162,6 @@ string getcurrentmod()
 		return argv(n - 1);
 }
 
-#ifndef MENUQC
-#ifdef CSQC
-float ReadInt24_t()
-{
-	float v;
-	v = ReadShort() * 256; // note: this is signed
-	v += ReadByte(); // note: this is unsigned
-	return v;
-}
-vector ReadInt48_t()
-{
-	vector v;
-	v_x = ReadInt24_t();
-	v_y = ReadInt24_t();
-	v_z = 0;
-	return v;
-}
-vector ReadInt72_t()
-{
-	vector v;
-	v_x = ReadInt24_t();
-	v_y = ReadInt24_t();
-	v_z = ReadInt24_t();
-	return v;
-}
-#else
-void WriteInt24_t(float dst, float val)
-{
-	float v;
-	WriteShort(dst, (v = floor(val / 256)));
-	WriteByte(dst, val - v * 256); // 0..255
-}
-void WriteInt48_t(float dst, vector val)
-{
-	WriteInt24_t(dst, val_x);
-	WriteInt24_t(dst, val_y);
-}
-void WriteInt72_t(float dst, vector val)
-{
-	WriteInt24_t(dst, val_x);
-	WriteInt24_t(dst, val_y);
-	WriteInt24_t(dst, val_z);
-}
-#endif
-#endif
-
-float float2range11(float f)
-{
-	// continuous function mapping all reals into -1..1
-	return f / (fabs(f) + 1);
-}
-
-float float2range01(float f)
-{
-	// continuous function mapping all reals into 0..1
-	return 0.5 + 0.5 * float2range11(f);
-}
-
-// from the GNU Scientific Library
-float gsl_ran_gaussian_lastvalue;
-float gsl_ran_gaussian_lastvalue_set;
-float gsl_ran_gaussian(float sigma)
-{
-	float a, b;
-	if(gsl_ran_gaussian_lastvalue_set)
-	{
-		gsl_ran_gaussian_lastvalue_set = 0;
-		return sigma * gsl_ran_gaussian_lastvalue;
-	}
-	else
-	{
-		a = random() * 2 * M_PI;
-		b = sqrt(-2 * log(random()));
-		gsl_ran_gaussian_lastvalue = cos(a) * b;
-		gsl_ran_gaussian_lastvalue_set = 1;
-		return sigma * sin(a) * b;
-	}
-}
-
-string car(string s)
-{
-	float o;
-	o = strstrofs(s, " ", 0);
-	if(o < 0)
-		return s;
-	return substring(s, 0, o);
-}
-string cdr(string s)
-{
-	float o;
-	o = strstrofs(s, " ", 0);
-	if(o < 0)
-		return string_null;
-	return substring(s, o + 1, strlen(s) - (o + 1));
-}
 float matchacl(string acl, string str)
 {
 	string t, s;
@@ -2011,14 +1195,6 @@ float matchacl(string acl, string str)
 	}
 	return r;
 }
-float startsWith(string haystack, string needle)
-{
-	return substring(haystack, 0, strlen(needle)) == needle;
-}
-float startsWithNocase(string haystack, string needle)
-{
-	return strcasecmp(substring(haystack, 0, strlen(needle)), needle) == 0;
-}
 
 string get_model_datafilename(string m, float sk, string fil)
 {
@@ -2035,9 +1211,6 @@ string get_model_datafilename(string m, float sk, string fil)
 
 float get_model_parameters(string m, float sk)
 {
-	string fn, s, c;
-	float fh, i;
-
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
 	get_model_parameters_name = string_null;
@@ -2048,12 +1221,16 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_desc = string_null;
 	get_model_parameters_bone_upperbody = string_null;
 	get_model_parameters_bone_weapon = string_null;
-	for(i = 0; i < MAX_AIM_BONES; ++i)
+	for(int i = 0; i < MAX_AIM_BONES; ++i)
 	{
 		get_model_parameters_bone_aim[i] = string_null;
 		get_model_parameters_bone_aimweight[i] = 0;
 	}
 	get_model_parameters_fixbone = 0;
+
+#ifndef MENUQC
+	MUTATOR_CALLHOOK(ClearModelParams);
+#endif
 
 	if (!m)
 		return 1;
@@ -2071,8 +1248,8 @@ float get_model_parameters(string m, float sk)
 		m = substring(m, 0, -7);
 	}
 
-	fn = get_model_datafilename(m, sk, "txt");
-	fh = fopen(fn, FILE_READ);
+	string fn = get_model_datafilename(m, sk, "txt");
+	int fh = fopen(fn, FILE_READ);
 	if(fh < 0)
 	{
 		sk = 0;
@@ -2084,6 +1261,7 @@ float get_model_parameters(string m, float sk)
 
 	get_model_parameters_modelname = m;
 	get_model_parameters_modelskin = sk;
+	string s, c;
 	while((s = fgets(fh)))
 	{
 		if(s == "")
@@ -2115,7 +1293,10 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
-		for(i = 0; i < MAX_AIM_BONES; ++i)
+	#ifndef MENUQC
+		MUTATOR_CALLHOOK(GetModelParams, c, s);
+	#endif
+		for(int i = 0; i < MAX_AIM_BONES; ++i)
 			if(c == strcat("bone_aim", ftos(i)))
 			{
 				get_model_parameters_bone_aimweight[i] = stof(car(s));
@@ -2138,127 +1319,10 @@ float get_model_parameters(string m, float sk)
 	return 1;
 }
 
-vector vec2(vector v)
-{
-	v_z = 0;
-	return v;
-}
-
-#ifndef MENUQC
-vector NearestPointOnBox(entity box, vector org)
-{
-	vector m1, m2, nearest;
-
-	m1 = box.mins + box.origin;
-	m2 = box.maxs + box.origin;
-
-	nearest_x = bound(m1_x, org_x, m2_x);
-	nearest_y = bound(m1_y, org_y, m2_y);
-	nearest_z = bound(m1_z, org_z, m2_z);
-
-	return nearest;
-}
-#endif
-
-float vercmp_recursive(string v1, string v2)
-{
-	float dot1, dot2;
-	string s1, s2;
-	float r;
-
-	dot1 = strstrofs(v1, ".", 0);
-	dot2 = strstrofs(v2, ".", 0);
-	if(dot1 == -1)
-		s1 = v1;
-	else
-		s1 = substring(v1, 0, dot1);
-	if(dot2 == -1)
-		s2 = v2;
-	else
-		s2 = substring(v2, 0, dot2);
-
-	r = stof(s1) - stof(s2);
-	if(r != 0)
-		return r;
-
-	r = strcasecmp(s1, s2);
-	if(r != 0)
-		return r;
-
-	if(dot1 == -1)
-		if(dot2 == -1)
-			return 0;
-		else
-			return -1;
-	else
-		if(dot2 == -1)
-			return 1;
-		else
-			return vercmp_recursive(substring(v1, dot1 + 1, 999), substring(v2, dot2 + 1, 999));
-}
-
-float vercmp(string v1, string v2)
-{
-	if(strcasecmp(v1, v2) == 0) // early out check
-		return 0;
-
-	// "git" beats all
-	if(v1 == "git")
-		return 1;
-	if(v2 == "git")
-		return -1;
-
-	return vercmp_recursive(v1, v2);
-}
-
-float u8_strsize(string s)
-{
-	float l, i, c;
-	l = 0;
-	for(i = 0; ; ++i)
-	{
-		c = str2chr(s, i);
-		if(c <= 0)
-			break;
-		++l;
-		if(c >= 0x80)
-			++l;
-		if(c >= 0x800)
-			++l;
-		if(c >= 0x10000)
-			++l;
-	}
-	return l;
-}
-
-// translation helpers
-string language_filename(string s)
-{
-	string fn;
-	float fh;
-	fn = prvm_language;
-	if(fn == "" || fn == "dump")
-		return s;
-	fn = strcat(s, ".", fn);
-	if((fh = fopen(fn, FILE_READ)) >= 0)
-	{
-		fclose(fh);
-		return fn;
-	}
-	return s;
-}
-string CTX(string s)
-{
-	float p = strstrofs(s, "^", 0);
-	if(p < 0)
-		return s;
-	return substring(s, p+1, -1);
-}
-
 // x-encoding (encoding as zero length invisible string)
 const string XENCODE_2  = "xX";
 const string XENCODE_22 = "0123456789abcdefABCDEF";
-string xencode(float f)
+string xencode(int f)
 {
 	float a, b, c, d;
 	d = f % 22; f = floor(f / 22);
@@ -2289,16 +1353,6 @@ float xdecode(string s)
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
 
-float lowestbit(float f)
-{
-	f &= ~(f * 2);
-	f &= ~(f * 4);
-	f &= ~(f * 16);
-	f &= ~(f * 256);
-	f &= ~(f * 65536);
-	return f;
-}
-
 /*
 string strlimitedlen(string input, string truncation, float strip_colors, float limit)
 {
@@ -2307,48 +1361,6 @@ string strlimitedlen(string input, string truncation, float strip_colors, float 
 	else
 		return strcat(substring(input, 0, (strlen(input) - strlen(truncation))), truncation);
 }*/
-
-// escape the string to make it safe for consoles
-string MakeConsoleSafe(string input)
-{
-	input = strreplace("\n", "", input);
-	input = strreplace("\\", "\\\\", input);
-	input = strreplace("$", "$$", input);
-	input = strreplace("\"", "\\\"", input);
-	return input;
-}
-
-#ifndef MENUQC
-// get true/false value of a string with multiple different inputs
-float InterpretBoolean(string input)
-{
-	switch(strtolower(input))
-	{
-		case "yes":
-		case "true":
-		case "on":
-			return TRUE;
-
-		case "no":
-		case "false":
-		case "off":
-			return FALSE;
-
-		default: return stof(input);
-	}
-}
-#endif
-
-#ifdef CSQC
-entity ReadCSQCEntity()
-{
-	float f;
-	f = ReadShort();
-	if(f == 0)
-		return world;
-	return findfloat(world, entnum, f);
-}
-#endif
 
 float shutdown_running;
 #ifdef SVQC
@@ -2363,53 +1375,16 @@ void m_shutdown()
 {
 	if(shutdown_running)
 	{
-		print("Recursive shutdown detected! Only restoring cvars...\n");
+		LOG_INFO("Recursive shutdown detected! Only restoring cvars...\n");
 	}
 	else
 	{
 		shutdown_running = 1;
 		Shutdown();
+		shutdownhooks();
 	}
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }
-
-#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
-#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
-#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
-// this will use the value:
-//   128
-// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
-// accuracy at x is 1/derivative, i.e.
-//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
-#ifdef SVQC
-void WriteApproxPastTime(float dst, float t)
-{
-	float dt = time - t;
-
-	// warning: this is approximate; do not resend when you don't have to!
-	// be careful with sendflags here!
-	// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
-
-	// map to range...
-	dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
-
-	// round...
-	dt = rint(bound(0, dt, 255));
-
-	WriteByte(dst, dt);
-}
-#endif
-#ifdef CSQC
-float ReadApproxPastTime()
-{
-	float dt = ReadByte();
-
-	// map from range...PPROXPASTTIME_MAX / 256
-	dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
-
-	return servertime - dt;
-}
-#endif
 
 #ifndef MENUQC
 .float skeleton_bones_index;
@@ -2447,80 +1422,6 @@ void queue_to_execute_next_frame(string s)
 	to_execute_next_frame = strzone(s);
 }
 
-float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x)
-{
-	return
-		(((     startspeedfactor + endspeedfactor - 2
-		) * x - 2 * startspeedfactor - endspeedfactor + 3
-		) * x + startspeedfactor
-		) * x;
-}
-
-float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
-{
-	if(startspeedfactor < 0 || endspeedfactor < 0)
-		return FALSE;
-
-	/*
-	// if this is the case, the possible zeros of the first derivative are outside
-	// 0..1
-	We can calculate this condition as condition
-	if(se <= 3)
-		return TRUE;
-	*/
-
-	// better, see below:
-	if(startspeedfactor <= 3 && endspeedfactor <= 3)
-		return TRUE;
-
-	// if this is the case, the first derivative has no zeros at all
-	float se = startspeedfactor + endspeedfactor;
-	float s_e = startspeedfactor - endspeedfactor;
-	if(3 * (se - 4) * (se - 4) + s_e * s_e <= 12) // an ellipse
-		return TRUE;
-
-	// Now let s <= 3, s <= 3, s+e >= 3 (triangle) then we get se <= 6 (top right corner).
-	// we also get s_e <= 6 - se
-	// 3 * (se - 4)^2 + (6 - se)^2
-	// is quadratic, has value 12 at 3 and 6, and value < 12 in between.
-	// Therefore, above "better" check works!
-
-	return FALSE;
-
-	// known good cases:
-	// (0, [0..3])
-	// (0.5, [0..3.8])
-	// (1, [0..4])
-	// (1.5, [0..3.9])
-	// (2, [0..3.7])
-	// (2.5, [0..3.4])
-	// (3, [0..3])
-	// (3.5, [0.2..2.3])
-	// (4, 1)
-
-	/*
-	   On another note:
-	   inflection point is always at (2s + e - 3) / (3s + 3e - 6).
-
-	   s + e - 2 == 0: no inflection
-
-	   s + e > 2:
-	   0 < inflection < 1 if:
-	   0 < 2s + e - 3 < 3s + 3e - 6
-	   2s + e > 3 and 2e + s > 3
-
-	   s + e < 2:
-	   0 < inflection < 1 if:
-	   0 > 2s + e - 3 > 3s + 3e - 6
-	   2s + e < 3 and 2e + s < 3
-
-	   Therefore: there is an inflection point iff:
-	   e outside (3 - s)/2 .. 3 - s*2
-
-	   in other words, if (s,e) in triangle (1,1)(0,3)(0,1.5) or in triangle (1,1)(3,0)(1.5,0)
-	*/
-}
-
 .float FindConnectedComponent_processing;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass)
 {
@@ -2535,143 +1436,58 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 	// start with a 1-element queue
 	queue_start = queue_end = e;
-	queue_end.fld = world;
+	queue_end.(fld) = NULL;
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
-	for(; queue_start; queue_start = queue_start.fld)
+	for (; queue_start; queue_start = queue_start.(fld))
 	{
 		// find all neighbors of queue_start
 		entity t;
-		for(t = world; (t = nxt(t, queue_start, pass)); )
+		for(t = NULL; (t = nxt(t, queue_start, pass)); )
 		{
 			if(t.FindConnectedComponent_processing)
 				continue;
 			if(iscon(t, queue_start, pass))
 			{
 				// it is connected? ADD IT. It will look for neighbors soon too.
-				queue_end.fld = t;
+				queue_end.(fld) = t;
 				queue_end = t;
-				queue_end.fld = world;
+				queue_end.(fld) = NULL;
 				queue_end.FindConnectedComponent_processing = 1;
 			}
 		}
 	}
 
 	// unmark
-	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+	for (queue_start = e; queue_start; queue_start = queue_start.(fld))
 		queue_start.FindConnectedComponent_processing = 0;
-}
-
-#ifdef SVQC
-vector combine_to_vector(float x, float y, float z)
-{
-	vector result; result_x = x; result_y = y; result_z = z;
-	return result;
-}
-
-vector get_corner_position(entity box, float corner)
-{
-	switch(corner)
-	{
-		case 1: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmin_z);
-		case 2: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmin_z);
-		case 3: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmin_z);
-		case 4: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmax_z);
-		case 5: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmin_z);
-		case 6: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmax_z);
-		case 7: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmax_z);
-		case 8: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmax_z);
-		default: return '0 0 0';
-	}
-}
-#endif
-
-// todo: this sucks, lets find a better way to do backtraces?
-void backtrace(string msg)
-{
-	float dev, war;
-	#ifdef SVQC
-	dev = autocvar_developer;
-	war = autocvar_prvm_backtraceforwarnings;
-	#else
-	dev = cvar("developer");
-	war = cvar("prvm_backtraceforwarnings");
-	#endif
-	cvar_set("developer", "1");
-	cvar_set("prvm_backtraceforwarnings", "1");
-	print("\n");
-	print("--- CUT HERE ---\nWARNING: ");
-	print(msg);
-	print("\n");
-	remove(world); // isn't there any better way to cause a backtrace?
-	print("\n--- CUT UNTIL HERE ---\n");
-	cvar_set("developer", ftos(dev));
-	cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
-
-// color code replace, place inside of sprintf and parse the string
-string CCR(string input)
-{
-	// See the autocvar declarations in util.qh for default values
-
-	// foreground/normal colors
-	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
-	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
-	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
-	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
-
-	// "kill" colors
-	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
-	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
-	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
-
-	// background colors
-	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
-	input = strreplace("^N", "^7", input); // "none"-- reset to white...
-	return input;
-}
-
-vector vec3(float x, float y, float z)
-{
-	vector v;
-	v_x = x;
-	v_y = y;
-	v_z = z;
-	return v;
 }
 
 #ifndef MENUQC
 vector animfixfps(entity e, vector a, vector b)
 {
 	// multi-frame anim: keep as-is
-	if(a_y == 1)
+	if(a.y == 1)
 	{
-		float dur;
-		dur = frameduration(e.modelindex, a_x);
-		if(dur <= 0 && b_y)
+		float dur = frameduration(e.modelindex, a.x);
+		if (dur <= 0 && b.y)
 		{
 			a = b;
-			dur = frameduration(e.modelindex, a_x);
+			dur = frameduration(e.modelindex, a.x);
 		}
-		if(dur > 0)
-			a_z = 1.0 / dur;
+		if (dur > 0)
+			a.z = 1.0 / dur;
 	}
 	return a;
 }
 #endif
 
-#ifdef SVQC
-void dedicated_print(string input) // print(), but only print if the server is not local
-{
-	if(server_is_dedicated) { print(input); }
-}
-#endif
-
 #ifndef MENUQC
-float Announcer_PickNumber(float type, float num)
+Notification Announcer_PickNumber(int type, int num)
 {
-	switch(type)
+    return = NULL;
+	switch (type)
 	{
 		case CNT_GAMESTART:
 		{
@@ -2776,12 +1592,11 @@ float Announcer_PickNumber(float type, float num)
 			break;
 		}
 	}
-	return NOTIF_ABORT; // abort sending if none of these numbers were right
 }
 #endif
 
 #ifndef MENUQC
-float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
+int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents)
 {
 	switch(nativecontents)
 	{
@@ -2801,7 +1616,7 @@ float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents)
 	return 0;
 }
 
-float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
+int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents)
 {
 	if(supercontents & (DPCONTENTS_SOLID | DPCONTENTS_BODY))
 		return CONTENT_SOLID;
@@ -2816,18 +1631,3 @@ float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
 	return CONTENT_EMPTY;
 }
 #endif
-
-vector bezier_quadratic_getpoint(vector a, vector b, vector c, float t)
-{
-	return
-		(c - 2 * b + a) * (t * t) +
-		(b - a) * (2 * t) +
-		a;
-}
-
-vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
-{
-	return
-		(c - 2 * b + a) * (2 * t) +
-		(b - a) * 2;
-}

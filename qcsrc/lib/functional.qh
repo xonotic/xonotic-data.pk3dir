@@ -1,0 +1,42 @@
+#pragma once
+
+#define MAP(f, ...) EVAL(OVERLOAD(MAP, f, __VA_ARGS__))
+#define MAP_2(f, it) f(it)
+#define MAP_3(f, it, ...) f(it) MAP_2(f, __VA_ARGS__)
+#define MAP_4(f, it, ...) f(it) MAP_3(f, __VA_ARGS__)
+#define MAP_5(f, it, ...) f(it) MAP_4(f, __VA_ARGS__)
+#define MAP_6(f, it, ...) f(it) MAP_5(f, __VA_ARGS__)
+#define MAP_7(f, it, ...) f(it) MAP_6(f, __VA_ARGS__)
+#define MAP_8(f, it, ...) f(it) MAP_7(f, __VA_ARGS__)
+#define MAP_9(f, it, ...) f(it) MAP_8(f, __VA_ARGS__)
+#define MAP_10(f, it, ...) f(it) MAP_9(f, __VA_ARGS__)
+#define MAP_11(f, it, ...) f(it) MAP_10(f, __VA_ARGS__)
+#define MAP_12(f, it, ...) f(it) MAP_11(f, __VA_ARGS__)
+#define MAP_13(f, it, ...) f(it) MAP_12(f, __VA_ARGS__)
+#define MAP_14(f, it, ...) f(it) MAP_13(f, __VA_ARGS__)
+#define MAP_15(f, it, ...) f(it) MAP_14(f, __VA_ARGS__)
+#define MAP_16(f, it, ...) f(it) MAP_15(f, __VA_ARGS__)
+#define MAP_17(f, it, ...) f(it) MAP_16(f, __VA_ARGS__)
+#define MAP_18(f, it, ...) f(it) MAP_17(f, __VA_ARGS__)
+#define MAP_19(f, it, ...) f(it) MAP_18(f, __VA_ARGS__)
+#define MAP_20(f, it, ...) f(it) MAP_19(f, __VA_ARGS__)
+
+#define IDENTITY(it) it
+
+#define UNWORDS(...) MAP(IDENTITY, __VA_ARGS__)
+
+#define APPLY(f, ...) f(__VA_ARGS__)
+
+#ifdef SVQC
+	#define SV(f, ...) f(__VA_ARGS__)
+#else
+	#define SV(f, ...)
+#endif
+
+#ifdef CSQC
+	#define CL(f, ...) f(__VA_ARGS__)
+#else
+	#define CL(f, ...)
+#endif
+
+#define IF(cond, f, ...) cond(f, __VA_ARGS__)

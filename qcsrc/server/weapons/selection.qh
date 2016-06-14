@@ -1,29 +1,31 @@
+#pragma once
+
 // switch between weapons
 void Send_WeaponComplain(entity e, float wpn, float type);
 
 .float hasweapon_complain_spam;
-float client_hasweapon(entity cl, float wpn, float andammo, float complain);
+bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain);
 
-.float weaponcomplainindex;
-float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing);
+.int weaponcomplainindex;
+float W_GetCycleWeapon(entity this, string weaponorder, float dir, float imp, float complain, float skipmissing);
 
-#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE)
+#define w_getbestweapon(ent) Weapons_from(W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, false, true))
 
-void W_SwitchWeapon_Force(entity e, float w);
+void W_SwitchWeapon_Force(Player this, Weapon w);
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
-void W_SwitchToOtherWeapon(entity pl);
-void W_SwitchWeapon(float imp);
+void W_SwitchToOtherWeapon(entity this);
+void W_SwitchWeapon(entity this, Weapon imp);
 
-void W_CycleWeapon(string weaponorder, float dir);
+void W_CycleWeapon(entity this, string weaponorder, float dir);
 
-void W_NextWeaponOnImpulse(float imp);
+void W_NextWeaponOnImpulse(entity this, float imp);
 
 // next weapon
-void W_NextWeapon(float list);
+void W_NextWeapon(entity this, float list);
 
 // prev weapon
-void W_PreviousWeapon(float list);
+void W_PreviousWeapon(entity this, float list);
 
 // previously used if exists and has ammo, (second) best otherwise
-void W_LastWeapon(void);
+void W_LastWeapon(entity this);

@@ -1,1 +1,3 @@
+#pragma once
+
 void GameCommand(string command);

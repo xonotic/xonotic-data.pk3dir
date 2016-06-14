@@ -1,0 +1,4 @@
+#pragma once
+
+float buildpath_nodefilter_none(vector n,vector c,vector p);
+entity path_build(entity next, vector where, entity prev, entity start);

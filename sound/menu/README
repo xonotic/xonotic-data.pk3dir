@@ -1,0 +1,10 @@
+SOUND    PLAYED WHEN
+
+open     opening dialog
+close    closing dialog
+focus    moving focus to new item
+execute  pressing button, enter key, or double click
+select   using checkbox, radiobutton, or similar
+slide    using slider or colorpicker
+clear    clearing inputbox or keybind
+winner   winning single player campaign

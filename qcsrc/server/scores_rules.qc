@@ -1,4 +1,8 @@
-float c1, c2, c3, c4;
+#include "scores_rules.qh"
+
+#include "cl_client.qh"
+#include "scores.qh"
+
 void CheckAllowedTeams (entity for_whom);
 
 // NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE
@@ -27,6 +31,9 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 
 	if(score_enabled)
 		ScoreInfo_SetLabel_PlayerScore(SP_SCORE,        "score",     sprio);
+
+	ScoreInfo_SetLabel_PlayerScore(SP_DMG, "damage", 0);
+	ScoreInfo_SetLabel_PlayerScore(SP_DMGTAKEN, "damagetaken", SFL_LOWER_IS_BETTER);
 }
 void ScoreRules_basics_end()
 {
@@ -36,11 +43,10 @@ void ScoreRules_generic()
 {
 	if(teamplay)
 	{
-		CheckAllowedTeams(world);
-		ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
+		CheckAllowedTeams(NULL);
+		ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	}
 	else
-		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
+		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	ScoreRules_basics_end();
 }
-

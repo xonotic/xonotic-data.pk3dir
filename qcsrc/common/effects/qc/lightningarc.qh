@@ -1,0 +1,5 @@
+#pragma once
+
+#ifdef SVQC
+void te_csqc_lightningarc(vector from, vector to);
+#endif

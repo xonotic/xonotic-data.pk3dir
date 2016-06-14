@@ -1,0 +1,34 @@
+#ifndef PROGSDEFS_H
+#define PROGSDEFS_H
+
+#pragma noref 1
+
+#define true _true
+#define false _false
+#define TRUE _TRUE
+#define FALSE _FALSE
+
+#define spawn _spawn
+#define setmodel _setmodel
+
+#include "upstream/progsdefs.qc"
+
+#undef true
+#undef false
+#undef TRUE
+#undef FALSE
+
+#undef spawn
+#undef setmodel
+
+#define stuffcmd(cl, ...) MACRO_BEGIN \
+    entity _cl = (cl); \
+    if (IS_REAL_CLIENT(_cl)) stuffcmd(_cl, __VA_ARGS__); \
+MACRO_END
+
+#pragma noref 0
+
+#define use use1
+.void(entity this, entity actor, entity trigger) use;
+
+#endif
