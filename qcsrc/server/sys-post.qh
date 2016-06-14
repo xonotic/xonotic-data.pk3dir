@@ -1,7 +1,5 @@
-#pragma noref 0
+#pragma once
 
-#undef ATTEN_NORM
-#undef objerror
 #undef droptofloor
 #undef sound
 #undef remove
@@ -9,6 +7,33 @@
 #undef cvar_string
 #undef cvar
 
-var float(string var) cvar;
-var string(string var) cvar_string;
-var void(string var, string val) cvar_set;
+var float(string name) cvar;
+var string(string name) cvar_string;
+var void(string name, string value) cvar_set;
+var void remove(entity e);
+
+#undef IT_SHOTGUN
+#undef IT_SUPER_SHOTGUN
+#undef IT_NAILGUN
+#undef IT_SUPER_NAILGUN
+#undef IT_GRENADE_LAUNCHER
+#undef IT_ROCKET_LAUNCHER
+#undef IT_LIGHTNING
+#undef IT_EXTRA_WEAPON
+#undef IT_SHELLS
+#undef IT_NAILS
+#undef IT_ROCKETS
+#undef IT_CELLS
+#undef IT_AXE
+#undef IT_ARMOR1
+#undef IT_ARMOR2
+#undef IT_ARMOR3
+#undef IT_SUPERHEALTH
+#undef IT_KEY1
+#undef IT_KEY2
+#undef IT_INVISIBILITY
+#undef IT_INVULNERABILITY
+#undef IT_SUIT
+#undef IT_QUAD
+
+#pragma noref 0

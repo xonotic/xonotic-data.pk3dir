@@ -1,3 +1,4 @@
+#pragma once
 /*
  * Globals and Fields
  */
@@ -49,28 +50,29 @@ float bot_waypoint_queue_bestgoalrating;
  */
 
 void debugresetnodes();
-void debugnode(vector node);
+void debugnode(entity this, vector node);
 void debugnodestatus(vector position, float status);
 
-void debuggoalstack();
+void debuggoalstack(entity this);
 
 float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
 
-float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist);
-float navigation_routetogoal(entity e, vector startposition);
+float navigation_markroutes_nearestwaypoints(entity this, entity waylist, float maxdist);
+float navigation_routetogoal(entity this, entity e, vector startposition);
 
-void navigation_clearroute();
-void navigation_pushroute(entity e);
-void navigation_poproute();
+void navigation_clearroute(entity this);
+void navigation_pushroute(entity this, entity e);
+void navigation_poproute(entity this);
 void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vector p);
-void navigation_markroutes(entity fixed_source_waypoint);
+void navigation_markroutes(entity this, entity fixed_source_waypoint);
 void navigation_markroutes_inverted(entity fixed_source_waypoint);
-void navigation_routerating(entity e, float f, float rangebias);
-void navigation_poptouchedgoals();
-void navigation_goalrating_start();
-void navigation_goalrating_end();
-void navigation_unstuck();
+void navigation_routerating(entity this, entity e, float f, float rangebias);
+void navigation_poptouchedgoals(entity this);
+void navigation_goalrating_start(entity this);
+void navigation_goalrating_end(entity this);
+void navigation_unstuck(entity this);
 
 void botframe_updatedangerousobjects(float maxupdate);
 
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp);
+float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist);

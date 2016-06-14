@@ -1,0 +1,5 @@
+#pragma once
+
+#include "hud.qh"
+#include "hud_config.qh"
+#include <client/mutators/events.qh>

@@ -1,0 +1,14 @@
+#ifndef KEYCODES_H
+#define KEYCODES_H
+
+#pragma noref 1
+
+//#define float const int
+
+#include "upstream/keycodes.qc"
+
+//#undef float
+
+#pragma noref 0
+
+#endif

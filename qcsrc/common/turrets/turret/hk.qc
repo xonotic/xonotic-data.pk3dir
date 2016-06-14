@@ -1,0 +1,70 @@
+#ifndef TURRET_HK_H
+#define TURRET_HK_H
+
+//#define TURRET_DEBUG_HK
+
+#include "hk_weapon.qh"
+
+CLASS(HunterKiller, Turret)
+/* spawnflags */ ATTRIB(HunterKiller, spawnflags, int, TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER | TUR_FLAG_RECIEVETARGETS);
+/* mins       */ ATTRIB(HunterKiller, mins, vector, '-32 -32 0');
+/* maxs       */ ATTRIB(HunterKiller, maxs, vector, '32 32 64');
+/* modelname  */ ATTRIB(HunterKiller, mdl, string, "base.md3");
+/* model      */ ATTRIB_STRZONE(HunterKiller, model, string, strcat("models/turrets/", this.mdl));
+/* head_model */ ATTRIB_STRZONE(HunterKiller, head_model, string, strcat("models/turrets/", "hk.md3"));
+/* netname    */ ATTRIB(HunterKiller, netname, string, "hk");
+/* fullname   */ ATTRIB(HunterKiller, turret_name, string, _("Hunter-Killer Turret"));
+    ATTRIB(HunterKiller, m_weapon, Weapon, WEP_HK);
+ENDCLASS(HunterKiller)
+REGISTER_TURRET(HK, NEW(HunterKiller));
+
+#endif
+
+#ifdef IMPLEMENTATION
+
+#ifdef SVQC
+
+#ifdef TURRET_DEBUG_HK
+.float atime;
+#endif
+
+spawnfunc(turret_hk) { if(!turret_initialize(this, TUR_HK)) remove(this); }
+
+METHOD(HunterKiller, tr_think, void(HunterKiller thistur, entity it))
+{
+    if (it.tur_head.frame != 0)
+        it.tur_head.frame = it.tur_head.frame + 1;
+
+    if (it.tur_head.frame > 5)
+        it.tur_head.frame = 0;
+}
+
+bool turret_hk_addtarget(entity this, entity e_target,entity e_sender);
+METHOD(HunterKiller, tr_setup, void(HunterKiller this, entity it))
+{
+    it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
+    it.aim_flags = TFL_AIM_SIMPLE;
+    it.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
+    it.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCHECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
+    it.shoot_flags = TFL_SHOOT_CLEARTARGET;
+    it.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TEAMCHECK;
+
+    it.turret_addtarget = turret_hk_addtarget;
+}
+
+bool turret_hk_addtarget(entity this, entity e_target,entity e_sender)
+{
+    if (e_target)
+    {
+        if (turret_validate_target(this,e_target,this.target_validate_flags) > 0)
+        {
+            this.enemy = e_target;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+#endif // SVQC
+#endif

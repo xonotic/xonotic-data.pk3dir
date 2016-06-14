@@ -1,4 +1,11 @@
-void CampaignSetup(float n)
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "campaign_common.qh"
+    #include "mapinfo.qh"
+#endif
+
+void CampaignSetup(int n)
 {
 	localcmd("set g_campaign 1\n");
 	localcmd("set _campaign_name \"");

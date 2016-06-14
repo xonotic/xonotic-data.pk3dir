@@ -1,3 +1,10 @@
+#include "campaign.qh"
+#include "cheats.qh"
+#include "miscfunctions.qh"
+#include "g_world.qh"
+
+#include "../common/campaign_common.qh"
+
 // campaign cvars:
 //   _campaign_index: index of CURRENT map
 //   _campaign_name: name of the current campaign
@@ -7,7 +14,7 @@
 float campaign_level;
 float campaign_won;
 string campaign_index_var;
-float checkrules_equality;
+//float checkrules_equality;
 
 float CampaignBailout(string s)
 {
@@ -15,7 +22,7 @@ float CampaignBailout(string s)
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
 	cvar_set("g_campaign", "0");
-	print("^4campaign initialization failed: ", s, "\n");
+	LOG_INFO("^4campaign initialization failed: ", s, "\n");
 	if(autocvar__campaign_testrun)
 		error("CAMPAIGN FAIL AHAHAHAHAHAHAHAHAH))");
 	return 1;
@@ -114,7 +121,6 @@ void CampaignPreInit()
 	strunzone(title);
 }
 
-string GetMapname();
 void CampaignPostInit()
 {
 	// now some sanity checks
@@ -178,25 +184,16 @@ void CampaignSaveCvar(string cvarname, float value)
 
 void CampaignPreIntermission()
 {
-	entity head;
-	float won;
-	float lost;
+	int won = 0;
+	int lost = 0;
 	string savevar;
 
-	won = lost = 0;
-
-	head = findchain(classname, "player");
-	while(head)
-	{
-		if(IS_REAL_CLIENT(head))
-		{
-			if(head.winning)
-				won = won + 1;
-			else
-				lost = lost + 1;
-		}
-		head = head.chain;
-	}
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), LAMBDA(
+		if(it.winning)
+			won += 1;
+		else
+			lost += 1;
+	));
 
 	if(autocvar__campaign_testrun)
 	{
@@ -259,7 +256,7 @@ void CampaignPostIntermission()
 	if(campaign_won && campaign_entries < 2)
 	{
 		// last map won!
-		print("^2test run: campaign looks GOOD\n");
+		LOG_DEBUG("^2test run: campaign looks GOOD\n");
 		localcmd("togglemenu 1\n");
 		CampaignFile_Unload();
 		return;
