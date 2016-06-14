@@ -1,7 +1,8 @@
+#pragma once
 
 void W_GiveWeapon (entity e, float wep);
 .float prevstrengthsound;
 .float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player);
-float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception);
-void W_PrepareExplosionByDamage(entity attacker, void() explode);
+float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception);
+void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode);

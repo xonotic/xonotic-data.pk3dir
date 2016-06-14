@@ -1,3 +1,0 @@
-#ifndef NOCOMPAT
-# define COMPAT_NO_MOD_IS_XONOTIC
-#endif

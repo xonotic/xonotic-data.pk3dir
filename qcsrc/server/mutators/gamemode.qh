@@ -1,0 +1,48 @@
+#pragma once
+
+#include <server/cl_client.qh>
+#include <server/cl_player.qh>
+#include <server/cl_impulse.qh>
+#include <server/cheats.qh>
+#include <server/g_damage.qh>
+#include <server/g_world.qh>
+#include <server/round_handler.qh>
+#include <server/scores.qh>
+#include <server/scores_rules.qh>
+#include <server/teamplay.qh>
+
+#include <server/bot/bot.qh>
+#include <server/bot/navigation.qh>
+#include <server/bot/waypoints.qh>
+#include <server/bot/havocbot/roles.qh>
+
+#include <server/bot/havocbot/havocbot.qh>
+
+#include <server/command/vote.qh>
+
+#include <common/monsters/all.qh>
+
+#include <server/command/common.qh>
+
+#include <server/weapons/tracing.qh>
+#include <server/weapons/weaponsystem.qh>
+
+#include <common/physics/player.qh>
+#include <common/effects/qc/all.qh>
+#include <common/deathtypes/all.qh>
+#include <common/notifications/all.qh>
+#include <common/triggers/teleporters.qh>
+#include <common/triggers/subs.qh>
+#include <common/stats.qh>
+#include <common/teams.qh>
+
+#include <lib/warpzone/server.qh>
+#include <lib/warpzone/util_server.qh>
+
+.float lastground;
+float total_players;
+float redalive, bluealive, yellowalive, pinkalive;
+.float redalive_stat = _STAT(REDALIVE);
+.float bluealive_stat = _STAT(BLUEALIVE);
+.float yellowalive_stat = _STAT(YELLOWALIVE);
+.float pinkalive_stat = _STAT(PINKALIVE);

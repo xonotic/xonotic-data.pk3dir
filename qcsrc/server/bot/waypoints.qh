@@ -1,15 +1,16 @@
+#pragma once
 /*
  * Globals and Fields
  */
 
-const float WAYPOINTFLAG_GENERATED = 8388608;
-const float WAYPOINTFLAG_ITEM = 4194304;
-const float WAYPOINTFLAG_TELEPORT = 2097152;
-const float WAYPOINTFLAG_NORELINK = 1048576;
-const float WAYPOINTFLAG_PERSONAL = 524288;
-const float WAYPOINTFLAG_PROTECTED = 262144;  // Useless WP detection never kills these.
-const float WAYPOINTFLAG_USEFUL = 131072;  // Useless WP detection temporary flag.
-const float WAYPOINTFLAG_DEAD_END = 65536;  // Useless WP detection temporary flag.
+const int WAYPOINTFLAG_GENERATED = BIT(23);
+const int WAYPOINTFLAG_ITEM = BIT(22);
+const int WAYPOINTFLAG_TELEPORT = BIT(21);
+const int WAYPOINTFLAG_NORELINK = BIT(20);
+const int WAYPOINTFLAG_PERSONAL = BIT(19);
+const int WAYPOINTFLAG_PROTECTED = BIT(18);  // Useless WP detection never kills these.
+const int WAYPOINTFLAG_USEFUL = BIT(17);  // Useless WP detection temporary flag.
+const int WAYPOINTFLAG_DEAD_END = BIT(16);  // Useless WP detection temporary flag.
 
 // fields you can query using prvm_global server to get some statistics about waypoint linking culling
 float relink_total, relink_walkculled, relink_pvsculled, relink_lengthculled;
@@ -27,7 +28,8 @@ float botframe_cachedwaypointlinks;
 .float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 
-.float wpfire, wpcost, wpconsidered, wpisbox, wpflags, wplinked, wphardwired;
+.float wpfire, wpcost, wpconsidered, wpisbox, wplinked, wphardwired;
+.int wpflags;
 
 .vector wpnearestpoint;
 
@@ -35,9 +37,9 @@ float botframe_cachedwaypointlinks;
  * Functions
  */
 
-void spawnfunc_waypoint();
+spawnfunc(waypoint);
 void waypoint_addlink(entity from, entity to);
-void waypoint_think();
+void waypoint_think(entity this);
 void waypoint_clearlinks(entity wp);
 void waypoint_schedulerelink(entity wp);
 
@@ -51,13 +53,14 @@ void waypoint_saveall();
 void waypoint_spawnforitem_force(entity e, vector org);
 void waypoint_spawnforitem(entity e);
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken);
+void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken);
 void botframe_showwaypointlinks();
 
 float waypoint_loadall();
 float waypoint_load_links();
 
 entity waypoint_spawn(vector m1, vector m2, float f);
-entity waypoint_spawnpersonal(vector position);
+entity waypoint_spawnpersonal(entity this, vector position);
 
 vector waypoint_fixorigin(vector position);
 

@@ -1,10 +1,13 @@
+#ifndef CAMPAIGN_COMMON_H
+#define CAMPAIGN_COMMON_H
+
 #ifndef CAMPAIGN_MAX_ENTRIES
 #define CAMPAIGN_MAX_ENTRIES 64
 #endif
 
 // each i-th array element corresponds to the list entry campaign_offset+i
-float campaign_entries;
-float campaign_offset;
+int campaign_entries;
+int campaign_offset;
 string campaign_gametype[CAMPAIGN_MAX_ENTRIES];
 string campaign_mapname[CAMPAIGN_MAX_ENTRIES];
 float campaign_bots[CAMPAIGN_MAX_ENTRIES];
@@ -28,3 +31,4 @@ void CampaignFile_Unload();
 // Sets up the campaign for the n-th array item (meaning: campaign_offset+nth
 // level) using localcmd()
 void CampaignSetup(float n);
+#endif

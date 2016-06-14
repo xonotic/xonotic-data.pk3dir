@@ -1,0 +1,4 @@
+// generated file; do not modify
+#include <common/monsters/all.qh>
+#include <common/monsters/spawn.qh>
+#include <common/monsters/sv_monsters.qh>

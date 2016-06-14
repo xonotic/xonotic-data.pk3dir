@@ -1,22 +1,23 @@
-#define localcmd cmd
+#pragma once
 
-#define NULL (null_entity)
-#define world NULL
+#include "draw.qh"
+#include "skin.qh"
 
-// constants
+#include "xonotic/util.qh"
 
-const float GAME_ISSERVER 	= 1;
-const float GAME_CONNECTED	= 2;
-const float GAME_DEVELOPER	= 4;
+#include <common/constants.qh>
+#include <common/util.qh>
 
-// prototypes
+const int GAME_ISSERVER     = BIT(0);
+const int GAME_CONNECTED    = BIT(1);
+const int GAME_DEVELOPER    = BIT(2);
 
-float Menu_Active;
-float gamestatus;
+bool Menu_Active;
+int gamestatus;
 
-const float S_SHIFT = 1;
-const float S_CTRL = 2;
-const float S_ALT = 4;
+const int S_SHIFT = 1;
+const int S_CTRL = 2;
+const int S_ALT = 4;
 
 float frametime;
 float time;
@@ -29,12 +30,30 @@ void m_goto(string name);
 .string name;
 
 entity keyGrabber;
-.void(entity me, float key, float ascii) keyGrabbed;
+.void(entity this, float key, float ascii) keyGrabbed;
 
-float conwidth, conheight; // "virtual" conwidth/height values for other stuff to assume for scaling
+// "virtual" conwidth/height values for other stuff to assume for scaling
+float conwidth, conheight;
 
-float preMenuInit(); // you have to define this for pre-menu initialization. Return 0 if initialization needs to be retried a frame later, 1 if it succeeded.
-void preMenuDraw(); // this is run before the menu is drawn. You may put some stuff there that has to be done every frame.
-void postMenuDraw(); // this is run just after the menu is drawn (or not). Useful to draw something over everything else.
+/** you have to define this for pre-menu initialization. Return 0 if initialization needs to be retried a frame later, 1 if it succeeded. */
+float preMenuInit();
+/** this is run before the menu is drawn. You may put some stuff there that has to be done every frame. */
+void preMenuDraw();
+/** this is run just after the menu is drawn (or not). Useful to draw something over everything else. */
+void postMenuDraw();
 
 void m_sync();
+
+void draw_reset_cropped();
+
+const string MENU_SOUND_CLEAR   = "sound/menu/clear.wav";
+const string MENU_SOUND_CLOSE   = "sound/menu/close.wav";
+const string MENU_SOUND_EXECUTE = "sound/menu/execute.wav";
+const string MENU_SOUND_FOCUS   = "sound/menu/focus.wav";
+const string MENU_SOUND_OPEN    = "sound/menu/open.wav";
+const string MENU_SOUND_SELECT  = "sound/menu/select.wav";
+const string MENU_SOUND_SLIDE   = "sound/menu/slide.wav";
+const string MENU_SOUND_WINNER  = "sound/menu/winner.wav";
+
+void m_play_focus_sound();
+void m_play_click_sound(string soundfile);

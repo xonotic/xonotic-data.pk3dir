@@ -1,0 +1,8 @@
+#ifndef TRIGGERS_FUNC_BREAKABLE_H
+#define TRIGGERS_FUNC_BREAKABLE_H
+
+#ifdef SVQC
+spawnfunc(func_breakable);
+#endif
+
+#endif

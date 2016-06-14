@@ -1,8 +1,15 @@
+#if defined(CSQC)
+#elif defined(MENUQC)
+#elif defined(SVQC)
+    #include "util.qh"
+    #include "campaign_common.qh"
+#endif
+
 // CampaignFileLoad(offset, n)
 // - Loads campaign level data (up to n entries starting at offset)
 //   into the globals
 // - Returns the number of entries successfully read
-float CampaignFile_Load(float offset, float n)
+float CampaignFile_Load(int offset, float n)
 {
 	float fh;
 	float lineno;
@@ -78,10 +85,10 @@ float CampaignFile_Load(float offset, float n)
 
 void CampaignFile_Unload()
 {
-	float i;
 	if(campaign_title)
 	{
 		strunzone(campaign_title);
+		int i;
 		for(i = 0; i < campaign_entries; ++i)
 		{
 			strunzone(campaign_gametype[i]);

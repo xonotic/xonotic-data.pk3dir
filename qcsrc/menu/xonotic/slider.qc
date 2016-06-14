@@ -1,0 +1,64 @@
+#include "slider.qh"
+
+entity makeXonoticSlider_T(float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
+{
+	entity me;
+	me = NEW(XonoticSlider);
+	me.configureXonoticSlider(me, theValueMin, theValueMax, theValueStep, theCvar, theTooltip);
+	return me;
+}
+entity makeXonoticSlider(float theValueMin, float theValueMax, float theValueStep, string theCvar)
+{
+	return makeXonoticSlider_T(theValueMin, theValueMax, theValueStep, theCvar, string_null);
+}
+void XonoticSlider_configureXonoticSlider(entity me, float theValueMin, float theValueMax, float theValueStep, string theCvar, string theTooltip)
+{
+	float vp;
+	vp = theValueStep * 10;
+	while(fabs(vp) < fabs(theValueMax - theValueMin) / 40)
+		vp *= 10;
+
+	me.configureSliderVisuals(me, me.fontSize, me.align, me.valueSpace, me.image);
+
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	if(theCvar)
+		// Prevent flickering of the slider button by initialising the
+		// slider out of bounds to hide the button before loading the cvar
+		me.configureSliderValues(me, theValueMin, theValueMin-theValueStep, theValueMax, theValueStep, theValueStep, vp);
+	else
+		me.configureSliderValues(me, theValueMin, theValueMin, theValueMax, theValueStep, theValueStep, vp);
+	me.loadCvars(me);
+	setZonedTooltip(me, theTooltip, theCvar);
+}
+void XonoticSlider_setValue(entity me, float val)
+{
+	if(val != me.value)
+	{
+		SUPER(XonoticSlider).setValue( me, val );
+		me.saveCvars(me);
+	}
+}
+void XonoticSlider_setValue_noAnim(entity me, float val)
+{
+	if(val != me.value)
+	{
+		SUPER(XonoticSlider).setValue_noAnim(me, val);
+		me.saveCvars(me);
+	}
+}
+void XonoticSlider_loadCvars(entity me)
+{
+	if (!me.cvarName)
+		return;
+
+	me.setValue_noAnim(me, cvar(me.cvarName));
+}
+void XonoticSlider_saveCvars(entity me)
+{
+	if (!me.cvarName)
+		return;
+
+	cvar_set(me.cvarName, ftos_mindecimals(me.value));
+
+	CheckSendCvars(me, me.cvarName);
+}

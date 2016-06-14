@@ -1,0 +1,7 @@
+#pragma once
+
+#include "../item/image.qh"
+CLASS(XonoticImage, Image)
+	METHOD(XonoticImage, configureXonoticImage, void(entity, string, float));
+ENDCLASS(XonoticImage)
+entity makeXonoticImage(string theImage, float theAspect);
