@@ -108,7 +108,7 @@ void stopsound(entity e, int chan)
 void play2(entity e, string filename)
 {
 	msg_entity = e;
-	soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
+	soundtoat(MSG_ONE, NULL, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
 }
 
 .float spamtime;
@@ -134,7 +134,7 @@ void play2team(float t, string filename)
 void play2all(string samp)
 {
 	if (autocvar_bot_sound_monopoly) return;
-	_sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
+	_sound(NULL, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
 }
 
 #endif

@@ -64,13 +64,13 @@ void viewloc_PlayerPhysics(entity this)
 void viewloc_SetTags(entity this)
 {
 	if(this.viewloc && wasfreed(this.viewloc))
-		this.viewloc = world;
+		this.viewloc = NULL;
 
 	if(this.viewloc.entnum != this.tag_networkviewloc)
 	if(this.tag_networkviewloc == 0)
-		this.viewloc = world;
+		this.viewloc = NULL;
 	else
-		this.viewloc = findfloat(world, entnum, this.tag_networkviewloc);
+		this.viewloc = findfloat(NULL, entnum, this.tag_networkviewloc);
 }
 
 vector old_camera_angle = '0 0 0';

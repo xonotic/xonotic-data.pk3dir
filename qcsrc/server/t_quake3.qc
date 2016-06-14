@@ -71,8 +71,8 @@ spawnfunc(item_enviro)         { spawnfunc_item_invincible(this);     }
 void target_init_verify(entity this)
 {
 	entity trigger, targ;
-	for(trigger = world; (trigger = find(trigger, classname, "trigger_multiple")); )
-		for(targ = world; (targ = find(targ, targetname, trigger.target)); )
+	for(trigger = NULL; (trigger = find(trigger, classname, "trigger_multiple")); )
+		for(targ = NULL; (targ = find(targ, targetname, trigger.target)); )
 			if (targ.classname == "target_init" || targ.classname == "target_give" || targ.classname == "target_items")
 			{
 				trigger.wait = 0;
@@ -98,7 +98,7 @@ spawnfunc(target_init)
 void target_give_init(entity this)
 {
 	entity targ;
-	for (targ = world; (targ = find(targ, targetname, this.target)); ) {
+	for (targ = NULL; (targ = find(targ, targetname, this.target)); ) {
 		if (targ.classname == "weapon_rocketlauncher" || targ.classname == "weapon_devastator") {
 			this.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
 			this.netname = "devastator";

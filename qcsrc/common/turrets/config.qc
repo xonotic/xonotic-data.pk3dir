@@ -38,7 +38,7 @@ void Dump_Turret_Settings()
 		it.tr_config(it);
 
 		// step 3: sort queue
-		heapsort(TUR_CONFIG_COUNT, T_Config_Queue_Swap, T_Config_Queue_Compare, world);
+		heapsort(TUR_CONFIG_COUNT, T_Config_Queue_Swap, T_Config_Queue_Compare, NULL);
 
 		// step 4: write queue
 		TUR_CONFIG_WRITETOFILE(sprintf("// {{{ #%d: %s\n", i, it.turret_name))

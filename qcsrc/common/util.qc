@@ -297,7 +297,7 @@ float compressShortVector(vector vec)
 {
 	vector ang;
 	float p, y, len;
-	if(vlen(vec) == 0)
+	if(vec == '0 0 0')
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
 	ang = vectoangles(vec);
@@ -489,7 +489,7 @@ void get_mi_min_max(float mode)
 					 '0 1 0' * ma.y + '0 0 1' * ma.z,
 					 '1 0 0' * ma.x,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_min.x = trace_endpos.x;
 
@@ -498,7 +498,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 0 1' * ma.z,
 					 '0 1 0' * ma.y,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_min.y = trace_endpos.y;
 
@@ -507,7 +507,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 1 0' * ma.y,
 					 '0 0 1' * ma.z,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_min.z = trace_endpos.z;
 
@@ -516,7 +516,7 @@ void get_mi_min_max(float mode)
 					 '0 1 0' * ma.y + '0 0 1' * ma.z,
 					 '1 0 0' * mi.x,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_max.x = trace_endpos.x;
 
@@ -525,7 +525,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 0 1' * ma.z,
 					 '0 1 0' * mi.y,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_max.y = trace_endpos.y;
 
@@ -534,7 +534,7 @@ void get_mi_min_max(float mode)
 					 '1 0 0' * ma.x + '0 1 0' * ma.y,
 					 '0 0 1' * mi.z,
 					 MOVE_WORLDONLY,
-					 world);
+					 NULL);
 			if(!trace_startsolid)
 				mi_max.z = trace_endpos.z;
 		}
@@ -643,7 +643,7 @@ int cvar_settemp_restore()
 	});
 
 #else
-	entity e = world;
+	entity e = NULL;
 	while((e = find(e, classname, "saved_cvar_value")))
 	{
 		if(cvar_type(e.netname))
@@ -1436,7 +1436,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 	// start with a 1-element queue
 	queue_start = queue_end = e;
-	queue_end.(fld) = world;
+	queue_end.(fld) = NULL;
 	queue_end.FindConnectedComponent_processing = 1;
 
 	// for each queued item:
@@ -1444,7 +1444,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	{
 		// find all neighbors of queue_start
 		entity t;
-		for(t = world; (t = nxt(t, queue_start, pass)); )
+		for(t = NULL; (t = nxt(t, queue_start, pass)); )
 		{
 			if(t.FindConnectedComponent_processing)
 				continue;
@@ -1453,7 +1453,7 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 				// it is connected? ADD IT. It will look for neighbors soon too.
 				queue_end.(fld) = t;
 				queue_end = t;
-				queue_end.(fld) = world;
+				queue_end.(fld) = NULL;
 				queue_end.FindConnectedComponent_processing = 1;
 			}
 		}

@@ -176,7 +176,7 @@ void ClientCommand_join(entity caller, float request)
 						TRANSMUTE(Player, caller);
 						PlayerScore_Clear(caller);
 						Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
-						Send_Notification(NOTIF_ALL, world, MSG_INFO, ((teamplay && caller.team != -1) ? APP_TEAM_ENT(caller, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), caller.netname);
+						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && caller.team != -1) ? APP_TEAM_ENT(caller, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), caller.netname);
 						WITHSELF(caller, PutClientInServer());
 					}
 					else
@@ -292,7 +292,7 @@ void ClientCommand_say(entity caller, float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argc >= 2)   Say(caller, false, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			if (argc >= 2)   Say(caller, false, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 			return;  // never fall through to usage
 		}
 
@@ -312,7 +312,7 @@ void ClientCommand_say_team(entity caller, float request, float argc, string com
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if (argc >= 2)   Say(caller, true, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+			if (argc >= 2)   Say(caller, true, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 			return;  // never fall through to usage
 		}
 
@@ -560,7 +560,7 @@ void ClientCommand_tell(entity caller, float request, float argc, string command
 				}
 				else if (argv(1) == "#0")
 				{
-					trigger_magicear_processmessage_forallears(caller, -1, world, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)));
+					trigger_magicear_processmessage_forallears(caller, -1, NULL, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)));
 					return;
 				}
 				else { print_to(caller, strcat("tell: ", GetClientErrorString(tell_accepted, argv(1)), ".")); return; }

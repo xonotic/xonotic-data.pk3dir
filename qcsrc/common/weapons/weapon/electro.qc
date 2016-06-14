@@ -134,11 +134,11 @@ void W_Electro_ExplodeCombo(entity this)
 		WEP_CVAR(electro, combo_damage),
 		WEP_CVAR(electro, combo_edgedamage),
 		WEP_CVAR(electro, combo_radius),
-		world,
-		world,
+		NULL,
+		NULL,
 		WEP_CVAR(electro, combo_force),
 		WEP_ELECTRO.m_id | HITTYPE_BOUNCE, // use THIS type for a combo because primary can't bounce
-		world
+		NULL
 	);
 
 	remove(this);
@@ -164,8 +164,8 @@ void W_Electro_Explode(entity this)
 			WEP_CVAR_SEC(electro, damage),
 			WEP_CVAR_SEC(electro, edgedamage),
 			WEP_CVAR_SEC(electro, radius),
-			world,
-			world,
+			NULL,
+			NULL,
 			WEP_CVAR_SEC(electro, force),
 			this.projectiledeathtype,
 			other
@@ -180,8 +180,8 @@ void W_Electro_Explode(entity this)
 			WEP_CVAR_PRI(electro, damage),
 			WEP_CVAR_PRI(electro, edgedamage),
 			WEP_CVAR_PRI(electro, radius),
-			world,
-			world,
+			NULL,
+			NULL,
 			WEP_CVAR_PRI(electro, force),
 			this.projectiledeathtype,
 			other

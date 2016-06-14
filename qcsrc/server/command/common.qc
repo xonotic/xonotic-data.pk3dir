@@ -80,7 +80,7 @@ entity GetIndexedEntity(float argc, float start_index)
 
 	next_token = -1;
 	index = start_index;
-	selection = world;
+	selection = NULL;
 
 	if (argc > start_index)
 	{
@@ -147,7 +147,7 @@ entity GetFilteredEntity(string input)
 	}
 	else
 	{
-		selection = world;
+		selection = NULL;
 		FOREACH_CLIENT(true, LAMBDA(
 			if(strdecolorize(it.netname) == strdecolorize(input))
 			{
@@ -200,10 +200,10 @@ void timeout_handler_think(entity this)
 		{
 			if (timeout_time > 0)  // countdown is still going
 			{
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
 				if (timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
-					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_PREPARE);
 
 				this.nextthink = time + TIMEOUT_SLOWMO_VALUE;       // think again in one second
 				timeout_time -= 1;                                  // decrease the time counter
@@ -230,7 +230,7 @@ void timeout_handler_think(entity this)
 		{
 			if (timeout_leadtime > 0)  // countdown is still going
 			{
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 
 				this.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1;     // decrease the time counter
@@ -400,7 +400,7 @@ void CommonCommand_editmob(int request, entity caller, int argc)
 					if (mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if (!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
-					Damage(mon, world, world, mon.health + mon.max_health + 200, DEATH_KILL.m_id, mon.origin, '0 0 0');
+					Damage(mon, NULL, NULL, mon.health + mon.max_health + 200, DEATH_KILL.m_id, mon.origin, '0 0 0');
 					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
 					return;
 				}
@@ -740,7 +740,7 @@ void CommonCommand_timeout(float request, entity caller)  // DEAR GOD THIS COMMA
 					setthink(timeout_handler, timeout_handler_think);
 					timeout_handler.nextthink = time;  // always let the entity think asap
 
-					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_TIMEOUT);
+					Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_TIMEOUT);
 				}
 			}
 			else { print_to(caller, "^1Timeouts are not allowed to be called, enable them with sv_timeout 1.\n"); }

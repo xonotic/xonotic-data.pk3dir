@@ -32,8 +32,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	else
 		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 	if(antilag)
-		WarpZone_traceline_antilag(world, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
-		// passing world, because we do NOT want it to touch dphitcontentsmask
+		WarpZone_traceline_antilag(NULL, ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NORMAL, ent, ANTILAG_LATENCY(ent));
+		// passing NULL, because we do NOT want it to touch dphitcontentsmask
 	else
 		WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
@@ -164,7 +164,7 @@ vector W_CalculateProjectileVelocity(entity actor, vector pvelocity, vector mvel
 
 void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute)
 {
-	if(proj.owner == world)
+	if(proj.owner == NULL)
 		error("Unowned missile");
 
 	dir = dir + upDir * (pUpSpeed / pSpeed);
@@ -211,7 +211,7 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 	entity pseudoprojectile;
 	float f, ffs;
 
-	pseudoprojectile = world;
+	pseudoprojectile = NULL;
 
 	dir = normalize(end - start);
 	length = vlen(end - start);
@@ -234,15 +234,15 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 			WarpZone_traceline_antilag (this, start, end, false, o, ANTILAG_LATENCY(this));
 		if(o && WarpZone_trace_firstzone)
 		{
-			o = world;
+			o = NULL;
 			continue;
 		}
 
 		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
 			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, this);
 
-		// if it is world we can't hurt it so stop now
-		if (trace_ent == world || trace_fraction == 1)
+		// if it is NULL we can't hurt it so stop now
+		if (trace_ent == NULL || trace_fraction == 1)
 			break;
 
 		// make the entity non-solid so we can hit the next one
@@ -265,7 +265,7 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 	endq3surfaceflags = trace_dphitq3surfaceflags;
 
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// restore their solid type
@@ -304,7 +304,7 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 	}
 
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// get the details we need to call the damage function
@@ -321,8 +321,8 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 			Damage (ent, this, this, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
 
 		// create a small explosion to throw gibs around (if applicable)
-		//setorigin (explosion, hitloc);
-		//RadiusDamage (explosion, this, 10, 0, 50, world, world, 300, deathtype);
+		//setorigin(explosion, hitloc);
+		//RadiusDamage (explosion, this, 10, 0, 50, NULL, NULL, 300, deathtype);
 
 		ent.railgunhitloc = '0 0 0';
 		ent.railgunhitsolidbackup = SOLID_NOT;
@@ -344,9 +344,9 @@ void FireRailgunBullet (entity this, vector start, vector end, float bdamage, fl
 void fireBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vdist(hit - start, >, 16))
-		trailparticles(world, fireBullet_trace_callback_eff, start, hit);
-	WarpZone_trace_forent = world;
-	fireBullet_last_hit = world;
+		trailparticles(NULL, fireBullet_trace_callback_eff, start, hit);
+	WarpZone_trace_forent = NULL;
+	fireBullet_last_hit = NULL;
 }
 
 void fireBullet(entity this, vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, int tracereffects)
@@ -356,7 +356,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 	dir = normalize(dir + randomvec() * spread);
 	end = start + dir * MAX_SHOT_DISTANCE;
 
-	fireBullet_last_hit = world;
+	fireBullet_last_hit = NULL;
 	float solid_penetration_left = 1;
 	float total_damage = 0;
 
@@ -393,7 +393,7 @@ void fireBullet(entity this, vector start, vector dir, float spread, float max_s
 	for (;;)
 	{
 		// TODO also show effect while tracing
-		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, world, fireBullet_trace_callback);
+		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, false, WarpZone_trace_forent, NULL, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;

@@ -356,7 +356,7 @@ void ItemUpdate(entity this)
 
 void UpdateItemAfterTeleport(entity this)
 {
-	if(this.SendEntity3 == ItemSend)
+	if(getSendEntity(this) == ItemSend)
 		ItemUpdate(this);
 }
 
@@ -494,7 +494,7 @@ void Item_Respawn (entity this)
 		sound (this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
 		sound (this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	setorigin (this, this.origin);
+	setorigin(this, this.origin);
 
     if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)
 	{
@@ -529,7 +529,7 @@ void Item_RespawnCountdown (entity this)
 				{
 					entity wi = Weapons_from(this.weapon);
 					if (wi != WEP_Null) {
-						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, this, '0 0 64', world, 0, this, waypointsprite_attached, true, RADARICON_Weapon);
+						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Weapon);
 						wp.wp_extra = wi.m_id;
 						break;
 					}
@@ -537,7 +537,7 @@ void Item_RespawnCountdown (entity this)
 				{
 					entity ii = this.itemdef;
 					if (ii != NULL) {
-						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, this, '0 0 64', world, 0, this, waypointsprite_attached, true, RADARICON_Item);
+						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Item);
 						wp.wp_extra = ii.m_id;
 						break;
 					}
@@ -825,7 +825,7 @@ LABEL(pickup)
 		if(this.team)
 		{
 			RandomSelection_Init();
-			for(entity head = world; (head = findfloat(head, team, this.team)); )
+			for(entity head = NULL; (head = findfloat(head, team, this.team)); )
 			{
 				if(head.flags & FL_ITEM)
 				if(head.classname != "item_flag_team" && head.classname != "item_key_team")

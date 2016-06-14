@@ -254,7 +254,7 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 		float found;
 
 		found = 0;
-		for(ent = world; (ent = find(ent, targetname, spot.target)); )
+		for(ent = NULL; (ent = find(ent, targetname, spot.target)); )
 		{
 			++found;
 			if(ent.spawn_evalfunc)
@@ -288,8 +288,8 @@ entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, flo
 {
 	entity spot, spotlist, spotlistend;
 
-	spotlist = world;
-	spotlistend = world;
+	spotlist = NULL;
+	spotlistend = NULL;
 
 	Spawn_ScoreAll(this, firstspot, mindist, teamcheck);
 
@@ -305,7 +305,7 @@ entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, flo
 		}
 	}
 	if(spotlistend)
-		spotlistend.chain = world;
+		spotlistend.chain = NULL;
 
 	return spotlist;
 }
@@ -335,7 +335,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	float teamcheck;
 	entity spot, firstspot;
 
-	spot = find (world, classname, "testplayerstart");
+	spot = find (NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
@@ -392,7 +392,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 		else
 		{
 			if(some_spawn_has_been_used)
-				return world; // team can't spawn any more, because of actions of other team
+				return NULL; // team can't spawn any more, because of actions of other team
 			else
 				error("Cannot find a spawn point - please fix the map!");
 		}

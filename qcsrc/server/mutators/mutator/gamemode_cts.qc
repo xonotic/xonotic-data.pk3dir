@@ -93,7 +93,7 @@ void cts_ScoreRules()
 void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(strcat(":cts:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 void KillIndicator_Think(entity this);
@@ -184,7 +184,7 @@ MUTATOR_HOOKFUNCTION(cts, reset_map_global)
 {
 	float s;
 
-	Score_NicePrint(world);
+	Score_NicePrint(NULL);
 
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
@@ -407,7 +407,7 @@ MUTATOR_HOOKFUNCTION(cts, ClientKill)
 	if(player.killindicator && player.killindicator.health == 1) // player.killindicator.health == 1 means that the kill indicator was spawned by CTS_ClientKill
 	{
 		remove(player.killindicator);
-		player.killindicator = world;
+		player.killindicator = NULL;
 
 		ClientKill_Now(player); // allow instant kill in this case
 		return;

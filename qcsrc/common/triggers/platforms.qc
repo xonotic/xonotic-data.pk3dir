@@ -183,13 +183,13 @@ void plat_reset(entity this)
 {
 	IFTARGETED
 	{
-		setorigin (this, this.pos1);
+		setorigin(this, this.pos1);
 		this.state = 4;
 		this.use = plat_use;
 	}
 	else
 	{
-		setorigin (this, this.pos2);
+		setorigin(this, this.pos2);
 		this.state = 2;
 		this.use = plat_trigger_use;
 	}

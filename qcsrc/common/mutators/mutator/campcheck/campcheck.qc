@@ -62,9 +62,9 @@ MUTATOR_HOOKFUNCTION(campcheck, PlayerPreThink)
 			{
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CAMPCHECK);
 				if(player.vehicle)
-					Damage(player.vehicle, world, world, autocvar_g_campcheck_damage * 2, DEATH_CAMP.m_id, player.vehicle.origin, '0 0 0');
+					Damage(player.vehicle, NULL, NULL, autocvar_g_campcheck_damage * 2, DEATH_CAMP.m_id, player.vehicle.origin, '0 0 0');
 				else
-					Damage(player, world, world, bound(0, autocvar_g_campcheck_damage, player.health + player.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, player.origin, '0 0 0');
+					Damage(player, NULL, NULL, bound(0, autocvar_g_campcheck_damage, player.health + player.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP.m_id, player.origin, '0 0 0');
 			}
 			player.campcheck_nextcheck = time + autocvar_g_campcheck_interval;
 			player.campcheck_traveled_distance = 0;

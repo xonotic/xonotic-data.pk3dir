@@ -209,8 +209,8 @@ void pong_ai_think(entity this)
 	float distance;
 	float next_distance;
 	float min_distance = 1;
-	entity ball = world;
-	entity mayball = world;
+	entity ball = NULL;
+	entity mayball = NULL;
 	while ( ( mayball = findentity(mayball,owner,this.owner) ) )
 		if ( mayball.classname == "pong_ball" )
 		{
@@ -309,7 +309,7 @@ vector pong_team_to_paddlepos(int nteam)
 }
 
 // Spawns a pong paddle
-// if real_player is world, the paddle is controlled by AI
+// if real_player is NULL, the paddle is controlled by AI
 entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 {
 	entity paddle = msle_spawn(minigame,"pong_paddle");
@@ -321,7 +321,7 @@ entity pong_paddle_spawn(entity minigame, int pl_team, entity real_player)
 	paddle.mins = pong_team_to_box_halfsize(pl_team,-paddle.pong_length,-1/16);
 	paddle.maxs = pong_team_to_box_halfsize(pl_team,paddle.pong_length,1/16);
 
-	if ( real_player == world )
+	if ( real_player == NULL )
 		pong_ai_spawn(paddle);
 	else
 		paddle.realowner = real_player;
@@ -352,7 +352,7 @@ int pong_server_event(entity minigame, string event, ...)
 			int i;
 			for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
 			{
-				if ( minigame.pong_paddles[i] == world )
+				if ( minigame.pong_paddles[i] == NULL )
 				{
 					pong_paddle_spawn(minigame,i+1,player);
 					return i+1;
@@ -370,7 +370,7 @@ int pong_server_event(entity minigame, string event, ...)
 			for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
 			{
 				paddle = minigame.pong_paddles[i];
-				if ( paddle != world && paddle.realowner == player )
+				if ( paddle != NULL && paddle.realowner == player )
 				{
 					ai = pong_ai_spawn(paddle);
 					ai.pong_score = player.minigame_players.pong_score;
@@ -420,9 +420,9 @@ int pong_server_event(entity minigame, string event, ...)
 					if ( minigame.minigame_flags & PONG_STATUS_WAIT )
 						for ( i = 0; i < PONG_MAX_PLAYERS; i++ )
 						{
-							if ( minigame.pong_paddles[i] == world )
+							if ( minigame.pong_paddles[i] == NULL )
 							{
-								pong_paddle_spawn(minigame,i+1,world);
+								pong_paddle_spawn(minigame,i+1,NULL);
 								return true;
 							}
 						}
@@ -438,10 +438,10 @@ int pong_server_event(entity minigame, string event, ...)
 						for ( i = PONG_MAX_PLAYERS-1; i >= 0; i-- )
 						{
 							paddle = minigame.pong_paddles[i];
-							if ( paddle != world &&
+							if ( paddle != NULL &&
 								paddle.realowner.classname == "pong_ai" )
 							{
-								minigame.pong_paddles[i] = world;
+								minigame.pong_paddles[i] = NULL;
 								remove(paddle.realowner);
 								remove(paddle);
 								return true;

@@ -120,7 +120,7 @@ void W_MineLayer_Explode(entity this)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), world, world, WEP_CVAR(minelayer, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, other);
 
 	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
 	{
@@ -146,7 +146,7 @@ void W_MineLayer_DoRemoteExplode(entity this)
 	if(this.movetype == MOVETYPE_NONE || this.movetype == MOVETYPE_FOLLOW)
 		this.velocity = this.mine_orientation; // particle fx and decals need .velocity
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), world, world, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, world);
+	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, remote_damage), WEP_CVAR(minelayer, remote_edgedamage), WEP_CVAR(minelayer, remote_radius), NULL, NULL, WEP_CVAR(minelayer, remote_force), this.projectiledeathtype | HITTYPE_BOUNCE, NULL);
 
 	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
 	{
@@ -199,7 +199,7 @@ int W_MineLayer_Count(entity e)
 {
 	int minecount = 0;
 	entity mine;
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
+	for(mine = NULL; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
 
 	return minecount;
@@ -234,7 +234,7 @@ void W_MineLayer_Think(entity this)
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
 	{
-		other = world;
+		other = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		W_MineLayer_Explode(this);
 		return;
@@ -385,7 +385,7 @@ float W_MineLayer_PlacedMines(entity this, float detonate)
 	entity mine;
 	float minfound = 0;
 
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == this)
+	for(mine = NULL; (mine = find(mine, classname, "mine")); ) if(mine.realowner == this)
 	{
 		if(detonate)
 		{
@@ -422,7 +422,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
         teamdamage = 0;
         enemydamage = 0;
         targetlist = findchainfloat(bot_attack, true);
-        entity mine = find(world, classname, "mine");
+        entity mine = find(NULL, classname, "mine");
         while(mine)
         {
             if(mine.realowner != actor)
@@ -453,7 +453,7 @@ METHOD(MineLayer, wr_aim, void(entity thiswep, entity actor))
         if(teamplay && actor.team)
             desirabledamage = desirabledamage - teamdamage;
 
-        mine = find(world, classname, "mine");
+        mine = find(NULL, classname, "mine");
         while(mine)
         {
             if(mine.realowner != actor)

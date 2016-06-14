@@ -76,7 +76,7 @@ void W_Devastator_Unregister(entity this)
 {
 	if(this.realowner && this.realowner.lastrocket == this)
 	{
-		this.realowner.lastrocket = world;
+		this.realowner.lastrocket = NULL;
 		// this.realowner.rl_release = 1;
 	}
 }
@@ -101,8 +101,8 @@ void W_Devastator_Explode(entity this)
 		WEP_CVAR(devastator, damage),
 		WEP_CVAR(devastator, edgedamage),
 		WEP_CVAR(devastator, radius),
-		world,
-		world,
+		NULL,
+		NULL,
 		WEP_CVAR(devastator, force),
 		this.projectiledeathtype,
 		other
@@ -164,11 +164,11 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 					WEP_CVAR(devastator, remote_jump_damage),
 					WEP_CVAR(devastator, remote_jump_damage),
 					WEP_CVAR(devastator, remote_jump_radius),
-					world,
+					NULL,
 					head,
 					0,
 					this.projectiledeathtype | HITTYPE_BOUNCE,
-					world
+					NULL
 				);
 				break;
 			}
@@ -182,11 +182,11 @@ void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
 		WEP_CVAR(devastator, remote_damage),
 		WEP_CVAR(devastator, remote_edgedamage),
 		WEP_CVAR(devastator, remote_radius),
-		(handled_as_rocketjump ? head : world),
-		world,
+		(handled_as_rocketjump ? head : NULL),
+		NULL,
 		WEP_CVAR(devastator, remote_force),
 		this.projectiledeathtype | HITTYPE_BOUNCE,
-		world
+		NULL
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
@@ -259,7 +259,7 @@ void W_Devastator_Think(entity this)
 	this.nextthink = time;
 	if(time > this.cnt)
 	{
-		other = world;
+		other = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		W_Devastator_Explode(this);
 		return;
@@ -349,15 +349,12 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 
 void W_Devastator_Attack(Weapon thiswep, entity actor)
 {
-	entity missile;
-	entity flash;
-
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(devastator, ammo));
 
 	W_SetupShot_ProjectileSize(actor, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKET_FIRE, CH_WEAPON_A, WEP_CVAR(devastator, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);
 	missile.owner = missile.realowner = actor;
 	actor.lastrocket = missile;
 	if(WEP_CVAR(devastator, detonatedelay) >= 0)
@@ -394,7 +391,7 @@ void W_Devastator_Attack(Weapon thiswep, entity actor)
 	CSQCProjectile(missile, WEP_CVAR(devastator, guiderate) == 0 && WEP_CVAR(devastator, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
 
 	// muzzle flash for 1st person view
-	flash = spawn();
+	entity flash = spawn();
 	setmodel(flash, MDL_DEVASTATOR_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
@@ -415,7 +412,7 @@ METHOD(Devastator, wr_aim, void(entity thiswep, entity actor))
         // decide whether to detonate rockets
         entity missile, targetlist, targ;
         targetlist = findchainfloat(bot_attack, true);
-        for(missile = world; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == actor)
+        for(missile = NULL; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == actor)
         {
             targ = targetlist;
             while(targ)
@@ -543,7 +540,7 @@ METHOD(Devastator, wr_think, void(entity thiswep, entity actor, .entity weaponen
         {
             entity rock;
             bool rockfound = false;
-            for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == actor)
+            for(rock = NULL; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == actor)
             {
                 if(!rock.rl_detonate_later)
                 {

@@ -38,16 +38,16 @@ METHOD(FlacAttack, wr_think, void(entity thiswep, entity actor, .entity weaponen
 
 void turret_flac_projectile_think_explode(entity this)
 {
-    if(this.enemy != world)
+    if(this.enemy != NULL)
     if(vdist(this.origin - this.enemy.origin, <, this.owner.shot_radius * 3))
-        setorigin(this,this.enemy.origin + randomvec() * this.owner.shot_radius);
+        setorigin(this, this.enemy.origin + randomvec() * this.owner.shot_radius);
 
 #ifdef TURRET_DEBUG
-    float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
+    float d = RadiusDamage (this, this.owner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
     this.owner.tur_dbg_dmg_t_h = this.owner.tur_dbg_dmg_t_h + d;
     this.owner.tur_dbg_dmg_t_f = this.owner.tur_dbg_dmg_t_f + this.owner.shot_dmg;
 #else
-    RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, world, this.owner.shot_force, this.totalfrags, world);
+    RadiusDamage (this, this.realowner, this.owner.shot_dmg, this.owner.shot_dmg, this.owner.shot_radius, this, NULL, this.owner.shot_force, this.totalfrags, NULL);
 #endif
     remove(this);
 }

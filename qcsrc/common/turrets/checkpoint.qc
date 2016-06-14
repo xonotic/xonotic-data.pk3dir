@@ -54,8 +54,8 @@ void turret_checkpoint_init(entity this)
 
     if(this.target != "")
     {
-        this.enemy = find(world, targetname, this.target);
-        if(this.enemy == world)
+        this.enemy = find(NULL, targetname, this.target);
+        if(this.enemy == NULL)
             LOG_TRACE("A turret_checkpoint faild to find its target!\n");
     }
     //setthink(this, turret_checkpoint_think);
@@ -65,7 +65,7 @@ void turret_checkpoint_init(entity this)
 
 spawnfunc(turret_checkpoint)
 {
-    setorigin(this,this.origin);
+    setorigin(this, this.origin);
     setthink(this, turret_checkpoint_init);
     this.nextthink = time + 0.2;
 }

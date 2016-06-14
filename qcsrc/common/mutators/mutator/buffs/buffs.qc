@@ -88,7 +88,7 @@ REGISTER_MUTATOR(buffs, cvar("g_buffs"))
 {
 	MUTATOR_ONADD
 	{
-		InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
+		InitializeEntity(NULL, buffs_DelayedInit, INITPRIO_FINDTARGET);
 	}
 }
 
@@ -169,7 +169,7 @@ bool buff_Waypoint_visible_for_player(entity this, entity player, entity view)
 void buff_Waypoint_Spawn(entity e)
 {
 	entity buff = buff_FirstFromFlags(e.buffs);
-	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, world, e.team, e, buff_waypoint, true, RADARICON_Buff);
+	entity wp = WaypointSprite_Spawn(WP_Buff, 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs.z, NULL, e.team, e, buff_waypoint, true, RADARICON_Buff);
 	wp.wp_extra = buff.m_id;
 	WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_Buff, e.glowmod);
 	e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
@@ -255,7 +255,7 @@ void buff_Touch(entity this)
 		{
 			int buffid = buff_FirstFromFlags(other.buffs).m_id;
 			//Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_DROP, other.buffs);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, buffid);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, buffid);
 
 			other.buffs = 0;
 			//sound(other, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
@@ -294,7 +294,7 @@ void buff_NewType(entity ent, float cb)
 	FOREACH(Buffs, buff_Available(it), LAMBDA(
 		it.buff_seencount += 1;
 		// if it's already been chosen, give it a lower priority
-		RandomSelection_Add(world, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));
+		RandomSelection_Add(NULL, it.m_itemid, string_null, 1, max(0.2, 1 / it.buff_seencount));
 	));
 	ent.buffs = RandomSelection_chosen_float;
 }
@@ -334,7 +334,7 @@ void buff_Think(entity this)
 	if(!this.owner || STAT(FROZEN, this.owner) || IS_DEAD(this.owner) || !this.owner.iscreature || !(this.owner.buffs & this.buffs))
 	{
 		buff_SetCooldown(this, autocvar_g_buffs_cooldown_respawn + frametime);
-		this.owner = world;
+		this.owner = NULL;
 		if(autocvar_g_buffs_randomize)
 			buff_NewType(this, this.buffs);
 
@@ -381,7 +381,7 @@ void buff_Reset(entity this)
 {
 	if(autocvar_g_buffs_randomize)
 		buff_NewType(this, this.buffs);
-	this.owner = world;
+	this.owner = NULL;
 	buff_SetCooldown(this, autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset(this);
 	this.buff_activetime_updated = false;
@@ -690,7 +690,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerDies)
 		if(frag_target.buff_model)
 		{
 			remove(frag_target.buff_model);
-			frag_target.buff_model = world;
+			frag_target.buff_model = NULL;
 		}
 	}
 }
@@ -721,7 +721,7 @@ MUTATOR_HOOKFUNCTION(buffs, ForbidThrowCurrentWeapon)
 	if(player.buffs & BUFF_SWAPPER.m_itemid)
 	{
 		float best_distance = autocvar_g_buffs_swapper_range;
-		entity closest = world;
+		entity closest = NULL;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			if(!IS_DEAD(it) && !STAT(FROZEN, it) && !it.vehicle)
 			if(DIFF_TEAM(it, player))
@@ -787,7 +787,7 @@ bool buffs_RemovePlayer(entity player)
 	if(player.buff_model)
 	{
 		remove(player.buff_model);
-		player.buff_model = world;
+		player.buff_model = NULL;
 	}
 
 	// also reset timers here to prevent them continuing after spectating
@@ -907,7 +907,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 				{
 					entity oldother = other;
 					other = player;
-					WITHSELF(it, gettouch(it)(it));
+					gettouch(it)(it);
 					other = oldother;
 				}
 			}
@@ -986,7 +986,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		else
 		{
 			remove(player.buff_model);
-			player.buff_model = world;
+			player.buff_model = NULL;
 
 			player.effects &= ~(EF_NOSHADOW);
 		}
@@ -1065,7 +1065,7 @@ MUTATOR_HOOKFUNCTION(buffs, BuildMutatorsPrettyString)
 void buffs_DelayedInit(entity this)
 {
 	if(autocvar_g_buffs_spawn_count > 0)
-	if(find(world, classname, "item_buff") == world)
+	if(find(NULL, classname, "item_buff") == NULL)
 	{
 		float i;
 		for(i = 0; i < autocvar_g_buffs_spawn_count; ++i)

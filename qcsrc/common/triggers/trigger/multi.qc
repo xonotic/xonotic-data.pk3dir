@@ -172,14 +172,14 @@ spawnfunc(trigger_multiple)
 		this.event_damage = multi_eventdamage;
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
-		setorigin (this, this.origin);	// make sure it links into the world
+		setorigin(this, this.origin);	// make sure it links into the world
 	}
 	else
 	{
 		if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
 		{
 			settouch(this, multi_touch);
-			setorigin (this, this.origin);	// make sure it links into the world
+			setorigin(this, this.origin);	// make sure it links into the world
 		}
 	}
 }

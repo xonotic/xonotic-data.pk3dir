@@ -836,7 +836,7 @@ void HitSound()
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
 
-			sound7(world, CH_INFO, SND(HIT), VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
+			sound7(NULL, CH_INFO, SND(HIT), VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
 		}
 		unaccounted_damage = 0;
 		hitsound_time_prev = time;
@@ -846,7 +846,7 @@ void HitSound()
 	float typehit_time = STAT(TYPEHIT_TIME);
 	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
-		sound(world, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
+		sound(NULL, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
 		typehit_time_prev = typehit_time;
 	}
 }
@@ -1461,7 +1461,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
-		entity gen = world;
+		entity gen = NULL;
 
 		float vehicle_viewdist = 0;
 		vector vehicle_viewofs = '0 0 0';

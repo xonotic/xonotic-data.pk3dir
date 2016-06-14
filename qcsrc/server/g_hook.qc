@@ -72,10 +72,10 @@ And you should be done!
 
 void RemoveGrapplingHook(entity pl)
 {
-	if(pl.hook == world)
+	if(pl.hook == NULL)
 		return;
 	remove(pl.hook);
-	pl.hook = world;
+	pl.hook = NULL;
 	if(pl.movetype == MOVETYPE_FLY)
 		pl.movetype = MOVETYPE_WALK;
 
@@ -376,7 +376,7 @@ void FireGrapplingHook(entity actor)
 
 	//setmodel (missile, MDL_HOOK); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
-	setorigin (missile, org);
+	setorigin(missile, org);
 
 	missile.state = 0; // not latched onto anything
 

@@ -6,7 +6,7 @@
 
 void target_voicescript_clear(entity pl)
 {
-	pl.voicescript = world;
+	pl.voicescript = NULL;
 }
 
 void target_voicescript_use(entity this, entity actor, entity trigger)
@@ -67,7 +67,7 @@ void target_voicescript_next(entity pl)
 			}
 			else
 			{
-				pl.voicescript = world; // stop trying then
+				pl.voicescript = NULL; // stop trying then
 			}
 		}
 	}

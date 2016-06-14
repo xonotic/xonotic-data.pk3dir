@@ -122,7 +122,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     float num_nearest;
     num_nearest = 0;
 
-    localhead = find(world, field, value);
+    localhead = find(NULL, field, value);
     while (localhead)
     {
         if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.target == "###item###")
@@ -160,7 +160,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     // now use the first one from our list that we can see
     for (i = 0; i < num_nearest; ++i)
     {
-        traceline(point, nearest_entity[i].origin, true, world);
+        traceline(point, nearest_entity[i].origin, true, NULL);
         if (trace_fraction == 1)
         {
             if (i != 0)
@@ -174,7 +174,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     }
 
     if (num_nearest == 0)
-        return world;
+        return NULL;
 
     LOG_TRACE("Not seeing any location point, using nearest as fallback.\n");
     /* DEBUGGING CODE:
@@ -796,7 +796,7 @@ void make_safe_for_remove(entity e)
 {
     if (e.initialize_entity)
     {
-        entity ent, prev = world;
+        entity ent, prev = NULL;
         for (ent = initialize_entity_first; ent; )
         {
             if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
@@ -860,7 +860,7 @@ void InitializeEntity(entity e, void(entity this) func, float order)
     e.initialize_entity_order = order;
 
     cur = initialize_entity_first;
-    prev = world;
+    prev = NULL;
     for (;;)
     {
         if (!cur || cur.initialize_entity_order > order)
@@ -903,7 +903,7 @@ void InitializeEntitiesRun()
         //dprint("Delayed initialization: ", e.classname, "\n");
         if (func)
         {
-        	WITHSELF(e, func(e));
+        	func(e);
         }
         else
         {
@@ -957,7 +957,7 @@ void adaptor_think2use_hittype_splash(entity this) // for timed projectile deton
 {
 	if(!(IS_ONGROUND(this))) // if onground, we ARE touching something, but HITTYPE_SPLASH is to be networked if the damage causing projectile is not touching ANYTHING
 		this.projectiledeathtype |= HITTYPE_SPLASH;
-	WITHSELF(this, adaptor_think2use(this));
+	adaptor_think2use(this);
 }
 
 // deferred dropping
@@ -1032,12 +1032,12 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
-		WITHSELF(this, checkclient());
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
+		checkclient(this);
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
         return true;
-    if (toucher == world && this.size != '0 0 0')
+    if (toucher == NULL && this.size != '0 0 0')
     {
         vector tic;
         tic = this.velocity * sys_frametime;
@@ -1196,13 +1196,13 @@ float MoveToRandomLocationWithinBounds(entity e, vector boundmin, vector boundma
             continue;
 
 	// rule 4: we must "see" some spawnpoint or item
-	for(sp = world; (sp = find(sp, classname, "info_player_deathmatch")); )
+	for(sp = NULL; (sp = find(sp, classname, "info_player_deathmatch")); )
 		if(checkpvs(mstart, sp))
 			if((traceline(mstart, sp.origin, MOVE_NORMAL, e), trace_fraction) >= 1)
 				break;
 	if(!sp)
 	{
-		for(sp = world; (sp = findflags(sp, flags, FL_ITEM)); )
+		for(sp = NULL; (sp = findflags(sp, flags, FL_ITEM)); )
 			if(checkpvs(mstart, sp))
 				if((traceline(mstart, sp.origin + (sp.mins + sp.maxs) * 0.5, MOVE_NORMAL, e), trace_fraction) >= 1)
 					break;
@@ -1313,7 +1313,7 @@ void detach_sameorigin(entity e)
 	else
 		e.angles = AnglesTransform_ToAngles(e.angles);
     setorigin(e, org);
-    setattachment(e, world, "");
+    setattachment(e, NULL, "");
     setorigin(e, e.origin);
 }
 
@@ -1363,7 +1363,7 @@ void UnsetMovetypeFollow(entity ent)
 {
 	ent.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(ent);
-	ent.aiment = world;
+	ent.aiment = NULL;
 }
 float LostMovetypeFollow(entity ent)
 {

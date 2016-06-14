@@ -97,7 +97,7 @@ spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 void W_Seeker_Missile_Explode(entity this)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), world, world, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, other);
 
 	remove(this);
 }
@@ -130,11 +130,11 @@ void W_Seeker_Missile_Think(entity this)
 		spd + WEP_CVAR(seeker, missile_accel) * frametime
 	);
 
-	if(this.enemy != world)
+	if(this.enemy != NULL)
 		if(this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
-			this.enemy = world;
+			this.enemy = NULL;
 
-	if(this.enemy != world)
+	if(this.enemy != NULL)
 	{
 		e               = this.enemy;
 		eorg            = 0.5 * (e.absmin + e.absmax);
@@ -193,7 +193,7 @@ void W_Seeker_Missile_Think(entity this)
 
 	if(IS_DEAD(this.enemy))
 	{
-		this.enemy = world;
+		this.enemy = NULL;
 		this.cnt = time + 1 + (random() * 4);
 		this.nextthink = this.cnt;
 		return;
@@ -229,9 +229,9 @@ void W_Seeker_Missile_Animate(entity this)
 	this.frame = this.frame +1;
 	this.nextthink = time + 0.05;
 
-	if(this.enemy != world)
+	if(this.enemy != NULL)
 		if(this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
-			this.enemy = world;
+			this.enemy = NULL;
 
 	if(this.frame == 5)
 	{
@@ -280,7 +280,7 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, vector f_diff, entity m
 	missile.damagedbycontents = true;
 	//missile.think           = W_Seeker_Missile_Animate; // csqc projectiles.
 
-	if(missile.enemy != world)
+	if(missile.enemy != NULL)
 		missile.projectiledeathtype = WEP_SEEKER.m_id | HITTYPE_SECONDARY;
 	else
 		missile.projectiledeathtype = WEP_SEEKER.m_id;
@@ -308,7 +308,7 @@ void W_Seeker_Flac_Explode(entity this)
 {
 	this.event_damage = func_null;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), world, world, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, other);
 
 	remove(this);
 }
@@ -382,19 +382,19 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
 entity W_Seeker_Tagged_Info(entity isowner, entity istarget)
 {
 	entity tag;
-	for(tag = world; (tag = find(tag, classname, "tag_tracker")); )
+	for(tag = NULL; (tag = find(tag, classname, "tag_tracker")); )
 		if((tag.realowner == isowner) && (tag.tag_target == istarget))
 			return tag;
 
-	return world;
+	return NULL;
 }
 
 void W_Seeker_Attack(entity actor)
 {
 	entity tracker, closest_target;
 
-	closest_target = world;
-	for(tracker = world; (tracker = find(tracker, classname, "tag_tracker")); ) if (tracker.realowner == actor)
+	closest_target = NULL;
+	for(tracker = NULL; (tracker = find(tracker, classname, "tag_tracker")); ) if (tracker.realowner == actor)
 	{
 		if(closest_target)
 		{
@@ -407,7 +407,7 @@ void W_Seeker_Attack(entity actor)
 
 	traceline(actor.origin + actor.view_ofs, closest_target.origin, MOVE_NOMONSTERS, actor);
 	if((!closest_target) || ((trace_fraction < 1) && (trace_ent != closest_target)))
-		closest_target = world;
+		closest_target = NULL;
 
 	W_Seeker_Fire_Missile(WEP_SEEKER, actor, '0 0 0', closest_target);
 }
@@ -513,7 +513,7 @@ void W_Seeker_Tag_Touch(entity this)
 		// check to see if this person is already tagged by me
 		entity tag = W_Seeker_Tagged_Info(this.realowner, other);
 
-		if(tag != world)
+		if(tag != NULL)
 		{
 			if(other.wps_tag_tracker && (WEP_CVAR(seeker, type) == 1)) // don't attach another waypointsprite without killing the old one first
 				WaypointSprite_Kill(other.wps_tag_tracker);
@@ -598,7 +598,7 @@ void W_Seeker_Fire_Tag(Weapon thiswep, entity actor)
 METHOD(Seeker, wr_aim, void(entity thiswep, entity actor))
 {
     if(WEP_CVAR(seeker, type) == 1)
-        if(W_Seeker_Tagged_Info(actor, actor.enemy) != world)
+        if(W_Seeker_Tagged_Info(actor, actor.enemy) != NULL)
             PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(seeker, missile_speed_max), 0, WEP_CVAR(seeker, missile_lifetime), false);
         else
             PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR(seeker, tag_speed), 0, WEP_CVAR(seeker, tag_lifetime), false);

@@ -29,6 +29,8 @@
 
 #include <dpdefs/post.qh>
 
+#include "self.qh"
+
 #define USING(name, T) typedef T name
 
 #include "bool.qh"
@@ -94,7 +96,6 @@ void    isnt_bool(   float this) { print(ftos(this)); }
 #include "registry.qh"
 #include "registry_net.qh"
 #include "replicate.qh"
-#include "self.qh"
 #include "sortlist.qc"
 #include "sort.qh"
 #include "spawnfunc.qh"

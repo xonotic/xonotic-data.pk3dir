@@ -234,7 +234,7 @@ void Arc_Player_SetHeat(entity player)
 void W_Arc_Bolt_Explode(entity this)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), world, world, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, other);
 
 	remove(this);
 }
@@ -371,7 +371,7 @@ void W_Arc_Beam_Think(entity this)
 			}
 		}
 
-		if(this == this.owner.arc_beam) { this.owner.arc_beam = world; }
+		if(this == this.owner.arc_beam) { this.owner.arc_beam = NULL; }
 		entity own = this.owner;
 		Weapon w = WEP_ARC;
 		if(!w.wr_checkammo1(w, own) && !w.wr_checkammo2(w, own))
@@ -691,7 +691,7 @@ void W_Arc_Beam(float burst, entity actor)
 	beam.beam_bursting = burst;
 	Net_LinkEntity(beam, false, 0, W_Arc_Beam_Send);
 
-	WITHSELF(beam, getthink(beam)(beam));
+	getthink(beam)(beam);
 }
 void Arc_Smoke(entity actor)
 {
@@ -965,10 +965,10 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 void Reset_ArcBeam()
 {
 	entity e;
-	for (e = world; (e = findfloat(e, beam_usevieworigin, 1)); ) {
+	for (e = NULL; (e = findfloat(e, beam_usevieworigin, 1)); ) {
 		e.beam_initialized = false;
 	}
-	for (e = world; (e = findfloat(e, beam_usevieworigin, 2)); ) {
+	for (e = NULL; (e = findfloat(e, beam_usevieworigin, 2)); ) {
 		e.beam_initialized = false;
 	}
 }
@@ -1193,8 +1193,8 @@ void Draw_ArcBeam(entity this)
 			'0 0 0',
 			new_origin,
 			MOVE_NORMAL,
-			world,
-			world,
+			NULL,
+			NULL,
 			Draw_ArcBeam_callback
 		);
 
@@ -1260,7 +1260,7 @@ void Draw_ArcBeam(entity this)
 	}
 
 	// cleanup
-	Draw_ArcBeam_callback_entity = world;
+	Draw_ArcBeam_callback_entity = NULL;
 	Draw_ArcBeam_callback_last_thickness = 0;
 	Draw_ArcBeam_callback_last_top = '0 0 0';
 	Draw_ArcBeam_callback_last_bottom = '0 0 0';
@@ -1279,7 +1279,7 @@ NET_HANDLE(ENT_CLIENT_ARC_BEAM, bool isnew)
 
 	if(isnew)
 	{
-		int gunalign = W_GetGunAlignment(world);
+		int gunalign = W_GetGunAlignment(NULL);
 
 		this.beam_shotorigin = arc_shotorigin[gunalign];
 

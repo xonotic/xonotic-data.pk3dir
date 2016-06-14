@@ -128,7 +128,7 @@ void VoteReset()
 	}
 
 	vote_called = VOTE_NULL;
-	vote_caller = world;
+	vote_caller = NULL;
 	vote_caller_name = string_null;
 	vote_endtime = 0;
 
@@ -160,21 +160,21 @@ void VoteAccept()
 	if (vote_caller)   vote_caller.vote_waittime = 0;  // people like your votes, you don't need to wait to vote again
 
 	VoteReset();
-	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_ACCEPT);
+	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_ACCEPT);
 }
 
 void VoteReject()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 was rejected\n");
 	VoteReset();
-	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
+	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteTimeout()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 timed out\n");
 	VoteReset();
-	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
+	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteSpam(float notvoters, float mincount, string result)
@@ -340,7 +340,7 @@ void reset_map(bool dorespawn)
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
 		if (it.reset)
 		{
-			WITHSELF(it, it.reset(it)); // needs WITHSELF, as some spawnfuncs are set to .reset
+			it.reset(it);
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;
@@ -801,7 +801,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				}
 
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(++tmp_playercount));
-				if (tmp_playercount > 1)   Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_CALL);  // don't announce a "vote now" sound if player is alone
+				if (tmp_playercount > 1)   Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);  // don't announce a "vote now" sound if player is alone
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
 				if (autocvar_sv_eventlog)   GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));

@@ -52,7 +52,7 @@ void misc_laser_aim(entity this)
 void misc_laser_init(entity this)
 {
 	if(this.target != "")
-		this.enemy = find(world, targetname, this.target);
+		this.enemy = find(NULL, targetname, this.target);
 }
 
 .entity pusher;

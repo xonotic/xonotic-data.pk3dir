@@ -162,7 +162,7 @@ void W_Shockwave_Melee_Think(entity this)
 
 		// draw lightning beams for debugging
 #ifdef DEBUG_SHOCKWAVE
-		te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		te_customflash(targpos, 40,  2, '1 1 1');
 #endif
 
@@ -328,7 +328,7 @@ float W_Shockwave_Attack_CheckHit(
 	{
 		if(shockwave_hit[i] == head)
 		{
-			if(vlen(final_force) > vlen(shockwave_hit_force[i])) { shockwave_hit_force[i] = final_force; }
+			if(vlen2(final_force) > vlen2(shockwave_hit_force[i])) { shockwave_hit_force[i] = final_force; }
 			if(final_damage > shockwave_hit_damage[i]) { shockwave_hit_damage[i] = final_damage; }
 			return false;
 		}
@@ -521,7 +521,7 @@ void W_Shockwave_Attack(entity actor)
 				// figure out the direction of force
 				final_force = (w_shotdir * WEP_CVAR(shockwave, blast_splash_force_forwardbias));
 				final_force = normalize(CENTER_OR_VIEWOFS(head) - (attack_hitpos - final_force));
-				//te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
+				//te_lightning2(NULL, attack_hitpos, (attack_hitpos + (final_force * 200)));
 
 				// now multiply the direction by force units
 				final_force *= (WEP_CVAR(shockwave, blast_splash_force) * multiplier);
@@ -610,7 +610,7 @@ void W_Shockwave_Attack(entity actor)
 				// figure out the direction of force
 				final_force = (w_shotdir * WEP_CVAR(shockwave, blast_force_forwardbias));
 				final_force = normalize(center - (nearest_on_line - final_force));
-				//te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
+				//te_lightning2(NULL, nearest_on_line, (attack_hitpos + (final_force * 200)));
 
 				// now multiply the direction by force units
 				final_force *= (WEP_CVAR(shockwave, blast_force) * multiplier);
@@ -666,7 +666,7 @@ void W_Shockwave_Attack(entity actor)
 		));
 		#endif
 
-		shockwave_hit[i-1] = world;
+		shockwave_hit[i-1] = NULL;
 		shockwave_hit_force[i-1] = '0 0 0';
 		shockwave_hit_damage[i-1] = 0;
 	}
@@ -771,14 +771,14 @@ void Draw_Shockwave(entity this)
 		deviation = ((this.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_min_dist = SW_DISTTOMIN;
 		new_min_end = (this.sw_shotorg + (deviation * new_min_dist));
-		//te_lightning2(world, new_min_end, this.sw_shotorg);
+		//te_lightning2(NULL, new_min_end, this.sw_shotorg);
 
 		// then calculate spread_to_max effect
 		deviation = angle * spread_to_max;
 		deviation = ((this.sw_shotdir + (right * deviation.y) + (up * deviation.z)));
 		new_max_dist = vlen(new_min_end - endpos);
 		new_max_end = (new_min_end + (deviation * new_max_dist));
-		//te_lightning2(world, new_end, prev_min_end);
+		//te_lightning2(NULL, new_end, prev_min_end);
 
 
 		if(counter == 0)

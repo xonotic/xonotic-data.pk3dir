@@ -55,7 +55,7 @@ void W_RocketPropelledChainsaw_Explode(entity this)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), world, world, WEP_CVAR(rpc, force), this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, other);
 
 	remove (this);
 }
@@ -129,7 +129,7 @@ void W_RocketPropelledChainsaw_Attack (Weapon thiswep, entity actor)
 	missile.projectiledeathtype = WEP_RPC.m_id;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
-	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+	setorigin(missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR(rpc, speed), 0);
 
 	settouch(missile, W_RocketPropelledChainsaw_Touch);

@@ -114,7 +114,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 					if(time < act.pushltime)
 						valueent = act.pusher;
 					else
-						valueent = world;
+						valueent = NULL;
 					value = "";
 				}
 				else if(value == "target")
@@ -144,7 +144,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 				}
 				else if(value == "time")
 				{
-					valueent = world;
+					valueent = NULL;
 					value = ftos(time);
 				}
 				else
@@ -217,7 +217,7 @@ void target_spawn_edit_entity(entity this, entity e, string msg, entity kt, enti
 				value = strcat("target_spawn_helper", value);
 			putentityfieldstring(target_spawn_spawnfunc_field, e, value);
 
-			WITHSELF(e, e.target_spawn_spawnfunc(e));
+			e.target_spawn_spawnfunc(e);
 
 			// We called an external function, so we have to re-tokenize msg.
 			n = tokenize_console(msg);
@@ -238,10 +238,10 @@ void target_spawn_useon(entity e, entity this, entity actor, entity trigger)
 		this,
 		e,
 		this.message,
-		find(world, targetname, this.killtarget),
-		find(world, targetname, this.target2),
-		find(world, targetname, this.target3),
-		find(world, targetname, this.target4),
+		find(NULL, targetname, this.killtarget),
+		find(NULL, targetname, this.target2),
+		find(NULL, targetname, this.target3),
+		find(NULL, targetname, this.target4),
 		actor,
 		trigger
 	);
@@ -257,7 +257,7 @@ bool target_spawn_cancreate(entity this)
 		return true;
 
 	++c; // increase count to not include MYSELF
-	for(e = world; (e = findfloat(e, target_spawn_id, this.target_spawn_id)); --c)
+	for(e = NULL; (e = findfloat(e, target_spawn_id, this.target_spawn_id)); --c)
 		;
 
 	// if c now is 0, we have AT LEAST the given count (maybe more), so don't spawn any more
@@ -287,7 +287,7 @@ void target_spawn_use(entity this, entity actor, entity trigger)
 	else
 	{
 		// edit entity
-		for(entity e = world; (e = find(e, targetname, this.target)); )
+		for(entity e = NULL; (e = find(e, targetname, this.target)); )
 			target_spawn_useon(e, this, actor, trigger);
 	}
 }

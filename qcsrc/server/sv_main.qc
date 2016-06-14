@@ -38,9 +38,9 @@ void CreatureFrame_hotliquids(entity this)
 		if (this.flags & FL_PROJECTILE)
 		{
 			if (this.watertype == CONTENT_LAVA)
-				Damage (this, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
 			else if (this.watertype == CONTENT_SLIME)
-				Damage (this, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
 		}
 		else
 		{
@@ -51,9 +51,9 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
 				if(autocvar_g_balance_contents_playerdamage_lava_burn)
-					Fire_AddDamage(this, world, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
+					Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
 			}
 			else if (this.watertype == CONTENT_SLIME)
 			{
@@ -62,7 +62,7 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
 			}
 		}
 	}
@@ -107,11 +107,11 @@ void CreatureFrame_FallDamage(entity this)
 			else
 				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 			if (dm > 0)
-				Damage (this, world, world, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
 		}
 
 		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-			Damage (this, world, world, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
 	}
 }
 
@@ -239,12 +239,14 @@ void StartFrame()
 bool DoesQ3ARemoveThisEntity(entity this);
 void SV_OnEntityPreSpawnFunction()
 {ENGINE_EVENT();
+	__spawnfunc_expecting = true;
 	__spawnfunc_expect = this;
 	if (this)
 	if (this.gametypefilter != "")
 	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
 		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 	if(this.cvarfilter != "")
@@ -353,6 +355,7 @@ LABEL(cvar_fail)
 		{
 			//print("cvarfilter fail\n");
 			remove(this);
+			__spawnfunc_expecting = false;
 			return;
 		}
 	}
@@ -360,6 +363,7 @@ LABEL(cvar_fail)
 	if(DoesQ3ARemoveThisEntity(this))
 	{
 		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 
@@ -387,6 +391,7 @@ LABEL(cvar_fail)
 	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
 		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 }
@@ -395,7 +400,7 @@ void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
 	entity e;
-	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
+	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 	{
 		vector src, dst;
 		src = (e.absmin + e.absmax) * 0.5;

@@ -74,16 +74,16 @@ void func_vectormamamam_controller_think(entity this)
 void func_vectormamamam_findtarget(entity this)
 {
 	if(this.target != "")
-		this.wp00 = find(world, targetname, this.target);
+		this.wp00 = find(NULL, targetname, this.target);
 
 	if(this.target2 != "")
-		this.wp01 = find(world, targetname, this.target2);
+		this.wp01 = find(NULL, targetname, this.target2);
 
 	if(this.target3 != "")
-		this.wp02 = find(world, targetname, this.target3);
+		this.wp02 = find(NULL, targetname, this.target3);
 
 	if(this.target4 != "")
-		this.wp03 = find(world, targetname, this.target4);
+		this.wp03 = find(NULL, targetname, this.target4);
 
 	if(!this.wp00 && !this.wp01 && !this.wp02 && !this.wp03)
 		objerror(this, "No reference entity found, so there is nothing to move. Aborting.");
@@ -117,16 +117,16 @@ spawnfunc(func_vectormamamam)
 	if(!this.target4factor)
 		this.target4factor = 1;
 
-	if(vlen(this.targetnormal))
+	if(this.targetnormal)
 		this.targetnormal = normalize(this.targetnormal);
 
-	if(vlen(this.target2normal))
+	if(this.target2normal)
 		this.target2normal = normalize(this.target2normal);
 
-	if(vlen(this.target3normal))
+	if(this.target3normal)
 		this.target3normal = normalize(this.target3normal);
 
-	if(vlen(this.target4normal))
+	if(this.target4normal)
 		this.target4normal = normalize(this.target4normal);
 
 	setblocked(this, generic_plat_blocked);

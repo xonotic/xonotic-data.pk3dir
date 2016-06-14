@@ -25,11 +25,11 @@ const int TTT_TILE_SIZE = 3;
 // find tic tac toe piece given its tile name
 entity ttt_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 // Checks if the given piece completes a row
@@ -120,7 +120,7 @@ void ttt_next_match(entity minigame, entity player)
 		minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 		minigame.ttt_npieces = 0;
-		entity e = world;
+		entity e = NULL;
 		while ( ( e = findentity(e,owner,minigame) ) )
 			if ( e.classname == "minigame_board_piece" )
 				remove(e);
@@ -142,7 +142,7 @@ int ttt_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
@@ -417,7 +417,7 @@ int ttt_ai_random(int piecemask)
 	for ( int i = 0; i < 9; i++ )
 	{
 		if ( piecemask & f )
-			RandomSelection_Add(world, f, string_null, 1, 1);
+			RandomSelection_Add(NULL, f, string_null, 1, 1);
 		f <<= 1;
 	}
 
@@ -469,7 +469,7 @@ void ttt_aimove(entity minigame)
 {
 	if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame.ttt_ai) )
 	{
-		entity aiplayer = world;
+		entity aiplayer = NULL;
 		while ( ( aiplayer = findentity(aiplayer,owner,minigame) ) )
 			if ( aiplayer.classname == "minigame_player" && !aiplayer.minigame_playerslot )
 				break;

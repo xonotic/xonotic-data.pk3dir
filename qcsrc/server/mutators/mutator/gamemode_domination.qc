@@ -82,7 +82,7 @@ int autocvar_g_domination_teams_override;
 void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":dom:", mode, ":", ftos(team_before), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(strcat(":dom:", mode, ":", ftos(team_before), ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 void set_dom_state(entity e)
@@ -107,7 +107,7 @@ void dompoint_captured(entity this)
 	this.cnt = -1;
 
 	dom_EventLog("taken", this.team, this.dmg_inflictor);
-	this.dmg_inflictor = world;
+	this.dmg_inflictor = NULL;
 
 	this.goalentity = head;
 	this.model = head.mdl;
@@ -127,12 +127,12 @@ void dompoint_captured(entity this)
 	if(domination_roundbased)
 		bprint(sprintf("^3%s^3%s\n", head.netname, this.message));
 	else
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, this.message, points, wait_time);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, this.message, points, wait_time);
 
 	if(this.enemy.playerid == this.enemy_playerid)
 		PlayerScore_Add(this.enemy, SP_DOM_TAKES, 1);
 	else
-		this.enemy = world;
+		this.enemy = NULL;
 
 	if (head.noise != "")
 		if(this.enemy)
@@ -165,7 +165,7 @@ void dompoint_captured(entity this)
 	WaypointSprite_UpdateSprites(this.sprite, msg, WP_Null, WP_Null);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
+	for(head = NULL; (head = find(head, classname, "dom_controlpoint")) != NULL; )
 	FOREACH_ENTITY_CLASS("dom_controlpoint", true, LAMBDA(
 		if (autocvar_g_domination_point_amt)
 			points = autocvar_g_domination_point_amt;
@@ -246,7 +246,7 @@ void dompointthink(entity this)
 			PlayerScore_Add(this.enemy, SP_DOM_TICKS, fragamt);
 		}
 		else
-			this.enemy = world;
+			this.enemy = NULL;
 	}
 }
 
@@ -264,7 +264,7 @@ void dompointtouch(entity this)
 		return;
 
 	// only valid teams can claim it
-	entity head = find(world, classname, "dom_team");
+	entity head = find(NULL, classname, "dom_team");
 	while (head && head.team != other.team)
 		head = find(head, classname, "dom_team");
 	if (!head || head.netname == "" || head == this.goalentity)
@@ -284,10 +284,10 @@ void dompointtouch(entity this)
 	//this.think = dompoint_captured;
 
 	// go to neutral team in the mean time
-	head = find(world, classname, "dom_team");
+	head = find(NULL, classname, "dom_team");
 	while (head && head.netname != "")
 		head = find(head, classname, "dom_team");
-	if(head == world)
+	if(head == NULL)
 		return;
 
 	WaypointSprite_UpdateSprites(this.sprite, WP_DomNeut, WP_Null, WP_Null);
@@ -308,7 +308,7 @@ void dom_controlpoint_setup(entity this)
 {
 	entity head;
 	// find the spawnfunc_dom_team representing unclaimed points
-	head = find(world, classname, "dom_team");
+	head = find(NULL, classname, "dom_team");
 	while(head && head.netname != "")
 		head = find(head, classname, "dom_team");
 	if (!head)
@@ -364,7 +364,7 @@ void Domination_count_controlpoints()
 {
 	entity e;
 	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
-	for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
+	for(e = NULL; (e = find(e, classname, "dom_controlpoint")) != NULL; )
 	{
 		++total_controlpoints;
 		redowned += (e.goalentity.team == NUM_TEAM_1);
@@ -405,8 +405,8 @@ float Domination_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 		return 1;
 	}
@@ -420,14 +420,14 @@ float Domination_CheckWinner()
 
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_DOM_CAPS, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
@@ -469,7 +469,7 @@ MUTATOR_HOOKFUNCTION(dom, GetTeamCount)
 	M_ARGV(0, float) = domination_teams;
 	string ret_string = "dom_team";
 
-	entity head = find(world, classname, ret_string);
+	entity head = find(NULL, classname, ret_string);
 	while(head)
 	{
 		if(head.netname != "")
@@ -678,14 +678,14 @@ void dom_spawnteams(int teams)
 void dom_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
 {
 	// if no teams are found, spawn defaults
-	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
+	if(find(NULL, classname, "dom_team") == NULL || autocvar_g_domination_teams_override >= 2)
 	{
 		LOG_TRACE("No \"dom_team\" entities found on this map, creating them anyway.\n");
 		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}
 
-	CheckAllowedTeams(world);
+	CheckAllowedTeams(NULL);
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
 
 	domination_roundbased = autocvar_g_domination_roundbased;
@@ -702,7 +702,7 @@ void dom_DelayedInit(entity this) // Do this check with a delay so we can wait f
 void dom_Initialize()
 {
 	g_domination = true;
-	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
+	InitializeEntity(NULL, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 #endif

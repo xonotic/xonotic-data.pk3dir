@@ -1,3 +1,16 @@
 #pragma once
 
+#undef ChangeYaw
+#undef checkclient
+#undef droptofloor
+#undef error
+#undef movetogoal
 #undef objerror
+#undef walkmove
+
+#ifdef MENUQC
+	#define NULL (0, null_entity)
+	#define world NULL
+#else
+	#define NULL (0, world)
+#endif

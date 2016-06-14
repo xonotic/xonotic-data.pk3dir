@@ -71,7 +71,7 @@ spawnfunc(target_music)
 }
 void TargetMusic_RestoreGame()
 {
-	for(entity e = world; (e = find(e, classname, "target_music")); )
+	for(entity e = NULL; (e = find(e, classname, "target_music")); )
 	{
 		if(e.targetname == "")
 			target_music_sendto(e, MSG_INIT, 1);
@@ -188,7 +188,7 @@ void TargetMusic_Advance()
 			it.lastvol = vol;
 		}
 	});
-	music_trigger = world;
+	music_trigger = NULL;
 	bgmtime = (best) ? getsoundtime(best, CH_BGM_SINGLE) : gettime(GETTIME_CDTRACK);
 }
 
@@ -254,7 +254,7 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think(entity this)
 {
-	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, this, world))
+	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, this, NULL))
 	{
 		music_trigger = this;
 	}

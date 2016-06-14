@@ -79,7 +79,7 @@ void W_Mortar_Grenade_Explode(entity this)
 	if(this.movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), world, world, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(mortar, damage), WEP_CVAR_PRI(mortar, edgedamage), WEP_CVAR_PRI(mortar, radius), NULL, NULL, WEP_CVAR_PRI(mortar, force), this.projectiledeathtype, other);
 
 	remove(this);
 }
@@ -104,7 +104,7 @@ void W_Mortar_Grenade_Explode2(entity this)
 	if(this.movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), world, world, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(mortar, damage), WEP_CVAR_SEC(mortar, edgedamage), WEP_CVAR_SEC(mortar, radius), NULL, NULL, WEP_CVAR_SEC(mortar, force), this.projectiledeathtype, other);
 
 	remove(this);
 }
@@ -133,7 +133,7 @@ void W_Mortar_Grenade_Think1(entity this)
 	this.nextthink = time;
 	if(time > this.cnt)
 	{
-		other = world;
+		other = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		W_Mortar_Grenade_Explode(this);
 		return;
@@ -362,7 +362,7 @@ METHOD(Mortar, wr_think, void(entity thiswep, entity actor, .entity weaponentity
         {
             bool nadefound = false;
             entity nade;
-            for(nade = world; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == actor)
+            for(nade = NULL; (nade = find(nade, classname, "grenade")); ) if(nade.realowner == actor)
             {
                 if(!nade.gl_detonate_later)
                 {
