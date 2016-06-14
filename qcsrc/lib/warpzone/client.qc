@@ -258,10 +258,28 @@ void WarpZone_FixView()
 #ifndef KEEP_ROLL
 	float rick;
 	float f;
-	if(autocvar_cl_rollkillspeed)
-		f = max(0, (1 - frametime * autocvar_cl_rollkillspeed));
-	else
+	static float rollkill;
+	if (STAT(HEALTH) > 0 || STAT(HEALTH) == -666 || STAT(HEALTH) == -2342)
+	{
 		f = 0;
+		// reset roll when passing through a warpzone that change player's roll angle
+		if(autocvar_cl_rollkillspeed)
+			f = max(0, (1 - frametime * autocvar_cl_rollkillspeed));
+		if(rollkill)
+			rollkill = 0;
+	}
+	else
+	{
+		f = 1;
+		// roll the view when killed (v_deathtilt)
+		if(autocvar_cl_rollkillspeed)
+		{
+			rollkill += frametime * autocvar_cl_rollkillspeed;
+			f = min(1, rollkill);
+		}
+		else if(rollkill)
+			rollkill = 0;
+	}
 
 	rick = getproperty(VF_CL_VIEWANGLES_Z);
 	rick *= f;
