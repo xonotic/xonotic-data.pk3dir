@@ -26,7 +26,7 @@ void Projectile_ContentsTransition(int prev, int current)
 {ENGINE_EVENT();
 	if(current == CONTENT_WATER)
 	{
-		pointparticles(EFFECT_WATER_SPLASH_SMALL, this.move_origin, this.move_velocity, 1);
+		pointparticles(EFFECT_WATER_SPLASH_SMALL, this.move_origin, '0 0 0', 1);
 	}
 }
 
