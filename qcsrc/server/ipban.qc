@@ -196,8 +196,8 @@ LABEL(skip)
 	}
 }
 
-void OnlineBanList_Think()
-{SELFPARAM();
+void OnlineBanList_Think(entity this)
+{
 	float argc;
 	string uri;
 	float i, n;
@@ -237,13 +237,13 @@ void OnlineBanList_Think()
 	}
 
 	if(autocvar_g_ban_sync_interval > 0)
-		self.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
+		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 	else
 		goto killme;
 	return;
 
 LABEL(killme)
-	remove(self);
+	remove(this);
 }
 
 const float BAN_MAX = 256;
@@ -319,7 +319,7 @@ void Ban_LoadBans()
 	}
 
 	entity e = new(bansyncer);
-	e.think = OnlineBanList_Think;
+	setthink(e, OnlineBanList_Think);
 	e.nextthink = time + 1;
 }
 

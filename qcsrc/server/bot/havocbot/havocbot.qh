@@ -47,7 +47,7 @@ float havocbot_resetgoal(entity this);
 float havocbot_moveto(entity this, vector pos);
 float havocbot_moveto_refresh_route(entity this);
 
-vector havocbot_dodge();
+vector havocbot_dodge(entity this);
 
 .void(entity this) havocbot_role;
 .void(entity this) havocbot_previous_role;

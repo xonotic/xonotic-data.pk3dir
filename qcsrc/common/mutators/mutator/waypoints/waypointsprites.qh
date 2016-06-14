@@ -128,7 +128,7 @@ float autocvar_sv_waypointsprite_limitedrange;
 .string model2;
 .string model3;
 
-.float(entity) waypointsprite_visible_for_player;
+.bool(entity, entity, entity) waypointsprite_visible_for_player;
 
 void WaypointSprite_UpdateSprites(entity e, entity m1, entity m2, entity m3);
 
@@ -160,19 +160,19 @@ void WaypointSprite_Kill(entity wp);
 
 void WaypointSprite_Disown(entity wp, float fadetime);
 
-void WaypointSprite_Think();
+void WaypointSprite_Think(entity this);
 
-float WaypointSprite_visible_for_player(entity e);
+bool WaypointSprite_visible_for_player(entity this, entity player, entity view);
 
 entity WaypointSprite_getviewentity(entity e);
 
 float WaypointSprite_isteammate(entity e, entity e2);
 
-float WaypointSprite_Customize();
+float WaypointSprite_Customize(entity this);
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
-void WaypointSprite_Reset();
+void WaypointSprite_Reset(entity this);
 
 entity WaypointSprite_Spawn(
     entity spr, // sprite
@@ -196,6 +196,7 @@ entity WaypointSprite_SpawnFixed(
 entity WaypointSprite_DeployFixed(
     entity spr,
     float limited_range,
+    entity player,
     vector ofs,
     entity icon // initial icon
 );
@@ -203,6 +204,7 @@ entity WaypointSprite_DeployFixed(
 .entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
     entity spr,
+    entity player,
     vector ofs,
     entity icon // initial icon
 );
@@ -211,6 +213,7 @@ entity WaypointSprite_DeployPersonal(
 .entity waypointsprite_attachedforcarrier;
 entity WaypointSprite_Attach(
     entity spr,
+    entity player,
     float limited_range,
     entity icon // initial icon
 );
@@ -223,13 +226,13 @@ entity WaypointSprite_AttachCarrier(
 
 void WaypointSprite_DetachCarrier(entity carrier);
 
-void WaypointSprite_ClearPersonal();
+void WaypointSprite_ClearPersonal(entity this);
 
-void WaypointSprite_ClearOwned();
+void WaypointSprite_ClearOwned(entity this);
 
 void WaypointSprite_PlayerDead(entity this);
 
-void WaypointSprite_PlayerGone();
+void WaypointSprite_PlayerGone(entity this);
 #endif
 
 #endif

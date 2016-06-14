@@ -5,8 +5,6 @@ MUTATOR_HOOKFUNCTION(melee_only, SetStartItems)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;
 	start_weapons = warmup_start_weapons = WEPSET(SHOTGUN);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
@@ -15,8 +13,10 @@ MUTATOR_HOOKFUNCTION(melee_only, ForbidThrowCurrentWeapon)
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
-{SELFPARAM();
-	switch (self.items)
+{
+	entity item = M_ARGV(0, entity);
+
+	switch (item.items)
 	{
 		case ITEM_HealthSmall.m_itemid:
 		case ITEM_ArmorSmall.m_itemid:
@@ -28,13 +28,11 @@ MUTATOR_HOOKFUNCTION(melee_only, FilterItem)
 
 MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":MeleeOnly");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":MeleeOnly");
 }
 
 MUTATOR_HOOKFUNCTION(melee_only, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Melee Only Arena");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Melee Only Arena");
 }
 #endif

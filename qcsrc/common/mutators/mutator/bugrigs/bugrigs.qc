@@ -271,48 +271,44 @@ void RaceCarPhysics(entity this)
 #endif
 MUTATOR_HOOKFUNCTION(bugrigs, PM_Physics)
 {
-    SELFPARAM();
-	if(!PHYS_BUGRIGS(self) || !IS_PLAYER(self)) { return false; }
+    entity player = M_ARGV(0, entity);
+
+	if(!PHYS_BUGRIGS(player) || !IS_PLAYER(player)) { return; }
 
 #ifdef SVQC
-	self.angles = self.bugrigs_prevangles;
+	player.angles = player.bugrigs_prevangles;
 #endif
 
-	RaceCarPhysics(self);
+	RaceCarPhysics(player);
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(bugrigs, PlayerPhysics)
 {
+	if(!PHYS_BUGRIGS(M_ARGV(0, entity))) { return; }
 #ifdef SVQC
-    SELFPARAM();
+	entity player = M_ARGV(0, entity);
+	player.bugrigs_prevangles = player.angles;
 #endif
-	if(!PHYS_BUGRIGS(self)) { return false; }
-#ifdef SVQC
-	self.bugrigs_prevangles = self.angles;
-#endif
-	return false;
 }
 
 #ifdef SVQC
 
 MUTATOR_HOOKFUNCTION(bugrigs, ClientConnect)
 {
-    SELFPARAM();
-	stuffcmd(self, "cl_cmd settemp chase_active 1\n");
-	return false;
+    entity player = M_ARGV(0, entity);
+
+	stuffcmd(player, "cl_cmd settemp chase_active 1\n");
 }
 
 MUTATOR_HOOKFUNCTION(bugrigs, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":bugrigs");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":bugrigs");
 }
 
 MUTATOR_HOOKFUNCTION(bugrigs, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Bug rigs");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Bug rigs");
 }
 
 #endif

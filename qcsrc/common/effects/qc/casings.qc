@@ -15,10 +15,10 @@ REGISTER_NET_TEMP(casings)
 
 #ifdef SVQC
 void SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner)
-{SELFPARAM();
+{
     .entity weaponentity = weaponentities[0]; // TODO: parameter
-    entity wep = self.(weaponentity);
-    vector org = self.origin + self.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
+    entity wep = casingowner.(weaponentity);
+    vector org = casingowner.origin + casingowner.view_ofs + wep.spawnorigin.x * v_forward - wep.spawnorigin.y * v_right + wep.spawnorigin.z * v_up;
 
     if (!sound_allowed(MSG_BROADCAST, casingowner))
         casingtype |= 0x80;
@@ -83,23 +83,23 @@ Sound SND_CASINGS_RANDOM() {
     return Sounds_from(SND_CASINGS1.m_id + floor(prandom() * 3));
 }
 
-void Casing_Touch()
-{SELFPARAM();
+void Casing_Touch(entity this)
+{
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
-        Casing_Delete(self);
+        Casing_Delete(this);
         return;
     }
 
-    if (!self.silent)
+    if (!this.silent)
     if (!trace_ent || trace_ent.solid == SOLID_BSP)
     {
-        if(vdist(self.velocity, >, 50))
+        if(vdist(this.velocity, >, 50))
         {
-            if (time >= self.nextthink)
+            if (time >= this.nextthink)
             {
                 Sound s;
-                switch (self.state)
+                switch (this.state)
                 {
                     case 1:
                         s = SND_CASINGS_RANDOM();
@@ -109,12 +109,12 @@ void Casing_Touch()
                         break;
                 }
 
-                sound (self, CH_SHOTS, s, VOL_BASE, ATTEN_LARGE);
+                sound (this, CH_SHOTS, s, VOL_BASE, ATTEN_LARGE);
             }
         }
     }
 
-    self.nextthink = time + 0.2;
+    this.nextthink = time + 0.2;
 }
 
 void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector thisforce)
@@ -156,7 +156,7 @@ NET_HANDLE(casings, bool isNew)
     casing.move_angles = casing.angles;
     casing.move_avelocity = '0 250 0' + 100 * prandomvec();
     casing.move_movetype = MOVETYPE_BOUNCE;
-    casing.move_touch = Casing_Touch;
+    settouch(casing, Casing_Touch);
     casing.move_time = time;
     casing.event_damage = Casing_Damage;
     casing.solid = SOLID_TRIGGER;

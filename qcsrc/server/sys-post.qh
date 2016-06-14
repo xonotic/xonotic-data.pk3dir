@@ -1,6 +1,5 @@
 #pragma once
 
-#undef objerror
 #undef droptofloor
 #undef sound
 #undef remove

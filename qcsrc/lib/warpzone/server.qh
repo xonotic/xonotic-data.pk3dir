@@ -3,11 +3,11 @@
 
 #ifdef SVQC
 void WarpZone_StartFrame();
-float WarpZone_Projectile_Touch();
+float WarpZone_Projectile_Touch(entity this);
 
 // THESE must be defined by calling QC code:
 void WarpZone_PostTeleportPlayer_Callback(entity pl);
-float WarpZone_Projectile_Touch_ImpactFilter_Callback();
+bool WarpZone_Projectile_Touch_ImpactFilter_Callback(entity this, entity toucher);
 
 // server must also define a float called ENT_CLIENT_WARPZONE for the initial byte of WarpZone entities
 //const float ENT_CLIENT_WARPZONE;

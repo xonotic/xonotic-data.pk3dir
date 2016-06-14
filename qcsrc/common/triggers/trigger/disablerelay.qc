@@ -3,7 +3,7 @@ void trigger_disablerelay_use(entity this, entity actor, entity trigger)
 {
 	int a = 0, b = 0;
 
-	for(entity e = world; (e = find(e, targetname, this.target)); )
+	for(entity e = NULL; (e = find(e, targetname, this.target)); )
 	{
 		if(e.use == SUB_UseTargets)
 		{

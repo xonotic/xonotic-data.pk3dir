@@ -19,30 +19,29 @@
 
 .float weapon_frametime;
 
-float W_WeaponRateFactor()
+float W_WeaponRateFactor(entity this)
 {
 	float t = 1.0 / g_weaponratefactor;
 
-	MUTATOR_CALLHOOK(WeaponRateFactor, t);
-	t = weapon_rate;
+	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
+	t = M_ARGV(0, float);
 
 	return t;
 }
 
-float W_WeaponSpeedFactor()
+float W_WeaponSpeedFactor(entity this)
 {
 	float t = 1.0 * g_weaponspeedfactor;
 
-	MUTATOR_CALLHOOK(WeaponSpeedFactor, t);
-	t = ret_float;
+	MUTATOR_CALLHOOK(WeaponSpeedFactor, t, this);
+	t = M_ARGV(0, float);
 
 	return t;
 }
 
 
-bool CL_Weaponentity_CustomizeEntityForClient()
+bool CL_Weaponentity_CustomizeEntityForClient(entity this)
 {
-	SELFPARAM();
 	this.viewmodelforclient = this.owner;
 	if (IS_SPEC(other) && other.enemy == this.owner) this.viewmodelforclient = other;
 	return true;
@@ -62,15 +61,14 @@ vector CL_Weapon_GetShotOrg(int wpn)
 ..entity weaponentity_fld;
 .float m_alpha;
 
-void CL_Weaponentity_Think()
+void CL_Weaponentity_Think(entity this)
 {
-	SELFPARAM();
 	this.nextthink = time;
 	if (intermission_running) this.frame = this.anim_idle.x;
 	.entity weaponentity = this.weaponentity_fld;
 	if (this.owner.(weaponentity) != this)
 	{
-		// owner has new gun; remove self
+		// owner has new gun; remove old one
 		if (this.weaponchild) remove(this.weaponchild);
 		remove(this);
 		return;
@@ -107,9 +105,8 @@ void CL_Weaponentity_Think()
 	}
 }
 
-void CL_ExteriorWeaponentity_Think()
+void CL_ExteriorWeaponentity_Think(entity this)
 {
-	SELFPARAM();
 	this.nextthink = time;
 	if (this.owner.exteriorweaponentity != this)
 	{
@@ -168,10 +165,10 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	setmodel(view, MDL_Null);  // precision set when changed
 	setorigin(view, '0 0 0');
 	view.weaponentity_fld = weaponentity;
-	view.think = CL_Weaponentity_Think;
+	setthink(view, CL_Weaponentity_Think);
 	view.nextthink = time;
 	view.viewmodelforclient = actor;
-	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	setcefc(view, CL_Weaponentity_CustomizeEntityForClient);
 
 	if (weaponentity == weaponentities[0])
 	{
@@ -179,7 +176,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 		exterior.solid = SOLID_NOT;
 		exterior.owner = actor;
 		setorigin(exterior, '0 0 0');
-		exterior.think = CL_ExteriorWeaponentity_Think;
+		setthink(exterior, CL_ExteriorWeaponentity_Think);
 		exterior.nextthink = time;
 
 		CSQCMODEL_AUTOINIT(exterior);
@@ -210,11 +207,10 @@ void w_ready(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 .float prevwarntime;
 bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary)
 {
-    SELFPARAM();
 	if ((actor.items & IT_UNLIMITED_WEAPON_AMMO)) return true;
 	bool ammo = false;
-	if (secondary) WITHSELF(actor, ammo = thiswep.wr_checkammo2(thiswep));
-	else WITHSELF(actor, ammo = thiswep.wr_checkammo1(thiswep));
+	if (secondary) ammo = thiswep.wr_checkammo2(thiswep, actor);
+	else ammo = thiswep.wr_checkammo1(thiswep, actor);
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
@@ -232,8 +228,8 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 
 	// check if the other firing mode has enough ammo
 	bool ammo_other = false;
-	if (secondary) WITHSELF(actor, ammo_other = thiswep.wr_checkammo1(thiswep));
-	else WITHSELF(actor, ammo_other = thiswep.wr_checkammo2(thiswep));
+	if (secondary) ammo_other = thiswep.wr_checkammo1(thiswep, actor);
+	else ammo_other = thiswep.wr_checkammo2(thiswep, actor);
 	if (ammo_other)
 	{
 		if (time - actor.prevwarntime > 1)
@@ -303,7 +299,7 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 			ATTACK_FINISHED(actor, slot) = time;
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
-		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
 	}
 	actor.bulletcounter += 1;
 	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
@@ -361,7 +357,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
 
-	t *= W_WeaponRateFactor();
+	t *= W_WeaponRateFactor(actor);
 
 	// VorteX: haste can be added here
 	if (this.weapon_think == w_ready)
@@ -472,7 +468,7 @@ void W_WeaponFrame(Player actor)
 				actor.weaponname = newwep.mdl;
 				actor.bulletcounter = 0;
 				actor.ammo_field = newwep.ammo_field;
-				newwep.wr_setup(newwep);
+				newwep.wr_setup(newwep, actor);
 				this.state = WS_RAISE;
 
 				// set our clip load to the load of the weapon we switched to, if it's reloadable
@@ -545,7 +541,7 @@ void W_WeaponFrame(Player actor)
 			else
 			{
 				if (key_pressed && PS(actor).m_switchweapon != WEP_HOOK && !actor.hook_switchweapon)
-					W_SwitchWeapon(WEP_HOOK);
+					W_SwitchWeapon(actor, WEP_HOOK);
 				actor.hook_switchweapon = key_pressed;
 				Weapon h = WEP_HOOK;
 				block_weapon = (PS(actor).m_weapon == h && (PHYS_INPUT_BUTTON_ATCK(actor) || key_pressed));
@@ -567,7 +563,7 @@ void W_WeaponFrame(Player actor)
 			}
 			else if (e)
 			{
-				e.wr_gonethink(e);
+				e.wr_gonethink(e, actor);
 			}
 		}
 
@@ -731,7 +727,7 @@ void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 				}
 				// switch away if the amount of ammo is not enough to keep using this weapon
 				Weapon w = PS(actor).m_weapon;
-				if (!(w.wr_checkammo1(w) + w.wr_checkammo2(w)))
+				if (!(w.wr_checkammo1(w, actor) + w.wr_checkammo2(w, actor)))
 				{
 					actor.clip_load = -1;  // reload later
 					W_SwitchToOtherWeapon(actor);
@@ -767,10 +763,9 @@ void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound)
 	actor.clip_load = actor.(weapon_load[PS(actor).m_weapon.m_id]) = -1;
 }
 
-void W_DropEvent(.void(Weapon) event, entity player, float weapon_type, entity weapon_item)
+void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_type, entity weapon_item)
 {
-    SELFPARAM();
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
-	WITHSELF(player, w.event(w));
+	w.event(w, player);
 }

@@ -77,7 +77,7 @@ bool Monster_Spawn(entity this, int mon_id);
 
 void monster_setupcolors(entity this);
 
-void Monster_Touch();
+void Monster_Touch(entity this);
 
 void Monster_Move_2D(entity this, float mspeed, float allow_jumpoff);
 
@@ -85,7 +85,7 @@ void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity)
 
 float Monster_Attack_Melee(entity this, entity targ, float damg, vector anim, float er, float animtime, int deathtype, float dostop);
 
-bool Monster_Attack_Leap(entity this, vector anm, void() touchfunc, vector vel, float animtime);
+bool Monster_Attack_Leap(entity this, vector anm, void(entity this) touchfunc, vector vel, float animtime);
 
 entity Monster_FindTarget(entity this);
 

@@ -151,13 +151,13 @@ void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1,
 {
 	if(this.flags & FL_INWATER)
 	{
-		this.bot_aimtarg = world;
+		this.bot_aimtarg = NULL;
 		return;
 	}
 	this.bot_aimtarg = e1;
 	this.bot_aimlatency = this.ping; // FIXME?  Shouldn't this be in the lag item?
-	//this.bot_aimselforigin = v1;
-	//this.bot_aimselfvelocity = v2;
+	//this.bot_aimorigin = v1;
+	//this.bot_aimvelocity = v2;
 	this.bot_aimtargorigin = v3;
 	this.bot_aimtargvelocity = v4;
 	if(skill <= 0)
@@ -183,7 +183,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	// get the desired angles to aim at
 	//dprint(" at:", vtos(v));
 	v = normalize(v);
-	//te_lightning2(world, this.origin + this.view_ofs, this.origin + this.view_ofs + v * 200);
+	//te_lightning2(NULL, this.origin + this.view_ofs, this.origin + this.view_ofs + v * 200);
 	if (time >= this.bot_badaimtime)
 	{
 		this.bot_badaimtime = max(this.bot_badaimtime + 0.3, time);
@@ -292,7 +292,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	shotdir = v_forward;
 
 	//dprint(" dir:", vtos(v_forward));
-	//te_lightning2(world, shotorg, shotorg + shotdir * 100);
+	//te_lightning2(NULL, shotorg, shotorg + shotdir * 100);
 
 	// calculate turn angles again
 	//diffang = desiredang - this.v_angle;
@@ -308,7 +308,7 @@ float bot_aimdir(entity this, vector v, float maxfiredeviation)
 	if ((normalize(v) * shotdir) >= cos(maxfiredeviation * (3.14159265358979323846 / 180)))
 	if(vdist(trace_endpos-shotorg, <, 500 + 500 * bound(0, skill + this.bot_aggresskill, 10)) || random()*random()>bound(0,(skill+this.bot_aggresskill)*0.05,1))
 		this.bot_firetimer = time + bound(0.1, 0.5-(skill+this.bot_aggresskill)*0.05, 0.5);
-	//traceline(shotorg,shotorg+shotdir*1000,false,world);
+	//traceline(shotorg,shotorg+shotdir*1000,false,NULL);
 	//dprint(ftos(maxfiredeviation),"\n");
 	//dprint(" diff:", vtos(diffang), "\n");
 
@@ -337,8 +337,8 @@ bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshott
 	hf = this.dphitcontentsmask;
 	this.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	shotspeed *= W_WeaponSpeedFactor();
-	shotspeedupward *= W_WeaponSpeedFactor();
+	shotspeed *= W_WeaponSpeedFactor(this);
+	shotspeedupward *= W_WeaponSpeedFactor(this);
 	if (!shotspeed)
 	{
 		LOG_TRACE("bot_aim: WARNING: weapon ", PS(this).m_weapon.m_name, " shotspeed is zero!\n");

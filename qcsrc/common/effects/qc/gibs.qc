@@ -111,28 +111,27 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 		__pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
-void SUB_RemoveOnNoImpact()
+void SUB_RemoveOnNoImpact(entity this)
 {
-    SELFPARAM();
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-		Gib_Delete(self);
+		Gib_Delete(this);
 }
 
-void Gib_Touch()
-{SELFPARAM();
+void Gib_Touch(entity this)
+{
 	// TODO maybe bounce of walls, make more gibs, etc.
 
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		Gib_Delete(self);
+		Gib_Delete(this);
 		return;
 	}
 
-	if(!self.silent)
-		sound(self, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
-	__pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
+	if(!this.silent)
+		sound(this, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
+	__pointparticles(_particleeffectnum(strcat(species_prefix(this.cnt), "blood")), this.origin + '0 0 1', '0 0 30', 10);
 
-	Gib_Delete(self);
+	Gib_Delete(this);
 }
 
 void Gib_Draw(entity this)
@@ -144,7 +143,7 @@ void Gib_Draw(entity this)
 	if(wasfreed(this))
 		return;
 
-	if(this.touch == Gib_Touch) // don't do this for the "chunk" thingie...
+	if(gettouch(this) == Gib_Touch) // don't do this for the "chunk" thingie...
 		// TODO somehow make it spray in a direction dependent on this.angles
 		__trailparticles(this, _particleeffectnum(strcat(species_prefix(this.cnt), EFFECT_TR_SLIGHTBLOOD.eent_eff_name)), oldorg, this.origin);
 	else
@@ -182,9 +181,9 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	gib.draw = Gib_Draw;
 	if(destroyontouch)
-		gib.move_touch = Gib_Touch;
+		settouch(gib, Gib_Touch);
 	else
-		gib.move_touch = SUB_RemoveOnNoImpact;
+		settouch(gib, SUB_RemoveOnNoImpact);
 
 	// don't spawn gibs inside solid - just don't
 	if(org != safeorg)

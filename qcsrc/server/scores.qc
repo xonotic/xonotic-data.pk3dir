@@ -65,7 +65,7 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(self.(teamscores[i]) > 127 || self.(teamscores[i]) <= -128)
+		if(this.(teamscores[i]) > 127 || this.(teamscores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_TEAMSCORE <= 8
@@ -79,9 +79,9 @@ bool TeamScore_SendEntity(entity this, entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.(teamscores[i]));
+				WriteInt24_t(MSG_ENTITY, this.(teamscores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.(teamscores[i]));
+				WriteChar(MSG_ENTITY, this.(teamscores[i]));
 		}
 
 	return true;
@@ -233,11 +233,11 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 	float i, p, longflags;
 
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_SCORES);
-	WriteByte(MSG_ENTITY, etof(self.owner));
+	WriteByte(MSG_ENTITY, etof(this.owner));
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(self.(scores[i]) > 127 || self.(scores[i]) <= -128)
+		if(this.(scores[i]) > 127 || this.(scores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_SCORE <= 8
@@ -251,9 +251,9 @@ bool PlayerScore_SendEntity(entity this, entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.(scores[i]));
+				WriteInt24_t(MSG_ENTITY, this.(scores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.(scores[i]));
+				WriteChar(MSG_ENTITY, this.(scores[i]));
 		}
 
 	return true;
@@ -328,13 +328,13 @@ void PlayerScore_Detach(entity player)
 	if(!player.scorekeeper)
 		error("player has no scorekeeper");
 	remove(player.scorekeeper);
-	player.scorekeeper = world;
+	player.scorekeeper = NULL;
 }
 
 float PlayerScore_Add(entity player, float scorefield, float score)
 {
-	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score);
-	score = ret_float;
+	bool mutator_returnvalue = MUTATOR_CALLHOOK(AddPlayerScore, scorefield, score, player);
+	score = M_ARGV(1, float);
 
 	if(gameover)
 	if(!mutator_returnvalue)
@@ -385,9 +385,8 @@ float PlayerScore_Compare(entity t1, entity t2, float strict)
 	return result.x;
 }
 
-void WinningConditionHelper()
+void WinningConditionHelper(entity this)
 {
-    SELFPARAM();
 	float c;
 	string s;
 	float fullstatus;
@@ -406,10 +405,10 @@ void WinningConditionHelper()
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
-	s = strcat(s, ":S", ftos(nJoinAllowed(self, world)));
+	s = strcat(s, ":S", ftos(nJoinAllowed(this, NULL)));
 	s = strcat(s, ":F", ftos(serverflags));
 	s = strcat(s, ":M", modname);
-	s = strcat(s, "::", GetPlayerScoreString(world, (fullstatus ? 1 : 2)));
+	s = strcat(s, "::", GetPlayerScoreString(NULL, (fullstatus ? 1 : 2)));
 
 	if(teamscores_entities_count)
 	{
@@ -422,8 +421,8 @@ void WinningConditionHelper()
 
 		WinningConditionHelper_winnerteam = -1;
 		WinningConditionHelper_secondteam = -1;
-		winnerscorekeeper = world;
-		secondscorekeeper = world;
+		winnerscorekeeper = NULL;
+		secondscorekeeper = NULL;
 		for(t = 0; t < 16; ++t)
 		{
 			sk = teamscorekeepers[t];
@@ -455,15 +454,15 @@ void WinningConditionHelper()
 		WinningConditionHelper_lowerisbetter = (teamscores_flags_primary & SFL_LOWER_IS_BETTER);
 		WinningConditionHelper_zeroisworst = (teamscores_flags_primary & SFL_ZERO_IS_WORST);
 
-		WinningConditionHelper_winner = world; // not supported in teamplay
-		WinningConditionHelper_second = world; // not supported in teamplay
+		WinningConditionHelper_winner = NULL; // not supported in teamplay
+		WinningConditionHelper_second = NULL; // not supported in teamplay
 	}
 	else
 	{
-		WinningConditionHelper_winner = world;
-		WinningConditionHelper_second = world;
-		winnerscorekeeper = world;
-		secondscorekeeper = world;
+		WinningConditionHelper_winner = NULL;
+		WinningConditionHelper_second = NULL;
+		winnerscorekeeper = NULL;
+		secondscorekeeper = NULL;
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			sk = it.scorekeeper;
 			c = PlayerScore_Compare(winnerscorekeeper, sk, 1);
@@ -487,7 +486,7 @@ void WinningConditionHelper()
 
 		WinningConditionHelper_equality = (PlayerScore_Compare(winnerscorekeeper, secondscorekeeper, 0) == 0);
 		if(WinningConditionHelper_equality)
-			WinningConditionHelper_winner = WinningConditionHelper_second = world;
+			WinningConditionHelper_winner = WinningConditionHelper_second = NULL;
 
 		WinningConditionHelper_topscore = winnerscorekeeper.scores_primary;
 		WinningConditionHelper_secondscore = secondscorekeeper.scores_primary;
@@ -531,19 +530,15 @@ void WinningConditionHelper()
 		{
 			s = GetPlayerScoreString(it, 1);
 			s = strcat(s, IS_REAL_CLIENT(it) ? ":human" : ":bot");
-			ret_string = string_null;
-			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+			if(!IS_PLAYER(it) && !MUTATOR_CALLHOOK(GetPlayerStatus, it))
 				s = strcat(s, ":spectator");
-			if (ret_string) s = strcat(s, ret_string);
 		}
 		else
 		{
-			ret_string = string_null;
-			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+			if (IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 				s = GetPlayerScoreString(it, 2);
 			else
 				s = "-666";
-			if (ret_string) s = strcat(s, ret_string);
 		}
 
 		if(it.clientstatus)
@@ -700,7 +695,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 	entity p, plist, pprev, pbest, pbestprev, pfirst, plast;
 	float i, j;
 
-	plist = world;
+	plist = NULL;
 
 	FOREACH_CLIENT(true, LAMBDA(it.(field) = 0));
 
@@ -715,12 +710,12 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 	});
 	// Now plist points to the whole list.
 
-	pfirst = plast = world;
+	pfirst = plast = NULL;
 
 	i = j = 0;
 	while(plist)
 	{
-		pprev = pbestprev = world;
+		pprev = pbestprev = NULL;
 		pbest = plist;
 		for(p = plist; (pprev = p), (p = p.chain); )
 		{
@@ -732,11 +727,11 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 		}
 
 		// remove pbest out of the chain
-		if(pbestprev == world)
+		if(pbestprev == NULL)
 			plist = pbest.chain;
 		else
 			pbestprev.chain = pbest.chain;
-		pbest.chain = world;
+		pbest.chain = NULL;
 
 		++i;
 		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, 0))

@@ -1,11 +1,11 @@
 // targeted (directional) mode
-void trigger_impulse_touch1()
-{SELFPARAM();
+void trigger_impulse_touch1(entity this)
+{
 	entity targ;
 	float pushdeltatime;
 	float str;
 
-	if (self.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -13,55 +13,55 @@ void trigger_impulse_touch1()
 
 	EXACTTRIGGER_TOUCH;
 
-	targ = find(world, targetname, self.target);
+	targ = find(NULL, targetname, this.target);
 	if(!targ)
 	{
-		objerror("trigger_force without a (valid) .target!\n");
-		remove(self);
+		objerror(this, "trigger_force without a (valid) .target!\n");
+		remove(this);
 		return;
 	}
 
 #ifdef SVQC
-	str = min(self.radius, vlen(self.origin - other.origin));
+	str = min(this.radius, vlen(this.origin - other.origin));
 #elif defined(CSQC)
-	str = min(self.radius, vlen(self.origin - other.move_origin));
+	str = min(this.radius, vlen(this.origin - other.move_origin));
 #endif
 
-	if(self.falloff == 1)
-		str = (str / self.radius) * self.strength;
-	else if(self.falloff == 2)
-		str = (1 - (str / self.radius)) * self.strength;
+	if(this.falloff == 1)
+		str = (str / this.radius) * this.strength;
+	else if(this.falloff == 2)
+		str = (1 - (str / this.radius)) * this.strength;
 	else
-		str = self.strength;
+		str = this.strength;
 
 	pushdeltatime = time - other.lastpushtime;
 	if (pushdeltatime > 0.15) pushdeltatime = 0;
 	other.lastpushtime = time;
 	if(!pushdeltatime) return;
 
-	if(self.spawnflags & 64)
+	if(this.spawnflags & 64)
 	{
 #ifdef SVQC
-		float addspeed = str - other.velocity * normalize(targ.origin - self.origin);
+		float addspeed = str - other.velocity * normalize(targ.origin - this.origin);
 		if (addspeed > 0)
 		{
 			float accelspeed = min(8 * pushdeltatime * str, addspeed);
-			other.velocity += accelspeed * normalize(targ.origin - self.origin);
+			other.velocity += accelspeed * normalize(targ.origin - this.origin);
 		}
 #elif defined(CSQC)
-		float addspeed = str - other.move_velocity * normalize(targ.origin - self.origin);
+		float addspeed = str - other.move_velocity * normalize(targ.origin - this.origin);
 		if (addspeed > 0)
 		{
 			float accelspeed = min(8 * pushdeltatime * str, addspeed);
-			other.move_velocity += accelspeed * normalize(targ.origin - self.origin);
+			other.move_velocity += accelspeed * normalize(targ.origin - this.origin);
 		}
 #endif
 	}
 	else
 #ifdef SVQC
-		other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
+		other.velocity = other.velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
 #elif defined(CSQC)
-		other.move_velocity = other.move_velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
+		other.move_velocity = other.move_velocity + normalize(targ.origin - this.origin) * str * pushdeltatime;
 #endif
 
 #ifdef SVQC
@@ -74,11 +74,11 @@ void trigger_impulse_touch1()
 }
 
 // Directionless (accelerator/decelerator) mode
-void trigger_impulse_touch2()
-{SELFPARAM();
+void trigger_impulse_touch2(entity this)
+{
 	float pushdeltatime;
 
-	if (self.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -93,21 +93,21 @@ void trigger_impulse_touch2()
 
 	// div0: ticrate independent, 1 = identity (not 20)
 #ifdef SVQC
-	other.velocity = other.velocity * pow(self.strength, pushdeltatime);
+	other.velocity = other.velocity * pow(this.strength, pushdeltatime);
 
 	UpdateCSQCProjectile(other);
 #elif defined(CSQC)
-	other.move_velocity = other.move_velocity * pow(self.strength, pushdeltatime);
+	other.move_velocity = other.move_velocity * pow(this.strength, pushdeltatime);
 #endif
 }
 
 // Spherical (gravity/repulsor) mode
-void trigger_impulse_touch3()
-{SELFPARAM();
+void trigger_impulse_touch3(entity this)
+{
 	float pushdeltatime;
 	float str;
 
-	if (self.active != ACTIVE_ACTIVE)
+	if (this.active != ACTIVE_ACTIVE)
 		return;
 
 	if (!isPushable(other))
@@ -120,27 +120,27 @@ void trigger_impulse_touch3()
 	other.lastpushtime = time;
 	if(!pushdeltatime) return;
 
-	setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
+	setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
 
 #ifdef SVQC
-	str = min(self.radius, vlen(self.origin - other.origin));
+	str = min(this.radius, vlen(this.origin - other.origin));
 #elif defined(CSQC)
-	str = min(self.radius, vlen(self.origin - other.move_origin));
+	str = min(this.radius, vlen(this.origin - other.move_origin));
 #endif
 
-	if(self.falloff == 1)
-		str = (1 - str / self.radius) * self.strength; // 1 in the inside
-	else if(self.falloff == 2)
-		str = (str / self.radius) * self.strength; // 0 in the inside
+	if(this.falloff == 1)
+		str = (1 - str / this.radius) * this.strength; // 1 in the inside
+	else if(this.falloff == 2)
+		str = (str / this.radius) * this.strength; // 0 in the inside
 	else
-		str = self.strength;
+		str = this.strength;
 
 #ifdef SVQC
-	other.velocity = other.velocity + normalize(other.origin - self.origin) * str * pushdeltatime;
+	other.velocity = other.velocity + normalize(other.origin - this.origin) * str * pushdeltatime;
 
 	UpdateCSQCProjectile(other);
 #elif defined(CSQC)
-	other.move_velocity = other.move_velocity + normalize(other.move_origin - self.origin) * str * pushdeltatime;
+	other.move_velocity = other.move_velocity + normalize(other.move_origin - this.origin) * str * pushdeltatime;
 #endif
 }
 
@@ -179,41 +179,40 @@ bool trigger_impulse_send(entity this, entity to, int sf)
 	return true;
 }
 
-void trigger_impulse_link()
+void trigger_impulse_link(entity this)
 {
-    SELFPARAM();
-	trigger_link(self, trigger_impulse_send);
+	trigger_link(this, trigger_impulse_send);
 }
 
 spawnfunc(trigger_impulse)
 {
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
-	trigger_init(self);
+	trigger_init(this);
 
-	if(self.radius)
+	if(this.radius)
 	{
-		if(!self.strength) self.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
-		setorigin(self, self.origin);
-		setsize(self, '-1 -1 -1' * self.radius,'1 1 1' * self.radius);
-		self.touch = trigger_impulse_touch3;
+		if(!this.strength) this.strength = 2000 * autocvar_g_triggerimpulse_radial_multiplier;
+		setorigin(this, this.origin);
+		setsize(this, '-1 -1 -1' * this.radius,'1 1 1' * this.radius);
+		settouch(this, trigger_impulse_touch3);
 	}
 	else
 	{
-		if(self.target)
+		if(this.target)
 		{
-			if(!self.strength) self.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
-			self.touch = trigger_impulse_touch1;
+			if(!this.strength) this.strength = 950 * autocvar_g_triggerimpulse_directional_multiplier;
+			settouch(this, trigger_impulse_touch1);
 		}
 		else
 		{
-			if(!self.strength) self.strength = 0.9;
-			self.strength = pow(self.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
-			self.touch = trigger_impulse_touch2;
+			if(!this.strength) this.strength = 0.9;
+			this.strength = pow(this.strength, autocvar_g_triggerimpulse_accel_power) * autocvar_g_triggerimpulse_accel_multiplier;
+			settouch(this, trigger_impulse_touch2);
 		}
 	}
 
-	trigger_impulse_link();
+	trigger_impulse_link(this);
 }
 #elif defined(CSQC)
 NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
@@ -224,18 +223,16 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_IMPULSE, bool isnew)
 	this.falloff = ReadByte();
 	this.active = ReadByte();
 
-	trigger_common_read(true);
+	trigger_common_read(this, true);
 	return = true;
 
 	this.classname = "trigger_impulse";
 	this.solid = SOLID_TRIGGER;
 	this.entremove = trigger_remove_generic;
-	//this.draw = trigger_draw_generic;
-	this.drawmask = MASK_NORMAL;
 	this.move_time = time;
 
-	if(this.radius) { this.move_touch = trigger_impulse_touch3; }
-	else if(this.target) { this.move_touch = trigger_impulse_touch1; }
-	else { this.move_touch = trigger_impulse_touch2; }
+	if (this.radius) { settouch(this, trigger_impulse_touch3); }
+	else if (this.target) { settouch(this, trigger_impulse_touch1); }
+	else { settouch(this, trigger_impulse_touch2); }
 }
 #endif

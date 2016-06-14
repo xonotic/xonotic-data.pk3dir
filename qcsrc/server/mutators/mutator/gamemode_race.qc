@@ -57,7 +57,7 @@ void havocbot_role_race(entity this)
 		this.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 		navigation_goalrating_start(this);
 
-		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
+		for(e = NULL; (e = find(e, classname, "trigger_race_checkpoint")) != NULL; )
 		{
 			if(e.cnt == this.race_checkpoint)
 			{
@@ -99,7 +99,7 @@ void race_ScoreRules()
 void race_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":race:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(strcat(":race:", mode, ":", ((actor != NULL) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 float WinningCondition_Race(float fraglimit)
@@ -141,24 +141,26 @@ float WinningCondition_QualifyingThenRace(float limit)
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
-{SELFPARAM();
-	self.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
-	float f = floor(self.race_movetime_frac);
-	self.race_movetime_frac -= f;
-	self.race_movetime_count += f;
-	self.race_movetime = self.race_movetime_frac + self.race_movetime_count;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.race_movetime_frac += PHYS_INPUT_TIMELENGTH;
+	float f = floor(player.race_movetime_frac);
+	player.race_movetime_frac -= f;
+	player.race_movetime_count += f;
+	player.race_movetime = player.race_movetime_frac + player.race_movetime_count;
 
 #ifdef SVQC
-	if(IS_PLAYER(self))
+	if(IS_PLAYER(player))
 	{
-		if (self.race_penalty)
-			if (time > self.race_penalty)
-				self.race_penalty = 0;
-		if(self.race_penalty)
+		if (player.race_penalty)
+			if (time > player.race_penalty)
+				player.race_penalty = 0;
+		if(player.race_penalty)
 		{
-			self.velocity = '0 0 0';
-			self.movetype = MOVETYPE_NONE;
-			self.disableclientprediction = 2;
+			player.velocity = '0 0 0';
+			player.movetype = MOVETYPE_NONE;
+			player.disableclientprediction = 2;
 		}
 	}
 #endif
@@ -171,8 +173,8 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 	// ensure nothing EVIL is being done (i.e. div0_evade)
 	// this hinders joystick users though
 	// but it still gives SOME analog control
-	wishvel.x = fabs(self.movement.x);
-	wishvel.y = fabs(self.movement.y);
+	wishvel.x = fabs(player.movement.x);
+	wishvel.y = fabs(player.movement.y);
 	if(wishvel.x != 0 && wishvel.y != 0 && wishvel.x != wishvel.y)
 	{
 		wishvel.z = 0;
@@ -180,43 +182,41 @@ MUTATOR_HOOKFUNCTION(rc, PlayerPhysics)
 		if(wishvel.x >= 2 * wishvel.y)
 		{
 			// pure X motion
-			if(self.movement.x > 0)
-				self.movement_x = wishspeed;
+			if(player.movement.x > 0)
+				player.movement_x = wishspeed;
 			else
-				self.movement_x = -wishspeed;
-			self.movement_y = 0;
+				player.movement_x = -wishspeed;
+			player.movement_y = 0;
 		}
 		else if(wishvel.y >= 2 * wishvel.x)
 		{
 			// pure Y motion
-			self.movement_x = 0;
-			if(self.movement.y > 0)
-				self.movement_y = wishspeed;
+			player.movement_x = 0;
+			if(player.movement.y > 0)
+				player.movement_y = wishspeed;
 			else
-				self.movement_y = -wishspeed;
+				player.movement_y = -wishspeed;
 		}
 		else
 		{
 			// diagonal
-			if(self.movement.x > 0)
-				self.movement_x = M_SQRT1_2 * wishspeed;
+			if(player.movement.x > 0)
+				player.movement_x = M_SQRT1_2 * wishspeed;
 			else
-				self.movement_x = -M_SQRT1_2 * wishspeed;
-			if(self.movement.y > 0)
-				self.movement_y = M_SQRT1_2 * wishspeed;
+				player.movement_x = -M_SQRT1_2 * wishspeed;
+			if(player.movement.y > 0)
+				player.movement_y = M_SQRT1_2 * wishspeed;
 			else
-				self.movement_y = -M_SQRT1_2 * wishspeed;
+				player.movement_y = -M_SQRT1_2 * wishspeed;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 {
 	float s;
 
-	Score_NicePrint(world);
+	Score_NicePrint(NULL);
 
 	race_ClearRecords();
 	PlayerScore_Sort(race_place, 0, 1, 0);
@@ -240,20 +240,20 @@ MUTATOR_HOOKFUNCTION(rc, reset_map_global)
 		cvar_set("timelimit", ftos(race_timelimit));
 		race_ScoreRules();
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, ClientConnect)
-{SELFPARAM();
-	race_PreparePlayer();
-	self.race_checkpoint = -1;
+{
+	entity player = M_ARGV(0, entity);
+
+	race_PreparePlayer(player);
+	player.race_checkpoint = -1;
 
 	string rr = RACE_RECORD;
 
-	if(IS_REAL_CLIENT(self))
+	if(IS_REAL_CLIENT(player))
 	{
-		msg_entity = self;
+		msg_entity = player;
 		race_send_recordtime(MSG_ONE);
 		race_send_speedaward(MSG_ONE);
 
@@ -267,88 +267,93 @@ MUTATOR_HOOKFUNCTION(rc, ClientConnect)
 			race_SendRankings(i, 0, 0, MSG_ONE);
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, MakePlayerObserver)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(g_race_qualifying)
-	if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
-		self.frags = FRAGS_LMS_LOSER;
+	if(PlayerScore_Add(player, SP_RACE_FASTEST, 0))
+		player.frags = FRAGS_LMS_LOSER;
 	else
-		self.frags = FRAGS_SPECTATOR;
+		player.frags = FRAGS_SPECTATOR;
 
-	race_PreparePlayer();
-	self.race_checkpoint = -1;
-
-	return false;
+	race_PreparePlayer(player);
+	player.race_checkpoint = -1;
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerSpawn)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+	entity spawn_spot = M_ARGV(1, entity);
+
 	if(spawn_spot.target == "")
 		// Emergency: this wasn't a real spawnpoint. Can this ever happen?
-		race_PreparePlayer();
+		race_PreparePlayer(player);
 
 	// if we need to respawn, do it right
-	self.race_respawn_checkpoint = self.race_checkpoint;
-	self.race_respawn_spotref = spawn_spot;
+	player.race_respawn_checkpoint = player.race_checkpoint;
+	player.race_respawn_spotref = spawn_spot;
 
-	self.race_place = 0;
-
-	return false;
+	player.race_place = 0;
 }
 
 MUTATOR_HOOKFUNCTION(rc, PutClientInServer)
-{SELFPARAM();
-	if(IS_PLAYER(self))
+{
+	entity player = M_ARGV(0, entity);
+
+	if(IS_PLAYER(player))
 	if(!gameover)
 	{
-		if(self.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
-			race_PreparePlayer();
+		if(player.killcount == FRAGS_SPECTATOR /* initial spawn */ || g_race_qualifying) // spawn
+			race_PreparePlayer(player);
 		else // respawn
-			race_RetractPlayer();
+			race_RetractPlayer(player);
 
-		race_AbandonRaceCheck(self);
+		race_AbandonRaceCheck(player);
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, PlayerDies)
 {
+	entity frag_target = M_ARGV(2, entity);
+	
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	race_AbandonRaceCheck(frag_target);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, HavocBot_ChooseRole)
-{SELFPARAM();
-	self.havocbot_role = havocbot_role_race;
+{
+	entity bot = M_ARGV(0, entity);
+
+	bot.havocbot_role = havocbot_role_race;
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
-{SELFPARAM();
-	if(self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.cvar_cl_allow_uidtracking == 1 && player.cvar_cl_allow_uid2name == 1)
 	{
-		if (!self.stored_netname)
-			self.stored_netname = strzone(uid2name(self.crypto_idfp));
-		if(self.stored_netname != self.netname)
+		if (!player.stored_netname)
+			player.stored_netname = strzone(uid2name(player.crypto_idfp));
+		if(player.stored_netname != player.netname)
 		{
-			db_put(ServerProgsDB, strcat("/uid2name/", self.crypto_idfp), self.netname);
-			strunzone(self.stored_netname);
-			self.stored_netname = strzone(self.netname);
+			db_put(ServerProgsDB, strcat("/uid2name/", player.crypto_idfp), player.netname);
+			strunzone(player.stored_netname);
+			player.stored_netname = strzone(player.netname);
 		}
 	}
 
-	if (!IS_OBSERVER(self))
+	if (!IS_OBSERVER(player))
 	{
-		if (vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed)
+		if(vdist(player.velocity - player.velocity_z * '0 0 1', >, speedaward_speed))
 		{
-			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
-			speedaward_holder = self.netname;
-			speedaward_uid = self.crypto_idfp;
+			speedaward_speed = vlen(player.velocity - player.velocity_z * '0 0 1');
+			speedaward_holder = player.netname;
+			speedaward_uid = player.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
 		if (speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
@@ -367,21 +372,17 @@ MUTATOR_HOOKFUNCTION(rc, GetPressedKeys)
 			}
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, ForbidPlayerScore_Clear)
 {
 	if(g_race_qualifying)
 		return true; // in qualifying, you don't lose score by observing
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = race_teams;
-	return false;
+	M_ARGV(0, float) = race_teams;
 }
 
 MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
@@ -389,12 +390,13 @@ MUTATOR_HOOKFUNCTION(rc, Scores_CountFragsRemaining)
 	// announce remaining frags if not in qualifying mode
 	if(!g_race_qualifying)
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, GetRecords)
 {
+	int record_page = M_ARGV(0, int);
+	string ret_string = M_ARGV(1, string);
+
 	for(int i = record_page * 200; i < MapInfo_count && i < record_page * 200 + 200; ++i)
 	{
 		if(MapInfo_Get_ByID(i))
@@ -409,39 +411,40 @@ MUTATOR_HOOKFUNCTION(rc, GetRecords)
 		}
 	}
 
-	return false;
+	M_ARGV(1, string) = ret_string;
 }
 
 MUTATOR_HOOKFUNCTION(rc, FixClientCvars)
 {
-	stuffcmd(fix_client, "cl_cmd settemp cl_movecliptokeyboard 2\n");
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	stuffcmd(player, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 }
 
 MUTATOR_HOOKFUNCTION(rc, CheckRules_World)
 {
+	float checkrules_timelimit = M_ARGV(1, float);
+	float checkrules_fraglimit = M_ARGV(2, float);
+
 	if(checkrules_timelimit >= 0)
 	{
 		if(!g_race_qualifying)
 		{
-			ret_float = WinningCondition_Race(checkrules_fraglimit);
+			M_ARGV(0, float) = WinningCondition_Race(checkrules_fraglimit);
 			return true;
 		}
 		else if(g_race_qualifying == 2)
 		{
-			ret_float = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
+			M_ARGV(0, float) = WinningCondition_QualifyingThenRace(checkrules_fraglimit);
 			return true;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(rc, ReadLevelCvars)
 {
 	if(g_race_qualifying == 2)
 		warmup_stage = 0;
-	return false;
 }
 
 void race_Initialize()

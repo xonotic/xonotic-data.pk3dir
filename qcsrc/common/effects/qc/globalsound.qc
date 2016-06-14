@@ -105,7 +105,7 @@
 			o.y = ReadCoord();
 			o.z = ReadCoord();
 			// TODO: is this really what we want to be doing? Footsteps that follow the player at head height?
-			if (who == player_currententnum) e = findfloat(world, entnum, who);  // play at camera position for full volume
+			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
 			if (e)
 			{
@@ -136,7 +136,7 @@
 			o.x = ReadCoord();
 			o.y = ReadCoord();
 			o.z = ReadCoord();
-			if (who == player_currententnum) e = findfloat(world, entnum, who);  // play at camera position for full volume
+			if (who == player_currententnum) e = findfloat(NULL, entnum, who);  // play at camera position for full volume
 			else if (e) e.origin = o;
 			if (e)
 			{

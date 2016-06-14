@@ -107,15 +107,15 @@ void W_PROP_reload(int chan, entity to)
         if (f) f(it, chan);
     });
 }
-void W_PROP_think()
+void W_PROP_think(entity this)
 {
     W_PROP_reload(MSG_ALL, NULL);
 }
 STATIC_INIT_LATE(W_PROP_reloader)
 {
-    SELFPARAM();
     entity e = W_PROP_reloader = new_pure(W_PROP_reloader);
-    WITHSELF(e, (e.think = W_PROP_think)());
+    setthink(e, W_PROP_think);
+    W_PROP_think(e);
 }
 #endif
 
