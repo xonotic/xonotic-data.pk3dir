@@ -1,25 +1,6 @@
-#ifdef INTERFACE
-CLASS(XonoticPlayerList) EXTENDS(XonoticListBox)
-	ATTRIB(XonoticPlayerList, rowsPerItem, float, 1)
-	METHOD(XonoticPlayerList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayerList, drawListBoxItem, void(entity, float, vector, float))
-	ATTRIB(XonoticPlayerList, allowFocusSound, float, 0)
-	ATTRIB(XonoticPlayerList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticPlayerList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticPlayerList, columnNameSize, float, 0)
-	ATTRIB(XonoticPlayerList, columnScoreOrigin, float, 0)
-	ATTRIB(XonoticPlayerList, columnScoreSize, float, 0)
-	ATTRIB(XonoticPlayerList, realUpperMargin, float, 0)
-	ATTRIB(XonoticPlayerList, origin, vector, '0 0 0')
-	ATTRIB(XonoticPlayerList, itemAbsSize, vector, '0 0 0')
-	METHOD(XonoticPlayerList, setPlayerList, void(entity, string))
-	METHOD(XonoticPlayerList, getPlayerList, string(entity, float, float))
-	ATTRIB(XonoticPlayerList, playerList, float, -1)
-ENDCLASS(XonoticPlayerList)
-entity makeXonoticPlayerList();
-#endif
+#include "playerlist.qh"
 
-#ifdef IMPLEMENTATION
+.float realUpperMargin2;
 
 const float PLAYERPARM_SCORE = 0;
 const float PLAYERPARM_PING = 1;
@@ -30,7 +11,7 @@ const float PLAYERPARM_COUNT = 4;
 entity makeXonoticPlayerList()
 {
 	entity me;
-	me = spawnXonoticPlayerList();
+	me = NEW(XonoticPlayerList);
 	me.configureXonoticListBox(me);
 	return me;
 }
@@ -92,7 +73,7 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.columnScoreOrigin = me.columnNameOrigin + me.columnNameSize + me.realFontSize.x;
 }
 
-void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticPlayerList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	string score;
@@ -125,7 +106,7 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 		if((t = strstrofs(score, ",", 0)) >= 0)
 			score = substring(score, 0, t);
 
-		if(stof(score) == -666)
+		if(stof(score) == FRAGS_SPECTATOR)
 			score = _("spectator");
 	}
 
@@ -135,5 +116,3 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 	score = draw_TextShortenToWidth(score, me.columnScoreSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin2 * eY + (me.columnScoreOrigin + 1.00 * (me.columnScoreSize - draw_TextWidth(score, 1, me.realFontSize))) * eX, score, me.realFontSize, rgb, 1, 0);
 }
-
-#endif

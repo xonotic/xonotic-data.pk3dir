@@ -1,13 +1,4 @@
-#if defined(CSQC)
-	#include "../dpdefs/csprogsdefs.qh"
-	#include "defs.qh"
-	#include "../common/util.qh"
-	#include "autocvars.qh"
-	#include "bgmscript.qh"
-	#include "main.qh"
-#elif defined(MENUQC)
-#elif defined(SVQC)
-#endif
+#include "bgmscript.qh"
 
 #define CONSTANT_SPEED_DECAY
 
@@ -15,12 +6,12 @@ float bgmscriptbuf;
 float bgmscriptbufsize;
 float bgmscriptbufloaded;
 
-.float bgmscriptline;
-.float bgmscriptline0;
-.float bgmscriptvolume;
-.float bgmscripttime;
-.float bgmscriptstate;
-.float bgmscriptstatetime;
+class(BGMScript) .float bgmscriptline;
+class(BGMScript) .float bgmscriptline0;
+class(BGMScript) .float bgmscriptvolume;
+class(BGMScript) .float bgmscripttime;
+class(BGMScript) .float bgmscriptstate;
+class(BGMScript) .float bgmscriptstatetime;
 
 float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 {
@@ -142,7 +133,7 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			printf("ERROR: bgmscript does not define %s\n", e.bgmscript);
+			LOG_INFOF("ERROR: bgmscript does not define %s\n", e.bgmscript);
 			strunzone(e.bgmscript);
 			e.bgmscript = string_null;
 		}
@@ -177,7 +168,7 @@ float GetTimeForAmplitude(entity e, float amp)
 	}
 }
 
-float BGMScript(entity e)
+float doBGMScript(entity e)
 {
 	float amp, vel;
 

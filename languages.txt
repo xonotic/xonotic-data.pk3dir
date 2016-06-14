@@ -1,17 +1,20 @@
-ast Asturian "Asturianu (52%)"
-de German "Deutsch (100%)"
-en English "English"
-es Spanish "Español (78%)"
-fr French "Français (100%)"
-it Italian "Italiano (100%)"
-hu Hungarian "Magyar (53%)"
-nl Dutch "Nederlands (57%)"
-pl Polish "Polski (70%)"
-pt Portuguese "Português (53%)"
-ro Romanian "Romana (47%)"
-fi Finnish "Suomi (43%)"
-el Greek "Ελληνική (32%)"
-be Belarusian "Беларуская (81%)"
-bg Bulgarian "Български (81%)"
-ru Russian "Русский (100%)"
-uk Ukrainian "Українська (67%)"
+ast   Asturian "Asturianu" 71%
+de    German "Deutsch" 98%
+de_CH German "Deutsch (Schweiz)" 98%
+en    English "English"
+en_AU English "English (Australia)" 75%
+es    Spanish "Español" 68%
+fr    French "Français" 98%
+it    Italian "Italiano" 98%
+hu    Hungarian "Magyar" 48%
+nl    Dutch "Nederlands" 43%
+pl    Polish "Polski" 64%
+pt    Portuguese "Português" 96%
+ro    Romanian "Romana" 86%
+fi    Finnish "Suomi" 34%
+zh_TW zh_TW "zh_TW" 63%
+el    Greek "Ελληνική" 34%
+be    Belarusian "Беларуская" 63%
+bg    Bulgarian "Български" 63%
+ru    Russian "Русский" 94%
+uk    Ukrainian "Українська" 59%

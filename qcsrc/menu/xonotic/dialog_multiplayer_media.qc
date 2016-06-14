@@ -1,20 +1,18 @@
-#ifdef INTERFACE
-CLASS(XonoticMediaTab) EXTENDS(XonoticTab)
-	METHOD(XonoticMediaTab, fill, void(entity))
-	ATTRIB(XonoticMediaTab, title, string, _("Media"))
-	ATTRIB(XonoticMediaTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMediaTab, rows, float, 23)
-	ATTRIB(XonoticMediaTab, columns, float, 3)
-	ATTRIB(XonoticMediaTab, name, string, "Media")
-ENDCLASS(XonoticMediaTab)
-entity makeXonoticMediaTab();
-#endif
+#include "dialog_multiplayer_media.qh"
 
-#ifdef IMPLEMENTATION
+#include "demolist.qh"
+#include "dialog_multiplayer_media_demo.qh"
+#include "dialog_multiplayer_media_screenshot.qh"
+#include "dialog_multiplayer_media_musicplayer.qh"
+#include "dialog_multiplayer_media_demo_timeconfirm.qh"
+#include "dialog_multiplayer_media_demo_startconfirm.qh"
+
+#include "tabcontroller.qh"
+
 entity makeXonoticMediaTab()
 {
 	entity me;
-	me = spawnXonoticMediaTab();
+	me = NEW(XonoticMediaTab);
 	me.configureDialog(me);
 	return me;
 }
@@ -31,4 +29,3 @@ void XonoticMediaTab_fill(entity me)
 	me.gotoRC(me, 3, 0);
 		me.TD(me, me.rows - 2, me.columns, mc);
 }
-#endif

@@ -1,19 +1,19 @@
-#ifdef INTERFACE
-CLASS(XonoticInputSettingsTab) EXTENDS(XonoticTab)
-	METHOD(XonoticInputSettingsTab, fill, void(entity))
-	ATTRIB(XonoticInputSettingsTab, title, string, _("Input"))
-	ATTRIB(XonoticInputSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticInputSettingsTab, rows, float, 15.5)
-	ATTRIB(XonoticInputSettingsTab, columns, float, 6.2) // added extra .2 for center space
-ENDCLASS(XonoticInputSettingsTab)
-entity makeXonoticInputSettingsTab();
-#endif
+#include "dialog_settings_input.qh"
 
-#ifdef IMPLEMENTATION
+#include "dialog_settings_input_userbind.qh"
+#include "skinlist.qh"
+#include "slider_resolution.qh"
+#include "../item/checkbox.qh"
+#include "keybinder.qh"
+#include "textlabel.qh"
+#include "button.qh"
+#include "slider.qh"
+#include "checkbox.qh"
+
 entity makeXonoticInputSettingsTab()
 {
 	entity me;
-	me = spawnXonoticInputSettingsTab();
+	me = NEW(XonoticInputSettingsTab);
 	me.configureDialog(me);
 	return me;
 }
@@ -57,13 +57,16 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Mouse")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(1, 32, 0.2, "sensitivity"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(1, 32, 0.2, "sensitivity",
+			_("Mouse speed multiplier")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_filter", _("Smooth aiming")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "m_filter", _("Smooth aiming"),
+			_("Smoothes the mouse movement, but makes aiming slightly less responsive")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1.022, "m_pitch", _("Invert aiming")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(1.022, "m_pitch", _("Invert aiming"),
+			_("Invert mouse movement on the Y-axis")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_mouse_absolute", _("Use system mouse positioning")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "menu_mouse_absolute", _("Use system mouse positioning"), "-"));
 			makeMulti(e, "hud_cursormode");
 			e.onClick = CheckBox_Click_Redisplay;
 			e.onClickEntity = e;
@@ -71,7 +74,10 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
 	me.TR(me);
 		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_dgamouse", _("Disable system mouse acceleration")));
+		{
+			me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "vid_dgamouse", _("Disable system mouse acceleration"),
+				_("Make use of DGA mouse input")));
+		}
 		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Disable system mouse acceleration")));
 		else
@@ -84,7 +90,8 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Other")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it"),
+			_("Allow the console toggling bind to also close the console")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
 			e.sendCvars = true;
@@ -113,4 +120,3 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.disabled = 1; // the option is never available in this case, just there for show
 		}
 }
-#endif

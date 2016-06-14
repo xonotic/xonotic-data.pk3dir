@@ -1,25 +1,15 @@
-#ifndef COMMANDBUTTON_CLOSE
-# define COMMANDBUTTON_CLOSE 1
-# define COMMANDBUTTON_APPLY 2
-//# define COMMANDBUTTON_REVERT 4
-#endif
+#include "commandbutton.qh"
 
-#ifdef INTERFACE
-CLASS(XonoticCommandButton) EXTENDS(XonoticButton)
-	METHOD(XonoticCommandButton, configureXonoticCommandButton, void(entity, string, vector, string, float))
-	ATTRIB(XonoticCommandButton, onClickCommand, string, string_null)
-	ATTRIB(XonoticCommandButton, flags, float, 0)
-ENDCLASS(XonoticCommandButton)
-entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, float closesMenu);
-#endif
-
-#ifdef IMPLEMENTATION
-entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, float theFlags)
+entity makeXonoticCommandButton_T(string theText, vector theColor, string theCommand, float theFlags, string theTooltip)
 {
 	entity me;
-	me = spawnXonoticCommandButton();
-	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags);
+	me = NEW(XonoticCommandButton);
+	me.configureXonoticCommandButton(me, theText, theColor, theCommand, theFlags, theTooltip);
 	return me;
+}
+entity makeXonoticCommandButton(string theText, vector theColor, string theCommand, float theFlags)
+{
+	return makeXonoticCommandButton_T(theText, theColor, theCommand, theFlags, string_null);
 }
 
 void XonoticCommandButton_Click(entity me, entity other)
@@ -33,12 +23,11 @@ void XonoticCommandButton_Click(entity me, entity other)
 		m_goto(string_null);
 }
 
-void XonoticCommandButton_configureXonoticCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags)
+void XonoticCommandButton_configureXonoticCommandButton(entity me, string theText, vector theColor, string theCommand, float theFlags, string theTooltip)
 {
-	me.configureXonoticButton(me, theText, theColor);
+	me.configureXonoticButton(me, theText, theColor, theTooltip);
 	me.onClickCommand = theCommand;
 	me.flags = theFlags;
 	me.onClick = XonoticCommandButton_Click;
 	me.onClickEntity = me;
 }
-#endif

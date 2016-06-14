@@ -1,5 +1,4 @@
-#ifndef AIM_H
-#define AIM_H
+#pragma once
 /*
  * Globals and Fields
  */
@@ -75,8 +74,8 @@ vector shotdir;
 .vector bot_5th_order_aimfilter;
 .vector bot_olddesiredang;
 
-.vector bot_aimselforigin;
-.vector bot_aimselfvelocity;
+//.vector bot_aimorigin;
+//.vector bot_aimvelocity;
 .vector bot_aimtargorigin;
 .vector bot_aimtargvelocity;
 
@@ -86,15 +85,15 @@ vector shotdir;
  * Functions
  */
 
-void lag_update();
-void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4);
+float lag_additem(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4);
+void lag_update(entity this);
+void bot_lagfunc(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4);
 
-float bot_shouldattack(entity e);
-float bot_aimdir(vector v, float maxfiredeviation);
-float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
+float bot_shouldattack(entity this, entity targ);
+float bot_aimdir(entity this, vector v, float maxfiredeviation);
+bool bot_aim(entity this, float shotspeed, float shotspeedupward, float maxshottime, bool applygravity);
 float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore);
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay);
 
-.void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) lag_func;
-#endif
+.void(entity this, float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) lag_func;

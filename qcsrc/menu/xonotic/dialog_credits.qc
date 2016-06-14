@@ -1,17 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticCreditsDialog) EXTENDS(XonoticDialog)
-	METHOD(XonoticCreditsDialog, fill, void(entity))
-	METHOD(XonoticCreditsDialog, focusEnter, void(entity))
-	ATTRIB(XonoticCreditsDialog, title, string, _("Credits"))
-	ATTRIB(XonoticCreditsDialog, color, vector, SKINCOLOR_DIALOG_CREDITS)
-	ATTRIB(XonoticCreditsDialog, intendedWidth, float, SKINWIDTH_CREDITS)
-	ATTRIB(XonoticCreditsDialog, rows, float, SKINROWS_CREDITS)
-	ATTRIB(XonoticCreditsDialog, columns, float, 2)
-	ATTRIB(XonoticCreditsDialog, creditsList, entity, NULL)
-ENDCLASS(XonoticCreditsDialog)
-#endif
+#include "dialog_credits.qh"
 
-#ifdef IMPLEMENTATION
+#include "credits.qh"
+#include "button.qh"
+#include "../item/dialog.qh"
+
 void XonoticCreditsDialog_fill(entity me)
 {
 	entity e;
@@ -26,4 +18,3 @@ void XonoticCreditsDialog_focusEnter(entity me)
 {
 	me.creditsList.scrolling = time + 1;
 }
-#endif

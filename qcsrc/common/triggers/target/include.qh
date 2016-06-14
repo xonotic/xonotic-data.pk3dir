@@ -1,0 +1,6 @@
+#ifndef TRIGGERS_TARGET_INCLUDE_H
+#define TRIGGERS_TARGET_INCLUDE_H
+
+#include "music.qh"
+
+#endif

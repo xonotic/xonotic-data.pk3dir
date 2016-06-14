@@ -1,0 +1,7 @@
+#ifndef CL_MINIGAMES_HUD_H
+#define CL_MINIGAMES_HUD_H
+
+float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary);
+void HUD_Minigame_Mouse();
+
+#endif

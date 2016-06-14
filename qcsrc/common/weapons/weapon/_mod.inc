@@ -1,0 +1,21 @@
+// generated file; do not modify
+#include <common/weapons/weapon/arc.qc>
+#include <common/weapons/weapon/blaster.qc>
+#include <common/weapons/weapon/crylink.qc>
+#include <common/weapons/weapon/devastator.qc>
+#include <common/weapons/weapon/electro.qc>
+#include <common/weapons/weapon/fireball.qc>
+#include <common/weapons/weapon/hagar.qc>
+#include <common/weapons/weapon/hlac.qc>
+#include <common/weapons/weapon/hook.qc>
+#include <common/weapons/weapon/machinegun.qc>
+#include <common/weapons/weapon/minelayer.qc>
+#include <common/weapons/weapon/mortar.qc>
+#include <common/weapons/weapon/porto.qc>
+#include <common/weapons/weapon/rifle.qc>
+#include <common/weapons/weapon/seeker.qc>
+#include <common/weapons/weapon/shockwave.qc>
+#include <common/weapons/weapon/shotgun.qc>
+#include <common/weapons/weapon/tuba.qc>
+#include <common/weapons/weapon/vaporizer.qc>
+#include <common/weapons/weapon/vortex.qc>

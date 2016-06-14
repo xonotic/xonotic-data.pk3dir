@@ -1,0 +1,32 @@
+#pragma once
+
+#ifndef QCC_SUPPORT_STRUCT
+	#define _STRUCT_DECLARE(x, id, type, END) noref type x##_##id;
+	#define STRUCT_DECLARE(id, s) s(_STRUCT_DECLARE, id)
+
+	#define _STRUCT_PARAM_(x, id, type) type x##_##id,
+	#define _STRUCT_PARAM_END(x, id, type) type x##_##id
+	#define _STRUCT_PARAM(x, id, type, isend) _STRUCT_PARAM_##isend(x, id, type)
+	#define STRUCT_PARAM(id, s) s(_STRUCT_PARAM, id)
+
+	#define _STRUCT_PASS_(x, id, type) x##_##id,
+	#define _STRUCT_PASS_END(x, id, type) x##_##id
+	#define _STRUCT_PASS(x, id, type, END) _STRUCT_PASS_##END(x, id, type)
+	#define STRUCT_PASS(id, s) s(_STRUCT_PASS, id)
+
+	#define _STRUCT_STORE_DST(_, it) it
+	#define _STRUCT_STORE_SRC(it, _) it
+	#define _CONCAT3_(a, b, c) a##b##c
+	#define _CONCAT3(a, b, c) _CONCAT3_(a, b, c)
+	#define _STRUCT_STORE(x, id, type, END) _CONCAT3(_STRUCT_STORE_DST x, _, id) = _CONCAT3(_STRUCT_STORE_SRC x, _, id);
+	#define STRUCT_STORE(from, to, s) s(_STRUCT_STORE, (from, to))
+
+	#define STRUCT(id, ...)
+#else
+	#define STRUCT_DECLARE(id, type) type id;
+	#define STRUCT_PARAM(id, type) type id
+	#define STRUCT_PASS(id, type) id
+	#define STRUCT_STORE(from, to, s) to = from
+	#define _STRUCT_MEMBER(my, id, type, END) type id;
+	#define STRUCT(id, s) struct STRUCT_##id { s(_STRUCT_MEMBER, ) };
+#endif

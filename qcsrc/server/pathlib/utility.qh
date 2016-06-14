@@ -1,0 +1,5 @@
+#pragma once
+
+float fsnap(float val,float fsize);
+entity pathlib_nodeatpoint(vector where);
+float tile_check_plus2(entity this, vector where);
