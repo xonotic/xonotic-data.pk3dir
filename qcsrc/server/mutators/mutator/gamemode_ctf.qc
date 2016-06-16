@@ -2561,9 +2561,9 @@ void ctf_SpawnTeam (string teamname, int teamcolor)
 {
 	entity this = new_pure(ctf_team);
 	this.netname = teamname;
-	this.cnt = teamcolor;
+	this.cnt = teamcolor - 1;
 	this.spawnfunc_checked = true;
-	spawnfunc_ctf_team(this);
+	this.team = teamcolor;
 }
 
 void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
@@ -2584,12 +2584,12 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	if(find(NULL, classname, "ctf_team") == NULL)
 	{
 		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.\n");
-		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
-		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
+		ctf_SpawnTeam("Red", NUM_TEAM_1);
+		ctf_SpawnTeam("Blue", NUM_TEAM_2);
 		if(ctf_teams >= 3)
-			ctf_SpawnTeam("Yellow", NUM_TEAM_3 - 1);
+			ctf_SpawnTeam("Yellow", NUM_TEAM_3);
 		if(ctf_teams >= 4)
-			ctf_SpawnTeam("Pink", NUM_TEAM_4 - 1);
+			ctf_SpawnTeam("Pink", NUM_TEAM_4);
 	}
 
 	ctf_ScoreRules(ctf_teams);
