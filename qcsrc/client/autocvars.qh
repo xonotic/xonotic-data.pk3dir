@@ -418,7 +418,7 @@ float autocvar_scoreboard_offset_left;
 float autocvar_scoreboard_offset_right;
 float autocvar_scoreboard_offset_vertical;
 float autocvar_scoreboard_respawntime_decimals;
-float autocvar_scoreboard_dynamichud = 1;
+bool autocvar_scoreboard_dynamichud = false;
 bool autocvar_v_flipped;
 float autocvar_vid_conheight;
 float autocvar_vid_conwidth;
