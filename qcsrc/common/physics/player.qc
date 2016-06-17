@@ -1330,6 +1330,9 @@ void PM_Main(entity this)
 	if (this.PlayerPhysplug)
 		if (this.PlayerPhysplug(this))
 			return;
+#elif defined(CSQC)
+	if(hud != HUD_NORMAL)
+		return; // no vehicle prediction (yet)
 #endif
 
 #ifdef SVQC
