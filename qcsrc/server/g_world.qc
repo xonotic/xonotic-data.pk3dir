@@ -1038,7 +1038,7 @@ float Map_Check(float position, float pass)
 		return 0;
 	}
 	else
-		LOG_TRACE( "Couldn't select '", filename, "'..\n" );
+		LOG_DEBUG( "Couldn't select '", filename, "'...\n" );
 
 	return 0;
 }
