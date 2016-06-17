@@ -620,8 +620,8 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(this);
-			this.move_origin = this.move_origin + TICRATE * this.move_velocity;
-			this.move_angles = this.move_angles + TICRATE * this.move_avelocity;
+			this.move_origin = this.move_origin + movedt * this.move_velocity;
+			this.move_angles = this.move_angles + movedt * this.move_avelocity;
 			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:
