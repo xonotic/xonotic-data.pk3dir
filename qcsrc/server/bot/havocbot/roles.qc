@@ -35,7 +35,7 @@ void havocbot_goalrating_items(entity this, float ratingscale, vector org, float
 		// Check if the item can be picked up safely
 		if(head.classname == "droppedweapon")
 		{
-			traceline(o, o + '0 0 -1500', true, world);
+			traceline(o, o + '0 0 -1500', true, NULL);
 
 			d = pointcontents(trace_endpos + '0 0 1');
 			if(d & CONTENT_WATER || d & CONTENT_SLIME || d & CONTENT_LAVA)
@@ -178,7 +178,7 @@ void havocbot_goalrating_enemyplayers(entity this, float ratingscale, vector org
 		// not falling
 		if((IS_ONGROUND(it)) == 0)
 		{
-			traceline(it.origin, it.origin + '0 0 -1500', true, world);
+			traceline(it.origin, it.origin + '0 0 -1500', true, NULL);
 			t = pointcontents(trace_endpos + '0 0 1');
 			if(t != CONTENT_SOLID )
 			if(t & CONTENT_WATER || t & CONTENT_SLIME || t & CONTENT_LAVA)

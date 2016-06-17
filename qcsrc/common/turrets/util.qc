@@ -1,17 +1,17 @@
 /*
-* Update self.tur_shotorg by getting up2date bone info
+* Update this.tur_shotorg by getting up2date bone info
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
 */
-float turret_tag_fire_update()
-{SELFPARAM();
-	if(!self.tur_head)
+float turret_tag_fire_update(entity this)
+{
+	if(!this.tur_head)
 	{
-		error("Call to turret_tag_fire_update with self.tur_head missing!\n");
-		self.tur_shotorg = '0 0 0';
+		LOG_DEBUG("Call to turret_tag_fire_update with this.tur_head missing!\n");
+		this.tur_shotorg = '0 0 0';
 		return false;
 	}
 
-	self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
+	this.tur_shotorg = gettaginfo(this.tur_head, gettagindex(this.tur_head, "tag_fire"));
 	v_forward = normalize(v_forward);
 
 	return true;
@@ -20,10 +20,10 @@ float turret_tag_fire_update()
 /*
 * Railgun-like beam, but has thickness and suppots slowing of target
 */
-void FireImoBeam (vector start, vector end, vector smin, vector smax,
+void FireImoBeam(entity this, vector start, vector end, vector smin, vector smax,
 				  float bforce, float f_dmg, float f_velfactor, int deathtype)
 
-{SELFPARAM();
+{
 	vector hitloc, force, endpoint, dir;
 	entity ent;
 
@@ -37,10 +37,10 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 	// note down which entities were hit so we can damage them later
 	while (1)
 	{
-		tracebox(start, smin, smax, end, false, self);
+		tracebox(start, smin, smax, end, false, this);
 
-		// if it is world we can't hurt it so stop now
-		if (trace_ent == world || trace_fraction == 1)
+		// if it is NULL we can't hurt it so stop now
+		if (trace_ent == NULL || trace_fraction == 1)
 			break;
 
 		if (trace_ent.solid == SOLID_BSP)
@@ -60,7 +60,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 	endpoint = trace_endpos;
 
 	// find all the entities the railgun hit and restore their solid state
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// restore their solid type
@@ -69,7 +69,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 	}
 
 	// find all the entities the railgun hit and hurt them
-	ent = findfloat(world, railgunhit, true);
+	ent = findfloat(NULL, railgunhit, true);
 	while (ent)
 	{
 		// get the details we need to call the damage function
@@ -81,7 +81,7 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 		// apply the damage
 		if (ent.takedamage)
 		{
-			Damage (ent, self, self, f_dmg, deathtype, hitloc, force);
+			Damage (ent, this, this, f_dmg, deathtype, hitloc, force);
 			ent.velocity = ent.velocity * f_velfactor;
 			//ent.alpha = 0.25 + random() * 0.75;
 		}
@@ -93,30 +93,30 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
 }
 
 #ifdef TURRET_DEBUG
-void marker_think()
-{SELFPARAM();
-	if(self.cnt)
-	if(self.cnt < time)
+void marker_think(entity this, )
+{
+	if(this.cnt)
+	if(this.cnt < time)
 	{
-		self.think = SUB_Remove;
-		self.nextthink = time;
+		setthink(this, SUB_Remove);
+		this.nextthink = time;
 		return;
 	}
 
-	self.frame += 1;
-	if(self.frame > 29)
-		self.frame = 0;
+	this.frame += 1;
+	if(this.frame > 29)
+		this.frame = 0;
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 void mark_error(vector where,float lifetime)
 {
 	entity err = new(error_marker);
 	setmodel(err, MDL_MARKER);
-	setorigin(err,where);
+	setorigin(err, where);
 	err.movetype = MOVETYPE_NONE;
-	err.think = marker_think;
+	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 0;
 	if(lifetime)
@@ -127,9 +127,9 @@ void mark_info(vector where,float lifetime)
 {
 	entity err = spawn(info_marker);
 	setmodel(err, MDL_MARKER);
-	setorigin(err,where);
+	setorigin(err, where);
 	err.movetype = MOVETYPE_NONE;
-	err.think = marker_think;
+	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 1;
 	if(lifetime)
@@ -140,9 +140,9 @@ entity mark_misc(vector where,float lifetime)
 {
 	entity err = spawn(mark_misc);
 	setmodel(err, MDL_MARKER);
-	setorigin(err,where);
+	setorigin(err, where);
 	err.movetype = MOVETYPE_NONE;
-	err.think = marker_think;
+	setthink(err, marker_think);
 	err.nextthink = time;
 	err.skin = 3;
 	if(lifetime)
@@ -165,7 +165,7 @@ void paint_target(entity onwho, float f_size, vector v_color, float f_time)
 	e.scale = (f_size/512);
 	//setsize(e, '0 0 0', '0 0 0');
 	//setattachment(e,onwho,"");
-	setorigin(e,onwho.origin + '0 0 1');
+	setorigin(e, onwho.origin + '0 0 1');
 	e.alpha = 0.15;
 	e.movetype = MOVETYPE_FLY;
 
@@ -184,7 +184,7 @@ void paint_target2(entity onwho, float f_size, vector v_color, float f_time)
 	e.scale = (f_size/512);
 	setsize(e, '0 0 0', '0 0 0');
 
-	setorigin(e,onwho.origin + '0 0 1');
+	setorigin(e, onwho.origin + '0 0 1');
 	e.alpha = 0.15;
 	e.movetype = MOVETYPE_FLY;
 
@@ -202,7 +202,7 @@ void paint_target3(vector where, float f_size, vector v_color, float f_time)
 	setmodel(e, MDL_TUR_C512); // precision set above
 	e.scale = (f_size/512);
 	setsize(e, '0 0 0', '0 0 0');
-	setorigin(e,where+ '0 0 1');
+	setorigin(e, where + '0 0 1');
 	e.movetype = MOVETYPE_NONE;
 	e.velocity = '0 0 0';
 	e.colormod = v_color;

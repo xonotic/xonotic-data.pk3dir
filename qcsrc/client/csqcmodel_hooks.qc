@@ -389,7 +389,7 @@ void CSQCPlayer_FallbackFrame_Apply(entity this)
 void CSQCModel_AutoTagIndex_Apply(entity this)
 {
 	if(this.tag_entity && wasfreed(this.tag_entity))
-		this.tag_entity = world;
+		this.tag_entity = NULL;
 
 	viewloc_SetTags(this);
 
@@ -401,7 +401,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 		bool changed = 0;
 		if(this.tag_entity.entnum != this.tag_networkentity)
 		{
-			this.tag_entity = findfloat(world, entnum, this.tag_networkentity);
+			this.tag_entity = findfloat(NULL, entnum, this.tag_networkentity);
 			changed = 1;
 		}
 
@@ -431,7 +431,7 @@ void CSQCModel_AutoTagIndex_Apply(entity this)
 						if(!this.tag_index)
 						{
 							// we need to prevent this from 'appening
-							this.tag_entity = world;
+							this.tag_entity = NULL;
 							this.drawmask = 0;
 							LOG_TRACE("h_ model lacks weapon attachment, but v_ model is attached to it\n");
 						}

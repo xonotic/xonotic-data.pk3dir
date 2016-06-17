@@ -13,7 +13,7 @@ MUTATOR_HOOKFUNCTION(cloaked, SetDefaultAlpha)
 
 MUTATOR_HOOKFUNCTION(cloaked, BuildMutatorsPrettyString)
 {
-	if (!g_cts) ret_string = strcat(ret_string, ", Cloaked");
+	if (!g_cts) M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Cloaked");
 }
 
 #endif

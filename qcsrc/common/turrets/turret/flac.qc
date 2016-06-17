@@ -22,7 +22,7 @@ REGISTER_TURRET(FLAC, NEW(Flac));
 
 #ifdef SVQC
 
-spawnfunc(turret_flac) { if (!turret_initialize(TUR_FLAC)) remove(self); }
+spawnfunc(turret_flac) { if (!turret_initialize(this, TUR_FLAC)) remove(this); }
 
 METHOD(Flac, tr_setup, void(Flac this, entity it))
 {

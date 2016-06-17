@@ -160,25 +160,31 @@ MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver)
-{SELFPARAM();
-    Item_ItemsTime_SetTimesForPlayer(self);
+{
+    entity player = M_ARGV(0, entity);
+
+    Item_ItemsTime_SetTimesForPlayer(player);
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
-{SELFPARAM();
-	if(IS_PLAYER(self))
+{
+    entity player = M_ARGV(0, entity);
+
+	if(IS_PLAYER(player))
 	{
 		// client became player on connection skipping putObserverInServer step
-		if (IS_REAL_CLIENT(self))
+		if (IS_REAL_CLIENT(player))
 		if (warmup_stage)
-			Item_ItemsTime_SetTimesForPlayer(self);
+			Item_ItemsTime_SetTimesForPlayer(player);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
-{SELFPARAM();
+{
     if (warmup_stage) return;
-    Item_ItemsTime_ResetTimesForPlayer(self);
+    entity player = M_ARGV(0, entity);
+
+    Item_ItemsTime_ResetTimesForPlayer(player);
 }
 
 #endif
@@ -357,6 +363,7 @@ void HUD_ItemsTime()
         }
     }
 
+    HUD_Scale_Enable();
     HUD_Panel_DrawBg(1);
 
     float row = 0, column = 0;

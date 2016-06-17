@@ -12,6 +12,8 @@
 	#define bool float
 #endif
 
+#include <dpdefs/pre.qh>
+
 #if defined(CSQC)
 	#include <dpdefs/csprogsdefs.qh>
 	#include <dpdefs/keycodes.qh>
@@ -24,6 +26,10 @@
 	#include <dpdefs/menudefs.qh>
 	#include <dpdefs/keycodes.qh>
 #endif
+
+#include <dpdefs/post.qh>
+
+#include "self.qh"
 
 #define USING(name, T) typedef T name
 
@@ -90,7 +96,6 @@ void    isnt_bool(   float this) { print(ftos(this)); }
 #include "registry.qh"
 #include "registry_net.qh"
 #include "replicate.qh"
-#include "self.qh"
 #include "sortlist.qc"
 #include "sort.qh"
 #include "spawnfunc.qh"

@@ -333,7 +333,7 @@ void CSQCPlayer_SetCamera()
 		if (view.csqcmodel_teleported) refdefflags |= REFDEFFLAG_TELEPORTED;
 		if (input_buttons & BIT(1)) refdefflags |= REFDEFFLAG_JUMPING;
 		// note: these two only work in WIP2, but are harmless in WIP1
-		if (STAT(HEALTH) <= 0) refdefflags |= REFDEFFLAG_DEAD;
+		if (STAT(HEALTH) <= 0 && STAT(HEALTH) != -666 && STAT(HEALTH) != -2342) refdefflags |= REFDEFFLAG_DEAD;
 		if (intermission) refdefflags |= REFDEFFLAG_INTERMISSION;
 		V_CalcRefdef(view, refdefflags);
 	}

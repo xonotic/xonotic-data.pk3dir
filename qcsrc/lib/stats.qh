@@ -93,7 +93,7 @@ USING(vectori, vector);
     #define REGISTER_STAT_3(id, T, expr) \
     	REGISTER_STAT_2(id, T); \
     	[[accumulate]] void GlobalStats_update(entity this) { STAT(id, this) = (expr); } \
-    	STATIC_INIT(worldstat_##id) { entity this = world; STAT(id, this) = (expr); }
+    	STATIC_INIT(worldstat_##id) { entity this = NULL; STAT(id, this) = (expr); }
 #else
 	#define REGISTER_STAT_2(id, type)
     #define REGISTER_STAT_3(id, T, expr)

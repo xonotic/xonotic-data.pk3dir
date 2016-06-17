@@ -1,7 +1,7 @@
 #ifdef SVQC
 void relay_activators_use(entity this, entity actor, entity trigger)
 {
-	for(entity trg = world; (trg = find(trg, targetname, this.target)); )
+	for(entity trg = NULL; (trg = find(trg, targetname, this.target)); )
 	{
 		if (trg.setactive)
 			trg.setactive(trg, this.cnt);

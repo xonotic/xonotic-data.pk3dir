@@ -58,6 +58,8 @@ void XonoticCheckBox_setChecked(entity me, float val)
 	{
 		me.checked = val;
 		me.saveCvars(me);
+		if(me.linkedCheckBox)
+			me.linkedCheckBox.loadCvars(me.linkedCheckBox);
 	}
 }
 void XonoticCheckBox_loadCvars(entity me)

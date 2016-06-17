@@ -43,5 +43,6 @@
 
 #define use use1
 .void(entity this, entity actor, entity trigger) use;
+#define touch move_touch
 
 #endif

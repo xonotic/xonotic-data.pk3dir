@@ -6,6 +6,14 @@ pyria
 		rgbgen lightingDiffuse
 	}
 }
+pyriafullbright
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/pyriafullbright.tga
+		rgbgen lightingDiffuse
+	}
+}
 
 pyriahair
 {

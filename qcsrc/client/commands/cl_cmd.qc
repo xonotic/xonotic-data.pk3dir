@@ -92,7 +92,7 @@ void LocalCommand_boxparticles(int request, int argc)
 					if (index <= 0)
 						own = entitybyindex(-index);
 					else
-						own = findfloat(world, entnum, index);
+						own = findfloat(NULL, entnum, index);
 					vector org_from = stov(argv(3));
 					vector org_to = stov(argv(4));
 					vector dir_from = stov(argv(5));

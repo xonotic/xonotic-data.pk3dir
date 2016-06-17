@@ -17,47 +17,46 @@ REGISTER_TURRET(FUSIONREACTOR, NEW(FusionReactor));
 
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-bool turret_fusionreactor_firecheck()
-{SELFPARAM();
-    if (self.attack_finished_single[0] > time)
+bool turret_fusionreactor_firecheck(entity this)
+{
+    if (this.attack_finished_single[0] > time)
         return false;
 
-    if (IS_DEAD(self.enemy))
+    if (IS_DEAD(this.enemy))
         return false;
 
-    if (self.enemy == world)
+    if (this.enemy == NULL)
         return false;
 
-    if (self.ammo < self.shot_dmg)
+    if (this.ammo < this.shot_dmg)
         return false;
 
-    if (self.enemy.ammo >= self.enemy.ammo_max)
+    if (this.enemy.ammo >= this.enemy.ammo_max)
         return false;
 
-    if(vdist(self.enemy.origin - self.origin, >, self.target_range))
+    if(vdist(this.enemy.origin - this.origin, >, this.target_range))
         return false;
 
-    if(self.team != self.enemy.team)
+    if(this.team != this.enemy.team)
         return false;
 
-    if(!(self.enemy.ammo_flags & TFL_AMMO_ENERGY))
+    if(!(this.enemy.ammo_flags & TFL_AMMO_ENERGY))
         return false;
 
     return true;
 }
 
-spawnfunc(turret_fusionreactor) { if (!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
+spawnfunc(turret_fusionreactor) { if (!turret_initialize(this, TUR_FUSIONREACTOR)) remove(this); }
 
 METHOD(FusionReactor, tr_attack, void(FusionReactor this, entity it))
 {
-    self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
-    vector fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
+    it.enemy.ammo = min(it.enemy.ammo + it.shot_dmg,it.enemy.ammo_max);
+    vector fl_org = 0.5 * (it.enemy.absmin + it.enemy.absmax);
     te_smallflash(fl_org);
 }
 METHOD(FusionReactor, tr_think, void(FusionReactor thistur, entity it))
 {
-    SELFPARAM();
-    self.tur_head.avelocity = '0 250 0' * (self.ammo / self.ammo_max);
+    it.tur_head.avelocity = '0 250 0' * (it.ammo / it.ammo_max);
 }
 METHOD(FusionReactor, tr_setup, void(FusionReactor this, entity it))
 {

@@ -9,8 +9,8 @@
 #endif
 #include "common.qh"
 
-void WarpZoneLib_ExactTrigger_Init()
-{SELFPARAM();
+void WarpZoneLib_ExactTrigger_Init(entity this)
+{
 	vector mi, ma;
 	if (this.movedir == '0 0 0')
 	if (this.angles != '0 0 0')

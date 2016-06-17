@@ -11,7 +11,7 @@ void counter_use(entity this, entity actor, entity trigger)
 			Send_Notification(NOTIF_ONE, actor, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
 
 		this.enemy = actor;
-		WITHSELF(this, multi_trigger ());
+		multi_trigger(this);
 	}
 	else
 	{
@@ -38,12 +38,12 @@ After the counter has been triggered "count" times (default 2), it will fire all
 */
 spawnfunc(trigger_counter)
 {
-	self.wait = -1;
-	if (!self.count)
-		self.count = 2;
-	self.cnt = self.count;
+	this.wait = -1;
+	if (!this.count)
+		this.count = 2;
+	this.cnt = this.count;
 
-	self.use = counter_use;
-	self.reset = counter_reset;
+	this.use = counter_use;
+	this.reset = counter_reset;
 }
 #endif
