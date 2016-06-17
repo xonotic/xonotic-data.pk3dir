@@ -1,21 +1,10 @@
-#ifndef CMD_H
-#define CMD_H
-
-// =================================================
-//  Declarations for server side networked commands
-//  Last updated: December 26th, 2011
-// =================================================
+#pragma once
 
 .float cmd_floodtime;
 .float cmd_floodcount;
 .float lms_spectate_warning;
-.float checkfail;
 
-// number of monsters spawned with mobspawn command
-float totalspawned;
-
-string MapVote_Suggest(string m);
+string MapVote_Suggest(entity this, string m);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void ClientCommand_macro_write_aliases(float fh);
-#endif

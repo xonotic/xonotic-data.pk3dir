@@ -1,5 +1,4 @@
-#ifndef CSQCPROJECTILE_H
-#define CSQCPROJECTILE_H
+#pragma once
 
 .float csqcprojectile_clientanimate;
 
@@ -7,4 +6,3 @@ void CSQCProjectile(entity e, float clientanimate, float type, float docull);
 void UpdateCSQCProjectile(entity e);
 void UpdateCSQCProjectileAfterTeleport(entity e);
 void CSQCProjectile_Check(entity e);
-#endif

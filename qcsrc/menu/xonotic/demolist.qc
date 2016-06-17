@@ -1,44 +1,11 @@
-#ifdef INTERFACE
-CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
-	METHOD(XonoticDemoList, configureXonoticDemoList, void(entity))
-	ATTRIB(XonoticDemoList, rowsPerItem, float, 1)
-	METHOD(XonoticDemoList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticDemoList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticDemoList, getDemos, void(entity))
-	METHOD(XonoticDemoList, startDemo, void(entity))
-	METHOD(XonoticDemoList, timeDemo, void(entity))
-	METHOD(XonoticDemoList, demoName, string(entity, float))
-	METHOD(XonoticDemoList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticDemoList, destroy, void(entity))
-	METHOD(XonoticDemoList, showNotify, void(entity))
+#include "demolist.qh"
 
-	ATTRIB(XonoticDemoList, listDemo, float, -1)
-	ATTRIB(XonoticDemoList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticDemoList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticDemoList, columnNameSize, float, 0)
-	ATTRIB(XonoticDemoList, realUpperMargin, float, 0)
-	ATTRIB(XonoticDemoList, origin, vector, '0 0 0')
-	ATTRIB(XonoticDemoList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticDemoList, filterString, string, string_null)
-ENDCLASS(XonoticDemoList)
-
-#ifndef IMPLEMENTATION
-// public:
-entity demolist; // for reference elsewhere
-entity makeXonoticDemoList();
-#endif
-void DemoList_Refresh_Click(entity btn, entity me);
-void DemoList_Filter_Change(entity box, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "inputbox.qh"
 
 entity makeXonoticDemoList()
 {
 	entity me;
-	me = spawnXonoticDemoList();
+	me = NEW(XonoticDemoList);
 	me.configureXonoticDemoList(me);
 	return me;
 }
@@ -46,7 +13,7 @@ entity makeXonoticDemoList()
 void XonoticDemoList_configureXonoticDemoList(entity me)
 {
 	me.configureXonoticListBox(me);
-	me.getDemos(me);
+	me.nItems = 0;
 }
 
 string XonoticDemoList_demoName(entity me, float i)
@@ -133,11 +100,16 @@ void XonoticDemoList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 	me.columnNameSize = 1 - 2 * me.realFontSize.x;
 }
 
-void XonoticDemoList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticDemoList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	s = me.demoName(me,i);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
@@ -225,5 +197,3 @@ float XonoticDemoList_keyDown(entity me, float scan, float ascii, float shift)
 		return SUPER(XonoticDemoList).keyDown(me, scan, ascii, shift);
 	}
 }
-#endif
-

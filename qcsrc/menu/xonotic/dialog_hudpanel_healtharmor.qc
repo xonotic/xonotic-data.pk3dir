@@ -1,17 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDHealthArmorDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDHealthArmorDialog, fill, void(entity))
-	ATTRIB(XonoticHUDHealthArmorDialog, title, string, _("Health/Armor Panel"))
-	ATTRIB(XonoticHUDHealthArmorDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDHealthArmorDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDHealthArmorDialog, rows, float, 15)
-	ATTRIB(XonoticHUDHealthArmorDialog, columns, float, 4)
-	ATTRIB(XonoticHUDHealthArmorDialog, name, string, "HUDhealtharmor")
-	ATTRIB(XonoticHUDHealthArmorDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDHealthArmorDialog)
-#endif
+#include "dialog_hudpanel_healtharmor.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "radiobutton.qh"
+
 void XonoticHUDHealthArmorDialog_fill(entity me)
 {
 	entity e;
@@ -19,6 +11,8 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 
 	DIALOG_HUDPANEL_COMMON();
 
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_combined", _("Combine health and armor")));
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_progressbar", _("Enable status bar")));
 	me.TR(me);
@@ -45,4 +39,3 @@ void XonoticHUDHealthArmorDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_healtharmor_flip", _("Flip health and armor positions")));
 }
-#endif

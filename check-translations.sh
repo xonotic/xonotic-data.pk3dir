@@ -29,14 +29,40 @@ case "$1" in
 esac
 
 if [ x"$mode" = x"pot" ]; then
+	make QCC="../../../../gmqcc/gmqcc" clean
+	make QCC="../../../../gmqcc/gmqcc"
 	{
-		find qcsrc -type f -name \*.\* -not -name \*.po -not -name \*.txt
+		grep -h '^\.' .tmp/*_includes.txt | cut -d ' ' -f 2 | sed -e 's,^,qcsrc/,' | while IFS= read -r name; do
+			while :; do
+				case "$name" in
+					*/./*)
+						name=${name%%/./*}/${name#*/./}
+						;;
+					./*)
+						name=${name#./}
+						;;
+					*/*/../*)
+						before=${name%%/../*}
+						before=${before%/*}
+						name=$before/${name#*/../}
+						;;
+					*/../*)
+						name=${name#*/../}
+						;;
+					*)
+						break
+						;;
+				esac
+			done
+			echo "$name"
+		done | sort -u
 	} | xgettext -LC -k_ -f- --from-code utf-8 -F -o common.pot >&2
 fi
 
 if [ x"$mode" = x"txt" ]; then
 	{
-		echo "en English \"English\""
+		item=`grep "^en " languages.txt`
+		echo "$item"
 		for X in common.*.po; do
 			[ -f "$X" ] || continue
 			if [ -n "$language" ]; then
@@ -67,9 +93,9 @@ if [ x"$mode" = x"txt" ]; then
 				if [ "$p" -lt 50 ]; then
 					continue
 				fi
-				item="$l $l \"$l (0%)\""
+				item="$l $l \"$l\" 0%"
 			fi
-			printf "%s\n" "$item" | sed -e "s/([0-9][0-9]*%)/($p%)/"
+			printf "%s\n" "$item" | sed -e "s/[0-9][0-9]*%/$p%/"
 		done
 	} | tr '"' '\t' | sort -k3 | tr '\t' '"'
 fi

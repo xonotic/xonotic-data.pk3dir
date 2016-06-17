@@ -1,20 +1,17 @@
-#ifdef INTERFACE
-CLASS(XonoticMusicPlayerTab) EXTENDS(XonoticTab)
-	METHOD(XonoticMusicPlayerTab, fill, void(entity))
-	ATTRIB(XonoticMusicPlayerTab, title, string, _("Music"))
-	ATTRIB(XonoticMusicPlayerTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMusicPlayerTab, rows, float, 21)
-	ATTRIB(XonoticMusicPlayerTab, columns, float, 6.5)
-	ATTRIB(XonoticMusicPlayerTab, name, string, "MusicPlayer")
-ENDCLASS(XonoticMusicPlayerTab)
-entity makeXonoticMusicPlayerTab();
-#endif
+#include "dialog_multiplayer_media_musicplayer.qh"
 
-#ifdef IMPLEMENTATION
+#include "soundlist.qh"
+#include "playlist.qh"
+
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "button.qh"
+#include "checkbox.qh"
+
 entity makeXonoticMusicPlayerTab()
 {
 	entity me;
-	me = spawnXonoticMusicPlayerTab();
+	me = NEW(XonoticMusicPlayerTab);
 	me.configureDialog(me);
 	return me;
 }
@@ -30,7 +27,6 @@ void XonoticMusicPlayerTab_fill(entity me)
 			soundList = makeXonoticSoundList();
 			e.onChange = SoundList_Filter_Change;
 			e.onChangeEntity = soundList;
-			soundList.controlledTextbox = e;
 			playList = makeXonoticPlayList();
 			soundList.playlist = playList;
 
@@ -84,4 +80,3 @@ void XonoticMusicPlayerTab_fill(entity me)
 			e.onClick = PlayList_Remove_All;
 			e.onClickEntity = playList;
 }
-#endif

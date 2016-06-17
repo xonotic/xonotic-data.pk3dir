@@ -1,16 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticNexposee) EXTENDS(Nexposee)
-	METHOD(XonoticNexposee, configureXonoticNexposee, void(entity))
-	METHOD(XonoticNexposee, close, void(entity))
-ENDCLASS(XonoticNexposee)
-entity makeXonoticNexposee();
-#endif
+#include "nexposee.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticNexposee()
 {
 	entity me;
-	me = spawnXonoticNexposee();
+	me = NEW(XonoticNexposee);
 	me.configureXonoticNexposee(me);
 	return me;
 }
@@ -23,4 +16,3 @@ void XonoticNexposee_close(entity me)
 {
 	m_goto(string_null); // hide
 }
-#endif

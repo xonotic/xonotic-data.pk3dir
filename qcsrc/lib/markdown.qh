@@ -1,0 +1,65 @@
+#include "test.qh"
+
+/**
+ * handle string spacing as markdown:
+ *   - two spaces escape a linebreak (otherwise text wraps)
+ *   - two linebreaks become a paragraph (remain unchanged)
+ */
+string markdown(string s)
+{
+	string buf = "";
+	int lines = 0;
+	int spaces = 0;
+	FOREACH_CHAR(s, true, {
+		switch (it) {
+			default:
+				for (; spaces > 0; --spaces) {
+					buf = strcat(buf, " ");
+				}
+				buf = strcat(buf, chr2str(it));
+				break;
+			case ' ':
+				spaces += 1;
+				break;
+			case '\n':
+				lines += 1;
+				if (lines > 1) {
+					lines = 0;
+					spaces = 0;
+					buf = strcat(buf, "\n\n");
+					break;
+				}
+				if (spaces < 2) {
+					spaces = 1;
+				} else {
+					spaces = 0;
+					buf = strcat(buf, "\n");
+				}
+				break;
+		}
+	});
+	return buf;
+}
+
+TEST(Markdown, LineWrap)
+{
+	#define X(expect, in) MACRO_BEGIN \
+		string out = markdown(in); \
+		EXPECT_TRUE(expect == out); \
+		LOG_INFO(expect); \
+		LOG_INFO(out); \
+	MACRO_END
+
+	// identity
+	X("lorem ipsum", "lorem ipsum");
+	// trim trailing space
+	X("lorem ipsum", "lorem ipsum ");
+	// allow manual input wrapping
+	X("lorem ipsum", "lorem\nipsum");
+	// line break
+	X("lorem\nipsum", "lorem  \nipsum");
+	// paragraph
+	X("lorem\n\nipsum", "lorem\n\nipsum");
+	SUCCEED();
+	#undef X
+}

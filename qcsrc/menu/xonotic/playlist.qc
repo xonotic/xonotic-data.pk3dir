@@ -1,48 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
-	METHOD(XonoticPlayList, configureXonoticPlayList, void(entity))
-	ATTRIB(XonoticPlayList, rowsPerItem, float, 1)
-	METHOD(XonoticPlayList, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayList, draw, void(entity))
-	METHOD(XonoticPlayList, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticPlayList, stopSound, void(entity))
-	METHOD(XonoticPlayList, startSound, void(entity, float))
-	METHOD(XonoticPlayList, resumeSound, void(entity))
-	METHOD(XonoticPlayList, pauseSound, void(entity))
-	METHOD(XonoticPlayList, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticPlayList, keyDown, float(entity, float, float, float))
-	METHOD(XonoticPlayList, mouseDrag, float(entity, vector))
-
-	METHOD(XonoticPlayList, addToPlayList, void(entity, string))
-	METHOD(XonoticPlayList, removeSelectedFromPlayList, void(entity))
-	ATTRIB(XonoticPlayList, playingTrack, float, -1)
-
-	ATTRIB(XonoticPlayList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticPlayList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticPlayList, columnNameSize, float, 0)
-	ATTRIB(XonoticPlayList, columnNumberOrigin, float, 0)
-	ATTRIB(XonoticPlayList, columnNumberSize, float, 0)
-	ATTRIB(XonoticPlayList, realUpperMargin, float, 0)
-	ATTRIB(XonoticPlayList, origin, vector, '0 0 0')
-	ATTRIB(XonoticPlayList, itemAbsSize, vector, '0 0 0')
-ENDCLASS(XonoticPlayList)
-
-entity makeXonoticPlayList();
-void PlayList_Remove(entity btn, entity me);
-void PlayList_Remove_All(entity btn, entity me);
-void StopSound_Click(entity btn, entity me);
-void StartSound_Click(entity btn, entity me);
-void PauseSound_Click(entity btn, entity me);
-void PrevSound_Click(entity btn, entity me);
-void NextSound_Click(entity btn, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "playlist.qh"
 
 entity makeXonoticPlayList()
 {
 	entity me;
-	me = spawnXonoticPlayList();
+	me = NEW(XonoticPlayList);
 	me.configureXonoticPlayList(me);
 	return me;
 }
@@ -170,11 +131,16 @@ void XonoticPlayList_draw(entity me)
 	SUPER(XonoticPlayList).draw(me);
 }
 
-void XonoticPlayList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticPlayList_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
+	else if(isFocused)
+	{
+		me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+	}
 
 	if(i == me.playingTrack)
 	{
@@ -298,5 +264,3 @@ float XonoticPlayList_keyDown(entity me, float scan, float ascii, float shift)
 	else
 		return SUPER(XonoticPlayList).keyDown(me, scan, ascii, shift);
 }
-#endif
-

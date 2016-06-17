@@ -1,0 +1,10 @@
+#pragma once
+
+#ifdef QCC_SUPPORT_NIL
+	#define func_null nil
+	#define string_null nil
+#else
+// the NULL function
+	var void func_null();
+	string string_null;
+#endif
