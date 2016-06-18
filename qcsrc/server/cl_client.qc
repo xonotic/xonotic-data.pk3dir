@@ -2155,26 +2155,27 @@ void PlayerPreThink ()
 
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
-	if(autocvar_g_vehicles_enter)
-	if(time > this.last_vehiclecheck)
-	if(IS_PLAYER(this))
-	if(!gameover)
-	if(!STAT(FROZEN, this))
-	if(!this.vehicle)
-	if(!IS_DEAD(this))
+	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !gameover && !this.vehicle)
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
 	{
-		entity veh;
-		for(veh = NULL; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
-		if(vdist(veh.origin - this.origin, <, autocvar_g_vehicles_enter_radius))
-		if(!IS_DEAD(veh))
-		if(veh.takedamage != DAMAGE_NO)
-		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, this))
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-		else if(!veh.owner)
-		if(!veh.team || SAME_TEAM(this, veh))
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-		else if(autocvar_g_vehicles_steal)
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+		FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE,
+		{
+			if(!IS_DEAD(it) && it.takedamage != DAMAGE_NO)
+			if(vdist(it.origin - this.origin, <, autocvar_g_vehicles_enter_radius))
+			if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
+			{
+				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
+			}
+			else if(!it.owner)
+			{
+				if(!it.team || SAME_TEAM(this, it))
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
+			}
+			else if(autocvar_g_vehicles_steal)
+			{
+				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+			}
+		});
 
 		this.last_vehiclecheck = time + 1;
 	}
