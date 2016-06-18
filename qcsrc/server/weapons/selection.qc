@@ -21,7 +21,7 @@ void Send_WeaponComplain(entity e, float wpn, float type)
 void Weapon_whereis(Weapon this, entity cl)
 {
 	if (!autocvar_g_showweaponspawns) return;
-	for (entity it = NULL; (it = findfloat(it, weapon, this.m_id)); )
+	FOREACH_ENTITY_FLOAT(weapon, this.m_id,
 	{
 		if (it.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
 			continue;
@@ -37,7 +37,7 @@ void Weapon_whereis(Weapon this, entity cl)
 			RADARICON_NONE
 		);
 		wp.wp_extra = this.m_id;
-	}
+	});
 }
 
 bool client_hasweapon(entity this, Weapon wpn, float andammo, bool complain)

@@ -1233,15 +1233,11 @@ float havocbot_moveto(entity this, vector pos)
 	this.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_LINKING;
 
 	// if pos is inside a teleport, then let's mark it as teleport waypoint
-	entity head;
-	for(head = NULL; (head = find(head, classname, "trigger_teleport")); )
+	FOREACH_ENTITY_CLASS("trigger_teleport", WarpZoneLib_BoxTouchesBrush(pos, pos, it, NULL),
 	{
-		if(WarpZoneLib_BoxTouchesBrush(pos, pos, head, NULL))
-		{
-			wp.wpflags |= WAYPOINTFLAG_TELEPORT;
-			this.lastteleporttime = 0;
-		}
-	}
+		wp.wpflags |= WAYPOINTFLAG_TELEPORT;
+		this.lastteleporttime = 0;
+	});
 
 /*
 	if(wp.wpflags & WAYPOINTFLAG_TELEPORT)

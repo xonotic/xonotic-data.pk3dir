@@ -853,7 +853,6 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 {
 	float killtime;
 	float starttime;
-	entity e;
 
 	if (gameover)
 		return;
@@ -896,20 +895,20 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 			this.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(this, strcat("^1You'll be dead in ", ftos(this.killindicator.cnt), " seconds\n"));
 
-			for(e = NULL; (e = find(e, classname, "body")) != NULL; )
+			FOREACH_ENTITY_ENT(enemy, this,
 			{
-				if(e.enemy != this)
+				if(it.classname != "body")
 					continue;
-				e.killindicator = spawn();
-				e.killindicator.owner = e;
-				e.killindicator.scale = 0.5;
-				setattachment(e.killindicator, e, "");
-				setorigin(e.killindicator, '0 0 52');
-				setthink(e.killindicator, KillIndicator_Think);
-				e.killindicator.nextthink = starttime + (e.lip) * 0.05;
-				clientkilltime = max(clientkilltime, e.killindicator.nextthink + 0.05);
-				e.killindicator.cnt = ceil(killtime);
-			}
+				it.killindicator = spawn();
+				it.killindicator.owner = it;
+				it.killindicator.scale = 0.5;
+				setattachment(it.killindicator, it, "");
+				setorigin(it.killindicator, '0 0 52');
+				setthink(it.killindicator, KillIndicator_Think);
+				it.killindicator.nextthink = starttime + (it.lip) * 0.05;
+				clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
+				it.killindicator.cnt = ceil(killtime);
+			});
 			this.lip = 0;
 		}
 	}
@@ -2031,7 +2030,7 @@ void PlayerUseKey(entity this)
 
 			while(head) // find the closest acceptable target to enter
 			{
-				if(head.vehicle_flags & VHF_ISVEHICLE)
+				if(IS_VEHICLE(head))
 				if(!IS_DEAD(head))
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
 				if(head.takedamage != DAMAGE_NO)

@@ -165,7 +165,6 @@ void dompoint_captured(entity this)
 	WaypointSprite_UpdateSprites(this.sprite, msg, WP_Null, WP_Null);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	for(head = NULL; (head = find(head, classname, "dom_controlpoint")) != NULL; )
 	FOREACH_ENTITY_CLASS("dom_controlpoint", true, LAMBDA(
 		if (autocvar_g_domination_point_amt)
 			points = autocvar_g_domination_point_amt;
@@ -362,16 +361,15 @@ void dom_controlpoint_setup(entity this)
 float total_controlpoints;
 void Domination_count_controlpoints()
 {
-	entity e;
 	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
-	for(e = NULL; (e = find(e, classname, "dom_controlpoint")) != NULL; )
+	FOREACH_ENTITY_CLASS("dom_controlpoint", true,
 	{
 		++total_controlpoints;
-		redowned += (e.goalentity.team == NUM_TEAM_1);
-		blueowned += (e.goalentity.team == NUM_TEAM_2);
-		yellowowned += (e.goalentity.team == NUM_TEAM_3);
-		pinkowned += (e.goalentity.team == NUM_TEAM_4);
-	}
+		redowned += (it.goalentity.team == NUM_TEAM_1);
+		blueowned += (it.goalentity.team == NUM_TEAM_2);
+		yellowowned += (it.goalentity.team == NUM_TEAM_3);
+		pinkowned += (it.goalentity.team == NUM_TEAM_4);
+	});
 }
 
 float Domination_GetWinnerTeam()

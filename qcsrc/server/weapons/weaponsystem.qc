@@ -214,8 +214,13 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
-		for (entity mine; (mine = find(mine, classname, "mine")); )
-			if (mine.owner == actor) return false;
+	{
+		FOREACH_ENTITY_ENT(owner, actor,
+		{
+			if(it.classname != "mine") continue;
+			if(it.owner == actor) return false;
+		});
+	}
 
 	if (thiswep == WEP_SHOTGUN)
 		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow

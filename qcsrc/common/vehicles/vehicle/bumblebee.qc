@@ -562,7 +562,7 @@ bool bumblebee_pilot_frame(entity this)
 					if((teamplay && trace_ent.team == this.team) || !teamplay)
 					{
 
-						if(trace_ent.vehicle_flags & VHF_ISVEHICLE)
+						if(IS_VEHICLE(trace_ent))
 						{
 							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.max_health)
 								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * frametime, trace_ent.tur_head.max_health);

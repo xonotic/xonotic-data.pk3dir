@@ -269,7 +269,7 @@ void Portal_Touch(entity this)
 		return; // handled by think
 
 	if(!autocvar_g_vehicles_teleportable)
-	if(other.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_VEHICLE(other))
 		return; // no teleporting vehicles?
 
 	if(!this.enemy)
