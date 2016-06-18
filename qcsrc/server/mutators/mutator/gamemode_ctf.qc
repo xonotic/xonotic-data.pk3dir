@@ -2238,14 +2238,13 @@ MUTATOR_HOOKFUNCTION(ctf, VehicleEnter)
 
 	if(player.flagcarried)
 	{
-		player.flagcarried.nodrawtoclient = player; // hide the flag from the driver
-
 		if(!autocvar_g_ctf_allow_vehicle_carry && !autocvar_g_ctf_allow_vehicle_touch)
 		{
 			ctf_Handle_Throw(player, NULL, DROP_NORMAL);
 		}
 		else
 		{
+			player.flagcarried.nodrawtoclient = player; // hide the flag from the driver
 			setattachment(player.flagcarried, veh, "");
 			setorigin(player.flagcarried, VEHICLE_FLAG_OFFSET);
 			player.flagcarried.scale = VEHICLE_FLAG_SCALE;
