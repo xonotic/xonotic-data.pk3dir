@@ -872,7 +872,10 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 
 	if(player.buff_time)
 	if(time >= player.buff_time)
+	{
+		player.buff_time = 0;
 		buff_lost = 2;
+	}
 
 	if(STAT(FROZEN, player)) { buff_lost = 1; }
 
