@@ -16,6 +16,7 @@ float autocvar_g_vehicles_crush_force = 50;
 bool autocvar_g_vehicles_delayspawn = true;
 float autocvar_g_vehicles_delayspawn_jitter = 10;
 float autocvar_g_vehicles_allow_bots;
+int autocvar_g_vehicles_exit_attempts = 25;
 
 AUTOCVAR(g_vehicles_teams, bool, true, "allow team specific vehicles");
 float autocvar_g_vehicles_teleportable;

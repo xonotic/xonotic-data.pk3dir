@@ -768,7 +768,7 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 	float i;
 	vector v, v2;
 	v2 = 0.5 * (this.absmin + this.absmax);
-	for(i = 0; i < 100; ++i)
+	for(i = 0; i < autocvar_g_vehicles_exit_attempts; ++i)
 	{
 		v = randomvec();
 		v_z = 0;
@@ -1005,7 +1005,6 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	tracebox(pl.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pl.origin, false, pl);
 	pl.crouch = false;
 	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
 	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
