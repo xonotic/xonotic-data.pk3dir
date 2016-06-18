@@ -24,8 +24,8 @@
 .float move_bounce_stopspeed;
 .float move_nomonsters;  // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
-.entity move_aiment;
-.vector move_punchangle;
+.entity aiment;
+.vector punchangle;
 
 // should match sv_gameplayfix_fixedcheckwatertransition
 float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
