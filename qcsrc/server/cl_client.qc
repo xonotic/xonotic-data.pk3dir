@@ -2158,10 +2158,9 @@ void PlayerPreThink ()
 	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !gameover && !this.vehicle)
 	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
 	{
-		FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE,
+		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it),
 		{
 			if(!IS_DEAD(it) && it.takedamage != DAMAGE_NO)
-			if(vdist(it.origin - this.origin, <, autocvar_g_vehicles_enter_radius))
 			if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
 			{
 				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
