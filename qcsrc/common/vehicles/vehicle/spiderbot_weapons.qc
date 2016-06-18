@@ -140,7 +140,7 @@ vector spiberbot_calcartillery(vector org, vector tgt, float ht)
 }
 
 void spiderbot_rocket_do(entity this)
-{;
+{
     vector v;
     entity rocket = NULL;
 
