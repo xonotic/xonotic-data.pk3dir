@@ -124,6 +124,12 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 	}
 }
 
+float vehicle_altitude(entity this, float amax)
+{
+	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * amax), MOVE_WORLDONLY, this);
+	return vlen(this.origin - trace_endpos);
+}
+
 vector vehicles_force_fromtag_hover(entity this, string tag_name, float spring_length, float max_power)
 {
 	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));

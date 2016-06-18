@@ -106,6 +106,7 @@ void vehicles_exit(entity vehic, int eject);
 bool vehicle_initialize(entity this, Vehicle info, float nodrop);
 bool vehicle_impulse(entity this, int imp);
 bool vehicles_crushable(entity e);
+float vehicle_altitude(entity this, float amax);
 
 #endif
 #endif

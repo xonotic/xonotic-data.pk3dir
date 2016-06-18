@@ -629,7 +629,7 @@ void bumblebee_land(entity this)
 {
 	float hgt;
 
-	hgt = raptor_altitude(this, 512);
+	hgt = vehicle_altitude(this, 512);
 	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
 	this.angles_x *= 0.95;
 	this.angles_z *= 0.95;

@@ -77,23 +77,16 @@ vector autocvar_g_vehicle_raptor_bouncepain = '1 4 1000';
 .entity bomb1;
 .entity bomb2;
 
-float raptor_altitude(entity this, float amax)
-{
-	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * amax), MOVE_WORLDONLY, this);
-	return vlen(this.origin - trace_endpos);
-}
-
 void raptor_land(entity this)
 {
 	float hgt;
 
-	hgt = raptor_altitude(this, 512);
+	hgt = vehicle_altitude(this, 512);
 	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
 	this.angles_x *= 0.95;
 	this.angles_z *= 0.95;
 
-	if(hgt < 128)
-	if(hgt > 0)
+	if(hgt < 128 && hgt > 0)
 		this.frame = (hgt / 128) * 25;
 
 	this.bomb1.gun1.avelocity_y = 90 + ((this.frame / 25) * 2000);
@@ -113,19 +106,19 @@ void raptor_land(entity this)
 
 void raptor_exit(entity this, int eject)
 {
-	vector spot;
 	this.tur_head.exteriormodeltoclient = NULL;
 
 	if(!IS_DEAD(this))
 	{
 		setthink(this, raptor_land);
-		this.nextthink  = time;
+		this.nextthink = time;
 	}
 
 	if(!this.owner)
 		return;
 
 	makevectors(this.angles);
+	vector spot;
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
@@ -172,7 +165,6 @@ bool raptor_frame(entity this)
 
 	vehicles_frame(vehic, this);
 
-	float ftmp = 0;
 	/*
 	ftmp = vlen(vehic.velocity);
 	if(ftmp > autocvar_g_vehicle_raptor_speed_forward)
@@ -226,7 +218,7 @@ bool raptor_frame(entity this)
 	if(df_y > 180)  df_y -= 360;
 	if(df_y < -180) df_y += 360;
 
-	ftmp = shortangle_f(this.v_angle_y - vang_y, vang_y);
+	float ftmp = shortangle_f(this.v_angle_y - vang_y, vang_y);
 	if(ftmp > 180)  ftmp -= 360; if(ftmp < -180) ftmp += 360;
 	vehic.avelocity_y = bound(-autocvar_g_vehicle_raptor_turnspeed, ftmp + vehic.avelocity_y * 0.9, autocvar_g_vehicle_raptor_turnspeed);
 
