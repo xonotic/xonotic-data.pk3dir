@@ -162,9 +162,9 @@ void FixSize(entity e);
 // CaptureShield Functions
 // =======================
 
-bool ons_CaptureShield_Customize(entity this)
+bool ons_CaptureShield_Customize(entity this, entity client)
 {
-	entity e = WaypointSprite_getviewentity(other);
+	entity e = WaypointSprite_getviewentity(client);
 
 	if(!this.enemy.isshielded && (ons_ControlPoint_Attackable(this.enemy, e.team) > 0 || this.enemy.classname != "onslaught_controlpoint")) { return false; }
 	if(SAME_TEAM(this, e)) { return false; }

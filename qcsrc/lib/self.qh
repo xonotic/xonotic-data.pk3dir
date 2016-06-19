@@ -79,9 +79,11 @@ SELFWRAP(blocked, void, (), (entity this), (this))
 SELFWRAP(predraw, void, (), (entity this), (this))
 #define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
 
-SELFWRAP(customizeentityforclient, bool, (), (entity this), (this))
+#ifndef MENUQC
+SELFWRAP(customizeentityforclient, bool, (), (entity this, entity client), (this, other))
 #define setcefc(e, f) SELFWRAP_SET(customizeentityforclient, e, f)
 #define getcefc(e) SELFWRAP_GET(customizeentityforclient, e)
+#endif
 
 SELFWRAP(camera_transform, vector, (vector org, vector ang), (entity this, vector org, vector ang), (this, org, ang))
 #define setcamera_transform(e, f) SELFWRAP_SET(camera_transform, e, f)

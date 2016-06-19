@@ -999,10 +999,10 @@ MUTATOR_HOOKFUNCTION(nades, PutClientInServer)
 	nades_RemoveBonus(player);
 }
 
-float nade_customize(entity this)
+bool nade_customize(entity this, entity client)
 {
-	//if(IS_SPEC(other)) { return false; }
-	if(other == this.exteriormodeltoclient || (IS_SPEC(other) && other.enemy == this.exteriormodeltoclient))
+	//if(IS_SPEC(client)) { return false; }
+	if(client == this.exteriormodeltoclient || (IS_SPEC(client) && client.enemy == this.exteriormodeltoclient))
 	{
 		// somewhat hide the model, but keep the glow
 		//this.effects = 0;

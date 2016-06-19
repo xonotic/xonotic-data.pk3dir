@@ -278,10 +278,10 @@ void ctf_CaptureShield_Update(entity player, bool wanted_status)
 	}
 }
 
-bool ctf_CaptureShield_Customize(entity this)
+bool ctf_CaptureShield_Customize(entity this, entity client)
 {
-	if(!other.ctf_captureshielded) { return false; }
-	if(CTF_SAMETEAM(this, other)) { return false; }
+	if(!client.ctf_captureshielded) { return false; }
+	if(CTF_SAMETEAM(this, client)) { return false; }
 
 	return true;
 }
@@ -747,11 +747,11 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 	}
 }
 
-bool ctf_Stalemate_Customize(entity this)
+bool ctf_Stalemate_Customize(entity this, entity client)
 {
 	// make spectators see what the player would see
 	entity e, wp_owner;
-	e = WaypointSprite_getviewentity(other);
+	e = WaypointSprite_getviewentity(client);
 	wp_owner = this.owner;
 
 	// team waypoints

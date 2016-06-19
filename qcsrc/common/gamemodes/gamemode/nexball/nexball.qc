@@ -609,11 +609,10 @@ spawnfunc(nexball_football)
 	SpawnBall(this);
 }
 
-float nb_Goal_Customize(entity this)
+bool nb_Goal_Customize(entity this, entity client)
 {
-	entity e, wp_owner;
-	e = WaypointSprite_getviewentity(other);
-	wp_owner = this.owner;
+	entity e = WaypointSprite_getviewentity(client);
+	entity wp_owner = this.owner;
 	if(SAME_TEAM(e, wp_owner)) { return false; }
 
 	return true;
@@ -838,7 +837,7 @@ void W_Nexball_Attack2(entity actor)
 	CSQCProjectile(missile, true, PROJECTILE_ELECTRO, true);
 }
 
-float ball_customize(entity this)
+bool ball_customize(entity this, entity client)
 {
 	if(!this.owner)
 	{
@@ -848,7 +847,7 @@ float ball_customize(entity this)
 		return true;
 	}
 
-	if(other == this.owner)
+	if(client == this.owner)
 	{
 		this.scale = autocvar_g_nexball_viewmodel_scale;
 		if(this.enemy)

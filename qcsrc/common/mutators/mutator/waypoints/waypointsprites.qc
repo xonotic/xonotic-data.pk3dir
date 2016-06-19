@@ -963,17 +963,17 @@ float WaypointSprite_isteammate(entity e, entity e2)
     return e2 == e;
 }
 
-float WaypointSprite_Customize(entity this)
+bool WaypointSprite_Customize(entity this, entity client)
 {
     // this is not in SendEntity because it shall run every frame, not just every update
 
     // make spectators see what the player would see
-    entity e = WaypointSprite_getviewentity(other);
+    entity e = WaypointSprite_getviewentity(client);
 
-    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, other))
+    if (MUTATOR_CALLHOOK(CustomizeWaypoint, this, client))
         return false;
 
-    return this.waypointsprite_visible_for_player(this, other, e);
+    return this.waypointsprite_visible_for_player(this, client, e);
 }
 
 bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);

@@ -494,15 +494,15 @@ void Portal_Think(entity this)
 		Portal_Remove(this, 0);
 }
 
-float Portal_Customize(entity this)
+bool Portal_Customize(entity this, entity client)
 {
-	if(IS_SPEC(other))
-		other = other.enemy;
-	if(other == this.aiment)
+	if(IS_SPEC(client))
+		client = client.enemy;
+	if(client == this.aiment)
 	{
 		this.modelindex = this.savemodelindex;
 	}
-	else if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(this.aiment))
+	else if(IS_INDEPENDENT_PLAYER(client) || IS_INDEPENDENT_PLAYER(this.aiment))
 	{
 		this.modelindex = 0;
 	}
