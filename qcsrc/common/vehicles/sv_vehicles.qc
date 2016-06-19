@@ -1011,7 +1011,7 @@ void vehicles_enter(entity pl, entity veh)
 
 void vehicles_think(entity this)
 {
-	this.nextthink = time;
+	this.nextthink = time + autocvar_g_vehicles_thinkrate;
 
 	if(this.owner)
 		this.owner.vehicle_weapon2mode = this.vehicle_weapon2mode;

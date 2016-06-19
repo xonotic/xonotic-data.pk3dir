@@ -178,7 +178,7 @@ bool raptor_frame(entity this)
 		vehic.sound_nexttime = time + 7.955812;
 		//sound (vehic.tur_head, CH_TRIGGER_SINGLE, SND_VEH_RAPTOR_FLY, 1 - ftmp,   ATTEN_NORM );
 		sound (vehic, CH_TRIGGER_SINGLE, SND_VEH_RAPTOR_SPEED, 1, ATTEN_NORM);
-		vehic.wait = ftmp;
+		vehic.wait = 0;
 	}
 	/*
 	else if(fabs(ftmp - vehic.wait) > 0.2)
