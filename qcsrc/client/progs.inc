@@ -1,4 +1,7 @@
 #include <lib/_all.inc>
+
+#if XONOTIC
+
 #include "_all.qh"
 
 #include "../client/_mod.inc"
@@ -19,6 +22,8 @@
 #include <lib/warpzone/client.qc>
 #include <lib/warpzone/server.qc>
 #include <lib/warpzone/util_server.qc>
+
+#endif
 
 #if BUILD_MOD
 #include "../../mod/client/progs.inc"
