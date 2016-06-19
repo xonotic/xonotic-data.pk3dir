@@ -23,33 +23,33 @@ THINK FUNCTIONS
 void door_go_down(entity this);
 void door_go_up(entity this);
 void door_rotating_go_down(entity this);
-void door_rotating_go_up(entity this);
+void door_rotating_go_up(entity this, entity oth);
 
-void door_blocked(entity this)
+void door_blocked(entity this, entity blocker)
 {
 	if((this.spawnflags & 8)
 #ifdef SVQC
-		&& (other.takedamage != DAMAGE_NO)
+		&& (blocker.takedamage != DAMAGE_NO)
 #elif defined(CSQC)
-		&& !IS_DEAD(other)
+		&& !IS_DEAD(blocker)
 #endif
 	)
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
-		if((this.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (other, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 #endif
 
 		 // don't change direction for dead or dying stuff
-		if(IS_DEAD(other)
+		if(IS_DEAD(blocker)
 #ifdef SVQC
-			&& (other.takedamage == DAMAGE_NO)
+			&& (blocker.takedamage == DAMAGE_NO)
 #endif
 		)
 		{
@@ -61,7 +61,7 @@ void door_blocked(entity this)
 				door_go_up (this);
 			} else
 			{
-				door_rotating_go_up (this);
+				door_rotating_go_up(this, blocker);
 			}
 				else
 			if (this.classname == "door")
@@ -77,8 +77,8 @@ void door_blocked(entity this)
 		else
 		{
 			//gib dying stuff just to make sure
-			if((this.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 		}
 #endif
 	}
@@ -235,15 +235,15 @@ void door_fire(entity this, entity actor, entity trigger)
 			door_go_up(e);
 		} else {
 			// if the BIDIR spawnflag (==2) is set and the trigger has set trigger_reverse, reverse the opening direction
-			if ((e.spawnflags & 2) && other.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
+			if ((e.spawnflags & 2) && trigger.trigger_reverse!=0 && e.lip != 666 && e.state == STATE_BOTTOM) {
 				e.lip = 666; // e.lip is used to remember reverse opening direction for door_rotating
 				e.pos2 = '0 0 0' - e.pos2;
 			}
 			// if BIDIR_IN_DOWN (==8) is set, prevent the door from reoping during closing if it is triggered from the wrong side
 			if (!((e.spawnflags & 2) &&  (e.spawnflags & 8) && e.state == STATE_DOWN
-				&& (((e.lip == 666) && (other.trigger_reverse == 0)) || ((e.lip != 666) && (other.trigger_reverse != 0)))))
+				&& (((e.lip == 666) && (trigger.trigger_reverse == 0)) || ((e.lip != 666) && (trigger.trigger_reverse != 0)))))
 			{
-				door_rotating_go_up(e);
+				door_rotating_go_up(e, trigger);
 			}
 		}
 		e = e.enemy;
@@ -308,28 +308,28 @@ void door_touch(entity this, entity toucher)
 #endif
 }
 
-void door_generic_plat_blocked(entity this)
+void door_generic_plat_blocked(entity this, entity blocker)
 {
-	if((this.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
+	if((this.spawnflags & 8) && (blocker.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
 #ifdef SVQC
-		Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 
 #ifdef SVQC
-		if((this.dmg) && (other.takedamage == DAMAGE_YES))    // Shall we bite?
-			Damage (other, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		if((this.dmg) && (blocker.takedamage == DAMAGE_YES))    // Shall we bite?
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 #endif
 
 		 //Dont chamge direction for dead or dying stuff
-		if(IS_DEAD(other) && (other.takedamage == DAMAGE_NO))
+		if(IS_DEAD(blocker) && (blocker.takedamage == DAMAGE_NO))
 		{
 			if (this.wait >= 0)
 			{
 				if (this.state == STATE_DOWN)
-					door_rotating_go_up (this);
+					door_rotating_go_up (this, blocker);
 				else
 					door_rotating_go_down (this);
 			}
@@ -338,8 +338,8 @@ void door_generic_plat_blocked(entity this)
 		else
 		{
 			//gib dying stuff just to make sure
-			if((this.dmg) && (other.takedamage != DAMAGE_NO))    // Shall we bite?
-				Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			if((this.dmg) && (blocker.takedamage != DAMAGE_NO))    // Shall we bite?
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 		}
 #endif
 	}
@@ -382,7 +382,7 @@ void door_rotating_go_down(entity this)
 	SUB_CalcAngleMove (this, this.pos1, TSPEED_LINEAR, this.speed, door_rotating_hit_bottom);
 }
 
-void door_rotating_go_up(entity this)
+void door_rotating_go_up(entity this, entity oth)
 {
 	if (this.state == STATE_UP)
 		return;		// already going up
@@ -400,7 +400,7 @@ void door_rotating_go_up(entity this)
 	string oldmessage;
 	oldmessage = this.message;
 	this.message = "";
-	SUB_UseTargets(this, NULL, other); // TODO: is other needed here?
+	SUB_UseTargets(this, NULL, oth); // TODO: is oth needed here?
 	this.message = oldmessage;
 }
 

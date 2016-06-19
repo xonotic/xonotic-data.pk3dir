@@ -135,7 +135,7 @@ void W_Crylink_LinkExplode(entity e, entity e2, entity directhitentity)
 	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius), 
 				NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * a, e.projectiledeathtype, directhitentity);
 
-	W_Crylink_LinkExplode(e.queuenext, e2);
+	W_Crylink_LinkExplode(e.queuenext, e2, directhitentity);
 
 	e.classname = "spike_oktoremove";
 	remove(e);

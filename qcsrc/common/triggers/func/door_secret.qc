@@ -135,7 +135,7 @@ void fd_secret_done(entity this)
 
 .float door_finished;
 
-void secret_blocked(entity this)
+void secret_blocked(entity this, entity blocker)
 {
 	if (time < this.door_finished)
 		return;

@@ -28,7 +28,7 @@ void button_return(entity this)
 }
 
 
-void button_blocked(entity this)
+void button_blocked(entity this, entity blocker)
 {
 	// do nothing, just don't come all the way back out
 }

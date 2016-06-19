@@ -1,17 +1,17 @@
-void generic_plat_blocked(entity this)
+void generic_plat_blocked(entity this, entity blocker)
 {
 #ifdef SVQC
-	if(this.dmg && other.takedamage != DAMAGE_NO)
+	if(this.dmg && blocker.takedamage != DAMAGE_NO)
 	{
 		if(this.dmgtime2 < time)
 		{
-			Damage (other, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 			this.dmgtime2 = time + this.dmgtime;
 		}
 
 		// Gib dead/dying stuff
-		if(IS_DEAD(other))
-			Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		if(IS_DEAD(blocker))
+			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 	}
 #endif
 }
@@ -139,23 +139,23 @@ void plat_trigger_use(entity this, entity actor, entity trigger)
 }
 
 
-void plat_crush(entity this)
+void plat_crush(entity this, entity blocker)
 {
-	if((this.spawnflags & 4) && (other.takedamage != DAMAGE_NO))
+	if((this.spawnflags & 4) && (blocker.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
-		if((this.dmg) && (other.takedamage != DAMAGE_NO))
+		if((this.dmg) && (blocker.takedamage != DAMAGE_NO))
 		{   // Shall we bite?
-			Damage (other, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 			// Gib dead/dying stuff
-			if(IS_DEAD(other))
-				Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
+			if(IS_DEAD(blocker))
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 		}
 #endif
 

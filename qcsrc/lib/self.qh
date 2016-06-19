@@ -72,9 +72,11 @@ SELFWRAP(touch, void, (), (entity this, entity toucher), (this, other))
 #define gettouch(e) SELFWRAP_GET(touch, e)
 #endif
 
-SELFWRAP(blocked, void, (), (entity this), (this))
+#ifndef MENUQC
+SELFWRAP(blocked, void, (), (entity this, entity blocker), (this, other))
 #define setblocked(e, f) SELFWRAP_SET(blocked, e, f)
 #define blocked stopusingthis
+#endif
 
 SELFWRAP(predraw, void, (), (entity this), (this))
 #define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
