@@ -591,20 +591,15 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	// WEAPONTODO
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
 		damage *= autocvar_g_vehicles_vortex_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
 		damage *= autocvar_g_vehicles_machinegun_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
+	else if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 		damage *= autocvar_g_vehicles_vaporizer_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;
-
-	if(DEATH_WEAPONOF(deathtype) != WEP_Null)
+	else if(DEATH_WEAPONOF(deathtype) != WEP_Null)
 		damage *= autocvar_g_vehicles_weapon_damagerate;
 
 	this.enemy = attacker;
