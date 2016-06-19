@@ -34,7 +34,7 @@ float object_count;
 .string material;
 
 .float touch_timer;
-void sandbox_ObjectFunction_Touch(entity this)
+void sandbox_ObjectFunction_Touch(entity this, entity toucher)
 {
 	// apply material impact effects
 
@@ -46,7 +46,7 @@ void sandbox_ObjectFunction_Touch(entity this)
 
 	// make particle count and sound volume depend on impact speed
 	float intensity;
-	intensity = vlen(this.velocity) + vlen(other.velocity);
+	intensity = vlen(this.velocity) + vlen(toucher.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
 	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))

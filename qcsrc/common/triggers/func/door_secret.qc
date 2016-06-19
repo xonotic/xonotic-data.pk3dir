@@ -150,9 +150,9 @@ secret_touch
 Prints messages
 ================
 */
-void secret_touch(entity this)
+void secret_touch(entity this, entity toucher)
 {
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 	if (this.door_finished > time)
 		return;
@@ -161,9 +161,9 @@ void secret_touch(entity this)
 
 	if (this.message)
 	{
-		if (IS_CLIENT(other))
-			centerprint(other, this.message);
-		play2(other, this.noise);
+		if (IS_CLIENT(toucher))
+			centerprint(toucher, this.message);
+		play2(toucher, this.noise);
 	}
 }
 

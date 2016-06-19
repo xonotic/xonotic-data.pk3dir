@@ -369,26 +369,26 @@ bool vehicles_valid_pilot(entity this, entity toucher)
 	return true;
 }
 
-void bumblebee_touch(entity this)
+void bumblebee_touch(entity this, entity toucher)
 {
 	if(autocvar_g_vehicles_enter) { return; }
 
 	if(this.gunner1 != NULL && this.gunner2 != NULL)
 	{
-		vehicles_touch(this);
+		vehicles_touch(this, toucher);
 		return;
 	}
 
-	if(vehicles_valid_pilot(this, other))
+	if(vehicles_valid_pilot(this, toucher))
 	{
 		float phase_time = (time >= this.gun1.phase) + (time >= this.gun2.phase);
 
-		if(time >= other.vehicle_enter_delay && phase_time)
-		if(bumblebee_gunner_enter(this, other))
+		if(time >= toucher.vehicle_enter_delay && phase_time)
+		if(bumblebee_gunner_enter(this, toucher))
 			return;
 	}
 
-	vehicles_touch(this);
+	vehicles_touch(this, toucher);
 }
 
 void bumblebee_regen(entity this)
@@ -701,6 +701,11 @@ void bumblebee_blowup(entity this)
 	remove(this);
 }
 
+void bumblebee_dead_touch(entity this, entity toucher)
+{
+	bumblebee_blowup(this);
+}
+
 void bumblebee_diethink(entity this)
 {
 	if(time >= this.wait)
@@ -745,11 +750,8 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         {
         	entity e = instance.gunner1;
         	instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
-        	entity oldother = other;
-        	other = e;
         	instance.phase = 0;
-        	gettouch(instance)(instance);
-        	other = oldother;
+        	gettouch(instance)(instance, e);
         	return;
         }
 
@@ -757,11 +759,8 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         {
         	entity e = instance.gunner2;
         	instance.gun2.vehicle_exit(instance.gun2, VHEF_EJECT);
-        	entity oldother = other;
-        	other = e;
         	instance.phase = 0;
-        	gettouch(instance)(instance);
-        	other = oldother;
+        	gettouch(instance)(instance, e);
             return;
         }
     }
@@ -790,7 +789,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     entity _body = vehicle_tossgib(instance, instance, instance.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
     if(random() > 0.5)
-        settouch(_body, bumblebee_blowup);
+        settouch(_body, bumblebee_dead_touch);
     else
         settouch(_body, func_null);
 

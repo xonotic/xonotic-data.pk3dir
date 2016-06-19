@@ -142,12 +142,12 @@ void W_Mortar_Grenade_Think1(entity this)
 		W_Mortar_Grenade_Explode(this);
 }
 
-void W_Mortar_Grenade_Touch1(entity this)
+void W_Mortar_Grenade_Touch1(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM || WEP_CVAR_PRI(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use(this, NULL, NULL);
+		WITH(entity, other, toucher, this.use(this, NULL, NULL));
 	}
 	else if(WEP_CVAR_PRI(mortar, type) == 1) // bounce
 	{
@@ -156,7 +156,7 @@ void W_Mortar_Grenade_Touch1(entity this)
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
 		this.gl_bouncecnt += 1;
 	}
-	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_PRI(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound(this, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
 
@@ -174,12 +174,12 @@ void W_Mortar_Grenade_Touch1(entity this)
 	}
 }
 
-void W_Mortar_Grenade_Touch2(entity this)
+void W_Mortar_Grenade_Touch2(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	if(other.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM || WEP_CVAR_SEC(mortar, type) == 0) // always explode when hitting a player, or if normal mortar projectile
 	{
-		this.use(this, NULL, NULL);
+		WITH(entity, other, toucher, this.use(this, NULL, NULL));
 	}
 	else if(WEP_CVAR_SEC(mortar, type) == 1) // bounce
 	{
@@ -192,7 +192,7 @@ void W_Mortar_Grenade_Touch2(entity this)
 			this.nextthink = time + WEP_CVAR_SEC(mortar, lifetime_bounce);
 
 	}
-	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
+	else if(WEP_CVAR_SEC(mortar, type) == 2 && (!toucher || (toucher.takedamage != DAMAGE_AIM && toucher.movetype == MOVETYPE_NONE))) // stick
 	{
 		spamsound(this, CH_SHOTS, SND(GRENADE_STICK), VOL_BASE, ATTN_NORM);
 

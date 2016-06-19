@@ -268,26 +268,26 @@ void W_MineLayer_Think(entity this)
 		W_MineLayer_RemoteExplode(this);
 }
 
-void W_MineLayer_Touch(entity this)
+void W_MineLayer_Touch(entity this, entity toucher)
 {
 	if(this.movetype == MOVETYPE_NONE || this.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 
-	if(WarpZone_Projectile_Touch(this))
+	if(WarpZone_Projectile_Touch(this, toucher))
 	{
 		if(wasfreed(this))
 			this.realowner.minelayer_mines -= 1;
 		return;
 	}
 
-	if(other && IS_PLAYER(other) && !IS_DEAD(other))
+	if(toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher))
 	{
 		// hit a player
 		// don't stick
 	}
 	else
 	{
-		W_MineLayer_Stick(this, other);
+		W_MineLayer_Stick(this, toucher);
 	}
 }
 

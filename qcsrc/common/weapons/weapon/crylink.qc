@@ -293,17 +293,17 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 }
 
 // NO bounce protection, as bounces are limited!
-void W_Crylink_Touch(entity this)
+void W_Crylink_Touch(entity this, entity toucher)
 {
 	float finalhit;
 	float f;
 	float isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	float a;
 	a = bound(0, 1 - (time - this.fade_time) * this.fade_rate, 1);
 
-	finalhit = ((this.cnt <= 0) || (other.takedamage != DAMAGE_NO));
+	finalhit = ((this.cnt <= 0) || (toucher.takedamage != DAMAGE_NO));
 	if(finalhit)
 		f = 1;
 	else
@@ -311,13 +311,13 @@ void W_Crylink_Touch(entity this)
 	if(a)
 		f *= a;
 
-	float totaldamage = RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * f, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * f, WEP_CVAR_BOTH(crylink, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * f, this.projectiledeathtype, other);
+	float totaldamage = RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * f, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * f, WEP_CVAR_BOTH(crylink, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * f, this.projectiledeathtype, toucher);
 
 	if(totaldamage && ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 2) || ((WEP_CVAR_BOTH(crylink, isprimary, linkexplode) == 1) && !W_Crylink_Touch_WouldHitFriendly(this, WEP_CVAR_BOTH(crylink, isprimary, radius)))))
 	{
 		if(this == this.realowner.crylink_lastgroup)
 			this.realowner.crylink_lastgroup = NULL;
-		W_Crylink_LinkExplode(this.queuenext, this);
+		WITH(entity, other, toucher, W_Crylink_LinkExplode(this.queuenext, this));
 		this.classname = "spike_oktoremove";
 		remove(this);
 		return;

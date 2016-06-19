@@ -508,7 +508,7 @@ bool raptor_takeoff(entity this)
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }
 
-void raptor_blowup(entity this)
+void raptor_blowup(entity this, entity toucher)
 {
 	this.deadflag	= DEAD_DEAD;
 	this.vehicle_exit(this, VHEF_NORMAL);
@@ -529,7 +529,10 @@ void raptor_blowup(entity this)
 void raptor_diethink(entity this)
 {
 	if(time >= this.wait)
-		setthink(this, raptor_blowup);
+	{
+		raptor_blowup(this, NULL);
+		return;
+	}
 
 	if(random() < 0.05)
 	{

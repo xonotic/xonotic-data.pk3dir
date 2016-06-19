@@ -122,11 +122,11 @@ void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity at
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void M_Shambler_Attack_Lightning_Touch(entity this)
+void M_Shambler_Attack_Lightning_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	this.use(this, NULL, NULL);
+	WITH(entity, other, toucher, this.use(this, NULL, NULL));
 }
 
 void M_Shambler_Attack_Lightning_Think(entity this)

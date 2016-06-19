@@ -60,13 +60,13 @@ void W_RocketPropelledChainsaw_Explode(entity this)
 	remove (this);
 }
 
-void W_RocketPropelledChainsaw_Touch (entity this)
+void W_RocketPropelledChainsaw_Touch (entity this, entity toucher)
 {
-	if(WarpZone_Projectile_Touch(this))
+	if(WarpZone_Projectile_Touch(this, toucher))
 		if(wasfreed(this))
 			return;
 
-	W_RocketPropelledChainsaw_Explode(this);
+	WITH(entity, other, toucher, W_RocketPropelledChainsaw_Explode(this));
 }
 
 void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

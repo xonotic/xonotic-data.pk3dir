@@ -86,18 +86,18 @@ void plat_go_up(entity this)
 	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, plat_hit_top);
 }
 
-void plat_center_touch(entity this)
+void plat_center_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 
-	if (other.health <= 0)
+	if (toucher.health <= 0)
 		return;
 #elif defined(CSQC)
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if(IS_DEAD(other))
+	if(IS_DEAD(toucher))
 		return;
 #endif
 
@@ -107,16 +107,16 @@ void plat_center_touch(entity this)
 		this.enemy.SUB_NEXTTHINK = this.enemy.SUB_LTIME + 1;
 }
 
-void plat_outside_touch(entity this)
+void plat_outside_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 
-	if (other.health <= 0)
+	if (toucher.health <= 0)
 		return;
 #elif defined(CSQC)
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
 #endif
 

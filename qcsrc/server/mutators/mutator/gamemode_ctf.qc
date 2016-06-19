@@ -286,16 +286,16 @@ bool ctf_CaptureShield_Customize(entity this)
 	return true;
 }
 
-void ctf_CaptureShield_Touch(entity this)
+void ctf_CaptureShield_Touch(entity this, entity toucher)
 {
-	if(!other.ctf_captureshielded) { return; }
-	if(CTF_SAMETEAM(this, other)) { return; }
+	if(!toucher.ctf_captureshielded) { return; }
+	if(CTF_SAMETEAM(this, toucher)) { return; }
 
 	vector mymid = (this.absmin + this.absmax) * 0.5;
-	vector othermid = (other.absmin + other.absmax) * 0.5;
+	vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-	Damage(other, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	if(IS_REAL_CLIENT(other)) { Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
+	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * ctf_captureshield_force);
+	if(IS_REAL_CLIENT(toucher)) { Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
 }
 
 void ctf_CaptureShield_Spawn(entity flag)

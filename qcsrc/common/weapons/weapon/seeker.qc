@@ -102,11 +102,12 @@ void W_Seeker_Missile_Explode(entity this)
 	remove(this);
 }
 
-void W_Seeker_Missile_Touch(entity this)
+void W_Seeker_Missile_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	W_Seeker_Missile_Explode(this);
+	// TODO
+	WITH(entity, other, toucher, W_Seeker_Missile_Explode(this));
 }
 
 void W_Seeker_Missile_Think(entity this)
@@ -313,9 +314,14 @@ void W_Seeker_Flac_Explode(entity this)
 	remove(this);
 }
 
+void W_Seeker_Flac_Touch(entity this, entity toucher)
+{
+	WITH(entity, other, toucher, W_Seeker_Flac_Explode(this));
+}
+
 void W_Seeker_Flac_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_Seeker_Flac_Explode(this);
+	WITH(entity, other, trigger, W_Seeker_Flac_Explode(this));
 }
 
 void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
@@ -352,7 +358,7 @@ void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
 	missile.owner 			= missile.realowner = actor;
 	missile.bot_dodge 		= true;
 	missile.bot_dodgerating = WEP_CVAR(seeker, flac_damage);
-	settouch(missile, W_Seeker_Flac_Explode);
+	settouch(missile, W_Seeker_Flac_Touch);
 	missile.use 			= W_Seeker_Flac_Explode_use;
 	setthink(missile, adaptor_think2use_hittype_splash);
 	missile.nextthink 		= time + WEP_CVAR(seeker, flac_lifetime) + WEP_CVAR(seeker, flac_lifetime_rand);
@@ -492,13 +498,13 @@ void W_Seeker_Tag_Damage(entity this, entity inflictor, entity attacker, float d
 		W_Seeker_Tag_Explode(this);
 }
 
-void W_Seeker_Tag_Touch(entity this)
+void W_Seeker_Tag_Touch(entity this, entity toucher)
 {
 	vector dir;
 	vector org2;
 	entity e;
 
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	dir     = normalize(this.realowner.origin - this.origin);
 	org2    = findbetterlocation(this.origin, 8);
@@ -506,23 +512,23 @@ void W_Seeker_Tag_Touch(entity this)
 	te_knightspike(org2);
 
 	this.event_damage = func_null;
-	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, this);
+	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE | HITTYPE_SECONDARY, toucher.species, this);
 
-	if(other.takedamage == DAMAGE_AIM && !IS_DEAD(other))
+	if(toucher.takedamage == DAMAGE_AIM && !IS_DEAD(toucher))
 	{
 		// check to see if this person is already tagged by me
-		entity tag = W_Seeker_Tagged_Info(this.realowner, other);
+		entity tag = W_Seeker_Tagged_Info(this.realowner, toucher);
 
 		if(tag != NULL)
 		{
-			if(other.wps_tag_tracker && (WEP_CVAR(seeker, type) == 1)) // don't attach another waypointsprite without killing the old one first
-				WaypointSprite_Kill(other.wps_tag_tracker);
+			if(toucher.wps_tag_tracker && (WEP_CVAR(seeker, type) == 1)) // don't attach another waypointsprite without killing the old one first
+				WaypointSprite_Kill(toucher.wps_tag_tracker);
 
 			tag.tag_time = time;
 		}
 		else
 		{
-			//sprint(this.realowner, strcat("You just tagged ^2", other.netname, "^7 with a tracking device!\n"));
+			//sprint(this.realowner, strcat("You just tagged ^2", toucher.netname, "^7 with a tracking device!\n"));
 			e             = new(tag_tracker);
 			e.cnt         = WEP_CVAR(seeker, missile_count);
 			e.owner       = this.owner;
@@ -530,13 +536,13 @@ void W_Seeker_Tag_Touch(entity this)
 
 			if(WEP_CVAR(seeker, type) == 1)
 			{
-				e.tag_target  = other;
+				e.tag_target  = toucher;
 				e.tag_time    = time;
 				setthink(e, W_Seeker_Tracker_Think);
 			}
 			else
 			{
-				e.enemy     = other;
+				e.enemy     = toucher;
 				setthink(e, W_Seeker_Vollycontroller_Think);
 			}
 
@@ -545,8 +551,8 @@ void W_Seeker_Tag_Touch(entity this)
 
 		if(WEP_CVAR(seeker, type) == 1)
 		{
-			WaypointSprite_Spawn(WP_Seeker, WEP_CVAR(seeker, tag_tracker_lifetime), 0, other, '0 0 64', this.realowner, 0, other, wps_tag_tracker, true, RADARICON_TAGGED);
-			WaypointSprite_UpdateRule(other.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
+			WaypointSprite_Spawn(WP_Seeker, WEP_CVAR(seeker, tag_tracker_lifetime), 0, toucher, '0 0 64', this.realowner, 0, toucher, wps_tag_tracker, true, RADARICON_TAGGED);
+			WaypointSprite_UpdateRule(toucher.wps_tag_tracker, 0, SPRITERULE_DEFAULT);
 		}
 	}
 

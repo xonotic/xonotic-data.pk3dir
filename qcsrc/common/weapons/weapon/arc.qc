@@ -259,10 +259,10 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
-void W_Arc_Bolt_Touch(entity this)
+void W_Arc_Bolt_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	this.use(this, NULL, NULL);
+	PROJECTILE_TOUCH(this, toucher);
+	WITH(entity, other, toucher, this.use(this, NULL, NULL));
 }
 
 void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)

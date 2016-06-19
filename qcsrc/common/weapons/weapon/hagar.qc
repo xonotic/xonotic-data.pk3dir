@@ -113,18 +113,18 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
-void W_Hagar_Touch(entity this)
+void W_Hagar_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	this.use(this, NULL, NULL);
+	PROJECTILE_TOUCH(this, toucher);
+	WITH(entity, other, toucher, this.use(this, NULL, NULL));
 }
 
-void W_Hagar_Touch2(entity this)
+void W_Hagar_Touch2(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	if(this.cnt > 0 || other.takedamage == DAMAGE_AIM) {
-		this.use(this, NULL, NULL);
+	if(this.cnt > 0 || toucher.takedamage == DAMAGE_AIM) {
+		WITH(entity, other, toucher, this.use(this, NULL, NULL));
 	} else {
 		this.cnt++;
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);

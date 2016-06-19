@@ -160,11 +160,11 @@ void M_Mage_Attack_Spike_Explode(entity this)
 	remove (this);
 }
 
-void M_Mage_Attack_Spike_Touch(entity this)
+void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	M_Mage_Attack_Spike_Explode(this);
+	WITH(entity, other, toucher, M_Mage_Attack_Spike_Explode(this));
 }
 
 .float wait;

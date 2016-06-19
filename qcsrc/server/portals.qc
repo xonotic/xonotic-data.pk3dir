@@ -249,7 +249,7 @@ float Portal_WillHitPlane(vector eorg, vector emins, vector emaxs, vector evel, 
 #endif
 }
 
-void Portal_Touch(entity this)
+void Portal_Touch(entity this, entity toucher)
 {
 	vector g;
 
@@ -258,18 +258,18 @@ void Portal_Touch(entity this)
 	if(this.solid != SOLID_TRIGGER)
 		return; // possibly engine bug
 
-	if(IS_PLAYER(other))
+	if(IS_PLAYER(toucher))
 		return; // handled by think
 #endif
 
-	if(other.classname == "item_flag_team")
+	if(toucher.classname == "item_flag_team")
 		return; // never portal these
 
-	if(other.classname == "grapplinghook")
+	if(toucher.classname == "grapplinghook")
 		return; // handled by think
 
 	if(!autocvar_g_vehicles_teleportable)
-	if(IS_VEHICLE(other))
+	if(IS_VEHICLE(toucher))
 		return; // no teleporting vehicles?
 
 	if(!this.enemy)
@@ -283,43 +283,43 @@ void Portal_Touch(entity this)
 		return; // only handle impacts
 #endif
 
-	if(other.classname == "porto")
+	if(toucher.classname == "porto")
 	{
-		if(other.portal_id == this.portal_id)
+		if(toucher.portal_id == this.portal_id)
 			return;
 	}
 	if(time < this.portal_activatetime)
-		if(other == this.aiment)
+		if(toucher == this.aiment)
 		{
 			this.portal_activatetime = time + 0.1;
 			return;
 		}
-	if(other != this.aiment)
-		if(IS_PLAYER(other))
-			if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(this.aiment))
+	if(toucher != this.aiment)
+		if(IS_PLAYER(toucher))
+			if(IS_INDEPENDENT_PLAYER(toucher) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
-	if(other.aiment != this.aiment)
-		if(IS_PLAYER(other.aiment))
-			if(IS_INDEPENDENT_PLAYER(other.aiment) || IS_INDEPENDENT_PLAYER(this.aiment))
+	if(toucher.aiment != this.aiment)
+		if(IS_PLAYER(toucher.aiment))
+			if(IS_INDEPENDENT_PLAYER(toucher.aiment) || IS_INDEPENDENT_PLAYER(this.aiment))
 				return; // cannot go through someone else's portal
 	fixedmakevectors(this.mangle);
 	g = frametime * '0 0 -1' * autocvar_sv_gravity;
-	if(!Portal_WillHitPlane(other.origin, other.mins, other.maxs, other.velocity + g, this.origin, v_forward, this.maxs.x))
+	if(!Portal_WillHitPlane(toucher.origin, toucher.mins, toucher.maxs, toucher.velocity + g, this.origin, v_forward, this.maxs.x))
 		return;
 
 	/*
-	if(other.mins_x < PL_MIN.x || other.mins_y < PL_MIN.y || other.mins_z < PL_MIN.z
-	|| other.maxs_x > PL_MAX.x || other.maxs_y > PL_MAX.y || other.maxs_z > PL_MAX.z)
+	if(toucher.mins_x < PL_MIN.x || toucher.mins_y < PL_MIN.y || toucher.mins_z < PL_MIN.z
+	|| toucher.maxs_x > PL_MAX.x || toucher.maxs_y > PL_MAX.y || toucher.maxs_z > PL_MAX.z)
 	{
 		// can't teleport this
 		return;
 	}
 	*/
 
-	if(Portal_TeleportPlayer(this, other))
-		if(other.classname == "porto")
-			if(other.effects & EF_RED)
-				other.effects += EF_BLUE - EF_RED;
+	if(Portal_TeleportPlayer(this, toucher))
+		if(toucher.classname == "porto")
+			if(toucher.effects & EF_RED)
+				toucher.effects += EF_BLUE - EF_RED;
 }
 
 void Portal_Think(entity this);

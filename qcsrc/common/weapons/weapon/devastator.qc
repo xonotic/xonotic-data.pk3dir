@@ -320,16 +320,16 @@ void W_Devastator_Think(entity this)
 		UpdateCSQCProjectile(this);
 }
 
-void W_Devastator_Touch(entity this)
+void W_Devastator_Touch(entity this, entity toucher)
 {
-	if(WarpZone_Projectile_Touch(this))
+	if(WarpZone_Projectile_Touch(this, toucher))
 	{
 		if(wasfreed(this))
 			W_Devastator_Unregister(this);
 		return;
 	}
 	W_Devastator_Unregister(this);
-	W_Devastator_Explode(this);
+	WITH(entity, other, toucher, W_Devastator_Explode(this));
 }
 
 void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)

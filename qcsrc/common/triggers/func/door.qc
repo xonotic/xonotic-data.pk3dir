@@ -289,9 +289,9 @@ Prints messages
 ================
 */
 
-void door_touch(entity this)
+void door_touch(entity this, entity toucher)
 {
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
 	if (this.owner.door_finished > time)
 		return;
@@ -301,17 +301,16 @@ void door_touch(entity this)
 #ifdef SVQC
 	if (!(this.owner.dmg) && (this.owner.message != ""))
 	{
-		if (IS_CLIENT(other))
-			centerprint(other, this.owner.message);
-		play2(other, this.owner.noise);
+		if (IS_CLIENT(toucher))
+			centerprint(toucher, this.owner.message);
+		play2(toucher, this.owner.noise);
 	}
 #endif
 }
 
 void door_generic_plat_blocked(entity this)
 {
-
-	if((this.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // KIll Kill Kill!!
+	if((this.spawnflags & 8) && (other.takedamage != DAMAGE_NO)) { // Kill Kill Kill!!
 #ifdef SVQC
 		Damage (other, this, this, 10000, DEATH_HURTTRIGGER.m_id, other.origin, '0 0 0');
 #endif
@@ -414,13 +413,13 @@ Spawned if a door lacks a real activator
 =========================================
 */
 
-void door_trigger_touch(entity this)
+void door_trigger_touch(entity this, entity toucher)
 {
-	if (other.health < 1)
+	if (toucher.health < 1)
 #ifdef SVQC
-		if (!((other.iscreature || (other.flags & FL_PROJECTILE)) && !IS_DEAD(other)))
+		if (!((toucher.iscreature || (toucher.flags & FL_PROJECTILE)) && !IS_DEAD(toucher)))
 #elif defined(CSQC)
-		if(!((IS_CLIENT(other) || other.classname == "csqcprojectile") && !IS_DEAD(other)))
+		if(!((IS_CLIENT(toucher) || toucher.classname == "csqcprojectile") && !IS_DEAD(toucher)))
 #endif
 			return;
 
@@ -428,12 +427,12 @@ void door_trigger_touch(entity this)
 		return;
 
 	// check if door is locked
-	if (!door_check_keys(this, other))
+	if (!door_check_keys(this, toucher))
 		return;
 
 	this.door_finished = time + 1;
 
-	door_use(this.owner, other, NULL);
+	door_use(this.owner, toucher, NULL);
 }
 
 void door_spawnfield(entity this, vector fmins, vector fmaxs)

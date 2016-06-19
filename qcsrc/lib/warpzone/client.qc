@@ -25,7 +25,7 @@ void WarpZone_Fade_PreDraw(entity this)
 		this.drawmask = MASK_NORMAL;
 }
 
-void WarpZone_Touch (entity this);
+void WarpZone_Touch(entity this, entity toucher);
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
 	warpzone_warpzones_exist = 1;

@@ -196,10 +196,10 @@ void W_Electro_Explode_use(entity this, entity actor, entity trigger)
 	W_Electro_Explode(this);
 }
 
-void W_Electro_TouchExplode(entity this)
+void W_Electro_TouchExplode(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	W_Electro_Explode(this);
+	PROJECTILE_TOUCH(this, toucher);
+	WITH(entity, other, toucher, W_Electro_Explode(this));
 }
 
 void W_Electro_Bolt_Think(entity this)
@@ -298,11 +298,11 @@ void W_Electro_Attack_Bolt(Weapon thiswep, entity actor)
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-void W_Electro_Orb_Touch(entity this)
+void W_Electro_Orb_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	if(other.takedamage == DAMAGE_AIM)
-		{ if(WEP_CVAR_SEC(electro, touchexplode)) { W_Electro_Explode(this); } }
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM)
+		{ if(WEP_CVAR_SEC(electro, touchexplode)) { WITH(entity, other, toucher, W_Electro_Explode(this)); } }
 	else
 	{
 		//UpdateCSQCProjectile(this);

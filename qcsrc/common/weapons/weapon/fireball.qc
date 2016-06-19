@@ -117,10 +117,10 @@ void W_Fireball_Explode_use(entity this, entity actor, entity trigger)
 	W_Fireball_Explode(this);
 }
 
-void W_Fireball_TouchExplode(entity this)
+void W_Fireball_TouchExplode(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	W_Fireball_Explode(this);
+	PROJECTILE_TOUCH(this, toucher);
+	WITH(entity, other, toucher, W_Fireball_Explode(this));
 }
 
 void W_Fireball_LaserPlay(entity this, float dt, float dist, float damage, float edgedamage, float burntime)
@@ -290,11 +290,11 @@ void W_Fireball_Firemine_Think(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void W_Fireball_Firemine_Touch(entity this)
+void W_Fireball_Firemine_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	if(other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, this.realowner, WEP_CVAR_SEC(fireball, damage), WEP_CVAR_SEC(fireball, damagetime), this.projectiledeathtype) >= 0)
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher.takedamage == DAMAGE_AIM)
+	if(Fire_AddDamage(toucher, this.realowner, WEP_CVAR_SEC(fireball, damage), WEP_CVAR_SEC(fireball, damagetime), this.projectiledeathtype) >= 0)
 	{
 		remove(this);
 		return;
