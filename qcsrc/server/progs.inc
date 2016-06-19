@@ -28,6 +28,8 @@
 
 #endif
 
+#include <ecs/_lib.inc>
+
 #if BUILD_MOD
 #include "../../mod/server/progs.inc"
 #endif

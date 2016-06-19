@@ -25,6 +25,8 @@
 
 #endif
 
+#include <ecs/_lib.inc>
+
 #if BUILD_MOD
 #include "../../mod/client/progs.inc"
 #endif
