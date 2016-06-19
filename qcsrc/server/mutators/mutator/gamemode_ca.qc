@@ -254,7 +254,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 		{
 			TRANSMUTE(Player, it);
 			it.caplayer = 1;
-			WITHSELF(it, PutClientInServer());
+			PutClientInServer(it);
 		}
 	});
 	return true;

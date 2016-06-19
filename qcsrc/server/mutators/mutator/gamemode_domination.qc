@@ -493,7 +493,7 @@ MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 {
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		WITHSELF(it, PutClientInServer());
+		PutClientInServer(it);
 		if(domination_roundbased)
 			it.player_blocked = 1;
 		if(IS_REAL_CLIENT(it))

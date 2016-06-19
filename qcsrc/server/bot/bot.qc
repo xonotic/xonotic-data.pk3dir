@@ -43,8 +43,8 @@ entity bot_spawn()
 	{
 		currentbots = currentbots + 1;
 		bot_setnameandstuff(bot);
-		WITHSELF(bot, ClientConnect());
-		WITHSELF(bot, PutClientInServer());
+		ClientConnect(bot);
+		PutClientInServer(bot);
 	}
 	return bot;
 }

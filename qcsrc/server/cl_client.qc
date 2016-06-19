@@ -55,21 +55,20 @@
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
-    WITHSELF(this, ClientConnect());
+    ClientConnect(this);
     TRANSMUTE(Player, this);
     this.frame = 12; // 7
     this.team = _team;
-    WITHSELF(this, PutClientInServer());
+    PutClientInServer(this);
 }
 
 void PutObserverInServer(entity this);
-void ClientDisconnect();
 
 STATIC_METHOD(Client, Remove, void(Client this))
 {
     TRANSMUTE(Observer, this);
-    WITHSELF(this, PutClientInServer());
-    WITHSELF(this, ClientDisconnect());
+    PutClientInServer(this);
+    ClientDisconnect(this);
 }
 
 void send_CSQC_teamnagger() {
@@ -440,8 +439,8 @@ void FixPlayermodel(entity player)
 
 
 /** Called when a client spawns in the server */
-void PutClientInServer()
-{ENGINE_EVENT();
+void PutClientInServer(entity this)
+{
 	if (IS_BOT_CLIENT(this)) {
 		TRANSMUTE(Player, this);
 	} else if (IS_REAL_CLIENT(this)) {
@@ -731,8 +730,8 @@ void SetNewParms ()
 SetChangeParms
 =============
 */
-void SetChangeParms ()
-{ENGINE_EVENT();
+void SetChangeParms (entity this)
+{
 	// save parms for level change
 	parm1 = this.parm_idlesince - time;
 
@@ -779,7 +778,7 @@ void ClientKill_Now_TeamChange(entity this)
 		PutObserverInServer(this);
 	}
 	else
-		WITHSELF(this, SV_ChangeTeam(this.killindicator_teamchange - 1));
+		SV_ChangeTeam(this, this.killindicator_teamchange - 1);
 	this.killindicator_teamchange = 0;
 }
 
@@ -946,8 +945,8 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 }
 
-void ClientKill ()
-{ENGINE_EVENT();
+void ClientKill (entity this)
+{
 	if(gameover) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
@@ -1016,8 +1015,8 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-void ClientConnect()
-{ENGINE_EVENT();
+void ClientConnect(entity this)
+{
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
 	this.flags |= FL_CLIENT;
@@ -1172,8 +1171,8 @@ Called when a client disconnects from the server
 */
 .entity chatbubbleentity;
 void ReadyCount();
-void ClientDisconnect()
-{ENGINE_EVENT();
+void ClientDisconnect(entity this)
+{
 	assert(IS_CLIENT(this), return);
 
 	PlayerStats_GameReport_FinalizePlayer(this);
@@ -1300,7 +1299,7 @@ void respawn(entity this)
 	CopyBody(this, 1);
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
-	WITHSELF(this, PutClientInServer());
+	PutClientInServer(this);
 }
 
 void play_countdown(entity this, float finished, Sound samp)
@@ -1797,7 +1796,7 @@ void LeaveSpectatorMode(entity this)
 
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
-			WITHSELF(this, PutClientInServer());
+			PutClientInServer(this);
 
 			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
 		}
@@ -1968,7 +1967,7 @@ void SpectatorThink(entity this)
 				TRANSMUTE(Spectator, this);
 			} else {
 				TRANSMUTE(Observer, this);
-				WITHSELF(this, PutClientInServer());
+				PutClientInServer(this);
 			}
 			this.impulse = 0;
 		} else if(this.impulse == 12 || this.impulse == 16  || this.impulse == 19 || (this.impulse >= 220 && this.impulse <= 229)) {
@@ -1977,13 +1976,13 @@ void SpectatorThink(entity this)
 				TRANSMUTE(Spectator, this);
 			} else {
 				TRANSMUTE(Observer, this);
-				WITHSELF(this, PutClientInServer());
+				PutClientInServer(this);
 			}
 			this.impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			TRANSMUTE(Observer, this);
-			WITHSELF(this, PutClientInServer());
+			PutClientInServer(this);
 		} else {
 			if(!SpectateUpdate(this))
 				PutObserverInServer(this);
@@ -2065,8 +2064,8 @@ Called every frame for each client before the physics are run
 .float usekeypressed;
 .float last_vehiclecheck;
 .int items_added;
-void PlayerPreThink ()
-{ENGINE_EVENT();
+void PlayerPreThink (entity this)
+{
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
     STAT(GAMESTARTTIME, this) = game_starttime;
@@ -2414,8 +2413,8 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
-void PlayerPostThink ()
-{ENGINE_EVENT();
+void PlayerPostThink (entity this)
+{
 	if (sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))

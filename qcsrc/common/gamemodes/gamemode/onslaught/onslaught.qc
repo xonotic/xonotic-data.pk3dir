@@ -1759,7 +1759,7 @@ MUTATOR_HOOKFUNCTION(ons, reset_map_global)
 	FOREACH_CLIENT(IS_PLAYER(it), {
 		it.ons_roundlost = false;
 		it.ons_deathloc = '0 0 0';
-		WITHSELF(it, PutClientInServer());
+		PutClientInServer(it);
 	});
 	return false;
 }

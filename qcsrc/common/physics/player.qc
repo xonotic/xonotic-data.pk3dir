@@ -1549,13 +1549,10 @@ LABEL(end)
 }
 
 #if defined(SVQC)
-void SV_PlayerPhysics()
+void SV_PlayerPhysics(entity this)
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
-#ifdef SVQC
-	ENGINE_EVENT();
-#endif
 	PM_Main(this);
 }
