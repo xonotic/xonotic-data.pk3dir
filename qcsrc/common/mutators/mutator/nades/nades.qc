@@ -426,16 +426,13 @@ void nade_ice_think(entity this)
 
 	float current_freeze_time = this.ltime - time - 0.1;
 
-	entity e;
-	for(e = findradius(this.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
-	if(e != this)
-	if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(e, this.realowner) || e == this.realowner))
-	if(e.takedamage && !IS_DEAD(e))
-	if(e.health > 0)
-	if(!e.revival_time || ((time - e.revival_time) >= 1.5))
-	if(!STAT(FROZEN, e))
-	if(current_freeze_time > 0)
-		nade_ice_freeze(this, e, current_freeze_time);
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_nades_nade_radius, it != this && it.takedamage && !IS_DEAD(it) && it.health > 0 && current_freeze_time > 0,
+	{
+		if(!autocvar_g_nades_ice_teamcheck || (DIFF_TEAM(it, this.realowner) || it == this.realowner))
+		if(!it.revival_time || ((time - it.revival_time) >= 1.5))
+		if(!STAT(FROZEN, it))
+			nade_ice_freeze(this, it, current_freeze_time);
+	});
 }
 
 void nade_ice_boom(entity this)

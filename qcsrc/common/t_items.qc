@@ -825,15 +825,15 @@ LABEL(pickup)
 		if(this.team)
 		{
 			RandomSelection_Init();
-			for(entity head = NULL; (head = findfloat(head, team, this.team)); )
+			FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 			{
-				if(head.flags & FL_ITEM)
-				if(head.classname != "item_flag_team" && head.classname != "item_key_team")
+				if(it.team == this.team)
+				if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 				{
-					Item_Show(head, -1);
-					RandomSelection_Add(head, 0, string_null, head.cnt, 0);
+					Item_Show(it, -1);
+					RandomSelection_Add(it, 0, string_null, it.cnt, 0);
 				}
-			}
+			});
 			e = RandomSelection_chosen_ent;
 
 		}

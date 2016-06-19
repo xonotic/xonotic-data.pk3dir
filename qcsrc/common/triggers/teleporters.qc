@@ -187,21 +187,21 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	else
 	{
 		RandomSelection_Init();
-		for(e = NULL; (e = find(e, targetname, teleporter.target)); )
+		FOREACH_ENTITY_STRING(targetname, teleporter.target,
 		{
 			p = 1;
 			if(STAT(TELEPORT_TELEFRAG_AVOID, player))
 			{
 			#ifdef SVQC
-				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+				locout = it.origin + '0 0 1' * (1 - player.mins.z - 24);
 			#elif defined(CSQC)
-				locout = e.origin + '0 0 1' * (1 - player.mins.z - 24);
+				locout = it.origin + '0 0 1' * (1 - player.mins.z - 24);
 			#endif
 				if(check_tdeath(player, locout, '0 0 0', '0 0 0'))
 					p = 0;
 			}
-			RandomSelection_Add(e, 0, string_null, (e.cnt ? e.cnt : 1), p);
-		}
+			RandomSelection_Add(it, 0, string_null, (it.cnt ? it.cnt : 1), p);
+		});
 		e = RandomSelection_chosen_ent;
 	}
 

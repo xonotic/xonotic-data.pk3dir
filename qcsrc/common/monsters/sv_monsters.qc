@@ -123,29 +123,26 @@ entity Monster_FindTarget(entity mon)
 {
 	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return mon.enemy; } // Handled by a mutator
 
-	entity head, closest_target = NULL;
-	head = findradius(mon.origin, mon.target_range);
+	entity closest_target = NULL;
 
-	while(head) // find the closest acceptable target to pass to
+	// find the closest acceptable target to pass to
+	FOREACH_ENTITY_RADIUS(mon.origin, mon.target_range, it.monster_attack,
 	{
-		if(head.monster_attack)
-		if(Monster_ValidTarget(mon, head))
+		if(Monster_ValidTarget(mon, it))
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-			vector head_center = CENTER_OR_VIEWOFS(head);
+			vector head_center = CENTER_OR_VIEWOFS(it);
 			vector ent_center = CENTER_OR_VIEWOFS(mon);
 
 			if(closest_target)
 			{
 				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
 				if(vlen2(ent_center - head_center) < vlen2(ent_center - closest_target_center))
-					{ closest_target = head; }
+					{ closest_target = it; }
 			}
-			else { closest_target = head; }
+			else { closest_target = it; }
 		}
-
-		head = head.chain;
-	}
+	});
 
 	return closest_target;
 }
