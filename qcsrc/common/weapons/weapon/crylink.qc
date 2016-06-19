@@ -118,7 +118,7 @@ void W_Crylink_Reset(entity this)
 }
 
 // force projectile to explode
-void W_Crylink_LinkExplode(entity e, entity e2)
+void W_Crylink_LinkExplode(entity e, entity e2, entity directhitentity)
 {
 	float a;
 
@@ -132,7 +132,8 @@ void W_Crylink_LinkExplode(entity e, entity e2)
 
 	float isprimary = !(e.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * a, e.projectiledeathtype, other);
+	RadiusDamage(e, e.realowner, WEP_CVAR_BOTH(crylink, isprimary, damage) * a, WEP_CVAR_BOTH(crylink, isprimary, edgedamage) * a, WEP_CVAR_BOTH(crylink, isprimary, radius), 
+				NULL, NULL, WEP_CVAR_BOTH(crylink, isprimary, force) * a, e.projectiledeathtype, directhitentity);
 
 	W_Crylink_LinkExplode(e.queuenext, e2);
 
@@ -261,7 +262,7 @@ void W_Crylink_LinkJoinEffect_Think(entity this)
 					NULL,
 					WEP_CVAR_BOTH(crylink, isprimary, joinexplode_force) * n,
 					e.projectiledeathtype,
-					other
+					NULL
 				);
 				Send_Effect(EFFECT_CRYLINK_JOINEXPLODE, this.origin, '0 0 0', n);
 			}
@@ -317,7 +318,7 @@ void W_Crylink_Touch(entity this, entity toucher)
 	{
 		if(this == this.realowner.crylink_lastgroup)
 			this.realowner.crylink_lastgroup = NULL;
-		WITH(entity, other, toucher, W_Crylink_LinkExplode(this.queuenext, this));
+		W_Crylink_LinkExplode(this.queuenext, this, toucher);
 		this.classname = "spike_oktoremove";
 		remove(this);
 		return;

@@ -81,15 +81,15 @@ void W_Devastator_Unregister(entity this)
 	}
 }
 
-void W_Devastator_Explode(entity this)
+void W_Devastator_Explode(entity this, entity directhitentity)
 {
 	W_Devastator_Unregister(this);
 
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	this.event_damage = func_null;
@@ -105,7 +105,7 @@ void W_Devastator_Explode(entity this)
 		NULL,
 		WEP_CVAR(devastator, force),
 		this.projectiledeathtype,
-		other
+		directhitentity
 	);
 
 	Weapon thiswep = WEP_DEVASTATOR;
@@ -121,6 +121,11 @@ void W_Devastator_Explode(entity this)
 		}
 	}
 	remove(this);
+}
+
+void W_Devastator_Explode_think(entity this)
+{
+	W_Devastator_Explode(this, NULL);
 }
 
 void W_Devastator_DoRemoteExplode(entity this, .entity weaponentity)
@@ -259,9 +264,8 @@ void W_Devastator_Think(entity this)
 	this.nextthink = time;
 	if(time > this.cnt)
 	{
-		other = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_Devastator_Explode(this);
+		W_Devastator_Explode(this, NULL);
 		return;
 	}
 
@@ -329,7 +333,7 @@ void W_Devastator_Touch(entity this, entity toucher)
 		return;
 	}
 	W_Devastator_Unregister(this);
-	WITH(entity, other, toucher, W_Devastator_Explode(this));
+	W_Devastator_Explode(this, toucher);
 }
 
 void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -344,7 +348,7 @@ void W_Devastator_Damage(entity this, entity inflictor, entity attacker, float d
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_Devastator_Explode_think);
 }
 
 void W_Devastator_Attack(Weapon thiswep, entity actor)

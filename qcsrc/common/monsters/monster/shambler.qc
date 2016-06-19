@@ -78,7 +78,7 @@ void M_Shambler_Attack_Swing(entity this)
 
 #include <common/effects/qc/all.qh>
 
-void M_Shambler_Attack_Lightning_Explode(entity this)
+void M_Shambler_Attack_Lightning_Explode(entity this, entity directhitentity)
 {
 	sound(this, CH_SHOTS, SND_ELECTRO_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
@@ -91,7 +91,8 @@ void M_Shambler_Attack_Lightning_Explode(entity this)
 	if(this.movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), 
+					NULL, NULL, (autocvar_g_monster_shambler_attack_lightning_force), this.projectiledeathtype, directhitentity);
 
 	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_shambler_attack_lightning_radius_zap, it != this.realowner && it.takedamage,
 	{
@@ -105,7 +106,7 @@ void M_Shambler_Attack_Lightning_Explode(entity this)
 
 void M_Shambler_Attack_Lightning_Explode_use(entity this, entity actor, entity trigger)
 {
-	M_Shambler_Attack_Lightning_Explode(this);
+	M_Shambler_Attack_Lightning_Explode(this, trigger);
 }
 
 void M_Shambler_Attack_Lightning_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -126,7 +127,7 @@ void M_Shambler_Attack_Lightning_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 
-	WITH(entity, other, toucher, this.use(this, NULL, NULL));
+	this.use(this, NULL, toucher);
 }
 
 void M_Shambler_Attack_Lightning_Think(entity this)
@@ -134,8 +135,7 @@ void M_Shambler_Attack_Lightning_Think(entity this)
 	this.nextthink = time;
 	if (time > this.cnt)
 	{
-		other = NULL;
-		M_Shambler_Attack_Lightning_Explode(this);
+		M_Shambler_Attack_Lightning_Explode(this, NULL);
 		return;
 	}
 }

@@ -63,30 +63,30 @@ spawnfunc(weapon_hagar) { weapon_defaultspawnfunc(this, WEP_HAGAR); }
 
 // NO bounce protection, as bounces are limited!
 
-void W_Hagar_Explode(entity this)
+void W_Hagar_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_PRI(hagar, damage), WEP_CVAR_PRI(hagar, edgedamage), WEP_CVAR_PRI(hagar, radius), NULL, NULL, WEP_CVAR_PRI(hagar, force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Hagar_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_Hagar_Explode(this);
+	W_Hagar_Explode(this, trigger);
 }
 
-void W_Hagar_Explode2(entity this)
+void W_Hagar_Explode2(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_SEC(hagar, damage), WEP_CVAR_SEC(hagar, edgedamage), WEP_CVAR_SEC(hagar, radius), NULL, NULL, WEP_CVAR_SEC(hagar, force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Hagar_Explode2_use(entity this, entity actor, entity trigger)
 {
-	W_Hagar_Explode2(this);
+	W_Hagar_Explode2(this, trigger);
 }
 
 void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -116,7 +116,7 @@ void W_Hagar_Damage(entity this, entity inflictor, entity attacker, float damage
 void W_Hagar_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	WITH(entity, other, toucher, this.use(this, NULL, NULL));
+	this.use(this, NULL, toucher);
 }
 
 void W_Hagar_Touch2(entity this, entity toucher)
@@ -124,7 +124,7 @@ void W_Hagar_Touch2(entity this, entity toucher)
 	PROJECTILE_TOUCH(this, toucher);
 
 	if(this.cnt > 0 || toucher.takedamage == DAMAGE_AIM) {
-		WITH(entity, other, toucher, this.use(this, NULL, NULL));
+		this.use(this, NULL, toucher);
 	} else {
 		this.cnt++;
 		Send_Effect(EFFECT_HAGAR_BOUNCE, this.origin, this.velocity, 1);

@@ -94,20 +94,24 @@ spawnfunc(weapon_seeker) { weapon_defaultspawnfunc(this, WEP_SEEKER); }
 // ============================
 // Begin: Missile functions, these are general functions to be manipulated by other code
 // ============================
-void W_Seeker_Missile_Explode(entity this)
+void W_Seeker_Missile_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, missile_damage), WEP_CVAR(seeker, missile_edgedamage), WEP_CVAR(seeker, missile_radius), NULL, NULL, WEP_CVAR(seeker, missile_force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
+}
+
+void W_Seeker_Missile_Explode_think(entity this)
+{
+	W_Seeker_Missile_Explode(this, NULL);
 }
 
 void W_Seeker_Missile_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
 
-	// TODO
-	WITH(entity, other, toucher, W_Seeker_Missile_Explode(this));
+	W_Seeker_Missile_Explode(this, toucher);
 }
 
 void W_Seeker_Missile_Think(entity this)
@@ -121,7 +125,7 @@ void W_Seeker_Missile_Think(entity this)
 	if(time > this.cnt)
 	{
 		this.projectiledeathtype |= HITTYPE_SPLASH;
-		W_Seeker_Missile_Explode(this);
+		W_Seeker_Missile_Explode(this, NULL);
 	}
 
 	spd = vlen(this.velocity);
@@ -179,7 +183,7 @@ void W_Seeker_Missile_Think(entity this)
 			{
 				if(this.autoswitch <= time)
 				{
-					W_Seeker_Missile_Explode(this);
+					W_Seeker_Missile_Explode(this, NULL);
 					this.autoswitch = 0;
 				}
 			}
@@ -221,7 +225,7 @@ void W_Seeker_Missile_Damage(entity this, entity inflictor, entity attacker, flo
 		this.health = this.health - damage;
 
 	if(this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, W_Seeker_Missile_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_Seeker_Missile_Explode_think);
 }
 
 /*
@@ -305,23 +309,23 @@ void W_Seeker_Fire_Missile(Weapon thiswep, entity actor, vector f_diff, entity m
 // ============================
 // Begin: FLAC, close range attack meant for defeating rockets which are coming at you.
 // ============================
-void W_Seeker_Flac_Explode(entity this)
+void W_Seeker_Flac_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(seeker, flac_damage), WEP_CVAR(seeker, flac_edgedamage), WEP_CVAR(seeker, flac_radius), NULL, NULL, WEP_CVAR(seeker, flac_force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Seeker_Flac_Touch(entity this, entity toucher)
 {
-	WITH(entity, other, toucher, W_Seeker_Flac_Explode(this));
+	W_Seeker_Flac_Explode(this, toucher);
 }
 
 void W_Seeker_Flac_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITH(entity, other, trigger, W_Seeker_Flac_Explode(this));
+	W_Seeker_Flac_Explode(this, trigger);
 }
 
 void W_Seeker_Fire_Flac(Weapon thiswep, entity actor)
@@ -484,7 +488,7 @@ void W_Seeker_Tag_Explode(entity this)
 {
 	//if(other==this.realowner)
 	//    return;
-	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, other.species, this);
+	Damage_DamageInfo(this.origin, 0, 0, 0, this.velocity, WEP_SEEKER.m_id | HITTYPE_BOUNCE, 0, this);
 
 	remove(this);
 }

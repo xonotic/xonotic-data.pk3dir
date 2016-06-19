@@ -231,17 +231,17 @@ void Arc_Player_SetHeat(entity player)
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
-void W_Arc_Bolt_Explode(entity this)
+void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_Arc_Bolt_Explode(this);
+	W_Arc_Bolt_Explode(this, trigger);
 }
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -262,7 +262,7 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 void W_Arc_Bolt_Touch(entity this, entity toucher)
 {
 	PROJECTILE_TOUCH(this, toucher);
-	WITH(entity, other, toucher, this.use(this, NULL, NULL));
+	this.use(this, NULL, toucher);
 }
 
 void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
