@@ -884,7 +884,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
-	if(veh.owner)
+	if(veh.owner && SAME_TEAM(pl, veh))
 	{
 		if(!veh.gunner1)
 		if(time >= veh.gun1.phase)
