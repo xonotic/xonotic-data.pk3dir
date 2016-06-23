@@ -1548,11 +1548,12 @@ LABEL(end)
 	this.lastclassname = this.classname;
 }
 
+void sys_phys_update(entity this, float dt);
 #if defined(SVQC)
 void SV_PlayerPhysics(entity this)
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
-	PM_Main(this);
+	sys_phys_update(this, PHYS_INPUT_TIMELENGTH);
 }

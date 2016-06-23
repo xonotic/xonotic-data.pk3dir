@@ -154,11 +154,11 @@ float game_delay_last;
 
 bool autocvar_sv_autopause = true;
 float RedirectionThink();
-void PM_Main(Client this);
+void sys_phys_update(entity this, float dt);
 void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), sys_phys_update(it, frametime));
     FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
