@@ -31,7 +31,7 @@ void monsters_setstatus(entity this)
 	this.stat_monsters_killed = monsters_killed;
 }
 
-void monster_dropitem(entity this)
+void monster_dropitem(entity this, entity attacker)
 {
 	if(!this.candrop || !this.monster_loot)
 		return;
@@ -42,13 +42,13 @@ void monster_dropitem(entity this)
 
 	e.monster_loot = this.monster_loot;
 
-	MUTATOR_CALLHOOK(MonsterDropItem, e);
-	e = other;
+	MUTATOR_CALLHOOK(MonsterDropItem, this, e, attacker);
+	e = M_ARGV(1, entity);
 
 	if(e && e.monster_loot)
 	{
 		e.noalign = true;
-		WITHSELF(e, e.monster_loot(e));
+		e.monster_loot(e);
 		e.gravity = 1;
 		e.movetype = MOVETYPE_TOSS;
 		e.reset = SUB_Remove;
@@ -123,29 +123,26 @@ entity Monster_FindTarget(entity mon)
 {
 	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return mon.enemy; } // Handled by a mutator
 
-	entity head, closest_target = world;
-	head = findradius(mon.origin, mon.target_range);
+	entity closest_target = NULL;
 
-	while(head) // find the closest acceptable target to pass to
+	// find the closest acceptable target to pass to
+	FOREACH_ENTITY_RADIUS(mon.origin, mon.target_range, it.monster_attack,
 	{
-		if(head.monster_attack)
-		if(Monster_ValidTarget(mon, head))
+		if(Monster_ValidTarget(mon, it))
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-			vector head_center = CENTER_OR_VIEWOFS(head);
+			vector head_center = CENTER_OR_VIEWOFS(it);
 			vector ent_center = CENTER_OR_VIEWOFS(mon);
 
 			if(closest_target)
 			{
 				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
 				if(vlen2(ent_center - head_center) < vlen2(ent_center - closest_target_center))
-					{ closest_target = head; }
+					{ closest_target = it; }
 			}
-			else { closest_target = head; }
+			else { closest_target = it; }
 		}
-
-		head = head.chain;
-	}
+	});
 
 	return closest_target;
 }
@@ -191,7 +188,6 @@ void monster_changeteam(entity ent, float newteam)
 }
 
 .void(entity) monster_delayedfunc;
-void Monster_Delay_Action_self();
 void Monster_Delay_Action(entity this)
 {
 	if(Monster_ValidTarget(this.owner, this.owner.enemy)) { this.monster_delayedfunc(this.owner); }
@@ -199,20 +195,14 @@ void Monster_Delay_Action(entity this)
 	if(this.cnt > 1)
 	{
 		this.cnt -= 1;
-		this.think = Monster_Delay_Action_self;
+		setthink(this, Monster_Delay_Action);
 		this.nextthink = time + this.count;
 	}
 	else
 	{
-		this.think = SUB_Remove_self;
+		setthink(this, SUB_Remove);
 		this.nextthink = time;
 	}
-}
-
-void Monster_Delay_Action_self()
-{
-    SELFPARAM();
-	Monster_Delay_Action(self);
 }
 
 void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity) func)
@@ -220,7 +210,7 @@ void Monster_Delay(entity this, int repeat_count, float defer_amnt, void(entity)
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
 	entity e = spawn();
 
-	e.think = Monster_Delay_Action_self;
+	setthink(e, Monster_Delay_Action);
 	e.nextthink = time + defer_amnt;
 	e.count = defer_amnt;
 	e.owner = this;
@@ -401,7 +391,7 @@ bool Monster_Attack_Leap_Check(entity this, vector vel)
 	return true;
 }
 
-bool Monster_Attack_Leap(entity this, vector anm, void() touchfunc, vector vel, float animtime)
+bool Monster_Attack_Leap(entity this, vector anm, void(entity this) touchfunc, vector vel, float animtime)
 {
 	if(!Monster_Attack_Leap_Check(this, vel))
 		return false;
@@ -415,7 +405,7 @@ bool Monster_Attack_Leap(entity this, vector anm, void() touchfunc, vector vel, 
 
 	if(this.flags & FL_MONSTER)
 		this.state = MONSTER_ATTACK_RANGED;
-	this.touch = touchfunc;
+	settouch(this, touchfunc);
 	this.origin_z += 1;
 	this.velocity = vel;
 	UNSET_ONGROUND(this);
@@ -425,7 +415,7 @@ bool Monster_Attack_Leap(entity this, vector anm, void() touchfunc, vector vel, 
 
 void Monster_Attack_Check(entity this, entity targ)
 {
-	if((this == world || targ == world)
+	if((this == NULL || targ == NULL)
 	|| (!this.monster_attackfunc)
 	|| (time < this.attack_finished_single[0])
 	) { return; }
@@ -473,9 +463,9 @@ void Monster_UpdateModel(entity this)
 	mon.mr_anim(mon, this);
 }
 
-void Monster_Touch()
-{SELFPARAM();
-	if(other == world) { return; }
+void Monster_Touch(entity this)
+{
+	if(other == NULL) { return; }
 
 	if(other.monster_attack)
 	if(this.enemy != other)
@@ -516,14 +506,14 @@ bool Monster_Respawn_Check(entity this)
 	return true;
 }
 
-void Monster_Respawn() { SELFPARAM(); Monster_Spawn(this, this.monsterid); }
+void Monster_Respawn(entity this) { Monster_Spawn(this, this.monsterid); }
 
 void Monster_Dead_Fade(entity this)
 {
 	if(Monster_Respawn_Check(this))
 	{
 		this.spawnflags |= MONSTERFLAG_RESPAWNED;
-		this.think = Monster_Respawn;
+		setthink(this, Monster_Respawn);
 		this.nextthink = time + this.respawntime;
 		this.monster_lifetime = 0;
 		this.deadflag = DEAD_RESPAWNING;
@@ -562,7 +552,7 @@ vector Monster_Move_Target(entity this, entity targ)
 		targ_origin = WarpZone_RefSys_TransformOrigin(this.enemy, this, targ_origin); // origin of target as seen by the monster (us)
 		WarpZone_TraceLine(this.origin, targ_origin, MOVE_NOMONSTERS, this);
 
-		if((this.enemy == world)
+		if((this.enemy == NULL)
 			|| (IS_DEAD(this.enemy) || this.enemy.health < 1)
 			|| (STAT(FROZEN, this.enemy))
 			|| (this.enemy.flags & FL_NOTARGET)
@@ -571,13 +561,13 @@ vector Monster_Move_Target(entity this, entity targ)
 			|| (vdist(this.origin - targ_origin, >, this.target_range))
 			|| ((trace_fraction < 1) && (trace_ent != this.enemy)))
 		{
-			this.enemy = world;
+			this.enemy = NULL;
 			this.pass_distance = 0;
 		}
 
 		if(this.enemy)
 		{
-			/*WarpZone_TrailParticles(world, particleeffectnum(EFFECT_RED_PASS), this.origin, targ_origin);
+			/*WarpZone_TrailParticles(NULL, particleeffectnum(EFFECT_RED_PASS), this.origin, targ_origin);
 			print("Trace origin: ", vtos(targ_origin), "\n");
 			print("Target origin: ", vtos(this.enemy.origin), "\n");
 			print("My origin: ", vtos(this.origin), "\n"); */
@@ -697,7 +687,7 @@ void Monster_CalculateVelocity(entity this, vector to, vector from, float turnra
 
 void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 {
-	if(this.target2) { this.goalentity = find(world, targetname, this.target2); }
+	if(this.target2) { this.goalentity = find(NULL, targetname, this.target2); }
 
 	entity targ;
 
@@ -713,7 +703,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		movelib_brake_simple(this, stpspeed);
 		setanim(this, this.anim_idle, true, false, false);
 
-		this.enemy = world;
+		this.enemy = NULL;
 		this.nextthink = time + this.ticrate;
 
 		if(this.revive_progress >= 1)
@@ -732,7 +722,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		movelib_brake_simple(this, stpspeed);
 		setanim(this, this.anim_idle, true, false, false);
 
-		this.enemy = world;
+		this.enemy = NULL;
 		this.nextthink = time + this.ticrate;
 
 		if(this.health < 1)
@@ -757,7 +747,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 			{
 				this.last_trace = time + 0.4;
 
-				Damage (this, world, world, 2, DEATH_DROWN.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, 2, DEATH_DROWN.m_id, this.origin, '0 0 0');
 				this.angles = '90 90 0';
 				if(random() < 0.5)
 				{
@@ -789,7 +779,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 
 	if (MUTATOR_CALLHOOK(MonsterMove, this, runspeed, walkspeed, targ)
 		|| gameover
-		|| this.draggedby != world
+		|| this.draggedby != NULL
 		|| (round_handler_IsActive() && !round_handler_IsRoundStarted())
 		|| time < game_starttime
 		|| (autocvar_g_campaign && !campaign_bots_may_start)
@@ -802,14 +792,14 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 		return;
 	}
 
-	targ = monster_target;
-	runspeed = bound(0, monster_speed_run * MONSTER_SKILLMOD(this), runspeed * 2.5); // limit maxspeed to prevent craziness
-	walkspeed = bound(0, monster_speed_walk * MONSTER_SKILLMOD(this), walkspeed * 2.5); // limit maxspeed to prevent craziness
+	targ = M_ARGV(3, entity);
+	runspeed = bound(0, M_ARGV(1, float) * MONSTER_SKILLMOD(this), runspeed * 2.5); // limit maxspeed to prevent craziness
+	walkspeed = bound(0, M_ARGV(2, float) * MONSTER_SKILLMOD(this), walkspeed * 2.5); // limit maxspeed to prevent craziness
 
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
 	if(DIFF_TEAM(this.monster_follow, this))
-		this.monster_follow = world;
+		this.monster_follow = NULL;
 
 	if(time >= this.last_enemycheck)
 	{
@@ -835,7 +825,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	if(this.state == MONSTER_ATTACK_RANGED && IS_ONGROUND(this))
 	{
 		this.state = 0;
-		this.touch = Monster_Touch;
+		settouch(this, Monster_Touch);
 	}
 
 	if(this.state && time >= this.attack_finished_single[0])
@@ -873,7 +863,7 @@ void Monster_Move(entity this, float runspeed, float walkspeed, float stpspeed)
 	}
 	else
 	{
-		entity e = find(world, targetname, this.target2);
+		entity e = find(NULL, targetname, this.target2);
 		if(e.target2)
 			this.target2 = e.target2;
 		else if(e.target)
@@ -919,8 +909,8 @@ void Monster_Remove(entity this)
 	remove(this);
 }
 
-void Monster_Dead_Think()
-{SELFPARAM();
+void Monster_Dead_Think(entity this)
+{
 	this.nextthink = time + this.ticrate;
 
 	if(this.monster_lifetime != 0)
@@ -943,7 +933,7 @@ bool Monster_Appear_Check(entity this, int monster_id)
 	if(!(this.spawnflags & MONSTERFLAG_APPEAR))
 		return false;
 
-	this.think = func_null;
+	setthink(this, func_null);
 	this.monsterid = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	this.nextthink = 0;
 	this.use = Monster_Appear;
@@ -961,8 +951,8 @@ void Monster_Reset(entity this)
 
 	this.health = this.max_health;
 	this.velocity = '0 0 0';
-	this.enemy = world;
-	this.goalentity = world;
+	this.enemy = NULL;
+	this.goalentity = NULL;
 	this.attack_finished_single[0] = 0;
 	this.moveto = this.origin;
 }
@@ -980,7 +970,7 @@ void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float d
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		this.think = SUB_Remove_self;
+		setthink(this, SUB_Remove);
 		this.nextthink = time + 0.1;
 		this.event_damage = func_null;
 	}
@@ -988,7 +978,7 @@ void Monster_Dead_Damage(entity this, entity inflictor, entity attacker, float d
 
 void Monster_Dead(entity this, entity attacker, float gibbed)
 {
-	this.think = Monster_Dead_Think;
+	setthink(this, Monster_Dead_Think);
 	this.nextthink = time;
 	this.monster_lifetime = time + 5;
 
@@ -998,7 +988,7 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 		this.health = 0; // reset by Unfreeze
 	}
 
-	monster_dropitem(this);
+	monster_dropitem(this, attacker);
 
 	Monster_Sound(this, monstersound_death, 0, false, CH_VOICE);
 
@@ -1019,10 +1009,10 @@ void Monster_Dead(entity this, entity attacker, float gibbed)
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_AIM;
 	this.deadflag		= DEAD_DEAD;
-	this.enemy			= world;
+	this.enemy			= NULL;
 	this.movetype		= MOVETYPE_TOSS;
 	this.moveto			= this.origin;
-	this.touch			= Monster_Touch; // reset incase monster was pouncing
+	settouch(this, Monster_Touch); // reset incase monster was pouncing
 	this.reset			= func_null;
 	this.state			= 0;
 	this.attack_finished_single[0] = 0;
@@ -1054,7 +1044,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	if(time < this.spawnshieldtime && deathtype != DEATH_KILL.m_id)
 		return;
 
-	if(deathtype == DEATH_FALL.m_id && this.draggedby != world)
+	if(deathtype == DEATH_FALL.m_id && this.draggedby != NULL)
 		return;
 
 	vector v;
@@ -1064,12 +1054,8 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 	take = v_x;
 	save = v_y;
 
-	damage_take = take;
-	frag_attacker = attacker;
-	frag_deathtype = deathtype;
 	Monster mon = get_monsterinfo(this.monsterid);
-	mon.mr_pain(mon, this);
-	take = damage_take;
+	take = mon.mr_pain(mon, this, take, attacker, deathtype);
 
 	if(take)
 	{
@@ -1109,13 +1095,13 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 
 		WaypointSprite_Kill(this.sprite);
 
-		MUTATOR_CALLHOOK(MonsterDies, this, attacker);
+		MUTATOR_CALLHOOK(MonsterDies, this, attacker, deathtype);
 
 		if(this.health <= -100 || deathtype == DEATH_KILL.m_id) // check if we're already gibbed
 		{
 			Violence_GibSplash(this, 1, 0.5, attacker);
 
-			this.think = SUB_Remove_self;
+			setthink(this, SUB_Remove);
 			this.nextthink = time + 0.1;
 		}
 	}
@@ -1124,7 +1110,7 @@ void Monster_Damage(entity this, entity inflictor, entity attacker, float damage
 // don't check for enemies, just keep walking in a straight line
 void Monster_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 {
-	if(gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != world || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
+	if(gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != NULL || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
 	{
 		mspeed = 0;
 		if(time >= this.spawn_time)
@@ -1214,9 +1200,9 @@ void Monster_Anim(entity this)
 	*/
 }
 
-void Monster_Think()
-{SELFPARAM();
-	this.think = Monster_Think;
+void Monster_Think(entity this)
+{
+	setthink(this, Monster_Think);
 	this.nextthink = this.ticrate;
 
 	if(this.monster_lifetime)
@@ -1277,7 +1263,7 @@ bool Monster_Spawn_Setup(entity this)
 
 	if(autocvar_g_monsters_healthbars)
 	{
-		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 1024, this, '0 0 1' * (this.maxs.z + 15), world, this.team, this, sprite, true, RADARICON_DANGER);
+		entity wp = WaypointSprite_Spawn(WP_Monster, 0, 1024, this, '0 0 1' * (this.maxs.z + 15), NULL, this.team, this, sprite, true, RADARICON_DANGER);
 		wp.wp_extra = this.monsterid;
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 0 0');
 		if(!(this.spawnflags & MONSTERFLAG_INVINCIBLE))
@@ -1287,7 +1273,7 @@ bool Monster_Spawn_Setup(entity this)
 		}
 	}
 
-	this.think = Monster_Think;
+	setthink(this, Monster_Think);
 	this.nextthink = time + this.ticrate;
 
 	if(MUTATOR_CALLHOOK(MonsterSpawn, this))
@@ -1331,12 +1317,12 @@ bool Monster_Spawn(entity this, int mon_id)
 	this.damagedbycontents	= true;
 	this.monsterid			= mon_id;
 	this.event_damage		= Monster_Damage;
-	this.touch				= Monster_Touch;
+	settouch(this, Monster_Touch);
 	this.use				= Monster_Use;
 	this.solid				= SOLID_BBOX;
 	this.movetype			= MOVETYPE_WALK;
 	this.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
-	this.enemy				= world;
+	this.enemy				= NULL;
 	this.velocity			= '0 0 0';
 	this.moveto				= this.origin;
 	this.pos1				= this.origin;

@@ -14,7 +14,7 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 		}
 		else if (this.move_suspendedinair && wasfreed(this.move_groundentity))
 		{
-			this.move_groundentity = world;
+			this.move_groundentity = NULL;
 			return;
 		}
 	}

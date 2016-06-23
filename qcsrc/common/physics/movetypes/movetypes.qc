@@ -96,7 +96,7 @@ int _Movetype_FlyMove(entity this, float dt, bool applygravity, vector stepnorma
 				if(!trace_ent)
 				{
 					//dprint("_Movetype_FlyMove: !trace_ent\n");
-					trace_ent = world;
+					trace_ent = NULL;
 				}
 
 				this.move_flags |= FL_ONGROUND;
@@ -317,20 +317,20 @@ void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 {
 	entity oldother = other;
 
-	if(this.move_touch)
+	if(gettouch(this))
 	{
 		other = oth;
 
-		WITHSELF(this, this.move_touch());
+		gettouch(this)(this);
 
 		other = oldother;
 	}
 
-	if(oth.move_touch)
+	if(gettouch(oth))
 	{
 		other = this;
 
-		WITHSELF(oth, oth.move_touch());
+		gettouch(oth)(oth);
 
 		other = oldother;
 	}
@@ -346,7 +346,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
     FOREACH_ENTITY_RADIUS(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
 		if (it.solid == SOLID_TRIGGER && it != this)
 		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
-		if (it.move_touch && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
+		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
 		{
 			other = this;
 
@@ -360,7 +360,7 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_dist = 0;
 			trace_ent = this;
 
-			WITHSELF(it, it.move_touch());
+			gettouch(it)(it);
 		}
     });
 
@@ -620,8 +620,8 @@ void _Movetype_Physics_ClientFrame(entity this, float movedt)
 			break;
 		case MOVETYPE_NOCLIP:
 			_Movetype_CheckWater(this);
-			this.move_origin = this.move_origin + TICRATE * this.move_velocity;
-			this.move_angles = this.move_angles + TICRATE * this.move_avelocity;
+			this.move_origin = this.move_origin + movedt * this.move_velocity;
+			this.move_angles = this.move_angles + movedt * this.move_avelocity;
 			_Movetype_LinkEdict(this, false);
 			break;
 		case MOVETYPE_STEP:

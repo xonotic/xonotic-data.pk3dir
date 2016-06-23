@@ -34,17 +34,16 @@ METHOD(RacerAttack, wr_think, void(entity thiswep, entity actor, .entity weapone
     }
 }
 
-METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep))
+METHOD(RacerAttack, wr_checkammo1, bool(RacerAttack thiswep, entity actor))
 {
-    SELFPARAM();
-    bool isPlayer = IS_PLAYER(self);
-    entity player = isPlayer ? self : self.owner;
+    bool isPlayer = IS_PLAYER(actor);
+    entity player = isPlayer ? actor : actor.owner;
     entity veh = player.vehicle;
     return isPlayer || veh.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost;
 }
 
-void racer_rocket_tracker();
-void racer_rocket_groundhugger();
+void racer_rocket_tracker(entity this);
+void racer_rocket_groundhugger(entity this);
 
 void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
 {
@@ -60,112 +59,112 @@ void racer_fire_rocket(entity player, vector org, vector dir, entity trg)
     rocket.cnt			  = time + 15;
 
     if(trg)
-        rocket.think			= racer_rocket_tracker;
+        setthink(rocket, racer_rocket_tracker);
     else
-        rocket.think			= racer_rocket_groundhugger;
+        setthink(rocket, racer_rocket_groundhugger);
 }
 
-void racer_rocket_tracker()
-{SELFPARAM();
+void racer_rocket_tracker(entity this)
+{
     vector olddir, newdir;
     float oldvel, newvel;
 
-    self.nextthink  = time;
+    this.nextthink  = time;
 
-    if (IS_DEAD(self.owner) || self.cnt < time)
+    if (IS_DEAD(this.owner) || this.cnt < time)
     {
-        self.use(self, NULL, NULL);
+        this.use(this, NULL, NULL);
         return;
     }
 
-    if(!self.realowner.vehicle)
+    if(!this.realowner.vehicle)
     {
-        UpdateCSQCProjectile(self);
+        UpdateCSQCProjectile(this);
         return;
     }
 
-    olddir = normalize(self.velocity);
-    oldvel = vlen(self.velocity);
-    newvel = oldvel + self.lip;
+    olddir = normalize(this.velocity);
+    oldvel = vlen(this.velocity);
+    newvel = oldvel + this.lip;
     makevectors(vectoangles(olddir));
 
-    float time_to_impact = min(vlen(self.enemy.origin - self.origin) / vlen(self.velocity), 1);
-    vector predicted_origin = self.enemy.origin + self.enemy.velocity * time_to_impact;
+    float time_to_impact = min(vlen(this.enemy.origin - this.origin) / vlen(this.velocity), 1);
+    vector predicted_origin = this.enemy.origin + this.enemy.velocity * time_to_impact;
 
-    traceline(self.origin, self.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, self);
-    newdir = normalize(predicted_origin - self.origin);
+    traceline(this.origin, this.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, this);
+    newdir = normalize(predicted_origin - this.origin);
 
     //vector
-    float height_diff = predicted_origin_z - self.origin_z;
+    float height_diff = predicted_origin_z - this.origin_z;
 
     if(vdist(newdir - v_forward, >, autocvar_g_vehicle_racer_rocket_locked_maxangle))
     {
         //bprint("Target lost!\n");
         //dprint("OF:", ftos(vlen(newdir - v_forward)), "\n");
-        self.think = racer_rocket_groundhugger;
+        setthink(this, racer_rocket_groundhugger);
         return;
     }
 
-    if(trace_fraction != 1.0 && trace_ent != self.enemy)
+    if(trace_fraction != 1.0 && trace_ent != this.enemy)
         newdir_z += 16 * sys_frametime;
 
-    self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
-    self.velocity_z -= 800 * sys_frametime;
-    self.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
+    this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
+    this.velocity_z -= 800 * sys_frametime;
+    this.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
 
-    UpdateCSQCProjectile(self);
+    UpdateCSQCProjectile(this);
     return;
 }
 
-void racer_rocket_groundhugger()
-{SELFPARAM();
+void racer_rocket_groundhugger(entity this)
+{
     vector olddir, newdir;
     float oldvel, newvel;
 
-    self.nextthink  = time;
+    this.nextthink  = time;
 
-    if(IS_DEAD(self.owner) || self.cnt < time)
+    if(IS_DEAD(this.owner) || this.cnt < time)
     {
-        self.use(self, NULL, NULL);
+        this.use(this, NULL, NULL);
         return;
     }
 
-    if(!self.realowner.vehicle)
+    if(!this.realowner.vehicle)
     {
-        UpdateCSQCProjectile(self);
+        UpdateCSQCProjectile(this);
         return;
     }
 
-    olddir = normalize(self.velocity);
-    oldvel = vlen(self.velocity);
-    newvel = oldvel + self.lip;
+    olddir = normalize(this.velocity);
+    oldvel = vlen(this.velocity);
+    newvel = oldvel + this.lip;
 
-    tracebox(self.origin, self.mins, self.maxs, self.origin + olddir * 64, MOVE_WORLDONLY,self);
+    tracebox(this.origin, this.mins, this.maxs, this.origin + olddir * 64, MOVE_WORLDONLY,this);
     if(trace_fraction <= 0.5)
     {
         // Hitting somethign soon, just speed ahead
-        self.velocity = olddir * newvel;
-        UpdateCSQCProjectile(self);
+        this.velocity = olddir * newvel;
+        UpdateCSQCProjectile(this);
         return;
     }
 
-    traceline(trace_endpos, trace_endpos - '0 0 64', MOVE_NORMAL, self);
+    traceline(trace_endpos, trace_endpos - '0 0 64', MOVE_NORMAL, this);
     if(trace_fraction != 1.0)
     {
-        newdir = normalize(trace_endpos + '0 0 64' - self.origin) * autocvar_g_vehicle_racer_rocket_turnrate;
-        self.velocity = normalize(olddir + newdir) * newvel;
+        newdir = normalize(trace_endpos + '0 0 64' - this.origin) * autocvar_g_vehicle_racer_rocket_turnrate;
+        this.velocity = normalize(olddir + newdir) * newvel;
     }
     else
     {
-        self.velocity = olddir * newvel;
-        self.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
+        this.velocity = olddir * newvel;
+        this.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
     }
 
-    int cont = pointcontents(self.origin - '0 0 32');
+    int cont = pointcontents(this.origin - '0 0 32');
     if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
-        self.velocity_z += 200;
+        this.velocity_z += 200;
 
-    UpdateCSQCProjectile(self);
+    UpdateCSQCProjectile(this);
     return;
 }
 

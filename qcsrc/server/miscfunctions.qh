@@ -40,11 +40,11 @@ void play2all(string samp);
 
 void play2team(float t, string filename);
 
-void GetCvars_handleFloat(string thisname, float f, .float field, string name);
+void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name);
 
 float spamsound(entity e, float chan, string samp, float vol, float _atten);
 
-void GetCvars_handleString(string thisname, float f, .string field, string name);
+void GetCvars_handleString(entity this, string thisname, float f, .string field, string name);
 
 void precache_all_playermodels(string pattern);
 
@@ -55,8 +55,7 @@ void InitializeEntitiesRun();
 void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
 
-void objerror(string s);
-void droptofloor();
+void droptofloor(entity this);
 
 void attach_sameorigin(entity e, entity to, string tag);
 
@@ -68,7 +67,7 @@ void detach_sameorigin(entity e);
 
 void follow_sameorigin(entity e, entity to);
 
-string formatmessage(string msg);
+string formatmessage(entity this, string msg);
 
 void GameLogEcho(string s);
 
@@ -116,15 +115,13 @@ void WarpZone_crosshair_trace(entity pl);
 
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 
-void adaptor_think2use();
-
 #define IS_DEAD(s) ((s).deadflag != DEAD_NO)
 
 
 #define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 #define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER.m_id) || ((dt) == DEATH_SLIME.m_id) || ((dt) == DEATH_LAVA.m_id) || ((dt) == DEATH_SWAMP.m_id))
 
-#define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
+#define PROJECTILE_TOUCH(this) MACRO_BEGIN if (WarpZone_Projectile_Touch(this)) return; MACRO_END
 
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
@@ -368,4 +365,3 @@ entity initialize_entity_first;
 
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(entity this) func, float order);
-void SetCustomizer(entity e, float() customizer, void() uncustomizer);

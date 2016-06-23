@@ -1,7 +1,7 @@
 REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
 
-void func_ladder_touch()
-{SELFPARAM();
+void func_ladder_touch(entity this)
+{
 #ifdef SVQC
 	if (!other.iscreature)
 		return;
@@ -15,48 +15,45 @@ void func_ladder_touch()
 	EXACTTRIGGER_TOUCH;
 
 	other.ladder_time = time + 0.1;
-	other.ladder_entity = self;
+	other.ladder_entity = this;
 }
 
 #ifdef SVQC
-bool func_ladder_send(entity to, int sf)
-{SELFPARAM();
+bool func_ladder_send(entity this, entity to, int sf)
+{
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER);
 
-	WriteString(MSG_ENTITY, self.classname);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteCoord(MSG_ENTITY, self.speed);
+	WriteString(MSG_ENTITY, this.classname);
+	WriteByte(MSG_ENTITY, this.skin);
+	WriteCoord(MSG_ENTITY, this.speed);
 
-	trigger_common_write(self, false);
+	trigger_common_write(this, false);
 
 	return true;
 }
 
-void func_ladder_link()
+void func_ladder_link(entity this)
 {
-    SELFPARAM();
-	self.SendEntity = func_ladder_send;
-	self.SendFlags = 0xFFFFFF;
-	//self.model = "null";
+	trigger_link(this, func_ladder_send);
+	//this.model = "null";
 }
 
-void func_ladder_init()
+void func_ladder_init(entity this)
 {
-    SELFPARAM();
-	self.touch = func_ladder_touch;
+	settouch(this, func_ladder_touch);
 
-	trigger_init(self);
-	func_ladder_link();
+	trigger_init(this);
+	func_ladder_link(this);
 }
 
 spawnfunc(func_ladder)
 {
-	func_ladder_init();
+	func_ladder_init(this);
 }
 
 spawnfunc(func_water)
 {
-	func_ladder_init();
+	func_ladder_init(this);
 }
 
 #elif defined(CSQC)
@@ -70,17 +67,17 @@ void func_ladder_remove(entity this)
 
 NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
 {
-	self.classname = strzone(ReadString());
-	self.skin = ReadByte();
-	self.speed = ReadCoord();
+	this.classname = strzone(ReadString());
+	this.skin = ReadByte();
+	this.speed = ReadCoord();
 
-	trigger_common_read(false);
+	trigger_common_read(this, false);
 
-	self.solid = SOLID_TRIGGER;
-	self.move_touch = func_ladder_touch;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-	self.entremove = func_ladder_remove;
+	this.solid = SOLID_TRIGGER;
+	settouch(this, func_ladder_touch);
+	this.drawmask = MASK_NORMAL;
+	this.move_time = time;
+	this.entremove = func_ladder_remove;
 
 	return true;
 }

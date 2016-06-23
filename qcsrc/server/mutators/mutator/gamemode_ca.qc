@@ -35,7 +35,6 @@ REGISTER_MUTATOR(ca, false)
 		ca_teams = autocvar_g_ca_teams_override;
 		if (ca_teams < 2) ca_teams = autocvar_g_ca_teams;
 		ca_teams = bound(2, ca_teams, 4);
-		ret_float = ca_teams;
 
         ScoreRules_basics(ca_teams, SFL_SORT_PRIO_PRIMARY, 0, true);
         ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
@@ -123,8 +122,8 @@ float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		allowed_to_spawn = false;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(nades_Clear(it)));
@@ -138,14 +137,14 @@ float CA_CheckWinner()
 	int winner_team = CA_GetWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CA_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	allowed_to_spawn = false;
@@ -169,14 +168,14 @@ bool CA_CheckTeams()
 	if(CA_ALIVE_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return false;
 	}
@@ -185,7 +184,7 @@ bool CA_CheckTeams()
 	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return false;
@@ -220,29 +219,30 @@ entity CA_SpectateNext(entity player, entity start)
 
 MUTATOR_HOOKFUNCTION(ca, PlayerSpawn)
 {
-    SELFPARAM();
-	this.caplayer = 1;
+    entity player = M_ARGV(0, entity);
+
+	player.caplayer = 1;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PutClientInServer)
 {
-    SELFPARAM();
-	if (!allowed_to_spawn && IS_PLAYER(this)) // this is true even when player is trying to join
+	entity player = M_ARGV(0, entity);
+
+	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
-		TRANSMUTE(Observer, this);
-		if (this.jointime != time && !this.caplayer) // not when connecting
+		TRANSMUTE(Observer, player);
+		if (player.jointime != time && !player.caplayer) // not when connecting
 		{
-			this.caplayer = 0.5;
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CA_JOIN_LATE);
+			player.caplayer = 0.5;
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
 }
 
 MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 {
-    SELFPARAM();
 	FOREACH_CLIENT(true, {
 		it.killcount = 0;
 		if (!it.caplayer && IS_BOT_CLIENT(it))
@@ -254,7 +254,7 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 		{
 			TRANSMUTE(Player, it);
 			it.caplayer = 1;
-			WITHSELF(it, PutClientInServer());
+			PutClientInServer(it);
 		}
 	});
 	return true;
@@ -262,8 +262,9 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_players)
 
 MUTATOR_HOOKFUNCTION(ca, ClientConnect)
 {
-    SELFPARAM();
-	TRANSMUTE(Observer, this);
+    entity player = M_ARGV(0, entity);
+
+	TRANSMUTE(Observer, player);
 	return true;
 }
 
@@ -275,13 +276,11 @@ MUTATOR_HOOKFUNCTION(ca, reset_map_global)
 
 MUTATOR_HOOKFUNCTION(ca, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_float = ca_teams;
-	return false;
+	M_ARGV(0, float) = ca_teams;
 }
 
-entity ca_LastPlayerForTeam()
+entity ca_LastPlayerForTeam(entity this)
 {
-    SELFPARAM();
 	entity last_pl = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this, {
 		if (!IS_DEAD(it))
@@ -294,12 +293,12 @@ entity ca_LastPlayerForTeam()
 	return last_pl;
 }
 
-void ca_LastPlayerForTeam_Notify()
+void ca_LastPlayerForTeam_Notify(entity this)
 {
 	if (round_handler_IsActive())
 	if (round_handler_IsRoundStarted())
 	{
-		entity pl = ca_LastPlayerForTeam();
+		entity pl = ca_LastPlayerForTeam(this);
 		if (pl)
 			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
 	}
@@ -307,36 +306,40 @@ void ca_LastPlayerForTeam_Notify()
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 {
-	ca_LastPlayerForTeam_Notify();
+	entity frag_target = M_ARGV(2, entity);
+	
+	ca_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ClientDisconnect)
 {
-    SELFPARAM();
-	if (this.caplayer == 1)
-		ca_LastPlayerForTeam_Notify();
-	return 1;
+    entity player = M_ARGV(0, entity);
+
+	if (player.caplayer == 1)
+		ca_LastPlayerForTeam_Notify(player);
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ForbidPlayerScore_Clear)
 {
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 {
-    SELFPARAM();
-	if (!IS_DEAD(this))
-		ca_LastPlayerForTeam_Notify();
-	if (this.killindicator_teamchange == -2)
-		this.caplayer = 0;
-	if (this.caplayer)
-		this.frags = FRAGS_LMS_LOSER;
+    entity player = M_ARGV(0, entity);
+
+	if (!IS_DEAD(player))
+		ca_LastPlayerForTeam_Notify(player);
+	if (player.killindicator_teamchange == -2)
+		player.caplayer = 0;
+	if (player.caplayer)
+		player.frags = FRAGS_LMS_LOSER;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	return true;  // prevent team reset
@@ -344,13 +347,13 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(ca, ForbidThrowCurrentWeapon)
 {
-	return 1;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, GiveFragsForKill, CBC_ORDER_FIRST)
 {
-	frag_score = 0; // score will be given to the winner team when the round ends
-	return 1;
+	M_ARGV(2, float) = 0; // score will be given to the winner team when the round ends
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetStartItems)
@@ -364,12 +367,16 @@ MUTATOR_HOOKFUNCTION(ca, SetStartItems)
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
 	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
-
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	float frag_mirrordamage = M_ARGV(5, float);
+
 	if (IS_PLAYER(frag_target))
 	if (!IS_DEAD(frag_target))
 	if (frag_target == frag_attacker || SAME_TEAM(frag_target, frag_attacker) || frag_deathtype == DEATH_FALL.m_id)
@@ -377,30 +384,34 @@ MUTATOR_HOOKFUNCTION(ca, PlayerDamage_Calculate)
 
 	frag_mirrordamage = 0;
 
-	return false;
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(5, float) = frag_mirrordamage;
 }
 
 MUTATOR_HOOKFUNCTION(ca, FilterItem)
 {
-    SELFPARAM();
+    entity item = M_ARGV(0, entity);
+
 	if (autocvar_g_powerups <= 0)
-	if (this.flags & FL_POWERUP)
+	if (item.flags & FL_POWERUP)
 		return true;
 
 	if (autocvar_g_pickup_items <= 0)
 		return true;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerDamage_SplitHealthArmor)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_damage = M_ARGV(7, float);
+	float damage_take = M_ARGV(4, float);
+	float damage_save = M_ARGV(5, float);
+
 	float excess = max(0, frag_damage - damage_take - damage_save);
 
 	if (frag_target != frag_attacker && IS_PLAYER(frag_attacker))
 		PlayerTeamScore_Add(frag_attacker, SP_SCORE, ST_SCORE, (frag_damage - excess) * autocvar_g_ca_damage2score_multiplier);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, PlayerRegen)
@@ -417,37 +428,42 @@ MUTATOR_HOOKFUNCTION(ca, Scores_CountFragsRemaining)
 
 MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 {
-    SELFPARAM();
-	if (!autocvar_g_ca_spectate_enemies && this.caplayer)
-	if (DIFF_TEAM(spec_player, this))
+    entity client = M_ARGV(0, entity);
+    entity targ = M_ARGV(1, entity);
+
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
+	if (DIFF_TEAM(targ, client))
 		return true;
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
-    SELFPARAM();
-	if (!autocvar_g_ca_spectate_enemies && this.caplayer)
+    entity client = M_ARGV(0, entity);
+    entity targ = M_ARGV(1, entity);
+
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
-		spec_player = CA_SpectateNext(this, spec_player);
+		targ = CA_SpectateNext(client, targ);
 		return true;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 {
-    SELFPARAM();
-	if (!autocvar_g_ca_spectate_enemies && this.caplayer)
+    entity client = M_ARGV(0, entity);
+    entity targ = M_ARGV(1, entity);
+    entity first = M_ARGV(2, entity);
+
+	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
-		do { spec_player = spec_player.chain; }
-		while(spec_player && DIFF_TEAM(spec_player, this));
+		do { targ = targ.chain; }
+		while(targ && DIFF_TEAM(targ, client));
 
-		if (!spec_player)
+		if (!targ)
 		{
-			for (spec_player = spec_first; spec_player && DIFF_TEAM(spec_player, this); spec_player = spec_player.chain);
+			for (targ = first; targ && DIFF_TEAM(targ, client); targ = targ.chain);
 
-			if (spec_player == this.enemy)
+			if (targ == client.enemy)
 				return MUT_SPECPREV_RETURN;
 		}
 	}
@@ -459,20 +475,21 @@ MUTATOR_HOOKFUNCTION(ca, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		if (IS_PLAYER(it) || it.caplayer == 1)
-			++bot_activerealplayers;
-		++bot_realplayers;
+			++M_ARGV(0, int);
+		++M_ARGV(1, int);
 	});
 	return true;
 }
 
 MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 {
-    SELFPARAM();
-	if (this.caplayer)
+    entity player = M_ARGV(0, entity);
+
+	if (player.caplayer)
 	{
 		// they're going to spec, we can do other checks
-		if (autocvar_sv_spectate && (IS_SPEC(this) || IS_OBSERVER(this)))
-			Send_Notification(NOTIF_ONE_ONLY, this, MSG_INFO, INFO_CA_LEAVE);
+		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
+			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_LEAVE);
 		return MUT_SPECCMD_FORCE;
 	}
 
@@ -481,19 +498,20 @@ MUTATOR_HOOKFUNCTION(ca, ClientCommand_Spectate)
 
 MUTATOR_HOOKFUNCTION(ca, WantWeapon)
 {
-	want_allguns = true;
-	return false;
+	M_ARGV(2, bool) = true; // all weapons
 }
 
 MUTATOR_HOOKFUNCTION(ca, GetPlayerStatus)
 {
-	return set_player.caplayer == 1;
+	entity player = M_ARGV(0, entity);
+
+	return player.caplayer == 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca, SetWeaponArena)
 {
 	// most weapons arena
-	if (ret_string == "0" || ret_string == "") ret_string = "most";
+	if (M_ARGV(0, string) == "0" || M_ARGV(0, string) == "") M_ARGV(0, string) = "most";
 }
 
 #endif

@@ -9,30 +9,30 @@ float autocvar_g_vampirehook_health_steal;
 .float last_dmg;
 
 MUTATOR_HOOKFUNCTION(vh, GrappleHookThink)
-{SELFPARAM();
-	entity dmgent = ((SAME_TEAM(self.owner, self.aiment) && autocvar_g_vampirehook_teamheal) ? self.owner : self.aiment);
+{
+	entity thehook = M_ARGV(0, entity);
 
-	if(IS_PLAYER(self.aiment))
-	if(self.last_dmg < time)
-	if(!STAT(FROZEN, self.aiment))
+	entity dmgent = ((SAME_TEAM(thehook.owner, thehook.aiment) && autocvar_g_vampirehook_teamheal) ? thehook.owner : thehook.aiment);
+
+	if(IS_PLAYER(thehook.aiment))
+	if(thehook.last_dmg < time)
+	if(!STAT(FROZEN, thehook.aiment))
 	if(time >= game_starttime)
-	if(DIFF_TEAM(self.owner, self.aiment) || autocvar_g_vampirehook_teamheal)
-	if(self.aiment.health > 0)
+	if(DIFF_TEAM(thehook.owner, thehook.aiment) || autocvar_g_vampirehook_teamheal)
+	if(thehook.aiment.health > 0)
 	if(autocvar_g_vampirehook_damage)
 	{
-		self.last_dmg = time + autocvar_g_vampirehook_damagerate;
-		self.owner.damage_dealt += autocvar_g_vampirehook_damage;
-		Damage(dmgent, self, self.owner, autocvar_g_vampirehook_damage, WEP_HOOK.m_id, self.origin, '0 0 0');
-		if(SAME_TEAM(self.owner, self.aiment))
-			self.aiment.health = min(self.aiment.health + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
+		thehook.last_dmg = time + autocvar_g_vampirehook_damagerate;
+		thehook.owner.damage_dealt += autocvar_g_vampirehook_damage;
+		Damage(dmgent, thehook, thehook.owner, autocvar_g_vampirehook_damage, WEP_HOOK.m_id, thehook.origin, '0 0 0');
+		if(SAME_TEAM(thehook.owner, thehook.aiment))
+			thehook.aiment.health = min(thehook.aiment.health + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
 		else
-			self.owner.health = min(self.owner.health + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
+			thehook.owner.health = min(thehook.owner.health + autocvar_g_vampirehook_health_steal, g_pickup_healthsmall_max);
 
-		if(dmgent == self.owner)
+		if(dmgent == thehook.owner)
 			dmgent.health -= autocvar_g_vampirehook_damage; // FIXME: friendly fire?!
 	}
-
-	return false;
 }
 
 #endif

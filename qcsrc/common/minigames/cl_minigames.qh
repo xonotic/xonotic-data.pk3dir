@@ -88,7 +88,7 @@ entity minigame_self;
 // Whethere there's an active minigame
 float minigame_isactive()
 {
-	return active_minigame != world;
+	return active_minigame != NULL;
 }
 
 // Execute a minigame command
@@ -107,7 +107,7 @@ void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_ar
 
 
 #define FOREACH_MINIGAME_ENTITY(entityvar) \
-	entityvar=world; \
+	entityvar=NULL; \
 	while( (entityvar = findentity(entityvar,owner,active_minigame)) )
 
 

@@ -28,7 +28,7 @@ NET_HANDLE(net_effect, bool isNew)
 		eff_cnt = ReadByte();
 
 	if(eff_trail)
-		WarpZone_TrailParticles(world, particleeffectnum(eff), v, vel);
+		WarpZone_TrailParticles(NULL, particleeffectnum(eff), v, vel);
 	else
 		pointparticles(eff, v, vel, eff_cnt);
 	return true;

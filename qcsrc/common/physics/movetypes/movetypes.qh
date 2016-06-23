@@ -6,9 +6,9 @@
 #define UNSET_ONGROUND(s)                   ((s).flags &= ~FL_ONGROUND)
 
 .float move_ltime;
-.void()move_think;
+.void(entity this) move_think;
 .float move_nextthink;
-.void()move_blocked;
+.void(entity this) move_blocked;
 
 .float move_movetype;
 .float move_time;
@@ -19,14 +19,13 @@
 .int move_flags;
 .int move_watertype;
 .int move_waterlevel;
-.void()move_touch;
 .void(float, float)contentstransition;
 .float move_bounce_factor;
 .float move_bounce_stopspeed;
 .float move_nomonsters;  // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
 
-.entity move_aiment;
-.vector move_punchangle;
+.entity aiment;
+.vector punchangle;
 
 // should match sv_gameplayfix_fixedcheckwatertransition
 float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;

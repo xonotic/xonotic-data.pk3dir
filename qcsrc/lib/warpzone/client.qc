@@ -25,7 +25,7 @@ void WarpZone_Fade_PreDraw(entity this)
 		this.drawmask = MASK_NORMAL;
 }
 
-void WarpZone_Touch ();
+void WarpZone_Touch (entity this);
 NET_HANDLE(ENT_CLIENT_WARPZONE, bool isnew)
 {
 	warpzone_warpzones_exist = 1;
@@ -241,7 +241,6 @@ void WarpZone_FixView()
 {
 	entity e;
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, o;
-	float f;
 
 	warpzone_save_view_origin = org = getpropertyvec(VF_ORIGIN);
 	warpzone_save_view_angles = ang = getpropertyvec(VF_ANGLES);
@@ -258,10 +257,29 @@ void WarpZone_FixView()
 
 #ifndef KEEP_ROLL
 	float rick;
-	if(autocvar_cl_rollkillspeed)
-		f = max(0, (1 - frametime * autocvar_cl_rollkillspeed));
-	else
+	float f;
+	static float rollkill;
+	if (STAT(HEALTH) > 0 || STAT(HEALTH) == -666 || STAT(HEALTH) == -2342)
+	{
 		f = 0;
+		// reset roll when passing through a warpzone that change player's roll angle
+		if(autocvar_cl_rollkillspeed)
+			f = max(0, (1 - frametime * autocvar_cl_rollkillspeed));
+		if(rollkill)
+			rollkill = 0;
+	}
+	else
+	{
+		f = 1;
+		// roll the view when killed (v_deathtilt)
+		if(autocvar_cl_rollkillspeed)
+		{
+			rollkill += frametime * autocvar_cl_rollkillspeed;
+			f = min(1, rollkill);
+		}
+		else if(rollkill)
+			rollkill = 0;
+	}
 
 	rick = getproperty(VF_CL_VIEWANGLES_Z);
 	rick *= f;

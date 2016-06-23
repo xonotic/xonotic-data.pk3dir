@@ -4,42 +4,40 @@ REGISTER_MUTATOR(bloodloss, cvar("g_bloodloss"));
 .float bloodloss_timer;
 
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerPreThink)
-{SELFPARAM();
-	if(IS_PLAYER(self))
-	if(self.health <= autocvar_g_bloodloss && !IS_DEAD(self))
-	{
-		PHYS_INPUT_BUTTON_CROUCH(self) = true;
+{
+	entity player = M_ARGV(0, entity);
 
-		if(time >= self.bloodloss_timer)
+	if(IS_PLAYER(player))
+	if(player.health <= autocvar_g_bloodloss && !IS_DEAD(player))
+	{
+		PHYS_INPUT_BUTTON_CROUCH(player) = true;
+
+		if(time >= player.bloodloss_timer)
 		{
-			if(self.vehicle)
-				vehicles_exit(VHEF_RELEASE);
-			if(self.event_damage)
-				self.event_damage(self, self, self, 1, DEATH_ROT.m_id, self.origin, '0 0 0');
-			self.bloodloss_timer = time + 0.5 + random() * 0.5;
+			if(player.vehicle)
+				vehicles_exit(player.vehicle, VHEF_RELEASE);
+			if(player.event_damage)
+				player.event_damage(player, player, player, 1, DEATH_ROT.m_id, player.origin, '0 0 0');
+			player.bloodloss_timer = time + 0.5 + random() * 0.5;
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss, PlayerJump)
-{SELFPARAM();
-	if(self.health <= autocvar_g_bloodloss)
-		return true;
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if(player.health <= autocvar_g_bloodloss)
+		return true;
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":bloodloss");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":bloodloss");
 }
 
 MUTATOR_HOOKFUNCTION(bloodloss, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Blood loss");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Blood loss");
 }
 #endif

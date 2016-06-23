@@ -38,9 +38,9 @@ void CreatureFrame_hotliquids(entity this)
 		if (this.flags & FL_PROJECTILE)
 		{
 			if (this.watertype == CONTENT_LAVA)
-				Damage (this, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
 			else if (this.watertype == CONTENT_SLIME)
-				Damage (this, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
 		}
 		else
 		{
@@ -51,9 +51,9 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_LAVA, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_LAVA.m_id, this.origin, '0 0 0');
 				if(autocvar_g_balance_contents_playerdamage_lava_burn)
-					Fire_AddDamage(this, world, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
+					Fire_AddDamage(this, NULL, autocvar_g_balance_contents_playerdamage_lava_burn * this.waterlevel, autocvar_g_balance_contents_playerdamage_lava_burn_time * this.waterlevel, DEATH_LAVA.m_id);
 			}
 			else if (this.watertype == CONTENT_SLIME)
 			{
@@ -62,7 +62,7 @@ void CreatureFrame_hotliquids(entity this)
 					this.watersound_finished = time + 0.5;
 					sound (this, CH_PLAYER_SINGLE, SND_SLIME, VOL_BASE, ATTEN_NORM);
 				}
-				Damage (this, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * this.waterlevel, DEATH_SLIME.m_id, this.origin, '0 0 0');
 			}
 		}
 	}
@@ -107,11 +107,11 @@ void CreatureFrame_FallDamage(entity this)
 			else
 				dm = min((dm - autocvar_g_balance_falldamage_minspeed) * autocvar_g_balance_falldamage_factor, autocvar_g_balance_falldamage_maxdamage);
 			if (dm > 0)
-				Damage (this, world, world, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
+				Damage (this, NULL, NULL, dm, DEATH_FALL.m_id, this.origin, '0 0 0');
 		}
 
 		if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
-			Damage (this, world, world, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
+			Damage (this, NULL, NULL, 100000, DEATH_SHOOTING_STAR.m_id, this.origin, '0 0 0');
 	}
 }
 
@@ -159,7 +159,7 @@ void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
     FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPreThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
@@ -228,7 +228,7 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
     FOREACH_CLIENT(true, GlobalStats_update(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPostThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
 
 .vector originjitter;
@@ -236,24 +236,26 @@ void StartFrame()
 .float anglejitter;
 .string gametypefilter;
 .string cvarfilter;
-float DoesQ3ARemoveThisEntity();
-void SV_OnEntityPreSpawnFunction()
-{SELFPARAM();
+bool DoesQ3ARemoveThisEntity(entity this);
+void SV_OnEntityPreSpawnFunction(entity this)
+{
+	__spawnfunc_expecting = true;
 	__spawnfunc_expect = this;
-	if (self)
-	if (self.gametypefilter != "")
-	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
+	if (this)
+	if (this.gametypefilter != "")
+	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, this.gametypefilter))
 	{
-		remove(self);
+		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
-	if(self.cvarfilter != "")
+	if(this.cvarfilter != "")
 	{
 		float n, i, o, inv;
 		string s, k, v;
 		inv = 0;
 
-		s = self.cvarfilter;
+		s = this.cvarfilter;
 		if(substring(s, 0, 1) == "+")
 		{
 			s = substring(s, 1, -1);
@@ -352,41 +354,44 @@ LABEL(cvar_fail)
 		if (!inv)
 		{
 			//print("cvarfilter fail\n");
-			remove(self);
+			remove(this);
+			__spawnfunc_expecting = false;
 			return;
 		}
 	}
 
-	if(DoesQ3ARemoveThisEntity())
+	if(DoesQ3ARemoveThisEntity(this))
 	{
-		remove(self);
+		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 
 	// support special -1 and -2 angle from radiant
-	if (self.angles == '0 -1 0')
-		self.angles = '-90 0 0';
-	else if (self.angles == '0 -2 0')
-		self.angles = '+90 0 0';
+	if (this.angles == '0 -1 0')
+		this.angles = '-90 0 0';
+	else if (this.angles == '0 -2 0')
+		this.angles = '+90 0 0';
 
-	if(self.originjitter.x != 0)
-		self.origin_x = self.origin.x + (random() * 2 - 1) * self.originjitter.x;
-	if(self.originjitter.y != 0)
-		self.origin_y = self.origin.y + (random() * 2 - 1) * self.originjitter.y;
-	if(self.originjitter.z != 0)
-		self.origin_z = self.origin.z + (random() * 2 - 1) * self.originjitter.z;
-	if(self.anglesjitter.x != 0)
-		self.angles_x = self.angles.x + (random() * 2 - 1) * self.anglesjitter.x;
-	if(self.anglesjitter.y != 0)
-		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglesjitter.y;
-	if(self.anglesjitter.z != 0)
-		self.angles_z = self.angles.z + (random() * 2 - 1) * self.anglesjitter.z;
-	if(self.anglejitter != 0)
-		self.angles_y = self.angles.y + (random() * 2 - 1) * self.anglejitter;
+	if(this.originjitter.x != 0)
+		this.origin_x = this.origin.x + (random() * 2 - 1) * this.originjitter.x;
+	if(this.originjitter.y != 0)
+		this.origin_y = this.origin.y + (random() * 2 - 1) * this.originjitter.y;
+	if(this.originjitter.z != 0)
+		this.origin_z = this.origin.z + (random() * 2 - 1) * this.originjitter.z;
+	if(this.anglesjitter.x != 0)
+		this.angles_x = this.angles.x + (random() * 2 - 1) * this.anglesjitter.x;
+	if(this.anglesjitter.y != 0)
+		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglesjitter.y;
+	if(this.anglesjitter.z != 0)
+		this.angles_z = this.angles.z + (random() * 2 - 1) * this.anglesjitter.z;
+	if(this.anglejitter != 0)
+		this.angles_y = this.angles.y + (random() * 2 - 1) * this.anglejitter;
 
-	if(MUTATOR_CALLHOOK(OnEntityPreSpawn))
+	if(MUTATOR_CALLHOOK(OnEntityPreSpawn, this))
 	{
-		remove(self);
+		remove(this);
+		__spawnfunc_expecting = false;
 		return;
 	}
 }
@@ -395,7 +400,7 @@ void WarpZone_PostInitialize_Callback()
 {
 	// create waypoint links for warpzones
 	entity e;
-	for(e = world; (e = find(e, classname, "trigger_warpzone")); )
+	for(e = NULL; (e = find(e, classname, "trigger_warpzone")); )
 	{
 		vector src, dst;
 		src = (e.absmin + e.absmax) * 0.5;

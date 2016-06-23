@@ -452,11 +452,11 @@ bool PlayerJump(entity this)
 	bool doublejump = false;
 	float mjumpheight = PHYS_JUMPVELOCITY(this);
 
-	if (MUTATOR_CALLHOOK(PlayerJump, this, doublejump, mjumpheight))
+	if (MUTATOR_CALLHOOK(PlayerJump, this, mjumpheight, doublejump))
 		return true;
 
-	doublejump = player_multijump;
-	mjumpheight = player_jumpheight;
+	mjumpheight = M_ARGV(1, float);
+	doublejump = M_ARGV(2, bool);
 
 	if (this.waterlevel >= WATERLEVEL_SWIMMING)
 	{
@@ -587,16 +587,18 @@ void CheckWaterJump(entity this)
 void CheckPlayerJump(entity this)
 {
 #ifdef SVQC
-	float was_flying = ITEMS_STAT(this) & IT_USING_JETPACK;
+	bool was_flying = boolean(ITEMS_STAT(this) & IT_USING_JETPACK);
 #endif
 	if (JETPACK_JUMP(this) < 2)
 		ITEMS_STAT(this) &= ~IT_USING_JETPACK;
 
 	if(PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this))
 	{
-		float air_jump = !PlayerJump(this) || player_multijump; // PlayerJump() has important side effects
-		float activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
-		float has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO);
+		bool playerjump = PlayerJump(this); // required
+
+		bool air_jump = !playerjump || M_ARGV(2, bool);
+		bool activate = JETPACK_JUMP(this) && air_jump && PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_JETPACK(this);
+		bool has_fuel = !PHYS_JETPACK_FUEL(this) || PHYS_AMMO_FUEL(this) || (ITEMS_STAT(this) & IT_UNLIMITED_WEAPON_AMMO);
 
 		if (!(ITEMS_STAT(this) & ITEM_Jetpack.m_itemid)) { }
 		else if (this.jetpack_stopped) { }
@@ -646,15 +648,15 @@ float racecar_angle(float forward, float down)
 
 string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
-void SpecialCommand()
+void SpecialCommand(entity this)
 {
 #ifdef SVQC
-	if (!CheatImpulse(CHIMPULSE_GIVE_ALL.impulse))
+	if (!CheatImpulse(this, CHIMPULSE_GIVE_ALL.impulse))
 		LOG_INFO("A hollow voice says \"Plugh\".\n");
 #endif
 }
 
-float PM_check_specialcommand(entity this, float buttons)
+bool PM_check_specialcommand(entity this, int buttons)
 {
 #ifdef SVQC
 	string c;
@@ -681,7 +683,7 @@ float PM_check_specialcommand(entity this, float buttons)
 		if (this.specialcommand_pos >= strlen(specialcommand))
 		{
 			this.specialcommand_pos = 0;
-			SpecialCommand();
+			SpecialCommand(this);
 			return true;
 		}
 	}
@@ -1328,6 +1330,9 @@ void PM_Main(entity this)
 	if (this.PlayerPhysplug)
 		if (this.PlayerPhysplug(this))
 			return;
+#elif defined(CSQC)
+	if(hud != HUD_NORMAL)
+		return; // no vehicle prediction (yet)
 #endif
 
 #ifdef SVQC
@@ -1544,13 +1549,10 @@ LABEL(end)
 }
 
 #if defined(SVQC)
-void SV_PlayerPhysics()
+void SV_PlayerPhysics(entity this)
 #elif defined(CSQC)
 void CSQC_ClientMovement_PlayerMove_Frame(entity this)
 #endif
 {
-#ifdef SVQC
-	SELFPARAM();
-#endif
 	PM_Main(this);
 }

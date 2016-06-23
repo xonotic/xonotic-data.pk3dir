@@ -77,14 +77,14 @@ void InitGameplayMode()
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
 
-	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
+	InitializeEntity(NULL, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
 
-string GetClientVersionMessage()
-{SELFPARAM();
+string GetClientVersionMessage(entity this)
+{
 	string versionmsg;
-	if (self.version_mismatch) {
-		if(self.version < autocvar_gameversion) {
+	if (this.version_mismatch) {
+		if(this.version < autocvar_gameversion) {
 			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
 		} else {
 			versionmsg = "^3This server is using an outdated Xonotic version.\n\n\n ### THIS SERVER IS INCOMPATIBLE AND THUS YOU CANNOT JOIN ###.^8";
@@ -95,12 +95,12 @@ string GetClientVersionMessage()
 	return versionmsg;
 }
 
-string getwelcomemessage()
+string getwelcomemessage(entity this)
 {
 	string s, modifications, motd;
 
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString, "");
-	modifications = ret_string;
+	modifications = M_ARGV(0, string);
 
 	if(g_weaponarena)
 	{
@@ -123,8 +123,7 @@ string getwelcomemessage()
 		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	string versionmessage;
-	versionmessage = GetClientVersionMessage();
+	string versionmessage = GetClientVersionMessage(this);
 
 	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
@@ -148,7 +147,7 @@ string getwelcomemessage()
 
 	string mutator_msg = "";
 	MUTATOR_CALLHOOK(BuildGameplayTipsString, mutator_msg);
-	mutator_msg = ret_string;
+	mutator_msg = M_ARGV(0, string);
 
 	s = strcat(s, mutator_msg); // trust that the mutator will do proper formatting
 
@@ -206,7 +205,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 
 // set c1...c4 to show what teams are allowed
 void CheckAllowedTeams (entity for_whom)
-{SELFPARAM();
+{
 	int dm = 0;
 
 	c1 = c2 = c3 = c4 = -1;
@@ -215,8 +214,8 @@ void CheckAllowedTeams (entity for_whom)
 	string teament_name = string_null;
 
 	bool mutator_returnvalue = MUTATOR_CALLHOOK(GetTeamCount, dm, teament_name);
-	teament_name = ret_string;
-	dm = ret_float;
+	dm = M_ARGV(0, float);
+	teament_name = M_ARGV(1, string);
 
 	if(!mutator_returnvalue)
 	{
@@ -231,7 +230,7 @@ void CheckAllowedTeams (entity for_whom)
 	// find out what teams are allowed if necessary
 	if(teament_name)
 	{
-		entity head = find(world, classname, teament_name);
+		entity head = find(NULL, classname, teament_name);
 		while(head)
 		{
 			switch(head.team)
@@ -268,14 +267,17 @@ void CheckAllowedTeams (entity for_whom)
 		}
 	}
 
+	if(!for_whom)
+		return;
+
 	// if player has a forced team, ONLY allow that one
-	if(self.team_forced == NUM_TEAM_1 && c1 >= 0)
+	if(for_whom.team_forced == NUM_TEAM_1 && c1 >= 0)
 		c2 = c3 = c4 = -1;
-	else if(self.team_forced == NUM_TEAM_2 && c2 >= 0)
+	else if(for_whom.team_forced == NUM_TEAM_2 && c2 >= 0)
 		c1 = c3 = c4 = -1;
-	else if(self.team_forced == NUM_TEAM_3 && c3 >= 0)
+	else if(for_whom.team_forced == NUM_TEAM_3 && c3 >= 0)
 		c1 = c2 = c4 = -1;
-	else if(self.team_forced == NUM_TEAM_4 && c4 >= 0)
+	else if(for_whom.team_forced == NUM_TEAM_4 && c4 >= 0)
 		c1 = c2 = c3 = -1;
 }
 
@@ -455,7 +457,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	if(ignore_pl)
 		GetTeamCounts(pl);
 	else
-		GetTeamCounts(world);
+		GetTeamCounts(NULL);
 
 	RandomSelection_Init();
 
@@ -469,19 +471,19 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	// now t is the minimum, or A minimum!
 	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
-		RandomSelection_Add(world, 1, string_null, 1, 1);
+		RandomSelection_Add(NULL, 1, string_null, 1, 1);
 	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
-		RandomSelection_Add(world, 2, string_null, 1, 1);
+		RandomSelection_Add(NULL, 2, string_null, 1, 1);
 	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
-		RandomSelection_Add(world, 3, string_null, 1, 1);
+		RandomSelection_Add(NULL, 3, string_null, 1, 1);
 	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
-		RandomSelection_Add(world, 4, string_null, 1, 1);
+		RandomSelection_Add(NULL, 4, string_null, 1, 1);
 
 	return RandomSelection_chosen_float;
 }
 
-int JoinBestTeam(entity pl, bool only_return_best, bool forcebestteam)
-{SELFPARAM();
+int JoinBestTeam(entity this, bool only_return_best, bool forcebestteam)
+{
 	float smallest, selectedteam;
 
 	// don't join a team if we're not playing a team game
@@ -489,20 +491,20 @@ int JoinBestTeam(entity pl, bool only_return_best, bool forcebestteam)
 		return 0;
 
 	// find out what teams are available
-	CheckAllowedTeams(pl);
+	CheckAllowedTeams(this);
 
 	// if we don't care what team he ends up on, put him on whatever team he entered as.
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
 	{
-		if(     c1 >= 0 && pl.team == NUM_TEAM_1)
-			selectedteam = pl.team;
-		else if(c2 >= 0 && pl.team == NUM_TEAM_2)
-			selectedteam = pl.team;
-		else if(c3 >= 0 && pl.team == NUM_TEAM_3)
-			selectedteam = pl.team;
-		else if(c4 >= 0 && pl.team == NUM_TEAM_4)
-			selectedteam = pl.team;
+		if(     c1 >= 0 && this.team == NUM_TEAM_1)
+			selectedteam = this.team;
+		else if(c2 >= 0 && this.team == NUM_TEAM_2)
+			selectedteam = this.team;
+		else if(c3 >= 0 && this.team == NUM_TEAM_3)
+			selectedteam = this.team;
+		else if(c4 >= 0 && this.team == NUM_TEAM_4)
+			selectedteam = this.team;
 		else
 			selectedteam = -1;
 
@@ -510,72 +512,72 @@ int JoinBestTeam(entity pl, bool only_return_best, bool forcebestteam)
 		{
 			if(!only_return_best)
 			{
-				SetPlayerColors(pl, selectedteam - 1);
+				SetPlayerColors(this, selectedteam - 1);
 
 				// when JoinBestTeam is called by client.qc/ClientKill_Now_TeamChange the players team is -1 and thus skipped
 				// when JoinBestTeam is called by cl_client.qc/ClientConnect the player_id is 0 the log attempt is rejected
-				LogTeamchange(pl.playerid, pl.team, 99);
+				LogTeamchange(this.playerid, this.team, 99);
 			}
 			return selectedteam;
 		}
 		// otherwise end up on the smallest team (handled below)
 	}
 
-	smallest = FindSmallestTeam(pl, true);
+	smallest = FindSmallestTeam(this, true);
 
-	if(!only_return_best && !pl.bot_forced_team)
+	if(!only_return_best && !this.bot_forced_team)
 	{
-		TeamchangeFrags(self);
+		TeamchangeFrags(this);
 		if(smallest == 1)
 		{
-			SetPlayerColors(pl, NUM_TEAM_1 - 1);
+			SetPlayerColors(this, NUM_TEAM_1 - 1);
 		}
 		else if(smallest == 2)
 		{
-			SetPlayerColors(pl, NUM_TEAM_2 - 1);
+			SetPlayerColors(this, NUM_TEAM_2 - 1);
 		}
 		else if(smallest == 3)
 		{
-			SetPlayerColors(pl, NUM_TEAM_3 - 1);
+			SetPlayerColors(this, NUM_TEAM_3 - 1);
 		}
 		else if(smallest == 4)
 		{
-			SetPlayerColors(pl, NUM_TEAM_4 - 1);
+			SetPlayerColors(this, NUM_TEAM_4 - 1);
 		}
 		else
 		{
 			error("smallest team: invalid team\n");
 		}
 
-		LogTeamchange(pl.playerid, pl.team, 2); // log auto join
+		LogTeamchange(this.playerid, this.team, 2); // log auto join
 
-		if(!IS_DEAD(pl))
-			Damage(pl, pl, pl, 100000, DEATH_TEAMCHANGE.m_id, pl.origin, '0 0 0');
+		if(!IS_DEAD(this))
+			Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
 	}
 
 	return smallest;
 }
 
 //void() ctf_playerchanged;
-void SV_ChangeTeam(float _color)
-{SELFPARAM();
+void SV_ChangeTeam(entity this, float _color)
+{
 	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
 	if(!teamplay)
-		SetPlayerColors(self, _color);
+		SetPlayerColors(this, _color);
 
-	if(!IS_CLIENT(self))
+	if(!IS_CLIENT(this))
 	{
 		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_CONNECTING, self.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_CONNECTING, this.netname);
 		return;
 	}
 
 	if(!teamplay)
 		return;
 
-	scolor = self.clientcolors & 0x0F;
+	scolor = this.clientcolors & 0x0F;
 	dcolor = _color & 0x0F;
 
 	if(scolor == NUM_TEAM_1 - 1)
@@ -595,7 +597,7 @@ void SV_ChangeTeam(float _color)
 	else // if(dcolor == NUM_TEAM_4 - 1)
 		dteam = 4;
 
-	CheckAllowedTeams(self);
+	CheckAllowedTeams(this);
 
 	if(dteam == 1 && c1 < 0) dteam = 4;
 	if(dteam == 4 && c4 < 0) dteam = 3;
@@ -606,43 +608,43 @@ void SV_ChangeTeam(float _color)
 	if(scolor == dcolor)
 	{
 		//bprint("same team change\n");
-		SetPlayerTeam(self, dteam, steam, true);
+		SetPlayerTeam(this, dteam, steam, true);
 		return;
 	}
 
-	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
-		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
+	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && this.wasplayer)) {
+		Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
 	// autocvar_g_balance_teams_prevent_imbalance only makes sense if autocvar_g_balance_teams is on, as it makes the team selection dialog pointless
 	if(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 	{
-		GetTeamCounts(self);
-		if(!TeamSmallerEqThanTeam(dteam, steam, self))
+		GetTeamCounts(this);
+		if(!TeamSmallerEqThanTeam(dteam, steam, this))
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
+			Send_Notification(NOTIF_ONE, this, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}
 
 //	bprint("allow change teams from ", ftos(steam), " to ", ftos(dteam), "\n");
 
-	if(IS_PLAYER(self) && steam != dteam)
+	if(IS_PLAYER(this) && steam != dteam)
 	{
 		// reduce frags during a team change
-		TeamchangeFrags(self);
+		TeamchangeFrags(this);
 	}
 
-	MUTATOR_CALLHOOK(Player_ChangeTeam, self, steam, dteam);
+	MUTATOR_CALLHOOK(Player_ChangeTeam, this, steam, dteam);
 
-	SetPlayerTeam(self, dteam, steam, !IS_CLIENT(self));
+	SetPlayerTeam(this, dteam, steam, !IS_CLIENT(this));
 
-	if(IS_PLAYER(self) && steam != dteam)
+	if(IS_PLAYER(this) && steam != dteam)
 	{
 		// kill player when changing teams
-		if(!IS_DEAD(self))
-			Damage(self, self, self, 100000, DEATH_TEAMCHANGE.m_id, self.origin, '0 0 0');
+		if(!IS_DEAD(this))
+			Damage(this, this, this, 100000, DEATH_TEAMCHANGE.m_id, this.origin, '0 0 0');
 	}
 }
 
@@ -691,9 +693,9 @@ void ShufflePlayerOutOfTeam (float source_team)
 	else // if(source_team == 4)
 		steam = NUM_TEAM_4;
 
-	lowest_bot = world;
+	lowest_bot = NULL;
 	lowest_bot_score = 999999999;
-	lowest_player = world;
+	lowest_player = NULL;
 	lowest_player_score = 999999999;
 
 	// find the lowest-scoring player & bot of that team
@@ -717,7 +719,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 	));
 
 	// prefers to move a bot...
-	if(lowest_bot != world)
+	if(lowest_bot != NULL)
 		selected = lowest_bot;
 	// but it will move a player if it has to
 	else

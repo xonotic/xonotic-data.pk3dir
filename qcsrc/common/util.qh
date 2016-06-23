@@ -11,7 +11,7 @@ vector real_origin(entity ent);
 string wordwrap(string s, float l);
 #ifndef MENUQC
 #ifndef CSQC
-void wordwrap_sprint(string s, float l);
+void wordwrap_sprint(entity to, string s, float l);
 #endif
 #endif
 void wordwrap_cb(string s, float l, void(string) callback);

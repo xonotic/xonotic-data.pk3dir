@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-cd "$(dirname "$0")"
+cd ${0%/*}
 
 WORKDIR=../.tmp
 
@@ -9,6 +9,7 @@ CPP="cc -xc -E"
 
 declare -a QCCDEFS=(
     -DNDEBUG=1
+    -DXONOTIC=1
     -DWATERMARK="\"$(git describe --tags --dirty='~')\""
     -DDEBUGPATHING=0
 )

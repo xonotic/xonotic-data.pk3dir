@@ -128,7 +128,7 @@ void VoteReset()
 	}
 
 	vote_called = VOTE_NULL;
-	vote_caller = world;
+	vote_caller = NULL;
 	vote_caller_name = string_null;
 	vote_endtime = 0;
 
@@ -160,21 +160,21 @@ void VoteAccept()
 	if (vote_caller)   vote_caller.vote_waittime = 0;  // people like your votes, you don't need to wait to vote again
 
 	VoteReset();
-	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_ACCEPT);
+	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_ACCEPT);
 }
 
 void VoteReject()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 was rejected\n");
 	VoteReset();
-	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
+	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteTimeout()
 {
 	bprint("\{1}^2* ^3", OriginalCallerName(), "^2's vote for ", vote_called_display, "^2 timed out\n");
 	VoteReset();
-	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
+	Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteSpam(float notvoters, float mincount, string result)
@@ -333,8 +333,6 @@ void VoteThink()
 // Resets the state of all clients, items, weapons, waypoints, ... of the map.
 void reset_map(bool dorespawn)
 {
-	SELFPARAM();
-
 	if (time <= game_starttime && round_handler_IsActive()) round_handler_Reset(game_starttime);
 
 	MUTATOR_CALLHOOK(reset_map_global);
@@ -342,7 +340,7 @@ void reset_map(bool dorespawn)
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
 		if (it.reset)
 		{
-			WITHSELF(it, it.reset(it));
+			it.reset(it);
 			continue;
 		}
 		if (it.team_saved) it.team = it.team_saved;
@@ -351,10 +349,10 @@ void reset_map(bool dorespawn)
 
 	// Waypoints and assault start come LAST
 	FOREACH_ENTITY_ORDERED(IS_NOT_A_CLIENT(it), {
-		if (it.reset2) WITHSELF(it, it.reset2());
+		if (it.reset2) it.reset2(it);
 	});
 
-	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(WITHSELF(it, Unfreeze(it))));
+	FOREACH_CLIENT(IS_PLAYER(it) && STAT(FROZEN, it), LAMBDA(Unfreeze(it)));
 
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
@@ -363,7 +361,6 @@ void reset_map(bool dorespawn)
 		if (!MUTATOR_CALLHOOK(reset_map_players))
 		{
 			FOREACH_CLIENT(true, LAMBDA(
-				setself(it);
 				/*
 				only reset players if a restart countdown is active
 				this can either be due to cvar sv_ready_restart_after_countdown having set
@@ -373,28 +370,25 @@ void reset_map(bool dorespawn)
 				if (restart_mapalreadyrestarted || (time < game_starttime))
 				{
 					// NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (IS_PLAYER(self))
+					if (IS_PLAYER(it))
 					{
-						// PlayerScore_Clear(self);
-						self.killcount = 0;
+						// PlayerScore_Clear(it);
+						it.killcount = 0;
 						// stop the player from moving so that he stands still once he gets respawned
-						self.velocity = '0 0 0';
-						self.avelocity = '0 0 0';
-						self.movement = '0 0 0';
-						PutClientInServer();
+						it.velocity = '0 0 0';
+						it.avelocity = '0 0 0';
+						it.movement = '0 0 0';
+						PutClientInServer(it);
 					}
 				}
 			));
-
-			setself(this);
 		}
 	}
 }
 
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
-void ReadyRestart_think()
+void ReadyRestart_think(entity this)
 {
-	SELFPARAM();
 	restart_mapalreadyrestarted = true;
 	reset_map(true);
 	Score_ClearAll();
@@ -444,7 +438,7 @@ void ReadyRestart_force()
 	if (autocvar_sv_ready_restart_after_countdown)
 	{
 		entity restart_timer = new_pure(restart_timer);
-		restart_timer.think = ReadyRestart_think;
+		setthink(restart_timer, ReadyRestart_think);
 		restart_timer.nextthink = game_starttime;
 	}
 
@@ -807,7 +801,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				}
 
 				FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(++tmp_playercount));
-				if (tmp_playercount > 1)   Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_CALL);  // don't announce a "vote now" sound if player is alone
+				if (tmp_playercount > 1)   Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_VOTE_CALL);  // don't announce a "vote now" sound if player is alone
 
 				bprint("\{1}^2* ^3", OriginalCallerName(), "^2 calls a vote for ", vote_called_display, "\n");
 				if (autocvar_sv_eventlog)   GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display));
