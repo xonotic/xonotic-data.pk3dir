@@ -626,6 +626,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerSpawn)
 	entity player = M_ARGV(0, entity);
 
 	player.buffs = 0;
+	player.buff_time = 0;
 	// reset timers here to prevent them continuing after re-spawn
 	player.buff_disability_time = 0;
 	player.buff_disability_effect_time = 0;
@@ -708,6 +709,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerUseKey, CBC_ORDER_FIRST)
 		Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 
 		player.buffs = 0;
+		player.buff_time = 0; // already notified
 		sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 		return true;
 	}
@@ -870,7 +872,7 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 	// 2: notify carrier as well
 	int buff_lost = 0;
 
-	if(player.buff_time)
+	if(player.buff_time && player.buffs)
 	if(time >= player.buff_time)
 	{
 		player.buff_time = 0;
@@ -884,12 +886,13 @@ MUTATOR_HOOKFUNCTION(buffs, PlayerPreThink)
 		if(player.buffs)
 		{
 			int buffid = buff_FirstFromFlags(player.buffs).m_id;
-			Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
-			if(buff_lost >= 2)
+			if(buff_lost == 2)
 			{
 				Send_Notification(NOTIF_ONE, player, MSG_MULTI, ITEM_BUFF_DROP, buffid); // TODO: special timeout message?
 				sound(player, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
 			}
+			else
+				Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_INFO, INFO_ITEM_BUFF_LOST, player.netname, buffid);
 			player.buffs = 0;
 		}
 	}
