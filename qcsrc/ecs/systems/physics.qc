@@ -93,7 +93,15 @@ void sys_phys_update(entity this, float dt)
 	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
 		PM_swim(this, maxspeed_mod);
 	} else if (time < this.ladder_time) {
-		PM_ladder(this, maxspeed_mod);
+		this.com_phys_friction = PHYS_FRICTION(this);
+		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
+		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
+		this.com_phys_gravity = '0 0 -1' * PHYS_GRAVITY(this) * dt;
+		if (PHYS_ENTGRAVITY(this)) { this.com_phys_gravity *= PHYS_ENTGRAVITY(this); }
+		this.com_phys_ladder = true;
+		sys_phys_simulate(this, dt);
+		this.com_phys_ladder = false;
+		this.com_phys_gravity = '0 0 0';
 	} else if (ITEMS_STAT(this) & IT_USING_JETPACK) {
 		PM_jetpack(this, maxspeed_mod);
 	} else if (IS_ONGROUND(this)) {
@@ -113,15 +121,49 @@ void sys_phys_update(entity this, float dt)
 
 void sys_phys_simulate(entity this, float dt)
 {
-	// noclipping or flying
+	// noclipping
+	// flying
+	// on a spawnfunc_func_ladder
+	// swimming in spawnfunc_func_water
 	UNSET_ONGROUND(this);
 
+	float g = -this.com_phys_gravity.z;
+	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE) {
+		g *= 0.5;
+		this.velocity_z += g;
+	}
 	this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
+	this.velocity_z += g;
+
 	makevectors(this.v_angle);
 	// wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
 	vector wishvel = v_forward * this.movement.x
 	    + v_right * this.movement.y
 	    + '0 0 1' * this.movement.z;
+	if (this.com_phys_ladder) {
+		if (this.viewloc) {
+			wishvel.z = this.oldmovement.x;
+		}
+		if (this.ladder_entity.classname == "func_water") {
+			float f = vlen(wishvel);
+			if (f > this.ladder_entity.speed) {
+				wishvel *= (this.ladder_entity.speed / f);
+			}
+
+			this.watertype = this.ladder_entity.skin;
+			f = this.ladder_entity.origin_z + this.ladder_entity.maxs_z;
+			if ((this.origin_z + this.view_ofs_z) < f) {
+				this.waterlevel = WATERLEVEL_SUBMERGED;
+			} else if ((this.origin_z + (this.mins_z + this.maxs_z) * 0.5) < f) {
+				this.waterlevel = WATERLEVEL_SWIMMING;
+			} else if ((this.origin_z + this.mins_z + 1) < f) {
+				this.waterlevel = WATERLEVEL_WETFEET;
+			} else {
+				this.waterlevel = WATERLEVEL_NONE;
+				this.watertype = CONTENT_EMPTY;
+			}
+		}
+	}
 	// acceleration
 	vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);

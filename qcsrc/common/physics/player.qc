@@ -917,58 +917,6 @@ void PM_swim(entity this, float maxspd_mod)
 }
 
 .vector oldmovement;
-void PM_ladder(entity this, float maxspd_mod)
-{
-	// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
-	UNSET_ONGROUND(this);
-
-	float g;
-	g = PHYS_GRAVITY(this) * PHYS_INPUT_TIMELENGTH;
-	if (PHYS_ENTGRAVITY(this))
-		g *= PHYS_ENTGRAVITY(this);
-	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE)
-	{
-		g *= 0.5;
-		this.velocity_z += g;
-	}
-
-	this.velocity = this.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this));
-	makevectors(this.v_angle);
-	//wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
-	vector wishvel = v_forward * this.movement_x
-					+ v_right * this.movement_y
-					+ '0 0 1' * this.movement_z;
-	if(this.viewloc)
-		wishvel.z = this.oldmovement.x;
-	this.velocity_z += g;
-	if (this.ladder_entity.classname == "func_water")
-	{
-		float f = vlen(wishvel);
-		if (f > this.ladder_entity.speed)
-			wishvel *= (this.ladder_entity.speed / f);
-
-		this.watertype = this.ladder_entity.skin;
-		f = this.ladder_entity.origin_z + this.ladder_entity.maxs_z;
-		if ((this.origin_z + this.view_ofs_z) < f)
-			this.waterlevel = WATERLEVEL_SUBMERGED;
-		else if ((this.origin_z + (this.mins_z + this.maxs_z) * 0.5) < f)
-			this.waterlevel = WATERLEVEL_SWIMMING;
-		else if ((this.origin_z + this.mins_z + 1) < f)
-			this.waterlevel = WATERLEVEL_WETFEET;
-		else
-		{
-			this.waterlevel = WATERLEVEL_NONE;
-			this.watertype = CONTENT_EMPTY;
-		}
-	}
-	// acceleration
-	vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod);
-	if(time >= PHYS_TELEPORT_TIME(this))
-		// water acceleration
-		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this)*maxspd_mod, 1, 0, 0, 0);
-	PM_ClientMovement_Move(this);
-}
 
 void PM_jetpack(entity this, float maxspd_mod)
 {
