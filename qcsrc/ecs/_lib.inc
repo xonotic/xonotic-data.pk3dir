@@ -13,8 +13,9 @@
 	FOREACH_ENTITY_FLOAT_ORDERED(evt_##T##_listener, true, it.evt_##T(__VA_ARGS__)); \
 	MACRO_END
 
-#define subscribe(listener, T) \
+#define subscribe(listener, T, fn) \
 	MACRO_BEGIN \
+	listener.evt_##T = (fn); \
 	listener.evt_##T##_listener = true; \
 	MACRO_END
 

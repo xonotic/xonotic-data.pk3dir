@@ -9,8 +9,8 @@ void sys_phys_fix(entity this, float dt)
 bool sys_phys_override(entity this)
 {
 	int buttons = PHYS_INPUT_BUTTON_MASK(this);
-	if (PM_check_specialcommand(this, buttons)) return true;
-	if (this.PlayerPhysplug && this.PlayerPhysplug(this)) return true;
+	if (PM_check_specialcommand(this, buttons)) { return true; }
+	if (this.PlayerPhysplug && this.PlayerPhysplug(this)) { return true; }
 	return false;
 }
 
@@ -21,7 +21,7 @@ void sys_phys_monitor(entity this)
 	if (sv_maxidle > 0) {
 		if (buttons != this.buttons_old
 		    || this.movement != this.movement_old
-		    || this.v_angle != this.v_angle_old) this.parm_idlesince = time;
+		    || this.v_angle != this.v_angle_old) { this.parm_idlesince = time; }
 	}
 	PM_check_nickspam(this);
 	PM_check_punch(this);
@@ -29,21 +29,21 @@ void sys_phys_monitor(entity this)
 
 void sys_phys_ai(entity this)
 {
-	if (!IS_BOT_CLIENT(this)) return;
-	if (playerdemo_read(this)) return;
+	if (!IS_BOT_CLIENT(this)) { return; }
+	if (playerdemo_read(this)) { return; }
 	bot_think(this);
 }
 
 void sys_phys_pregame_hold(entity this)
 {
-	if (!IS_PLAYER(this)) return;
+	if (!IS_PLAYER(this)) { return; }
 	const bool allowed_to_move = (time >= game_starttime);
 	if (!allowed_to_move) {
 		this.velocity = '0 0 0';
 		this.movetype = MOVETYPE_NONE;
 		this.disableclientprediction = 2;
 	} else if (this.disableclientprediction == 2) {
-		if (this.movetype == MOVETYPE_NONE) this.movetype = MOVETYPE_WALK;
+		if (this.movetype == MOVETYPE_NONE) { this.movetype = MOVETYPE_WALK; }
 		this.disableclientprediction = 0;
 	}
 }
@@ -51,7 +51,7 @@ void sys_phys_pregame_hold(entity this)
 void sys_phys_spectator_control(entity this)
 {
 	float maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
-	if (!this.spectatorspeed) this.spectatorspeed = maxspeed_mod;
+	if (!this.spectatorspeed) { this.spectatorspeed = maxspeed_mod; }
 	if ((this.impulse >= 1 && this.impulse <= 19)
 	    || (this.impulse >= 200 && this.impulse <= 209)
 	    || (this.impulse >= 220 && this.impulse <= 229)
@@ -61,14 +61,17 @@ void sys_phys_spectator_control(entity this)
 			    || this.impulse == 15
 			    || this.impulse == 18
 			    || (this.impulse >= 200 && this.impulse <= 209)
-			   ) this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);
-			else if (this.impulse == 11) this.spectatorspeed = maxspeed_mod;
-			else if (this.impulse == 12
+			   ) { this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5); } else if (this.impulse == 11) {
+				this.spectatorspeed = maxspeed_mod;
+			} else if (this.impulse == 12
 			    || this.impulse == 16
 			    || this.impulse == 19
 			    || (this.impulse >= 220 && this.impulse <= 229)
-			        ) this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
-			else if (this.impulse >= 1 && this.impulse <= 9) this.spectatorspeed = 1 + 0.5 * (this.impulse - 1);
+			          ) {
+				this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
+			} else if (this.impulse >= 1 && this.impulse <= 9) {
+				this.spectatorspeed = 1 + 0.5 * (this.impulse - 1);
+			}
 		}  // otherwise just clear
 		this.impulse = 0;
 	}
@@ -94,4 +97,21 @@ void sys_phys_fixspeed(entity this, float maxspeed_mod)
 		this.jumpspeedcap_max = autocvar_sv_jumpspeedcap_max;
 		stuffcmd(this, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
 	}
+}
+
+void sys_phys_land(entity this)
+{
+	if (autocvar_speedmeter) {
+		LOG_TRACEF("landing velocity: %v (abs: %f)", this.velocity, vlen(this.velocity));
+	}
+	if (this.jumppadcount > 1) {
+		LOG_TRACEF("%dx jumppad combo", this.jumppadcount);
+	}
+	this.jumppadcount = 0;
+}
+
+STATIC_INIT(sys_phys)
+{
+	entity listener = new_pure(sys_phys);
+	subscribe(listener, phys_land, sys_phys_land);
 }

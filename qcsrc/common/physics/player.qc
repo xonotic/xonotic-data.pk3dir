@@ -1042,21 +1042,6 @@ void PM_jetpack(entity this, float maxspd_mod)
 
 void PM_walk(entity this, float maxspd_mod)
 {
-	if (!WAS_ONGROUND(this))
-	{
-#ifdef SVQC
-		if (autocvar_speedmeter)
-			LOG_TRACE(strcat("landing velocity: ", vtos(this.velocity), " (abs: ", ftos(vlen(this.velocity)), ")\n"));
-#endif
-		if (this.lastground < time - 0.3)
-			this.velocity *= (1 - PHYS_FRICTION_ONLAND(this));
-#ifdef SVQC
-		if (this.jumppadcount > 1)
-			LOG_TRACE(strcat(ftos(this.jumppadcount), "x jumppad combo\n"));
-		this.jumppadcount = 0;
-#endif
-	}
-
 	// walking
 	makevectors(this.v_angle.y * '0 1 0');
 	const vector wishvel = v_forward * this.movement.x

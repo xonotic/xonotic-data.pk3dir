@@ -105,6 +105,12 @@ void sys_phys_update(entity this, float dt)
 	} else if (ITEMS_STAT(this) & IT_USING_JETPACK) {
 		PM_jetpack(this, maxspeed_mod);
 	} else if (IS_ONGROUND(this)) {
+		if (!WAS_ONGROUND(this)) {
+			emit(phys_land, this);
+			if (this.lastground < time - 0.3) {
+				this.velocity *= (1 - PHYS_FRICTION_ONLAND(this));
+			}
+		}
 		PM_walk(this, maxspeed_mod);
 	} else {
 		PM_air(this, buttons_prev, maxspeed_mod);
