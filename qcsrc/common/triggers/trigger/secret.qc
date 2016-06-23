@@ -8,8 +8,8 @@
 
 #ifdef SVQC
 
-void secrets_setstatus()
-{SELFPARAM();
+void secrets_setstatus(entity this)
+{
 	this.stat_secrets_total = secrets_total;
 	this.stat_secrets_found = secrets_found;
 }
@@ -29,12 +29,12 @@ void trigger_secret_touch(entity this)
 	//print(ftos(secret_counter.count), "\n");
 
 	// centerprint message (multi_touch() doesn't always call centerprint())
-	centerprint(other, self.message);
-	self.message = "";
+	centerprint(other, this.message);
+	this.message = "";
 
 	// handle normal trigger features
-	multi_touch(self);
-	remove(self);
+	multi_touch(this);
+	remove(this);
 }
 
 /*QUAKED trigger_secret (.5 .5 .5) ?

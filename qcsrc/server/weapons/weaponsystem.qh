@@ -20,9 +20,9 @@ void W_Reload(entity actor, float sent_ammo_min, Sound sent_sound);
 
 void W_WeaponFrame(Player actor);
 
-float W_WeaponRateFactor();
+float W_WeaponRateFactor(entity this);
 
-float W_WeaponSpeedFactor();
+float W_WeaponSpeedFactor(entity this);
 
 bool weapon_prepareattack(Weapon thiswep, entity actor, .entity weaponentity, bool secondary, float attacktime);
 

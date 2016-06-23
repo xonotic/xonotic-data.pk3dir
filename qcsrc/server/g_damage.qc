@@ -31,7 +31,7 @@ void UpdateFrags(entity player, float f)
 }
 
 void GiveFrags (entity attacker, entity targ, float f, int deathtype)
-{SELFPARAM();
+{
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 
@@ -102,10 +102,8 @@ void GiveFrags (entity attacker, entity targ, float f, int deathtype)
 	}
 
 	// FIXME fix the mess this is (we have REAL points now!)
-	if(MUTATOR_CALLHOOK(GiveFragsForKill, self, attacker, targ, f))
-	{
-		f = frag_score;
-	}
+	if(MUTATOR_CALLHOOK(GiveFragsForKill, attacker, targ, f))
+		f = M_ARGV(2, float);
 
 	attacker.totalfrags += f;
 
@@ -125,7 +123,7 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "S");
 	if(time < player.invincible_finished)
 		s = strcat(s, "I");
-	if(player.flagcarried != world)
+	if(player.flagcarried != NULL)
 		s = strcat(s, "F");
 	if(PHYS_INPUT_BUTTON_CHAT(player))
 		s = strcat(s, "T");
@@ -346,7 +344,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
+			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(targ.team, INFO_DEATH_TEAMKILL), targ.netname, attacker.netname, deathlocation, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -503,17 +501,17 @@ void Obituary(entity attacker, entity inflictor, entity targ, int deathtype)
 
 void Ice_Think(entity this)
 {
-	if(!STAT(FROZEN, self.owner) || self.owner.iceblock != self)
+	if(!STAT(FROZEN, this.owner) || this.owner.iceblock != this)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	setorigin(self, self.owner.origin - '0 0 16');
-	self.nextthink = time;
+	setorigin(this, this.owner.origin - '0 0 16');
+	this.nextthink = time;
 }
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
-{SELFPARAM();
+{
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 
@@ -526,7 +524,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
-	self.bot_attack = false;
+	targ.bot_attack = false;
 
 	entity ice = new(ice);
 	ice.owner = targ;
@@ -541,7 +539,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.iceblock = ice;
 	targ.revival_time = 0;
 
-	WITHSELF(ice, Ice_Think(ice));
+	Ice_Think(ice);
 
 	RemoveGrapplingHook(targ);
 
@@ -549,12 +547,11 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 	// add waypoint
 	if(show_waypoint)
-		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
+		WaypointSprite_Spawn(WP_Frozen, 0, 0, targ, '0 0 64', NULL, targ.team, targ, waypointsprite_attached, true, RADARICON_WAYPOINT);
 }
 
 void Unfreeze (entity targ)
 {
-    SELFPARAM();
 	if(!STAT(FROZEN, targ))
 		return;
 
@@ -564,7 +561,7 @@ void Unfreeze (entity targ)
 	STAT(FROZEN, targ) = 0;
 	targ.revive_progress = 0;
 	targ.revival_time = time;
-	self.bot_attack = true;
+	targ.bot_attack = true;
 
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
@@ -573,7 +570,7 @@ void Unfreeze (entity targ)
 	// remove the ice block
 	if(targ.iceblock)
 		remove(targ.iceblock);
-	targ.iceblock = world;
+	targ.iceblock = NULL;
 }
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -612,7 +609,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 	{
 		// exit the vehicle before killing (fixes a crash)
 		if(IS_PLAYER(targ) && targ.vehicle)
-			WITHSELF(targ, vehicles_exit(VHEF_RELEASE));
+			vehicles_exit(targ.vehicle, VHEF_RELEASE);
 
 		// These are ALWAYS lethal
 		// No damage modification here
@@ -697,9 +694,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 
 		// should this be changed at all? If so, in what way?
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate, inflictor, attacker, targ, deathtype, damage, mirrordamage, force);
-		damage = frag_damage;
-		mirrordamage = frag_mirrordamage;
-		force = frag_force;
+		damage = M_ARGV(4, float);
+		mirrordamage = M_ARGV(5, float);
+		force = M_ARGV(6, vector);
 
 		if(STAT(FROZEN, targ))
 		if(deathtype != DEATH_HURTTRIGGER.m_id && deathtype != DEATH_TEAMCHANGE.m_id && deathtype != DEATH_AUTOTEAMCHANGE.m_id)
@@ -711,7 +708,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				Unfreeze(targ);
 				targ.health = autocvar_g_frozen_revive_falldamage_health;
 				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
 
@@ -744,7 +741,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, int d
 				targ.oldvelocity = targ.velocity;
 
 				targ.spawnorigin = spot.origin;
-				setorigin (targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
+				setorigin(targ, spot.origin + '0 0 1' * (1 - targ.mins.z - 24));
 				// don't reset back to last position, even if new position is stuck in solid
 				targ.oldorigin = targ.origin;
 				targ.prevorigin = targ.origin;
@@ -906,7 +903,7 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
 		{
 			force = inflictorvelocity;
-			if(vlen(force) == 0)
+			if(force == '0 0 0')
 				force = '0 0 -1';
 			else
 				force = normalize(force);
@@ -1254,18 +1251,18 @@ void Fire_ApplyEffect(entity e)
 void fireburner_think(entity this)
 {
 	// for players, this is done in the regular loop
-	if(wasfreed(self.owner))
+	if(wasfreed(this.owner))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	Fire_ApplyEffect(self.owner);
-	if(!Fire_IsBurning(self.owner))
+	Fire_ApplyEffect(this.owner);
+	if(!Fire_IsBurning(this.owner))
 	{
-		self.owner.fire_burner = world;
-		remove(self);
+		this.owner.fire_burner = NULL;
+		remove(this);
 		return;
 	}
-	Fire_ApplyDamage(self.owner);
-	self.nextthink = time;
+	Fire_ApplyDamage(this.owner);
+	this.nextthink = time;
 }

@@ -6,47 +6,47 @@ void button_return(entity this);
 
 void button_wait(entity this)
 {
-	self.state = STATE_TOP;
-	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
-	SUB_THINK(self, button_return);
-	SUB_UseTargets(self, self.enemy, NULL);
-	self.frame = 1;			// use alternate textures
+	this.state = STATE_TOP;
+	this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+	SUB_THINK(this, button_return);
+	SUB_UseTargets(this, this.enemy, NULL);
+	this.frame = 1;			// use alternate textures
 }
 
 void button_done(entity this)
 {
-	self.state = STATE_BOTTOM;
+	this.state = STATE_BOTTOM;
 }
 
 void button_return(entity this)
 {
-	self.state = STATE_DOWN;
-	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, button_done);
-	self.frame = 0;			// use normal textures
-	if (self.health)
-		self.takedamage = DAMAGE_YES;	// can be shot again
+	this.state = STATE_DOWN;
+	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, button_done);
+	this.frame = 0;			// use normal textures
+	if (this.health)
+		this.takedamage = DAMAGE_YES;	// can be shot again
 }
 
 
-void button_blocked()
+void button_blocked(entity this)
 {
 	// do nothing, just don't come all the way back out
 }
 
 
-void button_fire()
-{SELFPARAM();
-	self.health = self.max_health;
-	self.takedamage = DAMAGE_NO;    // will be reset upon return
+void button_fire(entity this)
+{
+	this.health = this.max_health;
+	this.takedamage = DAMAGE_NO;    // will be reset upon return
 
-	if (self.state == STATE_UP || self.state == STATE_TOP)
+	if (this.state == STATE_UP || this.state == STATE_TOP)
 		return;
 
-	if (self.noise != "")
-		_sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+	if (this.noise != "")
+		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
-	self.state = STATE_UP;
-	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, button_wait);
+	this.state = STATE_UP;
+	SUB_CalcMove (this, this.pos2, TSPEED_LINEAR, this.speed, button_wait);
 }
 
 void button_reset(entity this)
@@ -65,7 +65,7 @@ void button_use(entity this, entity actor, entity trigger)
 		return;
 
 	this.enemy = actor;
-	WITHSELF(this, button_fire());
+	button_fire(this);
 }
 
 void button_touch(entity this)
@@ -74,12 +74,12 @@ void button_touch(entity this)
 		return;
 	if (!other.iscreature)
 		return;
-	if(other.velocity * self.movedir < 0)
+	if(other.velocity * this.movedir < 0)
 		return;
-	self.enemy = other;
+	this.enemy = other;
 	if (other.owner)
-		self.enemy = other.owner;
-	button_fire ();
+		this.enemy = other.owner;
+	button_fire (this);
 }
 
 void button_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -91,7 +91,7 @@ void button_damage(entity this, entity inflictor, entity attacker, float damage,
 	if (this.health <= 0)
 	{
 		this.enemy = damage_attacker;
-		WITHSELF(this, button_fire());
+		button_fire(this);
 	}
 }
 
@@ -119,7 +119,7 @@ spawnfunc(func_button)
 		return;
 	this.effects |= EF_LOWPRECISION;
 
-	this.blocked = button_blocked;
+	setblocked(this, button_blocked);
 	this.use = button_use;
 
 //	if (this.health == 0) // all buttons are now shootable

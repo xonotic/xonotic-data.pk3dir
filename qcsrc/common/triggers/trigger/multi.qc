@@ -50,7 +50,7 @@ void multi_trigger(entity this)
 	}
 	else if (this.wait == 0)
 	{
-		WITHSELF(this, multi_wait(this)); // waiting finished
+		multi_wait(this); // waiting finished
 	}
 	else
 	{	// we can't just remove (this) here, because this is a touch function
@@ -68,33 +68,33 @@ void multi_use(entity this, entity actor, entity trigger)
 
 void multi_touch(entity this)
 {
-	if(!(self.spawnflags & 2))
+	if(!(this.spawnflags & 2))
 	if(!other.iscreature)
 			return;
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (this.team != other.team))
 			return;
 
 // if the trigger has an angles field, check player's facing direction
-	if (self.movedir != '0 0 0')
+	if (this.movedir != '0 0 0')
 	{
 		makevectors (other.angles);
-		if (v_forward * self.movedir < 0)
+		if (v_forward * this.movedir < 0)
 			return;		// not facing the right way
 	}
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(self.pressedkeys)
+	if(this.pressedkeys)
 	if(IS_PLAYER(other)) // only for players
-	if(!(other.pressedkeys & self.pressedkeys))
+	if(!(other.pressedkeys & this.pressedkeys))
 		return;
 
 	EXACTTRIGGER_TOUCH;
 
-	self.enemy = other;
-	self.goalentity = other;
-	multi_trigger(self);
+	this.enemy = other;
+	this.goalentity = other;
+	multi_trigger(this);
 }
 
 void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -167,19 +167,19 @@ spawnfunc(trigger_multiple)
 	if (this.health)
 	{
 		if (this.spawnflags & SPAWNFLAG_NOTOUCH)
-			objerror ("health and notouch don't make sense\n");
+			objerror (this, "health and notouch don't make sense\n");
 		this.max_health = this.health;
 		this.event_damage = multi_eventdamage;
 		this.takedamage = DAMAGE_YES;
 		this.solid = SOLID_BBOX;
-		setorigin (this, this.origin);	// make sure it links into the world
+		setorigin(this, this.origin);	// make sure it links into the world
 	}
 	else
 	{
 		if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
 		{
 			settouch(this, multi_touch);
-			setorigin (this, this.origin);	// make sure it links into the world
+			setorigin(this, this.origin);	// make sure it links into the world
 		}
 	}
 }

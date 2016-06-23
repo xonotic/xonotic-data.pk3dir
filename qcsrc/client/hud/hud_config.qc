@@ -642,7 +642,7 @@ void HUD_Panel_FirstInDrawQ(float id);
 void reset_tab_panels()
 {
 	for (int i = 0; i < hud_panels_COUNT; ++i)
-		tab_panels[i] = world;
+		tab_panels[i] = NULL;
 }
 float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
@@ -706,7 +706,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 				highlightedAction = 0;
 				HUD_Panel_FirstInDrawQ(highlightedPanel.panel_id);
 			}
-			tab_panel = world;
+			tab_panel = NULL;
 			reset_tab_panels();
 		}
 	}
@@ -778,7 +778,7 @@ LABEL(find_tab_panel)
 		level = floor(tab_panel_pos.y / level_height) * level_height; //starting level
 		candidate_pos.x = (!tab_backward) ? vid_conwidth : 0;
 		start_posX = tab_panel_pos.x;
-		tab_panel = world;
+		tab_panel = NULL;
 		k=0;
 		while(++k)
 		{
@@ -805,11 +805,11 @@ LABEL(find_tab_panel)
 				reset_tab_panels();
 				if (!old_tab_panel)
 				{
-					tab_panel = world;
+					tab_panel = NULL;
 					return true;
 				}
 				starting_panel = old_tab_panel;
-				old_tab_panel = world;
+				old_tab_panel = NULL;
 				goto find_tab_panel; //u must find tab_panel!
 			}
 			if (!tab_backward)
@@ -890,7 +890,7 @@ LABEL(find_tab_panel)
 			cvar_set(strcat("hud_panel_", highlightedPanel_backup.panel_name, "_pos"), s);
 			s = strcat(ftos(panel_size_backup.x/vid_conwidth), " ", ftos(panel_size_backup.y/vid_conheight));
 			cvar_set(strcat("hud_panel_", highlightedPanel_backup.panel_name, "_size"), s);
-			highlightedPanel_backup = world;
+			highlightedPanel_backup = NULL;
 		}
 	}
 	else if(nPrimary == 's' && hudShiftState & S_CTRL) // save config
@@ -1078,7 +1078,7 @@ void HUD_Panel_Highlight(float allow_move)
 			return;
 		}
 	}
-	highlightedPanel = world;
+	highlightedPanel = NULL;
 	highlightedAction = 0;
 }
 
@@ -1108,7 +1108,7 @@ void HUD_Panel_Mouse()
 			if (tab_panel)
 			{
 				//stop ctrl-tab selection
-				tab_panel = world;
+				tab_panel = NULL;
 				reset_tab_panels();
 			}
 			HUD_Panel_Highlight(mouseClicked & S_MOUSE1); // sets highlightedPanel, highlightedAction, panel_click_distance, panel_click_resizeorigin

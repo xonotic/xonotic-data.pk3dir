@@ -134,7 +134,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 
 	string thelabel = mv_desc[id], ts;
 	entity last = title;
-	entity next = world;
+	entity next = NULL;
 	float nlines = 0;
 	if( thelabel != "")
 	{
@@ -678,8 +678,8 @@ void MapVote_Init()
 	for(i = 0; i < mv_num_maps; ++i )
 		mv_flags_start[i] = mv_flags[i];
 
-	// Assume mv_pk3list is world, there should only be 1 mapvote per round
-	mv_pk3list = world; // I'm still paranoid!
+	// Assume mv_pk3list is NULL, there should only be 1 mapvote per round
+	mv_pk3list = NULL; // I'm still paranoid!
 
 	for(i = 0; i < mv_num_maps; ++i)
 	{

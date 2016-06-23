@@ -275,25 +275,25 @@ vector steerlib_traceavoid(entity this, float pitch,float length)
     traceline(this.origin, this.origin +  vup_left,MOVE_NOMONSTERS,this);
     fup_left = trace_fraction;
 
-    //te_lightning1(world,this.origin, trace_endpos);
+    //te_lightning1(NULL,this.origin, trace_endpos);
 
     vup_right = (v_forward + (v_right * pitch + v_up * pitch)) * length;
     traceline(this.origin,this.origin + vup_right ,MOVE_NOMONSTERS,this);
     fup_right = trace_fraction;
 
-    //te_lightning1(world,this.origin, trace_endpos);
+    //te_lightning1(NULL,this.origin, trace_endpos);
 
     vdown_left = (v_forward + (v_left * pitch + v_down * pitch)) * length;
     traceline(this.origin,this.origin + vdown_left,MOVE_NOMONSTERS,this);
     fdown_left = trace_fraction;
 
-    //te_lightning1(world,this.origin, trace_endpos);
+    //te_lightning1(NULL,this.origin, trace_endpos);
 
     vdown_right = (v_forward + (v_right * pitch + v_down * pitch)) * length;
     traceline(this.origin,this.origin + vdown_right,MOVE_NOMONSTERS,this);
     fdown_right = trace_fraction;
 
-    //te_lightning1(world,this.origin, trace_endpos);
+    //te_lightning1(NULL,this.origin, trace_endpos);
     upwish    = v_up    * (fup_left   + fup_right);
     downwish  = v_down  * (fdown_left + fdown_right);
     leftwish  = v_left  * (fup_left   + fdown_left);
@@ -324,13 +324,13 @@ vector steerlib_traceavoid_flat(entity this, float pitch, float length, vector v
     traceline(this.origin + vofs, this.origin + vofs + vt_left,MOVE_NOMONSTERS,this);
     f_left = trace_fraction;
 
-    //te_lightning1(world,this.origin, trace_endpos);
+    //te_lightning1(NULL,this.origin, trace_endpos);
 
     vt_right = (v_forward + (v_right * pitch)) * length;
     traceline(this.origin + vofs, this.origin + vofs + vt_right ,MOVE_NOMONSTERS,this);
     f_right = trace_fraction;
 
-    //te_lightning1(world,this.origin, trace_endpos);
+    //te_lightning1(NULL,this.origin, trace_endpos);
 
     leftwish  = v_left    * f_left;
     rightwish = v_right   * f_right;
@@ -410,8 +410,8 @@ float beamsweep(entity this, vector from, vector dir,float length, float step,fl
         if(beamsweep_badpoint(trace_endpos,0))
             return i / length;
 #ifdef BEAMSTEER_VISUAL
-        te_lightning1(world,a+u,b+u);
-        te_lightning1(world,b+u,b-d);
+        te_lightning1(NULL,a+u,b+u);
+        te_lightning1(NULL,b+u,b-d);
 #endif
         a = trace_endpos;
     }
@@ -497,15 +497,15 @@ void flocker_die(entity this)
 	Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 
     this.owner.cnt += 1;
-    this.owner = world;
+    this.owner = NULL;
 
     this.nextthink = time;
     setthink(this, SUB_Remove);
 }
 
 
-void flocker_think()
-{SELFPARAM();
+void flocker_think(entity this)
+{
     vector dodgemove,swarmmove;
     vector reprellmove,wandermove,newmove;
 
@@ -567,8 +567,8 @@ void spawn_flocker(entity this)
 
 }
 
-void flockerspawn_think()
-{SELFPARAM();
+void flockerspawn_think(entity this)
+{
     if(this.cnt > 0)
         spawn_flocker(this);
 
@@ -576,8 +576,8 @@ void flockerspawn_think()
 
 }
 
-void flocker_hunter_think()
-{SELFPARAM();
+void flocker_hunter_think(entity this)
+{
     vector dodgemove,attractmove,newmove;
     entity e,ee;
     float d,bd;
@@ -591,7 +591,7 @@ void flocker_hunter_think()
     {
         ee = this.enemy;
         ee.health = -1;
-        this.enemy = world;
+        this.enemy = NULL;
 
     }
 
@@ -645,7 +645,7 @@ spawnfunc(flockerspawn)
     this.enemy = new(FLock Hunter);
 
     setmodel(this.enemy, MDL_FLOCKER);
-    setorigin(this.enemy,this.origin + '0 0 768' + (randomvec() * 128));
+    setorigin(this.enemy, this.origin + '0 0 768' + (randomvec() * 128));
 
     this.enemy.scale     = 3;
     this.enemy.effects   = EF_LOWPRECISION;

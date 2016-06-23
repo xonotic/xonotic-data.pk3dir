@@ -3,21 +3,21 @@
 void func_pendulum_controller_think(entity this)
 {
 	float v;
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 
-	if (!(self.owner.active == ACTIVE_ACTIVE))
+	if (!(this.owner.active == ACTIVE_ACTIVE))
 	{
-		self.owner.avelocity_x = 0;
+		this.owner.avelocity_x = 0;
 		return;
 	}
 
 	// calculate sinewave using makevectors
-	makevectors((self.nextthink * self.owner.freq + self.owner.phase) * '0 360 0');
-	v = self.owner.speed * v_forward_y + self.cnt;
-	if(self.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
+	makevectors((this.nextthink * this.owner.freq + this.owner.phase) * '0 360 0');
+	v = this.owner.speed * v_forward_y + this.cnt;
+	if(this.owner.classname == "func_pendulum") // don't brake stuff if the func_bobbing was killtarget'ed
 	{
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
+		this.owner.avelocity_z = (remainder(v - this.owner.angles_z, 360)) * 10;
 	}
 }
 
@@ -46,7 +46,7 @@ spawnfunc(func_pendulum)
 		this.dmgtime = 0.25;
 	this.dmgtime2 = time;
 
-	this.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 
 	this.avelocity_z = 0.0000001;
 	if (!InitMovingBrushTrigger(this))

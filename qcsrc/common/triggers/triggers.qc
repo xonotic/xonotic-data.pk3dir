@@ -41,8 +41,7 @@ void trigger_init(entity this)
 
 void trigger_link(entity this, bool(entity this, entity to, int sendflags) sendfunc)
 {
-	this.SendEntity = SendEntity_self;
-	this.SendEntity3 = sendfunc;
+	setSendEntity(this, sendfunc);
 	this.SendFlags = 0xFFFFFF;
 }
 
@@ -170,16 +169,16 @@ SUB_UseTargets
 
 the global "activator" should be set to the entity that initiated the firing.
 
-If self.delay is set, a DelayedUse entity will be created that will actually
+If this.delay is set, a DelayedUse entity will be created that will actually
 do the SUB_UseTargets after that many seconds have passed.
 
-Centerprints any self.message to the activator.
+Centerprints any this.message to the activator.
 
-Removes all entities with a targetname that match self.killtarget,
+Removes all entities with a targetname that match this.killtarget,
 and removes them, so some events can remove other triggers.
 
 Search for (string)targetname in all entities that
-match (string)self.target and call their .use function
+match (string)this.target and call their .use function
 
 ==============================
 */
@@ -225,7 +224,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	s = this.killtarget;
 	if (s != "")
 	{
-		for(entity t = world; (t = find(t, targetname, s)); )
+		for(entity t = NULL; (t = find(t, targetname, s)); )
 			remove(t);
 	}
 #endif
@@ -252,7 +251,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 			// Flag to set func_clientwall state
 			// 1 == deactivate, 2 == activate, 0 == do nothing
 			int aw_flag = this.antiwall_flag;
-			for(entity t = world; (t = find(t, targetname, s)); )
+			for(entity t = NULL; (t = find(t, targetname, s)); )
 			{
 				if(t.use)
 				{

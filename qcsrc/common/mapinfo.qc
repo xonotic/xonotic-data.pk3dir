@@ -178,7 +178,7 @@ float MapInfo_FilterGametype(int pGametype, int pFeatures, int pFlagsRequired, i
 	MapInfo_ClearTemps();
 
 	// sometimes the glob isn't sorted nicely, so fix it here...
-	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
+	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, NULL);
 
 	return 1;
 }
@@ -206,7 +206,7 @@ void MapInfo_FilterString(string sf)
 	MapInfo_ClearTemps();
 
 	// sometimes the glob isn't sorted nicely, so fix it here...
-	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
+	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, NULL);
 }
 
 void MapInfo_Filter_Free()

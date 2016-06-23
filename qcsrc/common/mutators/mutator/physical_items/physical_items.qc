@@ -33,48 +33,48 @@ REGISTER_MUTATOR(physical_items, cvar("g_physical_items"))
 
 void physical_item_think(entity this)
 {
-	self.nextthink = time;
+	this.nextthink = time;
 
-	self.alpha = self.owner.alpha; // apply fading and ghosting
+	this.alpha = this.owner.alpha; // apply fading and ghosting
 
-	if(!self.cnt) // map item, not dropped
+	if(!this.cnt) // map item, not dropped
 	{
 		// copy ghost item properties
-		self.colormap = self.owner.colormap;
-		self.colormod = self.owner.colormod;
-		self.glowmod = self.owner.glowmod;
+		this.colormap = this.owner.colormap;
+		this.colormod = this.owner.colormod;
+		this.glowmod = this.owner.glowmod;
 
 		// if the item is not spawned, make sure the invisible / ghost item returns to its origin and stays there
 		if(autocvar_g_physical_items_reset)
 		{
-			if(self.owner.wait > time) // awaiting respawn
+			if(this.owner.wait > time) // awaiting respawn
 			{
-				setorigin(self, self.spawn_origin);
-				self.angles = self.spawn_angles;
-				self.solid = SOLID_NOT;
-				self.alpha = -1;
-				self.movetype = MOVETYPE_NONE;
+				setorigin(this, this.spawn_origin);
+				this.angles = this.spawn_angles;
+				this.solid = SOLID_NOT;
+				this.alpha = -1;
+				this.movetype = MOVETYPE_NONE;
 			}
 			else
 			{
-				self.alpha = 1;
-				self.solid = SOLID_CORPSE;
-				self.movetype = MOVETYPE_PHYSICS;
+				this.alpha = 1;
+				this.solid = SOLID_CORPSE;
+				this.movetype = MOVETYPE_PHYSICS;
 			}
 		}
 	}
 
-	if(!self.owner.modelindex)
-		remove(self); // the real item is gone, remove this
+	if(!this.owner.modelindex)
+		remove(this); // the real item is gone, remove this
 }
 
 void physical_item_touch(entity this)
 {
-	if(!self.cnt) // not for dropped items
+	if(!this.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())
 	{
-		setorigin(self, self.spawn_origin);
-		self.angles = self.spawn_angles;
+		setorigin(this, this.spawn_origin);
+		this.angles = this.spawn_angles;
 	}
 }
 
@@ -89,32 +89,34 @@ void physical_item_damage(entity this, entity inflictor, entity attacker, float 
 }
 
 MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
-{SELFPARAM();
-	if(self.owner == world && autocvar_g_physical_items <= 1)
-		return false;
-	if (self.spawnflags & 1) // floating item
-		return false;
+{
+	entity item = M_ARGV(0, entity);
+
+	if(item.owner == NULL && autocvar_g_physical_items <= 1)
+		return;
+	if (item.spawnflags & 1) // floating item
+		return;
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
 	entity wep;
 	wep = spawn();
-	_setmodel(wep, self.model);
-	setsize(wep, self.mins, self.maxs);
-	setorigin(wep, self.origin);
-	wep.angles = self.angles;
-	wep.velocity = self.velocity;
+	_setmodel(wep, item.model);
+	setsize(wep, item.mins, item.maxs);
+	setorigin(wep, item.origin);
+	wep.angles = item.angles;
+	wep.velocity = item.velocity;
 
-	wep.owner = self;
+	wep.owner = item;
 	wep.solid = SOLID_CORPSE;
 	wep.movetype = MOVETYPE_PHYSICS;
 	wep.takedamage = DAMAGE_AIM;
 	wep.effects |= EF_NOMODELFLAGS; // disable the spinning
-	wep.colormap = self.owner.colormap;
-	wep.glowmod = self.owner.glowmod;
+	wep.colormap = item.owner.colormap;
+	wep.glowmod = item.owner.glowmod;
 	wep.damageforcescale = autocvar_g_physical_items_damageforcescale;
-	wep.dphitcontentsmask = self.dphitcontentsmask;
-	wep.cnt = (self.owner != world);
+	wep.dphitcontentsmask = item.dphitcontentsmask;
+	wep.cnt = (item.owner != NULL);
 
 	setthink(wep, physical_item_think);
 	wep.nextthink = time;
@@ -125,19 +127,15 @@ MUTATOR_HOOKFUNCTION(physical_items, Item_Spawn)
 	{
 		// fix the spawn origin
 		setorigin(wep, wep.origin + '0 0 1');
-		entity oldself;
-		oldself = self;
-		WITHSELF(wep, builtin_droptofloor());
+		droptofloor(wep);
 	}
 
 	wep.spawn_origin = wep.origin;
-	wep.spawn_angles = self.angles;
+	wep.spawn_angles = item.angles;
 
-	self.effects |= EF_NODRAW; // hide the original weapon
-	self.movetype = MOVETYPE_FOLLOW;
-	self.aiment = wep; // attach the original weapon
-	self.SendEntity3 = func_null;
-
-	return false;
+	item.effects |= EF_NODRAW; // hide the original weapon
+	item.movetype = MOVETYPE_FOLLOW;
+	item.aiment = wep; // attach the original weapon
+	setSendEntity(item, func_null);
 }
 #endif

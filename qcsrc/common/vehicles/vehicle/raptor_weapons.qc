@@ -38,7 +38,7 @@ METHOD(RaptorCannon, wr_checkammo1, bool(RacerAttack thiswep, entity actor)) {
 }
 
 
-void raptor_bombdrop();
+void raptor_bombdrop(entity this);
 METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
     entity player = isPlayer ? actor : actor.owner;
@@ -46,7 +46,7 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
     if (fire & 2)
     if (!isPlayer || weapon_prepareattack(thiswep, player, weaponentity, true, autocvar_g_vehicle_raptor_bombs_refire)) {
         entity e = (veh) ? veh : player;
-        WITHSELF(e, raptor_bombdrop());
+        raptor_bombdrop(e);
         weapon_thinkf(player, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
@@ -87,33 +87,33 @@ METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weapone
 
 void raptor_bomblet_boom(entity this)
 {
-    RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
+    RadiusDamage (this, this.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
                                     autocvar_g_vehicle_raptor_bomblet_edgedamage,
-                                    autocvar_g_vehicle_raptor_bomblet_radius, world, world,
-                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, world);
-    remove(self);
+                                    autocvar_g_vehicle_raptor_bomblet_radius, NULL, NULL,
+                                    autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB.m_id, NULL);
+    remove(this);
 }
 
 void raptor_bomblet_touch(entity this)
 {
-    if(other == self.owner)
+    if(other == this.owner)
         return;
 
     PROJECTILE_TOUCH(this);
-    setthink(self, raptor_bomblet_boom);
-    self.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
+    setthink(this, raptor_bomblet_boom);
+    this.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
 }
 
 void raptor_bomb_burst(entity this)
 {
-    if(self.cnt > time)
+    if(this.cnt > time)
     if(autocvar_g_vehicle_raptor_bomblet_alt)
     {
-        self.nextthink = time;
-        traceline(self.origin, self.origin + (normalize(self.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, self);
-        if((trace_fraction == 1.0) || (vdist(self.origin - self.owner.origin, <, autocvar_g_vehicle_raptor_bomblet_radius)))
+        this.nextthink = time;
+        traceline(this.origin, this.origin + (normalize(this.velocity) * autocvar_g_vehicle_raptor_bomblet_alt), MOVE_NORMAL, this);
+        if((trace_fraction == 1.0) || (vdist(this.origin - this.owner.origin, <, autocvar_g_vehicle_raptor_bomblet_radius)))
         {
-            UpdateCSQCProjectile(self);
+            UpdateCSQCProjectile(this);
             return;
         }
     }
@@ -121,42 +121,42 @@ void raptor_bomb_burst(entity this)
     entity bomblet;
     float i;
 
-    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_VH_RAPT_FRAGMENT.m_id, 0, self);
+    Damage_DamageInfo(this.origin, 0, 0, 0, '0 0 0', DEATH_VH_RAPT_FRAGMENT.m_id, 0, this);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
         bomblet = spawn();
-        setorigin(bomblet, self.origin);
+        setorigin(bomblet, this.origin);
 
         bomblet.movetype	= MOVETYPE_TOSS;
         settouch(bomblet, raptor_bomblet_touch);
         setthink(bomblet, raptor_bomblet_boom);
         bomblet.nextthink   = time + 5;
-        bomblet.owner	   = self.owner;
-        bomblet.realowner   = self.realowner;
-        bomblet.velocity	= normalize(normalize(self.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(self.velocity);
+        bomblet.owner	   = this.owner;
+        bomblet.realowner   = this.realowner;
+        bomblet.velocity	= normalize(normalize(this.velocity) + (randomvec() * autocvar_g_vehicle_raptor_bomblet_spread)) * vlen(this.velocity);
 
         PROJECTILE_MAKETRIGGER(bomblet);
         CSQCProjectile(bomblet, true, PROJECTILE_RAPTORBOMBLET, true);
     }
 
-    remove(self);
+    remove(this);
 }
 
-void raptor_bombdrop()
-{SELFPARAM();
+void raptor_bombdrop(entity this)
+{
     entity bomb_1, bomb_2;
 
     bomb_1 = spawn();
     bomb_2 = spawn();
 
-    vector org = gettaginfo(self, gettagindex(self, "bombmount_left"));
+    vector org = gettaginfo(this, gettagindex(this, "bombmount_left"));
     setorigin(bomb_1, org);
-    org = gettaginfo(self, gettagindex(self, "bombmount_right"));
+    org = gettaginfo(this, gettagindex(this, "bombmount_right"));
     setorigin(bomb_2, org);
 
     bomb_1.movetype	 = bomb_2.movetype   = MOVETYPE_BOUNCE;
-    bomb_1.velocity	 = bomb_2.velocity   = self.velocity;
+    bomb_1.velocity	 = bomb_2.velocity   = this.velocity;
     settouch(bomb_1, raptor_bomb_burst);
     settouch(bomb_2, raptor_bomb_burst);
     setthink(bomb_1, raptor_bomb_burst);
@@ -168,8 +168,8 @@ void raptor_bombdrop()
     else
         bomb_1.nextthink = bomb_2.nextthink  = time + autocvar_g_vehicle_raptor_bomblet_time;
 
-    bomb_1.owner	 = bomb_2.owner	  = self;
-    bomb_1.realowner = bomb_2.realowner  = self.owner;
+    bomb_1.owner	 = bomb_2.owner	  = this;
+    bomb_1.realowner = bomb_2.realowner  = this.owner;
     bomb_1.solid	 = bomb_2.solid	  = SOLID_BBOX;
     bomb_1.gravity   = bomb_2.gravity	= 1;
 
@@ -182,7 +182,7 @@ void raptor_bombdrop()
 
 void raptor_flare_touch(entity this)
 {
-    remove(self);
+    remove(this);
 }
 
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -194,19 +194,19 @@ void raptor_flare_damage(entity this, entity inflictor, entity attacker, float d
 
 void raptor_flare_think(entity this)
 {
-    self.nextthink = time + 0.1;
-    entity _missile = findchainentity(enemy, self.owner);
+    this.nextthink = time + 0.1;
+    entity _missile = findchainentity(enemy, this.owner);
     while(_missile)
     {
         if(_missile.flags & FL_PROJECTILE)
-        if(vdist(self.origin - _missile.origin, <, autocvar_g_vehicle_raptor_flare_range))
+        if(vdist(this.origin - _missile.origin, <, autocvar_g_vehicle_raptor_flare_range))
         if(random() > autocvar_g_vehicle_raptor_flare_chase)
-            _missile.enemy = self;
+            _missile.enemy = this;
         _missile = _missile.chain;
     }
 
-    if(self.tur_impacttime < time)
-        remove(self);
+    if(this.tur_impacttime < time)
+        remove(this);
 }
 
 #endif
@@ -230,10 +230,8 @@ void RaptorCBShellfragDraw(entity this)
 }
 
 void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
-{SELFPARAM();
-    entity sfrag;
-
-    sfrag = spawn();
+{
+    entity sfrag = spawn();
     setmodel(sfrag, MDL_VEH_RAPTOR_CB_FRAGMENT);
     setorigin(sfrag, _org);
 
@@ -246,7 +244,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
     sfrag.move_origin = sfrag.origin = _org;
     sfrag.move_velocity = _vel;
     sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
-    sfrag.angles = self.move_angles = _ang;
+    sfrag.angles = sfrag.move_angles = _ang;
 
     sfrag.move_time = time;
     sfrag.damageforcescale = 4;

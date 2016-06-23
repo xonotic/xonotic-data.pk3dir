@@ -11,7 +11,7 @@ string AnnouncerOption()
 {
 	string ret = autocvar_cl_announcer;
 	MUTATOR_CALLHOOK(AnnouncerOption, ret);
-	ret = ret_string;
+	ret = M_ARGV(0, string);
 	return ret;
 }
 

@@ -28,19 +28,18 @@ REGISTER_TURRET(HK, NEW(HunterKiller));
 .float atime;
 #endif
 
-spawnfunc(turret_hk) { if(!turret_initialize(TUR_HK)) remove(this); }
+spawnfunc(turret_hk) { if(!turret_initialize(this, TUR_HK)) remove(this); }
 
 METHOD(HunterKiller, tr_think, void(HunterKiller thistur, entity it))
 {
-    SELFPARAM();
-    if (self.tur_head.frame != 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
+    if (it.tur_head.frame != 0)
+        it.tur_head.frame = it.tur_head.frame + 1;
 
-    if (self.tur_head.frame > 5)
-        self.tur_head.frame = 0;
+    if (it.tur_head.frame > 5)
+        it.tur_head.frame = 0;
 }
 
-float turret_hk_addtarget(entity e_target,entity e_sender);
+bool turret_hk_addtarget(entity this, entity e_target,entity e_sender);
 METHOD(HunterKiller, tr_setup, void(HunterKiller this, entity it))
 {
     it.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
@@ -53,18 +52,18 @@ METHOD(HunterKiller, tr_setup, void(HunterKiller this, entity it))
     it.turret_addtarget = turret_hk_addtarget;
 }
 
-float turret_hk_addtarget(entity e_target,entity e_sender)
-{SELFPARAM();
+bool turret_hk_addtarget(entity this, entity e_target,entity e_sender)
+{
     if (e_target)
     {
-        if (turret_validate_target(self,e_target,self.target_validate_flags) > 0)
+        if (turret_validate_target(this,e_target,this.target_validate_flags) > 0)
         {
-            self.enemy = e_target;
-            return 1;
+            this.enemy = e_target;
+            return true;
         }
     }
 
-    return 0;
+    return false;
 }
 
 #endif // SVQC

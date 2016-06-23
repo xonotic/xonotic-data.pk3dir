@@ -36,50 +36,50 @@ flags:
 */
 void dynlight_think(entity this)
 {
-	if(!self.owner)
-		remove(self);
+	if(!this.owner)
+		remove(this);
 
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 }
 void dynlight_find_aiment(entity this)
 {
 	entity targ;
-	if (!self.target)
-		objerror ("dynlight: no target to follow");
+	if (!this.target)
+		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, self.target);
-	self.movetype = MOVETYPE_FOLLOW;
-	self.aiment = targ;
-	self.owner = targ;
-	self.punchangle = targ.angles;
-	self.view_ofs = self.origin - targ.origin;
-	self.v_angle = self.angles - targ.angles;
-	setthink(self, dynlight_think);
-	self.nextthink = time + 0.1;
+	targ = find(NULL, targetname, this.target);
+	this.movetype = MOVETYPE_FOLLOW;
+	this.aiment = targ;
+	this.owner = targ;
+	this.punchangle = targ.angles;
+	this.view_ofs = this.origin - targ.origin;
+	this.v_angle = this.angles - targ.angles;
+	setthink(this, dynlight_think);
+	this.nextthink = time + 0.1;
 }
 void dynlight_find_path(entity this)
 {
 	entity targ;
-	if (!self.target)
-		objerror ("dynlight: no target to follow");
+	if (!this.target)
+		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, self.target);
-	self.target = targ.target;
-	setorigin (self, targ.origin);
-	setthink(self, train_next);
-	self.nextthink = time + 0.1;
+	targ = find(NULL, targetname, this.target);
+	this.target = targ.target;
+	setorigin(this, targ.origin);
+	setthink(this, train_next);
+	this.nextthink = time + 0.1;
 }
 void dynlight_find_target(entity this)
 {
 	entity targ;
-	if (!self.target)
-		objerror ("dynlight: no target to follow");
+	if (!this.target)
+		objerror (this, "dynlight: no target to follow");
 
-	targ = find(world, targetname, self.target);
-	setattachment(self, targ, self.dtagname);
-	self.owner = targ;
-	setthink(self, dynlight_think);
-	self.nextthink = time + 0.1;
+	targ = find(NULL, targetname, this.target);
+	setattachment(this, targ, this.dtagname);
+	this.owner = targ;
+	setthink(this, dynlight_think);
+	this.nextthink = time + 0.1;
 }
 void dynlight_use(entity this, entity actor, entity trigger)
 {
@@ -97,7 +97,7 @@ spawnfunc(dynlight)
 	this.lefty = this.light_lev;
 	this.use = dynlight_use;
 	setsize (this, '0 0 0', '0 0 0');
-	setorigin (this, this.origin);
+	setorigin(this, this.origin);
 	//this.pflags = PFLAGS_FULLDYNAMIC;
 	this.solid = SOLID_NOT;
 	//this.blocked = func_null;

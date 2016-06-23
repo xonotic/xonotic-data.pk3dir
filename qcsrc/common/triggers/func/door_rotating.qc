@@ -38,9 +38,9 @@ void door_rotating_reset(entity this)
 
 void door_rotating_init_startopen(entity this)
 {
-	self.angles = self.movedir;
-	self.pos2 = '0 0 0';
-	self.pos1 = self.movedir;
+	this.angles = this.movedir;
+	this.pos2 = '0 0 0';
+	this.pos1 = this.movedir;
 }
 
 
@@ -71,7 +71,7 @@ spawnfunc(func_door_rotating)
 	//this.effects |= EF_LOWPRECISION;
 	this.classname = "door_rotating";
 
-	this.blocked = door_blocked;
+	setblocked(this, door_blocked);
 	this.use = door_use;
 
     if(this.spawnflags & 8)

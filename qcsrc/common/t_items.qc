@@ -289,7 +289,7 @@ NET_HANDLE(ENT_CLIENT_ITEM, bool isnew)
 #ifdef SVQC
 bool ItemSend(entity this, entity to, int sf)
 {
-	if(self.gravity)
+	if(this.gravity)
 		sf |= ISF_DROP;
 	else
 		sf &= ~ISF_DROP;
@@ -297,19 +297,19 @@ bool ItemSend(entity this, entity to, int sf)
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ITEM);
 	WriteByte(MSG_ENTITY, sf);
 
-	//WriteByte(MSG_ENTITY, self.cnt);
+	//WriteByte(MSG_ENTITY, this.cnt);
 	if(sf & ISF_LOCATION)
 	{
-		WriteCoord(MSG_ENTITY, self.origin.x);
-		WriteCoord(MSG_ENTITY, self.origin.y);
-		WriteCoord(MSG_ENTITY, self.origin.z);
+		WriteCoord(MSG_ENTITY, this.origin.x);
+		WriteCoord(MSG_ENTITY, this.origin.y);
+		WriteCoord(MSG_ENTITY, this.origin.z);
 	}
 
 	if(sf & ISF_ANGLES)
 	{
-		WriteAngle(MSG_ENTITY, self.angles_x);
-		WriteAngle(MSG_ENTITY, self.angles_y);
-		WriteAngle(MSG_ENTITY, self.angles_z);
+		WriteAngle(MSG_ENTITY, this.angles_x);
+		WriteAngle(MSG_ENTITY, this.angles_y);
+		WriteAngle(MSG_ENTITY, this.angles_z);
 	}
 
 	if(sf & ISF_SIZE)
@@ -319,30 +319,30 @@ bool ItemSend(entity this, entity to, int sf)
 	}
 
 	if(sf & ISF_STATUS)
-		WriteByte(MSG_ENTITY, self.ItemStatus);
+		WriteByte(MSG_ENTITY, this.ItemStatus);
 
 	if(sf & ISF_MODEL)
 	{
 		Pickup p = this.itemdef;
 		WriteByte(MSG_ENTITY, p.instanceOfPowerup || p.instanceOfHealth || p.instanceOfArmor);
-		WriteShort(MSG_ENTITY, self.fade_end);
-		WriteShort(MSG_ENTITY, self.fade_start);
+		WriteShort(MSG_ENTITY, this.fade_end);
+		WriteShort(MSG_ENTITY, this.fade_start);
 
-		if(self.mdl == "")
-			LOG_TRACE("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+		if(this.mdl == "")
+			LOG_TRACE("^1WARNING!^7 this.mdl is unset for item ", this.classname, "exspect a crash just aboute now\n");
 
-		WriteString(MSG_ENTITY, self.mdl);
+		WriteString(MSG_ENTITY, this.mdl);
 	}
 
 
 	if(sf & ISF_COLORMAP)
-		WriteShort(MSG_ENTITY, self.colormap);
+		WriteShort(MSG_ENTITY, this.colormap);
 
 	if(sf & ISF_DROP)
 	{
-		WriteCoord(MSG_ENTITY, self.velocity.x);
-		WriteCoord(MSG_ENTITY, self.velocity.y);
-		WriteCoord(MSG_ENTITY, self.velocity.z);
+		WriteCoord(MSG_ENTITY, this.velocity.x);
+		WriteCoord(MSG_ENTITY, this.velocity.y);
+		WriteCoord(MSG_ENTITY, this.velocity.z);
 	}
 
 	return true;
@@ -356,7 +356,7 @@ void ItemUpdate(entity this)
 
 void UpdateItemAfterTeleport(entity this)
 {
-	if(this.SendEntity3 == ItemSend)
+	if(getSendEntity(this) == ItemSend)
 		ItemUpdate(this);
 }
 
@@ -385,22 +385,22 @@ bool have_pickup_item(entity this)
 /*
 float Item_Customize()
 {
-	if(self.spawnshieldtime)
+	if(this.spawnshieldtime)
 		return true;
-	if(self.weapons & ~other.weapons)
+	if(this.weapons & ~other.weapons)
 	{
-		self.colormod = '0 0 0';
-		self.glowmod = self.colormod;
-		self.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
+		this.colormod = '0 0 0';
+		this.glowmod = this.colormod;
+		this.alpha = 0.5 + 0.5 * g_ghost_items; // halfway more alpha
 		return true;
 	}
 	else
 	{
 		if(g_ghost_items)
 		{
-			self.colormod = stov(autocvar_g_ghost_items_color);
-			self.glowmod = self.colormod;
-			self.alpha = g_ghost_items;
+			this.colormod = stov(autocvar_g_ghost_items_color);
+			this.glowmod = this.colormod;
+			this.alpha = g_ghost_items;
 			return true;
 		}
 		else
@@ -473,9 +473,9 @@ void Item_Show (entity e, float mode)
 
 void Item_Think(entity this)
 {
-	self.nextthink = time;
-	if(self.origin != self.oldorigin)
-		ItemUpdate(self);
+	this.nextthink = time;
+	if(this.origin != this.oldorigin)
+		ItemUpdate(this);
 }
 
 bool Item_ItemsTime_SpectatorOnly(GameItem it);
@@ -486,96 +486,96 @@ void Item_ItemsTime_SetTimesForAllPlayers();
 
 void Item_Respawn (entity this)
 {
-	Item_Show(self, 1);
+	Item_Show(this, 1);
 	// this is ugly...
-	if(self.items == ITEM_Strength.m_itemid)
-		sound (self, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	else if(self.items == ITEM_Shield.m_itemid)
-		sound (self, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	if(this.items == ITEM_Strength.m_itemid)
+		sound (this, CH_TRIGGER, SND_STRENGTH_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	else if(this.items == ITEM_Shield.m_itemid)
+		sound (this, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
 	else
-		sound (self, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
-	setorigin (self, self.origin);
+		sound (this, CH_TRIGGER, SND_ITEMRESPAWN, VOL_BASE, ATTEN_NORM);	// play respawn sound
+	setorigin(this, this.origin);
 
-    if (Item_ItemsTime_Allow(self.itemdef) || self.weapons & WEPSET_SUPERWEAPONS)
+    if (Item_ItemsTime_Allow(this.itemdef) || this.weapons & WEPSET_SUPERWEAPONS)
 	{
-		float t = Item_ItemsTime_UpdateTime(self, 0);
-		Item_ItemsTime_SetTime(self, t);
+		float t = Item_ItemsTime_UpdateTime(this, 0);
+		Item_ItemsTime_SetTime(this, t);
 		Item_ItemsTime_SetTimesForAllPlayers();
 	}
 
-	setthink(self, Item_Think);
-	self.nextthink = time;
+	setthink(this, Item_Think);
+	this.nextthink = time;
 
-	//Send_Effect(EFFECT_ITEM_RESPAWN, self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	//Send_Effect(EFFECT_ITEM_RESPAWN, this.origin + this.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
 }
 
 void Item_RespawnCountdown (entity this)
 {
-	if(self.count >= ITEM_RESPAWN_TICKS)
+	if(this.count >= ITEM_RESPAWN_TICKS)
 	{
-		if(self.waypointsprite_attached)
-			WaypointSprite_Kill(self.waypointsprite_attached);
-		Item_Respawn(self);
+		if(this.waypointsprite_attached)
+			WaypointSprite_Kill(this.waypointsprite_attached);
+		Item_Respawn(this);
 	}
 	else
 	{
-		self.nextthink = time + 1;
-		self.count += 1;
-		if(self.count == 1)
+		this.nextthink = time + 1;
+		this.count += 1;
+		if(this.count == 1)
 		{
 			MUTATOR_CALLHOOK(Item_RespawnCountdown, string_null, '0 0 0');
 			do {
 				{
-					entity wi = Weapons_from(self.weapon);
+					entity wi = Weapons_from(this.weapon);
 					if (wi != WEP_Null) {
-						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Weapon);
+						entity wp = WaypointSprite_Spawn(WP_Weapon, 0, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Weapon);
 						wp.wp_extra = wi.m_id;
 						break;
 					}
 				}
 				{
-					entity ii = self.itemdef;
+					entity ii = this.itemdef;
 					if (ii != NULL) {
-						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, true, RADARICON_Item);
+						entity wp = WaypointSprite_Spawn(WP_Item, 0, 0, this, '0 0 64', NULL, 0, this, waypointsprite_attached, true, RADARICON_Item);
 						wp.wp_extra = ii.m_id;
 						break;
 					}
 				}
 			} while (0);
-            if(self.waypointsprite_attached)
+            if(this.waypointsprite_attached)
             {
-                GameItem def = self.itemdef;
+                GameItem def = this.itemdef;
                 if (Item_ItemsTime_SpectatorOnly(def))
-                    WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
-                WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+                    WaypointSprite_UpdateRule(this.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
+                WaypointSprite_UpdateBuildFinished(this.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
             }
 		}
 
-		if(self.waypointsprite_attached)
+		if(this.waypointsprite_attached)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-				if(self.waypointsprite_attached.waypointsprite_visible_for_player(self.waypointsprite_attached, it, it))
+				if(this.waypointsprite_attached.waypointsprite_visible_for_player(this.waypointsprite_attached, it, it))
 				{
 					msg_entity = it;
 					soundto(MSG_ONE, this, CH_TRIGGER, SND(ITEMRESPAWNCOUNTDOWN), VOL_BASE, ATTEN_NORM);	// play respawn sound
 				}
 			});
 
-			WaypointSprite_Ping(self.waypointsprite_attached);
-			//WaypointSprite_UpdateHealth(self.waypointsprite_attached, self.count);
+			WaypointSprite_Ping(this.waypointsprite_attached);
+			//WaypointSprite_UpdateHealth(this.waypointsprite_attached, this.count);
 		}
 	}
 }
 
 void Item_RespawnThink(entity this)
 {
-	self.nextthink = time;
-	if(self.origin != self.oldorigin)
-		ItemUpdate(self);
+	this.nextthink = time;
+	if(this.origin != this.oldorigin)
+		ItemUpdate(this);
 
-	if(time >= self.wait)
-		Item_Respawn(self);
+	if(time >= this.wait)
+		Item_Respawn(this);
 }
 
 void Item_ScheduleRespawnIn(entity e, float t)
@@ -785,8 +785,10 @@ void Item_Touch(entity this)
 	switch (MUTATOR_CALLHOOK(ItemTouch, this, other))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
-		case MUT_ITEMTOUCH_PICKUP: { goto pickup; }
+		case MUT_ITEMTOUCH_PICKUP: { other = M_ARGV(1, entity); goto pickup; }
 	}
+
+	other = M_ARGV(1, entity);
 
 	if (this.classname == "droppedweapon")
 	{
@@ -823,15 +825,15 @@ LABEL(pickup)
 		if(this.team)
 		{
 			RandomSelection_Init();
-			for(entity head = world; (head = findfloat(head, team, this.team)); )
+			FOREACH_ENTITY_FLAGS(flags, FL_ITEM,
 			{
-				if(head.flags & FL_ITEM)
-				if(head.classname != "item_flag_team" && head.classname != "item_key_team")
+				if(it.team == this.team)
+				if(it.classname != "item_flag_team" && it.classname != "item_key_team")
 				{
-					Item_Show(head, -1);
-					RandomSelection_Add(head, 0, string_null, head.cnt, 0);
+					Item_Show(it, -1);
+					RandomSelection_Add(it, 0, string_null, it.cnt, 0);
 				}
-			}
+			});
 			e = RandomSelection_chosen_ent;
 
 		}
@@ -863,12 +865,12 @@ void Item_FindTeam(entity this)
 {
 	entity e;
 
-	if(self.effects & EF_NODRAW)
+	if(this.effects & EF_NODRAW)
 	{
 		// marker for item team search
-		LOG_TRACE("Initializing item team ", ftos(self.team), "\n");
+		LOG_TRACE("Initializing item team ", ftos(this.team), "\n");
 		RandomSelection_Init();
-		FOREACH_ENTITY_FLOAT(team, self.team,
+		FOREACH_ENTITY_FLOAT(team, this.team,
 		{
 			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
@@ -879,7 +881,7 @@ void Item_FindTeam(entity this)
 		e.state = 0;
 		Item_Show(e, 1);
 
-		FOREACH_ENTITY_FLOAT(team, self.team,
+		FOREACH_ENTITY_FLOAT(team, this.team,
 		{
 			if(it.flags & FL_ITEM)
 			if(it.classname != "item_flag_team" && it.classname != "item_key_team")
@@ -894,16 +896,16 @@ void Item_FindTeam(entity this)
 			}
 		});
 
-		Item_Reset(self);
+		Item_Reset(this);
 	}
 }
 
 // Savage: used for item garbage-collection
 void RemoveItem(entity this)
 {
-	if(wasfreed(self) || !self) { return; }
-	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
-	remove(self);
+	if(wasfreed(this) || !this) { return; }
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
+	remove(this);
 }
 
 // pickup evaluation functions
@@ -1026,7 +1028,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 void Item_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		WITHSELF(this, RemoveItem(this));
+		RemoveItem(this);
 }
 
 void _StartItem(entity this, entity def, float defaultrespawntime, float defaultrespawntimejitter)
@@ -1131,7 +1133,7 @@ void _StartItem(entity this, entity def, float defaultrespawntime, float default
 			this.SendFlags |= ISF_SIZE;
 			// note droptofloor returns false if stuck/or would fall too far
 			if (!this.noalign)
-				WITHSELF(this, droptofloor());
+				droptofloor(this);
 			waypoint_spawnforitem(this);
 		}
 
@@ -1452,39 +1454,39 @@ spawnfunc(target_items)
 	float n, i;
 	string s;
 
-	self.use = target_items_use;
-	if(!self.strength_finished)
-		self.strength_finished = autocvar_g_balance_powerup_strength_time;
-	if(!self.invincible_finished)
-		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-	if(!self.superweapons_finished)
-		self.superweapons_finished = autocvar_g_balance_superweapons_time;
+	this.use = target_items_use;
+	if(!this.strength_finished)
+		this.strength_finished = autocvar_g_balance_powerup_strength_time;
+	if(!this.invincible_finished)
+		this.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	if(!this.superweapons_finished)
+		this.superweapons_finished = autocvar_g_balance_superweapons_time;
 
-	n = tokenize_console(self.netname);
+	n = tokenize_console(this.netname);
 	if(argv(0) == "give")
 	{
-		self.netname = substring(self.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
+		this.netname = substring(this.netname, argv_start_index(1), argv_end_index(-1) - argv_start_index(1));
 	}
 	else
 	{
 		for(i = 0; i < n; ++i)
 		{
-			if     (argv(i) == "unlimited_ammo")         self.items |= IT_UNLIMITED_AMMO;
-			else if(argv(i) == "unlimited_weapon_ammo")  self.items |= IT_UNLIMITED_WEAPON_AMMO;
-			else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
-			else if(argv(i) == "strength")               self.items |= ITEM_Strength.m_itemid;
-			else if(argv(i) == "invincible")             self.items |= ITEM_Shield.m_itemid;
-			else if(argv(i) == "superweapons")           self.items |= IT_SUPERWEAPON;
-			else if(argv(i) == "jetpack")                self.items |= ITEM_Jetpack.m_itemid;
-			else if(argv(i) == "fuel_regen")             self.items |= ITEM_JetpackRegen.m_itemid;
+			if     (argv(i) == "unlimited_ammo")         this.items |= IT_UNLIMITED_AMMO;
+			else if(argv(i) == "unlimited_weapon_ammo")  this.items |= IT_UNLIMITED_WEAPON_AMMO;
+			else if(argv(i) == "unlimited_superweapons") this.items |= IT_UNLIMITED_SUPERWEAPONS;
+			else if(argv(i) == "strength")               this.items |= ITEM_Strength.m_itemid;
+			else if(argv(i) == "invincible")             this.items |= ITEM_Shield.m_itemid;
+			else if(argv(i) == "superweapons")           this.items |= IT_SUPERWEAPON;
+			else if(argv(i) == "jetpack")                this.items |= ITEM_Jetpack.m_itemid;
+			else if(argv(i) == "fuel_regen")             this.items |= ITEM_JetpackRegen.m_itemid;
 			else
 			{
 				FOREACH(Weapons, it != WEP_Null, {
 					s = W_UndeprecateName(argv(i));
 					if(s == it.netname)
 					{
-						self.weapons |= (it.m_wepset);
-						if(self.spawnflags == 0 || self.spawnflags == 2)
+						this.weapons |= (it.m_wepset);
+						if(this.spawnflags == 0 || this.spawnflags == 2)
 							it.wr_init(it);
 						break;
 					}
@@ -1493,22 +1495,22 @@ spawnfunc(target_items)
 		}
 
 		string itemprefix, valueprefix;
-		if(self.spawnflags == 0)
+		if(this.spawnflags == 0)
 		{
 			itemprefix = "";
 			valueprefix = "";
 		}
-		else if(self.spawnflags == 1)
+		else if(this.spawnflags == 1)
 		{
 			itemprefix = "max ";
 			valueprefix = "max ";
 		}
-		else if(self.spawnflags == 2)
+		else if(this.spawnflags == 2)
 		{
 			itemprefix = "min ";
 			valueprefix = "min ";
 		}
-		else if(self.spawnflags == 4)
+		else if(this.spawnflags == 4)
 		{
 			itemprefix = "minus ";
 			valueprefix = "max ";
@@ -1519,28 +1521,28 @@ spawnfunc(target_items)
 			itemprefix = valueprefix = string_null;
 		}
 
-		self.netname = "";
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * boolean(self.items & ITEM_Strength.m_itemid), "strength");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * boolean(self.items & ITEM_Shield.m_itemid), "invincible");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * boolean(self.items & IT_SUPERWEAPON), "superweapons");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & ITEM_Jetpack.m_itemid), "jetpack");
-		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, boolean(self.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
-		if(self.ammo_shells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_shells), "shells");
-		if(self.ammo_nails != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_nails), "nails");
-		if(self.ammo_rockets != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_rockets), "rockets");
-		if(self.ammo_cells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_cells), "cells");
-		if(self.ammo_plasma != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_plasma), "plasma");
-		if(self.ammo_fuel != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_fuel), "fuel");
-		if(self.health != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "health");
-		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.armorvalue), "armor");
-		FOREACH(Weapons, it != WEP_Null, self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & (it.m_wepset)), it.netname));
+		this.netname = "";
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
+		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.strength_finished * boolean(this.items & ITEM_Strength.m_itemid), "strength");
+		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.invincible_finished * boolean(this.items & ITEM_Shield.m_itemid), "invincible");
+		this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, this.superweapons_finished * boolean(this.items & IT_SUPERWEAPON), "superweapons");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_Jetpack.m_itemid), "jetpack");
+		this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, boolean(this.items & ITEM_JetpackRegen.m_itemid), "fuel_regen");
+		if(this.ammo_shells != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_shells), "shells");
+		if(this.ammo_nails != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_nails), "nails");
+		if(this.ammo_rockets != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_rockets), "rockets");
+		if(this.ammo_cells != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_cells), "cells");
+		if(this.ammo_plasma != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_plasma), "plasma");
+		if(this.ammo_fuel != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.ammo_fuel), "fuel");
+		if(this.health != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.health), "health");
+		if(this.armorvalue != 0) this.netname = sprintf("%s %s%d %s", this.netname, valueprefix, max(0, this.armorvalue), "armor");
+		FOREACH(Weapons, it != WEP_Null, this.netname = sprintf("%s %s%d %s", this.netname, itemprefix, !!(this.weapons & (it.m_wepset)), it.netname));
 	}
-	self.netname = strzone(self.netname);
-	//print(self.netname, "\n");
+	this.netname = strzone(this.netname);
+	//print(this.netname, "\n");
 
-	n = tokenize_console(self.netname);
+	n = tokenize_console(this.netname);
 	for(i = 0; i < n; ++i)
 	{
 		FOREACH(Weapons, it != WEP_Null && argv(i) == it.netname, {

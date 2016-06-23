@@ -3,20 +3,20 @@
 void func_bobbing_controller_think(entity this)
 {
 	vector v;
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 
-	if(self.owner.active != ACTIVE_ACTIVE)
+	if(this.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';
+		this.owner.velocity = '0 0 0';
 		return;
 	}
 
 	// calculate sinewave using makevectors
-	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
-	v = self.owner.destvec + self.owner.movedir * v_forward_y;
-	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
+	makevectors((this.nextthink * this.owner.cnt + this.owner.phase * 360) * '0 1 0');
+	v = this.owner.destvec + this.owner.movedir * v_forward_y;
+	if(this.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.velocity = (v - self.owner.SUB_ORIGIN) * 10;
+		this.owner.velocity = (v - this.owner.SUB_ORIGIN) * 10;
 }
 
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
@@ -48,7 +48,7 @@ spawnfunc(func_bobbing)
 	this.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
-	this.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
     if(this.dmg && (this.message2 == ""))

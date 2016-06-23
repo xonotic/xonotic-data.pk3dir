@@ -114,7 +114,7 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 void SUB_RemoveOnNoImpact(entity this)
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-		Gib_Delete(self);
+		Gib_Delete(this);
 }
 
 void Gib_Touch(entity this)
@@ -123,15 +123,15 @@ void Gib_Touch(entity this)
 
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{
-		Gib_Delete(self);
+		Gib_Delete(this);
 		return;
 	}
 
-	if(!self.silent)
-		sound(self, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
-	__pointparticles(_particleeffectnum(strcat(species_prefix(self.cnt), "blood")), self.origin + '0 0 1', '0 0 30', 10);
+	if(!this.silent)
+		sound(this, CH_PAIN, SND_GIB_SPLAT_RANDOM(), VOL_BASE, ATTEN_NORM);
+	__pointparticles(_particleeffectnum(strcat(species_prefix(this.cnt), "blood")), this.origin + '0 0 1', '0 0 30', 10);
 
-	Gib_Delete(self);
+	Gib_Delete(this);
 }
 
 void Gib_Draw(entity this)

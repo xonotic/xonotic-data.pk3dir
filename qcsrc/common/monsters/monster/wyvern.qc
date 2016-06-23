@@ -105,7 +105,7 @@ void M_Wyvern_Attack_Fireball_Explode(entity this)
 
 	entity own = this.realowner;
 
-	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, world, world, autocvar_g_monster_wyvern_attack_fireball_radius, this.projectiledeathtype, world);
+	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, NULL, NULL, autocvar_g_monster_wyvern_attack_fireball_radius, this.projectiledeathtype, NULL);
 
 	FOREACH_ENTITY_FLOAT(takedamage, DAMAGE_AIM,
 	{
@@ -151,12 +151,12 @@ METHOD(Wyvern, mr_think, bool(Wyvern this, entity actor))
     return true;
 }
 
-METHOD(Wyvern, mr_pain, bool(Wyvern this, entity actor))
+METHOD(Wyvern, mr_pain, float(Wyvern this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Wyvern, this);
     actor.pain_finished = time + 0.5;
     setanim(actor, actor.anim_pain1, true, true, false);
-    return true;
+    return damage_take;
 }
 
 METHOD(Wyvern, mr_death, bool(Wyvern this, entity actor))

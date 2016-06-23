@@ -29,7 +29,7 @@ METHOD(HellionAttack, wr_think, void(entity thiswep, entity actor, .entity weapo
                 actor.tur_shotorg = gettaginfo(actor.tur_head, gettagindex(actor.tur_head, "tag_fire2"));
         }
 
-        entity missile = turret_projectile(SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
+        entity missile = turret_projectile(actor, SND_ROCKET_FIRE, 6, 10, DEATH_TURRET_HELLION.m_id, PROJECTILE_ROCKET, false, false);
         te_explosion (missile.origin);
         setthink(missile, turret_hellion_missile_think);
         missile.nextthink	= time;
@@ -47,60 +47,60 @@ void turret_hellion_missile_think(entity this)
     vector pre_pos;
     float itime;
 
-    self.nextthink = time + 0.05;
+    this.nextthink = time + 0.05;
 
-    olddir = normalize(self.velocity);
+    olddir = normalize(this.velocity);
 
-    if(self.max_health < time)
-        turret_projectile_explode(self);
+    if(this.max_health < time)
+        turret_projectile_explode(this);
 
     // Enemy dead? just keep on the current heading then.
-    if ((self.enemy == world) || (IS_DEAD(self.enemy)))
+    if ((this.enemy == NULL) || (IS_DEAD(this.enemy)))
     {
 
         // Make sure we dont return to tracking a respawned player
-        self.enemy = world;
+        this.enemy = NULL;
 
         // Turn model
-        self.angles = vectoangles(self.velocity);
+        this.angles = vectoangles(this.velocity);
 
-        if(vdist(self.origin - self.owner.origin, >, (self.owner.shot_radius * 5)))
-            turret_projectile_explode(self);
+        if(vdist(this.origin - this.owner.origin, >, (this.owner.shot_radius * 5)))
+            turret_projectile_explode(this);
 
         // Accelerate
-        self.velocity = olddir * min(vlen(self.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
+        this.velocity = olddir * min(vlen(this.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
 
-        UpdateCSQCProjectile(self);
+        UpdateCSQCProjectile(this);
 
         return;
     }
 
     // Enemy in range?
-    if(vdist(self.origin - self.enemy.origin, <, self.owner.shot_radius * 0.2))
-        turret_projectile_explode(self);
+    if(vdist(this.origin - this.enemy.origin, <, this.owner.shot_radius * 0.2))
+        turret_projectile_explode(this);
 
     // Predict enemy position
-    itime = vlen(self.enemy.origin - self.origin) / vlen(self.velocity);
-    pre_pos = self.enemy.origin + self.enemy.velocity * itime;
+    itime = vlen(this.enemy.origin - this.origin) / vlen(this.velocity);
+    pre_pos = this.enemy.origin + this.enemy.velocity * itime;
 
-    pre_pos = (pre_pos + self.enemy.origin) * 0.5;
+    pre_pos = (pre_pos + this.enemy.origin) * 0.5;
 
     // Find out the direction to that place
-    newdir = normalize(pre_pos - self.origin);
+    newdir = normalize(pre_pos - this.origin);
 
     // Turn
     newdir = normalize(olddir + newdir * 0.35);
 
     // Turn model
-    self.angles = vectoangles(self.velocity);
+    this.angles = vectoangles(this.velocity);
 
     // Accelerate
-    self.velocity = newdir * min(vlen(self.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
+    this.velocity = newdir * min(vlen(this.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
 
     if (itime < 0.05)
-        setthink(self, turret_projectile_explode);
+        setthink(this, turret_projectile_explode);
 
-    UpdateCSQCProjectile(self);
+    UpdateCSQCProjectile(this);
 }
 
 #endif

@@ -47,7 +47,7 @@
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
 #ifdef SVQC
-	setorigin (player, to); // NOTE: this also aborts the move, when this is called by touch
+	setorigin(player, to); // NOTE: this also aborts the move, when this is called by touch
 	player.oldorigin = to; // for DP's unsticking
 	player.angles = to_angles;
 	player.fixangle = true;
@@ -111,7 +111,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		{
 			entity own;
 			own = player.owner;
-			player.owner = world;
+			player.owner = NULL;
 			tracebox(trace_endpos, player.mins, player.maxs, o1 - player.view_ofs + v1 * frametime * f1, MOVE_NORMAL, player); // this should get us through the warpzone
 			player.owner = own;
 		}
@@ -169,8 +169,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 
 		entity ts = new(warpzone_teleported);
 		setmodel(ts, MDL_Null);
-		ts.SendEntity = SendEntity_self;
-		ts.SendEntity3 = WarpZone_Teleported_Send;
+		setSendEntity(ts, WarpZone_Teleported_Send);
 		ts.SendFlags = 0xFFFFFF;
 		ts.drawonlytoclient = player;
 		setthink(ts, SUB_Remove);
@@ -206,7 +205,7 @@ void WarpZone_Touch (entity this)
 #endif
 		return;
 
-	if(WarpZoneLib_ExactTrigger_Touch(self, other))
+	if(WarpZoneLib_ExactTrigger_Touch(this, other))
 		return;
 
 #ifdef SVQC
@@ -497,7 +496,7 @@ float WarpZone_Projectile_Touch(entity this)
 	}
 #endif
 
-	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
+	if(WarpZone_Projectile_Touch_ImpactFilter_Callback(this, other))
 		return true;
 #endif
 
@@ -510,8 +509,8 @@ void WarpZone_InitStep_FindOriginTarget(entity this)
 {
 	if(this.killtarget != "")
 	{
-		this.aiment = find(world, targetname, this.killtarget);
-		if(this.aiment == world)
+		this.aiment = find(NULL, targetname, this.killtarget);
+		if(this.aiment == NULL)
 		{
 			error("Warp zone with nonexisting killtarget");
 			return;
@@ -527,8 +526,8 @@ void WarpZonePosition_InitStep_FindTarget(entity this)
 		error("Warp zone position with no target");
 		return;
 	}
-	this.enemy = find(world, targetname, this.target);
-	if(this.enemy == world)
+	this.enemy = find(NULL, targetname, this.target);
+	if(this.enemy == NULL)
 	{
 		error("Warp zone position with nonexisting target");
 		return;
@@ -567,11 +566,11 @@ void WarpZoneCamera_InitStep_FindTarget(entity this)
 		error("Camera with no target");
 		return;
 	}
-	this.enemy = world;
-	for(e = world, i = 0; (e = find(e, targetname, this.target)); )
+	this.enemy = NULL;
+	for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )
 		if(random() * ++i < 1)
 			this.enemy = e;
-	if(this.enemy == world)
+	if(this.enemy == NULL)
 	{
 		error("Camera with nonexisting target");
 		return;
@@ -672,8 +671,8 @@ void WarpZone_InitStep_UpdateTransform(entity this)
 void WarpZone_InitStep_ClearTarget(entity this)
 {
 	if(this.enemy)
-		this.enemy.enemy = world;
-	this.enemy = world;
+		this.enemy.enemy = NULL;
+	this.enemy = NULL;
 }
 
 entity warpzone_first; .entity warpzone_next;
@@ -690,15 +689,15 @@ void WarpZone_InitStep_FindTarget(entity this)
 	{
 		this.enemy = this; // so the if(!e.enemy) check also skips this, saves one IF
 
-		e2 = world;
-		for(e = world, i = 0; (e = find(e, targetname, this.target)); )
+		e2 = NULL;
+		for(e = NULL, i = 0; (e = find(e, targetname, this.target)); )
 			if(!e.enemy)
 				if(e.classname == this.classname) // possibly non-warpzones may use the same targetname!
 					if(random() * ++i < 1)
 						e2 = e;
 		if(!e2)
 		{
-			this.enemy = world;
+			this.enemy = NULL;
 			error("Warpzone with non-existing target");
 			return;
 		}
@@ -771,8 +770,7 @@ spawnfunc(trigger_warpzone)
 		setsize(this, this.mins * this.scale, this.maxs * this.scale);
 	else
 		setsize(this, this.mins, this.maxs);
-	this.SendEntity = SendEntity_self;
-	this.SendEntity3 = WarpZone_Send;
+	setSendEntity(this, WarpZone_Send);
 	this.SendFlags = 0xFFFFFF;
 	BITSET_ASSIGN(this.effects, EF_NODEPTHTEST);
 	this.warpzone_next = warpzone_first;
@@ -798,8 +796,7 @@ spawnfunc(func_camera)
 		this.solid = SOLID_BSP;
 	else if(this.solid < 0)
 		this.solid = SOLID_NOT;
-	this.SendEntity = SendEntity_self;
-	this.SendEntity3 = WarpZone_Camera_Send;
+	setSendEntity(this, WarpZone_Camera_Send);
 	this.SendFlags = 0xFFFFFF;
 	this.warpzone_next = warpzone_camera_first;
 	warpzone_camera_first = this;

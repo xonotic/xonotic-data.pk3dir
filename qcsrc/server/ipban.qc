@@ -237,13 +237,13 @@ void OnlineBanList_Think(entity this)
 	}
 
 	if(autocvar_g_ban_sync_interval > 0)
-		self.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
+		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 	else
 		goto killme;
 	return;
 
 LABEL(killme)
-	remove(self);
+	remove(this);
 }
 
 const float BAN_MAX = 256;

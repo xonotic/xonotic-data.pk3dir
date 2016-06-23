@@ -36,7 +36,6 @@ bool NIX_CanChooseWeapon(int wpn);
 
 REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"))
 {
-    SELFPARAM();
 	MUTATOR_ONADD
 	{
 		g_nix_with_blaster = autocvar_g_nix_with_blaster;
@@ -64,11 +63,11 @@ REGISTER_MUTATOR(nix, cvar("g_nix") && !cvar("g_instagib") && !cvar("g_overkill"
 			it.ammo_fuel = start_ammo_fuel;
 			it.weapons = start_weapons;
 			if(!client_hasweapon(it, PS(it).m_weapon, true, false))
-				PS(it).m_switchweapon = w_getbestweapon(self);
+				PS(it).m_switchweapon = w_getbestweapon(it);
 		});
 	}
 
-	return 0;
+	return false;
 }
 
 bool NIX_CanChooseWeapon(int wpn)
@@ -96,13 +95,13 @@ void NIX_ChooseNextWeapon()
 	RandomSelection_Init();
 	FOREACH(Weapons, it != WEP_Null, LAMBDA(
 		if(NIX_CanChooseWeapon(it.m_id))
-			RandomSelection_Add(world, it.m_id, string_null, 1, (it.m_id != nix_weapon));
+			RandomSelection_Add(NULL, it.m_id, string_null, 1, (it.m_id != nix_weapon));
 	));
 	nix_nextweapon = RandomSelection_chosen_float;
 }
 
-void NIX_GiveCurrentWeapon()
-{SELFPARAM();
+void NIX_GiveCurrentWeapon(entity this)
+{
 	float dt;
 
 	if(!nix_nextweapon)
@@ -125,114 +124,114 @@ void NIX_GiveCurrentWeapon()
 	// get weapon info
 	entity e = Weapons_from(nix_weapon);
 
-	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
+	if(nix_nextchange != this.nix_lastchange_id) // this shall only be called once per round!
 	{
-		self.ammo_shells = self.ammo_nails = self.ammo_rockets = self.ammo_cells = self.ammo_plasma = self.ammo_fuel = 0;
+		this.ammo_shells = this.ammo_nails = this.ammo_rockets = this.ammo_cells = this.ammo_plasma = this.ammo_fuel = 0;
 
-		if(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		if(this.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
 			switch(e.ammo_field)
 			{
-				case ammo_shells:  self.ammo_shells  = autocvar_g_pickup_shells_max;  break;
-				case ammo_nails:   self.ammo_nails   = autocvar_g_pickup_nails_max;   break;
-				case ammo_rockets: self.ammo_rockets = autocvar_g_pickup_rockets_max; break;
-				case ammo_cells:   self.ammo_cells   = autocvar_g_pickup_cells_max;   break;
-				case ammo_plasma:  self.ammo_plasma  = autocvar_g_pickup_plasma_max;   break;
-				case ammo_fuel:    self.ammo_fuel    = autocvar_g_pickup_fuel_max;    break;
+				case ammo_shells:  this.ammo_shells  = autocvar_g_pickup_shells_max;  break;
+				case ammo_nails:   this.ammo_nails   = autocvar_g_pickup_nails_max;   break;
+				case ammo_rockets: this.ammo_rockets = autocvar_g_pickup_rockets_max; break;
+				case ammo_cells:   this.ammo_cells   = autocvar_g_pickup_cells_max;   break;
+				case ammo_plasma:  this.ammo_plasma  = autocvar_g_pickup_plasma_max;   break;
+				case ammo_fuel:    this.ammo_fuel    = autocvar_g_pickup_fuel_max;    break;
 			}
 		}
 		else
 		{
 			switch(e.ammo_field)
 			{
-				case ammo_shells:  self.ammo_shells  = autocvar_g_balance_nix_ammo_shells;  break;
-				case ammo_nails:   self.ammo_nails   = autocvar_g_balance_nix_ammo_nails;   break;
-				case ammo_rockets: self.ammo_rockets = autocvar_g_balance_nix_ammo_rockets; break;
-				case ammo_cells:   self.ammo_cells   = autocvar_g_balance_nix_ammo_cells;   break;
-				case ammo_plasma:  self.ammo_plasma  = autocvar_g_balance_nix_ammo_plasma;   break;
-				case ammo_fuel:    self.ammo_fuel    = autocvar_g_balance_nix_ammo_fuel;    break;
+				case ammo_shells:  this.ammo_shells  = autocvar_g_balance_nix_ammo_shells;  break;
+				case ammo_nails:   this.ammo_nails   = autocvar_g_balance_nix_ammo_nails;   break;
+				case ammo_rockets: this.ammo_rockets = autocvar_g_balance_nix_ammo_rockets; break;
+				case ammo_cells:   this.ammo_cells   = autocvar_g_balance_nix_ammo_cells;   break;
+				case ammo_plasma:  this.ammo_plasma  = autocvar_g_balance_nix_ammo_plasma;   break;
+				case ammo_fuel:    this.ammo_fuel    = autocvar_g_balance_nix_ammo_fuel;    break;
 			}
 		}
 
-		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
+		this.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 		if(dt >= 1 && dt <= 5)
-			self.nix_lastinfotime = -42;
+			this.nix_lastinfotime = -42;
 		else
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_NIX_NEWWEAPON, nix_weapon);
 
-		e.wr_resetplayer(e, self);
+		e.wr_resetplayer(e, this);
 
 		// all weapons must be fully loaded when we spawn
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-			self.(weapon_load[nix_weapon]) = e.reloading_ammo;
+			this.(weapon_load[nix_weapon]) = e.reloading_ammo;
 
 		// vortex too
 		if(WEP_CVAR(vortex, charge))
 		{
 			if(WEP_CVAR_SEC(vortex, chargepool))
-				self.vortex_chargepool_ammo = 1;
-			self.vortex_charge = WEP_CVAR(vortex, charge_start);
+				this.vortex_chargepool_ammo = 1;
+			this.vortex_charge = WEP_CVAR(vortex, charge_start);
 		}
 
 		// set last change info
-		self.nix_lastchange_id = nix_nextchange;
+		this.nix_lastchange_id = nix_nextchange;
 	}
-	if(self.nix_lastinfotime != dt)
+	if(this.nix_lastinfotime != dt)
 	{
-		self.nix_lastinfotime = dt; // initial value 0 should count as "not seen"
+		this.nix_lastinfotime = dt; // initial value 0 should count as "not seen"
 		if(dt >= 1 && dt <= 5)
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_NIX_COUNTDOWN, nix_nextweapon, dt);
+			Send_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CENTER_NIX_COUNTDOWN, nix_nextweapon, dt);
 	}
 
-	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO) && time > self.nix_nextincr)
+	if(!(this.items & IT_UNLIMITED_WEAPON_AMMO) && time > this.nix_nextincr)
 	{
 		switch(e.ammo_field)
 		{
-			case ammo_shells:  self.ammo_shells  += autocvar_g_balance_nix_ammoincr_shells;  break;
-			case ammo_nails:   self.ammo_nails   += autocvar_g_balance_nix_ammoincr_nails;   break;
-			case ammo_rockets: self.ammo_rockets += autocvar_g_balance_nix_ammoincr_rockets; break;
-			case ammo_cells:   self.ammo_cells   += autocvar_g_balance_nix_ammoincr_cells;   break;
-			case ammo_plasma:  self.ammo_plasma  += autocvar_g_balance_nix_ammoincr_plasma;   break;
-			case ammo_fuel:    self.ammo_fuel    += autocvar_g_balance_nix_ammoincr_fuel;    break;
+			case ammo_shells:  this.ammo_shells  += autocvar_g_balance_nix_ammoincr_shells;  break;
+			case ammo_nails:   this.ammo_nails   += autocvar_g_balance_nix_ammoincr_nails;   break;
+			case ammo_rockets: this.ammo_rockets += autocvar_g_balance_nix_ammoincr_rockets; break;
+			case ammo_cells:   this.ammo_cells   += autocvar_g_balance_nix_ammoincr_cells;   break;
+			case ammo_plasma:  this.ammo_plasma  += autocvar_g_balance_nix_ammoincr_plasma;   break;
+			case ammo_fuel:    this.ammo_fuel    += autocvar_g_balance_nix_ammoincr_fuel;    break;
 		}
 
-		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
+		this.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
-	self.weapons = '0 0 0';
+	this.weapons = '0 0 0';
 	if(g_nix_with_blaster)
-		self.weapons |= WEPSET(BLASTER);
-	self.weapons |= e.m_wepset;
+		this.weapons |= WEPSET(BLASTER);
+	this.weapons |= e.m_wepset;
 
     Weapon w = Weapons_from(nix_weapon);
-	if(PS(self).m_switchweapon != w)
-		if(!client_hasweapon(self, PS(self).m_switchweapon, true, false))
+	if(PS(this).m_switchweapon != w)
+		if(!client_hasweapon(this, PS(this).m_switchweapon, true, false))
 		{
-			if(client_hasweapon(self, w, true, false))
-				W_SwitchWeapon(self, w);
+			if(client_hasweapon(this, w, true, false))
+				W_SwitchWeapon(this, w);
 		}
 }
 
 MUTATOR_HOOKFUNCTION(nix, ForbidThrowCurrentWeapon)
 {
-	return 1; // no throwing in NIX
+	return true; // no throwing in NIX
 }
 
 MUTATOR_HOOKFUNCTION(nix, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":NIX");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":NIX");
 }
 
 MUTATOR_HOOKFUNCTION(nix, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", NIX");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", NIX");
 }
 
 MUTATOR_HOOKFUNCTION(nix, FilterItem)
-{SELFPARAM();
-	switch (self.items)
+{
+	entity item = M_ARGV(0, entity);
+
+	switch (item.items)
 	{
 		case ITEM_HealthSmall.m_itemid:
 		case ITEM_HealthMedium.m_itemid:
@@ -243,45 +242,47 @@ MUTATOR_HOOKFUNCTION(nix, FilterItem)
 		case ITEM_ArmorLarge.m_itemid:
 		case ITEM_ArmorMega.m_itemid:
 			if (autocvar_g_nix_with_healtharmor)
-				return 0;
+				return false;
 			break;
 		case ITEM_Strength.m_itemid:
 		case ITEM_Shield.m_itemid:
 			if (autocvar_g_nix_with_powerups)
-				return 0;
+				return false;
 			break;
 	}
 
-	return 1; // delete all other items
+	return true; // delete all other items
 }
 
 MUTATOR_HOOKFUNCTION(nix, OnEntityPreSpawn)
-{SELFPARAM();
-	if(self.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
-		return 1;
-	return 0;
+{
+	entity ent = M_ARGV(0, entity);
+
+	if(ent.classname == "target_items") // items triggers cannot work in nix (as they change weapons/ammo)
+		return true;
 }
 
 MUTATOR_HOOKFUNCTION(nix, PlayerPreThink)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(!intermission_running)
-	if(!IS_DEAD(self))
-	if(IS_PLAYER(self))
-		NIX_GiveCurrentWeapon();
-	return 0;
+	if(!IS_DEAD(player))
+	if(IS_PLAYER(player))
+		NIX_GiveCurrentWeapon(player);
 }
 
 MUTATOR_HOOKFUNCTION(nix, PlayerSpawn)
-{SELFPARAM();
-	self.nix_lastchange_id = -1;
-	NIX_GiveCurrentWeapon(); // overrides the weapons you got when spawning
-	self.items |= IT_UNLIMITED_SUPERWEAPONS;
-	return 0;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.nix_lastchange_id = -1;
+	NIX_GiveCurrentWeapon(player); // overrides the weapons you got when spawning
+	player.items |= IT_UNLIMITED_SUPERWEAPONS;
 }
 
 MUTATOR_HOOKFUNCTION(nix, SetModname, CBC_ORDER_LAST)
 {
-	modname = "NIX";
-	return 0;
+	M_ARGV(0, string) = "NIX";
 }
 #endif

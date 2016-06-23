@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
-cd "$(dirname "$0")"
+cd ${0%/*}
 cd ..
 ROOT=$PWD/
 
@@ -32,6 +32,7 @@ function genmod() {
 
 (cd lib; genmod)
 (cd common; genmod)
+(cd ecs; genmod)
 (cd client; genmod)
 (cd server; genmod)
 (cd menu; genmod)

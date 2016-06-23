@@ -3,6 +3,9 @@
 #endif
 
 #include <lib/_all.inc>
+
+#if XONOTIC
+
 #include "_all.qh"
 
 #include "../server/_mod.inc"
@@ -22,6 +25,10 @@
 #include <lib/warpzone/common.qc>
 #include <lib/warpzone/server.qc>
 #include <lib/warpzone/util_server.qc>
+
+#endif
+
+#include <ecs/_lib.inc>
 
 #if BUILD_MOD
 #include "../../mod/server/progs.inc"

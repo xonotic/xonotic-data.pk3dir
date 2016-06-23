@@ -60,22 +60,22 @@ void W_Blaster_Touch(entity this)
 {
 	PROJECTILE_TOUCH(this);
 
-	self.event_damage = func_null;
+	this.event_damage = func_null;
 
 	RadiusDamage(
-		self,
-		self.realowner,
-		self.blaster_damage,
-		self.blaster_edgedamage,
-		self.blaster_radius,
-		world,
-		world,
-		self.blaster_force,
-		self.projectiledeathtype,
+		this,
+		this.realowner,
+		this.blaster_damage,
+		this.blaster_edgedamage,
+		this.blaster_radius,
+		NULL,
+		NULL,
+		this.blaster_force,
+		this.projectiledeathtype,
 		other
 	);
 
-	remove(self);
+	remove(this);
 }
 
 void W_Blaster_Think(entity this)
@@ -146,22 +146,21 @@ void W_Blaster_Attack(
 
 	if (time >= missile.nextthink)
 	{
-		WITHSELF(missile, getthink(missile)(missile));
+		getthink(missile)(missile);
 	}
 }
 
 METHOD(Blaster, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     if(WEP_CVAR(blaster, secondary))
     {
         if((random() * (WEP_CVAR_PRI(blaster, damage) + WEP_CVAR_SEC(blaster, damage))) > WEP_CVAR_PRI(blaster, damage))
-            { PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR_SEC(blaster, speed), 0, WEP_CVAR_SEC(blaster, lifetime), false); }
         else
-            { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+            { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
     }
     else
-        { PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
+        { PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(blaster, speed), 0, WEP_CVAR_PRI(blaster, lifetime), false); }
 }
 
 METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponentity, int fire))
@@ -225,8 +224,7 @@ METHOD(Blaster, wr_think, void(Blaster thiswep, entity actor, .entity weaponenti
 
 METHOD(Blaster, wr_setup, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    self.ammo_field = ammo_none;
+    actor.ammo_field = ammo_none;
 }
 
 METHOD(Blaster, wr_checkammo1, bool(entity thiswep, entity actor))
@@ -254,11 +252,10 @@ METHOD(Blaster, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Blaster, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 6;
     pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
-    if(!w_issilent) { sound(self, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
+    if(!w_issilent) { sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM); }
 }
 
 #endif

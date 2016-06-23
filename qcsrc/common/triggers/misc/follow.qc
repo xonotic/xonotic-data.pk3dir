@@ -4,16 +4,16 @@
 void follow_init(entity this)
 {
 	entity src, dst;
-	src = world;
-	dst = world;
+	src = NULL;
+	dst = NULL;
 	if(this.killtarget != "")
-		src = find(world, targetname, this.killtarget);
+		src = find(NULL, targetname, this.killtarget);
 	if(this.target != "")
-		dst = find(world, targetname, this.target);
+		dst = find(NULL, targetname, this.target);
 
 	if(!src && !dst)
 	{
-		objerror("follow: could not find target/killtarget");
+		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
 
@@ -25,7 +25,7 @@ void follow_init(entity this)
 	}
 	else if(!src || !dst)
 	{
-		objerror("follow: could not find target/killtarget");
+		objerror(this, "follow: could not find target/killtarget");
 		return;
 	}
 	else if(this.spawnflags & 1)

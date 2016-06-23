@@ -58,7 +58,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		this.dest1 = this.origin + v_right * (this.t_width * temp);
 
 	this.dest2 = this.dest1 + v_forward * this.t_length;
-	WITHSELF(this, SUB_CalcMove(this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1));
+	SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1);
 	if (this.noise2 != "")
 		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
 }
@@ -71,76 +71,76 @@ void fd_secret_damage(entity this, entity inflictor, entity attacker, float dama
 // Wait after first movement...
 void fd_secret_move1(entity this)
 {
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
-	setthink(self, fd_secret_move2);
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 1.0;
+	setthink(this, fd_secret_move2);
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 // Start moving sideways w/sound...
 void fd_secret_move2(entity this)
 {
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.dest2, TSPEED_LINEAR, self.speed, fd_secret_move3);
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	SUB_CalcMove(this, this.dest2, TSPEED_LINEAR, this.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
 void fd_secret_move3(entity this)
 {
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
-	if (!(self.spawnflags & SECRET_OPEN_ONCE))
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
+	if (!(this.spawnflags & SECRET_OPEN_ONCE))
 	{
-		self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
-		setthink(self, fd_secret_move4);
+		this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+		setthink(this, fd_secret_move4);
 	}
 }
 
 // Move backward...
 void fd_secret_move4(entity this)
 {
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move5);
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move5);
 }
 
 // Wait 1 second...
 void fd_secret_move5(entity this)
 {
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 1.0;
-	setthink(self, fd_secret_move6);
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 1.0;
+	setthink(this, fd_secret_move6);
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 void fd_secret_move6(entity this)
 {
-	if (self.noise2 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTEN_NORM);
-	SUB_CalcMove(self.oldorigin, TSPEED_LINEAR, self.speed, fd_secret_done);
+	if (this.noise2 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise2, VOL_BASE, ATTEN_NORM);
+	SUB_CalcMove(this, this.oldorigin, TSPEED_LINEAR, this.speed, fd_secret_done);
 }
 
 void fd_secret_done(entity this)
 {
-	if (self.spawnflags&SECRET_YES_SHOOT)
+	if (this.spawnflags&SECRET_YES_SHOOT)
 	{
-		self.health = 10000;
-		self.takedamage = DAMAGE_YES;
-		//self.th_pain = fd_secret_use;
+		this.health = 10000;
+		this.takedamage = DAMAGE_YES;
+		//this.th_pain = fd_secret_use;
 	}
-	if (self.noise3 != "")
-		_sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTEN_NORM);
+	if (this.noise3 != "")
+		_sound(this, CH_TRIGGER_SINGLE, this.noise3, VOL_BASE, ATTEN_NORM);
 }
 
 .float door_finished;
 
-void secret_blocked()
-{SELFPARAM();
-	if (time < self.door_finished)
+void secret_blocked(entity this)
+{
+	if (time < this.door_finished)
 		return;
-	self.door_finished = time + 0.5;
-	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
+	this.door_finished = time + 0.5;
+	//T_Damage (other, this, this, this.dmg, this.dmg, this.deathtype, DT_IMPACT, (this.absmin + this.absmax) * 0.5, '0 0 0', Obituary_Generic);
 }
 
 /*
@@ -154,16 +154,16 @@ void secret_touch(entity this)
 {
 	if (!other.iscreature)
 		return;
-	if (self.door_finished > time)
+	if (this.door_finished > time)
 		return;
 
-	self.door_finished = time + 2;
+	this.door_finished = time + 2;
 
-	if (self.message)
+	if (this.message)
 	{
 		if (IS_CLIENT(other))
-			centerprint(other, self.message);
-		play2(other, self.noise);
+			centerprint(other, this.message);
+		play2(other, this.noise);
 	}
 }
 
@@ -214,7 +214,7 @@ spawnfunc(func_door_secret)
 	precache_sound(this.noise);
 
 	settouch(this, secret_touch);
-	this.blocked = secret_blocked;
+	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
 	IFTARGETED

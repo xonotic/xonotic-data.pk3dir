@@ -125,7 +125,7 @@ entity bot_getplace(entity this, string placename)
 			cvar_set(placename, strcat(substring(s2, p+1, -1), " ", s));
 			//print("places: ", placename, " := ", cvar_string(placename), "\n");
 		}
-		e = find(world, targetname, s);
+		e = find(NULL, targetname, s);
 		if(!e)
 			LOG_INFO("invalid place ", s, "\n");
 		if(i < MAX_BOT_PLACES)
@@ -138,7 +138,7 @@ entity bot_getplace(entity this, string placename)
 	}
 	else
 	{
-		e = find(world, targetname, placename);
+		e = find(NULL, targetname, placename);
 		if(!e)
 			LOG_INFO("invalid place ", placename, "\n");
 		return e;
@@ -240,7 +240,7 @@ entity find_bot_by_name(string name)
 		bot = bot.chain;
 	}
 
-	return world;
+	return NULL;
 }
 
 // Returns a bot by number on list
@@ -250,7 +250,7 @@ entity find_bot_by_number(float number)
 	float c = 0;
 
 	if(!number)
-		return world;
+		return NULL;
 
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
@@ -263,7 +263,7 @@ entity find_bot_by_number(float number)
 		bot = bot.chain;
 	}
 
-	return world;
+	return NULL;
 }
 
 float bot_decodecommand(string cmdstring)
@@ -476,10 +476,9 @@ void bot_list_commands()
 // Commands code
 .int bot_exec_status;
 
-void SV_ParseClientCommand(string s);
 float bot_cmd_cc(entity this)
 {
-	WITHSELF(this, SV_ParseClientCommand(bot_cmd.bot_cmd_parm_string));
+	SV_ParseClientCommand(this, bot_cmd.bot_cmd_parm_string);
 	return CMD_STATUS_FINISHED;
 }
 
@@ -612,7 +611,7 @@ float bot_cmd_eval(entity this, string expr)
 		case "speed":
 			return vlen(this.velocity);
 		case "flagcarrier":
-			return ((this.flagcarried!=world));
+			return ((this.flagcarried!=NULL));
 	}
 
 	LOG_INFO(strcat("ERROR: Unable to convert the expression '",expr,"' into a numeric value\n"));
@@ -1111,7 +1110,7 @@ void bot_command_executed(entity this, bool rm)
 
 void bot_setcurrentcommand(entity this)
 {
-	bot_cmd = world;
+	bot_cmd = NULL;
 
 	if(!this.bot_cmd_current)
 	{
@@ -1134,13 +1133,13 @@ void bot_setcurrentcommand(entity this)
 			else
 			{
 				// Invalid command, remove from queue
-				bot_cmd = world;
+				bot_cmd = NULL;
 				bot_dequeuecommand(this, this.bot_cmd_execution_index);
 				this.bot_cmd_execution_index++;
 			}
 		}
 		else
-			bot_cmd = world;
+			bot_cmd = NULL;
 	}
 }
 
@@ -1175,7 +1174,7 @@ float bot_execute_commands_once(entity this)
 	// old logic kept pressing previously pressed keys, but that has problems
 	// (namely, it means you cannot make a bot "normal" ever again)
 	// to keep a bot walking for a while, use the "wait" bot command
-	if(bot_cmd == world)
+	if(bot_cmd == NULL)
 		return false;
 
 	// Ignore all commands except continue when the bot is paused

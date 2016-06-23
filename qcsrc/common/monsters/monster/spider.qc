@@ -56,45 +56,45 @@ REGISTER_MUTATOR(spiderweb, true);
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerPhysics)
 {
-    SELFPARAM();
-	if (time >= this.spider_slowness)
+    entity player = M_ARGV(0, entity);
+
+	if (time >= player.spider_slowness)
 		return false;
-	PHYS_MAXSPEED(this) *= 0.5; // half speed while slow from spider
-	PHYS_MAXAIRSPEED(this) *= 0.5;
-	PHYS_AIRSPEEDLIMIT_NONQW(this) *= 0.5;
-	PHYS_AIRSTRAFEACCELERATE(this) *= 0.5;
-	return false;
+	PHYS_MAXSPEED(player) *= 0.5; // half speed while slow from spider
+	PHYS_MAXAIRSPEED(player) *= 0.5;
+	PHYS_AIRSPEEDLIMIT_NONQW(player) *= 0.5;
+	PHYS_AIRSTRAFEACCELERATE(player) *= 0.5;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterMove)
 {
-    SELFPARAM();
-	if(time < self.spider_slowness)
+    entity mon = M_ARGV(0, entity);
+
+	if(time < mon.spider_slowness)
 	{
-		monster_speed_run *= 0.5;
-		monster_speed_walk *= 0.5;
+		M_ARGV(1, float) *= 0.5; // run speed
+		M_ARGV(2, float) *= 0.5; // walk speed
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, PlayerSpawn)
 {
-    SELFPARAM();
-	self.spider_slowness = 0;
+	entity player = M_ARGV(0, entity);
+
+	player.spider_slowness = 0;
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spiderweb, MonsterSpawn)
 {
-    SELFPARAM();
-	self.spider_slowness = 0;
-	return false;
+    entity mon = M_ARGV(0, entity);
+
+	mon.spider_slowness = 0;
 }
 
 SOUND(SpiderAttack_FIRE, W_Sound("electro_fire"));
 METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity weaponentity, int fire))
 {
-    SELFPARAM();
     TC(SpiderAttack, thiswep);
     bool isPlayer = IS_PLAYER(actor);
     if (fire & 1)
@@ -118,7 +118,7 @@ METHOD(SpiderAttack, wr_think, void(SpiderAttack thiswep, entity actor, .entity 
     		actor.enemy = Monster_FindTarget(actor);
     		actor.attack_range = 60;
     	}
-    	Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? self.anim_melee : self.anim_shoot), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
+    	Monster_Attack_Melee(actor, actor.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? actor.anim_melee : actor.anim_shoot), actor.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER.m_id, true);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, 0, w_ready);
     }
 }
@@ -136,31 +136,32 @@ const float spider_anim_attack		= 2;
 const float spider_anim_attack2		= 3;
 */
 
-void M_Spider_Attack_Web_Explode()
-{SELFPARAM();
-	entity e;
-	if(self)
+void M_Spider_Attack_Web_Explode(entity this)
+{
+	if(this)
 	{
-		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
-		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
+		Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
+		RadiusDamage(this, this.realowner, 0, 0, 25, NULL, NULL, 25, this.projectiledeathtype, NULL);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && !IS_DEAD(e)) if(e.health > 0) if(e.monsterid != MON_SPIDER.monsterid)
-			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
+		FOREACH_ENTITY_RADIUS(this.origin, 25, it != this && it.takedamage && !IS_DEAD(it) && it.health > 0 && it.monsterid != MON_SPIDER.monsterid,
+		{
+			it.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
+		});
 
-		remove(self);
+		remove(this);
 	}
 }
 
 void M_Spider_Attack_Web_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, M_Spider_Attack_Web_Explode());
+	M_Spider_Attack_Web_Explode(this);
 }
 
 void M_Spider_Attack_Web_Touch(entity this)
 {
 	PROJECTILE_TOUCH(this);
 
-	M_Spider_Attack_Web_Explode();
+	M_Spider_Attack_Web_Explode(this);
 }
 
 void adaptor_think2use_hittype_splash(entity this);
@@ -233,10 +234,10 @@ METHOD(Spider, mr_think, bool(Spider this, entity actor))
     return true;
 }
 
-METHOD(Spider, mr_pain, bool(Spider this, entity actor))
+METHOD(Spider, mr_pain, float(Spider this, entity actor, float damage_take, entity attacker, float deathtype))
 {
     TC(Spider, this);
-    return true;
+    return damage_take;
 }
 
 METHOD(Spider, mr_death, bool(Spider this, entity actor))

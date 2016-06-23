@@ -2,7 +2,7 @@
 REGISTER_MUTATOR(superspec, cvar("g_superspectate"));
 
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
-#define _ISLOCAL ((edict_num(1) == self) ? true : false)
+#define _ISLOCAL(ent) ((edict_num(1) == (ent)) ? true : false)
 
 const float ASF_STRENGTH 		= BIT(0);
 const float ASF_SHIELD 			= BIT(1);
@@ -23,25 +23,25 @@ const float SSF_ITEMMSG = 4;
 
 .string superspec_itemfilter; //"classname1 classname2 ..."
 
-bool superspec_Spectate(entity _player)
-{SELFPARAM();
-	if(Spectate(_player) == 1)
-	    TRANSMUTE(Spectator, self);
+bool superspec_Spectate(entity this, entity targ)
+{
+	if(Spectate(this, targ) == 1)
+	    TRANSMUTE(Spectator, this);
 
 	return true;
 }
 
-void superspec_save_client_conf()
-{SELFPARAM();
+void superspec_save_client_conf(entity this)
+{
 	string fn = "superspec-local.options";
 	float fh;
 
-	if (!_ISLOCAL)
+	if (!_ISLOCAL(this))
 	{
-		if(self.crypto_idfp == "")
+		if(this.crypto_idfp == "")
 			return;
 
-		fn = sprintf("superspec-%s.options", uri_escape(self.crypto_idfp));
+		fn = sprintf("superspec-%s.options", uri_escape(this.crypto_idfp));
 	}
 
 	fh = fopen(fn, FILE_WRITE);
@@ -53,11 +53,11 @@ void superspec_save_client_conf()
 	{
 		fputs(fh, _SSMAGIX);
 		fputs(fh, "\n");
-		fputs(fh, ftos(self.autospec_flags));
+		fputs(fh, ftos(this.autospec_flags));
 		fputs(fh, "\n");
-		fputs(fh, ftos(self.superspec_flags));
+		fputs(fh, ftos(this.superspec_flags));
 		fputs(fh, "\n");
-		fputs(fh, self.superspec_itemfilter);
+		fputs(fh, this.superspec_itemfilter);
 		fputs(fh, "\n");
 		fclose(fh);
 	}
@@ -98,46 +98,47 @@ float superspec_filteritem(entity _for, entity _item)
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
-{SELFPARAM();
-	entity _item = self;
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
 
 	FOREACH_CLIENT(true, LAMBDA(
 		if(!IS_SPEC(it) && !IS_OBSERVER(it))
 			continue;
 		if(it.superspec_flags & SSF_ITEMMSG)
-			if(superspec_filteritem(it, _item))
+			if(superspec_filteritem(it, item))
 			{
 				if(it.superspec_flags & SSF_VERBOSE)
-					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n", other.netname, _item.netname), 1);
+					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n", toucher.netname, item.netname), 1);
 				else
-					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", other.netname, _item.netname, _item.classname), 1);
-				if((it.autospec_flags & ASF_SSIM) && it.enemy != other)
+					superspec_msg("", "", it, sprintf("Player %s^7 just picked up ^3%s\n^8(%s^8)\n", toucher.netname, item.netname, item.classname), 1);
+				if((it.autospec_flags & ASF_SSIM) && it.enemy != toucher)
 				{
-					WITHSELF(it, superspec_Spectate(other));
+					superspec_Spectate(it, toucher);
 					return MUT_ITEMTOUCH_CONTINUE;
 				}
 			}
 
-		if((it.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
-			(it.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
-			(it.autospec_flags & ASF_MEGA_AR && _item.itemdef == ITEM_ArmorMega) ||
-			(it.autospec_flags & ASF_MEGA_HP && _item.itemdef == ITEM_HealthMega) ||
-			(it.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
+		if((it.autospec_flags & ASF_SHIELD && item.invincible_finished) ||
+			(it.autospec_flags & ASF_STRENGTH && item.strength_finished) ||
+			(it.autospec_flags & ASF_MEGA_AR && item.itemdef == ITEM_ArmorMega) ||
+			(it.autospec_flags & ASF_MEGA_HP && item.itemdef == ITEM_HealthMega) ||
+			(it.autospec_flags & ASF_FLAG_GRAB && item.classname == "item_flag_team"))
 		{
 
-			if((it.enemy != other) || IS_OBSERVER(it))
+			if((it.enemy != toucher) || IS_OBSERVER(it))
 			{
 				if(it.autospec_flags & ASF_OBSERVER_ONLY && !IS_OBSERVER(it))
 				{
 					if(it.superspec_flags & SSF_VERBOSE)
-						superspec_msg("", "", it, sprintf("^8Ignored that ^7%s^8 grabbed %s^8 since the observer_only option is ON\n", other.netname, _item.netname), 2);
+						superspec_msg("", "", it, sprintf("^8Ignored that ^7%s^8 grabbed %s^8 since the observer_only option is ON\n", toucher.netname, item.netname), 2);
 				}
 				else
 				{
 					if(it.autospec_flags & ASF_SHOWWHAT)
-						superspec_msg("", "", it, sprintf("^7Following %s^7 due to picking up %s\n", other.netname, _item.netname), 2);
+						superspec_msg("", "", it, sprintf("^7Following %s^7 due to picking up %s\n", toucher.netname, item.netname), 2);
 
-					WITHSELF(it, superspec_Spectate(other));
+					superspec_Spectate(it, toucher);
 				}
 			}
 		}
@@ -147,16 +148,20 @@ MUTATOR_HOOKFUNCTION(superspec, ItemTouch)
 }
 
 MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
-{SELFPARAM();
+{
 #define OPTIONINFO(flag,var,test,text,long,short) \
     var = strcat(var, ((flag & test) ? "^2[ON]  ^7" : "^1[OFF] ^7")); \
     var = strcat(var, text," ^7(^3 ", long, "^7 | ^3", short, " ^7)\n")
 
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
 
-	if(IS_PLAYER(self))
-		return false;
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+	int cmd_argc = M_ARGV(2, int);
+
+	if(IS_PLAYER(player))
+		return;
 
 	if(cmd_name == "superspec_itemfilter")
 	{
@@ -166,24 +171,24 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 			_aspeco = "^7 superspec_itemfilter ^3\"item_classname1 item_classname2\"^7 only show thise items when ^2superspec ^3item_message^7 is on\n";
 			_aspeco = strcat(_aspeco, "^3 clear^7 Remove the filter (show all pickups)\n");
 			_aspeco = strcat(_aspeco, "^3 show ^7 Display current filter\n");
-			superspec_msg("^3superspec_itemfilter help:\n\n\n", "\n^3superspec_itemfilter help:\n", self, _aspeco, 1);
+			superspec_msg("^3superspec_itemfilter help:\n\n\n", "\n^3superspec_itemfilter help:\n", player, _aspeco, 1);
 		}
 		else if(argv(1) == "clear")
 		{
-			if(self.superspec_itemfilter != "")
-				strunzone(self.superspec_itemfilter);
+			if(player.superspec_itemfilter != "")
+				strunzone(player.superspec_itemfilter);
 
-			self.superspec_itemfilter = "";
+			player.superspec_itemfilter = "";
 		}
 		else if(argv(1) == "show" || argv(1) == "")
 		{
-			if(self.superspec_itemfilter == "")
+			if(player.superspec_itemfilter == "")
 			{
-				superspec_msg("^3superspec_itemfilter^7 is ^1not^7 set", "\n^3superspec_itemfilter^7 is ^1not^7 set\n", self, "", 1);
+				superspec_msg("^3superspec_itemfilter^7 is ^1not^7 set", "\n^3superspec_itemfilter^7 is ^1not^7 set\n", player, "", 1);
 				return true;
 			}
 			float i;
-			float l = tokenize_console(self.superspec_itemfilter);
+			float l = tokenize_console(player.superspec_itemfilter);
 			string _msg = "";
 			for(i = 0; i < l; ++i)
 				_msg = strcat(_msg, "^3#", ftos(i), " ^7", argv(i), "\n");
@@ -191,14 +196,14 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 
 			_msg = strcat(_msg,"\n");
 
-			superspec_msg("^3superspec_itemfilter is:\n\n\n", "\n^3superspec_itemfilter is:\n", self, _msg, 1);
+			superspec_msg("^3superspec_itemfilter is:\n\n\n", "\n^3superspec_itemfilter is:\n", player, _msg, 1);
 		}
 		else
 		{
-			if(self.superspec_itemfilter != "")
-				strunzone(self.superspec_itemfilter);
+			if(player.superspec_itemfilter != "")
+				strunzone(player.superspec_itemfilter);
 
-			self.superspec_itemfilter = strzone(argv(1));
+			player.superspec_itemfilter = strzone(argv(1));
 		}
 
 		return true;
@@ -218,13 +223,13 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 				_aspeco = strcat(_aspeco, "^3 verbose ^7(short^5 ve^7) makes superspectate print some additional information.\n");
 				_aspeco = strcat(_aspeco, "^3 item_message ^7(short^5 im^7) makes superspectate print items that were picked up.\n");
 				_aspeco = strcat(_aspeco, "^7    Use cmd superspec_itemfilter \"item_class1 item_class2\" to set up a filter of what to show with ^3item_message.\n");
-				superspec_msg("^2Available Super Spectate ^3options:\n\n\n", "\n^2Available Super Spectate ^3options:\n", self, _aspeco, 1);
+				superspec_msg("^2Available Super Spectate ^3options:\n\n\n", "\n^2Available Super Spectate ^3options:\n", player, _aspeco, 1);
 				return true;
 			}
 
 			if(argv(1) == "clear")
 			{
-				self.superspec_flags = 0;
+				player.superspec_flags = 0;
 				_start = 2;
 			}
 
@@ -232,13 +237,13 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 			{
 				if(argv(i) == "on" || argv(i) == "1")
 				{
-					self.superspec_flags |= _bits;
+					player.superspec_flags |= _bits;
 					_bits = 0;
 				}
 				else if(argv(i) == "off" || argv(i) == "0")
 				{
 					if(_start == 1)
-						self.superspec_flags &= ~_bits;
+						player.superspec_flags &= ~_bits;
 
 					_bits = 0;
 				}
@@ -252,11 +257,11 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 		}
 
 		_aspeco = "";
-		OPTIONINFO(self.superspec_flags, _aspeco, SSF_SILENT, "Silent", "silent", "si");
-		OPTIONINFO(self.superspec_flags, _aspeco, SSF_VERBOSE, "Verbose", "verbose", "ve");
-		OPTIONINFO(self.superspec_flags, _aspeco, SSF_ITEMMSG, "Item pickup messages", "item_message", "im");
+		OPTIONINFO(player.superspec_flags, _aspeco, SSF_SILENT, "Silent", "silent", "si");
+		OPTIONINFO(player.superspec_flags, _aspeco, SSF_VERBOSE, "Verbose", "verbose", "ve");
+		OPTIONINFO(player.superspec_flags, _aspeco, SSF_ITEMMSG, "Item pickup messages", "item_message", "im");
 
-		superspec_msg("^3Current Super Spectate options are:\n\n\n\n\n", "\n^3Current Super Spectate options are:\n", self, _aspeco, 1);
+		superspec_msg("^3Current Super Spectate options are:\n\n\n\n\n", "\n^3Current Super Spectate options are:\n", player, _aspeco, 1);
 
 		return true;
 	}
@@ -281,14 +286,14 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 				_aspeco = strcat(_aspeco, "^3 item_msg ^7(short^5 im^7) to autospec when item_message in superspectate is triggered\n");
 				_aspeco = strcat(_aspeco, "^3 followkiller ^7(short ^5fk^7) to autospec the killer/off\n");
 				_aspeco = strcat(_aspeco, "^3 all ^7(short ^5aa^7) to turn everything on/off\n");
-				superspec_msg("^2Available Auto Spectate ^3options:\n\n\n", "\n^2Available Auto Spectate ^3options:\n", self, _aspeco, 1);
+				superspec_msg("^2Available Auto Spectate ^3options:\n\n\n", "\n^2Available Auto Spectate ^3options:\n", player, _aspeco, 1);
 				return true;
 			}
 
 			float i, _bits = 0, _start = 1;
 			if(argv(1) == "clear")
 			{
-				self.autospec_flags = 0;
+				player.autospec_flags = 0;
 				_start = 2;
 			}
 
@@ -296,13 +301,13 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 			{
 				if(argv(i) == "on" || argv(i) == "1")
 				{
-					self.autospec_flags |= _bits;
+					player.autospec_flags |= _bits;
 					_bits = 0;
 				}
 				else if(argv(i) == "off" || argv(i) == "0")
 				{
 					if(_start == 1)
-						self.autospec_flags &= ~_bits;
+						player.autospec_flags &= ~_bits;
 
 					_bits = 0;
 				}
@@ -323,90 +328,88 @@ MUTATOR_HOOKFUNCTION(superspec, SV_ParseClientCommand)
 		}
 
 		_aspeco = "";
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_STRENGTH, "Strength", "strength", "st");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHIELD, "Shield", "shield", "sh");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_HP, "Mega Health", "mega_health", "mh");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_AR, "Mega Armor", "mega_armor", "ma");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_FLAG_GRAB, "Flag grab", "flag_grab","fg");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_OBSERVER_ONLY, "Only switch if observer", "observer_only", "oo");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHOWWHAT, "Show what item triggered spectate", "show_what", "sw");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SSIM, "Switch on superspec item message", "item_msg", "im");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_FOLLOWKILLER, "Followkiller", "followkiller", "fk");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_STRENGTH, "Strength", "strength", "st");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_SHIELD, "Shield", "shield", "sh");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_MEGA_HP, "Mega Health", "mega_health", "mh");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_MEGA_AR, "Mega Armor", "mega_armor", "ma");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_FLAG_GRAB, "Flag grab", "flag_grab","fg");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_OBSERVER_ONLY, "Only switch if observer", "observer_only", "oo");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_SHOWWHAT, "Show what item triggered spectate", "show_what", "sw");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_SSIM, "Switch on superspec item message", "item_msg", "im");
+		OPTIONINFO(player.autospec_flags, _aspeco, ASF_FOLLOWKILLER, "Followkiller", "followkiller", "fk");
 
-		superspec_msg("^3Current auto spectate options are:\n\n\n\n\n", "\n^3Current auto spectate options are:\n", self, _aspeco, 1);
+		superspec_msg("^3Current auto spectate options are:\n\n\n\n\n", "\n^3Current auto spectate options are:\n", player, _aspeco, 1);
 		return true;
 	}
 
 	if(cmd_name == "followpowerup")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && (it.strength_finished > time || it.invincible_finished > time), LAMBDA(return superspec_Spectate(it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && (it.strength_finished > time || it.invincible_finished > time), LAMBDA(return superspec_Spectate(player, it)));
 
-		superspec_msg("", "", self, "No active powerup\n", 1);
+		superspec_msg("", "", player, "No active powerup\n", 1);
 		return true;
 	}
 
 	if(cmd_name == "followstrength")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it.strength_finished > time, LAMBDA(return superspec_Spectate(it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.strength_finished > time, LAMBDA(return superspec_Spectate(player, it)));
 
-		superspec_msg("", "", self, "No active Strength\n", 1);
+		superspec_msg("", "", player, "No active Strength\n", 1);
 		return true;
 	}
 
 	if(cmd_name == "followshield")
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it.invincible_finished > time, LAMBDA(return superspec_Spectate(it)));
+		FOREACH_CLIENT(IS_PLAYER(it) && it.invincible_finished > time, LAMBDA(return superspec_Spectate(player, it)));
 
-		superspec_msg("", "", self, "No active Shield\n", 1);
+		superspec_msg("", "", player, "No active Shield\n", 1);
 		return true;
 	}
-
-	return false;
 #undef OPTIONINFO
 }
 
 MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":SS");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":SS");
 }
 
 MUTATOR_HOOKFUNCTION(superspec, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Super Spectators");
-	return 0;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Super Spectators");
 }
 
 void superspec_hello(entity this)
 {
-	if(self.enemy.crypto_idfp == "")
-		Send_Notification(NOTIF_ONE_ONLY, self.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
+	if(this.enemy.crypto_idfp == "")
+		Send_Notification(NOTIF_ONE_ONLY, this.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
-	remove(self);
+	remove(this);
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
-{SELFPARAM();
-	if(!IS_REAL_CLIENT(self))
-		return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	if(!IS_REAL_CLIENT(player))
+		return;
 
 	string fn = "superspec-local.options";
 	float fh;
 
-	self.superspec_flags = SSF_VERBOSE;
-	self.superspec_itemfilter = "";
+	player.superspec_flags = SSF_VERBOSE;
+	player.superspec_itemfilter = "";
 
 	entity _hello = spawn();
-	_hello.enemy = self;
+	_hello.enemy = player;
 	setthink(_hello, superspec_hello);
 	_hello.nextthink = time + 5;
 
-	if (!_ISLOCAL)
+	if (!_ISLOCAL(player))
 	{
-		if(self.crypto_idfp == "")
-			return false;
+		if(player.crypto_idfp == "")
+			return;
 
-		fn = sprintf("superspec-%s.options", uri_escape(self.crypto_idfp));
+		fn = sprintf("superspec-%s.options", uri_escape(player.crypto_idfp));
 	}
 
 	fh = fopen(fn, FILE_READ);
@@ -423,34 +426,34 @@ MUTATOR_HOOKFUNCTION(superspec, ClientConnect)
 		}
 		else
 		{
-			self.autospec_flags = stof(fgets(fh));
-			self.superspec_flags = stof(fgets(fh));
-			self.superspec_itemfilter = strzone(fgets(fh));
+			player.autospec_flags = stof(fgets(fh));
+			player.superspec_flags = stof(fgets(fh));
+			player.superspec_itemfilter = strzone(fgets(fh));
 		}
 		fclose(fh);
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(superspec, PlayerDies)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	FOREACH_CLIENT(IS_SPEC(it), LAMBDA(
 		if(it.autospec_flags & ASF_FOLLOWKILLER && IS_PLAYER(frag_attacker) && it.enemy == frag_target)
 		{
 			if(it.autospec_flags & ASF_SHOWWHAT)
 				superspec_msg("", "", it, sprintf("^7Following %s^7 due to followkiller\n", frag_attacker.netname), 2);
 
-			WITHSELF(it, superspec_Spectate(frag_attacker));
+			superspec_Spectate(it, frag_attacker);
 		}
 	));
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(superspec, ClientDisconnect)
 {
-	superspec_save_client_conf();
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	superspec_save_client_conf(player);
 }
 #endif

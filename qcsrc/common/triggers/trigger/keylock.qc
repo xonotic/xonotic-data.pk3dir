@@ -3,7 +3,7 @@
  */
 void trigger_keylock_trigger(entity this, entity actor, string s)
 {
-	for(entity t = world; (t = find(t, targetname, s)); )
+	for(entity t = NULL; (t = find(t, targetname, s)); )
 		if(t.use)
 			t.use(t, actor, this);
 }
@@ -14,7 +14,7 @@ void trigger_keylock_trigger(entity this, entity actor, string s)
 void trigger_keylock_kill(string s)
 {
 	entity t;
-	for(t = world; (t = find(t, targetname, s)); )
+	for(t = NULL; (t = find(t, targetname, s)); )
 		remove(t);
 }
 
@@ -28,53 +28,53 @@ void trigger_keylock_touch(entity this)
 		return;
 
 	// check silver key
-	if(self.itemkeys)
-		key_used = item_keys_usekey(self, other);
+	if(this.itemkeys)
+		key_used = item_keys_usekey(this, other);
 
-	if(self.itemkeys)
+	if(this.itemkeys)
 	{
 #ifdef SVQC
 		// at least one of the keys is missing
 		if(key_used)
 		{
 			// one or more keys were given, but others are still missing!
-			play2(other, self.noise1);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(self.itemkeys));
+			play2(other, this.noise1);
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(this.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 		else if(other.key_door_messagetime <= time)
 		{
 			// no keys were given
-			play2(other, self.noise2);
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(self.itemkeys));
+			play2(other, this.noise2);
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(this.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 #endif
 
 		// trigger target2
-		if(self.delay <= time || started_delay == true)
-		if(self.target2)
+		if(this.delay <= time || started_delay == true)
+		if(this.target2)
 		{
-			trigger_keylock_trigger(this, other, self.target2);
+			trigger_keylock_trigger(this, other, this.target2);
 			started_delay = true;
-			self.delay = time + self.wait;
+			this.delay = time + this.wait;
 		}
 	}
 	else
 	{
 #ifdef SVQC
 		// all keys were given!
-		play2(other, self.noise);
-		centerprint(other, self.message);
+		play2(other, this.noise);
+		centerprint(other, this.message);
 #endif
 
-		if(self.target)
-			trigger_keylock_trigger(this, other, self.target);
+		if(this.target)
+			trigger_keylock_trigger(this, other, this.target);
 
-		if(self.killtarget)
-			trigger_keylock_kill(self.killtarget);
+		if(this.killtarget)
+			trigger_keylock_kill(this.killtarget);
 
-		remove(self);
+		remove(this);
 	}
 
 }

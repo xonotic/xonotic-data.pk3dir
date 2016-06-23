@@ -10,7 +10,7 @@ void CheatInit();
 void CheatShutdown();
 float CheatImpulse(entity this, int imp);
 float CheatCommand(entity this, int argc);
-float CheatFrame();
+float CheatFrame(entity this);
 
 const float CHRAME_DRAG = 8;
 

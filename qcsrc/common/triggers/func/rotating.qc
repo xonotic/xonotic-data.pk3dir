@@ -65,7 +65,7 @@ spawnfunc(func_rotating)
 		return;
 	// no EF_LOWPRECISION here, as rounding angles is bad
 
-    this.blocked = generic_plat_blocked;
+    setblocked(this, generic_plat_blocked);
 
 	// wait for targets to spawn
 	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;

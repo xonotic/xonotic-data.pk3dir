@@ -9,7 +9,7 @@
 	class(Defer).entity owner;
 	class(Defer).void(entity) defer_func;
 
-	/** Remove self */
+	/** Remove entity */
 	void SUB_Remove(entity this)
 	{
 		remove(this);

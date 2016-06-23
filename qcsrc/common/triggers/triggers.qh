@@ -16,7 +16,7 @@ const float	SPAWNFLAG_NOTOUCH = 1;
 .float height;
 
 .float nottargeted;
-#define IFTARGETED if(!self.nottargeted && self.targetname != "")
+#define IFTARGETED if(!this.nottargeted && this.targetname != "")
 
 .float lip;
 

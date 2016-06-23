@@ -86,15 +86,15 @@ void deactivate_minigame()
 		return;
 
 	active_minigame.minigame_event(active_minigame,"deactivate");
-	entity e = world;
+	entity e = NULL;
 	while( (e = findentity(e, owner, active_minigame)) )
 		if ( e.minigame_autoclean )
 		{
 			minigame_autoclean_entity(e);
 		}
 
-	minigame_self = world;
-	active_minigame = world;
+	minigame_self = NULL;
+	active_minigame = NULL;
 
 	if ( auto_close_minigamemenu )
 	{
@@ -134,7 +134,7 @@ void activate_minigame(entity minigame)
 	}
 
 	if ( minigame_self.owner != minigame )
-		minigame_self = world;
+		minigame_self = NULL;
 	active_minigame = minigame;
 	active_minigame.minigame_event(active_minigame,"activate");
 
@@ -160,16 +160,16 @@ string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define MSLE(Name,Fields) \
 	else if ( this.classname == #Name ) { \
 		if ( sf & MINIG_SF_CREATE ) { \
-			minigame_read_owner(); \
+			minigame_read_owner(this); \
 			this.entremove = msle_entremove_##Name; \
 		} \
 		minigame_ent = this.owner; \
 		Fields \
 	}
-void minigame_read_owner()
-{SELFPARAM();
+void minigame_read_owner(entity this)
+{
 	string owner_name = ReadString_Raw();
-	this.owner = world;
+	this.owner = NULL;
 	do
 		this.owner = find(this.owner,netname,owner_name);
 	while ( this.owner && this.owner.classname != "minigame" );
@@ -185,7 +185,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 		this.netname = ReadString_Zoned();
 	}
 
-	entity minigame_ent = world;
+	entity minigame_ent = NULL;
 
 	if ( this.classname == "minigame" )
 	{
@@ -209,7 +209,7 @@ NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 		if ( sf & MINIG_SF_CREATE )
 		{
 			this.entremove = minigame_player_entremove;
-			minigame_read_owner();
+			minigame_read_owner(this);
 			float ent = ReadLong();
 			this.minigame_playerslot = ent;
 			LOG_DEBUG("Player: ",entcs_GetName(ent-1),"\n");

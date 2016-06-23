@@ -87,19 +87,19 @@ void Casing_Touch(entity this)
 {
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
     {
-        Casing_Delete(self);
+        Casing_Delete(this);
         return;
     }
 
-    if (!self.silent)
+    if (!this.silent)
     if (!trace_ent || trace_ent.solid == SOLID_BSP)
     {
-        if(vdist(self.velocity, >, 50))
+        if(vdist(this.velocity, >, 50))
         {
-            if (time >= self.nextthink)
+            if (time >= this.nextthink)
             {
                 Sound s;
-                switch (self.state)
+                switch (this.state)
                 {
                     case 1:
                         s = SND_CASINGS_RANDOM();
@@ -109,12 +109,12 @@ void Casing_Touch(entity this)
                         break;
                 }
 
-                sound (self, CH_SHOTS, s, VOL_BASE, ATTEN_LARGE);
+                sound (this, CH_SHOTS, s, VOL_BASE, ATTEN_LARGE);
             }
         }
     }
 
-    self.nextthink = time + 0.2;
+    this.nextthink = time + 0.2;
 }
 
 void Casing_Damage(entity this, float thisdmg, int hittype, vector org, vector thisforce)

@@ -51,7 +51,7 @@ NET_HANDLE(ENT_CLIENT_AUXILIARYXHAIR, bool isnew)
 	int axh_id	= bound(0, ReadByte(), MAX_AXH);
 	entity axh 		= AuxiliaryXhair[axh_id];
 
-	if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 	{
 		axh					= spawn();
 		axh.draw2d			= func_null;
@@ -92,7 +92,7 @@ NET_HANDLE(TE_CSQC_VEHICLESETUP, bool isnew)
 	{
 		entity axh = AuxiliaryXhair[i];
 
-		if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+		if(axh != NULL && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
 			remove(axh);
 
 		axh              = spawn();
@@ -124,7 +124,6 @@ void Vehicles_drawHUD(
 	string iconAmmo2,
 	vector colorAmmo2)
 {
-	SELFPARAM();
 	// Initialize
 	vector tmpSize = '0 0 0';
 	vector tmpPos  = '0 0 0';
@@ -232,7 +231,7 @@ void Vehicles_drawHUD(
 		if(alarm1time < time)
 		{
 			alarm1time = time + 2;
-			vehicle_alarm(self, CH_PAIN_SINGLE, SND_VEH_ALARM);
+			vehicle_alarm(NULL, CH_PAIN_SINGLE, SND_VEH_ALARM);
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -240,7 +239,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm1time)
 		{
-			vehicle_alarm(self, CH_PAIN_SINGLE, SND_Null);
+			vehicle_alarm(NULL, CH_PAIN_SINGLE, SND_Null);
 			alarm1time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_health", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);
@@ -254,7 +253,7 @@ void Vehicles_drawHUD(
 		if(alarm2time < time)
 		{
 			alarm2time = time + 1;
-			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND_VEH_ALARM_SHIELD);
+			vehicle_alarm(NULL, CH_TRIGGER_SINGLE, SND_VEH_ALARM_SHIELD);
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha * blinkValue, DRAWFLAG_NORMAL);
 	}
@@ -262,7 +261,7 @@ void Vehicles_drawHUD(
 	{
 		if(alarm2time)
 		{
-			vehicle_alarm(self, CH_TRIGGER_SINGLE, SND_Null);
+			vehicle_alarm(NULL, CH_TRIGGER_SINGLE, SND_Null);
 			alarm2time = 0;
 		}
 		drawpic_skin(tmpPos, "vehicle_icon_shield", tmpSize, '1 1 1', hudAlpha, DRAWFLAG_NORMAL);

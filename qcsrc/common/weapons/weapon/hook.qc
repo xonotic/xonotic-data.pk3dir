@@ -83,44 +83,44 @@ void W_Hook_ExplodeThink(entity this)
 {
 	float dt, dmg_remaining_next, f;
 
-	dt = time - self.teleport_time;
-	dmg_remaining_next = pow(bound(0, 1 - dt / self.dmg_duration, 1), self.dmg_power);
+	dt = time - this.teleport_time;
+	dmg_remaining_next = pow(bound(0, 1 - dt / this.dmg_duration, 1), this.dmg_power);
 
-	f = self.dmg_last - dmg_remaining_next;
-	self.dmg_last = dmg_remaining_next;
+	f = this.dmg_last - dmg_remaining_next;
+	this.dmg_last = dmg_remaining_next;
 
-	RadiusDamage(self, self.realowner, self.dmg * f, self.dmg_edge * f, self.dmg_radius, self.realowner, world, self.dmg_force * f, self.projectiledeathtype, world);
-	self.projectiledeathtype |= HITTYPE_BOUNCE;
-	//RadiusDamage(self, world, self.dmg * f, self.dmg_edge * f, self.dmg_radius, world, world, self.dmg_force * f, self.projectiledeathtype, world);
+	RadiusDamage(this, this.realowner, this.dmg * f, this.dmg_edge * f, this.dmg_radius, this.realowner, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
+	this.projectiledeathtype |= HITTYPE_BOUNCE;
+	//RadiusDamage(this, NULL, this.dmg * f, this.dmg_edge * f, this.dmg_radius, NULL, NULL, this.dmg_force * f, this.projectiledeathtype, NULL);
 
-	if(dt < self.dmg_duration)
-		self.nextthink = time + 0.05; // soon
+	if(dt < this.dmg_duration)
+		this.nextthink = time + 0.05; // soon
 	else
-		remove(self);
+		remove(this);
 }
 
 void W_Hook_Explode2(entity this)
 {
-	self.event_damage = func_null;
-	settouch(self, func_null);
-	self.effects |= EF_NODRAW;
+	this.event_damage = func_null;
+	settouch(this, func_null);
+	this.effects |= EF_NODRAW;
 
-	setthink(self, W_Hook_ExplodeThink);
-	self.nextthink = time;
-	self.dmg = WEP_CVAR_SEC(hook, damage);
-	self.dmg_edge = WEP_CVAR_SEC(hook, edgedamage);
-	self.dmg_radius = WEP_CVAR_SEC(hook, radius);
-	self.dmg_force = WEP_CVAR_SEC(hook, force);
-	self.dmg_power = WEP_CVAR_SEC(hook, power);
-	self.dmg_duration = WEP_CVAR_SEC(hook, duration);
-	self.teleport_time = time;
-	self.dmg_last = 1;
-	self.movetype = MOVETYPE_NONE;
+	setthink(this, W_Hook_ExplodeThink);
+	this.nextthink = time;
+	this.dmg = WEP_CVAR_SEC(hook, damage);
+	this.dmg_edge = WEP_CVAR_SEC(hook, edgedamage);
+	this.dmg_radius = WEP_CVAR_SEC(hook, radius);
+	this.dmg_force = WEP_CVAR_SEC(hook, force);
+	this.dmg_power = WEP_CVAR_SEC(hook, power);
+	this.dmg_duration = WEP_CVAR_SEC(hook, duration);
+	this.teleport_time = time;
+	this.dmg_last = 1;
+	this.movetype = MOVETYPE_NONE;
 }
 
 void W_Hook_Explode2_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, W_Hook_Explode2(this));
+	W_Hook_Explode2(this);
 }
 
 void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -215,7 +215,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     if(actor.hook)
     {
         // if hooked, no bombs, and increase the timer
-        actor.hook_refire = max(actor.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor());
+        actor.hook_refire = max(actor.hook_refire, time + WEP_CVAR_PRI(hook, refire) * W_WeaponRateFactor(actor));
 
         // hook also inhibits health regeneration, but only for 1 second
         if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -266,9 +266,9 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
     {
         if (actor.hook)
             RemoveGrapplingHook(actor);
-        WITHSELF(actor, FireGrapplingHook());
+        FireGrapplingHook(actor);
         actor.hook_state &= ~HOOK_FIRING;
-        actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
+        actor.hook_refire = max(actor.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor(actor));
     }
     else if (actor.hook_state & HOOK_REMOVING)
     {
@@ -279,8 +279,7 @@ METHOD(Hook, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(Hook, wr_setup, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
+    actor.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 }
 METHOD(Hook, wr_checkammo1, bool(Hook thiswep, entity actor))
 {
@@ -297,10 +296,9 @@ METHOD(Hook, wr_checkammo2, bool(Hook thiswep, entity actor))
 }
 METHOD(Hook, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    RemoveGrapplingHook(self);
-    self.hook_time = 0;
-    self.hook_refire = time;
+    RemoveGrapplingHook(actor);
+    actor.hook_time = 0;
+    actor.hook_refire = time;
 }
 METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 {
@@ -312,12 +310,11 @@ METHOD(Hook, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Hook, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_HOOK_EXPLODE, org2, '0 0 0', 1);
     if(!w_issilent)
-        sound(self, CH_SHOTS, SND_HOOKBOMB_IMPACT, VOL_BASE, ATTN_NORM);
+        sound(actor, CH_SHOTS, SND_HOOKBOMB_IMPACT, VOL_BASE, ATTN_NORM);
 }
 
 #endif
@@ -370,7 +367,7 @@ void Draw_GrapplingHook(entity this)
 
 	InterpolateOrigin_Do(this);
 
-	int s = W_GetGunAlignment(world);
+	int s = W_GetGunAlignment(NULL);
 
 	switch(this.HookType)
 	{
@@ -397,7 +394,7 @@ void Draw_GrapplingHook(entity this)
 					b = view_origin + view_forward * this.HookRange;
 				else
 					b = view_origin + view_forward * vlen(this.velocity - this.origin); // honor original length of beam!
-				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, world);
+				WarpZone_TraceLine(view_origin, b, MOVE_NORMAL, NULL);
 				b = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 				a = view_origin + view_forward * vs.x + view_right * -vs.y + view_up * vs.z;
 				break;
@@ -448,7 +445,7 @@ void Draw_GrapplingHook(entity this)
 	Draw_GrapplingHook_trace_callback_rnd = offset;
 	Draw_GrapplingHook_trace_callback_rgb = rgb;
 	Draw_GrapplingHook_trace_callback_a = intensity;
-	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((this.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), world, world, Draw_GrapplingHook_trace_callback);
+	WarpZone_TraceBox_ThroughZone(a, '0 0 0', '0 0 0', b, ((this.HookType == NET_ENT_CLIENT_HOOK) ? MOVE_NOTHING : MOVE_NORMAL), NULL, NULL, Draw_GrapplingHook_trace_callback);
 	Draw_GrapplingHook_trace_callback_tex = string_null;
 
 	atrans = WarpZone_TransformOrigin(WarpZone_trace_transform, a);

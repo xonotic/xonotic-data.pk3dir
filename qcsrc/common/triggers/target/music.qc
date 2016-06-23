@@ -39,9 +39,9 @@ void target_music_kill()
 	FOREACH_ENTITY_CLASS("target_music", true, {
 		it.volume = 0;
         if (it.targetname == "")
-            WITHSELF(it, target_music_sendto(it, MSG_ALL, 1));
+            target_music_sendto(it, MSG_ALL, 1);
         else
-            WITHSELF(it, target_music_sendto(it, MSG_ALL, 0));
+            target_music_sendto(it, MSG_ALL, 0);
 	});
 }
 void target_music_use(entity this, entity actor, entity trigger)
@@ -71,13 +71,13 @@ spawnfunc(target_music)
 }
 void TargetMusic_RestoreGame()
 {
-	for(entity e = world; (e = find(e, classname, "target_music")); )
+	FOREACH_ENTITY_CLASS("target_music", true,
 	{
-		if(e.targetname == "")
-			target_music_sendto(e, MSG_INIT, 1);
+		if(it.targetname == "")
+			target_music_sendto(it, MSG_INIT, 1);
 		else
-			target_music_sendto(e, MSG_INIT, 0);
-	}
+			target_music_sendto(it, MSG_INIT, 0);
+	});
 }
 // values:
 //   volume
@@ -188,7 +188,7 @@ void TargetMusic_Advance()
 			it.lastvol = vol;
 		}
 	});
-	music_trigger = world;
+	music_trigger = NULL;
 	bgmtime = (best) ? getsoundtime(best, CH_BGM_SINGLE) : gettime(GETTIME_CDTRACK);
 }
 
@@ -254,18 +254,18 @@ void Net_TargetMusic()
 
 void Ent_TriggerMusic_Think(entity this)
 {
-	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, self, world))
+	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, this, NULL))
 	{
-		music_trigger = self;
+		music_trigger = this;
 	}
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
-void Ent_TriggerMusic_Remove()
-{SELFPARAM();
-	if(self.noise)
-		strunzone(self.noise);
-	self.noise = string_null;
+void Ent_TriggerMusic_Remove(entity this)
+{
+	if(this.noise)
+		strunzone(this.noise);
+	this.noise = string_null;
 }
 
 NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)

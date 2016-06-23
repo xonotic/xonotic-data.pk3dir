@@ -387,10 +387,10 @@ void HUD_Reset()
 		HUD_Mod_CTF_Reset();
 }
 
-float autocvar_hud_dynamic_shake;
-float autocvar_hud_dynamic_shake_damage_max;
-float autocvar_hud_dynamic_shake_damage_min;
-float autocvar_hud_dynamic_shake_scale;
+float autocvar_hud_dynamic_shake = 1;
+float autocvar_hud_dynamic_shake_damage_max = 130;
+float autocvar_hud_dynamic_shake_damage_min = 10;
+float autocvar_hud_dynamic_shake_scale = 0.2;
 float hud_dynamic_shake_x[10] = {0,    1, -0.7,  0.5, -0.3,  0.2, -0.1,  0.1,  0.0, 0};
 float hud_dynamic_shake_y[10] = {0,  0.4,  0.8, -0.2, -0.6,  0.0,  0.3,  0.1, -0.1, 0};
 bool Hud_Shake_Update()
@@ -446,12 +446,15 @@ void Hud_Dynamic_Frame()
 
 	if(autocvar_hud_dynamic_shake > 0)
 	{
+		static float old_health = 0;
+		float health = max(-1, STAT(HEALTH));
 		if(hud_dynamic_shake_factor == -1) // don't allow the effect for this frame
+		{
 			hud_dynamic_shake_factor = 0;
+			old_health = health;
+		}
 		else
 		{
-			static float old_health = 0;
-			float health = max(-1, STAT(HEALTH));
 			float new_hud_dynamic_shake_factor = 0;
 			if (old_health - health >= autocvar_hud_dynamic_shake_damage_min
 				&& autocvar_hud_dynamic_shake_damage_max > autocvar_hud_dynamic_shake_damage_min

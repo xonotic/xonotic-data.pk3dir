@@ -81,7 +81,7 @@ void relocate_spawnpoint(entity this)
         this.mins = PL_MIN_CONST;
         this.maxs = PL_MAX_CONST;
         if (!move_out_of_solid(this))
-            objerror("could not get out of solid at all!");
+            objerror(this, "could not get out of solid at all!");
         LOG_INFO("^1NOTE: this map needs FIXING. Spawnpoint at ", vtos(o - '0 0 1'));
         LOG_INFO(" needs to be moved out of solid, e.g. by '", ftos(this.origin.x - o.x));
         LOG_INFO(" ", ftos(this.origin.y - o.y));
@@ -96,7 +96,7 @@ void relocate_spawnpoint(entity this)
         {
             setorigin(this, o);
             this.mins = this.maxs = '0 0 0';
-            objerror("player spawn point in solid, mapper sucks!\n");
+            objerror(this, "player spawn point in solid, mapper sucks!\n");
             return;
         }
     }
@@ -246,25 +246,22 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
-	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
-	spawn_spot = spot;
+	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
-	if(spot.target != "") {
-		entity ent;
-		float found;
-
-		found = 0;
-		for(ent = world; (ent = find(ent, targetname, spot.target)); )
+	if(spot.target != "")
+	{
+		int found = 0;
+		FOREACH_ENTITY_STRING(targetname, spot.target,
 		{
 			++found;
-			if(ent.spawn_evalfunc)
+			if(it.spawn_evalfunc)
 			{
-				spawn_score = ent.spawn_evalfunc(ent, this, spot, spawn_score);
+				spawn_score = it.spawn_evalfunc(it, this, spot, spawn_score);
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}
-		}
+		});
 
 		if(!found)
 		{
@@ -273,7 +270,8 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 		}
 	}
 
-	MUTATOR_CALLHOOK(Spawn_Score, this, spawn_spot, spawn_score);
+	MUTATOR_CALLHOOK(Spawn_Score, this, spot, spawn_score);
+	spawn_score = M_ARGV(2, vector);
 	return spawn_score;
 }
 
@@ -288,8 +286,8 @@ entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, flo
 {
 	entity spot, spotlist, spotlistend;
 
-	spotlist = world;
-	spotlistend = world;
+	spotlist = NULL;
+	spotlistend = NULL;
 
 	Spawn_ScoreAll(this, firstspot, mindist, teamcheck);
 
@@ -305,7 +303,7 @@ entity Spawn_FilterOutBadSpots(entity this, entity firstspot, float mindist, flo
 		}
 	}
 	if(spotlistend)
-		spotlistend.chain = world;
+		spotlistend.chain = NULL;
 
 	return spotlist;
 }
@@ -335,7 +333,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 	float teamcheck;
 	entity spot, firstspot;
 
-	spot = find (world, classname, "testplayerstart");
+	spot = find (NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
@@ -392,7 +390,7 @@ entity SelectSpawnPoint(entity this, bool anypoint)
 		else
 		{
 			if(some_spawn_has_been_used)
-				return world; // team can't spawn any more, because of actions of other team
+				return NULL; // team can't spawn any more, because of actions of other team
 			else
 				error("Cannot find a spawn point - please fix the map!");
 		}

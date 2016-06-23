@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 
-entity toast(entity from, float range, float damage);
+entity toast(entity actor, entity from, float range, float damage);
 SOUND(TeslaCoilTurretAttack_FIRE, W_Sound("electro_fire"));
 METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -22,11 +22,11 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
         float d = actor.shot_dmg;
         float r = actor.target_range;
         entity e = spawn();
-        setorigin(e,actor.tur_shotorg);
+        setorigin(e, actor.tur_shotorg);
 
         actor.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK;
 
-        entity t = toast(e,r,d);
+        entity t = toast(actor, e,r,d);
         remove(e);
 
         if (t == NULL) return;
@@ -37,8 +37,8 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
         for (int i = 0; i < 10; ++i) {
             d *= 0.75;
             r *= 0.85;
-            t = toast(t, r, d);
-            if (t == world) break;
+            t = toast(actor, t, r, d);
+            if (t == NULL) break;
 
         }
 
@@ -51,10 +51,10 @@ METHOD(TeslaCoilTurretAttack, wr_think, void(entity thiswep, entity actor, .enti
     }
 }
 
-entity toast(entity from, float range, float damage)
-{SELFPARAM();
+entity toast(entity actor, entity from, float range, float damage)
+{
     entity e;
-    entity etarget = world;
+    entity etarget = NULL;
     float d,dd;
     float r;
 
@@ -65,7 +65,7 @@ entity toast(entity from, float range, float damage)
     {
         if ((e.railgunhit != 1) && (e != from))
         {
-            r = turret_validate_target(self,e,self.target_validate_flags);
+            r = turret_validate_target(actor,e,actor.target_validate_flags);
             if (r > 0)
             {
                 traceline(from.origin,0.5 * (e.absmin + e.absmax),MOVE_WORLDONLY,from);
@@ -86,7 +86,7 @@ entity toast(entity from, float range, float damage)
     if (etarget)
     {
         te_csqc_lightningarc(from.origin,etarget.origin);
-        Damage(etarget, self, self, damage, DEATH_TURRET_TESLA.m_id, etarget.origin, '0 0 0');
+        Damage(etarget, actor, actor, damage, DEATH_TURRET_TESLA.m_id, etarget.origin, '0 0 0');
         etarget.railgunhit = 1;
     }
 

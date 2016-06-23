@@ -15,28 +15,28 @@ void func_fourier_controller_think(entity this)
 	vector v;
 	float n, i, t;
 
-	self.nextthink = time + 0.1;
-	if(self.owner.active != ACTIVE_ACTIVE)
+	this.nextthink = time + 0.1;
+	if(this.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';
+		this.owner.velocity = '0 0 0';
 		return;
 	}
 
 
-	n = floor((tokenize_console(self.owner.netname)) / 5);
-	t = self.nextthink * self.owner.cnt + self.owner.phase * 360;
+	n = floor((tokenize_console(this.owner.netname)) / 5);
+	t = this.nextthink * this.owner.cnt + this.owner.phase * 360;
 
-	v = self.owner.destvec;
+	v = this.owner.destvec;
 
 	for(i = 0; i < n; ++i)
 	{
 		makevectors((t * stof(argv(i*5)) + stof(argv(i*5+1)) * 360) * '0 1 0');
-		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * self.owner.height * v_forward_y;
+		v = v + ('1 0 0' * stof(argv(i*5+2)) + '0 1 0' * stof(argv(i*5+3)) + '0 0 1' * stof(argv(i*5+4))) * this.owner.height * v_forward_y;
 	}
 
-	if(self.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed
+	if(this.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.velocity = (v - self.owner.origin) * 10;
+		this.owner.velocity = (v - this.owner.origin) * 10;
 }
 
 spawnfunc(func_fourier)
@@ -55,7 +55,7 @@ spawnfunc(func_fourier)
 	this.destvec = this.origin;
 	this.cnt = 360 / this.speed;
 
-	this.blocked = generic_plat_blocked;
+	setblocked(this, generic_plat_blocked);
 	if(this.dmg && (this.message == ""))
 		this.message = " was squished";
     if(this.dmg && (this.message2 == ""))

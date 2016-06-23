@@ -37,14 +37,14 @@ spawnfunc(info_teleport_destination)
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 
-	//setorigin (this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
-	setorigin (this, this.origin);
+	//setorigin(this, this.origin + '0 0 27');	// To fix a mappers' habit as old as Quake
+	setorigin(this, this.origin);
 
 	IFTARGETED
 	{
 	}
 	else
-		objerror ("^3Teleport destination without a targetname");
+		objerror (this, "^3Teleport destination without a targetname");
 
 	teleport_dest_link(this);
 }

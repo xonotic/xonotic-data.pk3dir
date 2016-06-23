@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 CPP=${CPP:-cpp}
 QCC=${QCC:-$PWD/../../gmqcc/gmqcc${CMAKE_EXECUTABLE_SUFFIX}}
 case $1 in

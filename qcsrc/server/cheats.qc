@@ -33,7 +33,7 @@ void CopyBody(entity this, float keepvelocity);
 
 float CheatImpulse(entity this, int imp) { return 0; }
 float CheatCommand(entity this, int argc) { return 0; }
-float CheatFrame() { return 0; }
+float CheatFrame(entity this) { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
 void CheatShutdown() { }
 void Drag_MoveDrag(entity from, entity to) { }
@@ -107,10 +107,10 @@ float num_autoscreenshot;
 void info_autoscreenshot_findtarget(entity this)
 {
 	entity e;
-	e = find(world, targetname, this.target);
+	e = find(NULL, targetname, this.target);
 	if(!e)
 	{
-		objerror("Missing target. FAIL!");
+		objerror(this, "Missing target. FAIL!");
 		return;
 	}
 	vector a = vectoangles(e.origin - this.origin);
@@ -123,7 +123,7 @@ spawnfunc(info_autoscreenshot)
 {
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
 	{
-		objerror("Too many info_autoscreenshot entitites. FAIL!");
+		objerror(this, "Too many info_autoscreenshot entitites. FAIL!");
 		return;
 	}
 	if(this.target != "")
@@ -234,7 +234,7 @@ float CheatImpulse(entity this, int imp)
 			IS_CHEAT(this, imp, 0, 0);
 			if(this.movetype == MOVETYPE_NOCLIP)
 			{
-				e = find(world, classname, "info_autoscreenshot");
+				e = find(NULL, classname, "info_autoscreenshot");
 				if(e)
 				{
 					sprint(this, "Emergency teleport used info_autoscreenshot location\n");
@@ -273,7 +273,7 @@ float CheatImpulse(entity this, int imp)
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, this, 1000, 0, 128, world, world, 500, DEATH_CHEAT.m_id, e);
+			RadiusDamage(e2, this, 1000, 0, 128, NULL, NULL, 500, DEATH_CHEAT.m_id, e);
 			remove(e2);
 
 			LOG_INFO("404 Sportsmanship not found.\n");
@@ -295,7 +295,6 @@ float CheatCommand(entity this, int argc)
 	{
 		float effectnum, f;
 		vector start, end;
-		entity oldself;
 
 		case "pointparticles":
 			IS_CHEAT(this, 0, argc, 0);
@@ -358,7 +357,7 @@ float CheatCommand(entity this, int argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					WITHSELF(e, spawnfunc_func_breakable(e));
+					spawnfunc_func_breakable(e);
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -475,9 +474,9 @@ float CheatCommand(entity this, int argc)
 			IS_CHEAT(this, 0, argc, 0);
 			RandomSelection_Init();
 			crosshair_trace(this);
-			for(entity e = world; (e = find(e, classname, "dragbox_box")); )
+			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-			for(entity e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			if(RandomSelection_chosen_ent)
 			{
@@ -497,9 +496,9 @@ float CheatCommand(entity this, int argc)
 			{
 				RandomSelection_Init();
 				crosshair_trace(this);
-				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-				for(entity e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				if(RandomSelection_chosen_ent)
 				{
@@ -519,11 +518,11 @@ float CheatCommand(entity this, int argc)
 			{
 				f = fopen(argv(1), FILE_WRITE);
 				fputs(f, "cmd drag_clear\n");
-				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, strcat("cmd dragbox_spawn ", ftos(e.cnt), " \"", vtos(e.aiment.origin), "\" \"", vtos(e.enemy.origin), "\"\n"));
 				}
-				for(entity e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				{
 					fputs(f, strcat("cmd dragpoint_spawn ", ftos(e.cnt), " \"", vtos(e.origin), "\"\n"));
 				}
@@ -538,7 +537,7 @@ float CheatCommand(entity this, int argc)
 			if(argc == 2)
 			{
 				f = fopen(argv(1), FILE_WRITE);
-				for(entity e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"trigger_race_checkpoint\"\n");
@@ -548,15 +547,15 @@ float CheatCommand(entity this, int argc)
 					fputs(f, strcat("\"targetname\" \"checkpoint", ftos(e.cnt), "\"\n"));
 					fputs(f, "}\n");
 				}
-				for(entity e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				{
 					start = '0 0 0';
 					effectnum = 0;
-					for(oldself = world; (oldself = find(oldself, classname, "dragbox_box")); )
+					for(entity ent = NULL; (ent = find(ent, classname, "dragbox_box")); )
 					{
-						if(e.cnt <= 0 && oldself.cnt == 0 || e.cnt == oldself.cnt)
+						if(e.cnt <= 0 && ent.cnt == 0 || e.cnt == ent.cnt)
 						{
-							start = start + oldself.origin;
+							start = start + ent.origin;
 							++effectnum;
 						}
 					}
@@ -583,12 +582,12 @@ float CheatCommand(entity this, int argc)
 							// these need race_place
 							// counting...
 							effectnum = 1;
-							for(oldself = world; (oldself = find(oldself, classname, "dragpoint")); )
-							if(oldself.cnt == 0)
+							for(entity ent = NULL; (ent = find(ent, classname, "dragpoint")); )
+							if(ent.cnt == 0)
 							{
-								if(vlen(oldself.origin - start) < vlen(e.origin - start))
+								if(vlen2(ent.origin - start) < vlen2(e.origin - start))
 									++effectnum;
-								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && etof(oldself) < etof(e))
+								else if(vlen2(ent.origin - start) == vlen2(e.origin - start) && etof(ent) < etof(e))
 									++effectnum;
 							}
 							fputs(f, strcat("\"race_place\" \"", ftos(effectnum), "\"\n"));
@@ -604,15 +603,15 @@ float CheatCommand(entity this, int argc)
 			break;
 		case "drag_clear":
 			IS_CHEAT(this, 0, argc, 0);
-			for(entity e = world; (e = find(e, classname, "dragbox_box")); )
+			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				remove(e);
-			for(entity e = world; (e = find(e, classname, "dragbox_corner_1")); )
+			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_1")); )
 				remove(e);
-			for(entity e = world; (e = find(e, classname, "dragbox_corner_2")); )
+			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_2")); )
 				remove(e);
-			for(entity e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				remove(e);
-			for(entity e = world; (e = find(e, classname, "drag_digit")); )
+			for(entity e = NULL; (e = find(e, classname, "drag_digit")); )
 				remove(e);
 			DID_CHEAT();
 			break;
@@ -719,8 +718,8 @@ float Drag_IsDragging(entity dragger);
 void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
-float CheatFrame()
-{SELFPARAM();
+float CheatFrame(entity this)
+{
 	BEGIN_CHEAT_FUNCTION();
 
 	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,
@@ -820,7 +819,7 @@ float Drag(entity this, float force_allow_pick, float ischeat)
 							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 							// it goes out of range while slinging it around.
 
-							if(vlen(this.origin - e.origin) <= autocvar_g_grab_range)
+							if(vdist(this.origin - e.origin, <=, autocvar_g_grab_range))
 							{
 								switch(e.grab)
 								{
@@ -893,8 +892,8 @@ void Drag_Finish(entity dragger)
 	entity draggee;
 	draggee = dragger.dragentity;
 	if(dragger)
-		dragger.dragentity = world;
-	draggee.draggedby = world;
+		dragger.dragentity = NULL;
+	draggee.draggedby = NULL;
 	draggee.movetype = draggee.dragmovetype;
 	draggee.gravity = draggee.draggravity;
 
@@ -923,7 +922,7 @@ void Drag_Finish(entity dragger)
 float Drag_IsDraggable(entity draggee)
 {
 	// TODO add more checks for bad stuff here
-	if(draggee == world)
+	if(draggee == NULL)
 		return false;
 	if(draggee.classname == "func_bobbing")
 		return false;
@@ -1019,7 +1018,7 @@ float Drag_IsDragging(entity dragger)
 		return false;
 	if(wasfreed(dragger.dragentity) || dragger.dragentity.draggedby != dragger)
 	{
-		dragger.dragentity = world;
+		dragger.dragentity = NULL;
 		return false;
 	}
 	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity))
@@ -1036,7 +1035,7 @@ void Drag_MoveDrag(entity from, entity to)
 	{
 		to.draggedby = from.draggedby;
 		to.draggedby.dragentity = to;
-		from.draggedby = world;
+		from.draggedby = NULL;
 	}
 }
 

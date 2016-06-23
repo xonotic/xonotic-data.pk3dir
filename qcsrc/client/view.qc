@@ -766,12 +766,12 @@ bool WantEventchase(entity this)
 	return false;
 }
 
-void HUD_Crosshair_Vehicle()
+void HUD_Crosshair_Vehicle(entity this)
 {
 	if(hud != HUD_BUMBLEBEE_GUN)
 	{
 		Vehicle info = Vehicles_from(hud);
-		info.vr_crosshair(info);
+		info.vr_crosshair(info, this);
 	}
 }
 
@@ -836,7 +836,7 @@ void HitSound()
 			// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
 			// todo: normalize sound pressure levels? seems unnecessary
 
-			sound7(world, CH_INFO, SND(HIT), VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
+			sound7(NULL, CH_INFO, SND(HIT), VOL_BASE, ATTN_NONE, pitch_shift * 100, 0);
 		}
 		unaccounted_damage = 0;
 		hitsound_time_prev = time;
@@ -846,7 +846,7 @@ void HitSound()
 	float typehit_time = STAT(TYPEHIT_TIME);
 	if (COMPARE_INCREASING(typehit_time, typehit_time_prev) > autocvar_cl_hitsound_antispam_time)
 	{
-		sound(world, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
+		sound(NULL, CH_INFO, SND_TYPEHIT, VOL_BASE, ATTN_NONE);
 		typehit_time_prev = typehit_time;
 	}
 }
@@ -860,7 +860,7 @@ vector crosshair_getcolor(entity this, float health_stat)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			if(this)
+			if(this != WEP_Null)
 			{
 				wcross_color = this.wpcolor;
 				break;
@@ -944,7 +944,7 @@ void HUD_Crosshair(entity this)
 
 		if (hud != HUD_NORMAL)
 		{
-			HUD_Crosshair_Vehicle();
+			HUD_Crosshair_Vehicle(this);
 			return;
 		}
 
@@ -989,7 +989,7 @@ void HUD_Crosshair(entity this)
 		string wcross_name = "";
 		float wcross_scale, wcross_blur;
 
-        entity e = this; // wtf?
+        entity e = WEP_Null;
 		if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 		{
 			e = switchingweapon;
@@ -1321,7 +1321,7 @@ void HUD_Draw(entity this)
 	if(!intermission)
 	if (MUTATOR_CALLHOOK(HUD_Draw_overlay))
 	{
-		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, MUTATOR_ARGV(0, vector), autocvar_hud_colorflash_alpha * MUTATOR_ARGV(0, float), DRAWFLAG_ADDITIVE);
+		drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, M_ARGV(0, vector), autocvar_hud_colorflash_alpha * M_ARGV(1, float), DRAWFLAG_ADDITIVE);
 	}
 	else if(STAT(FROZEN))
 	{
@@ -1369,9 +1369,8 @@ float prev_myteam;
 int lasthud;
 float vh_notice_time;
 void WaypointSprite_Load();
-void CSQC_UpdateView(float w, float h)
+void CSQC_UpdateView(entity this, float w, float h)
 {
-    SELFPARAM();
     TC(int, w); TC(int, h);
 	entity e;
 	float fov;
@@ -1462,7 +1461,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && STAT(ROUNDLOST));
-		entity gen = world;
+		entity gen = NULL;
 
 		float vehicle_viewdist = 0;
 		vector vehicle_viewofs = '0 0 0';
@@ -2184,7 +2183,7 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	HUD_Draw(this);
+	HUD_Draw(this); // this parameter for deep vehicle function
 
 	if(NextFrameCommand)
 	{

@@ -13,7 +13,7 @@ REGISTER_MUTATOR(tdm, false)
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		InitializeEntity(world, tdm_DelayedInit, INITPRIO_GAMETYPE);
+		InitializeEntity(NULL, tdm_DelayedInit, INITPRIO_GAMETYPE);
 
 		ActivateTeamplay();
 		SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
@@ -64,13 +64,13 @@ void tdm_SpawnTeam (string teamname, float teamcolor)
 	this.netname = teamname;
 	this.cnt = teamcolor;
 	this.spawnfunc_checked = true;
-	WITHSELF(this, spawnfunc_tdm_team(this));
+	spawnfunc_tdm_team(this);
 }
 
 void tdm_DelayedInit(entity this)
 {
 	// if no teams are found, spawn defaults
-	if(find(world, classname, "tdm_team") == world)
+	if(find(NULL, classname, "tdm_team") == NULL)
 	{
 		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.\n");
 
@@ -87,7 +87,7 @@ void tdm_DelayedInit(entity this)
 
 MUTATOR_HOOKFUNCTION(tdm, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 {
-	ret_string = "tdm_team";
+	M_ARGV(1, string) = "tdm_team";
 	return true;
 }
 

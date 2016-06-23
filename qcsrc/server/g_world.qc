@@ -129,11 +129,11 @@ void GotoFirstMap(entity this)
 
 	if(time < 5)
 	{
-		self.nextthink = time;
+		this.nextthink = time;
 	}
 	else
 	{
-		self.nextthink = time + 1;
+		this.nextthink = time + 1;
 		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...\n");
 	}
 }
@@ -489,7 +489,7 @@ void detect_maptype()
 		o.y += random() * (world.maxs.y - world.mins.y);
 		o.z += random() * (world.maxs.z - world.mins.z);
 
-		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, world);
+		tracebox(o, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), o - '0 0 32768', MOVE_WORLDONLY, NULL);
 		if(trace_fraction == 1)
 			continue;
 
@@ -497,7 +497,7 @@ void detect_maptype()
 
 		for(i = 0; i < 64; i += 4)
 		{
-			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, world);
+			tracebox(o, '-1 -1 -1' * i, '1 1 1' * i, o - '0 0 32768', MOVE_WORLDONLY, NULL);
 	if(trace_fraction == 1)
 		continue;
 			LOG_INFO(ftos(i), " -> ", vtos(trace_endpos), "\n");
@@ -528,7 +528,7 @@ void RandomSeed_Spawn()
 	setthink(randomseed, RandomSeed_Think);
 	Net_LinkEntity(randomseed, false, 0, RandomSeed_Send);
 
-	WITHSELF(randomseed, getthink(randomseed)(randomseed)); // sets random seed and nextthink
+	getthink(randomseed)(randomseed); // sets random seed and nextthink
 }
 
 spawnfunc(__init_dedicated_server)
@@ -548,7 +548,7 @@ spawnfunc(__init_dedicated_server)
 
 	e = new(info_player_deathmatch);  // safeguard against player joining
 
-	self.classname = "worldspawn"; // safeguard against various stuff ;)
+	this.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
 	static_init();
@@ -664,7 +664,7 @@ spawnfunc(worldspawn)
 	compressShortVector_init();
 
 	maxclients = 0;
-	for (entity head = nextent(world); head; head = nextent(head))
+	for (entity head = nextent(NULL); head; head = nextent(head))
 	{
 		++maxclients;
 	}
@@ -739,7 +739,7 @@ spawnfunc(worldspawn)
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
 	if(bot_waypoints_for_items == 1)
-		if(self.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
+		if(this.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
 	precache();
@@ -760,7 +760,7 @@ spawnfunc(worldspawn)
 		s = ":gameinfo:mutators:LIST";
 
 		MUTATOR_CALLHOOK(BuildMutatorsString, s);
-		s = ret_string;
+		s = M_ARGV(0, string);
 
 		// initialiation stuff, not good in the mutator system
 		if(!autocvar_g_use_ammunition)
@@ -915,14 +915,14 @@ spawnfunc(worldspawn)
 	// save it for later
 	modname = strzone(modname);
 
-	WinningConditionHelper(); // set worldstatus
+	WinningConditionHelper(this); // set worldstatus
 
 	world_initialized = 1;
 }
 
 spawnfunc(light)
 {
-	//makestatic (self); // Who the f___ did that?
+	//makestatic (this); // Who the f___ did that?
 	remove(this);
 }
 
@@ -1038,7 +1038,7 @@ float Map_Check(float position, float pass)
 		return 0;
 	}
 	else
-		LOG_TRACE( "Couldn't select '", filename, "'..\n" );
+		LOG_DEBUG( "Couldn't select '", filename, "'...\n" );
 
 	return 0;
 }
@@ -1296,18 +1296,18 @@ When the player presses attack or jump, change to the next level
 ============
 */
 .float autoscreenshot;
-void IntermissionThink()
-{SELFPARAM();
-	FixIntermissionClient(self);
+void IntermissionThink(entity this)
+{
+	FixIntermissionClient(this);
 
-	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
-	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
+	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
+	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);
 
 	if( (server_screenshot || client_screenshot)
-		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
+		&& ((this.autoscreenshot > 0) && (time > this.autoscreenshot)) )
 	{
-		self.autoscreenshot = -1;
-		if(IS_REAL_CLIENT(self)) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
+		this.autoscreenshot = -1;
+		if(IS_REAL_CLIENT(this)) { stuffcmd(this, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(false, "%s"))); }
 		return;
 	}
 
@@ -1315,7 +1315,7 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self)))
+		if (time < intermission_exittime + 10 && !(PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this)))
 			return;
 
 	MapVote_Start();
@@ -1335,7 +1335,7 @@ entity FindIntermission()
 	local	float cyc;
 
 // look for info_intermission first
-	spot = find (world, classname, "info_intermission");
+	spot = find (NULL, classname, "info_intermission");
 	if (spot)
 	{	// pick a random one
 		cyc = random() * 4;
@@ -1350,22 +1350,22 @@ entity FindIntermission()
 	}
 
 // then look for the start position
-	spot = find (world, classname, "info_player_start");
+	spot = find (NULL, classname, "info_player_start");
 	if (spot)
 		return spot;
 
 // testinfo_player_start is only found in regioned levels
-	spot = find (world, classname, "testplayerstart");
+	spot = find (NULL, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
 // then look for the start position
-	spot = find (world, classname, "info_player_deathmatch");
+	spot = find (NULL, classname, "info_player_deathmatch");
 	if (spot)
 		return spot;
 
 	//objerror ("FindIntermission: no spot");
-	return world;
+	return NULL;
 }
 */
 
@@ -1421,7 +1421,7 @@ void DumpStats(float final)
 			fputs(file, strcat(s, "\n"));
 	}
 
-	s = strcat(":labels:player:", GetPlayerScoreString(world, 0));
+	s = strcat(":labels:player:", GetPlayerScoreString(NULL, 0));
 	if(to_console)
 		LOG_INFO(s, "\n");
 	if(to_eventlog)
@@ -1432,7 +1432,7 @@ void DumpStats(float final)
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) || (IS_BOT_CLIENT(it) && autocvar_sv_logscores_bots), LAMBDA(
 		s = strcat(":player:see-labels:", GetPlayerScoreString(it, 0), ":");
 		s = strcat(s, ftos(rint(time - it.jointime)), ":");
-		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it, s))
+		if(IS_PLAYER(it) || MUTATOR_CALLHOOK(GetPlayerStatus, it))
 			s = strcat(s, ftos(it.team), ":");
 		else
 			s = strcat(s, "spectator:");
@@ -1549,7 +1549,7 @@ void NextLevel()
 	PlayerStats_GameReport(true);
 	WeaponStats_Shutdown();
 
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_Null); // kill all centerprints now
+	Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_Null); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1562,7 +1562,7 @@ void NextLevel()
 			bprint(it.netname, " ^7wins.\n");
 	));
 
-	WITHSELF(NULL, target_music_kill());
+	target_music_kill();
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
@@ -1579,8 +1579,8 @@ CheckRules_Player
 Exit deathmatch games upon conditions
 ============
 */
-void CheckRules_Player()
-{SELFPARAM();
+void CheckRules_Player(entity this)
+{
 	if (gameover)	// someone else quit the game already
 		return;
 
@@ -1626,7 +1626,7 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	tl += autocvar_timelimit_overtime;
 	cvar_set("timelimit", ftos(tl));
 
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
+	Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
 }
 
 float GetWinningCode(float fraglimitreached, float equality)
@@ -1682,7 +1682,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	float limitreached;
 
 	// TODO make everything use THIS winning condition (except LMS)
-	WinningConditionHelper();
+	WinningConditionHelper(NULL);
 
 	if(teamplay)
 	{
@@ -1717,11 +1717,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 			if (limit)
 			if (leaderfrags == limit - 1)
-				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
 			else if (leaderfrags == limit - 2)
-				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
 			else if (leaderfrags == limit - 3)
-				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
+				Send_Notification(NOTIF_ALL, NULL, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 		}
 	}
 
@@ -1798,7 +1798,7 @@ float WinningCondition_RanOutOfSpawns()
 			t = NUM_TEAM_3;
 		else // if(team4_score)
 			t = NUM_TEAM_4;
-		CheckAllowedTeams(world);
+		CheckAllowedTeams(NULL);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
 			if(t != NUM_TEAM_1) if(c1 >= 0) TeamScore_AddToTeam(NUM_TEAM_1, i, -1000);
@@ -1879,9 +1879,9 @@ void CheckRules_World()
 		{
 			checkrules_suddendeathwarning = true;
 			if(g_race && !g_race_qualifying)
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_RACE_FINISHLAP);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_FRAG);
+				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_OVERTIME_FRAG);
 		}
 	}
 	else
@@ -1928,7 +1928,7 @@ void CheckRules_World()
 	if(checkrules_status == WINNING_YES)
 		bprint("Hey! Someone ran out of spawns!\n");
 	else if(MUTATOR_CALLHOOK(CheckRules_World, checkrules_status, timelimit, fraglimit))
-		checkrules_status = ret_float;
+		checkrules_status = M_ARGV(0, float);
 	else
 		checkrules_status = WinningCondition_Scores(fraglimit, leadlimit);
 

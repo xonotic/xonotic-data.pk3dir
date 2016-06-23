@@ -49,7 +49,7 @@ const float GRAPHOOK_RELEASE		= 21;
 
 4. Open client.c and add this to the top of PutClientInServer():
 
-	RemoveGrapplingHook(self); // Wazat's Grappling Hook
+	RemoveGrapplingHook(this); // Wazat's Grappling Hook
 
 5. Find ClientConnect() (in client.c) and add these lines to the bottom:
 
@@ -72,10 +72,10 @@ And you should be done!
 
 void RemoveGrapplingHook(entity pl)
 {
-	if(pl.hook == world)
+	if(pl.hook == NULL)
 		return;
 	remove(pl.hook);
-	pl.hook = world;
+	pl.hook = NULL;
 	if(pl.movetype == MOVETYPE_FLY)
 		pl.movetype = MOVETYPE_WALK;
 
@@ -91,18 +91,18 @@ void GrapplingHookReset(entity this)
 }
 
 void GrapplingHookThink(entity this);
-void GrapplingHook_Stop()
-{SELFPARAM();
-	Send_Effect(EFFECT_HOOK_IMPACT, self.origin, '0 0 0', 1);
-	sound (self, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
+void GrapplingHook_Stop(entity this)
+{
+	Send_Effect(EFFECT_HOOK_IMPACT, this.origin, '0 0 0', 1);
+	sound (this, CH_SHOTS, SND_HOOK_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	self.state = 1;
-	setthink(self, GrapplingHookThink);
-	self.nextthink = time;
-	settouch(self, func_null);
-	self.velocity = '0 0 0';
-	self.movetype = MOVETYPE_NONE;
-	self.hook_length = -1;
+	this.state = 1;
+	setthink(this, GrapplingHookThink);
+	this.nextthink = time;
+	settouch(this, func_null);
+	this.velocity = '0 0 0';
+	this.movetype = MOVETYPE_NONE;
+	this.hook_length = -1;
 }
 
 .vector hook_start, hook_end;
@@ -110,24 +110,24 @@ bool GrapplingHookSend(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_HOOK);
 	sf = sf & 0x7F;
-	if(sound_allowed(MSG_BROADCAST, self.realowner))
+	if(sound_allowed(MSG_BROADCAST, this.realowner))
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
 	{
-		WriteByte(MSG_ENTITY, etof(self.realowner));
+		WriteByte(MSG_ENTITY, etof(this.realowner));
 	}
 	if(sf & 2)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_start.x);
-		WriteCoord(MSG_ENTITY, self.hook_start.y);
-		WriteCoord(MSG_ENTITY, self.hook_start.z);
+		WriteCoord(MSG_ENTITY, this.hook_start.x);
+		WriteCoord(MSG_ENTITY, this.hook_start.y);
+		WriteCoord(MSG_ENTITY, this.hook_start.z);
 	}
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.hook_end.x);
-		WriteCoord(MSG_ENTITY, self.hook_end.y);
-		WriteCoord(MSG_ENTITY, self.hook_end.z);
+		WriteCoord(MSG_ENTITY, this.hook_end.x);
+		WriteCoord(MSG_ENTITY, this.hook_end.y);
+		WriteCoord(MSG_ENTITY, this.hook_end.z);
 	}
 	return true;
 }
@@ -138,40 +138,40 @@ void GrapplingHookThink(entity this)
 {
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch;
 	vector dir, org, end, v0, dv, v, myorg, vs;
-	if(self.realowner.hook != self)	// how did that happen?
+	if(this.realowner.hook != this)	// how did that happen?
 	{
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self) || intermission_running || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || ((self.aiment.flags & FL_PROJECTILE) && self.aiment.classname != "nade"))
+	if(LostMovetypeFollow(this) || intermission_running || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || ((this.aiment.flags & FL_PROJECTILE) && this.aiment.classname != "nade"))
 	{
-		RemoveGrapplingHook(self.realowner);
+		RemoveGrapplingHook(this.realowner);
 		return;
 	}
-	if(self.aiment)
-		WarpZone_RefSys_AddIncrementally(self, self.aiment);
+	if(this.aiment)
+		WarpZone_RefSys_AddIncrementally(this, this.aiment);
 
-	self.nextthink = time;
+	this.nextthink = time;
 
-	int s = W_GetGunAlignment(self.realowner);
+	int s = W_GetGunAlignment(this.realowner);
 	vs = hook_shotorigin[s];
 
-	makevectors(self.realowner.v_angle);
-	org = self.realowner.origin + self.realowner.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
-	myorg = WarpZone_RefSys_TransformOrigin(self.realowner, self, org);
+	makevectors(this.realowner.v_angle);
+	org = this.realowner.origin + this.realowner.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+	myorg = WarpZone_RefSys_TransformOrigin(this.realowner, this, org);
 
-	if(self.hook_length < 0)
-		self.hook_length = vlen(myorg - self.origin);
+	if(this.hook_length < 0)
+		this.hook_length = vlen(myorg - this.origin);
 
 	int tarzan = autocvar_g_grappling_hook_tarzan;
-	entity pull_entity = self.realowner;
+	entity pull_entity = this.realowner;
 	float velocity_multiplier = 1;
-	MUTATOR_CALLHOOK(GrappleHookThink, self, tarzan, pull_entity, velocity_multiplier);
-	tarzan = hook_tarzan;
-	pull_entity = hook_pullentity;
-	velocity_multiplier = hook_velmultiplier;
+	MUTATOR_CALLHOOK(GrappleHookThink, this, tarzan, pull_entity, velocity_multiplier);
+	tarzan = M_ARGV(1, int);
+	pull_entity = M_ARGV(2, entity);
+	velocity_multiplier = M_ARGV(3, float);
 
-	if(self.state == 1)
+	if(this.state == 1)
 	{
 		pullspeed = autocvar_g_balance_grapplehook_speed_pull;//2000;
 		// speed the rope is pulled with
@@ -196,18 +196,18 @@ void GrapplingHookThink(entity this)
 
 		bool frozen_pulling = (autocvar_g_grappling_hook_tarzan >= 2 && autocvar_g_balance_grapplehook_pull_frozen);
 
-		dir = self.origin - myorg;
+		dir = this.origin - myorg;
 		dist = vlen(dir);
 		dir = normalize(dir);
 
 		if(tarzan)
 		{
-			v = v0 = WarpZone_RefSys_TransformVelocity(pull_entity, self, pull_entity.velocity);
+			v = v0 = WarpZone_RefSys_TransformVelocity(pull_entity, this, pull_entity.velocity);
 
 			// first pull the rope...
-			if(self.realowner.hook_state & HOOK_PULLING)
+			if(this.realowner.hook_state & HOOK_PULLING)
 			{
-				newlength = self.hook_length;
+				newlength = this.hook_length;
 				newlength = max(newlength - pullspeed * frametime, minlength);
 
 				if(newlength < dist - ropestretch) // overstretched?
@@ -217,41 +217,41 @@ void GrapplingHookThink(entity this)
 						v = v + frametime * dir * rubberforce_overstretch;
 				}
 
-				self.hook_length = newlength;
+				this.hook_length = newlength;
 			}
 
 			if(pull_entity.movetype == MOVETYPE_FLY)
 				pull_entity.movetype = MOVETYPE_WALK;
 
-			if(self.realowner.hook_state & HOOK_RELEASING)
+			if(this.realowner.hook_state & HOOK_RELEASING)
 			{
 				newlength = dist;
-				self.hook_length = newlength;
+				this.hook_length = newlength;
 			}
 			else
 			{
 				// then pull the player
-				spd = bound(0, (dist - self.hook_length) / ropestretch, 1);
+				spd = bound(0, (dist - this.hook_length) / ropestretch, 1);
 				v = v * (1 - frametime * ropeairfriction);
 				v = v + frametime * dir * spd * rubberforce;
 
 				dv = ((v - v0) * dir) * dir;
 				if(tarzan >= 2)
 				{
-					if(self.aiment.movetype == MOVETYPE_WALK || self.aiment.classname == "nade")
+					if(this.aiment.movetype == MOVETYPE_WALK || this.aiment.classname == "nade")
 					{
-						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
+						entity aim_ent = ((IS_VEHICLE(this.aiment) && this.aiment.owner) ? this.aiment.owner : this.aiment);
 						v = v - dv * 0.5;
-						if((frozen_pulling && STAT(FROZEN, self.aiment)) || !frozen_pulling)
+						if((frozen_pulling && STAT(FROZEN, this.aiment)) || !frozen_pulling)
 						{
-							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-							UNSET_ONGROUND(self.aiment);
-							if(self.aiment.flags & FL_PROJECTILE)
-								UpdateCSQCProjectile(self.aiment);
+							this.aiment.velocity = this.aiment.velocity - dv * 0.5;
+							UNSET_ONGROUND(this.aiment);
+							if(this.aiment.flags & FL_PROJECTILE)
+								UpdateCSQCProjectile(this.aiment);
 						}
-						if(self.aiment.classname == "nade")
-							self.aiment.nextthink = time + autocvar_g_balance_grapplehook_nade_time; // set time after letting go?
-						aim_ent.pusher = self.realowner;
+						if(this.aiment.classname == "nade")
+							this.aiment.nextthink = time + autocvar_g_balance_grapplehook_nade_time; // set time after letting go?
+						aim_ent.pusher = this.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
 						aim_ent.istypefrag = PHYS_INPUT_BUTTON_CHAT(aim_ent);
 					}
@@ -260,18 +260,18 @@ void GrapplingHookThink(entity this)
 				UNSET_ONGROUND(pull_entity);
 			}
 
-			if(!frozen_pulling && !(self.aiment.flags & FL_PROJECTILE))
-				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(self, pull_entity, v * velocity_multiplier);
+			if(!frozen_pulling && !(this.aiment.flags & FL_PROJECTILE))
+				pull_entity.velocity = WarpZone_RefSys_TransformVelocity(this, pull_entity, v * velocity_multiplier);
 
-			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, self.aiment))
+			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !STAT(FROZEN, this.aiment))
 			{
-				RemoveGrapplingHook(self.realowner);
+				RemoveGrapplingHook(this.realowner);
 				return;
 			}
 		}
 		else
 		{
-			end = self.origin - dir*50;
+			end = this.origin - dir*50;
 			dist = vlen(end - myorg);
 			if(dist < 200)
 				spd = dist * (pullspeed / 200);
@@ -279,25 +279,25 @@ void GrapplingHookThink(entity this)
 				spd = pullspeed;
 			if(spd < 50)
 				spd = 0;
-			self.realowner.velocity = dir*spd;
-			self.realowner.movetype = MOVETYPE_FLY;
+			this.realowner.velocity = dir*spd;
+			this.realowner.movetype = MOVETYPE_FLY;
 
-			UNSET_ONGROUND(self.realowner);
+			UNSET_ONGROUND(this.realowner);
 		}
 	}
 
-	makevectors(self.angles.x * '-1 0 0' + self.angles.y * '0 1 0');
-	myorg = WarpZone_RefSys_TransformOrigin(self, self.realowner, self.origin); // + v_forward * (-9);
+	makevectors(this.angles.x * '-1 0 0' + this.angles.y * '0 1 0');
+	myorg = WarpZone_RefSys_TransformOrigin(this, this.realowner, this.origin); // + v_forward * (-9);
 
-	if(myorg != self.hook_start)
+	if(myorg != this.hook_start)
 	{
-		self.SendFlags |= 2;
-		self.hook_start = myorg;
+		this.SendFlags |= 2;
+		this.hook_start = myorg;
 	}
-	if(org != self.hook_end)
+	if(org != this.hook_end)
 	{
-		self.SendFlags |= 4;
-		self.hook_end = org;
+		this.SendFlags |= 4;
+		this.hook_end = org;
 	}
 }
 
@@ -307,16 +307,16 @@ void GrapplingHookTouch (entity this)
 		return;
 	PROJECTILE_TOUCH(this);
 
-	GrapplingHook_Stop();
+	GrapplingHook_Stop(this);
 
 	if(other)
 		if(other.movetype != MOVETYPE_NONE)
 		{
-			SetMovetypeFollow(self, other);
-			WarpZone_RefSys_BeginAddingIncrementally(self, self.aiment);
+			SetMovetypeFollow(this, other);
+			WarpZone_RefSys_BeginAddingIncrementally(this, this.aiment);
 		}
 
-	//self.realowner.disableclientprediction = true;
+	//this.realowner.disableclientprediction = true;
 }
 
 void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -341,32 +341,32 @@ void GrapplingHook_Damage(entity this, entity inflictor, entity attacker, float 
 	}
 }
 
-void FireGrapplingHook ()
-{SELFPARAM();
+void FireGrapplingHook(entity actor)
+{
 	entity missile;
 	vector org;
 	vector vs;
 
-	if(forbidWeaponUse(self)) return;
-	if(self.vehicle) return;
+	if(forbidWeaponUse(actor)) return;
+	if(actor.vehicle) return;
 
-	makevectors(self.v_angle);
+	makevectors(actor.v_angle);
 
-	int s = W_GetGunAlignment(self);
+	int s = W_GetGunAlignment(actor);
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (self, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
-	org = self.origin + self.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
+	sound (actor, CH_WEAPON_B, SND_HOOK_FIRE, VOL_BASE, ATTEN_NORM);
+	org = actor.origin + actor.view_ofs + v_forward * vs.x + v_right * -vs.y + v_up * vs.z;
 
-	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
+	tracebox(actor.origin + actor.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, actor);
 	org = trace_endpos;
 
 	Send_Effect(EFFECT_HOOK_MUZZLEFLASH, org, '0 0 0', 1);
 
-	missile = WarpZone_RefSys_SpawnSameRefSys(self);
-	missile.owner = missile.realowner = self;
-	self.hook = missile;
+	missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	missile.owner = missile.realowner = actor;
+	actor.hook = missile;
 	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;
@@ -376,7 +376,7 @@ void FireGrapplingHook ()
 
 	//setmodel (missile, MDL_HOOK); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
-	setorigin (missile, org);
+	setorigin(missile, org);
 
 	missile.state = 0; // not latched onto anything
 

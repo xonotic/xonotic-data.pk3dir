@@ -57,26 +57,26 @@ spawnfunc(weapon_campingrifle) { spawnfunc_weapon_rifle(this); }
 spawnfunc(weapon_sniperrifle) { spawnfunc_weapon_rifle(this); }
 
 void W_Rifle_FireBullet(Weapon thiswep, float pSpread, float pDamage, float pForce, float pSolidPenetration, float pAmmo, int deathtype, float pTracer, float pShots, Sound pSound, entity actor)
-{entity this = actor;
+{
 	float i;
 
-	W_DecreaseAmmo(thiswep, self, pAmmo);
+	W_DecreaseAmmo(thiswep, actor, pAmmo);
 
-	W_SetupShot(self, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
+	W_SetupShot(actor, true, 2, pSound, CH_WEAPON_A, pDamage * pShots);
 
 	Send_Effect(EFFECT_RIFLE_MUZZLEFLASH, w_shotorg, w_shotdir * 2000, 1);
 
-	if(PHYS_INPUT_BUTTON_ZOOM(self) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(self)) // if zoomed, shoot from the eye
+	if(PHYS_INPUT_BUTTON_ZOOM(actor) | PHYS_INPUT_BUTTON_ZOOMSCRIPT(actor)) // if zoomed, shoot from the eye
 	{
 		w_shotdir = v_forward;
-		w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
+		w_shotorg = actor.origin + actor.view_ofs + ((w_shotorg - actor.origin - actor.view_ofs) * v_forward) * v_forward;
 	}
 
 	for(i = 0; i < pShots; ++i)
-		fireBullet(self, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
+		fireBullet(actor, w_shotorg, w_shotdir, pSpread, pSolidPenetration, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE));
 
 	if(autocvar_g_casings >= 2)
-		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 }
 
 void W_Rifle_Attack(entity actor)
@@ -117,22 +117,22 @@ void W_Rifle_BulletHail_Continue(Weapon thiswep, entity actor, .entity weaponent
 }
 
 void W_Rifle_BulletHail(entity actor, .entity weaponentity, float mode, void(entity actor) AttackFunc, WFRAME fr, float animtime, float refire)
-{entity this = actor;
+{
 	// if we get here, we have at least one bullet to fire
 	AttackFunc(actor);
 	if(mode)
 	{
 		// continue hail
-		self.rifle_bullethail_attackfunc = AttackFunc;
-		self.rifle_bullethail_frame = fr;
-		self.rifle_bullethail_animtime = animtime;
-		self.rifle_bullethail_refire = refire;
-		weapon_thinkf(self, weaponentity, fr, animtime, W_Rifle_BulletHail_Continue);
+		actor.rifle_bullethail_attackfunc = AttackFunc;
+		actor.rifle_bullethail_frame = fr;
+		actor.rifle_bullethail_animtime = animtime;
+		actor.rifle_bullethail_refire = refire;
+		weapon_thinkf(actor, weaponentity, fr, animtime, W_Rifle_BulletHail_Continue);
 	}
 	else
 	{
 		// just one shot
-		weapon_thinkf(self, weaponentity, fr, animtime, w_ready);
+		weapon_thinkf(actor, weaponentity, fr, animtime, w_ready);
 	}
 }
 
@@ -140,25 +140,24 @@ void W_Rifle_BulletHail(entity actor, .entity weaponentity, float mode, void(ent
 
 METHOD(Rifle, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    PHYS_INPUT_BUTTON_ATCK(self) = false;
-    PHYS_INPUT_BUTTON_ATCK2(self) = false;
-    if(vdist(self.origin - self.enemy.origin, >, 1000))
-        self.bot_secondary_riflemooth = 0;
-    if(self.bot_secondary_riflemooth == 0)
+    PHYS_INPUT_BUTTON_ATCK(actor) = false;
+    PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+    if(vdist(actor.origin - actor.enemy.origin, >, 1000))
+        actor.bot_secondary_riflemooth = 0;
+    if(actor.bot_secondary_riflemooth == 0)
     {
-        if(bot_aim(self, 1000000, 0, 0.001, false))
+        if(bot_aim(actor, 1000000, 0, 0.001, false))
         {
-            PHYS_INPUT_BUTTON_ATCK(self) = true;
-            if(random() < 0.01) self.bot_secondary_riflemooth = 1;
+            PHYS_INPUT_BUTTON_ATCK(actor) = true;
+            if(random() < 0.01) actor.bot_secondary_riflemooth = 1;
         }
     }
     else
     {
-        if(bot_aim(self, 1000000, 0, 0.001, false))
+        if(bot_aim(actor, 1000000, 0, 0.001, false))
         {
-            PHYS_INPUT_BUTTON_ATCK2(self) = true;
-            if(random() < 0.03) self.bot_secondary_riflemooth = 0;
+            PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+            if(random() < 0.03) actor.bot_secondary_riflemooth = 0;
         }
     }
 }
@@ -211,8 +210,7 @@ METHOD(Rifle, wr_checkammo2, bool(entity thiswep, entity actor))
 }
 METHOD(Rifle, wr_resetplayer, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    self.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
+    actor.rifle_accumulator = time - WEP_CVAR(rifle, bursttime);
 }
 METHOD(Rifle, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
@@ -245,13 +243,12 @@ METHOD(Rifle, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Rifle, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2;
     org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_RIFLE_IMPACT, org2, w_backoff * 1000, 1);
     if(!w_issilent)
     {
-        sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
+        sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
     }
 }
 METHOD(Rifle, wr_init, void(entity thiswep))

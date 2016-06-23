@@ -22,34 +22,33 @@ REGISTER_TURRET(PHASER, NEW(PhaserTurret));
 
 #ifdef SVQC
 
-spawnfunc(turret_phaser) { if (!turret_initialize(TUR_PHASER)) remove(this); }
+spawnfunc(turret_phaser) { if (!turret_initialize(this, TUR_PHASER)) remove(this); }
 
 .int fireflag;
 
 METHOD(PhaserTurret, tr_think, void(PhaserTurret thistur, entity it))
 {
-    SELFPARAM();
-    if (self.tur_head.frame != 0)
+    if (it.tur_head.frame != 0)
     {
-        if (self.fireflag == 1)
+        if (it.fireflag == 1)
         {
-            if (self.tur_head.frame == 10)
-                self.tur_head.frame = 1;
+            if (it.tur_head.frame == 10)
+                it.tur_head.frame = 1;
             else
-                self.tur_head.frame = self.tur_head.frame +1;
+                it.tur_head.frame = it.tur_head.frame +1;
         }
-        else if (self.fireflag == 2 )
+        else if (it.fireflag == 2 )
         {
-            self.tur_head.frame = self.tur_head.frame +1;
-            if (self.tur_head.frame == 15)
+            it.tur_head.frame = it.tur_head.frame +1;
+            if (it.tur_head.frame == 15)
             {
-                self.tur_head.frame = 0;
-                self.fireflag = 0;
+                it.tur_head.frame = 0;
+                it.fireflag = 0;
             }
         }
     }
 }
-float turret_phaser_firecheck();
+bool turret_phaser_firecheck(entity this);
 METHOD(PhaserTurret, tr_setup, void(PhaserTurret this, entity it))
 {
     it.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
@@ -57,11 +56,10 @@ METHOD(PhaserTurret, tr_setup, void(PhaserTurret this, entity it))
 
     it.turret_firecheckfunc = turret_phaser_firecheck;
 }
-float turret_phaser_firecheck()
+bool turret_phaser_firecheck(entity this)
 {
-    SELFPARAM();
-    if (self.fireflag != 0) return 0;
-    return turret_firecheck();
+    if (this.fireflag != 0) return false;
+    return turret_firecheck(this);
 }
 
 #endif

@@ -74,18 +74,18 @@ void item_key_touch(entity this)
 		return;
 
 	// player already picked up this key
-	if (other.itemkeys & self.itemkeys)
+	if (other.itemkeys & this.itemkeys)
 		return;
 
-	other.itemkeys |= self.itemkeys;
-	play2(other, self.noise);
+	other.itemkeys |= this.itemkeys;
+	play2(other, this.noise);
 
-	centerprint(other, self.message);
+	centerprint(other, this.message);
 
-	string oldmsg = self.message;
-	self.message = "";
-	SUB_UseTargets(self, other, other); // TODO: should we be using other for the trigger here?
-	self.message = oldmsg;
+	string oldmsg = this.message;
+	this.message = "";
+	SUB_UseTargets(this, other, other); // TODO: should we be using other for the trigger here?
+	this.message = oldmsg;
 };
 
 /**
@@ -119,7 +119,7 @@ void spawn_item_key(entity this)
 		// first nudge it off the floor a little bit to avoid math errors
 		setorigin(this, this.origin + '0 0 1');
 		// note droptofloor returns false if stuck/or would fall too far
-		WITHSELF(this, droptofloor());
+		droptofloor(this);
 	}
 
 	settouch(this, item_key_touch);
@@ -159,7 +159,7 @@ spawnfunc(item_key)
 
 	// reject this entity if more than one key was set!
 	if (this.itemkeys>0 && (this.itemkeys & (this.itemkeys-1)) != 0) {
-		objerror("item_key.itemkeys must contain only 1 bit set specifying the key it represents!");
+		objerror(this, "item_key.itemkeys must contain only 1 bit set specifying the key it represents!");
 		remove(this);
 		return;
 	}
@@ -201,7 +201,7 @@ spawnfunc(item_key)
 		_colormod = '1 1 1';
 
 		if (this.netname == "") {
-			objerror("item_key doesn't have a default name for this key and a custom one was not specified!");
+			objerror(this, "item_key doesn't have a default name for this key and a custom one was not specified!");
 			remove(this);
 			return;
 		}
@@ -216,7 +216,7 @@ spawnfunc(item_key)
 	} else if (this.itemkeys >= ITEM_KEY_BIT(3) && this.itemkeys <= ITEM_KEY_BIT(5)) {
 		_model = "models/keys/key.md3"; // FIXME: replace it by a keycard model!
 	} else if (this.model == "") {
-		objerror("item_key doesn't have a default model for this key and a custom one was not specified!");
+		objerror(this, "item_key doesn't have a default model for this key and a custom one was not specified!");
 		remove(this);
 		return;
 	}

@@ -148,11 +148,11 @@ void trigger_push_touch(entity this)
 		other.velocity = trigger_push_calculatevelocity(other.origin, this.enemy, this.height);
 		other.move_velocity = other.velocity;
 	}
-	else if(this.target)
+	else if(this.target && this.target != "")
 	{
 		entity e;
 		RandomSelection_Init();
-		for(e = world; (e = find(e, targetname, this.target)); )
+		for(e = NULL; (e = find(e, targetname, this.target)); )
 		{
 			if(e.cnt)
 				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
@@ -270,7 +270,7 @@ void trigger_push_touch(entity this)
 }
 
 #ifdef SVQC
-void trigger_push_link();
+void trigger_push_link(entity this);
 void trigger_push_updatelink(entity this);
 #endif
 void trigger_push_findtarget(entity this)
@@ -285,7 +285,7 @@ void trigger_push_findtarget(entity this)
 	if (this.target)
 	{
 		float n = 0;
-		for(t = world; (t = find(t, targetname, this.target)); )
+		for(t = NULL; (t = find(t, targetname, this.target)); )
 		{
 			++n;
 #ifdef SVQC
@@ -304,19 +304,19 @@ void trigger_push_findtarget(entity this)
 		{
 			// no dest!
 #ifdef SVQC
-			objerror ("Jumppad with nonexistant target");
+			objerror (this, "Jumppad with nonexistant target");
 #endif
 			return;
 		}
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			this.enemy = find(world, targetname, this.target);
+			this.enemy = find(NULL, targetname, this.target);
 		}
 		else
 		{
 			// have to use random selection every single time
-			this.enemy = world;
+			this.enemy = NULL;
 		}
 	}
 #ifdef SVQC
@@ -331,7 +331,7 @@ void trigger_push_findtarget(entity this)
 		remove(e);
 	}
 
-	trigger_push_link();
+	trigger_push_link(this);
 	defer(this, 0.1, trigger_push_updatelink);
 #endif
 }
@@ -346,6 +346,10 @@ float trigger_push_send(entity this, entity to, float sf)
 	WriteByte(MSG_ENTITY, this.active);
 	WriteCoord(MSG_ENTITY, this.height);
 
+	WriteCoord(MSG_ENTITY, this.movedir_x);
+	WriteCoord(MSG_ENTITY, this.movedir_y);
+	WriteCoord(MSG_ENTITY, this.movedir_z);
+
 	trigger_common_write(this, true);
 
 	return true;
@@ -356,9 +360,8 @@ void trigger_push_updatelink(entity this)
 	this.SendFlags |= 1;
 }
 
-void trigger_push_link()
+void trigger_push_link(entity this)
 {
-    SELFPARAM();
 	trigger_link(this, trigger_push_send);
 }
 
@@ -442,6 +445,10 @@ NET_HANDLE(ENT_CLIENT_TRIGGER_PUSH, bool isnew)
 	this.spawnflags = ReadInt24_t();
 	this.active = ReadByte();
 	this.height = ReadCoord();
+
+	this.movedir_x = ReadCoord();
+	this.movedir_y = ReadCoord();
+	this.movedir_z = ReadCoord();
 
 	trigger_common_read(this, true);
 

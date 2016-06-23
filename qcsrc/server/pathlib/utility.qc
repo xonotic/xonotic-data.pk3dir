@@ -68,7 +68,7 @@ entity pathlib_nodeatpoint(vector where)
         node = node.chain;
     }
 
-    return world;
+    return NULL;
 }
 
 float tile_check_cross(entity this, vector where)

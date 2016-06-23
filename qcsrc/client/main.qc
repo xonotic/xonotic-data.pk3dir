@@ -233,7 +233,7 @@ float SetTeam(entity o, int Team)
 			case NUM_TEAM_4:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(Team, false) == NULL)
 				{
 					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
@@ -249,7 +249,7 @@ float SetTeam(entity o, int Team)
 			case 0:
 				break;
 			default:
-				if(GetTeam(Team, false) == world)
+				if(GetTeam(Team, false) == NULL)
 				{
 					LOG_TRACEF("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
@@ -304,7 +304,7 @@ void Playerchecker_Think(entity this)
 				// player disconnected
 				SetTeam(e, -1);
 				RemovePlayer(e);
-				e.sort_prev = world;
+				e.sort_prev = NULL;
 				//e.gotscores = 0;
 			}
 		}
@@ -780,9 +780,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void CSQC_Ent_Update(bool isnew)
+void CSQC_Ent_Update(entity this, bool isnew)
 {
-	SELFPARAM();
 	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
@@ -861,9 +860,8 @@ void Ent_Remove(entity this)
 	// TODO possibly set more stuff to defaults
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
-void CSQC_Ent_Remove()
+void CSQC_Ent_Remove(entity this)
 {
-	SELFPARAM();
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{

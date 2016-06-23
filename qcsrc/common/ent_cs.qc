@@ -187,7 +187,7 @@
 	#undef X
 		this.iflags |= IFLAG_ORIGIN;
 		InterpolateOrigin_Note(this);
-		WITHSELF(this, getthink(this)(this));
+		getthink(this)(this);
 		return true;
 	}
 

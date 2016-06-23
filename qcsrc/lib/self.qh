@@ -21,21 +21,22 @@
     #define self (this, self)
     #undef SELFPARAM
     #define SELFPARAM() const entity this = __self
+    #define ENGINE_EVENT() const entity this = __self
 #endif
 
 // Step 4: kill unstructured setself
-#if 0
+#if 1
     #undef setself
 #endif
 
 // Step 5: this should work
-#if 0
+#if 1
     #undef self
     #define self (0, this)
 #endif
 
 // Step 6: remove SELFPARAM, add parameters
-#if 0
+#if 1
     #undef SELFPARAM
 #endif
 
@@ -45,11 +46,11 @@
     #define WITHSELF(value, block) block
 #endif
 
-#define SELFWRAP(T, R, args, forward) \
-    .R() T; \
-    .R() __##T = T; \
+#define SELFWRAP(T, R, oldargs, args, forward) \
+    .R oldargs T; \
+    .R oldargs __##T = T; \
     .R args self##T; \
-    R T##_self() { SELFPARAM(); return this.self##T forward; }
+    R T##_self oldargs { ENGINE_EVENT(); return this.self##T forward; }
 
 noref entity _selftemp;
 #define SELFWRAP_SET(T, e, f) \
@@ -61,18 +62,48 @@ noref entity _selftemp;
 #define _SELFWRAP_GET(T, e) \
     (0, (e).__##T)
 
-SELFWRAP(think, void, (entity this), (this))
+SELFWRAP(think, void, (), (entity this), (this))
 #define setthink(e, f) SELFWRAP_SET(think, e, f)
 #define getthink(e) SELFWRAP_GET(think, e)
 
-SELFWRAP(touch, void, (entity this), (this))
+SELFWRAP(touch, void, (), (entity this), (this))
 #define settouch(e, f) SELFWRAP_SET(touch, e, f)
 #define gettouch(e) SELFWRAP_GET(touch, e)
 
-SELFWRAP(predraw, void, (entity this), (this))
+SELFWRAP(blocked, void, (), (entity this), (this))
+#define setblocked(e, f) SELFWRAP_SET(blocked, e, f)
+#define blocked stopusingthis
+
+SELFWRAP(predraw, void, (), (entity this), (this))
 #define setpredraw(e, f) SELFWRAP_SET(predraw, e, f)
 
+SELFWRAP(customizeentityforclient, bool, (), (entity this), (this))
+#define setcefc(e, f) SELFWRAP_SET(customizeentityforclient, e, f)
+#define getcefc(e) SELFWRAP_GET(customizeentityforclient, e)
+
+SELFWRAP(camera_transform, vector, (vector org, vector ang), (entity this, vector org, vector ang), (this, org, ang))
+#define setcamera_transform(e, f) SELFWRAP_SET(camera_transform, e, f)
+
+/** return false to remove from the client */
+SELFWRAP(SendEntity, bool, (entity to, int sendflags), (entity this, entity to, int sendflags), (this, to, sendflags))
+#define setSendEntity(e, f) SELFWRAP_SET(SendEntity, e, f)
+#define getSendEntity(e) SELFWRAP_GET(SendEntity, e)
+
+#define ChangeYaw(e, ...) (__self = (e), builtin_ChangeYaw(__VA_ARGS__))
+#define checkclient(e, ...) (__self = (e), builtin_checkclient(__VA_ARGS__))
+#ifndef SVQC
+    #define droptofloor(e, ...) (__self = (e), builtin_droptofloor(__VA_ARGS__))
+#endif
+#define error(...) (__self = (NULL), builtin_error(__VA_ARGS__))
+#define movetogoal(e, ...) (__self = (e), builtin_movetogoal(__VA_ARGS__))
+#ifndef SVQC
+    #define objerror(e, ...) (__self = (e), builtin_objerror(__VA_ARGS__))
+#else
+    void make_safe_for_remove(entity this);
+    #define objerror(e, ...) (__self = (e), make_safe_for_remove(__self), builtin_objerror(__VA_ARGS__))
+#endif
+#define walkmove(e, ...) (__self = (e), builtin_walkmove(__VA_ARGS__))
+
 #ifndef MENUQC
-void adaptor_think2touch(entity this) { WITH(entity, other, NULL, gettouch(this)(this)); }
 void adaptor_think2use(entity this) { if (this.use) this.use(this, NULL, NULL); }
 #endif

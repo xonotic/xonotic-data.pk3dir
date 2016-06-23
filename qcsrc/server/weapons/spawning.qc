@@ -36,7 +36,7 @@ void weapon_defaultspawnfunc(entity this, Weapon e)
 
 		string s = W_Apply_Weaponreplace(e.netname);
 		MUTATOR_CALLHOOK(SetWeaponreplace, this, e, s);
-		s = ret_string;
+		s = M_ARGV(2, string);
 		if (s == "")
 		{
 			remove(this);

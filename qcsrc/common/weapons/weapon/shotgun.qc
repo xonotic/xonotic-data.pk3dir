@@ -59,22 +59,22 @@ REGISTER_WEAPON(SHOTGUN, shotgun, NEW(Shotgun));
 spawnfunc(weapon_shotgun) { weapon_defaultspawnfunc(this, WEP_SHOTGUN); }
 
 void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
-{entity this = actor;
+{
 	float	sc;
 	entity flash;
 
-	W_DecreaseAmmo(thiswep, self, WEP_CVAR_PRI(shotgun, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(self, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(actor, true, 5, SND_SHOTGUN_FIRE, ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
-		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
+		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, WEP_CVAR_PRI(shotgun, ammo));
 
 	// casing code
 	if(autocvar_g_casings >= 1)
 		for(sc = 0;sc < WEP_CVAR_PRI(shotgun, ammo);sc = sc + 1)
-			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, self);
+			SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 30) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 1, actor);
 
 	// muzzle flash for 1st person view
 	flash = spawn();
@@ -82,7 +82,7 @@ void W_Shotgun_Attack(Weapon thiswep, entity actor, float isprimary)
 	setthink(flash, SUB_Remove);
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(self, flash, '5 0 0');
+	W_AttachToShotorg(actor, flash, '5 0 0');
 }
 
 .float swing_prev;
@@ -94,47 +94,47 @@ void W_Shotgun_Melee_Think(entity this)
 	entity target_victim;
 	vector targpos;
 
-	if(!self.cnt) // set start time of melee
+	if(!this.cnt) // set start time of melee
 	{
-		self.cnt = time;
-		W_PlayStrengthSound(self.realowner);
+		this.cnt = time;
+		W_PlayStrengthSound(this.realowner);
 	}
 
-	makevectors(self.realowner.v_angle); // update values for v_* vectors
+	makevectors(this.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
-	meleetime = WEP_CVAR_SEC(shotgun, melee_time) * W_WeaponRateFactor();
-	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
+	meleetime = WEP_CVAR_SEC(shotgun, melee_time) * W_WeaponRateFactor(this.realowner);
+	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * WEP_CVAR_SEC(shotgun, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if(IS_DEAD(self.realowner) && WEP_CVAR_SEC(shotgun, melee_no_doubleslap))
+	if(IS_DEAD(this.realowner) && WEP_CVAR_SEC(shotgun, melee_no_doubleslap))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
 	// if okay, perform the traces needed for this frame
-	for(i=self.swing_prev; i < f; ++i)
+	for(i=this.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / WEP_CVAR_SEC(shotgun, melee_traces))) * 2 - 1);
 
-		targpos = (self.realowner.origin + self.realowner.view_ofs
+		targpos = (this.realowner.origin + this.realowner.view_ofs
 			+ (v_forward * WEP_CVAR_SEC(shotgun, melee_range))
 			+ (v_up * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_SEC(shotgun, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self.realowner, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || IS_MONSTER(trace_ent));
 
-		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
+		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
 			&& (trace_ent.takedamage == DAMAGE_AIM)
-			&& (trace_ent != self.swing_alreadyhit)
+			&& (trace_ent != this.swing_alreadyhit)
 			&& (is_player || WEP_CVAR_SEC(shotgun, melee_nonplayerdamage)))
 		{
 			target_victim = trace_ent; // so it persists through other calls
@@ -144,42 +144,42 @@ void W_Shotgun_Melee_Think(entity this)
 			else
 				swing_damage = (WEP_CVAR_SEC(shotgun, melee_nonplayerdamage) * min(1, swing_factor + 1));
 
-			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
+			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
-			Damage(target_victim, self.realowner, self.realowner,
+			Damage(target_victim, this.realowner, this.realowner,
 				swing_damage, WEP_SHOTGUN.m_id | HITTYPE_SECONDARY,
-				self.realowner.origin + self.realowner.view_ofs,
+				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR_SEC(shotgun, force));
 
-			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN.m_id, 0, swing_damage); }
+			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_SHOTGUN.m_id, 0, swing_damage); }
 
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 
 			if(WEP_CVAR_SEC(shotgun, melee_multihit)) // allow multiple hits with one swing, but not against the same player twice.
 			{
-				self.swing_alreadyhit = target_victim;
+				this.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
 			}
 			else
 			{
-				remove(self);
+				remove(this);
 				return;
 			}
 		}
 	}
 
-	if(time >= self.cnt + meleetime)
+	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(self);
+		remove(this);
 		return;
 	}
 	else
 	{
 		// set up next frame
-		self.swing_prev = i;
-		self.nextthink = time;
+		this.swing_prev = i;
+		this.nextthink = time;
 	}
 }
 
@@ -191,7 +191,7 @@ void W_Shotgun_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int f
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Shotgun_Melee_Think);
-	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor();
+	meleetemp.nextthink = time + WEP_CVAR_SEC(shotgun, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 
@@ -228,11 +228,10 @@ void W_Shotgun_Attack3_Frame1(Weapon thiswep, entity actor, .entity weaponentity
 
 METHOD(Shotgun, wr_aim, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
-        PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
+    if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR_SEC(shotgun, melee_range)))
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
     else
-        PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
 }
 METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -252,7 +251,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(shotgun, animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, true);
-                    actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
+                    actor.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
                 }
             }
@@ -264,7 +263,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
                 if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_SEC(shotgun, alt_animtime)))
                 {
                     W_Shotgun_Attack(thiswep, actor, false);
-                    actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
+                    actor.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor(actor);
                     weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
                 }
             }
@@ -282,8 +281,7 @@ METHOD(Shotgun, wr_think, void(entity thiswep, entity actor, .entity weaponentit
 }
 METHOD(Shotgun, wr_setup, void(entity thiswep, entity actor))
 {
-    entity this = actor;
-    self.ammo_field = ammo_none;
+    actor.ammo_field = ammo_none;
 }
 METHOD(Shotgun, wr_checkammo1, bool(entity thiswep, entity actor))
 {
@@ -330,14 +328,13 @@ METHOD(Shotgun, wr_killmessage, Notification(entity thiswep))
 
 METHOD(Shotgun, wr_impacteffect, void(entity thiswep, entity actor))
 {
-    entity this = actor;
     vector org2 = w_org + w_backoff * 2;
     pointparticles(EFFECT_SHOTGUN_IMPACT, org2, w_backoff * 1000, 1);
-    if(!w_issilent && time - self.prevric > 0.25)
+    if(!w_issilent && time - actor.prevric > 0.25)
     {
         if(w_random < 0.05)
-            sound(self, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
-        self.prevric = time;
+            sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTEN_NORM);
+        actor.prevric = time;
     }
 }
 

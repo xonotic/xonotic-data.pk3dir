@@ -13,17 +13,17 @@ const int PS_TILE_SIZE = 8;
 // find same game piece given its tile name
 entity ps_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 bool ps_draw(entity minigame)
 {
 	int valid = 0;
-	entity e = world;
+	entity e = NULL;
 	while( ( e = findentity(e,owner,minigame) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
@@ -69,7 +69,7 @@ bool ps_winning_piece(entity minigame)
 	//int number = minigame_tile_number(piece.netname);
 	//int letter = minigame_tile_letter(piece.netname);
 
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minigame) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
@@ -227,7 +227,7 @@ int ps_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
@@ -506,7 +506,7 @@ void ps_make_move(entity minigame)
 		else
 		{
 			minigame_cmd("move ", ps_curr_piece.netname, " ", ps_curr_pos);
-			ps_curr_piece = world;
+			ps_curr_piece = NULL;
 		}
 	}
 }
@@ -528,7 +528,7 @@ int ps_client_event(entity minigame, string event, ...)
 		case "activate":
 		{
 			ps_set_curr_pos("");
-			ps_curr_piece = world;
+			ps_curr_piece = NULL;
 			minigame.message = ps_turn_to_string(minigame.minigame_flags);
 			return false;
 		}

@@ -8,25 +8,25 @@ bool cpicon_send(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & CPSF_SETUP)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, this.origin_x);
+		WriteCoord(MSG_ENTITY, this.origin_y);
+		WriteCoord(MSG_ENTITY, this.origin_z);
 
-		WriteByte(MSG_ENTITY, self.health);
-		WriteByte(MSG_ENTITY, self.max_health);
-		WriteByte(MSG_ENTITY, self.count);
-		WriteByte(MSG_ENTITY, self.team);
-		WriteByte(MSG_ENTITY, self.owner.iscaptured);
+		WriteByte(MSG_ENTITY, this.health);
+		WriteByte(MSG_ENTITY, this.max_health);
+		WriteByte(MSG_ENTITY, this.count);
+		WriteByte(MSG_ENTITY, this.team);
+		WriteByte(MSG_ENTITY, this.owner.iscaptured);
 	}
 
 	if(sf & CPSF_STATUS)
 	{
-		WriteByte(MSG_ENTITY, self.team);
+		WriteByte(MSG_ENTITY, this.team);
 
-		if(self.health <= 0)
+		if(this.health <= 0)
 			WriteByte(MSG_ENTITY, 0);
 		else
-			WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
+			WriteByte(MSG_ENTITY, ceil((this.health / this.max_health) * 255));
 	}
 
 	return true;

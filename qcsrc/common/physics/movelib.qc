@@ -232,6 +232,6 @@ void movelib_groundalign4point(entity this, float spring_length, float spring_up
     this.angles_z = ((1-blendrate) *  this.angles.z)  + (push_angle.z * blendrate);
 
     //a = this.origin;
-    setorigin(this,r);
+    setorigin(this, r);
 }
 

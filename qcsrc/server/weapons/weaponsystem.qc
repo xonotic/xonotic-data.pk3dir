@@ -19,30 +19,29 @@
 
 .float weapon_frametime;
 
-float W_WeaponRateFactor()
+float W_WeaponRateFactor(entity this)
 {
 	float t = 1.0 / g_weaponratefactor;
 
-	MUTATOR_CALLHOOK(WeaponRateFactor, t);
-	t = weapon_rate;
+	MUTATOR_CALLHOOK(WeaponRateFactor, t, this);
+	t = M_ARGV(0, float);
 
 	return t;
 }
 
-float W_WeaponSpeedFactor()
+float W_WeaponSpeedFactor(entity this)
 {
 	float t = 1.0 * g_weaponspeedfactor;
 
-	MUTATOR_CALLHOOK(WeaponSpeedFactor, t);
-	t = ret_float;
+	MUTATOR_CALLHOOK(WeaponSpeedFactor, t, this);
+	t = M_ARGV(0, float);
 
 	return t;
 }
 
 
-bool CL_Weaponentity_CustomizeEntityForClient()
+bool CL_Weaponentity_CustomizeEntityForClient(entity this)
 {
-	SELFPARAM();
 	this.viewmodelforclient = this.owner;
 	if (IS_SPEC(other) && other.enemy == this.owner) this.viewmodelforclient = other;
 	return true;
@@ -69,7 +68,7 @@ void CL_Weaponentity_Think(entity this)
 	.entity weaponentity = this.weaponentity_fld;
 	if (this.owner.(weaponentity) != this)
 	{
-		// owner has new gun; remove self
+		// owner has new gun; remove old one
 		if (this.weaponchild) remove(this.weaponchild);
 		remove(this);
 		return;
@@ -169,7 +168,7 @@ void CL_SpawnWeaponentity(entity actor, .entity weaponentity)
 	setthink(view, CL_Weaponentity_Think);
 	view.nextthink = time;
 	view.viewmodelforclient = actor;
-	view.customizeentityforclient = CL_Weaponentity_CustomizeEntityForClient;
+	setcefc(view, CL_Weaponentity_CustomizeEntityForClient);
 
 	if (weaponentity == weaponentities[0])
 	{
@@ -215,8 +214,13 @@ bool weapon_prepareattack_checkammo(Weapon thiswep, entity actor, bool secondary
 	if (ammo) return true;
 	// always keep the Mine Layer if we placed mines, so that we can detonate them
 	if (thiswep == WEP_MINE_LAYER)
-		for (entity mine; (mine = find(mine, classname, "mine")); )
-			if (mine.owner == actor) return false;
+	{
+		FOREACH_ENTITY_ENT(owner, actor,
+		{
+			if(it.classname != "mine") continue;
+			if(it.owner == actor) return false;
+		});
+	}
 
 	if (thiswep == WEP_SHOTGUN)
 		if (!secondary && WEP_CVAR(shotgun, secondary) == 1) return false;           // no clicking, just allow
@@ -300,7 +304,7 @@ void weapon_prepareattack_do(entity actor, .entity weaponentity, bool secondary,
 			ATTACK_FINISHED(actor, slot) = time;
 			// dprint("resetting attack finished to ", ftos(time), "\n");
 		}
-		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor, slot) = ATTACK_FINISHED(actor, slot) + attacktime * W_WeaponRateFactor(actor);
 	}
 	actor.bulletcounter += 1;
 	// dprint("attack finished ", ftos(ATTACK_FINISHED(actor, slot)), "\n");
@@ -358,7 +362,7 @@ void weapon_thinkf(entity actor, .entity weaponentity, WFRAME fr, float t, void(
 	if (this.weapon_think == w_ready && func != w_ready && this.state == WS_RAISE) backtrace(
 			"Tried to override initial weapon think function - should this really happen?");
 
-	t *= W_WeaponRateFactor();
+	t *= W_WeaponRateFactor(actor);
 
 	// VorteX: haste can be added here
 	if (this.weapon_think == w_ready)
@@ -768,5 +772,5 @@ void W_DropEvent(.void(Weapon, entity actor) event, entity player, float weapon_
 {
 	Weapon w = Weapons_from(weapon_type);
 	weapon_dropevent_item = weapon_item;
-	WITHSELF(player, w.event(w, player));
+	w.event(w, player);
 }

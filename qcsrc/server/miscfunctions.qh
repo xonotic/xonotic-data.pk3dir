@@ -40,11 +40,11 @@ void play2all(string samp);
 
 void play2team(float t, string filename);
 
-void GetCvars_handleFloat(string thisname, float f, .float field, string name);
+void GetCvars_handleFloat(entity this, string thisname, float f, .float field, string name);
 
 float spamsound(entity e, float chan, string samp, float vol, float _atten);
 
-void GetCvars_handleString(string thisname, float f, .string field, string name);
+void GetCvars_handleString(entity this, string thisname, float f, .string field, string name);
 
 void precache_all_playermodels(string pattern);
 
@@ -55,8 +55,7 @@ void InitializeEntitiesRun();
 void stopsoundto(float _dest, entity e, float chan);
 void soundtoat(float _dest, entity e, vector o, float chan, string samp, float vol, float _atten);
 
-void objerror(string s);
-void droptofloor();
+void droptofloor(entity this);
 
 void attach_sameorigin(entity e, entity to, string tag);
 
@@ -68,7 +67,7 @@ void detach_sameorigin(entity e);
 
 void follow_sameorigin(entity e, entity to);
 
-string formatmessage(string msg);
+string formatmessage(entity this, string msg);
 
 void GameLogEcho(string s);
 
@@ -366,4 +365,3 @@ entity initialize_entity_first;
 
 float sound_allowed(float dest, entity e);
 void InitializeEntity(entity e, void(entity this) func, float order);
-void SetCustomizer(entity e, float() customizer, void() uncustomizer);
