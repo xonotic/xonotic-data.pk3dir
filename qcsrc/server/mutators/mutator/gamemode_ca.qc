@@ -187,9 +187,15 @@ bool CA_CheckTeams()
 		prev_missing_teams_mask = -1;
 		return false;
 	}
-	int missing_teams_mask = (!redalive) + (!bluealive) * 2;
-	if(NumTeams(ca_teams) >= 3) missing_teams_mask += (!yellowalive) * 4;
-	if(NumTeams(ca_teams) >= 4) missing_teams_mask += (!pinkalive) * 8;
+	int missing_teams_mask = 0;
+	if(ca_teams & BIT(0))
+		missing_teams_mask += (!redalive) * 1;
+	if(ca_teams & BIT(1))
+		missing_teams_mask += (!bluealive) * 2;
+	if(ca_teams & BIT(2))
+		missing_teams_mask += (!yellowalive) * 4;
+	if(ca_teams & BIT(3))
+		missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);

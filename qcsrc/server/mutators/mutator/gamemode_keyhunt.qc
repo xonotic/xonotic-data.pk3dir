@@ -959,9 +959,15 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 		}
 		else
 		{
-			float missing_teams_mask = boolean(p1) + boolean(p2) * 2;
-			if(kh_teams >= 3) missing_teams_mask += boolean(p3) * 4;
-			if(kh_teams >= 4) missing_teams_mask += boolean(p4) * 8;
+			int missing_teams_mask = 0;
+			if(kh_teams & BIT(0))
+				missing_teams_mask += boolean(p1) * 1;
+			if(kh_teams & BIT(1))
+				missing_teams_mask += boolean(p2) * 2;
+			if(kh_teams & BIT(2))
+				missing_teams_mask += boolean(p3) * 4;
+			if(kh_teams & BIT(3))
+				missing_teams_mask += boolean(p4) * 8;
 			if(prev_missing_teams_mask != missing_teams_mask)
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
