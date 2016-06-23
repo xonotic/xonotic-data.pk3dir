@@ -2251,7 +2251,12 @@ spawnfunc(onslaught_generator)
 void ons_ScoreRules()
 {
 	CheckAllowedTeams(NULL);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, true);
+	int teams = 0;
+	if(c1 >= 0) teams |= BIT(0);
+	if(c2 >= 0) teams |= BIT(1);
+	if(c3 >= 0) teams |= BIT(2);
+	if(c4 >= 0) teams |= BIT(3);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);

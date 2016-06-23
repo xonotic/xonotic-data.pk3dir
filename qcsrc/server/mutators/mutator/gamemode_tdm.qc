@@ -79,8 +79,16 @@ void tdm_DelayedInit(entity this)
 		if(numteams < 2) { numteams = autocvar_g_tdm_teams; }
 		numteams = bound(2, numteams, 4);
 
+		int teams = 0;
+		if(numteams >= 1) teams |= BIT(0);
+		if(numteams >= 2) teams |= BIT(1);
+		if(numteams >= 3) teams |= BIT(2);
+		if(numteams >= 4) teams |= BIT(3);
+
+		//numteams = teams; // now set it?
+
 		float i;
-		for(i = 1; i <= numteams; ++i)
+		for(i = 1; i <= numteams && (teams & BIT(numteams)); ++i)
 			tdm_SpawnTeam(Team_ColorName(Team_NumberToTeam(i)), Team_NumberToTeam(i) - 1);
 	}
 }

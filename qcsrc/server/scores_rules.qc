@@ -5,10 +5,15 @@
 
 void CheckAllowedTeams (entity for_whom);
 
+int NumTeams(int teams)
+{
+	return (teams & BIT(0)) + (teams & BIT(1)) + (teams & BIT(2)) + (teams & BIT(3));
+}
+
 // NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE
 // scores that should be in all modes:
-float ScoreRules_teams;
-void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabled)
+int ScoreRules_teams;
+void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled)
 {
 	float i;
 	for(i = 0; i < MAX_SCORE; ++i)
@@ -44,7 +49,12 @@ void ScoreRules_generic()
 	if(teamplay)
 	{
 		CheckAllowedTeams(NULL);
-		ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
+		int teams = 0;
+		if(c1 >= 0) teams |= BIT(0);
+		if(c2 >= 0) teams |= BIT(1);
+		if(c3 >= 0) teams |= BIT(2);
+		if(c4 >= 0) teams |= BIT(3);
+		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
 	}
 	else
 		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);

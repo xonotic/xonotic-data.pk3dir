@@ -219,12 +219,10 @@ void CheckAllowedTeams (entity for_whom)
 
 	if(!mutator_returnvalue)
 	{
-		if(dm >= 4)
-			c1 = c2 = c3 = c4 = 0;
-		else if(dm >= 3)
-			c1 = c2 = c3 = 0;
-		else
-			c1 = c2 = 0;
+		if(dm & BIT(0)) c1 = 0;
+		if(dm & BIT(1)) c2 = 0;
+		if(dm & BIT(2)) c3 = 0;
+		if(dm & BIT(3)) c4 = 0;
 	}
 
 	// find out what teams are allowed if necessary

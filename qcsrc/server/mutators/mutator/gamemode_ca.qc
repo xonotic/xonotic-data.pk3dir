@@ -36,7 +36,15 @@ REGISTER_MUTATOR(ca, false)
 		if (ca_teams < 2) ca_teams = autocvar_g_ca_teams;
 		ca_teams = bound(2, ca_teams, 4);
 
-        ScoreRules_basics(ca_teams, SFL_SORT_PRIO_PRIMARY, 0, true);
+		int teams = 0;
+		if(ca_teams >= 1) teams |= BIT(0);
+		if(ca_teams >= 2) teams |= BIT(1);
+		if(ca_teams >= 3) teams |= BIT(2);
+		if(ca_teams >= 4) teams |= BIT(3);
+
+		ca_teams = teams; // now set it?
+
+        ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
         ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
         ScoreRules_basics_end();
 
@@ -117,7 +125,7 @@ float CA_GetWinnerTeam()
 void nades_Clear(entity player);
 
 #define CA_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
+#define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == NumTeams(ca_teams))
 float CA_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -180,8 +188,8 @@ bool CA_CheckTeams()
 		return false;
 	}
 	int missing_teams_mask = (!redalive) + (!bluealive) * 2;
-	if(ca_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
-	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	if(NumTeams(ca_teams) >= 3) missing_teams_mask += (!yellowalive) * 4;
+	if(NumTeams(ca_teams) >= 4) missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
