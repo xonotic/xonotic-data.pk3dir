@@ -7,7 +7,7 @@ void CheckAllowedTeams (entity for_whom);
 
 int NumTeams(int teams)
 {
-	return (teams & BIT(0)) + (teams & BIT(1)) + (teams & BIT(2)) + (teams & BIT(3));
+	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));
 }
 
 // NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE

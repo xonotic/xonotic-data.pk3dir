@@ -2577,12 +2577,19 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 
 		switch(tmp_entity.team)
 		{
-			case NUM_TEAM_1: ctf_teams |= BIT(0); break;
-			case NUM_TEAM_2: ctf_teams |= BIT(1); break;
-			case NUM_TEAM_3: ctf_teams |= BIT(2); break;
-			case NUM_TEAM_4: ctf_teams |= BIT(3); break;
+			case NUM_TEAM_1: BITSET_ASSIGN(ctf_teams, BIT(0)); break;
+			case NUM_TEAM_2: BITSET_ASSIGN(ctf_teams, BIT(1)); break;
+			case NUM_TEAM_3: BITSET_ASSIGN(ctf_teams, BIT(2)); break;
+			case NUM_TEAM_4: BITSET_ASSIGN(ctf_teams, BIT(3)); break;
 		}
 		if(tmp_entity.team == 0) { ctf_oneflag = true; }
+	}
+
+	if(NumTeams(ctf_teams) < 2) // somehow, there's not enough flags!
+	{
+		ctf_teams = 0; // so set the default red and blue teams
+		BITSET_ASSIGN(ctf_teams, BIT(0));
+		BITSET_ASSIGN(ctf_teams, BIT(1));
 	}
 
 	//ctf_teams = bound(2, ctf_teams, 4);

@@ -424,8 +424,12 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	float totalteams, t;
-	totalteams = 0;
+	int totalteams = 0;
+	int t = 1; // initialize with a random team?
+	if(c4 >= 0) t = 4;
+	if(c3 >= 0) t = 3;
+	if(c2 >= 0) t = 2;
+	if(c1 >= 0) t = 1;
 
 	// find out what teams are available
 	//CheckAllowedTeams();
@@ -459,7 +463,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 
 	RandomSelection_Init();
 
-	t = 1;
+	if(TeamSmallerEqThanTeam(1, t, pl))
+		t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;
 	if(TeamSmallerEqThanTeam(3, t, pl))
