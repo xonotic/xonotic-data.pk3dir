@@ -816,27 +816,6 @@ void PM_check_blocked(entity this)
 #endif
 }
 
-void PM_fly(entity this, float maxspd_mod)
-{
-	// noclipping or flying
-	UNSET_ONGROUND(this);
-
-	this.velocity = this.velocity * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this));
-	makevectors(this.v_angle);
-	//wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
-	vector wishvel = v_forward * this.movement.x
-					+ v_right * this.movement.y
-					+ '0 0 1' * this.movement.z;
-	// acceleration
-	vector wishdir = normalize(wishvel);
-	float wishspeed = min(vlen(wishvel), PHYS_MAXSPEED(this) * maxspd_mod);
-#ifdef SVQC
-	if(time >= PHYS_TELEPORT_TIME(this))
-#endif
-		PM_Accelerate(this, wishdir, wishspeed, wishspeed, PHYS_ACCELERATE(this) * maxspd_mod, 1, 0, 0, 0);
-	PM_ClientMovement_Move(this);
-}
-
 void PM_swim(entity this, float maxspd_mod)
 {
 	// swimming

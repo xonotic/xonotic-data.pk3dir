@@ -4,4 +4,7 @@ COMPONENT(phys);
 .vector com_phys_pos, com_phys_pos_prev;
 .vector com_phys_ang, com_phys_ang_prev;
 .vector com_phys_vel;
+.float com_phys_vel_max;
 .vector com_phys_acc;
+.float com_phys_acc_rate;
+.float com_phys_friction;
