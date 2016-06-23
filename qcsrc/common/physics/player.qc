@@ -198,8 +198,8 @@ void PM_ClientMovement_UpdateStatus(entity this, bool ground)
 		}
 	}
 
-	if (IS_ONGROUND(this) || this.velocity.z <= 0 || pmove_waterjumptime <= 0)
-		pmove_waterjumptime = 0;
+	if (IS_ONGROUND(this) || this.velocity.z <= 0 || PHYS_WATERJUMP_TIME(this) <= 0)
+		PHYS_WATERJUMP_TIME(this) = 0;
 #endif
 }
 
@@ -570,7 +570,7 @@ void CheckWaterJump(entity this)
 		#ifdef SVQC
 			PHYS_TELEPORT_TIME(this) = time + 2;	// safety net
 		#elif defined(CSQC)
-			pmove_waterjumptime = 2;
+			PHYS_WATERJUMP_TIME(this) = 2;
 		#endif
 		}
 	}
@@ -862,7 +862,7 @@ void PM_swim(entity this, float maxspd_mod)
 				this.velocity = forward * 50;
 				this.velocity_z = 310;
 			#ifdef CSQC
-				pmove_waterjumptime = 2;
+				PHYS_WATERJUMP_TIME(this) = 2;
 			#endif
 				UNSET_ONGROUND(this);
 				SET_JUMP_HELD(this);
@@ -886,7 +886,7 @@ void PM_swim(entity this, float maxspd_mod)
 	if (IS_DUCKED(this))
     	wishspeed *= 0.5;
 
-//	if (pmove_waterjumptime <= 0) // TODO: use
+//	if (PHYS_WATERJUMP_TIME(this) <= 0) // TODO: use
     {
 		// water friction
 		float f = 1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this);
@@ -1215,7 +1215,7 @@ void PM_air(entity this, float buttons_prev, float maxspd_mod)
 #ifdef SVQC
 	if(time >= PHYS_TELEPORT_TIME(this))
 #elif defined(CSQC)
-	if(pmove_waterjumptime <= 0)
+	if(PHYS_WATERJUMP_TIME(this) <= 0)
 #endif
 	{
 		float maxairspd = PHYS_MAXAIRSPEED(this) * min(maxspd_mod, 1);
@@ -1297,256 +1297,6 @@ bool IsFlying(entity this)
 	return true;
 }
 
-void PM_Main(entity this)
-{
-	int buttons = PHYS_INPUT_BUTTON_MASK(this);
-#ifdef CSQC
-	this.items = STAT(ITEMS);
-
-	this.movement = PHYS_INPUT_MOVEVALUES(this);
-
-	this.spectatorspeed = STAT(SPECTATORSPEED);
-
-	this.team = myteam + 1; // is this correct?
-	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
-		UNSET_JUMP_HELD(this); // canjump = true
-	pmove_waterjumptime -= PHYS_INPUT_TIMELENGTH;
-
-	PM_ClientMovement_UpdateStatus(this, true);
-#endif
-
-	this.oldmovement = this.movement;
-
-
-#ifdef SVQC
-	WarpZone_PlayerPhysics_FixVAngle(this);
-#endif
-	float maxspeed_mod = 1;
-	maxspeed_mod *= PHYS_HIGHSPEED(this);
-
-#ifdef SVQC
-	Physics_UpdateStats(this, maxspeed_mod);
-
-	if (this.PlayerPhysplug)
-		if (this.PlayerPhysplug(this))
-			return;
-#elif defined(CSQC)
-	if(hud != HUD_NORMAL)
-		return; // no vehicle prediction (yet)
-#endif
-
-#ifdef SVQC
-	anticheat_physics(this);
-#endif
-
-	if (PM_check_specialcommand(this, buttons))
-		return;
-#ifdef SVQC
-	if (sv_maxidle > 0)
-	{
-		if (buttons != this.buttons_old || this.movement != this.movement_old || this.v_angle != this.v_angle_old)
-			this.parm_idlesince = time;
-	}
-#endif
-	int buttons_prev = this.buttons_old;
-	this.buttons_old = buttons;
-	this.movement_old = this.movement;
-	this.v_angle_old = this.v_angle;
-
-	PM_check_nickspam(this);
-
-	PM_check_punch(this);
-#ifdef SVQC
-	if (IS_BOT_CLIENT(this))
-	{
-		if (playerdemo_read(this))
-			return;
-		bot_think(this);
-	}
-#endif
-
-#ifdef SVQC
-	if (IS_PLAYER(this))
-	{
-		const bool allowed_to_move = (time >= game_starttime);
-		if (!allowed_to_move)
-		{
-			this.velocity = '0 0 0';
-			this.movetype = MOVETYPE_NONE;
-			this.disableclientprediction = 2;
-		}
-		else if (this.disableclientprediction == 2)
-		{
-			if (this.movetype == MOVETYPE_NONE)
-				this.movetype = MOVETYPE_WALK;
-			this.disableclientprediction = 0;
-		}
-	}
-#endif
-
-#ifdef SVQC
-	if (this.movetype == MOVETYPE_NONE)
-		return;
-
-	// when we get here, disableclientprediction cannot be 2
-	this.disableclientprediction = 0;
-#endif
-
-	viewloc_PlayerPhysics(this);
-
-	PM_check_frozen(this);
-
-	PM_check_blocked(this);
-
-	maxspeed_mod = 1;
-
-	if (this.in_swamp)
-		maxspeed_mod *= this.swamp_slowdown; //cvar("g_balance_swamp_moverate");
-
-	// conveyors: first fix velocity
-	if (this.conveyor.state)
-		this.velocity -= this.conveyor.movedir;
-
-	MUTATOR_CALLHOOK(PlayerPhysics, this);
-
-	if (!IS_PLAYER(this))
-	{
-#ifdef SVQC
-		maxspeed_mod = autocvar_sv_spectator_speed_multiplier;
-		if (!this.spectatorspeed)
-			this.spectatorspeed = maxspeed_mod;
-		if (this.impulse && this.impulse <= 19 || (this.impulse >= 200 && this.impulse <= 209) || (this.impulse >= 220 && this.impulse <= 229))
-		{
-			if (this.lastclassname != STR_PLAYER)
-			{
-				if (this.impulse == 10 || this.impulse == 15 || this.impulse == 18 || (this.impulse >= 200 && this.impulse <= 209))
-					this.spectatorspeed = bound(1, this.spectatorspeed + 0.5, 5);
-				else if (this.impulse == 11)
-					this.spectatorspeed = maxspeed_mod;
-				else if (this.impulse == 12 || this.impulse == 16  || this.impulse == 19 || (this.impulse >= 220 && this.impulse <= 229))
-					this.spectatorspeed = bound(1, this.spectatorspeed - 0.5, 5);
-				else if (this.impulse >= 1 && this.impulse <= 9)
-					this.spectatorspeed = 1 + 0.5 * (this.impulse - 1);
-			} // otherwise just clear
-			this.impulse = 0;
-		}
-#endif
-		maxspeed_mod = this.spectatorspeed;
-	}
-#ifdef SVQC
-
-	float spd = max(PHYS_MAXSPEED(this), PHYS_MAXAIRSPEED(this)) * maxspeed_mod;
-	if(this.speed != spd)
-	{
-		this.speed = spd;
-		string temps = ftos(spd);
-		stuffcmd(this, strcat("cl_forwardspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_backspeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_sidespeed ", temps, "\n"));
-		stuffcmd(this, strcat("cl_upspeed ", temps, "\n"));
-	}
-
-	if(this.jumpspeedcap_min != autocvar_sv_jumpspeedcap_min)
-	{
-		this.jumpspeedcap_min = autocvar_sv_jumpspeedcap_min;
-		stuffcmd(this, sprintf("\ncl_jumpspeedcap_min \"%s\"\n", autocvar_sv_jumpspeedcap_min));
-	}
-	if(this.jumpspeedcap_max != autocvar_sv_jumpspeedcap_max)
-	{
-		this.jumpspeedcap_max = autocvar_sv_jumpspeedcap_max;
-		stuffcmd(this, sprintf("\ncl_jumpspeedcap_max \"%s\"\n", autocvar_sv_jumpspeedcap_max));
-	}
-#endif
-
-	if(IS_DEAD(this))
-	{
-		// handle water here
-		vector midpoint = ((this.absmin + this.absmax) * 0.5);
-		if(pointcontents(midpoint) == CONTENT_WATER)
-		{
-			this.velocity = this.velocity * 0.5;
-
-			// do we want this?
-			//if(pointcontents(midpoint + '0 0 2') == CONTENT_WATER)
-				//{ this.velocity_z = 70; }
-		}
-		goto end;
-	}
-
-#ifdef SVQC
-	if (!this.fixangle)
-		this.angles = '0 1 0' * this.v_angle.y;
-#endif
-
-	if (IS_PLAYER(this) && IS_ONGROUND(this))
-	{
-		PM_check_hitground(this);
-		PM_Footsteps(this);
-	}
-
-#ifdef SVQC
-	if(IsFlying(this))
-		this.wasFlying = 1;
-#endif
-
-	if (IS_PLAYER(this))
-		CheckPlayerJump(this);
-
-	if (this.flags & FL_WATERJUMP)
-	{
-		this.velocity_x = this.movedir.x;
-		this.velocity_y = this.movedir.y;
-		if (time > PHYS_TELEPORT_TIME(this) || this.waterlevel == WATERLEVEL_NONE
-		#ifdef CSQC
-			|| pmove_waterjumptime <= 0
-		#endif
-			)
-		{
-			this.flags &= ~FL_WATERJUMP;
-			PHYS_TELEPORT_TIME(this) = 0;
-		#ifdef CSQC
-			pmove_waterjumptime = 0;
-		#endif
-		}
-	}
-
-	else if (MUTATOR_CALLHOOK(PM_Physics, this, maxspeed_mod))
-		{ }
-
-#ifdef SVQC
-	else if (this.movetype == MOVETYPE_NOCLIP || this.movetype == MOVETYPE_FLY || this.movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
-#elif defined(CSQC)
-	else if (this.move_movetype == MOVETYPE_NOCLIP || this.move_movetype == MOVETYPE_FLY || this.move_movetype == MOVETYPE_FLY_WORLDONLY || MUTATOR_CALLHOOK(IsFlying, this))
-#endif
-		PM_fly(this, maxspeed_mod);
-
-	else if (this.waterlevel >= WATERLEVEL_SWIMMING)
-		PM_swim(this, maxspeed_mod);
-
-	else if (time < this.ladder_time)
-		PM_ladder(this, maxspeed_mod);
-
-	else if (ITEMS_STAT(this) & IT_USING_JETPACK)
-		PM_jetpack(this, maxspeed_mod);
-
-	else if (IS_ONGROUND(this))
-		PM_walk(this, maxspeed_mod);
-
-	else
-		PM_air(this, buttons_prev, maxspeed_mod);
-
-LABEL(end)
-	if (IS_ONGROUND(this))
-		this.lastground = time;
-
-	// conveyors: then break velocity again
-	if(this.conveyor.state)
-		this.velocity += this.conveyor.movedir;
-
-	this.lastflags = this.flags;
-
-	this.lastclassname = this.classname;
-}
 
 void sys_phys_update(entity this, float dt);
 #if defined(SVQC)

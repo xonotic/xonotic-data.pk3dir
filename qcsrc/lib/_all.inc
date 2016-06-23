@@ -2,6 +2,18 @@
 	#define COMPAT_NO_MOD_IS_XONOTIC
 #endif
 
+#ifdef CSQC
+#define IS_CSQC 1
+#else
+#define IS_CSQC 0
+#endif
+
+#ifdef SVQC
+#define IS_SVQC 1
+#else
+#define IS_SVQC 0
+#endif
+
 #include "compiler.qh"
 
 #ifndef QCC_SUPPORT_INT
