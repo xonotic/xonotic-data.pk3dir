@@ -12,7 +12,6 @@ void sys_phys_update(entity this, float dt)
 	sys_phys_fix(this, dt);
 	if (sys_phys_override(this)) { return; } sys_phys_monitor(this);
 
-	int buttons_prev = this.buttons_old;
 	this.buttons_old = PHYS_INPUT_BUTTON_MASK(this);
 	this.movement_old = this.movement;
 	this.v_angle_old = this.v_angle;
@@ -129,7 +128,17 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_ground = false;
 		this.com_phys_gravity = '0 0 0';
 	} else {
-		PM_air(this, buttons_prev, maxspeed_mod);
+		this.com_phys_acc_rate_air = PHYS_AIRACCELERATE(this) * min(maxspeed_mod, 1);
+		this.com_phys_acc_rate_air_stop = PHYS_AIRSTOPACCELERATE(this) * maxspeed_mod;
+		this.com_phys_acc_rate_air_strafe = PHYS_AIRSTRAFEACCELERATE(this) * maxspeed_mod;
+		this.com_phys_vel_max_air_strafe = PHYS_MAXAIRSTRAFESPEED(this) * maxspeed_mod;
+		this.com_phys_vel_max_air = PHYS_MAXAIRSPEED(this) * maxspeed_mod;
+		this.com_phys_vel_max = PHYS_MAXAIRSPEED(this) * min(maxspeed_mod, 1);
+		this.com_phys_air = true;
+		this.com_phys_vel_2d = true;
+		sys_phys_simulate(this, dt);
+		this.com_phys_vel_2d = false;
+		this.com_phys_air = false;
 	}
 
 	LABEL(end)
@@ -146,7 +155,7 @@ void sys_phys_simulate(entity this, float dt)
 	const vector g = -this.com_phys_gravity;
 	const bool jump = this.com_in_jump;
 
-	if (!this.com_phys_ground) {
+	if (!this.com_phys_ground && !this.com_phys_air) {
 		// noclipping
 		// flying
 		// on a spawnfunc_func_ladder
@@ -223,101 +232,162 @@ void sys_phys_simulate(entity this, float dt)
 	// acceleration
 	const vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);
-	if (this.com_phys_ground || this.com_phys_water) {
-		if (IS_DUCKED(this)) { wishspeed *= 0.5; }
-	}
-	if (this.com_phys_water) {
-		wishspeed *= 0.7;
 
-		//	if (PHYS_WATERJUMP_TIME(this) <= 0) // TODO: use
-		{
-			// water friction
-			float f = 1 - dt * PHYS_FRICTION(this);
-			f = min(max(0, f), 1);
-			this.velocity *= f;
+	if (this.com_phys_air) {
+		if ((IS_SVQC && time >= PHYS_TELEPORT_TIME(this))
+		    ||  (IS_CSQC && PHYS_WATERJUMP_TIME(this) <= 0)) {
+			// apply air speed limit
+			float airaccelqw = PHYS_AIRACCEL_QW(this);
+			float wishspeed0 = wishspeed;
+			const float maxairspd = this.com_phys_vel_max;
+			wishspeed = min(wishspeed, maxairspd);
+			if (IS_DUCKED(this)) {
+				wishspeed *= 0.5;
+			}
+			float airaccel = this.com_phys_acc_rate_air;
 
-			f = wishspeed - this.velocity * wishdir;
-			if (f > 0) {
-				float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, f);
-				this.velocity += accelspeed * wishdir;
+			float accelerating = (this.velocity * wishdir > 0);
+			float wishspeed2 = wishspeed;
+
+			// CPM: air control
+			if (PHYS_AIRSTOPACCELERATE(this)) {
+				vector curdir = normalize(vec2(this.velocity));
+				airaccel += (this.com_phys_acc_rate_air_stop - airaccel) * max(0, -(curdir * wishdir));
+			}
+			// note that for straight forward jumping:
+			// step = accel * PHYS_INPUT_TIMELENGTH * wishspeed0;
+			// accel  = bound(0, wishspeed - vel_xy_current, step) * accelqw + step * (1 - accelqw);
+			// -->
+			// dv/dt = accel * maxspeed (when slow)
+			// dv/dt = accel * maxspeed * (1 - accelqw) (when fast)
+			// log dv/dt = logaccel + logmaxspeed (when slow)
+			// log dv/dt = logaccel + logmaxspeed + log(1 - accelqw) (when fast)
+			float strafity = IsMoveInDirection(this.movement, -90) + IsMoveInDirection(this.movement, +90);  // if one is nonzero, other is always zero
+			if (PHYS_MAXAIRSTRAFESPEED(this)) {
+				wishspeed =
+				    min(wishspeed,
+					GeomLerp(this.com_phys_vel_max_air, strafity, this.com_phys_vel_max_air_strafe));
+			}
+			if (PHYS_AIRSTRAFEACCELERATE(this)) {
+				airaccel = GeomLerp(airaccel, strafity, this.com_phys_acc_rate_air_strafe);
+			}
+			if (PHYS_AIRSTRAFEACCEL_QW(this)) {
+				airaccelqw =
+				    (((strafity > 0.5 ? PHYS_AIRSTRAFEACCEL_QW(this) : PHYS_AIRACCEL_QW(this)) >= 0) ? +1 : -1)
+				    *
+				    (1 - GeomLerp(1 - fabs(PHYS_AIRACCEL_QW(this)), strafity, 1 - fabs(PHYS_AIRSTRAFEACCEL_QW(this))));
+			}
+			// !CPM
+
+			if (PHYS_WARSOWBUNNY_TURNACCEL(this) && accelerating && this.movement.y == 0 && this.movement.x != 0) {
+				PM_AirAccelerate(this, wishdir, wishspeed2);
+			} else {
+				float sidefric = maxairspd ? (PHYS_AIRACCEL_SIDEWAYS_FRICTION(this) / maxairspd) : 0;
+				PM_Accelerate(this, wishdir, wishspeed, wishspeed0, airaccel, airaccelqw,
+					PHYS_AIRACCEL_QW_STRETCHFACTOR(this), sidefric, PHYS_AIRSPEEDLIMIT_NONQW(this));
 			}
 
-			// holding jump button swims upward slowly
-			if (jump && !this.viewloc) {
-				// was:
-				// lava: 50
-				// slime: 80
-				// water: 100
-				// idea: double those
-				this.velocity_z = 200;
+			if (PHYS_AIRCONTROL(this)) {
+				CPM_PM_Aircontrol(this, wishdir, wishspeed2);
 			}
 		}
-		if (this.viewloc) {
+	} else {
+		if (this.com_phys_ground || this.com_phys_water) {
+			if (IS_DUCKED(this)) { wishspeed *= 0.5; }
+		}
+		if (this.com_phys_water) {
+			wishspeed *= 0.7;
+
+			//	if (PHYS_WATERJUMP_TIME(this) <= 0) // TODO: use
+			{
+				// water friction
+				float f = 1 - dt * PHYS_FRICTION(this);
+				f = min(max(0, f), 1);
+				this.velocity *= f;
+
+				f = wishspeed - this.velocity * wishdir;
+				if (f > 0) {
+					float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, f);
+					this.velocity += accelspeed * wishdir;
+				}
+
+				// holding jump button swims upward slowly
+				if (jump && !this.viewloc) {
+					// was:
+					// lava: 50
+					// slime: 80
+					// water: 100
+					// idea: double those
+					this.velocity_z = 200;
+				}
+			}
+			if (this.viewloc) {
+				const float addspeed = wishspeed - this.velocity * wishdir;
+				if (addspeed > 0) {
+					const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
+					this.velocity += accelspeed * wishdir;
+				}
+			} else {
+				// water acceleration
+				PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
+				PM_ClientMovement_Move(this);
+			}
+			return;
+		}
+		if (this.com_phys_ground) {
+			// apply edge friction
+			const float f2 = vlen2(vec2(this.velocity));
+			if (f2 > 0) {
+				trace_dphitq3surfaceflags = 0;
+				tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+				// TODO: apply edge friction
+				// apply ground friction
+				const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+				    ? PHYS_FRICTION_SLICK(this)
+					: PHYS_FRICTION(this);
+
+				float f = sqrt(f2);
+				f = 1 - dt * realfriction
+				    * ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
+				f = max(0, f);
+				this.velocity *= f;
+				/*
+				   Mathematical analysis time!
+
+				   Our goal is to invert this mess.
+
+				   For the two cases we get:
+				    v = v0 * (1 - dt * (PHYS_STOPSPEED(this) / v0) * PHYS_FRICTION(this))
+				      = v0 - dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
+				    v0 = v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
+				   and
+				    v = v0 * (1 - dt * PHYS_FRICTION(this))
+				    v0 = v / (1 - dt * PHYS_FRICTION(this))
+
+				   These cases would be chosen ONLY if:
+				    v0 < PHYS_STOPSPEED(this)
+				    v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this) < PHYS_STOPSPEED(this)
+				    v < PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
+				   and, respectively:
+				    v0 >= PHYS_STOPSPEED(this)
+				    v / (1 - dt * PHYS_FRICTION(this)) >= PHYS_STOPSPEED(this)
+				    v >= PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
+				 */
+			}
 			const float addspeed = wishspeed - this.velocity * wishdir;
 			if (addspeed > 0) {
 				const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
 				this.velocity += accelspeed * wishdir;
 			}
-		} else {
-			// water acceleration
+			if (IS_CSQC && vdist(this.velocity, >, 0)) {
+				PM_ClientMovement_Move(this);
+			}
+			return;
+		}
+
+		if (IS_CSQC || time >= PHYS_TELEPORT_TIME(this)) {
 			PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
-			PM_ClientMovement_Move(this);
 		}
-		return;
-	}
-	if (this.com_phys_ground) {
-		// apply edge friction
-		const float f2 = vlen2(vec2(this.velocity));
-		if (f2 > 0) {
-			trace_dphitq3surfaceflags = 0;
-			tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-			// TODO: apply edge friction
-			// apply ground friction
-			const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
-			    ? PHYS_FRICTION_SLICK(this)
-				: PHYS_FRICTION(this);
-
-			float f = sqrt(f2);
-			f = 1 - dt * realfriction
-			    * ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
-			f = max(0, f);
-			this.velocity *= f;
-			/*
-			   Mathematical analysis time!
-
-			   Our goal is to invert this mess.
-
-			   For the two cases we get:
-			    v = v0 * (1 - dt * (PHYS_STOPSPEED(this) / v0) * PHYS_FRICTION(this))
-			      = v0 - dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
-			    v0 = v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
-			   and
-			    v = v0 * (1 - dt * PHYS_FRICTION(this))
-			    v0 = v / (1 - dt * PHYS_FRICTION(this))
-
-			   These cases would be chosen ONLY if:
-			    v0 < PHYS_STOPSPEED(this)
-			    v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this) < PHYS_STOPSPEED(this)
-			    v < PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
-			   and, respectively:
-			    v0 >= PHYS_STOPSPEED(this)
-			    v / (1 - dt * PHYS_FRICTION(this)) >= PHYS_STOPSPEED(this)
-			    v >= PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
-			 */
-		}
-		const float addspeed = wishspeed - this.velocity * wishdir;
-		if (addspeed > 0) {
-			const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
-			this.velocity += accelspeed * wishdir;
-		}
-		if (IS_CSQC && vdist(this.velocity, >, 0)) {
-			PM_ClientMovement_Move(this);
-		}
-		return;
-	}
-
-	if (IS_CSQC || time >= PHYS_TELEPORT_TIME(this)) {
-		PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 	}
 	PM_ClientMovement_Move(this);
 }
