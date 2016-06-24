@@ -612,7 +612,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
     instance.solid		  = SOLID_SLIDEBOX;
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
-    instance.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
+    instance.velocity = '0 0 1'; // nude upwards so takeoff sequence can work
     instance.tur_head.exteriormodeltoclient = instance.owner;
 
     instance.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
