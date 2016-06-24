@@ -1073,6 +1073,17 @@ MUTATOR_HOOKFUNCTION(nb, FilterItem)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(nb, ItemTouch)
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
+
+	if(item.weapon && toucher.ballcarried)
+		return MUT_ITEMTOUCH_RETURN; // no new weapons for you, mister!
+
+	return MUT_ITEMTOUCH_CONTINUE;
+}
+
 MUTATOR_HOOKFUNCTION(nb, GetTeamCount)
 {
 	M_ARGV(1, string) = "nexball_team";
