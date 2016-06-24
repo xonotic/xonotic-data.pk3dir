@@ -254,7 +254,7 @@ void CSQCPlayer_SetViewLocation()
 /** Called once per CSQC_UpdateView() */
 void CSQCPlayer_SetCamera()
 {
-	const vector v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+	const vector v0 = ((intermission) ? '0 0 0' : pmove_vel); // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 	const float vh = STAT(VIEWHEIGHT);
 	const vector pl_viewofs = STAT(PL_VIEW_OFS, NULL);
 	const vector pl_viewofs_crouch = STAT(PL_CROUCH_VIEW_OFS, NULL);
