@@ -89,9 +89,15 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
 		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
+		this.com_phys_friction_air = true;
 		sys_phys_simulate(this, dt);
+		this.com_phys_friction_air = false;
 	} else if (this.waterlevel >= WATERLEVEL_SWIMMING) {
-		PM_swim(this, maxspeed_mod);
+		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
+		this.com_phys_acc_rate = PHYS_ACCELERATE(this) * maxspeed_mod;
+		this.com_phys_water = true;
+		sys_phys_simulate(this, dt);
+		this.com_phys_water = false;
 	} else if (time < this.ladder_time) {
 		this.com_phys_friction = PHYS_FRICTION(this);
 		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
@@ -99,7 +105,9 @@ void sys_phys_update(entity this, float dt)
 		this.com_phys_gravity = '0 0 -1' * PHYS_GRAVITY(this) * dt;
 		if (PHYS_ENTGRAVITY(this)) { this.com_phys_gravity *= PHYS_ENTGRAVITY(this); }
 		this.com_phys_ladder = true;
+		this.com_phys_friction_air = true;
 		sys_phys_simulate(this, dt);
+		this.com_phys_friction_air = false;
 		this.com_phys_ladder = false;
 		this.com_phys_gravity = '0 0 0';
 	} else if (ITEMS_STAT(this) & IT_USING_JETPACK) {
@@ -135,24 +143,59 @@ void sys_phys_update(entity this, float dt)
 
 void sys_phys_simulate(entity this, float dt)
 {
-	const float g = -this.com_phys_gravity.z;
+	const vector g = -this.com_phys_gravity;
+	const bool jump = this.com_in_jump;
+
 	if (!this.com_phys_ground) {
 		// noclipping
 		// flying
 		// on a spawnfunc_func_ladder
 		// swimming in spawnfunc_func_water
+		// swimming
 		UNSET_ONGROUND(this);
 
-		this.velocity_z += g / 2;
-		this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
-		this.velocity_z += g / 2;
+		if (this.com_phys_friction_air) {
+			this.velocity_z += g.z / 2;
+			this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
+			this.velocity_z += g.z / 2;
+		}
 	}
 
+	if (this.com_phys_water) {
+		// water jump only in certain situations
+		// this mimics quakeworld code
+		if (jump && this.waterlevel == WATERLEVEL_SWIMMING && this.velocity_z >= -180 && !this.viewloc) {
+			vector yawangles = '0 1 0' * this.v_angle.y;
+			makevectors(yawangles);
+			vector forward = v_forward;
+			vector spot = this.origin + 24 * forward;
+			spot_z += 8;
+			traceline(spot, spot, MOVE_NOMONSTERS, this);
+			if (trace_startsolid) {
+				spot_z += 24;
+				traceline(spot, spot, MOVE_NOMONSTERS, this);
+				if (!trace_startsolid) {
+					this.velocity = forward * 50;
+					this.velocity_z = 310;
+					if (IS_CSQC) { PHYS_WATERJUMP_TIME(this) = 2; }
+					UNSET_ONGROUND(this);
+					SET_JUMP_HELD(this);
+				}
+			}
+		}
+	}
 	makevectors(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')));
 	// wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
 	vector wishvel = v_forward * this.movement.x
 	    + v_right * this.movement.y
 	    + '0 0 1' * this.movement.z * (this.com_phys_vel_2d ? 0 : 1);
+	if (this.com_phys_water) {
+		if (this.viewloc) {
+			wishvel.z = -160;    // drift anyway
+		} else if (wishvel == '0 0 0') {
+			wishvel = '0 0 -60'; // drift towards bottom
+		}
+	}
 	if (this.com_phys_ladder) {
 		if (this.viewloc) {
 			wishvel.z = this.oldmovement.x;
@@ -180,10 +223,49 @@ void sys_phys_simulate(entity this, float dt)
 	// acceleration
 	const vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);
-
-	if (this.com_phys_ground) {
+	if (this.com_phys_ground || this.com_phys_water) {
 		if (IS_DUCKED(this)) { wishspeed *= 0.5; }
+	}
+	if (this.com_phys_water) {
+		wishspeed *= 0.7;
 
+		//	if (PHYS_WATERJUMP_TIME(this) <= 0) // TODO: use
+		{
+			// water friction
+			float f = 1 - dt * PHYS_FRICTION(this);
+			f = min(max(0, f), 1);
+			this.velocity *= f;
+
+			f = wishspeed - this.velocity * wishdir;
+			if (f > 0) {
+				float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, f);
+				this.velocity += accelspeed * wishdir;
+			}
+
+			// holding jump button swims upward slowly
+			if (jump && !this.viewloc) {
+				// was:
+				// lava: 50
+				// slime: 80
+				// water: 100
+				// idea: double those
+				this.velocity_z = 200;
+			}
+		}
+		if (this.viewloc) {
+			const float addspeed = wishspeed - this.velocity * wishdir;
+			if (addspeed > 0) {
+				const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
+				this.velocity += accelspeed * wishdir;
+			}
+		} else {
+			// water acceleration
+			PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
+			PM_ClientMovement_Move(this);
+		}
+		return;
+	}
+	if (this.com_phys_ground) {
 		// apply edge friction
 		const float f2 = vlen2(vec2(this.velocity));
 		if (f2 > 0) {
@@ -196,7 +278,7 @@ void sys_phys_simulate(entity this, float dt)
 				: PHYS_FRICTION(this);
 
 			float f = sqrt(f2);
-			f = 1 - PHYS_INPUT_TIMELENGTH * realfriction
+			f = 1 - dt * realfriction
 			    * ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
 			f = max(0, f);
 			this.velocity *= f;
@@ -206,26 +288,26 @@ void sys_phys_simulate(entity this, float dt)
 			   Our goal is to invert this mess.
 
 			   For the two cases we get:
-			    v = v0 * (1 - PHYS_INPUT_TIMELENGTH * (PHYS_STOPSPEED(this) / v0) * PHYS_FRICTION(this))
-			      = v0 - PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
-			    v0 = v + PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
+			    v = v0 * (1 - dt * (PHYS_STOPSPEED(this) / v0) * PHYS_FRICTION(this))
+			      = v0 - dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
+			    v0 = v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
 			   and
-			    v = v0 * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
-			    v0 = v / (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
+			    v = v0 * (1 - dt * PHYS_FRICTION(this))
+			    v0 = v / (1 - dt * PHYS_FRICTION(this))
 
 			   These cases would be chosen ONLY if:
 			    v0 < PHYS_STOPSPEED(this)
-			    v + PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this) < PHYS_STOPSPEED(this)
-			    v < PHYS_STOPSPEED(this) * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
+			    v + dt * PHYS_STOPSPEED(this) * PHYS_FRICTION(this) < PHYS_STOPSPEED(this)
+			    v < PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
 			   and, respectively:
 			    v0 >= PHYS_STOPSPEED(this)
-			    v / (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this)) >= PHYS_STOPSPEED(this)
-			    v >= PHYS_STOPSPEED(this) * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
+			    v / (1 - dt * PHYS_FRICTION(this)) >= PHYS_STOPSPEED(this)
+			    v >= PHYS_STOPSPEED(this) * (1 - dt * PHYS_FRICTION(this))
 			 */
 		}
 		const float addspeed = wishspeed - this.velocity * wishdir;
 		if (addspeed > 0) {
-			const float accelspeed = min(PHYS_ACCELERATE(this) * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
+			const float accelspeed = min(PHYS_ACCELERATE(this) * dt * wishspeed, addspeed);
 			this.velocity += accelspeed * wishdir;
 		}
 		if (IS_CSQC && vdist(this.velocity, >, 0)) {

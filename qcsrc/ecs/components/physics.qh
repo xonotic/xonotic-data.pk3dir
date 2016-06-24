@@ -14,3 +14,5 @@ COMPONENT(phys);
 .bool com_phys_ground;
 .bool com_phys_ladder;
 .bool com_phys_vel_2d;
+.bool com_phys_water;
+.bool com_phys_friction_air;
