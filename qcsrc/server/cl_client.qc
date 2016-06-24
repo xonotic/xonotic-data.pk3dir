@@ -1704,14 +1704,14 @@ bool Spectate(entity this, entity pl)
 
 bool SpectateNext(entity this)
 {
-	other = find(this.enemy, classname, STR_PLAYER);
+	entity ent = find(this.enemy, classname, STR_PLAYER);
 
-	if (MUTATOR_CALLHOOK(SpectateNext, this, other))
-		other = M_ARGV(1, entity);
-	else if (!other)
-		other = find(other, classname, STR_PLAYER);
+	if (MUTATOR_CALLHOOK(SpectateNext, this, ent))
+		ent = M_ARGV(1, entity);
+	else if (!ent)
+		ent = find(ent, classname, STR_PLAYER);
 
-	if(other) { SetSpectatee(this, other); }
+	if(ent) { SetSpectatee(this, ent); }
 
 	return SpectateSet(this);
 }
@@ -1719,36 +1719,36 @@ bool SpectateNext(entity this)
 bool SpectatePrev(entity this)
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
-	other = findchain(classname, STR_PLAYER);
-	if (!other) // no player
+	entity ent = findchain(classname, STR_PLAYER);
+	if (!ent) // no player
 		return false;
 
-	entity first = other;
+	entity first = ent;
 	// skip players until current spectated player
 	if(this.enemy)
-	while(other && other != this.enemy)
-		other = other.chain;
+	while(ent && ent != this.enemy)
+		ent = ent.chain;
 
-	switch (MUTATOR_CALLHOOK(SpectatePrev, this, other, first))
+	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    other = M_ARGV(1, entity);
+		    ent = M_ARGV(1, entity);
 		    break;
 		case MUT_SPECPREV_RETURN:
-		    other = M_ARGV(1, entity);
+		    ent = M_ARGV(1, entity);
 		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
-			if(other.chain)
-				other = other.chain;
+			if(ent.chain)
+				ent = ent.chain;
 			else
-				other = first;
+				ent = first;
 			break;
 		}
 	}
 
-	SetSpectatee(this, other);
+	SetSpectatee(this, ent);
 	return SpectateSet(this);
 }
 

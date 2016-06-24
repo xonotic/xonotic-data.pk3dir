@@ -108,19 +108,19 @@ void W_MineLayer_Stick(entity this, entity to)
 		SetMovetypeFollow(newmine, to);
 }
 
-void W_MineLayer_Explode(entity this)
+void W_MineLayer_Explode(entity this, entity directhitentity)
 {
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(minelayer, damage), WEP_CVAR(minelayer, edgedamage), WEP_CVAR(minelayer, radius), NULL, NULL, WEP_CVAR(minelayer, force), this.projectiledeathtype, directhitentity);
 
 	if(PS(this.realowner).m_weapon == WEP_MINE_LAYER)
 	{
@@ -136,6 +136,11 @@ void W_MineLayer_Explode(entity this)
 	}
 	this.realowner.minelayer_mines -= 1;
 	remove(this);
+}
+
+void W_MineLayer_Explode_think(entity this)
+{
+	W_MineLayer_Explode(this, NULL);
 }
 
 void W_MineLayer_DoRemoteExplode(entity this)
@@ -192,7 +197,7 @@ void W_MineLayer_ProximityExplode(entity this)
 	}
 
 	this.mine_time = 0;
-	W_MineLayer_Explode(this);
+	W_MineLayer_Explode(this, NULL);
 }
 
 int W_MineLayer_Count(entity e)
@@ -234,9 +239,8 @@ void W_MineLayer_Think(entity this)
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
 	if(!IS_PLAYER(this.realowner) || IS_DEAD(this.realowner) || STAT(FROZEN, this.realowner))
 	{
-		other = NULL;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_MineLayer_Explode(this);
+		W_MineLayer_Explode(this, NULL);
 		return;
 	}
 
@@ -268,26 +272,26 @@ void W_MineLayer_Think(entity this)
 		W_MineLayer_RemoteExplode(this);
 }
 
-void W_MineLayer_Touch(entity this)
+void W_MineLayer_Touch(entity this, entity toucher)
 {
 	if(this.movetype == MOVETYPE_NONE || this.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 
-	if(WarpZone_Projectile_Touch(this))
+	if(WarpZone_Projectile_Touch(this, toucher))
 	{
 		if(wasfreed(this))
 			this.realowner.minelayer_mines -= 1;
 		return;
 	}
 
-	if(other && IS_PLAYER(other) && !IS_DEAD(other))
+	if(toucher && IS_PLAYER(toucher) && !IS_DEAD(toucher))
 	{
 		// hit a player
 		// don't stick
 	}
 	else
 	{
-		W_MineLayer_Stick(this, other);
+		W_MineLayer_Stick(this, toucher);
 	}
 }
 
@@ -305,7 +309,7 @@ void W_MineLayer_Damage(entity this, entity inflictor, entity attacker, float da
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, W_MineLayer_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_MineLayer_Explode_think);
 }
 
 void W_MineLayer_Attack(Weapon thiswep, entity actor)

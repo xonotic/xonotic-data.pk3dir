@@ -88,7 +88,7 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax
 
 float Item_GiveTo(entity item, entity player);
 
-void Item_Touch(entity this);
+void Item_Touch(entity this, entity toucher);
 
 void Item_Reset(entity this);
 

@@ -508,7 +508,7 @@ bool raptor_takeoff(entity this)
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }
 
-void raptor_blowup(entity this)
+void raptor_blowup(entity this, entity toucher)
 {
 	this.deadflag	= DEAD_DEAD;
 	this.vehicle_exit(this, VHEF_NORMAL);
@@ -529,7 +529,10 @@ void raptor_blowup(entity this)
 void raptor_diethink(entity this)
 {
 	if(time >= this.wait)
-		setthink(this, raptor_blowup);
+	{
+		raptor_blowup(this, NULL);
+		return;
+	}
 
 	if(random() < 0.05)
 	{
@@ -612,7 +615,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
     instance.solid		  = SOLID_SLIDEBOX;
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
-    instance.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
+    instance.velocity = '0 0 1'; // nudge upwards so takeoff sequence can work
     instance.tur_head.exteriormodeltoclient = instance.owner;
 
     instance.delay = time + autocvar_g_vehicle_raptor_bombs_refire;

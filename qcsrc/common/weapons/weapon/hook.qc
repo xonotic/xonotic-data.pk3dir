@@ -137,9 +137,9 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
-void W_Hook_Touch2(entity this)
+void W_Hook_Touch2(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 	this.use(this, NULL, NULL);
 }
 

@@ -40,10 +40,10 @@ float W_WeaponSpeedFactor(entity this)
 }
 
 
-bool CL_Weaponentity_CustomizeEntityForClient(entity this)
+bool CL_Weaponentity_CustomizeEntityForClient(entity this, entity client)
 {
 	this.viewmodelforclient = this.owner;
-	if (IS_SPEC(other) && other.enemy == this.owner) this.viewmodelforclient = other;
+	if (IS_SPEC(client) && client.enemy == this.owner) this.viewmodelforclient = client;
 	return true;
 }
 

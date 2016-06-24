@@ -233,11 +233,11 @@ void W_RocketMinsta_Laser_Explode_use(entity this, entity actor, entity trigger)
 	W_RocketMinsta_Laser_Explode(this);
 }
 
-void W_RocketMinsta_Laser_Touch (entity this)
+void W_RocketMinsta_Laser_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 	//W_RocketMinsta_Laser_Explode ();
-	RadiusDamage (this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, this.rm_damage, this.rm_edmg, autocvar_g_rm_laser_radius, NULL, NULL, this.rm_force, this.projectiledeathtype, toucher);
 	remove(this);
 }
 

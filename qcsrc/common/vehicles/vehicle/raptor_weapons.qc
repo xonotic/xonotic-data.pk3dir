@@ -53,7 +53,7 @@ METHOD(RaptorBomb, wr_think, void(entity thiswep, entity actor, .entity weaponen
 
 void raptor_flare_think(entity this);
 void raptor_flare_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
-void raptor_flare_touch(entity this);
+void raptor_flare_touch(entity this, entity toucher);
 
 METHOD(RaptorFlare, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire)) {
     bool isPlayer = IS_PLAYER(actor);
@@ -94,12 +94,12 @@ void raptor_bomblet_boom(entity this)
     remove(this);
 }
 
-void raptor_bomblet_touch(entity this)
+void raptor_bomblet_touch(entity this, entity toucher)
 {
-    if(other == this.owner)
+    if(toucher == this.owner)
         return;
 
-    PROJECTILE_TOUCH(this);
+    PROJECTILE_TOUCH(this, toucher);
     setthink(this, raptor_bomblet_boom);
     this.nextthink = time + random() * autocvar_g_vehicle_raptor_bomblet_explode_delay;
 }
@@ -143,6 +143,11 @@ void raptor_bomb_burst(entity this)
     remove(this);
 }
 
+void raptor_bomb_touch(entity this, entity toucher)
+{
+	raptor_bomb_burst(this);
+}
+
 void raptor_bombdrop(entity this)
 {
     entity bomb_1, bomb_2;
@@ -157,8 +162,8 @@ void raptor_bombdrop(entity this)
 
     bomb_1.movetype	 = bomb_2.movetype   = MOVETYPE_BOUNCE;
     bomb_1.velocity	 = bomb_2.velocity   = this.velocity;
-    settouch(bomb_1, raptor_bomb_burst);
-    settouch(bomb_2, raptor_bomb_burst);
+    settouch(bomb_1, raptor_bomb_touch);
+    settouch(bomb_2, raptor_bomb_touch);
     setthink(bomb_1, raptor_bomb_burst);
     setthink(bomb_2, raptor_bomb_burst);
     bomb_1.cnt		  = bomb_2.cnt		= time + 10;
@@ -180,7 +185,7 @@ void raptor_bombdrop(entity this)
     CSQCProjectile(bomb_2, true, PROJECTILE_RAPTORBOMB, true);
 }
 
-void raptor_flare_touch(entity this)
+void raptor_flare_touch(entity this, entity toucher)
 {
     remove(this);
 }

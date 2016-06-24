@@ -278,24 +278,24 @@ void ctf_CaptureShield_Update(entity player, bool wanted_status)
 	}
 }
 
-bool ctf_CaptureShield_Customize(entity this)
+bool ctf_CaptureShield_Customize(entity this, entity client)
 {
-	if(!other.ctf_captureshielded) { return false; }
-	if(CTF_SAMETEAM(this, other)) { return false; }
+	if(!client.ctf_captureshielded) { return false; }
+	if(CTF_SAMETEAM(this, client)) { return false; }
 
 	return true;
 }
 
-void ctf_CaptureShield_Touch(entity this)
+void ctf_CaptureShield_Touch(entity this, entity toucher)
 {
-	if(!other.ctf_captureshielded) { return; }
-	if(CTF_SAMETEAM(this, other)) { return; }
+	if(!toucher.ctf_captureshielded) { return; }
+	if(CTF_SAMETEAM(this, toucher)) { return; }
 
 	vector mymid = (this.absmin + this.absmax) * 0.5;
-	vector othermid = (other.absmin + other.absmax) * 0.5;
+	vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-	Damage(other, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	if(IS_REAL_CLIENT(other)) { Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
+	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * ctf_captureshield_force);
+	if(IS_REAL_CLIENT(toucher)) { Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -747,11 +747,11 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 	}
 }
 
-bool ctf_Stalemate_Customize(entity this)
+bool ctf_Stalemate_Customize(entity this, entity client)
 {
 	// make spectators see what the player would see
 	entity e, wp_owner;
-	e = WaypointSprite_getviewentity(other);
+	e = WaypointSprite_getviewentity(client);
 	wp_owner = this.owner;
 
 	// team waypoints

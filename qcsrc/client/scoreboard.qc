@@ -194,13 +194,14 @@ float HUD_ComparePlayerScores(entity left, entity right)
 
 void HUD_UpdatePlayerPos(entity player)
 {
-	for(other = player.sort_next; other && HUD_ComparePlayerScores(player, other); other = player.sort_next)
+	entity ent;
+	for(ent = player.sort_next; ent && HUD_ComparePlayerScores(player, ent); ent = player.sort_next)
 	{
-		SORT_SWAP(player, other);
+		SORT_SWAP(player, ent);
 	}
-	for(other = player.sort_prev; other != players && HUD_ComparePlayerScores(other, player); other = player.sort_prev)
+	for(ent = player.sort_prev; ent != players && HUD_ComparePlayerScores(ent, player); ent = player.sort_prev)
 	{
-		SORT_SWAP(other, player);
+		SORT_SWAP(ent, player);
 	}
 }
 
@@ -236,13 +237,14 @@ float HUD_CompareTeamScores(entity left, entity right)
 
 void HUD_UpdateTeamPos(entity Team)
 {
-	for(other = Team.sort_next; other && HUD_CompareTeamScores(Team, other); other = Team.sort_next)
+	entity ent;
+	for(ent = Team.sort_next; ent && HUD_CompareTeamScores(Team, ent); ent = Team.sort_next)
 	{
-		SORT_SWAP(Team, other);
+		SORT_SWAP(Team, ent);
 	}
-	for(other = Team.sort_prev; other != teams && HUD_CompareTeamScores(other, Team); other = Team.sort_prev)
+	for(ent = Team.sort_prev; ent != teams && HUD_CompareTeamScores(ent, Team); ent = Team.sort_prev)
 	{
-		SORT_SWAP(other, Team);
+		SORT_SWAP(ent, Team);
 	}
 }
 

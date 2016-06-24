@@ -1,5 +1,6 @@
 #include "physics.qh"
 
+#include <client/main.qh>
 #include <common/mapinfo.qh>
 #include <lib/csqcmodel/cl_player.qh>
 
