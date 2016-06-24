@@ -315,25 +315,11 @@ void _Movetype_CheckWaterTransition(entity ent)  // SV_CheckWaterTransition
 
 void _Movetype_Impact(entity this, entity oth)  // SV_Impact
 {
-	entity oldother = other;
-
 	if(gettouch(this))
-	{
-		other = oth;
-
-		gettouch(this)(this);
-
-		other = oldother;
-	}
+		gettouch(this)(this, oth);
 
 	if(gettouch(oth))
-	{
-		other = this;
-
-		gettouch(oth)(oth);
-
-		other = oldother;
-	}
+		gettouch(oth)(oth, this);
 }
 
 void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGrid
@@ -341,15 +327,11 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 	if(this.solid == SOLID_NOT)
 		return;
 
-	entity oldother = other;
-
     FOREACH_ENTITY_RADIUS(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
 		if (it.solid == SOLID_TRIGGER && it != this)
 		if (it.move_nomonsters != MOVE_NOMONSTERS && it.move_nomonsters != MOVE_WORLDONLY)
 		if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax))
 		{
-			other = this;
-
 			trace_allsolid = false;
 			trace_startsolid = false;
 			trace_fraction = 1;
@@ -360,11 +342,9 @@ void _Movetype_LinkEdict_TouchAreaGrid(entity this)  // SV_LinkEdict_TouchAreaGr
 			trace_plane_dist = 0;
 			trace_ent = this;
 
-			gettouch(it)(it);
+			gettouch(it)(it, this);
 		}
     });
-
-	other = oldother;
 }
 
 void _Movetype_LinkEdict(entity this, bool touch_triggers)  // SV_LinkEdict

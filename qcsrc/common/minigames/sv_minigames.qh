@@ -24,7 +24,7 @@ void end_minigames();
 
 // Only sends entities to players who joined the minigame
 // Use on customizeentityforclient for gameplay entities
-bool minigame_CheckSend(entity this);
+bool minigame_CheckSend(entity this, entity client);
 
 // Check for minigame impulses
 bool MinigameImpulse(entity this, int imp);

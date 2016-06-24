@@ -16,7 +16,7 @@
 .float scale;
 .vector colormod;
 
-void SUB_Stop(entity this)
+void SUB_Stop(entity this, entity toucher)
 {
 	this.move_velocity = this.move_avelocity = '0 0 0';
 	this.move_movetype = MOVETYPE_NONE;

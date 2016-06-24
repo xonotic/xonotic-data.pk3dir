@@ -189,29 +189,29 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 	return 1;
 }
 
-void WarpZone_Touch (entity this)
+void WarpZone_Touch(entity this, entity toucher)
 {
-	if(other.classname == "trigger_warpzone")
+	if(toucher.classname == "trigger_warpzone")
 		return;
 
-	if(time <= other.warpzone_teleport_finishtime) // already teleported this frame
+	if(time <= toucher.warpzone_teleport_finishtime) // already teleported this frame
 		return;
 
 	// FIXME needs a better check to know what is safe to teleport and what not
 #ifdef SVQC
-	if(other.movetype == MOVETYPE_NONE || other.movetype == MOVETYPE_FOLLOW || other.tag_entity)
+	if(toucher.movetype == MOVETYPE_NONE || toucher.movetype == MOVETYPE_FOLLOW || toucher.tag_entity)
 #elif defined(CSQC)
-	if(other.move_movetype == MOVETYPE_NONE || other.move_movetype == MOVETYPE_FOLLOW || other.tag_networkentity)
+	if(toucher.move_movetype == MOVETYPE_NONE || toucher.move_movetype == MOVETYPE_FOLLOW || toucher.tag_networkentity)
 #endif
 		return;
 
-	if(WarpZoneLib_ExactTrigger_Touch(this, other))
+	if(WarpZoneLib_ExactTrigger_Touch(this, toucher))
 		return;
 
 #ifdef SVQC
-	if(WarpZone_PlaneDist(this, other.origin + other.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
+	if(WarpZone_PlaneDist(this, toucher.origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
 #elif defined(CSQC)
-	if(WarpZone_PlaneDist(this, other.move_origin + other.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
+	if(WarpZone_PlaneDist(this, toucher.move_origin + toucher.view_ofs) >= 0) // wrong side of the trigger_warpzone (don't teleport yet)
 #endif
 		return;
 
@@ -227,29 +227,29 @@ void WarpZone_Touch (entity this)
 	//       24/(0.25/frametime)
 	//       96*frametime
 	float d;
-	d = 24 + max(vlen(other.mins), vlen(other.maxs));
-	if(IS_NOT_A_CLIENT(other))
+	d = 24 + max(vlen(toucher.mins), vlen(toucher.maxs));
+	if(IS_NOT_A_CLIENT(toucher))
 	#ifdef SVQC
-		f = -d / bound(frametime * d * 1, frametime * vlen(other.velocity), d);
+		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.velocity), d);
 	#elif defined(CSQC)
-		f = -d / bound(frametime * d * 1, frametime * vlen(other.move_velocity), d);
+		f = -d / bound(frametime * d * 1, frametime * vlen(toucher.move_velocity), d);
 	#endif
 	else
 		f = -1;
-	if(WarpZone_Teleport(this, other, f, 0))
+	if(WarpZone_Teleport(this, toucher, f, 0))
 	{
 #ifdef SVQC
 		string save1, save2;
 
 		save1 = this.target; this.target = string_null;
 		save2 = this.target3; this.target3 = string_null;
-		SUB_UseTargets(this, other, other); // use other too?
+		SUB_UseTargets(this, toucher, toucher); // use toucher too?
 		if (!this.target) this.target = save1;
 		if (!this.target3) this.target3 = save2;
 
 		save1 = this.target; this.target = string_null;
 		save2 = this.target2; this.target2 = string_null;
-		SUB_UseTargets(this.enemy, other, other); // use other too?
+		SUB_UseTargets(this.enemy, toucher, toucher); // use toucher too?
 		if (!this.target) this.target = save1;
 		if (!this.target2) this.target2 = save2;
 #endif
@@ -434,9 +434,9 @@ float WarpZone_CheckProjectileImpact(entity player)
 #endif
 #endif
 
-float WarpZone_Projectile_Touch(entity this)
+float WarpZone_Projectile_Touch(entity this, entity toucher)
 {
-	if(other.classname == "trigger_warpzone")
+	if(toucher.classname == "trigger_warpzone")
 		return true;
 
 	// no further impacts if we teleported this frame!
@@ -496,7 +496,7 @@ float WarpZone_Projectile_Touch(entity this)
 	}
 #endif
 
-	if(WarpZone_Projectile_Touch_ImpactFilter_Callback(this, other))
+	if(WarpZone_Projectile_Touch_ImpactFilter_Callback(this, toucher))
 		return true;
 #endif
 
@@ -847,8 +847,6 @@ void WarpZone_StartFrame()
 		WarpZone_PostInitialize_Callback();
 	}
 
-	entity oldother = other;
-
 	FOREACH_ENTITY(!is_pure(it),
 	{
 		if(warpzone_warpzones_exist)
@@ -857,28 +855,25 @@ void WarpZone_StartFrame()
 		if(IS_OBSERVER(it) || it.solid == SOLID_NOT)
 		if(IS_CLIENT(it)) // we don't care about it being a bot
 		{
-			other = it; // player
-
 			// warpzones
 			if (warpzone_warpzones_exist) {
 				entity e = WarpZone_Find(it.origin + it.mins, it.origin + it.maxs);
 				if (e)
-				if (!WarpZoneLib_ExactTrigger_Touch(e, other))
+				if (!WarpZoneLib_ExactTrigger_Touch(e, it))
 				if (WarpZone_PlaneDist(e, it.origin + it.view_ofs) <= 0)
 					WarpZone_Teleport(e, it, -1, 0); // NOT triggering targets by this!
 			}
 
 			// teleporters
-			if(other.teleportable)
+			if(it.teleportable)
 			{
 				entity ent = Teleport_Find(it.origin + it.mins, it.origin + it.maxs);
 				if (ent)
-				if (!WarpZoneLib_ExactTrigger_Touch(ent, other))
-					Simple_TeleportPlayer(ent, other); // NOT triggering targets by this!
+				if (!WarpZoneLib_ExactTrigger_Touch(ent, it))
+					Simple_TeleportPlayer(ent, it); // NOT triggering targets by this!
 			}
 		}
 	});
-	other = oldother;
 }
 
 .float warpzone_reconnecting;

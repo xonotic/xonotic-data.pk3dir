@@ -103,6 +103,11 @@ void walker_rocket_explode(entity this)
     remove (this);
 }
 
+void walker_rocket_touch(entity this, entity toucher)
+{
+    walker_rocket_explode(this);
+}
+
 void walker_rocket_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
 {
     this.health = this.health - damage;
@@ -253,7 +258,7 @@ void walker_fire_rocket(entity this, vector org)
     rocket.movetype		   = MOVETYPE_FLY;
     rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * (autocvar_g_turrets_unit_walker_rocket_speed);
     rocket.angles			 = vectoangles(rocket.velocity);
-    settouch(rocket, walker_rocket_explode);
+    settouch(rocket, walker_rocket_touch);
     rocket.flags			  = FL_PROJECTILE;
     rocket.solid			  = SOLID_BBOX;
     rocket.max_health		 = time + 9;

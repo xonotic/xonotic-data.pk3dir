@@ -50,23 +50,28 @@ REGISTER_WEAPON(RPC, rpc, NEW(RocketPropelledChainsaw));
 #ifdef SVQC
 spawnfunc(weapon_rpc) { weapon_defaultspawnfunc(this, WEP_RPC); }
 
-void W_RocketPropelledChainsaw_Explode(entity this)
+void W_RocketPropelledChainsaw_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, WEP_CVAR(rpc, damage), WEP_CVAR(rpc, edgedamage), WEP_CVAR(rpc, radius), NULL, NULL, WEP_CVAR(rpc, force), this.projectiledeathtype, directhitentity);
 
 	remove (this);
 }
 
-void W_RocketPropelledChainsaw_Touch (entity this)
+void W_RocketPropelledChainsaw_Explode_think(entity this)
 {
-	if(WarpZone_Projectile_Touch(this))
+	W_RocketPropelledChainsaw_Explode(this, NULL);
+}
+
+void W_RocketPropelledChainsaw_Touch (entity this, entity toucher)
+{
+	if(WarpZone_Projectile_Touch(this, toucher))
 		if(wasfreed(this))
 			return;
 
-	W_RocketPropelledChainsaw_Explode(this);
+	W_RocketPropelledChainsaw_Explode(this, toucher);
 }
 
 void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -80,7 +85,7 @@ void W_RocketPropelledChainsaw_Damage(entity this, entity inflictor, entity atta
 	this.health = this.health - damage;
 
 	if (this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, W_RocketPropelledChainsaw_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_RocketPropelledChainsaw_Explode_think);
 }
 
 void W_RocketPropelledChainsaw_Think(entity this)
