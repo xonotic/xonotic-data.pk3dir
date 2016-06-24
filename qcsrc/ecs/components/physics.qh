@@ -11,4 +11,6 @@ COMPONENT(phys);
 
 .vector com_phys_gravity;
 // TODO: remove
+.bool com_phys_ground;
 .bool com_phys_ladder;
+.bool com_phys_vel_2d;

@@ -34,6 +34,13 @@ vector cross(vector a, vector b)
 }
 #endif
 
+noref vector _vmul_a, _vmul_b;
+#define vmul(a, b) \
+    (_vmul_a = (a), _vmul_b = (b), \
+	  '1 0 0' * (_vmul_a.x * _vmul_b.x) \
+	+ '0 1 0' * (_vmul_a.y * _vmul_b.y) \
+	+ '0 0 1' * (_vmul_a.z * _vmul_b.z))
+
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
 const vector eZ = '0 0 1';

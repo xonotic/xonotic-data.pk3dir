@@ -111,7 +111,15 @@ void sys_phys_update(entity this, float dt)
 				this.velocity *= (1 - PHYS_FRICTION_ONLAND(this));
 			}
 		}
-		PM_walk(this, maxspeed_mod);
+		this.com_phys_vel_max = PHYS_MAXSPEED(this) * maxspeed_mod;
+		this.com_phys_gravity = '0 0 -1' * PHYS_GRAVITY(this) * dt;
+		if (PHYS_ENTGRAVITY(this)) { this.com_phys_gravity *= PHYS_ENTGRAVITY(this); }
+		this.com_phys_ground = true;
+		this.com_phys_vel_2d = true;
+		sys_phys_simulate(this, dt);
+		this.com_phys_vel_2d = false;
+		this.com_phys_ground = false;
+		this.com_phys_gravity = '0 0 0';
 	} else {
 		PM_air(this, buttons_prev, maxspeed_mod);
 	}
@@ -127,25 +135,24 @@ void sys_phys_update(entity this, float dt)
 
 void sys_phys_simulate(entity this, float dt)
 {
-	// noclipping
-	// flying
-	// on a spawnfunc_func_ladder
-	// swimming in spawnfunc_func_water
-	UNSET_ONGROUND(this);
+	const float g = -this.com_phys_gravity.z;
+	if (!this.com_phys_ground) {
+		// noclipping
+		// flying
+		// on a spawnfunc_func_ladder
+		// swimming in spawnfunc_func_water
+		UNSET_ONGROUND(this);
 
-	float g = -this.com_phys_gravity.z;
-	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE) {
-		g *= 0.5;
-		this.velocity_z += g;
+		this.velocity_z += g / 2;
+		this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
+		this.velocity_z += g / 2;
 	}
-	this.velocity = this.velocity * (1 - dt * this.com_phys_friction);
-	this.velocity_z += g;
 
-	makevectors(this.v_angle);
+	makevectors(vmul(this.v_angle, (this.com_phys_vel_2d ? '0 1 0' : '1 1 1')));
 	// wishvel = v_forward * this.movement.x + v_right * this.movement.y + v_up * this.movement.z;
 	vector wishvel = v_forward * this.movement.x
 	    + v_right * this.movement.y
-	    + '0 0 1' * this.movement.z;
+	    + '0 0 1' * this.movement.z * (this.com_phys_vel_2d ? 0 : 1);
 	if (this.com_phys_ladder) {
 		if (this.viewloc) {
 			wishvel.z = this.oldmovement.x;
@@ -171,8 +178,62 @@ void sys_phys_simulate(entity this, float dt)
 		}
 	}
 	// acceleration
-	vector wishdir = normalize(wishvel);
+	const vector wishdir = normalize(wishvel);
 	float wishspeed = min(vlen(wishvel), this.com_phys_vel_max);
+
+	if (this.com_phys_ground) {
+		if (IS_DUCKED(this)) { wishspeed *= 0.5; }
+
+		// apply edge friction
+		const float f2 = vlen2(vec2(this.velocity));
+		if (f2 > 0) {
+			trace_dphitq3surfaceflags = 0;
+			tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
+			// TODO: apply edge friction
+			// apply ground friction
+			const int realfriction = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SLICK)
+			    ? PHYS_FRICTION_SLICK(this)
+				: PHYS_FRICTION(this);
+
+			float f = sqrt(f2);
+			f = 1 - PHYS_INPUT_TIMELENGTH * realfriction
+			    * ((f < PHYS_STOPSPEED(this)) ? (PHYS_STOPSPEED(this) / f) : 1);
+			f = max(0, f);
+			this.velocity *= f;
+			/*
+			   Mathematical analysis time!
+
+			   Our goal is to invert this mess.
+
+			   For the two cases we get:
+			    v = v0 * (1 - PHYS_INPUT_TIMELENGTH * (PHYS_STOPSPEED(this) / v0) * PHYS_FRICTION(this))
+			      = v0 - PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
+			    v0 = v + PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this)
+			   and
+			    v = v0 * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
+			    v0 = v / (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
+
+			   These cases would be chosen ONLY if:
+			    v0 < PHYS_STOPSPEED(this)
+			    v + PHYS_INPUT_TIMELENGTH * PHYS_STOPSPEED(this) * PHYS_FRICTION(this) < PHYS_STOPSPEED(this)
+			    v < PHYS_STOPSPEED(this) * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
+			   and, respectively:
+			    v0 >= PHYS_STOPSPEED(this)
+			    v / (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this)) >= PHYS_STOPSPEED(this)
+			    v >= PHYS_STOPSPEED(this) * (1 - PHYS_INPUT_TIMELENGTH * PHYS_FRICTION(this))
+			 */
+		}
+		const float addspeed = wishspeed - this.velocity * wishdir;
+		if (addspeed > 0) {
+			const float accelspeed = min(PHYS_ACCELERATE(this) * PHYS_INPUT_TIMELENGTH * wishspeed, addspeed);
+			this.velocity += accelspeed * wishdir;
+		}
+		if (IS_CSQC && vdist(this.velocity, >, 0)) {
+			PM_ClientMovement_Move(this);
+		}
+		return;
+	}
+
 	if (IS_CSQC || time >= PHYS_TELEPORT_TIME(this)) {
 		PM_Accelerate(this, wishdir, wishspeed, wishspeed, this.com_phys_acc_rate, 1, 0, 0, 0);
 	}
