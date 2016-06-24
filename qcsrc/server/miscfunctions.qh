@@ -256,6 +256,8 @@ void readlevelcvars()
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
+	sv_maxidle_slots = cvar("sv_maxidle_slots");
+	sv_maxidle_slots_countbots = cvar("sv_maxidle_slots_countbots");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
 

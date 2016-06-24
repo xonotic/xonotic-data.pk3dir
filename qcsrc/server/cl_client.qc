@@ -2420,7 +2420,18 @@ void PlayerPostThink (entity this)
 	if (IS_REAL_CLIENT(this))
 	if (IS_PLAYER(this) || sv_maxidle_spectatorsareidle)
 	{
-		if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
+		int totalClients = 0;
+		if(sv_maxidle_slots > 0)
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || sv_maxidle_slots_countbots,
+			{
+				++totalClients;
+			});
+		}
+
+		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
+		{ /* do nothing */ }
+		else if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (this.idlekick_lasttimeleft)
 			{
