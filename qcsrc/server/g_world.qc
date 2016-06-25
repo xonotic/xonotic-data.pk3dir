@@ -1983,7 +1983,7 @@ string GotoMap(string m)
 		return "Map switch will happen after scoreboard.";
 }
 
-
+void systems_update();
 void EndFrame()
 {
 	anticheat_endframe();
@@ -2015,6 +2015,7 @@ void EndFrame()
 		PlayerState s = PS(it);
 		s.ps_push(s, it);
 	});
+	systems_update();
 }
 
 

@@ -248,3 +248,8 @@ void    isnt_bool(float this) { print(ftos(this)); }
 	#define CSQC_Ent_Remove _CSQC_Ent_Remove
 #endif
 #undef ENGINE_EVENT
+
+#ifndef MENUQC
+	#include <ecs/_lib.qh>
+	#include <ecs/components/_mod.qh>
+#endif

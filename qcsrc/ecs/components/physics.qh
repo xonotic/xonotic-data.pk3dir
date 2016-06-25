@@ -15,6 +15,7 @@ COMPONENT(phys);
 .float com_phys_friction;
 
 .vector com_phys_gravity;
+.float com_phys_gravity_factor;
 // TODO: remove
 .bool com_phys_ground;
 .bool com_phys_air;

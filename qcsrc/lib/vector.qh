@@ -131,6 +131,17 @@ vector vec_reflect(vector vel, vector norm, float bounce)
 	return vel - (1 + bounce) * (vel * norm) * norm;
 }
 
+vector vec_epsilon(vector this, float eps)
+{
+	if (this.x > -eps && this.x < eps) this.x = 0;
+	if (this.y > -eps && this.y < eps) this.y = 0;
+	if (this.z > -eps && this.z < eps) this.z = 0;
+	return this;
+}
+
+#define ClipVelocity(in, normal, out, overbounce) \
+	(out = vec_epsilon(vec_reflect(in, normal, (overbounce) - 1), 0.1))
+
 #ifndef MENUQC
 	vector get_corner_position(entity box, int corner)
 	{

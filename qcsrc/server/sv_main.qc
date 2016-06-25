@@ -154,6 +154,7 @@ float game_delay_last;
 
 bool autocvar_sv_autopause = true;
 float RedirectionThink();
+void systems_update();
 void sys_phys_update(entity this, float dt);
 void StartFrame()
 {

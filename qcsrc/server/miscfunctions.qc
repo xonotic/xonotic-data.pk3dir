@@ -1031,8 +1031,7 @@ bool SUB_NoImpactCheck(entity this, entity toucher)
 	// these stop the projectile from moving, so...
 	if(trace_dphitcontents == 0)
 	{
-		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", etof(this), this.classname, vtos(this.origin));
+		LOG_TRACEF("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct. (edict: %i, classname: %s, origin: %v)", this, this.classname, this.origin);
 		checkclient(this);
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)

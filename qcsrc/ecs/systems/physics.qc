@@ -4,9 +4,14 @@
 .int disableclientprediction;
 
 void sys_phys_simulate(entity this, float dt);
+void sys_phys_simulate_simple(entity this, float dt);
 
 void sys_phys_update(entity this, float dt)
 {
+	if (!IS_CLIENT(this)) {
+		sys_phys_simulate_simple(this, dt);
+		return;
+	}
 	sys_in_update(this, dt);
 
 	sys_phys_fix(this, dt);
@@ -150,6 +155,7 @@ void sys_phys_update(entity this, float dt)
 	this.lastclassname = this.classname;
 }
 
+/** for players */
 void sys_phys_simulate(entity this, float dt)
 {
 	const vector g = -this.com_phys_gravity;
@@ -390,4 +396,98 @@ void sys_phys_simulate(entity this, float dt)
 		}
 	}
 	PM_ClientMovement_Move(this);
+}
+
+.entity groundentity;
+/** for other entities */
+void sys_phys_simulate_simple(entity this, float dt)
+{
+	vector mn = this.mins;
+	vector mx = this.maxs;
+
+	vector g = '0 0 0';
+	if (this.com_phys_gravity_factor && !g) g = '0 0 -1' * PHYS_GRAVITY(NULL);
+
+	vector acc = this.com_phys_acc;
+	vector vel = this.com_phys_vel;
+	vector pos = this.com_phys_pos;
+
+	// SV_Physics_Toss
+
+	vel += g * dt;
+
+	this.angles += dt * this.avelocity;
+	float movetime = dt;
+	for (int i = 0; i < MAX_CLIP_PLANES && movetime > 0; i++) {
+		vector push = vel * movetime;
+		vector p0 = pos;
+		vector p1 = p0 + push;
+		// SV_PushEntity
+		tracebox(p0, mn, mx, p1, MOVE_NORMAL, this);
+		if (!trace_startsolid) {
+			bool hit = trace_fraction < 1;
+			pos = trace_endpos;
+			entity ent = trace_ent;
+			// SV_LinkEdict_TouchAreaGrid
+			if (this.solid != SOLID_NOT) {
+				FOREACH_ENTITY_RADIUS_ORDERED(0.5 * (this.absmin + this.absmax), 0.5 * vlen(this.absmax - this.absmin), true, {
+					if (it.solid != SOLID_TRIGGER || it == this) continue;
+					if (gettouch(it) && boxesoverlap(it.absmin, it.absmax, this.absmin, this.absmax)) {
+					    // SV_LinkEdict_TouchAreaGrid_Call
+					    trace_allsolid = false;
+					    trace_startsolid = false;
+					    trace_fraction = 1;
+					    trace_inwater = false;
+					    trace_inopen = true;
+					    trace_endpos = it.origin;
+					    trace_plane_normal = '0 0 1';
+					    trace_plane_dist = 0;
+					    trace_ent = this;
+					    trace_dpstartcontents = 0;
+					    trace_dphitcontents = 0;
+					    trace_dphitq3surfaceflags = 0;
+					    trace_dphittexturename = string_null;
+					    gettouch(it)((other = this, it));
+					    vel = this.velocity;
+					}
+				});
+			}
+			if (hit && this.solid >= SOLID_TRIGGER && (!IS_ONGROUND(this) || this.groundentity != ent)) {
+				// SV_Impact (ent, trace);
+				tracebox(p0, mn, mx, p1, MOVE_NORMAL, this);
+				void(entity) touched = gettouch(this);
+				if (touched && this.solid != SOLID_NOT) {
+					touched((other = ent, this));
+				}
+				void(entity) touched2 = gettouch(ent);
+				if (this && ent && touched2 && ent.solid != SOLID_NOT) {
+					trace_endpos = ent.origin;
+					trace_plane_normal *= -1;
+					trace_plane_dist *= -1;
+					trace_ent = this;
+					trace_dpstartcontents = 0;
+					trace_dphitcontents = 0;
+					trace_dphitq3surfaceflags = 0;
+					trace_dphittexturename = string_null;
+					touched2((other = this, ent));
+				}
+			}
+		}
+		// end SV_PushEntity
+		if (wasfreed(this)) { return; }
+		tracebox(p0, mn, mx, p1, MOVE_NORMAL, this);
+		if (trace_fraction == 1) { break; }
+		movetime *= 1 - min(1, trace_fraction);
+		ClipVelocity(vel, trace_plane_normal, vel, 1);
+	}
+
+	this.com_phys_acc = acc;
+	this.com_phys_vel = vel;
+	this.com_phys_pos = pos;
+	setorigin(this, this.com_phys_pos);
+}
+
+void sys_phys_update_single(entity this)
+{
+	sys_phys_simulate_simple(this, frametime);
 }

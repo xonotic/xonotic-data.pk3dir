@@ -240,6 +240,7 @@ void trigger_push_touch(entity this)
 	if (other.flags & FL_PROJECTILE)
 	{
 		other.angles = vectoangles (other.velocity);
+		other.com_phys_gravity_factor = 1;
 		switch(other.movetype)
 		{
 			case MOVETYPE_FLY:
