@@ -17,7 +17,7 @@ const float TELEPORT_SIMPLE = 2; // only do teleport, nothing special
 
 entity Simple_TeleportPlayer(entity teleporter, entity player);
 
-void Teleport_Touch (entity this);
+void Teleport_Touch(entity this, entity toucher);
 
 void teleport_findtarget(entity this);
 

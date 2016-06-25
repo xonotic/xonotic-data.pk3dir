@@ -142,3 +142,6 @@ float hud;
 float view_quality;
 int framecount;
 .float health;
+
+float GetSpeedUnitFactor(int speed_unit);
+string GetSpeedUnit(int speed_unit);

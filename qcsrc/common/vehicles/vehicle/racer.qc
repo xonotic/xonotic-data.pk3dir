@@ -511,7 +511,7 @@ void racer_blowup_think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void racer_deadtouch(entity this)
+void racer_deadtouch(entity this, entity toucher)
 {
 	this.avelocity_x *= 0.7;
 	this.cnt -= 1;
