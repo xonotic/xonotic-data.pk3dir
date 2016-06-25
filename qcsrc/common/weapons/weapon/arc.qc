@@ -857,6 +857,7 @@ METHOD(Arc, wr_drop, void(entity thiswep, entity actor))
     weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
 }
 METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
 {
@@ -866,6 +867,18 @@ METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
         actor.arc_overheat = weapon_dropevent_item.arc_overheat;
         actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
     }
+}
+METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
+{
+    actor.arc_overheat = 0;
+    actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
+}
+METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor))
+{
+    actor.arc_overheat = 0;
+    actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
 }
 #endif
 #ifdef CSQC
