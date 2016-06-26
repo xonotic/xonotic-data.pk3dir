@@ -307,7 +307,7 @@ void ca_LastPlayerForTeam_Notify(entity this)
 MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	ca_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
@@ -340,6 +340,8 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		player.caplayer = 0;
 	if (player.caplayer)
 		player.frags = FRAGS_LMS_LOSER;
+    else
+        player.frags = FRAGS_SPECTATOR;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	return true;  // prevent team reset
