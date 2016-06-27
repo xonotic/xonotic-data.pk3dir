@@ -1735,7 +1735,6 @@ bool SpectatePrev(entity this)
 		    ent = M_ARGV(1, entity);
 		    break;
 		case MUT_SPECPREV_RETURN:
-		    ent = M_ARGV(1, entity);
 		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
