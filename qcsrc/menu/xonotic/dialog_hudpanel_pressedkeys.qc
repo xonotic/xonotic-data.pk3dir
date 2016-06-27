@@ -1,17 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDPressedKeysDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDPressedKeysDialog, fill, void(entity))
-	ATTRIB(XonoticHUDPressedKeysDialog, title, string, _("Pressed Keys Panel"))
-	ATTRIB(XonoticHUDPressedKeysDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDPressedKeysDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDPressedKeysDialog, rows, float, 15)
-	ATTRIB(XonoticHUDPressedKeysDialog, columns, float, 4)
-	ATTRIB(XonoticHUDPressedKeysDialog, name, string, "HUDpressedkeys")
-	ATTRIB(XonoticHUDPressedKeysDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDPressedKeysDialog)
-#endif
+#include "dialog_hudpanel_pressedkeys.qh"
 
-#ifdef IMPLEMENTATION
+#include "textslider.qh"
+#include "slider.qh"
+#include "textlabel.qh"
+
 void XonoticHUDPressedKeysDialog_fill(entity me)
 {
 	entity e;
@@ -31,4 +23,3 @@ void XonoticHUDPressedKeysDialog_fill(entity me)
 		me.TD(me, 1, 1.2, e = makeXonoticTextLabel(0, _("Forced aspect:")));
 			me.TD(me, 1, 2.6, e = makeXonoticSlider(0.2, 4, 0.1, "hud_panel_pressedkeys_aspect"));
 }
-#endif

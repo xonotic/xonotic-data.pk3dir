@@ -1,0 +1,2 @@
+// generated file; do not modify
+#include <common/mutators/mutator/new_toys/new_toys.qc>

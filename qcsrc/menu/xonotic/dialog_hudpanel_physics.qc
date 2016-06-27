@@ -1,18 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDPhysicsDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDPhysicsDialog, fill, void(entity))
-	ATTRIB(XonoticHUDPhysicsDialog, title, string, _("Physics Panel"))
-	ATTRIB(XonoticHUDPhysicsDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDPhysicsDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDPhysicsDialog, rows, float, 15)
-	ATTRIB(XonoticHUDPhysicsDialog, columns, float, 4)
-	ATTRIB(XonoticHUDPhysicsDialog, name, string, "HUDphysics")
-	ATTRIB(XonoticHUDPhysicsDialog, sliderTopspeedTime, entity, NULL)
-	ATTRIB(XonoticHUDPhysicsDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDPhysicsDialog)
-#endif
+#include "dialog_hudpanel_physics.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "textslider.qh"
+#include "checkbox.qh"
+#include "slider.qh"
+
 void XonoticHUDPhysicsDialog_fill(entity me)
 {
 	entity e;
@@ -80,4 +72,3 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 		// me.TD(me, 1, 0.6, e = makeXonoticInputBox(1, "hud_panel_physics_acceleration_max"));
 			// setDependent(e, "hud_panel_physics_progressbar", 1, 1);
 }
-#endif

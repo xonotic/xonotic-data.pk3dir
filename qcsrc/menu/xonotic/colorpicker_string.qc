@@ -1,44 +1,23 @@
-#ifdef INTERFACE
-CLASS(XonoticColorpickerString) EXTENDS(Image)
-	METHOD(XonoticColorpickerString, configureXonoticColorpickerString, void(entity, string, string))
-	METHOD(XonoticColorpickerString, mousePress, float(entity, vector))
-	METHOD(XonoticColorpickerString, mouseRelease, float(entity, vector))
-	METHOD(XonoticColorpickerString, mouseDrag, float(entity, vector))
-	ATTRIB(XonoticColorpickerString, cvarName, string, string_null)
-	METHOD(XonoticColorPickerString, loadCvars, void(entity))
-	METHOD(XonoticColorPickerString, saveCvars, void(entity))
-	ATTRIB(XonoticColorpickerString, prevcoords, vector, '0 0 0')
-	ATTRIB(XonoticColorpickerString, image, string, SKINGFX_COLORPICKER)
-	ATTRIB(XonoticColorpickerString, imagemargin, vector, SKINMARGIN_COLORPICKER)
-	ATTRIB(XonoticColorpickerString, focusable, float, 1)
-	METHOD(XonoticColorpickerString, draw, void(entity))
-	ATTRIB(XonoticColorpickerString, disabledAlpha, float, 0.3)
-ENDCLASS(XonoticColorpickerString)
-entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar);
-#endif
+#include "colorpicker_string.qh"
 
-#ifdef IMPLEMENTATION
+.bool disabled;
+
 entity makeXonoticColorpickerString(string theCvar, string theDefaultCvar)
 {
 	entity me;
-	me = spawnXonoticColorpickerString();
+	me = NEW(XonoticColorpickerString);
 	me.configureXonoticColorpickerString(me, theCvar, theDefaultCvar);
 	return me;
 }
 
 void XonoticColorpickerString_configureXonoticColorpickerString(entity me, string theCvar, string theDefaultCvar)
 {
-	me.cvarName = theCvar;
 	me.configureImage(me, me.image);
-	if(theCvar)
-	{
-		me.cvarName = theCvar;
-		me.tooltip = getZonedTooltipForIdentifier(theCvar);
-		me.loadCvars(me);
-	}
+	me.cvarName = (theCvar) ? theCvar : string_null;
+	me.loadCvars(me);
 }
 
-void XonoticColorPickerString_loadCvars(entity me)
+void XonoticColorpickerString_loadCvars(entity me)
 {
 	if (!me.cvarName)
 		return;
@@ -55,7 +34,7 @@ void XonoticColorPickerString_loadCvars(entity me)
 		me.prevcoords = color_hslimage(stov(cvar_string(me.cvarName)), me.imagemargin);
 }
 
-void XonoticColorPickerString_saveCvars(entity me)
+void XonoticColorpickerString_saveCvars(entity me)
 {
 	if (!me.cvarName)
 		return;
@@ -120,4 +99,3 @@ void XonoticColorpickerString_draw(entity me)
 
 	draw_alpha = save;
 }
-#endif

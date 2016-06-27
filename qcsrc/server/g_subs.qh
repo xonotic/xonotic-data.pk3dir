@@ -1,37 +1,21 @@
-#ifndef G_SUBS_H
-#define G_SUBS_H
+#pragma once
 
-void SUB_NullThink(void);
+void SUB_NullThink(entity this);
 
-void()  SUB_CalcMoveDone;
-void() SUB_CalcAngleMoveDone;
-//void() SUB_UseTargets;
-void() SUB_Remove;
+void SUB_CalcMoveDone(entity this);
+void SUB_CalcAngleMoveDone(entity this);
 
-void spawnfunc_info_null (void);
-
-void setanim(entity e, vector anim, float looping, float override, float restart);
-
-void updateanim(entity e);
-
-/*
-==================
-SUB_Remove
-
-Remove self
-==================
-*/
-void SUB_Remove (void);
+spawnfunc(info_null);
 
 /*
 ==================
 SUB_Friction
 
-Applies some friction to self
+Applies some friction to this
 ==================
 */
 .float friction;
-void SUB_Friction (void);
+void SUB_Friction (entity this);
 
 /*
 ==================
@@ -42,7 +26,7 @@ Makes client invisible or removes non-client
 */
 void SUB_VanishOrRemove (entity ent);
 
-void SUB_SetFade_Think (void);
+void SUB_SetFade_Think (entity this);
 
 /*
 ==================
@@ -57,47 +41,41 @@ void SUB_SetFade (entity ent, float when, float fadetime);
 =============
 SUB_CalcMove
 
-calculate self.velocity and self.nextthink to reach dest from
-self.origin traveling at speed
+calculate this.velocity and this.nextthink to reach dest from
+this.origin traveling at speed
 ===============
 */
-void SUB_CalcMoveDone (void);
+void SUB_CalcMoveDone(entity this);
 
 .float platmovetype_turn;
-void SUB_CalcMove_controller_think (void);
+void SUB_CalcMove_controller_think (entity this);
 
 void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector dest);
 
 void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest);
 
-float TSPEED_TIME = -1;
-float TSPEED_LINEAR = 0;
-float TSPEED_START = 1;
-float TSPEED_END = 2;
-// TODO average too?
+void SUB_CalcMove_Bezier (entity this, vector tcontrol, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
 
-void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func);
+void SUB_CalcMove (entity this, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
 
-void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func);
-
-void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func);
+void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void(entity this) func);
 
 /*
 =============
 SUB_CalcAngleMove
 
-calculate self.avelocity and self.nextthink to reach destangle from
-self.angles rotating
+calculate this.avelocity and this.nextthink to reach destangle from
+this.angles rotating
 
-The calling function should make sure self.think is valid
+The calling function should make sure this.think is valid
 ===============
 */
-void SUB_CalcAngleMoveDone (void);
+void SUB_CalcAngleMoveDone (entity this);
 
 // FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func);
+void SUB_CalcAngleMove (entity this, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
 
-void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func);
+void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void(entity this) func);
 
 /*
 ==================
@@ -106,7 +84,7 @@ main
 unused but required by the engine
 ==================
 */
-void main (void);
+void main ();
 
 // Misc
 
@@ -143,15 +121,6 @@ vector findbetterlocation (vector org, float mindist);
 
 /*
 ==================
-crandom
-
-Returns a random number between -1.0 and 1.0
-==================
-*/
-float crandom (void);
-
-/*
-==================
 Angc used for animations
 ==================
 */
@@ -169,17 +138,17 @@ float angc (float a1, float a2);
 .float loddistance1;
 .float loddistance2;
 
-float LOD_customize();
+bool LOD_customize(entity this, entity client);
 
-void LOD_uncustomize();
+void LOD_uncustomize(entity this);
 
-void LODmodel_attach();
+void LODmodel_attach(entity this);
 
 void ApplyMinMaxScaleAngles(entity e);
 
-void SetBrushEntityModel();
+void SetBrushEntityModel(entity this);
 
-void SetBrushEntityModelNoLOD();
+void SetBrushEntityModelNoLOD(entity this);
 
 /*
 ================
@@ -187,11 +156,10 @@ InitTrigger
 ================
 */
 
-void SetMovedir();
+void SetMovedir(entity this);
 
-void InitTrigger();
+void InitTrigger(entity this);
 
-void InitSolidBSPTrigger();
+void InitSolidBSPTrigger(entity this);
 
-float InitMovingBrushTrigger();
-#endif
+bool InitMovingBrushTrigger(entity this);

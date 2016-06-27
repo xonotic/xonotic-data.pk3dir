@@ -1,17 +1,7 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDRaceTimerDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDRaceTimerDialog, fill, void(entity))
-	ATTRIB(XonoticHUDRaceTimerDialog, title, string, _("Race Timer Panel"))
-	ATTRIB(XonoticHUDRaceTimerDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDRaceTimerDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDRaceTimerDialog, rows, float, 15)
-	ATTRIB(XonoticHUDRaceTimerDialog, columns, float, 4)
-	ATTRIB(XonoticHUDRaceTimerDialog, name, string, "HUDracetimer")
-	ATTRIB(XonoticHUDRaceTimerDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDRaceTimerDialog)
-#endif
+#include "dialog_hudpanel_racetimer.qh"
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+
 void XonoticHUDRaceTimerDialog_fill(entity me)
 {
 	entity e;
@@ -19,4 +9,3 @@ void XonoticHUDRaceTimerDialog_fill(entity me)
 
 	DIALOG_HUDPANEL_COMMON();
 }
-#endif

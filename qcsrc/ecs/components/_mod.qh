@@ -1,0 +1,3 @@
+// generated file; do not modify
+#include <ecs/components/input.qh>
+#include <ecs/components/physics.qh>

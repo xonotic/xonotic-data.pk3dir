@@ -1,0 +1,3 @@
+#pragma once
+
+void bot_clearqueue(entity bot);

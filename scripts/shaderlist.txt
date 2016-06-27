@@ -16,3 +16,4 @@ turrets
 weapons
 monsters
 ok_nade_counter
+nades

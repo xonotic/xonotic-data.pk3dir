@@ -1,0 +1,4 @@
+// generated file; do not modify
+#include <common/weapons/all.qh>
+#include <common/weapons/calculations.qh>
+#include <common/weapons/config.qh>

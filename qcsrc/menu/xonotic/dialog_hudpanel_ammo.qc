@@ -1,17 +1,10 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDAmmoDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDAmmoDialog, fill, void(entity))
-	ATTRIB(XonoticHUDAmmoDialog, title, string, _("Ammo Panel"))
-	ATTRIB(XonoticHUDAmmoDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDAmmoDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDAmmoDialog, rows, float, 15)
-	ATTRIB(XonoticHUDAmmoDialog, columns, float, 4)
-	ATTRIB(XonoticHUDAmmoDialog, name, string, "HUDammo")
-	ATTRIB(XonoticHUDAmmoDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDAmmoDialog)
-#endif
+#include "dialog_hudpanel_ammo.qh"
 
-#ifdef IMPLEMENTATION
+#include "slider.qh"
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "radiobutton.qh"
+
 void XonoticHUDAmmoDialog_fill(entity me)
 {
 	entity e;
@@ -38,4 +31,3 @@ void XonoticHUDAmmoDialog_fill(entity me)
 			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_ammo_iconalign", "0", _("Left")));
 			me.TD(me, 1, 2.6/2, e = makeXonoticRadioButton(2, "hud_panel_ammo_iconalign", "1", _("Right")));
 }
-#endif

@@ -1,27 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticScreenshotImage) EXTENDS(XonoticImage)
-	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity))
-	METHOD(XonoticScreenshotImage, load, void(entity, string))
-	METHOD(XonoticScreenshotImage, draw, void(entity))
-	ATTRIB(XonoticScreenshotImage, focusable, float, 1) // mousePress and mouseDrag work only if focusable is set
-	METHOD(XonoticScreenshotImage, mousePress, float(entity, vector))
-	METHOD(XonoticScreenshotImage, mouseDrag, float(entity, vector))
-	METHOD(XonoticScreenshotImage, mouseMove, float(entity, vector))
-	METHOD(XonoticScreenshotImage, resizeNotify, void(entity, vector, vector, vector, vector))
-	ATTRIB(XonoticScreenshotImage, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticScreenshotImage, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticScreenshotImage, showTitle, float, 1)
-	ATTRIB(XonoticScreenshotImage, screenshotTime, float, 0)
-	ATTRIB(XonoticScreenshotImage, screenshotTitle, string, string_null)
-ENDCLASS(XonoticScreenshotImage)
-entity makeXonoticScreenshotImage();
-#endif
+#include "screenshotimage.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticScreenshotImage()
 {
 	entity me;
-	me = spawnXonoticScreenshotImage();
+	me = NEW(XonoticScreenshotImage);
 	me.configureXonoticScreenshotImage(me);
 	return me;
 }
@@ -92,4 +74,3 @@ void XonoticScreenshotImage_resizeNotify(entity me, vector relOrigin, vector rel
 	me.realFontSize_y = me.fontSize / absSize.y;
 	me.realFontSize_x = me.fontSize / absSize.x;
 }
-#endif

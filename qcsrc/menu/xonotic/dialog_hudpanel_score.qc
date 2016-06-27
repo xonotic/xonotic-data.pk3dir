@@ -1,17 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticHUDScoreDialog) EXTENDS(XonoticRootDialog)
-	METHOD(XonoticHUDScoreDialog, fill, void(entity))
-	ATTRIB(XonoticHUDScoreDialog, title, string, _("Score Panel"))
-	ATTRIB(XonoticHUDScoreDialog, color, vector, SKINCOLOR_DIALOG_TEAMSELECT)
-	ATTRIB(XonoticHUDScoreDialog, intendedWidth, float, 0.4)
-	ATTRIB(XonoticHUDScoreDialog, rows, float, 15)
-	ATTRIB(XonoticHUDScoreDialog, columns, float, 4)
-	ATTRIB(XonoticHUDScoreDialog, name, string, "HUDscore")
-	ATTRIB(XonoticHUDScoreDialog, requiresConnection, float, true)
-ENDCLASS(XonoticHUDScoreDialog)
-#endif
+#include "dialog_hudpanel_score.qh"
 
-#ifdef IMPLEMENTATION
+#include "checkbox.qh"
+#include "textlabel.qh"
+#include "radiobutton.qh"
+
 void XonoticHUDScoreDialog_fill(entity me)
 {
 	entity e;
@@ -28,4 +20,3 @@ void XonoticHUDScoreDialog_fill(entity me)
 		me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(1, "hud_panel_score_rankings", "1", _("And me")));
 		me.TD(me, 1, 2.6/3, e = makeXonoticRadioButton(1, "hud_panel_score_rankings", "2", _("Pure")));
 }
-#endif

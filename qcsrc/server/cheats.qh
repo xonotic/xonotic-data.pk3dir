@@ -1,5 +1,6 @@
-#ifndef CHEATS_H
-#define CHEATS_H
+#pragma once
+
+#include <common/impulses/all.qh>
 
 //float autocvar_sv_cheats; // must... declare... global
 
@@ -7,11 +8,10 @@ float cheatcount_total;
 .float cheatcount;
 void CheatInit();
 void CheatShutdown();
-void CheatInitClient();
-void CheatShutdownClient();
-float CheatImpulse(float i);
-float CheatCommand(float argc);
-float CheatFrame();
+float CheatImpulse(entity this, int imp);
+float CheatCommand(entity this, int argc);
+float CheatFrame(entity this);
+
+const float CHRAME_DRAG = 8;
 
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
-#endif
