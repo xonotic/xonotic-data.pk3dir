@@ -1,58 +1,15 @@
 #include "g_subs.qh"
-#include "_all.qh"
 
 #include "antilag.qh"
 #include "command/common.qh"
-#include "../warpzonelib/common.qh"
+#include "../common/state.qh"
+#include "../lib/warpzone/common.qh"
+#include "../common/triggers/subs.qh"
 
-void spawnfunc_info_null (void)
+spawnfunc(info_null)
 {
-	remove(self);
+	remove(this);
 	// if anything breaks, tell the mapper to fix his map! info_null is meant to remove itself immediately.
-}
-
-void setanim(entity e, vector anim, float looping, float override, float restart)
-{
-	if (!anim)
-		return; // no animation was given to us! We can't use this.
-
-	if (anim.x == e.animstate_startframe)
-	if (anim.y == e.animstate_numframes)
-	if (anim.z == e.animstate_framerate)
-	{
-		if(restart)
-		{
-			if(restart > 0)
-			if(anim.y == 1) // ZYM animation
-				BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
-		}
-		else
-			return;
-	}
-	e.animstate_startframe = anim.x;
-	e.animstate_numframes = anim.y;
-	e.animstate_framerate = anim.z;
-	e.animstate_starttime = servertime - 0.1 * serverframetime; // shift it a little bit into the past to prevent float inaccuracy hiccups
-	e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
-	e.animstate_looping = looping;
-	e.animstate_override = override;
-	e.frame = e.animstate_startframe;
-	e.frame1time = servertime;
-}
-
-void updateanim(entity e)
-{
-	if (time >= e.animstate_endtime)
-	{
-		if (e.animstate_looping)
-		{
-			e.animstate_starttime = e.animstate_endtime;
-			e.animstate_endtime = e.animstate_starttime + e.animstate_numframes / e.animstate_framerate;
-		}
-		e.animstate_override = false;
-	}
-	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
-	//print(ftos(time), " -> ", ftos(e.frame), "\n");
 }
 
 /*
@@ -62,7 +19,7 @@ main
 unused but required by the engine
 ==================
 */
-void main (void)
+void main ()
 {
 
 }
@@ -79,9 +36,6 @@ Additionally it moves players back into the past before the trace and restores t
 */
 void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz)
 {
-	entity player;
-	float oldsolid;
-
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
 		lag = 0;
@@ -89,18 +43,18 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
-	oldsolid = source.dphitcontentsmask;
+	int oldsolid = source.dphitcontentsmask;
 	if(source)
 		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	if (lag)
 	{
 		// take players back into the past
-		FOR_EACH_PLAYER(player)
-			if(player != forent)
-				antilag_takeback(player, time - lag);
-		FOR_EACH_MONSTER(player)
-			antilag_takeback(player, time - lag);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_takeback(it, CS(it), time - lag));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if(it != forent)
+				antilag_takeback(it, it, time - lag);
+		});
 	}
 
 	// do the trace
@@ -112,11 +66,11 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// restore players to current positions
 	if (lag)
 	{
-		FOR_EACH_PLAYER(player)
-			if(player != forent)
-				antilag_restore(player);
-		FOR_EACH_MONSTER(player)
-			antilag_restore(player);
+		FOREACH_CLIENT(IS_PLAYER(it) && it != forent, antilag_restore(it, CS(it)));
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, {
+			if (it != forent)
+				antilag_restore(it, it);
+		});
 	}
 
 	// restore shooter solid type
@@ -258,12 +212,12 @@ vector findbetterlocation (vector org, float mindist)
 	c = 0;
 	while (c < 6)
 	{
-		traceline (org, org + vec, true, world);
+		traceline (org, org + vec, true, NULL);
 		vec = vec * -1;
 		if (trace_fraction < 1)
 		{
 			loc = trace_endpos;
-			traceline (loc, loc + vec, true, world);
+			traceline (loc, loc + vec, true, NULL);
 			if (trace_fraction >= 1)
 				org = loc + vec;
 		}
@@ -280,102 +234,100 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-float LOD_customize()
+bool LOD_customize(entity this, entity client)
 {
-	float d;
-
 	if(autocvar_loddebug)
 	{
-		d = autocvar_loddebug;
+		int d = autocvar_loddebug;
 		if(d == 1)
-			self.modelindex = self.lodmodelindex0;
-		else if(d == 2 || !self.lodmodelindex2)
-			self.modelindex = self.lodmodelindex1;
+			this.modelindex = this.lodmodelindex0;
+		else if(d == 2 || !this.lodmodelindex2)
+			this.modelindex = this.lodmodelindex1;
 		else // if(d == 3)
-			self.modelindex = self.lodmodelindex2;
+			this.modelindex = this.lodmodelindex2;
 		return true;
 	}
 
 	// TODO csqc network this so it only gets sent once
-	d = vlen(NearestPointOnBox(self, other.origin) - other.origin);
-	if(d < self.loddistance1)
-		self.modelindex = self.lodmodelindex0;
-	else if(!self.lodmodelindex2 || d < self.loddistance2)
-		self.modelindex = self.lodmodelindex1;
+	vector near_point = NearestPointOnBox(this, client.origin);
+	if(vdist(near_point - client.origin, <, this.loddistance1))
+		this.modelindex = this.lodmodelindex0;
+	else if(!this.lodmodelindex2 || vdist(near_point - client.origin, <, this.loddistance2))
+		this.modelindex = this.lodmodelindex1;
 	else
-		self.modelindex = self.lodmodelindex2;
+		this.modelindex = this.lodmodelindex2;
 
 	return true;
 }
 
-void LOD_uncustomize()
+void LOD_uncustomize(entity this)
 {
-	self.modelindex = self.lodmodelindex0;
+	this.modelindex = this.lodmodelindex0;
 }
 
-void LODmodel_attach()
+void LODmodel_attach(entity this)
 {
 	entity e;
 
-	if(!self.loddistance1)
-		self.loddistance1 = 1000;
-	if(!self.loddistance2)
-		self.loddistance2 = 2000;
-	self.lodmodelindex0 = self.modelindex;
+	if(!this.loddistance1)
+		this.loddistance1 = 1000;
+	if(!this.loddistance2)
+		this.loddistance2 = 2000;
+	this.lodmodelindex0 = this.modelindex;
 
-	if(self.lodtarget1 != "")
+	if(this.lodtarget1 != "")
 	{
-		e = find(world, targetname, self.lodtarget1);
+		e = find(NULL, targetname, this.lodtarget1);
 		if(e)
 		{
-			self.lodmodel1 = e.model;
+			this.lodmodel1 = e.model;
 			remove(e);
 		}
 	}
-	if(self.lodtarget2 != "")
+	if(this.lodtarget2 != "")
 	{
-		e = find(world, targetname, self.lodtarget2);
+		e = find(NULL, targetname, this.lodtarget2);
 		if(e)
 		{
-			self.lodmodel2 = e.model;
+			this.lodmodel2 = e.model;
 			remove(e);
 		}
 	}
 
 	if(autocvar_loddebug < 0)
 	{
-		self.lodmodel1 = self.lodmodel2 = ""; // don't even initialize
+		this.lodmodel1 = this.lodmodel2 = ""; // don't even initialize
 	}
 
-	if(self.lodmodel1 != "")
+	if(this.lodmodel1 != "")
 	{
 		vector mi, ma;
-		mi = self.mins;
-		ma = self.maxs;
+		mi = this.mins;
+		ma = this.maxs;
 
-		precache_model(self.lodmodel1);
-		setmodel(self, self.lodmodel1);
-		self.lodmodelindex1 = self.modelindex;
+		precache_model(this.lodmodel1);
+		_setmodel(this, this.lodmodel1);
+		this.lodmodelindex1 = this.modelindex;
 
-		if(self.lodmodel2 != "")
+		if(this.lodmodel2 != "")
 		{
-			precache_model(self.lodmodel2);
-			setmodel(self, self.lodmodel2);
-			self.lodmodelindex2 = self.modelindex;
+			precache_model(this.lodmodel2);
+			_setmodel(this, this.lodmodel2);
+			this.lodmodelindex2 = this.modelindex;
 		}
 
-		self.modelindex = self.lodmodelindex0;
-		setsize(self, mi, ma);
+		this.modelindex = this.lodmodelindex0;
+		setsize(this, mi, ma);
 	}
 
-	if(self.lodmodelindex1)
-		if (!self.SendEntity)
-			SetCustomizer(self, LOD_customize, LOD_uncustomize);
+	if(this.lodmodelindex1)
+		if (!getSendEntity(this))
+			SetCustomizer(this, LOD_customize, LOD_uncustomize);
 }
 
 void ApplyMinMaxScaleAngles(entity e)
 {
-	if(e.angles.x != 0 || e.angles.z != 0 || self.avelocity.x != 0 || self.avelocity.z != 0) // "weird" rotation
+	if(e.angles.x != 0 || e.angles.z != 0 || e.avelocity.x != 0 || e.avelocity.z != 0) // "weird" rotation
 	{
 		e.maxs = '1 1 1' * vlen(
 			'1 0 0' * max(-e.mins.x, e.maxs.x) +
@@ -384,7 +336,7 @@ void ApplyMinMaxScaleAngles(entity e)
 		);
 		e.mins = -e.maxs;
 	}
-	else if(e.angles.y != 0 || self.avelocity.y != 0) // yaw only is a bit better
+	else if(e.angles.y != 0 || e.avelocity.y != 0) // yaw only is a bit better
 	{
 		e.maxs_x = vlen(
 			'1 0 0' * max(-e.mins.x, e.maxs.x) +
@@ -400,43 +352,43 @@ void ApplyMinMaxScaleAngles(entity e)
 		setsize(e, e.mins, e.maxs);
 }
 
-void SetBrushEntityModel()
+void SetBrushEntityModel(entity this)
 {
- 	if(self.model != "")
+ 	if(this.model != "")
  	{
- 		precache_model(self.model);
-		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
-			vector mi = self.mins;
-			vector ma = self.maxs;
-			setmodel(self, self.model); // no precision needed
-			setsize(self, mi, ma);
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
 		}
 		else
-			setmodel(self, self.model); // no precision needed
-		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
+			_setmodel(this, this.model); // no precision needed
+		InitializeEntity(this, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
-	setorigin(self, self.origin);
-	ApplyMinMaxScaleAngles(self);
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
 }
 
-void SetBrushEntityModelNoLOD()
+void SetBrushEntityModelNoLOD(entity this)
 {
- 	if(self.model != "")
+ 	if(this.model != "")
  	{
- 		precache_model(self.model);
-		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
 		{
-			vector mi = self.mins;
-			vector ma = self.maxs;
-			setmodel(self, self.model); // no precision needed
-			setsize(self, mi, ma);
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
 		}
 		else
-			setmodel(self, self.model); // no precision needed
+			_setmodel(this, this.model); // no precision needed
  	}
-	setorigin(self, self.origin);
-	ApplyMinMaxScaleAngles(self);
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
 }
 
 /*
@@ -445,54 +397,54 @@ InitTrigger
 ================
 */
 
-void SetMovedir()
+void SetMovedir(entity this)
 {
-	if (self.movedir != '0 0 0')
-		self.movedir = normalize(self.movedir);
+	if(this.movedir != '0 0 0')
+		this.movedir = normalize(this.movedir);
 	else
 	{
-		makevectors (self.angles);
-		self.movedir = v_forward;
+		makevectors(this.angles);
+		this.movedir = v_forward;
 	}
 
-	self.angles = '0 0 0';
+	this.angles = '0 0 0';
 }
 
-void InitTrigger()
+void InitTrigger(entity this)
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir ();
-	self.solid = SOLID_TRIGGER;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_NONE;
-	self.modelindex = 0;
-	self.model = "";
+	SetMovedir(this);
+	this.solid = SOLID_TRIGGER;
+	SetBrushEntityModel(this);
+	this.movetype = MOVETYPE_NONE;
+	this.modelindex = 0;
+	this.model = "";
 }
 
-void InitSolidBSPTrigger()
+void InitSolidBSPTrigger(entity this)
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	SetMovedir ();
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
-//	self.modelindex = 0;
-	self.model = "";
+	SetMovedir(this);
+	this.solid = SOLID_BSP;
+	SetBrushEntityModel(this);
+	this.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
+//	this.modelindex = 0;
+	this.model = "";
 }
 
-float InitMovingBrushTrigger()
+bool InitMovingBrushTrigger(entity this)
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	self.solid = SOLID_BSP;
-	SetBrushEntityModel();
-	self.movetype = MOVETYPE_PUSH;
-	if(self.modelindex == 0)
+	this.solid = SOLID_BSP;
+	SetBrushEntityModel(this);
+	this.movetype = MOVETYPE_PUSH;
+	if(this.modelindex == 0)
 	{
-		objerror("InitMovingBrushTrigger: no brushes found!");
-		return 0;
+		objerror(this, "InitMovingBrushTrigger: no brushes found!");
+		return false;
 	}
-	return 1;
+	return true;
 }

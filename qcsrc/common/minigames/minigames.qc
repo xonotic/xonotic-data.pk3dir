@@ -1,12 +1,11 @@
 #include "minigames.qh"
 
+REGISTER_NET_LINKED(ENT_CLIENT_MINIGAME)
+
 entity minigame_get_descriptor(string id)
 {
-	entity e;
-	for ( e = minigame_descriptors; e != world; e = e.list_next )
-		if ( e.netname == id )
-			return e;
-	return world;
+	FOREACH(Minigames, it.netname == id, return it);
+	return NULL;
 }
 
 // Get letter index of a tile name
@@ -17,7 +16,7 @@ int minigame_tile_letter(string id)
 
 // Get number index of a tile name
 // Note: this is 0 based, useful for mathematical operations
-// Note: Since the tile notation starts from the bottom left, 
+// Note: Since the tile notation starts from the bottom left,
 //	you may want to do number_of_rows - what_this_function_returns or something
 int minigame_tile_number(string id)
 {
@@ -27,7 +26,7 @@ int minigame_tile_number(string id)
 // Get relative position of the center of a given tile
 vector minigame_tile_pos(string id, int rows, int columns)
 {
-	return eX*(minigame_tile_letter(id)+0.5)/columns + 
+	return eX*(minigame_tile_letter(id)+0.5)/columns +
 	       eY - eY*(minigame_tile_number(id)+0.5)/rows;
 }
 
@@ -56,7 +55,7 @@ string minigame_tile_name(vector pos, int rows, int columns)
 {
 	if ( pos_x < 0 || pos_x > 1 || pos_y < 0 || pos_y > 1 )
 		return ""; // no tile
-		
+
 	int letter = floor(pos_x * columns);
 	int number = floor((1-pos_y) * rows);
 	return minigame_tile_buildname(letter, number);
@@ -92,7 +91,7 @@ entity msle_spawn(entity minigame_session, string class_name)
 	e.owner = minigame_session;
 	e.minigame_autoclean = 1;
 	#ifdef SVQC
-		e.customizeentityforclient = minigame_CheckSend;
+		setcefc(e, minigame_CheckSend);
 		Net_LinkEntity(e, false, 0, minigame_SendEntity);
 	#endif
 	return e;
@@ -128,10 +127,17 @@ int minigame_count_players(entity minigame)
 #ifdef SVQC
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
-	e = world;
+	e = NULL;
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif
 		pl_num++;
 	return pl_num;
 }
+
+#ifdef CSQC
+#include "cl_minigames.qc"
+#endif
+#ifdef SVQC
+#include "sv_minigames.qc"
+#endif

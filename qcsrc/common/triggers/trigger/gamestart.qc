@@ -1,22 +1,27 @@
 #ifdef SVQC
-void gamestart_use()
+void gamestart_use(entity this, entity actor, entity trigger)
 {
-	activator = self;
-	SUB_UseTargets();
-	remove(self);
+	SUB_UseTargets(this, this, trigger);
+	remove(this);
 }
 
-void spawnfunc_trigger_gamestart()
+void gamestart_use_this(entity this)
 {
-	self.use = gamestart_use;
-	self.reset2 = spawnfunc_trigger_gamestart;
+	gamestart_use(this, NULL, NULL);
+}
 
-	if(self.wait)
+spawnfunc(trigger_gamestart)
+{
+	this.use = gamestart_use;
+	this.reset2 = spawnfunc_trigger_gamestart;
+
+	if(this.wait)
 	{
-		self.think = self.use;
-		self.nextthink = game_starttime + self.wait;
+		setthink(this, adaptor_think2use);
+		this.nextthink = game_starttime + this.wait;
 	}
 	else
-		InitializeEntity(self, gamestart_use, INITPRIO_FINDTARGET);
+		InitializeEntity(this, gamestart_use_this, INITPRIO_FINDTARGET);
 }
+
 #endif

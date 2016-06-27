@@ -97,24 +97,24 @@ vector drawspritearrow(vector o, float ang, vector rgb, float a, float t);
 // returns location of sprite healthbar
 vector drawspritetext(vector o, float ang, float minwidth, vector rgb, float a, vector fontsize, string s);
 
-float spritelookupblinkvalue(string s);
-vector spritelookupcolor(string s, vector def);
-string spritelookuptext(string s);
+float spritelookupblinkvalue(entity this, string s);
+vector spritelookupcolor(entity this, string s, vector def);
+string spritelookuptext(entity this, string s);
 
 vector fixrgbexcess_move(vector rgb, vector src, vector dst);
 vector fixrgbexcess(vector rgb);
 
 // they are drawn using a .draw function
 
-void Ent_RemoveWaypointSprite();
+void Ent_RemoveWaypointSprite(entity this);
 
-void Ent_WaypointSprite();
+void Ent_WaypointSprite(entity this);
 
 void WaypointSprite_Load_Frames(string ext);
 
 void WaypointSprite_Load();
 .float alpha;
-void Draw_WaypointSprite();
+void Draw_WaypointSprite(entity this);
 #endif
 
 #ifdef SVQC
@@ -128,7 +128,7 @@ float autocvar_sv_waypointsprite_limitedrange;
 .string model2;
 .string model3;
 
-.float(entity) waypointsprite_visible_for_player;
+.bool(entity, entity, entity) waypointsprite_visible_for_player;
 
 void WaypointSprite_UpdateSprites(entity e, entity m1, entity m2, entity m3);
 
@@ -142,7 +142,7 @@ void WaypointSprite_UpdateOrigin(entity e, vector o);
 
 void WaypointSprite_UpdateRule(entity e, float t, float r);
 
-void WaypointSprite_UpdateTeamRadar(entity e, float icon, vector col);
+void WaypointSprite_UpdateTeamRadar(entity e, entity icon, vector col);
 
 .float waypointsprite_pingtime;
 .float waypointsprite_helpmetime;
@@ -155,25 +155,24 @@ void WaypointSprite_HelpMePing(entity e);
 void WaypointSprite_FadeOutIn(entity e, float t);
 
 void WaypointSprite_Init();
-void WaypointSprite_InitClient(entity e);
 
 void WaypointSprite_Kill(entity wp);
 
 void WaypointSprite_Disown(entity wp, float fadetime);
 
-void WaypointSprite_Think();
+void WaypointSprite_Think(entity this);
 
-float WaypointSprite_visible_for_player(entity e);
+bool WaypointSprite_visible_for_player(entity this, entity player, entity view);
 
 entity WaypointSprite_getviewentity(entity e);
 
 float WaypointSprite_isteammate(entity e, entity e2);
 
-float WaypointSprite_Customize();
+bool WaypointSprite_Customize(entity this, entity client);
 
-float WaypointSprite_SendEntity(entity to, float sendflags);
+bool WaypointSprite_SendEntity(entity this, entity to, float sendflags);
 
-void WaypointSprite_Reset();
+void WaypointSprite_Reset(entity this);
 
 entity WaypointSprite_Spawn(
     entity spr, // sprite
@@ -182,7 +181,7 @@ entity WaypointSprite_Spawn(
     entity showto, float t, // show to whom? Use a flag to indicate a team
     entity own, .entity ownfield, // remove when own gets killed
     float hideable, // true when it should be controlled by cl_hidewaypoints
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 entity WaypointSprite_SpawnFixed(
@@ -190,47 +189,50 @@ entity WaypointSprite_SpawnFixed(
     vector ofs,
     entity own,
     .entity ownfield,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 .entity waypointsprite_deployed_fixed;
 entity WaypointSprite_DeployFixed(
     entity spr,
     float limited_range,
+    entity player,
     vector ofs,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 .entity waypointsprite_deployed_personal;
 entity WaypointSprite_DeployPersonal(
     entity spr,
+    entity player,
     vector ofs,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 .entity waypointsprite_attached;
 .entity waypointsprite_attachedforcarrier;
 entity WaypointSprite_Attach(
     entity spr,
+    entity player,
     float limited_range,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 entity WaypointSprite_AttachCarrier(
     entity spr,
     entity carrier,
-    float icon // initial icon
+    entity icon // initial icon
 );
 
 void WaypointSprite_DetachCarrier(entity carrier);
 
-void WaypointSprite_ClearPersonal();
+void WaypointSprite_ClearPersonal(entity this);
 
-void WaypointSprite_ClearOwned();
+void WaypointSprite_ClearOwned(entity this);
 
-void WaypointSprite_PlayerDead();
+void WaypointSprite_PlayerDead(entity this);
 
-void WaypointSprite_PlayerGone();
+void WaypointSprite_PlayerGone(entity this);
 #endif
 
 #endif

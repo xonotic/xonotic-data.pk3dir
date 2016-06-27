@@ -2,128 +2,130 @@
 
 #ifdef SVQC
 // the wait time has passed, so set back up for another activation
-void multi_wait()
+void multi_wait(entity this)
 {
-	if (self.max_health)
+	if (this.max_health)
 	{
-		self.health = self.max_health;
-		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
+		this.health = this.max_health;
+		this.takedamage = DAMAGE_YES;
+		this.solid = SOLID_BBOX;
 	}
 }
 
 
 // the trigger was just touched/killed/used
-// self.enemy should be set to the activator so it can be held through a delay
+// this.enemy should be set to the activator so it can be held through a delay
 // so wait for the delay time before firing
-void multi_trigger()
+void multi_trigger(entity this)
 {
-	if (self.nextthink > time)
+	if (this.nextthink > time)
 	{
 		return;		// allready been triggered
 	}
 
-	if (self.classname == "trigger_secret")
+	if(this.spawnflags & 16384)
+	if(!IS_PLAYER(this.enemy))
+		return; // only players
+
+	if (this.classname == "trigger_secret")
 	{
-		if (!IS_PLAYER(self.enemy))
+		if (!IS_PLAYER(this.enemy))
 			return;
 		found_secrets = found_secrets + 1;
 		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
 	}
 
-	if (self.noise)
-		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+	if (this.noise)
+		_sound (this.enemy, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
 // don't trigger again until reset
-	self.takedamage = DAMAGE_NO;
+	this.takedamage = DAMAGE_NO;
 
-	activator = self.enemy;
-	other = self.goalentity;
-	SUB_UseTargets();
+	SUB_UseTargets(this, this.enemy, this.goalentity);
 
-	if (self.wait > 0)
+	if (this.wait > 0)
 	{
-		self.think = multi_wait;
-		self.nextthink = time + self.wait;
+		setthink(this, multi_wait);
+		this.nextthink = time + this.wait;
 	}
-	else if (self.wait == 0)
+	else if (this.wait == 0)
 	{
-		multi_wait(); // waiting finished
+		multi_wait(this); // waiting finished
 	}
 	else
-	{	// we can't just remove (self) here, because this is a touch function
+	{	// we can't just remove (this) here, because this is a touch function
 		// called wheil C code is looping through area links...
-		self.touch = func_null;
+		settouch(this, func_null);
 	}
 }
 
-void multi_use()
+void multi_use(entity this, entity actor, entity trigger)
 {
-	self.goalentity = other;
-	self.enemy = activator;
-	multi_trigger();
+	this.goalentity = trigger;
+	this.enemy = actor;
+	multi_trigger(this);
 }
 
-void multi_touch()
+void multi_touch(entity this, entity toucher)
 {
-	if(!(self.spawnflags & 2))
-	if(!other.iscreature)
+	if(!(this.spawnflags & 2))
+	if(!toucher.iscreature)
 			return;
 
-	if(self.team)
-		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
+	if(this.team)
+		if(((this.spawnflags & 4) == 0) == (this.team != toucher.team))
 			return;
 
 // if the trigger has an angles field, check player's facing direction
-	if (self.movedir != '0 0 0')
+	if (this.movedir != '0 0 0')
 	{
-		makevectors (other.angles);
-		if (v_forward * self.movedir < 0)
+		makevectors (toucher.angles);
+		if (v_forward * this.movedir < 0)
 			return;		// not facing the right way
 	}
 
 	// if the trigger has pressed keys, check that the player is pressing those keys
-	if(self.pressedkeys)
-	if(IS_PLAYER(other)) // only for players
-	if(!(other.pressedkeys & self.pressedkeys))
+	if(this.pressedkeys)
+	if(IS_PLAYER(toucher)) // only for players
+	if(!(toucher.pressedkeys & this.pressedkeys))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	self.enemy = other;
-	self.goalentity = other;
-	multi_trigger ();
+	this.enemy = toucher;
+	this.goalentity = toucher;
+	multi_trigger(this);
 }
 
-void multi_eventdamage (entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void multi_eventdamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	if (!self.takedamage)
+	if(!this.takedamage)
 		return;
-	if(self.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
-	if (self.health <= 0)
+	this.health = this.health - damage;
+	if (this.health <= 0)
 	{
-		self.enemy = attacker;
-		self.goalentity = inflictor;
-		multi_trigger();
+		this.enemy = attacker;
+		this.goalentity = inflictor;
+		multi_trigger(this);
 	}
 }
 
-void multi_reset()
+void multi_reset(entity this)
 {
-	if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
-		self.touch = multi_touch;
-	if (self.max_health)
+	if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
+		settouch(this, multi_touch);
+	if (this.max_health)
 	{
-		self.health = self.max_health;
-		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
+		this.health = this.max_health;
+		this.takedamage = DAMAGE_YES;
+		this.solid = SOLID_BBOX;
 	}
-	self.think = func_null;
-	self.nextthink = 0;
-	self.team = self.team_saved;
+	setthink(this, func_null);
+	this.nextthink = 0;
+	this.team = this.team_saved;
 }
 
 /*QUAKED spawnfunc_trigger_multiple (.5 .5 .5) ? notouch
@@ -139,51 +141,45 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_multiple()
+spawnfunc(trigger_multiple)
 {
-	self.reset = multi_reset;
-	if (self.sounds == 1)
-	{
-		precache_sound ("misc/secret.wav");
-		self.noise = "misc/secret.wav";
-	}
-	else if (self.sounds == 2)
-	{
-		precache_sound ("misc/talk.wav");
-		self.noise = "misc/talk.wav";
-	}
-	else if (self.sounds == 3)
-	{
-		precache_sound ("misc/trigger1.wav");
-		self.noise = "misc/trigger1.wav";
-	}
+	this.reset = multi_reset;
+	if (this.sounds == 1)
+		this.noise = "misc/secret.wav";
+	else if (this.sounds == 2)
+		this.noise = strzone(SND(TALK));
+	else if (this.sounds == 3)
+		this.noise = "misc/trigger1.wav";
 
-	if (!self.wait)
-		self.wait = 0.2;
-	else if(self.wait < -1)
-		self.wait = 0;
-	self.use = multi_use;
+	if(this.noise)
+		precache_sound(this.noise);
+
+	if (!this.wait)
+		this.wait = 0.2;
+	else if(this.wait < -1)
+		this.wait = 0;
+	this.use = multi_use;
 
 	EXACTTRIGGER_INIT;
 
-	self.team_saved = self.team;
+	this.team_saved = this.team;
 
-	if (self.health)
+	if (this.health)
 	{
-		if (self.spawnflags & SPAWNFLAG_NOTOUCH)
-			objerror ("health and notouch don't make sense\n");
-		self.max_health = self.health;
-		self.event_damage = multi_eventdamage;
-		self.takedamage = DAMAGE_YES;
-		self.solid = SOLID_BBOX;
-		setorigin (self, self.origin);	// make sure it links into the world
+		if (this.spawnflags & SPAWNFLAG_NOTOUCH)
+			objerror (this, "health and notouch don't make sense\n");
+		this.max_health = this.health;
+		this.event_damage = multi_eventdamage;
+		this.takedamage = DAMAGE_YES;
+		this.solid = SOLID_BBOX;
+		setorigin(this, this.origin);	// make sure it links into the world
 	}
 	else
 	{
-		if ( !(self.spawnflags & SPAWNFLAG_NOTOUCH) )
+		if ( !(this.spawnflags & SPAWNFLAG_NOTOUCH) )
 		{
-			self.touch = multi_touch;
-			setorigin (self, self.origin);	// make sure it links into the world
+			settouch(this, multi_touch);
+			setorigin(this, this.origin);	// make sure it links into the world
 		}
 	}
 }
@@ -202,9 +198,9 @@ sounds
 4)
 set "message" to text string
 */
-void spawnfunc_trigger_once()
+spawnfunc(trigger_once)
 {
-	self.wait = -1;
-	spawnfunc_trigger_multiple();
+	this.wait = -1;
+	spawnfunc_trigger_multiple(this);
 }
 #endif

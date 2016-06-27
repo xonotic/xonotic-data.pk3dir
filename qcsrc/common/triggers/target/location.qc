@@ -1,14 +1,20 @@
 #ifdef SVQC
-void spawnfunc_target_location()
+void target_push_init(entity this);
+
+spawnfunc(target_location)
 {
-    self.classname = "target_location";
+    this.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
+
+    target_push_init(this);
 }
 
-void spawnfunc_info_location()
+spawnfunc(info_location)
 {
-    self.classname = "target_location";
-    self.message = self.netname;
+    this.classname = "target_location";
+    this.message = this.netname;
+
+    target_push_init(this);
 }
 #endif

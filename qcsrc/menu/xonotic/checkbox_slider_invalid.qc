@@ -1,30 +1,7 @@
-#ifndef CHECKBOX_SLIDER_INVALID_H
-#define CHECKBOX_SLIDER_INVALID_H
-#include "../item/checkbox.qc"
-CLASS(XonoticSliderCheckBox, CheckBox)
-	METHOD(XonoticSliderCheckBox, configureXonoticSliderCheckBox, void(entity, float, float, entity, string));
-	METHOD(XonoticSliderCheckBox, setChecked, void(entity, float));
-	METHOD(XonoticSliderCheckBox, draw, void(entity));
-	ATTRIB(XonoticSliderCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticSliderCheckBox, image, string, SKINGFX_CHECKBOX)
+#include "checkbox_slider_invalid.qh"
 
-	ATTRIB(XonoticSliderCheckBox, color, vector, SKINCOLOR_CHECKBOX_N)
-	ATTRIB(XonoticSliderCheckBox, colorC, vector, SKINCOLOR_CHECKBOX_C)
-	ATTRIB(XonoticSliderCheckBox, colorF, vector, SKINCOLOR_CHECKBOX_F)
-	ATTRIB(XonoticSliderCheckBox, colorD, vector, SKINCOLOR_CHECKBOX_D)
+#include "slider.qh"
 
-	ATTRIB(XonoticSliderCheckBox, alpha, float, SKINALPHA_TEXT)
-	ATTRIB(XonoticSliderCheckBox, disabledAlpha, float, SKINALPHA_DISABLED)
-
-	ATTRIB(XonoticSliderCheckBox, controlledSlider, entity, NULL)
-	ATTRIB(XonoticSliderCheckBox, offValue, float, -1)
-	ATTRIB(XonoticSliderCheckBox, inverted, float, 0)
-	ATTRIB(XonoticSliderCheckBox, savedValue, float, -1)
-ENDCLASS(XonoticSliderCheckBox)
-entity makeXonoticSliderCheckBox(float, float, entity, string);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticSliderCheckBox(float theOffValue, float isInverted, entity theControlledSlider, string theText)
 {
 	entity me;
@@ -43,8 +20,8 @@ void XonoticSliderCheckBox_configureXonoticSliderCheckBox(entity me, float theOf
 		me.savedValue = theControlledSlider.valueMin;
 	me.controlledSlider = theControlledSlider;
 	me.configureCheckBox(me, theText, me.fontSize, me.image);
-	me.tooltip = theControlledSlider.tooltip;
 	me.cvarName = theControlledSlider.cvarName; // in case we want to display the cvar in the tooltip
+	me.tooltip = theControlledSlider.tooltip;
 }
 void XonoticSliderCheckBox_draw(entity me)
 {
@@ -63,5 +40,3 @@ void XonoticSliderCheckBox_setChecked(entity me, float val)
 	else
 		me.controlledSlider.setValue(me.controlledSlider, me.offValue);
 }
-
-#endif

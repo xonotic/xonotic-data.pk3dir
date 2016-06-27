@@ -1,30 +1,44 @@
+#ifdef IMPLEMENTATION
 REGISTER_MUTATOR(itemstime, true);
+
+REGISTER_NET_TEMP(itemstime)
 
 #ifdef SVQC
 void IT_Write(entity e, int i, float f) {
     if (!IS_REAL_CLIENT(e)) return;
     msg_entity = e;
-    WriteByte(MSG_ONE, SVC_TEMPENTITY);
-    WriteMutator(MSG_ONE, itemstime);
+    WriteHeader(MSG_ONE, itemstime);
     WriteByte(MSG_ONE, i);
     WriteFloat(MSG_ONE, f);
 }
 #endif
 
 #ifdef CSQC
-float ItemsTime_time[MAX_ITEMS];
-float ItemsTime_availableTime[MAX_ITEMS];
-MUTATOR_HOOKFUNCTION(itemstime, CSQC_Parse_TempEntity) {
-    if (MUTATOR_RETURNVALUE) return false;
-    if (!ReadMutatorEquals(mutator_argv_int_0, itemstime)) return false;
+// reserve one more spot for superweapons time
+float ItemsTime_time[Items_MAX + 1];
+float ItemsTime_availableTime[Items_MAX + 1];
+NET_HANDLE(itemstime, bool isNew)
+{
     int i = ReadByte();
     float f = ReadFloat();
+    return = true;
     ItemsTime_time[i] = f;
-    return true;
 }
 #endif
 
 #ifdef CSQC
+void Item_ItemsTime_Init()
+{
+    FOREACH(Items, true, LAMBDA(
+        ItemsTime_time[it.m_id] = -1;
+    ));
+    ItemsTime_time[Items_MAX] = -1;
+}
+
+STATIC_INIT(ItemsTime_Init) {
+    Item_ItemsTime_Init();
+}
+
 int autocvar_hud_panel_itemstime = 2;
 float autocvar_hud_panel_itemstime_dynamicsize = 1;
 float autocvar_hud_panel_itemstime_ratio = 2;
@@ -49,24 +63,25 @@ bool Item_ItemsTime_SpectatorOnly(GameItem it)
     );
 }
 
-bool Item_ItemsTime_Allow(GameItem it, WepSet _weapons)
+bool Item_ItemsTime_Allow(GameItem it)
 {
     return (false
     || it.instanceOfPowerup
     || Item_ItemsTime_SpectatorOnly(it)
-    || (_weapons & WEPSET_SUPERWEAPONS)
     );
 }
 
 #ifdef SVQC
 
-float it_times[MAX_ITEMS];
+// reserve one more spot for superweapons time
+float it_times[Items_MAX + 1];
 
 void Item_ItemsTime_Init()
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         it_times[it.m_id] = -1;
     ));
+    it_times[Items_MAX] = -1;
 }
 
 STATIC_INIT(ItemsTime_Init) {
@@ -76,23 +91,26 @@ STATIC_INIT(ItemsTime_Init) {
 
 void Item_ItemsTime_ResetTimes()
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         it_times[it.m_id] = (it_times[it.m_id] == -1) ? -1 : 0;
     ));
+    it_times[Items_MAX] = (it_times[Items_MAX] == -1) ? -1 : 0;
 }
 
 void Item_ItemsTime_ResetTimesForPlayer(entity e)
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         IT_Write(e, it.m_id, (it_times[it.m_id] == -1) ? -1 : 0);
     ));
+    IT_Write(e, Items_MAX, (it_times[Items_MAX] == -1) ? -1 : 0);
 }
 
 void Item_ItemsTime_SetTimesForPlayer(entity e)
 {
-    FOREACH(ITEMS, true, LAMBDA(
+    FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
         IT_Write(e, it.m_id, it_times[it.m_id]);
     ));
+    IT_Write(e, Items_MAX, it_times[Items_MAX]);
 }
 
 void Item_ItemsTime_SetTime(entity e, float t)
@@ -101,81 +119,79 @@ void Item_ItemsTime_SetTime(entity e, float t)
         return;
 
     GameItem item = e.itemdef;
-    it_times[item.m_id] = t;
+    if (item.instanceOfGameItem)
+    {
+		if (!item.instanceOfWeaponPickup)
+			it_times[item.m_id] = t;
+		else if (e.weapons & WEPSET_SUPERWEAPONS)
+			it_times[Items_MAX] = t;
+    }
 }
 
 void Item_ItemsTime_SetTimesForAllPlayers()
 {
-    entity e;
-    FOR_EACH_REALCLIENT(e) if (warmup_stage || !IS_PLAYER(e))
-        Item_ItemsTime_SetTimesForPlayer(e);
+    FOREACH_CLIENT(IS_REAL_CLIENT(it) && (warmup_stage || !IS_PLAYER(it)), LAMBDA(Item_ItemsTime_SetTimesForPlayer(it)));
 }
 
 float Item_ItemsTime_UpdateTime(entity e, float t)
 {
     bool isavailable = (t == 0);
-    if (e.weapons & WEPSET_SUPERWEAPONS)
-    {
-        for (entity head = world; (head = nextent(head)); )
-        {
-            if (clienttype(head) != CLIENTTYPE_NOTACLIENT || !(head.weapons & WEPSET_SUPERWEAPONS) || head.classname == "weapon_info")
-                continue;
-            if (e == head)
-                continue;
-
-            if (head.scheduledrespawntime <= time)
-                isavailable = true;
-            else if (t == 0 || head.scheduledrespawntime < t)
-                t = head.scheduledrespawntime;
-        }
-    }
-    else
-    {
-        for (entity head = world; (head = nextent(head)); )
-        {
-            if (head.itemdef != e.itemdef)
-                continue;
-            if (e == head)
-                continue;
-
-            if (head.scheduledrespawntime <= time)
-                isavailable = true;
-            else if (t == 0 || head.scheduledrespawntime < t)
-                t = head.scheduledrespawntime;
-        }
-    }
+    FOREACH_ENTITY(it.itemdef == e.itemdef || ((e.weapons & WEPSET_SUPERWEAPONS) && (it.weapons & WEPSET_SUPERWEAPONS) && clienttype(it) == CLIENTTYPE_NOTACLIENT), LAMBDA(
+        if (e == it) continue;
+        if (it.scheduledrespawntime <= time)
+            isavailable = true;
+        else if (t == 0 || it.scheduledrespawntime < t)
+            t = it.scheduledrespawntime;
+    ));
     if (isavailable)
         t = -t; // let know the client there's another available item
     return t;
 }
 
-MUTATOR_HOOKFUNCTION(itemstime, reset_map_global) {
+MUTATOR_HOOKFUNCTION(itemstime, reset_map_global)
+{
     Item_ItemsTime_ResetTimes();
     // ALL the times need to be reset before .reset()ing each item
     // since Item_Reset schedules respawn of superweapons and powerups
-    for (self = world; (self = nextent(self)); )
-    if (IS_NOT_A_CLIENT(self))
-    {
-        if (self.reset)
-            Item_ItemsTime_SetTime(self, 0);
-    }
+    FOREACH_ENTITY(IS_NOT_A_CLIENT(it), LAMBDA(
+        if (it.reset) Item_ItemsTime_SetTime(it, 0);
+    ));
     Item_ItemsTime_SetTimesForAllPlayers();
 }
 
-MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver) {
-    Item_ItemsTime_SetTimesForPlayer(self);
+MUTATOR_HOOKFUNCTION(itemstime, MakePlayerObserver)
+{
+    entity player = M_ARGV(0, entity);
+
+    Item_ItemsTime_SetTimesForPlayer(player);
 }
 
-MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn) {
+MUTATOR_HOOKFUNCTION(itemstime, ClientConnect, CBC_ORDER_LAST)
+{
+    entity player = M_ARGV(0, entity);
+
+	if(IS_PLAYER(player))
+	{
+		// client became player on connection skipping putObserverInServer step
+		if (IS_REAL_CLIENT(player))
+		if (warmup_stage)
+			Item_ItemsTime_SetTimesForPlayer(player);
+	}
+}
+
+MUTATOR_HOOKFUNCTION(itemstime, PlayerSpawn)
+{
     if (warmup_stage) return;
-    Item_ItemsTime_ResetTimesForPlayer(self);
+    entity player = M_ARGV(0, entity);
+
+    Item_ItemsTime_ResetTimesForPlayer(player);
 }
 
 #endif
 
 #ifdef CSQC
 
-void DrawItemsTimeItem(vector myPos, vector mySize, float ar, entity item, float item_time, bool item_available, float item_availableTime)
+void DrawItemsTimeItem(vector myPos, vector mySize, float ar, string item_icon, float item_time, bool item_available, float item_availableTime)
 {
     float t = 0;
     vector color = '0 0 0';
@@ -228,13 +244,18 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float ar, entity item, float
         HUD_Panel_DrawProgressBar(p_pos, p_size, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_progressbar_maxtime, 0, autocvar_hud_panel_itemstime_iconalign, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
     }
 
-    if (t > 0 && autocvar_hud_panel_itemstime_text)
-        drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-    else
-        picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
+    if(autocvar_hud_panel_itemstime_text)
+    {
+        if(t > 0)
+            drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+        else if(precache_pic("gfx/hud/default/checkmark")) // COMPAT: check if this image exists, as 0.8.1 clients lack it
+            drawpic_aspect_skin(numpos, "checkmark", eX * (ar - 1) * mySize_y + eY * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
+        else // legacy code, if the image is missing just center the icon
+            picpos.x = myPos.x + mySize.x / 2 - mySize.y / 2;
+    }
     if (item_availableTime)
-        drawpic_aspect_skin_expanding(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
-    drawpic_aspect_skin(picpos, item.m_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
+        drawpic_aspect_skin_expanding(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL, item_availableTime);
+    drawpic_aspect_skin(picpos, item_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_ItemsTime()
@@ -256,17 +277,26 @@ void HUD_ItemsTime()
 
     int count = 0;
     if (autocvar_hud_panel_itemstime_hidespawned == 1)
-        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
-            count += (ItemsTime_time[i] > time || -ItemsTime_time[i] > time);
+    {
+        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+            count += (ItemsTime_time[it.m_id] > time || -ItemsTime_time[it.m_id] > time);
         ));
+        count += (ItemsTime_time[Items_MAX] > time || -ItemsTime_time[Items_MAX] > time);
+    }
     else if (autocvar_hud_panel_itemstime_hidespawned == 2)
-        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
-            count += (ItemsTime_time[i] > time);
+    {
+        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+            count += (ItemsTime_time[it.m_id] > time);
         ));
+        count += (ItemsTime_time[Items_MAX] > time);
+    }
     else
-        FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0'), LAMBDA(
-            count += (ItemsTime_time[i] != -1);
+    {
+        FOREACH(Items, Item_ItemsTime_Allow(it), LAMBDA(
+            count += (ItemsTime_time[it.m_id] != -1);
         ));
+        count += (ItemsTime_time[Items_MAX] != -1);
+    }
     if (count == 0)
         return;
 
@@ -333,12 +363,19 @@ void HUD_ItemsTime()
         }
     }
 
+    HUD_Scale_Enable();
     HUD_Panel_DrawBg(1);
 
     float row = 0, column = 0;
     bool item_available;
-    FOREACH(ITEMS, Item_ItemsTime_Allow(it, '0 0 0') && ItemsTime_time[i] != -1, LAMBDA(
-        float item_time = ItemsTime_time[i];
+    int id = 0;
+    string icon = "";
+    FOREACH(Items, Item_ItemsTime_Allow(it) && ItemsTime_time[it.m_id] != -1, LAMBDA(
+    	id = it.m_id;
+    	icon = it.m_icon;
+
+LABEL(iteration)
+        float item_time = ItemsTime_time[id];
         if (item_time < -1)
         {
             item_available = true;
@@ -347,35 +384,45 @@ void HUD_ItemsTime()
         else
             item_available = (item_time <= time);
 
-        if (ItemsTime_time[i] >= 0)
+        if (ItemsTime_time[id] >= 0)
         {
-            if (time <= ItemsTime_time[i])
-                ItemsTime_availableTime[i] = 0;
-            else if (ItemsTime_availableTime[i] == 0)
-                ItemsTime_availableTime[i] = time;
+            if (time <= ItemsTime_time[id])
+                ItemsTime_availableTime[id] = 0;
+            else if (ItemsTime_availableTime[id] == 0)
+                ItemsTime_availableTime[id] = time;
         }
-        else if (ItemsTime_availableTime[i] == 0)
-            ItemsTime_availableTime[i] = time;
+        else if (ItemsTime_availableTime[id] == 0)
+            ItemsTime_availableTime[id] = time;
 
-        float f = (time - ItemsTime_availableTime[i]) * 2;
+        float f = (time - ItemsTime_availableTime[id]) * 2;
         f = (f > 1) ? 0 : bound(0, f, 1);
 
         if (autocvar_hud_panel_itemstime_hidespawned == 1)
-            if (!(ItemsTime_time[i] > time || -ItemsTime_time[i] > time))
+            if (!(ItemsTime_time[id] > time || -ItemsTime_time[id] > time))
                 continue;
 
         if (autocvar_hud_panel_itemstime_hidespawned == 2)
-            if (!(ItemsTime_time[i] > time))
+            if (!(ItemsTime_time[id] > time))
                 continue;
 
-        DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, it, item_time, item_available, f);
+        DrawItemsTimeItem(pos + eX * column * (itemstime_size.x + offset.x) + eY * row * (itemstime_size.y + offset.y), itemstime_size, ar, icon, item_time, item_available, f);
         ++row;
         if (row >= rows)
         {
             row = 0;
             column = column + 1;
         }
+        if(id == Items_MAX) // can happen only in the last fake iteration
+        	break;
     ));
+    // add another fake iteration for superweapons time
+    if(id < Items_MAX && ItemsTime_time[Items_MAX] != -1)
+    {
+		id = Items_MAX;
+		icon = "superweapons";
+		goto iteration;
+    }
 }
 
+#endif
 #endif

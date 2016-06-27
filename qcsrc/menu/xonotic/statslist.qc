@@ -1,35 +1,5 @@
-#include "../../common/playerstats.qh"
-
-#ifndef STATSLIST_H
-#define STATSLIST_H
-#include "listbox.qc"
-CLASS(XonoticStatsList, XonoticListBox)
-	METHOD(XonoticStatsList, configureXonoticStatsList, void(entity));
-	ATTRIB(XonoticStatsList, rowsPerItem, float, 1.4)
-	METHOD(XonoticStatsList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticStatsList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticStatsList, getStats, void(entity));
-	METHOD(XonoticStatsList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticStatsList, keyDown, float(entity, float, float, float));
-	METHOD(XonoticStatsList, destroy, void(entity));
-	METHOD(XonoticStatsList, showNotify, void(entity));
-	ATTRIB(XonoticStatsList, selectionDoesntMatter, bool, true)
-
-	ATTRIB(XonoticStatsList, listStats, float, -1)
-	ATTRIB(XonoticStatsList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticStatsList, realUpperMargin, float, 0)
-	ATTRIB(XonoticStatsList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticStatsList, columnNameSize, float, 0)
-ENDCLASS(XonoticStatsList)
-
-#ifndef IMPLEMENTATION
-// public:
-entity statslist; // for reference elsewhere
-#endif
-entity makeXonoticStatsList();
-#endif
-
-#ifdef IMPLEMENTATION
+#include "statslist.qh"
+#include <common/playerstats.qh>
 
 entity makeXonoticStatsList()
 {
@@ -358,5 +328,3 @@ float XonoticStatsList_keyDown(entity me, float scan, float ascii, float shift)
 		return SUPER(XonoticStatsList).keyDown(me, scan, ascii, shift);
 	}
 }
-#endif
-

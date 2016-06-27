@@ -1,13 +1,10 @@
 #include "ipban.qh"
-#include "_all.qh"
 
 #include "autocvars.qh"
 #include "command/banning.qh"
 #include "defs.qh"
 #include "../common/constants.qh"
 #include "../common/util.qh"
-#include "../dpdefs/dpextensions.qh"
-#include "../dpdefs/progsdefs.qh"
 
 /*
  * Protocol of online ban list:
@@ -195,11 +192,11 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 		LOG_INFO("Ban list syncing: accepted ban of ", ip, " by ", serverip, " at ", uri, ": ");
 		LOG_INFO(reason, "\n");
 
-:skip
+LABEL(skip)
 	}
 }
 
-void OnlineBanList_Think()
+void OnlineBanList_Think(entity this)
 {
 	float argc;
 	string uri;
@@ -240,13 +237,13 @@ void OnlineBanList_Think()
 	}
 
 	if(autocvar_g_ban_sync_interval > 0)
-		self.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
+		this.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 	else
 		goto killme;
 	return;
 
-:killme
-	remove(self);
+LABEL(killme)
+	remove(this);
 }
 
 const float BAN_MAX = 256;
@@ -321,10 +318,8 @@ void Ban_LoadBans()
 		}
 	}
 
-	entity e;
-	e = spawn();
-	e.classname = "bansyncer";
-	e.think = OnlineBanList_Think;
+	entity e = new(bansyncer);
+	setthink(e, OnlineBanList_Think);
 	e.nextthink = time + 1;
 }
 
@@ -385,7 +380,7 @@ float Ban_GetClientIP(entity client)
 	ban_ip4 = strcat1(s); // 32
 	return true;
 
-:ipv6
+LABEL(ipv6)
 	i1 = strstrofs(s, ":", 0);
 	if(i1 < 0)
 		return false;
@@ -451,12 +446,11 @@ float Ban_IsClientBanned(entity client, float idx)
 	return false;
 }
 
-float Ban_MaybeEnforceBan(entity client)
+bool Ban_MaybeEnforceBan(entity client)
 {
-	if(Ban_IsClientBanned(client, -1))
+	if (Ban_IsClientBanned(client, -1))
 	{
-		string s;
-		s = strcat("^1NOTE:^7 banned client ", client.netaddress, " just tried to enter\n");
+		string s = sprintf("^1NOTE:^7 banned client %s just tried to enter\n", client.netaddress);
 		dropclient(client);
 		bprint(s);
 		return true;
@@ -464,25 +458,23 @@ float Ban_MaybeEnforceBan(entity client)
 	return false;
 }
 
-.float ban_checked;
-float Ban_MaybeEnforceBanOnce(entity client)
+.bool ban_checked;
+bool Ban_MaybeEnforceBanOnce(entity client)
 {
-	if(client.ban_checked)
-		return false;
+	if (client.ban_checked) return false;
 	client.ban_checked = true;
 	return Ban_MaybeEnforceBan(client);
 }
 
-string Ban_Enforce(float i, string reason)
+string Ban_Enforce(float j, string reason)
 {
 	string s;
-	entity e;
 
 	// Enforce our new ban
 	s = "";
-	FOR_EACH_CLIENTSLOT(e)
-		if (IS_REAL_CLIENT(e))
-		if(Ban_IsClientBanned(e, i))
+	FOREACH_CLIENTSLOT(IS_REAL_CLIENT(it),
+	{
+		if(Ban_IsClientBanned(it, j))
 		{
 			if(reason != "")
 			{
@@ -490,11 +482,12 @@ string Ban_Enforce(float i, string reason)
 					reason = strcat(reason, ": affects ");
 				else
 					reason = strcat(reason, ", ");
-				reason = strcat(reason, e.netname);
+				reason = strcat(reason, it.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", e.netaddress, "^7 has to go\n");
-			dropclient(e);
+			s = strcat(s, "^1NOTE:^7 banned client ", it.netaddress, "^7 has to go\n");
+			dropclient(it);
 		}
+	});
 	bprint(s);
 
 	return reason;

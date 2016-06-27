@@ -1,5 +1,4 @@
-#ifndef SHOWNAMES_H
-#define SHOWNAMES_H
+#pragma once
 
 entityclass(ShowNames);
 class(ShowNames) .float healthvalue;
@@ -9,5 +8,3 @@ class(ShowNames) .float fadedelay;
 class(ShowNames) .float pointtime;
 
 void Draw_ShowNames_All();
-
-#endif

@@ -1,52 +1,46 @@
-void generic_plat_blocked()
+void generic_plat_blocked(entity this, entity blocker)
 {
 #ifdef SVQC
-	if(self.dmg && other.takedamage != DAMAGE_NO)
+	if(this.dmg && blocker.takedamage != DAMAGE_NO)
 	{
-		if(self.dmgtime2 < time)
+		if(this.dmgtime2 < time)
 		{
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
-			self.dmgtime2 = time + self.dmgtime;
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
+			this.dmgtime2 = time + this.dmgtime;
 		}
 
 		// Gib dead/dying stuff
-		if(other.deadflag != DEAD_NO)
-			Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		if(IS_DEAD(blocker))
+			Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 	}
 #endif
 }
 
-void plat_spawn_inside_trigger()
+void plat_spawn_inside_trigger(entity this)
 {
 	entity trigger;
 	vector tmin, tmax;
 
 	trigger = spawn();
-	trigger.touch = plat_center_touch;
+	settouch(trigger, plat_center_touch);
 	trigger.movetype = MOVETYPE_NONE;
 	trigger.solid = SOLID_TRIGGER;
-	trigger.enemy = self;
+	trigger.enemy = this;
 
-#ifdef CSQC
-	trigger.drawmask = MASK_NORMAL;
-	trigger.trigger_touch = plat_center_touch;
-	trigger.draw = trigger_draw_generic;
-#endif
-
-	tmin = self.absmin + '25 25 0';
-	tmax = self.absmax - '25 25 -8';
-	tmin_z = tmax_z - (self.pos1_z - self.pos2_z + 8);
-	if (self.spawnflags & PLAT_LOW_TRIGGER)
+	tmin = this.absmin + '25 25 0';
+	tmax = this.absmax - '25 25 -8';
+	tmin_z = tmax_z - (this.pos1_z - this.pos2_z + 8);
+	if (this.spawnflags & PLAT_LOW_TRIGGER)
 		tmax_z = tmin_z + 8;
 
-	if (self.size_x <= 50)
+	if (this.size_x <= 50)
 	{
-		tmin_x = (self.mins_x + self.maxs_x) / 2;
+		tmin_x = (this.mins_x + this.maxs_x) / 2;
 		tmax_x = tmin_x + 1;
 	}
-	if (self.size_y <= 50)
+	if (this.size_y <= 50)
 	{
-		tmin_y = (self.mins_y + self.maxs_y) / 2;
+		tmin_y = (this.mins_y + this.maxs_y) / 2;
 		tmax_y = tmin_y + 1;
 	}
 
@@ -60,148 +54,148 @@ void plat_spawn_inside_trigger()
 
 	// otherwise, something is fishy...
 	remove(trigger);
-	objerror("plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
+	objerror(this, "plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
 
-void plat_hit_top()
+void plat_hit_top(entity this)
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
-	self.state = 1;
+	_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+	this.state = 1;
 
-	self.SUB_THINK = plat_go_down;
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 3;
+	SUB_THINK(this, plat_go_down);
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 3;
 }
 
-void plat_hit_bottom()
+void plat_hit_bottom(entity this)
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTEN_NORM);
-	self.state = 2;
+	_sound (this, CH_TRIGGER_SINGLE, this.noise1, VOL_BASE, ATTEN_NORM);
+	this.state = 2;
 }
 
-void plat_go_down()
+void plat_go_down(entity this)
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
-	self.state = 3;
-	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, plat_hit_bottom);
+	_sound (this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_NORM);
+	this.state = 3;
+	SUB_CalcMove (this, this.pos2, TSPEED_LINEAR, this.speed, plat_hit_bottom);
 }
 
-void plat_go_up()
+void plat_go_up(entity this)
 {
-	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_NORM);
-	self.state = 4;
-	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, plat_hit_top);
+	_sound (this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_NORM);
+	this.state = 4;
+	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, plat_hit_top);
 }
 
-void plat_center_touch()
+void plat_center_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 
-	if (other.health <= 0)
+	if (toucher.health <= 0)
 		return;
 #elif defined(CSQC)
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if(PHYS_DEAD(other))
+	if(IS_DEAD(toucher))
 		return;
 #endif
 
-	self = self.enemy;
-	if (self.state == 2)
-		plat_go_up ();
-	else if (self.state == 1)
-		self.SUB_NEXTTHINK = self.SUB_LTIME + 1;
+	if (this.enemy.state == 2) {
+		plat_go_up(this.enemy);
+	} else if (this.enemy.state == 1)
+		this.enemy.SUB_NEXTTHINK = this.enemy.SUB_LTIME + 1;
 }
 
-void plat_outside_touch()
+void plat_outside_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
 
-	if (other.health <= 0)
+	if (toucher.health <= 0)
 		return;
 #elif defined(CSQC)
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
 #endif
 
-	self = self.enemy;
-	if (self.state == 1)
-		plat_go_down ();
+	if (this.enemy.state == 1) {
+	    entity e = this.enemy;
+		plat_go_down(e);
+    }
 }
 
-void plat_trigger_use()
+void plat_trigger_use(entity this, entity actor, entity trigger)
 {
 #ifdef SVQC
-	if (self.think)
+	if (getthink(this))
 		return;		// already activated
 #elif defined(CSQC)
-	if(self.move_think)
+	if(this.move_think)
 		return;
 #endif
-	plat_go_down();
+	plat_go_down(this);
 }
 
 
-void plat_crush()
+void plat_crush(entity this, entity blocker)
 {
-	if((self.spawnflags & 4) && (other.takedamage != DAMAGE_NO))
+	if((this.spawnflags & 4) && (blocker.takedamage != DAMAGE_NO))
 	{ // KIll Kill Kill!!
 #ifdef SVQC
-		Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 #endif
 	}
 	else
 	{
 #ifdef SVQC
-		if((self.dmg) && (other.takedamage != DAMAGE_NO))
+		if((this.dmg) && (blocker.takedamage != DAMAGE_NO))
 		{   // Shall we bite?
-			Damage (other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			Damage (blocker, this, this, this.dmg, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 			// Gib dead/dying stuff
-			if(other.deadflag != DEAD_NO)
-				Damage (other, self, self, 10000, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+			if(IS_DEAD(blocker))
+				Damage (blocker, this, this, 10000, DEATH_HURTTRIGGER.m_id, blocker.origin, '0 0 0');
 		}
 #endif
 
-		if (self.state == 4)
-			plat_go_down ();
-		else if (self.state == 3)
-			plat_go_up ();
+		if (this.state == 4)
+			plat_go_down (this);
+		else if (this.state == 3)
+			plat_go_up (this);
 	// when in other states, then the plat_crush event came delayed after
 	// plat state already had changed
 	// this isn't a bug per se!
 	}
 }
 
-void plat_use()
+void plat_use(entity this, entity actor, entity trigger)
 {
-	self.use = func_null;
-	if (self.state != 4)
-		objerror ("plat_use: not in up state");
-	plat_go_down();
+	this.use = func_null;
+	if (this.state != 4)
+		objerror (this, "plat_use: not in up state");
+	plat_go_down(this);
 }
 
 .string sound1, sound2;
 
-void plat_reset()
+void plat_reset(entity this)
 {
 	IFTARGETED
 	{
-		setorigin (self, self.pos1);
-		self.state = 4;
-		self.use = plat_use;
+		setorigin(this, this.pos1);
+		this.state = 4;
+		this.use = plat_use;
 	}
 	else
 	{
-		setorigin (self, self.pos2);
-		self.state = 2;
-		self.use = plat_trigger_use;
+		setorigin(this, this.pos2);
+		this.state = 2;
+		this.use = plat_trigger_use;
 	}
 
 #ifdef SVQC
-	self.SendFlags |= SF_TRIGGER_RESET;
+	this.SendFlags |= SF_TRIGGER_RESET;
 #endif
 }
 
@@ -227,7 +221,7 @@ bool set_platmovetype(entity e, string s)
 
 	if(!cubic_speedfunc_is_sane(e.platmovetype_start, e.platmovetype_end))
 	{
-		objerror("Invalid platform move type; platform would go in reverse, which is not allowed.");
+		objerror(e, "Invalid platform move type; platform would go in reverse, which is not allowed.");
 		return false;
 	}
 

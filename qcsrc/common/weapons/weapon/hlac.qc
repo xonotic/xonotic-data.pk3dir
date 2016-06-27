@@ -1,93 +1,96 @@
 #ifndef IMPLEMENTATION
-REGISTER_WEAPON(
-/* WEP_##id  */ HLAC,
-/* function  */ W_HLAC,
-/* ammotype  */ ammo_cells,
-/* impulse   */ 6,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
-/* rating    */ BOT_PICKUP_RATING_MID,
-/* color     */ '0 1 0',
-/* modelname */ "hlac",
-/* simplemdl */ "foobar",
-/* crosshair */ "gfx/crosshairhlac 0.6",
-/* wepimg    */ "weaponhlac",
-/* refname   */ "hlac",
-/* wepname   */ _("Heavy Laser Assault Cannon")
-);
-
-#define HLAC_SETTINGS(w_cvar,w_prop) HLAC_SETTINGS_LIST(w_cvar, w_prop, HLAC, hlac)
-#define HLAC_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, edgedamage) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, BOTH, radius) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, spread_crouchmod) \
-	w_cvar(id, sn, PRI,  spread_add) \
-	w_cvar(id, sn, PRI,  spread_max) \
-	w_cvar(id, sn, PRI,  spread_min) \
-	w_cvar(id, sn, NONE, secondary) \
-	w_cvar(id, sn, SEC,  shots) \
-	w_cvar(id, sn, SEC,  spread) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
-
-#ifdef SVQC
-HLAC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+CLASS(HLAC, Weapon)
+/* ammotype  */ ATTRIB(HLAC, ammo_field, .int, ammo_cells)
+/* impulse   */ ATTRIB(HLAC, impulse, int, 6)
+/* flags     */ ATTRIB(HLAC, spawnflags, int, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
+/* rating    */ ATTRIB(HLAC, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* color     */ ATTRIB(HLAC, wpcolor, vector, '0 1 0');
+/* modelname */ ATTRIB(HLAC, mdl, string, "hlac");
+#ifndef MENUQC
+/* model     */ ATTRIB(HLAC, m_model, Model, MDL_HLAC_ITEM);
 #endif
+/* crosshair */ ATTRIB(HLAC, w_crosshair, string, "gfx/crosshairhlac");
+/* crosshair */ ATTRIB(HLAC, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(HLAC, model2, string, "weaponhlac");
+/* refname   */ ATTRIB(HLAC, netname, string, "hlac");
+/* wepname   */ ATTRIB(HLAC, m_name, string, _("Heavy Laser Assault Cannon"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, BOTH) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, radius, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, reload_ammo, float, NONE) \
+		P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, secondary, float, NONE) \
+		P(class, prefix, shots, float, SEC) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, spread, float, SEC) \
+		P(class, prefix, spread_add, float, PRI) \
+		P(class, prefix, spread_crouchmod, float, BOTH) \
+		P(class, prefix, spread_max, float, PRI) \
+		P(class, prefix, spread_min, float, PRI) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, weaponreplace, string,NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, HLAC, hlac)
+#undef X
+
+ENDCLASS(HLAC)
+REGISTER_WEAPON(HLAC, hlac, NEW(HLAC));
+
+
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-void spawnfunc_weapon_hlac(void) { weapon_defaultspawnfunc(WEP_HLAC.m_id); }
+spawnfunc(weapon_hlac) { weapon_defaultspawnfunc(this, WEP_HLAC); }
 
-void W_HLAC_Touch(void)
+void W_HLAC_Touch(entity this, entity toucher)
 {
 	float isprimary;
 
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this, toucher);
 
-	self.event_damage = func_null;
+	this.event_damage = func_null;
 
-	isprimary = !(self.projectiledeathtype & HITTYPE_SECONDARY);
+	isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
-	RadiusDamage(self, self.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), world, world, WEP_CVAR_BOTH(hlac, isprimary, force), self.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), NULL, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, toucher);
 
-	remove(self);
+	remove(this);
 }
 
-void W_HLAC_Attack(void)
+void W_HLAC_Attack(Weapon thiswep, entity actor)
 {
 	entity missile;
     float spread;
 
-	W_DecreaseAmmo(WEP_CVAR_PRI(hlac, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(hlac, ammo));
 
-    spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * self.misc_bulletcounter);
+    spread = WEP_CVAR_PRI(hlac, spread_min) + (WEP_CVAR_PRI(hlac, spread_add) * actor.misc_bulletcounter);
     spread = min(spread,WEP_CVAR_PRI(hlac, spread_max));
-    if(self.crouch)
+    if(actor.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
-	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
+	W_SetupShot(actor, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
-		self.punchangle_x = random() - 0.5;
-		self.punchangle_y = random() - 0.5;
+		actor.punchangle_x = random() - 0.5;
+		actor.punchangle_y = random() - 0.5;
 	}
 
-	missile = spawn();
-	missile.owner = missile.realowner = self;
-	missile.classname = "hlacbolt";
+	missile = new(hlacbolt);
+	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
@@ -101,8 +104,8 @@ void W_HLAC_Attack(void)
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR_PRI(hlac, speed), spread);
 	//missile.angles = vectoangles(missile.velocity); // csqc
 
-	missile.touch = W_HLAC_Touch;
-	missile.think = SUB_Remove;
+	settouch(missile, W_HLAC_Touch);
+	setthink(missile, SUB_Remove);
 
     missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
@@ -111,10 +114,10 @@ void W_HLAC_Attack(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, missile);
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
-void W_HLAC_Attack2(void)
+void W_HLAC_Attack2(entity actor)
 {
 	entity missile;
     float spread;
@@ -122,15 +125,14 @@ void W_HLAC_Attack2(void)
     spread = WEP_CVAR_SEC(hlac, spread);
 
 
-    if(self.crouch)
+    if(actor.crouch)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
-	W_SetupShot(self, false, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
+	W_SetupShot(actor, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn();
-	missile.owner = missile.realowner = self;
-	missile.classname = "hlacbolt";
+	missile = new(hlacbolt);
+	missile.owner = missile.realowner = actor;
 	missile.bot_dodge = true;
 
     missile.bot_dodgerating = WEP_CVAR_SEC(hlac, damage);
@@ -144,8 +146,8 @@ void W_HLAC_Attack2(void)
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR_SEC(hlac, speed), spread);
 	//missile.angles = vectoangles(missile.velocity); // csqc
 
-	missile.touch = W_HLAC_Touch;
-	missile.think = SUB_Remove;
+	settouch(missile, W_HLAC_Touch);
+	setthink(missile, SUB_Remove);
 
     missile.nextthink = time + WEP_CVAR_SEC(hlac, lifetime);
 
@@ -155,160 +157,119 @@ void W_HLAC_Attack2(void)
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, missile);
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
 // weapon frames
-void W_HLAC_Attack_Frame(void)
+void W_HLAC_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(self.weapon != self.switchweapon) // abort immediately if switching
+	if(PS(actor).m_weapon != PS(actor).m_switchweapon) // abort immediately if switching
 	{
-		w_ready();
+		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 
-	if(self.BUTTON_ATCK)
+	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
-		if(!WEP_ACTION(self.weapon, WR_CHECKAMMO1))
-		if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!thiswep.wr_checkammo1(thiswep, actor))
+		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			w_ready();
+			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
 
-		ATTACK_FINISHED(self) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor();
-		W_HLAC_Attack();
-		self.misc_bulletcounter = self.misc_bulletcounter + 1;
-        weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+		int slot = weaponslot(weaponentity);
+		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR_PRI(hlac, refire) * W_WeaponRateFactor(actor);
+		W_HLAC_Attack(WEP_HLAC, actor);
+		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
 	}
 	else
 	{
-		weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, animtime), w_ready);
 	}
 }
 
-void W_HLAC_Attack2_Frame(void)
+void W_HLAC_Attack2_Frame(Weapon thiswep, entity actor)
 {
     float i;
 
-	W_DecreaseAmmo(WEP_CVAR_SEC(hlac, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(hlac, ammo));
 
     for(i=WEP_CVAR_SEC(hlac, shots);i>0;--i)
-        W_HLAC_Attack2();
+        W_HLAC_Attack2(actor);
 
 	if(!autocvar_g_norecoil)
 	{
-		self.punchangle_x = random() - 0.5;
-		self.punchangle_y = random() - 0.5;
+		actor.punchangle_x = random() - 0.5;
+		actor.punchangle_y = random() - 0.5;
 	}
 }
 
-bool W_HLAC(int req)
+METHOD(HLAC, wr_aim, void(entity thiswep, entity actor))
 {
-	float ammo_amount;
-	switch(req)
-	{
-		case WR_AIM:
-		{
-			self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
-			return true;
-		}
-		case WR_THINK:
-		{
-			if(autocvar_g_balance_hlac_reload_ammo && self.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) // forced reload
-				WEP_ACTION(self.weapon, WR_RELOAD);
-			else if(self.BUTTON_ATCK)
-			{
-				if(weapon_prepareattack(0, WEP_CVAR_PRI(hlac, refire)))
-				{
-					self.misc_bulletcounter = 0;
-					W_HLAC_Attack();
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
-				}
-			}
-
-			else if(self.BUTTON_ATCK2 && WEP_CVAR(hlac, secondary))
-			{
-				if(weapon_prepareattack(1, WEP_CVAR_SEC(hlac, refire)))
-				{
-					W_HLAC_Attack2_Frame();
-					weapon_thinkf(WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
-				}
-			}
-
-			return true;
-		}
-		case WR_INIT:
-		{
-			precache_model(W_Model("g_hlac.md3"));
-			precache_model(W_Model("v_hlac.md3"));
-			precache_model(W_Model("h_hlac.iqm"));
-			precache_sound(W_Sound("lasergun_fire"));
-			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-			return true;
-		}
-		case WR_CHECKAMMO1:
-		{
-			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_PRI(hlac, ammo);
-			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
-			return ammo_amount;
-		}
-		case WR_CHECKAMMO2:
-		{
-			ammo_amount = self.WEP_AMMO(HLAC) >= WEP_CVAR_SEC(hlac, ammo);
-			ammo_amount += self.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
-			return ammo_amount;
-		}
-		case WR_CONFIG:
-		{
-			HLAC_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
-			return true;
-		}
-		case WR_RELOAD:
-		{
-			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), W_Sound("reload"));
-			return true;
-		}
-		case WR_SUICIDEMESSAGE:
-		{
-			return WEAPON_HLAC_SUICIDE;
-		}
-		case WR_KILLMESSAGE:
-		{
-			return WEAPON_HLAC_MURDER;
-		}
-	}
-	return false;
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(hlac, speed), 0, WEP_CVAR_PRI(hlac, lifetime), false);
 }
+METHOD(HLAC, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
+{
+    if(autocvar_g_balance_hlac_reload_ammo && actor.clip_load < min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo))) { // forced reload
+        thiswep.wr_reload(thiswep, actor, weaponentity);
+    } else if(fire & 1)
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(hlac, refire)))
+        {
+            actor.misc_bulletcounter = 0;
+            W_HLAC_Attack(thiswep, actor);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(hlac, refire), W_HLAC_Attack_Frame);
+        }
+    }
+
+    else if((fire & 2) && WEP_CVAR(hlac, secondary))
+    {
+        if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(hlac, refire)))
+        {
+            W_HLAC_Attack2_Frame(thiswep, actor);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(hlac, animtime), w_ready);
+        }
+    }
+}
+METHOD(HLAC, wr_checkammo1, bool(entity thiswep, entity actor))
+{
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(hlac, ammo);
+    ammo_amount += actor.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_PRI(hlac, ammo);
+    return ammo_amount;
+}
+METHOD(HLAC, wr_checkammo2, bool(entity thiswep, entity actor))
+{
+    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_SEC(hlac, ammo);
+    ammo_amount += actor.(weapon_load[WEP_HLAC.m_id]) >= WEP_CVAR_SEC(hlac, ammo);
+    return ammo_amount;
+}
+METHOD(HLAC, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
+{
+    W_Reload(actor, min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), SND_RELOAD);
+}
+METHOD(HLAC, wr_suicidemessage, Notification(entity thiswep))
+{
+    return WEAPON_HLAC_SUICIDE;
+}
+METHOD(HLAC, wr_killmessage, Notification(entity thiswep))
+{
+    return WEAPON_HLAC_MURDER;
+}
+
 #endif
 #ifdef CSQC
-bool W_HLAC(int req)
-{
-	switch(req)
-	{
-		case WR_IMPACTEFFECT:
-		{
-			vector org2;
-			org2 = w_org + w_backoff * 6;
-			pointparticles(particleeffectnum(EFFECT_BLASTER_IMPACT), org2, w_backoff * 1000, 1);
-			if(!w_issilent)
-				sound(self, CH_SHOTS, W_Sound("laserimpact"), VOL_BASE, ATTN_NORM);
 
-			return true;
-		}
-		case WR_INIT:
-		{
-			precache_sound(W_Sound("laserimpact"));
-			return true;
-		}
-		case WR_ZOOMRETICLE:
-		{
-			// no weapon specific image for this weapon
-			return false;
-		}
-	}
-	return false;
+METHOD(HLAC, wr_impacteffect, void(entity thiswep, entity actor))
+{
+    vector org2;
+    org2 = w_org + w_backoff * 6;
+    pointparticles(EFFECT_BLASTER_IMPACT, org2, w_backoff * 1000, 1);
+    if(!w_issilent)
+        sound(actor, CH_SHOTS, SND_LASERIMPACT, VOL_BASE, ATTN_NORM);
 }
+
 #endif
 #endif

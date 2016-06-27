@@ -1,8 +1,0 @@
-#ifndef ROLE_KEYHUNT_H
-#define ROLE_KEYHUNT_H
-
-entity kh_worldkeylist;
-.entity kh_worldkeynext;
-
-void havocbot_chooserole_kh();
-#endif

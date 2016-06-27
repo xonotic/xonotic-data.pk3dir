@@ -1,22 +1,22 @@
 #ifdef SVQC
 .float height;
-void func_bobbing_controller_think()
+void func_bobbing_controller_think(entity this)
 {
 	vector v;
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 
-	if(self.owner.active != ACTIVE_ACTIVE)
+	if(this.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';
+		this.owner.velocity = '0 0 0';
 		return;
 	}
 
 	// calculate sinewave using makevectors
-	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
-	v = self.owner.destvec + self.owner.movedir * v_forward_y;
-	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
+	makevectors((this.nextthink * this.owner.cnt + this.owner.phase * 360) * '0 1 0');
+	v = this.owner.destvec + this.owner.movedir * v_forward_y;
+	if(this.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
-		self.owner.velocity = (v - self.owner.SUB_ORIGIN) * 10;
+		this.owner.velocity = (v - this.owner.SUB_ORIGIN) * 10;
 }
 
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
@@ -28,57 +28,56 @@ noise : path/name of looping .wav file to play.
 dmg : Do this mutch dmg every .dmgtime intervall when blocked
 dmgtime : See above.
 */
-void spawnfunc_func_bobbing()
+spawnfunc(func_bobbing)
 {
 	entity controller;
-	if (self.noise != "")
+	if (this.noise != "")
 	{
-		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
+		precache_sound(this.noise);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
-	if (!self.speed)
-		self.speed = 4;
-	if (!self.height)
-		self.height = 32;
+	if (!this.speed)
+		this.speed = 4;
+	if (!this.height)
+		this.height = 32;
 	// center of bobbing motion
-	self.destvec = self.origin;
+	this.destvec = this.origin;
 	// time scale to get degrees
-	self.cnt = 360 / self.speed;
+	this.cnt = 360 / this.speed;
 
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
 	// damage when blocked
-	self.blocked = generic_plat_blocked;
-	if(self.dmg && (self.message == ""))
-		self.message = " was squished";
-    if(self.dmg && (self.message2 == ""))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
+	setblocked(this, generic_plat_blocked);
+	if(this.dmg && (this.message == ""))
+		this.message = " was squished";
+    if(this.dmg && (this.message2 == ""))
+		this.message2 = "was squished by";
+	if(this.dmg && (!this.dmgtime))
+		this.dmgtime = 0.25;
+	this.dmgtime2 = time;
 
 	// how far to bob
-	if (self.spawnflags & 1) // X
-		self.movedir = '1 0 0' * self.height;
-	else if (self.spawnflags & 2) // Y
-		self.movedir = '0 1 0' * self.height;
+	if (this.spawnflags & 1) // X
+		this.movedir = '1 0 0' * this.height;
+	else if (this.spawnflags & 2) // Y
+		this.movedir = '0 1 0' * this.height;
 	else // Z
-		self.movedir = '0 0 1' * self.height;
+		this.movedir = '0 0 1' * this.height;
 
-	if (!InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger(this))
 		return;
 
 	// wait for targets to spawn
-	controller = spawn();
-	controller.classname = "func_bobbing_controller";
-	controller.owner = self;
+	controller = new(func_bobbing_controller);
+	controller.owner = this;
 	controller.nextthink = time + 1;
-	controller.think = func_bobbing_controller_think;
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 999999999;
-	self.SUB_THINK = SUB_NullThink;
+	setthink(controller, func_bobbing_controller_think);
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
+	SUB_THINK(this, SUB_NullThink);
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
-	self.effects |= EF_LOWPRECISION;
+	this.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
 }

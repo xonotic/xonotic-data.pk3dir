@@ -6,16 +6,16 @@
 
 void target_voicescript_clear(entity pl)
 {
-	pl.voicescript = world;
+	pl.voicescript = NULL;
 }
 
-void target_voicescript_use()
+void target_voicescript_use(entity this, entity actor, entity trigger)
 {
-	if(activator.voicescript != self)
+	if(actor.voicescript != this)
 	{
-		activator.voicescript = self;
-		activator.voicescript_index = 0;
-		activator.voicescript_nextthink = time + self.delay;
+		actor.voicescript = this;
+		actor.voicescript_index = 0;
+		actor.voicescript_nextthink = time + this.delay;
 	}
 }
 
@@ -67,13 +67,13 @@ void target_voicescript_next(entity pl)
 			}
 			else
 			{
-				pl.voicescript = world; // stop trying then
+				pl.voicescript = NULL; // stop trying then
 			}
 		}
 	}
 }
 
-void spawnfunc_target_voicescript()
+spawnfunc(target_voicescript)
 {
 	// netname: directory of the sound files
 	// message: list of "sound file" duration "sound file" duration, a *, and again a list
@@ -84,18 +84,18 @@ void spawnfunc_target_voicescript()
 	// delay: initial delay before the first message
 
 	float i, n;
-	self.use = target_voicescript_use;
+	this.use = target_voicescript_use;
 
-	n = tokenize_console(self.message);
-	self.cnt = n / 2;
+	n = tokenize_console(this.message);
+	this.cnt = n / 2;
 	for(i = 0; i+1 < n; i += 2)
 	{
 		if(argv(i) == "*")
 		{
-			self.cnt = i / 2;
+			this.cnt = i / 2;
 			++i;
 		}
-		precache_sound(strcat(self.netname, "/", argv(i), ".wav"));
+		precache_sound(strcat(this.netname, "/", argv(i), ".wav"));
 	}
 }
 #endif

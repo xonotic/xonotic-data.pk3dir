@@ -1,16 +1,5 @@
-#ifndef SLIDER_PICMIP_H
-#define SLIDER_PICMIP_H
-#include "textslider.qc"
-CLASS(XonoticPicmipSlider, XonoticTextSlider)
-	METHOD(XonoticPicmipSlider, configureXonoticPicmipSlider, void(entity));
-	METHOD(XonoticPicmipSlider, draw, void(entity));
-	METHOD(XonoticPicmipSlider, autofix, void(entity));
-	ATTRIB(XonoticPicmipSlider, have_s3tc, float, 0)
-ENDCLASS(XonoticPicmipSlider)
-entity makeXonoticPicmipSlider(); // note: you still need to call addValue and configureXonoticTextSliderValues!
-#endif
+#include "slider_picmip.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticPicmipSlider()
 {
 	entity me;
@@ -20,7 +9,8 @@ entity makeXonoticPicmipSlider()
 }
 void XonoticPicmipSlider_configureXonoticPicmipSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "gl_picmip");
+	me.configureXonoticTextSlider(me, "gl_picmip",
+		_("Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)"));
 	me.autofix(me);
 	me.have_s3tc = GL_Have_TextureCompression();
 }
@@ -52,4 +42,3 @@ void XonoticPicmipSlider_draw(entity me)
 	me.autofix(me);
 	SUPER(XonoticPicmipSlider).draw(me);
 }
-#endif

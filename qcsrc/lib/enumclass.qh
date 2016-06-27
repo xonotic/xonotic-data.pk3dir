@@ -1,0 +1,28 @@
+#pragma once
+
+#include "oo.qh"
+
+// purpose: prevent transposed parameter passing
+
+#if NDEBUG
+
+// zero overhead mode, use this for releases
+
+#define ENUMCLASS(id) USING(id, int); enum { CASE(id, Null)
+#define CASE(class, id) class##_##id,
+#define ENUMCLASS_END(id) };
+#define ORDINAL(it) (it)
+#define ENUMCAST(T, it) (it)
+
+#else
+
+// edict overhead mode, use this for type checking
+
+.int enum_ordinal;
+#define ENUMCLASS(id) CLASS(id, Object) int id##_count; const noref entity id##_Null = nil; CASE(id, Null__)
+#define CASE(class, id) class class##_##id; STATIC_INIT(class##_##id) { entity e = class##_##id = NEW(class); e.enum_ordinal = class##_count++; }
+#define ENUMCLASS_END(id) ENDCLASS(id)
+#define ORDINAL(it) ((it).enum_ordinal)
+#define ENUMCAST(T, it) ftoe(etof(T##_Null__) + (it))
+
+#endif

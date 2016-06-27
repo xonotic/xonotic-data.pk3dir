@@ -1,13 +1,12 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../../dpdefs/progsdefs.qh"
     #include "../util.qh"
     #include "all.qh"
     #include "sv_monsters.qh"
     #include "spawn.qh"
-    #include "../../server/autocvars.qh"
-    #include "../../server/defs.qh"
+    #include <server/autocvars.qh>
+    #include <server/defs.qh>
 #endif
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
@@ -25,7 +24,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	{
 		RandomSelection_Init();
 		for(i = MON_FIRST; i <= MON_LAST; ++i)
-			RandomSelection_Add(world, i, string_null, 1, 1);
+			RandomSelection_Add(NULL, i, string_null, 1, 1);
 
            monster_id = RandomSelection_chosen_float;
 	}
@@ -62,12 +61,9 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 
 		e.angles_y = spawnedby.angles_y;
 	}
-	
+
 	// Monster_Spawn checks if monster is valid
-	entity oldself = self;
-	self = e;
-	Monster_Spawn(monster_id);
-	self = oldself;
+	Monster_Spawn(e, monster_id);
 
 	return e;
 }

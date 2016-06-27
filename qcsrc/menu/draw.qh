@@ -1,5 +1,4 @@
-#ifndef DRAW_H
-#define DRAW_H
+#pragma once
 
 // from the engine
 vector drawfontscale;
@@ -10,8 +9,8 @@ vector draw_scale;
 float draw_alpha;
 
 void draw_reset(float cw, float ch, float ox, float oy);
-void draw_beginBoldFont();
-void draw_endBoldFont();
+#define draw_beginBoldFont() MACRO_BEGIN { drawfont = FONT_USER + 3; } MACRO_END
+#define draw_endBoldFont() MACRO_BEGIN { drawfont = FONT_USER + 0; } MACRO_END
 void draw_setMousePointer(string pic, vector theSize, vector theOffset);
 void draw_drawMousePointer(vector where);
 
@@ -41,4 +40,3 @@ vector globalToBoxSize(vector v, vector scale);
 
 float draw_TextWidth_WithColors(string s, vector size);
 float draw_TextWidth_WithoutColors(string s, vector size);
-#endif

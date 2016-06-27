@@ -1,21 +1,13 @@
-#ifndef DIALOG_SETTINGS_GAME_HUD_H
-#define DIALOG_SETTINGS_GAME_HUD_H
-#include "tab.qc"
-CLASS(XonoticGameHUDSettingsTab, XonoticTab)
-	METHOD(XonoticGameHUDSettingsTab, fill, void(entity));
-	METHOD(XonoticGameHUDSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameHUDSettingsTab, title, string, _("HUD"))
-	ATTRIB(XonoticGameHUDSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameHUDSettingsTab, rows, float, 13)
-	ATTRIB(XonoticGameHUDSettingsTab, columns, float, 6.2)
-ENDCLASS(XonoticGameHUDSettingsTab)
-entity makeXonoticGameHUDSettingsTab();
-void HUDSetup_Start(entity me, entity btn);
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(HUD, makeXonoticGameHUDSettingsTab());
-#endif
+#include "dialog_settings_game_hud.qh"
 
-#ifdef IMPLEMENTATION
+#include "../item/modalcontroller.qh"
+#include "mainwindow.qh"
+#include "textlabel.qh"
+#include "slider.qh"
+#include "slider_sbfadetime.qh"
+#include "checkbox.qh"
+#include "button.qh"
+
 void HUDSetup_Check_Gamestatus(entity me, entity btn)
 {
 	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, ask the player if they want to start one anyway
@@ -47,12 +39,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	// threshold: hud_damage_pain_threshold_lower_health
 	// scoreboard_alpha*
 
-	//me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Scoreboard")));
-	//me.TR(me);
-	//	me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
-	//	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "scoreboard_alpha_bg"));
+	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Alpha:")));
+	me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "scoreboard_alpha_bg"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Fading speed:")));
 		me.TD(me, 1, 2, e = makeXonoticScoreboardFadeTimeSlider());
@@ -71,12 +62,14 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticHeaderLabel(_("Waypoints")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_hidewaypoints", _("Display waypoint markers for objectives on the map")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(1, "cl_hidewaypoints", _("Display waypoint markers for objectives on the map"),
+			_("Show various gametype specific waypoints")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Alpha:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.05, "g_waypointsprite_alpha"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0.1, 1, 0.05, "g_waypointsprite_alpha",
+			_("Control transparency of the waypoints")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -88,7 +81,7 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Edge offset:")));
 			setDependent(e, "cl_hidewaypoints", 0, 0);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 0.3, 0.01, "g_waypointsprite_edgeoffset_bottom"));
+		me.TD(me, 1, 2, e = makeXonoticSlider_T(0, 0.3, 0.01, "g_waypointsprite_edgeoffset_bottom", "-"));
 			makeMulti(e, "g_waypointsprite_edgeoffset_top g_waypointsprite_edgeoffset_left g_waypointsprite_edgeoffset_right");
 			setDependent(e, "cl_hidewaypoints", 0, 0);
 
@@ -166,6 +159,11 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage overlay:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox_T(0, "hud_dynamic_follow", _("Dynamic HUD"),
+			_("HUD moves around following player's movement")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "hud_dynamic_shake", _("Shake the HUD when hurt")));
+	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
@@ -173,4 +171,3 @@ void XonoticGameHUDSettingsTab_fill(entity me)
 			e.onClickEntity = me;
 		// TODO: show hud config name with text here
 }
-#endif

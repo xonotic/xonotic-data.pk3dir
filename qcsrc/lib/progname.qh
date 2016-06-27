@@ -1,0 +1,11 @@
+#pragma once
+
+#if defined(MENUQC)
+	#define PROGNAME "MENUQC"
+#elif defined(SVQC)
+	#define PROGNAME "SVQC"
+#elif defined(CSQC)
+	#define PROGNAME "CSQC"
+#else
+	#error "Unable to detect PROGNAME"
+#endif

@@ -1,0 +1,11 @@
+#pragma once
+
+#ifndef QCC_SUPPORT_INT
+	#define stoi(s) stof(s)
+	#define stob(s) stof(s)
+	#define itos(i) ftos(i)
+#else
+	#define stoi(s) ((int) stof(s))
+	#define stob(s) ((bool) stof(s))
+	#define itos(i) ftos(i)
+#endif

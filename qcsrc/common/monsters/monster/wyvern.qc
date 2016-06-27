@@ -1,29 +1,92 @@
+#ifndef WYVERN_H
+#define WYVERN_H
+
 #ifndef MENUQC
-bool M_Wyvern(int);
+MODEL(MON_WYVERN, M_Model("wizard.mdl"));
 #endif
-REGISTER_MONSTER_SIMPLE(
-/* MON_##id   */ WYVERN,
-/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE,
-/* mins,maxs  */ '-20 -20 -58', '20 20 20',
-/* model      */ "wizard.mdl",
-/* netname    */ "wyvern",
-/* fullname   */ _("Wyvern")
-) {
+
+CLASS(Wyvern, Monster)
+    ATTRIB(Wyvern, spawnflags, int, MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE);
+    ATTRIB(Wyvern, mins, vector, '-20 -20 -58');
+    ATTRIB(Wyvern, maxs, vector, '20 20 20');
 #ifndef MENUQC
-	this.monster_func = M_Wyvern;
-	this.monster_func(MR_PRECACHE);
+    ATTRIB(Wyvern, m_model, Model, MDL_MON_WYVERN);
+#endif
+    ATTRIB(Wyvern, netname, string, "wyvern");
+    ATTRIB(Wyvern, monster_name, string, _("Wyvern"));
+ENDCLASS(Wyvern)
+
+REGISTER_MONSTER(WYVERN, NEW(Wyvern)) {
+#ifndef MENUQC
+    this.mr_precache(this);
 #endif
 }
 
+#include <common/weapons/all.qh>
+
+CLASS(WyvernAttack, PortoLaunch)
+/* flags     */ ATTRIB(WyvernAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* impulse   */ ATTRIB(WyvernAttack, impulse, int, 9);
+/* refname   */ ATTRIB(WyvernAttack, netname, string, "wyvern");
+/* wepname   */ ATTRIB(WyvernAttack, m_name, string, _("Wyvern attack"));
+ENDCLASS(WyvernAttack)
+REGISTER_WEAPON(WYVERN_ATTACK, NEW(WyvernAttack));
+
+#endif
+
+#ifdef IMPLEMENTATION
+
 #ifdef SVQC
-float autocvar_g_monster_wyvern_health;
-float autocvar_g_monster_wyvern_damageforcescale = 0.6;
+
 float autocvar_g_monster_wyvern_attack_fireball_damage;
 float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_damagetime;
 float autocvar_g_monster_wyvern_attack_fireball_force;
 float autocvar_g_monster_wyvern_attack_fireball_radius;
 float autocvar_g_monster_wyvern_attack_fireball_speed;
+
+void M_Wyvern_Attack_Fireball_Explode(entity this);
+void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher);
+
+SOUND(WyvernAttack_FIRE, W_Sound("electro_fire"));
+METHOD(WyvernAttack, wr_think, void(WyvernAttack thiswep, entity actor, .entity weaponentity, int fire))
+{
+    TC(WyvernAttack, thiswep);
+    if (fire & 1)
+    if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
+        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, SND_WyvernAttack_FIRE, CH_WEAPON_B, 0);
+		if (IS_MONSTER(actor)) {
+			actor.attack_finished_single[0] = time + 1.2;
+			actor.anim_finished = time + 1.2;
+			monster_makevectors(actor, actor.enemy);
+		}
+
+		entity missile = spawn();
+		missile.owner = missile.realowner = actor;
+		missile.solid = SOLID_TRIGGER;
+		missile.movetype = MOVETYPE_FLYMISSILE;
+		missile.projectiledeathtype = DEATH_MONSTER_WYVERN.m_id;
+		setsize(missile, '-6 -6 -6', '6 6 6');
+		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);
+		missile.flags = FL_PROJECTILE;
+		missile.velocity = w_shotdir * (autocvar_g_monster_wyvern_attack_fireball_speed);
+		missile.avelocity = '300 300 300';
+		missile.nextthink = time + 5;
+		setthink(missile, M_Wyvern_Attack_Fireball_Explode);
+		settouch(missile, M_Wyvern_Attack_Fireball_Touch);
+		CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
+
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
+    }
+}
+
+METHOD(WyvernAttack, wr_checkammo1, bool(WyvernAttack this, entity actor)) {
+    TC(WyvernAttack, this);
+	return true;
+}
+
+float autocvar_g_monster_wyvern_health;
+float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_speed_stop;
 float autocvar_g_monster_wyvern_speed_run;
 float autocvar_g_monster_wyvern_speed_walk;
@@ -36,64 +99,41 @@ const float wyvern_anim_pain	= 3;
 const float wyvern_anim_death	= 4;
 */
 
-void M_Wyvern_Attack_Fireball_Explode()
+void M_Wyvern_Attack_Fireball_Explode(entity this)
 {
-	entity e;
-	if(self)
+	Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
+
+	entity own = this.realowner;
+
+	RadiusDamage(this, own, autocvar_g_monster_wyvern_attack_fireball_damage, autocvar_g_monster_wyvern_attack_fireball_edgedamage, autocvar_g_monster_wyvern_attack_fireball_force, NULL, NULL, autocvar_g_monster_wyvern_attack_fireball_radius, this.projectiledeathtype, NULL);
+
+	FOREACH_ENTITY_FLOAT(takedamage, DAMAGE_AIM,
 	{
-		Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
+		if(vdist(it.origin - this.origin, <=, autocvar_g_monster_wyvern_attack_fireball_radius))
+			Fire_AddDamage(it, own, 5 * MONSTER_SKILLMOD(own), autocvar_g_monster_wyvern_attack_fireball_damagetime, this.projectiledeathtype);
+	});
 
-		RadiusDamage(self, self.realowner, (autocvar_g_monster_wyvern_attack_fireball_damage), (autocvar_g_monster_wyvern_attack_fireball_edgedamage), (autocvar_g_monster_wyvern_attack_fireball_force), world, world, (autocvar_g_monster_wyvern_attack_fireball_radius), self.projectiledeathtype, world);
-
-		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= (autocvar_g_monster_wyvern_attack_fireball_radius))
-			Fire_AddDamage(e, self, 5 * MONSTER_SKILLMOD(self), (autocvar_g_monster_wyvern_attack_fireball_damagetime), self.projectiledeathtype);
-
-		remove(self);
-	}
+	remove(this);
 }
 
-void M_Wyvern_Attack_Fireball_Touch()
+void M_Wyvern_Attack_Fireball_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this, toucher);
 
-	M_Wyvern_Attack_Fireball_Explode();
+	M_Wyvern_Attack_Fireball_Explode(this);
 }
 
-void M_Wyvern_Attack_Fireball()
+bool M_Wyvern_Attack(int attack_type, entity actor, entity targ)
 {
-	entity missile = spawn();
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-
-	monster_makevectors(self.enemy);
-
-	missile.owner = missile.realowner = self;
-	missile.solid = SOLID_TRIGGER;
-	missile.movetype = MOVETYPE_FLYMISSILE;
-	missile.projectiledeathtype = DEATH_MONSTER_WYVERN;
-	setsize(missile, '-6 -6 -6', '6 6 6');
-	setorigin(missile, self.origin + self.view_ofs + v_forward * 14);
-	missile.flags = FL_PROJECTILE;
-	missile.velocity = dir * (autocvar_g_monster_wyvern_attack_fireball_speed);
-	missile.avelocity = '300 300 300';
-	missile.nextthink = time + 5;
-	missile.think = M_Wyvern_Attack_Fireball_Explode;
-	missile.enemy = self.enemy;
-	missile.touch = M_Wyvern_Attack_Fireball_Touch;
-	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
-}
-
-float M_Wyvern_Attack(float attack_type)
-{
+	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.attack_finished_single = time + 1.2;
-			self.anim_finished = time + 1.2;
-
-			M_Wyvern_Attack_Fireball();
-
+			w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
+			Weapon wep = WEP_WYVERN_ATTACK;
+			wep.wr_think(wep, actor, weaponentity, 1);
 			return true;
 		}
 	}
@@ -101,68 +141,70 @@ float M_Wyvern_Attack(float attack_type)
 	return false;
 }
 
-void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN.monsterid); }
+spawnfunc(monster_wyvern) { Monster_Spawn(this, MON_WYVERN.monsterid); }
 #endif // SVQC
 
-bool M_Wyvern(int req)
+#ifdef SVQC
+METHOD(Wyvern, mr_think, bool(Wyvern this, entity actor))
 {
-	switch(req)
-	{
-		#ifdef SVQC
-		case MR_THINK:
-		{
-			return true;
-		}
-		case MR_PAIN:
-		{
-			self.pain_finished = time + 0.5;
-			setanim(self, self.anim_pain1, true, true, false);
-			return true;
-		}
-		case MR_DEATH:
-		{
-			setanim(self, self.anim_die1, false, true, true);
-			self.velocity_x = -200 + 400 * random();
-			self.velocity_y = -200 + 400 * random();
-			self.velocity_z = 100 + 100 * random();
-			return true;
-		}
-		#endif
-		#ifndef MENUQC
-		case MR_ANIM:
-		{
-			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '1 1 1', none);
-			self.anim_idle = animfixfps(self, '0 1 1', none);
-			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
-			self.anim_shoot = animfixfps(self, '2 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '1 1 1', none);
-
-			return true;
-		}
-		#endif
-		#ifdef SVQC
-		case MR_SETUP:
-		{
-			if(!self.health) self.health = (autocvar_g_monster_wyvern_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_wyvern_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_wyvern_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
-
-			self.monster_loot = spawnfunc_item_cells;
-			self.monster_attackfunc = M_Wyvern_Attack;
-
-			return true;
-		}
-		case MR_PRECACHE:
-		{
-			precache_model("models/monsters/wizard.mdl");
-			return true;
-		}
-		#endif
-	}
-
-	return true;
+    TC(Wyvern, this);
+    return true;
 }
+
+METHOD(Wyvern, mr_pain, float(Wyvern this, entity actor, float damage_take, entity attacker, float deathtype))
+{
+    TC(Wyvern, this);
+    actor.pain_finished = time + 0.5;
+    setanim(actor, actor.anim_pain1, true, true, false);
+    return damage_take;
+}
+
+METHOD(Wyvern, mr_death, bool(Wyvern this, entity actor))
+{
+    TC(Wyvern, this);
+    setanim(actor, actor.anim_die1, false, true, true);
+    actor.velocity_x = -200 + 400 * random();
+    actor.velocity_y = -200 + 400 * random();
+    actor.velocity_z = 100 + 100 * random();
+    return true;
+}
+#endif
+#ifndef MENUQC
+METHOD(Wyvern, mr_anim, bool(Wyvern this, entity actor))
+{
+    TC(Wyvern, this);
+    vector none = '0 0 0';
+    actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
+    actor.anim_walk = animfixfps(actor, '1 1 1', none);
+    actor.anim_idle = animfixfps(actor, '0 1 1', none);
+    actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+    actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+    actor.anim_run = animfixfps(actor, '1 1 1', none);
+    return true;
+}
+#endif
+#ifdef SVQC
+spawnfunc(item_cells);
+METHOD(Wyvern, mr_setup, bool(Wyvern this, entity actor))
+{
+    TC(Wyvern, this);
+    if(!actor.health) actor.health = (autocvar_g_monster_wyvern_health);
+    if(!actor.speed) { actor.speed = (autocvar_g_monster_wyvern_speed_walk); }
+    if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_wyvern_speed_run); }
+    if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
+    if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
+
+    actor.monster_loot = spawnfunc_item_cells;
+    actor.monster_attackfunc = M_Wyvern_Attack;
+
+    return true;
+}
+
+METHOD(Wyvern, mr_precache, bool(Wyvern this))
+{
+    TC(Wyvern, this);
+    return true;
+}
+#endif
+
+#endif

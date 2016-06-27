@@ -1,4 +1,4 @@
-#include "../_all.qh"
+#include "main.qh"
 
 #include "pathlib.qh"
 #include "utility.qh"
@@ -11,7 +11,7 @@ void pathlib_deletepath(entity start)
     e = findchainentity(owner, start);
     while(e)
     {
-        e.think = SUB_Remove;
+        setthink(e, SUB_Remove);
         e.nextthink = time;
         e = e.chain;
     }
@@ -23,9 +23,16 @@ const float PATHLIB_NODEEXPIRE = 20;
 void dumpnode(entity n)
 {
     n.is_path_node = false;
-    n.think        = SUB_Remove;
+    setthink(n, SUB_Remove);
     n.nextthink    = time;
 }
+
+#if DEBUGPATHING
+void pathlib_showpath(entity start);
+void pathlib_showpath2(entity path);
+void pathlib_showsquare(vector where,float goodsquare,float _lifetime);
+#endif
+
 
 entity pathlib_mknode(vector where,entity parent)
 {
@@ -42,7 +49,7 @@ entity pathlib_mknode(vector where,entity parent)
 
     node = spawn();
 
-    node.think        = SUB_Remove;
+    setthink(node, SUB_Remove);
     node.nextthink    = time + PATHLIB_NODEEXPIRE;
     node.is_path_node = true;
     node.owner        = openlist;
@@ -53,8 +60,9 @@ entity pathlib_mknode(vector where,entity parent)
 
     setorigin(node, where);
     node.medium = pointcontents(where);
+#if DEBUGPATHING
     pathlib_showsquare(where, 1 ,15);
-
+#endif
     ++pathlib_made_cnt;
     ++pathlib_open_cnt;
 
@@ -125,7 +133,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         return 1;
     }
 
-    where = pathlib_movenode(parent.origin, to, 0);
+    where = pathlib_movenode(parent, parent.origin, to, 0);
 
     if (!pathlib_movenode_goodnode)
     {
@@ -147,10 +155,12 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
 
     if(doedge)
-        if (!tile_check(where))
+        if (!tile_check(parent, where))
         {
             LOG_TRACE("tile_check fail\n");
+#if DEBUGPATHING
             pathlib_showsquare(where, 0 ,30);
+#endif
             return 0;
         }
 
@@ -170,7 +180,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
             {
                 if(node.pathlib_node_g > g)
                 {
-                    //pathlib_movenode(where,node.origin,0);
+                    //pathlib_movenode(node, where,node.origin,0);
                     //if(pathlib_movenode_goodnode)
                     //{
                         //mark_error(node.origin + '0 0 128',30);
@@ -221,7 +231,7 @@ entity pathlib_getbestopen()
 
     node = findchainentity(owner,openlist);
     if(!node)
-        return world;
+        return NULL;
 
     bestnode = node;
     while(node)
@@ -246,18 +256,18 @@ void pathlib_close_node(entity node,vector goal)
     }
 
     if(node == best_open_node)
-        best_open_node = world;
+        best_open_node = NULL;
 
     ++pathlib_closed_cnt;
     --pathlib_open_cnt;
 
     node.owner = closedlist;
 
-    if(vlen(node.origin - goal) <= pathlib_gridsize)
+    if(vdist(node.origin - goal, <=, pathlib_gridsize))
     {
         vector goalmove;
 
-        goalmove = pathlib_walknode(node.origin,goal,1);
+        goalmove = pathlib_walknode(node, node.origin, goal, 1);
         if(pathlib_movenode_goodnode)
         {
             goal_node         = node;
@@ -268,13 +278,13 @@ void pathlib_close_node(entity node,vector goal)
 
 void pathlib_cleanup()
 {
-    best_open_node = world;
+    best_open_node = NULL;
 
     //return;
 
     entity node;
 
-    node = findfloat(world,is_path_node, true);
+    node = findfloat(NULL,is_path_node, true);
     while(node)
     {
         /*
@@ -282,7 +292,7 @@ void pathlib_cleanup()
         node.pathlib_node_g = 0;
         node.pathlib_node_h = 0;
         node.pathlib_node_f = 0;
-        node.path_prev = world;
+        node.path_prev = NULL;
         */
 
         dumpnode(node);
@@ -295,8 +305,8 @@ void pathlib_cleanup()
     if(closedlist)
         remove(closedlist);
 
-    openlist       = world;
-    closedlist     = world;
+    openlist       = NULL;
+    closedlist     = NULL;
 
 }
 
@@ -317,7 +327,7 @@ float buildpath_nodefilter_directional(vector n,vector c,vector p)
     d2 = normalize(p - c);
     d1 = normalize(c - n);
 
-    if(vlen(d1-d2) < 0.25)
+    if(vdist(d1 - d2, <, 0.25))
     {
         //mark_error(c,30);
         return 1;
@@ -326,9 +336,9 @@ float buildpath_nodefilter_directional(vector n,vector c,vector p)
     return 0;
 }
 
-float buildpath_nodefilter_moveskip(vector n,vector c,vector p)
+float buildpath_nodefilter_moveskip(entity this, vector n,vector c,vector p)
 {
-    pathlib_walknode(p,n,1);
+    pathlib_walknode(this, p, n, 1);
     if(pathlib_movenode_goodnode)
         return 1;
 
@@ -354,7 +364,7 @@ entity path_build(entity next, vector where, entity prev, entity start)
     path.owner     = start;
     path.path_next = next;
 
-    setorigin(path,where);
+    setorigin(path, where);
 
     if(!next)
         path.classname = "path_end";
@@ -369,7 +379,7 @@ entity path_build(entity next, vector where, entity prev, entity start)
     return path;
 }
 
-entity pathlib_astar(vector from,vector to)
+entity pathlib_astar(entity this, vector from,vector to)
 {
     entity path, start, end, open, n, ln;
     float ptime, ftime, ctime;
@@ -432,8 +442,8 @@ entity pathlib_astar(vector from,vector to)
     pathlib_movecost_waterfactor = 25000000;
     pathlib_foundgoal      = 0;
 
-    movenode_boxmax   = self.maxs * 1.1;
-    movenode_boxmin   = self.mins * 1.1;
+    movenode_boxmax   = this.maxs * 1.1;
+    movenode_boxmin   = this.mins * 1.1;
 
     movenode_stepsize = pathlib_gridsize * 0.25;
 
@@ -458,16 +468,15 @@ entity pathlib_astar(vector from,vector to)
     //to_z += 32;
 
     LOG_TRACE("AStar init\n");
-    path = pathlib_mknode(from, world);
+    path = pathlib_mknode(from, NULL);
     pathlib_close_node(path, to);
     if(pathlib_foundgoal)
     {
         LOG_TRACE("AStar: Goal found on first node!\n");
 
-        open           = spawn();
+        open           = new(path_end);
         open.owner     = open;
-        open.classname = "path_end";
-        setorigin(open,path.origin);
+        setorigin(open, path.origin);
 
         pathlib_cleanup();
 
@@ -479,7 +488,7 @@ entity pathlib_astar(vector from,vector to)
         LOG_TRACE("AStar path fail.\n");
         pathlib_cleanup();
 
-        return world;
+        return NULL;
     }
 
     best_open_node = pathlib_getbestopen();
@@ -501,7 +510,7 @@ entity pathlib_astar(vector from,vector to)
             LOG_TRACE("Nodes -  closed: ", ftos(pathlib_closed_cnt),"\n");
 
             pathlib_cleanup();
-            return world;
+            return NULL;
         }
 
         best_open_node = pathlib_getbestopen();
@@ -519,8 +528,8 @@ entity pathlib_astar(vector from,vector to)
             ftime = gettime(GETTIME_REALTIME);
             ptime = ftime - ptime;
 
-            start = path_build(world,path.origin,world,world);
-            end   = path_build(world,goal_node.origin,world,start);
+            start = path_build(NULL,path.origin,NULL,NULL);
+            end   = path_build(NULL,goal_node.origin,NULL,start);
             ln    = end;
 
             open = goal_node;
@@ -539,7 +548,7 @@ entity pathlib_astar(vector from,vector to)
             ctime = gettime(GETTIME_REALTIME) - ctime;
 
 
-#ifdef DEBUGPATHING
+#if DEBUGPATHING
             pathlib_showpath2(start);
 
             LOG_TRACE("Time used -      pathfinding: ", ftos(ptime),"\n");
@@ -565,5 +574,5 @@ entity pathlib_astar(vector from,vector to)
 
     pathlib_cleanup();
 
-    return world;
+    return NULL;
 }

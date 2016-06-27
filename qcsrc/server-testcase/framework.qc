@@ -4,7 +4,7 @@ string vtos(vector v) = #27;
 void error(string e) = #10;
 float test();
 
-void spawnfunc_worldspawn()
+spawnfunc(worldspawn)
 {
 	float r;
 	LOG_TRACE("TESTCASE: START\n");

@@ -1,29 +1,22 @@
 #include "common.qh"
-#include "../_all.qh"
 
-#include "../t_items.qh"
-#include "../../common/constants.qh"
-#include "../../common/deathtypes.qh"
-#include "../../common/notifications.qh"
-#include "../../common/util.qh"
-#include "../../common/weapons/all.qh"
+#include <common/t_items.qh>
+#include <common/constants.qh>
+#include <common/deathtypes/all.qh>
+#include <common/notifications/all.qh>
+#include <common/util.qh>
+#include <common/weapons/all.qh>
+#include <common/items/all.qc>
 
-void W_GiveWeapon (entity e, float wep)
+void W_GiveWeapon(entity e, int wep)
 {
-	entity oldself;
+	if (!wep) return;
 
-	if (!wep)
-		return;
+	e.weapons |= WepSet_FromWeapon(Weapons_from(wep));
 
-	e.weapons |= WepSet_FromWeapon(wep);
-
-	oldself = self;
-	self = e;
-
-	if(IS_PLAYER(other))
-		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
-
-	self = oldself;
+	if (IS_PLAYER(e)) {
+	    Send_Notification(NOTIF_ONE, e, MSG_MULTI, ITEM_WEAPON_GOT, wep);
+    }
 }
 
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
@@ -32,7 +25,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
 		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
-			sound(player, CH_TRIGGER, W_Sound("strength_fire"), VOL_BASE, ATTEN_NORM);
+			sound(player, CH_TRIGGER, SND_STRENGTH_FIRE, VOL_BASE, ATTEN_NORM);
 			player.prevstrengthsound = time;
 		}
 		player.prevstrengthsoundattempt = time;
@@ -40,7 +33,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 
 float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype, float exception)
 {
-	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
+	float is_from_contents = (deathtype == DEATH_SLIME.m_id || deathtype == DEATH_LAVA.m_id);
 	float is_from_owner = (inflictor == projowner);
 	float is_from_exception = (exception != -1);
 
@@ -80,19 +73,21 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, int deathtype,
 	return true; // if none of these return, then allow damage anyway.
 }
 
-void W_PrepareExplosionByDamage(entity attacker, void() explode)
+void W_PrepareExplosionByDamage(entity this, entity attacker, void(entity this) explode)
 {
-	self.takedamage = DAMAGE_NO;
-	self.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
 
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
-		self.owner = attacker;
-		self.realowner = attacker;
+		this.owner = attacker;
+		this.realowner = attacker;
 	}
+
+	MUTATOR_CALLHOOK(PrepareExplosionByDamage, this, attacker);
 
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
-	self.nextthink = time;
-	self.think = explode;
+	this.nextthink = time;
+	setthink(this, explode);
 }

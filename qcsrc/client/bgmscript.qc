@@ -1,7 +1,4 @@
 #include "bgmscript.qh"
-#include "_all.qh"
-
-#include "../common/util.qh"
 
 #define CONSTANT_SPEED_DECAY
 

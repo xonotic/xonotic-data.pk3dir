@@ -1,6 +1,5 @@
-#ifndef ANNOUNCER_H
-#define ANNOUNCER_H
+#pragma once
 
 void Announcer();
 
-#endif
+string AnnouncerOption();

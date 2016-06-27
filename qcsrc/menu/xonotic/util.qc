@@ -1,53 +1,22 @@
 #include "util.qh"
+
+#include "../item.qh"
+
 #include "../menu.qh"
-#include "../oo/base.qh"
-#include "../../common/campaign_common.qh"
-#include "../../common/constants.qh"
-#include "../../common/mapinfo.qh"
-#include "../../common/util.qh"
-#include "../../common/command/generic.qh"
+#include <common/campaign_common.qh>
+#include <common/constants.qh>
+#include <common/mapinfo.qh>
+#include <common/util.qh>
+#include <common/command/generic.qh>
 
 float GL_CheckExtension(string ext)
 {
-	return (strstrofs(strcat(" ", cvar_string("gl_info_extensions"), " "), strcat(" ", ext, " "), 0) >= 0);
+	return strhasword(cvar_string("gl_info_extensions"), ext);
 }
 
 float GL_Have_TextureCompression()
 {
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
-}
-
-void loadTooltips()
-{
-	tooltipdb = db_load(language_filename("tooltips.db"));
-}
-void unloadTooltips()
-{
-	if(tooltipdb >= 0)
-		db_close(tooltipdb);
-	tooltipdb = -1;
-}
-string getZonedTooltipForIdentifier(string s)
-{
-	string t;
-	if(s == "")
-		return string_null;
-	if(tooltipdb >= 0)
-	{
-		t = db_get(tooltipdb, s);
-		if(t == "-")
-			return string_null;
-		if(t != "")
-			return strzone(t);
-	}
-	if(prvm_language == "en")
-	{
-		t = cvar_description(s);
-		if(t != "" && t != "custom cvar")
-			return strzone(t);
-	}
-	LOG_TRACE("WARNING: no tooltip set for ", s, "\n");
-	return string_null;
 }
 
 .entity parent, firstChild, nextSibling;
@@ -94,7 +63,7 @@ string getCvarsMulti(entity me)
 void saveCvarsMulti(entity me)
 {
 	float n, i;
-	string s;
+	string s, cvarname;
 
 	me.saveCvars_Multi(me);
 	s = cvar_string(me.cvarName);
@@ -102,12 +71,19 @@ void saveCvarsMulti(entity me)
 	n = tokenize_console(me.cvarNames_Multi);
 	for(i = 0; i < n; ++i)
 	{
+		// cvars prefixed with ! get saved with the inverted value
 		if(substring(argv(i), 0, 1) == "!")
-			cvar_set(substring(argv(i), 1, strlen(argv(i))), ((s == "0") ? "1" : "0"));
+		{
+			cvarname = substring(argv(i), 1, strlen(argv(i)));
+			cvar_set(cvarname, ((s == "0") ? "1" : "0"));
+		}
 		else
-			cvar_set(argv(i), s);
+		{
+			cvarname = argv(i);
+			cvar_set(cvarname, s);
+		}
 
-		CheckSendCvars(me, argv(i));
+		CheckSendCvars(me, cvarname);
 	}
 }
 void makeMulti(entity e, string otherCvars)
@@ -274,6 +250,32 @@ void setDependentWeird(entity e, float(entity) func)
 	setDependent_Check(e);
 }
 
+void setZonedTooltip(entity e, string theTooltip, string theCvar)
+{
+	if(theTooltip == "") // no tooltip, use cvar description then
+	{
+		if(theCvar != "" && prvm_language == "en")
+		{
+			string t = cvar_description(theCvar);
+			if(t != "" && t != "custom cvar")
+				theTooltip = t;
+		}
+	}
+	else if(theTooltip == "-") // no cvar description as tooltip
+	{
+		theTooltip = string_null;
+	}
+
+	if(e.tooltip)
+		strunzone(e.tooltip);
+	e.tooltip = (theTooltip != "") ? strzone(theTooltip) : string_null;
+}
+
+void clearTooltip(entity e)
+{
+	setZonedTooltip(e, string_null, string_null);
+}
+
 // URI SYSTEM ////////////////////////////////////////////////////////
 
 float _Nex_ExtResponseSystem_Queried;
@@ -282,6 +284,7 @@ string _Nex_ExtResponseSystem_UpdateToURL;
 string _Nex_ExtResponseSystem_Packs;
 float _Nex_ExtResponseSystem_PacksStep;
 
+/** engine callback */
 void URI_Get_Callback(float id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
@@ -678,8 +681,8 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
 	if (cvar("developer")) GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
-	//GAMETYPE(MAPINFO_TYPE_INVASION) \
-	/* nothing */
+	/* GAMETYPE(MAPINFO_TYPE_INVASION) */ \
+	/**/
 
 int GameType_GetID(int cnt)
 {

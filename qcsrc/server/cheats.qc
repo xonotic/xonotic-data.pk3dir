@@ -1,18 +1,18 @@
 #include "cheats.qh"
-#include "_all.qh"
 
 #include "g_damage.qh"
 #include "race.qh"
 #include "../common/triggers/teleporters.qh"
 
-#include "mutators/mutators_include.qh"
+#include "mutators/all.qh"
 
 #include "weapons/tracing.qh"
 
 #include "../common/constants.qh"
-#include "../common/deathtypes.qh"
-#include "../common/effects.qh"
+#include "../common/deathtypes/all.qh"
 #include "../common/util.qh"
+
+#include <common/physics/player.qh>
 
 #include "../common/monsters/all.qh"
 
@@ -22,22 +22,20 @@
 
 #include "../common/triggers/func/breakable.qh"
 
-#include "../csqcmodellib/sv_model.qh"
+#include "../lib/csqcmodel/sv_model.qh"
 
-#include "../warpzonelib/anglestransform.qh"
-#include "../warpzonelib/util_server.qh"
+#include "../lib/warpzone/anglestransform.qh"
+#include "../lib/warpzone/util_server.qh"
 
-void CopyBody(float keepvelocity);
+void CopyBody(entity this, float keepvelocity);
 
 #ifdef NOCHEATS
 
-float CheatImpulse(float i) { return 0; }
-float CheatCommand(float argc) { return 0; }
-float CheatFrame() { return 0; }
+float CheatImpulse(entity this, int imp) { return 0; }
+float CheatCommand(entity this, int argc) { return 0; }
+float CheatFrame(entity this) { return 0; }
 void CheatInit() { cheatcount_total = world.cheatcount; }
 void CheatShutdown() { }
-void CheatInitClient() { }
-void CheatShutdownClient() { }
 void Drag_MoveDrag(entity from, entity to) { }
 
 #else
@@ -56,29 +54,21 @@ void CheatShutdown()
 {
 }
 
-void CheatInitClient()
-{
-}
-
-void CheatShutdownClient()
-{
-}
-
-float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
+float CheatsAllowed(entity this, float i, float argc, float fr) // the cheat gets passed as argument for possible future ACL checking
 {
 	// dead people cannot cheat
-	if(self.deadflag != DEAD_NO)
+	if(IS_DEAD(this))
 		return 0;
-	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
+	if(gamestart_sv_cheats < 2 && !IS_PLAYER(this))
 		return 0;
 
 	// sv_clones
-	if(i == CHIMPULSE_CLONE_MOVING || i == CHIMPULSE_CLONE_STANDING)
-		if(self.lip < sv_clones)
+	if(i == CHIMPULSE_CLONE_MOVING.impulse || i == CHIMPULSE_CLONE_STANDING.impulse)
+		if(this.lip < sv_clones)
 			return 1;
 
 	// haha
-	if(self.maycheat)
+	if(this.maycheat)
 		return 1;
 
 	// sv_cheats
@@ -87,13 +77,13 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", self.netname, i);
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", this.netname, i);
 	else if(argc)
-		bprintf("Player %s^7 tried to use cheat '%s'\n", self.netname, argv(0));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", this.netname, argv(0));
 	else if(fr)
-		bprintf("Player %s^7 tried to use cheat frame %d\n", self.netname, fr);
+		bprintf("Player %s^7 tried to use cheat frame %d\n", this.netname, fr);
 	else
-		bprintf("Player %s^7 tried to use an unknown cheat\n", self.netname);
+		bprintf("Player %s^7 tried to use an unknown cheat\n", this.netname);
 
 	return 0;
 }
@@ -107,187 +97,183 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	cheatcount_total += n; \
 	e.cheatcount += n
 #define END_CHEAT_FUNCTION() \
-	ADD_CHEATS(self,cheating); \
+	ADD_CHEATS(this, cheating); \
 	return attempting
-#define IS_CHEAT(i,argc,fr) \
-	if((++attempting, !CheatsAllowed(i,argc,fr))) \
+#define IS_CHEAT(ent,i,argc,fr) \
+	if((++attempting, !CheatsAllowed(ent,i,argc,fr))) \
 		break
 
 float num_autoscreenshot;
-void info_autoscreenshot_findtarget()
+void info_autoscreenshot_findtarget(entity this)
 {
 	entity e;
-	e = find(world, targetname, self.target);
+	e = find(NULL, targetname, this.target);
 	if(!e)
 	{
-		objerror("Missing target. FAIL!");
+		objerror(this, "Missing target. FAIL!");
 		return;
 	}
-	vector a = vectoangles(e.origin - self.origin);
+	vector a = vectoangles(e.origin - this.origin);
 	a.x = -a.x; // don't ask
-	self.angles_x = a.x;
-	self.angles_y = a.y;
+	this.angles_x = a.x;
+	this.angles_y = a.y;
 	// we leave Rick Roll alone
 }
-void spawnfunc_info_autoscreenshot()
+spawnfunc(info_autoscreenshot)
 {
 	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
 	{
-		objerror("Too many info_autoscreenshot entitites. FAIL!");
+		objerror(this, "Too many info_autoscreenshot entitites. FAIL!");
 		return;
 	}
-	if(self.target != "")
-		InitializeEntity(self, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
+	if(this.target != "")
+		InitializeEntity(this, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
 	// this one just has to exist
 }
 
-float CheatImpulse(float i)
+float CheatImpulse(entity this, int imp)
 {
 	BEGIN_CHEAT_FUNCTION();
-	switch(i)
+	switch(imp)
 	{
 		entity e, e2;
 
-		case CHIMPULSE_SPEEDRUN_INIT: // deploy personal waypoint
+		case CHIMPULSE_SPEEDRUN_INIT.impulse: // deploy personal waypoint
 			// shared with regular waypoint init, so this is not a cheat by itself
-			if(!self.personal)
+			if(!this.personal)
 			{
-				self.personal = spawn();
-				self.personal.classname = "personal_wp";
+				this.personal = new(personal_wp);
 			}
-			self.personal.origin = self.origin;
-			self.personal.v_angle = self.v_angle;
-			self.personal.velocity = self.velocity;
-			self.personal.ammo_rockets = self.ammo_rockets;
-			self.personal.ammo_nails = self.ammo_nails;
-			self.personal.ammo_cells = self.ammo_cells;
-			self.personal.ammo_plasma = self.ammo_plasma;
-			self.personal.ammo_shells = self.ammo_shells;
-			self.personal.ammo_fuel = self.ammo_fuel;
-			self.personal.health = self.health;
-			self.personal.armorvalue = self.armorvalue;
-			self.personal.weapons = self.weapons;
-			self.personal.items = self.items;
-			self.personal.pauserotarmor_finished = self.pauserotarmor_finished;
-			self.personal.pauserothealth_finished = self.pauserothealth_finished;
-			self.personal.pauserotfuel_finished = self.pauserotfuel_finished;
-			self.personal.pauseregen_finished = self.pauseregen_finished;
-			self.personal.strength_finished = self.strength_finished;
-			self.personal.invincible_finished = self.invincible_finished;
-			self.personal.teleport_time = time;
-			break; // this part itself doesn't cheat, so let's not count this
-		case CHIMPULSE_CLONE_MOVING:
-			IS_CHEAT(i, 0, 0);
-			makevectors (self.v_angle);
-			self.velocity = self.velocity + v_forward * 300;
-			CopyBody(1);
-			self.lip += 1;
-			self.velocity = self.velocity - v_forward * 300;
+			this.personal.origin = this.origin;
+			this.personal.v_angle = this.v_angle;
+			this.personal.velocity = this.velocity;
+			this.personal.ammo_rockets = this.ammo_rockets;
+			this.personal.ammo_nails = this.ammo_nails;
+			this.personal.ammo_cells = this.ammo_cells;
+			this.personal.ammo_plasma = this.ammo_plasma;
+			this.personal.ammo_shells = this.ammo_shells;
+			this.personal.ammo_fuel = this.ammo_fuel;
+			this.personal.health = this.health;
+			this.personal.armorvalue = this.armorvalue;
+			this.personal.weapons = this.weapons;
+			this.personal.items = this.items;
+			this.personal.pauserotarmor_finished = this.pauserotarmor_finished;
+			this.personal.pauserothealth_finished = this.pauserothealth_finished;
+			this.personal.pauserotfuel_finished = this.pauserotfuel_finished;
+			this.personal.pauseregen_finished = this.pauseregen_finished;
+			this.personal.strength_finished = this.strength_finished;
+			this.personal.invincible_finished = this.invincible_finished;
+			this.personal.teleport_time = time;
+			break; // this part itthis doesn't cheat, so let's not count this
+		case CHIMPULSE_CLONE_MOVING.impulse:
+			IS_CHEAT(this, imp, 0, 0);
+			makevectors (this.v_angle);
+			this.velocity = this.velocity + v_forward * 300;
+			CopyBody(this, 1);
+			this.lip += 1;
+			this.velocity = this.velocity - v_forward * 300;
 			DID_CHEAT();
 			break;
-		case CHIMPULSE_CLONE_STANDING:
-			IS_CHEAT(i, 0, 0);
-			CopyBody(0);
-			self.lip += 1;
+		case CHIMPULSE_CLONE_STANDING.impulse:
+			IS_CHEAT(this, imp, 0, 0);
+			CopyBody(this, 0);
+			this.lip += 1;
 			DID_CHEAT();
 			break;
-		case CHIMPULSE_GIVE_ALL:
-			IS_CHEAT(i, 0, 0);
-			CheatCommand(tokenize_console("give all"));
+		case CHIMPULSE_GIVE_ALL.impulse:
+			IS_CHEAT(this, imp, 0, 0);
+			CheatCommand(this, tokenize_console("give all"));
 			break; // already counted as cheat
-		case CHIMPULSE_SPEEDRUN:
-			IS_CHEAT(i, 0, 0);
-			if(self.personal)
+		case CHIMPULSE_SPEEDRUN.impulse:
+			IS_CHEAT(this, imp, 0, 0);
+			if(this.personal)
 			{
-				self.speedrunning = true;
-				tracebox(self.personal.origin, self.mins, self.maxs, self.personal.origin, MOVE_WORLDONLY, self);
+				this.speedrunning = true;
+				tracebox(this.personal.origin, this.mins, this.maxs, this.personal.origin, MOVE_WORLDONLY, this);
 				if(trace_startsolid)
 				{
-					sprint(self, "Cannot move there, cheater - only waypoints set using g_waypointsprite_personal work\n");
+					sprint(this, "Cannot move there, cheater - only waypoints set using g_waypointsprite_personal work\n");
 				}
 				else
 				{
 					// Abort speedrun, teleport back
-					setorigin(self, self.personal.origin);
-					self.oldvelocity = self.velocity = self.personal.velocity;
-					self.angles = self.personal.v_angle;
-					self.fixangle = true;
+					setorigin(this, this.personal.origin);
+					this.oldvelocity = this.velocity = this.personal.velocity;
+					this.angles = this.personal.v_angle;
+					this.fixangle = true;
 
-					MUTATOR_CALLHOOK(AbortSpeedrun, self);
+					MUTATOR_CALLHOOK(AbortSpeedrun, this);
 				}
 
-				self.ammo_rockets = self.personal.ammo_rockets;
-				self.ammo_nails = self.personal.ammo_nails;
-				self.ammo_cells = self.personal.ammo_cells;
-				self.ammo_plasma = self.personal.ammo_plasma;
-				self.ammo_shells = self.personal.ammo_shells;
-				self.ammo_fuel = self.personal.ammo_fuel;
-				self.health = self.personal.health;
-				self.armorvalue = self.personal.armorvalue;
-				self.weapons = self.personal.weapons;
-				self.items = self.personal.items;
-				self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
-				self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
-				self.pauserotfuel_finished = time + self.personal.pauserotfuel_finished - self.personal.teleport_time;
-				self.pauseregen_finished = time + self.personal.pauseregen_finished - self.personal.teleport_time;
-				self.strength_finished = time + self.personal.strength_finished - self.personal.teleport_time;
-				self.invincible_finished = time + self.personal.invincible_finished - self.personal.teleport_time;
+				this.ammo_rockets = this.personal.ammo_rockets;
+				this.ammo_nails = this.personal.ammo_nails;
+				this.ammo_cells = this.personal.ammo_cells;
+				this.ammo_plasma = this.personal.ammo_plasma;
+				this.ammo_shells = this.personal.ammo_shells;
+				this.ammo_fuel = this.personal.ammo_fuel;
+				this.health = this.personal.health;
+				this.armorvalue = this.personal.armorvalue;
+				this.weapons = this.personal.weapons;
+				this.items = this.personal.items;
+				this.pauserotarmor_finished = time + this.personal.pauserotarmor_finished - this.personal.teleport_time;
+				this.pauserothealth_finished = time + this.personal.pauserothealth_finished - this.personal.teleport_time;
+				this.pauserotfuel_finished = time + this.personal.pauserotfuel_finished - this.personal.teleport_time;
+				this.pauseregen_finished = time + this.personal.pauseregen_finished - this.personal.teleport_time;
+				this.strength_finished = time + this.personal.strength_finished - this.personal.teleport_time;
+				this.invincible_finished = time + this.personal.invincible_finished - this.personal.teleport_time;
 
 				DID_CHEAT();
 				break;
 			}
-			if(self.deadflag != DEAD_NO)
-				sprint(self, "UR DEAD AHAHAH))\n");
+			if(IS_DEAD(this))
+				sprint(this, "UR DEAD AHAHAH))\n");
 			else
-				sprint(self, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
+				sprint(this, "No waypoint set, cheater (use g_waypointsprite_personal to set one)\n");
 			break;
-		case CHIMPULSE_TELEPORT:
-			IS_CHEAT(i, 0, 0);
-			if(self.movetype == MOVETYPE_NOCLIP)
+		case CHIMPULSE_TELEPORT.impulse:
+			IS_CHEAT(this, imp, 0, 0);
+			if(this.movetype == MOVETYPE_NOCLIP)
 			{
-				e = find(world, classname, "info_autoscreenshot");
+				e = find(NULL, classname, "info_autoscreenshot");
 				if(e)
 				{
-					sprint(self, "Emergency teleport used info_autoscreenshot location\n");
-					setorigin(self, e.origin);
-					self.angles = e.angles;
+					sprint(this, "Emergency teleport used info_autoscreenshot location\n");
+					setorigin(this, e.origin);
+					this.angles = e.angles;
 					remove(e);
-					// should we? self.angles_x = -self.angles_x;
-					self.fixangle = true;
-					self.velocity = '0 0 0';
+					// should we? this.angles_x = -this.angles_x;
+					this.fixangle = true;
+					this.velocity = '0 0 0';
 					DID_CHEAT();
 					break;
 				}
 			}
-			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 384, 384))
+			if(MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 384, 384))
 			{
-				sprint(self, "Emergency teleport used random location\n");
-				self.angles_x = -self.angles.x;
-				self.fixangle = true;
-				self.velocity = '0 0 0';
+				sprint(this, "Emergency teleport used random location\n");
+				this.angles_x = -this.angles.x;
+				this.fixangle = true;
+				this.velocity = '0 0 0';
 				DID_CHEAT();
 				break;
 			}
-			sprint(self, "Emergency teleport could not find a good location, forget it!\n");
+			sprint(this, "Emergency teleport could not find a good location, forget it!\n");
 			break;
-		case CHIMPULSE_R00T:
-			IS_CHEAT(i, 0, 0);
+		case CHIMPULSE_R00T.impulse:
+			IS_CHEAT(this, imp, 0, 0);
 			RandomSelection_Init();
-			FOR_EACH_PLAYER(e)
-				if(e.deadflag == DEAD_NO)
-					if(DIFF_TEAM(e, self))
-						RandomSelection_Add(e, 0, string_null, 1, 1);
+			FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it) && DIFF_TEAM(it, this), LAMBDA(RandomSelection_Add(it, 0, string_null, 1, 1)));
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
 			else
-				e = self;
+				e = this;
 
 			Send_Effect(EFFECT_ROCKET_EXPLODE, e.origin, '0 0 0', 1);
-			sound(e, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+			sound(e, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
+			RadiusDamage(e2, this, 1000, 0, 128, NULL, NULL, 500, DEATH_CHEAT.m_id, e);
 			remove(e2);
 
 			LOG_INFO("404 Sportsmanship not found.\n");
@@ -298,22 +284,20 @@ float CheatImpulse(float i)
 	END_CHEAT_FUNCTION();
 }
 
-void DragBox_Think();
+void DragBox_Think(entity this);
 float drag_lastcnt;
-float CheatCommand(float argc)
+float CheatCommand(entity this, int argc)
 {
 	BEGIN_CHEAT_FUNCTION();
 	string cmd;
 	cmd = argv(0);
 	switch(cmd)
 	{
-		entity e;
 		float effectnum, f;
 		vector start, end;
-		entity oldself;
 
 		case "pointparticles":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 5)
 			{
 				// arguments:
@@ -322,47 +306,47 @@ float CheatCommand(float argc)
 				//   velocity
 				//   howmany
 				f = stof(argv(2));
-				crosshair_trace(self);
-				start = (1-f) * self.origin + f * trace_endpos;
+				crosshair_trace(this);
+				start = (1-f) * this.origin + f * trace_endpos;
 				end = stov(argv(3));
 				f = stof(argv(4));
 				Send_Effect_(argv(1), start, end, f);
 				DID_CHEAT();
 				break;
 			}
-			sprint(self, "Usage: sv_cheats 1; restart; cmd pointparticles effectname position(0..1) velocityvector multiplier\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd pointparticles effectname position(0..1) velocityvector multiplier\n");
 			break;
 		case "trailparticles":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 2)
 			{
 				// arguments:
 				//   effectname
 				effectnum = _particleeffectnum(argv(1));
-				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
-				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
-				trailparticles(self, effectnum, w_shotorg, trace_endpos);
+				W_SetupShot(this, false, false, SND_Null, CH_WEAPON_A, 0);
+				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, this);
+				__trailparticles(this, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
 				break;
 			}
-			sprint(self, "Usage: sv_cheats 1; restart; cmd trailparticles effectname\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd trailparticles effectname\n");
 			break;
 		case "make":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 3)
 			{
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, false, false, "", CH_WEAPON_A, 0);
-				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
+				W_SetupShot(this, false, false, SND_Null, CH_WEAPON_A, 0);
+				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, this);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{
-					sprint(self, "cannot make stuff there (bad surface)\n");
+					sprint(this, "cannot make stuff there (bad surface)\n");
 				}
 				else
 				{
-					e = spawn();
+					entity e = spawn();
 					e.model = strzone(argv(1));
 					e.mdl = "rocket_explode";
 					e.health = 1000;
@@ -373,10 +357,7 @@ float CheatCommand(float argc)
 						e.angles = fixedvectoangles2(trace_plane_normal, v_forward);
 						e.angles = AnglesTransform_ApplyToAngles(e.angles, '-90 0 0'); // so unrotated models work
 					}
-					oldself = self;
-					self = e;
-					spawnfunc_func_breakable();
-					self = oldself;
+					spawnfunc_func_breakable(e);
 					// now, is it valid?
 					if(f == 0)
 					{
@@ -384,7 +365,7 @@ float CheatCommand(float argc)
 						if(trace_startsolid)
 						{
 							remove(e);
-							sprint(self, "cannot make stuff there (no space)\n");
+							sprint(this, "cannot make stuff there (no space)\n");
 						}
 						else
 							DID_CHEAT();
@@ -394,52 +375,49 @@ float CheatCommand(float argc)
 				}
 			}
 			else
-				sprint(self, "Usage: sv_cheats 1; restart; cmd make models/... 0/1/2\n");
+				sprint(this, "Usage: sv_cheats 1; restart; cmd make models/... 0/1/2\n");
 			break;
 		case "penalty":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 3)
 			{
-				race_ImposePenaltyTime(self, stof(argv(1)), argv(2));
+				race_ImposePenaltyTime(this, stof(argv(1)), argv(2));
 				DID_CHEAT();
 				break;
 			}
-			sprint(self, "Usage: sv_cheats 1; restart; cmd penalty 5.0 AHAHAHAHAHAHAH))\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd penalty 5.0 AHAHAHAHAHAHAH))\n");
 			break;
-		case "dragbox_spawn":
-			IS_CHEAT(0, argc, 0);
-			e = spawn();
-			e.classname = "dragbox_box";
-			e.think = DragBox_Think;
+		case "dragbox_spawn": {
+			IS_CHEAT(this, 0, argc, 0);
+			entity e = new(dragbox_box);
+			setthink(e, DragBox_Think);
 			e.nextthink = time;
 			e.solid = -1; // black
-			setmodel(e, "null"); // network it
+			setmodel(e, MDL_Null); // network it
 			if(argc == 4)
 				e.cnt = stof(argv(1));
 			else
 				e.cnt = max(0, drag_lastcnt);
 
-			e.aiment = spawn();
-			e.aiment.classname = "dragbox_corner_1";
+			e.aiment = new(dragbox_corner_1);
 			e.aiment.owner = e;
-			setmodel(e.aiment, "models/marker.md3");
+			setmodel(e.aiment, MDL_MARKER);
 			e.aiment.skin = 0;
 			setsize(e.aiment, '0 0 0', '0 0 0');
 			if(argc == 4)
 				setorigin(e.aiment, stov(argv(2)));
 			else
 			{
-				crosshair_trace(self);
+				crosshair_trace(this);
 				setorigin(e.aiment, trace_endpos);
 			}
 
-			e.enemy = spawn();
-			e.enemy.classname = "dragbox_corner_2";
+			e.enemy = new(dragbox_corner_2);
 			e.enemy.owner = e;
-			setmodel(e.enemy, "models/marker.md3");
+			setmodel(e.enemy, MDL_MARKER);
 			e.enemy.skin = 1;
 			setsize(e.enemy, '0 0 0', '0 0 0');
-			end = normalize(self.origin + self.view_ofs - e.aiment.origin);
+			end = normalize(this.origin + this.view_ofs - e.aiment.origin);
 			end.x = (end.x > 0) * 2 - 1;
 			end.y = (end.y > 0) * 2 - 1;
 			end.z = (end.z > 0) * 2 - 1;
@@ -448,27 +426,25 @@ float CheatCommand(float argc)
 			else
 				setorigin(e.enemy, e.aiment.origin + 32 * end);
 
-			e.killindicator = spawn();
-			e.killindicator.classname = "drag_digit";
+			e.killindicator = new(drag_digit);
 			e.killindicator.owner = e;
 			setattachment(e.killindicator, e, "");
 			setorigin(e.killindicator, '0 0 -8');
-			e.killindicator.killindicator = spawn();
-			e.killindicator.killindicator.classname = "drag_digit";
+			e.killindicator.killindicator = new(drag_digit);
 			e.killindicator.killindicator.owner = e;
 			setattachment(e.killindicator.killindicator, e, "");
 			setorigin(e.killindicator.killindicator, '0 0 8');
 			DID_CHEAT();
 			break;
-		case "dragpoint_spawn":
-			IS_CHEAT(0, argc, 0);
-			e = spawn();
-			e.classname = "dragpoint";
-			e.think = DragBox_Think;
+		}
+		case "dragpoint_spawn": {
+			IS_CHEAT(this, 0, argc, 0);
+			entity e = new(dragpoint);
+			setthink(e, DragBox_Think);
 			e.nextthink = time;
 			e.solid = 0; // nothing special
-			setmodel(e, "models/marker.md3");
-			setsize(e, PL_MIN, PL_MAX);
+			setmodel(e, MDL_MARKER);
+			setsize(e, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
 			e.skin = 2;
 			if(argc == 3)
 				e.cnt = stof(argv(1));
@@ -478,30 +454,29 @@ float CheatCommand(float argc)
 				setorigin(e, stov(argv(2)));
 			else
 			{
-				crosshair_trace(self);
-				setorigin(e, trace_endpos + normalize(self.origin + self.view_ofs - trace_endpos));
+				crosshair_trace(this);
+				setorigin(e, trace_endpos + normalize(this.origin + this.view_ofs - trace_endpos));
 				move_out_of_solid(e);
 			}
 
-			e.killindicator = spawn();
-			e.killindicator.classname = "drag_digit";
+			e.killindicator = new(drag_digit);
 			e.killindicator.owner = e;
 			setattachment(e.killindicator, e, "");
 			setorigin(e.killindicator, '0 0 40');
-			e.killindicator.killindicator = spawn();
-			e.killindicator.killindicator.classname = "drag_digit";
+			e.killindicator.killindicator = new(drag_digit);
 			e.killindicator.killindicator.owner = e;
 			setattachment(e.killindicator.killindicator, e, "");
 			setorigin(e.killindicator.killindicator, '0 0 56');
 			DID_CHEAT();
 			break;
+		}
 		case "drag_remove":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			RandomSelection_Init();
-			crosshair_trace(self);
-			for(e = world; (e = find(e, classname, "dragbox_box")); )
+			crosshair_trace(this);
+			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-			for(e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 			if(RandomSelection_chosen_ent)
 			{
@@ -516,14 +491,14 @@ float CheatCommand(float argc)
 			DID_CHEAT();
 			break;
 		case "drag_setcnt":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 2)
 			{
 				RandomSelection_Init();
-				crosshair_trace(self);
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				crosshair_trace(this);
+				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 					RandomSelection_Add(e, 0, string_null, 1, 1 / vlen(e.origin + (e.mins + e.maxs) * 0.5 - trace_endpos));
 				if(RandomSelection_chosen_ent)
 				{
@@ -535,19 +510,19 @@ float CheatCommand(float argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(self, "Usage: sv_cheats 1; restart; cmd dragbox_setcnt cnt\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_setcnt cnt\n");
 			break;
 		case "drag_save":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 2)
 			{
 				f = fopen(argv(1), FILE_WRITE);
 				fputs(f, "cmd drag_clear\n");
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, strcat("cmd dragbox_spawn ", ftos(e.cnt), " \"", vtos(e.aiment.origin), "\" \"", vtos(e.enemy.origin), "\"\n"));
 				}
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				{
 					fputs(f, strcat("cmd dragpoint_spawn ", ftos(e.cnt), " \"", vtos(e.origin), "\"\n"));
 				}
@@ -555,14 +530,14 @@ float CheatCommand(float argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(self, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
 			break;
 		case "drag_saveraceent":
-			IS_CHEAT(0, argc, 0);
+			IS_CHEAT(this, 0, argc, 0);
 			if(argc == 2)
 			{
 				f = fopen(argv(1), FILE_WRITE);
-				for(e = world; (e = find(e, classname, "dragbox_box")); )
+				for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				{
 					fputs(f, "{\n");
 					fputs(f, "\"classname\" \"trigger_race_checkpoint\"\n");
@@ -572,15 +547,15 @@ float CheatCommand(float argc)
 					fputs(f, strcat("\"targetname\" \"checkpoint", ftos(e.cnt), "\"\n"));
 					fputs(f, "}\n");
 				}
-				for(e = world; (e = find(e, classname, "dragpoint")); )
+				for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				{
 					start = '0 0 0';
 					effectnum = 0;
-					for(oldself = world; (oldself = find(oldself, classname, "dragbox_box")); )
+					for(entity ent = NULL; (ent = find(ent, classname, "dragbox_box")); )
 					{
-						if(e.cnt <= 0 && oldself.cnt == 0 || e.cnt == oldself.cnt)
+						if(e.cnt <= 0 && ent.cnt == 0 || e.cnt == ent.cnt)
 						{
-							start = start + oldself.origin;
+							start = start + ent.origin;
 							++effectnum;
 						}
 					}
@@ -607,12 +582,12 @@ float CheatCommand(float argc)
 							// these need race_place
 							// counting...
 							effectnum = 1;
-							for(oldself = world; (oldself = find(oldself, classname, "dragpoint")); )
-							if(oldself.cnt == 0)
+							for(entity ent = NULL; (ent = find(ent, classname, "dragpoint")); )
+							if(ent.cnt == 0)
 							{
-								if(vlen(oldself.origin - start) < vlen(e.origin - start))
+								if(vlen2(ent.origin - start) < vlen2(e.origin - start))
 									++effectnum;
-								else if(vlen(oldself.origin - start) == vlen(e.origin - start) && num_for_edict(oldself) < num_for_edict(e))
+								else if(vlen2(ent.origin - start) == vlen2(e.origin - start) && etof(ent) < etof(e))
 									++effectnum;
 							}
 							fputs(f, strcat("\"race_place\" \"", ftos(effectnum), "\"\n"));
@@ -624,123 +599,112 @@ float CheatCommand(float argc)
 				DID_CHEAT();
 				break;
 			}
-			sprint(self, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
+			sprint(this, "Usage: sv_cheats 1; restart; cmd dragbox_save filename\n");
 			break;
 		case "drag_clear":
-			IS_CHEAT(0, argc, 0);
-			for(e = world; (e = find(e, classname, "dragbox_box")); )
+			IS_CHEAT(this, 0, argc, 0);
+			for(entity e = NULL; (e = find(e, classname, "dragbox_box")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragbox_corner_1")); )
+			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_1")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragbox_corner_2")); )
+			for(entity e = NULL; (e = find(e, classname, "dragbox_corner_2")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "dragpoint")); )
+			for(entity e = NULL; (e = find(e, classname, "dragpoint")); )
 				remove(e);
-			for(e = world; (e = find(e, classname, "drag_digit")); )
+			for(entity e = NULL; (e = find(e, classname, "drag_digit")); )
 				remove(e);
 			DID_CHEAT();
 			break;
 		case "god":
-			IS_CHEAT(0, argc, 0);
-			BITXOR_ASSIGN(self.flags, FL_GODMODE);
-			if(self.flags & FL_GODMODE)
+			IS_CHEAT(this, 0, argc, 0);
+			BITXOR_ASSIGN(this.flags, FL_GODMODE);
+			if(this.flags & FL_GODMODE)
 			{
-				sprint(self, "godmode ON\n");
+				sprint(this, "godmode ON\n");
 				DID_CHEAT();
 			}
 			else
-				sprint(self, "godmode OFF\n");
+				sprint(this, "godmode OFF\n");
 			break;
 		case "notarget":
-			IS_CHEAT(0, argc, 0);
-			BITXOR_ASSIGN(self.flags, FL_NOTARGET);
-			if(self.flags & FL_NOTARGET)
+			IS_CHEAT(this, 0, argc, 0);
+			BITXOR_ASSIGN(this.flags, FL_NOTARGET);
+			if(this.flags & FL_NOTARGET)
 			{
-				sprint(self, "notarget ON\n");
+				sprint(this, "notarget ON\n");
 				DID_CHEAT();
 			}
 			else
-				sprint(self, "notarget OFF\n");
+				sprint(this, "notarget OFF\n");
 			break;
 		case "noclip":
-			IS_CHEAT(0, argc, 0);
-			if(self.movetype != MOVETYPE_NOCLIP)
+			IS_CHEAT(this, 0, argc, 0);
+			if(this.movetype != MOVETYPE_NOCLIP)
 			{
-				self.movetype = MOVETYPE_NOCLIP;
-				sprint(self, "noclip ON\n");
+				this.movetype = MOVETYPE_NOCLIP;
+				sprint(this, "noclip ON\n");
 				DID_CHEAT();
 			}
 			else
 			{
-				self.movetype = MOVETYPE_WALK;
-				sprint(self, "noclip OFF\n");
+				this.movetype = MOVETYPE_WALK;
+				sprint(this, "noclip OFF\n");
 			}
 			break;
 		case "fly":
-			IS_CHEAT(0, argc, 0);
-			if(self.movetype != MOVETYPE_FLY)
+			IS_CHEAT(this, 0, argc, 0);
+			if(this.movetype != MOVETYPE_FLY)
 			{
-				self.movetype = MOVETYPE_FLY;
-				sprint(self, "flymode ON\n");
+				this.movetype = MOVETYPE_FLY;
+				sprint(this, "flymode ON\n");
 				DID_CHEAT();
 			}
 			else
 			{
-				self.movetype = MOVETYPE_WALK;
-				sprint(self, "flymode OFF\n");
+				this.movetype = MOVETYPE_WALK;
+				sprint(this, "flymode OFF\n");
 			}
 			break;
 		case "give":
-			IS_CHEAT(0, argc, 0);
-			if(GiveItems(self, 1, argc))
+			IS_CHEAT(this, 0, argc, 0);
+			if(GiveItems(this, 1, argc))
 				DID_CHEAT();
 			break;
 		case "usetarget":
-			IS_CHEAT(0, argc, 0);
-			e = self;
-			self = spawn();
-			self.target = argv(1);
-			activator = e;
-			SUB_UseTargets();
-			remove(self);
-			self = e;
+			IS_CHEAT(this, 0, argc, 0);
+			entity e = spawn();
+			e.target = argv(1);
+			SUB_UseTargets(e, this, NULL);
+			remove(e);
 			DID_CHEAT();
 			break;
 		case "killtarget":
-			IS_CHEAT(0, argc, 0);
-			e = self;
-			self = spawn();
-			self.killtarget = argv(1);
-			activator = e;
-			SUB_UseTargets();
-			remove(self);
-			self = e;
+			IS_CHEAT(this, 0, argc, 0);
+			entity e2 = spawn();
+			e2.killtarget = argv(1);
+			SUB_UseTargets(e2, this, NULL);
+			remove(e2);
 			DID_CHEAT();
 			break;
 		case "teleporttotarget":
-			IS_CHEAT(0, argc, 0);
-			e = self;
-			self = spawn();
-			setorigin(self, self.origin);
-			self.classname = "cheattriggerteleport";
-			self.target = argv(1);
-			teleport_findtarget();
-			if(!wasfreed(self))
+			IS_CHEAT(this, 0, argc, 0);
+			entity ent = new(cheattriggerteleport);
+			setorigin(ent, ent.origin);
+			ent.target = argv(1);
+			teleport_findtarget(ent);
+			if(!wasfreed(ent))
 			{
-				Simple_TeleportPlayer(self, e);
-				remove(self);
-				self = e;
+				Simple_TeleportPlayer(ent, this);
+				remove(ent);
 				DID_CHEAT();
 			}
-			else
-				self = e;
 			break;
 	}
 
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(float force_allow_pick, float ischeat);
+float Drag(entity this, float force_allow_pick, float ischeat);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -754,7 +718,7 @@ float Drag_IsDragging(entity dragger);
 void Drag_MoveDrag(entity from, entity to);
 .entity dragentity;
 
-float CheatFrame()
+float CheatFrame(entity this)
 {
 	BEGIN_CHEAT_FUNCTION();
 
@@ -766,15 +730,15 @@ float CheatFrame()
 	switch(0)
 	{
 		default:
-			if(self.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
+			if(this.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
 			{
 				// use cheat dragging if cheats are enabled
-				crosshair_trace_plusvisibletriggers(self);
-				Drag(true, true);
+				crosshair_trace_plusvisibletriggers(this);
+				Drag(this, true, true);
 			}
 			else
 			{
-				Drag(false, false); // execute dragging
+				Drag(this, false, false); // execute dragging
 			}
 			break;
 	}
@@ -798,7 +762,7 @@ float CheatFrame()
 .entity draggedby;
 .float dragmovetype;
 
-float Drag(float force_allow_pick, float ischeat)
+float Drag(entity this, float force_allow_pick, float ischeat)
 {
 	BEGIN_CHEAT_FUNCTION();
 
@@ -809,43 +773,43 @@ float Drag(float force_allow_pick, float ischeat)
 	switch(0)
 	{
 		default:
-			if(Drag_IsDragging(self))
+			if(Drag_IsDragging(this))
 			{
-				if(self.BUTTON_DRAG)
+				if(PHYS_INPUT_BUTTON_DRAG(this))
 				{
-					if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
+					if(this.impulse == 10 || this.impulse == 15 || this.impulse == 18)
 					{
-						Drag_MoveForward(self);
-						self.impulse = 0;
+						Drag_MoveForward(this);
+						this.impulse = 0;
 					}
-					else if(self.impulse == 12 || self.impulse == 16 || self.impulse == 19)
+					else if(this.impulse == 12 || this.impulse == 16 || this.impulse == 19)
 					{
-						Drag_MoveBackward(self);
-						self.impulse = 0;
+						Drag_MoveBackward(this);
+						this.impulse = 0;
 					}
-					else if(self.impulse >= 1 && self.impulse <= 9)
+					else if(this.impulse >= 1 && this.impulse <= 9)
 					{
-						Drag_SetSpeed(self, self.impulse - 1);
+						Drag_SetSpeed(this, this.impulse - 1);
 					}
-					else if(self.impulse == 14)
+					else if(this.impulse == 14)
 					{
-						Drag_SetSpeed(self, 9);
+						Drag_SetSpeed(this, 9);
 					}
 
 					if(frametime)
-						Drag_Update(self);
+						Drag_Update(this);
 				}
 				else
 				{
-					Drag_Finish(self);
+					Drag_Finish(this);
 				}
 			}
 			else
 			{
-				if(Drag_CanDrag(self))
-					if(self.BUTTON_DRAG)
+				if(Drag_CanDrag(this))
+					if(PHYS_INPUT_BUTTON_DRAG(this))
 					{
-						crosshair_trace_plusvisibletriggers(self);
+						crosshair_trace_plusvisibletriggers(this);
 						entity e = trace_ent;
 						float pick = force_allow_pick;
 						if (e && !pick)
@@ -855,18 +819,18 @@ float Drag(float force_allow_pick, float ischeat)
 							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 							// it goes out of range while slinging it around.
 
-							if(vlen(self.origin - e.origin) <= autocvar_g_grab_range)
+							if(vdist(this.origin - e.origin, <=, autocvar_g_grab_range))
 							{
 								switch(e.grab)
 								{
 									case 0: // can't grab
 										break;
 									case 1: // owner can grab
-										if(e.owner == self || e.realowner == self)
+										if(e.owner == this || e.realowner == this)
 											pick = true;
 										break;
 									case 2: // owner and team mates can grab
-										if(SAME_TEAM(e.owner, self) || SAME_TEAM(e.realowner, self) || e.team == self.team)
+										if(SAME_TEAM(e.owner, this) || SAME_TEAM(e.realowner, this) || e.team == this.team)
 											pick = true;
 										break;
 									case 3: // anyone can grab
@@ -882,12 +846,12 @@ float Drag(float force_allow_pick, float ischeat)
 							if(Drag_IsDraggable(e))
 							{
 								if(ischeat)
-									IS_CHEAT(0, 0, CHRAME_DRAG);
+									IS_CHEAT(this, 0, 0, CHRAME_DRAG);
 								if(e.draggedby)
 									Drag_Finish(e.draggedby);
 								if(e.tag_entity)
 									detach_sameorigin(e);
-								Drag_Begin(self, e, trace_endpos);
+								Drag_Begin(this, e, trace_endpos);
 								if(ischeat)
 									DID_CHEAT();
 								return true;
@@ -907,7 +871,7 @@ void Drag_Begin(entity dragger, entity draggee, vector touchpoint)
 	draggee.draggravity = draggee.gravity;
 	draggee.movetype = MOVETYPE_WALK;
 	draggee.gravity = 0.00001;
-	draggee.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(draggee);
 	draggee.draggedby = dragger;
 
 	dragger.dragentity = draggee;
@@ -928,8 +892,8 @@ void Drag_Finish(entity dragger)
 	entity draggee;
 	draggee = dragger.dragentity;
 	if(dragger)
-		dragger.dragentity = world;
-	draggee.draggedby = world;
+		dragger.dragentity = NULL;
+	draggee.draggedby = NULL;
 	draggee.movetype = draggee.dragmovetype;
 	draggee.gravity = draggee.draggravity;
 
@@ -951,14 +915,14 @@ void Drag_Finish(entity dragger)
 	if((draggee.flags & FL_ITEM) && (vlen(draggee.velocity) < 32))
 	{
 		draggee.velocity = '0 0 0';
-		draggee.flags |= FL_ONGROUND; // floating items are FUN
+		SET_ONGROUND(draggee); // floating items are FUN
 	}
 }
 
 float Drag_IsDraggable(entity draggee)
 {
 	// TODO add more checks for bad stuff here
-	if(draggee == world)
+	if(draggee == NULL)
 		return false;
 	if(draggee.classname == "func_bobbing")
 		return false;
@@ -1012,7 +976,7 @@ void Drag_Update(entity dragger)
 	entity draggee;
 
 	draggee = dragger.dragentity;
-	draggee.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(draggee);
 
 	curorigin = gettaginfo(draggee, 0);
 	curorigin = curorigin + v_forward * dragger.draglocalvector.x + v_right * dragger.draglocalvector.y + v_up * dragger.draglocalvector.z;
@@ -1034,8 +998,9 @@ void Drag_Update(entity dragger)
 	draggee.ltime = max(servertime + serverframetime, draggee.ltime); // fixes func_train breakage
 
 	vector vecs = '0 0 0';
-	if(dragger.weaponentity.movedir_x > 0)
-		vecs = dragger.weaponentity.movedir;
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
+	if(dragger.(weaponentity).movedir.x > 0)
+		vecs = dragger.(weaponentity).movedir;
 
 	vector dv = v_right * -vecs_y + v_up * vecs_z;
 
@@ -1044,7 +1009,7 @@ void Drag_Update(entity dragger)
 
 float Drag_CanDrag(entity dragger)
 {
-	return (dragger.deadflag == DEAD_NO) || (IS_PLAYER(dragger));
+	return (!IS_DEAD(dragger)) || (IS_PLAYER(dragger));
 }
 
 float Drag_IsDragging(entity dragger)
@@ -1053,7 +1018,7 @@ float Drag_IsDragging(entity dragger)
 		return false;
 	if(wasfreed(dragger.dragentity) || dragger.dragentity.draggedby != dragger)
 	{
-		dragger.dragentity = world;
+		dragger.dragentity = NULL;
 		return false;
 	}
 	if(!Drag_CanDrag(dragger) || !Drag_IsDraggable(dragger.dragentity))
@@ -1070,43 +1035,44 @@ void Drag_MoveDrag(entity from, entity to)
 	{
 		to.draggedby = from.draggedby;
 		to.draggedby.dragentity = to;
-		from.draggedby = world;
+		from.draggedby = NULL;
 	}
 }
 
-void DragBox_Think()
+void DragBox_Think(entity this)
 {
-	if(self.aiment && self.enemy)
+	if(this.aiment && this.enemy)
 	{
-		self.origin_x = (self.aiment.origin.x + self.enemy.origin.x) * 0.5;
-		self.origin_y = (self.aiment.origin.y + self.enemy.origin.y) * 0.5;
-		self.origin_z = (self.aiment.origin.z + self.enemy.origin.z) * 0.5;
-		self.maxs_x = fabs(self.aiment.origin.x - self.enemy.origin.x) * 0.5;
-		self.maxs_y = fabs(self.aiment.origin.y - self.enemy.origin.y) * 0.5;
-		self.maxs_z = fabs(self.aiment.origin.z - self.enemy.origin.z) * 0.5;
-		self.mins = -1 * self.maxs;
-		setorigin(self, self.origin); setsize(self, self.mins, self.maxs); // link edict
+		this.origin_x = (this.aiment.origin.x + this.enemy.origin.x) * 0.5;
+		this.origin_y = (this.aiment.origin.y + this.enemy.origin.y) * 0.5;
+		this.origin_z = (this.aiment.origin.z + this.enemy.origin.z) * 0.5;
+		this.maxs_x = fabs(this.aiment.origin.x - this.enemy.origin.x) * 0.5;
+		this.maxs_y = fabs(this.aiment.origin.y - this.enemy.origin.y) * 0.5;
+		this.maxs_z = fabs(this.aiment.origin.z - this.enemy.origin.z) * 0.5;
+		this.mins = -1 * this.maxs;
+		setorigin(this, this.origin);
+		setsize(this, this.mins, this.maxs); // link edict
 	}
 
-	if(self.cnt == -1) // actually race_place -1
+	if(this.cnt == -1) // actually race_place -1
 	{
 		// show "10 10" for qualifying spawns
-		setmodel(self.killindicator, "models/sprites/10.spr32");
-		setmodel(self.killindicator.killindicator, "models/sprites/10.spr32");
+		setmodel(this.killindicator, MDL_NUM(10));
+		setmodel(this.killindicator.killindicator, MDL_NUM(10));
 	}
-	else if(self.cnt == -2) // actually race_place 0
+	else if(this.cnt == -2) // actually race_place 0
 	{
 		// show "10 0" for loser spawns
-		setmodel(self.killindicator, "models/sprites/10.spr32");
-		setmodel(self.killindicator.killindicator, "models/sprites/0.spr32");
+		setmodel(this.killindicator, MDL_NUM(10));
+		setmodel(this.killindicator.killindicator, MDL_NUM(0));
 	}
 	else
 	{
-		setmodel(self.killindicator, strcat("models/sprites/", ftos(self.cnt % 10), ".spr32"));
-		setmodel(self.killindicator.killindicator, strcat("models/sprites/", ftos(floor(self.cnt / 10)), ".spr32"));
+		setmodel(this.killindicator, MDL_NUM(this.cnt % 10));
+		setmodel(this.killindicator.killindicator, MDL_NUM(floor(this.cnt / 10)));
 	}
 
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
 #endif

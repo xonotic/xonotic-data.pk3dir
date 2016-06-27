@@ -1,4 +1,2 @@
-#ifndef ROLES_H
-#define ROLES_H
-void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius);
-#endif
+#pragma once
+void havocbot_goalrating_controlpoints(entity this, float ratingscale, vector org, float sradius);

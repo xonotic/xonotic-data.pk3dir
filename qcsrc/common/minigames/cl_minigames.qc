@@ -4,10 +4,10 @@
 void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture)
 {
 	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")
-		draw_BorderPicture(pos - '1 1 0' * panel_bg_border, 
-					panel.current_panel_bg, 
-					mySize + '1 1 0' * 2 * panel_bg_border, 
-					panel_bg_color, panel_bg_alpha, 
+		draw_BorderPicture(pos - '1 1 0' * panel_bg_border,
+					panel.current_panel_bg,
+					mySize + '1 1 0' * 2 * panel_bg_border,
+					panel_bg_color, panel_bg_alpha,
 					 '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));
 	drawpic(pos, board_texture, mySize, '1 1 1', panel_bg_alpha, DRAWFLAG_NORMAL);
 }
@@ -42,27 +42,6 @@ bool minigame_hud_mouse_in(vector pos, vector sz)
 	       mousepos_y >= pos_y && mousepos_y < pos_y + sz_y ;
 }
 
-void initialize_minigames()
-{
-	entity last_minig = world;
-	entity minig;
-	#define MINIGAME(name,nicename) \
-		minig = spawn(); \
-		minig.classname = "minigame_descriptor"; \
-		minig.netname = strzone(strtolower(#name)); \
-		minig.message = nicename; \
-		minig.minigame_hud_board = name##_hud_board; \
-		minig.minigame_hud_status = name##_hud_status; \
-		minig.minigame_event = name##_client_event; \
-		if ( !last_minig ) minigame_descriptors = minig; \
-		else last_minig.list_next = minig; \
-		last_minig = minig;
-		
-	REGISTERED_MINIGAMES
-	
-	#undef MINIGAME
-}
-
 string minigame_texture_skin(string skinname, string name)
 {
 	return sprintf("gfx/hud/%s/minigames/%s", skinname, name);
@@ -75,7 +54,7 @@ string minigame_texture(string name)
 	return path;
 }
 
-#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(self.Name)
+#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(this.Name)
 #define MSLE_CLEAN_String(x) strunzone(x);
 #define MSLE_CLEAN_Byte(x)
 #define MSLE_CLEAN_Char(x)
@@ -88,14 +67,14 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Vector2D(x)
 
 #define MSLE(Name,Fields) \
-	void msle_entremove_##Name() { strunzone(self.netname); Fields }
+	void msle_entremove_##Name(entity this) { strunzone(this.netname); Fields }
 MINIGAME_SIMPLELINKED_ENTITIES
 #undef MSLE
 #undef FIELD
 
 void minigame_autoclean_entity(entity e)
 {
-	LOG_TRACE("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+	LOG_DEBUG("CL Auto-cleaned: ",ftos(etof(e)), " (",e.classname,")\n");
 	remove(e);
 }
 
@@ -107,28 +86,28 @@ void deactivate_minigame()
 		return;
 
 	active_minigame.minigame_event(active_minigame,"deactivate");
-	entity e = world;
+	entity e = NULL;
 	while( (e = findentity(e, owner, active_minigame)) )
 		if ( e.minigame_autoclean )
 		{
 			minigame_autoclean_entity(e);
 		}
 
-	minigame_self = world;
-	active_minigame = world;
+	minigame_self = NULL;
+	active_minigame = NULL;
 
 	if ( auto_close_minigamemenu )
 	{
-		HUD_MinigameMenu_Close();
+		HUD_MinigameMenu_Close(NULL, NULL, NULL);
 		auto_close_minigamemenu = 0;
 	}
 	else
 		HUD_MinigameMenu_CurrentButton();
 }
 
-void minigame_entremove()
+void minigame_entremove(entity this)
 {
-	if ( self == active_minigame )
+	if ( this == active_minigame )
 		deactivate_minigame();
 }
 
@@ -139,26 +118,26 @@ void activate_minigame(entity minigame)
 		deactivate_minigame();
 		return;
 	}
-	
+
 	if ( !minigame.descriptor || minigame.classname != "minigame" )
 	{
 		LOG_TRACE("Trying to activate unregistered minigame ",minigame.netname," in client\n");
 		return;
 	}
-	
+
 	if ( minigame == active_minigame )
 		return;
-	
+
 	if ( active_minigame )
 	{
 		deactivate_minigame();
 	}
-	
+
 	if ( minigame_self.owner != minigame )
-		minigame_self = world;
+		minigame_self = NULL;
 	active_minigame = minigame;
 	active_minigame.minigame_event(active_minigame,"activate");
-	
+
 	if ( HUD_MinigameMenu_IsOpened() )
 		HUD_MinigameMenu_CurrentButton();
 	else
@@ -168,100 +147,99 @@ void activate_minigame(entity minigame)
 	}
 }
 
-void minigame_player_entremove()
+void minigame_player_entremove(entity this)
 {
-	if ( self.owner == active_minigame && self.minigame_playerslot == player_localentnum )
+	if ( this.owner == active_minigame && this.minigame_playerslot == player_localentnum )
 		deactivate_minigame();
 }
 
-vector ReadVector2D() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = 0; return v; }
-vector ReadVector() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = ReadCoord(); return v; }
 string() ReadString_Raw = #366;
 string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define ReadString ReadString_Zoned
-#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) self.Name = Read##Type();
+#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) this.Name = Read##Type();
 #define MSLE(Name,Fields) \
-	else if ( self.classname == #Name ) { \
+	else if ( this.classname == #Name ) { \
 		if ( sf & MINIG_SF_CREATE ) { \
-			minigame_read_owner(); \
-			self.entremove = msle_entremove_##Name; \
+			minigame_read_owner(this); \
+			this.entremove = msle_entremove_##Name; \
 		} \
-		minigame_ent = self.owner; \
+		minigame_ent = this.owner; \
 		Fields \
 	}
-void minigame_read_owner()
+void minigame_read_owner(entity this)
 {
 	string owner_name = ReadString_Raw();
-	self.owner = world;
+	this.owner = NULL;
 	do
-		self.owner = find(self.owner,netname,owner_name);
-	while ( self.owner && self.owner.classname != "minigame" );
-	if ( !self.owner )
+		this.owner = find(this.owner,netname,owner_name);
+	while ( this.owner && this.owner.classname != "minigame" );
+	if ( !this.owner )
 		LOG_TRACE("Got a minigame entity without a minigame!\n");
 }
-void ent_read_minigame()
+NET_HANDLE(ENT_CLIENT_MINIGAME, bool isnew)
 {
 	float sf = ReadByte();
 	if ( sf & MINIG_SF_CREATE )
 	{
-		self.classname = msle_classname(ReadShort());
-		self.netname = ReadString_Zoned();
+		this.classname = msle_classname(ReadShort());
+		this.netname = ReadString_Zoned();
 	}
-	
-	entity minigame_ent = world;
-	
-	if ( self.classname == "minigame" )
+
+	entity minigame_ent = NULL;
+
+	if ( this.classname == "minigame" )
 	{
-		minigame_ent = self;
-		
+		minigame_ent = this;
+
 		if ( sf & MINIG_SF_CREATE )
 		{
-			self.entremove = minigame_entremove;
-			self.descriptor = minigame_get_descriptor(ReadString_Raw());
-			if ( !self.descriptor )
+			this.entremove = minigame_entremove;
+			this.descriptor = minigame_get_descriptor(ReadString_Raw());
+			if ( !this.descriptor )
 				LOG_TRACE("Got a minigame without a client-side descriptor!\n");
 			else
-				self.minigame_event = self.descriptor.minigame_event;
+				this.minigame_event = this.descriptor.minigame_event;
 		}
 		if ( sf & MINIG_SF_UPDATE )
-			self.minigame_flags = ReadLong();
+			this.minigame_flags = ReadLong();
 	}
-	else if ( self.classname == "minigame_player" )
+	else if ( this.classname == "minigame_player" )
 	{
 		float activate = 0;
 		if ( sf & MINIG_SF_CREATE )
 		{
-			self.entremove = minigame_player_entremove;
-			minigame_read_owner();
+			this.entremove = minigame_player_entremove;
+			minigame_read_owner(this);
 			float ent = ReadLong();
-			self.minigame_playerslot = ent;
-			LOG_TRACE("Player: ",GetPlayerName(ent-1),"\n");
-			
-			activate = (ent == player_localnum+1 && self.owner && self.owner != active_minigame);
-			
+			this.minigame_playerslot = ent;
+			LOG_DEBUG("Player: ",entcs_GetName(ent-1),"\n");
+
+			activate = (ent == player_localnum+1 && this.owner && this.owner != active_minigame);
+
 		}
-		minigame_ent = self.owner;
-			
+		minigame_ent = this.owner;
+
 		if ( sf & MINIG_SF_UPDATE )
-			self.team = ReadByte();
-		
+			this.team = ReadByte();
+
 		if ( activate )
 		{
-			minigame_self = self;
-			activate_minigame(self.owner);
+			minigame_self = this;
+			activate_minigame(this.owner);
 		}
 	}
 	MINIGAME_SIMPLELINKED_ENTITIES
-	
+
 	if ( minigame_ent )
-		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
+		minigame_ent.minigame_event(minigame_ent,"network_receive",this,sf);
 
 	if ( sf & MINIG_SF_CREATE )
 	{
-		LOG_TRACE("CL Reading entity: ",ftos(num_for_edict(self)),
-			" classname:",self.classname," enttype:",ftos(self.enttype) );
-		LOG_TRACE(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
+		LOG_DEBUG("CL Reading entity: ",ftos(etof(this)),
+			" classname:",this.classname," enttype:",ftos(this.enttype) );
+		LOG_DEBUG(" sf:",ftos(sf)," netname:",this.netname,"\n\n");
 	}
+	return true;
 }
 #undef ReadString
 #undef FIELD
@@ -283,7 +261,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 	}
 
 	take_until = textLengthUpToWidth(s, w, theFontSize, tw);
-	
+
 	if ( take_until > strlen(s) )
 		take_until = strlen(s);
 
@@ -294,7 +272,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 			skip = 1;
 			break;
 		}
-	
+
 	if ( take_until > 0 || skip > 0 )
 	{
 		if ( skip == 0 && take_until < strlen(s) )
@@ -309,7 +287,7 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 				skip = 1;
 			}
 		}
-			
+
 		getWrappedLine_remaining = substring(s, take_until+skip, strlen(s) - (take_until+skip));
 		if(getWrappedLine_remaining == "")
 			getWrappedLine_remaining = string_null;
@@ -324,9 +302,9 @@ string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_
 	}
 }
 
-vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
+vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text,
 	vector fontsize, vector color, float theAlpha, int drawflags, float align )
-{	
+{
 	getWrappedLine_remaining = text;
 	vector mypos = pos;
 	while ( getWrappedLine_remaining )
@@ -343,7 +321,7 @@ vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text,
 	return mypos;
 }
 
-vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
+vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos,
 	string text, vector fontsize, float theAlpha, int drawflags, float align )
 {
 	getWrappedLine_remaining = text;
@@ -362,21 +340,21 @@ vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos,
 	return mypos;
 }
 
-void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
+void minigame_drawstring_trunc(float maxwidth, vector pos, string text,
 	vector fontsize, vector color, float theAlpha, int drawflags )
 {
 	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_nocolors);
 	drawstring(pos, line, fontsize, color, theAlpha, drawflags);
 }
 
-void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
+void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text,
 	vector fontsize, float theAlpha, int drawflags )
 {
 	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_colors);
 	drawcolorcodedstring(pos, line, fontsize, theAlpha, drawflags);
 }
 
-void minigame_drawpic_centered( vector pos, string texture, vector sz, 
+void minigame_drawpic_centered( vector pos, string texture, vector sz,
 	vector color, float thealpha, int drawflags )
 {
 	drawpic( pos-sz/2, texture, sz, color, thealpha, drawflags );
@@ -394,7 +372,7 @@ void minigame_cmd_workaround(float dummy, string...cmdargc)
 	localcmd(strcat(cmd,"\n"));
 }
 
-// Prompt the player to play in the current minigame 
+// Prompt the player to play in the current minigame
 // (ie: it's their turn and they should get back to the minigame)
 void minigame_prompt()
 {
@@ -403,4 +381,23 @@ void minigame_prompt()
 		HUD_Notify_Push(sprintf("minigames/%s/icon_notif",active_minigame.descriptor.netname),
 			_("It's your turn"), "");
 	}
+}
+
+// handle commands etc.
+REGISTER_MUTATOR(minigames, true);
+
+MUTATOR_HOOKFUNCTION(minigames, HUD_Command)
+{
+	if(MUTATOR_RETURNVALUE) { return false; } // command was already handled
+
+	if(argv(1) == "minigame")
+	{
+		if (HUD_MinigameMenu_IsOpened())
+			HUD_MinigameMenu_Close(NULL, NULL, NULL);
+		else
+			HUD_MinigameMenu_Open();
+		return true;
+	}
+
+	return false;
 }

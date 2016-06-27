@@ -9,54 +9,46 @@
 	#define SUB_ORIGIN			origin
 	#define SUB_SETORIGIN(s,v)	setorigin((s), (v))
 	#define SUB_NEXTTHINK		nextthink
-	#define SUB_THINK			think
+	#define SUB_THINK(e, f)     setthink(e, f)
+	#define SUB_THUNK(e)        getthink(e)
 	#define SUB_LTIME			ltime
 	#define SUB_FLAGS			flags
 
 #elif defined(CSQC)
 
-	void _Movetype_LinkEdict(float touch_triggers);
+	void _Movetype_LinkEdict(entity this, float touch_triggers);
 
 	#define SUB_ANGLES(s)	(s).move_angles
 	#define SUB_VELOCITY	move_velocity
 	#define SUB_AVELOCITY	move_avelocity
 	#define SUB_ORIGIN		move_origin
 	#define SUB_NEXTTHINK	move_nextthink
-	#define SUB_THINK		move_think
+	#define SUB_THINK(e, f) ((e).move_think = (f))
+	#define SUB_THUNK(e)    ((e).move_think)
 	#define SUB_LTIME		move_ltime
 	#define SUB_FLAGS		move_flags
+
+.vector move_origin;
 
 	void SUB_SETORIGIN(entity s, vector v)
 	{
 		s.move_origin = v;
-		entity oldself = self;
-		self = s;
-		_Movetype_LinkEdict(true);
-		self = oldself;
+		_Movetype_LinkEdict(s, true);
 	}
 
 #endif
 
-void SUB_Remove();
+
 void SUB_SetFade (entity ent, float when, float fading_time);
 void SUB_VanishOrRemove (entity ent);
 
 .vector		finaldest, finalangle; 		//plat.qc stuff
-.void()		think1;
+.void(entity this) think1;
 .float state;
 .float		t_length, t_width;
 
 .vector destvec;
 .vector destvec2;
-
-// player animation state
-.float animstate_startframe;
-.float animstate_numframes;
-.float animstate_framerate;
-.float animstate_starttime;
-.float animstate_endtime;
-.float animstate_override;
-.float animstate_looping;
 
 .float	delay;
 .float	wait;
@@ -66,7 +58,7 @@ void SUB_VanishOrRemove (entity ent);
 .string  platmovetype;
 .float platmovetype_start, platmovetype_end;
 
-entity activator;
+//entity activator;
 
 .string killtarget;
 

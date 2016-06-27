@@ -1,20 +1,10 @@
-#ifndef DIALOG_SETTINGS_GAME_MODEL_H
-#define DIALOG_SETTINGS_GAME_MODEL_H
-#include "tab.qc"
-CLASS(XonoticGameModelSettingsTab, XonoticTab)
-	METHOD(XonoticGameModelSettingsTab, fill, void(entity));
-	METHOD(XonoticGameModelSettingsTab, showNotify, void(entity));
-	ATTRIB(XonoticGameModelSettingsTab, title, string, _("Models"))
-	ATTRIB(XonoticGameModelSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticGameModelSettingsTab, rows, float, 13)
-	ATTRIB(XonoticGameModelSettingsTab, columns, float, 5)
-ENDCLASS(XonoticGameModelSettingsTab)
-entity makeXonoticGameModelSettingsTab();
-#include "../gamesettings.qh"
-REGISTER_SETTINGS(Models, makeXonoticGameModelSettingsTab());
-#endif
+#include "dialog_settings_game_model.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "checkbox.qh"
+#include "textslider.qh"
+#include "slider.qh"
+
 void XonoticGameModelSettingsTab_showNotify(entity me)
 {
 	loadAllCvars(me);
@@ -74,4 +64,3 @@ void XonoticGameModelSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
 }
-#endif

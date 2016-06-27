@@ -1,12 +1,8 @@
 #ifndef TRIGGERS_FUNC_INCLUDE_H
 #define TRIGGERS_FUNC_INCLUDE_H
 
-#include "conveyor.qh"
 #include "door.qh"
 #include "ladder.qh"
-#include "plat.qh"
-#include "rainsnow.qh"
-#include "pointparticles.qh"
 #include "train.qh"
 
 #endif

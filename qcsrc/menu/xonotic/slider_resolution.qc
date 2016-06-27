@@ -1,22 +1,4 @@
-#ifndef SLIDER_RESOLUTION_H
-#define SLIDER_RESOLUTION_H
-#include "textslider.qc"
-CLASS(XonoticResolutionSlider, XonoticTextSlider)
-	METHOD(XonoticResolutionSlider, configureXonoticResolutionSlider, void(entity));
-	METHOD(XonoticResolutionSlider, loadResolutions, void(entity, float));
-	METHOD(XonoticResolutionSlider, addResolution, void(entity, float, float, float));
-	METHOD(XonoticResolutionSlider, loadCvars, void(entity));
-	METHOD(XonoticResolutionSlider, saveCvars, void(entity));
-	METHOD(XonoticResolutionSlider, draw, void(entity));
-	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1)
-	ATTRIB(XonoticResolutionSlider, maxAllowedWidth, float, 0)
-	ATTRIB(XonoticResolutionSlider, maxAllowedHeight, float, 0)
-ENDCLASS(XonoticResolutionSlider)
-entity makeXonoticResolutionSlider();
-float updateConwidths(float width, float height, float pixelheight);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "slider_resolution.qh"
 
 /* private static */ float XonoticResolutionSlider_DataHasChanged;
 
@@ -129,7 +111,8 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 {
-	me.configureXonoticTextSlider(me, "_menu_vid_width");
+	me.configureXonoticTextSlider(me, "_menu_vid_width",
+		_("Screen resolution"));
 	me.loadResolutions(me, cvar("vid_fullscreen"));
 }
 void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
@@ -211,7 +194,7 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 }
 void XonoticResolutionSlider_loadCvars(entity me)
 {
-	me.setValueFromIdentifier(me, strcat(cvar_string("_menu_vid_width"), " ", cvar_string("_menu_vid_height"), " ", cvar_string("_menu_vid_pixelheight")));
+	me.setValueFromIdentifier_noAnim(me, strcat(cvar_string("_menu_vid_width"), " ", cvar_string("_menu_vid_height"), " ", cvar_string("_menu_vid_pixelheight")));
 }
 void XonoticResolutionSlider_saveCvars(entity me)
 {
@@ -242,4 +225,3 @@ void XonoticResolutionSlider_draw(entity me)
 	}
 	SUPER(XonoticResolutionSlider).draw(me);
 }
-#endif

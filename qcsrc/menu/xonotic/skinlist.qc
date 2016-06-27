@@ -1,39 +1,4 @@
-#ifndef SKINLIST_H
-#define SKINLIST_H
-#include "listbox.qc"
-CLASS(XonoticSkinList, XonoticListBox)
-	METHOD(XonoticSkinList, configureXonoticSkinList, void(entity));
-	ATTRIB(XonoticSkinList, rowsPerItem, float, 4)
-	METHOD(XonoticSkinList, resizeNotify, void(entity, vector, vector, vector, vector));
-	METHOD(XonoticSkinList, drawListBoxItem, void(entity, int, vector, bool, bool));
-	METHOD(XonoticSkinList, getSkins, void(entity));
-	METHOD(XonoticSkinList, setSkin, void(entity));
-	METHOD(XonoticSkinList, loadCvars, void(entity));
-	METHOD(XonoticSkinList, saveCvars, void(entity));
-	METHOD(XonoticSkinList, skinParameter, string(entity, float, float));
-	METHOD(XonoticSkinList, doubleClickListBoxItem, void(entity, float, vector));
-	METHOD(XonoticSkinList, keyDown, float(entity, float, float, float));
-	METHOD(XonoticSkinList, destroy, void(entity));
-
-	ATTRIB(XonoticSkinList, skinlist, float, -1)
-	ATTRIB(XonoticSkinList, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticSkinList, columnPreviewOrigin, float, 0)
-	ATTRIB(XonoticSkinList, columnPreviewSize, float, 0)
-	ATTRIB(XonoticSkinList, columnNameOrigin, float, 0)
-	ATTRIB(XonoticSkinList, columnNameSize, float, 0)
-	ATTRIB(XonoticSkinList, realUpperMargin1, float, 0)
-	ATTRIB(XonoticSkinList, realUpperMargin2, float, 0)
-	ATTRIB(XonoticSkinList, origin, vector, '0 0 0')
-	ATTRIB(XonoticSkinList, itemAbsSize, vector, '0 0 0')
-
-	ATTRIB(XonoticSkinList, name, string, "skinselector")
-ENDCLASS(XonoticSkinList)
-
-entity makeXonoticSkinList();
-void SetSkin_Click(entity btn, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "skinlist.qh"
 
 const float SKINPARM_NAME = 0;
 const float SKINPARM_TITLE = 1;
@@ -108,7 +73,7 @@ void XonoticSkinList_getSkins(entity me)
 			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, "nopreview_menuskin");
 		else
 			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
-		fh = fopen(language_filename(s), FILE_READ);
+		fh = fopen(s, FILE_READ);
 		if(fh < 0)
 		{
 			LOG_INFO("Warning: can't open skinvalues.txt file\n");
@@ -209,4 +174,3 @@ float XonoticSkinList_keyDown(entity me, float scan, float ascii, float shift)
 	else
 		return SUPER(XonoticSkinList).keyDown(me, scan, ascii, shift);
 }
-#endif

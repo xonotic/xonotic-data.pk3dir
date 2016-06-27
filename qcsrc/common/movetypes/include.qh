@@ -1,8 +1,0 @@
-#ifndef MOVETYPES_INCLUDE_H
-#define MOVETYPES_INCLUDE_H
-
-#include "push.qh"
-#include "toss.qh"
-#include "walk.qh"
-
-#endif

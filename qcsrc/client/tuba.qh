@@ -1,8 +1,0 @@
-#ifndef TUBA_H
-#define TUBA_H
-void Ent_TubaNote(bool isNew);
-void Tuba_Precache();
-
-entityclass(Tuba);
-
-#endif

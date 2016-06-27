@@ -8,8 +8,4 @@
 .float in_swamp;              // bool
 .entity swampslug;            // Uses this to release from swamp ("untouch" fix)
 
-#ifdef CSQC
-void ent_swamp();
-#endif
-
 #endif

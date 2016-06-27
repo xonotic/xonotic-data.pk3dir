@@ -1,12 +1,16 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-// =========================================================
-//  Shared declarations for all commands, written by Samual
-//  Last updated: December 13th, 2011
-// =========================================================
-
-// identifiers for subfunction requests by the command code structure
 const int CMD_REQUEST_COMMAND = 1;
 const int CMD_REQUEST_USAGE = 2;
+
+CLASS(Command, Object)
+	ATTRIB(Command, m_name, string, string_null);
+	ATTRIB(Command, m_description, string, string_null);
+	METHOD(Command, m_invokecmd, void(Command this, int request, entity caller, int arguments, string command))
+	{
+        TC(Command, this);
+	}
+ENDCLASS(Command)
+
 #endif

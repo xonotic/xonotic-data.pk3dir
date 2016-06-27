@@ -3,6 +3,8 @@
 #include "pickup.qh"
 CLASS(Health, Pickup)
 #ifdef SVQC
+    ATTRIB(Health, m_mins, vector, '-16 -16 0')
+    ATTRIB(Health, m_maxs, vector, '16 16 48')
     ATTRIB(Health, m_pickupevalfunc, float(entity player, entity item), commodity_pickupevalfunc)
 #endif
 ENDCLASS(Health)

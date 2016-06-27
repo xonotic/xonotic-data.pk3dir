@@ -1,83 +1,84 @@
-void func_ladder_touch()
+REGISTER_NET_LINKED(ENT_CLIENT_LADDER)
+
+void func_ladder_touch(entity this, entity toucher)
 {
 #ifdef SVQC
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
-	if(IS_VEHICLE(other))
+	if(IS_VEHICLE(toucher))
 		return;
-#endif
-#ifdef CSQC
-	if(other.classname != "csqcmodel")
+#elif defined(CSQC)
+	if(!toucher.isplayermodel)
 		return;
 #endif
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
-	other.ladder_time = time + 0.1;
-	other.ladder_entity = self;
+	toucher.ladder_time = time + 0.1;
+	toucher.ladder_entity = this;
 }
 
 #ifdef SVQC
-float func_ladder_send(entity to, float sf)
+bool func_ladder_send(entity this, entity to, int sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_LADDER);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_LADDER);
 
-	WriteString(MSG_ENTITY, self.classname);
-	WriteByte(MSG_ENTITY, self.skin);
-	WriteByte(MSG_ENTITY, self.speed);
-	WriteString(MSG_ENTITY, self.mdl);
+	WriteString(MSG_ENTITY, this.classname);
+	WriteByte(MSG_ENTITY, this.skin);
+	WriteCoord(MSG_ENTITY, this.speed);
 
-	trigger_common_write(false);
+	trigger_common_write(this, false);
 
 	return true;
 }
 
-void func_ladder_link()
+void func_ladder_link(entity this)
 {
-	//self.SendEntity = func_ladder_send;
-	//self.SendFlags = 0xFFFFFF;
-	//self.model = "null";
+	trigger_link(this, func_ladder_send);
+	//this.model = "null";
 }
 
-void spawnfunc_func_ladder()
+void func_ladder_init(entity this)
 {
-	self.mdl = self.model;
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
+	settouch(this, func_ladder_touch);
 
-	func_ladder_link();
+	trigger_init(this);
+	func_ladder_link(this);
 }
 
-void spawnfunc_func_water()
+spawnfunc(func_ladder)
 {
-	self.mdl = self.model;
-	EXACTTRIGGER_INIT;
-	self.touch = func_ladder_touch;
+	func_ladder_init(this);
+}
 
-	func_ladder_link();
+spawnfunc(func_water)
+{
+	func_ladder_init(this);
 }
 
 #elif defined(CSQC)
 .float speed;
 
-void ent_func_ladder()
+void func_ladder_remove(entity this)
 {
-	self.classname = strzone(ReadString());
-	self.skin = ReadByte();
-	self.speed = ReadByte();
-	self.model = strzone(ReadString());
+	if(this.classname) { strunzone(this.classname); }
+	this.classname = string_null;
+}
 
-	trigger_common_read(false);
-	self.mins = self.maxs = '0 0 0';
+NET_HANDLE(ENT_CLIENT_LADDER, bool isnew)
+{
+	this.classname = strzone(ReadString());
+	this.skin = ReadByte();
+	this.speed = ReadCoord();
 
-	self.solid = SOLID_TRIGGER;
-	self.draw = trigger_draw_generic;
-	self.trigger_touch = func_ladder_touch;
-	self.drawmask = MASK_NORMAL;
-	self.move_time = time;
-	self.entremove = trigger_remove_generic;
+	trigger_common_read(this, false);
 
-	//precache_model(self.mdl);
-	EXACTTRIGGER_INIT;
+	this.solid = SOLID_TRIGGER;
+	settouch(this, func_ladder_touch);
+	this.drawmask = MASK_NORMAL;
+	this.move_time = time;
+	this.entremove = func_ladder_remove;
+
+	return true;
 }
 #endif

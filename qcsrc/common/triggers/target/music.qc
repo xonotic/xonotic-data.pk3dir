@@ -1,11 +1,13 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-    #include "../../../server/_all.qh"
-    #include "../../constants.qh"
-    #include "../../../server/constants.qh"
-    #include "../../../server/defs.qh"
+    #include <common/constants.qh>
+    #include <server/constants.qh>
+    #include <server/defs.qh>
 #endif
+
+REGISTER_NET_TEMP(TE_CSQC_TARGET_MUSIC)
+REGISTER_NET_LINKED(ENT_CLIENT_TRIGGER_MUSIC)
 
 #ifdef SVQC
 
@@ -18,54 +20,64 @@
 //   fade_rate
 // when triggered, the music is overridden for activator until lifetime (or forever, if lifetime is 0)
 // when targetname is not set, THIS ONE is default
-void target_music_sendto(float to, float is)
+void target_music_sendto(entity this, int to, bool is)
 {
-	WriteByte(to, SVC_TEMPENTITY);
-	WriteByte(to, TE_CSQC_TARGET_MUSIC);
-	WriteShort(to, num_for_edict(self));
-	WriteByte(to, self.volume * 255.0 * is);
-	WriteByte(to, self.fade_time * 16.0);
-	WriteByte(to, self.fade_rate * 16.0);
-	WriteByte(to, self.lifetime);
-	WriteString(to, self.noise);
+	WriteHeader(to, TE_CSQC_TARGET_MUSIC);
+	WriteShort(to, etof(this));
+	WriteByte(to, this.volume * 255.0 * is);
+	WriteByte(to, this.fade_time * 16.0);
+	WriteByte(to, this.fade_rate * 16.0);
+	WriteByte(to, this.lifetime);
+	WriteString(to, this.noise);
 }
-void target_music_reset()
+void target_music_reset(entity this)
 {
-	if(self.targetname == "")
-		target_music_sendto(MSG_ALL, 1);
+	if (this.targetname == "") target_music_sendto(this, MSG_ALL, 1);
 }
-void target_music_use()
+void target_music_kill()
 {
-	if(!activator)
+	FOREACH_ENTITY_CLASS("target_music", true, {
+		it.volume = 0;
+        if (it.targetname == "")
+            target_music_sendto(it, MSG_ALL, 1);
+        else
+            target_music_sendto(it, MSG_ALL, 0);
+	});
+}
+void target_music_use(entity this, entity actor, entity trigger)
+{
+	if(!actor)
 		return;
-	if(IS_REAL_CLIENT(activator))
+	if(IS_REAL_CLIENT(actor))
 	{
-		msg_entity = activator;
-		target_music_sendto(MSG_ONE, 1);
+		msg_entity = actor;
+		target_music_sendto(this, MSG_ONE, 1);
 	}
-	entity head;
-	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
+	FOREACH_CLIENT(IS_SPEC(it) && it.enemy == actor, {
+		msg_entity = it;
+		target_music_sendto(this, MSG_ONE, 1);
+	});
 }
-void spawnfunc_target_music()
+spawnfunc(target_music)
 {
-	self.use = target_music_use;
-	self.reset = target_music_reset;
-	if(!self.volume)
-		self.volume = 1;
-	if(self.targetname == "")
-		target_music_sendto(MSG_INIT, 1);
+	this.use = target_music_use;
+	this.reset = target_music_reset;
+	if(!this.volume)
+		this.volume = 1;
+	if(this.targetname == "")
+		target_music_sendto(this, MSG_INIT, 1);
 	else
-		target_music_sendto(MSG_INIT, 0);
+		target_music_sendto(this, MSG_INIT, 0);
 }
 void TargetMusic_RestoreGame()
 {
-	for(self = world; (self = find(self, classname, "target_music")); )
+	FOREACH_ENTITY_CLASS("target_music", true,
 	{
-		if(self.targetname == "")
-			target_music_sendto(MSG_INIT, 1);
+		if(it.targetname == "")
+			target_music_sendto(it, MSG_INIT, 1);
 		else
-			target_music_sendto(MSG_INIT, 0);
-	}
+			target_music_sendto(it, MSG_INIT, 0);
+	});
 }
 // values:
 //   volume
@@ -75,145 +87,131 @@ void TargetMusic_RestoreGame()
 // spawnflags:
 //   1 = START_OFF
 // when triggered, it is disabled/enabled for everyone
-float trigger_music_SendEntity(entity to, float sf)
+bool trigger_music_SendEntity(entity this, entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_TRIGGER_MUSIC);
 	sf &= ~0x80;
-	if(self.cnt)
+	if(this.cnt)
 		sf |= 0x80;
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 4)
 	{
-		WriteCoord(MSG_ENTITY, self.origin.x);
-		WriteCoord(MSG_ENTITY, self.origin.y);
-		WriteCoord(MSG_ENTITY, self.origin.z);
+		WriteCoord(MSG_ENTITY, this.origin.x);
+		WriteCoord(MSG_ENTITY, this.origin.y);
+		WriteCoord(MSG_ENTITY, this.origin.z);
 	}
 	if(sf & 1)
 	{
-		if(self.model != "null")
+		if(this.model != "null")
 		{
-			WriteShort(MSG_ENTITY, self.modelindex);
-			WriteCoord(MSG_ENTITY, self.mins.x);
-			WriteCoord(MSG_ENTITY, self.mins.y);
-			WriteCoord(MSG_ENTITY, self.mins.z);
-			WriteCoord(MSG_ENTITY, self.maxs.x);
-			WriteCoord(MSG_ENTITY, self.maxs.y);
-			WriteCoord(MSG_ENTITY, self.maxs.z);
+			WriteShort(MSG_ENTITY, this.modelindex);
+			WriteCoord(MSG_ENTITY, this.mins.x);
+			WriteCoord(MSG_ENTITY, this.mins.y);
+			WriteCoord(MSG_ENTITY, this.mins.z);
+			WriteCoord(MSG_ENTITY, this.maxs.x);
+			WriteCoord(MSG_ENTITY, this.maxs.y);
+			WriteCoord(MSG_ENTITY, this.maxs.z);
 		}
 		else
 		{
 			WriteShort(MSG_ENTITY, 0);
-			WriteCoord(MSG_ENTITY, self.maxs.x);
-			WriteCoord(MSG_ENTITY, self.maxs.y);
-			WriteCoord(MSG_ENTITY, self.maxs.z);
+			WriteCoord(MSG_ENTITY, this.maxs.x);
+			WriteCoord(MSG_ENTITY, this.maxs.y);
+			WriteCoord(MSG_ENTITY, this.maxs.z);
 		}
-		WriteByte(MSG_ENTITY, self.volume * 255.0);
-		WriteByte(MSG_ENTITY, self.fade_time * 16.0);
-		WriteByte(MSG_ENTITY, self.fade_rate * 16.0);
-		WriteString(MSG_ENTITY, self.noise);
+		WriteByte(MSG_ENTITY, this.volume * 255.0);
+		WriteByte(MSG_ENTITY, this.fade_time * 16.0);
+		WriteByte(MSG_ENTITY, this.fade_rate * 16.0);
+		WriteString(MSG_ENTITY, this.noise);
 	}
 	return 1;
 }
-void trigger_music_reset()
+void trigger_music_reset(entity this)
 {
-	self.cnt = !(self.spawnflags & 1);
-	self.SendFlags |= 0x80;
+	this.cnt = !(this.spawnflags & 1);
+	this.SendFlags |= 0x80;
 }
-void trigger_music_use()
+void trigger_music_use(entity this, entity actor, entity trigger)
 {
-	self.cnt = !self.cnt;
-	self.SendFlags |= 0x80;
+	this.cnt = !this.cnt;
+	this.SendFlags |= 0x80;
 }
-void spawnfunc_trigger_music()
+spawnfunc(trigger_music)
 {
-	if(self.model != "")
-		setmodel(self, self.model);
-	if(!self.volume)
-		self.volume = 1;
-	if(!self.modelindex)
+	if(this.model != "") _setmodel(this, this.model);
+	if(!this.volume) this.volume = 1;
+	if(!this.modelindex)
 	{
-		setorigin(self, self.origin + self.mins);
-		setsize(self, '0 0 0', self.maxs - self.mins);
+		setorigin(this, this.origin + this.mins);
+		setsize(this, '0 0 0', this.maxs - this.mins);
 	}
-	trigger_music_reset();
+	trigger_music_reset(this);
 
-	self.use = trigger_music_use;
-	self.reset = trigger_music_reset;
+	this.use = trigger_music_use;
+	this.reset = trigger_music_reset;
 
-	Net_LinkEntity(self, false, 0, trigger_music_SendEntity);
+	Net_LinkEntity(this, false, 0, trigger_music_SendEntity);
 }
 #elif defined(CSQC)
+
+entity TargetMusic_list;
+STATIC_INIT(TargetMusic_list)
+{
+	TargetMusic_list = LL_NEW();
+}
 
 void TargetMusic_Advance()
 {
 	// run AFTER all the thinks!
-	entity best, e;
-	float vol, vol0;
-	best = music_default;
-	if(music_target && time < music_target.lifetime)
-		best = music_target;
-	if(music_trigger)
-		best = music_trigger;
-	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); ) if(e.noise)
-	{
-		vol0 = e.lastvol;
-		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
-		{
-			vol0 = -1;
-		}
-		if(e == best)
+	entity best = music_default;
+	if (music_target && time < music_target.lifetime) best = music_target;
+	if (music_trigger) best = music_trigger;
+	LL_EACH(TargetMusic_list, it.noise, {
+		const float vol0 = (getsoundtime(it, CH_BGM_SINGLE) >= 0) ? it.lastvol : -1;
+		if (it == best)
 		{
 			// increase volume
-			if(e.fade_time > 0)
-				e.state = bound(0, e.state + frametime / e.fade_time, 1);
-			else
-				e.state = 1;
+			it.state = (it.fade_time > 0) ? bound(0, it.state + frametime / it.fade_time, 1) : 1;
 		}
 		else
 		{
 			// decrease volume
-			if(e.fade_rate > 0)
-				e.state = bound(0, e.state - frametime / e.fade_rate, 1);
-			else
-				e.state = 0;
+			it.state = (it.fade_rate > 0) ? bound(0, it.state - frametime / it.fade_rate, 1) : 0;
 		}
-		vol = e.state * e.volume * autocvar_bgmvolume;
-		if(vol != vol0)
+		const float vol = it.state * it.volume * autocvar_bgmvolume;
+		if (vol != vol0)
 		{
 			if(vol0 < 0)
-				sound(e, CH_BGM_SINGLE, e.noise, vol, ATTEN_NONE); // restart
+				_sound(it, CH_BGM_SINGLE, it.noise, vol, ATTEN_NONE); // restart
 			else
-				sound(e, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
-			e.lastvol = vol;
+				_sound(it, CH_BGM_SINGLE, "", vol, ATTEN_NONE);
+			it.lastvol = vol;
 		}
-	}
-	music_trigger = world;
+	});
+	music_trigger = NULL;
+	bgmtime = (best) ? getsoundtime(best, CH_BGM_SINGLE) : gettime(GETTIME_CDTRACK);
+}
 
-	if(best)
-		bgmtime = getsoundtime(best, CH_BGM_SINGLE);
-	else
-		bgmtime = gettime(GETTIME_CDTRACK);
+NET_HANDLE(TE_CSQC_TARGET_MUSIC, bool isNew)
+{
+	Net_TargetMusic();
+	return true;
 }
 
 void Net_TargetMusic()
 {
-	int id = ReadShort();
-	float vol = ReadByte() / 255.0;
-	float fai = ReadByte() / 16.0;
-	float fao = ReadByte() / 16.0;
-	float tim = ReadByte();
-	string noi = ReadString();
+	const int id = ReadShort();
+	const float vol = ReadByte() / 255.0;
+	const float fai = ReadByte() / 16.0;
+	const float fao = ReadByte() / 16.0;
+	const float tim = ReadByte();
+	const string noi = ReadString();
 
-	entity e;
-	for(e = world; (e = findfloat(e, enttype, ENT_CLIENT_TRIGGER_MUSIC)); )
+	entity e = NULL;
+	LL_EACH(TargetMusic_list, it.count == id, { e = it; break; });
+	if (!e)
 	{
-		if(e.count == id)
-			break;
-	}
-	if(!e)
-	{
-		e = spawn();
-		e.enttype = ENT_CLIENT_TRIGGER_MUSIC;
+		LL_PUSH(TargetMusic_list, e = new_pure(TargetMusic));
 		e.count = id;
 	}
 	if(e.noise != noi)
@@ -222,7 +220,7 @@ void Net_TargetMusic()
 			strunzone(e.noise);
 		e.noise = strzone(noi);
 		precache_sound(e.noise);
-		sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
+		_sound(e, CH_BGM_SINGLE, e.noise, 0, ATTEN_NONE);
 		if(getsoundtime(e, CH_BGM_SINGLE) < 0)
 		{
 			LOG_TRACEF("Cannot initialize sound %s\n", e.noise);
@@ -254,76 +252,77 @@ void Net_TargetMusic()
 	}
 }
 
-void Ent_TriggerMusic_Think()
+void Ent_TriggerMusic_Think(entity this)
 {
-	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, self, world))
+	if(WarpZoneLib_BoxTouchesBrush(view_origin, view_origin, this, NULL))
 	{
-		music_trigger = self;
+		music_trigger = this;
 	}
-	self.nextthink = time;
+	this.nextthink = time;
 }
 
-void Ent_TriggerMusic_Remove()
+void Ent_TriggerMusic_Remove(entity this)
 {
-	if(self.noise)
-		strunzone(self.noise);
-	self.noise = string_null;
+	if(this.noise)
+		strunzone(this.noise);
+	this.noise = string_null;
 }
 
-void Ent_ReadTriggerMusic()
+NET_HANDLE(ENT_CLIENT_TRIGGER_MUSIC, bool isnew)
 {
 	int f = ReadByte();
 	if(f & 4)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
 	}
 	if(f & 1)
 	{
-		self.modelindex = ReadShort();
-		if(self.modelindex)
+		this.modelindex = ReadShort();
+		if(this.modelindex)
 		{
-			self.mins_x = ReadCoord();
-			self.mins_y = ReadCoord();
-			self.mins_z = ReadCoord();
-			self.maxs_x = ReadCoord();
-			self.maxs_y = ReadCoord();
-			self.maxs_z = ReadCoord();
+			this.mins_x = ReadCoord();
+			this.mins_y = ReadCoord();
+			this.mins_z = ReadCoord();
+			this.maxs_x = ReadCoord();
+			this.maxs_y = ReadCoord();
+			this.maxs_z = ReadCoord();
 		}
 		else
 		{
-			self.mins    = '0 0 0';
-			self.maxs_x = ReadCoord();
-			self.maxs_y = ReadCoord();
-			self.maxs_z = ReadCoord();
+			this.mins    = '0 0 0';
+			this.maxs_x = ReadCoord();
+			this.maxs_y = ReadCoord();
+			this.maxs_z = ReadCoord();
 		}
 
-		self.volume = ReadByte() / 255.0;
-		self.fade_time = ReadByte() / 16.0;
-		self.fade_rate = ReadByte() / 16.0;
-		string s = self.noise;
-		if(self.noise)
-			strunzone(self.noise);
-		self.noise = strzone(ReadString());
-		if(self.noise != s)
+		this.volume = ReadByte() / 255.0;
+		this.fade_time = ReadByte() / 16.0;
+		this.fade_rate = ReadByte() / 16.0;
+		string s = this.noise;
+		if(this.noise)
+			strunzone(this.noise);
+		this.noise = strzone(ReadString());
+		if(this.noise != s)
 		{
-			precache_sound(self.noise);
-			sound(self, CH_BGM_SINGLE, self.noise, 0, ATTEN_NONE);
-			if(getsoundtime(self, CH_BGM_SINGLE) < 0)
+			precache_sound(this.noise);
+			_sound(this, CH_BGM_SINGLE, this.noise, 0, ATTEN_NONE);
+			if(getsoundtime(this, CH_BGM_SINGLE) < 0)
 			{
-				LOG_TRACEF("Cannot initialize sound %s\n", self.noise);
-				strunzone(self.noise);
-				self.noise = string_null;
+				LOG_TRACEF("Cannot initialize sound %s\n", this.noise);
+				strunzone(this.noise);
+				this.noise = string_null;
 			}
 		}
 	}
 
-	setorigin(self, self.origin);
-	setsize(self, self.mins, self.maxs);
-	self.cnt = 1;
-	self.think = Ent_TriggerMusic_Think;
-	self.nextthink = time;
+	setorigin(this, this.origin);
+	setsize(this, this.mins, this.maxs);
+	this.cnt = 1;
+	setthink(this, Ent_TriggerMusic_Think);
+	this.nextthink = time;
+	return true;
 }
 
 #endif

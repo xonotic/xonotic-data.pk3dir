@@ -1,3 +1,4 @@
+#include "path_waypoint.qh"
 #include "../bot/waypoints.qh"
 
 #include "pathlib.qh"
@@ -13,7 +14,7 @@ void pathlib_wpp_close(entity wp)
     wp.pathlib_list = closedlist;
 
     if(wp == best_open_node)
-        best_open_node = world;
+        best_open_node = NULL;
 
     if(wp == goal_node)
         pathlib_foundgoal = true;
@@ -169,7 +170,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     // FIXME! presisted chain for better preformance
     for(n = findchain(classname, "waypoint"); n; n = n.chain)
     {
-        n.pathlib_list = world;
+        n.pathlib_list = NULL;
         n.pathlib_node_g = 0;
         n.pathlib_node_f = 0;
         n.pathlib_node_h = 0;
@@ -189,10 +190,10 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     if(pathlib_open_cnt <= 0)
     {
         LOG_TRACE("pathlib_waypointpath: Start waypoint not linked! aborting.\n");
-        return world;
+        return NULL;
     }
 
-    return world;
+    return NULL;
 }
 
 entity pathlib_waypointpath_step()
@@ -203,7 +204,7 @@ entity pathlib_waypointpath_step()
     if(!n)
     {
         LOG_TRACE("Cannot find best open node, abort.\n");
-        return world;
+        return NULL;
     }
     pathlib_wpp_close(n);
 	LOG_TRACE("Expanding ",ftos(pathlib_wpp_expand(n))," links\n");
@@ -215,8 +216,8 @@ entity pathlib_waypointpath_step()
         LOG_TRACE("Target found. Rebuilding and filtering path...\n");
 
 		buildpath_nodefilter = buildpath_nodefilter_none;
-		start = path_build(world, start_node.origin, world, world);
-		end   = path_build(world, goal_node.origin, world, start);
+		start = path_build(NULL, start_node.origin, NULL, NULL);
+		end   = path_build(NULL, goal_node.origin, NULL, start);
 		ln    = end;
 
 		for(open = goal_node; open.path_prev != start_node; open = open.path_prev)
@@ -231,20 +232,20 @@ entity pathlib_waypointpath_step()
         return start;
     }
 
-    return world;
+    return NULL;
 }
-void plas_think()
+void plas_think(entity this)
 {
     pathlib_waypointpath_step();
     if(pathlib_foundgoal)
         return;
-    self.nextthink = time + 0.1;
+    this.nextthink = time + 0.1;
 }
 
 void pathlib_waypointpath_autostep()
 {
     entity n;
     n = spawn();
-    n.think = plas_think;
+    setthink(n, plas_think);
     n.nextthink = time + 0.1;
 }

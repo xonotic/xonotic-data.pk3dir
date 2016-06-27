@@ -1,5 +1,4 @@
-#ifndef CLIENT_DEFS_H
-#define CLIENT_DEFS_H
+#pragma once
 
 // Additional OPTIONAL Fields and Globals
 //float		intermission;
@@ -23,8 +22,8 @@ float		dmg_take;
 #endif
 
 // Basic variables
-.float enttype; // entity type sent from server
-.int   sv_entnum; // entity number sent from server
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
 .int team;
 .int team_size;
 
@@ -48,8 +47,10 @@ string race_penaltyreason; // reason for penalty
 float race_server_record; // server record
 float race_speedaward;
 string race_speedaward_holder;
+string race_speedaward_unit;
 float race_speedaward_alltimebest;
 string race_speedaward_alltimebest_holder;
+string race_speedaward_alltimebest_unit;
 
 // RACE
 float race_mycheckpoint;
@@ -95,7 +96,7 @@ float ticrate;
 const float MIN_DAMAGEEXTRARADIUS = 2;
 const float MAX_DAMAGEEXTRARADIUS = 16;
 .float damageextraradius;
-.void(float thisdmg, int hittype, vector org, vector thisforce) event_damage;
+.void(entity this, float thisdmg, int hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto
 float angles_held_status;
@@ -108,13 +109,6 @@ int w_deathtype;
 float w_issilent, w_random;
 vector w_org, w_backoff;
 
-float rifle_scope;
-float vortex_scope;
-
-float minelayer_maxmines;
-
-float hagar_maxrockets;
-
 float bgmtime;
 
 string weaponorder_byimpulse;
@@ -126,9 +120,6 @@ int serverflags;
 
 float uid2name_dialog;
 
-.bool csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead
+.bool csqcmodel_isdead; // used by shownames and miscfunctions (entcs_IsDead) to know when a player is dead
 
 #define player_currententnum (spectatee_status > 0 ? spectatee_status : player_localnum + 1)
-
-float g_balance_porto_secondary;
-#endif

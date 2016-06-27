@@ -3,7 +3,7 @@
 
 // some required common stuff
 #ifdef CSQC
-	#include "../../server/item_key.qh"
+	#include <server/item_key.qh>
 #endif
 #include "triggers.qh"
 #include "subs.qh"
@@ -12,9 +12,6 @@
 
 // func
 #include "func/include.qh"
-
-// misc
-#include "misc/include.qh"
 
 // target
 #include "target/include.qh"
