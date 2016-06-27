@@ -1,77 +1,128 @@
-#ifdef INTERFACE
-CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
-	METHOD(XonoticKeyBinder, configureXonoticKeyBinder, void(entity))
-	ATTRIB(XonoticKeyBinder, rowsPerItem, float, 1)
-	METHOD(XonoticKeyBinder, drawListBoxItem, void(entity, float, vector, float))
-	METHOD(XonoticKeyBinder, doubleClickListBoxItem, void(entity, float, vector))
-	METHOD(XonoticKeyBinder, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticKeyBinder, setSelected, void(entity, float))
-	METHOD(XonoticKeyBinder, keyDown, float(entity, float, float, float))
-	METHOD(XonoticKeyBinder, keyGrabbed, void(entity, float, float))
+#include "keybinder.qh"
 
-	ATTRIB(XonoticKeyBinder, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticKeyBinder, realUpperMargin, float, 0)
-	ATTRIB(XonoticKeyBinder, columnFunctionOrigin, float, 0)
-	ATTRIB(XonoticKeyBinder, columnFunctionSize, float, 0)
-	ATTRIB(XonoticKeyBinder, columnKeysOrigin, float, 0)
-	ATTRIB(XonoticKeyBinder, columnKeysSize, float, 0)
+#include <common/weapons/all.qh>
+.int flags;
 
-	ATTRIB(XonoticKeyBinder, previouslySelected, float, -1)
-	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0)
-	ATTRIB(XonoticKeyBinder, userbindEditButton, entity, NULL)
-	ATTRIB(XonoticKeyBinder, keyGrabButton, entity, NULL)
-	ATTRIB(XonoticKeyBinder, clearButton, entity, NULL)
-	ATTRIB(XonoticKeyBinder, userbindEditDialog, entity, NULL)
-	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string))
-ENDCLASS(XonoticKeyBinder)
-entity makeXonoticKeyBinder();
-void KeyBinder_Bind_Change(entity btn, entity me);
-void KeyBinder_Bind_Clear(entity btn, entity me);
-void KeyBinder_Bind_Edit(entity btn, entity me);
-#endif
-
-#ifdef IMPLEMENTATION
+#include "button.qh"
+#include "dialog_settings_input_userbind.qh"
 
 const string KEY_NOT_BOUND_CMD = "// not bound";
 
-const float MAX_KEYS_PER_FUNCTION = 2;
-const float MAX_KEYBINDS = 256;
+const int MAX_KEYS_PER_FUNCTION = 2;
+const int MAX_KEYBINDS = 256;
 string Xonotic_KeyBinds_Functions[MAX_KEYBINDS];
 string Xonotic_KeyBinds_Descriptions[MAX_KEYBINDS];
-float Xonotic_KeyBinds_Count = -1;
+int Xonotic_KeyBinds_Count = -1;
 
 void Xonotic_KeyBinds_Read()
 {
-	float fh;
-	string s;
-
 	Xonotic_KeyBinds_Count = 0;
-	fh = fopen(language_filename("keybinds.txt"), FILE_READ);
-	if(fh < 0)
-		return;
-	while((s = fgets(fh)))
+
+	#define KEYBIND_DEF(func, desc) MACRO_BEGIN { \
+		if((Xonotic_KeyBinds_Count < MAX_KEYBINDS)) { \
+			Xonotic_KeyBinds_Functions[Xonotic_KeyBinds_Count] = strzone(func); \
+			Xonotic_KeyBinds_Descriptions[Xonotic_KeyBinds_Count] = strzone(desc); \
+			++Xonotic_KeyBinds_Count; \
+		} \
+	} MACRO_END
+
+	KEYBIND_DEF(""                                      , _("Moving"));
+	KEYBIND_DEF("+forward"                              , _("forward"));
+	KEYBIND_DEF("+back"                                 , _("backpedal"));
+	KEYBIND_DEF("+moveleft"                             , _("strafe left"));
+	KEYBIND_DEF("+moveright"                            , _("strafe right"));
+	KEYBIND_DEF("+jump"                                 , _("jump / swim"));
+	KEYBIND_DEF("+crouch"                               , _("crouch / sink"));
+	KEYBIND_DEF("+hook"                                 , _("off-hand hook"));
+	KEYBIND_DEF("+jetpack"                              , _("jet pack"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Attacking"));
+	KEYBIND_DEF("+fire"                                 , _("primary fire"));
+	KEYBIND_DEF("+fire2"                                , _("secondary fire"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Weapon switching"));
+	KEYBIND_DEF("weapprev"                              , _("previous"));
+	KEYBIND_DEF("weapnext"                              , _("next"));
+	KEYBIND_DEF("weaplast"                              , _("previously used"));
+	KEYBIND_DEF("weapbest"                              , _("best"));
+	KEYBIND_DEF("reload"                                , _("reload"));
+
+	int i;
+
+	#define ADD_TO_W_LIST(pred) \
+		FOREACH(Weapons, it != WEP_Null, LAMBDA( \
+			if (it.impulse != imp) continue; \
+			if (!(pred)) continue; \
+			w_list = strcat(w_list, it.m_name, " / "); \
+		))
+
+	for(int imp = 1; imp <= 9; ++imp)
 	{
-		if(tokenize_console(s) != 2)
-			continue;
-		Xonotic_KeyBinds_Functions[Xonotic_KeyBinds_Count] = strzone(argv(0));
-		Xonotic_KeyBinds_Descriptions[Xonotic_KeyBinds_Count] = strzone(argv(1));
-		++Xonotic_KeyBinds_Count;
-		if(Xonotic_KeyBinds_Count >= MAX_KEYBINDS)
+        string w_list = "";
+		ADD_TO_W_LIST(!(it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_TYPE_OTHER) && !(it.spawnflags & WEP_FLAG_HIDDEN) && !(it.spawnflags & WEP_FLAG_SUPERWEAPON));
+		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_SUPERWEAPON) && !(it.spawnflags & WEP_TYPE_OTHER) && !(it.spawnflags & WEP_FLAG_HIDDEN));
+		ADD_TO_W_LIST((it.spawnflags & WEP_FLAG_MUTATORBLOCKED) && !(it.spawnflags & WEP_TYPE_OTHER) && !(it.spawnflags & WEP_FLAG_HIDDEN));
+		if(w_list)
+			KEYBIND_DEF(strcat("weapon_group_", itos(imp)), substring(w_list, 0, -4));
+		if(imp == 0)
 			break;
+		if(imp == 9)
+			imp = -1;
 	}
-	fclose(fh);
+	#undef ADD_TO_W_LIST
+
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("View"));
+	KEYBIND_DEF("+zoom"                                 , _("hold zoom"));
+	KEYBIND_DEF("togglezoom"                            , _("toggle zoom"));
+	KEYBIND_DEF("+showscores"                           , _("show scores"));
+	KEYBIND_DEF("screenshot"                            , _("screen shot"));
+	KEYBIND_DEF("+hud_panel_radar_maximized"            , _("maximize radar"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Communicate"));
+	KEYBIND_DEF("messagemode"                           , _("public chat"));
+	KEYBIND_DEF("messagemode2"                          , _("team chat"));
+	KEYBIND_DEF("+con_chat_maximize"                    , _("show chat history"));
+	KEYBIND_DEF("vyes"                                  , _("vote YES"));
+	KEYBIND_DEF("vno"                                   , _("vote NO"));
+	KEYBIND_DEF("ready"                                 , _("ready"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Client"));
+	KEYBIND_DEF("+show_info"                            , _("server info"));
+	KEYBIND_DEF("toggleconsole"                         , _("enter console"));
+	KEYBIND_DEF("disconnect"                            , _("disconnect"));
+	KEYBIND_DEF("menu_showquitdialog"                   , _("quit"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("Teamplay"));
+	KEYBIND_DEF("messagemode2"                          , _("team chat"));
+	KEYBIND_DEF("team_auto"                             , _("auto-join team"));
+	KEYBIND_DEF("menu_showteamselect"                   , _("team menu"));
+	KEYBIND_DEF("menu_showsandboxtools"                 , _("sandbox menu"));
+	KEYBIND_DEF("spec"                                  , _("enter spectator mode"));
+	KEYBIND_DEF("dropweapon"                            , _("drop weapon"));
+	KEYBIND_DEF("+use"                                  , _("drop key / drop flag"));
+	KEYBIND_DEF("+button8"                              , _("drag object"));
+	KEYBIND_DEF("toggle chase_active"                   , _("3rd person view"));
+	KEYBIND_DEF(""                                      , "");
+	KEYBIND_DEF(""                                      , _("User defined"));
+
+	for(i = 1; i <= 32; ++i)
+		KEYBIND_DEF(strcat("+userbind ", itos(i)), strcat("$userbind", itos(i)));
+
+	#undef KEYBIND_DEF
 }
 
 entity makeXonoticKeyBinder()
 {
 	entity me;
-	me = spawnXonoticKeyBinder();
+	me = NEW(XonoticKeyBinder);
 	me.configureXonoticKeyBinder(me);
 	return me;
 }
 void replace_bind(string from, string to)
 {
-	float n, j, k;
+	int n, j;
+	float k; // not sure if float or int
 	n = tokenize(findkeysforcommand(from, 0)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
@@ -85,10 +136,7 @@ void replace_bind(string from, string to)
 void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
-	if(Xonotic_KeyBinds_Count < 0)
-		Xonotic_KeyBinds_Read();
-	me.nItems = Xonotic_KeyBinds_Count;
-	me.setSelected(me, 0);
+	me.nItems = 0;
 
 	// TEMP: Xonotic 0.1 to later
 	replace_bind("impulse 1", "weapon_group_1");
@@ -102,6 +150,21 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 	replace_bind("impulse 9", "weapon_group_9");
 	replace_bind("impulse 14", "weapon_group_0");
 }
+void XonoticKeyBinder_loadKeyBinds(entity me)
+{
+	bool force_initial_selection = false;
+	if(Xonotic_KeyBinds_Count < 0) // me.handle not loaded yet?
+		force_initial_selection = true;
+	Xonotic_KeyBinds_Read();
+	me.nItems = Xonotic_KeyBinds_Count;
+	if(force_initial_selection)
+		me.setSelected(me, 0);
+}
+void XonoticKeyBinder_showNotify(entity me)
+{
+	me.destroy(me);
+	me.loadKeyBinds(me);
+}
 void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	SUPER(XonoticKeyBinder).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
@@ -114,9 +177,6 @@ void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, 
 	me.columnKeysSize = me.realFontSize.x * 12;
 	me.columnFunctionSize = 1 - me.columnKeysSize - 2 * me.realFontSize.x;
 	me.columnKeysOrigin = me.columnFunctionOrigin + me.columnFunctionSize + me.realFontSize.x;
-
-	if(me.userbindEditButton)
-		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[me.selectedItem], 0, 1) != "$");
 }
 void KeyBinder_Bind_Change(entity btn, entity me)
 {
@@ -130,9 +190,10 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
-void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
+void XonoticKeyBinder_keyGrabbed(entity me, int key, bool ascii)
 {
-	float n, j, k, nvalid;
+	int n, j, nvalid;
+	float k;
 	string func;
 
 	me.keyGrabButton.forcePressed = 0;
@@ -174,6 +235,22 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
 	cvar_set("_hud_showbinds_reload", "1");
+}
+void XonoticKeyBinder_destroy(entity me)
+{
+	if(Xonotic_KeyBinds_Count < 0)
+		return;
+
+	for(int i = 0; i < MAX_KEYBINDS; ++i)
+	{
+		if(Xonotic_KeyBinds_Functions[i])
+			strunzone(Xonotic_KeyBinds_Functions[i]);
+		Xonotic_KeyBinds_Functions[i] = string_null;
+		if(Xonotic_KeyBinds_Descriptions[i])
+			strunzone(Xonotic_KeyBinds_Descriptions[i]);
+		Xonotic_KeyBinds_Descriptions[i] = string_null;
+	}
+	Xonotic_KeyBinds_Count = 0;
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
@@ -249,7 +326,7 @@ void XonoticKeyBinder_doubleClickListBoxItem(entity me, float i, vector where)
 {
 	KeyBinder_Bind_Change(NULL, me);
 }
-void XonoticKeyBinder_setSelected(entity me, float i)
+void XonoticKeyBinder_setSelected(entity me, int i)
 {
 	// handling of "unselectable" items
 	i = floor(0.5 + bound(0, i, me.nItems - 1));
@@ -276,10 +353,9 @@ void XonoticKeyBinder_setSelected(entity me, float i)
 		me.userbindEditButton.disabled = (substring(Xonotic_KeyBinds_Descriptions[i], 0, 1) != "$");
 	SUPER(XonoticKeyBinder).setSelected(me, i);
 }
-float XonoticKeyBinder_keyDown(entity me, float key, float ascii, float shift)
+float XonoticKeyBinder_keyDown(entity me, int key, bool ascii, float shift)
 {
-	float r;
-	r = 1;
+	bool r = true;
 	switch(key)
 	{
 		case K_ENTER:
@@ -298,10 +374,11 @@ float XonoticKeyBinder_keyDown(entity me, float key, float ascii, float shift)
 	}
 	return r;
 }
-void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
+void XonoticKeyBinder_drawListBoxItem(entity me, int i, vector absSize, bool isSelected, bool isFocused)
 {
 	string s;
-	float j, k, n;
+	int j, n;
+	float k;
 	vector theColor;
 	float theAlpha;
 	string func, descr;
@@ -326,6 +403,12 @@ void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float 
 			else
 				draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 		}
+		else if(isFocused)
+		{
+			me.focusedItemAlpha = getFadedAlpha(me.focusedItemAlpha, SKINALPHA_LISTBOX_FOCUSED, SKINFADEALPHA_LISTBOX_FOCUSED);
+			draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_FOCUSED, me.focusedItemAlpha);
+		}
+
 		theAlpha = SKINALPHA_KEYGRABBER_KEYS;
 		theColor = SKINCOLOR_KEYGRABBER_KEYS;
 		extraMargin = me.realFontSize.x * 0.5;
@@ -362,4 +445,3 @@ void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float 
 		draw_CenterText(me.realUpperMargin * eY + (me.columnKeysOrigin + 0.5 * me.columnKeysSize) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	}
 }
-#endif

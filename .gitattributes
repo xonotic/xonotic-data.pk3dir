@@ -1,3 +1,6 @@
+*.q[ch] linguist-language=C
+*.inc linguist-language=C
+
 * -crlf
 *.0 -diff -crlf
 *.1 crlf=input

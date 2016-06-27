@@ -1,37 +1,9 @@
-#ifdef INTERFACE
-CLASS(XonoticPlayerModelSelector) EXTENDS(XonoticImage)
-	METHOD(XonoticPlayerModelSelector, configureXonoticPlayerModelSelector, void(entity))
-	METHOD(XonoticPlayerModelSelector, loadCvars, void(entity))
-	METHOD(XonoticPlayerModelSelector, saveCvars, void(entity))
-	METHOD(XonoticPlayerModelSelector, draw, void(entity))
-	METHOD(XonoticPlayerModelSelector, resizeNotify, void(entity, vector, vector, vector, vector))
-	METHOD(XonoticPlayerModelSelector, showNotify, void(entity))
-	ATTRIB(XonoticPlayerModelSelector, currentModel, string, string_null)
-	ATTRIB(XonoticPlayerModelSelector, currentSkin, float, 0)
-	ATTRIB(XonoticPlayerModelSelector, currentModelImage, string, string_null)
-	ATTRIB(XonoticPlayerModelSelector, currentModelTitle, string, string_null)
-	ATTRIB(XonoticPlayerModelSelector, currentModelDescription, string, string_null)
-	METHOD(XonoticPlayerModelSelector, go, void(entity, float))
-	METHOD(XonoticPlayerModelSelector, destroy, void(entity))
-	ATTRIB(XonoticPlayerModelSelector, origin, vector, '0 0 0')
-	ATTRIB(XonoticPlayerModelSelector, size, vector, '0 0 0')
-	ATTRIB(XonoticPlayerModelSelector, realFontSize, vector, '0 0 0')
-	ATTRIB(XonoticPlayerModelSelector, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticPlayerModelSelector, titleFontSize, float, SKINFONTSIZE_TITLE)
-	ATTRIB(XonoticPlayerModelSelector, bufModels, float, -1)
-	ATTRIB(XonoticPlayerModelSelector, numModels, float, -1)
-	ATTRIB(XonoticPlayerModelSelector, idxModels, float, -1)
-ENDCLASS(XonoticPlayerModelSelector)
-entity makeXonoticPlayerModelSelector();
-void PlayerModelSelector_Next_Click(entity btn, entity me);
-void PlayerModelSelector_Prev_Click(entity btn, entity me);
-#endif
+#include "playermodel.qh"
 
-#ifdef IMPLEMENTATION
 entity makeXonoticPlayerModelSelector()
 {
 	entity me;
-	me = spawnXonoticPlayerModelSelector();
+	me = NEW(XonoticPlayerModelSelector);
 	me.configureXonoticPlayerModelSelector(me);
 	return me;
 }
@@ -47,16 +19,19 @@ const float BUFMODELS_COUNT = 5;
 
 void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 {
-	float sortbuf, glob, i;
+	me.configureXonoticImage(me, string_null, -1);
+}
+
+void XonoticPlayerModelSelector_loadModels(entity me)
+{
+	int i;
 	string fn;
 
-	glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
+	float glob = search_begin(language_filename(get_model_datafilename(string_null, -1, "txt")), true, true);
 	if (glob < 0)
 		return;
 
-	me.configureXonoticImage(me, string_null, -1);
-
-	sortbuf = buf_create();
+	float sortbuf = buf_create();
 	for(i = 0; i < search_getsize(glob); ++i)
 	{
 		// select model #i!
@@ -101,10 +76,14 @@ void XonoticPlayerModelSelector_configureXonoticPlayerModelSelector(entity me)
 	me.loadCvars(me); // this will select the initial model, depending on the current cvars
 	me.go(me, 0); // this will set the vars for the selected model
 }
+
 void XonoticPlayerModelSelector_destroy(entity me)
 {
-	buf_del(me.bufModels);
-	me.bufModels = -1;
+	if(me.bufModels >= 0)
+	{
+		buf_del(me.bufModels);
+		me.bufModels = -1;
+	}
 }
 
 void XonoticPlayerModelSelector_loadCvars(entity me)
@@ -218,6 +197,7 @@ void XonoticPlayerModelSelector_resizeNotify(entity me, vector relOrigin, vector
 
 void XonoticPlayerModelSelector_showNotify(entity me)
 {
-	me.configureXonoticPlayerModelSelector(me);
+	// Reinitialize self.
+	me.destroy(me);
+	me.loadModels(me);
 }
-#endif

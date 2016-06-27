@@ -1,0 +1,6 @@
+#ifndef MUTATORS_ALL_H
+#define MUTATORS_ALL_H
+
+#include "all.inc"
+
+#endif
