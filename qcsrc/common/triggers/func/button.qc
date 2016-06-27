@@ -1,98 +1,97 @@
 #ifdef SVQC
 // button and multiple button
 
-void() button_wait;
-void() button_return;
+void button_wait(entity this);
+void button_return(entity this);
 
-void button_wait()
+void button_wait(entity this)
 {
-	self.state = STATE_TOP;
-	self.SUB_NEXTTHINK = self.SUB_LTIME + self.wait;
-	self.SUB_THINK = button_return;
-	activator = self.enemy;
-	SUB_UseTargets();
-	self.frame = 1;			// use alternate textures
+	this.state = STATE_TOP;
+	this.SUB_NEXTTHINK = this.SUB_LTIME + this.wait;
+	SUB_THINK(this, button_return);
+	SUB_UseTargets(this, this.enemy, NULL);
+	this.frame = 1;			// use alternate textures
 }
 
-void button_done()
+void button_done(entity this)
 {
-	self.state = STATE_BOTTOM;
+	this.state = STATE_BOTTOM;
 }
 
-void button_return()
+void button_return(entity this)
 {
-	self.state = STATE_DOWN;
-	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, button_done);
-	self.frame = 0;			// use normal textures
-	if (self.health)
-		self.takedamage = DAMAGE_YES;	// can be shot again
+	this.state = STATE_DOWN;
+	SUB_CalcMove (this, this.pos1, TSPEED_LINEAR, this.speed, button_done);
+	this.frame = 0;			// use normal textures
+	if (this.health)
+		this.takedamage = DAMAGE_YES;	// can be shot again
 }
 
 
-void button_blocked()
+void button_blocked(entity this, entity blocker)
 {
 	// do nothing, just don't come all the way back out
 }
 
 
-void button_fire()
+void button_fire(entity this)
 {
-	self.health = self.max_health;
-	self.takedamage = DAMAGE_NO;    // will be reset upon return
+	this.health = this.max_health;
+	this.takedamage = DAMAGE_NO;    // will be reset upon return
 
-	if (self.state == STATE_UP || self.state == STATE_TOP)
+	if (this.state == STATE_UP || this.state == STATE_TOP)
 		return;
 
-	if (self.noise != "")
-		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
+	if (this.noise != "")
+		_sound (this, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 
-	self.state = STATE_UP;
-	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, button_wait);
+	this.state = STATE_UP;
+	SUB_CalcMove (this, this.pos2, TSPEED_LINEAR, this.speed, button_wait);
 }
 
-void button_reset()
+void button_reset(entity this)
 {
-	self.health = self.max_health;
-	setorigin(self, self.pos1);
-	self.frame = 0;			// use normal textures
-	self.state = STATE_BOTTOM;
-	if (self.health)
-		self.takedamage = DAMAGE_YES;	// can be shot again
+	this.health = this.max_health;
+	setorigin(this, this.pos1);
+	this.frame = 0;			// use normal textures
+	this.state = STATE_BOTTOM;
+	if (this.health)
+		this.takedamage = DAMAGE_YES;	// can be shot again
 }
 
-void button_use()
+void button_use(entity this, entity actor, entity trigger)
 {
-	if(self.active != ACTIVE_ACTIVE)
+	if(this.active != ACTIVE_ACTIVE)
 		return;
 
-	self.enemy = activator;
-	button_fire ();
+	this.enemy = actor;
+	button_fire(this);
 }
 
-void button_touch()
+void button_touch(entity this, entity toucher)
 {
-	if (!other)
+	if (!toucher)
 		return;
-	if (!other.iscreature)
+	if (!toucher.iscreature)
 		return;
-	if(other.velocity * self.movedir < 0)
+	if(toucher.velocity * this.movedir < 0)
 		return;
-	self.enemy = other;
-	if (other.owner)
-		self.enemy = other.owner;
-	button_fire ();
+	this.enemy = toucher;
+	if (toucher.owner)
+		this.enemy = toucher.owner;
+	button_fire (this);
 }
 
-void button_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void button_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	if(self.spawnflags & DOOR_NOSPLASH)
+	if(this.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
-	self.health = self.health - damage;
-	if (self.health <= 0)
+	this.health = this.health - damage;
+	if (this.health <= 0)
 	{
-		self.enemy = damage_attacker;
-		button_fire ();
+		this.enemy = damage_attacker;
+		button_fire(this);
 	}
 }
 
@@ -112,44 +111,44 @@ When a button is touched, it moves some distance in the direction of it's angle,
 2) metallic click
 3) in-out
 */
-void spawnfunc_func_button()
+spawnfunc(func_button)
 {
-	SetMovedir ();
+	SetMovedir(this);
 
-	if (!InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger(this))
 		return;
-	self.effects |= EF_LOWPRECISION;
+	this.effects |= EF_LOWPRECISION;
 
-	self.blocked = button_blocked;
-	self.use = button_use;
+	setblocked(this, button_blocked);
+	this.use = button_use;
 
-//	if (self.health == 0) // all buttons are now shootable
-//		self.health = 10;
-	if (self.health)
+//	if (this.health == 0) // all buttons are now shootable
+//		this.health = 10;
+	if (this.health)
 	{
-		self.max_health = self.health;
-		self.event_damage = button_damage;
-		self.takedamage = DAMAGE_YES;
+		this.max_health = this.health;
+		this.event_damage = button_damage;
+		this.takedamage = DAMAGE_YES;
 	}
 	else
-		self.touch = button_touch;
+		settouch(this, button_touch);
 
-	if (!self.speed)
-		self.speed = 40;
-	if (!self.wait)
-		self.wait = 1;
-	if (!self.lip)
-		self.lip = 4;
+	if (!this.speed)
+		this.speed = 40;
+	if (!this.wait)
+		this.wait = 1;
+	if (!this.lip)
+		this.lip = 4;
 
-    if(self.noise != "")
-        precache_sound(self.noise);
+    if(this.noise != "")
+        precache_sound(this.noise);
 
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
-	self.pos1 = self.origin;
-	self.pos2 = self.pos1 + self.movedir*(fabs(self.movedir*self.size) - self.lip);
-    self.flags |= FL_NOTARGET;
+	this.pos1 = this.origin;
+	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
+    this.flags |= FL_NOTARGET;
 
-	button_reset();
+	button_reset(this);
 }
 #endif

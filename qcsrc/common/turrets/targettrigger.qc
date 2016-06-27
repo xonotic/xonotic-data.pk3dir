@@ -1,38 +1,24 @@
-void spawnfunc_turret_targettrigger();
-void turret_targettrigger_touch();
+spawnfunc(turret_targettrigger);
+void turret_targettrigger_touch(entity this, entity toucher);
 
-void turret_targettrigger_touch()
+void turret_targettrigger_touch(entity this, entity toucher)
 {
-    entity e;
-    if (self.cnt > time) return;
-    entity oldself;
-    oldself = self;
-
-    e = find(world, targetname, self.target);
-    while (e)
-    {
-        if (e.turret_flags & TUR_FLAG_RECIEVETARGETS)
-        {
-            self = e;
-            if(e.turret_addtarget)
-                e.turret_addtarget(other,oldself);
-        }
-
-        e = find(e, targetname, oldself.target);
-    }
-
-    oldself.cnt = time + 0.5;
-
-    self = oldself;
+    if (this.cnt > time) return;
+    FOREACH_ENTITY_STRING_ORDERED(targetname, this.target, {
+        if (!(it.turret_flags & TUR_FLAG_RECIEVETARGETS)) continue;
+        if (!it.turret_addtarget) continue;
+        it.turret_addtarget(it, toucher, this);
+    });
+    this.cnt = time + 0.5;
 }
 
 /*QUAKED turret_targettrigger (.5 .5 .5) ?
 */
-void spawnfunc_turret_targettrigger()
+spawnfunc(turret_targettrigger)
 {
-    if(!autocvar_g_turrets) { remove(self); return; }
+    if(!autocvar_g_turrets) { remove(this); return; }
 
-    InitTrigger ();
+    InitTrigger(this);
 
-    self.touch = turret_targettrigger_touch;
+    settouch(this, turret_targettrigger_touch);
 }

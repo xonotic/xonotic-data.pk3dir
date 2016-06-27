@@ -7,8 +7,4 @@
 .float strength;
 .float lastpushtime;
 
-#ifdef CSQC
-void ent_trigger_impulse();
-#endif
-
 #endif

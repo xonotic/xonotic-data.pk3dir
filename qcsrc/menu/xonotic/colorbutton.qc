@@ -1,25 +1,5 @@
-#ifndef COLORBUTTON_H
-#define COLORBUTTON_H
-#include "../item/radiobutton.qc"
-CLASS(XonoticColorButton, RadioButton)
-	METHOD(XonoticColorButton, configureXonoticColorButton, void(entity, float, float, float));
-	METHOD(XonoticColorButton, setChecked, void(entity, float));
-	METHOD(XonoticColorButton, draw, void(entity));
-	ATTRIB(XonoticColorButton, fontSize, float, 0)
-	ATTRIB(XonoticColorButton, image, string, SKINGFX_COLORBUTTON)
+#include "colorbutton.qh"
 
-	ATTRIB(XonoticColorButton, useDownAsChecked, float, 1)
-
-	ATTRIB(XonoticColorButton, cvarPart, float, 0)
-	ATTRIB(XonoticColorButton, cvarName, string, string_null)
-	ATTRIB(XonoticColorButton, cvarValueFloat, float, 0)
-	METHOD(XonoticColorButton, loadCvars, void(entity));
-	METHOD(XonoticColorButton, saveCvars, void(entity));
-ENDCLASS(XonoticColorButton)
-entity makeXonoticColorButton(float, float, float);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticColorButton(float theGroup, float theColor, float theValue)
 {
 	entity me;
@@ -99,4 +79,3 @@ void XonoticColorButton_draw(entity me)
 	me.colorD = me.color;
 	SUPER(XonoticColorButton).draw(me);
 }
-#endif

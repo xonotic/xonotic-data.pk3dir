@@ -1,26 +1,10 @@
 #include "teamradar.qh"
-#include "_all.qh"
 
-#include "hud.qh"
+#include "hud/all.qh"
 
-#include "../common/util.qh"
+#include <common/mutators/mutator/waypoints/all.qh>
 
-#include "../csqcmodellib/interpolate.qh"
-
-float vlen2d(vector v)
-{
-	return sqrt(v.x * v.x + v.y * v.y);
-}
-
-float vlen_maxnorm2d(vector v)
-{
-	return max(v.x, v.y, -v.x, -v.y);
-}
-
-float vlen_minnorm2d(vector v)
-{
-	return min(max(v.x, -v.x), max(v.y, -v.y));
-}
+#include "../lib/csqcmodel/interpolate.qh"
 
 vector teamradar_3dcoord_to_texcoord(vector in)
 {
@@ -72,12 +56,6 @@ vector teamradar_texcoord_to_3dcoord(vector in,float z)
 	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
 	out_z = z;
 	return out;
-}
-
-vector yinvert(vector v)
-{
-	v.y = 1 - v.y;
-	return v;
 }
 
 void draw_teamradar_background(float fg)
@@ -147,10 +125,10 @@ void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 	R_EndPolygon();
 }
 
-void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a)
+void draw_teamradar_icon(vector coord, entity icon, entity pingdata, vector rgb, float a)
 {
 	coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(coord));
-	drawpic(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon)), '8 8 0', rgb, a, 0);
+	drawpic_builtin(coord - '4 4 0', strcat("gfx/teamradar_icon_", ftos(icon.m_radaricon)), '8 8 0', rgb, a, 0);
 
 	if(pingdata)
 	{
@@ -163,13 +141,14 @@ void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, 
 			if(dt >= 1 || dt <= 0)
 				continue;
 			vector v = '2 2 0' * teamradar_size * dt;
-			drawpic(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
+			drawpic_builtin(coord - 0.5 * v, "gfx/teamradar_ping", v, '1 1 1', (1 - dt) * a, DRAWFLAG_ADDITIVE);
 		}
 	}
 }
 
 void draw_teamradar_link(vector start, vector end, int colors)
 {
+    TC(int, colors);
 	vector c0, c1, norm;
 
 	start = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(start));
@@ -216,34 +195,36 @@ void teamradar_loadcvars()
 
 // radar links
 
-void Ent_RadarLink()
+NET_HANDLE(ENT_CLIENT_RADARLINK, bool isnew)
 {
 	int sendflags = ReadByte();
 
-	InterpolateOrigin_Undo();
+	InterpolateOrigin_Undo(this);
 
-	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
-	self.classname = "radarlink";
+	this.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
+	this.classname = "radarlink";
 
 	if(sendflags & 1)
 	{
-		self.origin_x = ReadCoord();
-		self.origin_y = ReadCoord();
-		self.origin_z = ReadCoord();
-		setorigin(self, self.origin);
+		this.origin_x = ReadCoord();
+		this.origin_y = ReadCoord();
+		this.origin_z = ReadCoord();
+		setorigin(this, this.origin);
 	}
 
 	if(sendflags & 2)
 	{
-		self.velocity_x = ReadCoord();
-		self.velocity_y = ReadCoord();
-		self.velocity_z = ReadCoord();
+		this.velocity_x = ReadCoord();
+		this.velocity_y = ReadCoord();
+		this.velocity_z = ReadCoord();
 	}
 
 	if(sendflags & 4)
 	{
-		self.team = ReadByte();
+		this.team = ReadByte();
 	}
 
-	InterpolateOrigin_Note();
+	return = true;
+
+	InterpolateOrigin_Note(this);
 }

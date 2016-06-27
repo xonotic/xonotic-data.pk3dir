@@ -1,19 +1,12 @@
-#ifndef DIALOG_SANDBOXTOOLS_H
-#define DIALOG_SANDBOXTOOLS_H
-#include "rootdialog.qc"
-CLASS(XonoticSandboxToolsDialog, XonoticRootDialog)
-	METHOD(XonoticSandboxToolsDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
-	ATTRIB(XonoticSandboxToolsDialog, title, string, _("Sandbox Tools")) // ;)
-	ATTRIB(XonoticSandboxToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS)
-	ATTRIB(XonoticSandboxToolsDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticSandboxToolsDialog, rows, float, 16)
-	ATTRIB(XonoticSandboxToolsDialog, columns, float, 4)
-	ATTRIB(XonoticSandboxToolsDialog, name, string, "SandboxTools")
-	ATTRIB(XonoticSandboxToolsDialog, requiresConnection, float, true)
-ENDCLASS(XonoticSandboxToolsDialog)
-#endif
+#include "dialog_sandboxtools.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "commandbutton.qh"
+#include "colorpicker_string.qh"
+#include "slider.qh"
+#include "radiobutton.qh"
+
 void XonoticSandboxToolsDialog_fill(entity me)
 {
 	entity e, box;
@@ -93,6 +86,3 @@ void XonoticSandboxToolsDialog_fill(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-#endif
-
-/* Click. The c-word is here so you can grep for it :-) */

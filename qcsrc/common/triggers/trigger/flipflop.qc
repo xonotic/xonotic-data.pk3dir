@@ -2,18 +2,19 @@
 /*QUAKED spawnfunc_trigger_flipflop (.5 .5 .5) (-8 -8 -8) (8 8 8) START_ENABLED
 "Flip-flop" trigger gate... lets only every second trigger event through
 */
-void flipflop_use()
+void flipflop_use(entity this, entity actor, entity trigger)
 {
-    self.state = !self.state;
-    if(self.state)
-        SUB_UseTargets();
+    this.state = !this.state;
+    if(this.state)
+        SUB_UseTargets(this, actor, trigger);
 }
 
-void spawnfunc_trigger_flipflop()
+spawnfunc(trigger_flipflop)
 {
-    if(self.spawnflags & 1)
-        self.state = 1;
-    self.use = flipflop_use;
-    self.reset = spawnfunc_trigger_flipflop; // perfect resetter
+    if(this.spawnflags & 1)
+        this.state = 1;
+    this.use = flipflop_use;
+    this.reset = spawnfunc_trigger_flipflop; // perfect resetter
 }
+
 #endif

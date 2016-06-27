@@ -1,7 +1,11 @@
 #include "scripting.qh"
-#include "../_all.qh"
+
+#include <common/state.qh>
+#include <common/physics/player.qh>
 
 #include "bot.qh"
+
+.int state;
 
 .float bot_cmdqueuebuf_allocated;
 .float bot_cmdqueuebuf;
@@ -14,7 +18,7 @@ void bot_clearqueue(entity bot)
 		return;
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = false;
-	dprint("bot ", bot.netname, " queue cleared\n");
+	LOG_TRACE("bot ", bot.netname, " queue cleared\n");
 }
 
 void bot_queuecommand(entity bot, string cmdstring)
@@ -85,22 +89,22 @@ string bot_readcommand(entity bot, float idx)
 	return bufstr_get(bot.bot_cmdqueuebuf, idx);
 }
 
-float bot_havecommand(entity bot, float idx)
+bool bot_havecommand(entity this, int idx)
 {
-	if(!bot.bot_cmdqueuebuf_allocated)
-		return 0;
-	if(idx < bot.bot_cmdqueuebuf_start)
-		return 0;
-	if(idx >= bot.bot_cmdqueuebuf_end)
-		return 0;
-	return 1;
+	if(!this.bot_cmdqueuebuf_allocated)
+		return false;
+	if(idx < this.bot_cmdqueuebuf_start)
+		return false;
+	if(idx >= this.bot_cmdqueuebuf_end)
+		return false;
+	return true;
 }
 
 const int MAX_BOT_PLACES = 4;
 .float bot_places_count;
 .entity bot_places[MAX_BOT_PLACES];
 .string bot_placenames[MAX_BOT_PLACES];
-entity bot_getplace(string placename)
+entity bot_getplace(entity this, string placename)
 {
 	entity e;
 	if(substring(placename, 0, 1) == "@")
@@ -108,10 +112,10 @@ entity bot_getplace(string placename)
 		int i, p;
 		placename = substring(placename, 1, -1);
 		string s, s2;
-		for(i = 0; i < self.bot_places_count; ++i)
-			if(self.(bot_placenames[i]) == placename)
-				return self.(bot_places[i]);
-		// now: i == self.bot_places_count
+		for(i = 0; i < this.bot_places_count; ++i)
+			if(this.(bot_placenames[i]) == placename)
+				return this.(bot_places[i]);
+		// now: i == this.bot_places_count
 		s = s2 = cvar_string(placename);
 		p = strstrofs(s2, " ", 0);
 		if(p >= 0)
@@ -121,22 +125,22 @@ entity bot_getplace(string placename)
 			cvar_set(placename, strcat(substring(s2, p+1, -1), " ", s));
 			//print("places: ", placename, " := ", cvar_string(placename), "\n");
 		}
-		e = find(world, targetname, s);
+		e = find(NULL, targetname, s);
 		if(!e)
-			print("invalid place ", s, "\n");
+			LOG_INFO("invalid place ", s, "\n");
 		if(i < MAX_BOT_PLACES)
 		{
-			self.(bot_placenames[i]) = strzone(placename);
-			self.(bot_places[i]) = e;
-			self.bot_places_count += 1;
+			this.(bot_placenames[i]) = strzone(placename);
+			this.(bot_places[i]) = e;
+			this.bot_places_count += 1;
 		}
 		return e;
 	}
 	else
 	{
-		e = find(world, targetname, placename);
+		e = find(NULL, targetname, placename);
 		if(!e)
-			print("invalid place ", placename, "\n");
+			LOG_INFO("invalid place ", placename, "\n");
 		return e;
 	}
 }
@@ -236,7 +240,7 @@ entity find_bot_by_name(string name)
 		bot = bot.chain;
 	}
 
-	return world;
+	return NULL;
 }
 
 // Returns a bot by number on list
@@ -246,7 +250,7 @@ entity find_bot_by_number(float number)
 	float c = 0;
 
 	if(!number)
-		return world;
+		return NULL;
 
 	bot = findchainflags(flags, FL_CLIENT);
 	while (bot)
@@ -259,7 +263,7 @@ entity find_bot_by_number(float number)
 		bot = bot.chain;
 	}
 
-	return world;
+	return NULL;
 }
 
 float bot_decodecommand(string cmdstring)
@@ -292,7 +296,7 @@ float bot_decodecommand(string cmdstring)
 
 		if(cmd_parm_type!=BOT_CMD_PARAMETER_NONE&&parm=="")
 		{
-			print("ERROR: A parameter is required for this command\n");
+			LOG_INFO("ERROR: A parameter is required for this command\n");
 			return 0;
 		}
 
@@ -318,7 +322,7 @@ float bot_decodecommand(string cmdstring)
 		}
 		return 1;
 	}
-	print("ERROR: No such command '", cmdstring, "'\n");
+	LOG_INFO("ERROR: No such command '", cmdstring, "'\n");
 	return 0;
 }
 
@@ -353,87 +357,87 @@ void bot_cmdhelp(string scmd)
 				break;
 		}
 
-		print(strcat("Command: ",bot_cmd_string[i],"\nParameter: <",stype,"> \n"));
+		LOG_INFO(strcat("Command: ",bot_cmd_string[i],"\nParameter: <",stype,"> \n"));
 
-		print("Description: ");
+		LOG_INFO("Description: ");
 		switch(i)
 		{
 			case BOT_CMD_PAUSE:
-				print("Stops the bot completely. Any command other than 'continue' will be ignored.");
+				LOG_INFO("Stops the bot completely. Any command other than 'continue' will be ignored.");
 				break;
 			case BOT_CMD_CONTINUE:
-				print("Disable paused status");
+				LOG_INFO("Disable paused status");
 				break;
 			case BOT_CMD_WAIT:
-				print("Pause command parsing and bot ai for N seconds. Pressed key will remain pressed");
+				LOG_INFO("Pause command parsing and bot ai for N seconds. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_WAIT_UNTIL:
-				print("Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed");
+				LOG_INFO("Pause command parsing and bot ai until time is N from the last barrier. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_BARRIER:
-				print("Waits till all bots that have a command queue reach this command. Pressed key will remain pressed");
+				LOG_INFO("Waits till all bots that have a command queue reach this command. Pressed key will remain pressed");
 				break;
 			case BOT_CMD_TURN:
-				print("Look to the right or left N degrees. For turning to the left use positive numbers.");
+				LOG_INFO("Look to the right or left N degrees. For turning to the left use positive numbers.");
 				break;
 			case BOT_CMD_MOVETO:
-				print("Walk to an specific coordinate on the map. Usage: moveto \"x y z\"");
+				LOG_INFO("Walk to an specific coordinate on the map. Usage: moveto \"x y z\"");
 				break;
 			case BOT_CMD_MOVETOTARGET:
-				print("Walk to the specific target on the map");
+				LOG_INFO("Walk to the specific target on the map");
 				break;
 			case BOT_CMD_RESETGOAL:
-				print("Resets the goal stack");
+				LOG_INFO("Resets the goal stack");
 				break;
 			case BOT_CMD_CC:
-				print("Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;");
+				LOG_INFO("Execute client command. Examples: cc \"say something\"; cc god; cc \"name newnickname\"; cc kill;");
 				break;
 			case BOT_CMD_IF:
-				print("Perform simple conditional execution.\n");
-				print("Syntax: \n");
-				print("        sv_cmd .. if \"condition\"\n");
-				print("        sv_cmd .. 	<instruction if true>\n");
-				print("        sv_cmd .. 	<instruction if true>\n");
-				print("        sv_cmd .. else\n");
-				print("        sv_cmd .. 	<instruction if false>\n");
-				print("        sv_cmd .. 	<instruction if false>\n");
-				print("        sv_cmd .. fi\n");
-				print("Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n");
-				print("            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n");
-				print("Fields: health, speed, flagcarrier\n");
-				print("Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;");
+				LOG_INFO("Perform simple conditional execution.\n");
+				LOG_INFO("Syntax: \n");
+				LOG_INFO("        sv_cmd .. if \"condition\"\n");
+				LOG_INFO("        sv_cmd .. 	<instruction if true>\n");
+				LOG_INFO("        sv_cmd .. 	<instruction if true>\n");
+				LOG_INFO("        sv_cmd .. else\n");
+				LOG_INFO("        sv_cmd .. 	<instruction if false>\n");
+				LOG_INFO("        sv_cmd .. 	<instruction if false>\n");
+				LOG_INFO("        sv_cmd .. fi\n");
+				LOG_INFO("Conditions: a=b, a>b, a<b, a\t\t(spaces not allowed)\n");
+				LOG_INFO("            Values in conditions can be numbers, cvars in the form cvar.cvar_string or special fields\n");
+				LOG_INFO("Fields: health, speed, flagcarrier\n");
+				LOG_INFO("Examples: if health>50; if health>cvar.g_balance_laser_primary_damage; if flagcarrier;");
 				break;
 			case BOT_CMD_RESETAIM:
-				print("Points the aim to the coordinates x,y 0,0");
+				LOG_INFO("Points the aim to the coordinates x,y 0,0");
 				break;
 			case BOT_CMD_AIM:
-				print("Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n");
-				print("There is a 3rd optional parameter telling in how many seconds the aim has to reach the new position\n");
-				print("Examples: aim \"90 0\"	// Turn 90 degrees inmediately (positive numbers move to the left/up)\n");
-				print("          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds");
+				LOG_INFO("Move the aim x/y (horizontal/vertical) degrees relatives to the bot\n");
+				LOG_INFO("There is a 3rd optional parameter telling in how many seconds the aim has to reach the new position\n");
+				LOG_INFO("Examples: aim \"90 0\"	// Turn 90 degrees inmediately (positive numbers move to the left/up)\n");
+				LOG_INFO("          aim \"0 90 2\"	// Will gradually look to the sky in the next two seconds");
 				break;
 			case BOT_CMD_AIMTARGET:
-				print("Points the aim to given target");
+				LOG_INFO("Points the aim to given target");
 				break;
 			case BOT_CMD_PRESSKEY:
-				print("Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use\n");
-				print("Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called");
-				print("Note: The script will not return the control to the bot ai until all keys are released");
+				LOG_INFO("Press one of the following keys: forward, backward, left, right, jump, crouch, attack1, attack2, use\n");
+				LOG_INFO("Multiple keys can be pressed at time (with many presskey calls) and it will remain pressed until the command \"releasekey\" is called");
+				LOG_INFO("Note: The script will not return the control to the bot ai until all keys are released");
 				break;
 			case BOT_CMD_RELEASEKEY:
-				print("Release previoulsy used keys. Use the parameter \"all\" to release all keys");
+				LOG_INFO("Release previoulsy used keys. Use the parameter \"all\" to release all keys");
 				break;
 			case BOT_CMD_SOUND:
-				print("play sound file at bot location");
+				LOG_INFO("play sound file at bot location");
 				break;
 			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
-				print("verify the state of the weapon entity");
+				LOG_INFO("verify the state of the weapon entity");
 				break;
 			default:
-				print("This command has no description yet.");
+				LOG_INFO("This command has no description yet.");
 				break;
 		}
-		print("\n");
+		LOG_INFO("\n");
 	}
 }
 
@@ -445,8 +449,8 @@ void bot_list_commands()
 	if(!bot_cmds_initialized)
 		bot_commands_init();
 
-	print("List of all available commands:\n");
-	print("  Command - Parameter Type\n");
+	LOG_INFO("List of all available commands:\n");
+	LOG_INFO("  Command - Parameter Type\n");
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
@@ -465,119 +469,112 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		print(strcat("  ",bot_cmd_string[i]," - <",ptype,"> \n"));
+		LOG_INFO(strcat("  ",bot_cmd_string[i]," - <",ptype,"> \n"));
 	}
 }
 
 // Commands code
 .int bot_exec_status;
 
-void SV_ParseClientCommand(string s);
-float bot_cmd_cc()
+float bot_cmd_cc(entity this)
 {
-	SV_ParseClientCommand(bot_cmd.bot_cmd_parm_string);
+	SV_ParseClientCommand(this, bot_cmd.bot_cmd_parm_string);
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_impulse()
+float bot_cmd_impulse(entity this)
 {
-	self.impulse = bot_cmd.bot_cmd_parm_float;
+	this.impulse = bot_cmd.bot_cmd_parm_float;
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_continue()
+float bot_cmd_continue(entity this)
 {
-	self.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
+	this.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
 	return CMD_STATUS_FINISHED;
 }
 
 .float bot_cmd_wait_time;
-float bot_cmd_wait()
+float bot_cmd_wait(entity this)
 {
-	if(self.bot_exec_status & BOT_EXEC_STATUS_WAITING)
+	if(this.bot_exec_status & BOT_EXEC_STATUS_WAITING)
 	{
-		if(time>=self.bot_cmd_wait_time)
+		if(time>=this.bot_cmd_wait_time)
 		{
-			self.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
+			this.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
 			return CMD_STATUS_FINISHED;
 		}
 		else
 			return CMD_STATUS_EXECUTING;
 	}
 
-	self.bot_cmd_wait_time = time + bot_cmd.bot_cmd_parm_float;
-	self.bot_exec_status |= BOT_EXEC_STATUS_WAITING;
+	this.bot_cmd_wait_time = time + bot_cmd.bot_cmd_parm_float;
+	this.bot_exec_status |= BOT_EXEC_STATUS_WAITING;
 	return CMD_STATUS_EXECUTING;
 }
 
-float bot_cmd_wait_until()
+float bot_cmd_wait_until(entity this)
 {
 	if(time < bot_cmd.bot_cmd_parm_float + bot_barriertime)
 	{
-		self.bot_exec_status |= BOT_EXEC_STATUS_WAITING;
+		this.bot_exec_status |= BOT_EXEC_STATUS_WAITING;
 		return CMD_STATUS_EXECUTING;
 	}
-	self.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
+	this.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_barrier()
+float bot_cmd_barrier(entity this)
 {
-	entity cl;
-
 	// 0 = no barrier, 1 = waiting, 2 = waiting finished
 
-	if(self.bot_barrier == 0) // initialization
+	if(this.bot_barrier == 0) // initialization
 	{
-		self.bot_barrier = 1;
+		this.bot_barrier = 1;
 
-		//self.colormod = '4 4 0';
+		//this.colormod = '4 4 0';
 	}
 
-	if(self.bot_barrier == 1) // find other bots
+	if(this.bot_barrier == 1) // find other bots
 	{
-		FOR_EACH_CLIENT(cl) if(cl.isbot)
-		{
-			if(cl.bot_cmdqueuebuf_allocated)
-				if(cl.bot_barrier != 1)
-					return CMD_STATUS_EXECUTING; // not all are at the barrier yet
-		}
+		FOREACH_CLIENT(it.isbot, LAMBDA(
+			if(it.bot_cmdqueuebuf_allocated)
+			if(it.bot_barrier != 1)
+				return CMD_STATUS_EXECUTING; // not all are at the barrier yet
+		));
 
 		// all bots hit the barrier!
-		FOR_EACH_CLIENT(cl) if(cl.isbot)
-		{
-			cl.bot_barrier = 2; // acknowledge barrier
-		}
+
+		// acknowledge barrier
+		FOREACH_CLIENT(it.isbot, LAMBDA(it.bot_barrier = 2));
 
 		bot_barriertime = time;
 	}
 
 	// if we get here, the barrier is finished
 	// so end it...
-	self.bot_barrier = 0;
-	//self.colormod = '0 0 0';
+	this.bot_barrier = 0;
+	//this.colormod = '0 0 0';
 
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_turn()
+float bot_cmd_turn(entity this)
 {
-	self.v_angle_y = self.v_angle.y + bot_cmd.bot_cmd_parm_float;
-	self.v_angle_y = self.v_angle.y - floor(self.v_angle.y / 360) * 360;
+	this.v_angle_y = this.v_angle.y + bot_cmd.bot_cmd_parm_float;
+	this.v_angle_y = this.v_angle.y - floor(this.v_angle.y / 360) * 360;
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_select_weapon()
+float bot_cmd_select_weapon(entity this)
 {
-	float id;
-
-	id = bot_cmd.bot_cmd_parm_float;
+	float id = bot_cmd.bot_cmd_parm_float;
 
 	if(id < WEP_FIRST || id > WEP_LAST)
 		return CMD_STATUS_ERROR;
 
-	if(client_hasweapon(self, id, true, false))
-		self.switchweapon = id;
+	if(client_hasweapon(this, Weapons_from(id), true, false))
+		PS(this).m_switchweapon = Weapons_from(id);
 	else
 		return CMD_STATUS_ERROR;
 
@@ -592,7 +589,7 @@ const int CMD_CONDITION_false = 2;
 const int CMD_CONDITION_true_BLOCK = 4;
 const int CMD_CONDITION_false_BLOCK = 8;
 
-float bot_cmd_eval(string expr)
+float bot_cmd_eval(entity this, string expr)
 {
 	// Search for numbers
 	if(strstrofs("0123456789", substring(expr, 0, 1), 0) >= 0)
@@ -610,31 +607,31 @@ float bot_cmd_eval(string expr)
 	switch(expr)
 	{
 		case "health":
-			return self.health;
+			return this.health;
 		case "speed":
-			return vlen(self.velocity);
+			return vlen(this.velocity);
 		case "flagcarrier":
-			return ((self.flagcarried!=world));
+			return ((this.flagcarried!=NULL));
 	}
 
-	print(strcat("ERROR: Unable to convert the expression '",expr,"' into a numeric value\n"));
+	LOG_INFO(strcat("ERROR: Unable to convert the expression '",expr,"' into a numeric value\n"));
 	return 0;
 }
 
-float bot_cmd_if()
+float bot_cmd_if(entity this)
 {
 	string expr, val_a, val_b;
 	float cmpofs;
 
-	if(self.bot_cmd_condition_status != CMD_CONDITION_NONE)
+	if(this.bot_cmd_condition_status != CMD_CONDITION_NONE)
 	{
 		// Only one "if" block is allowed at time
-		print("ERROR: Only one conditional block can be processed at time");
-		bot_clearqueue(self);
+		LOG_INFO("ERROR: Only one conditional block can be processed at time");
+		bot_clearqueue(this);
 		return CMD_STATUS_ERROR;
 	}
 
-	self.bot_cmd_condition_status |= CMD_CONDITION_true_BLOCK;
+	this.bot_cmd_condition_status |= CMD_CONDITION_true_BLOCK;
 
 	// search for operators
 	expr = bot_cmd.bot_cmd_parm_string;
@@ -646,10 +643,10 @@ float bot_cmd_if()
 		val_a = substring(expr,0,cmpofs);
 		val_b = substring(expr,cmpofs+1,strlen(expr));
 
-		if(bot_cmd_eval(val_a)==bot_cmd_eval(val_b))
-			self.bot_cmd_condition_status |= CMD_CONDITION_true;
+		if(bot_cmd_eval(this, val_a)==bot_cmd_eval(this, val_b))
+			this.bot_cmd_condition_status |= CMD_CONDITION_true;
 		else
-			self.bot_cmd_condition_status |= CMD_CONDITION_false;
+			this.bot_cmd_condition_status |= CMD_CONDITION_false;
 
   		return CMD_STATUS_FINISHED;
 	}
@@ -661,10 +658,10 @@ float bot_cmd_if()
 		val_a = substring(expr,0,cmpofs);
 		val_b = substring(expr,cmpofs+1,strlen(expr));
 
-		if(bot_cmd_eval(val_a)>bot_cmd_eval(val_b))
-			self.bot_cmd_condition_status |= CMD_CONDITION_true;
+		if(bot_cmd_eval(this, val_a)>bot_cmd_eval(this, val_b))
+			this.bot_cmd_condition_status |= CMD_CONDITION_true;
 		else
-			self.bot_cmd_condition_status |= CMD_CONDITION_false;
+			this.bot_cmd_condition_status |= CMD_CONDITION_false;
 
 		return CMD_STATUS_FINISHED;
 	}
@@ -676,38 +673,38 @@ float bot_cmd_if()
 		val_a = substring(expr,0,cmpofs);
 		val_b = substring(expr,cmpofs+1,strlen(expr));
 
-		if(bot_cmd_eval(val_a)<bot_cmd_eval(val_b))
-			self.bot_cmd_condition_status |= CMD_CONDITION_true;
+		if(bot_cmd_eval(this, val_a)<bot_cmd_eval(this, val_b))
+			this.bot_cmd_condition_status |= CMD_CONDITION_true;
 		else
-			self.bot_cmd_condition_status |= CMD_CONDITION_false;
+			this.bot_cmd_condition_status |= CMD_CONDITION_false;
 
   		return CMD_STATUS_FINISHED;
 	}
 
-	if(bot_cmd_eval(expr))
-		self.bot_cmd_condition_status |= CMD_CONDITION_true;
+	if(bot_cmd_eval(this, expr))
+		this.bot_cmd_condition_status |= CMD_CONDITION_true;
 	else
-		self.bot_cmd_condition_status |= CMD_CONDITION_false;
+		this.bot_cmd_condition_status |= CMD_CONDITION_false;
 
   	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_else()
+float bot_cmd_else(entity this)
 {
-	self.bot_cmd_condition_status &= ~CMD_CONDITION_true_BLOCK;
-	self.bot_cmd_condition_status |= CMD_CONDITION_false_BLOCK;
+	this.bot_cmd_condition_status &= ~CMD_CONDITION_true_BLOCK;
+	this.bot_cmd_condition_status |= CMD_CONDITION_false_BLOCK;
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_fi()
+float bot_cmd_fi(entity this)
 {
-	self.bot_cmd_condition_status = CMD_CONDITION_NONE;
+	this.bot_cmd_condition_status = CMD_CONDITION_NONE;
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_resetaim()
+float bot_cmd_resetaim(entity this)
 {
-	self.v_angle = '0 0 0';
+	this.v_angle = '0 0 0';
 	return CMD_STATUS_FINISHED;
 }
 
@@ -716,19 +713,19 @@ float bot_cmd_resetaim()
 .vector bot_cmd_aim_begin;
 .vector bot_cmd_aim_end;
 
-float bot_cmd_aim()
+float bot_cmd_aim(entity this)
 {
 	// Current direction
-	if(self.bot_cmd_aim_endtime)
+	if(this.bot_cmd_aim_endtime)
 	{
 		float progress;
 
-		progress = min(1 - (self.bot_cmd_aim_endtime - time) / (self.bot_cmd_aim_endtime - self.bot_cmd_aim_begintime),1);
-		self.v_angle = self.bot_cmd_aim_begin + ((self.bot_cmd_aim_end - self.bot_cmd_aim_begin) * progress);
+		progress = min(1 - (this.bot_cmd_aim_endtime - time) / (this.bot_cmd_aim_endtime - this.bot_cmd_aim_begintime),1);
+		this.v_angle = this.bot_cmd_aim_begin + ((this.bot_cmd_aim_end - this.bot_cmd_aim_begin) * progress);
 
-		if(time>=self.bot_cmd_aim_endtime)
+		if(time>=this.bot_cmd_aim_endtime)
 		{
-			self.bot_cmd_aim_endtime = 0;
+			this.bot_cmd_aim_endtime = 0;
 			return CMD_STATUS_FINISHED;
 		}
 		else
@@ -750,28 +747,28 @@ float bot_cmd_aim()
 
 	if(step == 0)
 	{
-		self.v_angle_x -= stof(argv(1));
-		self.v_angle_y += stof(argv(0));
+		this.v_angle_x -= stof(argv(1));
+		this.v_angle_y += stof(argv(0));
 		return CMD_STATUS_FINISHED;
 	}
 
-	self.bot_cmd_aim_begin = self.v_angle;
+	this.bot_cmd_aim_begin = this.v_angle;
 
-	self.bot_cmd_aim_end_x = self.v_angle.x - stof(argv(1));
-	self.bot_cmd_aim_end_y = self.v_angle.y + stof(argv(0));
-	self.bot_cmd_aim_end_z = 0;
+	this.bot_cmd_aim_end_x = this.v_angle.x - stof(argv(1));
+	this.bot_cmd_aim_end_y = this.v_angle.y + stof(argv(0));
+	this.bot_cmd_aim_end_z = 0;
 
-	self.bot_cmd_aim_begintime = time;
-	self.bot_cmd_aim_endtime = time + step;
+	this.bot_cmd_aim_begintime = time;
+	this.bot_cmd_aim_endtime = time + step;
 
 	return CMD_STATUS_EXECUTING;
 }
 
-float bot_cmd_aimtarget()
+float bot_cmd_aimtarget(entity this)
 {
-	if(self.bot_cmd_aim_endtime)
+	if(this.bot_cmd_aim_endtime)
 	{
-		return bot_cmd_aim();
+		return bot_cmd_aim(this);
 	}
 
 	entity e;
@@ -783,7 +780,7 @@ float bot_cmd_aimtarget()
 
 	tokens = tokenizebyseparator(parms, " ");
 
-	e = bot_getplace(argv(0));
+	e = bot_getplace(this, argv(0));
 	if(!e)
 		return CMD_STATUS_ERROR;
 
@@ -791,8 +788,8 @@ float bot_cmd_aimtarget()
 
 	if(tokens==1)
 	{
-		self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
-		self.v_angle_x = -self.v_angle.x;
+		this.v_angle = vectoangles(v - (this.origin + this.view_ofs));
+		this.v_angle_x = -this.v_angle.x;
 		return CMD_STATUS_FINISHED;
 	}
 
@@ -801,12 +798,12 @@ float bot_cmd_aimtarget()
 
 	step = stof(argv(1));
 
-	self.bot_cmd_aim_begin = self.v_angle;
-	self.bot_cmd_aim_end = vectoangles(v - (self.origin + self.view_ofs));
-	self.bot_cmd_aim_end_x = -self.bot_cmd_aim_end.x;
+	this.bot_cmd_aim_begin = this.v_angle;
+	this.bot_cmd_aim_end = vectoangles(v - (this.origin + this.view_ofs));
+	this.bot_cmd_aim_end_x = -this.bot_cmd_aim_end.x;
 
-	self.bot_cmd_aim_begintime = time;
-	self.bot_cmd_aim_endtime = time + step;
+	this.bot_cmd_aim_begintime = time;
+	this.bot_cmd_aim_endtime = time + step;
 
 	return CMD_STATUS_EXECUTING;
 }
@@ -814,153 +811,153 @@ float bot_cmd_aimtarget()
 .int bot_cmd_keys;
 
 const int BOT_CMD_KEY_NONE 		= 0;
-const int BOT_CMD_KEY_FORWARD 	= 1;
-const int BOT_CMD_KEY_BACKWARD 	= 2;
-const int BOT_CMD_KEY_RIGHT 	= 4;
-const int BOT_CMD_KEY_LEFT 		= 8;
-const int BOT_CMD_KEY_JUMP 		= 16;
-const int BOT_CMD_KEY_ATTACK1 	= 32;
-const int BOT_CMD_KEY_ATTACK2 	= 64;
-const int BOT_CMD_KEY_USE 		= 128;
-const int BOT_CMD_KEY_HOOK 		= 256;
-const int BOT_CMD_KEY_CROUCH 	= 512;
-const int BOT_CMD_KEY_CHAT 		= 1024;
+const int BOT_CMD_KEY_FORWARD 	= BIT(0);
+const int BOT_CMD_KEY_BACKWARD 	= BIT(1);
+const int BOT_CMD_KEY_RIGHT 	= BIT(2);
+const int BOT_CMD_KEY_LEFT 		= BIT(3);
+const int BOT_CMD_KEY_JUMP 		= BIT(4);
+const int BOT_CMD_KEY_ATTACK1 	= BIT(5);
+const int BOT_CMD_KEY_ATTACK2 	= BIT(6);
+const int BOT_CMD_KEY_USE 		= BIT(7);
+const int BOT_CMD_KEY_HOOK 		= BIT(8);
+const int BOT_CMD_KEY_CROUCH 	= BIT(9);
+const int BOT_CMD_KEY_CHAT 		= BIT(10);
 
-float bot_presskeys()
+bool bot_presskeys(entity this)
 {
-	self.movement = '0 0 0';
-	self.BUTTON_JUMP = false;
-	self.BUTTON_CROUCH = false;
-	self.BUTTON_ATCK = false;
-	self.BUTTON_ATCK2 = false;
-	self.BUTTON_USE = false;
-	self.BUTTON_HOOK = false;
-	self.BUTTON_CHAT = false;
+	this.movement = '0 0 0';
+	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	PHYS_INPUT_BUTTON_CROUCH(this) = false;
+	PHYS_INPUT_BUTTON_ATCK(this) = false;
+	PHYS_INPUT_BUTTON_ATCK2(this) = false;
+	PHYS_INPUT_BUTTON_USE(this) = false;
+	PHYS_INPUT_BUTTON_HOOK(this) = false;
+	PHYS_INPUT_BUTTON_CHAT(this) = false;
 
-	if(self.bot_cmd_keys == BOT_CMD_KEY_NONE)
+	if(this.bot_cmd_keys == BOT_CMD_KEY_NONE)
 		return false;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
-		self.movement_x = autocvar_sv_maxspeed;
-	else if(self.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
-		self.movement_x = -autocvar_sv_maxspeed;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_FORWARD)
+		this.movement_x = autocvar_sv_maxspeed;
+	else if(this.bot_cmd_keys & BOT_CMD_KEY_BACKWARD)
+		this.movement_x = -autocvar_sv_maxspeed;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
-		self.movement_y = autocvar_sv_maxspeed;
-	else if(self.bot_cmd_keys & BOT_CMD_KEY_LEFT)
-		self.movement_y = -autocvar_sv_maxspeed;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_RIGHT)
+		this.movement_y = autocvar_sv_maxspeed;
+	else if(this.bot_cmd_keys & BOT_CMD_KEY_LEFT)
+		this.movement_y = -autocvar_sv_maxspeed;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_JUMP)
-		self.BUTTON_JUMP = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_JUMP)
+		PHYS_INPUT_BUTTON_JUMP(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_CROUCH)
-		self.BUTTON_CROUCH = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_CROUCH)
+		PHYS_INPUT_BUTTON_CROUCH(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK1)
-		self.BUTTON_ATCK = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_ATTACK1)
+		PHYS_INPUT_BUTTON_ATCK(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_ATTACK2)
-		self.BUTTON_ATCK2 = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_ATTACK2)
+		PHYS_INPUT_BUTTON_ATCK2(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_USE)
-		self.BUTTON_USE = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_USE)
+		PHYS_INPUT_BUTTON_USE(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_HOOK)
-		self.BUTTON_HOOK = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_HOOK)
+		PHYS_INPUT_BUTTON_HOOK(this) = true;
 
-	if(self.bot_cmd_keys & BOT_CMD_KEY_CHAT)
-		self.BUTTON_CHAT = true;
+	if(this.bot_cmd_keys & BOT_CMD_KEY_CHAT)
+		PHYS_INPUT_BUTTON_CHAT(this) = true;
 
 	return true;
 }
 
 
-float bot_cmd_keypress_handler(string key, float enabled)
+float bot_cmd_keypress_handler(entity this, string key, float enabled)
 {
 	switch(key)
 	{
 		case "all":
 			if(enabled)
-				self.bot_cmd_keys = power2of(20) - 1; // >:)
+				this.bot_cmd_keys = power2of(20) - 1; // >:)
 			else
-				self.bot_cmd_keys = BOT_CMD_KEY_NONE;
+				this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 		case "forward":
 			if(enabled)
 			{
-				self.bot_cmd_keys |= BOT_CMD_KEY_FORWARD;
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
+				this.bot_cmd_keys |= BOT_CMD_KEY_FORWARD;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
 			}
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
 			break;
 		case "backward":
 			if(enabled)
 			{
-				self.bot_cmd_keys |= BOT_CMD_KEY_BACKWARD;
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
+				this.bot_cmd_keys |= BOT_CMD_KEY_BACKWARD;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
 			}
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
 			break;
 		case "left":
 			if(enabled)
 			{
-				self.bot_cmd_keys |= BOT_CMD_KEY_LEFT;
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
+				this.bot_cmd_keys |= BOT_CMD_KEY_LEFT;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
 			}
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
 			break;
 		case "right":
 			if(enabled)
 			{
-				self.bot_cmd_keys |= BOT_CMD_KEY_RIGHT;
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
+				this.bot_cmd_keys |= BOT_CMD_KEY_RIGHT;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
 			}
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
 			break;
 		case "jump":
 			if(enabled)
-				self.bot_cmd_keys |= BOT_CMD_KEY_JUMP;
+				this.bot_cmd_keys |= BOT_CMD_KEY_JUMP;
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_JUMP;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_JUMP;
 			break;
 		case "crouch":
 			if(enabled)
-				self.bot_cmd_keys |= BOT_CMD_KEY_CROUCH;
+				this.bot_cmd_keys |= BOT_CMD_KEY_CROUCH;
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_CROUCH;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_CROUCH;
 			break;
 		case "attack1":
 			if(enabled)
-				self.bot_cmd_keys |= BOT_CMD_KEY_ATTACK1;
+				this.bot_cmd_keys |= BOT_CMD_KEY_ATTACK1;
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK1;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK1;
 			break;
 		case "attack2":
 			if(enabled)
-				self.bot_cmd_keys |= BOT_CMD_KEY_ATTACK2;
+				this.bot_cmd_keys |= BOT_CMD_KEY_ATTACK2;
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK2;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK2;
 			break;
 		case "use":
 			if(enabled)
-				self.bot_cmd_keys |= BOT_CMD_KEY_USE;
+				this.bot_cmd_keys |= BOT_CMD_KEY_USE;
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_USE;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_USE;
 			break;
 		case "hook":
 			if(enabled)
-				self.bot_cmd_keys |= BOT_CMD_KEY_HOOK;
+				this.bot_cmd_keys |= BOT_CMD_KEY_HOOK;
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_HOOK;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_HOOK;
 			break;
 		case "chat":
 			if(enabled)
-				self.bot_cmd_keys |= BOT_CMD_KEY_CHAT;
+				this.bot_cmd_keys |= BOT_CMD_KEY_CHAT;
 			else
-				self.bot_cmd_keys &= ~BOT_CMD_KEY_CHAT;
+				this.bot_cmd_keys &= ~BOT_CMD_KEY_CHAT;
 			break;
 		default:
 			break;
@@ -969,66 +966,65 @@ float bot_cmd_keypress_handler(string key, float enabled)
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_presskey()
+float bot_cmd_presskey(entity this)
 {
 	string key;
 
 	key = bot_cmd.bot_cmd_parm_string;
 
-	bot_cmd_keypress_handler(key,true);
+	bot_cmd_keypress_handler(this, key,true);
 
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_releasekey()
+float bot_cmd_releasekey(entity this)
 {
 	string key;
 
 	key = bot_cmd.bot_cmd_parm_string;
 
-	return bot_cmd_keypress_handler(key,false);
+	return bot_cmd_keypress_handler(this, key,false);
 }
 
-float bot_cmd_pause()
+float bot_cmd_pause(entity this)
 {
-	self.button1        = 0;
-	self.button8        = 0;
-	self.BUTTON_USE     = 0;
-	self.BUTTON_ATCK    = 0;
-	self.BUTTON_JUMP    = 0;
-	self.BUTTON_HOOK    = 0;
-	self.BUTTON_CHAT    = 0;
-	self.BUTTON_ATCK2   = 0;
-	self.BUTTON_CROUCH  = 0;
+	PHYS_INPUT_BUTTON_DRAG(this) = false;
+	PHYS_INPUT_BUTTON_USE(this) = false;
+	PHYS_INPUT_BUTTON_ATCK(this) = false;
+	PHYS_INPUT_BUTTON_JUMP(this) = false;
+	PHYS_INPUT_BUTTON_HOOK(this) = false;
+	PHYS_INPUT_BUTTON_CHAT(this) = false;
+	PHYS_INPUT_BUTTON_ATCK2(this) = false;
+	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	self.movement = '0 0 0';
-	self.bot_cmd_keys = BOT_CMD_KEY_NONE;
+	this.movement = '0 0 0';
+	this.bot_cmd_keys = BOT_CMD_KEY_NONE;
 
-	self.bot_exec_status |= BOT_EXEC_STATUS_PAUSED;
+	this.bot_exec_status |= BOT_EXEC_STATUS_PAUSED;
 	return CMD_STATUS_FINISHED;
 }
 
-float bot_cmd_moveto()
+float bot_cmd_moveto(entity this)
 {
-	return self.cmd_moveto(bot_cmd.bot_cmd_parm_vector);
+	return this.cmd_moveto(this, bot_cmd.bot_cmd_parm_vector);
 }
 
-float bot_cmd_movetotarget()
+float bot_cmd_movetotarget(entity this)
 {
 	entity e;
-	e = bot_getplace(bot_cmd.bot_cmd_parm_string);
+	e = bot_getplace(this, bot_cmd.bot_cmd_parm_string);
 	if(!e)
 		return CMD_STATUS_ERROR;
-	return self.cmd_moveto(e.origin + (e.mins + e.maxs) * 0.5);
+	return this.cmd_moveto(this, e.origin + (e.mins + e.maxs) * 0.5);
 }
 
-float bot_cmd_resetgoal()
+float bot_cmd_resetgoal(entity this)
 {
-	return self.cmd_resetgoal();
+	return this.cmd_resetgoal(this);
 }
 
 
-float bot_cmd_sound()
+float bot_cmd_sound(entity this)
 {
 	string f;
 	f = bot_cmd.bot_cmd_parm_string;
@@ -1050,47 +1046,48 @@ float bot_cmd_sound()
 		atten = stof(argv(2));
 
 	precache_sound(f);
-	sound(self, chan, sample, vol, atten);
+	_sound(this, chan, sample, vol, atten);
 
 	return CMD_STATUS_FINISHED;
 }
 
 .entity tuba_note;
-float bot_cmd_debug_assert_canfire()
+float bot_cmd_debug_assert_canfire(entity this)
 {
-	float f;
-	f = bot_cmd.bot_cmd_parm_float;
+	float f = bot_cmd.bot_cmd_parm_float;
 
-	if(self.weaponentity.state != WS_READY)
+	int slot = 0;
+	.entity weaponentity = weaponentities[slot];
+	if(this.(weaponentity).state != WS_READY)
 	{
 		if(f)
 		{
-			self.colormod = '0 8 8';
-			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by weaponentity state\n");
+			this.colormod = '0 8 8';
+			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by weaponentity state\n");
 		}
 	}
-	else if(ATTACK_FINISHED(self) > time)
+	else if(ATTACK_FINISHED(this, slot) > time)
 	{
 		if(f)
 		{
-			self.colormod = '8 0 8';
-			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(self) - time), " seconds left)\n");
+			this.colormod = '8 0 8';
+			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left)\n");
 		}
 	}
-	else if(self.tuba_note)
+	else if(this.tuba_note)
 	{
 		if(f)
 		{
-			self.colormod = '8 0 0';
-			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, bot still has an active tuba note\n");
+			this.colormod = '8 0 0';
+			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " wants to fire, bot still has an active tuba note\n");
 		}
 	}
 	else
 	{
 		if(!f)
 		{
-			self.colormod = '8 8 0';
-			print("Bot ", self.netname, " using ", self.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(self) - time), " seconds left\n");
+			this.colormod = '8 8 0';
+			LOG_INFO("Bot ", this.netname, " using ", this.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(this, slot) - time), " seconds left\n");
 		}
 	}
 
@@ -1099,116 +1096,112 @@ float bot_cmd_debug_assert_canfire()
 
 //
 
-void bot_command_executed(float rm)
+void bot_command_executed(entity this, bool rm)
 {
 	entity cmd;
 
 	cmd = bot_cmd;
 
 	if(rm)
-		bot_dequeuecommand(self, self.bot_cmd_execution_index);
+		bot_dequeuecommand(this, this.bot_cmd_execution_index);
 
-	self.bot_cmd_execution_index++;
+	this.bot_cmd_execution_index++;
 }
 
-void bot_setcurrentcommand()
+void bot_setcurrentcommand(entity this)
 {
-	bot_cmd = world;
+	bot_cmd = NULL;
 
-	if(!self.bot_cmd_current)
+	if(!this.bot_cmd_current)
 	{
-		self.bot_cmd_current = spawn();
-		self.bot_cmd_current.classname = "bot_cmd";
-		self.bot_cmd_current.is_bot_cmd = 1;
+		this.bot_cmd_current = new_pure(bot_cmd);
+		this.bot_cmd_current.is_bot_cmd = true;
 	}
 
-	bot_cmd = self.bot_cmd_current;
-	if(bot_cmd.bot_cmd_index != self.bot_cmd_execution_index || self.bot_cmd_execution_index == 0)
+	bot_cmd = this.bot_cmd_current;
+	if(bot_cmd.bot_cmd_index != this.bot_cmd_execution_index || this.bot_cmd_execution_index == 0)
 	{
-		if(bot_havecommand(self, self.bot_cmd_execution_index))
+		if(bot_havecommand(this, this.bot_cmd_execution_index))
 		{
 			string cmdstring;
-			cmdstring = bot_readcommand(self, self.bot_cmd_execution_index);
+			cmdstring = bot_readcommand(this, this.bot_cmd_execution_index);
 			if(bot_decodecommand(cmdstring))
 			{
-				bot_cmd.owner = self;
-				bot_cmd.bot_cmd_index = self.bot_cmd_execution_index;
+				bot_cmd.owner = this;
+				bot_cmd.bot_cmd_index = this.bot_cmd_execution_index;
 			}
 			else
 			{
 				// Invalid command, remove from queue
-				bot_cmd = world;
-				bot_dequeuecommand(self, self.bot_cmd_execution_index);
-				self.bot_cmd_execution_index++;
+				bot_cmd = NULL;
+				bot_dequeuecommand(this, this.bot_cmd_execution_index);
+				this.bot_cmd_execution_index++;
 			}
 		}
 		else
-			bot_cmd = world;
+			bot_cmd = NULL;
 	}
 }
 
 void bot_resetqueues()
 {
-	entity cl;
-
-	FOR_EACH_CLIENT(cl) if(cl.isbot)
-	{
-		cl.bot_cmd_execution_index = 0;
-		bot_clearqueue(cl);
+	FOREACH_CLIENT(it.isbot, LAMBDA(
+		it.bot_cmd_execution_index = 0;
+		bot_clearqueue(it);
 		// also, cancel all barriers
-		cl.bot_barrier = 0;
-		for(int i = 0; i < cl.bot_places_count; ++i)
+		it.bot_barrier = 0;
+		for(int i = 0; i < it.bot_places_count; ++i)
 		{
-			strunzone(cl.(bot_placenames[i]));
-			cl.(bot_placenames[i]) = string_null;
+			strunzone(it.(bot_placenames[i]));
+			it.(bot_placenames[i]) = string_null;
 		}
-		cl.bot_places_count = 0;
-	}
+		it.bot_places_count = 0;
+	));
 
 	bot_barriertime = time;
 }
 
 // Here we map commands to functions and deal with complex interactions between commands and execution states
 // NOTE: Of course you need to include your commands here too :)
-float bot_execute_commands_once()
+float bot_execute_commands_once(entity this)
 {
 	float status, ispressingkey;
 
 	// Find command
-	bot_setcurrentcommand();
+	bot_setcurrentcommand(this);
 
 	// if we have no bot command, better return
 	// old logic kept pressing previously pressed keys, but that has problems
 	// (namely, it means you cannot make a bot "normal" ever again)
 	// to keep a bot walking for a while, use the "wait" bot command
-	if(bot_cmd == world)
+	if(bot_cmd == NULL)
 		return false;
 
 	// Ignore all commands except continue when the bot is paused
-	if(self.bot_exec_status & BOT_EXEC_STATUS_PAUSED)
+	if(this.bot_exec_status & BOT_EXEC_STATUS_PAUSED)
 	if(bot_cmd.bot_cmd_type!=BOT_CMD_CONTINUE)
 	{
 		if(bot_cmd.bot_cmd_type!=BOT_CMD_NULL)
 		{
-			bot_command_executed(true);
-			print( "WARNING: Commands are ignored while the bot is paused. Use the command 'continue' instead.\n");
+			bot_command_executed(this, true);
+			LOG_INFO( "WARNING: Commands are ignored while the bot is paused. Use the command 'continue' instead.\n");
 		}
 		return 1;
 	}
 
 	// Keep pressing keys raised by the "presskey" command
-	ispressingkey = !!bot_presskeys();
+	ispressingkey = boolean(bot_presskeys(this));
 
 	// Handle conditions
 	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
-	if(self.bot_cmd_condition_status & CMD_CONDITION_true && self.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
+	if(this.bot_cmd_condition_status & CMD_CONDITION_true && this.bot_cmd_condition_status & CMD_CONDITION_false_BLOCK)
 	{
-		bot_command_executed(true);
+		bot_command_executed(this, true);
 		return -1;
 	}
-	else if(self.bot_cmd_condition_status & CMD_CONDITION_false && self.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
+	else if(this.bot_cmd_condition_status & CMD_CONDITION_false && this.bot_cmd_condition_status & CMD_CONDITION_true_BLOCK)
 	{
-		bot_command_executed(true);
+		bot_command_executed(this, true);
 		return -1;
 	}
 
@@ -1219,82 +1212,82 @@ float bot_execute_commands_once()
 			return ispressingkey;
 			//break;
 		case BOT_CMD_PAUSE:
-			status = bot_cmd_pause();
+			status = bot_cmd_pause(this);
 			break;
 		case BOT_CMD_CONTINUE:
-			status = bot_cmd_continue();
+			status = bot_cmd_continue(this);
 			break;
 		case BOT_CMD_WAIT:
-			status = bot_cmd_wait();
+			status = bot_cmd_wait(this);
 			break;
 		case BOT_CMD_WAIT_UNTIL:
-			status = bot_cmd_wait_until();
+			status = bot_cmd_wait_until(this);
 			break;
 		case BOT_CMD_TURN:
-			status = bot_cmd_turn();
+			status = bot_cmd_turn(this);
 			break;
 		case BOT_CMD_MOVETO:
-			status = bot_cmd_moveto();
+			status = bot_cmd_moveto(this);
 			break;
 		case BOT_CMD_MOVETOTARGET:
-			status = bot_cmd_movetotarget();
+			status = bot_cmd_movetotarget(this);
 			break;
 		case BOT_CMD_RESETGOAL:
-			status = bot_cmd_resetgoal();
+			status = bot_cmd_resetgoal(this);
 			break;
 		case BOT_CMD_CC:
-			status = bot_cmd_cc();
+			status = bot_cmd_cc(this);
 			break;
 		case BOT_CMD_IF:
-			status = bot_cmd_if();
+			status = bot_cmd_if(this);
 			break;
 		case BOT_CMD_ELSE:
-			status = bot_cmd_else();
+			status = bot_cmd_else(this);
 			break;
 		case BOT_CMD_FI:
-			status = bot_cmd_fi();
+			status = bot_cmd_fi(this);
 			break;
 		case BOT_CMD_RESETAIM:
-			status = bot_cmd_resetaim();
+			status = bot_cmd_resetaim(this);
 			break;
 		case BOT_CMD_AIM:
-			status = bot_cmd_aim();
+			status = bot_cmd_aim(this);
 			break;
 		case BOT_CMD_AIMTARGET:
-			status = bot_cmd_aimtarget();
+			status = bot_cmd_aimtarget(this);
 			break;
 		case BOT_CMD_PRESSKEY:
-			status = bot_cmd_presskey();
+			status = bot_cmd_presskey(this);
 			break;
 		case BOT_CMD_RELEASEKEY:
-			status = bot_cmd_releasekey();
+			status = bot_cmd_releasekey(this);
 			break;
 		case BOT_CMD_SELECTWEAPON:
-			status = bot_cmd_select_weapon();
+			status = bot_cmd_select_weapon(this);
 			break;
 		case BOT_CMD_IMPULSE:
-			status = bot_cmd_impulse();
+			status = bot_cmd_impulse(this);
 			break;
 		case BOT_CMD_BARRIER:
-			status = bot_cmd_barrier();
+			status = bot_cmd_barrier(this);
 			break;
 		case BOT_CMD_CONSOLE:
 			localcmd(strcat(bot_cmd.bot_cmd_parm_string, "\n"));
 			status = CMD_STATUS_FINISHED;
 			break;
 		case BOT_CMD_SOUND:
-			status = bot_cmd_sound();
+			status = bot_cmd_sound(this);
 			break;
 		case BOT_CMD_DEBUG_ASSERT_CANFIRE:
-			status = bot_cmd_debug_assert_canfire();
+			status = bot_cmd_debug_assert_canfire(this);
 			break;
 		default:
-			print(strcat("ERROR: Invalid command on queue with id '",ftos(bot_cmd.bot_cmd_type),"'\n"));
+			LOG_INFO(strcat("ERROR: Invalid command on queue with id '",ftos(bot_cmd.bot_cmd_type),"'\n"));
 			return 0;
 	}
 
 	if (status==CMD_STATUS_ERROR)
-		print(strcat("ERROR: The command '",bot_cmd_string[bot_cmd.bot_cmd_type],"' returned an error status\n"));
+		LOG_INFO(strcat("ERROR: The command '",bot_cmd_string[bot_cmd.bot_cmd_type],"' returned an error status\n"));
 
 	// Move execution pointer
 	if(status==CMD_STATUS_EXECUTING)
@@ -1322,10 +1315,10 @@ float bot_execute_commands_once()
 					parms = "";
 					break;
 			}
-			clientcommand(self,strcat("say ^7", bot_cmd_string[bot_cmd.bot_cmd_type]," ",parms,"\n"));
+			clientcommand(this,strcat("say ^7", bot_cmd_string[bot_cmd.bot_cmd_type]," ",parms,"\n"));
 		}
 
-		bot_command_executed(true);
+		bot_command_executed(this, true);
 	}
 
 	if(status == CMD_STATUS_FINISHED)
@@ -1335,12 +1328,12 @@ float bot_execute_commands_once()
 }
 
 // This function should be (the only) called directly from the bot ai loop
-float bot_execute_commands()
+int bot_execute_commands(entity this)
 {
-	float f;
+	int f;
 	do
 	{
-		f = bot_execute_commands_once();
+		f = bot_execute_commands_once(this);
 	}
 	while(f < 0);
 	return f;

@@ -1,12 +1,9 @@
 #if defined(CSQC)
 #elif defined(MENUQC)
 #elif defined(SVQC)
-	#include "../dpdefs/progsdefs.qh"
-    #include "../dpdefs/dpextensions.qh"
     #include "constants.qh"
     #include "util.qh"
-    #include "urllib.qh"
-    #include "weapons/all.qh"
+    #include <common/weapons/all.qh>
     #include "../server/weapons/accuracy.qh"
     #include "../server/defs.qh"
     #include "playerstats.qh"
@@ -14,7 +11,7 @@
 #endif
 
 #ifdef SVQC
-void PlayerStats_Prematch(void)
+void PlayerStats_Prematch()
 {
 	//foobar
 }
@@ -31,7 +28,7 @@ void PlayerStats_GameReport_AddPlayer(entity e)
 	else if(IS_BOT_CLIENT(e))
 		{ s = sprintf("bot#%g#%s", skill, e.cleanname); }
 
-	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
+	if((s == "") || find(NULL, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
 		if(IS_BOT_CLIENT(e))
 			{ s = sprintf("bot#%d", e.playerid); }
@@ -109,23 +106,16 @@ float PlayerStats_GameReport_Event(string prefix, string event_id, float value)
 
 void PlayerStats_GameReport_Accuracy(entity p)
 {
-	int i;
-
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		entity w = get_weaponinfo(i);
-
-		#define ACCMAC(suffix,field) \
-			PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", w.netname, suffix), p.accuracy.(field[i-1]));
-
+	#define ACCMAC(suffix, field) \
+		PS_GR_P_ADDVAL(p, sprintf("acc-%s-%s", it.netname, suffix), p.accuracy.(field[i-1]));
+	FOREACH(Weapons, it != WEP_Null, {
 		ACCMAC("hit", accuracy_hit)
 		ACCMAC("fired", accuracy_fired)
 		ACCMAC("cnt-hit", accuracy_cnt_hit)
 		ACCMAC("cnt-fired", accuracy_cnt_fired)
 		ACCMAC("frags", accuracy_frags)
-
-		#undef ACCMAC
-	}
+	});
+	#undef ACCMAC
 }
 
 void PlayerStats_GameReport_FinalizePlayer(entity p)
@@ -173,35 +163,33 @@ void PlayerStats_GameReport(float finished)
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	if(teamplay) { PlayerScore_TeamStats(); }
 
-	entity p;
-	FOR_EACH_CLIENT(p)
-	{
+	FOREACH_CLIENT(true, {
 		// add personal score rank
-		PS_GR_P_ADDVAL(p, PLAYERSTATS_RANK, p.score_dummyfield);
+		PS_GR_P_ADDVAL(it, PLAYERSTATS_RANK, it.score_dummyfield);
 
 		// scoreboard data
-		if(p.scoreboard_pos)
+		if(it.scoreboard_pos)
 		{
 			// scoreboard is valid!
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_VALID, 1);
 
 			// add scoreboard position
-			PS_GR_P_ADDVAL(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+			PS_GR_P_ADDVAL(it, PLAYERSTATS_SCOREBOARD_POS, it.scoreboard_pos);
 
 			// add scoreboard data
-			PlayerScore_PlayerStats(p);
+			PlayerScore_PlayerStats(it);
 
 			// if the match ended normally, add winning info
 			if(finished)
 			{
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_WINS, p.winning);
-				PS_GR_P_ADDVAL(p, PLAYERSTATS_MATCHES, 1);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_WINS, it.winning);
+				PS_GR_P_ADDVAL(it, PLAYERSTATS_MATCHES, 1);
 			}
 		}
 
 		// collect final player information
-		PlayerStats_GameReport_FinalizePlayer(p);
-	}
+		PlayerStats_GameReport_FinalizePlayer(it);
+	});
 
 	if(autocvar_g_playerstats_gamereport_uri != "")
 	{
@@ -210,7 +198,7 @@ void PlayerStats_GameReport(float finished)
 			autocvar_g_playerstats_gamereport_uri,
 			FILE_APPEND,
 			PlayerStats_GameReport_Handler,
-			world
+			NULL
 		);
 	}
 	else
@@ -243,17 +231,13 @@ void PlayerStats_GameReport_Init() // initiated before InitGameplayMode so that 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_RANK);
 
 		// accuracy stats
-		entity w;
-		float i;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			w = get_weaponinfo(i);
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-hit"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-fired"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-hit"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-cnt-fired"));
-			PlayerStats_GameReport_AddEvent(strcat("acc-", w.netname, "-frags"));
-		}
+		FOREACH(Weapons, it != WEP_Null, {
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-hit"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-cnt-fired"));
+			PlayerStats_GameReport_AddEvent(strcat("acc-", it.netname, "-frags"));
+		});
 
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 		PlayerStats_GameReport_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -395,9 +379,9 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		{
 			// url_fclose is processing, we got a response for writing the data
 			// this must come from HTTP
-			dprint("Got response from player stats server:\n");
-			while((s = url_fgets(fh))) { dprint("  ", s, "\n"); }
-			dprint("End of response.\n");
+			LOG_TRACE("Got response from player stats server:\n");
+			while((s = url_fgets(fh))) { LOG_TRACE("  ", s, "\n"); }
+			LOG_TRACE("End of response.\n");
 			url_fclose(fh);
 			break;
 		}
@@ -405,7 +389,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			dprint("Player stats written\n");
+			LOG_TRACE("Player stats written\n");
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -418,7 +402,7 @@ void PlayerStats_GameReport_Handler(entity fh, entity pass, float status)
 		case URL_READY_ERROR:
 		default:
 		{
-			print("Player stats writing failed: ", ftos(status), "\n");
+			LOG_INFO("Player stats writing failed: ", ftos(status), "\n");
 			PlayerStats_GameReport_DelayMapVote = false;
 			if(PS_GR_OUT_DB >= 0)
 			{
@@ -443,8 +427,8 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 				PS_B_IN_DB = db_create();
 
 			// now request the information
-			uri = strcat(uri, "/player/", uri_escape(uri_escape(joiningplayer.crypto_idfp)), "/elo.txt");
-			dprint("Retrieving playerstats from URL: ", uri, "\n");
+			uri = strcat(uri, "/player/", uri_escape(uri_escape(uri_escape(joiningplayer.crypto_idfp))), "/elo.txt");
+			LOG_TRACE("Retrieving playerstats from URL: ", uri, "\n");
 			url_single_fopen(
 				uri,
 				FILE_APPEND,
@@ -470,12 +454,10 @@ void PlayerStats_PlayerBasic(entity joiningplayer, float newrequest)
 		// server has this disabled, kill the DB and set status to idle
 		if(PS_B_IN_DB >= 0)
 		{
-			entity player;
-
 			db_close(PS_B_IN_DB);
 			PS_B_IN_DB = -1;
 
-			FOR_EACH_REALCLIENT(player) { player.playerstats_basicstatus = PS_B_STATUS_IDLE; }
+			FOREACH_CLIENT(IS_REAL_CLIENT(it), it.playerstats_basicstatus = PS_B_STATUS_IDLE);
 		}
 	}
 }
@@ -485,7 +467,7 @@ void PlayerStats_PlayerBasic_CheckUpdate(entity joiningplayer)
 	// determine whether we should retrieve playerbasic information again
 
 	#if 0
-	printf("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f\n",
+	LOG_INFOF("PlayerStats_PlayerBasic_CheckUpdate('%s'): %f\n",
 		joiningplayer.netname,
 		time
 	);
@@ -509,7 +491,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			dprint("-- Sending data to player stats server\n");
+			LOG_TRACE("-- Sending data to player stats server\n");
 			/*url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -527,11 +509,11 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 		case URL_READY_CANREAD:
 		{
 			string s = "";
-			dprint("-- Got response from player stats server:\n");
+			LOG_TRACE("-- Got response from player stats server:\n");
 			//string gametype = string_null;
 			while((s = url_fgets(fh)))
 			{
-				dprint("  ", s, "\n");
+				LOG_TRACE("  ", s, "\n");
 				/*
 				string key = "", value = "", data = "";
 
@@ -582,21 +564,21 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 				continue;
 				*/
 			}
-			dprint("-- End of response.\n");
+			LOG_TRACE("-- End of response.\n");
 			url_fclose(fh);
 			break;
 		}
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			print("Player stats synchronized with server\n");
+			LOG_INFO("Player stats synchronized with server\n");
 			break;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			print("Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("Receiving player stats failed: ", ftos(status), "\n");
 			break;
 		}
 	}
@@ -611,7 +593,7 @@ void PlayerStats_PlayerBasic_Handler(entity fh, entity p, float status)
 	float i = 0;
 	for(e = PS_D_IN_EVL; (en = db_get(PS_D_IN_DB, e)) != ""; e = en)
 	{
-		print(sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))));
+		LOG_INFO(sprintf("%d:%s:%s\n", i, e, db_get(PS_D_IN_DB, sprintf("#%s", e))));
 		++i;
 	}
 #endif
@@ -635,10 +617,10 @@ void PlayerStats_PlayerDetail_AddItem(string event, string data)
 
 	// now actually set the event data
 	db_put(PS_D_IN_DB, sprintf("#%s", event), data);
-	dprint("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
+	LOG_TRACE("Added item ", sprintf("#%s", event), "=", data, " to PS_D_IN_DB\n");
 }
 
-void PlayerStats_PlayerDetail(void)
+void PlayerStats_PlayerDetail()
 {
 	// http://stats.xonotic.org/player/me
 	if((autocvar_g_playerstats_playerdetail_uri != "") && (crypto_getmyidstatus(0) > 0))
@@ -648,12 +630,12 @@ void PlayerStats_PlayerDetail(void)
 			PS_D_IN_DB = db_create();
 
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
-		dprint("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri, "\n");
+		LOG_TRACE("Retrieving playerstats from URL: ", autocvar_g_playerstats_playerdetail_uri, "\n");
 		url_single_fopen(
 			autocvar_g_playerstats_playerdetail_uri,
 			FILE_APPEND,
 			PlayerStats_PlayerDetail_Handler,
-			world
+			NULL
 		);
 
 		PlayerStats_PlayerDetail_Status = PS_D_STATUS_WAITING;
@@ -671,13 +653,13 @@ void PlayerStats_PlayerDetail(void)
 	}
 }
 
-void PlayerStats_PlayerDetail_CheckUpdate(void)
+void PlayerStats_PlayerDetail_CheckUpdate()
 {
 	// determine whether we should retrieve playerdetail information again
 	float gamecount = cvar("cl_matchcount");
 
 	#if 0
-	printf("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
+	LOG_INFOF("PlayerStats_PlayerDetail_CheckUpdate(): %f >= %f, %d > %d\n",
 		time,
 		PS_D_NEXTUPDATETIME,
 		PS_D_LASTGAMECOUNT,
@@ -703,7 +685,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 	{
 		case URL_READY_CANWRITE:
 		{
-			dprint("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...\n");
+			LOG_TRACE("PlayerStats_PlayerDetail_Handler(): Sending data to player stats server...\n");
 			url_fputs(fh, "V 1\n");
 			#ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
@@ -776,7 +758,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 
 					default:
 					{
-						printf(
+						LOG_INFOF(
 							"PlayerStats_PlayerDetail_Handler(): ERROR: "
 							"Key went unhandled? Is our version outdated?\n"
 							"PlayerStats_PlayerDetail_Handler(): "
@@ -790,7 +772,7 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 				}
 
 				#if 0
-				print(sprintf(
+				LOG_INFO(sprintf(
 					"PlayerStats_PlayerDetail_Handler(): "
 					"Key '%s', Event '%s', Data '%s'\n",
 					key,
@@ -809,14 +791,14 @@ void PlayerStats_PlayerDetail_Handler(entity fh, entity unused, float status)
 		case URL_READY_CLOSED:
 		{
 			// url_fclose has finished
-			print("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Player stats synchronized with server.\n");
 			break;
 		}
 
 		case URL_READY_ERROR:
 		default:
 		{
-			print("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
+			LOG_INFO("PlayerStats_PlayerDetail_Handler(): Receiving player stats failed: ", ftos(status), "\n");
 			PlayerStats_PlayerDetail_Status = PS_D_STATUS_ERROR;
 			if(PS_D_IN_DB >= 0)
 			{
@@ -1031,14 +1013,13 @@ void PlayerInfo_Details()
 		//uri = strcat(uri, "/player/", uri_escape(crypto_getmyidfp(0)));
                 uri = strcat(uri, "/player/me");
 		print("Retrieving playerstats from URL: ", uri, "\n");
-		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, world);
+		url_single_fopen(uri, FILE_APPEND, PlayerInfo_ready, NULL);
 	}
 }
 #endif
 
 #ifdef CSQC
-/*
- * FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qh:885)
+// FIXME - crypto_* builtin functions missing in CSQC (csprogsdefs.qh:885)
 void PlayerInfo_Details()
 {
         print("-- Getting detailed PlayerInfo for local player (CSQC)\n");

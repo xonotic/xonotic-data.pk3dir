@@ -5,12 +5,11 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 {
 	float domatch, dotrigger, matchstart, l;
 	string s, msg;
-	entity oldself;
 	string savemessage;
 
 	magicear_matched = false;
 
-	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
+	dotrigger = ((IS_PLAYER(source)) && (!IS_DEAD(source)) && ((ear.radius == 0) || (vdist(source.origin - ear.origin, <=, ear.radius))));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
 
 	if (!domatch)
@@ -29,14 +28,10 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 		if(dotrigger)
 		{
-			oldself = self;
-			activator = source;
-			self = ear;
-			savemessage = self.message;
-			self.message = string_null;
-			SUB_UseTargets();
-			self.message = savemessage;
-			self = oldself;
+			savemessage = ear.message;
+			ear.message = string_null;
+			SUB_UseTargets(ear, source, NULL);
+			ear.message = savemessage;
 		}
 
 		if(ear.netname != "")
@@ -120,14 +115,10 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	if(dotrigger)
 	{
-		oldself = self;
-		activator = source;
-		self = ear;
-		savemessage = self.message;
-		self.message = string_null;
-		SUB_UseTargets();
-		self.message = savemessage;
-		self = oldself;
+		savemessage = ear.message;
+		ear.message = string_null;
+		SUB_UseTargets(ear, source, NULL);
+		ear.message = savemessage;
 	}
 
 	if(ear.spawnflags & 16)
@@ -165,10 +156,10 @@ string trigger_magicear_processmessage_forallears(entity source, float teamsay, 
 	return msgin;
 }
 
-void spawnfunc_trigger_magicear()
+spawnfunc(trigger_magicear)
 {
-	self.enemy = magicears;
-	magicears = self;
+	this.enemy = magicears;
+	magicears = this;
 
 	// actually handled in "say" processing
 	// spawnflags:
@@ -199,6 +190,6 @@ void spawnfunc_trigger_magicear()
 	// movedir:
 	//   for spawnflags 256, defines 'instrument+1 mintempo maxtempo' (zero component doesn't matter)
 
-	self.movedir_x -= 1; // map to tuba instrument numbers
+	this.movedir_x -= 1; // map to tuba instrument numbers
 }
 #endif

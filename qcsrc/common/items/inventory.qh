@@ -4,47 +4,61 @@
 #include "all.qh"
 #include "item/pickup.qh"
 
-entityclass(Inventory);
-/** Stores counts of items, the id being the index */
-class(Inventory) .int inv_items[MAX_ITEMS];
+CLASS(Inventory, Object)
+    /** Stores counts of items, the id being the index */
+    ATTRIBARRAY(Inventory, inv_items, int, Items_MAX)
+    /** Previous state */
+    ATTRIB(Inventory, inventory, Inventory, NULL)
+ENDCLASS(Inventory)
 
-/** Player inventory; Inventories also have one inventory for storing the previous state */
+/** Player inventory */
 .Inventory inventory;
 
+REGISTER_NET_LINKED(ENT_CLIENT_INVENTORY)
+
 #ifdef CSQC
-void Inventory_Read(Inventory data)
+NET_HANDLE(ENT_CLIENT_INVENTORY, bool isnew)
 {
+    make_pure(this);
     const int bits = ReadInt24_t();
-    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
-        .int fld = inv_items[i];
-        int prev = data.(fld);
-        int next = data.(fld) = ReadByte();
-        dprintf("%s: %.0f -> %.0f\n", ITEMS[i].m_name, prev, next);
-    ));
+    FOREACH(Items, bits & BIT(it.m_id), {
+        .int fld = inv_items[it.m_id];
+        int prev = this.(fld);
+        int next = this.(fld) = ReadByte();
+        LOG_TRACEF("%s: %.0f -> %.0f\n", it.m_name, prev, next);
+    });
+    return true;
 }
 #endif
 
 #ifdef SVQC
 void Inventory_Write(Inventory data)
 {
+    if (!data) {
+        WriteInt24_t(MSG_ENTITY, 0);
+        return;
+    }
+    TC(Inventory, data);
     int bits = 0;
-    FOREACH(ITEMS, true, LAMBDA(
-        .int fld = inv_items[i];
-        bits = BITSET(bits, BIT(i), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
-    ));
+    FOREACH(Items, true, {
+        .int fld = inv_items[it.m_id];
+        bits = BITSET(bits, BIT(it.m_id), data.inventory.(fld) != (data.inventory.(fld) = data.(fld)));
+    });
     WriteInt24_t(MSG_ENTITY, bits);
-    FOREACH(ITEMS, bits & BIT(i), LAMBDA(
-        WriteByte(MSG_ENTITY, data.inv_items[i]);
-    ));
+    FOREACH(Items, bits & BIT(it.m_id), {
+        WriteByte(MSG_ENTITY, data.inv_items[it.m_id]);
+    });
 }
 #endif
 
 #ifdef SVQC
-bool Inventory_Send(entity to, int sf)
+bool Inventory_Send(Inventory this, Client to, int sf)
 {
-    WriteByte(MSG_ENTITY, ENT_CLIENT_INVENTORY);
-    entity e = self.owner;
+    TC(Inventory, this);
+    WriteHeader(MSG_ENTITY, ENT_CLIENT_INVENTORY);
+    entity e = this.owner;
     if (IS_SPEC(e)) e = e.enemy;
+    TC(Player, e);
     Inventory data = e.inventory;
     Inventory_Write(data);
     return true;
@@ -52,8 +66,7 @@ bool Inventory_Send(entity to, int sf)
 
 void Inventory_new(entity e)
 {
-    Inventory inv = new(Inventory), bak = new(Inventory);
-    inv.classname = "inventory", bak.classname = "inventory";
+    Inventory inv = NEW(Inventory), bak = NEW(Inventory);
     inv.inventory = bak;
     inv.drawonlytoclient = e;
     Net_LinkEntity((inv.owner = e).inventory = inv, false, 0, Inventory_Send);

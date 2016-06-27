@@ -1,17 +1,8 @@
-#ifndef DIALOG_SETTINGS_USER_LANGUAGEWARNING_H
-#define DIALOG_SETTINGS_USER_LANGUAGEWARNING_H
-#include "dialog.qc"
-CLASS(XonoticLanguageWarningDialog, XonoticDialog)
-	METHOD(XonoticLanguageWarningDialog, fill, void(entity)); // to be overridden by user to fill the dialog with controls
-	ATTRIB(XonoticLanguageWarningDialog, title, string, _("Warning"))
-	ATTRIB(XonoticLanguageWarningDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)
-	ATTRIB(XonoticLanguageWarningDialog, intendedWidth, float, 0.6)
-	ATTRIB(XonoticLanguageWarningDialog, rows, float, 5)
-	ATTRIB(XonoticLanguageWarningDialog, columns, float, 4)
-ENDCLASS(XonoticLanguageWarningDialog)
-#endif
+#include "dialog_settings_user_languagewarning.qh"
 
-#ifdef IMPLEMENTATION
+#include "textlabel.qh"
+#include "commandbutton.qh"
+
 void XonoticLanguageWarningDialog_fill(entity me)
 {
 	entity e;
@@ -25,4 +16,3 @@ void XonoticLanguageWarningDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCommandButton(_("Disconnect now"), '0 0 0', "disconnect", 0));
 		me.TD(me, 1, 2, e = makeXonoticCommandButton(_("Switch language"), '0 0 0', "prvm_language \"$_menu_prvm_language\"; menu_restart; menu_cmd languageselect", 0));
 }
-#endif

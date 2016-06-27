@@ -1,0 +1,23 @@
+// generated file; do not modify
+#include <common/turrets/turret/ewheel.qc>
+#include <common/turrets/turret/ewheel_weapon.qc>
+#include <common/turrets/turret/flac.qc>
+#include <common/turrets/turret/flac_weapon.qc>
+#include <common/turrets/turret/fusionreactor.qc>
+#include <common/turrets/turret/hellion.qc>
+#include <common/turrets/turret/hellion_weapon.qc>
+#include <common/turrets/turret/hk.qc>
+#include <common/turrets/turret/hk_weapon.qc>
+#include <common/turrets/turret/machinegun.qc>
+#include <common/turrets/turret/machinegun_weapon.qc>
+#include <common/turrets/turret/mlrs.qc>
+#include <common/turrets/turret/mlrs_weapon.qc>
+#include <common/turrets/turret/phaser.qc>
+#include <common/turrets/turret/phaser_weapon.qc>
+#include <common/turrets/turret/plasma.qc>
+#include <common/turrets/turret/plasma_dual.qc>
+#include <common/turrets/turret/plasma_weapon.qc>
+#include <common/turrets/turret/tesla.qc>
+#include <common/turrets/turret/tesla_weapon.qc>
+#include <common/turrets/turret/walker.qc>
+#include <common/turrets/turret/walker_weapon.qc>

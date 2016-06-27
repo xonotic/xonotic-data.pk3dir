@@ -1,3 +1,5 @@
+#pragma once
+
 // door constants
 const int DOOR_START_OPEN = 1;
 const int DOOR_DONT_LINK = 4;
@@ -12,8 +14,6 @@ const int SPAWNFLAGS_SILVER_KEY = 16;
 
 #ifdef CSQC
 // stuff for preload
-void ent_door();
 
-// abused
-.float attack_finished_single;
+.float door_finished;
 #endif

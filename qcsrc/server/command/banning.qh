@@ -1,13 +1,12 @@
-#ifndef BANNING_H
-#define BANNING_H
+#pragma once
 
 // ====================================
 //  Declarations for kick/ban commands
 //  Last updated: December 29th, 2011
 // =====================================
 
-#define GET_BAN_ARG(v,d) if(argc > reason_arg) { if((v = stof(argv(reason_arg))) != 0) ++reason_arg; else v = d; } else { v = d; }
-#define GET_BAN_REASON(v,d) if(argc > reason_arg) v = substring(command, argv_start_index(reason_arg), strlen(command) - argv_start_index(reason_arg)); else v = d;
+#define GET_BAN_ARG(v, d) if (argc > reason_arg) { if ((v = stof(argv(reason_arg))) != 0) ++reason_arg; else v = d; } else { v = d; }
+#define GET_BAN_REASON(v, d) if (argc > reason_arg) v = substring(command, argv_start_index(reason_arg), strlen(command) - argv_start_index(reason_arg)); else v = d;
 
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason);
 void Ban_View();
@@ -19,5 +18,3 @@ void BanCommand_macro_write_aliases(float fh);
 
 void BanCommand_macro_help();
 float BanCommand_macro_usage(float argc);
-
-#endif

@@ -1,12 +1,9 @@
 #ifdef SVQC
-void trigger_disablerelay_use()
+void trigger_disablerelay_use(entity this, entity actor, entity trigger)
 {
-	entity e;
+	int a = 0, b = 0;
 
-	float a, b;
-	a = b = 0;
-
-	for(e = world; (e = find(e, targetname, self.target)); )
+	for(entity e = NULL; (e = find(e, targetname, this.target)); )
 	{
 		if(e.use == SUB_UseTargets)
 		{
@@ -21,11 +18,11 @@ void trigger_disablerelay_use()
 	}
 
 	if((!a) == (!b))
-		print("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!\n");
+		LOG_INFO("Invalid use of trigger_disablerelay: ", ftos(a), " relays were on, ", ftos(b), " relays were off!\n");
 }
 
-void spawnfunc_trigger_disablerelay()
+spawnfunc(trigger_disablerelay)
 {
-	self.use = trigger_disablerelay_use;
+	this.use = trigger_disablerelay_use;
 }
 #endif

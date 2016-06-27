@@ -1,20 +1,5 @@
-#ifndef WEAPONARENACHECKBOX_H
-#define WEAPONARENACHECKBOX_H
-#include "../item/checkbox.qc"
-CLASS(XonoticWeaponarenaCheckBox, CheckBox)
-	METHOD(XonoticWeaponarenaCheckBox, configureXonoticWeaponarenaCheckBox, void(entity, string, string));
-	METHOD(XonoticWeaponarenaCheckBox, setChecked, void(entity, float));
-	ATTRIB(XonoticWeaponarenaCheckBox, fontSize, float, SKINFONTSIZE_NORMAL)
-	ATTRIB(XonoticWeaponarenaCheckBox, image, string, SKINGFX_CHECKBOX)
-	ATTRIB(XonoticWeaponarenaCheckBox, netname, string, string_null)
+#include "weaponarenacheckbox.qh"
 
-	METHOD(XonoticWeaponarenaCheckBox, loadCvars, void(entity));
-	METHOD(XonoticWeaponarenaCheckBox, saveCvars, void(entity));
-ENDCLASS(XonoticWeaponarenaCheckBox)
-entity makeXonoticWeaponarenaCheckBox(string, string);
-#endif
-
-#ifdef IMPLEMENTATION
 entity makeXonoticWeaponarenaCheckBox(string theWeapon, string theText)
 {
 	entity me;
@@ -56,4 +41,3 @@ void XonoticWeaponarenaCheckBox_saveCvars(entity me)
 		localcmd(strcat("\nmenu_cmd removefromlist menu_weaponarena ", me.netname, "\n"));
 	localcmd("\ng_weaponarena \"$menu_weaponarena\"\n");
 }
-#endif

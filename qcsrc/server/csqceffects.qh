@@ -1,4 +1,0 @@
-#ifndef CSQCEFFECTS_H
-#define CSQCEFFECTS_H
-void te_csqc_lightningarc(vector from,vector to);
-#endif

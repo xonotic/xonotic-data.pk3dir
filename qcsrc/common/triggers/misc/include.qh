@@ -1,7 +1,0 @@
-#ifndef TRIGGERS_MISC_INCLUDE_H
-#define TRIGGERS_MISC_INCLUDE_H
-
-#include "corner.qh"
-#include "laser.qh"
-
-#endif

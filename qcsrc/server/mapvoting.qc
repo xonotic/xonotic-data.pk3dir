@@ -1,5 +1,4 @@
 #include "mapvoting.qh"
-#include "_all.qh"
 
 #include "g_world.qh"
 #include "command/cmd.qh"
@@ -100,8 +99,7 @@ string GameTypeVote_MapInfo_FixName(string m)
 
 void MapVote_ClearAllVotes()
 {
-	FOR_EACH_CLIENT(other)
-		other.mapvote = 0;
+	FOREACH_CLIENT(true, LAMBDA(it.mapvote = 0));
 }
 
 void MapVote_UnzoneStrings()
@@ -122,7 +120,7 @@ void MapVote_UnzoneStrings()
 	}
 }
 
-string MapVote_Suggest(string m)
+string MapVote_Suggest(entity this, string m)
 {
 	float i;
 	if(m == "")
@@ -158,7 +156,7 @@ string MapVote_Suggest(string m)
 		strunzone(mapvote_suggestions[i]);
 	mapvote_suggestions[i] = strzone(m);
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(self.playerid)));
+		GameLogEcho(strcat(":vote:suggested:", m, ":", ftos(this.playerid)));
 	return strcat("Suggestion of ", m, " accepted.");
 }
 
@@ -193,7 +191,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	}
 	if(i >= mapvote_screenshot_dirs_count)
 		i = 0; // FIXME maybe network this error case, as that means there is no mapshot on the server?
-	for(o = strstr(pakfile, "/", 0)+1; o > 0; o = strstr(pakfile, "/", 0)+1)
+	for(o = strstrofs(pakfile, "/", 0)+1; o > 0; o = strstrofs(pakfile, "/", 0)+1)
 		pakfile = substring(pakfile, o, -1);
 
 	mapvote_maps_screenshot_dir[mapvote_count] = i;
@@ -262,11 +260,10 @@ void MapVote_Init()
 	MapVote_Spawn();
 }
 
-void MapVote_SendPicture(float id)
+void MapVote_SendPicture(entity to, int id)
 {
-	msg_entity = self;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_PICTURE);
+	msg_entity = to;
+	WriteHeader(MSG_ONE, TE_CSQC_PICTURE);
 	WriteByte(MSG_ONE, id);
 	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dirs[mapvote_maps_screenshot_dir[id]], "/", mapvote_maps[id]), 3072);
 }
@@ -343,14 +340,14 @@ void GameTypeVote_SendOption(int i)
 	}
 }
 
-float MapVote_SendEntity(entity to, int sf)
+bool MapVote_SendEntity(entity this, entity to, int sf)
 {
 	float i;
 
 	if(sf & 1)
 		sf &= ~2; // if we send 1, we don't need to also send 2
 
-	WriteByte(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
+	WriteHeader(MSG_ENTITY, ENT_CLIENT_MAPVOTE);
 	WriteByte(MSG_ENTITY, sf);
 
 	if(sf & 1)
@@ -456,8 +453,7 @@ float MapVote_Finished(float mappos)
 			GameLogEcho(strcat(":vote:suggestion_accepted:", mapvote_maps[mappos]));
 	}
 
-	FOR_EACH_REALCLIENT(other)
-		FixClientCvars(other);
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(FixClientCvars(it)));
 
 	if(gametypevote)
 	{
@@ -486,26 +482,23 @@ float MapVote_Finished(float mappos)
 
 void MapVote_CheckRules_1()
 {
-	float i;
-
-	for(i = 0; i < mapvote_count; ++i)
-		if( mapvote_maps_flags[i] & GTV_AVAILABLE )
+	for (int i = 0; i < mapvote_count; ++i)
+		if (mapvote_maps_flags[i] & GTV_AVAILABLE)
 		{
 			//dprint("Map ", ftos(i), ": "); dprint(mapvote_maps[i], "\n");
 			mapvote_selections[i] = 0;
 		}
 
 	mapvote_voters = 0;
-	FOR_EACH_REALCLIENT(other)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
 		++mapvote_voters;
-		if(other.mapvote)
+		if (it.mapvote)
 		{
-			i = other.mapvote - 1;
-			//dprint("Player ", other.netname, " vote = ", ftos(other.mapvote - 1), "\n");
-			mapvote_selections[i] = mapvote_selections[i] + 1;
+			int idx = it.mapvote - 1;
+			//dprint("Player ", it.netname, " vote = ", ftos(idx), "\n");
+			++mapvote_selections[idx];
 		}
-	}
+	});
 }
 
 float MapVote_CheckRules_2()
@@ -529,7 +522,7 @@ float MapVote_CheckRules_2()
 	for(i = 0; i < mapvote_count_real; ++i)
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
 		{
-			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
+			RandomSelection_Add(NULL, i, string_null, 1, mapvote_selections[i]);
 			if ( gametypevote &&  mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
 			{
 				currentVotes = mapvote_selections[i];
@@ -549,7 +542,7 @@ float MapVote_CheckRules_2()
 	for(i = 0; i < mapvote_count_real; ++i)
 		if(i != firstPlace)
 		if ( mapvote_maps_flags[i] & GTV_AVAILABLE )
-			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
+			RandomSelection_Add(NULL, i, string_null, 1, mapvote_selections[i]);
 	secondPlace = RandomSelection_chosen_float;
 	secondPlaceVotes = RandomSelection_best_priority;
 	//dprint("Second place: ", ftos(secondPlace), "\n");
@@ -606,36 +599,33 @@ void MapVote_Tick()
 		return;
 
 	totalvotes = 0;
-	FOR_EACH_REALCLIENT(other)
-	{
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
 		// hide scoreboard again
-		if(other.health != 2342)
+		if(it.health != 2342)
 		{
-			other.health = 2342;
-			other.impulse = 0;
-			if(IS_REAL_CLIENT(other))
-			{
-				msg_entity = other;
-				WriteByte(MSG_ONE, SVC_FINALE);
-				WriteString(MSG_ONE, "");
-			}
+			it.health = 2342;
+			it.impulse = 0;
+
+			msg_entity = it;
+			WriteByte(MSG_ONE, SVC_FINALE);
+			WriteString(MSG_ONE, "");
 		}
 
 		// clear possibly invalid votes
-		if ( !(mapvote_maps_flags[other.mapvote-1] & GTV_AVAILABLE) )
-			other.mapvote = 0;
+		if ( !(mapvote_maps_flags[it.mapvote-1] & GTV_AVAILABLE) )
+			it.mapvote = 0;
 		// use impulses as new vote
-		if(other.impulse >= 1 && other.impulse <= mapvote_count)
-			if( mapvote_maps_flags[other.impulse - 1] & GTV_AVAILABLE )
+		if(it.impulse >= 1 && it.impulse <= mapvote_count)
+			if( mapvote_maps_flags[it.impulse - 1] & GTV_AVAILABLE )
 			{
-				other.mapvote = other.impulse;
-				MapVote_TouchVotes(other);
+				it.mapvote = it.impulse;
+				MapVote_TouchVotes(it);
 			}
-		other.impulse = 0;
+		it.impulse = 0;
 
-		if(other.mapvote)
+		if(it.mapvote)
 			++totalvotes;
-	}
+	));
 
 	MapVote_CheckRules_1(); // just count
 }
@@ -748,7 +738,7 @@ float GameTypeVote_Finished(float pos)
 
 	if ( !GameTypeVote_SetGametype(GameTypeVote_Type_FromString(mapvote_maps[pos])) )
 	{
-		dprint("Selected gametype is not supported by any map");
+		LOG_TRACE("Selected gametype is not supported by any map");
 	}
 
 	localcmd("sv_vote_gametype_hook_all\n");

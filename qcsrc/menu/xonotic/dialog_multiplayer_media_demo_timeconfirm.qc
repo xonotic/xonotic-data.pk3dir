@@ -1,17 +1,9 @@
-#ifndef DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
-#define DIALOG_MULTIPLAYER_MEDIA_DEMO_TIMECONFIRM_H
-#include "dialog.qc"
-CLASS(XonoticDemoTimeConfirmDialog, XonoticDialog)
-	METHOD(XonoticDemoTimeConfirmDialog, fill, void(entity));
-	ATTRIB(XonoticDemoTimeConfirmDialog, title, string, _("Disconnect"))
-	ATTRIB(XonoticDemoTimeConfirmDialog, color, vector, SKINCOLOR_DIALOG_HUDCONFIRM)
-	ATTRIB(XonoticDemoTimeConfirmDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticDemoTimeConfirmDialog, rows, float, 4)
-	ATTRIB(XonoticDemoTimeConfirmDialog, columns, float, 2)
-ENDCLASS(XonoticDemoTimeConfirmDialog)
-#endif
+#include "dialog_multiplayer_media_demo_timeconfirm.qh"
 
-#ifdef IMPLEMENTATION
+#include "demolist.qh"
+#include "textlabel.qh"
+#include "button.qh"
+
 void Handle_TimeDemo_Click(entity unused, entity unused) { demolist.timeDemo(demolist); }
 void XonoticDemoTimeConfirmDialog_fill(entity me)
 {
@@ -30,4 +22,3 @@ void XonoticDemoTimeConfirmDialog_fill(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-#endif

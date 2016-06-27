@@ -1,3 +1,4 @@
+#include "expandnode.qh"
 #include "pathlib.qh"
 #include "utility.qh"
 
@@ -101,11 +102,11 @@ float pathlib_expandnode_star(entity node, vector start, vector goal)
     r = PLIB_RIGHT   * pathlib_gridsize;
 
     if (node.pathlib_node_edgeflags == pathlib_node_edgeflag_unknown)
-        node.pathlib_node_edgeflags = tile_check_plus2(node.origin);
+        node.pathlib_node_edgeflags = tile_check_plus2(node, node.origin);
 
     if(node.pathlib_node_edgeflags == pathlib_node_edgeflag_none)
     {
-        dprint("Node at ", vtos(node.origin), " not expanable");
+        LOG_TRACE("Node at ", vtos(node.origin), " not expanable");
         return pathlib_open_cnt;
     }
 

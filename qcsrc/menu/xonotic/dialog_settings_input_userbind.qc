@@ -1,23 +1,10 @@
-#ifndef DIALOG_SETTINGS_INPUT_USERBIND_H
-#define DIALOG_SETTINGS_INPUT_USERBIND_H
-#include "dialog.qc"
-CLASS(XonoticUserbindEditDialog, XonoticDialog)
-	METHOD(XonoticUserbindEditDialog, loadUserBind, void(entity, string, string, string));
-	METHOD(XonoticUserbindEditDialog, fill, void(entity));
-	ATTRIB(XonoticUserbindEditDialog, title, string, _("User defined key bind"))
-	ATTRIB(XonoticUserbindEditDialog, color, vector, SKINCOLOR_DIALOG_USERBIND)
-	ATTRIB(XonoticUserbindEditDialog, intendedWidth, float, 0.7)
-	ATTRIB(XonoticUserbindEditDialog, rows, float, 4)
-	ATTRIB(XonoticUserbindEditDialog, columns, float, 3)
-	ATTRIB(XonoticUserbindEditDialog, keybindBox, entity, NULL)
+#include "dialog_settings_input_userbind.qh"
 
-	ATTRIB(XonoticUserbindEditDialog, nameBox, entity, NULL)
-	ATTRIB(XonoticUserbindEditDialog, commandPressBox, entity, NULL)
-	ATTRIB(XonoticUserbindEditDialog, commandReleaseBox, entity, NULL)
-ENDCLASS(XonoticUserbindEditDialog)
-#endif
+#include "keybinder.qh"
+#include "textlabel.qh"
+#include "inputbox.qh"
+#include "button.qh"
 
-#ifdef IMPLEMENTATION
 void XonoticUserbindEditDialog_Save(entity btn, entity me)
 {
 	me.keybindBox.editUserbind(me.keybindBox, me.nameBox.text, me.commandPressBox.text, me.commandReleaseBox.text);
@@ -54,4 +41,3 @@ void XonoticUserbindEditDialog_fill(entity me)
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
-#endif

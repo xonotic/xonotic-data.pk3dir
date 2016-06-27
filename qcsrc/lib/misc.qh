@@ -1,0 +1,44 @@
+#pragma once
+
+#ifdef __STDC__
+	#define EVAL(...) EVAL1(EVAL1(EVAL1(__VA_ARGS__)))
+	#define EVAL1(...) EVAL2(EVAL2(EVAL2(__VA_ARGS__)))
+	#define EVAL2(...) EVAL3(EVAL3(EVAL3(__VA_ARGS__)))
+	#define EVAL3(...) EVAL4(EVAL4(EVAL4(__VA_ARGS__)))
+	#define EVAL4(...) EVAL5(EVAL5(EVAL5(__VA_ARGS__)))
+	#define EVAL5(...) __VA_ARGS__
+
+	#include "p99.qh"
+	#define OVERLOAD(F, ...) P99_IF_EMPTY(__VA_ARGS__)(P99_PASTE2(F, _00)())(P99_PASTE3(F, _, P00_NARG(__VA_ARGS__))(__VA_ARGS__))
+	#define OVERLOAD_(F, ...) P99_IF_EMPTY(__VA_ARGS__)(P99_PASTE2(F, _00)())(P99_PASTE3(F, _, P00_NARG(__VA_ARGS__))(__VA_ARGS__))
+#else
+	#define EVAL(...) __VA_ARGS__
+
+	#define OVERLOAD_(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
+	#define OVERLOAD(F, ...) F##_##__VA_COUNT__(__VA_ARGS__)
+#endif
+
+#if defined(CSQC)
+	#define etof(e) num_for_edict(e)
+	#define ftoe(i) entitybyindex(i)
+#elif defined(SVQC)
+	#define etof(e) num_for_edict(e)
+	#define ftoe(i) edict_num(i)
+#elif defined(MENUQC)
+	// already defined
+#endif
+
+#define GET(name) name##get
+#define GETTER(type, name) type GET(name)() { return name; }
+#define PROPERTY(type, name) type name; GETTER(type, name)
+#define LAMBDA(...) { __VA_ARGS__; }
+
+// With block may not contain continue or break
+#define WITH(type, name, value, block) \
+	MACRO_BEGIN \
+	{ \
+		type __with_save = (name); \
+		name = (value); \
+		LAMBDA(block) \
+		name = __with_save; \
+	} MACRO_END

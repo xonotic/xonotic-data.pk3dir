@@ -1,0 +1,4 @@
+#ifndef EFFECTS_QC
+#define EFFECTS_QC
+#include "all.inc"
+#endif

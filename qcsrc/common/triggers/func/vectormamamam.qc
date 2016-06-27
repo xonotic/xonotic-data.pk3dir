@@ -57,103 +57,102 @@ vector func_vectormamamam_origin(entity o, float t)
 	return v;
 }
 
-void func_vectormamamam_controller_think()
+void func_vectormamamam_controller_think(entity this)
 {
-	self.nextthink = time + 0.1;
+	this.nextthink = time + 0.1;
 
-	if(self.owner.active != ACTIVE_ACTIVE)
+	if(this.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';
+		this.owner.velocity = '0 0 0';
 		return;
 	}
 
-	if(self.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
-		self.owner.velocity = (self.owner.destvec + func_vectormamamam_origin(self.owner, 0.1) - self.owner.origin) * 10;
+	if(this.owner.classname == "func_vectormamamam") // don't brake stuff if the func_vectormamamam was killtarget'ed
+		this.owner.velocity = (this.owner.destvec + func_vectormamamam_origin(this.owner, 0.1) - this.owner.origin) * 10;
 }
 
-void func_vectormamamam_findtarget()
+void func_vectormamamam_findtarget(entity this)
 {
-	if(self.target != "")
-		self.wp00 = find(world, targetname, self.target);
+	if(this.target != "")
+		this.wp00 = find(NULL, targetname, this.target);
 
-	if(self.target2 != "")
-		self.wp01 = find(world, targetname, self.target2);
+	if(this.target2 != "")
+		this.wp01 = find(NULL, targetname, this.target2);
 
-	if(self.target3 != "")
-		self.wp02 = find(world, targetname, self.target3);
+	if(this.target3 != "")
+		this.wp02 = find(NULL, targetname, this.target3);
 
-	if(self.target4 != "")
-		self.wp03 = find(world, targetname, self.target4);
+	if(this.target4 != "")
+		this.wp03 = find(NULL, targetname, this.target4);
 
-	if(!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
-		objerror("No reference entity found, so there is nothing to move. Aborting.");
+	if(!this.wp00 && !this.wp01 && !this.wp02 && !this.wp03)
+		objerror(this, "No reference entity found, so there is nothing to move. Aborting.");
 
-	self.destvec = self.origin - func_vectormamamam_origin(self, 0);
+	this.destvec = this.origin - func_vectormamamam_origin(this, 0);
 
 	entity controller;
-	controller = spawn();
-	controller.classname = "func_vectormamamam_controller";
-	controller.owner = self;
+	controller = new(func_vectormamamam_controller);
+	controller.owner = this;
 	controller.nextthink = time + 1;
-	controller.think = func_vectormamamam_controller_think;
+	setthink(controller, func_vectormamamam_controller_think);
 }
 
-void spawnfunc_func_vectormamamam()
+spawnfunc(func_vectormamamam)
 {
-	if (self.noise != "")
+	if (this.noise != "")
 	{
-		precache_sound(self.noise);
-		soundto(MSG_INIT, self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTEN_IDLE);
+		precache_sound(this.noise);
+		soundto(MSG_INIT, this, CH_TRIGGER_SINGLE, this.noise, VOL_BASE, ATTEN_IDLE);
 	}
 
-	if(!self.targetfactor)
-		self.targetfactor = 1;
+	if(!this.targetfactor)
+		this.targetfactor = 1;
 
-	if(!self.target2factor)
-		self.target2factor = 1;
+	if(!this.target2factor)
+		this.target2factor = 1;
 
-	if(!self.target3factor)
-		self.target3factor = 1;
+	if(!this.target3factor)
+		this.target3factor = 1;
 
-	if(!self.target4factor)
-		self.target4factor = 1;
+	if(!this.target4factor)
+		this.target4factor = 1;
 
-	if(vlen(self.targetnormal))
-		self.targetnormal = normalize(self.targetnormal);
+	if(this.targetnormal)
+		this.targetnormal = normalize(this.targetnormal);
 
-	if(vlen(self.target2normal))
-		self.target2normal = normalize(self.target2normal);
+	if(this.target2normal)
+		this.target2normal = normalize(this.target2normal);
 
-	if(vlen(self.target3normal))
-		self.target3normal = normalize(self.target3normal);
+	if(this.target3normal)
+		this.target3normal = normalize(this.target3normal);
 
-	if(vlen(self.target4normal))
-		self.target4normal = normalize(self.target4normal);
+	if(this.target4normal)
+		this.target4normal = normalize(this.target4normal);
 
-	self.blocked = generic_plat_blocked;
-	if(self.dmg && (self.message == ""))
-		self.message = " was squished";
-    if(self.dmg && (self.message == ""))
-		self.message2 = "was squished by";
-	if(self.dmg && (!self.dmgtime))
-		self.dmgtime = 0.25;
-	self.dmgtime2 = time;
+	setblocked(this, generic_plat_blocked);
+	if(this.dmg && (this.message == ""))
+		this.message = " was squished";
+    if(this.dmg && (this.message == ""))
+		this.message2 = "was squished by";
+	if(this.dmg && (!this.dmgtime))
+		this.dmgtime = 0.25;
+	this.dmgtime2 = time;
 
-	if(self.netname == "")
-		self.netname = "1 0 0 0 1";
+	if(this.netname == "")
+		this.netname = "1 0 0 0 1";
 
-	if (!InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger(this))
 		return;
 
 	// wait for targets to spawn
-	self.SUB_NEXTTHINK = self.SUB_LTIME + 999999999;
-	self.SUB_THINK = SUB_NullThink; // for PushMove
+	this.SUB_NEXTTHINK = this.SUB_LTIME + 999999999;
+	SUB_THINK(this, SUB_NullThink); // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
-	self.effects |= EF_LOWPRECISION;
+	this.effects |= EF_LOWPRECISION;
 
-	self.active = ACTIVE_ACTIVE;
+	this.active = ACTIVE_ACTIVE;
 
-	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
+	InitializeEntity(this, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }
 #endif
