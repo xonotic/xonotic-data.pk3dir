@@ -1,10 +1,7 @@
-fireball
+fireball_plasma
 {
-	{
-		map textures/fireball
-		tcgen environment
-	}
-	{
-		map $lightmap
-	}
+ {
+	map textures/fireball_plasma.tga
+	tcMod scroll 0.03 0.001
+ }
 }
