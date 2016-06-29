@@ -186,7 +186,7 @@ bool racer_frame(entity this)
 
 	traceline(vehic.origin, vehic.origin + '0 0 1', MOVE_NOMONSTERS, this);
 	int cont = trace_dpstartcontents;
-	if(cont & DPCONTENTS_WATER)
+	if(!(cont & DPCONTENTS_WATER))
 		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
