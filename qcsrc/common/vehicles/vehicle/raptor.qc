@@ -47,6 +47,8 @@ float autocvar_g_vehicle_raptor_speed_up = 1700;
 float autocvar_g_vehicle_raptor_speed_down = 1700;
 float autocvar_g_vehicle_raptor_friction = 2;
 
+bool autocvar_g_vehicle_raptor_swim = false;
+
 float autocvar_g_vehicle_raptor_cannon_turnspeed = 120;
 float autocvar_g_vehicle_raptor_cannon_turnlimit = 20;
 float autocvar_g_vehicle_raptor_cannon_pitchlimit_up = 12;
@@ -725,6 +727,9 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     instance.movetype	   = MOVETYPE_TOSS;
     instance.solid		  = SOLID_SLIDEBOX;
     instance.vehicle_energy = 1;
+
+    if(!autocvar_g_vehicle_raptor_swim)
+    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 
     instance.PlayerPhysplug = raptor_frame;
 
