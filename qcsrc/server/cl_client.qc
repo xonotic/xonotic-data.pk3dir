@@ -2387,7 +2387,7 @@ void DrownPlayer(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.waterlevel != WATERLEVEL_SUBMERGED)
+	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
 	{
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
