@@ -200,7 +200,7 @@ void PutObserverInServer(entity this)
         this.angles_z = 0;
         this.fixangle = true;
         // offset it so that the spectator spawns higher off the ground, looks better this way
-        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, this));
+        setorigin(this, spot.origin + STAT(PL_VIEW_OFS, NULL));
         this.prevorigin = this.origin;
         if (IS_REAL_CLIENT(this))
         {
@@ -217,7 +217,7 @@ void PutObserverInServer(entity this)
 	        FixPlayermodel(this);
         } 
         setmodel(this, MDL_Null);
-        setsize(this, STAT(PL_CROUCH_MIN, this), STAT(PL_CROUCH_MAX, this));
+        setsize(this, STAT(PL_CROUCH_MIN, NULL), STAT(PL_CROUCH_MAX, NULL));
         this.view_ofs = '0 0 0';
     }
 
