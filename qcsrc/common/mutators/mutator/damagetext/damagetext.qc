@@ -25,16 +25,20 @@ AUTOCVAR_SAVE(cl_damagetext_alpha_lifetime,     float,  3,          "Damage text
 AUTOCVAR_SAVE(cl_damagetext_velocity,           vector, '0 0 20',   "Damage text move direction");
 AUTOCVAR_SAVE(cl_damagetext_offset,             vector, '0 -40 0',  "Damage text offset");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,   float,  30,         "Damage text spawned within this range is accumulated");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire,       bool,   true,       "Show damage text for friendlyfire too");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color, vector, '1 0 0',    "Damage text color for friendlyfire too");
 #endif
 
 #ifdef CSQC
 CLASS(DamageText, Object)
     ATTRIB(DamageText, m_color, vector, autocvar_cl_damagetext_color)
+    ATTRIB(DamageText, m_color_friendlyfire, vector, autocvar_cl_damagetext_friendlyfire_color)
     ATTRIB(DamageText, m_size, float, autocvar_cl_damagetext_size)
     ATTRIB(DamageText, alpha, float, autocvar_cl_damagetext_alpha_start)
     ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime)
     ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity)
     ATTRIB(DamageText, m_group, int, 0)
+    ATTRIB(DamageText, m_friendlyfire, int, 0)
     ATTRIB(DamageText, m_damage, int, 0)
     ATTRIB(DamageText, m_armordamage, int, 0)
     ATTRIB(DamageText, m_deathtype, int, 0)
@@ -49,7 +53,13 @@ CLASS(DamageText, Object)
         vector pos = project_3d_to_2d(this.origin) + autocvar_cl_damagetext_offset;
         if (pos.z >= 0 && this.m_size > 0) {
             pos.z = 0;
-            vector rgb = this.m_color;
+            vector rgb;
+            if (this.m_friendlyfire) {
+                rgb = this.m_color_friendlyfire;
+            }
+            else {
+                rgb = this.m_color;
+            }
             if (autocvar_cl_damagetext_color_per_weapon) {
                 Weapon w = DEATH_WEAPONOF(this.m_deathtype);
                 if (w != WEP_Null) rgb = w.wpcolor;
@@ -71,9 +81,10 @@ CLASS(DamageText, Object)
         this.alpha = 1;
     }
 
-    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype) {
+    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype, int _friendlyfire) {
         CONSTRUCT(DamageText);
         this.m_group = _group;
+        this.m_friendlyfire = _friendlyfire;
         DamageText_update(this, _origin, _health, _armor, _deathtype);
     }
 ENDCLASS(DamageText)
@@ -111,6 +122,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             WriteCoord(MSG_ONE, location.y);
             WriteCoord(MSG_ONE, location.z);
             WriteInt24_t(MSG_ONE, deathtype);
+            WriteShort(MSG_ONE, SAME_TEAM(hit, attacker));
         }
     ));
 }
@@ -124,8 +136,12 @@ NET_HANDLE(damagetext, bool isNew)
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
+    int friendlyfire = ReadShort();
     return = true;
     if (autocvar_cl_damagetext) {
+        if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) {
+            return;
+        }
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
                 if (e.instanceOfDamageText && e.m_group == group) {
@@ -134,7 +150,7 @@ NET_HANDLE(damagetext, bool isNew)
                 }
             }
         }
-        NEW(DamageText, group, location, health, armor, deathtype);
+        NEW(DamageText, group, location, health, armor, deathtype, friendlyfire);
     }
 }
 #endif
