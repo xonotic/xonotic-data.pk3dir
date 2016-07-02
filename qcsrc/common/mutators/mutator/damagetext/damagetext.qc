@@ -26,7 +26,7 @@ AUTOCVAR_SAVE(cl_damagetext_velocity,           vector, '0 0 20',   "Damage text
 AUTOCVAR_SAVE(cl_damagetext_offset,             vector, '0 -40 0',  "Damage text offset");
 AUTOCVAR_SAVE(cl_damagetext_accumulate_range,   float,  30,         "Damage text spawned within this range is accumulated");
 AUTOCVAR_SAVE(cl_damagetext_friendlyfire,       bool,   true,       "Show damage text for friendlyfire too");
-AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color, vector, '1 0 0',    "Damage text color for friendlyfire too");
+AUTOCVAR_SAVE(cl_damagetext_friendlyfire_color, vector, '1 0 0',    "Damage text color for friendlyfire");
 #endif
 
 #ifdef CSQC
