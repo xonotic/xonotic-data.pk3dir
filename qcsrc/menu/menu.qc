@@ -270,7 +270,8 @@ void m_keydown(float key, float ascii)
 	else
 	{
 		draw_reset_cropped();
-		if (!mouseButtonsPressed && key >= K_MOUSE1 && key <= K_MOUSE3) main.mousePress(main, menuMousePos);
+		if (!mouseButtonsPressed && key >= K_MOUSE1 && key <= K_MOUSE3)
+			main.mousePress(main, menuMousePos);
 		if (!main.keyDown(main, key, ascii, menuShiftState))
 		{
 			// disable menu on unhandled ESC
