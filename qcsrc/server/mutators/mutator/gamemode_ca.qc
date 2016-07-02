@@ -439,11 +439,11 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
     entity client = M_ARGV(0, entity);
-    entity targ = M_ARGV(1, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
-		targ = CA_SpectateNext(client, targ);
+		entity targ = M_ARGV(1, entity);
+		M_ARGV(1, entity) = CA_SpectateNext(client, targ);
 		return true;
 	}
 }
@@ -467,6 +467,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 				return MUT_SPECPREV_RETURN;
 		}
 	}
+
+	M_ARGV(1, entity) = targ;
 
 	return MUT_SPECPREV_FOUND;
 }

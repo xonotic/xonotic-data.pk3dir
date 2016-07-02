@@ -56,6 +56,8 @@ void HUD_Weapons()
 	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
 	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
+	bool infinite_ammo = (STAT(ITEMS) & IT_UNLIMITED_WEAPON_AMMO);
+
 	vector weapon_pos, weapon_size = '0 0 0';
 	vector color;
 
@@ -330,7 +332,7 @@ void HUD_Weapons()
 	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
-	if (autocvar_hud_panel_weapons_ammo)
+	if (!infinite_ammo && autocvar_hud_panel_weapons_ammo)
 	{
 		ammo_color = stov(autocvar_hud_panel_weapons_ammo_color);
 		ammo_alpha = panel_fg_alpha * autocvar_hud_panel_weapons_ammo_alpha;
@@ -466,7 +468,7 @@ void HUD_Weapons()
 			}
 
 			// draw ammo status bar
-			if(autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
+			if(!infinite_ammo && autocvar_hud_panel_weapons_ammo && (it.ammo_field != ammo_none))
 			{
 				float ammo_full;
 				a = getstati(GetAmmoStat(it.ammo_field)); // how much ammo do we have?

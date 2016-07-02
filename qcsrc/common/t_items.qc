@@ -761,7 +761,7 @@ LABEL(skip)
 	return 1;
 }
 
-void Item_Touch(entity this)
+void Item_Touch(entity this, entity toucher)
 {
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
@@ -774,21 +774,21 @@ void Item_Touch(entity this)
 		}
 	}
 
-	if(!(other.flags & FL_PICKUPITEMS)
-	|| STAT(FROZEN, other)
-	|| IS_DEAD(other)
+	if(!(toucher.flags & FL_PICKUPITEMS)
+	|| STAT(FROZEN, toucher)
+	|| IS_DEAD(toucher)
 	|| (this.solid != SOLID_TRIGGER)
-	|| (this.owner == other)
+	|| (this.owner == toucher)
 	|| (time < this.item_spawnshieldtime)
 	) { return; }
 
-	switch (MUTATOR_CALLHOOK(ItemTouch, this, other))
+	switch (MUTATOR_CALLHOOK(ItemTouch, this, toucher))
 	{
 		case MUT_ITEMTOUCH_RETURN: { return; }
-		case MUT_ITEMTOUCH_PICKUP: { other = M_ARGV(1, entity); goto pickup; }
+		case MUT_ITEMTOUCH_PICKUP: { toucher = M_ARGV(1, entity); goto pickup; }
 	}
 
-	other = M_ARGV(1, entity);
+	toucher = M_ARGV(1, entity);
 
 	if (this.classname == "droppedweapon")
 	{
@@ -797,7 +797,7 @@ void Item_Touch(entity this)
 		this.superweapons_finished = max(0, this.superweapons_finished - time);
 	}
 	entity it = this.itemdef;
-	bool gave = ITEM_HANDLE(Pickup, it, this, other);
+	bool gave = ITEM_HANDLE(Pickup, it, this, toucher);
 	if (!gave)
 	{
 		if (this.classname == "droppedweapon")
@@ -812,10 +812,10 @@ void Item_Touch(entity this)
 
 LABEL(pickup)
 
-	other.last_pickup = time;
+	toucher.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	_sound (other, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
+	_sound (toucher, (this.itemdef.instanceOfPowerup ? CH_TRIGGER_SINGLE : CH_TRIGGER), (this.item_pickupsound ? this.item_pickupsound : Sound_fixpath(this.item_pickupsound_ent)), VOL_BASE, ATTEN_NORM);
 
 	if (this.classname == "droppedweapon")
 		remove (this);
@@ -1421,11 +1421,9 @@ spawnfunc(item_quad) { this.classname = "item_strength";spawnfunc_item_strength(
 
 void target_items_use(entity this, entity actor, entity trigger)
 {
-	other = trigger; // TODO
-
 	if(actor.classname == "droppedweapon")
 	{
-		EXACTTRIGGER_TOUCH;
+		EXACTTRIGGER_TOUCH(this, trigger);
 		remove(actor);
 		return;
 	}
@@ -1436,7 +1434,7 @@ void target_items_use(entity this, entity actor, entity trigger)
 		return;
 	if(trigger.solid == SOLID_TRIGGER)
 	{
-		EXACTTRIGGER_TOUCH;
+		EXACTTRIGGER_TOUCH(this, trigger);
 	}
 
 	FOREACH_ENTITY_ENT(enemy, actor,

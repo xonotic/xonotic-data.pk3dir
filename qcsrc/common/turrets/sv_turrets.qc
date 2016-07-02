@@ -443,9 +443,9 @@ void turret_projectile_explode(entity this)
 	remove(this);
 }
 
-void turret_projectile_touch(entity this)
+void turret_projectile_touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 	turret_projectile_explode(this);
 }
 

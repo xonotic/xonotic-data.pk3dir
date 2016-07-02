@@ -391,7 +391,7 @@ bool Monster_Attack_Leap_Check(entity this, vector vel)
 	return true;
 }
 
-bool Monster_Attack_Leap(entity this, vector anm, void(entity this) touchfunc, vector vel, float animtime)
+bool Monster_Attack_Leap(entity this, vector anm, void(entity this, entity toucher) touchfunc, vector vel, float animtime)
 {
 	if(!Monster_Attack_Leap_Check(this, vel))
 		return false;
@@ -463,15 +463,15 @@ void Monster_UpdateModel(entity this)
 	mon.mr_anim(mon, this);
 }
 
-void Monster_Touch(entity this)
+void Monster_Touch(entity this, entity toucher)
 {
-	if(other == NULL) { return; }
+	if(toucher == NULL) { return; }
 
-	if(other.monster_attack)
-	if(this.enemy != other)
-	if(!IS_MONSTER(other))
-	if(Monster_ValidTarget(this, other))
-		this.enemy = other;
+	if(toucher.monster_attack)
+	if(this.enemy != toucher)
+	if(!IS_MONSTER(toucher))
+	if(Monster_ValidTarget(this, toucher))
+		this.enemy = toucher;
 }
 
 void Monster_Miniboss_Check(entity this)

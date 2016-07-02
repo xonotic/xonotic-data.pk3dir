@@ -234,7 +234,7 @@ vector findbetterlocation (vector org, float mindist)
 	return org;
 }
 
-float LOD_customize(entity this)
+bool LOD_customize(entity this, entity client)
 {
 	if(autocvar_loddebug)
 	{
@@ -249,10 +249,10 @@ float LOD_customize(entity this)
 	}
 
 	// TODO csqc network this so it only gets sent once
-	vector near_point = NearestPointOnBox(this, other.origin);
-	if(vdist(near_point - other.origin, <, this.loddistance1))
+	vector near_point = NearestPointOnBox(this, client.origin);
+	if(vdist(near_point - client.origin, <, this.loddistance1))
 		this.modelindex = this.lodmodelindex0;
-	else if(!this.lodmodelindex2 || vdist(near_point - other.origin, <, this.loddistance2))
+	else if(!this.lodmodelindex2 || vdist(near_point - client.origin, <, this.loddistance2))
 		this.modelindex = this.lodmodelindex1;
 	else
 		this.modelindex = this.lodmodelindex2;

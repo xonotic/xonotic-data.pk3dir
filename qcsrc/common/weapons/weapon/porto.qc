@@ -118,14 +118,14 @@ void W_Porto_Think(entity this)
 		W_Porto_Fail(this, 0);
 }
 
-void W_Porto_Touch(entity this)
+void W_Porto_Touch(entity this, entity toucher)
 {
 	vector norm;
 
 	// do not use PROJECTILE_TOUCH here
 	// FIXME but DO handle warpzones!
 
-	if(other.classname == "portal")
+	if(toucher.classname == "portal")
 		return; // handled by the portal
 
 	norm = trace_plane_normal;

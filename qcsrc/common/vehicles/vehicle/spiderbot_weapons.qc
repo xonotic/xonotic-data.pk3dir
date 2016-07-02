@@ -196,7 +196,7 @@ void spiderbot_rocket_do(entity this)
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
             rocket.nextthink  = time + (_dist / autocvar_g_vehicle_spiderbot_rocket_speed);
-            setthink(rocket, vehicles_projectile_explode);
+            setthink(rocket, vehicles_projectile_explode_think);
 
             if(PHYS_INPUT_BUTTON_ATCK2(this.owner) && this.tur_head.frame == 1)
                 this.wait = -10;
