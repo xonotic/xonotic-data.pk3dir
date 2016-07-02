@@ -7,6 +7,13 @@ void HUD_Vote()
 {
 	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
+		// this dialog gets overriden by the uid2name menu dialog, if it exists
+		// TODO remove this client side uid2name dialog in the next release
+		if (!uid2name_dialog)
+			localcmd("menu_cmd directmenu Uid2Name\n");
+		if(autocvar__menu_alpha)
+			hud_fade_alpha = 0;
+
 		vote_active = 1;
 		if (autocvar__hud_configure)
 		{
