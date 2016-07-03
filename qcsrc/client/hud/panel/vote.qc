@@ -9,10 +9,12 @@ void HUD_Vote()
 	{
 		// this dialog gets overriden by the uid2name menu dialog, if it exists
 		// TODO remove this client side uid2name dialog in the next release
-		if (!uid2name_dialog)
-			localcmd("menu_cmd directmenu Uid2Name\n");
 		if(autocvar__menu_alpha)
 			hud_fade_alpha = 0;
+		else
+			uid2name_dialog = 0;
+		if (!uid2name_dialog)
+			localcmd("menu_cmd directmenu Uid2Name\n");
 
 		vote_active = 1;
 		if (autocvar__hud_configure)
