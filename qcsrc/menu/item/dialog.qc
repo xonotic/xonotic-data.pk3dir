@@ -118,5 +118,8 @@
 				return 1;
 			}
 		}
-		return SUPER(Dialog).keyDown(me, key, ascii, shift);
+		float r = SUPER(Dialog).keyDown(me, key, ascii, shift);
+		if (!me.closable && key == K_ESCAPE)
+			return 1;
+		return r;
 	}
