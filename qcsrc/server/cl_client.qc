@@ -802,7 +802,7 @@ void ClientKill_Now(entity this)
 	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(IS_PLAYER(this))
+	if(!IS_SPEC(this) && !IS_OBSERVER(this))
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
 
 	// now I am sure the player IS dead
@@ -905,7 +905,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 				setorigin(it.killindicator, '0 0 52');
 				setthink(it.killindicator, KillIndicator_Think);
 				it.killindicator.nextthink = starttime + (it.lip) * 0.05;
-				clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
+				//clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
 				it.killindicator.cnt = ceil(killtime);
 			});
 			this.lip = 0;

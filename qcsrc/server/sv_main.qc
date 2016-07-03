@@ -96,6 +96,7 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
+	if(this.velocity || this.oldvelocity) // moving or has moved
 	{
 		// check for falling damage
 		float velocity_len = vlen(this.velocity);
