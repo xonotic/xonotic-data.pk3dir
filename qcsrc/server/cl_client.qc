@@ -2215,27 +2215,39 @@ void PlayerPreThink (entity this)
 				if (frametime) player_anim(this);
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
-				if (this.deadflag == DEAD_DYING) {
-					if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max)) {
-						this.deadflag = DEAD_RESPAWNING;
-					} else if (!button_pressed) {
-						this.deadflag = DEAD_DEAD;
-                    }
-				} else if (this.deadflag == DEAD_DEAD) {
-					if (button_pressed) {
-						this.deadflag = DEAD_RESPAWNABLE;
-					} else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNABLE) {
-					if (!button_pressed) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNING) {
-					if (time > this.respawn_time) {
-						this.respawn_time = time + 1; // only retry once a second
-						this.respawn_time_max = this.respawn_time;
-						respawn(this);
+				switch(this.deadflag)
+				{
+					case DEAD_DYING:
+					{
+						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
+							this.deadflag = DEAD_RESPAWNING;
+						else if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_DEAD;
+						break;
+					}
+					case DEAD_DEAD:
+					{
+						if (button_pressed)
+							this.deadflag = DEAD_RESPAWNABLE;
+						else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNABLE:
+					{
+						if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNING:
+					{
+						if (time > this.respawn_time)
+						{
+							this.respawn_time = time + 1; // only retry once a second
+							this.respawn_time_max = this.respawn_time;
+							respawn(this);
+						}
+						break;
 					}
 				}
 
