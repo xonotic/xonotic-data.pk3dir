@@ -38,7 +38,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, fade_rate, float, 1 / autocvar_cl_damagetext_alpha_lifetime)
     ATTRIB(DamageText, velocity, vector, autocvar_cl_damagetext_velocity)
     ATTRIB(DamageText, m_group, int, 0)
-    ATTRIB(DamageText, m_friendlyfire, int, 0)
+    ATTRIB(DamageText, m_friendlyfire, bool, false)
     ATTRIB(DamageText, m_damage, int, 0)
     ATTRIB(DamageText, m_armordamage, int, 0)
     ATTRIB(DamageText, m_deathtype, int, 0)
@@ -81,7 +81,7 @@ CLASS(DamageText, Object)
         this.alpha = 1;
     }
 
-    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype, int _friendlyfire) {
+    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype, bool _friendlyfire) {
         CONSTRUCT(DamageText);
         this.m_group = _group;
         this.m_friendlyfire = _friendlyfire;
@@ -122,7 +122,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             WriteCoord(MSG_ONE, location.y);
             WriteCoord(MSG_ONE, location.z);
             WriteInt24_t(MSG_ONE, deathtype);
-            WriteShort(MSG_ONE, SAME_TEAM(hit, attacker));
+            WriteByte(MSG_ONE, SAME_TEAM(hit, attacker));
         }
     ));
 }
@@ -136,7 +136,7 @@ NET_HANDLE(damagetext, bool isNew)
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
-    int friendlyfire = ReadShort();
+    bool friendlyfire = ReadByte();
     return = true;
     if (autocvar_cl_damagetext) {
         if (friendlyfire && !autocvar_cl_damagetext_friendlyfire) {
