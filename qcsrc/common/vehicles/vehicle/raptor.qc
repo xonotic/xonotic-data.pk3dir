@@ -786,7 +786,7 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
     }
 
     vector tmpSize = '0 0 0';
-    if(weapon2mode != RSM_FLARE)
+    if(weapon2mode != RSM_FLARE && !spectatee_status)
     {
         vector where;
 
