@@ -1623,7 +1623,9 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        this.fixangle = false;
+    	this.angles = spectatee.v_angle;
+
+        //this.fixangle = false;
         //this.velocity = spectatee.vehicle.velocity;
         this.vehicle_health = spectatee.vehicle_health;
         this.vehicle_shield = spectatee.vehicle_shield;
@@ -1633,12 +1635,12 @@ void SpectateCopy(entity this, entity spectatee)
         this.vehicle_reload1 = spectatee.vehicle_reload1;
         this.vehicle_reload2 = spectatee.vehicle_reload2;
 
-        msg_entity = this;
+        //msg_entity = this;
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.x);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.y);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.z);
+       // WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            //WriteAngle(MSG_ONE,  spectatee.v_angle.x);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.y);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
         //    WriteEntity(MSG_ONE, this);
