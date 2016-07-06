@@ -58,6 +58,7 @@ void QuickMenu_Page_ClearEntry(int i)
 	if (QuickMenu_Page_Command[i])
 		strunzone(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command[i] = string_null;
+	QuickMenu_Page_Command_Type[i] = 0;
 }
 
 float QuickMenu_Page_Load(string target_submenu, float new_page);
@@ -660,7 +661,7 @@ void HUD_QuickMenu()
 				else
 					tokenize_console(substring(QuickMenu_Page_Command[i], 0, end));
 
-				//if(argv(1) && argv(0) == "toggle") // already checked
+				if(argv(1) && argv(0) == "toggle")
 				{
 					// "enable feature xxx" "toggle xxx" (or "toggle xxx 1 0")
 					// "disable feature xxx" "toggle xxx 0 1"
