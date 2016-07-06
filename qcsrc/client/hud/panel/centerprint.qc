@@ -128,7 +128,10 @@ void HUD_CenterPrint ()
 	else
 	{
 		if(!hud_configure_prev)
+		{
 			reset_centerprint_messages();
+			hud_configure_cp_generation_time = time; // show a message immediately
+		}
 		if (time > hud_configure_cp_generation_time)
 		{
 			if(highlightedPanel == HUD_PANEL(CENTERPRINT))
