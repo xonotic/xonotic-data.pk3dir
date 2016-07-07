@@ -41,24 +41,30 @@ NET_HANDLE(TE_CSQC_SVNOTICE, bool isNew)
 	return true;
 }
 entity cl_notices;
-STATIC_INIT(cl_notice)
-{
-    cl_notices = LL_NEW();
-}
 void cl_notice_read()
 {
     entity _notice = new_pure(sv_notice);
     _notice.netname = strzone(ReadString());
     _notice.alpha = ReadLong() + time;
     _notice.skin = ReadByte();
+    if(!cl_notices)
+    	cl_notices = LL_NEW();
     LL_PUSH(cl_notices, _notice);
 }
 
 void cl_notice_run()
 {
+	if (!cl_notices)
+		return;
+
     bool flag = false;
     LL_EACH(cl_notices, it.alpha > time, { flag = true; break; });
-    if (!flag) return;
+	if (!flag)
+	{
+		LL_DELETE(cl_notices);
+		return;
+	}
+
     const int M1 = 30;
     const int M2 = 10;
 
