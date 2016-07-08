@@ -359,6 +359,7 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate, EV_PlayerDamage_Calculate);
     /** armor     */ i(float,    MUTATOR_ARGV_3_float) \
     /** location  */ i(vector, MUTATOR_ARGV_4_vector) \
     /** deathtype */ i(int,    MUTATOR_ARGV_5_int) \
+    /** potential_damage     */ i(float,    MUTATOR_ARGV_6_float) \
     /**/
 MUTATOR_HOOKABLE(PlayerDamaged, EV_PlayerDamaged);
 
