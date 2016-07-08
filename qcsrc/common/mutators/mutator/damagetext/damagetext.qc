@@ -41,6 +41,7 @@ CLASS(DamageText, Object)
     ATTRIB(DamageText, m_friendlyfire, bool, false)
     ATTRIB(DamageText, m_damage, int, 0)
     ATTRIB(DamageText, m_armordamage, int, 0)
+    ATTRIB(DamageText, m_potential_damage, int, 0)
     ATTRIB(DamageText, m_deathtype, int, 0)
     ATTRIB(DamageText, time_prev, float, time)
 
@@ -68,24 +69,26 @@ CLASS(DamageText, Object)
             s = strreplace("{health}", sprintf("%d", this.m_damage), s);
             s = strreplace("{armor}",  sprintf("%d", this.m_armordamage), s);
             s = strreplace("{total}",  sprintf("%d", this.m_damage + this.m_armordamage), s);
+            s = strreplace("{potential}",  sprintf("%d", this.m_potential_damage), s);
             drawcolorcodedstring2_builtin(pos, s, this.m_size * '1 1 0', rgb, this.alpha, DRAWFLAG_NORMAL);
         }
     }
     ATTRIB(DamageText, draw2d, void(DamageText), DamageText_draw2d)
 
-    void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _deathtype) {
+    void DamageText_update(DamageText this, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype) {
         this.m_damage = _health;
         this.m_armordamage = _armor;
+        this.m_potential_damage = _potential_damage;
         this.m_deathtype = _deathtype;
         setorigin(this, _origin);
         this.alpha = 1;
     }
 
-    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _deathtype, bool _friendlyfire) {
+    CONSTRUCTOR(DamageText, int _group, vector _origin, int _health, int _armor, int _potential_damage, int _deathtype, bool _friendlyfire) {
         CONSTRUCT(DamageText);
         this.m_group = _group;
         this.m_friendlyfire = _friendlyfire;
-        DamageText_update(this, _origin, _health, _armor, _deathtype);
+        DamageText_update(this, _origin, _health, _armor, _potential_damage, _deathtype);
     }
 ENDCLASS(DamageText)
 #endif
@@ -104,7 +107,8 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
     const entity hit = M_ARGV(1, entity); if (hit == attacker) return;
     const int health = M_ARGV(2, int);
     const int armor = M_ARGV(3, int);
-    const int deathtype = M_ARGV(5, int);
+    const int potential_damage = M_ARGV(4, int);
+    const int deathtype = M_ARGV(6, int);
     const vector location = hit.origin;
     FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
         if (
@@ -117,6 +121,7 @@ MUTATOR_HOOKFUNCTION(damagetext, PlayerDamaged) {
             WriteHeader(MSG_ONE, damagetext);
             WriteShort(MSG_ONE, rint(health));
             WriteShort(MSG_ONE, rint(armor));
+            WriteShort(MSG_ONE, rint(potential_damage));
             WriteEntity(MSG_ONE, hit);
             WriteCoord(MSG_ONE, location.x);
             WriteCoord(MSG_ONE, location.y);
@@ -133,6 +138,7 @@ NET_HANDLE(damagetext, bool isNew)
 {
     int health = ReadShort();
     int armor = ReadShort();
+    int potential_damage = ReadShort();
     int group = ReadShort();
     vector location = vec3(ReadCoord(), ReadCoord(), ReadCoord());
     int deathtype = ReadInt24_t();
@@ -145,12 +151,12 @@ NET_HANDLE(damagetext, bool isNew)
         if (autocvar_cl_damagetext_accumulate_range) {
             for (entity e = findradius(location, autocvar_cl_damagetext_accumulate_range); e; e = e.chain) {
                 if (e.instanceOfDamageText && e.m_group == group) {
-                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, deathtype);
+                    DamageText_update(e, location, e.m_damage + health, e.m_armordamage + armor, e.m_potential_damage + potential_damage, deathtype);
                     return;
                 }
             }
         }
-        NEW(DamageText, group, location, health, armor, deathtype, friendlyfire);
+        NEW(DamageText, group, location, health, armor, potential_damage, deathtype, friendlyfire);
     }
 }
 #endif
