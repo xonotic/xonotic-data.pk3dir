@@ -1165,6 +1165,8 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	setsize(this, info.mins, info.maxs);
 
+	info.vr_setup(info, this);
+
 	if(!nodrop)
 	{
 		setorigin(this, this.origin);
@@ -1175,8 +1177,6 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.pos1 = this.origin;
 	this.pos2 = this.angles;
 	this.tur_head.team = this.team;
-
-	info.vr_setup(info, this);
 
 	if(this.active == ACTIVE_NOT)
 		this.nextthink = 0; // wait until activated

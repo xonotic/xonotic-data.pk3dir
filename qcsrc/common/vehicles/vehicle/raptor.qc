@@ -763,6 +763,9 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
     instance.vehicle_health = autocvar_g_vehicle_raptor_health;
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     instance.max_health = instance.vehicle_health;
+
+    if(!autocvar_g_vehicle_raptor_swim)
+    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 }
 
 #endif
