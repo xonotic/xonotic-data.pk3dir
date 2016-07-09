@@ -24,6 +24,8 @@ bool WaypointSprite_SendEntity(entity this, entity to, float sendflags)
         f |= 2; // my own
 
     MUTATOR_CALLHOOK(SendWaypoint, this, to, sendflags, f);
+    sendflags = M_ARGV(2, int);
+    f = M_ARGV(3, int);
 
     WriteByte(MSG_ENTITY, sendflags);
     WriteByte(MSG_ENTITY, this.wp_extra);

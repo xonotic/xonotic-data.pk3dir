@@ -199,12 +199,6 @@ bool racer_frame(entity this)
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 
-	if(time >= vehic.vehicle_last_trace)
-	{
-		crosshair_trace(this);
-		vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
-	}
-
 	vehic.angles_x *= -1;
 
 	// Yaw
@@ -337,10 +331,16 @@ bool racer_frame(entity this)
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
-		if(vehic.vehicle_last_trace == time + autocvar_g_vehicle_racer_thinkrate)
-		vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
-						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
-						 autocvar_g_vehicle_racer_rocket_locked_time);
+		if(time >= vehic.vehicle_last_trace)
+		{
+			crosshair_trace(this);
+
+			vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
+							 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
+							 autocvar_g_vehicle_racer_rocket_locked_time);
+
+			vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
+		}
 
 		if(vehic.lock_target)
 		{
