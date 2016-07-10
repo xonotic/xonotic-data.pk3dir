@@ -82,10 +82,18 @@ void cl_notice_run()
     vector v3 = v1 + '10 10 0';
     #define OUT(s, z) MACRO_BEGIN { drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3.y += z + 4; } MACRO_END
 
+    float cur_time = 0;
+    float time_width = 48;
     OUT(_("^1Server notices:"), 32);
     LL_EACH(cl_notices, it.alpha > time, {
-        string s = sprintf(_("^7%s (^3%d sec left)"), it.netname , rint(it.alpha - time));
-        OUT(s, 16);
+        if(it.alpha - cur_time > 0.1)
+        {
+            cur_time = it.alpha;
+            string s = sprintf("^3%d", ceil(cur_time - time));
+            drawcolorcodedstring(v3 + eX * 0.5 * (time_width - stringwidth(s, true, '1 1 0' * 16)), s, '1 1 0' * 16, 1, DRAWFLAG_NORMAL);
+            v3.x = v1.x + 10 + time_width;
+        }
+        OUT(it.netname, 16);
     });
     #undef OUT
 }
