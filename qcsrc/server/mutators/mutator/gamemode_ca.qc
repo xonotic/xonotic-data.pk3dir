@@ -321,7 +321,7 @@ void ca_LastPlayerForTeam_Notify(entity this)
 MUTATOR_HOOKFUNCTION(ca, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
-	
+
 	ca_LastPlayerForTeam_Notify(frag_target);
 	if (!allowed_to_spawn)
 		frag_target.respawn_flags =  RESPAWN_SILENT;
@@ -354,6 +354,8 @@ MUTATOR_HOOKFUNCTION(ca, MakePlayerObserver)
 		player.caplayer = 0;
 	if (player.caplayer)
 		player.frags = FRAGS_LMS_LOSER;
+    else
+        player.frags = FRAGS_SPECTATOR;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 	return true;  // prevent team reset
@@ -453,11 +455,11 @@ MUTATOR_HOOKFUNCTION(ca, SpectateSet)
 MUTATOR_HOOKFUNCTION(ca, SpectateNext)
 {
     entity client = M_ARGV(0, entity);
-    entity targ = M_ARGV(1, entity);
 
 	if (!autocvar_g_ca_spectate_enemies && client.caplayer)
 	{
-		targ = CA_SpectateNext(client, targ);
+		entity targ = M_ARGV(1, entity);
+		M_ARGV(1, entity) = CA_SpectateNext(client, targ);
 		return true;
 	}
 }
@@ -481,6 +483,8 @@ MUTATOR_HOOKFUNCTION(ca, SpectatePrev)
 				return MUT_SPECPREV_RETURN;
 		}
 	}
+
+	M_ARGV(1, entity) = targ;
 
 	return MUT_SPECPREV_FOUND;
 }

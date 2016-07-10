@@ -505,7 +505,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
 
-void kh_Key_Touch(entity this)  // runs many, many times when a key has been dropped and can be picked up
+void kh_Key_Touch(entity this, entity toucher)  // runs many, many times when a key has been dropped and can be picked up
 {
 	if(intermission_running)
 		return;
@@ -521,14 +521,14 @@ void kh_Key_Touch(entity this)  // runs many, many times when a key has been dro
 		// maybe start a shorter countdown?
 	}
 
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if(IS_DEAD(other))
+	if(IS_DEAD(toucher))
 		return;
-	if(other == this.enemy)
+	if(toucher == this.enemy)
 		if(time < this.kh_droptime + autocvar_g_balance_keyhunt_delay_collect)
 			return;  // you just dropped it!
-	kh_Key_Collect(this, other);
+	kh_Key_Collect(this, toucher);
 }
 
 void kh_Key_Remove(entity key)  // runs after when all the keys have been collected or when a key has been dropped for more than X seconds

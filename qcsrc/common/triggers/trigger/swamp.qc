@@ -22,7 +22,7 @@
 #ifdef SVQC
 spawnfunc(trigger_swamp);
 #endif
-void swamp_touch(entity this);
+void swamp_touch(entity this, entity toucher);
 void swampslug_think(entity this);
 
 
@@ -54,42 +54,42 @@ void swampslug_think(entity this)
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
 #ifdef SVQC
-	Damage (this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, other.origin, '0 0 0');
+	Damage (this.owner, this, this, this.dmg, DEATH_SWAMP.m_id, this.owner.origin, '0 0 0');
 #endif
 
 	this.nextthink = time + this.swamp_interval;
 }
 
-void swamp_touch(entity this)
+void swamp_touch(entity this, entity toucher)
 {
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
-	if(!IS_PLAYER(other) || IS_DEAD(other))
+	if(!IS_PLAYER(toucher) || IS_DEAD(toucher))
 		return;
 
-	EXACTTRIGGER_TOUCH;
+	EXACTTRIGGER_TOUCH(this, toucher);
 
 	// Chech if player alredy got a swampslug.
-	if(other.in_swamp != 1)
+	if(toucher.in_swamp != 1)
 	{
 		// If not attach one.
-		//centerprint(other,"Entering swamp!\n");
-		other.swampslug = spawn();
-		other.swampslug.health = 2;
-		setthink(other.swampslug, swampslug_think);
-		other.swampslug.nextthink = time;
-		other.swampslug.owner = other;
-		other.swampslug.dmg = this.dmg;
-		other.swampslug.swamp_interval = this.swamp_interval;
-		other.swamp_slowdown = this.swamp_slowdown;
-		other.in_swamp = 1;
+		//centerprint(toucher,"Entering swamp!\n");
+		toucher.swampslug = spawn();
+		toucher.swampslug.health = 2;
+		setthink(toucher.swampslug, swampslug_think);
+		toucher.swampslug.nextthink = time;
+		toucher.swampslug.owner = toucher;
+		toucher.swampslug.dmg = this.dmg;
+		toucher.swampslug.swamp_interval = this.swamp_interval;
+		toucher.swamp_slowdown = this.swamp_slowdown;
+		toucher.in_swamp = 1;
 		return;
 	}
 
-	//other.in_swamp = 1;
+	//toucher.in_swamp = 1;
 
 	//Revitalize players swampslug
-	other.swampslug.health = 2;
+	toucher.swampslug.health = 2;
 }
 
 REGISTER_NET_LINKED(ENT_CLIENT_SWAMP)

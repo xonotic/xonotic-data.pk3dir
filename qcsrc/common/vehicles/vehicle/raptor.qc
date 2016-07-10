@@ -47,6 +47,8 @@ float autocvar_g_vehicle_raptor_speed_up = 1700;
 float autocvar_g_vehicle_raptor_speed_down = 1700;
 float autocvar_g_vehicle_raptor_friction = 2;
 
+bool autocvar_g_vehicle_raptor_swim = false;
+
 float autocvar_g_vehicle_raptor_cannon_turnspeed = 120;
 float autocvar_g_vehicle_raptor_cannon_turnlimit = 20;
 float autocvar_g_vehicle_raptor_cannon_pitchlimit_up = 12;
@@ -508,7 +510,7 @@ bool raptor_takeoff(entity this)
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }
 
-void raptor_blowup(entity this)
+void raptor_blowup(entity this, entity toucher)
 {
 	this.deadflag	= DEAD_DEAD;
 	this.vehicle_exit(this, VHEF_NORMAL);
@@ -529,7 +531,10 @@ void raptor_blowup(entity this)
 void raptor_diethink(entity this)
 {
 	if(time >= this.wait)
-		setthink(this, raptor_blowup);
+	{
+		raptor_blowup(this, NULL);
+		return;
+	}
 
 	if(random() < 0.05)
 	{
@@ -612,7 +617,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
     instance.solid		  = SOLID_SLIDEBOX;
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
-    instance.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
+    instance.velocity = '0 0 1'; // nudge upwards so takeoff sequence can work
     instance.tur_head.exteriormodeltoclient = instance.owner;
 
     instance.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
@@ -723,6 +728,9 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     instance.solid		  = SOLID_SLIDEBOX;
     instance.vehicle_energy = 1;
 
+    if(!autocvar_g_vehicle_raptor_swim)
+    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
+
     instance.PlayerPhysplug = raptor_frame;
 
     instance.bomb1.gun1.avelocity_y = 90;
@@ -755,6 +763,9 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
     instance.vehicle_health = autocvar_g_vehicle_raptor_health;
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     instance.max_health = instance.vehicle_health;
+
+    if(!autocvar_g_vehicle_raptor_swim)
+    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 }
 
 #endif
@@ -778,7 +789,7 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
     }
 
     vector tmpSize = '0 0 0';
-    if(weapon2mode != RSM_FLARE)
+    if(weapon2mode != RSM_FLARE && !spectatee_status)
     {
         vector where;
 

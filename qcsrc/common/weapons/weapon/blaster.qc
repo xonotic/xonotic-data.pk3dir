@@ -56,9 +56,9 @@ REGISTER_WEAPON(BLASTER, blaster, NEW(Blaster));
 spawnfunc(weapon_blaster) { weapon_defaultspawnfunc(this, WEP_BLASTER); }
 spawnfunc(weapon_laser) { spawnfunc_weapon_blaster(this); }
 
-void W_Blaster_Touch(entity this)
+void W_Blaster_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
 
@@ -72,7 +72,7 @@ void W_Blaster_Touch(entity this)
 		NULL,
 		this.blaster_force,
 		this.projectiledeathtype,
-		other
+		toucher
 	);
 
 	remove(this);

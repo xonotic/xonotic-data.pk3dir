@@ -802,7 +802,7 @@ void ClientKill_Now(entity this)
 	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(IS_PLAYER(this))
+	if(!IS_SPEC(this) && !IS_OBSERVER(this))
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
 
 	// now I am sure the player IS dead
@@ -905,7 +905,7 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 				setorigin(it.killindicator, '0 0 52');
 				setthink(it.killindicator, KillIndicator_Think);
 				it.killindicator.nextthink = starttime + (it.lip) * 0.05;
-				clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
+				//clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
 				it.killindicator.cnt = ceil(killtime);
 			});
 			this.lip = 0;
@@ -1623,7 +1623,9 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        this.fixangle = false;
+    	this.angles = spectatee.v_angle;
+
+        //this.fixangle = false;
         //this.velocity = spectatee.vehicle.velocity;
         this.vehicle_health = spectatee.vehicle_health;
         this.vehicle_shield = spectatee.vehicle_shield;
@@ -1633,12 +1635,12 @@ void SpectateCopy(entity this, entity spectatee)
         this.vehicle_reload1 = spectatee.vehicle_reload1;
         this.vehicle_reload2 = spectatee.vehicle_reload2;
 
-        msg_entity = this;
+        //msg_entity = this;
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.x);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.y);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.z);
+       // WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            //WriteAngle(MSG_ONE,  spectatee.v_angle.x);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.y);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
         //    WriteEntity(MSG_ONE, this);
@@ -1704,14 +1706,14 @@ bool Spectate(entity this, entity pl)
 
 bool SpectateNext(entity this)
 {
-	other = find(this.enemy, classname, STR_PLAYER);
+	entity ent = find(this.enemy, classname, STR_PLAYER);
 
-	if (MUTATOR_CALLHOOK(SpectateNext, this, other))
-		other = M_ARGV(1, entity);
-	else if (!other)
-		other = find(other, classname, STR_PLAYER);
+	if (MUTATOR_CALLHOOK(SpectateNext, this, ent))
+		ent = M_ARGV(1, entity);
+	else if (!ent)
+		ent = find(ent, classname, STR_PLAYER);
 
-	if(other) { SetSpectatee(this, other); }
+	if(ent) { SetSpectatee(this, ent); }
 
 	return SpectateSet(this);
 }
@@ -1719,36 +1721,35 @@ bool SpectateNext(entity this)
 bool SpectatePrev(entity this)
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
-	other = findchain(classname, STR_PLAYER);
-	if (!other) // no player
+	entity ent = findchain(classname, STR_PLAYER);
+	if (!ent) // no player
 		return false;
 
-	entity first = other;
+	entity first = ent;
 	// skip players until current spectated player
 	if(this.enemy)
-	while(other && other != this.enemy)
-		other = other.chain;
+	while(ent && ent != this.enemy)
+		ent = ent.chain;
 
-	switch (MUTATOR_CALLHOOK(SpectatePrev, this, other, first))
+	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    other = M_ARGV(1, entity);
+		    ent = M_ARGV(1, entity);
 		    break;
 		case MUT_SPECPREV_RETURN:
-		    other = M_ARGV(1, entity);
 		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
-			if(other.chain)
-				other = other.chain;
+			if(ent.chain)
+				ent = ent.chain;
 			else
-				other = first;
+				ent = first;
 			break;
 		}
 	}
 
-	SetSpectatee(this, other);
+	SetSpectatee(this, ent);
 	return SpectateSet(this);
 }
 
@@ -2167,10 +2168,8 @@ void PlayerPreThink (entity this)
 			{
 				if(!it.team || SAME_TEAM(this, it))
 					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-			}
-			else if(autocvar_g_vehicles_steal)
-			{
-				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+				else if(autocvar_g_vehicles_steal)
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
 			}
 		});
 
@@ -2216,27 +2215,39 @@ void PlayerPreThink (entity this)
 				if (frametime) player_anim(this);
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
-				if (this.deadflag == DEAD_DYING) {
-					if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max)) {
-						this.deadflag = DEAD_RESPAWNING;
-					} else if (!button_pressed) {
-						this.deadflag = DEAD_DEAD;
-                    }
-				} else if (this.deadflag == DEAD_DEAD) {
-					if (button_pressed) {
-						this.deadflag = DEAD_RESPAWNABLE;
-					} else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNABLE) {
-					if (!button_pressed) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNING) {
-					if (time > this.respawn_time) {
-						this.respawn_time = time + 1; // only retry once a second
-						this.respawn_time_max = this.respawn_time;
-						respawn(this);
+				switch(this.deadflag)
+				{
+					case DEAD_DYING:
+					{
+						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
+							this.deadflag = DEAD_RESPAWNING;
+						else if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_DEAD;
+						break;
+					}
+					case DEAD_DEAD:
+					{
+						if (button_pressed)
+							this.deadflag = DEAD_RESPAWNABLE;
+						else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNABLE:
+					{
+						if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNING:
+					{
+						if (time > this.respawn_time)
+						{
+							this.respawn_time = time + 1; // only retry once a second
+							this.respawn_time_max = this.respawn_time;
+							respawn(this);
+						}
+						break;
 					}
 				}
 
@@ -2388,7 +2399,7 @@ void DrownPlayer(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.waterlevel != WATERLEVEL_SUBMERGED)
+	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
 	{
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
@@ -2420,7 +2431,18 @@ void PlayerPostThink (entity this)
 	if (IS_REAL_CLIENT(this))
 	if (IS_PLAYER(this) || sv_maxidle_spectatorsareidle)
 	{
-		if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
+		int totalClients = 0;
+		if(sv_maxidle_slots > 0)
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || sv_maxidle_slots_countbots,
+			{
+				++totalClients;
+			});
+		}
+
+		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
+		{ /* do nothing */ }
+		else if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (this.idlekick_lasttimeleft)
 			{

@@ -138,7 +138,7 @@ float angc (float a1, float a2);
 .float loddistance1;
 .float loddistance2;
 
-float LOD_customize(entity this);
+bool LOD_customize(entity this, entity client);
 
 void LOD_uncustomize(entity this);
 

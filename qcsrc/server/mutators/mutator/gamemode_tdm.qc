@@ -60,11 +60,12 @@ spawnfunc(tdm_team)
 // code from here on is just to support maps that don't have team entities
 void tdm_SpawnTeam (string teamname, float teamcolor)
 {
-	entity this = new(tdm_team);
+	entity this = new_pure(tdm_team);
 	this.netname = teamname;
 	this.cnt = teamcolor;
+	this.team = this.cnt + 1;
 	this.spawnfunc_checked = true;
-	spawnfunc_tdm_team(this);
+	//spawnfunc_tdm_team(this);
 }
 
 void tdm_DelayedInit(entity this)

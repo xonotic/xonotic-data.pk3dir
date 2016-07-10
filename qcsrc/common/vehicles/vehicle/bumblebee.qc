@@ -297,15 +297,17 @@ bool bumblebee_gunner_enter(entity this, entity player)
 	if(!vehic.gunner1 && !vehic.gunner2 && ((time >= vehic.gun1.phase) + (time >= vehic.gun2.phase)) == 2)
 	{
 		// we can have some fun
-		if(vlen2(real_origin(vehic.gun2) - player.origin) < vlen2(real_origin(vehic.gun1) - player.origin))
-		{
-			gunner = vehic.gun2;
-			vehic.gunner2 = player;
-		}
-		else
+		vector v1 = gettaginfo(vehic, gettagindex(vehic, "cannon_right"));
+		vector v2 = gettaginfo(vehic, gettagindex(vehic, "cannon_left"));
+		if(vlen2(player.origin - v1) < vlen2(player.origin - v2))
 		{
 			gunner = vehic.gun1;
 			vehic.gunner1 = player;
+		}
+		else
+		{
+			gunner = vehic.gun2;
+			vehic.gunner2 = player;
 		}
 	}
 	else if(!vehic.gunner1 && time >= vehic.gun1.phase) 	{ gunner = vehic.gun1; vehic.gunner1 = player; }
@@ -369,26 +371,26 @@ bool vehicles_valid_pilot(entity this, entity toucher)
 	return true;
 }
 
-void bumblebee_touch(entity this)
+void bumblebee_touch(entity this, entity toucher)
 {
 	if(autocvar_g_vehicles_enter) { return; }
 
 	if(this.gunner1 != NULL && this.gunner2 != NULL)
 	{
-		vehicles_touch(this);
+		vehicles_touch(this, toucher);
 		return;
 	}
 
-	if(vehicles_valid_pilot(this, other))
+	if(vehicles_valid_pilot(this, toucher))
 	{
 		float phase_time = (time >= this.gun1.phase) + (time >= this.gun2.phase);
 
-		if(time >= other.vehicle_enter_delay && phase_time)
-		if(bumblebee_gunner_enter(this, other))
+		if(time >= toucher.vehicle_enter_delay && phase_time)
+		if(bumblebee_gunner_enter(this, toucher))
 			return;
 	}
 
-	vehicles_touch(this);
+	vehicles_touch(this, toucher);
 }
 
 void bumblebee_regen(entity this)
@@ -701,6 +703,11 @@ void bumblebee_blowup(entity this)
 	remove(this);
 }
 
+void bumblebee_dead_touch(entity this, entity toucher)
+{
+	bumblebee_blowup(this);
+}
+
 void bumblebee_diethink(entity this)
 {
 	if(time >= this.wait)
@@ -732,6 +739,20 @@ METHOD(Bumblebee, vr_enter, void(Bumblebee thisveh, entity instance))
     instance.nextthink = 0;
     instance.movetype = MOVETYPE_BOUNCEMISSILE;
 }
+METHOD(Bumblebee, vr_gunner_enter, void(Bumblebee thisveh, entity instance, entity actor))
+{
+	if(!instance.gunner1)
+	if(time >= instance.gun1.phase)
+	if(instance.gun1.vehicle_enter)
+	if(instance.gun1.vehicle_enter(instance, actor))
+		return;
+
+	if(!instance.gunner2)
+	if(time >= instance.gun2.phase)
+	if(instance.gun2.vehicle_enter)
+	if(instance.gun2.vehicle_enter(instance, actor))
+		return;
+}
 METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
 {
     instance.angles_z *= 0.8;
@@ -745,11 +766,8 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         {
         	entity e = instance.gunner1;
         	instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
-        	entity oldother = other;
-        	other = e;
         	instance.phase = 0;
-        	gettouch(instance)(instance);
-        	other = oldother;
+        	gettouch(instance)(instance, e);
         	return;
         }
 
@@ -757,11 +775,8 @@ METHOD(Bumblebee, vr_think, void(Bumblebee thisveh, entity instance))
         {
         	entity e = instance.gunner2;
         	instance.gun2.vehicle_exit(instance.gun2, VHEF_EJECT);
-        	entity oldother = other;
-        	other = e;
         	instance.phase = 0;
-        	gettouch(instance)(instance);
-        	other = oldother;
+        	gettouch(instance)(instance, e);
             return;
         }
     }
@@ -790,7 +805,7 @@ METHOD(Bumblebee, vr_death, void(Bumblebee thisveh, entity instance))
     entity _body = vehicle_tossgib(instance, instance, instance.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
     if(random() > 0.5)
-        settouch(_body, bumblebee_blowup);
+        settouch(_body, bumblebee_dead_touch);
     else
         settouch(_body, func_null);
 

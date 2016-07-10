@@ -137,9 +137,9 @@ void W_Hook_Damage(entity this, entity inflictor, entity attacker, float damage,
 		W_PrepareExplosionByDamage(this, this.realowner, W_Hook_Explode2);
 }
 
-void W_Hook_Touch2(entity this)
+void W_Hook_Touch2(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 	this.use(this, NULL, NULL);
 }
 
@@ -440,6 +440,10 @@ void Draw_GrapplingHook(entity this)
 			rgb = '1 1 1';
 			break;
 	}
+
+	MUTATOR_CALLHOOK(DrawGrapplingHook, this, tex, rgb, t);
+	tex = M_ARGV(1, string);
+	rgb = M_ARGV(2, vector);
 
 	Draw_GrapplingHook_trace_callback_tex = tex;
 	Draw_GrapplingHook_trace_callback_rnd = offset;
