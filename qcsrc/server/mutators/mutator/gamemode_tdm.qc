@@ -58,12 +58,12 @@ spawnfunc(tdm_team)
 }
 
 // code from here on is just to support maps that don't have team entities
-void tdm_SpawnTeam (string teamname, float teamcolor)
+void tdm_SpawnTeam (string teamname, int teamcolor)
 {
 	entity this = new_pure(tdm_team);
 	this.netname = teamname;
-	this.cnt = teamcolor;
-	this.team = this.cnt + 1;
+	this.cnt = teamcolor - 1;
+	this.team = teamcolor;
 	this.spawnfunc_checked = true;
 	//spawnfunc_tdm_team(this);
 }
@@ -75,7 +75,7 @@ void tdm_DelayedInit(entity this)
 	{
 		LOG_TRACE("No \"tdm_team\" entities found on this map, creating them anyway.\n");
 
-		int numteams = min(4, autocvar_g_tdm_teams_override);
+		int numteams = autocvar_g_tdm_teams_override;
 
 		if(numteams < 2) { numteams = autocvar_g_tdm_teams; }
 		numteams = bound(2, numteams, 4);
@@ -86,11 +86,14 @@ void tdm_DelayedInit(entity this)
 		if(numteams >= 3) teams |= BIT(2);
 		if(numteams >= 4) teams |= BIT(3);
 
-		//numteams = teams; // now set it?
-
-		float i;
-		for(i = 1; i <= numteams && (teams & BIT(numteams)); ++i)
-			tdm_SpawnTeam(Team_ColorName(Team_NumberToTeam(i)), Team_NumberToTeam(i) - 1);
+		if(teams & BIT(0))
+			tdm_SpawnTeam("Red", NUM_TEAM_1);
+		if(teams & BIT(1))
+			tdm_SpawnTeam("Blue", NUM_TEAM_2);
+		if(teams & BIT(2))
+			tdm_SpawnTeam("Yellow", NUM_TEAM_3);
+		if(teams & BIT(3))
+			tdm_SpawnTeam("Pink", NUM_TEAM_4);
 	}
 }
 
