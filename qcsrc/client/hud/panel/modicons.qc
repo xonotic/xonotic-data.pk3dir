@@ -201,8 +201,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				break; \
 		} \
 	} MACRO_END
-	X(red, myteam != NUM_TEAM_1);
-	X(blue, myteam != NUM_TEAM_2);
+	X(red, myteam != NUM_TEAM_1 && (nteams & BIT(0)));
+	X(blue, myteam != NUM_TEAM_2 && (nteams & BIT(1)));
 	X(yellow, myteam != NUM_TEAM_3 && (nteams & BIT(2)));
 	X(pink, myteam != NUM_TEAM_4 && (nteams & BIT(3)));
 	X(neutral, ctf_oneflag);
