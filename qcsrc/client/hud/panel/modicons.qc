@@ -214,8 +214,6 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	if(nteams & BIT(3))
 		tcount = 4;
 
-	LOG_INFO(ftos(tcount), "\n");
-
 	if (ctf_oneflag) {
 		// hacky, but these aren't needed
 		red_icon = red_icon_prevstatus = blue_icon = blue_icon_prevstatus = yellow_icon = yellow_icon_prevstatus = pink_icon = pink_icon_prevstatus = string_null;
