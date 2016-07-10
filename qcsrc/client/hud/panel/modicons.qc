@@ -108,6 +108,7 @@ void HUD_Mod_CTF_Reset()
 	redflag_statuschange_time = blueflag_statuschange_time = yellowflag_statuschange_time = pinkflag_statuschange_time = neutralflag_statuschange_time = 0;
 }
 
+int autocvar__teams_available;
 void HUD_Mod_CTF(vector pos, vector mySize)
 {
 	vector redflag_pos, blueflag_pos, yellowflag_pos, pinkflag_pos, neutralflag_pos;
@@ -120,6 +121,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	int stat_items = STAT(CTF_FLAGSTATUS);
 	float fs, fs2, fs3, size1, size2;
 	vector e1, e2;
+
+	int nteams = autocvar__teams_available;
 
 	redflag = (stat_items/CTF_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/CTF_BLUE_FLAG_TAKEN) & 3;
@@ -134,9 +137,9 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	if (autocvar__hud_configure) {
 		redflag = 1;
 		blueflag = 2;
-		if (team_count >= 3)
+		if (nteams & BIT(2))
 			yellowflag = 2;
-		if (team_count >= 4)
+		if (nteams & BIT(3))
 			pinkflag = 3;
 		ctf_oneflag = neutralflag = 0; // disable neutral flag in hud editor?
 	}
@@ -200,16 +203,24 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	} MACRO_END
 	X(red, myteam != NUM_TEAM_1);
 	X(blue, myteam != NUM_TEAM_2);
-	X(yellow, myteam != NUM_TEAM_3 && team_count >= 3);
-	X(pink, myteam != NUM_TEAM_4 && team_count >= 4);
+	X(yellow, myteam != NUM_TEAM_3 && (nteams & BIT(2)));
+	X(pink, myteam != NUM_TEAM_4 && (nteams & BIT(3)));
 	X(neutral, ctf_oneflag);
 	#undef X
+
+	int tcount = 2;
+	if(nteams & BIT(2))
+		tcount = 3;
+	if(nteams & BIT(3))
+		tcount = 4;
+
+	LOG_INFO(ftos(tcount), "\n");
 
 	if (ctf_oneflag) {
 		// hacky, but these aren't needed
 		red_icon = red_icon_prevstatus = blue_icon = blue_icon_prevstatus = yellow_icon = yellow_icon_prevstatus = pink_icon = pink_icon_prevstatus = string_null;
 		fs = fs2 = fs3 = 1;
-	} else switch (team_count) {
+	} else switch (tcount) {
 		default:
 		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
 		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;

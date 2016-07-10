@@ -244,24 +244,46 @@ void CheckAllowedTeams (entity for_whom)
 	}
 
 	// TODO: Balance quantity of bots across > 2 teams when bot_vs_human is set (and remove next line)
-	if(c3==-1 && c4==-1)
+	if(AvailableTeams() == 2)
 	if(autocvar_bot_vs_human && for_whom)
 	{
 		if(autocvar_bot_vs_human > 0)
 		{
-			// bots are all blue
+			// find last team available
+
 			if(IS_BOT_CLIENT(for_whom))
-				c1 = c3 = c4 = -1;
+			{
+				if(c4 >= 0) { c3 = c2 = c1 = -1; }
+				else if(c3 >= 0) { c4 = c2 = c1 = -1; }
+				else { c4 = c3 = c1 = -1; }
+				// no further cases, we know at least 2 teams exist
+			}
 			else
-				c2 = -1;
+			{
+				if(c1 >= 0) { c2 = c3 = c4 = -1; }
+				else if(c2 >= 0) { c1 = c3 = c4 = -1; }
+				else { c1 = c2 = c4 = -1; }
+				// no further cases, bots have one of the teams
+			}
 		}
 		else
 		{
-			// bots are all red
+			// find first team available
+
 			if(IS_BOT_CLIENT(for_whom))
-				c2 = c3 = c4 = -1;
+			{
+				if(c1 >= 0) { c2 = c3 = c4 = -1; }
+				else if(c2 >= 0) { c1 = c3 = c4 = -1; }
+				else { c1 = c2 = c4 = -1; }
+				// no further cases, we know at least 2 teams exist
+			}
 			else
-				c1 = -1;
+			{
+				if(c4 >= 0) { c3 = c2 = c1 = -1; }
+				else if(c3 >= 0) { c4 = c2 = c1 = -1; }
+				else { c4 = c3 = c1 = -1; }
+				// no further cases, bots have one of the teams
+			}
 		}
 	}
 

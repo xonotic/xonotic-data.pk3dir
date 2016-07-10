@@ -1145,7 +1145,7 @@ void ClientConnect(entity this)
 	if (!sv_foginterval && world.fog != "")
 		stuffcmd(this, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)))
+	if (autocvar_sv_teamnagger && !(autocvar_bot_vs_human && AvailableTeams() == 2))
 		if (!g_ca && !g_cts && !g_race) // teamnagger is currently bad for ca, race & cts
 			send_CSQC_teamnagger();
 

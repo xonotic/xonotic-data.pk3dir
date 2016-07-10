@@ -3,6 +3,8 @@
 #include "cl_client.qh"
 #include "scores.qh"
 
+int ScoreRules_teams;
+
 void CheckAllowedTeams (entity for_whom);
 
 int NumTeams(int teams)
@@ -10,9 +12,15 @@ int NumTeams(int teams)
 	return boolean(teams & BIT(0)) + boolean(teams & BIT(1)) + boolean(teams & BIT(2)) + boolean(teams & BIT(3));
 }
 
+int AvailableTeams()
+{
+	return NumTeams(ScoreRules_teams);
+	// NOTE: this method is unreliable, as forced teams set the c* globals to weird values
+	//return boolean(c1 >= 0) + boolean(c2 >= 0) + boolean(c3 >= 0) + boolean(c4 >= 0);
+}
+
 // NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE
 // scores that should be in all modes:
-int ScoreRules_teams;
 void ScoreRules_basics(int teams, float sprio, float stprio, float score_enabled)
 {
 	float i;
