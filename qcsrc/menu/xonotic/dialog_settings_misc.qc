@@ -77,14 +77,12 @@ void XonoticMiscSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Maximum:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_maxfps"));
-			ADDVALUE_FPS(5);
-			ADDVALUE_FPS(10);
-			ADDVALUE_FPS(20);
 			ADDVALUE_FPS(30);
 			ADDVALUE_FPS(40);
 			ADDVALUE_FPS(50);
 			ADDVALUE_FPS(60);
 			ADDVALUE_FPS(70);
+			ADDVALUE_FPS(80);
 			ADDVALUE_FPS(100);
 			ADDVALUE_FPS(125);
 			ADDVALUE_FPS(200);
