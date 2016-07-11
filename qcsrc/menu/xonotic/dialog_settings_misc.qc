@@ -85,6 +85,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			ADDVALUE_FPS(80);
 			ADDVALUE_FPS(100);
 			ADDVALUE_FPS(125);
+			ADDVALUE_FPS(150);
 			ADDVALUE_FPS(200);
 			e.addValue(e, ZCTX(_("MAXFPS^Unlimited")), "0");
 			e.configureXonoticTextSliderValues(e);
@@ -96,8 +97,10 @@ void XonoticMiscSettingsTab_fill(entity me)
 			ADDVALUE_FPS(40);
 			ADDVALUE_FPS(50);
 			ADDVALUE_FPS(60);
+			ADDVALUE_FPS(80);
 			ADDVALUE_FPS(100);
 			ADDVALUE_FPS(125);
+			ADDVALUE_FPS(150);
 			ADDVALUE_FPS(200);
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
