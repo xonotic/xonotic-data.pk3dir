@@ -58,6 +58,7 @@ void QuickMenu_Page_ClearEntry(int i)
 	if (QuickMenu_Page_Command[i])
 		strunzone(QuickMenu_Page_Command[i]);
 	QuickMenu_Page_Command[i] = string_null;
+	QuickMenu_Page_Command_Type[i] = 0;
 }
 
 float QuickMenu_Page_Load(string target_submenu, float new_page);
@@ -430,11 +431,8 @@ bool QuickMenu_InputEvent(int bInputType, float nPrimary, float nSecondary)
 	}
 
 	// allow console bind to work
-	string con_keys;
-	float keys;
-	con_keys = findkeysforcommand("toggleconsole", 0);
-	keys = tokenize(con_keys); // findkeysforcommand returns data for this
-
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
 	bool hit_con_bind = false;
 	int i;
 	for (i = 0; i < keys; ++i)
@@ -660,7 +658,7 @@ void HUD_QuickMenu()
 				else
 					tokenize_console(substring(QuickMenu_Page_Command[i], 0, end));
 
-				//if(argv(1) && argv(0) == "toggle") // already checked
+				if(argv(1) && argv(0) == "toggle")
 				{
 					// "enable feature xxx" "toggle xxx" (or "toggle xxx 1 0")
 					// "disable feature xxx" "toggle xxx 0 1"

@@ -598,10 +598,10 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		}
 
 		// allow some binds
-		string con_keys;
-		con_keys = findkeysforcommand("toggleconsole", 0);
+		string con_keys = findkeysforcommand("toggleconsole", 0);
 		int keys = tokenize(con_keys); // findkeysforcommand returns data for this
-		for (int i = 0; i < keys; ++i)
+		int i;
+		for (i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
 				return false;
