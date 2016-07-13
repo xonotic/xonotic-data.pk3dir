@@ -316,7 +316,7 @@
 
 	#ifdef SVQC
 
-		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, int voicetype, bool fake)
+		void _GlobalSound(entity this, entity gs, entity ps, string sample, int chan, float vol, int voicetype, bool fake)
 		{
 			if (gs == NULL && ps == NULL && sample == "") return;
 			if(this.classname == "body") return;
@@ -334,9 +334,9 @@
 						if (IS_REAL_CLIENT(msg_entity))
 						{
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE;
-							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten);
-							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten);
-							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten);
+							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten);
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten);
+							else soundto(MSG_ONE, this, chan, sample, vol, atten);
 						}
 					}
 					if (voicetype == VOICETYPE_LASTATTACKER_ONLY) break;
@@ -355,9 +355,9 @@
 						MACRO_BEGIN \
 						{ \
 							float atten = (msg_entity.cvar_cl_voice_directional == 1) ? ATTEN_MIN : ATTEN_NONE; \
-							if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
-							else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
-							else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+							if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
+							else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
+							else soundto(MSG_ONE, this, chan, sample, vol, atten); \
 						} MACRO_END
 
 					if (fake) { msg_entity = this; X(); }
@@ -390,9 +390,9 @@
 								    ? bound(ATTEN_MIN, msg_entity.cvar_cl_voice_directional_taunt_attenuation, \
 									ATTEN_MAX) \
 									: ATTEN_NONE; \
-								if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASEVOICE, atten); \
-								else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASEVOICE, atten); \
-								else soundto(MSG_ONE, this, chan, sample, VOL_BASEVOICE, atten); \
+								if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, atten); \
+								else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, atten); \
+								else soundto(MSG_ONE, this, chan, sample, vol, atten); \
 							} \
 						} MACRO_END
 					if (fake)
@@ -415,15 +415,15 @@
 					msg_entity = this;
 					if (fake)
 					{
-						if (gs) globalsound(MSG_ONE, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
-						else if (ps) playersound(MSG_ONE, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
-						else soundto(MSG_ONE, this, chan, sample, VOL_BASE, ATTEN_NORM);
+						if (gs) globalsound(MSG_ONE, this, gs, r, chan, vol, ATTEN_NORM);
+						else if (ps) playersound(MSG_ONE, this, ps, r, chan, vol, ATTEN_NORM);
+						else soundto(MSG_ONE, this, chan, sample, vol, ATTEN_NORM);
 					}
 					else
 					{
-						if (gs) globalsound(MSG_ALL, this, gs, r, chan, VOL_BASE, ATTEN_NORM);
-						else if (ps) playersound(MSG_ALL, this, ps, r, chan, VOL_BASE, ATTEN_NORM);
-						else _sound(this, chan, sample, VOL_BASE, ATTEN_NORM);
+						if (gs) globalsound(MSG_ALL, this, gs, r, chan, vol, ATTEN_NORM);
+						else if (ps) playersound(MSG_ALL, this, ps, r, chan, vol, ATTEN_NORM);
+						else _sound(this, chan, sample, vol, ATTEN_NORM);
 					}
 					break;
 				}

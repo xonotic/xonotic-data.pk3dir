@@ -541,7 +541,7 @@ bool PlayerJump(entity this)
 	animdecide_setaction(this, ANIMACTION_JUMP, true);
 
 	if (autocvar_g_jump_grunt)
-		PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		PlayerSound(this, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 #endif
 	return true;
 }
@@ -781,7 +781,8 @@ void PM_check_hitground(entity this)
     entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
     	? GS_FALL_METAL
     	: GS_FALL;
-    GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+    float vol = ((IS_DUCKED(this)) ? VOL_MUFFLED : VOL_BASE);
+    GlobalSound(this, gs, CH_PLAYER, vol, VOICETYPE_PLAYERSOUND);
 #endif
 }
 
@@ -801,7 +802,7 @@ void PM_Footsteps(entity this)
 		entity gs = (trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 			? GS_STEP_METAL
 			: GS_STEP;
-		GlobalSound(this, gs, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+		GlobalSound(this, gs, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 	}
 #endif
 }

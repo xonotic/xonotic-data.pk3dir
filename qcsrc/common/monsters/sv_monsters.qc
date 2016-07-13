@@ -338,7 +338,7 @@ void Monster_Sound(entity this, .string samplefield, float sound_delay, float de
 	if(delaytoo)
 	if(time < this.msound_delay)
 		return; // too early
-	GlobalSound_string(this, this.(samplefield), chan, VOICETYPE_PLAYERSOUND);
+	GlobalSound_string(this, this.(samplefield), chan, VOL_BASE, VOICETYPE_PLAYERSOUND);
 
 	this.msound_delay = time + sound_delay;
 }
