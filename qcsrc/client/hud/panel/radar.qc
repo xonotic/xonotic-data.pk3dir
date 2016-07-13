@@ -355,7 +355,7 @@ void HUD_Radar()
 
 	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
 		if ( hud_panel_radar_mouse )
-		if ( it.health > 0 || !it.health )
+		if ( it.health >= 0 )
 		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE || !(serverflags & SERVERFLAG_TEAMPLAY) )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
