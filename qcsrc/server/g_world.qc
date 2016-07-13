@@ -1038,7 +1038,7 @@ float Map_Check(float position, float pass)
 		return 0;
 	}
 	else
-		LOG_TRACE( "Couldn't select '", filename, "'..\n" );
+		LOG_DEBUG( "Couldn't select '", filename, "'...\n" );
 
 	return 0;
 }
@@ -1299,6 +1299,7 @@ When the player presses attack or jump, change to the next level
 void IntermissionThink(entity this)
 {
 	FixIntermissionClient(this);
+	CSQCMODEL_AUTOUPDATE(this); // PlayerPostThink returns before calling this during intermission, so run it here
 
 	float server_screenshot = (autocvar_sv_autoscreenshot && this.cvar_cl_autoscreenshot);
 	float client_screenshot = (this.cvar_cl_autoscreenshot == 2);

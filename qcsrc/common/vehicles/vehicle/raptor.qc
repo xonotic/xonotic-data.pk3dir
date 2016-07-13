@@ -47,6 +47,8 @@ float autocvar_g_vehicle_raptor_speed_up = 1700;
 float autocvar_g_vehicle_raptor_speed_down = 1700;
 float autocvar_g_vehicle_raptor_friction = 2;
 
+bool autocvar_g_vehicle_raptor_swim = false;
+
 float autocvar_g_vehicle_raptor_cannon_turnspeed = 120;
 float autocvar_g_vehicle_raptor_cannon_turnlimit = 20;
 float autocvar_g_vehicle_raptor_cannon_pitchlimit_up = 12;
@@ -77,23 +79,16 @@ vector autocvar_g_vehicle_raptor_bouncepain = '1 4 1000';
 .entity bomb1;
 .entity bomb2;
 
-float raptor_altitude(entity this, float amax)
-{
-	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * amax), MOVE_WORLDONLY, this);
-	return vlen(this.origin - trace_endpos);
-}
-
 void raptor_land(entity this)
 {
 	float hgt;
 
-	hgt = raptor_altitude(this, 512);
+	hgt = vehicle_altitude(this, 512);
 	this.velocity = (this.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
 	this.angles_x *= 0.95;
 	this.angles_z *= 0.95;
 
-	if(hgt < 128)
-	if(hgt > 0)
+	if(hgt < 128 && hgt > 0)
 		this.frame = (hgt / 128) * 25;
 
 	this.bomb1.gun1.avelocity_y = 90 + ((this.frame / 25) * 2000);
@@ -113,19 +108,19 @@ void raptor_land(entity this)
 
 void raptor_exit(entity this, int eject)
 {
-	vector spot;
 	this.tur_head.exteriormodeltoclient = NULL;
 
 	if(!IS_DEAD(this))
 	{
 		setthink(this, raptor_land);
-		this.nextthink  = time;
+		this.nextthink = time;
 	}
 
 	if(!this.owner)
 		return;
 
 	makevectors(this.angles);
+	vector spot;
 	if(eject)
 	{
 		spot = this.origin + v_forward * 100 + '0 0 64';
@@ -172,7 +167,6 @@ bool raptor_frame(entity this)
 
 	vehicles_frame(vehic, this);
 
-	float ftmp = 0;
 	/*
 	ftmp = vlen(vehic.velocity);
 	if(ftmp > autocvar_g_vehicle_raptor_speed_forward)
@@ -186,7 +180,7 @@ bool raptor_frame(entity this)
 		vehic.sound_nexttime = time + 7.955812;
 		//sound (vehic.tur_head, CH_TRIGGER_SINGLE, SND_VEH_RAPTOR_FLY, 1 - ftmp,   ATTEN_NORM );
 		sound (vehic, CH_TRIGGER_SINGLE, SND_VEH_RAPTOR_SPEED, 1, ATTEN_NORM);
-		vehic.wait = ftmp;
+		vehic.wait = 0;
 	}
 	/*
 	else if(fabs(ftmp - vehic.wait) > 0.2)
@@ -226,7 +220,7 @@ bool raptor_frame(entity this)
 	if(df_y > 180)  df_y -= 360;
 	if(df_y < -180) df_y += 360;
 
-	ftmp = shortangle_f(this.v_angle_y - vang_y, vang_y);
+	float ftmp = shortangle_f(this.v_angle_y - vang_y, vang_y);
 	if(ftmp > 180)  ftmp -= 360; if(ftmp < -180) ftmp += 360;
 	vehic.avelocity_y = bound(-autocvar_g_vehicle_raptor_turnspeed, ftmp + vehic.avelocity_y * 0.9, autocvar_g_vehicle_raptor_turnspeed);
 
@@ -516,7 +510,7 @@ bool raptor_takeoff(entity this)
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
 }
 
-void raptor_blowup(entity this)
+void raptor_blowup(entity this, entity toucher)
 {
 	this.deadflag	= DEAD_DEAD;
 	this.vehicle_exit(this, VHEF_NORMAL);
@@ -537,7 +531,10 @@ void raptor_blowup(entity this)
 void raptor_diethink(entity this)
 {
 	if(time >= this.wait)
-		setthink(this, raptor_blowup);
+	{
+		raptor_blowup(this, NULL);
+		return;
+	}
 
 	if(random() < 0.05)
 	{
@@ -620,7 +617,7 @@ METHOD(Raptor, vr_enter, void(Raptor thisveh, entity instance))
     instance.solid		  = SOLID_SLIDEBOX;
     instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
     instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
-    instance.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
+    instance.velocity = '0 0 1'; // nudge upwards so takeoff sequence can work
     instance.tur_head.exteriormodeltoclient = instance.owner;
 
     instance.delay = time + autocvar_g_vehicle_raptor_bombs_refire;
@@ -731,6 +728,9 @@ METHOD(Raptor, vr_spawn, void(Raptor thisveh, entity instance))
     instance.solid		  = SOLID_SLIDEBOX;
     instance.vehicle_energy = 1;
 
+    if(!autocvar_g_vehicle_raptor_swim)
+    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
+
     instance.PlayerPhysplug = raptor_frame;
 
     instance.bomb1.gun1.avelocity_y = 90;
@@ -763,6 +763,9 @@ METHOD(Raptor, vr_setup, void(Raptor thisveh, entity instance))
     instance.vehicle_health = autocvar_g_vehicle_raptor_health;
     instance.vehicle_shield = autocvar_g_vehicle_raptor_shield;
     instance.max_health = instance.vehicle_health;
+
+    if(!autocvar_g_vehicle_raptor_swim)
+    	instance.dphitcontentsmask |= DPCONTENTS_LIQUIDSMASK;
 }
 
 #endif
@@ -786,7 +789,7 @@ METHOD(Raptor, vr_crosshair, void(Raptor thisveh, entity player))
     }
 
     vector tmpSize = '0 0 0';
-    if(weapon2mode != RSM_FLARE)
+    if(weapon2mode != RSM_FLARE && !spectatee_status)
     {
         vector where;
 

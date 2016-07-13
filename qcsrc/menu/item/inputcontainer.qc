@@ -20,7 +20,8 @@
 	float InputContainer_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		entity f, ff;
-		if (SUPER(InputContainer).keyDown(me, scan, ascii, shift)) return 1;
+		if (SUPER(InputContainer).keyDown(me, scan, ascii, shift))
+			return 1;
 		if (scan == K_ESCAPE)
 		{
 			f = me.focusedChild;

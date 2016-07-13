@@ -112,15 +112,13 @@ float invasion_PickMonster(float supermonster_count)
 
 entity invasion_PickSpawn()
 {
-	entity e;
-
 	RandomSelection_Init();
 
-	for(e = NULL;(e = find(e, classname, "invasion_spawnpoint")); )
+	FOREACH_ENTITY_CLASS("invasion_spawnpoint", true,
 	{
-		RandomSelection_Add(e, 0, string_null, 1, ((time >= e.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
-		e.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
-	}
+		RandomSelection_Add(it, 0, string_null, 1, ((time >= it.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
+		it.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
+	});
 
 	return RandomSelection_chosen_ent;
 }

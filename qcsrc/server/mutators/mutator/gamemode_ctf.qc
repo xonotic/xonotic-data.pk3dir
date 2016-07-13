@@ -278,24 +278,24 @@ void ctf_CaptureShield_Update(entity player, bool wanted_status)
 	}
 }
 
-bool ctf_CaptureShield_Customize(entity this)
+bool ctf_CaptureShield_Customize(entity this, entity client)
 {
-	if(!other.ctf_captureshielded) { return false; }
-	if(CTF_SAMETEAM(this, other)) { return false; }
+	if(!client.ctf_captureshielded) { return false; }
+	if(CTF_SAMETEAM(this, client)) { return false; }
 
 	return true;
 }
 
-void ctf_CaptureShield_Touch(entity this)
+void ctf_CaptureShield_Touch(entity this, entity toucher)
 {
-	if(!other.ctf_captureshielded) { return; }
-	if(CTF_SAMETEAM(this, other)) { return; }
+	if(!toucher.ctf_captureshielded) { return; }
+	if(CTF_SAMETEAM(this, toucher)) { return; }
 
 	vector mymid = (this.absmin + this.absmax) * 0.5;
-	vector othermid = (other.absmin + other.absmax) * 0.5;
+	vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-	Damage(other, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	if(IS_REAL_CLIENT(other)) { Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
+	Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * ctf_captureshield_force);
+	if(IS_REAL_CLIENT(toucher)) { Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -747,11 +747,11 @@ void ctf_CheckFlagReturn(entity flag, int returntype)
 	}
 }
 
-bool ctf_Stalemate_Customize(entity this)
+bool ctf_Stalemate_Customize(entity this, entity client)
 {
 	// make spectators see what the player would see
 	entity e, wp_owner;
-	e = WaypointSprite_getviewentity(other);
+	e = WaypointSprite_getviewentity(client);
 	wp_owner = this.owner;
 
 	// team waypoints
@@ -2238,14 +2238,13 @@ MUTATOR_HOOKFUNCTION(ctf, VehicleEnter)
 
 	if(player.flagcarried)
 	{
-		player.flagcarried.nodrawtoclient = player; // hide the flag from the driver
-
 		if(!autocvar_g_ctf_allow_vehicle_carry && !autocvar_g_ctf_allow_vehicle_touch)
 		{
 			ctf_Handle_Throw(player, NULL, DROP_NORMAL);
 		}
 		else
 		{
+			player.flagcarried.nodrawtoclient = player; // hide the flag from the driver
 			setattachment(player.flagcarried, veh, "");
 			setorigin(player.flagcarried, VEHICLE_FLAG_OFFSET);
 			player.flagcarried.scale = VEHICLE_FLAG_SCALE;
@@ -2561,9 +2560,9 @@ void ctf_SpawnTeam (string teamname, int teamcolor)
 {
 	entity this = new_pure(ctf_team);
 	this.netname = teamname;
-	this.cnt = teamcolor;
+	this.cnt = teamcolor - 1;
 	this.spawnfunc_checked = true;
-	spawnfunc_ctf_team(this);
+	this.team = teamcolor;
 }
 
 void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.
@@ -2584,12 +2583,12 @@ void ctf_DelayedInit(entity this) // Do this check with a delay so we can wait f
 	if(find(NULL, classname, "ctf_team") == NULL)
 	{
 		LOG_TRACE("No \"ctf_team\" entities found on this map, creating them anyway.\n");
-		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
-		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
+		ctf_SpawnTeam("Red", NUM_TEAM_1);
+		ctf_SpawnTeam("Blue", NUM_TEAM_2);
 		if(ctf_teams >= 3)
-			ctf_SpawnTeam("Yellow", NUM_TEAM_3 - 1);
+			ctf_SpawnTeam("Yellow", NUM_TEAM_3);
 		if(ctf_teams >= 4)
-			ctf_SpawnTeam("Pink", NUM_TEAM_4 - 1);
+			ctf_SpawnTeam("Pink", NUM_TEAM_4);
 	}
 
 	ctf_ScoreRules(ctf_teams);

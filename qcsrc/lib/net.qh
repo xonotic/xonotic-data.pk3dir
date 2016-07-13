@@ -130,7 +130,7 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 	.void(entity this) uncustomizeentityforclient;
 	.float uncustomizeentityforclient_set;
 
-	void SetCustomizer(entity e, bool(entity this) customizer, void(entity this) uncustomizer)
+	void SetCustomizer(entity e, bool(entity this, entity client) customizer, void(entity this) uncustomizer)
 	{
 		setcefc(e, customizer);
 		e.uncustomizeentityforclient = uncustomizer;
@@ -202,6 +202,54 @@ STATIC_INIT(C2S_Protocol_renumber) { FOREACH(C2S_Protocol, true, it.m_id = i); }
 			WriteByte(to, NET_##id.m_id); \
 		} MACRO_END
 #endif
+
+// serialization: new style
+
+USING(Stream, int);
+#if defined(SVQC)
+	#define stream_reading(stream) false
+	#define stream_writing(stream) true
+#elif defined(CSQC)
+	#define stream_reading(stream) true
+	#define stream_writing(stream) false
+#endif
+
+#define serialize(T, stream, ...) serialize_##T(stream, __VA_ARGS__)
+
+#if defined(SVQC)
+	#define serialize_byte(stream, this) \
+		MACRO_BEGIN \
+		WriteByte(stream, this); \
+		MACRO_END
+#elif defined(CSQC)
+	#define serialize_byte(stream, this) \
+		MACRO_BEGIN \
+		this = ReadByte(); \
+		MACRO_END
+#endif
+
+#if defined(SVQC)
+	#define serialize_float(stream, this) \
+		MACRO_BEGIN \
+		WriteCoord(stream, this); \
+		MACRO_END
+#elif defined(CSQC)
+	#define serialize_float(stream, this) \
+		MACRO_BEGIN \
+		this = ReadCoord(); \
+		MACRO_END
+#endif
+
+#define serialize_vector(stream, this) \
+    MACRO_BEGIN \
+    vector _v = this; \
+    serialize_float(stream, _v.x); \
+    serialize_float(stream, _v.y); \
+    serialize_float(stream, _v.z); \
+    this = _v; \
+    MACRO_END
+
+// serialization: old
 
 #define ReadRegistered(r) r##_from(Read_byte())
 #define WriteRegistered(r, to, it) Write_byte(to, it.m_id)

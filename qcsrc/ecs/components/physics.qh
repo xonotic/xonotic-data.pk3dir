@@ -1,0 +1,7 @@
+#pragma once
+
+COMPONENT(phys);
+.vector com_phys_pos, com_phys_pos_prev;
+.vector com_phys_ang, com_phys_ang_prev;
+.vector com_phys_vel;
+.vector com_phys_acc;

@@ -231,17 +231,17 @@ void Arc_Player_SetHeat(entity player)
 	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
 }
 
-void W_Arc_Bolt_Explode(entity this)
+void W_Arc_Bolt_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
-	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, other);
+	RadiusDamage(this, this.realowner, WEP_CVAR(arc, bolt_damage), WEP_CVAR(arc, bolt_edgedamage), WEP_CVAR(arc, bolt_radius), NULL, NULL, WEP_CVAR(arc, bolt_force), this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
 void W_Arc_Bolt_Explode_use(entity this, entity actor, entity trigger)
 {
-	W_Arc_Bolt_Explode(this);
+	W_Arc_Bolt_Explode(this, trigger);
 }
 
 void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -259,10 +259,10 @@ void W_Arc_Bolt_Damage(entity this, entity inflictor, entity attacker, float dam
 		W_PrepareExplosionByDamage(this, attacker, getthink(this));
 }
 
-void W_Arc_Bolt_Touch(entity this)
+void W_Arc_Bolt_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	this.use(this, NULL, NULL);
+	PROJECTILE_TOUCH(this, toucher);
+	this.use(this, NULL, toucher);
 }
 
 void W_Arc_Attack_Bolt(Weapon thiswep, entity actor)
@@ -857,6 +857,7 @@ METHOD(Arc, wr_drop, void(entity thiswep, entity actor))
     weapon_dropevent_item.arc_cooldown = actor.arc_cooldown;
     actor.arc_overheat = 0;
     actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
 }
 METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
 {
@@ -866,6 +867,18 @@ METHOD(Arc, wr_pickup, void(entity thiswep, entity actor))
         actor.arc_overheat = weapon_dropevent_item.arc_overheat;
         actor.arc_cooldown = weapon_dropevent_item.arc_cooldown;
     }
+}
+METHOD(Arc, wr_resetplayer, void(entity thiswep, entity actor))
+{
+    actor.arc_overheat = 0;
+    actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
+}
+METHOD(Arc, wr_playerdeath, void(entity thiswep, entity actor))
+{
+    actor.arc_overheat = 0;
+    actor.arc_cooldown = 0;
+    actor.arc_BUTTON_ATCK_prev = false;
 }
 #endif
 #ifdef CSQC

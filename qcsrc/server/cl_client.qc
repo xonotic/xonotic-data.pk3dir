@@ -55,21 +55,20 @@
 
 STATIC_METHOD(Client, Add, void(Client this, int _team))
 {
-    WITHSELF(this, ClientConnect());
+    ClientConnect(this);
     TRANSMUTE(Player, this);
     this.frame = 12; // 7
     this.team = _team;
-    WITHSELF(this, PutClientInServer());
+    PutClientInServer(this);
 }
 
 void PutObserverInServer(entity this);
-void ClientDisconnect();
 
 STATIC_METHOD(Client, Remove, void(Client this))
 {
     TRANSMUTE(Observer, this);
-    WITHSELF(this, PutClientInServer());
-    WITHSELF(this, ClientDisconnect());
+    PutClientInServer(this);
+    ClientDisconnect(this);
 }
 
 void send_CSQC_teamnagger() {
@@ -440,8 +439,8 @@ void FixPlayermodel(entity player)
 
 
 /** Called when a client spawns in the server */
-void PutClientInServer()
-{ENGINE_EVENT();
+void PutClientInServer(entity this)
+{
 	if (IS_BOT_CLIENT(this)) {
 		TRANSMUTE(Player, this);
 	} else if (IS_REAL_CLIENT(this)) {
@@ -463,6 +462,8 @@ void PutClientInServer()
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
+		if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
+		
 		PlayerState_attach(this);
 		accuracy_resend(this);
 
@@ -731,8 +732,8 @@ void SetNewParms ()
 SetChangeParms
 =============
 */
-void SetChangeParms ()
-{ENGINE_EVENT();
+void SetChangeParms (entity this)
+{
 	// save parms for level change
 	parm1 = this.parm_idlesince - time;
 
@@ -779,7 +780,7 @@ void ClientKill_Now_TeamChange(entity this)
 		PutObserverInServer(this);
 	}
 	else
-		WITHSELF(this, SV_ChangeTeam(this.killindicator_teamchange - 1));
+		SV_ChangeTeam(this, this.killindicator_teamchange - 1);
 	this.killindicator_teamchange = 0;
 }
 
@@ -803,7 +804,7 @@ void ClientKill_Now(entity this)
 	if(this.killindicator_teamchange)
 		ClientKill_Now_TeamChange(this);
 
-	if(IS_PLAYER(this))
+	if(!IS_SPEC(this) && !IS_OBSERVER(this))
 		Damage(this, this, this, 100000, DEATH_KILL.m_id, this.origin, '0 0 0');
 
 	// now I am sure the player IS dead
@@ -853,7 +854,6 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 {
 	float killtime;
 	float starttime;
-	entity e;
 
 	if (gameover)
 		return;
@@ -896,20 +896,20 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 			this.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(this, strcat("^1You'll be dead in ", ftos(this.killindicator.cnt), " seconds\n"));
 
-			for(e = NULL; (e = find(e, classname, "body")) != NULL; )
+			FOREACH_ENTITY_ENT(enemy, this,
 			{
-				if(e.enemy != this)
+				if(it.classname != "body")
 					continue;
-				e.killindicator = spawn();
-				e.killindicator.owner = e;
-				e.killindicator.scale = 0.5;
-				setattachment(e.killindicator, e, "");
-				setorigin(e.killindicator, '0 0 52');
-				setthink(e.killindicator, KillIndicator_Think);
-				e.killindicator.nextthink = starttime + (e.lip) * 0.05;
-				clientkilltime = max(clientkilltime, e.killindicator.nextthink + 0.05);
-				e.killindicator.cnt = ceil(killtime);
-			}
+				it.killindicator = spawn();
+				it.killindicator.owner = it;
+				it.killindicator.scale = 0.5;
+				setattachment(it.killindicator, it, "");
+				setorigin(it.killindicator, '0 0 52');
+				setthink(it.killindicator, KillIndicator_Think);
+				it.killindicator.nextthink = starttime + (it.lip) * 0.05;
+				//clientkilltime = max(clientkilltime, it.killindicator.nextthink + 0.05);
+				it.killindicator.cnt = ceil(killtime);
+			});
 			this.lip = 0;
 		}
 	}
@@ -947,8 +947,8 @@ void ClientKill_TeamChange (entity this, float targetteam) // 0 = don't change, 
 
 }
 
-void ClientKill ()
-{ENGINE_EVENT();
+void ClientKill (entity this)
+{
 	if(gameover) return;
 	if(this.player_blocked) return;
 	if(STAT(FROZEN, this)) return;
@@ -1017,8 +1017,8 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-void ClientConnect()
-{ENGINE_EVENT();
+void ClientConnect(entity this)
+{
 	if (Ban_MaybeEnforceBanOnce(this)) return;
 	assert(!IS_CLIENT(this), return);
 	this.flags |= FL_CLIENT;
@@ -1173,8 +1173,8 @@ Called when a client disconnects from the server
 */
 .entity chatbubbleentity;
 void ReadyCount();
-void ClientDisconnect()
-{ENGINE_EVENT();
+void ClientDisconnect(entity this)
+{
 	assert(IS_CLIENT(this), return);
 
 	PlayerStats_GameReport_FinalizePlayer(this);
@@ -1301,7 +1301,7 @@ void respawn(entity this)
 	CopyBody(this, 1);
 
 	this.effects |= EF_NODRAW; // prevent another CopyBody
-	WITHSELF(this, PutClientInServer());
+	PutClientInServer(this);
 }
 
 void play_countdown(entity this, float finished, Sound samp)
@@ -1625,7 +1625,9 @@ void SpectateCopy(entity this, entity spectatee)
 	this.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        this.fixangle = false;
+    	this.angles = spectatee.v_angle;
+
+        //this.fixangle = false;
         //this.velocity = spectatee.vehicle.velocity;
         this.vehicle_health = spectatee.vehicle_health;
         this.vehicle_shield = spectatee.vehicle_shield;
@@ -1635,12 +1637,12 @@ void SpectateCopy(entity this, entity spectatee)
         this.vehicle_reload1 = spectatee.vehicle_reload1;
         this.vehicle_reload2 = spectatee.vehicle_reload2;
 
-        msg_entity = this;
+        //msg_entity = this;
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.x);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.y);
-            WriteAngle(MSG_ONE,  spectatee.v_angle.z);
+       // WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            //WriteAngle(MSG_ONE,  spectatee.v_angle.x);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.y);
+           // WriteAngle(MSG_ONE,  spectatee.v_angle.z);
 
         //WriteByte (MSG_ONE, SVC_SETVIEW);
         //    WriteEntity(MSG_ONE, this);
@@ -1706,14 +1708,14 @@ bool Spectate(entity this, entity pl)
 
 bool SpectateNext(entity this)
 {
-	other = find(this.enemy, classname, STR_PLAYER);
+	entity ent = find(this.enemy, classname, STR_PLAYER);
 
-	if (MUTATOR_CALLHOOK(SpectateNext, this, other))
-		other = M_ARGV(1, entity);
-	else if (!other)
-		other = find(other, classname, STR_PLAYER);
+	if (MUTATOR_CALLHOOK(SpectateNext, this, ent))
+		ent = M_ARGV(1, entity);
+	else if (!ent)
+		ent = find(ent, classname, STR_PLAYER);
 
-	if(other) { SetSpectatee(this, other); }
+	if(ent) { SetSpectatee(this, ent); }
 
 	return SpectateSet(this);
 }
@@ -1721,36 +1723,35 @@ bool SpectateNext(entity this)
 bool SpectatePrev(entity this)
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
-	other = findchain(classname, STR_PLAYER);
-	if (!other) // no player
+	entity ent = findchain(classname, STR_PLAYER);
+	if (!ent) // no player
 		return false;
 
-	entity first = other;
+	entity first = ent;
 	// skip players until current spectated player
 	if(this.enemy)
-	while(other && other != this.enemy)
-		other = other.chain;
+	while(ent && ent != this.enemy)
+		ent = ent.chain;
 
-	switch (MUTATOR_CALLHOOK(SpectatePrev, this, other, first))
+	switch (MUTATOR_CALLHOOK(SpectatePrev, this, ent, first))
 	{
 		case MUT_SPECPREV_FOUND:
-		    other = M_ARGV(1, entity);
+		    ent = M_ARGV(1, entity);
 		    break;
 		case MUT_SPECPREV_RETURN:
-		    other = M_ARGV(1, entity);
 		    return true;
 		case MUT_SPECPREV_CONTINUE:
 		default:
 		{
-			if(other.chain)
-				other = other.chain;
+			if(ent.chain)
+				ent = ent.chain;
 			else
-				other = first;
+				ent = first;
 			break;
 		}
 	}
 
-	SetSpectatee(this, other);
+	SetSpectatee(this, ent);
 	return SpectateSet(this);
 }
 
@@ -1798,7 +1799,7 @@ void LeaveSpectatorMode(entity this)
 
 			Kill_Notification(NOTIF_ONE_ONLY, this, MSG_CENTER, CPID_PREVENT_JOIN);
 
-			WITHSELF(this, PutClientInServer());
+			PutClientInServer(this);
 
 			if(IS_PLAYER(this)) { Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && this.team != -1) ? APP_TEAM_ENT(this, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), this.netname); }
 		}
@@ -1969,7 +1970,7 @@ void SpectatorThink(entity this)
 				TRANSMUTE(Spectator, this);
 			} else {
 				TRANSMUTE(Observer, this);
-				WITHSELF(this, PutClientInServer());
+				PutClientInServer(this);
 			}
 			this.impulse = 0;
 		} else if(this.impulse == 12 || this.impulse == 16  || this.impulse == 19 || (this.impulse >= 220 && this.impulse <= 229)) {
@@ -1978,13 +1979,13 @@ void SpectatorThink(entity this)
 				TRANSMUTE(Spectator, this);
 			} else {
 				TRANSMUTE(Observer, this);
-				WITHSELF(this, PutClientInServer());
+				PutClientInServer(this);
 			}
 			this.impulse = 0;
 		} else if (PHYS_INPUT_BUTTON_ATCK2(this)) {
 			this.flags &= ~FL_JUMPRELEASED;
 			TRANSMUTE(Observer, this);
-			WITHSELF(this, PutClientInServer());
+			PutClientInServer(this);
 		} else {
 			if(!SpectateUpdate(this))
 				PutObserverInServer(this);
@@ -2031,7 +2032,7 @@ void PlayerUseKey(entity this)
 
 			while(head) // find the closest acceptable target to enter
 			{
-				if(head.vehicle_flags & VHF_ISVEHICLE)
+				if(IS_VEHICLE(head))
 				if(!IS_DEAD(head))
 				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, this)))
 				if(head.takedamage != DAMAGE_NO)
@@ -2066,8 +2067,8 @@ Called every frame for each client before the physics are run
 .float usekeypressed;
 .float last_vehiclecheck;
 .int items_added;
-void PlayerPreThink ()
-{ENGINE_EVENT();
+void PlayerPreThink (entity this)
+{
 	WarpZone_PlayerPhysics_FixVAngle(this);
 
     STAT(GAMESTARTTIME, this) = game_starttime;
@@ -2155,26 +2156,24 @@ void PlayerPreThink ()
 
 	MUTATOR_CALLHOOK(PlayerPreThink, this);
 
-	if(autocvar_g_vehicles_enter)
-	if(time > this.last_vehiclecheck)
-	if(IS_PLAYER(this))
-	if(!gameover)
-	if(!STAT(FROZEN, this))
-	if(!this.vehicle)
-	if(!IS_DEAD(this))
+	if(autocvar_g_vehicles_enter && (time > this.last_vehiclecheck) && !gameover && !this.vehicle)
+	if(IS_PLAYER(this) && !STAT(FROZEN, this) && !IS_DEAD(this))
 	{
-		entity veh;
-		for(veh = NULL; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
-		if(vdist(veh.origin - this.origin, <, autocvar_g_vehicles_enter_radius))
-		if(!IS_DEAD(veh))
-		if(veh.takedamage != DAMAGE_NO)
-		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, this))
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
-		else if(!veh.owner)
-		if(!veh.team || SAME_TEAM(this, veh))
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
-		else if(autocvar_g_vehicles_steal)
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_vehicles_enter_radius, IS_VEHICLE(it),
+		{
+			if(!IS_DEAD(it) && it.takedamage != DAMAGE_NO)
+			if((it.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(it.owner, this))
+			{
+				Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
+			}
+			else if(!it.owner)
+			{
+				if(!it.team || SAME_TEAM(this, it))
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER);
+				else if(autocvar_g_vehicles_steal)
+					Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
+			}
+		});
 
 		this.last_vehiclecheck = time + 1;
 	}
@@ -2218,27 +2217,39 @@ void PlayerPreThink ()
 				if (frametime) player_anim(this);
 				bool button_pressed = (PHYS_INPUT_BUTTON_ATCK(this) || PHYS_INPUT_BUTTON_JUMP(this) || PHYS_INPUT_BUTTON_ATCK2(this) || PHYS_INPUT_BUTTON_HOOK(this) || PHYS_INPUT_BUTTON_USE(this));
 
-				if (this.deadflag == DEAD_DYING) {
-					if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max)) {
-						this.deadflag = DEAD_RESPAWNING;
-					} else if (!button_pressed) {
-						this.deadflag = DEAD_DEAD;
-                    }
-				} else if (this.deadflag == DEAD_DEAD) {
-					if (button_pressed) {
-						this.deadflag = DEAD_RESPAWNABLE;
-					} else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE)) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNABLE) {
-					if (!button_pressed) {
-						this.deadflag = DEAD_RESPAWNING;
-                    }
-				} else if (this.deadflag == DEAD_RESPAWNING) {
-					if (time > this.respawn_time) {
-						this.respawn_time = time + 1; // only retry once a second
-						this.respawn_time_max = this.respawn_time;
-						respawn(this);
+				switch(this.deadflag)
+				{
+					case DEAD_DYING:
+					{
+						if ((this.respawn_flags & RESPAWN_FORCE) && !(this.respawn_time < this.respawn_time_max))
+							this.deadflag = DEAD_RESPAWNING;
+						else if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_DEAD;
+						break;
+					}
+					case DEAD_DEAD:
+					{
+						if (button_pressed)
+							this.deadflag = DEAD_RESPAWNABLE;
+						else if (time >= this.respawn_time_max && (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNABLE:
+					{
+						if (!button_pressed || (this.respawn_flags & RESPAWN_FORCE))
+							this.deadflag = DEAD_RESPAWNING;
+						break;
+					}
+					case DEAD_RESPAWNING:
+					{
+						if (time > this.respawn_time)
+						{
+							this.respawn_time = time + 1; // only retry once a second
+							this.respawn_time_max = this.respawn_time;
+							respawn(this);
+						}
+						break;
 					}
 				}
 
@@ -2390,7 +2401,7 @@ void DrownPlayer(entity this)
 	if(IS_DEAD(this))
 		return;
 
-	if (this.waterlevel != WATERLEVEL_SUBMERGED)
+	if (this.waterlevel != WATERLEVEL_SUBMERGED || this.vehicle)
 	{
 		if(this.air_finished < time)
 			PlayerSound(this, playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
@@ -2415,14 +2426,25 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
-void PlayerPostThink ()
-{ENGINE_EVENT();
+void PlayerPostThink (entity this)
+{
 	if (sv_maxidle > 0)
 	if (frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	if (IS_REAL_CLIENT(this))
 	if (IS_PLAYER(this) || sv_maxidle_spectatorsareidle)
 	{
-		if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
+		int totalClients = 0;
+		if(sv_maxidle_slots > 0)
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it) || sv_maxidle_slots_countbots,
+			{
+				++totalClients;
+			});
+		}
+
+		if (sv_maxidle_slots > 0 && (maxclients - totalClients) > sv_maxidle_slots)
+		{ /* do nothing */ }
+		else if (time - this.parm_idlesince < 1) // instead of (time == this.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if (this.idlekick_lasttimeleft)
 			{

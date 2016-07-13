@@ -23,13 +23,19 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 
 	_Movetype_CheckVelocity(this);
 
-	if (this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS)
+	/*if (this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS)
 	{
 		this.move_didgravity = 1;
 		this.move_velocity_z -= (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE ? 0.5 : 1)
 		    * dt
 		    * (this.gravity ? this.gravity : 1)
 		    * PHYS_GRAVITY(this);
+	}*/
+
+	if (this.move_movetype == MOVETYPE_BOUNCE || this.move_movetype == MOVETYPE_TOSS)
+	{
+		this.move_didgravity = true;
+		this.move_velocity_z -= (((this.gravity) ? this.gravity : 1) * PHYS_GRAVITY(this) * dt);
 	}
 
 	this.move_angles = this.move_angles + this.move_avelocity * dt;
@@ -108,8 +114,8 @@ void _Movetype_Physics_Toss(entity this, float dt)  // SV_Physics_Toss
 			break;
 	}
 
-	if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && this.move_didgravity > 0 && !(this.move_flags & FL_ONGROUND))
-		this.move_velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
+	//if (GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE && this.move_didgravity > 0 && !(this.move_flags & FL_ONGROUND))
+	//	this.move_velocity_z -= 0.5 * dt * (this.gravity ? this.gravity : 1) * PHYS_GRAVITY(this);
 
 	_Movetype_CheckWaterTransition(this);
 }

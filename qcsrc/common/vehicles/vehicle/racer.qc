@@ -186,7 +186,7 @@ bool racer_frame(entity this)
 
 	traceline(vehic.origin, vehic.origin + '0 0 1', MOVE_NOMONSTERS, this);
 	int cont = trace_dpstartcontents;
-	if(cont & DPCONTENTS_WATER)
+	if(!(cont & DPCONTENTS_WATER))
 		vehic.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(IS_DEAD(vehic))
@@ -198,12 +198,6 @@ bool racer_frame(entity this)
 	racer_align4point(vehic, PHYS_INPUT_TIMELENGTH);
 
 	PHYS_INPUT_BUTTON_ZOOM(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
-
-	if(time >= vehic.vehicle_last_trace)
-	{
-		crosshair_trace(this);
-		vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
-	}
 
 	vehic.angles_x *= -1;
 
@@ -337,10 +331,16 @@ bool racer_frame(entity this)
 
 	if(autocvar_g_vehicle_racer_rocket_locktarget)
 	{
-		if(vehic.vehicle_last_trace == time + autocvar_g_vehicle_racer_thinkrate)
-		vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
-						 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
-						 autocvar_g_vehicle_racer_rocket_locked_time);
+		if(time >= vehic.vehicle_last_trace)
+		{
+			crosshair_trace(this);
+
+			vehicles_locktarget(vehic, (1 / autocvar_g_vehicle_racer_rocket_locking_time) * frametime,
+							 (1 / autocvar_g_vehicle_racer_rocket_locking_releasetime) * frametime,
+							 autocvar_g_vehicle_racer_rocket_locked_time);
+
+			vehic.vehicle_last_trace = time + autocvar_g_vehicle_racer_thinkrate;
+		}
 
 		if(vehic.lock_target)
 		{
@@ -511,7 +511,7 @@ void racer_blowup_think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-void racer_deadtouch(entity this)
+void racer_deadtouch(entity this, entity toucher)
 {
 	this.avelocity_x *= 0.7;
 	this.cnt -= 1;

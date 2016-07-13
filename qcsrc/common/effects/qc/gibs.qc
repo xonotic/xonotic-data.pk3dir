@@ -111,13 +111,13 @@ void new_te_bloodshower (int ef, vector org, float explosionspeed, int howmany)
 		__pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
-void SUB_RemoveOnNoImpact(entity this)
+void SUB_RemoveOnNoImpact(entity this, entity toucher)
 {
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 		Gib_Delete(this);
 }
 
-void Gib_Touch(entity this)
+void Gib_Touch(entity this, entity toucher)
 {
 	// TODO maybe bounce of walls, make more gibs, etc.
 

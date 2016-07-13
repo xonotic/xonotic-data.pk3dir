@@ -96,6 +96,7 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	if(!IS_VEHICLE(this) && !(this.flags & FL_PROJECTILE)) // vehicles don't get falling damage
+	if(this.velocity || this.oldvelocity) // moving or has moved
 	{
 		// check for falling damage
 		float velocity_len = vlen(this.velocity);
@@ -159,7 +160,7 @@ void StartFrame()
 {
     // TODO: if move is more than 50ms, split it into two moves (this matches QWSV behavior and the client prediction)
     FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PM_Main(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPreThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPreThink(it));
 
 	execute_next_frame();
 	if (autocvar_sv_autopause && !server_is_dedicated) Pause_TryPause(true);
@@ -228,7 +229,7 @@ void StartFrame()
 	MUTATOR_CALLHOOK(SV_StartFrame);
 
     FOREACH_CLIENT(true, GlobalStats_update(it));
-    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), WITHSELF(it, PlayerPostThink()));
+    FOREACH_ENTITY_CLASS(STR_PLAYER, IS_FAKE_CLIENT(it), PlayerPostThink(it));
 }
 
 .vector originjitter;
@@ -237,8 +238,8 @@ void StartFrame()
 .string gametypefilter;
 .string cvarfilter;
 bool DoesQ3ARemoveThisEntity(entity this);
-void SV_OnEntityPreSpawnFunction()
-{ENGINE_EVENT();
+void SV_OnEntityPreSpawnFunction(entity this)
+{
 	__spawnfunc_expecting = true;
 	__spawnfunc_expect = this;
 	if (this)

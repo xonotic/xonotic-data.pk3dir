@@ -4,6 +4,7 @@ project(xonotic-data LANGUAGES ASM)
 
 include_directories(qcsrc)
 
+add_definitions(-DXONOTIC=1)
 add_definitions(-DNDEBUG=1)
 
 find_package(Git REQUIRED)

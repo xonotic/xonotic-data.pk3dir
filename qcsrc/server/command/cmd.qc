@@ -177,7 +177,7 @@ void ClientCommand_join(entity caller, float request)
 						PlayerScore_Clear(caller);
 						Kill_Notification(NOTIF_ONE_ONLY, caller, MSG_CENTER, CPID_PREVENT_JOIN);
 						Send_Notification(NOTIF_ALL, NULL, MSG_INFO, ((teamplay && caller.team != -1) ? APP_TEAM_ENT(caller, INFO_JOIN_PLAY_TEAM) : INFO_JOIN_PLAY), caller.netname);
-						WITHSELF(caller, PutClientInServer());
+						PutClientInServer(caller);
 					}
 					else
 					{
@@ -704,8 +704,8 @@ void ClientCommand_macro_write_aliases(float fh)
 // ======================================
 // If this function exists, server game code parses clientcommand before the engine code gets it.
 
-void SV_ParseClientCommand(string command)
-{ENGINE_EVENT();
+void SV_ParseClientCommand(entity this, string command)
+{
 	// If invalid UTF-8, don't even parse it
 	string command2 = "";
 	float len = strlen(command);

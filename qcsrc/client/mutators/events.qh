@@ -124,3 +124,14 @@ MUTATOR_HOOKABLE(Weapon_ImpactEffect, EV_Weapon_ImpactEffect);
 	/** argc (also, argv() can be used) */ i(int, MUTATOR_ARGV_0_int) \
 	/**/
 MUTATOR_HOOKABLE(HUD_Command, EV_HUD_Command);
+
+/** Draw the grapple hook, allows changing hook texture and colour */
+#define EV_DrawGrapplingHook(i, o) \
+	/** hook */ 			i(entity, MUTATOR_ARGV_0_entity) \
+	/** texture */ 			i(string, MUTATOR_ARGV_1_string) \
+	/***/ 					o(string, MUTATOR_ARGV_1_string) \
+	/** colour */ 			i(vector, MUTATOR_ARGV_2_vector) \
+	/***/ 					o(vector, MUTATOR_ARGV_2_vector) \
+	/** team */ 			i(float, MUTATOR_ARGV_3_float) \
+	/**/
+MUTATOR_HOOKABLE(DrawGrapplingHook, EV_DrawGrapplingHook);

@@ -494,11 +494,14 @@ void PlayerDamage(entity this, entity inflictor, entity attacker, float damage, 
 		valid_damage_for_weaponstats = 1;
 	}
 
+	dh = dh - max(this.health, 0);
+	da = da - max(this.armorvalue, 0);
 	if(valid_damage_for_weaponstats)
 	{
-		dh = dh - max(this.health, 0);
-		da = da - max(this.armorvalue, 0);
 		WeaponStats_LogDamage(awep.m_id, abot, PS(this).m_weapon.m_id, vbot, dh + da);
+	}
+	if (dh + da)
+	{
 		MUTATOR_CALLHOOK(PlayerDamaged, attacker, this, dh, da, hitloc, deathtype);
 	}
 

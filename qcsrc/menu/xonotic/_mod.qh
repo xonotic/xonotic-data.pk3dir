@@ -79,6 +79,7 @@
 #include <menu/xonotic/dialog_singleplayer.qh>
 #include <menu/xonotic/dialog_singleplayer_winner.qh>
 #include <menu/xonotic/dialog_teamselect.qh>
+#include <menu/xonotic/dialog_uid2name.qh>
 #include <menu/xonotic/gametypelist.qh>
 #include <menu/xonotic/hudskinlist.qh>
 #include <menu/xonotic/image.qh>

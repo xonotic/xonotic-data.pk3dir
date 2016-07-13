@@ -6,4 +6,12 @@ nyx
 		rgbgen lightingDiffuse
 	}
 }
+nyxfullbright
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/nyxfullbright.tga
+		rgbgen lightingDiffuse
+	}
+}
 

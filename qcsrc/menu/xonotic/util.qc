@@ -429,6 +429,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		}
 	}
 
+	if(un_bannedservers != "")
+	{
+		_Nex_ExtResponseSystem_BannedServers = strzone(un_bannedservers);
+		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
+	}
+
 	if(un_emergency_pk3s != "")
 	{
 		_Nex_ExtResponseSystem_Packs = strzone(un_emergency_pk3s);

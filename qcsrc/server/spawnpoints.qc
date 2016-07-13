@@ -249,17 +249,15 @@ vector Spawn_Score(entity this, entity spot, float mindist, float teamcheck)
 	vector spawn_score = prio * '1 0 0' + shortest * '0 1 0';
 
 	// filter out spots for assault
-	if(spot.target != "") {
-		entity ent;
-		float found;
-
-		found = 0;
-		for(ent = NULL; (ent = find(ent, targetname, spot.target)); )
+	if(spot.target != "")
+	{
+		int found = 0;
+		for(entity targ = findchain(targetname, spot.target); targ; targ = targ.chain)
 		{
 			++found;
-			if(ent.spawn_evalfunc)
+			if(targ.spawn_evalfunc)
 			{
-				spawn_score = ent.spawn_evalfunc(ent, this, spot, spawn_score);
+				spawn_score = targ.spawn_evalfunc(targ, this, spot, spawn_score);
 				if(spawn_score.x < 0)
 					return spawn_score;
 			}

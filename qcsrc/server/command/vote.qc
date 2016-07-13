@@ -378,7 +378,7 @@ void reset_map(bool dorespawn)
 						it.velocity = '0 0 0';
 						it.avelocity = '0 0 0';
 						it.movement = '0 0 0';
-						WITHSELF(it, PutClientInServer());
+						PutClientInServer(it);
 					}
 				}
 			));

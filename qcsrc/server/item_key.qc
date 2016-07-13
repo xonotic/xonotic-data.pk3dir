@@ -68,23 +68,23 @@ item_key
 /**
  * Key touch handler.
  */
-void item_key_touch(entity this)
+void item_key_touch(entity this, entity toucher)
 {
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
 
 	// player already picked up this key
-	if (other.itemkeys & this.itemkeys)
+	if (toucher.itemkeys & this.itemkeys)
 		return;
 
-	other.itemkeys |= this.itemkeys;
-	play2(other, this.noise);
+	toucher.itemkeys |= this.itemkeys;
+	play2(toucher, this.noise);
 
-	centerprint(other, this.message);
+	centerprint(toucher, this.message);
 
 	string oldmsg = this.message;
 	this.message = "";
-	SUB_UseTargets(this, other, other); // TODO: should we be using other for the trigger here?
+	SUB_UseTargets(this, toucher, toucher); // TODO: should we be using toucher for the trigger here?
 	this.message = oldmsg;
 };
 

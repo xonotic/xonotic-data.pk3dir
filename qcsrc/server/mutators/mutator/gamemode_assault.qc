@@ -140,18 +140,17 @@ void assault_objective_decrease_use(entity this, entity actor, entity trigger)
 
 void assault_setenemytoobjective(entity this)
 {
-	entity objective;
-	for(objective = NULL; (objective = find(objective, targetname, this.target)); )
+	FOREACH_ENTITY_STRING(targetname, this.target,
 	{
-		if(objective.classname == "target_objective")
+		if(it.classname == "target_objective")
 		{
 			if(this.enemy == NULL)
-				this.enemy = objective;
+				this.enemy = it;
 			else
 				objerror(this, "more than one objective as target - fix the map!");
 			break;
 		}
-	}
+	});
 
 	if(this.enemy == NULL)
 		objerror(this, "no objective as target - fix the map!");
@@ -167,32 +166,32 @@ bool assault_decreaser_sprite_visible(entity this, entity player, entity view)
 
 void target_objective_decrease_activate(entity this)
 {
-	entity ent, spr;
+	entity spr;
 	this.owner = NULL;
-	for(ent = NULL; (ent = find(ent, target, this.targetname)); )
+	FOREACH_ENTITY_STRING(target, this.targetname,
 	{
-		if(ent.assault_sprite != NULL)
+		if(it.assault_sprite != NULL)
 		{
-			WaypointSprite_Disown(ent.assault_sprite, waypointsprite_deadlifetime);
-			if(ent.classname == "func_assault_destructible")
-				ent.sprite = NULL; // TODO: just unsetting it?!
+			WaypointSprite_Disown(it.assault_sprite, waypointsprite_deadlifetime);
+			if(it.classname == "func_assault_destructible")
+				it.sprite = NULL; // TODO: just unsetting it?!
 		}
 
-		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (ent.absmin + ent.absmax), ent, assault_sprite, RADARICON_OBJECTIVE);
+		spr = WaypointSprite_SpawnFixed(WP_Assault, 0.5 * (it.absmin + it.absmax), it, assault_sprite, RADARICON_OBJECTIVE);
 		spr.assault_decreaser = this;
 		spr.waypointsprite_visible_for_player = assault_decreaser_sprite_visible;
 		spr.classname = "sprite_waypoint";
 		WaypointSprite_UpdateRule(spr, assault_attacker_team, SPRITERULE_TEAMPLAY);
-		if(ent.classname == "func_assault_destructible")
+		if(it.classname == "func_assault_destructible")
 		{
 			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultDestroy, WP_AssaultDestroy);
-			WaypointSprite_UpdateMaxHealth(spr, ent.max_health);
-			WaypointSprite_UpdateHealth(spr, ent.health);
-			ent.sprite = spr;
+			WaypointSprite_UpdateMaxHealth(spr, it.max_health);
+			WaypointSprite_UpdateHealth(spr, it.health);
+			it.sprite = spr;
 		}
 		else
 			WaypointSprite_UpdateSprites(spr, WP_AssaultDefend, WP_AssaultPush, WP_AssaultPush);
-	}
+	});
 }
 
 void target_objective_decrease_findtarget(entity this)
@@ -426,8 +425,9 @@ spawnfunc(target_assault_roundstart)
 // legacy bot code
 void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 {
-	entity ad, best, wp, tod;
-	float radius, found, bestvalue;
+	entity ad, best, wp;
+	float radius, bestvalue;
+	bool found;
 	vector p;
 
 	ad = findchain(classname, "func_assault_destructible");
@@ -441,18 +441,18 @@ void havocbot_goalrating_ast_targets(entity this, float ratingscale)
 			continue;
 
 		found = false;
-		for(tod = NULL; (tod = find(tod, targetname, ad.target)); )
+		FOREACH_ENTITY_STRING(targetname, ad.target,
 		{
-			if(tod.classname == "target_objective_decrease")
+			if(it.classname == "target_objective_decrease")
 			{
-				if(tod.enemy.health > 0 && tod.enemy.health < ASSAULT_VALUE_INACTIVE)
+				if(it.enemy.health > 0 && it.enemy.health < ASSAULT_VALUE_INACTIVE)
 				{
 				//	dprint(etos(ad),"\n");
 					found = true;
 					break;
 				}
 			}
-		}
+		});
 
 		if(!found)
 		{
