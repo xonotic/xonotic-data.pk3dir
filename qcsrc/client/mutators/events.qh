@@ -135,3 +135,10 @@ MUTATOR_HOOKABLE(HUD_Command, EV_HUD_Command);
 	/** team */ 			i(float, MUTATOR_ARGV_3_float) \
 	/**/
 MUTATOR_HOOKABLE(DrawGrapplingHook, EV_DrawGrapplingHook);
+
+/** Called when an entity is updated (either by SVQC networking or PVS) */
+#define EV_Ent_Update(i, o) \
+	/** entity id */ 		i(entity, MUTATOR_ARGV_0_entity) \
+	/** is new to client */ i(bool, MUTATOR_ARGV_1_bool) \
+	/**/
+MUTATOR_HOOKABLE(Ent_Update, EV_Ent_Update);
