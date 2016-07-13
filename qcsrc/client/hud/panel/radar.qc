@@ -26,6 +26,13 @@ void HUD_Radar_Show_Maximized(bool doshow,float clickable)
 			if(autocvar_hud_cursormode)
 				setcursormode(1);
 			hud_panel_radar_mouse = 1;
+
+			// we must unset the player's buttons, as they aren't released elsewhere
+			localcmd("-fire\n");
+			localcmd("-fire2\n");
+			localcmd("-use\n");
+			localcmd("-hook\n");
+			localcmd("-jump\n");
 		}
 	}
 	else if ( hud_panel_radar_mouse )
@@ -348,7 +355,7 @@ void HUD_Radar()
 
 	FOREACH_ENTITY_FLAGS(teamradar_icon, 0xFFFFFF, {
 		if ( hud_panel_radar_mouse )
-		if ( it.health > 0 )
+		if ( it.health > 0 || !it.health )
 		if ( it.team == myteam+1 || gametype == MAPINFO_TYPE_RACE )
 		{
 			vector coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(it.origin));
