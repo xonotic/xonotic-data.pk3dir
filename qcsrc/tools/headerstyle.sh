@@ -24,7 +24,7 @@ function check() {
         include="#include \"${include}\""
         startswith "$file" "$include"
     done
-    find "$base" -type f -name '*.qh' -print0 | sort -z | while read -r -d '' file; do
+    find "$base" -type f -name '*.qh' -a \! -name '_mod.qh' -print0 | sort -z | while read -r -d '' file; do
         echo "$file"
         startswith "$file" "#pragma once"
     done

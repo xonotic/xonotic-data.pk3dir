@@ -337,19 +337,14 @@ bool spiderbot_frame(entity this)
 
 void spiderbot_exit(entity this, int eject)
 {
-	entity e;
 	vector spot;
 
-	e = findchain(classname,"spiderbot_rocket");
-	while(e)
+	FOREACH_ENTITY_ENT(owner, this.owner,
 	{
-		if(e.owner == this.owner)
-		{
-			e.realowner = this.owner;
-			e.owner = NULL;
-		}
-		e = e.chain;
-	}
+		if(it.classname != "spiderbot_rocket") continue;
+		it.realowner = this.owner;
+		it.owner = NULL;
+	});
 
 	setthink(this, vehicles_think);
 	this.nextthink = time;

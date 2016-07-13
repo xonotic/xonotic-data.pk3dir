@@ -146,7 +146,7 @@ bool M_Mage_Defend_Heal_Check(entity this, entity targ)
 	return false;
 }
 
-void M_Mage_Attack_Spike_Explode(entity this)
+void M_Mage_Attack_Spike_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
@@ -155,16 +155,16 @@ void M_Mage_Attack_Spike_Explode(entity this)
 	this.realowner.mage_spike = NULL;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
 
 	remove (this);
 }
 
-void M_Mage_Attack_Spike_Touch(entity this)
+void M_Mage_Attack_Spike_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	M_Mage_Attack_Spike_Explode(this);
+	M_Mage_Attack_Spike_Explode(this, toucher);
 }
 
 .float wait;
@@ -174,7 +174,7 @@ void M_Mage_Attack_Spike_Think(entity this)
 {
 	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
 		this.projectiledeathtype |= HITTYPE_SPLASH;
-		M_Mage_Attack_Spike_Explode(this);
+		M_Mage_Attack_Spike_Explode(this, NULL);
 	}
 
 	float spd = vlen(this.velocity);
@@ -249,52 +249,51 @@ void M_Mage_Attack_Spike(entity this, vector dir)
 
 void M_Mage_Defend_Heal(entity this)
 {
-	entity head;
 	float washealed = false;
 
-	for(head = findradius(this.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(M_Mage_Defend_Heal_Check(this, head))
+	FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_mage_heal_range, M_Mage_Defend_Heal_Check(this, it),
 	{
 		washealed = true;
 		string fx = "";
-		if(IS_PLAYER(head))
+		if(IS_PLAYER(it))
 		{
 			switch(this.skin)
 			{
 				case 0:
-					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
+					if(it.health < autocvar_g_balance_health_regenstable) it.health = bound(0, it.health + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_health_regenstable);
 					fx = EFFECT_HEALING.eent_eff_name;
 					break;
 				case 1:
-					if(head.ammo_cells) head.ammo_cells = bound(head.ammo_cells, head.ammo_cells + 1, g_pickup_cells_max);
-					if(head.ammo_plasma) head.ammo_plasma = bound(head.ammo_plasma, head.ammo_plasma + 1, g_pickup_plasma_max);
-					if(head.ammo_rockets) head.ammo_rockets = bound(head.ammo_rockets, head.ammo_rockets + 1, g_pickup_rockets_max);
-					if(head.ammo_shells) head.ammo_shells = bound(head.ammo_shells, head.ammo_shells + 2, g_pickup_shells_max);
-					if(head.ammo_nails) head.ammo_nails = bound(head.ammo_nails, head.ammo_nails + 5, g_pickup_nails_max);
+					if(it.ammo_cells) it.ammo_cells = bound(it.ammo_cells, it.ammo_cells + 1, g_pickup_cells_max);
+					if(it.ammo_plasma) it.ammo_plasma = bound(it.ammo_plasma, it.ammo_plasma + 1, g_pickup_plasma_max);
+					if(it.ammo_rockets) it.ammo_rockets = bound(it.ammo_rockets, it.ammo_rockets + 1, g_pickup_rockets_max);
+					if(it.ammo_shells) it.ammo_shells = bound(it.ammo_shells, it.ammo_shells + 2, g_pickup_shells_max);
+					if(it.ammo_nails) it.ammo_nails = bound(it.ammo_nails, it.ammo_nails + 5, g_pickup_nails_max);
 					fx = "ammoregen_fx";
 					break;
 				case 2:
-					if(head.armorvalue < autocvar_g_balance_armor_regenstable)
+					if(it.armorvalue < autocvar_g_balance_armor_regenstable)
 					{
-						head.armorvalue = bound(0, head.armorvalue + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_armor_regenstable);
+						it.armorvalue = bound(0, it.armorvalue + (autocvar_g_monster_mage_heal_allies), autocvar_g_balance_armor_regenstable);
 						fx = "armorrepair_fx";
 					}
 					break;
 				case 3:
-					head.health = bound(0, head.health - ((head == this)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
+					it.health = bound(0, it.health - ((it == this)  ? (autocvar_g_monster_mage_heal_self) : (autocvar_g_monster_mage_heal_allies)), autocvar_g_balance_health_regenstable);
 					fx = EFFECT_RAGE.eent_eff_name;
 					break;
 			}
 
-			Send_Effect_(fx, head.origin, '0 0 0', 1);
+			Send_Effect_(fx, it.origin, '0 0 0', 1);
 		}
 		else
 		{
-			Send_Effect(EFFECT_HEALING, head.origin, '0 0 0', 1);
-			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
-			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE) && head.sprite)
-				WaypointSprite_UpdateHealth(head.sprite, head.health);
+			Send_Effect(EFFECT_HEALING, it.origin, '0 0 0', 1);
+			it.health = bound(0, it.health + (autocvar_g_monster_mage_heal_allies), it.max_health);
+			if(!(it.spawnflags & MONSTERFLAG_INVINCIBLE) && it.sprite)
+				WaypointSprite_UpdateHealth(it.sprite, it.health);
 		}
-	}
+	});
 
 	if(washealed)
 	{

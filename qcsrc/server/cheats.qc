@@ -733,7 +733,8 @@ float CheatFrame(entity this)
 			if(this.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
 			{
 				// use cheat dragging if cheats are enabled
-				crosshair_trace_plusvisibletriggers(this);
+				//if(Drag_IsDragging(this))
+					//crosshair_trace_plusvisibletriggers(this);
 				Drag(this, true, true);
 			}
 			else

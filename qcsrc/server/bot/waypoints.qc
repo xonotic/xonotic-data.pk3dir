@@ -17,19 +17,18 @@
 // (suitable for spawnfunc_waypoint editor)
 entity waypoint_spawn(vector m1, vector m2, float f)
 {
-	entity w;
-	w = find(NULL, classname, "waypoint");
-
-	if (!(f & WAYPOINTFLAG_PERSONAL))
-	while (w)
+	if(!(f & WAYPOINTFLAG_PERSONAL))
 	{
-		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
-		if (boxesoverlap(m1, m2, w.absmin, w.absmax))
-			return w;
-		w = find(w, classname, "waypoint");
+		for(entity wp = findchain(classname, "waypoint"); wp; wp = wp.chain)
+		{
+			// if a matching spawnfunc_waypoint already exists, don't add a duplicate
+			if(boxesoverlap(m1, m2, wp.absmin, wp.absmax))
+				return wp;
+		}
 	}
+		
 
-	w = new(waypoint);
+	entity w = new(waypoint);
 	w.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	w.wpflags = f;
 	w.solid = SOLID_TRIGGER;
@@ -165,7 +164,6 @@ void waypoint_addlink(entity from, entity to)
 // (SLOW!)
 void waypoint_think(entity this)
 {
-	entity e;
 	vector sv, sm1, sm2, ev, em1, em2, dv;
 
 	bot_calculate_stepheightvec();
@@ -175,28 +173,28 @@ void waypoint_think(entity this)
 	//dprint("waypoint_think wpisbox = ", ftos(this.wpisbox), "\n");
 	sm1 = this.origin + this.mins;
 	sm2 = this.origin + this.maxs;
-	for(e = NULL; (e = find(e, classname, "waypoint")); )
+	FOREACH_ENTITY_CLASS("waypoint", true,
 	{
-		if (boxesoverlap(this.absmin, this.absmax, e.absmin, e.absmax))
+		if (boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
 		{
-			waypoint_addlink(this, e);
-			waypoint_addlink(e, this);
+			waypoint_addlink(this, it);
+			waypoint_addlink(it, this);
 		}
 		else
 		{
 			++relink_total;
-			if(!checkpvs(this.origin, e))
+			if(!checkpvs(this.origin, it))
 			{
 				++relink_pvsculled;
 				continue;
 			}
-			sv = e.origin;
+			sv = it.origin;
 			sv.x = bound(sm1_x, sv.x, sm2_x);
 			sv.y = bound(sm1_y, sv.y, sm2_y);
 			sv.z = bound(sm1_z, sv.z, sm2_z);
 			ev = this.origin;
-			em1 = e.origin + e.mins;
-			em2 = e.origin + e.maxs;
+			em1 = it.origin + it.mins;
+			em2 = it.origin + it.maxs;
 			ev.x = bound(em1_x, ev.x, em2_x);
 			ev.y = bound(em1_y, ev.y, em2_y);
 			ev.z = bound(em1_z, ev.z, em2_z);
@@ -217,27 +215,27 @@ void waypoint_think(entity this)
 					sv = trace_endpos + '0 0 1';
 				}
 			}
-			if (!e.wpisbox)
+			if (!it.wpisbox)
 			{
-				tracebox(ev - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, false, e);
+				tracebox(ev - STAT(PL_MIN, NULL).z * '0 0 1', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, false, it);
 				if (!trace_startsolid)
 				{
 					//dprint("ev deviation", vtos(trace_endpos - ev), "\n");
 					ev = trace_endpos + '0 0 1';
 				}
 			}
-			//traceline(this.origin, e.origin, false, NULL);
+			//traceline(this.origin, it.origin, false, NULL);
 			//if (trace_fraction == 1)
 			if (!this.wpisbox && tracewalk(this, sv, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), ev, MOVE_NOMONSTERS))
-				waypoint_addlink(this, e);
+				waypoint_addlink(this, it);
 			else
 				relink_walkculled += 0.5;
-			if (!e.wpisbox && tracewalk(e, ev, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, MOVE_NOMONSTERS))
-				waypoint_addlink(e, this);
+			if (!it.wpisbox && tracewalk(it, ev, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), sv, MOVE_NOMONSTERS))
+				waypoint_addlink(it, this);
 			else
 				relink_walkculled += 0.5;
 		}
-	}
+	});
 	navigation_testtracewalk = 0;
 	this.wplinked = true;
 }

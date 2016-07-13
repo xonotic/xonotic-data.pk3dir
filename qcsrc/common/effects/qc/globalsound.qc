@@ -363,7 +363,7 @@
 					if (fake) { msg_entity = this; X(); }
 					else
 					{
-						FOREACH_CLIENT(IS_REAL_CLIENT(it) && (!teamplay || msg_entity.team == this.team), {
+						FOREACH_CLIENT(IS_REAL_CLIENT(it) && SAME_TEAM(it, this), {
 							msg_entity = it;
 							X();
 						});

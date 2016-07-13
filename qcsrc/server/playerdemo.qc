@@ -147,9 +147,9 @@ float playerdemo_read(entity this)
 		PLAYERDEMO_FIELDS(this, playerdemo_read_)
 		{
 			time = this.playerdemo_time;
-			WITHSELF(this, PlayerPreThink());
+			PlayerPreThink(this);
 			// not running physics though... this is just so we can run weapon stuff
-			WITHSELF(this, PlayerPostThink());
+			PlayerPostThink(this);
 		}
 		this.playerdemo_time = stof(fgets(this.playerdemo_fh));
 		if(this.playerdemo_time == 0)

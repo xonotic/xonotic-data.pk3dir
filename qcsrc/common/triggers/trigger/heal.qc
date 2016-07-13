@@ -1,25 +1,25 @@
 #ifdef SVQC
 .float triggerhealtime;
-void trigger_heal_touch(entity this)
+void trigger_heal_touch(entity this, entity toucher)
 {
 	if (this.active != ACTIVE_ACTIVE)
 		return;
 
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
-	if (other.iscreature)
+	if (toucher.iscreature)
 	{
-		if (other.takedamage)
-		if (!IS_DEAD(other))
-		if (other.triggerhealtime < time)
+		if (toucher.takedamage)
+		if (!IS_DEAD(toucher))
+		if (toucher.triggerhealtime < time)
 		{
-			EXACTTRIGGER_TOUCH;
-			other.triggerhealtime = time + 1;
+			EXACTTRIGGER_TOUCH(this, toucher);
+			toucher.triggerhealtime = time + 1;
 
-			if (other.health < this.max_health)
+			if (toucher.health < this.max_health)
 			{
-				other.health = min(other.health + this.health, this.max_health);
-				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				_sound (other, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
+				toucher.health = min(toucher.health + this.health, this.max_health);
+				toucher.pauserothealth_finished = max(toucher.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
+				_sound (toucher, CH_TRIGGER, this.noise, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}

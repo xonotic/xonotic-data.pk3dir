@@ -1,45 +1,7 @@
 #include "sv_vehicles.qh"
 
-#if 0
-bool vehicle_send(entity to, int sf)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_VEHICLE);
-	WriteByte(MSG_ENTITY, sf);
-
-	if(sf & VSF_SPAWN)
-	{
-		WriteByte(MSG_ENTITY, this.vehicleid);
-	}
-
-	if(sf & VSF_SETUP)
-	{
-		// send stuff?
-	}
-
-	if(sf & VSF_ENTER)
-	{
-		// player handles the .vehicle stuff, we need only set ourselves up for driving
-
-		// send stuff?
-	}
-
-	if(sf & VSF_EXIT)
-	{
-		// senf stuff?
-	}
-
-	if(sf & VSF_PRECACHE)
-	{
-		// send stuff?!
-	}
-
-	return true;
-}
-#endif
-
 bool SendAuxiliaryXhair(entity this, entity to, int sf)
 {
-
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_AUXILIARYXHAIR);
 
 	WriteByte(MSG_ENTITY, this.cnt);
@@ -60,12 +22,10 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, int axh_id)
 	if(!IS_REAL_CLIENT(own))
 		return;
 
-	entity axh;
-
 	axh_id = bound(0, axh_id, MAX_AXH);
-	axh = own.(AuxiliaryXhair[axh_id]);
+	entity axh = own.(AuxiliaryXhair[axh_id]);
 
-	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
+	if(axh == NULL || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist? Mario: because of sloppy code like this)
 	{
 		axh					 = spawn();
 		axh.cnt				 = axh_id;
@@ -164,6 +124,12 @@ void vehicles_locktarget(entity this, float incr, float decr, float _lock_time)
 	}
 }
 
+float vehicle_altitude(entity this, float amax)
+{
+	tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * amax), MOVE_WORLDONLY, this);
+	return vlen(this.origin - trace_endpos);
+}
+
 vector vehicles_force_fromtag_hover(entity this, string tag_name, float spring_length, float max_power)
 {
 	force_fromtag_origin = gettaginfo(this, gettagindex(this, tag_name));
@@ -213,28 +179,33 @@ void vehicles_projectile_damage(entity this, entity inflictor, entity attacker, 
 	}
 }
 
-void vehicles_projectile_explode(entity this)
+void vehicles_projectile_explode(entity this, entity toucher)
 {
-	if(this.owner && other != NULL)
+	if(this.owner && toucher != NULL)
 	{
-		if(other == this.owner.vehicle)
+		if(toucher == this.owner.vehicle)
 			return;
 
-		if(other == this.owner.vehicle.tur_head)
+		if(toucher == this.owner.vehicle.tur_head)
 			return;
 	}
 
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
-	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, other);
+	RadiusDamage (this, this.realowner, this.shot_dmg, 0, this.shot_radius, this, NULL, this.shot_force, this.totalfrags, toucher);
 
 	remove (this);
 }
 
+void vehicles_projectile_explode_think(entity this)
+{
+	vehicles_projectile_explode(this, NULL);
+}
+
 void vehicles_projectile_explode_use(entity this, entity actor, entity trigger)
 {
-	vehicles_projectile_explode(this);
+	vehicles_projectile_explode(this, trigger);
 }
 
 entity vehicles_projectile(entity this, string _mzlfx, Sound _mzlsound,
@@ -298,6 +269,11 @@ void vehicles_gib_explode(entity this)
 	remove(this);
 }
 
+void vehicles_gib_touch(entity this, entity toucher)
+{
+	vehicles_gib_explode(this);
+}
+
 void vehicles_gib_think(entity this)
 {
 	this.alpha -= 0.1;
@@ -327,7 +303,7 @@ entity vehicle_tossgib(entity this, entity _template, vector _vel, string _tag, 
 	{
 		setthink(_gib, vehicles_gib_explode);
 		_gib.nextthink = time + random() * _explode;
-		settouch(_gib, vehicles_gib_explode);
+		settouch(_gib, vehicles_gib_touch);
 	}
 	else
 	{
@@ -436,21 +412,19 @@ void vehicles_reset_colors(entity this)
 
 void vehicles_clearreturn(entity veh)
 {
-	// Remove "return helper", if any.
-	for (entity ret = findchain(classname, "vehicle_return"); ret; ret = ret.chain)
+	// Remove "return helper" entities, if any.
+	FOREACH_ENTITY_ENT(wp00, veh,
 	{
-		if(ret.wp00 == veh)
+		if(it.classname == "vehicle_return")
 		{
-			ret.classname   = "";
-			setthink(ret, SUB_Remove);
-			ret.nextthink   = time + 0.1;
+			it.classname = "";
+			setthink(it, SUB_Remove);
+			it.nextthink = time + 0.1;
 
-			if(ret.waypointsprite_attached)
-				WaypointSprite_Kill(ret.waypointsprite_attached);
-
-			return;
+			if(it.waypointsprite_attached)
+				WaypointSprite_Kill(it.waypointsprite_attached);
 		}
-	}
+	});
 }
 
 void vehicles_spawn(entity this);
@@ -473,13 +447,10 @@ void vehicles_showwp_goaway(entity this)
 		WaypointSprite_Kill(this.waypointsprite_attached);
 
 	remove(this);
-
 }
 
 void vehicles_showwp(entity this)
 {
-	vector rgb;
-
 	entity ent = this;
 
 	if(ent.cnt)
@@ -493,7 +464,6 @@ void vehicles_showwp(entity this)
 		ent.nextthink  = time + 1;
 
 		ent = spawn();
-		setmodel(ent, MDL_Null);
 		ent.team = this.wp00.team;
 		ent.wp00 = this.wp00;
 		setorigin(ent, this.wp00.pos1);
@@ -502,6 +472,7 @@ void vehicles_showwp(entity this)
 		setthink(ent, vehicles_showwp_goaway);
 	}
 
+	vector rgb;
 	if(teamplay && ent.team)
 		rgb = Team_ColorRGB(ent.team);
 	else
@@ -519,11 +490,9 @@ void vehicles_showwp(entity this)
 
 void vehicles_setreturn(entity veh)
 {
-	entity ret;
-
 	vehicles_clearreturn(veh);
 
-	ret = new(vehicle_return);
+	entity ret = new(vehicle_return);
 	ret.wp00	   = veh;
 	ret.team		= veh.team;
 	setthink(ret, vehicles_showwp);
@@ -538,14 +507,12 @@ void vehicles_setreturn(entity veh)
 		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 1);
 	}
 
-	setmodel(ret, MDL_Null);
 	setorigin(ret, veh.pos1 + '0 0 96');
-
 }
 
 void vehicle_use(entity this, entity actor, entity trigger)
 {
-	LOG_TRACE("vehicle ",this.netname, " used by ", actor.classname, "\n");
+	LOG_DEBUG("vehicle ", this.netname, " used by ", actor.classname, "\n");
 
 	this.tur_head.team = actor.team;
 
@@ -556,7 +523,7 @@ void vehicle_use(entity this, entity actor, entity trigger)
 
 	if(this.active == ACTIVE_ACTIVE && !IS_DEAD(this) && !gameover)
 	{
-		LOG_TRACE("Respawning vehicle: ", this.netname, "\n");
+		LOG_DEBUG("Respawning vehicle: ", this.netname, "\n");
 		if(this.effects & EF_NODRAW)
 		{
 			setthink(this, vehicles_spawn);
@@ -634,20 +601,15 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	// WEAPONTODO
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
 		damage *= autocvar_g_vehicles_vortex_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
+	else if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
 		damage *= autocvar_g_vehicles_machinegun_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
+	else if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 		damage *= autocvar_g_vehicles_vaporizer_damagerate;
-
-	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
+	else if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;
-
-	if(DEATH_WEAPONOF(deathtype) != WEP_Null)
+	else if(DEATH_WEAPONOF(deathtype) != WEP_Null)
 		damage *= autocvar_g_vehicles_weapon_damagerate;
 
 	this.enemy = attacker;
@@ -721,7 +683,7 @@ void vehicles_damage(entity this, entity inflictor, entity attacker, float damag
 	}
 }
 
-float vehicles_crushable(entity e)
+bool vehicles_crushable(entity e)
 {
 	if(IS_PLAYER(e) && time >= e.vehicle_enter_delay)
 		return true;
@@ -757,18 +719,14 @@ void vehicles_impact(entity this, float _minspeed, float _speedfac, float _maxpa
 // vehicle enter/exit handling
 vector vehicles_findgoodexit(entity this, vector prefer_spot)
 {
-	//vector exitspot;
-	float mysize;
-
 	tracebox(this.origin + '0 0 32', STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), prefer_spot, MOVE_NORMAL, this.owner);
 	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 		return prefer_spot;
 
-	mysize = 1.5 * vlen(this.maxs - this.mins);
-	float i;
-	vector v, v2;
-	v2 = 0.5 * (this.absmin + this.absmax);
-	for(i = 0; i < 100; ++i)
+	float mysize = 1.5 * vlen(this.maxs - this.mins);
+	vector v;
+	vector v2 = 0.5 * (this.absmin + this.absmax);
+	for(int i = 0; i < autocvar_g_vehicles_exit_attempts; ++i)
 	{
 		v = randomvec();
 		v_z = 0;
@@ -777,28 +735,6 @@ vector vehicles_findgoodexit(entity this, vector prefer_spot)
 		if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
 			return v;
 	}
-
-	/*
-	exitspot = (this.origin + '0 0 48') + v_forward * mysize;
-	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
-	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
-		return exitspot;
-
-	exitspot = (this.origin + '0 0 48') - v_forward * mysize;
-	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
-	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
-		return exitspot;
-
-	exitspot = (this.origin + '0 0 48') + v_right * mysize;
-	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
-	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
-		return exitspot;
-
-	exitspot = (this.origin + '0 0 48') - v_right * mysize;
-	tracebox(this.origin + '0 0 32', PL_MIN, PL_MAX, exitspot, MOVE_NORMAL, this.owner);
-	if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
-		return exitspot;
-	*/
 
 	return this.origin;
 }
@@ -891,21 +827,21 @@ void vehicles_exit(entity vehic, bool eject)
 	vehicles_exit_running = false;
 }
 
-void vehicles_touch(entity this)
+void vehicles_touch(entity this, entity toucher)
 {
-	if(MUTATOR_CALLHOOK(VehicleTouch, this, other))
+	if(MUTATOR_CALLHOOK(VehicleTouch, this, toucher))
 		return;
 
 	// Vehicle currently in use
 	if(this.owner)
 	{
 		if(!forbidWeaponUse(this.owner))
-		if(other != NULL)
-		if((this.origin_z + this.maxs_z) > (other.origin_z))
-		if(vehicles_crushable(other))
+		if(toucher != NULL)
+		if((this.origin_z + this.maxs_z) > (toucher.origin_z))
+		if(vehicles_crushable(toucher))
 		{
 			if(vdist(this.velocity, >=, 30))
-				Damage(other, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(other.origin - this.origin) * autocvar_g_vehicles_crush_force);
+				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 
 			return; // Dont do selfdamage when hitting "soft targets".
 		}
@@ -921,7 +857,7 @@ void vehicles_touch(entity this)
 	if(autocvar_g_vehicles_enter)
 		return;
 
-	vehicles_enter(other, this);
+	vehicles_enter(toucher, this);
 }
 
 bool vehicle_impulse(entity this, int imp)
@@ -956,22 +892,19 @@ void vehicles_enter(entity pl, entity veh)
 	|| (pl.vehicle)
 	) { return; }
 
+	Vehicle info = Vehicles_from(veh.vehicleid);
+
 	if(autocvar_g_vehicles_enter) // vehicle's touch function should handle this if entering via use key is disabled (TODO)
 	if(veh.vehicle_flags & VHF_MULTISLOT)
-	if(veh.owner)
+	if(veh.owner && SAME_TEAM(pl, veh))
 	{
-		if(!veh.gunner1)
-		if(time >= veh.gun1.phase)
-		if(veh.gun1.vehicle_enter)
-		if(veh.gun1.vehicle_enter(veh, pl))
-			return;
-
-		if(!veh.gunner2)
-		if(time >= veh.gun2.phase)
-		if(veh.gun2.vehicle_enter)
-		if(veh.gun2.vehicle_enter(veh, pl))
-			return;
+		// we don't need a return value or anything here
+		// if successful the owner check below will prevent anything weird
+		info.vr_gunner_enter(info, veh, pl);
 	}
+
+	if(veh.owner)
+		return; // got here and didn't enter the gunner, return
 
 	if(teamplay)
 	if(veh.team)
@@ -1005,7 +938,6 @@ void vehicles_enter(entity pl, entity veh)
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-	tracebox(pl.origin, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL), pl.origin, false, pl);
 	pl.crouch = false;
 	pl.view_ofs = STAT(PL_VIEW_OFS, NULL);
 	setsize (pl, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
@@ -1073,7 +1005,6 @@ void vehicles_enter(entity pl, entity veh)
 	MUTATOR_CALLHOOK(VehicleEnter, pl, veh);
 
 	CSQCModel_UnlinkEntity(veh);
-	Vehicle info = Vehicles_from(veh.vehicleid);
 	info.vr_enter(info, veh);
 
 	antilag_clear(pl, CS(pl));
@@ -1081,7 +1012,7 @@ void vehicles_enter(entity pl, entity veh)
 
 void vehicles_think(entity this)
 {
-	this.nextthink = time;
+	this.nextthink = time + autocvar_g_vehicles_thinkrate;
 
 	if(this.owner)
 		this.owner.vehicle_weapon2mode = this.vehicle_weapon2mode;
@@ -1094,10 +1025,21 @@ void vehicles_think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
+void vehicles_reset(entity this)
+{
+	if(this.owner)
+		vehicles_exit(this, VHEF_RELEASE);
+
+	vehicles_clearreturn(this);
+
+	if(this.active != ACTIVE_NOT)
+		vehicles_spawn(this);
+}
+
 // initialization
 void vehicles_spawn(entity this)
 {
-	LOG_TRACE("Spawning vehicle: ", this.classname, "\n");
+	LOG_DEBUG("Spawning vehicle: ", this.classname, "\n");
 
 	// disown & reset
 	this.vehicle_hudmodel.viewmodelforclient = this;
@@ -1105,6 +1047,7 @@ void vehicles_spawn(entity this)
 	this.owner				= NULL;
 	settouch(this, vehicles_touch);
 	this.event_damage		= vehicles_damage;
+	this.reset 				= vehicles_reset;
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents	= true;
@@ -1159,7 +1102,7 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 		this.vehicle_controller = find(NULL, target, this.targetname);
 		if(!this.vehicle_controller)
 		{
-			bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");
+			LOG_DEBUG("^1WARNING: ^7Vehicle with invalid .targetname\n");
 			this.active = ACTIVE_ACTIVE;
 		}
 		else
@@ -1234,6 +1177,8 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 
 	setsize(this, info.mins, info.maxs);
 
+	info.vr_setup(info, this);
+
 	if(!nodrop)
 	{
 		setorigin(this, this.origin);
@@ -1244,8 +1189,6 @@ bool vehicle_initialize(entity this, Vehicle info, bool nodrop)
 	this.pos1 = this.origin;
 	this.pos2 = this.angles;
 	this.tur_head.team = this.team;
-
-	info.vr_setup(info, this);
 
 	if(this.active == ACTIVE_NOT)
 		this.nextthink = 0; // wait until activated

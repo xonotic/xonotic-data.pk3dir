@@ -165,7 +165,6 @@ void dompoint_captured(entity this)
 	WaypointSprite_UpdateSprites(this.sprite, msg, WP_Null, WP_Null);
 
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
-	for(head = NULL; (head = find(head, classname, "dom_controlpoint")) != NULL; )
 	FOREACH_ENTITY_CLASS("dom_controlpoint", true, LAMBDA(
 		if (autocvar_g_domination_point_amt)
 			points = autocvar_g_domination_point_amt;
@@ -250,11 +249,11 @@ void dompointthink(entity this)
 	}
 }
 
-void dompointtouch(entity this)
+void dompointtouch(entity this, entity toucher)
 {
-	if (!IS_PLAYER(other))
+	if (!IS_PLAYER(toucher))
 		return;
-	if (other.health < 1)
+	if (toucher.health < 1)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
@@ -265,7 +264,7 @@ void dompointtouch(entity this)
 
 	// only valid teams can claim it
 	entity head = find(NULL, classname, "dom_team");
-	while (head && head.team != other.team)
+	while (head && head.team != toucher.team)
 		head = find(head, classname, "dom_team");
 	if (!head || head.netname == "" || head == this.goalentity)
 		return;
@@ -274,9 +273,9 @@ void dompointtouch(entity this)
 
 	this.team = this.goalentity.team; // this stores the PREVIOUS team!
 
-	this.cnt = other.team;
+	this.cnt = toucher.team;
 	this.owner = head; // team to switch to after the delay
-	this.dmg_inflictor = other;
+	this.dmg_inflictor = toucher;
 
 	// this.state = 1;
 	// this.delay = time + cvar("g_domination_point_capturetime");
@@ -299,8 +298,8 @@ void dompointtouch(entity this)
 	this.modelindex = head.dmg;
 	this.skin = head.skin;
 
-	this.enemy = other; // individual player scoring
-	this.enemy_playerid = other.playerid;
+	this.enemy = toucher; // individual player scoring
+	this.enemy_playerid = toucher.playerid;
 	dompoint_captured(this);
 }
 
@@ -362,16 +361,15 @@ void dom_controlpoint_setup(entity this)
 float total_controlpoints;
 void Domination_count_controlpoints()
 {
-	entity e;
 	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
-	for(e = NULL; (e = find(e, classname, "dom_controlpoint")) != NULL; )
+	FOREACH_ENTITY_CLASS("dom_controlpoint", true,
 	{
 		++total_controlpoints;
-		redowned += (e.goalentity.team == NUM_TEAM_1);
-		blueowned += (e.goalentity.team == NUM_TEAM_2);
-		yellowowned += (e.goalentity.team == NUM_TEAM_3);
-		pinkowned += (e.goalentity.team == NUM_TEAM_4);
-	}
+		redowned += (it.goalentity.team == NUM_TEAM_1);
+		blueowned += (it.goalentity.team == NUM_TEAM_2);
+		yellowowned += (it.goalentity.team == NUM_TEAM_3);
+		pinkowned += (it.goalentity.team == NUM_TEAM_4);
+	});
 }
 
 float Domination_GetWinnerTeam()
@@ -495,7 +493,7 @@ MUTATOR_HOOKFUNCTION(dom, reset_map_players)
 {
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-		WITHSELF(it, PutClientInServer());
+		PutClientInServer(it);
 		if(domination_roundbased)
 			it.player_blocked = 1;
 		if(IS_REAL_CLIENT(it))

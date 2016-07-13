@@ -1,0 +1,6 @@
+#pragma once
+
+COMPONENT(in);
+.vector com_in_move;
+.vector com_in_angles;
+.bool   com_in_jump;

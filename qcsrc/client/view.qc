@@ -447,7 +447,7 @@ vector GetCurrentFov(float fov)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
-	if(hud == HUD_NORMAL)
+	if(hud == HUD_NORMAL && !spectatee_status)
 	if(switchweapon == activeweapon)
 	if((activeweapon == WEP_VORTEX && !WEP_CVAR(vortex, secondary)) || (activeweapon == WEP_RIFLE && !WEP_CVAR(rifle, secondary))) // do NOT use switchweapon here
 		zoomdir += button_attack2;
@@ -1369,8 +1369,8 @@ float prev_myteam;
 int lasthud;
 float vh_notice_time;
 void WaypointSprite_Load();
-void CSQC_UpdateView(float w, float h)
-{ENGINE_EVENT();
+void CSQC_UpdateView(entity this, float w, float h)
+{
     TC(int, w); TC(int, h);
 	entity e;
 	float fov;

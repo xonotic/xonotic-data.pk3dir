@@ -684,6 +684,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 	spn_origin.y = ReadCoord();
 	spn_origin.z = ReadCoord();
 
+	this.team = (teamnum + 1);
+
 	//if(is_new)
 	//{
 		this.origin = spn_origin;
@@ -780,8 +782,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNEVENT, bool is_new)
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
-void CSQC_Ent_Update(bool isnew)
-{ENGINE_EVENT();
+void CSQC_Ent_Update(entity this, bool isnew)
+{
 	this.sourceLoc = __FILE__ ":" STR(__LINE__);
 	int t = ReadByte();
 
@@ -825,6 +827,7 @@ void CSQC_Ent_Update(bool isnew)
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
+		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
 	});
 	time = savetime;
@@ -860,8 +863,8 @@ void Ent_Remove(entity this)
 	// TODO possibly set more stuff to defaults
 }
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
-void CSQC_Ent_Remove()
-{ENGINE_EVENT();
+void CSQC_Ent_Remove(entity this)
+{
 	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
 	if (wasfreed(this))
 	{
@@ -983,6 +986,42 @@ NET_HANDLE(ENT_CLIENT_INIT, bool isnew)
 	if (!postinit) PostInit();
 }
 
+float GetSpeedUnitFactor(int speed_unit)
+{
+	switch(speed_unit)
+	{
+		default:
+		case 1:
+			return 1.0;
+		case 2:
+			return 0.0254;
+		case 3:
+			return 0.0254 * 3.6;
+		case 4:
+			return 0.0254 * 3.6 * 0.6213711922;
+		case 5:
+			return 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
+	}
+}
+
+string GetSpeedUnit(int speed_unit)
+{
+	switch(speed_unit)
+	{
+		default:
+		case 1:
+			return _(" qu/s");
+		case 2:
+			return _(" m/s");
+		case 3:
+			return _(" km/h");
+		case 4:
+			return _(" mph");
+		case 5:
+			return _(" knots");
+	}
+}
+
 NET_HANDLE(TE_CSQC_RACE, bool isNew)
 {
 	int b = ReadByte();
@@ -1071,16 +1110,22 @@ NET_HANDLE(TE_CSQC_RACE, bool isNew)
 			race_server_record = ReadInt24_t();
 			break;
 		case RACE_NET_SPEED_AWARD:
-			race_speedaward = ReadInt24_t();
+			race_speedaward = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			if(race_speedaward_holder)
 				strunzone(race_speedaward_holder);
 			race_speedaward_holder = strzone(ReadString());
+			if(race_speedaward_unit)
+				strunzone(race_speedaward_unit);
+			race_speedaward_unit = strzone(GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_SPEED_AWARD_BEST:
-			race_speedaward_alltimebest = ReadInt24_t();
+			race_speedaward_alltimebest = ReadInt24_t() * GetSpeedUnitFactor(autocvar_hud_panel_physics_speed_unit);
 			if(race_speedaward_alltimebest_holder)
 				strunzone(race_speedaward_alltimebest_holder);
 			race_speedaward_alltimebest_holder = strzone(ReadString());
+			if(race_speedaward_alltimebest_unit)
+				strunzone(race_speedaward_alltimebest_unit);
+			race_speedaward_alltimebest_unit = strzone(GetSpeedUnit(autocvar_hud_panel_physics_speed_unit));
 			break;
 		case RACE_NET_SERVER_RANKINGS:
 			float prevpos, del;
