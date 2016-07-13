@@ -684,7 +684,7 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 	spn_origin.y = ReadCoord();
 	spn_origin.z = ReadCoord();
 
-	this.team = teamnum;
+	this.team = (teamnum + 1);
 
 	//if(is_new)
 	//{
