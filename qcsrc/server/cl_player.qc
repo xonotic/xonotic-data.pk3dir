@@ -29,6 +29,8 @@
 
 #include "../common/animdecide.qh"
 
+#define RESPAWN_DELAY_OVERTIMEFACTOR_MAX 5
+
 void Drop_Special_Items(entity player)
 {
 	// called when the player has become stuck or frozen
@@ -228,6 +230,8 @@ void calculate_player_respawn_time(entity this)
 	if (checkrules_overtimesadded)
 	{
 		float delay_overtimefactor = pow(GAMETYPE_DEFAULTED_SETTING(respawn_delay_overtimefactor), checkrules_overtimesadded);
+		// cap the factor at a max value
+		delay_overtimefactor = min(delay_overtimefactor, RESPAWN_DELAY_OVERTIMEFACTOR_MAX);
 		sdelay_small *= delay_overtimefactor;
 		sdelay_large *= delay_overtimefactor;
 		sdelay_max *= delay_overtimefactor;
