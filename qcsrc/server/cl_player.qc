@@ -224,6 +224,15 @@ void calculate_player_respawn_time(entity this)
 	float sdelay_large_count = GAMETYPE_DEFAULTED_SETTING(respawn_delay_large_count);
 	float waves = GAMETYPE_DEFAULTED_SETTING(respawn_waves);
 
+	// increase spawn delay in overtime
+	if (checkrules_overtimesadded)
+	{
+		float delay_overtimefactor = pow(GAMETYPE_DEFAULTED_SETTING(respawn_delay_overtimefactor), checkrules_overtimesadded);
+		sdelay_small *= delay_overtimefactor;
+		sdelay_large *= delay_overtimefactor;
+		sdelay_max *= delay_overtimefactor;
+	}
+
 	float pcount = 1;  // Include myself whether or not team is already set right and I'm a "player".
 	if (teamplay)
 	{
