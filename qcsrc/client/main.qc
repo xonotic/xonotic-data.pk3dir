@@ -684,6 +684,8 @@ NET_HANDLE(ENT_CLIENT_SPAWNPOINT, bool is_new)
 	spn_origin.y = ReadCoord();
 	spn_origin.z = ReadCoord();
 
+	this.team = (teamnum + 1);
+
 	//if(is_new)
 	//{
 		this.origin = spn_origin;
@@ -825,6 +827,7 @@ void CSQC_Ent_Update(entity this, bool isnew)
 		if (autocvar_developer_csqcentities)
             LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
 		done = it.m_read(this, NULL, isnew);
+		MUTATOR_CALLHOOK(Ent_Update, this, isnew);
 		break;
 	});
 	time = savetime;

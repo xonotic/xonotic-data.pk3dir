@@ -671,10 +671,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	}
 
 	// allow console bind to work
-	string con_keys;
-	float keys;
-	con_keys = findkeysforcommand("toggleconsole", 0);
-	keys = tokenize(con_keys); // findkeysforcommand returns data for this
+	string con_keys = findkeysforcommand("toggleconsole", 0);
+	int keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
 	bool hit_con_bind = false;
 	int i;

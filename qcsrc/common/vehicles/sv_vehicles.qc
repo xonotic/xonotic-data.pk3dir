@@ -1025,6 +1025,17 @@ void vehicles_think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
+void vehicles_reset(entity this)
+{
+	if(this.owner)
+		vehicles_exit(this, VHEF_RELEASE);
+
+	vehicles_clearreturn(this);
+
+	if(this.active != ACTIVE_NOT)
+		vehicles_spawn(this);
+}
+
 // initialization
 void vehicles_spawn(entity this)
 {
@@ -1036,6 +1047,7 @@ void vehicles_spawn(entity this)
 	this.owner				= NULL;
 	settouch(this, vehicles_touch);
 	this.event_damage		= vehicles_damage;
+	this.reset 				= vehicles_reset;
 	this.iscreature			= true;
 	this.teleportable		= false; // no teleporting for vehicles, too buggy
 	this.damagedbycontents	= true;

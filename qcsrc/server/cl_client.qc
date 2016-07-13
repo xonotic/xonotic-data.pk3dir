@@ -462,6 +462,8 @@ void PutClientInServer(entity this)
 	if (IS_OBSERVER(this)) {
 		PutObserverInServer(this);
 	} else if (IS_PLAYER(this)) {
+		if (this.vehicle) vehicles_exit(this.vehicle, VHEF_RELEASE);
+		
 		PlayerState_attach(this);
 		accuracy_resend(this);
 
