@@ -13,7 +13,7 @@ REGISTER_MUTATOR(damagetext, true);
 #if defined(CSQC) || defined(MENUQC)
 // no translatable cvar description please
 AUTOCVAR_SAVE(cl_damagetext,                    bool,   true,      "Draw damage dealt where you hit the enemy");
-AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}");
+AUTOCVAR_SAVE(cl_damagetext_format,             string, "-{total}", "How to format the damage text. {health}, {armor}, {total}, {potential}");
 STATIC_INIT(DamageText_LegacyFormat) {
     if (strstrofs(autocvar_cl_damagetext_format, "{", 0) < 0) autocvar_cl_damagetext_format = "-{total}";
 }
